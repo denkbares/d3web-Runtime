@@ -42,21 +42,23 @@
 			</plugin>
 
 			<!-- Create a JAR with all our dependencies -->
-			<!-- <plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptors>
-						<descriptor>assembly.xml</descriptor>
-					</descriptors>
-
-				</configuration>
-			</plugin>-->
+			<!--
+				<plugin> <artifactId>maven-assembly-plugin</artifactId>
+				<configuration> <descriptors> <descriptor>assembly.xml</descriptor>
+				</descriptors> </configuration> </plugin>
+			-->
 
 		</plugins>
 		<extensions>
 		</extensions>
 
 	</build>
+	<repositories>
+		<repository>
+			<id>infoVI-public</id>
+			<url>http://win6154.informatik.uni-wuerzburg.de:8080/nexus/content/groups/public/</url>
+		</repository>
+	</repositories>
 
 	<developers>
 		<developer>
@@ -74,25 +76,23 @@
 		<url>http://uni-wuerzburg.de/</url>
 	</organization>
 	<modules>
-		<module>d3web-Kernel</module>
-		<!-- <module>../d3web-Config</module>
+		<module>../d3web-Kernel</module>
 		<module>../d3web-Persistence</module>
-		<module>../d3web-Persistence-MMInfo</module>
-		<module>../d3web-CaseRepository</module>
-		<module>../d3web-Utilities</module>
-		<module>../d3web CompareCase</module>
-		<module>../d3web CompareCase Facade</module> 
-		<module>../d3web-SharedKnowledge</module>
-		<module>../d3web-SCM</module>
-		<module>../d3web-ExplainTree</module>
-		<module>../d3web-Verbalizer</module>
-		<module>../d3web-Report</module>
-		<module>../d3web-Utilities-Swing</module>
-		<module>../d3web-MMExtensions</module>
-		<module>../d3web-KnOfficeParser</module>
-		<module>../d3web-TextParser</module>
-		<module>../d3web-TiRex</module>
-		putt <module>../d3web-KnowledgeExporter</module> -->
+		<!--
+			<module>../d3web-Config</module>
+			<module>../d3web-Persistence-MMInfo</module>
+			<module>../d3web-CaseRepository</module>
+			<module>../d3web-Utilities</module> <module>../d3web
+			CompareCase</module> <module>../d3web CompareCase Facade</module>
+			<module>../d3web-SharedKnowledge</module>
+			<module>../d3web-SCM</module> <module>../d3web-ExplainTree</module>
+			<module>../d3web-Verbalizer</module> <module>../d3web-Report</module>
+			<module>../d3web-Utilities-Swing</module>
+			<module>../d3web-MMExtensions</module>
+			<module>../d3web-KnOfficeParser</module>
+			<module>../d3web-TextParser</module> <module>../d3web-TiRex</module>
+			putt <module>../d3web-KnowledgeExporter</module>
+		-->
 	</modules>
 	<dependencies>
 	</dependencies>
