@@ -1,0 +1,228 @@
+package de.d3web.kernel.domainModel.qasets;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import de.d3web.kernel.XPSCase;
+import de.d3web.kernel.domainModel.Answer;
+import de.d3web.kernel.domainModel.Diagnosis;
+import de.d3web.kernel.domainModel.DiagnosisState;
+import de.d3web.kernel.domainModel.IEventSource;
+import de.d3web.kernel.domainModel.KBOEventListener;
+import de.d3web.kernel.domainModel.KnowledgeBaseManagement;
+import de.d3web.kernel.domainModel.KnowledgeSlice;
+import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.RuleFactory;
+import de.d3web.kernel.domainModel.answers.AnswerChoice;
+import de.d3web.kernel.domainModel.answers.AnswerFactory;
+import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
+import de.d3web.kernel.domainModel.ruleCondition.CondDState;
+import de.d3web.kernel.dynamicObjects.CaseQuestionOC;
+import de.d3web.kernel.dynamicObjects.XPSCaseObject;
+import de.d3web.kernel.psMethods.xclPattern.XCLModel;
+import de.d3web.kernel.supportknowledge.Property;
+import de.d3web.kernel.utilities.Utils;
+
+public class QuestionSolution extends QuestionOC implements KBOEventListener {
+
+    protected final static String HIGH_STRING = "High";
+    protected final static String MEDIUM_STRING = "Medium";
+    protected final static String UNCLEAR_STRING = "Unclear";
+    protected final static String NOT_STRING = "Not";
+
+    private boolean mapped = false;
+    private Diagnosis d = null;
+
+    public boolean isMapped() {
+	return mapped;
+    }
+
+    public AnswerChoice getHigh() {
+	return high;
+    }
+
+    public AnswerChoice getMedium() {
+	return medium;
+    }
+
+    public AnswerChoice getUnclear() {
+	return unclear;
+    }
+
+    public AnswerChoice getNot() {
+	return not;
+    }
+
+    private AnswerChoice high;
+    private AnswerChoice medium;
+    private AnswerChoice unclear;
+    private AnswerChoice not;
+
+    private static final String[] highStrings = { "ja", "yes", "high", "hoch",
+	    "true", "wahr", "trifft zu", "zutreffend", "is true",
+	    "is accurate", "established", "etabliert" };
+    private static final String[] mediumStrings = { "medium", "mittel",
+	    "möglich", "possible", "teilweise", "suggested", "verdächtig",
+	    "verdächtigt" };
+    private static final String[] unclearStrings = { "unklar", "unclear",
+	    "unsicher", "not clarified" };
+    private static final String[] notStrings = { "nein", "no", "false",
+	    "excluded", "ausgeschlossen", "nicht", "not", "falsch", "false" };
+
+    public AnswerChoice selectAnswerForString(String answerText) {
+	for (String s : highStrings) {
+	    if (s.equalsIgnoreCase(answerText)) {
+		return high;
+	    }
+	}
+
+	for (String s : mediumStrings) {
+	    if (s.equalsIgnoreCase(answerText)) {
+		return medium;
+	    }
+	}
+
+	for (String s : unclearStrings) {
+	    if (s.equalsIgnoreCase(answerText)) {
+		return unclear;
+	    }
+	}
+
+	for (String s : notStrings) {
+	    if (s.equalsIgnoreCase(answerText)) {
+		return not;
+	    }
+	}
+
+	return null;
+
+    }
+
+    public QuestionSolution(String highText, String mediumText,
+	    String unclearString, String notString) {
+	super();
+	this.getProperties().setProperty(Property.ABSTRACTION_QUESTION,
+		Boolean.TRUE);
+	high = AnswerFactory.createAnswerYes("", highText);
+	medium = AnswerFactory.createAnswerNo("", mediumText);
+	unclear = AnswerFactory.createAnswerNo("", unclearString);
+	not = AnswerFactory.createAnswerNo("", notString);
+
+	setAlternatives(Utils.createList(new Object[] { high, medium, unclear,
+		not }));
+    }
+    
+    public QuestionSolution() {
+	this(HIGH_STRING, MEDIUM_STRING, UNCLEAR_STRING, NOT_STRING);
+    }
+    
+    public QuestionSolution(String id) {
+	super(id);
+	this.getProperties().setProperty(Property.ABSTRACTION_QUESTION,
+		Boolean.TRUE);
+	high = AnswerFactory.createAnswerYes(id + HIGH_STRING, HIGH_STRING);
+	medium = AnswerFactory.createAnswerNo(id + MEDIUM_STRING, MEDIUM_STRING);
+	unclear = AnswerFactory.createAnswerNo(id + UNCLEAR_STRING, UNCLEAR_STRING);
+	not = AnswerFactory.createAnswerNo(id + NOT_STRING, NOT_STRING);
+
+	setAlternatives(Utils.createList(new Object[] { high, medium, unclear,
+		not }));
+    }
+
+    public void setId(String theID) {
+	super.setId(theID);
+	high.setId(getId() + HIGH_STRING);
+	medium.setId(getId() + MEDIUM_STRING);
+	unclear.setId(getId() + UNCLEAR_STRING);
+	not.setId(getId() + NOT_STRING);
+
+    }
+
+    /**
+     * @return a List of Answers which are currently the value of the question.
+     */
+    public List<Answer> getValue(XPSCase theCase) {
+
+	ArrayList<Answer> v = new ArrayList<Answer>();
+
+	Diagnosis d = null;
+	List<Diagnosis> solutions = theCase.getKnowledgeBase().getDiagnoses();
+	for (Diagnosis diagnosis : solutions) {
+	    if (diagnosis.getText().equals(this.getText())) {
+		d = diagnosis;
+		break;
+	    }
+	}
+
+	if (d != null) {
+	    Collection<KnowledgeSlice> slices = theCase.getKnowledgeBase()
+		    .getAllKnowledgeSlices();
+	    for (KnowledgeSlice knowledgeSlice : slices) {
+		if (knowledgeSlice instanceof XCLModel) {
+		    XCLModel model = ((XCLModel) knowledgeSlice);
+		    if (model.getSolution().equals(d)) {
+			DiagnosisState state = model.getState(theCase);
+			if (state.equals(DiagnosisState.ESTABLISHED)) {
+			    this.setValueHigh(theCase);
+			    v.add(high);
+			}
+			if (state.equals(DiagnosisState.SUGGESTED)) {
+			    this.setValueMedium(theCase);
+			    v.add(medium);
+			}
+			if (state.equals(DiagnosisState.UNCLEAR)) {
+			    this.setValueUnclear(theCase);
+			    v.add(unclear);
+			}
+			if (state.equals(DiagnosisState.EXCLUDED)) {
+			    this.setValueNot(theCase);
+			    v.add(not);
+			}
+			break;
+		    }
+		}
+	    }
+	}
+
+	return v;
+    }
+
+    public void setValueHigh(XPSCase theCase) {
+	super.setValue(theCase, new Object[] { high });
+    }
+
+    public void setValueMedium(XPSCase theCase) {
+	super.setValue(theCase, new Object[] { medium });
+    }
+
+    public void setValueNot(XPSCase theCase) {
+	super.setValue(theCase, new Object[] { not });
+    }
+
+    public void setValueUnclear(XPSCase theCase) {
+	super.setValue(theCase, new Object[] { unclear });
+    }
+
+    public void notify(IEventSource source, XPSCase xpsCase) {
+	if (source instanceof Diagnosis && this.d != null) {
+	    if (((Diagnosis) source).equals(d)) {
+		DiagnosisState state = d.getState(xpsCase, null);
+		if (state.equals(DiagnosisState.ESTABLISHED)) {
+		    this.setValueHigh(xpsCase);
+		}
+		if (state.equals(DiagnosisState.SUGGESTED)) {
+		    this.setValueMedium(xpsCase);
+		}
+		if (state.equals(DiagnosisState.UNCLEAR)) {
+		    this.setValueUnclear(xpsCase);
+		}
+		if (state.equals(DiagnosisState.EXCLUDED)) {
+		    this.setValueNot(xpsCase);
+		}
+	    }
+	}
+
+    }
+
+}

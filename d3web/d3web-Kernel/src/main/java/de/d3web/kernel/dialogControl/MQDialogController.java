@@ -1,0 +1,1214 @@
+package de.d3web.kernel.dialogControl;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import de.d3web.kernel.XPSCase;
+import de.d3web.kernel.domainModel.DerivationType;
+import de.d3web.kernel.domainModel.NamedObject;
+import de.d3web.kernel.domainModel.QASet;
+import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.qasets.QContainer;
+import de.d3web.kernel.domainModel.qasets.Question;
+import de.d3web.kernel.domainModel.ruleCondition.NoAnswerException;
+import de.d3web.kernel.domainModel.ruleCondition.UnknownAnswerException;
+import de.d3web.kernel.psMethods.MethodKind;
+import de.d3web.kernel.psMethods.PSMethod;
+import de.d3web.kernel.psMethods.PSMethodInit;
+import de.d3web.kernel.psMethods.nextQASet.PSMethodNextQASet;
+import de.d3web.kernel.psMethods.questionSetter.PSMethodQuestionSetter;
+import de.d3web.kernel.psMethods.userSelected.PSMethodUserSelected;
+import de.d3web.kernel.supportknowledge.Property;
+
+/**
+ * Multiple Question Dialog Controller <br>
+ * Creation date: (21.02.2001 10:30:15)
+ * 
+ * @author Georg Buscher
+ */
+public class MQDialogController implements DialogController {
+	private List<? extends QASet> initQASets = null; // contains the init-QContainers at the
+	// beginning
+	private List<? extends QASet> qasetQueue = null; // contains all QContainers which have to be
+	// presented
+	private List history = null; // contains QContainers in the order in which
+	// they have been presented
+	private List<QContainer> processedContainers = null; // contains all QContainers that
+	// have been (partially) answered
+	private List<QASet> userIndicationList = null; // contains QContainers that
+	// currently are indicated by the
+	// user
+	// (they may have indication-rules, so don't have to be user-selected)
+	private List userSelectedQASets = null; // contains all currently
+	// user-selected QASets
+	// (QASets that don't have indication-rules except PSMethodUserSelected)
+
+	protected int historyCursor = -1;
+
+	// for "moveToNextRemaingQASet" only
+	private List remainingQASetQueue = null;
+	private boolean obtainRemainingQASetStatus = false;
+
+	protected XPSCase theCase = null;
+
+	/**
+	 * MQDialogController constructor comment.
+	 */
+	public MQDialogController(XPSCase _theCase) {
+		this(_theCase, new LinkedList());
+	}
+	
+	/**
+	 * new MQDialogController that will be initialized with the
+	 * given list of initQASets. (attention: the case might add some
+	 * more initQASets that are specified in the knowledge base)
+	 */
+	public MQDialogController(XPSCase _theCase, List initQASets) {
+		theCase = _theCase;
+		qasetQueue = new LinkedList();
+		this.initQASets = new LinkedList(initQASets);
+		userIndicationList = new LinkedList();
+		userSelectedQASets = new LinkedList();
+		history = new LinkedList();
+		processedContainers = new LinkedList();
+
+		theCase.setQASetManager(this);
+
+		moveToNewestQASet();
+	}
+
+	/**
+	 * Adds the new QASet considering the priorities of QContainers.
+	 * 
+	 * Creation date: (08.06.2002 18:42:38)
+	 * 
+	 * @param q
+	 *            de.d3web.kernel.domainModel.QASet
+	 */
+	private void addQASet(List qaSetList, de.d3web.kernel.domainModel.QASet q) {
+		QContainer toAdd = null;
+		if (q instanceof QContainer) {
+			toAdd = (QContainer) q;
+		} else if (q instanceof Question) {
+			toAdd = getFirstLogicalContainerParent((Question) q);
+		}
+		if (toAdd != null) {
+			// insert into qaSetQueue
+			addContainer(qaSetList, toAdd, toAdd.getPriority());
+			if (obtainRemainingQASetStatus) {
+				// insert into remainingQASetQueue, if the remaining qaSets are
+				// currently obtained
+				addContainer(remainingQASetQueue, toAdd, toAdd.getPriority());
+			}
+		}
+	}
+	/**
+	 * Adds the new QContainer into the "containerList" considering the
+	 * priorities of QContainers (lowest priority on top).
+	 * 
+	 * Creation date: (11.10.2002 18:42:38)
+	 * 
+	 * @param q
+	 *            de.d3web.kernel.domainModel.QContainer
+	 * @param priority
+	 *            Integer
+	 */
+	private static void addContainer(List containerList, QContainer q, Integer priority) {
+		if (!containerList.contains(q)) {
+
+			// bei Frageklassenoberbegriff die children-Frageklassen anhängen
+			boolean hasQuestions = false;
+			Iterator childrenIter = q.getChildren().iterator();
+			while (childrenIter.hasNext()) {
+				NamedObject element = (NamedObject) childrenIter.next();
+				if (element instanceof QContainer) {
+					addContainer(containerList, (QContainer) element, ((QContainer) element)
+							.getPriority());
+				} else if (element instanceof Question) {
+					hasQuestions = true;
+				}
+			}
+
+			if (hasQuestions) {
+				// add the new QContainer
+
+				if (priority != null) {
+					QASet tempQA;
+					Iterator queueIter = containerList.iterator();
+					int i = 0;
+					boolean added = false;
+
+					// insert into the containerList considering the priority
+					// (lowest priority on top)
+					while ((queueIter.hasNext()) && (!added)) {
+
+						tempQA = (QASet) queueIter.next();
+						if ((tempQA instanceof QContainer)
+								&& ((((QContainer) tempQA).getPriority() == null) || (priority
+										.compareTo(((QContainer) tempQA).getPriority()) < 0))) {
+							containerList.add(i, q);
+							added = true;
+						}
+						i++;
+
+					}
+
+					if (!added) {
+						containerList.add(q);
+					}
+				} else {
+					containerList.add(q);
+				}
+			}
+
+		}
+	}
+
+	/**
+	 * Adds "q" to the current history position and shifts the last "current
+	 * QASet" (if any) to the right. Creation date: (27.02.2001 12:58:41)
+	 * 
+	 * @param q
+	 *            de.d3web.kernel.domainModel.QASet
+	 */
+	protected void addToCurrentHistoryPos(QASet q) {
+		if (historyCursor < 0)
+			historyCursor = 0;
+		if (historyCursor > history.size())
+			historyCursor = history.size();
+		history.add(historyCursor, q);
+		if ((q instanceof QContainer) && (!processedContainers.contains(q))) {
+			processedContainers.add((QContainer) q);
+		}
+		// move the container that was current before to the qaSetQueue
+		if (history.size() > historyCursor + 1) {
+			addQASet(qasetQueue, (QASet) history.get(historyCursor + 1));
+			history.remove(historyCursor + 1);
+		}
+	}
+
+	/**
+	 * Insert the method's description here. Creation date: (20.02.2001
+	 * 15:55:25)
+	 * 
+	 * @return de.d3web.kernel.domainModel.QContainer
+	 */
+	public QASet getCurrentQASet() {
+
+		if ((historyCursor < 0) || (historyCursor >= history.size()))
+			return null;
+		else
+			return (QASet) history.get(historyCursor);
+
+	}
+
+	/**
+	 * Insert the method's description here. Creation date: (11.01.2001
+	 * 14:47:47)
+	 * 
+	 * @return java.util.List
+	 */
+	public List<? extends QASet> getQASetQueue() {
+		return qasetQueue;
+	}
+
+	public List getHistory() {
+		return history;
+	}
+	
+	protected List getInitQASets() {
+		return initQASets;
+	}
+	
+	protected List getUserIndicationList() {
+		return userIndicationList;
+	}
+
+	/**
+	 * @return List of all QContainers, that have been (partially) processed
+	 *         during answering the case (system-indicated and user-selected
+	 *         ones)
+	 */
+	public List getProcessedContainers() {
+		if ((getCurrentQASet() != null) && (!processedContainers.contains(getCurrentQASet()))) {
+			processedContainers.add((QContainer) getCurrentQASet());
+		}
+		Iterator iter = processedContainers.iterator();
+		while (iter.hasNext()) {
+			QContainer c = (QContainer) iter.next();
+			if (nothingIsDoneInContainer(c) || (!isIndicated(c))) {
+				iter.remove();
+			}
+		}
+		return processedContainers;
+	}
+
+	/**
+	 * hasNewestQASet method comment.
+	 */
+	public boolean hasNewestQASet() {
+		return (hasNewestContainer());
+	}
+
+	/**
+	 * hasNextQASet method comment.
+	 */
+	public boolean hasNextQASet() {
+		return (hasNewestContainer());
+	}
+
+	/**
+	 * Returns, if there is a container to show (with valid questions).
+	 */
+	private boolean hasNewestContainer() {
+
+		// first look at user-selected containers
+		if (userIndicationList.size() > 0) {
+			return true;
+		}
+
+		// if there isn't any user-selected container:
+		
+		// is the case aborted due to single fault assumption?
+		Boolean abortCaseSFA = (Boolean) theCase.getProperties().getProperty(
+			Property.HDT_ABORT_CASE_SFA);
+		if ((abortCaseSFA != null) && (abortCaseSFA.booleanValue())) {
+			return false;
+		}
+
+		// second, look at the current container
+		if (isValidForDC(getCurrentQASet())) {
+			return true;
+		}
+
+		// third, look at the initQASets
+		Iterator initIter = initQASets.iterator();
+		while (initIter.hasNext()) {
+			QASet qaSet = (QASet) initIter.next();
+			if (isValidForDC(qaSet)) {
+				return true;
+			}
+		}
+
+		// fourth, look at the containers in the qaSetQueue
+		Iterator qaSetIter = getQASetQueue().iterator();
+		while (qaSetIter.hasNext()) {
+			QASet qaSet = (QASet) qaSetIter.next();
+			if (isValidForDC(qaSet)) {
+				return true;
+			}
+		}
+
+		// else, there is no container to show
+		return false;
+	}
+
+	/**
+	 * hasPreviousQASet method comment.
+	 */
+	public boolean hasPreviousQASet() {
+		return historyCursor > 0;
+	}
+
+	/**
+	 * Insert the method's description here. Creation date: (22.02.2001
+	 * 13:12:22)
+	 * 
+	 * @return boolean
+	 * @param q
+	 *            de.d3web.kernel.domainModel.QASet
+	 */
+	public boolean isValidForDC(QASet q) {
+		return (isValidForDC(q, new LinkedList()));
+	}
+
+	private boolean isValidForDC(QASet q, List processedQASets) {
+		if ((q == null) || (processedQASets.contains(q))) {
+			return false;
+		}
+
+		List pros = q.getProReasons(theCase);
+		List cons = q.getContraReasons(theCase);
+
+		// user-selection outweight any contrareason!
+		if ((cons.isEmpty()) || (pros.contains(new QASet.Reason(null, PSMethodUserSelected.class)))) {
+			if (!q.isDone(theCase) && !pros.isEmpty()) {
+				// if there are pro-reasons and and (some) question(s) are not
+				// answered
+				return true;
+			} else {
+				if (q instanceof Question) {
+					// go through all follow-questions
+					Iterator iter = QContainerIterator.createFollowList(theCase, (Question) q)
+							.iterator();
+					// to avoid cycles:
+					processedQASets.add(q);
+					while (iter.hasNext()) {
+						QASet follow = (QASet) iter.next();
+						if (follow instanceof Question) {
+							Question followQ = (Question) follow;
+							if (isValidForDC(followQ, processedQASets)) {
+								QASet logicalParent = getFirstLogicalParent(followQ);
+								if ((logicalParent == null) || (logicalParent.equals(q))) {
+									// a follow-question is valid
+									processedQASets.remove(processedQASets.size() - 1);
+									return (true);
+								}
+							}
+						} else {
+							if (isValidForDC(follow, processedQASets)) {
+								// a follow-container is valid
+								Logger.getLogger(this.getClass().getName()).warning(
+										"how can that be? : container " + follow.getId()
+												+ " is follow of question " + q.getId());
+								processedQASets.remove(processedQASets.size() - 1);
+								return (true);
+							}
+						}
+					}
+					// no valid follow-question
+					processedQASets.remove(processedQASets.size() - 1);
+					return false;
+				} else {
+					if (!pros.isEmpty()) {
+						// to avoid cycles:
+						processedQASets.add(q);
+						// go through all children
+						Iterator iter = q.getChildren().iterator();
+						while (iter.hasNext()) {
+							if (isValidForDC((QASet) iter.next(), processedQASets)) {
+								// a child is valid
+								processedQASets.remove(processedQASets.size() - 1);
+								return true;
+							}
+						}
+					} else if ((theCase.getKnowledgeBase().getInitQuestions().contains(q))
+							&& (!q.isDone(theCase))) {
+						return true;
+					}
+					// container is not indicated or no child is valid
+					return (false);
+				}
+			}
+		} else {
+			// there are contra-reasons against this QASet
+			return (false);
+		}
+
+	}
+
+	/**
+	 * Returns true, if the given container or any child of it is indicated.
+	 * @param considerQuestionsAsChildren determines, if the quesiton-children of a container shall also be considered
+	 * (if false, only children-containers will be considered).
+	 */
+	public boolean isIndicatedOrHasIndicatedChild(QContainer container, boolean considerQuestionsAsChildren) {
+		return isIndicatedOrHasIndicatedChild(container, new LinkedList(), considerQuestionsAsChildren);
+	}
+
+	/**
+	 * Returns true, if the given QASet is indicated.
+	 */
+	private boolean isIndicated(QASet q) {
+		List pros = q.getProReasons(theCase);
+		List cons = q.getContraReasons(theCase);
+
+		// user-selection outweight any contrareason!
+		if (((cons.isEmpty()) && (!pros.isEmpty()))
+				|| (pros.contains(new QASet.Reason(null, PSMethodUserSelected.class)))) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Returns true, if the given container or any child of it is indicated.
+	 * 
+	 * @param c (QContainer to test)
+	 * @param processedQASets (to avoid cycles)
+	 * @param considerQuestionsAsChildren determines, if the quesiton-children of a container shall also be considered
+	 * (if false, only children-containers will be considered).
+	 * @return boolean
+	 */
+	private boolean isIndicatedOrHasIndicatedChild(QContainer c, List processedQASets, boolean considerQuestionsAsChildren) {
+		if ((c == null) || (processedQASets.contains(c))) {
+			return false;
+		}
+		if (isIndicated(c)) {
+			return true;
+		} else if (!c.getChildren().isEmpty()) {
+			if (c.getChildren().get(0) instanceof Question) {
+				if (considerQuestionsAsChildren && somethingIsDoneInContainer(c)) {
+					return true;
+				}
+			} else {
+				processedQASets.add(c);
+				// go through all container-children
+				Iterator iter = c.getChildren().iterator();
+				while (iter.hasNext()) {
+					if (isIndicatedOrHasIndicatedChild((QContainer) iter.next(), processedQASets, considerQuestionsAsChildren)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns true, if the given container has any child, that is valid.
+	 * (children of all levels will be considered, not only the next level)
+	 * 
+	 * @return boolean
+	 */
+	public boolean isAnyChildValid(QContainer c) {
+		Iterator iter = c.getChildren().iterator();
+		while (iter.hasNext()) {
+			QASet q = (QASet) iter.next();
+			if (q instanceof QContainer) {
+				QContainer childC = (QContainer) q;
+				if ((isValidForDC(childC)) || (isAnyChildValid(childC))) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * returns a QASet, which is logical parent of the given "followQuestion"
+	 * (this is in general the first TerminalObject of the first active
+	 * derivation-rule)
+	 */
+	public QASet getFirstLogicalParent(Question followQuestion) {
+		List knowledge = followQuestion.getKnowledge(PSMethodNextQASet.class,
+				MethodKind.BACKWARD);
+		if (knowledge == null) {
+			knowledge = followQuestion.getKnowledge(PSMethodQuestionSetter.class,
+					MethodKind.BACKWARD);
+		}
+		if (knowledge != null) {
+			Iterator iter = knowledge.iterator();
+			while (iter.hasNext()) {
+				RuleComplex rule = (RuleComplex) iter.next();
+				try {
+					if (rule.getCondition().eval(theCase)) {
+						return getSuitableTerminalObjectForLogicalParent(rule.getCondition()
+								.getTerminalObjects());
+					}
+				} catch (NoAnswerException ex) {
+				} catch (UnknownAnswerException ex) {
+				} catch (IndexOutOfBoundsException ex) {
+					Logger.getLogger(this.getClass().getName()).warning(
+							"Rule " + rule.getId() + " is corrupted! See Question "
+									+ followQuestion.getId());
+				}
+			}
+		}
+
+		// container-parents have a higher priority than question-parents for being logical parents
+		Iterator parentIter = followQuestion.getParents().iterator();
+		List remainingQuestions = new LinkedList();
+		while (parentIter.hasNext()) {
+			QASet parent = (QASet) parentIter.next();
+			if (parent instanceof Question) {
+				remainingQuestions.add(parent);
+			}
+			if (parent instanceof QContainer) {
+				if ((getQASetQueue().contains(parent)) || (history.contains(parent))) {
+					return parent;
+				}
+			}
+		}
+		
+		if (!remainingQuestions.isEmpty()) {
+			return (Question) remainingQuestions.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns a QASet out of the terminalObjects, which should be taken as
+	 * logical parent. (in general, it is the first terminal object, that is valid; but if this
+	 * is an SI-question, then its first logical parent will be determined and
+	 * returned instead)
+	 */
+	private QASet getSuitableTerminalObjectForLogicalParent(List terminalObjects) {
+		Iterator iter = terminalObjects.iterator();
+		QASet qaset = null;
+		while (iter.hasNext()) {
+			Object obj = iter.next();
+			if (obj instanceof Question) {
+				Question qaSet = (Question)obj;
+				if (qaSet.isValid(theCase)) {
+					if (isSiQuestion((Question) qaSet)) {
+						return getFirstLogicalParent((Question) qaSet);
+					}
+					return qaSet;
+				}
+			} else if (qaset == null && obj instanceof QContainer) {
+				qaset = (QContainer)obj;
+			}
+			
+		}
+		return qaset;
+	}
+
+	/**
+	 * Returns true, if the given question is an "SI"-question.
+	 */
+	private boolean isSiQuestion(Question q) {
+		return q.getDerivationType().equals(DerivationType.DERIVED);
+	}
+
+	/**
+	 * Returns a List, that contains all valid (to ask) questions, which are
+	 * below "qc" in hierarchy. If "qc" is not a "leaf"-container, the first
+	 * "leaf"-container, that is hierarchically under "qc" will be considered.
+	 */
+	public List getAllValidQuestionsOf(QContainer qc) {
+		if (qc == null) {
+			return (new LinkedList());
+		}
+
+		List validQuestions = new LinkedList();
+		Iterator iter = qc.getChildren().iterator();
+		while (iter.hasNext()) {
+			QASet qaSet = (QASet) iter.next();
+			if (qaSet instanceof Question) {
+				if (!qaSet.isDone(theCase)) {
+					validQuestions.add(qaSet);
+				}
+				validQuestions.addAll(getAllValidFollowQuestionsOf((Question) qaSet));
+			} else {
+				if (isValidForDC(qaSet)) {
+					validQuestions.addAll(getAllValidQuestionsOf((QContainer) qaSet));
+				}
+			}
+		}
+		return (validQuestions);
+	}
+
+	/**
+	 * Returns a List, that contains all valid (to ask) follow-questions and
+	 * follow-follow-questions ... of the given question "q".
+	 */
+	private List getAllValidFollowQuestionsOf(Question q) {
+		List validQuestions = new LinkedList();
+		Iterator iter = QContainerIterator.createFollowList(theCase, q).iterator();
+		while (iter.hasNext()) {
+			Question follow = (Question) iter.next();
+			if (isValidForDC(follow)) {
+				validQuestions.add(follow);
+				validQuestions.addAll(getAllValidFollowQuestionsOf(follow));
+			}
+		}
+		return (validQuestions);
+	}
+
+	/**
+	 * Returns all active questions of the container "qc" in a List of List's;
+	 * the List's contain first the Question-object and second an Integer-object
+	 * describing the level of the question The order of the questions in the
+	 * returned list is exactly the order in which they shall be presented on
+	 * the screen.
+	 * 
+	 * @param qC
+	 * @return List
+	 */
+	public List getAllQuestionsToRender(QContainer qC) {
+		return getAllQuestionsToRender(qC, false, false);
+	}
+
+	/**
+	 * Returns all visible questions of the container "qc" in a List of List's;
+	 * the List's contain first the Question-object and second an Integer-object
+	 * describing the level of the question The order of the questions in the
+	 * returned list is exactly the order in which they shall be presented on
+	 * the screen.
+	 * 
+	 * @param qC
+	 * @param includingInactiveOnes
+	 *            boolean (include questions that are not valid?)
+	 * @param inactiveHierarchicalChildrenOnly
+	 *            boolean (If "inactiveHierarchicalChildrenOnly" is set, then
+	 *            the inactive follow-questions, that are not hierarchical
+	 *            children, will not be added.)
+	 * @return List
+	 */
+	public List getAllQuestionsToRender(QContainer qC, boolean includingInactiveOnes,
+			boolean inactiveHierarchicalChildrenOnly) {
+
+		List questionList = new LinkedList();
+		if ((qC.getChildren().size() > 0) && (qC.getChildren().get(0) instanceof Question)) {
+			QContainerIterator containerIterator = new QContainerIterator(theCase, qC);
+
+			while (containerIterator.hasNextChild()) {
+				QASet child = containerIterator.getNextChild();
+				if (child instanceof Question) {
+					LinkedList oneQuestion = new LinkedList();
+					oneQuestion.add(child);
+					oneQuestion.add(new Integer(0));
+					questionList.add(oneQuestion);
+					addAllFollowQuestionsToRender((Question) child, 1, questionList,
+							includingInactiveOnes, inactiveHierarchicalChildrenOnly);
+				}
+			}
+		}
+		return (questionList);
+	}
+
+	/**
+	 * Adds all or only visible follow-questions of the question "q" to the list
+	 * "prevQuestions". If "inactiveHierarchicalChildrenOnly" is set, then the
+	 * inactive follow-questions, that are not hierarchical children, will not
+	 * be added. The list "prevQuestions" is a List of List's; the List's
+	 * contain first the Question-object and second an Integer-object describing
+	 * the level of the question. The order of the questions in the
+	 * "prevQuestions"-list ist exactly the order in which they shall be
+	 * presented on the screen.
+	 */
+	private void addAllFollowQuestionsToRender(Question q, int level, List prevQuestions,
+			boolean includingInactiveOnes, boolean inactiveHierarchicalChildrenOnly) {
+
+		// children (logical follow-questions, NOT hierarchical)
+		Iterator followiter = QContainerIterator.createFollowList(theCase, q).iterator();
+		while (followiter.hasNext()) {
+			QASet follow = (QASet) followiter.next();
+			if ((follow instanceof Question)
+					&& ((!isInListOfQuestionLists((Question) follow, prevQuestions)))) {
+				Question followQ = (Question) follow;
+				if ((followQ.isValid(theCase))
+						|| hasToShowInactiveQuestion(q, followQ, includingInactiveOnes,
+								inactiveHierarchicalChildrenOnly)) {
+
+					QASet logicalParent = getFirstLogicalParent((Question) follow);
+
+					// logical parent has to be original question
+					if ((logicalParent == null) || (logicalParent.equals(q)) || (!logicalParent.isValid(theCase))) {
+
+						List oneQuestion = new LinkedList();
+						oneQuestion.add(followQ);
+						oneQuestion.add(new Integer(level));
+						prevQuestions.add(oneQuestion);
+						addAllFollowQuestionsToRender(followQ, level + 1, prevQuestions,
+								includingInactiveOnes, inactiveHierarchicalChildrenOnly);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Returns true, if the follow-question "follow" has to be displayed on the
+	 * screen, independent from its state of indication.
+	 * 
+	 * @see addAllFollowQuestionsToRender
+	 */
+	private boolean hasToShowInactiveQuestion(Question parent, Question follow,
+			boolean includingInactiveQuestions, boolean inactiveHierarchicalChildrenOnly) {
+		Boolean showAlways = (Boolean) follow.getProperties().getProperty(
+				Property.DIALOG_MQDIALOGS_SHOW_FOLLOWQ_ALWAYS);
+		if ((showAlways != null) && (showAlways.booleanValue())
+			&& (parent.getChildren().contains(follow) || !inactiveHierarchicalChildrenOnly)) {
+			return true;
+		}
+
+		if ((includingInactiveQuestions)
+		// (intersect with hierarchical children)
+				&& (parent.getChildren().contains(follow) || !inactiveHierarchicalChildrenOnly)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param q
+	 *            Question (the question, which is to search)
+	 * @param toSearch
+	 *            List (a List of List's; only if the question is contained in
+	 *            one of the List's, this method returns true)
+	 * @return boolean
+	 */
+	private static boolean isInListOfQuestionLists(Question q, List toSearch) {
+		Iterator iter = toSearch.iterator();
+		while (iter.hasNext()) {
+			List oneQuestion = (List) iter.next();
+			if (oneQuestion.get(0).equals(q))
+				return (true);
+		}
+		return (false);
+	}
+
+	/**
+	 * @return true, if all questions of the given container are not done and do
+	 *         not have any real valid (except user-seletion!)
+	 *         parent-containers. (if a container hasn't any proreasons but has
+	 *         some questions, that are done, the container has to be
+	 *         user-selected)
+	 */
+	public boolean nothingIsDoneInContainer(QContainer c) {
+		Iterator iter = c.getChildren().iterator();
+		while (iter.hasNext()) {
+			QASet qaSet = (QASet) iter.next();
+			if (qaSet instanceof Question) {
+				Question q = (Question) qaSet;
+
+				QASet logicalParent = getFirstLogicalParent(q);
+				if (c.equals(logicalParent)) {
+					return false;
+				} else if (logicalParent == null) {
+
+					boolean aParentIsValid = false;
+					Iterator parentIter = q.getParents().iterator();
+					while ((parentIter.hasNext()) && (!aParentIsValid)) {
+						QASet parent = (QASet) parentIter.next();
+						if (parent != c) {
+							// determine, if the parent is user-selected
+							QASet.Reason userSelectionReason = new QASet.Reason(null,
+									PSMethodUserSelected.class);
+							List pros = parent.getProReasons(theCase);
+							boolean wasUserSelected = false;
+							if (pros.contains(userSelectionReason)) {
+								wasUserSelected = true;
+								// remove the user-selection temporarily
+								pros.remove(userSelectionReason);
+							}
+	
+							// check, if the parent is real valid (valid WITHOUT the
+							// user-selection)
+							aParentIsValid = aParentIsValid
+									|| ((parent instanceof QContainer) && (parent.isValid(theCase)));
+	
+							// now, restore the user-selection
+							if (wasUserSelected) {
+								pros.add(userSelectionReason);
+							}
+						}
+					}
+					// if there is an answered question, which has no other real valid
+					// container-parent...
+					// (then the container has to be user-selected)
+					if ((!aParentIsValid) && (q.isDone(theCase))) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * Returns true, if at least one of the children-questions is done.
+	 */
+	public boolean somethingIsDoneInContainer(QContainer c) {
+		Iterator iter = c.getChildren().iterator();
+		while (iter.hasNext()) {
+			QASet qaSet = (QASet) iter.next();
+			if (qaSet instanceof Question) {
+				Question q = (Question) qaSet;
+				if (q.hasValue(theCase)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * getNewestQASet method comment.
+	 */
+	public QASet moveToNewestQASet() {
+		return (moveToNewestContainer());
+	}
+
+	/**
+	 * getNextQASet method comment.
+	 */
+	public QASet moveToNextQASet() {
+		return (moveToNewestContainer());
+	}
+
+	private QASet moveToNewestContainer() {
+
+		// now, the process of obtaining the remaining QASets (if started) is
+		// interrupted
+		obtainRemainingQASetStatus = false;
+
+		// first look at user-selected containers
+		if (!userIndicationList.isEmpty()) {
+			tryToRemoveUserSelection((QContainer) getCurrentQASet());
+
+			QASet current = (QASet) userIndicationList.get(0);
+			// insert it at the current history-position
+			addToCurrentHistoryPos(current);
+			userIndicationList.remove(0);
+			return (current);
+		}
+
+		// if there isn't any user-selected container:
+		
+		// if the case is finished (aborted by a problem-solver), do not continue the case
+		if (theCase.isFinished()) {
+			return null;
+		}
+		
+		// is the case aborted due to single fault assumption?
+		Boolean abortCaseSFA = (Boolean) theCase.getProperties().getProperty(
+			Property.HDT_ABORT_CASE_SFA);
+		if ((abortCaseSFA != null) && (abortCaseSFA.booleanValue())) {
+			return null;
+		}
+
+		// second, look at the current container
+		if (isValidForDC(getCurrentQASet())) {
+			return (getCurrentQASet());
+		} else {
+			historyCursor++;
+		}
+
+		// if the current container is not valid:
+
+		// init-containers
+		Iterator initIter = initQASets.iterator();
+		while (initIter.hasNext()) {
+			QASet qaSet = (QASet) initIter.next();
+			if (qaSet instanceof QContainer) {
+				tryToRemoveUserSelection((QContainer) qaSet);
+			}
+			initIter.remove();
+			addToCurrentHistoryPos(qaSet);
+			if (isValidForDC(qaSet)) {
+				return (qaSet);
+			} else {
+				historyCursor++;
+			}
+		}
+
+		// determine the first valid container in qaSetQueue
+		// (that's a container, which was indicated by a rule)
+		Iterator queueIter = getQASetQueue().iterator();
+		while (queueIter.hasNext()) {
+			QContainer container = (QContainer) queueIter.next();
+			queueIter.remove();
+
+			// check, if the container has to be user-selected (if
+			// user-selected)
+			tryToRemoveUserSelection(container);
+
+			addToCurrentHistoryPos(container);
+			if (isValidForDC(container)) {
+				return (container);
+			} else {
+				historyCursor++;
+			}
+		}
+
+		// else, there is no container to show
+		return (null);
+	}
+
+	/**
+	 * Trys to remove the user-selection (if existing).
+	 * 
+	 * @param container
+	 *            (QContainer)
+	 */
+	public void tryToRemoveUserSelection(QContainer container) {
+		if (container == null) {
+			return;
+		}
+		if ((userSelectedQASets.contains(container))
+				&& ((nothingIsDoneInContainer(container)) || ((container.getProReasons(theCase)
+						.size() > 1) && (container.getContraReasons(theCase).isEmpty())))) {
+			// if nothing is answered in the container or if the container has
+			// proreasons
+			// and no contrareason, remove the user-selection
+			userSelectedQASets.remove(container);
+			container.removeProReason(new QASet.Reason(null, PSMethodUserSelected.class), theCase);
+		}
+	}
+
+	/**
+	 * Returns all remaining QASets step by step.
+	 * 
+	 * @see de.d3web.kernel.dialogControl.DialogController#moveToNextRemainingQASet()
+	 */
+	public QASet moveToNextRemainingQASet() {
+		if ((!obtainRemainingQASetStatus) || (remainingQASetQueue == null)) {
+			obtainRemainingQASetStatus = true;
+			remainingQASetQueue = new LinkedList();
+			// at the beginning of the obtaining process the remaining QASets
+			// are exactly
+			// the QASets in initQASets and qaSetQueue
+			remainingQASetQueue.addAll(initQASets);
+			remainingQASetQueue.addAll(getQASetQueue());
+			remainingQASetQueue.addAll(userIndicationList);
+		}
+		Iterator iter = remainingQASetQueue.iterator();
+		while (iter.hasNext()) {
+			QASet next = (QASet) iter.next();
+			iter.remove();
+			if (isValidForDC(next)) {
+				if ((next instanceof QContainer) && (!processedContainers.contains(next))) {
+					processedContainers.add((QContainer) next);
+				}
+				return next;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * getPreviousQASet method comment.
+	 */
+	public QASet moveToPreviousQASet() {
+		if (hasPreviousQASet()) {
+			historyCursor--;
+			if (historyCursor >= history.size()) {
+				historyCursor = history.size() - 1;
+			}
+			QASet q = (QASet) history.get(historyCursor);
+			return q;
+		}
+		return null;
+	}
+
+	/**
+	 * Insert the method's description here. Creation date: (27.02.2001
+	 * 11:33:05)
+	 * 
+	 * @param id
+	 *            java.lang.String
+	 */
+	public QASet moveToQASet(QASet searchQASet) {
+		addUserIndicationQASet(searchQASet);
+		return (searchQASet);
+	}
+
+	/**
+	 * Insert the method's description here. Creation date: (27.02.2001
+	 * 11:33:05)
+	 * 
+	 * @param id
+	 *            java.lang.String
+	 */
+	public QASet moveToQuestion(QASet searchQuestion) {
+
+		if (searchQuestion == null) {
+			return (moveToNewestContainer());
+		} else if (searchQuestion instanceof QContainer) {
+			return (moveToQASet(searchQuestion));
+		}
+
+		addUserIndicationQASet(searchQuestion);
+		// determine the parent-container and move to that parent
+		QContainer c = getFirstContainerParent((Question) searchQuestion);
+		return (c);
+	}
+
+	/**
+	 * Returns a "leaf"-QContainer, that is parent of the question
+	 */
+	private static QContainer getFirstContainerParent(Question q) {
+		if (q == null)
+			return (null);
+
+		Iterator iter = q.getParents().iterator();
+		if (iter.hasNext()) {
+			QASet qaSet = (QASet) iter.next();
+			if (qaSet instanceof Question)
+				return (getFirstContainerParent((Question) qaSet));
+			else
+				return ((QContainer) qaSet);
+		}
+		return (null);
+	}
+
+	/**
+	 * Returns a "leaf"-QContainer, that is directly parent of the question "q"
+	 * or that is parent of a question, whose follow-(follow-...-)question is
+	 * "q".
+	 * 
+	 * @param q
+	 * @return
+	 */
+	public QContainer getFirstLogicalContainerParent(Question q) {
+		QASet parent = null;
+		QASet firstLogicalParent = getFirstLogicalParent(q);
+		while (firstLogicalParent instanceof Question) {
+			parent = firstLogicalParent;
+			firstLogicalParent = getFirstLogicalParent((Question) firstLogicalParent);
+		}
+		if (parent instanceof Question) {
+			return getFirstContainerParent((Question) parent);
+		} else {
+			return getFirstContainerParent(q);
+		}
+	}
+
+	/**
+	 * addUserIndicationQASet method comment.
+	 */
+	public void addUserIndicationQASet(de.d3web.kernel.domainModel.QASet q) {
+		QContainer qContainer = null;
+		if (q instanceof QContainer) {
+			// only "leaf"-containers should be added
+			if (!q.getChildren().isEmpty()) {
+				qContainer = getFirstIndicatedLeafContainer((QContainer) q, true);
+				if (qContainer == null) {
+					qContainer = getFirstIndicatedLeafContainer((QContainer) q, false);
+				}
+				if (qContainer == null) {
+					qContainer = getFirstLeafContainer((QContainer) q);
+				}
+			} else {
+				qContainer = (QContainer) q;
+			}
+		} else {
+			// questions shouldn't be added, so determine a parent-container
+			qContainer = getFirstContainerParent((Question) q);
+		}
+		if ((qContainer != null) && (!userIndicationList.contains(qContainer))) {
+			// if the container hasn't any proreasons or if it has some
+			// contrareasons,
+			// mark it as user-selected
+			List pros = qContainer.getProReasons(theCase);
+			List cons = qContainer.getContraReasons(theCase);
+			if ((pros.isEmpty()) || (!cons.isEmpty())) {
+				if (!userSelectedQASets.contains(qContainer)) {
+					userSelectedQASets.add(qContainer);
+				}
+				qContainer
+						.addProReason(new QASet.Reason(null, PSMethodUserSelected.class), theCase);
+			}
+			userIndicationList.add(0, qContainer);
+
+		}
+	}
+
+	/**
+	 * Returns the first container (below startC in hierarchy) which has
+	 * questions as children.
+	 */
+	private QContainer getFirstLeafContainer(QContainer startC) {
+		if (startC == null)
+			return null;
+
+		while ((startC.getChildren()).get(0) instanceof QContainer) {
+			startC = (QContainer) startC.getChildren().get(0);
+		}
+		return startC;
+	}
+
+	/**
+	 * Returns the first container (below startC) which is indicated (and
+	 * valid?) and which has questions as children.
+	 */
+	private QContainer getFirstIndicatedLeafContainer(QContainer startC, boolean mustBeValid) {
+		if (startC == null) {
+			return null;
+		}
+
+		Iterator iter = startC.getChildren().iterator();
+		while (iter.hasNext()) {
+			QASet qaSet = (QASet) iter.next();
+			if (qaSet instanceof Question) {
+				if ((isIndicated(startC)) && ((!mustBeValid) || (isValidForDC(startC)))) {
+					return startC;
+				} else {
+					return null;
+				}
+			} else {
+				if (isIndicated(qaSet)) {
+					QContainer ret = getFirstIndicatedLeafContainer((QContainer) qaSet, mustBeValid);
+					if (ret != null) {
+						return ret;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	public void propagate(NamedObject no, RuleComplex rule, PSMethod psm) {
+		if(no instanceof QASet) {
+			QASet qaSet = (QASet) no;
+			if (psm instanceof PSMethodUserSelected) {
+				addUserIndicationQASet(qaSet);
+			} else if (psm instanceof PSMethodInit) {
+				addQASet(initQASets, qaSet);
+			} else {
+				addQASet(qasetQueue, qaSet);
+			}
+		}
+	}
+
+	public MQDialogController getMQDialogcontroller() {
+		return this;
+	}
+
+	public OQDialogController getOQDialogcontroller() {
+		return null;
+	}
+
+	/**
+	 * HOTFIX:
+	 * A Plugin need to know, what QASet will be displayed next
+	 * 
+	 * @return newest QAset
+	 */
+	public QASet getNewestQASet() {
+//		 now, the process of obtaining the remaining QASets (if started) is
+		// interrupted
+		obtainRemainingQASetStatus = false;
+
+		// first look at user-selected containers
+		if (!userIndicationList.isEmpty()) {
+			return userIndicationList.get(0);
+		}
+
+		// if there isn't any user-selected container:
+		
+		// if the case is finished (aborted by a problem-solver), do not continue the case
+		if (theCase.isFinished()) {
+			return null;
+		}
+		
+		// is the case aborted due to single fault assumption?
+		Boolean abortCaseSFA = (Boolean) theCase.getProperties().getProperty(
+			Property.HDT_ABORT_CASE_SFA);
+		if ((abortCaseSFA != null) && (abortCaseSFA.booleanValue())) {
+			return null;
+		}
+
+		// second, look at the current container
+		if (isValidForDC(getCurrentQASet())) {
+			return (getCurrentQASet());
+		} 
+		
+		// if the current container is not valid:
+
+		// init-containers
+		for (QASet each : initQASets) {
+			if (isValidForDC(each)) {
+				return (each);
+			} 
+		}
+
+		// determine the first valid container in qaSetQueue
+		// (that's a container, which was indicated by a rule)
+		for (QASet each : getQASetQueue()) {
+			if (isValidForDC(each)) {
+				return (each);
+			} 
+		}
+
+		// else, there is no container to show
+		return (null);
+	}
+
+}
