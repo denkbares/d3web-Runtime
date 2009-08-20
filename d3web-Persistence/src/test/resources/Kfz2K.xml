@@ -1,0 +1,1106 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<KnowledgeBase system="D3" type="basic">
+<KnowledgeBaseDescriptor>
+<Descriptor name="DC.TITLE" value="KFZ Wissensbasis (Uni. Würzburg, Informatik 6)" />
+<Descriptor name="DC.RELATION" value="isVersionOf WB_ID_30437347122" />
+</KnowledgeBaseDescriptor>
+<PriorityGroups>
+</PriorityGroups>
+<InitQASets>
+<QContainer ID="Q56" />
+<QContainer ID="Q16" />
+</InitQASets>
+<Costs>
+<Cost ID="timeexpenditure" unit=" " verbalization=" " />
+<Cost ID="risk" unit=" " verbalization=" " />
+<Cost ID="cost" unit=" " verbalization=" " />
+</Costs>
+<QContainers>
+<QContainer ID="Q000">
+<Text>
+Fragebögen
+</Text>
+<Costs>
+<Cost ID="timeexpenditure" value="0.0" />
+<Cost ID="risk" value="0.0" />
+<Cost ID="cost" value="0.0" />
+</Costs>
+<Children>
+<Child ID="Q16" />
+<Child ID="Qcl16" />
+<Child ID="Q56" />
+</Children>
+</QContainer>
+<QContainer ID="Q16">
+<Text>
+Beobachtungen
+</Text>
+<Costs>
+<Cost ID="timeexpenditure" value="0.0" />
+<Cost ID="risk" value="0.0" />
+<Cost ID="cost" value="0.0" />
+</Costs>
+<Children>
+<Child ID="Mf2" />
+<Child ID="Mf3" />
+<Child ID="Mf4" />
+<Child ID="Mf5" />
+<Child ID="Mf6" />
+<Child ID="Mf7" />
+<Child ID="Mf8" />
+<Child ID="Mf9" />
+</Children>
+</QContainer>
+<QContainer ID="Qcl16">
+<Text>
+Technische Untersuchungen
+</Text>
+<Costs>
+<Cost ID="timeexpenditure" value="0.0" />
+<Cost ID="risk" value="0.0" />
+<Cost ID="cost" value="0.0" />
+</Costs>
+<Children>
+<Child ID="Q17" />
+<Child ID="Q18" />
+<Child ID="Q19" />
+<Child ID="Q20" />
+<Child ID="Q21" />
+</Children>
+</QContainer>
+<QContainer ID="Q17">
+<Text>
+Untersuchung Leerlaufsystem
+</Text>
+<Costs>
+<Cost ID="timeexpenditure" value="0.0" />
+<Cost ID="risk" value="0.0" />
+<Cost ID="cost" value="0.0" />
+</Costs>
+<Children>
+<Child ID="Mf13" />
+</Children>
+</QContainer>
+<QContainer ID="Q18">
+<Text>
+Untersuchung Ansaugsystem
+</Text>
+<Costs>
+<Cost ID="timeexpenditure" value="0.0" />
+<Cost ID="risk" value="0.0" />
+<Cost ID="cost" value="0.0" />
+</Costs>
+<Children>
+<Child ID="Mf15" />
+</Children>
+</QContainer>
+<QContainer ID="Q19">
+<Text>
+Untersuchung Luftfiltereinsatz
+</Text>
+<Costs>
+<Cost ID="timeexpenditure" value="0.0" />
+<Cost ID="risk" value="0.0" />
+<Cost ID="cost" value="0.0" />
+</Costs>
+<Children>
+<Child ID="Mf17" />
+</Children>
+</QContainer>
+<QContainer ID="Q20">
+<Text>
+Untersuchung Zündeinstellung
+</Text>
+<Costs>
+<Cost ID="timeexpenditure" value="0.0" />
+<Cost ID="risk" value="0.0" />
+<Cost ID="cost" value="0.0" />
+</Costs>
+<Children>
+<Child ID="Mf19" />
+</Children>
+</QContainer>
+<QContainer ID="Q21">
+<Text>
+Untersuchung Batterie
+</Text>
+<Costs>
+<Cost ID="timeexpenditure" value="0.0" />
+<Cost ID="risk" value="0.0" />
+<Cost ID="cost" value="0.0" />
+</Costs>
+<Children>
+<Child ID="Mf11" />
+</Children>
+</QContainer>
+<QContainer ID="Q56">
+<Text>
+Allgemeines
+</Text>
+<Costs>
+<Cost ID="timeexpenditure" value="0.0" />
+<Cost ID="risk" value="0.0" />
+<Cost ID="cost" value="0.0" />
+</Costs>
+<Children>
+<Child ID="Mf57" />
+<Child ID="Mf58" />
+</Children>
+</QContainer>
+</QContainers>
+<Questions>
+<Question ID="Mf2" type="OC">
+<Text>
+Abgase
+</Text>
+<Costs />
+<Answers>
+<Answer ID="Mf2a1" type="AnswerChoice">
+<Text>
+schwarz
+</Text>
+</Answer>
+<Answer ID="Mf2a2" type="AnswerChoice">
+<Text>
+bläulich
+</Text>
+</Answer>
+<Answer ID="Mf2a3" type="AnswerChoice">
+<Text>
+farblos
+</Text>
+</Answer>
+</Answers>
+</Question>
+<Question ID="Mf3" type="OC">
+<Text>
+Auspuffrohrfarbe
+</Text>
+<Costs />
+<Children>
+<Child ID="Msi21" />
+</Children>
+<Answers>
+<Answer ID="Mf3a1" type="AnswerChoice">
+<Text>
+braun
+</Text>
+</Answer>
+<Answer ID="Mf3a2" type="AnswerChoice">
+<Text>
+grau
+</Text>
+</Answer>
+<Answer ID="Mf3a3" type="AnswerChoice">
+<Text>
+hellgrau
+</Text>
+</Answer>
+<Answer ID="Mf3a4" type="AnswerChoice">
+<Text>
+schwarzverrußt
+</Text>
+</Answer>
+</Answers>
+</Question>
+<Question ID="Msi21" type="OC">
+<Text>
+Bewertung Auspuffrohrfarbe
+</Text>
+<Costs />
+<Answers>
+<Answer ID="Msi21a1" type="AnswerChoice">
+<Text>
+normal
+</Text>
+</Answer>
+<Answer ID="Msi21a2" type="AnswerChoice">
+<Text>
+abnorm
+</Text>
+</Answer>
+</Answers>
+</Question>
+<Question ID="Mf4" type="OC">
+<Text>
+Benzinart
+</Text>
+<Costs />
+<Children>
+<Child ID="Msi21" />
+</Children>
+<Answers>
+<Answer ID="Mf4a1" type="AnswerChoice">
+<Text>
+Diesel
+</Text>
+</Answer>
+<Answer ID="Mf4a3" type="AnswerChoice">
+<Text>
+Normal oder Super
+</Text>
+</Answer>
+</Answers>
+</Question>
+<Question ID="Mf5" type="Num">
+<Text>
+Üblicher Kraftstoffverbrauch/100km
+</Text>
+<Costs />
+<Children>
+<Child ID="Msi4" />
+</Children>
+</Question>
+<Question ID="Msi4" type="OC">
+<Text>
+Bewertung Kraftstoffverbrauch
+</Text>
+<Costs />
+<Answers>
+<Answer ID="Msi4a1" type="AnswerChoice">
+<Text>
+normal
+</Text>
+</Answer>
+<Answer ID="Msi4a2" type="AnswerChoice">
+<Text>
+leicht erhöht
+</Text>
+</Answer>
+<Answer ID="Msi4a3" type="AnswerChoice">
+<Text>
+erhöht
+</Text>
+</Answer>
+</Answers>
+</Question>
+<Question ID="Mf6" type="Num">
+<Text>
+Tatsächlicher Kraftstoffverbrauch/100km
+</Text>
+<Costs />
+<Children>
+<Child ID="Msi4" />
+</Children>
+</Question>
+<Question ID="Mf7" type="MC">
+<Text>
+Motorgeräusche
+</Text>
+<Costs />
+<Answers>
+<Answer ID="Mf7a1" type="AnswerChoice">
+<Text>
+klopfen
+</Text>
+</Answer>
+<Answer ID="Mf7a2" type="AnswerChoice">
+<Text>
+klingeln
+</Text>
+</Answer>
+<Answer ID="Mf7a0" type="AnswerNo">
+<Text>
+Nein/Sonstiges
+</Text>
+</Answer>
+</Answers>
+</Question>
+<Question ID="Mf8" type="OC">
+<Text>
+Verhalten bei Motorstart
+</Text>
+<Costs />
+<Children>
+<Child ID="Mf10" />
+</Children>
+<Answers>
+<Answer ID="Mf8a1" type="AnswerChoice">
+<Text>
+springt normal an
+</Text>
+</Answer>
+<Answer ID="Mf8a2" type="AnswerChoice">
+<Text>
+springt schlecht an
+</Text>
+</Answer>
+<Answer ID="Mf8a3" type="AnswerChoice">
+<Text>
+springt überhaupt nicht an
+</Text>
+</Answer>
+</Answers>
+</Question>
+<Question ID="Mf10" type="OC">
+<Text>
+Anlasser
+</Text>
+<Costs />
+<Answers>
+<Answer ID="Mf10a1" type="AnswerChoice">
+<Text>
+dreht durch
+</Text>
+</Answer>
+<Answer ID="Mf10a2" type="AnswerChoice">
+<Text>
+dreht nicht richtig durch
+</Text>
+</Answer>
+</Answers>
+</Question>
+<Question ID="Mf9" type="MC">
+<Text>
+Fahrverhalten
+</Text>
+<Costs />
+<Answers>
+<Answer ID="Mf9a1" type="AnswerChoice">
+<Text>
+verzögertes Anfahren
+</Text>
+</Answer>
+<Answer ID="Mf9a2" type="AnswerChoice">
+<Text>
+schlechte Beschleunigung
+</Text>
+</Answer>
+<Answer ID="Mf9a3" type="AnswerChoice">
+<Text>
+Leerlauf ist zu niedrig
+</Text>
+</Answer>
+<Answer ID="Mf9a4" type="AnswerChoice">
+<Text>
+Leerlauf ist unregelmäßig
+</Text>
+</Answer>
+<Answer ID="Mf9a5" type="AnswerChoice">
+<Text>
+zu wenig Leistung bei Teillast
+</Text>
+</Answer>
+<Answer ID="Mf9a6" type="AnswerChoice">
+<Text>
+zu wenig Leistung bei Volllast
+</Text>
+</Answer>
+<Answer ID="Mf9a0" type="AnswerNo">
+<Text>
+Nein/Sonstiges
+</Text>
+</Answer>
+</Answers>
+</Question>
+<Question ID="Mf13" type="YN">
+<Text>
+Leerlaufsystem
+</Text>
+<Costs />
+<Answers>
+<Answer ID="Mf13a1" type="AnswerYes">
+<Text>
+ja
+</Text>
+</Answer>
+<Answer ID="Mf13a0" type="AnswerNo">
+<Text>
+nein
+</Text>
+</Answer>
+</Answers>
+</Question>
+<Question ID="Mf15" type="YN">
+<Text>
+Ansaugsystem
+</Text>
+<Costs />
+<Answers>
+<Answer ID="Mf15a1" type="AnswerYes">
+<Text>
+ja
+</Text>
+</Answer>
+<Answer ID="Mf15a0" type="AnswerNo">
+<Text>
+nein
+</Text>
+</Answer>
+</Answers>
+</Question>
+<Question ID="Mf17" type="YN">
+<Text>
+Luftfiltereinsatz
+</Text>
+<Costs />
+<Answers>
+<Answer ID="Mf17a1" type="AnswerYes">
+<Text>
+ja
+</Text>
+</Answer>
+<Answer ID="Mf17a0" type="AnswerNo">
+<Text>
+nein
+</Text>
+</Answer>
+</Answers>
+</Question>
+<Question ID="Mf19" type="YN">
+<Text>
+Zündeinstellung
+</Text>
+<Costs />
+<Answers>
+<Answer ID="Mf19a1" type="AnswerYes">
+<Text>
+ja
+</Text>
+</Answer>
+<Answer ID="Mf19a0" type="AnswerNo">
+<Text>
+nein
+</Text>
+</Answer>
+</Answers>
+</Question>
+<Question ID="Mf11" type="YN">
+<Text>
+Batterie
+</Text>
+<Costs />
+<Answers>
+<Answer ID="Mf11a1" type="AnswerYes">
+<Text>
+ja
+</Text>
+</Answer>
+<Answer ID="Mf11a0" type="AnswerNo">
+<Text>
+nein
+</Text>
+</Answer>
+</Answers>
+</Question>
+<Question ID="Mf57" type="OC">
+<Text>
+Automarke
+</Text>
+<Costs />
+<Answers>
+<Answer ID="Mf57a1" type="AnswerChoice">
+<Text>
+VW
+</Text>
+</Answer>
+<Answer ID="Mf57a2" type="AnswerChoice">
+<Text>
+Opel
+</Text>
+</Answer>
+<Answer ID="Mf57a3" type="AnswerChoice">
+<Text>
+Mercedes Benz
+</Text>
+</Answer>
+<Answer ID="Mf57a4" type="AnswerChoice">
+<Text>
+BMW
+</Text>
+</Answer>
+<Answer ID="Mf57a5" type="AnswerChoice">
+<Text>
+Porsche
+</Text>
+</Answer>
+<Answer ID="Mf57a6" type="AnswerChoice">
+<Text>
+Fiat
+</Text>
+</Answer>
+<Answer ID="Mf57a7" type="AnswerChoice">
+<Text>
+Toyota
+</Text>
+</Answer>
+<Answer ID="Mf57a8" type="AnswerChoice">
+<Text>
+Mazda
+</Text>
+</Answer>
+<Answer ID="Mf57a9" type="AnswerChoice">
+<Text>
+sonstige
+</Text>
+</Answer>
+</Answers>
+</Question>
+<Question ID="Mf58" type="Num">
+<Text>
+Baujahr
+</Text>
+<Costs />
+</Question>
+</Questions>
+<Diagnoses>
+<Diagnosis ID="P000">
+<Text>
+Klassifikation
+</Text>
+<Properties>
+</Properties>
+<Children>
+<Child ID="P8" />
+<Child ID="P13" />
+<Child ID="P14" />
+<Child ID="P15" />
+<Child ID="P16" />
+</Children>
+</Diagnosis>
+<Diagnosis ID="P8">
+<Text>
+Leerlaufsystem defekt
+</Text>
+<Properties>
+</Properties>
+</Diagnosis>
+<Diagnosis ID="P13">
+<Text>
+Ansaugsystem undicht
+</Text>
+<Properties>
+</Properties>
+</Diagnosis>
+<Diagnosis ID="P14" aPriProb="P2">
+<Text>
+Luftfiltereinsatz verschmutzt
+</Text>
+<Properties>
+</Properties>
+</Diagnosis>
+<Diagnosis ID="P15">
+<Text>
+Zündeinstellung falsch
+</Text>
+<Properties>
+</Properties>
+</Diagnosis>
+<Diagnosis ID="P16">
+<Text>
+Batterie leer
+</Text>
+<Properties>
+</Properties>
+</Diagnosis>
+</Diagnoses>
+<KnowledgeSlices>
+<KnowledgeSlice ID="R-Fb-57" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N4" />
+<Diagnosis ID="P16" />
+</Action>
+<Condition type="equal" ID="Mf10" value="Mf10a1" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-56" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P5" />
+<Diagnosis ID="P16" />
+</Action>
+<Condition type="or">
+<Condition type="equal" ID="Mf8" value="Mf8a3" />
+<Condition type="equal" ID="Mf8" value="Mf8a2" />
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="RADD59" type="RuleComplex">
+<Action type="ActionAddValue">
+<Question ID="Msi21" />
+<Values>
+<Value type="answerChoice" ID="Msi21a2" />
+</Values>
+</Action>
+<Condition type="and">
+<Condition type="equal" ID="Mf4" value="Mf4a3" />
+<Condition type="equal" ID="Mf3" value="Mf3a4" />
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-29" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P4" />
+<Diagnosis ID="P14" />
+</Action>
+<Condition type="equal" ID="Mf9" value="Mf9a4" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-28" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N4" />
+<Diagnosis ID="P13" />
+</Action>
+<Condition type="equal" ID="Msi4" value="Msi4a1" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-27" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P3" />
+<Diagnosis ID="P13" />
+</Action>
+<Condition type="equal" ID="Mf9" value="Mf9a5" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-26" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P4" />
+<Diagnosis ID="P13" />
+</Action>
+<Condition type="equal" ID="Mf9" value="Mf9a4" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-25" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P3" />
+<Diagnosis ID="P13" />
+</Action>
+<Condition type="equal" ID="Msi4" value="Msi4a2" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-24" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P4" />
+<Diagnosis ID="P13" />
+</Action>
+<Condition type="equal" ID="Msi4" value="Msi4a3" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-22" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N6" />
+<Diagnosis ID="P14" />
+</Action>
+<Condition type="not">
+<Condition type="equal" ID="Mf10" value="Mf10a1" />
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-21" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N4" />
+<Diagnosis ID="P14" />
+</Action>
+<Condition type="not">
+<Condition type="or">
+<Condition type="equal" ID="Mf8" value="Mf8a3" />
+<Condition type="equal" ID="Mf8" value="Mf8a2" />
+</Condition>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-20" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P4" />
+<Diagnosis ID="P14" />
+</Action>
+<Condition type="and">
+<Condition type="or">
+<Condition type="equal" ID="Mf8" value="Mf8a3" />
+<Condition type="equal" ID="Mf8" value="Mf8a2" />
+</Condition>
+<Condition type="equal" ID="Mf10" value="Mf10a1" />
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-18" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N4" />
+<Diagnosis ID="P14" />
+</Action>
+<Condition type="equal" ID="Msi4" value="Msi4a1" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-17" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P3" />
+<Diagnosis ID="P14" />
+</Action>
+<Condition type="equal" ID="Msi4" value="Msi4a2" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-16" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P4" />
+<Diagnosis ID="P14" />
+</Action>
+<Condition type="equal" ID="Msi4" value="Msi4a3" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-15" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P5" />
+<Diagnosis ID="P14" />
+</Action>
+<Condition type="equal" ID="Msi21" value="Msi21a2" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-14" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P5" />
+<Diagnosis ID="P14" />
+</Action>
+<Condition type="equal" ID="Mf2" value="Mf2a1" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-13" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N5" />
+<Diagnosis ID="P15" />
+</Action>
+<Condition type="not">
+<Condition type="or">
+<Condition type="equal" ID="Mf8" value="Mf8a3" />
+<Condition type="equal" ID="Mf8" value="Mf8a2" />
+</Condition>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-12" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N3" />
+<Diagnosis ID="P15" />
+</Action>
+<Condition type="not">
+<Condition type="or">
+<Condition type="equal" ID="Mf7" value="Mf7a2" />
+<Condition type="equal" ID="Mf7" value="Mf7a1" />
+</Condition>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-11" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N6" />
+<Diagnosis ID="P15" />
+</Action>
+<Condition type="not">
+<Condition type="equal" ID="Mf10" value="Mf10a1" />
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-10" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P5" />
+<Diagnosis ID="P15" />
+</Action>
+<Condition type="and">
+<Condition type="or">
+<Condition type="equal" ID="Mf8" value="Mf8a3" />
+<Condition type="equal" ID="Mf8" value="Mf8a2" />
+</Condition>
+<Condition type="equal" ID="Mf10" value="Mf10a1" />
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-9" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P5" />
+<Diagnosis ID="P15" />
+</Action>
+<Condition type="or">
+<Condition type="equal" ID="Mf7" value="Mf7a2" />
+<Condition type="equal" ID="Mf7" value="Mf7a1" />
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-8" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P3" />
+<Diagnosis ID="P15" />
+</Action>
+<Condition type="equal" ID="Mf9" value="Mf9a4" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-7" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P3" />
+<Diagnosis ID="P15" />
+</Action>
+<Condition type="equal" ID="Mf9" value="Mf9a1" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-6" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N3" />
+<Diagnosis ID="P8" />
+</Action>
+<Condition type="not">
+<Condition type="equal" ID="Mf9" value="Mf9a3" />
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-5" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N4" />
+<Diagnosis ID="P8" />
+</Action>
+<Condition type="not">
+<Condition type="equal" ID="Mf9" value="Mf9a4" />
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-4" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P5" />
+<Diagnosis ID="P8" />
+</Action>
+<Condition type="equal" ID="Mf8" value="Mf8a2" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-3" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P4" />
+<Diagnosis ID="P8" />
+</Action>
+<Condition type="equal" ID="Mf9" value="Mf9a3" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="R-Fb-2" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P5" />
+<Diagnosis ID="P8" />
+</Action>
+<Condition type="equal" ID="Mf9" value="Mf9a4" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="RDQ4" type="RuleComplex">
+<Action type="ActionAddValue">
+<Question ID="Msi4" />
+<Values>
+<Value type="evaluatable">
+<FormulaTerm type="*">
+<arg1>
+<FormulaTerm type="/">
+<arg1>
+<FormulaTerm type="-">
+<arg1>
+<FormulaPrimitive type="QNumWrapper">
+<Value>
+Mf6
+</Value>
+</FormulaPrimitive>
+</arg1>
+<arg2>
+<FormulaPrimitive type="QNumWrapper">
+<Value>
+Mf5
+</Value>
+</FormulaPrimitive>
+</arg2>
+</FormulaTerm>
+</arg1>
+<arg2>
+<FormulaPrimitive type="QNumWrapper">
+<Value>
+Mf5
+</Value>
+</FormulaPrimitive>
+</arg2>
+</FormulaTerm>
+</arg1>
+<arg2>
+<FormulaPrimitive type="FormulaNumber">
+<Value>
+100.0
+</Value>
+</FormulaPrimitive>
+</arg2>
+</FormulaTerm>
+</Value>
+</Values>
+</Action>
+<Condition type="and">
+<Condition type="numGreater" ID="Mf5" value="0" />
+<Condition type="known" ID="Mf6" value="any" />
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="RADD4" type="RuleComplex">
+<Action type="ActionAddValue">
+<Question ID="Msi21" />
+<Values>
+<Value type="answerChoice" ID="Msi21a1" />
+</Values>
+</Action>
+<Condition type="or">
+<Condition type="equal" ID="Mf3" value="Mf3a1" />
+<Condition type="equal" ID="Mf3" value="Mf3a2" />
+<Condition type="equal" ID="Mf3" value="Mf3a3" />
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="RADD2" type="RuleComplex">
+<Action type="ActionAddValue">
+<Question ID="Msi21" />
+<Values>
+<Value type="answerChoice" ID="Msi21a1" />
+</Values>
+</Action>
+<Condition type="and">
+<Condition type="equal" ID="Mf3" value="Mf3a4" />
+<Condition type="equal" ID="Mf4" value="Mf4a1" />
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="Rfb21" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P7" />
+<Diagnosis ID="P15" />
+</Action>
+<Condition type="equal" ID="Mf19" value="Mf19a1" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="Rfb20" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N7" />
+<Diagnosis ID="P15" />
+</Action>
+<Condition type="equal" ID="Mf19" value="Mf19a0" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="Rfb19" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P7" />
+<Diagnosis ID="P14" />
+</Action>
+<Condition type="equal" ID="Mf17" value="Mf17a1" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="Rfb18" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N7" />
+<Diagnosis ID="P14" />
+</Action>
+<Condition type="equal" ID="Mf17" value="Mf17a0" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="Rfb17" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P7" />
+<Diagnosis ID="P13" />
+</Action>
+<Condition type="equal" ID="Mf15" value="Mf15a1" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="Rfb16" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N7" />
+<Diagnosis ID="P13" />
+</Action>
+<Condition type="equal" ID="Mf15" value="Mf15a0" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="Rfb15" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P7" />
+<Diagnosis ID="P8" />
+</Action>
+<Condition type="equal" ID="Mf13" value="Mf13a1" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="Rfb14" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N7" />
+<Diagnosis ID="P8" />
+</Action>
+<Condition type="equal" ID="Mf13" value="Mf13a0" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="Rfb13" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P7" />
+<Diagnosis ID="P16" />
+</Action>
+<Condition type="equal" ID="Mf11" value="Mf11a1" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="Rfb12" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N7" />
+<Diagnosis ID="P16" />
+</Action>
+<Condition type="equal" ID="Mf11" value="Mf11a0" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="Rfb11" type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P5" />
+<Diagnosis ID="P16" />
+</Action>
+<Condition type="equal" ID="Mf10" value="Mf10a2" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="RASK10" type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet ID="Mf10" />
+</TargetQASets>
+</Action>
+<Condition type="or">
+<Condition type="equal" ID="Mf8" value="Mf8a2" />
+<Condition type="equal" ID="Mf8" value="Mf8a3" />
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="rqsug15347" type="RuleComplex">
+<Action type="ActionClarify">
+<targetDiagnosis ID="P8" />
+<TargetQASets>
+<QASet ID="Q17" />
+</TargetQASets>
+</Action>
+<Condition ID="P8" type="DState" value="suggested" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="rqetab15348" type="RuleComplex">
+<Action type="ActionRefine">
+<targetDiagnosis ID="P8" />
+<TargetQASets>
+<QASet ID="Q17" />
+</TargetQASets>
+</Action>
+<Condition ID="P8" type="DState" value="established" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="rqsug15350" type="RuleComplex">
+<Action type="ActionClarify">
+<targetDiagnosis ID="P13" />
+<TargetQASets>
+<QASet ID="Q18" />
+</TargetQASets>
+</Action>
+<Condition ID="P13" type="DState" value="suggested" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="rqetab15351" type="RuleComplex">
+<Action type="ActionRefine">
+<targetDiagnosis ID="P13" />
+<TargetQASets>
+<QASet ID="Q18" />
+</TargetQASets>
+</Action>
+<Condition ID="P13" type="DState" value="established" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="rqsug15353" type="RuleComplex">
+<Action type="ActionClarify">
+<targetDiagnosis ID="P14" />
+<TargetQASets>
+<QASet ID="Q19" />
+</TargetQASets>
+</Action>
+<Condition ID="P14" type="DState" value="suggested" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="rqetab15354" type="RuleComplex">
+<Action type="ActionRefine">
+<targetDiagnosis ID="P14" />
+<TargetQASets>
+<QASet ID="Q19" />
+</TargetQASets>
+</Action>
+<Condition ID="P14" type="DState" value="established" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="rqsug15356" type="RuleComplex">
+<Action type="ActionClarify">
+<targetDiagnosis ID="P15" />
+<TargetQASets>
+<QASet ID="Q20" />
+</TargetQASets>
+</Action>
+<Condition ID="P15" type="DState" value="suggested" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="rqetab15357" type="RuleComplex">
+<Action type="ActionRefine">
+<targetDiagnosis ID="P15" />
+<TargetQASets>
+<QASet ID="Q20" />
+</TargetQASets>
+</Action>
+<Condition ID="P15" type="DState" value="established" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="rqsug15359" type="RuleComplex">
+<Action type="ActionClarify">
+<targetDiagnosis ID="P16" />
+<TargetQASets>
+<QASet ID="Q21" />
+</TargetQASets>
+</Action>
+<Condition ID="P16" type="DState" value="suggested" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="rqetab15360" type="RuleComplex">
+<Action type="ActionRefine">
+<targetDiagnosis ID="P16" />
+<TargetQASets>
+<QASet ID="Q21" />
+</TargetQASets>
+</Action>
+<Condition ID="P16" type="DState" value="established" />
+</KnowledgeSlice>
+<KnowledgeSlice ID="S1" type="Schema">
+<Question ID="Msi4" />
+<LeftClosedInterval value="10.0 20.0" />
+</KnowledgeSlice>
+</KnowledgeSlices>
+</KnowledgeBase>

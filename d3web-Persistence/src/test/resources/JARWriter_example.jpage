@@ -1,0 +1,18 @@
+try {
+	java.net.URL storageURL = new java.net.URL(java.util.ResourceBundle.getBundle("tests").getString("jarwriter_example.output_url"));
+
+	de.d3web.persistence.utilities.JARWriter jarWriter = new de.d3web.persistence.utilities.JARWriter(storageURL);
+
+	try {
+		jarWriter.setManifest(de.d3web.persistence.utilities.JARWriter.getEmptyManifest());
+
+		// Create a jar entry and add it to the temp jar.
+
+		jarWriter.write("KB-INF/index.xml", de.d3web.persistence.utilities.JARWriter.getIndexDOM());
+		jarWriter.write("test", "<test/>");
+		jarWriter.close();
+	} catch (java.io.FileNotFoundException e) {
+	} catch (java.io.IOException e) {
+	}
+} catch (java.net.MalformedURLException e) {
+}
