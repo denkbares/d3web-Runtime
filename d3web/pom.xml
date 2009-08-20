@@ -23,8 +23,6 @@
 	</licenses>
 	<build>
 		<defaultGoal>package</defaultGoal>
-		<sourceDirectory>src</sourceDirectory>
-		<outputDirectory>bin</outputDirectory>
 		<plugins>
 			<!-- Set Java 1.6 as source and target -->
 			<plugin>
