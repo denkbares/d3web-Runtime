@@ -1,0 +1,915 @@
+\documentclass[12pt,a4paper]{article}
+
+\headheight0cm \headsep0cm \topmargin0cm \textwidth16cm
+\textheight23cm \oddsidemargin0cm \evensidemargin0cm \topskip0cm
+\footskip2cm
+
+% FOR A BETTER LOOKING AS PDF-FILE
+\RequirePackage{times} \fontfamily{ptm}\selectfont
+\RequirePackage[T1]{fontenc}
+
+\usepackage[latin1]{inputenc}
+\usepackage{ngerman}
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{placeins}
+%\usepackage{fancyhdr}
+%\usepackage{hyperref}
+
+\author{Norman Brümmer, Joachim Baumeister}
+\title{\huge{d3web.kernel-HowTo} \\ \large{Wie der \emphdddweb{d3web.kernel} in Java-Applikationen integriert werden kann}}
+
+
+\begin{document}
+
+\newcommand{\qd} {"`}
+\newcommand{\qu} {"'}
+
+\newcommand{\emphclass} {\texttt}
+\newcommand{\emphdddweb} {\emph}
+
+\maketitle \thispagestyle{empty}
+\begin{abstract}
+\noindent Dies ist ein Entwickler-HowTo, das beschreibt, wie der
+\emphdddweb{d3web.kernel} in Java-Applikationen integriert werden
+kann. Im ersten Abschnitt wird allgemein erklärt, was der
+\emphdddweb{d3web.kernel}, wie er arbeitet und welche die
+Hauptmechanismen und -objekte sind. Im zweiten Abschnitt werden
+diese Objekte detaillierter erklärt, so dass der Entwickler ein
+grundlegendes Verständnis von den wichtigsten Klassen des
+\emphdddweb{d3web.kernel}s bekommt. Im dritten Abschnitt wird
+anhand eines Szenarios in Form einer Beispielapplikation
+schrittweise das Vorgehen bei den wichtigsten Mechanismen(wie z.B.
+Laden von Wissensbasen, starten eines neuen Falls, etc.) erklärt.
+Im vierten Abschnitt werden die XML-Repräsentationen von Wissens-
+und Fallbasen vorgestellt. Abschließend wird im fünften Abschnitt
+erläutert, was zu tun ist, wenn man einen eigenen Problemlöser
+implementieren möchte.
+\end{abstract}
+\newpage
+\tableofcontents
+\newpage
+
+\section{Was ist d3web?}
+
+\clearpage
+\section{Die grundlegenden Objekte und Konzepte} Die
+zentralen Klassen zur Repräsentation von Wissensbasisobjekten
+befinden sich im Paket
+\begin{center}
+\emphclass{de.d3web.kernel.domainModel}
+\end{center}
+und seinen Unterpaketen. Eine Wissensbasis wird in
+\emphdddweb{d3web} durch die Klasse \emphclass{KnowledgeBase}
+realisiert. Ihre wichtigsten Bestandteile sind Frageklassen und
+Fragen, Antworten, Diagnosen
+und Regeln. Ihre Repräsentation wird im Folgenden genauer erklärt:\\
+
+\noindent Für Objekte der Wissensbasis, die eindeutig
+identifizierbar sein sollen (wie z.B. Frageklassen, Fragen,
+Diagnosen, einige Antworttypen und Regeln) existiert die abstrakte
+Klasse \emphclass{IDObject}. Von ihr erbt direkt die Klasse
+\emphclass{RuleComplex}, welche Regeln repräsentiert. Diagnosen,
+Frageklassen und Fragen haben einen \qd Namen\qu, z.B. einen
+Fragetext oder eine beschreibende Frageklassenbezeichnung. Daher
+erben die Klassen \emphclass{Diagnosis} und \emphclass{QASet} von
+\emphclass{NamedObject}, einer Klasse, die \emphclass{IDObject}
+erweitert. Die Oberklasse \emphclass{QASet} wird, wie auch die
+anderen erwähnten konkreten Klassen später genauer behandelt.
+Diagnosen und Fragen können einen Wert erhalten. Daher
+implementieren die Klassen \emphclass{Diagnosis} und
+\emphclass{Question} das Interface
+\emphclass{ValuedObject}.\\
+
+\begin{figure} [h]
+\centering
+\includegraphics[scale=0.85]{fig/domainModel1.png}
+\caption{de.d3web.domainModel - Die wissensbasisrelevanten
+Klassen} \label{domainModel1}
+\end{figure}
+
+\clearpage
+
+\noindent Wie man in Abbildung \ref{domainModel1} sehen kann,
+können \emphclass{NamedObject}s wieder \emphclass{NamedObject}s
+enthalten, die man über die \emphclass{getChildren()}-Methode
+erreichen kann. Andersherum kann man von einem Kindobjekt über
+\emphclass{getParents()} auf dessen Elternobjekte zugreifen - eine
+doppelte Verkettung also. In Tabelle \ref{kbobjects-table} sind
+die wesentlichen Wissensbasisobjekte und die zugehörigen Klassen
+gegenübergestellt.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Wissensbasis-Objekt} & \textbf{d3web-Klasse}\\
+ & \\
+\hline
+
+Wissensbasis & KnowledgeBase\\
+\hline
+Diagnose & Diagnosis\\
+\hline
+Frageklasse & QContainer\\
+\hline
+Frage allgemein & Question\\
+\hline
+Antwort allgemein & Answer\\
+\hline
+Regel & RuleComplex\\
+\hline
+Regelkondition allgemein & AbstractCondition\\
+\hline
+Regelaktion allgemein & RuleAction\\
+\hline
+\end{tabular}
+\caption{Gegenüberstellung: Wissensbasisobjekte - d3web-Klassen}
+\label{kbobjects-table}
+\end{table}
+
+
+\subsection{Frageklassen, Fragen und Antworten}
+In Bezug auf Frageklassen und Fragen hat die oben genannte
+Eltern-Kind-Verkettung folgende Bedeutung: Eine Frageklasse,
+realisiert durch \emphclass{QContainer} kann allgemein
+\emphclass{QASets} enthalten; somit also Fragen, das sind
+\emphclass{Question}-Objekte, und wiederum Frageklassen. In diesen
+Fällen handelt es sich einfach um eine hierarchische Beziehung.
+Hat allerdings ein \emphclass{Question}-Objekt \qd Kinder\qu, so
+handelt es sich um Folgefragen dieser Frage. Die Semantik ist hier
+eindeutig, weil eine einfache Frage kein Container ist.
+
+\noindent Es gibt eine Reihe verschiedener Fragetypen und
+dementsprechend viele verschiedene Typen von Antworten. Klassen,
+die spezielle Antworttypen realisieren, sind im Paket
+\begin{center}
+\emphclass{de.d3web.kernel.domainModel.answers}
+\end{center}
+enthalten. Im Folgenden werden die konkreten Frage- und
+Antworttypen beschrieben:
+
+\begin{description}
+\item[Choice-Fragen:] One-Choice und Multiple-Choice-Fragen werden
+durch die Klassen\\ \emphclass{QuestionOC} bzw.
+\emphclass{QuestionMC} realisiert. Diese erhalten Werte vom Typ\\
+\emphclass{AnswerChoice}, die entsprechenden
+Antwort-Implementierungen. Ein Spezielfall der One-Choice-Fragen
+sind die Ja-Nein-Fragen, realisiert durch \emphclass{QuestionYN}.
+Entsprechend existieren Klassen für die Ja- und Nein-Antwort,
+\emphclass{AnswerYes} bzw. \emphclass{AnswerNo}.
+
+\item[Numerische Fragen:] Numerische Fragen entsprechen in
+\emphdddweb{d3web} der Klasse \emphclass{QuestionNum}. Diese
+bekommen einen Wert vom Typ \emphclass{AnswerNum}.
+
+\item[Text-Fragen:] Text-Fragen sind in \emphdddweb{d3web} Objekte
+vom Typ \emphclass{QuestionText}. Sie erhalten Werte vom Typ
+\emphclass{AnswerText}.
+\end{description}
+
+\noindent Da alle Fragen unabhängig vom Typ mit \qd unbekannt\qu\
+beantwortet werden können, gibt es eine entsprechende
+Antwort-Implementierung, \emphclass{AnswerUnknown}.
+
+\noindent In Abbildung \ref{QuestionAnswer} sind die beiden
+Hierarchien nebeneinander zu sehen.
+
+\begin{figure} [h]
+\centering
+\includegraphics[width=\textwidth]{fig/QuestionAnswer.png}
+\caption{Fragen und Antworten} \label{QuestionAnswer}
+\end{figure}
+
+\noindent Wie den Fragen die Antworten zugewiesen werden, wird im
+letzten Abschnitt dieses Kapitels beschrieben.
+
+\subsection{Diagnosen}
+\label{abschnitt-diagnosen} Diagnosen entsprechen in
+\emphdddweb{d3web} \emphclass{Diagnosis}-Objekten. Da diese
+\emphclass{NamedObject}s und damit auch \emphclass{IDObject}s
+sind, haben sie sowohl einen Verbalisierungstext als auch eine
+eindeutige ID. Auch Diagnosen können demnach Hierarchien bilden.
+Wie man die Eltern- und Kind-Objekte einer Diagnose erreicht, ist
+bereits am Anfang des Kapitels erklärt worden. Diagnosen können
+verschiedene Stati annehmen, die von einem Problemlöser berechnet
+werden: ausgeschlossen (\emph{excluded}), unklar (\emph{unclear}),
+verdächtigt (\emph{suggested}) und etabliert (\emph{established}).
+Diese sind abhängig von den Punkten, die sie z.B. durch eine
+heuristische Regel bekommen. Status und Punkte einer Diagnose
+werden durch die Klassen \emphclass{DiagnosisState} bzw.
+\emphclass{DiagnosisScore} im Paket
+\emphclass{de.d3web.domainModel} repräsentiert. Um die Punkte bzw.
+den Status einer Diagnose zu erfragen, sollten die Methoden
+\begin{center}
+\emphclass{getScore(XPSCase, Class)} bzw.
+\emphclass{getState(XPSCase, Class)}
+\end{center}
+der Klasse \emphclass{Diagnosis} verwendet werden. Als
+\emphclass{Class}-Parameter übergibt man die Klasseninstanz
+desjenigen Problemlösers, der den Diagnosestatus berechnen soll.
+
+\clearpage
+
+\subsection{Regeln}
+\label{abschnitt-regeln} \emphdddweb{d3web} verwendet eine
+Vielzahl von Regeln, um beispielsweise einen geführten Dialog zu
+steuern (Folge\-fragen-Regeln, Suppress-Regeln,
+Contra-Indikations-Regeln) oder um als Funktionsgrundlage von
+Problemlösern (heuristischer
+Problemlöser) zu dienen.\\
+Regeln unterscheiden sich nur durch ihre verschiedenen Aktionen.
+Sie haben ansonsten immer den gleichen Aufbau und folgen der
+gleichen Funktionsweise. Deshalb wurde das sogenannte
+\emph{Rule-Pattern} eingeführt, das nun näher betrachtet werden
+soll. Eine Regel ist immer eine Instanz der Klasse
+\emphclass{RuleComplex} und enthält eine Kondition
+(\emphclass{AbstractCondition}) und eine Regelaktion
+(\emphclass{RuleAction}).
+\begin{figure} [h]
+\includegraphics[width=\textwidth]{fig/rulePattern.png}
+\caption{Rule-Pattern. Eine Regel mit Regelaktion}
+\label{rulePattern}
+\end{figure}
+
+\noindent In Abbildung \ref{rulePattern} ist eine Regel mit
+Regelaktion \emphclass{ruleAction} und -Kondition
+\emphclass{condition} zu sehen. Desweiteren hat
+\emphclass{RuleComplex} die Attribute \emphclass{context} und \emphclass{exception} vom Typ\\
+\emphclass{AbstractCondition}, die spezielle Konditions-Objekte sind.
+Aktionen und Konditionen einer Regel werden Folgenden erläutert.\\
+Über die Methode \emphclass{canFire(XPSCase)} kann abgefragt
+werden, ob die Regel feuern kann. Dies wird in Abschnitt
+\ref{Semantik-cond-exception-context} im Detail behandelt. Die
+Methode \emphclass{hasFired(XPSCase)} prüft, ob die Regel bereits
+gefeuert hat - also, ob die Regelaktion im aktuellen Fall
+(\emphclass{XPSCase}) schon ausgeführt wurde.
+\emphclass{check(XPSCase)} ist eine zusammenfassende Methode,
+welche die Ausführung und Rücknahme einer Regel steuern kann. Sie
+führt die Regelaktion aus, wenn die Regel feuern kann und sie noch
+nicht ausgeführt wurde. Umgekehrt nimmt sie eine Regelaktion
+zurück, wenn sie bereits ausgeführt wurde, die Regel aber momentan
+nicht feuern kann (wenn die Kondition nicht erfüllt ist, oder die
+Ausnahmebedingung erfüllt
+ist). \\
+
+\clearpage
+
+\subsubsection{Verwendung und Instanziierung von Regeln}
+Regeln sollten, wenn möglich, nicht manuell über ihren Konstruktor
+erzeugt werden, sondern durch die Verwendung der entsprechenden
+Methode in der Klasse \emphclass{RuleFactory}. Lässt sich die
+manuelle Erzeugung einer Regel allerdings nicht umgehen, sollte
+man unbedingt darauf achten, dass erst dann eine Kondition gesetzt
+wird, wenn die Aktion bekannt ist. Dies ist darin begründet, dass
+die Aktionen den Problemlöser-Kontext tragen und dieser wichtig
+für die dynamische Verzeigerung der beteiligten Objekte ist. Diese
+Anforderung wird jedoch von den jeweiligen Methoden in
+\emphclass{RuleFactory} erfüllt. In Abbildung \ref{ruleAction} ist
+die gesamte Hierarchie der bereits implementierten Regelaktionen
+zu sehen.
+
+
+\begin{figure}[h]
+\includegraphics[width=\textwidth]{fig/ruleAction.png}
+\caption{RuleAction-Hierarchie: Alle Regelaktionen auf einen
+Blick}
+\label{ruleAction}
+\end{figure}
+
+
+\subsubsection{Semantik von Kondition, Ausnahmebedingung und Diagnose-kontext}
+\label{Semantik-cond-exception-context} \textbf{Konditionen}\\
+Die Regelkondition ist die hauptsächliche Bedingung, bei deren
+Erfüllung eine Regel feuern kann (und somit ihre Aktion ausführt).
+Eine Kondition muss angegeben werden. Generell kann man sagen,
+dass Regeln die Form
+\begin{center}
+\emph{Wenn KONDITION dann AKTION}
+\end{center}
+haben. Im Folgenden werden noch zwei zusätzliche Bedingungen
+vorgestellt, mit denen Einschränkungen zur Kondition gemacht
+werden können.\\
+
+\noindent \textbf{Ausnahmebedingungen} \\
+\noindent Eine Ausnahmebedingung ist eine \emph{optionale}
+Bedingung, die bei Erfüllung das Feuern einer Regel verhindert. Es
+erscheint etwas verwunderlich, dass zusätzlich zur Kondition eine
+Ausnahmebedingung (Attribut \emphclass{exception}) im Regelobjekt
+existiert. Auf den ersten Blick könnte man annehmen, dass diese
+durch die Kombination
+\begin{center}
+\emph{Kondition UND NICHT Ausnahmebedingung}
+\end{center}
+abgebildet werden könnte. In \emphdddweb{d3web} basieren jedoch
+die meisten Konditionen auf Antworten auf im Dialog gestellten
+Fragen. Sind Fragen (noch) nicht beantwortet, so kann die
+umschließende Kondition nicht ausgewertet werden und es wird eine
+\emphclass{NoAnswerException} geworfen. Die Teilkondition
+\emph{NICHT Ausnahmebedingung} könnte im ungünstigsten Fall also
+nicht evaluiert werden. Ausnahmebedingungen beinhalten somit meist
+selten beantwortete Fragen, deren Auftreten jedoch zum Verhindern
+der Regelfeuerung führen soll.\\
+
+\noindent \textbf{Diagnose-Kontext}\\
+Der Diagnose-Kontext (Attribut \emphclass{context}) ist eine
+\emph{optionale} Bedingung, die bewirkt, dass eine Regel nur dann
+in Betracht gezogen wird, wenn die in der Kontext-Kondition
+angegebenen Diagnosen etabliert sind. Realisiert wird dies durch
+ein \emphclass{AbstractCondition}-Kompositum, deren Terminale
+ausschließlich aus \emphclass{CondDState}-Objekten bestehen.\\
+
+\noindent Zusammenfassend kann man sagen, dass eine Regel genau
+dann feuert, wenn:
+\begin{itemize}
+\item die Kondition erfüllt ist, \item der Diagnose-Kontext
+erfüllt ist (falls vorhanden), \item und die Ausnahmebedingung
+nicht erfüllt ist (falls vorhanden).
+\end{itemize}
+
+\subsubsection{Implementierungsaspekt: Das Regelkonditionen-Kompositum}
+Die abstrakte Klasse \emphclass{AbstractCondition} bildet das
+Topelement aller Regelkonditionen. Sie beinhaltet die wichtigen
+Methoden \emphclass{getTerminalObjects()} und
+\emphclass{eval(XPSCase)}. Die Methode
+\emphclass{getTerminalObjects()} liefert alle in dieser Kondition
+enthaltenen Terminale, also atomare Konditionen. Für die
+Auswertung der Kondition bzw. der darin enthaltenen
+Teilkonditionen ist die Methode \emphclass{eval(XPSCase)}
+zuständig.
+
+\begin{figure}[h]
+\includegraphics[width=\textwidth]{fig/ruleCondition.png}
+\caption{Das Regelkonditionen-Kompositum mit einigen konkreten
+Konditions-Implementierungen} \label{ruleCondition}
+\end{figure}
+
+\noindent Das \emphclass{AbstractCondition}-Framework ist als
+Kompositum-Muster (Composite Pattern) implementiert. Dabei stellt
+\emphclass{AbstractCondition} die Komponente (component), alle
+Erben der Klasse \emphclass{TerminalCondition} die Blätter (leaf)
+und alle Nachkommen von\\ \emphclass{NonTerminalCondition} das
+Kompositum (composite) dar. Dieses Muster ist in Abbildung
+\ref{ruleCondition} dargestellt.
+
+\subsubsection{Regelaktionen als zentraler Zustand (State) von RuleComplex}
+Die Aktion einer Regel wird in einem Zustandsobjekt
+\emphclass{RuleAction} gespeichert (siehe Abbildung
+\ref{ruleAction}). Die Methode \emphclass{doIt(XPSCase)} führt die
+gewünschte Aktion aus. Um nicht-monotones Schließen zu
+unterstützen, wird die Methode \emphclass{undo(XPSCase)} zur
+Rücknahme der Aktion angeboten.\\
+Eine Besonderheit ist die Methode \emphclass{singleFire()}: Sie
+steuert, ob eine Regel die spezifizierte Aktion jedes Mal
+ausführen darf, wenn die Regel überprüft wird, oder ob die Regel
+nur einmal ihre Aktion feuern darf, nämlich genau dann, wenn sie
+das erste Mal positiv überprüft wird. Die Default-Einstellung ist
+\emph{singleFire=true}.
+
+\subsubsection{Dynamische Verzeigerung der beteiligten Objekte (Observer)}
+Regeln werden im allgemeinen in Abhängigkeit vom Status anderer
+Objekte ausgeführt und verändern üblicherweise den Status anderer
+Objekte. Damit bei der Veränderung eines beteiligten Objekts
+schnell alle davon betroffenen Regeln gefunden werden können, ist
+es sinnvoll, die Regeln als Beobachter (Observer) bei den
+entsprechenden Objekten anzumelden. In \emphdddweb{d3web} meldet
+sich eine Regel bei den beteiligten Objekten (vom Typ
+\emphclass{NamedObject}) über deren Methode
+\emphclass{addKnowledge(..)} an. Ändert sich der Wert des
+\emphclass{NamedObject}s, so können effizient alle angemeldeten
+Regeln überprüft werden. Dieser Mechanismus ist für alle Objekte
+sinnvoll, die in der Regelkondition enthalten sind. Für die
+Objekte in der Regelaktion existiert der gleiche Mechanismus. In
+diesem Fall ist er jedoch nicht für die effiziente Abarbeitung der
+Regeln gedacht, sondern dient der \emph{Erklärung} des Zustands
+eines bestimmten Objekts. Will man eine Erklärung zum aktuellen
+Zustand eines Objekts bekommen (d.h. das Zustandekommen des
+aktuellen Werts nachvollziehen), dann können hierüber schnell alle
+Regeln angezeigt werden, welche überhaupt das Objekt beeinflussen
+können. Wie die interne Speicherung von Wissen in
+\emphclass{NamedObject}s erfolgt, wird in Abschnitt
+\ref{abschnitt-knowledge} erklärt.
+
+\subsection{Problemlöser}
+Einige Problemlöser sind bereits im \emphdddweb{d3web.kernel}
+implementiert. Diese, im Folgenden kurz erklärten, arbeiten mit
+Regeln. Es werden zwar für jeden Problemlöser die
+Regelaktionsklassen genannt, aber es sei nochmals darauf
+hingewiesen, dass es am sichersten ist, entsprechende Regeln über
+die Methoden der Klasse \emphclass{RuleFactory} zu erzeugen.
+
+\begin{description}
+\item[\emphclass{PSMethodHeuristic}] ist die Implementierung eines
+heuristischen Problemlösers, der abhängig von Symptomwerten auf
+Diagnosen Punkte verteilt. Er befindet sich im Paket
+\begin{center}
+\emphclass{de.d3web.kernel.psMethods.heuristic}
+\end{center}
+Die Klasse für die entsprechende Regelaktion heißt
+\emphclass{ActionHeuristicPS}.\\
+
+
+\item[\emphclass{PSMethodNextQASet}] ist die Implementierung eines
+Problemlösers, durch den abhängig von Symptomwerten Fragen oder
+Frageklassen indiziert werden können (Folgefragen). Dadurch ist
+ein Einfluss der Steuerung eines geführten Dialogs möglich. Er
+befindet sich im Paket
+\begin{center}
+\emphclass{de.d3web.kernel.psMethods.nextQASet}.
+\end{center}
+An dieser Stelle befindet ebenfalls ich die entsprechende
+allgemeine Regelaktionsklasse \emphclass{ActionNextQASet}. Davon
+erbend existieren spezielle Indikationsklassen:\\
+\emphclass{ActionClarify} zur Klärung von Diagnosewerten,
+\emphclass{ActionIndication} zur Indizierung von Folgefragen und
+\emphclass{ActionRefine}
+zur Bestätigung etablierter Diagnosen.\\
+
+
+\item[\emphclass{PSMethodContraIndication}] stellt einen
+Problemlöser dar, der abhängig von Symptomwerten Fragen und
+Frageklassen blockieren kann, so dass diese in einem geführten
+Dialog nicht gestellt werden. Er befindet sich im Paket
+\begin{center}
+\emphclass{de.d3web.kernel.psMethods.contraIndication}
+\end{center}
+Die entsprechende Regelaktion wird durch \emphclass{ActionContraIndication} implementiert.\\
+
+
+\item[\emphclass{PSMethodQuestionSetter}] ist ein Problemlöser
+über den in Abhängigkeit bestimmter Symptomwerte Werte anderer
+Symptome setzen oder addieren kann. Er wird im Allgemeinen zur
+Merkmalsabstraktion verwendet. In abstrakter Weise wird die
+entsprechende Regelaktion durch \emphclass{ActionQuestionSetter}
+dargestellt.\\ Von dieser gibt es zwei Ausprägungen:
+\emphclass{ActionSetValue} zum Setzen von Symptomwerten und
+\emphclass{ActionAddValue} zum Addieren neuer Werte auf die
+bereits vorhandenen (was für numerische und Choice-Werte sinnvoll
+ist). Die entsprechenden Klassen befinden sich im Paket
+\begin{center}
+\emphclass{de.d3web.kernel.psMethods.questionSetter}.
+\end{center}
+
+\item[\emphclass{PSMethodSuppressAnswer}] repräsentiert einen
+Problemlöser, der abhängig von Symptomwerten Antwortalternativen
+von Choice-Fragen unterdrücken kann. Die entsprechende
+Regelaktionsklasse \emphclass{ActionSuppressAnswer} befindet sich,
+wie auch der Problemlöser im Paket
+\begin{center}
+\emphclass{de.d3web.kernel.psMethods.suppressAnswer}.
+\end{center}
+Dieser Problemlöser wird im Dialog zur Reduzierung von
+Antwortalternativen und damit zur Optimierung des Dialogs
+eingesetzt.
+\end{description}
+
+\clearpage
+\subsection{Zugriff auf Wissen in \emphdddweb{d3web}}
+\label{abschnitt-knowledge} Jedes Wissensbasisobjekt, das von
+\emphclass{NamedObject} erbt, wie zum Beispiel
+\emphclass{Question} oder \emphclass{Diagnosis}, enthält intern
+gespeichertes Wissen. Welche Art von Wissen dort gespeichert ist
+und wie es erreichbar ist, wird in diesem Abschnitt ausführlich
+behandelt.
+
+\subsubsection{Interne Speicherung von Wissen}
+Allgemein wird Wissen in \emphdddweb{d3web} durch Klassen
+repräsentiert, die das Interface\\ \emphclass{KnowledgeSlice}
+implementieren. Häufig wird Wissen in Form von Regeln gespeichert
+(\emphclass{RuleComplex} implementiert
+\emphclass{KnowledgeSlice}). Es kann sich aber auch um
+Zusatzwissen wie z.B. Gewichte (\emphclass{Weight}), Ähnlichkeiten
+(\emphclass{QuestionComparator}) oder Abnormitäten
+(\emphclass{Abnormality}) aus dem Projekt
+\emph{d3web-SharedKnowledge} handeln, die hier allerdings nicht
+weiter behandelt werden.\\
+In einem \emphclass{NamedObject} wird Wissen in einer
+\emphclass{Map} gespeichert. Deren Key ist der
+Problemlö\-ser-Kontext (\emphclass{Class}-Objekt des
+entsprechenden Problemlösers) und der zu diesem Key gehörige Wert
+ist eine weitere \emphclass{Map}. Diese zu einem
+Problemlöser-Kontext gehörige \emphclass{Map} hat Keys vom Typ
+\emphclass{MethodKind} und als Werte jeweils eine Liste von dazu
+verfügbaren \emphclass{KnowledgeSlices}. Bei Regeln kann der
+\emphclass{MethodKind} \emphclass{FORWARD} für vorwärts
+verkettetes oder \emphclass{BACKWARD} für rückwärts verkettetes
+Wissen sein. Was das bedeutet wird im nächsten Unterabschnitt
+anhand eines einfachen Beispiels erklärt. Handelt es sich nicht um
+eine Regel, kann es auch andere \emphclass{MethodKind}-Instanzen
+geben. Allgemein
+sieht der Aufbau der Speicherstruktur in einem\\
+\emphclass{NamedObject} wie in Abbildung
+\ref{knowledgeMap-allgemein} skizziert aus.
+
+\begin{figure}[h]
+\includegraphics[width=\textwidth]{fig/knowledgeMap.png}
+\caption{Interne Speicherung von Wissen in einem
+\emphclass{NamedObject}} \label{knowledgeMap-allgemein}
+\end{figure}
+
+\noindent \emphclass{NamedObject} besitzt Methoden zum Hinzufügen
+und Abfragen von Wissen: \\
+
+\noindent \emphclass{addKnowledge(Class context, KnowledgeSlice
+slice, MethodKind kind)}\\ fügt ein \emphclass{KnowledgeSlice
+slice} zu einem PSMethod-Kontext \emphclass{context} mit gegebenem \emphclass{MethodKind kind} ein.\\
+
+\noindent \emphclass{getKnowledge(Class context, MethodKind
+kind)}\\ liefert eine Liste von \emphclass{KnowledgeSlice}s zum
+spezifizierten PSMethod-Kontext \emphclass{context} und dem angegebenen \emphclass{MethodKind kind}.\\
+
+\noindent Im nächsten Unterabschnitt werden diese Methoden im
+Beispiel nochmals verdeutlicht.
+
+\subsubsection{Ein Beispiel anhand einer Regel}
+Im Beispiel aus Abbildung \ref{knowledgeMap-example} wird eine
+heuristische Regel \emph{r1} mit der Frage \emph{Auspuffrohr-Farbe
+(QAuspuff)} und der Diagnose \emph{Luftfilter verschmutzt
+(DLuftfilter)} betrachtet. Weil es sich hier um eine heuristische
+Diagnoseregel handelt, wird \emph{r1} in beiden
+\emphclass{NamedObject}s, \emph{QAuspuff} und \emph{DLuftfilter}
+in die \emphclass{Map} unter heuristischem Wissen aufgenommen.
+Daher ist der verwendete Key \emphclass{PSMethodHeuristic.class}.
+Die Frage \emph{QAuspuff} kommt in der Kondition von \emph{r1}
+vor, die Diagnose \emph{DLuftfilter} in der Aktion von \emph{r1}.
+Deshalb wird in der \emphclass{MethodKind-Map} der Frage
+\emphclass{QAuspuff} die Regel \emph{r1} unter
+\emphclass{MethodKind.FORWARD} eingetragen und in der
+entsprechenden \emphclass{Map} der Diagnose
+\emphclass{DLuftfilter} unter \emphclass{MethodKind.BACKWARD}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.8]{fig/knowledgeMap_example.png}
+\caption{Wissensspeicherung in \emphclass{NamedObject} - Beispiel
+anhand einer Regel \emph{r1}} \label{knowledgeMap-example}
+\end{figure}
+
+\FloatBarrier
+
+\subsection{Fälle}
+\label{abschnitt-faelle} Ein Fall ist gleichbedeutend mit dem
+Durchspielen eines Problems, d.h. Eingabe von Antworten auf Fragen
+und Herleiten von Lösungen (Diagnosen). Die das Interface
+\emphclass{XPSCase} implementierende Klasse \emphclass{D3WebCase}
+welche die zentralste Klasse des \emphdddweb{d3web.kernel} ist,
+repräsentiert einen Fall. Über diesen erfolgt die Steuerung von
+neuen Werten, die Wissensbasisobjekte während des Durchspielens
+eines Falls erhalten können.\\
+
+\noindent \textbf{Erzeugung eines neuen Falles}\\
+Die Standardmethode zur Erzeugung eines neuen \emphclass{XPSCase}
+ist die Verwendung der Factory-Klasse \emphclass{CaseFactory}.
+Diese bietet verschiedene Erzeugungsmethoden; unter anderem die
+Methode \emphclass{createXPSCase(KnowledgeBase)}. Wie man ein
+\emphclass{KnowledgeBase}-Objekt erzeugen, also eine
+Wissensbasis laden kann, wird im nächsten Abschnitt erklärt.\\
+
+\noindent \textbf{Setzen von Werten über den \emphclass{XPSCase}}\\
+Damit das Setzen von Werten (z.B. das Beantworten von Fragen oder
+Addieren von Diagnosepunkten) zentral gesteuert und propagiert
+werden kann, geschieht es über den \emphclass{XPSCase}. So werden
+benutzerabhängige Werte kontrolliert gesetzt und sichergestellt,
+dass alle Regeln, deren Konditionen von diesen Änderungen
+betroffen sind, überprüft werden. Um Werte zu setzen, verwendet
+man eine der folgenden Methoden: {\small
+\begin{quote}
+\emphclass{setValue(ValuedObject o, Object[] ans)},\\
+\emphclass{setValue(ValuedObject o, Object[] ans, Class c)},\\
+\emphclass{setValue(ValuedObject o, Object[] ans, Class c,
+RuleComplex r)}.
+\end{quote}
+\par}
+\noindent Hierbei ist das \emphclass{ValuedObject} das betreffente
+Wissensbasisobjekt (z.B. Question).\\ Das \emphclass{Object}-Array
+muss die zu setzenden Werte enthalten (z.B. \emphclass{Answer}s).
+Dieser Parameter wird als Array übergeben, da beispielsweise eine
+MC-Frage mehr als eine Antwort erhalten kann. Zusätzlich kann noch
+ein Problemlö\-ser-Kontext \emphclass{c} angegeben werden, so dass
+z.B. beim Setzen von Diagnosewerten ein vom Problemlöser
+abhängiger Wert gesetzt wird. Desweiteren ist es möglich eine
+Regel \emphclass{r} zu übergeben. Das ist vor allem dann wichtig,
+wenn man sich merken will, durch welche Regeln welche Symptomwerte
+überschrieben wurden. Dazu gibt es im
+\emphclass{domainModel}-Paket die Klasse \emphclass{SymptomValue}.
+Sie realisiert ein Paar, das aus einer Regel und dem Symptomwert
+besteht, den ihre Aktion überschrieben hat. In
+\emphclass{CaseQuestion} im \emphclass{domainModel}-Unterpaket
+\emphclass{dynamicObjects} wird eine History zu diesen Paaren
+gehalten.
+
+\section{Eine Beispielapplikation}
+In diesem Abschnitt werden die üblichen Mechanismen bei der
+Benutzung des \emphdddweb{d3web.kernel} erklärt. Es wird jeweils
+Beispielcode angegeben, der zusätzlich andeutet, welche Klassen
+bevorzugt verwendet werden sollten. \\
+Zu Beginn wird gezeigt, wie eine Wissensbasis geladen und
+gespeichert werden kann. Im darauffolgenden Abschnitt werden
+Möglichkeiten zum Erzeugen von neuen Fällen aufgezeigt.
+Anschließend wird demonstriert, wie man vom Fallobjekt an die
+Wissensbasis gelangt und aus dieser Wissensbasisobjekte abfragt.
+Im letzten Unterabschnitt werden die wesentlichen Schritte zum
+Laden und Speichern von \emphdddweb{d3web}-Fällen erklärt.
+
+\subsection{Laden und Speichern von Wissensbasen}
+Im Projekt \emph{d3web-Persistence} sind einige Klassen zum Laden
+und Speichern von Wissensbasen enthalten. Die Wesentliche dieser
+Klassen ist der \emphclass{PersistenceManager} im Paket
+\begin{center}
+\emphclass{de.d3web.persistence.xml}.
+\end{center}
+Mit seiner \emphclass{load(URL)}-Methode wird eine Wissensbasis,
+die als \emph{jar}-Archiv vorliegen muss, von der angegebenen URL
+geladen, und mit \emphclass{save(KnowledgeBase, URL)} wird eine
+Wissensbasis an die spezifizierte Stelle als jar-Archiv
+geschrieben. Die jar-URLs sind von folgender Struktur:
+\begin{center}
+\emph{jar:<protokoll>:<pfad-zum-jar>!/}
+\end{center}
+Also zum Beispiel \emph{jar:file://knowledgebases/kfz.jar!/}.\\
+Es wird automatisch eventuell vorhandenes Zusatzwissen mitgeladen
+und geschrieben, wenn entsprechende \emphclass{PersistenceHandler}
+implementiert und im \emphclass{PersistenceManager} mittels
+\emphclass{addPersistenceHandler(PersistenceHandler)} registriert
+wurden. Standardmäßig registriert ist der
+\emphclass{BasicPersistenceHandler}, der das Basiswissen
+(Diagnosen, Fragen, Regeln,...) lädt und speichert. Der Code zum
+Laden einer Wissensbasis sieht z.B. so aus:\\
+
+\noindent {\footnotesize
+\emphclass{PersistenceManager pm = new PersistenceManager();}\\
+\emphclass{KnowledgeBase kb = pm.load(new URL(\qu
+jar:file:/c:/.../kbases/kfz.jar!/\qu ));}
+\par}
+
+\subsection{Erzeugen und Bearbeiten eines neuen Falls}
+\label{abschnitt-newcase}
+Grundsätzlich steht zum Erzeugen eines
+neuen Fallobjekts die Fabrik-Klasse \emphclass{CaseFactory} aus
+dem Paket
+\begin{center}
+\emphclass{de.d3web.kernel.domainModel}
+\end{center}
+zur Verfügung. Um einen leeren Fall zu erzeugen, sollte man die
+statische Methode
+\begin{center}
+\emphclass{createXPSCase(KnowledgeBase)}
+\end{center}
+verwenden, die eine Instanz von \emphclass{D3WebCase} liefert.\\
+Eine weitere Möglichkeit bietet die Methode
+\begin{center}
+\emphclass{createAnsweredXPSCase(KnowledgeBase, Class,
+DialogProxy)}.
+\end{center}
+Sie liefert einen bereits vorbelegten Fall, der mit allen im
+\emphclass{DialogProxy} enthaltenen \emphclass{Answer}-Objekten
+beantwortet wurde. Der \emphclass{Class}-Parameter bestimmt dabei
+den zu verwendenden \emphclass{DialogController}-Typ.
+Üblicherweise werden die Instanzen
+\begin{center}
+\emphclass{OQDialogController.class} oder \emphclass{MQDialogController.class}
+\end{center} verwendet. Ein \emphclass{DialogProxy} ist ein Stellvertreter-Objekt (siehe
+Proxy-Entwurfsmuster), das zu einer gegebenen Frage-ID nach
+Antworten sucht. Dabei fragt der Proxy alle angemeldeten Clients
+(z.B. Datenbank, Dialog,...) und liefert die zuerst gefundene
+Antwort zurück (\emphclass{null}, falls keine Antwort gefunden
+wurde). Die Clients sind vom Typ \emphclass{DialogClient}. Für die
+meisten Anwendungen sollte der Client \emphclass{ShadowMemory}
+genügen, der die ihm zugefügten Objekte im Arbeitsspeicher hält.
+Die folgenden Beispiel-Zeilen zeigen, wie man einen vorbelegten
+Fall generieren kann:\\
+
+\noindent {\footnotesize
+\emphclass{DialogProxy proxy = new DialogProxy();}\\
+\emphclass{ShadowMemory shm = new ShadowMemory();}\\
+\emphclass{shm.addAnswers(\qu Frage1-ID \qu, answerList);}\\
+\emphclass{proxy.addClient(shm);}\\
+
+\noindent \emphclass{XPSCase newCase = \\}
+\hspace*{0.5cm}\emphclass{CaseFactory.createAnsweredXPSCase(kb,
+MQDialogController.class, proxy);}
+\par}
+
+\noindent Möchte man Fragen manuell beantworten oder auch andere
+Werte (wie z.B. Diagnose-Punkte) setzen, verwendet man die
+\emphclass{setValue(..)}-Methoden, die in Abschnitt
+\ref{abschnitt-faelle} beschrieben werden. In diesem Beispiel
+beantworten wir eine Frage \emphclass{question1} der Antwort
+\emphclass{answer1} ohne Angabe eines speziellen
+Problemlöser-Kontexts (also wird per default\\
+\emphclass{PSMethodHeuristic.class} verwendet):\\
+
+\noindent {\footnotesize
+\emphclass{newCase.setValue(question1, new Object[]\{answer1\});}\\
+\par}
+
+\subsection{Abfragen von Informationen aus dem Fall}
+Wenn man einen Fall, also eine Instanz von \emphclass{XPSCase}
+vorliegen hat, kann man daraus auf einige Informationen zugreifen.
+Die wesentlichen
+werden in diesem Abschnitt vorgestellt.\\
+Die zum Fall gehörige Wissensbasis erreicht man über
+\emphclass{getKnowledgeBase()}. In dieser kann man z.B. nach
+Wissensbasis-Objekten suchen
+(\emphclass{search(..)}-Methoden).\\
+Desweiteren können über \emphclass{getAnsweredQuestions()} die
+bereits beantworteten und über \emphclass{getQuestions()} alle
+Fragen abgefragt werden. Ebenso gelangt man unter Verwendung von
+\emphclass{getDiagnoses()} an alle Diagnosen. Möchte man nur
+Diagnosen mit bestimmtem Status erhalten, sollte man die Methode
+\emphclass{getDiagnoses(DiagnosisState)} verwenden. Diese liefert
+alle Diagnosen, die bezüglich irgendeines Problemlösers den
+angegebenen Status bekommen haben. Hat man über eine der
+\emphclass{search...()}-Methoden ein Wissensbasisobjekt erhalten,
+kann man aus diesem mittels \emphclass{getKnowledge(..)} Wissen
+abfragen (z.B., Regeln durch die eine Diagnose ihre Punkte
+bekommen hat). Im folgenden Beispielcode wird gezeigt, wie man
+Wissensbasis-Objekte suchen und aus ihnen Wissen abfragen kann.\\
+
+\noindent {\footnotesize \emphclass{KnowledgeBase kb =
+newCase.getKnowledgeBase();}\\
+\emphclass{Diagnosis diag = kb.searchDiagnoses(\qu diag1-ID\qu);}\\
+\emphclass{List rules = (List)}\\
+\hspace*{0.5cm}\emphclass{diag.getKnowledge(PSMethodHeuristic.class,
+MethodKind.BACKWARD);}\\
+\par}
+
+\noindent Hier wird zuerst die Wissensbasis aus dem Fallobjekt
+geholt und aus dieser durch Angabe der ID einer Diagnose das
+entsprechende \emphclass{Diagnosis}-Objekt mit
+\emphclass{searchDiagnosis(String id)} gesucht. Anschließend
+werden alle heuristischen Herleitungsregeln aus dieser Diagnose
+abgefragt (daher
+\emphclass{MethodKind.BACKWARD}).\\
+Wie das Wissen in den Objekten gespeichert ist und welche
+Möglichkeiten zur Abfrage bestehen, wird in
+Abschnitt \ref{abschnitt-knowledge} ausführlich beschrieben.\\
+
+\subsection{Laden und Speichern von Fällen}
+Durch die Klassen im Projekt \emph{d3web-CaseRepository} besteht
+die Möglichkeit, \emphdddweb{d3web}-Fälle zu laden und zu
+speichern. Es ist empfehlenswert, dazu die Klasse
+\emphclass{SAXCaseRepositoryHandler} aus dem Paket
+\begin{center}
+\emphclass{de.d3web.caserepository.sax}
+\end{center}
+zu verwenden, wie es im folgenden Beispielcode gezeigt wird.\\
+
+\noindent \textbf{Erzeugen des Handlers}\\
+\noindent {\footnotesize \emphclass{SAXCaseRepositoryhandler handler = new SAXCaseRepositoryhandler();}\\
+\par}
+
+\noindent \textbf{Laden von Fällen}\\
+{\footnotesize \emphclass{List caseList = handler.load(kb, new URL(\qu jar:file:/c:/.../cbr/cases.jar!/\qu));}\\
+\par}
+
+\noindent Nun liegt eine Liste von \emphclass{CaseObject}s vor.
+Nachdem man ein solches \emphclass{CaseObject} aus der Liste
+entnommen hat, kann man sich mit \emphclass{getQuestions()} die
+Fragen und dann über \emphclass{getAnswers(Question)} die
+Antworten zu einer Frage holen. Damit können dann z.B. Clients für
+den \emphclass{DialogProxy} gefüllt werden (siehe Abschnitt \ref{abschnitt-newcase}).\\
+
+\noindent \textbf{Speichern von Fällen}\\
+Durch den Aufruf:\\
+
+\noindent {\footnotesize \emphclass{handler.saveToFile(new File(\qu cases.xml\qu), caseList);}\\
+\par}
+
+\noindent Werden die angegebenen Fälle in das XML-File
+\emph{cases.xml} geschrieben. Möchte man aus dem Fallspeicher ein
+DOM-Dokument, also ein \emphclass{org.w3c.dom.Document}
+generieren, so verwende
+man folgenden Aufruf:\\
+
+\noindent {\footnotesize \emphclass{Document doc = handler.save(caseList);}\\
+\par}
+
+\noindent Allerdings kann die Erzeugung einer DOM-Struktur bei
+großen Fallspeichern sehr lange dauern.
+
+\clearpage
+
+\section{XML-Repräsentation von Wissen in \emphdddweb{d3web}}
+In diesem Abschnitt werden die XML-Schemata zu Wissensbasis- und
+Fallspeicher-XML-\\Dokumenten vorgestellt.
+
+\subsection{XML-Schema für Wissensbasen}
+In Abbildung \ref{xml-schema-knowledgeBase} ist das XML-Schema für
+Wissensbasen (Basiswissen) graphisch dargestellt.
+
+\begin{figure} [h]
+\includegraphics[scale=0.85]{fig/schema_knowledgeBase.png}
+\caption{Graphische Darstellung des XML-Schemas für Wissensbasen}
+\label{xml-schema-knowledgeBase}
+\end{figure}
+
+\FloatBarrier
+
+\noindent \emph{KnowledgeSlice} ist meistens vom Typ
+\emph{RuleComplex} (\emph{type='RuleComplex'}). Nur dann hat
+\emph{KnowledgeSlice} die Untertags \emph{Action, Condition} und
+\emph{Exception}. Es kann aber auch vorkommen, dass
+\emph{KnowledgeSlice} vom Typ \emph{Num2ChoiceSchema}
+(\emph{type='schema'}) ist. Dann hat es die Untertags
+\emph{Question} und \emph{LeftClosedInterval}.
+
+\subsection{XML-Schema für Fallspeicher}
+In Abbildung \ref{xml-schema-fallspeicher} ist das XML-Schema für
+Fallspeicher graphisch dargestellt.
+
+\begin{figure} [h]
+\includegraphics[width=\textwidth]{fig/schema_caserep.png}
+\caption{Graphische Darstellung des XML-Schemas für Fallspeicher}
+\label{xml-schema-fallspeicher}
+\end{figure}
+
+\FloatBarrier
+
+\noindent Ein Fall wird durch den Tag \emph{Problem} dargestellt.
+\emph{Metadata} steht für die Metadaten zum Fall (z.B. wer ihn
+erstellt hat oder zu welcher Wissensbasis er gehört).\\
+\emph{QContainers} enthält Frageklassen (Tag \emph{QContainer}),
+\emph{Questions} repräsentiert Fragen (Tag \emph{Question}) und
+die wiederum Antworten (\emph{Answer}). Diagnosen werden durch den
+Tag \emph{Solution} dargestellt und unter \emph{Solutions}
+gesammelt. Es werden nur Wissensbasis-Objekte gespeichert, die
+(bestimmte) Werte im Fall bekommen haben. Das bedeutet, das nur
+beantwortete Fragen und nicht-unklare Diagnosen (also
+\emphclass{DiagnosisState} ist \emph{excluded, suggested} oder
+\emph{established}) gespeichert werden.\\
+Unter \emph{Multimedia} können Multimadia-Informationen (z.B. URLs
+zu Bildern im Fallspeicher-jar (Tag \emph{Image})) gespeichert
+werden.
+
+\section{Implementierung eines Problemlösers für d3web}
+In diesem Abschnitt wird gezeigt, welche Schritte notwendig sind,
+um einen neuen Problemlöser für \emphdddweb{d3web}
+zu schreiben.\\
+
+\subsection{Erstellen der notwendigen Klassen und Anmelden des neuen Problemlösers}
+Um den Problemlöser in den \emphdddweb{d3web-kernel} integrieren
+zu können, muss dieser als eine das Interface
+\emphdddweb{PSMethod} implementierende Klasse geschrieben werden.
+Eine starke Vereinfachung bietet der \emphclass{PSMethodAdapter},
+der für die meisten Methoden bereits eine Default-Implementierung
+bereitstellt. Sowohl \emphclass{PSMethod} als auch der
+\emphclass{PSMethodAdapter} sind im Paket
+\begin{center}
+\emphclass{de.d3web.kernel.psMethods}
+\end{center}
+enthalten. Leitet man seinen Problemlöser von
+\emphclass{PSMethodAdapter} ab, müssen nur zwei wichtige Methoden
+implementiert werden, die nun näher erläutert werden:\\
+
+\begin{description}
+\item[\emphclass{public DiagnosisState getState(XPSCase,
+Diagnosis)}] $ $\\
+Diese Methode bestimmt, inwiefern die Diagnosepunkte
+auf Diagnosestati abgebildet werden sollen. Mehr Informationen
+dazu findet man in Abschnitt \ref{abschnitt-diagnosen}.
+
+\item[\emphclass{public void propagate(XPSCase, NamedObject,
+Object[])}] $ $\\
+Ändert sich der Wert eines \emphclass{NamedObject} (z.B. Frage
+oder Diagnose), so ruft der Fall (\emphclass{XPSCase}) diese
+Methode bei jedem angemeldeten Problemlöser auf, so dass jeder
+Problemlöser für sich entscheiden kann, was aufgrund dieser
+Wertänderung geschehen soll. Beim heuristischen Problemlöser
+beispielsweise werden alle beteiligten Regeln überprüft und somit
+der Feuer-Mechanismus angestoßen.
+\end{description}
+
+\noindent Soll der neue Problemlöser mit Regeln arbeiten, muss
+eine Regelaktion definiert werden. Diese wird durch die Klasse
+\emphclass{RuleAction} dargestellt. Von dieser Klasse muss man die
+neue Regelaktionsklasse ableiten und die Methoden
+\emphclass{doIt(XPSCase)} und \emphclass{undo(XPSCase)}
+implementieren, die beschreiben, was geschehen soll, wenn eine
+Regel mit dieser Aktion feuert, bzw. zurückgezogen wird. Mehr
+Informationen zu Regeln und Aktionen sind in Abschnitt
+\ref{abschnitt-regeln} zu finden.
+
+\noindent Um den neuen Problemlöser im Fall anzumelden, so dass
+dieser über das Bekanntwerden von neuen Werten (z.B. Etablieren
+einer Diagnose oder Beantworten einer Frage) benachrichtigt wird,
+muss die \emphclass{D3WebCase}-Methode
+\emphclass{addUsedPSMethod(PSMethod)} verwendet werden. Diese
+hängt den Problemlöser einfach an die interne Liste der zu
+verwendenden Problemlöser an.
+
+\subsection{Paketstruktur}
+Es ist sinnvoll, ein Unterpaket von
+\begin{center}
+\emphclass{de.d3web.kernel.psMethods}
+\end{center}
+zu erzeugen und dort den Problemlöser sowie die
+Regelaktionsklassen unterzubringen. Dies wäre dann konform zur
+bereits bestehenden Problemlöser-Paketstruktur im
+\emphdddweb{d3web.kernel}.
+
+\end{document}
