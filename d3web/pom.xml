@@ -5,4 +5,7 @@
   <packaging>pom</packaging>
   <name>d3web</name>
   <version>0.0.1-SNAPSHOT</version>
+  <modules>
+  	<module>d3web-Kernel</module>
+  </modules>
 </project>
