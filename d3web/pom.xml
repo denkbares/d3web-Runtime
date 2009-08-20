@@ -42,7 +42,7 @@
 			</plugin>
 
 			<!-- Create a JAR with all our dependencies -->
-			<plugin>
+			<!-- <plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
 					<descriptors>
@@ -50,7 +50,7 @@
 					</descriptors>
 
 				</configuration>
-			</plugin>
+			</plugin>-->
 
 		</plugins>
 		<extensions>
