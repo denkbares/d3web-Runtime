@@ -10,9 +10,9 @@
 		<groupId>de.uniwue.d3web</groupId>
 		<version>0-SNAPSHOT</version>
 	</parent>
-        <scm>
-            <connection>scm:cvs|sserver|buildscript@132.187.15.16|d:/cvs/repositories/d3web-basics|d3web-Kernel</connection>
-        </scm>
+	<scm>
+		<connection>scm:svn:http://maven@win6154.informatik.uni-wuerzburg.de/svn/d3web-core/trunk</connection>
+	</scm>
 
 	<build>
 		<defaultGoal>package</defaultGoal>
@@ -22,6 +22,7 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>3.8.2</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>
