@@ -1,0 +1,627 @@
+build_20090514_1402 belli
+    * Save KnowledgeSlices in stable order (in BasicPersistanceHandler) to enable diff of basic.xml
+
+build_20090302_1700 atzmueller, lemmerich
+    * KBLoader, QuestionWriter: (re-)convert question and answer IDs to XML compliant text
+    * XMLTools: added conversion methods
+
+build_20090108_1330 reutelshoefer
+	* some Hotfixes in XCL-Persistence when the AbstractCondition is null
+	
+build_20081204_1100 haupt
+	* fixed establishedThreshold attribute in XCLModelWriter (closing " wasn't written)
+	* removed broken teamtask
+	
+build_20081110_1830 reutelshoefer
+	* renamed QuestionState to QuestionSolution
+	
+build_20081107_1330 reutelshoefer
+	* added Persistence for QuestionState
+
+build_20081022_1630 reutelshoefer
+	* IDs of XCLRelations persistent now
+
+build_20080923_1600 reutelshoefer/lemmerich
+	* added persistence for QustionZC
+
+build_20080811_1110 reutelshoefer
+	* fixed bug in XCLModelLoader loading all relations to each models
+
+build_20080610_1800 reutelshoefer
+	* fixed two small problems in XCLPersisteceHandler/Writer
+
+
+build_20080521_1445 haupt
+	* added PersistenceHandler and related stuff for PSMethodXCL
+	
+build_20070914_1830 pkluegl
+	* fixed bug in LinkedListCodec
+
+build_20060427_1457 marty
+	* InputFilter#getFilteredInputSource: only throw new IOException for the
+	caught Exception (no more printStacktrace())
+
+build_20070315_1330 aha
+	no more exception when costsnode is missing
+
+build_20060309_0930 marty
+	* InputFilter#getFilteredInputSource: printStacktrace for the caught exception
+	
+build_20060302_1045 marty
+	* LinkedListCodec#decode: fixed bug when decoding "empty" list-entries
+
+build_20060301_1800 marty
+	* added class ContraIndicationPersistenceHandler: up to now, contra indication
+	rules were ignored (since 2006/10)
+	* fix: install the new handler in the RuleLoader
+
+build_20060202_1050 pkluegl
+	* bugfix for java 6: Transformer in JARWriter uses now also UTF-8 encoding
+
+build_20060109_1715 aha
+	added an 'else'
+	added some fault tolerance + logging + events
+		de.d3web.persistence.warnings
+		KBLoader implements WarningNotifier
+		when there is a child diagnosis/qcontainer/question id present
+		 but no matching diagnosis/qcontainer/question declared,
+		 then Logger logs a warning, and all subscribed WarningListeners are informed
+		 and the Diagnosis/QContainer/Question is ignored
+		why?
+			one may make ignorable errors when editing the knowledgebase manually
+			now these errors may not break the parsing process with an exception
+			(and these errors will disappear with the next loading/saving)
+
+build_20061109_1430 pkluegl
+	* added persistence for rule comments
+
+build_20061017_1300 pkluegl
+	* organized imports
+	* added part plugin mechanism for rule actions
+	* some smaller refactorings
+	* added RuleActionPersistenceHandler for each action type
+	* adapted RuleLoader
+	* fixed answerChoice bug in ActionSetValueWriter and ActionTest
+
+build_20061016_1745 joba
+    * additions due to new indication action Instant Indication
+      here: question sets are directly inserted for indication 
+      after the currently presented question set
+
+build_20060919_1250 pkluegl
+	* id of a knowledgebase is persistent now
+
+build_20060719_1345 marty
+	* added new constructor for class String in PersistentObjectDescriptor
+	* according changes in PersistenceManager
+
+build_20060629_1530 jueb
+	* removed unnecessary imports, casts and instanceof-tests
+	* deleted never read local variables
+	* replaced deprecated method-calls
+
+build_20060621_1700 marty
+	* use new KnowledgeBase#cleanupStaleQASets method in KBLoader#_cleanupQASets
+
+build_20060614_1600 georg
+	* added some robustness concerning reading numerical intervals
+	* removed redundant code from KBLoader (KBLoader#createNumericalIntervals does the
+	  same as NumericalIntervalsCodec#readNumericalIntervals)
+
+build_20060606_1730 pkluegl
+	* changed temp dir policy (1 temp dir per session <-> 1 temp dir per kb)
+	* added newTempDir(): create new, unique temp dir
+
+build_20060523_1500 jueb
+	* properties to answers (e.g. explanations) are persistent now
+
+build_20060411_1800 koup
+	* saving kb after deleting an existing Shema dont throw NullPointer now.
+
+build_20060202_1500 pkluegl
+	* RuleComplex.active is persistent now
+
+build_20060201_1700 aha
+	* removed warning on missing prioritygroups tag
+
+build_20060126_1615 krause
+	* fixed detection of xml-encoding in InputFilter
+
+build_20060119_1400 pkluegl
+	* added check on null in ActionAddValueWriter
+
+build_20051201_1415 pkluegl
+	* added PersistentObjectDescriptor
+	* added MultipleAuxilaryPersistenceHandler
+	* renamed createTempDir to getTempDir
+	* PersistenceManager takes now care of MultipleAuxilaryPersistenceHandler
+
+build_20051128_1650 pkluegl
+	* changed cast and xml-tag to answer (was answerChoice)
+
+build_20051103_1122 bates
+	* added support for additional persistence handlers in ConditionFactory.
+	  now, nested additional contitions (e.g. temporal ones) will be loaded correctly
+
+build_20050901_0855 georg
+	* added some robustness to JarExtractor and URLUtils
+	* added a LinkedListCodec: a LinkedList, which only contains objects that
+	  have an appropriate codec (e.g. String, Double, Integer, Boolean, ...), can 
+	  now be used as a persistent property for knowledge bases. However, up to
+	  now, it cannot be used as a persistent property for CaseObject, because
+	  an appropriate SAX-reader/writer does not exist yet.
+
+build_20050819_1500 pkluegl
+	* made URLUtils.getFile() more tolerant for weird urls
+
+build_20050802_1240 pkluegl
+	* check again on QuestionNum for old KBs
+
+build_20050727_1115 pkluegl
+	* bugfix: changed QuestionNum to Question
+		(FormulaExpression wasnt persistent)
+
+build_20050714_1520 reutelshoefer
+	* added IntegerListCodec
+
+build_20050611_1730 georg
+	* sometimes, moving through a catch-block is intended and no bad event
+	  (this is noticable by short comments in the empty catch-blocks ;-) )
+	  --> removed some logger messages
+
+build_20050606_1732 bates
+	* extended URLUtils: URL.toURI only allows absolute paths. 
+	  Now, relative paths will be handled by url.getPath()...
+
+bulid_20050527_1315 pkluegl
+	* fixed several catch-blocks
+	* added several logger messages
+	* added check on null in almost all writers
+	* organized imports of project
+
+build_20050526_1200 georg
+	* enhanced JarWriter so that the created jar-file gets unlocked after closing
+	* added new method JarWriter#write(String entryName, InputStream input)
+
+build_20050420_1400 pkluegl
+	* added logger message in JarExtractor
+	* fixed TempDirManager
+	* added logger message in TempDirManager
+
+build_20050418_0910 georg
+	* removed unnecessary method invocation in RuleLoader#loadRule
+
+build_20050415_1124 bates
+	* removed 1.5-method call "toURI" from URLUtils
+
+build_20050412_1310 pkluegl
+	* added another check on null (should be unnecessary)
+
+build_20050411_1630 pkluegl
+	* added check on Null in TempDirManager (when getting old files)
+
+build_20050406_2025 chris
+	* spaces (and other special characters) in file paths are error prone
+	  due to url-file-url-conversion issues.
+	  I hope, these are fixed now.
+
+build_20050315_1300 pkluegl
+	* remove some logger messages in TempDirManager
+
+build_20050222_1300 chris
+	renamed enum for Java 5 compatibility
+	
+build_20050131_1415 aha
+	temp dir is now created in java.io.tmp instead of next to it
+
+build_20050126_0845 marty
+	* add method PersistenceManager#removeCaseRepositoryHandler,
+	in analogy to removePersistenceHandler
+
+build_20050125_1510 pkluegl
+	* JarExtractor became more stable (url-string not used) 
+
+build_20050120_1440 pkluegl
+	* added TempDirManager
+	* extracted the temp dir functionality of PersistenceManager to TempDirManager
+	* old temp dirs will be deleted after 1 hour now
+
+build_20050118_1345 pkluegl
+	* File object used again, check on directory with ZipEntry (deodorant for bad smell)
+
+build_20050117_1725 pkluegl
+	* smelly workarround in JarExtractor to solve the problem with older KB (no File Objects used)
+	* adjusted temp dir location
+
+build_20050117_1600 pkluegl
+	* removed bug in JarExtractor (directory spam)
+	* removed commented method
+
+build_20050112_1330 pkluegl
+	* public Constructor of PersistenceManager is deprecated now
+
+build_20050112_1320 pkluegl
+	* each PersistenceManager instance get a unique temp dir now
+
+build_20050112_1000 marty
+	* incidentally, jazzlib.jar should also be referenced by .classpath,
+	instead of the non-existing jazlib-binary-0.07.zip. make it so.
+
+build_20050111_1500 pkluegl
+	* renamed jazlib-binary-0.07.zip to jazzlib.jar
+	* PersistenceManager creates now his temp dir (only one right now) in system temp dir
+	* PersistenceManager deletes temp dir at runtime shutdown
+
+build_20050110_1450 pkluegl
+	* removed getDefaultStorageLocation() in Interface AuxiliaryPersistenceHandler
+
+build_20050106_1640 pkluegl
+	* added jazzlib library in new lib folder (is used instead of java.util.zip)
+	* added JarExtractor.java
+	* added getDefaultStorageLocation() in Interface AuxiliaryPersistenceHandler
+	* changed load() in PersistenceManager
+		* jar/zip is extracted -> handler get a url outside of the jar
+
+build_20041220_1545 pkluegl
+	* filled some emty catch-blocks with Logger->Warning
+
+build_20041209_1536 chris
+	fixed the encoding problem for (some) unicode characters in basic.xml
+	as described in http://ki.informatik.uni-wuerzburg.de/projects/d3webWiki/pmwiki.php/Main/JavaCorner
+	
+build_20040923_1407 bates
+	* KBLoader.getinstance() => KBLoader.getInstance()
+
+build_20040916_1030 bates
+	* refactoring to pattern: made KBLoader singleton
+
+build_20040915_1450 bates
+	* little bugfix (reset())
+	
+build_20040915_1430 bates
+	* changed BasicPersistenceHandler: now there is always one KBLoader present.
+	  Anytime a kb is loaded this loader will be reconfigured instead of creating a new one!
+
+build_20040907_1548 bates
+	* made ConditionWriter.toXML(AbstractCondition) public (was protected).
+	* changed affected subclasses.
+
+build_20040903_1615 bates
+	* extracted rule creation from KBLoader.
+	  Now, there exists a new subpackage ...loader.rules which contains the new RuleLoader.
+	  Any plugin (e.g. temporal abstraction) that provides its own rule conditions has to implement and register
+	  a RuleConditionPersistenceHandler. Here a DefaultRuleConditionPersistenceHandler is
+	  implemented for the standard rule conditions.
+
+build_20040826_0950 joba
+	* made the PersistenceManager a singelton
+	* made the kbloader in BasicPersistenceHandler accessible for other handlers
+
+build_20040805_1245 aha
+	minor beautification
+
+build_20040804_1236 joba
+	* fixed accidently overwritten method, sorry
+
+build_20040804_1115 joba
+	* added "linked children" feature in Persistence
+	  (added optional attribute "link='true'" in child tag)
+	   
+build_20040702_1755 aha
+	changed classpath for eclipse 3.0
+
+build_20040517_1630 aha
+	* renamed all occurrences of persistAnce to persistEnce
+		resistance against this action is futile!
+
+build_20040414_1505 georg
+	* added a new method to JARWriter, so that you can specify the creation-date of a new jar-entry
+
+build_20040401_1530 aha
+	* reading of schemas for deleted questions triggered pseudo-exception
+		- removed
+
+build_20040311_1150 tobi
+	* fixed ConcurrentModificationException in KBLoader#_cleanupQASets
+
+build_20040309_1610 aha
+	* added legacy code for older caserepositories
+	* removed unused older properties reading
+	* added cleanupQASets for deleting orphaned qasets
+		(logging outputs all removed qasets)
+
+build_20040223_1830 aha
+	* removed multimediaitem file saving
+	!!! this should not be forgotten - we need this mechanism someday
+	@see saveImages method
+
+build_20040130_1820 tobi
+	* made getPersistenceHandlers() public
+
+build_20040129_1206 marty
+	* new method in PersistenceManager: auxiliary persistence-handlers can be
+	removed now.
+
+build_20040127_1415 aha
+	* fixed bug in costs loading
+
+build_20040122_14020 chris
+	* minor build path cosmetics
+
+build_20040122_1545 aha
+	* fixed bug in PropertiesUtilities
+
+build_20040115_1325 aha
+	MEA CULPA MEA MAXIMA CULPA!
+	* fixed bug in CondTextEquals
+	* tests are up to date, btw: XMLTagUtils.generateNodeFromXMLCode sux
+
+build_20040112_1730 aha
+	* CDataStrings and URLs as Property content are now CDATA'ed too
+	(anyone tried to save a knowledgebase into a directory with a name containing {���}?)
+
+build_20040112_1515 aha
+	* removed faulty KBLoader.getTextNodeValue(Node), uses DOMAcces.getText(Node)
+	* moved XMLTools to de.d3web.xml.utilities
+	* removed XMLTools.prepareForXML
+	* added XMLTools.prepareForCDATA, XMLTools.prepareFromCDATA
+	* ids, scores, symbols, constants are not xml prepared anymore (it should not be needed for identifiers)
+	* all texts (diagnosis, qaset, question, answer, cost-verbalization, cost-unit, mminfo-content, condtext...-value)
+	  are now written as CDATA nodes and read with XMLTools.prepareFromCDATA for back conversion
+	* wherever encountered <XXX ID='xyz'></XXX> was replaced with <XXX ID='xyz'/>
+	* removed d3web-Utilities and d3web-Utilities-Swing(!) from classpath
+
+build_20031203_1145 aha
+	in CondMofN max attribute may now be missing (max will be set to #terms)
+
+build_20031127_1300 tobi
+	* fixed formula-loading, can now load old format again
+	* fixed logging in kbloader
+
+build_20032511_1126 chris
+	* adapted to changes in d3web-kernel
+	
+build_20031114_1730 aha
+	* getFilteredInputSource of InputFilter throws an Exception instead of returning null
+	* PersistenceManager is adapted to that
+
+build_20031114_2000 Andreas
+	* info-strings for loading/saving quasimodu settigs added in properties
+
+build_20031113_1530 tobi
+	* refactored hierarchy of Kernel-formula-classes
+	* Changed Persistence of FormulaDatesToNumberTerms, they are now saved like FormulaNumberTerms
+	* added persistence for new FormulaDate-class
+
+build_20031029_1500 tobi
+	* can save/load QuestionDates (and the other Date-classes) now
+
+build_20031028_1000 aha
+	* added robustness in persistencemanager
+		won't throw exception if no caserepositories are found although the indexes indicate them
+
+build_20031025_1750 georg
+	* new PropertiesUtilities$CDataStringPropertyCloner (see changelog of d3web-Kernel)
+
+build_20031021_1530 aha
+	* messages output changed to Logger.getLogger(this.getClass().getName()).{warning, info}(msg);
+	* ex.printStackTrace() changed to Logger.getLogger(...).throwing(.., .., ex);
+
+build_20031013_1430 aha
+	minor changes to DCMarkup and Property persistence
+	new PropertiesUtilities.CDataString inner class
+	
+build_20031013_1400 georg
+	* JarWriter doesn't close the stream after writing a string, now.
+
+build_20031009_2045 georg
+	* fixed a bug in ConditionFactory#createCondNumIn which appeared after the last bugfix 
+	  in NumericalIntervalsCodec
+
+build_20031007_1745 andreas
+	bug in NumericalIntervalsCodec fixed -> now not only a list of codecs wil be loaded
+	but a single codec too
+
+build_20031005_1845 georg
+	speed-up in KBLoader: 
+		* "search"-method faster due to changes in the order of hashtables which are to search
+		* loading a kb-patch is faster because of avoiding to call the 
+		  "updateAnswersHashtable"-method; as a consequence, every time a QuestionChoice 
+		  is searched, the answers-hashtable is updated with all of its answers
+
+build_20031002_1800 aha
+	* changes due to CaseObject changes
+	* changes to PersistenceManager (KB-INF/index.xml - CaseRepositories -> CRS-INF/index.xml)
+		full legacy support
+
+build_20030925_1335 bates
+	* added SCM-entry to property file for ProgressListener
+
+build_20030920_1745 georg
+	* bug fixed in NumericalIntervalsCodec#encode (missing spaces)
+
+build_20030920_1615 georg
+	* ClassCastException-bug fixed in CondNum{Greater/Less}EqualWriter
+
+build_20030919_1508 bates
+	* adopted tests. fixed old bugs in tests (dstate => DState, Interval => NumInterval)
+
+build_20030918_1700 bates
+	* XML-Im/Export NumericalIntervals in CondNumIn is now consistent with D3-lisp
+
+build_20030917_1320 bates
+	* Interval-boundaries are now considered in CondNumIn im- and export
+
+build_20030901_1000
+* added save progress events
+
+build_20030829_1405 aha
+	fixed bug that casued AnswerYes to be saved as AnswerNo and vice versa
+		exists since first version!
+
+build_20030828_1220 aha
+	'dstate' legacy support
+
+build_20030827_1540 aha
+	* added support for CondNum{Greater,Less}Equal
+
+build_20030824_1900 georg
+	* added NumericalIntervalsCodec to en- and decode NumericalIntervals as Property
+
+build_20030822_1130 tobi
+	* corrected internationalized progress messages again
+
+build_20030819_1440 tobi
+	* corrected internationalized progress messages
+
+build_20030819_1200 mweniger
+	* internationalized progress messages
+	* added progress information for saving KBs
+
+build_20030802_1815 georg
+	* modified StringBufferOutputStream: now, you can specify the Charset, which shall be
+	  used (default: "ISO-8859-1").
+
+build_20030731_1700 mweniger
+	* removed mysterious eclipse path bug
+	* moved de.d3web.utilites.progress.* to Persistence
+
+build_20030731_1415 mweniger
+	* added ProgressNotifier for PersistenceManager. Loading progress can now be monitored!
+	* added ProgressListener for PersistenceManager to notifiy of modular loaders 
+	  (KB, Aux, CaseRep) progress
+	* progress will be updated if modular loaders implement ProgressNotifier
+	* rescaled Progress of modular loaders to file size
+
+build_20030720_1405 georg
+	* fixed a potential bug in JarUpdater
+
+build_20030718_1405 georg
+	* new class KBPatchLoader to load kb-patches and to update a knowledgebase with it
+	* adapted KBLoader (esp. search-methods) so that KBPatchLoader can inherit it
+	* changes in PersistenceManager: method "load(URL)" automatically loads the patch for the
+	  knoledgebase if there is any
+	  new method "load(URL, boolean)" loads a (patched) knowledgebase (depending on the 
+	  boolean-parameter)
+	* changes in BasicPersistenceHandler: method "load(URL)" does not automatically load the
+	  patch for the knowledgebase
+	  new method "load(URL, URL, boolean)" loads a (patched)
+	  knowledgebase (depending on the boolean- and second URL-parameter)
+	* new classes "de.d3web.persistence.xml.KBPatchPersistanceHandler" and 
+	  "de.d3web.persistence.xml.loader.KBPatchLoader" to load a knowledgebase-patch
+	* method "getXmlWriters" in BasicPersistenceHandler is public, now
+	* new class "de.d3web.persistence.utilities.URLUtils" with method "openStream(URL)" which
+	  returns an Inputstream WITHOUT using any chaches
+	* replaced all "url.openStream()" with "URLUtils.openStream(url)"
+	* new class "de.d3web.persistence.utilities.JARUpdater" which provides the same functionality
+	  as JARWriter but which takes over all old jar-Entries which did not change
+
+build_20030623_1945 aha
+	removed some ex.printStackTrace() because of console output flooding
+
+build_20030618_1900 aha
+	more downwards compatibility
+
+build_20030616_1020 mp
+	* fixed big bug when saving a KB with MMItems (code is very ugly now, must be changed!)
+
+build_20030606_1930 aha
+	changes due to supportknowledge refactoring
+	
+	writers.PropertiesWriter, loader.PropertiesUtilities, writers.DCMarkupWriter, loader.DCMarkupUtilities
+	if you want to encode/decode your own properties, use PropertiesUtilities & PropertyCodec to
+	encode your Objects to XML-String and decode your Objects from a node
+	
+	removed MockPropertyDescriptor
+	
+	removed lib with old xerces etc.
+
+build_20030519_1615 aha
+	* removed annoying System.err. :-/
+
+build_20030512_1730 aha
+	* added numericalintervals for questionnum + questionnum-test (all tests green)
+	* NumericalIntervalsUtils for en- & decoding NumericalIntervals (and extensions)
+
+build_20030509_1720 tobi
+	* abnormilities can be saved
+	* formulas can be saved
+
+build_20030509_1156 tobi
+	* Zum laden ge�ffnete Dateien werden auch wieder geschlossen
+	
+build_20030320_1715 mp
+	* added : KB properties are now written&loaded
+
+build_20030318_1612 cbb
+	* removed references to xerces, use JAXP instead.
+
+build 20030317_1540 mp
+	* added : images are now stored in the file
+
+build_20030315_1550 bates
+	* changed jar-location from d3web-Tests (obsolete) to d3web-Kernel
+
+build_20030314_1054 aha
+	* changed comments to task-comments where appropriate -> this build is deprecated extra markers free
+	* moved jarwriter-testmain to src-unitTests/JARWriter_example.jpage
+
+build_20030313_1939 aha
+	* changed descriptorobjectwriter (again) and changed test accordingly
+	* fixed testkfz
+
+build_20030313_1809 aha
+	* moved unitTests to src-unitTests
+	* changed task-comments to new task-comments
+	* moved KnowledgeBaseExportTest from Tests project to src-unitTests
+	* fixed QuestionOCWriter ("text" -> "Text")
+	* moved tasks to /tasks
+
+build_03_03_12_2
+	aha 19:20
+	* added Kfz2k
+	* added new task
+
+build_03_03_12
+	aha 18:50
+	* changed kbloader so that comments (e.g. auto-added by xmlspy) don't result in nullpointerexceptions
+	* added unitTests to source (and debugged the resulting error ...)
+	* fixed ActionAddValueWriter, ActionNextQASetWriter, ActionSetValueWriter
+	* undid last change of DescriptorWriter which resulted in JUnit-test failure
+	* added new tasks
+
+build_03_02_18
+	03-02-18 georg 14:45
+	* exeptions-conditions are considered in ActionContraIndication-rules, now
+
+build_3_7b
+	03-01-13 merz 18:15
+	* xml-sonderzeichen werden in allen writern abgefragt
+
+build_3_6b
+	2002-12-17 aha 23:30
+	removed unused local variables
+
+build_3_6
+    2002-12-16 joba 21:14
+    Added handling for Num2ChoiceSchema 
+    -> converts a numerical answer to a choice anser 
+
+build_3_5
+	02-12-10 aha 15:00
+	* organized imports
+	* static methods are called static
+
+build_3_3
+	02-11-28 aha 11:05
+	* added warning in answersparsing
+	* added warning in conditionsparsing
+
+build_3_2
+	02-11-25 aha 18:10
+	* added pp warning in rule creation
+
+build_3_1
+	02-11-19 aha 18:10
+	* added changelog
+	* changed libs
