@@ -82,6 +82,7 @@
 		<module>d3web-Config</module>
 		<module>d3web-Persistence-MMInfo</module>
 		<module>d3web-CaseRepository</module>
+		<module>d3web-Utilities</module>
 		<!--
 			<module>../d3web-CaseRepository</module>
 			<module>../d3web-Utilities</module> <module>../d3web
