@@ -83,11 +83,11 @@
 		<module>d3web-Persistence-MMInfo</module>
 		<module>d3web-CaseRepository</module>
 		<module>d3web-Utilities</module>
+		<module>d3web-SharedKnowledge</module>
+		<module>d3web-CompareCase</module>
 		<!--
-			<module>../d3web-CaseRepository</module>
-			<module>../d3web-Utilities</module> <module>../d3web
-			CompareCase</module> <module>../d3web CompareCase Facade</module>
-			<module>../d3web-SharedKnowledge</module>
+ <module>../d3webCompareCase</module> <module>../d3web CompareCase Facade</module>
+			
 			<module>../d3web-SCM</module> <module>../d3web-ExplainTree</module>
 			<module>../d3web-Verbalizer</module> <module>../d3web-Report</module>
 			<module>../d3web-Utilities-Swing</module>

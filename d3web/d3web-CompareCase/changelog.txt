@@ -1,0 +1,120 @@
++-----------------------------------------------------------+
+|    d3web CompareCase
+|
+|    University of Wuerzburg
+|    Department of Artificial Intelligence and
+|                  Applied Computer Science
++-----------------------------------------------------------+
+
+
++-----------------------------------------------------------+
+history of the changes:
++-----------------------------------------------------------+
+
+build_20061020_1355 hesselbach & marty
+	* adapted JUNIT_HOME_SRC path in classpath
+
+build_20060629_1530 jueb
+	* removed unnecessary imports, casts and instanceof-tests
+	* deleted never read local variables
+	* replaced deprecated method-calls
+
+build_20050520_1500 bates
+	* made case comparison independent from CaseRepositoryManager.
+
+build_20041125_1115 bates
+	* extracted CaseLoader-Classes and CaseRepository to d3web-Utilities
+
+build_20040429_1125 marty
+	* minor code cleanup
+	* removed some unnecessary casts
+	
+build_20040305_1846 bates, marty
+	* minor bugfix
+
+build_20040305_1834 bates
+	* minor bigfix
+
+build_20040305_1622 marty, bates
+	* fixed handling of unknown/missing values in CaseComparator;
+	now, this corresponds to the behavior described in the dissertation
+	of Klaus Goos, i.e., it corresponds to the behavior of classic D3.
+	Formerly, if a value in one case was missing/unknown, and the value was
+	known in the other compare-case, then a default similarity of 0.1 was
+	added to the reachedPoints.
+	Now, reachedPoints += 0, but the effect of unknown/missing values is reduced,
+	because the weight which is added to maxPoints is multiplied by an unknown-factor,
+	e.g., 0.1. Then maxPoints += rawWeight * unknown-factor.
+
+build_20040302_1752 bates
+	* fixed another ClassCastException in CaseComparator
+	* hope, all List/HashSet - problems are fixed now!
+
+build_20040213_1144 bates
+	* fixed ClassCastException in CaseComparator
+
+build_20032511_1545 chris
+	* adapted to kernel changes
+	
+build_20031029_1322 bates
+	* changes due to KnowledgeBase reference in CaseObjectImpl
+
+build_20031025_1750 georg
+	* DefaultXMLCaseLoader provides adding additional AbstractTagReaders (new method
+	  "addTagReader(..)").
+
+build_20031023_1745 georg
+	* DefaultXMLCaseLoader is renamed to DomXMLCaseLoader (for old case-format)
+	* now, the DefaultXMLCaseLoader uses sax.CaseObjectListCreator (new case-format)
+
+build_20031016_1345 bates
+	* changed BOTH_FILL_UNKNOWN handling in case comparison: 
+	  Questions in stored case without or with unknown answers will be excluded now.
+
+build_20031015_2221 bates
+	* another change due to bugfix in case comparison
+
+build_20031015_1405 marty
+	* bugs in computing the similarity of a case fixed
+
+build_20031014_1345 bates
+	* changes due to caseRepository-refactoring
+
+build_20031007_1148 marty:
+	* rename method calculateSimilarityForClustering to
+	calculateSimilarityBetweenCases
+
+build_20031006_1255 bates
+	* removed todo tags (acknowleged georgs changes)
+
+build_20031003_1330 georg
+	* changes due to caserepository-changes
+
+build_20030926_1240 bates
+	* changes due to kernel refactoring
+
+build_20030924_1320 bates
+	* changed CaseRepository: It is now the only repository for holding 
+	  CaseObjects by KnowledgeBase-ids
+	* Fixed clustering: works with case-ids now! (needs less memory)
+
+build_20030920_1710 bates
+	* finished clustering with tests
+
+build_20030920_1614 bates
+	* added clustering for CBR
+
+build_20030913_2009 bates
+	* added an accelerated case-comparison-mechanism for clustering
+
+build_20030913_1832 bates
+	* removed everything that had to do with "StaticCase" ;-)
+
+build_20030606_2300 georg
+	changes due to supportknowledge refactoring
+
+build_20030512_1535 georg
+	* CaseRepository uses CaseObject's now (instead of StaticCase's)
+
+build_20030315_1520
+	* bates: initial commit
