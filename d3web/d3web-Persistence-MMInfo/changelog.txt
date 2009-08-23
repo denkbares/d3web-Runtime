@@ -1,0 +1,51 @@
+build_20080314_1200 wittner
+	* MMInfoStorageWriter: enabled output encoding selection. set to utf-8
+
+build_20040702_1755 aha
+	changed classpath for eclipse 3.0
+
+build_20040401_1530 aha
+	* minor
+
+build_20040112_1515 aha
+	* changed to cdata saving (see d3web-Persistence)
+
+build_20040112_1210
+	* now with synonyms
+
+build_20031021_1530 aha
+	* messages output changed to Logger.getLogger(this.getClass().getName()).{warning, info}(msg);
+	* ex.printStackTrace() changed to Logger.getLogger(...).throwing(.., .., ex);
+
+build_20030824_1900 georg
+	* MMInfoLoader does not use FilteredInputSource any more (because breaks and tabs
+	  have been filtered out)
+
+build_20030819_1200 mweniger
+	* internationalized progress messages
+
+build_20030731_1700 mweniger
+	* removed mysterious eclipse path bug
+	* moved de.d3web.utilites.progress.* to Persistence
+
+build_20030731_1415 mweniger
+	* added support for progress notification
+
+build_20030623_1945 aha
+	added robustness when encountering 'old' mminfos
+
+build_20030606_1930 aha
+	changes due to supportknowledge refactoring
+
+build_20030318_1612 cbb
+	* removed references to xerces, use JAXP instead.
+
+build_20030314_1100 aha
+	* checked comments -> this code is deprecated extra markers free
+	* removed junit.jar from path
+	* added tasks folder
+
+build_3_2 aha
+	* added this file
+	* organized imports
+	* static methods are called static
