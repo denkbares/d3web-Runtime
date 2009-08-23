@@ -1,0 +1,374 @@
+
+build_20070110_1410 aha
+	added items
+
+build_20070417_1345 aha
+	removed/renamed items
+
+build_20070315_1330 aha
+	added items
+
+build_20060118_1140 aha
+	added items
+
+build_20061218_1400 aha
+	added items
+
+build_20061206_1345 aha
+	removed items
+	added item
+
+build_20061128_1435 aha
+	added item
+
+build_20061122_1125 aha
+	added & changed items
+
+build_20061107_1700 aha
+	* added & removed items
+
+build_20061020_1355 hesselbach & marty
+	* adapted JUNIT_HOME_SRC path in classpath
+	
+build_20061011_1615 aha
+	added items
+
+build_20061005_1430 aha
+	some code cleanup
+	removed/added items
+
+build_20061001_1800 georg
+	* added an additional option for risk diagnoses
+
+build_20060802_1536 bates
+	* added option for risk diagnoses
+
+build_20060731_0535 krause
+	* added option for olap-statistics button
+
+build_20060717_1125 georg
+	added dialog item
+
+build_20060626_1655 georg
+	added dialog items
+
+build_20060609_1515 aha
+	added items
+	
+build_20060313_1345 aha
+	added/changed/remove items
+	removed everything for WantedSpecialRenderers and SpecialPictureRegions
+	removed tests
+
+build_20060307_1000 aha
+	added/renamed items
+
+build_20060222_1630 aha
+	added item
+
+build_20060203_1130 aha
+	added item
+
+build_20060201_1700 aha
+	added items
+
+build_20060123_1430 aha
+	added items
+
+build_20060119_1045 aha
+	added items
+
+build_20060109_1015 georg
+	changed dialog item
+
+build_20051222_1830 georg
+	added item
+
+build_20051213_2115 georg
+	added item
+
+build_20051130_1830 aha
+	added items
+	
+build_20051122_1500 aha
+	added item
+
+build_20051121_1045 georg
+	added item
+
+build_20051114_1330 aha
+	added item
+
+build_20051102_1200 georg
+	added item
+
+build_20051102 aha
+	added items
+
+build_20050831_1115 aha
+	added some generics stuff
+	replaced HashMap with Map wherever possible
+
+build_20050824_1325 aha
+	added items
+
+build_20050811_1840 georg
+	added items
+
+build_20050718_1615 aha
+	added items
+
+build_20050704_1700 aha
+	added items
+
+build_20050608_1500 aha
+	added items
+
+build_20050506_1818 bates
+	* added config dialog_SOLUTIONPAGE_ENABLE_SPEECH
+	
+build_20050419_1715 aha
+	added items
+	removed items (different ones of course ...)
+
+build_20050411_1720 hatko
+	added config items for adaptive help
+	
+build_20040511_1315 aha
+	new items
+
+build_20050329_1525 aha
+	.setIgnoringElementContentWhitespace(false)
+
+build_20050415_1800 aha
+	small refactoring, code beautification
+
+build_20050311_1730 aha
+	added items
+
+build_20050307_1645 aha
+	added items
+
+build_20050302_1710 jan
+	added items
+
+build_20050225_1830 aha
+	added items
+
+build_20050218_1540 jan
+	some refactoring stuff
+
+build_20050214_1530 aha
+	added 2 items
+
+build_20050131_1555 georg
+	added a dialog-item
+
+build_20050131_1415 aha
+	removed item
+	StringHashMap and StringList can now read CDATA values
+
+build_20050126_1630 georg
+	added a dialog-item
+
+build_20050125_1020 georg
+	added some dialog-items
+
+build_20040121_1735 aha
+	added train kernel item (config_base.xml only)
+
+build_20050114_1530 aha
+	added/changed items
+
+build_20050108_1455 georg
+	added a dialog-item
+
+build_20041208_1830 aha
+	added items
+
+build_20041201_1905 aha
+	added item
+
+build_20041109_1710 jan
+	added item for PrintTreeRenderer
+
+build_20041108_1715 jan
+	added item for Save/Load
+
+build_20041105_1800 aha
+	added item
+
+build_20041101_1640 georg
+	added dialog-item
+
+build_20041015_1430 jan
+	added items
+
+build_20040929_1600 aha
+	added items
+
+build_20041007_1340 hatko
+	* added ConfigItems in config_base.xml and corresponding ConfigGroup in ConfigType for AdaptiveHelp
+
+build_20040929_0945 aha
+	added description.txt
+
+build_20040923_1058 bates
+	* added basic config: dialog_SOLUTIONPAGE_ENABLE_TEMPORAL
+
+build_040831_1001 aha
+	added items
+
+build_20040805_1245 aha
+	added / changed items
+
+build_20040702_1755 aha
+	changed classpath for eclipse 3.0
+	added item
+
+build_20040617_1111 aha
+	* added items
+
+build_20040615_1745 aha
+	* added item
+
+build_20040604_1325 aha
+	* added/changed/removed items
+
+build_20040602_1330 aha
+	* removed item
+
+build_20040519_1615 aha
+	* added/moved items
+
+build_20040517_1630 aha
+	* added items
+
+build_20040511_1615 aha
+	* moved sessionflowconfig items & contextinformation items here
+
+build_20040427_1915 aha
+	* added item
+
+build_20040423_1100 aha
+	* added/deleted/changed items
+
+build_20030414_1435 georg
+	* added dialog config items
+
+build_20040413_1430 aha
+	* added/deleted/changed items
+
+build_20040401_1615 aha
+	* new items
+
+build_20040330_1340 jan
+	* new items
+	
+build_20040324_1230 jan
+	* new items
+
+build_20040323_1600 aha
+	* new items
+
+build_20040318_1510 aha
+	* new items
+	* moved reader & writer to persistence package
+
+build_20040309_1610 aha
+	* added & deleted items
+	* converters can be set even if value == null (useful for base config)
+
+build_20040223_1830 aha
+	* added items
+	* fixed StringListReader
+
+build_20030219_1325 georg
+	* added dialog config items
+
+build_20040217_1745 aha
+	* added names to config
+
+build_20030212_1700 georg
+	* added dialog config items
+
+build_20040203_1545 aha
+	added item
+	cleanup
+
+build_20040202_0810 georg
+	* added dialog config items
+
+build_20040130_1445 georg
+	* added dialog config items
+
+build_20040128_1015 aha
+	added item
+	
+build_20040127_1415 aha
+	* added DoubleHashMap remaining stuff
+	* added some items
+
+build_20040124_1830 georg
+	* added dialog config items
+	* Config is serializable
+
+build_20040123_1750 georg
+	* added a dialog config item
+
+build_20040122_1545 aha
+	* added some train config items
+
+build_20040122_1455 georg
+	* added some config-items to use in the dialog
+
+build_20040121_1030 georg
+	* added some config-items to use in the dialog
+
+build_20040120_1740 jan
+	added DoubleHashMap
+
+build_20040114_1920 georg
+	* changes due to renaming of Property.CONFIG
+	* added some config-items for the dialog
+
+build_20040114_1630 jan
+	userconfig is saved/loaded in/from Database
+
+build_20031218_1600 aha
+	config can only be read from url
+	LANGUAGE removed from d3web.Train config type
+
+build_20031217_1400 jan
+	new types
+	changed config_base.xml
+
+build_20031205_1145 aha
+	fixed
+	changed config_base.xml
+
+build_20031202_1330 aha
+	added questionary configitems & group for d3web.Train
+
+build_20031201_1910 aha
+	added ConfigType/ConfigGroup
+	added de-Comments for config_base
+
+build_20031131_1410 mweniger
+	added PersistenceHandler. Configs can now be loaded, saving configs doesn´t work yet.
+
+build_20031114_1730 aha
+	changed tagnames
+
+build_20031119_1500 jan
+	config-test
+	small cosmetic fixes
+
+build_20031110_1340 jan
+	base-config
+
+build_20031106_1450 jan
+	version 1.01 (Korekturen, Verbesserungen)
+
+build_20031028_1400 jan
+	version 1.0
