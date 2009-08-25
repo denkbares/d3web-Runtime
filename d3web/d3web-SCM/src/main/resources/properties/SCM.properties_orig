@@ -1,0 +1,38 @@
+# Probability Symbols to values
+P7 = 0.975
+P6 = 0.875
+P5 = 0.7
+P4 = 0.5
+P3 = 0.3
+P2 = 0.15
+P1 = 0.075
+ZERO = 0.05
+N1 = 0.025
+N2 = 0.015
+N3 = 0.0075
+N4 = 0.00375
+N5 = 0.00125
+N6 = 0.00075
+N7 = 0.00025
+
+# Default probability
+EPSILON = 0.01
+
+# Abnormality symbols to values
+A0 = 0
+A1 = 0.0625
+A2 = 0.125
+A3 = 0.25
+A4 = 0.5
+A5 = 0.55
+
+# Weight to transformation values
+G0 = 0.99
+G1 = 0.7
+G2 = 0.55
+G3 = 0.4
+G4 = 0.3
+G5 = 0.2
+G6 = 0.15
+G7 = 0.1
+

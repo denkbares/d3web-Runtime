@@ -1,0 +1,293 @@
+build_20080121_1045 reutelshoefer
+	* no more use of SetPool for HashSet-objects (was unstable)
+	* --> SetPool.getEmptySet() replaced by new HashSet()
+
+build_2007219_1330 reutelshoefer
+	* SmipleSCM: coverage of MCs calculated as intersection of
+	expected answers and entered answers
+
+build_20071217_1040 reutelshoefer
+	* SimpleSCM: answer unknow handled as not answered 
+	
+build_20071211_1040 reutelshoefer
+	* SimpleSCM: small update
+
+build_20071203_1315 reutelshoefer
+	* extented simple SetCovering Problem solver for num-questions
+
+build_2007120_093000 reutelshoefer	
+	* changes in simple SetCovering Problem solver
+	* Precision/Recall results
+	* triggered by SC_PROBLEMSOLVER_SIMPLE property
+
+build_20071128_1400 reutelshoefer	
+	* introduced simple SetCovering Problem solver
+
+
+build_20070608_1530 joba
+	* added feature of rule-based exclusion of scm solutions
+
+build_20070521_1900_UNSTABLE pkluegl
+	* HOTFIX: lazy creation of SCDiagnosis in SCMLoader
+
+build_20060629_1530 jueb
+	* removed unnecessary imports, casts and instanceof-tests
+	* deleted never read local variables
+	* replaced deprecated method-calls
+
+build_20060330_1600 georg
+	* adapted the new score score calculation method, so that it can
+	  interpret negative covering strengths
+	* fixed a bug concerning the update process of diagnoses' scores
+	* changed the default covering scores defined in the property-file
+	  (property-file for the "old" claculation method stays unchanged)
+
+build_20060206_1900 georg
+	* considered similarity for the remainder of the new calculation method
+
+build_20060121_1640 pkluegl
+	* organized imports
+	* added remove() to SCRelation
+	* added RemoveKnowledgeSliceTest
+
+build_20051223_0950 georg
+	* a finding is not treated as similar to itself
+	* weights of questions became Doubles and case-dependent
+
+build_20051213_1810 georg
+	* set score of P7 to 1.0 (instead of 0.975)
+
+build_20051212_2215 georg
+	* added similarity support for diagnosis-score calculation
+
+build_20051125_0920 georg
+	* bug fixed while determining unexplained findings
+	* removed debugging messages
+
+build_20051123_1710_bates
+	* added QuestionMC support for diagnosis-score calculation
+	* added "ignore unknown" handling
+
+build_20051121_1045 georg
+	* SCDiagnosis is an IEventSource, now
+
+build_20051116_1915 georg
+	* little bug fixed
+
+build_20051116_1630 bates
+	* added PriorityQueue to PSMethodSetCovering to store a sorted diagnoses list
+	* according to the new single-fault score calculation
+
+build_20051116_1018 bates
+	* added P0 to symbol table
+	* integrated P0 into score calculation (removed "N1"-workaround)
+
+build_20051115_1834 bates
+	* added basis for new on demand diagnosis score calculation
+
+build_20050527_1126 bates
+	* made code Java5-compatible (enum => enu)
+
+build_20050120_1235 pkluegl
+	* changed e.printStackTrace() to Logger.getLogger...
+
+build_20040826_0950 joba
+ 	* commented out System.out.println in SCMLoader
+
+build_20040527_1345 bates
+	* changed persistance to persistence
+	* removed warnings
+
+build_20030202_1442 aha
+	* cvs relocation changes
+
+build_20031201_1410 bates
+	* changed abnormality table and epsilon
+
+build_20031109_2059 bates 
+	* minor changes
+
+build_20031031_1016 bates
+	* fixed bug in knowledgeBase removal => case removal 
+	(transitive closure has been deregistered too early)
+
+build_20031024_1139 bates
+	* changed writers so that they implement IXMLWriter
+
+build_20031023_1900 bates
+	* little changes / extensions
+
+build_20031017_1150 marty
+	* test for answerunknown in Finding.calculateSimilarity()
+
+build_20031011_1620 bates
+	* added verbalize-method to elimination strategies
+	* added removeXPSCase-methods to PSMethodSetcovering and SCDiagnosis 
+
+build_20031007_1715 bates
+	* refactoring: finding comparison, hypotheses-generation, aso. changed
+	* several "bugs" fixed
+
+build_20031002_1655_unstable bates
+	* intervals from CondNumIn will be transformed to AnswerChoices now
+
+build_20031001_1700_stable bates
+	* added default probability "EPSILON" to property file and SCProbability
+
+build_20030930_1711 bates
+	* added "removeKnowledge" to SCRelation
+
+build_20030929_1720 bates
+	* bugfix in FindingVerbalizer (retrieval of answerw from NonTerminalCondition)
+
+build_20030927_1002_stable bates
+	* changed method named in Transitive closure to make them better understandable
+
+build_20030926_1240 bates
+	* changes due to kernel refactoring
+
+build_20030926_1005 bates
+	* removed SCStrength and fixed some minor bugs
+
+build_20030924_1650 bates
+	* efficiency patch
+
+build_20030923_1358 bates
+	* bugfix
+
+build_20030919_1340 bates
+	* added verbalizer for PredictedFinding that creates 
+	  internationalized NonTerminalCondition-verbalization 
+	  
+build_20030918_1700 bates
+	* changes because of persistence-bugfix
+
+build_20030917_1348 bates
+	* bugfix
+
+build_20030917_1320 bates
+	* did a refactoring: Findings have AbstractConditions now!
+
+build_200309011_1525 bates
+	* changes for transformation
+
+build_20030909_1024 bates
+	* old xml-format can still be imported
+
+build_20030908_1517 bates
+	* changed XML import/export: Nodes will no longer be im-/exported separately
+
+build_20030812_1749 bates
+	* bugfix and minor changes
+
+build_20030811_1321 bates
+	* added a method (in Hypothesis) that sums the weights of 
+	  uncovered but observed findings
+
+build_20030801_1755 bates
+	* changed termination criteria in HypothesesGeneration-Algorithn
+	
+build_20030731_1900 bates
+	* removed concurrent modification-bug in SCDiagnosis
+
+build_20030731_1526 bates
+	* again some little fixes
+
+build_20030715_1627 bates
+	* some fixes
+
+build_20030715_1403 bates
+	* added Persistence for Intervals and new Finding types
+	*  + tests of course ;-)
+	
+build_20030715_1245 bates
+	* added numerical and multiple-choice support (NumericalInterval etc.)
+	* added tests for the new features
+
+build_20030714_1700 bates
+	* some little changes in persistence etc
+
+build_20030712_1702 bates
+	* again some changes for KnowME-SetCoveringTables
+	
+build_20030711_1858 bates
+	* made some changes which were necessary for KnowME-SetCoveringTables
+
+build_20030711_0956 bates
+	* added some comments
+
+build_20030710_1649 bates
+	* added partial elimination algorithm
+	* added tests
+
+build_20030709_1643 bates
+	* added full elimination algorithm
+	* added test for the algorithm
+
+build_20030708_1523 bates
+	* added strategies for hypotheses generation
+	* added tests of course ;-)
+
+build_20030707_1703 bates
+	* added hypothesis evaluation methods...
+	* added tests for evaluation methods
+
+build_20030705_1706 bates
+	* added propagation (PSM)
+	* completed SCDiagnosis-features
+	* added tests for the features above
+		
+build_20030704_1715 bates
+	* added covering strength calculation/selection-strategies
+	* added tests for transitive closure and strategies
+	* started to include PSMethodSetCovering
+
+build_20030703_1845 bates
+	* added transitive closure and moved most strategies into "unused"-folder
+
+build_20030504_1820 bates
+	* added max-explain and plain strategies
+	
+build_20030504_1139 bates
+	* added test for max-weight-strategy and worked off some tasks
+
+build_20030429_1550 bates
+	* added some tasks ;-)
+
+build_20030426_1623 bates
+	* wrote a test for covering-score generation strategy
+
+build_20030425_1642 bates
+	* added hypothesis-creation strategies (TODO: tests!)
+
+build_20030424_0937 bates
+	* added some comments
+	
+build_20030423_1420 bates
+	* added mixed knowledge- and covering score- hypothesis quality-calculation
+
+build_20030422_1700 bates
+	* secure copy
+
+build_20030417_1655 bates
+	* started with hypothesis evaluation
+	
+build_20030417_1518 bates
+	* did some refactoring
+
+build_20030411_1712 bates
+
+build_20030411_1450 bates
+	* added some persistence...
+
+build_20030404_1300 bates
+	* added probabilities, similarities, coveringScores.
+	  and similarity calculation. changed answers in Finding from
+	  List to Object[].
+	* added tests (8 now)
+
+build_20030403_1654 bates
+	* added tests for equals() and hashCode()
+	
+build_20030403_1634 bates
+	* init
