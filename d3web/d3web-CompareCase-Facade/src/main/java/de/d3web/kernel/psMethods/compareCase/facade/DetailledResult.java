@@ -7,7 +7,7 @@ import de.d3web.kernel.psMethods.compareCase.comparators.ComparatorResult;
 /**
  * Insert the type's description here.
  * Creation date: (22.08.01 01:45:07)
- * @author: Norman Brümmer
+ * @author: Norman BrÃ¼mmer
  */
 public class DetailledResult {
 	private QContainer container = null;

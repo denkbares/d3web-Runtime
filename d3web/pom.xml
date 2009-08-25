@@ -86,9 +86,10 @@
 		<module>d3web-SharedKnowledge</module>
 		<module>d3web-CompareCase</module>
 		<module>d3web-CompareCase-Facade</module>
+		<module>d3web-SCM</module>
 		<!--
 			
-			<module>../d3web-SCM</module> <module>../d3web-ExplainTree</module>
+			<module>../d3web-ExplainTree</module>
 			<module>../d3web-Verbalizer</module> <module>../d3web-Report</module>
 			<module>../d3web-Utilities-Swing</module>
 			<module>../d3web-MMExtensions</module>

@@ -6,7 +6,7 @@ import de.d3web.kernel.supportknowledge.DCElement;
 
 /**
  * Creation date: (22.08.01 00:57:47)
- * @author: Norman Brümmer
+ * @author: Norman BrÃ¼mmer
  */
 public class SimpleResult {
 	private CaseObject theCase = null;

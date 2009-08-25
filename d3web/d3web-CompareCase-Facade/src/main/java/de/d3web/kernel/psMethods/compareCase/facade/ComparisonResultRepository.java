@@ -14,7 +14,7 @@ import de.d3web.utilities.caseLoaders.CaseRepository;
 /**
  * Creation date: (22.08.01 00:24:39)
  * 
- * @author: Norman Brümmer
+ * @author: Norman BrÃ¼mmer
  */
 public class ComparisonResultRepository {
 
