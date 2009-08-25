@@ -59,7 +59,26 @@
 			<id>infoVI-public</id>
 			<url>http://win6154.informatik.uni-wuerzburg.de:8080/nexus/content/groups/public/</url>
 		</repository>
+		<repository>
+			<id>snapshots</id>
+			<url>http://win6154.informatik.uni-wuerzburg.de:8080/nexus/content/repositories/snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>ignore</checksumPolicy>
+			</snapshots>
+		</repository>
 	</repositories>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>d3web Snapshots</name>
+			<url>http://win6154.informatik.uni-wuerzburg.de:8080/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<developers>
 		<developer>
