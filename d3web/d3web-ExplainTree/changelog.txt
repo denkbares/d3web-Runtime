@@ -1,0 +1,113 @@
+Explanation facility for d3web.
+
+build_20060629_1530 jueb
+	* removed unnecessary imports, casts and instanceof-tests
+	* deleted never read local variables
+	* replaced deprecated method-calls
+
+build_20050812_1345 georg
+	* changes due to new configuration option to avoid the popup-windows 
+	  (see d3web-Dialog)
+
+build_20050721_1230 georg
+	* made js firefox compatible
+	* added some robustness
+
+build_20050418_0910 georg
+	* bug fixed in explain_general.xsl
+
+build_20041220_1330 georg
+	* made popups firefox-compatible
+
+build_20030209_1650 georg
+	* bug fixed in xsl-file
+
+build_20040122_14020 chris
+	* minor build path cosmetics
+
+build_20040114_1900 georg
+	* removed d3web-Utilities from classpath
+
+build_20031113_1530 tobi
+	refactored hierarchy of Kernel-formula-classes
+
+build_20031030_1505 georg
+	QuestionDate can be explained
+
+build_20031015_1730 georg
+	XMLRenderer#renderQASetReasons is public, now
+
+build_20030728_2215 georg
+	enhanced reloading behavior in browser
+
+build_20030623_1140 aha
+	removed lib
+	cleanup
+
+build_20030618_1900 aha
+	* removed comparecase projects from project properties
+
+build_20030613_1305 georg
+	bug fixed (diagnosis.getState may return null)
+
+build_20030607_1805 georg
+	changes due to supportknowledge refactoring
+
+build_20030529_1830 georg
+	id's of RuleComplex are shown in the explanation, now
+
+build_20030525_1800 georg
+	added javascript- and css-files
+
+build_20030522_2030 georg
+	restructured paths
+
+build_20030521_2200 georg
+	* a single RuleComplex can be explained now
+	* added all xsl-stylesheets needed for explanation
+	* structured paths in the project
+
+build_20030427_1830 georg
+	added the class "XMLRenderer" which can explain QASets and Diagnoses in high detail (in XML-format).
+
+Created by Christian Betz (CBB)
+
+2002-04-15	17:00	Chris	build_3_2
+	Can explain reasons for diagnoses.
+
+2002-04-12	17:00	Chris	
+	Started developing Diagnosis-Explanation.
+
+2002-04-12	16:50	Chris	build_3_1
+	Some toString methods
+	ExplanationFactory is now able to explain QASet-activation.
+	
+	First implementation of ECondition. Tests are still to come.
+	
+	Implemented and tested InitQASet-Handling, indication, clarification
+	and refinement.
+	
+	
+	
+ToDo:
+	Die Contexts werden noch nicht berücksichtigt.
+	
+	Die ActiveParts eine ECondition können auch die bei TerminalConditions
+	noch was enthalten: die tatsächlichen Wert/Conditions-Schnittmengen.
+	
+	Außerdem muss noch die Regel mit getestet werden, insbesondere bei
+	Clarification und Refinement!!
+
+
+	Aktivierung von Fragen:
+		Die Erklärung der Aktivierung von Fragen funktioniert noch nicht.
+		In QContainer.{add|remove}{Pro|Contra}Reason werden die
+		Pro-&Contra-Reasons der QContainer auf die Children durchgeschleift.
+	
+		Nachdem ich das im Trainer aber gar nicht brauche, muss ich das auch
+		nicht behandeln. Ist mir also egal.
+
+
+
+
+	

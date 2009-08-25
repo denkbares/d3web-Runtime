@@ -1,0 +1,224 @@
+/*
+ * ENode.java
+ *
+ * Created on 26. März 2002, 17:10
+ */
+
+package de.d3web.explain.eNodes;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+
+import de.d3web.explain.ExplanationFactory;
+import de.d3web.explain.eNodes.values.DiagnosticValue;
+import de.d3web.explain.eNodes.values.QState;
+import de.d3web.explain.eNodes.values.TargetValue;
+import de.d3web.kernel.domainModel.Diagnosis;
+import de.d3web.kernel.domainModel.KnowledgeSlice;
+import de.d3web.kernel.domainModel.NamedObject;
+import de.d3web.kernel.domainModel.QASet;
+import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.psMethods.MethodKind;
+import de.d3web.kernel.psMethods.heuristic.ActionHeuristicPS;
+import de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic;
+import de.d3web.kernel.psMethods.nextQASet.PSMethodNextQASet;
+
+/**
+ *
+ * @author  betz
+ */
+public class ENode {
+    private NamedObject target = null;		//e.g. the question or diagnosis to explain
+    private TargetValue value = null;			//FF wie kann eine Aw-Alternative erklärt werden (in LispD3 nicht möglich!)
+    private Collection contexts = null;
+
+    private Collection proReasons = null;		//Collection of EReasons
+    	// bei Diagnosis nur "P-Regeln"; bei QContainer und Questions nur Indikationsregeln
+    private Collection contraReasons = null;	//Collection of EReasons
+    	// bei Diagnosis nur "N-Regeln"; bei QContainer und Questions nur KontraInd-regeln
+    private Collection unrealized = null;		//Collection of EReasons
+    private ExplanationFactory factory = null;
+
+    /** Creates a new instance of ENode */
+    public ENode(ExplanationFactory myFactory, NamedObject myTarget, TargetValue myValue, Collection myContexts) {
+        super();
+        factory = myFactory;
+        target = myTarget;
+        value = myValue;
+        contexts = myContexts;
+    }
+
+    /** Getter for property target.
+     * @return Value of property target.
+     */
+    public NamedObject getTarget() {
+        return target;
+    }
+
+    /** Getter for property contexts.
+     * @return Value of property contexts.
+     */
+    public Collection getContexts() {
+        return contexts;
+    }
+
+    /** Getter for property value.
+     * @return Value of property value.
+     */
+    public TargetValue getValue() {
+        return value;
+    }
+
+
+
+	public Collection getProReasons() {
+		if (proReasons == null) {
+			//FIXME
+			if (getTarget() instanceof QASet) {	
+				if (getValue() == QState.ACTIVE) {
+					proReasons = getQASetActivationReasons();
+				}
+			} else if (getTarget() instanceof Diagnosis) {
+				if (getValue() == DiagnosticValue.getInstance()) {
+					initDiagnosticReasons();
+				}
+			}
+			// so do other target objects. (welche?)
+		}
+		return proReasons;
+	}
+
+	public Collection getContraReasons() {
+		if (contraReasons == null) {
+			//FIXME
+			if (getTarget() instanceof QASet) {
+				if (getValue() == QState.ACTIVE) {
+					contraReasons = getQASetContraReasons();
+				}
+			} else if (getTarget() instanceof Diagnosis) {
+				if (getValue() == DiagnosticValue.getInstance()) {
+					initDiagnosticReasons();
+				}
+			}
+			// so do other target objects. (welche?)
+		}
+		return contraReasons;
+	}
+
+	public Collection getUnrealizedReasons() {
+		if (unrealized == null) {
+			if (getTarget() instanceof QASet) {
+				unrealized = getQASetUnrealizedReasons();
+			} else if (getTarget() instanceof Diagnosis) {
+				if (getValue() == DiagnosticValue.getInstance()) {
+					initDiagnosticReasons();
+				}
+			}
+			// FIXME other target objects are still missing (welche?)
+		}
+		return unrealized;
+	}
+
+	private Collection getQASetActivationReasons() {
+		Collection retValues = new LinkedList();
+		Iterator pros =
+			((QASet) getTarget()).getProReasons(getFactory().getXPSCase()).iterator();
+		while (pros.hasNext()) {
+			Object pro = pros.next();
+			if ((pro instanceof QASet.Reason) && (contexts.contains(((QASet.Reason) pro).getProblemSolverContext()))) {
+				retValues.add(EReason.createReason(getFactory(), (QASet.Reason) pro));
+			} else {
+				System.err.println("Ups, kein QASet.Reason. Dürfte eigentlich nicht sein!");
+			}
+		}
+		return retValues;
+	}
+	
+	private Collection getQASetContraReasons() {
+		Collection retValues = new LinkedList();
+		Iterator cons =
+			((QASet) getTarget()).getContraReasons(getFactory().getXPSCase()).iterator();
+		while (cons.hasNext()) {
+			Object con = cons.next();
+			if ((con instanceof QASet.Reason) && (contexts.contains(((QASet.Reason) con).getProblemSolverContext()))) {
+				retValues.add(EReason.createReason(getFactory(), (QASet.Reason) con));
+			} else {
+				System.err.println("Ups, kein QASet.Reason. Dürfte eigentlich nicht sein!");
+			}
+		}
+		return retValues;
+	}
+	
+	private Collection getQASetUnrealizedReasons() {
+		Collection unrealized = new LinkedList();
+		Class context = PSMethodNextQASet.class;		//FIXME: Kontext berücksichtigen
+		
+		Collection allRules = ((QASet)getTarget()).getKnowledge(context, MethodKind.BACKWARD);
+		if (allRules != null) {
+			Iterator ruleIter = allRules.iterator();
+			while (ruleIter.hasNext()) {
+				KnowledgeSlice rule = (KnowledgeSlice) ruleIter.next();
+				if (!rule.isUsed(getFactory().getXPSCase())) {	//FIXME: right method "isUsed"?
+					unrealized.add(EReason.createReason(getFactory(), rule));
+				}
+			}	
+		}
+		return(unrealized);
+	}
+
+	private void initDiagnosticReasons() {
+		proReasons = new LinkedList();
+		contraReasons = new LinkedList();
+		unrealized = new LinkedList();
+		Class context = PSMethodHeuristic.class;		//FIXME: Kontext berücksichtigen
+
+		Collection backwardKnowledge = ((Diagnosis) getTarget()).getKnowledge(context, MethodKind.BACKWARD);
+		if (backwardKnowledge == null) {
+			return;
+		}
+		
+		Iterator rules = backwardKnowledge.iterator();
+		while (rules.hasNext()) {
+			KnowledgeSlice rule = (KnowledgeSlice) rules.next();
+			if (rule.isUsed(getFactory().getXPSCase())) {	//FIXME: right method "isUsed"?
+				try {
+					if (((ActionHeuristicPS)((RuleComplex)rule).getAction()).getScore().aPrioriIsPositive()) {
+						proReasons.add(EReason.createReason(getFactory(), rule));
+					} else {
+						contraReasons.add(EReason.createReason(getFactory(), rule));
+					}
+				} catch(ClassCastException ex) {
+				        System.err.println("Error - not a RuleComplex-Object");
+					ex.printStackTrace();
+				}
+			} else {
+			        unrealized.add(EReason.createReason(getFactory(), rule));
+			}
+		}
+	}
+
+
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append(getTarget().getId());
+        sb.append(" ist ");
+        sb.append(getValue());
+        sb.append(", weil ");
+        Iterator pros = getProReasons().iterator();
+        while (pros.hasNext()) {
+            sb.append("\n\t");
+            sb.append(pros.next().toString());
+        }
+        return sb.toString();
+    }
+
+	/**
+	 * Gets the factory.
+	 * @return Returns a ExplanationFactory
+	 */
+	public ExplanationFactory getFactory() {
+		return factory;
+	}
+
+}

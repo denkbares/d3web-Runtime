@@ -1,0 +1,77 @@
+td.diagnosis- {
+background-color:#91AEFF
+}
+div.diagnosis-text {
+color:#073985;
+}
+
+td.si- {
+background-color:#BBD6FF
+}
+div.si-text {
+color:#3569B7;
+}
+
+td.question- {
+background-color:#FFFF8C;
+}
+div.question-text {
+color:#965E1C;
+}
+
+td.container- {
+background-color:#E5CF75
+}
+div.container-text {
+color:#6A3904;
+}
+
+label.space {padding-left:20px}
+label.wordspace {padding-left:3px}
+
+body {
+background-color:#FFFFDE;
+font-family:sans-serif;
+font-size:12
+}
+
+td {
+white-space:nowrap;
+vertical-align:top;
+padding:0pX;
+font-size:12
+}
+
+td.wordwrap {
+white-space:normal;
+}
+
+.fired {
+background-color:#CCF9C5;
+border-color:#D0F9C0;
+border-width:1px;
+border-style:solid;
+}
+
+.notFired {
+background-color:#FFCFD0;
+border-color:#FFCFD0; 
+border-width:1px;
+border-style:solid;
+}
+
+.exFired {
+background-color:#FFADBE;
+border-color:#FFADBE;
+border-width:1px;
+border-style:solid;
+}
+
+.exFiredEffectless {
+background-color:#FFCFD0;
+border-color:#FFCFD0;
+border-width:1px;
+border-style:solid;
+}
+
+
