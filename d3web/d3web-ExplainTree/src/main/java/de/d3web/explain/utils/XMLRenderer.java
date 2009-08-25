@@ -610,7 +610,7 @@ public class XMLRenderer {
 				}
 			}
 		} 
-		// ActionSuppressAnswer wird nicht erklärt
+		// ActionSuppressAnswer wird nicht erklÃ¤rt
 	
 		sb.append("</Action>");
 		returnList.add(0,sb);

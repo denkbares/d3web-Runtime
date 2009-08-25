@@ -1,7 +1,7 @@
 /*
  * ENode.java
  *
- * Created on 26. März 2002, 17:10
+ * Created on 26. MÃ¤rz 2002, 17:10
  */
 
 package de.d3web.explain.eNodes;
@@ -30,7 +30,7 @@ import de.d3web.kernel.psMethods.nextQASet.PSMethodNextQASet;
  */
 public class ENode {
     private NamedObject target = null;		//e.g. the question or diagnosis to explain
-    private TargetValue value = null;			//FF wie kann eine Aw-Alternative erklärt werden (in LispD3 nicht möglich!)
+    private TargetValue value = null;			//FF wie kann eine Aw-Alternative erklÃ¤rt werden (in LispD3 nicht mÃ¶glich!)
     private Collection contexts = null;
 
     private Collection proReasons = null;		//Collection of EReasons
@@ -129,7 +129,7 @@ public class ENode {
 			if ((pro instanceof QASet.Reason) && (contexts.contains(((QASet.Reason) pro).getProblemSolverContext()))) {
 				retValues.add(EReason.createReason(getFactory(), (QASet.Reason) pro));
 			} else {
-				System.err.println("Ups, kein QASet.Reason. Dürfte eigentlich nicht sein!");
+				System.err.println("Ups, kein QASet.Reason. DÃ¼rfte eigentlich nicht sein!");
 			}
 		}
 		return retValues;
@@ -144,7 +144,7 @@ public class ENode {
 			if ((con instanceof QASet.Reason) && (contexts.contains(((QASet.Reason) con).getProblemSolverContext()))) {
 				retValues.add(EReason.createReason(getFactory(), (QASet.Reason) con));
 			} else {
-				System.err.println("Ups, kein QASet.Reason. Dürfte eigentlich nicht sein!");
+				System.err.println("Ups, kein QASet.Reason. DÃ¼rfte eigentlich nicht sein!");
 			}
 		}
 		return retValues;
@@ -152,7 +152,7 @@ public class ENode {
 	
 	private Collection getQASetUnrealizedReasons() {
 		Collection unrealized = new LinkedList();
-		Class context = PSMethodNextQASet.class;		//FIXME: Kontext berücksichtigen
+		Class context = PSMethodNextQASet.class;		//FIXME: Kontext berÃ¼cksichtigen
 		
 		Collection allRules = ((QASet)getTarget()).getKnowledge(context, MethodKind.BACKWARD);
 		if (allRules != null) {
@@ -171,7 +171,7 @@ public class ENode {
 		proReasons = new LinkedList();
 		contraReasons = new LinkedList();
 		unrealized = new LinkedList();
-		Class context = PSMethodHeuristic.class;		//FIXME: Kontext berücksichtigen
+		Class context = PSMethodHeuristic.class;		//FIXME: Kontext berÃ¼cksichtigen
 
 		Collection backwardKnowledge = ((Diagnosis) getTarget()).getKnowledge(context, MethodKind.BACKWARD);
 		if (backwardKnowledge == null) {

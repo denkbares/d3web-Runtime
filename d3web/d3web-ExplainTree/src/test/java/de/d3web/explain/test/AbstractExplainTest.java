@@ -1,7 +1,7 @@
 /*
  * AbstractExplainTest.java
  *
- * Created on 25. März 2002, 16:57
+ * Created on 25. MÃ¤rz 2002, 16:57
  */
 
 package de.d3web.explain.test;

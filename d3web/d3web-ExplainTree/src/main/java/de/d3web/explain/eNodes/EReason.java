@@ -1,7 +1,7 @@
 /*
  * EReason.java
  *
- * Created on 27. März 2002, 16:14
+ * Created on 27. MÃ¤rz 2002, 16:14
  */
 
 package de.d3web.explain.eNodes;

@@ -1,7 +1,7 @@
 /*
  * ExplainQASetReasons.java
  *
- * Created on 26. März 2002, 09:18
+ * Created on 26. MÃ¤rz 2002, 09:18
  */
 
 package de.d3web.explain.test;
@@ -231,7 +231,7 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 		assertTrue(activeCondition.getCondition() instanceof CondOr);
 		assertTrue(activeCondition.getActiveParts()!=null && !activeCondition.getActiveParts().isEmpty());
 		assertTrue(((ECondition)activeCondition.getActiveParts().get(0)).getCondition() instanceof CondEqual);
-		// das sollte hier genügen. Es müsste noch Mf8 überprüft werden...
+		// das sollte hier genÃ¼gen. Es mÃ¼sste noch Mf8 Ã¼berprÃ¼ft werden...
 	}
 
 	public void _testContraIndication() {

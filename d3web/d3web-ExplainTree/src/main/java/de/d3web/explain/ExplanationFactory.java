@@ -1,7 +1,7 @@
 /*
  * ExplainationFactory.java
  *
- * Created on 25. März 2002, 16:49
+ * Created on 25. MÃ¤rz 2002, 16:49
  */
 
 package de.d3web.explain;

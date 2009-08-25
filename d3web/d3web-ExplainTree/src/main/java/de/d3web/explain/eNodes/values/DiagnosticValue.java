@@ -1,7 +1,7 @@
 /*
  * DiagnosticValue.java
  *
- * Created on 27. März 2002, 13:00
+ * Created on 27. MÃ¤rz 2002, 13:00
  */
 
 package de.d3web.explain.eNodes.values;

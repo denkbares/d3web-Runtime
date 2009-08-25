@@ -9,7 +9,7 @@ import de.d3web.kernel.domainModel.RuleComplex;
 
 public class ERuleReason extends EReason {
 
-	private Class context = null;	// Erklärungskontext
+	private Class context = null;	// ErklÃ¤rungskontext
 	private RuleComplex rule = null;				// the "original" rule object
 	private ECondition activeCondition = null;	
 	private ECondition activeContext = null;	// Fragekontext (muss immer beantwortet sein, damit die Regel feuert)
@@ -136,7 +136,7 @@ public class ERuleReason extends EReason {
 		}
 
 		
-		//FF: activeContext nur für Diagnosen gültig? (==> getDiagnosisContext())
+		//FF: activeContext nur fÃ¼r Diagnosen gÃ¼ltig? (==> getDiagnosisContext())
 		condition = ECondition.createECondition(getFactory(), getRule().getContext());
 		if (condition!=null) {
 			setActiveContext(condition);

@@ -1,7 +1,7 @@
 /*
  * ExplainDiagnosisReasons.java
  *
- * Created on 26. März 2002, 09:18
+ * Created on 26. MÃ¤rz 2002, 09:18
  */
 
 package de.d3web.explain.test;
@@ -112,11 +112,11 @@ public class ExplainDiagnosisReasons extends AbstractExplainTest {
 	}
 
 	public void _testAPriori() {
-		// soll irgendwann mal die Erklärung von APriori-Regeln aufnehmen
+		// soll irgendwann mal die ErklÃ¤rung von APriori-Regeln aufnehmen
 	}
 
 	public void _testNecessary() {
-		// sollte die Erklärung von Pp-Regeln aufnehmen.
+		// sollte die ErklÃ¤rung von Pp-Regeln aufnehmen.
 	}
 
 }

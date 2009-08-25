@@ -50,14 +50,14 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 	private QContainer Q56 = new QContainer();
 
 	private Answer Mf2a1 = AnswerFactory.createAnswerChoice("Mf2a1", "schwarz");
-	private Answer Mf2a2 = AnswerFactory.createAnswerChoice("Mf2a2", "bl�ulich");
+	private Answer Mf2a2 = AnswerFactory.createAnswerChoice("Mf2a2", "bläulich");
 	private Answer Mf2a3 = AnswerFactory.createAnswerChoice("Mf2a3", "farblos");
 	private QuestionOC Mf2 = new QuestionOC();
 
 	private Answer Mf3a1 = AnswerFactory.createAnswerChoice("Mf3a1", "braun");
 	private Answer Mf3a2 = AnswerFactory.createAnswerChoice("Mf3a2", "grau");
 	private Answer Mf3a3 = AnswerFactory.createAnswerChoice("Mf3a3", "hellgrau");
-	private Answer Mf3a4 = AnswerFactory.createAnswerChoice("Mf3a4", "schwarzverru�t");
+	private Answer Mf3a4 = AnswerFactory.createAnswerChoice("Mf3a4", "schwarzverrußt");
 	private QuestionOC Mf3 = new QuestionOC();
 
 	private Answer Msi21a1 = AnswerFactory.createAnswerChoice("Msi21a1", "normal");
@@ -71,8 +71,8 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 	private QuestionNum Mf5 = new QuestionNum();
 
 	private Answer Msi4a1 = AnswerFactory.createAnswerChoice("Msi4a1", "normal");
-	private Answer Msi4a2 = AnswerFactory.createAnswerChoice("Msi4a2", "leicht erh�ht");
-	private Answer Msi4a3 = AnswerFactory.createAnswerChoice("Msi4a3", "erh�ht");
+	private Answer Msi4a2 = AnswerFactory.createAnswerChoice("Msi4a2", "leicht erhöht");
+	private Answer Msi4a3 = AnswerFactory.createAnswerChoice("Msi4a3", "erhöht");
 	private QuestionOC Msi4 = new QuestionOC();
 
 	private QuestionNum Mf6 = new QuestionNum();
@@ -84,17 +84,17 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 
 	private Answer Mf8a1 = AnswerFactory.createAnswerChoice("Mf8a1", "springt normal an");
 	private Answer Mf8a2 = AnswerFactory.createAnswerChoice("Mf8a2", "springt schlecht an");
-	private Answer Mf8a3 = AnswerFactory.createAnswerChoice("Mf8a3", "springt �berhaupt nicht an");
+	private Answer Mf8a3 = AnswerFactory.createAnswerChoice("Mf8a3", "springt überhaupt nicht an");
 	private QuestionOC Mf8 = new QuestionOC();
 
 	private Answer Mf10a1 = AnswerFactory.createAnswerChoice("Mf10a1", "dreht durch");
 	private Answer Mf10a2 = AnswerFactory.createAnswerChoice("Mf10a2", "dreht nicht richtig durch");
 	private QuestionOC Mf10 = new QuestionOC();
 
-	private Answer Mf9a1 = AnswerFactory.createAnswerChoice("Mf9a1", "verz�gertes Anfahren");
+	private Answer Mf9a1 = AnswerFactory.createAnswerChoice("Mf9a1", "verzögertes Anfahren");
 	private Answer Mf9a2 = AnswerFactory.createAnswerChoice("Mf9a2", "schlechte Beschleunigung");
 	private Answer Mf9a3 = AnswerFactory.createAnswerChoice("Mf9a3", "Leerlauf ist zu niedrig");
-	private Answer Mf9a4 = AnswerFactory.createAnswerChoice("Mf9a4", "Leerlauf ist unregelm��ig");
+	private Answer Mf9a4 = AnswerFactory.createAnswerChoice("Mf9a4", "Leerlauf ist unregelmäßig");
 	private Answer Mf9a5 = AnswerFactory.createAnswerChoice("Mf9a5", "zu wenig Leistung bei Teillast");
 	private Answer Mf9a6 = AnswerFactory.createAnswerChoice("Mf9a6", "zu wenig Leistung bei Volllast");
 	private Answer Mf9a0 = AnswerFactory.createAnswerNo("Mf9a0", "Nein/Sonstiges");
@@ -184,7 +184,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 			// keine Kosten: sonst Q56.setCosts("Risiko", new Double(56.0));
 
 			Q000.setId("Q000");
-			Q000.setText("Frageb�gen");
+			Q000.setText("Fragebögen");
             Q000.setKnowledgeBase(this);
 			Q56.setId("Q56");
 			Q56.setText("Allgemeines");
@@ -214,7 +214,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 			Mf4.setParents(Utils.createList(new NamedObject[] { Q16 }));
 			Mf4.setAlternatives(Utils.createVector(new Object[] { Mf4a1, Mf4a3 }));
 			Mf5.setId("Mf5");
-			Mf5.setText("SI: �blicher Kraftstoffverbrauch/100km");
+			Mf5.setText("SI: Üblicher Kraftstoffverbrauch/100km");
             Mf5.setKnowledgeBase(this);
 			Mf5.setParents(Utils.createList(new NamedObject[] { Q16 }));
 			Msi4.setId("Msi4");
@@ -229,11 +229,11 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 			
 			
 			Mf6.setId("Mf6");
-			Mf6.setText("SI: Tats�chlicher Kraftstoffverbrauch/100km");
+			Mf6.setText("SI: Tatsächlicher Kraftstoffverbrauch/100km");
             Mf6.setKnowledgeBase(this);
 			Mf6.setParents(Utils.createList(new NamedObject[] { Q16 }));
 			Mf7.setId("Mf7");
-			Mf7.setText("SI: Motorger�usche");
+			Mf7.setText("SI: Motorgeräusche");
             Mf7.setKnowledgeBase(this);
 			Mf7.setParents(Utils.createList(new NamedObject[] { Q16 }));
 			Mf7.setAlternatives(Utils.createVector(new Object[] { Mf7a1, Mf7a2, Mf7a0 }));
@@ -243,7 +243,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 			Mf8.setParents(Utils.createList(new NamedObject[] { Q16 }));
 			Mf8.setAlternatives(Utils.createVector(new Object[] { Mf8a1, Mf8a2, Mf8a3 }));
 			Mf10.setId("Mf10");
-			Mf10.setText("Wie verh�lt sich der Anlasser bei Motorstartversuchen?");
+			Mf10.setText("Wie verhält sich der Anlasser bei Motorstartversuchen?");
             Mf10.setKnowledgeBase(this);
 			Mf10.setAlternatives(Utils.createVector(new Object[] { Mf10a1, Mf10a2 }));
 			Mf9.setId("Mf9");
@@ -269,7 +269,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
             Q19.setKnowledgeBase(this);
 			Q19.setParents(Utils.createList(new NamedObject[] { Qcl16 }));
 			Q20.setId("Q20");
-			Q20.setText("Untersuchung Z�ndeinstellung");
+			Q20.setText("Untersuchung Zündeinstellung");
             Q20.setKnowledgeBase(this);
 			Q20.setParents(Utils.createList(new NamedObject[] { Qcl16 }));
 			Q21.setId("Q21");
@@ -302,7 +302,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 	private void setProperties1() {
 		try {
 			Mf19.setId("Mf19");
-			Mf19.setText("Ist die Z�ndeinstellung fehlerhaft?");
+			Mf19.setText("Ist die Zündeinstellung fehlerhaft?");
             Mf19.setKnowledgeBase(this);
 			Mf19.setParents(Utils.createList(new NamedObject[] { Q20 }));
 			Mf19.setAlternatives(Utils.createVector(new Object[] { Mf19a1, Mf19a0 }));
@@ -341,7 +341,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 			P14.setParents(Arrays.asList(new NamedObject[] { P000 }));
 
 			P15.setId("P15");
-			P15.setText("Z�ndeinstellung falsch");
+			P15.setText("Zündeinstellung falsch");
             P15.setKnowledgeBase(this);
 			P15.setParents(Arrays.asList(new NamedObject[] { P000 }));
 

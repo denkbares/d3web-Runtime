@@ -1,7 +1,7 @@
 /*
  * DiagnosticValue.java
  *
- * Created on 27. März 2002, 13:00
+ * Created on 27. MÃ¤rz 2002, 13:00
  */
 
 package de.d3web.explain.eNodes.values;
@@ -11,7 +11,7 @@ package de.d3web.explain.eNodes.values;
  * @author  betz
  */
 public class QState implements TargetValue {
-		//TargetValue für Fragen und Frageklassen
+		//TargetValue fÃ¼r Fragen und Frageklassen
    
     public static final QState ACTIVE = new QState("active");
 
