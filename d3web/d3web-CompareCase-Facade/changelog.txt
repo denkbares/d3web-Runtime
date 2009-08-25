@@ -1,0 +1,56 @@
+build_20060629_1530 jueb
+	* removed unnecessary imports, casts and instanceof-tests
+	* deleted never read local variables
+	* replaced deprecated method-calls
+
+build_20050526_1200 georg
+	* made code java5-compatible ("enum" is a reserved keyword --> "enu")
+
+build_20050520_1500 bates
+	* made case comparison independent from CaseRepositoryManager.
+	
+build_20041125_1115 bates
+	* changes due to d3web-CompareCase changes
+
+build_20040923_1610 bates
+	* changes due to CaseConverter extension
+	
+build_20040419_1507 bates
+	* changes in ComparisonResultRepository: SIs will now be associated to containers of their parents
+	  (necessary for detailled results-rendering in dialog)
+
+build_20032511_1545 chris
+	* adapted to kernel changes
+	
+build_20031016_1345 bates
+	* same as previous version. Is stable
+
+build_20031016_1133_unstable marty
+	* fixed SimpleResultComparator
+	* fixed ComparisonResultRepository.getEstablishedDiagnoses()
+	* case comparison fixes from bates (Norman) still pending, so this version
+	  is unstable!
+
+build_20031015_1426 bates
+	* added SimpleResultComparator
+	* changed equals() of SimpleResult
+
+build_20031015_1404 marty
+	* new method getSimpleResults where a case base can be
+	  provided independently of the CaseRepository (Management)
+
+build_20031014_1345 bates
+	* changes due to caseRepository-refactoring
+
+build_20031007_1149 marty
+	* undeprecate ComparisonResultRepository.setCurrentCase(CaseObject newCurrentCase)
+
+build_20031006_1255 bates
+	* removed todo tags (acknowleged georgs changes)
+
+build_20031003_1330 georg
+	* changes due to caserepository-changes
+
+build_20030924_1320 bates
+	* adopted ComparisonResultRepository because of changes in CaseRepository
+	  and the new case-clustering
