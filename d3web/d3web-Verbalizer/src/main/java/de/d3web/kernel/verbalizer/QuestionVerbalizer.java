@@ -1,0 +1,89 @@
+package de.d3web.kernel.verbalizer;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
+
+import de.d3web.kernel.domainModel.qasets.Question;
+import de.d3web.kernel.verbalizer.VerbalizationManager.RenderingFormat;
+/**
+ * This class verbalizes (renders to String representation) a Question.
+ * It integrates the old VerbalizationFactory/RuleToHTML classes into the verbalizer framework.
+ * 
+ * @author lemmerich
+ * @date june 2008
+ */
+public class QuestionVerbalizer implements Verbalizer{
+	/**
+	 * Returns the classes RuleVerbalizer can render
+	 */
+	public Class[] getSupportedClassesForVerbalization() {
+		Class[] supportedClasses = {Question.class };
+		return supportedClasses;
+	}
+
+	@Override
+	/**
+	 * Returns the targetFormats (Verbalization.RenderingTarget) the
+	 * RuleVerbalizer can render
+	 */
+	public RenderingFormat[] getSupportedRenderingTargets() {
+		RenderingFormat[] r = { RenderingFormat.HTML };
+		return r;
+	}
+
+	@Override
+	/**
+	 * Returns a verbalization (String representation) of the given Question in
+	 * the target format using additional parameters.
+	 * 
+	 * 
+	 * @param o
+	 *            the Diagnosis to be verbalized. returns null and logs a warning for non-questions.
+	 * @param targetFormat
+	 *            The output format of the verbalization (HTML)
+	 * @param parameter
+	 *            additional parameters used to adapt the verbalization (e.g.,
+	 *            singleLine, etc...)
+	 * @return A String representation of given object o in the target format
+	 */
+	public String verbalize(Object o, RenderingFormat targetFormat, Map<String, Object> parameter) {
+
+		// These two ifs are for safety only and should not be needed
+		if (! Arrays.asList(getSupportedRenderingTargets()).contains(targetFormat)) {
+			// this should not happen, cause VerbalizationManager should not
+			// delegate here in this case!
+			Logger.getLogger("Verbalizer").warning(
+					"RenderingTarget" + targetFormat + " is not supported by RuleVerbalizer!");
+			return null;
+		}
+		if (!(o instanceof Question)) {
+			// this should not happen, cause VerbalizationManager should not
+			// delegate here in this case!
+			Logger.getLogger("Verbalizer").warning("Object " + o + " couldnt be rendered by DiagnosisVerbalizer!");
+			return null;
+		}
+		
+		
+		Question q = (Question) o;
+		//set the default parameter for idVisible
+		boolean idVisible = false;
+		
+		//read the parameter for idVisible from the parameter Hash, if possible
+		if ((!(parameter == null)) && parameter.containsKey(Verbalizer.ID_VISIBLE)) {
+			Object paraIDVisible = parameter.get(Verbalizer.ID_VISIBLE);
+			//catch illegal object saved in parameter Hash
+			if (paraIDVisible instanceof Boolean) idVisible = (Boolean) paraIDVisible;
+		}
+		
+		String s = q.getText();
+		if (idVisible) {
+			s += " (" + q.getId() + ")";
+		} 
+		
+		return s;
+	}
+	
+	
+}

@@ -1,0 +1,77 @@
+build_20090427_1600 astriffler
+	* changed operator of CondNumIn from 'in' to 'IN'
+
+build_20090423_1720 astriffler
+	* fixed bug from last changes
+
+build_20090423_1625 astriffler
+	* minor improvements
+	* intervals dont get quoted any longer
+
+build_20090306_1545 astriffler
+	* attribute isCondNot of NonTerminalCondVerbalizations now gets set properly
+
+build_20090228_2140 astriffler
+	* caught ArrayOutOfBoundException in ConditionVerbalizer...
+
+build_20090228_1525 astriffler
+	* CondEquals with more than one value or answer now
+	get verbalized like CondAnds
+	* quoting is now handled here
+
+build_20090204_1740 astriffler
+	* fixed NullPointerException in AnswerVerbalizer
+
+build_20081218_1845 astriffler
+	* implemented TerminalCondVerbalization and NonTerminalCondVerbalization.
+	These classes are string wrapper for conditions and are returned by
+	the createConditionVerbalization(AbstractConditionn cond) method of
+	the ConditionVerbalizer for use in other verbalizers and exporters.
+	* rewrote ConditionVerbalizer using the new CondVerbalizations
+	-> please report bugs
+	* internationalized ConditionVerbalizer
+	* internationalized AnswerVerbalizer
+	* internationalized RenderingFormat.PLAIN_TEXT of XclVerbalizer
+
+build_20081210_1815 reutelshoefer
+	* added null check
+
+build_20080930_1805 astriffler
+	* fixed bug in the ConditionVerbalizer concerning the plaintext verbalization
+	of CondNumLess and CondNumLessEqual 
+	* ConditionVerbalizer now verbalizes round doubles without the .0
+	at the end
+
+build_20080905_1740 reutelshoefer
+	* added FormularNumber to RuleActionVerbalizer
+
+build_20080719_1210 astriffler
+	* added RenderingFormat.PLAIN_TEXT functionality to XclVerbalizer
+	* added RenderingFormat.PLAIN_TEXT functionality to ConditionVerbalizer
+
+build_20080618_1015 haupt
+	* changed xclverbalizer behaviour
+	
+build_20080617_2300 haupt
+	* new package de.d3web.kernel.psMethods.verbalizer
+	* added XclVerbalizer to the defaultverbalizer
+	
+build_20080612_1500 reutelshoefer
+	* some refactoring : generalized interfaces: HashMap --> Map
+
+build_20080610_1050 lemmerich
+	* minor correction: added final tag to static variables in VerbalizationManager
+
+build_20080610_1050 lemmerich
+	* Removed VerbalizationFactory by moving its method to the using verbalizers
+	* added comments to key classes
+	* added description.txt
+
+build_20080528_1730 lemmerich
+	* Still Work in progress !
+	* removed dependency from KnowMe-App, but KnowMe properties are now ignored!
+	* copied messages.properties file in this project
+	* added some more Verbalizers
+
+build_20080528_1000 lemmerich
+	* initial commit: Basic Framework, RuleAction and ConditionVerbalizer
