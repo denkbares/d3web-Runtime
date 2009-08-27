@@ -14,18 +14,6 @@
 
 	<build>
 		<defaultGoal>package</defaultGoal>
-		<sourceDirectory>src</sourceDirectory>
-		<testSourceDirectory>src-unitTests</testSourceDirectory>
-		<outputDirectory>bin</outputDirectory>
-		<testOutputDirectory>test</testOutputDirectory>
-		<resources>
-		</resources>
-		<pluginManagement>
-			<plugins>
-			</plugins>
-		</pluginManagement>
-		<plugins>
-		</plugins>
 	</build>
 	<dependencies>
 		<dependency>
