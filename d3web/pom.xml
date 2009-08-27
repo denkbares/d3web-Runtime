@@ -109,5 +109,6 @@
 		<module>d3web-ExplainTree</module>
 		<module>d3web-Verbalizer</module>
 		<module>d3web-MMExtensions</module>
+		<module>d3web-Dialog2</module>
 	</modules>
 </project>
