@@ -1,0 +1,6 @@
+build_20061208_1730 pkluegl
+	* fixed bug in multimedia persistence handler
+
+build_20061116_1330 pkluegl
+	* initial commit
+	* extracted KnowME independant code
