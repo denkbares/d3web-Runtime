@@ -12,8 +12,8 @@
 		<url>http://knowwetrac.informatik.uni-wuerzburg.de/</url>
 	</issueManagement>
 	<ciManagement>
-		<system>Continuum</system>
-		<url>http://win6154.informatik.uni-wuerzburg.de:8080/</url>
+		<system>Hudson</system>
+		<url>http://win6154.informatik.uni-wuerzburg.de:8080/hudson/</url>
 	</ciManagement>
 	<licenses>
 		<license>
