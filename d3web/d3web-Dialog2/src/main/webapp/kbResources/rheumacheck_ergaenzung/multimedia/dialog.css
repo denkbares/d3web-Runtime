@@ -1,0 +1,275 @@
+/* ----------------  General  ----------------------------- */
+body,input,textarea {
+	font: small Arial, sans-serif;
+}
+
+body {
+	background: #FAF9E1;
+	color: #000;
+}
+
+a {
+	text-decoration: none;
+	color: blue;
+}
+
+a:HOVER {
+	text-decoration: underline;
+	color: blue;
+}
+
+a.underline {
+	text-decoration: underline;
+}
+
+.validationerror {
+	color: red;
+}
+
+.textfieldDisabled {
+	background-color: #eee;
+}
+
+/* ----------------  Site layout  ----------------------------- */
+	/*							wrap
+/*	header					main					footer
+/*							  |
+/*			  leftPanel	 middlePanel  rightPanel
+/**/
+#wrap {
+	border: 2px solid #5AACFF;
+	font-size: 100%;
+}
+
+#header {
+	background: #DCEDFF;
+	border-bottom: 1px solid #5AACFF;
+}
+
+#main {
+	background: #F5FAFF;
+}
+
+.middlePanel {
+	background: #F5FAFF;
+}
+
+#middlePanel h2 {
+	font-weight: bold;
+}
+
+#footer {
+	background: #DCEDFF;
+	border-top: 1px solid #5AACFF;
+}
+
+/* ----------------  Questionpage middle  ----------------------------- */
+.qWrapTable th {
+	background: #eee;
+}
+
+.qTable h3 { /* Headline in a question */
+	background: #E0E0E0;
+	font-weight: bold;
+	font-size: 110%;
+}
+
+.qTable .okButton {
+	background: #E0E0E0;
+	font-size: 8px;
+	font-weight: bold;
+}
+
+.validationerror {
+	font-weight: bold;
+}
+
+.smaller {
+	font-size: 80%;
+}
+
+/* ----------------  Tabs in HTML-PanelTabbedPane  ----------------------------- */
+.inactiveTab,.inactiveTab input {
+	background: #DCEDFF;
+	font-size: 95%;
+}
+
+/* ----------------  ResultPage  ----------------------------- */
+.resultPageSubHeadline {
+	font-size: 120%;
+	font-weight: bold;
+}
+
+.savePageTableHeadline {
+	font-weight: bold;
+	font-size: 140%;
+}
+
+/* ----------------  QATree leftPanel  ----------------------------- */
+.currentQASet {
+	background-color: #FFFFCC;
+}
+
+.incompleteQASet {
+	background-color: #DFFDDF;
+}
+
+.completeQASet {
+	background-color: #F0F0F0;
+}
+
+/* ----------------  DiagnosesTree leftPanel  ----------------------------- */
+.diagStandard {
+	color: black;
+}
+
+.diagExcl {
+	color: black;
+}
+
+.diagEstab {
+	color: #009900;
+	font-weight: bold;
+}
+
+.diagSugg {
+	color: #333399;
+}
+
+/* ----------------  Management leftPanel  ----------------------------- */
+.mgmntPanelDiv {
+	background: #fff;
+	border: 1px solid black;
+}
+
+.mgmntheadline {
+	font-weight: bold;
+}
+
+.mgmnttext {
+	font-size: 90%;
+}
+
+/* ----------------  PanelBoxTable  ----------------------------- */
+.panelBox {
+	background: #B3CCED;
+	color: #000;
+	border: 1px solid #6195D9;
+}
+
+.panelBox td {
+	background: #C3DCFD;
+}
+
+/* ----------------  CompareCase Popup Page  ----------------------------- */
+.compareCaseTable {
+	background: #839CBD;
+	border: 1px solid black;
+}
+
+.compareCaseTable td {
+	background: #C3DCFD;
+	font-size: 85%;
+}
+
+.compareCaseTable tr.qContainer td {
+	background: #B3CCED;
+	font-weight: bold;
+	font-style: italic;
+	font-size: 95%;
+}
+
+.compareCaseTable img {
+	border: 1px solid #839CBD;
+}
+
+#comparecase .backbutton {
+	border: 1px solid #839CBD;
+}
+
+/* ----------------  Explanation Popup Page  ----------------------------- */
+.fired {
+	background: #CCF9C5;
+}
+
+.notFired {
+	background: #FFCFD0;
+}
+
+.explanationtable,.explanationtr {
+	border: 1px dotted #000;
+}
+
+/* ----------------  MMInfo Popup Page  ----------------------------- */
+.mminfotable {
+	background: #B3CCED;
+	border: 2px solid #6195D9;
+}
+
+.mminfotable td {
+	background: #F5FAFF;
+}
+
+.mminfotable th {
+	font-size: 120%;
+}
+
+/* ----------------  SCM Popup Page  ----------------------------- */
+.scmTable {
+	background: #839CBD;
+	border: 1px solid black;
+}
+
+.scmTable td {
+	background: #C3DCFD;
+}
+
+.scmTable td.sum {
+	font-weight: bold;
+}
+
+.scmTable tr.qContainer td {
+	background: #B3CCED;
+	font-weight: bold;
+	font-style: italic;
+	font-size: 95%;
+}
+
+#scm h3 {
+	font-size: 130%;
+}
+
+/* ----------------  "Please wait" - Ajax-Panel  ----------------------------- */
+.progress_inner {
+	background: red;
+	color: #fff;
+	font-size: 110%;
+	font-weight: bold;
+}
+
+.corners .corner2,.corners .corner3,.corners .corner4 {
+	background-color: red;
+}
+
+/* ----------------  QuestionImages styles  ----------------------------- */
+.answerSet {
+	border: 2px solid red;
+}
+
+/* ----------------  Rheumacheck new styles...  ----------------------------- */
+.rt {
+	margin: 2px 0px;
+}
+
+.rt td.l {
+	width: 25px;
+	vertical-align: top;
+}
+
+.rd {
+	margin: 6px 0px 3px 25px;
+}
+
+.info {
+	font-size: 80%;
+}

@@ -1,0 +1,244 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<CaseRepository>
+	<Cases>
+		<Problem>
+			<DCMarkup>
+				<DCElement label="DC.TITLE"><![CDATA[asd zähne]]></DCElement>
+				<DCElement label="DC.CREATOR"><![CDATA[asd]]></DCElement>
+				<DCElement label="DC.DESCRIPTION"><![CDATA[die zähne von asd!]]></DCElement>
+				<DCElement label="DC.DATE" value="2007-5-17 23:0" />
+				<DCElement label="DC.RESOURCE_IDENTIFIER" value="1" />
+			</DCMarkup>
+			<Properties>
+				<Property name="case_metadata" class="de.d3web.caserepository.MetaDataImpl">
+					<Metadata>
+						<ProcessingTime value="1000" />
+						<Account>guest@guest</Account>
+					</Metadata>
+				</Property>
+				<Property name="case_source_system" class="java.lang.String">d3web.dialog</Property>
+			</Properties>
+			<Questions>
+				<Question id='BefZa41'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Karies17'>
+					<Answer id='Karies17a1' />
+				</Question>
+				<Question id='BefZa27'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Karies15'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa45'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa35'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Q2'>
+					<Answer id='Q2a2' />
+				</Question>
+				<Question id='Q1'>
+					<Answer><![CDATA[asd]]></Answer>
+				</Question>
+				<Question id='BefZa28'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa12'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Krone17'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa42'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Fuellung15'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa32'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Karies18'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefAll'>
+					<Answer id='BefAlla1' />
+				</Question>
+				<Question id='BefZa48'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa18'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa37'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa16'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Sensi17'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='LockGrad15'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Sensi18'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa38'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Perk18'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa46'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='LockGrad16'>
+					<Answer id='LockGrad16a1' />
+				</Question>
+				<Question id='BefZa24'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa17'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Perk16'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Weitere16'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa25'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa36'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Weitere15'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='LockGrad18'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa21'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa33'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Sensi15'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Wurzel16'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa44'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Perk15'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa22'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa11'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa34'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Weitere18'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Wurzel15'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Krone16'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Sensi16'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa13'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa23'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='LockGrad17'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Wurzel18'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Q3'>
+					<Answer id='Q3NO' />
+				</Question>
+				<Question id='Perk17'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa43'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Karies16'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Fuellung18'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa26'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa15'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Krone18'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Krone15'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Fuellung17'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Wurzel17'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Fuellung16'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Weitere17'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa14'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa31'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='BefZa47'>
+					<UnknownAnswer />
+				</Question>
+			</Questions>
+			<Solutions>
+			</Solutions>
+		</Problem>
+	</Cases>
+	<_AppliedQSets>
+		<Case id="1">
+			<QContainers>
+				<QContainer id="QC1" />
+				<QContainer id="QC7" />
+				<QContainer id="QC22" />
+				<QContainer id="QC21" />
+				<QContainer id="QC20" />
+				<QContainer id="QC19" />
+				<QContainer id="QC18" />
+			</QContainers>
+		</Case>
+	</_AppliedQSets>
+</CaseRepository>

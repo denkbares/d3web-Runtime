@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ImageMap>
+	<Images>
+		<Image src="dentalerbefund.jpg">
+			<Regions>
+				<Region shape="rect" coords="374,232,388,245" questionID="BefAll"
+					rotate="yes" />
+				<Region shape="rect" coords="280,1,310,100" questionID="BefZa11"
+					rotate="yes" />
+				<Region shape="rect" coords="314,1,336,100" questionID="BefZa12"
+					rotate="yes" />
+				<Region shape="rect" coords="342,1,366,100" questionID="BefZa13"
+					rotate="yes" />
+				<Region shape="rect" coords="375,1,395,100" questionID="BefZa14"
+					rotate="yes" />
+				<Region shape="rect" coords="405,1,425,100" questionID="BefZa15"
+					rotate="yes" />
+				<Region shape="rect" coords="435,1,475,100" questionID="BefZa16"
+					rotate="yes" />
+				<Region shape="rect" coords="483,1,513,100" questionID="BefZa17"
+					rotate="yes" />
+				<Region shape="rect" coords="522,1,553,100" questionID="BefZa18"
+					rotate="yes" />
+				<Region shape="rect" coords="252,1,278,100" questionID="BefZa41"
+					rotate="yes" />
+				<Region shape="rect" coords="226,1,245,100" questionID="BefZa42"
+					rotate="yes" />
+				<Region shape="rect" coords="193,1,220,100" questionID="BefZa43"
+					rotate="yes" />
+				<Region shape="rect" coords="163,1,188,100" questionID="BefZa44"
+					rotate="yes" />
+				<Region shape="rect" coords="134,1,156,100" questionID="BefZa45"
+					rotate="yes" />
+				<Region shape="rect" coords="88,1,122,100" questionID="BefZa46"
+					rotate="yes" />
+				<Region shape="rect" coords="46,1,77,100" questionID="BefZa47"
+					rotate="yes" />
+				<Region shape="rect" coords="5,1,39,100" questionID="BefZa48"
+					rotate="yes" />
+				<Region shape="rect" coords="283,120,301,215" questionID="BefZa21"
+					rotate="yes" />
+				<Region shape="rect" coords="305,120,324,215" questionID="BefZa22"
+					rotate="yes" />
+				<Region shape="rect" coords="329,120,353,215" questionID="BefZa23"
+					rotate="yes" />
+				<Region shape="rect" coords="363,120,381,215" questionID="BefZa24"
+					rotate="yes" />
+				<Region shape="rect" coords="391,120,415,215" questionID="BefZa25"
+					rotate="yes" />
+				<Region shape="rect" coords="422,120,463,215" questionID="BefZa26"
+					rotate="yes" />
+				<Region shape="rect" coords="468,120,507,215" questionID="BefZa27"
+					rotate="yes" />
+				<Region shape="rect" coords="514,120,553,215" questionID="BefZa28"
+					rotate="yes" />
+				<Region shape="rect" coords="261,120,277,215" questionID="BefZa31"
+					rotate="yes" />
+				<Region shape="rect" coords="238,120,254,215" questionID="BefZa32"
+					rotate="yes" />
+				<Region shape="rect" coords="207,120,233,215" questionID="BefZa33"
+					rotate="yes" />
+				<Region shape="rect" coords="176,120,201,215" questionID="BefZa34"
+					rotate="yes" />
+				<Region shape="rect" coords="147,120,170,215" questionID="BefZa35"
+					rotate="yes" />
+				<Region shape="rect" coords="100,120,140,215" questionID="BefZa36"
+					rotate="yes" />
+				<Region shape="rect" coords="55,120,92,215" questionID="BefZa37"
+					rotate="yes" />
+				<Region shape="rect" coords="7,120,47,215" questionID="BefZa38"
+					rotate="yes" />
+			</Regions>
+			<AnswerImages>
+				<AnswerImage src="ok.gif" id="BefZa18a1" />
+				<AnswerImage src="ok.gif" id="BefZa17a1" />
+				<AnswerImage src="ok.gif" id="BefZa16a1" />
+				<AnswerImage src="ok.gif" id="BefZa15a1" />
+				<AnswerImage src="ok.gif" id="BefZa14a1" />
+				<AnswerImage src="ok.gif" id="BefZa13a1" />
+				<AnswerImage src="ok.gif" id="BefZa12a1" />
+				<AnswerImage src="ok.gif" id="BefZa11a1" />
+				<AnswerImage src="ok.gif" id="BefZa21a1" />
+				<AnswerImage src="ok.gif" id="BefZa22a1" />
+				<AnswerImage src="ok.gif" id="BefZa23a1" />
+				<AnswerImage src="ok.gif" id="BefZa24a1" />
+				<AnswerImage src="ok.gif" id="BefZa25a1" />
+				<AnswerImage src="ok.gif" id="BefZa26a1" />
+				<AnswerImage src="ok.gif" id="BefZa27a1" />
+				<AnswerImage src="ok.gif" id="BefZa28a1" />
+				<AnswerImage src="ok.gif" id="BefZa38a1" />
+				<AnswerImage src="ok.gif" id="BefZa37a1" />
+				<AnswerImage src="ok.gif" id="BefZa36a1" />
+				<AnswerImage src="ok.gif" id="BefZa35a1" />
+				<AnswerImage src="ok.gif" id="BefZa34a1" />
+				<AnswerImage src="ok.gif" id="BefZa33a1" />
+				<AnswerImage src="ok.gif" id="BefZa32a1" />
+				<AnswerImage src="ok.gif" id="BefZa31a1" />
+				<AnswerImage src="ok.gif" id="BefZa41a1" />
+				<AnswerImage src="ok.gif" id="BefZa42a1" />
+				<AnswerImage src="ok.gif" id="BefZa43a1" />
+				<AnswerImage src="ok.gif" id="BefZa44a1" />
+				<AnswerImage src="ok.gif" id="BefZa45a1" />
+				<AnswerImage src="ok.gif" id="BefZa46a1" />
+				<AnswerImage src="ok.gif" id="BefZa47a1" />
+				<AnswerImage src="ok.gif" id="BefZa48a1" />
+			</AnswerImages>
+		</Image>
+		<Image src="frontzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone11"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung11"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel11"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="frontzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone12"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung12"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel12"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="frontzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone13"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung13"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel13"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="frontzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone14"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung14"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel14"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="frontzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone15"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung15"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel15"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="frontzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone21"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung21"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel21"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="frontzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone22"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung22"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel22"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="frontzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone23"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung23"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel23"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="frontzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone24"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung24"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel24"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="frontzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone25"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung25"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel25"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="frontzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone31"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung31"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel31"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="frontzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone32"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung32"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel32"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="frontzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone33"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung33"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel33"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="frontzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone34"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung34"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel34"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="frontzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone35"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung35"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel35"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="frontzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone41"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung41"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel41"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="frontzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone42"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung42"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel42"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="frontzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone43"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung43"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel43"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="frontzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone44"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung44"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel44"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="frontzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone45"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung45"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel45"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="backzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone16"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung16"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel16"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="backzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone17"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung17"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel17"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="backzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone18"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung18"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel18"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="backzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone26"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung26"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel26"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="backzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone27"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung27"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel27"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="backzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone28"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung28"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel28"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="backzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone36"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung36"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel36"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="backzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone37"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung37"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel37"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="backzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone38"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung38"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel38"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="backzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone46"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung46"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel46"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="backzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone47"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung47"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel47"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+		<Image src="backzahn.jpg">
+			<Regions>
+				<Region shape="rect" coords="61,175,125,202" questionID="Krone48"
+					textCoords="167,175" />
+				<Region shape="rect" coords="63,125,125,174" questionID="Fuellung48"
+					textCoords="167,137" />
+				<Region shape="rect" coords="69,15,123,125" questionID="Wurzel48"
+					textCoords="167,50" />
+			</Regions>
+		</Image>
+	</Images>
+</ImageMap>

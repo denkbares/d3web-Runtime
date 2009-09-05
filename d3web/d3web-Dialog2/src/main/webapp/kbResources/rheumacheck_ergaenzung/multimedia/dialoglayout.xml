@@ -1,0 +1,215 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<QContainers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../../../WEB-INF/classes/de/d3web/dialog2/dialoglayout.xsd">
+	<Default gridgap="0" padding="5px" qContainerBorder="1px solid black"
+		questionBorder="1px solid black" questionVerticalAlign="top">
+		<QContainerHeadline showHeadline="false" />
+		<QuestionHeadline showHeadline="false" showButton="false" />
+		<QuestionAnswers answerChoiceType="checkbox" columns="2"
+			fastAnswer="true" />
+		<MMInfo align="left" padding="5px 0px" position="hidden" />
+	</Default>
+	
+	<!-- Eingangsfragen -->
+	<QContainer id="Q2">
+		<Dimension rows="9" cols="7" />
+		<HtmlText questionBinding="M2" additionalCSSStyle="border-right: 0px;">
+			<Position posX="0-4" posY="0" />
+			<HtmlTextContent>
+				<![CDATA[
+					<table class="rt">
+						<tr>
+							<td class="l">1.</td>
+							<td><QText>M2</QText></td>
+						</tr>
+					</table>
+				]]>
+			</HtmlTextContent>
+		</HtmlText>
+		<Question id="M2" additionalCSSStyle="border-left: 0px;"> <!-- Alter -->
+			<Position posX="5-6" posY="0" />
+		</Question>
+		<HtmlText questionBinding="M3" additionalCSSStyle="border-right: 0px;">
+			<Position posX="0-4" posY="1" />
+			<HtmlTextContent>
+				<![CDATA[
+					<table class="rt">
+						<tr>
+							<td class="l">2.</td>
+							<td><QText>M3</QText></td>
+						</tr>
+					</table>
+				]]>
+			</HtmlTextContent>
+		</HtmlText>
+		<Question id="M3" additionalCSSStyle="border-left: 0px;"> <!-- Geschlecht -->
+			<Position posX="5-6" posY="1" />
+		</Question>
+		<HtmlText questionBinding="M4" additionalCSSStyle="border-right: 0px;">
+			<Position posX="0-4" posY="2" />
+			<HtmlTextContent>
+				<![CDATA[
+					<table class="rt">
+						<tr>
+							<td class="l">3.</td>
+							<td><QPrompt>M4</QPrompt><br /><MMInfo>M4</MMInfo></td>
+						</tr>
+					</table>
+				]]>
+			</HtmlTextContent><!--  -->
+		</HtmlText>
+		<Question id="M4" additionalCSSStyle="border-left: 0px;"> <!-- laenger als 3 Monate -->
+			<Position posX="5-6" posY="2" />
+			<!--  <MMInfo position="headline" tooltipWidth="400"/>-->
+		</Question>
+		<HtmlText questionBinding="M5" additionalCSSStyle="border-right: 0px;">
+			<Position posX="0-4" posY="3" />
+			<HtmlTextContent>
+				<![CDATA[
+					<table class="rt">
+						<tr>
+							<td class="l">4.</td>
+							<td><QPrompt>M5</QPrompt></td>
+						</tr>
+					</table>
+				]]>
+			</HtmlTextContent>
+		</HtmlText>
+		<Question id="M5" additionalCSSStyle="border-left: 0px;"> <!-- ohne vorausgehende Verletzungen -->
+			<Position posX="5-6" posY="3" />
+			<QuestionAnswers fastAnswer="true" />
+		</Question>
+		<Question id="M6" padding="0px" additionalCSSStyle="border-right: 0px;"> <!-- Gelenke (mit Bild) -->
+			<Position posX="0-4" posY="4" />
+			<MMInfo align="left" position="top" padding="5px" />
+			<!--
+				This is a workaround.. questionimage MUST have the attribute
+				answersPosition="none" set, otherwise it will not work
+			-->
+			<QuestionImage file="rheuma-maennchen.png" align="center"
+				answersPosition="none" showRegionOnMouseOver="true">
+				<AnswerRegion answerID="M6a2" xStart="50" xEnd="86"
+					yStart="73" yEnd="104" />
+				<AnswerRegion answerID="M6a9" xStart="109" xEnd="150"
+					yStart="73" yEnd="104" />
+				<AnswerRegion answerID="M6a3" xStart="38" xEnd="69"
+					yStart="120" yEnd="172" />
+				<AnswerRegion answerID="M6a10" xStart="124" xEnd="155"
+					yStart="120" yEnd="172" />
+				<AnswerRegion answerID="M6a4" xStart="23" xEnd="55"
+					yStart="179" yEnd="224" />
+				<AnswerRegion answerID="M6a5" xStart="138" xEnd="172"
+					yStart="179" yEnd="224" />
+				<AnswerRegion answerID="M6a6" xStart="54" xEnd="91"
+					yStart="244" yEnd="309" />
+				<AnswerRegion answerID="M6a11" xStart="102" xEnd="139"
+					yStart="244" yEnd="309" />
+				<AnswerRegion answerID="M6a7" xStart="61" xEnd="80"
+					yStart="324" yEnd="343" />
+				<AnswerRegion answerID="M6a12" xStart="112" xEnd="135"
+					yStart="324" yEnd="343" />
+				<AnswerRegion answerID="M6a8" xStart="37" xEnd="80"
+					yStart="345" yEnd="363" />
+				<AnswerRegion answerID="M6a13" xStart="113" xEnd="153"
+					yStart="345" yEnd="363" />
+			</QuestionImage>
+		</Question>
+		<Question id="M6" additionalCSSStyle="border-left: 0px;"> <!-- Gelenke (mit Bild) -->
+			<Position posX="5-6" posY="4" />
+			<QuestionAnswers columns="1" />
+		</Question>
+		<HtmlText questionBinding="M10" additionalCSSStyle="border-right: 0px;">
+			<Position posX="0-4" posY="8" />
+			<HtmlTextContent>
+				<![CDATA[
+					<table class="rt">
+						<tr>
+							<td class="l">6.</td>
+							<td><QPrompt>M10</QPrompt></td>
+						</tr>
+					</table>
+				]]>
+			</HtmlTextContent>
+		</HtmlText>
+		<Question id="M10" additionalCSSStyle="border-left: 0px;"> <!-- Dauer -->
+			<Position posX="5-6" posY="8" />
+			<QuestionAnswers columns="1" fastAnswer="true" />
+		</Question>
+		<Question id="M7" padding="0px" additionalCSSStyle="border-right: 0px;"> <!-- Gelenkschwellung Fingergelenke -->
+			<Position posX="0-4" posY="5" />
+			<MMInfo align="left" position="top" />
+			<!--
+				This is a workaround.. questionimage MUST have the attribute
+				answersPosition="none" set, otherwise it will not work
+			-->
+			<QuestionImage file="rechte_hand.png" align="center"
+				answersPosition="none">
+				<AnswerRegion answerID="M7a3" xStart="36" xEnd="103"
+					yStart="62" yEnd="93" />
+				<AnswerRegion answerID="M7a5" xStart="32" xEnd="113"
+					yStart="92" yEnd="115" />
+				<AnswerRegion answerID="M7a7" xStart="25" xEnd="87"
+					yStart="24" yEnd="53" />
+			</QuestionImage>
+			<QuestionImage file="linke_hand.png" align="center"
+				answersPosition="none">
+				<AnswerRegion answerID="M7a2" xStart="21" xEnd="96"
+					yStart="57" yEnd="84" />
+				<AnswerRegion answerID="M7a4" xStart="18" xEnd="98"
+					yStart="91" yEnd="115" />
+				<AnswerRegion answerID="M7a6" xStart="24" xEnd="100"
+					yStart="23" yEnd="54" />
+			</QuestionImage>
+		</Question>
+		<Question id="M7" additionalCSSStyle="border-left: 0px;"> <!-- Gelenke (mit Bild) -->
+			<Position posX="5-6" posY="5" />
+			<QuestionAnswers columns="1" />
+		</Question>
+		<HtmlText questionBinding="M9" additionalCSSStyle="border-right: 0px;">
+			<Position posX="0-4" posY="6" />
+			<HtmlTextContent>
+				<![CDATA[
+					<table class="rt">
+						<tr>
+							<td class="l">7a.</td>
+							<td><QPrompt>M9</QPrompt></td>
+						</tr>
+						<tr>
+						<td>&nbsp;</td>
+						<td class="info">
+							Entscheidend ist die Unterscheidung zwischen einer 
+							weichen, federnden Schwellung (Entz&#252;ndung, die man 
+							mit 2 Fingern ertasten kann) und einer knochenharten 
+							Schwellung, die schon seit Jahren besteht! Beide k&#246;nnen 
+							schmerzhaft sein! Die kn&#246;cherne, harte Schwellung ist 
+							ein Abnutzungsproblem der kleinen Fingergelenke, 
+							diese Schwellung nimmt meistens &#252;ber Jahre ganz allm&#228;lich 
+							zu und ist nur manchmal schmerzhaft.
+						</td>
+						</tr>
+					</table>
+				]]>
+			</HtmlTextContent>
+		</HtmlText>
+		<Question id="M9" additionalCSSStyle="border-left: 0px;"> <!-- Schwellungen Fingermittelgelenke -->
+			<Position posX="5-6" posY="6" />
+		</Question>
+		<HtmlText questionBinding="M8" additionalCSSStyle="border-right: 0px;">
+			<Position posX="0-4" posY="7" />
+			<HtmlTextContent>
+				<![CDATA[
+					<table class="rt">
+						<tr>
+							<td class="l">5b.</td>
+							<td><QPrompt>M8</QPrompt></td>
+						</tr>
+					</table>
+				]]>
+			</HtmlTextContent>
+		</HtmlText>
+		<Question id="M8" additionalCSSStyle="border-left: 0px;"> <!-- Gelenkschwellung Zehengelenke -->
+			<Position posX="5-6" posY="7" />
+			<QuestionAnswers columns="1" />
+		</Question>
+	</QContainer>
+</QContainers>

@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<QContainers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="dialoglayout.xsd">
+	<Default gridgap="3" padding="3px" qContainerBorder="1px solid #000"
+		questionBorder="1px solid #000" questionVerticalAlign="top"
+		currentQuestionBackground="#FFFFCC" answeredQuestionBackground="#F0F0F0"
+		unansweredQuestionBackground="#DFFDDF" questionColumns="2">
+		<QContainerHeadline showHeadline="true" border="1px solid #000"
+			background="#eee" color="#000" padding="4px" />
+		<QuestionHeadline showHeadline="true" showButton="true"
+			color="#000" margin="0px" background="#eee" border="1px solid #ddd" />
+		<QuestionAnswers answerChoiceType="checkbox" color="#000"
+			inputWidth="200px" inputHeight="100px" fastAnswer="true"
+			qTextDisplayMode="textarea" margin="5px" />
+		<ImageMap showRegionOnMouseOver="true" />
+		<MMInfo align="left" position="headline" mouseEvent="onmouseover"
+			padding="3px" />
+	</Default>
+</QContainers>

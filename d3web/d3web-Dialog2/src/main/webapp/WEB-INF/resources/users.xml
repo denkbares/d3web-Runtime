@@ -1,0 +1,6 @@
+<users>
+	<user name='Gast' forename='' pass='guest' email='guest@guest'
+		admin='false' />
+	<user name='Administrator' forename='' pass='admin' email='admin'
+		admin='true' />
+</users>

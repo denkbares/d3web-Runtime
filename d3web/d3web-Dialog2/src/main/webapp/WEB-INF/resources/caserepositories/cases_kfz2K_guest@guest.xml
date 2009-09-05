@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<CaseRepository>
+	<Cases>
+		<Problem>
+			<DCMarkup>
+				<DCElement label="DC.TITLE"><![CDATA[testtt]]></DCElement>
+				<DCElement label="DC.CREATOR"><![CDATA[Gast]]></DCElement>
+				<DCElement label="DC.DATE" value="2007-9-17 22:44" />
+				<DCElement label="DC.RESOURCE_IDENTIFIER" value="22" />
+			</DCMarkup>
+			<Properties>
+				<Property name="case_metadata" class="de.d3web.caserepository.MetaDataImpl">
+					<Metadata>
+						<ProcessingTime value="28" />
+						<Account>guest@guest</Account>
+					</Metadata>
+				</Property>
+				<Property name="case_source_system" class="java.lang.String">d3web.dialog</Property>
+			</Properties>
+			<Questions>
+				<Question id='Mf2'>
+					<Answer id='Mf2a1' />
+				</Question>
+			</Questions>
+			<Solutions>
+				<Solution id="P13" weight="1.0"
+					psmethod="de.d3web.kernel.psMethods.userSelected.PSMethodUserSelected"
+					state="established" />
+				<Solution id="P14" weight="1.0"
+					psmethod="de.d3web.kernel.psMethods.userSelected.PSMethodUserSelected"
+					state="established" />
+				<Solution id="P14" weight="1.0"
+					psmethod="de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic"
+					state="established" />
+				<Solution id="P15" weight="1.0"
+					psmethod="de.d3web.kernel.psMethods.userSelected.PSMethodUserSelected"
+					state="established" />
+			</Solutions>
+		</Problem>
+		<Problem>
+			<DCMarkup>
+				<DCElement label="DC.TITLE"><![CDATA[case_autosave]]></DCElement>
+				<DCElement label="DC.CREATOR"><![CDATA[ Gast]]></DCElement>
+				<DCElement label="DC.DATE" value="2007-9-18 8:21" />
+				<DCElement label="DC.RESOURCE_IDENTIFIER" value="23" />
+			</DCMarkup>
+			<Properties>
+				<Property name="case_metadata" class="de.d3web.caserepository.MetaDataImpl">
+					<Metadata>
+						<ProcessingTime value="56" />
+						<Account>guest@guest</Account>
+					</Metadata>
+				</Property>
+				<Property name="case_source_system" class="java.lang.String">d3web.dialog</Property>
+			</Properties>
+			<Questions>
+				<Question id='M5'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Mf2'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Mf4'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Mf3'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='M4'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Mf6'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='M3'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Mf5'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Mf8'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Mf7'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Mf9'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Mf58'>
+					<UnknownAnswer />
+				</Question>
+				<Question id='Mf57'>
+					<UnknownAnswer />
+				</Question>
+			</Questions>
+			<Solutions>
+			</Solutions>
+		</Problem>
+	</Cases>
+	<_AppliedQSets>
+		<Case id="22">
+			<QContainers>
+				<QContainer id="Q56" />
+				<QContainer id="Q16" />
+			</QContainers>
+		</Case>
+		<Case id="23">
+			<QContainers>
+				<QContainer id="Q56" />
+				<QContainer id="Q16" />
+			</QContainers>
+		</Case>
+	</_AppliedQSets>
+</CaseRepository>

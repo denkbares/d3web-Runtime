@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!-- <!DOCTYPE Problem SYSTEM 'problem.dtd' > -->
+<ProblemRepository>
+	<Problem>
+		<Properties>
+			<Property name="case_metadata" class="de.d3web.caserepository.MetaDataImpl">
+				<Metadata>
+					<KnowledgeBase></KnowledgeBase>
+					<SourceSystem>D3Web WebApp</SourceSystem>
+					<Complexity>medium</Complexity>
+					<CreationDate>
+						<Date m='08' y='2003' d='24' />
+						<Time h='12' m='47' />
+					</CreationDate>
+					<ProcessingTime value="1" />
+					<Id>21349396</Id>
+					<Author> Gast</Author>
+					<Account>guest@guest</Account>
+					<Title>norman-3</Title>
+					<Comment><![CDATA[]]>
+					</Comment>
+				</Metadata>
+			</Property>
+		</Properties>
+		<QContainers>
+			<QContainer id="Q4" />
+		</QContainers>
+		<Questions>
+			<Question id='MOC4'>
+				<UnknownAnswer />
+			</Question>
+		</Questions>
+		<Solutions>
+		</Solutions>
+	</Problem>
+	<Problem>
+		<Properties>
+			<Property name="case_metadata" class="de.d3web.caserepository.MetaDataImpl">
+				<Metadata>
+					<KnowledgeBase></KnowledgeBase>
+					<SourceSystem>D3Web WebApp</SourceSystem>
+					<Complexity>medium</Complexity>
+					<CreationDate>
+						<Date m='08' y='2003' d='24' />
+						<Time h='12' m='47' />
+					</CreationDate>
+					<ProcessingTime value="1" />
+					<Id>9194335</Id>
+					<Author> Gast</Author>
+					<Account>guest@guest</Account>
+					<Title>norman-2</Title>
+					<Comment><![CDATA[]]>
+					</Comment>
+				</Metadata>
+			</Property>
+		</Properties>
+		<QContainers>
+			<QContainer id="Q4" />
+		</QContainers>
+		<Questions>
+			<Question id='MOC4'>
+				<UnknownAnswer />
+			</Question>
+		</Questions>
+		<Solutions>
+		</Solutions>
+	</Problem>
+</ProblemRepository>

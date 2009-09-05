@@ -1,0 +1,133 @@
+package de.d3web.dialog2.render;
+
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
+import javax.faces.render.Renderer;
+
+import de.d3web.dialog2.basics.settings.ResourceRepository;
+import de.d3web.dialog2.component.html.UIMMInfoPage;
+import de.d3web.dialog2.util.DialogUtils;
+import de.d3web.kernel.XPSCase;
+import de.d3web.kernel.domainModel.NamedObject;
+import de.d3web.kernel.supportknowledge.MMInfoObject;
+import de.d3web.kernel.supportknowledge.MMInfoSubject;
+
+public class MMInfoPageRenderer extends Renderer {
+
+    @Override
+    public void encodeEnd(FacesContext context, UIComponent component)
+	    throws IOException {
+	ResponseWriter writer = context.getResponseWriter();
+
+	XPSCase theCase = DialogUtils.getDialog().getTheCase();
+
+	String kbid = theCase.getKnowledgeBase().getId();
+
+	// TODO show not all infos?
+	// String infoValue = (String) ((UIMMInfoPage) component).getValue();
+
+	String qOrDiagID = ((UIMMInfoPage) component).getDiag();
+
+	NamedObject diagOrQuestion = theCase.getKnowledgeBase()
+		.searchDiagnosis(qOrDiagID);
+	// diagnosis or qaset
+	if (diagOrQuestion == null) {
+	    diagOrQuestion = theCase.getKnowledgeBase().searchQASet(qOrDiagID);
+	}
+
+	DialogRenderUtils
+		.renderTableWithClass(writer, component, "mminfotable");
+	writer.startElement("th", component);
+	writer.writeText(DialogUtils.getMessageWithParamsFor("mminfo.title",
+		new Object[] { diagOrQuestion.getText() }), "value");
+	writer.endElement("th");
+
+	List<MMInfoObject> mmInfoTextList = DialogRenderUtils.getMMInfo(
+		diagOrQuestion, MMInfoSubject.INFO);
+	List<MMInfoObject> mmInfoURLList = DialogRenderUtils.getMMInfo(
+		diagOrQuestion, MMInfoSubject.URL);
+	List<MMInfoObject> mmInfomultimediaList = DialogRenderUtils.getMMInfo(
+		diagOrQuestion, MMInfoSubject.MULTIMEDIA);
+
+	if (DialogRenderUtils.isMMInfoAvailable(new List[] { mmInfoTextList,
+		mmInfoURLList, mmInfomultimediaList })) {
+
+	    for (Iterator<MMInfoObject> iter = mmInfoTextList.iterator(); iter
+		    .hasNext();) {
+		MMInfoObject obj = iter.next();
+
+		writer.startElement("tr", component);
+		writer.startElement("td", component);
+
+		DialogRenderUtils.renderAdditionalInfoWithReplacedExtraMarkup(
+			writer, component, diagOrQuestion, obj.getContent());
+
+		writer.endElement("td");
+		writer.endElement("tr");
+	    }
+	    for (Iterator<MMInfoObject> iter = mmInfoURLList.iterator(); iter
+		    .hasNext();) {
+		MMInfoObject obj = iter.next();
+
+		writer.startElement("tr", component);
+		writer.startElement("td", component);
+		writer.startElement("a", component);
+		writer.writeAttribute("href", obj.getContent(), "href");
+		writer.writeAttribute("title", DialogUtils
+			.getMessageFor("mminfo.url.title"), "title");
+		writer.writeAttribute("target", "_blank", "target");
+		writer.writeText(obj.getContent(), "value");
+		writer.endElement("a");
+
+		writer.endElement("td");
+		writer.endElement("tr");
+	    }
+	    for (Iterator<MMInfoObject> iter = mmInfomultimediaList.iterator(); iter
+		    .hasNext();) {
+		MMInfoObject obj = iter.next();
+		writer.startElement("tr", component);
+		writer.startElement("td", component);
+
+		writer.startElement("a", component);
+		writer.writeAttribute("href", ResourceRepository
+			.getMMPathForKB(kbid)
+			+ obj.getContent(), "href");
+		writer.writeAttribute("target", "_blank", "target");
+		writer.writeAttribute("title", DialogUtils
+			.getMessageFor("mminfo.multimedialink.title"), "title");
+		writer.startElement("img", component);
+		writer.writeAttribute("src", ResourceRepository
+			.getMMPathForKB(kbid)
+			+ obj.getContent(), "src");
+		writer.writeAttribute("alt", obj.getContent(), "alt");
+		writer.endElement("img");
+		writer.endElement("a");
+
+		writer.endElement("td");
+		writer.endElement("tr");
+	    }
+
+	}
+	writer.startElement("tr", component);
+	writer.startElement("td", component);
+	writer.writeAttribute("align", "right", "align");
+
+	writer.startElement("a", component);
+	writer.writeAttribute("class", "close", "class");
+	writer.writeAttribute("title", DialogUtils
+		.getMessageFor("mminfo.closebutton.text"), "title");
+	writer.writeAttribute("href", "javascript:window.close()", "href");
+	writer.writeText(DialogUtils.getMessageFor("mminfo.closebutton.text"),
+		"value");
+	writer.endElement("a");
+
+	writer.endElement("td");
+	writer.endElement("tr");
+	writer.endElement("table");
+    }
+}

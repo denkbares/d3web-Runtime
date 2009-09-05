@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<KnowledgeBases>
+	<KnowledgeBase ID='kfz2K' name='Kfz-WB 2k' type='complete'
+		location='file:///$webapp_path$/WEB-INF/resources/knowledgebases/kfz2K.jar'
+		locationType='jar' />
+	<KnowledgeBase ID='kfz2K_old' name='Kfz-WB 2k (alt)'
+		type='complete'
+		location='file:///$webapp_path$/WEB-INF/resources/knowledgebases/kfz2K_old.jar'
+		locationType='jar' />
+	<KnowledgeBase ID='zahnbefund20061108' name='Zahnbefund 2006-11-08 (alt)'
+		type='complete'
+		location='file:///$webapp_path$/WEB-INF/resources/knowledgebases/zahnbefund20061108.jar'
+		locationType='jar' />
+	<KnowledgeBase ID='zahnbefund20070904' name='Zahnbefund 2007-09-04 (neu)'
+		type='complete'
+		location='file:///$webapp_path$/WEB-INF/resources/knowledgebases/zahnbefund20070904.jar'
+		locationType='jar' />
+	<KnowledgeBase ID='movie' name='Movie KB' type='complete'
+		location='file:/$webapp_path$/WEB-INF/resources/knowledgebases/movie.jar'
+		locationType='jar' />
+	<KnowledgeBase ID='rheumacheck_b2' name='RheumaCheck_b2'
+		type='complete'
+		location='file:/$webapp_path$/WEB-INF/resources/knowledgebases/rheumacheck_b2.jar'
+		locationType='jar' />
+	<KnowledgeBase ID='rheumacheck_ergaenzung' name='RheumaCheck Ergänzung'
+		type='complete'
+		location='file:/$webapp_path$/WEB-INF/resources/knowledgebases/rheumacheck_ergaenzung.jar'
+		locationType='jar' />
+	<KnowledgeBase ID='test_kfz_extended' name='Test-KB KFZ extended'
+		type='complete'
+		location='file:/$webapp_path$/WEB-INF/resources/knowledgebases/testkb_kfz2K_extended.jar'
+		locationType='jar' />
+	<KnowledgeBase ID='demo_f_r_gef_hrten_statistik_beratungsdialog'
+		name='test' type='complete'
+		location='file:/$webapp_path$/WEB-INF/resources/knowledgebases/test.jar'
+		locationType='jar' />
+</KnowledgeBases>
