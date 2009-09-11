@@ -76,6 +76,12 @@
 			</snapshots>
 		</repository>
 	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>contrib</id>
+			<url>http://win6154.informatik.uni-wuerzburg.de:8080/nexus/content/repositories/contrib/</url>
+		</pluginRepository>
+	</pluginRepositories>
 
 	<distributionManagement>
 		<snapshotRepository>
