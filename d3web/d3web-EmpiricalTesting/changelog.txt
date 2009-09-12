@@ -1,0 +1,103 @@
+===== 20090913 SVN migration - alegler ======================
+
+build_20090911_0255 furth
+	* removed unused imports
+
+build_20090908_0720 joba
+    * added more features to InterviewBot (e.g., forbidden answers, known answers)
+    * factory method for Finding
+    * a refined strategy for StateRating and ScoreRating
+
+build_20090906_1345 furth
+	* added ability to handle XCL Knowledge
+	* fixed bug concerning QuestionMC, now more than one answer can be given to a QuestionMC
+
+build_20090827_1950 joba
+    * Added InterviewBot; DDBot2 is deprecated now
+      InterviewBot allows for psMethod independent generation of test cases 
+      and has multiple config settings
+    * refactored some methods in the persistence of sequential test cases
+   
+build_20090825_1740 furth
+	* introduced InterviewCalculator
+	* refactored caseConverter package
+	  Now the converting functionality is stored in an abstract class and the
+	  specific output functionality is implemented in the derived calculators.
+	* a lot of JavaDoc
+	* fixed wrong precision calculation in DerivedSolutionsCalculator
+
+build_20090803_1800 furth
+	* added possibility to calculate various precisions and recalls
+	* some minor fixes and refactoring
+	* added some java-doc
+
+build_20090718_1215 furth
+	* some minor fixes concerning state ratings, numeric answers and spaces in filepaths
+	* added CaseObjectToTestsuiteConverter
+		
+build_20090701_2105 furth
+	* derived solutions now get a staterating if all expected solutions have stateratings
+
+build_20090625_1205 furth
+	* changed visibilty of StateRating constructor to public
+
+build_20090529_1930 joba
+   * finished an initial version of a case converter
+
+build_20090529_1700 joba
+   * started with case converter
+
+build_20090528_1330 joba
+	* added some demo methods in EmpiricalTester
+
+build_20090527_1505 joba
+    * modified the starter examples of EmpiricalTester a little bit 
+
+build_20090510_1915 ochlast
+	* DDNet Visualisation: Expected AND derived solutions are now shown in erroneous testcases
+
+build_20090428_0915 ochlast
+	* introduced the new interface RatingSimilarity (to compare two Ratings) and its 
+	  default implementation, the IndividualSimilariry (simple test of equality).
+
+build_20090423_1205 ochlast
+	* minor improvements (mostly in DDBuilder)
+
+build_20090415_2230 ochlast
+	* missed some files while committing
+	
+build_20090415_2225 ochlast
+	* moved the DOT-File generating components to DDBuilder
+	* new method in DDBuilder: generateDDNetAndPrintDOT(TestSuite TS, String dotFile)
+	  generates the DDNet Representation of the TestSuite and prints the DOT-Tree to File
+	* new option: partitionTree (see config.properties)
+	* new option: compareOnlySymbolicStates (see config.properties)
+	* some minor changes
+	* example usage of the AdvancedEmpiricalTester in EmpiricalTester.java
+
+build_20090402_1837 ochlast
+	* no real changes, just synchronizing my laptop and desktop pc ;-)
+
+build_20090330_1200 ochlast
+	* The derived Solutions of a Rated Test Case are now hold in the Rated Test Case itself,
+	  and not in a separate List. Therefore, the class TestResult was obsolete and has been removed.
+	* The Test Cases are now hold in a "TestSuite", which loads the List of SequentialTestCases, 
+	  checks for consistency and derives all the solutions automatically.
+	* The DDNet Builder now consumes a TestSuite (instead of two List of SequentialTestCases)
+
+build_20090326_0732 ochlast
+	* some structural changes on the TestCase-holding classes TestResult and TestSuite
+	* equals() and hashCode() for Findings and RatedSolutions, 
+	  so that the TestCaseComparator works now and that the DDTree will be correctly written 
+	  (new cases green, old cases grey)
+	* EmpiricalPersistency.writeCases() now prints correctly indented XML
+	* moved DDEdge & DDNode (formally known as RTCEdge & RTCNode) to package empiricalTesting.ddTrees
+
+build_20090310_1400 ochlast
+	* initial check-in of project 'EmpiricalTester'
+	* basic functionality like 'Load/Save of Sequential Test Cases'
+	  and computing of precision/recall is already implemented
+	  - more to come...
+
+build_20090317_1950 ochlast
+	* some visual improvements

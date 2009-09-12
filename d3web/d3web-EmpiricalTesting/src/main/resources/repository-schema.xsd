@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="SeqTestCaseRepository">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="STestCase"/>
+      </xs:sequence>
+      <xs:attribute name="CreationDate" use="optional" type="xs:NMTOKEN"/>
+      <xs:attribute name="NumberOfCases" use="optional" type="xs:integer"/>
+      <xs:attribute name="UsedFindings" use="optional" type="xs:integer"/>
+      <xs:attribute name="UsedSolutions" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="STestCase">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="RatedTestCase"/>
+      </xs:sequence>
+      <xs:attribute name="Name" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RatedTestCase">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Findings"/>
+        <xs:element ref="Solutions"/>
+      </xs:sequence>
+	  <xs:attribute name="LastTested" use="optional" type="xs:NMTOKEN"/>
+      <xs:attribute name="Name" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Findings">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Finding"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Finding">
+    <xs:complexType>
+      <xs:attribute name="Answer" use="required"/>
+      <xs:attribute name="Question" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Solutions">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="Solution"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Solution">
+    <xs:complexType>
+      <xs:attribute name="Name" use="required"/>
+      <xs:attribute name="Rating" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
