@@ -1,3 +1,5 @@
+===== 20090913 SVN migration - alegler ======================
+
 build_20090427_1600 astriffler
 	* changed operator of CondNumIn from 'in' to 'IN'
 
