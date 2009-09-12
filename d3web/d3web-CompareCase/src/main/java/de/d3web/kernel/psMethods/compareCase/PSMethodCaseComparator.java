@@ -1,12 +1,33 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.kernel.psMethods.compareCase;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisState;
-import de.d3web.kernel.domainModel.NamedObject;
 import de.d3web.kernel.psMethods.PSMethod;
+import de.d3web.kernel.psMethods.PropagationEntry;
 import de.d3web.kernel.psMethods.compareCase.comparators.ComparatorResult;
 
 /**
@@ -59,6 +80,7 @@ public class PSMethodCaseComparator implements PSMethod {
 	 * @param theCase EasyXPS.domainModel.XPSCase
 	 */
 	public DiagnosisState getState(XPSCase theCase, Diagnosis diagnosis) {
+		//TODO: vb: das ist falsch. diagnosis.getState ruft wiederum diese Method auf. Hier liegt eine Endlosrekursion vor, oder?
 		return diagnosis.getState(theCase, PSMethodCaseComparator.class);
 	}
 
@@ -73,7 +95,8 @@ public class PSMethodCaseComparator implements PSMethod {
 	/**
 	 * propagate method comment.
 	 */
-	public void propagate(XPSCase theCase, NamedObject nob, Object[] values) {
+	@Override
+	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
 	}
 
 	/**

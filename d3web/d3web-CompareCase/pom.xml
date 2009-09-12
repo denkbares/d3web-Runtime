@@ -13,7 +13,6 @@
 	</parent>
 
 	<build>
-		<defaultGoal>package</defaultGoal>
 		<plugins>
 			<!--  Needed because src/ depends on src-UnitTests/ -->
 			<plugin>
@@ -81,8 +80,4 @@
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
-	<dependencyManagement>
-		<dependencies>
-		</dependencies>
-	</dependencyManagement>
 </project>
