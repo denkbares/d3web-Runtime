@@ -1,3 +1,4 @@
+===== 20090912 SVN migration - alegler ======================
 
 build_20070110_1410 aha
 	added items
@@ -355,7 +356,7 @@ build_20031201_1910 aha
 	added de-Comments for config_base
 
 build_20031131_1410 mweniger
-	added PersistenceHandler. Configs can now be loaded, saving configs doesn´t work yet.
+	added PersistenceHandler. Configs can now be loaded, saving configs doesnï¿½t work yet.
 
 build_20031114_1730 aha
 	changed tagnames
