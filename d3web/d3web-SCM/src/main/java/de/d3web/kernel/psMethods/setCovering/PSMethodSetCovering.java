@@ -1,3 +1,23 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.kernel.psMethods.setCovering;
 
 import java.util.Collection;
@@ -23,8 +43,8 @@ import de.d3web.kernel.domainModel.qasets.Question;
 import de.d3web.kernel.domainModel.qasets.QuestionMC;
 import de.d3web.kernel.psMethods.MethodKind;
 import de.d3web.kernel.psMethods.PSMethod;
+import de.d3web.kernel.psMethods.PropagationEntry;
 import de.d3web.kernel.psMethods.setCovering.pools.HypothesisPool;
-import de.d3web.kernel.psMethods.setCovering.pools.SetPool;
 import de.d3web.kernel.psMethods.setCovering.strategies.transitivePropagation.DefaultStrengthCalculationStrategy;
 import de.d3web.kernel.psMethods.setCovering.strategies.transitivePropagation.DefaultStrengthSelectionStrategy;
 import de.d3web.kernel.psMethods.setCovering.strategies.transitivePropagation.StrengthCalculationStrategy;
@@ -33,7 +53,6 @@ import de.d3web.kernel.psMethods.setCovering.utils.FindingsByQuestionIdContainer
 import de.d3web.kernel.psMethods.setCovering.utils.SortedList;
 import de.d3web.kernel.psMethods.setCovering.utils.TransitiveClosure;
 import de.d3web.kernel.psMethods.setCovering.utils.comparators.HypothesisComparator;
-import de.d3web.kernel.supportknowledge.Properties;
 import de.d3web.kernel.supportknowledge.Property;
 
 /**
@@ -336,16 +355,20 @@ public class PSMethodSetCovering implements PSMethod {
 	 * propagates new values for the given NamedObject. If nob is a Question it
 	 * will become a new PredictedFinding (with given value)
 	 */
-	public void propagate(XPSCase theCase, NamedObject nob, Object[] newValue) {
+	@Override
+	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
+		boolean hasChange = false;
+		for (PropagationEntry change : changes) {
+			NamedObject nob = change.getObject();
+			// only handle relevant changes
+			if (!(nob instanceof Question)) continue;
+			Object[] newValue = change.getNewValue();
+			if (newValue == null || newValue.length == 0) continue;
+			hasChange = true;
 
-		if (!(nob instanceof Question)) {
-			return;
-		}
-
-		TransitiveClosure transitiveClosure = (TransitiveClosure) transitiveClosureByKnowledgeBase
-				.get(theCase.getKnowledgeBase());
-
-		if (newValue != null && newValue.length > 0) {
+			TransitiveClosure transitiveClosure = (TransitiveClosure) transitiveClosureByKnowledgeBase
+					.get(theCase.getKnowledgeBase());
+	
 			// remove previously observed findings with same parameter
 			ObservableFinding paramF = SCNodeFactory.createObservableFinding((Question) nob,
 					new Object[]{newValue[0]});
@@ -373,25 +396,25 @@ public class PSMethodSetCovering implements PSMethod {
 						diagCoveringF.addObservedFinding(theCase, f);
 					}
 				}
-				// ************************new_score_calculation_**********************
-				Object val = theCase.getKnowledgeBase().getProperties().getProperty(Property.SC_PROBLEMSOLVER_SIMPLE);
-				//DEFAULT: should be FALSE to use standard SC-ProblemSolver
-				boolean simple = false;
-				if(val != null && val instanceof Boolean) {
-					simple = ((Boolean)val).booleanValue();
-				}
-				for (Diagnosis d : theCase.getKnowledgeBase().getDiagnoses()) {
-					
-					SCDiagnosis scDiag = getSCDiagnosisForDiagnosis(d);
-					if (scDiag != null) {						
-						if (simple) {
-							scDiag.updateScoreSimple(theCase);
-						} else { 
-							scDiag.updateScore(theCase);
-						}
+			}
+		}
+		// new score calculation if there have been any changes
+		if (hasChange) {
+			Object val = theCase.getKnowledgeBase().getProperties().getProperty(Property.SC_PROBLEMSOLVER_SIMPLE);
+			//DEFAULT: should be FALSE to use standard SC-ProblemSolver
+			boolean simple = false;
+			if(val != null && val instanceof Boolean) {
+				simple = ((Boolean)val).booleanValue();
+			}
+			for (Diagnosis d : theCase.getKnowledgeBase().getDiagnoses()) {
+				SCDiagnosis scDiag = getSCDiagnosisForDiagnosis(d);
+				if (scDiag != null) {						
+					if (simple) {
+						scDiag.updateScoreSimple(theCase);
+					} else { 
+						scDiag.updateScore(theCase);
 					}
 				}
-				// ********************************************************************
 			}
 		}
 	}
