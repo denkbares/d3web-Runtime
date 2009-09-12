@@ -1,3 +1,23 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.dialog2.render;
 
 import java.io.IOException;
@@ -44,7 +64,7 @@ public class SCMBoxRenderer extends Renderer {
 	for (KnowledgeSlice d : solutions) {
 	    if (d instanceof XCLModel) {
 		XCLModel model = (XCLModel) d;
-		if (model.computeXCLScore(theCase) > 0
+		if (model.getInferenceTrace(theCase).getScore() > 0
 			|| model.getState(theCase).equals(
 				DiagnosisState.ESTABLISHED)) {
 		    return true;
@@ -80,9 +100,9 @@ public class SCMBoxRenderer extends Renderer {
 		XCLModel model = (XCLModel) d;
 		Diagnosis origDiag = model.getSolution();
 
-		if (model.computeXCLScore(theCase) >= minValue) {
-		    int score = (int) (Math.round(model
-			    .computeXCLScore(theCase) * 100));
+		double score = model.getInferenceTrace(theCase).getScore();
+		if (score >= minValue) {
+		    int percent = (int) (Math.round(score * 100));
 
 		    DiagnosisState state = model.getState(theCase);
 
@@ -101,7 +121,7 @@ public class SCMBoxRenderer extends Renderer {
 			    .getMessageWithParamsFor("scm.tooltip",
 				    new Object[] { origDiag.getText() }),
 			    "title");
-		    writer.writeText(origDiag.getText() + " (" + score + " % "
+		    writer.writeText(origDiag.getText() + " (" + percent + " % "
 			    + "(" + state.getName().substring(0, 4) + ".))",
 			    "value");
 		    writer.endElement("a");

@@ -1,4 +1,9 @@
 +--------------------------------------------------------------+
+===== 20090913 SVN migration - alegler ======================
+
+build_20090629_1250 belli
+	* access to xcl-scores adapted
+
 build_20090309_1945 haupt
 	* fixed bug in layout that prevented dialog2 to be run from knowwe
 
