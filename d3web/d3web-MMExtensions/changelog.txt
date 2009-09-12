@@ -1,3 +1,8 @@
+===== 20090913 SVN migration - alegler ======================
+
+build_20090629_1255 belli
+	* sub-directories allowed
+
 build_20061208_1730 pkluegl
 	* fixed bug in multimedia persistence handler
 
