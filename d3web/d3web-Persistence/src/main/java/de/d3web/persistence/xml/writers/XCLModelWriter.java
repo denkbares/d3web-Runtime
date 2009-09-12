@@ -1,33 +1,42 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.persistence.xml.writers;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.KnowledgeBase;
 import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.domainModel.QASet;
-import de.d3web.kernel.domainModel.qasets.Question;
-import de.d3web.kernel.domainModel.qasets.QuestionChoice;
-import de.d3web.kernel.domainModel.qasets.QuestionDate;
-import de.d3web.kernel.domainModel.qasets.QuestionMC;
-import de.d3web.kernel.domainModel.qasets.QuestionNum;
-import de.d3web.kernel.domainModel.qasets.QuestionOC;
-import de.d3web.kernel.domainModel.qasets.QuestionText;
-import de.d3web.kernel.domainModel.qasets.QuestionYN;
 import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
-
 import de.d3web.kernel.psMethods.xclPattern.PSMethodXCL;
 import de.d3web.kernel.psMethods.xclPattern.XCLModel;
 import de.d3web.kernel.psMethods.xclPattern.XCLRelation;
+import de.d3web.persistence.utilities.XCLModelComparator;
 import de.d3web.persistence.xml.BasicPersistenceHandler;
-import de.d3web.persistence.xml.MockQASet;
 import de.d3web.persistence.xml.XCLModelPersistenceHandler;
 import de.d3web.persistence.xml.writers.conditions.ConditionsPersistenceHandler;
 
@@ -67,12 +76,13 @@ public class XCLModelWriter implements IXMLWriter{
 		StringBuffer sb = new StringBuffer();
 		sb.append("<?xml version='1.0' encoding='UTF-8' ?>");
 		sb.append("<KnowledgeBase type='" + XCLModelPersistenceHandler.ID
-				+ "' system='d3web'>");		
+				+ "' system='d3web'>");
 		
 		List<Diagnosis> dias = kb.getDiagnoses();
 		sb.append("<KnowledgeSlices>");		
 		
-		Collection<KnowledgeSlice> slices = kb.getAllKnowledgeSlicesFor(PSMethodXCL.class);
+		ArrayList<KnowledgeSlice> slices = new ArrayList<KnowledgeSlice>(kb.getAllKnowledgeSlicesFor(PSMethodXCL.class));
+		Collections.sort(slices, new XCLModelComparator());
 		for (KnowledgeSlice model : slices) {
 			sb.append(getXMLStringXCLM(model));
 		}

@@ -1,3 +1,23 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.persistence.tests.utils;
 
 import java.util.Enumeration;
@@ -87,7 +107,7 @@ public class XMLTag {
 	/**
 	 * Adds a new attribute to this XMLTag
 	 * @param name the name of the new attribute
-	 * @param value the attribute's value
+	 * @param value the attribute´s value
 	 */
 	public void addAttribute(String name, String value) {
 		attributes.put(name, value);
@@ -111,7 +131,7 @@ public class XMLTag {
 
 	/**
 	 * Returns the tag-content.
-	 * @return the tag's content
+	 * @return the tag´s content
 	 */
 	public String getContent() {
 		return content;
@@ -119,14 +139,14 @@ public class XMLTag {
 
 	/**
 	 * Returns the name.
-	 * @return the tag's name
+	 * @return the tag´s name
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * Sets the tag's children.
+	 * Sets the tag´s children.
 	 * @param children the children to set
 	 */
 	public void setChildren(List children) {

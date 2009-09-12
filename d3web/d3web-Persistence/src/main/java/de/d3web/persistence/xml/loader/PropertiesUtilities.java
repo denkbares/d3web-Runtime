@@ -1,4 +1,24 @@
 /*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
+/*
  * Created on 02.06.2003
  *
  * To change the template for this generated file go to
@@ -149,10 +169,17 @@ public class PropertiesUtilities {
 
 		addCodec(new PropertyCodec(String.class) {
 			public String encode(Object o) {
-				return o.toString();
+				return "<![CDATA[" + XMLTools.prepareForCDATA(o.toString()) + "]]>";
 			}
 			public Object decode(Node n) {
-				return DOMAccess.getText(n);
+				NodeList ns = n.getChildNodes();
+				for (int i = 0; i < ns.getLength(); i++) {
+					if (ns.item(i).getNodeType() == Node.CDATA_SECTION_NODE) {
+						return XMLTools.prepareFromCDATA(ns.item(i).getNodeValue());
+					}
+				}
+				Logger.getLogger(this.getClass().getName()).warning("no CDATA_SECTION_NODE found.");
+				return null;
 			}
 		});
 

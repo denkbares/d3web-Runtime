@@ -18,35 +18,17 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.persistence.xml.writers.conditions.terminalWriters;
+package de.d3web.persistence.utilities;
 
-import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
-import de.d3web.kernel.domainModel.ruleCondition.CondChoiceYes;
-import de.d3web.persistence.xml.writers.conditions.ConditionWriter;
-/**
- * This is the writer-class for CondChoiceYes-Objects
- * @author merz
- */
-public class CondChoiceYesWriter extends ConditionWriter {
+import java.util.Comparator;
 
-	public String toXML(AbstractCondition ac) {
+import de.d3web.kernel.domainModel.KnowledgeSlice;
 
-		CondChoiceYes ccy = (CondChoiceYes) ac;
-		String questionId = "";
-		
-		if(ccy.getQuestion() != null) {
-			questionId = ccy.getQuestion().getId();
-		}
-		return "<Condition type='choiceYes' ID='"
-			+ questionId
-			+ "'/>\n";
-	}
+public class XCLModelComparator implements Comparator<KnowledgeSlice> {
 
-	/**
-	 * @see ConditionWriter#getSourceObject()
-	 */
-	public Class getSourceObject() {
-		return CondChoiceYes.class;
+	@Override
+	public int compare(KnowledgeSlice o1, KnowledgeSlice o2) {
+		return o1.getId().compareTo(o2.getId());
 	}
 
 }

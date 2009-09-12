@@ -18,35 +18,23 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.persistence.xml.writers.conditions.terminalWriters;
+package de.d3web.persistence.utilities;
 
-import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
-import de.d3web.kernel.domainModel.ruleCondition.CondChoiceYes;
-import de.d3web.persistence.xml.writers.conditions.ConditionWriter;
+import java.util.Comparator;
+
+import de.d3web.kernel.domainModel.KnowledgeSlice;
+
 /**
- * This is the writer-class for CondChoiceYes-Objects
- * @author merz
+ * For Ordering rules after their id.
+ * i.e: R1,R2,R3,...
+ * 
+ * @author Johannes Dienst
  */
-public class CondChoiceYesWriter extends ConditionWriter {
+public class RulesComparator implements Comparator<KnowledgeSlice> {
 
-	public String toXML(AbstractCondition ac) {
-
-		CondChoiceYes ccy = (CondChoiceYes) ac;
-		String questionId = "";
-		
-		if(ccy.getQuestion() != null) {
-			questionId = ccy.getQuestion().getId();
-		}
-		return "<Condition type='choiceYes' ID='"
-			+ questionId
-			+ "'/>\n";
-	}
-
-	/**
-	 * @see ConditionWriter#getSourceObject()
-	 */
-	public Class getSourceObject() {
-		return CondChoiceYes.class;
+	@Override
+	public int compare(KnowledgeSlice r1, KnowledgeSlice r2) {
+		return(r1.getId().compareTo(r2.getId()));
 	}
 
 }

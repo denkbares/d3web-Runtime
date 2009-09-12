@@ -30,8 +30,4 @@
 			<version>0.0.7</version>
 		</dependency>
 	</dependencies>
-	<dependencyManagement>
-		<dependencies>
-		</dependencies>
-	</dependencyManagement>
 </project>

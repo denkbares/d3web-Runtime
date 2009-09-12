@@ -1,3 +1,18 @@
+===== 20090912 SVN migration - alegler ======================
+
+build_20090909_1650 joba
+    * removed useless imports
+    
+build_20090909_1540 JoeD
+	* Added XCLModelComparator
+	* Used it in XCLModelWriter
+
+build_20090809_1650 JoeD
+	* Rules now written to KnowledgeBaseJar in alphabetical order
+
+build_20090525_1604 belli
+    * fix: string-properties of choices (e.g. explanation) produces an XML error on saving the knowledge base if they contains an '&' 
+
 build_20090514_1402 belli
     * Save KnowledgeSlices in stable order (in BasicPersistanceHandler) to enable diff of basic.xml
 

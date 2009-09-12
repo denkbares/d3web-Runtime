@@ -1,15 +1,34 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.persistence.xml;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.Vector;
 import java.util.logging.Logger;
 
@@ -36,6 +55,7 @@ import de.d3web.kernel.supportknowledge.Properties;
 import de.d3web.persistence.progress.ProgressEvent;
 import de.d3web.persistence.progress.ProgressListener;
 import de.d3web.persistence.progress.ProgressNotifier;
+import de.d3web.persistence.utilities.RulesComparator;
 import de.d3web.persistence.utilities.URLUtils;
 import de.d3web.persistence.xml.loader.KBLoader;
 import de.d3web.persistence.xml.loader.KBPatchLoader;
@@ -517,42 +537,55 @@ public class BasicPersistenceHandler
 
 	private String saveRules(KnowledgeBase kb) {
 		// anfügen der Regeln
-		
-		StringBuffer sb = new StringBuffer();
-		List<Question> questionList = kb.getQuestions();
-		List<Diagnosis> diagList = kb.getDiagnoses();
 
-		// changed [vb]: preserve order according to NamedObjects to create 
-		// a diffable xml output (to create small update patches of basic.xml)
-		SortedSet<KnowledgeSlice> knowledgeSlices = new TreeSet<KnowledgeSlice>(new Comparator<KnowledgeSlice>() {
-			@Override
-			public int compare(KnowledgeSlice a, KnowledgeSlice b) {
-				if (a == b) return 0;
-				// sort by ids, where "null" is the lowest value
-				String aID = a.getId();
-				String bID = b.getId();
-				if (aID == null) return -1;
-				if (bID == null) return 1;
-				return aID.compareTo(bID);
-			}
-		});
-		
-		Iterator<?> psIter = getPsWriters().iterator();
+		StringBuffer sb = new StringBuffer();
+		List questionList = kb.getQuestions();
+		List diagList = kb.getDiagnoses();
+
+		Iterator psIter = getPsWriters().iterator();
+
+		Iterator qIter = null;
+		Iterator dIter = null;
+
+		Iterator iter = null;
+
+		// geändert, weil sonst Regeln doppelt rausgeschrieben werden
+		Set knowledgeSlices = new HashSet();
+
+		if ((questionList == null)) {
+			questionList = new Vector();
+		}
+
+		if (diagList == null) {
+			diagList = new Vector();
+		}
+
+		Question theQuestion = null;
+		Diagnosis theDiag = null;
+		Class theClass = null;
+
 		while (psIter.hasNext()) {
 			// für jede PSMethod
-			Class<?> theClass = (Class<?>) psIter.next();
+			qIter = questionList.iterator();
+			dIter = diagList.iterator();
+
+			theClass = (Class) psIter.next();
 
 			// nun die KnowledgeSlices aus den Fragen
-			for (Question theQuestion : questionList) {
-				List<? extends KnowledgeSlice> theKnowledgeSlices = theQuestion.getKnowledge(theClass);
+			while (qIter.hasNext()) {
+				theQuestion = (Question) qIter.next();
+
+				List theKnowledgeSlices = theQuestion.getKnowledge(theClass);
 				if (theKnowledgeSlices != null) {
 					knowledgeSlices.addAll(theKnowledgeSlices);
 				}
 			}
 
 			// nun die KnowledgeSlices aus den Diagnosen
-			for (Diagnosis theDiag : diagList) {
-				List<? extends KnowledgeSlice>  theKnowledgeSlices = theDiag.getKnowledge(theClass);
+			while (dIter.hasNext()) {
+				theDiag = (Diagnosis) dIter.next();
+
+				List theKnowledgeSlices = theDiag.getKnowledge(theClass);
 				if (theKnowledgeSlices != null) {
 					knowledgeSlices.addAll(theKnowledgeSlices);
 				}
@@ -561,7 +594,18 @@ public class BasicPersistenceHandler
 
 		// An dieser Stelle haben wir nun in knowledgeSlices alle
 		// KnowledgeSlices der registrierten Problemlöser
-		for (KnowledgeSlice ks : knowledgeSlices) {
+		
+		// FIXME: Johannes: Rules sollten in der gleichen Reihenfolge wie in der
+		//					Original-KnowledgeBase rausgeschrieben werden. Im 
+		//                  Moment waere das zB. R1, R2,...
+		ArrayList<KnowledgeSlice> slices = new ArrayList<KnowledgeSlice>(knowledgeSlices);
+		Collections.sort(slices, new RulesComparator());
+		iter = slices.iterator();
+		
+		IXMLWriter theWriter = null;
+		while (iter.hasNext()) {
+			KnowledgeSlice ks = (KnowledgeSlice) iter.next();
+			theWriter = getXMLWriter(ks.getClass());
 
 			everLastingProgressEvent.type = ProgressEvent.UPDATE;
 			everLastingProgressEvent.taskDescription = PersistenceManager.resourceBundle
@@ -569,11 +613,9 @@ public class BasicPersistenceHandler
 			everLastingProgressEvent.currentValue++;
 			fireProgressEvent(everLastingProgressEvent);
 
-			IXMLWriter theWriter = getXMLWriter(ks.getClass());
 			if (theWriter != null) {
 				sb.append(theWriter.getXMLString(ks));
-			} 
-			else {
+			} else {
 				sb.append("<KnowledgeSlice ID='" + ks.getId() + "' class='" + ks.getClass()
 						+ "' writer='not present'></KnowledgeSlice>");
 			}
