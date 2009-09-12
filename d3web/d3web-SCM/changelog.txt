@@ -25,7 +25,6 @@ build_2007120_093000 reutelshoefer
 build_20071128_1400 reutelshoefer	
 	* introduced simple SetCovering Problem solver
 
-
 build_20070608_1530 joba
 	* added feature of rule-based exclusion of scm solutions
 
