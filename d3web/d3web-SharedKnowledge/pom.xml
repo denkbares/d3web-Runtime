@@ -25,12 +25,7 @@ E.g., such knowledge is used by the CBR and the set-covering methods.</descripti
 		<groupId>de.uniwue.d3web</groupId>
 		<version>0-SNAPSHOT</version>
 	</parent>
-	<developers>
-	</developers>
 
-	<build>
-		<defaultGoal>package</defaultGoal>
-	</build>
 	<dependencies>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>

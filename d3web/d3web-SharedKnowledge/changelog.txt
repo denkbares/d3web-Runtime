@@ -1,3 +1,5 @@
+===== 20090913 SVN migration - alegler ======================
+
 build_20061020_1355 hesselbach & marty
 	* adapted JUNIT_HOME_SRC path in classpath
 	
