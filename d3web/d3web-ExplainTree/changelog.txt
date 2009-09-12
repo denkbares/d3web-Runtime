@@ -1,5 +1,7 @@
 Explanation facility for d3web.
 
+===== 20090912 SVN migration - alegler ======================
+
 build_20060629_1530 jueb
 	* removed unnecessary imports, casts and instanceof-tests
 	* deleted never read local variables
@@ -90,17 +92,17 @@ Created by Christian Betz (CBB)
 	
 	
 ToDo:
-	Die Contexts werden noch nicht berücksichtigt.
+	Die Contexts werden noch nicht berï¿½cksichtigt.
 	
-	Die ActiveParts eine ECondition können auch die bei TerminalConditions
-	noch was enthalten: die tatsächlichen Wert/Conditions-Schnittmengen.
+	Die ActiveParts eine ECondition kï¿½nnen auch die bei TerminalConditions
+	noch was enthalten: die tatsï¿½chlichen Wert/Conditions-Schnittmengen.
 	
-	Außerdem muss noch die Regel mit getestet werden, insbesondere bei
+	Auï¿½erdem muss noch die Regel mit getestet werden, insbesondere bei
 	Clarification und Refinement!!
 
 
 	Aktivierung von Fragen:
-		Die Erklärung der Aktivierung von Fragen funktioniert noch nicht.
+		Die Erklï¿½rung der Aktivierung von Fragen funktioniert noch nicht.
 		In QContainer.{add|remove}{Pro|Contra}Reason werden die
 		Pro-&Contra-Reasons der QContainer auf die Children durchgeschleift.
 	

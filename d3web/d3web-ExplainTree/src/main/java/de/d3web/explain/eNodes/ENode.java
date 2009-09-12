@@ -1,7 +1,27 @@
 /*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
+/*
  * ENode.java
  *
- * Created on 26. MÃ¤rz 2002, 17:10
+ * Created on 26. März 2002, 17:10
  */
 
 package de.d3web.explain.eNodes;
@@ -30,7 +50,7 @@ import de.d3web.kernel.psMethods.nextQASet.PSMethodNextQASet;
  */
 public class ENode {
     private NamedObject target = null;		//e.g. the question or diagnosis to explain
-    private TargetValue value = null;			//FF wie kann eine Aw-Alternative erklÃ¤rt werden (in LispD3 nicht mÃ¶glich!)
+    private TargetValue value = null;			//FF wie kann eine Aw-Alternative erklärt werden (in LispD3 nicht möglich!)
     private Collection contexts = null;
 
     private Collection proReasons = null;		//Collection of EReasons
@@ -129,7 +149,7 @@ public class ENode {
 			if ((pro instanceof QASet.Reason) && (contexts.contains(((QASet.Reason) pro).getProblemSolverContext()))) {
 				retValues.add(EReason.createReason(getFactory(), (QASet.Reason) pro));
 			} else {
-				System.err.println("Ups, kein QASet.Reason. DÃ¼rfte eigentlich nicht sein!");
+				System.err.println("Ups, kein QASet.Reason. Dürfte eigentlich nicht sein!");
 			}
 		}
 		return retValues;
@@ -144,7 +164,7 @@ public class ENode {
 			if ((con instanceof QASet.Reason) && (contexts.contains(((QASet.Reason) con).getProblemSolverContext()))) {
 				retValues.add(EReason.createReason(getFactory(), (QASet.Reason) con));
 			} else {
-				System.err.println("Ups, kein QASet.Reason. DÃ¼rfte eigentlich nicht sein!");
+				System.err.println("Ups, kein QASet.Reason. Dürfte eigentlich nicht sein!");
 			}
 		}
 		return retValues;
@@ -152,7 +172,7 @@ public class ENode {
 	
 	private Collection getQASetUnrealizedReasons() {
 		Collection unrealized = new LinkedList();
-		Class context = PSMethodNextQASet.class;		//FIXME: Kontext berÃ¼cksichtigen
+		Class context = PSMethodNextQASet.class;		//FIXME: Kontext berücksichtigen
 		
 		Collection allRules = ((QASet)getTarget()).getKnowledge(context, MethodKind.BACKWARD);
 		if (allRules != null) {
@@ -171,7 +191,7 @@ public class ENode {
 		proReasons = new LinkedList();
 		contraReasons = new LinkedList();
 		unrealized = new LinkedList();
-		Class context = PSMethodHeuristic.class;		//FIXME: Kontext berÃ¼cksichtigen
+		Class context = PSMethodHeuristic.class;		//FIXME: Kontext berücksichtigen
 
 		Collection backwardKnowledge = ((Diagnosis) getTarget()).getKnowledge(context, MethodKind.BACKWARD);
 		if (backwardKnowledge == null) {
