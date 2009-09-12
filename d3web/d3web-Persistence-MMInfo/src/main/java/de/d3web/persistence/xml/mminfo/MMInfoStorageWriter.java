@@ -1,6 +1,24 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.persistence.xml.mminfo;
-import java.io.InputStream;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,7 +27,9 @@ import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.w3c.dom.Document;
+
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.KnowledgeBase;
 import de.d3web.kernel.domainModel.answers.AnswerChoice;
@@ -22,8 +42,6 @@ import de.d3web.kernel.supportknowledge.MMInfoStorage;
 import de.d3web.kernel.supportknowledge.Property;
 import de.d3web.persistence.progress.ProgressEvent;
 import de.d3web.persistence.progress.ProgressListener;
-import de.d3web.persistence.utilities.StringBufferInputStream;
-import de.d3web.persistence.utilities.StringBufferStream;
 import de.d3web.persistence.xml.PersistenceManager;
 import de.d3web.persistence.xml.writers.DCMarkupWriter;
 import de.d3web.xml.utilities.XMLTools;
@@ -72,34 +90,23 @@ public class MMInfoStorageWriter {
 		} else if (!(o instanceof MMInfoStorage)) {
 			// D3WebCase.trace(o.toString() + " is no MMInfoStorage Object !!!");
 		} else {
-			MMInfoStorage mmi = (MMInfoStorage) o;
-
 			// Picking the stored infoMap
-			Collection markupCollection = mmi.getAllDCMarkups();
-
-			if (!markupCollection.isEmpty()) {
-				// Getting the Key Set of the infoMap
-				Iterator iter = markupCollection.iterator();
-				while (iter.hasNext()) {
-					boolean hasContent = false;
-
-					StringBuffer sb1 = new StringBuffer();
-					sb1.append("<MMInfo>\n");
-					DCMarkup markup = (DCMarkup) iter.next();
-					sb1.append(DCMarkupWriter.getInstance().getXMLString(markup));
-					Iterator iter2 = mmi.getMMInfo(markup).iterator();
-					while (iter2.hasNext()) {
-						String content = ((MMInfoObject) iter2.next()).getContent().trim();
-						if (!"".equals(content)) {
-							hasContent = true;
-							sb1.append("<Content><![CDATA[" + XMLTools.prepareForCDATA(content) + "]]></Content>\n");
-						}
+			// Getting the Key Set of the infoMap
+			MMInfoStorage mmi = (MMInfoStorage) o;
+			for (DCMarkup markup : mmi.getAllDCMarkups()) {
+				StringBuffer sb1 = new StringBuffer();
+				sb1.append("<MMInfo>\n");
+				sb1.append(DCMarkupWriter.getInstance().getXMLString(markup));
+				boolean hasContent = false;
+				for (MMInfoObject info : mmi.getMMInfo(markup)) {
+					String content = info.getContent().trim();
+					if (!content.isEmpty()) {
+						hasContent = true;
+						sb1.append("<Content><![CDATA[" + XMLTools.prepareForCDATA(content) + "]]></Content>\n");
 					}
-					sb1.append("</MMInfo>\n");
-
-					if (hasContent)
-						sb.append(sb1);
 				}
+				sb1.append("</MMInfo>\n");
+				if (hasContent) sb.append(sb1);
 			}
 		}
 

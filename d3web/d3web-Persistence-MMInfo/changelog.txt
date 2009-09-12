@@ -1,3 +1,8 @@
+===== 20090912 SVN migration - alegler ======================
+
+build_20080525_1354 dr.krabbe
+	* some warnings removed
+
 build_20080314_1200 wittner
 	* MMInfoStorageWriter: enabled output encoding selection. set to utf-8
 
