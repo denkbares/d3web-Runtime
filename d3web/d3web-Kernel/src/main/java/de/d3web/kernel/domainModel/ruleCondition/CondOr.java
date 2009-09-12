@@ -1,6 +1,25 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.kernel.domainModel.ruleCondition;
 
-import java.util.Iterator;
 import java.util.List;
 
 import de.d3web.kernel.XPSCase;
@@ -14,25 +33,23 @@ import de.d3web.kernel.XPSCase;
 public class CondOr extends NonTerminalCondition {
 
 	/**
-	 * Creates a new OR-condition with a list of sub-conditions.
+	 * Creates a new OR-condition with a list of 
+	 * disjunctive sub-conditions.
 	 */
 	public CondOr(List terms) {
 		super(terms);
 	}
 
-	/**
-	 * @return true, if at least one sub-condition is true.
-	 */
+	@Override
 	public boolean eval(XPSCase theCase)
 		throws NoAnswerException, UnknownAnswerException {
 
 		boolean wasNoAnswer = false;
 		boolean wasUnknownAnswer = false;
 
-		Iterator iter = terms.iterator();
-		while (iter.hasNext()) {
+		for (AbstractCondition condition : terms) {
 			try {
-				if (((AbstractCondition) iter.next()).eval(theCase))
+				if (condition.eval(theCase))
 					return true;
 			} catch (NoAnswerException nae) {
 				wasNoAnswer = true;
@@ -40,7 +57,6 @@ public class CondOr extends NonTerminalCondition {
 				wasUnknownAnswer = true;
 			}
 		}
-
 		if (wasNoAnswer) {
 			throw NoAnswerException.getInstance();
 		}
@@ -52,21 +68,17 @@ public class CondOr extends NonTerminalCondition {
 		return false;
 	}
 
-	/**
-	 * Verbalizes the condition.
-	 */
+	@Override
 	public String toString() {
-
 		String ret = "<Condition type='or'>\n";
-		Iterator iter = terms.iterator();
-		while (iter.hasNext()) {
-			ret += ((AbstractCondition) iter.next()).toString();
+		for (AbstractCondition condition : terms) {
+			ret += condition.toString();
 		}
-
 		return ret + "</Condition>\n";
 
 	}
 
+	@Override
 	protected AbstractCondition createInstance(List theTerms, AbstractCondition o) {
 		return new CondOr(theTerms);
 	}

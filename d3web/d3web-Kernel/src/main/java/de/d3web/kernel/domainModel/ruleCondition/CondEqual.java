@@ -1,7 +1,27 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.kernel.domainModel.ruleCondition;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Logger;
 
 import de.d3web.kernel.XPSCase;
@@ -11,7 +31,7 @@ import de.d3web.kernel.domainModel.answers.AnswerUnknown;
 import de.d3web.kernel.domainModel.qasets.Question;
 import de.d3web.kernel.domainModel.qasets.QuestionChoice;
 /**
- * This condition checks, if a question has an specified value (or values).
+ * This condition checks, whether a specified value is assigned to a question 
  * The composite pattern is used for this. This class is a "leaf".
  * 
  * @author Christian Betz
@@ -20,20 +40,22 @@ public class CondEqual extends CondQuestion {
 	private List values;
 
 	/**
-	 * Creates a new equal-condition. 
-	 * @param _quest the question to check
-	 * @param _val the value the question needs to have to fulfill the condition
+	 * Creates a new equal-condition constraining a specified 
+	 * question to the unknown answer. 
+	 * @param question the specified question to check
+	 * @param value the UnknownAnswer that have to be fulfilled
 	 */
 	public CondEqual(Question question, AnswerUnknown value) {
 		super(question);
-		values = new Vector();
+		values = new ArrayList<Answer>(1);
 		values.add(value);
 	}
 
 	/**
-	 * Creates a new equal-condition. 
+	 * Creates a new equal-condition constraining a specified 
+	 * question to a specified list of answers. 
 	 * @param question the question to check
-	 * @param values the value/values the question needs to have to fulfill the condition
+	 * @param values the values the question needs to be assigned to 
 	 */
 	public CondEqual(Question question, List values) {
 		super(question);
@@ -41,42 +63,43 @@ public class CondEqual extends CondQuestion {
 	}
 
 	/**
-	 * Creates a new equal-condition. more generic.
+	 * Creates a new equal-condition constraining a specified 
+	 * question to a specified answer. 
 	 * @param question the question to check
 	 * @param value the value the question needs to have to fulfill the condition
 	 */
 	public CondEqual(QuestionChoice question, Answer value) {
 		super(question);
-		values = new Vector();
+		values = new ArrayList(1);
 		values.add(value);
 	}
 	
 	/**
-	 * Creates a new equal-condition. 
+	 * Creates a new equal-condition constraining a specified 
+	 * question to a specified answer. 
 	 * @param question the question to check
 	 * @param value the value the question needs to have to fulfill the condition
 	 */
 	public CondEqual(Question question, Answer value) {
 		super(question);
-		values = new Vector();
+		values = new ArrayList(1);
 		values.add(value);
 	}
 	
 	/**
-	 * Creates a new equal-condition.<br/>
+	 * Creates a new equal-condition, where {@link AnswerUnknown} needs to be assigned
+	 * to the question.<br/>
 	 * THIS METHOD ONLY EXISTS TO SOLVE THE AMBIGUITY<br/>
-	 * @param _quest the question to check
-	 * @param _val the value the question needs to have to fulfill the condition
+	 * @param question the question to check
+	 * @param value the UnknownAnswer that have to be fulfilled
 	 */
 	public CondEqual(QuestionChoice question, AnswerUnknown value) {
 		super(question);
-		values = new Vector();
+		values = new ArrayList(1);
 		values.add(value);
 	}
 
-	/**
-	 * Checks if the question has the value(s) specified in the constructor.
-	 */
+	@Override
 	public boolean eval(XPSCase theCase)
 		throws NoAnswerException, UnknownAnswerException {
 		checkAnswer(theCase);
@@ -99,37 +122,40 @@ public class CondEqual extends CondQuestion {
 		}
 	}
 
+	/**
+	 * Returns the values that have to be assigned to the question
+	 * to fulfill the condition.
+	 * @return the constrained values of this condition 
+	 */
 	public List getValues() {
 		return values;
 	}
 
+	/**
+	 * Sets the values that have to be assigned to the question
+	 * to fulfill the condition.
+	 * @param newValues the constrained values of this condition 
+	 */
 	public void setValues(List newValues) {
 		values = newValues;
 	}
 
-	/**
-	 * Verbalizes the condition.
-	 */
+	@Override
 	public String toString() {
 		String ret =
 			"<Condition type='equal' ID='" + question.getId() + "' value='";
-
 		Iterator iter = values.iterator();
-
 		if (iter.hasNext()) {
-			ret += getId(iter.next());
+			 ret += getId(iter.next());
 		}
-
 		while (iter.hasNext()) {
 			ret += "," + getId(iter.next());
 		}
-
 		ret += "'></Condition>\n";
-
 		return ret;
 	}
 	
-	
+	@Override
 	public boolean equals(Object other) {
 		if (!super.equals(other)) return false;
 		
@@ -138,10 +164,12 @@ public class CondEqual extends CondQuestion {
 		else return this.getValues() == ((CondEqual)other).getValues();
 	}
 
+	@Override
 	public AbstractCondition copy() {
 		return new CondEqual(getQuestion(), getValues());
 	}
 	
+	@Override
 	public int hashCode() {
 		int hash = super.hashCode()*31;
 		for (Object o : this.getValues()) {
@@ -150,5 +178,4 @@ public class CondEqual extends CondQuestion {
 		}
 		return hash;
 	}
-
 }

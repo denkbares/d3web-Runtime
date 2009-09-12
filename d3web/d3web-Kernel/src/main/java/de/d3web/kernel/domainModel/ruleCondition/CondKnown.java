@@ -1,51 +1,64 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.kernel.domainModel.ruleCondition;
 
 import de.d3web.kernel.XPSCase;
+import de.d3web.kernel.domainModel.answers.AnswerUnknown;
 import de.d3web.kernel.domainModel.qasets.Question;
 
 /**
- * This condition checks, if an IDObject (e.g. Question) has a value and is not
- * unknown The composite pattern is used for this. This class is a "leaf".
+ * This condition checks, if an IDObject (e.g. Question) has a value and was 
+ * not answered with {@link AnswerUnknown}.
+ * The composite pattern is used for this. This class is a "leaf".
  * Creation date: (13.09.2000 14:07:14)
  * 
- * @author Norman Brümmer
+ * @author Norman Bruemmer
  */
 public class CondKnown extends CondQuestion {
 
 	/**
-	 * Creates a new CondKnown object for the given Question
+	 * Creates a new CondKnown object for the given {@link Question}.
+	 * @param the given question
 	 */
 	public CondKnown(Question question) {
 		super(question);
 	}
 
-	/**
-	 * checks the condition.
-	 * 
-	 * @return true, iff the question has an answer that is different from
-	 *         "unknown"
-	 */
+	@Override
 	public boolean eval(XPSCase theCase) throws NoAnswerException {
 		try {
 			checkAnswer(theCase);
 			return true;
 		} catch (UnknownAnswerException ex) {
-			// commented out 20041110 marty
-			// this is not really necessary:
-			//			Logger.getLogger(this.getClass().getName()).throwing(
-			//				this.getClass().getName(), "eval", ex);
 			return false;
 		}
 	}
 
-	/**
-	 * @return java.lang.String
-	 */
+	@Override
 	public String toString() {
 		return "<Condition type='known' ID='" + question.getId()
 				+ "' value='any'>" + "</Condition>\n";
 	}
 
+	@Override
 	public AbstractCondition copy() {
 		return new CondKnown(getQuestion());
 	}

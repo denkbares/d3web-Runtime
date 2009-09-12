@@ -1,7 +1,25 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.kernel.psMethods;
 
-import java.util.Arrays;
-import java.util.Iterator;
 
 /**
  * Helper class to provide explict information about
@@ -11,7 +29,10 @@ import java.util.Iterator;
  * @author Joachim Baumeister
  */
 public class MethodKind implements java.io.Serializable {
-	private java.lang.String kind;
+	private static final long serialVersionUID = 7807082872089949082L;
+
+	private final String kind;
+	
 	public final static MethodKind FORWARD = new MethodKind("FORWARD");
 	public final static MethodKind BACKWARD = new MethodKind("BACKWARD");
 
@@ -46,12 +67,11 @@ public class MethodKind implements java.io.Serializable {
 	 * @author georg
 	 */
 	private Object readResolve() {
-		Iterator iter = Arrays.asList(new MethodKind[] {
+		MethodKind[] methodKinds = new MethodKind[] {
 			MethodKind.FORWARD,
 			MethodKind.BACKWARD,
-		}).iterator();
-		while (iter.hasNext()) {
-			MethodKind m = (MethodKind) iter.next();
+		};
+		for (MethodKind m : methodKinds) {
 			if (m.kind.equals(this.kind)) {
 				return m;
 			}

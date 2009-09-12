@@ -1,3 +1,23 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.kernel.domainModel.ruleCondition;
 
 import de.d3web.kernel.XPSCase;
@@ -14,19 +34,16 @@ import de.d3web.kernel.domainModel.qasets.QuestionNum;
 public class CondNumGreater extends CondNum {
 
 	/**
-	 * Creates a new condtion, where a the specified numerical question needs to
+	 * Creates a new condition, where a the specified numerical question needs to
 	 * be greater than the specified value.
-	 * @param quest the specified numerical question
-	 * @param val the specified value (Double)
+	 * @param question the specified numerical question
+	 * @param value the specified value (Double)
 	 */
 	public CondNumGreater(QuestionNum question, Double value) {
 		super(question, value);
 	}
 
-	/**
-	  * @return true, iff the value of the question is greater 
-	  * than the given numerical value.
-	  */
+	@Override
 	public boolean eval(XPSCase theCase)
 		throws NoAnswerException, UnknownAnswerException {
 		checkAnswer(theCase);
@@ -40,9 +57,7 @@ public class CondNumGreater extends CondNum {
 		}
 	}
 
-	/**
-	 * Verbalizes the condition.
-	 */
+	@Override
 	public String toString() {
 
 		return "<Condition type='numGreater' ID='"
@@ -53,6 +68,7 @@ public class CondNumGreater extends CondNum {
 			+ "</Condition>\n";
 	}
 	
+	@Override
 	public AbstractCondition copy() {
 		return new CondNumGreater((QuestionNum)getQuestion(),  getAnswerValue());
 	}

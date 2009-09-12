@@ -1,8 +1,28 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.kernel.psMethods.diagnosisDecisionGraph;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 import de.d3web.kernel.XPSCase;
@@ -12,6 +32,7 @@ import de.d3web.kernel.domainModel.DiagnosisState;
 import de.d3web.kernel.domainModel.NamedObject;
 import de.d3web.kernel.dynamicObjects.CaseDiagnosis;
 import de.d3web.kernel.psMethods.PSMethod;
+import de.d3web.kernel.psMethods.PropagationEntry;
 import de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic;
 import de.d3web.kernel.psMethods.userSelected.PSMethodUserSelected;
 import de.d3web.kernel.supportknowledge.Property;
@@ -30,17 +51,19 @@ public class PSMethodDiagnosisDecisionGraph implements PSMethod {
 
 	private static PSMethod instance;
 
-	class DiagnosisStateComparator implements Comparator {
-		private final List allStati = Arrays.asList(new DiagnosisState[]{DiagnosisState.EXCLUDED,
-				DiagnosisState.UNCLEAR, DiagnosisState.SUGGESTED, DiagnosisState.ESTABLISHED});
+	class DiagnosisStateComparator implements Comparator<DiagnosisState> {
+		private final List<DiagnosisState> allStati = Arrays.asList(
+				new DiagnosisState[] {
+					DiagnosisState.EXCLUDED,
+					DiagnosisState.UNCLEAR, 
+					DiagnosisState.SUGGESTED, 
+					DiagnosisState.ESTABLISHED });
 
-		public int compare(Object o1, Object o2) {
-			if ((o1 instanceof DiagnosisState) && (o2 instanceof DiagnosisState)) {
-				int index1 = allStati.indexOf(o1);
-				int index2 = allStati.indexOf(o2);
-				if ((index1 > -1) && (index2 > -1)) {
-					return index1 - index2;
-				}
+		public int compare(DiagnosisState o1, DiagnosisState o2) {
+			int index1 = allStati.indexOf(o1);
+			int index2 = allStati.indexOf(o2);
+			if ((index1 > -1) && (index2 > -1)) {
+				return index1 - index2;
 			}
 			return 0;
 		}
@@ -75,16 +98,15 @@ public class PSMethodDiagnosisDecisionGraph implements PSMethod {
 		return true;
 	}
 
-	public void propagate(XPSCase theCase, NamedObject nob, Object[] newValue) {
-		if (nob instanceof Diagnosis) {
-			Iterator parentIter = nob.getParents().iterator();
-			while (parentIter.hasNext()) {
-				Diagnosis diag = (Diagnosis) parentIter.next();
-				checkDiagnosis(theCase, diag);
+	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
+		for (PropagationEntry change : changes) {
+			if (change.getObject() instanceof Diagnosis) {
+				for (NamedObject diag : change.getObject().getParents()) {
+					checkDiagnosis(theCase, (Diagnosis) diag);
+				}
 			}
 		}
-
-	}
+	};
 
 	private void checkDiagnosis(XPSCase theCase, Diagnosis parent) {
 		String property = (String) parent.getProperties().getProperty(Property.DIAGNOSIS_TYPE);
@@ -102,9 +124,8 @@ public class PSMethodDiagnosisDecisionGraph implements PSMethod {
 
 	private void checkORDiagnosis(XPSCase theCase, Diagnosis parent) {
 		DiagnosisState maxState = DiagnosisState.EXCLUDED;
-		Iterator iter = parent.getChildren().iterator();
-		while (iter.hasNext()) {
-			DiagnosisState state = getStateOfMostWeighingContext(theCase, (Diagnosis) iter.next());
+		for (NamedObject diag : parent.getChildren()) {
+			DiagnosisState state = getStateOfMostWeighingContext(theCase, (Diagnosis) diag);
 			if (diagStateComparator.compare(state, maxState) > 0) {
 				maxState = state;
 			}
@@ -117,9 +138,8 @@ public class PSMethodDiagnosisDecisionGraph implements PSMethod {
 
 	private void checkANDDiagnosis(XPSCase theCase, Diagnosis parent) {
 		DiagnosisState minState = DiagnosisState.ESTABLISHED;
-		Iterator iter = parent.getChildren().iterator();
-		while (iter.hasNext()) {
-			DiagnosisState state = getStateOfMostWeighingContext(theCase, (Diagnosis) iter.next());
+		for (NamedObject diag : parent.getChildren()) {
+			DiagnosisState state = getStateOfMostWeighingContext(theCase, (Diagnosis) diag);
 			if (diagStateComparator.compare(state, minState) < 0) {
 				minState = state;
 			}

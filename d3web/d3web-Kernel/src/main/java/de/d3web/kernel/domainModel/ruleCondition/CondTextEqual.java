@@ -1,3 +1,23 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.kernel.domainModel.ruleCondition;
 
 import de.d3web.kernel.XPSCase;
@@ -14,7 +34,7 @@ public class CondTextEqual extends CondQuestion {
 	private String value;
 
 	/**
-	 * Creates a new condtion, where the specified text question needs to
+	 * Creates a new condition, where the specified text question needs to
 	 * be equal to the specified value.
 	 * @param question the specified text question
 	 * @param value the specified value (String)
@@ -24,9 +44,7 @@ public class CondTextEqual extends CondQuestion {
 		this.value = value;
 	}
 
-	/**
-	  * @return true, iff the question is equal to a specified value.
-	  */
+	@Override
 	public boolean eval(XPSCase theCase)
 		throws NoAnswerException, UnknownAnswerException {
 		checkAnswer(theCase);
@@ -39,19 +57,26 @@ public class CondTextEqual extends CondQuestion {
 		}
 	}
 
-	public java.lang.String getValue() {
+	/** 
+	 * Returns the {@link String} value that has to be 
+	 * equal to the answer given to the text value.
+	 * @return the required String value
+	 */
+	public String getValue() {
 		return value;
 	}
 
-	public void setValue(java.lang.String newValue) {
+	/**
+	 * Sets the {@link String} value that has to be 
+	 * equal to the answer given to the text value. 
+	 * @param newValue the required String value
+	 */
+	public void setValue(String newValue) {
 		value = newValue;
 	}
 
-	/**
-	 * Verbalizes the condition.
-	 */
+	@Override
 	public String toString() {
-
 		return "<Condition type='textEqual' ID='"
 			+ question.getId()
 			+ "' value='"
@@ -60,6 +85,7 @@ public class CondTextEqual extends CondQuestion {
 			+ "</Condition>\n";
 	}
 	
+	@Override
 	public boolean equals(Object other) {
 		if (!super.equals(other)) return false;
 	
@@ -68,9 +94,8 @@ public class CondTextEqual extends CondQuestion {
 		else return this.getValue() == ((CondTextEqual)other).getValue();	
 	}
 	
+	@Override
 	public AbstractCondition copy() {
 		return new CondTextEqual((QuestionText)getQuestion(), getValue());
 	}
-	
-
 }

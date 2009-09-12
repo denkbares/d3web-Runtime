@@ -1,4 +1,24 @@
 /*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
+/*
  * Created on 27.05.2003
  *
  * To change the template for this generated file go to
@@ -8,13 +28,15 @@ package de.d3web.kernel.supportknowledge;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author hoernlein
  * 
  */
 public class MMInfoSubject implements java.io.Serializable {
-	
+	private static final long serialVersionUID = 4496885373902478779L;
+
 	private String name;
 	private MMInfoSubject() { /* hide empty constructor */ }
 	private MMInfoSubject(String name) {
@@ -103,20 +125,24 @@ public class MMInfoSubject implements java.io.Serializable {
 		return name;
 	}
 	
-	public static Iterator getIterator() {
+	public static List<MMInfoSubject> getSubjects() {
 		return Arrays.asList(new MMInfoSubject[] {
-			MMInfoSubject.INFO,
-			MMInfoSubject.SYNONYMS,
-			MMInfoSubject.MEDIA,
-			MMInfoSubject.LINK,
-			MMInfoSubject.URL,
-			MMInfoSubject.MULTIMEDIA,
-			MMInfoSubject.THERAPY,
-			MMInfoSubject.PREDICTION,
-			MMInfoSubject.PROMPT,
-			MMInfoSubject.COMMENT,
-			MMInfoSubject.IZONE
-		}).iterator();
+				MMInfoSubject.INFO,
+				MMInfoSubject.SYNONYMS,
+				MMInfoSubject.MEDIA,
+				MMInfoSubject.LINK,
+				MMInfoSubject.URL,
+				MMInfoSubject.MULTIMEDIA,
+				MMInfoSubject.THERAPY,
+				MMInfoSubject.PREDICTION,
+				MMInfoSubject.PROMPT,
+				MMInfoSubject.COMMENT,
+				MMInfoSubject.IZONE
+			});
+	}
+	
+	public static Iterator<MMInfoSubject> getIterator() {
+		return getSubjects().iterator();
 	}
 	
 	
@@ -127,7 +153,7 @@ public class MMInfoSubject implements java.io.Serializable {
 	 * @author georg
 	 */
 	private Object readResolve() {
-		Iterator iter = getIterator();
+		Iterator<MMInfoSubject> iter = getIterator();
 		while (iter.hasNext()) {
 			MMInfoSubject s = (MMInfoSubject) iter.next();
 			if (s.getName().equals(this.getName())) {

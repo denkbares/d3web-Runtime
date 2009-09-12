@@ -1,6 +1,25 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.kernel.psMethods.heuristic;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -10,10 +29,12 @@ import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisScore;
 import de.d3web.kernel.domainModel.DiagnosisState;
 import de.d3web.kernel.domainModel.HDTType;
+import de.d3web.kernel.domainModel.KnowledgeSlice;
 import de.d3web.kernel.domainModel.NamedObject;
 import de.d3web.kernel.domainModel.RuleComplex;
 import de.d3web.kernel.psMethods.PSMethodAdapter;
 import de.d3web.kernel.psMethods.PSSubMethod;
+import de.d3web.kernel.psMethods.PropagationEntry;
 import de.d3web.kernel.supportknowledge.Property;
 
 /**
@@ -37,7 +58,7 @@ import de.d3web.kernel.supportknowledge.Property;
  */
 public class PSMethodHeuristic extends PSMethodAdapter {
 	
-	private Collection<PSSubMethod> subPSMethods = new LinkedList();
+	private Collection<PSSubMethod> subPSMethods = new LinkedList<PSSubMethod>();
 	// remembers if the case was stopped before (e.g., by SFA)
 	private boolean wasPreviouslyStopped = false;
 	
@@ -111,8 +132,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
     private Diagnosis computeBestDiagnosis(XPSCase theCase) {
         Diagnosis best = null;
         DiagnosisScore bestScore = null;
-        for (Iterator iter = theCase.getKnowledgeBase().getDiagnoses().iterator(); iter.hasNext();) {
-            Diagnosis d = (Diagnosis) iter.next();
+        for (Diagnosis d : theCase.getKnowledgeBase().getDiagnoses()) {
             if (isFinalDiagnosis(d)) {
                 if (best == null) {
                     best = d;
@@ -125,7 +145,6 @@ public class PSMethodHeuristic extends PSMethodAdapter {
                     }
                 }
             }
-            
         }
         return best;
     }
@@ -133,11 +152,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
     /**
 	 * Check if NamedObject has nextQASet rules and check them, if available
 	 */
-	public void propagate(
-		XPSCase theCase,
-		NamedObject nob,
-		Object[] newValue) {
-
+	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
 	    
 	    // do nothing, if case has been finished
 	    if (theCase.isFinished()) {
@@ -153,20 +168,23 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 			//[MISC]:Peter: decide where to check if the subPS should be used:
 			for (PSSubMethod subMethod : subPSMethods) {
 				if(subMethod.isActivated(theCase)) {
-					subMethod.propagate(theCase, nob, newValue);
+					subMethod.propagate(theCase, changes);
 				}
 			}
 			
-			checkRulesFor(theCase, nob);
-		} catch (Exception ex) {
+			for (PropagationEntry change : changes) {
+				checkRulesFor(theCase, change.getObject());
+			}
+		} 
+		catch (Exception ex) {
 			Logger.getLogger(this.getClass().getName()).throwing(
 				this.getClass().getName(), "propagate", ex);
 		}
 		
 	    // If SFA: if a diagnosis is established, then finish the case 
 	    if ((isSFA(theCase)) && (finalSolutionIsEstablished(theCase))) {
-                theCase.finish(getClass());
-                return;
+            theCase.finish(RuleComplex.class);
+            return;
 	    }
 
 	}
@@ -175,8 +193,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 	
 
     private boolean finalSolutionIsEstablished(XPSCase theCase) {
-        for (Iterator iter = theCase.getKnowledgeBase().getDiagnoses().iterator(); iter.hasNext();) {
-            Diagnosis d = (Diagnosis) iter.next();
+        for (Diagnosis d : theCase.getKnowledgeBase().getDiagnoses()) {
             if ((isFinalDiagnosis(d)) && 
                 (getState(theCase, d).equals(DiagnosisState.ESTABLISHED))){
                 return true;
@@ -191,13 +208,14 @@ public class PSMethodHeuristic extends PSMethodAdapter {
      * @param nob
      */
     private void checkRulesFor(XPSCase theCase, NamedObject nob) {
-        List knowledgeSlices = (nob.getKnowledge(this.getClass()));
+        List<? extends KnowledgeSlice> knowledgeSlices = nob.getKnowledge(this.getClass());
         if (knowledgeSlices != null) {
-            for (Iterator iter = knowledgeSlices.iterator(); iter.hasNext();) {
+            for (KnowledgeSlice slice : knowledgeSlices) {
                 try {
-                    RuleComplex rule = (RuleComplex) iter.next();
+                    RuleComplex rule = (RuleComplex) slice;
                     rule.check(theCase);
-                } catch (Exception e) {
+                } 
+                catch (Exception e) {
                     Logger.getLogger(this.getClass().getName()).throwing(
                             this.getClass().getName(), "propagate", e);
                 }
@@ -212,20 +230,19 @@ public class PSMethodHeuristic extends PSMethodAdapter {
      * @param theCase
      */
     private void reCheckAllRules(XPSCase theCase) {
-        List oldEstablishedDiagnoses = theCase.getDiagnoses(DiagnosisState.ESTABLISHED);
-        List objects = new LinkedList(theCase.getKnowledgeBase().getQuestions());
+        List<Diagnosis> oldEstablishedDiagnoses = theCase.getDiagnoses(DiagnosisState.ESTABLISHED);
+        List<NamedObject> objects = new LinkedList<NamedObject>(theCase.getKnowledgeBase().getQuestions());
         objects.addAll(theCase.getKnowledgeBase().getDiagnoses());
-        for (Iterator iter = objects.iterator(); iter.hasNext();) {
-            NamedObject o = (NamedObject) iter.next();
+        for (NamedObject o : objects) {
             checkRulesFor(theCase, o);
         }
         
-        List newEstalishedDiagnoses = theCase.getDiagnoses(DiagnosisState.ESTABLISHED);
+        List<Diagnosis> newEstalishedDiagnoses = theCase.getDiagnoses(DiagnosisState.ESTABLISHED);
         if ((!oldEstablishedDiagnoses.isEmpty()) &&
             (oldEstablishedDiagnoses.containsAll(newEstalishedDiagnoses)) &&
             (newEstalishedDiagnoses.containsAll(oldEstablishedDiagnoses))) {
             // nothing has changed and a diagnosis is established => finishCase
-            theCase.finish(getClass());
+            theCase.finish(RuleComplex.class);
         }
             
     }
@@ -236,7 +253,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
      * @return
      */
     private boolean isFinalDiagnosis(Diagnosis diagnosis) {
-        List c = diagnosis.getChildren();
+        List<?> c = diagnosis.getChildren();
         boolean hasNoChildren = ((c == null) || (c.isEmpty()));
         HDTType type = diagnosis.getHdtType();
         if (type != null) {

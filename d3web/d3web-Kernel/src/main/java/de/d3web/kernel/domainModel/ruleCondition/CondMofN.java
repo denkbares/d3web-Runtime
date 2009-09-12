@@ -1,13 +1,32 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.kernel.domainModel.ruleCondition;
-import java.util.Iterator;
 import java.util.List;
 
 import de.d3web.kernel.XPSCase;
 /**
- * Implements an "m out of n"-condition, where m sub-conditions of all
- * n conditions have to be true.
+ * Implements a Min/Max condition: A list of sub-conditions is given, where
+ * <i>min</i> conditions must hold at least and <i>max</i> conditions must 
+ * hold at most, to fulfill the min/max condition.
  * The composite pattern is used for this. This class is a "composite".
- * 
  * @author joba
  */
 public class CondMofN extends NonTerminalCondition {
@@ -16,9 +35,11 @@ public class CondMofN extends NonTerminalCondition {
 	private int max;
 
 	/**
-	 * Creates a new M-out-of-N-condition with a list of sub-conditions.
-	 * set min and max borders via setMin() and setMax().
-	 * evaluates with min <= numberOfTrueConditions <= max
+	 * Creates a new min/max condition with a list of sub-conditions
+	 * with the specified number of minimal and maximal required conditions.
+	 * @param terms the list of sub-conditions
+	 * @param min the number of minimal required conditions
+	 * @param max the number of maximal required conditions
 	 */
 	public CondMofN(List terms, int min, int max) {
 		super(terms);
@@ -26,66 +47,70 @@ public class CondMofN extends NonTerminalCondition {
 		setMax(max);
 	}
 
-	/**
-	  * checks this M-out-of-N condition.
-	  * @return true, iff m sub-conditions of all n conditions are true.
-	  */
+	@Override
 	public boolean eval(XPSCase theCase)
 		throws NoAnswerException, UnknownAnswerException {
 		int trueTillNow = 0;
-		Iterator iter = terms.iterator();
-
 		boolean wasNoAnswer = false;
 
-		while (iter.hasNext()) {
-
+		for (AbstractCondition condition : terms) {
 			try {
-				if (((AbstractCondition) iter.next()).eval(theCase)) {
+				if (condition.eval(theCase)) {
 					trueTillNow++;
 					if (trueTillNow > getMax())
 						return false;
 				}
-
 			} catch (NoAnswerException nax) {
 				wasNoAnswer = true;
 			} catch (UnknownAnswerException uax) {
-
+				// do nothing, if all are Unknown, the return FALSE is appropriate
 			}
-
 		}
-
 		if (trueTillNow >= getMin())
 			return true;
-
-		else if (wasNoAnswer) {
+		else if (wasNoAnswer)
 			throw NoAnswerException.getInstance();
-		} else
+		else
+			// if all answers were Unknown, then also false is appropriate
 			return false;
 
 	}
-
+	
+	/**
+	 * Returns the maximum number of allowed sub-conditions to be true. 
+	 * @return the maximum number of allowed true sub-conditions
+	 */
 	public int getMax() {
 		return max;
 	}
 
+	/**
+	 * Returns the minimum number of required sub-conditions to be true. 
+	 * @return the minimum number of required true sub-conditions
+	 */
 	public int getMin() {
 		return min;
 	}
 
+	/**
+	 * Sets the maximum number of allowed sub-conditions to be true. 
+	 * @param max the maximum number of allowed true sub-conditions
+	 */
 	public void setMax(int max) {
 		this.max = max;
 	}
 
+	/**
+	 * Sets the minimum number of required sub-conditions to be true. 
+	 * @param min the minimum number of required true sub-conditions
+	 */
 	public void setMin(int min) {
+		if (min<0) min=0;
 		this.min = min;
 	}
 
-	/**
-	 * Verbalizes the condition.
-	 */
+	@Override
 	public String toString() {
-
-		Iterator iter = terms.iterator();
 		String ret =
 			"<Condition type='MofN' min='"
 				+ getMin()
@@ -94,22 +119,25 @@ public class CondMofN extends NonTerminalCondition {
 				+ "' size='"
 				+ terms.size()
 				+ "'>\n";
-
-		while (iter.hasNext()) {
-			ret += ((AbstractCondition) iter.next()).toString();
+		for (AbstractCondition condition : terms) {
+			ret += (condition).toString();
 		}
-
 		return ret + "</Condition>\n";
 	}
 	
+	@Override
 	public boolean equals(Object other){
-		if (!super.equals(other))
+		if (other instanceof CondMofN) {
+			return (super.equals(other)) &&
+			       (this.getMin() == ((CondMofN)other).getMin()) && 
+				   (this.getMax() == ((CondMofN)other).getMax());
+			
+		}
+		else 
 			return false;
-		
-		//noch min und max vergleichen
-		return (this.getMin() == ((CondMofN)other).getMin()) && (this.getMax() == ((CondMofN)other).getMax());
 	}
 
+	@Override
 	protected AbstractCondition createInstance(List theTerms, AbstractCondition o) {
 		int min = ((CondMofN)o).getMin();
 		int max = ((CondMofN)o).getMax();

@@ -1,3 +1,23 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.kernel.domainModel;
 
 import java.lang.reflect.Constructor;
@@ -24,22 +44,24 @@ import de.d3web.kernel.psMethods.userSelected.PSMethodUserSelected;
  */
 public class CaseFactory {
 
-	private static class QASetManagerFactoryAdapter
-		implements QASetManagerFactory {
-		private Class qaSetManagerClass = null;
-		public QASetManagerFactoryAdapter(Class qaSetManagerClass) {
+	private static class QASetManagerFactoryAdapter implements QASetManagerFactory {
+		
+		private Class<? extends QASetManager> qaSetManagerClass = null;
+		
+		public QASetManagerFactoryAdapter(Class<? extends QASetManager> qaSetManagerClass) {
 			super();
 			if (!QASetManager.class.isAssignableFrom(qaSetManagerClass)) {
 				throw new ClassCastException();
 			}
 			this.qaSetManagerClass = qaSetManagerClass;
 		}
+		
 		/* (non-Javadoc)
 		 * @see de.d3web.kernel.dialogControl.QASetManagerFactory#createQASetManager(de.d3web.kernel.XPSCase)
 		 */
 		public QASetManager createQASetManager(XPSCase theCase) {
 			try {
-				Constructor constructor =
+				Constructor<? extends QASetManager> constructor =
 					qaSetManagerClass.getConstructor(new Class[] { XPSCase.class });
 				return (QASetManager) constructor.newInstance(
 					new Object[] { theCase });
@@ -49,41 +71,39 @@ public class CaseFactory {
 		}
 	}
 
-/**
- *	Factory-method that produces instances of XPSCase with default QASetManagerFactory
- *	@param kb Knowledgebase used in the case.
- *  @return new XPSCase-object with KnowledgeBase kb
- */
-public static synchronized XPSCase createXPSCase(KnowledgeBase kb) {
-	return new D3WebCase(kb, new DefaultQASetManagerFactory());
-}
-
-/**
- *	Factory-method that produces instances of XPSCase
- *	@param kb Knowledgebase used in the case.
- *  @return new XPSCase-object with KnowledgeBase kb
- */
-public static synchronized XPSCase createXPSCase(
-	KnowledgeBase kb,
-	QASetManagerFactory factory) {
-	return new D3WebCase(kb, factory);
-}
-
-/**
- *	Factory-method that produces instances of XPSCase
- *	@param kb Knowledgebase used in the case.
- *  @return new XPSCase-object with KnowledgeBase kb
- */
-public static synchronized XPSCase createXPSCase(
-	KnowledgeBase kb,
-	Class qaManagerClass) {
-	return new D3WebCase(kb, new QASetManagerFactoryAdapter(qaManagerClass));
-}
-
-	private static void addUsedPSMethods(XPSCase newCase, List psMethods) {
-		Iterator iter = psMethods.iterator();
-		while (iter.hasNext()) {
-			PSMethod psm = (PSMethod) iter.next();
+	/**
+	 *	Factory-method that produces instances of XPSCase with default QASetManagerFactory
+	 *	@param kb Knowledgebase used in the case.
+	 *  @return new XPSCase-object with KnowledgeBase kb
+	 */
+	public static synchronized XPSCase createXPSCase(KnowledgeBase kb) {
+		return new D3WebCase(kb, new DefaultQASetManagerFactory());
+	}
+	
+	/**
+	 *	Factory-method that produces instances of XPSCase
+	 *	@param kb Knowledgebase used in the case.
+	 *  @return new XPSCase-object with KnowledgeBase kb
+	 */
+	public static synchronized XPSCase createXPSCase(
+		KnowledgeBase kb,
+		QASetManagerFactory factory) {
+		return new D3WebCase(kb, factory);
+	}
+	
+	/**
+	 *	Factory-method that produces instances of XPSCase
+	 *	@param kb Knowledgebase used in the case.
+	 *  @return new XPSCase-object with KnowledgeBase kb
+	 */
+	public static synchronized XPSCase createXPSCase(
+			KnowledgeBase kb,
+			Class<? extends QASetManager> qaManagerClass) {
+		return new D3WebCase(kb, new QASetManagerFactoryAdapter(qaManagerClass));
+	}
+	
+	private static void addUsedPSMethods(XPSCase newCase, List<? extends PSMethod> psMethods) {
+		for (PSMethod psm : psMethods) {
 			((D3WebCase) newCase).addUsedPSMethod(psm);
 			psm.init(newCase);
 		}
@@ -100,9 +120,9 @@ public static synchronized XPSCase createXPSCase(
 	 */
 	public static XPSCase createAnsweredXPSCase(
 		KnowledgeBase kb,
-		Class dialogControllerType,
+		Class<? extends QASetManager> dialogControllerType,
 		DialogProxy proxy,
-		List usedPSMethods) {
+		List<? extends PSMethod> usedPSMethods) {
 		return createAnsweredXPSCase(kb, dialogControllerType, proxy, null, usedPSMethods);
 	}
 
@@ -120,10 +140,10 @@ public static synchronized XPSCase createXPSCase(
 	 */
 	public static XPSCase createAnsweredXPSCase(
 		KnowledgeBase kb,
-		Class dialogControllerType,
+		Class<? extends QASetManager> dialogControllerType,
 		DialogProxy proxy,
-		Collection registeredQContainers,
-		List usedPSMethods) {
+		Collection<? extends QContainer> registeredQContainers,
+		List<? extends PSMethod> usedPSMethods) {
 
 		XPSCase newCase = createXPSCase(kb, dialogControllerType);
 		addUsedPSMethods(newCase, usedPSMethods);
@@ -154,7 +174,7 @@ public static synchronized XPSCase createXPSCase(
 			XPSCase newCase, 
 			KnowledgeBase kb,
 			DialogProxy proxy,
-			Collection registeredQContainers) {
+			Collection<? extends QContainer> registeredQContainers) {
 		
 		// first answer all normally indicated questions
 		// go through all remaining QASets
@@ -166,10 +186,8 @@ public static synchronized XPSCase createXPSCase(
 
 		// then process the registered containers
 		if ((registeredQContainers != null) && (registeredQContainers.size() > 0)) {
-			Iterator regIter = registeredQContainers.iterator();
-			while (regIter.hasNext()) {
-				QASet qaSet = (QASet) regIter.next();
-				List pros = qaSet.getProReasons(newCase);
+			for (QASet qaSet : registeredQContainers) {
+				List<?> pros = qaSet.getProReasons(newCase);
 				if ((pros == null) || (pros.size() == 0)) {
 					qaSet.addProReason(new QASet.Reason(null, PSMethodUserSelected.class), newCase);
 				}
@@ -177,10 +195,8 @@ public static synchronized XPSCase createXPSCase(
 				answerQuestions(qaSet, proxy, newCase, mqdc);
 			}
 			// now remove the user-selection if possible
-			regIter = registeredQContainers.iterator();
-			while (regIter.hasNext()) {
-				QASet qaSet = (QASet) regIter.next();
-				List pros = qaSet.getProReasons(newCase);
+			for (QASet qaSet : registeredQContainers) {
+				List<?> pros = qaSet.getProReasons(newCase);
 				if (((pros != null) && (pros.size() > 1))
 					|| ((qaSet instanceof QContainer) && (mqdc.nothingIsDoneInContainer((QContainer) qaSet)))) {
 					qaSet.removeProReason(new QASet.Reason(null, PSMethodUserSelected.class), newCase);

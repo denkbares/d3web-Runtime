@@ -1,4 +1,24 @@
 /*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
+/*
  * Created on 10.11.2003
  */
 package de.d3web.kernel.utilities;
@@ -7,8 +27,6 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.rmi.server.UID;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
@@ -26,34 +44,24 @@ import java.util.logging.SimpleFormatter;
 public class Logging {
 
     private static class Formatter extends SimpleFormatter {
-
-	private int stackTraceLength;
-
-	private Formatter() { /* hide empty */
-	}
-
-	public Formatter(int stackTraceLength) {
-	    this.stackTraceLength = stackTraceLength;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * java.util.logging.SimpleFormatter#format(java.util.logging.LogRecord)
-	 */
-	public synchronized String format(LogRecord record) {
-	    if (record.getThrown() != null) {
-		StackTraceElement[] ste = record.getThrown().getStackTrace();
-		int stackSize = Math.min(stackTraceLength, ste.length);
-		StackTraceElement[] newSTE = new StackTraceElement[stackSize];
-		for (int i = 0; i < stackSize; i++)
-		    newSTE[i] = ste[i];
-		record.getThrown().setStackTrace(newSTE);
-	    }
-	    return super.format(record);
-	}
-
+	
+		private int stackTraceLength;
+	
+		public Formatter(int stackTraceLength) {
+		    this.stackTraceLength = stackTraceLength;
+		}
+	
+		public synchronized String format(LogRecord record) {
+		    if (record.getThrown() != null) {
+			StackTraceElement[] ste = record.getThrown().getStackTrace();
+			int stackSize = Math.min(stackTraceLength, ste.length);
+			StackTraceElement[] newSTE = new StackTraceElement[stackSize];
+			for (int i = 0; i < stackSize; i++)
+			    newSTE[i] = ste[i];
+			record.getThrown().setStackTrace(newSTE);
+		    }
+		    return super.format(record);
+		}
     }
 
     private static boolean initialized = false;
@@ -89,47 +97,46 @@ public class Logging {
     private static int f_stackTraceLength = DEFAULT_FILE_STACK_TRACE_LENGTH;
 
     public static void init(String resbundlename) {
-	if (!initialized) {
-
-	    deleteOldLogFiles();
-
-	    try {
-		ResourceBundle bundle = ResourceBundle.getBundle(resbundlename);
-
-		c_level = Level.parse(bundle.getString("console.level"));
-		c_stackTraceLength = Integer.parseInt(bundle
-			.getString("console.stacktracelength"));
-		f_level = Level.parse(bundle.getString("file.level"));
-		f_stackTraceLength = Integer.parseInt(bundle
-			.getString("file.stacktracelength"));
-
-	    } catch (Exception ex) {
-		System.err.println("Error while reading ResourceBundle");
-	    }
-
-	    Logger logger = Logger.getLogger("de.d3web");
-	    logger.setUseParentHandlers(false);
-	    logger.setLevel(Level.ALL);
-
-	    {
-		Handler handler = new ConsoleHandler();
-		handler.setLevel(c_level);
-		handler.setFormatter(new Formatter(c_stackTraceLength));
-		logger.addHandler(handler);
-	    }
-
-	    // file handler is created lazily
-	    try {
-		logger.addHandler(getFileHandler());
-	    } catch (SecurityException e) {
-		Logger.getLogger(Logging.class.getName()).throwing(
-			Logging.class.getName(), "init", e);
-	    }
-
-	    System.out.println(getInitText());
-
-	    initialized = true;
-	}
+		if (!initialized) {
+	
+		    deleteOldLogFiles();
+	
+		    try {
+				ResourceBundle bundle = ResourceBundle.getBundle(resbundlename);
+		
+				c_level = Level.parse(bundle.getString("console.level"));
+				c_stackTraceLength = Integer.parseInt(bundle
+					.getString("console.stacktracelength"));
+				f_level = Level.parse(bundle.getString("file.level"));
+				f_stackTraceLength = Integer.parseInt(bundle
+					.getString("file.stacktracelength"));
+		
+		    } 
+		    catch (Exception ex) {
+		    	System.err.println("Error while reading ResourceBundle");
+		    }
+		
+		    Logger logger = Logger.getLogger("de.d3web");
+		    logger.setUseParentHandlers(false);
+		    logger.setLevel(Level.ALL);
+		    
+		    Handler handler = new ConsoleHandler();
+		    handler.setLevel(c_level);
+		    handler.setFormatter(new Formatter(c_stackTraceLength));
+		    logger.addHandler(handler);
+		    
+		    // file handler is created lazily
+		    try {
+		    	logger.addHandler(getFileHandler());
+		    } 
+		    catch (SecurityException e) {
+		    	Logger.getLogger(Logging.class.getName()).throwing(
+		    			Logging.class.getName(), "init", e);
+		    }
+	
+		    System.out.println(getInitText());
+		    initialized = true;
+		}
     }
 
     public static String getInitText() {
@@ -145,46 +152,40 @@ public class Logging {
     }
 
     private static void deleteOldLogFiles() {
-	FilenameFilter filter = new FilenameFilter() {
-	    public boolean accept(File dir, String name) {
-		return name.startsWith(PREFIX)
-			&& (name.endsWith(SUFFIX) || (name.endsWith(SUFFIX
-				+ LOCK)));
-	    }
-	};
-
-	File[] files = TEMP_DIR.listFiles(filter);
-	if (files == null)
-	    return;
-	Iterator iter = Arrays.asList(files).iterator();
-
-	while (iter.hasNext()) {
-	    File file = (File) iter.next();
-	    if ((System.currentTimeMillis() - file.lastModified()) > TIME_DIFF)
-		if (!file.delete())
-		    Logger.getLogger(Logging.class.getName()).warning(
-			    "Error while deleting log-File : "
-				    + file.toString());
-	}
-
+		FilenameFilter filter = new FilenameFilter() {
+		    public boolean accept(File dir, String name) {
+			return name.startsWith(PREFIX)
+				&& (name.endsWith(SUFFIX) || (name.endsWith(SUFFIX + LOCK)));
+		    }
+		};
+	
+		File[] files = TEMP_DIR.listFiles(filter);
+		if (files == null) return;
+		for (File file : files) {
+		    if ((System.currentTimeMillis() - file.lastModified()) > TIME_DIFF)
+			if (!file.delete()) {
+			    Logger.getLogger(Logging.class.getName()).warning(
+				    "Error while deleting log-File : " + file.toString());
+			}
+		}
     }
 
     public static String getLoggingFilename() {
-	return logFile;
+    	return logFile;
     }
 
     public static FileHandler getFileHandler() {
-	if (fileHandler == null) {
-	    try {
-		fileHandler = new FileHandler(logFile);
-		fileHandler.setLevel(f_level);
-		fileHandler.setFormatter(new Formatter(f_stackTraceLength));
-	    } catch (IOException e) {
-		Logger.getLogger(Logging.class.getName()).throwing(
-			Logging.class.getName(), "init", e);
-	    }
-	}
-	return fileHandler;
+		if (fileHandler == null) {
+		    try {
+				fileHandler = new FileHandler(logFile);
+				fileHandler.setLevel(f_level);
+				fileHandler.setFormatter(new Formatter(f_stackTraceLength));
+		    } 
+		    catch (IOException e) {
+				Logger.getLogger(Logging.class.getName()).throwing(
+					Logging.class.getName(), "init", e);
+		    }
+		}
+		return fileHandler;
     }
-
 }

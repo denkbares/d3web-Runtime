@@ -1,9 +1,31 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.kernel;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import de.d3web.kernel.dialogControl.DialogController;
 import de.d3web.kernel.dialogControl.QASetManager;
+import de.d3web.kernel.domainModel.Answer;
 import de.d3web.kernel.domainModel.CaseObjectSource;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisState;
@@ -16,141 +38,229 @@ import de.d3web.kernel.domainModel.qasets.QContainer;
 import de.d3web.kernel.domainModel.qasets.Question;
 import de.d3web.kernel.dynamicObjects.XPSCaseObject;
 import de.d3web.kernel.psMethods.PSMethod;
+import de.d3web.kernel.psMethods.PropagationContoller;
 import de.d3web.kernel.supportknowledge.DCMarkedUp;
 import de.d3web.kernel.supportknowledge.PropertiesContainer;
+
 /**
- * Interface that describes a case in general<br>
+ * Every problem-solving session is represented by a
+ * an XPSCase.
+ * It manages the used problem-solving methods {@link PSMethod}, 
+ * the entered findings ({@link Question} and {@link Answer}),
+ * derived solutions ({@link Diagnosis}). The XPSCase also holds 
+ * the used {@link KnowledgeBase}. <BR>  
+ * Most importantly, all entered answers have to set through the
+ * setValue methods of XPSCase, since XPSCase acts as a mediator
+ * during problem-solving between the user inputs and the 
+ * problem-solvers.
+ * 
  * Creation date: (30.11.2000 14:17:40)
- * @author Norman Brümmer
+ * @author Norman Bruemmer, joba
  */
 public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 
-	public Collection<? extends PSMethod> getDialogControllingPSMethods();
+	/**
+	 * Returns all registered {@link PSMethod} instances that also 
+	 * have an impact on the interview behavior.
+	 * @return all {@link PSMethod} instances influencing the interview behavior
+	 */
+	Collection<? extends PSMethod> getDialogControllingPSMethods();
 
-	public List<QContainer> getIndicatedQContainers();
+	List<QContainer> getIndicatedQContainers();
 
-	public List<? extends Question> getAnsweredQuestions();
+	/**
+	 * Returns all {@link Question} instances, that have been 
+	 * already answered in the case.
+	 * @return all currently answered questions in this case
+	 */
+	List<? extends Question> getAnsweredQuestions();
 
-	/**	
-	  * @param item Object whose case object should be returned
-	  * @return a (dynamic) case object of a static object.
-	  */
-	public XPSCaseObject getCaseObject(CaseObjectSource item);
+	/**
+	 * Returns the {@link XPSCaseObject} (dynamic flyweight object) 
+	 * corresponding to the specified {@link CaseObjectSource} instance
+	 * (often this is a {@link Question} or a {@link Diagnosis}.
+	 * 	
+	 * @param item Object whose case object should be returned
+	 * @return the corresponding {@link XPSCaseObject} of the given item
+	 */
+	XPSCaseObject getCaseObject(CaseObjectSource item);
 
 	/** 
-	  * @return a List of all Diagnoses the case contains
-	  */
-	public List<Diagnosis> getDiagnoses();
+	 * Returns all {@link Diagnosis} instances contained in the 
+	 * knowledge base as a sequential list.  
+	 * @return a list of all {@link Diagnosis} instances 
+	 */
+	List<Diagnosis> getDiagnoses();
 
 	/**
-	  * @param state the DiagnosisState the diagnoses must have to be returned
-	  * @return a list of diagnoses in this case that have the state 'state'
-	  */
-	public List<Diagnosis> getDiagnoses(DiagnosisState state);
+	 * Returns all {@link Diagnosis} instances, that hold the specified 
+	 * {@link DiagnosisState} in this {@link XPSCase}. All registered 
+	 * {@link PSMethod} instances are considered, so a {@link Diagnosis} 
+	 * is returned, if it haves the specified {@link DiagnosisState} for 
+	 * at least one {@link PSMethod}.
+	 *  
+	 * @param the specified {@link DiagnosisState} that the diagnoses should have
+	 * @return a list of {@link Diagnosis} instances having the specified state
+	 */
+	List<Diagnosis> getDiagnoses(DiagnosisState state);
 	
 	/**
-	  * @param state the DiagnosisState the diagnoses must have to be returned
-	  * @param psMethods Only these diagnoses are considered, whose
-	  *         states have been set by one of the given PSMethods
-	  * @return a list of diagnoses in this case that have the state 'state'
-	  */
-	public List<Diagnosis> getDiagnoses(DiagnosisState state, List psMethods);
-
-	/**
-	 * @return the KnowledgeBase used in this case
+	 * Returns all {@link Diagnosis} instances, that hold the specified 
+	 * {@link DiagnosisState} for at least one {@link PSMethod} specified.  
+	 * in this {@link XPSCase}. 
+	 * Only the specified {@link PSMethod} instances are considered, 
+	 * so a {@link Diagnosis} is returned, if it haves the specified 
+	 * {@link DiagnosisState} for at least one of these {@link PSMethod}.
+	 * 
+	 * @param state the DiagnosisState the diagnoses must have to be returned
+	 * @param psMethods Only these diagnoses are considered, whose
+	 *         states have been set by one of the given PSMethods
+	 * @return a list of diagnoses in this case that have the state 'state'
 	 */
-	public KnowledgeBase getKnowledgeBase();
-
-	public PSMethod getPSMethodInstance(Class context);
+	List<Diagnosis> getDiagnoses(DiagnosisState state, List<PSMethod> psMethods);
 
 	/**
-	 * @return the QASetManager defined for this case. May be a DialogController, Mediator...
+	 * Returns the {@link KnowledgeBase} instance this object belongs to.
+	 * @return the knowledge base used to solve this case
 	 */
-	public QASetManager getQASetManager();
+	KnowledgeBase getKnowledgeBase();
+
+	
+	PSMethod getPSMethodInstance(Class<? extends PSMethod> context);
 
 	/**
-	 * @return a List of all Questions the KnowledgeBase contains
+	 * Returns the {@link QASetManager} used in this case. 
+	 * @return the {@link QASetManager} defined for this case, for example 
+	 * a {@link DialogController}
 	 */
-	public List<? extends Question> getQuestions();
+	QASetManager getQASetManager();
 
 	/**
-	 * @return a List of used problem solvers
+	 * Returns the (flattened) list of all {@link Question} instances
+	 * contained in the knowledge base.
+	 * @return a list of all questions the knowledge base 
 	 */
-	public List<PSMethod> getUsedPSMethods();
+	List<? extends Question> getQuestions();
 
 	/**
-	 * @return true if there exists at least one reason to quit the case 
+	 * Returns a list of all registered {@link PSMethod} instances
+	 * used in this case.
+	 * @return a list of {@link PSMethod} instances registered for this case
 	 */
-	public boolean isFinished();
+	List<PSMethod> getUsedPSMethods();
 
 	/**
-	 * Adds a new reason for quiting the current case.
+	 * Returns the {@link PropagationContoller} instance, responsible for
+	 * do all propagation of this case.
+	 * @return the PropagationManager of this case
+	 */
+	PropagationContoller getPropagationContoller();
+	
+	/**
+	 * Tests, if the case is finished with respect to the 
+	 * problem-solving behavior, e.g., no more question are 
+	 * required to asked.  
+	 * @return true, if there exists at least one reason to quit the case 
+	 */
+	boolean isFinished();
+
+	/**
+	 * Adds a new reason for quitting this case.
 	 * @see XPSCase#setFinished(boolean f)
+	 * @param reasonForFinishCase the new reason to quit the case
 	 */
-	public void finish(Class reasonForFinishCase);
+	void finish(Class<? extends KnowledgeSlice> reasonForFinishCase);
 	
-	public Set<Class<? extends KnowledgeSlice>> getFinishReasons();
+	/**
+	 * Returns all registered reasons for setting the case into
+	 * the 'finished' state.
+	 * 
+	 * @return all reasons for finishing the case
+	 */
+	Set<Class<? extends KnowledgeSlice>> getFinishReasons();
 	
 	/**
 	 * Removes a specified reason from the set of
-	 * reasons for quiting the case.
-	 * @param reasonForContinueCase
+	 * reasons for quitting the case.
+	 * @param reasonForContinueCase the quit-reason to be removed 
+	 *        from the reasons list.
 	 */
-	public void continueCase(Class reasonForContinueCase);
+	void continueCase(Class<? extends KnowledgeSlice> reasonForContinueCase);
 
 	
 	/**
-	 * Sets a QASetManager that will be used for this case
+	 * Sets a {@link QASetManager}, that will be used to control
+	 * the interview behavior of this case. 
+	 * @param cd the {@link QASetManager} of this case
 	 */
-	public void setQASetManager(QASetManager cd);
+	void setQASetManager(QASetManager cd);
 
 	/**
-	 *	@param methods a List of used problem solvers
+	 * Sets the list of registered {@link PSMethod} instances, that
+	 * will be used during the problem-solving session.
+	 *@param methods the list of registered problem-solvers
 	 */
-	public void setUsedPSMethods(List methods);
+	void setUsedPSMethods(List<? extends PSMethod> methods);
 
 	/**
-	 *	Sets the value of a XPSCaseObject of a ValuedObject
-	 * @param ValuedObject	object whose XPSCaseObject´s value will be set
-	 * @param value value of the object
+	 * Assigns the specified value(s) to the specified {@link ValuedObject}, e.g., 
+	 * a {@link Question} or a {@link Diagnosis} receives a new value.
+	 * @param ValuedObject the object, that receives a new value
+	 * @param value the (array of new) values for the specified {@link ValuedObject} 
 	 */
-	public void setValue(ValuedObject o, Object[] value);
+	void setValue(ValuedObject o, Object[] value);
 
 	/**
-	 *	Sets the value of a XPSCaseObject of a ValuedObject in a special context
-	 * @param ValuedObject	object whose XPSCaseObject´s value will be set
-	 * @param value value of the object
-	 * @param context ProblemSolver-Class-Object
+	 * Assigns the specified value(s) to the specified {@link ValuedObject}, e.g., 
+	 * a {@link Question} or a {@link Diagnosis} receives a new value.
+	 * The knowledge source of this assignment is also given, here it is a 
+	 * {@link RuleComplex}.
+	 * @param ValuedObject	ValuedObject the object, that receives a new value
+	 * @param value  value the (array of new) values for the specified {@link ValuedObject}
+	 * @param context the knowledge element responsible for making the assignment
 	 */
-	public void setValue(ValuedObject o, Object[] value, RuleComplex rule);
+	void setValue(ValuedObject o, Object[] value, RuleComplex rule);
 
 	/**
-	 *	Sets the value of a XPSCaseObject of a ValuedObject in a special context
-	 * @param ValuedObject	object whose XPSCaseObject´s value will be set
-	 * @param value value of the object
-	 * @param context ProblemSolver-Class-Object
+	 * Assigns the specified value(s) to the specified {@link ValuedObject}, e.g., 
+	 * a {@link Question} or a {@link Diagnosis} receives a new value.
+	 * The {@link PSMethod} responsible of this assignment is also given
+	 * @param ValuedObject	ValuedObject the object, that receives a new value
+	 * @param value value the (array of new) values for the specified {@link ValuedObject}
+	 * @param context the problem-solver responsible for this assignment
 	 */
-	public void setValue(ValuedObject o, Object[] value, Class context);
-
+	void setValue(ValuedObject o, Object[] value, Class<? extends PSMethod> context);
+	
 	/**
-	 * @param s java.lang.String
+	 * Takes a specified log message, that is relevant for this case. 
+	 * @param message the specified log message
 	 */
-	public void trace(String s);
+	void trace(String message);
 	
 	
 	/**
-	 * @param listener to add
+	 * Registers a new listener to this case. If something
+	 * in this case changes, the all registered listeners will
+	 * be notified.
+	 * @param listener one new listener of this case to register
 	 */
-	public void addListener(XPSCaseEventListener listener);
+	void addListener(XPSCaseEventListener listener);
 
 	/**
-	 * @param listener to remove
+	 * Removes the specified listener from the list of
+	 * registered listeners. All listeners will be notified,
+	 * if something in the case changes. 
+	 * @param listener the specified listener to be removed 
 	 */
-	public void removeListener(XPSCaseEventListener listener);
+	void removeListener(XPSCaseEventListener listener);
 
 	/**
-	 * @return collection of all registered listeners
+	 * Returns the list of all registered listeners of
+	 * this case. All listeners will be notified,
+	 * if something in the case changes, e.g., a new answer is 
+	 * given for a {@link Question}. 
+	 * @return the collection of all registered listeners of this case
 	 */
-	public Collection<XPSCaseEventListener> getListeners();
+	Collection<XPSCaseEventListener> getListeners();
 	
 }

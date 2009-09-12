@@ -1,3 +1,23 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.kernel.domainModel.ruleCondition;
 import java.util.Iterator;
 import java.util.List;
@@ -17,22 +37,22 @@ import de.d3web.kernel.psMethods.MethodKind;
  */
 public class CondDState extends TerminalCondition {
 	private Diagnosis diagnosis;
-	private DiagnosisState status;
+	private DiagnosisState solutionState;
 	private Class context;
 
 	/**
 	 * Creates a new CondDState Expression:
 	 * @param diagnose diagnosis to check
-	 * @param status state of the diagnosis to check
+	 * @param solutionState state of the diagnosis to check
 	 * @param context the context in which the diagnosis has the state
 	 */
 	public CondDState(
 		Diagnosis diagnosis,
-		DiagnosisState status,
+		DiagnosisState solutionState,
 		Class context) {
 		super(diagnosis);
 		this.diagnosis = diagnosis;
-		this.status = status;
+		this.solutionState = solutionState;
 		this.context = context;
 	}
 
@@ -50,7 +70,7 @@ public class CondDState extends TerminalCondition {
 			if (!hasHeuristicRulesFired(diagnosis, theCase, context))
 				throw NoAnswerException.getInstance();
 		}
-		return status.equals(diagnosis.getState(theCase, context));
+		return solutionState.equals(diagnosis.getState(theCase, context));
 	}
 
 	/**
@@ -74,27 +94,23 @@ public class CondDState extends TerminalCondition {
 		return false;
 	}
 
-	public de.d3web.kernel.domainModel.Diagnosis getDiagnosis() {
+	public Diagnosis getDiagnosis() {
 		return diagnosis;
 	}
 
-	public de.d3web.kernel.domainModel.DiagnosisState getStatus() {
-		return status;
+	public DiagnosisState getStatus() {
+		return solutionState;
 	}
 
-	public void setDiagnosis(
-		de.d3web.kernel.domainModel.Diagnosis newDiagnosis) {
+	public void setDiagnosis(Diagnosis newDiagnosis) {
 		diagnosis = newDiagnosis;
 	}
 
-	public void setStatus(
-		de.d3web.kernel.domainModel.DiagnosisState newStatus) {
-		status = newStatus;
+	public void setStatus(DiagnosisState newStatus) {
+		solutionState = newStatus;
 	}
 
-	/**
-	 * Verbalizes the condition.
-	 */
+	@Override
 	public String toString() {
 		return "<Condition type='DState' ID='"
 			+ diagnosis.getId()
@@ -105,15 +121,11 @@ public class CondDState extends TerminalCondition {
 	}
 	
 	
-	
+	@Override
 	public boolean equals(Object other) {
-		
 		if (!super.equals(other)) return false;
-		
 			CondDState otherCDS = (CondDState)other;
-			
 			boolean test = true;
-			
 			if(this.getDiagnosis() != null)
 				test = this.getDiagnosis().equals(otherCDS.getDiagnosis()) && test;
 			else //== null
@@ -133,10 +145,7 @@ public class CondDState extends TerminalCondition {
 		
 	}
 	
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
+	@Override
 	public int hashCode() {
 		
 		String str = getClass().toString();
@@ -163,6 +172,7 @@ public class CondDState extends TerminalCondition {
 		return context;
 	}
 
+	@Override
 	public AbstractCondition copy() {
 		return new CondDState(getDiagnosis(), getStatus(), getContext());
 	}

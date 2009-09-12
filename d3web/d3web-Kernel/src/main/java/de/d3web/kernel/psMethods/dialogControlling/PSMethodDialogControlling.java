@@ -1,15 +1,35 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.kernel.psMethods.dialogControlling;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisState;
-import de.d3web.kernel.domainModel.NamedObject;
+import de.d3web.kernel.domainModel.KnowledgeSlice;
 import de.d3web.kernel.domainModel.RuleComplex;
 import de.d3web.kernel.psMethods.PSMethod;
+import de.d3web.kernel.psMethods.PropagationEntry;
 import de.d3web.kernel.psMethods.combinied.PSMethodCombined;
 
 /**
@@ -29,10 +49,8 @@ public class PSMethodDialogControlling extends PSMethodCombined {
 	public DiagnosisState getState(XPSCase theCase, Diagnosis theDiagnosis) {
 
 		DiagnosisState diagnosisState = null;
-		Iterator iter = getPSMethods().iterator();
-		while (iter.hasNext()) {
-			PSMethod psMethod = (PSMethod) iter.next();
-			DiagnosisState dState = psMethod.getState(theCase, theDiagnosis);
+		for (PSMethod psMethod : getPSMethods()) {
+				DiagnosisState dState = psMethod.getState(theCase, theDiagnosis);
 
 			if (dState != null && dState.compareTo(diagnosisState) > 0) {
 				diagnosisState = dState;
@@ -50,29 +68,20 @@ public class PSMethodDialogControlling extends PSMethodCombined {
 	 * Creation date: (03.01.2002 16:17:28)
 	 */
 	public void init(XPSCase theCase) {
-		setPSMethods(new LinkedList(theCase.getDialogControllingPSMethods()));
+		setPSMethods(new LinkedList<PSMethod>(theCase.getDialogControllingPSMethods()));
 	}
 
 	/**
 	 * @see PSMethod
 	 */
-	public void propagate(
-		XPSCase theCase,
-		NamedObject nob,
-		Object[] newValue) {
-		try {
-			List knowledgeSlices = (nob.getKnowledge(this.getClass()));
-			if (knowledgeSlices == null) {
-				return;
-			}
-			Iterator iter = knowledgeSlices.iterator();
-			while (iter.hasNext()) {
-				RuleComplex rule = (RuleComplex) iter.next();
+	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
+		for (PropagationEntry change : changes) {
+			List<? extends KnowledgeSlice> knowledgeSlices = change.getObject().getKnowledge(this.getClass());
+			if (knowledgeSlices == null) return;
+			for (KnowledgeSlice slice : knowledgeSlices) {
+				RuleComplex rule = (RuleComplex) slice;
 				rule.check(theCase);
 			}
-		} catch (Exception ex) {
-			Logger.getLogger(this.getClass().getName()).throwing(
-				this.getClass().getName(), "propagate", ex);
 		}
 	}
 

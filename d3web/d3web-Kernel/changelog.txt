@@ -5,10 +5,42 @@
 |    Department of Artificial Intelligence and
 |                  Applied Computer Science
 +-----------------------------------------------------------+
-asdfsafejijithjtiojiojioj
+
 +-----------------------------------------------------------+
 history of the changes:
 +-----------------------------------------------------------+
+
+===== 20090912 SVN migration - alegler ======================
+	* The old tests are not migrated
+
+build_20090827_1950 joba
+    * added factory methods to AnswerFactory
+
+build_20090804_1045 joba
+    * revised JavaDoc for class Answer and all classes
+      in the ruleCondition package
+    * changed some iterators to foreach iterations
+
+build_20090722_2100 joba
+	* revised JavaDoc for class Diagnosis
+	
+build_20090718_1804 joba
+    * first step into 'Quernel': beautified and commented the
+      class NamedObject and interface XPSCase; hopefully, the 
+      rest of the core classes/interfaces will follow soon.
+
+build_20090713_1630 reutelshoefer
+	* fixed ClassCastExeption in PSMethodXCL.propagate()
+
+build_20090527_1900 belli, joba
+	* propagation of findings changed, now done by PropagationController
+	* fixed some warnings
+	* PSMethodXCL integrated as connected problem solver 
+	  (is now updated on every question change)
+
+build_20080525_1354 dr.krabbe
+	* some warnings removed
+
 build_20090517_1215 friedrich, belli
 	* improved hashCode() in CondEqual
 
@@ -1721,8 +1753,8 @@ build 3_0 First tagged version in CVS
 
 0.2 build 1: chris (15. Feb. 2001, 09:17)
 	The diagnosis-score-schema is -42, 10 (not 30), 42; according to FP. Fixed that.
-	Comment: The original D3 schema contained another value "etwas-verd�chtig",
-	which worked exactly as "verd�chtig" did. The limits for "etwas-verd�chtig" were 10,30.
+	Comment: The original D3 schema contained another value "etwas-verdächtig",
+	which worked exactly as "verdächtig" did. The limits for "etwas-verdächtig" were 10,30.
 	The faulty schema resultet from this missing item. We still do not need this value,
     so the schema had to be corrected.
 0.1 build 8: chris
@@ -1786,9 +1818,9 @@ Nick			Name				e-Mail
 
 chris/cbb		Christian Betz		betz@informatik.
 joba			Joachim Baumeister	joba@informatik.
-aha				Alexander H�rnlein	hoernlein@informatik.
-Martin			Martin Atzm�ller	atzmueller@informatik.
-norman/bates	Norman Br�mmer		bruemmer@ki.informatik.
+aha				Alexander Hoernlein	hoernlein@informatik.
+Martin			Martin Atzmueller	atzmueller@informatik.
+norman/bates	Norman Bruemmer		bruemmer@ki.informatik.
 mike			Michael Scharvogel	scharvogel@ki.informatik.
 georg			Georg Buscher		@
 tobi			Tobias Vogele		@

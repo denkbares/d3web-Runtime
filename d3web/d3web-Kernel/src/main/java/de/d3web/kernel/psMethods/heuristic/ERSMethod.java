@@ -1,5 +1,26 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.kernel.psMethods.heuristic;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,6 +33,7 @@ import de.d3web.kernel.domainModel.DiagnosisState;
 import de.d3web.kernel.domainModel.NamedObject;
 import de.d3web.kernel.domainModel.Score;
 import de.d3web.kernel.psMethods.PSSubMethod;
+import de.d3web.kernel.psMethods.PropagationEntry;
 import de.d3web.kernel.supportknowledge.Property;
 
 /**
@@ -38,7 +60,7 @@ public class ERSMethod extends PSSubMethod {
 	 * innerMap Object:	list of ChangeOfDiagnosis
 	 */
 	private Map<XPSCase, Map<Diagnosis, List<ChangeOfDiagnosis>>> hDT_establishedDiagnoses = new HashMap<XPSCase, Map<Diagnosis,List<ChangeOfDiagnosis>>>();
-	Class PSCONTEXT = PSMethodHeuristic.class;
+	Class<PSMethodHeuristic> PSCONTEXT = PSMethodHeuristic.class;
 	
 	/**
 	 * This class contains the score that was added to a diagnosis
@@ -79,15 +101,18 @@ public class ERSMethod extends PSSubMethod {
 	/**
 	 * propergates the new value of the given NamedObject for the given XPSCase
 	 */
-	public void propagate(XPSCase theCase, NamedObject nob, Object[] newValue) {
-		if(nob instanceof Diagnosis) {
-			Diagnosis diagnosis = (Diagnosis) nob;
-			checkHashMap(theCase);
-			if (isEstablished(theCase, diagnosis)) {
-				setAllChildrenToSuggested(theCase, diagnosis);
-			} else if(wasEstablished(theCase, diagnosis)){
-				resetAllChildren(theCase, diagnosis);
-			}		
+	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
+		for (PropagationEntry change : changes) {
+			if (change.getObject() instanceof Diagnosis) {
+				Diagnosis diagnosis = (Diagnosis) change.getObject();
+				checkHashMap(theCase);
+				if (isEstablished(theCase, diagnosis)) {
+					setAllChildrenToSuggested(theCase, diagnosis);
+				} 
+				else if(wasEstablished(theCase, diagnosis)){
+					resetAllChildren(theCase, diagnosis);
+				}
+			}
 		}	
 	}
 	
@@ -177,7 +202,7 @@ public class ERSMethod extends PSSubMethod {
 		return diagnosis.getState(theCase, PSCONTEXT).equals(DiagnosisState.ESTABLISHED);
 	}
 	private boolean wasEstablished(XPSCase theCase, Diagnosis diagnosis) {
-		return ((HashMap)hDT_establishedDiagnoses.get(theCase)).containsKey(diagnosis);
+		return hDT_establishedDiagnoses.get(theCase).containsKey(diagnosis);
 	}
 	
 	/**
@@ -210,7 +235,7 @@ public class ERSMethod extends PSSubMethod {
 	 */
 	private void checkHashMap(XPSCase theCase) {
 		if(!hDT_establishedDiagnoses.containsKey(theCase)) {
-			HashMap innerMap = new HashMap();
+			Map<Diagnosis, List<ChangeOfDiagnosis>> innerMap = new HashMap<Diagnosis, List<ChangeOfDiagnosis>>();
 			hDT_establishedDiagnoses.put(theCase, innerMap);
 		}
 	}

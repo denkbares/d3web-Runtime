@@ -1,8 +1,29 @@
+/*
+ * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package de.d3web.kernel.psMethods;
+import java.util.Collection;
+
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisState;
-import de.d3web.kernel.domainModel.NamedObject;
 
 /**
  * Interface for all problen-solver methods to implement.
@@ -19,20 +40,21 @@ public interface PSMethod {
  	 * the state of a diagnosis.
 	 * @return the DiagnosisState of the given Diagnosis depending on the given XPSCase
 	 */
-	public DiagnosisState getState(XPSCase theCase, Diagnosis theDiagnosis);
+	DiagnosisState getState(XPSCase theCase, Diagnosis theDiagnosis);
 
 	/**
 	 * initialization method for this PSMethod
 	 */
-	public void init(XPSCase theCase);
+	void init(XPSCase theCase);
 	
 	/**
 	 * Indicates whether the problemsolver contributes to XPSCase.getDiagnoses(DiangosisState)
 	 */
-	public boolean isContributingToResult();
+	boolean isContributingToResult();
 
 	/**
 	 * propergates the new value of the given NamedObject for the given XPSCase
 	 */
-	public void propagate(XPSCase theCase, NamedObject nob, Object[] newValue);
+	//void propagate(XPSCase theCase, NamedObject nob, Object[] newValue);
+	void propagate(XPSCase theCase, Collection<PropagationEntry> changes); 
 }
