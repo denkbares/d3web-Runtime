@@ -1,3 +1,5 @@
+===== 20090912 SVN migration - alegler ======================
+
 build_20080614_1105 haupt
     * updated ant.jar 
     
