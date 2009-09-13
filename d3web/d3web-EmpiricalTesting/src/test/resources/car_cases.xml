@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SeqTestCaseRepository CreationDate="2009-09-11_0207" NumberOfCases="5" UsedSolutions="5" UsedFindings="15">
+	<STestCase Name="Damaged idle speed system">
+		<RatedTestCase Name="rtc1" LastTested="2009-09-11_0207">
+			<Findings>
+				<Finding Question="Engine start" Answer="engine barely starts"/>
+			</Findings>
+			<Solutions>
+				<Solution Name="Damaged idle speed system" Rating="suggested"/>
+				<Solution Name="Empty battery" Rating="suggested"/>
+			</Solutions>
+		</RatedTestCase>
+		<RatedTestCase Name="rtc2" LastTested="2009-09-11_0207">
+			<Findings>
+				<Finding Question="Driving" Answer="unsteady idle speed"/>
+			</Findings>
+			<Solutions>
+				<Solution Name="Damaged idle speed system" Rating="suggested"/>
+				<Solution Name="Clogged air filter" Rating="suggested"/>
+				<Solution Name="Empty battery" Rating="suggested"/>
+			</Solutions>
+		</RatedTestCase>
+		<RatedTestCase Name="rtc3" LastTested="2009-09-11_0207">
+			<Findings>
+				<Finding Question="Driving" Answer="low idle speed"/>
+			</Findings>
+			<Solutions>
+				<Solution Name="Damaged idle speed system" Rating="established"/>
+				<Solution Name="Clogged air filter" Rating="suggested"/>
+				<Solution Name="Empty battery" Rating="suggested"/>
+			</Solutions>
+		</RatedTestCase>
+		<RatedTestCase Name="rtc4" LastTested="2009-09-11_0207">
+			<Findings>
+				<Finding Question="Battery o.k.?" Answer="yes"/>
+				<Finding Question="Air filter o.k.?" Answer="yes"/>
+			</Findings>
+			<Solutions>
+				<Solution Name="Damaged idle speed system" Rating="established"/>
+			</Solutions>
+		</RatedTestCase>
+	</STestCase>
+	<STestCase Name="Leaking air intake system">
+		<RatedTestCase Name="rtc1" LastTested="2009-09-11_0207">
+			<Findings>
+				<Finding Question="Driving" Answer="insufficient power on partial load"/>
+			</Findings>
+			<Solutions>
+				<Solution Name="Leaking air intake system" Rating="suggested"/>
+			</Solutions>
+		</RatedTestCase>
+		<RatedTestCase Name="rtc2" LastTested="2009-09-11_0207">
+			<Findings>
+				<Finding Question="Driving" Answer="unsteady idle speed"/>
+			</Findings>
+			<Solutions>
+				<Solution Name="Leaking air intake system" Rating="suggested"/>
+				<Solution Name="Clogged air filter" Rating="suggested"/>
+			</Solutions>
+		</RatedTestCase>
+		<RatedTestCase Name="rtc3" LastTested="2009-09-11_0207">
+			<Findings>
+				<Finding Question="Air filter o.k.?" Answer="yes"/>
+				<Finding Question="Driving" Answer="insufficient power on full load"/>
+			</Findings>
+			<Solutions>
+				<Solution Name="Leaking air intake system" Rating="established"/>
+			</Solutions>
+		</RatedTestCase>
+	</STestCase>
+	<STestCase Name="Clogged air filter">
+		<RatedTestCase Name="rtc1" LastTested="2009-09-11_0207">
+			<Findings>
+				<Finding Question="Exhaust pipe color" Answer="sooty black"/>
+				<Finding Question="Fuel" Answer="unleaded gasoline"/>
+			</Findings>
+			<Solutions>
+				<Solution Name="Clogged air filter" Rating="suggested"/>
+			</Solutions>
+		</RatedTestCase>
+		<RatedTestCase Name="rtc2" LastTested="2009-09-11_0207">
+			<Findings>
+				<Finding Question="Driving" Answer="unsteady idle speed"/>
+				<Finding Question="Driving" Answer="weak acceleration"/>
+				<Finding Question="Ignition timing o.k.?" Answer="yes"/>
+			</Findings>
+			<Solutions>
+				<Solution Name="Clogged air filter" Rating="established"/>
+			</Solutions>
+		</RatedTestCase>
+	</STestCase>
+	<STestCase Name="Bad ignition timing">
+		<RatedTestCase Name="rtc1" LastTested="2009-09-11_0207">
+			<Findings>
+				<Finding Question="Battery o.k.?" Answer="yes"/>
+				<Finding Question="Air filter o.k.?" Answer="yes"/>
+				<Finding Question="Engine start" Answer="does not start"/>
+				<Finding Question="Starter" Answer="turns over"/>
+			</Findings>
+			<Solutions>
+				<Solution Name="Bad ignition timing" Rating="suggested"/>
+			</Solutions>
+		</RatedTestCase>
+		<RatedTestCase Name="rtc2" LastTested="2009-09-11_0207">
+			<Findings>
+				<Finding Question="Driving" Answer="delayed take-off"/>
+				<Finding Question="Driving" Answer="unsteady idle speed"/>
+				<Finding Question="Driving" Answer="weak acceleration"/>
+			</Findings>
+			<Solutions>
+				<Solution Name="Bad ignition timing" Rating="established"/>
+			</Solutions>
+		</RatedTestCase>
+	</STestCase>
+	<STestCase Name="Empty battery">
+		<RatedTestCase Name="rtc1" LastTested="2009-09-11_0207">
+			<Findings>
+				<Finding Question="Engine start" Answer="does not start"/>
+			</Findings>
+			<Solutions>
+				<Solution Name="Empty battery" Rating="suggested"/>
+			</Solutions>
+		</RatedTestCase>
+		<RatedTestCase Name="rtc2" LastTested="2009-09-11_0207">
+			<Findings>
+				<Finding Question="Starter" Answer="does not turn over"/>
+			</Findings>
+			<Solutions>
+				<Solution Name="Empty battery" Rating="established"/>
+			</Solutions>
+		</RatedTestCase>
+	</STestCase>
+</SeqTestCaseRepository>
