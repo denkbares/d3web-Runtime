@@ -11,7 +11,7 @@
 		<artifactId>d3web</artifactId>
 		<groupId>de.uniwue.d3web</groupId>
 		<version>0-SNAPSHOT</version>
-	</parent>	
+	</parent>
 
 	<dependencies>
 		<dependency>
@@ -79,13 +79,6 @@
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-ExplainTree</artifactId>
 			<version>0-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>net.java.dev.ajax4jsf</groupId>
-			<artifactId>ajax4jsf</artifactId>
-			<version>1.0.6</version>
-			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -157,6 +150,12 @@
 			<version>1.1</version>
 			<type>jar</type>
 			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>servlet-api</artifactId>
+					<groupId>javax.servlet</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.jdom</groupId>
@@ -201,46 +200,61 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.myfaces.tomahawk</groupId>
-			<artifactId>tomahawk</artifactId>
-			<version>1.1.6</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>annotations-api</artifactId>
 			<version>6.0.20</version>
 			<type>jar</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>el-api</artifactId>
 			<version>6.0.20</version>
 			<type>jar</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>jasper</artifactId>
 			<version>6.0.20</version>
 			<type>jar</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>jsp-api</artifactId>
 			<version>6.0.20</version>
 			<type>jar</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>6.0.20</version>
 			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.myfaces.tomahawk</groupId>
+			<artifactId>tomahawk</artifactId>
+			<version>1.1.9</version>
+			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
+		<!--
+		Testing offline building... -Alex
+		<dependency>
+			<groupId>org.apache.myfaces.tomahawk</groupId>
+			<artifactId>tomahawk</artifactId>
+			<version>1.1.9-uniwue</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>-->
+		<dependency>
+			<groupId>org.ajax4jsf</groupId>
+			<artifactId>ajax4jsf</artifactId>
+			<version>1.1.1-uniwue</version>
+			<scope>compile</scope>
+		</dependency>		
 	</dependencies>
 </project>
