@@ -347,7 +347,11 @@ public class CaseComparator {
 			// default similarity !
 			qcomp = SharedKnowledgeLoader.addDefaultKnowledge(q);
 		} else {
+			try{
 			qcomp = (QuestionComparator) ((List) o).get(0);
+			} catch (IndexOutOfBoundsException e){
+				return SharedKnowledgeLoader.addDefaultKnowledge(q);
+			}
 		}
 		return qcomp;
 	}

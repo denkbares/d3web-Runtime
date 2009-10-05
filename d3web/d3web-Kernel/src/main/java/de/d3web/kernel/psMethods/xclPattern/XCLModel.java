@@ -74,6 +74,10 @@ public class XCLModel implements KnowledgeSlice, IEventSource {
 	}
 
 	public XCLInferenceTrace getInferenceTrace(XPSCase c) {
+		XCLInferenceTrace temp=explanation.get(c);
+		if (temp==null){
+			XCLInferenceTrace trace = new XCLInferenceTrace();
+			explanation.put(c, trace);}
 		return explanation.get(c);
 	}
 
