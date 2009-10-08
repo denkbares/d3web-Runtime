@@ -114,5 +114,6 @@
 		<module>d3web-MMExtensions</module>
 		<module>d3web-Dialog2</module>
 		<module>d3web-EmpiricalTesting</module>
+		<module>d3web-SCM-CBR</module>
 	</modules>
 </project>
