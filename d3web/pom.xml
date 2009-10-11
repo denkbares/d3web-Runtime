@@ -13,7 +13,7 @@
 	</issueManagement>
 	<ciManagement>
 		<system>Hudson</system>
-		<url>http://win6154.informatik.uni-wuerzburg.de:8080/hudson/</url>
+		<url>https://isci.informatik.uni-wuerzburg.de/hudson/</url>
 	</ciManagement>
 	<licenses>
 		<license>
@@ -53,12 +53,12 @@
   	</properties>
 	<repositories>
 		<repository>
-			<id>infoVI-public</id>
-			<url>http://win6154.informatik.uni-wuerzburg.de:8080/nexus/content/groups/public/</url>
+			<id>infovi-artifactory</id>
+			<url>http://isci.informatik.uni-wuerzburg.de:8080/artifactory/repo/</url>
 		</repository>
 		<repository>
-			<id>snapshots</id>
-			<url>http://win6154.informatik.uni-wuerzburg.de:8080/nexus/content/repositories/snapshots/</url>
+			<id>knowwe-snapshots</id>
+			<url>http://isci.informatik.uni-wuerzburg.de:8080/artifactory/knowwe-snapshots/</url>
 			<releases>
 				<enabled>false</enabled>
 			</releases>
@@ -71,15 +71,15 @@
 	<pluginRepositories>
 		<pluginRepository>
 			<id>contrib</id>
-			<url>http://win6154.informatik.uni-wuerzburg.de:8080/nexus/content/repositories/contrib/</url>
+			<url>http://isci.informatik.uni-wuerzburg.de:8080/artifactory/infovi-contrib/</url>
 		</pluginRepository>
 	</pluginRepositories>
 
 	<distributionManagement>
 		<snapshotRepository>
-			<id>snapshots</id>
+			<id>knowwe-snapshots</id>
 			<name>d3web Snapshots</name>
-			<url>http://win6154.informatik.uni-wuerzburg.de:8080/nexus/content/repositories/snapshots/</url>
+			<url>http://isci.informatik.uni-wuerzburg.de:8080/artifactory/knowwe-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
