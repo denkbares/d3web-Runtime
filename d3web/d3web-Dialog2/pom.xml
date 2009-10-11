@@ -240,6 +240,28 @@
 			<version>1.1.9</version>
 			<type>jar</type>
 			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>batik-gui-util</artifactId>
+					<groupId>batik</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>batik-awt-util</artifactId>
+					<groupId>batik</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>batik-ext</artifactId>
+					<groupId>batik</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>batik-util</artifactId>
+					<groupId>batik</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>itext</artifactId>
+					<groupId>com.lowagie</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!--
 		Testing offline building... -Alex
