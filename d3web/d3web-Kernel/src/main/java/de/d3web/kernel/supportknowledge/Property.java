@@ -1,23 +1,3 @@
-/*
- * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- */
-
 package de.d3web.kernel.supportknowledge;
 
 import java.lang.reflect.Field;
@@ -166,7 +146,7 @@ public class Property implements java.io.Serializable {
 
 	/**
 	 * used for: Question The unit of numerical questions according to
-	 * internatial standard units
+	 * international standard units
 	 * 
 	 * @link http://physics.nist.gov/cuu/Units/ handled by:
 	 *       d3web-Train-Persistence [TODO]:aha:this should go to base
@@ -235,7 +215,7 @@ public class Property implements java.io.Serializable {
 	/**
 	 * used for: diagnoses<br>
 	 * doc: filter for dialog diagnosis view<br>
-	 * handeled by: d3web-Persistence<br>
+	 * handled by: d3web-Persistence<br>
 	 * 
 	 * @return boolean
 	 */
@@ -301,6 +281,14 @@ public class Property implements java.io.Serializable {
 	public static final Property DIAGNOSIS_TYPE = new Property("diagnosisType");
 
 	/**
+	 * used for Diagnosis
+	 * Saves the apriori probability of a diagnosis
+	 * 
+	 * @return float
+	 */
+	public static final Property APRIORI = new Property("apriori");
+	
+	/**
 	 * used for: PSMethodHeuristic - decision tree doc: [TODO]:doc for
 	 * PROBLEM_TYPE handled by: [TODO]:handled by for PROBLEM_TYPE
 	 * 
@@ -324,7 +312,7 @@ public class Property implements java.io.Serializable {
 	 * used for: QuestionNum doc: valid range of numerical answers of
 	 * QuestionNum handled by: d3web-Persistence
 	 * 
-	 * @return List of NumericalInterval
+	 * @return NumericalInterval
 	 */
 	public static final Property QUESTION_NUM_RANGE = new Property("range");
 
@@ -505,6 +493,20 @@ public class Property implements java.io.Serializable {
 			"dialog.boxed.force_linebreak_after");
 
 	/**
+	 * used for question doc: the ids of the answers(seperated by ";"), which is set in PSMethodInit
+	 * 
+	 * @return String
+	 */
+	public static final Property INIT = new Property("INIT");
+	
+	/**
+	 * used for question doc: the ids of the answers(seperated by ";"), which is preselected in dialogs
+	 * 
+	 * @return String
+	 */
+	public static final Property DEFAULT = new Property("DEFAULT");
+	
+	/**
 	 * used for: QContainer doc: the column-count within MQBoxedDialog (number
 	 * of questions side by side in a row) will not be greater than this limit
 	 * handled by: d3web-dialog
@@ -514,6 +516,7 @@ public class Property implements java.io.Serializable {
 	public static final Property DIALOG_BOXED_MAXCOLWIDTH = new Property(
 			"dialog.boxed.maxcolwidth");
 
+	
 	/**
 	 * used for: QContainer doc: the minimal count of chars that have to fit in
 	 * a column handled by: d3web-dialog
@@ -664,7 +667,7 @@ public class Property implements java.io.Serializable {
 	
 	/**
 	 * used for: heuristic problem solver. If one diagnosis is established, then
-	 * suggest all chilren
+	 * suggest all children
 	 * 
 	 * @return Boolean
 	 */
@@ -674,7 +677,7 @@ public class Property implements java.io.Serializable {
 	
 	/**
 	 * used for: heuristic problem solver. If one diagnosis is excluded, then
-	 * exclude all chilren
+	 * exclude all children
 	 * 
 	 * @return Boolean
 	 */
@@ -888,6 +891,8 @@ public class Property implements java.io.Serializable {
 		basicPropertys.add(Property.MC_CONSTRAINTS);
 		basicPropertys.add(Property.SC_PROBLEMSOLVER_SIMPLE);
 		basicPropertys.add(Property.TERMINOLOGY_USED);
+		basicPropertys.add(Property.INIT);
+		basicPropertys.add(Property.DEFAULT);
 	}
 
 	private String name;
