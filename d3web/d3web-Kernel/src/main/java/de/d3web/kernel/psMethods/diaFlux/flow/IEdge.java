@@ -18,38 +18,43 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.kernel.psMethods;
+package de.d3web.kernel.psMethods.diaFlux.flow;
 
-import java.util.Arrays;
+import java.io.Serializable;
 
-import de.d3web.kernel.domainModel.NamedObject;
+import de.d3web.kernel.domainModel.CaseObjectSource;
+import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
 
-public class PropagationEntry {
+/**
+ * 
+ * @author hatko
+ *
+ */
+public interface IEdge extends Serializable, CaseObjectSource {
 	
-	private final NamedObject object;
-	private final Object[] oldValue;
-	private final Object[] newValue;
+	/**
+	 * 
+	 * @return s the node this edge starts at
+	 */
+	INode getStartNode();
 	
-	public PropagationEntry(NamedObject object, Object[] oldValue, Object[] newValue) {
-		this.object = object;
-		this.oldValue = oldValue;
-		this.newValue = newValue;
-	}
-
-	public NamedObject getObject() {
-		return object;
-	}
-
-	public Object[] getOldValue() {
-		return oldValue;
-	}
-
-	public Object[] getNewValue() {
-		return newValue;
-	}
 	
-	@Override
-	public String toString() {
-		return getClass().getSimpleName() + "[" + object + ":" + Arrays.toString(oldValue) + " -> " + Arrays.toString(newValue) + "]" + Integer.toHexString(hashCode());
-	}
+	/**
+	 * 
+	 * @return s the node this edge ends at
+	 */
+	INode getEndNode();
+
+
+	/**
+	 * 
+	 * @return s the edges predicate
+	 */
+	AbstractCondition getCondition();
+	
+	/**
+	 * @return s the ID
+	 */
+	String getID();
+
 }

@@ -41,6 +41,7 @@ import de.d3web.kernel.psMethods.PSMethodInit;
 import de.d3web.kernel.psMethods.PropagationContoller;
 import de.d3web.kernel.psMethods.DefaultPropagationController;
 import de.d3web.kernel.psMethods.contraIndication.PSMethodContraIndication;
+import de.d3web.kernel.psMethods.diaFlux.FluxSolver;
 import de.d3web.kernel.psMethods.dialogControlling.PSMethodDialogControlling;
 import de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic;
 import de.d3web.kernel.psMethods.nextQASet.PSMethodNextQASet;
@@ -98,7 +99,8 @@ public class D3WebCase implements XPSCase {
 			new PSMethodDialogControlling(), PSMethodContraIndication.getInstance(),
 			PSMethodNextQASet.getInstance(), PSMethodQuestionSetter.getInstance(),
 			PSMethodSuppressAnswer.getInstance(), PSMethodHeuristic.getInstance(),
-			PSMethodInit.getInstance(), PSMethodParentQASet.getInstance(), PSMethodXCL.getInstance()};
+			PSMethodInit.getInstance(), PSMethodParentQASet.getInstance(), PSMethodXCL.getInstance(),
+			FluxSolver.getInstance()};
 
 	/**
 	 * Creates a new user case with the specified knowledge base. <br>

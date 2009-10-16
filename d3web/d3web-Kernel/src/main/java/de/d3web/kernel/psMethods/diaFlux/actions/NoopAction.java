@@ -18,38 +18,52 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.kernel.psMethods;
+package de.d3web.kernel.psMethods.diaFlux.actions;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
-import de.d3web.kernel.domainModel.NamedObject;
+import de.d3web.kernel.XPSCase;
+import de.d3web.kernel.domainModel.RuleAction;
+import de.d3web.kernel.psMethods.diaFlux.FluxSolver;
 
-public class PropagationEntry {
+/**
+ * 
+ * @author Reinhard Hatko
+ * Created: 14.09.2009
+ *
+ */
+public class NoopAction extends RuleAction {
 	
-	private final NamedObject object;
-	private final Object[] oldValue;
-	private final Object[] newValue;
+	public static final NoopAction INSTANCE = new NoopAction();
 	
-	public PropagationEntry(NamedObject object, Object[] oldValue, Object[] newValue) {
-		this.object = object;
-		this.oldValue = oldValue;
-		this.newValue = newValue;
+	private NoopAction() {
+		super(null);
+		
 	}
 
-	public NamedObject getObject() {
-		return object;
+	public RuleAction copy() {
+		return this;
 	}
 
-	public Object[] getOldValue() {
-		return oldValue;
-	}
-
-	public Object[] getNewValue() {
-		return newValue;
-	}
-	
 	@Override
-	public String toString() {
-		return getClass().getSimpleName() + "[" + object + ":" + Arrays.toString(oldValue) + " -> " + Arrays.toString(newValue) + "]" + Integer.toHexString(hashCode());
+	public void doIt(XPSCase theCase) {
+
 	}
+
+	@Override
+	public Class getProblemsolverContext() {
+		return FluxSolver.class;
+	}
+
+	@Override
+	public List getTerminalObjects() {
+		return new ArrayList(0);
+	}
+
+	@Override
+	public void undo(XPSCase theCase) {
+
+	}
+
 }

@@ -18,38 +18,36 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.kernel.psMethods;
+package de.d3web.kernel.psMethods.diaFlux.flow;
 
-import java.util.Arrays;
+import de.d3web.kernel.psMethods.diaFlux.actions.NoopAction;
 
-import de.d3web.kernel.domainModel.NamedObject;
+/**
+ * 
+ * @author hatko
+ *
+ */
+public class EndNode extends Node {
 
-public class PropagationEntry {
+	private final String name;
 	
-	private final NamedObject object;
-	private final Object[] oldValue;
-	private final Object[] newValue;
+	public EndNode(String id, String name) {
+		super(id, NoopAction.INSTANCE);
+		
+		this.name = name;
+	}
 	
-	public PropagationEntry(NamedObject object, Object[] oldValue, Object[] newValue) {
-		this.object = object;
-		this.oldValue = oldValue;
-		this.newValue = newValue;
-	}
-
-	public NamedObject getObject() {
-		return object;
-	}
-
-	public Object[] getOldValue() {
-		return oldValue;
-	}
-
-	public Object[] getNewValue() {
-		return newValue;
-	}
 	
 	@Override
-	public String toString() {
-		return getClass().getSimpleName() + "[" + object + ":" + Arrays.toString(oldValue) + " -> " + Arrays.toString(newValue) + "]" + Integer.toHexString(hashCode());
+	protected boolean addOutgoingEdge(IEdge edge) {
+		throw new UnsupportedOperationException("can not add outgoing edge to end node");
 	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	
+	
+
 }

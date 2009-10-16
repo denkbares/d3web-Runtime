@@ -18,38 +18,50 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.kernel.psMethods;
+/**
+ * 
+ */
+package de.d3web.kernel.psMethods.diaFlux.flow;
 
-import java.util.Arrays;
+import java.io.Serializable;
+import java.util.List;
 
-import de.d3web.kernel.domainModel.NamedObject;
+import de.d3web.kernel.domainModel.CaseObjectSource;
+import de.d3web.kernel.domainModel.RuleAction;
 
-public class PropagationEntry {
+/**
+ * @author hatko
+ *
+ */
+public interface INode extends Serializable, CaseObjectSource {
 	
-	private final NamedObject object;
-	private final Object[] oldValue;
-	private final Object[] newValue;
 	
-	public PropagationEntry(NamedObject object, Object[] oldValue, Object[] newValue) {
-		this.object = object;
-		this.oldValue = oldValue;
-		this.newValue = newValue;
-	}
-
-	public NamedObject getObject() {
-		return object;
-	}
-
-	public Object[] getOldValue() {
-		return oldValue;
-	}
-
-	public Object[] getNewValue() {
-		return newValue;
-	}
+	/**
+	 * 
+	 * @return s a list of this node's incoming edges. 
+	 */
+	List<IEdge> getIncomingEdges();
 	
-	@Override
-	public String toString() {
-		return getClass().getSimpleName() + "[" + object + ":" + Arrays.toString(oldValue) + " -> " + Arrays.toString(newValue) + "]" + Integer.toHexString(hashCode());
-	}
+	/**
+	 * 
+	 * @return s a list of this node's outgoing edges.
+	 */
+	List<IEdge> getOutgoingEdges();
+	
+	
+	/**
+	 * 
+	 * @return s the action this node is doing when reached
+	 */
+	RuleAction getAction();
+	
+	/**
+	 * @return s the id of the node
+	 */
+	String getID();
+	
+	
+	
+	
+
 }

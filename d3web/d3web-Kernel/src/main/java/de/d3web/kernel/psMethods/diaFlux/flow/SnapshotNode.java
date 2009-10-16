@@ -18,38 +18,22 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.kernel.psMethods;
+package de.d3web.kernel.psMethods.diaFlux.flow;
 
-import java.util.Arrays;
+import java.util.List;
 
-import de.d3web.kernel.domainModel.NamedObject;
+import de.d3web.kernel.domainModel.RuleAction;
+import de.d3web.kernel.dynamicObjects.XPSCaseObject;
+import de.d3web.kernel.psMethods.diaFlux.actions.NoopAction;
 
-public class PropagationEntry {
+public class SnapshotNode extends Node {
 	
-	private final NamedObject object;
-	private final Object[] oldValue;
-	private final Object[] newValue;
-	
-	public PropagationEntry(NamedObject object, Object[] oldValue, Object[] newValue) {
-		this.object = object;
-		this.oldValue = oldValue;
-		this.newValue = newValue;
-	}
-
-	public NamedObject getObject() {
-		return object;
-	}
-
-	public Object[] getOldValue() {
-		return oldValue;
-	}
-
-	public Object[] getNewValue() {
-		return newValue;
+	public SnapshotNode() {
+		super("Snapshot", NoopAction.INSTANCE);
 	}
 	
-	@Override
-	public String toString() {
-		return getClass().getSimpleName() + "[" + object + ":" + Arrays.toString(oldValue) + " -> " + Arrays.toString(newValue) + "]" + Integer.toHexString(hashCode());
-	}
+	
+
+	
+
 }
