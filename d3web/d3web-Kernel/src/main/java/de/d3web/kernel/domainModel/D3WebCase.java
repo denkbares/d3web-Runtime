@@ -513,6 +513,9 @@ public class D3WebCase implements XPSCase {
 	 *            problem-solver context
 	 */
 	public void setValue(ValuedObject valuedObject, Object[] values, Class<? extends PSMethod> context) {
+		if(valuedObject == null) {
+			throw new IllegalStateException("ValuedObject is null");
+		}
 		Object[] oldValue = getValue(valuedObject, context);
 		if (valuedObject instanceof Diagnosis) {
 			((Diagnosis) valuedObject).setValue(this, values, context);
