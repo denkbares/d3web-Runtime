@@ -72,12 +72,12 @@ public class FluxSolver implements PSMethod {
 	@Override
 	public void init(XPSCase theCase) {
 		
+		if (!isFlowCase(theCase))
+			return;
+		
 		log("Initing FluxSolver with case: " + theCase);
 		
 		Flow flowDeclaration = getFlowDeclaration(theCase);
-		
-		if (flowDeclaration == null)
-			return;
 		
 		INode startNode = flowDeclaration.getStartNodes().get(0);
 		
@@ -85,6 +85,10 @@ public class FluxSolver implements PSMethod {
 		
 		addPathEntryForNode(theCase, null, null, FlowFactory.getInstance().createEdge("Pseudostart", null, startNode, ConditionTrue.INSTANCE));
 		
+	}
+	
+	private boolean isFlowCase(XPSCase theCase) {
+		return getFlowDeclaration(theCase) != null;
 	}
 
 	private Flow getFlowDeclaration(XPSCase theCase) {
@@ -362,6 +366,10 @@ public class FluxSolver implements PSMethod {
 
 	@Override
 	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
+		
+		if (!isFlowCase(theCase))
+			return;
+		
 	
 		log("Start propagating: " + changes);
 		
