@@ -39,7 +39,7 @@ import de.d3web.kernel.domainModel.ruleCondition.NoAnswerException;
 import de.d3web.kernel.domainModel.ruleCondition.UnknownAnswerException;
 import de.d3web.kernel.psMethods.MethodKind;
 
-public class XCLModel implements KnowledgeSlice, IEventSource {
+public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLModel> {
 	private static final long serialVersionUID = 1068721270222432667L;
 
 	public final static MethodKind XCLMODEL = new MethodKind("XCLMODEL");
@@ -494,6 +494,11 @@ public class XCLModel implements KnowledgeSlice, IEventSource {
 
 	public Collection<KBOEventListener> getListeners() {
 		return listeners;
+	}
+
+	@Override
+	public int compareTo(XCLModel o) {
+		return this.solution.getText().compareTo(o.solution.getText());		
 	}
 
 }
