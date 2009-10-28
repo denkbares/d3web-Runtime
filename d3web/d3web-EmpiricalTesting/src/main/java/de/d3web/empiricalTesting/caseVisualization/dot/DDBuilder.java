@@ -104,7 +104,7 @@ public class DDBuilder implements CaseVisualizer {
 	 * Saves the graph visualization to a <b>DOT file</b> which
 	 * will be created at the committed filepath.
 	 * 
-	 * @param testsuite TestSuite which's cases will be 
+	 * @param TS TestSuite which's cases will be 
 	 * 					visualized by this class. 
 	 * @param filepath String which specifies where the 
 	 *                 created <b>DOT file</b> will be stored.
@@ -436,8 +436,8 @@ public class DDBuilder implements CaseVisualizer {
 	 * Generates the header for the solutions
 	 * in the table (node).
 	 * 
-	 * @param cfg HashMap<String, String> containing 
-	 *            configuration information
+	 * @param color String containing coloration information
+	 * @parm colspan int containing colspan information
 	 *            
 	 * @return String representing the header of the 
 	 *                solutions part of the table
@@ -472,7 +472,9 @@ public class DDBuilder implements CaseVisualizer {
 	/**
 	 * Checks if it is necessary to render a column for
 	 * user correction.
-	 * @param cfg HashMap containing the required information
+
+	 * @parm colspan int containing colspan information
+	 * 
 	 * @return String which is empty if column is not required.
 	 */
 	private String createCorrectionColumn(int colspan) {
@@ -490,9 +492,12 @@ public class DDBuilder implements CaseVisualizer {
 	 * preparation for rendering.
 	 * 
 	 * @param derived RatedSolution the derived solution
-	 *                which will be transformed
-	 *                
-	 * @param co HashMap containing configuration information
+	 *                which will be transformed       
+	 * @param color String containing coloration information
+	 * @parm colspan int containing colspan information
+	 * @parm symbolicstates boolean containing information whether
+	 *                      states are shown as symbolic states or
+	 *                      scores
 	 * 
 	 * @return String representing the transformed RatedSolution
 	 */
@@ -529,8 +534,16 @@ public class DDBuilder implements CaseVisualizer {
 	 *                
 	 * @param derived RatedSolution the derived solution
 	 *                which will be transformed
-	 *                
-	 * @param cfg HashMap containing configuration information
+	 * @parm colspan int containing colspan information          
+	 * @param expectedcolor String containing coloration information
+	 *                      for expected solution
+	 * @param derivedcolor String containing coloration information
+	 *                      for derived solution
+	 * @param nodecolor String containing coloration information
+	 *                      for the node
+	 * @parm symbolicstates boolean containing information whether
+	 *                      states are shown as symbolic states or
+	 *                      scores
 	 * 
 	 * @return String representing the transformed RatedSolutions
 	 */
@@ -575,7 +588,9 @@ public class DDBuilder implements CaseVisualizer {
 	 * @param rs RatedSolution representing the currently 
 	 *           processed RatedSolution
 
-	 * @param cfg HashMap containing config information
+	 * @parm symbolicstates boolean containing information whether
+	 *                      states are shown as symbolic states or
+	 *                      scores
 	 * 
 	 * @return String representing the score of the
 	 *                currently processed Solution.
@@ -665,7 +680,10 @@ public class DDBuilder implements CaseVisualizer {
 	 * @param rs RatedSolution which's backgroundcolor
 	 *           we are looking for.
 	 *           
-	 * @param cfg HashMap containing config information
+	 * @param suggested String containing coloration information
+	 *                      for solutions which are suggested
+	 * @param established String containing coloration information
+	 *                      for solutions which are established
 	 * 
 	 * @return String representing the color
 	 */

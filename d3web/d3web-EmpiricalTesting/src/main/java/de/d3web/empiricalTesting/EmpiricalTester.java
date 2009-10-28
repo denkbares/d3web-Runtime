@@ -62,7 +62,7 @@ public class EmpiricalTester {
 //			demoComputePrecisionAndRecall();
 //			demoBotTestCases();
 //			demoCaseVisualization();
-			demoBuildDDTree();
+//			demoBuildDDTree();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -128,7 +128,6 @@ public class EmpiricalTester {
 		TS.setKb(kb);
 		TS.loadRepository(workspace + caseFile);
 		
-//		JUNGCaseVisualizer.getInstance().showInJFrame(TS);
 		JUNGCaseVisualizer.getInstance().writeToFile(TS, workspace + pdfFile);
 	}
 	

@@ -127,8 +127,9 @@ public class ScoreRating implements Rating {
 	/**
 	 * Checks if the score exceeds either 20 or -20 points.
 	 */
-	public boolean isProblemSolvingRelevant() {	
-		return (rating > 0);
+	public boolean isProblemSolvingRelevant() {
+		DiagnosisState s = DiagnosisState.getState(rating);
+		return !(s.equals(DiagnosisState.UNCLEAR) || (s.equals(DiagnosisState.EXCLUDED)));
 	}
 
 }
