@@ -22,6 +22,9 @@ package de.d3web.empiricalTesting.caseVisualization.jung;
 
 import org.apache.commons.collections15.Transformer;
 
+import de.d3web.empiricalTesting.Finding;
+import de.d3web.empiricalTesting.RatedTestCase;
+
 
 /**
  * This class transforms (Edge)Findings which are the
@@ -34,16 +37,36 @@ import org.apache.commons.collections15.Transformer;
 public class EdgeTransformer implements Transformer<EdgeFinding, String> {
 
 	/**
+	 * Graph which's edges are transformed.
+	 * This reference is necessary for getting
+	 * the answers of all asked questions.
+	 */
+	private CaseTree<RatedTestCase, EdgeFinding> graph;
+	
+	/**
+	 * Creates an instance of EdgeTransformer backed on
+	 * the committed CaseTree object.
+	 * @param graph CaseTree which's elements are transformed.
+	 */
+	public EdgeTransformer(CaseTree<RatedTestCase, EdgeFinding> graph) {
+		this.graph = graph;		
+	}
+	
+	/**
 	 * Transforms a Finding to nice
 	 * formatted String which is necessary
 	 * for rendering.
 	 */
-    public String transform(EdgeFinding f) {
+    public String transform(EdgeFinding ef) {
     	
     	StringBuilder result = new StringBuilder();
-    	result.append("<html>");
-    	result.append(f.getFinding().getAnswer().toString());
-    	result.append("</html>");
+    	result.append("<html><center>");
+    	for (Finding f : graph.getDest(ef).getFindings()) {
+    		result.append(f.getAnswer().toString());
+    		result.append("<br/>");
+    	}
+    	result.delete(result.length() - 4, result.length());
+    	result.append("</center></html>");
     	
         return result.toString();
     }

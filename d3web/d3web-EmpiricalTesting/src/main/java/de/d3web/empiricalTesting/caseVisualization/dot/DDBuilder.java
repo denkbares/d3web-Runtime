@@ -269,10 +269,18 @@ public class DDBuilder implements CaseVisualizer {
 			return;
 		else {
 			createdEdges.add(arcName);
-			String label = edge.getLabel().getAnswer().toString();
+//			String label = edge.getLabel().getAnswer().toString();
+//			
+//			b.append("\"" + s0name + "\" -> \"" + s1name + "\" [");
+//			b.append("label = " + bh.prettyLabel(label));
 			
 			b.append("\"" + s0name + "\" -> \"" + s1name + "\" [");
-			b.append("label = " + bh.prettyLabel(label));
+			b.append("label = \"");
+			for (Finding f : edge.getEnd().getFindings()) {
+				b.append(bh.prettyLabel(f.getAnswer().toString()));
+				b.append("\\l");
+			}
+			b.append("\"");
 			
 			boolean bolOldCasesLikeNewCases = 
 				config.getProperty("renderOldCasesLikeNewCases").equals("true");
@@ -364,11 +372,19 @@ public class DDBuilder implements CaseVisualizer {
 		}
 
 		// print question answered for deriving the current solutions
-		Finding currentFinding = node.getTestCase().getFindings().get(0);
-		String nodeName = currentFinding.toString();
-
-		b.append("    <TR><TD COLSPAN=\""+intColSpan+"\" BGCOLOR=\"" + 
-				nodeColor + "\">" + bh.pretty(nodeName) + "</TD> </TR>\n");
+		
+		String nodeName;
+		for (Finding f : node.getTestCase().getFindings()) {
+			nodeName = f.toString();
+			b.append("    <TR><TD COLSPAN=\""+intColSpan+"\" BGCOLOR=\"" + 
+					nodeColor + "\">" + bh.pretty(nodeName) + "</TD> </TR>\n");
+		}
+		
+//		Finding currentFinding = node.getTestCase().getFindings().get(0);
+//		String nodeName = currentFinding.toString();
+//
+//		b.append("    <TR><TD COLSPAN=\""+intColSpan+"\" BGCOLOR=\"" + 
+//				nodeColor + "\">" + bh.pretty(nodeName) + "</TD> </TR>\n");
 
 		// Put all RatedSolutions in HashMaps
 		HashMap<Diagnosis, RatedSolution> expSolutions = 

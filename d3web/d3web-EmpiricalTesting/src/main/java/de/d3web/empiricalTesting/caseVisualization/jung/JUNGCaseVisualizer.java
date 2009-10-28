@@ -265,7 +265,7 @@ public class JUNGCaseVisualizer implements CaseVisualizer {
         vv.getRenderContext().setVertexFillPaintTransformer(new VertexColorTransformer());
         
         // Edge transformation 
-        vv.getRenderContext().setEdgeLabelTransformer(new EdgeTransformer());
+        vv.getRenderContext().setEdgeLabelTransformer(new EdgeTransformer(graph));
         vv.getRenderContext().setEdgeDrawPaintTransformer(new EdgeColorTransformer(graph));
         vv.getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line<RatedTestCase, EdgeFinding>());
         vv.getRenderContext().setArrowFillPaintTransformer(new EdgeColorTransformer(graph));

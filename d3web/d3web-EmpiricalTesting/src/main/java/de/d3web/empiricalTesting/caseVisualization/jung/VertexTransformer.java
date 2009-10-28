@@ -169,17 +169,19 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 			HashMap<String, String> cfg) {
 		
 		StringBuilder result = new StringBuilder();
-		result.append("<tr>");
-		result.append("<td colspan=\"");
-		result.append(cfg.get("colspan"));
-		result.append("\" bgcolor=\"");
-		result.append(cfg.get("nodeColor"));
-		result.append("\">");
-		result.append("<center>");
-		result.append(bh.pretty(rtc.getFindings().get(0).toString()));
-		result.append("</center>");
-		result.append("</td>");
-		result.append("</tr>");
+		for (Finding f : rtc.getFindings()) {
+			result.append("<tr>");
+			result.append("<td colspan=\"");
+			result.append(cfg.get("colspan"));
+			result.append("\" bgcolor=\"");
+			result.append(cfg.get("nodeColor"));
+			result.append("\">");
+			result.append("<center>");
+			result.append(bh.pretty(f.toString()));
+			result.append("</center>");
+			result.append("</td>");
+			result.append("</tr>");
+		}
 		
 		return result.toString();
 	}
@@ -536,7 +538,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 			result.append("\">");
 			result.append("<center>");
 			result.append(bh.pretty(q.getText()));
-			result.append("<center>");
+			result.append("</center>");
 			result.append("</td>");
 			result.append("</tr>");
 		}
