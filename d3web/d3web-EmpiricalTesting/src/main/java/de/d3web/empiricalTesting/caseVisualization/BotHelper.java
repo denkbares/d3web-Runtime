@@ -18,7 +18,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.empiricalTesting.ddTrees;
+package de.d3web.empiricalTesting.caseVisualization;
 
 import java.util.HashMap;
 import java.util.List;
@@ -109,6 +109,15 @@ public class BotHelper {
 
 	public String prettyAnswer(String answer) {
 		return pretty(answer);
+	}
+	
+	public String removeBadChars(String text) {
+		String badChars = ": =()[]{}.?/\\-";
+		for (int i = 0; i < badChars.length(); i++) {
+			text = text.replace(badChars.charAt(i), '_');
+			text = text.replace("_", "");
+		}
+		return text;
 	}
 
 	public void buildAnswerHashFor(KnowledgeBase k) {

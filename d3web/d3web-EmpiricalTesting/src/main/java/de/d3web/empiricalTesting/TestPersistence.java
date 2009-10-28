@@ -42,7 +42,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
-import de.d3web.empiricalTesting.ddTrees.BotHelper;
+import de.d3web.empiricalTesting.caseVisualization.BotHelper;
 import de.d3web.kernel.domainModel.Answer;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.KnowledgeBase;
@@ -154,7 +154,7 @@ public class TestPersistence {
 		return imported;
 	}
 
-	public void writeCases(URL casesUrl, List<SequentialTestCase> cases, boolean bWriteDerivedSolutions2) {
+	public void writeCases(URL casesUrl, List<SequentialTestCase> cases, boolean bWriteDerivedSolutions) {
 		try {
 			_writeCases(casesUrl, cases, bWriteDerivedSolutions);
 		} catch (FileNotFoundException e) {
@@ -289,7 +289,7 @@ public class TestPersistence {
 		Rating r = rs.getRating();
 		if (r instanceof ScoreRating) {
 			xmlsw.writeAttribute(RATING, ""
-					+ ((ScoreRating) r).getRating());
+					+ (((ScoreRating) r).getRating()).intValue());
 		} else if (r instanceof StateRating) {
 			xmlsw.writeAttribute(RATING, "" + ((StateRating )r).getRating());
 		}

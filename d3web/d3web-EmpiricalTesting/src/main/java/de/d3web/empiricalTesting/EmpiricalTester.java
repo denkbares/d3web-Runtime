@@ -24,62 +24,131 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.util.List;
 
-import de.d3web.empiricalTesting.ddTrees.DDBuilder;
-import de.d3web.empiricalTesting.joba.testcases.DDBot2Runner;
+import javax.activation.UnsupportedDataTypeException;
+
+import de.d3web.caseGeneration.HeuristicScoreRatingStrategy;
+import de.d3web.caseGeneration.InterviewBot;
+import de.d3web.empiricalTesting.caseConverter.CaseObjectToKnOffice;
+import de.d3web.empiricalTesting.caseConverter.CaseObjectToTestSuiteXML;
+import de.d3web.empiricalTesting.caseVisualization.dot.DDBuilder;
+import de.d3web.empiricalTesting.caseVisualization.jung.JUNGCaseVisualizer;
 import de.d3web.kernel.domainModel.KnowledgeBase;
 import de.d3web.persistence.xml.PersistenceManager;
 import de.d3web.persistence.xml.XCLModelPersistenceHandler;
 
 public class EmpiricalTester {
+	
+	// Input variables
+	static String workspace = "D:/Projekte/Temp/EmpiricalTesting/";
+	static String kbFile = "dano.jar";
+	static String caseFile = "dano_bot_49_cases.xml";
+
+	// Output file for DDBuilder
+	static String dotFile = "dano.dot";
+	// Output file for JUNGCaseVisualizer
+	static String pdfFile = "dano.pdf";
+	// Output files for InterviewBot
+	static String xmlFile = "dano_bot"; 
+	static String txtFile = "dano_bot"; 
+
 
 	/**
-	 * Here you can specify the KnowlegeBase and the TestCase.
-	 * Furthermore you can chose which demos you want to start.
-	 * simply comment them out if you don't want to use them.
+	 * Driver for the Empirical Testing project
 	 * @param args
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-
-		String workspace = "d:/eigene projekte/temp/";
-		String kbPath = workspace + "car_xcl_temp.jar";
-		String casesPath = workspace + "car_xcl_cases.xml";
-//		String dotPath = workspace + "pflanzen.dot";
-//		String generatedCasesPath = kbPath + "_generated.xml";
-		
-		demoComputePrecisionAndRecall(kbPath, casesPath);
-//		demoBuildDDTree(kbPath, casesPath, dotPath);
-//		demoBotTestCases(kbPath, generatedCasesPath);
+		try {
+//			demoComputePrecisionAndRecall();
+//			demoBotTestCases();
+//			demoCaseVisualization();
+			demoBuildDDTree();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
 	}
+
 	
 	/**
 	 * Demo that computes the Precision and Recall for the
 	 * derived solutions and the interview.
-	 * @param kbPath URL-formatted String representing the path to the KnowledgeBase
-	 * @return the loaded KnowledgeBase
 	 * @throws Exception
 	 */
-	public static void demoComputePrecisionAndRecall(String kbPath,
-			String casesPath) throws Exception {
+	public static void demoComputePrecisionAndRecall() throws Exception {
 		
-		KnowledgeBase kb = loadKnowledgeBase(kbPath);
-
+		KnowledgeBase kb = loadKnowledgeBase(workspace + kbFile);
 		TestSuite TS = new TestSuite();
 		TS.setKb(kb);
-		TS.loadRepository(casesPath);
+		TS.loadRepository(workspace + caseFile);
 
 		System.out.println("DerivedSolutions-Precision: " + TS.totalPrecision());
 		System.out.println("DerivedSolutions-Recall: " + TS.totalRecall());
 		System.out.println("Interview-Precision: " + TS.totalPrecisionInterview());
 		System.out.println("Interview-Recall: " + TS.totalRecallInterview());
-
-		System.out.println("Consistent test suite: " + TS.isConsistent());
-		for (RatedTestCase r : TS.getRepository().get(0).getCases()) {
-			System.out.println("Derived solutions are up-to-date: "
-					+ r.getDerivedSolutionsAreUpToDate() + " and correct: "
-					+ r.isCorrect());
-		}
 	}
+	
+	
+	/**
+	 * Demo that generates sequential test cases simulating an interview 
+	 * with the d3web interview manager by exhaustively traversing all 
+	 * possible answers of the currently active question.
+	 * 
+	 * The generated sequential test cases are stored in the xml file
+	 * and the txt file which are specified above.
+	 *  
+	 * @throws MalformedURLException
+	 * @throws UnsupportedDataTypeException
+	 */
+	public static void demoBotTestCases() throws 
+		UnsupportedDataTypeException, MalformedURLException {
+		
+		KnowledgeBase kb = loadKnowledgeBase(workspace + kbFile);
+	
+		InterviewBot bot = new InterviewBot.Builder(kb).
+			maxCases(50).
+			ratingStrategy(new HeuristicScoreRatingStrategy()).
+			build();
+		List<SequentialTestCase> cases = bot.generate();
+	
+		writeCasesTXT(txtFile, cases);
+		writeCasesXML(xmlFile, cases);
+	}
+
+	
+	/**
+	 * Demo that generates a visualization of the specified
+	 * test suite using JUNGCaseVisualizer. The visualization 
+	 * is saved in a PDF file at the location specified above.
+	 * @throws MalformedURLException
+	 */
+	public static void demoCaseVisualization() throws MalformedURLException {
+		
+		KnowledgeBase kb = loadKnowledgeBase(workspace + kbFile);
+		TestSuite TS = new TestSuite();
+		TS.setKb(kb);
+		TS.loadRepository(workspace + caseFile);
+		
+//		JUNGCaseVisualizer.getInstance().showInJFrame(TS);
+		JUNGCaseVisualizer.getInstance().writeToFile(TS, workspace + pdfFile);
+	}
+	
+	
+	/**
+	 * Demo that generates a visualization of the specified
+	 * test suite using DDBuilder. The visualization is
+	 * saved in DOT format to the file specified above.
+	 * @throws MalformedURLException
+	 */
+	public static void demoBuildDDTree() throws MalformedURLException {
+		
+		KnowledgeBase kb = loadKnowledgeBase(workspace + kbFile);
+		TestSuite TS = new TestSuite();
+		TS.setKb(kb);
+		TS.loadRepository(workspace + caseFile);
+
+		DDBuilder.getInstance().writeToFile(TS, workspace + dotFile);
+	}
+	
 
 	/**
 	 * Loads the KnowledgeBase.
@@ -95,32 +164,49 @@ public class EmpiricalTester {
 		return kb;
 	}
 	
-	public static void demoBotTestCases(String kbPath, String casesPath) throws Exception {
-		KnowledgeBase k = loadKnowledgeBase(kbPath);
-		DDBot2Runner botRunner = new DDBot2Runner(k);
-		botRunner.setCaseNamePraefix("STC");
-		
-		// Example: run ALL cases and store it to a file
-		 List<SequentialTestCase> cases =
-		 botRunner.generateSequentialTestCases(1,1);
-		 botRunner.storeCases(cases, casesPath, true);
-		
-		// Example: compare two nets and print differences in a dot
-//		botRunner.testDriveDDNetComparison(workspace, "some_bigger_exp.xml",
-//				"some_bigger_exp2.xml", "some_bigger_exp.dot");
-		 
+	
+	/**
+	 * Saves the generated sequential test cases to 
+	 * an XML file.
+	 * @param filename String part of the filename of the 
+	 *                 generated output file
+	 * @param cases List<SequentialTestCase> the cases
+	 */
+	private static void writeCasesXML(String filename, List<SequentialTestCase> cases) {
+		CaseObjectToTestSuiteXML conv = new CaseObjectToTestSuiteXML();
+		long casesK = cases.size();
+		conv.write(cases, workspace+filename+"_"+casesK+"_cases.xml");
 	}
-
-	public static void demoBuildDDTree(String kbPath, String casesPath,
-			String dotPath) throws MalformedURLException {
-		KnowledgeBase kb = loadKnowledgeBase(kbPath);
-		TestSuite TS = new TestSuite();
-		TS.setKb(kb);
-		TS.loadRepository(casesPath);
-
-		DDBuilder builder = new DDBuilder();
-		builder.printDOT(TS, dotPath);
+	
+	
+	/**
+	 * Saves the generated sequential test cases in KnOffice format
+	 * to an TXT file.
+	 * @param filename String part of the filename of the 
+	 *                 generated output file
+	 * @param cases List<SequentialTestCase> the cases
+	 */
+	private static void writeCasesTXT(String filename, List<SequentialTestCase> cases) {
+		CaseObjectToKnOffice conv = new CaseObjectToKnOffice();
+		long casesK = cases.size();
+		conv.write(cases, workspace+filename+"_"+casesK+"_cases.txt");
 	}
-
+	
+	
+//	public static void demoBotTestCases(String kbPath, String casesPath) throws Exception {
+//	KnowledgeBase k = loadKnowledgeBase(kbPath);
+//	DDBot2Runner botRunner = new DDBot2Runner(k);
+//	botRunner.setCaseNamePraefix("STC");
+//	
+//	// Example: run ALL cases and store it to a file
+//	 List<SequentialTestCase> cases =
+//	 botRunner.generateSequentialTestCases(1,1);
+//	 botRunner.storeCases(cases, casesPath, true);
+//	
+//	// Example: compare two nets and print differences in a dot
+//	botRunner.testDriveDDNetComparison(workspace, "some_bigger_exp.xml",
+//			"some_bigger_exp2.xml", "some_bigger_exp.dot");
+//	 
+//	}
 
 }

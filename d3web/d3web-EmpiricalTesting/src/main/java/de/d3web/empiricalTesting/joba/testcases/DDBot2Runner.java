@@ -35,7 +35,7 @@ import java.util.List;
 
 import de.d3web.empiricalTesting.Finding;
 import de.d3web.empiricalTesting.SequentialTestCase;
-import de.d3web.empiricalTesting.ddTrees.BotHelper;
+import de.d3web.empiricalTesting.caseVisualization.BotHelper;
 import de.d3web.kernel.domainModel.KnowledgeBase;
 import de.d3web.kernel.domainModel.answers.AnswerChoice;
 import de.d3web.kernel.domainModel.qasets.QContainer;

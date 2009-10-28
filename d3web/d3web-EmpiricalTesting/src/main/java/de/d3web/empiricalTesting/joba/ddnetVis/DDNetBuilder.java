@@ -26,8 +26,8 @@ import java.util.List;
 
 import de.d3web.empiricalTesting.RatedTestCase;
 import de.d3web.empiricalTesting.SequentialTestCase;
-import de.d3web.empiricalTesting.ddTrees.DDNode;
-import de.d3web.empiricalTesting.ddTrees.DDBuilder.caseType;
+import de.d3web.empiricalTesting.caseVisualization.dot.DDNode;
+import de.d3web.empiricalTesting.caseVisualization.dot.DDBuilder.caseType;
 import de.d3web.kernel.domainModel.QASet;
 import de.d3web.kernel.domainModel.qasets.QContainer;
 

@@ -18,10 +18,10 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.empiricalTesting.ddTrees;
+package de.d3web.empiricalTesting.caseVisualization.dot;
 
 import de.d3web.empiricalTesting.Finding;
-import de.d3web.empiricalTesting.ddTrees.DDBuilder.caseType;
+import de.d3web.empiricalTesting.caseVisualization.dot.DDBuilder.caseType;
 
 public class DDEdge {
 	DDNode begin;

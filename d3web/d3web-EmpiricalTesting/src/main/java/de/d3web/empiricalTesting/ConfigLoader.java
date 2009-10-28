@@ -34,7 +34,8 @@ public class ConfigLoader {
 	private ConfigLoader() {
 		setDefaultProperties();
 		try {
-			config.load(new FileReader("config.properties"));
+			String userdir = System.getProperty("user.dir") + "/src/main/resources/";
+			config.load(new FileReader(userdir + "config.properties"));
 		} catch (Exception e) {}
 	}
 
@@ -64,18 +65,18 @@ public class ConfigLoader {
 		config.setProperty("fMeasureDiff", "0.01");
 		config.setProperty("compareOnlySymbolicStates", "false");
 		//Formatting Nodes
-		config.setProperty("nodeColorNewCase", "green");
-		config.setProperty("nodeColorOldCase", "white");
-		config.setProperty("nodeColorIncorrectCase", "red");
-		config.setProperty("solutionColorSuggested", "yellow");
-		config.setProperty("solutionColorEstablished", "orange");
+		config.setProperty("nodeColorNewCase", "#04B404");
+		config.setProperty("nodeColorOldCase", "#FFFFFF");
+		config.setProperty("nodeColorIncorrectCase", "#FF0000");
+		config.setProperty("solutionColorSuggested", "#FFFF00");
+		config.setProperty("solutionColorEstablished", "#FF8000");
 		//Formatting Edges
 		config.setProperty("edgeWidthNewCase", "15");
 		config.setProperty("edgeWidthOldCase", "3");
 		config.setProperty("edgeWidthIncorrectCase", "25");
-		config.setProperty("edgeColorNewCase", "green");
-		config.setProperty("edgeColorOldCase", "gray");
-		config.setProperty("edgeColorIncorrectCase", "red");
+		config.setProperty("edgeColorNewCase", "#04B404");
+		config.setProperty("edgeColorOldCase", "#A4A4A4");
+		config.setProperty("edgeColorIncorrectCase", "#FF0000");
 	}
 
 	public String getProperty(String key) {

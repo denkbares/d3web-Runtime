@@ -28,7 +28,6 @@ import java.util.Map;
 
 import javax.activation.UnsupportedDataTypeException;
 
-import de.d3web.empiricalTesting.Finding;
 import de.d3web.kernel.domainModel.Answer;
 import de.d3web.kernel.domainModel.NumericalInterval;
 import de.d3web.kernel.domainModel.answers.AnswerFactory;

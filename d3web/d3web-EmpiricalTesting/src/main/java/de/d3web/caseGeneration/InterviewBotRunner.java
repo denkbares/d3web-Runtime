@@ -28,17 +28,18 @@ import javax.activation.UnsupportedDataTypeException;
 
 import de.d3web.empiricalTesting.SequentialTestCase;
 import de.d3web.empiricalTesting.caseConverter.CaseObjectToKnOffice;
+import de.d3web.empiricalTesting.caseConverter.CaseObjectToTestSuiteXML;
 import de.d3web.kernel.domainModel.KnowledgeBase;
 import de.d3web.persistence.xml.PersistenceManager;
 
 public class InterviewBotRunner {
-	static String workspace = "/jobatrash/";
+	static String workspace = "D:/Projekte/Temp/EmpiricalTesting/";
 	static String filename = "";
 	static Stopwatch watch = new Stopwatch();
 
 	public static void main(String[] args) {
 		try {
-			demoForCarDiagnosis();
+//			demoForCarDiagnosis();
 //			demoForGenerated1K_KB();
 //			demoForDigitalysKB();
 		} catch (Exception e) {
@@ -46,22 +47,23 @@ public class InterviewBotRunner {
 		}
 	}
 
-
+	
 	@SuppressWarnings("unused")
 	private static void demoForDigitalysKB() 
 	    throws UnsupportedDataTypeException, MalformedURLException {
-		filename = "digitalys_final.jar";
+		filename = "dano.jar";
 		KnowledgeBase k = loadKnowledgebase(filename);
 		
 		watch.start();
 		InterviewBot bot = new InterviewBot.Builder(k).
+			maxCases(5).
 			ratingStrategy(new HeuristicScoreRatingStrategy()).
 			build();
 		List<SequentialTestCase> cases = bot.generate();
 		watch.stop();
 		
 		System.out.println(watch);
-		writeCases(filename, cases);
+		writeCasesXML(filename, cases);
 	}
 	
 
@@ -78,7 +80,7 @@ public class InterviewBotRunner {
 
 		System.out.println(watch);
 		
-		writeCases(filename, cases);
+		writeCasesXML(filename, cases);
 	}
 
 
@@ -99,19 +101,27 @@ public class InterviewBotRunner {
 
 		System.out.println(watch);
 		
-		writeCases(filename, cases);
+		writeCasesXML(filename, cases);
 	}
 	
 	
-
 	private static KnowledgeBase loadKnowledgebase(String filename) throws MalformedURLException {
 		KnowledgeBase k = PersistenceManager.getInstance().load(new File(workspace+filename).toURI().toURL());
 		return k;
 	}
 
-	private static void writeCases(String filename, List<SequentialTestCase> cases) {
+
+	private static void writeCasesXML(String filename, List<SequentialTestCase> cases) {
+		CaseObjectToTestSuiteXML conv = new CaseObjectToTestSuiteXML();
+		long casesK = cases.size() / 1000;
+		conv.write(cases, workspace+filename+"_cases_"+casesK+".xml");
+	}
+	
+	
+	@SuppressWarnings("unused")
+	private static void writeCasesTXT(String filename, List<SequentialTestCase> cases) {
 		CaseObjectToKnOffice conv = new CaseObjectToKnOffice();
 		long casesK = cases.size() / 1000;
 		conv.write(cases, workspace+filename+"_cases_"+casesK+".txt");
-	}	
+	}
 }

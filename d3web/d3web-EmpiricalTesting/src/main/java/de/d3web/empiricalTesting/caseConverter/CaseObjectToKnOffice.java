@@ -44,7 +44,7 @@ public class CaseObjectToKnOffice extends CaseObjectConverter {
 	
 	// quote the verbalized text, if at least on character of 
 	// these is contained in the verbalization text
-	private final String BAD_CHARS= "()=,";
+	private final String BAD_CHARS= "()=,:;?";
 	// the default indent for each line within a case
 	private final String INDENT = "   ";
 	
