@@ -254,7 +254,9 @@ public class ConditionVerbalizer implements Verbalizer {
 							("(" + renderCondVerbalizationPlainText(cond, quote) + ")")
 						+ " " + ntCond.getOperator() + " ");
 				}
-				s.append(renderCondVerbalizationPlainText(ntCond.getCondVerbalizations()
+				
+				if (ntCond.getCondVerbalizations().size() > 0) //Avoid AIOOBE for empty NTConds
+					s.append(renderCondVerbalizationPlainText(ntCond.getCondVerbalizations()
 						.get(ntCond.getCondVerbalizations().size() - 1), quote));
 			}
 		}
