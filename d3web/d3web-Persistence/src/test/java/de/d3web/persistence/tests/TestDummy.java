@@ -23,22 +23,32 @@ package de.d3web.persistence.tests;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.persistence.tests.utils.XMLTagUtils;
+import de.d3web.persistence.xml.writers.DiagnosisWriter;
 
 /**
  * @author merz, brümmer :-)  ->danke!
  */
 
 public class TestDummy extends TestCase {
-
+	
+	/*
+	 * furth: I think this isn't really a test anymore
+	 *        because the only remaining test in here 
+	 *        is also available in DiagnosisTest
+	 */
 
 //	private TestClass test;
 //	private TestWriter tw;
+	private Diagnosis diag;
+	private DiagnosisWriter dw;
 	private String xmlcode;
-	
+
 	private XMLTag isTag;
 	private XMLTag shouldTag;
+	
 	/**
 	 * Constructor for RuleComplexTest.
 	 * @param arg0
@@ -57,13 +67,13 @@ public class TestDummy extends TestCase {
 	
 	protected void setUp() {
 		
-//		test = new TestDummy();
-//		test.setId("d1");
-//		test.setText("d1-text");
+		diag = new Diagnosis();
+		diag.setId("d1");
+		diag.setText("d1-text");
 		
-//		dw = new DiagnosisWriter();
+		dw = new DiagnosisWriter();
 
-		shouldTag = new XMLTag("testClass");
+		shouldTag = new XMLTag("Diagnosis");
 		shouldTag.addAttribute("ID", "d1");
 		
 		XMLTag shouldTextTag = new XMLTag("Text");
@@ -73,9 +83,8 @@ public class TestDummy extends TestCase {
 	}
 	
 	public void testDiagnosisSimpleState() throws Exception{
-//		xmlcode = dw.getXMLString(diag);
+		xmlcode = dw.getXMLString(diag);
 		isTag = new XMLTag(XMLTagUtils.generateNodeFromXMLCode(xmlcode, "Diagnosis", 0));
-		
 		assertEquals("(0)", shouldTag, isTag);
 	}
 }

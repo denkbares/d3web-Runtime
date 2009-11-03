@@ -101,6 +101,7 @@ public class BasicPersistenceHandlerTest extends TestCase {
 		shouldTag = new XMLTag("KnowledgeBase");
 		shouldTag.addAttribute("type", "basic");
 		shouldTag.addAttribute("system", "d3web");
+		shouldTag.addAttribute("id", "null");
 		
 		this.addPriorityGroups();
 	
@@ -139,14 +140,29 @@ public class BasicPersistenceHandlerTest extends TestCase {
 		
 		XMLTag costTag1 = new XMLTag("Cost");	
 		costTag1.addAttribute("ID", "risk-id");
-		costTag1.addAttribute("verbalization", "Patientenbelastung");
-		costTag1.addAttribute("unit", "Punkte");
+		
+		XMLTag costTag1Verbalization = new XMLTag("Verbalization");
+		costTag1Verbalization.setContent("Patientenbelastung");
+		costTag1.addChild(costTag1Verbalization);
+		
+		XMLTag costTag1Unit = new XMLTag("Unit");
+		costTag1Unit.setContent("Punkte");
+		costTag1.addChild(costTag1Unit);
+		
 		costsTag.addChild(costTag1);
+		
 		
 		XMLTag costTag2 = new XMLTag("Cost");	
 		costTag2.addAttribute("ID", "timeexpenditure-id");
-		costTag2.addAttribute("verbalization", "Arztzeit");
-		costTag2.addAttribute("unit", "Minuten");
+		
+		XMLTag costTag2Verbalization = new XMLTag("Verbalization");
+		costTag2Verbalization.setContent("Arztzeit");
+		costTag2.addChild(costTag2Verbalization);
+		
+		XMLTag costTag2Unit = new XMLTag("Unit");
+		costTag2Unit.setContent("Minuten");
+		costTag2.addChild(costTag2Unit);
+		
 		costsTag.addChild(costTag2);
 	}
 	
@@ -170,8 +186,6 @@ public class BasicPersistenceHandlerTest extends TestCase {
 		XMLTag qContainerTextTag1 = new XMLTag("Text");
 		qContainerTextTag1.setContent("qc1-text");
 		qContainerTag1.addChild(qContainerTextTag1);
-		XMLTag qContainerCostTag1 = new XMLTag("Costs");
-		qContainerTag1.addChild(qContainerCostTag1);
 		qContainersTag.addChild(qContainerTag1);
 		
 		
@@ -180,8 +194,6 @@ public class BasicPersistenceHandlerTest extends TestCase {
 		XMLTag qContainerTextTag2 = new XMLTag("Text");
 		qContainerTextTag2.setContent("qc2-text");
 		qContainerTag2.addChild(qContainerTextTag2);
-		XMLTag qContainerCostTag2 = new XMLTag("Costs");
-		qContainerTag2.addChild(qContainerCostTag2);
 		qContainersTag.addChild(qContainerTag2);
 	}
 	
@@ -233,8 +245,6 @@ public class BasicPersistenceHandlerTest extends TestCase {
 		XMLTag questionTextTag1 = new XMLTag("Text");
 		questionTextTag1.setContent("q1-text");
 		questionTag1.addChild(questionTextTag1);
-		XMLTag questionCostTag1 = new XMLTag("Costs");
-		questionTag1.addChild(questionCostTag1);
 		questionsTag.addChild(questionTag1);
 		
 		XMLTag questionTag2 = new XMLTag("Question");
@@ -243,8 +253,6 @@ public class BasicPersistenceHandlerTest extends TestCase {
 		XMLTag questionTextTag2 = new XMLTag("Text");
 		questionTextTag2.setContent("q2-text");
 		questionTag2.addChild(questionTextTag2);
-		XMLTag questionCosTag2 = new XMLTag("Costs");
-		questionTag2.addChild(questionCosTag2);
 		XMLTag questionAnswersTag2 = new XMLTag("Answers");
 		questionTag2.addChild(questionAnswersTag2);
 		questionsTag.addChild(questionTag2);
@@ -353,7 +361,7 @@ public class BasicPersistenceHandlerTest extends TestCase {
 		
 		XMLTag conditionTag1 = new XMLTag("Condition");
 		conditionTag1.addAttribute("ID", "d1");
-		conditionTag1.addAttribute("type", "dstate");
+		conditionTag1.addAttribute("type", "DState");
 		conditionTag1.addAttribute("value", "suggested");
 		ruleComplexTag1.addChild(conditionTag1);
 		
@@ -381,7 +389,7 @@ public class BasicPersistenceHandlerTest extends TestCase {
 		
 			XMLTag conditionTag2 = new XMLTag("Condition");
 			conditionTag2.addAttribute("ID", "d1");
-			conditionTag2.addAttribute("type", "dstate");
+			conditionTag2.addAttribute("type", "DState");
 			conditionTag2.addAttribute("value", "suggested");
 			conditionsTag2.addChild(conditionTag2);
 	}

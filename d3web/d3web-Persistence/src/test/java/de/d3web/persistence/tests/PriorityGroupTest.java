@@ -24,6 +24,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import de.d3web.kernel.domainModel.KnowledgeBase;
+import de.d3web.kernel.domainModel.KnowledgeBaseManagement;
 import de.d3web.kernel.domainModel.PriorityGroup;
 import de.d3web.kernel.domainModel.qasets.QContainer;
 import de.d3web.kernel.supportknowledge.Property;
@@ -93,14 +94,17 @@ public class PriorityGroupTest extends TestCase {
 	}
 
 	public void testPriorityGroupWithChildren() throws Exception {
-		qc1 = new QContainer();
+				
+		qc1 = new QContainer("qc1ID");
 		qc1.setId("qc1ID");
 		qc1.setKnowledgeBase(kb);
+		qc1.setPriority(1);
 		pg.addChild(qc1);
 
-		qc2 = new QContainer();
+		qc2 = new QContainer("qc2ID");
 		qc2.setId("qc2ID");
 		qc2.setKnowledgeBase(kb);
+		qc2.setPriority(1);
 		pg.addChild(qc2);
 
 		XMLTag children = new XMLTag("Children");
