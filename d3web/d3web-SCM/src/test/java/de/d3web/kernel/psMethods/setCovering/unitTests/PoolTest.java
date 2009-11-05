@@ -24,8 +24,10 @@ import java.util.Collections;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.psMethods.setCovering.Hypothesis;
 import de.d3web.kernel.psMethods.setCovering.SCDiagnosis;
+import de.d3web.kernel.psMethods.setCovering.SCNodeFactory;
 import de.d3web.kernel.psMethods.setCovering.pools.HypothesisPool;
 import de.d3web.kernel.psMethods.setCovering.pools.SetPool;
 
@@ -81,7 +83,13 @@ public class PoolTest extends TestCase {
 		// when retrieving a Hypothesis from the empty pool, GENERATION_COUNT
 		// new hypotheses will be created.
 		// so GENERATION_COUNT-1 Hypotheses are left.
-		SCDiagnosis scDiagnosis = new SCDiagnosis();
+		
+		//TODO: Hotfix! It is not posible to create a proper SCDiagnosis by simply calling
+        //		the constructor. You have to set the NamedObject manually by calling
+		//		SCDiagnosis.setNamedObject(). Another possibility is that you use
+		//		SCNodeFactory.createSCDiagnosis().
+		Diagnosis diag1 = new Diagnosis();
+		SCDiagnosis scDiagnosis = SCNodeFactory.createSCDiagnosis(diag1);
 		Hypothesis hypothesis = hypothesisPool.getHypothesis(new Object[]{scDiagnosis});
 		assertEquals("wrong hypothesis count", HypothesisPool.GENERATION_COUNT - 1, hypothesisPool
 				.getCurrentHypothesesCount());
