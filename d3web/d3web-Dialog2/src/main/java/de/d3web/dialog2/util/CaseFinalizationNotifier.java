@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 
 import de.d3web.dialog2.WebDialog;
 import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.psMethods.setCovering.PSMethodSetCovering;
+
 
 public class CaseFinalizationNotifier implements HttpSessionListener {
 
@@ -36,11 +36,7 @@ public class CaseFinalizationNotifier implements HttpSessionListener {
 	    .getLogger(CaseFinalizationNotifier.class);
 
     public static void finalizeCase(XPSCase theCase) {
-	try {
-	    PSMethodSetCovering.getInstance().removeXPSCase(theCase);
-	} catch (Exception e) {
-	    logger.warn("Error while finalizing case...");
-	}
+    	//TODO: Does nothing, should be removed...
     }
 
     public void sessionCreated(HttpSessionEvent e) {

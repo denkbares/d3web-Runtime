@@ -30,10 +30,10 @@ import org.apache.log4j.Logger;
 import de.d3web.config.persistence.ConfigPersistenceHandler;
 import de.d3web.dialog2.basics.persistence.DialogPersistenceManager;
 import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.psMethods.setCovering.persistence.SCMPersistenceHandler;
 import de.d3web.persistence.xml.AuxiliaryPersistenceHandler;
 import de.d3web.persistence.xml.KBPatchPersistenceHandler;
 import de.d3web.persistence.xml.PersistenceManager;
+import de.d3web.persistence.xml.XCLModelPersistenceHandler;
 import de.d3web.persistence.xml.mminfo.MMInfoPersistenceHandler;
 import de.d3web.persistence.xml.shared.SharedPersistenceHandler;
 
@@ -83,7 +83,7 @@ public class KnowledgeBaseRepository {
 		.addPersistenceHandler(new SharedPersistenceHandler());
 	persistenceManager
 		.addPersistenceHandler(new ConfigPersistenceHandler());
-	persistenceManager.addPersistenceHandler(new SCMPersistenceHandler());
+	persistenceManager.addPersistenceHandler(new XCLModelPersistenceHandler());
 	initialize();
     }
 

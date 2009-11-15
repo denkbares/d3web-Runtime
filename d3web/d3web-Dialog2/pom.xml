@@ -71,12 +71,6 @@
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
-			<artifactId>d3web-SCM</artifactId>
-			<version>0-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-ExplainTree</artifactId>
 			<version>0-SNAPSHOT</version>
 			<scope>compile</scope>
@@ -263,6 +257,12 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>org.ajax4jsf</groupId>
+			<artifactId>ajax4jsf</artifactId>
+			<version>1.1.1-uniwue</version>
+			<scope>compile</scope>
+		</dependency>
 		<!--
 		Testing offline building... -Alex
 		<dependency>
@@ -271,12 +271,6 @@
 			<version>1.1.9-uniwue</version>
 			<type>jar</type>
 			<scope>compile</scope>
-		</dependency>-->
-		<dependency>
-			<groupId>org.ajax4jsf</groupId>
-			<artifactId>ajax4jsf</artifactId>
-			<version>1.1.1-uniwue</version>
-			<scope>compile</scope>
-		</dependency>		
+		</dependency>-->		
 	</dependencies>
 </project>
