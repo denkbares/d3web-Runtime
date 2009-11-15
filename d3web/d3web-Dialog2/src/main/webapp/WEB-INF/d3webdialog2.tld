@@ -228,8 +228,8 @@
 	</tag>
 	<tag>
 		<description></description>
-		<name>scmBox</name>
-		<tag-class>de.d3web.dialog2.webapp.SCMBoxTag</tag-class>
+		<name>xclBox</name>
+		<tag-class>de.d3web.dialog2.webapp.XCLBoxTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
 			<name>value</name>
@@ -480,8 +480,8 @@
 	</tag>
 	<tag>
 		<description></description>
-		<name>scmPage</name>
-		<tag-class>de.d3web.dialog2.webapp.SCMPageTag</tag-class>
+		<name>xclPage</name>
+		<tag-class>de.d3web.dialog2.webapp.XCLPageTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
 			<name>diag</name>

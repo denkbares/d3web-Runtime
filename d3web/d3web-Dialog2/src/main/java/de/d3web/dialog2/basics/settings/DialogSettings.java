@@ -120,11 +120,11 @@ public class DialogSettings {
     // Elements of CompareCase
     private boolean showCompareCase = true;
 
-    // Elements of SCM
-    private boolean showSCM = true;
-    private float scm_display_min_percentage = 0.15f;
+    // Elements of XCL
+    private boolean showXCL = true;
+    private float xcl_display_min_percentage = 0.15f;
 
-    private int scm_digitcount = 2;
+    private int xcl_digitcount = 2;
 
     // Elements of ProcessedQContainers
     private boolean showProcessedQContainers = true;
@@ -214,12 +214,12 @@ public class DialogSettings {
 	return saveCaseThreadMaxIdleTime;
     }
 
-    public int getScm_digitcount() {
-	return scm_digitcount;
+    public int getXCL_digitcount() {
+	return xcl_digitcount;
     }
 
-    public float getScm_display_min_percentage() {
-	return scm_display_min_percentage;
+    public float getXCL_display_min_percentage() {
+	return xcl_display_min_percentage;
     }
 
     public int getSessionMaxInactiveInterval() {
@@ -392,8 +392,8 @@ public class DialogSettings {
 	return showRightPanelToggleButtons;
     }
 
-    public boolean isShowSCM() {
-	return showSCM;
+    public boolean isShowXCL() {
+	return showXCL;
     }
 
     public void setAllowRightPanel(boolean allowRightPanel) {
@@ -483,12 +483,12 @@ public class DialogSettings {
 	this.saveCaseThreadMaxIdleTime = saveCaseThreadMaxIdleTime;
     }
 
-    public void setScm_digitcount(int scm_digitcount) {
-	this.scm_digitcount = scm_digitcount;
+    public void setXCL_digitcount(int xcl_digitcount) {
+	this.xcl_digitcount = xcl_digitcount;
     }
 
-    public void setScm_display_min_percentage(float scm_display_min_percentage) {
-	this.scm_display_min_percentage = scm_display_min_percentage;
+    public void setXCL_display_min_percentage(float xcl_display_min_percentage) {
+	this.xcl_display_min_percentage = xcl_display_min_percentage;
     }
 
     public void setSessionMaxInactiveInterval(int sessionMaxInactiveInterval) {
@@ -611,8 +611,8 @@ public class DialogSettings {
 	this.showRightPanelToggleButtons = showRightPanelToggleButtons;
     }
 
-    public void setShowSCM(boolean showSCM) {
-	this.showSCM = showSCM;
+    public void setShowXCL(boolean showXCL) {
+	this.showXCL = showXCL;
     }
 
     public void setStyleSheetPath(String styleSheetPath) {

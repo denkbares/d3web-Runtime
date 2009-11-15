@@ -18,43 +18,41 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.dialog2.component.html;
+package de.d3web.dialog2.webapp;
 
-import javax.faces.component.UIOutput;
-import javax.faces.context.FacesContext;
+import javax.el.ValueExpression;
+import javax.faces.component.UIComponent;
+import javax.faces.webapp.UIComponentELTag;
 
-public class UISCMPage extends UIOutput {
+import de.d3web.dialog2.component.html.UIXCLPage;
 
-    public static final String COMPONENT_TYPE = "de.d3web.dialog2.SCMPage";
+public class XCLPageTag extends UIComponentELTag {
 
-    private static final String DEFAULT_RENDERER_TYPE = "de.d3web.dialog2.SCMPage";
+    private ValueExpression diag;
 
-    private String diag;
-
-    public UISCMPage() {
-	setRendererType(DEFAULT_RENDERER_TYPE);
-    }
-
-    public String getDiag() {
-	return ComponentUtils.getStringValue(this, diag, "diag");
+    @Override
+    public String getComponentType() {
+	return UIXCLPage.COMPONENT_TYPE;
     }
 
     @Override
-    public void restoreState(FacesContext context, Object state) {
-	Object values[] = (Object[]) state;
-	super.restoreState(context, values[0]);
-	diag = (String) values[1];
+    public String getRendererType() {
+	return UIXCLPage.COMPONENT_TYPE;
     }
 
     @Override
-    public Object saveState(FacesContext context) {
-	Object values[] = new Object[2];
-	values[0] = super.saveState(context);
-	values[1] = diag;
-	return ((values));
+    public void release() {
+	super.release();
+	diag = null;
     }
 
-    public void setDiag(String diag) {
+    public void setDiag(ValueExpression diag) {
 	this.diag = diag;
+    }
+
+    @Override
+    public void setProperties(UIComponent component) {
+	super.setProperties(component);
+	component.setValueExpression("diag", diag);
     }
 }

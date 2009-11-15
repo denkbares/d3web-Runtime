@@ -16,7 +16,7 @@
 	<html>
 	<head>
 	<title><d3:outputTextWithoutId
-		value="#{msgs['scm.explainD3.explanation']}" /></title>
+		value="#{msgs['xcl.explainD3.explanation']}" /></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 
 	<link rel="stylesheet" type="text/css" href="css/pagelayout.css"
@@ -37,13 +37,13 @@
 	<a4j:form>
 		<script type="text/javascript" src="javascript/tooltip/wz_tooltip.js"></script>
 		<script type="text/javascript" src="javascript/tooltip/tip_balloon.js"></script>
-		<h:form id="scmForm">
-			<t:div id="scm" forceId="true">
+		<h:form id="xclForm">
+			<t:div id="xcl" forceId="true">
 				<t:htmlTag value="h2">
-					<h:outputText value="#{msgs['scm.explainD3.title']}" />
+					<h:outputText value="#{msgs['xcl.explainD3.title']}" />
 				</t:htmlTag>
 
-				<d3:scmPage diag="#{param.diagID}" />
+				<d3:xclPage diag="#{param.diagID}" />
 			</t:div>
 		</h:form>
 	</a4j:form>

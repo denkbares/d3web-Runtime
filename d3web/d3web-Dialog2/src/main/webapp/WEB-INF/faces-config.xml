@@ -32,12 +32,12 @@
 		<component-class>de.d3web.dialog2.component.html.UIAnswerFrequentnessBox</component-class>
 	</component>
 	<component>
-		<component-type>de.d3web.dialog2.SCMBox</component-type>
-		<component-class>de.d3web.dialog2.component.html.UISCMBox</component-class>
+		<component-type>de.d3web.dialog2.XCLBox</component-type>
+		<component-class>de.d3web.dialog2.component.html.UIXCLBox</component-class>
 	</component>
 	<component>
-		<component-type>de.d3web.dialog2.SCMPage</component-type>
-		<component-class>de.d3web.dialog2.component.html.UISCMPage</component-class>
+		<component-type>de.d3web.dialog2.XCLPage</component-type>
+		<component-class>de.d3web.dialog2.component.html.UIXCLPage</component-class>
 	</component>
 	<component>
 		<component-type>de.d3web.dialog2.DiagWithInfo</component-type>
@@ -209,13 +209,13 @@
 		</renderer>
 		<renderer>
 			<component-family>javax.faces.Output</component-family>
-			<renderer-type>de.d3web.dialog2.SCMBox</renderer-type>
-			<renderer-class>de.d3web.dialog2.render.SCMBoxRenderer</renderer-class>
+			<renderer-type>de.d3web.dialog2.XCLBox</renderer-type>
+			<renderer-class>de.d3web.dialog2.render.XCLBoxRenderer</renderer-class>
 		</renderer>
 		<renderer>
 			<component-family>javax.faces.Output</component-family>
-			<renderer-type>de.d3web.dialog2.SCMPage</renderer-type>
-			<renderer-class>de.d3web.dialog2.render.SCMPageRenderer</renderer-class>
+			<renderer-type>de.d3web.dialog2.XCLPage</renderer-type>
+			<renderer-class>de.d3web.dialog2.render.XCLPageRenderer</renderer-class>
 		</renderer>
 		<renderer>
 			<component-family>javax.faces.Output</component-family>

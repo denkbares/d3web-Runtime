@@ -265,13 +265,13 @@ function openDiagPopup(site, popupid) {
 	popupwin.focus();
 }
 
-function openSCM(diagId) {
-	var site = 'scm.jsf?diagID=' + diagId;
+function openXCL(diagId) {
+	var site = 'xcl.jsf?diagID=' + diagId;
 	// um das Fenster eindeutig zu identifizieren
 	e1 = window
 			.open(
 					site,
-					"scm_" + diagId,
+					"xcl_" + diagId,
 					"width=600,height=400,left=50,top=50,resizable=yes,scrollbars=yes,dependent=yes");
 	e1.focus();
 }

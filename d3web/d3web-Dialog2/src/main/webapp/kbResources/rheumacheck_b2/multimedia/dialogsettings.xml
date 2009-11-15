@@ -59,11 +59,11 @@
 	<CompareCase>
 		<showCompareCase value="true" />
 	</CompareCase>
-	<SCM>
-		<showSCM value="true" />
+	<XCL>
+		<showXCL value="true" />
 		<displayMinPercentage value="0.15" />
 		<digitcount value="2" />
-	</SCM>
+	</XCL>
 	<ProcessedQContainers>
 		<showProcessedQContainers value="true" />
 		<showAll value="false" />

@@ -305,26 +305,26 @@ html>body #main {
 	}
 	
 	
-/* ----------------  SCM Popup Page  ----------------------------- */
+/* ----------------  XCL Popup Page  ----------------------------- */
 
-.scmTable {
+.xclTable {
 	background	: #839CBD;
 	border		: 1px solid black;
 }
-	.scmTable td {
+	.xclTable td {
 		background	: #C3DCFD;
 	}
-	.scmTable td.sum {
+	.xclTable td.sum {
 		font-weight	: bold;
 	}
-	.scmTable tr.qContainer td {
+	.xclTable tr.qContainer td {
 		background	: #B3CCED;
 		font-weight	: bold;
 		font-style	: italic;
 		font-size	: 95%;
 	}
 
-#scm h3 {
+#xcl h3 {
 	font-size		: 130%;
 }
 

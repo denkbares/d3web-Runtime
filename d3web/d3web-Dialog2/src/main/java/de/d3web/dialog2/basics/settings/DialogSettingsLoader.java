@@ -139,7 +139,7 @@ public class DialogSettingsLoader {
 	readExplanationSettings(root);
 	readMMInfoSettings(root);
 	readCompareCaseSettings(root);
-	readSCMSettings(root);
+	readXCLSettings(root);
 	readProcessedQContainersSettings(root);
 	readFrequentnessSettings(root);
     }
@@ -296,15 +296,15 @@ public class DialogSettingsLoader {
 		"showAbstractQuestions", settings.isShowAbstractQuestions()));
     }
 
-    private void readSCMSettings(Element root) {
-	Element scmSettings = root.getChild("SCM");
+    private void readXCLSettings(Element root) {
+	Element xclSettings = root.getChild("XCL");
 
-	settings.setShowSCM(getBooleanValue(scmSettings, "showSCM", settings
-		.isShowSCM()));
-	settings.setScm_digitcount(getIntValue(scmSettings, "digitcount",
-		settings.getScm_digitcount()));
-	settings.setScm_display_min_percentage(getFloatValue(scmSettings,
+	settings.setShowXCL(getBooleanValue(xclSettings, "showXCL", settings
+		.isShowXCL()));
+	settings.setXCL_digitcount(getIntValue(xclSettings, "digitcount",
+		settings.getXCL_digitcount()));
+	settings.setXCL_display_min_percentage(getFloatValue(xclSettings,
 		"displayMinPercentage", settings
-			.getScm_display_min_percentage()));
+			.getXCL_display_min_percentage()));
     }
 }

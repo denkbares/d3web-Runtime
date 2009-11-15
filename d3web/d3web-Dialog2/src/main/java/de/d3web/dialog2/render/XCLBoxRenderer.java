@@ -36,7 +36,7 @@ import de.d3web.kernel.domainModel.KnowledgeSlice;
 import de.d3web.kernel.psMethods.xclPattern.PSMethodXCL;
 import de.d3web.kernel.psMethods.xclPattern.XCLModel;
 
-public class SCMBoxRenderer extends Renderer {
+public class XCLBoxRenderer extends Renderer {
 
     public boolean checkDisplayability(XPSCase theCase) {
 	if (theCase != null) {
@@ -55,7 +55,7 @@ public class SCMBoxRenderer extends Renderer {
 	    throws IOException {
 	XPSCase theCase = DialogUtils.getDialog().getTheCase();
 	if (checkDisplayability(theCase)) {
-	    renderSCMBox(context.getResponseWriter(), component, theCase);
+	    renderXCLBox(context.getResponseWriter(), component, theCase);
 	}
     }
 
@@ -74,7 +74,7 @@ public class SCMBoxRenderer extends Renderer {
 	return false;
     }
 
-    private void renderSCMBox(ResponseWriter writer, UIComponent component,
+    private void renderXCLBox(ResponseWriter writer, UIComponent component,
 	    XPSCase theCase) throws IOException {
 
 	DialogRenderUtils.renderTableWithClass(writer, component, "panelBox");
@@ -82,14 +82,14 @@ public class SCMBoxRenderer extends Renderer {
 		.getCurrentInstance()), "id");
 	writer.startElement("tr", component);
 	writer.startElement("th", component);
-	writer.writeText(DialogUtils.getMessageFor("scm.title"), "value");
+	writer.writeText(DialogUtils.getMessageFor("xcl.title"), "value");
 	writer.endElement("th");
 	writer.endElement("tr");
 
 	Collection<KnowledgeSlice> sortedDiags = theCase.getKnowledgeBase()
 		.getAllKnowledgeSlicesFor(PSMethodXCL.class);
 	double minValue = DialogUtils.getDialogSettings()
-		.getScm_display_min_percentage();
+		.getXCL_display_min_percentage();
 	if (minValue == 0) {
 	    // do not show 0 results
 	    minValue = 0.001;
@@ -99,26 +99,26 @@ public class SCMBoxRenderer extends Renderer {
 	    if (d instanceof XCLModel) {
 		XCLModel model = (XCLModel) d;
 		Diagnosis origDiag = model.getSolution();
+		DiagnosisState state = model.getState(theCase);
 
 		double score = model.getInferenceTrace(theCase).getScore();
-		if (score >= minValue) {
+		if (score >= minValue || state.equals(DiagnosisState.ESTABLISHED)) {
 		    int percent = (int) (Math.round(score * 100));
 
-		    DiagnosisState state = model.getState(theCase);
 
 		    writer.startElement("tr", component);
 		    writer.startElement("td", component);
 
 		    writer.startElement("a", component);
-		    writer.writeAttribute("id", "openSCM_" + origDiag.getId(),
+		    writer.writeAttribute("id", "openXCL_" + origDiag.getId(),
 			    "id");
 		    writer
-			    .writeAttribute("onclick", "openSCM('"
+			    .writeAttribute("onclick", "openXCL('"
 				    + origDiag.getId() + "'); return false;",
 				    "onclick");
 		    writer.writeAttribute("href", "#", "href");
 		    writer.writeAttribute("title", DialogUtils
-			    .getMessageWithParamsFor("scm.tooltip",
+			    .getMessageWithParamsFor("xcl.tooltip",
 				    new Object[] { origDiag.getText() }),
 			    "title");
 		    writer.writeText(origDiag.getText() + " (" + percent + " % "

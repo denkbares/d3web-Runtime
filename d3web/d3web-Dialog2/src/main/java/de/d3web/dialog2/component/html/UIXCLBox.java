@@ -18,32 +18,31 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.dialog2.webapp;
+package de.d3web.dialog2.component.html;
 
-import javax.faces.component.UIComponent;
-import javax.faces.webapp.UIComponentELTag;
+import javax.faces.component.UIOutput;
+import javax.faces.context.FacesContext;
 
-import de.d3web.dialog2.component.html.UISCMBox;
+public class UIXCLBox extends UIOutput {
 
-public class SCMBoxTag extends UIComponentELTag {
+    public static final String COMPONENT_TYPE = "de.d3web.dialog2.XCLBox";
 
-    @Override
-    public String getComponentType() {
-	return UISCMBox.COMPONENT_TYPE;
+    private static final String DEFAULT_RENDERER_TYPE = "de.d3web.dialog2.XCLBox";
+
+    public UIXCLBox() {
+	setRendererType(DEFAULT_RENDERER_TYPE);
     }
 
     @Override
-    public String getRendererType() {
-	return UISCMBox.COMPONENT_TYPE;
+    public void restoreState(FacesContext context, Object state) {
+	Object values[] = (Object[]) state;
+	super.restoreState(context, values[0]);
     }
 
     @Override
-    public void release() {
-	super.release();
-    }
-
-    @Override
-    public void setProperties(UIComponent component) {
-	super.setProperties(component);
+    public Object saveState(FacesContext context) {
+	Object values[] = new Object[1];
+	values[0] = super.saveState(context);
+	return ((values));
     }
 }

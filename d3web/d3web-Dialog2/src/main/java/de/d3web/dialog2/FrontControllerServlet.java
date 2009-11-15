@@ -155,10 +155,10 @@ public class FrontControllerServlet extends HttpServlet {
 
 	} else if (req.getParameter("knowwescm") != null) {
 	    String toExplain = req.getParameter("toexplain");
-	    // redirect to scm-page
+	    // redirect to xcl-page
 	    ((HttpServletResponse) jsfContext.getExternalContext()
 		    .getResponse()).sendRedirect(req.getContextPath()
-		    + "/scm.jsf?diagID=" + toExplain + "");
+		    + "/xcl.jsf?diagID=" + toExplain + "");
 	}
     }
 

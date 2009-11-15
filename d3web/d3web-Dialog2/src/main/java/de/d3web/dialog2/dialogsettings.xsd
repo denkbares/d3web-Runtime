@@ -14,7 +14,7 @@
 					maxOccurs="1" />
 				<xsd:element name="CompareCase" type="CompareCase"
 					minOccurs="1" maxOccurs="1" />
-				<xsd:element name="SCM" type="SCM" minOccurs="1"
+				<xsd:element name="XCL" type="XCL" minOccurs="1"
 					maxOccurs="1" />
 				<xsd:element name="ProcessedQContainers" type="ProcessedQContainers"
 					minOccurs="1" maxOccurs="1" />
@@ -287,9 +287,9 @@
 			</xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
-	<xsd:complexType name="SCM">
+	<xsd:complexType name="XCL">
 		<xsd:sequence minOccurs="1" maxOccurs="1">
-			<xsd:element name="showSCM" minOccurs="1" maxOccurs="1">
+			<xsd:element name="showXCL" minOccurs="1" maxOccurs="1">
 				<xsd:complexType>
 					<xsd:attribute name="value" type="xsd:boolean"
 						default="true" />

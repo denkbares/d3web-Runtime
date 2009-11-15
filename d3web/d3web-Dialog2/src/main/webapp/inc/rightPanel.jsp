@@ -17,7 +17,7 @@
 				rendered="#{dialogSettings.showHeuristicDiagnoses}" />
 			<d3:compareCaseBox id="right_cc"
 				rendered="#{dialogSettings.showCompareCase}" />
-			<d3:scmBox id="right_scm" rendered="#{dialogSettings.showSCM}" />
+			<d3:xclBox id="right_xcl" rendered="#{dialogSettings.showXCL}" />
 			<t:div id="right_processed"
 				rendered="#{dialogSettings.showProcessedQContainers}">
 				<d3:processedQContainersBox id="right_processedQContainers"
