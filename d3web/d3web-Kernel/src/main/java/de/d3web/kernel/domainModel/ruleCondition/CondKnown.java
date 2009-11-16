@@ -54,7 +54,8 @@ public class CondKnown extends CondQuestion {
 
 	@Override
 	public String toString() {
-		return "<Condition type='known' ID='" + question.getId()
+		return "<Condition type='known' ID='" 
+				+ ((question == null) ? "" : question.getId())
 				+ "' value='any'>" + "</Condition>\n";
 	}
 
