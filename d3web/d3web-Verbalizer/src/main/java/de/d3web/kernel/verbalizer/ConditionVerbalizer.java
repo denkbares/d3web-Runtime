@@ -362,12 +362,14 @@ public class ConditionVerbalizer implements Verbalizer {
 					answer.append(getResourceBundle().getString("rule.CondYes"));
 				} else if (tempValue instanceof AnswerNo) {
 					answer.append(getResourceBundle().getString("rule.CondNo"));
-				} else if (tempValue.toString().compareToIgnoreCase("yes") == 0 
-						|| tempValue.toString().compareToIgnoreCase("ja") == 0) {
-					answer.append(getResourceBundle().getString("rule.CondYes"));
-				} else if (tempValue.toString().compareToIgnoreCase("no") == 0 
-						|| tempValue.toString().compareToIgnoreCase("nein") == 0) {
-					answer.append(getResourceBundle().getString("rule.CondNo"));
+					//This verbalizes answers of oc-questions also like yes/no-questions.
+					//which is most likely not what you want. 
+//				} else if (tempValue.toString().equalsIgnoreCase("yes") 
+//						|| tempValue.toString().equalsIgnoreCase("ja")) {
+//					answer.append(getResourceBundle().getString("rule.CondYes"));
+//				} else if (tempValue.toString().equalsIgnoreCase("no") 
+//						|| tempValue.toString().equalsIgnoreCase("nein")) {
+//					answer.append(getResourceBundle().getString("rule.CondNo"));
 				} else {
 					answer.append(tempValue.toString());
 				}
