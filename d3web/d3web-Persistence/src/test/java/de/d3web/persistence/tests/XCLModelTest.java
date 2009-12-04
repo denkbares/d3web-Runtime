@@ -93,7 +93,7 @@ public class XCLModelTest extends TestCase{
 		PersistenceManager pm=PersistenceManager.getInstance();		
 		pm.addPersistenceHandler(xmph);				
 		// URL url= new URL("file:/tmp/test.jar");
-		URL url= new URL("file://"+System.getProperty("java.io.tmpdir")+"test.jar");
+		URL url= new URL("file://"+System.getProperty("java.io.tmpdir")+"/test.jar");
 		pm.save(k,url);									
 		KnowledgeBase k2=pm.load(url);
 		Collection<KnowledgeSlice> col=k2.getAllKnowledgeSlicesFor(PSMethodXCL.class);
