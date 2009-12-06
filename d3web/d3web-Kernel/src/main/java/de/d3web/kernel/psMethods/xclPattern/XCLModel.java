@@ -56,10 +56,10 @@ public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLMode
 
 	private RelationHelper rh = RelationHelper.getInstance();
 	private String id = null;
-	private Collection<XCLRelation> relations;
-	private Collection<XCLRelation> necessaryRelations;
-	private Collection<XCLRelation> sufficientRelations;
-	private Collection<XCLRelation> contradictingRelations;
+	private Map<String, XCLRelation> relations;
+	private Map<String, XCLRelation> necessaryRelations;
+	private Map<String, XCLRelation> sufficientRelations;
+	private Map<String, XCLRelation> contradictingRelations;
 	public static String DEFAULT_SOLUTION = "default_solution";
 
 	private Map<XPSCase, XCLInferenceTrace> explanation = new HashMap<XPSCase, XCLInferenceTrace>();
@@ -67,10 +67,10 @@ public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLMode
 	public XCLModel(Diagnosis solution) {
 		this.solution = solution;
 		
-		relations = new ArrayList<XCLRelation>();
-		necessaryRelations = new ArrayList<XCLRelation>();
-		sufficientRelations = new ArrayList<XCLRelation>();
-		contradictingRelations = new ArrayList<XCLRelation>();
+		relations = new HashMap<String, XCLRelation>();
+		necessaryRelations = new HashMap<String, XCLRelation>();
+		sufficientRelations = new HashMap<String, XCLRelation>();
+		contradictingRelations = new HashMap<String, XCLRelation>();
 	}
 
 	public XCLInferenceTrace getInferenceTrace(XPSCase c) {
@@ -178,10 +178,10 @@ public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLMode
 		explanation.put(theCase, trace);
 		evalRelations(trace, theCase);
 
-		if (rh.atLeastOneRelationTrue(contradictingRelations, theCase)) {
+		if (rh.atLeastOneRelationTrue(contradictingRelations.values(), theCase)) {
 			trace.setState(DiagnosisState.EXCLUDED);
 			return DiagnosisState.EXCLUDED;
-		} else if (rh.atLeastOneRelationTrue(sufficientRelations, theCase)) {
+		} else if (rh.atLeastOneRelationTrue(sufficientRelations.values(), theCase)) {
 			trace.setState(DiagnosisState.ESTABLISHED);
 			return DiagnosisState.ESTABLISHED;
 		} else {
@@ -191,15 +191,15 @@ public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLMode
 			trace.setSupport(currentSupport);
 			if (minSupport <= currentSupport) {
 				if (currentXCLScore >= establishedThreshold
-						&& rh.allRelationsTrue(necessaryRelations, theCase)) {
+						&& rh.allRelationsTrue(necessaryRelations.values(), theCase)) {
 					trace.setState(DiagnosisState.ESTABLISHED);
 					return DiagnosisState.ESTABLISHED;
 				} else if (currentXCLScore >= establishedThreshold
-						&& !rh.allRelationsTrue(necessaryRelations, theCase)) {
+						&& !rh.allRelationsTrue(necessaryRelations.values(), theCase)) {
 					trace.setState(DiagnosisState.SUGGESTED);
 					return DiagnosisState.SUGGESTED;
 				} else if (currentXCLScore >= suggestedThreshold
-						&& rh.allRelationsTrue(necessaryRelations, theCase)) {
+						&& rh.allRelationsTrue(necessaryRelations.values(), theCase)) {
 					trace.setState(DiagnosisState.SUGGESTED);
 					return DiagnosisState.SUGGESTED;
 				}
@@ -210,7 +210,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLMode
 	}
 
 	private void evalRelations(XCLInferenceTrace trace, XPSCase c) {
-		for (XCLRelation rel : relations) {
+		for (XCLRelation rel : relations.values()) {
 			try {
 				boolean b = rel.eval(c);
 				if (b) {
@@ -226,7 +226,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLMode
 
 		}
 
-		for (XCLRelation rel : this.necessaryRelations) {
+		for (XCLRelation rel : this.necessaryRelations.values()) {
 			try {
 				boolean b = rel.eval(c);
 				if (b) {
@@ -242,7 +242,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLMode
 
 		}
 
-		for (XCLRelation rel : this.contradictingRelations) {
+		for (XCLRelation rel : this.contradictingRelations.values()) {
 			try {
 				boolean b = rel.eval(c);
 				if (b) {
@@ -256,7 +256,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLMode
 
 		}
 
-		for (XCLRelation rel : this.sufficientRelations) {
+		for (XCLRelation rel : this.sufficientRelations.values()) {
 			try {
 				boolean b = rel.eval(c);
 				if (b) {
@@ -288,8 +288,8 @@ public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLMode
 
 	private Collection<XCLRelation> computeAllWeightedRelations() {
 		Collection<XCLRelation> all = new HashSet<XCLRelation>();
-		all.addAll(this.relations);
-		all.addAll(this.necessaryRelations);
+		all.addAll(this.relations.values());
+		all.addAll(this.necessaryRelations.values());
 		return all;
 	}
 
@@ -315,8 +315,8 @@ public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLMode
 			boolean direction) {
 		Collection<XCLRelation> r = new ArrayList<XCLRelation>();
 		Collection<XCLRelation> toTest = new ArrayList<XCLRelation>();	
-		toTest.addAll(relations);
-		toTest.addAll(this.necessaryRelations);
+		toTest.addAll(relations.values());
+		toTest.addAll(this.necessaryRelations.values());
 		for (XCLRelation relation : toTest) {
 			try {
 				if (relation.eval(theCase) == direction)
@@ -363,24 +363,32 @@ public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLMode
 	}
 
 	private boolean addRelationTo(XCLRelation relation,
-			Collection<XCLRelation> theRelations) {
-		if (theRelations.contains(relation))
-			return false;
-		theRelations.add(relation);
-		return true;
+			Map<String, XCLRelation> theRelations) {
+		return theRelations.put(relation.getId(), relation) == null ? true : false;
 	}
 
 	public XCLRelation findRelation(String id) {
-		Collection<XCLRelation> r = new ArrayList<XCLRelation>();
-		r.addAll(relations);
-		r.addAll(necessaryRelations);
-		r.addAll(sufficientRelations);
-		r.addAll(contradictingRelations);
-		for (XCLRelation relation : r) {
-			if (id.equals(relation.getId()))
-				return relation;
-		}
-		return null;
+		XCLRelation r = null;
+		r = relations.get(id);
+		if (r != null) return r;
+		r = necessaryRelations.get(id);
+		if (r != null) return r;
+		r = sufficientRelations.get(id);
+		if (r != null) return r;
+		r = contradictingRelations.get(id);
+		return r;
+	}
+	
+	public XCLRelation removeRelation(String id) {
+		XCLRelation r = null;
+		r = relations.remove(id);
+		if (r != null) return r;
+		r = necessaryRelations.remove(id);
+		if (r != null) return r;
+		r = sufficientRelations.remove(id);
+		if (r != null) return r;
+		r = contradictingRelations.remove(id);
+		return r;
 	}
 
 	public Diagnosis getSolution() {
@@ -445,21 +453,30 @@ public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLMode
 	public void remove() {
 		solution.removeKnowledge(getProblemsolverContext(), this, XCLMODEL);
 	}
+	
+	public Map<String, XCLRelation> getAllRelations() {
+		Map<String, XCLRelation> allRels = new HashMap<String, XCLRelation>();
+		allRels.putAll(relations);
+		allRels.putAll(necessaryRelations);
+		allRels.putAll(sufficientRelations);
+		allRels.putAll(contradictingRelations);
+		return allRels;
+	}
 
 	public Collection<XCLRelation> getRelations() {
-		return relations;
+		return relations.values();
 	}
 
 	public Collection<XCLRelation> getNecessaryRelations() {
-		return necessaryRelations;
+		return necessaryRelations.values();
 	}
 
 	public Collection<XCLRelation> getSufficientRelations() {
-		return sufficientRelations;
+		return sufficientRelations.values();
 	}
 
 	public Collection<XCLRelation> getContradictingRelations() {
-		return contradictingRelations;
+		return contradictingRelations.values();
 	}
 
 	Collection<KBOEventListener> listeners;
