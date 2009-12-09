@@ -40,6 +40,7 @@ class Node implements INode, CaseObjectSource {
 	private final List<IEdge> outgoing;
 	private final RuleAction action;
 	private final String id;
+	private Flow flow;
 	
 	public Node(String id, RuleAction action) {
 		
@@ -91,6 +92,18 @@ class Node implements INode, CaseObjectSource {
 	public RuleAction getAction() {
 		return action;
 	}
+	
+	
+	@Override
+	public Flow getFlow() {
+		return flow;
+	}
+	
+	@Override
+	public void setFlow(Flow flow) {
+		this.flow = flow;
+	}
+	
 
 	@Override
 	public int hashCode() {

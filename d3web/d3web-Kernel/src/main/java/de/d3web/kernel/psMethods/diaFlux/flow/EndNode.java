@@ -40,7 +40,8 @@ public class EndNode extends Node {
 	
 	@Override
 	protected boolean addOutgoingEdge(IEdge edge) {
-		throw new UnsupportedOperationException("can not add outgoing edge to end node");
+		return true;
+//		throw new UnsupportedOperationException("can not add outgoing edge to end node");
 	}
 	
 	public String getName() {

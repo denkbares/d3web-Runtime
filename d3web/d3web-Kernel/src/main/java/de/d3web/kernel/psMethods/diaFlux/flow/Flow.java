@@ -67,10 +67,12 @@ public class Flow implements Serializable, CaseObjectSource, KnowledgeSlice {
 	}
 
 	/**
-	 * Checks the consistency of nodes and edges
+	 * Checks the consistency of nodes and edges and sets backreference to flwo in nodes
 	 */
 	private void checkFlow() {
-		
+		for (INode node : nodes) {
+			node.setFlow(this);
+		}
 		
 	}
 	

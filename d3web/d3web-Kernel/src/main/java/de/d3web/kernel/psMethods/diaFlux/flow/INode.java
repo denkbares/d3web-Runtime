@@ -61,6 +61,20 @@ public interface INode extends Serializable, CaseObjectSource {
 	String getID();
 	
 	
+	/**
+	 * @return s the flow this node belongs to
+	 */
+	Flow getFlow();
+	
+	
+	/**
+	 * sets this nodes containing flow
+	 */
+	void setFlow(Flow flow);
+	
+	
+	
+	
 	
 	
 

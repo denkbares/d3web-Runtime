@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import de.d3web.kernel.dynamicObjects.XPSCaseObject;
 import de.d3web.kernel.psMethods.diaFlux.PathEntry;
@@ -33,7 +32,6 @@ public class FlowData extends XPSCaseObject {
 
 	private final Map<INode, INodeData> nodeData;
 	private final Map<IEdge, IEdgeData> edgeData;
-	private final List<PathEntry> pathEnds;
 	
 	
 	public FlowData(Flow flow, Map<INode, INodeData> nodeData, Map<IEdge, IEdgeData> edgeData) {
@@ -41,7 +39,7 @@ public class FlowData extends XPSCaseObject {
 		
 		this.edgeData = Collections.unmodifiableMap(edgeData);
 		this.nodeData = Collections.unmodifiableMap(nodeData);
-		this.pathEnds = new ArrayList<PathEntry>();
+		
 	}
 
 	public Map<INode, INodeData> getNodes() {
@@ -63,11 +61,6 @@ public class FlowData extends XPSCaseObject {
 			
 		return edgeData.get(edge);
 	}
-	
-	public List<PathEntry> getPathEnds() {
-		return pathEnds;
-	}
-	
 	
 
 }
