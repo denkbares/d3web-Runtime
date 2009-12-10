@@ -323,8 +323,13 @@ public class ConditionVerbalizer implements Verbalizer {
 	private CondVerbalization createNonTerminalConditionVerbalization(NonTerminalCondition ntCondition) {
 
 		List<CondVerbalization> condVerbs = new ArrayList<CondVerbalization>(); 
-		for (Object term:ntCondition.getTerms()) {
-			condVerbs.add(createConditionVerbalization((AbstractCondition) term));
+		List<AbstractCondition> terms = ntCondition.getTerms();
+		List<AbstractCondition> reverseTerms = new ArrayList<AbstractCondition>();
+		while (!terms.isEmpty()) {
+			reverseTerms.add(terms.remove(terms.size() - 1));
+		}
+		for (AbstractCondition term:reverseTerms) {
+			condVerbs.add(createConditionVerbalization(term));
 		}
 		return new NonTerminalCondVerbalization(condVerbs, getClassVerbalisation(ntCondition), 
 				ntCondition.getClass().getSimpleName());
