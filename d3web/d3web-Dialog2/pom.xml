@@ -231,7 +231,7 @@
 		<dependency>
 			<groupId>org.apache.myfaces.tomahawk</groupId>
 			<artifactId>tomahawk</artifactId>
-			<version>1.1.9</version>
+			<version>1.1.9-uniwue</version>
 			<type>jar</type>
 			<scope>compile</scope>
 			<exclusions>
