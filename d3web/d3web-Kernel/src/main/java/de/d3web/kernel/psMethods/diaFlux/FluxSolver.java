@@ -30,7 +30,6 @@ import java.util.logging.Logger;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisState;
-import de.d3web.kernel.domainModel.KnowledgeSlice;
 import de.d3web.kernel.domainModel.RuleAction;
 import de.d3web.kernel.domainModel.ruleCondition.NoAnswerException;
 import de.d3web.kernel.domainModel.ruleCondition.UnknownAnswerException;
@@ -39,6 +38,7 @@ import de.d3web.kernel.psMethods.PSMethod;
 import de.d3web.kernel.psMethods.PropagationEntry;
 import de.d3web.kernel.psMethods.diaFlux.actions.CallFlowAction;
 import de.d3web.kernel.psMethods.diaFlux.flow.DiaFluxCaseObject;
+import de.d3web.kernel.psMethods.diaFlux.flow.EndNode;
 import de.d3web.kernel.psMethods.diaFlux.flow.Flow;
 import de.d3web.kernel.psMethods.diaFlux.flow.FlowData;
 import de.d3web.kernel.psMethods.diaFlux.flow.FlowFactory;
@@ -123,10 +123,16 @@ public class FluxSolver implements PSMethod {
 	
 	private DiaFluxCaseObject getFlowData(XPSCase theCase) {
 		
+		FlowSet flowSet = getFlowSet(theCase);
+
+		return (DiaFluxCaseObject) theCase.getCaseObject(flowSet);
+	}
+
+	private FlowSet getFlowSet(XPSCase theCase) {
+		
 		FlowSet flowSet = (FlowSet) ((List) theCase.getKnowledgeBase().getKnowledge(FluxSolver.class, FluxSolver.DIAFLUX)).get(0);
 		
-		
-		return (DiaFluxCaseObject) theCase.getCaseObject(flowSet);
+		return flowSet;
 	}
 	
 	
@@ -236,8 +242,6 @@ public class FluxSolver implements PSMethod {
 			if (edge == null) { //no edge to take
 				log("Staying in Node: " + currentNode);
 				return;
-			} else if (currentNode instanceof SnapshotNode){
-				takeSnapshot(currentEntry);
 			} 
 			
 			fireEdge(edge, theCase);
@@ -253,9 +257,20 @@ public class FluxSolver implements PSMethod {
 			
 			currentEntry = followEdge(theCase, currentNode, currentEntry, edge);
 			
-			if (currentNode.getAction() instanceof CallFlowAction) {
-				callFlow(currentNode);				
-			}
+			if (edge.getEndNode().getAction() instanceof CallFlowAction) {
+				currentEntry = callFlow(edge.getEndNode(), currentEntry, theCase);	
+				//TODO remove after debug phase
+				if (currentEntry == null)
+					return;
+			} else if (edge.getEndNode() instanceof EndNode) {
+				currentEntry = returnFromFlow((EndNode) edge.getEndNode(), currentEntry, theCase);
+				//TODO remove after debug phase
+				if (currentEntry == null)
+					return;
+				
+			} else if (currentNode instanceof SnapshotNode){
+				takeSnapshot(currentEntry);
+			} 
 			
  			
 		}
@@ -265,19 +280,46 @@ public class FluxSolver implements PSMethod {
 	}
 	
 	
-	private void callFlow(INode subNode) {
+	private PathEntry returnFromFlow(EndNode endNode, PathEntry currentEntry,
+			XPSCase theCase) {
+		
+		INode callFlowNode = currentEntry.getStack().getNodeData().getNode();
+		
+		
+		IEdge edge = FlowFactory.getInstance().createEdge("RETURN", endNode, callFlowNode, ConditionTrue.INSTANCE);
+		
+		return addPathEntryForNode(theCase, endNode, currentEntry, edge);
+		
+	}
+
+	private PathEntry callFlow(INode subNode, PathEntry currentEntry, XPSCase theCase) {
 		CallFlowAction action = (CallFlowAction) subNode.getAction();
 		
 		String flowName = action.getFlowName();
 		String startNodeName = action.getStartNodeName();
 		
+		FlowSet flowSet = getFlowSet(theCase);
 		
-		INode subFlowStartNode = null;
+		Flow subflow = flowSet.getByName(flowName);
+		List<INode> startNodes = subflow.getStartNodes();
+		INode startNode = null;
 		
-		FlowFactory.getInstance().createEdge("CHANGE", subNode, subFlowStartNode, ConditionTrue.INSTANCE);
+		for (INode iNode : startNodes) {
+			if (((StartNode)iNode).getName().equalsIgnoreCase(startNodeName)) {
+				startNode = iNode;
+				break;
+				
+			}
+		}
 		
+		if (startNode == null) {
+			log("Startnode '" + startNodeName + "' of flow '" + flowName +"' not found.", Level.SEVERE);
+			return null;
+		}
 		
+		IEdge edge = FlowFactory.getInstance().createEdge("CALL", subNode, startNode, ConditionTrue.INSTANCE);
 		
+		return addPathEntryForNode(theCase, startNode, currentEntry, edge);
 	}
 
 	/**
@@ -560,66 +602,5 @@ public class FluxSolver implements PSMethod {
 	}
 
 
-	
-//	@Override
-//	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
-		
-
-		
-//		Set<IEdgeData> nowTrueEdges = new HashSet<IEdgeData>();
-//		Set<IEdgeData> nowFalseEdges = new HashSet<IEdgeData>();
-//		
-//		for (PropagationEntry entry : changes) { //for all changed objects
-//			
-//			
-//			NodeAndEdgeSet set = (NodeAndEdgeSet) entry.getObject().getKnowledge(FluxSolver.class, DIAFLUX).get(0);
-//			
-//			//check all edges where it is used...
-//			for (IEdge edge : set.getEdges()) {
-//				
-//				IEdgeData edgeData = flow.getDataForEdge(edge);
-//				if (edgeData.hasFired()) { //if the edge had fired
-//					
-//					try {
-//						boolean eval = edge.getCondition().eval(theCase);
-//						if (!eval) { //... and is no longer
-//							nowFalseEdges.add(edgeData); //...put it in set NF
-//						}
-//					} catch (NoAnswerException e) { // if edge had fired and now has no answer anymore, it is now false
-//						nowFalseEdges.add(edgeData);
-//					} catch (UnknownAnswerException e) { // right? There could be an "unknown"-Edge that was taken
-//						nowFalseEdges.add(edgeData);
-//					}
-//				} else { //edge had not fired...
-//					
-//					try {
-//						boolean eval = edge.getCondition().eval(theCase);
-//						if (eval) {//...but is now
-//							nowTrueEdges.add(edgeData); // put it in set NT
-//						}
-//					} catch (NoAnswerException e) { // an edge with no answer is not true
-//					} catch (UnknownAnswerException e) { // right? There could be an "unknown"-Edge that has to be taken
-//					}
-//					
-//				}
-//			}
-//			
-//			
-//		}
-//		for (IEdgeData edgeData : nowFalseEdges) {
-//				
-//				edgeData.unfire();
-//				
-//				
-//				
-//				
-//			}
-//	}
-	
-	
-	
-	
-	
-	
 
 }
