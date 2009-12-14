@@ -35,7 +35,9 @@ import de.d3web.kernel.domainModel.answers.AnswerNum;
 import de.d3web.kernel.domainModel.answers.AnswerText;
 import de.d3web.kernel.domainModel.qasets.Question;
 import de.d3web.kernel.domainModel.qasets.QuestionChoice;
+import de.d3web.kernel.domainModel.qasets.QuestionMC;
 import de.d3web.kernel.domainModel.qasets.QuestionNum;
+import de.d3web.kernel.domainModel.qasets.QuestionOC;
 import de.d3web.kernel.domainModel.qasets.QuestionText;
 import de.d3web.kernel.supportknowledge.Property;
 
@@ -113,7 +115,7 @@ public class AnswerSelector {
 	 * @return a list of allowed answer values for the specified question
 	 * @throws UnsupportedDataTypeException when an unsupported question is given in the parameter
 	 */
-	public List<? extends Answer> determineAnswers(Question question) throws UnsupportedDataTypeException {
+	public List<? extends Answer[]> determineAnswers(Question question) throws UnsupportedDataTypeException {
 		if (question instanceof QuestionChoice) {
 			return determineChoiceAnswers((QuestionChoice)question);
 		} else if (question instanceof QuestionNum) {
@@ -125,31 +127,46 @@ public class AnswerSelector {
 		throw new UnsupportedDataTypeException();
 	}
 	
-	private List<? extends Answer> determineTextAnswers(QuestionText question) {
-		List<AnswerText>answers = new LinkedList<AnswerText>();
-		answers.add(AnswerFactory.createAnswerText("test"));
-		answers.add(AnswerFactory.createAnswerText("."));
-		answers.add(AnswerFactory.createAnswerText(""));
+	private List<? extends Answer[]> determineTextAnswers(QuestionText question) {
+		List<AnswerText[]> answers = new LinkedList<AnswerText[]>();
+		answers.add(new AnswerText[] {AnswerFactory.createAnswerText("test")});
+		answers.add(new AnswerText[] {AnswerFactory.createAnswerText(".")});
+		answers.add(new AnswerText[] {AnswerFactory.createAnswerText("")});
 		return answers;
 	}
-	private List<? extends Answer> determineNumAnswers(QuestionNum question) {
-		List<AnswerNum>answers = new LinkedList<AnswerNum>();
+	private List<? extends Answer[]> determineNumAnswers(QuestionNum question) {
+		List<AnswerNum[]> answers = new LinkedList<AnswerNum[]>();
 		NumericalInterval range = (NumericalInterval)question.getProperties().getProperty(Property.QUESTION_NUM_RANGE);
 		if (range == null) {
 			range = DEFAULT_INTERVAL;
 		}
 		int indent = (int) ((range.getRight()-range.getLeft()) / (numberOfNumericalValues-1));
 		for (double i = range.getLeft(); i <= range.getRight(); i=i+indent) {
-			answers.add(AnswerFactory.createAnswerNum(i));
+			answers.add(new AnswerNum[] {AnswerFactory.createAnswerNum(i)});
 		}
 		
 		return answers;
 	}
-	private List<? extends Answer> determineChoiceAnswers(QuestionChoice question) {
-		List<? extends Answer> answers = new ArrayList<Answer>(question.getAllAlternatives());
+	private List<? extends Answer[]> determineChoiceAnswers(QuestionChoice question) {
+		List<Answer[]> answers = new ArrayList<Answer[]>();
+		List<? extends Answer> answerCandidates = new ArrayList<Answer>(question.getAllAlternatives());
+		
+		// remove all answers which are forbidden
 		if (forbiddenAnswers.get(question) != null) {
-			answers.removeAll(forbiddenAnswers.get(question));
+			answerCandidates.removeAll(forbiddenAnswers.get(question));
 		}
+		
+		// if the question is a QuestionOC add each possible answer to an Answer[]
+		if (question instanceof QuestionOC) {
+			for (Answer answer : answerCandidates) {
+				answers.add(new Answer[] {answer});
+			}
+			
+		// if the question is a QuestionMC get all possible answer combinations
+		} else if (question instanceof QuestionMC) {
+			answers.addAll(AnswerCombinator.getInstance().getAllPossibleCombinations(answerCandidates));
+		}
+		
 		return answers;
 	}
 

@@ -39,7 +39,7 @@ public class InterviewBotRunner {
 
 	public static void main(String[] args) {
 		try {
-//			demoForCarDiagnosis();
+			demoForCarDiagnosis();
 //			demoForGenerated1K_KB();
 //			demoForDigitalysKB();
 		} catch (Exception e) {
@@ -86,21 +86,18 @@ public class InterviewBotRunner {
 
 	@SuppressWarnings("unused")
 	private static void demoForCarDiagnosis() throws Exception {
-		filename  = "carDiagnosis.jar";
+		filename  = "minicar.jar";
 
 		KnowledgeBase k = loadKnowledgebase(filename);
-
+		
 		watch.start();
 		InterviewBot bot = new InterviewBot.Builder(k).
-//			knownAnswers(Finding.createFinding(k, "Driving", "delayed take-off")).
-//			knownAnswers(Finding.createFinding(k, "Exhaust fumes", "black")).
-//			forbiddenAnswer(Finding.createFinding(k, "Engine noises", "knocking")).
 			build();
 		List<SequentialTestCase> cases = bot.generate();
 		watch.stop();
 
 		System.out.println(watch);
-		
+
 		writeCasesXML(filename, cases);
 	}
 	

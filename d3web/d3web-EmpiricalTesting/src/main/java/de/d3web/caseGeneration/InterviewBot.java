@@ -137,8 +137,8 @@ public class InterviewBot {
 		}
 
 		// Iterate over all possible answers of the next question
-		List<? extends Answer> nextAnswers = answerSelector.determineAnswers(currentQuestion);
-		for (Answer nextAnswer : nextAnswers) {
+		List<? extends Answer[]> nextAnswers = answerSelector.determineAnswers(currentQuestion);
+		for (Answer[] nextAnswer : nextAnswers) {
 			XPSCase theCase = createCase(sqCase);
 			setCaseValue(theCase, currentQuestion, nextAnswer);
 			SequentialTestCase newSequentialCase = packNewSequence(sqCase, currentQuestion, nextAnswer, theCase);
@@ -149,17 +149,19 @@ public class InterviewBot {
 		}
 	}
 
-	private SequentialTestCase packNewSequence(SequentialTestCase sqCase, Question currentQuestion, Answer nextAnswer, XPSCase theCase) {
+	private SequentialTestCase packNewSequence(SequentialTestCase sqCase, Question currentQuestion, Answer[] nextAnswer, XPSCase theCase) {
 		SequentialTestCase newSequentialCase = sqCase.flatClone();
 		newSequentialCase.setName(sqtcasePraefix + dateToString());
 		newSequentialCase.add(createRatedTestCase(currentQuestion, nextAnswer, theCase, sqCase));
 		return newSequentialCase;
 	}
 
-	private RatedTestCase createRatedTestCase(Question currentQuestion, Answer nextAnswer, XPSCase theCase, SequentialTestCase sqCase) {
+	private RatedTestCase createRatedTestCase(Question currentQuestion, Answer[] nextAnswers, XPSCase theCase, SequentialTestCase sqCase) {
 
 		RatedTestCase ratedCase = new RatedTestCase();
-		ratedCase.add(new Finding(currentQuestion, nextAnswer));
+		for (Answer nextAnswer : nextAnswers) {
+			ratedCase.add(new Finding(currentQuestion, nextAnswer));	
+		}
 		ratedCase.addExpected(toRatedSolutions(theCase));
 		ratedCase.inverseSortSolutions();
 
@@ -202,7 +204,7 @@ public class InterviewBot {
 			Answer answer = knownAnswers.get(question);
 			setCaseValue(theCase, question, answer);
 
-			sqCase.add(createRatedTestCase(question, answer, theCase, sqCase));
+			sqCase.add(createRatedTestCase(question, new Answer[] { answer }, theCase, sqCase));
 
 			question = nextQuestionFromAgenda(theCase);
 		}
@@ -252,6 +254,10 @@ public class InterviewBot {
 		return theCase;
 	}
 
+	private void setCaseValue(XPSCase theCase, Question q, Answer[] a) {
+		theCase.setValue(q, a);
+	}
+	
 	private void setCaseValue(XPSCase theCase, Question q, Answer a) {
 		theCase.setValue(q, new Object[] { a });
 	}
