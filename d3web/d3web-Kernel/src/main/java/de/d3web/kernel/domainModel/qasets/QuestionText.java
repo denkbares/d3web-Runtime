@@ -58,7 +58,7 @@ public class QuestionText extends Question {
 	/**
 	 * @return a newly created user-case dependend CaseQuestionText object.
 	 */
-	public XPSCaseObject createCaseObject() {
+	public XPSCaseObject createCaseObject(XPSCase session) {
 		return new CaseQuestionText(this);
 	}
 

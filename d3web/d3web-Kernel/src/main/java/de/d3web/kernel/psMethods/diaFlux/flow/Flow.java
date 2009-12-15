@@ -24,15 +24,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.CaseObjectSource;
 import de.d3web.kernel.domainModel.KnowledgeSlice;
 import de.d3web.kernel.dynamicObjects.XPSCaseObject;
+import de.d3web.kernel.psMethods.PSMethod;
 import de.d3web.kernel.psMethods.diaFlux.FluxSolver;
 
 /**
@@ -40,6 +39,8 @@ import de.d3web.kernel.psMethods.diaFlux.FluxSolver;
  *
  */
 public class Flow implements Serializable, CaseObjectSource, KnowledgeSlice {
+	
+	private static final long serialVersionUID = -8432405209778184118L;
 	
 	private final List<IEdge> edges;
 	private final List<INode> nodes;
@@ -74,22 +75,23 @@ public class Flow implements Serializable, CaseObjectSource, KnowledgeSlice {
 			node.setFlow(this);
 		}
 		
+		
 	}
 	
 	@Override
-	public XPSCaseObject createCaseObject() {
+	public XPSCaseObject createCaseObject(XPSCase session) {
 		
 		Map<INode, INodeData> nodedata = new HashMap<INode, INodeData>(getNodes().size());
 		
 		for (INode nodeDecl : getNodes()) {
-			nodedata.put(nodeDecl, (INodeData) nodeDecl.createCaseObject());
+			nodedata.put(nodeDecl, (INodeData) nodeDecl.createCaseObject(session));
 		}
 		
 		Map<IEdge, IEdgeData> edgedata = new HashMap<IEdge, IEdgeData>(getEdges().size());
 		
 
 		for (IEdge edge : getEdges()) {
-			edgedata.put(edge, (IEdgeData) edge.createCaseObject());
+			edgedata.put(edge, (IEdgeData) edge.createCaseObject(session));
 		}
 		
 		return new FlowData(this, nodedata, edgedata);
@@ -169,7 +171,7 @@ public class Flow implements Serializable, CaseObjectSource, KnowledgeSlice {
 	}
 
 	@Override
-	public Class getProblemsolverContext() {
+	public Class<? extends PSMethod> getProblemsolverContext() {
 		return FluxSolver.class;
 	}
 

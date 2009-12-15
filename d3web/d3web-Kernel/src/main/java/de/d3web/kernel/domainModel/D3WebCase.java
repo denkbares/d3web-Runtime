@@ -131,9 +131,9 @@ public class D3WebCase implements XPSCase {
 		// register some common problem solving methods
 		PSMethod methods[] = commonPSMethods;
 
+		// first add all methods
 		for (int i = 0; i < methods.length; i++) {
-			usedPSMethods.add(methods[i]);
-			methods[i].init(this);
+			addUsedPSMethod(methods[i]);
 		}
 
 		// activate InitQASets
@@ -189,9 +189,30 @@ public class D3WebCase implements XPSCase {
 	 *            java.util.List
 	 */
 	public void addUsedPSMethod(PSMethod psmethod) {
-		if (!getUsedPSMethods().contains(psmethod))
-			getUsedPSMethods().add(psmethod);
-			// TODO: vb: call psMethod.init(this) instead of doing that in the case factory 
+		if (getUsedPSMethods().contains(psmethod)) return;
+
+		this.usedPSMethods.add(psmethod);
+		psmethod.init(this);
+		
+		PropagationContoller propagationContoller = getPropagationContoller();
+		propagationContoller.openPropagation();
+		try {
+			for (Question question : this.getAnsweredQuestions()) {
+				Object[] oldValue = new Object[0];
+				Object[] newValue = getValue(question, null);
+				propagationContoller.propagate(question, oldValue, newValue, psmethod);
+			}
+			// TODO: das ist so viel zu aufwendig, wenn viele Lösungen sind. Man bräuchte eine Liste der bewerteten Lösungen im Fall (analog beantwortete Fragen)
+			for (Diagnosis diagnosis : this.getDiagnoses()) {
+				if (DiagnosisState.UNCLEAR.equals(diagnosis.getState(this))) continue;
+				Object[] oldValue = new Object[] {DiagnosisState.UNCLEAR};
+				Object[] newValue = getValue(diagnosis, null);
+				propagationContoller.propagate(diagnosis, oldValue, newValue, psmethod);
+			}
+		}
+		finally {
+			propagationContoller.commitPropagation();
+		}
 	}
 
 	/**
@@ -212,7 +233,7 @@ public class D3WebCase implements XPSCase {
 	public XPSCaseObject getCaseObject(CaseObjectSource cos) {
 		XPSCaseObject co = dynamicStore.get(cos);
 		if (co == null) {
-			co = cos.createCaseObject();
+			co = cos.createCaseObject(this);
 			dynamicStore.put(cos, co);
 		}
 		return co;
@@ -243,7 +264,7 @@ public class D3WebCase implements XPSCase {
 	 *         DiagnosisState. Only these diagnoses are considered, whose
 	 *         states have been set by one of the given PSMethods.
 	 */
-	public List<Diagnosis> getDiagnoses(DiagnosisState state, List<PSMethod> psMethods) {
+	public List<Diagnosis> getDiagnoses(DiagnosisState state, List<? extends PSMethod> psMethods) {
 		List<Diagnosis> result = new LinkedList<Diagnosis>();
 		for (Diagnosis diag : getDiagnoses()) {
 			for (PSMethod psm : psMethods) {
@@ -513,9 +534,6 @@ public class D3WebCase implements XPSCase {
 	 *            problem-solver context
 	 */
 	public void setValue(ValuedObject valuedObject, Object[] values, Class<? extends PSMethod> context) {
-		if(valuedObject == null) {
-			throw new IllegalStateException("ValuedObject is null");
-		}
 		Object[] oldValue = getValue(valuedObject, context);
 		if (valuedObject instanceof Diagnosis) {
 			((Diagnosis) valuedObject).setValue(this, values, context);
@@ -523,13 +541,14 @@ public class D3WebCase implements XPSCase {
 		else {
 			valuedObject.setValue(this, values);
 		}
+		Object[] newValue = getValue(valuedObject, context);
 		notifyListeners(valuedObject, context);
-		propagateValue(valuedObject, oldValue, values);
+		propagateValue(valuedObject, oldValue, newValue);
 	}
 
 	private Object[] getValue(ValuedObject valuedObject, Class<? extends PSMethod> context) {
 		if (valuedObject instanceof Diagnosis) {
-			return new Object[] {((Diagnosis) valuedObject).getState(this)};
+			return new DiagnosisState[] {((Diagnosis) valuedObject).getState(this)};
 		}
 		else if (valuedObject instanceof Question) {
 			return ((Question) valuedObject).getValue(this).toArray();

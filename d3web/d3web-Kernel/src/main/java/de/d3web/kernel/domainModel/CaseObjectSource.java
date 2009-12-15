@@ -20,17 +20,27 @@
 
 package de.d3web.kernel.domainModel;
 
+import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.dynamicObjects.XPSCaseObject;
 
 /**
- * States the ability that the implementing objects
- * are able to create a user case sensitive part
- * of itself.
+ * States the ability that the implementing object are able to create an session
+ * object to store session depending data into.
  */
 public interface CaseObjectSource {
 
 	/**
-	 * Create a user case sesitive part of itself.
+	 * Create a session object for itself, to store all dynamic values (session
+	 * dependent values) of this instance into.
+	 * <p>
+	 * <b>Do not call this method directly.</b> It is created by the {@link XPSCase}
+	 * implementations to create the dynamic objects. Use
+	 * {@link XPSCase#getCaseObject(CaseObjectSource)} instead.
+	 * 
+	 * @param session
+	 *            the session instance this object is created for
+	 * 
+	 * @return the created session object for this instance
 	 */
-	public XPSCaseObject createCaseObject();
+	public XPSCaseObject createCaseObject(XPSCase session);
 }

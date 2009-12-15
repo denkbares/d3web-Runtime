@@ -1,23 +1,3 @@
-/*
- * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- */
-
 package de.d3web.kernel.psMethods;
 
 import java.util.Arrays;
@@ -101,6 +81,8 @@ public class DefaultPropagationController implements PropagationContoller {
 	private final XPSCase xpsCase;
 	private List<PSMethodHandler> psHandlers = null;
 	private int recursiveCounter = 0;
+	private long propagationTime = 0;
+	
 
 	public DefaultPropagationController(XPSCase xpsCase) {
 		this.xpsCase = xpsCase;
@@ -143,12 +125,25 @@ public class DefaultPropagationController implements PropagationContoller {
 	 * </p>
 	 */
 	public void openPropagation() {
+		this.openPropagation(System.currentTimeMillis());
+	}
+	
+	/**
+	 * Starts a new propagation frame with a given time.
+	 * If an other propagation frame has already been opened,
+	 * the specified time is ignored.
+	 * For more details see PropagationController.openProgagation()
+	 * 
+	 * @see PropagationController.openProgagation()
+	 */
+	public void openPropagation(long time) {
 		this.recursiveCounter++;
 		if (this.recursiveCounter == 1) {
+			this.propagationTime = time;
 			initHandlers();
 		}
 	}
-	
+
 	/**
 	 * Commits a propagation frame.
 	 * <p>
@@ -175,7 +170,7 @@ public class DefaultPropagationController implements PropagationContoller {
 	 * </pre>
 	 * </p>
 	 */
-	public void commitPropagtion() {
+	public void commitPropagation() {
 		if (this.recursiveCounter == 1) {
 			distribute();
 			destroyHandlers();
@@ -227,6 +222,26 @@ public class DefaultPropagationController implements PropagationContoller {
 	 * @param newValue the new value of the object within the case
 	 */
 	public void propagate(NamedObject object, Object[] oldValue, Object[] newValue) {
+		propagate(object, oldValue, newValue, null);
+	}
+
+	/**
+	 * Propagates a change value of an object through one selected PSMethod.
+	 * All changes that will be derived by that PSMethod will be propagated
+	 * normally thoughout the whole system.
+	 * <p>
+	 * This method may be used after a problem solver has been added to distribute
+	 * existing facts to him and enable him to derive additional facts.
+	 * <p>
+	 * <b>Do not call this method directly! It will be called by the case 
+	 * to propagate facts updated into the case.</b>
+	 * 
+	 * @param object the object that has been updated
+	 * @param oldValue the old value of the object within the case
+	 * @param newValue the new value of the object within the case
+	 * @param psMethod the PSMethod the fact will be propagated to
+	 */
+	public void propagate(NamedObject object, Object[] oldValue, Object[] newValue, PSMethod psMethod) {
 		try {
 			// open propagation frame
 			openPropagation();
@@ -234,13 +249,29 @@ public class DefaultPropagationController implements PropagationContoller {
 			// add the value change to each handler
 			PropagationEntry change = new PropagationEntry(object, oldValue, newValue);
 			for (PSMethodHandler handler : this.psHandlers) {
-				handler.addPropagationEntry(change);
+				if (psMethod == null || handler.getPSMethod().equals(psMethod)) {
+					handler.addPropagationEntry(change);
+				}
 			}
 		}
 		finally {
 			// and commit the propagation frame
-			commitPropagtion();
+			commitPropagation();
 		}
-		
 	}
+	
+	
+	/**
+	 * Returns the propagation time of the current propagation.
+	 * If no propagation frame has been opened, an {@link IllegalStateException}
+	 * is thrown.
+	 * 
+	 * @return the propagation time of that propagation frame
+	 * @throws IllegalStateException if no propagation frame has been opened
+	 */
+	public long getPropagationTime() throws IllegalStateException {
+		if (recursiveCounter == 0) throw new IllegalStateException("no propagation fram opened");
+		return propagationTime;
+	}
+
 }

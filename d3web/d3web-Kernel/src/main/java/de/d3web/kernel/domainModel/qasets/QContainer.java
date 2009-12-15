@@ -182,7 +182,7 @@ public class QContainer extends QASet {
 	return getPriority().compareTo(acPriority);
     }
 
-    public XPSCaseObject createCaseObject() {
+    public XPSCaseObject createCaseObject(XPSCase session) {
 	return new CaseQContainer(this);
     }
 

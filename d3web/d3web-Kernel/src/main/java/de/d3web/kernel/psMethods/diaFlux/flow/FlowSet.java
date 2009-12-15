@@ -51,18 +51,14 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource {
 
 
 	@Override
-	public XPSCaseObject createCaseObject() {
+	public XPSCaseObject createCaseObject(XPSCase session) {
 		
 		Map<String, FlowData> flowdatas = new HashMap<String, FlowData>();
 		
 		for (Flow flow : map.values()) {
-			
-			FlowData flowdata = (FlowData) flow.createCaseObject();
+			FlowData flowdata = (FlowData) flow.createCaseObject(session);
 			flowdatas.put(flow.getId(), flowdata);
-			
 		}
-		
-		
 		
 		return new DiaFluxCaseObject(this, flowdatas);
 	}

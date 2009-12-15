@@ -809,6 +809,15 @@ public class Property implements java.io.Serializable {
 	 */
 	public static final Property CONSTANTS = new Property("constants");
 	
+	/**
+	 * used for time database purge hints
+	 * handled by denkbar/cc DefaultPurgeHandler
+	 * 
+	 * @return java.lang.String
+	 */
+	public static final Property PURGE_HINT = new Property("timeDB.purge_hint");
+	
+	
 	/*
 	 * ############################################################################
 	 */
@@ -893,6 +902,7 @@ public class Property implements java.io.Serializable {
 		basicPropertys.add(Property.TERMINOLOGY_USED);
 		basicPropertys.add(Property.INIT);
 		basicPropertys.add(Property.DEFAULT);
+		basicPropertys.add(Property.PURGE_HINT);
 	}
 
 	private String name;

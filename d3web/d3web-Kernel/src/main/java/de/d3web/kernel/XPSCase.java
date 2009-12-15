@@ -117,7 +117,7 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	 *         states have been set by one of the given PSMethods
 	 * @return a list of diagnoses in this case that have the state 'state'
 	 */
-	List<Diagnosis> getDiagnoses(DiagnosisState state, List<PSMethod> psMethods);
+	List<Diagnosis> getDiagnoses(DiagnosisState state, List<? extends PSMethod> psMethods);
 
 	/**
 	 * Returns the {@link KnowledgeBase} instance this object belongs to.
@@ -147,7 +147,7 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	 * used in this case.
 	 * @return a list of {@link PSMethod} instances registered for this case
 	 */
-	List<PSMethod> getUsedPSMethods();
+	List<? extends PSMethod> getUsedPSMethods();
 
 	/**
 	 * Returns the {@link PropagationContoller} instance, responsible for

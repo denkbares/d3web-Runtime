@@ -50,7 +50,7 @@ public class QuestionOC extends QuestionChoice {
 		super(id);
 	}
 
-	public XPSCaseObject createCaseObject() {
+	public XPSCaseObject createCaseObject(XPSCase session) {
 		return new CaseQuestionOC(this);
 	}
 

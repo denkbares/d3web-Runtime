@@ -21,7 +21,8 @@
 package de.d3web.kernel.dynamicObjects;
 import de.d3web.kernel.domainModel.CaseObjectSource;
 /**
- * Superclass for any dynamic, user specific object.<br>
+ * Superclass for any dynamic, session specific object.
+ * 
  * @author Christian Betz, joba
  */
 public abstract class XPSCaseObject {

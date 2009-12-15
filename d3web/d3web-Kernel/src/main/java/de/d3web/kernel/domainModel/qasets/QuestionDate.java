@@ -89,7 +89,7 @@ public class QuestionDate extends Question {
 	/* (non-Javadoc)
 	 * @see de.d3web.kernel.domainModel.CaseObjectSource#createCaseObject()
 	 */
-	public XPSCaseObject createCaseObject() {
+	public XPSCaseObject createCaseObject(XPSCase session) {
 		return new CaseQuestionDate(this);
 	}
 

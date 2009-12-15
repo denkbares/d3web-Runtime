@@ -129,7 +129,7 @@ public class Diagnosis extends NamedObject implements ValuedObject {
 	 * in the context of the d3web-Kernel project.
 	 * @return a flyweight instance of this object.
 	 */
-	public XPSCaseObject createCaseObject() {
+	public XPSCaseObject createCaseObject(XPSCase session) {
 		return new CaseDiagnosis(this);
 	}
 

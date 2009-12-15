@@ -208,7 +208,7 @@ public class PriorityGroup extends QASet {
     /**
      * No Implementation yet !
      */
-    public XPSCaseObject createCaseObject() {
+    public XPSCaseObject createCaseObject(XPSCase session) {
 	Logger.getLogger(this.getClass().getName()).throwing(
 		this.getClass().getName(), "createCaseObject",
 		new NotImplementedFeatureException());

@@ -55,7 +55,7 @@ public class QuestionNum extends Question {
 	 */ 
 	private List valuePartitions = null;
 
-	public XPSCaseObject createCaseObject() {
+	public XPSCaseObject createCaseObject(XPSCase session) {
 		return new CaseQuestionNum(this);
 	}
 

@@ -214,7 +214,7 @@ public class RuleComplex
 		}
 	}
 
-	public XPSCaseObject createCaseObject() {
+	public XPSCaseObject createCaseObject(XPSCase session) {
 		return new CaseRuleComplex(this);
 	}
 

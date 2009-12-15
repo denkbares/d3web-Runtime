@@ -53,7 +53,7 @@ public class QuestionMC extends QuestionChoice {
 		super(id);
 	}
 
-	public XPSCaseObject createCaseObject() {
+	public XPSCaseObject createCaseObject(XPSCase session) {
 		return new CaseQuestionMC(this);
 	}
 

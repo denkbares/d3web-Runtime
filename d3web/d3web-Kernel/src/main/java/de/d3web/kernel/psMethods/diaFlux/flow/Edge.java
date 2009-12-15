@@ -23,6 +23,7 @@
  */
 package de.d3web.kernel.psMethods.diaFlux.flow;
 
+import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
 import de.d3web.kernel.dynamicObjects.XPSCaseObject;
 
@@ -64,7 +65,7 @@ class Edge implements IEdge {
 	
 	
 	@Override
-	public XPSCaseObject createCaseObject() {
+	public XPSCaseObject createCaseObject(XPSCase session) {
 		return new EdgeData(this);
 	}
 	

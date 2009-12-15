@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.CaseObjectSource;
 import de.d3web.kernel.domainModel.RuleAction;
 import de.d3web.kernel.dynamicObjects.XPSCaseObject;
@@ -147,7 +148,7 @@ class Node implements INode, CaseObjectSource {
 
 
 	@Override
-	public XPSCaseObject createCaseObject() {
+	public XPSCaseObject createCaseObject(XPSCase session) {
 		return new NodeData(this);
 	}
 

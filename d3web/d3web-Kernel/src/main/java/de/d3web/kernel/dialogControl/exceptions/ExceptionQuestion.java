@@ -82,7 +82,7 @@ public abstract class ExceptionQuestion extends Question {
      * 
      * @return null
      */
-    public XPSCaseObject createCaseObject() {
+    public XPSCaseObject createCaseObject(XPSCase session) {
 	return null;
     }
 

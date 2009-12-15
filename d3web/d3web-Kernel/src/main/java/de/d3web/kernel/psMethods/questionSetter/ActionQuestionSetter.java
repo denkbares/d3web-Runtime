@@ -352,9 +352,9 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 	}
 
 	/**
-	 * @see de.d3web.kernel.domainModel.CaseObjectSource#createCaseObject()
+	 * @see de.d3web.kernel.domainModel.CaseObjectSource#createCaseObject(XPSCase)
 	 */
-	public XPSCaseObject createCaseObject() {
+	public XPSCaseObject createCaseObject(XPSCase session) {
 		return new CaseActionQuestionSetter(this);
 	}
 
