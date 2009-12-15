@@ -28,6 +28,7 @@ import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.CaseObjectSource;
 import de.d3web.kernel.domainModel.KnowledgeSlice;
 import de.d3web.kernel.dynamicObjects.XPSCaseObject;
+import de.d3web.kernel.psMethods.PSMethod;
 import de.d3web.kernel.psMethods.diaFlux.FluxSolver;
 
 /**
@@ -37,7 +38,7 @@ import de.d3web.kernel.psMethods.diaFlux.FluxSolver;
  */
 public class FlowSet implements KnowledgeSlice, CaseObjectSource {
 	
-	
+	private static final long serialVersionUID = 2498725033186477477L;
 	private final String setID;
 	private final Map<String, Flow> map;
 
@@ -123,7 +124,7 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource {
 	}
 
 	@Override
-	public Class getProblemsolverContext() {
+	public Class<? extends PSMethod> getProblemsolverContext() {
 		return FluxSolver.class;
 	}
 
