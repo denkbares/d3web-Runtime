@@ -37,7 +37,6 @@ import de.d3web.kernel.dynamicObjects.XPSCaseObject;
 class Node implements INode, CaseObjectSource {
 
 	
-	private final List<IEdge> incoming;
 	private final List<IEdge> outgoing;
 	private final RuleAction action;
 	private final String id;
@@ -50,22 +49,11 @@ class Node implements INode, CaseObjectSource {
 		
 		this.id = id;
 		this.action = action;
-		this.incoming = new ArrayList<IEdge>();
 		this.outgoing = new ArrayList<IEdge>();
 		 
 	}
 	
 	
-	protected boolean addIncomingEdge(IEdge edge) {
-		if (edge == null)
-			throw new IllegalArgumentException("edge must not be null");
-		
-		if (edge.getEndNode() != this)
-			throw new IllegalArgumentException("edge '" + edge + "' does not end at: " + this.toString());
-		
-		return incoming.add(edge);
-		
-	}
 	
 	protected boolean addOutgoingEdge(IEdge edge) {
 		if (edge == null)
@@ -77,12 +65,6 @@ class Node implements INode, CaseObjectSource {
 		return outgoing.add(edge);
 		
 	}
-	
-	@Override
-	public final List<IEdge> getIncomingEdges() {
-		return Collections.unmodifiableList(incoming);
-	}
-
 	
 	@Override
 	public final List<IEdge> getOutgoingEdges() {
@@ -112,8 +94,6 @@ class Node implements INode, CaseObjectSource {
 		int result = 1;
 		result = prime * result + ((action == null) ? 0 : action.hashCode());
 		result = prime * result
-				+ ((incoming == null) ? 0 : incoming.hashCode());
-		result = prime * result
 				+ ((outgoing == null) ? 0 : outgoing.hashCode());
 		return result;
 	}
@@ -132,9 +112,6 @@ class Node implements INode, CaseObjectSource {
 		if (!action.equals(other.action))
 			return false;
 		
-		if (!incoming.equals(other.incoming))
-			return false;
-		
 		if (!outgoing.equals(other.outgoing))
 			return false;
 		
@@ -143,7 +120,7 @@ class Node implements INode, CaseObjectSource {
 	
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "[" + getID() +", " + getAction().getClass().getSimpleName() + "]";
+		return getClass().getSimpleName() + "[" + getID() +", " + getAction() + "]";
 	}
 
 

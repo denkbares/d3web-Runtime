@@ -35,13 +35,15 @@ public interface INodeData {
 	
 	boolean isActive();
 
-	void setActive(boolean b);
-	
 	boolean addSupport(PathEntry entry);
 	
 	boolean removeSupport(PathEntry entry);
 	
 	int getReferenceCounter();
+
+	public int decReferenceCounter();
+
+	public int incReferenceCounter();
 	
 
 }

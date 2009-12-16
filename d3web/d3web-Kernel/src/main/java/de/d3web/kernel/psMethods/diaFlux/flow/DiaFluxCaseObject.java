@@ -39,6 +39,7 @@ public class DiaFluxCaseObject extends XPSCaseObject {
 	
 	private final Map<String, FlowData> map;
 	private final List<PathEntry> pathEnds;
+	private boolean continueFlowing;
 	
 	
 	public DiaFluxCaseObject(CaseObjectSource theSourceObject, Map<String, FlowData> map) {
@@ -76,6 +77,14 @@ public class DiaFluxCaseObject extends XPSCaseObject {
 		return pathEnds;
 	}
 	
+	
+	public void setContinueFlowing(boolean continueFlowing) {
+		this.continueFlowing = continueFlowing;
+	}
+	
+	public boolean isContinueFlowing() {
+		return continueFlowing;
+	}
 	
 	
 

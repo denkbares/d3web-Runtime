@@ -140,4 +140,11 @@ public abstract class ActionNextQASet extends RuleAction {
 				getCorrespondingRule().getProblemsolverContext());
 		}
 	}	
+	
+	
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode()) + getQASets();
+	}
+	
 }

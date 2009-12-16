@@ -36,11 +36,6 @@ import de.d3web.kernel.domainModel.RuleAction;
 public interface INode extends Serializable, CaseObjectSource {
 	
 	
-	/**
-	 * 
-	 * @return s a list of this node's incoming edges. 
-	 */
-	List<IEdge> getIncomingEdges();
 	
 	/**
 	 * 

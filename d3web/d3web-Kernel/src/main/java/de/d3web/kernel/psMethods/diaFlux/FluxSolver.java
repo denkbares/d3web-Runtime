@@ -33,6 +33,7 @@ import de.d3web.kernel.domainModel.DiagnosisState;
 import de.d3web.kernel.domainModel.RuleAction;
 import de.d3web.kernel.domainModel.ruleCondition.NoAnswerException;
 import de.d3web.kernel.domainModel.ruleCondition.UnknownAnswerException;
+import de.d3web.kernel.dynamicObjects.XPSCaseObject;
 import de.d3web.kernel.psMethods.MethodKind;
 import de.d3web.kernel.psMethods.PSMethod;
 import de.d3web.kernel.psMethods.PropagationEntry;
@@ -92,10 +93,21 @@ public class FluxSolver implements PSMethod {
 		}
 		
 		INode startNode = flowDeclaration.getStartNodes().get(0);
+//		System.out.println(flowDeclaration);
+//		System.out.println("!!!!" + startNode.hashCode());
 		
+		insertNewPath(theCase, startNode);
 		
-		addPathEntryForNode(theCase, null, null, FlowFactory.getInstance().createEdge("Pseudostart", null, startNode, ConditionTrue.INSTANCE));
+//		System.out.println(flowDeclaration);
+//		System.out.println("!!!!" + startNode.hashCode());
+	}
+
+	private PathEntry insertNewPath(XPSCase theCase, INode startNode) {
+		IEdge edge = FlowFactory.getInstance().createEdge("Pseudostart", null, startNode, ConditionTrue.INSTANCE);
 		
+		IEdgeData edgeData = (IEdgeData) edge.createCaseObject(theCase);
+		
+		return addPathEntryForNode(theCase, null, edgeData);
 	}
 	
 	// remove when Flowchart is indicated by rule. Just for testing
@@ -119,8 +131,6 @@ public class FluxSolver implements PSMethod {
 		return flowSet != null;
 	}
 
-
-	
 	private DiaFluxCaseObject getFlowData(XPSCase theCase) {
 		
 		FlowSet flowSet = getFlowSet(theCase);
@@ -145,19 +155,33 @@ public class FluxSolver implements PSMethod {
 
 	 * @return the new {@link PathEntry} for node
 	 */
-	private PathEntry addPathEntryForNode(XPSCase theCase, INode currentNode, PathEntry currentEntry, IEdge edge) {
+	private PathEntry addPathEntryForNode(XPSCase theCase, PathEntry currentEntry, IEdgeData edgeData) {
 		
-		INode nextNode = edge.getEndNode(); 
+		INode currentNode;
+		
+		if (currentEntry != null)
+			currentNode = currentEntry.getNode();
+		else
+			currentNode = null;
+		
+		INode nextNode = edgeData.getEdge().getEndNode(); 
+
 		log("Adding PathEntry for Node' " + nextNode + "' as successor of '" + currentNode + "'.");
 		
+		
 		// both are null if a new flow is started (at first start, after snapshot, (after fork?))
-		PathEntry stack = null;
-		PathEntry predecessor = null;
+		PathEntry stack;
+		PathEntry predecessor;
 		
 		if (currentNode instanceof SnapshotNode) {
 			//starts new flow -> stack = null, pred = null 
+			stack = null;
+			predecessor = null;
 			
-		} else if (currentNode != null) { //continue old flow 
+		} else { //continue old flow 
+			
+//			if (currentNode == null)
+//				log("IllegalState in addPathEntryForNode", Level.SEVERE);
 			
 			predecessor = currentEntry;
 			
@@ -167,10 +191,10 @@ public class FluxSolver implements PSMethod {
 				stack = currentEntry.getStack();
 			}
 		} 
-		
+
 		INodeData nodeData = getNodeData(nextNode, theCase);
 		
-		PathEntry newEntry = new PathEntry(predecessor, stack, nodeData, edge);
+		PathEntry newEntry = new PathEntry(predecessor, stack, nodeData, edgeData);
 		
 		if (currentEntry != null) { //entry for this flow already in pathends
 			replacePathEnd(theCase, currentEntry, newEntry);
@@ -178,17 +202,12 @@ public class FluxSolver implements PSMethod {
 			addPathEnd(theCase, newEntry);
 		}
 		
-		
 		return newEntry;
-		
 		
 	}
 
-
-
-
 	private void addPathEnd(XPSCase theCase, PathEntry newEntry) {
-		log("Adding new PathEnd for node: " + newEntry.getNodeData().getNode());
+		log("Adding new PathEnd for node: " + newEntry.getNode());
 		DiaFluxCaseObject caseObject = getFlowData(theCase);
 		
 		List<PathEntry> pathEnds = caseObject.getPathEnds();
@@ -203,15 +222,16 @@ public class FluxSolver implements PSMethod {
 		
 		log("Replacing PathEnd '" + currentEntry + "' by '" + newEntry + "'.");
 
-		DiaFluxCaseObject caseObject = getFlowData(theCase);
-		List<PathEntry> pathEnds = caseObject.getPathEnds();
+		List<PathEntry> pathEnds = getFlowData(theCase).getPathEnds();
 		
 		log("PathEnds before: " + pathEnds);
 		
 		
 		//Exception: fork? (would fail after first successor)
 		boolean remove = pathEnds.remove(currentEntry);
-//		Assert.assertTrue("Predecessor '" + currentEntry + "' not found in PathEnds: " + pathEnds, remove);
+
+		if (!remove)
+			throw new IllegalStateException("Predecessor '" + currentEntry + "' not found in PathEnds: " + pathEnds);
 		
 		addPathEnd(theCase, newEntry);
 		
@@ -231,16 +251,16 @@ public class FluxSolver implements PSMethod {
 	 */
 	private void flow(XPSCase theCase, PathEntry startEntry) {
 
-		log("Start flowing from node: " + startEntry.getNodeData().getNode());
+		log("Start flowing from node: " + startEntry.getNode());
 
 		PathEntry currentEntry = startEntry;
+		 
 		while (true) {
-			INode currentNode = currentEntry.getNodeData().getNode();
 			
-			IEdge edge = selectNextEdge(theCase, currentNode);
+			IEdge edge = selectNextEdge(theCase, currentEntry);
 			
 			if (edge == null) { //no edge to take
-				log("Staying in Node: " + currentNode);
+				log("Staying in Node: " + currentEntry.getNode());
 				return;
 			} 
 			
@@ -250,31 +270,25 @@ public class FluxSolver implements PSMethod {
 			
 			if (nextNodeData.isActive()) {
 				//what's next??? just stall?
-				log("Stop flowing. Node is already active: " + currentEntry.getNodeData().getNode());
-				
+				log("Stop flowing. Node is already active: " + currentEntry.getNode());
 				return;
 			}
 			
-			currentEntry = followEdge(theCase, currentNode, currentEntry, edge);
+			currentEntry = followEdge(theCase, currentEntry, edge);
 			
 			if (edge.getEndNode().getAction() instanceof CallFlowAction) {
-				currentEntry = callFlow(edge.getEndNode(), currentEntry, theCase);	
-				//TODO remove after debug phase
-				if (currentEntry == null)
-					return;
+				callFlow(edge.getEndNode(), currentEntry, theCase);	
+				return;
 			} else if (edge.getEndNode() instanceof EndNode) {
 				currentEntry = returnFromFlow((EndNode) edge.getEndNode(), currentEntry, theCase);
 				//TODO remove after debug phase
 				if (currentEntry == null)
 					return;
 				
-			} else if (currentNode instanceof SnapshotNode){
-				takeSnapshot(currentEntry);
 			} 
 			
  			
 		}
-//		log("Finished flowing.");
 		
 		
 	}
@@ -283,18 +297,31 @@ public class FluxSolver implements PSMethod {
 	private PathEntry returnFromFlow(EndNode endNode, PathEntry currentEntry,
 			XPSCase theCase) {
 		
-		INode callFlowNode = currentEntry.getStack().getNodeData().getNode();
+//		INode callFlowNode = currentEntry.getStack().getNode();
+//		
+//		IEdge edge = FlowFactory.getInstance().createEdge("RETURN", endNode, callFlowNode, ConditionTrue.INSTANCE);
 		
-		
-		IEdge edge = FlowFactory.getInstance().createEdge("RETURN", endNode, callFlowNode, ConditionTrue.INSTANCE);
-		
-		return addPathEntryForNode(theCase, endNode, currentEntry, edge);
+		return null;
 		
 	}
 
-	private PathEntry callFlow(INode subNode, PathEntry currentEntry, XPSCase theCase) {
+	private void callFlow(INode subNode, PathEntry currentEntry, XPSCase theCase) {
+		
+		getFlowData(theCase).setContinueFlowing(true);
 		CallFlowAction action = (CallFlowAction) subNode.getAction();
 		
+		INode startNode = findStartNode(action, theCase);
+		
+
+		insertNewPath(theCase, startNode);
+		
+	}
+
+	
+	/**
+	 * returns the StartNode that is called by the supplied action
+	 */
+	private INode findStartNode(CallFlowAction action, XPSCase theCase) {
 		String flowName = action.getFlowName();
 		String startNodeName = action.getStartNodeName();
 		
@@ -302,33 +329,38 @@ public class FluxSolver implements PSMethod {
 		
 		Flow subflow = flowSet.getByName(flowName);
 		List<INode> startNodes = subflow.getStartNodes();
-		INode startNode = null;
 		
 		for (INode iNode : startNodes) {
 			if (((StartNode)iNode).getName().equalsIgnoreCase(startNodeName)) {
-				startNode = iNode;
-				break;
+				return iNode;
 				
 			}
 		}
 		
-		if (startNode == null) {
-			log("Startnode '" + startNodeName + "' of flow '" + flowName +"' not found.", Level.SEVERE);
-			return null;
-		}
+		log("Startnode '" + startNodeName + "' of flow '" + flowName +"' not found.", Level.SEVERE);
+		return null;
 		
-		IEdge edge = FlowFactory.getInstance().createEdge("CALL", subNode, startNode, ConditionTrue.INSTANCE);
-		
-		return addPathEntryForNode(theCase, startNode, currentEntry, edge);
 	}
 
+//	private PathEntry callFlow(INode subNode, PathEntry currentEntry, XPSCase theCase) {
+//		
+//		CallFlowAction action = (CallFlowAction) subNode.getAction();
+//		
+//		INode startNode = findStartNode(action, theCase);
+//		
+//		
+//		IEdge edge = FlowFactory.getInstance().createEdge("CALL", subNode, startNode, ConditionTrue.INSTANCE);
+//		
+//		return addPathEntryForNode(theCase, startNode, currentEntry, edge);
+//	}
+	
 	/**
 	 * Takes a snapshot of the System when leaving the node that belongs to the given entry.
 	 * @param entry
 	 */
 	private void takeSnapshot(PathEntry entry) {
 //		Assert.assertTrue(entry.getNodeData().getNode() instanceof SnapshotNode);
-		log("Taking snapshot at: " + entry.getNodeData().getNode());
+		log("Taking snapshot at: " + entry.getNode());
 		
 		
 	}
@@ -347,7 +379,7 @@ public class FluxSolver implements PSMethod {
 	 * @param edge the egde to take
 	 * @return nextNode
 	 */
-	private PathEntry followEdge(XPSCase theCase, INode currentNode, PathEntry entry, IEdge edge) {
+	private PathEntry followEdge(XPSCase theCase, PathEntry entry, IEdge edge) {
 		
 		
 		INode nextNode = edge.getEndNode();
@@ -356,17 +388,16 @@ public class FluxSolver implements PSMethod {
 		log("Following edge '" + edge +"' to node '" + nextNode +"'.");
 		
 //		Assert.assertFalse(nextNodeData.isActive());
-		if (nextNodeData.isActive())
+		if (nextNodeData.isActive()) {
 			log("Node is already active: " + nextNode, Level.SEVERE);
-		
-		nextNodeData.setActive(true);
+			return null; //TODO correct?
+		}
 		
 		RuleAction action = nextNodeData.getNode().getAction();
 		
 		doAction(theCase, action);
 		
-		
-		PathEntry newPathEntry = addPathEntryForNode(theCase, currentNode, entry, edge);
+		PathEntry newPathEntry = addPathEntryForNode(theCase, entry, getEdgeData(edge, theCase));
 
 		return newPathEntry;
 		
@@ -406,15 +437,15 @@ public class FluxSolver implements PSMethod {
 	/**
 	 * Selects appropriate successor of {@code node} according to the current state of the case.
 	 * @param theCase 
-	 * @param node
+	 * @param currentEntry
 	 * 
 	 * @return
 	 */
-	private IEdge selectNextEdge(XPSCase theCase, INode node) {
+	private IEdge selectNextEdge(XPSCase theCase, PathEntry currentEntry) {
 		
-		INodeData nodeData = getNodeData(node, theCase);
-		
-		nodeData.setActive(true);
+		INode node = currentEntry.getNode();
+//		INodeData nodeData = getNodeData(node, theCase);
+//		nodeData.setActive(true);
 		
 		Iterator<IEdge> edges = node.getOutgoingEdges().iterator();
 		
@@ -439,13 +470,11 @@ public class FluxSolver implements PSMethod {
 		
 //		throw new UnsupportedOperationException("can not stay in node '" + nodeDeclaration + "'");
 		
-		log("No edge to take.");
+		log("No edge to take from node:" + node);
 		return null;
 		
 		
 	}
-	
-	
 	
 
 	private void fireEdge(IEdge edge, XPSCase theCase) {
@@ -454,8 +483,6 @@ public class FluxSolver implements PSMethod {
 		edgeData.fire(); 
 		
 	}
-	
-	
 
 //	private void assertOtherEdgesFalse(XPSCase theCase, Iterator<IEdge> edges) throws NoAnswerException, UnknownAnswerException {
 //		while (edges.hasNext()) { 
@@ -479,17 +506,26 @@ public class FluxSolver implements PSMethod {
 		log("Start propagating: " + changes);
 		
 		DiaFluxCaseObject caseObject = getFlowData(theCase);
+		caseObject.setContinueFlowing(true);
 		
-		for (PathEntry entry : new ArrayList<PathEntry>(caseObject.getPathEnds())) {
+		//repeat until no new PathEnds are inserted. (As iteration happens over new lists)
+		while (caseObject.isContinueFlowing()) {
+			caseObject.setContinueFlowing(false);
 			
-			maintainTruth(theCase, entry,  changes);
+//			System.out.println("**********" + caseObject.getPathEnds() + "@" + caseObject.hashCode());
 			
-		}
-		
-		
-		for (PathEntry entry : new ArrayList<PathEntry>(caseObject.getPathEnds())) {
+			for (PathEntry entry : new ArrayList<PathEntry>(caseObject.getPathEnds())) {
+				
+				maintainTruth(theCase, entry,  changes);
+				
+			}
 			
-			flow(theCase, entry);
+			for (PathEntry entry : new ArrayList<PathEntry>(caseObject.getPathEnds())) {
+				
+				flow(theCase, entry);
+				
+			}
+			
 		}
 		log("Finished propagating.");
 		
@@ -520,6 +556,12 @@ public class FluxSolver implements PSMethod {
 				eval = false;
 			}
 			
+			
+			//TODO !!!check support from other edges
+			//something like !eval && entry.getNodeData().getReferenceCounter() == 0
+			// if in between there are subpathes that have support by other nodes
+			// will they be collapsed too???
+			// TODO ? search for and collapse only completely wrong subpathes??
 			if (!eval) {
 				
 				log("Edge is no longer true: " + edge);
@@ -530,11 +572,9 @@ public class FluxSolver implements PSMethod {
 		}
 		
 		if (earliestWrongPathEntry != null) {
-//			DiaFluxCaseObject caseObject = getFlowData(theCase);
 			// incoming edge to  earliest wrong entry is now false, so collapse back to its predecessor
-			collapsePathUntilEntry(theCase, startEntry, /*caseObject,*/ earliestWrongPathEntry.getPath());
-		}
-		else
+			collapsePathUntilEntry(theCase, startEntry, earliestWrongPathEntry.getPath());
+		} else
 			log("No TMS necessary");
 		
 		log("Finished maintaining truth.");
@@ -542,7 +582,7 @@ public class FluxSolver implements PSMethod {
 	}
 
 	private void collapsePathUntilEntry(XPSCase theCase, PathEntry startEntry,
-			/*FlowData flow,*/ PathEntry endEntry) {
+			 PathEntry endEntry) {
 		
 		log("Collapsing path from '" + startEntry + "' back to " + endEntry);
 		
@@ -551,12 +591,10 @@ public class FluxSolver implements PSMethod {
 		
 		while (currentEntry != endEntry) {
 			
-			IEdgeData edgeData = getEdgeData(currentEntry.getEdge(), theCase); 
-				//flow.getDataForEdge(currentEntry.getEdge());
+			IEdgeData edgeData = currentEntry.getEdgeData(); 
 			edgeData.unfire();
 			
 			INodeData data = currentEntry.getNodeData();
-			data.setActive(false);
 			data.removeSupport(currentEntry);
 			
 			undoAction(theCase, data.getNode().getAction());

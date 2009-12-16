@@ -23,6 +23,8 @@ package de.d3web.kernel.psMethods.diaFlux;
 import java.io.Serializable;
 
 import de.d3web.kernel.psMethods.diaFlux.flow.IEdge;
+import de.d3web.kernel.psMethods.diaFlux.flow.IEdgeData;
+import de.d3web.kernel.psMethods.diaFlux.flow.INode;
 import de.d3web.kernel.psMethods.diaFlux.flow.INodeData;
 
 /**
@@ -37,7 +39,7 @@ public class PathEntry implements Serializable {
 	private final PathEntry path;
 	private final PathEntry stack;
 	private final INodeData nodeData;
-	private final IEdge edge;
+	private final IEdgeData edgeData;
 //	private final String flowId;
 
 	/**
@@ -47,30 +49,36 @@ public class PathEntry implements Serializable {
 	 * @param edge 
 	 * @param flowId 
 	 */
-	public PathEntry(PathEntry path, PathEntry stack, INodeData nodeData, IEdge edge) {//, String flowId) {
+	public PathEntry(PathEntry path, PathEntry stack, INodeData nodeData, IEdgeData edgeData) {//, String flowId) {
 		this.path = path;
 		this.stack = stack;
 		this.nodeData = nodeData;
-		this.edge = edge;
+		this.edgeData = edgeData;
 //		this.flowId = flowId;
 	}
-	
 	
 	public PathEntry getPath() {
 		return path;
 	}
-	
 	
 	public PathEntry getStack() {
 		return stack;
 	}
 	
 	public IEdge getEdge() {
-		return edge;
+		return edgeData.getEdge();
+	}
+	
+	public IEdgeData getEdgeData() {
+		return edgeData;
 	}
 	
 	public INodeData getNodeData() {
 		return nodeData;
+	}
+	
+	public INode getNode() {
+		return getNodeData().getNode();
 	}
 	
 //	public String getFlowId() {

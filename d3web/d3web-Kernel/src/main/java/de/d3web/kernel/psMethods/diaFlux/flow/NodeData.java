@@ -31,12 +31,14 @@ public class NodeData extends XPSCaseObject implements INodeData {
 	
 	private boolean isActive;
 	private final List<PathEntry> support;
+	private int refCounter;
 	
 	public NodeData(INode node) {
 		super(node);
 		
 		support = new ArrayList<PathEntry>(2);
 		isActive = false;
+		refCounter = 0;
 	}
 
 	@Override
@@ -47,11 +49,6 @@ public class NodeData extends XPSCaseObject implements INodeData {
 	@Override
 	public boolean isActive() {
 		return isActive;
-	}
-	
-	
-	public void setActive(boolean isActive) {
-		this.isActive = isActive;
 	}
 	
 	
@@ -66,8 +63,20 @@ public class NodeData extends XPSCaseObject implements INodeData {
 	}
 	
 	@Override
+	public int decReferenceCounter() {
+		refCounter = refCounter - 1;
+		return refCounter;
+	}
+	
+	@Override
+	public int incReferenceCounter() {
+		refCounter = refCounter + 1;
+		return refCounter;
+	}
+	
+	@Override
 	public int getReferenceCounter() {
-		return support.size();
+		return refCounter;
 	}
 	
 	@Override

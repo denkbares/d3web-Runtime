@@ -34,7 +34,6 @@ import de.d3web.kernel.dynamicObjects.XPSCaseObject;
  */
 class Edge implements IEdge {
 	
-	
 	private final INode startNode;
 	private final INode endNode;
 	private final AbstractCondition condition;
@@ -42,8 +41,6 @@ class Edge implements IEdge {
 	
 	
 	public Edge(String id, INode startNode, INode endNode, AbstractCondition condition) {
-//		if (startNode == null)
-//			throw new IllegalArgumentException("startNode must not be null");
 		
 		if (endNode == null)
 			throw new IllegalArgumentException("endNode must not be null");
@@ -59,7 +56,6 @@ class Edge implements IEdge {
 		if (startNode != null)
 			((Node) startNode).addOutgoingEdge(this);
 		
-		((Node) endNode).addIncomingEdge(this); //TODO move
 				
 	}
 	
