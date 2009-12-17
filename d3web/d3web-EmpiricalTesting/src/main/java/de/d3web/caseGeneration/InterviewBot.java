@@ -20,7 +20,9 @@
 
 package de.d3web.caseGeneration;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,6 +44,7 @@ import de.d3web.kernel.domainModel.KnowledgeBase;
 import de.d3web.kernel.domainModel.QASet;
 import de.d3web.kernel.domainModel.qasets.QContainer;
 import de.d3web.kernel.domainModel.qasets.Question;
+import de.d3web.kernel.domainModel.qasets.QuestionMC;
 
 /**
  * This class generates sequential test cases simulating an interview with the
@@ -89,6 +92,15 @@ public class InterviewBot {
 	private Map<Question, Answer> knownAnswers;
 	// the answers for the given question are omitted during the interview
 	private Map<Question, List<Answer>> forbiddenAnswers;
+	// default 0 means no restriction in the number of answer combinations
+	private int maxAnswerCombinations;
+	// number of combinations for specified questions
+	private Map<Question, Integer> maxAnswerCombinationsForQuestion;
+	// forbidden answer combinations for a specified question
+	private Map<Question, Collection<Answer[]>> forbiddenAnswerCombinations;
+	// allowed answer combinations for a specified question
+	private Map<Question, Collection<Answer[]>> allowedAnswerCombinations;
+
 
 	// the generated cases
 	private List<SequentialTestCase> cases;
@@ -96,6 +108,7 @@ public class InterviewBot {
 	private int casesCounter = 1;
 
 	private AnswerSelector answerSelector = AnswerSelector.getInstance();
+	private AnswerCombinator answerCombinator = AnswerCombinator.getInstance();
 
 	/**
 	 * Generates a collection of {@link SequentialTestCase} instances based on
@@ -124,6 +137,9 @@ public class InterviewBot {
 		cases = new LinkedList<SequentialTestCase>();
 		answerSelector = AnswerSelector.getInstance();
 		answerSelector.setForbiddenAnswers(forbiddenAnswers);
+		answerCombinator.setAllowedAnswerCombinations(allowedAnswerCombinations);
+		answerCombinator.setForbiddenAnswerCombinations(forbiddenAnswerCombinations);
+		
 	}
 
 	private void traverse(SequentialTestCase sqCase, Question currentQuestion, KnowledgeBase knowledge) throws UnsupportedDataTypeException {
@@ -136,17 +152,51 @@ public class InterviewBot {
 			return;
 		}
 
+		// Get all possible answers (combinations) for the question
+		List<? extends Answer[]> possibleAnswers = 
+			new ArrayList<Answer[]>(answerSelector.determineAnswers(currentQuestion));	
+		
+		// check if there is a limitation of combinations for QuestionMC
+		int numberOfCombinations = determineNumberOfCombinations(possibleAnswers, currentQuestion);	
+		
 		// Iterate over all possible answers of the next question
-		List<? extends Answer[]> nextAnswers = answerSelector.determineAnswers(currentQuestion);
-		for (Answer[] nextAnswer : nextAnswers) {
+		for (int i = 0; i < numberOfCombinations; i++) {
+			Answer[] nextAnswers = possibleAnswers.get(i);
 			XPSCase theCase = createCase(sqCase);
-			setCaseValue(theCase, currentQuestion, nextAnswer);
-			SequentialTestCase newSequentialCase = packNewSequence(sqCase, currentQuestion, nextAnswer, theCase);
+			setCaseValue(theCase, currentQuestion, nextAnswers);
+			SequentialTestCase newSequentialCase = packNewSequence(sqCase, currentQuestion, nextAnswers, theCase);
 
 			// step down in recursion with the next suitable question to ask
 			Question nextQuestion = getNextQuestion(theCase, newSequentialCase);
 			traverse(newSequentialCase, nextQuestion, knowledge);
 		}
+	}
+
+
+	/**
+	 * Determines how many combinations of the available answer combinations are considered.
+	 * @param currentNumberOfCombinations List<Answer[]> all available combinations
+	 * @param currentQuestion Question the current Question
+	 * @return int number of considered combinations
+	 */
+	private int determineNumberOfCombinations(Collection<? extends Answer[]> possibleAnswers, Question currentQuestion) {
+
+		int availableCombinations = possibleAnswers.size();
+		
+		// The combination constraints apply only to QuestionMCs
+		if (currentQuestion instanceof QuestionMC) {
+			if (maxAnswerCombinationsForQuestion.get(currentQuestion) != null) {
+				int maxCombinationsQuestion = maxAnswerCombinationsForQuestion.get(currentQuestion).intValue();
+				if (maxCombinationsQuestion < availableCombinations) {
+					return maxCombinationsQuestion;
+				}
+			} else if (maxAnswerCombinations > 0 && maxAnswerCombinations < availableCombinations) {
+				return maxAnswerCombinations;
+			}
+		}
+
+		return availableCombinations;
+		
 	}
 
 	private SequentialTestCase packNewSequence(SequentialTestCase sqCase, Question currentQuestion, Answer[] nextAnswer, XPSCase theCase) {
@@ -276,7 +326,11 @@ public class InterviewBot {
 		private RatingStrategy ratingStrategy = new StateRatingStrategy();
 		private Map<Question, Answer> knownAnswers = new HashMap<Question, Answer>();
 		private Map<Question, List<Answer>> forbiddenAnswers = new HashMap<Question, List<Answer>>();
-
+		private int maxAnswerCombinations = 0;
+		private Map<Question, Integer> maxAnswerCombinationsForQuestion = new HashMap<Question, Integer>();
+		private Map<Question, Collection<Answer[]>> forbiddenAnswerCombinations = new HashMap<Question, Collection<Answer[]>>();
+		private Map<Question, Collection<Answer[]>> allowedAnswerCombinations = new HashMap<Question, Collection<Answer[]>>();
+		
 		private KnowledgeBase knowledge;
 
 		public Builder(KnowledgeBase knowledge) {
@@ -327,10 +381,47 @@ public class InterviewBot {
 			forbiddenAnswers.put(f.getQuestion(), answers);
 			return this;
 		}
+		
+		public Builder maxAnswerCombinations(int val) {
+			maxAnswerCombinations = val;
+			return this;
+		}
+		
+		public Builder maxAnswerCombinations(Question q, int val) {
+			maxAnswerCombinationsForQuestion.put(q, new Integer(val));
+			return this;
+		}
+		
+		public Builder forbiddenAnswerCombination(FindingMC f) throws Exception {
+			if (allowedAnswerCombinations.containsKey(f.getQuestion()))
+				throw new Exception("There are already forbidden answer combinations defined for question \"" + f.getQuestion().getText() + "\".");
+			
+			Collection<Answer[]> answers = forbiddenAnswerCombinations.get(f.getQuestion());
+			if (answers == null) {
+				answers = new LinkedList<Answer[]>();
+			}
+			answers.add(f.getAnswers());
+			forbiddenAnswerCombinations.put(f.getQuestion(), answers);
+			return this;
+		}
+		
+		public Builder allowedAnswerCombination(FindingMC f) {
+			if (forbiddenAnswerCombinations.containsKey(f.getQuestion()))
+				throw new IllegalArgumentException("There are already allowed answer combinations defined for question \"" + f.getQuestion().getText() + "\".");
+			
+			Collection<Answer[]> answers = allowedAnswerCombinations.get(f.getQuestion());
+			if (answers == null) {
+				answers = new LinkedList<Answer[]>();
+			}
+			answers.add(f.getAnswers());
+			allowedAnswerCombinations.put(f.getQuestion(), answers);
+			return this;
+		}
 
-		public InterviewBot build() {
+		public InterviewBot build() throws Exception {
 			return new InterviewBot(this);
 		}
+		
 	}
 
 	private InterviewBot() {
@@ -346,6 +437,10 @@ public class InterviewBot {
 		ratingStrategy = builder.ratingStrategy;
 		knownAnswers = builder.knownAnswers;
 		forbiddenAnswers = builder.forbiddenAnswers;
+		maxAnswerCombinations = builder.maxAnswerCombinations;
+		maxAnswerCombinationsForQuestion = builder.maxAnswerCombinationsForQuestion;
+		forbiddenAnswerCombinations = builder.forbiddenAnswerCombinations;
+		allowedAnswerCombinations = builder.allowedAnswerCombinations;		
 	}
 
 	private String dateToString() {

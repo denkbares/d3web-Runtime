@@ -134,6 +134,7 @@ public class AnswerSelector {
 		answers.add(new AnswerText[] {AnswerFactory.createAnswerText("")});
 		return answers;
 	}
+	
 	private List<? extends Answer[]> determineNumAnswers(QuestionNum question) {
 		List<AnswerNum[]> answers = new LinkedList<AnswerNum[]>();
 		NumericalInterval range = (NumericalInterval)question.getProperties().getProperty(Property.QUESTION_NUM_RANGE);
@@ -147,9 +148,10 @@ public class AnswerSelector {
 		
 		return answers;
 	}
+	
 	private List<? extends Answer[]> determineChoiceAnswers(QuestionChoice question) {
 		List<Answer[]> answers = new ArrayList<Answer[]>();
-		List<? extends Answer> answerCandidates = new ArrayList<Answer>(question.getAllAlternatives());
+		List<? extends Answer> answerCandidates = question.getAllAlternatives();
 		
 		// remove all answers which are forbidden
 		if (forbiddenAnswers.get(question) != null) {
@@ -164,7 +166,7 @@ public class AnswerSelector {
 			
 		// if the question is a QuestionMC get all possible answer combinations
 		} else if (question instanceof QuestionMC) {
-			answers.addAll(AnswerCombinator.getInstance().getAllPossibleCombinations(answerCandidates));
+			answers.addAll(AnswerCombinator.getInstance().getAllPossibleCombinations((QuestionMC) question));
 		}
 		
 		return answers;

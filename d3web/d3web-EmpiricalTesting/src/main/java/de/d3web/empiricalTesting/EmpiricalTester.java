@@ -24,8 +24,6 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.util.List;
 
-import javax.activation.UnsupportedDataTypeException;
-
 import de.d3web.caseGeneration.HeuristicScoreRatingStrategy;
 import de.d3web.caseGeneration.InterviewBot;
 import de.d3web.empiricalTesting.caseConverter.CaseObjectToKnOffice;
@@ -95,12 +93,9 @@ public class EmpiricalTester {
 	 * 
 	 * The generated sequential test cases are stored in the xml file
 	 * and the txt file which are specified above.
-	 *  
-	 * @throws MalformedURLException
-	 * @throws UnsupportedDataTypeException
+	 * @throws Exception 
 	 */
-	public static void demoBotTestCases() throws 
-		UnsupportedDataTypeException, MalformedURLException {
+	public static void demoBotTestCases() throws Exception {
 		
 		KnowledgeBase kb = loadKnowledgeBase(workspace + kbFile);
 	

@@ -20,13 +20,17 @@
 
 package de.d3web.caseGeneration;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 
 import de.d3web.kernel.domainModel.Answer;
 import de.d3web.kernel.domainModel.answers.AnswerChoice;
+import de.d3web.kernel.domainModel.qasets.Question;
+import de.d3web.kernel.domainModel.qasets.QuestionMC;
 
 /**
  * This class is used to compute a list of Answer[] 
@@ -39,6 +43,19 @@ public class AnswerCombinator {
 
 	// Singleton instance
 	private static AnswerCombinator instance = new AnswerCombinator();
+	
+	// forbidden answer combinations for specified questions
+	private Map<Question, Collection<Answer[]>> forbiddenAnswerCombinations = 
+		new HashMap<Question, Collection<Answer[]>>();
+	
+	// allowed answer combinations for specified questions
+	private Map<Question, Collection<Answer[]>> allowedAnswerCombinations = 
+		new HashMap<Question, Collection<Answer[]>>();
+	
+	// stores the answer combinations for better performance
+	private Map<Question, Collection<Answer[]>> existingCombinations = 
+		new HashMap<Question, Collection<Answer[]>>();
+	
 	
 	/**
 	 * Private constructor to ensure noninstantiability
@@ -61,51 +78,60 @@ public class AnswerCombinator {
 	 * The returned Collection of Object[] represents the power set
 	 * of the committed List of Answers.
 	 * 
-	 * @param answers List of answers of which all combinations are computed.
+	 * @param question QuestionMC for which all answer combinations are computed
 	 * @return Collection<Answer[]> power set of committed List of answers.
 	 */
-	public Collection<Answer[]> getAllPossibleCombinations(List<? extends Answer> answers) {
+	public Collection<Answer[]> getAllPossibleCombinations(QuestionMC question) {
 				
-		if (answers == null || answers.size() == 0) {
-			throw new IllegalArgumentException("There must be at least one answer in the List of possible answers!");
+		if (question == null) {
+			throw new IllegalArgumentException("The question is null!");
 		}
 		
-       //create the empty power set
-       LinkedHashSet<Answer[]> powerSet = new LinkedHashSet<Answer[]>();
+		Collection<Answer[]> combinations = existingCombinations.get(question);
+		
+		if (combinations != null) {
+			return combinations;
+		}
+		
+		List<AnswerChoice> answers = question.getAllAlternatives();
+		
+		//create the empty power set
+		combinations = new LinkedHashSet<Answer[]>();
+
+		//get the number of elements in the set
+		int maxLength = answers.size();
+		
+		//the number of members of a power set is 2^n
+		int powerSetElements = 1 << maxLength;
      
-       //get the number of elements in the set
-       int maxLength = answers.size();
-     
-       //the number of members of a power set is 2^n
-       int powerSetElements = 1 << maxLength;
-     
-       //run a binary counter for the number of power elements
-       for (int i = 0; i < powerSetElements; i++) {
+		//run a binary counter for the number of power elements
+		for (int i = 0; i < powerSetElements; i++) {
          
-           //convert the binary number to a string containing n digits
-           String binary = intToBinary(i, maxLength);
+			//convert the binary number to a string containing n digits
+			String binary = intToBinary(i, maxLength);
          
-           //create a new set
-           LinkedHashSet<Answer> innerSet = new LinkedHashSet<Answer>();
+			//create a new set
+			LinkedHashSet<Answer> innerSet = new LinkedHashSet<Answer>();
          
-           //convert each digit in the current binary number to the corresponding element
-           //in the given set
-           for (int j = 0; j < binary.length(); j++) {
-               if (binary.charAt(j) == '1')
-                   innerSet.add(answers.get(j));
-           }
+			//convert each digit in the current binary number to the corresponding element
+			//in the given set
+			for (int j = 0; j < binary.length(); j++) {
+				if (binary.charAt(j) == '1')
+					innerSet.add(answers.get(j));
+			}
          
-           //add the new set to the power set
-           if (innerSet.size() > 0) {
-        	   powerSet.add(innerSet.toArray(new Answer[innerSet.size()]));
-           }
+			//add the new set to the power set
+			if (innerSet.size() > 0 && allowedCombination(question, innerSet)) {
+				combinations.add(innerSet.toArray(new Answer[innerSet.size()]));
+			}
            
-       }
-     
-       return powerSet;   
+		}
+		
+		existingCombinations.put(question, combinations);
+		return combinations;   
 	}
 
-	
+
 	/**
 	 * Converts a decimal number to a binary number
 	 * e.g. 2 --> 0010.
@@ -125,40 +151,72 @@ public class AnswerCombinator {
 		
 		return binary.toString();
 	} 
-
+	
+	
 	/**
-	 * Nur zum testen...
-	 * @param args
+	 * Sets the forbidden answer combinations.
+	 * @param combinations Map<Question, Collection<Answer[]>> forbidden combinations
 	 */
-	public static void main(String[] args) {
-		
-		AnswerChoice a1 = new AnswerChoice("A");
-		a1.setText("A");
-		
-		AnswerChoice a2 = new AnswerChoice("B");
-		a2.setText("B");
-		
-		AnswerChoice a3 = new AnswerChoice("C");
-		a3.setText("C");
-		
-		AnswerChoice a4 = new AnswerChoice("D");
-		a4.setText("D");
-		
-		List<AnswerChoice> answers = new ArrayList<AnswerChoice>();
-		answers.add(a1);
-		answers.add(a2);
-		answers.add(a3);
-		answers.add(a4);
-		
-		AnswerCombinator combinator = AnswerCombinator.getInstance();
-		
-		for (Answer[] a : combinator.getAllPossibleCombinations(answers)) {
-			for (Answer answer :  a) {
-				System.out.print(answer + ", ");
+	public void setForbiddenAnswerCombinations(Map<Question, Collection<Answer[]>> combinations) {
+		for (Question q : combinations.keySet()) {
+			if (allowedAnswerCombinations.containsKey(q))
+				throw new IllegalArgumentException("There are already allowed answer combinations defined for question \"" + q.getText() + "\".");
+		}
+		this.forbiddenAnswerCombinations = combinations;
+	}
+
+	
+	/**
+	 * Sets the allowed answer combinations.
+	 * @param combinations Map<Question, Collection<Answer[]>> forbidden combinations
+	 */
+	public void setAllowedAnswerCombinations(Map<Question, Collection<Answer[]>> combinations) {
+		for (Question q : combinations.keySet()) {
+			if (forbiddenAnswerCombinations.containsKey(q))
+				throw new IllegalArgumentException("There are already forbidden answer combinations defined for question \"" + q.getText() + "\".");
+		}
+		this.allowedAnswerCombinations = combinations;
+	}
+
+	
+	/**
+	 * Checks if the current combination is allowed.
+	 * This means allowed or not forbidden.
+	 * @param question QuestionMC the question
+	 * @param currentCombination LinkedHashSet<Answer> the combination to be checked
+	 * @return true, if combination is allowed otherwise false
+	 */
+	private boolean allowedCombination(QuestionMC question, LinkedHashSet<Answer> currentCombination) {
+				
+		if (forbiddenAnswerCombinations.containsKey(question)) {
+			for (Answer[] combination : forbiddenAnswerCombinations.get(question)) {
+				if (equalCombinations(currentCombination, combination))
+					return false;
 			}
-			System.out.print("\n");
+		} else if (allowedAnswerCombinations.containsKey(question)) {
+			for (Answer[] combination : allowedAnswerCombinations.get(question)) {
+				if (equalCombinations(currentCombination, combination))
+					return true;
+			}
+			return false;
 		}
 		
+		return true;
+	}
+	
+
+	/**
+	 * Checks if two combinations are equal.
+	 * @param combination LinkedHashSet<Answer> in most cases the current combination
+	 * @param constraint Answer[] in most cases a defined constraint
+	 * @return true if combinations are equal, otherwise false.
+	 */
+	private boolean equalCombinations(LinkedHashSet<Answer> combination, Answer[] constraint) {
+		if (combination.size() == constraint.length) {
+			if (combination.containsAll(Arrays.asList(constraint)))
+				return true;
+		}
+		return false;
 	}
 
 }

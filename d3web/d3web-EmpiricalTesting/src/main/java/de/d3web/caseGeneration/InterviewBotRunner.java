@@ -24,12 +24,11 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.util.List;
 
-import javax.activation.UnsupportedDataTypeException;
-
 import de.d3web.empiricalTesting.SequentialTestCase;
 import de.d3web.empiricalTesting.caseConverter.CaseObjectToKnOffice;
 import de.d3web.empiricalTesting.caseConverter.CaseObjectToTestSuiteXML;
 import de.d3web.kernel.domainModel.KnowledgeBase;
+import de.d3web.kernel.domainModel.KnowledgeBaseManagement;
 import de.d3web.persistence.xml.PersistenceManager;
 
 public class InterviewBotRunner {
@@ -49,8 +48,7 @@ public class InterviewBotRunner {
 
 	
 	@SuppressWarnings("unused")
-	private static void demoForDigitalysKB() 
-	    throws UnsupportedDataTypeException, MalformedURLException {
+	private static void demoForDigitalysKB() throws Exception {
 		filename = "dano.jar";
 		KnowledgeBase k = loadKnowledgebase(filename);
 		
@@ -68,8 +66,7 @@ public class InterviewBotRunner {
 	
 
 	@SuppressWarnings("unused")
-	private static void demoForGenerated1K_KB() 
-	    throws MalformedURLException, UnsupportedDataTypeException {
+	private static void demoForGenerated1K_KB() throws Exception {
 		filename  = "testKnowledgebase1KRules.jar";
 		KnowledgeBase k = loadKnowledgebase(filename);
 		
@@ -89,9 +86,15 @@ public class InterviewBotRunner {
 		filename  = "minicar.jar";
 
 		KnowledgeBase k = loadKnowledgebase(filename);
+		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(k);
 		
 		watch.start();
 		InterviewBot bot = new InterviewBot.Builder(k).
+			forbiddenAnswerCombination(FindingMC.createFindingMC(k, "Driving", new String[] { "insufficient power on full load" , "unsteady idle speed" })).
+			forbiddenAnswerCombination(FindingMC.createFindingMC(k, "Driving", new String[] { "insufficient power on partial load" })).
+			forbiddenAnswerCombination(FindingMC.createFindingMC(k, "Driving", new String[] { "unsteady idle speed" })).
+//			maxAnswerCombinations(2).
+//			maxAnswerCombinations(kbm.findQuestion("Driving"), 2).
 			build();
 		List<SequentialTestCase> cases = bot.generate();
 		watch.stop();
