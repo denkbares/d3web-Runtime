@@ -20,32 +20,23 @@
 
 package de.d3web.kernel.psMethods.diaFlux.flow;
 
-import de.d3web.kernel.psMethods.diaFlux.actions.NoopAction;
 
 /**
  * 
- * @author hatko
+ * @author Reinhard Hatko
  *
  */
-public class StartNode extends Node {
+public class StartNode extends NamedNode {
 
-	private final String name;
 	
 	public StartNode(String id, String name) {
-		super(id, NoopAction.INSTANCE);
-		
-		this.name = name;
+		super(id, name);
 	}
-	
 	
 //	@Override
 //	protected boolean addIncomingEdge(IEdge edge) {
 //		throw new UnsupportedOperationException("can not add incoming edge to start node");
 //	}
-	
-	public String getName() {
-		return name;
-	}
 	
 
 }

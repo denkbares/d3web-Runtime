@@ -21,23 +21,28 @@ package de.d3web.kernel.psMethods.diaFlux.actions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.RuleAction;
 import de.d3web.kernel.psMethods.diaFlux.FluxSolver;
+import de.d3web.kernel.psMethods.diaFlux.flow.Flow;
+import de.d3web.kernel.psMethods.diaFlux.flow.FlowSet;
+import de.d3web.kernel.psMethods.diaFlux.flow.INode;
+import de.d3web.kernel.psMethods.diaFlux.flow.StartNode;
 
 /**
  *
  * @author Reinhard Hatko
  * Created on: 03.11.2009
  */
-public class CallFlowAction extends RuleAction {
+public class IndicateFlowAction extends RuleAction {
 	
-
 	private final String flowName;
 	private final String startNodeName;
 
-	public CallFlowAction(String flow, String node) {
+	public IndicateFlowAction(String flow, String node) {
 		super(null);
 		
 		this.flowName = flow;
@@ -46,12 +51,45 @@ public class CallFlowAction extends RuleAction {
 
 	@Override
 	public RuleAction copy() {
-		return new CallFlowAction(flowName, startNodeName);
+		return new IndicateFlowAction(flowName, startNodeName);
 	}
 
 	@Override
 	public void doIt(XPSCase theCase) {
+		
+		
+		log("Indicating Startnode '"  + startNodeName +"' of flow '" + flowName + "'.", Level.FINE);
+		
+		StartNode startNode = findStartNode(theCase);
+		
+		FluxSolver.getInstance().indicateFlow(startNode, theCase);
 
+	}
+	
+	/**
+	 * returns the StartNode that is called by the supplied action
+	 */
+	private StartNode findStartNode(XPSCase theCase) {
+		
+		FlowSet flowSet = FluxSolver.getFlowSet(theCase);
+		
+		Flow subflow = flowSet.getByName(flowName);
+		List<StartNode> startNodes = subflow.getStartNodes();
+		
+		for (StartNode iNode : startNodes) {
+			if (iNode.getName().equalsIgnoreCase(startNodeName)) {
+				return iNode;
+				
+			}
+		}
+		
+		log("Startnode '" + startNodeName + "' of flow '" + flowName +"' not found.", Level.SEVERE);
+		return null;
+		
+	}
+	
+	private void log(String message, Level level) {
+		Logger.getLogger(getClass().getName()).log(level, message);
 	}
 
 	@Override
@@ -59,13 +97,15 @@ public class CallFlowAction extends RuleAction {
 		return FluxSolver.class;
 	}
 
-	@Override
+	@Override 
 	public List getTerminalObjects() {
 		return new ArrayList(0);
 	}
 
 	@Override
 	public void undo(XPSCase theCase) {
+		
+		
 		
 	}
 	

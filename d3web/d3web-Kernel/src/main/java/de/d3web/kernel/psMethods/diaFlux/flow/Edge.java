@@ -29,7 +29,7 @@ import de.d3web.kernel.dynamicObjects.XPSCaseObject;
 
 
 /**
- * @author hatko
+ * @author Reinhard Hatko
  *
  */
 class Edge implements IEdge {
@@ -59,11 +59,6 @@ class Edge implements IEdge {
 				
 	}
 	
-	
-	@Override
-	public XPSCaseObject createCaseObject(XPSCase session) {
-		return new EdgeData(this);
-	}
 	
 
 	@Override

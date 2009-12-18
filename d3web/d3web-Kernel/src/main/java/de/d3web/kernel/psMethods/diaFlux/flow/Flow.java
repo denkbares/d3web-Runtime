@@ -30,12 +30,13 @@ import java.util.Map;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.CaseObjectSource;
 import de.d3web.kernel.domainModel.KnowledgeSlice;
+import de.d3web.kernel.domainModel.qasets.QContainer;
 import de.d3web.kernel.dynamicObjects.XPSCaseObject;
 import de.d3web.kernel.psMethods.PSMethod;
 import de.d3web.kernel.psMethods.diaFlux.FluxSolver;
 
 /**
- * @author hatko
+ * @author Reinhard Hatko
  *
  */
 public class Flow implements Serializable, CaseObjectSource, KnowledgeSlice {
@@ -46,6 +47,8 @@ public class Flow implements Serializable, CaseObjectSource, KnowledgeSlice {
 	private final List<INode> nodes;
 	private final String name;
 	private final String id;
+
+	private QContainer flowQC;
 	
 	
 	public Flow(String id, String name, List<INode> nodes, List<IEdge> edges) {
@@ -87,14 +90,7 @@ public class Flow implements Serializable, CaseObjectSource, KnowledgeSlice {
 			nodedata.put(nodeDecl, (INodeData) nodeDecl.createCaseObject(session));
 		}
 		
-		Map<IEdge, IEdgeData> edgedata = new HashMap<IEdge, IEdgeData>(getEdges().size());
-		
-
-		for (IEdge edge : getEdges()) {
-			edgedata.put(edge, (IEdgeData) edge.createCaseObject(session));
-		}
-		
-		return new FlowData(this, nodedata, edgedata);
+		return new FlowData(this, nodedata);
 	}
 	
 
@@ -147,18 +143,34 @@ public class Flow implements Serializable, CaseObjectSource, KnowledgeSlice {
 		return nodes;
 	}
 	
-	public List<INode> getStartNodes() {
-		
-		List<INode> result = new ArrayList<INode>(1);
+	public List<StartNode> getStartNodes() {
+		return getNodesOfType(StartNode.class);
+	}
+
+	public List<EndNode> getExitNodes() {
+		return getNodesOfType(EndNode.class);
+	}
+	
+	private <T> List<T> getNodesOfType(Class<T> clazz) {
+		List<T> result = new ArrayList<T>(3);
 		
 		for (INode node : nodes) {
-			if (node instanceof StartNode)
-				result.add(node);
+			if (clazz.isAssignableFrom(node.getClass()))
+				result.add((T) node);
 		}
 		
 		return result;
-		
 	}
+	
+	
+	public void setTerminology(QContainer flowQC) {
+		this.flowQC = flowQC;
+	}
+	
+	public QContainer getTerminology() {
+		return flowQC;
+	}
+	
 	
 	@Override
 	public String toString() {
@@ -186,6 +198,7 @@ public class Flow implements Serializable, CaseObjectSource, KnowledgeSlice {
 		// TODO Auto-generated method stub
 		
 	}
+
 
 	
 

@@ -31,13 +31,11 @@ import de.d3web.kernel.psMethods.diaFlux.PathEntry;
 public class FlowData extends XPSCaseObject {
 
 	private final Map<INode, INodeData> nodeData;
-	private final Map<IEdge, IEdgeData> edgeData;
 	
 	
-	public FlowData(Flow flow, Map<INode, INodeData> nodeData, Map<IEdge, IEdgeData> edgeData) {
+	public FlowData(Flow flow, Map<INode, INodeData> nodeData) {
 		super(flow);
 		
-		this.edgeData = Collections.unmodifiableMap(edgeData);
 		this.nodeData = Collections.unmodifiableMap(nodeData);
 		
 	}
@@ -53,13 +51,6 @@ public class FlowData extends XPSCaseObject {
 		
 		return nodeData.get(node); 
 		
-	}
-	
-	public IEdgeData getDataForEdge(IEdge edge) {
-		if (!edgeData.containsKey(edge))
-			throw new IllegalArgumentException("Edge '" + edge+ "' not found in flow '" + getSourceObject() + "'.");
-			
-		return edgeData.get(edge);
 	}
 	
 

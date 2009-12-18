@@ -27,10 +27,10 @@ import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
 
 /**
  * 
- * @author hatko
+ * @author Reinhard Hatko
  *
  */
-public interface IEdge extends Serializable, CaseObjectSource {
+public interface IEdge extends Serializable {
 	
 	/**
 	 * 

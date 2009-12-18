@@ -20,14 +20,18 @@
 
 package de.d3web.kernel.psMethods.diaFlux.flow;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.d3web.kernel.domainModel.RuleAction;
+import de.d3web.kernel.domainModel.RuleComplex;
 import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
+import de.d3web.kernel.domainModel.ruleCondition.CondAnd;
+import de.d3web.kernel.psMethods.questionSetter.ActionSetValue;
 
 /**
  * 
- * @author hatko
+ * @author Reinhard Hatko
  *
  */
 public class FlowFactory {
@@ -68,12 +72,23 @@ public class FlowFactory {
 		return new StartNode(id, name);
 	}
 	
-	public INode createEndNode(String id, String name) {
-		return new EndNode(id, name);
+	public INode createEndNode(String id, String name, RuleAction action) {
+			
+		
+		return new EndNode(id, name, action);
 	}
 	
 	
-	
+	//Fix after Refactoring
+	public ActionSetValue createSetValueAction() {
+		RuleComplex rule = new RuleComplex();
+		rule.setId("FlowchartRule" + System.currentTimeMillis());
+		
+		ActionSetValue action = new ActionSetValue(rule);
+		rule.setAction(action);
+		rule.setCondition(new CondAnd(new ArrayList()));
+		return action;
+	}
 	
 	
 

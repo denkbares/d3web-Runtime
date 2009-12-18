@@ -20,22 +20,31 @@
 
 package de.d3web.kernel.psMethods.diaFlux.flow;
 
-import de.d3web.kernel.psMethods.diaFlux.actions.NoopAction;
+import de.d3web.kernel.domainModel.RuleAction;
+
 
 /**
  * 
- * @author hatko
+ * @author Reinhard Hatko
  *
  */
-public class EndNode extends Node {
+public class EndNode extends NamedNode {
 
-	private final String name;
+	private final RuleAction action;
 	
-	public EndNode(String id, String name) {
-		super(id, NoopAction.INSTANCE);
-		
-		this.name = name;
+	
+	//TODO action dirty Hack
+	public EndNode(String id, String name, RuleAction action) {
+		super(id, name);
+		this.action = action;
 	}
+	
+	
+	@Override
+	public RuleAction getAction() {
+		return action;
+	}
+	
 	
 	
 	@Override
@@ -43,12 +52,6 @@ public class EndNode extends Node {
 		return true;
 //		throw new UnsupportedOperationException("can not add outgoing edge to end node");
 	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	
 	
 
 }

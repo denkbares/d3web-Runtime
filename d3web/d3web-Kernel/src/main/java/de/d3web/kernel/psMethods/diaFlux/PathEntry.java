@@ -39,22 +39,19 @@ public class PathEntry implements Serializable {
 	private final PathEntry path;
 	private final PathEntry stack;
 	private final INodeData nodeData;
-	private final IEdgeData edgeData;
-//	private final String flowId;
+	private final IEdge edge;
 
 	/**
 	 * @param path
 	 * @param stack
 	 * @param nodeData 
 	 * @param edge 
-	 * @param flowId 
 	 */
-	public PathEntry(PathEntry path, PathEntry stack, INodeData nodeData, IEdgeData edgeData) {//, String flowId) {
+	public PathEntry(PathEntry path, PathEntry stack, INodeData nodeData, IEdge edge) {
 		this.path = path;
 		this.stack = stack;
 		this.nodeData = nodeData;
-		this.edgeData = edgeData;
-//		this.flowId = flowId;
+		this.edge = edge;
 	}
 	
 	public PathEntry getPath() {
@@ -66,11 +63,7 @@ public class PathEntry implements Serializable {
 	}
 	
 	public IEdge getEdge() {
-		return edgeData.getEdge();
-	}
-	
-	public IEdgeData getEdgeData() {
-		return edgeData;
+		return edge;
 	}
 	
 	public INodeData getNodeData() {
@@ -81,9 +74,6 @@ public class PathEntry implements Serializable {
 		return getNodeData().getNode();
 	}
 	
-//	public String getFlowId() {
-//		return flowId;
-//	}
 	
 	@Override
 	public String toString() {

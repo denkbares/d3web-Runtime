@@ -78,6 +78,7 @@ public class DiaFluxCaseObject extends XPSCaseObject {
 	}
 	
 	
+	
 	public void setContinueFlowing(boolean continueFlowing) {
 		this.continueFlowing = continueFlowing;
 	}
