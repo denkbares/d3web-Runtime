@@ -390,14 +390,19 @@ public class KnowledgeBaseManagement {
 			return "Q" + idC;
 
 		} else if (o instanceof RuleComplex) {
-			int idC = getMaxCountOf(knowledgeBase.getAllKnowledgeSlices()) + 1;
-			return "R" + idC;
+			return createRuleID();
 
 		} else {
 			internalCounter++;
 			return "O" + internalCounter;
 		}
 	}
+	
+	public String createRuleID() {
+		int idC = getMaxCountOf(knowledgeBase.getAllKnowledgeSlices()) + 1;
+		return "R" + idC;
+	}
+
 
 	public String findNewIDForAnswerChoice(QuestionChoice qc) {
 		int returnIDnumber = 1;

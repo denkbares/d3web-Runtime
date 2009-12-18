@@ -19,6 +19,9 @@
  */
 
 package de.d3web.kernel.domainModel.answers;
+
+import java.util.Date;
+
 /**
  * This is a factory class for Answer objects
  * It contains several static methods which create the most popular answer types
@@ -58,5 +61,10 @@ public class AnswerFactory {
 		AnswerText answer = new AnswerText();
 		answer.setText(text);
 		return answer;
+	}
+	public static AnswerDate createAnswerDate(Date date) {
+		AnswerDate theAnswer = new AnswerDate();
+		theAnswer.setValue(date);
+		return theAnswer;
 	}
 }
