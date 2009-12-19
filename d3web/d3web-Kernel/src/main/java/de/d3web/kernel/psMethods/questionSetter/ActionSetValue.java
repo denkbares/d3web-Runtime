@@ -124,13 +124,6 @@ public class ActionSetValue extends ActionQuestionSetter implements CaseObjectSo
 	}
 
 	/**
-	 * @return false
-	 */
-	public boolean singleFire() {
-		return false;
-	}
-
-	/**
 	 * Tries to undo the included action.
 	 */
 	public void undo(XPSCase theCase) {

@@ -22,6 +22,8 @@ package de.d3web.kernel.domainModel;
 
 import java.util.List;
 
+import de.d3web.kernel.XPSCase;
+
 /**
  * Abstract class to describe actions executed by rules,
  * when their conditions are true.
@@ -57,16 +59,15 @@ public abstract class RuleAction implements Cloneable, java.io.Serializable {
 	}
 
 	/**
-	 * @return true (default), if this action needs to be executed
-	 * only once, when the corresponding rule can fire 
-	 * (true -- e.g. ActionHeuristicRS),or, if the action has to 
-	 * be executed each time the rule is checked 
-	 * (false -- e.g. ActionSetValue/ActionAddValue)
+	 * Checks if any action value (e.g. terminal objects of a formula) have
+	 * changed since last call to {@link #doIt(XPSCase)}.
+	 * 
+	 * @see RuleComplex
 	 */
-	public boolean singleFire() {
-		return true;
+	public boolean hasChangedValue(XPSCase theCase) {
+		return false;
 	}
-
+	
 	/**
 	 * Tries to undo the included action.
 	 */

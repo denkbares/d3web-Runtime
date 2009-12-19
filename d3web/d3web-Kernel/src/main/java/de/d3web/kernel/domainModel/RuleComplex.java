@@ -30,7 +30,6 @@ import de.d3web.kernel.dynamicObjects.CaseRuleComplex;
 import de.d3web.kernel.dynamicObjects.XPSCaseObject;
 import de.d3web.kernel.psMethods.MethodKind;
 import de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic;
-import de.d3web.kernel.psMethods.questionSetter.ActionQuestionSetter;
 /**
  * Abstract super class for all rules. <BR>
  * It stores the condition, the check routine and if it has fired or not.
@@ -180,28 +179,14 @@ public class RuleComplex
 			if (hasFired && !canFire)
 				UNDO_ACTION = true;
 
-			boolean isQuestionSetterActionWithChangedValues = false;
-			// if the action is a question setter action, changes in depending values (e.g. elements of a formula)
-			// will be noticed and stored in the boolean "isQuestionSetterActionWithChangedValues"
-			if (getAction() instanceof ActionQuestionSetter) {
-				ActionQuestionSetter action =
-					(ActionQuestionSetter) getAction();
-				isQuestionSetterActionWithChangedValues =
-					action.actionValuesChanged(theCase);
-			}
-			// if this is a multipleFire-rule that has fired AND can fire again AND any depending value has
-			// changed, its action will be undone and executed again.
-			// This change fixes the "fire-undo-fire-bug" (when a question gets the same
-			// value several times (see MQDialogController)) and some problems with the "cycle-check".
-			if (hasFired
-				&& canFire
-				&& (!getAction().singleFire())
-				&& isQuestionSetterActionWithChangedValues) {
+			// If the action has a changed value, it requires a re-firing.
+			// Its action will therefore be undone and executed again.
+			if (hasFired && canFire && getAction().hasChangedValue(theCase)) {
 				UNDO_ACTION = true;
 				EXECUTE_ACTION = true;
 			}
-
-		} catch (UnknownAnswerException ex) {
+		} 
+		catch (UnknownAnswerException ex) {
 			if (hasFired(theCase))
 				UNDO_ACTION = true;
 		}

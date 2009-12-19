@@ -127,14 +127,8 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 	public void undo(XPSCase theCase) {
 	}
 
-	/**
-	 * checks if any action value (e.g. terminal objects of a formula) have
-	 * changed this Method is public, because it is used in
-	 * RuleComplex.check(..)
-	 * 
-	 * @see RuleComplex
-	 */
-	public boolean actionValuesChanged(XPSCase theCase) {
+	@Override
+	public boolean hasChangedValue(XPSCase theCase) {
 
 		Hashtable questionToValuesHash = getActionValues(theCase);
 		if ((questionToValuesHash != null) && (!questionToValuesHash.isEmpty())) {
@@ -358,11 +352,6 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 		return new CaseActionQuestionSetter(this);
 	}
 
-	/*
-	 * @see de.d3web.kernel.domainModel.RuleAction#doIt(de.d3web.kernel.XPSCase)
-	 */
-	public void doIt(XPSCase theCase) {
-	}
 
 	/**
 	 * @return Hashtable

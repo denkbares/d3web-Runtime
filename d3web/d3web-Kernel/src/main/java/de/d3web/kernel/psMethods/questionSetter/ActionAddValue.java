@@ -268,13 +268,6 @@ public class ActionAddValue extends ActionQuestionSetter {
 		}
 	}
 
-	/**
-	 * @return false.
-	 */
-	public boolean singleFire() {
-		return false;
-	}
-
 	public String toString() {
 		return "<RuleAction type=\"AddValue\">\n" + "  [" + getQuestion().getId() + ": "
 				+ getValues() + "]" + "\n</RuleAction>";
