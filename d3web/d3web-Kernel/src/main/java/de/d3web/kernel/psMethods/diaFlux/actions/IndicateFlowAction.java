@@ -25,11 +25,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.d3web.kernel.XPSCase;
+import de.d3web.kernel.domainModel.NamedObject;
 import de.d3web.kernel.domainModel.RuleAction;
+import de.d3web.kernel.psMethods.PSMethod;
 import de.d3web.kernel.psMethods.diaFlux.FluxSolver;
 import de.d3web.kernel.psMethods.diaFlux.flow.Flow;
 import de.d3web.kernel.psMethods.diaFlux.flow.FlowSet;
-import de.d3web.kernel.psMethods.diaFlux.flow.INode;
 import de.d3web.kernel.psMethods.diaFlux.flow.StartNode;
 
 /**
@@ -39,6 +40,7 @@ import de.d3web.kernel.psMethods.diaFlux.flow.StartNode;
  */
 public class IndicateFlowAction extends RuleAction {
 	
+	private static final long serialVersionUID = -157309383130821699L;
 	private final String flowName;
 	private final String startNodeName;
 
@@ -93,13 +95,13 @@ public class IndicateFlowAction extends RuleAction {
 	}
 
 	@Override
-	public Class getProblemsolverContext() {
+	public Class<? extends PSMethod> getProblemsolverContext() {
 		return FluxSolver.class;
 	}
 
 	@Override 
-	public List getTerminalObjects() {
-		return new ArrayList(0);
+	public List<? extends NamedObject> getTerminalObjects() {
+		return new ArrayList<NamedObject>(0);
 	}
 
 	@Override

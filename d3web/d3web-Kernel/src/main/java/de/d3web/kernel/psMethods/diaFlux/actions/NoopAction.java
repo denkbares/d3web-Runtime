@@ -24,7 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.d3web.kernel.XPSCase;
+import de.d3web.kernel.domainModel.NamedObject;
 import de.d3web.kernel.domainModel.RuleAction;
+import de.d3web.kernel.psMethods.PSMethod;
 import de.d3web.kernel.psMethods.diaFlux.FluxSolver;
 
 /**
@@ -34,7 +36,8 @@ import de.d3web.kernel.psMethods.diaFlux.FluxSolver;
  *
  */
 public class NoopAction extends RuleAction {
-	
+
+	private static final long serialVersionUID = -5920305686485574489L;
 	public static final NoopAction INSTANCE = new NoopAction();
 	
 	private NoopAction() {
@@ -52,13 +55,13 @@ public class NoopAction extends RuleAction {
 	}
 
 	@Override
-	public Class getProblemsolverContext() {
+	public Class<? extends PSMethod> getProblemsolverContext() {
 		return FluxSolver.class;
 	}
 
 	@Override
-	public List getTerminalObjects() {
-		return new ArrayList(0);
+	public List<NamedObject> getTerminalObjects() {
+		return new ArrayList<NamedObject>(0);
 	}
 
 	@Override
