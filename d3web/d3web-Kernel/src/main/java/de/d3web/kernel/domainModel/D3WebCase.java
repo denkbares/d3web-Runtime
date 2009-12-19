@@ -20,6 +20,7 @@
 
 package de.d3web.kernel.domainModel;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,11 +36,11 @@ import de.d3web.kernel.dialogControl.QASetManagerFactory;
 import de.d3web.kernel.domainModel.qasets.QContainer;
 import de.d3web.kernel.domainModel.qasets.Question;
 import de.d3web.kernel.dynamicObjects.XPSCaseObject;
+import de.d3web.kernel.psMethods.DefaultPropagationController;
 import de.d3web.kernel.psMethods.MethodKind;
 import de.d3web.kernel.psMethods.PSMethod;
 import de.d3web.kernel.psMethods.PSMethodInit;
 import de.d3web.kernel.psMethods.PropagationContoller;
-import de.d3web.kernel.psMethods.DefaultPropagationController;
 import de.d3web.kernel.psMethods.contraIndication.PSMethodContraIndication;
 import de.d3web.kernel.psMethods.diaFlux.FluxSolver;
 import de.d3web.kernel.psMethods.dialogControlling.PSMethodDialogControlling;
@@ -95,13 +96,23 @@ public class D3WebCase implements XPSCase {
 	private DCMarkup dcMarkup;
 	private Properties properties;
 
-	public static PSMethod[] commonPSMethods = new PSMethod[]{PSMethodUserSelected.getInstance(),
+	private static Collection<PSMethod> commonPSMethods = Arrays.asList(PSMethodUserSelected.getInstance(),
 			new PSMethodDialogControlling(), PSMethodContraIndication.getInstance(),
 			PSMethodNextQASet.getInstance(), PSMethodQuestionSetter.getInstance(),
 			PSMethodSuppressAnswer.getInstance(), PSMethodHeuristic.getInstance(),
 			PSMethodInit.getInstance(), PSMethodParentQASet.getInstance(), PSMethodXCL.getInstance(),
-			FluxSolver.getInstance()};
+			FluxSolver.getInstance());
 
+	/**
+	 * Adds a {@link PSMethod} instance to the list of default PSMethod 
+	 * when creating a new case.
+	 *  
+	 * @param method the PSMethod to be added
+	 */
+	public static void addCommonPSMethod(PSMethod method) {
+		commonPSMethods.add(method);
+	}
+	
 	/**
 	 * Creates a new user case with the specified knowledge base. <br>
 	 * The default problem-solvers for each case are listed in static array
@@ -129,11 +140,9 @@ public class D3WebCase implements XPSCase {
 		dialogControllingPSMethods.add(PSMethodHeuristic.getInstance());
 
 		// register some common problem solving methods
-		PSMethod methods[] = commonPSMethods;
-
-		// first add all methods
-		for (int i = 0; i < methods.length; i++) {
-			addUsedPSMethod(methods[i]);
+		// first add the methods
+		for (PSMethod method : commonPSMethods) {
+			addUsedPSMethod(method);
 		}
 
 		// activate InitQASets
