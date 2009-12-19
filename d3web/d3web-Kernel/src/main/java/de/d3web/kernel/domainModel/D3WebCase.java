@@ -96,12 +96,13 @@ public class D3WebCase implements XPSCase {
 	private DCMarkup dcMarkup;
 	private Properties properties;
 
-	private static Collection<PSMethod> commonPSMethods = Arrays.asList(PSMethodUserSelected.getInstance(),
+	private static Collection<PSMethod> commonPSMethods = new LinkedList<PSMethod>(Arrays.asList(
+			PSMethodUserSelected.getInstance(),
 			new PSMethodDialogControlling(), PSMethodContraIndication.getInstance(),
 			PSMethodNextQASet.getInstance(), PSMethodQuestionSetter.getInstance(),
 			PSMethodSuppressAnswer.getInstance(), PSMethodHeuristic.getInstance(),
 			PSMethodInit.getInstance(), PSMethodParentQASet.getInstance(), PSMethodXCL.getInstance(),
-			FluxSolver.getInstance());
+			FluxSolver.getInstance()));
 
 	/**
 	 * Adds a {@link PSMethod} instance to the list of default PSMethod 
