@@ -41,6 +41,7 @@ import de.d3web.kernel.psMethods.PSMethod;
 import de.d3web.kernel.psMethods.PropagationEntry;
 import de.d3web.kernel.psMethods.diaFlux.actions.IndicateFlowAction;
 import de.d3web.kernel.psMethods.diaFlux.flow.DiaFluxCaseObject;
+import de.d3web.kernel.psMethods.diaFlux.flow.EdgeSupport;
 import de.d3web.kernel.psMethods.diaFlux.flow.Flow;
 import de.d3web.kernel.psMethods.diaFlux.flow.FlowData;
 import de.d3web.kernel.psMethods.diaFlux.flow.FlowFactory;
@@ -48,6 +49,8 @@ import de.d3web.kernel.psMethods.diaFlux.flow.FlowSet;
 import de.d3web.kernel.psMethods.diaFlux.flow.IEdge;
 import de.d3web.kernel.psMethods.diaFlux.flow.INode;
 import de.d3web.kernel.psMethods.diaFlux.flow.INodeData;
+import de.d3web.kernel.psMethods.diaFlux.flow.ISupport;
+import de.d3web.kernel.psMethods.diaFlux.flow.RuleSupport;
 import de.d3web.kernel.psMethods.diaFlux.flow.SnapshotNode;
 import de.d3web.kernel.psMethods.diaFlux.flow.StartNode;
 import de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic;
@@ -89,11 +92,10 @@ public class FluxSolver implements PSMethod {
 		
 	}
 
-	public void indicateFlow(INode startNode, XPSCase theCase) {
+	public void indicateFlow(RuleComplex rule, INode startNode, XPSCase theCase) {
 		
-		IEdge edge = FlowFactory.getInstance().createEdge("Pseudostart", null, startNode, ConditionTrue.INSTANCE);
 		
-		addPathEntryForNode(theCase, null, edge);
+		addPathEntryForNode(theCase, null, startNode, new RuleSupport(rule));
 	}
 	
 	
@@ -126,13 +128,12 @@ public class FluxSolver implements PSMethod {
 	/**
 	 * Adds a path entry for the current node. Predecessor's entry is removed by this method.
 	 * @param theCase 
-	 * @param currentNode  
 	 * @param currentEntry
-	 * @param nextNode
-
+	 * @param nextNode 
+	 * @param currentNode  
 	 * @return the new {@link PathEntry} for node
 	 */
-	private PathEntry addPathEntryForNode(XPSCase theCase, PathEntry currentEntry, IEdge edge) {
+	private PathEntry addPathEntryForNode(XPSCase theCase, PathEntry currentEntry, INode nextNode, ISupport support) {
 		
 		INode currentNode;
 		
@@ -141,7 +142,6 @@ public class FluxSolver implements PSMethod {
 		else
 			currentNode = null;
 		
-		INode nextNode = edge.getEndNode(); 
 
 		log("Adding PathEntry for Node' " + nextNode + "' as successor of '" + currentNode + "'.");
 		
@@ -171,7 +171,7 @@ public class FluxSolver implements PSMethod {
 
 		INodeData nodeData = getNodeData(nextNode, theCase);
 		
-		PathEntry newEntry = new PathEntry(predecessor, stack, nodeData, edge);
+		PathEntry newEntry = new PathEntry(predecessor, stack, nodeData, support);
 		
 		if (currentEntry != null) { //entry for this flow already in pathends
 			replacePathEnd(theCase, currentEntry, newEntry);
@@ -210,7 +210,12 @@ public class FluxSolver implements PSMethod {
 		if (!remove)
 			throw new IllegalStateException("Predecessor '" + currentEntry + "' not found in PathEnds: " + pathEnds);
 		
-		addPathEnd(theCase, newEntry);
+		
+		if (newEntry != null){
+			addPathEnd(theCase, newEntry);
+		} else {
+			
+		}
 		
 	}
 	
@@ -275,7 +280,7 @@ public class FluxSolver implements PSMethod {
 		INode nextNode = edge.getEndNode();
 		INodeData nextNodeData = getNodeData(nextNode, theCase);
 		
-		log("Following edge '" + edge +"' to node '" + nextNode +"'.");
+		log("Following edge '" + edge +"'.");
 		
 //		Assert.assertFalse(nextNodeData.isActive());
 		if (nextNodeData.isActive()) {
@@ -283,11 +288,12 @@ public class FluxSolver implements PSMethod {
 			return null; //TODO correct?
 		}
 		
-		RuleAction action = nextNodeData.getNode().getAction();
+		
+		RuleAction action = nextNode.getAction();
 		
 		doAction(theCase, action);
 		
-		PathEntry newPathEntry = addPathEntryForNode(theCase, entry, edge);
+		PathEntry newPathEntry = addPathEntryForNode(theCase, entry, nextNode, new EdgeSupport(edge));
 
 		return newPathEntry;
 		
@@ -308,10 +314,7 @@ public class FluxSolver implements PSMethod {
 	private void doAction(XPSCase theCase, RuleAction action) {
 		log("Starting action: " + action);
 		
-		if (action instanceof IndicateFlowAction)
-			;
-		else 
-			action.doIt(theCase);
+		action.doIt(theCase);
 	}
 
 
@@ -410,7 +413,6 @@ public class FluxSolver implements PSMethod {
 	
 	private void checkFCIndications(Collection<PropagationEntry> changes, XPSCase theCase) {
 		
-		
 		for (PropagationEntry entry : changes) {
 			
 			NamedObject object = entry.getObject();
@@ -424,13 +426,8 @@ public class FluxSolver implements PSMethod {
 					rule.check(theCase);
 					
 				}
-				
-				
 			}
-			
-			
 		}
-		
 	}
 
 	private void maintainTruth(XPSCase theCase, PathEntry startEntry, Collection<PropagationEntry> changes) {
@@ -442,18 +439,9 @@ public class FluxSolver implements PSMethod {
 		
 		while (entry != null) {
 			
-			IEdge edge = entry.getEdge();
 			
-			boolean eval;
-			
-			try {
-				eval = edge.getCondition().eval(theCase);
-				
-			} catch (NoAnswerException e) {
-				eval = false;
-			} catch (UnknownAnswerException e) {
-				eval = false;
-			}
+			ISupport support = entry.getSupport();
+			boolean eval = support.isValid(theCase);
 			
 			
 			//TODO !!!check support from other edges
@@ -463,7 +451,7 @@ public class FluxSolver implements PSMethod {
 			// TODO ? search for and collapse only completely wrong subpathes??
 			if (!eval) {
 				
-				log("Edge is no longer true: " + edge);
+				log("Support is no longer valid: " + support);
 				earliestWrongPathEntry = entry;
 			}
 			

@@ -23,9 +23,9 @@ package de.d3web.kernel.psMethods.diaFlux;
 import java.io.Serializable;
 
 import de.d3web.kernel.psMethods.diaFlux.flow.IEdge;
-import de.d3web.kernel.psMethods.diaFlux.flow.IEdgeData;
 import de.d3web.kernel.psMethods.diaFlux.flow.INode;
 import de.d3web.kernel.psMethods.diaFlux.flow.INodeData;
+import de.d3web.kernel.psMethods.diaFlux.flow.ISupport;
 
 /**
  * 
@@ -39,7 +39,7 @@ public class PathEntry implements Serializable {
 	private final PathEntry path;
 	private final PathEntry stack;
 	private final INodeData nodeData;
-	private final IEdge edge;
+	private final ISupport support;
 
 	/**
 	 * @param path
@@ -47,11 +47,11 @@ public class PathEntry implements Serializable {
 	 * @param nodeData 
 	 * @param edge 
 	 */
-	public PathEntry(PathEntry path, PathEntry stack, INodeData nodeData, IEdge edge) {
+	public PathEntry(PathEntry path, PathEntry stack, INodeData nodeData, ISupport support) {
 		this.path = path;
 		this.stack = stack;
 		this.nodeData = nodeData;
-		this.edge = edge;
+		this.support = support; 
 	}
 	
 	public PathEntry getPath() {
@@ -62,9 +62,17 @@ public class PathEntry implements Serializable {
 		return stack;
 	}
 	
-	public IEdge getEdge() {
-		return edge;
+//	public IEdge getEdge() {
+//		return edge;
+//	}
+	
+	/**
+	 * @return the support
+	 */
+	public ISupport getSupport() {
+		return support;
 	}
+	
 	
 	public INodeData getNodeData() {
 		return nodeData;

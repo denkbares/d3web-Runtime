@@ -29,7 +29,6 @@ import de.d3web.kernel.psMethods.diaFlux.PathEntry;
 public class NodeData extends XPSCaseObject implements INodeData {
 
 	
-	private boolean isActive;
 	private final List<PathEntry> support;
 	private int refCounter;
 	
@@ -37,7 +36,6 @@ public class NodeData extends XPSCaseObject implements INodeData {
 		super(node);
 		
 		support = new ArrayList<PathEntry>(2);
-		isActive = false;
 		refCounter = 0;
 	}
 
@@ -48,7 +46,7 @@ public class NodeData extends XPSCaseObject implements INodeData {
 
 	@Override
 	public boolean isActive() {
-		return isActive;
+		return !support.isEmpty();
 	}
 	
 	
@@ -81,7 +79,7 @@ public class NodeData extends XPSCaseObject implements INodeData {
 	
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "[" + getNode() + ", active=" + isActive + ", refs=" + getReferenceCounter()+ "]" + Integer.toHexString(hashCode());
+		return getClass().getSimpleName() + "[" + getNode() + ", active=" + isActive() + ", refs=" + getReferenceCounter()+ "]" + Integer.toHexString(hashCode());
 	}
 
 }

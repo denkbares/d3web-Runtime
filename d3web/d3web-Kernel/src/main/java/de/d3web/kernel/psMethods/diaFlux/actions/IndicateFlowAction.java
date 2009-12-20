@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.NamedObject;
 import de.d3web.kernel.domainModel.RuleAction;
+import de.d3web.kernel.domainModel.RuleComplex;
 import de.d3web.kernel.psMethods.PSMethod;
 import de.d3web.kernel.psMethods.diaFlux.FluxSolver;
 import de.d3web.kernel.psMethods.diaFlux.flow.Flow;
@@ -44,8 +45,8 @@ public class IndicateFlowAction extends RuleAction {
 	private final String flowName;
 	private final String startNodeName;
 
-	public IndicateFlowAction(String flow, String node) {
-		super(null);
+	public IndicateFlowAction(RuleComplex rule, String flow, String node) {
+		super(rule);
 		
 		this.flowName = flow;
 		this.startNodeName = node;
@@ -53,7 +54,7 @@ public class IndicateFlowAction extends RuleAction {
 
 	@Override
 	public RuleAction copy() {
-		return new IndicateFlowAction(flowName, startNodeName);
+		return new IndicateFlowAction(getCorrespondingRule(), flowName, startNodeName);
 	}
 
 	@Override
@@ -64,7 +65,7 @@ public class IndicateFlowAction extends RuleAction {
 		
 		StartNode startNode = findStartNode(theCase);
 		
-		FluxSolver.getInstance().indicateFlow(startNode, theCase);
+		FluxSolver.getInstance().indicateFlow(getCorrespondingRule(), startNode, theCase);
 
 	}
 	
