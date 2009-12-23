@@ -840,18 +840,15 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
      */
     @Deprecated
     private static IDObject searchIdInList(List list, String id) {
-	Logger
-		.getLogger(KnowledgeBase.class.getName())
-		.finer(
-			"Searching object for id in list(linear time) as it wasnt hashed "
-				+ id
-				+ " shouldnt happen! (only in junit tests, which need to be refactored)");
 	if (id == null) {
 	    return null;
 	}
 	for (Object object : list) {
 	    if (object instanceof IDObject) {
 		if (((IDObject) object).getId().equalsIgnoreCase(id)) {
+			Logger.getLogger(KnowledgeBase.class.getName())
+			.warning("Found object for id '" + id + "' in list (linear time) as it wasn't hashed."
+					+ "This shouldn't happen! (only in junit tests, which need to be refactored)");
 		    return (IDObject) object;
 		}
 	    }
