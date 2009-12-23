@@ -842,7 +842,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
     private static IDObject searchIdInList(List list, String id) {
 	Logger
 		.getLogger(KnowledgeBase.class.getName())
-		.warning(
+		.finer(
 			"Searching object for id in list(linear time) as it wasnt hashed "
 				+ id
 				+ " shouldnt happen! (only in junit tests, which need to be refactored)");
