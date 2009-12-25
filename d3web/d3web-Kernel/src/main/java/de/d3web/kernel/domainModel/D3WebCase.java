@@ -61,8 +61,7 @@ import de.d3web.kernel.supportknowledge.Properties;
  * All actions have to be stated through the XPSCase (especially the setValue
  * operations for knowledge base objects!) <BR>
  * The XPSCase always knows the state of the <BR>
- * <LI>problem-solvers (which are used)
- * <LI>questions (answerd, to be answerd),
+ * <LI>problem-solvers (which are used) <LI>questions (answerd, to be answerd),
  * <LI>diagnoses (state with respect to the problem-solvers) <br>
  * It's important to set values through this facade and not directly via the
  * knowledge base objects, because XPSCase is responsible for the propagation
@@ -75,7 +74,7 @@ public class D3WebCase implements XPSCase {
 
 	private final KnowledgeBase kb;
 	private final DefaultPropagationController propagationController;
-	private Map<CaseObjectSource, XPSCaseObject> dynamicStore;	
+	private Map<CaseObjectSource, XPSCaseObject> dynamicStore;
 
 	private List<Diagnosis> establishedDiagnoses = new LinkedList<Diagnosis>();
 	private List<Question> answeredQuestions = new LinkedList<Question>();
@@ -83,7 +82,7 @@ public class D3WebCase implements XPSCase {
 	private List<PSMethod> usedPSMethods;
 
 	private Set<Class<? extends KnowledgeSlice>> finishReasons;
-	//private boolean finished = false;
+	// private boolean finished = false;
 
 	private QASetManager qaSetManager = null;
 	private QASetManagerFactory qamFactory = null;
@@ -96,24 +95,53 @@ public class D3WebCase implements XPSCase {
 	private DCMarkup dcMarkup;
 	private Properties properties;
 
-	private static Collection<PSMethod> commonPSMethods = new LinkedList<PSMethod>(Arrays.asList(
+	private static LinkedList<PSMethod> commonPSMethods = new LinkedList<PSMethod>(
+			Arrays.asList(
 			PSMethodUserSelected.getInstance(),
-			new PSMethodDialogControlling(), PSMethodContraIndication.getInstance(),
-			PSMethodNextQASet.getInstance(), PSMethodQuestionSetter.getInstance(),
-			PSMethodSuppressAnswer.getInstance(), PSMethodHeuristic.getInstance(),
-			PSMethodInit.getInstance(), PSMethodParentQASet.getInstance(), PSMethodXCL.getInstance(),
+			new PSMethodDialogControlling(),
+			PSMethodContraIndication.getInstance(),
+			PSMethodNextQASet.getInstance(),
+			PSMethodQuestionSetter.getInstance(),
+			PSMethodSuppressAnswer.getInstance(),
+			PSMethodHeuristic.getInstance(),
+			PSMethodInit.getInstance(),
+			PSMethodParentQASet.getInstance(),
+			PSMethodXCL.getInstance(),
 			FluxSolver.getInstance()));
 
 	/**
-	 * Adds a {@link PSMethod} instance to the list of default PSMethod 
-	 * when creating a new case.
-	 *  
-	 * @param method the PSMethod to be added
+	 * Adds a {@link PSMethod} instance to the list of default PSMethod when
+	 * creating a new case.
+	 * 
+	 * @param method
+	 *            the PSMethod to be added
 	 */
 	public static void addCommonPSMethod(PSMethod method) {
 		commonPSMethods.add(method);
 	}
+
+	/**
+	 * Adds a {@link PSMethod} instance to the list of default PSMethod when
+	 * creating a new case. The index is the position of the property
+	 * commonPSMethods where to add the PSMethod, and therefore the priority.
+	 * 
+	 * @param method
+	 *            the PSMethod to be added
+	 */
+	public static void addCommonPSMethod(PSMethod method, int index) {
+		commonPSMethods.add(index, method);
+	}
 	
+	/**
+	 * Returns the current common PSMethods. These PSMethods will be added 
+	 * to a newly created case as default PSMethods.
+	 * 
+	 * @return the current common (default) PSMethods
+	 */
+	public PSMethod[] getCommonPSMethods() {
+		return commonPSMethods.toArray(new PSMethod[commonPSMethods.size()]);
+	}
+
 	/**
 	 * Creates a new user case with the specified knowledge base. <br>
 	 * The default problem-solvers for each case are listed in static array
@@ -122,7 +150,7 @@ public class D3WebCase implements XPSCase {
 	D3WebCase(KnowledgeBase kb, QASetManagerFactory theQamFactory) {
 		this.kb = kb;
 		this.propagationController = new DefaultPropagationController(this);
-		
+
 		setQASetManagerFactory(theQamFactory);
 
 		properties = new Properties();
@@ -148,17 +176,18 @@ public class D3WebCase implements XPSCase {
 
 		// activate InitQASets
 		for (QASet qaSet : getKnowledgeBase().getInitQuestions()) {
-			//			//
-			//			// das ist irgendwie doppelt gemoppelt. Nachschauen, ob das
+			// //
+			// // das ist irgendwie doppelt gemoppelt. Nachschauen, ob das
 			// wirklich so gebraucht wird!!
-			//			//
-			//			addQASet(nextQASet, null, PSMethodInit.class);
+			// //
+			// addQASet(nextQASet, null, PSMethodInit.class);
 			qaSet.activate(this, null, PSMethodInit.class);
 		}
 		trace("\n------------------------------------------------\nNeuer Fall\n");
 	}
 
 	private String id = null;
+
 	/*
 	 * @see de.d3web.kernel.domainModel.IDReference#getId()
 	 */
@@ -203,7 +232,7 @@ public class D3WebCase implements XPSCase {
 
 		this.usedPSMethods.add(psmethod);
 		psmethod.init(this);
-		
+
 		PropagationContoller propagationContoller = getPropagationContoller();
 		propagationContoller.openPropagation();
 		try {
@@ -212,10 +241,12 @@ public class D3WebCase implements XPSCase {
 				Object[] newValue = getValue(question, null);
 				propagationContoller.propagate(question, oldValue, newValue, psmethod);
 			}
-			// TODO: das ist so viel zu aufwendig, wenn viele Lösungen sind. Man bräuchte eine Liste der bewerteten Lösungen im Fall (analog beantwortete Fragen)
+			// TODO: das ist so viel zu aufwendig, wenn viele Lösungen sind. Man
+			// bräuchte eine Liste der bewerteten Lösungen im Fall (analog
+			// beantwortete Fragen)
 			for (Diagnosis diagnosis : this.getDiagnoses()) {
 				if (DiagnosisState.UNCLEAR.equals(diagnosis.getState(this))) continue;
-				Object[] oldValue = new Object[] {DiagnosisState.UNCLEAR};
+				Object[] oldValue = new Object[] { DiagnosisState.UNCLEAR };
 				Object[] newValue = getValue(diagnosis, null);
 				propagationContoller.propagate(diagnosis, oldValue, newValue, psmethod);
 			}
@@ -271,14 +302,14 @@ public class D3WebCase implements XPSCase {
 
 	/**
 	 * @return a list of Diagnosis instances, which have the specified
-	 *         DiagnosisState. Only these diagnoses are considered, whose
-	 *         states have been set by one of the given PSMethods.
+	 *         DiagnosisState. Only these diagnoses are considered, whose states
+	 *         have been set by one of the given PSMethods.
 	 */
 	public List<Diagnosis> getDiagnoses(DiagnosisState state, List<? extends PSMethod> psMethods) {
 		List<Diagnosis> result = new LinkedList<Diagnosis>();
 		for (Diagnosis diag : getDiagnoses()) {
 			for (PSMethod psm : psMethods) {
-				if (psm.isContributingToResult() 
+				if (psm.isContributingToResult()
 						&& diag.getState(this, psm.getClass()).equals(state)) {
 					result.add(diag);
 					// do not need to look at the remaining psms
@@ -288,7 +319,7 @@ public class D3WebCase implements XPSCase {
 		}
 		return result;
 	}
-	
+
 	private QASetManagerFactory getQASetManagerFactory() {
 		return qamFactory;
 	}
@@ -324,7 +355,8 @@ public class D3WebCase implements XPSCase {
 		if (!getDiagnoses().contains(diagnosis) || !getUsedPSMethods().contains(psMethod))
 			return result;
 
-		List<? extends KnowledgeSlice> knowledge = diagnosis.getKnowledge(psMethod.getClass(), MethodKind.BACKWARD);
+		List<? extends KnowledgeSlice> knowledge = diagnosis.getKnowledge(
+				psMethod.getClass(), MethodKind.BACKWARD);
 
 		if (knowledge == null) {
 			return result;
@@ -356,9 +388,10 @@ public class D3WebCase implements XPSCase {
 			if (psm.getClass().equals(context)) {
 				return (PSMethod) psm;
 			}
-			
+
 		}
-		trace("<<<ERROR>>> XPSCase.getPSMethodInstance(): Instance for " + context + " not found.");
+		trace("<<<ERROR>>> XPSCase.getPSMethodInstance(): Instance for " + context
+				+ " not found.");
 		return null;
 	}
 
@@ -369,8 +402,10 @@ public class D3WebCase implements XPSCase {
 		if (qaSetManager == null) {
 			try {
 				qaSetManager = getQASetManagerFactory().createQASetManager(this);
-			} catch (Exception e) {
-				Logger.getLogger(this.getClass().getName()).throwing(this.getClass().getName(),
+			}
+			catch (Exception e) {
+				Logger.getLogger(this.getClass().getName()).throwing(
+						this.getClass().getName(),
 						"initializing dialog controller", e);
 				qaSetManager = null;
 			}
@@ -394,10 +429,11 @@ public class D3WebCase implements XPSCase {
 
 	/**
 	 * Checks if there are reasons for finishing the case.
+	 * 
 	 * @see XPSCase#isFinished()
 	 */
 	public boolean isFinished() {
-		return !finishReasons.isEmpty(); 
+		return !finishReasons.isEmpty();
 	}
 
 	/**
@@ -411,14 +447,15 @@ public class D3WebCase implements XPSCase {
 		// notify the dialog control if questions have been changed
 		// ugly implementation, use strategy pattern later
 		if (valuedObject instanceof Question) {
-			//removeQuestion((Question) valuedObject);
+			// removeQuestion((Question) valuedObject);
 			addAnsweredQuestions((Question) valuedObject);
 		}
 
 		// only propagate to ValuedObjects which are
 		// NamedObjects (and so have KnowledgeMaps
 		if (valuedObject instanceof NamedObject) {
-			this.propagationController.propagate((NamedObject) valuedObject, oldValue, newValue);
+			this.propagationController.propagate((NamedObject) valuedObject, oldValue,
+					newValue);
 		}
 	}
 
@@ -455,29 +492,31 @@ public class D3WebCase implements XPSCase {
 	 *            java.util.Collection
 	 */
 	public void setDialogControllingPSMethods(Collection<? extends PSMethod> newDialogControllingPSMethods) {
-		dialogControllingPSMethods = new LinkedList<PSMethod>(newDialogControllingPSMethods);
+		dialogControllingPSMethods = new LinkedList<PSMethod>(
+				newDialogControllingPSMethods);
 	}
 
 	/**
 	 * Adds a new reason for quiting the current case.
+	 * 
 	 * @see XPSCase#setFinished(boolean f)
 	 */
 	public void finish(Class<? extends KnowledgeSlice> reasonForFinishCase) {
-	    finishReasons.add(reasonForFinishCase);
+		finishReasons.add(reasonForFinishCase);
 	}
-	
+
 	public Set<Class<? extends KnowledgeSlice>> getFinishReasons() {
-	    return finishReasons;
+		return finishReasons;
 	}
-	
+
 	/**
-	 * Removes a specified reason from the set of
-	 * reasons for quiting the case.
+	 * Removes a specified reason from the set of reasons for quiting the case.
+	 * 
 	 * @param reasonForContinueCase
 	 */
 	public void continueCase(Class<? extends KnowledgeSlice> reasonForContinueCase) {
-	    if (finishReasons.contains(reasonForContinueCase))
-	        finishReasons.remove(reasonForContinueCase);
+		if (finishReasons.contains(reasonForContinueCase))
+			finishReasons.remove(reasonForContinueCase);
 	}
 
 	public void setQASetManager(QASetManager newQASetManager) {
@@ -521,12 +560,13 @@ public class D3WebCase implements XPSCase {
 		Object[] oldValue = getValue(valuedObject, null);
 		if (valuedObject instanceof Question) {
 			((Question) valuedObject).setValue(this, ruleContext, values);
-		} 
+		}
 		else {
 			valuedObject.setValue(this, values);
 		}
+		Object[] newValue = getValue(valuedObject, ruleContext.getProblemsolverContext());
 		notifyListeners(valuedObject, ruleContext);
-		propagateValue(valuedObject, oldValue, values);
+		propagateValue(valuedObject, oldValue, newValue);
 	}
 
 	/**
@@ -547,7 +587,7 @@ public class D3WebCase implements XPSCase {
 		Object[] oldValue = getValue(valuedObject, context);
 		if (valuedObject instanceof Diagnosis) {
 			((Diagnosis) valuedObject).setValue(this, values, context);
-		} 
+		}
 		else {
 			valuedObject.setValue(this, values);
 		}
@@ -558,7 +598,7 @@ public class D3WebCase implements XPSCase {
 
 	private Object[] getValue(ValuedObject valuedObject, Class<? extends PSMethod> context) {
 		if (valuedObject instanceof Diagnosis) {
-			return new DiagnosisState[] {((Diagnosis) valuedObject).getState(this)};
+			return new DiagnosisState[] { ((Diagnosis) valuedObject).getState(this) };
 		}
 		else if (valuedObject instanceof Question) {
 			return ((Question) valuedObject).getValue(this).toArray();
@@ -601,7 +641,9 @@ public class D3WebCase implements XPSCase {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.d3web.kernel.supportknowledge.DCMarkedUp#setDCDMarkup(de.d3web.kernel.supportknowledge.DCMarkup)
+	 * @see
+	 * de.d3web.kernel.supportknowledge.DCMarkedUp#setDCDMarkup(de.d3web.kernel
+	 * .supportknowledge.DCMarkup)
 	 */
 	public void setDCDMarkup(DCMarkup dcMarkup) {
 		this.dcMarkup = dcMarkup;
@@ -619,15 +661,16 @@ public class D3WebCase implements XPSCase {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.d3web.kernel.misc.PropertiesAdapter#setProperties(de.d3web.kernel.misc.Properties)
+	 * @see
+	 * de.d3web.kernel.misc.PropertiesAdapter#setProperties(de.d3web.kernel.
+	 * misc.Properties)
 	 */
 	public void setProperties(Properties properties) {
 		this.properties = properties;
 	}
-	
-	
+
 	// ******************** event notification *********************
-	
+
 	Collection<XPSCaseEventListener> listeners = new LinkedList<XPSCaseEventListener>();
 
 	/**
@@ -644,8 +687,8 @@ public class D3WebCase implements XPSCase {
 			listeners.remove(listener);
 		}
 	}
-	
-	private  void notifyListeners(ValuedObject o, Object context) {
+
+	private void notifyListeners(ValuedObject o, Object context) {
 		for (XPSCaseEventListener listener : listeners) {
 			listener.notify(this, o, context);
 		}
@@ -660,5 +703,5 @@ public class D3WebCase implements XPSCase {
 	}
 
 	// ******************** /event notification ********************
-	
+
 }
