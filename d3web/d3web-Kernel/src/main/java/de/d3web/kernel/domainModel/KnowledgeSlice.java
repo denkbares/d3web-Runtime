@@ -34,17 +34,20 @@ public interface KnowledgeSlice extends java.io.Serializable {
 	 * Provide a unique id for each part of knowledge.
 	 * @return java.lang.String
 	 */
+	// TODO: vb: discuss whether each slice should have an id? what is the sense behind that?
 	String getId();
 
 	/**
 	 * Creation date: (30.08.00 17:23:04)
 	 * @return the class of the PSMethod in which this KnowledgeSlice makes sense.
 	 */
+	//TODO: vb: Either (1) delete this method (only used for rules) or (2) change addKnowledge in a way that the context need not to be specified. 
 	public Class getProblemsolverContext();
 
 	/**
 	 * Has this knowledge already been used? (e.g. did a rule fire?)
 	 */
+	//TODO: vb: delete this method. It cannot is not useful and only used by unused methods or test methods. Does any one know the aimed goal to be reach by having this method??? 
 	public boolean isUsed(XPSCase theCase);
 
 	
@@ -52,11 +55,13 @@ public interface KnowledgeSlice extends java.io.Serializable {
 	 * Prompts the knowledgeslice to remove itsself from all objects
 	 *
 	 */
+	// TODO: vb: discuss whether this method should be defined. It forces the slices to know where they are added. This may be useful for rules but not appropriate for general knowledge slices. 
 	public void remove(); 
 	
 	/**
 	 * generic verbalization method
 	 * @return java.lang.String
 	 */
+	// TODO: vb: definitely remove this. toString should NOT be specified with a new sematics (here: xml!) 
 	public String toString();
 }

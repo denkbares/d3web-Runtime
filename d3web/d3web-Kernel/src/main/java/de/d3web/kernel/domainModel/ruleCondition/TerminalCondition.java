@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.d3web.kernel.domainModel.IDObject;
+import de.d3web.kernel.domainModel.NamedObject;
+import de.d3web.kernel.domainModel.qasets.Question;
 /**
  * Abstract condition for all terminal conditions. A terminal condition
  * contains no sub-conditions, but represents a single proposition.
@@ -33,14 +35,14 @@ import de.d3web.kernel.domainModel.IDObject;
  * @author Michael Wolber, joba
  */
 public abstract class TerminalCondition extends AbstractCondition {
-	private List<IDObject> terminal = new ArrayList<IDObject>(1);
+	private List<NamedObject> terminal = new ArrayList<NamedObject>(1);
 
 	/**
 	 * Creates a new terminal condition with the specified
 	 * proposition.
 	 * @param conds the specified condition
 	 */
-	protected TerminalCondition(IDObject idobject) {
+	protected TerminalCondition(NamedObject idobject) {
 		terminal.add(idobject);
 	}
 
@@ -49,7 +51,7 @@ public abstract class TerminalCondition extends AbstractCondition {
 	 * for instance a question constrained by a specific value.
 	 * @return the terminal object of this condition 
 	 */
-	public List getTerminalObjects() {
+	public List<? extends NamedObject> getTerminalObjects() {
 		return terminal;
 	}
 

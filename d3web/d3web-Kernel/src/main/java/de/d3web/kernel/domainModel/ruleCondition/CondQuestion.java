@@ -41,7 +41,7 @@ public abstract class CondQuestion extends TerminalCondition {
 	 * the specified {@link IDObject}.
 	 * @param idobject the specified {@link IDObject}
 	 */
-	protected CondQuestion(IDObject idobject) {
+	protected CondQuestion(Question idobject) {
 		super(idobject);
 		question = (Question) idobject;
 	}
