@@ -121,10 +121,8 @@ public class XclVerbalizer implements Verbalizer {
                 }
 
                 text.append("  " + v.verbalize(cond, RenderingFormat.PLAIN_TEXT, parameter)
-                        + " " + weight);
-                if (text.toString().endsWith(" ")) {
-                	text.replace(text.length() -1 , text.length(), "");
-                }
+                        + (weight.equals("") ? "" : " " + weight));
+
                 text.append(",\n");
             }
         }
