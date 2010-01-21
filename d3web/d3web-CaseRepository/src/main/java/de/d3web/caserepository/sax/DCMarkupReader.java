@@ -144,7 +144,7 @@ public class DCMarkupReader extends AbstractTagReader {
 		// this should have the effect, that only once per case
 		// this reader sets the case-DCMarkup
 		if (!dcMarkupSet) {
-			getCaseObject().setDCDMarkup(currentDCMarkup);
+			getCaseObject().setDCMarkup(currentDCMarkup);
 			dcMarkupSet = true;
 		}
 		currentDCMarkup = null;

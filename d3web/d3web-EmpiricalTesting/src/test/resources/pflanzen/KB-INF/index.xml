@@ -1,0 +1,10 @@
+<Structure>
+<KnowledgeBase basic="kb/basic.xml">
+<Auxiliary loader="shared" ref="kb/shared.xml" />
+<Auxiliary loader="mminfo" ref="kb/mminfo.xml" />
+<Auxiliary loader="set-covering" ref="kb/set-covering.xml" />
+<Auxiliary loader="train" ref="kb/train.xml" />
+<Auxiliary loader="dialog-properties" ref="kb/dialog-properties.xml" />
+</KnowledgeBase>
+<CaseRepositories></CaseRepositories>
+</Structure>

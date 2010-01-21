@@ -37,9 +37,9 @@ import de.d3web.caserepository.addons.IExaminationBlocks;
 import de.d3web.caserepository.addons.train.ExaminationBlock;
 import de.d3web.caserepository.addons.train.ExaminationBlocks;
 import de.d3web.caserepository.sax.AbstractTagReader;
+import de.d3web.core.kpers.utilities.XMLTools;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.qasets.QContainer;
-import de.d3web.xml.utilities.XMLTools;
 
 /**
  * 22.09.2003 18:08:00

@@ -270,7 +270,7 @@ public class XMLRenderer {
 			Iterator ruleIter = knowledgeList.iterator();
 			LinkedList sortedRules = new LinkedList();
 			while(ruleIter.hasNext()) {
-				RuleComplex rc = (RuleComplex)ruleIter.next();
+				Rule rc = (Rule)ruleIter.next();
 				insertIntoSortedList(sortedRules,renderRuleComplex(rc,theCase,showStatus));
 			}
 			sb.append(getMergedString(sortedRules));
@@ -327,7 +327,7 @@ public class XMLRenderer {
 	 * Renders the explanation of a single RuleComplex.
 	 * If "showStatus" is true, the current status of the RuleComplex and all reasons will be regarded.
 	 */
-	public static StringBuffer renderRuleComplexExplanation(RuleComplex rc, XPSCase theCase, boolean showStatus) {
+	public static StringBuffer renderRuleComplexExplanation(Rule rc, XPSCase theCase, boolean showStatus) {
 		return (StringBuffer) renderRuleComplex(rc, theCase, showStatus).get(0);
 	}
 
@@ -464,7 +464,7 @@ public class XMLRenderer {
 			List sortedList = new LinkedList();
 			Iterator ruleIter = c.iterator();
 			while (ruleIter.hasNext()) {
-				RuleComplex rc = (RuleComplex)ruleIter.next();
+				Rule rc = (Rule)ruleIter.next();
 				insertIntoSortedList(sortedList,renderRuleComplex(rc,theCase,showStatus));
 			}
 			// merge the strings in reverse order
@@ -520,7 +520,7 @@ public class XMLRenderer {
 	 * @param showStatus
 	 * @return List (List of (StringBuffer) or List of (StringBuffer,Double)
 	 */
-	private static List renderRuleComplex(RuleComplex rc, XPSCase theCase, boolean showStatus) {
+	private static List renderRuleComplex(Rule rc, XPSCase theCase, boolean showStatus) {
 		List returnList = new LinkedList();
 		StringBuffer sb = new StringBuffer();
 		sb.append("<KnowledgeSlice ID=\"" + rc.getId() + "\"");
@@ -573,7 +573,7 @@ public class XMLRenderer {
 	 * @param rc
 	 * @return List (List of (StringBuffer) or List of (StringBuffer,Double)
 	 */
-	public static List renderAction(RuleComplex rc) {
+	public static List renderAction(Rule rc) {
 		List returnList = new LinkedList();
 		StringBuffer sb = new StringBuffer();
 		sb.append("<Action>");

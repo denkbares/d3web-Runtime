@@ -21,6 +21,7 @@
 package de.d3web.empiricalTesting.caseConverter;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -38,7 +39,7 @@ import de.d3web.empiricalTesting.TestSuite;
  */
 public class CaseObjectToTestSuiteXML extends CaseObjectConverter{
 	
-	public static void main(String[] args) throws MalformedURLException {
+	public static void main(String[] args) throws IOException {
 		String workspace  = "d:/eigene projekte/temp/";
 		String knowledgePath = "pflanzen.jar";
 		String caseBase   = "pflanzen_cases_big_rerun.xml";

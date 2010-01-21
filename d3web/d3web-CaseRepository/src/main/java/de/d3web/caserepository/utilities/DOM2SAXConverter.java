@@ -24,6 +24,7 @@
 package de.d3web.caserepository.utilities;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
@@ -37,9 +38,9 @@ import de.d3web.caserepository.addons.train.writer.ContentsWriter;
 import de.d3web.caserepository.addons.train.writer.ExaminationBlocksWriter;
 import de.d3web.caserepository.addons.train.writer.MultimediaWriter;
 import de.d3web.caserepository.dom.CaseObjectListCreator;
+import de.d3web.core.kpers.PersistenceManager;
 import de.d3web.kernel.domainModel.KnowledgeBase;
 import de.d3web.kernel.supportknowledge.Property;
-import de.d3web.persistence.xml.PersistenceManager;
 
 /**
  * 26.11.2003 18:01:24
@@ -47,7 +48,7 @@ import de.d3web.persistence.xml.PersistenceManager;
  */
 public class DOM2SAXConverter {
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		
 		String kbFilename = "";
 		String casesInFilename = "";
@@ -74,11 +75,11 @@ public class DOM2SAXConverter {
 		
 	}
 	
-	public static void convert(String kbFilename, String casesInFilename, String casesOutFilename) throws MalformedURLException {
+	public static void convert(String kbFilename, String casesInFilename, String casesOutFilename) throws IOException {
 		
 		URL kbURL = new URL("jar", "", 0, new File(kbFilename).toURI().toURL().toString() + "!/");
-		PersistenceManager persistenceManager = new PersistenceManager();
-		KnowledgeBase kb = persistenceManager.load(kbURL);
+		PersistenceManager persistenceManager = de.d3web.core.kpers.PersistenceManager.getInstance();
+		KnowledgeBase kb = persistenceManager.load(new File(kbURL.getFile()));
 
 		CaseObjectListCreator crh = new CaseObjectListCreator();
 //		crh.addAdditionalCreator("Multimedia", new MultimediaCreator());

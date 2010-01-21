@@ -22,7 +22,6 @@ package de.d3web.caserepository.dom;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
@@ -36,7 +35,6 @@ import de.d3web.kernel.domainModel.KnowledgeBase;
 import de.d3web.persistence.progress.ProgressEvent;
 import de.d3web.persistence.progress.ProgressListener;
 import de.d3web.persistence.progress.ProgressNotifier;
-import de.d3web.persistence.xml.PersistenceManager;
 
 /**
  * Creates the CaseObjects defined in one XML-File using CaseObjectCreator.
@@ -205,7 +203,7 @@ public class CaseObjectListCreator implements ProgressNotifier {
 		
 
 		// notify progress listeners: 0
-		fireProgressEvent(new ProgressEvent(this, ProgressEvent.START,ProgressEvent.OPERATIONTYPE_LOAD,PersistenceManager.resourceBundle.getString("d3web.Persistence.CaseObjectListCreator.loadCase"),aktProg, maxProg));
+		fireProgressEvent(new ProgressEvent(this, ProgressEvent.START,ProgressEvent.OPERATIONTYPE_LOAD,"Loading case object",aktProg, maxProg));
 		
 		
 		for (int i = 0; i < nl2.getLength(); i++) {
@@ -216,13 +214,13 @@ public class CaseObjectListCreator implements ProgressNotifier {
 			caseObjects.add(caseObject);
 			// notify progress listeners: i+1
 			fireProgressEvent(new ProgressEvent(this, ProgressEvent.UPDATE,ProgressEvent.OPERATIONTYPE_LOAD,
-				PersistenceManager.resourceBundle.getString("d3web.Persistence.CaseObjectListCreator.loadCaseObject")
-				+ (aktProg++)+ PersistenceManager.resourceBundle.getString("d3web.Persistence.CaseObjectListCreator.loadCaseObjectOf")+maxProg,aktProg, maxProg));
+				"Loading case object: object "
+				+ (aktProg++)+ " of "+maxProg,aktProg, maxProg));
 		
 
 		}
 		// Notify done to progress listeners
-		fireProgressEvent(new ProgressEvent(this, ProgressEvent.DONE,ProgressEvent.OPERATIONTYPE_LOAD,PersistenceManager.resourceBundle.getString("d3web.Persistence.CaseObjectListCreator.loadCase"),aktProg, maxProg));
+		fireProgressEvent(new ProgressEvent(this, ProgressEvent.DONE,ProgressEvent.OPERATIONTYPE_LOAD,"Loading case object",aktProg, maxProg));
 		
 
 		return caseObjects;

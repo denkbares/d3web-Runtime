@@ -38,7 +38,7 @@ import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.KnowledgeSlice;
 import de.d3web.kernel.domainModel.NamedObject;
 import de.d3web.kernel.domainModel.QASet;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.psMethods.MethodKind;
 import de.d3web.kernel.psMethods.heuristic.ActionHeuristicPS;
 import de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic;
@@ -203,7 +203,7 @@ public class ENode {
 			KnowledgeSlice rule = (KnowledgeSlice) rules.next();
 			if (rule.isUsed(getFactory().getXPSCase())) {	//FIXME: right method "isUsed"?
 				try {
-					if (((ActionHeuristicPS)((RuleComplex)rule).getAction()).getScore().aPrioriIsPositive()) {
+					if (((ActionHeuristicPS)((Rule)rule).getAction()).getScore().aPrioriIsPositive()) {
 						proReasons.add(EReason.createReason(getFactory(), rule));
 					} else {
 						contraReasons.add(EReason.createReason(getFactory(), rule));

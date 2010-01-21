@@ -20,26 +20,31 @@
 
 package de.d3web.config.persistence;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.io.OutputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import de.d3web.config.Config;
+import de.d3web.core.kpers.KnowledgeReader;
+import de.d3web.core.kpers.KnowledgeWriter;
+import de.d3web.core.kpers.progress.ProgressListener;
+import de.d3web.core.kpers.utilities.StringBufferInputStream;
+import de.d3web.core.kpers.utilities.StringBufferStream;
+import de.d3web.core.kpers.utilities.Util;
 import de.d3web.kernel.domainModel.KnowledgeBase;
 import de.d3web.kernel.supportknowledge.Property;
-import de.d3web.persistence.utilities.StringBufferInputStream;
-import de.d3web.persistence.utilities.StringBufferStream;
-import de.d3web.persistence.xml.AuxiliaryPersistenceHandler;
-import de.d3web.persistence.xml.writers.DCMarkupWriter;
 
 /**
  * @author mweniger
  */
-public class ConfigPersistenceHandler implements AuxiliaryPersistenceHandler{
+public class ConfigPersistenceHandler implements KnowledgeReader, KnowledgeWriter{
 	
 	private final static String id = "config";
 	private final static String defaultStorageLocation = "kb/config.xml";
@@ -58,49 +63,47 @@ public class ConfigPersistenceHandler implements AuxiliaryPersistenceHandler{
 		return defaultStorageLocation;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.d3web.persistence.xml.AuxiliaryPersistenceHandler#load(de.d3web.kernel.domainModel.KnowledgeBase, java.net.URL)
-	 */	
-	public KnowledgeBase load(KnowledgeBase kb, URL url) {
-								
-		Config conf = ConfigReader.createConfig(url, Config.TYPE_KNOWLEDGEBASE);
+	@Override
+	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listerner) throws IOException {
+		Config conf = ConfigReader.createConfig(stream, Config.TYPE_KNOWLEDGEBASE);
 		kb.getProperties().setProperty(Property.CONFIG, conf);
-		
-		return kb;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.d3web.persistence.xml.PersistenceHandler#save(de.d3web.kernel.domainModel.KnowledgeBase)
-	 */
-	public Document save(KnowledgeBase kb) {
-		
+	@Override
+	public void write(KnowledgeBase kb, OutputStream stream, ProgressListener listerner) throws IOException {
 		Config conf = (Config) kb.getProperties().getProperty(Property.CONFIG);
 		if (conf == null)
-			return null;
+			return;
 			
 		StringBuffer sb = new StringBuffer();
 		
 		sb.append("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>");
 		sb.append("<KnowledgeBase system=\"d3web\" type=\"" + getId() + "\">");
-		sb.append(DCMarkupWriter.getInstance().getXMLString(kb.getDCMarkup()));
+//		sb.append(DCMarkupWriter.getInstance().getXMLString(kb.getDCMarkup()));
+		//TODO: Warum wir das DCMARKUP hier nochmal gespeichert?
 
 		ConfigWriter.write(conf, sb);
 		
 		sb.append("</KnowledgeBase>");
-		
 		try {
-
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			InputStream stream = new StringBufferInputStream(new StringBufferStream(sb));
-			Document dom = builder.parse(stream);
-			return dom;
-
-		} catch (Exception e) {
-			System.err.println("Exception " + e);
+			InputStream inputstream = new StringBufferInputStream(new StringBufferStream(sb));
+			Document dom = builder.parse(inputstream);
+			Util.writeDocumentToOutputStream(dom, stream);
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return null;
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
+	}
 
+	@Override
+	public int getEstimatedSize(KnowledgeBase kb) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

@@ -241,7 +241,7 @@ public class MultimediaSAXReader extends AbstractTagReader {
 		    warnFeatureTag++;
 		}
 		
-		q = getKnowledgeBase().searchQuestions(qS);
+		q = getKnowledgeBase().searchQuestion(qS);
 		if (q == null) {
 		    q = getKnowledgeBase().searchQContainers(qS);
 		    if (q == null)

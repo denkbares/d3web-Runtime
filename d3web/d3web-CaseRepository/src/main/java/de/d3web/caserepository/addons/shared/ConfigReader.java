@@ -34,7 +34,7 @@ import org.xml.sax.Attributes;
 
 import de.d3web.caserepository.sax.AbstractTagReader;
 import de.d3web.config.Config;
-import de.d3web.xml.utilities.XMLTools;
+import de.d3web.core.kpers.utilities.XMLTools;
 
 /**
  * 24.11.2003 11:40:22

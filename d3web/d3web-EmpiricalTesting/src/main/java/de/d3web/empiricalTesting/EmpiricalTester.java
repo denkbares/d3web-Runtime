@@ -21,18 +21,18 @@
 package de.d3web.empiricalTesting;
 
 import java.io.File;
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.util.List;
 
 import de.d3web.caseGeneration.HeuristicScoreRatingStrategy;
 import de.d3web.caseGeneration.InterviewBot;
+import de.d3web.core.kpers.PersistenceManager;
+import de.d3web.core.kpers.progress.ConsoleProgressListener;
 import de.d3web.empiricalTesting.caseConverter.CaseObjectToKnOffice;
 import de.d3web.empiricalTesting.caseConverter.CaseObjectToTestSuiteXML;
 import de.d3web.empiricalTesting.caseVisualization.dot.DDBuilder;
 import de.d3web.empiricalTesting.caseVisualization.jung.JUNGCaseVisualizer;
 import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.persistence.xml.PersistenceManager;
-import de.d3web.persistence.xml.XCLModelPersistenceHandler;
 
 public class EmpiricalTester {
 	
@@ -93,9 +93,10 @@ public class EmpiricalTester {
 	 * 
 	 * The generated sequential test cases are stored in the xml file
 	 * and the txt file which are specified above.
-	 * @throws Exception 
+	 * @throws IOException 
 	 */
-	public static void demoBotTestCases() throws Exception {
+	public static void demoBotTestCases() throws 
+		Exception {
 		
 		KnowledgeBase kb = loadKnowledgeBase(workspace + kbFile);
 	
@@ -114,9 +115,9 @@ public class EmpiricalTester {
 	 * Demo that generates a visualization of the specified
 	 * test suite using JUNGCaseVisualizer. The visualization 
 	 * is saved in a PDF file at the location specified above.
-	 * @throws MalformedURLException
+	 * @throws IOException 
 	 */
-	public static void demoCaseVisualization() throws MalformedURLException {
+	public static void demoCaseVisualization() throws IOException {
 		
 		KnowledgeBase kb = loadKnowledgeBase(workspace + kbFile);
 		TestSuite TS = new TestSuite();
@@ -131,9 +132,9 @@ public class EmpiricalTester {
 	 * Demo that generates a visualization of the specified
 	 * test suite using DDBuilder. The visualization is
 	 * saved in DOT format to the file specified above.
-	 * @throws MalformedURLException
+	 * @throws IOException 
 	 */
-	public static void demoBuildDDTree() throws MalformedURLException {
+	public static void demoBuildDDTree() throws IOException {
 		
 		KnowledgeBase kb = loadKnowledgeBase(workspace + kbFile);
 		TestSuite TS = new TestSuite();
@@ -148,13 +149,12 @@ public class EmpiricalTester {
 	 * Loads the KnowledgeBase.
 	 * @param kbPath URL-formatted String representing the path to the KnowledgeBase
 	 * @return the loaded KnowledgeBase
-	 * @throws MalformedURLException
+	 * @throws IOException 
 	 */
 	private static KnowledgeBase loadKnowledgeBase(String kbPath)
-			throws MalformedURLException {
+			throws IOException {
 		PersistenceManager pm = PersistenceManager.getInstance();
-		pm.addPersistenceHandler(new XCLModelPersistenceHandler());
-		KnowledgeBase kb = pm.load(new File(kbPath).toURI().toURL());
+		KnowledgeBase kb = pm.load(new File(kbPath), new ConsoleProgressListener());
 		return kb;
 	}
 	

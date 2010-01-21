@@ -51,7 +51,7 @@ public class QuestionImageMapRendererUtils {
 
 	private static boolean allQuestionsInImageAnswered(Image image, XPSCase theCase) {
 		for (Region r : image.getRegions()) {
-			Question q = theCase.getKnowledgeBase().searchQuestions(r.getQuestionID());
+			Question q = theCase.getKnowledgeBase().searchQuestion(r.getQuestionID());
 			if (q != null && !q.isDone(theCase)) {
 				return false;
 			}
@@ -207,7 +207,7 @@ public class QuestionImageMapRendererUtils {
 		for (Region region : image.getRegions()) {
 
 			List<Answer> answers = currentAnswerIDsForQuestionID(region.getQuestionID(), theCase, qList);
-			Question q = theCase.getKnowledgeBase().searchQuestions(region.getQuestionID());
+			Question q = theCase.getKnowledgeBase().searchQuestion(region.getQuestionID());
 
 			ImageMapAnswerIcon answerImage = getActualAnswerImage(image, answers);
 			String imageSrc = getImageSrc(answerImage, srcDir);
@@ -320,7 +320,7 @@ public class QuestionImageMapRendererUtils {
 				writer.startElement("div", component);
 				writer.writeAttribute("id", "imgmap_q_" + idsInImage + "_error", "id");
 				writer.writeAttribute("class", "validationerror", "class");
-				Question q = theCase.getKnowledgeBase().searchQuestions(qID);
+				Question q = theCase.getKnowledgeBase().searchQuestion(qID);
 				if (q != null) {
 					writer.writeText(q.getText() + ": " + msg.getSummary(), "value");
 				} else {

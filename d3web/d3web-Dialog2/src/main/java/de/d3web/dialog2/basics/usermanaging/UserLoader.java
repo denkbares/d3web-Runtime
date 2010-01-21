@@ -32,8 +32,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import de.d3web.core.kpers.utilities.InputFilter;
 import de.d3web.dialog2.basics.settings.ResourceRepository;
-import de.d3web.xml.utilities.InputFilter;
 
 public class UserLoader {
 

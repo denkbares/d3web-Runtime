@@ -118,7 +118,7 @@ public class CaseConverter {
 		}
 
 		if (copyDCMarkup) {
-			ret.setDCDMarkup((DCMarkup) cobj.getDCMarkup().clone());
+			ret.setDCMarkup((DCMarkup) cobj.getDCMarkup().clone());
 		}
 		if (copyProperties) {
 			ret.setProperties(PropertiesCloner.getInstance().cloneProperties(cobj.getProperties()));
@@ -191,7 +191,7 @@ public class CaseConverter {
 		addDiagnosesToSolutions(ret, theCase, DiagnosisState.EXCLUDED);
 
 		if (copyDCMarkup) {
-			ret.setDCDMarkup((DCMarkup) theCase.getDCMarkup().clone());
+			ret.setDCMarkup((DCMarkup) theCase.getDCMarkup().clone());
 		}
 		if (copyProperties) {
 			ret.setProperties(PropertiesCloner.getInstance().cloneProperties(

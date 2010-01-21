@@ -37,7 +37,7 @@ import de.d3web.dialog2.util.DialogUtils;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.psMethods.MethodKind;
 import de.d3web.kernel.psMethods.heuristic.ActionHeuristicPS;
 import de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic;
@@ -134,8 +134,8 @@ public class ExplanationRenderer extends Renderer {
 		// sort by score
 		Comparator<KnowledgeSlice> explComp = new Comparator<KnowledgeSlice>() {
 		    public int compare(KnowledgeSlice a, KnowledgeSlice b) {
-			RuleComplex ra = (RuleComplex) a;
-			RuleComplex rb = (RuleComplex) b;
+			Rule ra = (Rule) a;
+			Rule rb = (Rule) b;
 			if (ra.getAction() instanceof ActionHeuristicPS
 				&& rb.getAction() instanceof ActionHeuristicPS) {
 			    ActionHeuristicPS a_ac = (ActionHeuristicPS) ra
@@ -162,7 +162,7 @@ public class ExplanationRenderer extends Renderer {
 			"explanationtable");
 		for (Iterator<? extends KnowledgeSlice> iter = knowledgeList
 			.iterator(); iter.hasNext();) {
-		    RuleComplex rc = (RuleComplex) iter.next();
+		    Rule rc = (Rule) iter.next();
 
 		    writer.startElement("tr", component);
 

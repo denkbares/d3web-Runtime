@@ -274,7 +274,6 @@ public interface CaseObject
 	public void setContents(IContents c);
 
     public DCMarkup getDCMarkup();
-    public void setDCDMarkup(DCMarkup dcData);
     
 	public IAdditionalTrainData getAdditionalTrainData();
 	public void setAdditionalTrainData(IAdditionalTrainData atd);

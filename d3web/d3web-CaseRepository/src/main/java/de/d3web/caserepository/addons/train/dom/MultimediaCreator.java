@@ -197,7 +197,7 @@ public class MultimediaCreator implements AdditionalCaseObjectCreator {
 												featureNode,
 												"question",
 												"Feature: Attribute question is missing");
-										Question quest = creator.getKnowledgeBase().searchQuestions(question);
+										Question quest = creator.getKnowledgeBase().searchQuestion(question);
 										if (quest == null) {
 											Logger.getLogger(MultimediaCreator.class.getName()).warning(
 												"MultimediaCreator.process: no question found for "

@@ -53,7 +53,7 @@ public class BotHelper {
 	public void setCaseValue(XPSCase theCase, String questionID, String answerID)
 			throws Exception {
 		QuestionChoice q = (QuestionChoice) theCase.getKnowledgeBase()
-				.searchQuestions(questionID);
+				.searchQuestion(questionID);
 		if (answerID != null) {
 			AnswerChoice a = findAnswer(q, answerID);
 			setCaseValue(theCase, q, a);

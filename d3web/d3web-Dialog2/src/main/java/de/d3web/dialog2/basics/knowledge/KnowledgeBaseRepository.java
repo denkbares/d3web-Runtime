@@ -20,6 +20,7 @@
 
 package de.d3web.dialog2.basics.knowledge;
 
+import java.io.File;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -27,15 +28,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import de.d3web.config.persistence.ConfigPersistenceHandler;
-import de.d3web.dialog2.basics.persistence.DialogPersistenceManager;
+import de.d3web.core.kpers.PersistenceManager;
 import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.persistence.xml.AuxiliaryPersistenceHandler;
-import de.d3web.persistence.xml.KBPatchPersistenceHandler;
-import de.d3web.persistence.xml.PersistenceManager;
-import de.d3web.persistence.xml.XCLModelPersistenceHandler;
-import de.d3web.persistence.xml.mminfo.MMInfoPersistenceHandler;
-import de.d3web.persistence.xml.shared.SharedPersistenceHandler;
 
 /**
  * @author: Norman Brümmer
@@ -60,7 +54,7 @@ public class KnowledgeBaseRepository {
 
     private static KnowledgeBaseRepository instance = null;
 
-    private DialogPersistenceManager persistenceManager = null;
+    private PersistenceManager persistenceManager = null;
 
     public static Logger logger = Logger
 	    .getLogger(KnowledgeBaseRepository.class);
@@ -72,28 +66,11 @@ public class KnowledgeBaseRepository {
 	super();
 	knowledgeBasesById = new Hashtable<String, KnowledgeBase>();
 	knowledgeBaseDescriptorById = new Hashtable<String, KnowledgeBaseDescriptor>();
-
-	persistenceManager = DialogPersistenceManager.getInstance();
-
-	persistenceManager
-		.addPersistenceHandler(new KBPatchPersistenceHandler());
-	persistenceManager
-		.addPersistenceHandler(new MMInfoPersistenceHandler());
-	persistenceManager
-		.addPersistenceHandler(new SharedPersistenceHandler());
-	persistenceManager
-		.addPersistenceHandler(new ConfigPersistenceHandler());
-	persistenceManager.addPersistenceHandler(new XCLModelPersistenceHandler());
 	initialize();
     }
 
-    public void addAuxiliaryPersistenceHandler(
-	    AuxiliaryPersistenceHandler handler) {
-	persistenceManager.addPersistenceHandler(handler);
-    }
-
     public void addKnowledgeBase(String id, KnowledgeBase kb) {
-	knowledgeBasesById.put(id, kb);
+    	knowledgeBasesById.put(id, kb);
     }
 
     /**
@@ -128,7 +105,7 @@ public class KnowledgeBaseRepository {
 	}
 	KnowledgeBase kb = knowledgeBasesById.get(id);
 	if (kb == null) {
-	    kb = loadKnowledgeBase(knowledgeBaseDescriptorById.get(id), true);
+	    kb = loadKnowledgeBase(knowledgeBaseDescriptorById.get(id));
 	}
 	return kb;
     }
@@ -172,8 +149,7 @@ public class KnowledgeBaseRepository {
     /**
      * @return de.d3web.kernel.domainModel.KnowledgeBase
      */
-    private KnowledgeBase loadKnowledgeBase(KnowledgeBaseDescriptor desc,
-	    boolean patched) {
+    private KnowledgeBase loadKnowledgeBase(KnowledgeBaseDescriptor desc) {
 	KnowledgeBase ret = null;
 
 	if (desc == null) {
@@ -189,8 +165,7 @@ public class KnowledgeBaseRepository {
 		Class<?> kbClass = Class.forName(desc.getLocation());
 		ret = (KnowledgeBase) kbClass.newInstance();
 	    } else if (locationType.equalsIgnoreCase("jar")) {
-		ret = persistenceManager.load(new URL(desc.getLocation()),
-			patched, desc.getId());
+		ret = persistenceManager.load(new File(new URL(desc.getLocation()).getFile()));
 	    }
 
 	    if (ret != null) {
@@ -213,7 +188,7 @@ public class KnowledgeBaseRepository {
 	    logger.error("KB id was null! Cannot load it!");
 	    return null;
 	}
-	return loadKnowledgeBase(knowledgeBaseDescriptorById.get(id), patched);
+	return loadKnowledgeBase(knowledgeBaseDescriptorById.get(id));
 
     }
 
@@ -223,7 +198,7 @@ public class KnowledgeBaseRepository {
     }
 
     public KnowledgeBase loadKnowledgeBaseFromURL(URL url) throws Exception {
-	return persistenceManager.load(url, true);
+	return persistenceManager.load(new File(url.getFile()));
     }
 
     /**

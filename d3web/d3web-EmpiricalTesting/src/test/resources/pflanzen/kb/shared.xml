@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<KnowledgeBase system="D3" type="SharedKnowledge">
+<KnowledgeBaseDescriptor>
+<Descriptor name="DC.TITLE" value="Bestimmung krautiger Blütenpflanzen" />
+<Descriptor name="DC.RELATION" value="isVersionOf WB_ID_29238145450" />
+</KnowledgeBaseDescriptor>
+<KnowledgeSlice type="QuestionComparatorNumDivision">
+<Question ID="M1921" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCIndividual">
+<Question ID="M1916" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCIndividual">
+<Question ID="M1422" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCGrouped">
+<Question ID="M4830" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCIndividual">
+<Question ID="M2034" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCIndividual">
+<Question ID="M195" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorNumDivision">
+<Question ID="M202" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorNumIndividual">
+<Question ID="M204" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCIndividual">
+<Question ID="M196" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCScaled">
+<Question ID="M4679" />
+<scala>
+<scalavalue value="0.0" />
+<scalavalue value="10.0" />
+<scalavalue value="20.0" />
+<scalavalue value="30.0" />
+<scalavalue value="40.0" />
+<scalavalue value="50.0" />
+<scalavalue value="60.0" />
+<scalavalue value="70.0" />
+</scala>
+<constant value="70.0" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCIndividual">
+<Question ID="M1528" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCIndividual">
+<Question ID="M180" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCIndividual">
+<Question ID="M1515" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCIndividual">
+<Question ID="M1514" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCScaled">
+<Question ID="M1513" />
+<scala>
+<scalavalue value="0.0" />
+<scalavalue value="10.0" />
+<scalavalue value="20.0" />
+<scalavalue value="30.0" />
+</scala>
+<constant value="30.0" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorNumIndividual">
+<Question ID="M1531" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCScaled">
+<Question ID="M1419" />
+<scala>
+<scalavalue value="0.0" />
+<scalavalue value="32.0" />
+<scalavalue value="48.0" />
+<scalavalue value="56.0" />
+<scalavalue value="60.0" />
+</scala>
+<constant value="60.0" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCIndividual">
+<Question ID="M1434" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCIndividual">
+<Question ID="M1508" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCGrouped">
+<Question ID="M219" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCIndividual">
+<Question ID="M220" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCScaled">
+<Question ID="M221" />
+<scala>
+<scalavalue value="0.0" />
+<scalavalue value="10.0" />
+<scalavalue value="20.0" />
+<scalavalue value="30.0" />
+<scalavalue value="40.0" />
+<scalavalue value="50.0" />
+<scalavalue value="60.0" />
+</scala>
+<constant value="60.0" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCGrouped">
+<Question ID="M222" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCGrouped">
+<Question ID="M225" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCIndividual">
+<Question ID="M223" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCScaled">
+<Question ID="M224" />
+<scala>
+<scalavalue value="0.0" />
+<scalavalue value="10.0" />
+<scalavalue value="20.0" />
+</scala>
+<constant value="20.0" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorYN">
+<Question ID="M226" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorYN">
+<Question ID="M194" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCIndividual">
+<Question ID="M1536" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCIndividual">
+<Question ID="M1534" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCIndividual">
+<Question ID="M1535" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCScaled">
+<Question ID="M215" />
+<scala>
+<scalavalue value="0.0" />
+<scalavalue value="10.0" />
+<scalavalue value="20.0" />
+<scalavalue value="30.0" />
+<scalavalue value="40.0" />
+</scala>
+<constant value="40.0" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCGrouped">
+<Question ID="M214" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCIndividual">
+<Question ID="M1518" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCGrouped">
+<Question ID="M731" />
+<pairRelations>
+<pairRelation answer1="M731a1" answer2="M731a1" value="1" />
+<pairRelation answer1="M731a2" answer2="M731a1" value="0.64" />
+<pairRelation answer1="M731a2" answer2="M731a2" value="1" />
+<pairRelation answer1="M731a3" answer2="M731a1" value="0.16" />
+<pairRelation answer1="M731a3" answer2="M731a2" value="0.64" />
+<pairRelation answer1="M731a3" answer2="M731a3" value="1" />
+<pairRelation answer1="M731a4" answer2="M731a1" value="0.04" />
+<pairRelation answer1="M731a4" answer2="M731a2" value="0.16" />
+<pairRelation answer1="M731a4" answer2="M731a3" value="0.64" />
+<pairRelation answer1="M731a4" answer2="M731a4" value="1" />
+<pairRelation answer1="M731a5" answer2="M731a1" value="0" />
+<pairRelation answer1="M731a5" answer2="M731a2" value="0.04" />
+<pairRelation answer1="M731a5" answer2="M731a3" value="0.16" />
+<pairRelation answer1="M731a5" answer2="M731a4" value="0.64" />
+<pairRelation answer1="M731a5" answer2="M731a5" value="1" />
+<pairRelation answer1="M731a6" answer2="M731a1" value="0" />
+<pairRelation answer1="M731a6" answer2="M731a2" value="0" />
+<pairRelation answer1="M731a6" answer2="M731a3" value="0.04" />
+<pairRelation answer1="M731a6" answer2="M731a4" value="0.16" />
+<pairRelation answer1="M731a6" answer2="M731a5" value="0.64" />
+<pairRelation answer1="M731a6" answer2="M731a6" value="1" />
+<pairRelation answer1="M731a7" answer2="M731a1" value="0" />
+<pairRelation answer1="M731a7" answer2="M731a2" value="0" />
+<pairRelation answer1="M731a7" answer2="M731a3" value="0" />
+<pairRelation answer1="M731a7" answer2="M731a4" value="0.04" />
+<pairRelation answer1="M731a7" answer2="M731a5" value="0.16" />
+<pairRelation answer1="M731a7" answer2="M731a6" value="0.64" />
+<pairRelation answer1="M731a7" answer2="M731a7" value="1" />
+<pairRelation answer1="M731a8" answer2="M731a1" value="0" />
+<pairRelation answer1="M731a8" answer2="M731a2" value="0" />
+<pairRelation answer1="M731a8" answer2="M731a3" value="0" />
+<pairRelation answer1="M731a8" answer2="M731a4" value="0" />
+<pairRelation answer1="M731a8" answer2="M731a5" value="0.04" />
+<pairRelation answer1="M731a8" answer2="M731a6" value="0.16" />
+<pairRelation answer1="M731a8" answer2="M731a7" value="0.64" />
+<pairRelation answer1="M731a8" answer2="M731a8" value="1" />
+<pairRelation answer1="M731a9" answer2="M731a1" value="0" />
+<pairRelation answer1="M731a9" answer2="M731a2" value="0" />
+<pairRelation answer1="M731a9" answer2="M731a3" value="0" />
+<pairRelation answer1="M731a9" answer2="M731a4" value="0" />
+<pairRelation answer1="M731a9" answer2="M731a5" value="0" />
+<pairRelation answer1="M731a9" answer2="M731a6" value="0.04" />
+<pairRelation answer1="M731a9" answer2="M731a7" value="0.16" />
+<pairRelation answer1="M731a9" answer2="M731a8" value="0.64" />
+<pairRelation answer1="M731a9" answer2="M731a9" value="1" />
+<pairRelation answer1="M731a10" answer2="M731a1" value="0.04" />
+<pairRelation answer1="M731a10" answer2="M731a2" value="0" />
+<pairRelation answer1="M731a10" answer2="M731a3" value="0" />
+<pairRelation answer1="M731a10" answer2="M731a4" value="0" />
+<pairRelation answer1="M731a10" answer2="M731a5" value="0" />
+<pairRelation answer1="M731a10" answer2="M731a6" value="0" />
+<pairRelation answer1="M731a10" answer2="M731a7" value="0.04" />
+<pairRelation answer1="M731a10" answer2="M731a8" value="0.16" />
+<pairRelation answer1="M731a10" answer2="M731a9" value="0.64" />
+<pairRelation answer1="M731a10" answer2="M731a10" value="1" />
+<pairRelation answer1="M731a11" answer2="M731a1" value="0.16" />
+<pairRelation answer1="M731a11" answer2="M731a2" value="0.04" />
+<pairRelation answer1="M731a11" answer2="M731a3" value="0" />
+<pairRelation answer1="M731a11" answer2="M731a4" value="0" />
+<pairRelation answer1="M731a11" answer2="M731a5" value="0" />
+<pairRelation answer1="M731a11" answer2="M731a6" value="0" />
+<pairRelation answer1="M731a11" answer2="M731a7" value="0" />
+<pairRelation answer1="M731a11" answer2="M731a8" value="0.04" />
+<pairRelation answer1="M731a11" answer2="M731a9" value="0.16" />
+<pairRelation answer1="M731a11" answer2="M731a10" value="0.64" />
+<pairRelation answer1="M731a11" answer2="M731a11" value="1" />
+<pairRelation answer1="M731a12" answer2="M731a1" value="0.64" />
+<pairRelation answer1="M731a12" answer2="M731a2" value="0.16" />
+<pairRelation answer1="M731a12" answer2="M731a3" value="0.04" />
+<pairRelation answer1="M731a12" answer2="M731a4" value="0" />
+<pairRelation answer1="M731a12" answer2="M731a5" value="0" />
+<pairRelation answer1="M731a12" answer2="M731a6" value="0" />
+<pairRelation answer1="M731a12" answer2="M731a7" value="0" />
+<pairRelation answer1="M731a12" answer2="M731a8" value="0" />
+<pairRelation answer1="M731a12" answer2="M731a9" value="0.04" />
+<pairRelation answer1="M731a12" answer2="M731a10" value="0.16" />
+<pairRelation answer1="M731a12" answer2="M731a11" value="0.64" />
+<pairRelation answer1="M731a12" answer2="M731a12" value="1" />
+</pairRelations>
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCIndividual">
+<Question ID="M1537" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCIndividual">
+<Question ID="M1526" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCScaled">
+<Question ID="M192" />
+<scala>
+<scalavalue value="0.0" />
+<scalavalue value="10.0" />
+<scalavalue value="20.0" />
+<scalavalue value="30.0" />
+<scalavalue value="40.0" />
+<scalavalue value="50.0" />
+<scalavalue value="60.0" />
+<scalavalue value="70.0" />
+</scala>
+<constant value="70.0" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCIndividual">
+<Question ID="M193" />
+</KnowledgeSlice>
+<KnowledgeSlice type="QuestionComparatorOCIndividual">
+<Question ID="M1532" />
+</KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M1921" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M1916" value="G4"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M1422" value="G4"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M4830" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M2034" value="G2"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M195" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M202" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M204" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M196" value="G4"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M4679" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M1528" value="G2"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M180" value="G4"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M1515" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M1514" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M1513" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M1531" value="G4"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M1419" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M1434" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M1508" value="G4"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M219" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M220" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M221" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M222" value="G4"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M225" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M223" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M224" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M226" value="G4"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M194" value="G4"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M1536" value="G4"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M1534" value="G4"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M1535" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M215" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M214" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M1518" value="G4"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M731" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M1537" value="G2"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M1526" value="G4"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M192" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M193" value="G3"></KnowledgeSlice>
+<KnowledgeSlice type="weight" questionID="M1532" value="G4"></KnowledgeSlice>
+</KnowledgeBase>

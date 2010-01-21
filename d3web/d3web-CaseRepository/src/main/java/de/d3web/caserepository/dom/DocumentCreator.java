@@ -33,7 +33,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-import de.d3web.persistence.utilities.URLUtils;
+import de.d3web.core.kpers.utilities.URLUtils;
 /**
  * Creates a w3c.Document-Object based on a xml-file.
  */

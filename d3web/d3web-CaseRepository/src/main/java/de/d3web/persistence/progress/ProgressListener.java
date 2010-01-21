@@ -18,29 +18,22 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.dialog2.basics.persistence;
-
-import java.net.URL;
-
-import de.d3web.kernel.domainModel.KnowledgeBase;
+/*
+ * Created on 22.07.2003
+ *
+ * To change this generated comment go to 
+ * Window>Preferences>Java>Code Generation>Code Template
+ */
+package de.d3web.persistence.progress;
 
 /**
- * Classes implementing this interface can be registered at
- * DialogPersistenceManager. Alike AuxilliaryPersistenceHandler, they are
- * loading further knowledge to store in the knowledgebase-object. However (in
- * contrast to AuxilliaryPersistenceHandler), the further knowledge does not
- * have to (must not) be specified within the knowledgebase (jar) file, but on
- * other locations. AdditionalDialogConfigKnowledgeLoader are intended to load
- * configurational knowledge, which is to use within the dialog, but which shall
- * not be stored within the knowledgebase (jar) file.
- * 
- * @author gbuscher
+ * Listenes for ProgressEvents
+ * @author mweniger
  */
-public interface AdditionalDialogConfigKnowledgeLoader {
+public interface ProgressListener {
+	
 
-    public String getId();
-
-    public void loadAdditionalDialogConfigKnowledge(KnowledgeBase kb,
-	    String kbId, URL filename);
+	
+	public void updateProgress(ProgressEvent evt);
 
 }

@@ -21,6 +21,7 @@
 package de.d3web.empiricalTesting.caseConverter;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.List;
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.CaseObject.Solution;
 import de.d3web.caserepository.sax.CaseObjectListCreator;
+import de.d3web.core.kpers.PersistenceManager;
 import de.d3web.empiricalTesting.Finding;
 import de.d3web.empiricalTesting.RatedSolution;
 import de.d3web.empiricalTesting.RatedTestCase;
@@ -42,7 +44,6 @@ import de.d3web.kernel.domainModel.KnowledgeBase;
 import de.d3web.kernel.domainModel.qasets.Question;
 import de.d3web.kernel.supportknowledge.DCElement;
 import de.d3web.kernel.supportknowledge.DCMarkup;
-import de.d3web.persistence.xml.PersistenceManager;
 
 /**
  * This class converts CaseObject XML-Files to a TestSuite.
@@ -59,10 +60,10 @@ public abstract class CaseObjectConverter {
 	 * @param knowledgebase Path to the underlying KnowledgeBase
 	 * @param casespath Path to the CaseObject XML-File 
 	 * @return TestSuite containing the Data from the CaseObject File
-	 * @throws MalformedURLException
+	 * @throws IOException 
 	 */
 	public TestSuite convert(String knowledgebase, String casespath) 
-		throws MalformedURLException {
+		throws IOException {
 		
 		KnowledgeBase knowledge = loadKnowledgeBase(knowledgebase);
 		List<CaseObject> cases = loadCaseRepository(casespath, knowledge);
@@ -217,10 +218,9 @@ public abstract class CaseObjectConverter {
 		return markup.getContent(DCElement.IDENTIFIER);
 	}
 	
-	private KnowledgeBase loadKnowledgeBase(String filePath) throws MalformedURLException {
-		 URL fileURL = new File(filePath).toURI().toURL();
-	     PersistenceManager mgr = PersistenceManager.getInstance();
-	     return mgr.load(fileURL);
+	private KnowledgeBase loadKnowledgeBase(String filePath) throws IOException {
+		 PersistenceManager mgr = PersistenceManager.getInstance();
+	     return mgr.load(new File(filePath));
 	}
 
 	@SuppressWarnings("unchecked")

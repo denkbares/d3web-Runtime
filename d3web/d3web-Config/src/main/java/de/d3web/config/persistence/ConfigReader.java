@@ -20,6 +20,7 @@
 
 package de.d3web.config.persistence;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -40,9 +41,9 @@ import de.d3web.config.Config;
 import de.d3web.config.utils.BooleanHashMap;
 import de.d3web.config.utils.DoubleHashMap;
 import de.d3web.config.utils.StringHashMap;
-import de.d3web.xml.domtools.DOMAccess;
-import de.d3web.xml.utilities.InputFilter;
-import de.d3web.xml.utilities.XMLTools;
+import de.d3web.core.kpers.utilities.InputFilter;
+import de.d3web.core.kpers.utilities.XMLTools;
+import de.d3web.core.kpers.utilities.XMLUtil;
 
 /**
  * @author bannert
@@ -65,12 +66,12 @@ public class ConfigReader {
 		return null;
 	}
 	
-	public static Config createConfig(URL url, String type) {
+	public static Config createConfig(InputStream stream, String type) {
 		try {
-			Document doc = getDocumentBuilder().parse(InputFilter.getFilteredInputSource(url));
+			Document doc = getDocumentBuilder().parse(stream);
 			return init(doc, type);
 		} catch (Exception ex) {
-		    Logger.getLogger(ConfigReader.class.getName()).warning("can't read " + url + ": " + ex);
+		    Logger.getLogger(ConfigReader.class.getName()).warning("can't read " + stream + ": " + ex);
 		}
 		return null;
 	}
@@ -134,7 +135,7 @@ public class ConfigReader {
 					config.setConverter(name, getConverter(currentNode, type));
 					
 				} else if (currentNode.getNodeName().equals("Name")) {
-				    String name = DOMAccess.getText(currentNode);
+				    String name = XMLUtil.getText(currentNode);
 				    name = XMLTools.prepareFromCDATA(name);
 				    config.setName(name);
 				}

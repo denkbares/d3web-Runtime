@@ -20,18 +20,36 @@
 
 package de.d3web.kernel.psMethods.compareCase.comparators;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import de.d3web.caserepository.CaseObject;
-import de.d3web.kernel.domainModel.*;
+import de.d3web.kernel.domainModel.Answer;
+import de.d3web.kernel.domainModel.DiagnosisState;
 import de.d3web.kernel.domainModel.answers.AnswerUnknown;
 import de.d3web.kernel.domainModel.qasets.Question;
+import de.d3web.kernel.domainModel.qasets.QuestionMC;
+import de.d3web.kernel.domainModel.qasets.QuestionNum;
+import de.d3web.kernel.domainModel.qasets.QuestionOC;
+import de.d3web.kernel.domainModel.qasets.QuestionText;
+import de.d3web.kernel.domainModel.qasets.QuestionYN;
 import de.d3web.kernel.psMethods.compareCase.CompareObjectsHashContainer;
 import de.d3web.kernel.psMethods.compareCase.tests.utils.CaseObjectTestDummy;
-import de.d3web.kernel.psMethods.shared.*;
-import de.d3web.kernel.psMethods.shared.comparators.*;
-import de.d3web.persistence.xml.shared.loaders.SharedKnowledgeLoader;
+import de.d3web.kernel.psMethods.shared.Abnormality;
+import de.d3web.kernel.psMethods.shared.PSContextFinder;
+import de.d3web.kernel.psMethods.shared.PSMethodShared;
+import de.d3web.kernel.psMethods.shared.QuestionWeightValue;
+import de.d3web.kernel.psMethods.shared.Weight;
+import de.d3web.kernel.psMethods.shared.comparators.KnowledgeBaseUnknownSimilarity;
+import de.d3web.kernel.psMethods.shared.comparators.QuestionComparator;
+import de.d3web.kernel.psMethods.shared.comparators.mc.QuestionComparatorMCIndividual;
+import de.d3web.kernel.psMethods.shared.comparators.num.QuestionComparatorNumDivision;
+import de.d3web.kernel.psMethods.shared.comparators.oc.QuestionComparatorOCIndividual;
+import de.d3web.kernel.psMethods.shared.comparators.oc.QuestionComparatorYN;
+import de.d3web.kernel.psMethods.shared.comparators.text.QuestionComparatorTextIndividual;
 
 /**
  * Class that compares two cases and returns a List of ComparatorResult objects
@@ -345,15 +363,37 @@ public class CaseComparator {
 		QuestionComparator qcomp = null;
 		if (o == null) {
 			// default similarity !
-			qcomp = SharedKnowledgeLoader.addDefaultKnowledge(q);
+			qcomp = addDefaultKnowledge(q);
 		} else {
 			try{
 			qcomp = (QuestionComparator) ((List) o).get(0);
 			} catch (IndexOutOfBoundsException e){
-				return SharedKnowledgeLoader.addDefaultKnowledge(q);
+				return addDefaultKnowledge(q);
 			}
 		}
 		return qcomp;
+	}
+	
+	public static QuestionComparator addDefaultKnowledge(Question q) {
+
+		QuestionComparator qc = null;
+
+		if (q instanceof QuestionYN) {
+			qc = new QuestionComparatorYN();
+		} else if (q instanceof QuestionOC) {
+			qc = new QuestionComparatorOCIndividual();
+		} else if (q instanceof QuestionMC) {
+			qc = new QuestionComparatorMCIndividual();
+		} else if (q instanceof QuestionNum) {
+			qc = new QuestionComparatorNumDivision();
+		} else if (q instanceof QuestionText) {
+			qc = new QuestionComparatorTextIndividual();
+		}
+
+		if (qc != null) {
+			qc.setQuestion(q);
+		}
+		return qc;
 	}
 
 	public static int getWeight(CaseObject aCase, Question q) {
@@ -363,11 +403,11 @@ public class CaseComparator {
 		Weight qWeight = null;
 		if (o == null) {
 			// default knowledge !
-			qWeight = SharedKnowledgeLoader.addDefaultWeight(q);
+			qWeight = addDefaultWeight(q);
 		} else {
 			qWeight = (Weight) ((List) o).get(0);
 			if (qWeight == null) {
-				qWeight = SharedKnowledgeLoader.addDefaultWeight(q);
+				qWeight = addDefaultWeight(q);
 			}
 		}
 		Collection establishedDiagnoses = getEstablishedDiagnoses(aCase);
@@ -377,6 +417,19 @@ public class CaseComparator {
 			weight = qWeight.getQuestionWeightValue().getValue();
 		}
 		return weight;
+	}
+	
+	private static Weight addDefaultWeight(Question q) {
+
+		Weight w = new Weight();
+
+		QuestionWeightValue qww = new QuestionWeightValue();
+		qww.setQuestion(q);
+		qww.setValue(Weight.G4);
+
+		w.setQuestionWeightValue(qww);
+
+		return w;
 	}
 
 	private static Collection getEstablishedDiagnoses(CaseObject aCase) {

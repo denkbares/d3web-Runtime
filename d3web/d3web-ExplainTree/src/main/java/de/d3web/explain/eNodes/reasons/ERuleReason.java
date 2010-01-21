@@ -25,12 +25,12 @@ import de.d3web.explain.eNodes.ECondition;
 import de.d3web.explain.eNodes.EReason;
 import de.d3web.kernel.domainModel.KnowledgeSlice;
 import de.d3web.kernel.domainModel.QASet;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 
 public class ERuleReason extends EReason {
 
 	private Class context = null;	// Erklärungskontext
-	private RuleComplex rule = null;				// the "original" rule object
+	private Rule rule = null;				// the "original" rule object
 	private ECondition activeCondition = null;	
 	private ECondition activeContext = null;	// Fragekontext (muss immer beantwortet sein, damit die Regel feuert)
 	private ECondition activeException = null;
@@ -52,7 +52,7 @@ public class ERuleReason extends EReason {
 	 */
 	public ERuleReason(ExplanationFactory factory, KnowledgeSlice reason) {
 		super(factory);
-		RuleComplex rule = (RuleComplex)reason;
+		Rule rule = (Rule)reason;
 		setContext(rule.getProblemsolverContext());
 		setRule(rule);
 	}
@@ -125,14 +125,14 @@ public class ERuleReason extends EReason {
 	/** Getter for property rule.
 	 * @return Value of property rule.
 	 */
-	public RuleComplex getRule() {
+	public Rule getRule() {
 		return rule;
 	}
 
 	/** Setter for property rule.
 	 * @param rule New value of property rule.
 	 */
-	private void setRule(RuleComplex rule) {
+	private void setRule(Rule rule) {
 		this.rule = rule;
 	}
 

@@ -142,7 +142,7 @@ public class TemplateSession implements ITemplateSession {
         dcm.setContent(DCElement.CREATOR, "TemplateSession algorithm");
         dcm.setContent(DCElement.DATE, DCElement.date2string(new Date(System.currentTimeMillis())));
         dcm.setContent(DCElement.TITLE, "generated");
-        result.setDCDMarkup(dcm);
+        result.setDCMarkup(dcm);
         
         /* metadata */
         

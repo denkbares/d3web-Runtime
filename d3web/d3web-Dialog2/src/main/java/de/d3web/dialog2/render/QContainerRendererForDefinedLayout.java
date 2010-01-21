@@ -193,7 +193,7 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 		    .getHtmlTextDefinitionOnPosition(x, y);
 	    if (htmlTextDef != null) {
 		if (htmlTextDef.getQuestionBinding() != null) {
-		    Question q = theCase.getKnowledgeBase().searchQuestions(
+		    Question q = theCase.getKnowledgeBase().searchQuestion(
 			    htmlTextDef.getQuestionBinding());
 		    if (q != null && q.isValid(theCase)) {
 			return true;
@@ -228,7 +228,7 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 	    QuestionLayout qLayout = layoutDefinition
 		    .getQuestionLayoutForQuestionID(htmlTextDef
 			    .getQuestionBinding());
-	    Question q = theCase.getKnowledgeBase().searchQuestions(
+	    Question q = theCase.getKnowledgeBase().searchQuestion(
 		    qLayout.getQID());
 
 	    if (qLayout.getAdditionalCSSClass() != null) {
@@ -325,21 +325,21 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 	    throws IOException {
 	if (starttag.startsWith("<QPrompt")) {
 	    writer.writeText(DialogUtils.getQPrompt(theCase.getKnowledgeBase()
-		    .searchQuestions(content)), "value");
+		    .searchQuestion(content)), "value");
 	} else if (starttag.startsWith("<QText")) {
 	    writer.writeText(theCase.getKnowledgeBase()
-		    .searchQuestions(content).getText(), "value");
+		    .searchQuestion(content).getText(), "value");
 	} else if (starttag.startsWith("<MMInfo")) {
 	    QuestionLayout qLayout = layoutDefinition
 		    .getQuestionLayoutForQuestionID(content);
 	    MMInfo info = qLayout.getMmInfo();
 	    if (info.getPosition().equals(MMInfo.POSITION_HEADLINE)) {
 		DialogRenderUtils.renderMMInfoPopupLink(writer, component,
-			theCase.getKnowledgeBase().searchQuestions(content),
+			theCase.getKnowledgeBase().searchQuestion(content),
 			false, info);
 	    } else {
 		QuestionsRendererUtils.renderMMInfoWithoutPopup(writer,
-			component, theCase.getKnowledgeBase().searchQuestions(
+			component, theCase.getKnowledgeBase().searchQuestion(
 				content), layoutDefinition, null);
 	    }
 	} else if (starttag.startsWith("<Image")) {

@@ -42,7 +42,7 @@ import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Answer;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisState;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.domainModel.Score;
 import de.d3web.kernel.domainModel.answers.AnswerChoice;
 import de.d3web.kernel.domainModel.answers.AnswerUnknown;
@@ -441,7 +441,7 @@ public class ExplanationRendererUtils {
     }
 
     public static void renderRuleComplexAction(ResponseWriter writer,
-	    RuleComplex rc) throws IOException {
+	    Rule rc) throws IOException {
 	if (rc.getAction() instanceof ActionHeuristicPS) {
 	    ActionHeuristicPS ac = (ActionHeuristicPS) rc.getAction();
 	    Score score = ac.getScore();
@@ -466,7 +466,7 @@ public class ExplanationRendererUtils {
 	}
     }
 
-    public static void renderRuleComplexId(ResponseWriter writer, RuleComplex rc)
+    public static void renderRuleComplexId(ResponseWriter writer, Rule rc)
 	    throws IOException {
 	writer.writeText("(" + rc.getId() + "):", "value");
     }

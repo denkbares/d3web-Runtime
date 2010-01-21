@@ -42,9 +42,8 @@ import java.util.zip.ZipInputStream;
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.addons.train.Multimedia;
 import de.d3web.caserepository.addons.train.MultimediaItem;
+import de.d3web.core.kpers.utilities.URLUtils;
 import de.d3web.kernel.domainModel.DiagnosisState;
-import de.d3web.persistence.utilities.URLUtils;
-import de.d3web.persistence.xml.PersistenceManager;
 
 /**
  * @author Atzmueller
@@ -162,7 +161,7 @@ public class Utilities {
 	public static boolean hasCasesInf(URL jarFileURL) {
 	
 	    try {
-	        URL indexedJarURL = new URL(jarFileURL, PersistenceManager.CRS_INDEX_URL);
+	        URL indexedJarURL = new URL(jarFileURL, "CRS-INF/index.xml");
 	        URLUtils.openStream(indexedJarURL); // test for indexed jar
 	        return true;
 	    } catch (IOException ex1) {

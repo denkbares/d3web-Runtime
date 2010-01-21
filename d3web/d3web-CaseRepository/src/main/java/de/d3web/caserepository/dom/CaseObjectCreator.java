@@ -141,7 +141,7 @@ public class CaseObjectCreator {
 				boolean dcmarkupFound = false;
 
 				if (child.getNodeName().equals("DCMarkup")) {
-					caseObject.setDCDMarkup(DCMarkupUtilities
+					caseObject.setDCMarkup(DCMarkupUtilities
 							.getDCMarkup(child));
 					dcmarkupFound = true;
 				} else if (child.getNodeName().equals("Properties")) {
@@ -301,7 +301,7 @@ public class CaseObjectCreator {
 			caseObject.setProperties(new Properties());
 
 		if (caseObject.getDCMarkup() == null)
-			caseObject.setDCDMarkup(new DCMarkup());
+			caseObject.setDCMarkup(new DCMarkup());
 
 		caseObject.setAdditionalTrainData(new AdditionalTrainData());
 		MetaDataImpl meta = new MetaDataImpl();
@@ -648,7 +648,7 @@ public class CaseObjectCreator {
 				String idAttr = getAttribute(child, "id", "Question "
 						+ countString + ": id is missing", true);
 				Question quest = null;
-				quest = knowledgeBase.searchQuestions(idAttr);
+				quest = knowledgeBase.searchQuestion(idAttr);
 				//attrID.getNodeValue());
 				if (quest == null) {
 					Logger

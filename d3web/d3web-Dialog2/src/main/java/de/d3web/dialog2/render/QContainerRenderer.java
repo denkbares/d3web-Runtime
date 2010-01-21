@@ -108,7 +108,7 @@ public abstract class QContainerRenderer {
 							writer.writeAttribute("id", divID, "id");
 							writer.writeAttribute("class", "questionPopup", "class");
 
-							Question popupQuestion = theCase.getKnowledgeBase().searchQuestions(
+							Question popupQuestion = theCase.getKnowledgeBase().searchQuestion(
 									questionPopup.getNextQuestionID());
 
 							DialogRenderUtils.renderTable(writer, component);

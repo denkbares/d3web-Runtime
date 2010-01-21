@@ -311,7 +311,7 @@ public class CaseObjectTemplateSessionProxy implements CaseObject {
 	 * 
 	 * @see de.d3web.kernel.supportknowledge.DCMarkedUp#setDCDMarkup(de.d3web.kernel.supportknowledge.DCMarkup)
 	 */
-	public void setDCDMarkup(DCMarkup dcMarkup) {
+	public void setDCMarkup(DCMarkup dcMarkup) {
 		this.dc = dcMarkup;
 	}
 

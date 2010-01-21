@@ -40,15 +40,16 @@ import java.util.Vector;
 import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.w3c.dom.Document;
+
 import de.d3web.caserepository.CaseObject;
+import de.d3web.core.kpers.utilities.StringBufferInputStream;
+import de.d3web.core.kpers.utilities.StringBufferOutputStream;
+import de.d3web.core.kpers.utilities.StringBufferStream;
 import de.d3web.persistence.progress.ProgressEvent;
 import de.d3web.persistence.progress.ProgressListener;
 import de.d3web.persistence.progress.ProgressNotifier;
-import de.d3web.persistence.utilities.StringBufferInputStream;
-import de.d3web.persistence.utilities.StringBufferOutputStream;
-import de.d3web.persistence.utilities.StringBufferStream;
-import de.d3web.persistence.xml.PersistenceManager;
 
 /**
  * @author Atzmueller
@@ -132,7 +133,7 @@ public class CaseObjectListWriter implements ProgressNotifier, ProgressListener 
 				new ProgressEvent(this,
 					ProgressEvent.START,
 					ProgressEvent.OPERATIONTYPE_SAVE,
-					PersistenceManager.resourceBundle.getString("d3web.CaseRepository.CaseHandler.saveCase"),
+					"Saving cases",
 					0, 1)
 			);
 		long aktvalue = 0;
@@ -155,7 +156,7 @@ public class CaseObjectListWriter implements ProgressNotifier, ProgressListener 
 					new ProgressEvent(this,
 						ProgressEvent.UPDATE,
 						ProgressEvent.OPERATIONTYPE_SAVE,
-						PersistenceManager.resourceBundle.getString("d3web.CaseRepository.CaseHandler.save"),
+						"Saving basic case data",
 						aktvalue += 10,
 						maxvalue
 					)
@@ -183,7 +184,7 @@ public class CaseObjectListWriter implements ProgressNotifier, ProgressListener 
 								this,
 								ProgressEvent.UPDATE,
 								ProgressEvent.OPERATIONTYPE_SAVE,
-								PersistenceManager.resourceBundle.getString("d3web.CaseRepository.CaseHandler.saveadd") + ": " + aw.getTag(),
+								"Saving additional case data" + ": " + aw.getTag(),
 								aktvalue += 10,
 								maxvalue
 							)
@@ -199,7 +200,7 @@ public class CaseObjectListWriter implements ProgressNotifier, ProgressListener 
 				new ProgressEvent(this,
 					ProgressEvent.DONE,
 					ProgressEvent.OPERATIONTYPE_SAVE,
-					PersistenceManager.resourceBundle.getString("d3web.CaseRepository.CaseHandler.save"),
+					"Saving basic case data",
 					1, 1
 				)
 			);

@@ -81,7 +81,7 @@ public class QuestionTagReader extends AbstractTagReader {
 
 	private void startQuestion(Attributes attributes) {
 		String id = checkAttribute("id", attributes.getValue("id"), "<not set>");
-		currentQuestion = getKnowledgeBase().searchQuestions(id);
+		currentQuestion = getKnowledgeBase().searchQuestion(id);
 		currentAnswers = new HashSet(2);
 	}
 

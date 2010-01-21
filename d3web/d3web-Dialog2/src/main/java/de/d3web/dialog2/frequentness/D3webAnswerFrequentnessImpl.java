@@ -74,7 +74,7 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 	if (selectedData != null) {
 	    for (String qID : selectedData) {
 		XPSCase theCase = DialogUtils.getDialog().getTheCase();
-		Question q = theCase.getKnowledgeBase().searchQuestions(qID);
+		Question q = theCase.getKnowledgeBase().searchQuestion(qID);
 		if (q != null && q instanceof QuestionChoice) {
 		    QuestionChoice qCh = (QuestionChoice) q;
 		    DataGroup group = new DataGroup(qCh.getText());

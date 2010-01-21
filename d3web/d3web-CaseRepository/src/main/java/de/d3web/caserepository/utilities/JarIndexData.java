@@ -33,8 +33,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import de.d3web.persistence.xml.PersistenceManager;
-import de.d3web.xml.utilities.InputFilter;
+import de.d3web.core.kpers.PersistenceManager;
+import de.d3web.core.kpers.utilities.InputFilter;
 
 /**
  * @author bates
@@ -52,7 +52,7 @@ public class JarIndexData {
 		
 		try {
 			InputSource input = InputFilter.getFilteredInputSource(
-				new URL(jarFileURL, PersistenceManager.CRS_INDEX_URL));
+				new URL(jarFileURL, "CRS-INF/index.xml"));
 			parseIndexData(jarFileURL, input);
 		} catch (Exception e) {
 			
@@ -60,7 +60,7 @@ public class JarIndexData {
 			Logger.getLogger(this.getClass().getName()).info("trying old jar-format");
 			try {
 				InputSource input = InputFilter.getFilteredInputSource(
-					new URL(jarFileURL, PersistenceManager.KB_INDEX_URL));
+					new URL(jarFileURL, "KB-INF/index.xml"));
 				parseIndexData(jarFileURL, input);
 			} catch (Exception e2) {
 				Logger.getLogger(this.getClass().getName()).throwing(

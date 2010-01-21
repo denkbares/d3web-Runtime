@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.d3web.core.kpers.PersistenceManager;
 import de.d3web.empiricalTesting.Finding;
 import de.d3web.empiricalTesting.SequentialTestCase;
 import de.d3web.empiricalTesting.caseVisualization.BotHelper;
@@ -40,7 +41,6 @@ import de.d3web.kernel.domainModel.KnowledgeBase;
 import de.d3web.kernel.domainModel.answers.AnswerChoice;
 import de.d3web.kernel.domainModel.qasets.QContainer;
 import de.d3web.kernel.domainModel.qasets.QuestionChoice;
-import de.d3web.persistence.xml.PersistenceManager;
 
 /**
  * 
@@ -72,8 +72,7 @@ public class DDBot2Runner {
 		// String kfilepath = workspace + "demo.d3web.jar";
 
 		PersistenceManager mgr = PersistenceManager.getInstance();
-		KnowledgeBase k = mgr.load(new File(workspace + "dano.jar").toURI()
-				.toURL());
+		KnowledgeBase k = mgr.load(new File(workspace + "dano.jar"));
 
 		// KnowledgeBase k = D3webHelper.loadKnowledge(kfilepath);
 		DDBot2Runner botRunner = new DDBot2Runner(k);
@@ -250,7 +249,7 @@ public class DDBot2Runner {
 
 	private Finding toFinding(KnowledgeBase k, String questionID, int answerNo)
 			throws Exception {
-		QuestionChoice q = (QuestionChoice) k.searchQuestions(questionID);
+		QuestionChoice q = (QuestionChoice) k.searchQuestion(questionID);
 		AnswerChoice a = BotHelper.getInstance().findAnswer(q,
 				questionID + "a" + answerNo);
 		return new Finding(q, a);

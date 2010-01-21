@@ -24,22 +24,21 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.kpers.PersistenceManager;
 import de.d3web.empiricalTesting.RatedTestCase;
 import de.d3web.empiricalTesting.SequentialTestCase;
 import de.d3web.empiricalTesting.TestSuite;
 import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.persistence.xml.PersistenceManager;
-import de.d3web.persistence.xml.XCLModelPersistenceHandler;
+import de.d3web.plugin.test.InitPluginManager;
+
 
 /**
  * This test offers the ability to test the problem
@@ -145,54 +144,50 @@ public class KBTester {
 	 * The configuration file contains a list of KnowledgeBases with
 	 * corresponding SequentialTestCases and a declaration whether
 	 * the InterviewCalculator should be used or not for this case.
+	 * @throws IOException 
 	 */
 	@Before
-	public void initialize() {
+	public void initialize() throws IOException {
 		testsuites = new ArrayList<TestSuite>();
 		String userdir = System.getProperty("user.dir") + "/src/test/resources/";
 		FileReader f;
-		try {
-			f = new FileReader(userdir + "cases.properties");
-			BufferedReader r = new BufferedReader(f);
-			String s;
-			while((s = r.readLine()) != null) {
-				if (s.startsWith("#")) {
-					continue;
-				} else {
-					String[] config = s.split(";");
-					String kbpath = userdir + config[0];
-					String casespath = userdir + config[1];
-					
-					KnowledgeBase kb = loadKnowledgeBase(kbpath);
-					TestSuite t = new TestSuite();
-					t.setName(config[1]);
-					t.setKb(kb);
-					t.loadRepository(casespath);
-					if (config[2].equals("true")) {
-						t.setUseInterviewCalculator(true);
-					}
-					testsuites.add(t);
+		f = new FileReader(userdir + "cases.properties");
+		BufferedReader r = new BufferedReader(f);
+		String s;
+		while((s = r.readLine()) != null) {
+			if (s.startsWith("#")) {
+				continue;
+			} else {
+				String[] config = s.split(";");
+				String kbpath = userdir + config[0];
+				String casespath = userdir + config[1];
+				
+				KnowledgeBase kb = loadKnowledgeBase(kbpath);
+				TestSuite t = new TestSuite();
+				t.setName(config[1]);
+				t.setKb(kb);
+				t.loadRepository(casespath);
+				if (config[2].equals("true")) {
+					t.setUseInterviewCalculator(true);
 				}
+				testsuites.add(t);
 			}
-			f.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} 	
+		}
+		f.close();
 	}
 	
 	/**
 	 * Loads the KnowledgeBase.
 	 * @param kbPath URL-formatted String representing the path to the KnowledgeBase
 	 * @return the loaded KnowledgeBase
-	 * @throws MalformedURLException
+	 * @throws IOException 
 	 */
 	private static KnowledgeBase loadKnowledgeBase(String kbPath)
-			throws MalformedURLException {
+			throws IOException {
+		InitPluginManager.init();
 		PersistenceManager pm = PersistenceManager.getInstance();
-		pm.addPersistenceHandler(new XCLModelPersistenceHandler());
-		KnowledgeBase kb = pm.load(new File(kbPath).toURI().toURL());
+		KnowledgeBase kb = pm.load(new File(kbPath));
+		
 		return kb;
 	}
 }

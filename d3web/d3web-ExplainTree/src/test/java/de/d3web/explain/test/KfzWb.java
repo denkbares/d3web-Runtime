@@ -1,5 +1,7 @@
 package de.d3web.explain.test;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import de.d3web.kernel.domainModel.Answer;
 import de.d3web.kernel.domainModel.Diagnosis;
@@ -7,8 +9,7 @@ import de.d3web.kernel.domainModel.DiagnosisState;
 import de.d3web.kernel.domainModel.KnowledgeBase;
 import de.d3web.kernel.domainModel.NamedObject;
 import de.d3web.kernel.domainModel.Num2ChoiceSchema;
-import de.d3web.kernel.domainModel.PriorityGroup;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.domainModel.RuleFactory;
 import de.d3web.kernel.domainModel.Score;
 import de.d3web.kernel.domainModel.answers.AnswerFactory;
@@ -19,9 +20,11 @@ import de.d3web.kernel.domainModel.formula.Mult;
 import de.d3web.kernel.domainModel.formula.QNumWrapper;
 import de.d3web.kernel.domainModel.formula.Sub;
 import de.d3web.kernel.domainModel.qasets.QContainer;
+import de.d3web.kernel.domainModel.qasets.Question;
 import de.d3web.kernel.domainModel.qasets.QuestionMC;
 import de.d3web.kernel.domainModel.qasets.QuestionNum;
 import de.d3web.kernel.domainModel.qasets.QuestionOC;
+import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
 import de.d3web.kernel.domainModel.ruleCondition.CondAnd;
 import de.d3web.kernel.domainModel.ruleCondition.CondDState;
 import de.d3web.kernel.domainModel.ruleCondition.CondEqual;
@@ -29,8 +32,8 @@ import de.d3web.kernel.domainModel.ruleCondition.CondKnown;
 import de.d3web.kernel.domainModel.ruleCondition.CondNot;
 import de.d3web.kernel.domainModel.ruleCondition.CondNumGreater;
 import de.d3web.kernel.domainModel.ruleCondition.CondOr;
-import de.d3web.kernel.psMethods.dialogControlling.PSMethodDialogControlling;
 import de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic;
+import de.d3web.kernel.psMethods.nextQASet.PSMethodNextQASet;
 import de.d3web.kernel.psMethods.questionSetter.ActionSetValue;
 import de.d3web.kernel.psMethods.questionSetter.PSMethodQuestionSetter;
 import de.d3web.kernel.supportknowledge.DCElement;
@@ -144,21 +147,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 
 	private void setProperties0() {
 		try {
-			PriorityGroup pg_allgemeines = new PriorityGroup();
-			PriorityGroup pg_untersuchungen = new PriorityGroup();
-			pg_allgemeines.setId("PG1");
-			pg_allgemeines.setKnowledgeBase(this);
-			pg_allgemeines.setMaxLevel(new Integer(3));
-			pg_allgemeines.setText("Allgemeines");
-
-			pg_untersuchungen.setId("PG2");
-			pg_untersuchungen.setKnowledgeBase(this);
-			pg_untersuchungen.setMinLevel(new Integer(3));
-			pg_untersuchungen.setText("Untersuchungen");
-
-			this.add(pg_allgemeines);
-			this.add(pg_untersuchungen);
-
+			
 			Q16.setPriority(new Integer(2));
 			Qcl16.setPriority(new Integer(3));
 			Q56.setPriority(new Integer(1));
@@ -221,8 +210,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 			Msi4.setText("SI: Bewertung Kraftstoffverbrauch");
             Msi4.setKnowledgeBase(this);
 			Msi4.setAlternatives(Utils.createVector(new Object[] { Msi4a1, Msi4a2, Msi4a3 }));
-			Num2ChoiceSchema schema = new Num2ChoiceSchema();
-			schema.setId("Msi4_Schema00");
+			Num2ChoiceSchema schema = new Num2ChoiceSchema("Msi4_Schema00");
 			schema.setSchemaArray(new Double[] { new Double(10), new Double(20)});
 			Msi4.addKnowledge(PSMethodQuestionSetter.class, schema, PSMethodQuestionSetter.NUM2CHOICE_SCHEMA);
 
@@ -377,18 +365,18 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 			RuleFactory.createIndicationRule(
 				"RASK10",
 				Utils.createList(new Object[] { Mf10 }),
-				new CondOr(Utils.createList(new Object[] { new CondEqual(Mf8, Mf8a2), new CondEqual(Mf8, Mf8a3)})));
+				new CondOr(Utils.createList(new AbstractCondition[] { new CondEqual(Mf8, Mf8a2), new CondEqual(Mf8, Mf8a3)})));
 
 		/* Next von P000: rqsug14766
 		*/
 		// RuleComplex rqsug14766 =
 			RuleFactory.createClarificationRule("rqsug14766", Utils.createList(new Object[] {
-		}), P000, new CondDState(P000, DiagnosisState.SUGGESTED, PSMethodHeuristic.class));
+		}), P000, new CondDState(P000, DiagnosisState.SUGGESTED));
 
 		/* Frageklassen nach Etablierung von P000: Nil*/
 		// RuleComplex rqetab14767 =
 			RuleFactory.createRefinementRule("rqetab14767", Utils.createList(new Object[] {
-		}), P000, new CondDState(P000, DiagnosisState.ESTABLISHED, PSMethodDialogControlling.class));
+		}), P000, new CondDState(P000, DiagnosisState.ESTABLISHED));
 
 		/* Next von P8: rqsug14769
 		*/
@@ -397,7 +385,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 				"rqsug14769",
 				Utils.createList(new Object[] { Q17 }),
 				P8,
-				new CondDState(P8, DiagnosisState.SUGGESTED, PSMethodDialogControlling.class));
+				new CondDState(P8, DiagnosisState.SUGGESTED));
 
 		/* Frageklassen nach Etablierung von P8: (Q17)*/
 		// RuleComplex rqetab14770 =
@@ -405,7 +393,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 				"rqetab14770",
 				Utils.createList(new Object[] { Q17 }),
 				P8,
-				new CondDState(P8, DiagnosisState.ESTABLISHED, PSMethodDialogControlling.class));
+				new CondDState(P8, DiagnosisState.ESTABLISHED));
 
 		/* Next von P13: rqsug14772
 		*/
@@ -414,7 +402,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 				"rqsug14772",
 				Utils.createList(new Object[] { Q18 }),
 				P13,
-				new CondDState(P13, DiagnosisState.SUGGESTED, PSMethodDialogControlling.class));
+				new CondDState(P13, DiagnosisState.SUGGESTED));
 
 		/* Frageklassen nach Etablierung von P13: (Q18)*/
 		// RuleComplex rqetab14773 =
@@ -422,7 +410,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 				"rqetab14773",
 				Utils.createList(new Object[] { Q18 }),
 				P13,
-				new CondDState(P13, DiagnosisState.ESTABLISHED, PSMethodDialogControlling.class));
+				new CondDState(P13, DiagnosisState.ESTABLISHED));
 
 		/* Next von P14: rqsug14775
 		*/
@@ -431,7 +419,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 				"rqsug14775",
 				Utils.createList(new Object[] { Q19 }),
 				P14,
-				new CondDState(P14, DiagnosisState.SUGGESTED, PSMethodDialogControlling.class));
+				new CondDState(P14, DiagnosisState.SUGGESTED));
 
 		/* Frageklassen nach Etablierung von P14: (Q19)*/
 		// RuleComplex rqetab14776 =
@@ -439,7 +427,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 				"rqetab14776",
 				Utils.createList(new Object[] { Q19 }),
 				P14,
-				new CondDState(P14, DiagnosisState.ESTABLISHED, PSMethodDialogControlling.class));
+				new CondDState(P14, DiagnosisState.ESTABLISHED));
 
 		/* Next von P15: rqsug14778
 		*/
@@ -448,7 +436,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 				"rqsug14778",
 				Utils.createList(new Object[] { Q20 }),
 				P15,
-				new CondDState(P15, DiagnosisState.SUGGESTED, PSMethodDialogControlling.class));
+				new CondDState(P15, DiagnosisState.SUGGESTED));
 
 		/* Frageklassen nach Etablierung von P15: (Q20)*/
 		// RuleComplex rqetab14779 =
@@ -456,7 +444,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 				"rqetab14779",
 				Utils.createList(new Object[] { Q20 }),
 				P15,
-				new CondDState(P15, DiagnosisState.ESTABLISHED, PSMethodDialogControlling.class));
+				new CondDState(P15, DiagnosisState.ESTABLISHED));
 
 		/* Next von P16: rqsug14781
 		*/
@@ -465,7 +453,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 				"rqsug14781",
 				Utils.createList(new Object[] { Q21 }),
 				P16,
-				new CondDState(P16, DiagnosisState.SUGGESTED, PSMethodDialogControlling.class));
+				new CondDState(P16, DiagnosisState.SUGGESTED));
 
 		/* Frageklassen nach Etablierung von P16: (Q21)*/
 		// RuleComplex rqetab14782 =
@@ -473,7 +461,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 				"rqetab14782",
 				Utils.createList(new Object[] { Q21 }),
 				P16,
-				new CondDState(P16, DiagnosisState.ESTABLISHED, PSMethodDialogControlling.class));
+				new CondDState(P16, DiagnosisState.ESTABLISHED));
 
 		/* Die Diagnose-Regeln */
 
@@ -489,7 +477,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 				"R_FB_56",
 				P16,
 				Score.P5,
-				new CondOr(Utils.createList(new Object[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)})));
+				new CondOr(Utils.createList(new AbstractCondition[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)})));
 
 		/*(R_FB_29) Und (($= Mf9 4)) -> P14, P4
 		*/
@@ -535,7 +523,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 				Score.N4,
 				new CondNot(
 					new CondOr(
-						Utils.createList(new Object[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)}))));
+						Utils.createList(new AbstractCondition[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)}))));
 
 		/*(R_FB_20) Und (($Or Mf8 3 2) ($= Mf10 1)) -> P14, P4
 		*/
@@ -546,9 +534,9 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 				Score.P4,
 				new CondAnd(
 					Utils.createList(
-						new Object[] {
+						new AbstractCondition[] {
 							new CondOr(
-								Utils.createList(new Object[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)})),
+								Utils.createList(new AbstractCondition[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)})),
 							new CondEqual(Mf10, Mf10a1)
 		})));
 
@@ -586,7 +574,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 				Score.N5,
 				new CondNot(
 					new CondOr(
-						Utils.createList(new Object[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)}))));
+						Utils.createList(new AbstractCondition[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)}))));
 
 		/*(R_FB_12) Und ((Non $Or Mf7 2 1)) -> P15, N3
 		*/
@@ -597,7 +585,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 				Score.N3,
 				new CondNot(
 					new CondOr(
-						Utils.createList(new Object[] { new CondEqual(Mf7, Mf7a2), new CondEqual(Mf7, Mf7a1)}))));
+						Utils.createList(new AbstractCondition[] { new CondEqual(Mf7, Mf7a2), new CondEqual(Mf7, Mf7a1)}))));
 
 		/*(R_FB_11) Und ((Non $= Mf10 1)) -> P15, N6
 		*/
@@ -613,9 +601,9 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 				Score.P5,
 				new CondAnd(
 					Utils.createList(
-						new Object[] {
+						new AbstractCondition[] {
 							new CondOr(
-								Utils.createList(new Object[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)})),
+								Utils.createList(new AbstractCondition[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)})),
 							new CondEqual(Mf10, Mf10a1)
 		})));
 
@@ -626,7 +614,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 				"R_FB_9",
 				P15,
 				Score.P5,
-				new CondOr(Utils.createList(new Object[] { new CondEqual(Mf7, Mf7a2), new CondEqual(Mf7, Mf7a1)})));
+				new CondOr(Utils.createList(new AbstractCondition[] { new CondEqual(Mf7, Mf7a2), new CondEqual(Mf7, Mf7a1)})));
 
 		/*(R_FB_8) Und (($= Mf9 4)) -> P15, P3
 		*/
@@ -725,43 +713,43 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 		// Die Symptom-Interpretations-Regeln 
 
 		// (Radd59) Und (($= Mf4 3) ($= Mf3 4)) -> Msi21
-		RuleComplex Radd59 = new RuleComplex();
-		ActionSetValue a_Radd59 = new ActionSetValue(Radd59);
-		Radd59.setId("Radd59");
+		Rule Radd59 = new Rule("Radd59");
+		ActionSetValue a_Radd59 = new ActionSetValue();
+		a_Radd59.setRule(Radd59);
 		a_Radd59.setQuestion(Msi21);
 		a_Radd59.setValues(new Object[] { Msi21a2 });
 		Radd59.setAction(a_Radd59);
 		Radd59.setCondition(
-			new CondAnd(Utils.createList(new Object[] { new CondEqual(Mf4, Mf4a3), new CondEqual(Mf3, Mf3a4)})));
+			new CondAnd(Utils.createList(new AbstractCondition[] { new CondEqual(Mf4, Mf4a3), new CondEqual(Mf3, Mf3a4)})));
 
 		// (Radd4) Und (($Or Mf3 1 2 3)) -> Msi21
-		RuleComplex Radd4 = new RuleComplex();
-		ActionSetValue a_Radd4 = new ActionSetValue(Radd4);
-		Radd4.setId("Radd4");
+		Rule Radd4 = new Rule("Radd4");
+		ActionSetValue a_Radd4 = new ActionSetValue();
+		a_Radd4.setRule(Radd4);
 		a_Radd4.setQuestion(Msi21);
 		a_Radd4.setValues(new Object[] { Msi21a1 });
 		Radd4.setAction(a_Radd4);
 		Radd4.setCondition(
 			new CondOr(
 				Utils.createList(
-					new Object[] { new CondEqual(Mf3, Mf3a1), new CondEqual(Mf3, Mf3a2), new CondEqual(Mf3, Mf3a3)})));
+					new AbstractCondition[] { new CondEqual(Mf3, Mf3a1), new CondEqual(Mf3, Mf3a2), new CondEqual(Mf3, Mf3a3)})));
 
 		// (Radd2) Und (($= Mf3 4) ($= Mf4 1)) -> Msi21 
-		RuleComplex Radd2 = new RuleComplex();
-		ActionSetValue a_Radd2 = new ActionSetValue(Radd2);
-		Radd2.setId("Radd2");
+		Rule Radd2 = new Rule("Radd2");
+		ActionSetValue a_Radd2 = new ActionSetValue();
+		a_Radd2.setRule(Radd2);
 		a_Radd2.setQuestion(Msi21);
 		a_Radd2.setValues(new Object[] { Msi21a1 });
 		Radd2.setAction(a_Radd2);
 		Radd2.setCondition(
-			new CondAnd(Utils.createList(new Object[] { new CondEqual(Mf3, Mf3a4), new CondEqual(Mf4, Mf4a1)})));
+			new CondAnd(Utils.createList(new AbstractCondition[] { new CondEqual(Mf3, Mf3a4), new CondEqual(Mf4, Mf4a1)})));
 
 		/* Die Symptom-Interpretations-Regeln (Numerische) */
 
 		/* (Rdq4) Und (($> Mf5 0) ($Isvalue Mf6 True)) -> Msi4 */
-		RuleComplex Rdq4 = new RuleComplex();
-		ActionSetValue a_Rdq4 = new ActionSetValue(Rdq4);
-		Rdq4.setId("Rdq4");
+		Rule Rdq4 = new Rule("Rdq4");
+		ActionSetValue a_Rdq4 = new ActionSetValue();
+		a_Rdq4.setRule(Rdq4);
 		a_Rdq4.setQuestion(Msi4);
 
 		FormulaExpression formula =
@@ -779,7 +767,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 		});
 		Rdq4.setAction(a_Rdq4);
 		Rdq4.setCondition(
-			new CondAnd(Utils.createList(new Object[] { new CondNumGreater(Mf5, new Double(0)), new CondKnown(Mf6)})));
+			new CondAnd(Utils.createList(new AbstractCondition[] { new CondNumGreater(Mf5, new Double(0)), new CondKnown(Mf6)})));
 
 		/*
 		// (Radd59) Und (($= Mf4 3) ($= Mf3 4)) -> Msi21 
@@ -846,13 +834,13 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 			/* setExplanation(); */
 
 			/* Die Startfrageklassen */
-			this.setInitQuestions(Utils.createVector(new Object[] { Q56, Q16 }));
+			this.setInitQuestions(Utils.createVector(new QContainer[] { Q56, Q16 }));
 			DCMarkup dcdata = new DCMarkup();
 			dcdata.setContent(DCElement.TITLE, "KFZ-Wissensbasis");
 			dcdata.setContent(DCElement.CREATOR, "d3Team");
 			dcdata.setContent(DCElement.IDENTIFIER, "KFZWB1999");
 			dcdata.setContent(DCElement.LANGUAGE, "german");
-			this.setDCDMarkup(dcdata);
+			this.setDCMarkup(dcdata);
 
 		} catch (Exception e) {
 			System.out.println("" + e);
@@ -866,6 +854,67 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 	*/
 	public static void main(String[] args) {
 		KnowledgeBase theTestKb = new KfzWb();
-		theTestKb.inspect();
+		inspect(theTestKb);
 	}
+	
+	/**
+     * inspects the KB and prints out all objects the KB contains.
+     */
+    public static void inspect(KnowledgeBase kb) {
+	System.out.println(kb.getQuestions().size() + " Fragen und "
+		+ kb.getDiagnoses().size() + " Diagnosen");
+	Iterator iter, secIter;
+	iter = kb.getQuestions().iterator();
+	while (iter.hasNext()) {
+	    Question frage = (Question) iter.next();
+	    System.out.println("<" + frage.getClass().getName() + " "
+		    + frage.getId() + ": " + frage.getText() + ">");
+	    secIter = null;
+	    if (frage.getKnowledge(PSMethodHeuristic.class) != null)
+		secIter = ((List) (frage.getKnowledge(PSMethodHeuristic.class)))
+			.iterator();
+	    if (secIter != null)
+		while (secIter.hasNext()) {
+		    Rule regel = (Rule) secIter.next();
+		    System.out.println("  DiagnoseRegel: " + regel.getId()
+			    + ": " + regel);
+		}
+	    secIter = null;
+	    if (frage.getKnowledge(PSMethodNextQASet.class) != null)
+		secIter = ((List) (frage.getKnowledge(PSMethodNextQASet.class)))
+			.iterator();
+	    if (secIter != null)
+		while (secIter.hasNext()) {
+		    Rule regel = (Rule) secIter.next();
+		    System.out.println("  FolgefragenRegel: " + regel.getId()
+			    + ": " + regel);
+		}
+	}
+	iter = kb.getDiagnoses().iterator();
+	while (iter.hasNext()) {
+	    Diagnosis diagnose = (Diagnosis) iter.next();
+	    System.out.println("<" + diagnose.getClass().getName() + " "
+		    + diagnose.getId() + ": " + diagnose.getText() + ">");
+	    secIter = null;
+	    if (diagnose.getKnowledge(PSMethodHeuristic.class) != null)
+		secIter = ((List) (diagnose
+			.getKnowledge(PSMethodHeuristic.class))).iterator();
+	    if (secIter != null)
+		while (secIter.hasNext()) {
+		    Rule regel = (Rule) secIter.next();
+		    System.out.println("  DiagnoseRegel: " + regel.getId()
+			    + ": " + regel);
+		}
+	    secIter = null;
+	    if (diagnose.getKnowledge(PSMethodNextQASet.class) != null)
+		secIter = ((List) (diagnose
+			.getKnowledge(PSMethodNextQASet.class))).iterator();
+	    if (secIter != null)
+		while (secIter.hasNext()) {
+		    Rule regel = (Rule) secIter.next();
+		    System.out.println("  FolgefragenRegel: " + regel.getId()
+			    + ": " + regel);
+		}
+	}
+    }
 }

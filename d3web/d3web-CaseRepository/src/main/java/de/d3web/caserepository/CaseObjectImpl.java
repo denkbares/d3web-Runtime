@@ -312,7 +312,7 @@ public class CaseObjectImpl implements CaseObject {
 	 * 
 	 * @see de.d3web.kernel.misc.DCDataAdapter#setDCData(de.d3web.kernel.misc.DCData)
 	 */
-	public void setDCDMarkup(DCMarkup dcData) {
+	public void setDCMarkup(DCMarkup dcData) {
 		this.dcData = dcData;
 	}
 
