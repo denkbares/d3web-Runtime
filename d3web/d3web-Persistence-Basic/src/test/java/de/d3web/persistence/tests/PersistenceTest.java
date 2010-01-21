@@ -36,6 +36,7 @@ public class PersistenceTest extends XMLTestCase {
         super(name);
         _excludedFolders = new ArrayList<String>();
         _excludedFolders.add("CVS");
+        _excludedFolders.add(".svn");
         _excludedFolders.add("META-INF");
         _excludedFolders.add("CRS-INF");
         _excludedFolders.add("KB-INF");
