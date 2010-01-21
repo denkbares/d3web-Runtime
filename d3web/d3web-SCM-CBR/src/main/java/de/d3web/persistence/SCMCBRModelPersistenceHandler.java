@@ -1,29 +1,29 @@
 package de.d3web.persistence;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.io.OutputStream;
 import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Vector;
-import java.util.logging.Logger;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
+import de.d3web.core.kpers.KnowledgeReader;
+import de.d3web.core.kpers.KnowledgeWriter;
+import de.d3web.core.kpers.PersistenceManager;
+import de.d3web.core.kpers.progress.ProgressListener;
+import de.d3web.core.kpers.utilities.Util;
+import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.KnowledgeBase;
+import de.d3web.kernel.domainModel.KnowledgeBaseManagement;
+import de.d3web.kernel.domainModel.KnowledgeSlice;
+import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
 import de.d3web.kernel.psMethods.SCMCBR.PSMethodSCMCBR;
-import de.d3web.persistence.progress.ProgressEvent;
-import de.d3web.persistence.progress.ProgressListener;
-import de.d3web.persistence.progress.ProgressNotifier;
-import de.d3web.persistence.utilities.StringBufferInputStream;
-import de.d3web.persistence.utilities.StringBufferStream;
-import de.d3web.persistence.xml.AuxiliaryPersistenceHandler;
-import de.d3web.persistence.xml.PersistenceHandler;
-import de.d3web.persistence.xml.loaders.SCMCBRModelLoader;
-import de.d3web.persistence.xml.writers.SCMCBRModelWriter;
-import de.d3web.xml.utilities.InputFilter;
+import de.d3web.kernel.psMethods.SCMCBR.SCMCBRModel;
+import de.d3web.kernel.psMethods.SCMCBR.SCMCBRRelation;
+import de.d3web.kernel.psMethods.xclPattern.XCLRelation;
 
 /**
  * 
@@ -31,125 +31,186 @@ import de.d3web.xml.utilities.InputFilter;
  * Created: 25.09.2009
  *
  */
-public class SCMCBRModelPersistenceHandler implements PersistenceHandler,
-		AuxiliaryPersistenceHandler, ProgressListener, ProgressNotifier {
+public class SCMCBRModelPersistenceHandler implements KnowledgeReader,
+		KnowledgeWriter {
 	public static String ID = "scmcbrpattern";
-	private StringBuffer debugsb;
-	protected Vector progressListeners = null;
 
-	@Override
+	//TODO: Move to XML
+	@Deprecated
 	public String getDefaultStorageLocation() {
 
 		return "kb/scmcbr.xml";
 	}
 
-	public SCMCBRModelPersistenceHandler() {	
-		progressListeners = new Vector();
-	}
-	
 	@Override
-	public String getId() {
-		return ID;
-	}
+	public void read(KnowledgeBase kb, InputStream stream,
+			ProgressListener listener) throws IOException {
+		Document doc = Util.streamToDocument(stream);
+		listener.updateProgress(0, "Loading knowledge base");
+		KnowledgeBaseManagement kbm = KnowledgeBaseManagement
+				.createInstance(kb);
+		NodeList xclmodels = doc.getElementsByTagName("SCMCBRModel");
+		int cur = 0;
+		int max = xclmodels.getLength();
+		for (int i = 0; i < xclmodels.getLength(); i++) {
 
-	public Document save(KnowledgeBase kb) {
-		try {
-			SCMCBRModelWriter xmw=SCMCBRModelWriter.getInstance();
-			String erg =xmw.getXMLString(kb);
-			StringBuffer sb = new StringBuffer(erg);
-			debugsb=sb;
-			
-			// building the Document from StringBuffer
-			DocumentBuilder builder = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder();
-			InputStream stream = new StringBufferInputStream(
-					new StringBufferStream(sb));
-			Document dom = builder.parse(stream);
-			return dom;
+			Node current = xclmodels.item(i);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			addKnowledge(kbm, current);
+			listener.updateProgress(++cur / max, "Loading SCMCBR Models");
 		}
-
 	}
 
-	public StringBuffer getdebugsb(){
-		return debugsb;
+	@Override
+	public int getEstimatedSize(KnowledgeBase kb) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
-	
-	public KnowledgeBase load(KnowledgeBase kb,StringBuffer input){
-		try {
-			DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder();
-			Document doc = dBuilder.parse(input.toString());
-			SCMCBRModelLoader.getInstance().addProgressListener(this);
 
-			KnowledgeBase ret = SCMCBRModelLoader.getInstance()
-					.loadKnowledgeSlices(kb, doc);
-			SCMCBRModelLoader.getInstance().removeProgressListener(this);
-			return ret;
+	@Override
+	public void write(KnowledgeBase kb, OutputStream stream,
+			ProgressListener listener) throws IOException {
+		Document doc = Util.createEmptyDocument();
+		Element root = doc.createElement("KnowledgeBase");
+		root.setAttribute("type", SCMCBRModelPersistenceHandler.ID);
+		root.setAttribute("system", "d3web");
+		doc.appendChild(root);
+		Element ksNode = doc.createElement("KnowledgeSlices");
+		root.appendChild(ksNode);
+		
+		Collection<KnowledgeSlice> slices = kb.getAllKnowledgeSlicesFor(PSMethodSCMCBR.class);
+		
+		int cur = 0;
+		for (KnowledgeSlice model : slices) {
+			ksNode.appendChild(getModelElement((SCMCBRModel) model, doc));
+			listener.updateProgress(++cur/slices.size(), "Saving knowledge base: SCMCBR Models");
+		}
+		Util.writeDocumentToOutputStream(doc, stream);
+	}
 
-		} catch (Exception e) {
-			Logger.getLogger(SCMCBRModelPersistenceHandler.class.getName())
-					.throwing(SCMCBRModelPersistenceHandler.class.getName(),
-							"load", e);
+	private String getAttribute(String name, Node node) {
+		if ((node != null) && (node.getAttributes() != null)) {
+			try {
+				return node.getAttributes().getNamedItem(name).getNodeValue();
+			} catch (Exception e) {
+				return null;
+			}
 		}
 		return null;
+	}
+
+	private void addKnowledge(KnowledgeBaseManagement kbm, Node current) throws IOException {
+		String solutionID = getAttribute("SID", current);
+		String ID = getAttribute("ID", current);
+		String minSupportS = getAttribute("minSupport", current);
+		String suggestedThresholdS = getAttribute("suggestedThreshold", current);
+		String establishedThresholdS = getAttribute("establishedThreshold",
+				current);
+		String coveringSuggestedThreshold = getAttribute("coveringSuggestedThreshold", current);
+		String coveringEstablishedThreshold = getAttribute("coveringEstablishedThreshold",
+				current);
+		String completenessSuggestedThreshold = getAttribute("completenessSuggestedThreshold", current);
+		String completenessEstablishedThreshold = getAttribute("completenessEstablishedThreshold",
+				current);
+		Diagnosis diag = kbm.findDiagnosis(solutionID);
+		SCMCBRModel model = new SCMCBRModel(diag);
+		NodeList relations =  current.getChildNodes();
+		for(int i = 0; i < relations.getLength(); i++) {
+			addRelations(kbm, model, relations.item(i).getChildNodes());	
+		}
 		
+		model.setId(ID);
+		model.setMinSupport(Double.parseDouble(minSupportS));
+		model.setSuggestedThreshold(Double.parseDouble(suggestedThresholdS));
+		model.setEstablishedThreshold(Double.parseDouble(establishedThresholdS));		
+
+		model.setCompletenessEstablishedThreshold(Double.parseDouble(completenessEstablishedThreshold));
+		model.setCompletenessSuggestedThreshold(Double.parseDouble(completenessSuggestedThreshold));
+		model.setCoveringEstablishedThreshold(Double.parseDouble(coveringEstablishedThreshold));
+		model.setCoveringSuggestedThreshold(Double.parseDouble(coveringSuggestedThreshold));
+		
+		diag.addKnowledge(PSMethodSCMCBR.class, model, SCMCBRModel.SCMCBR);
+
 	}
-	@Override
-	public KnowledgeBase load(KnowledgeBase kb, URL url) {
 
-		try {
-			DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder();
-			Document doc = dBuilder.parse(InputFilter
-					.getFilteredInputSource(url));
+	private void addRelations(KnowledgeBaseManagement kbm, SCMCBRModel model,
+			NodeList relationsOfAType) throws IOException {
+		Node aRelation;
+		for (int i = 0; i < relationsOfAType.getLength(); i++) {
+			aRelation = relationsOfAType.item(i);			
+			String type = aRelation.getParentNode().getNodeName();
+			String id = getAttribute("ID", aRelation);
+			NodeList children = aRelation.getChildNodes();
+			AbstractCondition ac = null;
+			double weight = SCMCBRRelation.DEFAULT_WEIGHT;
+			for (int t = 0; t < children.getLength(); t++) {
+				Node child = children.item(t);
+				
+				if (child .getNodeName().equals("Condition")) {					
+						//TODO: check jochen
+					child .getTextContent();
+					ac = (AbstractCondition) PersistenceManager.getInstance().readFragment((Element) child, kbm.getKnowledgeBase());
+				} else if (child .getNodeName().equals("weight")) {
+					weight = Double.parseDouble(child.getTextContent());
+				}
+			}
+			if (ac != null) {
+				SCMCBRRelation rel = SCMCBRRelation.createSCMCBRRelation(ac, weight,id);
+				if (type.equals("Relations")) {
+					model.addRelation(rel);
+				} else if (type.equals("necessaryRelations")) {
+					model.addNecessaryRelation(rel);
+				} else if (type.equals("contradictingRelations")) {
+					model.addContradictingRelation(rel);
+				} else if (type.equals("sufficientRelations")) {
+					model.addSufficientRelation(rel);
+				}
+			}
 
-			SCMCBRModelLoader.getInstance().addProgressListener(this);
-
-			KnowledgeBase ret = SCMCBRModelLoader.getInstance()
-					.loadKnowledgeSlices(kb, doc);
-			SCMCBRModelLoader.getInstance().removeProgressListener(this);
-			return ret;
-
-		} catch (Exception e) {
-			Logger.getLogger(SCMCBRModelPersistenceHandler.class.getName())
-					.throwing(SCMCBRModelPersistenceHandler.class.getName(),
-							"load", e);
 		}
-		return kb;
-	}
 
-	public void updateProgress(ProgressEvent evt) {
-		fireProgressEvent(evt);
 	}
-
-	public void addProgressListener(ProgressListener listener) {
-		progressListeners.add(listener);
+	
+	public Element getModelElement(SCMCBRModel o, Document doc) throws IOException {
+		Element modelelement = doc.createElement("XCLModel");
+		modelelement.setAttribute("minSupport", ""+o.getMinSupport());
+		modelelement.setAttribute("suggestedThreshold", ""+o.getSuggestedThreshold());
+		modelelement.setAttribute("establishedThreshold", ""+o.getEstablishedThreshold());
+		modelelement.setAttribute("coveringSuggestedThreshold", ""+o.getCoveringSuggestedThreshold());
+		modelelement.setAttribute("coveringEstablishedThreshold", ""+o.getCoveringEstablishedThreshold());
+		modelelement.setAttribute("completenessSuggestedThreshold", ""+o.getCompletenessSuggestedThreshold());
+		modelelement.setAttribute("completenessEstablishedThreshold", ""+o.getCompletenessEstablishedThreshold());
+		modelelement.setAttribute("ID", o.getId());
+		modelelement.setAttribute("SID", o.getSolution().getId());
+		modelelement.appendChild(getRelationsElement(o.getNecessaryRelations(),"necessaryRelations", doc));
+		modelelement.appendChild(getRelationsElement(o.getSufficientRelations(), "sufficientRelations", doc));
+		modelelement.appendChild(getRelationsElement(o.getContradictingRelations(), "contradictingRelations", doc));
+		modelelement.appendChild(getRelationsElement(o.getRelations(), "Relations", doc));
+		return modelelement;
 	}
-
-	public void removeProgressListener(ProgressListener listener) {
-		progressListeners.remove(listener);
-	}
-
-	public void fireProgressEvent(ProgressEvent evt) {
-		Enumeration enu = progressListeners.elements();
-		while (enu.hasMoreElements())
-			((de.d3web.persistence.progress.ProgressListener) enu.nextElement())
-					.updateProgress(evt);
-	}
-
-	public long getProgressTime(int operationType, Object additionalInformation) {
-		try {
-			KnowledgeBase kb = (KnowledgeBase) additionalInformation;
-			Collection relations = kb
-					.getAllKnowledgeSlicesFor(PSMethodSCMCBR.class);
-			return relations.size();
-		} catch (Exception e) {
-			return PROGRESSTIME_UNKNOWN;
+	
+	private Element getRelationsElement(Collection<SCMCBRRelation> relations, String relationstext, Document doc) throws IOException{
+		Element relationsElement = doc.createElement(relationstext);
+		for (SCMCBRRelation current:relations) {
+			relationsElement.appendChild(getRelationElement(current, doc));
 		}
+		return relationsElement;
 	}
-
+	
+	private Element getRelationElement(SCMCBRRelation r, Document doc) throws IOException {
+		Element relationElement = doc.createElement("relation");
+		relationElement.setAttribute("ID", r.getId());
+		AbstractCondition cond = r.getConditionedFinding();
+		if (cond != null) {
+			relationElement.appendChild(PersistenceManager.getInstance().writeFragment(cond, doc));
+		} else {
+			throw new IOException("Missing condition.");
+		}
+		if (r.getWeight()!=XCLRelation.DEFAULT_WEIGHT) {
+			Element weight = doc.createElement("weight");
+			weight.setTextContent(""+r.getWeight());
+			relationElement.appendChild(weight);
+		}
+		return relationElement;
+	}
 }

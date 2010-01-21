@@ -17,9 +17,8 @@ import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
 import de.d3web.kernel.domainModel.ruleCondition.NoAnswerException;
 import de.d3web.kernel.domainModel.ruleCondition.UnknownAnswerException;
 import de.d3web.kernel.psMethods.MethodKind;
+import de.d3web.kernel.psMethods.PSMethod;
 import de.d3web.kernel.psMethods.xclPattern.XCLRelationType;
-import de.d3web.persistence.SCMCBRModelPersistenceHandler;
-import de.d3web.persistence.xml.PersistenceManager;
 
 
 /**
@@ -30,11 +29,8 @@ import de.d3web.persistence.xml.PersistenceManager;
  */
 public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 	
-	static { //TODO move to where it belongs
-		PersistenceManager.getInstance().addPersistenceHandler(new SCMCBRModelPersistenceHandler());
-		
-	}
-	
+	private static final long serialVersionUID = -7948460623330603066L;
+
 	public final static MethodKind SCMCBR = new MethodKind("SCMCBR");
 
 	public static double defaultEstablishedThreshold = 0.8;
@@ -462,7 +458,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		this.completenessEstablishedThreshold = completenessEstablishedThreshold;
 	}
 
-	public Class getProblemsolverContext() {
+	public Class<? extends PSMethod> getProblemsolverContext() {
 		return PSMethodSCMCBR.class;
 	}
 
