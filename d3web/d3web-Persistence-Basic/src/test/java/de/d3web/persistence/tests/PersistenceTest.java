@@ -73,6 +73,7 @@ public class PersistenceTest extends XMLTestCase {
     		if (kbFolders[i].isDirectory()) {
     			folderName = kbFolders[i].getName();
     			if (folderName.endsWith("CVS")) continue;
+    			if (folderName.contains("svn")) continue;
     			subPath = folderName + "/" + folderName;
     			f = new File(_originalFolder + subPath + "-Original.jar");
     			_originalBase = mgr.load(f);
