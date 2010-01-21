@@ -26,6 +26,7 @@
     	          <overWriteReleases>false</overWriteReleases>
 	              <overWriteSnapshots>false</overWriteSnapshots>
             	  <overWriteIfNewer>true</overWriteIfNewer>
+            	  <pathSeparator>;</pathSeparator>
             	  <outputFile>target/dependencies/output.txt</outputFile>
         	    </configuration>
     	      </execution>
