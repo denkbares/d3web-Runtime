@@ -32,11 +32,13 @@ import de.d3web.kernel.XPSCase;
  */
 public class CondOr extends NonTerminalCondition {
 
+	private static final long serialVersionUID = -7653603629850085254L;
+
 	/**
 	 * Creates a new OR-condition with a list of 
 	 * disjunctive sub-conditions.
 	 */
-	public CondOr(List terms) {
+	public CondOr(List<AbstractCondition> terms) {
 		super(terms);
 	}
 
@@ -70,16 +72,18 @@ public class CondOr extends NonTerminalCondition {
 
 	@Override
 	public String toString() {
-		String ret = "<Condition type='or'>\n";
+		String ret = "\u2190 CondOr {";
 		for (AbstractCondition condition : terms) {
-			ret += condition.toString();
+			if (condition != null)
+				ret += condition.toString();
 		}
-		return ret + "</Condition>\n";
+		ret += "}";
+		return ret;
 
 	}
 
 	@Override
-	protected AbstractCondition createInstance(List theTerms, AbstractCondition o) {
+	protected AbstractCondition createInstance(List<AbstractCondition> theTerms, AbstractCondition o) {
 		return new CondOr(theTerms);
 	}
 }

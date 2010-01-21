@@ -24,7 +24,9 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import de.d3web.kernel.XPSCase;
+import de.d3web.kernel.domainModel.answers.AnswerChoice;
 import de.d3web.kernel.domainModel.qasets.Question;
+import de.d3web.kernel.psMethods.PSMethod;
 import de.d3web.kernel.psMethods.questionSetter.PSMethodQuestionSetter;
 
 /**
@@ -36,9 +38,15 @@ import de.d3web.kernel.psMethods.questionSetter.PSMethodQuestionSetter;
  */
 public class Num2ChoiceSchema extends IDObject implements KnowledgeSlice {
 
+	private static final long serialVersionUID = -3081963703740657373L;
 	private Double[] schemaArray;
 	private Question question;
 
+
+	public Num2ChoiceSchema(String id) {
+		super(id);
+	}
+	
 	public void setSchemaArray(Double[] newArray) {
 		schemaArray = newArray;
 	}
@@ -51,7 +59,7 @@ public class Num2ChoiceSchema extends IDObject implements KnowledgeSlice {
 	 * @return PSMethodQuestionSetter.class
 	 * @see de.d3web.kernel.domainModel.KnowledgeSlice#getProblemsolverContext()
 	 */
-	public Class getProblemsolverContext() {
+	public Class<? extends PSMethod> getProblemsolverContext() {
 		return PSMethodQuestionSetter.class;
 	}
 	/**
@@ -66,7 +74,7 @@ public class Num2ChoiceSchema extends IDObject implements KnowledgeSlice {
 	 * @return the answer selected from the given answer collection according to
 	 *         the given numeric value
 	 */
-	public Answer getAnswerForNum(Double num, Collection answers, XPSCase theCase) {
+	public Answer getAnswerForNum(Double num, Collection<AnswerChoice> answers, XPSCase theCase) {
 		boolean ascending = isAscending();
 		for (int i = 0; i < schemaArray.length; i++) {
 			if ((ascending && num.doubleValue() < schemaArray[i].doubleValue())
@@ -86,11 +94,11 @@ public class Num2ChoiceSchema extends IDObject implements KnowledgeSlice {
 		return true;
 	}
 
-	protected Answer nth(Collection answers, int pos) {
-		Iterator iter = answers.iterator();
+	protected Answer nth(Collection<AnswerChoice> answers, int pos) {
+		Iterator<AnswerChoice> iter = answers.iterator();
 		int position = 0;
 		while (iter.hasNext()) {
-			Answer element = (Answer) iter.next();
+			Answer element = iter.next();
 			if (position == pos) {
 				return element;
 			}

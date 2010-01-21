@@ -34,7 +34,7 @@ import de.d3web.kernel.domainModel.Answer;
 import de.d3web.kernel.domainModel.CaseObjectSource;
 import de.d3web.kernel.domainModel.QASet;
 import de.d3web.kernel.domainModel.RuleAction;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.domainModel.SymptomValue;
 import de.d3web.kernel.domainModel.answers.AnswerChoice;
 import de.d3web.kernel.domainModel.answers.AnswerDate;
@@ -62,8 +62,8 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 	private Question question;
 	private Object[] values;
 
-	public ActionQuestionSetter(RuleComplex theCorrespondingRule) {
-		super(theCorrespondingRule);
+	public ActionQuestionSetter() {
+		super();
 	}
 
 	/**
@@ -272,7 +272,7 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 	/**
 	 * this method is needed for protection from cycles in rule firing
 	 */
-	protected RuleComplex getLastFiredRule(XPSCase theCase) {
+	protected Rule getLastFiredRule(XPSCase theCase) {
 		CaseQuestion q = (CaseQuestion) theCase.getCaseObject(getQuestion());
 		Object o = q.getValueHistory();
 		if ((o != null) && (o instanceof List)) {
@@ -308,7 +308,7 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 		while (proIter.hasNext()) {
 			Object reason = proIter.next();
 			if (reason instanceof QASet.Reason) {
-				RuleComplex rule = ((QASet.Reason) reason).getRule();
+				Rule rule = ((QASet.Reason) reason).getRule();
 				RuleAction action = rule.getAction();
 				if (action instanceof ActionQuestionSetter) {
 					Object[] actionValues = ((ActionQuestionSetter) action).getValues();

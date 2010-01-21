@@ -33,6 +33,8 @@ import de.d3web.kernel.domainModel.qasets.QuestionNum;
  */
 public class QNumWrapper extends FormulaNumberPrimitive {
 
+	private static final long serialVersionUID = 7316671292127035523L;
+
 	/**
 	 * Creates a new FormulaTerm with null-arguments.
 	 */
@@ -76,18 +78,6 @@ public class QNumWrapper extends FormulaNumberPrimitive {
 	}
 
 	/**
-	 * @see FormulaElement
-	 */
-	public java.lang.String getXMLString() {
-
-		StringBuffer sb = new StringBuffer();
-		sb.append("<FormulaPrimitive type='QNumWrapper'>\n");
-		sb.append("<Value>" + getQuestion().getId() + "</Value>");
-		sb.append("</FormulaPrimitive>\n");
-		return sb.toString();
-	}
-
-	/**
 	 * Sets the QuestionNum that will be wrapped
 	 */
 	private void setQuestion(QuestionNum newQuestion) {
@@ -97,8 +87,8 @@ public class QNumWrapper extends FormulaNumberPrimitive {
 	/**
 	 * @see FormulaElement
 	 */
-	public Collection getTerminalObjects() {
-		Collection ret = new LinkedList();
+	public Collection<Object> getTerminalObjects() {
+		Collection<Object> ret = new LinkedList<Object>();
 		ret.add(value);
 
 		return ret;

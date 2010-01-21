@@ -33,6 +33,8 @@ import de.d3web.kernel.domainModel.qasets.QuestionNum;
  */
 public class CondNumGreater extends CondNum {
 
+	private static final long serialVersionUID = 4544477310920618499L;
+
 	/**
 	 * Creates a new condition, where a the specified numerical question needs to
 	 * be greater than the specified value.
@@ -59,13 +61,10 @@ public class CondNumGreater extends CondNum {
 
 	@Override
 	public String toString() {
-
-		return "<Condition type='numGreater' ID='"
-			+ getQuestion().getId()
-			+ "' value='"
-			+ getAnswerValue()
-			+ "'>"
-			+ "</Condition>\n";
+		return "\u2190 CondNumGreater question: "
+			+ question.getId()
+			+ " value: "
+			+ getAnswerValue();
 	}
 	
 	@Override

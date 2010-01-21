@@ -27,7 +27,7 @@ import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisState;
 import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.psMethods.PSMethod;
 import de.d3web.kernel.psMethods.PropagationEntry;
 import de.d3web.kernel.psMethods.combinied.PSMethodCombined;
@@ -79,7 +79,7 @@ public class PSMethodDialogControlling extends PSMethodCombined {
 			List<? extends KnowledgeSlice> knowledgeSlices = change.getObject().getKnowledge(this.getClass());
 			if (knowledgeSlices == null) return;
 			for (KnowledgeSlice slice : knowledgeSlices) {
-				RuleComplex rule = (RuleComplex) slice;
+				Rule rule = (Rule) slice;
 				rule.check(theCase);
 			}
 		}

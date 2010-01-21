@@ -33,6 +33,9 @@ import de.d3web.kernel.domainModel.qasets.QuestionNum;
  * @author Joachim Baumeister
  */
 public abstract class CondNum extends CondQuestion {
+	
+	private static final long serialVersionUID = -3597849696812714194L;
+
 	/** 
 	 * Level of impression for numerical comparison.
 	 */

@@ -28,6 +28,8 @@ import de.d3web.kernel.domainModel.Answer;
  * @author norman
  */
 public class AnswerText extends Answer {
+	
+	private static final long serialVersionUID = -3763281596806332194L;
 	private String text;
 
 	/**
@@ -45,7 +47,7 @@ public class AnswerText extends Answer {
 		return getQuestion().getId() + "aText";
 	}
 
-	private String getText() {
+	public String getText() {
 		return text;
 	}
 

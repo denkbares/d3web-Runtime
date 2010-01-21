@@ -313,15 +313,10 @@ public class Diagnosis extends NamedObject implements ValuedObject {
 	 * @param newKnowledgeBase the knowledge base, to which this object belongs to 
 	 */
 	public void setKnowledgeBase(KnowledgeBase kb) {
-		try {
-			super.setKnowledgeBase(kb);
-			// maybe somebody should remove this object from the old
-			// knowledge base if available
-			getKnowledgeBase().add(this);
-		} catch (KnowledgeBaseObjectModificationException e) {
-			Logger.getLogger(this.getClass().getName()).throwing(this.getClass().getName(),
-					"setKnowledgeBase", e);
-		}
+		super.setKnowledgeBase(kb);
+		// maybe somebody should remove this object from the old
+		// knowledge base if available
+		getKnowledgeBase().add(this);
 	}
 
 	/**

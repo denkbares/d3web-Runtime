@@ -33,6 +33,7 @@ import de.d3web.kernel.domainModel.qasets.QuestionNum;
  */
 public class CondNumIn extends CondNum {
 
+	private static final long serialVersionUID = -7671429466069982930L;
 	private NumericalInterval _interval;
 
 	/**
@@ -91,14 +92,12 @@ public class CondNumIn extends CondNum {
 
 	@Override
 	public String toString() {
-		return "<Condition type='numIn' ID='"
-			+ getQuestion().getId()
-			+ "' minValue='"
+		return "\u2190 CondNumIn question: "
+			+ question.getId()
+			+ " minValue: "
 			+ getMinValue()
-			+ "' maxValue='"
-			+ getMaxValue()
-			+ "'>"
-			+ "</Condition>\n";
+			+ " maxValue: "
+			+ getMaxValue();
 	}
 
 	@Override

@@ -53,7 +53,7 @@ public class CondChoiceYes extends CondEqual {
 	 * Verbalizes the condition.
 	 */
 	public String toString() {
-		return "<Condition type='choiceYes' ID='" + question.getId() + "'/>\n";
+		return "\u2190 CondChoiceYes question: " + question.getId();
 	}
 	
 	public AbstractCondition copy() {

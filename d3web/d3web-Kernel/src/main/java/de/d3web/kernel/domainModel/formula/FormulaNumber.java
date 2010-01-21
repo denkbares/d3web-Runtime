@@ -31,6 +31,8 @@ import de.d3web.kernel.XPSCase;
  */
 public class FormulaNumber extends FormulaNumberPrimitive {
 
+	private static final long serialVersionUID = 4658860639252377370L;
+
 	/** 
 	 * Creates a new FormulaNubmer with 0 as value.
 	 */
@@ -52,17 +54,6 @@ public class FormulaNumber extends FormulaNumberPrimitive {
 	 */
 	public Double eval(XPSCase theCase) {
 		return (Double) getValue();
-	}
-
-	/**
-	 *	@return XML representation of this FormulaNumber-object
-	 **/
-	public java.lang.String getXMLString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("<FormulaPrimitive type='FormulaNumber'>\n");
-		sb.append("<Value>" + getValue() + "</Value>\n");
-		sb.append("</FormulaPrimitive>\n");
-		return sb.toString();
 	}
 
 	/**
@@ -95,8 +86,8 @@ public class FormulaNumber extends FormulaNumberPrimitive {
 	/**
 	 * @see FormulaElement
 	 */
-	public Collection getTerminalObjects() {
-		return new LinkedList();
+	public Collection<Object> getTerminalObjects() {
+		return new LinkedList<Object>();
 	}
 
 }

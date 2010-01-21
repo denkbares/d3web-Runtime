@@ -38,10 +38,9 @@ import java.util.logging.Logger;
  */
 public class DCElement implements java.io.Serializable {
 
-	private static List dcElements = new ArrayList();
+	private static final long serialVersionUID = 3422299195047203671L;
 
-	private DCElement() {
-	}
+	private static List<DCElement> dcElements = new ArrayList<DCElement>();
 
 	private String label;
 
@@ -68,14 +67,20 @@ public class DCElement implements java.io.Serializable {
 		return label.hashCode();
 	}
 
+	/**
+	 * Searches DCElement in the list of all created DCElements
+	 * If none is found, one will be created.
+	 * @param label of the DCElement
+	 * @return DCElement with the given label
+	 */
 	public static DCElement getDCElementFor(String label) {
-		Iterator iter = getIterator();
+		Iterator<DCElement> iter = getIterator();
 		while (iter.hasNext()) {
-			DCElement dce = (DCElement) iter.next();
-			if (dce.getLabel().equals(label))
+			DCElement dce = iter.next();
+			if (dce.getLabel().equalsIgnoreCase(label))
 				return dce;
 		}
-		return null;
+		return new DCElement(label);
 	}
 
 	/**
@@ -140,7 +145,7 @@ public class DCElement implements java.io.Serializable {
 	 * 
 	 * @return Iterator over all possible DC objects
 	 */
-	public static Iterator getIterator() {
+	public static Iterator<DCElement> getIterator() {
 		return dcElements.iterator();
 	}
 
@@ -161,7 +166,7 @@ public class DCElement implements java.io.Serializable {
 	 * resource. Comment: Typically, Title will be a name by which the resource
 	 * is formally known.
 	 */
-	public static final DCElement TITLE = new DCElement("DC.TITLE");
+	public static final DCElement TITLE = new DCElement("DC.title");
 
 	/**
 	 * Element Name: Creator Label: Creator Definition: An entity primarily
@@ -169,7 +174,7 @@ public class DCElement implements java.io.Serializable {
 	 * Creator include a person, an organization, or a service. Typically, the
 	 * name of a Creator should be used to indicate the entity.
 	 */
-	public static final DCElement CREATOR = new DCElement("DC.CREATOR");
+	public static final DCElement CREATOR = new DCElement("DC.creator");
 
 	/**
 	 * Element Name: Subject Label: Subject and Keywords Definition: A topic of
@@ -183,7 +188,7 @@ public class DCElement implements java.io.Serializable {
 	 * 
 	 * @see MMInfoSubject public final static constants
 	 */
-	public static final DCElement SUBJECT = new DCElement("DC.SUBJECT");
+	public static final DCElement SUBJECT = new DCElement("DC.subject");
 
 	/**
 	 * Element Name: Description Label: Description Definition: An account of
@@ -192,7 +197,7 @@ public class DCElement implements java.io.Serializable {
 	 * graphical representation of content or a free-text account of the
 	 * content.
 	 */
-	public static final DCElement DESCRIPTION = new DCElement("DC.DESCRIPTION");
+	public static final DCElement DESCRIPTION = new DCElement("DC.description");
 
 	/**
 	 * Element Name: Publisher Label: Publisher Definition: An entity
@@ -200,7 +205,7 @@ public class DCElement implements java.io.Serializable {
 	 * Publisher include a person, an organization, or a service. Typically, the
 	 * name of a Publisher should be used to indicate the entity.
 	 */
-	public static final DCElement PUBLISHER = new DCElement("DC.PUBLISHER");
+	public static final DCElement PUBLISHER = new DCElement("DC.publisher");
 
 	/**
 	 * Element Name: Contributor Label: Contributor Definition: An entity
@@ -209,7 +214,7 @@ public class DCElement implements java.io.Serializable {
 	 * service. Typically, the name of a Contributor should be used to indicate
 	 * the entity.
 	 */
-	public static final DCElement CONTRIBUTOR = new DCElement("DC.CONTRIBUTOR");
+	public static final DCElement CONTRIBUTOR = new DCElement("DC.contributor");
 
 	/**
 	 * Element Name: Date Label: Date Definition: A date of an event in the
@@ -220,7 +225,7 @@ public class DCElement implements java.io.Serializable {
 	 * 
 	 * @see DCElement.date2string(Date) & DCElement.string2date(String)
 	 */
-	public static final DCElement DATE = new DCElement("DC.DATE");
+	public static final DCElement DATE = new DCElement("DC.date");
 
 	/**
 	 * Element Name: Type Label: Resource Type Definition: The nature or genre
@@ -231,7 +236,7 @@ public class DCElement implements java.io.Serializable {
 	 * the physical or digital manifestation of the resource, use the FORMAT
 	 * element.
 	 */
-	public static final DCElement TYPE = new DCElement("DC.RESOURCE_TYPE");
+	public static final DCElement TYPE = new DCElement("DC.resource_type");
 
 	/**
 	 * Element Name: Format Label: Format Definition: The physical or digital
@@ -243,7 +248,7 @@ public class DCElement implements java.io.Serializable {
 	 * vocabulary (for example, the list of Internet Media Types [MIME] defining
 	 * computer media formats).
 	 */
-	public static final DCElement FORMAT = new DCElement("DC.FORMAT");
+	public static final DCElement FORMAT = new DCElement("DC.format");
 
 	/**
 	 * Element Name: Identifier Label: Resource Identifier Definition: An
@@ -256,7 +261,7 @@ public class DCElement implements java.io.Serializable {
 	 * Number (ISBN).
 	 */
 	public static final DCElement IDENTIFIER = new DCElement(
-			"DC.RESOURCE_IDENTIFIER");
+			"DC.resource_identifier");
 
 	/**
 	 * Element Name: Source Label: Source Definition: A Reference to a resource
@@ -265,7 +270,7 @@ public class DCElement implements java.io.Serializable {
 	 * best practice is to identify the referenced resource by means of a string
 	 * or number conforming to a formal identification system.
 	 */
-	public static final DCElement SOURCE = new DCElement("DC.SOURCE");
+	public static final DCElement SOURCE = new DCElement("DC.source");
 
 	/**
 	 * Element Name: Language Label: Language Definition: A language of the
@@ -275,7 +280,7 @@ public class DCElement implements java.io.Serializable {
 	 * Examples include "en" or "eng" for English, "akk" for Akkadian", and
 	 * "en-GB" for English used in the United Kingdom.
 	 */
-	public static final DCElement LANGUAGE = new DCElement("DC.LANGUAGE");
+	public static final DCElement LANGUAGE = new DCElement("DC.language");
 
 	/**
 	 * Element Name: Relation Label: Relation Definition: A reference to a
@@ -283,7 +288,7 @@ public class DCElement implements java.io.Serializable {
 	 * referenced resource by means of a string or number conforming to a formal
 	 * identification system.
 	 */
-	public static final DCElement RELATION = new DCElement("DC.RELATION");
+	public static final DCElement RELATION = new DCElement("DC.relation");
 
 	/**
 	 * Element Name: Coverage Label: Coverage Definition: The extent or scope of
@@ -296,7 +301,7 @@ public class DCElement implements java.io.Serializable {
 	 * time periods in preference to numeric identifiers such as sets of
 	 * coordinates or date ranges.
 	 */
-	public static final DCElement COVERAGE = new DCElement("DC.COVERAGE");
+	public static final DCElement COVERAGE = new DCElement("DC.coverage");
 
 	/**
 	 * Element Name: Rights Label: Rights Management Definition: Information
@@ -307,5 +312,5 @@ public class DCElement implements java.io.Serializable {
 	 * Property Rights. If the Rights element is absent, no assumptions may be
 	 * made about any rights held in or over the resource.
 	 */
-	public static final DCElement RIGHTS = new DCElement("DC.RIGHTS_MANAGEMENT");
+	public static final DCElement RIGHTS = new DCElement("DC.rights_management");
 }

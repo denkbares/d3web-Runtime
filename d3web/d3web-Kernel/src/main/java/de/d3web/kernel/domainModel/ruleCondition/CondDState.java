@@ -19,14 +19,9 @@
  */
 
 package de.d3web.kernel.domainModel.ruleCondition;
-import java.util.Iterator;
-import java.util.List;
-
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisState;
-import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.psMethods.MethodKind;
 
 /**
  * This condition checks, if a specified diagnosis is established or
@@ -36,9 +31,12 @@ import de.d3web.kernel.psMethods.MethodKind;
  * @author Christian Betz
  */
 public class CondDState extends TerminalCondition {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5690604452964483692L;
 	private Diagnosis diagnosis;
 	private DiagnosisState solutionState;
-	private Class context;
 
 	/**
 	 * Creates a new CondDState Expression:
@@ -48,12 +46,10 @@ public class CondDState extends TerminalCondition {
 	 */
 	public CondDState(
 		Diagnosis diagnosis,
-		DiagnosisState solutionState,
-		Class context) {
+		DiagnosisState solutionState) {
 		super(diagnosis);
 		this.diagnosis = diagnosis;
 		this.solutionState = solutionState;
-		this.context = context;
 	}
 
 	/**
@@ -64,34 +60,7 @@ public class CondDState extends TerminalCondition {
 	 * if no rule has ever changed the state of the diagnosis.
 	 */
 	public boolean eval(XPSCase theCase) throws NoAnswerException {
-		if (diagnosis
-			.getState(theCase, context)
-			.equals(DiagnosisState.UNCLEAR)) {
-			if (!hasHeuristicRulesFired(diagnosis, theCase, context))
-				throw NoAnswerException.getInstance();
-		}
-		return solutionState.equals(diagnosis.getState(theCase, context));
-	}
-
-	/**
-	 * @return true, if a knowledge slice of a given diagnosis has fired for a given context.
-	 */
-	private static boolean hasHeuristicRulesFired(
-		Diagnosis diagnosis,
-		XPSCase theCase,
-		Class context) {
-
-		List knowledge =
-			diagnosis.getKnowledge(context, MethodKind.BACKWARD);
-		if (knowledge != null) {
-			Iterator slices = knowledge.iterator();
-			while (slices.hasNext()) {
-				KnowledgeSlice slice = (KnowledgeSlice) slices.next();
-				if (slice.isUsed(theCase))
-					return true;
-			}
-		}
-		return false;
+		return solutionState.equals(diagnosis.getState(theCase));
 	}
 
 	public Diagnosis getDiagnosis() {
@@ -112,12 +81,10 @@ public class CondDState extends TerminalCondition {
 
 	@Override
 	public String toString() {
-		return "<Condition type='DState' ID='"
+		return "\u2190 CondDState diagnosis: "
 			+ diagnosis.getId()
-			+ "' value='"
-			+ this.getStatus()
-			+ "'>"
-			+ "</Condition>\n";
+			+ " value: "
+			+ this.getStatus();
 	}
 	
 	
@@ -135,14 +102,7 @@ public class CondDState extends TerminalCondition {
 				test = this.getStatus().equals(otherCDS.getStatus()) && test;
 			else
 				test = (otherCDS.getStatus() == null) && test;
-			
-			if(this.getContext() != null)
-				test = this.getContext().equals(otherCDS.getContext()) && test;
-			else
-				test = (otherCDS.getContext() == null) && test;
-					
 			return test;
-		
 	}
 	
 	@Override
@@ -156,25 +116,15 @@ public class CondDState extends TerminalCondition {
 		if (getStatus() != null)
 			str+=getStatus().toString();
 		
-		if (getContext() != null)
-			str+=getContext().toString();
-			
 		if (getTerminalObjects() != null)
 			str+=getTerminalObjects().toString();
 			
 		return str.hashCode();
 	}
 
-	/**
-	 * @return Class
-	 */
-	public Class getContext() {
-		return context;
-	}
-
 	@Override
 	public AbstractCondition copy() {
-		return new CondDState(getDiagnosis(), getStatus(), getContext());
+		return new CondDState(getDiagnosis(), getStatus());
 	}
 
 }

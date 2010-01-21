@@ -22,8 +22,8 @@ package de.d3web.kernel.psMethods.nextQASet;
 import java.util.LinkedList;
 
 import de.d3web.kernel.domainModel.Diagnosis;
+import de.d3web.kernel.domainModel.QASet;
 import de.d3web.kernel.domainModel.RuleAction;
-import de.d3web.kernel.domainModel.RuleComplex;
 
 /**
  * ActionRefine represents the indication of a QASet in order to refine an esteblished diagnosis.
@@ -32,13 +32,14 @@ import de.d3web.kernel.domainModel.RuleComplex;
  */
 public class ActionRefine extends ActionNextQASet {
 
+	private static final long serialVersionUID = -986240968780275101L;
 	private Diagnosis target = null;
 
 	/**
 	 * Creates a new ActionRefine for the given corresponding rule
 	 */
-	public ActionRefine(RuleComplex theCorrespondingRule) {
-		super(theCorrespondingRule);
+	public ActionRefine() {
+		super();
 	}
 
 	/**
@@ -56,8 +57,9 @@ public class ActionRefine extends ActionNextQASet {
 	}
 	
 	public RuleAction copy() {
-		ActionRefine a = new ActionRefine(getCorrespondingRule());
-		a.setQASets(new LinkedList(getQASets()));
+		ActionRefine a = new ActionRefine();
+		a.setRule(getCorrespondingRule());
+		a.setQASets(new LinkedList<QASet>(getQASets()));
 		a.setTarget(getTarget());
 		return a;
 	}

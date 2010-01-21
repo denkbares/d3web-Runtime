@@ -42,6 +42,7 @@ import de.d3web.kernel.XPSCase;
  */
 public class Today implements FormulaDateElement {
 	
+	private static final long serialVersionUID = 5007129759534680384L;
 	private FormulaNumberElement arg;
 	private Double evaluatedArg;
 
@@ -65,16 +66,8 @@ public class Today implements FormulaDateElement {
 		return new Date(cal.getTimeInMillis());
 	}
 
-	public Collection getTerminalObjects() {
-		return new ArrayList(getArg().getTerminalObjects());
-	}
-
-	public String getXMLString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("<Today>\n");
-		sb.append(getArg().getXMLString());
-		sb.append("</Today>\n");
-		return sb.toString();
+	public Collection<Object> getTerminalObjects() {
+		return new ArrayList<Object>(getArg().getTerminalObjects());
 	}
 
 	public FormulaNumberElement getArg() {

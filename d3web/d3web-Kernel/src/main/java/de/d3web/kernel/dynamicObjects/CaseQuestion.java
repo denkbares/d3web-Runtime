@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.d3web.kernel.domainModel.Answer;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.domainModel.qasets.Question;
 import de.d3web.kernel.psMethods.suppressAnswer.ActionSuppressAnswer;
 /**
@@ -57,7 +57,7 @@ public abstract class CaseQuestion extends CaseQASet {
 	 * adds a RuleComplex with an action that can suppress alternatives Creation
 	 * date: (28.08.2000 13:59:33)
 	 */
-	public void addRuleSuppress(RuleComplex rule) {
+	public void addRuleSuppress(Rule rule) {
 		suppressRules.add(rule);
 	}
 
@@ -69,7 +69,7 @@ public abstract class CaseQuestion extends CaseQASet {
 		Iterator rule = suppressRules.iterator();
 		List result = new LinkedList<Answer>();
 		while (rule.hasNext()) {
-			RuleComplex r = (RuleComplex) rule.next();
+			Rule r = (Rule) rule.next();
 			ActionSuppressAnswer tempAction = (ActionSuppressAnswer) r.getAction();
 			if (tempAction != null) {
 				Iterator supp = (tempAction).getSuppress().iterator();
@@ -104,7 +104,7 @@ public abstract class CaseQuestion extends CaseQASet {
 	 * removes a suppress rule (that has been added by addRuleSuppress())
 	 * Creation date: (28.08.2000 14:00:52)
 	 */
-	public void removeRuleSuppress(RuleComplex rule) {
+	public void removeRuleSuppress(Rule rule) {
 		suppressRules.remove(rule);
 	}
 

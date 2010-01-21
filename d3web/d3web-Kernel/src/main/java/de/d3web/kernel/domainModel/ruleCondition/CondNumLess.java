@@ -32,6 +32,8 @@ import de.d3web.kernel.domainModel.qasets.QuestionNum;
  */
 public class CondNumLess extends CondNum {
 
+	private static final long serialVersionUID = 9106223944823822308L;
+
 	/**
 	 * Creates a new condition, where the specified numerical question needs to
 	 * be less than the specified value.
@@ -58,12 +60,10 @@ public class CondNumLess extends CondNum {
 
 	@Override
 	public String toString() {
-		return "<Condition type='numLess' ID='"
-			+ getQuestion().getId()
-			+ "' value='"
-			+ getAnswerValue()
-			+ "'>"
-			+ "</Condition>\n";
+		return "\u2190 CondNumLess question: "
+			+ question.getId()
+			+ " value: "
+			+ getAnswerValue();
 	}
 	
 	@Override

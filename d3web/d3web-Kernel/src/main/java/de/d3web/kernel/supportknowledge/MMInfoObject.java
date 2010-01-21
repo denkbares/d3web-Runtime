@@ -29,11 +29,12 @@ import java.util.logging.Logger;
  */
 public class MMInfoObject implements DCMarkedUp, java.io.Serializable {
 	
+	private static final long serialVersionUID = -2724066948400335342L;
 	private DCMarkup dcData;
 	private String content;
 
 	public MMInfoObject(DCMarkup dcData, String content) {
-		setDCDMarkup(dcData);
+		setDCMarkup(dcData);
 		setContent(content);
 	}
 
@@ -60,12 +61,12 @@ public class MMInfoObject implements DCMarkedUp, java.io.Serializable {
 	 * 
 	 */
 	public boolean matches(DCMarkup dcData) {
-		Iterator iter = DCElement.getIterator();
+		Iterator<DCElement> iter = DCElement.getIterator();
 		while (iter.hasNext()) {
-			DCElement dc = (DCElement) iter.next();
+			DCElement dc = iter.next();
 			String content = dcData.getContent(dc);
 			if (content != null && !content.equals("") && this.getDCMarkup() != null &&
-				!content.equals(this.getDCMarkup().getContent(dc)))
+				!content.equalsIgnoreCase(this.getDCMarkup().getContent(dc)))
 				return false;
 		}
 		return true;
@@ -81,7 +82,7 @@ public class MMInfoObject implements DCMarkedUp, java.io.Serializable {
 	/* (non-Javadoc)
 	 * @see de.d3web.kernel.misc.DCDataAdapter#setDCData(de.d3web.kernel.misc.DCData)
 	 */
-	public void setDCDMarkup(DCMarkup dcData) {
+	public void setDCMarkup(DCMarkup dcData) {
 		String subject = dcData.getContent(DCElement.SUBJECT);
 
 		// [MISC]:aha:legacy code
@@ -90,9 +91,9 @@ public class MMInfoObject implements DCMarkedUp, java.io.Serializable {
 		else if ("info.suggestion".equals(subject))
 		    subject = MMInfoSubject.THERAPY.getName();
 		
-		Iterator iter = MMInfoSubject.getIterator();
+		Iterator<MMInfoSubject> iter = MMInfoSubject.getIterator();
 		while (iter.hasNext())
-			if (subject.equals(((MMInfoSubject) iter.next()).getName())) {
+			if (subject.equals((iter.next()).getName())) {
 				this.dcData = dcData;
 				return;
 			}

@@ -1,9 +1,7 @@
 package de.d3web.kernel.psMethods.diaFlux.flow;
 
 import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.RuleComplex;
-import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
-import de.d3web.kernel.domainModel.ruleCondition.NoAnswerException;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.domainModel.ruleCondition.UnknownAnswerException;
 
 /**
@@ -13,13 +11,13 @@ import de.d3web.kernel.domainModel.ruleCondition.UnknownAnswerException;
  */
 public class RuleSupport implements ISupport {
 
-	private final RuleComplex rule;
+	private final Rule rule;
 	
 	
 	/**
 	 * @param condition
 	 */
-	public RuleSupport(RuleComplex rule) {
+	public RuleSupport(Rule rule) {
 		this.rule = rule;
 	}
 
@@ -40,7 +38,7 @@ public class RuleSupport implements ISupport {
 	/**
 	 * @return the rule
 	 */
-	public RuleComplex getRule() {
+	public Rule getRule() {
 		return rule;
 	}
 

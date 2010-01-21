@@ -43,6 +43,8 @@ import de.d3web.kernel.domainModel.qasets.QuestionDate;
  */
 public class QDateWrapper extends FormulaDatePrimitive {
 
+	private static final long serialVersionUID = 1776598462654255384L;
+
 	/** 
 	 * Creates a new FormulaTerm with null-arguments.
 	 */
@@ -85,17 +87,6 @@ public class QDateWrapper extends FormulaDatePrimitive {
 	}
 
 	/**
-	 * @see FormulaElement
-	 */
-	public java.lang.String getXMLString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("<FormulaDatePrimitive type='QDateWrapper'>\n");
-		sb.append("<Value>" + getQuestion().getId() + "</Value>");
-		sb.append("</FormulaDatePrimitive>\n");
-		return sb.toString();
-	}
-
-	/**
 	 * Sets the QuestionNum that will be wrapped
 	 */
 	private void setQuestion(QuestionDate newQuestion) {
@@ -105,7 +96,7 @@ public class QDateWrapper extends FormulaDatePrimitive {
 	/**
 	 * @see FormulaElement
 	 */
-	public Collection getTerminalObjects() {
+	public Collection<Object> getTerminalObjects() {
 		return Collections.singletonList(value);
 	}
 

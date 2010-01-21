@@ -44,6 +44,8 @@ import de.d3web.kernel.supportknowledge.PropertiesContainer;
  */
 public abstract class Answer extends IDObject implements PropertiesContainer {
 	
+	private static final long serialVersionUID = 5842799720984682025L;
+
 	/**
 	 * The {@link Question} instance this {@link Answer} belongs to
 	 */
@@ -173,5 +175,9 @@ public abstract class Answer extends IDObject implements PropertiesContainer {
 	 */
 	public abstract int hashCode();
 	
+	
+	public String getText() {
+		return getValue(null).toString();
+	}
 	// [TODO] where is the equals implementation?
 }

@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.QASet;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.domainModel.qasets.QContainer;
 import de.d3web.kernel.domainModel.qasets.Question;
 import de.d3web.kernel.psMethods.PSMethod;
@@ -141,9 +141,9 @@ public class QContainerIterator {
 					while (kiter.hasNext()) {
 						Object obj = kiter.next();
 
-						if ((obj instanceof RuleComplex)
-								&& ((RuleComplex) obj).getAction() instanceof ActionNextQASet) {
-							RuleComplex rule = (RuleComplex) obj;
+						if ((obj instanceof Rule)
+								&& ((Rule) obj).getAction() instanceof ActionNextQASet) {
+							Rule rule = (Rule) obj;
 							Iterator termiter = rule.getCondition().getTerminalObjects().iterator();
 							while (termiter.hasNext()) {
 								if (termiter.next().equals(q)) {

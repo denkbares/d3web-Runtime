@@ -31,6 +31,7 @@ import de.d3web.kernel.XPSCase;
  */
 public class CondMofN extends NonTerminalCondition {
 
+	private static final long serialVersionUID = 1L;
 	private int min;
 	private int max;
 
@@ -41,7 +42,7 @@ public class CondMofN extends NonTerminalCondition {
 	 * @param min the number of minimal required conditions
 	 * @param max the number of maximal required conditions
 	 */
-	public CondMofN(List terms, int min, int max) {
+	public CondMofN(List<AbstractCondition> terms, int min, int max) {
 		super(terms);
 		setMin(min);
 		setMax(max);
@@ -111,18 +112,18 @@ public class CondMofN extends NonTerminalCondition {
 
 	@Override
 	public String toString() {
-		String ret =
-			"<Condition type='MofN' min='"
+		String ret = "\u2190 CondMofN min="
 				+ getMin()
-				+ "' max='"
+				+ " max="
 				+ getMax()
-				+ "' size='"
-				+ terms.size()
-				+ "'>\n";
+				+ " size="
+				+ terms.size()+ " {";
 		for (AbstractCondition condition : terms) {
-			ret += (condition).toString();
+			if (condition != null)
+				ret += condition.toString();
 		}
-		return ret + "</Condition>\n";
+		ret += "}";
+		return ret;
 	}
 	
 	@Override
@@ -138,7 +139,7 @@ public class CondMofN extends NonTerminalCondition {
 	}
 
 	@Override
-	protected AbstractCondition createInstance(List theTerms, AbstractCondition o) {
+	protected AbstractCondition createInstance(List<AbstractCondition> theTerms, AbstractCondition o) {
 		int min = ((CondMofN)o).getMin();
 		int max = ((CondMofN)o).getMax();
 		return new CondMofN(theTerms, min, max);

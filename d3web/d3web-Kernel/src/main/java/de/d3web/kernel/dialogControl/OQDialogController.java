@@ -31,7 +31,7 @@ import de.d3web.kernel.dialogControl.exceptions.InvalidQASetRequestException;
 import de.d3web.kernel.domainModel.NamedObject;
 import de.d3web.kernel.domainModel.QASet;
 import de.d3web.kernel.domainModel.RuleAction;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.domainModel.qasets.QContainer;
 import de.d3web.kernel.domainModel.qasets.Question;
 import de.d3web.kernel.psMethods.PSMethod;
@@ -271,7 +271,7 @@ public class OQDialogController implements DialogController {
 			return false;
 	}
 	
-	public void propagate(NamedObject no, RuleComplex rule, PSMethod psm) {
+	public void propagate(NamedObject no, Rule rule, PSMethod psm) {
 		mqdc.propagate(no, rule, psm);
 	}
 

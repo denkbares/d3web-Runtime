@@ -32,6 +32,8 @@ import de.d3web.kernel.domainModel.qasets.QuestionText;
  * @author joba
  */
 public class CondTextContains extends CondQuestion {
+	
+	private static final long serialVersionUID = -3269870203428058851L;
 	private String value;
 
 	/**
@@ -78,13 +80,10 @@ public class CondTextContains extends CondQuestion {
 
 	@Override
 	public String toString() {
-
-		return "<Condition type='textContains' ID='"
+		return "\u2190 CondTextContains question: "
 			+ question.getId()
-			+ "' value='"
-			+ value
-			+ "'>"
-			+ "</Condition>\n";
+			+ " value: "
+			+ value;
 	}
 
 	@Override

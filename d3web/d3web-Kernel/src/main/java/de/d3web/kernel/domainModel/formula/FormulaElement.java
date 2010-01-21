@@ -36,10 +36,5 @@ public interface FormulaElement extends java.io.Serializable {
 	/**
 	 * @return a list of FormulaElements, if it is a complex type. Otherwise e.g. a Double
 	 */
-	public Collection getTerminalObjects();
-
-	/**
-	 * @return the String representation of this FormulaElement
-	 */
-	public String getXMLString();
+	public Collection<Object> getTerminalObjects();
 }

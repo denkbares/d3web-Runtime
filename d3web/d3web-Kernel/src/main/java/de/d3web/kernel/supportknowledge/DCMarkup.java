@@ -32,13 +32,14 @@ import java.util.Map;
  */
 public class DCMarkup implements java.io.Serializable {
 	
-	private Map data = new HashMap(15);
+	private static final long serialVersionUID = 1362896727981840722L;
+	private Map<DCElement, String> data = new HashMap<DCElement, String>(15);
 	
 	/**
 	 * if content == null the saved content is ""
 	 * @param dc DCElement
 	 * @param content String
-	 * @throws NullPointerException iff dc == null
+	 * @throws NullPointerException if dc == null
 	 */
 	public void setContent(DCElement dc, String content) {
 		if (dc == null) throw new NullPointerException();
@@ -49,7 +50,7 @@ public class DCMarkup implements java.io.Serializable {
 	/**
 	 * if content == null the returned content is ""
 	 * @param dc DCElement
-	 * @throws NullPointerException iff dc == null
+	 * @throws NullPointerException if dc == null
 	 */
 	public String getContent(DCElement dc) {
 		if (dc == null) throw new NullPointerException();
@@ -63,10 +64,10 @@ public class DCMarkup implements java.io.Serializable {
 	 */
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof DCMarkup)) return false;
-		Iterator iter = DCElement.getIterator();
+		Iterator<DCElement> iter = DCElement.getIterator();
 		while (iter.hasNext()) {
-			DCElement dc = (DCElement) iter.next();
-			if (!((DCMarkup) obj).getContent(dc).equals(this.getContent(dc))) return false;
+			DCElement dc = iter.next();
+			if (!((DCMarkup) obj).getContent(dc).equalsIgnoreCase(this.getContent(dc))) return false;
 		}
 		return true;
 	}
@@ -77,12 +78,16 @@ public class DCMarkup implements java.io.Serializable {
 	 */
 	public Object clone() {
 		DCMarkup clonedDC = new DCMarkup();
-		Iterator iter = data.keySet().iterator();
+		Iterator<DCElement> iter = data.keySet().iterator();
 		while (iter.hasNext()) {
-			DCElement dc = (DCElement) iter.next();
+			DCElement dc = iter.next();
 			clonedDC.setContent(dc, new String(getContent(dc)));
 		}
 		return clonedDC;
+	}
+	
+	public boolean isEmpty() {
+		return data.isEmpty();
 	}
 
 }

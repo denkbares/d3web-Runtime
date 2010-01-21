@@ -23,8 +23,6 @@ package de.d3web.kernel.domainModel;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -36,11 +34,12 @@ import java.util.TreeMap;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+import de.d3web.kernel.domainModel.answers.AnswerChoice;
 import de.d3web.kernel.domainModel.qasets.QContainer;
 import de.d3web.kernel.domainModel.qasets.Question;
+import de.d3web.kernel.domainModel.qasets.QuestionChoice;
 import de.d3web.kernel.psMethods.MethodKind;
-import de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic;
-import de.d3web.kernel.psMethods.nextQASet.PSMethodNextQASet;
+import de.d3web.kernel.psMethods.PSMethod;
 import de.d3web.kernel.supportknowledge.DCMarkedUp;
 import de.d3web.kernel.supportknowledge.DCMarkup;
 import de.d3web.kernel.supportknowledge.Properties;
@@ -66,17 +65,7 @@ import de.d3web.kernel.supportknowledge.PropertiesContainer;
 public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	PropertiesContainer, java.io.Serializable {
 
-    private static class IDObjectIgnoreCaseComparator implements
-	    Comparator<IDObject> {
-	public int compare(IDObject o1, IDObject o2) {
-	    return o1.getId().compareToIgnoreCase(o2.getId());
-	}
-    }
-
-    // Id for the default case repository
-    private static final String DEFAULT_CASE_REPOSITORY_ID = "DEFAULT_CASE_REPOSITORY_ID";
-
-    private Map<String, Collection> caseRepositories;
+	private static final long serialVersionUID = -7990131776582821585L;
 
     private Properties properties;
 
@@ -88,15 +77,12 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 
     private Map<String, String> costUnit;
 
-    private List<Question> questions;
 
-    private List<QContainer> qcontainers;
-
-    private List initQuestions;
+    private List<? extends QASet> initQuestions;
 
     private List<Diagnosis> diagnoses;
 
-    private List<PriorityGroup> priorityGroups;
+    private List<BinaryRessource> binaryRessouces = new ArrayList<BinaryRessource>();
 
     /**
      * Hashes the objects for ID
@@ -112,7 +98,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
      * Map with key="ps-method type" value="list of e.g. rules provided by this
      * type"
      */
-    private Map<Class, Map<MethodKind, List<KnowledgeSlice>>> knowledgeMap;
+    private Map<Class<? extends PSMethod>, Map<MethodKind, List<KnowledgeSlice>>> knowledgeMap;
 
     /**
      * @see de.d3web.kernel.domainModel.IDReference#getId()
@@ -125,70 +111,6 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	kbID = id;
     }
 
-    public String createNewCaseId() {
-	// Das hier ist keine super-eindeutige Funktion, insbesondere nicht über
-	// mehrere Instanzen (auf verschiedenen Rechnern zur gleichen Zeit).
-	// Aber es sollte eigentlich für's erste genügen.
-	Date date = new Date();
-	StringBuffer id = new StringBuffer();
-	id.append("C");
-	id.append(date.toString());
-	id.append(Double.toString(Math.random()).substring(2));
-	return id.toString();
-    }
-
-    /**
-     * Get caserepositories of the Kb
-     * 
-     * @return Map from Name of the Repository (String) to Collection of
-     *         CaseObject
-     */
-    public Map getCaseRepositories() {
-	return caseRepositories;
-    }
-
-    /**
-     * Get the default caserepository of the Kb
-     * 
-     * @return the default case repository as a Collection of CaseObject
-     */
-    public Collection getDefaultCaseRepository() {
-	return getCaseRepository(DEFAULT_CASE_REPOSITORY_ID);
-    }
-
-    /**
-     * Sets the default case repository of the Kb
-     * 
-     * @param caseBase
-     *                Collection of CaseObject
-     */
-    public void setDefaultCaseRepository(Collection caseBase) {
-	addCaseRepository(DEFAULT_CASE_REPOSITORY_ID, caseBase);
-    }
-
-    /**
-     * Get the named caserepository
-     * 
-     * @return the caserepository as Collection of CaseObject
-     */
-    public Collection getCaseRepository(String id) {
-	if (caseRepositories != null) {
-	    return caseRepositories.get(id);
-	}
-	return null;
-    }
-
-    /**
-     * Adds a new caseRepository (as Collection of CaseObject) under a given
-     * name.
-     */
-    public void addCaseRepository(String id, Collection repository) {
-	if (caseRepositories == null) {
-	    caseRepositories = new HashMap<String, Collection>();
-	}
-	caseRepositories.put(id, repository);
-    }
-
     /**
      * @return usually a List of knowledge slices relating to this NamedObject,
      *         the specified problemsolver class and it's kind.
@@ -197,27 +119,24 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
      * @param kind
      *                kind of knowledgeUsed (e.g. FORWARD or BACKWARD)
      */
-    public Object getKnowledge(Class problemsolver, MethodKind kind) {
-	Object o = knowledgeMap.get(problemsolver);
+    public Object getKnowledge(Class<? extends PSMethod> problemsolver, MethodKind kind) {
+	Map<MethodKind, List<KnowledgeSlice>> o = knowledgeMap.get(problemsolver);
 	if (o != null)
-	    return ((Map) o).get(kind);
+	    return o.get(kind);
 	else
 	    return null;
     }
 
     public KnowledgeBase() {
 	diagnoses = new ArrayList<Diagnosis>();
-	questions = new ArrayList<Question>();
-	initQuestions = new ArrayList();
-	qcontainers = new ArrayList<QContainer>();
-	priorityGroups = new ArrayList<PriorityGroup>();
+	initQuestions = new ArrayList<QASet>();
 	costVerbalization = new TreeMap<String, String>();
 	costUnit = new TreeMap<String, String>();
 	properties = new Properties();
 	dcMarkup = new DCMarkup();
 
 	// unsynchronized version, allows null values
-	knowledgeMap = new HashMap<Class, Map<MethodKind, List<KnowledgeSlice>>>();
+	knowledgeMap = new HashMap<Class<? extends PSMethod>, Map<MethodKind, List<KnowledgeSlice>>>();
 
     }
 
@@ -264,23 +183,11 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	}
 	// TODO: vb: check if id is already used by an other object and return false or throw exception
 	// TODO: vb: make IDObject.setId unvisible (package) ?!?
-	// TODO: vb: do not search in lists!
 	// TODO: vb: how to handle is the id has been used (also how to handle add...() if id has already been used)
 	if (this.objectIDMap.containsKey(o.getId())) {
 	    this.objectIDMap.remove(o.getId());
 	    o.setId(newID);
 	    this.objectIDMap.put(o.getId(), o);
-	    return true;
-	}
-
-	if (searchIdInList(qcontainers, o.getId()) != null) {
-	    o.setId(newID);
-	    return true;
-	} else if (searchIdInList(questions, o.getId()) != null) {
-	    o.setId(newID);
-	    return true;
-	} else if (searchIdInList(diagnoses, o.getId()) != null) {
-	    o.setId(newID);
 	    return true;
 	}
 
@@ -294,24 +201,6 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
     }
 
     /**
-     * Adds a new priority group pg to the knowledge base. The new object is not
-     * added, if it is already in the knowledge base.
-     * 
-     * @param pg
-     *                the new priority group to be added
-     */
-    public void add(PriorityGroup pg) {
-
-	if (!objectIDMap.containsKey(pg.getId())) {
-	    objectIDMap.put(pg.getId(), pg);
-	    objectNameMap.put(pg.getText(), pg);
-
-	    getPriorityGroups().add(pg);
-	    pg.setKnowledgeBase(this);
-	}
-    }
-
-    /**
      * Adds a new qcontainer q to the knowledge base. The new object is not
      * added, if it is already in the knowledge base.
      * 
@@ -319,16 +208,17 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
      *                the new qcontainer to be added
      */
     public void add(QContainer q) {
-	checkID(q);
-
-	if (!objectIDMap.containsKey(q.getId())) {
-	    objectIDMap.put(q.getId(), q);
-	    objectNameMap.put(q.getText(), q);
-
-	    qcontainers.add(q);
-	    if (q.getKnowledgeBase() == null)
-		q.setKnowledgeBase(this);
-	}
+    	addQASet(q);
+//	checkID(q);
+//
+//	if (!objectIDMap.containsKey(q.getId())) {
+//	    objectIDMap.put(q.getId(), q);
+//	    objectNameMap.put(q.getText(), q);
+//
+//	    qcontainers.add(q);
+//	    if (q.getKnowledgeBase() == null)
+//		q.setKnowledgeBase(this);
+//	}
 
     }
 
@@ -340,16 +230,17 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
      *                the new question to be added
      */
     public void add(Question q) {
-	checkID(q);
-
-	if (!objectIDMap.containsKey(q.getId())) {
-	    objectIDMap.put(q.getId(), q);
-	    objectNameMap.put(q.getText(), q);
-
-	    questions.add(q);
-	    if (q.getKnowledgeBase() == null)
-		q.setKnowledgeBase(this);
-	}
+    	addQASet(q);
+//	checkID(q);
+//
+//	if (!objectIDMap.containsKey(q.getId())) {
+//	    objectIDMap.put(q.getId(), q);
+//	    objectNameMap.put(q.getText(), q);
+//
+//	    questions.add(q);
+//	    if (q.getKnowledgeBase() == null)
+//		q.setKnowledgeBase(this);
+//	}
 
     }
 
@@ -379,7 +270,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
      * Adds any kind of knowledge for the given problem solver and knowledge
      * context.
      */
-    public synchronized void addKnowledge(Class problemsolver,
+    public synchronized void addKnowledge(Class<? extends PSMethod> problemsolver,
 	    KnowledgeSlice knowledgeSlice, MethodKind knowledgeContext) {
 	try {
 	    /* make sure, that a storage for the problemsolver is available */
@@ -408,7 +299,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	}
     }
 
-    public boolean removeKnowledge(Class problemsolver,
+    public boolean removeKnowledge(Class<? extends PSMethod> problemsolver,
 	    KnowledgeSlice knowledgeSlice) {
 	boolean result = false;
 	Map<MethodKind, List<KnowledgeSlice>> knowledge = knowledgeMap
@@ -422,7 +313,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	return result;
     }
 
-    public boolean removeKnowledge(Class problemsolver,
+    public boolean removeKnowledge(Class<? extends PSMethod> problemsolver,
 	    KnowledgeSlice knowledgeSlice, MethodKind knowledgeContext) {
 	try {
 	    Map<MethodKind, List<KnowledgeSlice>> knowledge = knowledgeMap
@@ -485,15 +376,15 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	    // remove object from list of contained objects
 	    if (o instanceof Diagnosis) {
 		diagnoses.remove(o);
-	    } else if (o instanceof Question) {
-		questions.remove(o);
-	    } else if (o instanceof QContainer) {
-		qcontainers.remove(o);
-	    } else {
-		Logger.getLogger(this.getClass().getName()).warning(
-			"Did not remove object " + o + " (" + o.getClass()
-				+ ") from knowledge base because no"
-				+ "instanceof Diagnosis/Question!");
+//	    } else if (o instanceof Question) {
+//		questions.remove(o);
+//	    } else if (o instanceof QContainer) {
+//		qcontainers.remove(o);
+//	    } else {
+//		Logger.getLogger(this.getClass().getName()).warning(
+//			"Did not remove object " + o + " (" + o.getClass()
+//				+ ") from knowledge base because no"
+//				+ "instanceof Diagnosis/Question!");
 	    }
 	}
     }
@@ -507,29 +398,10 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
     }
 
     /**
-     * Used in d3web.Train, can be used anywhere
-     * 
-     * @param baseVec
-     *                List of NamedObjects
-     */
-    public static Vector fuzzySearchForText(String query, List baseVec) {
-	// Liefert alle Objekte aus baseVec, deren Text fuzzyEqual zu query ist.
-	Vector retVec = new Vector();
-	Iterator iter = baseVec.iterator();
-	while (iter.hasNext()) {
-	    NamedObject obj = (NamedObject) iter.next();
-	    if (fuzzyEqual(query, obj.getText())) {
-		retVec.add(obj);
-	    }
-	}
-	return retVec;
-    }
-
-    /**
      * 
      * @return a Collection of all stored Problem Solver
      */
-    public Collection getAllKnownProblemSolver() {
+    public Collection<Class<? extends PSMethod>> getAllKnownProblemSolver() {
 	return knowledgeMap.keySet();
     }
 
@@ -540,7 +412,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
      */
     public Collection<KnowledgeSlice> getAllKnowledgeSlices() {
 	Set<KnowledgeSlice> allKnowledgeSlices = new HashSet<KnowledgeSlice>();
-	Iterator<Class> psmIter = knowledgeMap.keySet().iterator();
+	Iterator<Class<? extends PSMethod>> psmIter = knowledgeMap.keySet().iterator();
 	while (psmIter.hasNext())
 	    allKnowledgeSlices.addAll(getAllKnowledgeSlicesFor(psmIter.next()));
 	return allKnowledgeSlices;
@@ -554,7 +426,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
      *         given PSContext
      */
     public Collection<KnowledgeSlice> getAllKnowledgeSlicesFor(
-	    Class problemSolverContext) {
+	    Class<? extends PSMethod> problemSolverContext) {
 	Set<KnowledgeSlice> slices = new HashSet<KnowledgeSlice>();
 	Map<MethodKind, List<KnowledgeSlice>> knowledge = knowledgeMap
 		.get(problemSolverContext);
@@ -593,13 +465,6 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	return initQuestions;
     }
 
-    /**
-     * @return a list of priority groups
-     */
-    public List<PriorityGroup> getPriorityGroups() {
-	return priorityGroups;
-    }
-
     public QASetIterator getQASetIterator() {
 	return new QASetIterator(this);
     }
@@ -609,7 +474,13 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
      *         KnowledgeBase
      */
     public List<QContainer> getQContainers() {
-	return Collections.unmodifiableList(qcontainers);
+    	List<QContainer> qcontainers = new ArrayList<QContainer>();
+    	for (IDObject o: objectIDMap.values()) {
+    		if (o instanceof QContainer) {
+    			qcontainers.add((QContainer) o);
+    		}
+    	}
+    	return qcontainers;
     }
 
     /**
@@ -617,17 +488,23 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
      *         KnowledgeBase
      */
     public List<Question> getQuestions() {
-	return Collections.unmodifiableList(questions);
+    	List<Question> questions = new ArrayList<Question>();
+    	for (IDObject o: objectIDMap.values()) {
+    		if (o instanceof Question) {
+    			questions.add((Question) o);
+    		}
+    	}
+    	return questions;
     }
 
     /**
      * @return the qasets that do not have any parent.
      */
     public Diagnosis getRootDiagnosis() {
-	Vector retVec = new Vector();
-	Iterator iter = getDiagnoses().iterator();
+	Vector<Diagnosis> retVec = new Vector<Diagnosis>();
+	Iterator<Diagnosis> iter = getDiagnoses().iterator();
 	while (iter.hasNext()) {
-	    Diagnosis d = (Diagnosis) iter.next();
+	    Diagnosis d = iter.next();
 	    if (d.getParents() == null || d.getParents().isEmpty()) {
 		retVec.add(d);
 	    }
@@ -637,11 +514,11 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		    "more than one diagnosis root node!");
 
 	    // [HOTFIX]:aha:multiple root / orphan handling
-	    Collection orphans = new Vector();
+	    Collection<Diagnosis> orphans = new Vector<Diagnosis>();
 	    Diagnosis root = null;
 	    iter = retVec.iterator();
 	    while (iter.hasNext()) {
-		Diagnosis d = (Diagnosis) iter.next();
+		Diagnosis d = iter.next();
 		if (d.getId().equals("P000"))
 		    root = d;
 		else
@@ -673,10 +550,10 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
      * @return the qasets that do not have any parent.
      */
     public QASet getRootQASet() {
-	Vector retVec = new Vector();
-	Iterator iter = getQContainers().iterator();
+	Vector<QASet> retVec = new Vector<QASet>();
+	Iterator<QASet> iter = getQASets().iterator();
 	while (iter.hasNext()) {
-	    QContainer fk = (QContainer) iter.next();
+		QASet fk = iter.next();
 	    if (fk.getParents() == null || fk.getParents().isEmpty()) {
 		retVec.add(fk);
 	    }
@@ -686,11 +563,11 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		    "more than one root node in qaset tree!");
 
 	    // [HOTFIX]:aha:multiple root / orphan handling
-	    Collection orphans = new Vector();
+	    Collection<QASet> orphans = new Vector<QASet>();
 	    QASet root = null;
 	    iter = retVec.iterator();
 	    while (iter.hasNext()) {
-		QASet q = (QASet) iter.next();
+	    QASet q = iter.next();
 		if (q.getId().equals("Q000"))
 		    root = q;
 		else
@@ -701,7 +578,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 			"fixed: single root is now " + root.getId());
 		iter = orphans.iterator();
 		while (iter.hasNext()) {
-		    QASet q = (QASet) iter.next();
+		    QASet q = iter.next();
 		    q.addParent(root);
 		    Logger.getLogger(this.getClass().getName()).warning(
 			    "fixed: node " + q.getId() + " is now child of "
@@ -715,68 +592,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		    "no root node in qaset tree!");
 	    return null;
 	}
-	return (QASet) retVec.get(0);
-    }
-
-    /**
-     * inspects the KB and prints out all objects the KB contains.
-     */
-    public void inspect() {
-	System.out.println(getQuestions().size() + " Fragen und "
-		+ getDiagnoses().size() + " Diagnosen");
-	Iterator iter, secIter;
-	iter = getQuestions().iterator();
-	while (iter.hasNext()) {
-	    Question frage = (Question) iter.next();
-	    System.out.println("<" + frage.getClass().getName() + " "
-		    + frage.getId() + ": " + frage.getText() + ">");
-	    secIter = null;
-	    if (frage.getKnowledge(PSMethodHeuristic.class) != null)
-		secIter = ((List) (frage.getKnowledge(PSMethodHeuristic.class)))
-			.iterator();
-	    if (secIter != null)
-		while (secIter.hasNext()) {
-		    RuleComplex regel = (RuleComplex) secIter.next();
-		    System.out.println("  DiagnoseRegel: " + regel.getId()
-			    + ": " + regel);
-		}
-	    secIter = null;
-	    if (frage.getKnowledge(PSMethodNextQASet.class) != null)
-		secIter = ((List) (frage.getKnowledge(PSMethodNextQASet.class)))
-			.iterator();
-	    if (secIter != null)
-		while (secIter.hasNext()) {
-		    RuleComplex regel = (RuleComplex) secIter.next();
-		    System.out.println("  FolgefragenRegel: " + regel.getId()
-			    + ": " + regel);
-		}
-	}
-	iter = getDiagnoses().iterator();
-	while (iter.hasNext()) {
-	    Diagnosis diagnose = (Diagnosis) iter.next();
-	    System.out.println("<" + diagnose.getClass().getName() + " "
-		    + diagnose.getId() + ": " + diagnose.getText() + ">");
-	    secIter = null;
-	    if (diagnose.getKnowledge(PSMethodHeuristic.class) != null)
-		secIter = ((List) (diagnose
-			.getKnowledge(PSMethodHeuristic.class))).iterator();
-	    if (secIter != null)
-		while (secIter.hasNext()) {
-		    RuleComplex regel = (RuleComplex) secIter.next();
-		    System.out.println("  DiagnoseRegel: " + regel.getId()
-			    + ": " + regel);
-		}
-	    secIter = null;
-	    if (diagnose.getKnowledge(PSMethodNextQASet.class) != null)
-		secIter = ((List) (diagnose
-			.getKnowledge(PSMethodNextQASet.class))).iterator();
-	    if (secIter != null)
-		while (secIter.hasNext()) {
-		    RuleComplex regel = (RuleComplex) secIter.next();
-		    System.out.println("  FolgefragenRegel: " + regel.getId()
-			    + ": " + regel);
-		}
-	}
+	return retVec.get(0);
     }
 
     /**
@@ -786,7 +602,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
      */
     public IDObject search(String id) {
 	// suche erst bei Fragen
-	IDObject o = searchQuestions(id);
+	IDObject o = searchQuestion(id);
 	if (o != null)
 	    return o;
 	// ... bei Frageklassen
@@ -801,12 +617,27 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	 * // ... bei Regeln o = sucheId(getRules(), id); if (o != null) return
 	 * o;
 	 */
-	// ... bei Prioritätsgruppen
-	o = searchPriorityGroups(id);
-	if (o != null)
-	    return o;
-
 	return null;
+    }
+    
+    /**
+     * Searches the Answer with the specified ID
+     * @param answerID ID of the Answer
+     * @return AnswerChoice with the specified ID
+     */
+    public AnswerChoice searchAnswerChoice(String answerID) {
+    	for (Question q: getQuestions()) {
+    		if (q instanceof QuestionChoice) {
+    			QuestionChoice qc = (QuestionChoice) q;
+    			List<AnswerChoice> allAlternatives = qc.getAllAlternatives();
+    			for (AnswerChoice a: allAlternatives) {
+    				if (a.getId().equals(answerID)) {
+    					return a;
+    				}
+    			}
+    		}
+    	}
+    	return null;
     }
 
     /**
@@ -820,68 +651,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	    if (o instanceof Diagnosis)
 		return (Diagnosis) o;
 	}
-
-	// deprecated: should be removed when objectMap hashing is stable
-	return (Diagnosis) searchIdInList(getDiagnoses(), id);
-    }
-
-    /**
-     * this method shouldnt be necessary any more to search objects as they are
-     * hashed O(1) this method should be factored out, but as all the tests dont
-     * create the Objects correctly (setID()) on junit testing this method is
-     * still called as the objects are not hashed correctly on creation of the
-     * KB
-     * 
-     * runs in linar time! O(n)
-     * 
-     * @param list
-     * @param id
-     * @return
-     */
-    @Deprecated
-    private static IDObject searchIdInList(List list, String id) {
-	if (id == null) {
-	    return null;
-	}
-	for (Object object : list) {
-	    if (object instanceof IDObject) {
-		if (((IDObject) object).getId().equalsIgnoreCase(id)) {
-			Logger.getLogger(KnowledgeBase.class.getName())
-			.warning("Found object for id '" + id + "' in list (linear time) as it wasn't hashed."
-					+ "This shouldn't happen! (only in junit tests, which need to be refactored)");
-		    return (IDObject) object;
-		}
-	    }
-	}
-
 	return null;
-    }
-
-    public static IDObject searchId(List v, String id) {
-	Iterator iter = v.iterator();
-	while (iter.hasNext()) {
-	    IDObject o = (IDObject) iter.next();
-	    if (o.getId().equalsIgnoreCase(id)) {
-		return o;
-	    }
-	}
-	return null;
-    }
-
-    /**
-     * Searches for a PriorityGroup by its id
-     * 
-     * @return found PriorityGroup, null if not present.
-     */
-    public PriorityGroup searchPriorityGroups(String id) {
-	if (objectIDMap.containsKey(id)) {
-	    IDObject o = objectIDMap.get(id);
-	    if (o instanceof PriorityGroup)
-		return (PriorityGroup) o;
-	}
-
-	// deprecated: should be removed when objectMap hashing is stable
-	return (PriorityGroup) searchId(getPriorityGroups(), id);
     }
 
     /**
@@ -897,12 +667,9 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	}
 
 	// deprecated: should be removed when objectMap hashing is stable
-	QASet ret = searchQuestions(id);
+	QASet ret = searchQuestion(id);
 	if (ret == null) {
 	    ret = searchQContainers(id);
-	}
-	if (ret == null) {
-	    ret = searchPriorityGroups(id);
 	}
 	return ret;
 
@@ -919,9 +686,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	    if (o instanceof QContainer)
 		return (QContainer) o;
 	}
-
-	// deprecated: should be removed when objectMap hashing is stable
-	return (QContainer) searchIdInList(getQContainers(), id);
+	return null;
     }
 
     /**
@@ -939,15 +704,13 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
      * 
      * @return found question, null if not present.
      */
-    public Question searchQuestions(String id) {
+    public Question searchQuestion(String id) {
 	if (objectIDMap.containsKey(id)) {
 	    IDObject o = objectIDMap.get(id);
 	    if (o instanceof Question)
 		return (Question) o;
 	}
-
-	// deprecated: should be removed when objectMap hashing is stable
-	return (Question) searchIdInList(getQuestions(), id);
+	return null;
     }
 
     /**
@@ -964,8 +727,8 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
     /**
      * Sets the initial question list.
      */
-    public void setInitQuestions(java.util.List initQuestions) {
-	this.initQuestions = initQuestions;
+    public void setInitQuestions(List<? extends QASet> initQuestions) {
+    	this.initQuestions = initQuestions;
     }
 
     /**
@@ -985,7 +748,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	return dcMarkup;
     }
 
-    public void setDCDMarkup(DCMarkup dcMarkup) {
+    public void setDCMarkup(DCMarkup dcMarkup) {
 	this.dcMarkup = dcMarkup;
     }
 
@@ -997,30 +760,33 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	this.properties = properties;
     }
 
-    public void cleanupStaleQASets(Collection qasets2Remove) {
-	StringBuffer sb = new StringBuffer();
-	sb.append("ignored " + qasets2Remove.size() + " orphaned qasets: ");
-	for (Iterator iter = qasets2Remove.iterator(); iter.hasNext();) {
-	    QASet q = (QASet) iter.next();
-	    String text = q.getText();
-	    if (text.length() > 20)
-		text = text.substring(0, 17) + "...";
-	    sb.append(q.getId() + "(" + text + ")");
-	    if (iter.hasNext())
-		sb.append("; ");
-	    Iterator qiter = new LinkedList(q.getChildren()).iterator();
-	    // we need to create first a copy of the children-list
-	    // to avoid a ConcurrentModificationException, because
-	    // removeParent removes the Child from the getChildren()-List,
-	    // which would break the iterator.
-	    while (qiter.hasNext())
-		((QASet) qiter.next()).removeParent(q);
-	    if (q instanceof Question)
-		questions.remove(q);
-	    else if (q instanceof QContainer)
-		qcontainers.remove(q);
+    public void addBinaryRessouce(BinaryRessource binaryRessource) {
+		binaryRessouces.add(binaryRessource);
 	}
-	Logger.getLogger(this.getClass().getName()).warning(sb.toString());
-    }
+	
+	public List<BinaryRessource> getBinaryRessources() {
+		return Collections.unmodifiableList(binaryRessouces);
+	}
+	
+	public void addQASet(QASet qaSet) {
+		checkID(qaSet);
+		if (!objectIDMap.containsKey(qaSet.getId())) {
+		    objectIDMap.put(qaSet.getId(), qaSet);
+		    objectNameMap.put(qaSet.getText(), qaSet);
+		    if (qaSet.getKnowledgeBase() == null)
+			qaSet.setKnowledgeBase(this);
+		}
+		
+	}
+	
+	public List<QASet> getQASets() {
+		List<QASet> qASets = new ArrayList<QASet>();
+    	for (IDObject o: objectIDMap.values()) {
+    		if (o instanceof QASet) {
+    			qASets.add((QASet) o);
+    		}
+    	}
+    	return qASets;
+	}
 
 }

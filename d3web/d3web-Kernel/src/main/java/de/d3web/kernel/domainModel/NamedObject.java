@@ -706,12 +706,11 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	 * @throws KnowledgeBaseObjectModificationException
 	 *         if a {@link KnowledgeBase} has been already defined previously
 	 */
-	public void setKnowledgeBase(KnowledgeBase knowledgeBase)
-			throws KnowledgeBaseObjectModificationException {
+	public void setKnowledgeBase(KnowledgeBase knowledgeBase) {
 		if (this.knowledgeBase == null) {
 			this.knowledgeBase = knowledgeBase;
 		} else if (!knowledgeBase.equals(getKnowledgeBase())) {
-			throw new KnowledgeBaseObjectModificationException(
+			throw new IllegalStateException(
 					"KnowledgeBase already defined!");
 		}
 	}

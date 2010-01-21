@@ -27,12 +27,18 @@ package de.d3web.kernel.domainModel.answers;
  */
 public class AnswerYes extends AnswerChoice {
 
+	private static final long serialVersionUID = -8797607249815331777L;
+
 	/**
 	 * creates a new AnswerYes.
 	 */
 	public AnswerYes() {
-		setId("YES");
+		super("YES");
 		setText("YES");
+	}
+	
+	public AnswerYes(String id) {
+		super(id);
 	}
 
 	/**

@@ -29,6 +29,8 @@ import de.d3web.kernel.XPSCase;
 public class Mult extends FormulaNumberArgumentsTerm implements FormulaNumberElement{
 
 	
+	private static final long serialVersionUID = 4932105555385315958L;
+
 	/** 
 	 * Creates a new FormulaTerm with null-arguments.
 	 */

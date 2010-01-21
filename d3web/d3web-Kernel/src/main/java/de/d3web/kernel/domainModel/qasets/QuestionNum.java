@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import de.d3web.kernel.XPSCase;
+import de.d3web.kernel.domainModel.NumericalInterval;
 import de.d3web.kernel.domainModel.QASet;
 import de.d3web.kernel.domainModel.answers.AnswerNum;
 import de.d3web.kernel.domainModel.answers.AnswerUnknown;
@@ -53,7 +54,7 @@ public class QuestionNum extends Question {
 	 * List of meaningful partitions for the numerical
 	 * value range of this question.
 	 */ 
-	private List valuePartitions = null;
+	private List<NumericalInterval> valuePartitions = null;
 
 	public XPSCaseObject createCaseObject(XPSCase session) {
 		return new CaseQuestionNum(this);
@@ -146,7 +147,7 @@ public class QuestionNum extends Question {
 	 * value range of this question.
 	 * @return partitions of the numerical value range.
 	 */ 
-	public List getValuePartitions() {
+	public List<NumericalInterval> getValuePartitions() {
 		return valuePartitions;
 	}
 
@@ -155,7 +156,7 @@ public class QuestionNum extends Question {
 	 * value range of this question.
 	 * @param valuePartions meaningful partitions of the value range.
 	 */
-	public void setValuePartitions(List valuePartitions) {
+	public void setValuePartitions(List<NumericalInterval> valuePartitions) {
 		this.valuePartitions = valuePartitions;
 	}
 

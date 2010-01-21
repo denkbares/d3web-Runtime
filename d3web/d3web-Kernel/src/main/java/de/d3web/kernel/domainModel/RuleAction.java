@@ -23,6 +23,7 @@ package de.d3web.kernel.domainModel;
 import java.util.List;
 
 import de.d3web.kernel.XPSCase;
+import de.d3web.kernel.psMethods.PSMethod;
 
 /**
  * Abstract class to describe actions executed by rules,
@@ -30,12 +31,25 @@ import de.d3web.kernel.XPSCase;
  * @author Joachim Baumeister
  */
 public abstract class RuleAction implements Cloneable, java.io.Serializable {
-	private RuleComplex correspondingRule;
-
-	public RuleAction(RuleComplex theCorrespondingRule) {
-		correspondingRule = theCorrespondingRule;
+	
+	private Rule rule = null;
+	
+	public Rule getCorrespondingRule() {
+		return rule;
 	}
-
+	
+	/**
+	 * Notlösung!!!
+	 * 
+	 * Eine Action sollte seine Regel nicht kennen müssen. Das QASetManager Interface und seine Implementierer müssen dringend überarbeitet werden.
+	 * @param rule
+	 */
+	public void setRule(Rule rule) {
+		this.rule=rule;
+	}
+	
+	private static final long serialVersionUID = -7734602381846137317L;
+	
 	/**
 	 * Executes the included action.
 	 */
@@ -48,15 +62,8 @@ public abstract class RuleAction implements Cloneable, java.io.Serializable {
 	 */
 	public abstract List getTerminalObjects();
 
-	public RuleComplex getCorrespondingRule() {
-		return correspondingRule;
-	}
 
-	public abstract Class getProblemsolverContext();
-
-	public void setCorrespondingRule(RuleComplex newCorrespondingRule) {
-		correspondingRule = newCorrespondingRule;
-	}
+	public abstract Class<? extends PSMethod> getProblemsolverContext();
 
 	/**
 	 * Checks if any action value (e.g. terminal objects of a formula) have

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.d3web.kernel.domainModel.answers.AnswerChoice;
 import de.d3web.kernel.domainModel.formula.FormulaDateExpression;
 import de.d3web.kernel.domainModel.formula.FormulaExpression;
 import de.d3web.kernel.domainModel.qasets.Question;
@@ -49,7 +50,7 @@ public class RuleFactory {
 	 * Creates a rule to set values for a given question 
 	 * with the specified parameters.
 	 */
-	public static RuleComplex createAddValueRule(
+	public static Rule createAddValueRule(
 		String theId,
 		Question theQuestion,
 		Object[] theAnswers,
@@ -67,16 +68,17 @@ public class RuleFactory {
 	 * Creates a rule to add values to a given question 
 	 * with the specified parameters.
 	 */
-	public static RuleComplex createAddValueRule(
+	public static Rule createAddValueRule(
 		String theId,
 		Question theQuestion,
 		Object[] theAnswers,
 		AbstractCondition theCondition,
 		AbstractCondition theRuleException) {
 
-		RuleComplex rule = createRule(theId);
+		Rule rule = createRule(theId);
 
-		ActionAddValue theAction = new ActionAddValue(rule);
+		ActionAddValue theAction = new ActionAddValue();
+		theAction.setRule(rule);
 		theAction.setQuestion(theQuestion);
 		theAction.setValues(theAnswers);
 
@@ -88,7 +90,7 @@ public class RuleFactory {
 	/**
 	 * Creates a clarification-rule with the specified parameters.
 	 */
-	public static RuleComplex createClarificationRule(
+	public static Rule createClarificationRule(
 		String theId,
 		List theAction,
 		Diagnosis target,
@@ -105,16 +107,17 @@ public class RuleFactory {
 	/**
 	 * Creates a Clarification-rule with the specified parameters.
 	 */
-	public static RuleComplex createClarificationRule(
+	public static Rule createClarificationRule(
 		String theId,
 		List theAction,
 		Diagnosis target,
 		AbstractCondition theCondition,
 		AbstractCondition theRuleException) {
 
-		RuleComplex rule = createRule(theId);
+		Rule rule = createRule(theId);
 
-		ActionClarify ruleAction = new ActionClarify(rule);
+		ActionClarify ruleAction = new ActionClarify();
+		ruleAction.setRule(rule);
 		ruleAction.setQASets(theAction);
 		ruleAction.setTarget(target);
 
@@ -125,7 +128,7 @@ public class RuleFactory {
 	/**
 	 * Creates a contra-indication-rule with the specified parameters.
 	 */
-	public static RuleComplex createContraIndicationRule(
+	public static Rule createContraIndicationRule(
 		String theId,
 		List theQASets,
 		AbstractCondition theCondition) {
@@ -136,15 +139,15 @@ public class RuleFactory {
 	/**
 	 * Creates a contra-indication-rule with the specified parameters.
 	 */
-	public static RuleComplex createContraIndicationRule(
+	public static Rule createContraIndicationRule(
 		String theId,
 		List theQASets,
 		AbstractCondition theCondition,
 		AbstractCondition theRuleException) {
 
-		RuleComplex rule = createRule(theId);
+		Rule rule = createRule(theId);
 
-		ActionContraIndication theAction = new ActionContraIndication(rule);
+		ActionContraIndication theAction = new ActionContraIndication();
 		theAction.setQASets(theQASets);
 
 		setRuleParams(rule, theAction, theCondition, theRuleException);
@@ -159,7 +162,7 @@ public class RuleFactory {
 	 * @param Score theDiagnosisScore
 	 * @param AbstractCondition theCondition
 	 */
-	public static RuleComplex createHeuristicPSRule(
+	public static Rule createHeuristicPSRule(
 		String theId,
 		Diagnosis theDiagnosisAction,
 		Score theDiagnosisScore,
@@ -172,20 +175,28 @@ public class RuleFactory {
 			theCondition,
 			null);
 	}
+	
+	public static Rule createRule(String theId, RuleAction theAction, AbstractCondition theCondition, AbstractCondition theException, AbstractCondition theContext) {
+		Rule rule = createRule(theId);
+		setRuleParams(rule, theAction, theCondition, theException);
+		rule.setContext(theContext);
+		return rule;
+	}
 
 	/**
 	 * Creates a heuristic-rule with the specified parameters.
 	 */
-	public static RuleComplex createHeuristicPSRule(
+	public static Rule createHeuristicPSRule(
 		String theId,
 		Diagnosis theDiagnosisAction,
 		Score theDiagnosisScore,
 		AbstractCondition theCondition,
 		AbstractCondition theRuleException) {
 
-		RuleComplex rule = createRule(theId);
+		Rule rule = createRule(theId);
 
-		ActionHeuristicPS theAction = new ActionHeuristicPS(rule);
+		ActionHeuristicPS theAction = new ActionHeuristicPS();
+		theAction.setRule(rule);
 		theAction.setDiagnosis(theDiagnosisAction);
 		theAction.setScore(theDiagnosisScore);
 
@@ -199,7 +210,7 @@ public class RuleFactory {
 	 * @param List theAction
 	 * @param AbstractCondition theCondition
 	 */
-	public static RuleComplex createIndicationRule(
+	public static Rule createIndicationRule(
 		String theId,
 		List theAction,
 		AbstractCondition theCondition) {
@@ -213,7 +224,7 @@ public class RuleFactory {
 	 * @param QASet one single QASet to indicate
 	 * @param AbstractCondition theCondition
 	 */
-	public static RuleComplex createIndicationRule(
+	public static Rule createIndicationRule(
 			String theId,
 			QASet singleIndication,
 			AbstractCondition theCondition) {
@@ -226,15 +237,16 @@ public class RuleFactory {
 	/**
 	 * Creates a NextQASet-rule with the specified parameters.
 	 */
-	public static RuleComplex createIndicationRule(
+	public static Rule createIndicationRule(
 		String theId,
 		List theAction,
 		AbstractCondition theCondition,
 		AbstractCondition theRuleException) {
 
-		RuleComplex rule = createRule(theId);
+		Rule rule = createRule(theId);
 
-		ActionNextQASet ruleAction = new ActionIndication(rule);
+		ActionNextQASet ruleAction = new ActionIndication();
+		ruleAction.setRule(rule);
 		ruleAction.setQASets(theAction);
 
 		setRuleParams(rule, ruleAction, theCondition, theRuleException);
@@ -245,20 +257,21 @@ public class RuleFactory {
 	 * Creates a rule, that instantly (directly after current qaset) 
 	 * indicates the specified qasets.
 	 */
-	public static RuleComplex createInstantIndicationRule(
+	public static Rule createInstantIndicationRule(
 			String id, 
 			List theAction, 
 			AbstractCondition theCondition,
 			AbstractCondition theRuleException) {
 		
-		RuleComplex rule = createRule(id);
-		ActionNextQASet ruleAction = new ActionInstantIndication(rule);
+		Rule rule = createRule(id);
+		ActionNextQASet ruleAction = new ActionInstantIndication();
+		ruleAction.setRule(rule);
 		ruleAction.setQASets(theAction);
 		setRuleParams(rule, ruleAction, theCondition, theRuleException);
 		return rule;
 	}
 
-	public static RuleComplex createInstantIndicationRule(
+	public static Rule createInstantIndicationRule(
 			String id, 
 			List theAction, 
 			AbstractCondition theCondition) {
@@ -271,7 +284,7 @@ public class RuleFactory {
 	 * Creates a rule, that instantly (directly after current qaset) 
 	 * indicates the specified qasets.
 	 */
-	public static RuleComplex createInstantIndicationRule(
+	public static Rule createInstantIndicationRule(
 			String theId,
 			QASet singleIndication,
 			AbstractCondition theCondition) {
@@ -288,7 +301,7 @@ public class RuleFactory {
 	/**
 	 * Creates a Refinement-rule with the specified parameters.
 	 */
-	public static RuleComplex createRefinementRule(
+	public static Rule createRefinementRule(
 		String theId,
 		List theAction,
 		Diagnosis target,
@@ -305,16 +318,17 @@ public class RuleFactory {
 	/**
 	 * Creates a Refinement-rule with the specified parameters.
 	 */
-	public static RuleComplex createRefinementRule(
+	public static Rule createRefinementRule(
 		String theId,
 		List theAction,
 		Diagnosis target,
 		AbstractCondition theCondition,
 		AbstractCondition theRuleException) {
 
-		RuleComplex rule = createRule(theId);
+		Rule rule = createRule(theId);
 
-		ActionRefine ruleAction = new ActionRefine(rule);
+		ActionRefine ruleAction = new ActionRefine();
+		ruleAction.setRule(rule);
 		ruleAction.setQASets(theAction);
 		ruleAction.setTarget(target);
 
@@ -325,10 +339,8 @@ public class RuleFactory {
 	/**
 	 * Creates a ruleComplex with the specified ID
 	 */
-	public static RuleComplex createRule(String theId) {
-
-		RuleComplex rule = new RuleComplex();
-		rule.setId(theId);
+	public static Rule createRule(String theId) {
+		Rule rule = new Rule(theId);
 		return rule;
 	}
 
@@ -340,7 +352,7 @@ public class RuleFactory {
 	 * @param Object[] theAnswers
 	 * @param AbstractCondition theCondition
 	 */
-	public static RuleComplex createSetValueRule(
+	public static Rule createSetValueRule(
 		String theId,
 		Question theQuestion,
 		Object[] theAnswers,
@@ -358,16 +370,17 @@ public class RuleFactory {
 	 * Creates a rule to set values for a given question 
 	 * with the specified parameters.
 	 */
-	public static RuleComplex createSetValueRule(
+	public static Rule createSetValueRule(
 		String theId,
 		Question theQuestion,
 		Object[] theAnswers,
 		AbstractCondition theCondition,
 		AbstractCondition theRuleException) {
 
-		RuleComplex rule = createRule(theId);
+		Rule rule = createRule(theId);
 
-		ActionSetValue theAction = new ActionSetValue(rule);
+		ActionSetValue theAction = new ActionSetValue();
+		theAction.setRule(rule);
 		theAction.setQuestion(theQuestion);
 		theAction.setValues(theAnswers);
 
@@ -380,7 +393,7 @@ public class RuleFactory {
 	 * Creates a rule to set values for a given question 
 	 * with the specified parameters.
 	 */
-	public static RuleComplex createSetValueRule(
+	public static Rule createSetValueRule(
 		String theId,
 		Question theQuestion,
 		FormulaExpression theAnswer,
@@ -397,7 +410,7 @@ public class RuleFactory {
 	 * Creates a rule to set values for a given question 
 	 * with the specified parameters.
 	 */
-	public static RuleComplex createSetValueRule(
+	public static Rule createSetValueRule(
 		String theId,
 		Question theQuestion,
 		FormulaDateExpression theAnswer,
@@ -414,16 +427,17 @@ public class RuleFactory {
 	 * Creates a rule to set values for a given question 
 	 * with the specified parameters.
 	 */
-	public static RuleComplex createSetValueRule(
+	public static Rule createSetValueRule(
 		String theId,
 		Question theQuestion,
 		FormulaExpression theAnswers,
 		AbstractCondition theCondition,
 		AbstractCondition theRuleException) {
 
-		RuleComplex rule = createRule(theId);
+		Rule rule = createRule(theId);
 
-		ActionSetValue theAction = new ActionSetValue(rule);
+		ActionSetValue theAction = new ActionSetValue();
+		theAction.setRule(rule);
 		theAction.setQuestion(theQuestion);
 		theAction.setValues(new Object[] { theAnswers });
 
@@ -437,16 +451,17 @@ public class RuleFactory {
 	 * Creates a rule to set values for a given question 
 	 * with the specified parameters.
 	 */
-	public static RuleComplex createSetValueRule(
+	public static Rule createSetValueRule(
 		String theId,
 		Question theQuestion,
 		FormulaDateExpression theAnswers,
 		AbstractCondition theCondition,
 		AbstractCondition theRuleException) {
 
-		RuleComplex rule = createRule(theId);
+		Rule rule = createRule(theId);
 
-		ActionSetValue theAction = new ActionSetValue(rule);
+		ActionSetValue theAction = new ActionSetValue();
+		theAction.setRule(rule);
 		theAction.setQuestion(theQuestion);
 		theAction.setValues(new Object[] { theAnswers });
 
@@ -459,10 +474,10 @@ public class RuleFactory {
 	 * Creates a rule to add values to a given question 
 	 * with the specified parameters.
 	 */
-	public static RuleComplex createSuppressAnswerRule(
+	public static Rule createSuppressAnswerRule(
 		String theId,
 		QuestionChoice theQuestion,
-		Object[] theAnswers,
+		AnswerChoice[] theAnswers,
 		AbstractCondition theCondition) {
 
 		return createSuppressAnswerRule(
@@ -477,16 +492,17 @@ public class RuleFactory {
 	 * Creates a rule to add values to a given question 
 	 * with the specified parameters.
 	 */
-	public static RuleComplex createSuppressAnswerRule(
+	public static Rule createSuppressAnswerRule(
 		String theId,
 		QuestionChoice theQuestion,
-		Object[] theAnswers,
+		AnswerChoice[] theAnswers,
 		AbstractCondition theCondition,
 		AbstractCondition theRuleException) {
 
-		RuleComplex rule = createRule(theId);
+		Rule rule = createRule(theId);
 
-		ActionSuppressAnswer theAction = new ActionSuppressAnswer(rule);
+		ActionSuppressAnswer theAction = new ActionSuppressAnswer();
+		theAction.setRule(rule);
 		theAction.setQuestion(theQuestion);
 		theAction.setSuppress(theAnswers);
 
@@ -499,7 +515,7 @@ public class RuleFactory {
 	 * Sets the specified parameters to the specified rule.
 	 */
 	public static void setRuleParams(
-		RuleComplex rule,
+		Rule rule,
 		RuleAction theAction,
 		AbstractCondition theCondition,
 		AbstractCondition theRuleException) {

@@ -23,15 +23,15 @@ import java.util.List;
 
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.NamedObject;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.IDObject;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.domainModel.answers.AnswerUnknown;
 import de.d3web.kernel.domainModel.qasets.Question;
 import de.d3web.kernel.psMethods.xclPattern.XCLRelation;
 
 /**
  * Abstract superclass to represent conditions, to be used
- * for example in rules ({@link RuleComplex}) and set-covering relations
+ * for example in rules ({@link Rule}) and set-covering relations
  * ({@link XCLRelation}). 
  * Every condition holds a collection of objects, that are constrained
  * in this condition, and an eval method to evaluate this condition
@@ -39,6 +39,8 @@ import de.d3web.kernel.psMethods.xclPattern.XCLRelation;
  * @author Joachim Baumeister, Christian Betz
  */
 public abstract class AbstractCondition implements java.io.Serializable {
+
+	private static final long serialVersionUID = -1427421083780321072L;
 
 	/**
 	 * Evaluates this condition with respect to the findings
@@ -64,7 +66,7 @@ public abstract class AbstractCondition implements java.io.Serializable {
 	 * instances, that are constrained in this condition.
 	 * @return all used questions and diagnoses used in this condition
 	 */
-	public abstract List<? extends NamedObject> getTerminalObjects();
+	public abstract List<? extends IDObject> getTerminalObjects();
 
 	/**
 	 * Returns a simple {@link String} verbalization of this condition. 

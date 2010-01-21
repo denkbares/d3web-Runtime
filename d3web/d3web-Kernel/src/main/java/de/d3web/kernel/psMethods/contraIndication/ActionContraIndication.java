@@ -26,8 +26,8 @@ import java.util.List;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.QASet;
 import de.d3web.kernel.domainModel.RuleAction;
-import de.d3web.kernel.domainModel.RuleComplex;
 import de.d3web.kernel.psMethods.MethodKind;
+import de.d3web.kernel.psMethods.PSMethod;
 
 /**
  * RuleAction that contra indicates a QASet, when the corresponding rule fires
@@ -35,14 +35,11 @@ import de.d3web.kernel.psMethods.MethodKind;
  * @author Joachim Baumeister
  */
 public class ActionContraIndication extends RuleAction {
-	private List qasets;
+	
+	private static final long serialVersionUID = 3218797752146535382L;
+	private List<QASet> qasets;
 
-	/**
-	 * Creates a new ActionContraIndication for the given corresponding RuleComplex
-	 */
-	public ActionContraIndication(RuleComplex theCorrespondingRule) {
-		super(theCorrespondingRule);
-	}
+	
 
 	/**
 	 * Invoked, if rule fires (action)
@@ -50,9 +47,9 @@ public class ActionContraIndication extends RuleAction {
 	 * @param theCase current case
 	 */
 	public void doIt(XPSCase theCase) {
-		Iterator qaset = getQASets().iterator();
+		Iterator<QASet> qaset = getQASets().iterator();
 		while (qaset.hasNext()) {
-			((QASet) qaset.next()).addContraReason(
+			(qaset.next()).addContraReason(
 				new QASet.Reason(getCorrespondingRule()),
 				theCase);
 		}
@@ -61,14 +58,14 @@ public class ActionContraIndication extends RuleAction {
 	/**
 	 * @return PSMethodContraIndication.class
 	 */
-	public Class getProblemsolverContext() {
+	public Class<? extends PSMethod> getProblemsolverContext() {
 		return PSMethodContraIndication.class;
 	}
 
 	/**
 	 * @return List of QASets this action can contraindicate
 	 */
-	public java.util.List getQASets() {
+	public java.util.List<QASet> getQASets() {
 		return qasets;
 	}
 
@@ -76,7 +73,7 @@ public class ActionContraIndication extends RuleAction {
 	 * @return all objects participating on the action.<BR>
 	 * -> getQASets()
 	 */
-	public List getTerminalObjects() {
+	public List<QASet> getTerminalObjects() {
 		return getQASets();
 	}
 
@@ -84,9 +81,9 @@ public class ActionContraIndication extends RuleAction {
 	 * inserts the corresponding rule as knowledge to all
 	 * QASets participating on the action.
 	 */
-	private void insertRuleIntoQASets(List sets) {
+	private void insertRuleIntoQASets(List<QASet> sets) {
 		if (getQASets() != null) {
-			Iterator qaset = getQASets().iterator();
+			Iterator<QASet> qaset = getQASets().iterator();
 			while (qaset.hasNext()) {
 				((QASet) qaset.next()).addKnowledge(
 					getProblemsolverContext(),
@@ -100,11 +97,11 @@ public class ActionContraIndication extends RuleAction {
 	 * removes the corresponding rule as knowledge to all
 	 * QASets participating on the action.
 	 */
-	private void removeRuleFromOldQASets(List qasets) {
+	private void removeRuleFromOldQASets(List<QASet> qasets) {
 		if (getQASets() != null) {
-			Iterator qaset = getQASets().iterator();
+			Iterator<QASet> qaset = getQASets().iterator();
 			while (qaset.hasNext()) {
-				((QASet) qaset.next()).removeKnowledge(
+				(qaset.next()).removeKnowledge(
 					getProblemsolverContext(),
 					getCorrespondingRule(),
 					MethodKind.BACKWARD);
@@ -115,7 +112,7 @@ public class ActionContraIndication extends RuleAction {
 	/**
 	 * sets the QASets for contraindication
 	 */
-	public void setQASets(List theQasets) {
+	public void setQASets(List<QASet> theQasets) {
 		removeRuleFromOldQASets(getQASets());
 		qasets = theQasets;
 		insertRuleIntoQASets(getQASets());
@@ -126,7 +123,7 @@ public class ActionContraIndication extends RuleAction {
 	 * @param theCase current case
 	 */
 	public void undo(XPSCase theCase) {
-		Iterator qaset = getQASets().iterator();
+		Iterator<QASet> qaset = getQASets().iterator();
 		while (qaset.hasNext()) {
 			((QASet) qaset.next()).removeContraReason(
 				new QASet.Reason(getCorrespondingRule()),
@@ -160,8 +157,8 @@ public class ActionContraIndication extends RuleAction {
 	}
 	
 	public RuleAction copy() {
-		ActionContraIndication newAction = new ActionContraIndication(getCorrespondingRule());
-		newAction.setQASets(new LinkedList(getQASets()));
+		ActionContraIndication newAction = new ActionContraIndication();
+		newAction.setQASets(new LinkedList<QASet>(getQASets()));
 		return newAction;
 	}
 }

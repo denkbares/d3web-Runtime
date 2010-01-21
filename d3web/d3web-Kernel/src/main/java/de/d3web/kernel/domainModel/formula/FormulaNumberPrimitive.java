@@ -29,6 +29,7 @@ package de.d3web.kernel.domainModel.formula;
  */
 public abstract class FormulaNumberPrimitive implements FormulaNumberElement {
 
+	private static final long serialVersionUID = 1815927179653196338L;
 	/**
 	 * Value of the primitive FormulaElement
 	 */
@@ -54,12 +55,6 @@ public abstract class FormulaNumberPrimitive implements FormulaNumberElement {
 	public Object getValue() {
 		return value;
 	}
-
-	/**
-	 * Creation date: (20.06.2001 15:31:53)
-	 * @see FormulaElement
-	 */
-	public abstract String getXMLString();
 
 	public void setValue(Object value) {
 		this.value = value;

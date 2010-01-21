@@ -31,10 +31,12 @@ import java.util.Set;
  */
 public class Properties implements java.io.Serializable {
 	
+	private static final long serialVersionUID = 3220708494712501553L;
+
 	public String toString() {
 	return properties.toString();}
 	
-	private Map properties = new HashMap();
+	private Map<Property, Object> properties = new HashMap<Property, Object>();
 	
 	public Object getProperty(Property pd) {
 		return properties.get(pd);
@@ -53,8 +55,12 @@ public class Properties implements java.io.Serializable {
 		return properties.entrySet().equals(((Properties) obj).properties.entrySet());
 	}
 	
-	public Set getKeys() {
+	public Set<Property> getKeys() {
 		return properties.keySet();
+	}
+	
+	public boolean isEmpty() {
+		return properties.isEmpty();
 	}
 
 }

@@ -29,7 +29,7 @@ import de.d3web.kernel.domainModel.D3WebCase;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisScore;
 import de.d3web.kernel.domainModel.RuleAction;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.domainModel.Score;
 import de.d3web.kernel.psMethods.MethodKind;
 
@@ -72,8 +72,8 @@ public class ActionHeuristicPS extends RuleAction {
 	 * Creates a new ActionHeuristicPS for the given corresponding Rule
 	 * Creation date: (19.06.2001 17:41:53)
 	 */
-	public ActionHeuristicPS(RuleComplex theCorrespondingRule) {
-		super(theCorrespondingRule);
+	public ActionHeuristicPS() {
+		super();
 	}
 
 	/**
@@ -166,7 +166,7 @@ public class ActionHeuristicPS extends RuleAction {
 			resultDS =
 				new DiagnosisScore(getDiagnosis().getAprioriProbability());
 			while (iter.hasNext()) {
-				RuleComplex rule = (RuleComplex) iter.next();
+				Rule rule = (Rule) iter.next();
 				if (rule.isUsed(theCase)) {
 					resultDS =
 						resultDS.add(
@@ -187,7 +187,8 @@ public class ActionHeuristicPS extends RuleAction {
 	}
 
 	public RuleAction copy() {
-		ActionHeuristicPS a = new ActionHeuristicPS(getCorrespondingRule());
+		ActionHeuristicPS a = new ActionHeuristicPS();
+		a.setRule(getCorrespondingRule());
 		a.setDiagnosis(getDiagnosis());
 		a.setScore(getScore());
 		return a;

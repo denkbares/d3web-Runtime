@@ -31,6 +31,8 @@ import de.d3web.kernel.XPSCase;
  * @author Michael Wolber, joba
  */
 public class CondNot extends NonTerminalCondition {
+	
+	private static final long serialVersionUID = -7497966202263366382L;
 	/**
 	 * The enclosed condition the be negated.
 	 */
@@ -44,7 +46,7 @@ public class CondNot extends NonTerminalCondition {
 	public CondNot(AbstractCondition condition) {
 		super(
 			de.d3web.kernel.utilities.Utils.createVector(
-				new Object[] { condition }));
+				new AbstractCondition[] { condition }));
 		this.condition = condition;
 	}
 
@@ -56,15 +58,11 @@ public class CondNot extends NonTerminalCondition {
 
 	@Override
 	public String toString() {
-		String ret =
-			"<condition operator=\"not\">\n  "
-				+ condition.toString()
-				+ "</condition>\n";
-		return ret;
+		return "\u2190 CondNot {"+condition.toString()+"}";
 	}
 
 	@Override
-	protected AbstractCondition createInstance(List theTerms, AbstractCondition o) {
+	protected AbstractCondition createInstance(List<AbstractCondition> theTerms, AbstractCondition o) {
 		if (theTerms.size() == 1) 
 			return new CondNot((AbstractCondition)(theTerms.get(0)));
 		else {

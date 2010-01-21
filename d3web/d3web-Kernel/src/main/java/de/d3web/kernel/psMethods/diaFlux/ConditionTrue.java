@@ -1,7 +1,6 @@
 package de.d3web.kernel.psMethods.diaFlux;
 
 import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.IDObject;
 import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
 import de.d3web.kernel.domainModel.ruleCondition.NoAnswerException;
 import de.d3web.kernel.domainModel.ruleCondition.TerminalCondition;
@@ -14,6 +13,7 @@ import de.d3web.kernel.domainModel.ruleCondition.UnknownAnswerException;
  */
 public class ConditionTrue extends TerminalCondition {
 	
+	private static final long serialVersionUID = 9073242686723969312L;
 	public static final AbstractCondition INSTANCE = new ConditionTrue();
 	
 	

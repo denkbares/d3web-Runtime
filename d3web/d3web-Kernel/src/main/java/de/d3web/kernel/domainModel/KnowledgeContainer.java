@@ -20,6 +20,7 @@
 
 package de.d3web.kernel.domainModel;
 import de.d3web.kernel.psMethods.MethodKind;
+import de.d3web.kernel.psMethods.PSMethod;
 /**
  * This interface describes a type that contains knowledge.
  * Of course a knowledge base does, but also a NamedObject is able to store 
@@ -34,13 +35,13 @@ public interface KnowledgeContainer {
 	 * @return all knowledge matching the given problemsolver context and method kind.
 	 * usually a List or Map.
 	 */
-	public Object getKnowledge(Class problemsolver, MethodKind kind);
+	public Object getKnowledge(Class<? extends PSMethod> problemsolver, MethodKind kind);
 
 	/**
 	 * adds a KnowledgeSlice with given problem solver context and method kind.
 	 */
 	public void addKnowledge(
-		Class problemsolver,
+		Class<? extends PSMethod> problemsolver,
 		KnowledgeSlice knowledgeSlice,
 		MethodKind knowledgeContext);
 }

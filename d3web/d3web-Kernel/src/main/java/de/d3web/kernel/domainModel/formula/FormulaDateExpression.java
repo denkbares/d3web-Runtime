@@ -42,6 +42,8 @@ import de.d3web.kernel.domainModel.qasets.Question;
  */
 public class FormulaDateExpression implements java.io.Serializable {
 
+	private static final long serialVersionUID = 2918085886051189808L;
+
 	/** the Question this expression belongs to */
 	private Question question;
 
@@ -82,21 +84,5 @@ public class FormulaDateExpression implements java.io.Serializable {
 
 	public Question getQuestionDate() {
 		return question;
-	}
-
-	/**
-	 * the XML-representation of this FormulaExpression
-	 */
-	public java.lang.String getXMLString() {
-		StringBuffer sb = new StringBuffer();
-		if ((question != null) && (fElement != null)) {
-			sb.append("<FormulaDateExpression>\n");
-			sb.append(question.getXMLString());
-			sb.append(fElement.getXMLString());
-			sb.append("</FormulaDateExpression>\n");
-		} else {
-			System.err.println("ERROR: could not create xml string for FormulaDateExpression!");
-		}
-		return sb.toString();
 	}
 }

@@ -19,8 +19,6 @@
  */
 
 package de.d3web.kernel.domainModel.formula;
-import java.util.logging.Logger;
-
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Answer;
 import de.d3web.kernel.domainModel.answers.AnswerNum;
@@ -38,6 +36,8 @@ import de.d3web.kernel.domainModel.qasets.Question;
  * can also belong to a FormulaExpression (-> Num2ChoiceSchema)
  */
 public class FormulaExpression implements java.io.Serializable {
+
+	private static final long serialVersionUID = -996240637815991111L;
 
 	/** the Question this expression belongs to */
 	private Question question;
@@ -86,21 +86,5 @@ public class FormulaExpression implements java.io.Serializable {
 
 	public Question getQuestionNum() {
 		return question;
-	}
-
-	/**
-	 * the XML-representation of this FormulaExpression
-	 */
-	public String getXMLString() {
-		StringBuffer sb = new StringBuffer();
-		if ((question != null) && (fElement != null)) {
-			sb.append("<FormulaExpression>\n");
-			sb.append(question.getXMLString());
-			sb.append(fElement.getXMLString());
-			sb.append("</FormulaExpression>\n");
-		} else {
-			Logger.getLogger(this.getClass().getName()).warning("could not create xml string for FormulaExpression");
-		}
-		return sb.toString();
 	}
 }

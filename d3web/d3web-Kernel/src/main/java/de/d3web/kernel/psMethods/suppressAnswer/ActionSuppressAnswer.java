@@ -25,7 +25,8 @@ import java.util.List;
 
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.RuleAction;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
+import de.d3web.kernel.domainModel.answers.AnswerChoice;
 import de.d3web.kernel.domainModel.qasets.QuestionChoice;
 import de.d3web.kernel.dynamicObjects.CaseQuestion;
 import de.d3web.kernel.psMethods.MethodKind;
@@ -39,13 +40,13 @@ public class ActionSuppressAnswer extends RuleAction {
 	private QuestionChoice question = null;
 
 	/* alternatives that should be suppressed, if rule fires */
-	private List suppress = null;
+	private List<AnswerChoice> suppress = null;
 
 	/**
 	 * Creates a new ActionSuppressAnswer for the given corresponding rule
 	 */
-	public ActionSuppressAnswer(RuleComplex theCorrespondingRule) {
-		super(theCorrespondingRule);
+	public ActionSuppressAnswer() {
+		super();
 	}
 
 	/**
@@ -88,7 +89,7 @@ public class ActionSuppressAnswer extends RuleAction {
 	 * @return a list of alternatives to be suppressed.
 	 * Creation date: (26.10.00 14:57:55)
 	 */
-	public List getSuppress() {
+	public List<AnswerChoice> getSuppress() {
 		return suppress;
 	}
 
@@ -127,7 +128,7 @@ public class ActionSuppressAnswer extends RuleAction {
 	 * Sets the answers to be suppressed.
 	 * Creation date: (26.10.00 14:57:55)
 	 */
-	public void setSuppress(Object[] theSuppressArray) {
+	public void setSuppress(AnswerChoice[] theSuppressArray) {
 		setSuppress(Utils.createList(theSuppressArray));
 	}
 
@@ -135,7 +136,7 @@ public class ActionSuppressAnswer extends RuleAction {
 	 * Sets the answers to be suppressed.
 	 * Creation date: (26.10.00 14:57:55)
 	 */
-	public void setSuppress(List theSuppress) {
+	public void setSuppress(List<AnswerChoice> theSuppress) {
 		this.suppress = theSuppress;
 	}
 
@@ -167,9 +168,10 @@ public class ActionSuppressAnswer extends RuleAction {
 	}
 
 	public RuleAction copy() {
-		ActionSuppressAnswer a = new ActionSuppressAnswer(getCorrespondingRule());
+		ActionSuppressAnswer a = new ActionSuppressAnswer();
+		a.setRule(getCorrespondingRule());
 		a.setQuestion(getQuestion());
-		a.setSuppress(new LinkedList(getSuppress()));
+		a.setSuppress(new LinkedList<AnswerChoice>(getSuppress()));
 		return a;
 	}
 	

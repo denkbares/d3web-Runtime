@@ -29,7 +29,9 @@ import de.d3web.kernel.domainModel.ruleCondition.UnknownAnswerException;
 import de.d3web.kernel.dynamicObjects.CaseRuleComplex;
 import de.d3web.kernel.dynamicObjects.XPSCaseObject;
 import de.d3web.kernel.psMethods.MethodKind;
+import de.d3web.kernel.psMethods.PSMethod;
 import de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic;
+import de.d3web.kernel.psMethods.questionSetter.ActionQuestionSetter;
 /**
  * Abstract super class for all rules. <BR>
  * It stores the condition, the check routine and if it has fired or not.
@@ -37,9 +39,11 @@ import de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic;
  * Additionally it is possible to store an exception, when this rule must not fire. 
  * @author Michael Wolber, joba
  */
-public class RuleComplex
+public class Rule
 	extends IDObject
 	implements KnowledgeSlice, CaseObjectSource {
+
+	private static final long serialVersionUID = 1648330152712439470L;
 
 	/**
 	 * Flag indicates, if the rule is activated.
@@ -82,15 +86,14 @@ public class RuleComplex
 	/**
 	  * Creates a new rule. The following properties have to be 
 	  * setted by hand:
-	  * <LI> id (from IDObject)
 	  * <LI> condition 
 	  * <LI> exception (optional)
 	  * @see IDObject
 	  */
-	public RuleComplex() {
-		super();
+	public Rule(String id) {
+		super(id);
 	}
-
+	
 	/**
 	  * Checks if the rule is able to fire in context of the values of 
 	  * the specified case.
@@ -179,14 +182,27 @@ public class RuleComplex
 			if (hasFired && !canFire)
 				UNDO_ACTION = true;
 
-			// If the action has a changed value, it requires a re-firing.
-			// Its action will therefore be undone and executed again.
-			if (hasFired && canFire && getAction().hasChangedValue(theCase)) {
+			boolean isQuestionSetterActionWithChangedValues = false;
+			// if the action is a question setter action, changes in depending values (e.g. elements of a formula)
+			// will be noticed and stored in the boolean "isQuestionSetterActionWithChangedValues"
+			if (getAction() instanceof ActionQuestionSetter) {
+				ActionQuestionSetter action =
+					(ActionQuestionSetter) getAction();
+				isQuestionSetterActionWithChangedValues =
+					action.hasChangedValue(theCase);
+			}
+			// if this is a multipleFire-rule that has fired AND can fire again AND any depending value has
+			// changed, its action will be undone and executed again.
+			// This change fixes the "fire-undo-fire-bug" (when a question gets the same
+			// value several times (see MQDialogController)) and some problems with the "cycle-check".
+			if (hasFired
+				&& canFire
+				&& isQuestionSetterActionWithChangedValues) {
 				UNDO_ACTION = true;
 				EXECUTE_ACTION = true;
 			}
-		} 
-		catch (UnknownAnswerException ex) {
+
+		} catch (UnknownAnswerException ex) {
 			if (hasFired(theCase))
 				UNDO_ACTION = true;
 		}
@@ -199,6 +215,7 @@ public class RuleComplex
 		}
 	}
 
+	@Override
 	public XPSCaseObject createCaseObject(XPSCase session) {
 		return new CaseRuleComplex(this);
 	}
@@ -226,12 +243,7 @@ public class RuleComplex
 	/**
 	 * @return the condtion which must be true, so that the rule can fire.
 	 */
-	public de
-		.d3web
-		.kernel
-		.domainModel
-		.ruleCondition
-		.AbstractCondition getCondition() {
+	public AbstractCondition getCondition() {
 		return condition;
 	}
 
@@ -250,16 +262,11 @@ public class RuleComplex
 	/**
 	 * @return the exception when this rule must not fire.
 	 */
-	public de
-		.d3web
-		.kernel
-		.domainModel
-		.ruleCondition
-		.AbstractCondition getException() {
+	public AbstractCondition getException() {
 		return exception;
 	}
 
-	public java.lang.Class getProblemsolverContext() {
+	public Class<? extends PSMethod> getProblemsolverContext() {
 		if ((problemsolverContext == null) && (getAction() != null))
 			return getAction().getProblemsolverContext();
 		else
@@ -289,10 +296,6 @@ public class RuleComplex
 	public void setAction(RuleAction theRuleAction) {
 		updateActionReferences(ruleAction, theRuleAction);
 		ruleAction = theRuleAction;
-
-		if (getAction() != null) {
-			getAction().setCorrespondingRule(this);
-		}
 	}
 
 	/**
@@ -367,7 +370,7 @@ public class RuleComplex
 	 * @param kind key for the specified knowledge map
 	 * */
 	private static void removeFrom(
-		RuleComplex r,
+		Rule r,
 		List namedObjects,
 		Class psContext,
 		MethodKind kind) {
@@ -387,7 +390,7 @@ public class RuleComplex
 	 * @param kind key for the specified knowledge map
 	 * */
 	private static void insertInto(
-		RuleComplex r,
+		Rule r,
 		List namedObjects,
 		Class psContext,
 		MethodKind kind) {
@@ -551,8 +554,8 @@ public class RuleComplex
             return false;
         else if (this == o)
             return true;
-        if (o instanceof RuleComplex) {
-            RuleComplex r = (RuleComplex)o;
+        if (o instanceof Rule) {
+            Rule r = (Rule)o;
             boolean eq = super.equals(r);
             if (eq == false)
                 return false;

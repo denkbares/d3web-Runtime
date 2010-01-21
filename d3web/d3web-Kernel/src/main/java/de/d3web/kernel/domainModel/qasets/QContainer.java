@@ -28,9 +28,8 @@ import java.util.logging.Logger;
 
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.KnowledgeBaseObjectModificationException;
 import de.d3web.kernel.domainModel.QASet;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.dynamicObjects.XPSCaseObject;
 import de.d3web.kernel.dynamicObjects.CaseQASet;
 import de.d3web.kernel.dynamicObjects.CaseQContainer;
@@ -105,7 +104,7 @@ public class QContainer extends QASet {
     /**
      * @see QASet
      */
-    public void activate(XPSCase theCase, RuleComplex rule, Class psm) {
+    public void activate(XPSCase theCase, Rule rule, Class psm) {
 	super.activate(theCase, rule, psm);
 	notifyListeners(theCase, this);
     }
@@ -113,7 +112,7 @@ public class QContainer extends QASet {
     /**
      * @see QASet
      */
-    public void deactivate(XPSCase theCase, RuleComplex rule, Class psm) {
+    public void deactivate(XPSCase theCase, Rule rule, Class psm) {
 	super.deactivate(theCase, rule, psm);
 	notifyListeners(theCase, this);
     }
@@ -364,16 +363,11 @@ public class QContainer extends QASet {
      *                de.d3web.kernel.domainModel.KnowledgeBase
      */
     public void setKnowledgeBase(KnowledgeBase knowledgeBase) {
-	try {
 	    super.setKnowledgeBase(knowledgeBase);
 	    // maybe somebody should remove this object from the old
 	    // knowledge base if available
 	    getKnowledgeBase().add(this);
-	} catch (KnowledgeBaseObjectModificationException ex) {
-	    Logger.getLogger(this.getClass().getName()).throwing(
-		    this.getClass().getName(), "setKnowledgeBase", ex);
 	}
-    }
 
     /**
      * Sets the QContainers priority to the given non-negative int value.

@@ -20,7 +20,6 @@
 
 package de.d3web.kernel.domainModel.ruleCondition;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -37,7 +36,9 @@ import de.d3web.kernel.domainModel.qasets.QuestionChoice;
  * @author Christian Betz
  */
 public class CondEqual extends CondQuestion {
-	private List values;
+	
+	private static final long serialVersionUID = -974336518850100085L;
+	private List<Answer> values;
 
 	/**
 	 * Creates a new equal-condition constraining a specified 
@@ -57,7 +58,7 @@ public class CondEqual extends CondQuestion {
 	 * @param question the question to check
 	 * @param values the values the question needs to be assigned to 
 	 */
-	public CondEqual(Question question, List values) {
+	public CondEqual(Question question, List<Answer> values) {
 		super(question);
 		this.values = values;
 	}
@@ -70,7 +71,7 @@ public class CondEqual extends CondQuestion {
 	 */
 	public CondEqual(QuestionChoice question, Answer value) {
 		super(question);
-		values = new ArrayList(1);
+		values = new ArrayList<Answer>(1);
 		values.add(value);
 	}
 	
@@ -82,7 +83,7 @@ public class CondEqual extends CondQuestion {
 	 */
 	public CondEqual(Question question, Answer value) {
 		super(question);
-		values = new ArrayList(1);
+		values = new ArrayList<Answer>(1);
 		values.add(value);
 	}
 	
@@ -95,7 +96,7 @@ public class CondEqual extends CondQuestion {
 	 */
 	public CondEqual(QuestionChoice question, AnswerUnknown value) {
 		super(question);
-		values = new ArrayList(1);
+		values = new ArrayList<Answer>(1);
 		values.add(value);
 	}
 
@@ -103,7 +104,8 @@ public class CondEqual extends CondQuestion {
 	public boolean eval(XPSCase theCase)
 		throws NoAnswerException, UnknownAnswerException {
 		checkAnswer(theCase);
-		return (question.getValue(theCase).containsAll(values));
+		List<?> value = question.getValue(theCase);
+		return value.containsAll(values);
 	}
 
 	private String getId(Object answer) {
@@ -127,7 +129,7 @@ public class CondEqual extends CondQuestion {
 	 * to fulfill the condition.
 	 * @return the constrained values of this condition 
 	 */
-	public List getValues() {
+	public List<Answer> getValues() {
 		return values;
 	}
 
@@ -136,22 +138,19 @@ public class CondEqual extends CondQuestion {
 	 * to fulfill the condition.
 	 * @param newValues the constrained values of this condition 
 	 */
-	public void setValues(List newValues) {
+	public void setValues(List<Answer> newValues) {
 		values = newValues;
 	}
 
 	@Override
 	public String toString() {
-		String ret =
-			"<Condition type='equal' ID='" + question.getId() + "' value='";
-		Iterator iter = values.iterator();
-		if (iter.hasNext()) {
-			 ret += getId(iter.next());
+		String ret = "\u2190 CondEqual question: "
+		+ question.getId()
+		+ " value: ";
+		for (Object o: values) {
+			ret += getId(o)+",";
 		}
-		while (iter.hasNext()) {
-			ret += "," + getId(iter.next());
-		}
-		ret += "'></Condition>\n";
+		ret = ret.substring(0, ret.length()-2);
 		return ret;
 	}
 	

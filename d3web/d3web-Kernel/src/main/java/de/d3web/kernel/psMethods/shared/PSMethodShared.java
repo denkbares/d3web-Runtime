@@ -18,26 +18,25 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.kernel.domainModel;
+package de.d3web.kernel.psMethods.shared;
+import java.util.Collection;
 
+import de.d3web.kernel.XPSCase;
+import de.d3web.kernel.psMethods.MethodKind;
+import de.d3web.kernel.psMethods.PSMethodAdapter;
+import de.d3web.kernel.psMethods.PropagationEntry;
 /**
- * This Exception will be thrown if a KnowledgeBase has been set to a XPSCaseObject more than one time.
- * @author Norman Brümmer
+ * psmethod for shared knowledge
+ * Creation date: (03.08.2001 16:30:13)
+ * @author: Norman Brümmer
  */
-public class KnowledgeBaseObjectModificationException extends Exception {
+public class PSMethodShared extends PSMethodAdapter {
+	public static MethodKind SHARED_SIMILARITY = new MethodKind("SHARED_SIMILARITY");
+	public static MethodKind SHARED_WEIGHT = new MethodKind("SHARED_WEIGHT");
+	public static MethodKind SHARED_LOCAL_WEIGHT = new MethodKind("SHARED_LOCAL_WEIGHT");
+	public static MethodKind SHARED_ABNORMALITY = new MethodKind("SHARED_ABNORMALITY");
 
-	/**
-	 * Creates a new KnowledgeBaseObjectModificationException.
-	 */
-	public KnowledgeBaseObjectModificationException() {
-		super();
-	}
-
-	/**
-	 * Creates a new KnowledgeBaseObjectModificationException.
-	 * @param s exception text
-	 */
-	public KnowledgeBaseObjectModificationException(String s) {
-		super(s);
+	@Override
+	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
 	}
 }

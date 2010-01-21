@@ -81,13 +81,11 @@ public class KnowledgeBaseManagement {
 
 		// we don't use internal methods, because we need to set
 		// the ID/Name/noParent manually.
-		Diagnosis p000 = new Diagnosis();
-		p000.setId("P000");
+		Diagnosis p000 = new Diagnosis("P000");
 		p000.setText("P000");
 		theK.add(p000);
 
-		QContainer q000 = new QContainer();
-		q000.setId("Q000");
+		QContainer q000 = new QContainer("Q000");
 		q000.setText("Q000");
 		theK.add(q000);
 
@@ -96,8 +94,8 @@ public class KnowledgeBaseManagement {
 
 	public Diagnosis createDiagnosis(String name, Diagnosis parent) {
 
-		Diagnosis d = new Diagnosis();
-		setBasicProperties(d, name);
+		Diagnosis d = new Diagnosis(findNewIDFor(Diagnosis.class));
+		d.setText(name);
 		addToParent(d, parent);
 		knowledgeBase.add(d);
 		
@@ -107,8 +105,8 @@ public class KnowledgeBaseManagement {
 
 	// [TODO] joba : throw exception, of parent an instanceof question
 	public QContainer createQContainer(String name, QASet parent) {
-		QContainer q = new QContainer();
-		setBasicProperties(q, name);
+		QContainer q = new QContainer(findNewIDFor(QContainer.class));
+		q.setText(name);
 		addToParent(q, parent);
 		knowledgeBase.add(q);
 		return q;
@@ -116,20 +114,20 @@ public class KnowledgeBaseManagement {
 
 	public QuestionOC createQuestionOC(String name, QASet parent,
 			AnswerChoice[] answers) {
-		QuestionOC q = new QuestionOC();
+		QuestionOC q = new QuestionOC(findNewIDFor(Question.class));
 		setChoiceProperties(q, name, parent, answers);
 		return q;
 	}
 
 	public QuestionZC createQuestionZC(String name, QASet parent) {
-		QuestionZC q = new QuestionZC();
+		QuestionZC q = new QuestionZC(findNewIDFor(Question.class));
 		setChoiceProperties(q, name, parent, new AnswerChoice[] {});
 		return q;
 	}
 
 	private void setChoiceProperties(QuestionChoice q, String name,
 			QASet parent, AnswerChoice[] answers) {
-		setBasicProperties(q, name);
+		q.setText(name);
 		addToParent(q, parent);
 		q.setAlternatives(toList(answers));
 		knowledgeBase.add(q);
@@ -144,7 +142,7 @@ public class KnowledgeBaseManagement {
 
 	public QuestionMC createQuestionMC(String name, QASet parent,
 			AnswerChoice[] answers) {
-		QuestionMC q = new QuestionMC();
+		QuestionMC q = new QuestionMC(findNewIDFor(Question.class));
 		setChoiceProperties(q, name, parent, answers);
 		return q;
 	}
@@ -157,8 +155,8 @@ public class KnowledgeBaseManagement {
 	}
 
 	public QuestionNum createQuestionNum(String name, QASet parent) {
-		QuestionNum q = new QuestionNum();
-		setBasicProperties(q, name);
+		QuestionNum q = new QuestionNum(findNewIDFor(Question.class));
+		q.setText(name);
 		addToParent(q, parent);
 		knowledgeBase.add(q);
 		return q;
@@ -169,8 +167,8 @@ public class KnowledgeBaseManagement {
 	}
 
 	public QuestionSolution createQuestionState(String name, QASet parent) {
-		QuestionSolution qs = new QuestionSolution();
-		setBasicProperties(qs, name);
+		QuestionSolution qs = new QuestionSolution(findNewIDFor(Question.class));
+		qs.setText(name);
 		addToParent(qs, parent);
 		knowledgeBase.add(qs);
 		return qs;
@@ -179,28 +177,28 @@ public class KnowledgeBaseManagement {
 	public QuestionYN createQuestionYN(String name, String yesAlternativeText,
 			String noAlternativeText, QASet parent) {
 		QuestionYN q = null;
-		if (yesAlternativeText != null && noAlternativeText != null)
-			q = new QuestionYN(yesAlternativeText, noAlternativeText);
-		else
-			q = new QuestionYN();
-
-		setBasicProperties(q, name);
+		if (yesAlternativeText != null && noAlternativeText != null) {
+			q = new QuestionYN(findNewIDFor(Question.class), yesAlternativeText, noAlternativeText);
+		} else {
+			q = new QuestionYN(findNewIDFor(Question.class));
+		}
+		q.setText(name);
 		addToParent(q, parent);
 		knowledgeBase.add(q);
 		return q;
 	}
 
 	public QuestionDate createQuestionDate(String name, QASet parent) {
-		QuestionDate q = new QuestionDate();
-		setBasicProperties(q, name);
+		QuestionDate q = new QuestionDate(findNewIDFor(Question.class));
+		q.setText(name);
 		addToParent(q, parent);
 		knowledgeBase.add(q);
 		return q;
 	}
 
 	public QuestionText createQuestionText(String name, QASet parent) {
-		QuestionText q = new QuestionText();
-		setBasicProperties(q, name);
+		QuestionText q = new QuestionText(findNewIDFor(Question.class));
+		q.setText(name);
 		addToParent(q, parent);
 		knowledgeBase.add(q);
 		return q;
@@ -216,7 +214,7 @@ public class KnowledgeBaseManagement {
 
 	private String getNewAnswerAlternativeFor(QuestionChoice question) {
 		int maxCount = 0;
-		for (Iterator iter = question.getAllAlternatives().iterator(); iter
+		for (Iterator<AnswerChoice> iter = question.getAllAlternatives().iterator(); iter
 				.hasNext();) {
 			AnswerChoice answer = (AnswerChoice) iter.next();
 			int position = answer.getId().lastIndexOf("a") + 1;
@@ -252,11 +250,11 @@ public class KnowledgeBaseManagement {
 	 * @param answers
 	 * @return
 	 */
-	private static List toList(AnswerChoice[] answers) {
+	private static List<AnswerChoice> toList(AnswerChoice[] answers) {
 		if (answers == null) {
-			return new LinkedList();
+			return new LinkedList<AnswerChoice>();
 		}
-		ArrayList l = new ArrayList(answers.length);
+		ArrayList<AnswerChoice> l = new ArrayList<AnswerChoice>(answers.length);
 		for (int i = 0; i < answers.length; i++) {
 			l.add(answers[i]);
 		}
@@ -376,20 +374,20 @@ public class KnowledgeBaseManagement {
 		return result;
 	}
 
-	public String findNewIDFor(IDObject o) {
-		if (o instanceof Diagnosis) {
+	public String findNewIDFor(Class<? extends IDObject> o) {
+		if (o == Diagnosis.class) {
 			int idC = getMaxCountOf(knowledgeBase.getDiagnoses()) + 1;
 			return "P" + idC;
 
-		} else if (o instanceof QContainer) {
+		} else if (o == QContainer.class) {
 			int idC = getMaxCountOf(knowledgeBase.getQContainers()) + 1;
 			return "QC" + idC;
 
-		} else if (o instanceof Question) {
+		} else if (o == Question.class) {
 			int idC = getMaxCountOf(knowledgeBase.getQuestions()) + 1;
 			return "Q" + idC;
 
-		} else if (o instanceof RuleComplex) {
+		} else if (o == Rule.class) {
 			return createRuleID();
 
 		} else {
@@ -432,9 +430,9 @@ public class KnowledgeBaseManagement {
 	 *            IDObject instances
 	 * @return the maximum number used as suffix
 	 */
-	private int getMaxCountOf(Collection kbObjects) {
+	private int getMaxCountOf(Collection<?> kbObjects) {
 		int maxCount = 0;
-		for (Iterator iter = kbObjects.iterator(); iter.hasNext();) {
+		for (Iterator<?> iter = kbObjects.iterator(); iter.hasNext();) {
 			Object obj = iter.next();
 			if (obj instanceof IDObject) {
 				String id = ((IDObject) obj).getId();
@@ -473,10 +471,9 @@ public class KnowledgeBaseManagement {
 	 * @param name
 	 * @param parent
 	 */
-	private void setBasicProperties(NamedObject theObject, String name) {
-		theObject.setId(findNewIDFor(theObject));
-		theObject.setText(name);
-	}
+//	private void setBasicProperties(NamedObject theObject, String name) {
+//		theObject.setText(name);
+//	}
 
 	/**
 	 * Adds the specified object to the given parent. If parent==null then add

@@ -33,6 +33,7 @@ import de.d3web.kernel.domainModel.qasets.QuestionMC;
  */
 public class Count implements FormulaNumberElement {
 
+	private static final long serialVersionUID = 332901233837459047L;
 	private QuestionMC questionMC = null;
 
 	/** 
@@ -49,8 +50,8 @@ public class Count implements FormulaNumberElement {
 		this.questionMC = questionMC;
 	}
 
-	public Collection getTerminalObjects() {
-		Collection ret = new LinkedList();
+	public Collection<Object> getTerminalObjects() {
+		Collection<Object> ret = new LinkedList<Object>();
 		ret.add(questionMC);
 
 		return ret;
@@ -62,7 +63,7 @@ public class Count implements FormulaNumberElement {
 	 */
 	public Double eval(XPSCase theCase) {
 		double count = 0;
-		Iterator iter = getQuestionMC().getValue(theCase).iterator();
+		Iterator<?> iter = getQuestionMC().getValue(theCase).iterator();
 		while (iter.hasNext()) {
 			AnswerChoice answer = (AnswerChoice) iter.next();
 			if ((answer.isAnswerNo() || answer.isUnknown())) {
@@ -73,7 +74,7 @@ public class Count implements FormulaNumberElement {
 		return new Double(count);
 	}
 
-	private QuestionMC getQuestionMC() {
+	public QuestionMC getQuestionMC() {
 		return questionMC;
 	}
 
@@ -81,7 +82,7 @@ public class Count implements FormulaNumberElement {
 	 * Creation date: (20.06.2001 15:34:57)
 	 * @return the XML-representation of this Count object
 	 */
-	public java.lang.String getXMLString() {
+	public String getXMLString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<Count>\n");
 		sb.append("<QuestionMC>" + getQuestionMC().getId() + "</QuestionMC>\n");

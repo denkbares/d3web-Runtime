@@ -35,6 +35,7 @@ import de.d3web.kernel.XPSCase;
  */
 public abstract class FormulaDateArgumentsTerm implements FormulaElement {
 
+	private static final long serialVersionUID = 9112704017339317024L;
 	private FormulaDateElement arg1;
 	private FormulaDateElement arg2;
 
@@ -85,26 +86,13 @@ public abstract class FormulaDateArgumentsTerm implements FormulaElement {
 	/* (non-Javadoc)
 	 * @see de.d3web.kernel.domainModel.formula.FormulaElement#getTerminalObjects()
 	 */
-	public Collection getTerminalObjects() {
-		Collection c1 = getArg1().getTerminalObjects();
-		Collection c2 = getArg2().getTerminalObjects();
-		Collection both = new ArrayList(c1.size() + c2.size());
+	public Collection<Object> getTerminalObjects() {
+		Collection<Object> c1 = getArg1().getTerminalObjects();
+		Collection<Object> c2 = getArg2().getTerminalObjects();
+		Collection<Object> both = new ArrayList<Object>(c1.size() + c2.size());
 		both.addAll(c1);
 		both.addAll(c2);
 		return both;	
-	}
-
-	public String getXMLString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("<FormulaTerm type=\"" + getSymbol() + "\">\n");
-		sb.append("<arg1>\n");
-		sb.append(getArg1().getXMLString());
-		sb.append("</arg1>\n");
-		sb.append("<arg2>\n");
-		sb.append(getArg2().getXMLString());
-		sb.append("</arg2>\n");
-		sb.append("</FormulaTerm>\n");
-		return sb.toString();
 	}
 
 	/**

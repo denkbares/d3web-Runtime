@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.KnowledgeSlice;
 import de.d3web.kernel.domainModel.NamedObject;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 
 /**
  * @author jochen
@@ -48,8 +48,8 @@ public abstract class PSMethodRulebased extends PSMethodAdapter {
 					.getClass());
 			if (slices != null) {
 				for (KnowledgeSlice slice : slices) {
-					if (slice instanceof RuleComplex) {
-						RuleComplex rule = (RuleComplex) slice;
+					if (slice instanceof Rule) {
+						Rule rule = (Rule) slice;
 						rule.check(theCase);
 					}
 				}

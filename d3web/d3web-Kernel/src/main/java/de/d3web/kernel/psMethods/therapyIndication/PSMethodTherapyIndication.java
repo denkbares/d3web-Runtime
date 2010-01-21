@@ -28,7 +28,7 @@ import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisScore;
 import de.d3web.kernel.domainModel.DiagnosisState;
 import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.psMethods.PSMethodAdapter;
 import de.d3web.kernel.psMethods.PropagationEntry;
 
@@ -82,7 +82,7 @@ public class PSMethodTherapyIndication extends PSMethodAdapter {
 			if (knowledgeSlices == null) return;
 			for (KnowledgeSlice slice : knowledgeSlices) {
 				try {
-					RuleComplex rule = (RuleComplex) slice;
+					Rule rule = (Rule) slice;
 					rule.check(theCase);
 				} 
 				catch (Exception e) {

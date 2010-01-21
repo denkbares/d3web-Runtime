@@ -43,9 +43,9 @@ import de.d3web.kernel.supportknowledge.Property;
 public abstract class QASet extends NamedObject {
 	
 	public static class Reason {
-		private RuleComplex rule;
+		private Rule rule;
 		private Class psm;
-		public Reason(RuleComplex myRule) {
+		public Reason(Rule myRule) {
 			super();
 			rule = myRule;
 			psm = myRule.getProblemsolverContext();
@@ -55,7 +55,7 @@ public abstract class QASet extends NamedObject {
 			rule = null;
 			psm = problemSolverContext;
 		}
-		public Reason(RuleComplex myRule, Class problemSolverContext) {
+		public Reason(Rule myRule, Class problemSolverContext) {
 			super();
 			rule = myRule;
 			psm = problemSolverContext;
@@ -67,7 +67,7 @@ public abstract class QASet extends NamedObject {
 			}
 			return (((Reason) o).psm == psm) && (((Reason) o).rule == rule);
 		}
-		public RuleComplex getRule() {
+		public Rule getRule() {
 			return rule;
 		}
 		public Class getProblemSolverContext() {
@@ -102,7 +102,7 @@ public abstract class QASet extends NamedObject {
 	  * @param rule rule that has activated the question
 	  * @param theCase current case
 	  */
-	public void activate(XPSCase theCase, RuleComplex rule, Class psm) {
+	public void activate(XPSCase theCase, Rule rule, Class psm) {
 		CaseQASet caseQA =
 			((de.d3web.kernel.dynamicObjects.CaseQASet) theCase
 				.getCaseObject(this));
@@ -163,7 +163,7 @@ public abstract class QASet extends NamedObject {
 	   * removes "source" from the list of pro reasons, if the question has been activated from a pro reason
 	   * Otherwise "source" will be added to contra reason list
 	   */
-	public void deactivate(XPSCase theCase, RuleComplex rule, Class psm) {
+	public void deactivate(XPSCase theCase, Rule rule, Class psm) {
 		CaseQASet caseQA =
 			((de.d3web.kernel.dynamicObjects.CaseQASet) theCase
 				.getCaseObject(this));
@@ -202,7 +202,7 @@ public abstract class QASet extends NamedObject {
 		return ((CaseQASet) theCase.getCaseObject(this)).getProReasons();
 	}
 
-	private Reason getReason(RuleComplex rule, Class psm) {
+	private Reason getReason(Rule rule, Class psm) {
 		return new Reason(rule, psm);
 	}
 

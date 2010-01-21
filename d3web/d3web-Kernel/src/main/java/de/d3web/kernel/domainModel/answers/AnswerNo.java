@@ -27,19 +27,26 @@ package de.d3web.kernel.domainModel.answers;
  */
 public class AnswerNo extends AnswerChoice {
 
+	private static final long serialVersionUID = 4580215611560294804L;
+	
 	/**
 	 * Creates a new AnswerNo object
 	 */
 	public AnswerNo() {
 		super();
 	}
-
+	
+	public AnswerNo(String id) {
+		super(id);
+	}
 	/**
 	 * @return true
 	 */
 	public boolean isAnswerNo() {
 		return true;
 	}
+	
+	
 
 	// 20030923 marty: delegate to AnswerChoice.equals(...)
 	//	/**

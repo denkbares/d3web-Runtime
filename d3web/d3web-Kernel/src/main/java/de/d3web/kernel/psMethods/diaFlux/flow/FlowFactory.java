@@ -23,8 +23,8 @@ package de.d3web.kernel.psMethods.diaFlux.flow;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.domainModel.RuleAction;
-import de.d3web.kernel.domainModel.RuleComplex;
 import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
 import de.d3web.kernel.domainModel.ruleCondition.CondAnd;
 import de.d3web.kernel.psMethods.questionSetter.ActionSetValue;
@@ -81,10 +81,10 @@ public class FlowFactory {
 	
 	//Fix after Refactoring
 	public ActionSetValue createSetValueAction() {
-		RuleComplex rule = new RuleComplex();
-		rule.setId("FlowchartRule" + System.currentTimeMillis());
+		Rule rule = new Rule("FlowchartRule" + System.currentTimeMillis());
 		
-		ActionSetValue action = new ActionSetValue(rule);
+		ActionSetValue action = new ActionSetValue();
+		action.setRule(rule);
 		rule.setAction(action);
 		rule.setCondition(new CondAnd(new ArrayList()));
 		return action;

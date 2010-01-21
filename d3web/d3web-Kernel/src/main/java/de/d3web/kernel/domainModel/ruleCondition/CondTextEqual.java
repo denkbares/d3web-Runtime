@@ -31,6 +31,8 @@ import de.d3web.kernel.domainModel.qasets.QuestionText;
  * @author joba
  */
 public class CondTextEqual extends CondQuestion {
+	
+	private static final long serialVersionUID = 5624328022212587525L;
 	private String value;
 
 	/**
@@ -77,12 +79,10 @@ public class CondTextEqual extends CondQuestion {
 
 	@Override
 	public String toString() {
-		return "<Condition type='textEqual' ID='"
+		return "\u2190 CondTextEqual question: "
 			+ question.getId()
-			+ "' value='"
-			+ value
-			+ "'"
-			+ "</Condition>\n";
+			+ " value: "
+			+ value;
 	}
 	
 	@Override

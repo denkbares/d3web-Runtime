@@ -31,6 +31,7 @@ import java.util.Set;
  */
 public class MMInfoStorage implements Serializable {
 	
+	private static final long serialVersionUID = -3808620586019274794L;
 	private Set<MMInfoObject> mmios = new LinkedHashSet<MMInfoObject>();
 
 	public void addMMInfo(MMInfoObject mmio) { mmios.add(mmio); }
@@ -42,9 +43,9 @@ public class MMInfoStorage implements Serializable {
 	 */
 	public Set<MMInfoObject> getMMInfo(DCMarkup dcMarkup) {
 		Set<MMInfoObject> result = new LinkedHashSet<MMInfoObject>();
-		Iterator iter = mmios.iterator();
+		Iterator<MMInfoObject> iter = mmios.iterator();
 		while (iter.hasNext()) {
-			MMInfoObject mmio = (MMInfoObject) iter.next();
+			MMInfoObject mmio = iter.next();
 			if (mmio.matches(dcMarkup))
 				result.add(mmio);
 		}

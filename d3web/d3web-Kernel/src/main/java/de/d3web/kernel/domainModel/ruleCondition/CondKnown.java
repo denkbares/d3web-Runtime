@@ -34,6 +34,8 @@ import de.d3web.kernel.domainModel.qasets.Question;
  */
 public class CondKnown extends CondQuestion {
 
+	private static final long serialVersionUID = -8494189870196724391L;
+
 	/**
 	 * Creates a new CondKnown object for the given {@link Question}.
 	 * @param the given question
@@ -54,9 +56,7 @@ public class CondKnown extends CondQuestion {
 
 	@Override
 	public String toString() {
-		return "<Condition type='known' ID='" 
-				+ ((question == null) ? "" : question.getId())
-				+ "' value='any'>" + "</Condition>\n";
+		return "\u2190 CondKnown question: " + question.getId();
 	}
 
 	@Override

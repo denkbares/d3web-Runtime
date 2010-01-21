@@ -26,8 +26,8 @@ import java.util.logging.Logger;
 
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.NamedObject;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.domainModel.RuleAction;
-import de.d3web.kernel.domainModel.RuleComplex;
 import de.d3web.kernel.psMethods.PSMethod;
 import de.d3web.kernel.psMethods.diaFlux.FluxSolver;
 import de.d3web.kernel.psMethods.diaFlux.flow.Flow;
@@ -45,9 +45,9 @@ public class IndicateFlowAction extends RuleAction {
 	private final String flowName;
 	private final String startNodeName;
 
-	public IndicateFlowAction(RuleComplex rule, String flow, String node) {
-		super(rule);
-		
+	public IndicateFlowAction(Rule rule, String flow, String node) {
+		super();
+		super.setRule(rule);
 		this.flowName = flow;
 		this.startNodeName = node;
 	}

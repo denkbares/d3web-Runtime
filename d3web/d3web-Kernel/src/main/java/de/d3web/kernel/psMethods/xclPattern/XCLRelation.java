@@ -54,11 +54,12 @@ public class XCLRelation {
 	private XCLRelation(String id) {
 		super();
 		this.id = id;
-		
-		String number = id.substring("XCLRelation_".length());
-		int num = Integer.parseInt(number);
-		if(count < num) {
-			count = num + 1;
+		if (id.startsWith("XCLRelation_")) {
+			String number = id.substring("XCLRelation_".length());
+			int num = Integer.parseInt(number);
+			if(count < num) {
+				count = num + 1;
+			}
 		}
 	}
 

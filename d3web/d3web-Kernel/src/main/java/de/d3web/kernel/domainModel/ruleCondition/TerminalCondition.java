@@ -35,6 +35,8 @@ import de.d3web.kernel.domainModel.qasets.Question;
  * @author Michael Wolber, joba
  */
 public abstract class TerminalCondition extends AbstractCondition {
+	
+	private static final long serialVersionUID = 985715059851028211L;
 	private List<NamedObject> terminal = new ArrayList<NamedObject>(1);
 
 	/**

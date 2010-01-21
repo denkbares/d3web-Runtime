@@ -46,7 +46,7 @@ public class MethodKind implements java.io.Serializable {
 	}
 
 	/**
-	 * @return true iff the String-value of these Objects are equal.
+	 * @return true if the String-value of these Objects are equal.
 	 */
 	public boolean equals(Object obj) {
 		return kind.equals(obj.toString());

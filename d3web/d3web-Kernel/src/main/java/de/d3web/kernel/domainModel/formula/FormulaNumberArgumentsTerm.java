@@ -30,6 +30,9 @@ import de.d3web.kernel.XPSCase;
  * @author Norman Brümmer
  */
 public abstract class FormulaNumberArgumentsTerm implements FormulaElement {
+	
+	private static final long serialVersionUID = 3935587662481357454L;
+
 	/** first argument of the term*/
 	private FormulaNumberElement arg1 = null;
 
@@ -127,22 +130,6 @@ public abstract class FormulaNumberArgumentsTerm implements FormulaElement {
 		return symbol;
 	}
 
-	/**
-	 * @see FormulaElement
-	 */
-	public String getXMLString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("<FormulaTerm type=\"" + getSymbol() + "\">\n");
-		sb.append("<arg1>\n");
-		sb.append(getArg1().getXMLString());
-		sb.append("</arg1>\n");
-		sb.append("<arg2>\n");
-		sb.append(getArg2().getXMLString());
-		sb.append("</arg2>\n");
-		sb.append("</FormulaTerm>\n");
-		return sb.toString();
-	}
-
 	public void setArg1(FormulaNumberElement arg1) {
 		this.arg1 = arg1;
 	}
@@ -164,8 +151,8 @@ public abstract class FormulaNumberArgumentsTerm implements FormulaElement {
 	/**
 	 * @see FormulaElement
 	 */
-	public Collection getTerminalObjects() {
-		Collection ret = new LinkedList(getArg1().getTerminalObjects());
+	public Collection<Object> getTerminalObjects() {
+		Collection<Object> ret = new LinkedList<Object>(getArg1().getTerminalObjects());
 		ret.addAll(getArg2().getTerminalObjects());
 
 		return ret;

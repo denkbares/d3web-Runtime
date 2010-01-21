@@ -41,7 +41,7 @@ public class NoopAction extends RuleAction {
 	public static final NoopAction INSTANCE = new NoopAction();
 	
 	private NoopAction() {
-		super(null);
+		super();
 		
 	}
 

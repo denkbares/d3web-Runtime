@@ -37,6 +37,8 @@ package de.d3web.kernel.domainModel.formula;
  */
 public abstract class FormulaDatePrimitive implements FormulaDateElement {
 
+	private static final long serialVersionUID = 1888867794731255770L;
+	
 	/**
 	 * Value of the primitive FormulaElement
 	 */
@@ -62,12 +64,6 @@ public abstract class FormulaDatePrimitive implements FormulaDateElement {
 	public Object getValue() {
 		return value;
 	}
-
-	/**
-	 * Creation date: (20.06.2001 15:31:53)
-	 * @see FormulaDateElement
-	 */
-	public abstract String getXMLString();
 
 	public void setValue(Object value) {
 		this.value = value;

@@ -31,7 +31,7 @@ import de.d3web.kernel.domainModel.DiagnosisState;
 import de.d3web.kernel.domainModel.HDTType;
 import de.d3web.kernel.domainModel.KnowledgeSlice;
 import de.d3web.kernel.domainModel.NamedObject;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.psMethods.PSMethodAdapter;
 import de.d3web.kernel.psMethods.PSSubMethod;
 import de.d3web.kernel.psMethods.PropagationEntry;
@@ -51,7 +51,7 @@ import de.d3web.kernel.supportknowledge.Property;
  * <P>
  * <B>Best Solution Only</B>
  * Only return the best established solution as "established";
- * all other established diagnoses are returned to be "suggsted"
+ * all other established diagnoses are returned to be "suggested"
  * 
  * Creation date: (28.08.00 18:04:09)
  * @author joba
@@ -183,7 +183,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 		
 	    // If SFA: if a diagnosis is established, then finish the case 
 	    if ((isSFA(theCase)) && (finalSolutionIsEstablished(theCase))) {
-            theCase.finish(RuleComplex.class);
+            theCase.finish(Rule.class);
             return;
 	    }
 
@@ -212,7 +212,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
         if (knowledgeSlices != null) {
             for (KnowledgeSlice slice : knowledgeSlices) {
                 try {
-                    RuleComplex rule = (RuleComplex) slice;
+                    Rule rule = (Rule) slice;
                     rule.check(theCase);
                 } 
                 catch (Exception e) {
@@ -242,7 +242,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
             (oldEstablishedDiagnoses.containsAll(newEstalishedDiagnoses)) &&
             (newEstalishedDiagnoses.containsAll(oldEstablishedDiagnoses))) {
             // nothing has changed and a diagnosis is established => finishCase
-            theCase.finish(RuleComplex.class);
+            theCase.finish(Rule.class);
         }
             
     }

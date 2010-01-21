@@ -32,19 +32,16 @@ import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisState;
 import de.d3web.kernel.domainModel.KnowledgeSlice;
 import de.d3web.kernel.domainModel.NamedObject;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.domainModel.RuleAction;
-import de.d3web.kernel.domainModel.RuleComplex;
 import de.d3web.kernel.domainModel.ruleCondition.NoAnswerException;
 import de.d3web.kernel.domainModel.ruleCondition.UnknownAnswerException;
 import de.d3web.kernel.psMethods.MethodKind;
 import de.d3web.kernel.psMethods.PSMethod;
 import de.d3web.kernel.psMethods.PropagationEntry;
-import de.d3web.kernel.psMethods.diaFlux.actions.IndicateFlowAction;
 import de.d3web.kernel.psMethods.diaFlux.flow.DiaFluxCaseObject;
 import de.d3web.kernel.psMethods.diaFlux.flow.EdgeSupport;
-import de.d3web.kernel.psMethods.diaFlux.flow.Flow;
 import de.d3web.kernel.psMethods.diaFlux.flow.FlowData;
-import de.d3web.kernel.psMethods.diaFlux.flow.FlowFactory;
 import de.d3web.kernel.psMethods.diaFlux.flow.FlowSet;
 import de.d3web.kernel.psMethods.diaFlux.flow.IEdge;
 import de.d3web.kernel.psMethods.diaFlux.flow.INode;
@@ -54,7 +51,6 @@ import de.d3web.kernel.psMethods.diaFlux.flow.RuleSupport;
 import de.d3web.kernel.psMethods.diaFlux.flow.SnapshotNode;
 import de.d3web.kernel.psMethods.diaFlux.flow.StartNode;
 import de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic;
-import de.d3web.kernel.utilities.Logging;
 
 /**
  * 
@@ -92,7 +88,7 @@ public class FluxSolver implements PSMethod {
 		
 	}
 
-	public void indicateFlow(RuleComplex rule, INode startNode, XPSCase theCase) {
+	public void indicateFlow(Rule rule, INode startNode, XPSCase theCase) {
 		
 		
 		addPathEntryForNode(theCase, null, startNode, new RuleSupport(rule));
@@ -420,8 +416,8 @@ public class FluxSolver implements PSMethod {
 			
 			for (KnowledgeSlice slice : knowledge) {
 				
-				if (slice instanceof RuleComplex) {
-					RuleComplex rule = (RuleComplex) slice;
+				if (slice instanceof Rule) {
+					Rule rule = (Rule) slice;
 					
 					rule.check(theCase);
 					

@@ -19,14 +19,14 @@
  */
 
 package de.d3web.kernel.dynamicObjects;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 /**
  * Stores the dynamic, user specific values for a RuleComplex
  * object. It corresponds to the static RuleComplex object.<br>
  * Values to be stored:<br>
  * <li> Current state of the rule (fired/not fired)
  * @author Christian Betz, joba
- * @see RuleComplex
+ * @see Rule
  */
 public class CaseRuleComplex extends XPSCaseObject {
 	private boolean fired = false;
@@ -35,7 +35,7 @@ public class CaseRuleComplex extends XPSCaseObject {
 	 * Creates a new CaseRuleComlplex. The dynamic store for
 	 * the given RuleComplex.
 	 */
-	public CaseRuleComplex(RuleComplex rule) {
+	public CaseRuleComplex(Rule rule) {
 		super(rule);
 	}
 

@@ -34,6 +34,8 @@ import de.d3web.kernel.domainModel.qasets.Question;
  */
 public class CondUnknown extends CondQuestion {
 
+	private static final long serialVersionUID = -7896716669763250004L;
+
 	/**
 	 * Creates a new CondUnknown instance, where a {@link Question}
 	 * has to be answered by {@link AnswerUnknown}.
@@ -55,14 +57,7 @@ public class CondUnknown extends CondQuestion {
 
 	@Override
 	public String toString() {
-		String questionID = "";
-		if(question != null) {
-			questionID = question.getId();
-		}
-		return "<Condition type='unknown' ID='"
-			+ questionID
-			+ "' value='unknown'>"
-			+ "</Condition>\n";
+		return "\u2190 CondTextContains question: " + question.getId();
 	}
 
 	@Override

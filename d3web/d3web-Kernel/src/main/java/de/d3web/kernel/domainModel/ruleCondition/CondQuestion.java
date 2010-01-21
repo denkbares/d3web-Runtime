@@ -34,6 +34,8 @@ import de.d3web.kernel.domainModel.qasets.Question;
  * @author Norman Bruemmer
  */
 public abstract class CondQuestion extends TerminalCondition {
+	
+	private static final long serialVersionUID = -2872772676232795811L;
 	protected Question question = null;
 
 	/**
@@ -55,7 +57,7 @@ public abstract class CondQuestion extends TerminalCondition {
 	 */
 	protected void checkAnswer(XPSCase theCase)
 		throws NoAnswerException, UnknownAnswerException {
-		List values = question.getValue(theCase);
+		List<?> values = question.getValue(theCase);
 		if ((values == null)
 			|| (values.size() == 0)
 			|| (values.get(0) == null)) {

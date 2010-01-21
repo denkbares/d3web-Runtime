@@ -33,7 +33,8 @@ import de.d3web.kernel.utilities.Utils;
  */
 public class QuestionYN extends QuestionOC {
 
-    protected final static String YES_STRING = "Yes";
+   private static final long serialVersionUID = 756090022125833331L;
+	protected final static String YES_STRING = "Yes";
     protected final static String NO_STRING = "No";
 
     public AnswerChoice yes;
@@ -51,10 +52,7 @@ public class QuestionYN extends QuestionOC {
      * @see Question
      * @see NamedObject
      */
-    public QuestionYN() {
-	this(YES_STRING, NO_STRING);
-    }
-
+    
     public QuestionYN(String id) {
 	super(id);
 
@@ -64,11 +62,11 @@ public class QuestionYN extends QuestionOC {
 	setAlternatives(Utils.createList(new Object[] { yes, no }));
     }
 
-    public QuestionYN(String yesText, String noText) {
+    public QuestionYN(String id, String yesText, String noText) {
 	super();
 
-	yes = AnswerFactory.createAnswerYes("", yesText);
-	no = AnswerFactory.createAnswerNo("", noText);
+	yes = AnswerFactory.createAnswerYes(id + "YES", yesText);
+	no = AnswerFactory.createAnswerNo(id + "NO", noText);
 
 	setAlternatives(Utils.createList(new Object[] { yes, no }));
 

@@ -25,14 +25,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
-import java.util.logging.Logger;
 
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.DerivationType;
 import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.KnowledgeBaseObjectModificationException;
 import de.d3web.kernel.domainModel.QASet;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.domainModel.SymptomValue;
 import de.d3web.kernel.domainModel.ValuedObject;
 import de.d3web.kernel.domainModel.answers.AnswerUnknown;
@@ -205,16 +203,11 @@ public abstract class Question extends QASet implements ValuedObject {
      *                de.d3web.kernel.domainModel.KnowledgeBase
      */
     public void setKnowledgeBase(KnowledgeBase knowledgeBase) {
-	try {
 	    super.setKnowledgeBase(knowledgeBase);
 	    // maybe somebody should remove this object from the old
 	    // knowledge base if available
 	    getKnowledgeBase().add(this);
-	} catch (KnowledgeBaseObjectModificationException ex) {
-	    Logger.getLogger(this.getClass().getName()).throwing(
-		    this.getClass().getName(), "setKnowledgeBase", ex);
 	}
-    }
 
     public abstract void setValue(XPSCase theCase, Object[] values);
 
@@ -230,7 +223,7 @@ public abstract class Question extends QASet implements ValuedObject {
      * @param values
      *                new value-array which will be set to the question.
      */
-    public void setValue(XPSCase theCase, RuleComplex ruleSymptom,
+    public void setValue(XPSCase theCase, Rule ruleSymptom,
 	    Object[] values) {
 	CaseQuestion caseQuestion = ((CaseQuestion) theCase.getCaseObject(this));
 	if (ruleSymptom != null) {
@@ -258,7 +251,7 @@ public abstract class Question extends QASet implements ValuedObject {
      * @param rule
      *                rule going to be undone
      */
-    public void undoSymptomValue(XPSCase theCase, RuleComplex ruleSymptom) {
+    public void undoSymptomValue(XPSCase theCase, Rule ruleSymptom) {
 	CaseQuestion caseQuestion = ((CaseQuestion) theCase.getCaseObject(this));
 	if (caseQuestion.getValueHistory().size() == 0) {
 	    setValue(theCase, new Object[] {});
@@ -310,9 +303,4 @@ public abstract class Question extends QASet implements ValuedObject {
     public String verbalizeWithValue(XPSCase theCase) {
 	return verbalizeWithoutValue() + "\n Wert -> " + getValue(theCase);
     }
-
-    public String getXMLString() {
-	return "<Question ID=\"" + this.getId() + "\"/>";
-    }
-
 }

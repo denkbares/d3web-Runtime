@@ -29,7 +29,7 @@ package de.d3web.kernel.domainModel;
  */
 public class SymptomValue {
     private Object[] values = null;
-    private RuleComplex rule = null;
+    private Rule rule = null;
 
     /**
      * Creates a new SymptomValue-Object - a tupel of an overwritten value-array
@@ -41,7 +41,7 @@ public class SymptomValue {
      *            rule that has overwritten it
      * 
      */
-    public SymptomValue(Object[] values, RuleComplex rule) {
+    public SymptomValue(Object[] values, Rule rule) {
         this.values = values;
         this.rule = rule;
     }
@@ -52,7 +52,7 @@ public class SymptomValue {
      * 
      * @return rule of this tupel
      */
-    public RuleComplex getRule() {
+    public Rule getRule() {
         return rule;
     }
 

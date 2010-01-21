@@ -25,7 +25,7 @@ import java.util.List;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.QASet;
 import de.d3web.kernel.domainModel.RuleAction;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.domainModel.qasets.QContainer;
 import de.d3web.kernel.psMethods.MethodKind;
 
@@ -37,13 +37,6 @@ import de.d3web.kernel.psMethods.MethodKind;
  */
 public abstract class ActionNextQASet extends RuleAction {
 	private java.util.List qasets;
-
-	/**
-	 * Creates a new ActionNextQASet for the given corresponding rule.
-	 */
-	public ActionNextQASet(RuleComplex theCorrespondingRule) {
-		super(theCorrespondingRule);
-	}
 
 	/**
 	  * Indicates all QASets specified by "setQASets"-Method

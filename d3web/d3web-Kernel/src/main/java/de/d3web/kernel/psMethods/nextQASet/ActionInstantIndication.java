@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.QASet;
 import de.d3web.kernel.domainModel.RuleAction;
-import de.d3web.kernel.domainModel.RuleComplex;
 import de.d3web.kernel.psMethods.PSMethodInit;
 
 /**
@@ -36,12 +35,15 @@ import de.d3web.kernel.psMethods.PSMethodInit;
  */
 public class ActionInstantIndication extends ActionIndication {
 
-	public ActionInstantIndication(RuleComplex theCorrespondingRule) {
-		super(theCorrespondingRule);
+	private static final long serialVersionUID = 114426903858814069L;
+
+	public ActionInstantIndication() {
+		super();
 	}
 	
 	public RuleAction copy() {
-		ActionInstantIndication a = new ActionInstantIndication(getCorrespondingRule());
+		ActionInstantIndication a = new ActionInstantIndication();
+		a.setRule(getCorrespondingRule());
 		a.setQASets(new ArrayList<QASet>(getQASets()));
 		return a;
 	}

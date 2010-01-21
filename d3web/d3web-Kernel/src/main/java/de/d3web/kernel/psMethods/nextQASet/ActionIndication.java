@@ -22,6 +22,7 @@ package de.d3web.kernel.psMethods.nextQASet;
 
 import java.util.ArrayList;
 
+import de.d3web.kernel.domainModel.QASet;
 import de.d3web.kernel.domainModel.RuleAction;
 
 /**
@@ -31,17 +32,19 @@ import de.d3web.kernel.domainModel.RuleAction;
  */
 public class ActionIndication extends ActionNextQASet {
 
+	private static final long serialVersionUID = 272476961557836941L;
+
 	/**
 	 * Creates a new indication action for the given corresponding rule
 	 */
-	public ActionIndication(
-		de.d3web.kernel.domainModel.RuleComplex theCorrespondingRule) {
-		super(theCorrespondingRule);
+	public ActionIndication() {
+		super();
 	}
 	
 	public RuleAction copy() {
-		ActionIndication a = new ActionIndication(getCorrespondingRule());
-		a.setQASets(new ArrayList(getQASets()));
+		ActionIndication a = new ActionIndication();
+		a.setRule(getCorrespondingRule());
+		a.setQASets(new ArrayList<QASet>(getQASets()));
 		return a;
 	}
 	

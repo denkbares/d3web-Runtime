@@ -26,7 +26,7 @@ import java.util.List;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.RuleAction;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.psMethods.MethodKind;
 
 /**
@@ -59,8 +59,8 @@ public class ActionIndicateTherapies extends RuleAction {
 	 * Creates a new ActionHeuristicPS for the given corresponding Rule
 	 * Creation date: (19.06.2001 17:41:53)
 	 */
-	public ActionIndicateTherapies(RuleComplex theCorrespondingRule) {
-		super(theCorrespondingRule);
+	public ActionIndicateTherapies() {
+		super();
 	}
 
 	/**
@@ -176,7 +176,8 @@ public class ActionIndicateTherapies extends RuleAction {
 	}
 	
 	public RuleAction copy() {
-		ActionIndicateTherapies a = new ActionIndicateTherapies(getCorrespondingRule());
+		ActionIndicateTherapies a = new ActionIndicateTherapies();
+		a.setRule(getCorrespondingRule());
 		a.setTherapies(new LinkedList(getTherapies()));
 		return a;
 	}

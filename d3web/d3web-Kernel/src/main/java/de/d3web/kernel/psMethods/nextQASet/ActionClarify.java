@@ -22,8 +22,8 @@ package de.d3web.kernel.psMethods.nextQASet;
 import java.util.LinkedList;
 
 import de.d3web.kernel.domainModel.Diagnosis;
+import de.d3web.kernel.domainModel.QASet;
 import de.d3web.kernel.domainModel.RuleAction;
-import de.d3web.kernel.domainModel.RuleComplex;
 
 /**
  * ActionClarify represents the indication of a QASet in order to clarify a suspected diagnosis.
@@ -32,13 +32,14 @@ import de.d3web.kernel.domainModel.RuleComplex;
  */
 public class ActionClarify extends ActionNextQASet {
 
+	private static final long serialVersionUID = -3173779628907752837L;
 	private Diagnosis target = null;
 
 	/**
 	 * @param Creates a new clarification action for the given corresponding rule
 	 */
-	public ActionClarify(RuleComplex theCorrespondingRule) {
-		super(theCorrespondingRule);
+	public ActionClarify() {
+		super();
 	}
 
 	/**
@@ -56,8 +57,8 @@ public class ActionClarify extends ActionNextQASet {
 	}
 	
 	public RuleAction copy() {
-		ActionClarify a = new ActionClarify(getCorrespondingRule());
-		a.setQASets(new LinkedList(getQASets()));
+		ActionClarify a = new ActionClarify();
+		a.setQASets(new LinkedList<QASet>(getQASets()));
 		a.setTarget(getTarget());
 		return a;
 	}

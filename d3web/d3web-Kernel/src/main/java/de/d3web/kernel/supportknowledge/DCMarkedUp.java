@@ -27,5 +27,5 @@ package de.d3web.kernel.supportknowledge;
  */
 public interface DCMarkedUp {
 	public DCMarkup getDCMarkup();
-	public void setDCDMarkup(DCMarkup dcMarkup);
+	public void setDCMarkup(DCMarkup dcMarkup);
 }

@@ -32,6 +32,8 @@ import de.d3web.kernel.domainModel.qasets.QuestionNum;
  */
 public class CondNumEqual extends CondNum {
 
+	private static final long serialVersionUID = 6904756198495948623L;
+
 	/**
 	 * Creates a new condition, where a the specified numerical question 
 	 * needs to be equal to the specified value.
@@ -59,13 +61,10 @@ public class CondNumEqual extends CondNum {
 
 	@Override
 	public String toString() {
-
-		return "<Condition type='numEqual' ID='"
-			+ getQuestion().getId()
-			+ "' value='"
-			+ getAnswerValue()
-			+ "'>"
-			+ "</Condition>\n";
+		return "\u2190 CondNumEqual question: "
+			+ question.getId()
+			+ " value: "
+			+ getAnswerValue();
 	}
 
 	@Override

@@ -26,7 +26,6 @@ import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Answer;
 import de.d3web.kernel.domainModel.CaseObjectSource;
 import de.d3web.kernel.domainModel.RuleAction;
-import de.d3web.kernel.domainModel.RuleComplex;
 import de.d3web.kernel.domainModel.answers.AnswerDate;
 import de.d3web.kernel.domainModel.answers.AnswerNum;
 import de.d3web.kernel.domainModel.answers.EvaluatableAnswerDateValue;
@@ -46,6 +45,8 @@ import de.d3web.kernel.supportknowledge.Property;
  */
 public class ActionSetValue extends ActionQuestionSetter implements CaseObjectSource {
 
+	private static final long serialVersionUID = -1213290904090399929L;
+
 	// private Map schemaValueHash = null;
 	public String toString() {
 		return "<RuleAction type=\"SetValue\">\n" + "  [" + getQuestion().getId() + ": "
@@ -55,8 +56,8 @@ public class ActionSetValue extends ActionQuestionSetter implements CaseObjectSo
 	/**
 	 * creates a new ActionSetValue for the given corresponding rule
 	 */
-	public ActionSetValue(RuleComplex theCorrespondingRule) {
-		super(theCorrespondingRule);
+	public ActionSetValue() {
+		super();
 	}
 
 	/**
@@ -165,7 +166,8 @@ public class ActionSetValue extends ActionQuestionSetter implements CaseObjectSo
 
 	}
 	public RuleAction copy() {
-		ActionSetValue a = new ActionSetValue(getCorrespondingRule());
+		ActionSetValue a = new ActionSetValue();
+		a.setRule(getCorrespondingRule());
 		a.setQuestion(getQuestion());
 		a.setValues(getValues());
 		return a;

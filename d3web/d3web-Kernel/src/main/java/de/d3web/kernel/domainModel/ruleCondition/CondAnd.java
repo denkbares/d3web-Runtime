@@ -31,11 +31,16 @@ import de.d3web.kernel.XPSCase;
 public class CondAnd extends NonTerminalCondition {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 130666501884397100L;
+
+	/**
 	 * Creates a new AND-condition based on the conjunction of the specified
 	 * terms ({@link AbstractCondition} instances).
 	 * @param terms a collection of {@link AbstractCondition} instances 
 	 */
-	public CondAnd(List terms) {
+	public CondAnd(List<AbstractCondition> terms) {
 		super(terms);
 	}
 
@@ -73,12 +78,12 @@ public class CondAnd extends NonTerminalCondition {
 
 	@Override
 	public String toString() {
-		String ret = "<Condition type='and'>\n";
+		String ret = "\u2190 CondAnd {";
 		for (AbstractCondition condition : terms) {
 			if (condition != null)
 				ret += condition.toString();
 		}
-		ret += "</Condition>\n";
+		ret += "}";
 		return ret;
 	}
 
@@ -87,7 +92,7 @@ public class CondAnd extends NonTerminalCondition {
 	 * of a {@link NonTerminalCondition}. Do not use in the wild.
 	 * 
 	 */
-	protected AbstractCondition createInstance(List theTerms, AbstractCondition o) {
+	protected AbstractCondition createInstance(List<AbstractCondition> theTerms, AbstractCondition o) {
 		return new CondAnd(theTerms);
 	}
 	

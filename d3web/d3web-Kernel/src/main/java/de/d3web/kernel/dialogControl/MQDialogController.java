@@ -28,7 +28,7 @@ import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.DerivationType;
 import de.d3web.kernel.domainModel.NamedObject;
 import de.d3web.kernel.domainModel.QASet;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.domainModel.qasets.QContainer;
 import de.d3web.kernel.domainModel.qasets.Question;
 import de.d3web.kernel.domainModel.ruleCondition.NoAnswerException;
@@ -511,8 +511,10 @@ public class MQDialogController implements DialogController {
 		if (knowledge != null) {
 			Iterator iter = knowledge.iterator();
 			while (iter.hasNext()) {
-				RuleComplex rule = (RuleComplex) iter.next();
+				Rule rule = (Rule) iter.next();
 				try {
+					//TODO: Hotfix should be removed
+					if (rule==null) continue;
 					if (rule.getCondition().eval(theCase)) {
 						return getSuitableTerminalObjectForLogicalParent(rule.getCondition()
 								.getTerminalObjects());
@@ -1154,7 +1156,7 @@ public class MQDialogController implements DialogController {
 		return null;
 	}
 
-	public void propagate(NamedObject no, RuleComplex rule, PSMethod psm) {
+	public void propagate(NamedObject no, Rule rule, PSMethod psm) {
 		if(no instanceof QASet) {
 			QASet qaSet = (QASet) no;
 			if (psm instanceof PSMethodUserSelected) {

@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import de.d3web.kernel.XPSCase;
@@ -193,9 +194,13 @@ public class D3WebCase implements XPSCase {
 	 */
 	public String getId() {
 		if (id == null) {
-			id = getKnowledgeBase().createNewCaseId();
+			id = createNewCaseId();
 		}
 		return id;
+	}
+
+	private String createNewCaseId() {
+		return UUID.randomUUID().toString();
 	}
 
 	private synchronized void addAnsweredQuestions(Question frage) {
@@ -216,7 +221,7 @@ public class D3WebCase implements XPSCase {
 	/**
 	 * adds a QASet to this case
 	 */
-	public void addQASet(QASet qaset, RuleComplex rule, Class<? extends PSMethod> psm) {
+	public void addQASet(QASet qaset, Rule rule, Class<? extends PSMethod> psm) {
 		getQASetManager().propagate(qaset, rule, getPSMethodInstance(psm));
 	}
 
@@ -556,7 +561,7 @@ public class D3WebCase implements XPSCase {
 	 * @param ruleContext
 	 *            rule, which sets the value
 	 */
-	public void setValue(ValuedObject valuedObject, Object[] values, RuleComplex ruleContext) {
+	public void setValue(ValuedObject valuedObject, Object[] values, Rule ruleContext) {
 		Object[] oldValue = getValue(valuedObject, null);
 		if (valuedObject instanceof Question) {
 			((Question) valuedObject).setValue(this, ruleContext, values);
@@ -645,7 +650,7 @@ public class D3WebCase implements XPSCase {
 	 * de.d3web.kernel.supportknowledge.DCMarkedUp#setDCDMarkup(de.d3web.kernel
 	 * .supportknowledge.DCMarkup)
 	 */
-	public void setDCDMarkup(DCMarkup dcMarkup) {
+	public void setDCMarkup(DCMarkup dcMarkup) {
 		this.dcMarkup = dcMarkup;
 	}
 

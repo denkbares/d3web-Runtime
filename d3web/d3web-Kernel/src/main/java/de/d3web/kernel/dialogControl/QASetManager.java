@@ -23,7 +23,7 @@ import java.util.List;
 
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.NamedObject;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.psMethods.PSMethod;
 /**
  * The cases view to the dialog: it only needs to add qasets.<br/>
@@ -55,6 +55,6 @@ public interface QASetManager {
 	/**
 	 * @see PSMethod#propagate(XPSCase, NamedObject, Object[])
 	 */
-	public void propagate(NamedObject no, RuleComplex rule, PSMethod psm);
+	public void propagate(NamedObject no, Rule rule, PSMethod psm);
 
 }

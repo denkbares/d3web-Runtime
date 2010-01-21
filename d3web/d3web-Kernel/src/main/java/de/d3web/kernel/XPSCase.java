@@ -31,7 +31,7 @@ import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisState;
 import de.d3web.kernel.domainModel.KnowledgeBase;
 import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.domainModel.ValuedObject;
 import de.d3web.kernel.domainModel.XPSCaseEventListener;
 import de.d3web.kernel.domainModel.qasets.QContainer;
@@ -214,12 +214,12 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	 * Assigns the specified value(s) to the specified {@link ValuedObject}, e.g., 
 	 * a {@link Question} or a {@link Diagnosis} receives a new value.
 	 * The knowledge source of this assignment is also given, here it is a 
-	 * {@link RuleComplex}.
+	 * {@link Rule}.
 	 * @param ValuedObject	ValuedObject the object, that receives a new value
 	 * @param value  value the (array of new) values for the specified {@link ValuedObject}
 	 * @param context the knowledge element responsible for making the assignment
 	 */
-	void setValue(ValuedObject o, Object[] value, RuleComplex rule);
+	void setValue(ValuedObject o, Object[] value, Rule rule);
 
 	/**
 	 * Assigns the specified value(s) to the specified {@link ValuedObject}, e.g., 

@@ -21,6 +21,7 @@
 package de.d3web.kernel.domainModel;
 
 import de.d3web.kernel.XPSCase;
+import de.d3web.kernel.psMethods.PSMethod;
 /**
  * Specifies that implementing classes are used as
  * explict knowledge. Each KnowledgeSlice needs to have
@@ -42,7 +43,7 @@ public interface KnowledgeSlice extends java.io.Serializable {
 	 * @return the class of the PSMethod in which this KnowledgeSlice makes sense.
 	 */
 	//TODO: vb: Either (1) delete this method (only used for rules) or (2) change addKnowledge in a way that the context need not to be specified. 
-	public Class getProblemsolverContext();
+	public Class<? extends PSMethod> getProblemsolverContext();
 
 	/**
 	 * Has this knowledge already been used? (e.g. did a rule fire?)

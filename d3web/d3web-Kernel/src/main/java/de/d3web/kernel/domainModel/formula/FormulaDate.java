@@ -40,6 +40,8 @@ import de.d3web.kernel.domainModel.answers.AnswerDate;
  */
 public class FormulaDate extends FormulaDatePrimitive {
 
+	private static final long serialVersionUID = 2745627018166279006L;
+
 	/** 
 	 * Creates a new FormulaNubmer with 0 as value.
 	 */
@@ -63,18 +65,7 @@ public class FormulaDate extends FormulaDatePrimitive {
 		return (Date) getValue();
 	}
 
-	/**
-	 *	@return XML representation of this FormulaNumber-object
-	 **/
-	public java.lang.String getXMLString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("<FormulaDatePrimitive type='FormulaDate'>\n");
-		sb.append("<Value>" + AnswerDate.format.format(getValue())	 + "</Value>\n");
-		sb.append("</FormulaDatePrimitive>\n");
-		return sb.toString();
-	}
-
-	/**
+		/**
 	 *	@return String representation of this FormulaNumber-object
 	 **/
 	public String toString() {
@@ -87,8 +78,8 @@ public class FormulaDate extends FormulaDatePrimitive {
 	/**
 	 * @see FormulaElement
 	 */
-	public Collection getTerminalObjects() {
-		return new LinkedList();
+	public Collection<Object> getTerminalObjects() {
+		return new LinkedList<Object>();
 	}
 
 }

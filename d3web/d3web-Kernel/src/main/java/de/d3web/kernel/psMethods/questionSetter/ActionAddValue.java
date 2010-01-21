@@ -28,7 +28,7 @@ import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Answer;
 import de.d3web.kernel.domainModel.QASet;
 import de.d3web.kernel.domainModel.RuleAction;
-import de.d3web.kernel.domainModel.RuleComplex;
+import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.domainModel.SymptomValue;
 import de.d3web.kernel.domainModel.answers.AnswerChoice;
 import de.d3web.kernel.domainModel.answers.AnswerDate;
@@ -54,8 +54,8 @@ public class ActionAddValue extends ActionQuestionSetter {
 	/**
 	 * creates a new ActionAddValue for the given corresponding rule
 	 */
-	public ActionAddValue(RuleComplex theCorrespondingRule) {
-		super(theCorrespondingRule);
+	public ActionAddValue() {
+		super();
 	}
 
 	private List addValue(List currentValues, AnswerChoice val) {
@@ -330,7 +330,7 @@ public class ActionAddValue extends ActionQuestionSetter {
 		}
 	}
 
-	private void removeRuleFromSymptomValueHistory(XPSCase theCase, RuleComplex rule) {
+	private void removeRuleFromSymptomValueHistory(XPSCase theCase, Rule rule) {
 		CaseQuestion q = (CaseQuestion) theCase.getCaseObject(getQuestion());
 		Object o = q.getValueHistory();
 		if ((o != null) && (o instanceof List)) {
@@ -347,7 +347,8 @@ public class ActionAddValue extends ActionQuestionSetter {
 	}
 
 	public RuleAction copy() {
-		ActionAddValue a = new ActionAddValue(getCorrespondingRule());
+		ActionAddValue a = new ActionAddValue();
+		a.setRule(getCorrespondingRule());
 		a.setQuestion(getQuestion());
 		a.setValues(getValues());
 		return a;

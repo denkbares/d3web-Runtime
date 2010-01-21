@@ -54,9 +54,7 @@ public class CondChoiceNo extends CondEqual {
 	 * Verbalizes the condition.
 	 */
 	public String toString() {
-		return "<condition operator=\"choiceNo\" id=\""
-			+ question.getId()
-			+ "\"/>\n";
+		return "\u2190 CondChoiceNo question: " + question.getId();
 	}
 
 
