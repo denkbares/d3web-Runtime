@@ -234,7 +234,7 @@ public class RuleActionVerbalizer implements Verbalizer {
 			}else if(item instanceof FormulaExpression) {
 				s += ((FormulaExpression)item).getFormulaElement().toString();
 			}else if(item instanceof FormulaNumber) {
-				s += ((FormulaNumber)item).getXMLString();
+				s += ((FormulaNumber)item).toString();
 			} else if (item instanceof IDObject)
 				s += getIDObjectVerbalistion((IDObject) item);
 			

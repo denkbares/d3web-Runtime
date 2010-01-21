@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 
 import de.d3web.kernel.domainModel.IDObject;
 import de.d3web.kernel.domainModel.KnowledgeBase;
+import de.d3web.kernel.domainModel.NamedObject;
 import de.d3web.kernel.domainModel.answers.AnswerNo;
 import de.d3web.kernel.domainModel.answers.AnswerUnknown;
 import de.d3web.kernel.domainModel.answers.AnswerYes;
@@ -103,8 +104,8 @@ public class ConditionVerbalizer implements Verbalizer {
 	/**
 	 * Returns the classes RuleVerbalizer can render
 	 */
-	public Class[] getSupportedClassesForVerbalization() {
-		Class[] supportedClasses = { AbstractCondition.class };
+	public Class<?>[] getSupportedClassesForVerbalization() {
+		Class<?>[] supportedClasses = { AbstractCondition.class };
 		return supportedClasses;
 	}
 
@@ -281,7 +282,7 @@ public class ConditionVerbalizer implements Verbalizer {
 			return new TerminalCondVerbalization("Condition", "=", "null", "");
 		}
 		
-		List terminalObjects = tCondition.getTerminalObjects();
+		List<? extends NamedObject> terminalObjects = tCondition.getTerminalObjects();
 		if(terminalObjects == null) {
 			//Fail-safe, shouldn't happen!
 			return new TerminalCondVerbalization("TerminalObject", "=", "null", "");
@@ -297,7 +298,8 @@ public class ConditionVerbalizer implements Verbalizer {
 			if (tCondition instanceof CondNumIn) {
 				values.add(trimZeros(((CondNumIn) tCondition).getValue().replaceAll(",", "")));
 			} else if (tCondition instanceof CondEqual) {
-				values = ((CondEqual) tCondition).getValues();
+				values = new ArrayList<Object>();
+				values.addAll(((CondEqual) tCondition).getValues());
 				if (object instanceof QuestionMC && values.size() > 1) {
 					List<CondVerbalization> tCondVerbs = new ArrayList<CondVerbalization>();
 					for (Object o:values) {
