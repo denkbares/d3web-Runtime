@@ -55,7 +55,7 @@ public class PersistenceManager {
 	
 	public static final String MULTIMEDIA_PATH_PREFIX = "multimedia/";
 	
-	public static final String EXTENDED_PLUGIN_ID = "knowledgePersistanceExtensionPoints";
+	public static final String EXTENDED_PLUGIN_ID = "KnowledgePersistenceExtensionPoints";
 	public static final String EXTENDED_POINT_READER = "KnowledgeReader";
 	public static final String EXTENDED_POINT_WRITER = "KnowledgeWriter";
 	public static final String EXTENDED_POINT_FRAGMENT = "FragmentHandler";

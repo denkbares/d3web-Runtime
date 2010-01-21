@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
-<plugin id="knowledgePersistanceBasicExtensions" version="0.0.1">
+<plugin id="KnowledgePersistenceBasicExtensions" version="0.0.1">
 	
 	<requires>
-		<import plugin-id="knowledgePersistanceExtensionPoints" />
+		<import plugin-id="KnowledgePersistenceExtensionPoints" />
 	</requires>
 	
 	<runtime>
@@ -12,7 +12,7 @@
 		</library>
 	</runtime>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="NullHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.NullHandler" />
@@ -22,7 +22,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="AnswerChoiceHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.AnswerChoiceHandler" />
@@ -32,7 +32,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="CostKBHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.CostKBHandler" />
@@ -42,7 +42,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="DCMarkupHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.DCMarkupHandler" />
@@ -52,7 +52,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="DiagnosisHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.DiagnosisHandler" />
@@ -62,7 +62,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="IntegerListHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.IntegerListHandler" />
@@ -72,7 +72,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="LinkedListHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.LinkedListHandler" />
@@ -83,7 +83,7 @@
 		<parameter id="priority" value="6" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="Num2ChoiceSchemaHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.Num2ChoiceSchemaHandler" />
@@ -93,7 +93,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="NumericalIntervalHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.NumericalIntervalHandler" />
@@ -103,7 +103,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="PropertiesHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.PropertiesHandler" />
@@ -113,7 +113,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="QContainerHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.QContainerHandler" />
@@ -123,7 +123,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="QuestionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.QuestionHandler" />
@@ -133,7 +133,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="RuleHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.RuleHandler" />
@@ -143,7 +143,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="ContraIndicationActionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.actions.ContraIndicationActionHandler" />
@@ -153,7 +153,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="HeuristicPSActionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.actions.HeuristicPSActionHandler" />
@@ -163,7 +163,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="NextQASetActionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.actions.NextQASetActionHandler" />
@@ -173,7 +173,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="QuestionSetterActionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.actions.QuestionSetterActionHandler" />
@@ -183,7 +183,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="SuppressAnswerActionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.actions.SuppressAnswerActionHandler" />
@@ -193,7 +193,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="FormulaDateExpressionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.actions.formula.FormulaDateExpressionHandler" />
@@ -203,7 +203,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="FormulaElementHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.actions.formula.FormulaElementHandler" />
@@ -213,7 +213,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="FormulaExpressionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.actions.formula.FormulaExpressionHandler" />
@@ -223,7 +223,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="AndConditionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.conditions.AndConditionHandler" />
@@ -233,7 +233,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="DStateConditionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.conditions.DStateConditionHandler" />
@@ -244,7 +244,7 @@
 	</extension>
 	
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="EqualConditionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.conditions.EqualConditionHandler" />
@@ -254,7 +254,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="KnownConditionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.conditions.KnownConditionHandler" />
@@ -264,7 +264,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="MofNConditionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.conditions.MofNConditionHandler" />
@@ -274,7 +274,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="NotConditionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.conditions.NotConditionHandler" />
@@ -284,7 +284,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="NumEqualConditionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.conditions.NumEqualConditionHandler" />
@@ -294,7 +294,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="NumGreaterConditionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.conditions.NumGreaterConditionHandler" />
@@ -304,7 +304,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="NumGreaterEqualConditionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.conditions.NumGreaterEqualConditionHandler" />
@@ -314,7 +314,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="NumInConditionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.conditions.NumInConditionHandler" />
@@ -324,7 +324,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="NumLessConditionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.conditions.NumLessConditionHandler" />
@@ -334,7 +334,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="NumLessEqualConditionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.conditions.NumLessEqualConditionHandler" />
@@ -344,7 +344,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="OrConditionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.conditions.OrConditionHandler" />
@@ -354,7 +354,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="TextContainsConditionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.conditions.TextContainsConditionHandler" />
@@ -364,7 +364,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="TextEqualConditionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.conditions.TextEqualConditionHandler" />
@@ -374,7 +374,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="UnknownConditionHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.fragments.conditions.UnknownConditionHandler" />
@@ -384,7 +384,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeReader"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeReader"
 		id="AbstractionRulesPersistenceHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.rules.AbstractionRulesPersistenceHandler" />
@@ -395,7 +395,7 @@
 		<parameter id="filename" value="kb/abstraction-rules.xml" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeWriter"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeWriter"
 		id="AbstractionRulesPersistenceHandler.Writer">
 		<parameter id="class"
 			value="de.d3web.core.kpers.rules.AbstractionRulesPersistenceHandler" />
@@ -406,7 +406,7 @@
 		<parameter id="filename" value="kb/abstraction-rules.xml" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeReader"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeReader"
 		id="HeuristicRulesPersitenceHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.rules.HeuristicRulesPersitenceHandler" />
@@ -417,7 +417,7 @@
 		<parameter id="filename" value="kb/heuristic-rules.xml" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeWriter"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeWriter"
 		id="HeuristicRulesPersitenceHandler.Writer">
 		<parameter id="class"
 			value="de.d3web.core.kpers.rules.HeuristicRulesPersitenceHandler" />
@@ -428,7 +428,7 @@
 		<parameter id="filename" value="kb/heuristic-rules.xml" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeReader"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeReader"
 		id="StrategicRulesPersistenceHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.rules.StrategicRulesPersistenceHandler" />
@@ -439,7 +439,7 @@
 		<parameter id="filename" value="kb/strategic-rules.xml" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeWriter"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeWriter"
 		id="StrategicRulesPersistenceHandler.Writer">
 		<parameter id="class"
 			value="de.d3web.core.kpers.rules.StrategicRulesPersistenceHandler" />
@@ -450,7 +450,7 @@
 		<parameter id="filename" value="kb/strategic-rules.xml" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeReader"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeReader"
 		id="XCLModelPersistenceHandler">
 		<parameter id="class"
 			value="de.d3web.xcl.kpers.XCLModelPersistenceHandler" />
@@ -461,7 +461,7 @@
 		<parameter id="filename" value="kb/xcl.xml" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeWriter"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeWriter"
 		id="XCLModelPersistenceHandler.Writer">
 		<parameter id="class"
 			value="de.d3web.xcl.kpers.XCLModelPersistenceHandler" />
@@ -472,7 +472,7 @@
 		<parameter id="filename" value="kb/xcl.xml" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeReader"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeReader"
 		id="BasicPersistenceHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.BasicPersistenceHandler" />
@@ -483,7 +483,7 @@
 		<parameter id="filename" value="kb/basic.xml" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeWriter"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeWriter"
 		id="BasicPersistenceHandler.Writer">
 		<parameter id="class"
 			value="de.d3web.core.kpers.BasicPersistenceHandler" />
@@ -494,7 +494,7 @@
 		<parameter id="filename" value="kb/basic.xml" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeReader"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeReader"
 		id="KBPatchPersistenceHandler">
 		<parameter id="class"
 			value="de.d3web.core.kpers.KBPatchPersistenceHandler" />
@@ -505,7 +505,7 @@
 		<parameter id="filename" value="kb/kb-patch.xml" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeWriter"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeWriter"
 		id="MMInfoPersistenceHandler.Writer">
 		<parameter id="class"
 			value="de.d3web.mminfo.kpers.MMInfoPersistenceHandler" />
@@ -516,7 +516,7 @@
 		<parameter id="filename" value="kb/mminfo.xml" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeReader"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeReader"
 		id="MMInfoPersistenceHandler">
 		<parameter id="class"
 			value="de.d3web.mminfo.kpers.MMInfoPersistenceHandler" />
@@ -527,22 +527,22 @@
 		<parameter id="filename" value="kb/mminfo.xml" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeWriter"
-		id="PluginConfigPersistanceHandler.Writer">
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeWriter"
+		id="PluginConfigPersistenceHandler.Writer">
 		<parameter id="class"
-			value="de.d3web.plugin.kpers.PluginConfigPersistanceHandler" />
-		<parameter id="name" value="PluginConfigPersistanceHandler" />
+			value="de.d3web.plugin.kpers.PluginConfigPersistenceHandler" />
+		<parameter id="name" value="PluginConfigPersistenceHandler" />
 		<parameter id="description" value="Reads Plugin Configurations." />
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 		<parameter id="filename" value="kb/plugins.xml" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeReader"
-		id="PluginConfigPersistanceHandler">
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeReader"
+		id="PluginConfigPersistenceHandler">
 		<parameter id="class"
-			value="de.d3web.plugin.kpers.PluginConfigPersistanceHandler" />
-		<parameter id="name" value="PluginConfigPersistanceHandler" />
+			value="de.d3web.plugin.kpers.PluginConfigPersistenceHandler" />
+		<parameter id="name" value="PluginConfigPersistenceHandler" />
 		<parameter id="description" value="Writes Plugin Configurations." />
 		<parameter id="version" value="1.0" />
 		<!-- Parsing the plugin.xml first, aviods parsing other files without being able to use them -->

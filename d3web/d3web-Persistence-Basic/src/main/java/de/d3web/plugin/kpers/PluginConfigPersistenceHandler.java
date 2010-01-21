@@ -45,7 +45,7 @@ import de.d3web.plugin.kr.ExtensionEntry;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class PluginConfigPersistanceHandler implements KnowledgeReader,
+public class PluginConfigPersistenceHandler implements KnowledgeReader,
 		KnowledgeWriter {
 
 	@Override
