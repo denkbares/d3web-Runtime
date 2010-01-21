@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<KnowledgeBase system="d3web" type="xclpattern">
+<KnowledgeSlices>
+<XCLModel ID="XCLM_P1" SID="P1">
+<necessaryRelations/>
+<sufficientRelations>
+<relation ID="XCLRelation_149">
+<Condition ID="Q15" type="equal" value="Q15a2"/>
+</relation>
+</sufficientRelations>
+<contradictingRelations>
+<relation ID="XCLRelation_153">
+<Condition ID="Q15" type="equal" value="Q15a1"/>
+</relation>
+</contradictingRelations>
+<Relations>
+<relation ID="XCLRelation_150">
+<Condition ID="Q10" type="equal" value="Q10a1"/>
+</relation>
+<relation ID="XCLRelation_151">
+<Condition ID="Q12" type="equal" value="Q12a4"/>
+</relation>
+<relation ID="XCLRelation_152">
+<Condition ID="Q12" type="equal" value="Q12a3"/>
+</relation>
+</Relations>
+</XCLModel>
+<XCLModel ID="XCLM_P2" SID="P2">
+<necessaryRelations/>
+<sufficientRelations>
+<relation ID="XCLRelation_154">
+<Condition ID="Q16" type="equal" value="Q16a2"/>
+</relation>
+</sufficientRelations>
+<contradictingRelations>
+<relation ID="XCLRelation_159">
+<Condition ID="Q16" type="equal" value="Q16a1"/>
+</relation>
+</contradictingRelations>
+<Relations>
+<relation ID="XCLRelation_155">
+<Condition type="or">
+<Condition ID="Q7" type="equal" value="Q7a1"/>
+<Condition ID="Q7" type="equal" value="Q7a3"/>
+</Condition>
+</relation>
+<relation ID="XCLRelation_156">
+<Condition ID="Q12" type="equal" value="Q12a2"/>
+</relation>
+<relation ID="XCLRelation_157">
+<Condition ID="Q12" type="equal" value="Q12a1"/>
+</relation>
+<relation ID="XCLRelation_158">
+<Condition ID="Q12" type="equal" value="Q12a3"/>
+</relation>
+</Relations>
+</XCLModel>
+<XCLModel ID="XCLM_P3" SID="P3">
+<necessaryRelations/>
+<sufficientRelations>
+<relation ID="XCLRelation_160">
+<Condition ID="Q17" type="equal" value="Q17a2"/>
+</relation>
+</sufficientRelations>
+<contradictingRelations>
+<relation ID="XCLRelation_169">
+<Condition ID="Q17" type="equal" value="Q17a1"/>
+</relation>
+</contradictingRelations>
+<Relations>
+<relation ID="XCLRelation_161">
+<Condition ID="Q3" type="equal" value="Q3a1"/>
+</relation>
+<relation ID="XCLRelation_162">
+<Condition ID="Q12" type="equal" value="Q12a6"/>
+</relation>
+<relation ID="XCLRelation_163">
+<Condition ID="Q12" type="equal" value="Q12a3"/>
+</relation>
+<relation ID="XCLRelation_164">
+<Condition ID="Q1" type="equal" value="Q1a1"/>
+</relation>
+<relation ID="XCLRelation_165">
+<Condition ID="Q4" type="equal" value="Q4a2"/>
+</relation>
+<relation ID="XCLRelation_166">
+<Condition type="or">
+<Condition ID="Q7" type="equal" value="Q7a1"/>
+<Condition ID="Q7" type="equal" value="Q7a3"/>
+</Condition>
+</relation>
+<relation ID="XCLRelation_167">
+<Condition type="or">
+<Condition ID="Q10" type="equal" value="Q10a3"/>
+<Condition ID="Q10" type="equal" value="Q10a1"/>
+</Condition>
+</relation>
+<relation ID="XCLRelation_168">
+<Condition ID="Q11" type="equal" value="Q11a2"/>
+</relation>
+</Relations>
+</XCLModel>
+<XCLModel ID="XCLM_P4" SID="P4">
+<necessaryRelations/>
+<sufficientRelations>
+<relation ID="XCLRelation_170">
+<Condition ID="Q18" type="equal" value="Q18a2"/>
+</relation>
+</sufficientRelations>
+<contradictingRelations>
+<relation ID="XCLRelation_177">
+<Condition ID="Q18" type="equal" value="Q18a1"/>
+</relation>
+</contradictingRelations>
+<Relations>
+<relation ID="XCLRelation_171">
+<Condition type="or">
+<Condition ID="Q9" type="equal" value="Q9a2"/>
+<Condition ID="Q9" type="equal" value="Q9a1"/>
+</Condition>
+</relation>
+<relation ID="XCLRelation_172">
+<Condition type="or">
+<Condition ID="Q10" type="equal" value="Q10a3"/>
+<Condition ID="Q10" type="equal" value="Q10a1"/>
+</Condition>
+</relation>
+<relation ID="XCLRelation_173">
+<Condition ID="Q11" type="equal" value="Q11a2"/>
+</relation>
+<relation ID="XCLRelation_174">
+<Condition ID="Q12" type="equal" value="Q12a6"/>
+</relation>
+<relation ID="XCLRelation_175">
+<Condition ID="Q12" type="equal" value="Q12a5"/>
+</relation>
+<relation ID="XCLRelation_176">
+<Condition ID="Q12" type="equal" value="Q12a3"/>
+</relation>
+</Relations>
+</XCLModel>
+<XCLModel ID="XCLM_P5" SID="P5">
+<necessaryRelations/>
+<sufficientRelations>
+<relation ID="XCLRelation_178">
+<Condition ID="Q19" type="equal" value="Q19a2"/>
+</relation>
+</sufficientRelations>
+<contradictingRelations>
+<relation ID="XCLRelation_181">
+<Condition ID="Q19" type="equal" value="Q19a1"/>
+</relation>
+</contradictingRelations>
+<Relations>
+<relation ID="XCLRelation_179">
+<Condition ID="Q11" type="equal" value="Q11a1"/>
+</relation>
+<relation ID="XCLRelation_180">
+<Condition type="or">
+<Condition ID="Q10" type="equal" value="Q10a3"/>
+<Condition ID="Q10" type="equal" value="Q10a1"/>
+</Condition>
+</relation>
+</Relations>
+</XCLModel>
+</KnowledgeSlices>
+</KnowledgeBase>

@@ -116,7 +116,6 @@
 		<module>d3web-Kernel</module>
 		<module>d3web-Persistence</module>
 		<module>d3web-Config</module>
-		<module>d3web-Persistence-MMInfo</module>
 		<module>d3web-CaseRepository</module>
 		<module>d3web-Utilities</module>
 		<module>d3web-SharedKnowledge</module>
@@ -124,9 +123,12 @@
 		<module>d3web-CompareCase-Facade</module>
 		<module>d3web-ExplainTree</module>
 		<module>d3web-Verbalizer</module>
-		<module>d3web-MMExtensions</module>
 		<module>d3web-Dialog2</module>
 		<module>d3web-EmpiricalTesting</module>
 		<module>d3web-SCM-CBR</module>
+		<module>d3web-Persistance-ExtensionPoints</module>
+		<module>d3web-Persistence-Basic</module>
+		<module>d3web-PluginManager</module>
+		<module>d3web-SharedKnowledgePersistence</module>
 	</modules>
 </project>

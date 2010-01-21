@@ -1,0 +1,554 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin id="knowledgePersistanceBasicExtensions" version="0.0.1">
+	
+	<requires>
+		<import plugin-id="knowledgePersistanceExtensionPoints" />
+	</requires>
+	
+	<runtime>
+		<library id="de.d3web" path="." type="code">
+			<export prefix="*" />
+		</library>
+	</runtime>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="NullHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.NullHandler" />
+		<parameter id="name" value="NullHandler" />
+		<parameter id="description" value="Handler for null" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="AnswerChoiceHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.AnswerChoiceHandler" />
+		<parameter id="name" value="AnswerChoiceHandler" />
+		<parameter id="description" value="Handles choice answers" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="CostKBHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.CostKBHandler" />
+		<parameter id="name" value="CostKBHandler" />
+		<parameter id="description" value="Handles costs for the knowledge base" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="DCMarkupHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.DCMarkupHandler" />
+		<parameter id="name" value="DCMarkupHandler" />
+		<parameter id="description" value="Handler for DCMarkups" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="DiagnosisHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.DiagnosisHandler" />
+		<parameter id="name" value="DiagnosisHandler" />
+		<parameter id="description" value="FragmentHanler for diagnosis" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="IntegerListHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.IntegerListHandler" />
+		<parameter id="name" value="IntegerListHandler" />
+		<parameter id="description" value="Fragment Handler for IntegerLists" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="LinkedListHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.LinkedListHandler" />
+		<parameter id="name" value="LinkedListHandler" />
+		<parameter id="description" value="Handler for LinkedLists" />
+		<parameter id="version" value="1.0" />
+		<!-- Must have a lower priority, so that other properties with special lists are tried first -->
+		<parameter id="priority" value="6" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="Num2ChoiceSchemaHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.Num2ChoiceSchemaHandler" />
+		<parameter id="name" value="Num2ChoiceSchemaHandler" />
+		<parameter id="description" value="Handler for Num2ChoiceSchemas" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="NumericalIntervalHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.NumericalIntervalHandler" />
+		<parameter id="name" value="NumericalIntervalHandler" />
+		<parameter id="description" value="FragmentHandler for NumericalIntervals and AbnormalityIntervals" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="PropertiesHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.PropertiesHandler" />
+		<parameter id="name" value="PropertiesHandler" />
+		<parameter id="description" value="Handler for properties" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="QContainerHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.QContainerHandler" />
+		<parameter id="name" value="QContainerHandler" />
+		<parameter id="description" value="Handler for QContainers" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="QuestionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.QuestionHandler" />
+		<parameter id="name" value="QuestionHandler" />
+		<parameter id="description" value="FragmentHandler for Questions" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="RuleHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.RuleHandler" />
+		<parameter id="name" value="RuleHandler" />
+		<parameter id="description" value="FragmentHandler for Rules" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="ContraIndicationActionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.actions.ContraIndicationActionHandler" />
+		<parameter id="name" value="ContraIndicationActionHandler" />
+		<parameter id="description" value="Handles contraindication actions" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="HeuristicPSActionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.actions.HeuristicPSActionHandler" />
+		<parameter id="name" value="HeuristicPSActionHandler" />
+		<parameter id="description" value="Handles heuristic actions" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="NextQASetActionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.actions.NextQASetActionHandler" />
+		<parameter id="name" value="NextQASetActionHandler" />
+		<parameter id="description" value="Handles actions indicating qasets" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="QuestionSetterActionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.actions.QuestionSetterActionHandler" />
+		<parameter id="name" value="QuestionSetterActionHandler" />
+		<parameter id="description" value="Handles actions setting answers to questions" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="SuppressAnswerActionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.actions.SuppressAnswerActionHandler" />
+		<parameter id="name" value="SuppressAnswerActionHandler" />
+		<parameter id="description" value="Handles actions supressing answers" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="FormulaDateExpressionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.actions.formula.FormulaDateExpressionHandler" />
+		<parameter id="name" value="FormulaDateExpressionHandler" />
+		<parameter id="description" value="Handles date formulas" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="FormulaElementHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.actions.formula.FormulaElementHandler" />
+		<parameter id="name" value="FormulaElementHandler" />
+		<parameter id="description" value="Handles basic formula elements." />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="FormulaExpressionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.actions.formula.FormulaExpressionHandler" />
+		<parameter id="name" value="FormulaExpressionHandler" />
+		<parameter id="description" value="Handles formula expressions." />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="AndConditionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.conditions.AndConditionHandler" />
+		<parameter id="name" value="AndConditionHandler" />
+		<parameter id="description" value="FragmentHandler for CondAnds" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="DStateConditionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.conditions.DStateConditionHandler" />
+		<parameter id="name" value="DStateConditionHandler" />
+		<parameter id="description" value="FragementHandler for CondDStates" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="EqualConditionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.conditions.EqualConditionHandler" />
+		<parameter id="name" value="EqualConditionHandler" />
+		<parameter id="description" value="FragmentHandler for CondEquals" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="KnownConditionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.conditions.KnownConditionHandler" />
+		<parameter id="name" value="KnownConditionHandler" />
+		<parameter id="description" value="FragmentHandler for CondKnowns" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="MofNConditionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.conditions.MofNConditionHandler" />
+		<parameter id="name" value="MofNConditionHandler" />
+		<parameter id="description" value="FragmentHandler for CondMofNs" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="NotConditionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.conditions.NotConditionHandler" />
+		<parameter id="name" value="NotConditionHandler" />
+		<parameter id="description" value="FragmentHandler for CondNots" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="NumEqualConditionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.conditions.NumEqualConditionHandler" />
+		<parameter id="name" value="NumEqualConditionHandler" />
+		<parameter id="description" value="FragmentHandler for CondNumEquals" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="NumGreaterConditionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.conditions.NumGreaterConditionHandler" />
+		<parameter id="name" value="NumGreaterConditionHandler" />
+		<parameter id="description" value="FragmentHandler for CondNumGreaters" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="NumGreaterEqualConditionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.conditions.NumGreaterEqualConditionHandler" />
+		<parameter id="name" value="NumGreaterEqualConditionHandler" />
+		<parameter id="description" value="FragmentHandler for CondNumGreaterEquals" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="NumInConditionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.conditions.NumInConditionHandler" />
+		<parameter id="name" value="NumInConditionHandler" />
+		<parameter id="description" value="FragementHandler for CondNumIns" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="NumLessConditionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.conditions.NumLessConditionHandler" />
+		<parameter id="name" value="NumLessConditionHandler" />
+		<parameter id="description" value="FragementHandler for CondNumLesses" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="NumLessEqualConditionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.conditions.NumLessEqualConditionHandler" />
+		<parameter id="name" value="NumLessEqualConditionHandler" />
+		<parameter id="description" value="FragementHandler for CondNumLessEquals" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="OrConditionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.conditions.OrConditionHandler" />
+		<parameter id="name" value="OrConditionHandler" />
+		<parameter id="description" value="FragmentHandler for CondOrs" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="TextContainsConditionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.conditions.TextContainsConditionHandler" />
+		<parameter id="name" value="TextContainsConditionHandler" />
+		<parameter id="description" value="FragmentHandler for CondTextContains" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="TextEqualConditionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.conditions.TextEqualConditionHandler" />
+		<parameter id="name" value="TextEqualConditionHandler" />
+		<parameter id="description" value="FragmentHandler for CondTextEquals" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+		id="UnknownConditionHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.fragments.conditions.UnknownConditionHandler" />
+		<parameter id="name" value="UnknownConditionHandler" />
+		<parameter id="description" value="FragmentHandler for CondUnknowns" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeReader"
+		id="AbstractionRulesPersistenceHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.rules.AbstractionRulesPersistenceHandler" />
+		<parameter id="name" value="AbstractionRulesPersistenceHandler" />
+		<parameter id="description" value="KnowledgeReader for abstraction rules" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+		<parameter id="filename" value="kb/abstraction-rules.xml" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeWriter"
+		id="AbstractionRulesPersistenceHandler.Writer">
+		<parameter id="class"
+			value="de.d3web.core.kpers.rules.AbstractionRulesPersistenceHandler" />
+		<parameter id="name" value="AbstractionRulesPersistenceHandler" />
+		<parameter id="description" value="KnowledgeWriter for abstraction rules" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+		<parameter id="filename" value="kb/abstraction-rules.xml" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeReader"
+		id="HeuristicRulesPersitenceHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.rules.HeuristicRulesPersitenceHandler" />
+		<parameter id="name" value="HeuristicRulesPersitenceHandler" />
+		<parameter id="description" value="KnowledgeReader for heuristic rules" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+		<parameter id="filename" value="kb/heuristic-rules.xml" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeWriter"
+		id="HeuristicRulesPersitenceHandler.Writer">
+		<parameter id="class"
+			value="de.d3web.core.kpers.rules.HeuristicRulesPersitenceHandler" />
+		<parameter id="name" value="HeuristicRulesPersitenceHandler" />
+		<parameter id="description" value="KnowledgeWriter for heuristic rules" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+		<parameter id="filename" value="kb/heuristic-rules.xml" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeReader"
+		id="StrategicRulesPersistenceHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.rules.StrategicRulesPersistenceHandler" />
+		<parameter id="name" value="StrategicRulesPersistenceHandler" />
+		<parameter id="description" value="KnowledgeReader for strategic-rules" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+		<parameter id="filename" value="kb/strategic-rules.xml" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeWriter"
+		id="StrategicRulesPersistenceHandler.Writer">
+		<parameter id="class"
+			value="de.d3web.core.kpers.rules.StrategicRulesPersistenceHandler" />
+		<parameter id="name" value="StrategicRulesPersistenceHandler" />
+		<parameter id="description" value="KnowledgeWriter for strategic-rules" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+		<parameter id="filename" value="kb/strategic-rules.xml" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeReader"
+		id="XCLModelPersistenceHandler">
+		<parameter id="class"
+			value="de.d3web.xcl.kpers.XCLModelPersistenceHandler" />
+		<parameter id="name" value="XCLModelPersistenceHandler" />
+		<parameter id="description" value="KnowledgeReader for XCLModels" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+		<parameter id="filename" value="kb/xcl.xml" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeWriter"
+		id="XCLModelPersistenceHandler.Writer">
+		<parameter id="class"
+			value="de.d3web.xcl.kpers.XCLModelPersistenceHandler" />
+		<parameter id="name" value="XCLModelPersistenceHandler" />
+		<parameter id="description" value="KnowledgeWriter for XCLModels" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+		<parameter id="filename" value="kb/xcl.xml" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeReader"
+		id="BasicPersistenceHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.BasicPersistenceHandler" />
+		<parameter id="name" value="BasicPersistenceHandler" />
+		<parameter id="description" value="KnowledgeReader for basic knowledge" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="1" />
+		<parameter id="filename" value="kb/basic.xml" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeWriter"
+		id="BasicPersistenceHandler.Writer">
+		<parameter id="class"
+			value="de.d3web.core.kpers.BasicPersistenceHandler" />
+		<parameter id="name" value="BasicPersistenceHandler" />
+		<parameter id="description" value="KnowledgeWriter for basic knowledge" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="1" />
+		<parameter id="filename" value="kb/basic.xml" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeReader"
+		id="KBPatchPersistenceHandler">
+		<parameter id="class"
+			value="de.d3web.core.kpers.KBPatchPersistenceHandler" />
+		<parameter id="name" value="KBPatchPersistenceHandler" />
+		<parameter id="description" value="KnowledgeReader for reading kb-patches" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+		<parameter id="filename" value="kb/kb-patch.xml" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeWriter"
+		id="MMInfoPersistenceHandler.Writer">
+		<parameter id="class"
+			value="de.d3web.mminfo.kpers.MMInfoPersistenceHandler" />
+		<parameter id="name" value="MMInfoPersistenceHandler" />
+		<parameter id="description" value="KnowledgeWriter for MMInfos" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+		<parameter id="filename" value="kb/mminfo.xml" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeReader"
+		id="MMInfoPersistenceHandler">
+		<parameter id="class"
+			value="de.d3web.mminfo.kpers.MMInfoPersistenceHandler" />
+		<parameter id="name" value="MMInfoPersistenceHandler" />
+		<parameter id="description" value="KnowledgeReader for MMInfos." />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+		<parameter id="filename" value="kb/mminfo.xml" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeWriter"
+		id="PluginConfigPersistanceHandler.Writer">
+		<parameter id="class"
+			value="de.d3web.plugin.kpers.PluginConfigPersistanceHandler" />
+		<parameter id="name" value="PluginConfigPersistanceHandler" />
+		<parameter id="description" value="Reads Plugin Configurations." />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+		<parameter id="filename" value="kb/plugins.xml" />
+	</extension>
+	
+	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeReader"
+		id="PluginConfigPersistanceHandler">
+		<parameter id="class"
+			value="de.d3web.plugin.kpers.PluginConfigPersistanceHandler" />
+		<parameter id="name" value="PluginConfigPersistanceHandler" />
+		<parameter id="description" value="Writes Plugin Configurations." />
+		<parameter id="version" value="1.0" />
+		<!-- Parsing the plugin.xml first, aviods parsing other files without being able to use them -->
+		<parameter id="priority" value="1" />
+		<parameter id="filename" value="kb/plugins.xml" />
+	</extension>
+
+	
+</plugin>

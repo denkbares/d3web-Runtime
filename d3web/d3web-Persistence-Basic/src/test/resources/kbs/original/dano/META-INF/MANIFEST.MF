@@ -1,0 +1,7 @@
+Manifest-Version: 2.0
+ID: null
+Author: Wolfgang Lotz (KE: Joachim Baumeister)
+Name: Digitalys 0.73 (Stand: Revision 2008-08-21)
+Date: Tue Jan 19 12:18:11 CET 2010
+User: Markus Friedrich
+
