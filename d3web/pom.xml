@@ -126,7 +126,7 @@
 		<module>d3web-Dialog2</module>
 		<module>d3web-EmpiricalTesting</module>
 		<module>d3web-SCM-CBR</module>
-		<module>d3web-Persistance-ExtensionPoints</module>
+		<module>d3web-Persistence-ExtensionPoints</module>
 		<module>d3web-Persistence-Basic</module>
 		<module>d3web-PluginManager</module>
 		<module>d3web-SharedKnowledgePersistence</module>
