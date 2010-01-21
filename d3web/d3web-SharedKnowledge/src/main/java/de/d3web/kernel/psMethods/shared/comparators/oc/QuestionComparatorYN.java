@@ -30,6 +30,8 @@ import de.d3web.kernel.psMethods.shared.comparators.QuestionComparator;
  */
 public class QuestionComparatorYN extends QuestionComparator {
 
+	private static final long serialVersionUID = 416820120354219536L;
+
 	/**
 	 * Insert the method's description here.
 	 * Creation date: (02.08.2001 18:04:08)
@@ -37,7 +39,7 @@ public class QuestionComparatorYN extends QuestionComparator {
 	public QuestionComparatorYN() {
 	}
 
-	public double compare(List ans1, List ans2) {
+	public double compare(List<?> ans1, List<?> ans2) {
 		try {
 
 			boolean isNo1 = (ans1.get(0) instanceof AnswerNo);
@@ -49,22 +51,5 @@ public class QuestionComparatorYN extends QuestionComparator {
 			System.err.println("Exception while comparing (YN): " + x);
 			return 0;
 		}
-	}
-
-	/**
-	 * Insert the method's description here.
-	 * Creation date: (10.08.2001 14:07:38)
-	 * @return java.lang.String
-	 */
-	public java.lang.String getXMLString() {
-		StringBuffer sb = new StringBuffer();
-
-		sb.append("<KnowledgeSlice ID='" + getId() + "' type='QuestionComparatorYN'>\n");
-		sb.append("<question ID='" + getQuestion().getId() + "'/>\n");
-		sb.append("<unknownSimilarity value='" + getUnknownSimilarity() + "'/>");
-		sb.append("</KnowledgeSlice>\n");
-
-		return sb.toString();
-
 	}
 }

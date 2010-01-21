@@ -31,7 +31,9 @@ import de.d3web.kernel.domainModel.answers.AnswerNum;
  */
 public class QuestionComparatorNumSectionInterpolate extends QuestionComparatorNumSection {
 
-	public double compare(List ans1, List ans2) {
+	private static final long serialVersionUID = 3188155211284462544L;
+
+	public double compare(List<?> ans1, List<?> ans2) {
 		try {
 			//       (g(x) / g(y))
 			Double x1 = (Double) ((AnswerNum) ans1.get(0)).getValue(null);
@@ -50,14 +52,14 @@ public class QuestionComparatorNumSectionInterpolate extends QuestionComparatorN
 		double a = 0, ga = 0;
 		double b = 0, gb = 0;
 
-		Iterator xiter = xValues.iterator();
-		Iterator yiter = yValues.iterator();
+		Iterator<Double> xiter = xValues.iterator();
+		Iterator<Double> yiter = yValues.iterator();
 
 		double m = 0;
 
 		while (xiter.hasNext()) {
-			Double d = (Double) xiter.next();
-			Double gd = (Double) yiter.next();
+			Double d = xiter.next();
+			Double gd = yiter.next();
 
 			b = d.doubleValue();
 			gb = gd.doubleValue();
@@ -85,33 +87,6 @@ public class QuestionComparatorNumSectionInterpolate extends QuestionComparatorN
 		}
 
 		return interpolate(a, ga, b, gb, val.doubleValue());
-	}
-
-	/**
-	 * Insert the method's description here.
-	 * Creation date: (09.08.2001 18:07:24)
-	 * @return java.lang.String
-	 */
-	public java.lang.String getXMLString() {
-		StringBuffer sb = new StringBuffer();
-
-		sb.append("<KnowledgeSlice ID='" + getId() + "' type='QuestionComparatorNumSectionInterpolate'>\n");
-		sb.append("<question ID='" + getQuestion().getId() + "'/>\n");
-		sb.append("<unknownSimilarity value='" + getUnknownSimilarity() + "'/>");
-		sb.append("<sections>\n");
-
-		Iterator xiter = xValues.iterator();
-		Iterator yiter = yValues.iterator();
-		while (xiter.hasNext()) {
-			double x = ((Double) xiter.next()).doubleValue();
-			double y = ((Double) yiter.next()).doubleValue();
-			sb.append("<section xvalue='" + x + "' yvalue='" + y + "'/>\n");
-		}
-
-		sb.append("</sections>\n");
-		sb.append("</KnowledgeSlice>\n");
-
-		return sb.toString();
 	}
 
 	/**

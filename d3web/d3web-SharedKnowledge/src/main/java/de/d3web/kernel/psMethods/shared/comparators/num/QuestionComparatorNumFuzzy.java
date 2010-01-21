@@ -63,6 +63,7 @@ import de.d3web.kernel.domainModel.answers.AnswerNum;
  */
 public class QuestionComparatorNumFuzzy extends QuestionComparatorNum {
 	
+	private static final long serialVersionUID = 9050181706018462531L;
 	public final static String POSITIVE_INFINITY_STR = "+INFINITY";
 	public final static String NEGATIVE_INFINITY_STR = "-INFINITY";
 
@@ -111,7 +112,7 @@ public class QuestionComparatorNumFuzzy extends QuestionComparatorNum {
 	 * the reference value. (e.g. the reference value can be the numerical
 	 * value, which is covered by a diagnosis)
 	 */
-	public double compare(List toCompareAnswer, List referenceAnswer) {
+	public double compare(List<?> toCompareAnswer, List<?> referenceAnswer) {
 		if (referenceAnswer.isEmpty()
 				|| !(referenceAnswer.get(0) instanceof AnswerNum)
 				|| toCompareAnswer.isEmpty()
@@ -123,7 +124,6 @@ public class QuestionComparatorNumFuzzy extends QuestionComparatorNum {
 				.getValue(null);
 		Double toCompare = (Double) ((AnswerNum) toCompareAnswer.get(0))
 				.getValue(null);
-		getXMLString();
 		Double constLeftPoint = new Double(reference);
 		Double constRightPoint = new Double(reference);
 
@@ -271,35 +271,6 @@ public class QuestionComparatorNumFuzzy extends QuestionComparatorNum {
 		return interpretationMethod;
 	}
 	
-	public String getXMLString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("<KnowledgeSlice ID='" + getId()
-				+ "' type='QuestionComparatorNumFuzzy'>\n");
-		sb.append("<question ID='" + getQuestion().getId() + "'/>\n");
-		sb
-				.append("<unknownSimilarity value='" + getUnknownSimilarity()
-						+ "'/>\n");
-		sb.append("<fuzzyParameters increasingLeft='"
-				+ doubleToString(increasingLeft) + "' constLeft='"
-				+ doubleToString(constLeft) + "' constRight='"
-				+ doubleToString(constRight) + "' decreasingRight='"
-				+ doubleToString(decreasingRight) + "' interpretation='"
-				+ interpretationMethod + "' />\n");
-		sb.append("</KnowledgeSlice>\n");
-		return sb.toString();
-	}
-
-	public static String doubleToString(Double d) {
-		if (d.isInfinite()) {
-			if (d.equals(Double.POSITIVE_INFINITY)) {
-				return POSITIVE_INFINITY_STR;
-			} else {
-				return NEGATIVE_INFINITY_STR;
-			}
-		}
-		return d + "";
-	}
-
 	public static Double stringToDouble(String s) {
 		if (s.equalsIgnoreCase(NEGATIVE_INFINITY_STR)) {
 			return Double.NEGATIVE_INFINITY;

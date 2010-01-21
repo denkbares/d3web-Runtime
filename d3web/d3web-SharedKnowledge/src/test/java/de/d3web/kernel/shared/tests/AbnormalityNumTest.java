@@ -40,35 +40,6 @@ public class AbnormalityNumTest extends TestCase {
 		return new TestSuite (AbnormalityNumTest.class);
 	}
 	
-	public void testXML() {
-		
-		AbnormalityNum an = new AbnormalityNum();
-
-		try {
-			an.addValue(0, 1, 0.1, true, false);
-		} catch (NumericalInterval.IntervalException e) {
-			assertTrue("exception", false);
-		}
-
-		try {
-			an.addValue(-1,0, 0.5, false, false);
-		} catch (NumericalInterval.IntervalException e) {
-			assertTrue("exception", false);
-		}
-		
-		String xml = an.getXMLString(true);
-		String xml2 =
-			"<KnowledgeSlice type=\"abnormality\">\n"
-			+ "<question ID=\"\"/>\n"
-			+ "<Intervals>\n"
-			+ "<Interval lower=\"0.0\" upper=\"1.0\" value=\"A1\" type=\"LeftOpenRightClosedInterval\" />\n"
-			+ "<Interval lower=\"-1.0\" upper=\"0.0\" value=\"A4\" type=\"LeftClosedRightClosedInterval\" />\n"
-			+ "</Intervals>\n"
-			+ "</KnowledgeSlice>\n"
-		;
-		assertEquals(xml2 + "\n <=/=> \n"+xml, xml, xml2);
-		
-	}
 	
 	public void testConstruction() {
 		AbnormalityNum an = new AbnormalityNum();

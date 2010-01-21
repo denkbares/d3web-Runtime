@@ -29,7 +29,9 @@ import de.d3web.kernel.psMethods.shared.comparators.IndividualComparator;
  */
 public class QuestionComparatorOCIndividual extends QuestionComparatorOC implements IndividualComparator {
 
-	public double compare(List ans1, List ans2) {
+	private static final long serialVersionUID = -637870285182263247L;
+
+	public double compare(List<?> ans1, List<?> ans2) {
 		try {
 			if (ans1.get(0).equals(ans2.get(0))) {
 				return 1;
@@ -41,21 +43,5 @@ public class QuestionComparatorOCIndividual extends QuestionComparatorOC impleme
 
 		return 0;
 
-	}
-
-	/**
-	 * Insert the method's description here.
-	 * Creation date: (10.08.2001 13:57:16)
-	 * @return java.lang.String
-	 */
-	public java.lang.String getXMLString() {
-		StringBuffer sb = new StringBuffer();
-
-		sb.append("<KnowledgeSlice ID='" + getId() + "' type='QuestionComparatorOCIndividual'>\n");
-		sb.append("<question ID='" + getQuestion().getId() + "'/>\n");
-		sb.append("<unknownSimilarity value='" + getUnknownSimilarity() + "'/>");
-		sb.append("</KnowledgeSlice>\n");
-
-		return sb.toString();
 	}
 }

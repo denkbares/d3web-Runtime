@@ -29,11 +29,10 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.KnowledgeBase;
+import de.d3web.kernel.domainModel.KnowledgeSlice;
 import de.d3web.kernel.domainModel.NamedObject;
 import de.d3web.kernel.domainModel.qasets.QContainer;
 import de.d3web.kernel.domainModel.qasets.QuestionYN;
-import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
-import de.d3web.kernel.domainModel.ruleCondition.CondChoiceYes;
 import de.d3web.kernel.psMethods.shared.Abnormality;
 import de.d3web.kernel.psMethods.shared.LocalWeight;
 import de.d3web.kernel.psMethods.shared.PSMethodShared;
@@ -67,37 +66,29 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 	protected void setUp() {
 		base = new KnowledgeBase();
 
-		qc = new QContainer();
-		qc.setId("qc");
+		qc = new QContainer("qc");
 		qc.setText("qc");
 		qc.setKnowledgeBase(base);
 
-		qyn1 = new QuestionYN();
-		qyn1.setId("qyn1");
+		qyn1 = new QuestionYN("qyn1");
 		qyn1.setText("qyn1");
 		qyn1.setKnowledgeBase(base);
 		qyn1.setParents(Arrays.asList(new NamedObject[] { qc }));
 
-		qyn2 = new QuestionYN();
-		qyn2.setId("qyn2");
+		qyn2 = new QuestionYN("qyn2");
 		qyn2.setText("qyn2");
 		qyn2.setKnowledgeBase(base);
 		qyn2.setParents(Arrays.asList(new NamedObject[] { qc }));
 
-		d1 = new Diagnosis();
-		d1.setId("d1");
+		d1 = new Diagnosis("d1");
 		d1.setText("d1");
 		d1.setKnowledgeBase(base);
 
-		d2 = new Diagnosis();
-		d2.setId("d2");
+		d2 = new Diagnosis("d2");
 		d2.setText("d2");
 		d2.setKnowledgeBase(base);
 
-		AbstractCondition cond1 = new CondChoiceYes(qyn1);
-		AbstractCondition cond2 = new CondChoiceYes(qyn2);
-
-		Abnormality sl1 = new Abnormality();
+				Abnormality sl1 = new Abnormality();
 		sl1.setQuestion(qyn1);
 		qyn1.addKnowledge(PSMethodShared.class, sl1,
 				PSMethodShared.SHARED_ABNORMALITY);
@@ -148,9 +139,9 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 	}
 
 	public void testRemoveAbnormality() {
-		List list;
+		List<?> list;
 		Abnormality slice;
-		list = (List) base.getKnowledge(PSMethodShared.class,
+		list = (List<?>) base.getKnowledge(PSMethodShared.class,
 				PSMethodShared.SHARED_ABNORMALITY);
 		slice = (Abnormality) list.get(0);
 		NamedObject no = slice.getQuestion();
@@ -158,17 +149,17 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 				.remove(slice));
 	
 		assertFalse("Deleted slice still mapped in '" + no.getText()
-				+ "', expected false : ", ((List) no.getKnowledge(
+				+ "', expected false : ", (no.getKnowledge(
 				PSMethodShared.class, PSMethodShared.SHARED_ABNORMALITY))
 				.contains(slice));
 
-		List all = (List) qyn2.getAllKnowledge();
+		List<?> all = (List<?>) qyn2.getAllKnowledge();
 		try {
 			base.remove(qyn2);
 		} catch (Exception e) {
 			fail(qyn2.getText()+" should have had no children!");
 		}
-		Collection slices = base
+		Collection<KnowledgeSlice> slices = base
 				.getAllKnowledgeSlicesFor(PSMethodShared.class);
 
 		for (Object object : all) {
@@ -179,9 +170,9 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 	}
 
 	public void testRemoveKnowledgeBaseUnknownSimilarity() {
-		List list;
+		List<?> list;
 		KnowledgeBaseUnknownSimilarity slice;
-		list = (List) base.getKnowledge(PSMethodShared.class,
+		list = (List<?>) base.getKnowledge(PSMethodShared.class,
 				PSMethodShared.SHARED_SIMILARITY);
 		slice = (KnowledgeBaseUnknownSimilarity) list.get(0);
 		KnowledgeBase no = slice.getKnowledgeBase();
@@ -189,17 +180,17 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 				.remove(slice));
 		
 		assertFalse("Deleted slice still mapped in '" + no
-				+ "', expected false : ", ((List) no.getKnowledge(
+				+ "', expected false : ", ((List<?>) no.getKnowledge(
 				PSMethodShared.class, PSMethodShared.SHARED_SIMILARITY))
 				.contains(slice));
 
-		List all = (List) qyn2.getAllKnowledge();
+		Collection<KnowledgeSlice> all = qyn2.getAllKnowledge();
 		try {
 			base.remove(qyn2);
 		} catch (Exception e) {
 			fail(qyn2.getText()+" should have had no children!");
 		}
-		Collection slices = base
+		Collection<KnowledgeSlice> slices = base
 				.getAllKnowledgeSlicesFor(PSMethodShared.class);
 
 		for (Object object : all) {
@@ -209,9 +200,9 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 	}
 
 	public void testRemoveLocalWeight() {
-		List list;
+		List<?> list;
 		LocalWeight slice;
-		list = (List) base.getKnowledge(PSMethodShared.class,
+		list = (List<?>) base.getKnowledge(PSMethodShared.class,
 				PSMethodShared.SHARED_LOCAL_WEIGHT);
 		slice = (LocalWeight) list.get(0);
 		NamedObject no = slice.getQuestion();
@@ -219,17 +210,17 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 				.remove(slice));
 		
 		assertFalse("Deleted slice still mapped in '" + no.getText()
-				+ "', expected false : ", ((List) no.getKnowledge(
+				+ "', expected false : ", (no.getKnowledge(
 				PSMethodShared.class, PSMethodShared.SHARED_LOCAL_WEIGHT))
 				.contains(slice));
 
-		List all = (List) qyn2.getAllKnowledge();
+		Collection<KnowledgeSlice> all = qyn2.getAllKnowledge();
 		try {
 			base.remove(qyn2);
 		} catch (Exception e) {
 			fail(qyn2.getText()+" should have had no children!");
 		}
-		Collection slices = base
+		Collection<KnowledgeSlice> slices = base
 				.getAllKnowledgeSlicesFor(PSMethodShared.class);
 
 		for (Object object : all) {
@@ -240,9 +231,9 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 
 	
 	public void testRemoveQuestionComparator() {
-		List list;
+		List<?> list;
 		QuestionComparatorYN slice;
-		list = (List) base.getKnowledge(PSMethodShared.class,
+		list = (List<?>) base.getKnowledge(PSMethodShared.class,
 				PSMethodShared.SHARED_SIMILARITY);
 		slice = (QuestionComparatorYN) list.get(4);
 		NamedObject no = slice.getQuestion();
@@ -250,17 +241,17 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 				.remove(slice));
 
 		assertFalse("Deleted slice still mapped in '" + no.getText()
-				+ "', expected false : ", ((List) no.getKnowledge(
+				+ "', expected false : ", (no.getKnowledge(
 				PSMethodShared.class, PSMethodShared.SHARED_SIMILARITY))
 				.contains(slice));
 
-		List all = (List) qyn2.getAllKnowledge();
+		Collection<KnowledgeSlice> all = qyn2.getAllKnowledge();
 		try {
 			base.remove(qyn2);
 		} catch (Exception e) {
 			fail(qyn2.getText()+" should have had no children!");
 		}
-		Collection slices = base
+		Collection<KnowledgeSlice> slices = base
 				.getAllKnowledgeSlicesFor(PSMethodShared.class);
 
 		for (Object object : all) {
@@ -271,9 +262,9 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 	
 
 	public void testRemoveWeight() {
-		List list;
+		List<?> list;
 		Weight slice;
-		list = (List) base.getKnowledge(PSMethodShared.class,
+		list = (List<?>) base.getKnowledge(PSMethodShared.class,
 				PSMethodShared.SHARED_WEIGHT);
 		slice = (Weight) list.get(0);
 		NamedObject no = slice.getQuestionWeightValue().getQuestion();
@@ -281,17 +272,17 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 				.remove(slice));
 		
 		assertFalse("Deleted slice still mapped in '" + no.getText()
-				+ "', expected false : ", ((List) no.getKnowledge(
+				+ "', expected false : ", (no.getKnowledge(
 				PSMethodShared.class, PSMethodShared.SHARED_WEIGHT))
 				.contains(slice));
 
-		List all = (List) qyn2.getAllKnowledge();
+		Collection<KnowledgeSlice> all = qyn2.getAllKnowledge();
 		try {
 			base.remove(qyn2);
 		} catch (Exception e) {
 			fail(qyn2.getText()+" should have had no children!");
 		}
-		Collection slices = base
+		Collection<KnowledgeSlice> slices = base
 				.getAllKnowledgeSlicesFor(PSMethodShared.class);
 
 		for (Object object : all) {

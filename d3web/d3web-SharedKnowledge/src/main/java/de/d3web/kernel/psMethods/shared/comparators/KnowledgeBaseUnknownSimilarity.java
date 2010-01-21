@@ -20,6 +20,7 @@
 
 package de.d3web.kernel.psMethods.shared.comparators;
 import de.d3web.kernel.domainModel.KnowledgeSlice;
+import de.d3web.kernel.psMethods.PSMethod;
 import de.d3web.kernel.psMethods.shared.PSMethodShared;
 /**
  * Insert the type's description here.
@@ -27,6 +28,9 @@ import de.d3web.kernel.psMethods.shared.PSMethodShared;
  * @author: Norman Brümmer
  */
 public class KnowledgeBaseUnknownSimilarity implements KnowledgeSlice{
+	
+	private static final long serialVersionUID = -5141583840097744293L;
+
 	private String id = null;
 
 	private double similarity = 0.1;
@@ -71,7 +75,7 @@ public de.d3web.kernel.domainModel.KnowledgeBase getKnowledgeBase() {
  * Creation date: (19.02.2002 13:46:55)
  * @return java.lang.Class PSMethod class
  */
-public java.lang.Class getProblemsolverContext() {
+public Class<? extends PSMethod> getProblemsolverContext() {
 	return de.d3web.kernel.psMethods.shared.PSMethodShared.class;
 }
 

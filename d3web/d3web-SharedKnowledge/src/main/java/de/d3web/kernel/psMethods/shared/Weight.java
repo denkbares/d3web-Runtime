@@ -25,7 +25,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.KnowledgeSlice;
+import de.d3web.kernel.psMethods.PSMethod;
 /**
  * Represents the weight of a symptom
  * Creation date: (03.08.2001 16:37:21)
@@ -33,6 +35,10 @@ import de.d3web.kernel.domainModel.KnowledgeSlice;
  */
 public class Weight implements KnowledgeSlice {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5362682008300174209L;
 	public static int G0 = 0;
 	public static int G1 = 1;
 	public static int G2 = 2;
@@ -42,75 +48,29 @@ public class Weight implements KnowledgeSlice {
 	public static int G6 = 32;
 	public static int G7 = 64;
 
-	private java.lang.String id = null;
 	private QuestionWeightValue questionWeightValue = null;
 
-	private List diagnosisWeightValues = null;
+	private List<DiagnosisWeightValue> diagnosisWeightValues = null;
 
-	private Hashtable diagnoseDiagnosisWeightValueHash = null;
+	private Hashtable<Diagnosis, DiagnosisWeightValue> diagnoseDiagnosisWeightValueHash = null;
 
 	/**
 	 * Weight constructor comment.
 	 */
 	public Weight() {
 		super();
-		diagnosisWeightValues = new LinkedList();
-		diagnoseDiagnosisWeightValueHash = new Hashtable();
+		diagnosisWeightValues = new LinkedList<DiagnosisWeightValue>();
+		diagnoseDiagnosisWeightValueHash = new Hashtable<Diagnosis, DiagnosisWeightValue>();
 	}
 
-	/**
-	 * @return a shallow copy of the Weight instance
-	 */
-	public Weight copy() {
-		Weight w = new Weight();
-		w.setId(w.getId()+"c");
-		w.setQuestionWeightValue(getQuestionWeightValue().copy());
-		w.diagnoseDiagnosisWeightValueHash = (Hashtable)diagnoseDiagnosisWeightValueHash.clone();
-		w.diagnosisWeightValues = new LinkedList(diagnosisWeightValues);
-		return w;
-	}
-	
 	/**
 	 * Returns the class of the PSMethod in which this
 	 * KnowledgeSlice makes sense.
 	 * Creation date: (11.08.2001 00:39:38)
 	 * @return java.lang.Class PSMethod class
 	 */
-	public Class getProblemsolverContext() {
+	public Class<? extends PSMethod> getProblemsolverContext() {
 		return PSMethodShared.class;
-	}
-
-	/**
-	 * Insert the method's description here.
-	 * Creation date: (09.08.2001 00:13:14)
-	 * @return java.lang.String
-	 */
-	public String getXMLString() {
-		StringBuffer sb = new StringBuffer();
-
-		sb.append(
-			"<KnowledgeSlice ID='W"
-				+ questionWeightValue.getQuestion().getId()
-				+ "' type='weight' questionID='"
-				+ questionWeightValue.getQuestion().getId()
-				+ "' value='"
-				+ convertValueToConstantString(questionWeightValue.getValue())
-				+ "' >\n");
-
-		Iterator iter = diagnosisWeightValues.iterator();
-		while (iter.hasNext()) {
-			DiagnosisWeightValue val = (DiagnosisWeightValue) iter.next();
-			sb.append(
-				"<diagnosis ID='"
-					+ val.getDiagnosis().getId()
-					+ "' value='"
-					+ convertValueToConstantString(val.getValue())
-					+ "' />\n");
-		}
-
-		sb.append("</KnowledgeSlice>\n");
-
-		return sb.toString();
 	}
 
 	/**
@@ -203,7 +163,7 @@ public class Weight implements KnowledgeSlice {
 	 * Creation date: (18.10.2001 19:12:52)
 	 * @return java.util.List
 	 */
-	public java.util.List getDiagnosisWeightValues() {
+	public List<DiagnosisWeightValue> getDiagnosisWeightValues() {
 		return diagnosisWeightValues;
 	}
 
@@ -213,7 +173,7 @@ public class Weight implements KnowledgeSlice {
 	 * @return java.lang.String
 	 */
 	public java.lang.String getId() {
-		return id;
+		return "W"+questionWeightValue.getQuestion().getId();
 	}
 
 	/**
@@ -223,10 +183,9 @@ public class Weight implements KnowledgeSlice {
 	 * @return int
 	 * @param diagnoses java.util.Collection
 	 */
-	public int getMaxDiagnosisWeightValueFromDiagnoses(Collection diagnoses) {
+	public int getMaxDiagnosisWeightValueFromDiagnoses(Collection<Diagnosis> diagnoses) {
 		int ret = -1;
-
-		Iterator iter = diagnoses.iterator();
+		Iterator<Diagnosis> iter = diagnoses.iterator();
 		while (iter.hasNext()) {
 			DiagnosisWeightValue val = (DiagnosisWeightValue) diagnoseDiagnosisWeightValueHash.get(iter.next());
 			if (val != null) {
@@ -246,15 +205,6 @@ public class Weight implements KnowledgeSlice {
 	 */
 	public QuestionWeightValue getQuestionWeightValue() {
 		return questionWeightValue;
-	}
-
-	/**
-	 * Insert the method's description here.
-	 * Creation date: (18.10.2001 18:40:12)
-	 * @param newId java.lang.String
-	 */
-	public void setId(java.lang.String newId) {
-		id = newId;
 	}
 
 	/**

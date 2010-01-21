@@ -27,6 +27,11 @@ import de.d3web.kernel.domainModel.qasets.Question;
  * @author: Norman Brümmer
  */
 public class QuestionWeightValue implements java.io.Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2848772598764003299L;
+
 	private de.d3web.kernel.domainModel.qasets.Question question = null;
 
 	private int value = 0;

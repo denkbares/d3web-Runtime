@@ -20,7 +20,6 @@
 
 package de.d3web.kernel.psMethods.shared.comparators.mc;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,7 +34,8 @@ import de.d3web.kernel.psMethods.shared.comparators.PairRelation;
 public abstract class QuestionComparatorMCGrouped extends QuestionComparatorMC implements
         GroupedComparator {
 
-    protected List pairRelations = null;
+   private static final long serialVersionUID = -4337435566756738090L;
+	protected List<PairRelation> pairRelations = null;
 
     /**
      * Creation date: (03.08.2001 15:23:14)
@@ -53,6 +53,10 @@ public abstract class QuestionComparatorMCGrouped extends QuestionComparatorMC i
         pairRelations.add(rel);
 
     }
+    
+    public void addPairRelation(PairRelation pairRelation) {
+    	pairRelations.add(pairRelation);
+    }
 
     public double getPairRelationValue(AnswerChoice ans1, AnswerChoice ans2) {
         PairRelation rel = new PairRelation(ans1, ans2, 0.0);
@@ -69,71 +73,17 @@ public abstract class QuestionComparatorMCGrouped extends QuestionComparatorMC i
      * Creation date: (07.08.2001 10:56:41)
      */
     public QuestionComparatorMCGrouped() {
-        pairRelations = new LinkedList();
+        pairRelations = new LinkedList<PairRelation>();
     }
 
     public void addPairRelation(AnswerChoice ans1, AnswerChoice ans2) {
         addPairRelation(ans1, ans2, 1.0);
     }
 
-    public double compare(List ans1, List ans2) {
-        if (isSameAnswerListContent(ans1, ans2)) { return 1; }
-
-        double value = 0;
-        double countComp = 0;
-
-        Iterator iter = pairRelations.iterator();
-        while (iter.hasNext()) {
-            PairRelation rel = (PairRelation) iter.next();
-            if ((ans1.contains(rel.getAnswer1()) && ans2.contains(rel
-                    .getAnswer1()))
-                    || (ans1.contains(rel.getAnswer2()) && ans2.contains(rel
-                            .getAnswer2()))) {
-                value += 1.0;
-                countComp++;
-            } else if ((ans1.contains(rel.getAnswer1()) && ans2.contains(rel
-                    .getAnswer2()))
-                    || (ans1.contains(rel.getAnswer2()) && ans2.contains(rel
-                            .getAnswer1()))) {
-                value += rel.getValue();
-                countComp++;
-            }
-        }
-        if (countComp == 0) {
-            return 0;
-        } else {
-            return value / countComp;
-        }
-    }
-
-    /**
-     * Creation date: (09.08.2001 18:07:04)
-     * 
-     * @return java.lang.String
-     */
-    public abstract java.lang.String getXMLString();
-        
-    /**
-     * Creation date: (20.08.2001 15:18:06)
-     */
-    private boolean isSameAnswerListContent(List l1, List l2) {
-        Iterator iter1 = l1.iterator();
-        while (iter1.hasNext()) {
-            if (!l2.contains(iter1.next())) { return false; }
-        }
-
-        Iterator iter2 = l2.iterator();
-        while (iter2.hasNext()) {
-            if (!l1.contains(iter2.next())) { return false; }
-        }
-
-        return true;
-    }
-
     /**
      * @return Returns the pairRelations.
      */
-    public List getPairRelations() {
+    public List<PairRelation> getPairRelations() {
         return pairRelations;
     }
 }

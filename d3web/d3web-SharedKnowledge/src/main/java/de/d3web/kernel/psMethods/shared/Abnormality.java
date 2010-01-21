@@ -30,7 +30,8 @@ import de.d3web.kernel.domainModel.Answer;
  */
 public class Abnormality extends AbstractAbnormality {
 
-	private Hashtable values = new Hashtable();
+	private static final long serialVersionUID = 7777097400967327079L;
+	private Hashtable<Answer, Double> values = new Hashtable<Answer, Double>();
 
 	/**
 	 * with this method you can add an answer-abnorm.Value pair
@@ -49,7 +50,7 @@ public class Abnormality extends AbstractAbnormality {
 	 * @param ans de.d3web.kernel.domainModel.Answer
 	 */
 	public double getValue(Answer ans) {
-		Double ret = (Double) values.get(ans);
+		Double ret = values.get(ans);
 		if (ret != null)
 		{
 			return ret.doubleValue();
@@ -58,32 +59,8 @@ public class Abnormality extends AbstractAbnormality {
 		return A0;
 	}
 
-	/**
-	 * Returns the XML representation of this abnormality object
-	 * Creation date: (09.08.2001 00:23:52)
-	 * @return java.lang.String
-	 */
-	public String getXMLString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append(getXMLStringHeader());
-
-		sb.append("<values>\n");
-	
-		Enumeration answers = values.keys();
-		while (answers.hasMoreElements()) {
-			Answer ans = (Answer) answers.nextElement();
-			sb.append(
-				"<abnormality ID='"
-					+ ans.getId()
-					+ "' value='"
-					+ convertValueToConstantString(((Double) values.get(ans)).doubleValue())
-					+ "'/>\n");
-		}
-		
-		sb.append("</values>\n");
-
-		sb.append(getXMLStringFooter());
-		return sb.toString();
+	public Enumeration<Answer> getAnswerEnumeration() {
+		return values.keys();
 	}
 
 }

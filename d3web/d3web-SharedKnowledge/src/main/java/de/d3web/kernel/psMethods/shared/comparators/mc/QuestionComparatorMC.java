@@ -26,4 +26,6 @@ import de.d3web.kernel.psMethods.shared.comparators.QuestionComparator;
  * @author: Norman Brümmer
  */
 public abstract class QuestionComparatorMC extends QuestionComparator {
+
+	private static final long serialVersionUID = -1560364552259256874L;
 }

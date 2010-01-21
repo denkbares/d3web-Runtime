@@ -37,16 +37,18 @@ import de.d3web.kernel.domainModel.Answer;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.KnowledgeSlice;
 import de.d3web.kernel.domainModel.qasets.Question;
+import de.d3web.kernel.psMethods.PSMethod;
 
 /**
  * @author heckel
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class LocalWeight implements KnowledgeSlice {
 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6449769676166771342L;
 	public static double G0 = 0;
 	public static double G1 = 1;
 	public static double G2 = 2;
@@ -56,18 +58,16 @@ public class LocalWeight implements KnowledgeSlice {
 	public static double G6 = 32;
 	public static double G7 = 64;
 	
-	private java.lang.String id = null;
-	
 	private Question q;
 	private Diagnosis d;
-	private Hashtable values = null;
+	private Hashtable<Answer, Double> values = null;
 	
 	/**
 	 * Weight constructor comment.
 	 */
 	public LocalWeight() {
 		super();
-		values = new Hashtable();
+		values = new Hashtable<Answer, Double>();
 	}
 	
 	public void setValue(Answer ans, double value) {
@@ -76,7 +76,7 @@ public class LocalWeight implements KnowledgeSlice {
 
 	
 	public double getValue(Answer ans) {
-		Double ret = (Double) values.get(ans);
+		Double ret = values.get(ans);
 		if (ret != null)
 		{
 			return ret.doubleValue();
@@ -125,46 +125,11 @@ public class LocalWeight implements KnowledgeSlice {
 	}
 	
 	
-	/**
-	 * Insert the method's description here.
-	 * @return java.lang.String
-	 */
-	public String getXMLString() {
-		StringBuffer sb = new StringBuffer();
-
-		sb.append(
-			"<KnowledgeSlice ID='W"
-				+ getQuestion().getId()
-				+ "' type='localweight' questionID='"
-				+ getQuestion().getId()
-				+ "' diagnosisID='"
-				+ getDiagnosis().getId()
-				+ "' >\n");
-		
-		sb.append("<values>\n");
-		Enumeration answers = values.keys();
-		while (answers.hasMoreElements()) {
-			Answer ans = (Answer) answers.nextElement();
-			sb.append(
-				"<localweight ID='"
-					+ ans.getId()
-					+ "' value='"
-					+ convertValueToConstantString(((Double) values.get(ans)).doubleValue())
-					+ "'/>\n");
-		}
-		
-		sb.append("</values>\n");
-		
-		sb.append("</KnowledgeSlice>\n");
-
-		return sb.toString();
-	}
-	
 	/* (non-Javadoc)
 	 * @see de.d3web.kernel.domainModel.KnowledgeSlice#getId()
 	 */
 	public java.lang.String getId() {
-		return id;
+		return "W"+getQuestion().getId();
 	}
 
 	/**
@@ -172,7 +137,7 @@ public class LocalWeight implements KnowledgeSlice {
 	 * KnowledgeSlice makes sense.
 	 * @return java.lang.Class PSMethod class
 	 */
-	public Class getProblemsolverContext() {
+	public Class<? extends PSMethod> getProblemsolverContext() {
 		return PSMethodShared.class;
 	}
 
@@ -241,6 +206,10 @@ public class LocalWeight implements KnowledgeSlice {
 	public void remove() {
 		setQuestion(null);
 		setDiagnosis(null);
+	}
+	
+	public Enumeration<Answer> getAnswerEnumeration() {
+		return values.keys();
 	}
 
 }

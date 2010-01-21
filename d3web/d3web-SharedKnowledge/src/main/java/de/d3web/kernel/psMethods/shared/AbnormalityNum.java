@@ -27,7 +27,6 @@ import java.util.List;
 import de.d3web.kernel.domainModel.Answer;
 import de.d3web.kernel.domainModel.NumericalInterval;
 import de.d3web.kernel.domainModel.answers.AnswerNum;
-import de.d3web.persistence.xml.loader.NumericalIntervalsUtils;
 
 /**
  * AbnormalityNum is for handling abnormality when working with QuestionNums
@@ -41,65 +40,10 @@ import de.d3web.persistence.xml.loader.NumericalIntervalsUtils;
  */
 public class AbnormalityNum extends AbstractAbnormality {
 
-	private List intervals = new LinkedList();
+	private static final long serialVersionUID = 8229775727799410392L;
+	private List<AbnormalityInterval> intervals = new LinkedList<AbnormalityInterval>();
 	
-	/**
-	 * AbnormalityInterval has
-	 * 
-	 * lowerBoundary, upperBoundary, value & type
-	 * type specifies if and which endpoints of the interval are included or not
-	 * CLOSED_... means lowerBoundary is included, OPEN_... means lowerBoundary is not included
-	 * ..._CLOSED and ..._OPEN analogous
-	 * 
-	 * Abnormality offers
-	 * 
-	 * interferesWith(AbnormalityInterval) to check if two intervals overlap or connects
-	 * contains(double) to check if a double lies between upperBoundary and upperBoundary
-	 * isRightOpen() to check if the upperBoundary is not included
-	 * isLeftOpen() ...
-	 */
-	public class AbnormalityInterval extends NumericalInterval {
-
-		private double value;
-
-		public AbnormalityInterval(
-			double lowerBoundary,
-			double upperBoundary,
-			double value,
-			boolean leftOpen,
-			boolean rightOpen)
-			throws NumericalInterval.IntervalException {
-			super(lowerBoundary, upperBoundary, leftOpen, rightOpen);
-			setValue(value);
-		}
-
-		public String toString() {
-			return "AbnormalityInterval"
-				+ " ("
-				+ convertValueToConstantString(value)
-				+ "): "
-				+ (isLeftOpen() ? "(" : "[")
-				+ getLeft()
-				+ ", "
-				+ getRight()
-				+ (isRightOpen() ? ")" : "]");
-		}
-
-		/**
-		 * @return
-		 */
-		public double getValue() {
-			return value;
-		}
-
-		/**
-		 * @param d
-		 */
-		public void setValue(double d) {
-			value = d;
-		}
-
-	}
+	
 
 	public AbnormalityNum(){
 	}
@@ -110,8 +54,8 @@ public class AbnormalityNum extends AbstractAbnormality {
 	 * @return boolean, true if ai does not interfere with any AbnormalityInterval in intervals
 	 */
 	private boolean checkIntervals(AbnormalityInterval ai) {
-		Iterator iter = intervals.iterator();
-		while (iter.hasNext()) if (((AbnormalityInterval) iter.next()).intersects(ai)) return false;
+		Iterator<AbnormalityInterval> iter = intervals.iterator();
+		while (iter.hasNext()) if ((iter.next()).intersects(ai)) return false;
 		return true;
 	}
 	
@@ -133,6 +77,10 @@ public class AbnormalityNum extends AbstractAbnormality {
 			
 		AbnormalityInterval ai =
 			new AbnormalityInterval(lowerBoundary, upperBoundary, value, leftOpen, rightOpen);
+		addValue(ai);
+	}
+	
+	public void addValue(AbnormalityInterval ai) {
 		if (checkIntervals(ai))
 			intervals.add(ai);
 		else
@@ -145,10 +93,10 @@ public class AbnormalityNum extends AbstractAbnormality {
 	 * @return double, value of abnormality of the AbnormalityInterval which contains answerValue, A0 if answerValue is not contained in any AbnormalityInterval
 	 */
 	public double getValue(double answerValue) {
-		Iterator iter = intervals.iterator();
+		Iterator<AbnormalityInterval> iter = intervals.iterator();
 		while (iter.hasNext()) {
 			AbnormalityInterval ai = (AbnormalityInterval) iter.next();
-			if (ai.contains(answerValue)) return ai.value;
+			if (ai.contains(answerValue)) return ai.getValue();
 		}
 		return A0;
 	}
@@ -172,7 +120,7 @@ public class AbnormalityNum extends AbstractAbnormality {
 	 * Returns the interval-list.
 	 * @return List with the Intervals.
 	 */
-	public List getIntervals(){
+	public List<AbnormalityInterval> getIntervals(){
 		return intervals;
 	}
 
@@ -180,54 +128,12 @@ public class AbnormalityNum extends AbstractAbnormality {
 	 * Sets the interval-list
 	 * @param newIntervals
 	 */
-	public void setIntervals(List newIntervals) throws NumericalInterval.IntervalException {
-		intervals = new LinkedList();
-		for (Iterator iter = newIntervals.iterator(); iter.hasNext();) {
+	public void setIntervals(List<AbnormalityInterval> newIntervals) throws NumericalInterval.IntervalException {
+		intervals = new LinkedList<AbnormalityInterval>();
+		for (Iterator<AbnormalityInterval> iter = newIntervals.iterator(); iter.hasNext();) {
 			AbnormalityInterval ai = (AbnormalityInterval) iter.next();
 			if (checkIntervals(ai)) intervals.add(ai);
 			else throw new NumericalInterval.IntervalException("new AbnormalityInterval overlaps one of the existing AbnormalityIntervals");
 		}
 	}
-	
-
-	/**
-	 * @see de.d3web.kernel.psMethods.shared.AbstractAbnormality#getXMLString()
-	 */
-	public String getXMLString() {
-		return getXMLString(false);
-	}
-
-	public String getXMLString(boolean ignoreNullQuestion) {
-		StringBuffer sb = new StringBuffer();
-		sb.append(getXMLStringHeader());
-	
-		sb.append("<" + NumericalIntervalsUtils.GROUPTAG + ">\n");
-	
-		Iterator iter = intervals.iterator();
-		while (iter.hasNext()) {
-			AbnormalityInterval ai = (AbnormalityInterval) iter.next();
-			sb.append(
-				"<" + NumericalIntervalsUtils.TAG
-				+ " " + NumericalIntervalsUtils.interval2lowerAttribute(ai)
-				+ " " + NumericalIntervalsUtils.interval2upperAttribute(ai)
-				+ " value=\"" + convertValueToConstantString(ai.value) + "\""
-				+ " " + NumericalIntervalsUtils.interval2typeAttribute(ai)
-				+ " />\n"
-			);
-		}
-		
-		sb.append("</" + NumericalIntervalsUtils.GROUPTAG + ">\n");
-	
-		sb.append(getXMLStringFooter());
-		return sb.toString();
-	}
-
-	/**
-	 * @param ai
-	 * @return
-	 */
-	private String getTypeXMLString(AbnormalityInterval ai) {
-		return "Left" + (ai.isLeftOpen() ? "Open" : "Closed") + "Right" + (ai.isRightOpen() ? "Open" : "Closed") + "Interval";
-	}
-	
 }

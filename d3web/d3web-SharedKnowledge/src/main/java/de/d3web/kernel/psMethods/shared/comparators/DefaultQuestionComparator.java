@@ -23,7 +23,7 @@ package de.d3web.kernel.psMethods.shared.comparators;
 import java.util.List;
 
 /**
- * This comparator simply checks if the ansewers are equal.
+ * This comparator simply checks if the answers are equal.
  * Then the similarity is 1.0. If not, it is 0.0.<br>
  * <B>
  * This Comparator will only be used if none is defined for a Question!
@@ -33,6 +33,7 @@ import java.util.List;
  */
 public class DefaultQuestionComparator extends QuestionComparator {
 
+	private static final long serialVersionUID = -7001760486842461686L;
 	private static DefaultQuestionComparator instance = null;
 	
 	private DefaultQuestionComparator() {
@@ -50,7 +51,7 @@ public class DefaultQuestionComparator extends QuestionComparator {
 	/**
 	 * @see QuestionComparator#compare(List, List)
 	 */
-	public double compare(List answers1, List answers2) {
+	public double compare(List<?> answers1, List<?> answers2) {
 		if (answers1.size() == answers2.size() 
 				&& answers1.containsAll(answers2)) {
 			return 1;
@@ -58,14 +59,4 @@ public class DefaultQuestionComparator extends QuestionComparator {
 			return 0;
 		}
 	}
-
-	/**
-	 * Returns an empty String because this comparator should only be used,
-	 * if no such KnowledgeSlice is defined for a Question. 
-	 */
-	public String getXMLString() {
-		StringBuffer sb = new StringBuffer();
-		return sb.toString();
-	}
-
 }

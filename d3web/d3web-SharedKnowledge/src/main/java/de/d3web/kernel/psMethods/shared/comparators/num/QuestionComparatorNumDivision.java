@@ -29,7 +29,9 @@ import de.d3web.kernel.domainModel.answers.AnswerNum;
  */
 public class QuestionComparatorNumDivision extends QuestionComparatorNum {
 
-	public double compare(List ans1, List ans2) {
+	private static final long serialVersionUID = -2797253845633333005L;
+
+	public double compare(List<?> ans1, List<?> ans2) {
 
 		try {
 
@@ -56,20 +58,5 @@ public class QuestionComparatorNumDivision extends QuestionComparatorNum {
 			return super.compare(ans1, ans2);
 		}
 
-	}
-
-	/**
-	 * Creation date: (09.08.2001 18:07:13)
-	 * @return java.lang.String
-	 */
-	public java.lang.String getXMLString() {
-		StringBuffer sb = new StringBuffer();
-
-		sb.append("<KnowledgeSlice ID='" + getId() + "' type='QuestionComparatorNumDivision'>\n");
-		sb.append("<question ID='" + getQuestion().getId() + "'/>\n");
-		sb.append("<unknownSimilarity value='" + getUnknownSimilarity() + "'/>");
-		sb.append("</KnowledgeSlice>\n");
-
-		return sb.toString();
 	}
 }

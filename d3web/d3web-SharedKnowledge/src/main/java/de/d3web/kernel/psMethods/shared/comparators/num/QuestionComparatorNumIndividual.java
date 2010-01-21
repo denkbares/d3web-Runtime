@@ -30,7 +30,9 @@ import de.d3web.kernel.psMethods.shared.comparators.IndividualComparator;
  */
 public class QuestionComparatorNumIndividual extends QuestionComparatorNum implements IndividualComparator {
 
-	public double compare(List ans1, List ans2) {
+	private static final long serialVersionUID = -2716446824920270409L;
+
+	public double compare(List<?> ans1, List<?> ans2) {
 		double x1 = 0;
 		double x2 = 0;
 		try {
@@ -43,19 +45,5 @@ public class QuestionComparatorNumIndividual extends QuestionComparatorNum imple
 			return super.compare(ans1, ans2);
 		}
 
-	}
-
-	/**
-	 * @return java.lang.String
-	 */
-	public String getXMLString() {
-		StringBuffer sb = new StringBuffer();
-
-		sb.append("<KnowledgeSlice ID='" + getId() + "' type='QuestionComparatorNumIndividual'>\n");
-		sb.append("<question ID='" + getQuestion().getId() + "'/>\n");
-		sb.append("<unknownSimilarity value='" + getUnknownSimilarity() + "'/>");
-		sb.append("</KnowledgeSlice>\n");
-
-		return sb.toString();
 	}
 }

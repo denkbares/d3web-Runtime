@@ -30,6 +30,11 @@ import de.d3web.kernel.psMethods.shared.PSMethodShared;
  * @author: Norman Brümmer
  */
 public abstract class QuestionComparator implements KnowledgeSlice {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7940425720868244820L;
+
 	private de.d3web.kernel.domainModel.qasets.Question question = null;
 
 	private double unknownSimilarity = -1;
@@ -38,7 +43,7 @@ public abstract class QuestionComparator implements KnowledgeSlice {
 	/**
 	 * compare method wihthout ComparableQuestions. just needs the answer-arrays.
 	 */
-	public abstract double compare(List answers1, List answers2);
+	public abstract double compare(List<?> answers1, List<?> answers2);
 
 	/**
 	 * @return java.lang.String
@@ -53,7 +58,7 @@ public abstract class QuestionComparator implements KnowledgeSlice {
 	 * Creation date: (02.08.2001 16:27:48)
 	 * @return java.lang.Class PSMethod class
 	 */
-	public java.lang.Class getProblemsolverContext() {
+	public Class<? extends PSMethodShared> getProblemsolverContext() {
 		return PSMethodShared.class;
 	}
 
@@ -74,13 +79,6 @@ public abstract class QuestionComparator implements KnowledgeSlice {
 	public double getUnknownSimilarity() {
 		return unknownSimilarity;
 	}
-
-	/**
-	 * Insert the method's description here.
-	 * Creation date: (09.08.2001 00:40:10)
-	 * @return java.lang.String
-	 */
-	public abstract String getXMLString();
 
 	/**
 	 * Has this knowledge already been used? (e.g. did a rule fire?)

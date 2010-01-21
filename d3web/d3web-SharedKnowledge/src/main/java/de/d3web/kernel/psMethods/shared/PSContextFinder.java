@@ -21,6 +21,7 @@
 package de.d3web.kernel.psMethods.shared;
 import java.util.Hashtable;
 
+import de.d3web.kernel.psMethods.PSMethod;
 import de.d3web.kernel.psMethods.shared.comparators.QuestionComparator;
 import de.d3web.kernel.psMethods.shared.comparators.oc.QuestionComparatorYN;
 /**
@@ -33,7 +34,7 @@ public class PSContextFinder {
 	private Weight weight = null;
 	private QuestionComparator qcomp = null;
 
-	private Hashtable contextHash = null;
+	private Hashtable<Class<?>, Class<? extends PSMethod>> contextHash = null;
 
 	private static PSContextFinder instance = null;
 
@@ -47,7 +48,7 @@ public class PSContextFinder {
 		qcomp = new QuestionComparatorYN();
 		weight = new Weight();
 
-		contextHash = new Hashtable();
+		contextHash = new Hashtable<Class<?>, Class<? extends PSMethod>>();
 		contextHash.put(Abnormality.class, abnorm.getProblemsolverContext());
 		contextHash.put(QuestionComparator.class, qcomp.getProblemsolverContext());
 		contextHash.put(Weight.class, weight.getProblemsolverContext());
@@ -59,9 +60,9 @@ public class PSContextFinder {
 	 * @return java.lang.Class
 	 * @param knowledgeSliceClass java.lang.Class
 	 */
-	public Class findPSContext(Class knowledgeSliceClass)
+	public Class<?> findPSContext(Class<?> knowledgeSliceClass)
 {
-		return (Class) contextHash.get(knowledgeSliceClass);
+		return contextHash.get(knowledgeSliceClass);
 	}
 
 	/**

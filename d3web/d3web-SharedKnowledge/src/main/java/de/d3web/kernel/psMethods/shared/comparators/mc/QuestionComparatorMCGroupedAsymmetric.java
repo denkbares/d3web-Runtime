@@ -30,30 +30,9 @@ import de.d3web.kernel.psMethods.shared.comparators.PairRelation;
 public class QuestionComparatorMCGroupedAsymmetric extends
 		QuestionComparatorMCGrouped implements GroupedComparatorAsymmetric{
 
-	public java.lang.String getXMLString() {
-        StringBuffer sb = new StringBuffer();
+	private static final long serialVersionUID = -2538401656126234739L;
 
-        sb.append("<KnowledgeSlice ID='" + getId()
-                + "' type='QuestionComparatorMCGroupedAsymmetric'>\n");
-        sb.append("<question ID='" + getQuestion().getId() + "'/>\n");
-        sb
-                .append("<unknownSimilarity value='" + getUnknownSimilarity()
-                        + "'/>");
-        sb.append("<pairRelations>\n");
-
-        Iterator iter = pairRelations.iterator();
-        while (iter.hasNext()) {
-            PairRelation rel = (PairRelation) iter.next();
-            sb.append(rel.getXMLString());
-        }
-
-        sb.append("</pairRelations>\n");
-        sb.append("</KnowledgeSlice>\n");
-
-        return sb.toString();
-    }
-	
-	public double compare(List answers1, List answers2) {
+	public double compare(List<?> answers1, List<?> answers2) {
 		try {
 			AnswerChoice ans1 = (AnswerChoice) answers1.get(0);
 			AnswerChoice ans2 = (AnswerChoice) answers2.get(0);
@@ -62,9 +41,9 @@ public class QuestionComparatorMCGroupedAsymmetric extends
 				return 1;
 			}
 
-			Iterator iter = pairRelations.iterator();
+			Iterator<PairRelation> iter = pairRelations.iterator();
 			while (iter.hasNext()) {
-				PairRelation r = (PairRelation) iter.next();
+				PairRelation r = iter.next();
 				if (r.getAnswer1().equals(ans1) && r.getAnswer2().equals(ans2)) {
 					return r.getValue();
 				}

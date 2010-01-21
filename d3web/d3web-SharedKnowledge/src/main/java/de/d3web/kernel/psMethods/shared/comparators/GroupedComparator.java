@@ -23,6 +23,8 @@
  */
 package de.d3web.kernel.psMethods.shared.comparators;
 
+import java.util.List;
+
 import de.d3web.kernel.domainModel.answers.AnswerChoice;
 
 /**
@@ -34,8 +36,12 @@ public interface GroupedComparator {
 
 	void addPairRelation(AnswerChoice ans1, AnswerChoice ans2, double value);
 	
+	void addPairRelation(PairRelation pairRelation);
+	
 	void addPairRelation(AnswerChoice ans1, AnswerChoice ans2);
 
 	double getPairRelationValue(AnswerChoice ans1, AnswerChoice ans2);
+
+	List<PairRelation> getPairRelations();
 	
 }

@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.d3web.kernel.domainModel.answers.AnswerChoice;
 import de.d3web.kernel.domainModel.qasets.QuestionOC;
 
 /**
@@ -32,61 +33,30 @@ import de.d3web.kernel.domainModel.qasets.QuestionOC;
  * @author: Norman Brümmer
  */
 public class QuestionComparatorOCScaled extends QuestionComparatorOC {
-	private java.util.List values = null;
+	
+	private static final long serialVersionUID = 2507886291700616036L;
+	private List<Double> values = null;
 	private double constant = 0;
 
-	public double compare(List ans1, List ans2) {
+	public double compare(List<?> ans1, List<?> ans2) {
 		if (getQuestion() == null) {
 			return 0;
 		}
 
-		Hashtable ansValHash = new Hashtable();
+		Hashtable<AnswerChoice, Double> ansValHash = new Hashtable<AnswerChoice, Double>();
 		checkValues();
 		checkConstant();
 		// build ansValHash
-		List alternatives = ((QuestionOC) getQuestion()).getAllAlternatives();
-		Iterator altIter = alternatives.iterator();
-		Iterator valIter = values.iterator();
+		List<AnswerChoice> alternatives = ((QuestionOC) getQuestion()).getAllAlternatives();
+		Iterator<AnswerChoice> altIter = alternatives.iterator();
+		Iterator<Double> valIter = values.iterator();
 		while (altIter.hasNext()) {
 			ansValHash.put(altIter.next(), valIter.next());
 		}
-		double val1 = ((Double) ansValHash.get(ans1.get(0))).doubleValue();
-		double val2 = ((Double) ansValHash.get(ans2.get(0))).doubleValue();
-		try {
-			return 1 - java.lang.Math.abs((val2 - val1)) / constant;
-		} catch (Exception x) {
-			System.err.println("Something went wrong while calculating the similarity...");
-			System.err.println(x);
-			return 0;
-		}
-
-	}
-
-	/**
-	 * Insert the method's description here.
-	 * Creation date: (10.08.2001 14:01:34)
-	 * @return java.lang.String
-	 */
-	public java.lang.String getXMLString() {
-		StringBuffer sb = new StringBuffer();
-
-		sb.append("<KnowledgeSlice ID='" + getId() + "' type='QuestionComparatorOCScaled'>\n");
-		sb.append("<question ID='" + getQuestion().getId() + "'/>\n");
-		sb.append("<unknownSimilarity value='" + getUnknownSimilarity() + "'/>");
-		sb.append("<scala>\n");
-
-		Iterator iter = getValues().iterator();
-		while (iter.hasNext()) {
-			double val = ((Double) iter.next()).doubleValue();
-			sb.append("<scalavalue value='" + val + "'/>\n");
-		}
-
-		sb.append("</scala>\n");
-
-		sb.append("<constant value='" + constant + "'/>\n");
-		sb.append("</KnowledgeSlice>\n");
-
-		return sb.toString();
+		double val1 = (ansValHash.get(ans1.get(0))).doubleValue();
+		double val2 = (ansValHash.get(ans2.get(0))).doubleValue();
+		double delta = Math.abs((val2 - val1));
+		return (delta == 0) ? 1 : (delta>=constant) ? 0 : 1 - delta / constant;
 	}
 
 	/**
@@ -112,7 +82,7 @@ public class QuestionComparatorOCScaled extends QuestionComparatorOC {
 	 * @param newValues java.util.List
 	 */
 	public void setValues(double[] newValues) {
-		values = new LinkedList();
+		values = new LinkedList<Double>();
 		for (int i = 0; i < newValues.length; ++i) {
 			values.add(new Double(newValues[i]));
 		}
@@ -123,20 +93,20 @@ public class QuestionComparatorOCScaled extends QuestionComparatorOC {
 	 * Creation date: (06.08.2001 17:01:47)
 	 * @param newValues java.util.List
 	 */
-	public void setValues(java.util.List newValues) {
+	public void setValues(List<Double> newValues) {
 		values = newValues;
 	}
 
-	public List getValues() {
+	public List<Double> getValues() {
 		checkValues();
 		return values;
 	}
 
 	protected void checkValues() {
 		// check values (if null or inconsistent create default-values (1,2,3,...))
-		List alternatives = ((QuestionOC) getQuestion()).getAllAlternatives();
+		List<AnswerChoice> alternatives = ((QuestionOC) getQuestion()).getAllAlternatives();
 		if ((values == null) || (values.size() != alternatives.size())) {
-			values = new LinkedList();
+			values = new LinkedList<Double>();
 			for (int i = 0; i < alternatives.size(); ++i) {
 				values.add(new Double(i + 1));
 			}
@@ -148,9 +118,9 @@ public class QuestionComparatorOCScaled extends QuestionComparatorOC {
 		if (constant == 0 && values != null && !values.isEmpty()) {
 			double max = ((Double) values.get(0)).doubleValue();
 			double min = max;
-			Iterator iter = values.iterator();
+			Iterator<Double> iter = values.iterator();
 			while (iter.hasNext()) {
-				double val = ((Double) iter.next()).doubleValue();
+				double val = iter.next().doubleValue();
 				if (max < val)
 					max = val;
 				if (min > val)
