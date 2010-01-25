@@ -54,9 +54,6 @@ import de.d3web.plugin.test.InitPluginManager;
 public class TestKfz extends TestCase {
 	private static KnowledgeBase kb = null;
 	private static URL kbURL = TestKfz.class.getClassLoader().getResource("Kfz2K.xml");
-	static {
-		
-	}
 
 /**
  * Creates a new test-object with name ´name´
@@ -109,7 +106,11 @@ protected void setUp() {
  * @throws IOException 
  */
 public void testCount() throws IOException {
-	PersistenceManager.getInstance().save(kb, new File("D:\\tmp\\test2.jar"));
+	File file = new File("target/kbs");
+	if (!file.isDirectory()) {
+		file.mkdir();
+	}
+	PersistenceManager.getInstance().save(kb, new File("target/kbs/test2.jar"));
 	XPSCase theCase = CaseFactory.createXPSCase(kb);
 	Class<? extends PSMethod> context = de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic.class;
 	Object[] values;

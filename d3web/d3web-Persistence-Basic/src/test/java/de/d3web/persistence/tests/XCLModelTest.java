@@ -23,7 +23,6 @@ package de.d3web.persistence.tests;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -99,11 +98,15 @@ public class XCLModelTest extends TestCase{
 	 * 
 	 * @throws Exception
 	 */
-	public void testPersistence()throws Exception{		
+	public void testPersistence()throws Exception{
+		File file = new File("target/kbs");
+		if (!file.isDirectory()) {
+			file.mkdir();
+		}
 		PersistenceManager pm=PersistenceManager.getInstance();		
-		URL url= new URL("file:/tmp/test.jar");
-		pm.save(k, new File(url.getFile()));
-		KnowledgeBase k2=pm.load(new File(url.getFile()));
+		File file2 = new File("target/kbs/test.jar");
+		pm.save(k, file2);
+		KnowledgeBase k2=pm.load(file2);
 		Collection<KnowledgeSlice> col=k2.getAllKnowledgeSlicesFor(PSMethodXCL.class);
 		for (Object current:col){
 			if (current instanceof de.d3web.kernel.psMethods.xclPattern.XCLModel){
