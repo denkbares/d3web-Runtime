@@ -249,12 +249,14 @@ public class D3WebCase implements XPSCase {
 			// TODO: das ist so viel zu aufwendig, wenn viele Lösungen sind. Man
 			// bräuchte eine Liste der bewerteten Lösungen im Fall (analog
 			// beantwortete Fragen)
+			/*
 			for (Diagnosis diagnosis : this.getDiagnoses()) {
 				if (DiagnosisState.UNCLEAR.equals(diagnosis.getState(this))) continue;
 				Object[] oldValue = new Object[] { DiagnosisState.UNCLEAR };
 				Object[] newValue = getValue(diagnosis, null);
 				propagationContoller.propagate(diagnosis, oldValue, newValue, psmethod);
 			}
+			*/
 		}
 		finally {
 			propagationContoller.commitPropagation();
