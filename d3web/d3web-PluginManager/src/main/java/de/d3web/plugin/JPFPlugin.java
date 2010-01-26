@@ -44,7 +44,7 @@ public class JPFPlugin implements Plugin {
 		
 		Collection<Resource> result = new LinkedList<Resource>();
 		try {
-			File pluginFile = new File(pluginUrl.toURI().getPath());
+			File pluginFile = new File(pluginUrl.toURI().getPath()).getParentFile();
 	
 			if (!pluginFile.exists()) {
 				throw new IllegalStateException(
@@ -54,7 +54,7 @@ public class JPFPlugin implements Plugin {
 			if (pluginFile.isDirectory()) {
 				File[] files = pluginFile.listFiles();
 				for (File file : files) {
-					String relativePath = file.getCanonicalPath().substring(pluginFile.getCanonicalPath().length());
+					String relativePath = file.getCanonicalPath().substring(pluginFile.getCanonicalPath().length()+1).replace(File.separatorChar, '/');
 					result.add(new JPFResource(file.toURI().toURL(), relativePath));
 				}
 			}
