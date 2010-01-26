@@ -24,6 +24,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -31,6 +32,7 @@ import org.java.plugin.JpfException;
 import org.java.plugin.ObjectFactory;
 import org.java.plugin.PluginManager.PluginLocation;
 import org.java.plugin.registry.ExtensionPoint;
+import org.java.plugin.registry.PluginDescriptor;
 import org.java.plugin.standard.StandardPluginLocation;
 
 import de.d3web.plugin.util.PluginCollectionComparatorByPriority;
@@ -112,5 +114,16 @@ public class JPFPluginManager extends PluginManager {
 			if (e.getID().equals(extensionID)) return e;
 		}
 		return null;
+	}
+
+
+	@Override
+	public Plugin[] getPlugins() {
+		Collection<Plugin> result = new LinkedList<Plugin>();
+		Collection<PluginDescriptor> descriptors = manager.getRegistry().getPluginDescriptors();
+		for (PluginDescriptor descriptor : descriptors) {
+			result.add(new JPFPlugin(this.manager, descriptor));
+		}
+		return result.toArray(new Plugin[result.size()]);
 	}
 }

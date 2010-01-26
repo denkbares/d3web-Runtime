@@ -47,6 +47,14 @@ public abstract class PluginManager {
 	 */
 	public abstract Extension getExtension(String extendetPluginID, String extendetPointID, String extensionID);
 	
+	
+	/**
+	 * Returns the list of all installed Plugins available to this manager.
+	 * 
+	 * @return the available Plugins
+	 */
+	public abstract Plugin[] getPlugins();
+	
 	/**
 	 * The current instance of the PluginManager can be accessed with this method
 	 * @return Instance of the actual PluginManager
