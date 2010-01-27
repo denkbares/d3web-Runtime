@@ -16,8 +16,8 @@ public interface Plugin {
 
 	/**
 	 * Returns a list of all Resources, available in this this plugin. The
-	 * resources are those files, located within the plugin in the "public"
-	 * folder.
+	 * resources are those files, exported in the plugin declaration as non-code
+	 * resources.
 	 * 
 	 * @return the plugin resources
 	 */
