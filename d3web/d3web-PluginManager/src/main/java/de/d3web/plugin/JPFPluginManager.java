@@ -36,60 +36,92 @@ import org.java.plugin.registry.PluginDescriptor;
 import org.java.plugin.standard.StandardPluginLocation;
 
 import de.d3web.plugin.util.PluginCollectionComparatorByPriority;
+
 /**
  * An implementation of the PluginManager for the Java Plugin Framework (JPF)
- *
+ * 
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class JPFPluginManager extends PluginManager {
-	private org.java.plugin.PluginManager manager;
 
-	private JPFPluginManager(File[] plugins) {
-		manager = ObjectFactory.newInstance().createManager();
-		List<PluginLocation> locations = new ArrayList<PluginLocation>();;
-		for (int i = 0; i < plugins.length; i++) {
+	private final org.java.plugin.PluginManager manager;
+
+	/**
+	 * Contains the registered Plugins. The field will be initialized lazy by
+	 * the {@link #getPlugins()} method.
+	 */
+	private Plugin[] plugins = null;
+
+	private JPFPluginManager(File[] pluginFiles) throws JpfException {
+		this.manager = ObjectFactory.newInstance().createManager();
+
+		List<PluginLocation> locations = new ArrayList<PluginLocation>();
+		for (File pluginFile : pluginFiles) {
 			try {
-				
-				PluginLocation location = StandardPluginLocation.create(plugins[i]);
-				if (location!=null) {
+				PluginLocation location = StandardPluginLocation.create(pluginFile);
+				if (location != null) {
 					locations.add(location);
-				} else {
-					Logger.getLogger("PluginManager").warning(plugins[i]+" is no plugin");
 				}
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				else {
+					Logger.getLogger("PluginManager").warning(
+							"File '" + pluginFile
+							+ "' is not a plugin. It will be ignored.");
+				}
+			}
+			catch (MalformedURLException e) {
+				Logger.getLogger("PluginManager").severe(
+						"error initializing plugin '" + pluginFile + "': " + e);
 			}
 		}
+		manager.publishPlugins(locations.toArray(new PluginLocation[locations.size()]));
+	}
+
+	/**
+	 * This method initializes the JPFPluginmanager as PluginManager (which can
+	 * be accessed via PluginManager.getInstance()) with the directory of the
+	 * plugins as a String.
+	 * <p>
+	 * If the manager could not be initialized with the specified directory (for
+	 * any reason), an IllegalArgumentException is thrown.
+	 * 
+	 * @param directory
+	 *            directory of the plugins
+	 * @throws IllegalArgumentException
+	 *             the directory could not be used for initialization
+	 */
+	public static void init(String directory) {
+		File pluginsDir = new File(directory);
+		File[] listFiles = pluginsDir.listFiles();
+		init(listFiles);
+	}
+
+	/**
+	 * This method initializes the JPFPluginmanager as PluginManager (which can
+	 * be accessed via PluginManager.getInstance()) with an array of plugin
+	 * files (any mixture of jars, zips or folders)
+	 * <p>
+	 * If the manager could not be initialized with the specified directory (for
+	 * any reason), an IllegalArgumentException is thrown.
+	 * 
+	 * @param pluginFiles
+	 *            list of plugin files
+	 * @throws IllegalArgumentException
+	 *             the files could not be used for initialization
+	 */
+	public static void init(File[] pluginFiles) {
+		if (pluginFiles == null) {
+			throw new IllegalArgumentException("invalid plugin files");
+		}
 		try {
-			manager.publishPlugins(locations.toArray(new PluginLocation[locations.size()]));
-		} catch (JpfException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			instance = new JPFPluginManager(pluginFiles);
+		}
+		catch (JpfException e) {
+			Logger.getLogger("PluginManager").severe(
+					"internal error while initializing plugin manager: " + e);
+			throw new IllegalArgumentException(
+					"internal error while initializing plugin manager", e);
 		}
 	}
-	
-
-	/**
-	 * This method initialises the JPFPluginmanager as PluginManager (which can be accessed via
-	 * PluginManager.getInstance()) with the directory of the plugins as a String
-	 * @param dir directory of the plugins
-	 */
-	public static void init(String dir) {
-		File pluginsDir = new File(dir);
-		File[] listFiles = pluginsDir.listFiles();
-		if (listFiles!=null) instance = new JPFPluginManager(listFiles);
-	}
-	
-	/**
-	 * This method initialises the JPFPluginmanager as PluginManager (which can be accessed via
-	 * PluginManager.getInstance()) with an array of plugins
-	 * @param pathes to the plugins
-	 */
-	public static void init(File[] plugins) {
-		instance = new JPFPluginManager(plugins);
-	}
-
 
 	@Override
 	public Extension[] getExtensions(String extendetPointID, String extendetPluginID) {
@@ -110,20 +142,24 @@ public class JPFPluginManager extends PluginManager {
 	public Extension getExtension(String extendetPluginID,
 			String extendetPointID, String extensionID) {
 		Extension[] extensions = getExtensions(extendetPointID, extendetPluginID);
-		for (Extension e: extensions) {
+		for (Extension e : extensions) {
 			if (e.getID().equals(extensionID)) return e;
 		}
 		return null;
 	}
 
-
 	@Override
 	public Plugin[] getPlugins() {
-		Collection<Plugin> result = new LinkedList<Plugin>();
-		Collection<PluginDescriptor> descriptors = manager.getRegistry().getPluginDescriptors();
-		for (PluginDescriptor descriptor : descriptors) {
-			result.add(new JPFPlugin(this.manager, descriptor));
+		// initialize plugins lazy
+		if (this.plugins == null) {
+			Collection<Plugin> result = new LinkedList<Plugin>();
+			Collection<PluginDescriptor> descriptors =
+					this.manager.getRegistry().getPluginDescriptors();
+			for (PluginDescriptor descriptor : descriptors) {
+				result.add(new JPFPlugin(descriptor));
+			}
+			this.plugins = result.toArray(new Plugin[result.size()]);
 		}
-		return result.toArray(new Plugin[result.size()]);
+		return this.plugins;
 	}
 }

@@ -4,28 +4,89 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.java.plugin.PluginManager;
+import org.java.plugin.registry.Library;
 import org.java.plugin.registry.PluginDescriptor;
 
 public class JPFPlugin implements Plugin {
 
-	
-	private final PluginManager manager;
+	private final class ResourceFilter {
+		private boolean isPublic;
+		private final Set<String> entries;
+
+		public ResourceFilter(Library lib) {
+			entries = new HashSet<String>();
+			for (String exportPrefix : lib.getExports()) {
+				if ("*".equals(exportPrefix)) { //$NON-NLS-1$
+					isPublic = true;
+					entries.clear();
+					break;
+				}
+				if (!lib.isCodeLibrary()) {
+					exportPrefix = exportPrefix.replace('\\', '.');
+					exportPrefix = exportPrefix.replace('/', '.');
+					if (exportPrefix.startsWith(".")) { //$NON-NLS-1$
+						exportPrefix = exportPrefix.substring(1);
+					}
+				}
+				entries.add(exportPrefix);
+			}
+		}
+
+		public boolean isClassVisible(String className) {
+			if (isPublic) {
+				return true;
+			}
+			if (entries.isEmpty()) {
+				return false;
+			}
+			if (entries.contains(className)) {
+				return true;
+			}
+			int p = className.lastIndexOf('.');
+			if (p == -1) {
+				return false;
+			}
+			return entries.contains(className.substring(0, p) + ".*"); //$NON-NLS-1$
+		}
+
+		public boolean isResourceVisible(String resPath) {
+			// quick check
+			if (isPublic) {
+				return true;
+			}
+			if (entries.isEmpty()) {
+				return false;
+			}
+			// translate "path spec" -> "full class name"
+			String str = resPath.replace('\\', '.').replace('/', '.');
+			if (str.startsWith(".")) { //$NON-NLS-1$
+				str = str.substring(1);
+			}
+			if (str.endsWith(".")) { //$NON-NLS-1$
+				str = str.substring(0, str.length() - 1);
+			}
+			return isClassVisible(str);
+		}
+	}
+
 	private final PluginDescriptor descriptor;
-	
+
 	// contains the exported resources of the plugin, initialized lazy
 	private Resource[] resources = null;
-	
+	// contains the export filter of the plugin, initialized lazy
+	private ArrayList<ResourceFilter> resourceFilters = null;
 
-	public JPFPlugin(PluginManager manager, PluginDescriptor descriptor) {
-		this.manager = manager;
+	public JPFPlugin(PluginDescriptor descriptor) {
 		this.descriptor = descriptor;
 	}
 
@@ -37,6 +98,7 @@ public class JPFPlugin implements Plugin {
 	@Override
 	public Resource[] getResources() {
 		if (this.resources == null) {
+			// create all resources
 			Collection<Resource> result = new LinkedList<Resource>();
 			result = getResourcePaths(this.descriptor.getLocation());
 			this.resources = result.toArray(new Resource[result.size()]);
@@ -97,14 +159,36 @@ public class JPFPlugin implements Plugin {
 		return result;
 	}
 
+	/**
+	 * Return whether the resource with the specified path has been exported.
+	 * This method uses the ResouceFilter class to determine if a specified
+	 * resource path has been exported. The method initialized the resource
+	 * filters lazy on demand.
+	 * 
+	 * @param relativePath
+	 *            the resource path to be checked
+	 * @return if the resource has been exported
+	 */
 	private boolean matchesExports(String relativePath) {
-//		 PathResolver pathResolver = manager.getPathResolver();
-//		 for (Library library : this.descriptor.getLibraries()) {
-//			 result.add(new JPFResource(pathResolver.get, library));
-//		 }
-		 
-		 // TODO: use export filter to determine if the resource is exported
-		 return true;
+		// initialize resource filters lazy
+		if (this.resourceFilters == null) {
+			this.resourceFilters = new ArrayList<ResourceFilter>();
+			for (Library library : this.descriptor.getLibraries()) {
+				// only export non-code libraries
+				if (library.isCodeLibrary()) continue;
+				this.resourceFilters.add(new ResourceFilter(library));
+			}
+		}
+
+		// use resource filter to determine if the resource is exported
+		for (ResourceFilter filter : this.resourceFilters) {
+			if (filter.isResourceVisible(relativePath)) {
+				return true;
+			}
+		}
+
+		// if no filter has matched, it is not exported
+		return false;
 	}
 
 	/**
