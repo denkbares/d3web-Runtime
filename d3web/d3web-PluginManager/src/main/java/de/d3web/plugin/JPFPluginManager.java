@@ -90,6 +90,11 @@ public class JPFPluginManager extends PluginManager {
 	 *             the directory could not be used for initialization
 	 */
 	public static void init(String directory) {
+		if (instance!=null) {
+			Logger.getLogger("PluginManager").warning(
+					"PluginManager already initialised.");
+			return;
+		}
 		File pluginsDir = new File(directory);
 		File[] listFiles = pluginsDir.listFiles();
 		init(listFiles);

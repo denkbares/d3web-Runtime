@@ -18,6 +18,9 @@
  */
 
 package de.d3web.plugin;
+
+import java.util.List;
+
 /**
  * An interface for Extensions
  *
@@ -37,6 +40,13 @@ public interface Extension {
 	 * @return the value of the parameter
 	 */
 	String getParameter(String parameter);
+	
+	/**
+	 * Returns the values of any parameter
+	 * @param parameter the name of the parameter, which should be returned
+	 * @return the values of the parameter
+	 */
+	List<String> getParameters(String parameter);
 	
 	/**
 	 * Returns an Instance of the Class represented by this extension

@@ -18,6 +18,9 @@
  */
 package de.d3web.plugin;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -122,5 +125,19 @@ public class JPFExtension implements de.d3web.plugin.Extension {
 	@Override
 	public String getExtendedPluginID() {
 		return extension.getExtendedPluginId();
+	}
+
+	@Override
+	public List<String> getParameters(String parameter) {
+		Collection<Parameter> parameters = extension.getParameters(parameter);
+		if (parameters!=null) {
+			List<String> ret = new ArrayList<String>();
+			for (Parameter p: parameters) {
+				ret.add(p.valueAsString());
+			}
+			return ret;
+		} else {
+			return null;
+		}
 	}
 }

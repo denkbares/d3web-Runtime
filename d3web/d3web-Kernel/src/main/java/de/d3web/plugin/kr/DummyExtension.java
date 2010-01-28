@@ -18,6 +18,8 @@
  */
 package de.d3web.plugin.kr;
 
+import java.util.List;
+
 import de.d3web.plugin.Extension;
 
 /**
@@ -84,6 +86,11 @@ public class DummyExtension implements Extension {
 
 	@Override
 	public String getVersion() {
+		return null;
+	}
+
+	@Override
+	public List<String> getParameters(String parameter) {
 		return null;
 	}
 
