@@ -61,6 +61,7 @@ import de.d3web.kernel.supportknowledge.Property;
 public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWriter {
 
 	public final static String MMINFO_PERSISTENCE_HANDLER = "mminfo";
+	private static final DCMarkupHandler DC_MARKUP_HANDLER = new DCMarkupHandler();
 
 	@Override
 	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
@@ -88,7 +89,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 			NodeList nl = mminfo.getChildNodes();
 			for (int j = 0; j < nl.getLength(); j++) {
 				Node node = nl.item(j);
-				if (node.getNodeName().equals(DCMarkupHandler.MARKUPTAG))
+				if (node instanceof Element && DC_MARKUP_HANDLER.canRead((Element)node))
 					dcmarkup = (DCMarkup) PersistenceManager.getInstance()
 							.readFragment((Element) node, null);
 				else if (node.getNodeName().equals("Content"))

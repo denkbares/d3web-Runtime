@@ -77,9 +77,12 @@ public class PropertiesHandler implements FragmentHandler {
 					ret.setProperty(property, o);
 				} else {
 					List<Element> childNodes = XMLUtil.getElementList(prop.getChildNodes());
-					if (childNodes.size()==1) {
+					if (childNodes.size()==0) {
+						ret.setProperty(property, "");
+					} else if (childNodes.size()==1) {
 						ret.setProperty(property, PersistenceManager.getInstance().readFragment(childNodes.get(0), kb));
-					} else {
+					}
+					else {
 						throw new IOException("Property must have exactly one child.");
 					}
 				}

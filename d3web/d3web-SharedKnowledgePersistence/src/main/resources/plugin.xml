@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
-<plugin id="knowledgePersistanceShared" version="0.0.1">
+<plugin id="knowledgePersistenceShared" version="0.0.1">
 	
 	<requires>
-		<import plugin-id="knowledgePersistanceExtensionPoints" />
+		<import plugin-id="KnowledgePersistenceExtensionPoints" />
 	</requires>
 	
 	<runtime>
@@ -12,7 +12,7 @@
 		</library>
 	</runtime>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeWriter"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeWriter"
 		id="SharedPersistenceHandler.Writer">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.SharedPersistenceHandler" />
@@ -23,7 +23,7 @@
 		<parameter id="filename" value="kb/shared.xml" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="KnowledgeReader"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeReader"
 		id="SharedPersistenceHandler">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.SharedPersistenceHandler" />
@@ -34,7 +34,7 @@
 		<parameter id="filename" value="kb/shared.xml" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="AbstractAbnormalityHandler">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.fragments.AbstractAbnormalityHandler" />
@@ -44,7 +44,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="LocalWeightHandler">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.fragments.LocalWeightHandler" />
@@ -54,7 +54,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="PairRelationHandler">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.fragments.PairRelationHandler" />
@@ -64,7 +64,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="QuestionComparatorMCGroupedAsymmetricHandler">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.fragments.QuestionComparatorMCGroupedAsymmetricHandler" />
@@ -74,7 +74,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="QuestionComparatorMCGroupedSymmetricHandler">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.fragments.QuestionComparatorMCGroupedSymmetricHandler" />
@@ -84,7 +84,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="QuestionComparatorMCIndividualHandler">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.fragments.QuestionComparatorMCIndividualHandler" />
@@ -94,7 +94,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="QuestionComparatorNumDivisionDenominatorHandler">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.fragments.QuestionComparatorNumDivisionDenominatorHandler" />
@@ -104,7 +104,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="QuestionComparatorNumDivisionHandler">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.fragments.QuestionComparatorNumDivisionHandler" />
@@ -114,7 +114,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="QuestionComparatorNumFuzzyHandler">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.fragments.QuestionComparatorNumFuzzyHandler" />
@@ -124,7 +124,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="QuestionComparatorNumIndividualHandler">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.fragments.QuestionComparatorNumIndividualHandler" />
@@ -134,7 +134,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="QuestionComparatorNumSectionHandler">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.fragments.QuestionComparatorNumSectionHandler" />
@@ -144,7 +144,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="QuestionComparatorNumSectionInterpolateHandler">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.fragments.QuestionComparatorNumSectionInterpolateHandler" />
@@ -155,7 +155,7 @@
 		<parameter id="priority" value="4" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="QuestionComparatorOCGroupedAsymmetricHandler">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.fragments.QuestionComparatorOCGroupedAsymmetricHandler" />
@@ -165,7 +165,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="QuestionComparatorOCGroupedSymmetricHandler">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.fragments.QuestionComparatorOCGroupedSymmetricHandler" />
@@ -175,7 +175,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="QuestionComparatorOCIndividualHandler">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.fragments.QuestionComparatorOCIndividualHandler" />
@@ -185,7 +185,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="QuestionComparatorOCScaledHandler">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.fragments.QuestionComparatorOCScaledHandler" />
@@ -195,7 +195,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="QuestionComparatorTextIndividualHandler">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.fragments.QuestionComparatorTextIndividualHandler" />
@@ -205,7 +205,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="QuestionComparatorYNHandler">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.fragments.QuestionComparatorYNHandler" />
@@ -215,7 +215,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="WeightHandler">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.fragments.WeightHandler" />
@@ -225,7 +225,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="knowledgePersistanceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="KnowledgeBaseUnknownSimilarityHandler">
 		<parameter id="class"
 			value="de.d3web.shared.kpers.fragments.KnowledgeBaseUnknownSimilarityHandler" />

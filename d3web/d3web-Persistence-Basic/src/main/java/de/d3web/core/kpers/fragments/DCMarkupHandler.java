@@ -43,7 +43,7 @@ public class DCMarkupHandler implements FragmentHandler {
 	public static final String TAG = "meta";
 	
 	@Override
-	public boolean canRead(Element element) {
+	public  boolean canRead(Element element) {
 		String profile = element.getAttribute("profile");
 		return element.getNodeName().equals("DCMarkup")
 			//former nodename in previous versions of the persistence
@@ -115,6 +115,11 @@ public class DCMarkupHandler implements FragmentHandler {
 		return ret;
 	}
 
+	/**
+	 * Used to check the old markup (prior to 2009) of the persistence
+	 * @param dcelem node instance of the DCMarkup element
+	 * @return true, if valid node, though it is the old version of the markup
+	 */
 	private boolean checkOldNodeName(Node dcelem) {
 		return dcelem.getNodeName().equals("DCElement")
 			// in former versions of persistence, the DCElments were named Descriptor
