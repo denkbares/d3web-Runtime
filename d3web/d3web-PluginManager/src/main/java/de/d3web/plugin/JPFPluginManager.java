@@ -115,7 +115,10 @@ public class JPFPluginManager extends PluginManager {
 	 */
 	public static void init(File[] pluginFiles) {
 		if (pluginFiles == null) {
-			throw new IllegalArgumentException("invalid plugin files");
+//			throw new IllegalArgumentException("invalid plugin files");
+			Logger.getLogger("PluginManager").severe(
+					"invalid plugin files");
+			return;
 		}
 		try {
 			instance = new JPFPluginManager(pluginFiles);
