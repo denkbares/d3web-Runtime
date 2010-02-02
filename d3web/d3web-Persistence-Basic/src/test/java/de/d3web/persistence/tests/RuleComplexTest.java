@@ -82,7 +82,7 @@ public class RuleComplexTest extends TestCase {
 		diag1 = new Diagnosis("diag1-id");
 		diag1.setText("diag1-text");
 		
-		cDState1 = new CondDState(diag1, DiagnosisState.EXCLUDED);
+		cDState1 = new CondDState(diag1, new DiagnosisState(DiagnosisState.State.EXCLUDED));
 		
 		cNumL1 =  new CondNumEqual(qnum1, new Double(12.7));
 			
@@ -119,7 +119,7 @@ public class RuleComplexTest extends TestCase {
 		XMLTag conditionTag1 = new XMLTag("Condition");
 		conditionTag1.addAttribute("type", "DState");
 		conditionTag1.addAttribute("ID", "diag1-id");
-		conditionTag1.addAttribute("value", "excluded");
+		conditionTag1.addAttribute("value", "EXCLUDED");
 		shouldTag.addChild(conditionTag1);
 		
 		XMLTag exceptionTag2 = new XMLTag("Exception");
@@ -149,7 +149,7 @@ public class RuleComplexTest extends TestCase {
 		XMLTag conditionTag1 = new XMLTag("Condition");
 		conditionTag1.addAttribute("type", "DState");
 		conditionTag1.addAttribute("ID", "diag1-id");
-		conditionTag1.addAttribute("value", "excluded");
+		conditionTag1.addAttribute("value", "EXCLUDED");
 		shouldTag.addChild(conditionTag1);
 		
 		XMLTag exceptionTag2 = new XMLTag("Exception");
@@ -223,7 +223,7 @@ public class RuleComplexTest extends TestCase {
 		XMLTag conditionTag1 = new XMLTag("Condition");
 		conditionTag1.addAttribute("type", "DState");
 		conditionTag1.addAttribute("ID", "diag1-id");
-		conditionTag1.addAttribute("value", "excluded");
+		conditionTag1.addAttribute("value", "EXCLUDED");
 		shouldTag.addChild(conditionTag1);
 		
 		isTag = new XMLTag(rcw.write(rcomp, Util.createEmptyDocument()));

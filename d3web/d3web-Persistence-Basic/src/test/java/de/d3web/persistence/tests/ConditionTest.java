@@ -123,7 +123,7 @@ public class ConditionTest extends TestCase {
 		val1.add(ach2);
 		val2.add(ach2);
 
-		cDState1 = new CondDState(d1, DiagnosisState.SUGGESTED);
+		cDState1 = new CondDState(d1, new DiagnosisState(DiagnosisState.State.SUGGESTED));
 
 		cEqual1 = new CondEqual(qnum1, new AnswerUnknown());
 		cEqual1.setValues(val1);
@@ -228,7 +228,7 @@ public class ConditionTest extends TestCase {
 		XMLTag dStateTag1 = new XMLTag("Condition");
 		dStateTag1.addAttribute("type", "DState");
 		dStateTag1.addAttribute("ID", "d1-id");
-		dStateTag1.addAttribute("value", "suggested");
+		dStateTag1.addAttribute("value", "SUGGESTED");
 		notTag1.addChild(dStateTag1);
 
 		andTag1.addChild(notTag1);
