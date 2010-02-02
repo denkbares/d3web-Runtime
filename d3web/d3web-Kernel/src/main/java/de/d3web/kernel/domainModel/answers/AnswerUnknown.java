@@ -46,18 +46,10 @@ public class AnswerUnknown extends Answer {
 	}
 
 	/**
-	 * @return true iff otherAnswer is of same type and not null
-	 */
-	public boolean equals(Object otherAnswer) {
-		if (otherAnswer == null)
-			return false;
-		return this == otherAnswer || otherAnswer instanceof AnswerUnknown;
-	}
-
-	/**
 	 * Creation date: (15.09.2000 11:07:48)
 	 * @return AnswerUnknown.UNKNOWN_VALUE
 	 */
+	@Override
 	public Object getValue(XPSCase theCase) {
 
 		String result = null;
@@ -96,10 +88,12 @@ public class AnswerUnknown extends Answer {
 	 * Creation date: (13.09.2000 13:54:21)
 	 * @return true
 	 */
+	@Override
 	public boolean isUnknown() {
 		return true;
 	}
 
+	@Override
 	public String getId() {
 		return UNKNOWN_ID;
 	}
@@ -112,15 +106,30 @@ public class AnswerUnknown extends Answer {
 		return o instanceof AnswerUnknown;
 	}
 
+	@Override
 	public String toString() {
 		return UNKNOWN_VALUE;
 	}
 	
-	/* (non-Javadoc)
-	 * @see de.d3web.kernel.domainModel.Answer#hashCode()
+	/**
+	 * @return true iff otherAnswer is of same type and not null
 	 */
+	@Override
+	public boolean equals(Object otherAnswer) {
+		return otherAnswer instanceof AnswerUnknown;
+	}
+
+	@Override
 	public int hashCode() {
 		return getId().hashCode();
 	}
 
+	@Override
+	public int compareTo(Answer other) {
+		if (other instanceof AnswerUnknown) {
+			return 0;
+		}
+		// unknown comes at the and
+		return 1;
+	}
 }

@@ -20,19 +20,20 @@
 
 package de.d3web.kernel.psMethods.diagnosisDecisionGraph;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
 
+import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.Facts;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisScore;
 import de.d3web.kernel.domainModel.DiagnosisState;
 import de.d3web.kernel.domainModel.NamedObject;
+import de.d3web.kernel.domainModel.DiagnosisState.State;
 import de.d3web.kernel.dynamicObjects.CaseDiagnosis;
 import de.d3web.kernel.psMethods.PSMethod;
 import de.d3web.kernel.psMethods.PropagationEntry;
+import de.d3web.kernel.psMethods.heuristic.HeuristicRating;
 import de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic;
 import de.d3web.kernel.psMethods.userSelected.PSMethodUserSelected;
 import de.d3web.kernel.supportknowledge.Property;
@@ -47,30 +48,30 @@ public class PSMethodDiagnosisDecisionGraph implements PSMethod {
 	public static final String DIAGNOSIS_TYPE_XOR = "XOR";
 	public static final String DIAGNOSIS_TYPE_NORMAL = "NORMAL";
 
-	private DiagnosisStateComparator diagStateComparator;
+	// private DiagnosisStateComparator diagStateComparator;
 
 	private static PSMethod instance;
 
-	class DiagnosisStateComparator implements Comparator<DiagnosisState> {
-		private final List<DiagnosisState> allStati = Arrays.asList(
-				new DiagnosisState[] {
-					DiagnosisState.EXCLUDED,
-					DiagnosisState.UNCLEAR, 
-					DiagnosisState.SUGGESTED, 
-					DiagnosisState.ESTABLISHED });
-
-		public int compare(DiagnosisState o1, DiagnosisState o2) {
-			int index1 = allStati.indexOf(o1);
-			int index2 = allStati.indexOf(o2);
-			if ((index1 > -1) && (index2 > -1)) {
-				return index1 - index2;
-			}
-			return 0;
-		}
-	}
+	// class DiagnosisStateComparator implements Comparator<DiagnosisState> {
+	// private final List<DiagnosisState> allStati = Arrays.asList(
+	// new DiagnosisState[] {
+	// DiagnosisState.EXCLUDED,
+	// DiagnosisState.UNCLEAR,
+	// DiagnosisState.SUGGESTED,
+	// DiagnosisState.ESTABLISHED });
+	//
+	// public int compare(DiagnosisState o1, DiagnosisState o2) {
+	// int index1 = allStati.indexOf(o1);
+	// int index2 = allStati.indexOf(o2);
+	// if ((index1 > -1) && (index2 > -1)) {
+	// return index1 - index2;
+	// }
+	// return 0;
+	// }
+	// }
 
 	public PSMethodDiagnosisDecisionGraph() {
-		diagStateComparator = new DiagnosisStateComparator();
+		// diagStateComparator = new DiagnosisStateComparator();
 	}
 
 	public static PSMethod getInstance() {
@@ -87,9 +88,10 @@ public class PSMethodDiagnosisDecisionGraph implements PSMethod {
 		Object s = ((CaseDiagnosis) (theCase.getCaseObject(theDiagnosis)))
 				.getValue(this.getClass());
 		if (s == null) {
-			s = DiagnosisState.UNCLEAR;
-		} else if (s instanceof DiagnosisScore) {
-			s = DiagnosisState.getState((DiagnosisScore) s);
+			s = new DiagnosisState(State.UNCLEAR);
+		}
+		else if (s instanceof DiagnosisScore) {
+			s = new HeuristicRating(((DiagnosisScore) s).getScore());
 		}
 		return (DiagnosisState) s;
 	}
@@ -109,7 +111,8 @@ public class PSMethodDiagnosisDecisionGraph implements PSMethod {
 	};
 
 	private void checkDiagnosis(XPSCase theCase, Diagnosis parent) {
-		String property = (String) parent.getProperties().getProperty(Property.DIAGNOSIS_TYPE);
+		String property = (String) parent.getProperties().getProperty(
+				Property.DIAGNOSIS_TYPE);
 
 		if ((DIAGNOSIS_TYPE_OR.equalsIgnoreCase(property))
 				|| (DIAGNOSIS_TYPE_XOR.equalsIgnoreCase(property))) {
@@ -123,30 +126,32 @@ public class PSMethodDiagnosisDecisionGraph implements PSMethod {
 	}
 
 	private void checkORDiagnosis(XPSCase theCase, Diagnosis parent) {
-		DiagnosisState maxState = DiagnosisState.EXCLUDED;
+		DiagnosisState maxState = null;
 		for (NamedObject diag : parent.getChildren()) {
-			DiagnosisState state = getStateOfMostWeighingContext(theCase, (Diagnosis) diag);
-			if (diagStateComparator.compare(state, maxState) > 0) {
+			DiagnosisState state = getStateOfMostWeighingContext(theCase,
+					(Diagnosis) diag);
+			if (maxState == null || state.compareTo(maxState) > 0) {
 				maxState = state;
 			}
 		}
 
 		if (!parent.getState(theCase, this.getClass()).equals(maxState)) {
-			theCase.setValue(parent, new Object[]{maxState}, this.getClass());
+			theCase.setValue(parent, new Object[] { maxState }, this.getClass());
 		}
 	}
 
 	private void checkANDDiagnosis(XPSCase theCase, Diagnosis parent) {
-		DiagnosisState minState = DiagnosisState.ESTABLISHED;
+		DiagnosisState minState = null;
 		for (NamedObject diag : parent.getChildren()) {
-			DiagnosisState state = getStateOfMostWeighingContext(theCase, (Diagnosis) diag);
-			if (diagStateComparator.compare(state, minState) < 0) {
+			DiagnosisState state = getStateOfMostWeighingContext(theCase,
+					(Diagnosis) diag);
+			if (minState == null || state.compareTo(minState) < 0) {
 				minState = state;
 			}
 		}
 
 		if (!parent.getState(theCase, this.getClass()).equals(minState)) {
-			theCase.setValue(parent, new Object[]{minState}, this.getClass());
+			theCase.setValue(parent, new Object[] { minState }, this.getClass());
 		}
 	}
 
@@ -156,21 +161,22 @@ public class PSMethodDiagnosisDecisionGraph implements PSMethod {
 	 */
 	private DiagnosisState getStateOfMostWeighingContext(XPSCase theCase, Diagnosis diag) {
 		DiagnosisState userState = diag.getState(theCase, PSMethodUserSelected.class);
-		if (!DiagnosisState.UNCLEAR.equals(userState)) {
+		if (!userState.hasState(State.UNCLEAR)) {
 			return userState;
-		} else {
-			DiagnosisState decisionGraphState = diag.getState(theCase,
-					PSMethodDiagnosisDecisionGraph.class);
-			if (!DiagnosisState.UNCLEAR.equals(decisionGraphState)) {
-				return decisionGraphState;
-			} else {
-				DiagnosisState heuristicState = diag.getState(theCase, PSMethodHeuristic.class);
-				if (!DiagnosisState.UNCLEAR.equals(heuristicState)) {
-					return heuristicState;
-				} else {
-					return DiagnosisState.UNCLEAR;
-				}
-			}
 		}
+		DiagnosisState graphState = diag.getState(theCase, PSMethodDiagnosisDecisionGraph.class);
+		if (!graphState.hasState(State.UNCLEAR)) {
+			return graphState;
+		}
+		DiagnosisState heuristicState = diag.getState(theCase, PSMethodHeuristic.class);
+		if (!heuristicState.hasState(State.UNCLEAR)) {
+			return heuristicState;
+		}
+		return new DiagnosisState(State.UNCLEAR);
+	}
+
+	@Override
+	public Fact mergeFacts(Fact[] facts) {
+		return Facts.mergeSolutionFacts(facts);
 	}
 }

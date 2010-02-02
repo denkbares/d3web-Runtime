@@ -44,7 +44,7 @@ public class AnswerText extends Answer {
 	 * getId method comment.
 	 */
 	public String getId() {
-		return getQuestion().getId() + "aText";
+		return getQuestion().getId() + "aText"; // äußerst fragwürdig!!! 
 	}
 
 	public String getText() {
@@ -63,15 +63,37 @@ public class AnswerText extends Answer {
 		text = newText;
 	}
 
+	@Override
 	public String toString() {
 		return getText();
 	}
 	
-	/* (non-Javadoc)
-	 * @see de.d3web.kernel.domainModel.Answer#hashCode()
-	 */
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof AnswerText) {
+			AnswerText other = (AnswerText) o;
+			return getId().equals(other.getId()) && getText().equals(other.getText());
+		}
+		return false;
+	}
+	
+	@Override
 	public int hashCode() {
 		return getId().hashCode() + getText().hashCode();
 	}
 
+	@Override
+	public int compareTo(Answer other) {
+		if (other instanceof AnswerText) {
+			String s1 = ((AnswerText) this).getText();
+			String s2 = ((AnswerText) other).getText();
+			return String.CASE_INSENSITIVE_ORDER.compare(s1, s2);
+		}
+		if (other instanceof AnswerUnknown) {
+			// unknown comes at the and
+			return -1;
+		}
+		throw new IllegalArgumentException(
+				"Cannot compare answers of type AnswerDate and " + other.getClass());
+	}
 }

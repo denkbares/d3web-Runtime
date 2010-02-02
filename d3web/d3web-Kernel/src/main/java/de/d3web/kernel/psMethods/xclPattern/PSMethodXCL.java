@@ -23,6 +23,8 @@ package de.d3web.kernel.psMethods.xclPattern;
 import java.util.Collection;
 import java.util.List;
 
+import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.Facts;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisScore;
@@ -111,6 +113,11 @@ public class PSMethodXCL extends PSMethodAdapter {
 				model.notifyListeners(theCase, model);
 			}
 		} 
+	}
+
+	@Override
+	public Fact mergeFacts(Fact[] facts) {
+		return Facts.mergeSolutionFacts(facts);
 	}
 	
 }

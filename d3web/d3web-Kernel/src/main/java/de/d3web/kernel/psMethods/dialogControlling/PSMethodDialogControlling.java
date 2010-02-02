@@ -23,6 +23,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.Facts;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisState;
@@ -47,20 +49,7 @@ public class PSMethodDialogControlling extends PSMethodCombined {
 	 * Creation date: (03.01.2002 16:17:28)
 	 */
 	public DiagnosisState getState(XPSCase theCase, Diagnosis theDiagnosis) {
-
-		DiagnosisState diagnosisState = null;
-		for (PSMethod psMethod : getPSMethods()) {
-				DiagnosisState dState = psMethod.getState(theCase, theDiagnosis);
-
-			if (dState != null && dState.compareTo(diagnosisState) > 0) {
-				diagnosisState = dState;
-			}
-		}
-
-		if (diagnosisState == null)
-			return DiagnosisState.UNCLEAR;
-		else
-			return diagnosisState;
+		return null;
 	}
 
 	/**
@@ -87,5 +76,10 @@ public class PSMethodDialogControlling extends PSMethodCombined {
 
 	public String toString() {
 		return "PSMethodDialogControlling";
+	}
+
+	@Override
+	public Fact mergeFacts(Fact[] facts) {
+		return Facts.mergeIndicationFacts(facts);
 	}
 }

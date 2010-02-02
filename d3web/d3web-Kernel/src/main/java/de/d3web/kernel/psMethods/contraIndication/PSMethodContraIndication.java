@@ -20,6 +20,7 @@
 
 package de.d3web.kernel.psMethods.contraIndication;
 
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.kernel.psMethods.PSMethodRulebased;
 
 /**
@@ -43,5 +44,11 @@ public class PSMethodContraIndication extends PSMethodRulebased {
 		return instance;
 	}
 
+	@Override
+	public Fact mergeFacts(Fact[] facts) {
+		// because any number of contra-indications is the same
+		// we simply deliver the first fact as the result
+		return facts[0];
+	}
 
 }

@@ -164,7 +164,7 @@ public class CaseConverter {
 
 		// Questions
 
-		Iterator qiter = theCase.getQuestions().iterator();
+		Iterator qiter = theCase.getKnowledgeBase().getQuestions().iterator();
 		while (qiter.hasNext()) {
 			Question q = (Question) qiter.next();
 			List value = q.getValue(theCase);

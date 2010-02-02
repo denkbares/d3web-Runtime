@@ -20,16 +20,20 @@
 
 package de.d3web.kernel.domainModel.answers;
 
+import java.util.List;
+
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Answer;
+import de.d3web.kernel.domainModel.qasets.QuestionChoice;
 
 /**
- * Answer (alternative) class for choice questions
- * Creation date: (13.09.2000 14:32:50)
+ * Answer (alternative) class for choice questions Creation date: (13.09.2000
+ * 14:32:50)
+ * 
  * @author norman
  */
 public class AnswerChoice extends Answer {
-	
+
 	private static final long serialVersionUID = -4155370058888998997L;
 	private String text;
 
@@ -39,9 +43,9 @@ public class AnswerChoice extends Answer {
 	public AnswerChoice() {
 		super();
 	}
-	
+
 	public AnswerChoice(String id) {
-	    super(id);
+		super(id);
 	}
 
 	public String getText() {
@@ -50,6 +54,7 @@ public class AnswerChoice extends Answer {
 
 	/**
 	 * Creation date: (15.09.2000 11:03:33)
+	 * 
 	 * @return the value of this answer object depending on the current case
 	 */
 	public Object getValue(XPSCase theCase) {
@@ -58,6 +63,7 @@ public class AnswerChoice extends Answer {
 
 	/**
 	 * Creation date: (28.09.00 17:50:31)
+	 * 
 	 * @return true, if this is an as AnswerNo configured answer (false here)
 	 */
 	public boolean isAnswerNo() {
@@ -66,6 +72,7 @@ public class AnswerChoice extends Answer {
 
 	/**
 	 * Creation date: (28.09.00 17:50:14)
+	 * 
 	 * @return true, if this is an as AnswerYes configured answer (false here)
 	 */
 	public boolean isAnswerYes() {
@@ -78,6 +85,7 @@ public class AnswerChoice extends Answer {
 
 	/**
 	 * Creation date: (15.09.2000 12:07:31)
+	 * 
 	 * @return String representation of the answer
 	 */
 	public String toString() {
@@ -85,25 +93,40 @@ public class AnswerChoice extends Answer {
 	}
 
 	/**
-	 * Firstly compares for equal reference, then for equal 
-	 * class instance, then for equal getText() values.
-	 * <BR>
+	 * Firstly compares for equal reference, then for equal class instance, then
+	 * for equal getText() values. <BR>
 	 * 2002-05-29 joba: added for better comparisons
 	 * */
 	public boolean equals(Object other) {
-		if (this == other)
-			return true;
-		else if (other instanceof AnswerChoice)
-			return ((AnswerChoice) other).getId().equals(this.getId());
-		else
-			return false;
+		if (this == other) return true;
+		else if (other instanceof AnswerChoice) return ((AnswerChoice) other).getId().equals(
+				this.getId());
+		else return false;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.d3web.kernel.domainModel.Answer#hashCode()
 	 */
 	public int hashCode() {
 		return getId().hashCode() + getText().hashCode();
+	}
+
+	@Override
+	public int compareTo(Answer other) {
+		if (other instanceof AnswerChoice) {
+			List<AnswerChoice> range = ((QuestionChoice) this.getQuestion()).getAllAlternatives();
+			int i1 = range.indexOf(this);
+			int i2 = range.indexOf(other);
+			return i1 - i2;
+		}
+		if (other instanceof AnswerUnknown) {
+			// unknown comes at the and
+			return -1;
+		}
+		throw new IllegalArgumentException(
+				"Cannot compare answers of type AnswerChoice and " + other.getClass());
 	}
 
 }

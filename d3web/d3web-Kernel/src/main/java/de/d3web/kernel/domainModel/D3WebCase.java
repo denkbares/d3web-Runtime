@@ -349,7 +349,7 @@ public class D3WebCase implements XPSCase {
 	}
 
 	/**
-	 * @return list of all knowledgeslices for psMethod which fired in theCase
+	 * @return list of all knowledge slices for psMethod which fired in theCase
 	 * @param diagnosis
 	 *            de.d3web.kernel.domainModel.Diagnosis
 	 * @param context
@@ -420,16 +420,7 @@ public class D3WebCase implements XPSCase {
 		return qaSetManager;
 	}
 
-	/**
-	 * @see XPSCase#getQuestions()
-	 */
-	public List<? extends Question> getQuestions() {
-		return getKnowledgeBase().getQuestions();
-	}
-
-	/**
-	 * @return List of all problem solving mehods used in this case
-	 */
+	@Override
 	public List<PSMethod> getUsedPSMethods() {
 		return usedPSMethods;
 	}

@@ -20,6 +20,8 @@
 
 package de.d3web.kernel.psMethods.questionSetter;
 
+import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.Facts;
 import de.d3web.kernel.psMethods.MethodKind;
 import de.d3web.kernel.psMethods.PSMethodRulebased;
 
@@ -48,6 +50,11 @@ public class PSMethodQuestionSetter extends PSMethodRulebased {
 			instance = new PSMethodQuestionSetter();
 		}
 		return instance;
+	}
+
+	@Override
+	public Fact mergeFacts(Fact[] facts) {
+		return Facts.mergeAnswerFacts(facts);
 	}
 
 }

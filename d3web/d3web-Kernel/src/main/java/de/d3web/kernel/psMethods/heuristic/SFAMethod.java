@@ -26,7 +26,6 @@ import java.util.List;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisState;
-import de.d3web.kernel.psMethods.PSSubMethod;
 import de.d3web.kernel.psMethods.PropagationEntry;
 import de.d3web.kernel.supportknowledge.Property;
 

@@ -20,6 +20,7 @@
 
 package de.d3web.kernel.psMethods.suppressAnswer;
 
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.kernel.psMethods.PSMethodRulebased;
 /**
  * Mechanism to suppress answers of questions via rules
@@ -38,6 +39,11 @@ public class PSMethodSuppressAnswer extends PSMethodRulebased {
 			instance = new PSMethodSuppressAnswer();
 		}
 		return instance;
+	}
+
+	@Override
+	public Fact mergeFacts(Fact[] facts) {
+		throw new IllegalStateException("must not create facts for PSMethodSuppressAnswer");
 	}
 
 }

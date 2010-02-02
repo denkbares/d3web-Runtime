@@ -22,6 +22,7 @@ package de.d3web.kernel.psMethods;
 
 import java.util.Collection;
 
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisState;
@@ -74,5 +75,12 @@ public class PSMethodInit implements PSMethod {
 	 * @see PSMethod
 	 */
 	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
+	}
+
+	@Override
+	public Fact mergeFacts(Fact[] facts) {
+		// because there should be only one init value for an object
+		// we simply deliver the first fact as the result
+		return facts[0];
 	}
 }

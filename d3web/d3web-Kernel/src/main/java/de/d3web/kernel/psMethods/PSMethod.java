@@ -19,42 +19,62 @@
  */
 
 package de.d3web.kernel.psMethods;
+
 import java.util.Collection;
 
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisState;
 
 /**
- * Interface for all problen-solver methods to implement.
- * Each XPSCase has a list of currently used problem-solvers.
- * They are notified, if some value (question or diagnosis)
- * has changed.
- * Creation date: (28.08.00 17:22:54)
+ * Interface for all problen-solver methods to implement. Each XPSCase has a
+ * list of currently used problem-solvers. They are notified, if some value
+ * (question or diagnosis) has changed. Creation date: (28.08.00 17:22:54)
+ * 
  * @author joba
  */
 public interface PSMethod {
 
 	/**
-	 * Every problem-solver has to decide how it calculates
- 	 * the state of a diagnosis.
-	 * @return the DiagnosisState of the given Diagnosis depending on the given XPSCase
+	 * Every problem-solver has to decide how it calculates the state of a
+	 * diagnosis.
+	 * 
+	 * @return the DiagnosisState of the given Diagnosis depending on the given
+	 *         XPSCase
 	 */
+	// TODO: should be moved as blackboard functionality: get merged facts for a
+	// specific problem solver
 	DiagnosisState getState(XPSCase theCase, Diagnosis theDiagnosis);
 
 	/**
 	 * initialization method for this PSMethod
 	 */
 	void init(XPSCase theCase);
-	
+
 	/**
-	 * Indicates whether the problemsolver contributes to XPSCase.getDiagnoses(DiangosisState)
+	 * Indicates whether the problemsolver contributes to
+	 * XPSCase.getDiagnoses(DiangosisState)
 	 */
 	boolean isContributingToResult();
 
 	/**
 	 * propergates the new value of the given NamedObject for the given XPSCase
 	 */
-	//void propagate(XPSCase theCase, NamedObject nob, Object[] newValue);
-	void propagate(XPSCase theCase, Collection<PropagationEntry> changes); 
+	void propagate(XPSCase theCase, Collection<PropagationEntry> changes);
+
+	/**
+	 * Merges the facts created by this problem solver to the final value. The
+	 * method will receive a non-empty set of facts created by this problem
+	 * solver to merge it to the final value. The method may rely on that every
+	 * fact has a unique source. The method may also rely on that all facts are
+	 * created by their own. Therefore it may cast the facts to the
+	 * implementation class it uses for creating facts.
+	 * 
+	 * @param facts
+	 *            the facts to be merged
+	 * 
+	 * @return the merged fact
+	 */
+	Fact mergeFacts(Fact[] facts);
 }

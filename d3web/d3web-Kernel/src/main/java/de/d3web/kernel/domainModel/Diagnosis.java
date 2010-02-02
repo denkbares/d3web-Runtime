@@ -23,6 +23,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 
+import de.d3web.core.kr.TerminologyObject;
+import de.d3web.core.kr.Value;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.dynamicObjects.CaseDiagnosis;
 import de.d3web.kernel.dynamicObjects.XPSCaseObject;
@@ -42,7 +44,7 @@ import de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic;
  * @see DiagnosisScore
  * @see DiagnosisState
  */
-public class Diagnosis extends NamedObject implements ValuedObject {
+public class Diagnosis extends NamedObject implements ValuedObject, TerminologyObject {
 
 	/**
 	 * Compares the heuristic scores of two Diagnosis instances. 

@@ -27,10 +27,12 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Answer;
+import de.d3web.kernel.domainModel.qasets.QuestionChoice;
 import de.d3web.kernel.domainModel.qasets.QuestionDate;
 
 /**
@@ -162,5 +164,22 @@ public class AnswerDate extends Answer {
 
 	public void setValue(EvaluatableAnswerDateValue value) {
 		this.value = value;
+	}
+	
+	@Override
+	public int compareTo(Answer other) {
+		if (other instanceof AnswerDate) {
+			EvaluatableAnswerDateValue e1 = (EvaluatableAnswerDateValue) this.getValue(null);
+			EvaluatableAnswerDateValue e2 = (EvaluatableAnswerDateValue) other.getValue(null);
+			long i1 = e1.eval(null).getTime();
+			long i2 = e2.eval(null).getTime();
+			return (int) (i1 - i2);
+		}
+		if (other instanceof AnswerUnknown) {
+			// unknown comes at the and
+			return -1;
+		}
+		throw new IllegalArgumentException(
+				"Cannot compare answers of type AnswerDate and " + other.getClass());
 	}
 }

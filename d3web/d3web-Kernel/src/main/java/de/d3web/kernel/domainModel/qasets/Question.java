@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
+import de.d3web.core.kr.TerminologyObject;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.DerivationType;
 import de.d3web.kernel.domainModel.KnowledgeBase;

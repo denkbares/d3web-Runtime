@@ -147,4 +147,18 @@ public class AnswerNum extends Answer {
 		return getId().hashCode() + (value == null ? 42 : value.hashCode());
 	}
 
+	@Override
+	public int compareTo(Answer other) {
+		if (other instanceof AnswerNum) {
+			Number d1 = (Number) this.getValue(null);
+			Number d2 = (Number) other.getValue(null);
+			return (int) Math.signum(d1.doubleValue() - d2.doubleValue());
+		}
+		if (other instanceof AnswerUnknown) {
+			// unknown comes at the and
+			return -1;
+		}
+		throw new IllegalArgumentException(
+				"Cannot compare answers of type AnswerDate and " + other.getClass());
+	}
 }

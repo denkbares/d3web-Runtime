@@ -32,7 +32,6 @@ import de.d3web.kernel.domainModel.DiagnosisScore;
 import de.d3web.kernel.domainModel.DiagnosisState;
 import de.d3web.kernel.domainModel.NamedObject;
 import de.d3web.kernel.domainModel.Score;
-import de.d3web.kernel.psMethods.PSSubMethod;
 import de.d3web.kernel.psMethods.PropagationEntry;
 import de.d3web.kernel.supportknowledge.Property;
 

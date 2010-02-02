@@ -18,14 +18,19 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.kernel.psMethods;
+package de.d3web.kernel.psMethods.heuristic;
 
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.kernel.XPSCase;
+import de.d3web.kernel.psMethods.PSMethodAdapter;
 
 public abstract class PSSubMethod extends PSMethodAdapter {
 
 	public abstract boolean isActivated(XPSCase theCase);
-	
-	
-	
+
+	@Override
+	public Fact mergeFacts(Fact[] fatcs) {
+		throw new IllegalStateException(
+				"must no create any Fact with a PSSubMethod instead of PSMethodHeuristic");
+	}
 }

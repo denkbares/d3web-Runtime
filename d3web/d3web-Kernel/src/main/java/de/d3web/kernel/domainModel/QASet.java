@@ -21,6 +21,7 @@
 package de.d3web.kernel.domainModel;
 import java.util.List;
 
+import de.d3web.core.kr.TerminologyObject;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.qasets.QContainer;
 import de.d3web.kernel.domainModel.qasets.Question;
@@ -40,7 +41,7 @@ import de.d3web.kernel.supportknowledge.Property;
  * @see QContainer
  * @see Question
  */
-public abstract class QASet extends NamedObject {
+public abstract class QASet extends NamedObject implements TerminologyObject {
 	
 	public static class Reason {
 		private Rule rule;

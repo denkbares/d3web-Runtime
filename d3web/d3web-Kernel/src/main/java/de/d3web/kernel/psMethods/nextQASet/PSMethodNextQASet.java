@@ -20,6 +20,8 @@
 
 package de.d3web.kernel.psMethods.nextQASet;
 
+import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.Facts;
 import de.d3web.kernel.psMethods.PSMethodRulebased;
 
 /**
@@ -39,6 +41,11 @@ public class PSMethodNextQASet extends PSMethodRulebased {
 			instance = new PSMethodNextQASet();
 		}
 		return instance;
+	}
+
+	@Override
+	public Fact mergeFacts(Fact[] facts) {
+		return Facts.mergeIndicationFacts(facts);
 	}
 
 

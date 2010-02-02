@@ -23,14 +23,18 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
+import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.Facts;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisScore;
 import de.d3web.kernel.domainModel.DiagnosisState;
 import de.d3web.kernel.domainModel.KnowledgeSlice;
 import de.d3web.kernel.domainModel.Rule;
+import de.d3web.kernel.domainModel.DiagnosisState.State;
 import de.d3web.kernel.psMethods.PSMethodAdapter;
 import de.d3web.kernel.psMethods.PropagationEntry;
+import de.d3web.kernel.psMethods.heuristic.HeuristicRating;
 
 /**
  * Heuristic problem-solver which adds scores to diagnoses
@@ -68,9 +72,9 @@ public class PSMethodTherapyIndication extends PSMethodAdapter {
 		DiagnosisScore diagnosisScore =
 			diagnosis.getScore(theCase, this.getClass());
 		if (diagnosisScore == null)
-			return DiagnosisState.UNCLEAR;
+			return new DiagnosisState(State.UNCLEAR);
 		else
-			return DiagnosisState.getState(diagnosisScore);
+			return new HeuristicRating(diagnosisScore.getScore());
 	}
 
 	/**
@@ -95,5 +99,10 @@ public class PSMethodTherapyIndication extends PSMethodAdapter {
 
 	public String toString() {
 		return "heuristic problem-solver";
+	}
+
+	@Override
+	public Fact mergeFacts(Fact[] facts) {
+		return Facts.mergeIndicationFacts(facts);
 	}
 }

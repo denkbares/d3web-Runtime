@@ -27,17 +27,21 @@ public class StateRating implements Rating {
 	private DiagnosisState s;
 
 	/**
-	 * Creates a new DiagnosisState with committed String
-	 * and creates a new StateRating with this new DiagnosisState.
-	 * @param rating String representing the state.
+	 * Creates a new DiagnosisState with committed String and creates a new
+	 * StateRating with this new DiagnosisState.
+	 * 
+	 * @param rating
+	 *            String representing the state.
 	 */
 	public StateRating(String rating) {
 		s = new DiagnosisState(rating);
 	}
-	
+
 	/**
 	 * Creates new StateRating with committed DiagnosisState
-	 * @param s State for this StateRating.
+	 * 
+	 * @param s
+	 *            State for this StateRating.
 	 */
 	public StateRating(DiagnosisState s) {
 		this.s = s;
@@ -45,6 +49,7 @@ public class StateRating implements Rating {
 
 	/**
 	 * Returns the DiagnosisState of this Rating
+	 * 
 	 * @return State of this StateRating.
 	 */
 	public DiagnosisState getRating() {
@@ -66,7 +71,7 @@ public class StateRating implements Rating {
 		result = prime * result + ((s == null) ? 0 : s.hashCode());
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -79,7 +84,8 @@ public class StateRating implements Rating {
 		if (s == null) {
 			if (other.s != null)
 				return false;
-		} else if (!s.equals(other.s))
+		}
+		else if (!s.equals(other.s))
 			return false;
 		return true;
 	}
@@ -87,7 +93,7 @@ public class StateRating implements Rating {
 	@Override
 	public int compareTo(Rating o) {
 		if (o instanceof StateRating) {
-			return s.compareTo(o.getRating());
+			return s.compareTo((DiagnosisState) o.getRating());
 		}
 		return 0;
 	}
@@ -103,7 +109,7 @@ public class StateRating implements Rating {
 	 * @return true when the rating is not UNCLEAR
 	 */
 	public boolean isProblemSolvingRelevant() {
-		return !(s.equals(DiagnosisState.UNCLEAR) || (s.equals(DiagnosisState.EXCLUDED)));
+		return ((DiagnosisState) s).isRelevant();
 	}
 
 }

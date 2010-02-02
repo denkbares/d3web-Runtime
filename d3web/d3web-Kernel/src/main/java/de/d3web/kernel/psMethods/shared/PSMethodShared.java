@@ -21,6 +21,7 @@
 package de.d3web.kernel.psMethods.shared;
 import java.util.Collection;
 
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.psMethods.MethodKind;
 import de.d3web.kernel.psMethods.PSMethodAdapter;
@@ -39,4 +40,10 @@ public class PSMethodShared extends PSMethodAdapter {
 	@Override
 	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
 	}
+	
+	@Override
+	public Fact mergeFacts(Fact[] facts) {
+		throw new IllegalStateException("must not add facts of PSMethodShared");
+	}
+
 }

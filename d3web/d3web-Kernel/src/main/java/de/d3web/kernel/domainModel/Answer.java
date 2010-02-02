@@ -20,6 +20,7 @@
 
 package de.d3web.kernel.domainModel;
 
+import de.d3web.core.kr.Value;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.answers.AnswerChoice;
 import de.d3web.kernel.domainModel.answers.AnswerFactory;
@@ -41,8 +42,9 @@ import de.d3web.kernel.supportknowledge.PropertiesContainer;
  * 
  * @author Christian Betz, joba, norman
  * @see Question
+ * TODO: remove IDOPbject from Answer. They do not should have any ids.
  */
-public abstract class Answer extends IDObject implements PropertiesContainer {
+public abstract class Answer extends IDObject implements Value, PropertiesContainer, Comparable<Answer> {
 	
 	private static final long serialVersionUID = 5842799720984682025L;
 
@@ -108,6 +110,7 @@ public abstract class Answer extends IDObject implements PropertiesContainer {
 	/**
 	 * Returns the {@link Question} instance corresponding to this {@link Answer}.
 	 * @return the question related with this answer
+	 * TODO: remove link to question from the answer.
 	 */
 	public Question getQuestion() {
 		return question;
@@ -117,6 +120,7 @@ public abstract class Answer extends IDObject implements PropertiesContainer {
 	 * Sets the {@link Question} object, that is corresponding to 
 	 * this {@link Answer}.
 	 * @param question the corresponding {@link Question}
+	 * TODO: remove link to question from the answer.
 	 */
 	public void setQuestion(Question question) {
 		this.question = question;
@@ -137,6 +141,7 @@ public abstract class Answer extends IDObject implements PropertiesContainer {
 	 * This method is especially useful for numeric answers,
 	 * since, e.g., {@link AnswerChoice} objects have static values. 
 	 * @return text or numeric value of this {@link Answer} object
+	 * TODO: remove XPSCase from signature. This results to removing all dynamic evaluateable answer values (e.g. Formulas) from the answer. Evaluate them before creating the Answer
 	 */
 	public abstract Object getValue(XPSCase theCase);
 

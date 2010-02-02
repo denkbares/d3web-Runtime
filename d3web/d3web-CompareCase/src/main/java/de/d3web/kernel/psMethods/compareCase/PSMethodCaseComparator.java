@@ -23,6 +23,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.Facts;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisState;
@@ -116,4 +118,11 @@ public class PSMethodCaseComparator implements PSMethod {
 	public void setContributionToResult(boolean newContributingToResult) {
 		contributingToResult = newContributingToResult;
 	}
+
+	@Override
+	public Fact mergeFacts(Fact[] facts) {
+		return Facts.mergeUniqueFact(facts);
+	}
+	
+	
 }

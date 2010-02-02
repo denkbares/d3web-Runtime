@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.Facts;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisState;
@@ -516,6 +518,10 @@ public class FluxSolver implements PSMethod {
 		return false;
 	}
 
-
+	@Override
+	public Fact mergeFacts(Fact[] facts) {
+		// diaflux does not derive own facts
+		return Facts.mergeError(facts);
+	}
 
 }

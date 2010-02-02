@@ -22,6 +22,8 @@ package de.d3web.kernel.psMethods.parentQASet;
 
 import java.util.Collection;
 
+import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.Facts;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisState;
@@ -59,4 +61,10 @@ public class PSMethodParentQASet extends PSMethodAdapter {
 
 	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
 	}
+	
+	@Override
+	public Fact mergeFacts(Fact[] facts) {
+		return Facts.mergeIndicationFacts(facts);
+	}
+
 }

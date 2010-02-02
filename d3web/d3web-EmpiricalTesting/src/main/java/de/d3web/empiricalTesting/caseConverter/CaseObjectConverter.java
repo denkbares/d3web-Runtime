@@ -194,7 +194,7 @@ public abstract class CaseObjectConverter {
 	private void addRatedSolution(RatedTestCase rtc, Solution s) {
 		DiagnosisState state = s.getState();
 		Diagnosis d = s.getDiagnosis();
-		if (!(state.equals(DiagnosisState.EXCLUDED) || state.equals(DiagnosisState.UNCLEAR))) {
+		if (state.isRelevant()) {
 			StateRating r = new StateRating(state);
 			rtc.addExpected(new RatedSolution(d, r));
 		}

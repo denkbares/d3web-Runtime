@@ -24,6 +24,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import de.d3web.core.kr.TerminologyObject;
+import de.d3web.core.kr.Value;
+import de.d3web.core.session.blackboard.DefaultFact;
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Diagnosis;
 import de.d3web.kernel.domainModel.DiagnosisScore;
@@ -33,7 +37,6 @@ import de.d3web.kernel.domainModel.KnowledgeSlice;
 import de.d3web.kernel.domainModel.NamedObject;
 import de.d3web.kernel.domainModel.Rule;
 import de.d3web.kernel.psMethods.PSMethodAdapter;
-import de.d3web.kernel.psMethods.PSSubMethod;
 import de.d3web.kernel.psMethods.PropagationEntry;
 import de.d3web.kernel.supportknowledge.Property;
 
@@ -279,7 +282,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
      * Single Fault Assumption:
      * Once a diagnosis is established the case is finished. 
      * Only the best diagnosis (if some were established in parallel) 
-     * is returned as "establshed" solution. 
+     * is returned as "established" solution. 
      * @return Returns the sFA.
      */
     public boolean isSFA(XPSCase theCase) {
@@ -297,4 +300,15 @@ public class PSMethodHeuristic extends PSMethodAdapter {
         else
             return b.booleanValue();
     }
+
+	@Override
+	public Fact mergeFacts(Fact[] facts) {
+		HeuristicRating[] ratings = new HeuristicRating[facts.length];
+		for (int i=0; i<facts.length; i++) {
+			ratings[i] = (HeuristicRating) facts[i].getValue();
+		}
+		TerminologyObject terminologyObject = facts[0].getTerminologyObject();
+		Value value = HeuristicRating.add(ratings);
+		return new DefaultFact(terminologyObject, value, this, this);
+	}
 }
