@@ -513,6 +513,7 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 					knowledgeContext);
 
 			if (getKnowledgeBase() != null) {
+				// FIXME: the slice must not be removed if it is used at any other NamedObject
 				getKnowledgeBase().removeKnowledge(problemsolver,
 						knowledgeSlice);
 			}
@@ -606,7 +607,7 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	 * @param knowlegeSlice the {@link KnowledgeSlice} to be removed
 	 * @param knowledgeContext the {@link MethodKind} key of the knowledge
 	 */
-	public synchronized boolean removeLocalKnowledge(Class problemsolver,
+	private synchronized boolean removeLocalKnowledge(Class problemsolver,
 			KnowledgeSlice knowledgeSlice, MethodKind knowledgeContext) {
 		try {
 			// List knowledgeSlices;
