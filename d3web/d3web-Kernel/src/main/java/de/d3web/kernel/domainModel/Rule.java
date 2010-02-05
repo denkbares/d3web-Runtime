@@ -182,15 +182,10 @@ public class Rule
 			if (hasFired && !canFire)
 				UNDO_ACTION = true;
 
-			boolean isQuestionSetterActionWithChangedValues = false;
 			// if the action is a question setter action, changes in depending values (e.g. elements of a formula)
 			// will be noticed and stored in the boolean "isQuestionSetterActionWithChangedValues"
-			if (getAction() instanceof ActionQuestionSetter) {
-				ActionQuestionSetter action =
-					(ActionQuestionSetter) getAction();
-				isQuestionSetterActionWithChangedValues =
-					action.hasChangedValue(theCase);
-			}
+			boolean isQuestionSetterActionWithChangedValues =
+				getAction().hasChangedValue(theCase);
 			// if this is a multipleFire-rule that has fired AND can fire again AND any depending value has
 			// changed, its action will be undone and executed again.
 			// This change fixes the "fire-undo-fire-bug" (when a question gets the same
