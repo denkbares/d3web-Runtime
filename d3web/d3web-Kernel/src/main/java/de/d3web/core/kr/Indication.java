@@ -1,5 +1,6 @@
 package de.d3web.core.kr;
 
+
 public class Indication implements Value, Comparable<Indication> {
 
 	public enum State {
@@ -10,7 +11,7 @@ public class Indication implements Value, Comparable<Indication> {
 
 	/**
 	 * Creates a new indication value based on the string representation. The
-	 * string representation is case insensitive for backward compability.
+	 * string representation is case insensitive for backward compatibility.
 	 * 
 	 * @param name
 	 *            the name of the indication state
@@ -46,6 +47,17 @@ public class Indication implements Value, Comparable<Indication> {
 	 */
 	public State getState() {
 		return state;
+	}
+
+	/**
+	 * Returns whether the state of this indication equals to the specified state.
+	 * 
+	 * @param state
+	 *            the state to be checked
+	 * @return whether the state is equal to the specified one
+	 */
+	public boolean hasState(State state) {
+		return this.state.equals(state);
 	}
 
 	/**

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 import de.d3web.core.kr.Indication;
+import de.d3web.core.kr.InterviewObject;
 import de.d3web.core.kr.TerminologyObject;
 import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.domainModel.Answer;
@@ -183,6 +184,18 @@ public class Blackboard {
 	}
 
 	/**
+	 * Removes all interview facts from this blackboard for the specified
+	 * terminology object. If no such fact exists in the blackboard, this method
+	 * has no effect.
+	 * 
+	 * @param termObject
+	 *            the terminology object to remove the interview facts from
+	 */
+	public void removeInterviewFacts(TerminologyObject terminologyObject) {
+		this.interviewStorage.remove(terminologyObject);
+	}
+
+	/**
 	 * Returns the merged fact for all interview facts of the specified
 	 * terminology object.
 	 * 
@@ -245,7 +258,7 @@ public class Blackboard {
 	 *            the question to take the rating from
 	 * @return the indication of the interview element
 	 */
-	public Indication getIndication(QASet interviewElement) {
+	public Indication getIndication(InterviewObject interviewElement) {
 		return (Indication) getInterviewFact(interviewElement).getValue();
 	}
 

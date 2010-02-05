@@ -79,12 +79,29 @@ class FactStorage {
 	 *            the fact source to be removed
 	 */
 	public void remove(TerminologyObject termObject, Object source) {
-		FactAggregator mediator = getAggregator(termObject);
-		mediator.removeFactsBySource(source);
-		// check if the mediator has become empty, then remember the terminology object
-		if (mediator.isEmpty()) {
+		FactAggregator aggreagator = getAggregator(termObject);
+		aggreagator.removeFactsBySource(source);
+		// check if the aggreagator has become empty, then remember the terminology object
+		if (aggreagator.isEmpty()) {
 			this.noFactObjects.add(termObject);
 		}
+	}
+
+	/**
+	 * Removes all facts from this storage for the
+	 * specified terminology object. If no such fact exists in the storage, this
+	 * method has no effect.
+	 * 
+	 * @param termObject
+	 *            the terminology object to remove the facts from
+	 * @param source
+	 *            the fact source to be removed
+	 */
+	public void remove(TerminologyObject termObject) {
+		FactAggregator aggreagator = getAggregator(termObject);
+		aggreagator.clear();
+		// then remember the terminology object to be empty
+		this.noFactObjects.add(termObject);
 	}
 
 	/**

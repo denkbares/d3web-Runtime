@@ -56,6 +56,17 @@ class FactAggregator {
 	}
 
 	/**
+	 * Removes all facts from this aggregator.
+	 * 
+	 * @param fact
+	 *            the fact to be removed
+	 */
+	public void clear() {
+		this.facts.clear();
+		invalidate();
+	}
+
+	/**
 	 * Removes the fact for the specified source from this aggregator.
 	 * 
 	 * @param source

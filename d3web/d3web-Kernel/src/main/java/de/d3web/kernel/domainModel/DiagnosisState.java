@@ -70,7 +70,7 @@ public class DiagnosisState implements Comparable<DiagnosisState>, Value {
 
 	/**
 	 * Creates a new solution rating value based on the string representation.
-	 * The string representation is case insensitive for backward compability.
+	 * The string representation is case insensitive for backward compatibility.
 	 * 
 	 * @param name
 	 *            the name of the rating state
