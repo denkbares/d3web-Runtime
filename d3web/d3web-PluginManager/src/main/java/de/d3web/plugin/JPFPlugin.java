@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -110,8 +111,13 @@ public class JPFPlugin implements Plugin {
 
 		Collection<Resource> result = new LinkedList<Resource>();
 		try {
-			File pluginFile = new File(pluginUrl.toURI().getPath()).getParentFile();
-
+			String fileString = URLDecoder.decode(pluginUrl.getFile(), "UTF-8");
+			if (fileString.startsWith("file:/")) {
+				fileString = fileString.substring("file:/".length());
+			}
+			fileString = fileString.replace(".jar!", ".jar");
+			File pluginFile = new File(fileString).getParentFile();
+			
 			if (!pluginFile.exists()) {
 				throw new IllegalStateException(
 						"Invalid plugin access due to internal error. Cannot find plugin location");
@@ -149,10 +155,6 @@ public class JPFPlugin implements Plugin {
 			}
 		}
 		catch (IOException e) {
-			Logger.getLogger(getClass().getName()).warning(
-					"cannot read resources from plugin '" + pluginUrl + "': " + e);
-		}
-		catch (URISyntaxException e) {
 			Logger.getLogger(getClass().getName()).warning(
 					"cannot read resources from plugin '" + pluginUrl + "': " + e);
 		}

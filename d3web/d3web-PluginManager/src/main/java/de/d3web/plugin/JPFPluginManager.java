@@ -24,14 +24,17 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.java.plugin.JpfException;
 import org.java.plugin.ObjectFactory;
 import org.java.plugin.PluginManager.PluginLocation;
 import org.java.plugin.registry.ExtensionPoint;
+import org.java.plugin.registry.Identity;
 import org.java.plugin.registry.PluginDescriptor;
 import org.java.plugin.standard.StandardPluginLocation;
 
@@ -45,6 +48,8 @@ import de.d3web.plugin.util.PluginCollectionComparatorByPriority;
 public class JPFPluginManager extends PluginManager {
 
 	private final org.java.plugin.PluginManager manager;
+	
+	private HashMap<org.java.plugin.registry.Extension, Extension> cachedExtension = new HashMap<org.java.plugin.registry.Extension, Extension>();
 
 	/**
 	 * Contains the registered Plugins. The field will be initialized lazy by
@@ -73,7 +78,11 @@ public class JPFPluginManager extends PluginManager {
 						"error initializing plugin '" + pluginFile + "': " + e);
 			}
 		}
-		manager.publishPlugins(locations.toArray(new PluginLocation[locations.size()]));
+		Map<String, Identity> map = manager.publishPlugins(locations.toArray(new PluginLocation[locations.size()]));
+		//activate all plugins
+		for (Identity i: map.values()) {
+			manager.activatePlugin(i.getId());
+		}
 	}
 
 	/**
@@ -139,7 +148,12 @@ public class JPFPluginManager extends PluginManager {
 		Collection<org.java.plugin.registry.Extension> connectedExtensions = toolExtPoint
 				.getConnectedExtensions();
 		for (org.java.plugin.registry.Extension e : connectedExtensions) {
-			result.add(new JPFExtension(e, manager));
+			Extension extension = cachedExtension.get(e);
+			if (extension==null) {
+				extension = new JPFExtension(e, manager);
+				cachedExtension.put(e, extension);
+			}
+			result.add(extension);
 		}
 		Extension[] ret = result.toArray(new Extension[result.size()]);
 		Arrays.sort(ret, new PluginCollectionComparatorByPriority());
