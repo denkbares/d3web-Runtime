@@ -116,10 +116,14 @@ public class JPFPlugin implements Plugin {
 			}
 			fileString = fileString.replace(".jar!", ".jar");
 			File pluginFile = new File(fileString).getParentFile();
-			
+			File pluginFileLinux=new File("/"+fileString).getParentFile();
 			if (!pluginFile.exists()) {
+				if (!pluginFileLinux.exists()){
 				throw new IllegalStateException(
 						"Invalid plugin access due to internal error. Cannot find plugin location");
+				} else {
+					pluginFile=pluginFileLinux;
+				}
 			}
 
 			if (pluginFile.isDirectory()) {
