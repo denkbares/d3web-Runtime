@@ -33,22 +33,19 @@ public class AnswerFactory {
 	public static AnswerChoice createAnswerChoice(
 		String theId,
 		String theValue) {
-		AnswerChoice theAnswer = new AnswerChoice();
-		theAnswer.setId(theId);
+		AnswerChoice theAnswer = new AnswerChoice(theId);
 		theAnswer.setText(theValue);
 		return theAnswer;
 	}
 
 	public static AnswerNo createAnswerNo(String theId, String theValue) {
-		AnswerNo theAnswer = new AnswerNo();
-		theAnswer.setId(theId);
+		AnswerNo theAnswer = new AnswerNo(theId);
 		theAnswer.setText(theValue);
 		return theAnswer;
 	}
 
 	public static AnswerYes createAnswerYes(String theId, String theValue) {
-		AnswerYes theAnswer = new AnswerYes();
-		theAnswer.setId(theId);
+		AnswerYes theAnswer = new AnswerYes(theId);
 		theAnswer.setText(theValue);
 		return theAnswer;
 	}
