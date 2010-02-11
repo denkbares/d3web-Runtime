@@ -23,10 +23,21 @@
  */
 package de.d3web.caserepository.addons.train;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Set;
 
-import de.d3web.caserepository.*;
-import de.d3web.caserepository.addons.*;
+import de.d3web.caserepository.CaseObject;
+import de.d3web.caserepository.CaseObjectWriter;
+import de.d3web.caserepository.addons.IAdditionalTrainData;
+import de.d3web.caserepository.addons.IAppliedQSets;
+import de.d3web.caserepository.addons.IContents;
+import de.d3web.caserepository.addons.IExaminationBlocks;
+import de.d3web.caserepository.addons.IFUSConfiguration;
+import de.d3web.caserepository.addons.IMultimedia;
+import de.d3web.caserepository.addons.ISimpleQuestions;
+import de.d3web.caserepository.addons.ISimpleTextFUSs;
+import de.d3web.caserepository.addons.ITemplateSession;
+import de.d3web.caserepository.addons.ITherapyConfiguration;
 import de.d3web.caserepository.addons.fus.FUSConfiguration;
 import de.d3web.config.Config;
 import de.d3web.core.KnowledgeBase;
@@ -36,8 +47,6 @@ import de.d3web.core.terminology.Question;
 import de.d3web.core.terminology.info.DCElement;
 import de.d3web.core.terminology.info.DCMarkup;
 import de.d3web.core.terminology.info.Properties;
-import de.d3web.kernel.domainModel.*;
-import de.d3web.kernel.supportknowledge.*;
 
 /**
  * CaseObjectTemplateSessionProxy (in ) de.d3web.caserepository

@@ -20,10 +20,25 @@
 
 package de.d3web.caserepository;
 import java.rmi.server.UID;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
-import de.d3web.caserepository.addons.*;
+import de.d3web.caserepository.addons.IAdditionalTrainData;
+import de.d3web.caserepository.addons.IAppliedQSets;
+import de.d3web.caserepository.addons.IContents;
+import de.d3web.caserepository.addons.IExaminationBlocks;
+import de.d3web.caserepository.addons.IFUSConfiguration;
+import de.d3web.caserepository.addons.IMultimedia;
+import de.d3web.caserepository.addons.ISimpleQuestions;
+import de.d3web.caserepository.addons.ISimpleTextFUSs;
+import de.d3web.caserepository.addons.ITemplateSession;
+import de.d3web.caserepository.addons.ITherapyConfiguration;
+import de.d3web.caserepository.addons.PSMethodAuthorSelected;
 import de.d3web.caserepository.addons.shared.AppliedQSets;
 import de.d3web.config.Config;
 import de.d3web.core.KnowledgeBase;
@@ -36,8 +51,6 @@ import de.d3web.core.terminology.info.DCMarkup;
 import de.d3web.core.terminology.info.Properties;
 import de.d3web.core.terminology.info.Property;
 import de.d3web.indication.inference.PSMethodUserSelected;
-import de.d3web.kernel.domainModel.*;
-import de.d3web.kernel.supportknowledge.*;
 
 /**
  * Implementation of Interface CaseObject
