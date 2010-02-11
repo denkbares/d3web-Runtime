@@ -3,8 +3,8 @@ package de.d3web.core.session;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.kr.Indication;
-import de.d3web.core.kr.InterviewObject;
+import de.d3web.core.Indication;
+import de.d3web.core.InterviewObject;
 
 public class DefaultInterview implements Interview {
 

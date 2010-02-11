@@ -1,8 +1,8 @@
 package de.d3web.core.session;
 
-import de.d3web.core.kr.InterviewObject;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.qasets.Question;
+import de.d3web.core.InterviewObject;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.Question;
 
 public interface Interview {
 

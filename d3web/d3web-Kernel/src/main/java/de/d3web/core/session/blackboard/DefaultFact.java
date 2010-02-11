@@ -1,8 +1,8 @@
 package de.d3web.core.session.blackboard;
 
-import de.d3web.core.kr.TerminologyObject;
-import de.d3web.core.kr.Value;
-import de.d3web.kernel.psMethods.PSMethod;
+import de.d3web.core.TerminologyObject;
+import de.d3web.core.Value;
+import de.d3web.core.inference.PSMethod;
 
 public class DefaultFact implements Fact {
 	

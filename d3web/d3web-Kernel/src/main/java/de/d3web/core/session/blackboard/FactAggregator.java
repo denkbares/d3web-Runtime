@@ -7,10 +7,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import de.d3web.core.kr.Indication;
-import de.d3web.kernel.domainModel.DiagnosisState;
-import de.d3web.kernel.psMethods.PSMethod;
-import de.d3web.kernel.psMethods.userSelected.PSMethodUserSelected;
+import de.d3web.core.Indication;
+import de.d3web.core.inference.PSMethod;
+import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
  * This class organizes the facts of one type for one terminology object. It is

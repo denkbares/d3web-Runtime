@@ -2,11 +2,11 @@ package de.d3web.core.session;
 
 import java.util.Collection;
 
-import de.d3web.core.kr.InfoStore;
+import de.d3web.core.InfoStore;
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.PropagationContoller;
 import de.d3web.core.session.blackboard.Blackboard;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.psMethods.PSMethod;
-import de.d3web.kernel.psMethods.PropagationContoller;
 
 /**
  * The Session interface represents a running xps session.
