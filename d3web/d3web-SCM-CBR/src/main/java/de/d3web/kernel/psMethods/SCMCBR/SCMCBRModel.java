@@ -6,19 +6,19 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.DiagnosisState;
-import de.d3web.kernel.domainModel.IEventSource;
-import de.d3web.kernel.domainModel.KBOEventListener;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
-import de.d3web.kernel.domainModel.ruleCondition.NoAnswerException;
-import de.d3web.kernel.domainModel.ruleCondition.UnknownAnswerException;
-import de.d3web.kernel.psMethods.MethodKind;
-import de.d3web.kernel.psMethods.PSMethod;
-import de.d3web.kernel.psMethods.xclPattern.XCLRelationType;
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.inference.MethodKind;
+import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.NoAnswerException;
+import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.session.IEventSource;
+import de.d3web.core.session.KBOEventListener;
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.xcl.XCLRelationType;
 
 
 /**

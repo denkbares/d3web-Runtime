@@ -40,8 +40,8 @@ import de.d3web.caserepository.SolutionContainerImpl;
 import de.d3web.caserepository.CaseObject.Solution;
 import de.d3web.caserepository.addons.IExaminationBlock;
 import de.d3web.core.kpers.utilities.XMLTools;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.qasets.QContainer;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.QContainer;
 
 /**
  * @author betz
@@ -169,7 +169,7 @@ public class ExaminationBlock implements IExaminationBlock {
 	/**
 	 * overridden method
 	 * 
-	 * @see de.d3web.caserepository.addons.IExaminationBlock#addContent(de.d3web.kernel.domainModel.qasets.QContainer)
+	 * @see de.d3web.caserepository.addons.IExaminationBlock#addContent(de.d3web.core.terminology.QContainer)
 	 */
 	public void addContent(QContainer q) {
 		contents.add(q);
@@ -178,7 +178,7 @@ public class ExaminationBlock implements IExaminationBlock {
 	/**
 	 * overridden method
 	 * 
-	 * @see de.d3web.caserepository.addons.IExaminationBlock#removeContent(de.d3web.kernel.domainModel.qasets.QContainer)
+	 * @see de.d3web.caserepository.addons.IExaminationBlock#removeContent(de.d3web.core.terminology.QContainer)
 	 */
 	public void removeContent(QContainer q) {
 		contents.remove(q);

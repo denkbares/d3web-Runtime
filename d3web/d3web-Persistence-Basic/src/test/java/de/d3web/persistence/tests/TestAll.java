@@ -21,7 +21,7 @@
 package de.d3web.persistence.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import de.d3web.kernel.domainModel.D3WebCase;
+import de.d3web.core.session.D3WebCase;
 
 /**
  * Container class for all persistence tests.

@@ -26,16 +26,16 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.kpers.fragments.FragmentHandler;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.Answer;
-import de.d3web.kernel.domainModel.IDObject;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.answers.AnswerChoice;
-import de.d3web.kernel.domainModel.answers.AnswerUnknown;
-import de.d3web.kernel.domainModel.qasets.QuestionChoice;
-import de.d3web.kernel.domainModel.qasets.QuestionYN;
-import de.d3web.kernel.domainModel.ruleCondition.CondEqual;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.terminology.Answer;
+import de.d3web.core.terminology.IDObject;
+import de.d3web.core.terminology.QuestionChoice;
+import de.d3web.core.terminology.QuestionYN;
 /**
  * FragmentHandler for CondEquals
  * It can also read choiceYes and choiceNo elements of former persistence versions

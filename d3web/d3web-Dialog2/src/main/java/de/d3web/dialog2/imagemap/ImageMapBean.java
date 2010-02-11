@@ -31,10 +31,10 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
+import de.d3web.core.terminology.Question;
 import de.d3web.dialog2.basics.settings.ResourceRepository;
 import de.d3web.dialog2.controller.KBLoadController;
 import de.d3web.dialog2.util.DialogUtils;
-import de.d3web.kernel.domainModel.qasets.Question;
 
 public class ImageMapBean {
 

@@ -24,12 +24,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import de.d3web.core.terminology.QASet;
+import de.d3web.core.terminology.QContainer;
 import de.d3web.empiricalTesting.RatedTestCase;
 import de.d3web.empiricalTesting.SequentialTestCase;
 import de.d3web.empiricalTesting.caseVisualization.dot.DDNode;
 import de.d3web.empiricalTesting.caseVisualization.dot.DDBuilder.caseType;
-import de.d3web.kernel.domainModel.QASet;
-import de.d3web.kernel.domainModel.qasets.QContainer;
 
 public class DDNetBuilder {
 	boolean cutQuationnaireSibling = false;

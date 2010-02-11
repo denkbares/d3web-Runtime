@@ -32,11 +32,11 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.KnowledgeBase;
 import de.d3web.core.kpers.PersistenceManager;
 import de.d3web.empiricalTesting.RatedTestCase;
 import de.d3web.empiricalTesting.SequentialTestCase;
 import de.d3web.empiricalTesting.TestSuite;
-import de.d3web.kernel.domainModel.KnowledgeBase;
 import de.d3web.plugin.test.InitPluginManager;
 
 

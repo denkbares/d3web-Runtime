@@ -26,7 +26,7 @@ import java.util.List;
 
 import org.w3c.dom.Document;
 
-import de.d3web.kernel.domainModel.KnowledgeBase;
+import de.d3web.core.KnowledgeBase;
 
 /**
  * This interface describes a handler for case repositories in 

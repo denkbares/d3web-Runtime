@@ -30,16 +30,16 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.CondEqual;
+import de.d3web.core.inference.condition.CondKnown;
+import de.d3web.core.inference.condition.NoAnswerException;
+import de.d3web.core.inference.condition.NonTerminalCondition;
+import de.d3web.core.inference.condition.TerminalCondition;
+import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.session.ValuedObject;
+import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.explain.ExplanationFactory;
-import de.d3web.kernel.domainModel.ValuedObject;
-import de.d3web.kernel.domainModel.answers.AnswerChoice;
-import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
-import de.d3web.kernel.domainModel.ruleCondition.CondEqual;
-import de.d3web.kernel.domainModel.ruleCondition.CondKnown;
-import de.d3web.kernel.domainModel.ruleCondition.NoAnswerException;
-import de.d3web.kernel.domainModel.ruleCondition.NonTerminalCondition;
-import de.d3web.kernel.domainModel.ruleCondition.TerminalCondition;
-import de.d3web.kernel.domainModel.ruleCondition.UnknownAnswerException;
 /**
  *
  * @author  betz

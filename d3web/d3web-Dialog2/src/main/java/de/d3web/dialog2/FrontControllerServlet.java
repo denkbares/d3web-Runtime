@@ -31,10 +31,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.d3web.core.session.XPSCase;
 import de.d3web.dialog2.basics.knowledge.KnowledgeBaseRepository;
 import de.d3web.dialog2.controller.KBLoadController;
 import de.d3web.dialog2.util.DialogUtils;
-import de.d3web.kernel.XPSCase;
 
 public class FrontControllerServlet extends HttpServlet {
 

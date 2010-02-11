@@ -24,15 +24,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.dialogControl.MQDialogController;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.QASet;
-import de.d3web.kernel.domainModel.answers.AnswerChoice;
-import de.d3web.kernel.domainModel.qasets.QContainer;
-import de.d3web.kernel.domainModel.qasets.Question;
-import de.d3web.kernel.domainModel.qasets.QuestionChoice;
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.interviewmanager.MQDialogController;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.QASet;
+import de.d3web.core.terminology.QContainer;
+import de.d3web.core.terminology.Question;
+import de.d3web.core.terminology.QuestionChoice;
 
 public class BotHelper {
 

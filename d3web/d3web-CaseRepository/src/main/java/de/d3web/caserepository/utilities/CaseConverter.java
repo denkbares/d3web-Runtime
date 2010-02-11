@@ -20,16 +20,25 @@
 
 package de.d3web.caserepository.utilities;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
-import de.d3web.caserepository.*;
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.dialogControl.proxy.*;
-import de.d3web.kernel.domainModel.*;
-import de.d3web.kernel.domainModel.qasets.*;
-import de.d3web.kernel.psMethods.PSMethod;
-import de.d3web.kernel.psMethods.userSelected.PSMethodUserSelected;
-import de.d3web.kernel.supportknowledge.*;
+import de.d3web.caserepository.CaseObject;
+import de.d3web.caserepository.CaseObjectImpl;
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.inference.PSMethod;
+import de.d3web.core.session.CaseFactory;
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.interviewmanager.DialogProxy;
+import de.d3web.core.session.interviewmanager.ShadowMemory;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.core.terminology.QContainer;
+import de.d3web.core.terminology.Question;
+import de.d3web.core.terminology.info.DCMarkup;
+import de.d3web.core.terminology.info.PropertiesCloner;
+import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
  * Converter class for Case objects. It converts XPSCase to CaseObject and

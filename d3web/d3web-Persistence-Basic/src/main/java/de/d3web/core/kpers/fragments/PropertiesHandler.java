@@ -27,12 +27,12 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.KnowledgeBase;
 import de.d3web.core.kpers.PersistenceManager;
 import de.d3web.core.kpers.fragments.FragmentHandler;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.supportknowledge.Properties;
-import de.d3web.kernel.supportknowledge.Property;
+import de.d3web.core.terminology.info.Properties;
+import de.d3web.core.terminology.info.Property;
 /**
  * Handler for properties
  * @author hoernlein, Markus Friedrich (denkbares GmbH)

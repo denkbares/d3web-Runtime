@@ -27,10 +27,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-import de.d3web.kernel.domainModel.Answer;
-import de.d3web.kernel.domainModel.answers.AnswerChoice;
-import de.d3web.kernel.domainModel.qasets.Question;
-import de.d3web.kernel.domainModel.qasets.QuestionMC;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.terminology.Answer;
+import de.d3web.core.terminology.Question;
+import de.d3web.core.terminology.QuestionMC;
 
 /**
  * This class is used to compute a list of Answer[] 

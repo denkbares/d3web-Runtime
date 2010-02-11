@@ -38,9 +38,9 @@ import de.d3web.caserepository.addons.train.writer.ContentsWriter;
 import de.d3web.caserepository.addons.train.writer.ExaminationBlocksWriter;
 import de.d3web.caserepository.addons.train.writer.MultimediaWriter;
 import de.d3web.caserepository.dom.CaseObjectListCreator;
+import de.d3web.core.KnowledgeBase;
 import de.d3web.core.kpers.PersistenceManager;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.supportknowledge.Property;
+import de.d3web.core.terminology.info.Property;
 
 /**
  * 26.11.2003 18:01:24

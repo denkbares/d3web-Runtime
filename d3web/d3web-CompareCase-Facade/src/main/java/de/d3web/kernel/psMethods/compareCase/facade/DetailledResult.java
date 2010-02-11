@@ -23,7 +23,7 @@ package de.d3web.kernel.psMethods.compareCase.facade;
 import java.util.Iterator;
 import java.util.List;
 
-import de.d3web.kernel.domainModel.qasets.QContainer;
+import de.d3web.core.terminology.QContainer;
 import de.d3web.kernel.psMethods.compareCase.comparators.ComparatorResult;
 
 /**

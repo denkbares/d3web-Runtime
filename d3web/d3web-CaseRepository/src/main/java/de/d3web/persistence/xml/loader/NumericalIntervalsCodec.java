@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.d3web.kernel.domainModel.NumericalInterval;
+import de.d3web.core.terminology.info.NumericalInterval;
 import de.d3web.persistence.xml.loader.PropertiesUtilities.PropertyCodec;
 
 /**

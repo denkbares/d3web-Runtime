@@ -27,19 +27,19 @@ import java.util.List;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.domainModel.NamedObject;
-import de.d3web.kernel.domainModel.qasets.QContainer;
-import de.d3web.kernel.domainModel.qasets.QuestionYN;
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.NamedObject;
+import de.d3web.core.terminology.QContainer;
+import de.d3web.core.terminology.QuestionYN;
 import de.d3web.kernel.psMethods.shared.Abnormality;
 import de.d3web.kernel.psMethods.shared.LocalWeight;
-import de.d3web.kernel.psMethods.shared.PSMethodShared;
 import de.d3web.kernel.psMethods.shared.QuestionWeightValue;
 import de.d3web.kernel.psMethods.shared.Weight;
 import de.d3web.kernel.psMethods.shared.comparators.KnowledgeBaseUnknownSimilarity;
 import de.d3web.kernel.psMethods.shared.comparators.oc.QuestionComparatorYN;
+import de.d3web.shared.PSMethodShared;
 
 public class RemoveKnowledgeSliceTest extends TestCase {
 

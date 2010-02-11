@@ -26,12 +26,12 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.KnowledgeBase;
 import de.d3web.core.kpers.fragments.FragmentHandler;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.NumericalInterval;
-import de.d3web.kernel.psMethods.shared.AbnormalityInterval;
-import de.d3web.kernel.psMethods.shared.AbstractAbnormality;
+import de.d3web.core.terminology.info.NumericalInterval;
+import de.d3web.shared.AbnormalityInterval;
+import de.d3web.shared.AbstractAbnormality;
 
 /**
  * FragmentHandler for NumericalIntervals and AbnormalityIntervals

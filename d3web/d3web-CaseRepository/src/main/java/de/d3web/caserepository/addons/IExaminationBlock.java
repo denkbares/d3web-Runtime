@@ -26,8 +26,8 @@ package de.d3web.caserepository.addons;
 import java.util.List;
 
 import de.d3web.caserepository.ISolutionContainer;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.qasets.QContainer;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.QContainer;
 
 /**
  * 22.09.2003 17:19:55

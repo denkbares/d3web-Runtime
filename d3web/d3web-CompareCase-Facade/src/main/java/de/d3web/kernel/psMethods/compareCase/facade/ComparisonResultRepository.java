@@ -19,16 +19,35 @@
  */
 
 package de.d3web.kernel.psMethods.compareCase.facade;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.utilities.CaseConverter;
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.*;
-import de.d3web.kernel.domainModel.answers.*;
-import de.d3web.kernel.domainModel.qasets.*;
-import de.d3web.kernel.psMethods.compareCase.*;
-import de.d3web.kernel.psMethods.compareCase.comparators.*;
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.AnswerNo;
+import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.session.values.AnswerYes;
+import de.d3web.core.terminology.Answer;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.core.terminology.QASet;
+import de.d3web.core.terminology.QContainer;
+import de.d3web.core.terminology.Question;
+import de.d3web.kernel.psMethods.compareCase.CompareCaseException;
+import de.d3web.kernel.psMethods.compareCase.CompareObjectsHashContainer;
+import de.d3web.kernel.psMethods.compareCase.comparators.CaseComparator;
+import de.d3web.kernel.psMethods.compareCase.comparators.ComparatorResult;
+import de.d3web.kernel.psMethods.compareCase.comparators.CompareMode;
 import de.d3web.utilities.caseLoaders.CaseRepository;
 
 /**

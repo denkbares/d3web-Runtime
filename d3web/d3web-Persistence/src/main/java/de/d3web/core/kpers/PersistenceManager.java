@@ -37,13 +37,13 @@ import java.util.zip.ZipFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.Resource;
 import de.d3web.core.kpers.fragments.FragmentHandler;
 import de.d3web.core.kpers.progress.CombinedProgressListener;
 import de.d3web.core.kpers.progress.DummyProgressListener;
 import de.d3web.core.kpers.progress.ProgressListener;
-import de.d3web.kernel.domainModel.BinaryRessource;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.supportknowledge.DCElement;
+import de.d3web.core.terminology.info.DCElement;
 import de.d3web.plugin.Extension;
 import de.d3web.plugin.PluginManager;
 
@@ -225,7 +225,7 @@ public class PersistenceManager {
 			}
 			cpl.next(kb.getBinaryRessources().size());
 			int i = 0;
-			for (BinaryRessource ressource: kb.getBinaryRessources()) {
+			for (Resource ressource: kb.getBinaryRessources()) {
 				ZipEntry entry = new ZipEntry(MULTIMEDIA_PATH_PREFIX+ressource.getPathName());
 				jarOutputStream.putNextEntry(entry);
 				InputStream inputStream = ressource.getInputStream();

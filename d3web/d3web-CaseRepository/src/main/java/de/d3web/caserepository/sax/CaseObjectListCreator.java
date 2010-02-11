@@ -36,7 +36,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 
 import de.d3web.caserepository.utilities.Checker;
-import de.d3web.kernel.domainModel.KnowledgeBase;
+import de.d3web.core.KnowledgeBase;
 
 /**
  * @author bates

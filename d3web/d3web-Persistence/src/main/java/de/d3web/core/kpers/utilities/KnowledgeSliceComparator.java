@@ -22,7 +22,7 @@ package de.d3web.core.kpers.utilities;
 
 import java.util.Comparator;
 
-import de.d3web.kernel.domainModel.KnowledgeSlice;
+import de.d3web.core.inference.KnowledgeSlice;
 
 /**
  * For Ordering KnowledgeSlices after their id.

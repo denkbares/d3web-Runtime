@@ -21,7 +21,7 @@
 package de.d3web.kernel.psMethods.shared;
 import java.util.Hashtable;
 
-import de.d3web.kernel.psMethods.PSMethod;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.kernel.psMethods.shared.comparators.QuestionComparator;
 import de.d3web.kernel.psMethods.shared.comparators.oc.QuestionComparatorYN;
 /**

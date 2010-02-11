@@ -34,22 +34,22 @@ import javax.faces.context.ResponseWriter;
 
 import org.apache.log4j.Logger;
 
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.core.terminology.NamedObject;
+import de.d3web.core.terminology.Question;
+import de.d3web.core.terminology.info.DCElement;
+import de.d3web.core.terminology.info.DCMarkup;
+import de.d3web.core.terminology.info.MMInfoObject;
+import de.d3web.core.terminology.info.MMInfoStorage;
+import de.d3web.core.terminology.info.MMInfoSubject;
+import de.d3web.core.terminology.info.Property;
 import de.d3web.dialog2.basics.layout.MMInfo;
 import de.d3web.dialog2.basics.settings.ResourceRepository;
 import de.d3web.dialog2.util.DialogUtils;
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.DiagnosisState;
-import de.d3web.kernel.domainModel.NamedObject;
-import de.d3web.kernel.domainModel.answers.AnswerUnknown;
-import de.d3web.kernel.domainModel.qasets.Question;
-import de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic;
-import de.d3web.kernel.supportknowledge.DCElement;
-import de.d3web.kernel.supportknowledge.DCMarkup;
-import de.d3web.kernel.supportknowledge.MMInfoObject;
-import de.d3web.kernel.supportknowledge.MMInfoStorage;
-import de.d3web.kernel.supportknowledge.MMInfoSubject;
-import de.d3web.kernel.supportknowledge.Property;
+import de.d3web.scoring.inference.PSMethodHeuristic;
 
 public class DialogRenderUtils {
 

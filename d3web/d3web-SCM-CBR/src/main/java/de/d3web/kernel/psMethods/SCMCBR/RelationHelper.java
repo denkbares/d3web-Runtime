@@ -2,9 +2,9 @@ package de.d3web.kernel.psMethods.SCMCBR;
 
 import java.util.Collection;
 
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.ruleCondition.NoAnswerException;
-import de.d3web.kernel.domainModel.ruleCondition.UnknownAnswerException;
+import de.d3web.core.inference.condition.NoAnswerException;
+import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.session.XPSCase;
 
 public class RelationHelper {
 	private static RelationHelper instance; 

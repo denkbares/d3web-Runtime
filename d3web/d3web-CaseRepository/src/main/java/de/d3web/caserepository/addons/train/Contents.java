@@ -29,7 +29,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import de.d3web.caserepository.addons.IContents;
-import de.d3web.kernel.domainModel.QASet;
+import de.d3web.core.terminology.QASet;
 
 /**
  * 24.09.2003 11:16:43

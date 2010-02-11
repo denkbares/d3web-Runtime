@@ -21,7 +21,7 @@
 package de.d3web.kernel.psMethods.shared.comparators.num;
 import java.util.List;
 
-import de.d3web.kernel.domainModel.answers.AnswerNum;
+import de.d3web.core.session.values.AnswerNum;
 
 /**
  * Creation date: (07.08.2001 02:02:18)

@@ -28,13 +28,13 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
+import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.DiagnosisState;
 import de.d3web.dialog2.util.DialogUtils;
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.DiagnosisState;
-import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.psMethods.xclPattern.PSMethodXCL;
-import de.d3web.kernel.psMethods.xclPattern.XCLModel;
+import de.d3web.xcl.XCLModel;
+import de.d3web.xcl.inference.PSMethodXCL;
 
 public class XCLBoxRenderer extends Renderer {
 

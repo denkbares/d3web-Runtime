@@ -20,7 +20,7 @@
 
 package de.d3web.kernel.psMethods.shared.comparators;
 
-import de.d3web.kernel.domainModel.answers.AnswerChoice;
+import de.d3web.core.session.values.AnswerChoice;
 
 /**
  * Helper Class for managing a pair of answers and the depending value (for

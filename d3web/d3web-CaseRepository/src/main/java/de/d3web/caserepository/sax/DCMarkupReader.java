@@ -30,9 +30,9 @@ import java.util.List;
 import org.xml.sax.Attributes;
 
 import de.d3web.caserepository.CaseObjectImpl;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.supportknowledge.DCElement;
-import de.d3web.kernel.supportknowledge.DCMarkup;
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.terminology.info.DCElement;
+import de.d3web.core.terminology.info.DCMarkup;
 
 /**
  * 06.10.2003 18:24:53

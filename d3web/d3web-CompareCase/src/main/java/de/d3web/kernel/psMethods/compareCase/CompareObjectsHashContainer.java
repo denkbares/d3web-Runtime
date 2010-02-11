@@ -23,8 +23,8 @@ package de.d3web.kernel.psMethods.compareCase;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.qasets.Question;
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.terminology.Question;
 import de.d3web.kernel.psMethods.compareCase.comparators.ComparatorResult;
 
 /**

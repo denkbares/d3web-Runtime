@@ -38,7 +38,7 @@ import sun.net.www.ParseUtil;
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.sax.CaseObjectListCreator;
 import de.d3web.caserepository.utilities.CaseObjectListWriter;
-import de.d3web.kernel.supportknowledge.DCElement;
+import de.d3web.core.terminology.info.DCElement;
 
 /**
  * Provides mostly the same functionality as CaseRepository but does not hold

@@ -26,23 +26,23 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.KnowledgeBase;
 import de.d3web.core.kpers.PersistenceManager;
 import de.d3web.core.kpers.fragments.FragmentHandler;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.NumericalInterval;
-import de.d3web.kernel.domainModel.answers.AnswerChoice;
-import de.d3web.kernel.domainModel.qasets.Question;
-import de.d3web.kernel.domainModel.qasets.QuestionChoice;
-import de.d3web.kernel.domainModel.qasets.QuestionDate;
-import de.d3web.kernel.domainModel.qasets.QuestionMC;
-import de.d3web.kernel.domainModel.qasets.QuestionNum;
-import de.d3web.kernel.domainModel.qasets.QuestionOC;
-import de.d3web.kernel.domainModel.qasets.QuestionSolution;
-import de.d3web.kernel.domainModel.qasets.QuestionText;
-import de.d3web.kernel.domainModel.qasets.QuestionYN;
-import de.d3web.kernel.domainModel.qasets.QuestionZC;
-import de.d3web.kernel.supportknowledge.Properties;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.terminology.Question;
+import de.d3web.core.terminology.QuestionChoice;
+import de.d3web.core.terminology.QuestionDate;
+import de.d3web.core.terminology.QuestionMC;
+import de.d3web.core.terminology.QuestionNum;
+import de.d3web.core.terminology.QuestionOC;
+import de.d3web.core.terminology.QuestionSolution;
+import de.d3web.core.terminology.QuestionText;
+import de.d3web.core.terminology.QuestionYN;
+import de.d3web.core.terminology.QuestionZC;
+import de.d3web.core.terminology.info.NumericalInterval;
+import de.d3web.core.terminology.info.Properties;
 /**
  * FragmentHandler for Questions
  * Children are ignored, hierarchies are read/written by the knowledge readers/writers.

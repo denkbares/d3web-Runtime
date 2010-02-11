@@ -29,13 +29,13 @@ import org.apache.log4j.Logger;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
 
 import de.d3web.caserepository.utilities.Utilities;
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.terminology.info.DCElement;
 import de.d3web.dialog2.basics.knowledge.KBDescriptorLoader;
 import de.d3web.dialog2.basics.knowledge.KnowledgeBaseDescriptor;
 import de.d3web.dialog2.basics.knowledge.KnowledgeBaseRepository;
 import de.d3web.dialog2.basics.settings.ResourceRepository;
 import de.d3web.dialog2.util.DialogUtils;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.supportknowledge.DCElement;
 
 public class KBUploadController implements Serializable {
 

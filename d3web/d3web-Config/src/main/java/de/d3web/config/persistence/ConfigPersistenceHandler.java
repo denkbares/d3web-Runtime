@@ -32,14 +32,14 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import de.d3web.config.Config;
+import de.d3web.core.KnowledgeBase;
 import de.d3web.core.kpers.KnowledgeReader;
 import de.d3web.core.kpers.KnowledgeWriter;
 import de.d3web.core.kpers.progress.ProgressListener;
 import de.d3web.core.kpers.utilities.StringBufferInputStream;
 import de.d3web.core.kpers.utilities.StringBufferStream;
 import de.d3web.core.kpers.utilities.Util;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.supportknowledge.Property;
+import de.d3web.core.terminology.info.Property;
 
 /**
  * @author mweniger

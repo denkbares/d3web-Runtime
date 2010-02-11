@@ -20,14 +20,25 @@
 
 package de.d3web.caserepository.sax;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.xml.sax.Attributes;
 
-import de.d3web.kernel.domainModel.Answer;
-import de.d3web.kernel.domainModel.answers.*;
-import de.d3web.kernel.domainModel.qasets.*;
+import de.d3web.core.session.values.AnswerNo;
+import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.session.values.AnswerYes;
+import de.d3web.core.terminology.Answer;
+import de.d3web.core.terminology.Question;
+import de.d3web.core.terminology.QuestionChoice;
+import de.d3web.core.terminology.QuestionDate;
+import de.d3web.core.terminology.QuestionNum;
+import de.d3web.core.terminology.QuestionText;
+import de.d3web.core.terminology.QuestionYN;
 
 /**
  * @author bates

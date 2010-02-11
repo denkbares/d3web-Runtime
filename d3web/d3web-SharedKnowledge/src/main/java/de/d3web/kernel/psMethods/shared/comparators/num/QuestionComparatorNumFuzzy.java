@@ -22,7 +22,7 @@ package de.d3web.kernel.psMethods.shared.comparators.num;
 
 import java.util.List;
 
-import de.d3web.kernel.domainModel.answers.AnswerNum;
+import de.d3web.core.session.values.AnswerNum;
 
 /**
  * Fuzzy comparator for numerical values. A value "toCompare" can be compared

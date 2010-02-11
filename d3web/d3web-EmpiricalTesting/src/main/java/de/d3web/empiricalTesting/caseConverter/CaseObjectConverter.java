@@ -30,20 +30,20 @@ import java.util.List;
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.CaseObject.Solution;
 import de.d3web.caserepository.sax.CaseObjectListCreator;
+import de.d3web.core.KnowledgeBase;
 import de.d3web.core.kpers.PersistenceManager;
+import de.d3web.core.terminology.Answer;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.core.terminology.Question;
+import de.d3web.core.terminology.info.DCElement;
+import de.d3web.core.terminology.info.DCMarkup;
 import de.d3web.empiricalTesting.Finding;
 import de.d3web.empiricalTesting.RatedSolution;
 import de.d3web.empiricalTesting.RatedTestCase;
 import de.d3web.empiricalTesting.SequentialTestCase;
 import de.d3web.empiricalTesting.StateRating;
 import de.d3web.empiricalTesting.TestSuite;
-import de.d3web.kernel.domainModel.Answer;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.DiagnosisState;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.qasets.Question;
-import de.d3web.kernel.supportknowledge.DCElement;
-import de.d3web.kernel.supportknowledge.DCMarkup;
 
 /**
  * This class converts CaseObject XML-Files to a TestSuite.

@@ -21,8 +21,8 @@
 package de.d3web.kernel.psMethods.shared.comparators;
 import java.util.List;
 
-import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.psMethods.shared.PSMethodShared;
+import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.shared.PSMethodShared;
 
 /**
  * superclass of all question qomparators
@@ -35,7 +35,7 @@ public abstract class QuestionComparator implements KnowledgeSlice {
 	 */
 	private static final long serialVersionUID = -7940425720868244820L;
 
-	private de.d3web.kernel.domainModel.qasets.Question question = null;
+	private de.d3web.core.terminology.Question question = null;
 
 	private double unknownSimilarity = -1;
 
@@ -67,7 +67,7 @@ public abstract class QuestionComparator implements KnowledgeSlice {
 	 * Creation date: (02.08.2001 16:15:24)
 	 * @return de.d3web.kernel.domainModel.Question
 	 */
-	public de.d3web.kernel.domainModel.qasets.Question getQuestion() {
+	public de.d3web.core.terminology.Question getQuestion() {
 		return question;
 	}
 
@@ -83,7 +83,7 @@ public abstract class QuestionComparator implements KnowledgeSlice {
 	/**
 	 * Has this knowledge already been used? (e.g. did a rule fire?)
 	 */
-	public boolean isUsed(de.d3web.kernel.XPSCase theCase) {
+	public boolean isUsed(de.d3web.core.session.XPSCase theCase) {
 		return true;
 	}
 
@@ -92,7 +92,7 @@ public abstract class QuestionComparator implements KnowledgeSlice {
 	 * Creation date: (02.08.2001 16:15:24)
 	 * @param newQuestion de.d3web.kernel.domainModel.Question
 	 */
-	public void setQuestion(de.d3web.kernel.domainModel.qasets.Question newQuestion) {
+	public void setQuestion(de.d3web.core.terminology.Question newQuestion) {
 		question = newQuestion;
 		if (question != null) {
 			question.addKnowledge(

@@ -24,12 +24,12 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
+import de.d3web.abstraction.formula.FormulaElement;
+import de.d3web.core.KnowledgeBase;
 import de.d3web.core.kpers.PersistenceManager;
 import de.d3web.core.kpers.fragments.FragmentHandler;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.formula.FormulaElement;
-import de.d3web.kernel.domainModel.qasets.Question;
+import de.d3web.core.terminology.Question;
 /**
  * Provides basic functionalities for ExpressionHandlers
  *

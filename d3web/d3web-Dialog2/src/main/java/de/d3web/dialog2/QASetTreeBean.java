@@ -31,13 +31,13 @@ import org.apache.myfaces.custom.tree2.TreeNode;
 import org.apache.myfaces.custom.tree2.TreeNodeBase;
 import org.apache.myfaces.custom.tree2.TreeWalker;
 
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.interviewmanager.MQDialogController;
+import de.d3web.core.terminology.NamedObject;
+import de.d3web.core.terminology.QASet;
+import de.d3web.core.terminology.QContainer;
+import de.d3web.core.terminology.Question;
 import de.d3web.dialog2.util.DialogUtils;
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.dialogControl.MQDialogController;
-import de.d3web.kernel.domainModel.NamedObject;
-import de.d3web.kernel.domainModel.QASet;
-import de.d3web.kernel.domainModel.qasets.QContainer;
-import de.d3web.kernel.domainModel.qasets.Question;
 
 public class QASetTreeBean {
 

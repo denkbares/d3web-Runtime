@@ -26,7 +26,7 @@ package de.d3web.caserepository.addons.fus.internal;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import de.d3web.kernel.domainModel.Diagnosis;
+import de.d3web.core.terminology.Diagnosis;
 
 /**
  * 21.10.2003 15:48:17

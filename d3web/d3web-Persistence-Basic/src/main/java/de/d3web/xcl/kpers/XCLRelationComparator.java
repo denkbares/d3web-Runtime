@@ -2,7 +2,7 @@ package de.d3web.xcl.kpers;
 
 import java.util.Comparator;
 
-import de.d3web.kernel.psMethods.xclPattern.XCLRelation;
+import de.d3web.xcl.XCLRelation;
 
 public class XCLRelationComparator implements Comparator<XCLRelation> {
 

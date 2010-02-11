@@ -26,9 +26,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.answers.AnswerChoice;
-import de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic;
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.scoring.inference.PSMethodHeuristic;
 
 public class TestSuite {
 

@@ -1,12 +1,12 @@
 package de.d3web.kernel.psMethods.SCMCBR;
 
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.answers.AnswerChoice;
-import de.d3web.kernel.domainModel.qasets.QuestionChoice;
-import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
-import de.d3web.kernel.domainModel.ruleCondition.CondEqual;
-import de.d3web.kernel.domainModel.ruleCondition.NoAnswerException;
-import de.d3web.kernel.domainModel.ruleCondition.UnknownAnswerException;
+import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.CondEqual;
+import de.d3web.core.inference.condition.NoAnswerException;
+import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.terminology.QuestionChoice;
 
 /**
  * 

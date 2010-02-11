@@ -22,7 +22,8 @@ package de.d3web.kernel.psMethods.shared;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import de.d3web.kernel.domainModel.Answer;
+import de.d3web.core.terminology.Answer;
+import de.d3web.shared.AbstractAbnormality;
 /**
  * Represents the abnormality of a symptom
  * Creation date: (06.08.2001 15:51:58)

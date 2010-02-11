@@ -30,7 +30,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import de.d3web.caserepository.CaseObject.Solution;
-import de.d3web.kernel.domainModel.Diagnosis;
+import de.d3web.core.terminology.Diagnosis;
 
 /**
  * 30.09.2003 12:09:05

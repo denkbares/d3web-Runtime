@@ -28,13 +28,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import de.d3web.core.KnowledgeBase;
 import de.d3web.core.kpers.fragments.FragmentHandler;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.answers.AnswerChoice;
-import de.d3web.kernel.domainModel.qasets.Question;
-import de.d3web.kernel.domainModel.qasets.QuestionChoice;
-import de.d3web.kernel.psMethods.suppressAnswer.ActionSuppressAnswer;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.terminology.Question;
+import de.d3web.core.terminology.QuestionChoice;
+import de.d3web.indication.ActionSuppressAnswer;
 /**
  * Handels actions supressing answers
  *

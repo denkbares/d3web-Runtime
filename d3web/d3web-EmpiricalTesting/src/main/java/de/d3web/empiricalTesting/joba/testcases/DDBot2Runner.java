@@ -33,14 +33,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.d3web.core.KnowledgeBase;
 import de.d3web.core.kpers.PersistenceManager;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.terminology.QContainer;
+import de.d3web.core.terminology.QuestionChoice;
 import de.d3web.empiricalTesting.Finding;
 import de.d3web.empiricalTesting.SequentialTestCase;
 import de.d3web.empiricalTesting.caseVisualization.BotHelper;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.answers.AnswerChoice;
-import de.d3web.kernel.domainModel.qasets.QContainer;
-import de.d3web.kernel.domainModel.qasets.QuestionChoice;
 
 /**
  * 

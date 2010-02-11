@@ -27,11 +27,11 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import de.d3web.core.kpers.fragments.DiagnosisHandler;
 import de.d3web.core.kpers.utilities.Util;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.Score;
-import de.d3web.kernel.supportknowledge.Property;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.info.Property;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.plugin.test.InitPluginManager;
+import de.d3web.scoring.Score;
 
 /**
  * @author merz

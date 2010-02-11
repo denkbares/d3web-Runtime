@@ -20,10 +20,10 @@
 
 package de.d3web.caseGeneration;
 
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.terminology.Diagnosis;
 import de.d3web.empiricalTesting.Rating;
 import de.d3web.empiricalTesting.StateRating;
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.Diagnosis;
 
 /**
  * This uses the general state of a solution as the rating.

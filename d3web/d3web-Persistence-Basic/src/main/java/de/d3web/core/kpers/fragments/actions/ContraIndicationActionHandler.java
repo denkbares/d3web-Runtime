@@ -25,11 +25,11 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.KnowledgeBase;
 import de.d3web.core.kpers.fragments.FragmentHandler;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.QASet;
-import de.d3web.kernel.psMethods.contraIndication.ActionContraIndication;
+import de.d3web.core.terminology.QASet;
+import de.d3web.indication.ActionContraIndication;
 /**
  * Handels ContraIndicationActions
  * @author Norman Brümmer, Markus Friedrich (denkbares GmbH)

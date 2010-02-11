@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import de.d3web.core.kpers.fragments.QuestionHandler;
 import de.d3web.core.kpers.utilities.Util;
-import de.d3web.kernel.domainModel.qasets.QuestionDate;
+import de.d3web.core.terminology.QuestionDate;
 import de.d3web.persistence.tests.utils.XMLTag;
 
 /**

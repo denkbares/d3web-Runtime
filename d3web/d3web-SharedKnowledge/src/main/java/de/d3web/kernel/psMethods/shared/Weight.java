@@ -25,9 +25,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.psMethods.PSMethod;
+import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.inference.PSMethod;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.shared.PSMethodShared;
 /**
  * Represents the weight of a symptom
  * Creation date: (03.08.2001 16:37:21)
@@ -76,7 +77,7 @@ public class Weight implements KnowledgeSlice {
 	/**
 	 * Has this knowledge already been used? (e.g. did a rule fire?)
 	 */
-	public boolean isUsed(de.d3web.kernel.XPSCase theCase) {
+	public boolean isUsed(de.d3web.core.session.XPSCase theCase) {
 		return true;
 	}
 

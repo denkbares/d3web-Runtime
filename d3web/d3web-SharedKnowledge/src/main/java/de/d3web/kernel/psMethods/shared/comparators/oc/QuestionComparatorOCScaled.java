@@ -24,8 +24,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.kernel.domainModel.answers.AnswerChoice;
-import de.d3web.kernel.domainModel.qasets.QuestionOC;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.terminology.QuestionOC;
 
 /**
  * Insert the type's description here.

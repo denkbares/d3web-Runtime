@@ -21,7 +21,7 @@
 package de.d3web.kernel.psMethods.compareCase.tests.utils;
 
 import de.d3web.caserepository.CaseObjectImpl;
-import de.d3web.kernel.supportknowledge.DCElement;
+import de.d3web.core.terminology.info.DCElement;
 
 /**
  * This is a dummy class for Junit-tests. It is used for retrieving a similarity without

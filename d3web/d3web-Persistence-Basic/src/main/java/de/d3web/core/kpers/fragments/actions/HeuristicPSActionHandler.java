@@ -26,13 +26,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import de.d3web.core.KnowledgeBase;
 import de.d3web.core.kpers.fragments.FragmentHandler;
 import de.d3web.core.kpers.utilities.Util;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.Score;
-import de.d3web.kernel.psMethods.heuristic.ActionHeuristicPS;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.scoring.ActionHeuristicPS;
+import de.d3web.scoring.Score;
 /**
  * Handels HeuristicPSActions
  * @author Norman Brümmer, Markus Friedrich(denkbares GmbH)

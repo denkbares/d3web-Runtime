@@ -25,14 +25,14 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.KnowledgeBase;
 import de.d3web.core.kpers.PersistenceManager;
 import de.d3web.core.kpers.fragments.FragmentHandler;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.answers.AnswerChoice;
-import de.d3web.kernel.domainModel.answers.AnswerNo;
-import de.d3web.kernel.domainModel.answers.AnswerYes;
-import de.d3web.kernel.supportknowledge.Properties;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.AnswerNo;
+import de.d3web.core.session.values.AnswerYes;
+import de.d3web.core.terminology.info.Properties;
 /**
  * Handels Choice Answers
  *

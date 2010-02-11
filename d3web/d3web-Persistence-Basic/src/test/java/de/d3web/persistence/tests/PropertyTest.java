@@ -25,9 +25,9 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import de.d3web.core.kpers.fragments.PropertiesHandler;
 import de.d3web.core.kpers.utilities.Util;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.supportknowledge.Properties;
-import de.d3web.kernel.supportknowledge.Property;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.info.Properties;
+import de.d3web.core.terminology.info.Property;
 import de.d3web.persistence.tests.utils.XMLTag;
 
 /**

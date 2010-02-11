@@ -21,7 +21,7 @@
 package de.d3web.kernel.psMethods.shared.comparators.text;
 import java.util.List;
 
-import de.d3web.kernel.domainModel.answers.AnswerText;
+import de.d3web.core.session.values.AnswerText;
 import de.d3web.kernel.psMethods.shared.comparators.IndividualComparator;
 /**
  * Insert the type's description here.

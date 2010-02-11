@@ -25,8 +25,8 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import de.d3web.core.kpers.fragments.DCMarkupHandler;
 import de.d3web.core.kpers.utilities.Util;
-import de.d3web.kernel.supportknowledge.DCElement;
-import de.d3web.kernel.supportknowledge.DCMarkup;
+import de.d3web.core.terminology.info.DCElement;
+import de.d3web.core.terminology.info.DCMarkup;
 import de.d3web.persistence.tests.utils.XMLTag;
 
 /**

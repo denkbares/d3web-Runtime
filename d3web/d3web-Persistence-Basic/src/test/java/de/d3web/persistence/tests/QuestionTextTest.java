@@ -25,8 +25,8 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import de.d3web.core.kpers.fragments.QuestionHandler;
 import de.d3web.core.kpers.utilities.Util;
-import de.d3web.kernel.domainModel.qasets.Question;
-import de.d3web.kernel.domainModel.qasets.QuestionText;
+import de.d3web.core.terminology.Question;
+import de.d3web.core.terminology.QuestionText;
 import de.d3web.persistence.tests.utils.XMLTag;
 
 /**

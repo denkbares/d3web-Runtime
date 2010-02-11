@@ -30,13 +30,13 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
+import de.d3web.core.inference.PSMethod;
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.core.terminology.info.Property;
 import de.d3web.dialog2.util.DialogUtils;
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.DiagnosisState;
-import de.d3web.kernel.psMethods.PSMethod;
-import de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic;
-import de.d3web.kernel.supportknowledge.Property;
+import de.d3web.scoring.inference.PSMethodHeuristic;
 
 public class HeuristicDiagnosesBoxRenderer extends Renderer {
 

@@ -22,10 +22,10 @@ package de.d3web.core.kpers.rules;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.d3web.kernel.psMethods.PSMethod;
-import de.d3web.kernel.psMethods.contraIndication.PSMethodContraIndication;
-import de.d3web.kernel.psMethods.nextQASet.PSMethodNextQASet;
-import de.d3web.kernel.psMethods.suppressAnswer.PSMethodSuppressAnswer;
+import de.d3web.core.inference.PSMethod;
+import de.d3web.indication.inference.PSMethodContraIndication;
+import de.d3web.indication.inference.PSMethodNextQASet;
+import de.d3web.indication.inference.PSMethodSuppressAnswer;
 /**
  * PersistanceHandler for strategic-rules
  *

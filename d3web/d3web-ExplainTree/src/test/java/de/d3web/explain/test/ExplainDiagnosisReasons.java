@@ -31,19 +31,19 @@ import java.util.LinkedList;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import de.d3web.abstraction.inference.PSMethodQuestionSetter;
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.inference.PSMethodInit;
+import de.d3web.core.session.CaseFactory;
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.terminology.QuestionChoice;
 import de.d3web.explain.ExplanationFactory;
 import de.d3web.explain.eNodes.ENode;
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.CaseFactory;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.qasets.QuestionChoice;
-import de.d3web.kernel.psMethods.PSMethodInit;
-import de.d3web.kernel.psMethods.contraIndication.PSMethodContraIndication;
-import de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic;
-import de.d3web.kernel.psMethods.nextQASet.PSMethodNextQASet;
-import de.d3web.kernel.psMethods.questionSetter.PSMethodQuestionSetter;
-import de.d3web.kernel.psMethods.suppressAnswer.PSMethodSuppressAnswer;
-import de.d3web.kernel.psMethods.userSelected.PSMethodUserSelected;
+import de.d3web.indication.inference.PSMethodContraIndication;
+import de.d3web.indication.inference.PSMethodNextQASet;
+import de.d3web.indication.inference.PSMethodSuppressAnswer;
+import de.d3web.indication.inference.PSMethodUserSelected;
+import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
  *
@@ -61,7 +61,7 @@ public class ExplainDiagnosisReasons extends AbstractExplainTest {
 	}
 
 	public static void main(String[] args) {
-		de.d3web.kernel.domainModel.D3WebCase.TRACE = false;
+		de.d3web.core.session.D3WebCase.TRACE = false;
 		junit.textui.TestRunner.main(
 			new String[] { "de.d3web.explain.test.ExplainDiagnosisReasons" });
 	}

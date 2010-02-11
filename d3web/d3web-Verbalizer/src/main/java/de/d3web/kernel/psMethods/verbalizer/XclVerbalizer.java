@@ -27,14 +27,14 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
-import de.d3web.kernel.psMethods.xclPattern.XCLModel;
-import de.d3web.kernel.psMethods.xclPattern.XCLRelation;
-import de.d3web.kernel.psMethods.xclPattern.XCLRelationType;
+import de.d3web.core.inference.condition.AbstractCondition;
 import de.d3web.kernel.verbalizer.ConditionVerbalizer;
 import de.d3web.kernel.verbalizer.VerbalizationManager;
 import de.d3web.kernel.verbalizer.Verbalizer;
 import de.d3web.kernel.verbalizer.VerbalizationManager.RenderingFormat;
+import de.d3web.xcl.XCLModel;
+import de.d3web.xcl.XCLRelation;
+import de.d3web.xcl.XCLRelationType;
 
 /**
  * This class generates a verablisation of a XCLModel object. 

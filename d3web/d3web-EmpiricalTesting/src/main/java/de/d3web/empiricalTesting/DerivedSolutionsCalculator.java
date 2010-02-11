@@ -23,7 +23,7 @@ package de.d3web.empiricalTesting;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.d3web.kernel.domainModel.Diagnosis;
+import de.d3web.core.terminology.Diagnosis;
 
 public class DerivedSolutionsCalculator extends PrecisionRecallCalculator{
 	

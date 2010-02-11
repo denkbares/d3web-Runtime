@@ -32,12 +32,9 @@ import org.xml.sax.Attributes;
 
 import de.d3web.caserepository.CaseObjectImpl;
 import de.d3web.caserepository.addons.fus.internal.*;
-import de.d3web.caserepository.addons.fus.internal.CLeaf;
-import de.d3web.caserepository.addons.fus.internal.CNode;
-import de.d3web.caserepository.addons.fus.internal.Configuration;
 import de.d3web.caserepository.sax.AbstractTagReader;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.KnowledgeBase;
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.terminology.Diagnosis;
 
 /**
  * 21.10.2003 17:29:59

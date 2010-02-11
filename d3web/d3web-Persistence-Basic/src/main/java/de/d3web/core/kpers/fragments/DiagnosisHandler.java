@@ -24,15 +24,13 @@ import java.io.IOException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.KnowledgeBase;
 import de.d3web.core.kpers.PersistenceManager;
-import de.d3web.core.kpers.fragments.FragmentHandler;
 import de.d3web.core.kpers.utilities.Util;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.Score;
-import de.d3web.kernel.domainModel.ValueNotAcceptedException;
-import de.d3web.kernel.supportknowledge.Properties;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.info.Properties;
+import de.d3web.scoring.Score;
 /**
  * FragmentHanler for Diagnosis
  * Children are ignored, hierarchies are read/written by the knowledge readers/writers.
@@ -59,7 +57,7 @@ public class DiagnosisHandler implements FragmentHandler {
 		if (apriori != null) {
 			try {
 				diag.setAprioriProbability(Util.getScore(apriori));
-			} catch (ValueNotAcceptedException e) {
+			} catch (Exception e) {
 				throw new IOException("Score not accepted", e);
 			}
 		}

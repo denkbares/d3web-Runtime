@@ -23,8 +23,16 @@ import java.util.*;
 
 import de.d3web.caserepository.addons.*;
 import de.d3web.config.ConfigContainer;
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.core.terminology.IDReference;
+import de.d3web.core.terminology.QASet;
+import de.d3web.core.terminology.Question;
+import de.d3web.core.terminology.info.DCMarkedUp;
+import de.d3web.core.terminology.info.DCMarkup;
+import de.d3web.core.terminology.info.PropertiesContainer;
 import de.d3web.kernel.domainModel.*;
-import de.d3web.kernel.domainModel.qasets.Question;
 import de.d3web.kernel.supportknowledge.*;
 
 /**

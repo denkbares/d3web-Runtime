@@ -40,7 +40,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import de.d3web.kernel.domainModel.Score;
+import de.d3web.scoring.Score;
 /**
  * This class provides some static methods which are usefull for reading
  * and writing knowledge

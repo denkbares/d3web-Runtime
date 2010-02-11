@@ -28,12 +28,12 @@ import org.apache.myfaces.custom.tree2.TreeModelBase;
 import org.apache.myfaces.custom.tree2.TreeNode;
 import org.apache.myfaces.custom.tree2.TreeNodeBase;
 
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.core.terminology.NamedObject;
 import de.d3web.dialog2.util.DialogUtils;
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.DiagnosisState;
-import de.d3web.kernel.domainModel.NamedObject;
-import de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic;
+import de.d3web.scoring.inference.PSMethodHeuristic;
 
 public class DiagnosesTreeBean {
 

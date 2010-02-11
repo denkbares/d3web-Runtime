@@ -25,7 +25,7 @@ package de.d3web.kernel.psMethods.shared.comparators;
 
 import java.util.List;
 
-import de.d3web.kernel.domainModel.answers.AnswerChoice;
+import de.d3web.core.session.values.AnswerChoice;
 
 /**
  * Marks a question-comparator as grouped.

@@ -27,14 +27,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.inference.Rule;
+import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.condition.AbstractCondition;
 import de.d3web.core.kpers.PersistenceManager;
 import de.d3web.core.kpers.fragments.FragmentHandler;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.Rule;
-import de.d3web.kernel.domainModel.RuleAction;
-import de.d3web.kernel.domainModel.RuleFactory;
-import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
+import de.d3web.core.manage.RuleFactory;
 /**
  * FragmentHandler for Rules
  *

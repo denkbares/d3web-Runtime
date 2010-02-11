@@ -28,7 +28,7 @@ import java.util.List;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.d3web.kernel.domainModel.IntegerList;
+import de.d3web.core.terminology.info.IntegerList;
 import de.d3web.persistence.xml.loader.PropertiesUtilities.PropertyCodec;
 
 public class IntegerListCodec extends PropertyCodec {

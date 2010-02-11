@@ -25,7 +25,7 @@ package de.d3web.caserepository;
 
 import java.util.Set;
 
-import de.d3web.kernel.domainModel.Diagnosis;
+import de.d3web.core.terminology.Diagnosis;
 
 /**
  * 23.09.2003 11:14:43

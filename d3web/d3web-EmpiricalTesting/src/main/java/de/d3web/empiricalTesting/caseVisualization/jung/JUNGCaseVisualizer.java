@@ -38,15 +38,15 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfTemplate;
 import com.lowagie.text.pdf.PdfWriter;
 
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.terminology.Answer;
+import de.d3web.core.terminology.QuestionChoice;
 import de.d3web.empiricalTesting.ConfigLoader;
 import de.d3web.empiricalTesting.RatedTestCase;
 import de.d3web.empiricalTesting.SequentialTestCase;
 import de.d3web.empiricalTesting.TestSuite;
 import de.d3web.empiricalTesting.caseVisualization.BotHelper;
 import de.d3web.empiricalTesting.caseVisualization.CaseVisualizer;
-import de.d3web.kernel.domainModel.Answer;
-import de.d3web.kernel.domainModel.answers.AnswerChoice;
-import de.d3web.kernel.domainModel.qasets.QuestionChoice;
 import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 import edu.uci.ics.jung.visualization.DefaultVisualizationModel;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;

@@ -21,7 +21,7 @@
 package de.d3web.kernel.psMethods.shared.comparators.oc;
 import java.util.List;
 
-import de.d3web.kernel.domainModel.answers.AnswerNo;
+import de.d3web.core.session.values.AnswerNo;
 import de.d3web.kernel.psMethods.shared.comparators.QuestionComparator;
 /**
  * Insert the type's description here.

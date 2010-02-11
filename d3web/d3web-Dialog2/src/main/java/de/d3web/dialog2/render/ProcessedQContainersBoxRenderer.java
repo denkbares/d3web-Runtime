@@ -37,19 +37,19 @@ import javax.faces.render.Renderer;
 import org.ajax4jsf.ajax.html.HtmlAjaxCommandLink;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
 
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.interviewmanager.MQDialogController;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.AnswerDate;
+import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.terminology.Answer;
+import de.d3web.core.terminology.QContainer;
+import de.d3web.core.terminology.Question;
+import de.d3web.core.terminology.QuestionChoice;
+import de.d3web.core.terminology.info.Property;
 import de.d3web.dialog2.controller.ProcessedQContainersController;
 import de.d3web.dialog2.util.DialogUtils;
 import de.d3web.dialog2.util.QuestionDateUtils;
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.dialogControl.MQDialogController;
-import de.d3web.kernel.domainModel.Answer;
-import de.d3web.kernel.domainModel.answers.AnswerChoice;
-import de.d3web.kernel.domainModel.answers.AnswerDate;
-import de.d3web.kernel.domainModel.answers.AnswerUnknown;
-import de.d3web.kernel.domainModel.qasets.QContainer;
-import de.d3web.kernel.domainModel.qasets.Question;
-import de.d3web.kernel.domainModel.qasets.QuestionChoice;
-import de.d3web.kernel.supportknowledge.Property;
 
 public class ProcessedQContainersBoxRenderer extends Renderer {
 

@@ -23,13 +23,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.DiagnosisState;
-import de.d3web.kernel.psMethods.PSMethod;
-import de.d3web.kernel.psMethods.PropagationEntry;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.DiagnosisState;
 import de.d3web.kernel.psMethods.compareCase.comparators.ComparatorResult;
 
 /**

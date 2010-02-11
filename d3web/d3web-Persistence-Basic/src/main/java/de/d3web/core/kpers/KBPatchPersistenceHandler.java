@@ -31,14 +31,14 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.inference.Rule;
 import de.d3web.core.kpers.KnowledgeReader;
 import de.d3web.core.kpers.PersistenceManager;
 import de.d3web.core.kpers.progress.ProgressListener;
 import de.d3web.core.kpers.utilities.Util;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.domainModel.Rule;
 
 /**
  * KnowledgeReader for reading kb-patches (e.g. redefined RuleComplex).

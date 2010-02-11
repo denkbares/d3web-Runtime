@@ -25,6 +25,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
+import de.d3web.core.session.XPSCase;
 import de.d3web.dialog2.basics.knowledge.CaseManager;
 import de.d3web.dialog2.basics.knowledge.KBDescriptorLoader;
 import de.d3web.dialog2.basics.knowledge.KnowledgeBaseRepository;
@@ -33,7 +34,6 @@ import de.d3web.dialog2.basics.usermanaging.UserManager;
 import de.d3web.dialog2.util.CaseFinalizationNotifier;
 import de.d3web.dialog2.util.DialogUtils;
 import de.d3web.dialog2.util.SaveCaseThread;
-import de.d3web.kernel.XPSCase;
 
 public class WebDialog {
 

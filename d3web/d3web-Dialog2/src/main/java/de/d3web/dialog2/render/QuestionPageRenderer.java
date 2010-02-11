@@ -36,26 +36,26 @@ import javax.faces.render.Renderer;
 
 import org.apache.log4j.Logger;
 
+import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.terminology.Answer;
+import de.d3web.core.terminology.Question;
+import de.d3web.core.terminology.QuestionChoice;
+import de.d3web.core.terminology.QuestionDate;
+import de.d3web.core.terminology.QuestionMC;
+import de.d3web.core.terminology.QuestionNum;
+import de.d3web.core.terminology.QuestionText;
+import de.d3web.core.terminology.info.NumericalInterval;
+import de.d3web.core.terminology.info.Property;
+import de.d3web.core.utilities.Utils;
 import de.d3web.dialog2.basics.layout.QContainerLayout;
 import de.d3web.dialog2.basics.layout.QuestionPageLayout;
 import de.d3web.dialog2.component.html.UIQuestionPage;
 import de.d3web.dialog2.util.DialogUtils;
 import de.d3web.dialog2.util.InvalidAnswerError;
 import de.d3web.dialog2.util.QuestionDateUtils;
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.Answer;
-import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.domainModel.NumericalInterval;
-import de.d3web.kernel.domainModel.answers.AnswerChoice;
-import de.d3web.kernel.domainModel.answers.AnswerUnknown;
-import de.d3web.kernel.domainModel.qasets.Question;
-import de.d3web.kernel.domainModel.qasets.QuestionChoice;
-import de.d3web.kernel.domainModel.qasets.QuestionDate;
-import de.d3web.kernel.domainModel.qasets.QuestionMC;
-import de.d3web.kernel.domainModel.qasets.QuestionNum;
-import de.d3web.kernel.domainModel.qasets.QuestionText;
-import de.d3web.kernel.supportknowledge.Property;
-import de.d3web.kernel.utilities.Utils;
 
 public class QuestionPageRenderer extends Renderer {
 

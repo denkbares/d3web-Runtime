@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 import de.d3web.caserepository.addons.IFUSConfiguration;
 import de.d3web.caserepository.addons.fus.internal.*;
 import de.d3web.caserepository.addons.fus.internal.ProbabilityList.Item;
-import de.d3web.kernel.domainModel.Diagnosis;
+import de.d3web.core.terminology.Diagnosis;
 
 /**
  * 21.10.2003 16:22:25

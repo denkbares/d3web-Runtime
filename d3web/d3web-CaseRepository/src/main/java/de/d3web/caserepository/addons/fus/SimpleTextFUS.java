@@ -31,7 +31,7 @@ import de.d3web.caserepository.SolutionContainerImpl;
 import de.d3web.caserepository.XMLCodeGenerator;
 import de.d3web.caserepository.CaseObject.Solution;
 import de.d3web.core.kpers.utilities.XMLTools;
-import de.d3web.kernel.domainModel.Diagnosis;
+import de.d3web.core.terminology.Diagnosis;
 
 /**
  * SimpleTextFUS (in ) de.d3web.caserepository.addons.fus d3web-CaseRepository

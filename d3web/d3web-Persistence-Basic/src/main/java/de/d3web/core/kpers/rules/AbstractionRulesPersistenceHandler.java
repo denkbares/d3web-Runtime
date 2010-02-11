@@ -22,8 +22,8 @@ package de.d3web.core.kpers.rules;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.d3web.kernel.psMethods.PSMethod;
-import de.d3web.kernel.psMethods.questionSetter.PSMethodQuestionSetter;
+import de.d3web.abstraction.inference.PSMethodQuestionSetter;
+import de.d3web.core.inference.PSMethod;
 /**
  * PersistenceHanlder for abstraction rules
  *

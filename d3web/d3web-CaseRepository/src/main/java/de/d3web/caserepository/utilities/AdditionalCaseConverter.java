@@ -21,7 +21,7 @@
 package de.d3web.caserepository.utilities;
 
 import de.d3web.caserepository.CaseObject;
-import de.d3web.kernel.XPSCase;
+import de.d3web.core.session.XPSCase;
 
 /**
  * @author bruemmer

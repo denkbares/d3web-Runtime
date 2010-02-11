@@ -23,7 +23,7 @@ package de.d3web.kernel.psMethods.shared.comparators.oc;
 import java.util.Iterator;
 import java.util.List;
 
-import de.d3web.kernel.domainModel.answers.AnswerChoice;
+import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.kernel.psMethods.shared.comparators.GroupedComparatorSymmetric;
 import de.d3web.kernel.psMethods.shared.comparators.PairRelation;
 

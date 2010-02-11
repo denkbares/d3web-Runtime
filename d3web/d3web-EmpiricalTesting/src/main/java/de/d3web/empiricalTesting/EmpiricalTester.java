@@ -26,13 +26,13 @@ import java.util.List;
 
 import de.d3web.caseGeneration.HeuristicScoreRatingStrategy;
 import de.d3web.caseGeneration.InterviewBot;
+import de.d3web.core.KnowledgeBase;
 import de.d3web.core.kpers.PersistenceManager;
 import de.d3web.core.kpers.progress.ConsoleProgressListener;
 import de.d3web.empiricalTesting.caseConverter.CaseObjectToKnOffice;
 import de.d3web.empiricalTesting.caseConverter.CaseObjectToTestSuiteXML;
 import de.d3web.empiricalTesting.caseVisualization.dot.DDBuilder;
 import de.d3web.empiricalTesting.caseVisualization.jung.JUNGCaseVisualizer;
-import de.d3web.kernel.domainModel.KnowledgeBase;
 
 public class EmpiricalTester {
 	

@@ -23,11 +23,11 @@ package de.d3web.caserepository.addons;
 
 import java.util.Collection;
 
+import de.d3web.core.inference.PSMethodAdapter;
+import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.psMethods.PSMethodAdapter;
-import de.d3web.kernel.psMethods.PropagationEntry;
 
 /**
  * @author gbuscher

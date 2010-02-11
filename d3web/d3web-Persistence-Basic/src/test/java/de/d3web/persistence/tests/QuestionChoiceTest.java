@@ -29,9 +29,9 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import de.d3web.core.kpers.fragments.QuestionHandler;
 import de.d3web.core.kpers.utilities.Util;
-import de.d3web.kernel.domainModel.answers.AnswerChoice;
-import de.d3web.kernel.domainModel.qasets.QuestionOC;
-import de.d3web.kernel.supportknowledge.Property;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.terminology.QuestionOC;
+import de.d3web.core.terminology.info.Property;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.plugin.test.InitPluginManager;
 

@@ -20,7 +20,7 @@
 
 package de.d3web.caserepository;
 
-import de.d3web.kernel.supportknowledge.propertyCloner.PropertyCloner;
+import de.d3web.indication.inference.PropertyCloner;
 
 /**
  * PropertyCloner for de.d3web.caserepository.MetaDataImpl.

@@ -24,12 +24,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import de.d3web.core.KnowledgeBase;
 import de.d3web.core.kpers.PersistenceManager;
+import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.empiricalTesting.SequentialTestCase;
 import de.d3web.empiricalTesting.caseConverter.CaseObjectToKnOffice;
 import de.d3web.empiricalTesting.caseConverter.CaseObjectToTestSuiteXML;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.KnowledgeBaseManagement;
 
 public class InterviewBotRunner {
 	static String workspace = "D:/Projekte/Temp/EmpiricalTesting/";

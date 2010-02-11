@@ -28,7 +28,7 @@ import java.util.List;
 
 import de.d3web.caserepository.XMLCodeGenerator;
 import de.d3web.core.kpers.utilities.XMLTools;
-import de.d3web.kernel.domainModel.qasets.QContainer;
+import de.d3web.core.terminology.QContainer;
 
 /**
  * SimpleQuestion (in ) de.d3web.caserepository.addons.train

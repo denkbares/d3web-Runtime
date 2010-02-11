@@ -24,12 +24,12 @@ import java.io.IOException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.abstraction.formula.FormulaElement;
+import de.d3web.abstraction.formula.FormulaExpression;
+import de.d3web.abstraction.formula.FormulaNumberElement;
 import de.d3web.core.kpers.PersistenceManager;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.formula.FormulaElement;
-import de.d3web.kernel.domainModel.formula.FormulaExpression;
-import de.d3web.kernel.domainModel.formula.FormulaNumberElement;
-import de.d3web.kernel.domainModel.qasets.Question;
+import de.d3web.core.terminology.Question;
 /**
  * Handels FormulaExpressions
  *

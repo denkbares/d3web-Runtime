@@ -26,10 +26,10 @@ import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.terminology.Diagnosis;
 import de.d3web.dialog2.render.DialogRenderUtils;
 import de.d3web.dialog2.util.DialogUtils;
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.Diagnosis;
 
 public class UIDiagWithInfo extends HtmlOutputText {
 

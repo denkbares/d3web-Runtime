@@ -30,19 +30,19 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.inference.MethodKind;
+import de.d3web.core.inference.Rule;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.NamedObject;
+import de.d3web.core.terminology.QASet;
 import de.d3web.explain.ExplanationFactory;
 import de.d3web.explain.eNodes.values.DiagnosticValue;
 import de.d3web.explain.eNodes.values.QState;
 import de.d3web.explain.eNodes.values.TargetValue;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.domainModel.NamedObject;
-import de.d3web.kernel.domainModel.QASet;
-import de.d3web.kernel.domainModel.Rule;
-import de.d3web.kernel.psMethods.MethodKind;
-import de.d3web.kernel.psMethods.heuristic.ActionHeuristicPS;
-import de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic;
-import de.d3web.kernel.psMethods.nextQASet.PSMethodNextQASet;
+import de.d3web.indication.inference.PSMethodNextQASet;
+import de.d3web.scoring.ActionHeuristicPS;
+import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
  *

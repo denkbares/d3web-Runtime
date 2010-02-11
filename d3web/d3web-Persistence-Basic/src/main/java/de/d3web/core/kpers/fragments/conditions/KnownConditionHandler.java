@@ -24,12 +24,12 @@ import java.io.IOException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.inference.condition.CondKnown;
 import de.d3web.core.kpers.fragments.FragmentHandler;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.IDObject;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.qasets.Question;
-import de.d3web.kernel.domainModel.ruleCondition.CondKnown;
+import de.d3web.core.terminology.IDObject;
+import de.d3web.core.terminology.Question;
 /**
  * FragmentHandler for CondKnowns
  * @author Markus Friedrich (denkbares GmbH)

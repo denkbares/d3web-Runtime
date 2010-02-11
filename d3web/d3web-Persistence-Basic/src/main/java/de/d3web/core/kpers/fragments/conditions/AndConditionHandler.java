@@ -26,12 +26,12 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.kpers.PersistenceManager;
 import de.d3web.core.kpers.fragments.FragmentHandler;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
-import de.d3web.kernel.domainModel.ruleCondition.CondAnd;
 /**
  * FragmentHandler for CondAnds
  *

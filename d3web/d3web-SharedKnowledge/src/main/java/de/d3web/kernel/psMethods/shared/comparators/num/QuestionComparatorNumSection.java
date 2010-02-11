@@ -25,7 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import de.d3web.kernel.domainModel.answers.AnswerNum;
+import de.d3web.core.session.values.AnswerNum;
 
 /**
  * Insert the type's description here.

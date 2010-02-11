@@ -28,8 +28,7 @@ import java.util.logging.Logger;
 
 import de.d3web.caserepository.AbstractCaseRepositoryHandler;
 import de.d3web.caserepository.utilities.*;
-import de.d3web.caserepository.utilities.Utilities;
-import de.d3web.kernel.domainModel.KnowledgeBase;
+import de.d3web.core.KnowledgeBase;
 
 /**
  * @author bates

@@ -25,14 +25,14 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.inference.condition.CondNumIn;
 import de.d3web.core.kpers.PersistenceManager;
 import de.d3web.core.kpers.fragments.FragmentHandler;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.IDObject;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.NumericalInterval;
-import de.d3web.kernel.domainModel.qasets.QuestionNum;
-import de.d3web.kernel.domainModel.ruleCondition.CondNumIn;
+import de.d3web.core.terminology.IDObject;
+import de.d3web.core.terminology.QuestionNum;
+import de.d3web.core.terminology.info.NumericalInterval;
 /**
  * FragementHandler for CondNumIns
  *

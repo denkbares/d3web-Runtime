@@ -22,8 +22,8 @@ package de.d3web.dialog2.basics.layout;
 
 import java.util.List;
 
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.qasets.Question;
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.terminology.Question;
 
 public class QuestionLayout extends QuestionPageLayout {
 

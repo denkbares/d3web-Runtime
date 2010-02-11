@@ -26,12 +26,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.inference.condition.CondTextEqual;
 import de.d3web.core.kpers.fragments.FragmentHandler;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.IDObject;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.qasets.QuestionText;
-import de.d3web.kernel.domainModel.ruleCondition.CondTextEqual;
+import de.d3web.core.terminology.IDObject;
+import de.d3web.core.terminology.QuestionText;
 /**
  * FragmentHandler for CondTextEquals
  *

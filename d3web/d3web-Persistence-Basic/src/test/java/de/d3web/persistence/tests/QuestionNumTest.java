@@ -30,10 +30,10 @@ import junit.framework.TestSuite;
 import de.d3web.core.kpers.fragments.NumericalIntervalHandler;
 import de.d3web.core.kpers.fragments.QuestionHandler;
 import de.d3web.core.kpers.utilities.Util;
-import de.d3web.kernel.domainModel.NumericalInterval;
-import de.d3web.kernel.domainModel.qasets.Question;
-import de.d3web.kernel.domainModel.qasets.QuestionNum;
-import de.d3web.kernel.supportknowledge.Property;
+import de.d3web.core.terminology.Question;
+import de.d3web.core.terminology.QuestionNum;
+import de.d3web.core.terminology.info.NumericalInterval;
+import de.d3web.core.terminology.info.Property;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.plugin.test.InitPluginManager;
 

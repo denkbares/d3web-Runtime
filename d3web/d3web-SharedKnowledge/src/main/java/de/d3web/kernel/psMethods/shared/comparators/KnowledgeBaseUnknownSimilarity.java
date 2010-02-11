@@ -19,9 +19,9 @@
  */
 
 package de.d3web.kernel.psMethods.shared.comparators;
-import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.psMethods.PSMethod;
-import de.d3web.kernel.psMethods.shared.PSMethodShared;
+import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.inference.PSMethod;
+import de.d3web.shared.PSMethodShared;
 /**
  * Insert the type's description here.
  * Creation date: (19.02.2002 13:46:08)
@@ -34,7 +34,7 @@ public class KnowledgeBaseUnknownSimilarity implements KnowledgeSlice{
 	private String id = null;
 
 	private double similarity = 0.1;
-	private de.d3web.kernel.domainModel.KnowledgeBase knowledgeBase = null;
+	private de.d3web.core.KnowledgeBase knowledgeBase = null;
 
 
 
@@ -63,7 +63,7 @@ public java.lang.String getId() {
  * Creation date: (19.02.2002 13:52:41)
  * @return de.d3web.kernel.domainModel.KnowledgeBase
  */
-public de.d3web.kernel.domainModel.KnowledgeBase getKnowledgeBase() {
+public de.d3web.core.KnowledgeBase getKnowledgeBase() {
 	return knowledgeBase;
 }
 
@@ -76,7 +76,7 @@ public de.d3web.kernel.domainModel.KnowledgeBase getKnowledgeBase() {
  * @return java.lang.Class PSMethod class
  */
 public Class<? extends PSMethod> getProblemsolverContext() {
-	return de.d3web.kernel.psMethods.shared.PSMethodShared.class;
+	return de.d3web.shared.PSMethodShared.class;
 }
 
 
@@ -95,7 +95,7 @@ public double getSimilarity() {
 /**
  * Has this knowledge already been used? (e.g. did a rule fire?)
  */
-public boolean isUsed(de.d3web.kernel.XPSCase theCase) {
+public boolean isUsed(de.d3web.core.session.XPSCase theCase) {
 	return true;
 }
 
@@ -118,7 +118,7 @@ public void setId(String _id) {
  * @param newKnowledgeBase de.d3web.kernel.domainModel.KnowledgeBase
  */
 public void setKnowledgeBase(
-	de.d3web.kernel.domainModel.KnowledgeBase newKnowledgeBase) {
+	de.d3web.core.KnowledgeBase newKnowledgeBase) {
 
 	knowledgeBase = newKnowledgeBase;
 

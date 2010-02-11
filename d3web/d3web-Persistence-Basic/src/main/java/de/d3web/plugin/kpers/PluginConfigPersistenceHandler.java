@@ -27,19 +27,19 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.kpers.KnowledgeReader;
 import de.d3web.core.kpers.KnowledgeWriter;
 import de.d3web.core.kpers.progress.ProgressListener;
 import de.d3web.core.kpers.utilities.Util;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.psMethods.PSMethod;
+import de.d3web.plugin.DummyExtension;
 import de.d3web.plugin.Extension;
+import de.d3web.plugin.ExtensionConfig;
+import de.d3web.plugin.ExtensionEntry;
 import de.d3web.plugin.PluginManager;
-import de.d3web.plugin.kr.DummyExtension;
-import de.d3web.plugin.kr.ExtensionConfig;
-import de.d3web.plugin.kr.ExtensionEntry;
 /**
  * A KnowledgeReader/Writer for the configuration of the extensions
  * 

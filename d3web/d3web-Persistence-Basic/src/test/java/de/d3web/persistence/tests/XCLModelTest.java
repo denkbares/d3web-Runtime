@@ -28,23 +28,23 @@ import java.util.Collection;
 import java.util.List;
 
 import junit.framework.TestCase;
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.kpers.PersistenceManager;
 import de.d3web.core.kpers.progress.DummyProgressListener;
-import de.d3web.kernel.domainModel.Answer;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.KnowledgeBaseManagement;
-import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.domainModel.answers.AnswerChoice;
-import de.d3web.kernel.domainModel.answers.AnswerFactory;
-import de.d3web.kernel.domainModel.qasets.QContainer;
-import de.d3web.kernel.domainModel.qasets.QuestionOC;
-import de.d3web.kernel.psMethods.xclPattern.PSMethodXCL;
-import de.d3web.kernel.psMethods.xclPattern.XCLModel;
-import de.d3web.kernel.psMethods.xclPattern.XCLRelation;
-import de.d3web.kernel.supportknowledge.Properties;
-import de.d3web.kernel.supportknowledge.Property;
+import de.d3web.core.manage.AnswerFactory;
+import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.terminology.Answer;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.QContainer;
+import de.d3web.core.terminology.QuestionOC;
+import de.d3web.core.terminology.info.Properties;
+import de.d3web.core.terminology.info.Property;
 import de.d3web.plugin.test.InitPluginManager;
+import de.d3web.xcl.XCLModel;
+import de.d3web.xcl.XCLRelation;
+import de.d3web.xcl.inference.PSMethodXCL;
 import de.d3web.xcl.kpers.XCLModelPersistenceHandler;
 
 /**
@@ -109,7 +109,7 @@ public class XCLModelTest extends TestCase{
 		KnowledgeBase k2=pm.load(file2);
 		Collection<KnowledgeSlice> col=k2.getAllKnowledgeSlicesFor(PSMethodXCL.class);
 		for (Object current:col){
-			if (current instanceof de.d3web.kernel.psMethods.xclPattern.XCLModel){
+			if (current instanceof de.d3web.xcl.XCLModel){
 				XCLModel model=(XCLModel) current;
 				assertEquals(0.3,model.getMinSupport());
 				assertEquals(0.7,model.getSuggestedThreshold());

@@ -22,8 +22,8 @@ package de.d3web.core.kpers;
 import java.io.IOException;
 import java.io.InputStream;
 
+import de.d3web.core.KnowledgeBase;
 import de.d3web.core.kpers.progress.ProgressListener;
-import de.d3web.kernel.domainModel.KnowledgeBase;
 
 /**
  * Interface for all reading persistance handlers.

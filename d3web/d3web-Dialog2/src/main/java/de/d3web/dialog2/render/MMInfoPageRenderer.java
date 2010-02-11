@@ -29,13 +29,13 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.terminology.NamedObject;
+import de.d3web.core.terminology.info.MMInfoObject;
+import de.d3web.core.terminology.info.MMInfoSubject;
 import de.d3web.dialog2.basics.settings.ResourceRepository;
 import de.d3web.dialog2.component.html.UIMMInfoPage;
 import de.d3web.dialog2.util.DialogUtils;
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.NamedObject;
-import de.d3web.kernel.supportknowledge.MMInfoObject;
-import de.d3web.kernel.supportknowledge.MMInfoSubject;
 
 public class MMInfoPageRenderer extends Renderer {
 

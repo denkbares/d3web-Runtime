@@ -25,6 +25,7 @@ import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 
+import de.d3web.core.KnowledgeBase;
 import de.d3web.dialog2.WebDialog;
 import de.d3web.dialog2.basics.knowledge.CaseManager;
 import de.d3web.dialog2.basics.knowledge.KnowledgeBaseRepository;
@@ -33,7 +34,6 @@ import de.d3web.dialog2.basics.settings.DialogSettings;
 import de.d3web.dialog2.imagemap.ImageMapBean;
 import de.d3web.dialog2.render.KBLoadRenderer;
 import de.d3web.dialog2.util.DialogUtils;
-import de.d3web.kernel.domainModel.KnowledgeBase;
 
 public class KBLoadController {
 

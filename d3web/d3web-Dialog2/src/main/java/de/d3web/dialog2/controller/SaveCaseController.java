@@ -36,19 +36,19 @@ import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.CaseObjectImpl;
 import de.d3web.caserepository.MetaDataImpl;
 import de.d3web.caserepository.utilities.CaseConverter;
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.core.terminology.info.DCElement;
+import de.d3web.core.terminology.info.Property;
 import de.d3web.dialog2.WebDialog;
 import de.d3web.dialog2.basics.knowledge.CaseManager;
 import de.d3web.dialog2.basics.knowledge.CaseRepositoryDescriptor;
 import de.d3web.dialog2.basics.settings.ResourceRepository;
 import de.d3web.dialog2.basics.usermanaging.User;
 import de.d3web.dialog2.util.DialogUtils;
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.DiagnosisState;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.psMethods.userSelected.PSMethodUserSelected;
-import de.d3web.kernel.supportknowledge.DCElement;
-import de.d3web.kernel.supportknowledge.Property;
+import de.d3web.indication.inference.PSMethodUserSelected;
 
 public class SaveCaseController {
 

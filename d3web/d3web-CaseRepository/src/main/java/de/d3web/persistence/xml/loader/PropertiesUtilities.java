@@ -39,9 +39,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import de.d3web.core.kpers.utilities.XMLTools;
-import de.d3web.kernel.supportknowledge.Properties;
-import de.d3web.kernel.supportknowledge.Property;
-import de.d3web.kernel.supportknowledge.propertyCloner.PropertyCloner;
+import de.d3web.core.terminology.info.Properties;
+import de.d3web.core.terminology.info.Property;
+import de.d3web.indication.inference.PropertyCloner;
 import de.d3web.xml.domtools.DOMAccess;
 /**
  * PropertiesUtilties can be used to enhance the basic en/decoding capabilities to en/decode additional properties
@@ -83,7 +83,7 @@ public class PropertiesUtilities {
 	
 	/**
 	 * PropertyCloner for de.d3web.persistence.xml.loader.PropertiesUtilities$CDataString.
-	 * @see de.d3web.kernel.supportknowledge.PropertyCloner
+	 * @see de.d3web.indication.inference.PropertyCloner
 	 */
 	public static class CDataStringPropertyCloner extends PropertyCloner {
 		public Object cloneProperty(Object o) {

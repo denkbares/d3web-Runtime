@@ -28,14 +28,14 @@ import java.util.List;
 import javax.faces.component.UIComponent;
 import javax.faces.context.ResponseWriter;
 
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.terminology.Question;
 import de.d3web.dialog2.LastClickedAnswer;
 import de.d3web.dialog2.basics.layout.QContainerLayout;
 import de.d3web.dialog2.basics.layout.QuestionLayout;
 import de.d3web.dialog2.basics.layout.QuestionPageLayout;
 import de.d3web.dialog2.basics.layout.QuestionPopup;
 import de.d3web.dialog2.util.DialogUtils;
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.qasets.Question;
 
 public abstract class QContainerRenderer {
 

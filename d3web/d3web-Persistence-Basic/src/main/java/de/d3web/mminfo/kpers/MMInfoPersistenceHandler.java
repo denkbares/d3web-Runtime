@@ -33,6 +33,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import de.d3web.core.KnowledgeBase;
 import de.d3web.core.kpers.KnowledgeReader;
 import de.d3web.core.kpers.KnowledgeWriter;
 import de.d3web.core.kpers.PersistenceManager;
@@ -41,18 +42,17 @@ import de.d3web.core.kpers.progress.ProgressListener;
 import de.d3web.core.kpers.utilities.IDObjectComparator;
 import de.d3web.core.kpers.utilities.Util;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.answers.AnswerChoice;
-import de.d3web.kernel.domainModel.qasets.QContainer;
-import de.d3web.kernel.domainModel.qasets.Question;
-import de.d3web.kernel.domainModel.qasets.QuestionChoice;
-import de.d3web.kernel.supportknowledge.DCElement;
-import de.d3web.kernel.supportknowledge.DCMarkup;
-import de.d3web.kernel.supportknowledge.MMInfoObject;
-import de.d3web.kernel.supportknowledge.MMInfoStorage;
-import de.d3web.kernel.supportknowledge.PropertiesContainer;
-import de.d3web.kernel.supportknowledge.Property;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.QContainer;
+import de.d3web.core.terminology.Question;
+import de.d3web.core.terminology.QuestionChoice;
+import de.d3web.core.terminology.info.DCElement;
+import de.d3web.core.terminology.info.DCMarkup;
+import de.d3web.core.terminology.info.MMInfoObject;
+import de.d3web.core.terminology.info.MMInfoStorage;
+import de.d3web.core.terminology.info.PropertiesContainer;
+import de.d3web.core.terminology.info.Property;
 /**
  * PersistanceHandler for MMInfos
  * Creation date: (25.01.2002 14:18:47)

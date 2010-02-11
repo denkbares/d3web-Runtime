@@ -29,10 +29,10 @@ import javax.faces.context.ResponseWriter;
 
 import org.apache.log4j.Logger;
 
+import de.d3web.core.session.XPSCase;
 import de.d3web.dialog2.basics.knowledge.CaseManager;
 import de.d3web.dialog2.render.DialogRenderUtils;
 import de.d3web.dialog2.util.DialogUtils;
-import de.d3web.kernel.XPSCase;
 import de.d3web.kernel.psMethods.compareCase.CompareCaseException;
 import de.d3web.kernel.psMethods.compareCase.comparators.CompareMode;
 import de.d3web.kernel.psMethods.compareCase.facade.ComparisonResultRepository;

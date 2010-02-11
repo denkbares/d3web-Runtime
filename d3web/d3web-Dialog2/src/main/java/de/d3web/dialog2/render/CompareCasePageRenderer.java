@@ -35,21 +35,21 @@ import org.ajax4jsf.ajax.html.HtmlAjaxCommandLink;
 import org.apache.log4j.Logger;
 import org.apache.myfaces.component.html.ext.HtmlInputHidden;
 
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.terminology.Answer;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.Question;
+import de.d3web.core.terminology.info.DCElement;
 import de.d3web.dialog2.basics.knowledge.CaseManager;
 import de.d3web.dialog2.component.html.UICompareCasePage;
 import de.d3web.dialog2.controller.CompareCaseController;
 import de.d3web.dialog2.util.DialogUtils;
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.Answer;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.answers.AnswerUnknown;
-import de.d3web.kernel.domainModel.qasets.Question;
 import de.d3web.kernel.psMethods.compareCase.CompareCaseException;
 import de.d3web.kernel.psMethods.compareCase.comparators.ComparatorResult;
 import de.d3web.kernel.psMethods.compareCase.facade.ComparisonResultRepository;
 import de.d3web.kernel.psMethods.compareCase.facade.DetailledResult;
 import de.d3web.kernel.psMethods.compareCase.facade.SimpleResult;
-import de.d3web.kernel.supportknowledge.DCElement;
 
 public class CompareCasePageRenderer extends Renderer {
 

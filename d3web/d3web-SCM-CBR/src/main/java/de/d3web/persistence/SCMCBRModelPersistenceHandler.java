@@ -10,20 +10,20 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.inference.condition.AbstractCondition;
 import de.d3web.core.kpers.KnowledgeReader;
 import de.d3web.core.kpers.KnowledgeWriter;
 import de.d3web.core.kpers.PersistenceManager;
 import de.d3web.core.kpers.progress.ProgressListener;
 import de.d3web.core.kpers.utilities.Util;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.KnowledgeBaseManagement;
-import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.domainModel.ruleCondition.AbstractCondition;
+import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.terminology.Diagnosis;
 import de.d3web.kernel.psMethods.SCMCBR.PSMethodSCMCBR;
 import de.d3web.kernel.psMethods.SCMCBR.SCMCBRModel;
 import de.d3web.kernel.psMethods.SCMCBR.SCMCBRRelation;
-import de.d3web.kernel.psMethods.xclPattern.XCLRelation;
+import de.d3web.xcl.XCLRelation;
 
 /**
  * 

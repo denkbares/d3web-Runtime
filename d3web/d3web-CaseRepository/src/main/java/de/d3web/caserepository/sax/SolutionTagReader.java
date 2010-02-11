@@ -30,9 +30,9 @@ import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.addons.PSMethodAuthorSelected;
 import de.d3web.caserepository.addons.PSMethodClassicD3;
 import de.d3web.caserepository.utilities.Utilities;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.DiagnosisState;
-import de.d3web.kernel.psMethods.userSelected.PSMethodUserSelected;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
  * @author bates

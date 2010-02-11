@@ -26,9 +26,9 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-import de.d3web.kernel.domainModel.Answer;
-import de.d3web.kernel.domainModel.answers.AnswerNo;
-import de.d3web.kernel.domainModel.answers.AnswerYes;
+import de.d3web.core.session.values.AnswerNo;
+import de.d3web.core.session.values.AnswerYes;
+import de.d3web.core.terminology.Answer;
 import de.d3web.kernel.verbalizer.VerbalizationManager.RenderingFormat;
 
 

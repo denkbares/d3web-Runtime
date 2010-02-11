@@ -53,6 +53,21 @@ import org.apache.myfaces.custom.fileupload.UploadedFile;
 
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.utilities.CaseConverter;
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.inference.PSMethod;
+import de.d3web.core.session.CaseFactory;
+import de.d3web.core.session.D3WebCase;
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.interviewmanager.DialogController;
+import de.d3web.core.session.interviewmanager.MQDialogController;
+import de.d3web.core.terminology.Answer;
+import de.d3web.core.terminology.Question;
+import de.d3web.core.terminology.info.DCElement;
+import de.d3web.core.terminology.info.DCMarkup;
+import de.d3web.core.terminology.info.MMInfoObject;
+import de.d3web.core.terminology.info.MMInfoStorage;
+import de.d3web.core.terminology.info.MMInfoSubject;
+import de.d3web.core.terminology.info.Property;
 import de.d3web.dialog2.DiagnosesTreeBean;
 import de.d3web.dialog2.QASetTreeBean;
 import de.d3web.dialog2.QuestionPageBean;
@@ -67,21 +82,6 @@ import de.d3web.dialog2.controller.PageDisplayController;
 import de.d3web.dialog2.controller.ProcessedQContainersController;
 import de.d3web.dialog2.controller.SaveCaseController;
 import de.d3web.dialog2.imagemap.ImageMapBean;
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.dialogControl.DialogController;
-import de.d3web.kernel.dialogControl.MQDialogController;
-import de.d3web.kernel.domainModel.Answer;
-import de.d3web.kernel.domainModel.CaseFactory;
-import de.d3web.kernel.domainModel.D3WebCase;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.qasets.Question;
-import de.d3web.kernel.psMethods.PSMethod;
-import de.d3web.kernel.supportknowledge.DCElement;
-import de.d3web.kernel.supportknowledge.DCMarkup;
-import de.d3web.kernel.supportknowledge.MMInfoObject;
-import de.d3web.kernel.supportknowledge.MMInfoStorage;
-import de.d3web.kernel.supportknowledge.MMInfoSubject;
-import de.d3web.kernel.supportknowledge.Property;
 
 public class DialogUtils {
 

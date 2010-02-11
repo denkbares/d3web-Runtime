@@ -27,18 +27,18 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.CaseFactory;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.DiagnosisScore;
-import de.d3web.kernel.domainModel.DiagnosisState;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.domainModel.qasets.Question;
-import de.d3web.kernel.domainModel.qasets.QuestionMC;
-import de.d3web.kernel.psMethods.PSMethod;
-import de.d3web.kernel.psMethods.xclPattern.PSMethodXCL;
-import de.d3web.kernel.psMethods.xclPattern.XCLModel;
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.inference.PSMethod;
+import de.d3web.core.session.CaseFactory;
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.core.terminology.Question;
+import de.d3web.core.terminology.QuestionMC;
+import de.d3web.scoring.DiagnosisScore;
+import de.d3web.xcl.XCLModel;
+import de.d3web.xcl.inference.PSMethodXCL;
 
 public class SequentialTestCase {
 

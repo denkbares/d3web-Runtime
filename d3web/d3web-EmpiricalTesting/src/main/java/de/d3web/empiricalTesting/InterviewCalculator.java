@@ -22,14 +22,14 @@ package de.d3web.empiricalTesting;
 
 import java.util.List;
 
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.dialogControl.MQDialogController;
-import de.d3web.kernel.domainModel.Answer;
-import de.d3web.kernel.domainModel.CaseFactory;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.QASet;
-import de.d3web.kernel.domainModel.qasets.QContainer;
-import de.d3web.kernel.domainModel.qasets.Question;
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.session.CaseFactory;
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.interviewmanager.MQDialogController;
+import de.d3web.core.terminology.Answer;
+import de.d3web.core.terminology.QASet;
+import de.d3web.core.terminology.QContainer;
+import de.d3web.core.terminology.Question;
 
 public class InterviewCalculator extends PrecisionRecallCalculator{
 	

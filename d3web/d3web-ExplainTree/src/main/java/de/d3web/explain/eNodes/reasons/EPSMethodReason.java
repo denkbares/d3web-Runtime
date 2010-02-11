@@ -20,11 +20,11 @@
 
 package de.d3web.explain.eNodes.reasons;
 
+import de.d3web.core.inference.PSMethodInit;
+import de.d3web.core.terminology.QASet;
 import de.d3web.explain.ExplanationFactory;
 import de.d3web.explain.eNodes.EReason;
-import de.d3web.kernel.domainModel.QASet;
-import de.d3web.kernel.psMethods.PSMethodInit;
-import de.d3web.kernel.psMethods.userSelected.PSMethodUserSelected;
+import de.d3web.indication.inference.PSMethodUserSelected;
 
 public class EPSMethodReason extends EReason {
 

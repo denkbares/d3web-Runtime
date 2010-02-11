@@ -32,12 +32,13 @@ package de.d3web.kernel.psMethods.shared;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.Answer;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.domainModel.qasets.Question;
-import de.d3web.kernel.psMethods.PSMethod;
+import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.inference.PSMethod;
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.terminology.Answer;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.Question;
+import de.d3web.shared.PSMethodShared;
 
 /**
  * @author heckel
@@ -84,7 +85,7 @@ public class LocalWeight implements KnowledgeSlice {
 		return G0;
 	}
 	
-	public void setQuestion(de.d3web.kernel.domainModel.qasets.Question newQuestion){
+	public void setQuestion(de.d3web.core.terminology.Question newQuestion){
 	if (q != null) {
 		q.removeKnowledge(
 			getProblemsolverContext(),
@@ -104,7 +105,7 @@ public class LocalWeight implements KnowledgeSlice {
 		return q;
 	}
 
-	public void setDiagnosis(de.d3web.kernel.domainModel.Diagnosis newDiagnosis){
+	public void setDiagnosis(de.d3web.core.terminology.Diagnosis newDiagnosis){
 		if (d != null) {
 			d.removeKnowledge(
 				getProblemsolverContext(),

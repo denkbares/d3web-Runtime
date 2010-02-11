@@ -31,6 +31,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.kpers.KnowledgeReader;
 import de.d3web.core.kpers.KnowledgeWriter;
 import de.d3web.core.kpers.PersistenceManager;
@@ -38,9 +41,6 @@ import de.d3web.core.kpers.progress.ProgressListener;
 import de.d3web.core.kpers.utilities.KnowledgeSliceComparator;
 import de.d3web.core.kpers.utilities.Util;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.psMethods.PSMethod;
 
 /**
  * This abstract class provides basic functions for rule handlers

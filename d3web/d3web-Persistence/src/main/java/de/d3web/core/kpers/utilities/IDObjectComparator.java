@@ -2,7 +2,7 @@ package de.d3web.core.kpers.utilities;
 
 import java.util.Comparator;
 
-import de.d3web.kernel.domainModel.IDObject;
+import de.d3web.core.terminology.IDObject;
 
 public class IDObjectComparator implements Comparator<IDObject> {
 

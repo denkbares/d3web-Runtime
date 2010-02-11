@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import de.d3web.kernel.domainModel.Diagnosis;
+import de.d3web.core.terminology.Diagnosis;
 import de.d3web.kernel.verbalizer.VerbalizationManager.RenderingFormat;
 
 /**

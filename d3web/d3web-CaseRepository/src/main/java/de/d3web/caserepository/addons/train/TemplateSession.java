@@ -37,12 +37,12 @@ import de.d3web.caserepository.addons.IExaminationBlock;
 import de.d3web.caserepository.addons.ITemplateSession;
 import de.d3web.caserepository.addons.shared.AppliedQSets;
 import de.d3web.caserepository.utilities.Utilities;
-import de.d3web.kernel.domainModel.QASet;
-import de.d3web.kernel.domainModel.qasets.QContainer;
-import de.d3web.kernel.domainModel.qasets.Question;
-import de.d3web.kernel.supportknowledge.DCElement;
-import de.d3web.kernel.supportknowledge.DCMarkup;
-import de.d3web.kernel.supportknowledge.Property;
+import de.d3web.core.terminology.QASet;
+import de.d3web.core.terminology.QContainer;
+import de.d3web.core.terminology.Question;
+import de.d3web.core.terminology.info.DCElement;
+import de.d3web.core.terminology.info.DCMarkup;
+import de.d3web.core.terminology.info.Property;
 
 /**
  * TemplateSession (in )

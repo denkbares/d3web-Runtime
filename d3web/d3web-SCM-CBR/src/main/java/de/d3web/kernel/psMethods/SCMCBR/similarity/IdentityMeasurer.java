@@ -2,10 +2,10 @@ package de.d3web.kernel.psMethods.SCMCBR.similarity;
 
 import java.util.List;
 
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.Answer;
-import de.d3web.kernel.domainModel.qasets.Question;
-import de.d3web.kernel.dynamicObjects.CaseQuestion;
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.blackboard.CaseQuestion;
+import de.d3web.core.terminology.Answer;
+import de.d3web.core.terminology.Question;
 
 public class IdentityMeasurer implements ISimilarityMeasurer {
 

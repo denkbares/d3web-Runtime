@@ -22,8 +22,8 @@ package de.d3web.core.kpers.rules;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.d3web.kernel.psMethods.PSMethod;
-import de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic;
+import de.d3web.core.inference.PSMethod;
+import de.d3web.scoring.inference.PSMethodHeuristic;
 /**
  * PersistenceHandler for heuristic rules
  *

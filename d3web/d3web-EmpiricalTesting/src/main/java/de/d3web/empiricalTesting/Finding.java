@@ -20,13 +20,13 @@
 
 package de.d3web.empiricalTesting;
 
-import de.d3web.kernel.domainModel.Answer;
-import de.d3web.kernel.domainModel.CaseFactory;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.answers.AnswerChoice;
-import de.d3web.kernel.domainModel.qasets.Question;
-import de.d3web.kernel.domainModel.qasets.QuestionChoice;
-import de.d3web.kernel.domainModel.qasets.QuestionNum;
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.session.CaseFactory;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.terminology.Answer;
+import de.d3web.core.terminology.Question;
+import de.d3web.core.terminology.QuestionChoice;
+import de.d3web.core.terminology.QuestionNum;
 
 
 /**

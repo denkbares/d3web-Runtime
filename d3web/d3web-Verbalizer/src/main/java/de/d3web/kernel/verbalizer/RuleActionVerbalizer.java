@@ -27,22 +27,22 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-import de.d3web.kernel.domainModel.Answer;
-import de.d3web.kernel.domainModel.IDObject;
-import de.d3web.kernel.domainModel.RuleAction;
-import de.d3web.kernel.domainModel.formula.FormulaExpression;
-import de.d3web.kernel.domainModel.formula.FormulaNumber;
-import de.d3web.kernel.psMethods.contraIndication.ActionContraIndication;
-import de.d3web.kernel.psMethods.heuristic.ActionHeuristicPS;
-import de.d3web.kernel.psMethods.nextQASet.ActionClarify;
-import de.d3web.kernel.psMethods.nextQASet.ActionInstantIndication;
-import de.d3web.kernel.psMethods.nextQASet.ActionNextQASet;
-import de.d3web.kernel.psMethods.nextQASet.ActionRefine;
-import de.d3web.kernel.psMethods.questionSetter.ActionAddValue;
-import de.d3web.kernel.psMethods.questionSetter.ActionSetValue;
-import de.d3web.kernel.psMethods.suppressAnswer.ActionSuppressAnswer;
-import de.d3web.kernel.psMethods.therapyIndication.ActionIndicateTherapies;
+import de.d3web.abstraction.ActionAddValue;
+import de.d3web.abstraction.ActionSetValue;
+import de.d3web.abstraction.formula.FormulaExpression;
+import de.d3web.abstraction.formula.FormulaNumber;
+import de.d3web.core.inference.RuleAction;
+import de.d3web.core.terminology.Answer;
+import de.d3web.core.terminology.IDObject;
+import de.d3web.indication.ActionClarify;
+import de.d3web.indication.ActionContraIndication;
+import de.d3web.indication.ActionIndicateTherapies;
+import de.d3web.indication.ActionInstantIndication;
+import de.d3web.indication.ActionNextQASet;
+import de.d3web.indication.ActionRefine;
+import de.d3web.indication.ActionSuppressAnswer;
 import de.d3web.kernel.verbalizer.VerbalizationManager.RenderingFormat;
+import de.d3web.scoring.ActionHeuristicPS;
 /**
  * This class verbalizes (renders to String representation) a RuleAction.
  * It integrates the old VerbalizationFactory/RuleToHTML classes into the verbalizer framework.

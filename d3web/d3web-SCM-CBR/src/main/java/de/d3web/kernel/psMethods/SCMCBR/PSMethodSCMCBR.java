@@ -2,19 +2,19 @@ package de.d3web.kernel.psMethods.SCMCBR;
 import java.util.Collection;
 import java.util.List;
 
+import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.PSMethodAdapter;
+import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.blackboard.CaseDiagnosis;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
-import de.d3web.kernel.XPSCase;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.DiagnosisScore;
-import de.d3web.kernel.domainModel.DiagnosisState;
-import de.d3web.kernel.domainModel.KnowledgeSlice;
-import de.d3web.kernel.domainModel.NamedObject;
-import de.d3web.kernel.domainModel.qasets.Question;
-import de.d3web.kernel.dynamicObjects.CaseDiagnosis;
-import de.d3web.kernel.psMethods.PSMethod;
-import de.d3web.kernel.psMethods.PSMethodAdapter;
-import de.d3web.kernel.psMethods.PropagationEntry;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.core.terminology.NamedObject;
+import de.d3web.core.terminology.Question;
+import de.d3web.scoring.DiagnosisScore;
 
 
 public class PSMethodSCMCBR extends PSMethodAdapter {

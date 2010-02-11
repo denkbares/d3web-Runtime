@@ -25,17 +25,17 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.inference.RuleAction;
 import de.d3web.core.kpers.fragments.FragmentHandler;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.QASet;
-import de.d3web.kernel.domainModel.RuleAction;
-import de.d3web.kernel.psMethods.nextQASet.ActionClarify;
-import de.d3web.kernel.psMethods.nextQASet.ActionIndication;
-import de.d3web.kernel.psMethods.nextQASet.ActionInstantIndication;
-import de.d3web.kernel.psMethods.nextQASet.ActionNextQASet;
-import de.d3web.kernel.psMethods.nextQASet.ActionRefine;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.QASet;
+import de.d3web.indication.ActionClarify;
+import de.d3web.indication.ActionIndication;
+import de.d3web.indication.ActionInstantIndication;
+import de.d3web.indication.ActionNextQASet;
+import de.d3web.indication.ActionRefine;
 /**
  * Handles ActionNextQASet and its default successors
  * @author Norman Brümmer, Markus Friedrich (denkbares GmbH)

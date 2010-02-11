@@ -27,7 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Date;
 
-import de.d3web.kernel.domainModel.Diagnosis;
+import de.d3web.core.terminology.Diagnosis;
 
 public class RatedTestCase {
 

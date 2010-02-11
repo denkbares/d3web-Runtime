@@ -26,13 +26,13 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import de.d3web.kernel.domainModel.BinaryRessource;
+import de.d3web.core.Resource;
 /**
  * Class to store Jar Ressources in the KnowledgeBase
  *
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class JarBinaryRessource implements BinaryRessource {
+public class JarBinaryRessource implements Resource {
 
 	private int size;
 	private String entryPath;

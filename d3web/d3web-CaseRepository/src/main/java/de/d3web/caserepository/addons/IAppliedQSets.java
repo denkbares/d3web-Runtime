@@ -26,9 +26,8 @@ package de.d3web.caserepository.addons;
 import java.util.Set;
 
 import de.d3web.caserepository.*;
-import de.d3web.caserepository.CaseObject;
-import de.d3web.kernel.domainModel.qasets.QContainer;
-import de.d3web.kernel.domainModel.qasets.Question;
+import de.d3web.core.terminology.QContainer;
+import de.d3web.core.terminology.Question;
 
 /**
  * 23.09.2003 15:18:00

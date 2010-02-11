@@ -25,18 +25,18 @@ import java.io.IOException;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import de.d3web.core.inference.Rule;
+import de.d3web.core.inference.condition.CondDState;
+import de.d3web.core.inference.condition.CondNumEqual;
 import de.d3web.core.kpers.fragments.RuleHandler;
 import de.d3web.core.kpers.utilities.Util;
-import de.d3web.kernel.domainModel.Diagnosis;
-import de.d3web.kernel.domainModel.DiagnosisState;
-import de.d3web.kernel.domainModel.Rule;
-import de.d3web.kernel.domainModel.Score;
-import de.d3web.kernel.domainModel.qasets.QuestionNum;
-import de.d3web.kernel.domainModel.ruleCondition.CondDState;
-import de.d3web.kernel.domainModel.ruleCondition.CondNumEqual;
-import de.d3web.kernel.psMethods.heuristic.ActionHeuristicPS;
+import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.core.terminology.QuestionNum;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.plugin.test.InitPluginManager;
+import de.d3web.scoring.ActionHeuristicPS;
+import de.d3web.scoring.Score;
 
 /**
  * @author merz

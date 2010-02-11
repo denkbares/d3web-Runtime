@@ -29,7 +29,7 @@ import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.CaseObjectImpl;
 import de.d3web.caserepository.ISolutionContainer;
 import de.d3web.caserepository.sax.ID2CaseMapper;
-import de.d3web.kernel.domainModel.KnowledgeBase;
+import de.d3web.core.KnowledgeBase;
 
 /**
  * @author bates
