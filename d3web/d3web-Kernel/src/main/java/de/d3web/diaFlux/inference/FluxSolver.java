@@ -97,7 +97,7 @@ public class FluxSolver implements PSMethod {
 	}
 	
 	
-	private boolean isFlowCase(XPSCase theCase) {
+	public boolean isFlowCase(XPSCase theCase) {
 		
 		List knowledge = (List) theCase.getKnowledgeBase().getKnowledge(FluxSolver.class, FluxSolver.DIAFLUX);
 		if (knowledge == null)
@@ -117,7 +117,12 @@ public class FluxSolver implements PSMethod {
 
 	public static FlowSet getFlowSet(XPSCase theCase) {
 		
-		FlowSet flowSet = (FlowSet) ((List) theCase.getKnowledgeBase().getKnowledge(FluxSolver.class, FluxSolver.DIAFLUX)).get(0);
+		List knowledge = (List) theCase.getKnowledgeBase().getKnowledge(FluxSolver.class, FluxSolver.DIAFLUX);
+		
+		if (knowledge == null)
+			return null;
+		
+		FlowSet flowSet = (FlowSet) knowledge.get(0);
 		
 		return flowSet;
 	}
