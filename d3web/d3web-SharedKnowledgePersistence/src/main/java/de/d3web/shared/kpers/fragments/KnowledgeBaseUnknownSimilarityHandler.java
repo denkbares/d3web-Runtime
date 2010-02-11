@@ -24,8 +24,8 @@ import java.io.IOException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.KnowledgeBase;
 import de.d3web.core.kpers.fragments.FragmentHandler;
-import de.d3web.kernel.domainModel.KnowledgeBase;
 import de.d3web.kernel.psMethods.shared.comparators.KnowledgeBaseUnknownSimilarity;
 /**
  * Handles KnowledgeBaseUnknownSimilaritys

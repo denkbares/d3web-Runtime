@@ -28,18 +28,18 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import de.d3web.core.KnowledgeBase;
 import de.d3web.core.kpers.PersistenceManager;
 import de.d3web.core.kpers.fragments.FragmentHandler;
 import de.d3web.core.kpers.utilities.XMLUtil;
-import de.d3web.kernel.domainModel.Answer;
-import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.domainModel.qasets.Question;
-import de.d3web.kernel.domainModel.qasets.QuestionChoice;
-import de.d3web.kernel.domainModel.qasets.QuestionNum;
+import de.d3web.core.terminology.Answer;
+import de.d3web.core.terminology.Question;
+import de.d3web.core.terminology.QuestionChoice;
+import de.d3web.core.terminology.QuestionNum;
 import de.d3web.kernel.psMethods.shared.Abnormality;
-import de.d3web.kernel.psMethods.shared.AbnormalityInterval;
 import de.d3web.kernel.psMethods.shared.AbnormalityNum;
-import de.d3web.kernel.psMethods.shared.AbstractAbnormality;
+import de.d3web.shared.AbnormalityInterval;
+import de.d3web.shared.AbstractAbnormality;
 /**
  * Handles the default implementations of AbstractAbnormality. Other Handlers for descendants of AbstractAbnormality must have a higher priority. 
  * @author Norman Brümmer, Markus Friedrich (denkbares GmbH)
