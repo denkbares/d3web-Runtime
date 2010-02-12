@@ -42,7 +42,7 @@ import java.util.zip.ZipInputStream;
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.addons.train.Multimedia;
 import de.d3web.caserepository.addons.train.MultimediaItem;
-import de.d3web.core.kpers.utilities.URLUtils;
+import de.d3web.core.io.utilities.URLUtils;
 import de.d3web.core.terminology.DiagnosisState;
 
 /**

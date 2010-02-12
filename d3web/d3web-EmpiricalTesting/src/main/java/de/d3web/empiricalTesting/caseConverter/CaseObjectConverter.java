@@ -31,7 +31,7 @@ import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.CaseObject.Solution;
 import de.d3web.caserepository.sax.CaseObjectListCreator;
 import de.d3web.core.KnowledgeBase;
-import de.d3web.core.kpers.PersistenceManager;
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.terminology.Answer;
 import de.d3web.core.terminology.Diagnosis;
 import de.d3web.core.terminology.DiagnosisState;

@@ -39,7 +39,7 @@ import de.d3web.caserepository.addons.train.writer.ExaminationBlocksWriter;
 import de.d3web.caserepository.addons.train.writer.MultimediaWriter;
 import de.d3web.caserepository.dom.CaseObjectListCreator;
 import de.d3web.core.KnowledgeBase;
-import de.d3web.core.kpers.PersistenceManager;
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.terminology.info.Property;
 
 /**
@@ -78,7 +78,7 @@ public class DOM2SAXConverter {
 	public static void convert(String kbFilename, String casesInFilename, String casesOutFilename) throws IOException {
 		
 		URL kbURL = new URL("jar", "", 0, new File(kbFilename).toURI().toURL().toString() + "!/");
-		PersistenceManager persistenceManager = de.d3web.core.kpers.PersistenceManager.getInstance();
+		PersistenceManager persistenceManager = de.d3web.core.io.PersistenceManager.getInstance();
 		KnowledgeBase kb = persistenceManager.load(new File(kbURL.getFile()));
 
 		CaseObjectListCreator crh = new CaseObjectListCreator();

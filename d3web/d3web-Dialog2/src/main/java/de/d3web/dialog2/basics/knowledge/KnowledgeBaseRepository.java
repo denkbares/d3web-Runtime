@@ -29,7 +29,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import de.d3web.core.KnowledgeBase;
-import de.d3web.core.kpers.PersistenceManager;
+import de.d3web.core.io.PersistenceManager;
 
 /**
  * @author: Norman Brümmer

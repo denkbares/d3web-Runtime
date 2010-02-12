@@ -25,9 +25,9 @@ import org.w3c.dom.Document;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import de.d3web.core.kpers.fragments.CostKBHandler;
-import de.d3web.core.kpers.utilities.CostObject;
-import de.d3web.core.kpers.utilities.Util;
+import de.d3web.core.io.fragments.CostKBHandler;
+import de.d3web.core.io.utilities.CostObject;
+import de.d3web.core.io.utilities.Util;
 import de.d3web.persistence.tests.utils.XMLTag;
 
 

@@ -38,7 +38,7 @@ import java.util.logging.Logger;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.d3web.core.kpers.utilities.XMLTools;
+import de.d3web.core.io.utilities.XMLTools;
 import de.d3web.core.terminology.info.Properties;
 import de.d3web.core.terminology.info.Property;
 import de.d3web.indication.inference.PropertyCloner;

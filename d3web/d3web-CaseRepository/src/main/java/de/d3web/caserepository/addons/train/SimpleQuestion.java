@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import de.d3web.caserepository.XMLCodeGenerator;
-import de.d3web.core.kpers.utilities.XMLTools;
+import de.d3web.core.io.utilities.XMLTools;
 import de.d3web.core.terminology.QContainer;
 
 /**

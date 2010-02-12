@@ -31,7 +31,7 @@ import org.xml.sax.Attributes;
 import de.d3web.caserepository.ISolutionContainer;
 import de.d3web.caserepository.SolutionContainerImpl;
 import de.d3web.caserepository.sax.AbstractTagReader;
-import de.d3web.core.kpers.utilities.XMLTools;
+import de.d3web.core.io.utilities.XMLTools;
 
 /**
  * SimpleTextFUSsReader (in )

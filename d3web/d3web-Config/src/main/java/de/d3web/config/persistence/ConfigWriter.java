@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.d3web.config.Config;
-import de.d3web.core.kpers.utilities.XMLTools;
+import de.d3web.core.io.utilities.XMLTools;
 
 /**
  * @author bannert

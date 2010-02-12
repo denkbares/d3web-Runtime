@@ -44,9 +44,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 
 import de.d3web.caserepository.CaseObject;
-import de.d3web.core.kpers.utilities.StringBufferInputStream;
-import de.d3web.core.kpers.utilities.StringBufferOutputStream;
-import de.d3web.core.kpers.utilities.StringBufferStream;
+import de.d3web.core.io.utilities.StringBufferInputStream;
+import de.d3web.core.io.utilities.StringBufferOutputStream;
+import de.d3web.core.io.utilities.StringBufferStream;
 import de.d3web.persistence.progress.ProgressEvent;
 import de.d3web.persistence.progress.ProgressListener;
 import de.d3web.persistence.progress.ProgressNotifier;

@@ -33,8 +33,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import de.d3web.core.kpers.PersistenceManager;
-import de.d3web.core.kpers.utilities.InputFilter;
+import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.io.utilities.InputFilter;
 
 /**
  * @author bates

@@ -34,7 +34,7 @@ import java.util.Date;
 import java.util.List;
 
 import de.d3web.core.KnowledgeBase;
-import de.d3web.core.kpers.PersistenceManager;
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.terminology.QContainer;
 import de.d3web.core.terminology.QuestionChoice;

@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.List;
 
 import de.d3web.core.KnowledgeBase;
-import de.d3web.core.kpers.PersistenceManager;
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.empiricalTesting.SequentialTestCase;
 import de.d3web.empiricalTesting.caseConverter.CaseObjectToKnOffice;

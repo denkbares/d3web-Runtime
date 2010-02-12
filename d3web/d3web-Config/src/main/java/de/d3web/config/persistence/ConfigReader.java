@@ -41,9 +41,9 @@ import de.d3web.config.Config;
 import de.d3web.config.utils.BooleanHashMap;
 import de.d3web.config.utils.DoubleHashMap;
 import de.d3web.config.utils.StringHashMap;
-import de.d3web.core.kpers.utilities.InputFilter;
-import de.d3web.core.kpers.utilities.XMLTools;
-import de.d3web.core.kpers.utilities.XMLUtil;
+import de.d3web.core.io.utilities.InputFilter;
+import de.d3web.core.io.utilities.XMLTools;
+import de.d3web.core.io.utilities.XMLUtil;
 
 /**
  * @author bannert

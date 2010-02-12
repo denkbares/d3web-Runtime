@@ -30,8 +30,8 @@ import java.util.List;
 import junit.framework.TestCase;
 import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.kpers.PersistenceManager;
-import de.d3web.core.kpers.progress.DummyProgressListener;
+import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.manage.AnswerFactory;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.values.AnswerChoice;
@@ -45,7 +45,7 @@ import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
 import de.d3web.xcl.inference.PSMethodXCL;
-import de.d3web.xcl.kpers.XCLModelPersistenceHandler;
+import de.d3web.xcl.io.XCLModelPersistenceHandler;
 
 /**
  * Test to check persistence implementation of XCLModel

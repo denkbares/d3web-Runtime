@@ -28,8 +28,8 @@ import java.util.List;
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.sax.CaseObjectListCreator;
 import de.d3web.core.KnowledgeBase;
-import de.d3web.core.kpers.PersistenceManager;
-import de.d3web.core.kpers.progress.ConsoleProgressListener;
+import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.io.progress.ConsoleProgressListener;
 import de.d3web.kernel.psMethods.compareCase.comparators.CaseComparator;
 import de.d3web.kernel.psMethods.compareCase.comparators.CompareMode;
 

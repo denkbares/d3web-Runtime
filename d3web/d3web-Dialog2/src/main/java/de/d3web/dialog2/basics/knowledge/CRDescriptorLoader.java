@@ -36,7 +36,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.d3web.core.kpers.utilities.InputFilter;
+import de.d3web.core.io.utilities.InputFilter;
 import de.d3web.dialog2.util.DialogUtils;
 
 public class CRDescriptorLoader {

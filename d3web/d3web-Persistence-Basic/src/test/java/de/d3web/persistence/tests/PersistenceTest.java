@@ -12,7 +12,7 @@ import org.custommonkey.xmlunit.Difference;
 import org.custommonkey.xmlunit.XMLTestCase;
 
 import de.d3web.core.KnowledgeBase;
-import de.d3web.core.kpers.PersistenceManager;
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.persistence.tests.utils.Butil;
 import de.d3web.persistence.tests.utils.JarExtractor;
 import de.d3web.persistence.tests.utils.PersistenceHelper;

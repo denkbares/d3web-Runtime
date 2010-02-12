@@ -39,7 +39,7 @@ import de.d3web.caserepository.ISolutionContainer;
 import de.d3web.caserepository.SolutionContainerImpl;
 import de.d3web.caserepository.CaseObject.Solution;
 import de.d3web.caserepository.addons.IExaminationBlock;
-import de.d3web.core.kpers.utilities.XMLTools;
+import de.d3web.core.io.utilities.XMLTools;
 import de.d3web.core.terminology.Diagnosis;
 import de.d3web.core.terminology.QContainer;
 
