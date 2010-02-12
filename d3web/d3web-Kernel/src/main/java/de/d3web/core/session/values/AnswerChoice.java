@@ -37,16 +37,14 @@ public class AnswerChoice extends Answer {
 	private static final long serialVersionUID = -4155370058888998997L;
 	private String text;
 
-	/**
-	 * Creates a new AnswerChoice object
-	 */
 	public AnswerChoice() {
 		super();
 	}
 
-	public AnswerChoice(String id) {
-		super(id);
+	public AnswerChoice(String theId) {
+		super(theId);
 	}
+
 
 	public String getText() {
 		return text;

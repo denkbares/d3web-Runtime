@@ -97,7 +97,7 @@ public class RuleFactory {
 	 */
 	public static Rule createClarificationRule(
 		String theId,
-		List theAction,
+		List<QASet> theAction,
 		Diagnosis target,
 		AbstractCondition theCondition) {
 
@@ -114,7 +114,7 @@ public class RuleFactory {
 	 */
 	public static Rule createClarificationRule(
 		String theId,
-		List theAction,
+		List<QASet> theAction,
 		Diagnosis target,
 		AbstractCondition theCondition,
 		AbstractCondition theRuleException) {
@@ -135,7 +135,7 @@ public class RuleFactory {
 	 */
 	public static Rule createContraIndicationRule(
 		String theId,
-		List theQASets,
+		List<QASet> theQASets,
 		AbstractCondition theCondition) {
 
 		return createContraIndicationRule(theId, theQASets, theCondition, null);
@@ -146,7 +146,7 @@ public class RuleFactory {
 	 */
 	public static Rule createContraIndicationRule(
 		String theId,
-		List theQASets,
+		List<QASet> theQASets,
 		AbstractCondition theCondition,
 		AbstractCondition theRuleException) {
 
@@ -217,7 +217,7 @@ public class RuleFactory {
 	 */
 	public static Rule createIndicationRule(
 		String theId,
-		List theAction,
+		List<QASet> theAction,
 		AbstractCondition theCondition) {
 
 		return createIndicationRule(theId, theAction, theCondition, null);
@@ -233,7 +233,7 @@ public class RuleFactory {
 			String theId,
 			QASet singleIndication,
 			AbstractCondition theCondition) {
-	    	List ind = new LinkedList();
+	    	List<QASet> ind = new LinkedList<QASet>();
 	    	ind.add(singleIndication);
 			return createIndicationRule(theId, ind, theCondition, null);
 		}
@@ -244,7 +244,7 @@ public class RuleFactory {
 	 */
 	public static Rule createIndicationRule(
 		String theId,
-		List theAction,
+		List<QASet> theAction,
 		AbstractCondition theCondition,
 		AbstractCondition theRuleException) {
 
@@ -264,7 +264,7 @@ public class RuleFactory {
 	 */
 	public static Rule createInstantIndicationRule(
 			String id, 
-			List theAction, 
+			List<QASet> theAction, 
 			AbstractCondition theCondition,
 			AbstractCondition theRuleException) {
 		
@@ -278,7 +278,7 @@ public class RuleFactory {
 
 	public static Rule createInstantIndicationRule(
 			String id, 
-			List theAction, 
+			List<QASet> theAction, 
 			AbstractCondition theCondition) {
 		
 		return createInstantIndicationRule(id, theAction, theCondition, null);
@@ -293,7 +293,7 @@ public class RuleFactory {
 			String theId,
 			QASet singleIndication,
 			AbstractCondition theCondition) {
-	    	List ind = new ArrayList<QASet>();
+	    	List<QASet> ind = new ArrayList<QASet>();
 	    	ind.add(singleIndication);
 			return createInstantIndicationRule(theId, ind, theCondition, null);
 	}
@@ -308,7 +308,7 @@ public class RuleFactory {
 	 */
 	public static Rule createRefinementRule(
 		String theId,
-		List theAction,
+		List<QASet> theAction,
 		Diagnosis target,
 		AbstractCondition theCondition) {
 
@@ -325,7 +325,7 @@ public class RuleFactory {
 	 */
 	public static Rule createRefinementRule(
 		String theId,
-		List theAction,
+		List<QASet> theAction,
 		Diagnosis target,
 		AbstractCondition theCondition,
 		AbstractCondition theRuleException) {

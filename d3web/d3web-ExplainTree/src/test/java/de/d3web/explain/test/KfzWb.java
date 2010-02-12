@@ -27,6 +27,7 @@ import de.d3web.core.terminology.Answer;
 import de.d3web.core.terminology.Diagnosis;
 import de.d3web.core.terminology.DiagnosisState;
 import de.d3web.core.terminology.NamedObject;
+import de.d3web.core.terminology.QASet;
 import de.d3web.core.terminology.QContainer;
 import de.d3web.core.terminology.Question;
 import de.d3web.core.terminology.QuestionMC;
@@ -364,26 +365,26 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 		// RuleComplex RASK10 =
 			RuleFactory.createIndicationRule(
 				"RASK10",
-				Utils.createList(new Object[] { Mf10 }),
+				Utils.createList(new QASet[] { Mf10 }),
 				new CondOr(Utils.createList(new AbstractCondition[] { new CondEqual(Mf8, Mf8a2), new CondEqual(Mf8, Mf8a3)})));
 
 		/* Next von P000: rqsug14766
 		*/
 		// RuleComplex rqsug14766 =
-			RuleFactory.createClarificationRule("rqsug14766", Utils.createList(new Object[] {
+			RuleFactory.createClarificationRule("rqsug14766", Utils.createList(new QASet[] {
 		}), P000, new CondDState(P000, DiagnosisState.SUGGESTED));
 
 		/* Frageklassen nach Etablierung von P000: Nil*/
 		// RuleComplex rqetab14767 =
-			RuleFactory.createRefinementRule("rqetab14767", Utils.createList(new Object[] {
-		}), P000, new CondDState(P000, DiagnosisState.ESTABLISHED));
+			RuleFactory.createRefinementRule("rqetab14767", Utils.createList(
+					new QASet[] {}), P000, new CondDState(P000, DiagnosisState.ESTABLISHED));
 
 		/* Next von P8: rqsug14769
 		*/
 		// RuleComplex rqsug14769 =
 			RuleFactory.createClarificationRule(
 				"rqsug14769",
-				Utils.createList(new Object[] { Q17 }),
+				Utils.createList(new QASet[] { Q17 }),
 				P8,
 				new CondDState(P8, DiagnosisState.SUGGESTED));
 
@@ -391,7 +392,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 		// RuleComplex rqetab14770 =
 			RuleFactory.createRefinementRule(
 				"rqetab14770",
-				Utils.createList(new Object[] { Q17 }),
+				Utils.createList(new QASet[] { Q17 }),
 				P8,
 				new CondDState(P8, DiagnosisState.ESTABLISHED));
 
@@ -400,7 +401,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 		// RuleComplex rqsug14772 =
 			RuleFactory.createClarificationRule(
 				"rqsug14772",
-				Utils.createList(new Object[] { Q18 }),
+				Utils.createList(new QASet[] { Q18 }),
 				P13,
 				new CondDState(P13, DiagnosisState.SUGGESTED));
 
@@ -408,7 +409,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 		// RuleComplex rqetab14773 =
 			RuleFactory.createRefinementRule(
 				"rqetab14773",
-				Utils.createList(new Object[] { Q18 }),
+				Utils.createList(new QASet[] { Q18 }),
 				P13,
 				new CondDState(P13, DiagnosisState.ESTABLISHED));
 
@@ -417,7 +418,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 		// RuleComplex rqsug14775 =
 			RuleFactory.createClarificationRule(
 				"rqsug14775",
-				Utils.createList(new Object[] { Q19 }),
+				Utils.createList(new QASet[] { Q19 }),
 				P14,
 				new CondDState(P14, DiagnosisState.SUGGESTED));
 
@@ -425,7 +426,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 		// RuleComplex rqetab14776 =
 			RuleFactory.createRefinementRule(
 				"rqetab14776",
-				Utils.createList(new Object[] { Q19 }),
+				Utils.createList(new QASet[] { Q19 }),
 				P14,
 				new CondDState(P14, DiagnosisState.ESTABLISHED));
 
@@ -434,7 +435,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 		// RuleComplex rqsug14778 =
 			RuleFactory.createClarificationRule(
 				"rqsug14778",
-				Utils.createList(new Object[] { Q20 }),
+				Utils.createList(new QASet[] { Q20 }),
 				P15,
 				new CondDState(P15, DiagnosisState.SUGGESTED));
 
@@ -442,7 +443,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 		// RuleComplex rqetab14779 =
 			RuleFactory.createRefinementRule(
 				"rqetab14779",
-				Utils.createList(new Object[] { Q20 }),
+				Utils.createList(new QASet[] { Q20 }),
 				P15,
 				new CondDState(P15, DiagnosisState.ESTABLISHED));
 
@@ -451,7 +452,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 		// RuleComplex rqsug14781 =
 			RuleFactory.createClarificationRule(
 				"rqsug14781",
-				Utils.createList(new Object[] { Q21 }),
+				Utils.createList(new QASet[] { Q21 }),
 				P16,
 				new CondDState(P16, DiagnosisState.SUGGESTED));
 
@@ -459,7 +460,7 @@ public class KfzWb extends KnowledgeBase { /* Hier kommen die Fragen */
 		// RuleComplex rqetab14782 =
 			RuleFactory.createRefinementRule(
 				"rqetab14782",
-				Utils.createList(new Object[] { Q21 }),
+				Utils.createList(new QASet[] { Q21 }),
 				P16,
 				new CondDState(P16, DiagnosisState.ESTABLISHED));
 

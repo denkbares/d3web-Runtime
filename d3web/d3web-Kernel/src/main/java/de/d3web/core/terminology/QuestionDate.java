@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseQuestionDate;
 import de.d3web.core.session.blackboard.XPSCaseObject;
@@ -69,20 +70,14 @@ public class QuestionDate extends Question {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see de.d3web.kernel.domainModel.NamedObject#setValue(de.d3web.kernel.XPSCase, java.lang.Object[])
-	 */
+	@Deprecated
 	public void setValue(XPSCase theCase, Object[] values) {
 		if (values.length > 1) {
 			Logger.getLogger(this.getClass().getName()).warning("wrong number of answeralternatives");
 		} else {
-			Answer newValue = null;
-			if (values.length == 1) {
-				newValue = (Answer) values[0];
-			}
-			((CaseQuestionDate) theCase.getCaseObject(this)).setValue(newValue);
+			((CaseQuestionDate) theCase.getCaseObject(this)).setValue((Answer)values[0]);
+			notifyListeners(theCase, this);
 		}
-		notifyListeners(theCase, this);
 	}
 
 	/* (non-Javadoc)

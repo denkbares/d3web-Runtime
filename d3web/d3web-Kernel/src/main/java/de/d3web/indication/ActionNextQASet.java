@@ -19,11 +19,10 @@
  */
 
 package de.d3web.indication;
-import java.util.Iterator;
+
 import java.util.List;
 
 import de.d3web.core.inference.MethodKind;
-import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleAction;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.terminology.QASet;
@@ -31,30 +30,27 @@ import de.d3web.core.terminology.QContainer;
 import de.d3web.indication.inference.PSMethodNextQASet;
 
 /**
- * This abstract class is representing the Action of an indication rule. Specialize this in order to implement a new
- * indication type.
- * Creation date: (19.06.2001 18:21:07)
+ * This abstract class is representing the Action of an indication rule.
+ * Specialize this in order to implement a new indication type. Creation date:
+ * (19.06.2001 18:21:07)
+ * 
  * @author Christian Betz
  */
 public abstract class ActionNextQASet extends RuleAction {
-	private java.util.List qasets;
+	private List<QASet> qasets;
 
 	/**
-	  * Indicates all QASets specified by "setQASets"-Method
-	  */
+	 * Indicates all QASets specified by "setQASets"-Method
+	 */
 	public void doIt(XPSCase theCase) {
-		doItWithContext(theCase, getCorrespondingRule().getProblemsolverContext());
+		doItWithContext(theCase, getCorrespondingRule()
+				.getProblemsolverContext());
 	}
-	
+
 	protected void doItWithContext(XPSCase theCase, Class context) {
-		Iterator qaset = getQASets().iterator();
-		while (qaset.hasNext()) {
-			QASet nextQASet = (QASet) qaset.next();
-			nextQASet.activate(
-				theCase,
-				getCorrespondingRule(),
-				context);
-				
+		for (QASet nextQASet : getQASets()) {
+			nextQASet.activate(theCase, getCorrespondingRule(), context);
+
 			if (nextQASet instanceof QContainer) {
 				theCase.getIndicatedQContainers().add((QContainer) nextQASet);
 			}
@@ -77,23 +73,20 @@ public abstract class ActionNextQASet extends RuleAction {
 
 	/**
 	 * @return all objects participating on the action.<BR>
-	 * same as getQASets()
+	 *         same as getQASets()
 	 */
-	public List getTerminalObjects() {
+	public List<QASet> getTerminalObjects() {
 		return getQASets();
 	}
 
 	/**
 	 * Inserts the corresponding rule as Knowledge to the given QASets
 	 */
-	private void insertRuleIntoQASets(List theQasets) {
+	private void insertRuleIntoQASets(List<QASet> theQasets) {
 		if (theQasets != null) {
-			Iterator qaset = theQasets.iterator();
-			while (qaset.hasNext()) {
-				((QASet) qaset.next()).addKnowledge(
-					getProblemsolverContext(),
-					getCorrespondingRule(),
-					MethodKind.BACKWARD);
+			for (QASet qaSet : theQasets) {
+				qaSet.addKnowledge(getProblemsolverContext(),
+						getCorrespondingRule(), MethodKind.BACKWARD);
 			}
 		}
 	}
@@ -101,14 +94,11 @@ public abstract class ActionNextQASet extends RuleAction {
 	/**
 	 * Removes the corresponding rule from the given QASets
 	 */
-	private void removeRuleFromOldQASets(List theQasets) {
+	private void removeRuleFromOldQASets(List<QASet> theQasets) {
 		if (theQasets != null) {
-			Iterator qaset = theQasets.iterator();
-			while (qaset.hasNext()) {
-				((QASet) qaset.next()).removeKnowledge(
-					getProblemsolverContext(),
-					getCorrespondingRule(),
-					MethodKind.BACKWARD);
+			for (QASet qaSet : theQasets) {
+				qaSet.removeKnowledge(getProblemsolverContext(),
+						getCorrespondingRule(), MethodKind.BACKWARD);
 			}
 		}
 	}
@@ -116,29 +106,26 @@ public abstract class ActionNextQASet extends RuleAction {
 	/**
 	 * sets a List of QASets that this Action can activate
 	 */
-	public void setQASets(List qasets) {
+	public void setQASets(List<QASet> qasets) {
 		removeRuleFromOldQASets(this.qasets);
 		this.qasets = qasets;
 		insertRuleIntoQASets(this.qasets);
 	}
 
 	/**
-	  * Deactivates all activated QASets
-	  */
+	 * Deactivates all activated QASets
+	 */
 	public void undo(XPSCase theCase) {
-		Iterator qaset = getQASets().iterator();
-		while (qaset.hasNext()) {
-			((QASet) (qaset.next())).deactivate(
-				theCase,
-				getCorrespondingRule(),
-				getCorrespondingRule().getProblemsolverContext());
+		for (QASet qaset : getQASets()) {
+			qaset.deactivate(theCase, getCorrespondingRule(),
+					getCorrespondingRule().getProblemsolverContext());
 		}
-	}	
-	
-	
+	}
+
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode()) + getQASets();
+		return getClass().getSimpleName() + "@"
+				+ Integer.toHexString(hashCode()) + getQASets();
 	}
-	
+
 }

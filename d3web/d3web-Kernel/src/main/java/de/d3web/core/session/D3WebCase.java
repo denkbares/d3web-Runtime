@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 
 import de.d3web.abstraction.inference.PSMethodQuestionSetter;
 import de.d3web.core.KnowledgeBase;
+import de.d3web.core.TerminologyObject;
 import de.d3web.core.inference.DefaultPropagationController;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
@@ -40,6 +41,9 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.PropagationContoller;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.session.blackboard.Blackboard;
+import de.d3web.core.session.blackboard.DefaultFact;
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.core.session.interviewmanager.QASetManager;
 import de.d3web.core.session.interviewmanager.QASetManagerFactory;
@@ -157,7 +161,8 @@ public class D3WebCase implements XPSCase {
 	D3WebCase(KnowledgeBase kb, QASetManagerFactory theQamFactory) {
 		this.kb = kb;
 		this.propagationController = new DefaultPropagationController(this);
-
+		blackboard = new Blackboard(this);
+		
 		setQASetManagerFactory(theQamFactory);
 
 		properties = new Properties();
@@ -194,6 +199,7 @@ public class D3WebCase implements XPSCase {
 	}
 
 	private String id = null;
+	private Blackboard blackboard;
 
 	/*
 	 * @see de.d3web.kernel.domainModel.IDReference#getId()
@@ -249,7 +255,7 @@ public class D3WebCase implements XPSCase {
 		try {
 			for (Question question : this.getAnsweredQuestions()) {
 				Object[] oldValue = new Object[0];
-				Object[] newValue = getValue(question, null);
+				Object[] newValue = getValue(question);
 				propagationContoller.propagate(question, oldValue, newValue, psmethod);
 			}
 			// TODO: das ist so viel zu aufwendig, wenn viele Lösungen sind. Man
@@ -448,18 +454,30 @@ public class D3WebCase implements XPSCase {
 	 * @author joba
 	 */
 	private void propagateValue(ValuedObject valuedObject, Object[] oldValue, Object[] newValue) {
+		
 		// notify the dialog control if questions have been changed
-		// ugly implementation, use strategy pattern later
 		if (valuedObject instanceof Question) {
 			// removeQuestion((Question) valuedObject);
 			addAnsweredQuestions((Question) valuedObject);
 		}
 
 		// only propagate to ValuedObjects which are
-		// NamedObjects (and so have KnowledgeMaps
+		// NamedObjects (and so have KnowledgeMaps)
 		if (valuedObject instanceof NamedObject) {
-			this.propagationController.propagate((NamedObject) valuedObject, oldValue,
+			this.propagationController.propagate((NamedObject) valuedObject, 
+					oldValue,
 					newValue);
+		}
+	}
+
+	private void updateBlackboard(ValuedObject valuedObject, Object[] newValue, 
+			Object source, PSMethod method) {
+		// TODO: consider 'context' and 'psMethod' when adding a fact
+		if (valuedObject instanceof TerminologyObject) {
+			Fact fact = new DefaultFact((TerminologyObject)valuedObject, 
+					ValueFactory.toValue(valuedObject, newValue, this), 
+					source, method);
+			getBlackboard().addValueFact(fact);			
 		}
 	}
 
@@ -534,17 +552,17 @@ public class D3WebCase implements XPSCase {
 		this.usedPSMethods = new LinkedList<PSMethod>(usedPSMethods);
 	}
 
-	/**
-	 * Sets the values for a specified question and propagates it to connected
-	 * problem-solving-methods. There is no information (context) from where
-	 * this setValue was called. Creation date: (28.08.00 17:16:13)
-	 * 
-	 * @param valuedObject
-	 * @param answers
-	 */
+	
+
+	@Override
 	public void setValue(ValuedObject valuedObject, Object[] values) {
 		// do not know the real context, so send PSMethod.class as context
 		setValue(valuedObject, values, PSMethod.class);
+		
+		updateBlackboard(valuedObject, values, 
+				this, 
+				PSMethodUserSelected.getInstance());
+
 	}
 
 	/**
@@ -561,16 +579,23 @@ public class D3WebCase implements XPSCase {
 	 *            rule, which sets the value
 	 */
 	public void setValue(ValuedObject valuedObject, Object[] values, Rule ruleContext) {
-		Object[] oldValue = getValue(valuedObject, null);
+		Object[] oldValue = getValue(valuedObject);
 		if (valuedObject instanceof Question) {
 			((Question) valuedObject).setValue(this, ruleContext, values);
 		}
 		else {
 			valuedObject.setValue(this, values);
 		}
-		Object[] newValue = getValue(valuedObject, ruleContext.getProblemsolverContext());
+		Object[] newValue = getValue(valuedObject);
 		notifyListeners(valuedObject, ruleContext);
 		propagateValue(valuedObject, oldValue, newValue);
+
+		// TODO: currently we do not distinguish PSMethods 
+		//       different than UserSelected
+		updateBlackboard(valuedObject, values, 
+				ruleContext, 
+				PSMethodUserSelected.getInstance());
+
 	}
 
 	/**
@@ -587,20 +612,26 @@ public class D3WebCase implements XPSCase {
 	 * @param context
 	 *            problem-solver context
 	 */
-	public void setValue(ValuedObject valuedObject, Object[] values, Class<? extends PSMethod> context) {
-		Object[] oldValue = getValue(valuedObject, context);
+	public void setValue(ValuedObject valuedObject, Object[] values, Class<? extends PSMethod> context) {		
+		Object[] oldValue = getValue(valuedObject);
 		if (valuedObject instanceof Diagnosis) {
 			((Diagnosis) valuedObject).setValue(this, values, context);
 		}
 		else {
 			valuedObject.setValue(this, values);
 		}
-		Object[] newValue = getValue(valuedObject, context);
+		Object[] newValue = getValue(valuedObject);
 		notifyListeners(valuedObject, context);
 		propagateValue(valuedObject, oldValue, newValue);
+		
+		// TODO: currently we do not distinguish PSMethods 
+		//       different than UserSelected
+		updateBlackboard(valuedObject, values, 
+				this, 
+				PSMethodUserSelected.getInstance());
 	}
 
-	private Object[] getValue(ValuedObject valuedObject, Class<? extends PSMethod> context) {
+	private Object[] getValue(ValuedObject valuedObject) {
 		if (valuedObject instanceof Diagnosis) {
 			return new DiagnosisState[] { ((Diagnosis) valuedObject).getState(this) };
 		}
@@ -610,6 +641,11 @@ public class D3WebCase implements XPSCase {
 		else {
 			throw new IllegalStateException("unexpected ValuedObject");
 		}
+	}
+
+	@Override
+	public Blackboard getBlackboard() {
+		return blackboard;
 	}
 
 	/**
@@ -705,6 +741,7 @@ public class D3WebCase implements XPSCase {
 	public PropagationContoller getPropagationContoller() {
 		return propagationController;
 	}
+
 
 	// ******************** /event notification ********************
 

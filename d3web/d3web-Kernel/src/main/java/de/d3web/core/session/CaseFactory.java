@@ -28,6 +28,7 @@ import java.util.List;
 
 import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.interviewmanager.DefaultQASetManagerFactory;
 import de.d3web.core.session.interviewmanager.DialogProxy;
 import de.d3web.core.session.interviewmanager.MQDialogController;
@@ -58,9 +59,6 @@ public class CaseFactory {
 			this.qaSetManagerClass = qaSetManagerClass;
 		}
 		
-		/* (non-Javadoc)
-		 * @see de.d3web.kernel.dialogControl.QASetManagerFactory#createQASetManager(de.d3web.kernel.XPSCase)
-		 */
 		public QASetManager createQASetManager(XPSCase theCase) {
 			try {
 				Constructor<? extends QASetManager> constructor =
@@ -74,34 +72,40 @@ public class CaseFactory {
 	}
 
 	/**
-	 *	Factory-method that produces instances of XPSCase with default QASetManagerFactory
-	 *	@param kb Knowledgebase used in the case.
+	 *	Factory-method that creates instances of XPSCase with default QASetManagerFactory
+	 *	@param kb the knowledge base used in the case.
 	 *  @return new XPSCase-object with KnowledgeBase kb
 	 */
 	public static synchronized XPSCase createXPSCase(KnowledgeBase kb) {
-		return new D3WebCase(kb, new DefaultQASetManagerFactory());
+		return createCase(kb, new DefaultQASetManagerFactory());
 	}
 	
+	private static XPSCase createCase(KnowledgeBase kb,
+			QASetManagerFactory defaultQASetManagerFactory) {
+		XPSCase theCase = new D3WebCase(kb, defaultQASetManagerFactory);
+		return theCase;
+	}
+
 	/**
 	 *	Factory-method that produces instances of XPSCase
-	 *	@param kb Knowledgebase used in the case.
+	 *	@param kb the knowledge base used in the case.
 	 *  @return new XPSCase-object with KnowledgeBase kb
 	 */
 	public static synchronized XPSCase createXPSCase(
 		KnowledgeBase kb,
 		QASetManagerFactory factory) {
-		return new D3WebCase(kb, factory);
+		return createCase(kb, factory);
 	}
 	
 	/**
 	 *	Factory-method that produces instances of XPSCase
-	 *	@param kb Knowledgebase used in the case.
+	 *	@param kb the knowledge base used in the case.
 	 *  @return new XPSCase-object with KnowledgeBase kb
 	 */
 	public static synchronized XPSCase createXPSCase(
 			KnowledgeBase kb,
 			Class<? extends QASetManager> qaManagerClass) {
-		return new D3WebCase(kb, new QASetManagerFactoryAdapter(qaManagerClass));
+		return createCase(kb, new QASetManagerFactoryAdapter(qaManagerClass));
 	}
 	
 	private static void addUsedPSMethods(XPSCase newCase, List<? extends PSMethod> psMethods) {
@@ -115,7 +119,7 @@ public class CaseFactory {
 	 * Factory-method that returns an instance of XPSCase. All normally indicated questions are answered
 	 * with the values of "proxy" (if any). The questions are answered in the order that is
 	 * defined by the MQDialogController. 
-	 * @param kb Knowledgebase used in the case.
+	 * @param kb the knowledge base used in the case.
 	 * @param dialogControllerType used in the case
 	 * @param proxy DialogProxy that contains values of questions
 	 * @return XPSCase
@@ -132,7 +136,7 @@ public class CaseFactory {
 	 * Factory-method that returns an instance of XPSCase. All questions that are indicated normally
 	 * or that are children of registered containers are answered with the values of "proxy" (if any).
 	 * The questions are answered in the order that is defined by the MQDialogController. 
-	 * @param kb Knowledgebase used in the case.
+	 * @param kb the knowledge base used in the case.
 	 * @param dialogControllerType used in the case (MQ- or OQDialogController)
 	 * @param proxy DialogProxy that contains values of questions
 	 * @param registeredQContainers Collection that contains all containers that have to be asked in any
@@ -147,7 +151,7 @@ public class CaseFactory {
 		Collection<? extends QContainer> registeredQContainers,
 		List<? extends PSMethod> usedPSMethods) {
 
-		XPSCase newCase = createXPSCase(kb, dialogControllerType);
+		XPSCase newCase = createXPSCase(kb);
 		addUsedPSMethods(newCase, usedPSMethods);
 		
 		MQDialogController mqdc = null;

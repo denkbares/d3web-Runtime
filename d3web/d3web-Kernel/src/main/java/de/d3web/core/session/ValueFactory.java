@@ -1,0 +1,61 @@
+package de.d3web.core.session;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.AnswerDate;
+import de.d3web.core.session.values.AnswerNum;
+import de.d3web.core.session.values.AnswerText;
+import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.DateValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.TextValue;
+import de.d3web.core.session.values.Unknown;
+import de.d3web.core.terminology.QuestionDate;
+import de.d3web.core.terminology.QuestionMC;
+import de.d3web.core.terminology.QuestionNum;
+import de.d3web.core.terminology.QuestionOC;
+import de.d3web.core.terminology.QuestionText;
+
+public class ValueFactory {
+
+	// it's planned to eliminate this method later, since
+	// the dialog should yield Value instances not 
+	// Answer instances any more
+	public static Value toValue(ValuedObject valuedObject, 
+			Object[] newValue, XPSCase theCase) {
+		if (newValue == null || newValue.length == 0) {
+			return null;
+		}
+		if (valuedObject instanceof QuestionMC) {
+			List<ChoiceValue> values = new ArrayList<ChoiceValue>(newValue.length);
+			for (int i = 0; i < newValue.length; i++) {
+				AnswerChoice answer = (AnswerChoice)newValue[i];
+				values.add(new ChoiceValue(answer));
+			}
+			return new MultipleChoiceValue(values);
+		} else {
+			Object o = newValue[0];
+			if (o instanceof AnswerUnknown) {
+				return new Unknown();
+			} else if (valuedObject instanceof QuestionNum) {
+				Double d = (Double) ((AnswerNum)o).getValue(theCase);
+				return new NumValue(d);
+			} else if (valuedObject instanceof QuestionOC) {
+				return new ChoiceValue((AnswerChoice)o);
+			} else if (o instanceof QuestionDate) {
+				Date date = (Date) ((AnswerDate)o).getValue(theCase);
+				return new DateValue(date);
+			} else if (o instanceof QuestionText) {
+				String text = ((AnswerText)o).getText();
+				return new TextValue(text);
+			} 
+		}
+		return null;
+	}
+
+}

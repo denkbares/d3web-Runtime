@@ -20,7 +20,7 @@
 
 package de.d3web.core.terminology;
 
-import de.d3web.core.Value;
+import de.d3web.core.session.Value;
 import de.d3web.scoring.DiagnosisScore;
 import de.d3web.scoring.HeuristicRating;
 
@@ -32,7 +32,7 @@ import de.d3web.scoring.HeuristicRating;
  * @see Diagnosis
  * @see DiagnosisScore
  */
-public class DiagnosisState implements Comparable<DiagnosisState>, Value {
+public class DiagnosisState implements Value {
 
 	public enum State {
 		EXCLUDED, UNCLEAR, SUGGESTED, ESTABLISHED;
@@ -171,9 +171,11 @@ public class DiagnosisState implements Comparable<DiagnosisState>, Value {
 	 * the state is compared to an instance of a different subclass.
 	 */
 	@Override
-	public int compareTo(DiagnosisState other) {
-		if (other == null) throw new NullPointerException();
-		return this.state.ordinal() - other.state.ordinal();
+	public int compareTo(Value other) {
+		if (other instanceof DiagnosisState) {
+			return this.state.ordinal() - ((DiagnosisState)other).state.ordinal();
+		}
+		return -1;
 	}
 
 	@Override
@@ -199,6 +201,11 @@ public class DiagnosisState implements Comparable<DiagnosisState>, Value {
 			return null;
 		}
 		return getState(diagnosisScore.getScore());
+	}
+
+	@Override
+	public Object getValue() {
+		return getState();
 	}
 
 }

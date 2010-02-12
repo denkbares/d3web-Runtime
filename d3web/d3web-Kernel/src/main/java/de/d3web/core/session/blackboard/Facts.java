@@ -8,8 +8,11 @@ import java.util.logging.Logger;
 import de.d3web.core.Indication;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.manage.AnswerFactory;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.AnswerNum;
 import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.Unknown;
 import de.d3web.core.terminology.Answer;
 import de.d3web.core.terminology.DiagnosisState;
 import de.d3web.core.terminology.Question;
@@ -168,35 +171,34 @@ public class Facts {
 	 * @return the unique or most recent fact
 	 */
 	public static Fact mergeAnswerFacts(Fact[] facts) {
-		Answer resultAnswer = null;
+		Value resultValue = null;
 		Question question = (Question) facts[0].getTerminologyObject();
 		PSMethod psMethod = facts[0].getPSMethod();
 		facts = filterFactsForSourceSolvers(facts);
 		if (facts.length == 1) return facts[0];
 		for (Fact fact : facts) {
-			Answer answer = (Answer) fact.getValue();
-			if (answer instanceof AnswerUnknown) {
+			Value value = (Value) fact.getValue();
+			if (value instanceof Unknown) {
 				// handle unknown as first one!
 				// unknown is never taken into the merge operation
 				// only if no other value is available at the end,
 				// unknown is used!
 			}
 			// otherwise calculate the sum of resultAnswer and answer
-			else if (resultAnswer == null) {
+			else if (resultValue == null) {
 				// if it is the first fact, use it as result.
 				// this is independent to the type of answer.
 				// use the following merge operations only for next ones
-				resultAnswer = answer;
+				resultValue = value;
 			}
-			else if (answer instanceof AnswerNum) {
+			else if (value instanceof NumValue) {
 				// for numeric questions, add the values
-				AnswerNum num1 = (AnswerNum) resultAnswer;
-				AnswerNum num2 = (AnswerNum) answer;
-				Number d1 = (Number) num1.getValue(null);
-				Number d2 = (Number) num2.getValue(null);
+				NumValue num1 = (NumValue) resultValue;
+				NumValue num2 = (NumValue) value;
+				Number d1 = (Number) num1.getValue();
+				Number d2 = (Number) num2.getValue();
 				double sum = d1.doubleValue() + d2.doubleValue();
-				resultAnswer = AnswerFactory.createAnswerNum(sum);
-				resultAnswer.setQuestion(question);
+				resultValue = new NumValue(sum); // deleteme: AnswerFactory.createAnswerNum(sum);
 			}
 			else if (question instanceof QuestionNum) {
 				// for mc questions, combine the choices
@@ -207,15 +209,15 @@ public class Facts {
 			}
 			else {
 				// otherwise use the lowest value
-				if (resultAnswer == null || answer.compareTo(resultAnswer) < 0) {
-					resultAnswer = answer;
+				if (resultValue == null || value.compareTo(resultValue) < 0) {
+					resultValue = value;
 				}
 			}
 		}
-		if (resultAnswer == null) {
-			resultAnswer = question.getUnknownAlternative();
+		if (resultValue == null) {
+			resultValue = new Unknown();
 		}
-		return new DefaultFact(question, resultAnswer, psMethod, psMethod);
+		return new DefaultFact(question, resultValue, psMethod, psMethod);
 	}
 
 	/**

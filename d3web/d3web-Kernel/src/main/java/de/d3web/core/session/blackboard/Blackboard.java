@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import de.d3web.core.Indication;
 import de.d3web.core.InterviewObject;
 import de.d3web.core.TerminologyObject;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.terminology.Answer;
 import de.d3web.core.terminology.Diagnosis;
@@ -244,8 +245,12 @@ public class Blackboard {
 	 *            the question to take the rating from
 	 * @return the answer of the question
 	 */
-	public Answer getAnswer(Question question) {
-		return (Answer) getValueFact(question).getValue();
+//	public Answer getAnswer(Question question) {
+//		return (Answer) getValueFact(question).getValue();
+//	}
+	
+	public Value getValue(Question question) {
+		return getValueFact(question).getValue();
 	}
 
 	/**

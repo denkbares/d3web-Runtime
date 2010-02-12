@@ -113,6 +113,16 @@ public class KnowledgeBaseManagement {
 		return d;
 	}
 
+	/**
+	 * Creates a new solution and adds the instance as child of 
+	 * the root of the solution hierarchy.
+	 * @param name The name of the new solution
+	 * @return the newly created solution
+	 */
+	public Diagnosis createDiagnosis(String name) {
+		return createDiagnosis(name, knowledgeBase.getRootDiagnosis());
+	}
+
 	// [TODO] joba : throw exception, of parent an instanceof question
 	public QContainer createQContainer(String name, QASet parent) {
 		QContainer q = new QContainer(findNewIDFor(QContainer.class));
@@ -507,5 +517,16 @@ public class KnowledgeBaseManagement {
 	public KnowledgeBase getKnowledgeBase() {
 		return knowledgeBase;
 	}
+
+	/**
+	 * Creates a new questionnaire with the specified name
+	 * as a child of the root questionnaire hierarchy.
+	 * @param name the specified name of the questionnaire
+	 * @return the newly created {@link QContainer}
+	 */
+	public QContainer createQContainer(String name) {
+		return createQContainer(name, knowledgeBase.getRootQASet());
+	}
+
 
 }

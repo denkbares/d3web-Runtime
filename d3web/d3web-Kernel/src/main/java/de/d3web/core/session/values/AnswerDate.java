@@ -43,7 +43,7 @@ import de.d3web.core.terminology.QuestionDate;
 public class AnswerDate extends Answer {
 
 	/**
-	 * This wrapper class is neccessary for the evaluation of
+	 * This wrapper class is necessary for the evaluation of
 	 * AnswerDate values which are EvaluatableAnswerDateValues 
 	 */
 	private class DateWrapper implements EvaluatableAnswerDateValue {

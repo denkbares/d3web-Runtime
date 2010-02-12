@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.KnowledgeBase;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.core.terminology.Question;
@@ -145,9 +146,11 @@ public abstract class ExceptionQuestion extends Question {
     /**
      * does nothing because this marker class needs no value
      */
+    @Deprecated
     public void setValue(de.d3web.core.session.XPSCase theCase,
 	    java.lang.Object[] values) {
     }
+
 
     public String toString() {
 	return "ExQ";

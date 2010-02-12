@@ -21,6 +21,7 @@
 package de.d3web.core.terminology;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
@@ -69,7 +70,7 @@ public class QuestionMC extends QuestionChoice {
 			return values;
 		} else {
 			// System.err.println("Fehlerhafte initialisierung des Fall-Wertes von MC-Fragen");
-			return new LinkedList();
+			return Collections.EMPTY_LIST;
 		}
 	}
 
@@ -82,17 +83,17 @@ public class QuestionMC extends QuestionChoice {
 	 * @param antwort an array of Answer instances
 	 */
 	public void setValue(XPSCase theCase, Object[] values) {
-		List newValues = new ArrayList(values.length);
+		List<Answer> newValues = new ArrayList<Answer>(values.length);
 		for (int i = 0; i < values.length; i++) {
 			if (values[i] instanceof AnswerNum) {
 				values[i] = convertNumericalValue(theCase, (AnswerNum)values[i]);
 			}
-			newValues.add(values[i]);
+			newValues.add((Answer)values[i]);
 		}
 		((CaseQuestionMC) theCase.getCaseObject(this)).setValue(newValues);
 		notifyListeners(theCase,this);
-	}
-
+	}	
+	
 	public String toString() {
 		return super.toString();
 	}

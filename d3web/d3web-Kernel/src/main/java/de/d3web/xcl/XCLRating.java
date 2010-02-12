@@ -1,5 +1,6 @@
 package de.d3web.xcl;
 
+import de.d3web.core.session.Value;
 import de.d3web.core.terminology.DiagnosisState;
 import de.d3web.xcl.inference.XCLInferenceTrace;
 
@@ -27,6 +28,11 @@ public class XCLRating extends DiagnosisState {
 	public double getScore() {
 		return inferenceTrace.getScore();
 	}
+	
+	@Override
+	public Object getValue() {
+		return getScore();
+	}
 
 	/**
 	 * Returns the support of this set covering rating.
@@ -45,7 +51,7 @@ public class XCLRating extends DiagnosisState {
 	// oh my godness, here joba will cry...
 	// TODO: how to order two set covering ratings if one has higher rating but less support?
 	@Override
-	public int compareTo(DiagnosisState otherState) {
+	public int compareTo(Value otherState) {
 		if (otherState instanceof XCLRating) {
 			// if both ratings are heuristic ones, ...
 			XCLRating other = (XCLRating) otherState;

@@ -22,6 +22,7 @@ package de.d3web.scoring;
 
 import java.util.logging.Logger;
 
+import de.d3web.core.session.Value;
 import de.d3web.core.terminology.Diagnosis;
 import de.d3web.core.terminology.DiagnosisState;
 
@@ -33,7 +34,7 @@ import de.d3web.core.terminology.DiagnosisState;
  * @see Diagnosis
  * @see DiagnosisState
  */
-public class DiagnosisScore implements Comparable {
+public class DiagnosisScore implements Value {
 
 	private double score;
 	private Score aPrioriScore;
@@ -88,23 +89,21 @@ public class DiagnosisScore implements Comparable {
 	}
 
 	/**
-	 * Neccessary implementation for the Comparable-interface
 	 * Compares this DiagnosisScore to any other Object.
-	 * @return 0, if the given Object is not instanceof DiagnosisScore, +1 if other score ist greater than this, -1 else.
+	 * @return 0, if the given Object is not instance of DiagnosisScore, 
+	 *             +1 if other score is greater than this, -1 else.
 	 */
-	public int compareTo(Object o) {
-		DiagnosisScore d;
-		try {
-			d = (DiagnosisScore) o;
-		} catch (Exception e) {
-			return 0;
-		}
-		double p = d.getScore();
-		if (p > getScore())
-			return +1;
-		else if (p == getScore())
-			return 0;
-		else
+	public int compareTo(Value o) {
+		if (o == null) throw new NullPointerException();
+		if (o instanceof DiagnosisScore) {
+			double  oscore = ((DiagnosisScore)o).getScore();
+			if (oscore > getScore())
+				return +1;
+			else if (oscore == getScore())
+				return 0;
+			else
+				return -1;			
+		} else
 			return -1;
 	}
 
@@ -184,5 +183,10 @@ public class DiagnosisScore implements Comparable {
 	 */
 	public String toString() {
 		return "" + getScore();
+	}
+
+	@Override
+	public Object getValue() {
+		return getScore();
 	}
 }

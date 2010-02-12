@@ -25,11 +25,11 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import de.d3web.core.TerminologyObject;
-import de.d3web.core.Value;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;

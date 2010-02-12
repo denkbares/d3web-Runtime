@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import de.d3web.abstraction.formula.FormulaNumberElement;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseQuestionNum;
 import de.d3web.core.session.blackboard.XPSCaseObject;
@@ -68,9 +69,9 @@ public class QuestionNum extends Question {
 
 	/**
 	 * @param theCase current case
-	 * @return 1-element-vector with containing an AnswerNum 
+	 * @return 1-element list containing an AnswerNum 
 	 */
-	public List getValue(XPSCase theCase) {
+	public List<Answer> getValue(XPSCase theCase) {
 		Object value =
 			((CaseQuestionNum) theCase.getCaseObject(this)).getValue();
 
@@ -81,11 +82,11 @@ public class QuestionNum extends Question {
 			tempValue = value;
 
 		if (tempValue != null) {
-			List v = new LinkedList();
-			v.add(tempValue);
+			List<Answer> v = new LinkedList<Answer>();
+			v.add((Answer)tempValue);
 			return (v);
 		} else {
-			return new LinkedList();
+			return new LinkedList<Answer>();
 		}
 	}
 
@@ -109,7 +110,8 @@ public class QuestionNum extends Question {
 	public String getXMLString() {
 		return "<QuestionNum ID='" + this.getId() + "'></QuestionNum>\n";
 	}
-
+	
+	@Deprecated
 	public void setValue(XPSCase theCase, Object[] values) {
 		if (values.length == 0) {
 			((CaseQuestionNum) theCase.getCaseObject(this)).setValue(null);

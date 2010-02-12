@@ -21,6 +21,7 @@
 package de.d3web.core.terminology;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -55,40 +56,40 @@ public class QuestionText extends Question {
 	}
 
 	/**
-	 * @return a newly created user-case dependend CaseQuestionText object.
+	 * @return a newly created user-case dependent CaseQuestionText object.
 	 */
 	public XPSCaseObject createCaseObject(XPSCase session) {
 		return new CaseQuestionText(this);
 	}
 
 	/**
-	 * @return the height of the displayed textfield asking the text question.
+	 * @return the height of the displayed text field asking the text question.
 	 */
 	public int getHeight() {
 		return height;
 	}
 
-	public java.util.List getValue(XPSCase theCase) {
+	public List<Answer> getValue(XPSCase theCase) {
 		Answer value =
 			((CaseQuestionText) theCase.getCaseObject(this)).getValue();
 		if (value != null) {
-			ArrayList v = new ArrayList(1);
+			ArrayList<Answer> v = new ArrayList<Answer>(1);
 			v.add(value);
 			return (v);
 		} else {
-			return new ArrayList(0);
+			return Collections.EMPTY_LIST;
 		}
 	}
 
 	/**
-	 * @return the width of the displayed textfield asking the text question.
+	 * @return the width of the displayed text field asking the text question.
 	 */
 	public int getWidth() {
 		return width;
 	}
 
 	/**
-	 * Sets the height of the displayed textfield
+	 * Sets the height of the displayed text field
 	 * asking the text question. The specified
 	 * value must be greater 0.
 	 * @param newHeight int the specified height
@@ -98,32 +99,22 @@ public class QuestionText extends Question {
 			this.height = height;
 	}
 
+	public void setValue(XPSCase theCase, Answer value) {
+		Answer answeredValue = (Answer)value;
+		((CaseQuestionText) theCase.getCaseObject(this)).setValue(answeredValue);
+		notifyListeners(theCase,this);
+	}
+	
 	public void setValue(XPSCase theCase, Object[] values) {
-		//List oldValues = getValue(theCase);
-		List newValues = new ArrayList(1);
 		if (values.length <= 1) {
-			// Bei Text-Fragen kann nur höchstens eine AntwortAlternative angegeben sein.
-			Answer newValue;
-			if (values.length == 1) {
-				newValue = (Answer) values[0];
-				newValues.add(newValue);
-			} else {
-				newValue = null;
-			}
-			((CaseQuestionText) theCase.getCaseObject(this)).setValue(newValue);
-
-			/* joba: Propagierung übenrimmt jetzt der Fall
-			// weiterpropagieren der neuen Werte
-			propagate(theCase, oldValues, newValues);
-			*/
+			setValue(theCase, (Answer)values[1]);
 		} else {
 			Logger.getLogger(this.getClass().getName()).warning("wrong number of answers");
 		}
-		notifyListeners(theCase,this);
 	}
 
 	/**
-	 * Sets the width of the displayed textfield
+	 * Sets the width of the displayed text field
 	 * asking the text question. The specified
 	 * value must be greater 0.
 	 * @param newHeight int the specified width

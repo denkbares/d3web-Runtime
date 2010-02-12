@@ -20,8 +20,8 @@
 
 package de.d3web.core.terminology;
 
-import de.d3web.core.Value;
 import de.d3web.core.manage.AnswerFactory;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerNum;
@@ -42,7 +42,7 @@ import de.d3web.core.terminology.info.PropertiesContainer;
  * @see Question
  * TODO: remove IDOPbject from Answer. They do not should have any ids.
  */
-public abstract class Answer extends IDObject implements Value, PropertiesContainer, Comparable<Answer> {
+public abstract class Answer extends IDObject implements PropertiesContainer, Comparable<Answer> {
 	
 	private static final long serialVersionUID = 5842799720984682025L;
 

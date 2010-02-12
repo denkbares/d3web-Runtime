@@ -1,7 +1,9 @@
 package de.d3web.core;
 
+import de.d3web.core.session.Value;
 
-public class Indication implements Value, Comparable<Indication> {
+
+public class Indication implements Value {
 
 	public enum State {
 		CONTRA_INDICATED, NEUTRAL, INDICATED, INSTANT_INDICATED;
@@ -49,6 +51,11 @@ public class Indication implements Value, Comparable<Indication> {
 		return state;
 	}
 
+	@Override
+	public Object getValue() {
+		return getState();
+	}
+	
 	/**
 	 * Returns whether the state of this indication equals to the specified state.
 	 * 
@@ -94,9 +101,13 @@ public class Indication implements Value, Comparable<Indication> {
 	}
 
 	@Override
-	public int compareTo(Indication other) {
+	public int compareTo(Value other) {
 		if (other == null) throw new NullPointerException();
-		return this.state.ordinal() - other.state.ordinal();
+		if (other instanceof Indication) {
+			return this.state.ordinal() - ((Indication)other).state.ordinal();
+		} else {
+			return -1;
+		}
 	}
 	
 	@Override

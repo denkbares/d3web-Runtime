@@ -1,5 +1,6 @@
 package de.d3web.scoring;
 
+import de.d3web.core.session.Value;
 import de.d3web.core.terminology.DiagnosisState;
 
 public class HeuristicRating extends DiagnosisState {
@@ -60,7 +61,7 @@ public class HeuristicRating extends DiagnosisState {
 	}
 
 	@Override
-	public int compareTo(DiagnosisState other) {
+	public int compareTo(Value other) {
 		if (other instanceof HeuristicRating) {
 			// if both ratings are heuristic ones, compare by score
 			return (int) Math.signum(this.score - ((HeuristicRating) other).score);
@@ -84,5 +85,10 @@ public class HeuristicRating extends DiagnosisState {
 			score += rating.getScore();
 		}
 		return new HeuristicRating(score);
+	}
+	
+	@Override
+	public Object getValue() {
+		return getScore();
 	}
 }

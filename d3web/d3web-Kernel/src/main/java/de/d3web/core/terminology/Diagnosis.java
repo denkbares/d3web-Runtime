@@ -28,6 +28,7 @@ import de.d3web.core.TerminologyObject;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.D3WebCase;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.ValuedObject;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseDiagnosis;
@@ -331,8 +332,33 @@ public class Diagnosis extends NamedObject implements ValuedObject, TerminologyO
 	 * This is the official method to change the state of the Diagnosis. The
 	 * first Object in the values array must be an DiagnosisScore Object.
 	 */
+	@Deprecated
 	public void setValue(XPSCase theCase, Object[] values) {
-		setValue(theCase, values, null);
+		setValue(theCase, (Value)values[0], null);
+	}
+
+	public void setValue(XPSCase theCase, Value value, Class context) {
+		try {
+			DiagnosisScore diagnosisScore = null;
+			DiagnosisState oldState = getState(theCase, context);
+			if (value != null)  {
+				if (value instanceof DiagnosisScore) {
+					diagnosisScore = (DiagnosisScore) value;
+					((CaseDiagnosis) theCase.getCaseObject(this)).setValue(diagnosisScore, context);
+				} else if (value instanceof DiagnosisState) {
+					((CaseDiagnosis) theCase.getCaseObject(this)).setValue(value, context);
+				}
+			}
+			DiagnosisState newState = getState(theCase, context);
+			// this does simply a check if state has changed
+			checkForNewState(oldState, newState, theCase, context);
+			// d3web.debug
+			notifyListeners(theCase, this);
+
+		} catch (Exception ex) {
+			Logger.getLogger(this.getClass().getName()).throwing(this.getClass().getName(),
+					"setValue(XPSCase, values(" + value + ")", ex);
+		}
 	}
 
 	/**
@@ -348,6 +374,7 @@ public class Diagnosis extends NamedObject implements ValuedObject, TerminologyO
 	 * @param values an array, where the first element holds the new value of the Diagnosis
 	 * @param context the {@link PSMethod} class that set the new value 
 	 */
+	@Deprecated
 	public void setValue(XPSCase theCase, Object[] values, Class context) {
 		try {
 			DiagnosisScore diagnosisScore = null;

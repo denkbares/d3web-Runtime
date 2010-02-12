@@ -1,8 +1,8 @@
 package de.d3web.core.session.blackboard;
 
 import de.d3web.core.TerminologyObject;
-import de.d3web.core.Value;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.session.Value;
 
 public class DefaultFact implements Fact {
 	
@@ -11,7 +11,8 @@ public class DefaultFact implements Fact {
 	private final Object source;
 	private final PSMethod psMethod;
 	
-	public DefaultFact(TerminologyObject terminologyObject, Value value, Object source, PSMethod psMethod) {
+	public DefaultFact(TerminologyObject terminologyObject, 
+			           Value value, Object source, PSMethod psMethod) {
 		super();
 		this.terminologyObject = terminologyObject;
 		this.value = value;

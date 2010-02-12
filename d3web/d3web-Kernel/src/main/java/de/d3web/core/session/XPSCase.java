@@ -29,6 +29,7 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationContoller;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.core.session.interviewmanager.DialogController;
 import de.d3web.core.session.interviewmanager.QASetManager;
@@ -220,6 +221,7 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	 */
 	void setValue(ValuedObject o, Object[] value);
 
+	
 	/**
 	 * Assigns the specified value(s) to the specified {@link ValuedObject},
 	 * e.g., a {@link Question} or a {@link Diagnosis} receives a new value. The
@@ -277,4 +279,9 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	 */
 	void removeListener(XPSCaseEventListener listener);
 
+	/**
+	 * The blackboard manages all entered and derived facts of the session.
+	 * @return
+	 */
+	Blackboard getBlackboard();
 }
