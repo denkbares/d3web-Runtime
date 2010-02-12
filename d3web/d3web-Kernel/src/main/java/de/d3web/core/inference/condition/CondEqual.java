@@ -150,7 +150,7 @@ public class CondEqual extends CondQuestion {
 		for (Object o: values) {
 			ret += getId(o)+",";
 		}
-		ret = ret.substring(0, ret.length()-2);
+		ret = ret.substring(0, ret.length()-1);
 		return ret;
 	}
 	
