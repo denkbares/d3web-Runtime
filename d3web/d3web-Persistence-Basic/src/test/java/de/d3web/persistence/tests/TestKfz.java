@@ -188,9 +188,9 @@ public void testFormulaSchema() {
 		"(2) --> Msi4: "
 			+ ((AnswerChoice) Msi4.getValue(theCase).get(0)).verbalizeValue(theCase));
 	//
-	assertTrue(
+	assertEquals(
 		"Error with formula (2)",
-		ratingHigh == Msi4.getValue(theCase).get(0));
+		ratingHigh, Msi4.getValue(theCase).get(0));
 
 	// 10+9.5 < 20 so answer is "leicht erhöht" as expected
 	highAnswer = Mf6.getAnswer(theCase, new Double(9.5));
@@ -201,9 +201,9 @@ public void testFormulaSchema() {
 		"(3) --> Msi4: "
 			+ ((AnswerChoice) Msi4.getValue(theCase).get(0)).verbalizeValue(theCase));
 	//
-	assertTrue(
+	assertEquals(
 		"Error with formula (3)",
-		ratingHigh == Msi4.getValue(theCase).get(0));
+		ratingHigh, Msi4.getValue(theCase).get(0));
 
 	//
 	AnswerNum veryHighAnswer = Mf6.getAnswer(theCase, new Double(15));

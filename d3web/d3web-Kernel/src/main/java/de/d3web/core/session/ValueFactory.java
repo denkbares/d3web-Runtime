@@ -34,8 +34,13 @@ public class ValueFactory {
 		if (valuedObject instanceof QuestionMC) {
 			List<ChoiceValue> values = new ArrayList<ChoiceValue>(newValue.length);
 			for (int i = 0; i < newValue.length; i++) {
-				AnswerChoice answer = (AnswerChoice)newValue[i];
-				values.add(new ChoiceValue(answer));
+				if (newValue[i] instanceof AnswerUnknown) {
+					// when one answer is UNKNOWN, then the entire value is set to unknown
+					return new Unknown();
+				} else {
+					AnswerChoice answer = (AnswerChoice)newValue[i];
+					values.add(new ChoiceValue(answer));
+				}
 			}
 			return new MultipleChoiceValue(values);
 		} else {
