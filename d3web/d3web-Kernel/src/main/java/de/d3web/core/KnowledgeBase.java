@@ -88,7 +88,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 
 	private List<Diagnosis> diagnoses;
 
-	private List<Resource> binaryRessouces = new ArrayList<Resource>();
+	private List<Resource> resouces = new ArrayList<Resource>();
 
 	/**
 	 * Hashes the objects for ID
@@ -772,12 +772,21 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		this.properties = properties;
 	}
 
-	public void addBinaryRessouce(Resource binaryRessource) {
-		binaryRessouces.add(binaryRessource);
+	public void addResouce(Resource resource) {
+		this.resouces.add(resource);
 	}
 
-	public List<Resource> getBinaryRessources() {
-		return Collections.unmodifiableList(binaryRessouces);
+	public List<Resource> getResources() {
+		return Collections.unmodifiableList(this.resouces);
+	}
+
+	public Resource getResource(String pathname) {
+		for (Resource resource : resouces) {
+			if (pathname.equalsIgnoreCase(resource.getPathName())) {
+				return resource;
+			}
+		}
+		return null;
 	}
 
 	public void addQASet(QASet qaSet) {
