@@ -7,8 +7,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import de.d3web.kernel.utilities.Pair;
-import de.d3web.kernel.utilities.Triple;
+import de.d3web.core.utilities.Pair;
+import de.d3web.core.utilities.Triple;
 
 public class DefaultInfoStore implements InfoStore {
 
