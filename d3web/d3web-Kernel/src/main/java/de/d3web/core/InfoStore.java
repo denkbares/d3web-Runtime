@@ -7,7 +7,7 @@ import java.util.Locale;
 import de.d3web.core.utilities.Triple;
 
 public interface InfoStore {
-
+	
 	/**
 	 * Default key to store the title text of a terminology object. The type of
 	 * the info item stored should be {@link String}.
@@ -88,4 +88,5 @@ public interface InfoStore {
 	 * @return the collection of stored items
 	 */
 	Collection<Triple<String, Locale, Object>> entries();
+
 }

@@ -30,18 +30,25 @@ import java.io.InputStream;
 public interface Resource {
 
 	/**
-	 * @return the size of the Binary
+	 * @return the size of the data of this resource
 	 */
 	public long getSize();
-	
+
 	/**
-	 * @return an InputStream to read the binary
-	 * @throws IOException when an Error occurs
+	 * @return an InputStream to read the data of this resource
+	 * @throws IOException
+	 *             if the stream cannot be provided
 	 */
 	public InputStream getInputStream() throws IOException;
-	
+
 	/**
-	 * @return the path of the binary
+	 * Returns the relative path to the resource within the knowledge base. The
+	 * path is similar to file system paths, but they do use the same file
+	 * separator character ("/") with no respect to the underlying file systems.
+	 * The path should be used case insensitive.
+	 * 
+	 * @return the path of the resource
 	 */
 	public String getPathName();
+
 }
