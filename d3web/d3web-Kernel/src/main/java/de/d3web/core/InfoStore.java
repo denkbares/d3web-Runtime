@@ -4,8 +4,8 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Locale;
 
+import de.d3web.core.utilities.Triple;
 import de.d3web.kernel.domainModel.KnowledgeBase;
-import de.d3web.kernel.utilities.Triple;
 
 public interface InfoStore {
 
