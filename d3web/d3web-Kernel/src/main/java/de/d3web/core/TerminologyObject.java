@@ -5,7 +5,7 @@ package de.d3web.core;
 public interface TerminologyObject {
 	
 	// --- header information ---
-	//String getID();
+	//String getId();
 	//String getName();
 	
 	// --- structure of terminology ---
