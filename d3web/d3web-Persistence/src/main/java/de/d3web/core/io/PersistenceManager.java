@@ -148,7 +148,7 @@ public class PersistenceManager {
 				if (!parsed) {
 					if (name.startsWith(MULTIMEDIA_PATH_PREFIX)) {
 						JarBinaryRessource jarBinaryRessource = new JarBinaryRessource(entry, file);
-						kb.addBinaryRessouce(jarBinaryRessource);
+						kb.addResouce(jarBinaryRessource);
 					} else if (notNeeded(entry)) {
 						//nothing to to, files were necessary for previous versions of persistence
 					} else {
@@ -208,7 +208,7 @@ public class PersistenceManager {
 			KnowledgeWriter writer = (KnowledgeWriter) plugin.getSingleton();
 			size += writer.getEstimatedSize(kb);
 		}
-		size += kb.getBinaryRessources().size();
+		size += kb.getResources().size();
 		CombinedProgressListener cpl = new CombinedProgressListener(size, listener);
 		try {
 			
@@ -223,9 +223,9 @@ public class PersistenceManager {
 				cpl.next(writer.getEstimatedSize(kb));
 				writer.write(kb, jarOutputStream, cpl);
 			}
-			cpl.next(kb.getBinaryRessources().size());
+			cpl.next(kb.getResources().size());
 			int i = 0;
-			for (Resource ressource: kb.getBinaryRessources()) {
+			for (Resource ressource: kb.getResources()) {
 				ZipEntry entry = new ZipEntry(MULTIMEDIA_PATH_PREFIX+ressource.getPathName());
 				jarOutputStream.putNextEntry(entry);
 				InputStream inputStream = ressource.getInputStream();
@@ -235,7 +235,9 @@ public class PersistenceManager {
 				finally {
 					inputStream.close();
 				}
-				cpl.updateProgress(i++/kb.getBinaryRessources().size(), "Saving binary ressources");
+				i++;
+				float percent = i / (float) kb.getResources().size();
+				cpl.updateProgress(percent, "Saving binary ressources");
 			}
 		} 
 		finally {
