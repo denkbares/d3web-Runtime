@@ -21,6 +21,7 @@
 package de.d3web.kernel.verbalizer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -325,12 +326,9 @@ public class ConditionVerbalizer implements Verbalizer {
 	private CondVerbalization createNonTerminalConditionVerbalization(NonTerminalCondition ntCondition) {
 
 		List<CondVerbalization> condVerbs = new ArrayList<CondVerbalization>(); 
-		List<AbstractCondition> terms = ntCondition.getTerms();
-		List<AbstractCondition> reverseTerms = new ArrayList<AbstractCondition>();
-		while (!terms.isEmpty()) {
-			reverseTerms.add(terms.remove(terms.size() - 1));
-		}
-		for (AbstractCondition term:reverseTerms) {
+		List<AbstractCondition> terms = new ArrayList<AbstractCondition>(ntCondition.getTerms());
+		Collections.reverse(terms);
+		for (AbstractCondition term:terms) {
 			condVerbs.add(createConditionVerbalization(term));
 		}
 		return new NonTerminalCondVerbalization(condVerbs, getClassVerbalisation(ntCondition), 
