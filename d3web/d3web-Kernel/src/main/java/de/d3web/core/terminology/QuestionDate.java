@@ -72,7 +72,7 @@ public class QuestionDate extends Question {
 
 	@Deprecated
 	public void setValue(XPSCase theCase, Object[] values) {
-		if (values.length > 1) {
+		if (values.length != 1) {
 			Logger.getLogger(this.getClass().getName()).warning("wrong number of answeralternatives");
 		} else {
 			((CaseQuestionDate) theCase.getCaseObject(this)).setValue((Answer)values[0]);
