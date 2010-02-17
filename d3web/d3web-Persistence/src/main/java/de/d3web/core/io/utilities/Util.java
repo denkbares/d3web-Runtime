@@ -155,4 +155,18 @@ public class Util {
 		}
 		return score;
 	}
+
+	/**
+	 * Writes the InputStream to the OutputStream
+	 * @param in InputStream
+	 * @param out OutputStream
+	 * @throws IOException
+	 */
+	public static void stream(InputStream in, OutputStream out) throws IOException {
+		byte[] buf = new byte[1024];
+		int len;
+		while ((len = in.read(buf)) != -1) {
+			out.write(buf, 0, len);
+		}
+	}
 }

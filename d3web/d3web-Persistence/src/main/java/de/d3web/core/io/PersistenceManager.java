@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.util.Date;
 import java.util.Enumeration;
@@ -43,6 +42,7 @@ import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.progress.CombinedProgressListener;
 import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.io.progress.ProgressListener;
+import de.d3web.core.io.utilities.Util;
 import de.d3web.core.terminology.info.DCElement;
 import de.d3web.plugin.Extension;
 import de.d3web.plugin.PluginManager;
@@ -230,7 +230,7 @@ public class PersistenceManager {
 				jarOutputStream.putNextEntry(entry);
 				InputStream inputStream = ressource.getInputStream();
 				try {
-					stream(inputStream, jarOutputStream);
+					Util.stream(inputStream, jarOutputStream);
 				}
 				finally {
 					inputStream.close();
@@ -306,13 +306,5 @@ public class PersistenceManager {
 	 */
 	public void save(KnowledgeBase kb, File file) throws IOException {
 		save(kb, file, new DummyProgressListener());
-	}
-	
-	private static void stream(InputStream in, OutputStream out) throws IOException {
-		byte[] buf = new byte[1024];
-		int len;
-		while ((len = in.read(buf)) != -1) {
-			out.write(buf, 0, len);
-		}
 	}
 }
