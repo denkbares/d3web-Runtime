@@ -25,7 +25,7 @@ import de.d3web.core.inference.Rule;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.IDObject;
+import de.d3web.core.terminology.NamedObject;
 import de.d3web.core.terminology.Question;
 import de.d3web.xcl.XCLRelation;
 
@@ -66,7 +66,7 @@ public abstract class AbstractCondition implements java.io.Serializable {
 	 * instances, that are constrained in this condition.
 	 * @return all used questions and diagnoses used in this condition
 	 */
-	public abstract List<? extends IDObject> getTerminalObjects();
+	public abstract List<? extends NamedObject> getTerminalObjects();
 
 	/**
 	 * Returns a simple {@link String} verbalization of this condition. 

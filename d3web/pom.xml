@@ -130,5 +130,6 @@
 		<module>d3web-Persistence-Basic</module>
 		<module>d3web-PluginManager</module>
 		<module>d3web-SharedKnowledgePersistence</module>
+		<module>d3web-CostBenefit</module>
 	</modules>
 </project>

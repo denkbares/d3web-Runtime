@@ -60,6 +60,14 @@ public class Abnormality extends AbstractAbnormality {
 		return A0;
 	}
 
+	public boolean isSet(Answer ans) {
+		if (values.get(ans)==null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
 	public Enumeration<Answer> getAnswerEnumeration() {
 		return values.keys();
 	}

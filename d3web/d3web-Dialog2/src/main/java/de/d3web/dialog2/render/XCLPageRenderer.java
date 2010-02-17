@@ -43,10 +43,10 @@ import de.d3web.dialog2.util.DialogUtils;
 import de.d3web.kernel.verbalizer.VerbalizationManager;
 import de.d3web.kernel.verbalizer.Verbalizer;
 import de.d3web.kernel.verbalizer.VerbalizationManager.RenderingFormat;
+import de.d3web.xcl.InferenceTrace;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
 import de.d3web.xcl.inference.PSMethodXCL;
-import de.d3web.xcl.inference.XCLInferenceTrace;
 
 public class XCLPageRenderer extends Renderer {
 	
@@ -81,7 +81,7 @@ public class XCLPageRenderer extends Renderer {
 				if (((XCLModel) knowledgeSlice).getSolution()
 						.equals(solution)) {
 					
-					XCLInferenceTrace trace = ((XCLModel) knowledgeSlice)
+					InferenceTrace trace = ((XCLModel) knowledgeSlice)
 							.getInferenceTrace(theCase);
 					
 					if (trace != null) {
@@ -96,7 +96,7 @@ public class XCLPageRenderer extends Renderer {
     }
     
     
-	private void verbalizeTrace(XCLInferenceTrace trace, String solution) throws IOException {
+	private void verbalizeTrace(InferenceTrace trace, String solution) throws IOException {
 		
 		//Score and Support
 		Double score = trace.getScore();

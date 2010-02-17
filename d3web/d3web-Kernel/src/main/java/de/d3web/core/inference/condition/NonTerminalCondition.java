@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.terminology.IDObject;
+import de.d3web.core.terminology.NamedObject;
 /**
  * Abstract condition for all non-terminal conditions. A non-terminal condition
  * is a container for other terminal or non-terminal sub-conditions.
@@ -56,8 +56,8 @@ public abstract class NonTerminalCondition extends AbstractCondition {
 	}
 	
 	@Override
-	public List<IDObject> getTerminalObjects() {
-		List<IDObject> v = new ArrayList<IDObject>();
+	public List<NamedObject> getTerminalObjects() {
+		List<NamedObject> v = new ArrayList<NamedObject>();
 		for (AbstractCondition condition : terms) {
 			v.addAll(condition.getTerminalObjects());
 		}

@@ -25,26 +25,34 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.condition.AbstractCondition;
-import de.d3web.core.inference.condition.NoAnswerException;
-import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.IEventSource;
 import de.d3web.core.session.KBOEventListener;
 import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.core.terminology.Diagnosis;
 import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.core.terminology.NamedObject;
 import de.d3web.xcl.inference.PSMethodXCL;
-import de.d3web.xcl.inference.XCLInferenceTrace;
 
-public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLModel> {
+public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLModel>, CaseObjectSource {
 	private static final long serialVersionUID = 1068721270222432667L;
 
 	public final static MethodKind XCLMODEL = new MethodKind("XCLMODEL");
+	/**
+	 * MethodKind for backward referenced xclModels from the NamedObjects of the
+	 * Conditions of the contained relations
+	 */
+	public final static MethodKind XCL_CONTRIBUTED_MODELS = new MethodKind(
+			"XCL_CONTRIBUTED_MODELS");
 
 	public static double defaultEstablishedThreshold = 0.8;
 	public static double defaultSuggestedThreshold = 0.3;
@@ -56,43 +64,46 @@ public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLMode
 	private double suggestedThreshold = defaultSuggestedThreshold;
 	private double minSupport = defaultMinSupport;
 
-	private RelationHelper rh = RelationHelper.getInstance();
 	private String id = null;
-	private Map<String, XCLRelation> relations;
-	private Map<String, XCLRelation> necessaryRelations;
-	private Map<String, XCLRelation> sufficientRelations;
-	private Map<String, XCLRelation> contradictingRelations;
+	private final Collection<XCLRelation> relations;
+	private final Collection<XCLRelation> necessaryRelations;
+	private final Collection<XCLRelation> sufficientRelations;
+	private final Collection<XCLRelation> contradictingRelations;
 	public static String DEFAULT_SOLUTION = "default_solution";
 
-	private Map<XPSCase, XCLInferenceTrace> explanation = new HashMap<XPSCase, XCLInferenceTrace>();
+	private boolean considerOnlyRelevantRelations = true;
+	// TODO: store these information in the NamedObjects, also required for
+	// efficient propagation
+	private transient Map<NamedObject, Set<XCLRelation>> coverage = new HashMap<NamedObject, Set<XCLRelation>>();
 
 	public XCLModel(Diagnosis solution) {
 		this.solution = solution;
-		
-		relations = new HashMap<String, XCLRelation>();
-		necessaryRelations = new HashMap<String, XCLRelation>();
-		sufficientRelations = new HashMap<String, XCLRelation>();
-		contradictingRelations = new HashMap<String, XCLRelation>();
+
+		relations = new LinkedList<XCLRelation>();
+		necessaryRelations = new LinkedList<XCLRelation>();
+		sufficientRelations = new LinkedList<XCLRelation>();
+		contradictingRelations = new LinkedList<XCLRelation>();
 	}
 
-	public XCLInferenceTrace getInferenceTrace(XPSCase c) {
-		XCLInferenceTrace temp=explanation.get(c);
-		if (temp==null){
-			XCLInferenceTrace trace = new XCLInferenceTrace();
-			explanation.put(c, trace);}
-		return explanation.get(c);
+	public Set<NamedObject> getCoveredSymptoms() {
+		return coverage.keySet();
+	}
+
+	public Set<XCLRelation> getCoveringRelations(NamedObject no) {
+		return coverage.get(no);
 	}
 
 	public static String insertXCLRelation(KnowledgeBase kb,
 			AbstractCondition theCondition, Diagnosis d) {
 		return insertXCLRelation(kb, theCondition, d, XCLRelationType.explains, null);
 	}
-	
+
 	public static String insertXCLRelation(KnowledgeBase kb,
 			AbstractCondition theCondition, Diagnosis d, String kdomNodeID) {
-		return insertXCLRelation(kb, theCondition, d, XCLRelationType.explains,kdomNodeID);
+		return insertXCLRelation(kb, theCondition, d, XCLRelationType.explains,
+				kdomNodeID);
 	}
-	
+
 	public static String insertXCLRelation(KnowledgeBase kb,
 			AbstractCondition theCondition, Diagnosis d, XCLRelationType type) {
 		return insertXCLRelation(kb, theCondition, d, type, 1, null);
@@ -102,7 +113,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLMode
 			AbstractCondition theCondition, Diagnosis d, XCLRelationType type, String kdomNodeID) {
 		return insertXCLRelation(kb, theCondition, d, type, 1, kdomNodeID);
 	}
-	
+
 	public static String insertXCLRelation(KnowledgeBase kb,
 			AbstractCondition theCondition, Diagnosis d, XCLRelationType type,
 			double weight) {
@@ -112,14 +123,14 @@ public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLMode
 	public static String insertXCLRelation(KnowledgeBase kb,
 			AbstractCondition theCondition, Diagnosis d, XCLRelationType type,
 			double weight, String kdomNodeID) {
-		
-		//Nullchecks
-		if(theCondition == null || d == null) {
+
+		// Nullchecks
+		if (theCondition == null || d == null) {
 			return null;
 		}
-		
+
 		// insert XCL
-		
+
 		String relationID = null;
 		Collection<KnowledgeSlice> models = kb
 				.getAllKnowledgeSlicesFor(PSMethodXCL.class);
@@ -130,12 +141,13 @@ public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLMode
 				if (((XCLModel) knowledgeSlice).getSolution().equals(d)) {
 					XCLRelation rel = XCLRelation.createXCLRelation(
 							theCondition, weight);
-					if(kdomNodeID != null) {
+					if (kdomNodeID != null) {
 						rel.setKdmomID(kdomNodeID);
 					}
 					relationID = rel.getId();
 					((XCLModel) knowledgeSlice).addRelation(rel, type);
 					foundModel = true;
+
 				}
 			}
 		}
@@ -143,13 +155,17 @@ public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLMode
 			XCLModel newModel = new XCLModel(d);
 			XCLRelation rel = XCLRelation.createXCLRelation(theCondition,
 					weight);
-			if(kdomNodeID != null) {
+
+			if (kdomNodeID != null) {
 				rel.setKdmomID(kdomNodeID);
 			}
 
 			relationID = rel.getId();
 			newModel.addRelation(rel, type);
+			// TODO: must it be added to the knowledge base?
 			kb.addKnowledge(PSMethodXCL.class, newModel, XCLModel.XCLMODEL);
+			d.addKnowledge(PSMethodXCL.class, newModel, XCLModel.XCLMODEL);
+
 		}
 
 		return relationID;
@@ -176,167 +192,34 @@ public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLMode
 	}
 
 	public DiagnosisState getState(XPSCase theCase) {
-		XCLInferenceTrace trace = new XCLInferenceTrace();
-		explanation.put(theCase, trace);
-		evalRelations(trace, theCase);
-
-		if (rh.atLeastOneRelationTrue(contradictingRelations.values(), theCase)) {
-			trace.setState(DiagnosisState.EXCLUDED);
-			return DiagnosisState.EXCLUDED;
-		} else if (rh.atLeastOneRelationTrue(sufficientRelations.values(), theCase)) {
-			trace.setState(DiagnosisState.ESTABLISHED);
-			return DiagnosisState.ESTABLISHED;
-		} else {
-			double currentXCLScore = computeXCLScore(theCase);
-			double currentSupport = computeSupport(theCase);
-			trace.setScore(currentXCLScore);
-			trace.setSupport(currentSupport);
-			if (minSupport <= currentSupport) {
-				if (currentXCLScore >= establishedThreshold
-						&& rh.allRelationsTrue(necessaryRelations.values(), theCase)) {
-					trace.setState(DiagnosisState.ESTABLISHED);
-					return DiagnosisState.ESTABLISHED;
-				} else if (currentXCLScore >= establishedThreshold
-						&& !rh.allRelationsTrue(necessaryRelations.values(), theCase)) {
-					trace.setState(DiagnosisState.SUGGESTED);
-					return DiagnosisState.SUGGESTED;
-				} else if (currentXCLScore >= suggestedThreshold
-						&& rh.allRelationsTrue(necessaryRelations.values(), theCase)) {
-					trace.setState(DiagnosisState.SUGGESTED);
-					return DiagnosisState.SUGGESTED;
-				}
-			}
-		}
-
-		return DiagnosisState.UNCLEAR;
-	}
-
-	private void evalRelations(XCLInferenceTrace trace, XPSCase c) {
-		for (XCLRelation rel : relations.values()) {
-			try {
-				boolean b = rel.eval(c);
-				if (b) {
-					trace.addPosRelation(rel);
-				} else {
-					trace.addNegRelation(rel);
-				}
-			} catch (NoAnswerException e) {
-				// do nothing
-			} catch (UnknownAnswerException e) {
-				// do nothing
-			}
-
-		}
-
-		for (XCLRelation rel : this.necessaryRelations.values()) {
-			try {
-				boolean b = rel.eval(c);
-				if (b) {
-					trace.addReqPosRelation(rel);
-				} else {
-					trace.addReqPNegRelation(rel);
-				}
-			} catch (NoAnswerException e) {
-				// do nothing
-			} catch (UnknownAnswerException e) {
-				// do nothing
-			}
-
-		}
-
-		for (XCLRelation rel : this.contradictingRelations.values()) {
-			try {
-				boolean b = rel.eval(c);
-				if (b) {
-					trace.addContrRelation(rel);
-				}
-			} catch (NoAnswerException e) {
-				// do nothing
-			} catch (UnknownAnswerException e) {
-				// do nothing
-			}
-
-		}
-
-		for (XCLRelation rel : this.sufficientRelations.values()) {
-			try {
-				boolean b = rel.eval(c);
-				if (b) {
-					trace.addSuffRelation(rel);
-				}
-			} catch (NoAnswerException e) {
-				// do nothing
-			} catch (UnknownAnswerException e) {
-				// do nothing
-			}
-
-		}
+		return getInferenceTrace(theCase).getState();
 
 	}
 
-	public double computeSupport(XPSCase theCase) {
-		double positiveRelationsWeightedSum = weightedSumOf(computeRelations(
-				theCase, true));
-		double negativeRelationsWeightedSum = weightedSumOf(computeRelations(
-				theCase, false));
-
-		double allRelationsWeightedSum = weightedSumOf(computeAllWeightedRelations());
-
-		double result = (positiveRelationsWeightedSum + negativeRelationsWeightedSum)
-				* 1.0 / (allRelationsWeightedSum);
-
-		return result;
+	public boolean isConsiderOnlyRelevantRelations() {
+		return considerOnlyRelevantRelations;
 	}
 
-	private Collection<XCLRelation> computeAllWeightedRelations() {
-		Collection<XCLRelation> all = new HashSet<XCLRelation>();
-		all.addAll(this.relations.values());
-		all.addAll(this.necessaryRelations.values());
-		return all;
+	public void setConsiderOnlyRelevantRelations(
+			boolean considerOnlyRelevantRelations) {
+		this.considerOnlyRelevantRelations = considerOnlyRelevantRelations;
 	}
 
-	public double computeXCLScore(XPSCase theCase) {
-		double positiveRelationsWeightedSum = weightedSumOf(computeRelations(
-				theCase, true));
-		double negativeRelationsWeightedSum = weightedSumOf(computeRelations(
-				theCase, false));
-		double result = positiveRelationsWeightedSum * 1.0
-				/ (negativeRelationsWeightedSum + positiveRelationsWeightedSum);
-		return result;
-	}
-
-	private double weightedSumOf(Collection<XCLRelation> relations) {
-		double sum = 0;
-		for (XCLRelation relation : relations) {
-			sum += relation.getWeight();
-		}
-		return sum;
-	}
-
-	private Collection<XCLRelation> computeRelations(XPSCase theCase,
-			boolean direction) {
-		Collection<XCLRelation> r = new ArrayList<XCLRelation>();
-		Collection<XCLRelation> toTest = new ArrayList<XCLRelation>();	
-		toTest.addAll(relations.values());
-		toTest.addAll(this.necessaryRelations.values());
-		for (XCLRelation relation : toTest) {
-			try {
-				if (relation.eval(theCase) == direction)
-					r.add(relation);
-			} catch (NoAnswerException e) {
-				// Do not count relation
-			} catch (UnknownAnswerException e) {
-				// Do not count relation
-			}
-		}
-		return r;
+	private PSMethodXCL getPSMethodXCL(XPSCase theCase) {
+		return (PSMethodXCL) theCase.getPSMethodInstance(getProblemsolverContext());
 	}
 
 	public boolean addRelation(XCLRelation relation) {
+		for (NamedObject nob : relation.getConditionedFinding().getTerminalObjects()) {
+			nob.addKnowledge(PSMethodXCL.class, this, XCL_CONTRIBUTED_MODELS);
+		}
 		return addRelationTo(relation, relations);
 	}
 
 	public boolean addRelation(XCLRelation relation, XCLRelationType type) {
+		for (NamedObject nob : relation.getConditionedFinding().getTerminalObjects()) {
+			nob.addKnowledge(PSMethodXCL.class, this, XCL_CONTRIBUTED_MODELS);
+		}
 		if (type.equals(XCLRelationType.explains))
 			return addRelationTo(relation, relations);
 
@@ -364,33 +247,47 @@ public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLMode
 		return addRelationTo(relation, contradictingRelations);
 	}
 
+	public void removeRelation(XCLRelation rel) {
+		for (NamedObject nob : rel.getConditionedFinding().getTerminalObjects()) {
+			nob.removeKnowledge(PSMethodXCL.class, this, XCL_CONTRIBUTED_MODELS);
+		}
+		relations.remove(rel);
+		contradictingRelations.remove(rel);
+		necessaryRelations.remove(rel);
+		sufficientRelations.remove(rel);
+	}
+
 	private boolean addRelationTo(XCLRelation relation,
-			Map<String, XCLRelation> theRelations) {
-		return theRelations.put(relation.getId(), relation) == null ? true : false;
+			Collection<XCLRelation> theRelations) {
+
+		if (theRelations.contains(relation))
+			return false;
+		theRelations.add(relation);
+		List<? extends NamedObject> terminalObjects = relation.getConditionedFinding().getTerminalObjects();
+		for (NamedObject no : terminalObjects) {
+			Set<XCLRelation> set = coverage.get(no);
+			if (set == null) {
+				set = new HashSet<XCLRelation>();
+				coverage.put(no, set);
+			}
+			set.add(relation);
+		}
+		return true;
 	}
 
 	public XCLRelation findRelation(String id) {
-		XCLRelation r = null;
-		r = relations.get(id);
-		if (r != null) return r;
-		r = necessaryRelations.get(id);
-		if (r != null) return r;
-		r = sufficientRelations.get(id);
-		if (r != null) return r;
-		r = contradictingRelations.get(id);
-		return r;
-	}
-	
-	public XCLRelation removeRelation(String id) {
-		XCLRelation r = null;
-		r = relations.remove(id);
-		if (r != null) return r;
-		r = necessaryRelations.remove(id);
-		if (r != null) return r;
-		r = sufficientRelations.remove(id);
-		if (r != null) return r;
-		r = contradictingRelations.remove(id);
-		return r;
+
+		Collection<XCLRelation> r = new ArrayList<XCLRelation>();
+		r.addAll(relations);
+		r.addAll(necessaryRelations);
+		r.addAll(sufficientRelations);
+
+		r.addAll(contradictingRelations);
+		for (XCLRelation relation : r) {
+			if (id.equals(relation.getId()))
+				return relation;
+		}
+		return null;
 	}
 
 	public Diagnosis getSolution() {
@@ -453,32 +350,37 @@ public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLMode
 	 * @see de.d3web.kernel.domainModel.KnowledgeSlice#remove()
 	 */
 	public void remove() {
+		solution.getKnowledgeBase().removeKnowledge(PSMethodXCL.class, this,
+				XCLModel.XCLMODEL);
 		solution.removeKnowledge(getProblemsolverContext(), this, XCLMODEL);
+		for (XCLRelation rel : relations) {
+			removeRelation(rel);
+		}
 	}
-	
-	public Map<String, XCLRelation> getAllRelations() {
-		Map<String, XCLRelation> allRels = new HashMap<String, XCLRelation>();
-		allRels.putAll(relations);
-		allRels.putAll(necessaryRelations);
-		allRels.putAll(sufficientRelations);
-		allRels.putAll(contradictingRelations);
+
+	public List<XCLRelation> getAllRelations() {
+		List<XCLRelation> allRels = new ArrayList<XCLRelation>();
+		allRels.addAll(relations);
+		allRels.addAll(necessaryRelations);
+		allRels.addAll(sufficientRelations);
+		allRels.addAll(contradictingRelations);
 		return allRels;
 	}
 
 	public Collection<XCLRelation> getRelations() {
-		return relations.values();
+		return relations;
 	}
 
 	public Collection<XCLRelation> getNecessaryRelations() {
-		return necessaryRelations.values();
+		return necessaryRelations;
 	}
 
 	public Collection<XCLRelation> getSufficientRelations() {
-		return sufficientRelations.values();
+		return sufficientRelations;
 	}
 
 	public Collection<XCLRelation> getContradictingRelations() {
-		return contradictingRelations.values();
+		return contradictingRelations;
 	}
 
 	Collection<KBOEventListener> listeners;
@@ -517,7 +419,28 @@ public class XCLModel implements KnowledgeSlice, IEventSource,Comparable<XCLMode
 
 	@Override
 	public int compareTo(XCLModel o) {
-		return this.solution.getText().compareTo(o.solution.getText());		
+		return this.solution.getText().compareTo(o.solution.getText());
 	}
 
+	private static class XCLCaseModel extends XPSCaseObject {
+		private final InferenceTrace inferenceTrace;
+
+		private XCLCaseModel(XCLModel model, XPSCase xpsCase) {
+			super(model);
+			ScoreAlgorithm scoreAlgorithm = model.getPSMethodXCL(xpsCase).getScoreAlgorithm();
+			this.inferenceTrace = scoreAlgorithm.createInferenceTrace(model);
+		}
+	}
+
+	public XPSCaseObject createCaseObject(XPSCase xpsCase) {
+		return new XCLCaseModel(this, xpsCase);
+	}
+
+	public InferenceTrace getInferenceTrace(XPSCase xpsCase) {
+		return getXCLCaseModel(xpsCase).inferenceTrace;
+	}
+
+	private XCLCaseModel getXCLCaseModel(XPSCase xpsCase) {
+		return (XCLCaseModel) xpsCase.getCaseObject(this);
+	}
 }

@@ -21,104 +21,327 @@
 package de.d3web.xcl.inference;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.PSMethodAdapter;
+import de.d3web.core.inference.MethodKind;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.inference.StrategicSupport;
+import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.session.blackboard.CaseDiagnosis;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
+import de.d3web.core.session.blackboard.XPSCaseObject;
+import de.d3web.core.terminology.Answer;
 import de.d3web.core.terminology.Diagnosis;
 import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.core.terminology.NamedObject;
+import de.d3web.core.terminology.QASet;
 import de.d3web.core.terminology.Question;
-import de.d3web.scoring.DiagnosisScore;
+import de.d3web.core.terminology.info.Property;
+import de.d3web.xcl.Abnormality;
+import de.d3web.xcl.DefaultScoreAlgorithm;
+import de.d3web.xcl.ScoreAlgorithm;
 import de.d3web.xcl.XCLModel;
+import de.d3web.xcl.XCLRelation;
 
-public class PSMethodXCL extends PSMethodAdapter {
-	
+public class PSMethodXCL implements PSMethod, StrategicSupport,
+		CaseObjectSource {
+
 	private static PSMethodXCL instance = null;
+
+	private ScoreAlgorithm scoreAlgorithm = new DefaultScoreAlgorithm();
 
 	private PSMethodXCL() {
 		super();
 	}
-	
+
 	public static PSMethodXCL getInstance() {
-		if (instance  == null) {
+		if (instance == null) {
 			instance = new PSMethodXCL();
 		}
 		return instance;
 	}
-	
+
 	public DiagnosisState getState(XPSCase theCase, Diagnosis diagnosis) {
-		List<? extends KnowledgeSlice> models = diagnosis.getKnowledge(PSMethodXCL.class, XCLModel.XCLMODEL);
-		if (models == null || models.size() == 0) return DiagnosisState.UNCLEAR; 
+		List<? extends KnowledgeSlice> models = diagnosis.getKnowledge(
+				PSMethodXCL.class, XCLModel.XCLMODEL);
+		if (models == null || models.size() == 0)
+			return DiagnosisState.UNCLEAR;
 		XCLModel model = (XCLModel) models.get(0);
 		return model.getState(theCase);
 	}
-	
+
 	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
-		// TODO: implement well, as defined below
-//		Set<XCLModel> modelsToUpdate = new HashSet<XCLModel>();
-//		for (PropagationEntry change : changes) {
-//			NamedObject nob = change.getObject();
-//			List<? extends KnowledgeSlice> models = nob.getKnowledge(PSMethodXCL.class, XCLModel.XCL_CONTRIBUTED_MODELS);
-//			if (models != null)  {
-//				for (KnowledgeSlice model : models) {
-//					modelsToUpdate.add((XCLModel) model);
-//				}
-//			}
-//		}
-//		for (XCLModel model : modelsToUpdate) {
-//			DiagnosisState state = model.getState(theCase);
-//			theCase.setValue(model.getSolution(), new DiagnosisState[]{state}, this.getClass());
-//			model.notifyListeners(theCase, model);
-//		}
 
-		// TODO: remove this hack
-		//only update if there is at least one question
-		boolean hasQuestion = false;
+		// update total weight
+		updateAnsweredWeight(theCase, changes);
+
+		// find xcl models to be updated (and remember affecting changes)
+		Map<XCLModel, List<PropagationEntry>> modelsToUpdate = new HashMap<XCLModel, List<PropagationEntry>>();
 		for (PropagationEntry change : changes) {
-			if (change.getObject() instanceof Question) hasQuestion = true;
-		}
-		if (!hasQuestion) return;
-		Collection<KnowledgeSlice> models = theCase.getKnowledgeBase().getAllKnowledgeSlicesFor(PSMethodXCL.class);
-		for (KnowledgeSlice knowledgeSlice : models) {
-			if(knowledgeSlice instanceof XCLModel) {
-				XCLModel model = (XCLModel) knowledgeSlice;
-				
-				//Quick fix for ClassCastException:
-				Object o =  ((CaseDiagnosis) theCase.getCaseObject(model.getSolution())).getValue(this.getClass());
-				DiagnosisState oldState = null;
-				if(o instanceof DiagnosisState) {
-					oldState =(DiagnosisState)o;
+			NamedObject nob = change.getObject();
+			List<? extends KnowledgeSlice> models = nob.getKnowledge(
+					PSMethodXCL.class, XCLModel.XCL_CONTRIBUTED_MODELS);
+			if (models != null) {
+				for (KnowledgeSlice model : models) {
+					List<PropagationEntry> entries = modelsToUpdate.get(model);
+					if (entries == null) {
+						entries = new LinkedList<PropagationEntry>();
+						modelsToUpdate.put((XCLModel) model, entries);
+					}
+					entries.add(change);
 				}
-				if(o instanceof DiagnosisScore) {
-					DiagnosisScore oldScore = (DiagnosisScore)o;
-					oldState = DiagnosisState.getState(oldScore);
-				}
-				
-
-				
-				
-				
-				
-				// TODO: split getState into getState and refreshState
-				//DiagnosisState oldState = model.getState(theCase);
-				//model.refreshState(theCase);
-				DiagnosisState newState = model.getState(theCase);
-				if (!oldState.equals(newState)) {
-					theCase.setValue(model.getSolution(), new DiagnosisState[]{newState}, this.getClass());
-				}
-				model.notifyListeners(theCase, model);
 			}
-		} 
+		}
+
+		// update required xcl models / inference traces
+		for (XCLModel model : modelsToUpdate.keySet()) {
+			List<PropagationEntry> entries = modelsToUpdate.get(model);
+			this.scoreAlgorithm.update(model, entries, theCase);
+		}
+
+		// refresh the solutions states
+		this.scoreAlgorithm.refreshStates(modelsToUpdate.keySet(), theCase);
+	}
+
+	private void updateAnsweredWeight(XPSCase theCase,
+			Collection<PropagationEntry> changes) {
+		XCLCaseObject caseObject = (XCLCaseObject) theCase.getCaseObject(this);
+		for (PropagationEntry entry : changes) {
+			if (entry.getObject() instanceof Question) {
+				Question question = (Question) entry.getObject();
+				
+				// update count of question
+				if (entry.hasOldValue()) caseObject.totalAnsweredCount--; 
+				if (entry.hasNewValue()) caseObject.totalAnsweredCount++;
+				
+				// update abnormalities
+				Abnormality abnormality = getAbnormalitySlice(question);
+				double oldAbnormality = getAbnormality(abnormality, entry.getOldValue());
+				double newAbnormality = getAbnormality(abnormality, entry.getNewValue());
+				caseObject.totalAnsweredAbnormality -= oldAbnormality;
+				caseObject.totalAnsweredAbnormality += newAbnormality;
+			}
+		}
+
+		// TODO: remove this assert calculation
+		List<? extends Question> answeredQuestions = theCase
+				.getAnsweredQuestions();
+		double restWeight = caseObject.totalAnsweredAbnormality;
+		for (Question question : answeredQuestions) {
+			Abnormality abnormality = getAbnormalitySlice(question);
+			List<?> answers = question.getValue(theCase);
+			restWeight -= getAbnormality(abnormality, answers);
+		}
+
+		if (Math.abs(restWeight) > 1e-6) {
+			throw new AssertionError();
+		}
+	}
+
+	double getAbnormality(Abnormality abnormality, Object[] answers) {
+		// no answer ==> not abnormal
+		if (answers == null || answers.length==0) return 0.0;
+		// no slice ==> every answer is abnormal
+		if (abnormality == null) return 1.0;
+		double max = 0;
+		for (Object a : answers) {
+			max = Math.max(max, abnormality.getValue((Answer) a));
+		}
+		return max;
+	}
+
+	public double getAbnormality(Abnormality abnormality, List<?> answers) {
+		// no answer ==> not abnormal
+		if (answers == null || answers.size()==0)
+			return 0.0;
+		// no slice ==> every answer is abnormal
+		if (abnormality == null) return 1.0;
+		double max = 0;
+		for (Object a : answers) {
+			max = Math.max(max, abnormality.getValue((Answer) a));
+		}
+		return max;
+	}
+
+	public Abnormality getAbnormalitySlice(Question question) {
+		try {
+			Class<?> context = (Class<?>) Class
+					.forName("de.d3web.shared.PSMethodShared");
+			MethodKind kind = (MethodKind) context.getField(
+					"SHARED_ABNORMALITY").get(null);
+			List<? extends KnowledgeSlice> knowledge = question.getKnowledge(
+					context, kind);
+			if (knowledge == null)
+				return null;
+			if (knowledge.size() == 0)
+				return null;
+			return (Abnormality) knowledge.get(0);
+		} catch (ClassNotFoundException e) {
+			throw new IllegalStateException(
+					"internal error accessing shared knowledge", e);
+		} catch (IllegalArgumentException e) {
+			throw new IllegalStateException(
+					"internal error accessing shared knowledge", e);
+		} catch (SecurityException e) {
+			throw new IllegalStateException(
+					"internal error accessing shared knowledge", e);
+		} catch (IllegalAccessException e) {
+			throw new IllegalStateException(
+					"internal error accessing shared knowledge", e);
+		} catch (NoSuchFieldException e) {
+			throw new IllegalStateException(
+					"internal error accessing shared knowledge", e);
+		}
+	}
+
+	public double getEntropy(Collection<? extends QASet> qasets,
+			Collection<Diagnosis> solutions, XPSCase theCase) {
+		Map<Set<AbstractCondition>, Float> map = new HashMap<Set<AbstractCondition>, Float>();
+		float totalweight = 0;
+		for (Diagnosis solution : solutions) {
+			Set<AbstractCondition> pot = new HashSet<AbstractCondition>();
+			List<? extends KnowledgeSlice> slices = solution.getKnowledge(PSMethodXCL.class,
+					XCLModel.XCLMODEL);
+			if (slices == null) continue;
+			for (KnowledgeSlice ks : slices) {
+				XCLModel model = (XCLModel) ks;
+				addRelationConditions(pot, qasets, model);
+			}
+			Float count = map.get(pot);
+			Number apriori = (Number) solution.getProperties().getProperty(Property.APRIORI);
+			float weight = (apriori == null) ? 1f : apriori.floatValue();
+			totalweight += weight;
+			if (count == null) {
+				map.put(pot, weight);
+			} else {
+				map.put(pot, weight+count);
+			}
+		}
+		// Russel & Norvig p. 805
+		double sum = 0;
+		for (Float relationcount : map.values()) {
+			double p = (double) relationcount / totalweight;
+			sum += (-1) * p * Math.log10(p) / Math.log10(2);
+		}
+		return sum;
+	}
+
+	private static void addRelationConditions(Set<AbstractCondition> pot,
+			Collection<? extends NamedObject> qaset, XCLModel model) {
+		for (NamedObject nob : qaset) {
+			addRelationConditions(pot, nob, model);
+		}
+	}
+
+	private static void addRelationConditions(Set<AbstractCondition> pot,
+			NamedObject qaset, XCLModel model) {
+		if (qaset instanceof Question) {
+			Set<XCLRelation> coveringRelations = model
+					.getCoveringRelations(qaset);
+			if (coveringRelations != null) {
+				for (XCLRelation relation : coveringRelations) {
+					pot.add(relation.getConditionedFinding());
+				}
+			}
+		}
+		List<? extends NamedObject> children = qaset.getChildren();
+		for (NamedObject child : children) {
+			addRelationConditions(pot, child, model);
+		}
+
+	}
+
+	public Collection<Diagnosis> getPossibleDiagnoses(XPSCase theCase) {
+		List<PSMethod> solvers = new LinkedList<PSMethod>();
+		solvers.add(this);
+		List<Diagnosis> solutions = theCase.getDiagnoses(
+				DiagnosisState.ESTABLISHED, solvers);
+		if (solutions.size() > 0) {
+			return solutions;
+		}
+		solutions = theCase.getDiagnoses(DiagnosisState.SUGGESTED, solvers);
+		if (solutions.size() > 0) {
+			return solutions;
+		}
+		return theCase.getDiagnoses(DiagnosisState.UNCLEAR, solvers);
+	}
+
+	public Collection<Question> getDiscriminatingQuestions(
+			Collection<Diagnosis> solutions, XPSCase theCase) {
+		Set<Question> coveredSymptoms = new HashSet<Question>();
+		for (Diagnosis solution : solutions) {
+			List<? extends KnowledgeSlice> slices = solution.getKnowledge(
+					PSMethodXCL.class, XCLModel.XCLMODEL);
+			if (slices == null)
+				continue;
+			for (KnowledgeSlice ks : slices) {
+				XCLModel model = (XCLModel) ks;
+				for (NamedObject nob : model.getCoveredSymptoms()) {
+					if (nob instanceof Question) {
+						coveredSymptoms.add((Question) nob);
+					}
+				}
+			}
+		}
+		return coveredSymptoms;
+	}
+
+	public void init(XPSCase theCase) {
+	}
+
+	public boolean isContributingToResult() {
+		return true;
+	}
+
+	private static class XCLCaseObject extends XPSCaseObject {
+		private int		totalAnsweredCount = 0;
+		private double	totalAnsweredAbnormality = 0.0;
+
+		private XCLCaseObject(PSMethodXCL methodXCL) {
+			super(methodXCL);
+		}
+	}
+
+	public XPSCaseObject createCaseObject(XPSCase xpsCase) {
+		return new XCLCaseObject(this);
+	}
+
+	public int getAnsweredQuestionsCount(XPSCase theCase) {
+		XCLCaseObject caseObject = (XCLCaseObject) theCase.getCaseObject(this);
+		return caseObject.totalAnsweredCount;
+	}
+
+	public double getAnsweredQuestionsAbnormality(XPSCase theCase) {
+		XCLCaseObject caseObject = (XCLCaseObject) theCase.getCaseObject(this);
+		return caseObject.totalAnsweredAbnormality;
+	}
+
+	/**
+	 * @param scoreAlgorithm
+	 *            the scoreAlgorithm to set
+	 */
+	public void setScoreAlgorithm(ScoreAlgorithm scoreAlgorithm) {
+		this.scoreAlgorithm = scoreAlgorithm;
+	}
+
+	/**
+	 * @return the scoreAlgorithm
+	 */
+	public ScoreAlgorithm getScoreAlgorithm() {
+		return scoreAlgorithm;
 	}
 
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
 		return Facts.mergeSolutionFacts(facts);
 	}
-	
 }
