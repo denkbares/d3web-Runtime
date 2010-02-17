@@ -1,0 +1,30 @@
+package de.d3web.xcl;
+
+import java.util.Collection;
+
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.terminology.DiagnosisState;
+
+public interface InferenceTrace {
+
+	public abstract DiagnosisState getState();
+
+	public abstract Collection<XCLRelation> getPosRelations();
+
+	public abstract Collection<XCLRelation> getNegRelations();
+
+	public abstract Collection<XCLRelation> getContrRelations();
+
+	public abstract Collection<XCLRelation> getReqPosRelations();
+
+	public abstract Collection<XCLRelation> getReqNegRelations();
+
+	public abstract Collection<XCLRelation> getSuffRelations();
+
+	public abstract double getScore();
+
+	public abstract double getSupport();
+	
+	public void refreshRelations(XCLModel xclModel, XPSCase xpsCase);
+
+}
