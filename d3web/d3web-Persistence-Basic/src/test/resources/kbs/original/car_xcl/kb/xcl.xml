@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <KnowledgeBase system="d3web" type="xclpattern">
 <KnowledgeSlices>
-<XCLModel ID="XCLM_P1" SID="P1">
+<XCLModel ID="XCLM_P1" SID="P1" considerOnlyRelevantRelations="true">
 <necessaryRelations/>
 <sufficientRelations>
 <relation ID="XCLRelation_149">
@@ -25,7 +25,7 @@
 </relation>
 </Relations>
 </XCLModel>
-<XCLModel ID="XCLM_P2" SID="P2">
+<XCLModel ID="XCLM_P2" SID="P2" considerOnlyRelevantRelations="true">
 <necessaryRelations/>
 <sufficientRelations>
 <relation ID="XCLRelation_154">
@@ -55,7 +55,7 @@
 </relation>
 </Relations>
 </XCLModel>
-<XCLModel ID="XCLM_P3" SID="P3">
+<XCLModel ID="XCLM_P3" SID="P3" considerOnlyRelevantRelations="true">
 <necessaryRelations/>
 <sufficientRelations>
 <relation ID="XCLRelation_160">
@@ -100,7 +100,7 @@
 </relation>
 </Relations>
 </XCLModel>
-<XCLModel ID="XCLM_P4" SID="P4">
+<XCLModel ID="XCLM_P4" SID="P4" considerOnlyRelevantRelations="true">
 <necessaryRelations/>
 <sufficientRelations>
 <relation ID="XCLRelation_170">
@@ -139,7 +139,7 @@
 </relation>
 </Relations>
 </XCLModel>
-<XCLModel ID="XCLM_P5" SID="P5">
+<XCLModel ID="XCLM_P5" SID="P5" considerOnlyRelevantRelations="true">
 <necessaryRelations/>
 <sufficientRelations>
 <relation ID="XCLRelation_178">

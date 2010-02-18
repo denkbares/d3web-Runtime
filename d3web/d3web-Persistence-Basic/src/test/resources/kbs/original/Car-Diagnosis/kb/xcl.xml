@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <KnowledgeBase system="d3web" type="xclpattern">
 <KnowledgeSlices>
-<XCLModel ID="XCLM_P1" SID="P1">
+<XCLModel ID="XCLM_P1" SID="P1" considerOnlyRelevantRelations="true">
 <necessaryRelations>
 <relation ID="XCLRelation_1132">
 <Condition ID="Q12" type="equal" value="Q12a6"/>
@@ -27,7 +27,7 @@
 </relation>
 </Relations>
 </XCLModel>
-<XCLModel ID="XCLM_P2" SID="P2">
+<XCLModel ID="XCLM_P2" SID="P2" considerOnlyRelevantRelations="true">
 <necessaryRelations>
 <relation ID="XCLRelation_1137">
 <Condition ID="Q10" type="equal" value="Q10a1"/>

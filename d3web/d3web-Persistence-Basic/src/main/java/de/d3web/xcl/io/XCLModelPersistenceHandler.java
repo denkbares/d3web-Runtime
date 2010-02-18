@@ -84,6 +84,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 			modelelement.setAttribute("establishedThreshold", ""+xclmodel.getEstablishedThreshold());
 		modelelement.setAttribute("ID", xclmodel.getId());
 		modelelement.setAttribute("SID", xclmodel.getSolution().getId());
+		modelelement.setAttribute("considerOnlyRelevantRelations", ""+xclmodel.isConsiderOnlyRelevantRelations());
 		modelelement.appendChild(getRelationsElement(xclmodel.getNecessaryRelations(),"necessaryRelations", doc));
 		modelelement.appendChild(getRelationsElement(xclmodel.getSufficientRelations(), "sufficientRelations", doc));
 		modelelement.appendChild(getRelationsElement(xclmodel.getContradictingRelations(), "contradictingRelations", doc));
@@ -171,6 +172,8 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 		String suggestedThresholdS = getAttribute("suggestedThreshold", current);
 		String establishedThresholdS = getAttribute("establishedThreshold",
 				current);
+		String considerOnlyRelevantRelations = getAttribute("considerOnlyRelevantRelations",
+				current);
 		Diagnosis diag = kbm.findDiagnosis(solutionID);
 		XCLModel model = new XCLModel(diag);
 		NodeList relations =  current.getChildNodes();
@@ -188,6 +191,9 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 		if (establishedThresholdS != null)
 			model.setEstablishedThreshold(Double
 					.parseDouble(establishedThresholdS));
+		if (considerOnlyRelevantRelations!=null) {
+			model.setConsiderOnlyRelevantRelations(Boolean.parseBoolean(considerOnlyRelevantRelations));
+		}
 		diag.addKnowledge(PSMethodXCL.class, model, XCLModel.XCLMODEL);
 
 	}
