@@ -21,11 +21,18 @@
 package de.d3web.core.inference;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
+import de.d3web.core.KnowledgeBase;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.terminology.Answer;
 import de.d3web.core.terminology.Diagnosis;
 import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.core.terminology.Question;
+import de.d3web.core.terminology.QuestionChoice;
+import de.d3web.core.terminology.info.Property;
 
 /**
  * This is a 'marker' psmethod to represent all the initial values.
@@ -60,6 +67,38 @@ public class PSMethodInit implements PSMethod {
 	 * Creation date: (21.02.2002 16:51:10)
 	 */
 	public void init(XPSCase theCase) {
+		theCase.getPropagationContoller().openPropagation();
+		try {
+			//initialise all questions
+			KnowledgeBase kb = theCase.getKnowledgeBase();
+			for (Question q: kb.getQuestions()) {
+				Object property = q.getProperties().getProperty(Property.INIT);
+				if (property != null) {
+					String s = (String) property;
+					List<String> ids = new LinkedList<String>();
+					int posstart = 0;
+					int posend = s.indexOf(";");
+					while (posend!=-1) {
+						ids.add(s.substring(posstart, posend));
+						posstart = posend+1;
+						posend = s.indexOf(";", posstart);
+					}
+					ids.add(s.substring(posstart));
+					if (q instanceof QuestionChoice) {
+						QuestionChoice qc = (QuestionChoice) q;
+						Answer[] a = new Answer[ids.size()];
+						for (int i = 0; i < a.length; i++) {
+							a[i] = qc.getAnswer(theCase, ids.get(i));
+						}
+						theCase.setValue(qc, a);
+					} else {
+						//TODO QuestionNum, QuestionDate
+					}
+				}
+			}
+		} finally {
+			theCase.getPropagationContoller().commitPropagation();
+		}
 	}
 
 	/**

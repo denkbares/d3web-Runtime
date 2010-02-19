@@ -91,7 +91,11 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 		Element ksNode = doc.createElement("KnowledgeSlices");
 		root.appendChild(ksNode);
 		SortedSet<KnowledgeSlice> knowledgeSlices = new TreeSet<KnowledgeSlice>(new KnowledgeSliceComparator());
-		knowledgeSlices.addAll(kb.getAllKnowledgeSlices());
+		for (KnowledgeSlice knowledgeSlice: kb.getAllKnowledgeSlices()) {
+			if (knowledgeSlice != null) {
+				knowledgeSlices.add(knowledgeSlice);
+			}
+		}
 		for (KnowledgeSlice model : knowledgeSlices) {
 			if (model instanceof CostBenefit) {
 				ksNode.appendChild(getElement((CostBenefit) model, doc));
