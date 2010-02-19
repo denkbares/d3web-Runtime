@@ -353,7 +353,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		solution.getKnowledgeBase().removeKnowledge(PSMethodXCL.class, this,
 				XCLModel.XCLMODEL);
 		solution.removeKnowledge(getProblemsolverContext(), this, XCLMODEL);
-		for (XCLRelation rel : relations) {
+		for (XCLRelation rel : new LinkedList<XCLRelation>(relations)) {
 			removeRelation(rel);
 		}
 	}
