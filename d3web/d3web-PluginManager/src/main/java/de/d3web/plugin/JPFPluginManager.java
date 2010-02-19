@@ -48,7 +48,7 @@ import de.d3web.plugin.util.PluginCollectionComparatorByPriority;
 public class JPFPluginManager extends PluginManager {
 
 	private final org.java.plugin.PluginManager manager;
-	
+
 	private HashMap<org.java.plugin.registry.Extension, Extension> cachedExtension = new HashMap<org.java.plugin.registry.Extension, Extension>();
 
 	/**
@@ -81,7 +81,9 @@ public class JPFPluginManager extends PluginManager {
 		Map<String, Identity> map = manager.publishPlugins(locations.toArray(new PluginLocation[locations.size()]));
 		//activate all plugins
 		for (Identity i: map.values()) {
-			manager.activatePlugin(i.getId());
+			String id = i.getId();
+			manager.activatePlugin(id);
+			Logger.getLogger("PluginManager").info("Plugin '" + id + "' installed and activated.");
 		}
 	}
 
@@ -99,7 +101,7 @@ public class JPFPluginManager extends PluginManager {
 	 *             the directory could not be used for initialization
 	 */
 	public static void init(String directory) {
-		if (instance!=null) {
+		if (instance != null) {
 			Logger.getLogger("PluginManager").warning(
 					"PluginManager already initialised.");
 			return;
@@ -124,7 +126,7 @@ public class JPFPluginManager extends PluginManager {
 	 */
 	public static void init(File[] pluginFiles) {
 		if (pluginFiles == null) {
-//			throw new IllegalArgumentException("invalid plugin files");
+			// throw new IllegalArgumentException("invalid plugin files");
 			Logger.getLogger("PluginManager").severe(
 					"invalid plugin files");
 			return;
@@ -149,7 +151,7 @@ public class JPFPluginManager extends PluginManager {
 				.getConnectedExtensions();
 		for (org.java.plugin.registry.Extension e : connectedExtensions) {
 			Extension extension = cachedExtension.get(e);
-			if (extension==null) {
+			if (extension == null) {
 				extension = new JPFExtension(e, manager);
 				cachedExtension.put(e, extension);
 			}
