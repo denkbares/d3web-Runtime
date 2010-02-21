@@ -33,13 +33,14 @@ import de.d3web.empiricalTesting.caseConverter.CaseObjectToKnOffice;
 import de.d3web.empiricalTesting.caseConverter.CaseObjectToTestSuiteXML;
 import de.d3web.empiricalTesting.caseVisualization.dot.DDBuilder;
 import de.d3web.empiricalTesting.caseVisualization.jung.JUNGCaseVisualizer;
+import de.d3web.plugin.test.InitPluginManager;
 
 public class EmpiricalTester {
 	
 	// Input variables
-	static String workspace = "D:/Projekte/Temp/EmpiricalTesting/";
+	static String workspace = "D:/tmp/EmpiricalTesting/";
 	static String kbFile = "dano.jar";
-	static String caseFile = "dano_bot_49_cases.xml";
+	static String caseFile = "dano_cases_small.xml";
 
 	// Output file for DDBuilder
 	static String dotFile = "dano.dot";
@@ -56,10 +57,11 @@ public class EmpiricalTester {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
+		InitPluginManager.init();
 		try {
 //			demoComputePrecisionAndRecall();
 //			demoBotTestCases();
-//			demoCaseVisualization();
+			demoCaseVisualization();
 //			demoBuildDDTree();
 		} catch (Exception e) {
 			e.printStackTrace();
