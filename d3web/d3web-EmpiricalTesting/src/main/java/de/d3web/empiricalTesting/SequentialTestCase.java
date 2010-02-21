@@ -32,6 +32,7 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.session.CaseFactory;
 import de.d3web.core.session.XPSCase;
+import de.d3web.core.terminology.Answer;
 import de.d3web.core.terminology.Diagnosis;
 import de.d3web.core.terminology.DiagnosisState;
 import de.d3web.core.terminology.Question;
@@ -161,7 +162,7 @@ public class SequentialTestCase {
 			if (slices.size() != 0) {	
 				deriveXCLSolutions(thecase, rtc, slices);
 			} else { 
-				deriveHeuristicSolutions(thecase, rtc, psMethodContext, useStateRatings);
+				deriveSolutionsForPSMethod(thecase, rtc, psMethodContext, useStateRatings);
 			}			
 
 			// Mark this RatedTestCase as successfully derived
@@ -171,7 +172,7 @@ public class SequentialTestCase {
 		}
 	}
 
-	private void deriveHeuristicSolutions(XPSCase thecase, RatedTestCase rtc,
+	private void deriveSolutionsForPSMethod(XPSCase thecase, RatedTestCase rtc,
 			Class<? extends PSMethod> psMethodContext, boolean useStateRatings) {
 		
 		for (Diagnosis dia : thecase.getDiagnoses()) {
@@ -208,6 +209,37 @@ public class SequentialTestCase {
 		
 	}
 
+	
+	public List<Answer> getAnswerForQuestionNum(KnowledgeBase kb, String questionname) {
+		XPSCase thecase = CaseFactory.createXPSCase(kb);
+		
+		for (RatedTestCase rtc : ratedTestCases) {
+			// Answer and Question setting in Case
+			for (Finding f : rtc.getFindings()) {
+				Object q = f.getQuestion();
+				List answers = new ArrayList();
+				
+				// Necessary for QuestionMC, otherwise only one answer can be given
+				if (q instanceof QuestionMC) {
+					answers.addAll(((QuestionMC) q).getValue(thecase));
+				}
+				
+				answers.add(f.getAnswer());
+				thecase.setValue((Question) q, answers.toArray());
+			}		
+		}
+		
+		List<? extends Question> answeredQuestions = thecase.getAnsweredQuestions();
+		for (Question question : answeredQuestions) {
+			if (question.getText().equals(questionname))
+				return question.getValue(thecase);
+		}
+		
+		return null;
+	}
+	
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

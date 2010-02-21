@@ -43,6 +43,7 @@ public class TestSuite {
 	
 	private String name;
 	private boolean useInterviewCalculator;
+	private boolean derived;
 
 	/**
 	 * Default Constructor
@@ -116,13 +117,11 @@ public class TestSuite {
 	}
 	
 	/**
-	 * Sets the Repository. All Solutions are derived, if the Repository is consistent.
+	 * Sets the Repository.
 	 * @param repository the repository to set
 	 */
 	public void setRepository(List<SequentialTestCase> repository) {
 		this.repository = repository;
-		if(isConsistent());
-			deriveAllSolutions();
 	}		
 	
 	/**
@@ -205,8 +204,12 @@ public class TestSuite {
 	 * Derives the Solutions for all SequentialTestCases in this Repositoty
 	 */
 	public void deriveAllSolutions() {
-		for (SequentialTestCase stc : repository)
-			stc.deriveSolutions(kb, psMethodContext);
+		if (!derived) {
+			for (SequentialTestCase stc : repository) {
+				stc.deriveSolutions(kb, psMethodContext);
+			}
+			derived = true;
+		}
 	}
 
 	/**
@@ -215,10 +218,13 @@ public class TestSuite {
 	 */
 	public double totalPrecision() {
 		double prec = 0;
-		if (!isConsistent())
+		if (!isConsistent()) {
 			return prec;
-		for (SequentialTestCase stc : repository)
+		}
+		deriveAllSolutions();
+		for (SequentialTestCase stc : repository) {
 			prec += functions.precision(stc, DerivedSolutionsCalculator.getInstance());
+		}
 		prec /= repository.size();
 		return prec;
 	}
@@ -231,15 +237,13 @@ public class TestSuite {
 	 */
 	public double totalPrecisionInterview() {
 		double prec = 0;
-		
 		if (!isConsistent()) {
 			return prec;
 		}
-			
+		deriveAllSolutions();	
 		for (SequentialTestCase stc : repository) {
 			prec += functions.precision(stc, new InterviewCalculator(kb));
 		}
-			
 		prec /= repository.size();
 		return prec;
 	}
@@ -250,10 +254,13 @@ public class TestSuite {
 	 */
 	public double totalRecall() {
 		double rec = 0;
-		if (!isConsistent())
+		if (!isConsistent()) {
 			return rec;
-		for (SequentialTestCase stc : repository)
+		}
+		deriveAllSolutions();
+		for (SequentialTestCase stc : repository) {
 			rec += functions.recall(stc, DerivedSolutionsCalculator.getInstance());
+		}
 		rec /= repository.size();
 		return rec;
 	}
@@ -266,15 +273,13 @@ public class TestSuite {
 	 */
 	public double totalRecallInterview() {
 		double rec = 0;
-		
 		if (!isConsistent()) {
 			return rec;
 		}
-			
+		deriveAllSolutions();	
 		for (SequentialTestCase stc : repository) {
 			rec += functions.recall(stc, new InterviewCalculator(kb));
 		}
-			
 		rec /= repository.size();
 		return rec;
 	}
