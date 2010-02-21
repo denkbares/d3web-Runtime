@@ -38,14 +38,14 @@ import de.d3web.plugin.test.InitPluginManager;
 public class EmpiricalTester {
 	
 	// Input variables
-	static String workspace = "D:/tmp/EmpiricalTesting/";
-	static String kbFile = "dano.jar";
-	static String caseFile = "dano_cases_small.xml";
+    static String workspace = "D:/Projekte/Temp/EmpiricalTesting/";
+    static String kbFile = "KnowledgeBases/dano.jar";
+    static String caseFile = "Cases/dano_Q1a10.xml";
 
 	// Output file for DDBuilder
 	static String dotFile = "dano.dot";
 	// Output file for JUNGCaseVisualizer
-	static String pdfFile = "dano.pdf";
+	static String pdfFile = "dano_Q1a10.pdf";
 	// Output files for InterviewBot
 	static String xmlFile = "dano_bot"; 
 	static String txtFile = "dano_bot"; 
@@ -61,7 +61,7 @@ public class EmpiricalTester {
 		try {
 //			demoComputePrecisionAndRecall();
 //			demoBotTestCases();
-			demoCaseVisualization();
+//			demoCaseVisualization();
 //			demoBuildDDTree();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -103,7 +103,7 @@ public class EmpiricalTester {
 		KnowledgeBase kb = loadKnowledgeBase(workspace + kbFile);
 	
 		InterviewBot bot = new InterviewBot.Builder(kb).
-			maxCases(50).
+			maxCases(100).
 			ratingStrategy(new HeuristicScoreRatingStrategy()).
 			build();
 		List<SequentialTestCase> cases = bot.generate();
@@ -125,6 +125,7 @@ public class EmpiricalTester {
 		TestSuite TS = new TestSuite();
 		TS.setKb(kb);
 		TS.loadRepository(workspace + caseFile);
+		TS.deriveAllSolutions();
 		
 		JUNGCaseVisualizer.getInstance().writeToFile(TS, workspace + pdfFile);
 	}

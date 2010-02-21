@@ -264,6 +264,7 @@ public class JUNGCaseVisualizer implements CaseVisualizer {
         vv.getRenderContext().setVertexShapeTransformer(vlasr);
         vv.getRenderContext().setVertexFillPaintTransformer(new VertexColorTransformer());
         
+        
         // Edge transformation 
         vv.getRenderContext().setEdgeLabelTransformer(new EdgeTransformer(graph));
         vv.getRenderContext().setEdgeDrawPaintTransformer(new EdgeColorTransformer(graph));
@@ -294,8 +295,10 @@ public class JUNGCaseVisualizer implements CaseVisualizer {
 	 */
 	private VisualizationViewer<RatedTestCase, EdgeFinding> generateVisualizationViewer() {
 
+		int distY = DistanceDeterminer.getInstance().determineDistance(graph.getVertices());
+		
 		TreeLayout<RatedTestCase, EdgeFinding> treeLayout = 
-			new TreeLayout<RatedTestCase, EdgeFinding>(graph, 400, 400);
+			new TreeLayout<RatedTestCase, EdgeFinding>(graph, 250, distY);
 		
         Dimension preferredSize = new Dimension(1400, 800);
         
@@ -310,7 +313,7 @@ public class JUNGCaseVisualizer implements CaseVisualizer {
 	
 	/**
 	 * Checks the if everything is ok with the output path
-	 * specified for the PDF File. If ther is something
+	 * specified for the PDF File. If there is something
 	 * wrong it will be corrected.
 	 * 
 	 * @param filepath String the specified filepath
