@@ -65,6 +65,7 @@ public class KBTester {
 	@Test
 	public void testKB() {	
 		for (TestSuite t : testsuites) {
+			t.deriveAllSolutions();
 			testCorrectnessAndActuallity(t);
 			testPrecisionAndRecall(t);
 			if (t.getUseInterviewCalculator())
