@@ -131,5 +131,6 @@
 		<module>d3web-PluginManager</module>
 		<module>d3web-SharedKnowledgePersistence</module>
 		<module>d3web-CostBenefit</module>
+		<module>d3web-Kernel-ExtensionPoints</module>
 	</modules>
 </project>
