@@ -24,8 +24,10 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -175,7 +177,6 @@ public class JUNGCaseVisualizer implements CaseVisualizer {
 			writeToFile(t.getRepository(), checkFilePath(filepath, ""));
 		}
 		
-		
 	}
 	
 	
@@ -191,17 +192,46 @@ public class JUNGCaseVisualizer implements CaseVisualizer {
 	@Override
 	public void writeToFile(List<SequentialTestCase> cases, String filepath) {
 		
-		init(cases);
 		checkFilePath(filepath, "");
+				
+		try {
+			
+			ByteArrayOutputStream bstream = getByteArrayOutputStream(cases);
+			bstream.writeTo(new FileOutputStream(filepath));
+						
+		} catch (FileNotFoundException e) {
+			Logger.getLogger(this.getClass().getName())
+			.warning("Can not access the specified file (" + filepath +
+					 "), probably because it is opened. " +
+					 "Close the file and try again."); 
+			
+		} catch (IOException e) {
+			Logger.getLogger(this.getClass().getName())
+			.warning("Error while writing to file. The file was not created. " + e.getMessage());
+		} 
+	}
+	
+	
+	/**
+	 * Streams the graph to an OutputStream (useful for web requests!)
+	 * @param cases List<SequentialTestCase> cases
+	 * @param out OutputStream
+	 */
+	@Override
+	public ByteArrayOutputStream getByteArrayOutputStream(List<SequentialTestCase> cases) {
+		
+		init(cases);
 		
 		int w = vv.getGraphLayout().getSize().width;
         int h = vv.getGraphLayout().getSize().height;
+		
+		ByteArrayOutputStream bstream = new ByteArrayOutputStream();
 		Document document = new Document();
 		
 		try {
 			
 			PdfWriter writer = 
-				PdfWriter.getInstance(document, new FileOutputStream(filepath));
+				PdfWriter.getInstance(document, bstream);
 			document.setPageSize(new Rectangle(w, h));
 			document.open();	
 
@@ -215,21 +245,17 @@ public class JUNGCaseVisualizer implements CaseVisualizer {
             cb.addTemplate(tp, 0, 0);
             cb.sanityCheck();
             
-		} catch (FileNotFoundException e) {
-			Logger.getLogger(this.getClass().getName())
-			.warning("Can not access the specified file (" + filepath +
-					 "), probably because it is opened. " +
-					 "Close the file and try again."); 
-			
+            document.close();
+            
 		} catch (DocumentException e) {
 			Logger.getLogger(this.getClass().getName())
-			.warning("Error while writing to file (" + filepath + 
-					"). The file was not created. " + e.getMessage());
+			.warning("Error while writing to file. The file was not created. " + e.getMessage());
 		} 
 		
-		document.close();
+		return bstream;
+		
 	}
-
+	
 	
 	/**
 	 * Actually writes the Graph as a Graph2D

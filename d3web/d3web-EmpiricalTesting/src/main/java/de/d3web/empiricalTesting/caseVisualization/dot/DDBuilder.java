@@ -20,9 +20,10 @@
 
 package de.d3web.empiricalTesting.caseVisualization.dot;
 
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -79,6 +80,24 @@ public class DDBuilder implements CaseVisualizer {
 	
 	
 	/**
+     * Streams the graph to an OutputStream (useful for web requests!)
+	 * @param cases List<SequentialTestCase> cases
+	 * @param out OutputStream
+	 */
+	@Override
+	public ByteArrayOutputStream getByteArrayOutputStream(List<SequentialTestCase> cases) {
+		generateDDNet(cases);
+		ByteArrayOutputStream bstream = new ByteArrayOutputStream();
+		try {
+			write(bstream);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return bstream;
+	}
+	
+	
+	/**
 	 * Saves the graph visualization to a <b>DOT file</b> which
 	 * will be created at the committed filepath.
 	 * 
@@ -92,13 +111,12 @@ public class DDBuilder implements CaseVisualizer {
 		generateDDNet(cases);
 		filepath = checkDotFilePath(filepath, "");
 		try {
-			write(new File(filepath));
+			write(new FileOutputStream(filepath));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
+	
 	
 	/**
 	 * Saves the graph visualization to a <b>DOT file</b> which
@@ -129,9 +147,8 @@ public class DDBuilder implements CaseVisualizer {
 						checkDotFilePath(dotFile, answerOfFirstQuestion.getId());
 					System.out.println(printFilePath);
 					try {
-						write(new File(printFilePath));
+						write(new FileOutputStream(printFilePath));
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -140,9 +157,8 @@ public class DDBuilder implements CaseVisualizer {
 			generateDDNet(TS.getRepository());
 			dotFile = checkDotFilePath(dotFile, "");
 			try {
-				write(new File(dotFile));
+				write(new FileOutputStream(dotFile));
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -224,9 +240,9 @@ public class DDBuilder implements CaseVisualizer {
 		return generateDOT(false);
 	}
 	
-	private void write(File file) throws IOException {
-		OutputStreamWriter dotwriter = new OutputStreamWriter(
-				new FileOutputStream(file), "UTF-8");
+	private void write(OutputStream out) throws IOException {
+		OutputStreamWriter dotwriter = 
+			new OutputStreamWriter(out , "UTF-8");
 		dotwriter.write(generateDOT());
 		dotwriter.close();
 	}	

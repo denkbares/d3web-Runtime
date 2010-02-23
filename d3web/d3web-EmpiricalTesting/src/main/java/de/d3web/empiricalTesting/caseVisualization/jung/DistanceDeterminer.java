@@ -68,7 +68,7 @@ public class DistanceDeterminer {
 				result = rtc.getExpectedSolutions().size();
 		}
 		
-		return result * 30;
+		return (result * 30 > 200) ? result * 30 : 200;
 		
 	}
 }
