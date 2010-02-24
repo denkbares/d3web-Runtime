@@ -35,7 +35,6 @@ import de.d3web.costBenefit.model.Path;
 import de.d3web.costBenefit.model.SearchModel;
 import de.d3web.costBenefit.model.Target;
 import de.d3web.indication.ActionIndication;
-import de.d3web.xcl.inference.PSMethodXCL;
 
 /**
  * The PSMethodCostBenefit indicates QContainer to establish a diagnosis as
@@ -124,10 +123,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter {
 		for (StrategicSupport strategicSupport: stratgicSupports){
 			Collection<Diagnosis> solutions = strategicSupport
 					.getPossibleDiagnoses(theCase);
-			
-			for (Diagnosis d : solutions) {
-				diags.add(d);
-			}
+			diags.addAll(solutions);
 			Collection<Question> discriminatingQuestions = strategicSupport
 					.getDiscriminatingQuestions(solutions, theCase);
 			Collection<Target> targets = targetFunction.getTargets(theCase,
@@ -229,8 +225,11 @@ public class PSMethodCostBenefit extends PSMethodAdapter {
 		// if the possible Diagnosis have changed, a flag that a new path has to
 		// be calculated is set
 		boolean changeddiags = false;
-		Collection<Diagnosis> possibleDiagnoses = PSMethodXCL.getInstance()
-				.getPossibleDiagnoses(theCase);
+		List<StrategicSupport> strategicSupports = getStrategicSupports(theCase);
+		HashSet<Diagnosis> possibleDiagnoses = new HashSet<Diagnosis>();
+		for (StrategicSupport strategicSupport: strategicSupports) {
+			possibleDiagnoses.addAll(strategicSupport.getPossibleDiagnoses(theCase));
+		}
 		if (possibleDiagnoses.size() == diags.size()) {
 			for (Diagnosis d : possibleDiagnoses) {
 				if (!diags.contains(d)) {
