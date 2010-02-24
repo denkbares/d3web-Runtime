@@ -114,6 +114,10 @@ public class QuestionHandler implements FragmentHandler {
 			if (intervalls != null) {
 				questionNum.setValuePartitions(intervalls);
 			}
+		} else if (type.equals("Text")) {
+			q = new QuestionText(id);
+		} else if (type.equals("Date")) {
+			q = new QuestionDate(id);
 		}
 		q.setText(text.getTextContent());
 		if (properties != null) {
