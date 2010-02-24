@@ -2,6 +2,7 @@ package de.d3web.costBenefit;
 
 import java.util.Collection;
 
+import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.terminology.Diagnosis;
 import de.d3web.core.terminology.Question;
@@ -26,5 +27,5 @@ public interface TargetFunction {
 	 */
 	Collection<Target> getTargets(XPSCase theCase,
 			Collection<Question> relevantQuestions,
-			Collection<Diagnosis> diagnosisToDiscriminate);
+			Collection<Diagnosis> diagnosisToDiscriminate, StrategicSupport strategicSupport);
 }

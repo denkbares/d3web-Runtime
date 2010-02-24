@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.terminology.Diagnosis;
 import de.d3web.core.terminology.NamedObject;
@@ -22,7 +23,7 @@ public class DefaultTargetFunction implements TargetFunction {
 	@Override
 	public Collection<Target> getTargets(XPSCase theCase,
 			Collection<Question> relevantQuestions,
-			Collection<Diagnosis> diagnosisToDiscriminate) {
+			Collection<Diagnosis> diagnosisToDiscriminate, StrategicSupport strategicSupport) {
 		Set<Target> set = new HashSet<Target>();
 		for (Question q : relevantQuestions) {
 			if (!q.isDone(theCase))

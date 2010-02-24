@@ -1,5 +1,6 @@
 package de.d3web.costBenefit.inference;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -7,9 +8,11 @@ import java.util.List;
 import java.util.Set;
 
 import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.inference.condition.AbstractCondition;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondOr;
@@ -115,24 +118,27 @@ public class PSMethodCostBenefit extends PSMethodAdapter {
 	}
 
 	private void calculateNewPath(XPSCase theCase) {
-		PSMethodXCL psmethodXCL = PSMethodXCL.getInstance();
-		cbm = new SearchModel(theCase);
-		Collection<Diagnosis> solutions = psmethodXCL
-				.getPossibleDiagnoses(theCase);
+		List<StrategicSupport> stratgicSupports = getStrategicSupports(theCase);
 		diags = new HashSet<Diagnosis>();
-		for (Diagnosis d : solutions) {
-			diags.add(d);
-		}
-		Collection<Question> discriminatingQuestions = psmethodXCL
-				.getDiscriminatingQuestions(solutions, theCase);
-		Collection<Target> targets = targetFunction.getTargets(theCase,
-				discriminatingQuestions, solutions);
-		for (Target target : targets) {
-			double benefit = psmethodXCL.getEntropy(target, solutions, theCase);
-			if (benefit == 0)
-				continue;
-			cbm.addTarget(target);
-			cbm.maximizeBenefit(target, benefit);
+		cbm = new SearchModel(theCase);
+		for (StrategicSupport strategicSupport: stratgicSupports){
+			Collection<Diagnosis> solutions = strategicSupport
+					.getPossibleDiagnoses(theCase);
+			
+			for (Diagnosis d : solutions) {
+				diags.add(d);
+			}
+			Collection<Question> discriminatingQuestions = strategicSupport
+					.getDiscriminatingQuestions(solutions, theCase);
+			Collection<Target> targets = targetFunction.getTargets(theCase,
+					discriminatingQuestions, solutions, strategicSupport);
+			for (Target target : targets) {
+				double benefit = strategicSupport.getEntropy(target, solutions, theCase);
+				if (benefit == 0)
+					continue;
+				cbm.addTarget(target);
+				cbm.maximizeBenefit(target, benefit);
+			}
 		}
 		if (cbm.getBestBenefit() == 0) {
 			resetPath();
@@ -156,6 +162,16 @@ public class PSMethodCostBenefit extends PSMethodAdapter {
 			}
 			this.currentPathIndex = -1;
 		}
+	}
+
+	private List<StrategicSupport> getStrategicSupports(XPSCase theCase) {
+		List<StrategicSupport> ret = new ArrayList<StrategicSupport>();
+		for (PSMethod psm: theCase.getUsedPSMethods()) {
+			if (psm instanceof StrategicSupport) {
+				ret.add((StrategicSupport) psm);
+			}
+		}
+		return ret;
 	}
 
 	private void resetPath() {
