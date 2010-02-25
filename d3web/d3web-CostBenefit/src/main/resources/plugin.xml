@@ -1,19 +1,30 @@
 <?xml version="1.0" ?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
 <plugin id="d3web-CostBenefit" version="0.0.1">
-	
+
 	<requires>
+		<import plugin-id="d3web-Kernel-ExtensionPoints" />
 		<import plugin-id="KnowledgePersistenceExtensionPoints" />
 	</requires>
-	
+
 	<runtime>
 		<library id="de.d3web" path="." type="code">
 			<export prefix="*" />
 		</library>
 	</runtime>
-	
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeWriter"
-		id="CostBenefitModelPersistenceHandler.Writer">
+
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="PSMethod"
+		id="PSMethodCostBenefit">
+		<parameter id="class"
+			value="de.d3web.costBenefit.inference.PSMethodCostBenefit" />
+		<parameter id="name" value="PSMethodCostBenefit" />
+		<parameter id="description" value="PSMethod for CostBenefit" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+
+	<extension plugin-id="KnowledgePersistenceExtensionPoints"
+		point-id="KnowledgeWriter" id="CostBenefitModelPersistenceHandler.Writer">
 		<parameter id="class"
 			value="de.d3web.costBenefit.io.CostBenefitModelPersistenceHandler" />
 		<parameter id="name" value="CostBenefitModelPersistenceHandler" />
@@ -22,9 +33,9 @@
 		<parameter id="priority" value="5" />
 		<parameter id="filename" value="kb/costbenefitknowledge.xml" />
 	</extension>
-	
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeReader"
-		id="CostBenefitModelPersistenceHandler">
+
+	<extension plugin-id="KnowledgePersistenceExtensionPoints"
+		point-id="KnowledgeReader" id="CostBenefitModelPersistenceHandler">
 		<parameter id="class"
 			value="de.d3web.costBenefit.io.CostBenefitModelPersistenceHandler" />
 		<parameter id="name" value="CostBenefitModelPersistenceHandler" />

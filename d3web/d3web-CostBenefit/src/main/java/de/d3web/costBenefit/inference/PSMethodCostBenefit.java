@@ -27,9 +27,12 @@ import de.d3web.core.terminology.QContainer;
 import de.d3web.core.terminology.Question;
 import de.d3web.core.terminology.QuestionOC;
 import de.d3web.costBenefit.CostFunction;
+import de.d3web.costBenefit.DefaultCostFunction;
+import de.d3web.costBenefit.DefaultTargetFunction;
 import de.d3web.costBenefit.SearchAlgorithm;
 import de.d3web.costBenefit.StateTransition;
 import de.d3web.costBenefit.TargetFunction;
+import de.d3web.costBenefit.ids.IterativeDeepeningSearchAlgorithm;
 import de.d3web.costBenefit.model.Node;
 import de.d3web.costBenefit.model.Path;
 import de.d3web.costBenefit.model.SearchModel;
@@ -60,6 +63,12 @@ public class PSMethodCostBenefit extends PSMethodAdapter {
 		this.targetFunction = targetFunction;
 		this.costFunction = costFunction;
 		this.searchAlgorithm = searchAlgorithm;
+	}
+	
+	public PSMethodCostBenefit() {
+		this.targetFunction = new DefaultTargetFunction();
+		this.costFunction = new DefaultCostFunction();
+		this.searchAlgorithm = new IterativeDeepeningSearchAlgorithm();
 	}
 
 	@Override
@@ -254,6 +263,22 @@ public class PSMethodCostBenefit extends PSMethodAdapter {
 
 	public CostFunction getCostFunction() {
 		return costFunction;
+	}
+	
+	public SearchAlgorithm getSearchAlgorithm() {
+		return searchAlgorithm;
+	}
+
+	public void setSearchAlgorithm(SearchAlgorithm searchAlgorithm) {
+		this.searchAlgorithm = searchAlgorithm;
+	}
+
+	public void setTargetFunction(TargetFunction targetFunction) {
+		this.targetFunction = targetFunction;
+	}
+
+	public void setCostFunction(CostFunction costFunction) {
+		this.costFunction = costFunction;
 	}
 
 	public QContainer[] getCurrentPath() {

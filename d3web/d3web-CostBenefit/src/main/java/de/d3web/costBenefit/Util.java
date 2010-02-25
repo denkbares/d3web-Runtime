@@ -27,8 +27,7 @@ public class Util {
 
 	public static XPSCase copyCase(XPSCase theCase) {
 		XPSCase testCase = CaseFactory
-				.createXPSCase(theCase.getKnowledgeBase());
-		testCase.setUsedPSMethods(new LinkedList<PSMethod>());
+				.createXPSCase(theCase.getKnowledgeBase(), new LinkedList<PSMethod>());
 		List<? extends Question> answeredQuestions = new LinkedList<Question>(
 				theCase.getAnsweredQuestions());
 		for (Question q : answeredQuestions) {

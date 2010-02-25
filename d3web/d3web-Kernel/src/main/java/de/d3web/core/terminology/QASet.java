@@ -22,6 +22,7 @@ package de.d3web.core.terminology;
 import java.util.List;
 
 import de.d3web.core.InterviewObject;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.session.D3WebCase;
 import de.d3web.core.session.XPSCase;
@@ -103,7 +104,7 @@ public abstract class QASet extends NamedObject implements InterviewObject {
 	  * @param rule rule that has activated the question
 	  * @param theCase current case
 	  */
-	public void activate(XPSCase theCase, Rule rule, Class psm) {
+	public void activate(XPSCase theCase, Rule rule, Class<? extends PSMethod> psm) {
 		CaseQASet caseQA =
 			((de.d3web.core.session.blackboard.CaseQASet) theCase
 				.getCaseObject(this));

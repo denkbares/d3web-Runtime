@@ -80,6 +80,10 @@ public class CaseFactory {
 		return createCase(kb, new DefaultQASetManagerFactory());
 	}
 	
+	public static synchronized XPSCase createXPSCase(KnowledgeBase kb, List<PSMethod> psms) {
+		return new D3WebCase(kb, new DefaultQASetManagerFactory(), psms);
+	}
+	
 	private static XPSCase createCase(KnowledgeBase kb,
 			QASetManagerFactory defaultQASetManagerFactory) {
 		XPSCase theCase = new D3WebCase(kb, defaultQASetManagerFactory);

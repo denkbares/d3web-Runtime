@@ -138,6 +138,20 @@ public class D3WebCase implements XPSCase {
 	D3WebCase(KnowledgeBase kb, QASetManagerFactory theQamFactory) {
 		this.kb = kb;
 		this.propagationController = new DefaultPropagationController(this);
+		init(theQamFactory);
+		// register some common problem solving methods
+		// first add the methods
+		for (PSMethod method : commonPSMethods) {
+			addUsedPSMethod(method);
+		}
+		//add plugged PS
+		for (Extension e: PluginManager.getInstance().getExtensions("d3web-Kernel-ExtensionPoints", "PSMethod")) {
+			addUsedPSMethod((PSMethod) e.getNewInstance());
+		}
+		trace("\n------------------------------------------------\nNeuer Fall\n");
+	}
+
+	private void init(QASetManagerFactory theQamFactory) {
 		blackboard = new Blackboard(this);
 		
 		setQASetManagerFactory(theQamFactory);
@@ -157,15 +171,7 @@ public class D3WebCase implements XPSCase {
 		dialogControllingPSMethods.add(psmUser);
 		dialogControllingPSMethods.add(PSMethodHeuristic.getInstance());
 
-		// register some common problem solving methods
-		// first add the methods
-		for (PSMethod method : commonPSMethods) {
-			addUsedPSMethod(method);
-		}
-		//add plugged PS
-		for (Extension e: PluginManager.getInstance().getExtensions("d3web-Kernel-ExtensionPoints", "PSMethod")) {
-			addUsedPSMethod((PSMethod) e.getNewInstance());
-		}
+		
 		// activate InitQASets
 		for (QASet qaSet : getKnowledgeBase().getInitQuestions()) {
 			// //
@@ -174,6 +180,16 @@ public class D3WebCase implements XPSCase {
 			// //
 			// addQASet(nextQASet, null, PSMethodInit.class);
 			qaSet.activate(this, null, PSMethodInit.class);
+		}
+	}
+	
+	D3WebCase(KnowledgeBase kb, QASetManagerFactory theQamFactory, List<PSMethod> psmethods) {
+		this.kb = kb;
+		this.propagationController = new DefaultPropagationController(this);
+		init(theQamFactory);
+		// register psms
+		for (PSMethod method : psmethods) {
+			addUsedPSMethod(method);
 		}
 		trace("\n------------------------------------------------\nNeuer Fall\n");
 	}
@@ -385,7 +401,7 @@ public class D3WebCase implements XPSCase {
 	public PSMethod getPSMethodInstance(Class<? extends PSMethod> context) {
 		for (PSMethod psm : getUsedPSMethods()) {
 			if (psm.getClass().equals(context)) {
-				return (PSMethod) psm;
+				return psm;
 			}
 
 		}
