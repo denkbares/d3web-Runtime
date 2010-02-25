@@ -1,4 +1,4 @@
-package de.d3web.persistence.tests.utils;
+package de.d3web.io.tests.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
