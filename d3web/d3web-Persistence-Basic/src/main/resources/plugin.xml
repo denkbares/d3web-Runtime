@@ -451,28 +451,6 @@
 	</extension>
 	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeReader"
-		id="XCLModelPersistenceHandler">
-		<parameter id="class"
-			value="de.d3web.xcl.io.XCLModelPersistenceHandler" />
-		<parameter id="name" value="XCLModelPersistenceHandler" />
-		<parameter id="description" value="KnowledgeReader for XCLModels" />
-		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
-		<parameter id="filename" value="kb/xcl.xml" />
-	</extension>
-	
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeWriter"
-		id="XCLModelPersistenceHandler.Writer">
-		<parameter id="class"
-			value="de.d3web.xcl.io.XCLModelPersistenceHandler" />
-		<parameter id="name" value="XCLModelPersistenceHandler" />
-		<parameter id="description" value="KnowledgeWriter for XCLModels" />
-		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
-		<parameter id="filename" value="kb/xcl.xml" />
-	</extension>
-	
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeReader"
 		id="BasicPersistenceHandler">
 		<parameter id="class"
 			value="de.d3web.core.io.BasicPersistenceHandler" />

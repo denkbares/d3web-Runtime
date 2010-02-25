@@ -24,9 +24,8 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.terminology.Answer;
 import de.d3web.core.terminology.Question;
-import de.d3web.xcl.Abnormality;
 
-public abstract class AbstractAbnormality implements KnowledgeSlice, Abnormality {
+public abstract class AbstractAbnormality implements KnowledgeSlice {
 
 	private static final long serialVersionUID = -6145840249505356476L;
 	public static double A0 = 0;

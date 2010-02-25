@@ -41,7 +41,6 @@ import de.d3web.core.terminology.QuestionDate;
 import de.d3web.core.terminology.QuestionMC;
 import de.d3web.core.terminology.QuestionNum;
 import de.d3web.core.terminology.QuestionOC;
-import de.d3web.core.terminology.QuestionSolution;
 import de.d3web.core.terminology.QuestionText;
 import de.d3web.core.terminology.QuestionYN;
 import de.d3web.core.terminology.QuestionZC;
@@ -184,14 +183,6 @@ public class KnowledgeBaseManagement {
 
 	public QuestionYN createQuestionYN(String name, QASet parent) {
 		return createQuestionYN(name, null, null, parent);
-	}
-
-	public QuestionSolution createQuestionState(String name, QASet parent) {
-		QuestionSolution qs = new QuestionSolution(findNewIDFor(Question.class));
-		qs.setText(name);
-		addToParent(qs, parent);
-		knowledgeBase.add(qs);
-		return qs;
 	}
 
 	public QuestionYN createQuestionYN(String name, String yesAlternativeText,

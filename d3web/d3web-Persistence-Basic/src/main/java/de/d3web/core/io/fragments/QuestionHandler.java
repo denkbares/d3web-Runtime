@@ -27,7 +27,6 @@ import org.w3c.dom.Element;
 
 import de.d3web.core.KnowledgeBase;
 import de.d3web.core.io.PersistenceManager;
-import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.terminology.Question;
@@ -36,7 +35,6 @@ import de.d3web.core.terminology.QuestionDate;
 import de.d3web.core.terminology.QuestionMC;
 import de.d3web.core.terminology.QuestionNum;
 import de.d3web.core.terminology.QuestionOC;
-import de.d3web.core.terminology.QuestionSolution;
 import de.d3web.core.terminology.QuestionText;
 import de.d3web.core.terminology.QuestionYN;
 import de.d3web.core.terminology.QuestionZC;
@@ -101,8 +99,6 @@ public class QuestionHandler implements FragmentHandler {
 			q = new QuestionYN(id);
 		} else if (type.equals(QuestionZC.XML_IDENTIFIER)) {
 			q = new QuestionZC(id);
-		} else if (type.equals("State")) {
-			q = new QuestionSolution(id);
 		} else if (type.equals("OC")) {
 			q = new QuestionOC(id);
 		} else if (type.equals("MC")) {
@@ -145,8 +141,6 @@ public class QuestionHandler implements FragmentHandler {
 			e.setAttribute("type", "YN");
 		} else if (q instanceof QuestionZC) {
 			e.setAttribute("type", QuestionZC.XML_IDENTIFIER);
-		} else if (q instanceof QuestionSolution) {
-			e.setAttribute("type", "State");
 		} else if (q instanceof QuestionOC) {
 			e.setAttribute("type", "OC");
 		} else if (q instanceof QuestionMC) {

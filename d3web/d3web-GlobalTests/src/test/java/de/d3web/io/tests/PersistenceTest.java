@@ -1,4 +1,4 @@
-package de.d3web.persistence.tests;
+package de.d3web.io.tests;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,9 +13,9 @@ import org.custommonkey.xmlunit.XMLTestCase;
 
 import de.d3web.core.KnowledgeBase;
 import de.d3web.core.io.PersistenceManager;
+import de.d3web.io.tests.utils.JarExtractor;
+import de.d3web.io.tests.utils.PersistenceHelper;
 import de.d3web.persistence.tests.utils.Butil;
-import de.d3web.persistence.tests.utils.JarExtractor;
-import de.d3web.persistence.tests.utils.PersistenceHelper;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**

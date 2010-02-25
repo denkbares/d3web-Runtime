@@ -23,7 +23,6 @@ import de.d3web.core.terminology.Diagnosis;
 import de.d3web.kernel.psMethods.SCMCBR.PSMethodSCMCBR;
 import de.d3web.kernel.psMethods.SCMCBR.SCMCBRModel;
 import de.d3web.kernel.psMethods.SCMCBR.SCMCBRRelation;
-import de.d3web.xcl.XCLRelation;
 
 /**
  * 
@@ -206,7 +205,7 @@ public class SCMCBRModelPersistenceHandler implements KnowledgeReader,
 		} else {
 			throw new IOException("Missing condition.");
 		}
-		if (r.getWeight()!=XCLRelation.DEFAULT_WEIGHT) {
+		if (r.getWeight()!=SCMCBRRelation.DEFAULT_WEIGHT) {
 			Element weight = doc.createElement("weight");
 			weight.setTextContent(""+r.getWeight());
 			relationElement.appendChild(weight);

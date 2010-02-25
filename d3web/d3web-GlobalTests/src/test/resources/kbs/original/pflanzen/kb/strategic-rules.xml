@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<KnowledgeBase system="d3web" type="strategic-rules">
+<KnowledgeSlice ID="RASK0" type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet ID="M2034"/>
+</TargetQASets>
+</Action>
+<Condition type="and">
+<Condition type="not">
+<Condition ID="M193" type="equal" value="M193a1"/>
+</Condition>
+<Condition ID="M193" type="equal" value="M193a1"/>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="RASK1298" type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet ID="M202"/>
+</TargetQASets>
+</Action>
+<Condition ID="M1534" type="equal" value="M1534a3"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="RASK1299" type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet ID="M204"/>
+</TargetQASets>
+</Action>
+<Condition type="or">
+<Condition ID="M1534" type="equal" value="M1534a5"/>
+<Condition ID="M1534" type="equal" value="M1534a6"/>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="RASK1300" type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet ID="M196"/>
+</TargetQASets>
+</Action>
+<Condition type="or">
+<Condition ID="M1534" type="equal" value="M1534a1"/>
+<Condition ID="M1534" type="equal" value="M1534a3"/>
+<Condition ID="M1534" type="equal" value="M1534a6"/>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="RASK1420" type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet ID="M1419"/>
+</TargetQASets>
+</Action>
+<Condition ID="M1508" type="equal" value="M1508a1"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="RASK1423" type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet ID="M1422"/>
+</TargetQASets>
+</Action>
+<Condition type="or">
+<Condition ID="M1419" type="equal" value="M1419a2"/>
+<Condition ID="M1419" type="equal" value="M1419a3"/>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="RASK1917" type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet ID="M1916"/>
+</TargetQASets>
+</Action>
+<Condition ID="M1532" type="equal" value="M1532a7"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="RASK1922" type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet ID="M1921"/>
+</TargetQASets>
+</Action>
+<Condition ID="M1916" type="equal" value="M1916a2"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="RASK207" type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet ID="M1508"/>
+</TargetQASets>
+</Action>
+<Condition ID="M1526" type="equal" value="M1526a1"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="RASK208" type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet ID="M1531"/>
+</TargetQASets>
+</Action>
+<Condition ID="M1508" type="equal" value="M1508a1"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="RASK210" type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet ID="M1513"/>
+</TargetQASets>
+</Action>
+<Condition ID="M1526" type="equal" value="M1526a3"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="RASK211" type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet ID="M1515"/>
+</TargetQASets>
+</Action>
+<Condition ID="M1526" type="equal" value="M1526a4"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="RASK212" type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet ID="M1514"/>
+</TargetQASets>
+</Action>
+<Condition ID="M1526" type="equal" value="M1526a5"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="RASK213" type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet ID="M180"/>
+</TargetQASets>
+</Action>
+<Condition ID="M1526" type="equal" value="M1526a6"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="RASK4680" type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet ID="M4679"/>
+</TargetQASets>
+</Action>
+<Condition ID="M1532" type="equal" value="M1532a5"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="RASK4831" type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet ID="M4830"/>
+</TargetQASets>
+</Action>
+<Condition type="or">
+<Condition ID="M225" type="equal" value="M225a2"/>
+<Condition ID="M225" type="equal" value="M225a3"/>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="RASK7078" type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet ID="M1528"/>
+</TargetQASets>
+</Action>
+<Condition type="not">
+<Condition type="or">
+<Condition ID="M1526" type="equal" value="M1526a1"/>
+<Condition ID="M1526" type="equal" value="M1526a2"/>
+<Condition ID="M1526" type="equal" value="M1526a3"/>
+<Condition ID="M1526" type="equal" value="M1526a4"/>
+<Condition ID="M1526" type="equal" value="M1526a5"/>
+<Condition ID="M1526" type="equal" value="M1526a6"/>
+</Condition>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice ID="RASK7485" type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet ID="M1434"/>
+</TargetQASets>
+</Action>
+<Condition ID="M1419" type="equal" value="M1419a1"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="RASK7598" type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet ID="M195"/>
+</TargetQASets>
+</Action>
+<Condition ID="M1534" type="equal" value="M1534a3"/>
+</KnowledgeSlice>
+</KnowledgeBase>

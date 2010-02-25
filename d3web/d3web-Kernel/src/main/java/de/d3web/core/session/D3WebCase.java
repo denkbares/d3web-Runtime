@@ -62,8 +62,9 @@ import de.d3web.indication.inference.PSMethodNextQASet;
 import de.d3web.indication.inference.PSMethodParentQASet;
 import de.d3web.indication.inference.PSMethodSuppressAnswer;
 import de.d3web.indication.inference.PSMethodUserSelected;
+import de.d3web.plugin.Extension;
+import de.d3web.plugin.PluginManager;
 import de.d3web.scoring.inference.PSMethodHeuristic;
-import de.d3web.xcl.inference.PSMethodXCL;
 
 /**
  * Central class <BR>
@@ -117,32 +118,8 @@ public class D3WebCase implements XPSCase {
 			PSMethodHeuristic.getInstance(),
 			PSMethodInit.getInstance(),
 			PSMethodParentQASet.getInstance(),
-			PSMethodXCL.getInstance(),
 			FluxSolver.getInstance()));
 
-	/**
-	 * Adds a {@link PSMethod} instance to the list of default PSMethod when
-	 * creating a new case.
-	 * 
-	 * @param method
-	 *            the PSMethod to be added
-	 */
-	public static void addCommonPSMethod(PSMethod method) {
-		commonPSMethods.add(method);
-	}
-
-	/**
-	 * Adds a {@link PSMethod} instance to the list of default PSMethod when
-	 * creating a new case. The index is the position of the property
-	 * commonPSMethods where to add the PSMethod, and therefore the priority.
-	 * 
-	 * @param method
-	 *            the PSMethod to be added
-	 */
-	public static void addCommonPSMethod(PSMethod method, int index) {
-		commonPSMethods.add(index, method);
-	}
-	
 	/**
 	 * Returns the current common PSMethods. These PSMethods will be added 
 	 * to a newly created case as default PSMethods.
@@ -185,7 +162,10 @@ public class D3WebCase implements XPSCase {
 		for (PSMethod method : commonPSMethods) {
 			addUsedPSMethod(method);
 		}
-
+		//add plugged PS
+		for (Extension e: PluginManager.getInstance().getExtensions("d3web-Kernel-ExtensionPoints", "PSMethod")) {
+			addUsedPSMethod((PSMethod) e.getNewInstance());
+		}
 		// activate InitQASets
 		for (QASet qaSet : getKnowledgeBase().getInitQuestions()) {
 			// //

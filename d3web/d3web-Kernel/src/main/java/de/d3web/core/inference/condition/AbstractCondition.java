@@ -27,7 +27,6 @@ import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.terminology.Diagnosis;
 import de.d3web.core.terminology.NamedObject;
 import de.d3web.core.terminology.Question;
-import de.d3web.xcl.XCLRelation;
 
 /**
  * Abstract superclass to represent conditions, to be used
