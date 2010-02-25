@@ -3,9 +3,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import de.d3web.KnOfficeParser.IDObjectManagement;
 import de.d3web.core.KnowledgeBase;
 import de.d3web.core.manage.AnswerFactory;
+import de.d3web.core.manage.IDObjectManagement;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.terminology.Answer;
