@@ -133,5 +133,6 @@
 		<module>d3web-CostBenefit</module>
 		<module>d3web-Kernel-ExtensionPoints</module>
 		<module>d3web-XCL</module>
+		<module>d3web-GlobalTests</module>
 	</modules>
 </project>
