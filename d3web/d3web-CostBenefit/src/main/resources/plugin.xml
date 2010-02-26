@@ -44,5 +44,55 @@
 		<parameter id="priority" value="5" />
 		<parameter id="filename" value="kb/costbenefitknowledge.xml" />
 	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="DefaultAbortStrategyHandler">
+		<parameter id="class"
+			value="de.d3web.costBenefit.io.fragments.DefaultAbortStrategyHandler" />
+		<parameter id="name" value="DefaultAbortStrategyHandler" />
+		<parameter id="description" value="Handler for DefaultAbortStrategy" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="DefaultCostFunctionHandler">
+		<parameter id="class"
+			value="de.d3web.costBenefit.io.fragments.DefaultCostFunctionHandler" />
+		<parameter id="name" value="DefaultCostFunctionHandler" />
+		<parameter id="description" value="Handler for DefaultCostFunctionHandler" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="DefaultTargetFunctionHandler">
+		<parameter id="class"
+			value="de.d3web.costBenefit.io.fragments.DefaultTargetFunctionHandler" />
+		<parameter id="name" value="DefaultTargetFunctionHandler" />
+		<parameter id="description" value="Handler for DefaultTargetFunctionHandler" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="IterativeDeepeningSearchAlgorithmHandler">
+		<parameter id="class"
+			value="de.d3web.costBenefit.io.fragments.IterativeDeepeningSearchAlgorithmHandler" />
+		<parameter id="name" value="IterativeDeepeningSearchAlgorithmHandler" />
+		<parameter id="description" value="Handler for IterativeDeepeningSearchAlgorithmHandler" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="NoAbortStrategyHandler">
+		<parameter id="class"
+			value="de.d3web.costBenefit.io.fragments.NoAbortStrategyHandler" />
+		<parameter id="name" value="NoAbortStrategyHandler" />
+		<parameter id="description" value="Handler for NoAbortStrategyHandler" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
 
 </plugin>
