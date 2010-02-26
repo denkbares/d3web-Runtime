@@ -186,4 +186,14 @@ public class JPFPluginManager extends PluginManager {
 		}
 		return this.plugins;
 	}
+
+	@Override
+	public Plugin getPlugin(String id) {
+		for (Plugin p: getPlugins()) {
+			if (p.getPluginID().equals(id)) {
+				return p;
+			}
+		}
+		return null;
+	}
 }

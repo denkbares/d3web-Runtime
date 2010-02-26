@@ -16,81 +16,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package de.d3web.plugin;
+package de.d3web.plugin.io;
 
-import java.util.List;
+import de.d3web.plugin.Plugin;
+import de.d3web.plugin.Resource;
 
-import de.d3web.plugin.Extension;
 
 /**
  * Objects of this class represent plugins, which are not available.
  * This class offers the possibility, to keep the configuration of these plugins in the kb.
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class DummyExtension implements Extension {
+public class DummyPlugin implements Plugin {
 
 	private String id;
-	private String extendetPluginID;
-	private String extendetPointID;
 	
-	public DummyExtension(String id, String extendetPluginID, String extendetPointID) {
+	public DummyPlugin(String id) {
 		this.id=id;
-		this.extendetPluginID=extendetPluginID;
-		this.extendetPointID=extendetPointID;
 	}
 	
 	@Override
-	public String getDescription() {
-		return null;
-	}
-
-	@Override
-	public String getExtendedPluginID() {
-		return extendetPluginID;
-	}
-
-	@Override
-	public String getExtendetPointID() {
-		return extendetPointID;
-	}
-
-	@Override
-	public String getID() {
+	public String getPluginID() {
 		return id;
 	}
 
 	@Override
-	public String getName() {
-		return null;
-	}
-
-	@Override
-	public Object getNewInstance() {
-		return null;
-	}
-
-	@Override
-	public String getParameter(String parameter) {
-		return null;
-	}
-
-	@Override
-	public Double getPriority() {
-		return null;
-	}
-
-	@Override
-	public Object getSingleton() {
-		return null;
-	}
-
-	@Override
-	public String getVersion() {
-		return null;
-	}
-
-	@Override
-	public List<String> getParameters(String parameter) {
+	public Resource[] getResources() {
 		return null;
 	}
 

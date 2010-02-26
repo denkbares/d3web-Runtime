@@ -19,52 +19,72 @@
 
 package de.d3web.plugin;
 
-
 /**
- * Via this abstract class a Pluginmanager can be accessed.
- * The pluginmanager can be used to access the extensions
- *
+ * Via this abstract class a Pluginmanager can be accessed. The pluginmanager
+ * can be used to access the extensions
+ * 
  * @author Markus Friedrich (denkbares GmbH)
  */
 public abstract class PluginManager {
 	protected static PluginManager instance;
-	
+
 	/**
-	 * This method is used to get an array of Extensions, which extend the extensionPoint represented by
-	 * the extendedPointID in the Plugin represented by the extendedPluginID
-	 * @param extendedPluginID ID of the Plugin of the extended ExtensionPoint
-	 * @param extendedPointID ID of the extended ExtensionPoint
+	 * This method is used to get an array of Extensions, which extend the
+	 * extensionPoint represented by the extendedPointID in the Plugin
+	 * represented by the extendedPluginID
+	 * 
+	 * @param extendedPluginID
+	 *            ID of the Plugin of the extended ExtensionPoint
+	 * @param extendedPointID
+	 *            ID of the extended ExtensionPoint
 	 * @return Array of Extensions specified with the parameters
 	 */
 	public abstract Extension[] getExtensions(String extendedPluginID, String extendedPointID);
-	
+
 	/**
 	 * This method is used to get an extension with the given parameters.
-	 * @param extendedPluginID ID of the Plugin of the extended ExtensionPoint
-	 * @param extendedPointID ID of the extended ExtensionPoint
-	 * @param extensionID ID of the Extension
+	 * 
+	 * @param extendedPluginID
+	 *            ID of the Plugin of the extended ExtensionPoint
+	 * @param extendedPointID
+	 *            ID of the extended ExtensionPoint
+	 * @param extensionID
+	 *            ID of the Extension
 	 * @return Extension specified with the parameters
 	 */
 	public abstract Extension getExtension(String extendetPluginID, String extendetPointID, String extensionID);
-	
-	
+
 	/**
 	 * Returns the list of all installed Plugins available to this manager.
 	 * 
 	 * @return the available Plugins
 	 */
 	public abstract Plugin[] getPlugins();
-	
+
 	/**
-	 * The current instance of the PluginManager can be accessed with this method
+	 * Returns the plugin with the specified id
+	 * 
+	 * @param id
+	 *            of the plugin
+	 * @return the plugin with the speciefied id, if no plugin with the id
+	 *         exists, null will be returned
+	 */
+	public abstract Plugin getPlugin(String id);
+
+	/**
+	 * The current instance of the PluginManager can be accessed with this
+	 * method
+	 * 
 	 * @return Instance of the actual PluginManager
 	 */
 	public static PluginManager getInstance() {
-		if (instance !=null) {
+		if (instance != null) {
 			return instance;
-		} else {
-			throw new IllegalStateException("Plugin Manager not initialized during application startup.");
+		}
+		else {
+			throw new IllegalStateException(
+					"Plugin Manager not initialized during application startup.");
 		}
 	}
-	
+
 }

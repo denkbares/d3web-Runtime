@@ -98,7 +98,7 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 
 			// render ESTABLISHED...
 			List<Diagnosis> diagListEstablished = theCase.getDiagnoses(DiagnosisState.ESTABLISHED,
-					getPsMethodHeur());
+					getPsMethodHeur(theCase));
 			if (!diagListEstablished.isEmpty()
 					&& DialogUtils.getDialogSettings().isShowHeuristicEstablishedDiagnoses()) {
 				DialogRenderUtils.sortDiagnosisList(diagListEstablished, theCase);
@@ -108,7 +108,7 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 
 			// render SUGGESTED...
 			List<Diagnosis> diagListSuggested = theCase.getDiagnoses(DiagnosisState.SUGGESTED,
-					getPsMethodHeur());
+					getPsMethodHeur(theCase));
 			if (!diagListSuggested.isEmpty()
 					&& DialogUtils.getDialogSettings().isShowHeuristicSuggestedDiagnoses()) {
 				DialogRenderUtils.sortDiagnosisList(diagListSuggested, theCase);
@@ -118,7 +118,7 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 
 			// render EXCLUDED...
 			List<Diagnosis> diagListExcluded = theCase.getDiagnoses(DiagnosisState.EXCLUDED,
-					getPsMethodHeur());
+					getPsMethodHeur(theCase));
 			if (!diagListExcluded.isEmpty()
 					&& DialogUtils.getDialogSettings().isShowHeuristicExcludedDiagnoses()) {
 				DialogRenderUtils.sortDiagnosisList(diagListExcluded, theCase);
@@ -129,16 +129,20 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 		}
 	}
 
-	private List<PSMethod> getPsMethodHeur() {
+	private List<PSMethod> getPsMethodHeur(XPSCase theCase) {
 		List<PSMethod> psMethodHeur = new ArrayList<PSMethod>();
-		psMethodHeur.add(PSMethodHeuristic.getInstance());
+		for (PSMethod psm: theCase.getUsedPSMethods()) {
+			if (psm instanceof PSMethodHeuristic) {
+				psMethodHeur.add(psm);
+			}
+		}
 		return psMethodHeur;
 	}
 
 	private boolean heuristicDiagnosesAvailable(XPSCase theCase) {
-		List<Diagnosis> established = theCase.getDiagnoses(DiagnosisState.ESTABLISHED, getPsMethodHeur());
-		List<Diagnosis> suggested = theCase.getDiagnoses(DiagnosisState.SUGGESTED, getPsMethodHeur());
-		List<Diagnosis> excluded = theCase.getDiagnoses(DiagnosisState.EXCLUDED, getPsMethodHeur());
+		List<Diagnosis> established = theCase.getDiagnoses(DiagnosisState.ESTABLISHED, getPsMethodHeur(theCase));
+		List<Diagnosis> suggested = theCase.getDiagnoses(DiagnosisState.SUGGESTED, getPsMethodHeur(theCase));
+		List<Diagnosis> excluded = theCase.getDiagnoses(DiagnosisState.EXCLUDED, getPsMethodHeur(theCase));
 		if ((established.size() != 0 && DialogUtils.getDialogSettings().isShowHeuristicEstablishedDiagnoses())
 				|| (suggested.size() != 0 && DialogUtils.getDialogSettings()
 						.isShowHeuristicSuggestedDiagnoses())

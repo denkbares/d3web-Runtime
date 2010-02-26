@@ -37,7 +37,7 @@ public class ExtensionConfig implements KnowledgeSlice {
 	private static final long serialVersionUID = -3148626378108269574L;
 
 	private KnowledgeBase kb;
-	private List<ExtensionEntry> entries = new ArrayList<ExtensionEntry>();
+	private List<PluginEntry> entries = new ArrayList<PluginEntry>();
 	
 	public static MethodKind EXTENSIONCONFIG = new MethodKind("ExtensionConfig");
 	
@@ -47,7 +47,7 @@ public class ExtensionConfig implements KnowledgeSlice {
 		kb.addKnowledge(getProblemsolverContext(), this, EXTENSIONCONFIG);
 	}
 
-	public ExtensionConfig(KnowledgeBase kb, List<ExtensionEntry> entries) {
+	public ExtensionConfig(KnowledgeBase kb, List<PluginEntry> entries) {
 		super();
 		this.kb = kb;
 		this.entries = entries;
@@ -78,7 +78,7 @@ public class ExtensionConfig implements KnowledgeSlice {
 	 * Adds a ExtensionEntry to this KnowledgeSlice
 	 * @param entry ExtensionEntry containing the configuration of one Extension
 	 */
-	public void addEntry(ExtensionEntry entry) {
+	public void addEntry(PluginEntry entry) {
 		entries.add(entry);
 	}
 	
@@ -86,7 +86,7 @@ public class ExtensionConfig implements KnowledgeSlice {
 	 * Returns an unmodifiable list of all ExtensionEntries contained in this KnowledgeSlice
 	 * @return a list of ExtensionEntries
 	 */
-	public List<ExtensionEntry> getEntries() {
+	public List<PluginEntry> getEntries() {
 		return Collections.unmodifiableList(entries);
 	}
 

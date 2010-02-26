@@ -220,4 +220,10 @@ public class JPFPlugin implements Plugin {
 			}
 		}
 	}
+
+	public PluginDescriptor getDescriptor() {
+		return descriptor;
+	}
+	
+	
 }
