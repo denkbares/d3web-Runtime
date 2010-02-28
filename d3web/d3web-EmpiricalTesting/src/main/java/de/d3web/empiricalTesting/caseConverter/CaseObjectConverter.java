@@ -20,10 +20,9 @@
 
 package de.d3web.empiricalTesting.caseConverter;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,7 +104,9 @@ public abstract class CaseObjectConverter {
 	public abstract void write(TestSuite t, String filepath);
 
 	public abstract void write(List<SequentialTestCase> cases, String filepath);
-		
+	
+	public abstract ByteArrayOutputStream getByteArrayOutputStream(List<SequentialTestCase> cases) throws IOException;
+	
 	private RatedTestCase computeRTC(CaseObject co, KnowledgeBase k) {
 		RatedTestCase rtc = new RatedTestCase();
 		rtc.setName("RTC");

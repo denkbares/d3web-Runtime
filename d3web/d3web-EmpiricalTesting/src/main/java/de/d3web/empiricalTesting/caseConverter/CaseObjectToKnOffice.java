@@ -21,8 +21,10 @@
 package de.d3web.empiricalTesting.caseConverter;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.List;
@@ -76,9 +78,10 @@ public class CaseObjectToKnOffice extends CaseObjectConverter {
 	@Override
 	public void write(List<SequentialTestCase> cases, String filepath) {
 		try {
-			Writer out =new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filepath), "UTF8"));
-			convertToKnOfficeFormat(cases, out); 
+			FileOutputStream fo = new FileOutputStream(filepath);
+			convertToKnOfficeFormat(cases, fo);
+			Writer out = new BufferedWriter(new OutputStreamWriter(
+					fo, "UTF8"));
 			out.close();
 		} catch (IOException e) {
 			System.err.println("Error while converting to KnOffice-format!");
@@ -93,14 +96,17 @@ public class CaseObjectToKnOffice extends CaseObjectConverter {
 		out.close();
 	}
 
-	private void convertToKnOfficeFormat(List<SequentialTestCase> cases, Writer out) throws IOException {
+	private void convertToKnOfficeFormat(List<SequentialTestCase> cases, OutputStream o) throws IOException {
+		OutputStreamWriter out = new OutputStreamWriter(o);
 		for (SequentialTestCase stc : cases) {
 			out.write(stc.getName() + " {");
 			for (RatedTestCase rtc : stc.getCases()) {
 				convertRTCToKnOfficeFormat(rtc, out);
 			}
 			out.write("\n}\n\n");
-		}		
+		}	
+		out.flush();
+		out.close();
 	}
 
 	private void convertRTCToKnOfficeFormat(RatedTestCase rtc, Writer out) throws IOException {
@@ -145,6 +151,14 @@ public class CaseObjectToKnOffice extends CaseObjectConverter {
 				return true;
 		}
 		return false;
+	}
+
+	@Override
+	public ByteArrayOutputStream getByteArrayOutputStream(
+			List<SequentialTestCase> cases) throws IOException {
+		ByteArrayOutputStream bstream = new ByteArrayOutputStream();
+		convertToKnOfficeFormat(cases, bstream);
+		return bstream;
 	}
 
 

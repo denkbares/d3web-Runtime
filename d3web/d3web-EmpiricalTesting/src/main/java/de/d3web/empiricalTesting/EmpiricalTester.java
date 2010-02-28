@@ -21,11 +21,13 @@
 package de.d3web.empiricalTesting;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
-import de.d3web.caseGeneration.HeuristicScoreRatingStrategy;
 import de.d3web.caseGeneration.InterviewBot;
+import de.d3web.caseGeneration.StateRatingStrategy;
 import de.d3web.core.KnowledgeBase;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ConsoleProgressListener;
@@ -40,15 +42,15 @@ public class EmpiricalTester {
 	// Input variables
     static String workspace = "D:/Projekte/Temp/EmpiricalTesting/";
     static String kbFile = "KnowledgeBases/dano.jar";
-    static String caseFile = "Cases/dano_Q1a10.xml";
+    static String caseFile = "dano.xml";
 
-	// Output file for DDBuilder
+	// Output file for DDBuilder (DOT-File for GraphViz)
 	static String dotFile = "dano.dot";
-	// Output file for JUNGCaseVisualizer
-	static String pdfFile = "dano_Q1a10.pdf";
+	// Output file for JUNGCaseVisualizer (PDF-File)
+	static String pdfFile = "dano.pdf";
 	// Output files for InterviewBot
-	static String xmlFile = "dano_bot"; 
-	static String txtFile = "dano_bot"; 
+	static String xmlFile = "dano"; 
+	static String txtFile = "dano"; 
 
 
 	/**
@@ -85,6 +87,40 @@ public class EmpiricalTester {
 		System.out.println("DerivedSolutions-Recall: " + TS.totalRecall());
 		System.out.println("Interview-Precision: " + TS.totalPrecisionInterview());
 		System.out.println("Interview-Recall: " + TS.totalRecallInterview());
+		showDifferences(TS);
+	}
+	
+	
+	private static void showDifferences(TestSuite t) {
+		
+		for (SequentialTestCase stc : t.getRepository()) {
+		
+			for (RatedTestCase rtc : stc.getCases()) {
+				if (!rtc.isCorrect()) {
+					System.out.println("SequentialTestCase: " + stc.getName());
+					System.out.println("RatedTestCase: " + rtc.getName());
+					System.out.println("Findings: ");
+					for (Finding f : rtc.getFindings()) {
+						System.out.println(f.toString());
+					}
+					System.out.println("Expected: ");
+					Collections.sort(rtc.getExpectedSolutions(), 
+							new RatedSolution.RatingComparatorByName());
+					for (RatedSolution rs : rtc.getExpectedSolutions()) {
+						System.out.println("\t" + rs.toString());
+					}
+					System.out.println("\nDerived: ");
+					Collections.sort(rtc.getDerivedSolutions(), 
+							new RatedSolution.RatingComparatorByName());
+					for (RatedSolution rs : rtc.getDerivedSolutions()) {
+						System.out.println("\t" + rs.toString());
+					}
+					System.out.println("-----------------------------------------");
+				}
+			}
+	
+		}	
+		
 	}
 	
 	
@@ -103,8 +139,7 @@ public class EmpiricalTester {
 		KnowledgeBase kb = loadKnowledgeBase(workspace + kbFile);
 	
 		InterviewBot bot = new InterviewBot.Builder(kb).
-			maxCases(100).
-			ratingStrategy(new HeuristicScoreRatingStrategy()).
+			ratingStrategy(new StateRatingStrategy()).
 			build();
 		List<SequentialTestCase> cases = bot.generate();
 	
@@ -128,6 +163,7 @@ public class EmpiricalTester {
 		TS.deriveAllSolutions();
 		
 		JUNGCaseVisualizer.getInstance().writeToFile(TS, workspace + pdfFile);
+
 	}
 	
 	
@@ -143,6 +179,7 @@ public class EmpiricalTester {
 		TestSuite TS = new TestSuite();
 		TS.setKb(kb);
 		TS.loadRepository(workspace + caseFile);
+		TS.deriveAllSolutions();
 
 		DDBuilder.getInstance().writeToFile(TS, workspace + dotFile);
 	}
@@ -168,8 +205,9 @@ public class EmpiricalTester {
 	 * @param filename String part of the filename of the 
 	 *                 generated output file
 	 * @param cases List<SequentialTestCase> the cases
+	 * @throws FileNotFoundException 
 	 */
-	private static void writeCasesXML(String filename, List<SequentialTestCase> cases) {
+	private static void writeCasesXML(String filename, List<SequentialTestCase> cases) throws FileNotFoundException {
 		CaseObjectToTestSuiteXML conv = new CaseObjectToTestSuiteXML();
 		long casesK = cases.size();
 		conv.write(cases, workspace+filename+"_"+casesK+"_cases.xml");
@@ -182,8 +220,9 @@ public class EmpiricalTester {
 	 * @param filename String part of the filename of the 
 	 *                 generated output file
 	 * @param cases List<SequentialTestCase> the cases
+	 * @throws FileNotFoundException 
 	 */
-	private static void writeCasesTXT(String filename, List<SequentialTestCase> cases) {
+	private static void writeCasesTXT(String filename, List<SequentialTestCase> cases) throws FileNotFoundException {
 		CaseObjectToKnOffice conv = new CaseObjectToKnOffice();
 		long casesK = cases.size();
 		conv.write(cases, workspace+filename+"_"+casesK+"_cases.txt");

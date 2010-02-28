@@ -215,7 +215,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 			RatedSolution expected = expSolutions.get(d);
 			RatedSolution derived = derSolutions.get(d);
 			
-			if (expected.equals(derived)) {
+			if (expected != null && derived != null && expected.equals(derived)) {
 				result.append(transformCorrectSolution(derived, cfg));
 			} else {
 				result.append(transformIncorrectSolutions(expected, derived, cfg));

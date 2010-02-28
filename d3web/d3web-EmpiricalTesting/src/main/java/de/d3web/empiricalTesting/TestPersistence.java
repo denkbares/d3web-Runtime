@@ -25,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -48,6 +49,8 @@ import de.d3web.core.session.values.AnswerNum;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.terminology.Answer;
 import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.QASet;
+import de.d3web.core.terminology.QContainer;
 import de.d3web.core.terminology.Question;
 import de.d3web.core.terminology.QuestionChoice;
 import de.d3web.core.terminology.QuestionNum;
@@ -67,6 +70,7 @@ public class TestPersistence {
 	//The Parameters
 	private static final String NAME = "Name";	
 	private static final String QUESTION = "Question";
+	private static final String QUESTIONNAIRE = "Questionnaire";
 	private static final String ANSWER = "Answer";
 	private static final String RATING = "Rating";	
 	
@@ -153,35 +157,52 @@ public class TestPersistence {
 		}
 		return imported;
 	}
-
+		
 	public void writeCases(URL casesUrl, List<SequentialTestCase> cases, boolean bWriteDerivedSolutions) {
 		try {
-			_writeCases(casesUrl, cases, bWriteDerivedSolutions);
+			writeCases(new FileOutputStream(casesUrl.toURI().getPath()), cases, bWriteDerivedSolutions);
 		} catch (FileNotFoundException e) {
 			System.err.println("Error in casesUrl: Path not correct!");
-			e.printStackTrace();
-		} catch (XMLStreamException e) {
-			System.err.println("Error while writing XML!");
 			e.printStackTrace();
 		} catch (URISyntaxException e) {
 			System.err.println("Error in casesUrl: URL has wrong syntax!");
 			e.printStackTrace();
 		}
 		
-	}	
+	}
+	
+
+	public void writeCases(OutputStream out, List<SequentialTestCase> cases, boolean bWriteDerivedSolutions) {
+		try {
+			_writeCases(out, cases, bWriteDerivedSolutions);
+		}  catch (XMLStreamException e) {
+			System.err.println("Error while writing XML!");
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			System.err.println("Error in casesUrl: Path not correct!");
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			System.err.println("Error in casesUrl: URL has wrong syntax!");
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeCases(OutputStream out, TestSuite TS, boolean bWriteDerivedSolutions) {
+		writeCases(out, TS.getRepository(), bWriteDerivedSolutions);
+	}
 
 	public void writeCases(URL casesUrl, TestSuite TS, boolean bWriteDerivedSolutions){
 		writeCases(casesUrl, TS.getRepository(), bWriteDerivedSolutions);
 	}	
 	
-	private void _writeCases(URL casesUrl, List<SequentialTestCase> cases, boolean bWriteDerivedSolutions) 
+	private void _writeCases(OutputStream out, List<SequentialTestCase> cases, boolean bWriteDerivedSolutions) 
 		throws FileNotFoundException, XMLStreamException, URISyntaxException{
 
 		this.bWriteDerivedSolutions = bWriteDerivedSolutions;
 		
 		XMLOutputFactory xmlof = XMLOutputFactory.newInstance();
 		XMLStreamWriter xmlsw = xmlof
-				.createXMLStreamWriter(new FileOutputStream(casesUrl.toURI().getPath()), "utf-8");
+				.createXMLStreamWriter(out, "utf-8");
 
 		xmlsw.writeStartDocument("utf-8", "1.0");
 		xmlsw.writeCharacters("\n");
@@ -268,6 +289,7 @@ public class TestPersistence {
 		xmlsw.writeCharacters("\n\t\t\t\t");
 		xmlsw.writeEmptyElement(FINDING);
 		xmlsw.writeAttribute(QUESTION, f.getQuestion().getText());
+		xmlsw.writeAttribute(QUESTIONNAIRE, findQuestionnaire(f.getQuestion()).getText());
 		Answer a = f.getAnswer();
 		if (a instanceof AnswerChoice) {
 			xmlsw.writeAttribute(ANSWER, ((AnswerChoice) a).getText());
@@ -323,9 +345,10 @@ public class TestPersistence {
 		} else if (elName.equals(FINDING)) {
 			String questionText = sr.getAttributeValue(null, QUESTION);
 			String answerText = sr.getAttributeValue(null, ANSWER);
+			String questionnaireText = sr.getAttributeValue(null, QUESTIONNAIRE);
 			Finding f = null;
 			try {
-				Question q = bh.getQuestionByIDorText(questionText, kb);
+				Question q = bh.getQuestionByIDorText(questionText, questionnaireText, kb);
 				if (answerText.equals("unknown")) {
 					f = new Finding(q, new AnswerUnknown());
 				} else if (q instanceof QuestionChoice) {
@@ -399,5 +422,17 @@ public class TestPersistence {
 		}
 		return findings;
 	}
-
+	
+	private QASet findQuestionnaire (Question q) {
+		Question question = q;
+		while (!(question.getParents().get(0) instanceof QContainer)) {
+			if (question.getParents().get(0) instanceof Question)
+				question = (Question) question.getParents().get(0);
+			else 
+				return q.getKnowledgeBase().getRootQASet();
+		}
+		
+		return (QASet) question.getParents().get(0);
+	}
+	
 }

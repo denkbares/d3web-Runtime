@@ -29,6 +29,7 @@ import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.interviewmanager.MQDialogController;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.NamedObject;
 import de.d3web.core.terminology.QASet;
 import de.d3web.core.terminology.QContainer;
 import de.d3web.core.terminology.Question;
@@ -148,12 +149,14 @@ public class BotHelper {
 	}
 
 	public Question getQuestionByIDorText(String questionIDorText,
-			KnowledgeBase kb) throws Exception {
+			String questionnaireText, KnowledgeBase kb) throws Exception {
+				
 		Question foundQuestion = null;
-		for (Question q : kb.getQuestions()) {
-			if (questionIDorText.equals(q.getId())
+		for (NamedObject q : kb.getQuestions()) {
+			if ((questionIDorText.equals(q.getId())
 					|| questionIDorText.equals(q.getText()))
-				foundQuestion = q;
+						&& checkQuestionnaire(q, questionnaireText))
+				foundQuestion = (Question) q;
 		}
 		if (foundQuestion == null)
 			throw new Exception("Question not found for ID/Text: "
@@ -175,5 +178,20 @@ public class BotHelper {
 					+ diagnosisIDorText);
 		else
 			return foundDiagnosis;
+	}
+	
+	private boolean checkQuestionnaire(NamedObject q, String questionnaireText) {
+		NamedObject question = q;
+		while (!(question.getParents().get(0) instanceof QContainer)) {
+			if (question.getParents().get(0) instanceof Question)
+				question = (Question) question.getParents().get(0);
+			else 
+				return false;
+		}
+		
+		if (question.getParents().get(0).getText().equals(questionnaireText))
+			return true;
+		
+		return false;
 	}
 }

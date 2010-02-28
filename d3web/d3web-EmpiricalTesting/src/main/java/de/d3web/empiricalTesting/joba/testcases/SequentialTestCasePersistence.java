@@ -58,6 +58,7 @@ public class SequentialTestCasePersistence {
 	private final static String FINDINGS = "Findings";
 	private final static String FINDING = "Finding";
 	private final static String QUESTION = "Question";
+	private final static String PARENT = "Parent";
 	private final static String ANSWER = "Answer";
 	private static final String SOLUTIONS = "Solutions";
 	private static final String SOLUTION = "Solution";
@@ -205,9 +206,10 @@ public class SequentialTestCasePersistence {
 			Element element = e.getChild(FINDING);
 			String questionID = element.getAttributeValue(QUESTION);
 			String answerID = element.getAttributeValue(ANSWER);
+			String questionnaireText = element.getAttributeValue(PARENT);
 
 			// Question q = bh.findQuestion(questionID, getKnowledge());
-			Question q = bh.getQuestionByIDorText(questionID, getKnowledge());
+			Question q = bh.getQuestionByIDorText(questionID, questionnaireText, getKnowledge());
 
 			// if (q == null)
 			// throw new Exception("Question with ID " + questionID +

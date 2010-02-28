@@ -27,6 +27,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import de.d3web.caseGeneration.HeuristicScoreRatingStrategy;
+import de.d3web.caseGeneration.RatingStrategy;
+import de.d3web.caseGeneration.StateRatingStrategy;
 import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
@@ -37,7 +40,6 @@ import de.d3web.core.terminology.Diagnosis;
 import de.d3web.core.terminology.DiagnosisState;
 import de.d3web.core.terminology.Question;
 import de.d3web.core.terminology.QuestionMC;
-import de.d3web.scoring.DiagnosisScore;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.inference.PSMethodXCL;
 
@@ -129,7 +131,7 @@ public class SequentialTestCase {
 	 */
 	@SuppressWarnings("unchecked")
 	public void deriveSolutions(KnowledgeBase kb, Class psMethodContext) {
-		boolean useStateRatings = true;
+		RatingStrategy ratingStrategy = new StateRatingStrategy();
 		XPSCase thecase = CaseFactory.createXPSCase(kb);
 		
 		for (RatedTestCase rtc : ratedTestCases) {
@@ -151,7 +153,7 @@ public class SequentialTestCase {
 			for (RatedSolution rs : rtc.getExpectedSolutions()) {
 				Rating r = rs.getRating();
 				if (!(r instanceof StateRating)) {
-					useStateRatings = false;
+					ratingStrategy = new HeuristicScoreRatingStrategy();
 					break;
 				}
 			}
@@ -162,7 +164,7 @@ public class SequentialTestCase {
 			if (slices.size() != 0) {	
 				deriveXCLSolutions(thecase, rtc, slices);
 			} else { 
-				deriveSolutionsForPSMethod(thecase, rtc, psMethodContext, useStateRatings);
+				deriveSolutionsForPSMethod(thecase, rtc, psMethodContext, ratingStrategy);
 			}			
 
 			// Mark this RatedTestCase as successfully derived
@@ -173,25 +175,33 @@ public class SequentialTestCase {
 	}
 
 	private void deriveSolutionsForPSMethod(XPSCase thecase, RatedTestCase rtc,
-			Class<? extends PSMethod> psMethodContext, boolean useStateRatings) {
+			Class<? extends PSMethod> psMethodContext, RatingStrategy ratingStrategy) {
 		
-		for (Diagnosis dia : thecase.getDiagnoses()) {
-			
-			DiagnosisState state = dia.getState(thecase, psMethodContext);
-			// Only suggested and established diagnoses are taken into account
-			if (!state.equals(DiagnosisState.UNCLEAR)
-					&& !state.equals(DiagnosisState.EXCLUDED)) {
-				if (!useStateRatings) { // use ScoreRating
-					DiagnosisScore sco = dia.getScore(thecase, psMethodContext);
-					RatedSolution rs = new RatedSolution(dia, new ScoreRating(
-							sco.getScore()));
-					rtc.addDerived(rs);	
-				} else { // use StateRating
-					RatedSolution rs = new RatedSolution(dia, new StateRating(state));
-					rtc.addDerived(rs);
-				}
+		for (Diagnosis solution : thecase.getDiagnoses()) {
+			Rating rating = ratingStrategy.getRatingFor(solution, thecase);
+			if (rating.isProblemSolvingRelevant()) {
+				RatedSolution ratedSolution = new RatedSolution(solution, rating);
+				rtc.addDerived(ratedSolution);
 			}
 		}
+		
+//		for (Diagnosis dia : thecase.getDiagnoses()) {
+//			
+//			DiagnosisState state = dia.getState(thecase, psMethodContext);
+//			// Only suggested and established diagnoses are taken into account
+//			if (!state.equals(DiagnosisState.UNCLEAR)
+//					&& !state.equals(DiagnosisState.EXCLUDED)) {
+//				if (!useStateRatings) { // use ScoreRating
+//					DiagnosisScore sco = dia.getScore(thecase, psMethodContext);
+//					RatedSolution rs = new RatedSolution(dia, new ScoreRating(
+//							sco.getScore()));
+//					rtc.addDerived(rs);	
+//				} else { // use StateRating
+//					RatedSolution rs = new RatedSolution(dia, new StateRating(state));
+//					rtc.addDerived(rs);
+//				}
+//			}
+//		}
 		
 	}
 

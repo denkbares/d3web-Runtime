@@ -21,6 +21,7 @@
 package de.d3web.caseGeneration;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -113,7 +114,7 @@ public class InterviewBotRunner {
 	}
 
 
-	private static void writeCasesXML(String filename, List<SequentialTestCase> cases) {
+	private static void writeCasesXML(String filename, List<SequentialTestCase> cases) throws FileNotFoundException {
 		CaseObjectToTestSuiteXML conv = new CaseObjectToTestSuiteXML();
 		long casesK = cases.size() / 1000;
 		conv.write(cases, workspace+filename+"_cases_"+casesK+".xml");
@@ -121,7 +122,7 @@ public class InterviewBotRunner {
 	
 	
 	@SuppressWarnings("unused")
-	private static void writeCasesTXT(String filename, List<SequentialTestCase> cases) {
+	private static void writeCasesTXT(String filename, List<SequentialTestCase> cases) throws FileNotFoundException {
 		CaseObjectToKnOffice conv = new CaseObjectToKnOffice();
 		long casesK = cases.size() / 1000;
 		conv.write(cases, workspace+filename+"_cases_"+casesK+".txt");

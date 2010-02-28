@@ -20,6 +20,7 @@
 
 package de.d3web.empiricalTesting.caseConverter;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -72,6 +73,14 @@ public class CaseObjectToTestSuiteXML extends CaseObjectConverter{
 		} catch (MalformedURLException e) {
 			System.err.println("Error while writing TestSuiteXML file!");
 		}
+	}
+
+	@Override
+	public ByteArrayOutputStream getByteArrayOutputStream(
+			List<SequentialTestCase> cases) throws IOException {
+		ByteArrayOutputStream bstream = new ByteArrayOutputStream();
+		TestPersistence.getInstance().writeCases(bstream, cases, false);
+		return bstream;
 	}
 
 }

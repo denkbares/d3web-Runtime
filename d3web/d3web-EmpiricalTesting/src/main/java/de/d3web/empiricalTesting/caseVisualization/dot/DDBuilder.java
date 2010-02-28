@@ -418,8 +418,8 @@ public class DDBuilder implements CaseVisualizer {
 		for (Diagnosis d : solutions) {
 			RatedSolution expected = expSolutions.get(d);
 			RatedSolution derived = derSolutions.get(d);
-			
-			if (expected.equals(derived)) {
+						
+			if (expected != null && derived != null && expected.equals(derived)) {
 				b.append(transformCorrectSolution(derived, strSolutionColorCorrect, 
 						intColSpan, bolCompareOnlySymbolicStates));
 			} else {
