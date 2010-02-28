@@ -150,14 +150,24 @@ public class BotHelper {
 
 	public Question getQuestionByIDorText(String questionIDorText,
 			String questionnaireText, KnowledgeBase kb) throws Exception {
-				
+		
 		Question foundQuestion = null;
-		for (NamedObject q : kb.getQuestions()) {
-			if ((questionIDorText.equals(q.getId())
-					|| questionIDorText.equals(q.getText()))
-						&& checkQuestionnaire(q, questionnaireText))
-				foundQuestion = (Question) q;
+		
+		if (questionnaireText == null || questionnaireText.equals("")) {
+			for (NamedObject q : kb.getQuestions()) {
+				if (questionIDorText.equals(q.getId())
+						|| questionIDorText.equals(q.getText()))
+					foundQuestion = (Question) q;
+			}
+		} else {
+			for (NamedObject q : kb.getQuestions()) {
+				if ((questionIDorText.equals(q.getId())
+						|| questionIDorText.equals(q.getText()))
+							&& checkQuestionnaire(q, questionnaireText))
+					foundQuestion = (Question) q;
+			}
 		}
+		
 		if (foundQuestion == null)
 			throw new Exception("Question not found for ID/Text: "
 					+ questionIDorText);
