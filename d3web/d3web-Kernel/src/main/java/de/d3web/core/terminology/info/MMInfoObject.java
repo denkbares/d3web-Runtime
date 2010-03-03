@@ -86,14 +86,14 @@ public class MMInfoObject implements DCMarkedUp, java.io.Serializable {
 		String subject = dcData.getContent(DCElement.SUBJECT);
 
 		// [MISC]:aha:legacy code
-		if ("therapy".equals(subject))
+		if ("therapy".equalsIgnoreCase(subject))
 		    subject = MMInfoSubject.THERAPY.getName();
-		else if ("info.suggestion".equals(subject))
+		else if ("info.suggestion".equalsIgnoreCase(subject))
 		    subject = MMInfoSubject.THERAPY.getName();
 		
 		Iterator<MMInfoSubject> iter = MMInfoSubject.getIterator();
 		while (iter.hasNext())
-			if (subject.equals((iter.next()).getName())) {
+			if (subject.equalsIgnoreCase((iter.next()).getName())) {
 				this.dcData = dcData;
 				return;
 			}
