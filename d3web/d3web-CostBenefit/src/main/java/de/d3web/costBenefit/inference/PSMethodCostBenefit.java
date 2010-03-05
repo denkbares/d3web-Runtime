@@ -34,8 +34,11 @@ import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.inference.condition.AbstractCondition;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondOr;
+import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.Facts;
+import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.terminology.Answer;
 import de.d3web.core.terminology.Diagnosis;
@@ -50,6 +53,7 @@ import de.d3web.costBenefit.DefaultTargetFunction;
 import de.d3web.costBenefit.SearchAlgorithm;
 import de.d3web.costBenefit.StateTransition;
 import de.d3web.costBenefit.TargetFunction;
+import de.d3web.costBenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costBenefit.ids.IterativeDeepeningSearchAlgorithm;
 import de.d3web.costBenefit.model.Node;
 import de.d3web.costBenefit.model.Path;
@@ -64,17 +68,12 @@ import de.d3web.indication.ActionIndication;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class PSMethodCostBenefit extends PSMethodAdapter {
+public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSource  {
 
-	private QContainer[] currentSequence;
-	private SearchModel cbm;
-	private Rule rule;
 	private TargetFunction targetFunction;
 	private CostFunction costFunction;
 	private SearchAlgorithm searchAlgorithm;
-	private int currentPathIndex = -1;
-	private boolean hasBegun = false;
-	private Set<Diagnosis> diags = new HashSet<Diagnosis>();
+	
 
 	public PSMethodCostBenefit(TargetFunction targetFunction,
 			CostFunction costFunction, SearchAlgorithm searchAlgorithm) {
@@ -91,37 +90,41 @@ public class PSMethodCostBenefit extends PSMethodAdapter {
 
 	@Override
 	public void init(XPSCase theCase) {
-		calculateNewPath(theCase);
-		activateNextQContainer(theCase);
+		CostBenefitCaseObject caseObject = (CostBenefitCaseObject) theCase.getCaseObject(this);
+		calculateNewPath(caseObject);
+		activateNextQContainer(caseObject);
 	}
 	
-	private void activateNextQContainer(XPSCase theCase) {
-		if (currentSequence == null) {
-			deactivateCurrentQContainer(theCase);
+	private void activateNextQContainer(CostBenefitCaseObject caseObject) {
+		QContainer[] currentSequence = caseObject.getCurrentSequence();
+		XPSCase theCase = caseObject.getSession();
+		if (currentSequence== null) {
+			deactivateCurrentQContainer(caseObject);
 		} else {
-			if (currentPathIndex == -1
-					|| currentSequence[currentPathIndex].isDone(theCase, true)) {
-				deactivateCurrentQContainer(theCase);
-				this.currentPathIndex++;
-				this.hasBegun = false;
-				if (currentPathIndex>=currentSequence.length) {
-					calculateNewPath(theCase);
-					activateNextQContainer(theCase);
+			if (caseObject.getCurrentPathIndex() == -1
+					|| currentSequence[caseObject.getCurrentPathIndex()].isDone(theCase, true)) {
+				deactivateCurrentQContainer(caseObject);
+				caseObject.incCurrentPathIndex();
+				caseObject.setHasBegun(false);
+				if (caseObject.getCurrentPathIndex()>=currentSequence.length) {
+					calculateNewPath(caseObject);
+					activateNextQContainer(caseObject);
 					return;
 				}
-				QContainer qc = currentSequence[currentPathIndex];
+				QContainer qc = currentSequence[caseObject.getCurrentPathIndex()];
 				if (new Node(qc, null).isApplicable(theCase)) {
-					activateQContainer(theCase, qc);
+					activateQContainer(caseObject, qc);
 				} else {
-					calculateNewPath(theCase);
-					activateNextQContainer(theCase);
+					calculateNewPath(caseObject);
+					activateNextQContainer(caseObject);
 				}
 			}
 		}
 	}
 
-	private void activateQContainer(XPSCase theCase, QContainer qc) {
-		rule = new Rule("TempRule");
+	private void activateQContainer(CostBenefitCaseObject caseObject, QContainer qc) {
+		Rule rule = new Rule("TempRule");
+		caseObject.setRule(rule);
 		rule.setActive(true);
 		ActionIndication action = new ActionIndication();
 		action.setRule(rule);
@@ -132,21 +135,25 @@ public class PSMethodCostBenefit extends PSMethodAdapter {
 				new LinkedList<AbstractCondition>());
 		rule.setAction(action);
 		rule.setCondition(cond);
-		rule.check(theCase);
+		rule.check(caseObject.getSession());
 	}
 
-	private void deactivateCurrentQContainer(XPSCase theCase) {
+	private void deactivateCurrentQContainer(CostBenefitCaseObject caseObject) {
+		Rule rule = caseObject.getRule();
 		if (rule == null)
 			return;
 		rule.setCondition(new CondOr(new LinkedList<AbstractCondition>()));
-		rule.check(theCase);
-		rule = null;
+		rule.check(caseObject.getSession());
+		caseObject.setRule(null);
 	}
 
-	private void calculateNewPath(XPSCase theCase) {
+	private void calculateNewPath(CostBenefitCaseObject caseObject) {
+		XPSCase theCase = caseObject.getSession();
 		List<StrategicSupport> stratgicSupports = getStrategicSupports(theCase);
-		diags = new HashSet<Diagnosis>();
-		cbm = new SearchModel(theCase);
+		HashSet<Diagnosis> diags = new HashSet<Diagnosis>();
+		caseObject.setDiags(diags);
+		SearchModel cbm = new SearchModel(theCase);
+		caseObject.setCbm(cbm);
 		for (StrategicSupport strategicSupport: stratgicSupports){
 			Collection<Diagnosis> solutions = strategicSupport
 					.getPossibleDiagnoses(theCase);
@@ -164,26 +171,27 @@ public class PSMethodCostBenefit extends PSMethodAdapter {
 			}
 		}
 		if (cbm.getBestBenefit() == 0) {
-			resetPath();
+			caseObject.resetPath();
 		} else {
 			searchAlgorithm.search(theCase, cbm);
 			Target bestTarget = cbm.getBestCostBenefitTarget();
 			if (bestTarget == null || bestTarget.getMinPath() == null) {
 				// es wurde kein bestes Ziel erreicht, bzw. dessen MinPath ist
 				// nicht gefunden worden.
-				resetPath();
+				caseObject.resetPath();
 			} else {
 				Path minPath = bestTarget.getMinPath();
 				Collection<Node> nodes = minPath.getNodes();
-				currentSequence = new QContainer[nodes.size()];
+				QContainer[] currentSequence = new QContainer[nodes.size()];
 				int i = 0;
 				for (Node node : nodes) {
 					currentSequence[i] = node.getQContainer();
 					makeOKQuestionsUndone(currentSequence[i], theCase);
 					i++;
 				}
+				caseObject.setCurrentSequence(currentSequence);
 			}
-			this.currentPathIndex = -1;
+			caseObject.setCurrentPathIndex(-1);
 		}
 	}
 
@@ -197,11 +205,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter {
 		return ret;
 	}
 
-	private void resetPath() {
-		currentSequence = null;
-		this.currentPathIndex = -1;
-		hasBegun = false;
-	}
+	
 
 	private void makeOKQuestionsUndone(NamedObject container, XPSCase theCase) {
 		for (NamedObject nob : container.getChildren()) {
@@ -221,6 +225,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter {
 
 	@Override
 	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
+		CostBenefitCaseObject caseObject = (CostBenefitCaseObject) theCase.getCaseObject(this);
 		Set<QContainer> qcons = new HashSet<QContainer>();
 		for (PropagationEntry entry : changes) {
 			NamedObject object = entry.getObject();
@@ -242,11 +247,12 @@ public class PSMethodCostBenefit extends PSMethodAdapter {
 			}
 		}
 		// determines if the user has begun our current qContainer
-		if (!hasBegun && currentSequence != null) {
-			hasBegun = qcons.contains(currentSequence[currentPathIndex]);
+		final QContainer[] currentSequence = caseObject.getCurrentSequence();
+		if (!caseObject.isHasBegun() && currentSequence != null) {
+			caseObject.setHasBegun(qcons.contains(currentSequence[caseObject.getCurrentPathIndex()]));
 		}
 		// returns if the actual QContainer is not done and has begun yet
-		if (hasBegun && !currentSequence[currentPathIndex].isDone(theCase, true)) {
+		if (caseObject.isHasBegun() && !currentSequence[caseObject.getCurrentPathIndex()].isDone(theCase, true)) {
 			return;
 		}
 		// if the possible Diagnosis have changed, a flag that a new path has to
@@ -257,7 +263,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter {
 		for (StrategicSupport strategicSupport: strategicSupports) {
 			possibleDiagnoses.addAll(strategicSupport.getPossibleDiagnoses(theCase));
 		}
-		if (possibleDiagnoses.size() == diags.size()) {
+		final Set<Diagnosis> diags = caseObject.getDiags();
+		if (possibleDiagnoses.size() == diags .size()) {
 			for (Diagnosis d : possibleDiagnoses) {
 				if (!diags.contains(d)) {
 					changeddiags = true;
@@ -270,9 +277,9 @@ public class PSMethodCostBenefit extends PSMethodAdapter {
 		// if there is no sequence calculated, the possible diags have changed
 		// or the next qcontainer is not applicable, a new branch is calculated
 		if (currentSequence == null || changeddiags) {
-			calculateNewPath(theCase);
+			calculateNewPath(caseObject);
 		}
-		activateNextQContainer(theCase);
+		activateNextQContainer(caseObject);
 	}
 
 	public TargetFunction getTargetFunction() {
@@ -299,10 +306,6 @@ public class PSMethodCostBenefit extends PSMethodAdapter {
 		this.costFunction = costFunction;
 	}
 
-	public QContainer[] getCurrentPath() {
-		return currentSequence;
-	}
-
 	private static void addParentContainers(Set<QContainer> targets,
 			NamedObject q) {
 		for (NamedObject qaset : q.getParents()) {
@@ -317,7 +320,11 @@ public class PSMethodCostBenefit extends PSMethodAdapter {
 
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
-		// TODO Auto-generated method stub
-		return null;
+		return Facts.mergeIndicationFacts(facts);
+	}
+
+	@Override
+	public XPSCaseObject createCaseObject(XPSCase session) {
+		return new CostBenefitCaseObject(this, session);
 	}
 }

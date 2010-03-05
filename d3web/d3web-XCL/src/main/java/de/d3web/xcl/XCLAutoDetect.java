@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 denkbares GmbH
+ * Copyright (C) 2010 denkbares GmbH
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,26 +16,24 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package de.d3web.costBenefit;
+package de.d3web.xcl;
 
-import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.QContainer;
-import de.d3web.core.terminology.info.Property;
-
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.plugin.Autodetect;
 /**
- * The DefaultCostFunction returns the static costs of a QContainer. The actual
- * case is not used.
- * 
+ * Detects if there are any XCL slices in the KB
+ *
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class DefaultCostFunction implements CostFunction {
-
-	public DefaultCostFunction() {
-	}
+public class XCLAutoDetect implements Autodetect {
 
 	@Override
-	public double getCosts(QContainer qcon, XPSCase theCase) {
-		return (Double) qcon.getProperties().getProperty(Property.COST);
+	public boolean check(KnowledgeBase kb) {
+		for (KnowledgeSlice ks: kb.getAllKnowledgeSlices()) {
+			if (ks instanceof XCLModel) return true;
+		}
+		return false;
 	}
-	
+
 }

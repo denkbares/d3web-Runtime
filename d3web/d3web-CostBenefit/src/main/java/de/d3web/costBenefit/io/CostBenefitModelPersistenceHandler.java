@@ -47,7 +47,6 @@ import de.d3web.core.terminology.Answer;
 import de.d3web.core.terminology.QContainer;
 import de.d3web.core.terminology.Question;
 import de.d3web.costBenefit.ConditionalValueSetter;
-import de.d3web.costBenefit.CostBenefit;
 import de.d3web.costBenefit.StateTransition;
 import de.d3web.costBenefit.ValueTransition;
 import de.d3web.costBenefit.inference.PSMethodCostBenefit;
@@ -70,15 +69,9 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 		listener.updateProgress(0, message);
 		KnowledgeBaseManagement kbm = KnowledgeBaseManagement
 				.createInstance(kb);
-		NodeList cbmodels = doc.getElementsByTagName("CostBenefit");
 		NodeList stmodels = doc.getElementsByTagName("StateTransition");
-		int max = cbmodels.getLength()+stmodels.getLength();
+		int max = stmodels.getLength();
 		float count = 0;
-		for (int i = 0; i < cbmodels.getLength(); i++) {
-			Node current = cbmodels.item(i);
-			addCBKnowledge(kbm, current);
-			listener.updateProgress(++count/max, message);
-		}
 		for (int i = 0; i < stmodels.getLength(); i++) {
 			Node current = stmodels.item(i);
 			addSTKnowledge(kbm, current);
@@ -92,7 +85,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 				.getAllKnowledgeSlicesFor(PSMethodCostBenefit.class);
 		int counter = 0;
 		for (KnowledgeSlice ks : relations) {
-			if (ks instanceof CostBenefit || ks instanceof StateTransition) {
+			if (ks instanceof StateTransition) {
 				counter++;
 			}
 		}
@@ -115,9 +108,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 			}
 		}
 		for (KnowledgeSlice model : knowledgeSlices) {
-			if (model instanceof CostBenefit) {
-				ksNode.appendChild(getElement((CostBenefit) model, doc));
-			} else if (model instanceof StateTransition){
+			if (model instanceof StateTransition){
 				ksNode.appendChild(getElement((StateTransition) model, doc));
 			} 
 		}
@@ -163,16 +154,6 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 		return element;
 	}
 
-	private Element getElement(CostBenefit cb, Document doc) {
-		Element element = doc.createElement("CostBenefit");
-		element.setAttribute("costs", ""+cb.getCosts());
-		element.setAttribute("maloperationProbability", ""+cb.getMaloperationProbability());
-		element.setAttribute("taskType", cb.getTaskType());
-		element.setAttribute("ID", cb.getId());
-		element.setAttribute("QID", cb.getQcontainer().getId());
-		return element;
-	}
-
 	private void addSTKnowledge(KnowledgeBaseManagement kbm, Node current) throws IOException {
 		String qcontainerID = current.getAttributes().getNamedItem("QID").getTextContent();
 		QContainer qcontainer = kbm.findQContainer(qcontainerID);
@@ -210,22 +191,4 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 		StateTransition st = new StateTransition(activationCondition, postTransitions, qcontainer);
 		qcontainer.addKnowledge(st.getProblemsolverContext(), st, StateTransition.STATE_TRANSITION);
 	}
-
-	private void addCBKnowledge(KnowledgeBaseManagement kbm, Node current) {
-		String qcontainerID = getAttribute("QID", current);
-//		String ID = getAttribute("ID", current);
-		String malOpString = getAttribute("maloperationProbability", current);
-		String taskType = getAttribute("taskType", current);
-		String costsString = getAttribute("costs", current);
-		QContainer qcontainer = kbm.findQContainer(qcontainerID);
-		Float maloperationProbability = Float.parseFloat(malOpString);
-		int costs = Integer.parseInt(costsString);
-		CostBenefit cb = new CostBenefit(costs, maloperationProbability, qcontainer, taskType);
-		qcontainer.addKnowledge(cb.getProblemsolverContext(), cb, CostBenefit.COST_BENEFIT);
-	}
-
-	private String getAttribute(String string, Node current) {
-		return current.getAttributes().getNamedItem(string).getTextContent();
-	}
-
 }

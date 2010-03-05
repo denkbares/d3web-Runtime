@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 denkbares GmbH
+ * Copyright (C) 2010 denkbares GmbH
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,26 +16,42 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package de.d3web.costBenefit;
+package de.d3web.core.inference;
 
-import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.QContainer;
-import de.d3web.core.terminology.info.Property;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * The DefaultCostFunction returns the static costs of a QContainer. The actual
- * case is not used.
- * 
+ * Saves the configuration of one problemsolver instance
+ *
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class DefaultCostFunction implements CostFunction {
+public class PSConfig {
 
-	public DefaultCostFunction() {
-	}
-
-	@Override
-	public double getCosts(QContainer qcon, XPSCase theCase) {
-		return (Double) qcon.getProperties().getProperty(Property.COST);
+	private boolean active;
+	private String psMethodID;
+	private List<Object> params;
+	
+	public PSConfig(boolean active, String psMethodID) {
+		super();
+		this.active = active;
+		this.psMethodID = psMethodID;
+		params = new ArrayList<Object>();
 	}
 	
+	public boolean isActive() {
+		return active;
+	}
+
+	public String getPsMethodID() {
+		return psMethodID;
+	}
+
+	public List<Object> getParams() {
+		return params;
+	}
+	
+	public void addParam(Object param) {
+		params.add(param);
+	}
 }

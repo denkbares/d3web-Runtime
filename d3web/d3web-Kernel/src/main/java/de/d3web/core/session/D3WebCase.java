@@ -145,7 +145,7 @@ public class D3WebCase implements XPSCase {
 			addUsedPSMethod(method);
 		}
 		//add plugged PS
-		for (Extension e: PluginManager.getInstance().getExtensions("d3web-Kernel-ExtensionPoints", "PSMethod")) {
+		for (Extension e: PluginManager.getInstance().getExtensions("d3web-Kernel-ExtensionPoints", PSMethod.EXTENSIONPOINT_ID)) {
 			addUsedPSMethod((PSMethod) e.getNewInstance());
 		}
 		trace("\n------------------------------------------------\nNeuer Fall\n");

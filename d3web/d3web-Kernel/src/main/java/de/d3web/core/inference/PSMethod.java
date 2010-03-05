@@ -36,6 +36,8 @@ import de.d3web.core.terminology.DiagnosisState;
  */
 public interface PSMethod {
 
+	public final static String EXTENSIONPOINT_ID = "PSMethod";
+	
 	/**
 	 * Every problem-solver has to decide how it calculates the state of a
 	 * diagnosis.

@@ -35,7 +35,7 @@ import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.plugin.ExtensionConfig;
+import de.d3web.plugin.PluginConfig;
 import de.d3web.plugin.Plugin;
 import de.d3web.plugin.PluginEntry;
 import de.d3web.plugin.PluginManager;
@@ -50,7 +50,7 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 	@Override
 	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
 		Document doc = Util.streamToDocument(stream);
-		ExtensionConfig pc = new ExtensionConfig(kb);
+		PluginConfig pc = new PluginConfig(kb);
 		List<Element> elementList = XMLUtil.getElementList(doc.getDocumentElement().getChildNodes());
 		if (elementList.size()==1) {
 			Element root = elementList.get(0);
@@ -89,7 +89,7 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 		root.appendChild(plugins);
 		listener.updateProgress(0, "Saving plugin configuration");
 		float count = 1;
-		List<PluginEntry> entries = getEntries(kb);
+		Collection<PluginEntry> entries = getEntries(kb);
 		if (entries != null) {
 			int max = entries.size();
 			for (PluginEntry conf: entries) {
@@ -111,15 +111,15 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 
 	@Override
 	public int getEstimatedSize(KnowledgeBase kb) {
-		List<PluginEntry> entries = getEntries(kb);
+		Collection<PluginEntry> entries = getEntries(kb);
 		return (entries != null) ? entries.size() : 0;
 	}
 	
-	private List<PluginEntry> getEntries(KnowledgeBase kb) {
+	private Collection<PluginEntry> getEntries(KnowledgeBase kb) {
 		Collection<KnowledgeSlice> pluginconfigs = kb.getAllKnowledgeSlicesFor(PSMethod.class);
 		for (KnowledgeSlice ks: pluginconfigs) {
-			if (ks instanceof ExtensionConfig) {
-				ExtensionConfig pc = (ExtensionConfig) ks;
+			if (ks instanceof PluginConfig) {
+				PluginConfig pc = (PluginConfig) ks;
 				return pc.getEntries();
 			}
 		}

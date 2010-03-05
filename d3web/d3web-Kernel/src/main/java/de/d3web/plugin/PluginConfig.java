@@ -17,9 +17,8 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 package de.d3web.plugin;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
 
 import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.KnowledgeSlice;
@@ -32,30 +31,24 @@ import de.d3web.core.session.XPSCase;
  * at the KnowledgeBase
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class ExtensionConfig implements KnowledgeSlice {
+public class PluginConfig implements KnowledgeSlice {
 
 	private static final long serialVersionUID = -3148626378108269574L;
 
 	private KnowledgeBase kb;
-	private List<PluginEntry> entries = new ArrayList<PluginEntry>();
+	private HashMap<String, PluginEntry> entries = new HashMap<String, PluginEntry>();
 	
-	public static MethodKind EXTENSIONCONFIG = new MethodKind("ExtensionConfig");
+	public static MethodKind PLUGINCONFIG = new MethodKind("ExtensionConfig");
 	
-	public ExtensionConfig(KnowledgeBase kb) {
+	public PluginConfig(KnowledgeBase kb) {
 		super();
 		this.kb = kb;
-		kb.addKnowledge(getProblemsolverContext(), this, EXTENSIONCONFIG);
-	}
-
-	public ExtensionConfig(KnowledgeBase kb, List<PluginEntry> entries) {
-		super();
-		this.kb = kb;
-		this.entries = entries;
+		kb.addKnowledge(getProblemsolverContext(), this, PLUGINCONFIG);
 	}
 
 	@Override
 	public String getId() {
-		return "ExtensionConfig";
+		return PLUGINCONFIG.toString();
 	}
 
 	@Override
@@ -79,15 +72,24 @@ public class ExtensionConfig implements KnowledgeSlice {
 	 * @param entry ExtensionEntry containing the configuration of one Extension
 	 */
 	public void addEntry(PluginEntry entry) {
-		entries.add(entry);
+		entries.put(entry.getPlugin().getPluginID(), entry);
 	}
 	
 	/**
 	 * Returns an unmodifiable list of all ExtensionEntries contained in this KnowledgeSlice
 	 * @return a list of ExtensionEntries
 	 */
-	public List<PluginEntry> getEntries() {
-		return Collections.unmodifiableList(entries);
+	public Collection<PluginEntry> getEntries() {
+		return entries.values();
+	}
+	
+	/**
+	 * Returns the Pluginentry for the Plugin with the specified id
+	 * @param id of the Plugin
+	 * @return Pluginentry of the Plugin
+	 */
+	public PluginEntry getPluginEntry(String id) {
+		return entries.get(id);
 	}
 
 }

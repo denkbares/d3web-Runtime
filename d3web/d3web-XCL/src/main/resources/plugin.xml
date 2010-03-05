@@ -45,4 +45,14 @@
 		<parameter id="filename" value="kb/xcl.xml" />
 	</extension>
 	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Autodetect"
+		id="XCLAutoDetect">
+		<parameter id="class"
+			value="de.d3web.xcl.io.XCLAutoDetect" />
+		<parameter id="name" value="XCLAutoDetect" />
+		<parameter id="description" value="Autodetect if xcl is needed for a kb" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
 </plugin>

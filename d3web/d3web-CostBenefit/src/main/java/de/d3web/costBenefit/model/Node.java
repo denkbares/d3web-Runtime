@@ -35,7 +35,7 @@ import de.d3web.core.terminology.NamedObject;
 import de.d3web.core.terminology.QContainer;
 import de.d3web.core.terminology.Question;
 import de.d3web.core.terminology.QuestionOC;
-import de.d3web.costBenefit.CostBenefit;
+import de.d3web.core.terminology.info.Property;
 import de.d3web.costBenefit.StateTransition;
 import de.d3web.kernel.psMethods.shared.Abnormality;
 import de.d3web.shared.AbstractAbnormality;
@@ -52,7 +52,6 @@ public class Node {
 	private QContainer qContainer;
 	private List<QuestionOC> questions;
 	private StateTransition st;
-	private CostBenefit cb;
 	private SearchModel cbm;
 	
 	
@@ -64,7 +63,6 @@ public class Node {
 		collectQuestions(this.qContainer, this.questions);
 		Collection<KnowledgeSlice> allKnowledge = qContainer.getAllKnowledge();
 		for (KnowledgeSlice ks: allKnowledge) {
-			if (ks instanceof CostBenefit) cb = (CostBenefit) ks;
 			if (ks instanceof StateTransition) st = (StateTransition) ks;
 		}
 	}
@@ -113,10 +111,6 @@ public class Node {
 		return st;
 	}
 
-	public CostBenefit getCostBenefit() {
-		return cb;
-	}
-
 	private void setAnswer(XPSCase theCase, Question q,
 			Answer answer, Map<Question, List<?>> map) {
 		map.put(q, q.getValue(theCase));
@@ -131,8 +125,12 @@ public class Node {
 	}
 	
 	public double getStaticCosts() {
-		if (cb==null) return 0;
-		return cb.getCosts();
+		Object property = qContainer.getProperties().getProperty(Property.COST);
+		if (property == null) {
+			return 0;
+		} else {
+			return (Double) property;
+		}
 	}
 	
 	/**
