@@ -60,4 +60,27 @@ public class PluginEntry {
 	public boolean isAutodetect() {
 		return autodetect;
 	}
+	
+	/**
+	 * Returns the Autodetect singleton of this plugin
+	 * @return Autodetect
+	 */
+	public Autodetect getAutodetect() {
+		Autodetect auto = null;
+		for (Extension e: PluginManager.getInstance().getExtensions("d3web-Kernel-ExtensionPoints", Autodetect.EXTENSIONPOINT_ID)) {
+			if (e.getPluginID().equals(plugin.getPluginID())) {
+				auto=(Autodetect) e.getSingleton();
+				break;
+			}
+		}
+		return auto;
+	}
+
+	public void setNecessary(boolean necessary) {
+		this.necessary = necessary;
+	}
+
+	public void setAutodetect(boolean autodetect) {
+		this.autodetect = autodetect;
+	}
 }

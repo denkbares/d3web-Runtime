@@ -16,38 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package de.d3web.costBenefit.ids;
+package de.d3web.costBenefit.inference;
 
 import de.d3web.core.session.XPSCase;
-import de.d3web.costBenefit.inference.AbortStrategy;
-import de.d3web.costBenefit.inference.SearchAlgorithm;
 import de.d3web.costBenefit.model.SearchModel;
 
 /**
- * Encapsulates the call of a new IterativeDeepeningSearch
- * search. For each call a new instance of the IterativeDeepeningSearch is
- * created.
- * 
+ * This Interface provides a method to start a search in a model.
+ * The targets, the nodes etc. are stored in the model.
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class IterativeDeepeningSearchAlgorithm implements SearchAlgorithm {
+public interface SearchAlgorithm {
 
-	private AbortStrategy abortStrategy;
-	
-	@Override
-	public void search(XPSCase theCase, SearchModel model) {
-		IterativeDeepeningSearch iterativeDeepeningSearch = new IterativeDeepeningSearch(model);
-		if (abortStrategy!=null) iterativeDeepeningSearch.setAbortStrategy(abortStrategy);
-		iterativeDeepeningSearch.search(theCase);
-	}
-
-	public AbortStrategy getAbortStrategy() {
-		return abortStrategy;
-	}
-
-	public void setAbortStrategy(AbortStrategy abortStrategy) {
-		this.abortStrategy = abortStrategy;
-	}
-	
-	
+	/**
+	 * Starts a search for the targets of the model. The result is stored in the model.
+	 * @param theCase
+	 * @param model
+	 */
+	void search(XPSCase theCase, SearchModel model);
 }

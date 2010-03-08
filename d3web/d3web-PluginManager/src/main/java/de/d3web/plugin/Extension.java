@@ -98,4 +98,6 @@ public interface Extension {
 	 * @return ID of the extended plugin 
 	 */
 	String getExtendedPluginID();
+
+	String getPluginID();
 }

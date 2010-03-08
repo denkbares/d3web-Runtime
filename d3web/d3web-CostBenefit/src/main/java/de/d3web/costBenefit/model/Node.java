@@ -36,7 +36,7 @@ import de.d3web.core.terminology.QContainer;
 import de.d3web.core.terminology.Question;
 import de.d3web.core.terminology.QuestionOC;
 import de.d3web.core.terminology.info.Property;
-import de.d3web.costBenefit.StateTransition;
+import de.d3web.costBenefit.inference.StateTransition;
 import de.d3web.kernel.psMethods.shared.Abnormality;
 import de.d3web.shared.AbstractAbnormality;
 import de.d3web.shared.PSMethodShared;

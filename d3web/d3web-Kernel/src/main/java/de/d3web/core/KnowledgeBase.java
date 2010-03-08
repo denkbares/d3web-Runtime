@@ -36,6 +36,7 @@ import java.util.logging.Logger;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
+import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.session.D3WebCase;
 import de.d3web.core.session.values.AnswerChoice;
@@ -89,6 +90,8 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	private List<Diagnosis> diagnoses;
 
 	private List<Resource> resouces = new ArrayList<Resource>();
+	
+	private List<PSConfig> psConfigs = new ArrayList<PSConfig>();
 
 	/**
 	 * Hashes the objects for ID
@@ -810,4 +813,15 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		return qASets;
 	}
 
+	public List<PSConfig> getPsConfigs() {
+		return Collections.unmodifiableList(psConfigs);
+	}
+
+	public void addPSConfig(PSConfig psConfig) {
+		psConfigs.add(psConfig);
+	}
+	
+	public void removePSConfig(PSConfig psConfig) {
+		psConfigs.remove(psConfig);
+	}
 }

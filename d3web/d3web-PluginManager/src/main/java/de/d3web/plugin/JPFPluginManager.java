@@ -164,10 +164,10 @@ public class JPFPluginManager extends PluginManager {
 
 	@Override
 	public Extension getExtension(String extendetPluginID,
-			String extendetPointID, String extensionID) {
+			String extendetPointID, String pluginID, String extensionID) {
 		Extension[] extensions = getExtensions(extendetPointID, extendetPluginID);
 		for (Extension e : extensions) {
-			if (e.getID().equals(extensionID)) return e;
+			if (e.getID().equals(extensionID)&& e.getPluginID().equals(pluginID)) return e;
 		}
 		return null;
 	}

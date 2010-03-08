@@ -37,6 +37,7 @@ import de.d3web.core.TerminologyObject;
 import de.d3web.core.inference.DefaultPropagationController;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
+import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.PropagationContoller;
@@ -62,7 +63,11 @@ import de.d3web.indication.inference.PSMethodNextQASet;
 import de.d3web.indication.inference.PSMethodParentQASet;
 import de.d3web.indication.inference.PSMethodSuppressAnswer;
 import de.d3web.indication.inference.PSMethodUserSelected;
+import de.d3web.plugin.Autodetect;
 import de.d3web.plugin.Extension;
+import de.d3web.plugin.Plugin;
+import de.d3web.plugin.PluginConfig;
+import de.d3web.plugin.PluginEntry;
 import de.d3web.plugin.PluginManager;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
@@ -144,11 +149,57 @@ public class D3WebCase implements XPSCase {
 		for (PSMethod method : commonPSMethods) {
 			addUsedPSMethod(method);
 		}
-		//add plugged PS
+		//adding preconfigured psmethods from the kb to the case
+		for (PSConfig psConfig: kb.getPsConfigs()) {
+			checkStateAndInsertPSM(kb, psConfig);
+		}
+		//get PluginConfiguration
+		PluginConfig pc = PluginConfig.getPluginConfig(kb);
+		//add plugged PS with default config, only if none instance of this plugin was configured in the kb
+		//psMethods with state deactivated are not inserted
 		for (Extension e: PluginManager.getInstance().getExtensions("d3web-Kernel-ExtensionPoints", PSMethod.EXTENSIONPOINT_ID)) {
-			addUsedPSMethod((PSMethod) e.getNewInstance());
+			PSMethod psMethod = (PSMethod) e.getNewInstance();
+			boolean found = false;
+			for (PSConfig psConfig: kb.getPsConfigs()) {
+				PSMethod psm = psConfig.getPsMethod();
+				if (psm.getClass().equals(psMethod.getClass())) {
+					found = true;
+					break;
+				}
+			}
+			if (found) continue;
+			//get PluginEntry, if none is found, one will be created
+			PluginEntry pluginEntry = pc.getPluginEntry(e.getPluginID());
+			if (pluginEntry==null) {
+				Plugin plugin = PluginManager.getInstance().getPlugin(e.getPluginID());
+				pluginEntry = new PluginEntry(plugin, false, true);
+				pc.addEntry(pluginEntry);
+			}
+			//get autodetect of the psMethod
+			Autodetect auto = pluginEntry.getAutodetect();
+			//add the newly created configuration
+			PSConfig psConfig = new PSConfig(PSConfig.PSState.autodetect, psMethod, auto, e.getID(), e.getPluginID());
+			kb.addPSConfig(psConfig);
+			checkStateAndInsertPSM(kb, psConfig);
 		}
 		trace("\n------------------------------------------------\nNeuer Fall\n");
+	}
+
+	private void checkStateAndInsertPSM(KnowledgeBase kb, PSConfig psConfig) {
+		if (psConfig.getPsState()==PSConfig.PSState.autodetect) {
+			Autodetect auto = psConfig.getAutodetect();
+			//if it is set to autodetect and there is no implementation
+			//the psmethod is added
+			if (auto==null) {
+				addUsedPSMethod(psConfig.getPsMethod());
+			} else {
+				if (auto.check(kb)) {
+					addUsedPSMethod(psConfig.getPsMethod());
+				}
+			}
+		} else if (psConfig.getPsState()==PSConfig.PSState.active) {
+			addUsedPSMethod(psConfig.getPsMethod());
+		}
 	}
 
 	private void init(QASetManagerFactory theQamFactory) {

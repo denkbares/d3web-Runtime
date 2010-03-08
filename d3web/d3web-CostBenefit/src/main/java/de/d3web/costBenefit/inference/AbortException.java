@@ -16,19 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package de.d3web.costBenefit;
+package de.d3web.costBenefit.inference;
 
-import de.d3web.costBenefit.model.Path;
-import de.d3web.costBenefit.model.SearchModel;
+/**
+ * This Exception is thrown to abort a calculation
+ * @author Markus Friedrich (denkbares GmbH)
+ *
+ */
+public class AbortException extends Exception {
 
-public class NoAbortStrategy implements AbortStrategy {
-
-	@Override
-	public void init(SearchModel model) {
-	}
-
-	@Override
-	public void nextStep(Path path) throws AbortException {
-	}
+	private static final long serialVersionUID = 2357895211525041862L;
+	
+	
 
 }

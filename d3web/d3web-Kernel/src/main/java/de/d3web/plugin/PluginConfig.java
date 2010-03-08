@@ -91,5 +91,26 @@ public class PluginConfig implements KnowledgeSlice {
 	public PluginEntry getPluginEntry(String id) {
 		return entries.get(id);
 	}
+	
+	/**
+	 * Extracts a PluginConfig from a kb, if none is found one will be created
+	 * @param kb KnowledgeBase
+	 * @return PluginConfig of the kb
+	 */
+	public static PluginConfig getPluginConfig(KnowledgeBase kb) {
+		Collection<KnowledgeSlice> pluginconfigs = kb.getAllKnowledgeSlicesFor(PSMethod.class);
+		PluginConfig pc = null;
+		for (KnowledgeSlice ks: pluginconfigs) {
+			if (ks instanceof PluginConfig) {
+				pc = (PluginConfig) ks;
+				break;
+			}
+		}
+		//if there is no knowledge slice PluginConfiguration, create one
+		if (pc==null) {
+			pc = new PluginConfig(kb);
+		}
+		return pc;
+	}
 
 }

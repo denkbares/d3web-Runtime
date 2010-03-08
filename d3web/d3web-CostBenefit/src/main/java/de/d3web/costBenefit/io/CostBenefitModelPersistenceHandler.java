@@ -46,10 +46,10 @@ import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.terminology.Answer;
 import de.d3web.core.terminology.QContainer;
 import de.d3web.core.terminology.Question;
-import de.d3web.costBenefit.ConditionalValueSetter;
-import de.d3web.costBenefit.StateTransition;
-import de.d3web.costBenefit.ValueTransition;
+import de.d3web.costBenefit.inference.ConditionalValueSetter;
 import de.d3web.costBenefit.inference.PSMethodCostBenefit;
+import de.d3web.costBenefit.inference.StateTransition;
+import de.d3web.costBenefit.inference.ValueTransition;
 
 /**
  * This PersistenceHandler saves and stores the default KnowledgeSlices of the

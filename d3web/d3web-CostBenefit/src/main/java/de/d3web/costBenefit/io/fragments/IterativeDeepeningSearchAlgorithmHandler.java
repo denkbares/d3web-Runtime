@@ -27,8 +27,8 @@ import de.d3web.core.KnowledgeBase;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.costBenefit.AbortStrategy;
 import de.d3web.costBenefit.ids.IterativeDeepeningSearchAlgorithm;
+import de.d3web.costBenefit.inference.AbortStrategy;
 
 /**
  * FragmentHandler for IteraticeDeepeningSearchAlgorithm

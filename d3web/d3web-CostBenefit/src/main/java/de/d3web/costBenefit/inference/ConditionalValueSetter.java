@@ -16,26 +16,44 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package de.d3web.costBenefit;
-
-import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.QContainer;
-import de.d3web.core.terminology.info.Property;
+package de.d3web.costBenefit.inference;
+import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.terminology.Answer;
 
 /**
- * The DefaultCostFunction returns the static costs of a QContainer. The actual
- * case is not used.
- * 
+ * This class contains a condition and an answer. If the condition is true and no condition
+ * of a previous ConditionalValueSetter if the same ValueTransition was true, this answer
+ * is set.
  * @author Markus Friedrich (denkbares GmbH)
+ *
  */
-public class DefaultCostFunction implements CostFunction {
+public class ConditionalValueSetter {
 
-	public DefaultCostFunction() {
+	private Answer answer;
+	private AbstractCondition condition;
+	
+	public ConditionalValueSetter(Answer answer, AbstractCondition condition) {
+		super();
+		this.answer = answer;
+		this.condition = condition;
 	}
-
-	@Override
-	public double getCosts(QContainer qcon, XPSCase theCase) {
-		return (Double) qcon.getProperties().getProperty(Property.COST);
+	
+	public Answer getAnswer() {
+		return answer;
 	}
+	
+	public void setAnswer(Answer answer) {
+		this.answer = answer;
+	}
+	
+	public AbstractCondition getCondition() {
+		return condition;
+	}
+	
+	public void setCondition(AbstractCondition condition) {
+		this.condition = condition;
+	}
+	
+	
 	
 }

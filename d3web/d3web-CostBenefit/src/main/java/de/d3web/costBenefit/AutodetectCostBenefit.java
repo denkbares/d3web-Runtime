@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 denkbares GmbH
+ * Copyright (C) 2010 denkbares GmbH
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,22 +18,23 @@
  */
 package de.d3web.costBenefit;
 
-import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.QContainer;
+import java.util.Collection;
 
+import de.d3web.core.KnowledgeBase;
+import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.costBenefit.inference.PSMethodCostBenefit;
+import de.d3web.plugin.Autodetect;
 /**
- * This interface provides a method to calculate the costs of a QContainer
- * depending on a case.
- * 
+ * Checks if the CostBenefit Plugin is necessary for the kb
+ *
  * @author Markus Friedrich (denkbares GmbH)
  */
-public interface CostFunction {
-	/**
-	 * Calculates the costs of a qcontainer in dependency on theCase.
-	 * 
-	 * @param qcon
-	 * @param theCase
-	 * @return
-	 */
-	double getCosts(QContainer qcon, XPSCase theCase);
+public class AutodetectCostBenefit implements Autodetect {
+
+	@Override
+	public boolean check(KnowledgeBase kb) {
+		Collection<KnowledgeSlice> ks = kb.getAllKnowledgeSlicesFor(PSMethodCostBenefit.class);
+		return (ks.size()!=0);
+	}
+
 }

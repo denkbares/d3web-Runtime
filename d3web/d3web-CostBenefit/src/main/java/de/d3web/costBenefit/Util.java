@@ -35,6 +35,7 @@ import de.d3web.core.terminology.QContainer;
 import de.d3web.core.terminology.Question;
 import de.d3web.core.terminology.QuestionOC;
 import de.d3web.costBenefit.inference.PSMethodCostBenefit;
+import de.d3web.costBenefit.inference.StateTransition;
 
 /**
  * Provides basic static functions for the CostBenefit package.

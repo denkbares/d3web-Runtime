@@ -18,40 +18,58 @@
  */
 package de.d3web.core.inference;
 
-import java.util.ArrayList;
-import java.util.List;
+import de.d3web.plugin.Autodetect;
 
 /**
  * Saves the configuration of one problemsolver instance
- *
+ * 
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class PSConfig {
 
-	private boolean active;
-	private String psMethodID;
-	private List<Object> params;
-	
-	public PSConfig(boolean active, String psMethodID) {
-		super();
-		this.active = active;
-		this.psMethodID = psMethodID;
-		params = new ArrayList<Object>();
-	}
-	
-	public boolean isActive() {
-		return active;
+	private static final long serialVersionUID = -8392435221734086888L;
+
+	public enum PSState {
+		active,
+		deactivated,
+		autodetect,
 	}
 
-	public String getPsMethodID() {
-		return psMethodID;
+	private PSState psState;
+	private PSMethod psMethod;
+	private Autodetect autodetect;
+	private String extensionID;
+	private String pluginID;
+
+	public PSConfig(PSState psState, PSMethod psMethod, String extensionID, String pluginID) {
+		this(psState, psMethod, null, extensionID, pluginID);
 	}
 
-	public List<Object> getParams() {
-		return params;
+	public PSConfig(PSState psState, PSMethod psMethod, Autodetect autodetect, String extensionID, String pluginID) {
+		this.psState = psState;
+		this.psMethod = psMethod;
+		this.autodetect = autodetect;
+		this.extensionID = extensionID;
+		this.pluginID = pluginID;
 	}
-	
-	public void addParam(Object param) {
-		params.add(param);
+
+	public PSState getPsState() {
+		return psState;
+	}
+
+	public PSMethod getPsMethod() {
+		return psMethod;
+	}
+
+	public Autodetect getAutodetect() {
+		return autodetect;
+	}
+
+	public String getExtensionID() {
+		return extensionID;
+	}
+
+	public String getPluginID() {
+		return pluginID;
 	}
 }

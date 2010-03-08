@@ -16,46 +16,26 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package de.d3web.costBenefit;
+package de.d3web.costBenefit.inference;
 
-import de.d3web.costBenefit.model.Path;
-import de.d3web.costBenefit.model.SearchModel;
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.terminology.QContainer;
+import de.d3web.core.terminology.info.Property;
 
 /**
- * The DefaultAbortyStrategy throws an AbortException, when the maximum amount
- * of steps is exceeded and at least one target is reached.
+ * The DefaultCostFunction returns the static costs of a QContainer. The actual
+ * case is not used.
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class DefaultAbortStrategy implements AbortStrategy {
+public class DefaultCostFunction implements CostFunction {
 
-	private long steps;
-
-	private long maxsteps;
-	private SearchModel model;
-
-	@Override
-	public void init(SearchModel model) {
-		steps = 0;
-		this.model = model;
+	public DefaultCostFunction() {
 	}
 
 	@Override
-	public void nextStep(Path path) throws AbortException {
-		steps++;
-		if ((steps >= maxsteps && model.oneTargetReached())||(steps >= maxsteps*10)) {
-			throw new AbortException();
-		}
-
+	public double getCosts(QContainer qcon, XPSCase theCase) {
+		return (Double) qcon.getProperties().getProperty(Property.COST);
 	}
 	
-	public DefaultAbortStrategy(long steps) {
-		maxsteps=steps;
-	}
-	
-	public DefaultAbortStrategy() {
-		// about 1,4 sec on my laptop ;-)
-		this(100000);
-	}
-
 }

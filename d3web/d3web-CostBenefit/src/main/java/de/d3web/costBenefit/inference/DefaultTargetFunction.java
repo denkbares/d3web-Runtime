@@ -16,34 +16,48 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package de.d3web.costBenefit;
+package de.d3web.costBenefit.inference;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.terminology.NamedObject;
+import de.d3web.core.terminology.QContainer;
 import de.d3web.core.terminology.Question;
 import de.d3web.costBenefit.model.Target;
 
 /**
- * A TargetFunction calculates the targets for a SearchAlgorithm based on
- * relevant questions and diagnosis.
+ * The DefaultTargetFunction creates one target of each QContainer, which
+ * contains a relevant question. Multitargets are not created.
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public interface TargetFunction {
+public class DefaultTargetFunction implements TargetFunction {
 
-	/**
-	 * Returns a collection of targets. These targets contain relevantQuestions
-	 * to discriminate the diagnosis.
-	 * 
-	 * @param theCase
-	 * @param relevantQuestions
-	 * @param diagnosisToDiscriminate
-	 * @return
-	 */
-	Collection<Target> getTargets(XPSCase theCase,
+	@Override
+	public Collection<Target> getTargets(XPSCase theCase,
 			Collection<Question> relevantQuestions,
-			Collection<Diagnosis> diagnosisToDiscriminate, StrategicSupport strategicSupport);
+			Collection<Diagnosis> diagnosisToDiscriminate, StrategicSupport strategicSupport) {
+		Set<Target> set = new HashSet<Target>();
+		for (Question q : relevantQuestions) {
+			if (!q.isDone(theCase))
+				addParentContainers(set, q);
+		}
+		return set;
+	}
+
+	private static void addParentContainers(Set<Target> targets, NamedObject q) {
+		for (NamedObject qaset : q.getParents()) {
+			if (qaset instanceof QContainer) {
+				targets.add(new Target((QContainer) qaset));
+			} else {
+				addParentContainers(targets, qaset);
+			}
+		}
+
+	}
 }

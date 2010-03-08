@@ -33,8 +33,8 @@ import de.d3web.core.session.XPSCase;
 import de.d3web.core.terminology.Answer;
 import de.d3web.core.terminology.QContainer;
 import de.d3web.core.terminology.Question;
-import de.d3web.costBenefit.CostFunction;
-import de.d3web.costBenefit.DefaultCostFunction;
+import de.d3web.costBenefit.inference.CostFunction;
+import de.d3web.costBenefit.inference.DefaultCostFunction;
 import de.d3web.costBenefit.inference.PSMethodCostBenefit;
 
 /**

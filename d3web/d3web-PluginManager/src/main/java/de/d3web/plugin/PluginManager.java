@@ -50,9 +50,10 @@ public abstract class PluginManager {
 	 *            ID of the extended ExtensionPoint
 	 * @param extensionID
 	 *            ID of the Extension
+	 * @param extensionID 
 	 * @return Extension specified with the parameters
 	 */
-	public abstract Extension getExtension(String extendetPluginID, String extendetPointID, String extensionID);
+	public abstract Extension getExtension(String extendetPluginID, String extendetPointID, String pluginID, String extensionID);
 
 	/**
 	 * Returns the list of all installed Plugins available to this manager.

@@ -94,5 +94,15 @@
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Autodetect"
+		id="AutodetectCostBenefit">
+		<parameter id="class"
+			value="de.d3web.costBenefit.AutodetectCostBenefit" />
+		<parameter id="name" value="AutodetectCostBenefit" />
+		<parameter id="description" value="Autodetect if CostBenefit is needed for a kb" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
 
 </plugin>

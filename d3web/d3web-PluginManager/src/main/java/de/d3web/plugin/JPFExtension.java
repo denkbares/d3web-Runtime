@@ -140,4 +140,9 @@ public class JPFExtension implements de.d3web.plugin.Extension {
 			return null;
 		}
 	}
+	
+	@Override
+	public String getPluginID() {
+		return extension.getDeclaringPluginDescriptor().getId();
+	}
 }

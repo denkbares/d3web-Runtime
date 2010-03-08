@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package de.d3web.costBenefit;
+package de.d3web.costBenefit.inference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +29,6 @@ import de.d3web.core.session.XPSCase;
 import de.d3web.core.terminology.Answer;
 import de.d3web.core.terminology.QContainer;
 import de.d3web.core.terminology.Question;
-import de.d3web.costBenefit.inference.PSMethodCostBenefit;
 
 /**
  * A StateTransition is a KnowledgeSlice which belongs to a QContainer.

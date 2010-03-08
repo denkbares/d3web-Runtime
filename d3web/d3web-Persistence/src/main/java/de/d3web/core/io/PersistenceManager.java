@@ -45,7 +45,11 @@ import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.terminology.info.DCElement;
+import de.d3web.plugin.Autodetect;
 import de.d3web.plugin.Extension;
+import de.d3web.plugin.Plugin;
+import de.d3web.plugin.PluginConfig;
+import de.d3web.plugin.PluginEntry;
 import de.d3web.plugin.PluginManager;
 
 /**
@@ -211,9 +215,32 @@ public class PersistenceManager {
 		}
 		size += kb.getResources().size();
 		CombinedProgressListener cpl = new CombinedProgressListener(size, listener);
+		//update plugin configuration
+		PluginConfig pc = PluginConfig.getPluginConfig(kb);
+		for (Plugin plugin: PluginManager.getInstance().getPlugins()) {
+			PluginEntry pluginEntry = pc.getPluginEntry(plugin.getPluginID());
+			//when there is no entry, create one with autodetect = true
+			if (pluginEntry==null) {
+				pluginEntry = new PluginEntry(plugin, false, true);
+				pc.addEntry(pluginEntry);
+			}
+			//when autodetect is true, refresh the necessary state
+			if (pluginEntry.isAutodetect()) {
+				Autodetect auto = pluginEntry.getAutodetect();
+				if (auto==null) {
+					pluginEntry.setNecessary(true);
+				} else {
+					pluginEntry.setNecessary(auto.check(kb));
+				}
+			}
+		}
 		try {
 			
 			for (Extension plugin : writerPlugins) {
+				//only save file when it is necessary
+				if (!pc.getPluginEntry(plugin.getPluginID()).isNecessary()) {
+					continue;
+				}
 				String filename = plugin.getParameter("filename");
 				if (filename == null) {
 					throw new IOException("No filename defined in plugin.xml");

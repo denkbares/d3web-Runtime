@@ -29,9 +29,11 @@ import org.w3c.dom.Element;
 
 import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
@@ -73,7 +75,10 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 							pc.addEntry(new PluginEntry(plugin, necessary, autodetect));
 						}
 					} else if (father.getNodeName().equals("psmethods")) {
-						//TODO
+						List<Element> children = XMLUtil.getElementList(father.getChildNodes());
+						for (Element e: children) {
+							kb.addPSConfig((PSConfig) PersistenceManager.getInstance().readFragment(e, kb));
+						}
 					}
 				}
 			}
@@ -104,7 +109,9 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 		}
 		Element psmethods = doc.createElement("psmethods");
 		root.appendChild(psmethods);
-		//TODO
+		for (PSConfig ps: kb.getPsConfigs()) {
+			root.appendChild(PersistenceManager.getInstance().writeFragment(ps, doc));
+		}
 		Util.writeDocumentToOutputStream(doc, stream);
 	}
 

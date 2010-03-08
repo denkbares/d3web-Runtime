@@ -16,44 +16,24 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package de.d3web.costBenefit;
-import de.d3web.core.inference.condition.AbstractCondition;
-import de.d3web.core.terminology.Answer;
+package de.d3web.costBenefit.inference;
+
+import de.d3web.core.session.XPSCase;
+import de.d3web.core.terminology.QContainer;
 
 /**
- * This class contains a condition and an answer. If the condition is true and no condition
- * of a previous ConditionalValueSetter if the same ValueTransition was true, this answer
- * is set.
+ * This interface provides a method to calculate the costs of a QContainer
+ * depending on a case.
+ * 
  * @author Markus Friedrich (denkbares GmbH)
- *
  */
-public class ConditionalValueSetter {
-
-	private Answer answer;
-	private AbstractCondition condition;
-	
-	public ConditionalValueSetter(Answer answer, AbstractCondition condition) {
-		super();
-		this.answer = answer;
-		this.condition = condition;
-	}
-	
-	public Answer getAnswer() {
-		return answer;
-	}
-	
-	public void setAnswer(Answer answer) {
-		this.answer = answer;
-	}
-	
-	public AbstractCondition getCondition() {
-		return condition;
-	}
-	
-	public void setCondition(AbstractCondition condition) {
-		this.condition = condition;
-	}
-	
-	
-	
+public interface CostFunction {
+	/**
+	 * Calculates the costs of a qcontainer in dependency on theCase.
+	 * 
+	 * @param qcon
+	 * @param theCase
+	 * @return
+	 */
+	double getCosts(QContainer qcon, XPSCase theCase);
 }

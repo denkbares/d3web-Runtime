@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
 
 import de.d3web.core.KnowledgeBase;
 import de.d3web.core.io.fragments.FragmentHandler;
-import de.d3web.costBenefit.DefaultTargetFunction;
+import de.d3web.costBenefit.inference.DefaultTargetFunction;
 
 public class DefaultTargetFunctionHandler implements FragmentHandler {
 
