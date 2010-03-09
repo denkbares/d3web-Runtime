@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package de.d3web.plugin.io;
+package de.d3web.plugin.io.fragments;
 
 import java.io.IOException;
 
@@ -39,7 +39,8 @@ import de.d3web.plugin.PluginManager;
  */
 public class DefaultPSConfigHandler implements FragmentHandler {
 
-	public static final String PS_ENTRY = "psEntry";
+	protected static final String EXTENSION_ID = "extensionID";
+	protected static final String PS_ENTRY = "psEntry";
 
 	@Override
 	public boolean canRead(Element element) {
@@ -53,11 +54,11 @@ public class DefaultPSConfigHandler implements FragmentHandler {
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		String extensionID = element.getAttribute("extensionID");
+		String extensionID = element.getAttribute(EXTENSION_ID);
 		String pluginID = element.getAttribute("pluginID");
 		PluginManager pluginManager = PluginManager.getInstance();
 		Extension extension = pluginManager.getExtension("d3web-Kernel-ExtensionPoints", PSMethod.EXTENSIONPOINT_ID, pluginID, extensionID);
-		PSMethod psMethod = (PSMethod) extension.getSingleton();
+		PSMethod psMethod = (PSMethod) extension.getNewInstance();
 		PSState psState = PSConfig.PSState.valueOf(element.getAttribute("state"));
 		Autodetect auto =  null;
 		for (Extension e: pluginManager.getExtensions("d3web-Kernel-ExtensionPoints", Autodetect.EXTENSIONPOINT_ID)) {
@@ -73,7 +74,7 @@ public class DefaultPSConfigHandler implements FragmentHandler {
 	public Element write(Object object, Document doc) throws IOException {
 		PSConfig psConfig = (PSConfig) object;
 		Element element = doc.createElement(PS_ENTRY);
-		element.setAttribute("extensionID", psConfig.getExtensionID());
+		element.setAttribute(EXTENSION_ID, psConfig.getExtensionID());
 		element.setAttribute("pluginID", psConfig.getExtensionID());
 		element.setAttribute("state", psConfig.getPsState().name());
 		return element;

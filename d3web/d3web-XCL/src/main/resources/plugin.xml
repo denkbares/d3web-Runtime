@@ -55,4 +55,34 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="XCLPSConfigHandler">
+		<parameter id="class"
+			value="de.d3web.xcl.io.fragments.XCLPSConfigHandler" />
+		<parameter id="name" value="XCLPSConfigHandler" />
+		<parameter id="description" value="Handler for XCLPSConfigs" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="SprintGroupScoreAlgorithmHandler">
+		<parameter id="class"
+			value="de.d3web.xcl.io.fragments.SprintGroupScoreAlgorithmHandler" />
+		<parameter id="name" value="SprintGroupScoreAlgorithmHandler" />
+		<parameter id="description" value="Handler for SprintGroupScoreAlgorithmHandler" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="DefaultScoreAlgorithmHandler">
+		<parameter id="class"
+			value="de.d3web.xcl.io.fragments.DefaultScoreAlgorithmHandler" />
+		<parameter id="name" value="DefaultScoreAlgorithmHandler" />
+		<parameter id="description" value="Handler for DefaultScoreAlgorithmHandler" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
 </plugin>

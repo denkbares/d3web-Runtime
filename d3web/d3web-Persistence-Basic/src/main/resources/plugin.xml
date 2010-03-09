@@ -15,11 +15,12 @@
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="DefaultPSConfigHandler">
 		<parameter id="class"
-			value="de.d3web.plugin.io.DefaultPSConfigHandler" />
+			value="de.d3web.plugin.io.fragments.DefaultPSConfigHandler" />
 		<parameter id="name" value="DefaultPSConfigHandler" />
 		<parameter id="description" value="Default handler for PSConfigs" />
 		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
+		<!--must have the lowest priority of all PSConfig Handlers, because it handels every PSConfig-->
+		<parameter id="priority" value="10" />
 	</extension>
 	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
