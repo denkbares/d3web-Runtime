@@ -13,6 +13,16 @@
 	</runtime>
 	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="DefaultPSConfigHandler">
+		<parameter id="class"
+			value="de.d3web.plugin.io.DefaultPSConfigHandler" />
+		<parameter id="name" value="DefaultPSConfigHandler" />
+		<parameter id="description" value="Default handler for PSConfigs" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="NullHandler">
 		<parameter id="class"
 			value="de.d3web.core.io.fragments.NullHandler" />
