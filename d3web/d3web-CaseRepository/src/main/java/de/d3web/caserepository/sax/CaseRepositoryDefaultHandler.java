@@ -36,7 +36,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.CaseObjectImpl;
-import de.d3web.core.KnowledgeBase;
+import de.d3web.core.knowledge.KnowledgeBase;
 /**
  * @author bates
  *

@@ -23,13 +23,13 @@ import java.io.IOException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.condition.CondNum;
 import de.d3web.core.inference.condition.CondNumLess;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.core.terminology.IDObject;
-import de.d3web.core.terminology.QuestionNum;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.IDObject;
+import de.d3web.core.knowledge.terminology.QuestionNum;
 /**
  * FragementHandler for CondNumLesses
  *

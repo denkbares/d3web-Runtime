@@ -23,11 +23,11 @@ import java.io.IOException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSConfig.PSState;
 import de.d3web.core.io.fragments.FragmentHandler;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.plugin.Autodetect;
 import de.d3web.plugin.Extension;
 import de.d3web.plugin.PluginManager;

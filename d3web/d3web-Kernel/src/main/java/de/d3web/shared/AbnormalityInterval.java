@@ -1,6 +1,6 @@
 package de.d3web.shared;
 
-import de.d3web.core.terminology.info.NumericalInterval;
+import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 
 /**
  * AbnormalityInterval has

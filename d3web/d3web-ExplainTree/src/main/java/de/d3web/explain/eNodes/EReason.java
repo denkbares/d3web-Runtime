@@ -27,7 +27,7 @@
 package de.d3web.explain.eNodes;
 
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.terminology.QASet;
+import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.explain.ExplanationFactory;
 import de.d3web.explain.eNodes.reasons.EPSMethodReason;
 import de.d3web.explain.eNodes.reasons.ERuleReason;

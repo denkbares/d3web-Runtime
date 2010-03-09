@@ -20,9 +20,9 @@
 
 package de.d3web.core.session.values;
 
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.info.Property;
 
 /**
  * special answer: "unknown"

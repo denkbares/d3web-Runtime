@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.NamedObject;
 
 public class DefaultPropagationController implements PropagationContoller {
 

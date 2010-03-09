@@ -27,9 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.QContainer;
-import de.d3web.core.terminology.Question;
 import de.d3web.costBenefit.Util;
 import de.d3web.costBenefit.inference.AbortException;
 import de.d3web.costBenefit.inference.AbortStrategy;

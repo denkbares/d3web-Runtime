@@ -6,18 +6,18 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.condition.AbstractCondition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.IEventSource;
 import de.d3web.core.session.KBOEventListener;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.DiagnosisState;
 import de.d3web.xcl.XCLRelationType;
 
 

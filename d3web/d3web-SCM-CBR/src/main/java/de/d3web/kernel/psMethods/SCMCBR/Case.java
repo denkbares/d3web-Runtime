@@ -1,6 +1,6 @@
 package de.d3web.kernel.psMethods.SCMCBR;
 
-import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Diagnosis;
 
 public class Case extends SCMCBRModel {
 

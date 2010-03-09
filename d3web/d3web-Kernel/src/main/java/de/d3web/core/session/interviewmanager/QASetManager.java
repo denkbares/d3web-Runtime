@@ -23,8 +23,8 @@ import java.util.List;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.NamedObject;
 /**
  * The cases view to the dialog: it only needs to add qasets.<br/>
  * <b>Attention:</b> This needs to be refactored in order to represent the new ActionNextQASet-Mechanism.

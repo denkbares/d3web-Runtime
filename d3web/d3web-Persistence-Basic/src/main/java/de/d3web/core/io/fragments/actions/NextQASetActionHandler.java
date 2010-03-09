@@ -26,12 +26,12 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.RuleAction;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.QASet;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.indication.ActionClarify;
 import de.d3web.indication.ActionIndication;
 import de.d3web.indication.ActionInstantIndication;

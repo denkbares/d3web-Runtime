@@ -23,7 +23,7 @@ package de.d3web.core.session.blackboard;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.scoring.DiagnosisScore;
 /**
  * Stores the dynamic, user specific values of a diagnosis object. It

@@ -22,8 +22,8 @@ package de.d3web.scoring;
 import java.util.Iterator;
 import java.util.List;
 
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.utilities.Utils;
 
 /**

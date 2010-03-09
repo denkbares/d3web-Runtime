@@ -37,6 +37,13 @@ import de.d3web.abstraction.inference.PSMethodQuestionSetter;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleAction;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionDate;
+import de.d3web.core.knowledge.terminology.QuestionMC;
+import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.SymptomValue;
 import de.d3web.core.session.XPSCase;
@@ -48,13 +55,6 @@ import de.d3web.core.session.values.AnswerDate;
 import de.d3web.core.session.values.AnswerNum;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.EvaluatableAnswerNumValue;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.QASet;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.QuestionDate;
-import de.d3web.core.terminology.QuestionMC;
-import de.d3web.core.terminology.QuestionNum;
-import de.d3web.core.terminology.QuestionOC;
 
 /**
  * @author baumeister, bates

@@ -31,13 +31,13 @@ import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.knowledge.terminology.DerivationType;
+import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.DerivationType;
-import de.d3web.core.terminology.NamedObject;
-import de.d3web.core.terminology.QASet;
-import de.d3web.core.terminology.QContainer;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.info.Property;
 import de.d3web.indication.inference.PSMethodNextQASet;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
@@ -106,7 +106,7 @@ public class MQDialogController implements DialogController {
 	 * @param q
 	 *            de.d3web.kernel.domainModel.QASet
 	 */
-	private void addQASet(List qaSetList, de.d3web.core.terminology.QASet q) {
+	private void addQASet(List qaSetList, de.d3web.core.knowledge.terminology.QASet q) {
 		QContainer toAdd = null;
 		if (q instanceof QContainer) {
 			toAdd = (QContainer) q;
@@ -1075,7 +1075,7 @@ public class MQDialogController implements DialogController {
 	/**
 	 * addUserIndicationQASet method comment.
 	 */
-	public void addUserIndicationQASet(de.d3web.core.terminology.QASet q) {
+	public void addUserIndicationQASet(de.d3web.core.knowledge.terminology.QASet q) {
 		QContainer qContainer = null;
 		if (q instanceof QContainer) {
 			// only "leaf"-containers should be added

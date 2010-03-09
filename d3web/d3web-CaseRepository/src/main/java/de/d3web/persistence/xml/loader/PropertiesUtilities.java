@@ -39,8 +39,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import de.d3web.core.io.utilities.XMLTools;
-import de.d3web.core.terminology.info.Properties;
-import de.d3web.core.terminology.info.Property;
+import de.d3web.core.knowledge.terminology.info.Properties;
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.indication.inference.PropertyCloner;
 import de.d3web.xml.domtools.DOMAccess;
 /**

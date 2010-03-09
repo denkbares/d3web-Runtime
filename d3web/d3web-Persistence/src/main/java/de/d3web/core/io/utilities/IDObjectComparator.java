@@ -20,7 +20,7 @@ package de.d3web.core.io.utilities;
 
 import java.util.Comparator;
 
-import de.d3web.core.terminology.IDObject;
+import de.d3web.core.knowledge.terminology.IDObject;
 
 public class IDObjectComparator implements Comparator<IDObject> {
 

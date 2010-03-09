@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 import org.xml.sax.Attributes;
 
 import de.d3web.caserepository.CaseObject;
-import de.d3web.core.terminology.info.Property;
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.persistence.xml.loader.PropertiesUtilities;
 
 /**

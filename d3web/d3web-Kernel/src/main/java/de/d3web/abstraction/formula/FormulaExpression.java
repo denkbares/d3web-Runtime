@@ -19,10 +19,10 @@
  */
 
 package de.d3web.abstraction.formula;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerNum;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.Question;
 
 /**
  * Encapsulates a FormulaElement and ensures the return of an answer num

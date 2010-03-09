@@ -35,7 +35,7 @@ public class PSMethodQuestionSetter extends PSMethodRulebased {
 
 	/**
 	 * Used, if numerical answers are given to an oc-question.
-	 * @see de.d3web.core.terminology.info.Num2ChoiceSchema
+	 * @see de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema
 	 */
 	public final static MethodKind NUM2CHOICE_SCHEMA =
 		new MethodKind("NUM2CHOICE_SCHEMA");

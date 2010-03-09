@@ -29,7 +29,7 @@ import java.util.Set;
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.sax.AbstractTagReader;
 import de.d3web.caserepository.sax.CaseObjectListCreator;
-import de.d3web.core.terminology.info.DCElement;
+import de.d3web.core.knowledge.terminology.info.DCElement;
 /**
  * Default implementation of an XML-loader (uses sax.CaseObjectListCreator)
  * it does NO pre-filtering
@@ -42,7 +42,7 @@ public class DefaultXMLCaseLoader implements XMLCaseLoader {
 	
 	private CaseObjectListCreator creator = null;
 
-	private de.d3web.core.KnowledgeBase knowledgeBase = null;
+	private de.d3web.core.knowledge.KnowledgeBase knowledgeBase = null;
 
 	/**
 	 * DefaultXMLCaseLoader constructor comment.
@@ -72,7 +72,7 @@ public class DefaultXMLCaseLoader implements XMLCaseLoader {
 		return loadAppend(kbid);
 	}
 
-	public void setKnowledgeBase(de.d3web.core.KnowledgeBase newKnowledgeBase) {
+	public void setKnowledgeBase(de.d3web.core.knowledge.KnowledgeBase newKnowledgeBase) {
 		knowledgeBase = newKnowledgeBase;
 	}
 

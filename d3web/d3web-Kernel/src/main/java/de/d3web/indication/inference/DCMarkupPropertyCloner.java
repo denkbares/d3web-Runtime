@@ -20,7 +20,7 @@
 
 package de.d3web.indication.inference;
 
-import de.d3web.core.terminology.info.DCMarkup;
+import de.d3web.core.knowledge.terminology.info.DCMarkup;
 
 /**
  * PropertyCloner for de.d3web.kernel.supportknowledge.DCMarkup.

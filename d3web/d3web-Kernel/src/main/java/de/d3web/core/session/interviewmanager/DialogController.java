@@ -19,7 +19,7 @@
  */
 
 package de.d3web.core.session.interviewmanager;
-import de.d3web.core.terminology.QASet;
+import de.d3web.core.knowledge.terminology.QASet;
 /**
  * The dialogs view on the dialogcontrolling-part of the case!
  * <br>

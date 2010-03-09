@@ -21,7 +21,7 @@ package de.d3web.core.inference;
 
 import java.util.Arrays;
 
-import de.d3web.core.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.NamedObject;
 
 public class PropagationEntry {
 	

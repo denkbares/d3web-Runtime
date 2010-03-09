@@ -21,9 +21,9 @@
 package de.d3web.kernel.psMethods.shared.comparators.num;
 import java.util.List;
 
+import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerNum;
-import de.d3web.core.terminology.info.NumericalInterval;
 import de.d3web.kernel.psMethods.shared.comparators.QuestionComparator;
 
 /**

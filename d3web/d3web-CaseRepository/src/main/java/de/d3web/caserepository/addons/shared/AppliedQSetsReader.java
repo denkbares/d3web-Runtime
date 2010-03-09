@@ -31,7 +31,7 @@ import org.xml.sax.Attributes;
 
 import de.d3web.caserepository.addons.IAppliedQSets;
 import de.d3web.caserepository.sax.AbstractTagReader;
-import de.d3web.core.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.QContainer;
 
 /**
  * 24.09.2003 12:31:02

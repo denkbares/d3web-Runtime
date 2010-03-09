@@ -37,14 +37,14 @@ import java.util.zip.ZipFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.KnowledgeBase;
-import de.d3web.core.Resource;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.progress.CombinedProgressListener;
 import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.Util;
-import de.d3web.core.terminology.info.DCElement;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.Resource;
+import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.plugin.Autodetect;
 import de.d3web.plugin.Extension;
 import de.d3web.plugin.Plugin;

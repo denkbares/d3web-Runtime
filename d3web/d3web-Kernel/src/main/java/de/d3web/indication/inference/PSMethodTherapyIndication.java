@@ -27,12 +27,12 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.DiagnosisState.State;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.DiagnosisState;
-import de.d3web.core.terminology.DiagnosisState.State;
 import de.d3web.scoring.DiagnosisScore;
 import de.d3web.scoring.HeuristicRating;
 

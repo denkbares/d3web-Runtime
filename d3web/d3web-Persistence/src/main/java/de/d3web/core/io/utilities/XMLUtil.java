@@ -30,17 +30,17 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.d3web.core.KnowledgeBase;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerUnknown;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.NamedObject;
-import de.d3web.core.terminology.QASet;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.QuestionChoice;
-import de.d3web.core.terminology.QuestionNum;
-import de.d3web.core.terminology.QuestionText;
 /**
  * Provides useful static functions for xml persistence handlers 
  *

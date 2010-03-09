@@ -20,8 +20,8 @@
 
 package de.d3web.core.session.blackboard;
 
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.QuestionText;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.QuestionText;
 
 /**
  * Stores the dynamic, user specific values for an QuestionText

@@ -34,10 +34,10 @@ import java.util.Hashtable;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.Question;
 import de.d3web.shared.PSMethodShared;
 
 /**
@@ -85,7 +85,7 @@ public class LocalWeight implements KnowledgeSlice {
 		return G0;
 	}
 	
-	public void setQuestion(de.d3web.core.terminology.Question newQuestion){
+	public void setQuestion(de.d3web.core.knowledge.terminology.Question newQuestion){
 	if (q != null) {
 		q.removeKnowledge(
 			getProblemsolverContext(),
@@ -105,7 +105,7 @@ public class LocalWeight implements KnowledgeSlice {
 		return q;
 	}
 
-	public void setDiagnosis(de.d3web.core.terminology.Diagnosis newDiagnosis){
+	public void setDiagnosis(de.d3web.core.knowledge.terminology.Diagnosis newDiagnosis){
 		if (d != null) {
 			d.removeKnowledge(
 				getProblemsolverContext(),

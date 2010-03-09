@@ -24,9 +24,9 @@ import java.util.List;
 
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.RuleAction;
+import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.QASet;
-import de.d3web.core.terminology.QContainer;
 import de.d3web.indication.inference.PSMethodNextQASet;
 
 /**

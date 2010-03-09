@@ -33,7 +33,7 @@ import org.w3c.dom.Document;
 import de.d3web.caserepository.utilities.CaseObjectListAdditionalWriter;
 import de.d3web.caserepository.utilities.CaseObjectListWriter;
 import de.d3web.caserepository.utilities.Utilities;
-import de.d3web.core.KnowledgeBase;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.persistence.progress.ProgressEvent;
 import de.d3web.persistence.progress.ProgressListener;
 import de.d3web.persistence.progress.ProgressNotifier;

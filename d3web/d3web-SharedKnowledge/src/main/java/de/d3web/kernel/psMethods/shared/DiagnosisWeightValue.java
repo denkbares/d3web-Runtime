@@ -25,7 +25,7 @@ package de.d3web.kernel.psMethods.shared;
  * @author: Norman Brümmer
  */
 public class DiagnosisWeightValue {
-	private de.d3web.core.terminology.Diagnosis diagnosis = null;
+	private de.d3web.core.knowledge.terminology.Diagnosis diagnosis = null;
 	private int value = 0;
 
 
@@ -44,7 +44,7 @@ public DiagnosisWeightValue() {
  * Creation date: (18.10.2001 19:04:19)
  * @return de.d3web.kernel.domainModel.Diagnosis
  */
-public de.d3web.core.terminology.Diagnosis getDiagnosis() {
+public de.d3web.core.knowledge.terminology.Diagnosis getDiagnosis() {
 	return diagnosis;
 }
 
@@ -66,7 +66,7 @@ public int getValue() {
  * Creation date: (18.10.2001 19:04:19)
  * @param newDiagnosis de.d3web.kernel.domainModel.Diagnosis
  */
-public void setDiagnosis(de.d3web.core.terminology.Diagnosis newDiagnosis) {
+public void setDiagnosis(de.d3web.core.knowledge.terminology.Diagnosis newDiagnosis) {
 	diagnosis = newDiagnosis;
 }
 

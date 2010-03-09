@@ -24,8 +24,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.Question;
 /**
  * This is a DialogClient that can store answers of Quesitons in the random access memory.
  * It is used by the DialogProxy

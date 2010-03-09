@@ -27,11 +27,11 @@ import java.util.Locale;
 
 import org.apache.log4j.Logger;
 
+import de.d3web.core.knowledge.terminology.QuestionDate;
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerDate;
 import de.d3web.core.session.values.EvaluatableAnswerDateValue;
-import de.d3web.core.terminology.QuestionDate;
-import de.d3web.core.terminology.info.Property;
 
 /**
  * Converts Date to String and vice versa.

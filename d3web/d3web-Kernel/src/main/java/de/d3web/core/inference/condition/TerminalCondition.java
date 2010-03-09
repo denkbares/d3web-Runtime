@@ -23,7 +23,7 @@ package de.d3web.core.inference.condition;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.d3web.core.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.NamedObject;
 /**
  * Abstract condition for all terminal conditions. A terminal condition
  * contains no sub-conditions, but represents a single proposition.

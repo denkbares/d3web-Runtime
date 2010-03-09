@@ -3,8 +3,8 @@ package de.d3web.xcl;
 import java.util.Collection;
 
 import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.DiagnosisState;
 import de.d3web.xcl.inference.PSMethodXCL;
 
 public class DefaultScoreAlgorithm implements ScoreAlgorithm {

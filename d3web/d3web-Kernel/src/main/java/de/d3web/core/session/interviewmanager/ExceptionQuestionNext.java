@@ -22,7 +22,7 @@ package de.d3web.core.session.interviewmanager;
 
 import java.util.List;
 
-import de.d3web.core.KnowledgeBase;
+import de.d3web.core.knowledge.KnowledgeBase;
 
 /**
  * This is a marker class that will be returned by moveToNext/Newest methods of DialogController

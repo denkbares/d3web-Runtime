@@ -28,9 +28,9 @@ import java.util.List;
 
 import de.d3web.caseGeneration.InterviewBot;
 import de.d3web.caseGeneration.StateRatingStrategy;
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ConsoleProgressListener;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.empiricalTesting.caseConverter.CaseObjectToKnOffice;
 import de.d3web.empiricalTesting.caseConverter.CaseObjectToTestSuiteXML;
 import de.d3web.empiricalTesting.caseVisualization.dot.DDBuilder;

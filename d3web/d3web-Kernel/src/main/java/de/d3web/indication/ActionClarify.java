@@ -22,8 +22,8 @@ package de.d3web.indication;
 import java.util.LinkedList;
 
 import de.d3web.core.inference.RuleAction;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.QASet;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.QASet;
 
 /**
  * ActionClarify represents the indication of a QASet in order to clarify a suspected diagnosis.
@@ -52,7 +52,7 @@ public class ActionClarify extends ActionNextQASet {
 	/**
 	 * sets the Diagnosis to clarify
 	 */
-	public void setTarget(de.d3web.core.terminology.Diagnosis newTarget) {
+	public void setTarget(de.d3web.core.knowledge.terminology.Diagnosis newTarget) {
 		target = newTarget;
 	}
 	

@@ -23,7 +23,7 @@ package de.d3web.indication;
 import java.util.ArrayList;
 
 import de.d3web.core.inference.RuleAction;
-import de.d3web.core.terminology.QASet;
+import de.d3web.core.knowledge.terminology.QASet;
 
 /**
  * ActionIndication represents the general indication of a QASet.

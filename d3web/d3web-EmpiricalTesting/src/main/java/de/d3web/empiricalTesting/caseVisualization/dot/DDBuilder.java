@@ -33,12 +33,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.values.AnswerChoice;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.DiagnosisState;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.QuestionChoice;
 import de.d3web.empiricalTesting.ConfigLoader;
 import de.d3web.empiricalTesting.Finding;
 import de.d3web.empiricalTesting.RatedSolution;

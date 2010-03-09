@@ -24,22 +24,22 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationContoller;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.info.DCMarkedUp;
+import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.core.session.interviewmanager.DialogController;
 import de.d3web.core.session.interviewmanager.QASetManager;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.DiagnosisState;
-import de.d3web.core.terminology.QContainer;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.info.DCMarkedUp;
-import de.d3web.core.terminology.info.PropertiesContainer;
 
 /**
  * Every problem-solving session is represented by a an XPSCase. It manages the

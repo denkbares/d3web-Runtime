@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.d3web.core.knowledge.terminology.QuestionDate;
+import de.d3web.core.knowledge.terminology.QuestionMC;
+import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerDate;
 import de.d3web.core.session.values.AnswerNum;
@@ -15,11 +20,6 @@ import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
-import de.d3web.core.terminology.QuestionDate;
-import de.d3web.core.terminology.QuestionMC;
-import de.d3web.core.terminology.QuestionNum;
-import de.d3web.core.terminology.QuestionOC;
-import de.d3web.core.terminology.QuestionText;
 
 public class ValueFactory {
 

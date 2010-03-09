@@ -22,7 +22,7 @@ package de.d3web.kernel.psMethods.compareCase.facade;
 import java.util.Collection;
 
 import de.d3web.caserepository.CaseObject;
-import de.d3web.core.terminology.info.DCElement;
+import de.d3web.core.knowledge.terminology.info.DCElement;
 
 /**
  * Creation date: (22.08.01 00:57:47)

@@ -28,7 +28,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Diagnosis;
 
 /**
  * 21.10.2003 15:48:35

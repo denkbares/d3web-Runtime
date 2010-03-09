@@ -24,8 +24,8 @@ import java.util.ArrayList;
 
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.RuleAction;
+import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.QASet;
 
 /**
  * Indicates a QASet like ActionIndication, but for QContainers: Then, the QContainer is 

@@ -7,9 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import de.d3web.core.Indication;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.core.knowledge.Indication;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**

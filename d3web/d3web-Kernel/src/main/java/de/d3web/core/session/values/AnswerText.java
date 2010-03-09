@@ -20,8 +20,8 @@
 
 package de.d3web.core.session.values;
 
+import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.Answer;
 /**
  * Answer class for textual questions
  * Creation date: (13.09.2000 13:50:23)

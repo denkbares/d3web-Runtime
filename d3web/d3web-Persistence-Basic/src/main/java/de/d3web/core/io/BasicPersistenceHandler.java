@@ -37,7 +37,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import de.d3web.abstraction.inference.PSMethodQuestionSetter;
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
@@ -49,13 +48,14 @@ import de.d3web.core.io.utilities.CostObject;
 import de.d3web.core.io.utilities.IDObjectComparator;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.NamedObject;
-import de.d3web.core.terminology.QASet;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.info.DCMarkup;
-import de.d3web.core.terminology.info.Num2ChoiceSchema;
-import de.d3web.core.terminology.info.Properties;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.info.DCMarkup;
+import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
+import de.d3web.core.knowledge.terminology.info.Properties;
 
 /**
  * PersistenceHandler for reading and writing basic knowledge Creation date:

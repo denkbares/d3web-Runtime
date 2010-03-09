@@ -20,7 +20,7 @@
 
 package de.d3web.empiricalTesting;
 
-import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
 
 public class StateRating implements Rating {
 

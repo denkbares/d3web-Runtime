@@ -20,8 +20,8 @@ package de.d3web.costBenefit;
 
 import java.util.Collection;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.costBenefit.inference.PSMethodCostBenefit;
 import de.d3web.plugin.Autodetect;
 /**

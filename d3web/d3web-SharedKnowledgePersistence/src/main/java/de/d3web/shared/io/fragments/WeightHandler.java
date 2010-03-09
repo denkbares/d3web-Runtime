@@ -28,10 +28,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.core.terminology.Question;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.kernel.psMethods.shared.DiagnosisWeightValue;
 import de.d3web.kernel.psMethods.shared.QuestionWeightValue;
 import de.d3web.kernel.psMethods.shared.Weight;

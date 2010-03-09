@@ -28,18 +28,18 @@ import java.util.Map;
 
 import javax.activation.UnsupportedDataTypeException;
 
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionMC;
+import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.QuestionText;
+import de.d3web.core.knowledge.terminology.info.NumericalInterval;
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.manage.AnswerFactory;
 import de.d3web.core.session.values.AnswerNum;
 import de.d3web.core.session.values.AnswerText;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.QuestionChoice;
-import de.d3web.core.terminology.QuestionMC;
-import de.d3web.core.terminology.QuestionNum;
-import de.d3web.core.terminology.QuestionOC;
-import de.d3web.core.terminology.QuestionText;
-import de.d3web.core.terminology.info.NumericalInterval;
-import de.d3web.core.terminology.info.Property;
 
 /**
  * This class is used to compute a list of suitable answers for a given

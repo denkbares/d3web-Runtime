@@ -22,10 +22,10 @@ package de.d3web.core.inference.condition;
 
 import java.util.List;
 
+import de.d3web.core.knowledge.terminology.IDObject;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerUnknown;
-import de.d3web.core.terminology.IDObject;
-import de.d3web.core.terminology.Question;
 /**
  * Abstract class for all conditions that constrain a
  * {@link Question} to a specific value.

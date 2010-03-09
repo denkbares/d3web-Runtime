@@ -28,7 +28,7 @@ import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.abstraction.formula.FormulaNumberElement;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.core.terminology.Question;
+import de.d3web.core.knowledge.terminology.Question;
 /**
  * Handels FormulaExpressions
  *

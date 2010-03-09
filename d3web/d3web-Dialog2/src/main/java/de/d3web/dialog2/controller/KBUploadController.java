@@ -29,8 +29,8 @@ import org.apache.log4j.Logger;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
 
 import de.d3web.caserepository.utilities.Utilities;
-import de.d3web.core.KnowledgeBase;
-import de.d3web.core.terminology.info.DCElement;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.dialog2.basics.knowledge.KBDescriptorLoader;
 import de.d3web.dialog2.basics.knowledge.KnowledgeBaseDescriptor;
 import de.d3web.dialog2.basics.knowledge.KnowledgeBaseRepository;

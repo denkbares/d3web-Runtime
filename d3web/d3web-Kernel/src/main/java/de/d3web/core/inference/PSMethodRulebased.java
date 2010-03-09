@@ -24,8 +24,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.NamedObject;
 
 /**
  * @author jochen

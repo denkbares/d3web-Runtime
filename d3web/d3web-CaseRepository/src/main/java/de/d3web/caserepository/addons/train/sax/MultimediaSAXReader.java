@@ -39,11 +39,11 @@ import de.d3web.caserepository.addons.train.Multimedia;
 import de.d3web.caserepository.addons.train.MultimediaItem;
 import de.d3web.caserepository.addons.train.Region;
 import de.d3web.caserepository.sax.AbstractTagReader;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.QASet;
-import de.d3web.core.terminology.QuestionChoice;
-import de.d3web.core.terminology.QuestionNum;
-import de.d3web.core.terminology.QuestionText;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.knowledge.terminology.QuestionText;
 
 /**
  * 22.09.2003 18:09:45

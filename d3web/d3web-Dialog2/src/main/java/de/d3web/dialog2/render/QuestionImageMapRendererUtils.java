@@ -31,14 +31,14 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerDate;
 import de.d3web.core.session.values.AnswerUnknown;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.QuestionChoice;
-import de.d3web.core.terminology.QuestionDate;
 import de.d3web.dialog2.basics.layout.QContainerLayout;
 import de.d3web.dialog2.basics.layout.QuestionPageLayout;
 import de.d3web.dialog2.imagemap.Image;

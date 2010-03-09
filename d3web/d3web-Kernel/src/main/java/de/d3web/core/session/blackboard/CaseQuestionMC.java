@@ -23,7 +23,7 @@ package de.d3web.core.session.blackboard;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.terminology.QuestionMC;
+import de.d3web.core.knowledge.terminology.QuestionMC;
 /**
  * Stores the dynamic, user specific values for an QuestionMC
  * object. It corresponds to the static QuestionMC object.<br>

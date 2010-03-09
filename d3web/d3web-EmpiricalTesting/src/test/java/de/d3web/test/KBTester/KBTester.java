@@ -32,8 +32,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.empiricalTesting.RatedTestCase;
 import de.d3web.empiricalTesting.SequentialTestCase;
 import de.d3web.empiricalTesting.TestSuite;

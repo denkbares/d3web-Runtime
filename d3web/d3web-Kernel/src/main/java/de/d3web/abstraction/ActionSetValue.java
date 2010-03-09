@@ -27,15 +27,15 @@ import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.abstraction.inference.PSMethodQuestionSetter;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.RuleAction;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerDate;
 import de.d3web.core.session.values.AnswerNum;
 import de.d3web.core.session.values.EvaluatableAnswerDateValue;
 import de.d3web.core.session.values.EvaluatableAnswerNumValue;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.QuestionOC;
-import de.d3web.core.terminology.info.Property;
 
 /**
  * Sets a specified value for a specified question.

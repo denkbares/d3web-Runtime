@@ -37,7 +37,7 @@ import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.sax.AbstractTagReader;
 import de.d3web.caserepository.utilities.CaseObjectListAdditionalWriter;
 import de.d3web.caserepository.utilities.CaseObjectListWriter;
-import de.d3web.core.terminology.info.DCElement;
+import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.utilities.caseLoaders.CaseRepository;
 import de.d3web.utilities.caseLoaders.DefaultXMLCaseLoader;
 

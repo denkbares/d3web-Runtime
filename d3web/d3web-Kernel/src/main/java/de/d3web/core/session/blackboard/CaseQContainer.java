@@ -20,7 +20,7 @@
 
 package de.d3web.core.session.blackboard;
 
-import de.d3web.core.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.QContainer;
 
 /**
  * Stores the dynamic, user specific values for an QContainer

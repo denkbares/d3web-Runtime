@@ -33,11 +33,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.values.AnswerChoice;
-import de.d3web.core.terminology.QContainer;
-import de.d3web.core.terminology.QuestionChoice;
 import de.d3web.empiricalTesting.Finding;
 import de.d3web.empiricalTesting.SequentialTestCase;
 import de.d3web.empiricalTesting.caseVisualization.BotHelper;

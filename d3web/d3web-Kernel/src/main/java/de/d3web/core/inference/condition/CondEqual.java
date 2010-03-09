@@ -23,12 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerUnknown;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.QuestionChoice;
 /**
  * This condition checks, whether a specified value is assigned to a question 
  * The composite pattern is used for this. This class is a "leaf".

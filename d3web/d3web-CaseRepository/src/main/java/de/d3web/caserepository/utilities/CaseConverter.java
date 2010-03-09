@@ -26,18 +26,18 @@ import java.util.List;
 
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.CaseObjectImpl;
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.info.DCMarkup;
+import de.d3web.core.knowledge.terminology.info.PropertiesCloner;
 import de.d3web.core.session.CaseFactory;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.interviewmanager.DialogProxy;
 import de.d3web.core.session.interviewmanager.ShadowMemory;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.DiagnosisState;
-import de.d3web.core.terminology.QContainer;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.info.DCMarkup;
-import de.d3web.core.terminology.info.PropertiesCloner;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**

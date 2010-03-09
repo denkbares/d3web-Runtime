@@ -28,8 +28,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.knowledge.KnowledgeBase;
 
 /**
  * @author: Norman Brümmer

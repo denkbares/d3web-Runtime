@@ -25,7 +25,7 @@ import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 
-import de.d3web.core.KnowledgeBase;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.dialog2.WebDialog;
 import de.d3web.dialog2.basics.knowledge.CaseManager;
 import de.d3web.dialog2.basics.knowledge.KnowledgeBaseRepository;

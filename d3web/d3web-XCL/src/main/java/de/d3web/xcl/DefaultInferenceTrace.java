@@ -5,8 +5,8 @@ import java.util.HashSet;
 
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.DiagnosisState;
 
 	
 public class DefaultInferenceTrace implements InferenceTrace {

@@ -52,15 +52,15 @@ import de.d3web.abstraction.formula.QNumWrapper;
 import de.d3web.abstraction.formula.Sub;
 import de.d3web.abstraction.formula.Today;
 import de.d3web.abstraction.formula.YearDiff;
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.io.NoSuchFragmentHandlerException;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.QuestionDate;
+import de.d3web.core.knowledge.terminology.QuestionMC;
+import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.session.values.AnswerDate;
-import de.d3web.core.terminology.QuestionDate;
-import de.d3web.core.terminology.QuestionMC;
-import de.d3web.core.terminology.QuestionNum;
 /**
  * Handels all standard FormulaElements. If additional FormulaElements are used in Plugins, they must
  * contain their own FragmentHandler with a higher priority. 

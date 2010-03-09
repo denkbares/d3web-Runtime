@@ -23,9 +23,9 @@
  */
 package de.d3web.core.session.blackboard;
 
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.QuestionDate;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionDate;
 
 /**
  * Stores the dynamic, user specific values for an QuestionDate

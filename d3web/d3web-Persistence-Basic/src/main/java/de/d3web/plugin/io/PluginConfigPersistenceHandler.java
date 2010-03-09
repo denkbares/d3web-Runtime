@@ -27,7 +27,6 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
@@ -37,6 +36,7 @@ import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.plugin.PluginConfig;
 import de.d3web.plugin.Plugin;
 import de.d3web.plugin.PluginEntry;

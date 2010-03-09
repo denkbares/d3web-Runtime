@@ -25,7 +25,7 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import de.d3web.core.Resource;
+import de.d3web.core.knowledge.Resource;
 /**
  * Class to store Jar Ressources in the KnowledgeBase
  *

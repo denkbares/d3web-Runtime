@@ -20,10 +20,10 @@ package de.d3web.plugin;
 import java.util.Collection;
 import java.util.HashMap;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.session.XPSCase;
 
 /**

@@ -25,10 +25,10 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.utilities.XMLUtil;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.costBenefit.inference.CostFunction;
 import de.d3web.costBenefit.inference.PSMethodCostBenefit;
 import de.d3web.costBenefit.inference.SearchAlgorithm;

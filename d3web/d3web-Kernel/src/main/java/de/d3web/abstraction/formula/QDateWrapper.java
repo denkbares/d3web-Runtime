@@ -30,10 +30,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 
+import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerDate;
 import de.d3web.core.session.values.EvaluatableAnswerDateValue;
-import de.d3web.core.terminology.QuestionDate;
 
 /**
  * Delegate-Pattern: Wraps a QuestionNum to use it as FormulaElement. Creation

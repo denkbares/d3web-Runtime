@@ -1,8 +1,8 @@
 package de.d3web.core.session;
 
-import de.d3web.core.InterviewObject;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.Question;
+import de.d3web.core.knowledge.InterviewObject;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Question;
 
 public interface Interview {
 

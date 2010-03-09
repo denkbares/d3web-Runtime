@@ -2,10 +2,10 @@ package de.d3web.core.session;
 
 import java.util.Collection;
 
-import de.d3web.core.InfoStore;
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationContoller;
+import de.d3web.core.knowledge.InfoStore;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.session.blackboard.Blackboard;
 
 /**

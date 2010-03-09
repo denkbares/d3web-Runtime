@@ -2,9 +2,9 @@ package de.d3web.kernel.psMethods.SCMCBR.similarity;
 
 import java.util.List;
 
+import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.QuestionNum;
-import de.d3web.core.terminology.info.NumericalInterval;
 
 /**
  * 

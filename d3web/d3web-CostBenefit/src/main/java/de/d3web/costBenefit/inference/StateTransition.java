@@ -25,10 +25,10 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.QContainer;
-import de.d3web.core.terminology.Question;
 
 /**
  * A StateTransition is a KnowledgeSlice which belongs to a QContainer.

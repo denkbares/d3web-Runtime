@@ -21,8 +21,8 @@ package de.d3web.core.io;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.io.progress.ProgressListener;
+import de.d3web.core.knowledge.KnowledgeBase;
 
 /**
  * Interface for all writing persistance handlers.

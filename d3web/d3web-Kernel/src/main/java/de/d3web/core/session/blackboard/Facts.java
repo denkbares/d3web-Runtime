@@ -5,19 +5,19 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
-import de.d3web.core.Indication;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.knowledge.Indication;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.knowledge.terminology.DiagnosisState.State;
 import de.d3web.core.manage.AnswerFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.AnswerNum;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.Unknown;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.DiagnosisState;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.QuestionNum;
-import de.d3web.core.terminology.DiagnosisState.State;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 public class Facts {

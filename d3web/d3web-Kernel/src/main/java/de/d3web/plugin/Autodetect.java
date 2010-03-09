@@ -18,7 +18,7 @@
  */
 package de.d3web.plugin;
 
-import de.d3web.core.KnowledgeBase;
+import de.d3web.core.knowledge.KnowledgeBase;
 
 public interface Autodetect {
 	

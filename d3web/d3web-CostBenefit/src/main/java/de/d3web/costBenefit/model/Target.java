@@ -20,7 +20,7 @@ package de.d3web.costBenefit.model;
 
 import java.util.LinkedList;
 
-import de.d3web.core.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.QContainer;
 
 /**
  * A Target is a List of QContainer with a combined benefit and a (minimal) path

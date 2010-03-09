@@ -31,10 +31,10 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseDiagnosis;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.DiagnosisState;
 import de.d3web.dialog2.WebDialog;
 import de.d3web.dialog2.util.DialogUtils;
 import de.d3web.indication.inference.PSMethodUserSelected;

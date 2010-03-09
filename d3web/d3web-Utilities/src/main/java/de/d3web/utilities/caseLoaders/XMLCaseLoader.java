@@ -19,7 +19,7 @@
  */
 
 package de.d3web.utilities.caseLoaders;
-import de.d3web.core.KnowledgeBase;
+import de.d3web.core.knowledge.KnowledgeBase;
 /**
  * Interface that describes what a XMLLoader has to implement
  * Creation date: (16.08.2001 20:07:33)

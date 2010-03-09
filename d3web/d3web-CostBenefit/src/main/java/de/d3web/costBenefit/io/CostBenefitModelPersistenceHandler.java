@@ -32,7 +32,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.condition.AbstractCondition;
 import de.d3web.core.io.KnowledgeReader;
@@ -42,10 +41,11 @@ import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.KnowledgeSliceComparator;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.manage.KnowledgeBaseManagement;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.QContainer;
-import de.d3web.core.terminology.Question;
 import de.d3web.costBenefit.inference.ConditionalValueSetter;
 import de.d3web.costBenefit.inference.PSMethodCostBenefit;
 import de.d3web.costBenefit.inference.StateTransition;
@@ -80,7 +80,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 	}
 
 	@Override
-	public int getEstimatedSize(de.d3web.core.KnowledgeBase kb) {
+	public int getEstimatedSize(de.d3web.core.knowledge.KnowledgeBase kb) {
 		Collection<KnowledgeSlice> relations = kb
 				.getAllKnowledgeSlicesFor(PSMethodCostBenefit.class);
 		int counter = 0;
@@ -93,7 +93,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 	}
 
 	@Override
-	public void write(de.d3web.core.KnowledgeBase kb, OutputStream stream, de.d3web.core.io.progress.ProgressListener listener) throws IOException {
+	public void write(de.d3web.core.knowledge.KnowledgeBase kb, OutputStream stream, de.d3web.core.io.progress.ProgressListener listener) throws IOException {
 		Document doc = Util.createEmptyDocument();
 		Element root = doc.createElement("KnowledgeBase");
 		root.setAttribute("type", ID);

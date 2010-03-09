@@ -3,7 +3,7 @@ package de.d3web.kernel.psMethods.SCMCBR;
 import java.util.Collection;
 import java.util.HashSet;
 
-import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
 
 public class SCMCBRInferenceTrace {
 	

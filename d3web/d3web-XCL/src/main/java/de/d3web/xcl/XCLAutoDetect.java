@@ -18,8 +18,8 @@
  */
 package de.d3web.xcl;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.plugin.Autodetect;
 /**
  * Detects if there are any XCL slices in the KB

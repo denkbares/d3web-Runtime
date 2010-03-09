@@ -4,16 +4,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 
-import de.d3web.core.Indication;
-import de.d3web.core.InterviewObject;
-import de.d3web.core.TerminologyObject;
+import de.d3web.core.knowledge.Indication;
+import de.d3web.core.knowledge.InterviewObject;
+import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.DiagnosisState;
-import de.d3web.core.terminology.QASet;
-import de.d3web.core.terminology.Question;
 
 /**
  * The Blackboard manages all dynamic values created within the case and

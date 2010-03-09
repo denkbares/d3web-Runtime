@@ -24,9 +24,9 @@ import de.d3web.core.inference.condition.AbstractCondition;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
-import de.d3web.core.terminology.QuestionChoice;
 
 public class XCLRelation {
 	public static double DEFAULT_WEIGHT = 1;

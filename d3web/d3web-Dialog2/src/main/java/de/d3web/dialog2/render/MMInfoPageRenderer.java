@@ -29,10 +29,10 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
+import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.info.MMInfoObject;
+import de.d3web.core.knowledge.terminology.info.MMInfoSubject;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.NamedObject;
-import de.d3web.core.terminology.info.MMInfoObject;
-import de.d3web.core.terminology.info.MMInfoSubject;
 import de.d3web.dialog2.basics.settings.ResourceRepository;
 import de.d3web.dialog2.component.html.UIMMInfoPage;
 import de.d3web.dialog2.util.DialogUtils;

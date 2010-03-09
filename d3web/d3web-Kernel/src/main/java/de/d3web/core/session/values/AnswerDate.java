@@ -30,10 +30,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.QuestionChoice;
-import de.d3web.core.terminology.QuestionDate;
 
 /**
  * Answer-Class for DateQuestions

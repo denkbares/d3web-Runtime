@@ -26,7 +26,7 @@ package de.d3web.caserepository.addons;
 import java.util.Set;
 
 import de.d3web.caserepository.*;
-import de.d3web.core.terminology.QASet;
+import de.d3web.core.knowledge.terminology.QASet;
 
 /**
  * 24.09.2003 11:11:08

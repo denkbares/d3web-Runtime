@@ -20,9 +20,9 @@
 
 package de.d3web.core.inference.condition;
 
+import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
-import de.d3web.core.terminology.QuestionYN;
 
 /**
  * This condition checks, if a YES/NO question has the NO value.

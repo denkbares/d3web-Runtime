@@ -31,18 +31,18 @@ import java.util.logging.Logger;
 import org.w3c.dom.Node;
 
 import de.d3web.caserepository.addons.IExaminationBlock;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.info.DCMarkup;
+import de.d3web.core.knowledge.terminology.info.Properties;
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerDate;
 import de.d3web.core.session.values.AnswerNum;
 import de.d3web.core.session.values.AnswerText;
 import de.d3web.core.session.values.AnswerUnknown;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.QASet;
-import de.d3web.core.terminology.QContainer;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.info.DCMarkup;
-import de.d3web.core.terminology.info.Properties;
-import de.d3web.core.terminology.info.Property;
 import de.d3web.persistence.xml.loader.DCMarkupUtilities;
 import de.d3web.persistence.xml.loader.PropertiesUtilities;
 

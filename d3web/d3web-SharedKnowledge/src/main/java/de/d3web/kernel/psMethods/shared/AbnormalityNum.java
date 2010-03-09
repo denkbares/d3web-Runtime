@@ -24,9 +24,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.session.values.AnswerNum;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.info.NumericalInterval;
 import de.d3web.shared.AbnormalityInterval;
 import de.d3web.shared.AbstractAbnormality;
 

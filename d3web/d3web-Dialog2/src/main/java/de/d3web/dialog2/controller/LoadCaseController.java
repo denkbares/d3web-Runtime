@@ -27,8 +27,8 @@ import org.apache.myfaces.component.html.ext.HtmlDataTable;
 
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.IMetaData;
-import de.d3web.core.terminology.info.DCElement;
-import de.d3web.core.terminology.info.Property;
+import de.d3web.core.knowledge.terminology.info.DCElement;
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.dialog2.WebDialog;
 import de.d3web.dialog2.basics.knowledge.CaseManager;
 import de.d3web.dialog2.basics.knowledge.CaseObjectDescriptor;

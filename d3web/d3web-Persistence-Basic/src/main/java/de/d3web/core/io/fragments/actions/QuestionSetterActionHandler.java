@@ -32,12 +32,12 @@ import org.w3c.dom.NodeList;
 import de.d3web.abstraction.ActionAddValue;
 import de.d3web.abstraction.ActionQuestionSetter;
 import de.d3web.abstraction.ActionSetValue;
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.Question;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.Question;
 /**
  * Handels the two default successors ActionAddValue and ActionSetValue of ActionQuestionSetter.
  * Other successors must have their own FragementHandler with a higher priority

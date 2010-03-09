@@ -24,7 +24,7 @@
  */
 package de.d3web.caserepository.addons.train.findings;
 
-import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Diagnosis;
 
 /**
  * DiagnosisRefRelation

@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import de.d3web.core.TerminologyObject;
+import de.d3web.core.knowledge.TerminologyObject;
 
 /**
  * This class handles a dynamic set of {@link FactAggregator}s.

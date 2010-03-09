@@ -29,10 +29,10 @@ import java.util.Map;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.XPSCaseObject;
-import de.d3web.core.terminology.QContainer;
 import de.d3web.diaFlux.inference.FluxSolver;
 
 /**

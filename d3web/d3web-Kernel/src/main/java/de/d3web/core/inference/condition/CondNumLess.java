@@ -20,9 +20,9 @@
 
 package de.d3web.core.inference.condition;
 
+import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerNum;
-import de.d3web.core.terminology.QuestionNum;
 /**
  * Condition for numerical questions, where the value
  * has to be less than a given value (Double value).

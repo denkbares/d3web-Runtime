@@ -30,7 +30,6 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.condition.AbstractCondition;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondDState;
@@ -46,14 +45,15 @@ import de.d3web.core.inference.condition.CondTextContains;
 import de.d3web.core.inference.condition.CondTextEqual;
 import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.inference.condition.TerminalCondition;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.IDObject;
+import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionMC;
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.values.AnswerNo;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.AnswerYes;
-import de.d3web.core.terminology.IDObject;
-import de.d3web.core.terminology.NamedObject;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.QuestionMC;
-import de.d3web.core.terminology.info.Property;
 import de.d3web.kernel.verbalizer.VerbalizationManager.RenderingFormat;
 
 /**

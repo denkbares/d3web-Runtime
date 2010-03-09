@@ -22,7 +22,7 @@ package de.d3web.core.session.blackboard;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.terminology.QASet;
+import de.d3web.core.knowledge.terminology.QASet;
 /**
  * Stores the dynamic, user specific values for an QASet
  * object. It corresponds to the static QASet object.<br>

@@ -23,7 +23,7 @@
  */
 package de.d3web.core.session.blackboard;
 
-import de.d3web.core.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
 
 /**
  * Stores the dynamic, user specific values for an QuestionChoice

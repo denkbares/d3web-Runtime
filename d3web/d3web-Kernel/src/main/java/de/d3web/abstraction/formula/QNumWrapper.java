@@ -22,10 +22,10 @@ package de.d3web.abstraction.formula;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerNum;
-import de.d3web.core.terminology.QuestionNum;
 
 /**
  * Delegate-Pattern: Wraps a QuestionNum to use it as FormulaElement. Creation date: (25.07.2001 15:51:18)
@@ -70,7 +70,7 @@ public class QNumWrapper extends FormulaNumberPrimitive {
 	 * 
 	 * @return the wrapped QuestionNum
 	 */
-	public de.d3web.core.terminology.QuestionNum getQuestion() {
+	public de.d3web.core.knowledge.terminology.QuestionNum getQuestion() {
 		return (QuestionNum) value;
 	}
 

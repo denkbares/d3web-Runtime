@@ -1,7 +1,7 @@
 package de.d3web.scoring;
 
+import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.Value;
-import de.d3web.core.terminology.DiagnosisState;
 
 public class HeuristicRating extends DiagnosisState {
 

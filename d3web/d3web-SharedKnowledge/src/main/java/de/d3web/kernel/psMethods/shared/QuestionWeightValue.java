@@ -20,7 +20,7 @@
 
 package de.d3web.kernel.psMethods.shared;
 
-import de.d3web.core.terminology.Question;
+import de.d3web.core.knowledge.terminology.Question;
 
 /**
  * Creation date: (18.10.2001 18:43:28)
@@ -32,7 +32,7 @@ public class QuestionWeightValue implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = -2848772598764003299L;
 
-	private de.d3web.core.terminology.Question question = null;
+	private de.d3web.core.knowledge.terminology.Question question = null;
 
 	private int value = 0;
 

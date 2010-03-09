@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Set;
 
 import de.d3web.core.inference.Rule;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.Question;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.indication.ActionSuppressAnswer;
 /**
  * Stores the dynamic, user specific values for an Question object. It

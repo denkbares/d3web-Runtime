@@ -28,9 +28,9 @@ package de.d3web.explain;
 
 import java.util.Collection;
 
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.QASet;
 import de.d3web.explain.eNodes.ENode;
 import de.d3web.explain.eNodes.values.DiagnosticValue;
 import de.d3web.explain.eNodes.values.QState;

@@ -30,13 +30,13 @@ import javax.faces.event.ActionEvent;
 import org.apache.log4j.Logger;
 import org.apache.myfaces.component.html.ext.HtmlInputHidden;
 
+import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.interviewmanager.DialogController;
 import de.d3web.core.session.interviewmanager.MQDialogController;
-import de.d3web.core.terminology.NamedObject;
-import de.d3web.core.terminology.QASet;
-import de.d3web.core.terminology.QContainer;
-import de.d3web.core.terminology.Question;
 import de.d3web.dialog2.basics.settings.DialogSettings;
 import de.d3web.dialog2.render.QuestionsRendererUtils;
 import de.d3web.dialog2.util.DialogUtils;

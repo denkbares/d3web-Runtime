@@ -29,16 +29,16 @@ import java.util.logging.Logger;
 
 import org.xml.sax.Attributes;
 
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionDate;
+import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.knowledge.terminology.QuestionText;
+import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.session.values.AnswerNo;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.AnswerYes;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.QuestionChoice;
-import de.d3web.core.terminology.QuestionDate;
-import de.d3web.core.terminology.QuestionNum;
-import de.d3web.core.terminology.QuestionText;
-import de.d3web.core.terminology.QuestionYN;
 
 /**
  * @author bates

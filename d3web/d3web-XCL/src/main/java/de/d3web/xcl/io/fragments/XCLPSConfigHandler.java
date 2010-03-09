@@ -25,10 +25,10 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.utilities.XMLUtil;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.plugin.io.fragments.DefaultPSConfigHandler;
 import de.d3web.xcl.ScoreAlgorithm;
 import de.d3web.xcl.inference.PSMethodXCL;

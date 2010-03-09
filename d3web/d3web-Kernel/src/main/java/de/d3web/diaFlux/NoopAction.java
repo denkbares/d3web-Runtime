@@ -25,8 +25,8 @@ import java.util.List;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.RuleAction;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.NamedObject;
 import de.d3web.diaFlux.inference.FluxSolver;
 
 /**

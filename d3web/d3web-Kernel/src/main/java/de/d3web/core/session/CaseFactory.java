@@ -26,8 +26,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QASet.Reason;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.interviewmanager.DefaultQASetManagerFactory;
 import de.d3web.core.session.interviewmanager.DialogProxy;
@@ -35,10 +39,6 @@ import de.d3web.core.session.interviewmanager.MQDialogController;
 import de.d3web.core.session.interviewmanager.OQDialogController;
 import de.d3web.core.session.interviewmanager.QASetManager;
 import de.d3web.core.session.interviewmanager.QASetManagerFactory;
-import de.d3web.core.terminology.QASet;
-import de.d3web.core.terminology.QContainer;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.QASet.Reason;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**

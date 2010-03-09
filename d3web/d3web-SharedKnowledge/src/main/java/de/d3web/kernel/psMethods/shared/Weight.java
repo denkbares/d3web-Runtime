@@ -27,7 +27,7 @@ import java.util.List;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.shared.PSMethodShared;
 /**
  * Represents the weight of a symptom

@@ -41,10 +41,10 @@ import de.d3web.caserepository.addons.train.Region;
 import de.d3web.caserepository.dom.AdditionalCaseObjectCreator;
 import de.d3web.caserepository.dom.CaseObjectCreator;
 import de.d3web.caserepository.dom.ChildrenIterator;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.QuestionChoice;
-import de.d3web.core.terminology.QuestionNum;
-import de.d3web.core.terminology.QuestionText;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.knowledge.terminology.QuestionText;
 
 
 /**

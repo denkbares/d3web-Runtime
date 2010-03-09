@@ -20,8 +20,8 @@
 
 package de.d3web.caseGeneration;
 
+import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.Diagnosis;
 import de.d3web.empiricalTesting.Rating;
 import de.d3web.empiricalTesting.ScoreRating;
 import de.d3web.scoring.inference.PSMethodHeuristic;

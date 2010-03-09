@@ -29,11 +29,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import de.d3web.abstraction.inference.PSMethodQuestionSetter;
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.info.Num2ChoiceSchema;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 /**
  * Handler for Num2ChoiceSchemas
  * 

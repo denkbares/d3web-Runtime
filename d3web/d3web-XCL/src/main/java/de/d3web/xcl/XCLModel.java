@@ -29,18 +29,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.IEventSource;
 import de.d3web.core.session.KBOEventListener;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.XPSCaseObject;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.DiagnosisState;
-import de.d3web.core.terminology.NamedObject;
 import de.d3web.xcl.inference.PSMethodXCL;
 
 public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLModel>, CaseObjectSource {

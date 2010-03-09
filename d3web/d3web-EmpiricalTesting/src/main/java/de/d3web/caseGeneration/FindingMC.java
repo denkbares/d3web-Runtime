@@ -3,11 +3,11 @@ package de.d3web.caseGeneration;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.d3web.core.KnowledgeBase;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.session.values.AnswerChoice;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.QuestionMC;
 
 /**
  * A FindingMC encapsulates a QuestionMC and an AnswerChoice[].

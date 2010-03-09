@@ -1,7 +1,7 @@
 package de.d3web.core.session.blackboard;
 
-import de.d3web.core.TerminologyObject;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Value;
 
 public class DefaultFact implements Fact {

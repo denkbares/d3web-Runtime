@@ -23,11 +23,11 @@ package de.d3web.core.session.interviewmanager;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.KnowledgeBase;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.XPSCaseObject;
-import de.d3web.core.terminology.Question;
 
 /**
  * This type of Question will be returned by a moveTo... method of
@@ -101,7 +101,7 @@ public abstract class ExceptionQuestion extends Question {
      * 
      * @return null
      */
-    public de.d3web.core.terminology.Answer getAnswer(Object value) {
+    public de.d3web.core.knowledge.terminology.Answer getAnswer(Object value) {
 	return null;
     }
 

@@ -19,7 +19,7 @@
 package de.d3web.costBenefit.inference;
 import java.util.List;
 
-import de.d3web.core.terminology.Question;
+import de.d3web.core.knowledge.terminology.Question;
 
 /**
  * A ValueTransition contains a question and a List of ConditionalValueSetters,

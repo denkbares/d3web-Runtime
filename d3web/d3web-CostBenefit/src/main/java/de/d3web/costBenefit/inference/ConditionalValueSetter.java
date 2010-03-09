@@ -18,7 +18,7 @@
  */
 package de.d3web.costBenefit.inference;
 import de.d3web.core.inference.condition.AbstractCondition;
-import de.d3web.core.terminology.Answer;
+import de.d3web.core.knowledge.terminology.Answer;
 
 /**
  * This class contains a condition and an answer. If the condition is true and no condition

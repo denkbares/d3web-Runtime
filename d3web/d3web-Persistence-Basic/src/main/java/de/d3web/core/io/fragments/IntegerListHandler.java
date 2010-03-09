@@ -27,9 +27,9 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.io.fragments.FragmentHandler;
-import de.d3web.core.terminology.info.IntegerList;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.info.IntegerList;
 /**
  * Fragment Handler for IntegerLists
  *

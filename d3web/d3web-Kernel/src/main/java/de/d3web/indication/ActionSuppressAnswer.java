@@ -26,10 +26,10 @@ import java.util.List;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleAction;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.values.AnswerChoice;
-import de.d3web.core.terminology.QuestionChoice;
 import de.d3web.core.utilities.Utils;
 import de.d3web.indication.inference.PSMethodSuppressAnswer;
 /**

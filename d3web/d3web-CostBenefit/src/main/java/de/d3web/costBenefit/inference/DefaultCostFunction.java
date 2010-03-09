@@ -18,9 +18,9 @@
  */
 package de.d3web.costBenefit.inference;
 
+import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.QContainer;
-import de.d3web.core.terminology.info.Property;
 
 /**
  * The DefaultCostFunction returns the static costs of a QContainer. The actual

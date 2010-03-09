@@ -23,9 +23,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
-import de.d3web.core.terminology.QuestionMC;
 /**
  * FormulaElement term that can count the answers of a QuestionMC
  * Creation date: (14.08.2000 16:33:00)

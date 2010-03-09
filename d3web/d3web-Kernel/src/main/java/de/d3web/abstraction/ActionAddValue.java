@@ -30,6 +30,10 @@ import de.d3web.abstraction.inference.PSMethodQuestionSetter;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleAction;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.session.SymptomValue;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseQuestion;
@@ -38,10 +42,6 @@ import de.d3web.core.session.values.AnswerDate;
 import de.d3web.core.session.values.AnswerNum;
 import de.d3web.core.session.values.EvaluatableAnswerDateValue;
 import de.d3web.core.session.values.EvaluatableAnswerNumValue;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.QASet;
-import de.d3web.core.terminology.QuestionChoice;
-import de.d3web.core.terminology.QuestionOC;
 
 /**
  * Adds a specified value to the value of a specified question.

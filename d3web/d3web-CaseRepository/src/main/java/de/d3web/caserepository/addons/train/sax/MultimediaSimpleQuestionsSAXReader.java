@@ -35,7 +35,7 @@ import de.d3web.caserepository.addons.train.SimpleQuestions;
 import de.d3web.caserepository.addons.train.SimpleQuestion;
 import de.d3web.caserepository.sax.AbstractTagReader;
 import de.d3web.core.io.utilities.XMLTools;
-import de.d3web.core.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.QContainer;
 
 /**
  * 22.09.2003 18:09:45

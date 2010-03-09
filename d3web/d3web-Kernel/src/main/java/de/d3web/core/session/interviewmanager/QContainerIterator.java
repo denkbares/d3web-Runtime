@@ -26,10 +26,10 @@ import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.QASet;
-import de.d3web.core.terminology.QContainer;
-import de.d3web.core.terminology.Question;
 import de.d3web.indication.ActionNextQASet;
 
 /**

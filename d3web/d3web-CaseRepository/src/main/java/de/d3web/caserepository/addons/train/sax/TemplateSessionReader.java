@@ -36,7 +36,7 @@ import de.d3web.caserepository.CaseObjectImpl;
 import de.d3web.caserepository.addons.ITemplateSession;
 import de.d3web.caserepository.addons.train.TemplateSession;
 import de.d3web.caserepository.sax.AbstractTagReader;
-import de.d3web.core.KnowledgeBase;
+import de.d3web.core.knowledge.KnowledgeBase;
 
 /**
  * 21.10.2003 17:29:59

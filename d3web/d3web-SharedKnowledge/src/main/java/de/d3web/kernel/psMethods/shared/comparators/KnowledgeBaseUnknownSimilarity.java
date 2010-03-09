@@ -34,7 +34,7 @@ public class KnowledgeBaseUnknownSimilarity implements KnowledgeSlice{
 	private String id = null;
 
 	private double similarity = 0.1;
-	private de.d3web.core.KnowledgeBase knowledgeBase = null;
+	private de.d3web.core.knowledge.KnowledgeBase knowledgeBase = null;
 
 
 
@@ -63,7 +63,7 @@ public java.lang.String getId() {
  * Creation date: (19.02.2002 13:52:41)
  * @return de.d3web.kernel.domainModel.KnowledgeBase
  */
-public de.d3web.core.KnowledgeBase getKnowledgeBase() {
+public de.d3web.core.knowledge.KnowledgeBase getKnowledgeBase() {
 	return knowledgeBase;
 }
 
@@ -118,7 +118,7 @@ public void setId(String _id) {
  * @param newKnowledgeBase de.d3web.kernel.domainModel.KnowledgeBase
  */
 public void setKnowledgeBase(
-	de.d3web.core.KnowledgeBase newKnowledgeBase) {
+	de.d3web.core.knowledge.KnowledgeBase newKnowledgeBase) {
 
 	knowledgeBase = newKnowledgeBase;
 

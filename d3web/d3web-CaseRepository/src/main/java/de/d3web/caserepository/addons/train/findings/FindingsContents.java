@@ -33,7 +33,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import de.d3web.caserepository.addons.IContents;
-import de.d3web.core.terminology.QASet;
+import de.d3web.core.knowledge.terminology.QASet;
 
 /**
  * 24.09.2003 11:16:43
@@ -47,7 +47,7 @@ public class FindingsContents implements IContents {
 	 * stores a single new CaseParagraph containing only the text, but no
 	 * additional information.
 	 * 
-	 * @see de.d3web.caserepository.addons.IContents#setContent(de.d3web.core.terminology.QASet,
+	 * @see de.d3web.caserepository.addons.IContents#setContent(de.d3web.core.knowledge.terminology.QASet,
 	 *      java.lang.String)
 	 */
 	public void setContent(QASet q, String content) {
@@ -94,7 +94,7 @@ public class FindingsContents implements IContents {
 	 * This implements the getContent method by combining all the textual
 	 * information distributed all over the paragraphs.
 	 * 
-	 * @see de.d3web.caserepository.addons.IContents#getContent(de.d3web.core.terminology.QASet)
+	 * @see de.d3web.caserepository.addons.IContents#getContent(de.d3web.core.knowledge.terminology.QASet)
 	 */
 	public String getContent(QASet q) {
 		StringBuffer sb = new StringBuffer();

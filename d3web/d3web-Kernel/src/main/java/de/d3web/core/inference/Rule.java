@@ -26,12 +26,12 @@ import de.d3web.abstraction.ActionQuestionSetter;
 import de.d3web.core.inference.condition.AbstractCondition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.knowledge.terminology.IDObject;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseRuleComplex;
 import de.d3web.core.session.blackboard.XPSCaseObject;
-import de.d3web.core.terminology.IDObject;
-import de.d3web.core.terminology.NamedObject;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 /**
  * Abstract super class for all rules. <BR>

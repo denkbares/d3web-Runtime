@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.NamedObject;
 /**
  * Abstract condition for all non-terminal conditions. A non-terminal condition
  * is a container for other terminal or non-terminal sub-conditions.

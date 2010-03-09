@@ -34,10 +34,10 @@ import javax.faces.render.Renderer;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.Question;
 import de.d3web.dialog2.component.html.UIXCLPage;
 import de.d3web.dialog2.util.DialogUtils;
 import de.d3web.kernel.verbalizer.VerbalizationManager;

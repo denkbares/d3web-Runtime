@@ -27,7 +27,7 @@ import java.util.Vector;
 
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.dom.CaseObjectListCreator;
-import de.d3web.core.terminology.info.DCElement;
+import de.d3web.core.knowledge.terminology.info.DCElement;
 /**
  * Default implementation of an XML-loader.
  * it does NO pre-filtering
@@ -38,7 +38,7 @@ public class DomXMLCaseLoader implements XMLCaseLoader {
 	private String xmlFile = null;
 	private URL xmlFileUrl = null;
 
-	private de.d3web.core.KnowledgeBase knowledgeBase = null;
+	private de.d3web.core.knowledge.KnowledgeBase knowledgeBase = null;
 
 	/**
 	 * DefaultXMLCaseLoader constructor comment.
@@ -76,7 +76,7 @@ public class DomXMLCaseLoader implements XMLCaseLoader {
 	 * Creation date: (22.08.01 00:45:06)
 	 * @param newKnowledgeBase de.d3web.kernel.domainModel.KnowledgeBase
 	 */
-	public void setKnowledgeBase(de.d3web.core.KnowledgeBase newKnowledgeBase) {
+	public void setKnowledgeBase(de.d3web.core.knowledge.KnowledgeBase newKnowledgeBase) {
 		knowledgeBase = newKnowledgeBase;
 	}
 

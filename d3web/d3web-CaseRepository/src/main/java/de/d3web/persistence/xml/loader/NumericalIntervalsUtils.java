@@ -22,7 +22,7 @@ package de.d3web.persistence.xml.loader;
 
 import org.w3c.dom.Node;
 
-import de.d3web.core.terminology.info.NumericalInterval;
+import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 
 /**
  * some utilities for XML-en- & decoding of NumericalIntervals

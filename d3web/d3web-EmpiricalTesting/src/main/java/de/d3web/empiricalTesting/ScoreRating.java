@@ -23,7 +23,7 @@ package de.d3web.empiricalTesting;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-import de.d3web.core.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.scoring.Score;
 
 public class ScoreRating implements Rating {

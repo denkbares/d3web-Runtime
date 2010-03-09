@@ -27,11 +27,11 @@ import java.util.List;
 import java.util.Map;
 
 import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.DiagnosisState;
-import de.d3web.core.terminology.NamedObject;
-import de.d3web.core.terminology.info.Property;
 import de.d3web.scoring.DiagnosisScore;
 import de.d3web.scoring.Score;
 

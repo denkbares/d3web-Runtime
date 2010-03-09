@@ -27,9 +27,9 @@ import java.util.List;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleAction;
+import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.session.D3WebCase;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.Diagnosis;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**

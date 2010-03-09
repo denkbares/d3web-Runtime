@@ -22,11 +22,11 @@ package de.d3web.core.inference.condition;
 import java.util.List;
 
 import de.d3web.core.inference.Rule;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerUnknown;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.NamedObject;
-import de.d3web.core.terminology.Question;
 
 /**
  * Abstract superclass to represent conditions, to be used

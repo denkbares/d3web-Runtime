@@ -35,12 +35,12 @@ import org.ajax4jsf.ajax.html.HtmlAjaxCommandLink;
 import org.apache.log4j.Logger;
 import org.apache.myfaces.component.html.ext.HtmlInputHidden;
 
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerUnknown;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.info.DCElement;
 import de.d3web.dialog2.basics.knowledge.CaseManager;
 import de.d3web.dialog2.component.html.UICompareCasePage;
 import de.d3web.dialog2.controller.CompareCaseController;

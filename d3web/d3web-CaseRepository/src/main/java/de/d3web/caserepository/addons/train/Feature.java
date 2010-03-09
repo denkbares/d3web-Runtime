@@ -26,12 +26,12 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import de.d3web.caserepository.XMLCodeGenerator;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerNum;
 import de.d3web.core.session.values.AnswerText;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.QASet;
-import de.d3web.core.terminology.QuestionNum;
 
 /**
  * @author: Christian Betz

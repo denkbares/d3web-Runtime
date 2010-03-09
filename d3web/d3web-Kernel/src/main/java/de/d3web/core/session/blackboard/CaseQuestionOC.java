@@ -19,8 +19,8 @@
  */
 
 package de.d3web.core.session.blackboard;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.QuestionOC;
 /**
  * Stores the dynamic, user specific values for an QuestionOC
  * object. It corresponds to the static QuestionOC object.<br>

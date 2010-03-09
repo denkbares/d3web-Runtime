@@ -11,8 +11,8 @@ import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.Difference;
 import org.custommonkey.xmlunit.XMLTestCase;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.io.tests.utils.Butil;
 import de.d3web.io.tests.utils.JarExtractor;
 import de.d3web.io.tests.utils.PersistenceHelper;

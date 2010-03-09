@@ -33,15 +33,15 @@ import de.d3web.caserepository.addons.ISimpleTextFUSs;
 import de.d3web.caserepository.addons.ITemplateSession;
 import de.d3web.caserepository.addons.ITherapyConfiguration;
 import de.d3web.config.ConfigContainer;
-import de.d3web.core.KnowledgeBase;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.DiagnosisState;
-import de.d3web.core.terminology.IDReference;
-import de.d3web.core.terminology.QASet;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.info.DCMarkedUp;
-import de.d3web.core.terminology.info.DCMarkup;
-import de.d3web.core.terminology.info.PropertiesContainer;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.IDReference;
+import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.info.DCMarkedUp;
+import de.d3web.core.knowledge.terminology.info.DCMarkup;
+import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 
 /**
  * Represents one case.

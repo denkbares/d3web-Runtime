@@ -30,7 +30,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.io.KnowledgeReader;
@@ -40,6 +39,7 @@ import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.KnowledgeSliceComparator;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
+import de.d3web.core.knowledge.KnowledgeBase;
 
 /**
  * This abstract class provides basic functions for rule handlers

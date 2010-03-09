@@ -23,7 +23,7 @@ package de.d3web.kernel.shared.tests;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import de.d3web.core.terminology.info.NumericalInterval;
+import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.kernel.psMethods.shared.Abnormality;
 import de.d3web.kernel.psMethods.shared.AbnormalityNum;
 public class AbnormalityNumTest extends TestCase {

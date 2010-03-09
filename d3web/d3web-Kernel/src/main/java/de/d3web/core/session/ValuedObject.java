@@ -19,7 +19,7 @@
  */
 
 package de.d3web.core.session;
-import de.d3web.core.terminology.IDReference;
+import de.d3web.core.knowledge.terminology.IDReference;
 
 /**
  * A ValuedObject is a knowledge base object that can have value

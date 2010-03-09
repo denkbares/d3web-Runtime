@@ -25,7 +25,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import de.d3web.core.io.fragments.DiagnosisHandler;
 import de.d3web.core.io.utilities.Util;
-import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.persistence.tests.utils.XMLTag;
 
 /**

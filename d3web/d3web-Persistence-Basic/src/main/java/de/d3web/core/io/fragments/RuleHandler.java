@@ -26,13 +26,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleAction;
 import de.d3web.core.inference.condition.AbstractCondition;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.manage.RuleFactory;
 /**
  * FragmentHandler for Rules

@@ -34,8 +34,8 @@ import de.d3web.caserepository.addons.train.findings.Finding;
 import de.d3web.caserepository.addons.train.findings.FindingsContents;
 import de.d3web.caserepository.addons.train.findings.Rating;
 import de.d3web.caserepository.sax.AbstractTagReader;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.QASet;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.QASet;
 
 /**
  * 22.09.2003 18:08:00

@@ -22,8 +22,8 @@ package de.d3web.shared;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.Question;
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.Question;
 
 public abstract class AbstractAbnormality implements KnowledgeSlice {
 
@@ -78,7 +78,7 @@ public abstract class AbstractAbnormality implements KnowledgeSlice {
 	 * Creation date: (06.08.2001 16:00:34)
 	 * @return de.d3web.kernel.domainModel.Question
 	 */
-	public de.d3web.core.terminology.Question getQuestion() {
+	public de.d3web.core.knowledge.terminology.Question getQuestion() {
 		return question;
 	}
 
@@ -88,7 +88,7 @@ public abstract class AbstractAbnormality implements KnowledgeSlice {
 	 * Creation date: (06.08.2001 16:00:34)
 	 * @param newQuestion de.d3web.kernel.domainModel.Question
 	 */
-	public void setQuestion(de.d3web.core.terminology.Question newQuestion) {
+	public void setQuestion(de.d3web.core.knowledge.terminology.Question newQuestion) {
 		if (question != null) {
 			question.removeKnowledge(
 				getProblemsolverContext(),

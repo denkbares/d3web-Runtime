@@ -35,8 +35,8 @@ import java.util.logging.Logger;
 
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.addons.IAppliedQSets;
-import de.d3web.core.terminology.QContainer;
-import de.d3web.core.terminology.Question;
+import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.Question;
 
 /**
  * 23.09.2003 15:21:29

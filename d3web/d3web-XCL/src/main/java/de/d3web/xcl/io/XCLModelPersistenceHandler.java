@@ -34,7 +34,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.condition.AbstractCondition;
 import de.d3web.core.io.KnowledgeReader;
@@ -43,8 +42,9 @@ import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.KnowledgeSliceComparator;
 import de.d3web.core.io.utilities.Util;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.manage.KnowledgeBaseManagement;
-import de.d3web.core.terminology.Diagnosis;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
 import de.d3web.xcl.inference.PSMethodXCL;

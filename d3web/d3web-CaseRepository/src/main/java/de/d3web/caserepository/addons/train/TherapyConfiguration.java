@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 
 import de.d3web.caserepository.XMLCodeGenerator;
 import de.d3web.caserepository.addons.ITherapyConfiguration;
-import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Diagnosis;
 
 /**
  * TherapyConfiguration (in ) de.d3web.caserepository.addons.train

@@ -22,9 +22,9 @@ package de.d3web.core.session.values;
 
 import java.util.List;
 
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.Answer;
-import de.d3web.core.terminology.QuestionChoice;
 
 /**
  * Answer (alternative) class for choice questions Creation date: (13.09.2000

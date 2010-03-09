@@ -21,7 +21,7 @@
 package de.d3web.kernel.psMethods.compareCase.comparators;
 import java.util.Collection;
 
-import de.d3web.core.terminology.Question;
+import de.d3web.core.knowledge.terminology.Question;
 
 /**
  * Class that describes a comparator result.

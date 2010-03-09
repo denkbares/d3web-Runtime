@@ -34,18 +34,18 @@ import javax.faces.context.ResponseWriter;
 
 import org.apache.log4j.Logger;
 
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.info.DCElement;
+import de.d3web.core.knowledge.terminology.info.DCMarkup;
+import de.d3web.core.knowledge.terminology.info.MMInfoObject;
+import de.d3web.core.knowledge.terminology.info.MMInfoStorage;
+import de.d3web.core.knowledge.terminology.info.MMInfoSubject;
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerUnknown;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.DiagnosisState;
-import de.d3web.core.terminology.NamedObject;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.info.DCElement;
-import de.d3web.core.terminology.info.DCMarkup;
-import de.d3web.core.terminology.info.MMInfoObject;
-import de.d3web.core.terminology.info.MMInfoStorage;
-import de.d3web.core.terminology.info.MMInfoSubject;
-import de.d3web.core.terminology.info.Property;
 import de.d3web.dialog2.basics.layout.MMInfo;
 import de.d3web.dialog2.basics.settings.ResourceRepository;
 import de.d3web.dialog2.util.DialogUtils;

@@ -22,11 +22,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.d3web.core.inference.Rule;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.XPSCaseObject;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.QContainer;
 import de.d3web.costBenefit.model.SearchModel;
 
 /**

@@ -20,9 +20,9 @@
 
 package de.d3web.core.inference.condition;
 
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerUnknown;
-import de.d3web.core.terminology.Question;
 
 /**
  * This condition checks, if an IDObject (e.g. Question) has a value and was 

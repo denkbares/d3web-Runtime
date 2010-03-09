@@ -24,7 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import org.xml.sax.Attributes;
 import de.d3web.caserepository.MetaDataImpl;
-import de.d3web.core.terminology.info.Property;
+import de.d3web.core.knowledge.terminology.info.Property;
 
 /**
  * @author bates

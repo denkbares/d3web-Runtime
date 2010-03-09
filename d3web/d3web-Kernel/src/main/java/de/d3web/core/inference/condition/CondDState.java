@@ -19,9 +19,9 @@
  */
 
 package de.d3web.core.inference.condition;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.DiagnosisState;
 
 /**
  * This condition checks, if a specified diagnosis is established or

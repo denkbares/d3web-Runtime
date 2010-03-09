@@ -18,8 +18,8 @@
  */
 package de.d3web.costBenefit.inference;
 
+import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.QContainer;
 
 /**
  * This interface provides a method to calculate the costs of a QContainer

@@ -25,7 +25,7 @@ package de.d3web.caserepository.addons.fus.internal;
 
 import java.util.Set;
 
-import de.d3web.core.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Diagnosis;
 
 
 /**

@@ -28,10 +28,10 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.d3web.core.KnowledgeBase;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.CostObject;
 import de.d3web.core.io.utilities.XMLUtil;
+import de.d3web.core.knowledge.KnowledgeBase;
 /**
  * Handels costs for the knowledge base 
  * @author Norman Brümmer, Markus Friedrich (denkbares GmbH)

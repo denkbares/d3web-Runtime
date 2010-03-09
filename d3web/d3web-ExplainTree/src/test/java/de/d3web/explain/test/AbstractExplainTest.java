@@ -27,9 +27,9 @@
 package de.d3web.explain.test;
 
 import junit.framework.TestCase;
-import de.d3web.core.KnowledgeBase;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.QASet;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.QASet;
 
 /**
  *

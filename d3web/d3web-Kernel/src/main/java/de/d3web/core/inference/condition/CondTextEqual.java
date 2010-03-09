@@ -20,9 +20,9 @@
 
 package de.d3web.core.inference.condition;
 
+import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerText;
-import de.d3web.core.terminology.QuestionText;
 /**
  * Condition for text questions, where the value
  * has to be equal to a given value (String value).

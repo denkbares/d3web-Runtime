@@ -41,15 +41,15 @@ import de.d3web.caserepository.addons.ITherapyConfiguration;
 import de.d3web.caserepository.addons.PSMethodAuthorSelected;
 import de.d3web.caserepository.addons.shared.AppliedQSets;
 import de.d3web.config.Config;
-import de.d3web.core.KnowledgeBase;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.DiagnosisState;
-import de.d3web.core.terminology.QASet;
-import de.d3web.core.terminology.Question;
-import de.d3web.core.terminology.info.DCElement;
-import de.d3web.core.terminology.info.DCMarkup;
-import de.d3web.core.terminology.info.Properties;
-import de.d3web.core.terminology.info.Property;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.info.DCElement;
+import de.d3web.core.knowledge.terminology.info.DCMarkup;
+import de.d3web.core.knowledge.terminology.info.Properties;
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**

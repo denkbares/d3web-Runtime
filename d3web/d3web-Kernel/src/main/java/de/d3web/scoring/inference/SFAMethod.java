@@ -24,10 +24,10 @@ import java.util.Collection;
 import java.util.List;
 
 import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.DiagnosisState;
-import de.d3web.core.terminology.info.Property;
 
 public class SFAMethod extends PSSubMethod{
 

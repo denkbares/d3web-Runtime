@@ -22,9 +22,9 @@ package de.d3web.scoring;
 
 import java.util.logging.Logger;
 
+import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.Value;
-import de.d3web.core.terminology.Diagnosis;
-import de.d3web.core.terminology.DiagnosisState;
 
 /**
  * Stores the score of a diagnosis in context to
