@@ -37,6 +37,7 @@ import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.session.CaseFactory;
 import de.d3web.core.session.XPSCase;
@@ -135,18 +136,10 @@ public class SequentialTestCase {
 		XPSCase thecase = CaseFactory.createXPSCase(kb);
 		
 		for (RatedTestCase rtc : ratedTestCases) {
+						
 			// Answer and Question setting in Case
 			for (Finding f : rtc.getFindings()) {
-				Object q = f.getQuestion();
-				List answers = new ArrayList();
-				
-				// Necessary for QuestionMC, otherwise only one answer can be given
-				if (q instanceof QuestionMC) {
-					answers.addAll(((QuestionMC) q).getValue(thecase));
-				}
-				
-				answers.add(f.getAnswer());
-				thecase.setValue((Question) q, answers.toArray());
+				setValues(thecase, f);
 			}
 			
 			// Check used Rating (StateRating or ScoreRating) in ExpectedSolutions	
@@ -172,6 +165,62 @@ public class SequentialTestCase {
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HHmm");
 			rtc.setTestingDate(df.format(new Date()));
 		}
+	}
+
+	/**
+	 * Sets the Answer of the Finding to all Questions which have
+	 * the same name as the Question of the Finding.
+	 * @param thecase the current XPSCase
+	 * @param f the current processed Finding
+	 */
+	private void setValues(XPSCase thecase, Finding f) {
+		
+		List<Question> questionsToAnswer = getAmbiguousQuestions(thecase, f);
+		
+		for (Question q : questionsToAnswer) {
+			List answers = new ArrayList();
+			
+			// Necessary for QuestionMC, otherwise only one answer can be given
+			if (q instanceof QuestionMC) {
+				answers.addAll(((QuestionMC) q).getValue(thecase));
+			}
+			
+			addAnswers(q, f.getAnswer(), answers);
+			thecase.setValue((Question) q, answers.toArray());
+		}
+		
+	}
+
+	/**
+	 * Adds all Answers of the Questions which have the same name
+	 * as the answer of the finding to the list of answers to be set.
+	 * @param q 
+	 * @param answer
+	 * @param answers
+	 */
+	private void addAnswers(Question q, Answer answer, List answers) {
+		if (q instanceof QuestionChoice) {
+			for (Answer a : ((QuestionChoice) q).getAllAlternatives())
+				if (a.getText().equals(answer.getText()))
+					answers.add(a);
+		} else {
+			answers.add(answer);
+		}
+	}
+
+	/**
+	 * Returns a List of Questions with the same Name.
+	 * @param thecase the current XPS Case
+	 * @param f the currently processed Finding
+	 * @return
+	 */
+	private List<Question> getAmbiguousQuestions(XPSCase thecase, Finding f) {
+		List<Question> ambiguousQuestions = new ArrayList<Question>();
+		for (Question q : thecase.getKnowledgeBase().getQuestions()) {
+			if (q.getText().equals(f.getQuestion().getText()))
+				ambiguousQuestions.add(q);
+		}
+		return ambiguousQuestions;
 	}
 
 	private void deriveSolutionsForPSMethod(XPSCase thecase, RatedTestCase rtc,
