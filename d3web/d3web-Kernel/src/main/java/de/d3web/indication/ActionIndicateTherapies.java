@@ -19,11 +19,11 @@
  */
 
 package de.d3web.indication;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.inference.MethodKind;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleAction;
 import de.d3web.core.knowledge.terminology.Diagnosis;
@@ -37,7 +37,9 @@ import de.d3web.indication.inference.PSMethodTherapyIndication;
  * @author Joachim Baumeister
  */
 public class ActionIndicateTherapies extends RuleAction {
-	private List therapies;
+	
+	private static final long serialVersionUID = -1883766652217433924L;
+	private List<Diagnosis> therapies;
 
 	public String toString() {
 		return "<RuleAction type=\"IndicateTherapies\">\n"
@@ -51,7 +53,7 @@ public class ActionIndicateTherapies extends RuleAction {
 	/**
 	 * @return all objects participating on the action. <BR>
 	 */
-	public List getTerminalObjects() {
+	public List<Diagnosis> getTerminalObjects() {
 		// This relies on a plain list of therapies.
 		return getTherapies();
 	}
@@ -85,41 +87,22 @@ public class ActionIndicateTherapies extends RuleAction {
 	/**
 	 * @return PSMethosHeuristic.class
 	 */
-	public Class getProblemsolverContext() {
+	public Class<? extends PSMethod> getProblemsolverContext() {
 		return PSMethodTherapyIndication.class;
 	}
 
 	/**
 	 * Inserts the corresponding rule as Knowledge to the given entities
 	 */
-	private void registerRuleWithEntities(List entities) {
-		if (entities != null) {
-			Iterator iter = entities.iterator();
-			while (iter.hasNext()) {
-				Diagnosis therapy = (Diagnosis) iter.next();
-				therapy.addKnowledge(
-					getProblemsolverContext(),
-					getCorrespondingRule(),
-					MethodKind.BACKWARD);
-			}
-		}
+	private void registerRuleWithEntities(List<Diagnosis> entities) {
+		Rule.insertInto(getCorrespondingRule(), entities, getProblemsolverContext(), MethodKind.BACKWARD);
 	}
 
 	/**
 	 * Removes the corresponding rule from the given entities
 	 */
-	private void deregisterRuleFromOldEntities(List entities) {
-
-		if (entities != null) {
-			Iterator iter = entities.iterator();
-			while (iter.hasNext()) {
-				Diagnosis therapy = (Diagnosis) iter.next();
-				therapy.removeKnowledge(
-					getProblemsolverContext(),
-					getCorrespondingRule(),
-					MethodKind.BACKWARD);
-			}
-		}
+	private void deregisterRuleFromOldEntities(List<Diagnosis> entities) {
+		Rule.removeFrom(getCorrespondingRule(), entities, getProblemsolverContext(), MethodKind.BACKWARD);
 	}
 
 	/**
@@ -162,7 +145,7 @@ public class ActionIndicateTherapies extends RuleAction {
 	/**
 	 * @return Returns the therapies.
 	 */
-	public List getTherapies() {
+	public List<Diagnosis> getTherapies() {
 		return therapies;
 	}
 
@@ -170,7 +153,7 @@ public class ActionIndicateTherapies extends RuleAction {
 	 * @param therapies
 	 *            The therapies to set.
 	 */
-	public void setTherapies(List newTherapies) {
+	public void setTherapies(List<Diagnosis> newTherapies) {
 		deregisterRuleFromOldEntities(therapies);
 		therapies = newTherapies;
 		registerRuleWithEntities(therapies);
@@ -179,7 +162,7 @@ public class ActionIndicateTherapies extends RuleAction {
 	public RuleAction copy() {
 		ActionIndicateTherapies a = new ActionIndicateTherapies();
 		a.setRule(getCorrespondingRule());
-		a.setTherapies(new LinkedList(getTherapies()));
+		a.setTherapies(new LinkedList<Diagnosis>(getTherapies()));
 		return a;
 	}
 	

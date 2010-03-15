@@ -150,8 +150,7 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 	
 		assertFalse("Deleted slice still mapped in '" + no.getText()
 				+ "', expected false : ", (no.getKnowledge(
-				PSMethodShared.class, PSMethodShared.SHARED_ABNORMALITY))
-				.contains(slice));
+				PSMethodShared.class, PSMethodShared.SHARED_ABNORMALITY))==slice);
 
 		List<?> all = (List<?>) qyn2.getAllKnowledge();
 		try {
@@ -211,8 +210,7 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		
 		assertFalse("Deleted slice still mapped in '" + no.getText()
 				+ "', expected false : ", (no.getKnowledge(
-				PSMethodShared.class, PSMethodShared.SHARED_LOCAL_WEIGHT))
-				.contains(slice));
+				PSMethodShared.class, PSMethodShared.SHARED_LOCAL_WEIGHT))==slice);
 
 		Collection<KnowledgeSlice> all = qyn2.getAllKnowledge();
 		try {
@@ -242,8 +240,7 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 
 		assertFalse("Deleted slice still mapped in '" + no.getText()
 				+ "', expected false : ", (no.getKnowledge(
-				PSMethodShared.class, PSMethodShared.SHARED_SIMILARITY))
-				.contains(slice));
+				PSMethodShared.class, PSMethodShared.SHARED_SIMILARITY))==slice);
 
 		Collection<KnowledgeSlice> all = qyn2.getAllKnowledge();
 		try {
@@ -273,8 +270,7 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		
 		assertFalse("Deleted slice still mapped in '" + no.getText()
 				+ "', expected false : ", (no.getKnowledge(
-				PSMethodShared.class, PSMethodShared.SHARED_WEIGHT))
-				.contains(slice));
+				PSMethodShared.class, PSMethodShared.SHARED_WEIGHT))==slice);
 
 		Collection<KnowledgeSlice> all = qyn2.getAllKnowledge();
 		try {

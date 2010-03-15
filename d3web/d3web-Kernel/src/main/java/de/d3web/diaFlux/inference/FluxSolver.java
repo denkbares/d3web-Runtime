@@ -33,6 +33,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.RuleSet;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.terminology.Diagnosis;
@@ -99,7 +100,7 @@ public class FluxSolver implements PSMethod {
 	
 	public boolean isFlowCase(XPSCase theCase) {
 		
-		List knowledge = (List) theCase.getKnowledgeBase().getKnowledge(FluxSolver.class, FluxSolver.DIAFLUX);
+		List<?> knowledge = (List<?>) theCase.getKnowledgeBase().getKnowledge(FluxSolver.class, FluxSolver.DIAFLUX);
 		if (knowledge == null)
 			return false;
 		
@@ -117,7 +118,7 @@ public class FluxSolver implements PSMethod {
 
 	public static FlowSet getFlowSet(XPSCase theCase) {
 		
-		List knowledge = (List) theCase.getKnowledgeBase().getKnowledge(FluxSolver.class, FluxSolver.DIAFLUX);
+		List<?> knowledge = (List<?>) theCase.getKnowledgeBase().getKnowledge(FluxSolver.class, FluxSolver.DIAFLUX);
 		
 		if (knowledge == null)
 			return null;
@@ -419,15 +420,11 @@ public class FluxSolver implements PSMethod {
 		for (PropagationEntry entry : changes) {
 			
 			NamedObject object = entry.getObject();
-			List<? extends KnowledgeSlice> knowledge = object.getKnowledge(FluxSolver.class, MethodKind.FORWARD);
-			
-			for (KnowledgeSlice slice : knowledge) {
-				
-				if (slice instanceof Rule) {
-					Rule rule = (Rule) slice;
-					
+			KnowledgeSlice knowledge = object.getKnowledge(FluxSolver.class, MethodKind.FORWARD);
+			if (knowledge!=null) {
+				RuleSet rs = (RuleSet) knowledge;
+				for (Rule rule : rs.getRules()) {
 					rule.check(theCase);
-					
 				}
 			}
 		}

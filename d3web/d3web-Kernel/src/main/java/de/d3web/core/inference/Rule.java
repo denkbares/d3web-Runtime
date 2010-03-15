@@ -19,10 +19,8 @@
  */
 
 package de.d3web.core.inference;
-import java.util.Iterator;
 import java.util.List;
 
-import de.d3web.abstraction.ActionQuestionSetter;
 import de.d3web.core.inference.condition.AbstractCondition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
@@ -42,7 +40,7 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  */
 public class Rule
 	extends IDObject
-	implements KnowledgeSlice, CaseObjectSource {
+	implements CaseObjectSource {
 
 	private static final long serialVersionUID = 1648330152712439470L;
 
@@ -75,7 +73,7 @@ public class Rule
 	 */
 	protected AbstractCondition diagnosisContext;
 
-	private Class problemsolverContext;
+	private Class<? extends PSMethod> problemsolverContext;
 
 	/**
 	  * The specified action the rule activates, if <it>condition</it> is true
@@ -365,41 +363,77 @@ public class Rule
 	 * @param psContext key for the specified knowledge map
 	 * @param kind key for the specified knowledge map
 	 * */
-	private static void removeFrom(
+	public static void removeFrom(
 		Rule r,
-		List namedObjects,
-		Class psContext,
+		List<? extends NamedObject> namedObjects,
+		Class<? extends PSMethod> psContext,
 		MethodKind kind) {
 		if (namedObjects != null) {
-			Iterator iter = namedObjects.iterator();
-			while (iter.hasNext()) {
-				NamedObject element = (NamedObject) iter.next();
-				element.removeKnowledge(psContext, r, kind);
+			for (NamedObject nob: namedObjects) {
+				removeFrom(r, psContext, kind, nob);
 			}
 		}
 	}
 
 	/**
-	 * Adds the specified rule from the knowledge map of the specified objects.
+	 * Removes the specified rule from the knowledge of the specified object
+	 * @param r specified rule
+	 * @param psContext Problemsolver
+	 * @param kind Methodkind
+	 * @param nob specified Object
+	 */
+	public static void removeFrom(Rule r, Class<? extends PSMethod> psContext, MethodKind kind, NamedObject nob) {
+		if (nob != null) {
+			KnowledgeSlice knowledge = nob.getKnowledge(psContext, kind);
+			if (knowledge!= null) {
+				RuleSet rs = (RuleSet) knowledge;
+				rs.removeRule(r);
+				if (rs.isEmpty()) {
+					nob.removeKnowledge(psContext, rs, kind);
+				}
+			}
+		}
+	}
+	
+	
+
+	/**
+	 * Adds the specified rule to the knowledge map of the specified objects.
 	 * @param namedObjects list of named objects, in which the rule should be added
 	 * @param psContext key for the specified knowledge map
 	 * @param kind key for the specified knowledge map
 	 * */
-	private static void insertInto(
+	public static void insertInto(
 		Rule r,
-		List namedObjects,
-		Class psContext,
+		List<? extends NamedObject> namedObjects,
+		Class<? extends PSMethod> psContext,
 		MethodKind kind) {
 		if (namedObjects != null) {
-			Iterator iter = namedObjects.iterator();
-			while (iter.hasNext()) {
-				NamedObject element = (NamedObject) iter.next();
-				if (element != null) {
-					element.addKnowledge(psContext, r, kind);
-				}
+			for (NamedObject nob: namedObjects) {
+				insertInto(r, psContext, kind, nob);
 			}
 		}
+	}
 
+	/**
+	 * Adds the specified rule to the knowledge map of the specified objects.
+	 * @param r specified rule
+	 * @param psContext Problemsolver
+	 * @param kind Methodkind
+	 * @param nob specified Object
+	 */
+	public static void insertInto(Rule r, Class<? extends PSMethod> psContext, MethodKind kind, NamedObject nob) {
+		if (nob!=null) {
+			KnowledgeSlice knowledge = nob.getKnowledge(psContext, kind);
+			if (knowledge!= null) {
+				RuleSet rs = (RuleSet) knowledge;
+				rs.addRule(r);
+			} else {
+				RuleSet rs = new RuleSet(psContext);
+				rs.addRule(r);
+				nob.addKnowledge(psContext, rs, kind);
+			}
+		}
 	}
 
 	/**
@@ -453,35 +487,18 @@ public class Rule
 
 	}
 
-	private void insertRuleIntoObjects(List objects, Class context) {
-		if (objects != null) {
-			Iterator i = objects.iterator();
-			while (i.hasNext()) {
-				((NamedObject) i.next()).addKnowledge(
-					context,
-					this,
-					MethodKind.FORWARD);
-			}
-		}
+	private void insertRuleIntoObjects(List<? extends NamedObject> objects, Class<? extends PSMethod> context) {
+		insertInto(this, objects, context, MethodKind.FORWARD);
 	}
 
-	private void insertRuleIntoObjects(List objects) {
+	private void insertRuleIntoObjects(List<? extends NamedObject> objects) {
 		insertRuleIntoObjects(objects, getProblemsolverContext());
 	}
-	private void removeRuleFromObjects(List objects, Class context) {
-		if (objects != null) {
-			Iterator i = objects.iterator();
-			while (i.hasNext()) {
-				((NamedObject) i.next()).removeKnowledge(
-					context,
-					this,
-					MethodKind.FORWARD);
-
-			}
-		}
+	private void removeRuleFromObjects(List<? extends NamedObject> objects, Class<? extends PSMethod> context) {
+		removeFrom(this, objects, context, MethodKind.FORWARD);
 	}
 
-	private void removeRuleFromObjects(List objects) {
+	private void removeRuleFromObjects(List<? extends NamedObject> objects) {
 		removeRuleFromObjects(objects, getProblemsolverContext());
 	}
 
@@ -507,7 +524,7 @@ public class Rule
 		((CaseRuleComplex) theCase.getCaseObject(this)).setFired(newFired);
 	}
 
-	public void setProblemsolverContext(java.lang.Class problemsolverContext) {
+	public void setProblemsolverContext(Class<? extends PSMethod> problemsolverContext) {
 		this.problemsolverContext = problemsolverContext;
 	}
 

@@ -22,7 +22,6 @@ package de.d3web.core.knowledge.terminology;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +55,8 @@ import de.d3web.core.session.XPSCase;
  */
 public abstract class NamedObject extends IDObject implements CaseObjectSource,
 		KnowledgeContainer, PropertiesContainer {
+
+	private static final long serialVersionUID = -3561319946758513307L;
 
 	private Properties properties;
 
@@ -97,7 +98,7 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	 * The map has to be transient, so that huge knowledge bases can be
 	 * serialized!
 	 */
-	private transient Map<Class, Map<MethodKind, List<KnowledgeSlice>>> knowledgeMap;
+	private transient Map<Class<? extends PSMethod>, Map<MethodKind, KnowledgeSlice>> knowledgeMap;
 
 	public static final int BEFORE = 1;
 
@@ -117,7 +118,7 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 
 	private void init() {
 		// unsynchronized version, allows null values
-		knowledgeMap = new HashMap<Class, Map<MethodKind, List<KnowledgeSlice>>>();
+		knowledgeMap = new HashMap<Class <? extends PSMethod>, Map<MethodKind, KnowledgeSlice>>();
 
 		children = new ArrayList<NamedObject>();
 		parents = new ArrayList<NamedObject>();
@@ -245,21 +246,6 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	 * Adds a new {@link KnowledgeSlice} instance to the 
 	 * knowledge storage of this {@link NamedObject} instance.
 	 * The knowledge is added to the given {@link PSMethod} 
-	 * context with {@link MethodKind}.FORWARD as default key.  
-	 * 
-	 * @param poblemsolver the {@link PSMethod} context of 
-	 *        the added knowledge
-	 * @param knowlegeSlice the piece of knowledge to be added
-	 */
-	public synchronized void addKnowledge(Class problemsolver,
-			KnowledgeSlice knowledgeSlice) {
-		addKnowledge(problemsolver, knowledgeSlice, MethodKind.FORWARD);
-	}
-
-	/**
-	 * Adds a new {@link KnowledgeSlice} instance to the 
-	 * knowledge storage of this {@link NamedObject} instance.
-	 * The knowledge is added to the given {@link PSMethod} 
 	 * context with the specified {@link MethodKind} as key.
 	 *   
 	 * @param poblemsolver the {@link PSMethod} context of 
@@ -267,39 +253,29 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	 * @param knowlegeSlice the piece of knowledge to be added
 	 * @param knowledgeContext The context, in which the knowledge acts
 	 */
-	public synchronized void addKnowledge(Class problemsolver,
+	public synchronized void addKnowledge(Class<? extends PSMethod> problemsolver,
 			KnowledgeSlice knowledgeSlice, MethodKind knowledgeContext) {
 		try {
-			List<KnowledgeSlice> knowledgeSlices;
 			/* make sure, that a storage for the problem-solver is available */
 			if (knowledgeMap.get(problemsolver) == null) {
 				// for rules (default) two types (FORWARD and BACKWARD) of
 				// knowledge are required
-				Map<MethodKind, List<KnowledgeSlice>> kinds = 
-					new HashMap<MethodKind, List<KnowledgeSlice>>(2);
+				Map<MethodKind, KnowledgeSlice> kinds = 
+					new HashMap<MethodKind, KnowledgeSlice>(2);
 				knowledgeMap.put(problemsolver, kinds);
 			}
-			Map<MethodKind, List<KnowledgeSlice>> storage = (knowledgeMap
+			Map<MethodKind, KnowledgeSlice> storage = (knowledgeMap
 					.get(problemsolver));
 
-			/* make sure, that a storage for the kind of knowledge is available */
-			if (storage.get(knowledgeContext) == null) {
-				knowledgeSlices = new ArrayList<KnowledgeSlice>();
-				storage.put(knowledgeContext, knowledgeSlices);
-			}
-
-			/* all right: now put that slice of knowledge in its slot */
-			List<KnowledgeSlice> slot = (List<KnowledgeSlice>) storage
-					.get(knowledgeContext);
-			if (!slot.contains(knowledgeSlice))
-				slot.add(knowledgeSlice);
-
+			storage.put(knowledgeContext, knowledgeSlice);
+			
 			if (getKnowledgeBase() != null) {
 				getKnowledgeBase().addKnowledge(problemsolver, knowledgeSlice,
 						knowledgeContext);
 			}
 
 		} catch (Exception e) {
+			//TODO MF: Remove catching Exception!
 			D3WebCase.strace(e + " occured in " + getClass() + ".addKnowledge("
 					+ problemsolver + "," + knowledgeSlice + ","
 					+ knowledgeContext + ")");
@@ -381,20 +357,6 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	}
 
 	/**
-	 * Returns the list of knowledge slices for a given problem-solver class.
-	 * Here, the default {@link MethodKind} 'MethodKind.FORWARD' is used.
-	 *
-	 * @param problemsolver
-	 *            the given problem-solver class, for which the knowledge should
-	 *            be retrieved
-	 * @return a (possibly empty) list of KnowledgeSlice elements that are used 
-	 *         by the given problem-solver in the context MethodKind.FORWARD 
-    */
-	public List<? extends KnowledgeSlice> getKnowledge(Class problemsolver) {
-		return getKnowledge(problemsolver, MethodKind.FORWARD);
-	}
-
-	/**
 	 * Returns the list of knowledge slices for a given problem-solver class
 	 * and the specified context of the problem-solving method ({@link MethodKind}).
 	 *
@@ -404,13 +366,13 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	 * @param kind the context of the knowledge (e.g. MethodKind.FORWARD 
 	 *        or MethodKind.BACKWARD)
 	 */
-	public List<? extends KnowledgeSlice> getKnowledge(Class problemsolver,
+	public KnowledgeSlice getKnowledge(Class<? extends PSMethod> problemsolver,
 			MethodKind kind) {
-		Map<MethodKind, List<KnowledgeSlice>> o = knowledgeMap.get(problemsolver);
+		Map<MethodKind, KnowledgeSlice> o = knowledgeMap.get(problemsolver);
 		if (o != null)
 			return o.get(kind);
 		else
-			return Collections.emptyList();
+			return null;
 	}
 
 	/**
@@ -510,7 +472,7 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	 * @param knowledgeSlice the element to be removed 
 	 * @param knowledgeContext the {@link MethodKind} key of the context
 	 */
-	public synchronized void removeKnowledge(Class problemsolver,
+	public synchronized void removeKnowledge(Class<? extends PSMethod> problemsolver,
 			KnowledgeSlice knowledgeSlice, MethodKind knowledgeContext) {
 		try {
 			removeLocalKnowledge(problemsolver, knowledgeSlice,
@@ -530,24 +492,15 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	}
 
 	/**
-	 * Returns all {@link KnowledgeSlice} instances contained the
+	 * Returns all {@link KnowledgeSlice} instances contained
 	 * in the knowledge storage of this object.
 	 * 
 	 * @return all {@link KnowledgeSlice} instances of this instance
 	 */
 	public Collection<KnowledgeSlice> getAllKnowledge() {
 		Collection<KnowledgeSlice> result = new ArrayList<KnowledgeSlice>();
-		for (Class problemsolverKeyClass : knowledgeMap.keySet()) {
-			Map<MethodKind, List<KnowledgeSlice>> map = knowledgeMap
-					.get(problemsolverKeyClass);
-			for (MethodKind methodKind : map.keySet()) {
-				List<KnowledgeSlice> list = map.get(methodKind);
-				if (list != null) {
-					for (KnowledgeSlice slice : list) {
-						result.add(slice);
-					}
-				}
-			}
+		for (Class<? extends PSMethod> problemsolverKeyClass : knowledgeMap.keySet()) {
+			result.addAll(knowledgeMap.get(problemsolverKeyClass).values());
 		}
 		return result;
 	}
@@ -561,15 +514,10 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	 */	
 	public Collection<KnowledgeSlice> getAllKnowledge(MethodKind methodKind) {
 		Collection<KnowledgeSlice> result = new ArrayList<KnowledgeSlice>();
-		for (Class problemsolverKeyClass : knowledgeMap.keySet()) {
-			Map<MethodKind, List<KnowledgeSlice>> map = knowledgeMap
-					.get(problemsolverKeyClass);
-			List<KnowledgeSlice> list = map.get(methodKind);
-
-			if (list != null) {
-				for (KnowledgeSlice slice : list) {
-					result.add(slice);
-				}
+		for (Class<? extends PSMethod> problemsolverKeyClass : knowledgeMap.keySet()) {
+			KnowledgeSlice knowledgeSlice = knowledgeMap.get(problemsolverKeyClass).get(methodKind);
+			if (knowledgeSlice!=null) {
+				result.add(knowledgeSlice);
 			}
 		}
 		return result;
@@ -585,15 +533,13 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	 */
 	public synchronized Collection<KnowledgeSlice> removeAllKnowledge() {
 		Collection<KnowledgeSlice> result = new ArrayList<KnowledgeSlice>();
-		for (Class problemsolverKeyClass : knowledgeMap.keySet()) {
-			Map<MethodKind, List<KnowledgeSlice>> map = knowledgeMap
+		for (Class<? extends PSMethod> problemsolverKeyClass : knowledgeMap.keySet()) {
+			Map<MethodKind, KnowledgeSlice> map = knowledgeMap
 					.get(problemsolverKeyClass);
 			for (MethodKind methodKind : new ArrayList<MethodKind>(map.keySet())) {
-				List<KnowledgeSlice> list = map.get(methodKind);
-				for (KnowledgeSlice slice : new ArrayList<KnowledgeSlice>(list)) {
-					removeKnowledge(problemsolverKeyClass, slice, methodKind);
-					result.add(slice);
-				}
+				KnowledgeSlice slice = map.get(methodKind);
+				removeKnowledge(problemsolverKeyClass, slice, methodKind);
+				result.add(slice);
 			}
 		}
 		return result;
@@ -611,7 +557,7 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	 * @param knowlegeSlice the {@link KnowledgeSlice} to be removed
 	 * @param knowledgeContext the {@link MethodKind} key of the knowledge
 	 */
-	private synchronized boolean removeLocalKnowledge(Class problemsolver,
+	private synchronized boolean removeLocalKnowledge(Class<? extends PSMethod> problemsolver,
 			KnowledgeSlice knowledgeSlice, MethodKind knowledgeContext) {
 		try {
 			// List knowledgeSlices;
@@ -621,22 +567,21 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 				return false;
 			}
 
-			Map<MethodKind, List<KnowledgeSlice>> storage = (knowledgeMap.get(problemsolver));
+			Map<MethodKind, KnowledgeSlice> storage = (knowledgeMap.get(problemsolver));
 
 			/* make sure, that a storage for the kind of knowledge is available */
 			if (storage.get(knowledgeContext) == null) {
 				return false;
 			}
-
-			/* all right: now put that slice of knowledge in its slot */
-			List<KnowledgeSlice> slot = (List<KnowledgeSlice>) storage.get(knowledgeContext);
-			if (slot.contains(knowledgeSlice)) {
-				while (slot.remove(knowledgeSlice));
+			//return if there is another knowledgeslice stored
+			if (storage.get(knowledgeContext)!=knowledgeSlice) {
+				return false;
+			} else {
+				storage.remove(knowledgeContext);
+				return true;
 			}
-			storage.put(knowledgeContext, slot);
-			return true;
-
 		} catch (Exception e) {
+			//TODO MF: remove catching Exception!
 			D3WebCase.strace(e + " occured in " + getClass()
 					+ ".removeLocalKnowledge(" + problemsolver + ","
 					+ knowledgeSlice + "," + knowledgeContext + ")");
@@ -757,30 +702,6 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 
 	public String toString() {
 		return getText();
-	}
-
-	/**
-	 * This method is necessary to serialize a knowledge base correctly
-	 * (knowledgeMap is transient!) <b>AND SHOULD BE USED FOR THAT PURPOSE ONLY!!!</b>
-	 * It is visible only within the package.
-	 * @author georg
-	 * 
-	 * @return the entire knowledge storage of this instance
-	 */
-	Map<Class, Map<MethodKind, List<KnowledgeSlice>>> getKnowledgeMap() {
-		return knowledgeMap;
-	}
-
-	/**
-	 * This method is necessary to de-serialize a knowlege base correctly
-	 * (knowledgeMap is transient!) <b>AND SHOULD BE USED FOR THAT PURPOSE ONLY!!!</b>
-	 * It is visible only within the package.
-	 * @author georg
-	 * 
-	 * @param the entire knowledge storage of this instance
-	 */
-	void setKnowledgeMap(Map<Class, Map<MethodKind, List<KnowledgeSlice>>> map) {
-		knowledgeMap = map;
 	}
 
 	/**

@@ -47,12 +47,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	private static final long serialVersionUID = 1068721270222432667L;
 
 	public final static MethodKind XCLMODEL = new MethodKind("XCLMODEL");
-	/**
-	 * MethodKind for backward referenced xclModels from the NamedObjects of the
-	 * Conditions of the contained relations
-	 */
-	public final static MethodKind XCL_CONTRIBUTED_MODELS = new MethodKind(
-			"XCL_CONTRIBUTED_MODELS");
+	
 
 	public static double defaultEstablishedThreshold = 0.8;
 	public static double defaultSuggestedThreshold = 0.3;
@@ -210,15 +205,20 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	}
 
 	public boolean addRelation(XCLRelation relation) {
-		for (NamedObject nob : relation.getConditionedFinding().getTerminalObjects()) {
-			nob.addKnowledge(PSMethodXCL.class, this, XCL_CONTRIBUTED_MODELS);
-		}
-		return addRelationTo(relation, relations);
+		return addRelation(relation, XCLRelationType.explains);
 	}
 
 	public boolean addRelation(XCLRelation relation, XCLRelationType type) {
 		for (NamedObject nob : relation.getConditionedFinding().getTerminalObjects()) {
-			nob.addKnowledge(PSMethodXCL.class, this, XCL_CONTRIBUTED_MODELS);
+			KnowledgeSlice knowledge = nob.getKnowledge(PSMethodXCL.class, XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
+			XCLContributedModelSet set = null;
+			if (knowledge==null) {
+				set = new XCLContributedModelSet();
+				nob.addKnowledge(PSMethodXCL.class, set, XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
+			} else {
+				set = (XCLContributedModelSet) knowledge;
+			}
+			set.addModel(this);
 		}
 		if (type.equals(XCLRelationType.explains))
 			return addRelationTo(relation, relations);
@@ -249,7 +249,14 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 
 	public void removeRelation(XCLRelation rel) {
 		for (NamedObject nob : rel.getConditionedFinding().getTerminalObjects()) {
-			nob.removeKnowledge(PSMethodXCL.class, this, XCL_CONTRIBUTED_MODELS);
+			KnowledgeSlice knowledge = nob.getKnowledge(PSMethodXCL.class, XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
+			if (knowledge!=null && knowledge instanceof XCLContributedModelSet) {
+				XCLContributedModelSet set = (XCLContributedModelSet) knowledge;
+				set.removeModel(this);
+				if (set.isEmpty()) {
+					nob.removeKnowledge(PSMethodXCL.class, set, XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
+				}
+			}
 		}
 		relations.remove(rel);
 		contradictingRelations.remove(rel);

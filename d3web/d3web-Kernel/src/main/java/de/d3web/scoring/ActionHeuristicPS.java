@@ -20,14 +20,16 @@
 
 package de.d3web.scoring;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
+import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.RuleSet;
 import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.D3WebCase;
 import de.d3web.core.session.XPSCase;
 import de.d3web.scoring.inference.PSMethodHeuristic;
@@ -39,6 +41,8 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  * @author Joachim Baumeister
  */
 public class ActionHeuristicPS extends RuleAction {
+	
+	private static final long serialVersionUID = -717940157732427270L;
 	private Diagnosis diagnosis;
 	private Score score;
 
@@ -59,8 +63,8 @@ public class ActionHeuristicPS extends RuleAction {
 	/**
 	 * @return all objects participating on the action.<BR>
 	 */
-	public List getTerminalObjects() {
-		List terminals = new ArrayList(1);
+	public List<? extends NamedObject> getTerminalObjects() {
+		List<Diagnosis> terminals = new ArrayList<Diagnosis>(1);
 		if (getDiagnosis() != null) {
 			terminals.add(getDiagnosis());
 		}
@@ -100,7 +104,7 @@ public class ActionHeuristicPS extends RuleAction {
 	/**
 	 * @return PSMethosHeuristic.class
 	 */
-	public Class getProblemsolverContext() {
+	public Class<? extends PSMethod> getProblemsolverContext() {
 		return PSMethodHeuristic.class;
 	}
 
@@ -115,24 +119,14 @@ public class ActionHeuristicPS extends RuleAction {
 	 * Inserts the corresponding rule as Knowledge to the given Diagnosis
 	 */
 	private void insertRuleIntoDiagnosis(Diagnosis diagnosis) {
-		if (diagnosis != null) {
-			diagnosis.addKnowledge(
-				getProblemsolverContext(),
-				getCorrespondingRule(),
-				MethodKind.BACKWARD);
-		}
+		Rule.insertInto(getCorrespondingRule(), getProblemsolverContext(), MethodKind.BACKWARD, diagnosis);
 	}
 
 	/**
 	 * Removes the corresponding rule from the given Diagnosis
 	 */
 	private void removeRuleFromOldDiagnosis(Diagnosis diagnosis) {
-		if (diagnosis != null) {
-			diagnosis.removeKnowledge(
-				getProblemsolverContext(),
-				getCorrespondingRule(),
-				MethodKind.BACKWARD);
-		}
+		Rule.insertInto(getCorrespondingRule(), getProblemsolverContext(), MethodKind.BACKWARD, diagnosis);
 	}
 
 	/**
@@ -158,18 +152,16 @@ public class ActionHeuristicPS extends RuleAction {
 	public void undo(XPSCase theCase) {
 		DiagnosisScore resultDS = null;
 		if (getScore().equals(Score.N7)) {
-			Iterator iter =
-				((Collection) getDiagnosis()
-					.getKnowledge(PSMethodHeuristic.class, MethodKind.BACKWARD))
-					.iterator();
-			resultDS =
-				new DiagnosisScore(getDiagnosis().getAprioriProbability());
-			while (iter.hasNext()) {
-				Rule rule = (Rule) iter.next();
-				if (rule.isUsed(theCase)) {
-					resultDS =
-						resultDS.add(
-							((ActionHeuristicPS) rule.getAction()).getScore());
+			KnowledgeSlice knowledge = getDiagnosis().getKnowledge(PSMethodHeuristic.class, MethodKind.BACKWARD);
+			resultDS =	new DiagnosisScore(getDiagnosis().getAprioriProbability());
+			if (knowledge!=null) {
+				RuleSet rs = (RuleSet) knowledge;
+				for (Rule r: rs.getRules()) {
+					if (r.isUsed(theCase)) {
+						resultDS =
+							resultDS.add(
+								((ActionHeuristicPS) r.getAction()).getScore());
+					}
 				}
 			}
 		} else {

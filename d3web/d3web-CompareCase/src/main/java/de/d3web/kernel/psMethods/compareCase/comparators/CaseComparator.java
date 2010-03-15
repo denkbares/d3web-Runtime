@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import de.d3web.caserepository.CaseObject;
+import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Question;
@@ -106,14 +107,13 @@ public class CaseComparator {
 			Question queryQuestion = (Question) queryQuestionIter.next();
 			QuestionComparator qcomp = getQuestionComparator(queryQuestion);
 			double weight = getWeight(queryCase, queryQuestion);
-			Collection queryAnswers = queryCase.getAnswers(queryQuestion);
-			Collection storedAnswers = storedCase.getAnswers(queryQuestion);
-
+			Collection<?> queryAnswers = queryCase.getAnswers(queryQuestion);
+			Collection<?> storedAnswers = storedCase.getAnswers(queryQuestion);
 			double abnormality = 1;
-			List abnorm = queryQuestion.getKnowledge(PSContextFinder.getInstance()
+			KnowledgeSlice abnorm = queryQuestion.getKnowledge(PSContextFinder.getInstance()
 					.findPSContext(Abnormality.class), PSMethodShared.SHARED_ABNORMALITY);
 			if (abnorm != null) {
-				abnormality = calcAbnormality((Abnormality) abnorm.get(0), storedAnswers);
+				abnormality = calcAbnormality((Abnormality) abnorm, storedAnswers);
 			}
 
 			if (!isUnknown(queryAnswers) || !isUnknown(storedAnswers)) {
@@ -309,10 +309,10 @@ public class CaseComparator {
 		double weight = getWeight(storedCase, question);
 		double abnormality = 1;
 		double weightedSimilarity = 0;
-		List abnorm = question.getKnowledge(PSContextFinder.getInstance().findPSContext(
+		KnowledgeSlice abnorm = question.getKnowledge(PSContextFinder.getInstance().findPSContext(
 				Abnormality.class), PSMethodShared.SHARED_ABNORMALITY);
 		if (abnorm != null) {
-			abnormality = calcAbnormality((Abnormality) abnorm.get(0), storedAnswers);
+			abnormality = calcAbnormality((Abnormality) abnorm, storedAnswers);
 		}
 
 		QuestionComparator qcomp = getQuestionComparator(question);
@@ -331,10 +331,10 @@ public class CaseComparator {
 		List queryAnswers = (List) queryQuestionAndAnswers[1];
 		List storedAnswers = new LinkedList((Collection) storedQuestionAndAnswers[1]);
 		double abnormality = 1;
-		List abnorm = question.getKnowledge(PSContextFinder.getInstance().findPSContext(
+		KnowledgeSlice abnorm = question.getKnowledge(PSContextFinder.getInstance().findPSContext(
 				Abnormality.class), PSMethodShared.SHARED_ABNORMALITY);
 		if (abnorm != null) {
-			abnormality = calcAbnormality((Abnormality) abnorm.get(0), storedAnswers);
+			abnormality = calcAbnormality((Abnormality) abnorm, storedAnswers);
 		}
 		int weight = getWeight(storedCase, question);
 		QuestionComparator qcomp = getQuestionComparator(question);

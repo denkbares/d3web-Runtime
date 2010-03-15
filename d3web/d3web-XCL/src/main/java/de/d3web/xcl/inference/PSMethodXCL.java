@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.Set;
 
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.StrategicSupport;
@@ -47,8 +46,10 @@ import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.shared.AbstractAbnormality;
+import de.d3web.shared.PSMethodShared;
 import de.d3web.xcl.DefaultScoreAlgorithm;
 import de.d3web.xcl.ScoreAlgorithm;
+import de.d3web.xcl.XCLContributedModelSet;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
 
@@ -65,12 +66,12 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 	
 
 	public DiagnosisState getState(XPSCase theCase, Diagnosis diagnosis) {
-		List<? extends KnowledgeSlice> models = diagnosis.getKnowledge(
+		KnowledgeSlice model = diagnosis.getKnowledge(
 				PSMethodXCL.class, XCLModel.XCLMODEL);
-		if (models == null || models.size() == 0)
+		if (model == null)
 			return DiagnosisState.UNCLEAR;
-		XCLModel model = (XCLModel) models.get(0);
-		return model.getState(theCase);
+		XCLModel xclmodel = (XCLModel) model;
+		return xclmodel.getState(theCase);
 	}
 
 	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
@@ -82,10 +83,11 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		Map<XCLModel, List<PropagationEntry>> modelsToUpdate = new HashMap<XCLModel, List<PropagationEntry>>();
 		for (PropagationEntry change : changes) {
 			NamedObject nob = change.getObject();
-			List<? extends KnowledgeSlice> models = nob.getKnowledge(
-					PSMethodXCL.class, XCLModel.XCL_CONTRIBUTED_MODELS);
-			if (models != null) {
-				for (KnowledgeSlice model : models) {
+			KnowledgeSlice ks = nob.getKnowledge(
+					PSMethodXCL.class, XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
+			if (ks != null) {
+				XCLContributedModelSet ms = (XCLContributedModelSet) ks;
+				for (XCLModel model : ms.getModels()) {
 					List<PropagationEntry> entries = modelsToUpdate.get(model);
 					if (entries == null) {
 						entries = new LinkedList<PropagationEntry>();
@@ -168,30 +170,14 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 
 	public AbstractAbnormality getAbnormalitySlice(Question question) {
 		try {
-			Class<?> context = (Class<?>) Class
-					.forName("de.d3web.shared.PSMethodShared");
-			MethodKind kind = (MethodKind) context.getField(
-					"SHARED_ABNORMALITY").get(null);
-			List<? extends KnowledgeSlice> knowledge = question.getKnowledge(
-					context, kind);
+			KnowledgeSlice knowledge = question.getKnowledge(PSMethodShared.class, PSMethodShared.SHARED_ABNORMALITY);
 			if (knowledge == null)
 				return null;
-			if (knowledge.size() == 0)
-				return null;
-			return (AbstractAbnormality) knowledge.get(0);
-		} catch (ClassNotFoundException e) {
-			throw new IllegalStateException(
-					"internal error accessing shared knowledge", e);
+			return (AbstractAbnormality) knowledge;
 		} catch (IllegalArgumentException e) {
 			throw new IllegalStateException(
 					"internal error accessing shared knowledge", e);
 		} catch (SecurityException e) {
-			throw new IllegalStateException(
-					"internal error accessing shared knowledge", e);
-		} catch (IllegalAccessException e) {
-			throw new IllegalStateException(
-					"internal error accessing shared knowledge", e);
-		} catch (NoSuchFieldException e) {
 			throw new IllegalStateException(
 					"internal error accessing shared knowledge", e);
 		}
@@ -203,13 +189,12 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		float totalweight = 0;
 		for (Diagnosis solution : solutions) {
 			Set<AbstractCondition> pot = new HashSet<AbstractCondition>();
-			List<? extends KnowledgeSlice> slices = solution.getKnowledge(PSMethodXCL.class,
+			KnowledgeSlice ks = solution.getKnowledge(PSMethodXCL.class,
 					XCLModel.XCLMODEL);
-			if (slices == null) continue;
-			for (KnowledgeSlice ks : slices) {
-				XCLModel model = (XCLModel) ks;
-				addRelationConditions(pot, qasets, model);
-			}
+			if (ks == null) continue;
+			XCLModel model = (XCLModel) ks;
+			addRelationConditions(pot, qasets, model);
+			
 			Float count = map.get(pot);
 			Number apriori = (Number) solution.getProperties().getProperty(Property.APRIORI);
 			float weight = (apriori == null) ? 1f : apriori.floatValue();
@@ -273,16 +258,14 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 			Collection<Diagnosis> solutions, XPSCase theCase) {
 		Set<Question> coveredSymptoms = new HashSet<Question>();
 		for (Diagnosis solution : solutions) {
-			List<? extends KnowledgeSlice> slices = solution.getKnowledge(
+			KnowledgeSlice ks = solution.getKnowledge(
 					PSMethodXCL.class, XCLModel.XCLMODEL);
-			if (slices == null)
+			if (ks == null)
 				continue;
-			for (KnowledgeSlice ks : slices) {
-				XCLModel model = (XCLModel) ks;
-				for (NamedObject nob : model.getCoveredSymptoms()) {
-					if (nob instanceof Question) {
-						coveredSymptoms.add((Question) nob);
-					}
+			XCLModel model = (XCLModel) ks;
+			for (NamedObject nob : model.getCoveredSymptoms()) {
+				if (nob instanceof Question) {
+					coveredSymptoms.add((Question) nob);
 				}
 			}
 		}

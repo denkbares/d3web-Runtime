@@ -20,13 +20,14 @@
 
 package de.d3web.indication.inference;
 import java.util.Collection;
-import java.util.List;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.inference.RuleSet;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.DiagnosisState.State;
@@ -82,14 +83,15 @@ public class PSMethodTherapyIndication extends PSMethodAdapter {
 	 */
 	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
 		for (PropagationEntry change : changes) {
-			List<? extends KnowledgeSlice> knowledgeSlices = change.getObject().getKnowledge(this.getClass());
+			KnowledgeSlice knowledgeSlices = change.getObject().getKnowledge(this.getClass(), MethodKind.FORWARD);
 			if (knowledgeSlices == null) return;
-			for (KnowledgeSlice slice : knowledgeSlices) {
+			RuleSet rs = (RuleSet) knowledgeSlices;
+			for (Rule rule: rs.getRules()) {
 				try {
-					Rule rule = (Rule) slice;
 					rule.check(theCase);
 				} 
 				catch (Exception e) {
+					//TODO MF: Don't catch exception!
 					Logger.getLogger(this.getClass().getName()).throwing(
 						this.getClass().getName(), "propagate", e);
 				}

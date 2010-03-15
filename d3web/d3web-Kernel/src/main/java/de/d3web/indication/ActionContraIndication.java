@@ -25,6 +25,7 @@ import java.util.List;
 
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleAction;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.XPSCase;
@@ -83,15 +84,7 @@ public class ActionContraIndication extends RuleAction {
 	 * QASets participating on the action.
 	 */
 	private void insertRuleIntoQASets(List<QASet> sets) {
-		if (getQASets() != null) {
-			Iterator<QASet> qaset = getQASets().iterator();
-			while (qaset.hasNext()) {
-				((QASet) qaset.next()).addKnowledge(
-					getProblemsolverContext(),
-					getCorrespondingRule(),
-					MethodKind.BACKWARD);
-			}
-		}
+		Rule.insertInto(getCorrespondingRule(), qasets, getProblemsolverContext(), MethodKind.BACKWARD);
 	}
 
 	/**
@@ -99,15 +92,7 @@ public class ActionContraIndication extends RuleAction {
 	 * QASets participating on the action.
 	 */
 	private void removeRuleFromOldQASets(List<QASet> qasets) {
-		if (getQASets() != null) {
-			Iterator<QASet> qaset = getQASets().iterator();
-			while (qaset.hasNext()) {
-				(qaset.next()).removeKnowledge(
-					getProblemsolverContext(),
-					getCorrespondingRule(),
-					MethodKind.BACKWARD);
-			}
-		}
+		Rule.removeFrom(getCorrespondingRule(), qasets, getProblemsolverContext(), MethodKind.BACKWARD);
 	}
 
 	/**

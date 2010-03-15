@@ -174,15 +174,12 @@ public class ENode {
 		Collection unrealized = new LinkedList();
 		Class context = PSMethodNextQASet.class;		//FIXME: Kontext berücksichtigen
 		
-		Collection allRules = ((QASet)getTarget()).getKnowledge(context, MethodKind.BACKWARD);
-		if (allRules != null) {
-			Iterator ruleIter = allRules.iterator();
-			while (ruleIter.hasNext()) {
-				KnowledgeSlice rule = (KnowledgeSlice) ruleIter.next();
-				if (!rule.isUsed(getFactory().getXPSCase())) {	//FIXME: right method "isUsed"?
-					unrealized.add(EReason.createReason(getFactory(), rule));
-				}
-			}	
+		KnowledgeSlice ks = ((QASet)getTarget()).getKnowledge(context, MethodKind.BACKWARD);
+		if (ks != null) {
+			KnowledgeSlice rule = (KnowledgeSlice) ks;
+			if (!rule.isUsed(getFactory().getXPSCase())) {	//FIXME: right method "isUsed"?
+				unrealized.add(EReason.createReason(getFactory(), rule));
+			}
 		}
 		return(unrealized);
 	}
@@ -191,31 +188,26 @@ public class ENode {
 		proReasons = new LinkedList();
 		contraReasons = new LinkedList();
 		unrealized = new LinkedList();
-		Class context = PSMethodHeuristic.class;		//FIXME: Kontext berücksichtigen
 
-		Collection backwardKnowledge = ((Diagnosis) getTarget()).getKnowledge(context, MethodKind.BACKWARD);
+		KnowledgeSlice backwardKnowledge = ((Diagnosis) getTarget()).getKnowledge(PSMethodHeuristic.class, MethodKind.BACKWARD);
 		if (backwardKnowledge == null) {
 			return;
 		}
-		
-		Iterator rules = backwardKnowledge.iterator();
-		while (rules.hasNext()) {
-			KnowledgeSlice rule = (KnowledgeSlice) rules.next();
-			if (rule.isUsed(getFactory().getXPSCase())) {	//FIXME: right method "isUsed"?
-				try {
-					if (((ActionHeuristicPS)((Rule)rule).getAction()).getScore().aPrioriIsPositive()) {
-						proReasons.add(EReason.createReason(getFactory(), rule));
-					} else {
-						contraReasons.add(EReason.createReason(getFactory(), rule));
-					}
-				} catch(ClassCastException ex) {
-				        System.err.println("Error - not a RuleComplex-Object");
-					ex.printStackTrace();
+		KnowledgeSlice rule = (KnowledgeSlice) backwardKnowledge;
+		if (rule.isUsed(getFactory().getXPSCase())) {	//FIXME: right method "isUsed"?
+			try {
+				if (((ActionHeuristicPS)((Rule)rule).getAction()).getScore().aPrioriIsPositive()) {
+					proReasons.add(EReason.createReason(getFactory(), rule));
+				} else {
+					contraReasons.add(EReason.createReason(getFactory(), rule));
 				}
-			} else {
-			        unrealized.add(EReason.createReason(getFactory(), rule));
+			} catch(ClassCastException ex) {
+			        System.err.println("Error - not a RuleComplex-Object");
+				ex.printStackTrace();
 			}
-		}
+		} else {
+		        unrealized.add(EReason.createReason(getFactory(), rule));
+		}	
 	}
 
 

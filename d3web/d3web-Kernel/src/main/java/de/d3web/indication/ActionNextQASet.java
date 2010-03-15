@@ -23,6 +23,8 @@ package de.d3web.indication;
 import java.util.List;
 
 import de.d3web.core.inference.MethodKind;
+import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleAction;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -37,6 +39,8 @@ import de.d3web.indication.inference.PSMethodNextQASet;
  * @author Christian Betz
  */
 public abstract class ActionNextQASet extends RuleAction {
+	
+	private static final long serialVersionUID = 8873284669648124113L;
 	private List<QASet> qasets;
 
 	/**
@@ -47,7 +51,7 @@ public abstract class ActionNextQASet extends RuleAction {
 				.getProblemsolverContext());
 	}
 
-	protected void doItWithContext(XPSCase theCase, Class context) {
+	protected void doItWithContext(XPSCase theCase, Class<? extends PSMethod> context) {
 		for (QASet nextQASet : getQASets()) {
 			nextQASet.activate(theCase, getCorrespondingRule(), context);
 
@@ -60,7 +64,7 @@ public abstract class ActionNextQASet extends RuleAction {
 	/**
 	 * @return PSMethodNextQASet.class
 	 */
-	public Class getProblemsolverContext() {
+	public Class<? extends PSMethod> getProblemsolverContext() {
 		return PSMethodNextQASet.class;
 	}
 
@@ -83,24 +87,14 @@ public abstract class ActionNextQASet extends RuleAction {
 	 * Inserts the corresponding rule as Knowledge to the given QASets
 	 */
 	private void insertRuleIntoQASets(List<QASet> theQasets) {
-		if (theQasets != null) {
-			for (QASet qaSet : theQasets) {
-				qaSet.addKnowledge(getProblemsolverContext(),
-						getCorrespondingRule(), MethodKind.BACKWARD);
-			}
-		}
+		Rule.insertInto(getCorrespondingRule(), theQasets, getProblemsolverContext(), MethodKind.BACKWARD);
 	}
 
 	/**
 	 * Removes the corresponding rule from the given QASets
 	 */
 	private void removeRuleFromOldQASets(List<QASet> theQasets) {
-		if (theQasets != null) {
-			for (QASet qaSet : theQasets) {
-				qaSet.removeKnowledge(getProblemsolverContext(),
-						getCorrespondingRule(), MethodKind.BACKWARD);
-			}
-		}
+		Rule.removeFrom(getCorrespondingRule(), theQasets, getProblemsolverContext(), MethodKind.BACKWARD);
 	}
 
 	/**

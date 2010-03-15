@@ -159,31 +159,29 @@ public class Node {
 		Map<Question, List<?>> expectedmap = new HashMap<Question, List<?>>();
 		for (QuestionOC q: questions) {
 			if (!answeredQuestions.contains(q)) {
-				List<? extends KnowledgeSlice> knowledge = q.getKnowledge(new Abnormality().getProblemsolverContext(), PSMethodShared.SHARED_ABNORMALITY);
-				if (knowledge==null) {
+				KnowledgeSlice ks = q.getKnowledge(new Abnormality().getProblemsolverContext(), PSMethodShared.SHARED_ABNORMALITY);
+				if (ks==null) {
 					if (set)
 						Logger.getLogger(this.getClass().getName()).throwing(
 								  this.getClass().getName(), "Fehler, kein Normalwert gesetzt: "+q, null);
 					continue;
 				}
-				for (KnowledgeSlice ks: knowledge) {
-					if (ks instanceof Abnormality) {
-						Abnormality abnormality = (Abnormality) ks;
-						List<Answer> alternatives = q.getAlternatives(testCase);
-						for (Answer a: alternatives) {
-							if (abnormality.getValue(a)==AbstractAbnormality.A0) {
-								if (set) {
-									setAnswer(testCase, q, a, undomap);
-								} else {
-									List<Answer> al = new LinkedList<Answer>();
-									al.add(a);
-									expectedmap.put(q, al);
-								}
-								break;
+				if (ks instanceof Abnormality) {
+					Abnormality abnormality = (Abnormality) ks;
+					List<Answer> alternatives = q.getAlternatives(testCase);
+					for (Answer a: alternatives) {
+						if (abnormality.getValue(a)==AbstractAbnormality.A0) {
+							if (set) {
+								setAnswer(testCase, q, a, undomap);
+							} else {
+								List<Answer> al = new LinkedList<Answer>();
+								al.add(a);
+								expectedmap.put(q, al);
 							}
+							break;
 						}
-						break;
 					}
+					break;
 				}
 			} else {
 				expectedmap.put(q, q.getValue(testCase));

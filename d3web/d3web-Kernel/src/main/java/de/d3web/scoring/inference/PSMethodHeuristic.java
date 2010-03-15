@@ -25,9 +25,11 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.inference.RuleSet;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
@@ -187,7 +189,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 		
 	    // If SFA: if a diagnosis is established, then finish the case 
 	    if ((isSFA(theCase)) && (finalSolutionIsEstablished(theCase))) {
-            theCase.finish(Rule.class);
+            theCase.finish(RuleSet.class);
             return;
 	    }
 
@@ -212,14 +214,15 @@ public class PSMethodHeuristic extends PSMethodAdapter {
      * @param nob
      */
     private void checkRulesFor(XPSCase theCase, NamedObject nob) {
-        List<? extends KnowledgeSlice> knowledgeSlices = nob.getKnowledge(this.getClass());
+        KnowledgeSlice knowledgeSlices = nob.getKnowledge(this.getClass(), MethodKind.FORWARD);
         if (knowledgeSlices != null) {
-            for (KnowledgeSlice slice : knowledgeSlices) {
+        	RuleSet rs = (RuleSet) knowledgeSlices;
+            for (Rule rule: rs.getRules()) {
                 try {
-                    Rule rule = (Rule) slice;
                     rule.check(theCase);
                 } 
                 catch (Exception e) {
+                	//TODO MF: Do not catch exceptions!
                     Logger.getLogger(this.getClass().getName()).throwing(
                             this.getClass().getName(), "propagate", e);
                 }
@@ -246,7 +249,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
             (oldEstablishedDiagnoses.containsAll(newEstalishedDiagnoses)) &&
             (newEstalishedDiagnoses.containsAll(oldEstablishedDiagnoses))) {
             // nothing has changed and a diagnosis is established => finishCase
-            theCase.finish(Rule.class);
+            theCase.finish(RuleSet.class);
         }
             
     }

@@ -22,6 +22,7 @@ package de.d3web.core.inference;
 
 import java.util.List;
 
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.XPSCase;
 
 /**
@@ -59,7 +60,7 @@ public abstract class RuleAction implements Cloneable, java.io.Serializable {
 	 * Needed from RuleComplex to manage dynamic references of 
 	 * knowledge maps.
 	 */
-	public abstract List getTerminalObjects();
+	public abstract List<? extends NamedObject> getTerminalObjects();
 
 
 	public abstract Class<? extends PSMethod> getProblemsolverContext();

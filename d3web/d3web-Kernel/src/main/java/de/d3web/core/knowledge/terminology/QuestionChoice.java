@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import de.d3web.abstraction.inference.PSMethodQuestionSetter;
+import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.XPSCase;
@@ -177,10 +178,10 @@ public abstract class QuestionChoice extends Question {
 	 * @return the Num2ChoiceSchema that has been set to this question, null, if no such schema exists.
 	 */
 	public Num2ChoiceSchema getSchemaForQuestion() {
-		Collection schemaCol =
+		KnowledgeSlice schemaCol =
 			getKnowledge(PSMethodQuestionSetter.class, PSMethodQuestionSetter.NUM2CHOICE_SCHEMA);
-		if ((schemaCol != null) && (!schemaCol.isEmpty())) {
-			return (Num2ChoiceSchema) schemaCol.toArray()[0];
+		if (schemaCol != null) {
+			return (Num2ChoiceSchema) schemaCol;
 		} else {
 			return null;
 		}

@@ -451,6 +451,22 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		}
 		return slices;
 	}
+	
+	/**
+	 * Get all knowledge slices contained in this knowledge base for the given
+	 * problem solver and method kins.
+	 * @param problemSolverContext problemsolver
+	 * @param kind MethodKind
+	 * @return a Collection containing the specified KnowledgeSlices
+	 */
+	public Collection<KnowledgeSlice> getAllKnowledgeSlicesFor(Class<? extends PSMethod> problemSolverContext, MethodKind kind) {
+		Map<MethodKind, List<KnowledgeSlice>> knowledge = knowledgeMap
+				.get(problemSolverContext);
+		if (knowledge != null) {
+			return knowledge.get(kind);
+		}
+		return new ArrayList<KnowledgeSlice>();
+	}
 
 	public Set<String> getCostIDs() {
 		return costVerbalization.keySet();

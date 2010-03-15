@@ -24,8 +24,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.inference.RuleSet;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -43,14 +47,14 @@ public class QContainerIterator {
 
 	private XPSCase theCase = null;
 
-	private Iterator childIter = null;
+	private Iterator<? extends NamedObject> childIter = null;
 
 	private Question currentQuestion = null;
 
 	private QContainer container = null;
-	private List flatList = null;
+	private List<QuestionModel> flatList = null;
 
-	private List tempQuestions = null;
+	private List<Question> tempQuestions = null;
 
 	/**
 	 * this class encapsulates a Question with the current case and an
@@ -122,39 +126,34 @@ public class QContainerIterator {
 	 * 
 	 * @return List of follow questions of q
 	 */
-	public static List createFollowList(XPSCase theCase, Question q) {
+	public static List<QASet> createFollowList(XPSCase theCase, Question q) {
 		// two-dimensional list: elements are terminal-object-lists of the
 		// different rules
-		List follow2d = new LinkedList();
+		List<List<QASet>> follow2d = new LinkedList<List<QASet>>();
 
 		try {
-			Iterator psmethod = theCase.getUsedPSMethods().iterator();
+			Iterator<? extends PSMethod> psmethod = theCase.getUsedPSMethods().iterator();
 			while (psmethod.hasNext()) {
 
 				PSMethod p = (PSMethod) psmethod.next();
 
-				List kslices = (q.getKnowledge(p.getClass()));
-				if (kslices != null) {
+				KnowledgeSlice kslices = q.getKnowledge(p.getClass(), MethodKind.FORWARD);
+				if (kslices != null && kslices instanceof RuleSet) {
+					RuleSet rs = (RuleSet) kslices;
+					for (Rule rule: rs.getRules()) {
 
-					Iterator kiter = kslices.iterator();
-
-					while (kiter.hasNext()) {
-						Object obj = kiter.next();
-
-						if ((obj instanceof Rule)
-								&& ((Rule) obj).getAction() instanceof ActionNextQASet) {
-							Rule rule = (Rule) obj;
-							Iterator termiter = rule.getCondition().getTerminalObjects().iterator();
+						if (rule.getAction() instanceof ActionNextQASet) {
+							Iterator<? extends NamedObject> termiter = rule.getCondition().getTerminalObjects().iterator();
 							while (termiter.hasNext()) {
 								if (termiter.next().equals(q)) {
 									// follows of the same action have to stay
 									// in the given order
-									List ruleFollows = new LinkedList();
+									List<QASet> ruleFollows = new LinkedList<QASet>();
 
-									Iterator qiter = ((ActionNextQASet) rule.getAction())
+									Iterator<QASet> qiter = ((ActionNextQASet) rule.getAction())
 											.getQASets().iterator();
 									while (qiter.hasNext()) {
-										Object o = qiter.next();
+										QASet o = qiter.next();
 										if ((o instanceof Question) && (!ruleFollows.contains(o))) {
 											ruleFollows.add(o);
 										}
@@ -170,6 +169,7 @@ public class QContainerIterator {
 				}
 			}
 		} catch (Exception ex) {
+			//TODO MF: Don't catch exception
 			Logger.getLogger(QContainerIterator.class.getName()).throwing(
 					QContainerIterator.class.getName(), "createFollowList", ex);
 		}
@@ -185,29 +185,29 @@ public class QContainerIterator {
 	 * rules-follow-lists) could have changed in order to obtain the arrangement
 	 * of the children of q.
 	 */
-	private static List getSortedFollows(List activeFollows2d, Question q) {
-		List result = new LinkedList();
-		List follows2d = new LinkedList(activeFollows2d);
+	private static List<QASet> getSortedFollows(List<List<QASet>> activeFollows2d, Question q) {
+		List<QASet> result = new LinkedList<QASet>();
+		List<List<QASet>> follows2d = new LinkedList<List<QASet>>(activeFollows2d);
 
 		// try to keep the order of q.getChildren-list
 		// (as measured by the first element of the rule-follow-lists)
-		Iterator childrenIter = q.getChildren().iterator();
+		Iterator<? extends NamedObject> childrenIter = q.getChildren().iterator();
 		while (childrenIter.hasNext()) {
 			QASet child = (QASet) childrenIter.next();
 
 			// iterate through rule-follow-lists, until a list is found which
 			// starts
 			// with the current child
-			Iterator follow2dIter = follows2d.iterator();
+			Iterator<List<QASet>> follow2dIter = follows2d.iterator();
 			while (follow2dIter.hasNext()) {
-				List ruleFollows = (List) follow2dIter.next();
+				List<QASet> ruleFollows = follow2dIter.next();
 				if (child.equals(ruleFollows.get(0))) {
 
 					// add all follow-qasets to the result unless they are
 					// already contained
-					Iterator ruleFollowIter = ruleFollows.iterator();
+					Iterator<QASet> ruleFollowIter = ruleFollows.iterator();
 					while (ruleFollowIter.hasNext()) {
-						QASet follow = (QASet) ruleFollowIter.next();
+						QASet follow = ruleFollowIter.next();
 						if (!result.contains(follow)) {
 							result.add(follow);
 						}
@@ -220,12 +220,12 @@ public class QContainerIterator {
 
 		// if there are some remaining rule-follow-lists, add their qasets in
 		// the end
-		Iterator follow2dIter = follows2d.iterator();
+		Iterator<List<QASet>> follow2dIter = follows2d.iterator();
 		while (follow2dIter.hasNext()) {
-			List ruleFollows = (List) follow2dIter.next();
-			Iterator ruleFollowIter = ruleFollows.iterator();
+			List<QASet> ruleFollows = follow2dIter.next();
+			Iterator<QASet> ruleFollowIter = ruleFollows.iterator();
 			while (ruleFollowIter.hasNext()) {
-				QASet follow = (QASet) ruleFollowIter.next();
+				QASet follow = ruleFollowIter.next();
 				if (!result.contains(follow)) {
 					result.add(follow);
 				}
@@ -234,7 +234,7 @@ public class QContainerIterator {
 		return result;
 	}
 
-	private void flatten(int depth, Question q, Iterator children) {
+	private void flatten(int depth, Question q, Iterator<? extends NamedObject> children) {
 
 		currentQuestion = q;
 
@@ -247,7 +247,7 @@ public class QContainerIterator {
 		}
 
 		if (hasNextFollow()) {
-			Iterator follows = createFollowList(theCase, q).iterator();
+			Iterator<QASet> follows = createFollowList(theCase, q).iterator();
 			// must be a Question here, has been checked earlier...
 			Question newQ = (Question) follows.next();
 			flatten(depth + 1, newQ, follows);
@@ -265,7 +265,7 @@ public class QContainerIterator {
 	/**
 	 * @return a list of all questions
 	 */
-	public List getAllQuestions() {
+	public List<Question> getAllQuestions() {
 		getQuestionModels();
 		return tempQuestions;
 	}
@@ -313,14 +313,14 @@ public class QContainerIterator {
 	 * @return a flat List of all determined Questions encapsulated in
 	 *         QuestionModel objects
 	 */
-	public List getQuestionModels() {
+	public List<QuestionModel> getQuestionModels() {
 
 		if (flatList == null) {
-			flatList = new LinkedList();
+			flatList = new LinkedList<QuestionModel>();
 
-			tempQuestions = new LinkedList();
+			tempQuestions = new LinkedList<Question>();
 
-			Iterator childIterSave = childIter;
+			Iterator<? extends NamedObject> childIterSave = childIter;
 			Question currentQuestionSave = currentQuestion;
 
 			childIter = container.getChildren().iterator();
@@ -337,7 +337,7 @@ public class QContainerIterator {
 
 		// building nextAnchors:
 
-		Iterator iter = flatList.iterator();
+		Iterator<QuestionModel> iter = flatList.iterator();
 
 		QuestionModel lastSet = null;
 		int i = 0;

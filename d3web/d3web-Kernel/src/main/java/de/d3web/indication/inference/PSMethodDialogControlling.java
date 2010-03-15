@@ -21,12 +21,13 @@
 package de.d3web.indication.inference;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
 import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.inference.RuleSet;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.XPSCase;
@@ -65,10 +66,10 @@ public class PSMethodDialogControlling extends PSMethodCombined {
 	 */
 	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
 		for (PropagationEntry change : changes) {
-			List<? extends KnowledgeSlice> knowledgeSlices = change.getObject().getKnowledge(this.getClass());
+			KnowledgeSlice knowledgeSlices = change.getObject().getKnowledge(this.getClass(), MethodKind.FORWARD);
 			if (knowledgeSlices == null) return;
-			for (KnowledgeSlice slice : knowledgeSlices) {
-				Rule rule = (Rule) slice;
+			RuleSet rs = (RuleSet) knowledgeSlices;
+			for (Rule rule: rs.getRules()) {
 				rule.check(theCase);
 			}
 		}

@@ -21,7 +21,6 @@
 package de.d3web.core.inference;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.terminology.NamedObject;
@@ -42,17 +41,16 @@ public abstract class PSMethodRulebased extends PSMethodAdapter {
 	 */
 	protected final void propagate(XPSCase theCase, NamedObject nob) {
 		try {
-			List<? extends KnowledgeSlice> slices = nob.getKnowledge(this
-					.getClass());
+			KnowledgeSlice slices = nob.getKnowledge(this
+					.getClass(), MethodKind.FORWARD);
 			if (slices != null) {
-				for (KnowledgeSlice slice : slices) {
-					if (slice instanceof Rule) {
-						Rule rule = (Rule) slice;
-						rule.check(theCase);
-					}
+				RuleSet rs = (RuleSet) slices;
+				for (Rule rule : rs.getRules()) {
+					rule.check(theCase);
 				}
 			}
 		} catch (Exception ex) {
+			//TODO MF: Don't catch exception!
 			Logger.getLogger(this.getClass().getName()).throwing(
 					this.getClass().getName(), "propagate", ex);
 		}

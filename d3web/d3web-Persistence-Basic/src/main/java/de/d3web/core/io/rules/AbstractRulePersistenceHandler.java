@@ -23,7 +23,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -32,11 +35,12 @@ import org.w3c.dom.NodeList;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.Rule;
+import de.d3web.core.inference.RuleSet;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
-import de.d3web.core.io.utilities.KnowledgeSliceComparator;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -57,25 +61,37 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 		root.setAttribute("system", "d3web");
 		root.setAttribute("type", ruletype);
 		doc.appendChild(root);
-		List<KnowledgeSlice> rules = getRules(kb);
+		List<Rule> rules = new ArrayList<Rule>(getRules(kb));
 		//sort the rules
-		Collections.sort(rules, new KnowledgeSliceComparator());
+		Collections.sort(rules, new Comparator<Rule>() {
+			@Override
+			public int compare(Rule o1, Rule o2) {
+				return(o1.getId().compareTo(o2.getId()));
+			}
+		});
 		PersistenceManager pm = PersistenceManager.getInstance();
 		float count = 0;
-		for (KnowledgeSlice ks: rules) {
-			Element element = pm.writeFragment(ks, doc);
+		for (Rule r: rules) {
+			Element element = pm.writeFragment(r, doc);
 			root.appendChild(element);
 			listener.updateProgress(count++/rules.size(), "Writing "+ruletype);
 		}
 		Util.writeDocumentToOutputStream(doc, stream);
 	}
 
-	private List<KnowledgeSlice> getRules(KnowledgeBase kb) {
-		List<KnowledgeSlice> rules = new ArrayList<KnowledgeSlice>();
+	private Set<Rule> getRules(KnowledgeBase kb) {
+		Set<Rule> rules = new HashSet<Rule>();
 		for (Class<? extends PSMethod> clazz: getProblemSolverContent()) {
-			rules.addAll(kb.getAllKnowledgeSlicesFor(clazz));
+			for (KnowledgeSlice slice: kb.getAllKnowledgeSlicesFor(clazz)) {
+				if (slice instanceof RuleSet) {
+					RuleSet rs = (RuleSet) slice;
+					rules.addAll(rs.getRules());
+				}
+			}
 		}
+		
 		rules.remove(null);
+		
 		return rules;
 	}
 

@@ -93,9 +93,9 @@ public class BasicPersistenceHandler implements
 		Iterator<Question> questionsIter = kb.getQuestions().iterator();
 		while (questionsIter.hasNext()) {
 			Question question = questionsIter.next();
-			List<? extends KnowledgeSlice> o = question.getKnowledge(context, methodKind);
-			if (o!=null && !o.isEmpty()) {
-				Num2ChoiceSchema schema = (Num2ChoiceSchema)  o.get(0);
+			KnowledgeSlice o = question.getKnowledge(context, methodKind);
+			if (o!=null) {
+				Num2ChoiceSchema schema = (Num2ChoiceSchema)  o;
 				listener.updateProgress(time++/abstime, "Saving knowledge base: Schemas");
 				father.appendChild(PersistenceManager.getInstance().writeFragment(schema, father.getOwnerDocument()));
 			}
@@ -345,7 +345,7 @@ public class BasicPersistenceHandler implements
 		Iterator<Question> questionsIter = kb.getQuestions().iterator();
 		while (questionsIter.hasNext()) {
 			Question question = questionsIter.next();
-			 List<? extends KnowledgeSlice> o = question.getKnowledge(context, methodKind);
+			 KnowledgeSlice o = question.getKnowledge(context, methodKind);
 			if ((o != null)) {
 				time++;
 			}

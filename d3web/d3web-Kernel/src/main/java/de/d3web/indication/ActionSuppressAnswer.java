@@ -24,8 +24,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.inference.MethodKind;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleAction;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseQuestion;
@@ -38,6 +40,9 @@ import de.d3web.indication.inference.PSMethodSuppressAnswer;
  * @author Joachim Baumeister
  */
 public class ActionSuppressAnswer extends RuleAction {
+	
+	private static final long serialVersionUID = 5889412150933130689L;
+
 	private QuestionChoice question = null;
 
 	/* alternatives that should be suppressed, if rule fires */
@@ -63,7 +68,7 @@ public class ActionSuppressAnswer extends RuleAction {
 	/**
 	 * @return PSMethodSuppressAnswer.class
 	 */
-	public Class getProblemsolverContext() {
+	public Class<? extends PSMethod> getProblemsolverContext() {
 		return PSMethodSuppressAnswer.class;
 	}
 
@@ -78,8 +83,8 @@ public class ActionSuppressAnswer extends RuleAction {
 	/**
 	 * @return  all objects participating on the action.
 	 */
-	public List getTerminalObjects() {
-		List terminals = new ArrayList(1);
+	public List<? extends NamedObject> getTerminalObjects() {
+		List<NamedObject> terminals = new ArrayList<NamedObject>(1);
 		if (getQuestion() != null) {
 			terminals.add(getQuestion());
 		}
@@ -98,22 +103,14 @@ public class ActionSuppressAnswer extends RuleAction {
 	 * inserts the corresponding rule as knowledge to the specified Question
 	 */
 	private void insertRuleIntoQuestion(QuestionChoice theQuestion) {
-		if (theQuestion != null)
-			theQuestion.addKnowledge(
-				getProblemsolverContext(),
-				getCorrespondingRule(),
-				MethodKind.BACKWARD);
+		Rule.insertInto(getCorrespondingRule(), getProblemsolverContext(), MethodKind.BACKWARD, theQuestion);
 	}
 
 	/**
 	 * removes the corresponding rule from the specified Question
 	 */
 	private void removeRuleFromOldQuestion(QuestionChoice theQuestion) {
-		if (theQuestion != null)
-			theQuestion.removeKnowledge(
-				getProblemsolverContext(),
-				getCorrespondingRule(),
-				MethodKind.BACKWARD);
+		Rule.removeFrom(getCorrespondingRule(), getProblemsolverContext(), MethodKind.BACKWARD, theQuestion);
 	}
 
 	/**

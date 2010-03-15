@@ -35,9 +35,11 @@ import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.abstraction.formula.FormulaNumberElement;
 import de.d3web.abstraction.inference.PSMethodQuestionSetter;
 import de.d3web.core.inference.MethodKind;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleAction;
 import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionDate;
@@ -60,6 +62,8 @@ import de.d3web.core.session.values.EvaluatableAnswerNumValue;
  * @author baumeister, bates
  */
 public abstract class ActionQuestionSetter extends RuleAction implements CaseObjectSource {
+	
+	private static final long serialVersionUID = 9036655281237588136L;
 	private Question question;
 	private Object[] values;
 
@@ -70,8 +74,8 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 	/**
 	 * @return all objects participating on the action.
 	 */
-	public List getTerminalObjects() {
-		List terminals = new ArrayList(1);
+	public List<? extends NamedObject> getTerminalObjects() {
+		List<NamedObject> terminals = new ArrayList<NamedObject>(1);
 		if (getQuestion() != null) {
 			terminals.add(getQuestion());
 		}
@@ -90,15 +94,11 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 	}
 
 	private void insertRuleIntoQuestion(Question questionArg) {
-		if (questionArg != null)
-			questionArg.addKnowledge(getProblemsolverContext(), getCorrespondingRule(),
-					MethodKind.BACKWARD);
+		Rule.insertInto(getCorrespondingRule(), getProblemsolverContext(), MethodKind.BACKWARD, questionArg);
 	}
 
 	private void removeRuleFromOldQuestion(Question questionArg) {
-		if (questionArg != null)
-			questionArg.removeKnowledge(getProblemsolverContext(), getCorrespondingRule(),
-					MethodKind.BACKWARD);
+		Rule.removeFrom(getCorrespondingRule(), getProblemsolverContext(), MethodKind.BACKWARD, questionArg);
 	}
 
 	/**
@@ -131,9 +131,9 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 	@Override
 	public boolean hasChangedValue(XPSCase theCase) {
 
-		Hashtable questionToValuesHash = getActionValues(theCase);
+		Hashtable<Question, Object> questionToValuesHash = getActionValues(theCase);
 		if ((questionToValuesHash != null) && (!questionToValuesHash.isEmpty())) {
-			Enumeration keys = questionToValuesHash.keys();
+			Enumeration<Question> keys = questionToValuesHash.keys();
 			while (keys.hasMoreElements()) {
 				Question q = (Question) keys.nextElement();
 				//theCase.trace("key: " + q.getId());
@@ -146,7 +146,7 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 				if (q instanceof QuestionNum || q instanceof QuestionDate) {
 					newValues = q.getValue(theCase);
 				} else if (q instanceof QuestionOC) {
-					newValues = new LinkedList();
+					newValues = new LinkedList<AnswerNum>();
 					if ((this.values != null) && (this.values.length > 0)) {
 						EvaluatableAnswerNumValue evalAnsnumVal = (EvaluatableAnswerNumValue) this.values[0];
 						Double value = evalAnsnumVal.eval(theCase);
@@ -187,7 +187,7 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 	 * stores the current state of terminal objects of the given action values
 	 */
 	protected void storeActionValues(XPSCase theCase, Object[] valuesArg) {
-		Hashtable questionToValuesHash = new Hashtable();
+		Hashtable<Question, Object> questionToValuesHash = new Hashtable<Question, Object>();
 		//theCase.trace("attempting to store action values (elementary formulaExpression values)");
 		if (valuesArg.length == 0) {
 			return; // should only be one value!
@@ -197,7 +197,7 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 
 		if ((obj instanceof FormulaExpression) || (obj instanceof FormulaNumberElement)
 				|| (obj instanceof FormulaDateElement) || (obj instanceof FormulaDateExpression)) {
-			Collection terminalObjects;
+			Collection<Object> terminalObjects;
 			if (obj instanceof FormulaExpression) {
 				terminalObjects = ((FormulaExpression) obj).getFormulaElement()
 						.getTerminalObjects();
@@ -212,27 +212,27 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 				throw new Error("Programmerror. Bad Type: " + obj);
 			}
 
-			Iterator iter = terminalObjects.iterator();
+			Iterator<Object> iter = terminalObjects.iterator();
 			while (iter.hasNext()) {
 				Question q = (Question) iter.next();
 				if (q instanceof QuestionNum) {
 					QuestionNum qNum = (QuestionNum) q;
-					List value = qNum.getValue(theCase);
+					List<Answer> value = qNum.getValue(theCase);
 					if ((value != null) && !value.isEmpty()) {
-						Answer ans = (Answer) value.get(0);
+						Answer ans = value.get(0);
 						Object val = ans.getValue(theCase);
 						questionToValuesHash.put(q, val);
 						//theCase.trace("put to hash: " + q.getId() + "; " + val);
 					}
 				} else if (q instanceof QuestionMC) {
 					QuestionMC qMC = (QuestionMC) q;
-					List value = qMC.getValue(theCase);
+					List<?> value = qMC.getValue(theCase);
 					Double val = new Double(value.size());
 					questionToValuesHash.put(q, val);
 					//theCase.trace("put to hash: " + q.getId() + "; " + val);
 				} else if (q instanceof QuestionDate) {
 					QuestionDate qDate = (QuestionDate) q;
-					List value = qDate.getValue(theCase);
+					List<?> value = qDate.getValue(theCase);
 					if ((value != null) && (!value.isEmpty())) {
 						Answer ans = (Answer) value.get(0);
 						Object val = ans.getValue(theCase);
@@ -276,9 +276,9 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 	protected Rule getLastFiredRule(XPSCase theCase) {
 		CaseQuestion q = (CaseQuestion) theCase.getCaseObject(getQuestion());
 		Object o = q.getValueHistory();
-		if ((o != null) && (o instanceof List)) {
-			if (!((List) o).isEmpty()) {
-				SymptomValue v = (SymptomValue) ((List) o).get(0);
+		if ((o != null) && (o instanceof List<?>)) {
+			if (!((List<?>) o).isEmpty()) {
+				SymptomValue v = (SymptomValue) ((List<?>) o).get(0);
 				return v.getRule();
 			} else
 				return null;
@@ -289,7 +289,7 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 	/**
 	 * @return PSMethodQuestionSetter.class
 	 */
-	public Class getProblemsolverContext() {
+	public Class<? extends PSMethod> getProblemsolverContext() {
 		return PSMethodQuestionSetter.class;
 	}
 
@@ -305,7 +305,7 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 		Object[] allAnswers = siQuestionOC.getAllAlternatives().toArray();
 
 		// go through all proreasons (only QASet.Reasons)
-		Iterator proIter = getQuestion().getProReasons(theCase).iterator();
+		Iterator<?> proIter = getQuestion().getProReasons(theCase).iterator();
 		while (proIter.hasNext()) {
 			Object reason = proIter.next();
 			if (reason instanceof QASet.Reason) {
@@ -357,14 +357,14 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 	/**
 	 * @return Hashtable
 	 */
-	public Hashtable getActionValues(XPSCase theCase) {
+	public Hashtable<Question, Object> getActionValues(XPSCase theCase) {
 		return ((CaseActionQuestionSetter) theCase.getCaseObject(this)).getActionValues();
 	}
 
 	/**
 	 * @param hashtable
 	 */
-	public void setActionValues(XPSCase theCase, Hashtable hashtable) {
+	public void setActionValues(XPSCase theCase, Hashtable<Question, Object> hashtable) {
 		((CaseActionQuestionSetter) theCase.getCaseObject(this)).setActionValues(hashtable);
 	}
 

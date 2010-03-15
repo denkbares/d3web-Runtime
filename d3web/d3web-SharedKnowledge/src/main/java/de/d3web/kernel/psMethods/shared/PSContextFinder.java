@@ -42,8 +42,7 @@ public class PSContextFinder {
 	 * Insert the method's description here.
 	 * Creation date: (14.08.2001 15:01:28)
 	 */
-	private PSContextFinder()
-{
+	private PSContextFinder() {
 		abnorm = new Abnormality();
 		qcomp = new QuestionComparatorYN();
 		weight = new Weight();
@@ -60,8 +59,7 @@ public class PSContextFinder {
 	 * @return java.lang.Class
 	 * @param knowledgeSliceClass java.lang.Class
 	 */
-	public Class<?> findPSContext(Class<?> knowledgeSliceClass)
-{
+	public Class<? extends PSMethod> findPSContext(Class<?> knowledgeSliceClass) {
 		return contextHash.get(knowledgeSliceClass);
 	}
 
@@ -70,8 +68,7 @@ public class PSContextFinder {
 	 * Creation date: (14.08.2001 15:17:52)
 	 * @return de.d3web.kernel.psMethods.shared.PSContextFinder
 	 */
-	public static PSContextFinder getInstance()
-{
+	public static PSContextFinder getInstance() {
 		if (instance == null)
 		{
 			instance = new PSContextFinder();

@@ -26,7 +26,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.inference.RuleSet;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Diagnosis;
@@ -408,7 +410,14 @@ public class KnowledgeBaseManagement {
 	}
 	
 	public String createRuleID() {
-		int idC = getMaxCountOf(knowledgeBase.getAllKnowledgeSlices()) + 1;
+		Collection<Rule> rules = new ArrayList<Rule>();
+		for (KnowledgeSlice ks: knowledgeBase.getAllKnowledgeSlices()) {
+			if (ks instanceof RuleSet) {
+				RuleSet rs = (RuleSet) ks;
+				rules.addAll(rs.getRules());
+			}
+		}
+		int idC = getMaxCountOf(rules) + 1;
 		return "R" + idC;
 	}
 

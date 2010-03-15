@@ -28,6 +28,7 @@ package de.d3web.core.session.blackboard;
 
 import java.util.Hashtable;
 
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.CaseObjectSource;
 
 /**
@@ -35,7 +36,7 @@ import de.d3web.core.session.CaseObjectSource;
  */
 public class CaseActionQuestionSetter extends XPSCaseObject {
 
-	private Hashtable actionValues;
+	private Hashtable<Question, Object> actionValues;
 	Double lastSetValue;
 
 	/**
@@ -48,14 +49,14 @@ public class CaseActionQuestionSetter extends XPSCaseObject {
 	/**
 	 * @return
 	 */
-	public Hashtable getActionValues() {
+	public Hashtable<Question, Object> getActionValues() {
 		return actionValues;
 	}
 
 	/**
 	 * @param hashtable
 	 */
-	public void setActionValues(Hashtable hashtable) {
+	public void setActionValues(Hashtable<Question, Object> hashtable) {
 		actionValues = hashtable;
 	}
 	

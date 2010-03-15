@@ -33,6 +33,7 @@ import org.w3c.dom.NodeList;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.inference.RuleSet;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
@@ -131,8 +132,18 @@ public class KBPatchPersistenceHandler implements KnowledgeReader {
 		Iterator<KnowledgeSlice> iter = kb.getAllKnowledgeSlices().iterator();
 		while (iter.hasNext()) {
 			KnowledgeSlice slice = iter.next();
-			if ((slice instanceof Rule) && (slice.getId().equalsIgnoreCase(id))) {
-				return kb.remove(slice);
+			if (slice instanceof RuleSet) {
+				RuleSet rs = (RuleSet) slice;
+				for (Rule r: rs.getRules()) {
+					if (r.getId().equalsIgnoreCase(id)) {
+						rs.removeRule(r);
+						if (rs.isEmpty()) {
+							return kb.remove(rs);
+						} else {
+							return true;
+						}
+					}
+				}
 			}
 		}
 		return false;

@@ -236,7 +236,7 @@ public interface CaseObject
 	 * 
 	 * @return Set
 	 */
-	public Set getQuestions();
+	public Set<Question> getQuestions();
 
 	/**
 	 * 

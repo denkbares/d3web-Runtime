@@ -25,10 +25,12 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import de.d3web.abstraction.inference.PSMethodQuestionSetter;
+import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.inference.RuleSet;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.terminology.DerivationType;
@@ -502,16 +504,15 @@ public class MQDialogController implements DialogController {
 	 * derivation-rule)
 	 */
 	public QASet getFirstLogicalParent(Question followQuestion) {
-		List knowledge = followQuestion.getKnowledge(PSMethodNextQASet.class,
+		KnowledgeSlice knowledge = followQuestion.getKnowledge(PSMethodNextQASet.class,
 				MethodKind.BACKWARD);
 		if (knowledge == null) {
 			knowledge = followQuestion.getKnowledge(PSMethodQuestionSetter.class,
 					MethodKind.BACKWARD);
 		}
 		if (knowledge != null) {
-			Iterator iter = knowledge.iterator();
-			while (iter.hasNext()) {
-				Rule rule = (Rule) iter.next();
+			RuleSet rs = (RuleSet) knowledge;
+			for (Rule rule: rs.getRules()) {
 				try {
 					//TODO: Hotfix should be removed
 					if (rule==null) continue;

@@ -72,7 +72,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 
 	@Override
 	public int getEstimatedSize(KnowledgeBase kb) {
-		return kb.getAllKnowledgeSlicesFor(PSMethodXCL.class).size();
+		return kb.getAllKnowledgeSlicesFor(PSMethodXCL.class, XCLModel.XCLMODEL).size();
 	}
 	
 	public Element getModelElement(XCLModel xclmodel, Document doc) throws IOException {
@@ -130,12 +130,15 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 		Element ksNode = doc.createElement("KnowledgeSlices");
 		root.appendChild(ksNode);
 		
-		ArrayList<KnowledgeSlice> slices = new ArrayList<KnowledgeSlice>(kb.getAllKnowledgeSlicesFor(PSMethodXCL.class));
+		ArrayList<KnowledgeSlice> slices = new ArrayList<KnowledgeSlice>(kb.getAllKnowledgeSlicesFor(PSMethodXCL.class, XCLModel.XCLMODEL));
 		Collections.sort(slices, new KnowledgeSliceComparator());
-		int cur = 0;
+		float cur = 0;
+		int max = getEstimatedSize(kb);
 		for (KnowledgeSlice model : slices) {
-			ksNode.appendChild(getModelElement((XCLModel) model, doc));
-			listener.updateProgress(++cur/slices.size(), "Saving knowledge base: XCL Models");
+			if (model instanceof XCLModel) {
+				ksNode.appendChild(getModelElement((XCLModel) model, doc));
+				listener.updateProgress(++cur/max, "Saving knowledge base: XCL Models");
+			}
 		}
 		Util.writeDocumentToOutputStream(doc, stream);
 	}

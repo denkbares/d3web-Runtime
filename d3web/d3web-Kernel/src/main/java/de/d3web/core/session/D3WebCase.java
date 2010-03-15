@@ -98,6 +98,7 @@ public class D3WebCase implements XPSCase {
 
 	private List<PSMethod> usedPSMethods;
 
+	//TODO: maybe change to rule
 	private Set<Class<? extends KnowledgeSlice>> finishReasons;
 	// private boolean finished = false;
 
@@ -421,17 +422,13 @@ public class D3WebCase implements XPSCase {
 		if (!getDiagnoses().contains(diagnosis) || !getUsedPSMethods().contains(psMethod))
 			return result;
 
-		List<? extends KnowledgeSlice> knowledge = diagnosis.getKnowledge(
-				psMethod.getClass(), MethodKind.BACKWARD);
+		KnowledgeSlice slice = diagnosis.getKnowledge(psMethod.getClass(), MethodKind.BACKWARD);
 
-		if (knowledge == null) {
-			return result;
-		}
-
-		for (KnowledgeSlice slice : knowledge) {
+		if (slice != null) {
 			if (slice.isUsed(this))
 				result.add(slice);
 		}
+
 		return result;
 	}
 

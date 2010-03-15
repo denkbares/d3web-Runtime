@@ -87,10 +87,10 @@ public class Util {
 	}
 	
 	public static StateTransition extractStateTransition(QContainer qcon) {
-		List<? extends KnowledgeSlice> knowledge = qcon.getKnowledge(PSMethodCostBenefit.class, StateTransition.STATE_TRANSITION);
-		for (KnowledgeSlice ks: knowledge) {
-			if (ks instanceof StateTransition) {
-				return (StateTransition) ks;
+		KnowledgeSlice knowledge = qcon.getKnowledge(PSMethodCostBenefit.class, StateTransition.STATE_TRANSITION);
+		if(knowledge!=null) {
+			if (knowledge instanceof StateTransition) {
+				return (StateTransition) knowledge;
 			}
 		}
 		return null;

@@ -49,9 +49,12 @@ import de.d3web.abstraction.formula.Sub;
 import de.d3web.abstraction.formula.Today;
 import de.d3web.abstraction.formula.YearDiff;
 import de.d3web.abstraction.inference.PSMethodQuestionSetter;
+import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.inference.RuleSet;
 import de.d3web.core.inference.condition.AbstractCondition;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondChoiceNo;
@@ -328,12 +331,11 @@ public class XMLRenderer {
 		sb.append(renderReference(diag,theCase,showStatus));
 	
 		// ES WIRD NUR PSMETHODHEURISTIC VERWENDET!
-		Collection knowledgeList = diag.getKnowledge(PSMethodHeuristic.class,MethodKind.BACKWARD);
-		if ((knowledgeList != null) && (!knowledgeList.isEmpty())) {
-			Iterator ruleIter = knowledgeList.iterator();
+		KnowledgeSlice knowledgeList = diag.getKnowledge(PSMethodHeuristic.class, MethodKind.BACKWARD);
+		if (knowledgeList != null) {
+			RuleSet rs = (RuleSet) knowledgeList;
 			LinkedList sortedRules = new LinkedList();
-			while(ruleIter.hasNext()) {
-				Rule rc = (Rule)ruleIter.next();
+			for (Rule rc: rs.getRules()) {
 				insertIntoSortedList(sortedRules,renderRuleComplex(rc,theCase,showStatus));
 			}
 			sb.append(getMergedString(sortedRules));
@@ -520,14 +522,13 @@ public class XMLRenderer {
 	}
 
 
-	public static StringBuffer renderQASetReasons(QASet qaSet, XPSCase theCase, Class context, boolean showStatus) {
+	public static StringBuffer renderQASetReasons(QASet qaSet, XPSCase theCase, Class<? extends PSMethod> context, boolean showStatus) {
 		StringBuffer sb = new StringBuffer();
-		Collection c = qaSet.getKnowledge(context,MethodKind.BACKWARD);
+		KnowledgeSlice c = qaSet.getKnowledge(context,MethodKind.BACKWARD);
 		if (c != null) {
+			RuleSet rs = (RuleSet) c;
 			List sortedList = new LinkedList();
-			Iterator ruleIter = c.iterator();
-			while (ruleIter.hasNext()) {
-				Rule rc = (Rule)ruleIter.next();
+			for (Rule rc: rs.getRules()) {
 				insertIntoSortedList(sortedList,renderRuleComplex(rc,theCase,showStatus));
 			}
 			// merge the strings in reverse order
@@ -980,10 +981,10 @@ public class XMLRenderer {
 	}
 
 	private static Num2ChoiceSchema getSchemaForQuestion(QuestionOC q) {
-		Collection schemaCol =
+		KnowledgeSlice schemaCol =
 			q.getKnowledge(PSMethodQuestionSetter.class, PSMethodQuestionSetter.NUM2CHOICE_SCHEMA);
-		if ((schemaCol != null) && (!schemaCol.isEmpty()))
-			return (Num2ChoiceSchema) schemaCol.toArray()[0];
+		if (schemaCol != null)
+			return (Num2ChoiceSchema) schemaCol;
 		else
 			return null;
 	}
@@ -1096,13 +1097,11 @@ public class XMLRenderer {
 	
 	
 	public static boolean isSiQASet(QASet q) {
-		List rules =
+		KnowledgeSlice rules =
 			q.getKnowledge(PSMethodQuestionSetter.class, MethodKind.BACKWARD);
-		if ((rules != null) && (!rules.isEmpty())) {
-
+		if (rules != null) {
 			return true;
 		}
-
 		return false;
 	}
 

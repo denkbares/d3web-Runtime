@@ -1,14 +1,11 @@
 package de.d3web.kernel.psMethods.SCMCBR;
 import java.util.Collection;
-import java.util.List;
 
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseDiagnosis;
@@ -32,9 +29,9 @@ public class PSMethodSCMCBR extends PSMethodAdapter {
 	}
 	
 	public DiagnosisState getState(XPSCase theCase, Diagnosis diagnosis) {
-		List<? extends KnowledgeSlice> models = diagnosis.getKnowledge(PSMethodSCMCBR.class, SCMCBRModel.SCMCBR);
-		if (models == null || models.size() == 0) return DiagnosisState.UNCLEAR; 
-		SCMCBRModel model = (SCMCBRModel) models.get(0);
+		KnowledgeSlice models = diagnosis.getKnowledge(PSMethodSCMCBR.class, SCMCBRModel.SCMCBR);
+		if (models == null) return DiagnosisState.UNCLEAR; 
+		SCMCBRModel model = (SCMCBRModel) models;
 		return model.getState(theCase);
 	}
 	
