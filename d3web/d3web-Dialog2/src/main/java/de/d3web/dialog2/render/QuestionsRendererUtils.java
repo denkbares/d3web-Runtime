@@ -252,9 +252,9 @@ public class QuestionsRendererUtils {
 	AnswerChoice answer = getAnswerChoiceForAnswerID(answerRegion
 		.getAnswerID(), qChoice);
 	if (answer == null) {
-	    // TODO fehlerbehandlung
+		// TODO sinnvolle fehlerbehandlung
+		logger.info("The Answer ID was not found in the knowledge base.");
 	    return;
-
 	}
 
 	AnswerChoice followingPopupQuestionAnswer = getAnswerOfFollowingPopupQuestion(
