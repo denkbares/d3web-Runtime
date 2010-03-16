@@ -327,6 +327,8 @@ public class XMLUtil {
 			return Boolean.parseBoolean(textContent);
 		} else if (clazz.equals(URL.class.getName())) {
 			return new URL(textContent);
+		} else if (clazz.equals(Float.class.getName())) {
+			return Float.parseFloat(textContent);
 		} else {
 			throw new IOException("Class "+clazz+" is not supported");
 		}

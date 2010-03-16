@@ -58,7 +58,6 @@ public class QContainerHandler implements FragmentHandler {
 		for (Element child: childNodes) {
 			if (child.getNodeName().equals("Text")) {
 				text = child.getTextContent();
-				break;
 			}
 			//if the child is none of the types above and it doesn't contain the children or the costs,
 			//it contains the properties.

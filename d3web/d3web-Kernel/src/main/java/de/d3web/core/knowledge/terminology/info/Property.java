@@ -858,7 +858,7 @@ public class Property implements java.io.Serializable {
 
 	static {
 		basicPropertys = new LinkedList<Property>();
-
+		basicPropertys.add(Property.APRIORI);
 		basicPropertys.add(Property.COMMENT);
 		basicPropertys.add(Property.SHORT_DESCRIPTION);
 		basicPropertys.add(Property.COST);
@@ -956,6 +956,9 @@ public class Property implements java.io.Serializable {
 		return Collections.synchronizedCollection(basicPropertys);
 	}
 	
+	public static Collection<Property> getAllPropertys() {
+		return allPropertys;
+	}
 
 	/*
 	 * (non-Javadoc)

@@ -57,20 +57,24 @@ public class DefaultPSConfigHandler implements FragmentHandler {
 		String extensionID = element.getAttribute(EXTENSION_ID);
 		String pluginID = element.getAttribute("pluginID");
 		PluginManager pluginManager = PluginManager.getInstance();
-		Extension extension = pluginManager.getExtension("d3web-Kernel-ExtensionPoints", PSMethod.EXTENSIONPOINT_ID, pluginID, extensionID);
 		PSState psState = PSConfig.PSState.valueOf(element.getAttribute("state"));
+		Extension extension = null;
+		try {
+			extension = pluginManager.getExtension("d3web-Kernel-ExtensionPoints",
+					PSMethod.EXTENSIONPOINT_ID, pluginID, extensionID);
+		}
+		catch (IllegalArgumentException e) {
+			if (psState.equals(PSConfig.PSState.active)) {
+				throw new IOException("Problemsolver "+extensionID+" not found");
+			} else {
+				return new DummyPSConfig(psState, extensionID, pluginID, element);
+			}
+		}
 		Autodetect auto =  null;
 		for (Extension e: pluginManager.getExtensions("d3web-Kernel-ExtensionPoints", Autodetect.EXTENSIONPOINT_ID)) {
 			if (e.getPluginID().equals(pluginID)) {
 				auto = (Autodetect) e.getSingleton();
 				break;
-			}
-		}
-		if (extension==null) {
-			if (psState.equals(PSConfig.PSState.active)) {
-				throw new IOException("Problemsolver "+pluginID+" not found");
-			} else {
-				return new DummyPSConfig(psState, extensionID, pluginID, element);
 			}
 		}
 		PSMethod psMethod = (PSMethod) extension.getNewInstance();
@@ -86,7 +90,7 @@ public class DefaultPSConfigHandler implements FragmentHandler {
 		PSConfig psConfig = (PSConfig) object;
 		Element element = doc.createElement(PS_ENTRY);
 		element.setAttribute(EXTENSION_ID, psConfig.getExtensionID());
-		element.setAttribute("pluginID", psConfig.getExtensionID());
+		element.setAttribute("pluginID", psConfig.getPluginID());
 		element.setAttribute("state", psConfig.getPsState().name());
 		return element;
 	}

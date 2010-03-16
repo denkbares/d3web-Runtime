@@ -144,10 +144,10 @@ public class JPFPluginManager extends PluginManager {
 	}
 
 	@Override
-	public Extension[] getExtensions(String extendetPointID, String extendetPluginID) {
+	public Extension[] getExtensions(String extendedPluginID, String extendedPointID) {
 		List<Extension> result = new ArrayList<Extension>();
 		ExtensionPoint toolExtPoint = manager.getRegistry().getExtensionPoint(
-				extendetPointID, extendetPluginID);
+				extendedPluginID, extendedPointID);
 		Collection<org.java.plugin.registry.Extension> connectedExtensions = toolExtPoint
 				.getConnectedExtensions();
 		for (org.java.plugin.registry.Extension e : connectedExtensions) {
@@ -185,7 +185,7 @@ public class JPFPluginManager extends PluginManager {
 	@Override
 	public Extension getExtension(String extendetPluginID,
 			String extendetPointID, String pluginID, String extensionID) {
-		Extension[] extensions = getExtensions(extendetPointID, extendetPluginID);
+		Extension[] extensions = getExtensions(extendetPluginID, extendetPointID);
 		for (Extension e : extensions) {
 			if (e.getID().equals(extensionID) && e.getPluginID().equals(pluginID))
 				return e;

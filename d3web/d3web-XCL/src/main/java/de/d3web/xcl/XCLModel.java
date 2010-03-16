@@ -158,7 +158,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 			relationID = rel.getId();
 			newModel.addRelation(rel, type);
 			// TODO: must it be added to the knowledge base?
-			kb.addKnowledge(PSMethodXCL.class, newModel, XCLModel.XCLMODEL);
+//			kb.addKnowledge(PSMethodXCL.class, newModel, XCLModel.XCLMODEL);
 			d.addKnowledge(PSMethodXCL.class, newModel, XCLModel.XCLMODEL);
 
 		}

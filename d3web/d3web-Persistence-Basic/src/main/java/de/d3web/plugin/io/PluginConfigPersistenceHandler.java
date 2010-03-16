@@ -53,32 +53,33 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
 		Document doc = Util.streamToDocument(stream);
 		PluginConfig pc = new PluginConfig(kb);
-		List<Element> elementList = XMLUtil.getElementList(doc.getDocumentElement().getChildNodes());
-		if (elementList.size()==1) {
-			Element root = elementList.get(0);
-			if (root.getNodeName().equals("settings")) {
-				for (Element father: XMLUtil.getElementList(root.getChildNodes())) {
-					if (father.getNodeName().equals("plugins")) {
-						List<Element> children = XMLUtil.getElementList(father.getChildNodes());
-						for (Element e: children) {
-							boolean necessary = Boolean.parseBoolean(e.getAttribute("necesary"));
-							boolean autodetect = Boolean.parseBoolean(e.getAttribute("autodetect"));
-							String id = e.getAttribute("ID");
-							Plugin plugin = PluginManager.getInstance().getPlugin(id);
-							if (plugin == null) {
-								if (necessary) {
-									throw new IOException("Necessary plugin "+id+" is not available");
-								} else {
-									plugin = new DummyPlugin(id);
-								}
+		Element root = doc.getDocumentElement();
+		if (root.getNodeName().equals("settings")) {
+			for (Element father : XMLUtil.getElementList(root.getChildNodes())) {
+				if (father.getNodeName().equals("plugins")) {
+					List<Element> children = XMLUtil.getElementList(father.getChildNodes());
+					for (Element e : children) {
+						boolean necessary = Boolean.parseBoolean(e.getAttribute("necesary"));
+						boolean autodetect = Boolean.parseBoolean(e.getAttribute("autodetect"));
+						String id = e.getAttribute("ID");
+						Plugin plugin = PluginManager.getInstance().getPlugin(id);
+						if (plugin == null) {
+							if (necessary) {
+								throw new IOException("Necessary plugin " + id
+										+ " is not available");
 							}
-							pc.addEntry(new PluginEntry(plugin, necessary, autodetect));
+							else {
+								plugin = new DummyPlugin(id);
+							}
 						}
-					} else if (father.getNodeName().equals("psmethods")) {
-						List<Element> children = XMLUtil.getElementList(father.getChildNodes());
-						for (Element e: children) {
-							kb.addPSConfig((PSConfig) PersistenceManager.getInstance().readFragment(e, kb));
-						}
+						pc.addEntry(new PluginEntry(plugin, necessary, autodetect));
+					}
+				}
+				else if (father.getNodeName().equals("psmethods")) {
+					List<Element> children = XMLUtil.getElementList(father.getChildNodes());
+					for (Element e : children) {
+						kb.addPSConfig((PSConfig) PersistenceManager.getInstance().readFragment(
+								e, kb));
 					}
 				}
 			}
@@ -110,7 +111,7 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 		Element psmethods = doc.createElement("psmethods");
 		root.appendChild(psmethods);
 		for (PSConfig ps: kb.getPsConfigs()) {
-			root.appendChild(PersistenceManager.getInstance().writeFragment(ps, doc));
+			psmethods.appendChild(PersistenceManager.getInstance().writeFragment(ps, doc));
 		}
 		Util.writeDocumentToOutputStream(doc, stream);
 	}

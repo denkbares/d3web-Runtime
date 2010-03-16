@@ -104,7 +104,7 @@ public class PropertiesHandler implements FragmentHandler {
 					Element propertyElement = doc.createElement("Property");
 					propertyElement.setAttribute("name", p.getName());
 					propertyElement.setAttribute("class", value.getClass().getName());
-					if (value instanceof String||value instanceof Integer || value instanceof Double || value instanceof Boolean || value instanceof URL) {
+					if (value instanceof String||value instanceof Integer || value instanceof Double || value instanceof Float || value instanceof Boolean || value instanceof URL) {
 						propertyElement.setTextContent(value.toString());
 					} else {
 						propertyElement.appendChild(PersistenceManager.getInstance().writeFragment(value, doc));

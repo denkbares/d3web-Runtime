@@ -237,8 +237,9 @@ public class PersistenceManager {
 		try {
 			
 			for (Extension plugin : writerPlugins) {
-				//only save file when it is necessary
-				if (!pc.getPluginEntry(plugin.getPluginID()).isNecessary()) {
+				//if autodetect is available, the file is only written when the autodetect check is positive
+				Autodetect autodetect = pc.getPluginEntry(plugin.getPluginID()).getAutodetect();
+				if (autodetect!=null&&!autodetect.check(kb)) {
 					continue;
 				}
 				String filename = plugin.getParameter("filename");
