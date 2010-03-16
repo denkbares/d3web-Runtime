@@ -79,11 +79,12 @@ public class JPFPluginManager extends PluginManager {
 			}
 		}
 		Map<String, Identity> map = manager.publishPlugins(locations.toArray(new PluginLocation[locations.size()]));
-		//activate all plugins
-		for (Identity i: map.values()) {
+		// activate all plugins
+		for (Identity i : map.values()) {
 			String id = i.getId();
 			manager.activatePlugin(id);
-			Logger.getLogger("PluginManager").info("Plugin '" + id + "' installed and activated.");
+			Logger.getLogger("PluginManager").info(
+					"Plugin '" + id + "' installed and activated.");
 		}
 	}
 
@@ -163,11 +164,31 @@ public class JPFPluginManager extends PluginManager {
 	}
 
 	@Override
+	public Extension[] getExtensions() {
+		List<Extension> result = new ArrayList<Extension>();
+		Collection<PluginDescriptor> pluginDescriptors = manager.getRegistry().getPluginDescriptors();
+		for (PluginDescriptor pluginDescriptor : pluginDescriptors) {
+			for (org.java.plugin.registry.Extension e : pluginDescriptor.getExtensions()) {
+				Extension extension = cachedExtension.get(e);
+				if (extension == null) {
+					extension = new JPFExtension(e, manager);
+					cachedExtension.put(e, extension);
+				}
+				result.add(extension);
+			}
+		}
+		Extension[] ret = result.toArray(new Extension[result.size()]);
+		Arrays.sort(ret, new PluginCollectionComparatorByPriority());
+		return ret;
+	}
+
+	@Override
 	public Extension getExtension(String extendetPluginID,
 			String extendetPointID, String pluginID, String extensionID) {
 		Extension[] extensions = getExtensions(extendetPointID, extendetPluginID);
 		for (Extension e : extensions) {
-			if (e.getID().equals(extensionID)&& e.getPluginID().equals(pluginID)) return e;
+			if (e.getID().equals(extensionID) && e.getPluginID().equals(pluginID))
+				return e;
 		}
 		return null;
 	}
@@ -189,7 +210,7 @@ public class JPFPluginManager extends PluginManager {
 
 	@Override
 	public Plugin getPlugin(String id) {
-		for (Plugin p: getPlugins()) {
+		for (Plugin p : getPlugins()) {
 			if (p.getPluginID().equals(id)) {
 				return p;
 			}

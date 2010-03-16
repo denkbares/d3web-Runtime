@@ -29,6 +29,13 @@ public abstract class PluginManager {
 	protected static PluginManager instance;
 
 	/**
+	 * This method is used to get an array of all Extensions, resgistered in this plugin manager.
+	 * 
+	 * @return array of all registered Extensions
+	 */
+	public abstract Extension[] getExtensions();
+
+	/**
 	 * This method is used to get an array of Extensions, which extend the
 	 * extensionPoint represented by the extendedPointID in the Plugin
 	 * represented by the extendedPluginID
@@ -37,7 +44,7 @@ public abstract class PluginManager {
 	 *            ID of the Plugin of the extended ExtensionPoint
 	 * @param extendedPointID
 	 *            ID of the extended ExtensionPoint
-	 * @return Array of Extensions specified with the parameters
+	 * @return array of Extensions specified with the parameters
 	 */
 	public abstract Extension[] getExtensions(String extendedPluginID, String extendedPointID);
 
