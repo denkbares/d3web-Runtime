@@ -39,8 +39,8 @@ public class IterativeDeepeningSearchAlgorithmHandler implements FragmentHandler
 
 	@Override
 	public boolean canRead(Element element) {
-		if (element.getNodeName().equals("targetFunction")
-				&& element.getAttribute("name").equals("DefaultTargetFunction")) {
+		if (element.getNodeName().equals("searchAlgorithm")
+				&& element.getAttribute("name").equals("IterativeDeepeningSearchAlgorithm")) {
 			return true;
 		}
 		return false;
@@ -66,8 +66,8 @@ public class IterativeDeepeningSearchAlgorithmHandler implements FragmentHandler
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
 		IterativeDeepeningSearchAlgorithm alg = (IterativeDeepeningSearchAlgorithm) object;
-		Element element = doc.createElement("targetFunction");
-		element.setAttribute("name", "DefaultTargetFunction");
+		Element element = doc.createElement("searchAlgorithm");
+		element.setAttribute("name", "IterativeDeepeningSearchAlgorithm");
 		AbortStrategy abortStrategy = alg.getAbortStrategy();
 		if (abortStrategy != null) {
 			element.appendChild(PersistenceManager.getInstance().writeFragment(
