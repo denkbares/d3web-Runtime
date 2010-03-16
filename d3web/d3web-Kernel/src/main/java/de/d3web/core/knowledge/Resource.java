@@ -23,8 +23,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Interface to keep references to binaries in the kb.
- *
+ * Interface to keep references to binaries in the knowledge base.
+ * 
  * @author Markus Friedrich (denkbares GmbH)
  */
 public interface Resource {
@@ -43,9 +43,10 @@ public interface Resource {
 
 	/**
 	 * Returns the relative path to the resource within the knowledge base. The
-	 * path is similar to file system paths, but they do use the same file
-	 * separator character ("/") with no respect to the underlying file systems.
-	 * The path should be used case insensitive.
+	 * path is similar to file system paths, but all implementations must use
+	 * the same file separator character ("/") with no respect to the underlying
+	 * file systems or operating system. The path is considered to be case
+	 * insensitive.
 	 * 
 	 * @return the path of the resource
 	 */
