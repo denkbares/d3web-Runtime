@@ -40,9 +40,6 @@ import de.d3web.abstraction.inference.PSMethodQuestionSetter;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.io.KnowledgeReader;
-import de.d3web.core.io.KnowledgeWriter;
-import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.CostObject;
 import de.d3web.core.io.utilities.IDObjectComparator;
@@ -166,7 +163,7 @@ public class BasicPersistenceHandler implements
 				diagnosisNodes = XMLUtil.getElementList(child.getChildNodes());
 				abstime += diagnosisNodes.size();
 			}
-			//former way of saving QContainers 
+			//former way of saving QContainers
 			else if (name.equalsIgnoreCase("QContainers")) {
 				qASetNodes.addAll(XMLUtil.getElementList(child.getChildNodes()));
 			}

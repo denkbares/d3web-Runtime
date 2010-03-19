@@ -55,7 +55,7 @@ public class PersistenceTest extends XMLTestCase {
     	// Clean the old reloaded dir
     	File fc = new File(_reloadedFolder);
     	if (!fc.exists()) fc.mkdir();
-    	for (File v : fc.listFiles()) {   		
+    	for (File v : fc.listFiles()) {
     		assertEquals("Error while deleting File: " + v.getName(),
     				true, PersistenceHelper.deleteRecursive(v));
     	}
@@ -117,7 +117,9 @@ public class PersistenceTest extends XMLTestCase {
     	int actual = 0;
     	message = new StringBuffer("Differences found (Without Properties):\n\r");
     	for (File[] p : pairs) {
-    		message = new StringBuffer("Differences found in "+p[0].getName()+" (Without Properties):\n\r");
+			message = new StringBuffer("Differences found in " +
+					p[0].getName() +
+					" (Without Properties):\n\r");
 			org = new BufferedReader(new InputStreamReader(new FileInputStream(p[0])));
 			rel = new BufferedReader(new InputStreamReader(new FileInputStream(p[1])));
     		
@@ -132,8 +134,6 @@ public class PersistenceTest extends XMLTestCase {
     	    		message.append(((Difference)f).toString() + "\n\r");
     	    	
     	    	assertEquals(message.toString(), 0, actual);
-    	    	
-    	    	
     		} else {
     			assertEquals("Difference in File: " + p[0].getPath() , Butil.readString(new FileInputStream(p[0])), Butil.readString(new FileInputStream(p[1])));
     		}

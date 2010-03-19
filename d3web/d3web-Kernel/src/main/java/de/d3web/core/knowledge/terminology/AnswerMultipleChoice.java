@@ -13,6 +13,7 @@ public class AnswerMultipleChoice extends Answer {
 	private static final long serialVersionUID = 1L;
 	private List<AnswerChoice> choices = new ArrayList<AnswerChoice>();
 	
+
 	public AnswerMultipleChoice(List<AnswerChoice> answers) {
 		super();
 		setChoices(answers);
@@ -25,6 +26,13 @@ public class AnswerMultipleChoice extends Answer {
 		}
 	}
 	
+
+	// @Override
+	// public String getId() {
+	// return "";
+	// }
+
+	@Override
 	public String getText() {
 		StringBuffer b = new StringBuffer();
 		for (Iterator<AnswerChoice> iterator = choices.iterator(); iterator.hasNext();) {
@@ -41,7 +49,19 @@ public class AnswerMultipleChoice extends Answer {
 	}
 	
 	public void setChoices(List<AnswerChoice> answers) {
-		choices = answers;		
+		choices = answers;
+		Collections.sort(choices);
+		String theId = "";
+
+		for (int i = 0; i < choices.size(); i++) {
+			if (i > 0) {
+				theId += "_" + choices.get(i).getId();
+			}
+			else {
+				theId += choices.get(i).getId();
+			}
+		}
+		setId(theId);
 	}
 	
 	@Override
@@ -81,19 +101,20 @@ public class AnswerMultipleChoice extends Answer {
 		if (o instanceof AnswerMultipleChoice) {
 			if (choices.equals(((AnswerMultipleChoice) o).choices))
 				return 0;
-			else 
+			else
 				return choices.size() - ((AnswerMultipleChoice)o).choices.size();
 		}
 		return -1;
 	}
 	
 	public int numberOfChoices() {
-		if (choices == null) 
+		if (choices == null)
 			return 0;
 		else
 			return choices.size();
 	}
 	
+	@Override
 	public String toString() {
 		return choices.toString();
 	}

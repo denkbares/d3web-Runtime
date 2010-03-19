@@ -32,6 +32,7 @@ import org.w3c.dom.NodeList;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
@@ -42,7 +43,7 @@ import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerUnknown;
 /**
- * Provides useful static functions for xml persistence handlers 
+ * Provides useful static functions for xml persistence handlers
  *
  * @author Markus Friedrich (denkbares GmbH)
  */
@@ -182,6 +183,9 @@ public class XMLUtil {
 			return ((AnswerChoice) answer).getId();
 		else if (answer instanceof AnswerUnknown)
 			return ((AnswerUnknown) answer).getId();
+		else if (answer instanceof AnswerMultipleChoice) {
+			return ((AnswerMultipleChoice) answer).getId();
+		}
 		else {
 			throw new IOException("Answer is neighter a Choice nor a Unknown Answer");
 		}
@@ -374,7 +378,7 @@ public class XMLUtil {
 	}
 
 	/**
-	 * Returns the content of the text-section of the given DOM-Node 
+	 * Returns the content of the text-section of the given DOM-Node
 	 * @param node Node to grab the text-section from
 	 * @return the content of the text-section of the given DOM-Node
 	 */
