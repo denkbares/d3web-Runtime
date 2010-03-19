@@ -37,103 +37,103 @@ import de.d3web.dialog2.basics.settings.ResourceRepository;
 
 public class UserLoader {
 
-    private java.net.URL fileURL;
+	private java.net.URL fileURL;
 
-    private List<User> users;
+	private List<User> users;
 
-    public static Logger logger = Logger.getLogger(UserLoader.class);
+	public static Logger logger = Logger.getLogger(UserLoader.class);
 
-    public UserLoader() {
-	users = new LinkedList<User>();
-	setFileURL(ResourceRepository.getInstance().getPropertyPathValue(
-		ResourceRepository.USERS_URL));
-    }
+	public UserLoader() {
+		users = new LinkedList<User>();
+		setFileURL(ResourceRepository.getInstance().getPropertyPathValue(
+				ResourceRepository.USERS_URL));
+	}
 
-    /**
-     * @param doc
-     *            org.w3c.dom.Document
-     */
-    private void buildUserLists(Document doc) {
-	try {
-	    NodeList nl = doc.getElementsByTagName("user");
-	    for (int i = 0; i < nl.getLength(); ++i) {
-		Node n = nl.item(i);
-		String name = n.getAttributes().getNamedItem("name")
-			.getNodeValue();
-		String forename = n.getAttributes().getNamedItem("forename")
-			.getNodeValue();
-		String pass = n.getAttributes().getNamedItem("pass")
-			.getNodeValue();
-		String email = n.getAttributes().getNamedItem("email")
-			.getNodeValue();
-		String admin = n.getAttributes().getNamedItem("admin")
-			.getNodeValue();
+	/**
+	 * @param doc
+	 *            org.w3c.dom.Document
+	 */
+	private void buildUserLists(Document doc) {
+		try {
+			NodeList nl = doc.getElementsByTagName("user");
+			for (int i = 0; i < nl.getLength(); ++i) {
+				Node n = nl.item(i);
+				String name = n.getAttributes().getNamedItem("name")
+						.getNodeValue();
+				String forename = n.getAttributes().getNamedItem("forename")
+						.getNodeValue();
+				String pass = n.getAttributes().getNamedItem("pass")
+						.getNodeValue();
+				String email = n.getAttributes().getNamedItem("email")
+						.getNodeValue();
+				String admin = n.getAttributes().getNamedItem("admin")
+						.getNodeValue();
 
-		User u = new User();
-		u.setName(name);
-		u.setForename(forename);
-		u.setPassword(pass);
-		u.setEmail(email);
+				User u = new User();
+				u.setName(name);
+				u.setForename(forename);
+				u.setPassword(pass);
+				u.setEmail(email);
 
-		if (admin.equalsIgnoreCase("TRUE")) {
-		    u.setAdmin(true);
-		} else {
-		    users.add(u);
+				if (admin.equalsIgnoreCase("TRUE")) {
+					u.setAdmin(true);
+				} else {
+					users.add(u);
+				}
+			}
+		} catch (Exception x) {
+			logger.error(x);
 		}
-	    }
-	} catch (Exception x) {
-	    logger.error(x);
-	}
-    }
-
-    /**
-     * @return java.net.URL
-     */
-    public java.net.URL getFileURL() {
-	return fileURL;
-    }
-
-    /**
-     * @return java.util.List
-     */
-    public List<User> getUsers() {
-	return users;
-    }
-
-    public void load() {
-	try {
-	    users = new LinkedList<User>();
-
-	    DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance()
-		    .newDocumentBuilder();
-	    Document doc = dBuilder.parse(InputFilter
-		    .getFilteredInputSource(fileURL));
-
-	    buildUserLists(doc);
-
-	} catch (Exception x) {
-	    logger.error("no user-xml-file found.");
 	}
 
-    }
-
-    /**
-     * @param newFileURL
-     *            java.net.URL
-     */
-    public void setFileURL(java.net.URL newFileURL) {
-	fileURL = newFileURL;
-    }
-
-    /**
-     * @param newFileURL
-     *            java.net.URL
-     */
-    public void setFileURL(String urlstg) {
-	try {
-	    fileURL = new URL(urlstg);
-	} catch (Exception x) {
-	    logger.error("URL: " + urlstg + " not valid!");
+	/**
+	 * @return java.net.URL
+	 */
+	public java.net.URL getFileURL() {
+		return fileURL;
 	}
-    }
+
+	/**
+	 * @return java.util.List
+	 */
+	public List<User> getUsers() {
+		return users;
+	}
+
+	public void load() {
+		try {
+			users = new LinkedList<User>();
+
+			DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance()
+					.newDocumentBuilder();
+			Document doc = dBuilder.parse(InputFilter
+					.getFilteredInputSource(fileURL));
+
+			buildUserLists(doc);
+
+		} catch (Exception x) {
+			logger.error("no user-xml-file found.");
+		}
+
+	}
+
+	/**
+	 * @param newFileURL
+	 *            java.net.URL
+	 */
+	public void setFileURL(java.net.URL newFileURL) {
+		fileURL = newFileURL;
+	}
+
+	/**
+	 * @param newFileURL
+	 *            java.net.URL
+	 */
+	public void setFileURL(String urlstg) {
+		try {
+			fileURL = new URL(urlstg);
+		} catch (Exception x) {
+			logger.error("URL: " + urlstg + " not valid!");
+		}
+	}
 }

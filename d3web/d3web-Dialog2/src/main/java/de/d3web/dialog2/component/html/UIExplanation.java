@@ -25,37 +25,37 @@ import javax.faces.context.FacesContext;
 
 public class UIExplanation extends UIOutput {
 
-    public static final String COMPONENT_TYPE = "de.d3web.dialog2.Explanation";
+	public static final String COMPONENT_TYPE = "de.d3web.dialog2.Explanation";
 
-    private static final String DEFAULT_RENDERER_TYPE = "de.d3web.dialog2.Explanation";
+	private static final String DEFAULT_RENDERER_TYPE = "de.d3web.dialog2.Explanation";
 
-    private String diag;
+	private String diag;
 
-    public UIExplanation() {
-	setRendererType(DEFAULT_RENDERER_TYPE);
-    }
+	public UIExplanation() {
+		setRendererType(DEFAULT_RENDERER_TYPE);
+	}
 
-    public String getDiag() {
-	return ComponentUtils.getStringValue(this, diag, "diag");
-    }
+	public String getDiag() {
+		return ComponentUtils.getStringValue(this, diag, "diag");
+	}
 
-    @Override
-    public void restoreState(FacesContext context, Object state) {
-	Object values[] = (Object[]) state;
-	super.restoreState(context, values[0]);
-	diag = (String) values[1];
-    }
+	@Override
+	public void restoreState(FacesContext context, Object state) {
+		Object values[] = (Object[]) state;
+		super.restoreState(context, values[0]);
+		diag = (String) values[1];
+	}
 
-    @Override
-    public Object saveState(FacesContext context) {
-	Object values[] = new Object[2];
-	values[0] = super.saveState(context);
-	values[1] = diag;
-	return ((values));
-    }
+	@Override
+	public Object saveState(FacesContext context) {
+		Object values[] = new Object[2];
+		values[0] = super.saveState(context);
+		values[1] = diag;
+		return ((values));
+	}
 
-    public void setDiag(String diag) {
-	this.diag = diag;
-    }
+	public void setDiag(String diag) {
+		this.diag = diag;
+	}
 
 }

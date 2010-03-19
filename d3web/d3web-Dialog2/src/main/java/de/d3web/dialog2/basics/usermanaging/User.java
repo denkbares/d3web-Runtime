@@ -27,143 +27,143 @@ import org.apache.log4j.Logger;
  */
 public class User {
 
-    private String name;
+	private String name;
 
-    private String password;
+	private String password;
 
-    private String email;
+	private String email;
 
-    private String forename;
+	private String forename;
 
-    private boolean admin = false;
+	private boolean admin = false;
 
-    public static Logger logger = Logger.getLogger(User.class);
+	public static Logger logger = Logger.getLogger(User.class);
 
-    /**
-     * User constructor comment.
-     */
-    public User() {
-	super();
-	email = "";
-	password = "";
-	forename = "";
-	name = "";
-
-    }
-
-    /**
-     * @return boolean
-     * @param o
-     *            java.lang.Object
-     */
-    @Override
-    public boolean equals(Object o) {
-	if (o == null)
-	    return false;
-	if (o instanceof User) {
-	    User u = (User) o;
-
-	    logger.info("User1: " + u);
-	    logger.info("User2: " + this);
-
-	    return u.getEmail().equals(email)
-		    && ((u.getPassword().equals(password)) || (u.getName()
-			    .equals(name)));
+	/**
+	 * User constructor comment.
+	 */
+	public User() {
+		super();
+		email = "";
+		password = "";
+		forename = "";
+		name = "";
 
 	}
-	return false;
-    }
 
-    public String getCompleteName() {
-	String ret = forename + " " + name;
-	return ret.trim();
-    }
+	/**
+	 * @return boolean
+	 * @param o
+	 *            java.lang.Object
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (o == null)
+			return false;
+		if (o instanceof User) {
+			User u = (User) o;
 
-    /**
-     * @return String
-     */
-    public String getEmail() {
-	return email;
-    }
+			logger.info("User1: " + u);
+			logger.info("User2: " + this);
 
-    /**
-     * @return String
-     */
-    public String getForename() {
-	return forename;
-    }
+			return u.getEmail().equals(email)
+					&& ((u.getPassword().equals(password)) || (u.getName()
+							.equals(name)));
 
-    /**
-     * @return String
-     */
-    public String getName() {
-	return name;
-    }
+		}
+		return false;
+	}
 
-    /**
-     * @return String
-     */
-    public String getPassword() {
-	return password;
-    }
+	public String getCompleteName() {
+		String ret = forename + " " + name;
+		return ret.trim();
+	}
 
-    public String getXMLString() {
-	return "<User name='" + name + "' forename='" + forename + "' pass='"
-		+ password + "' email='" + email + "' admin='" + admin + "' />";
-    }
+	/**
+	 * @return String
+	 */
+	public String getEmail() {
+		return email;
+	}
 
-    public boolean isAdmin() {
-	return admin;
-    }
+	/**
+	 * @return String
+	 */
+	public String getForename() {
+		return forename;
+	}
 
-    /**
-     * @param newAdmin
-     *            boolean
-     */
-    public void setAdmin(boolean newAdmin) {
-	admin = newAdmin;
-    }
+	/**
+	 * @return String
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * @param newEmail
-     *            String
-     */
-    public void setEmail(String newEmail) {
-	email = newEmail;
-    }
+	/**
+	 * @return String
+	 */
+	public String getPassword() {
+		return password;
+	}
 
-    /**
-     * @param newForename
-     *            String
-     */
-    public void setForename(String newForename) {
-	forename = newForename;
-    }
+	public String getXMLString() {
+		return "<User name='" + name + "' forename='" + forename + "' pass='"
+				+ password + "' email='" + email + "' admin='" + admin + "' />";
+	}
 
-    /**
-     * @param newName
-     *            String
-     */
-    public void setName(String newName) {
-	name = newName;
-    }
+	public boolean isAdmin() {
+		return admin;
+	}
 
-    /**
-     * @param newPassword
-     *            String
-     */
-    public void setPassword(String newPassword) {
-	password = newPassword;
-    }
+	/**
+	 * @param newAdmin
+	 *            boolean
+	 */
+	public void setAdmin(boolean newAdmin) {
+		admin = newAdmin;
+	}
 
-    /**
-     * 
-     * @return String
-     */
-    @Override
-    public String toString() {
-	return "User: \n  Name: " + name + "\n Fname: " + forename
-		+ "\n Pass: " + password + "\n  Mail: " + email + "\n\n";
-    }
+	/**
+	 * @param newEmail
+	 *            String
+	 */
+	public void setEmail(String newEmail) {
+		email = newEmail;
+	}
+
+	/**
+	 * @param newForename
+	 *            String
+	 */
+	public void setForename(String newForename) {
+		forename = newForename;
+	}
+
+	/**
+	 * @param newName
+	 *            String
+	 */
+	public void setName(String newName) {
+		name = newName;
+	}
+
+	/**
+	 * @param newPassword
+	 *            String
+	 */
+	public void setPassword(String newPassword) {
+		password = newPassword;
+	}
+
+	/**
+	 * 
+	 * @return String
+	 */
+	@Override
+	public String toString() {
+		return "User: \n  Name: " + name + "\n Fname: " + forename
+				+ "\n Pass: " + password + "\n  Mail: " + email + "\n\n";
+	}
 
 }

@@ -31,280 +31,279 @@ import de.d3web.dialog2.util.DialogUtils;
 
 public class DialogSettingsLoader {
 
-    private DialogSettings settings;
+	private DialogSettings settings;
 
-    public static Logger logger = Logger.getLogger(DialogSettingsLoader.class);
+	public static Logger logger = Logger.getLogger(DialogSettingsLoader.class);
 
-    public DialogSettingsLoader(DialogSettings settings) {
-	this.settings = settings;
-    }
+	public DialogSettingsLoader(DialogSettings settings) {
+		this.settings = settings;
+	}
 
-    private boolean getBooleanValue(Element setting, String string, boolean old) {
-	if (setting == null) {
-	    return old;
-	}
-	Element element = setting.getChild(string);
-	if (element == null) {
-	    return old;
-	}
-	return element.getAttributeValue("value") != null ? Boolean
-		.parseBoolean(element.getAttributeValue("value")) : old;
-    }
-
-    private float getFloatValue(Element setting, String string, float old) {
-	if (setting == null) {
-	    return old;
-	}
-	Element element = setting.getChild(string);
-	if (element == null) {
-	    return old;
-	}
-	return element.getAttributeValue("value") != null ? Float
-		.parseFloat(element.getAttributeValue("value")) : old;
-    }
-
-    private int getIntValue(Element setting, String string, int old) {
-	if (setting == null) {
-	    return old;
-	}
-	Element element = setting.getChild(string);
-	if (element == null) {
-	    return old;
-	}
-	return element.getAttributeValue("value") != null ? Integer
-		.parseInt(element.getAttributeValue("value")) : old;
-    }
-
-    private long getLongValue(Element setting, String string, long old) {
-	if (setting == null) {
-	    return old;
-	}
-	Element element = setting.getChild(string);
-	if (element == null) {
-	    return old;
-	}
-	return element.getAttributeValue("value") != null ? Long
-		.parseLong(element.getAttributeValue("value")) : old;
-    }
-
-    private String getStringValue(Element setting, String string, String old) {
-	if (setting == null) {
-	    return old;
-	}
-	Element element = setting.getChild(string);
-	if (element == null) {
-	    return old;
-	}
-	return element.getAttributeValue("value") != null ? element
-		.getAttributeValue("value") : old;
-    }
-
-    public void init(String kbid) {
-	SAXBuilder builder;
-	Document doc;
-	Element root = null;
-
-	File settingsFile;
-	if (kbid == null) {
-	    String destPath = DialogUtils.getContextPath() + File.separator
-		    + "WEB-INF" + File.separator + "classes" + File.separator
-		    + "de" + File.separator + "d3web" + File.separator
-		    + "dialog2";
-	    settingsFile = new File(destPath, DialogSettings.SETTINGS_FILENAME);
-	} else {
-	    String destPath = ResourceRepository.getInstance()
-		    .getBasicSettingValue(ResourceRepository.MULTIMEDIAPATH)
-		    .replaceAll("\\$kbid\\$", kbid);
-	    if (kbid.contains("..")) {
-			destPath = destPath.replaceAll("\\.", "P");
+	private boolean getBooleanValue(Element setting, String string, boolean old) {
+		if (setting == null) {
+			return old;
 		}
-	    settingsFile = new File(DialogUtils.getRealPath(destPath),
-		    DialogSettings.SETTINGS_FILENAME);
+		Element element = setting.getChild(string);
+		if (element == null) {
+			return old;
+		}
+		return element.getAttributeValue("value") != null ? Boolean
+				.parseBoolean(element.getAttributeValue("value")) : old;
 	}
 
-	try {
-	    builder = new SAXBuilder();
-	    doc = builder.build(settingsFile);
-	    root = doc.getRootElement();
-
-	} catch (Exception e) {
-	    logger
-		    .error("Error while loading dialogsettings from settingsfile. Using default values...");
-	    return;
+	private float getFloatValue(Element setting, String string, float old) {
+		if (setting == null) {
+			return old;
+		}
+		Element element = setting.getChild(string);
+		if (element == null) {
+			return old;
+		}
+		return element.getAttributeValue("value") != null ? Float
+				.parseFloat(element.getAttributeValue("value")) : old;
 	}
 
-	readDialogSettings(root);
-	readQuestionPageSettings(root);
-	readDiagnosesSettings(root);
-	readExplanationSettings(root);
-	readMMInfoSettings(root);
-	readCompareCaseSettings(root);
-	readXCLSettings(root);
-	readProcessedQContainersSettings(root);
-	readFrequentnessSettings(root);
-    }
+	private int getIntValue(Element setting, String string, int old) {
+		if (setting == null) {
+			return old;
+		}
+		Element element = setting.getChild(string);
+		if (element == null) {
+			return old;
+		}
+		return element.getAttributeValue("value") != null ? Integer
+				.parseInt(element.getAttributeValue("value")) : old;
+	}
 
-    private void readCompareCaseSettings(Element root) {
-	Element ccSettings = root.getChild("CompareCase");
+	private long getLongValue(Element setting, String string, long old) {
+		if (setting == null) {
+			return old;
+		}
+		Element element = setting.getChild(string);
+		if (element == null) {
+			return old;
+		}
+		return element.getAttributeValue("value") != null ? Long
+				.parseLong(element.getAttributeValue("value")) : old;
+	}
 
-	settings.setShowCompareCase(getBooleanValue(ccSettings,
-		"showCompareCase", settings.isShowCompareCase()));
-    }
+	private String getStringValue(Element setting, String string, String old) {
+		if (setting == null) {
+			return old;
+		}
+		Element element = setting.getChild(string);
+		if (element == null) {
+			return old;
+		}
+		return element.getAttributeValue("value") != null ? element
+				.getAttributeValue("value") : old;
+	}
 
-    private void readDiagnosesSettings(Element root) {
-	Element diagnosesSettings = root.getChild("Diagnoses");
+	public void init(String kbid) {
+		SAXBuilder builder;
+		Document doc;
+		Element root = null;
 
-	settings.setShowHeuristicDiagnoses(getBooleanValue(diagnosesSettings,
-		"showHeuristicDiagnoses", settings.isShowHeuristicDiagnoses()));
-	settings.setShowHeuristicEstablishedDiagnoses(getBooleanValue(
-		diagnosesSettings, "showHeuristicEstablishedDiagnoses",
-		settings.isShowHeuristicEstablishedDiagnoses()));
-	settings.setShowHeuristicSuggestedDiagnoses(getBooleanValue(
-		diagnosesSettings, "showHeuristicSuggestedDiagnoses", settings
-			.isShowHeuristicSuggestedDiagnoses()));
-	settings.setShowHeuristicExcludedDiagnoses(getBooleanValue(
-		diagnosesSettings, "showHeuristicExcludedDiagnoses", settings
-			.isShowHeuristicExcludedDiagnoses()));
-    }
+		File settingsFile;
+		if (kbid == null) {
+			String destPath = DialogUtils.getContextPath() + File.separator
+					+ "WEB-INF" + File.separator + "classes" + File.separator
+					+ "de" + File.separator + "d3web" + File.separator
+					+ "dialog2";
+			settingsFile = new File(destPath, DialogSettings.SETTINGS_FILENAME);
+		} else {
+			String destPath = ResourceRepository.getInstance()
+					.getBasicSettingValue(ResourceRepository.MULTIMEDIAPATH)
+					.replaceAll("\\$kbid\\$", kbid);
+			if (kbid.contains("..")) {
+				destPath = destPath.replaceAll("\\.", "P");
+			}
+			settingsFile = new File(DialogUtils.getRealPath(destPath),
+					DialogSettings.SETTINGS_FILENAME);
+		}
 
-    private void readDialogSettings(Element root) {
-	Element dialogSettings = root.getChild("Dialog");
+		try {
+			builder = new SAXBuilder();
+			doc = builder.build(settingsFile);
+			root = doc.getRootElement();
 
-	settings.setShowProgressBar(getBooleanValue(dialogSettings,
-		"showProgressBar", settings.isShowProgressBar()));
-	settings.setLeftPanelSize(getFloatValue(dialogSettings,
-		"leftPanelSizePercent", settings.getLeftPanelSize()));
-	settings.setLeftPanelFixed(getBooleanValue(dialogSettings,
-		"leftPanelFixed", settings.isLeftPanelFixed()));
-	settings.setRightPanelSize(getFloatValue(dialogSettings,
-		"rightPanelSizePercent", settings.getRightPanelSize()));
-	settings.setAllowRightPanel(getBooleanValue(dialogSettings,
-		"allowRightPanel", settings.isAllowRightPanel()));
-	settings.setShowRightPanelToggleButtons(getBooleanValue(dialogSettings,
-		"showRightPanelToggleButtons", settings
-			.isShowRightPanelToggleButtons()));
-	settings.setSaveCaseThreadMaxIdleTime(getLongValue(dialogSettings,
-		"saveCaseThreadMaxIdleTime", settings
-			.getSaveCaseThreadMaxIdleTime()));
-	settings.setSessionMaxInactiveInterval(getIntValue(dialogSettings,
-		"sessionMaxInactiveInterval", settings
-			.getSessionMaxInactiveInterval()));
-	settings.setShowManagementButton(getBooleanValue(dialogSettings,
-		"showManagementButton", settings.isShowManagementButton()));
-	settings.setShowDialogButton(getBooleanValue(dialogSettings,
-		"showDialogButton", settings.isShowDialogButton()));
-	settings.setTimeZone(getStringValue(dialogSettings, "timeZone",
-		settings.getTimeZone()));
-	settings.setShowCountryFlags(getBooleanValue(dialogSettings,
-		"showCountryFlags", settings.isShowCountryFlags()));
-	settings.setShowPageHeader(getBooleanValue(dialogSettings,
-		"showPageHeader", settings.isShowPageHeader()));
-	settings.setShowPageFooter(getBooleanValue(dialogSettings,
-		"showPageFooter", settings.isShowPageFooter()));
-    }
+		} catch (Exception e) {
+			logger
+					.error("Error while loading dialogsettings from settingsfile. Using default values...");
+			return;
+		}
 
-    private void readExplanationSettings(Element root) {
-	Element explSettings = root.getChild("Explanation");
+		readDialogSettings(root);
+		readQuestionPageSettings(root);
+		readDiagnosesSettings(root);
+		readExplanationSettings(root);
+		readMMInfoSettings(root);
+		readCompareCaseSettings(root);
+		readXCLSettings(root);
+		readProcessedQContainersSettings(root);
+		readFrequentnessSettings(root);
+	}
 
-	settings.setShowDiagExplanation(getBooleanValue(explSettings,
-		"showDiagExplanation", settings.isShowDiagExplanation()));
-	settings.setShowDiagReason(getBooleanValue(explSettings,
-		"showDiagReason", settings.isShowDiagReason()));
-	settings.setShowDiagConcreteDerivation(getBooleanValue(explSettings,
-		"showDiagConcreteDerivation", settings
-			.isShowDiagConcreteDerivation()));
-	settings.setShowDiagDerivation(getBooleanValue(explSettings,
-		"showDiagDerivation", settings.isShowDiagDerivation()));
-    }
+	private void readCompareCaseSettings(Element root) {
+		Element ccSettings = root.getChild("CompareCase");
 
-    private void readFrequentnessSettings(Element root) {
-	Element freqSettings = root.getChild("Frequentness");
+		settings.setShowCompareCase(getBooleanValue(ccSettings,
+				"showCompareCase", settings.isShowCompareCase()));
+	}
 
-	settings.setShowFrequentness(getBooleanValue(freqSettings,
-		"showFrequentness", settings.isShowFrequentness()));
+	private void readDiagnosesSettings(Element root) {
+		Element diagnosesSettings = root.getChild("Diagnoses");
 
-    }
+		settings.setShowHeuristicDiagnoses(getBooleanValue(diagnosesSettings,
+				"showHeuristicDiagnoses", settings.isShowHeuristicDiagnoses()));
+		settings.setShowHeuristicEstablishedDiagnoses(getBooleanValue(
+				diagnosesSettings, "showHeuristicEstablishedDiagnoses",
+				settings.isShowHeuristicEstablishedDiagnoses()));
+		settings.setShowHeuristicSuggestedDiagnoses(getBooleanValue(
+				diagnosesSettings, "showHeuristicSuggestedDiagnoses", settings
+						.isShowHeuristicSuggestedDiagnoses()));
+		settings.setShowHeuristicExcludedDiagnoses(getBooleanValue(
+				diagnosesSettings, "showHeuristicExcludedDiagnoses", settings
+						.isShowHeuristicExcludedDiagnoses()));
+	}
 
-    private void readMMInfoSettings(Element root) {
-	Element mmInfoSettings = root.getChild("MMInfo");
+	private void readDialogSettings(Element root) {
+		Element dialogSettings = root.getChild("Dialog");
 
-	settings.setShowMMInfo(getBooleanValue(mmInfoSettings, "showMMInfo",
-		settings.isShowMMInfo()));
-	settings.setMaxCharLengthInMMInfoPopup(getIntValue(mmInfoSettings,
-		"maxCharLengthInMMInfoPopup", settings
-			.getMaxCharLengthInMMInfoPopup()));
-    }
+		settings.setShowProgressBar(getBooleanValue(dialogSettings,
+				"showProgressBar", settings.isShowProgressBar()));
+		settings.setLeftPanelSize(getFloatValue(dialogSettings,
+				"leftPanelSizePercent", settings.getLeftPanelSize()));
+		settings.setLeftPanelFixed(getBooleanValue(dialogSettings,
+				"leftPanelFixed", settings.isLeftPanelFixed()));
+		settings.setRightPanelSize(getFloatValue(dialogSettings,
+				"rightPanelSizePercent", settings.getRightPanelSize()));
+		settings.setAllowRightPanel(getBooleanValue(dialogSettings,
+				"allowRightPanel", settings.isAllowRightPanel()));
+		settings.setShowRightPanelToggleButtons(getBooleanValue(dialogSettings,
+				"showRightPanelToggleButtons", settings
+						.isShowRightPanelToggleButtons()));
+		settings.setSaveCaseThreadMaxIdleTime(getLongValue(dialogSettings,
+				"saveCaseThreadMaxIdleTime", settings
+						.getSaveCaseThreadMaxIdleTime()));
+		settings.setSessionMaxInactiveInterval(getIntValue(dialogSettings,
+				"sessionMaxInactiveInterval", settings
+						.getSessionMaxInactiveInterval()));
+		settings.setShowManagementButton(getBooleanValue(dialogSettings,
+				"showManagementButton", settings.isShowManagementButton()));
+		settings.setShowDialogButton(getBooleanValue(dialogSettings,
+				"showDialogButton", settings.isShowDialogButton()));
+		settings.setTimeZone(getStringValue(dialogSettings, "timeZone",
+				settings.getTimeZone()));
+		settings.setShowCountryFlags(getBooleanValue(dialogSettings,
+				"showCountryFlags", settings.isShowCountryFlags()));
+		settings.setShowPageHeader(getBooleanValue(dialogSettings,
+				"showPageHeader", settings.isShowPageHeader()));
+		settings.setShowPageFooter(getBooleanValue(dialogSettings,
+				"showPageFooter", settings.isShowPageFooter()));
+	}
 
-    private void readProcessedQContainersSettings(Element root) {
-	Element procSettings = root.getChild("ProcessedQContainers");
+	private void readExplanationSettings(Element root) {
+		Element explSettings = root.getChild("Explanation");
 
-	settings.setShowProcessedQContainers(getBooleanValue(procSettings,
-		"showProcessedQContainers", settings
-			.isShowProcessedQContainers()));
-	settings.setProcessedShowAll(getBooleanValue(procSettings, "showAll",
-		settings.isProcessedShowAll()));
-	settings.setProcessedShowUnknown(getBooleanValue(procSettings,
-		"showUnknown", settings.isProcessedShowUnknown()));
-	settings.setProcessedMaxInput(getIntValue(procSettings, "maxInput",
-		settings.getProcessedMaxInput()));
-	settings.setProcessedQTextMode(getStringValue(procSettings,
-		"qTextMode", settings.getProcessedQTextMode()));
-	settings.setProcessedShowQContainerNames(getBooleanValue(procSettings,
-		"showQContainerNames", settings
-			.isProcessedShowQContainerNames()));
-	settings.setProcessedShowUnknownIcon(getBooleanValue(procSettings,
-		"showUnknownIcon", settings.isProcessedShowUnknownIcon()));
-	settings.setProcessedShowQContainerNamesIcon(getBooleanValue(
-		procSettings, "showQContainerNamesIcon", settings
-			.isProcessedShowQContainerNamesIcon()));
+		settings.setShowDiagExplanation(getBooleanValue(explSettings,
+				"showDiagExplanation", settings.isShowDiagExplanation()));
+		settings.setShowDiagReason(getBooleanValue(explSettings,
+				"showDiagReason", settings.isShowDiagReason()));
+		settings.setShowDiagConcreteDerivation(getBooleanValue(explSettings,
+				"showDiagConcreteDerivation", settings
+						.isShowDiagConcreteDerivation()));
+		settings.setShowDiagDerivation(getBooleanValue(explSettings,
+				"showDiagDerivation", settings.isShowDiagDerivation()));
+	}
 
-	settings.setShowAbstractQuestionsInResultPage(getBooleanValue(
-		procSettings, "showAbstractQuestionsInResultPage", settings
-			.isShowAbstractQuestionsInResultPage()));
-    }
+	private void readFrequentnessSettings(Element root) {
+		Element freqSettings = root.getChild("Frequentness");
 
+		settings.setShowFrequentness(getBooleanValue(freqSettings,
+				"showFrequentness", settings.isShowFrequentness()));
 
-    private void readQuestionPageSettings(Element root) {
-	Element qPageSettings = root.getChild("QuestionPage");
+	}
 
-	settings.setAutoMoveToResultpage(getBooleanValue(qPageSettings,
-		"autoMoveToResultpage", settings.isAutoMoveToResultpage()));
-	settings.setShowQuestionPageAnswerButton(getBooleanValue(qPageSettings,
-		"showQuestionPageAnswerButton", settings
-			.isShowQuestionPageAnswerButton()));
-	settings.setShowQuestionPageResultButton(getBooleanValue(qPageSettings,
-		"showQuestionPageResultButton", settings
-			.isShowQuestionPageResultButton()));
-	settings.setShowQuestionPageUnknownButton(getBooleanValue(
-		qPageSettings, "showQuestionPageUnknownButton", settings
-			.isShowQuestionPageUnknownButton()));
-	settings.setQuestionMinAnsWrap(getIntValue(qPageSettings,
-		"questionMinAnsWrap", settings.getQuestionMinAnsWrap()));
-	settings.setQuestionDateDefaultdateSection(getStringValue(
-		qPageSettings, "questionDateDefaultDatesection", settings
-			.getQuestionDateDefaultdateSection()));
-	settings.setDialogMode(getStringValue(qPageSettings, "dialogMode",
-		settings.getDialogMode()));
-	settings.setMCConstraintsAutoGrayOut(getBooleanValue(qPageSettings,
-		"mCConstraintsAutoGrayOut", settings
-			.isMCConstraintsAutoGrayOut()));
-	settings.setShowQASetTreeTab(getBooleanValue(qPageSettings,
-		"showQASetTreeTab", settings.isShowQASetTreeTab()));
-	settings.setShowDiagnosesTreeTab(getBooleanValue(qPageSettings,
-		"showDiagnosesTreeTab", settings.isShowDiagnosesTreeTab()));
-	settings.setShowAbstractQuestions(getBooleanValue(qPageSettings,
-		"showAbstractQuestions", settings.isShowAbstractQuestions()));
-    }
+	private void readMMInfoSettings(Element root) {
+		Element mmInfoSettings = root.getChild("MMInfo");
 
-    private void readXCLSettings(Element root) {
-	Element xclSettings = root.getChild("XCL");
+		settings.setShowMMInfo(getBooleanValue(mmInfoSettings, "showMMInfo",
+				settings.isShowMMInfo()));
+		settings.setMaxCharLengthInMMInfoPopup(getIntValue(mmInfoSettings,
+				"maxCharLengthInMMInfoPopup", settings
+						.getMaxCharLengthInMMInfoPopup()));
+	}
 
-	settings.setShowXCL(getBooleanValue(xclSettings, "showXCL", settings
-		.isShowXCL()));
-	settings.setXCL_digitcount(getIntValue(xclSettings, "digitcount",
-		settings.getXCL_digitcount()));
-	settings.setXCL_display_min_percentage(getFloatValue(xclSettings,
-		"displayMinPercentage", settings
-			.getXCL_display_min_percentage()));
-    }
+	private void readProcessedQContainersSettings(Element root) {
+		Element procSettings = root.getChild("ProcessedQContainers");
+
+		settings.setShowProcessedQContainers(getBooleanValue(procSettings,
+				"showProcessedQContainers", settings
+						.isShowProcessedQContainers()));
+		settings.setProcessedShowAll(getBooleanValue(procSettings, "showAll",
+				settings.isProcessedShowAll()));
+		settings.setProcessedShowUnknown(getBooleanValue(procSettings,
+				"showUnknown", settings.isProcessedShowUnknown()));
+		settings.setProcessedMaxInput(getIntValue(procSettings, "maxInput",
+				settings.getProcessedMaxInput()));
+		settings.setProcessedQTextMode(getStringValue(procSettings,
+				"qTextMode", settings.getProcessedQTextMode()));
+		settings.setProcessedShowQContainerNames(getBooleanValue(procSettings,
+				"showQContainerNames", settings
+						.isProcessedShowQContainerNames()));
+		settings.setProcessedShowUnknownIcon(getBooleanValue(procSettings,
+				"showUnknownIcon", settings.isProcessedShowUnknownIcon()));
+		settings.setProcessedShowQContainerNamesIcon(getBooleanValue(
+				procSettings, "showQContainerNamesIcon", settings
+						.isProcessedShowQContainerNamesIcon()));
+
+		settings.setShowAbstractQuestionsInResultPage(getBooleanValue(
+				procSettings, "showAbstractQuestionsInResultPage", settings
+						.isShowAbstractQuestionsInResultPage()));
+	}
+
+	private void readQuestionPageSettings(Element root) {
+		Element qPageSettings = root.getChild("QuestionPage");
+
+		settings.setAutoMoveToResultpage(getBooleanValue(qPageSettings,
+				"autoMoveToResultpage", settings.isAutoMoveToResultpage()));
+		settings.setShowQuestionPageAnswerButton(getBooleanValue(qPageSettings,
+				"showQuestionPageAnswerButton", settings
+						.isShowQuestionPageAnswerButton()));
+		settings.setShowQuestionPageResultButton(getBooleanValue(qPageSettings,
+				"showQuestionPageResultButton", settings
+						.isShowQuestionPageResultButton()));
+		settings.setShowQuestionPageUnknownButton(getBooleanValue(
+				qPageSettings, "showQuestionPageUnknownButton", settings
+						.isShowQuestionPageUnknownButton()));
+		settings.setQuestionMinAnsWrap(getIntValue(qPageSettings,
+				"questionMinAnsWrap", settings.getQuestionMinAnsWrap()));
+		settings.setQuestionDateDefaultdateSection(getStringValue(
+				qPageSettings, "questionDateDefaultDatesection", settings
+						.getQuestionDateDefaultdateSection()));
+		settings.setDialogMode(getStringValue(qPageSettings, "dialogMode",
+				settings.getDialogMode()));
+		settings.setMCConstraintsAutoGrayOut(getBooleanValue(qPageSettings,
+				"mCConstraintsAutoGrayOut", settings
+						.isMCConstraintsAutoGrayOut()));
+		settings.setShowQASetTreeTab(getBooleanValue(qPageSettings,
+				"showQASetTreeTab", settings.isShowQASetTreeTab()));
+		settings.setShowDiagnosesTreeTab(getBooleanValue(qPageSettings,
+				"showDiagnosesTreeTab", settings.isShowDiagnosesTreeTab()));
+		settings.setShowAbstractQuestions(getBooleanValue(qPageSettings,
+				"showAbstractQuestions", settings.isShowAbstractQuestions()));
+	}
+
+	private void readXCLSettings(Element root) {
+		Element xclSettings = root.getChild("XCL");
+
+		settings.setShowXCL(getBooleanValue(xclSettings, "showXCL", settings
+				.isShowXCL()));
+		settings.setXCL_digitcount(getIntValue(xclSettings, "digitcount",
+				settings.getXCL_digitcount()));
+		settings.setXCL_display_min_percentage(getFloatValue(xclSettings,
+				"displayMinPercentage", settings
+						.getXCL_display_min_percentage()));
+	}
 }

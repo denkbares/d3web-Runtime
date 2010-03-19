@@ -35,61 +35,61 @@ import org.apache.log4j.Logger;
  */
 public class UserWriter {
 
-    public static Logger logger = Logger.getLogger(UserWriter.class);
+	public static Logger logger = Logger.getLogger(UserWriter.class);
 
-    /**
-     * 
-     * @param users
-     *            java.util.List
-     * @param fileURL
-     *            java.lang.String
-     */
-    public static void writeUsers(List<User> users, String fileURL) {
-	try {
-	    URL url = new URL(fileURL);
-	    String file = url.getFile();
+	/**
+	 * 
+	 * @param users
+	 *            java.util.List
+	 * @param fileURL
+	 *            java.lang.String
+	 */
+	public static void writeUsers(List<User> users, String fileURL) {
+		try {
+			URL url = new URL(fileURL);
+			String file = url.getFile();
 
-	    PrintWriter pw = new PrintWriter(new FileWriter(file), true);
+			PrintWriter pw = new PrintWriter(new FileWriter(file), true);
 
-	    pw.println("<users>");
+			pw.println("<users>");
 
-	    Iterator<User> iter = users.iterator();
-	    while (iter.hasNext()) {
-		User u = iter.next();
-		pw.println(u.getXMLString());
-	    }
+			Iterator<User> iter = users.iterator();
+			while (iter.hasNext()) {
+				User u = iter.next();
+				pw.println(u.getXMLString());
+			}
 
-	    pw.println("</users>");
-	} catch (Exception e) {
-	    logger.error(e);
+			pw.println("</users>");
+		} catch (Exception e) {
+			logger.error(e);
+		}
 	}
-    }
 
-    /**
-     * 
-     * @param users
-     *            java.util.List
-     * @param fileURL
-     *            java.lang.String
-     */
-    public static void writeUsers(List<User> users, URL fileURL) {
-	try {
-	    String file = fileURL.getFile();
+	/**
+	 * 
+	 * @param users
+	 *            java.util.List
+	 * @param fileURL
+	 *            java.lang.String
+	 */
+	public static void writeUsers(List<User> users, URL fileURL) {
+		try {
+			String file = fileURL.getFile();
 
-	    PrintWriter pw = new PrintWriter(new FileWriter(file), true);
+			PrintWriter pw = new PrintWriter(new FileWriter(file), true);
 
-	    pw.println("<users>");
+			pw.println("<users>");
 
-	    Iterator<User> iter = users.iterator();
-	    while (iter.hasNext()) {
-		User u = iter.next();
-		pw.println(u.getXMLString());
-	    }
+			Iterator<User> iter = users.iterator();
+			while (iter.hasNext()) {
+				User u = iter.next();
+				pw.println(u.getXMLString());
+			}
 
-	    pw.println("</users>");
-	} catch (Exception x) {
-	    logger.error(x);
+			pw.println("</users>");
+		} catch (Exception x) {
+			logger.error(x);
+		}
 	}
-    }
 
 }

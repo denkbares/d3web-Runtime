@@ -27,56 +27,55 @@ import org.apache.log4j.Logger;
 
 public class DialogLayout {
 
-    public static String LAYOUTFILE_STRING = "dialoglayout.xml";
+	public static String LAYOUTFILE_STRING = "dialoglayout.xml";
 
-    private List<QContainerLayout> qContainerList;
+	private List<QContainerLayout> qContainerList;
 
-    private QuestionPageLayout questionPageLayout;
+	private QuestionPageLayout questionPageLayout;
 
-    public static Logger logger = Logger.getLogger(DialogLayout.class);
+	public static Logger logger = Logger.getLogger(DialogLayout.class);
 
-    public QContainerLayout getQContainerLayoutDefinitionForID(String id) {
-	for (QContainerLayout qCont : qContainerList) {
-	    if (qCont.getQContID().equals(id)) {
-		return qCont;
-	    }
+	public QContainerLayout getQContainerLayoutDefinitionForID(String id) {
+		for (QContainerLayout qCont : qContainerList) {
+			if (qCont.getQContID().equals(id)) {
+				return qCont;
+			}
+		}
+		return null;
 	}
-	return null;
-    }
 
-    public List<QContainerLayout> getQContainerList() {
-	return qContainerList;
-    }
-
-    public QuestionPageLayout getQuestionPageLayout() {
-	return questionPageLayout;
-    }
-
-
-    public boolean hasDefinitonsForQContainerID(String id) {
-	if (qContainerList.size() == 0) {
-	    return false;
+	public List<QContainerLayout> getQContainerList() {
+		return qContainerList;
 	}
-	for (QContainerLayout qCont : qContainerList) {
-	    if (qCont.getQContID().equals(id)) {
-		return true;
-	    }
+
+	public QuestionPageLayout getQuestionPageLayout() {
+		return questionPageLayout;
 	}
-	return false;
-    }
 
-    public void init(String kbid) {
-	qContainerList = new ArrayList<QContainerLayout>();
-	questionPageLayout = new QuestionPageLayout();
-	new DialogLayoutLoader(this).init(kbid);
-    }
+	public boolean hasDefinitonsForQContainerID(String id) {
+		if (qContainerList.size() == 0) {
+			return false;
+		}
+		for (QContainerLayout qCont : qContainerList) {
+			if (qCont.getQContID().equals(id)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-    public void setQContainerList(List<QContainerLayout> containerList) {
-	qContainerList = containerList;
-    }
+	public void init(String kbid) {
+		qContainerList = new ArrayList<QContainerLayout>();
+		questionPageLayout = new QuestionPageLayout();
+		new DialogLayoutLoader(this).init(kbid);
+	}
 
-    public void setQuestionPageLayout(QuestionPageLayout questionPageLayout) {
-	this.questionPageLayout = questionPageLayout;
-    }
+	public void setQContainerList(List<QContainerLayout> containerList) {
+		qContainerList = containerList;
+	}
+
+	public void setQuestionPageLayout(QuestionPageLayout questionPageLayout) {
+		this.questionPageLayout = questionPageLayout;
+	}
 
 }

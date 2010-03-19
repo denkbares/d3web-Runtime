@@ -37,108 +37,108 @@ import de.d3web.dialog2.util.DialogUtils;
 
 public class LoadCaseController {
 
-    private String sortColumn = null;
+	private String sortColumn = null;
 
-    private boolean sortAscending = true;
+	private boolean sortAscending = true;
 
-    private HtmlDataTable loadCaseDataTable;
+	private HtmlDataTable loadCaseDataTable;
 
-    public List<CaseObjectDescriptor> getCases() {
-	WebDialog dia = DialogUtils.getDialog();
-	List<CaseObjectDescriptor> cases = new LinkedList<CaseObjectDescriptor>();
-	String kbid = dia.getTheCase().getKnowledgeBase().getId();
-	if (!CaseManager.getInstance().hasCasesForKb(kbid)) {
-	    CaseManager.getInstance().loadCases(kbid);
-	}
-	cases = new LinkedList<CaseObjectDescriptor>(CaseManager.getInstance()
-		.getCaseObjectDescriptorsForKb(kbid));
-	return cases;
-    }
-
-    public HtmlDataTable getLoadCaseDataTable() {
-	return loadCaseDataTable;
-    }
-
-    public String getSortColumn() {
-	return sortColumn;
-    }
-
-    public boolean isHasData() {
-	if (getCases().size() == 0) {
-	    return false;
-	}
-	return true;
-    }
-
-    public boolean isSortAscending() {
-	return sortAscending;
-    }
-
-    public String loadCase() {
-	WebDialog dia = DialogUtils.getDialog();
-
-	CaseObjectDescriptor caseObject = (CaseObjectDescriptor) loadCaseDataTable
-		.getRowData();
-	CaseObject co = CaseManager.getInstance().getCase(
-		dia.getTheCase().getKnowledgeBase().getId(),
-		caseObject.getCaseId());
-
-	// a case will be loaded, so we have to execute the CaseFinalizer...
-	if (dia.getTheCase() != null) {
-	    CaseFinalizationNotifier.finalizeCase(dia.getTheCase());
+	public List<CaseObjectDescriptor> getCases() {
+		WebDialog dia = DialogUtils.getDialog();
+		List<CaseObjectDescriptor> cases = new LinkedList<CaseObjectDescriptor>();
+		String kbid = dia.getTheCase().getKnowledgeBase().getId();
+		if (!CaseManager.getInstance().hasCasesForKb(kbid)) {
+			CaseManager.getInstance().loadCases(kbid);
+		}
+		cases = new LinkedList<CaseObjectDescriptor>(CaseManager.getInstance()
+				.getCaseObjectDescriptorsForKb(kbid));
+		return cases;
 	}
 
-	dia.setTheCase(DialogUtils.createNewAnsweredCase(co, dia.getTheCase()
-		.getKnowledgeBase()));
-
-	dia.setCaseStartTimeToNow();
-	dia.setCaseLoaded(true);
-	dia.setCaseSaved(false);
-
-	// set the loaded properties into savecasebean
-	setLoadedCasePropertiesInSaveCaseBean(co);
-
-	long processingTime = ((IMetaData) co.getProperties().getProperty(
-		Property.CASE_METADATA)).getProcessingTime();
-	if (processingTime > 0) {
-	    dia.setCaseProcessingTime(processingTime * 1000); // because the
-							      // time is saved
-							      // as x/1000
+	public HtmlDataTable getLoadCaseDataTable() {
+		return loadCaseDataTable;
 	}
 
-	// init the Trees so that the actual diagnoses and containers are
-	// overtaken
+	public String getSortColumn() {
+		return sortColumn;
+	}
 
-	// re-init QuestionPageBean and move to result page...
-	DialogUtils.getQuestionPageBean().init();
-	DialogUtils.getPageDisplay().moveToQuestionPage();
-	DialogUtils.getPageDisplay().moveToResultPage();
+	public boolean isHasData() {
+		if (getCases().size() == 0) {
+			return false;
+		}
+		return true;
+	}
 
-	return "";
-    }
+	public boolean isSortAscending() {
+		return sortAscending;
+	}
 
-    public void setLoadCaseDataTable(HtmlDataTable loadCaseDataTable) {
-	this.loadCaseDataTable = loadCaseDataTable;
-    }
+	public String loadCase() {
+		WebDialog dia = DialogUtils.getDialog();
 
-    private void setLoadedCasePropertiesInSaveCaseBean(CaseObject co) {
-	SaveCaseController saveCaseBean = DialogUtils.getSaveCaseBean();
-	saveCaseBean.setCaseTitle(co.getDCMarkup().getContent(DCElement.TITLE));
-	saveCaseBean.setCaseComment(co.getDCMarkup().getContent(
-		DCElement.DESCRIPTION));
-	saveCaseBean.setCaseAuthor(co.getDCMarkup().getContent(
-		DCElement.CREATOR));
-	// TODO should the old date be set?
-	saveCaseBean.setCaseDate(DCElement.string2date(co.getDCMarkup()
-		.getContent(DCElement.DATE)));
+		CaseObjectDescriptor caseObject = (CaseObjectDescriptor) loadCaseDataTable
+				.getRowData();
+		CaseObject co = CaseManager.getInstance().getCase(
+				dia.getTheCase().getKnowledgeBase().getId(),
+				caseObject.getCaseId());
 
-    }
+		// a case will be loaded, so we have to execute the CaseFinalizer...
+		if (dia.getTheCase() != null) {
+			CaseFinalizationNotifier.finalizeCase(dia.getTheCase());
+		}
 
-    public void setSortAscending(boolean sortAscending) {
-	this.sortAscending = sortAscending;
-    }
+		dia.setTheCase(DialogUtils.createNewAnsweredCase(co, dia.getTheCase()
+				.getKnowledgeBase()));
 
-    public void setSortColumn(String sortColumn) {
-	this.sortColumn = sortColumn;
-    }
+		dia.setCaseStartTimeToNow();
+		dia.setCaseLoaded(true);
+		dia.setCaseSaved(false);
+
+		// set the loaded properties into savecasebean
+		setLoadedCasePropertiesInSaveCaseBean(co);
+
+		long processingTime = ((IMetaData) co.getProperties().getProperty(
+				Property.CASE_METADATA)).getProcessingTime();
+		if (processingTime > 0) {
+			dia.setCaseProcessingTime(processingTime * 1000); // because the
+			// time is saved
+			// as x/1000
+		}
+
+		// init the Trees so that the actual diagnoses and containers are
+		// overtaken
+
+		// re-init QuestionPageBean and move to result page...
+		DialogUtils.getQuestionPageBean().init();
+		DialogUtils.getPageDisplay().moveToQuestionPage();
+		DialogUtils.getPageDisplay().moveToResultPage();
+
+		return "";
+	}
+
+	public void setLoadCaseDataTable(HtmlDataTable loadCaseDataTable) {
+		this.loadCaseDataTable = loadCaseDataTable;
+	}
+
+	private void setLoadedCasePropertiesInSaveCaseBean(CaseObject co) {
+		SaveCaseController saveCaseBean = DialogUtils.getSaveCaseBean();
+		saveCaseBean.setCaseTitle(co.getDCMarkup().getContent(DCElement.TITLE));
+		saveCaseBean.setCaseComment(co.getDCMarkup().getContent(
+				DCElement.DESCRIPTION));
+		saveCaseBean.setCaseAuthor(co.getDCMarkup().getContent(
+				DCElement.CREATOR));
+		// TODO should the old date be set?
+		saveCaseBean.setCaseDate(DCElement.string2date(co.getDCMarkup()
+				.getContent(DCElement.DATE)));
+
+	}
+
+	public void setSortAscending(boolean sortAscending) {
+		this.sortAscending = sortAscending;
+	}
+
+	public void setSortColumn(String sortColumn) {
+		this.sortColumn = sortColumn;
+	}
 }

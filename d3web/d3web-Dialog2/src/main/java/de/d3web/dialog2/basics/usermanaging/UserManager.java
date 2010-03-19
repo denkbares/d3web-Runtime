@@ -31,129 +31,129 @@ import java.util.List;
  */
 public class UserManager {
 
-    private static UserManager instance;
+	private static UserManager instance;
 
-    /**
-     * @return testServlet.userManaging.UserManager
-     */
-    public static UserManager getInstance() {
-	if (instance == null) {
-	    instance = new UserManager();
-	}
-	return instance;
-    }
-
-    private UserLoader userLoader = null;
-
-    private boolean loaded = false;
-
-    /**
-     * UserManager constructor comment.
-     */
-    private UserManager() {
-	setUserLoader(new UserLoader());
-
-    }
-
-    /**
-     * @param u
-     *            testServlet.userManaging.User
-     */
-    public void addUser(User u) {
-	removeUser(u);
-	userLoader.getUsers().add(u);
-	saveUsers();
-    }
-
-    /**
-     * 
-     * @return boolean
-     * @param email
-     *            java.lang.String
-     */
-    public boolean containsEmail(String email) {
-	Iterator<User> iter = userLoader.getUsers().iterator();
-	while (iter.hasNext()) {
-	    User u = iter.next();
-	    if (u.getEmail().equals(email)) {
-		return true;
-	    }
+	/**
+	 * @return testServlet.userManaging.UserManager
+	 */
+	public static UserManager getInstance() {
+		if (instance == null) {
+			instance = new UserManager();
+		}
+		return instance;
 	}
 
-	return false;
-    }
+	private UserLoader userLoader = null;
 
-    /**
-     * @return java.util.List
-     */
-    public List<User> getAllLoadedUsers() {
-	List<User> ret = new LinkedList<User>();
-	if (!loaded) {
-	    reset();
+	private boolean loaded = false;
+
+	/**
+	 * UserManager constructor comment.
+	 */
+	private UserManager() {
+		setUserLoader(new UserLoader());
+
 	}
-	ret.addAll(userLoader.getUsers());
-	return ret;
-    }
 
-    /**
-     * @return de.d3web.gui.html.usermanaging.User
-     * @param email
-     *            java.lang.String
-     */
-    public User getUserByEmail(String email) {
-	Iterator<User> iter = getAllLoadedUsers().iterator();
-	while (iter.hasNext()) {
-	    User u = iter.next();
-	    if (u.getEmail().equals(email)) {
-		return u;
-	    }
+	/**
+	 * @param u
+	 *            testServlet.userManaging.User
+	 */
+	public void addUser(User u) {
+		removeUser(u);
+		userLoader.getUsers().add(u);
+		saveUsers();
 	}
-	return null;
-    }
 
-    /**
-     * @return boolean
-     */
-    public boolean hasLoaded() {
-	return loaded;
-    }
+	/**
+	 * 
+	 * @return boolean
+	 * @param email
+	 *            java.lang.String
+	 */
+	public boolean containsEmail(String email) {
+		Iterator<User> iter = userLoader.getUsers().iterator();
+		while (iter.hasNext()) {
+			User u = iter.next();
+			if (u.getEmail().equals(email)) {
+				return true;
+			}
+		}
 
-    /**
-     * @param u
-     *            testServlet.userManaging.User
-     */
-    public void removeUser(User u) {
-	userLoader.getUsers().remove(u);
+		return false;
+	}
 
-	saveUsers();
-    }
+	/**
+	 * @return java.util.List
+	 */
+	public List<User> getAllLoadedUsers() {
+		List<User> ret = new LinkedList<User>();
+		if (!loaded) {
+			reset();
+		}
+		ret.addAll(userLoader.getUsers());
+		return ret;
+	}
 
-    public void reset() {
-	userLoader.load();
-	loaded = true;
-    }
+	/**
+	 * @return de.d3web.gui.html.usermanaging.User
+	 * @param email
+	 *            java.lang.String
+	 */
+	public User getUserByEmail(String email) {
+		Iterator<User> iter = getAllLoadedUsers().iterator();
+		while (iter.hasNext()) {
+			User u = iter.next();
+			if (u.getEmail().equals(email)) {
+				return u;
+			}
+		}
+		return null;
+	}
 
-    public void saveUsers() {
-	UserWriter.writeUsers(getAllLoadedUsers(), userLoader.getFileURL());
-    }
+	/**
+	 * @return boolean
+	 */
+	public boolean hasLoaded() {
+		return loaded;
+	}
 
-    /**
-     * @param newUserLoader
-     *            testServlet.userManaging.UserLoader
-     */
-    public void setUserLoader(UserLoader newUserLoader) {
-	userLoader = newUserLoader;
-	userLoader.load();
-    }
+	/**
+	 * @param u
+	 *            testServlet.userManaging.User
+	 */
+	public void removeUser(User u) {
+		userLoader.getUsers().remove(u);
 
-    /**
-     * @return boolean
-     * @param u
-     *            testServlet.userManaging.User
-     */
-    public boolean validateUser(User u) {
-	if (u == null)
-	    return false;
-	return userLoader.getUsers().contains(u);
-    }
+		saveUsers();
+	}
+
+	public void reset() {
+		userLoader.load();
+		loaded = true;
+	}
+
+	public void saveUsers() {
+		UserWriter.writeUsers(getAllLoadedUsers(), userLoader.getFileURL());
+	}
+
+	/**
+	 * @param newUserLoader
+	 *            testServlet.userManaging.UserLoader
+	 */
+	public void setUserLoader(UserLoader newUserLoader) {
+		userLoader = newUserLoader;
+		userLoader.load();
+	}
+
+	/**
+	 * @return boolean
+	 * @param u
+	 *            testServlet.userManaging.User
+	 */
+	public boolean validateUser(User u) {
+		if (u == null)
+			return false;
+		return userLoader.getUsers().contains(u);
+	}
 }

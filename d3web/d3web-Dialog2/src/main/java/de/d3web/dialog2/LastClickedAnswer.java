@@ -43,7 +43,8 @@ public class LastClickedAnswer {
 		return cases2LastClickedAnswerID.get(aCaseId);
 	}
 
-	public void setLastClickedAnswerID(String lastClickedAnswerID, String aCaseId) {
+	public void setLastClickedAnswerID(String lastClickedAnswerID,
+			String aCaseId) {
 		cases2LastClickedAnswerID.put(aCaseId, lastClickedAnswerID);
 	}
 

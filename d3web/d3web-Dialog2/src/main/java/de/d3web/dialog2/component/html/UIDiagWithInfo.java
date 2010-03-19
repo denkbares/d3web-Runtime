@@ -33,41 +33,41 @@ import de.d3web.dialog2.util.DialogUtils;
 
 public class UIDiagWithInfo extends HtmlOutputText {
 
-    public static final String COMPONENT_TYPE = "de.d3web.dialog2.DiagWithInfo";
+	public static final String COMPONENT_TYPE = "de.d3web.dialog2.DiagWithInfo";
 
-    private static final String DEFAULT_RENDERER_TYPE = null;
+	private static final String DEFAULT_RENDERER_TYPE = null;
 
-    public UIDiagWithInfo() {
-	setRendererType(DEFAULT_RENDERER_TYPE);
-    }
+	public UIDiagWithInfo() {
+		setRendererType(DEFAULT_RENDERER_TYPE);
+	}
 
-    @Override
-    public void encodeEnd(FacesContext context) throws IOException {
-	ResponseWriter writer = FacesContext.getCurrentInstance()
-		.getResponseWriter();
-	XPSCase theCase = DialogUtils.getDialog().getTheCase();
+	@Override
+	public void encodeEnd(FacesContext context) throws IOException {
+		ResponseWriter writer = FacesContext.getCurrentInstance()
+				.getResponseWriter();
+		XPSCase theCase = DialogUtils.getDialog().getTheCase();
 
-	Diagnosis diag = theCase.getKnowledgeBase().searchDiagnosis(
-		(String) getValue());
+		Diagnosis diag = theCase.getKnowledgeBase().searchDiagnosis(
+				(String) getValue());
 
-	DialogRenderUtils.renderDiagnosesLink(writer, this, diag, theCase,
-		getStyleClass(), null, false);
-	writer.write(" ");
-	DialogRenderUtils
-		.renderMMInfoPopupLink(writer, this, diag, false, null);
-    }
+		DialogRenderUtils.renderDiagnosesLink(writer, this, diag, theCase,
+				getStyleClass(), null, false);
+		writer.write(" ");
+		DialogRenderUtils
+				.renderMMInfoPopupLink(writer, this, diag, false, null);
+	}
 
-    @Override
-    public void restoreState(FacesContext context, Object state) {
-	Object values[] = (Object[]) state;
-	super.restoreState(context, values[0]);
-    }
+	@Override
+	public void restoreState(FacesContext context, Object state) {
+		Object values[] = (Object[]) state;
+		super.restoreState(context, values[0]);
+	}
 
-    @Override
-    public Object saveState(FacesContext context) {
-	Object values[] = new Object[1];
-	values[0] = super.saveState(context);
-	return ((values));
-    }
+	@Override
+	public Object saveState(FacesContext context) {
+		Object values[] = new Object[1];
+		values[0] = super.saveState(context);
+		return ((values));
+	}
 
 }

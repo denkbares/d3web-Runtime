@@ -39,80 +39,80 @@ import de.d3web.dialog2.util.DialogUtils;
 
 public class KBUploadController implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private UploadedFile upFile;
+	private UploadedFile upFile;
 
-    private String name = "";
+	private String name = "";
 
-    public static Logger logger = Logger.getLogger(ActionEvent.class);
+	public static Logger logger = Logger.getLogger(ActionEvent.class);
 
-    public String getName() {
-	return name;
-    }
-
-    public UploadedFile getUpFile() {
-	return upFile;
-    }
-
-    public void setName(String name) {
-	this.name = name;
-    }
-
-    public void setUpFile(UploadedFile upFile) {
-	this.upFile = upFile;
-    }
-
-    public void upload(ActionEvent event) throws Exception {
-	if (upFile == null) {
-	    // error
-	    return;
+	public String getName() {
+		return name;
 	}
-	File savedFile = DialogUtils.saveFile(upFile, DialogUtils
-		.getRealPath(ResourceRepository.getInstance()
-			.getBasicSettingValue(ResourceRepository.KB_PATH)));
 
-	if (savedFile == null) {
-	    return; // error
-	} else {
-	    String filename = savedFile.toURI().toURL().toExternalForm();
-	    KnowledgeBase kb = KnowledgeBaseRepository.getInstance()
-		    .loadKnowledgeBaseFromJar(filename);
-	    if (kb != null) {
-		String retrievedId = kb.getDCMarkup().getContent(
-			DCElement.TITLE);
-		retrievedId = Utilities.idify(retrievedId);
-		if (retrievedId == null || retrievedId.length() == 0) {
-		    logger.warn("==> KB has no id! Create id from filename");
-		    retrievedId = savedFile.getName().substring(0,
-			    savedFile.getName().indexOf(".jar"));
+	public UploadedFile getUpFile() {
+		return upFile;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setUpFile(UploadedFile upFile) {
+		this.upFile = upFile;
+	}
+
+	public void upload(ActionEvent event) throws Exception {
+		if (upFile == null) {
+			// error
+			return;
 		}
-		kb.setId(retrievedId);
-		KnowledgeBaseRepository.getInstance().addKnowledgeBase(
-			retrievedId, kb);
-		KnowledgeBaseDescriptor desc = KBDescriptorLoader.getInstance()
-			.getKnowledgeBaseDescriptor(retrievedId);
+		File savedFile = DialogUtils.saveFile(upFile, DialogUtils
+				.getRealPath(ResourceRepository.getInstance()
+						.getBasicSettingValue(ResourceRepository.KB_PATH)));
 
-		if (desc == null) {
-		    desc = new KnowledgeBaseDescriptor();
+		if (savedFile == null) {
+			return; // error
 		} else {
-		    KBDescriptorLoader.getInstance()
-			    .removeDescriptorOnlyByKnowledgeBaseId(retrievedId);
+			String filename = savedFile.toURI().toURL().toExternalForm();
+			KnowledgeBase kb = KnowledgeBaseRepository.getInstance()
+					.loadKnowledgeBaseFromJar(filename);
+			if (kb != null) {
+				String retrievedId = kb.getDCMarkup().getContent(
+						DCElement.TITLE);
+				retrievedId = Utilities.idify(retrievedId);
+				if (retrievedId == null || retrievedId.length() == 0) {
+					logger.warn("==> KB has no id! Create id from filename");
+					retrievedId = savedFile.getName().substring(0,
+							savedFile.getName().indexOf(".jar"));
+				}
+				kb.setId(retrievedId);
+				KnowledgeBaseRepository.getInstance().addKnowledgeBase(
+						retrievedId, kb);
+				KnowledgeBaseDescriptor desc = KBDescriptorLoader.getInstance()
+						.getKnowledgeBaseDescriptor(retrievedId);
+
+				if (desc == null) {
+					desc = new KnowledgeBaseDescriptor();
+				} else {
+					KBDescriptorLoader.getInstance()
+							.removeDescriptorOnlyByKnowledgeBaseId(retrievedId);
+				}
+				desc.setLocation("file://"
+						+ ResourceRepository.getInstance()
+								.getBasicSettingValue(
+										ResourceRepository.KB_PATH)
+						+ savedFile.getName());
+				desc.setId(retrievedId);
+				desc.setLocationType("jar");
+				desc.setName(name);
+				desc.setType("complete");
+
+				KBDescriptorLoader.getInstance().addDescriptor(desc);
+			}
 		}
-		desc.setLocation("file://"
-			+ ResourceRepository.getInstance()
-				.getBasicSettingValue(
-					ResourceRepository.KB_PATH)
-			+ savedFile.getName());
-		desc.setId(retrievedId);
-		desc.setLocationType("jar");
-		desc.setName(name);
-		desc.setType("complete");
 
-		KBDescriptorLoader.getInstance().addDescriptor(desc);
-	    }
 	}
-
-    }
 
 }

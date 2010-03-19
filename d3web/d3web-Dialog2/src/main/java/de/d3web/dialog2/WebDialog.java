@@ -37,114 +37,114 @@ import de.d3web.dialog2.util.SaveCaseThread;
 
 public class WebDialog {
 
-    private XPSCase theCase;
+	private XPSCase theCase;
 
-    private long caseStartTime = System.currentTimeMillis();
+	private long caseStartTime = System.currentTimeMillis();
 
-    private long caseProcessingTime;
+	private long caseProcessingTime;
 
-    private boolean caseLoaded;
+	private boolean caseLoaded;
 
-    private boolean caseSaved;
+	private boolean caseSaved;
 
-    public static Logger logger = Logger.getLogger(WebDialog.class);
+	public static Logger logger = Logger.getLogger(WebDialog.class);
 
-    public static void resetWebApp() {
-	ResourceRepository.getInstance().initialize();
-	KBDescriptorLoader.getInstance().initialize();
-	KnowledgeBaseRepository.getInstance().initialize();
-	UserManager.getInstance().reset();
-	CaseManager.getInstance().initialize();
-    }
-
-    public WebDialog() {
-	// to set the right contextPath...
-	DialogUtils.init();
-	CaseManager.getInstance().initialize();
-    }
-
-    public long getCaseProcessingTime() {
-	return System.currentTimeMillis() - caseStartTime + caseProcessingTime;
-    }
-
-    public long getCaseStartTime() {
-	return caseStartTime;
-    }
-
-    public XPSCase getTheCase() {
-	return theCase;
-    }
-
-    public boolean isCaseLoaded() {
-	return caseLoaded;
-    }
-
-    public boolean isCaseSaved() {
-	return caseSaved;
-    }
-
-    public String killSession() {
-	logger.info("Sessions gets invalidated...");
-	resetWebApp();
-	HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
-		.getExternalContext().getSession(false);
-	if (session != null) {
-	    session.invalidate();
-	}
-	return "";
-    }
-
-    public void setCaseLoaded(boolean caseLoaded) {
-	this.caseLoaded = caseLoaded;
-    }
-
-    public void setCaseProcessingTime(long caseProcessingTime) {
-	this.caseProcessingTime = caseProcessingTime;
-    }
-
-    public void setCaseSaved(boolean caseSaved) {
-	this.caseSaved = caseSaved;
-    }
-
-    public void setCaseStartTimeToNow() {
-	caseStartTime = System.currentTimeMillis();
-    }
-
-    public void setTheCase(XPSCase theCase) {
-	this.theCase = theCase;
-	DialogUtils.getKBLoadBean().setLoadedKb(theCase.getKnowledgeBase());
-	DialogUtils.getKBLoadBean().setKbID(theCase.getKnowledgeBase().getId());
-    }
-
-    public String startNewCase() {
-	// we will start a new case, so we have to execute the casefinalizer...
-	if (theCase != null) {
-	    CaseFinalizationNotifier.finalizeCase(theCase);
+	public static void resetWebApp() {
+		ResourceRepository.getInstance().initialize();
+		KBDescriptorLoader.getInstance().initialize();
+		KnowledgeBaseRepository.getInstance().initialize();
+		UserManager.getInstance().reset();
+		CaseManager.getInstance().initialize();
 	}
 
-	setCaseStartTimeToNow();
-	caseProcessingTime = 0;
-	setTheCase(DialogUtils.createNewCase(DialogUtils.getKBLoadBean()
-		.getLoadedKb()));
-	caseLoaded = false;
-	caseSaved = false;
-	// reset savecase data...
-	DialogUtils.getSaveCaseBean().resetData();
-
-	// init saveCaseThread
-	long saveCaseThreadMaxIdleTime = DialogUtils.getDialogSettings()
-		.getSaveCaseThreadMaxIdleTime();
-	if (saveCaseThreadMaxIdleTime > 0) {
-	    SaveCaseThread saveCaseThread = new SaveCaseThread(this,
-		    DialogUtils.getSaveCaseBean(), theCase, DialogUtils
-			    .getUserBean().getUser(), saveCaseThreadMaxIdleTime);
-	    theCase.addListener(saveCaseThread);
-	    saveCaseThread.start();
+	public WebDialog() {
+		// to set the right contextPath...
+		DialogUtils.init();
+		CaseManager.getInstance().initialize();
 	}
 
-	DialogUtils.getQuestionPageBean().init();
+	public long getCaseProcessingTime() {
+		return System.currentTimeMillis() - caseStartTime + caseProcessingTime;
+	}
 
-	return DialogUtils.getPageDisplay().moveToQuestionPage();
-    }
+	public long getCaseStartTime() {
+		return caseStartTime;
+	}
+
+	public XPSCase getTheCase() {
+		return theCase;
+	}
+
+	public boolean isCaseLoaded() {
+		return caseLoaded;
+	}
+
+	public boolean isCaseSaved() {
+		return caseSaved;
+	}
+
+	public String killSession() {
+		logger.info("Sessions gets invalidated...");
+		resetWebApp();
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
+				.getExternalContext().getSession(false);
+		if (session != null) {
+			session.invalidate();
+		}
+		return "";
+	}
+
+	public void setCaseLoaded(boolean caseLoaded) {
+		this.caseLoaded = caseLoaded;
+	}
+
+	public void setCaseProcessingTime(long caseProcessingTime) {
+		this.caseProcessingTime = caseProcessingTime;
+	}
+
+	public void setCaseSaved(boolean caseSaved) {
+		this.caseSaved = caseSaved;
+	}
+
+	public void setCaseStartTimeToNow() {
+		caseStartTime = System.currentTimeMillis();
+	}
+
+	public void setTheCase(XPSCase theCase) {
+		this.theCase = theCase;
+		DialogUtils.getKBLoadBean().setLoadedKb(theCase.getKnowledgeBase());
+		DialogUtils.getKBLoadBean().setKbID(theCase.getKnowledgeBase().getId());
+	}
+
+	public String startNewCase() {
+		// we will start a new case, so we have to execute the casefinalizer...
+		if (theCase != null) {
+			CaseFinalizationNotifier.finalizeCase(theCase);
+		}
+
+		setCaseStartTimeToNow();
+		caseProcessingTime = 0;
+		setTheCase(DialogUtils.createNewCase(DialogUtils.getKBLoadBean()
+				.getLoadedKb()));
+		caseLoaded = false;
+		caseSaved = false;
+		// reset savecase data...
+		DialogUtils.getSaveCaseBean().resetData();
+
+		// init saveCaseThread
+		long saveCaseThreadMaxIdleTime = DialogUtils.getDialogSettings()
+				.getSaveCaseThreadMaxIdleTime();
+		if (saveCaseThreadMaxIdleTime > 0) {
+			SaveCaseThread saveCaseThread = new SaveCaseThread(this,
+					DialogUtils.getSaveCaseBean(), theCase, DialogUtils
+							.getUserBean().getUser(), saveCaseThreadMaxIdleTime);
+			theCase.addListener(saveCaseThread);
+			saveCaseThread.start();
+		}
+
+		DialogUtils.getQuestionPageBean().init();
+
+		return DialogUtils.getPageDisplay().moveToQuestionPage();
+	}
 
 }

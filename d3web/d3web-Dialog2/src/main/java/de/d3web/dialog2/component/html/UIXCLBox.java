@@ -25,24 +25,24 @@ import javax.faces.context.FacesContext;
 
 public class UIXCLBox extends UIOutput {
 
-    public static final String COMPONENT_TYPE = "de.d3web.dialog2.XCLBox";
+	public static final String COMPONENT_TYPE = "de.d3web.dialog2.XCLBox";
 
-    private static final String DEFAULT_RENDERER_TYPE = "de.d3web.dialog2.XCLBox";
+	private static final String DEFAULT_RENDERER_TYPE = "de.d3web.dialog2.XCLBox";
 
-    public UIXCLBox() {
-	setRendererType(DEFAULT_RENDERER_TYPE);
-    }
+	public UIXCLBox() {
+		setRendererType(DEFAULT_RENDERER_TYPE);
+	}
 
-    @Override
-    public void restoreState(FacesContext context, Object state) {
-	Object values[] = (Object[]) state;
-	super.restoreState(context, values[0]);
-    }
+	@Override
+	public void restoreState(FacesContext context, Object state) {
+		Object values[] = (Object[]) state;
+		super.restoreState(context, values[0]);
+	}
 
-    @Override
-    public Object saveState(FacesContext context) {
-	Object values[] = new Object[1];
-	values[0] = super.saveState(context);
-	return ((values));
-    }
+	@Override
+	public Object saveState(FacesContext context) {
+		Object values[] = new Object[1];
+		values[0] = super.saveState(context);
+		return ((values));
+	}
 }

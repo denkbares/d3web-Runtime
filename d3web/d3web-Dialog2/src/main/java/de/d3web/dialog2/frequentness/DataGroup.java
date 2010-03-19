@@ -25,25 +25,25 @@ import java.util.List;
 
 public class DataGroup {
 
-    private String text;
+	private String text;
 
-    private List<DataWithFrequentness> dataWithFrequentnessList;
+	private List<DataWithFrequentness> dataWithFrequentnessList;
 
-    public DataGroup(String text) {
-	this.text = text;
-	dataWithFrequentnessList = new ArrayList<DataWithFrequentness>();
-    }
+	public DataGroup(String text) {
+		this.text = text;
+		dataWithFrequentnessList = new ArrayList<DataWithFrequentness>();
+	}
 
-    public void addDataWithFrequentness(DataWithFrequentness data) {
-	dataWithFrequentnessList.add(data);
-    }
+	public void addDataWithFrequentness(DataWithFrequentness data) {
+		dataWithFrequentnessList.add(data);
+	}
 
-    public List<DataWithFrequentness> getDataWithFrequentnessList() {
-	return dataWithFrequentnessList;
-    }
+	public List<DataWithFrequentness> getDataWithFrequentnessList() {
+		return dataWithFrequentnessList;
+	}
 
-    public String getText() {
-	return text;
-    }
+	public String getText() {
+		return text;
+	}
 
 }

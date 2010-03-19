@@ -24,107 +24,107 @@ import java.util.List;
 
 public class QContainerLayout extends QuestionPageLayout {
 
-    private List<QuestionLayout> questionLayoutList;
+	private List<QuestionLayout> questionLayoutList;
 
-    private List<HtmlTextLayout> htmlTextList;
+	private List<HtmlTextLayout> htmlTextList;
 
-    private String qContID;
+	private String qContID;
 
-    private int rows;
+	private int rows;
 
-    private int cols;
+	private int cols;
 
-    private int defaultColspan;
+	private int defaultColspan;
 
-    // private boolean usePositioning;
+	// private boolean usePositioning;
 
-    public int getDefaultColspan() {
-	return defaultColspan;
-    }
-
-    public void setDefaultColspan(int defaultColspan) {
-	this.defaultColspan = defaultColspan;
-    }
-
-    public void setDefaultColspan(String defaultColspanString) {
-	try {
-	    setDefaultColspan(Integer.parseInt(defaultColspanString));
-	} catch (NumberFormatException e) {
-	    // do nothing
+	public int getDefaultColspan() {
+		return defaultColspan;
 	}
-    }
 
-    public QContainerLayout() {
-    }
-
-    public QContainerLayout(String qContID, String _rows, String _cols) {
-	this.qContID = qContID;
-	this.rows = Integer.parseInt(_rows);
-	this.cols = Integer.parseInt(_cols);
-	this.defaultColspan = -1;
-    }
-
-    public int getCols() {
-	return cols;
-    }
-
-    public HtmlTextLayout getHtmlTextDefinitionOnPosition(int x, int y) {
-	for (HtmlTextLayout layoutDef : htmlTextList) {
-	    if (layoutDef.getPosXStart() == x && layoutDef.getPosYStart() == y) {
-		return layoutDef;
-	    }
+	public void setDefaultColspan(int defaultColspan) {
+		this.defaultColspan = defaultColspan;
 	}
-	return null;
-    }
 
-    public List<HtmlTextLayout> getHtmlTextList() {
-	return htmlTextList;
-    }
-
-    public String getQContID() {
-	return qContID;
-    }
-
-    public QuestionLayout getQuestionDefinitionOnPosition(int x, int y) {
-	for (QuestionLayout questionDef : questionLayoutList) {
-	    if (questionDef.getPosXStart() == x
-		    && questionDef.getPosYStart() == y) {
-		return questionDef;
-	    }
+	public void setDefaultColspan(String defaultColspanString) {
+		try {
+			setDefaultColspan(Integer.parseInt(defaultColspanString));
+		} catch (NumberFormatException e) {
+			// do nothing
+		}
 	}
-	return null;
-    }
 
-    public QuestionLayout getQuestionLayoutForQuestionID(String id) {
-	for (QuestionLayout questionDef : questionLayoutList) {
-	    if (questionDef.getQID().equals(id)) {
-		return questionDef;
-	    }
+	public QContainerLayout() {
 	}
-	return null;
-    }
 
-    public List<QuestionLayout> getQuestionLayoutList() {
-	return questionLayoutList;
-    }
+	public QContainerLayout(String qContID, String _rows, String _cols) {
+		this.qContID = qContID;
+		this.rows = Integer.parseInt(_rows);
+		this.cols = Integer.parseInt(_cols);
+		this.defaultColspan = -1;
+	}
 
-    public int getRows() {
-	return rows;
-    }
+	public int getCols() {
+		return cols;
+	}
 
-    public void setHtmlTextList(List<HtmlTextLayout> htmlTextList) {
-	this.htmlTextList = htmlTextList;
-    }
+	public HtmlTextLayout getHtmlTextDefinitionOnPosition(int x, int y) {
+		for (HtmlTextLayout layoutDef : htmlTextList) {
+			if (layoutDef.getPosXStart() == x && layoutDef.getPosYStart() == y) {
+				return layoutDef;
+			}
+		}
+		return null;
+	}
 
-    public void setQuestionList(List<QuestionLayout> questionList) {
-	this.questionLayoutList = questionList;
-    }
+	public List<HtmlTextLayout> getHtmlTextList() {
+		return htmlTextList;
+	}
 
-    @Override
-    public String toString() {
-	return "\nQContainerLayoutDefinition id=" + qContID + "; gridgap="
-		+ getGridgap() + "; padding=" + getPadding() + "; rows=" + rows
-		+ "; cols=" + cols + "; containerBorder="
-		+ getQContainerBorder() + "; " + questionLayoutList;
-    }
+	public String getQContID() {
+		return qContID;
+	}
+
+	public QuestionLayout getQuestionDefinitionOnPosition(int x, int y) {
+		for (QuestionLayout questionDef : questionLayoutList) {
+			if (questionDef.getPosXStart() == x
+					&& questionDef.getPosYStart() == y) {
+				return questionDef;
+			}
+		}
+		return null;
+	}
+
+	public QuestionLayout getQuestionLayoutForQuestionID(String id) {
+		for (QuestionLayout questionDef : questionLayoutList) {
+			if (questionDef.getQID().equals(id)) {
+				return questionDef;
+			}
+		}
+		return null;
+	}
+
+	public List<QuestionLayout> getQuestionLayoutList() {
+		return questionLayoutList;
+	}
+
+	public int getRows() {
+		return rows;
+	}
+
+	public void setHtmlTextList(List<HtmlTextLayout> htmlTextList) {
+		this.htmlTextList = htmlTextList;
+	}
+
+	public void setQuestionList(List<QuestionLayout> questionList) {
+		this.questionLayoutList = questionList;
+	}
+
+	@Override
+	public String toString() {
+		return "\nQContainerLayoutDefinition id=" + qContID + "; gridgap="
+				+ getGridgap() + "; padding=" + getPadding() + "; rows=" + rows
+				+ "; cols=" + cols + "; containerBorder="
+				+ getQContainerBorder() + "; " + questionLayoutList;
+	}
 }

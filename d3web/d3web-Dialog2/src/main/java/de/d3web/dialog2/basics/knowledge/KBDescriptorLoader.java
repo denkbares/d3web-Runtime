@@ -42,221 +42,221 @@ import de.d3web.dialog2.util.DialogUtils;
 
 public class KBDescriptorLoader {
 
-    private static KBDescriptorLoader instance = null;
+	private static KBDescriptorLoader instance = null;
 
-    private List<KnowledgeBaseDescriptor> kbdescriptors = null;
+	private List<KnowledgeBaseDescriptor> kbdescriptors = null;
 
-    private URL descLocation = null;
+	private URL descLocation = null;
 
-    public static Logger logger = Logger.getLogger(KBDescriptorLoader.class);
+	public static Logger logger = Logger.getLogger(KBDescriptorLoader.class);
 
-    /**
-     * @return de.d3web.gui.html.knowledge.KBDescriptorLoader
-     */
-    public static KBDescriptorLoader getInstance() {
-	if (instance == null) {
-	    instance = new KBDescriptorLoader();
+	/**
+	 * @return de.d3web.gui.html.knowledge.KBDescriptorLoader
+	 */
+	public static KBDescriptorLoader getInstance() {
+		if (instance == null) {
+			instance = new KBDescriptorLoader();
+		}
+		return instance;
 	}
-	return instance;
-    }
 
-    private KBDescriptorLoader() {
-	initialize();
-    }
-
-    /**
-     * 
-     * @return boolean
-     * @param desc
-     *            de.d3web.gui.html.knowledge.KnowledgeBaseDescriptor
-     */
-    public boolean addDescriptor(KnowledgeBaseDescriptor desc) {
-	if (!kbdescriptors.contains(desc)) {
-	    kbdescriptors.add(desc);
-	    save();
-	    KnowledgeBaseRepository.getInstance().refreshKbDescriptorList(
-		    kbdescriptors);
-	    return true;
+	private KBDescriptorLoader() {
+		initialize();
 	}
-	return false;
-    }
 
-    /**
-     * If the given location is a "jar:"-location, a cleaned file-location will
-     * be returned. Example: "jar:xyz.jar!/" is going to be "xyz.jar".
-     */
-    private String getFileLocation(String jarLocation) {
-	String PRAEFIX = "jar:";
-	String location = jarLocation;
-	if (location.startsWith(PRAEFIX)) {
-	    location = location.substring(PRAEFIX.length());
-	    while ((location.startsWith("/")) || (location.startsWith("\\"))) {
-		location = location.substring(1);
-	    }
-	    location = location.substring(0, location.indexOf('!'));
+	/**
+	 * 
+	 * @return boolean
+	 * @param desc
+	 *            de.d3web.gui.html.knowledge.KnowledgeBaseDescriptor
+	 */
+	public boolean addDescriptor(KnowledgeBaseDescriptor desc) {
+		if (!kbdescriptors.contains(desc)) {
+			kbdescriptors.add(desc);
+			save();
+			KnowledgeBaseRepository.getInstance().refreshKbDescriptorList(
+					kbdescriptors);
+			return true;
+		}
+		return false;
 	}
-	return location;
-    }
 
-    /**
-     * @return KnowledgeBaseDescriptor for the given kbid
-     */
-    public KnowledgeBaseDescriptor getKnowledgeBaseDescriptor(String kbid) {
-	Iterator<KnowledgeBaseDescriptor> iter = kbdescriptors.iterator();
-	while (iter.hasNext()) {
-	    KnowledgeBaseDescriptor desc = iter.next();
-	    if (desc.getId().equals(kbid)) {
-		return (desc);
-	    }
+	/**
+	 * If the given location is a "jar:"-location, a cleaned file-location will
+	 * be returned. Example: "jar:xyz.jar!/" is going to be "xyz.jar".
+	 */
+	private String getFileLocation(String jarLocation) {
+		String PRAEFIX = "jar:";
+		String location = jarLocation;
+		if (location.startsWith(PRAEFIX)) {
+			location = location.substring(PRAEFIX.length());
+			while ((location.startsWith("/")) || (location.startsWith("\\"))) {
+				location = location.substring(1);
+			}
+			location = location.substring(0, location.indexOf('!'));
+		}
+		return location;
 	}
-	return null;
-    }
 
-    /**
-     * 
-     * @return java.util.List
-     */
-    public List<KnowledgeBaseDescriptor> getKnowledgeBaseDescriptors() {
-	return kbdescriptors;
-    }
-
-    public void initialize() {
-	try {
-	    descLocation = new URL(ResourceRepository.getInstance()
-		    .getPropertyPathValue(ResourceRepository.KBDESCRIPTORS_URL));
-	    load();
-	} catch (Exception x) {
-	    logger.error(x);
+	/**
+	 * @return KnowledgeBaseDescriptor for the given kbid
+	 */
+	public KnowledgeBaseDescriptor getKnowledgeBaseDescriptor(String kbid) {
+		Iterator<KnowledgeBaseDescriptor> iter = kbdescriptors.iterator();
+		while (iter.hasNext()) {
+			KnowledgeBaseDescriptor desc = iter.next();
+			if (desc.getId().equals(kbid)) {
+				return (desc);
+			}
+		}
+		return null;
 	}
-    }
 
-    /**
-     * @return java.util.List
-     * @param location
-     *            java.net.URL
-     */
-    private void load() {
-	kbdescriptors = new LinkedList<KnowledgeBaseDescriptor>();
-	if (!(new File(descLocation.getFile()).exists())) {
-	    return;
+	/**
+	 * 
+	 * @return java.util.List
+	 */
+	public List<KnowledgeBaseDescriptor> getKnowledgeBaseDescriptors() {
+		return kbdescriptors;
 	}
-	try {
 
-	    DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance()
-		    .newDocumentBuilder();
-	    Document doc = dBuilder.parse(InputFilter
-		    .getFilteredInputSource(descLocation));
+	public void initialize() {
+		try {
+			descLocation = new URL(ResourceRepository.getInstance()
+					.getPropertyPathValue(ResourceRepository.KBDESCRIPTORS_URL));
+			load();
+		} catch (Exception x) {
+			logger.error(x);
+		}
+	}
 
-	    NodeList nl = doc.getElementsByTagName("KnowledgeBase");
-	    for (int i = 0; i < nl.getLength(); ++i) {
-		Node n = nl.item(i);
-		String id = n.getAttributes().getNamedItem("ID").getNodeValue();
-		String name = n.getAttributes().getNamedItem("name")
-			.getNodeValue();
-		String type = n.getAttributes().getNamedItem("type")
-			.getNodeValue();
-		String location = n.getAttributes().getNamedItem("location")
-			.getNodeValue();
-		String locationType = n.getAttributes().getNamedItem(
-			"locationType").getNodeValue();
+	/**
+	 * @return java.util.List
+	 * @param location
+	 *            java.net.URL
+	 */
+	private void load() {
+		kbdescriptors = new LinkedList<KnowledgeBaseDescriptor>();
+		if (!(new File(descLocation.getFile()).exists())) {
+			return;
+		}
+		try {
 
-		KnowledgeBaseDescriptor desc = new KnowledgeBaseDescriptor();
-		desc.setId(id);
-		desc.setName(name);
-		desc.setType(type);
+			DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance()
+					.newDocumentBuilder();
+			Document doc = dBuilder.parse(InputFilter
+					.getFilteredInputSource(descLocation));
 
-		location = DialogUtils.getRealPath(location);
+			NodeList nl = doc.getElementsByTagName("KnowledgeBase");
+			for (int i = 0; i < nl.getLength(); ++i) {
+				Node n = nl.item(i);
+				String id = n.getAttributes().getNamedItem("ID").getNodeValue();
+				String name = n.getAttributes().getNamedItem("name")
+						.getNodeValue();
+				String type = n.getAttributes().getNamedItem("type")
+						.getNodeValue();
+				String location = n.getAttributes().getNamedItem("location")
+						.getNodeValue();
+				String locationType = n.getAttributes().getNamedItem(
+						"locationType").getNodeValue();
 
-		// this is needed for JarExtractor
-		if (locationType.equalsIgnoreCase("jar")) {
-		    location = getFileLocation(location);
+				KnowledgeBaseDescriptor desc = new KnowledgeBaseDescriptor();
+				desc.setId(id);
+				desc.setName(name);
+				desc.setType(type);
+
+				location = DialogUtils.getRealPath(location);
+
+				// this is needed for JarExtractor
+				if (locationType.equalsIgnoreCase("jar")) {
+					location = getFileLocation(location);
+				}
+
+				desc.setLocation(location);
+
+				desc.setLocationType(locationType);
+
+				kbdescriptors.add(desc);
+			}
+
+		} catch (Exception x) {
+			logger.error("Exception while loading kbDescriptors");
 		}
 
-		desc.setLocation(location);
-
-		desc.setLocationType(locationType);
-
-		kbdescriptors.add(desc);
-	    }
-
-	} catch (Exception x) {
-	    logger.error("Exception while loading kbDescriptors");
 	}
 
-    }
-
-    /**
-     * Removes all KnowledgeBaseDescriptors for the KnowledgeBase with the given
-     * id and renames the kb-jar-File to ".jar.bak".
-     * 
-     * @param kbid
-     */
-    public void removeDescriptorByKnowledgeBaseId(String kbid) {
-	Iterator<KnowledgeBaseDescriptor> iter = kbdescriptors.iterator();
-	while (iter.hasNext()) {
-	    KnowledgeBaseDescriptor desc = iter.next();
-	    if (desc.getId().equals(kbid)) {
-		DialogUtils.backupFile(desc.getLocation(), desc
-			.getLocationType());
-		iter.remove();
-	    }
-	}
-    }
-
-    /**
-     * Removes all KnowledgeBaseDescriptors for the KnowledgeBase with the given
-     * id.
-     * 
-     * @param kbid
-     */
-    public void removeDescriptorOnlyByKnowledgeBaseId(String kbid) {
-	Iterator<KnowledgeBaseDescriptor> iter = kbdescriptors.iterator();
-	while (iter.hasNext()) {
-	    KnowledgeBaseDescriptor desc = iter.next();
-	    if (desc.getId().equals(kbid)) {
-		iter.remove();
-	    }
-	}
-    }
-
-    public void save() {
-
-	try {
-
-	    PrintWriter pw = new PrintWriter(new FileWriter(descLocation
-		    .getFile()), true);
-
-	    pw.println("<?xml version='1.0' encoding='ISO-8859-1'?>\n");
-
-	    pw.println("<KnowledgeBases>\n");
-
-	    Iterator<KnowledgeBaseDescriptor> iter = kbdescriptors.iterator();
-	    while (iter.hasNext()) {
-		KnowledgeBaseDescriptor desc = iter.next();
-		pw.println("<KnowledgeBase ID='" + desc.getId() + "' name='"
-			+ desc.getName() + "' type='" + desc.getType()
-			+ "' location='"
-			+ DialogUtils.getVariablePath(desc.getLocation())
-			+ "' locationType='" + desc.getLocationType()
-			+ "' />\n");
-	    }
-	    pw.println("</KnowledgeBases>\n");
-
-	    pw.close();
-
-	} catch (Exception x) {
-	    logger.error("kb-descriptors could not be saved");
+	/**
+	 * Removes all KnowledgeBaseDescriptors for the KnowledgeBase with the given
+	 * id and renames the kb-jar-File to ".jar.bak".
+	 * 
+	 * @param kbid
+	 */
+	public void removeDescriptorByKnowledgeBaseId(String kbid) {
+		Iterator<KnowledgeBaseDescriptor> iter = kbdescriptors.iterator();
+		while (iter.hasNext()) {
+			KnowledgeBaseDescriptor desc = iter.next();
+			if (desc.getId().equals(kbid)) {
+				DialogUtils.backupFile(desc.getLocation(), desc
+						.getLocationType());
+				iter.remove();
+			}
+		}
 	}
 
-    }
+	/**
+	 * Removes all KnowledgeBaseDescriptors for the KnowledgeBase with the given
+	 * id.
+	 * 
+	 * @param kbid
+	 */
+	public void removeDescriptorOnlyByKnowledgeBaseId(String kbid) {
+		Iterator<KnowledgeBaseDescriptor> iter = kbdescriptors.iterator();
+		while (iter.hasNext()) {
+			KnowledgeBaseDescriptor desc = iter.next();
+			if (desc.getId().equals(kbid)) {
+				iter.remove();
+			}
+		}
+	}
 
-    /**
-     * 
-     * @param loc
-     *            java.net.URL
-     */
-    public void setLocationURL(URL loc) {
-	descLocation = loc;
-    }
+	public void save() {
+
+		try {
+
+			PrintWriter pw = new PrintWriter(new FileWriter(descLocation
+					.getFile()), true);
+
+			pw.println("<?xml version='1.0' encoding='ISO-8859-1'?>\n");
+
+			pw.println("<KnowledgeBases>\n");
+
+			Iterator<KnowledgeBaseDescriptor> iter = kbdescriptors.iterator();
+			while (iter.hasNext()) {
+				KnowledgeBaseDescriptor desc = iter.next();
+				pw.println("<KnowledgeBase ID='" + desc.getId() + "' name='"
+						+ desc.getName() + "' type='" + desc.getType()
+						+ "' location='"
+						+ DialogUtils.getVariablePath(desc.getLocation())
+						+ "' locationType='" + desc.getLocationType()
+						+ "' />\n");
+			}
+			pw.println("</KnowledgeBases>\n");
+
+			pw.close();
+
+		} catch (Exception x) {
+			logger.error("kb-descriptors could not be saved");
+		}
+
+	}
+
+	/**
+	 * 
+	 * @param loc
+	 *            java.net.URL
+	 */
+	public void setLocationURL(URL loc) {
+		descLocation = loc;
+	}
 
 }
