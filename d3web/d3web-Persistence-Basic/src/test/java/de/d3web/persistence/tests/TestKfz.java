@@ -22,7 +22,6 @@ package de.d3web.persistence.tests;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -33,6 +32,7 @@ import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -77,6 +77,7 @@ public static void main(String[] args) {
  * Method for instantiating neccessary objects
  * Creation date: (08.09.2000 16:15:09)
  */
+@Override
 protected void setUp() {
 	try {
 		InitPluginManager.init();
@@ -104,7 +105,7 @@ protected void setUp() {
 /**
  * Assures that every type of question can be set and retrieved.
  * Creation date: (08.09.2000 16:11:48)
- * @throws IOException 
+ * @throws IOException
  */
 public void testCount() throws IOException {
 	File file = new File("target/kbs");
@@ -123,8 +124,9 @@ public void testCount() throws IOException {
 	QuestionMC Mf7 = (QuestionMC) kb.searchQuestion("Mf7");
 	AnswerChoice Mf7a1 = (AnswerChoice) Mf7.getAnswer(theCase, "Mf7a1");
 	AnswerChoice Mf7a2 = (AnswerChoice) Mf7.getAnswer(theCase, "Mf7a2");
-	values = new Object[] { Mf7a1, Mf7a2 };
-	theCase.setValue(Mf7, values, context);
+		AnswerMultipleChoice answermc = new AnswerMultipleChoice(new AnswerChoice[] {
+				Mf7a1, Mf7a2 });
+		theCase.setValue(Mf7, answermc, context);
 	//
 
 	Answer answerList = Mf5.getValue(theCase);
@@ -218,7 +220,7 @@ public void testFormulaSchema() {
 		"Error with formula (4)",
 		ratingVeryHigh == Msi4.getValue(theCase));
 
-	//		
+	//
 
 }
 
@@ -299,7 +301,7 @@ public void testFormulaSchema() {
 		/*----------------------------------------------
 			*/
 
-		/* 	QuestionNum questionNum = (QuestionNum) kb.searchQuestions("Mf58"); 
+		/* 	QuestionNum questionNum = (QuestionNum) kb.searchQuestions("Mf58");
 		
 			assertTrue("Error: isDone should be false (5)",
 				false == questionNum.isDone(theCase));
@@ -362,7 +364,7 @@ public void testCase() {
 			System.out.println("Antworten: " + ((QuestionChoice) q1).getAllAlternatives());
 		}
 
-		theCase.setValue(q1, new Object[] { q1.getUnknownAlternative()});
+			theCase.setValue(q1, q1.getUnknownAlternative());
 	}
 
 }

@@ -34,7 +34,7 @@ import de.d3web.core.knowledge.terminology.QuestionMC;
  * @see QuestionMC
  */
 public class CaseQuestionMC extends CaseQuestionChoice {
-	AnswerMultipleChoice theAnswer;
+	Answer theAnswer;
 	
 	public CaseQuestionMC(QuestionMC question) {
 		super(question);
@@ -42,14 +42,14 @@ public class CaseQuestionMC extends CaseQuestionChoice {
 
 	/**
 	 * @return the user-specific value of the depending questionMC
-	 */ 
+	 */
 	public Answer getValue() {
 		return theAnswer;
 	}
 
 	/**
 	 * Sets the user-specific value of the depending questionMC
-	 */ 
+	 */
 	public void setValue(List value) {
 		theAnswer = new AnswerMultipleChoice(value);
 	}
@@ -57,8 +57,8 @@ public class CaseQuestionMC extends CaseQuestionChoice {
 
 	/**
 	 * Sets the user-specific value of the depending questionMC
-	 */ 
-	public void setValue(AnswerMultipleChoice answer) {
+	 */
+	public void setValue(Answer answer) {
 		theAnswer = answer;
 	}
 

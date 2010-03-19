@@ -21,8 +21,6 @@
 package de.d3web.core.knowledge.terminology;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -64,6 +62,7 @@ public class QuestionMC extends QuestionChoice {
 			return alternatives;
 	}
 
+	@Override
 	public Answer getValue(XPSCase theCase) {
 		Answer value = ((CaseQuestionMC) theCase.getCaseObject(this)).getValue();
 		if (value != null) {
@@ -82,9 +81,10 @@ public class QuestionMC extends QuestionChoice {
 	 * @param theCase the belonging XPSCase
 	 * @param antwort an array of Answer instances
 	 */
+	@Override
 	public void setValue(XPSCase theCase, Object[] values) {
 		List<AnswerChoice> newValues = new ArrayList<AnswerChoice>(values.length);
-		AnswerMultipleChoice amc = null;
+		Answer amc = null;
 		if (values.length > 1) {
 			for (int i = 0; i < values.length; i++) {
 				if (values[i] instanceof AnswerNum) {
@@ -95,11 +95,11 @@ public class QuestionMC extends QuestionChoice {
 			}
 			amc = new AnswerMultipleChoice(newValues);
 		} else if (values.length == 1) {
-			amc = (AnswerMultipleChoice)values[0];
+			amc = (Answer) values[0];
 		}
-		((CaseQuestionMC) theCase.getCaseObject(this)).setValue(amc);		
+		((CaseQuestionMC) theCase.getCaseObject(this)).setValue(amc);
 		notifyListeners(theCase,this);
-	}	
+	}
 	
 	/**
 	 * Sets the current values of this MC-question belonging to the
@@ -109,11 +109,13 @@ public class QuestionMC extends QuestionChoice {
 	 * @param theCase the belonging XPSCase
 	 * @param antwort an array of Answer instances
 	 */
+	@Override
 	public void setValue(XPSCase theCase, Answer value) {
-		((CaseQuestionMC) theCase.getCaseObject(this)).setValue((AnswerMultipleChoice)value);		
+		((CaseQuestionMC) theCase.getCaseObject(this)).setValue((AnswerMultipleChoice)value);
 		notifyListeners(theCase,this);
-	}	
+	}
 
+	@Override
 	public String toString() {
 		return super.toString();
 	}

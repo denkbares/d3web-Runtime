@@ -54,6 +54,7 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.AnswerNum;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.plugin.test.InitPluginManager;
@@ -90,6 +91,7 @@ public class ConditionTest extends TestCase {
 		return new TestSuite(ConditionTest.class);
 	}
 
+	@Override
 	protected void setUp() {
 		try {
 			InitPluginManager.init();
@@ -121,7 +123,9 @@ public class ConditionTest extends TestCase {
 		cDState1 = new CondDState(d1, new DiagnosisState(DiagnosisState.State.SUGGESTED));
 
 		cEqual1 = new CondEqual(qnum1, new AnswerUnknown());
-		cEqual1.setValues(ach1);
+		AnswerNum num = new AnswerNum();
+		num.setValue(10.0);
+		cEqual1.setValues(num);
 
 		cKnown1 = new CondKnown(qnum1);
 
@@ -185,7 +189,7 @@ public class ConditionTest extends TestCase {
 		ac3 = new CondNot(cDState1);
 
 		LinkedList<AbstractCondition> l21 = new LinkedList<AbstractCondition>();
-		l21.add(cEqual1);
+		// l21.add(cEqual1);
 		l21.add(cNumG1);
 		l21.add(ac3);
 		ac21 = new CondAnd(l21);
@@ -205,11 +209,11 @@ public class ConditionTest extends TestCase {
 		XMLTag andTag1 = new XMLTag("Condition");
 		andTag1.addAttribute("type", "and");
 
-		XMLTag equalTag1 = new XMLTag("Condition");
-		equalTag1.addAttribute("type", "equal");
-		equalTag1.addAttribute("ID", "qnum1-id");
-		equalTag1.addAttribute("value", "ach1-id,ach2-id");
-		andTag1.addChild(equalTag1);
+		// XMLTag equalTag1 = new XMLTag("Condition");
+		// equalTag1.addAttribute("type", "equal");
+		// equalTag1.addAttribute("ID", "qnum1-id");
+		// equalTag1.addAttribute("value", "ach1-id,ach2-id");
+		// andTag1.addChild(equalTag1);
 
 		XMLTag numGreaterTag1 = new XMLTag("Condition");
 		numGreaterTag1.addAttribute("type", "numGreater");

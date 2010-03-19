@@ -41,6 +41,7 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.AnswerNum;
 import de.d3web.core.session.values.AnswerUnknown;
 /**
  * Provides useful static functions for xml persistence handlers
@@ -160,13 +161,21 @@ public class XMLUtil {
 	}
 
 	/**
-	 * Creates a condition element with the id of the named object, the given type and values
-	 * @param doc Document, where the Element should be created
-	 * @param nob NamedObject, whose ID should be used
-	 * @param type type of the condition
-	 * @param values List of answers, which are used as values
+	 * Creates a condition element with the id of the named object, the given
+	 * type and values
+	 * 
+	 * @param doc
+	 *            Document, where the Element should be created
+	 * @param nob
+	 *            NamedObject, whose ID should be used
+	 * @param type
+	 *            type of the condition
+	 * @param values
+	 *            List of answers, which are used as values
 	 * @return condition element
-	 * @throws IOException if one of the elements in values is neighter a Choice nor a Unknown Answer
+	 * @throws IOException
+	 *             if one of the elements in values is neither a Choice nor a
+	 *             Unknown Answer
 	 */
 	public static Element writeCondition(Document doc, NamedObject nob, String type,
 			Answer value) throws IOException {
@@ -185,6 +194,9 @@ public class XMLUtil {
 			return ((AnswerUnknown) answer).getId();
 		else if (answer instanceof AnswerMultipleChoice) {
 			return ((AnswerMultipleChoice) answer).getId();
+		} // for num answers, not the ID, but their actual value is returned
+		else if (answer instanceof AnswerNum) {
+			return ((AnswerNum) answer).getValue(null).toString();
 		}
 		else {
 			throw new IOException("Answer is neighter a Choice nor a Unknown Answer");
