@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerNum;
 
@@ -58,11 +57,10 @@ public class QNumWrapper extends FormulaNumberPrimitive {
 	 */
 	public Double eval(XPSCase theCase) {
 		if (getQuestion().getValue(theCase) == null
-			|| getQuestion().getValue(theCase).isEmpty()
-			|| getQuestion().getValue(theCase).get(0).equals(getQuestion().getUnknownAlternative())) {
+			|| getQuestion().getValue(theCase).equals(getQuestion().getUnknownAlternative())) {
 			return null;
 		}
-		return (Double) ((AnswerNum) (getQuestion().getValue(theCase).get(0))).getValue(theCase);
+		return (Double) ((AnswerNum) (getQuestion().getValue(theCase))).getValue(theCase);
 	}
 
 	/**

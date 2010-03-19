@@ -38,12 +38,12 @@ import org.ajax4jsf.ajax.html.HtmlAjaxCommandLink;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
 
 import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.session.interviewmanager.MQDialogController;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerDate;
 import de.d3web.core.session.values.AnswerUnknown;
@@ -289,34 +289,31 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 		writer.startElement("span", component);
 		writer.writeAttribute("id", component.getId() + "_ans_" + q.getId(), "id");
 
-		List<Answer> ansList = q.getValue(theCase);
+		Answer ans = q.getValue(theCase);
 
-		for (int k = 0; k < ansList.size(); k++) {
-			Answer ans = ansList.get(k);
-			if (ans instanceof AnswerChoice) {
-				QuestionChoice qC = (QuestionChoice) q;
-				List<AnswerChoice> alterList = qC.getAllAlternatives();
-				for (Iterator<AnswerChoice> it = alterList.iterator(); it.hasNext();) {
-					AnswerChoice alterAns = it.next();
-					if (alterAns.getId().equals(ans.getId())) {
-						writer.writeText(alterAns.getText(), "value");
-						break;
-					}
+		if (ans instanceof AnswerChoice) {
+			QuestionChoice qC = (QuestionChoice) q;
+			List<AnswerChoice> alterList = qC.getAllAlternatives();
+			for (Iterator<AnswerChoice> it = alterList.iterator(); it.hasNext();) {
+				AnswerChoice alterAns = it.next();
+				if (alterAns.getId().equals(ans.getId())) {
+					writer.writeText(alterAns.getText(), "value");
+					break;
 				}
-			} else if (ans instanceof AnswerUnknown) {
-				writer.writeText(DialogRenderUtils.getUnknownAnswerString(q, theCase), "value");
-			} else if (ans instanceof AnswerDate) {
-				String dateanswer = QuestionDateUtils.dateToString((AnswerDate) ans.getQuestion().getValue(
-						theCase).get(0), theCase);
-				writer.writeText(dateanswer, "value");
-			} else {
-				writer.writeText(ans.toString(), "value");
 			}
-			// render a delimiter
-			if (ansList.size() > 1 && k < ansList.size() - 1) {
-				writer.write("; ");
-			}
+		} else if (ans instanceof AnswerMultipleChoice) {
+			writer.writeText(ans.getText(), "value");
+		} else if (ans instanceof AnswerUnknown) {
+			writer.writeText(DialogRenderUtils.getUnknownAnswerString(q,
+					theCase), "value");
+		} else if (ans instanceof AnswerDate) {
+			String dateanswer = QuestionDateUtils.dateToString((AnswerDate) ans
+					.getQuestion().getValue(theCase), theCase);
+			writer.writeText(dateanswer, "value");
+		} else {
+			writer.writeText(ans.toString(), "value");
 		}
+
 		writer.endElement("span");
 		writer.endElement("td");
 		writer.endElement("tr");
@@ -326,7 +323,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 		XPSCase theCase = DialogUtils.getDialog().getTheCase();
 		ProcessedQContainersController processedBean = DialogUtils.getProcessedQContainersBean();
-		MQDialogController mqdc = DialogUtils.getMQDialogController(theCase);
+		// MQDialogController mqdc = DialogUtils.getMQDialogController(theCase);
 		// List<QContainer> processedContainers = mqdc.getProcessedContainers();
 		List<QContainer> processedContainers = theCase.getKnowledgeBase().getQContainers();
 		if (checkDisplayability(theCase, processedContainers)) {

@@ -46,7 +46,7 @@ public class CondChoiceYes extends CondEqual {
 	public boolean eval(XPSCase theCase)
 		throws NoAnswerException, UnknownAnswerException {
 		checkAnswer(theCase);
-		return ((AnswerChoice) question.getValue(theCase).get(0)).isAnswerYes();
+		return ((AnswerChoice) question.getValue(theCase)).isAnswerYes();
 	}
 
 	/**

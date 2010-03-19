@@ -397,7 +397,7 @@ public class XMLRenderer {
 	}
 
 	/**
-	 * Renders the referenced QASet. (If exisiting, the schema will be included.)
+	 * Renders the referenced QASet. (If existing, the schema will be included.)
 	 * If "showStatus" is true, the current status of the QASet will be regarded.
 	 */
 	public static StringBuffer renderReference(QASet qaSet, XPSCase theCase, boolean showStatus) {
@@ -408,19 +408,14 @@ public class XMLRenderer {
 		if (qaSet instanceof Question) {
 			Question q = (Question)qaSet;
 			if (q instanceof QuestionChoice) {
-				Iterator valueIter = q.getValue(theCase).iterator();
-				if (valueIter.hasNext()) {
-					questionState.append("<Answers>");
-					while(valueIter.hasNext()) {
-						Answer ans = (Answer)valueIter.next();
-						if (ans instanceof AnswerUnknown) {
-							questionState.append(renderAnswerUnknownObject());
-						} else {
-							questionState.append(renderAnswerChoiceObject((AnswerChoice)ans));
-						}
-					}
-					questionState.append("</Answers>");
+				Answer answer = q.getValue(theCase);
+				questionState.append("<Answers>");
+				if (answer instanceof AnswerUnknown) {
+					questionState.append(renderAnswerUnknownObject());
+				} else {
+					questionState.append(renderAnswerChoiceObject((AnswerChoice)answer));
 				}
+				questionState.append("</Answers>");
 			
 				if ((qaSet instanceof QuestionOC) && (isSiQASet(qaSet))) {
 					QuestionOC qOC = (QuestionOC)qaSet;				
@@ -435,13 +430,13 @@ public class XMLRenderer {
 				
 				}		
 			} else if (q instanceof QuestionNum) {
-				List values = q.getValue(theCase);
-				if (values.size() > 0) {
+				Answer numValue = q.getValue(theCase);
+				if (numValue!= null) {
 					questionState.append("<Answers>");
-					if (values.get(0) instanceof AnswerUnknown) {
+					if (numValue instanceof AnswerUnknown) {
 						questionState.append(renderAnswerUnknownObject());
-					} else if (values.get(0) instanceof AnswerNum) {
-						Object value = ((AnswerNum)values.get(0)).getValue(theCase);
+					} else if (numValue instanceof AnswerNum) {
+						Object value = ((AnswerNum)numValue).getValue(theCase);
 						questionState.append("<Number value=\"");
 						if (value instanceof Double) {
 							if (((Double)value).doubleValue() % 1 == 0)
@@ -449,7 +444,7 @@ public class XMLRenderer {
 							else
 								questionState.append(((Double)value).doubleValue());
 						} else {
-							questionState.append(values.get(0));
+							questionState.append(numValue);
 						}
 						questionState.append("\">");
 						Object unit = q.getProperties().getProperty(Property.UNIT);
@@ -460,13 +455,13 @@ public class XMLRenderer {
 					questionState.append("</Answers>");
 				}
 			} else if (q instanceof QuestionText) {
-				List values = q.getValue(theCase);
-				if (values.size() > 0) {
+				Answer textValue = q.getValue(theCase);
+				if (textValue != null) {
 					questionState.append("<Answers>");
-					if (values.get(0) instanceof AnswerUnknown) {
+					if (textValue instanceof AnswerUnknown) {
 						questionState.append(renderAnswerUnknownObject());
-					} else if (values.get(0) instanceof AnswerText) {
-						Object value = ((AnswerText)values.get(0)).getValue(theCase);
+					} else if (textValue instanceof AnswerText) {
+						Object value = ((AnswerText)textValue).getValue(theCase);
 						questionState.append("<AnswerText><![CDATA[");
 						questionState.append(value.toString());
 						questionState.append("]]></AnswerText>");
@@ -474,13 +469,13 @@ public class XMLRenderer {
 					questionState.append("</Answers>");
 				}
 			} else if (q instanceof QuestionDate) {
-				List values = q.getValue(theCase);
-				if (values.size() > 0) {
+				Answer dateValue= q.getValue(theCase);
+				if (dateValue != null) {
 					questionState.append("<Answers>");
-					if (values.get(0) instanceof AnswerUnknown) {
+					if (dateValue instanceof AnswerUnknown) {
 						questionState.append(renderAnswerUnknownObject());
-					} else if (values.get(0) instanceof AnswerDate) {
-						Date date = ((EvaluatableAnswerDateValue) ((AnswerDate)values.get(0)).getValue(theCase)).eval(theCase);
+					} else if (dateValue instanceof AnswerDate) {
+						Date date = ((EvaluatableAnswerDateValue) ((AnswerDate)dateValue).getValue(theCase)).eval(theCase);
 						DateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 						questionState.append("<AnswerText><![CDATA[");
 						questionState.append(format.format(date));
@@ -828,14 +823,12 @@ public class XMLRenderer {
 			}
 			sb.append(">");
 			sb.append(renderQASetObject(ce.getQuestion()));
-			Iterator iter = ce.getValues().iterator();
-			while(iter.hasNext()) {
-				Answer ans = (Answer)iter.next();
-				if (ans instanceof AnswerChoice) 
-					sb.append(renderAnswerChoiceObject((AnswerChoice)ans));
-				else if (ans instanceof AnswerUnknown)
-					sb.append("<AnswerUnknown/>");
-			}		
+			Answer ceAnswer = ce.getValues();
+			if (ceAnswer instanceof AnswerChoice) 
+				sb.append(renderAnswerChoiceObject((AnswerChoice)ceAnswer));
+			else if (ceAnswer instanceof AnswerUnknown)
+				sb.append("<AnswerUnknown/>");
+					
 		} else if ((cond instanceof CondChoiceNo) || (cond instanceof CondChoiceYes)) {
 			CondQuestion cq = (CondQuestion)cond;
 			sb.append(" type=\"equal\"");

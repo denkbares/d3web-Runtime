@@ -56,7 +56,9 @@ import de.d3web.caserepository.utilities.CaseConverter;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.MMInfoObject;
@@ -446,11 +448,17 @@ public class DialogUtils {
 	}
 
 	public static boolean unknownAnswerInValueList(Question q, XPSCase theCase) {
-		List<Answer> valueList = q.getValue(theCase);
-		for (Answer a : valueList) {
-			if (a.isUnknown()) {
-				return true;
+		Answer answer = q.getValue(theCase);
+		List<? extends Answer> valueList = new LinkedList<Answer>();
+		if (q instanceof QuestionMC) {
+			valueList = ((AnswerMultipleChoice)answer).getChoices();
+			for (Answer a : valueList) {
+				if (a.isUnknown()) {
+					return true;
+				}
 			}
+		} else {
+			return answer.isUnknown();
 		}
 		return false;
 	}

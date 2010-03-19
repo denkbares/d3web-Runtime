@@ -57,6 +57,7 @@ import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.inference.condition.TerminalCondition;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.info.Property;
@@ -501,24 +502,22 @@ public class ExplanationRendererUtils {
 	}
 
 	if (cond instanceof CondEqual) {
-	    CondEqual ce = (CondEqual) cond;
-	    writer.writeAttribute("id", rcID + "_condequal_"
-		    + ce.getQuestion().getId(), "id");
-	    writer.writeText(ce.getQuestion().getText() + " ("
-		    + ce.getQuestion().getId() + ")", "value");
-	    writer.write(" = ");
-	    for (Iterator<Answer> iter = ce.getValues().iterator(); iter
-		    .hasNext();) {
-		Answer ans = iter.next();
-		if (ans instanceof AnswerChoice) {
-		    AnswerChoice ansC = (AnswerChoice) ans;
-		    writer
-			    .writeText(ansC.getText() + " (" + ansC.getId()
-				    + ")", "value");
-		} else if (ans instanceof AnswerUnknown) {
-		    writer.writeText(AnswerUnknown.UNKNOWN_VALUE, "value");
-		}
-	    }
+			CondEqual ce = (CondEqual) cond;
+			writer.writeAttribute("id", rcID + "_condequal_"
+					+ ce.getQuestion().getId(), "id");
+			writer.writeText(ce.getQuestion().getText() + " ("
+					+ ce.getQuestion().getId() + ")", "value");
+			writer.write(" = ");
+			Answer ans = ce.getValues();
+			if (ans instanceof AnswerChoice) {
+					AnswerChoice ansC = (AnswerChoice) ans;
+					writer.writeText(ansC.getText() + " (" + ansC.getId()+ ")", "value");
+			} else if (ans instanceof AnswerMultipleChoice) {
+				AnswerMultipleChoice ansC = (AnswerMultipleChoice) ans;
+				writer.writeText(ansC.getText() + " (" + ansC.getId()+ ")", "value");
+			} else if (ans instanceof AnswerUnknown) {
+					writer.writeText(AnswerUnknown.UNKNOWN_VALUE, "value");
+			}
 	} else if (cond instanceof CondKnown) {
 	    CondKnown ck = (CondKnown) cond;
 	    writer.writeAttribute("id", rcID + "_condknown_"

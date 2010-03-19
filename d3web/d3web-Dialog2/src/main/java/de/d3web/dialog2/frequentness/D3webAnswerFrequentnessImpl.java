@@ -55,13 +55,9 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 		// all cases...
 		int absoluteFreq = 0;
 		for (XPSCase oneCase : savedCases) {
-			List<Object> values = q.getValue(oneCase);
-			for (Object o : values) {
-				Answer a = (Answer) o;
-				if (a.getId().equals(ansID)) {
-					absoluteFreq++;
-					break;
-				}
+			Answer answer = q.getValue(oneCase);
+			if (answer.getId().equals(ansID)) {
+				absoluteFreq++;
 			}
 		}
 		return absoluteFreq;

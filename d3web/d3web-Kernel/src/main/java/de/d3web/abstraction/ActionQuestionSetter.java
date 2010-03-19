@@ -26,7 +26,6 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.abstraction.formula.FormulaDateElement;
@@ -39,6 +38,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleAction;
 import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
@@ -142,27 +142,27 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 				assert (oldValue instanceof Double || oldValue instanceof Date) : "Unknown oldValue-Type: "
 						+ oldValue;
 
-				List newValues = null;
+				Answer newValues = null;
 				if (q instanceof QuestionNum || q instanceof QuestionDate) {
 					newValues = q.getValue(theCase);
 				} else if (q instanceof QuestionOC) {
-					newValues = new LinkedList<AnswerNum>();
+					newValues = new AnswerNum();
 					if ((this.values != null) && (this.values.length > 0)) {
 						EvaluatableAnswerNumValue evalAnsnumVal = (EvaluatableAnswerNumValue) this.values[0];
 						Double value = evalAnsnumVal.eval(theCase);
 						AnswerNum ansNum = new AnswerNum();
 						ansNum.setQuestion(getQuestion());
 						ansNum.setValue(value);
-						newValues.add(ansNum);
+						newValues = ansNum;
 					}
 
 				}
 
-				if ((values != null) && !newValues.isEmpty()) {
+				if (values != null) {
 					if (oldValue == null)
 						return true;
-					Answer ans = (Answer) newValues.get(0); // can be AnswerDate
-															// or AnswerDouble
+					Answer ans = newValues; // can be AnswerDate
+											// or AnswerDouble
 					assert (ans instanceof AnswerDate || ans instanceof AnswerNum) : "Unknown newValue-Answer-Type: "
 							+ ans;
 					Object newValue = ans.getValue(theCase); // can be Double or
@@ -217,27 +217,22 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 				Question q = (Question) iter.next();
 				if (q instanceof QuestionNum) {
 					QuestionNum qNum = (QuestionNum) q;
-					List<Answer> value = qNum.getValue(theCase);
-					if ((value != null) && !value.isEmpty()) {
-						Answer ans = value.get(0);
-						Object val = ans.getValue(theCase);
+					Answer value = qNum.getValue(theCase);
+					if (value != null) {
+						Object val = value.getValue(theCase);
 						questionToValuesHash.put(q, val);
-						//theCase.trace("put to hash: " + q.getId() + "; " + val);
 					}
 				} else if (q instanceof QuestionMC) {
 					QuestionMC qMC = (QuestionMC) q;
-					List<?> value = qMC.getValue(theCase);
-					Double val = new Double(value.size());
+					AnswerMultipleChoice value = (AnswerMultipleChoice)qMC.getValue(theCase);
+					Double val = new Double(value.numberOfChoices());
 					questionToValuesHash.put(q, val);
-					//theCase.trace("put to hash: " + q.getId() + "; " + val);
 				} else if (q instanceof QuestionDate) {
 					QuestionDate qDate = (QuestionDate) q;
-					List<?> value = qDate.getValue(theCase);
-					if ((value != null) && (!value.isEmpty())) {
-						Answer ans = (Answer) value.get(0);
-						Object val = ans.getValue(theCase);
+					Answer value = qDate.getValue(theCase);
+					if (value != null) {
+						Object val = value.getValue(theCase);
 						questionToValuesHash.put(q, val);
-						//theCase.trace("put to hash: " + q.getId() + "; " + val);
 					}
 				}
 			}

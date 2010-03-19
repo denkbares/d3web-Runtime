@@ -10,19 +10,9 @@
 				<Solution Name="Empty battery" Rating="suggested"/>
 			</Solutions>
 		</RatedTestCase>
-		<RatedTestCase Name="rtc2" LastTested="2009-09-11_0207">
-			<Findings>
-				<Finding Question="Driving" Answer="unsteady idle speed"/>
-			</Findings>
-			<Solutions>
-				<Solution Name="Damaged idle speed system" Rating="suggested"/>
-				<Solution Name="Clogged air filter" Rating="suggested"/>
-				<Solution Name="Empty battery" Rating="suggested"/>
-			</Solutions>
-		</RatedTestCase>
 		<RatedTestCase Name="rtc3" LastTested="2009-09-11_0207">
 			<Findings>
-				<Finding Question="Driving" Answer="low idle speed"/>
+				<Finding Question="Driving" Answer="unsteady idle speed#####low idle speed"/>
 			</Findings>
 			<Solutions>
 				<Solution Name="Damaged idle speed system" Rating="established"/>
@@ -51,7 +41,7 @@
 		</RatedTestCase>
 		<RatedTestCase Name="rtc2" LastTested="2009-09-11_0207">
 			<Findings>
-				<Finding Question="Driving" Answer="unsteady idle speed"/>
+				<Finding Question="Driving" Answer="insufficient power on partial load#####unsteady idle speed"/>
 			</Findings>
 			<Solutions>
 				<Solution Name="Leaking air intake system" Rating="suggested"/>
@@ -61,7 +51,7 @@
 		<RatedTestCase Name="rtc3" LastTested="2009-09-11_0207">
 			<Findings>
 				<Finding Question="Air filter o.k.?" Answer="yes"/>
-				<Finding Question="Driving" Answer="insufficient power on full load"/>
+				<Finding Question="Driving" Answer="insufficient power on full load#####insufficient power on partial load#####unsteady idle speed"/>
 			</Findings>
 			<Solutions>
 				<Solution Name="Leaking air intake system" Rating="established"/>

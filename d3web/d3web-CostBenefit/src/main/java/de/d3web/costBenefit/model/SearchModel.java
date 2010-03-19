@@ -38,7 +38,7 @@ import de.d3web.costBenefit.inference.DefaultCostFunction;
 import de.d3web.costBenefit.inference.PSMethodCostBenefit;
 
 /**
- * This model provides all functions on targets, nodes and pathes for the searchalgorithms.
+ * This model provides all functions on targets, nodes and paths for the search algorithms.
  * It represents the actual state of a search.
  * 
  * @author Markus Friedrich (denkbares GmbH)
@@ -67,14 +67,15 @@ public class SearchModel {
 		for (QContainer qcon: theCase.getKnowledgeBase().getQContainers()) {
 			Node containerNode = new Node(qcon, this);
 			map.put(qcon, containerNode);
-			Map<Question, List<?>> expected = containerNode.getExpectedValues(theCase);
-			for (Entry<Question, List<?>> entry: expected.entrySet()) {
-				List<?> answers = entry.getValue();
-				List<Answer> answersCast = new LinkedList<Answer>();
-				for (Object a: answers) {
-					if (a instanceof Answer) answersCast.add((Answer) a); 
-				}
-				expectedValues.put(entry.getKey(), answersCast);
+			Map<Question, Answer> expected = containerNode.getExpectedValues(theCase);
+			for (Entry<Question, Answer> entry: expected.entrySet()) {
+				Answer answer = entry.getValue();
+				List<Answer> answers = new LinkedList<Answer>();
+				answers.add(answer);
+//				for (Object a: answers) {
+//					if (a instanceof Answer) answersCast.add((Answer) a); 
+//				}
+				expectedValues.put(entry.getKey(), answers);
 			}
 		}
 	}

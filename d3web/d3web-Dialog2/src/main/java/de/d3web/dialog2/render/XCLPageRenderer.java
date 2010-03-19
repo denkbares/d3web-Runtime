@@ -35,8 +35,10 @@ import javax.faces.render.Renderer;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.condition.AbstractCondition;
 import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.session.XPSCase;
 import de.d3web.dialog2.component.html.UIXCLPage;
 import de.d3web.dialog2.util.DialogUtils;
@@ -342,14 +344,21 @@ public class XCLPageRenderer extends Renderer {
 			}
 			writer.endElement("td");
 			writer.startElement("td", component);
-			List answers = cq.getValue(theCase);
-			ListIterator iterator = answers.listIterator();
+			Answer answer = cq.getValue(theCase);
+			List<Answer> answers = new ArrayList<Answer>();
+			if (cq instanceof QuestionMC) {
+				answers.addAll(((AnswerMultipleChoice)answer).getChoices());
+			} else {
+				answers.add(answer);
+			}
+				
+			ListIterator<Answer> iterator = answers.listIterator();
 			count = 0;
 			while(iterator.hasNext()){
 				if(count > 0){
 					writer.startElement("br", component);
 				}
-				Answer a = (Answer) iterator.next();
+				Answer a = iterator.next();
 				writer.writeText(a.getValue(theCase), "value");
 				count = count+1;
 			}

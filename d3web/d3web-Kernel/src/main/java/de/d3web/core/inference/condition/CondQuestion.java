@@ -22,6 +22,7 @@ package de.d3web.core.inference.condition;
 
 import java.util.List;
 
+import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.XPSCase;
@@ -57,13 +58,11 @@ public abstract class CondQuestion extends TerminalCondition {
 	 */
 	protected void checkAnswer(XPSCase theCase)
 		throws NoAnswerException, UnknownAnswerException {
-		List<?> values = question.getValue(theCase);
-		if ((values == null)
-			|| (values.size() == 0)
-			|| (values.get(0) == null)) {
+		Answer values = question.getValue(theCase);
+		if (values == null) {
 			throw NoAnswerException.getInstance();
 		} else {
-			if (values.get(0).equals(question.getUnknownAlternative())) {
+			if (values.equals(question.getUnknownAlternative())) {
 				throw UnknownAnswerException.getInstance();
 			}
 		}

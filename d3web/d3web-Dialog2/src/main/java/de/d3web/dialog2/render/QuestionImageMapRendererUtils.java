@@ -59,7 +59,7 @@ public class QuestionImageMapRendererUtils {
 		return true;
 	}
 
-	private static List<Answer> currentAnswerIDsForQuestionID(String questionID, XPSCase theCase,
+	private static Answer currentAnswerIDsForQuestionID(String questionID, XPSCase theCase,
 			List<Question> qList) {
 		for (Question question : qList) {
 			if (question.getId().equals(questionID)) {
@@ -69,27 +69,22 @@ public class QuestionImageMapRendererUtils {
 		return null;
 	}
 
-	private static ImageMapAnswerIcon getActualAnswerImage(Image image, List<Answer> answers) {
+	private static ImageMapAnswerIcon getActualAnswerImage(Image image, Answer answer) {
 		for (ImageMapAnswerIcon ai : image.getAnswerImages()) {
-			for (Answer answer : answers) {
-				if (answer.getId().equals(ai.getId())) {
-					return ai;
-				}
+			if (answer.getId().equals(ai.getId())) {
+				return ai;
 			}
 		}
 		return null;
 	}
 
-	private static String getAnswerText(Question q, XPSCase theCase, List<Answer> answers) {
-		String answerText = answers.toString().substring(1, answers.toString().length() - 1);
+	private static String getAnswerText(Question q, XPSCase theCase, Answer answer) {
+		String answerText = answer.toString();
 		if (answerText.equals(AnswerUnknown.UNKNOWN_VALUE)) {
 			return DialogUtils.getMessageFor("dialog.unknown");
 		} else if (q != null && q instanceof QuestionDate) {
-			List<Answer> valueList = q.getValue(theCase);
-
-			for (Answer ans : valueList) {
-				return QuestionDateUtils.dateToString((AnswerDate) ans, theCase);
-			}
+			Answer ans = q.getValue(theCase);
+			return QuestionDateUtils.dateToString((AnswerDate) ans, theCase);
 		}
 		return answerText;
 	}
@@ -187,8 +182,8 @@ public class QuestionImageMapRendererUtils {
 		return remainingQuestions;
 	}
 
-	private static Object getToolTipString(Question q, XPSCase theCase, List<Answer> answers) {
-		return "Tip('" + getAnswerText(q, theCase, answers) + "', CLOSEBTN, false, STICKY, false)";
+	private static Object getToolTipString(Question q, XPSCase theCase, Answer answer) {
+		return "Tip('" + getAnswerText(q, theCase, answer) + "', CLOSEBTN, false, STICKY, false)";
 	}
 
 	private static boolean questionIdInImage(Image image, String id) {
@@ -206,10 +201,10 @@ public class QuestionImageMapRendererUtils {
 		// Draw clickable regions
 		for (Region region : image.getRegions()) {
 
-			List<Answer> answers = currentAnswerIDsForQuestionID(region.getQuestionID(), theCase, qList);
+			Answer answer = currentAnswerIDsForQuestionID(region.getQuestionID(), theCase, qList);
 			Question q = theCase.getKnowledgeBase().searchQuestion(region.getQuestionID());
 
-			ImageMapAnswerIcon answerImage = getActualAnswerImage(image, answers);
+			ImageMapAnswerIcon answerImage = getActualAnswerImage(image, answer);
 			String imageSrc = getImageSrc(answerImage, srcDir);
 
 			writer.startElement("a", component);
@@ -233,8 +228,8 @@ public class QuestionImageMapRendererUtils {
 						.getQuestionID());
 
 				boolean useNext = false;
-				if (answers.size() > 0) {
-					if (answers.get(0).getId().equals(AnswerUnknown.UNKNOWN_ID)) {
+				if (answer != null) {
+					if (answer.getId().equals(AnswerUnknown.UNKNOWN_ID)) {
 						useNext = true;
 					}
 				} else {
@@ -249,8 +244,8 @@ public class QuestionImageMapRendererUtils {
 						useNext = false;
 						break;
 					}
-					if (answers.size() > 0) {
-						if (ac.getId().equals((answers.get(0)).getId())) {
+					if (answer != null) {
+						if (ac.getId().equals(answer.getId())) {
 							// This is the current answer. The next one is to be
 							// selected on clicking
 							useNext = true;
@@ -265,9 +260,9 @@ public class QuestionImageMapRendererUtils {
 					writer.writeAttribute("onclick", "setAns('" + region.getQuestionID() + "','"
 							+ nextAnswerID + "'); return false", "onclick");
 					writer
-							.writeAttribute("onmouseover", getToolTipString(q, theCase, answers),
+							.writeAttribute("onmouseover", getToolTipString(q, theCase, answer),
 									"onmouseover");
-					renderImageMapAnswerIcon(writer, component, q, answers, imageSrc);
+					renderImageMapAnswerIcon(writer, component, q, answer, imageSrc);
 				} else {
 					writer.writeAttribute("onclick", "setAns('" + region.getQuestionID() + "','"
 							+ nextAnswerID + "'); return false;", "onclick");
@@ -291,15 +286,15 @@ public class QuestionImageMapRendererUtils {
 						+ "px; top: " + textCoords[1] + "px;", "style");
 				writer.writeAttribute("onclick", "openQuestion(event,'" + region.getQuestionID()
 						+ "'); return false;", "onclick");
-				writer.writeText(getAnswerText(q, theCase, answers), "value");
+				writer.writeText(getAnswerText(q, theCase, answer), "value");
 			} else {
 				if (imageSrc != null) {
 					if (!(region.isRotate() || region.isMC())) {
 						writer.writeAttribute("onclick", "openQuestion(event,'" + region.getQuestionID()
 								+ "'); return false;", "onclick");
-						writer.writeAttribute("onmouseover", getToolTipString(q, theCase, answers),
+						writer.writeAttribute("onmouseover", getToolTipString(q, theCase, answer),
 								"onmouseover");
-						renderImageMapAnswerIcon(writer, component, q, answers, imageSrc);
+						renderImageMapAnswerIcon(writer, component, q, answer, imageSrc);
 					}
 				} else {
 					writer.writeAttribute("onclick", "openQuestion(event,'" + region.getQuestionID()
@@ -332,10 +327,10 @@ public class QuestionImageMapRendererUtils {
 	}
 
 	private static void renderImageMapAnswerIcon(ResponseWriter writer, UIComponent component, Question q,
-			List<Answer> answers, String imageSrc) throws IOException {
+			Answer answer, String imageSrc) throws IOException {
 		writer.startElement("img", component);
-		if (q != null && answers.size() > 0) {
-			writer.writeAttribute("id", "answerImg_q_" + q.getId() + "_" + answers.get(0).getId(), "id");
+		if (q != null && answer != null) {
+			writer.writeAttribute("id", "answerImg_q_" + q.getId() + "_" + answer.getId(), "id");
 		}
 		writer.writeAttribute("src", imageSrc, "src");
 		writer.writeAttribute("alt", "ans", "alt");

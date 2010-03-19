@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
@@ -45,12 +46,15 @@ import javax.xml.stream.XMLStreamWriter;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.manage.AnswerFactory;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerNum;
 import de.d3web.core.session.values.AnswerUnknown;
@@ -66,6 +70,8 @@ public class TestPersistence {
 
 	private static final String SOLUTIONS = "Solutions";
 	private static final String SOLUTION = "Solution";
+
+	private static final String MC_ANSWER_SEPARATOR = "#####";
 	
 	//The Parameters
 	private static final String NAME = "Name";	
@@ -351,6 +357,11 @@ public class TestPersistence {
 				Question q = bh.getQuestionByIDorText(questionText, questionnaireText, kb);
 				if (answerText.equals("unknown")) {
 					f = new Finding(q, new AnswerUnknown());
+				} else if (q instanceof QuestionMC) {
+					// '#####' separates two MCAnswers for a MCQuestion
+					AnswerChoice[] answers = toChoices(q, answerText.split(MC_ANSWER_SEPARATOR));
+					AnswerMultipleChoice answer = new AnswerMultipleChoice(answers);
+					f = new Finding((QuestionChoice)q, answer);
 				} else if (q instanceof QuestionChoice) {
 					f = new Finding((QuestionChoice) q, answerText);
 				} else if (q instanceof QuestionNum) {
@@ -381,6 +392,23 @@ public class TestPersistence {
 			RatedSolution rs = new RatedSolution(d, r);
 			rtc.addExpected(rs);
 		}
+	}
+
+	private AnswerChoice[] toChoices(Question q, String[] strings) {
+		AnswerChoice[] answers = new AnswerChoice[strings.length];
+		QuestionChoice qc = (QuestionChoice)q;
+		for (int i = 0; i < strings.length; i++) {
+			answers[i] = findAnswer(qc, strings[i]);
+		}	
+		return answers;
+	}
+
+	private AnswerChoice findAnswer(QuestionChoice qc, String string) {
+		for (AnswerChoice choice : qc.getAllAlternatives()) {
+			if (string.equals(choice.getText()))
+				return choice;
+		}
+		return null;
 	}
 
 	/**

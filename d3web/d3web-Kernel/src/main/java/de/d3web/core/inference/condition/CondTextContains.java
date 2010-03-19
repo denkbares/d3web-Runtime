@@ -51,7 +51,7 @@ public class CondTextContains extends CondQuestion {
 	public boolean eval(XPSCase theCase)
 		throws NoAnswerException, UnknownAnswerException {
 		checkAnswer(theCase);
-		AnswerText answer = (AnswerText) question.getValue(theCase).get(0);
+		AnswerText answer = (AnswerText) question.getValue(theCase);
 		String value = (String) answer.getValue(theCase);
 		if (value != null) {
 			return (value.indexOf(this.value) > -1);

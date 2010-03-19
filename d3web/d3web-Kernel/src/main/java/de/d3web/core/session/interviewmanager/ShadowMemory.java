@@ -42,7 +42,7 @@ public class ShadowMemory extends DialogClient {
 	/**
 	 * adds Answers for a Question with questionID as id
 	 */
-	public void addAnswers(String questionID, Collection answers) {
+	public void addAnswers(String questionID, Object answers) {
 		questionIdAnswersHash.put(questionID, answers);
 	}
 

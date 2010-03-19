@@ -19,13 +19,11 @@
  */
 
 package de.d3web.core.knowledge.terminology;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import de.d3web.abstraction.formula.FormulaNumberElement;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseQuestionNum;
 import de.d3web.core.session.blackboard.XPSCaseObject;
@@ -42,7 +40,9 @@ import de.d3web.core.session.values.AnswerUnknown;
  */
 public class QuestionNum extends Question {
 
- 	public QuestionNum(){
+ 	private static final long serialVersionUID = 1L;
+
+	public QuestionNum(){
  		super();
  	}
  	
@@ -71,7 +71,7 @@ public class QuestionNum extends Question {
 	 * @param theCase current case
 	 * @return 1-element list containing an AnswerNum 
 	 */
-	public List<Answer> getValue(XPSCase theCase) {
+	public Answer getValue(XPSCase theCase) {
 		Object value =
 			((CaseQuestionNum) theCase.getCaseObject(this)).getValue();
 
@@ -81,13 +81,15 @@ public class QuestionNum extends Question {
 		else
 			tempValue = value;
 
-		if (tempValue != null) {
-			List<Answer> v = new LinkedList<Answer>();
-			v.add((Answer)tempValue);
-			return (v);
-		} else {
-			return new LinkedList<Answer>();
-		}
+		return (Answer)tempValue;
+		
+//		if (tempValue != null) {
+//			List<Answer> v = new LinkedList<Answer>();
+//			v.add((Answer)tempValue);
+//			return (v);
+//		} else {
+//			return new LinkedList<Answer>();
+//		}
 	}
 
 	/**
@@ -140,6 +142,29 @@ public class QuestionNum extends Question {
 		} else {
 			Logger.getLogger(this.getClass().getName()).warning("wrong number of answers");
 		}
+		notifyListeners(theCase,this);
+	}
+
+	public void setValue(XPSCase theCase, Answer value) {
+		if (value == null) {
+			((CaseQuestionNum) theCase.getCaseObject(this)).setValue(null);
+		} else {
+			if (value instanceof AnswerUnknown) {
+				((CaseQuestionNum) theCase.getCaseObject(this)).setValue(
+					(AnswerUnknown) value);
+			} else {
+				Double newValue = null;
+				if (value instanceof FormulaNumberElement)
+					newValue = ((FormulaNumberElement) value).eval(theCase);
+				else
+					newValue = (Double) value.getValue(theCase);
+				AnswerNum answerNum = new AnswerNum();
+				answerNum.setValue(newValue);
+				answerNum.setQuestion(this);
+				((CaseQuestionNum) theCase.getCaseObject(this)).setValue(
+					answerNum);
+			}
+		} 
 		notifyListeners(theCase,this);
 	}
 

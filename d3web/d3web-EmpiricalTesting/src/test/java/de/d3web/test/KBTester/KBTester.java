@@ -78,7 +78,6 @@ public class KBTester {
 	 * @param t the underlying TestSuite
 	 */
 	private void testPrecisionAndRecallInterview(TestSuite t) {
-		
 		StringBuilder precisionFailureMsg = new StringBuilder();
 		precisionFailureMsg.append("\nInterview-Precision differ in test suite ");
 		precisionFailureMsg.append(t.getName() + " should be 1.0 but is ");
@@ -121,7 +120,6 @@ public class KBTester {
 
 			for (SequentialTestCase stc : t.getRepository()) {
 				for (RatedTestCase rtc : stc.getCases()) {
-					
 					StringBuilder notUpToDateErrorMsg = new StringBuilder();
 					notUpToDateErrorMsg.append("\nDerived Solutions aren't up to date\n in test suite ");
 					notUpToDateErrorMsg.append(t.getName() + "\n in STC ");
@@ -131,14 +129,18 @@ public class KBTester {
 					
 					StringBuilder notCorrectErrorMsg = new StringBuilder();
 					notCorrectErrorMsg.append("\nDerived Solutions aren't up to date\n in test suite ");
-					notCorrectErrorMsg.append(t.getName() + "\n in STC ");
-					notCorrectErrorMsg.append(stc.getName() + "\n in RTC ");
+					notCorrectErrorMsg.append(t.getName() + "\n    in STC ");
+					notCorrectErrorMsg.append(stc.getName() + "\n      in RTC ");
 					notCorrectErrorMsg.append(rtc.toString() + "!\n");	
 					assertEquals(notCorrectErrorMsg.toString(), true, rtc.isCorrect());
 				}
 			}
 	}
 	
+	private void print(String string) {
+		System.out.println(string);
+	}
+
 	/**
 	 * Creates the TestSuites necessary for this JUNIT-Test.
 	 * Therefore the configuration file (cases.properties) is read.

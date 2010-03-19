@@ -51,7 +51,7 @@ public class CondUnknown extends CondQuestion {
 			checkAnswer(theCase);
 			return false;
 		} catch (UnknownAnswerException ex) {
-			return ((Answer) question.getValue(theCase).get(0)).isUnknown();
+			return ((Answer) question.getValue(theCase)).isUnknown();
 		}
 	}
 

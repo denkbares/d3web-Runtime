@@ -67,11 +67,10 @@ public class QDateWrapper extends FormulaDatePrimitive {
 	 * @return evaluated AnswerNumValue (Double) of the wrapped QuestionNum
 	 */
 	public Date eval(XPSCase theCase) {
-		if (getQuestion().getValue(theCase) == null
-			|| getQuestion().getValue(theCase).isEmpty()) {
+		if (getQuestion().getValue(theCase) == null) {
 			return null;
 		}
-		AnswerDate ans = (AnswerDate) (getQuestion().getValue(theCase).get(0));
+		AnswerDate ans = (AnswerDate) (getQuestion().getValue(theCase));
 		EvaluatableAnswerDateValue ret =(EvaluatableAnswerDateValue)ans.getValue(theCase); 
 		return ret.eval(theCase);
 			

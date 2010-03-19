@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
@@ -107,11 +108,9 @@ public abstract class ExceptionQuestion extends Question {
 
     /**
      * has no value
-     * 
-     * @return an empty List
      */
-    public List getValue(XPSCase theCase) {
-	return new LinkedList();
+    public Answer getValue(XPSCase theCase) {
+    	return null;
     }
 
     /**
@@ -151,6 +150,12 @@ public abstract class ExceptionQuestion extends Question {
 	    java.lang.Object[] values) {
     }
 
+    /**
+     * does nothing because this marker class needs no value
+     */
+    @Override
+    public void setValue(XPSCase theCase, Answer value) {
+	}
 
     public String toString() {
 	return "ExQ";

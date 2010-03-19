@@ -168,14 +168,10 @@ public class XMLUtil {
 	 * @throws IOException if one of the elements in values is neighter a Choice nor a Unknown Answer
 	 */
 	public static Element writeCondition(Document doc, NamedObject nob, String type,
-			List<?> values) throws IOException {
+			Answer value) throws IOException {
 		Element element = writeCondition(doc, nob, type);
-		if (values != null && values.size()>0) {
-			String s = "";
-			for(Object o: values) {
-				s+= getId(o) + ",";
-			}
-			s = s.substring(0,s.length()-1);
+		if (value != null) {
+			String s = getId(value);
 			element.setAttribute("value", s);
 		}
 		return element;
@@ -205,7 +201,7 @@ public class XMLUtil {
 	
 	/**
 	 * Appends an Element TargetQASets containing elements for the given qaSets
-	 * @param element Element the TargetQASets Element sholud be appended
+	 * @param element Element the TargetQASets Element should be appended
 	 * @param qaSets List of QASet being represented by the appended element
 	 */
 	public static void appendTargetQASets(Element element, List<QASet> qaSets) {
@@ -224,7 +220,7 @@ public class XMLUtil {
 	/**
 	 * Extract the qasets stored in the given element
 	 * @param element Element representing the QASets
-	 * @param kb Knowledgebase containing the qasets
+	 * @param kb knowledge base containing the qasets
 	 * @return List of represented QASets
 	 */
 	public static List<QASet> getTargetQASets(Element element, KnowledgeBase kb) {
@@ -336,8 +332,8 @@ public class XMLUtil {
 	
 	/**
 	 * Filters all elements of a NodeList and returns them in a collection.
-	 * @param list Nodelist containing all types of nodes (textnodes etc.)
-	 * @return a list containing all elements from nodelist, but not containing other nodes such as textnodes etc.
+	 * @param list Nodelist containing all types of nodes (text nodes etc.)
+	 * @return a list containing all elements from nodelist, but not containing other nodes such as text nodes etc.
 	 */
 	public static List<Element> getElementList(NodeList list) {
 		List<Element> col = new ArrayList<Element>();

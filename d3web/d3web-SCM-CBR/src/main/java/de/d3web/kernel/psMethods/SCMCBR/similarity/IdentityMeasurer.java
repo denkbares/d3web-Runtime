@@ -29,7 +29,7 @@ public class IdentityMeasurer implements ISimilarityMeasurer {
 		
 		CaseQuestion caseQuestino = (CaseQuestion) theCase.getCaseObject(question);
 		
-		List value = question.getValue(theCase);
+		Answer value = question.getValue(theCase);
 		
 		if (value.equals(rightAnswer)) //TODO Fix
 			return 1;

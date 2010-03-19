@@ -210,40 +210,60 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	void setUsedPSMethods(List<? extends PSMethod> methods);
 
 	/**
-	 * Assigns the specified value(s) to the specified {@link ValuedObject},
+	 * Deprecated: Please use void setValue(ValuedObject valuedObject, Answer value)
+	 */
+	@Deprecated
+	void setValue(ValuedObject o, Object[] value);
+
+	/**
+	 * Deprecated: Please use void setValue(ValuedObject valuedObject, Answer value)
+	 */
+	@Deprecated
+	void setValue(ValuedObject o, Object[] value, Rule rule);
+
+
+	/**
+	 * Deprecated: Please use void setValue(ValuedObject valuedObject, Answer value, Class context)
+	 */
+	void setValue(ValuedObject o, Object[] value, Class<? extends PSMethod> context);
+
+
+	
+	/**
+	 * Assigns the specified value to the specified {@link ValuedObject},
 	 * e.g., a {@link Question} or a {@link Diagnosis} receives a new value.
 	 * 
-	 * @param ValuedObject
+	 * @param valuedObject
 	 *            the object, that receives a new value
 	 * @param value
 	 *            the (array of new) values for the specified
 	 *            {@link ValuedObject}
 	 */
-	void setValue(ValuedObject o, Object[] value);
-
+	void setValue(ValuedObject valuedObject, Answer value);
 	
+
 	/**
-	 * Assigns the specified value(s) to the specified {@link ValuedObject},
+	 * Assigns the specified value to the specified {@link ValuedObject},
 	 * e.g., a {@link Question} or a {@link Diagnosis} receives a new value. The
 	 * knowledge source of this assignment is also given, here it is a
 	 * {@link Rule}.
 	 * 
-	 * @param ValuedObject
+	 * @param valuedObject
 	 *            ValuedObject the object, that receives a new value
 	 * @param value
 	 *            value the (array of new) values for the specified
 	 *            {@link ValuedObject}
-	 * @param context
+	 * @param rule
 	 *            the knowledge element responsible for making the assignment
-	 */
-	void setValue(ValuedObject o, Object[] value, Rule rule);
+	 */	
+	void setValue(ValuedObject valuedObject, Answer value, Rule rule);
 
 	/**
-	 * Assigns the specified value(s) to the specified {@link ValuedObject},
+	 * Assigns the specified value to the specified {@link ValuedObject},
 	 * e.g., a {@link Question} or a {@link Diagnosis} receives a new value. The
 	 * {@link PSMethod} responsible of this assignment is also given
 	 * 
-	 * @param ValuedObject
+	 * @param valuedObject
 	 *            ValuedObject the object, that receives a new value
 	 * @param value
 	 *            value the (array of new) values for the specified
@@ -251,7 +271,7 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	 * @param context
 	 *            the problem-solver responsible for this assignment
 	 */
-	void setValue(ValuedObject o, Object[] value, Class<? extends PSMethod> context);
+	void setValue(ValuedObject valuedObject, Answer value, Class<? extends PSMethod> context);
 
 	/**
 	 * Takes a specified log message, that is relevant for this case.

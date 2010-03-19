@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
@@ -31,19 +32,19 @@ public class ValueFactory {
 		if (newValue == null || newValue.length == 0) {
 			return null;
 		}
-		if (valuedObject instanceof QuestionMC) {
-			List<ChoiceValue> values = new ArrayList<ChoiceValue>(newValue.length);
-			for (int i = 0; i < newValue.length; i++) {
-				if (newValue[i] instanceof AnswerUnknown) {
-					// when one answer is UNKNOWN, then the entire value is set to unknown
-					return new Unknown();
-				} else {
-					AnswerChoice answer = (AnswerChoice)newValue[i];
-					values.add(new ChoiceValue(answer));
-				}
-			}
-			return new MultipleChoiceValue(values);
-		} else {
+//		if (valuedObject instanceof QuestionMC) {
+//			List<ChoiceValue> values = new ArrayList<ChoiceValue>(newValue.length);
+//			for (int i = 0; i < newValue.length; i++) {
+//				if (newValue[i] instanceof AnswerUnknown) {
+//					// when one answer is UNKNOWN, then the entire value is set to unknown
+//					return new Unknown();
+//				} else {
+//					AnswerChoice answer = (AnswerChoice)newValue[i];
+//					values.add(new ChoiceValue(answer));
+//				}
+//			}
+//			return new MultipleChoiceValue(values);
+//		} else {
 			Object o = newValue[0];
 			if (o instanceof AnswerUnknown) {
 				return new Unknown();
@@ -52,6 +53,8 @@ public class ValueFactory {
 				return new NumValue(d);
 			} else if (valuedObject instanceof QuestionOC) {
 				return new ChoiceValue((AnswerChoice)o);
+			} else if (valuedObject instanceof QuestionMC) {
+				return new MultipleChoiceValue((AnswerMultipleChoice)o);
 			} else if (o instanceof QuestionDate) {
 				Date date = (Date) ((AnswerDate)o).getValue(theCase);
 				return new DateValue(date);
@@ -59,7 +62,7 @@ public class ValueFactory {
 				String text = ((AnswerText)o).getText();
 				return new TextValue(text);
 			} 
-		}
+//		}
 		return null;
 	}
 

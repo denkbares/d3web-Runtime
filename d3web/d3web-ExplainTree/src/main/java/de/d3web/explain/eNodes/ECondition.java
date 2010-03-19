@@ -37,6 +37,7 @@ import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.inference.condition.TerminalCondition;
 import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.session.ValuedObject;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.explain.ExplanationFactory;
@@ -138,9 +139,9 @@ public class ECondition {
 				sb.append("<target id='" + elem.getId() + "'");
 				sb.append(" value='");
 				if (getCondition() instanceof CondEqual) {
-					Iterator iter2 = ((CondEqual)getCondition()).getValues().iterator();
-					while(iter2.hasNext()) {
-						sb.append(((AnswerChoice)iter2.next()).getId());
+					Answer answer = ((CondEqual)getCondition()).getValues();
+					if (answer != null) {
+						sb.append(((AnswerChoice)answer).getId());
 					}
 				} else if (getCondition() instanceof CondKnown) {
 					sb.append("known");

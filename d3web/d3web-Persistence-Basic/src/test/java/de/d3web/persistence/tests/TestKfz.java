@@ -32,6 +32,7 @@ import de.d3web.core.io.BasicPersistenceHandler;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -126,13 +127,11 @@ public void testCount() throws IOException {
 	theCase.setValue(Mf7, values, context);
 	//
 
-	List<?> answerList = Mf5.getValue(theCase);
+	Answer answerList = Mf5.getValue(theCase);
 	if (answerList == null) {
 		System.out.println("(1) --> NULL!!!!");
-	} else if (answerList.isEmpty()) {
-		System.out.println("(1) --> EMPTY !!!!");
 	} else {
-		System.out.println("(1) --> Mf55: " + ((AnswerNum) answerList.get(0)).getValue(theCase));
+		System.out.println("(1) --> Mf55: " + ((AnswerNum) answerList).getValue(theCase));
 	}
 	//
 	//
@@ -172,11 +171,11 @@ public void testFormulaSchema() {
 
 	System.out.println(
 		"(1) --> Msi4: "
-			+ ((AnswerChoice) Msi4.getValue(theCase).get(0)).verbalizeValue(theCase));
+			+ ((AnswerChoice) Msi4.getValue(theCase)).verbalizeValue(theCase));
 	//
 	assertTrue(
 		"Error with formula (1)",
-		ratingNormal == Msi4.getValue(theCase).get(0));
+		ratingNormal == Msi4.getValue(theCase));
 
 	// This is exactly the border ((Mf6-Mf5)/Mf5)*100 = 10
 	AnswerNum highAnswer = Mf6.getAnswer(theCase, new Double(11));
@@ -186,11 +185,11 @@ public void testFormulaSchema() {
 	AnswerChoice ratingHigh = (AnswerChoice) Msi4.getAnswer(theCase, "Msi4a2");
 	System.out.println(
 		"(2) --> Msi4: "
-			+ ((AnswerChoice) Msi4.getValue(theCase).get(0)).verbalizeValue(theCase));
+			+ ((AnswerChoice) Msi4.getValue(theCase)).verbalizeValue(theCase));
 	//
 	assertEquals(
 		"Error with formula (2)",
-		ratingHigh, Msi4.getValue(theCase).get(0));
+		ratingHigh, Msi4.getValue(theCase));
 
 	// 10+9.5 < 20 so answer is "leicht erhöht" as expected
 	highAnswer = Mf6.getAnswer(theCase, new Double(9.5));
@@ -199,11 +198,11 @@ public void testFormulaSchema() {
 	//
 	System.out.println(
 		"(3) --> Msi4: "
-			+ ((AnswerChoice) Msi4.getValue(theCase).get(0)).verbalizeValue(theCase));
+			+ ((AnswerChoice) Msi4.getValue(theCase)).verbalizeValue(theCase));
 	//
 	assertEquals(
 		"Error with formula (3)",
-		ratingHigh, Msi4.getValue(theCase).get(0));
+		ratingHigh, Msi4.getValue(theCase));
 
 	//
 	AnswerNum veryHighAnswer = Mf6.getAnswer(theCase, new Double(15));
@@ -211,13 +210,13 @@ public void testFormulaSchema() {
 	theCase.setValue(Mf6, values, context);
 	System.out.println(
 		"(4) --> Msi4: "
-			+ ((AnswerChoice) Msi4.getValue(theCase).get(0)).verbalizeValue(theCase));
+			+ ((AnswerChoice) Msi4.getValue(theCase)).verbalizeValue(theCase));
 	//
 	AnswerChoice ratingVeryHigh = (AnswerChoice) Msi4.getAnswer(theCase, "Msi4a3");
 	//
 	assertTrue(
 		"Error with formula (4)",
-		ratingVeryHigh == Msi4.getValue(theCase).get(0));
+		ratingVeryHigh == Msi4.getValue(theCase));
 
 	//		
 
@@ -245,14 +244,12 @@ public void testFormulaSchema() {
 		AnswerNum normalAnswer = Mf6.getAnswer(theCase, new Double(10));
 		values = new Object[] { normalAnswer };
 		theCase.setValue(Mf6, values, context);
-		List<?> answerList = Mf58.getValue(theCase);
+		Answer answerList = Mf58.getValue(theCase);
 		if (answerList == null) {
 			System.out.println("(1) --> NULL!!!!");
-		} else if (answerList.isEmpty()) {
-			System.out.println("(1) --> EMPTY !!!!");
 		} else {
 			System.out.println(
-				"(1) --> Mf58: " + ((AnswerNum) answerList.get(0)).getValue(theCase));
+				"(1) --> Mf58: " + ((AnswerNum) answerList).getValue(theCase));
 		}
 		//
 		//
@@ -284,7 +281,7 @@ public void testFormulaSchema() {
 
 		assertTrue(
 			"Error while setting/getting known OC-Value (2)",
-			answerChoice == questionOC.getValue(theCase).get(0));
+			answerChoice == questionOC.getValue(theCase));
 
 		AnswerUnknown answerChoiceUnknown = questionOC.getUnknownAlternative();
 		values = new Object[] { answerChoiceUnknown };
@@ -293,7 +290,7 @@ public void testFormulaSchema() {
 
 		assertTrue(
 			"Error while setting/getting unknown OC-Value (3)",
-			answerChoiceUnknown == questionOC.getValue(theCase).get(0));
+			answerChoiceUnknown == questionOC.getValue(theCase));
 
 		assertTrue(
 			"Error: isDone shouldn't be false (4)",

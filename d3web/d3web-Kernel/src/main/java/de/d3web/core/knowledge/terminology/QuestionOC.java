@@ -21,13 +21,14 @@
 package de.d3web.core.knowledge.terminology;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Logger;
 
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseQuestionOC;
 import de.d3web.core.session.blackboard.XPSCaseObject;
+import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerNum;
 
 /**
@@ -39,6 +40,7 @@ import de.d3web.core.session.values.AnswerNum;
  * @see QASet
  */
 public class QuestionOC extends QuestionChoice {
+	private static final long serialVersionUID = 1L;
 
 	public QuestionOC() {
 		super();
@@ -56,9 +58,9 @@ public class QuestionOC extends QuestionChoice {
 		return (Answer) getAlternatives().get(key);
 	}
 
-	public List getAlternatives() {
+	public List<AnswerChoice> getAlternatives() {
 		if (alternatives == null) {
-			return new Vector();
+			return Collections.emptyList();
 		} else
 			return alternatives;
 	}
@@ -66,16 +68,17 @@ public class QuestionOC extends QuestionChoice {
 	/**
 	 * @return a List of Answers which are currently the value of the question.
 	 */
-	public List<Answer> getValue(XPSCase theCase) {
+	public Answer getValue(XPSCase theCase) {
 		Answer value =
 			((CaseQuestionOC) theCase.getCaseObject(this)).getValue();
-		if (value != null) {
-			ArrayList<Answer> v = new ArrayList<Answer>(1);
-			v.add(value);
-			return (v);
-		} else {
-			return new ArrayList<Answer>(0);
-		}
+		return value;
+		//		if (value != null) {
+//			ArrayList<Answer> v = new ArrayList<Answer>(1);
+//			v.add(value);
+//			return (v);
+//		} else {
+//			return new ArrayList<Answer>(0);
+//		}
 	}
 
 	/**
@@ -87,7 +90,7 @@ public class QuestionOC extends QuestionChoice {
 	 * @param antwort an array of Answer instances
 	 */
 	public void setValue(XPSCase theCase, Object[] values) {
-		List newValues = new Vector();
+		List<Answer> newValues = new ArrayList<Answer>();
 
 		if (values.length == 0) {
 			((CaseQuestionOC) theCase.getCaseObject(this)).setValue(null);
@@ -115,6 +118,21 @@ public class QuestionOC extends QuestionChoice {
 				"setValue",
 				new Exception("too many answers given to question \"" + getId() + "\" (> 1)"));
 		}
+		notifyListeners(theCase,this);
+
+	}
+
+	public void setValue(XPSCase theCase, Answer value) {
+		if (value == null) {
+			((CaseQuestionOC) theCase.getCaseObject(this)).setValue(null);
+		} else {
+			// if num value was passed, then convert numerical value to choice and
+			// check, if numerical value was set to oc-question
+			if (value instanceof AnswerNum) {
+				value = convertNumericalValue(theCase, (AnswerNum)value);
+			}
+			((CaseQuestionOC) theCase.getCaseObject(this)).setValue(value);
+		} 
 		notifyListeners(theCase,this);
 
 	}

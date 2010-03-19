@@ -19,7 +19,6 @@
  */
 
 package de.d3web.core.knowledge.terminology;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,6 +44,7 @@ import de.d3web.core.utilities.Utils;
  * @see QASet
  */
 public abstract class QuestionChoice extends Question {
+	private static final long serialVersionUID = 1L;
 	protected List<AnswerChoice> alternatives;
 
 	public QuestionChoice() {
@@ -113,7 +113,7 @@ public abstract class QuestionChoice extends Question {
 		return result;
 	}
 
-	public abstract List getValue(XPSCase theCase);
+	public abstract Answer getValue(XPSCase theCase);
 
 
 	/**

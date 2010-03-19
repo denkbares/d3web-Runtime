@@ -24,8 +24,10 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerUnknown;
@@ -38,7 +40,7 @@ import de.d3web.core.session.values.AnswerUnknown;
 public class CondEqual extends CondQuestion {
 	
 	private static final long serialVersionUID = -974336518850100085L;
-	private List<Answer> values;
+	private Answer value;
 
 	/**
 	 * Creates a new equal-condition constraining a specified 
@@ -48,8 +50,7 @@ public class CondEqual extends CondQuestion {
 	 */
 	public CondEqual(Question question, AnswerUnknown value) {
 		super(question);
-		values = new ArrayList<Answer>(1);
-		values.add(value);
+		this.value = value;
 	}
 
 	/**
@@ -60,7 +61,15 @@ public class CondEqual extends CondQuestion {
 	 */
 	public CondEqual(Question question, List<Answer> values) {
 		super(question);
-		this.values = values;
+		if (question instanceof QuestionMC) {
+			List<AnswerChoice> temp = new ArrayList<AnswerChoice>(values.size());
+			for (Answer answer : values) {
+				temp.add((AnswerChoice)answer);
+			}
+			value = new AnswerMultipleChoice(temp);
+		}
+		else 
+			this.value = values.get(0);
 	}
 
 	/**
@@ -71,8 +80,7 @@ public class CondEqual extends CondQuestion {
 	 */
 	public CondEqual(QuestionChoice question, Answer value) {
 		super(question);
-		values = new ArrayList<Answer>(1);
-		values.add(value);
+		this.value = value;
 	}
 	
 	/**
@@ -83,8 +91,7 @@ public class CondEqual extends CondQuestion {
 	 */
 	public CondEqual(Question question, Answer value) {
 		super(question);
-		values = new ArrayList<Answer>(1);
-		values.add(value);
+		this.value = value;
 	}
 	
 	/**
@@ -96,16 +103,19 @@ public class CondEqual extends CondQuestion {
 	 */
 	public CondEqual(QuestionChoice question, AnswerUnknown value) {
 		super(question);
-		values = new ArrayList<Answer>(1);
-		values.add(value);
+		this.value = value;
 	}
 
 	@Override
 	public boolean eval(XPSCase theCase)
 		throws NoAnswerException, UnknownAnswerException {
 		checkAnswer(theCase);
-		List<?> value = question.getValue(theCase);
-		return value.containsAll(values);
+		Answer value = question.getValue(theCase);
+		if (question instanceof QuestionMC) {
+			AnswerMultipleChoice mcans = (AnswerMultipleChoice)value;
+			return mcans.contains(this.value);
+		} else
+			return this.value.equals(value);
 	}
 
 	private String getId(Object answer) {
@@ -129,8 +139,8 @@ public class CondEqual extends CondQuestion {
 	 * to fulfill the condition.
 	 * @return the constrained values of this condition 
 	 */
-	public List<Answer> getValues() {
-		return values;
+	public Answer getValues() {
+		return value;
 	}
 
 	/**
@@ -138,18 +148,15 @@ public class CondEqual extends CondQuestion {
 	 * to fulfill the condition.
 	 * @param newValues the constrained values of this condition 
 	 */
-	public void setValues(List<Answer> newValues) {
-		values = newValues;
+	public void setValues(Answer newValue) {
+		value = newValue;
 	}
 
 	@Override
 	public String toString() {
 		String ret = "\u2190 CondEqual question: "
 		+ question.getId()
-		+ " value: ";
-		for (Object o: values) {
-			ret += getId(o)+",";
-		}
+		+ " value: " + this.value;
 		ret = ret.substring(0, ret.length()-1);
 		return ret;
 	}
@@ -159,7 +166,7 @@ public class CondEqual extends CondQuestion {
 		if (!super.equals(other)) return false;
 		
 		if (this.getValues() != null && ((CondEqual)other).getValues() != null)
-			return this.getValues().containsAll(((CondEqual)other).getValues()) && ((CondEqual)other).getValues().containsAll((this).getValues());
+			return this.getValues().equals(((CondEqual)other).getValues()) && ((CondEqual)other).getValues().equals((this).getValues());
 		else return this.getValues() == ((CondEqual)other).getValues();
 	}
 
@@ -170,11 +177,6 @@ public class CondEqual extends CondQuestion {
 	
 	@Override
 	public int hashCode() {
-		int hash = super.hashCode()*31;
-		for (Object o : this.getValues()) {
-			// hash code ignores order of answers (according to equals)
-			hash += o.hashCode();
-		}
-		return hash;
+		return super.hashCode()*31 + getValues().hashCode();
 	}
 }

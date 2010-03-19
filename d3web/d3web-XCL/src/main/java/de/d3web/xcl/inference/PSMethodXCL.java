@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.StrategicSupport;
@@ -134,8 +135,8 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		double restWeight = caseObject.totalAnsweredAbnormality;
 		for (Question question : answeredQuestions) {
 			AbstractAbnormality abnormality = getAbnormalitySlice(question);
-			List<?> answers = question.getValue(theCase);
-			restWeight -= getAbnormality(abnormality, answers);
+			Answer answer = question.getValue(theCase);
+			restWeight -= getAbnormality(abnormality, answer);
 		}
 
 		if (Math.abs(restWeight) > 1e-6) {
@@ -143,30 +144,33 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		}
 	}
 
-	double getAbnormality(AbstractAbnormality abnormality, Object[] answers) {
+	public double getAbnormality(AbstractAbnormality abnormality, Object answer) {
 		// no answer ==> not abnormal
-		if (answers == null || answers.length==0) return 0.0;
+		if (answer == null) return 0.0;
 		// no slice ==> every answer is abnormal
-		if (abnormality == null) return 1.0;
+		if (abnormality == null || (!(answer instanceof Answer))) return 1.0;
+		
 		double max = 0;
-		for (Object a : answers) {
-			max = Math.max(max, abnormality.getValue((Answer) a));
-		}
+		// TODO: Explicit Handling for MC Answers! (joba, 2010-03-11)
+		max = abnormality.getValue((Answer)answer);
+//		for (Object a : answers) {
+//			max = Math.max(max, abnormality.getValue((Answer) a));
+//		}
 		return max;
 	}
 
-	public double getAbnormality(AbstractAbnormality abnormality, List<?> answers) {
-		// no answer ==> not abnormal
-		if (answers == null || answers.size()==0)
-			return 0.0;
-		// no slice ==> every answer is abnormal
-		if (abnormality == null) return 1.0;
-		double max = 0;
-		for (Object a : answers) {
-			max = Math.max(max, abnormality.getValue((Answer) a));
-		}
-		return max;
-	}
+//	public double getAbnormality(AbstractAbnormality abnormality, List<?> answers) {
+//		// no answer ==> not abnormal
+//		if (answers == null || answers.size()==0)
+//			return 0.0;
+//		// no slice ==> every answer is abnormal
+//		if (abnormality == null) return 1.0;
+//		double max = 0;
+//		for (Object a : answers) {
+//			max = Math.max(max, abnormality.getValue((Answer) a));
+//		}
+//		return max;
+//	}
 
 	public AbstractAbnormality getAbnormalitySlice(Question question) {
 		try {

@@ -60,11 +60,6 @@ import de.d3web.plugin.test.InitPluginManager;
 
 /**
  * @author merz
- * 
- *         To change this generated comment edit the template variable
- *         "typecomment": Window>Preferences>Java>Templates. To enable and
- *         disable the creation of type comments go to
- *         Window>Preferences>Java>Code Generation.
  */
 public class ConditionTest extends TestCase {
 	private AbstractCondition ac1, ac21, ac22, ac3;
@@ -126,7 +121,7 @@ public class ConditionTest extends TestCase {
 		cDState1 = new CondDState(d1, new DiagnosisState(DiagnosisState.State.SUGGESTED));
 
 		cEqual1 = new CondEqual(qnum1, new AnswerUnknown());
-		cEqual1.setValues(val1);
+		cEqual1.setValues(ach1);
 
 		cKnown1 = new CondKnown(qnum1);
 

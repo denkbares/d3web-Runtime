@@ -125,10 +125,10 @@ public abstract class Question extends QASet implements ValuedObject {
 		return unknown;
 	}
 
-	public abstract List getValue(XPSCase theCase);
+	public abstract Answer getValue(XPSCase theCase);
 
 	public boolean hasValue(XPSCase theCase) {
-		return (getValue(theCase) != null) && (getValue(theCase).size() > 0);
+		return (getValue(theCase) != null);
 	}
 
 	public boolean isDone(XPSCase theCase) {
@@ -137,7 +137,7 @@ public abstract class Question extends QASet implements ValuedObject {
 			return true;
 		}
 		else {
-			return (getValue(theCase) != null && !getValue(theCase).isEmpty());
+			return getValue(theCase) != null;
 		}
 	}
 
@@ -205,6 +205,8 @@ public abstract class Question extends QASet implements ValuedObject {
 
 	public abstract void setValue(XPSCase theCase, Object[] values);
 
+	public abstract void setValue(XPSCase theCase, Answer value);
+
 	/**
 	 * Sets a new value to the case object of this question and saves the
 	 * overwritten value-array in its historyStack.
@@ -222,8 +224,7 @@ public abstract class Question extends QASet implements ValuedObject {
 		CaseQuestion caseQuestion = ((CaseQuestion) theCase.getCaseObject(this));
 		if (ruleSymptom != null) {
 			// get old value and push it (with new Rule) on historyStack.
-			SymptomValue symptomValue = new SymptomValue(getValue(theCase)
-					.toArray(), ruleSymptom);
+			SymptomValue symptomValue = new SymptomValue(getValue(theCase), ruleSymptom);
 			caseQuestion.getValueHistory().add(0, symptomValue);
 		}
 		setValue(theCase, values);

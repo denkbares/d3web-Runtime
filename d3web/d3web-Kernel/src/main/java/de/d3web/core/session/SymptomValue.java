@@ -21,6 +21,7 @@
 package de.d3web.core.session;
 
 import de.d3web.core.inference.Rule;
+import de.d3web.core.knowledge.terminology.Answer;
 
 /**
  * Type definition for a tupel of rule and values (extensible) There will be
@@ -45,6 +46,11 @@ public class SymptomValue {
      */
     public SymptomValue(Object[] values, Rule rule) {
         this.values = values;
+        this.rule = rule;
+    }
+    
+    public SymptomValue(Answer value, Rule rule) {
+        this.values = new Answer[] {value};
         this.rule = rule;
     }
 

@@ -20,9 +20,10 @@
 
 package de.d3web.core.session.blackboard;
 
-import java.util.LinkedList;
 import java.util.List;
 
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 /**
  * Stores the dynamic, user specific values for an QuestionMC
@@ -33,8 +34,8 @@ import de.d3web.core.knowledge.terminology.QuestionMC;
  * @see QuestionMC
  */
 public class CaseQuestionMC extends CaseQuestionChoice {
-	private List value = new LinkedList();
-
+	AnswerMultipleChoice theAnswer;
+	
 	public CaseQuestionMC(QuestionMC question) {
 		super(question);
 	}
@@ -42,15 +43,23 @@ public class CaseQuestionMC extends CaseQuestionChoice {
 	/**
 	 * @return the user-specific value of the depending questionMC
 	 */ 
-	public List getValue() {
-		return value;
+	public Answer getValue() {
+		return theAnswer;
 	}
 
 	/**
 	 * Sets the user-specific value of the depending questionMC
 	 */ 
 	public void setValue(List value) {
-		this.value = value;
+		theAnswer = new AnswerMultipleChoice(value);
+	}
+	
+
+	/**
+	 * Sets the user-specific value of the depending questionMC
+	 */ 
+	public void setValue(AnswerMultipleChoice answer) {
+		theAnswer = answer;
 	}
 
 }

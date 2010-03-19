@@ -64,13 +64,13 @@ public class QuestionMC extends QuestionChoice {
 			return alternatives;
 	}
 
-	public List getValue(XPSCase theCase) {
-		List values = ((CaseQuestionMC) theCase.getCaseObject(this)).getValue();
-		if (values != null) {
-			return values;
+	public Answer getValue(XPSCase theCase) {
+		Answer value = ((CaseQuestionMC) theCase.getCaseObject(this)).getValue();
+		if (value != null) {
+			return value;
 		} else {
 			// System.err.println("Fehlerhafte initialisierung des Fall-Wertes von MC-Fragen");
-			return Collections.EMPTY_LIST;
+			return null;
 		}
 	}
 
@@ -83,17 +83,37 @@ public class QuestionMC extends QuestionChoice {
 	 * @param antwort an array of Answer instances
 	 */
 	public void setValue(XPSCase theCase, Object[] values) {
-		List<Answer> newValues = new ArrayList<Answer>(values.length);
-		for (int i = 0; i < values.length; i++) {
-			if (values[i] instanceof AnswerNum) {
-				values[i] = convertNumericalValue(theCase, (AnswerNum)values[i]);
+		List<AnswerChoice> newValues = new ArrayList<AnswerChoice>(values.length);
+		AnswerMultipleChoice amc = null;
+		if (values.length > 1) {
+			for (int i = 0; i < values.length; i++) {
+				if (values[i] instanceof AnswerNum) {
+					values[i] = convertNumericalValue(theCase,
+							(AnswerNum) values[i]);
+				}
+				newValues.add((AnswerChoice) values[i]);
 			}
-			newValues.add((Answer)values[i]);
+			amc = new AnswerMultipleChoice(newValues);
+		} else if (values.length == 1) {
+			amc = (AnswerMultipleChoice)values[0];
 		}
-		((CaseQuestionMC) theCase.getCaseObject(this)).setValue(newValues);
+		((CaseQuestionMC) theCase.getCaseObject(this)).setValue(amc);		
 		notifyListeners(theCase,this);
 	}	
 	
+	/**
+	 * Sets the current values of this MC-question belonging to the
+	 * specified XPSCase.<BR>
+	 * <B>Caution:</B> It is possible to set numerical values to a MC-
+	 * question. In this case, a Num2ChoiceSchema must be defined a KnowledgeSlice.
+	 * @param theCase the belonging XPSCase
+	 * @param antwort an array of Answer instances
+	 */
+	public void setValue(XPSCase theCase, Answer value) {
+		((CaseQuestionMC) theCase.getCaseObject(this)).setValue((AnswerMultipleChoice)value);		
+		notifyListeners(theCase,this);
+	}	
+
 	public String toString() {
 		return super.toString();
 	}

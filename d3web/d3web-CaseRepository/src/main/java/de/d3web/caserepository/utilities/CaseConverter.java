@@ -20,6 +20,8 @@
 
 package de.d3web.caserepository.utilities;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +30,7 @@ import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.CaseObjectImpl;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -176,9 +179,11 @@ public class CaseConverter {
 		Iterator qiter = theCase.getKnowledgeBase().getQuestions().iterator();
 		while (qiter.hasNext()) {
 			Question q = (Question) qiter.next();
-			List value = q.getValue(theCase);
-			if ((value != null) && (!value.isEmpty())) {
-				ret.addQuestionAndAnswers(q, value);
+			Answer value = q.getValue(theCase);
+			if (value != null)  {
+				Collection<Answer> v = new ArrayList<Answer>(1);
+				v.add(value);
+				ret.addQuestionAndAnswers(q, v);
 			}
 		}
 

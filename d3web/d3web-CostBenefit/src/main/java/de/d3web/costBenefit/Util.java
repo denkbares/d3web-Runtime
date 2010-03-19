@@ -50,18 +50,16 @@ public class Util {
 		List<? extends Question> answeredQuestions = new LinkedList<Question>(
 				theCase.getAnsweredQuestions());
 		for (Question q : answeredQuestions) {
-			List<Answer> a = ((QuestionOC) q).getValue(theCase);
-			Answer[] aarray = new Answer[a.size()];
-			a.toArray(aarray);
-			testCase.setValue(q, aarray);
+			Answer a = q.getValue(theCase);
+			testCase.setValue(q, a);
 		}
 		return testCase;
-	}
+	} 
 
-	public static void undo(XPSCase theCase, Map<Question, List<?>> undo) {
-		for (Entry<Question, List<?>> entry : undo.entrySet()) {
-			entry.getKey().setValue(theCase, entry.getValue().toArray());
-			if (entry.getValue().size() == 0) {
+	public static void undo(XPSCase theCase, Map<Question, Answer> undo) {
+		for (Entry<Question, Answer> entry : undo.entrySet()) {
+			entry.getKey().setValue(theCase, entry.getValue());
+			if (entry.getValue() == null) {
 				theCase.getAnsweredQuestions().remove(entry.getKey());
 			}
 		}

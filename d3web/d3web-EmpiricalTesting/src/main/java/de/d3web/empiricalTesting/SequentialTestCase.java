@@ -126,7 +126,7 @@ public class SequentialTestCase {
 	/**
 	 * Finds the derived solutions for this SequentialTestCase.
 	 * @param kb the underlying KnowledgeBase
-	 * @param psMethodContext the problemsolver which is used to 
+	 * @param psMethodContext the problem solver which is used to 
 	 * 						  get the derived solutions
 	 */
 	@SuppressWarnings("unchecked")
@@ -139,14 +139,8 @@ public class SequentialTestCase {
 			for (Finding f : rtc.getFindings()) {
 				Object q = f.getQuestion();
 				List answers = new ArrayList();
-				
-				// Necessary for QuestionMC, otherwise only one answer can be given
-				if (q instanceof QuestionMC) {
-					answers.addAll(((QuestionMC) q).getValue(thecase));
-				}
-				
 				answers.add(f.getAnswer());
-				thecase.setValue((Question) q, answers.toArray());
+				thecase.setValue(f.getQuestion(), f.getAnswer());
 			}
 			
 			// Check used Rating (StateRating or ScoreRating) in ExpectedSolutions	
@@ -219,33 +213,33 @@ public class SequentialTestCase {
 	}
 
 	
-	public List<Answer> getAnswerForQuestionNum(KnowledgeBase kb, String questionname) {
-		XPSCase thecase = CaseFactory.createXPSCase(kb);
-		
-		for (RatedTestCase rtc : ratedTestCases) {
-			// Answer and Question setting in Case
-			for (Finding f : rtc.getFindings()) {
-				Object q = f.getQuestion();
-				List answers = new ArrayList();
-				
-				// Necessary for QuestionMC, otherwise only one answer can be given
-				if (q instanceof QuestionMC) {
-					answers.addAll(((QuestionMC) q).getValue(thecase));
-				}
-				
-				answers.add(f.getAnswer());
-				thecase.setValue((Question) q, answers.toArray());
-			}		
-		}
-		
-		List<? extends Question> answeredQuestions = thecase.getAnsweredQuestions();
-		for (Question question : answeredQuestions) {
-			if (question.getText().equals(questionname))
-				return question.getValue(thecase);
-		}
-		
-		return null;
-	}
+//	public List<Answer> getAnswerForQuestionNum(KnowledgeBase kb, String questionname) {
+//		XPSCase thecase = CaseFactory.createXPSCase(kb);
+//		
+//		for (RatedTestCase rtc : ratedTestCases) {
+//			// Answer and Question setting in Case
+//			for (Finding f : rtc.getFindings()) {
+//				Object q = f.getQuestion();
+//				List answers = new ArrayList();
+//				
+//				// Necessary for QuestionMC, otherwise only one answer can be given
+//				if (q instanceof QuestionMC) {
+//					answers.addAll(((QuestionMC) q).getValue(thecase));
+//				}
+//				
+//				answers.add(f.getAnswer());
+//				thecase.setValue((Question) q, answers.toArray());
+//			}		
+//		}
+//		
+//		List<? extends Question> answeredQuestions = thecase.getAnsweredQuestions();
+//		for (Question question : answeredQuestions) {
+//			if (question.getText().equals(questionname))
+//				return question.getValue(thecase);
+//		}
+//		
+//		return null;
+//	}
 	
 	
 	

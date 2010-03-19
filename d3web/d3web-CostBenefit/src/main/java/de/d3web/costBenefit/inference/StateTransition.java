@@ -99,12 +99,12 @@ public class StateTransition implements KnowledgeSlice {
 	
 	/**
 	 * This method is used to fire all ValueTransitions of the QContainer.
-	 * For each question, the first ValueTransition whose condition is fullfilled, is used.
+	 * For each question, the first ValueTransition whose condition is fulfilled, is used.
 	 * @param theCase
 	 * @return
 	 */
-	public Map<Question, List<?>> fire(XPSCase theCase) {
-		Map<Question, List<?>> map = new HashMap<Question, List<?>>();
+	public Map<Question, Answer> fire(XPSCase theCase) {
+		Map<Question, Answer> map = new HashMap<Question, Answer>();
 		for (ValueTransition vt: postTransitions) {
 			Question q = vt.getQuestion();
 			List<ConditionalValueSetter> setters = vt.getSetters();
@@ -124,7 +124,7 @@ public class StateTransition implements KnowledgeSlice {
 	}
 	
 	private void setAnswer(XPSCase theCase, Question q,
-			Answer answer, Map<Question, List<?>> map) {
+			Answer answer, Map<Question, Answer> map) {
 		map.put(q, q.getValue(theCase));
 		Answer[] a = new Answer[1];
 		a[0] = answer;

@@ -33,7 +33,7 @@ public class DefaultPropagationController implements PropagationContoller {
 				//TODO: use assert after D3WebCase.getValue() has been corrected
 				//assert Arrays.equals(oldChange.getNewValue(), newChange.getOldValue());
 				// check if they annihilate: a-->b && b-->a ==> no change
-				if (Arrays.equals(oldChange.getOldValue(), newChange.getNewValue())) {
+				if (oldChange.getOldValue().equals(newChange.getNewValue())) {
 					propagationEntries.remove(key);
 				}
 				// otherwise we have a chain: a-->b && b-->c ==> a-->c
@@ -221,7 +221,7 @@ public class DefaultPropagationController implements PropagationContoller {
 	 * @param oldValue the old value of the object within the case
 	 * @param newValue the new value of the object within the case
 	 */
-	public void propagate(NamedObject object, Object[] oldValue, Object[] newValue) {
+	public void propagate(NamedObject object, Object oldValue, Object newValue) {
 		propagate(object, oldValue, newValue, null);
 	}
 
@@ -241,7 +241,7 @@ public class DefaultPropagationController implements PropagationContoller {
 	 * @param newValue the new value of the object within the case
 	 * @param psMethod the PSMethod the fact will be propagated to
 	 */
-	public void propagate(NamedObject object, Object[] oldValue, Object[] newValue, PSMethod psMethod) {
+	public void propagate(NamedObject object, Object oldValue, Object newValue, PSMethod psMethod) {
 		try {
 			// open propagation frame
 			openPropagation();

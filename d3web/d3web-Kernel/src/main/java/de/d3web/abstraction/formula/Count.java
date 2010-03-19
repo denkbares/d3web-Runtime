@@ -20,9 +20,10 @@
 
 package de.d3web.abstraction.formula;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
+import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
@@ -62,16 +63,26 @@ public class Count implements FormulaNumberElement {
 	 * 0, if the active answer is "No" or "unknown".
 	 */
 	public Double eval(XPSCase theCase) {
-		double count = 0;
-		Iterator<?> iter = getQuestionMC().getValue(theCase).iterator();
-		while (iter.hasNext()) {
-			AnswerChoice answer = (AnswerChoice) iter.next();
-			if ((answer.isAnswerNo() || answer.isUnknown())) {
+//		double count = 0;
+		AnswerMultipleChoice answer = (AnswerMultipleChoice)(getQuestionMC().getValue(theCase));
+		List<AnswerChoice> choices = answer.getChoices();
+		
+		// check, if AnswerNo oder AnswerUnknown is included
+		for (AnswerChoice answerChoice : choices) {
+			if (answerChoice.isAnswerNo() || answerChoice.isUnknown()) 
 				return new Double(0);
-			}
-			count++;
 		}
-		return new Double(count);
+		return new Double(choices.size());
+		
+//		Iterator<?> iter = getQuestionMC().getValue(theCase).iterator();
+//		while (iter.hasNext()) {
+//			AnswerChoice answer = (AnswerChoice) iter.next();
+//			if ((answer.isAnswerNo() || answer.isUnknown())) {
+//				return new Double(0);
+//			}
+//			count++;
+//		}
+//		return new Double(count);
 	}
 
 	public QuestionMC getQuestionMC() {

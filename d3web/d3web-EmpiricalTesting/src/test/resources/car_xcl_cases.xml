@@ -36,7 +36,7 @@
 		</RatedTestCase>
 		<RatedTestCase Name="rtc2" LastTested="2009-09-11_0205">
 			<Findings>
-				<Finding Question="Driving" Answer="low idle speed"/>
+				<Finding Question="Driving" Answer="unsteady idle speed#####low idle speed"/>
 			</Findings>
 			<Solutions>
 				<Solution Name="Bad ignition timing" Rating="suggested"/>
@@ -81,7 +81,7 @@
 		</RatedTestCase>
 		<RatedTestCase Name="rtc2" LastTested="2009-09-11_0205">
 			<Findings>
-				<Finding Question="Driving" Answer="unsteady idle speed"/>
+				<Finding Question="Driving" Answer="insufficient power on partial load#####unsteady idle speed"/>
 			</Findings>
 			<Solutions>
 				<Solution Name="Bad ignition timing" Rating="suggested"/>
@@ -92,7 +92,7 @@
 		</RatedTestCase>
 		<RatedTestCase Name="rtc3" LastTested="2009-09-11_0205">
 			<Findings>
-				<Finding Question="Driving" Answer="insufficient power on full load"/>
+				<Finding Question="Driving" Answer="insufficient power on full load#####insufficient power on partial load#####unsteady idle speed"/>
 			</Findings>
 			<Solutions>
 				<Solution Name="Bad ignition timing" Rating="suggested"/>
@@ -105,9 +105,8 @@
 	<STestCase Name="Bad ignition timing and clogged air filter">
 		<RatedTestCase Name="rtc1" LastTested="2009-09-11_0205">
 			<Findings>
-				<Finding Question="Driving" Answer="unsteady idle speed"/>
+				<Finding Question="Driving" Answer="unsteady idle speed#####delayed take-off"/>
 				<Finding Question="Starter" Answer="turns over"/>
-				<Finding Question="Driving" Answer="delayed take-off"/>
 			</Findings>
 			<Solutions>
 				<Solution Name="Bad ignition timing" Rating="suggested"/>
@@ -118,7 +117,7 @@
 		</RatedTestCase>
 		<RatedTestCase Name="rtc2" LastTested="2009-09-11_0205">
 			<Findings>
-				<Finding Question="Driving" Answer="weak acceleration"/>
+				<Finding Question="Driving" Answer="unsteady idle speed#####delayed take-off#####weak acceleration"/>
 			</Findings>
 			<Solutions>
 				<Solution Name="Bad ignition timing" Rating="established"/>

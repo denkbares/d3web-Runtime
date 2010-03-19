@@ -300,7 +300,7 @@ public class ConditionVerbalizer implements Verbalizer {
 				values.add(trimZeros(((CondNumIn) tCondition).getValue().replaceAll(",", "")));
 			} else if (tCondition instanceof CondEqual) {
 				values = new ArrayList<Object>();
-				values.addAll(((CondEqual) tCondition).getValues());
+				values.add(((CondEqual) tCondition).getValues());
 				if (object instanceof QuestionMC && values.size() > 1) {
 					List<CondVerbalization> tCondVerbs = new ArrayList<CondVerbalization>();
 					for (Object o:values) {

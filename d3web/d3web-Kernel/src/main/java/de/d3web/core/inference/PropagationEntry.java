@@ -26,10 +26,10 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 public class PropagationEntry {
 	
 	private final NamedObject object;
-	private final Object[] oldValue;
-	private final Object[] newValue;
+	private final Object oldValue;
+	private final Object newValue;
 	
-	public PropagationEntry(NamedObject object, Object[] oldValue, Object[] newValue) {
+	public PropagationEntry(NamedObject object, Object oldValue, Object newValue) {
 		this.object = object;
 		this.oldValue = oldValue;
 		this.newValue = newValue;
@@ -39,25 +39,31 @@ public class PropagationEntry {
 		return object;
 	}
 
-	public Object[] getOldValue() {
+	public Object getOldValue() {
 		return oldValue;
 	}
 
 	public boolean hasOldValue() {
-		return oldValue.length != 0;
+		return oldValue != null;
 	}
 
-	public Object[] getNewValue() {
+	public Object getNewValue() {
 		return newValue;
 	}
 
 	public boolean hasNewValue() {
-		return newValue.length != 0;
+		return newValue != null;
 	}
 	
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "[" + object + ":" + Arrays.toString(oldValue) + " -> " + Arrays.toString(newValue) + "]" + Integer.toHexString(hashCode());
+		String newValueS = "";
+		String oldValueS = "";
+		if (newValue != null)
+			newValueS = newValue.toString();
+		if (oldValue != null)
+			oldValueS = oldValue.toString();
+		return getClass().getSimpleName() + "[" + object + ":" + oldValueS + " -> " + newValueS + "]" + Integer.toHexString(hashCode());
 	}
 
 }

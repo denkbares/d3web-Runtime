@@ -48,7 +48,7 @@ public class CondNumGreaterEqual extends CondNum {
 		throws NoAnswerException, UnknownAnswerException {
 		checkAnswer(theCase);
 
-		AnswerNum answer = (AnswerNum) getQuestion().getValue(theCase).get(0);
+		AnswerNum answer = (AnswerNum) getQuestion().getValue(theCase);
 		Double value = (Double) answer.getValue(theCase);
 		if (value != null) {
 			return (value.doubleValue() >= getAnswerValue().doubleValue());

@@ -104,12 +104,12 @@ public interface PropagationContoller {
 	 * @param oldValue the old value of the object within the case
 	 * @param newValue the new value of the object within the case
 	 */
-	void propagate(NamedObject object, Object[] oldValue, Object[] newValue);
+	void propagate(NamedObject object, Object oldValue, Object newValue);
 
 	/**
 	 * Propagates a change value of an object through one selected PSMethod.
 	 * All changes that will be derived by that PSMethod will be propagated
-	 * normally thoughout the whole system.
+	 * normally throughout the whole system.
 	 * <p>
 	 * This method may be used after a problem solver has been added to distribute
 	 * existing facts to him and enable him to derive additional facts.
@@ -122,5 +122,5 @@ public interface PropagationContoller {
 	 * @param newValue the new value of the object within the case
 	 * @param psMethod the PSMethod the fact will be propagated to
 	 */
-	void propagate(NamedObject object, Object[] oldValue, Object[] newValue, PSMethod psMethod);
+	void propagate(NamedObject object, Object oldValue, Object newValue, PSMethod psMethod);
 }

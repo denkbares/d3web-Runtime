@@ -42,6 +42,7 @@ import de.d3web.core.inference.PropagationContoller;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.NamedObject;
@@ -302,8 +303,8 @@ public class D3WebCase implements XPSCase {
 		propagationContoller.openPropagation();
 		try {
 			for (Question question : this.getAnsweredQuestions()) {
-				Object[] oldValue = new Object[0];
-				Object[] newValue = getValue(question);
+				Object oldValue = new Object();
+				Object newValue = getValue(question);
 				propagationContoller.propagate(question, oldValue, newValue, psmethod);
 			}
 			// TODO: das ist so viel zu aufwendig, wenn viele Lösungen sind. Man
@@ -497,7 +498,7 @@ public class D3WebCase implements XPSCase {
 	 * 
 	 * @author joba
 	 */
-	private void propagateValue(ValuedObject valuedObject, Object[] oldValue, Object[] newValue) {
+	private void propagateValue(ValuedObject valuedObject, Object oldValue, Object newValue) {
 		
 		// notify the dialog control if questions have been changed
 		if (valuedObject instanceof Question) {
@@ -576,7 +577,7 @@ public class D3WebCase implements XPSCase {
 	}
 
 	/**
-	 * Removes a specified reason from the set of reasons for quiting the case.
+	 * Removes a specified reason from the set of reasons for quitting the case.
 	 * 
 	 * @param reasonForContinueCase
 	 */
@@ -601,13 +602,29 @@ public class D3WebCase implements XPSCase {
 	@Override
 	public void setValue(ValuedObject valuedObject, Object[] values) {
 		// do not know the real context, so send PSMethod.class as context
-		setValue(valuedObject, values, PSMethod.class);
+		setValue(valuedObject, values, PSMethodUserSelected.class);
 		
-		updateBlackboard(valuedObject, values, 
+		/*updateBlackboard(valuedObject, values, 
 				this, 
-				PSMethodUserSelected.getInstance());
+				PSMethodUserSelected.getInstance());*/
 
 	}
+	
+	@Override
+	public void setValue(ValuedObject o, Answer value) {
+		setValue(o, new Object[] {value});
+	}
+	
+	@Override
+	public void setValue(ValuedObject valuedObject, Answer value, Rule rule) {
+		setValue(valuedObject, new Object[] {value}, rule);
+	}
+
+	@Override
+	public void setValue(ValuedObject valuedObject, Answer value, Class<? extends PSMethod> context) {
+		setValue(valuedObject, new Object[] {value}, context);
+	}
+
 
 	/**
 	 * Sets the values for a specified question and propagates it to connected
@@ -623,14 +640,14 @@ public class D3WebCase implements XPSCase {
 	 *            rule, which sets the value
 	 */
 	public void setValue(ValuedObject valuedObject, Object[] values, Rule ruleContext) {
-		Object[] oldValue = getValue(valuedObject);
+		Object oldValue = getValue(valuedObject);
 		if (valuedObject instanceof Question) {
 			((Question) valuedObject).setValue(this, ruleContext, values);
 		}
 		else {
 			valuedObject.setValue(this, values);
 		}
-		Object[] newValue = getValue(valuedObject);
+		Object newValue = getValue(valuedObject);
 		notifyListeners(valuedObject, ruleContext);
 		propagateValue(valuedObject, oldValue, newValue);
 
@@ -645,7 +662,7 @@ public class D3WebCase implements XPSCase {
 	/**
 	 * Sets the values for a specified question and propagates it to connected
 	 * problem-solving-methods. There is some information (context) given from
-	 * where this setValue was called. Typically Problemsolvers use this to
+	 * where this setValue was called. Typically problem solvers use this to
 	 * state a context for scores of diagnoses (with a context we all know where
 	 * to write a diagnosis value). Creation date: (28.08.00 17:16:13)
 	 * 
@@ -656,15 +673,15 @@ public class D3WebCase implements XPSCase {
 	 * @param context
 	 *            problem-solver context
 	 */
-	public void setValue(ValuedObject valuedObject, Object[] values, Class<? extends PSMethod> context) {		
-		Object[] oldValue = getValue(valuedObject);
+	public void setValue(ValuedObject valuedObject, Object[] values, Class<? extends PSMethod> context) {
+		Object oldValue = getValue(valuedObject);
 		if (valuedObject instanceof Diagnosis) {
 			((Diagnosis) valuedObject).setValue(this, values, context);
 		}
 		else {
 			valuedObject.setValue(this, values);
 		}
-		Object[] newValue = getValue(valuedObject);
+		Object newValue = getValue(valuedObject);
 		notifyListeners(valuedObject, context);
 		propagateValue(valuedObject, oldValue, newValue);
 		
@@ -675,12 +692,12 @@ public class D3WebCase implements XPSCase {
 				PSMethodUserSelected.getInstance());
 	}
 
-	private Object[] getValue(ValuedObject valuedObject) {
+	private Object getValue(ValuedObject valuedObject) {
 		if (valuedObject instanceof Diagnosis) {
-			return new DiagnosisState[] { ((Diagnosis) valuedObject).getState(this) };
+			return ((Diagnosis) valuedObject).getState(this) ;
 		}
 		else if (valuedObject instanceof Question) {
-			return ((Question) valuedObject).getValue(this).toArray();
+			return ((Question) valuedObject).getValue(this);
 		}
 		else {
 			throw new IllegalStateException("unexpected ValuedObject");
@@ -785,6 +802,9 @@ public class D3WebCase implements XPSCase {
 	public PropagationContoller getPropagationContoller() {
 		return propagationController;
 	}
+
+
+
 
 
 	// ******************** /event notification ********************

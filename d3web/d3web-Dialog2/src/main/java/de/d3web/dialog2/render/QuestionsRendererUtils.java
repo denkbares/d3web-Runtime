@@ -36,6 +36,7 @@ import org.ajax4jsf.ajax.html.HtmlAjaxCommandButton;
 import org.apache.log4j.Logger;
 
 import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
@@ -70,14 +71,11 @@ public class QuestionsRendererUtils {
 
     private static boolean currentAnswerIsSet(AnswerChoice specAns, Question q,
 	    XPSCase theCase) {
-	List<Answer> valueList = q.getValue(theCase);
-	if (valueList.size() != 0) {
-	    for (int j = 0; j < valueList.size(); j++) {
-		Answer answer = valueList.get(j);
+	Answer answer = q.getValue(theCase);
+	if (answer != null) {
 		if (answer.getId().equals(specAns.getId())) {
-		    return true;
+			return true;
 		}
-	    }
 	}
 	return false;
     }
@@ -124,12 +122,9 @@ public class QuestionsRendererUtils {
     }
 
     private static String getAnswerValue(Question q, XPSCase theCase) {
-	List<Answer> valueList = q.getValue(theCase);
-	if (valueList.size() != 0) {
-	    for (int j = 0; j < valueList.size(); j++) {
-		Answer answer = valueList.get(j);
+	Answer answer = q.getValue(theCase);
+	if (answer != null) {
 		return answer.getValue(theCase).toString();
-	    }
 	}
 	return "";
     }
@@ -252,9 +247,10 @@ public class QuestionsRendererUtils {
 	AnswerChoice answer = getAnswerChoiceForAnswerID(answerRegion
 		.getAnswerID(), qChoice);
 	if (answer == null) {
-		// TODO sinnvolle fehlerbehandlung
-		logger.info("The Answer ID was not found in the knowledge base.");
+	    // TODO fehlerbehandlung
+	    logger.info("The Answer ID was not found in the knowledge base.");
 	    return;
+
 	}
 
 	AnswerChoice followingPopupQuestionAnswer = getAnswerOfFollowingPopupQuestion(
@@ -356,9 +352,9 @@ public class QuestionsRendererUtils {
 		.getFollowingPopupQuestionId(answerId);
 	for (Question q : theCase.getAnsweredQuestions()) {
 	    if (q.getId().equals(questionId) && (q instanceof QuestionChoice)) {
-		List<Answer> answerList = q.getValue(theCase);
-		if (answerList != null && !answerList.isEmpty()) {
-		    return (AnswerChoice) answerList.get(0);
+		Answer answer= q.getValue(theCase);
+		if (answer != null) {
+		    return (AnswerChoice) answer;
 		}
 	    }
 	}
@@ -848,7 +844,8 @@ public class QuestionsRendererUtils {
 		    List<List<String>> badanswersLists = (List<List<String>>) qChoice
 			    .getProperties().getProperty(
 				    Property.MC_CONSTRAINTS);
-		    List<Answer> alreadySetAnsList = qChoice.getValue(theCase);
+		    AnswerMultipleChoice mcans = (AnswerMultipleChoice)qChoice.getValue(theCase);
+		    List<AnswerChoice> alreadySetAnsList = mcans.getChoices();
 		    // only check if both lists have entries
 		    if (badanswersLists != null && badanswersLists.size() > 0
 			    && alreadySetAnsList.size() > 0) {
@@ -946,15 +943,13 @@ public class QuestionsRendererUtils {
 	if (unknownAnswer) {
 	    writer.writeAttribute("value", "", "value");
 	} else {
-	    List<Answer> valueList = q.getValue(theCase);
+		Answer answer = q.getValue(theCase);
+		// List<Answer> valueList = q.getValue(theCase);
 	    String errorValue = ((UIQuestionPage) component)
 		    .getErrorIDsToSubmittedValues().get(q.getId());
-	    if (valueList.size() > 0) {
-		String dateanswer = null;
-		for (Answer ans : valueList) {
-		    dateanswer = QuestionDateUtils.dateToString(
-			    (AnswerDate) ans, theCase);
-		}
+	    if (answer != null) {
+		String dateanswer = QuestionDateUtils.dateToString(
+			    (AnswerDate) answer, theCase);
 		writer.writeAttribute("value", dateanswer, "value");
 	    } else if (errorValue != null) {
 		writer.writeAttribute("value", errorValue, "value");

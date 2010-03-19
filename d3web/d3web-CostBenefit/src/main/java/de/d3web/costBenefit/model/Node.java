@@ -42,8 +42,8 @@ import de.d3web.shared.AbstractAbnormality;
 import de.d3web.shared.PSMethodShared;
 
 /**
- * QContainer Node for the virtual graph
- * Provides easy access to costbenefit issues of QContainers. 
+ * QContainer Node for the virtual graph.
+ * Provides easy access to cost-benefit issues of QContainers. 
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
@@ -112,7 +112,7 @@ public class Node {
 	}
 
 	private void setAnswer(XPSCase theCase, Question q,
-			Answer answer, Map<Question, List<?>> map) {
+			Answer answer, Map<Question, Answer> map) {
 		map.put(q, q.getValue(theCase));
 		Answer[] a = new Answer[1];
 		a[0] = answer;
@@ -138,7 +138,7 @@ public class Node {
 	 * @param testCase
 	 * @return
 	 */
-	public Map<Question, List<?>> getExpectedValues(XPSCase testCase) {
+	public Map<Question, Answer> getExpectedValues(XPSCase testCase) {
 		return answerGetterAndSetter(testCase, false);
 	}
 	
@@ -149,14 +149,14 @@ public class Node {
 	 * @param testCase
 	 * @return
 	 */
-	public Map<Question, List<?>> setNormalValues(XPSCase testCase) {
+	public Map<Question, Answer> setNormalValues(XPSCase testCase) {
 		return answerGetterAndSetter(testCase, true);
 	}
 	
-	private Map<Question, List<?>> answerGetterAndSetter(XPSCase testCase, boolean set) {
+	private Map<Question, Answer> answerGetterAndSetter(XPSCase testCase, boolean set) {
 		List<? extends Question> answeredQuestions = testCase.getAnsweredQuestions();
-		Map<Question, List<?>> undomap = new HashMap<Question, List<?>>();
-		Map<Question, List<?>> expectedmap = new HashMap<Question, List<?>>();
+		Map<Question, Answer> undomap = new HashMap<Question, Answer>();
+		Map<Question, Answer> expectedmap = new HashMap<Question, Answer>();
 		for (QuestionOC q: questions) {
 			if (!answeredQuestions.contains(q)) {
 				KnowledgeSlice ks = q.getKnowledge(new Abnormality().getProblemsolverContext(), PSMethodShared.SHARED_ABNORMALITY);
@@ -174,9 +174,7 @@ public class Node {
 							if (set) {
 								setAnswer(testCase, q, a, undomap);
 							} else {
-								List<Answer> al = new LinkedList<Answer>();
-								al.add(a);
-								expectedmap.put(q, al);
+								expectedmap.put(q, a);
 							}
 							break;
 						}

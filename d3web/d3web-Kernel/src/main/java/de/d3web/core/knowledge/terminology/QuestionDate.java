@@ -24,11 +24,8 @@
 package de.d3web.core.knowledge.terminology;
 
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Logger;
 
-import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseQuestionDate;
 import de.d3web.core.session.blackboard.XPSCaseObject;
@@ -40,6 +37,9 @@ import de.d3web.core.session.values.AnswerDate;
  */
 public class QuestionDate extends Question {
 	
+
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * These constants are used for Property.QUESTION_DATE_TYPE to specify the type
 	 * of input.
@@ -56,17 +56,13 @@ public class QuestionDate extends Question {
 	    super(id);
 	}
 
-	/* (non-Javadoc)
-	 * @see de.d3web.kernel.domainModel.qasets.Question#getValue(de.d3web.kernel.XPSCase)
-	 */
-	public List getValue(XPSCase theCase) {
+
+	public Answer getValue(XPSCase theCase) {
 		Answer value = ((CaseQuestionDate) theCase.getCaseObject(this)).getValue();
 		if (value != null) {
-			LinkedList list = new LinkedList();
-			list.add(value);
-			return list;
+			return value;
 		} else {
-			return new LinkedList();
+			return null;
 		}
 	}
 
@@ -80,9 +76,12 @@ public class QuestionDate extends Question {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see de.d3web.kernel.domainModel.CaseObjectSource#createCaseObject()
-	 */
+	public void setValue(XPSCase theCase, Answer answer) {
+		((CaseQuestionDate) theCase.getCaseObject(this)).setValue(answer);
+			notifyListeners(theCase, this);
+	}
+
+
 	public XPSCaseObject createCaseObject(XPSCase session) {
 		return new CaseQuestionDate(this);
 	}

@@ -69,16 +69,17 @@ public class QuestionText extends Question {
 		return height;
 	}
 
-	public List<Answer> getValue(XPSCase theCase) {
+	public Answer getValue(XPSCase theCase) {
 		Answer value =
 			((CaseQuestionText) theCase.getCaseObject(this)).getValue();
-		if (value != null) {
-			ArrayList<Answer> v = new ArrayList<Answer>(1);
-			v.add(value);
-			return (v);
-		} else {
-			return Collections.EMPTY_LIST;
-		}
+		return value;		
+//		if (value != null) {
+//			ArrayList<Answer> v = new ArrayList<Answer>(1);
+//			v.add(value);
+//			return (v);
+//		} else {
+//			return Collections.EMPTY_LIST;
+//		}
 	}
 
 	/**
