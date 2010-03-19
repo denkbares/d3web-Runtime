@@ -136,6 +136,9 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 
 	private Element getElement(ValueTransition vt, Document doc) throws IOException {
 		Element element = doc.createElement("ValueTransition");
+		if (vt.getQuestion()== null) {
+			throw new IOException("ValueTransition has no question");
+		}
 		element.setAttribute("QID", vt.getQuestion().getId());
 		List<ConditionalValueSetter> setters = vt.getSetters();
 		for (ConditionalValueSetter cvs: setters) {
