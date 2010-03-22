@@ -25,7 +25,7 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondMofN;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.FragmentHandler;
@@ -54,9 +54,9 @@ public class MofNConditionHandler implements FragmentHandler {
 		int max = Integer.parseInt(element.getAttribute("max"));
 		List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
 		PersistenceManager pm = PersistenceManager.getInstance();
-		List<AbstractCondition> conds = new ArrayList<AbstractCondition>();
+		List<Condition> conds = new ArrayList<Condition>();
 		for (Element child: childNodes) {
-			conds.add((AbstractCondition) pm.readFragment(child, kb));
+			conds.add((Condition) pm.readFragment(child, kb));
 		}
 		return new CondMofN(conds, min, max);
 	}
@@ -69,7 +69,7 @@ public class MofNConditionHandler implements FragmentHandler {
 		element.setAttribute("max", ""+cond.getMax());
 		element.setAttribute("size", ""+cond.getTerms().size());
 		PersistenceManager pm = PersistenceManager.getInstance();
-		for (AbstractCondition ac: cond.getTerms()) {
+		for (Condition ac: cond.getTerms()) {
 			element.appendChild(pm.writeFragment(ac, doc));
 		}
 		return element;

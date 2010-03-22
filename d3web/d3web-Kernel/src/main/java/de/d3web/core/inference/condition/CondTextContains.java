@@ -96,7 +96,7 @@ public class CondTextContains extends CondQuestion {
 	}
 	
 	@Override
-	public AbstractCondition copy() {
+	public Condition copy() {
 		return new CondTextContains((QuestionText)getQuestion(), getValue());
 	}
 	

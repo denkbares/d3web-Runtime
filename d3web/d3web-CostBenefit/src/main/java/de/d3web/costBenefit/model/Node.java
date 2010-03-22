@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.terminology.Answer;
@@ -85,7 +85,7 @@ public class Node {
 	 */
 	public boolean isApplicable(XPSCase theCase) {
 		if (st==null) return false;
-		AbstractCondition activationCondition = st.getActivationCondition();
+		Condition activationCondition = st.getActivationCondition();
 		if (activationCondition==null) return true;
 		try {
 			return activationCondition.eval(theCase);

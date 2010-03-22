@@ -22,7 +22,7 @@ package de.d3web.diaFlux.flow;
 
 import java.io.Serializable;
 
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.session.CaseObjectSource;
 
 /**
@@ -50,7 +50,7 @@ public interface IEdge extends Serializable {
 	 * 
 	 * @return s the edges predicate
 	 */
-	AbstractCondition getCondition();
+	Condition getCondition();
 	
 	/**
 	 * @return s the ID

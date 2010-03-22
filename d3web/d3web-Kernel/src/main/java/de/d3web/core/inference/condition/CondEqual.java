@@ -171,7 +171,7 @@ public class CondEqual extends CondQuestion {
 	}
 
 	@Override
-	public AbstractCondition copy() {
+	public Condition copy() {
 		return new CondEqual(getQuestion(), getValues());
 	}
 	

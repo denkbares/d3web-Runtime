@@ -141,7 +141,7 @@ public class CondNumIn extends CondNum {
 	}
 
 	@Override
-	public AbstractCondition copy() {
+	public Condition copy() {
 		return new CondNumIn((QuestionNum)getQuestion(),  getInterval());
 	}
 }

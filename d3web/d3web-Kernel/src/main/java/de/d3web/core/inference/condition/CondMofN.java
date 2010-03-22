@@ -42,7 +42,7 @@ public class CondMofN extends NonTerminalCondition {
 	 * @param min the number of minimal required conditions
 	 * @param max the number of maximal required conditions
 	 */
-	public CondMofN(List<AbstractCondition> terms, int min, int max) {
+	public CondMofN(List<Condition> terms, int min, int max) {
 		super(terms);
 		setMin(min);
 		setMax(max);
@@ -54,7 +54,7 @@ public class CondMofN extends NonTerminalCondition {
 		int trueTillNow = 0;
 		boolean wasNoAnswer = false;
 
-		for (AbstractCondition condition : terms) {
+		for (Condition condition : terms) {
 			try {
 				if (condition.eval(theCase)) {
 					trueTillNow++;
@@ -118,7 +118,7 @@ public class CondMofN extends NonTerminalCondition {
 				+ getMax()
 				+ " size="
 				+ terms.size()+ " {";
-		for (AbstractCondition condition : terms) {
+		for (Condition condition : terms) {
 			if (condition != null)
 				ret += condition.toString();
 		}
@@ -139,7 +139,7 @@ public class CondMofN extends NonTerminalCondition {
 	}
 
 	@Override
-	protected AbstractCondition createInstance(List<AbstractCondition> theTerms, AbstractCondition o) {
+	protected Condition createInstance(List<Condition> theTerms, Condition o) {
 		int min = ((CondMofN)o).getMin();
 		int max = ((CondMofN)o).getMax();
 		return new CondMofN(theTerms, min, max);

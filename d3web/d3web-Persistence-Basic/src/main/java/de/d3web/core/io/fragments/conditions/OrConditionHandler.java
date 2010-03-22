@@ -25,7 +25,7 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.FragmentHandler;
@@ -52,9 +52,9 @@ public class OrConditionHandler implements FragmentHandler {
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
 		PersistenceManager pm = PersistenceManager.getInstance();
-		List<AbstractCondition> conds = new ArrayList<AbstractCondition>();
+		List<Condition> conds = new ArrayList<Condition>();
 		for (Element child: childNodes) {
-			conds.add((AbstractCondition) pm.readFragment(child, kb));
+			conds.add((Condition) pm.readFragment(child, kb));
 		}
 		return new CondOr(conds);
 	}
@@ -64,7 +64,7 @@ public class OrConditionHandler implements FragmentHandler {
 		CondOr cond = (CondOr) object;
 		Element element = XMLUtil.writeCondition(doc, "or");
 		PersistenceManager pm = PersistenceManager.getInstance();
-		for (AbstractCondition ac: cond.getTerms()) {
+		for (Condition ac: cond.getTerms()) {
 			element.appendChild(pm.writeFragment(ac, doc));
 		}
 		return element;

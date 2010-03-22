@@ -55,7 +55,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondChoiceNo;
 import de.d3web.core.inference.condition.CondChoiceYes;
@@ -788,7 +788,7 @@ public class XMLRenderer {
 	}
 
 
-	public static StringBuffer renderCondition(AbstractCondition cond, XPSCase theCase,
+	public static StringBuffer renderCondition(Condition cond, XPSCase theCase,
 							boolean showStatus, boolean parentFired) {
 		StringBuffer sb = new StringBuffer();
 		if (cond instanceof TerminalCondition)
@@ -798,7 +798,7 @@ public class XMLRenderer {
 		return(sb);
 	}
 
-	private static StringBuffer renderConditionAsException(AbstractCondition cond, XPSCase theCase,
+	private static StringBuffer renderConditionAsException(Condition cond, XPSCase theCase,
 							boolean showStatus, boolean parentFired) {
 		StringBuffer sb = new StringBuffer();
 		if (cond instanceof TerminalCondition)
@@ -962,10 +962,10 @@ public class XMLRenderer {
 		while (iter.hasNext()) {
 			// "parentFired" ist nur solange auf "true", wie alle Parents gefeuert haben
 			if (asException)
-				sb.append(renderConditionAsException((AbstractCondition)iter.next(),theCase,showStatus,
+				sb.append(renderConditionAsException((Condition)iter.next(),theCase,showStatus,
 						parentFired && (statusValues != null) && ((Boolean)statusValues.get(0)).booleanValue()));
 			else
-				sb.append(renderCondition((AbstractCondition)iter.next(),theCase,showStatus,
+				sb.append(renderCondition((Condition)iter.next(),theCase,showStatus,
 						parentFired && (statusValues != null) && ((Boolean)statusValues.get(0)).booleanValue()));
 		}
 	
@@ -1020,7 +1020,7 @@ public class XMLRenderer {
 	 * 					Boolean: condition is active
 	 * 					String: kind of condition-status
 	 */
-	private static List getStatusFor(AbstractCondition cond, XPSCase theCase, 
+	private static List getStatusFor(Condition cond, XPSCase theCase, 
 							boolean asException, boolean parentFired) {
 		LinkedList returnList = new LinkedList();
 		try {

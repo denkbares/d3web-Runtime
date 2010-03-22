@@ -27,7 +27,7 @@ import java.util.Vector;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.inference.condition.CondEqual;
@@ -63,7 +63,7 @@ import de.d3web.plugin.test.InitPluginManager;
  * @author merz
  */
 public class ConditionTest extends TestCase {
-	private AbstractCondition ac1, ac21, ac22, ac3;
+	private Condition ac1, ac21, ac22, ac3;
 
 	private CondDState cDState1;
 	private CondEqual cEqual1;
@@ -142,7 +142,7 @@ public class ConditionTest extends TestCase {
 
 	public void _testAllCondNums() throws Exception {
 
-		LinkedList<AbstractCondition> l1 = new LinkedList<AbstractCondition>();
+		LinkedList<Condition> l1 = new LinkedList<Condition>();
 		l1.add(cNumL1);
 		l1.add(cNumIn1);
 		l1.add(cNumG1);
@@ -188,17 +188,17 @@ public class ConditionTest extends TestCase {
 
 		ac3 = new CondNot(cDState1);
 
-		LinkedList<AbstractCondition> l21 = new LinkedList<AbstractCondition>();
+		LinkedList<Condition> l21 = new LinkedList<Condition>();
 		// l21.add(cEqual1);
 		l21.add(cNumG1);
 		l21.add(ac3);
 		ac21 = new CondAnd(l21);
 
-		LinkedList<AbstractCondition> l22 = new LinkedList<AbstractCondition>();
+		LinkedList<Condition> l22 = new LinkedList<Condition>();
 		l22.add(cTextContains1);
 		ac22 = new CondMofN(l22, 1, 1);
 
-		LinkedList<AbstractCondition> l1 = new LinkedList<AbstractCondition>();
+		LinkedList<Condition> l1 = new LinkedList<Condition>();
 		l1.add(ac21);
 		l1.add(ac22);
 		ac1 = new CondOr(l1);
@@ -258,7 +258,7 @@ public class ConditionTest extends TestCase {
 
 	public void testAllCondText() throws Exception {
 
-		LinkedList<AbstractCondition> l1 = new LinkedList<AbstractCondition>();
+		LinkedList<Condition> l1 = new LinkedList<Condition>();
 		l1.add(cTextContains1);
 		l1.add(cTextEqual1);
 		ac1 = new CondOr(l1);
@@ -295,7 +295,7 @@ public class ConditionTest extends TestCase {
 
 	public void testCondKnownAndUnknown() throws Exception {
 
-		LinkedList<AbstractCondition> l1 = new LinkedList<AbstractCondition>();
+		LinkedList<Condition> l1 = new LinkedList<Condition>();
 		l1.add(cKnown1);
 		l1.add(cUnknown1);
 		ac1 = new CondOr(l1);

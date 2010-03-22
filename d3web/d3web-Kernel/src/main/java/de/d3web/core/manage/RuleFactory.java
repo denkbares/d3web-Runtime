@@ -29,7 +29,7 @@ import de.d3web.abstraction.formula.FormulaDateExpression;
 import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleAction;
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
@@ -59,7 +59,7 @@ public class RuleFactory {
 		String theId,
 		Question theQuestion,
 		Object[] theAnswers,
-		AbstractCondition theCondition) {
+		Condition theCondition) {
 
 		return createAddValueRule(
 			theId,
@@ -77,8 +77,8 @@ public class RuleFactory {
 		String theId,
 		Question theQuestion,
 		Object[] theAnswers,
-		AbstractCondition theCondition,
-		AbstractCondition theRuleException) {
+		Condition theCondition,
+		Condition theRuleException) {
 
 		Rule rule = createRule(theId);
 
@@ -99,7 +99,7 @@ public class RuleFactory {
 		String theId,
 		List<QASet> theAction,
 		Diagnosis target,
-		AbstractCondition theCondition) {
+		Condition theCondition) {
 
 		return createClarificationRule(
 			theId,
@@ -116,8 +116,8 @@ public class RuleFactory {
 		String theId,
 		List<QASet> theAction,
 		Diagnosis target,
-		AbstractCondition theCondition,
-		AbstractCondition theRuleException) {
+		Condition theCondition,
+		Condition theRuleException) {
 
 		Rule rule = createRule(theId);
 
@@ -136,7 +136,7 @@ public class RuleFactory {
 	public static Rule createContraIndicationRule(
 		String theId,
 		List<QASet> theQASets,
-		AbstractCondition theCondition) {
+		Condition theCondition) {
 
 		return createContraIndicationRule(theId, theQASets, theCondition, null);
 	}
@@ -147,8 +147,8 @@ public class RuleFactory {
 	public static Rule createContraIndicationRule(
 		String theId,
 		List<QASet> theQASets,
-		AbstractCondition theCondition,
-		AbstractCondition theRuleException) {
+		Condition theCondition,
+		Condition theRuleException) {
 
 		Rule rule = createRule(theId);
 
@@ -165,13 +165,13 @@ public class RuleFactory {
 	 * @param String theId
 	 * @param Diagnosis theDiagnosisAction
 	 * @param Score theDiagnosisScore
-	 * @param AbstractCondition theCondition
+	 * @param Condition theCondition
 	 */
 	public static Rule createHeuristicPSRule(
 		String theId,
 		Diagnosis theDiagnosisAction,
 		Score theDiagnosisScore,
-		AbstractCondition theCondition) {
+		Condition theCondition) {
 
 		return createHeuristicPSRule(
 			theId,
@@ -181,7 +181,7 @@ public class RuleFactory {
 			null);
 	}
 	
-	public static Rule createRule(String theId, RuleAction theAction, AbstractCondition theCondition, AbstractCondition theException, AbstractCondition theContext) {
+	public static Rule createRule(String theId, RuleAction theAction, Condition theCondition, Condition theException, Condition theContext) {
 		Rule rule = createRule(theId);
 		setRuleParams(rule, theAction, theCondition, theException);
 		rule.setContext(theContext);
@@ -195,8 +195,8 @@ public class RuleFactory {
 		String theId,
 		Diagnosis theDiagnosisAction,
 		Score theDiagnosisScore,
-		AbstractCondition theCondition,
-		AbstractCondition theRuleException) {
+		Condition theCondition,
+		Condition theRuleException) {
 
 		Rule rule = createRule(theId);
 
@@ -213,12 +213,12 @@ public class RuleFactory {
 	 * Creates an Indication-rule with the specified parameters.
 	 * @param String theId
 	 * @param List theAction
-	 * @param AbstractCondition theCondition
+	 * @param Condition theCondition
 	 */
 	public static Rule createIndicationRule(
 		String theId,
 		List<QASet> theAction,
-		AbstractCondition theCondition) {
+		Condition theCondition) {
 
 		return createIndicationRule(theId, theAction, theCondition, null);
 	}
@@ -227,12 +227,12 @@ public class RuleFactory {
 	 * Creates an Indication-rule with the specified parameters.
 	 * @param String theId
 	 * @param QASet one single QASet to indicate
-	 * @param AbstractCondition theCondition
+	 * @param Condition theCondition
 	 */
 	public static Rule createIndicationRule(
 			String theId,
 			QASet singleIndication,
-			AbstractCondition theCondition) {
+			Condition theCondition) {
 	    	List<QASet> ind = new LinkedList<QASet>();
 	    	ind.add(singleIndication);
 			return createIndicationRule(theId, ind, theCondition, null);
@@ -245,8 +245,8 @@ public class RuleFactory {
 	public static Rule createIndicationRule(
 		String theId,
 		List<QASet> theAction,
-		AbstractCondition theCondition,
-		AbstractCondition theRuleException) {
+		Condition theCondition,
+		Condition theRuleException) {
 
 		Rule rule = createRule(theId);
 
@@ -265,8 +265,8 @@ public class RuleFactory {
 	public static Rule createInstantIndicationRule(
 			String id, 
 			List<QASet> theAction, 
-			AbstractCondition theCondition,
-			AbstractCondition theRuleException) {
+			Condition theCondition,
+			Condition theRuleException) {
 		
 		Rule rule = createRule(id);
 		ActionNextQASet ruleAction = new ActionInstantIndication();
@@ -279,7 +279,7 @@ public class RuleFactory {
 	public static Rule createInstantIndicationRule(
 			String id, 
 			List<QASet> theAction, 
-			AbstractCondition theCondition) {
+			Condition theCondition) {
 		
 		return createInstantIndicationRule(id, theAction, theCondition, null);
 	}
@@ -292,7 +292,7 @@ public class RuleFactory {
 	public static Rule createInstantIndicationRule(
 			String theId,
 			QASet singleIndication,
-			AbstractCondition theCondition) {
+			Condition theCondition) {
 	    	List<QASet> ind = new ArrayList<QASet>();
 	    	ind.add(singleIndication);
 			return createInstantIndicationRule(theId, ind, theCondition, null);
@@ -310,7 +310,7 @@ public class RuleFactory {
 		String theId,
 		List<QASet> theAction,
 		Diagnosis target,
-		AbstractCondition theCondition) {
+		Condition theCondition) {
 
 		return createRefinementRule(
 			theId,
@@ -327,8 +327,8 @@ public class RuleFactory {
 		String theId,
 		List<QASet> theAction,
 		Diagnosis target,
-		AbstractCondition theCondition,
-		AbstractCondition theRuleException) {
+		Condition theCondition,
+		Condition theRuleException) {
 
 		Rule rule = createRule(theId);
 
@@ -355,13 +355,13 @@ public class RuleFactory {
 	 * @param String theId
 	 * @param Question theQuestion
 	 * @param Object[] theAnswers
-	 * @param AbstractCondition theCondition
+	 * @param Condition theCondition
 	 */
 	public static Rule createSetValueRule(
 		String theId,
 		Question theQuestion,
 		Object[] theAnswers,
-		AbstractCondition theCondition) {
+		Condition theCondition) {
 
 		return createSetValueRule(
 			theId,
@@ -379,8 +379,8 @@ public class RuleFactory {
 		String theId,
 		Question theQuestion,
 		Object[] theAnswers,
-		AbstractCondition theCondition,
-		AbstractCondition theRuleException) {
+		Condition theCondition,
+		Condition theRuleException) {
 
 		Rule rule = createRule(theId);
 
@@ -402,7 +402,7 @@ public class RuleFactory {
 		String theId,
 		Question theQuestion,
 		FormulaExpression theAnswer,
-		AbstractCondition theCondition) {
+		Condition theCondition) {
 		return createSetValueRule(
 			theId,
 			theQuestion,
@@ -419,7 +419,7 @@ public class RuleFactory {
 		String theId,
 		Question theQuestion,
 		FormulaDateExpression theAnswer,
-		AbstractCondition theCondition) {
+		Condition theCondition) {
 		return createSetValueRule(
 			theId,
 			theQuestion,
@@ -436,8 +436,8 @@ public class RuleFactory {
 		String theId,
 		Question theQuestion,
 		FormulaExpression theAnswers,
-		AbstractCondition theCondition,
-		AbstractCondition theRuleException) {
+		Condition theCondition,
+		Condition theRuleException) {
 
 		Rule rule = createRule(theId);
 
@@ -460,8 +460,8 @@ public class RuleFactory {
 		String theId,
 		Question theQuestion,
 		FormulaDateExpression theAnswers,
-		AbstractCondition theCondition,
-		AbstractCondition theRuleException) {
+		Condition theCondition,
+		Condition theRuleException) {
 
 		Rule rule = createRule(theId);
 
@@ -483,7 +483,7 @@ public class RuleFactory {
 		String theId,
 		QuestionChoice theQuestion,
 		AnswerChoice[] theAnswers,
-		AbstractCondition theCondition) {
+		Condition theCondition) {
 
 		return createSuppressAnswerRule(
 			theId,
@@ -501,8 +501,8 @@ public class RuleFactory {
 		String theId,
 		QuestionChoice theQuestion,
 		AnswerChoice[] theAnswers,
-		AbstractCondition theCondition,
-		AbstractCondition theRuleException) {
+		Condition theCondition,
+		Condition theRuleException) {
 
 		Rule rule = createRule(theId);
 
@@ -522,8 +522,8 @@ public class RuleFactory {
 	public static void setRuleParams(
 		Rule rule,
 		RuleAction theAction,
-		AbstractCondition theCondition,
-		AbstractCondition theRuleException) {
+		Condition theCondition,
+		Condition theRuleException) {
 
 		rule.setAction(theAction);
 		rule.setCondition(theCondition);

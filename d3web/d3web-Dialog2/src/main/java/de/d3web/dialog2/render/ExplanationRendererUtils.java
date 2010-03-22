@@ -34,7 +34,7 @@ import org.apache.log4j.Logger;
 import de.d3web.abstraction.ActionQuestionSetter;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.inference.condition.CondEqual;
@@ -115,7 +115,7 @@ public class ExplanationRendererUtils {
      * @return List : List of (Boolean, String) Boolean: condition is active
      *         String: kind of condition-status
      */
-    private static List<Object> getStatusFor(AbstractCondition cond,
+    private static List<Object> getStatusFor(Condition cond,
 	    XPSCase theCase, boolean asException, boolean parentFired) {
 	LinkedList<Object> returnList = new LinkedList<Object>();
 	try {
@@ -145,7 +145,7 @@ public class ExplanationRendererUtils {
     }
 
     public static void renderCondition(ResponseWriter writer,
-	    UIComponent component, AbstractCondition cond, XPSCase theCase,
+	    UIComponent component, Condition cond, XPSCase theCase,
 	    boolean showStatus, boolean parentFired, String when,
 	    boolean parentIsNot, String rcID) throws IOException {
 	if (cond instanceof TerminalCondition) {
@@ -303,9 +303,9 @@ public class ExplanationRendererUtils {
 
 	if (cond instanceof CondNot) {
 	    writer.writeAttribute("id", rcID + "_condnot", "id");
-	    List<AbstractCondition> terms = cond.getTerms();
+	    List<Condition> terms = cond.getTerms();
 	    DialogRenderUtils.renderTableWithClass(writer, component, "inner");
-	    for (Iterator<AbstractCondition> iter = terms.iterator(); iter
+	    for (Iterator<Condition> iter = terms.iterator(); iter
 		    .hasNext();) {
 		writer.startElement("tr", component);
 		renderCondition(writer, component, iter.next(), theCase,
@@ -318,7 +318,7 @@ public class ExplanationRendererUtils {
 	    writer.endElement("table");
 	} else if (cond instanceof CondOr) {
 	    writer.writeAttribute("id", rcID + "_condor", "id");
-	    List<AbstractCondition> terms = cond.getTerms();
+	    List<Condition> terms = cond.getTerms();
 	    DialogRenderUtils.renderTable(writer, component);
 	    for (int i = 0; i < terms.size(); i++) {
 		writer.startElement("tr", component);
@@ -342,7 +342,7 @@ public class ExplanationRendererUtils {
 	    writer.endElement("table");
 	} else if (cond instanceof CondAnd) {
 	    writer.writeAttribute("id", rcID + "_condand", "id");
-	    List<AbstractCondition> terms = cond.getTerms();
+	    List<Condition> terms = cond.getTerms();
 	    DialogRenderUtils.renderTable(writer, component);
 	    for (int i = 0; i < terms.size(); i++) {
 		writer.startElement("tr", component);
@@ -366,7 +366,7 @@ public class ExplanationRendererUtils {
 	    writer.endElement("table");
 	} else if (cond instanceof CondMofN) {
 	    writer.writeAttribute("id", rcID + "_condmofn", "id");
-	    List<AbstractCondition> terms = cond.getTerms();
+	    List<Condition> terms = cond.getTerms();
 
 	    CondMofN cmofn = (CondMofN) cond;
 

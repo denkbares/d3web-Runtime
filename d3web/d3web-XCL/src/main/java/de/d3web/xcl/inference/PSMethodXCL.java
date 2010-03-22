@@ -33,7 +33,7 @@ import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.StrategicSupport;
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
@@ -189,10 +189,10 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 
 	public double getEntropy(Collection<? extends QASet> qasets,
 			Collection<Diagnosis> solutions, XPSCase theCase) {
-		Map<Set<AbstractCondition>, Float> map = new HashMap<Set<AbstractCondition>, Float>();
+		Map<Set<Condition>, Float> map = new HashMap<Set<Condition>, Float>();
 		float totalweight = 0;
 		for (Diagnosis solution : solutions) {
-			Set<AbstractCondition> pot = new HashSet<AbstractCondition>();
+			Set<Condition> pot = new HashSet<Condition>();
 			KnowledgeSlice ks = solution.getKnowledge(PSMethodXCL.class,
 					XCLModel.XCLMODEL);
 			if (ks == null) continue;
@@ -218,14 +218,14 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		return sum;
 	}
 
-	private static void addRelationConditions(Set<AbstractCondition> pot,
+	private static void addRelationConditions(Set<Condition> pot,
 			Collection<? extends NamedObject> qaset, XCLModel model) {
 		for (NamedObject nob : qaset) {
 			addRelationConditions(pot, nob, model);
 		}
 	}
 
-	private static void addRelationConditions(Set<AbstractCondition> pot,
+	private static void addRelationConditions(Set<Condition> pot,
 			NamedObject qaset, XCLModel model) {
 		if (qaset instanceof Question) {
 			Set<XCLRelation> coveringRelations = model

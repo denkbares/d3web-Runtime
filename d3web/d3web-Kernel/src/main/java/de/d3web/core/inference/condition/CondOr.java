@@ -38,7 +38,7 @@ public class CondOr extends NonTerminalCondition {
 	 * Creates a new OR-condition with a list of 
 	 * disjunctive sub-conditions.
 	 */
-	public CondOr(List<AbstractCondition> terms) {
+	public CondOr(List<Condition> terms) {
 		super(terms);
 	}
 
@@ -49,7 +49,7 @@ public class CondOr extends NonTerminalCondition {
 		boolean wasNoAnswer = false;
 		boolean wasUnknownAnswer = false;
 
-		for (AbstractCondition condition : terms) {
+		for (Condition condition : terms) {
 			try {
 				if (condition.eval(theCase))
 					return true;
@@ -73,7 +73,7 @@ public class CondOr extends NonTerminalCondition {
 	@Override
 	public String toString() {
 		String ret = "\u2190 CondOr {";
-		for (AbstractCondition condition : terms) {
+		for (Condition condition : terms) {
 			if (condition != null)
 				ret += condition.toString();
 		}
@@ -83,7 +83,7 @@ public class CondOr extends NonTerminalCondition {
 	}
 
 	@Override
-	protected AbstractCondition createInstance(List<AbstractCondition> theTerms, AbstractCondition o) {
+	protected Condition createInstance(List<Condition> theTerms, Condition o) {
 		return new CondOr(theTerms);
 	}
 }

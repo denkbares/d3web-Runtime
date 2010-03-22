@@ -33,7 +33,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.PersistenceManager;
@@ -120,7 +120,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 		Element element = doc.createElement("StateTransition");
 		element.setAttribute("ID", st.getId());
 		element.setAttribute("QID", st.getQcontainer().getId());
-		AbstractCondition activationCondition = st.getActivationCondition();
+		Condition activationCondition = st.getActivationCondition();
 		if (activationCondition!=null) {
 			Element aCElement = doc.createElement("activationCondition");
 			aCElement.appendChild(PersistenceManager.getInstance().writeFragment(activationCondition, doc));
@@ -150,7 +150,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 	private Element getElement(ConditionalValueSetter cvs, Document doc) throws IOException {
 		Element element = doc.createElement("ConditionalValueSetter");
 		element.setAttribute("AID", cvs.getAnswer().getId());
-		AbstractCondition condition = cvs.getCondition();
+		Condition condition = cvs.getCondition();
 		if (condition!=null) {
 			element.appendChild(PersistenceManager.getInstance().writeFragment(condition, doc));
 		}
@@ -161,13 +161,13 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 		String qcontainerID = current.getAttributes().getNamedItem("QID").getTextContent();
 		QContainer qcontainer = kbm.findQContainer(qcontainerID);
 		NodeList children =  current.getChildNodes();
-		AbstractCondition activationCondition = null;
+		Condition activationCondition = null;
 		List<ValueTransition> postTransitions = new ArrayList<ValueTransition>();
 		for (int i=0; i<children.getLength(); i++) {
 			Node n = children.item(i);
 			if (n.getNodeName().equals("activationCondition")) {
 				for (Element child: XMLUtil.getElementList(n.getChildNodes())) {
-					activationCondition = (AbstractCondition) PersistenceManager.getInstance().readFragment(child, kbm.getKnowledgeBase());
+					activationCondition = (Condition) PersistenceManager.getInstance().readFragment(child, kbm.getKnowledgeBase());
 				}
 			} else if (n.getNodeName().equals("ValueTransition")){
 				String question = n.getAttributes().getNamedItem("QID").getTextContent();
@@ -178,9 +178,9 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 					Node child = childNodes.item(j);
 					if (child.getNodeName().equals("ConditionalValueSetter")) {
 						Answer answer = kbm.findAnswer(q, child.getAttributes().getNamedItem("AID").getTextContent());
-						AbstractCondition condition = null;
+						Condition condition = null;
 						for (Element grandchild: XMLUtil.getElementList(child.getChildNodes())) {
-							condition = (AbstractCondition) PersistenceManager.getInstance().readFragment(grandchild, kbm.getKnowledgeBase());
+							condition = (Condition) PersistenceManager.getInstance().readFragment(grandchild, kbm.getKnowledgeBase());
 						}
 						ConditionalValueSetter cvs = new ConditionalValueSetter(
 								answer, condition);

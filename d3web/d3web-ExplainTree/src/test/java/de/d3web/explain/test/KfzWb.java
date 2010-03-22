@@ -14,7 +14,7 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.inference.condition.CondEqual;
@@ -339,7 +339,7 @@ public class KfzWb extends KnowledgeBase {
 			RuleFactory.createIndicationRule(
 				"RASK10",
 				Utils.createList(new QASet[] { Mf10 }),
-				new CondOr(Utils.createList(new AbstractCondition[] { new CondEqual(Mf8, Mf8a2), new CondEqual(Mf8, Mf8a3)})));
+				new CondOr(Utils.createList(new Condition[] { new CondEqual(Mf8, Mf8a2), new CondEqual(Mf8, Mf8a3)})));
 
 		/* Next von P000: rqsug14766
 		*/
@@ -451,7 +451,7 @@ public class KfzWb extends KnowledgeBase {
 				"R_FB_56",
 				P16,
 				Score.P5,
-				new CondOr(Utils.createList(new AbstractCondition[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)})));
+				new CondOr(Utils.createList(new Condition[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)})));
 
 		/*(R_FB_29) Und (($= Mf9 4)) -> P14, P4
 		*/
@@ -497,7 +497,7 @@ public class KfzWb extends KnowledgeBase {
 				Score.N4,
 				new CondNot(
 					new CondOr(
-						Utils.createList(new AbstractCondition[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)}))));
+						Utils.createList(new Condition[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)}))));
 
 		/*(R_FB_20) Und (($Or Mf8 3 2) ($= Mf10 1)) -> P14, P4
 		*/
@@ -508,9 +508,9 @@ public class KfzWb extends KnowledgeBase {
 				Score.P4,
 				new CondAnd(
 					Utils.createList(
-						new AbstractCondition[] {
+						new Condition[] {
 							new CondOr(
-								Utils.createList(new AbstractCondition[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)})),
+								Utils.createList(new Condition[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)})),
 							new CondEqual(Mf10, Mf10a1)
 		})));
 
@@ -548,7 +548,7 @@ public class KfzWb extends KnowledgeBase {
 				Score.N5,
 				new CondNot(
 					new CondOr(
-						Utils.createList(new AbstractCondition[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)}))));
+						Utils.createList(new Condition[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)}))));
 
 		/*(R_FB_12) Und ((Non $Or Mf7 2 1)) -> P15, N3
 		*/
@@ -559,7 +559,7 @@ public class KfzWb extends KnowledgeBase {
 				Score.N3,
 				new CondNot(
 					new CondOr(
-						Utils.createList(new AbstractCondition[] { new CondEqual(Mf7, Mf7a2), new CondEqual(Mf7, Mf7a1)}))));
+						Utils.createList(new Condition[] { new CondEqual(Mf7, Mf7a2), new CondEqual(Mf7, Mf7a1)}))));
 
 		/*(R_FB_11) Und ((Non $= Mf10 1)) -> P15, N6
 		*/
@@ -575,9 +575,9 @@ public class KfzWb extends KnowledgeBase {
 				Score.P5,
 				new CondAnd(
 					Utils.createList(
-						new AbstractCondition[] {
+						new Condition[] {
 							new CondOr(
-								Utils.createList(new AbstractCondition[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)})),
+								Utils.createList(new Condition[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)})),
 							new CondEqual(Mf10, Mf10a1)
 		})));
 
@@ -588,7 +588,7 @@ public class KfzWb extends KnowledgeBase {
 				"R_FB_9",
 				P15,
 				Score.P5,
-				new CondOr(Utils.createList(new AbstractCondition[] { new CondEqual(Mf7, Mf7a2), new CondEqual(Mf7, Mf7a1)})));
+				new CondOr(Utils.createList(new Condition[] { new CondEqual(Mf7, Mf7a2), new CondEqual(Mf7, Mf7a1)})));
 
 		/*(R_FB_8) Und (($= Mf9 4)) -> P15, P3
 		*/
@@ -694,7 +694,7 @@ public class KfzWb extends KnowledgeBase {
 		a_Radd59.setValues(new Object[] { Msi21a2 });
 		Radd59.setAction(a_Radd59);
 		Radd59.setCondition(
-			new CondAnd(Utils.createList(new AbstractCondition[] { new CondEqual(Mf4, Mf4a3), new CondEqual(Mf3, Mf3a4)})));
+			new CondAnd(Utils.createList(new Condition[] { new CondEqual(Mf4, Mf4a3), new CondEqual(Mf3, Mf3a4)})));
 
 		// (Radd4) Und (($Or Mf3 1 2 3)) -> Msi21
 		Rule Radd4 = new Rule("Radd4");
@@ -706,7 +706,7 @@ public class KfzWb extends KnowledgeBase {
 		Radd4.setCondition(
 			new CondOr(
 				Utils.createList(
-					new AbstractCondition[] { new CondEqual(Mf3, Mf3a1), new CondEqual(Mf3, Mf3a2), new CondEqual(Mf3, Mf3a3)})));
+					new Condition[] { new CondEqual(Mf3, Mf3a1), new CondEqual(Mf3, Mf3a2), new CondEqual(Mf3, Mf3a3)})));
 
 		// (Radd2) Und (($= Mf3 4) ($= Mf4 1)) -> Msi21 
 		Rule Radd2 = new Rule("Radd2");
@@ -716,7 +716,7 @@ public class KfzWb extends KnowledgeBase {
 		a_Radd2.setValues(new Object[] { Msi21a1 });
 		Radd2.setAction(a_Radd2);
 		Radd2.setCondition(
-			new CondAnd(Utils.createList(new AbstractCondition[] { new CondEqual(Mf3, Mf3a4), new CondEqual(Mf4, Mf4a1)})));
+			new CondAnd(Utils.createList(new Condition[] { new CondEqual(Mf3, Mf3a4), new CondEqual(Mf4, Mf4a1)})));
 
 		/* Die Symptom-Interpretations-Regeln (Numerische) */
 
@@ -741,7 +741,7 @@ public class KfzWb extends KnowledgeBase {
 		});
 		Rdq4.setAction(a_Rdq4);
 		Rdq4.setCondition(
-			new CondAnd(Utils.createList(new AbstractCondition[] { new CondNumGreater(Mf5, new Double(0)), new CondKnown(Mf6)})));
+			new CondAnd(Utils.createList(new Condition[] { new CondNumGreater(Mf5, new Double(0)), new CondKnown(Mf6)})));
 
 		/*
 		// (Radd59) Und (($= Mf4 3) ($= Mf3 4)) -> Msi21 

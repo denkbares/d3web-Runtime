@@ -35,7 +35,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.PersistenceManager;
@@ -106,7 +106,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 	private Element getRelationElement(XCLRelation r, Document doc) throws IOException {
 		Element relationElement = doc.createElement("relation");
 		relationElement.setAttribute("ID", r.getId());
-		AbstractCondition cond = r.getConditionedFinding();
+		Condition cond = r.getConditionedFinding();
 		if (cond != null) {
 			relationElement.appendChild(PersistenceManager.getInstance().writeFragment(cond, doc));
 		} else {
@@ -210,7 +210,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 			String type = aRelation.getParentNode().getNodeName();
 			String id = getAttribute("ID", aRelation);
 			NodeList children = aRelation.getChildNodes();
-			AbstractCondition ac = null;
+			Condition ac = null;
 			double weight = XCLRelation.DEFAULT_WEIGHT;
 			for (int t = 0; t < children.getLength(); t++) {
 				Node child = children.item(t);
@@ -218,7 +218,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 				if (child .getNodeName().equals("Condition")) {					
 						//TODO: check jochen
 					child .getTextContent();
-					ac = (AbstractCondition) PersistenceManager.getInstance().readFragment((Element) child, kbm.getKnowledgeBase());
+					ac = (Condition) PersistenceManager.getInstance().readFragment((Element) child, kbm.getKnowledgeBase());
 				} else if (child .getNodeName().equals("weight")) {
 					weight = Double.parseDouble(child.getTextContent());
 				}

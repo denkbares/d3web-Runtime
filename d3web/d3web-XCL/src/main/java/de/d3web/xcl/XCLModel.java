@@ -31,7 +31,7 @@ import java.util.Set;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
@@ -89,34 +89,34 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	}
 
 	public static String insertXCLRelation(KnowledgeBase kb,
-			AbstractCondition theCondition, Diagnosis d) {
+			Condition theCondition, Diagnosis d) {
 		return insertXCLRelation(kb, theCondition, d, XCLRelationType.explains, null);
 	}
 
 	public static String insertXCLRelation(KnowledgeBase kb,
-			AbstractCondition theCondition, Diagnosis d, String kdomNodeID) {
+			Condition theCondition, Diagnosis d, String kdomNodeID) {
 		return insertXCLRelation(kb, theCondition, d, XCLRelationType.explains,
 				kdomNodeID);
 	}
 
 	public static String insertXCLRelation(KnowledgeBase kb,
-			AbstractCondition theCondition, Diagnosis d, XCLRelationType type) {
+			Condition theCondition, Diagnosis d, XCLRelationType type) {
 		return insertXCLRelation(kb, theCondition, d, type, 1, null);
 	}
 
 	public static String insertXCLRelation(KnowledgeBase kb,
-			AbstractCondition theCondition, Diagnosis d, XCLRelationType type, String kdomNodeID) {
+			Condition theCondition, Diagnosis d, XCLRelationType type, String kdomNodeID) {
 		return insertXCLRelation(kb, theCondition, d, type, 1, kdomNodeID);
 	}
 
 	public static String insertXCLRelation(KnowledgeBase kb,
-			AbstractCondition theCondition, Diagnosis d, XCLRelationType type,
+			Condition theCondition, Diagnosis d, XCLRelationType type,
 			double weight) {
 		return insertXCLRelation(kb, theCondition, d, type, weight, null);
 	}
 
 	public static String insertXCLRelation(KnowledgeBase kb,
-			AbstractCondition theCondition, Diagnosis d, XCLRelationType type,
+			Condition theCondition, Diagnosis d, XCLRelationType type,
 			double weight, String kdomNodeID) {
 
 		// Nullchecks

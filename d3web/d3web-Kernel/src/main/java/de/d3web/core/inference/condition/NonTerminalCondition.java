@@ -33,53 +33,53 @@ import de.d3web.core.knowledge.terminology.NamedObject;
  * 
  * @author Michael Wolber, joba
  */
-public abstract class NonTerminalCondition extends AbstractCondition {
+public abstract class NonTerminalCondition implements Condition {
 
 	private static final long serialVersionUID = -5469533685946905130L;
 	/**
 	 * The list of conditions enclosed in this {@link NonTerminalCondition}.
 	 */
-	protected List<AbstractCondition> terms;
+	protected List<Condition> terms;
 
 	/**
 	 * Creates a new non-terminal condition with the specified
 	 * sub-conditions.
 	 * @param conditions the specified sub-conditions
 	 */
-	public NonTerminalCondition(List<AbstractCondition> conditions) {
+	public NonTerminalCondition(List<Condition> conditions) {
 		// The interface with the plain List is currently
 		// not touched. Therefore, we do a conversion here.
-		terms = new ArrayList<AbstractCondition>(conditions.size());
+		terms = new ArrayList<Condition>(conditions.size());
 		for (Object object : conditions) {
-			terms.add((AbstractCondition)object);
+			terms.add((Condition)object);
 		}
 	}
 	
 	@Override
 	public List<NamedObject> getTerminalObjects() {
 		List<NamedObject> v = new ArrayList<NamedObject>();
-		for (AbstractCondition condition : terms) {
+		for (Condition condition : terms) {
 			v.addAll(condition.getTerminalObjects());
 		}
 		return v;
 	}
 
 	/**
-	 * Returns the list of {@link AbstractCondition} instances
+	 * Returns the list of {@link Condition} instances
 	 * enclosed in this {@link NonTerminalCondition}.
 	 * @return a list containing the conditions enclosed in 
 	 *         this complex condition
 	 */
-	public List<AbstractCondition> getTerms() {
+	public List<Condition> getTerms() {
 		return terms;
 	}
 
 	/**
-	 * Sets the list of {@link AbstractCondition} instances
+	 * Sets the list of {@link Condition} instances
 	 * to be enclosed in this {@link NonTerminalCondition}.
 	 * @param theTerms the terms to be enclosed in this condition
 	 */
-	public void setTerms(List<AbstractCondition> theTerms) {
+	public void setTerms(List<Condition> theTerms) {
 		terms = theTerms;
 	}
 
@@ -111,11 +111,11 @@ public abstract class NonTerminalCondition extends AbstractCondition {
 	}
 
 	@Override
-	public AbstractCondition copy() {
-		List<AbstractCondition> newTerms  = new LinkedList<AbstractCondition>();
-		Iterator<AbstractCondition> tIter = getTerms().iterator();
+	public Condition copy() {
+		List<Condition> newTerms  = new LinkedList<Condition>();
+		Iterator<Condition> tIter = getTerms().iterator();
 		while (tIter.hasNext()) {
-			AbstractCondition c = tIter.next();
+			Condition c = tIter.next();
 			newTerms.add(c.copy());
 		}
 		return createInstance(newTerms, this);
@@ -126,5 +126,5 @@ public abstract class NonTerminalCondition extends AbstractCondition {
 	 * @param theTerms the conditions to be enclosed in the newly created instance
 	 * @param original the original condition that is the basis of the newly created instance 
 	 */
-	protected abstract AbstractCondition createInstance(List<AbstractCondition> theTerms, AbstractCondition original);
+	protected abstract Condition createInstance(List<Condition> theTerms, Condition original);
 }

@@ -60,7 +60,7 @@ public class CondKnown extends CondQuestion {
 	}
 
 	@Override
-	public AbstractCondition copy() {
+	public Condition copy() {
 		return new CondKnown(getQuestion());
 	}
 }

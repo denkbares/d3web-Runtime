@@ -28,7 +28,7 @@ import org.w3c.dom.Node;
 
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleAction;
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
@@ -68,23 +68,23 @@ public class RuleHandler implements FragmentHandler {
 		String active = node.getAttribute("active");
 		String comment = node.getAttribute("comment");
 		RuleAction action = null;
-		AbstractCondition condition = null;
-		AbstractCondition exception = null;
-		AbstractCondition context = null;
+		Condition condition = null;
+		Condition exception = null;
+		Condition context = null;
 		List<Element> children = XMLUtil.getElementList(node.getChildNodes());
 		PersistenceManager pm = PersistenceManager.getInstance();
 		for (Element child: children) {
 			if (child.getNodeName().equals("Exception")) {
 				Object object = getGrandChildObject(kb, pm, child);
-				if (object != null && exception instanceof AbstractCondition && exception== null) {
-					exception = (AbstractCondition) object;
+				if (object != null && exception instanceof Condition && exception== null) {
+					exception = (Condition) object;
 				} else {
 					throw new IOException();
 				}
 			} else if (child.getNodeName().equals("Context")) {
 				Object object = getGrandChildObject(kb, pm, child);
-				if (object != null && context instanceof AbstractCondition && context== null) {
-					context = (AbstractCondition) object;
+				if (object != null && context instanceof Condition && context== null) {
+					context = (Condition) object;
 				} else {
 					throw new IOException();
 				}
@@ -93,8 +93,8 @@ public class RuleHandler implements FragmentHandler {
 				if (object != null) {
 					if (object instanceof RuleAction && action == null) {
 						action = (RuleAction) object;
-					} else if (object instanceof AbstractCondition && condition == null) {
-						condition = (AbstractCondition) object;
+					} else if (object instanceof Condition && condition == null) {
+						condition = (Condition) object;
 					} else {
 						throw new IOException();
 					}
@@ -147,12 +147,12 @@ public class RuleHandler implements FragmentHandler {
 			node.appendChild(actionNode);
 		}
 		// creating condition and exception node 	
-		AbstractCondition condition = rule.getCondition();
+		Condition condition = rule.getCondition();
 		if (condition != null) {
 			Element conditionNode = pm.writeFragment(condition, doc);
 			node.appendChild(conditionNode);
 		}
-		AbstractCondition exception = rule.getException();
+		Condition exception = rule.getException();
 		if (exception != null) {
 			Element exceptionRoot = doc.createElement("Exception");
 			node.appendChild(exceptionRoot);
@@ -160,7 +160,7 @@ public class RuleHandler implements FragmentHandler {
 			exceptionRoot.appendChild(exceptionNode);
 		}
 		//create context node
-		AbstractCondition context = rule.getContext();
+		Condition context = rule.getContext();
 		if (context != null) {
 			Element contextRoot = doc.createElement("Context");
 			node.appendChild(contextRoot);

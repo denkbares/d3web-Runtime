@@ -95,7 +95,7 @@ public class CondTextEqual extends CondQuestion {
 	}
 	
 	@Override
-	public AbstractCondition copy() {
+	public Condition copy() {
 		return new CondTextEqual((QuestionText)getQuestion(), getValue());
 	}
 }

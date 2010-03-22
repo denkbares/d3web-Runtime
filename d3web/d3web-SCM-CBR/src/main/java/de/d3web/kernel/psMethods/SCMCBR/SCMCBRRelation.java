@@ -1,6 +1,6 @@
 package de.d3web.kernel.psMethods.SCMCBR;
 
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
@@ -20,7 +20,7 @@ public class SCMCBRRelation {
 	private static final String PREFIX = "SCMCBRRelation_";
 	
 	public static double DEFAULT_WEIGHT = 1;
-	private AbstractCondition conditionedFinding;
+	private Condition conditionedFinding;
 	private double weight = DEFAULT_WEIGHT;
 	private String id;
 	private static int count = 0;
@@ -50,14 +50,14 @@ public class SCMCBRRelation {
 		}
 	}
 
-	public static SCMCBRRelation createSCMCBRRelation(AbstractCondition conditionedFinding, 
+	public static SCMCBRRelation createSCMCBRRelation(Condition conditionedFinding, 
 			double weight) {
 		SCMCBRRelation r = new SCMCBRRelation();
 		r.setConditionedFinding(conditionedFinding);
 		r.setWeight(weight);
 		return r;
 	}
-	public static SCMCBRRelation createSCMCBRRelation(AbstractCondition conditionedFinding, 
+	public static SCMCBRRelation createSCMCBRRelation(Condition conditionedFinding, 
 			double weight, String id) {
 		SCMCBRRelation r = new SCMCBRRelation(id);
 		r.setConditionedFinding(conditionedFinding);
@@ -65,7 +65,7 @@ public class SCMCBRRelation {
 		return r;
 	}
 
-	public static SCMCBRRelation createSCMCBRRelation(AbstractCondition conditionedFinding) {
+	public static SCMCBRRelation createSCMCBRRelation(Condition conditionedFinding) {
 		return createSCMCBRRelation(conditionedFinding, DEFAULT_WEIGHT);
 	}
 	
@@ -95,11 +95,11 @@ public class SCMCBRRelation {
 	}
 	
 	
-	public AbstractCondition getConditionedFinding() {
+	public Condition getConditionedFinding() {
 		return conditionedFinding;
 	}
 
-	public void setConditionedFinding(AbstractCondition conditionedFinding) {
+	public void setConditionedFinding(Condition conditionedFinding) {
 		this.conditionedFinding = conditionedFinding;
 	}
 

@@ -58,7 +58,7 @@ public class CondChoiceNo extends CondEqual {
 	}
 
 
-	public AbstractCondition copy() {
+	public Condition copy() {
 		return new CondChoiceNo((QuestionYN)getQuestion());
 	}
 	

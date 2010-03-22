@@ -23,7 +23,7 @@
  */
 package de.d3web.diaFlux.flow;
 
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 
@@ -36,11 +36,11 @@ class Edge implements IEdge {
 	
 	private final INode startNode;
 	private final INode endNode;
-	private final AbstractCondition condition;
+	private final Condition condition;
 	private final String id;
 	
 	
-	public Edge(String id, INode startNode, INode endNode, AbstractCondition condition) {
+	public Edge(String id, INode startNode, INode endNode, Condition condition) {
 		
 		if (endNode == null)
 			throw new IllegalArgumentException("endNode must not be null");
@@ -62,7 +62,7 @@ class Edge implements IEdge {
 	
 
 	@Override
-	public AbstractCondition getCondition() {
+	public Condition getCondition() {
 		return condition;
 	}
 

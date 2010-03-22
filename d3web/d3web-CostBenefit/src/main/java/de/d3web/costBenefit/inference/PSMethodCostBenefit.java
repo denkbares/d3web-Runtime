@@ -31,7 +31,7 @@ import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.StrategicSupport;
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.knowledge.terminology.Answer;
@@ -125,8 +125,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		List<QASet> list = new LinkedList<QASet>();
 		list.add(qc);
 		action.setQASets(list);
-		AbstractCondition cond = new CondAnd(
-				new LinkedList<AbstractCondition>());
+		Condition cond = new CondAnd(
+				new LinkedList<Condition>());
 		rule.setAction(action);
 		rule.setCondition(cond);
 		rule.check(caseObject.getSession());
@@ -136,7 +136,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		Rule rule = caseObject.getRule();
 		if (rule == null)
 			return;
-		rule.setCondition(new CondOr(new LinkedList<AbstractCondition>()));
+		rule.setCondition(new CondOr(new LinkedList<Condition>()));
 		rule.check(caseObject.getSession());
 		caseObject.setRule(null);
 	}

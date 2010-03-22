@@ -30,7 +30,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondKnown;
 import de.d3web.core.inference.condition.NoAnswerException;
@@ -47,7 +47,7 @@ import de.d3web.explain.ExplanationFactory;
  */
 public class ECondition {
 
-	private AbstractCondition condition = null;	// the "original" condition object
+	private Condition condition = null;	// the "original" condition object
 	private List activeParts = null;
 
 
@@ -55,7 +55,7 @@ public class ECondition {
 	 * returns an ECondition only, if the condition "cond" is active (can fire), else null	 * @param factory ExplanationFactory	 * @param cond AbstractCondition	 * @return ECondition	 */
 	public static ECondition createECondition(
 		ExplanationFactory factory,
-		AbstractCondition cond) {
+		Condition cond) {
 
 		if (cond == null) {
 			return null;
@@ -76,7 +76,7 @@ public class ECondition {
 
 
 	/** Creates a new instance of EConditiion */
-	private ECondition(ExplanationFactory factory, AbstractCondition cond) {
+	private ECondition(ExplanationFactory factory, Condition cond) {
 		setCondition(cond);
 		init(factory);
 	}
@@ -86,7 +86,7 @@ public class ECondition {
 		if (getCondition() instanceof NonTerminalCondition) {
 			Iterator iter = ((NonTerminalCondition) getCondition()).getTerms().iterator();
 			while (iter.hasNext()) {
-				AbstractCondition cond = (AbstractCondition) iter.next();
+				Condition cond = (Condition) iter.next();
 				ECondition eCond = createECondition(factory, cond);
 				if (eCond != null) {
 					aParts.add(eCond);
@@ -100,7 +100,7 @@ public class ECondition {
 	 * Gets the condition.
 	 * @return Returns a AbstractCondition
 	 */
-	public AbstractCondition getCondition() {
+	public Condition getCondition() {
 		return condition;
 	}
 
@@ -108,7 +108,7 @@ public class ECondition {
 	 * Sets the condition.
 	 * @param condition The condition to set
 	 */
-	private void setCondition(AbstractCondition condition) {
+	private void setCondition(Condition condition) {
 		this.condition = condition;
 	}
 

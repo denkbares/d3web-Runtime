@@ -123,7 +123,7 @@ public class CondDState extends TerminalCondition {
 	}
 
 	@Override
-	public AbstractCondition copy() {
+	public Condition copy() {
 		return new CondDState(getDiagnosis(), getStatus());
 	}
 

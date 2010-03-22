@@ -27,7 +27,7 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.kernel.verbalizer.ConditionVerbalizer;
 import de.d3web.kernel.verbalizer.VerbalizationManager;
 import de.d3web.kernel.verbalizer.Verbalizer;
@@ -106,7 +106,7 @@ public class XclVerbalizer implements Verbalizer {
             			new XCLRelationComparator());
             }
             for (XCLRelation rel : relations) {
-                AbstractCondition cond = rel.getConditionedFinding();
+                Condition cond = rel.getConditionedFinding();
                 String weight = "";
                 if(type == XCLRelationType.explains) {
                 	if (rel.getWeight() != XCLRelation.DEFAULT_WEIGHT) {

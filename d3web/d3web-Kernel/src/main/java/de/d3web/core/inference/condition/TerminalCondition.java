@@ -32,7 +32,7 @@ import de.d3web.core.knowledge.terminology.NamedObject;
  * 
  * @author Michael Wolber, joba
  */
-public abstract class TerminalCondition extends AbstractCondition {
+public abstract class TerminalCondition implements Condition {
 	
 	private static final long serialVersionUID = 985715059851028211L;
 	private List<NamedObject> terminal = new ArrayList<NamedObject>(1);

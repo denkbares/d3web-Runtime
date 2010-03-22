@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 package de.d3web.costBenefit.inference;
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.terminology.Answer;
 
 /**
@@ -30,9 +30,9 @@ import de.d3web.core.knowledge.terminology.Answer;
 public class ConditionalValueSetter {
 
 	private Answer answer;
-	private AbstractCondition condition;
+	private Condition condition;
 	
-	public ConditionalValueSetter(Answer answer, AbstractCondition condition) {
+	public ConditionalValueSetter(Answer answer, Condition condition) {
 		super();
 		this.answer = answer;
 		this.condition = condition;
@@ -46,11 +46,11 @@ public class ConditionalValueSetter {
 		this.answer = answer;
 	}
 	
-	public AbstractCondition getCondition() {
+	public Condition getCondition() {
 		return condition;
 	}
 	
-	public void setCondition(AbstractCondition condition) {
+	public void setCondition(Condition condition) {
 		this.condition = condition;
 	}
 	

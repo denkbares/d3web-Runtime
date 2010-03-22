@@ -37,10 +37,10 @@ public class CondAnd extends NonTerminalCondition {
 
 	/**
 	 * Creates a new AND-condition based on the conjunction of the specified
-	 * terms ({@link AbstractCondition} instances).
-	 * @param terms a collection of {@link AbstractCondition} instances 
+	 * terms ({@link Condition} instances).
+	 * @param terms a collection of {@link Condition} instances 
 	 */
-	public CondAnd(List<AbstractCondition> terms) {
+	public CondAnd(List<Condition> terms) {
 		super(terms);
 	}
 
@@ -54,7 +54,7 @@ public class CondAnd extends NonTerminalCondition {
 		boolean wasNoAnswer = false;
 		boolean wasUnknownAnswer = false;
 
-		for (AbstractCondition condition : terms) {
+		for (Condition condition : terms) {
 			try {
 				if (!condition.eval(theCase)) {
 					return false;
@@ -79,7 +79,7 @@ public class CondAnd extends NonTerminalCondition {
 	@Override
 	public String toString() {
 		String ret = "\u2190 CondAnd {";
-		for (AbstractCondition condition : terms) {
+		for (Condition condition : terms) {
 			if (condition != null)
 				ret += condition.toString();
 		}
@@ -92,7 +92,7 @@ public class CondAnd extends NonTerminalCondition {
 	 * of a {@link NonTerminalCondition}. Do not use in the wild.
 	 * 
 	 */
-	protected AbstractCondition createInstance(List<AbstractCondition> theTerms, AbstractCondition o) {
+	protected Condition createInstance(List<Condition> theTerms, Condition o) {
 		return new CondAnd(theTerms);
 	}
 	

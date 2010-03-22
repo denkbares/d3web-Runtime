@@ -56,7 +56,7 @@ public class CondChoiceYes extends CondEqual {
 		return "\u2190 CondChoiceYes question: " + question.getId();
 	}
 	
-	public AbstractCondition copy() {
+	public Condition copy() {
 		return new CondChoiceYes((QuestionYN)getQuestion());
 	}
 }

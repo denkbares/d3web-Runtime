@@ -20,7 +20,7 @@
 
 package de.d3web.xcl;
 
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
@@ -30,7 +30,7 @@ import de.d3web.core.session.values.AnswerChoice;
 
 public class XCLRelation {
 	public static double DEFAULT_WEIGHT = 1;
-	private AbstractCondition conditionedFinding;
+	private Condition conditionedFinding;
 	private double weight = DEFAULT_WEIGHT;
 	private String id;
 	private static int count = 0;
@@ -63,14 +63,14 @@ public class XCLRelation {
 		}
 	}
 
-	public static XCLRelation createXCLRelation(AbstractCondition conditionedFinding, 
+	public static XCLRelation createXCLRelation(Condition conditionedFinding, 
 			double weight) {
 		XCLRelation r = new XCLRelation();
 		r.setConditionedFinding(conditionedFinding);
 		r.setWeight(weight);
 		return r;
 	}
-	public static XCLRelation createXCLRelation(AbstractCondition conditionedFinding, 
+	public static XCLRelation createXCLRelation(Condition conditionedFinding, 
 			double weight, String id) {
 		XCLRelation r = new XCLRelation(id);
 		r.setConditionedFinding(conditionedFinding);
@@ -78,7 +78,7 @@ public class XCLRelation {
 		return r;
 	}
 
-	public static XCLRelation createXCLRelation(AbstractCondition conditionedFinding) {
+	public static XCLRelation createXCLRelation(Condition conditionedFinding) {
 		return createXCLRelation(conditionedFinding, DEFAULT_WEIGHT);
 	}
 	
@@ -100,11 +100,11 @@ public class XCLRelation {
 		
 	}
 
-	public AbstractCondition getConditionedFinding() {
+	public Condition getConditionedFinding() {
 		return conditionedFinding;
 	}
 
-	public void setConditionedFinding(AbstractCondition conditionedFinding) {
+	public void setConditionedFinding(Condition conditionedFinding) {
 		this.conditionedFinding = conditionedFinding;
 	}
 

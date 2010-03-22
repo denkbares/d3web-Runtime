@@ -30,7 +30,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.inference.condition.CondEqual;
@@ -106,7 +106,7 @@ public class ConditionVerbalizer implements Verbalizer {
 	 * Returns the classes RuleVerbalizer can render
 	 */
 	public Class<?>[] getSupportedClassesForVerbalization() {
-		Class<?>[] supportedClasses = { AbstractCondition.class };
+		Class<?>[] supportedClasses = { Condition.class };
 		return supportedClasses;
 	}
 
@@ -127,14 +127,14 @@ public class ConditionVerbalizer implements Verbalizer {
 	 */
 	public String verbalize(Object o, RenderingFormat targetFormat, Map<String, Object> parameter) {
 
-		if (!(o instanceof AbstractCondition)) {
+		if (!(o instanceof Condition)) {
 			// this shouldnt happen, cause VerbalizationManager should not
 			// delegate here in this case!
 			Logger.getLogger("Verbalizer").warning("Object " + o + " couldnt be rendered by ConditionVerbalizer!");
 			return null;
 		}
 
-		AbstractCondition cond = (AbstractCondition) o;
+		Condition cond = (Condition) o;
 		
 		this.parameter = parameter;
 		this.targetFormat = targetFormat;
@@ -150,7 +150,7 @@ public class ConditionVerbalizer implements Verbalizer {
 	 * @param parameter
 	 * @return
 	 */
-	private String renderCondition(AbstractCondition cond) {
+	private String renderCondition(Condition cond) {
 
 		// set the default parameter
 		int indent = 0;
@@ -267,7 +267,7 @@ public class ConditionVerbalizer implements Verbalizer {
 	}
 	
 
-	public CondVerbalization createConditionVerbalization(AbstractCondition absCondition) {
+	public CondVerbalization createConditionVerbalization(Condition absCondition) {
 		
 		if (absCondition instanceof NonTerminalCondition) {
 			return createNonTerminalConditionVerbalization((NonTerminalCondition) absCondition);
@@ -326,9 +326,9 @@ public class ConditionVerbalizer implements Verbalizer {
 	private CondVerbalization createNonTerminalConditionVerbalization(NonTerminalCondition ntCondition) {
 
 		List<CondVerbalization> condVerbs = new ArrayList<CondVerbalization>(); 
-		List<AbstractCondition> terms = new ArrayList<AbstractCondition>(ntCondition.getTerms());
+		List<Condition> terms = new ArrayList<Condition>(ntCondition.getTerms());
 		Collections.reverse(terms);
-		for (AbstractCondition term:terms) {
+		for (Condition term:terms) {
 			condVerbs.add(createConditionVerbalization(term));
 		}
 		return new NonTerminalCondVerbalization(condVerbs, getClassVerbalisation(ntCondition), 
@@ -393,7 +393,7 @@ public class ConditionVerbalizer implements Verbalizer {
 	}
 
 
-	private  String getClassVerbalisation(AbstractCondition absCond) {	
+	private  String getClassVerbalisation(Condition absCond) {	
 		
 		String propertyKeyString = absCond.getClass().getSimpleName();
 		

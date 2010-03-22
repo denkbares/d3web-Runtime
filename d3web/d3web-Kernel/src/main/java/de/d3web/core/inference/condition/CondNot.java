@@ -36,17 +36,17 @@ public class CondNot extends NonTerminalCondition {
 	/**
 	 * The enclosed condition the be negated.
 	 */
-	private AbstractCondition condition;
+	private Condition condition;
 
 	/**
 	 * Creates a new condition, where the specified condition
 	 * must not be true to fulfill this condition.
 	 * @param condition the enclosed condition to be negated
 	 */
-	public CondNot(AbstractCondition condition) {
+	public CondNot(Condition condition) {
 		super(
 			de.d3web.core.utilities.Utils.createVector(
-				new AbstractCondition[] { condition }));
+				new Condition[] { condition }));
 		this.condition = condition;
 	}
 
@@ -62,9 +62,9 @@ public class CondNot extends NonTerminalCondition {
 	}
 
 	@Override
-	protected AbstractCondition createInstance(List<AbstractCondition> theTerms, AbstractCondition o) {
+	protected Condition createInstance(List<Condition> theTerms, Condition o) {
 		if (theTerms.size() == 1) 
-			return new CondNot((AbstractCondition)(theTerms.get(0)));
+			return new CondNot((Condition)(theTerms.get(0)));
 		else {
 			Logger.getLogger(CondNot.class.getName()).severe("Tried to" +
 					"create a CondNont instance with more/less than 1 argument.");			

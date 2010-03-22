@@ -26,7 +26,7 @@ import java.util.List;
 import de.d3web.abstraction.ActionSetValue;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleAction;
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondAnd;
 
 /**
@@ -64,7 +64,7 @@ public class FlowFactory {
 		
 	}
 	
-	public IEdge createEdge(String id, INode startNode, INode endNode, AbstractCondition condition) {
+	public IEdge createEdge(String id, INode startNode, INode endNode, Condition condition) {
 		return new Edge(id, startNode, endNode, condition);
 	}
 	

@@ -33,7 +33,7 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.Diagnosis;
@@ -281,7 +281,7 @@ public class XCLPageRenderer extends Renderer {
 	private void renderContent(Collection<XCLRelation> content) throws IOException{
 		
 		for (XCLRelation rel : content) {
-			AbstractCondition cond = rel.getConditionedFinding();	
+			Condition cond = rel.getConditionedFinding();	
 			writer.startElement("tr", component);
 			writer.startElement("td", component);
 			writer.writeText(VerbalizationManager.getInstance().verbalize(cond,
@@ -325,7 +325,7 @@ public class XCLPageRenderer extends Renderer {
 		for (XCLRelation rel : content) {
 			writer.startElement("tr", component);
 			writer.startElement("td", component);
-			AbstractCondition cond = rel.getConditionedFinding();	
+			Condition cond = rel.getConditionedFinding();	
 			List questions = cond.getTerminalObjects();
 			ListIterator condIt = questions.listIterator();
 			List<Question> askedQuestions = new ArrayList<Question>();

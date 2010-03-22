@@ -67,7 +67,7 @@ public class CondNumLess extends CondNum {
 	}
 	
 	@Override
-	public AbstractCondition copy() {
+	public Condition copy() {
 		return new CondNumLess((QuestionNum)getQuestion(),  getAnswerValue());
 	}
 }

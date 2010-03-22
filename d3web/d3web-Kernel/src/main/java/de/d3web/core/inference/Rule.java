@@ -21,7 +21,7 @@
 package de.d3web.core.inference;
 import java.util.List;
 
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.terminology.IDObject;
@@ -57,13 +57,13 @@ public class Rule
 	/**
 	  * A condition which must be true, if rule should fire (obligatory).
 	  */
-	protected AbstractCondition condition;
+	protected Condition condition;
 
 	/**
 	  * A condition that must be false or undefined, if 
 	  * rule should fire (optional).
 	 */
-	protected AbstractCondition exception;
+	protected Condition exception;
 
 	/**
 	  * A condition which contains CondDState(diagnosis, ESTABLISHED)
@@ -71,7 +71,7 @@ public class Rule
 	  * rule is able to fire. If specified diagnoses are not established,
 	  * then rule must not fire.
 	 */
-	protected AbstractCondition diagnosisContext;
+	protected Condition diagnosisContext;
 
 	private Class<? extends PSMethod> problemsolverContext;
 
@@ -237,7 +237,7 @@ public class Rule
 	/**
 	 * @return the condtion which must be true, so that the rule can fire.
 	 */
-	public AbstractCondition getCondition() {
+	public Condition getCondition() {
 		return condition;
 	}
 
@@ -249,14 +249,14 @@ public class Rule
 	 * rule is able to fire. If specified diagnoses are not established,
 	 * then rule must not fire.
 	 */
-	public AbstractCondition getContext() {
+	public Condition getContext() {
 		return diagnosisContext;
 	}
 
 	/**
 	 * @return the exception when this rule must not fire.
 	 */
-	public AbstractCondition getException() {
+	public Condition getException() {
 		return exception;
 	}
 
@@ -338,7 +338,7 @@ public class Rule
 	protected void updateConditionTerminals(
 		RuleAction oldAction,
 		RuleAction newAction,
-		AbstractCondition condi) {
+		Condition condi) {
 		if (condi != null) {
 			if (oldAction != null) {
 				removeFrom(
@@ -442,7 +442,7 @@ public class Rule
 	 * into the involved objects contained in the condition.
 	 */
 	public void setCondition(
-		de.d3web.core.inference.condition.AbstractCondition newCondition) {
+		de.d3web.core.inference.condition.Condition newCondition) {
 
 		/* check, if there are already some conditions */
 		if ((getCondition() != null) && (getAction() != null))
@@ -471,7 +471,7 @@ public class Rule
 	 * then rule must not fire. For checking the state of the diagnosis, the
 	 * heuristic problem solver is used.
 	 */
-	public void setContext(AbstractCondition newDiagnosisContext) {
+	public void setContext(Condition newDiagnosisContext) {
 
 		/* check, if there are already some conditions */
 		if (getContext() != null)
@@ -506,7 +506,7 @@ public class Rule
 	 * Sets exception when this rule must not fire.
 	 */
 	public void setException(
-		de.d3web.core.inference.condition.AbstractCondition newException) {
+		de.d3web.core.inference.condition.Condition newException) {
 		/* check, if there are already some conditions */
 		if (getException() != null)
 			removeRuleFromObjects(getException().getTerminalObjects());
@@ -594,7 +594,7 @@ public class Rule
             return false;
     }
 
-    private static boolean equalConditions(AbstractCondition c1, AbstractCondition c2) {
+    private static boolean equalConditions(Condition c1, Condition c2) {
         if (c1 != null && c2 != null)
             return c1.equals(c2);
         else if (c1 == null && c2 == null)

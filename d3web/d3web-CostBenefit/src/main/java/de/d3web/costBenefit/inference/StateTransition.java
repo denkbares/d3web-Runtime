@@ -24,7 +24,7 @@ import java.util.Map;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.condition.AbstractCondition;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -42,22 +42,22 @@ public class StateTransition implements KnowledgeSlice {
 	private static final long serialVersionUID = -5761339624924522001L;
 	public static final MethodKind STATE_TRANSITION= new MethodKind("STATE_TRANSITION");
 	
-	private AbstractCondition activationCondition;
+	private Condition activationCondition;
 	private List<ValueTransition> postTransitions;
 	private QContainer qcontainer;
 	
-	public StateTransition(AbstractCondition activationCondition, List<ValueTransition> postTransitions, QContainer qcontainer) {
+	public StateTransition(Condition activationCondition, List<ValueTransition> postTransitions, QContainer qcontainer) {
 		super();
 		this.activationCondition = activationCondition;
 		this.postTransitions = postTransitions;
 		this.qcontainer=qcontainer;
 	}
 	
-	public AbstractCondition getActivationCondition() {
+	public Condition getActivationCondition() {
 		return activationCondition;
 	}
 
-	public void setActivationCondition(AbstractCondition activationCondition) {
+	public void setActivationCondition(Condition activationCondition) {
 		this.activationCondition = activationCondition;
 	}
 
@@ -110,7 +110,7 @@ public class StateTransition implements KnowledgeSlice {
 			List<ConditionalValueSetter> setters = vt.getSetters();
 			for (ConditionalValueSetter cvs: setters) {
 				try {
-					AbstractCondition condition = cvs.getCondition();
+					Condition condition = cvs.getCondition();
 					if (condition==null||cvs.getCondition().eval(theCase)) {
 						setAnswer(theCase, q, cvs.getAnswer(), map);
 						break;
