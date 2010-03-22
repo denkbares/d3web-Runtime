@@ -156,13 +156,13 @@ public class BotHelper {
 		if (questionnaireText == null || questionnaireText.equals("")) {
 			for (NamedObject q : kb.getQuestions()) {
 				if (questionIDorText.equals(q.getId())
-						|| questionIDorText.equals(q.getText()))
+						|| questionIDorText.equals(q.getName()))
 					foundQuestion = (Question) q;
 			}
 		} else {
 			for (NamedObject q : kb.getQuestions()) {
 				if ((questionIDorText.equals(q.getId())
-						|| questionIDorText.equals(q.getText()))
+						|| questionIDorText.equals(q.getName()))
 							&& checkQuestionnaire(q, questionnaireText))
 					foundQuestion = (Question) q;
 			}
@@ -180,7 +180,7 @@ public class BotHelper {
 		Diagnosis foundDiagnosis = null;
 		for (Diagnosis d : kb.getDiagnoses()) {
 			if (diagnosisIDorText.equals(d.getId())
-					|| diagnosisIDorText.equals(d.getText()))
+					|| diagnosisIDorText.equals(d.getName()))
 				foundDiagnosis = d;
 		}
 		if (foundDiagnosis == null)
@@ -199,7 +199,7 @@ public class BotHelper {
 				return false;
 		}
 		
-		if (question.getParents().get(0).getText().equals(questionnaireText))
+		if (question.getParents().get(0).getName().equals(questionnaireText))
 			return true;
 		
 		return false;

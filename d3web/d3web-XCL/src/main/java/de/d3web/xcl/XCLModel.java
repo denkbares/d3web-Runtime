@@ -426,7 +426,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 
 	@Override
 	public int compareTo(XCLModel o) {
-		return this.solution.getText().compareTo(o.solution.getText());
+		return this.solution.getName().compareTo(o.solution.getName());
 	}
 
 	private static class XCLCaseModel extends XPSCaseObject {

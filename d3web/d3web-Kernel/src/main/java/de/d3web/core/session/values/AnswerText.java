@@ -32,17 +32,14 @@ public class AnswerText extends Answer {
 	private static final long serialVersionUID = -3763281596806332194L;
 	private String text;
 
-	/**
-	 * Creates a new AnswerText object
-	 * @param _text answer text
-	 */
 	public AnswerText() {
-	    super();
+		super(null);
 	}
 	
 	/**
 	 * getId method comment.
 	 */
+	@Override
 	public String getId() {
 		return getQuestion().getId() + "aText"; // äußerst fragwürdig!!! 
 	}

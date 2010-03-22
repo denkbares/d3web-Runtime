@@ -103,7 +103,7 @@ public class Finding implements Comparable<Finding> {
 		if (k == null || questionName == null || answerName == null)
 			throw new Exception("Null delivered as argument.");
 		for (Question question : k.getQuestions()) {
-			if (questionName.equals(question.getText())) {
+			if (questionName.equals(question.getName())) {
 				if (question instanceof QuestionChoice) {
 					return new Finding((QuestionChoice)question, answerName);
 				} else if (question instanceof QuestionNum) {
@@ -169,7 +169,7 @@ public class Finding implements Comparable<Finding> {
 		int comp = question.getId().compareTo(o.getQuestion().getId());
 		if (comp != 0)
 			return comp;
-		comp = question.getText().compareTo(o.getQuestion().getText());
+		comp = question.getName().compareTo(o.getQuestion().getName());
 		if (comp != 0)
 			return comp;
 		comp = answer.getId().compareTo(o.getAnswer().getId());

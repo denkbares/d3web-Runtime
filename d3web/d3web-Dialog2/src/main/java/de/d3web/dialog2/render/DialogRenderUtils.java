@@ -323,22 +323,22 @@ public class DialogRenderUtils {
 					getDiagnosesLinkOnclickString(diag), "onclick");
 			writer.writeAttribute("href", "#", "href");
 			writer.writeAttribute("title", DialogUtils.getMessageWithParamsFor(
-					"explain.button.text", new Object[] { diag.getText() }),
+					"explain.button.text", new Object[] { diag.getName() }),
 					"title");
 			if (score == null || !showScore) {
-				writer.writeText(diag.getText(), "value");
+				writer.writeText(diag.getName(), "value");
 			} else {
 				writer
-						.writeText(diag.getText() + " (" + score.toString()
+						.writeText(diag.getName() + " (" + score.toString()
 								+ ")", "value");
 			}
 			writer.endElement("a");
 		} else {
 			if (score == null || !showScore) {
-				writer.writeText(diag.getText(), "value");
+				writer.writeText(diag.getName(), "value");
 			} else {
 				writer
-						.writeText(diag.getText() + " (" + score.toString()
+						.writeText(diag.getName() + " (" + score.toString()
 								+ ")", "value");
 			}
 		}

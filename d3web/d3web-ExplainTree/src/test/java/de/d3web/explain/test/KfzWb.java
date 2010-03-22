@@ -39,6 +39,7 @@ import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.manage.AnswerFactory;
 import de.d3web.core.manage.RuleFactory;
+import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.utilities.Utils;
 import de.d3web.indication.inference.PSMethodNextQASet;
 import de.d3web.scoring.Score;
@@ -58,86 +59,86 @@ public class KfzWb extends KnowledgeBase {
 	private QContainer Q21 = new QContainer("Q21");
 	private QContainer Q56 = new QContainer("Q56");
 
-	private Answer Mf2a1 = AnswerFactory.createAnswerChoice("Mf2a1", "schwarz");
-	private Answer Mf2a2 = AnswerFactory.createAnswerChoice("Mf2a2", "bläulich");
-	private Answer Mf2a3 = AnswerFactory.createAnswerChoice("Mf2a3", "farblos");
+	private AnswerChoice Mf2a1 = AnswerFactory.createAnswerChoice("Mf2a1", "schwarz");
+	private AnswerChoice Mf2a2 = AnswerFactory.createAnswerChoice("Mf2a2", "bläulich");
+	private AnswerChoice Mf2a3 = AnswerFactory.createAnswerChoice("Mf2a3", "farblos");
 	private QuestionOC Mf2 = new QuestionOC("Mf2");
 
-	private Answer Mf3a1 = AnswerFactory.createAnswerChoice("Mf3a1", "braun");
-	private Answer Mf3a2 = AnswerFactory.createAnswerChoice("Mf3a2", "grau");
-	private Answer Mf3a3 = AnswerFactory.createAnswerChoice("Mf3a3", "hellgrau");
-	private Answer Mf3a4 = AnswerFactory.createAnswerChoice("Mf3a4", "schwarzverrußt");
+	private AnswerChoice Mf3a1 = AnswerFactory.createAnswerChoice("Mf3a1", "braun");
+	private AnswerChoice Mf3a2 = AnswerFactory.createAnswerChoice("Mf3a2", "grau");
+	private AnswerChoice Mf3a3 = AnswerFactory.createAnswerChoice("Mf3a3", "hellgrau");
+	private AnswerChoice Mf3a4 = AnswerFactory.createAnswerChoice("Mf3a4", "schwarzverrußt");
 	private QuestionOC Mf3 = new QuestionOC("Mf3");
 
-	private Answer Msi21a1 = AnswerFactory.createAnswerChoice("Msi21a1", "normal");
-	private Answer Msi21a2 = AnswerFactory.createAnswerChoice("Msi21a2", "abnorm");
+	private AnswerChoice Msi21a1 = AnswerFactory.createAnswerChoice("Msi21a1", "normal");
+	private AnswerChoice Msi21a2 = AnswerFactory.createAnswerChoice("Msi21a2", "abnorm");
 	private QuestionOC Msi21 = new QuestionOC("Msi21");
 
-	private Answer Mf4a1 = AnswerFactory.createAnswerChoice("Mf4a1", "Diesel");
-	private Answer Mf4a3 = AnswerFactory.createAnswerChoice("Mf4a3", "Normal oder Super");
+	private AnswerChoice Mf4a1 = AnswerFactory.createAnswerChoice("Mf4a1", "Diesel");
+	private AnswerChoice Mf4a3 = AnswerFactory.createAnswerChoice("Mf4a3", "Normal oder Super");
 	private QuestionOC Mf4 = new QuestionOC("Mf4");
 
 	private QuestionNum Mf5 = new QuestionNum("Mf5");
 
-	private Answer Msi4a1 = AnswerFactory.createAnswerChoice("Msi4a1", "normal");
-	private Answer Msi4a2 = AnswerFactory.createAnswerChoice("Msi4a2", "leicht erhöht");
-	private Answer Msi4a3 = AnswerFactory.createAnswerChoice("Msi4a3", "erhöht");
+	private AnswerChoice Msi4a1 = AnswerFactory.createAnswerChoice("Msi4a1", "normal");
+	private AnswerChoice Msi4a2 = AnswerFactory.createAnswerChoice("Msi4a2", "leicht erhöht");
+	private AnswerChoice Msi4a3 = AnswerFactory.createAnswerChoice("Msi4a3", "erhöht");
 	private QuestionOC Msi4 = new QuestionOC("Msi4");
 
 	private QuestionNum Mf6 = new QuestionNum("Mf6");
 
-	private Answer Mf7a1 = AnswerFactory.createAnswerChoice("Mf7a1", "klopfen");
-	private Answer Mf7a2 = AnswerFactory.createAnswerChoice("Mf7a2", "klingeln");
-	private Answer Mf7a0 = AnswerFactory.createAnswerNo("Mf7a0", "Nein/Sonstiges");
+	private AnswerChoice Mf7a1 = AnswerFactory.createAnswerChoice("Mf7a1", "klopfen");
+	private AnswerChoice Mf7a2 = AnswerFactory.createAnswerChoice("Mf7a2", "klingeln");
+	private AnswerChoice Mf7a0 = AnswerFactory.createAnswerNo("Mf7a0", "Nein/Sonstiges");
 	private QuestionMC Mf7 = new QuestionMC("Mf7");
 
-	private Answer Mf8a1 = AnswerFactory.createAnswerChoice("Mf8a1", "springt normal an");
-	private Answer Mf8a2 = AnswerFactory.createAnswerChoice("Mf8a2", "springt schlecht an");
-	private Answer Mf8a3 = AnswerFactory.createAnswerChoice("Mf8a3", "springt überhaupt nicht an");
+	private AnswerChoice Mf8a1 = AnswerFactory.createAnswerChoice("Mf8a1", "springt normal an");
+	private AnswerChoice Mf8a2 = AnswerFactory.createAnswerChoice("Mf8a2", "springt schlecht an");
+	private AnswerChoice Mf8a3 = AnswerFactory.createAnswerChoice("Mf8a3", "springt überhaupt nicht an");
 	private QuestionOC Mf8 = new QuestionOC("Mf8");
 
-	private Answer Mf10a1 = AnswerFactory.createAnswerChoice("Mf10a1", "dreht durch");
-	private Answer Mf10a2 = AnswerFactory.createAnswerChoice("Mf10a2", "dreht nicht richtig durch");
+	private AnswerChoice Mf10a1 = AnswerFactory.createAnswerChoice("Mf10a1", "dreht durch");
+	private AnswerChoice Mf10a2 = AnswerFactory.createAnswerChoice("Mf10a2", "dreht nicht richtig durch");
 	private QuestionOC Mf10 = new QuestionOC("Mf10");
 
-	private Answer Mf9a1 = AnswerFactory.createAnswerChoice("Mf9a1", "verzögertes Anfahren");
-	private Answer Mf9a2 = AnswerFactory.createAnswerChoice("Mf9a2", "schlechte Beschleunigung");
-	private Answer Mf9a3 = AnswerFactory.createAnswerChoice("Mf9a3", "Leerlauf ist zu niedrig");
-	private Answer Mf9a4 = AnswerFactory.createAnswerChoice("Mf9a4", "Leerlauf ist unregelmäßig");
-	private Answer Mf9a5 = AnswerFactory.createAnswerChoice("Mf9a5", "zu wenig Leistung bei Teillast");
-	private Answer Mf9a6 = AnswerFactory.createAnswerChoice("Mf9a6", "zu wenig Leistung bei Volllast");
-	private Answer Mf9a0 = AnswerFactory.createAnswerNo("Mf9a0", "Nein/Sonstiges");
+	private AnswerChoice Mf9a1 = AnswerFactory.createAnswerChoice("Mf9a1", "verzögertes Anfahren");
+	private AnswerChoice Mf9a2 = AnswerFactory.createAnswerChoice("Mf9a2", "schlechte Beschleunigung");
+	private AnswerChoice Mf9a3 = AnswerFactory.createAnswerChoice("Mf9a3", "Leerlauf ist zu niedrig");
+	private AnswerChoice Mf9a4 = AnswerFactory.createAnswerChoice("Mf9a4", "Leerlauf ist unregelmäßig");
+	private AnswerChoice Mf9a5 = AnswerFactory.createAnswerChoice("Mf9a5", "zu wenig Leistung bei Teillast");
+	private AnswerChoice Mf9a6 = AnswerFactory.createAnswerChoice("Mf9a6", "zu wenig Leistung bei Volllast");
+	private AnswerChoice Mf9a0 = AnswerFactory.createAnswerNo("Mf9a0", "Nein/Sonstiges");
 	private QuestionMC Mf9 = new QuestionMC("Mf9");
 
-	private Answer Mf13a1 = AnswerFactory.createAnswerChoice("Mf13a1", "ja");
-	private Answer Mf13a0 = AnswerFactory.createAnswerChoice("Mf13a0", "nein");
+	private AnswerChoice Mf13a1 = AnswerFactory.createAnswerChoice("Mf13a1", "ja");
+	private AnswerChoice Mf13a0 = AnswerFactory.createAnswerChoice("Mf13a0", "nein");
 	private QuestionOC Mf13 = new QuestionOC("Mf13");
 
-	private Answer Mf15a1 = AnswerFactory.createAnswerChoice("Mf15a1", "ja");
-	private Answer Mf15a0 = AnswerFactory.createAnswerChoice("Mf15a0", "nein");
+	private AnswerChoice Mf15a1 = AnswerFactory.createAnswerChoice("Mf15a1", "ja");
+	private AnswerChoice Mf15a0 = AnswerFactory.createAnswerChoice("Mf15a0", "nein");
 	private QuestionOC Mf15 = new QuestionOC("Mf15");
 
-	private Answer Mf17a1 = AnswerFactory.createAnswerChoice("Mf17a1", "ja");
-	private Answer Mf17a0 = AnswerFactory.createAnswerChoice("Mf17a0", "nein");
+	private AnswerChoice Mf17a1 = AnswerFactory.createAnswerChoice("Mf17a1", "ja");
+	private AnswerChoice Mf17a0 = AnswerFactory.createAnswerChoice("Mf17a0", "nein");
 	private QuestionOC Mf17 = new QuestionOC("Mf17");
 
-	private Answer Mf19a1 = AnswerFactory.createAnswerChoice("Mf19a1", "ja");
-	private Answer Mf19a0 = AnswerFactory.createAnswerChoice("Mf19a0", "nein");
+	private AnswerChoice Mf19a1 = AnswerFactory.createAnswerChoice("Mf19a1", "ja");
+	private AnswerChoice Mf19a0 = AnswerFactory.createAnswerChoice("Mf19a0", "nein");
 	private QuestionOC Mf19 = new QuestionOC("Mf19");
 
-	private Answer Mf11a1 = AnswerFactory.createAnswerChoice("Mf11a1", "ja");
-	private Answer Mf11a0 = AnswerFactory.createAnswerChoice("Mf11a0", "nein");
+	private AnswerChoice Mf11a1 = AnswerFactory.createAnswerChoice("Mf11a1", "ja");
+	private AnswerChoice Mf11a0 = AnswerFactory.createAnswerChoice("Mf11a0", "nein");
 	private QuestionOC Mf11 = new QuestionOC("Mf11");
 
-	private Answer Mf57a1 = AnswerFactory.createAnswerChoice("Mf57a1", "VW");
-	private Answer Mf57a2 = AnswerFactory.createAnswerChoice("Mf57a2", "Opel");
-	private Answer Mf57a3 = AnswerFactory.createAnswerChoice("Mf57a3", "Mercedes Benz");
-	private Answer Mf57a4 = AnswerFactory.createAnswerChoice("Mf57a4", "BMW");
-	private Answer Mf57a5 = AnswerFactory.createAnswerChoice("Mf57a5", "Porsche");
-	private Answer Mf57a6 = AnswerFactory.createAnswerChoice("Mf57a6", "Fiat");
-	private Answer Mf57a7 = AnswerFactory.createAnswerChoice("Mf57a7", "Toyota");
-	private Answer Mf57a8 = AnswerFactory.createAnswerChoice("Mf57a8", "Mazda");
-	private Answer Mf57a9 = AnswerFactory.createAnswerChoice("Mf57a9", "sonstige");
+	private AnswerChoice Mf57a1 = AnswerFactory.createAnswerChoice("Mf57a1", "VW");
+	private AnswerChoice Mf57a2 = AnswerFactory.createAnswerChoice("Mf57a2", "Opel");
+	private AnswerChoice Mf57a3 = AnswerFactory.createAnswerChoice("Mf57a3", "Mercedes Benz");
+	private AnswerChoice Mf57a4 = AnswerFactory.createAnswerChoice("Mf57a4", "BMW");
+	private AnswerChoice Mf57a5 = AnswerFactory.createAnswerChoice("Mf57a5", "Porsche");
+	private AnswerChoice Mf57a6 = AnswerFactory.createAnswerChoice("Mf57a6", "Fiat");
+	private AnswerChoice Mf57a7 = AnswerFactory.createAnswerChoice("Mf57a7", "Toyota");
+	private AnswerChoice Mf57a8 = AnswerFactory.createAnswerChoice("Mf57a8", "Mazda");
+	private AnswerChoice Mf57a9 = AnswerFactory.createAnswerChoice("Mf57a9", "sonstige");
 	private QuestionOC Mf57 = new QuestionOC("Mf57");
 
 	private QuestionNum Mf58 = new QuestionNum("Mf58");
@@ -178,91 +179,91 @@ public class KfzWb extends KnowledgeBase {
 			Q21.getProperties().setProperty(Property.RISK, new Double(1.7));
 			// keine Kosten: sonst Q56.setCosts("Risiko", new Double(56.0));
 
-			Q000.setText("Fragebögen");
+			Q000.setName("Fragebögen");
             Q000.setKnowledgeBase(this);
-			Q56.setText("Allgemeines");
+			Q56.setName("Allgemeines");
             Q56.setKnowledgeBase(this);
 			Q56.setParents(Utils.createList(new NamedObject[] { Q000 }));
-			Q16.setText("Beobachtungen");
+			Q16.setName("Beobachtungen");
             Q16.setKnowledgeBase(this);
 			Q16.setParents(Utils.createList(new NamedObject[] { Q000 }));
-			Mf2.setText("SI: Abgase");
+			Mf2.setName("SI: Abgase");
             Mf2.setKnowledgeBase(this);
 			Mf2.setParents(Utils.createList(new NamedObject[] { Q16 }));
-			Mf2.setAlternatives(Utils.createVector(new Object[] { Mf2a1, Mf2a2, Mf2a3 }));
-			Mf3.setText("SI: Auspuffrohrfarbe");
+			Mf2.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf2a1, Mf2a2, Mf2a3 }));
+			Mf3.setName("SI: Auspuffrohrfarbe");
             Mf3.setKnowledgeBase(this);
 			Mf3.setParents(Utils.createList(new NamedObject[] { Q16 }));
-			Mf3.setAlternatives(Utils.createVector(new Object[] { Mf3a1, Mf3a2, Mf3a3, Mf3a4 }));
-			Msi21.setText("SI: Bewertung Auspuffrohrfarbe");
+			Mf3.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf3a1, Mf3a2, Mf3a3, Mf3a4 }));
+			Msi21.setName("SI: Bewertung Auspuffrohrfarbe");
             Msi21.setKnowledgeBase(this);
-			Msi21.setAlternatives(Utils.createVector(new Object[] { Msi21a1, Msi21a2 }));
-			Mf4.setText("SI: Benzinart");
+			Msi21.setAlternatives(Utils.createVector(new AnswerChoice[] { Msi21a1, Msi21a2 }));
+			Mf4.setName("SI: Benzinart");
             Mf4.setKnowledgeBase(this);
 			Mf4.setParents(Utils.createList(new NamedObject[] { Q16 }));
-			Mf4.setAlternatives(Utils.createVector(new Object[] { Mf4a1, Mf4a3 }));
-			Mf5.setText("SI: Üblicher Kraftstoffverbrauch/100km");
+			Mf4.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf4a1, Mf4a3 }));
+			Mf5.setName("SI: Üblicher Kraftstoffverbrauch/100km");
             Mf5.setKnowledgeBase(this);
 			Mf5.setParents(Utils.createList(new NamedObject[] { Q16 }));
-			Msi4.setText("SI: Bewertung Kraftstoffverbrauch");
+			Msi4.setName("SI: Bewertung Kraftstoffverbrauch");
             Msi4.setKnowledgeBase(this);
-			Msi4.setAlternatives(Utils.createVector(new Object[] { Msi4a1, Msi4a2, Msi4a3 }));
+			Msi4.setAlternatives(Utils.createVector(new AnswerChoice[] { Msi4a1, Msi4a2, Msi4a3 }));
 			Num2ChoiceSchema schema = new Num2ChoiceSchema("Msi4_Schema00");
 			schema.setSchemaArray(new Double[] { new Double(10), new Double(20)});
 			Msi4.addKnowledge(PSMethodQuestionSetter.class, schema, PSMethodQuestionSetter.NUM2CHOICE_SCHEMA);
 
 			
 			
-			Mf6.setText("SI: Tatsächlicher Kraftstoffverbrauch/100km");
+			Mf6.setName("SI: Tatsächlicher Kraftstoffverbrauch/100km");
             Mf6.setKnowledgeBase(this);
 			Mf6.setParents(Utils.createList(new NamedObject[] { Q16 }));
-			Mf7.setText("SI: Motorgeräusche");
+			Mf7.setName("SI: Motorgeräusche");
             Mf7.setKnowledgeBase(this);
 			Mf7.setParents(Utils.createList(new NamedObject[] { Q16 }));
-			Mf7.setAlternatives(Utils.createVector(new Object[] { Mf7a1, Mf7a2, Mf7a0 }));
-			Mf8.setText("SI: Verhalten bei Motorstart");
+			Mf7.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf7a1, Mf7a2, Mf7a0 }));
+			Mf8.setName("SI: Verhalten bei Motorstart");
             Mf8.setKnowledgeBase(this);
 			Mf8.setParents(Utils.createList(new NamedObject[] { Q16 }));
-			Mf8.setAlternatives(Utils.createVector(new Object[] { Mf8a1, Mf8a2, Mf8a3 }));
-			Mf10.setText("Wie verhält sich der Anlasser bei Motorstartversuchen?");
+			Mf8.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf8a1, Mf8a2, Mf8a3 }));
+			Mf10.setName("Wie verhält sich der Anlasser bei Motorstartversuchen?");
             Mf10.setKnowledgeBase(this);
-			Mf10.setAlternatives(Utils.createVector(new Object[] { Mf10a1, Mf10a2 }));
-			Mf9.setText("SI: Fahrverhalten");
+			Mf10.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf10a1, Mf10a2 }));
+			Mf9.setName("SI: Fahrverhalten");
             Mf9.setKnowledgeBase(this);
 			Mf9.setParents(Utils.createList(new NamedObject[] { Q16 }));
-			Mf9.setAlternatives(Utils.createVector(new Object[] { Mf9a1, Mf9a2, Mf9a3, Mf9a4, Mf9a5, Mf9a6, Mf9a0 }));
+			Mf9.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf9a1, Mf9a2, Mf9a3, Mf9a4, Mf9a5, Mf9a6, Mf9a0 }));
 
-			Qcl16.setText("Technische Untersuchungen");
+			Qcl16.setName("Technische Untersuchungen");
             Qcl16.setKnowledgeBase(this);
 			Qcl16.setParents(Utils.createList(new NamedObject[] { Q000 }));
-			Q17.setText("Untersuchung Leerlaufsystem");
+			Q17.setName("Untersuchung Leerlaufsystem");
             Q17.setKnowledgeBase(this);
 			Q17.setParents(Utils.createList(new NamedObject[] { Qcl16 }));
-			Q18.setText("Untersuchung Ansaugsystem");
+			Q18.setName("Untersuchung Ansaugsystem");
             Q18.setKnowledgeBase(this);
 			Q18.setParents(Utils.createList(new NamedObject[] { Qcl16 }));
-			Q19.setText("Untersuchung Luftfiltereinsatz");
+			Q19.setName("Untersuchung Luftfiltereinsatz");
             Q19.setKnowledgeBase(this);
 			Q19.setParents(Utils.createList(new NamedObject[] { Qcl16 }));
-			Q20.setText("Untersuchung Zündeinstellung");
+			Q20.setName("Untersuchung Zündeinstellung");
             Q20.setKnowledgeBase(this);
 			Q20.setParents(Utils.createList(new NamedObject[] { Qcl16 }));
-			Q21.setText("Untersuchung Batterie");
+			Q21.setName("Untersuchung Batterie");
             Q21.setKnowledgeBase(this);
 			Q21.setParents(Utils.createList(new NamedObject[] { Qcl16 }));
 
-			Mf13.setText("Ist ein Fehler im Leerlaufsystem?");
+			Mf13.setName("Ist ein Fehler im Leerlaufsystem?");
             Mf13.setKnowledgeBase(this);
 			Mf13.setParents(Utils.createList(new NamedObject[] { Q17 }));
-			Mf13.setAlternatives(Utils.createVector(new Object[] { Mf13a1, Mf13a0 }));
-			Mf15.setText("Ist ein Fehler im Ansaugsystem?");
+			Mf13.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf13a1, Mf13a0 }));
+			Mf15.setName("Ist ein Fehler im Ansaugsystem?");
             Mf15.setKnowledgeBase(this);
 			Mf15.setParents(Utils.createList(new NamedObject[] { Q18 }));
-			Mf15.setAlternatives(Utils.createVector(new Object[] { Mf15a1, Mf15a0 }));
-			Mf17.setText("Ist der Luftfilter verschmutzt?");
+			Mf15.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf15a1, Mf15a0 }));
+			Mf17.setName("Ist der Luftfilter verschmutzt?");
             Mf17.setKnowledgeBase(this);
 			Mf17.setParents(Utils.createList(new NamedObject[] { Q19 }));
-			Mf17.setAlternatives(Utils.createVector(new Object[] { Mf17a1, Mf17a0 }));
+			Mf17.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf17a1, Mf17a0 }));
 
 		} catch (Exception e) {
 			System.out.println("" + e);
@@ -272,42 +273,42 @@ public class KfzWb extends KnowledgeBase {
 
 	private void setProperties1() {
 		try {
-			Mf19.setText("Ist die Zündeinstellung fehlerhaft?");
+			Mf19.setName("Ist die Zündeinstellung fehlerhaft?");
             Mf19.setKnowledgeBase(this);
 			Mf19.setParents(Utils.createList(new NamedObject[] { Q20 }));
-			Mf19.setAlternatives(Utils.createVector(new Object[] { Mf19a1, Mf19a0 }));
-			Mf11.setText("Ist die Batterie leer?");
+			Mf19.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf19a1, Mf19a0 }));
+			Mf11.setName("Ist die Batterie leer?");
             Mf11.setKnowledgeBase(this);
 			Mf11.setParents(Utils.createList(new NamedObject[] { Q21 }));
-			Mf11.setAlternatives(Utils.createVector(new Object[] { Mf11a1, Mf11a0 }));
-			Mf57.setText("Automarke?");
+			Mf11.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf11a1, Mf11a0 }));
+			Mf57.setName("Automarke?");
             Mf57.setKnowledgeBase(this);
 			Mf57.setParents(Utils.createList(new NamedObject[] { Q56 }));
 			Mf57.setAlternatives(
 				Utils.createVector(
-					new Object[] { Mf57a1, Mf57a2, Mf57a3, Mf57a4, Mf57a5, Mf57a6, Mf57a7, Mf57a8, Mf57a9 }));
-			Mf58.setText("Baujahr des Autos?");
+					new AnswerChoice[] { Mf57a1, Mf57a2, Mf57a3, Mf57a4, Mf57a5, Mf57a6, Mf57a7, Mf57a8, Mf57a9 }));
+			Mf58.setName("Baujahr des Autos?");
             Mf58.setKnowledgeBase(this);
 			Mf58.setParents(Utils.createList(new NamedObject[] { Q56 }));
-			P000.setText("Klassifikation");
+			P000.setName("Klassifikation");
             P000.setKnowledgeBase(this);
-			P8.setText("Leerlaufsystem defekt");
+			P8.setName("Leerlaufsystem defekt");
             P8.setKnowledgeBase(this);
 			P8.setParents(Arrays.asList(new NamedObject[] { P000 }));
-			P13.setText("Ansaugsystem undicht");
+			P13.setName("Ansaugsystem undicht");
             P13.setKnowledgeBase(this);
 			P13.setParents(Arrays.asList(new NamedObject[] { P000 }));
 
 			P14.setAprioriProbability(Score.P2);
             P14.setKnowledgeBase(this);
-			P14.setText("Luftfiltereinsatz verschmutzt");
+			P14.setName("Luftfiltereinsatz verschmutzt");
 			P14.setParents(Arrays.asList(new NamedObject[] { P000 }));
 
-			P15.setText("Zündeinstellung falsch");
+			P15.setName("Zündeinstellung falsch");
             P15.setKnowledgeBase(this);
 			P15.setParents(Arrays.asList(new NamedObject[] { P000 }));
 
-			P16.setText("Batterie leer");
+			P16.setName("Batterie leer");
             P16.setKnowledgeBase(this);
 			P16.setParents(Arrays.asList(new NamedObject[] { P000 }));
 
@@ -840,7 +841,7 @@ public class KfzWb extends KnowledgeBase {
 	while (iter.hasNext()) {
 	    Question frage = iter.next();
 	    System.out.println("<" + frage.getClass().getName() + " "
-		    + frage.getId() + ": " + frage.getText() + ">");
+		    + frage.getId() + ": " + frage.getName() + ">");
 	    KnowledgeSlice knowledge = frage.getKnowledge(PSMethodHeuristic.class, MethodKind.FORWARD);
 		if (knowledge != null) {
 			RuleSet rs = (RuleSet) knowledge;
@@ -862,7 +863,7 @@ public class KfzWb extends KnowledgeBase {
 	while (iter.hasNext()) {
 	    Diagnosis diagnose = iter2.next();
 	    System.out.println("<" + diagnose.getClass().getName() + " "
-		    + diagnose.getId() + ": " + diagnose.getText() + ">");
+		    + diagnose.getId() + ": " + diagnose.getName() + ">");
 	    KnowledgeSlice knowledge = diagnose.getKnowledge(PSMethodHeuristic.class, MethodKind.FORWARD);
 		if (knowledge != null) {
 			RuleSet rs = (RuleSet) knowledge;

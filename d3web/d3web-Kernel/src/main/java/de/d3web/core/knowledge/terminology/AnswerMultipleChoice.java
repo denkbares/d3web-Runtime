@@ -15,12 +15,12 @@ public class AnswerMultipleChoice extends Answer {
 	
 
 	public AnswerMultipleChoice(List<AnswerChoice> answers) {
-		super();
+		super(null);
 		setChoices(answers);
 	}
 
 	public AnswerMultipleChoice(AnswerChoice[] answers) {
-		super();
+		super(null);
 		for (AnswerChoice answerChoice : answers) {
 			choices.add(answerChoice);
 		}
@@ -50,6 +50,10 @@ public class AnswerMultipleChoice extends Answer {
 	
 	public void setChoices(List<AnswerChoice> answers) {
 		choices = answers;
+	}
+	
+	@Override
+	public String getId() {
 		Collections.sort(choices);
 		String theId = "";
 
@@ -61,7 +65,7 @@ public class AnswerMultipleChoice extends Answer {
 				theId += choices.get(i).getId();
 			}
 		}
-		setId(theId);
+		return theId;
 	}
 	
 	@Override

@@ -48,10 +48,6 @@ public class QuestionDate extends Question {
 	public final static String TYPE_TIME = "time";
 	public final static String TYPE_DATE_TIME = "date_time";
 
-	public QuestionDate() {
-	    super();
-	}
-	
 	public QuestionDate(String id) {
 	    super(id);
 	}

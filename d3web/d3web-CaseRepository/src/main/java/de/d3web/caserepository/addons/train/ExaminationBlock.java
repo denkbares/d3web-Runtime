@@ -202,7 +202,7 @@ public class ExaminationBlock implements IExaminationBlock {
 			Iterator iter = contents.iterator();
 			while (iter.hasNext()) {
 				QContainer qc = (QContainer) iter.next();
-				sb.append(qc.getText());
+				sb.append(qc.getName());
 				if (iter.hasNext())
 					sb.append(", ");
 			}

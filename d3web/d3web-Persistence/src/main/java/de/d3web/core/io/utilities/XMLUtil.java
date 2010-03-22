@@ -65,7 +65,7 @@ public class XMLUtil {
 				e.setAttribute("ID", q.getId());
 				parent.appendChild(e);
 			} else {
-				throw new IOException("Question "+q.getText()+" has no ID");
+				throw new IOException("Question "+q.getName()+" has no ID");
 			}
 		}
 	}
@@ -371,7 +371,7 @@ public class XMLUtil {
 	public static Answer getAnswer(XPSCase theCase, Question q, String idOrValue) {
 
 		if (idOrValue.equals("MaU")) {
-			return new AnswerUnknown();
+			return q.getUnknownAlternative();
 		}
 
 		if (q instanceof QuestionChoice) {

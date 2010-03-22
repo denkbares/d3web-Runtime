@@ -67,7 +67,7 @@ public class TestDummy extends TestCase {
 	protected void setUp() {
 		
 		diag = new Diagnosis("d1");
-		diag.setText("d1-text");
+		diag.setName("d1-text");
 		
 		dw = new DiagnosisHandler();
 

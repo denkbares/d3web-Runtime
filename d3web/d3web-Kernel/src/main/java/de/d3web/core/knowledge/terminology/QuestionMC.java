@@ -40,13 +40,8 @@ import de.d3web.core.session.values.AnswerNum;
  */
 public class QuestionMC extends QuestionChoice {
 
-	/**
-	 * 
-	 */
-	public QuestionMC() {
-		super();
-	}
-	
+	private static final long serialVersionUID = -4747366345903105411L;
+
 	public QuestionMC(String id) {
 		super(id);
 	}

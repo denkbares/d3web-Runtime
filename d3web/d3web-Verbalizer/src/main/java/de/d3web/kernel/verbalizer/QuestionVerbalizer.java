@@ -96,7 +96,7 @@ public class QuestionVerbalizer implements Verbalizer{
 			if (paraIDVisible instanceof Boolean) idVisible = (Boolean) paraIDVisible;
 		}
 		
-		String s = q.getText();
+		String s = q.getName();
 		if (idVisible) {
 			s += " (" + q.getId() + ")";
 		} 

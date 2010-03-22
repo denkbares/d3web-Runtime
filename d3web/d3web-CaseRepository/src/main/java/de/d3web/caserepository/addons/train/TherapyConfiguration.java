@@ -170,7 +170,7 @@ public class TherapyConfiguration implements ITherapyConfiguration {
 		 * @see java.lang.Object#toString()
 		 */
 		public String toString() {
-			return getDiagnosis().getText();
+			return getDiagnosis().getName();
 		}
 	}
 

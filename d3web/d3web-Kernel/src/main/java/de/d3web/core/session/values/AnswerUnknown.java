@@ -30,19 +30,19 @@ import de.d3web.core.session.XPSCase;
  * @author norman
  */
 public class AnswerUnknown extends Answer {
+	
+	private static final long serialVersionUID = -1234474189907420204L;
+
 	public final static String UNKNOWN_ID = "MaU";
 	
 	public final static String UNKNOWN_VALUE = "-?-";
 
-	/**
-	 * Creates a new AnswerUnknown object
-	 */
-	public AnswerUnknown() {
-	    super();
-	}
-	
 	public AnswerUnknown(String id) {
 	    super(id);
+	}
+
+	public AnswerUnknown() {
+		super(UNKNOWN_ID);
 	}
 
 	/**

@@ -32,7 +32,6 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionOC;
@@ -58,7 +57,7 @@ public class XCLModelTest extends TestCase{
 		XCLModel model;
 		KnowledgeBase k ;
 		KnowledgeBaseManagement kbm=KnowledgeBaseManagement.createInstance();
-		Diagnosis  terminator = new Diagnosis();
+		Diagnosis  terminator = new Diagnosis("D1");
 		
 		QuestionOC genre = new QuestionOC("GENRE");
 		AnswerChoice action; 
@@ -146,10 +145,10 @@ public class XCLModelTest extends TestCase{
 			QContainer container=rootContainer;
 			
 			// the question "Genre"
-			genre.setText("Genre");
+			genre.setName("Genre");
 			action = AnswerFactory.createAnswerChoice("Ga1", "action");
 			love = AnswerFactory.createAnswerChoice("Ga2", "love");
-			List<Answer> alternatives = new ArrayList<Answer>();
+			List<AnswerChoice> alternatives = new ArrayList<AnswerChoice>();
 			alternatives.add(action);
 			alternatives.add(love);
 			genre.setAlternatives(alternatives);
@@ -157,10 +156,10 @@ public class XCLModelTest extends TestCase{
 			container.addChild(genre);
 			
 			// the question "player"
-			player.setText("Player");
+			player.setName("Player");
 			arnold = AnswerFactory.createAnswerChoice("Ga1", "arnold");
 			will = AnswerFactory.createAnswerChoice("Ga2", "will");
-			List<Answer> alt = new ArrayList<Answer>();
+			List<AnswerChoice> alt = new ArrayList<AnswerChoice>();
 			alt.add(arnold);
 			alt.add(will);
 			player.setAlternatives(alt);
@@ -168,8 +167,8 @@ public class XCLModelTest extends TestCase{
 			container.addChild(player);
 			
 			// the question "rated"
-			rated.setText("Rated");
-			List<Answer> aPlayer = new ArrayList<Answer>();
+			rated.setName("Rated");
+			List<AnswerChoice> aPlayer = new ArrayList<AnswerChoice>();
 			plus18 = AnswerFactory.createAnswerChoice("Ra1", "18+");
 			baby = AnswerFactory.createAnswerChoice("Ra2", "baby");
 			aPlayer.add(plus18);

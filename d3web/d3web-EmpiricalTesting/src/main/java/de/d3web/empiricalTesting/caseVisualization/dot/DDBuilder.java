@@ -435,7 +435,7 @@ public class DDBuilder implements CaseVisualizer {
 		// print questions to be asked next (mostly only one)
 		for (Question question : nextQuestions) {
 			b.append("    <TR><TD COLSPAN=\""+intColSpan+"\" BGCOLOR=\"" + 
-				nodeColor + "\">" + bh.pretty(question.getText()) + "</TD> </TR>\n");
+				nodeColor + "\">" + bh.pretty(question.getName()) + "</TD> </TR>\n");
 		}
 
 		b.append("   </TABLE>>\n");
@@ -542,7 +542,7 @@ public class DDBuilder implements CaseVisualizer {
 		result.append("<TD BGCOLOR=\"");
 		result.append(color);
 		result.append("\">");
-		result.append(bh.pretty(derived.getSolution().getText()));
+		result.append(bh.pretty(derived.getSolution().getName()));
 		result.append("</TD>");
 		result.append("<TD COLSPAN=\"2\" ALIGN=\"CENTER\" BGCOLOR=\"");
 		result.append(color);
@@ -586,8 +586,8 @@ public class DDBuilder implements CaseVisualizer {
 
 		StringBuilder result = new StringBuilder();
 		String solName = (expected == null ? 
-						  derived.getSolution().getText() : 
-						  expected.getSolution().getText());
+						  derived.getSolution().getName() : 
+						  expected.getSolution().getName());
 		
 		result.append("    <TR>");
 		result.append("<TD BGCOLOR=\"");

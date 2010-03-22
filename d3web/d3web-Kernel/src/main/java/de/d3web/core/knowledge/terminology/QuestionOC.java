@@ -42,10 +42,6 @@ import de.d3web.core.session.values.AnswerNum;
 public class QuestionOC extends QuestionChoice {
 	private static final long serialVersionUID = 1L;
 
-	public QuestionOC() {
-		super();
-	}
-	
 	public QuestionOC(String id) {
 		super(id);
 	}

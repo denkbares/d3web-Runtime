@@ -42,11 +42,7 @@ public class QuestionNum extends Question {
 
  	private static final long serialVersionUID = 1L;
 
-	public QuestionNum(){
- 		super();
- 	}
- 	
- 	public QuestionNum(String id){
+	public QuestionNum(String id){
 		super(id);
 	}
 	
@@ -58,13 +54,6 @@ public class QuestionNum extends Question {
 
 	public XPSCaseObject createCaseObject(XPSCase session) {
 		return new CaseQuestionNum(this);
-	}
-
-	/**
-	 * @return boolean (false)
-	 */
-	public boolean expand(List onList, XPSCase theCase) {
-		return false;
 	}
 
 	/**

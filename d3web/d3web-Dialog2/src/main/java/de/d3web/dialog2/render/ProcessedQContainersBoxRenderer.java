@@ -99,18 +99,18 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 			HtmlAjaxCommandLink facet = (HtmlAjaxCommandLink) component.getFacet("link");
 			if (facet != null) {
 				facet.setTitle(DialogUtils.getMessageWithParamsFor("processed.moveToContainer",
-						new Object[] { cont.getText() }));
+						new Object[] { cont.getName() }));
 				facet.setOnclick("cursor_wait();setClickedQASet('" + cont.getId() + "')");
 				HtmlOutputText comp = (HtmlOutputText) FacesContext.getCurrentInstance().getApplication()
 						.createComponent(HtmlOutputText.COMPONENT_TYPE);
-				comp.setValue(cont.getText());
+				comp.setValue(cont.getName());
 				comp.setId(component.getId() + "_jump_cont_" + cont.getId());
 				facet.encodeBegin(FacesContext.getCurrentInstance());
 				comp.encodeAll(FacesContext.getCurrentInstance());
 				facet.encodeEnd(FacesContext.getCurrentInstance());
 			}
 		} else {
-			writer.writeText(cont.getText(), "value");
+			writer.writeText(cont.getName(), "value");
 		}
 		writer.endElement("th");
 		writer.endElement("tr");
@@ -216,9 +216,9 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 			Comparator<Question> qCompAsc = new Comparator<Question>() {
 				public int compare(Question a, Question b) {
 					Collator collator = Collator.getInstance(DialogUtils.getLocaleBean().getLocale());
-					if (collator.compare(a.getText(), b.getText()) < 0) {
+					if (collator.compare(a.getName(), b.getName()) < 0) {
 						return -1;
-					} else if (collator.compare(a.getText(), b.getText()) > 0) {
+					} else if (collator.compare(a.getName(), b.getName()) > 0) {
 						return 1;
 					} else
 						return 0;
@@ -260,7 +260,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 		HtmlAjaxCommandLink facet = (HtmlAjaxCommandLink) component.getFacet("link");
 		if (facet != null) {
 			facet.setTitle(DialogUtils.getMessageWithParamsFor("processed.moveToQuestion", new Object[] { q
-					.getText() }));
+					.getName() }));
 			facet.setOnclick("cursor_wait();setClickedQASet('" + q.getId() + "')");
 
 			HtmlOutputText comp = (HtmlOutputText) FacesContext.getCurrentInstance().getApplication()
@@ -276,7 +276,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 				comp.setValue(DialogUtils.getQPrompt(q));
 			} else {
 
-				comp.setValue(q.getText() + abstractFlag);
+				comp.setValue(q.getName() + abstractFlag);
 			}
 			comp.setId(component.getId() + "_jump_q_" + q.getId());
 			facet.encodeBegin(FacesContext.getCurrentInstance());

@@ -64,7 +64,7 @@ public class DiagnosisHandler implements FragmentHandler {
 		Properties properties = null;
 		for (Element child: XMLUtil.getElementList(element.getChildNodes())) {
 			if (child.getNodeName().equals("Text")) {
-				diag.setText(child.getTextContent());
+				diag.setName(child.getTextContent());
 			}
 			//If the child is none of the types above and it doesn't contain the children or the costs,
 			//it contains the properties.
@@ -85,7 +85,7 @@ public class DiagnosisHandler implements FragmentHandler {
 		Diagnosis diag = (Diagnosis) object;
 		Element element = doc.createElement("Diagnosis");
 		element.setAttribute("ID", diag.getId());
-		XMLUtil.appendTextNode(diag.getText(), element);
+		XMLUtil.appendTextNode(diag.getName(), element);
 		Score apriori = diag.getAprioriProbability();
 		if (apriori != null) {
 			element.setAttribute("aPriProb", apriori.getSymbol());

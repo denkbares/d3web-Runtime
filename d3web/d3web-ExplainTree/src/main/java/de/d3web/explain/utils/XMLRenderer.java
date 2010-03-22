@@ -195,7 +195,7 @@ public class XMLRenderer {
 		sb.append("<Diagnosis ID=\"");
 		sb.append(diag.getId());
 		sb.append("\"><![CDATA[");
-		sb.append(diag.getText());
+		sb.append(diag.getName());
 		sb.append("]]></Diagnosis>");
 		return sb;
 	}
@@ -217,7 +217,7 @@ public class XMLRenderer {
 			sb.append("<QContainer ID=\"");
 		sb.append(qaSet.getId());
 		sb.append("\"><![CDATA[");
-		sb.append(qaSet.getText());
+		sb.append(qaSet.getName());
 		if (qaSet instanceof Question) {
 			if (isSiQASet(qaSet))
 				sb.append("]]></SI>");

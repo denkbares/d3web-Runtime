@@ -23,7 +23,6 @@ package de.d3web.core.knowledge.terminology;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 import de.d3web.core.manage.AnswerFactory;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerNum;
@@ -56,14 +55,6 @@ public abstract class Answer extends IDObject implements PropertiesContainer, Co
 	 * such as explanation text etc.
 	 */
 	private Properties properties = new Properties();
-	
-	/**
-	 * Creates an {@link Answer} with no information at all.
-	 * Not for public use. Please use {@link AnswerFactory}. 
-	 */
-	public Answer() {
-	    super();
-	}
 	
 	/**
 	 * Creates an {@link Answer} only with ID information.

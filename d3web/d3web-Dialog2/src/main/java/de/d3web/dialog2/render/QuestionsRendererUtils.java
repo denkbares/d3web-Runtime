@@ -399,7 +399,7 @@ public class QuestionsRendererUtils {
 		    colDiff);
 	} else {
 	    // render nothing if case is not valid...
-	    logger.info("Question " + q.getText()
+	    logger.info("Question " + q.getName()
 		    + " is not valid or abstract!");
 	}
     }

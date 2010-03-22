@@ -60,7 +60,7 @@ public class PropertyTest extends TestCase {
 	}
 	
 	protected void setUp() {
-		diag = new Diagnosis();
+		diag = new Diagnosis("D1");
 		
 		pdh = new PropertiesHandler();
 	}

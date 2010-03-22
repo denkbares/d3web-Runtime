@@ -218,7 +218,7 @@ public class QuestionImageMapRendererUtils {
 			writer.writeAttribute("id", "clickable_" + region.getQuestionID(), "id");
 			writer.writeAttribute("href", "#", "href");
 			writer.writeAttribute("title", DialogUtils.getMessageWithParamsFor("dialog.imagemapAnswerTitle",
-					new Object[] { q.getText() }), "title");
+					new Object[] { q.getName() }), "title");
 
 			writer.writeAttribute("style", getPositionString(region, answerImage)
 					+ getDimensionString(region, answerImage), "style");
@@ -281,7 +281,7 @@ public class QuestionImageMapRendererUtils {
 				writer.startElement("a", component);
 				writer.writeAttribute("href", "#", "href");
 				writer.writeAttribute("title", DialogUtils.getMessageWithParamsFor(
-						"dialog.imagemapAnswerTitle", new Object[] { q.getText() }), "title");
+						"dialog.imagemapAnswerTitle", new Object[] { q.getName() }), "title");
 				writer.writeAttribute("style", "position: absolute; cursor: pointer; left: " + textCoords[0]
 						+ "px; top: " + textCoords[1] + "px;", "style");
 				writer.writeAttribute("onclick", "openQuestion(event,'" + region.getQuestionID()
@@ -317,7 +317,7 @@ public class QuestionImageMapRendererUtils {
 				writer.writeAttribute("class", "validationerror", "class");
 				Question q = theCase.getKnowledgeBase().searchQuestion(qID);
 				if (q != null) {
-					writer.writeText(q.getText() + ": " + msg.getSummary(), "value");
+					writer.writeText(q.getName() + ": " + msg.getSummary(), "value");
 				} else {
 					writer.writeText(msg.getSummary(), "value");
 				}

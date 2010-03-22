@@ -22,10 +22,9 @@ package de.d3web.core.knowledge.terminology;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Vector;
 import java.util.logging.Logger;
 
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.session.XPSCase;
@@ -43,32 +42,13 @@ import de.d3web.indication.inference.PSMethodUserSelected;
  * @see QASet
  */
 public class QContainer extends QASet {
-    private Integer priority;
 
-    /**
-     * Creates a new QContainer by setting an empty LinkedList as the children
-     * of this instance. <BR>
-     * The following properties have to be setted by hand:
-     * <LI> id (IBObject)
-     * <LI> text (NamedObject)
-     * <LI> knowledgeBase (NamedObject)
-     * <LI> parents (QASet)
-     * <LI> children
-     * <LI> priority
-     * 
-     * @see QASet
-     * @see Question
-     * @see IDObject
-     * @see NamedObject
-     */
-    public QContainer() {
-	super();
-	setChildren(new LinkedList());
-    }
+	private static final long serialVersionUID = -3786994343103529901L;
+	private Integer priority;
 
     public QContainer(String id) {
 	super(id);
-	setChildren(new LinkedList());
+	setChildren(new LinkedList<NamedObject>());
     }
 
     /**
@@ -90,7 +70,7 @@ public class QContainer extends QASet {
      * @param theCase
      */
     private void delegateContraReason(XPSCase theCase) {
-	Iterator childrenIter = this.getChildren().iterator();
+	Iterator<? extends NamedObject> childrenIter = this.getChildren().iterator();
 	while (childrenIter.hasNext()) {
 	    QASet qaSet = (QASet) childrenIter.next();
 	    if (qaSet instanceof QContainer) {
@@ -103,7 +83,7 @@ public class QContainer extends QASet {
     /**
      * @see QASet
      */
-    public void activate(XPSCase theCase, Rule rule, Class psm) {
+    public void activate(XPSCase theCase, Rule rule, Class<? extends PSMethod> psm) {
 	super.activate(theCase, rule, psm);
 	notifyListeners(theCase, this);
     }
@@ -111,7 +91,7 @@ public class QContainer extends QASet {
     /**
      * @see QASet
      */
-    public void deactivate(XPSCase theCase, Rule rule, Class psm) {
+    public void deactivate(XPSCase theCase, Rule rule, Class<? extends PSMethod> psm) {
 	super.deactivate(theCase, rule, psm);
 	notifyListeners(theCase, this);
     }
@@ -135,7 +115,7 @@ public class QContainer extends QASet {
      * @param theCase
      */
     private void delegateProReason(XPSCase theCase) {
-	Iterator childrenIter = this.getChildren().iterator();
+	Iterator<? extends NamedObject> childrenIter = this.getChildren().iterator();
 	while (childrenIter.hasNext()) {
 	    QASet qaSet = (QASet) childrenIter.next();
 	    if (qaSet instanceof QContainer) {
@@ -185,49 +165,6 @@ public class QContainer extends QASet {
     }
 
     /**
-     * Expands a single QContainer to a list of children, if it is contained in
-     * this list. The expansion objects will be at the same place as the
-     * original object. returns true iff expansion changed the list!
-     */
-    /*
-     * This is an old version: Expansion of the first element takes place, until
-     * first element of expansion list is a Question <br/> <b>Example:</b><br/>
-     * List: (Q1, Q2, Q3), Sons of Q2: (Q4, Q5, Q6), Sons of Q4: (Q7 Q8)<br/>
-     * Result of expanding Q2: (Q1 Q7 Q8 Q5 Q6 Q3)
-     */
-    public boolean expand(List onList, XPSCase theCase) {
-	// Fehlerfall abfangen: falls this nicht auf aufListe steht!!!
-
-	if (!onList.contains(this)) {
-	    return false;
-	}
-	int index = onList.indexOf(this);
-	onList.remove(this);
-
-	// Expand a single level only
-
-	Vector expandVec = new Vector();
-	Iterator iter = getChildren().iterator();
-	while (iter.hasNext()) {
-	    QASet fg = (QASet) iter.next();
-	    if (!fg.isDone(theCase)) {
-		expandVec.add(fg);
-	    }
-	}
-
-	/*
-	 * if (expandVec.size() > 0) { // the expandVec might be empty -> thus
-	 * having no first element! QASet first = null; first = (QASet)
-	 * expandVec.firstElement();
-	 *  // vorsicht bei frisch expandierten sachen, die schon auf der Liste
-	 * stehen // (was vor oder hinter dor!!! }
-	 */
-	// Abbruch: expand von Question bricht die Rekursion ab!
-	onList.addAll(index, expandVec);
-	return true;
-    }
-
-    /**
      * Gets the QContainers priority. This is a non-negative Integer value
      * specifying the order of the QContainers to be brought up by a dialogue
      * component. Thus priority is not an absolute number but relative to all
@@ -252,7 +189,7 @@ public class QContainer extends QASet {
 
 	// Falls auch nur ein einziges Children nicht abgearbeitet ist, ist auch
 	// die ganze FK nicht abgearbeitet.
-	Iterator iter = getChildren().iterator();
+	Iterator<? extends NamedObject> iter = getChildren().iterator();
 	while (iter.hasNext()) {
 	    QASet qaset = (QASet) iter.next();
 	    if (!qaset.isDone(theCase)) {
@@ -268,7 +205,7 @@ public class QContainer extends QASet {
 
 	// Falls auch nur ein einziges (valides) Children nicht abgearbeitet
 	// ist, ist auch die ganze FK nicht abgearbeitet.
-	Iterator iter = getChildren().iterator();
+	Iterator<? extends NamedObject> iter = getChildren().iterator();
 	while (iter.hasNext()) {
 	    if (!((QASet) iter.next()).isDone(theCase,
 		    respectValidFollowQuestions)) {
@@ -305,12 +242,12 @@ public class QContainer extends QASet {
      * @param theCase
      */
     private void delegateRemoveContraReason(XPSCase theCase) {
-	Iterator childrenIter = this.getChildren().iterator();
+	Iterator<? extends NamedObject> childrenIter = this.getChildren().iterator();
 	while (childrenIter.hasNext()) {
 	    QASet qaSet = (QASet) childrenIter.next();
 	    if (qaSet instanceof QContainer) {
 		boolean parentContraIndicated = false;
-		Iterator parentIter = qaSet.getParents().iterator();
+		Iterator<? extends NamedObject> parentIter = qaSet.getParents().iterator();
 		while ((parentIter.hasNext()) && (!parentContraIndicated)) {
 		    QASet parent = (QASet) parentIter.next();
 		    if (!parent.getContraReasons(theCase).isEmpty()) {
@@ -333,12 +270,12 @@ public class QContainer extends QASet {
      * @param theCase
      */
     private void delegateRemoveProReason(XPSCase theCase) {
-	Iterator childrenIter = this.getChildren().iterator();
+	Iterator<? extends NamedObject> childrenIter = this.getChildren().iterator();
 	while (childrenIter.hasNext()) {
 	    QASet qaSet = (QASet) childrenIter.next();
 	    if (qaSet instanceof QContainer) {
 		boolean parentIndicated = false;
-		Iterator parentIter = qaSet.getParents().iterator();
+		Iterator<? extends NamedObject> parentIter = qaSet.getParents().iterator();
 		while ((parentIter.hasNext()) && (!parentIndicated)) {
 		    QASet parent = (QASet) parentIter.next();
 		    if (!parent.getProReasons(theCase).isEmpty()) {

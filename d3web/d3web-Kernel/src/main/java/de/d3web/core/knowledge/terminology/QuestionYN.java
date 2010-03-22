@@ -59,23 +59,17 @@ public class QuestionYN extends QuestionOC {
 	yes = AnswerFactory.createAnswerYes(id + "YES", YES_STRING);
 	no = AnswerFactory.createAnswerNo(id + "NO", NO_STRING);
 
-	setAlternatives(Utils.createList(new Object[] { yes, no }));
+	setAlternatives(Utils.createList(new AnswerChoice[] { yes, no }));
     }
 
     public QuestionYN(String id, String yesText, String noText) {
-	super();
+	super(id);
 
 	yes = AnswerFactory.createAnswerYes(id + "YES", yesText);
 	no = AnswerFactory.createAnswerNo(id + "NO", noText);
 
-	setAlternatives(Utils.createList(new Object[] { yes, no }));
+	setAlternatives(Utils.createList(new AnswerChoice[] { yes, no }));
 
-    }
-
-    public void setId(String theID) {
-	super.setId(theID);
-	yes.setId(getId() + "YES");
-	no.setId(getId() + "NO");
     }
 
     /**

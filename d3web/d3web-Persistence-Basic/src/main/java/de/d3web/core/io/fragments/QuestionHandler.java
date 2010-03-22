@@ -114,7 +114,7 @@ public class QuestionHandler implements FragmentHandler {
 		} else if (type.equals("Date")) {
 			q = new QuestionDate(id);
 		}
-		q.setText(text.getTextContent());
+		q.setName(text.getTextContent());
 		if (properties != null) {
 			q.setProperties(properties);
 		}
@@ -135,7 +135,7 @@ public class QuestionHandler implements FragmentHandler {
 	public Element write(Object object, Document doc) throws IOException {
 		Question q = (Question) object;
 		Element e = doc.createElement("Question");
-		XMLUtil.appendTextNode(q.getText(), e);
+		XMLUtil.appendTextNode(q.getName(), e);
 		e.setAttribute("ID", q.getId());
 		if (q instanceof QuestionYN) {
 			e.setAttribute("type", "YN");

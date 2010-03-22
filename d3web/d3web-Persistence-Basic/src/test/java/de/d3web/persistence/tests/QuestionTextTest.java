@@ -62,7 +62,7 @@ public class QuestionTextTest extends TestCase {
 
 	protected void setUp() {
 		q1 = new QuestionText("q1");
-		q1.setText("q1-text");
+		q1.setName("q1-text");
 		
 		qw = new QuestionHandler();
 

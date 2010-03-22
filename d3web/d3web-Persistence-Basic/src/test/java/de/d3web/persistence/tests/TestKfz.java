@@ -359,7 +359,7 @@ public void testCase() {
 
 		System.out.println("    Frage: " + q1);
 		System.out.println("  FrageId: " + q1.getId());
-		System.out.println("FrageText: " + q1.getText());
+		System.out.println("FrageText: " + q1.getName());
 		if (q1 instanceof QuestionChoice) {
 			System.out.println("Antworten: " + ((QuestionChoice) q1).getAllAlternatives());
 		}

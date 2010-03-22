@@ -77,7 +77,7 @@ public class QuestionNumTest extends TestCase {
 			assertTrue("Error initialising plugin framework", false);
 		}
 		q1 = new QuestionNum("q1");
-		q1.setText("q1-text");
+		q1.setName("q1-text");
 		 
 		qw = new QuestionHandler();
 

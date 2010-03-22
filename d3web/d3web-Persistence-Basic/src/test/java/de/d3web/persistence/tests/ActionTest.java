@@ -143,7 +143,7 @@ public class ActionTest extends TestCase {
 		qdate1 = new QuestionDate("qdate1-id");
 		
 		diag1 = new Diagnosis("diag1-id");
-		diag1.setText("diag1-text");
+		diag1.setName("diag1-text");
 		
 		qcon1 = new QContainer("qcon1-id");
 		

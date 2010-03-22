@@ -27,11 +27,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.session.XPSCase;
 
@@ -41,6 +39,8 @@ import de.d3web.core.session.XPSCase;
  * @see QuestionDate
  */
 public class AnswerDate extends Answer {
+
+	private static final long serialVersionUID = 245080751144689421L;
 
 	/**
 	 * This wrapper class is necessary for the evaluation of
@@ -87,10 +87,6 @@ public class AnswerDate extends Answer {
 			else
 				return super.hashCode();
 		}
-		
-		public Date getDate() {
-			return value;
-		}
 
 	}	
 	
@@ -103,13 +99,10 @@ public class AnswerDate extends Answer {
 	private EvaluatableAnswerDateValue value;
 
 	public AnswerDate() {
-	    super();
-	}
-	
-	public AnswerDate(String id) {
-	    super(id);
+	    super(null);
 	}
 
+	@Override
 	public String getId() {
 		return getQuestion().getId() + "aDate";
 	}

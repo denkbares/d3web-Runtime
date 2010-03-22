@@ -64,7 +64,7 @@ public class MMInfoPageRenderer extends Renderer {
 		.renderTableWithClass(writer, component, "mminfotable");
 	writer.startElement("th", component);
 	writer.writeText(DialogUtils.getMessageWithParamsFor("mminfo.title",
-		new Object[] { diagOrQuestion.getText() }), "value");
+		new Object[] { diagOrQuestion.getName() }), "value");
 	writer.endElement("th");
 
 	List<MMInfoObject> mmInfoTextList = DialogRenderUtils.getMMInfo(

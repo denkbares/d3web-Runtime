@@ -44,20 +44,22 @@ import de.d3web.indication.inference.PSMethodUserSelected;
  */
 public abstract class QASet extends NamedObject implements InterviewObject {
 	
+	private static final long serialVersionUID = -6129285010227602284L;
+
 	public static class Reason {
 		private Rule rule;
-		private Class psm;
+		private Class<? extends PSMethod> psm;
 		public Reason(Rule myRule) {
 			super();
 			rule = myRule;
 			psm = myRule.getProblemsolverContext();
 		}
-		public Reason(Class problemSolverContext) {
+		public Reason(Class<? extends PSMethod> problemSolverContext) {
 			super();
 			rule = null;
 			psm = problemSolverContext;
 		}
-		public Reason(Rule myRule, Class problemSolverContext) {
+		public Reason(Rule myRule, Class<? extends PSMethod> problemSolverContext) {
 			super();
 			rule = myRule;
 			psm = problemSolverContext;
@@ -72,7 +74,7 @@ public abstract class QASet extends NamedObject implements InterviewObject {
 		public Rule getRule() {
 			return rule;
 		}
-		public Class getProblemSolverContext() {
+		public Class<? extends PSMethod> getProblemSolverContext() {
 			return psm;
 		}
 		
@@ -81,19 +83,6 @@ public abstract class QASet extends NamedObject implements InterviewObject {
 		}
 	}
 
-	/**
-	 * Does the construction of a new abstract query set.
-	 * It simply add an empty LinkedList as the parents of this
-	 * object to this instance.
-	 * @see QContainer
-	 * @see Question
-	 * @see IDObject
-	 * @see NamedObject
-	 */
-	public QASet() {
-		super();
-	}
-	
 	public QASet(String id) {
 	    super(id);
 	}
@@ -165,7 +154,7 @@ public abstract class QASet extends NamedObject implements InterviewObject {
 	   * removes "source" from the list of pro reasons, if the question has been activated from a pro reason
 	   * Otherwise "source" will be added to contra reason list
 	   */
-	public void deactivate(XPSCase theCase, Rule rule, Class psm) {
+	public void deactivate(XPSCase theCase, Rule rule, Class<? extends PSMethod> psm) {
 		CaseQASet caseQA =
 			((de.d3web.core.session.blackboard.CaseQASet) theCase
 				.getCaseObject(this));
@@ -194,17 +183,15 @@ public abstract class QASet extends NamedObject implements InterviewObject {
 
 	}
 
-	public abstract boolean expand(List onList, XPSCase theCase);
-
-	public List getContraReasons(XPSCase theCase) {
+	public List<Reason> getContraReasons(XPSCase theCase) {
 		return ((CaseQASet) theCase.getCaseObject(this)).getContraReasons();
 	}
 
-	public List getProReasons(XPSCase theCase) {
+	public List<Reason> getProReasons(XPSCase theCase) {
 		return ((CaseQASet) theCase.getCaseObject(this)).getProReasons();
 	}
 
-	private Reason getReason(Rule rule, Class psm) {
+	private Reason getReason(Rule rule, Class<? extends PSMethod> psm) {
 		return new Reason(rule, psm);
 	}
 
@@ -222,16 +209,20 @@ public abstract class QASet extends NamedObject implements InterviewObject {
 	 */
 	public boolean isValid(XPSCase theCase) {
 		CaseQASet caseQASet = (CaseQASet) theCase.getCaseObject(this);
-		List pros = getProReasons(theCase);
+		List<Reason> pros = getProReasons(theCase);
 		if (!caseQASet.hasContraReason()
             || pros.contains(new QASet.Reason(null, PSMethodUserSelected.class))) {
 			if (!pros.isEmpty())
 				return true;
             
 			if (this instanceof Question)
-				for (QASet parent : (List<QASet>) getParents())
-					if (parent instanceof QContainer && parent.isValid(theCase))
-						return true;
+				for (NamedObject parent : getParents())
+					if (parent instanceof QContainer) {
+						QContainer qcon = (QContainer) parent;
+						if (qcon.isValid(theCase)) {
+							return true;
+						}
+					}
 		}
 		return false;
 	}

@@ -106,7 +106,7 @@ public class ConditionTest extends TestCase {
 		QuestionNum qnum1 = new QuestionNum("qnum1-id");
 		QuestionNum qnum2 = new QuestionNum("qnum2-id");
 		QuestionText qt1 = new QuestionText("qt1-id");
-		qt1.setText("qt1-text");
+		qt1.setName("qt1-text");
 
 		Vector<Answer> val1 = new Vector<Answer>();
 		Vector<Answer> val2 = new Vector<Answer>();

@@ -88,7 +88,7 @@ public class XCLPageRenderer extends Renderer {
 					
 					if (trace != null) {
 						
-						verbalizeTrace(trace, solution.getText());
+						verbalizeTrace(trace, solution.getName());
 					}					
 					
 				}
@@ -337,7 +337,7 @@ public class XCLPageRenderer extends Renderer {
 				}
 				cq =(Question) condIt.next();
 				if (!askedQuestions.contains(cq)) {
-					writer.writeText(cq.getText(), "value");
+					writer.writeText(cq.getName(), "value");
 					count = count +1;
 					askedQuestions.add(cq);
 				}				

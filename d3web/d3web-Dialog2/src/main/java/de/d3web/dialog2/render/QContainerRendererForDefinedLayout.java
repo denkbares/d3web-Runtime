@@ -328,7 +328,7 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 		    .searchQuestion(content)), "value");
 	} else if (starttag.startsWith("<QText")) {
 	    writer.writeText(theCase.getKnowledgeBase()
-		    .searchQuestion(content).getText(), "value");
+		    .searchQuestion(content).getName(), "value");
 	} else if (starttag.startsWith("<MMInfo")) {
 	    QuestionLayout qLayout = layoutDefinition
 		    .getQuestionLayoutForQuestionID(content);

@@ -119,9 +119,9 @@ public class XCLBoxRenderer extends Renderer {
 		    writer.writeAttribute("href", "#", "href");
 		    writer.writeAttribute("title", DialogUtils
 			    .getMessageWithParamsFor("xcl.tooltip",
-				    new Object[] { origDiag.getText() }),
+				    new Object[] { origDiag.getName() }),
 			    "title");
-		    writer.writeText(origDiag.getText() + " (" + percent + " % "
+		    writer.writeText(origDiag.getName() + " (" + percent + " % "
 			    + "(" + state.getName().substring(0, 4) + ".))",
 			    "value");
 		    writer.endElement("a");

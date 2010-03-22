@@ -71,7 +71,7 @@ public class QContainerTest extends TestCase {
 			assertTrue("Error initialising plugin framework", false);
 		}
 		qc1 = new QContainer("c1");
-		qc1.setText("c1-text");
+		qc1.setName("c1-text");
 		
 		shouldTag = new XMLTag("QContainer");
 		shouldTag.addAttribute("ID", "c1");
@@ -101,11 +101,11 @@ public class QContainerTest extends TestCase {
 	
 	public void testQContainerWithChildren() throws Exception{
 		Question q1 = new QuestionText("q1");
-		q1.setText("q1-text");
+		q1.setName("q1-text");
 		q1.addParent(qc1);
 		
 		Question q2 = new QuestionText("q2");
-		q2.setText("q2-text");
+		q2.setName("q2-text");
 		q2.addParent(qc1);
 		
 		isTag = new XMLTag(qcw.write(qc1, Util.createEmptyDocument()));

@@ -56,6 +56,18 @@ public interface IDObjectManagement {
 	Answer findAnswer(Question q, String name);
 	
 	QContainer createQContainer(String name, QASet parent);
+	QContainer createQContainer(String id, String name, QASet parent);
+	
+	QuestionOC createQuestionOC(String id, String name, QASet parent, AnswerChoice[] answers);
+	QuestionZC createQuestionZC(String id, String name, QASet parent);
+	QuestionOC createQuestionOC(String id, String name, QASet parent, String[] answers);
+	QuestionMC createQuestionMC(String id, String name, QASet parent, AnswerChoice[] answers);
+	QuestionMC createQuestionMC(String id, String name, QASet parent, String[] answers);
+	QuestionNum createQuestionNum(String id, String name, QASet parent);
+	QuestionYN createQuestionYN(String id, String name, QASet parent);
+	QuestionYN createQuestionYN(String id, String name, String yesAlternativeText, String noAlternativeText, QASet parent);
+	QuestionDate createQuestionDate(String id, String name, QASet parent);
+	QuestionText createQuestionText(String id, String name, QASet parent);
 	
 	QuestionOC createQuestionOC(String name, QASet parent, AnswerChoice[] answers);
 	QuestionZC createQuestionZC(String name, QASet parent);
@@ -68,6 +80,7 @@ public interface IDObjectManagement {
 	QuestionDate createQuestionDate(String name, QASet parent);
 	QuestionText createQuestionText(String name, QASet parent);
 	
+	Diagnosis createDiagnosis(String id, String name, Diagnosis parent);
 	Diagnosis createDiagnosis(String name, Diagnosis parent);
 
 	Answer addChoiceAnswer(QuestionChoice qc, String value);
@@ -76,7 +89,4 @@ public interface IDObjectManagement {
 	String findNewIDForAnswerChoice(QuestionChoice currentQuestion);
 
 	String findNewIDFor(Class<? extends IDObject> object);
-
-	boolean changeID(IDObject object, String ref);
-	
 }

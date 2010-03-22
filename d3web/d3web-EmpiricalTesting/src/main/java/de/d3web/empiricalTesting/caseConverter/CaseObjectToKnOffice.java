@@ -119,7 +119,7 @@ public class CaseObjectToKnOffice extends CaseObjectConverter {
 	private void convertFindingsToKnOfficeFormat (RatedTestCase rtc, Writer out) throws IOException {
 		for (Finding f : rtc.getFindings()) {
 			out.write("\n" + INDENT);
-			out.write(quoteTextIfRequired(f.getQuestion().getText()));
+			out.write(quoteTextIfRequired(f.getQuestion().getName()));
 			out.write(" = ");
 			out.write(quoteTextIfRequired(f.getAnswer().toString()));
 			if (rtc.getFindings().indexOf(f) < rtc.getFindings().size() - 1) {
@@ -130,7 +130,7 @@ public class CaseObjectToKnOffice extends CaseObjectConverter {
 	
 	private void convertExpectedSolutionsToKnOfficeFormat (RatedTestCase rtc, Writer out) throws IOException {
 		for (RatedSolution s : rtc.getExpectedSolutions()) {
-			out.write("\n" + INDENT + INDENT + quoteTextIfRequired(s.getSolution().getText()));
+			out.write("\n" + INDENT + INDENT + quoteTextIfRequired(s.getSolution().getName()));
 			out.write(" (" + quoteTextIfRequired(s.getRating().toString()) + ")");
 			if (rtc.getExpectedSolutions().indexOf(s) < rtc.getExpectedSolutions().size() - 1) {
 				out.write(",");

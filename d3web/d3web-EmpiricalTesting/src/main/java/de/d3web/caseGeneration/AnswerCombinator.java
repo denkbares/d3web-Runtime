@@ -160,7 +160,7 @@ public class AnswerCombinator {
 	public void setForbiddenAnswerCombinations(Map<Question, Collection<Answer[]>> combinations) {
 		for (Question q : combinations.keySet()) {
 			if (allowedAnswerCombinations.containsKey(q))
-				throw new IllegalArgumentException("There are already allowed answer combinations defined for question \"" + q.getText() + "\".");
+				throw new IllegalArgumentException("There are already allowed answer combinations defined for question \"" + q.getName() + "\".");
 		}
 		this.forbiddenAnswerCombinations = combinations;
 	}
@@ -173,7 +173,7 @@ public class AnswerCombinator {
 	public void setAllowedAnswerCombinations(Map<Question, Collection<Answer[]>> combinations) {
 		for (Question q : combinations.keySet()) {
 			if (forbiddenAnswerCombinations.containsKey(q))
-				throw new IllegalArgumentException("There are already forbidden answer combinations defined for question \"" + q.getText() + "\".");
+				throw new IllegalArgumentException("There are already forbidden answer combinations defined for question \"" + q.getName() + "\".");
 		}
 		this.allowedAnswerCombinations = combinations;
 	}

@@ -39,7 +39,7 @@ public class RatedSolution implements Comparable<RatedSolution> {
 	public static class RatingComparatorByName implements Comparator<RatedSolution> {
 		@Override
 		public int compare(RatedSolution o1, RatedSolution o2) {
-			return o1.getSolution().getText().compareTo(o2.getSolution().getText());
+			return o1.getSolution().getName().compareTo(o2.getSolution().getName());
 		}
 	}	
 
@@ -106,7 +106,7 @@ public class RatedSolution implements Comparable<RatedSolution> {
 		if (comp != 0)
 			return comp;
 		else
-			return solution.getText().compareTo(o.solution.getText());
+			return solution.getName().compareTo(o.solution.getName());
 	}
 
 	/**

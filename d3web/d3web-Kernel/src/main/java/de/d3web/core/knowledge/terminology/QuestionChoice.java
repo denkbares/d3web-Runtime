@@ -47,14 +47,9 @@ public abstract class QuestionChoice extends Question {
 	private static final long serialVersionUID = 1L;
 	protected List<AnswerChoice> alternatives;
 
-	public QuestionChoice() {
-		super();
-		this.setAlternatives(new LinkedList());
-	}
-	
 	public QuestionChoice(String id) {
 		super(id);
-		this.setAlternatives(new LinkedList());
+		this.setAlternatives(new LinkedList<AnswerChoice>());
 	}
 
 	/**
@@ -67,7 +62,7 @@ public abstract class QuestionChoice extends Question {
 		return alternatives;
 	}
 
-	private Answer findAlternative(List alternativesArg, final String id) {
+	private Answer findAlternative(List<? extends Answer> alternativesArg, final String id) {
 		return (Answer) Utils.findIf(alternativesArg, new Tester() {
 			public boolean test(Object testObj) {
 				if ((testObj instanceof AnswerChoice)
@@ -120,15 +115,15 @@ public abstract class QuestionChoice extends Question {
 	 * sets the answer alternatives from which a user or rule can
 	 * choose one or more to answer this question.
 	 */
-	public void setAlternatives(List alternatives) {
+	public void setAlternatives(List<AnswerChoice> alternatives) {
 		if (alternatives != null) {
 			this.alternatives = alternatives;
-			Iterator iter = this.alternatives.iterator();
+			Iterator<AnswerChoice> iter = this.alternatives.iterator();
 			while (iter.hasNext()) {
-				((Answer) iter.next()).setQuestion(this);
+				iter.next().setQuestion(this);
 			}
 		} else
-			setAlternatives(new LinkedList());
+			setAlternatives(new LinkedList<AnswerChoice>());
 
 	}
     
@@ -148,7 +143,7 @@ public abstract class QuestionChoice extends Question {
 
 	public String verbalizeWithoutValue(XPSCase theCase) {
 		String res = "\n " + super.toString();
-		Iterator iter = getAlternatives(theCase).iterator();
+		Iterator<Answer> iter = getAlternatives(theCase).iterator();
 		while (iter.hasNext())
 			res += "\n  " + iter.next().toString();
 		return res;
@@ -205,7 +200,7 @@ public abstract class QuestionChoice extends Question {
 				this.getClass().getName(),
 				"convertNumericalValue",
 					new RuntimeException("No Num2ChoiceSchema defined for " + getId() + ":"
-							+ getText()));
+							+ getName()));
 			return value;
 		}
 	}

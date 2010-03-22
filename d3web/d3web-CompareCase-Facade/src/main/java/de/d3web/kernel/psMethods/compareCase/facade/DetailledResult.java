@@ -84,7 +84,7 @@ public class DetailledResult {
 	 * @return java.lang.String
 	 */
 	public String getContainerName() {
-		return container.getText();
+		return container.getName();
 	}
 
 	/**

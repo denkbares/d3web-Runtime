@@ -28,6 +28,8 @@ import java.util.Set;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.SymptomValue;
+import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.indication.ActionSuppressAnswer;
 /**
  * Stores the dynamic, user specific values for an Question object. It
@@ -42,14 +44,14 @@ import de.d3web.indication.ActionSuppressAnswer;
  * @see Question
  */
 public abstract class CaseQuestion extends CaseQASet {
-	private List valueHistory = null;
-	private Set suppressRules = null;
+	private List<SymptomValue> valueHistory = null;
+	private Set<Rule> suppressRules = null;
 	private boolean unknownVisible;
 
 	public CaseQuestion(Question question) {
 		super(question);
-		valueHistory = new LinkedList();
-		suppressRules = new HashSet();
+		valueHistory = new LinkedList<SymptomValue>();
+		suppressRules = new HashSet<Rule>();
 		unknownVisible = true;
 	}
 
@@ -64,15 +66,15 @@ public abstract class CaseQuestion extends CaseQASet {
 	/**
 	 * @return alternatives which are not suppressed by suppress rules
 	 */
-	public List getMergedSuppressAlternatives() {
+	public List<Answer> getMergedSuppressAlternatives() {
 		//TreeSet suppSet = new TreeSet();
-		Iterator rule = suppressRules.iterator();
-		List result = new LinkedList<Answer>();
+		Iterator<Rule> rule = suppressRules.iterator();
+		List<Answer> result = new LinkedList<Answer>();
 		while (rule.hasNext()) {
 			Rule r = (Rule) rule.next();
 			ActionSuppressAnswer tempAction = (ActionSuppressAnswer) r.getAction();
 			if (tempAction != null) {
-				Iterator supp = (tempAction).getSuppress().iterator();
+				Iterator<AnswerChoice> supp = (tempAction).getSuppress().iterator();
 				while (supp.hasNext()) {
 					result.add(supp.next());
 				}
@@ -86,7 +88,7 @@ public abstract class CaseQuestion extends CaseQASet {
 	 * @return a history stack that contains a map of rule/value pairs. These
 	 *         pairs inform about which value has been overridden by which rule.
 	 */
-	public List getValueHistory() {
+	public List<SymptomValue> getValueHistory() {
 		return valueHistory;
 	}
 

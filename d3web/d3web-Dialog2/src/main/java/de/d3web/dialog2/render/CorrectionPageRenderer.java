@@ -252,7 +252,7 @@ public class CorrectionPageRenderer extends Renderer {
 	    writer.startElement("tr", component);
 
 	    writer.startElement("td", component);
-	    writer.writeText(diag.getText(), "value");
+	    writer.writeText(diag.getName(), "value");
 	    writer.endElement("td");
 
 	    writer.startElement("td", component);

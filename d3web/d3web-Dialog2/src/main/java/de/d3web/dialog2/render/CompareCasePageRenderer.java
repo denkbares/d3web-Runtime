@@ -304,7 +304,7 @@ public class CompareCasePageRenderer extends Renderer {
 			writer.startElement("td", component);
 			writer.writeAttribute("id",
 				"qname_" + question.getId(), "id");
-			writer.writeText(question.getText(), "value");
+			writer.writeText(question.getName(), "value");
 			writer.endElement("td");
 
 			// Aktuelle Answers
@@ -486,7 +486,7 @@ public class CompareCasePageRenderer extends Renderer {
 		    writer.startElement("p", component);
 		    writer.writeAttribute("id", "casesolution_" + caseName
 			    + "_" + diag.getId(), "id");
-		    writer.writeText(diag.getText(), "value");
+		    writer.writeText(diag.getName(), "value");
 		    writer.endElement("p");
 		}
 		writer.endElement("td");

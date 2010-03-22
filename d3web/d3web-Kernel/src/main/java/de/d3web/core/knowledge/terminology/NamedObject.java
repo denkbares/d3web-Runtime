@@ -63,7 +63,7 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	/**
 	 * Representing a short name of the object.
 	 */
-	private String text;
+	private String name;
 
 	/**
 	 * The knowledge base this object belongs to.
@@ -103,18 +103,6 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	public static final int BEFORE = 1;
 
 	public static final int AFTER = 2;
-
-	/**
-	 * Creates a new {@link NamedObject}. 
-	 * The instance is created totally empty, so you have to set some properties
-	 * by hand, e.g., ID, knowledge base etc.
-	 * Comment for temporal reasoning: By default, NamedObjects are not time
-	 * dependent.
-	 */
-	public NamedObject() {
-		super();
-		init();
-	}
 
 	private void init() {
 		// unsynchronized version, allows null values
@@ -425,8 +413,8 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	 * 
 	 * @return the name of this object
 	 */
-	public String getText() {
-		return text;
+	public String getName() {
+		return name;
 	}
 
 	private static void removeParentChildLink(NamedObject parent,
@@ -687,8 +675,8 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	 * 
 	 * @param text the new text of this instance
 	 */
-	public void setText(String text) {
-		this.text = text;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**
@@ -701,7 +689,7 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	public abstract void setValue(XPSCase theCase, Object[] values);
 
 	public String toString() {
-		return getText();
+		return getName();
 	}
 
 	/**

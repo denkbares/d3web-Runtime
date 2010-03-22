@@ -111,7 +111,7 @@ public class QASetTreeBean {
 				QASet qaSetchild = (QASet) childrenList.get(i);
 				if (!(qaSetchild instanceof Question)) {
 					TreeNode newNode = new TreeNodeBase(
-							QASetTreeBean.STANDARD_TYPE, qaSetchild.getText(),
+							QASetTreeBean.STANDARD_TYPE, qaSetchild.getName(),
 							qaSetchild.getId(), false);
 					parentNode.getChildren().add(newNode);
 					createTreeRecursive(qaSetchild, newNode);
@@ -147,7 +147,7 @@ public class QASetTreeBean {
 		XPSCase theCase = DialogUtils.getDialog().getTheCase();
 		QASet root = theCase.getKnowledgeBase().getRootQASet();
 		TreeNode treeData = new TreeNodeBase(QASetTreeBean.STANDARD_TYPE, root
-				.getText(), root.getId(), false);
+				.getName(), root.getId(), false);
 		qaSetTreeModel = new TreeModelBase(treeData);
 		qaSetHtmlTree = new HtmlTree();
 		qaSetHtmlTree.setModel(qaSetTreeModel);

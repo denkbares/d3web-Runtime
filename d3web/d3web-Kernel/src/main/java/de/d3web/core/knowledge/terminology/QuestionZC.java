@@ -39,12 +39,9 @@ import de.d3web.core.session.values.AnswerChoice;
  */
 public class QuestionZC extends QuestionOC {
 
+	private static final long serialVersionUID = -2285319927790751950L;
 	public static final String XML_IDENTIFIER = "Info";
 
-	public QuestionZC() {
-	    super();
-	}
-	
 	public QuestionZC(String id) {
 	    super(id);
 	}
@@ -55,7 +52,7 @@ public class QuestionZC extends QuestionOC {
 	}
 
 	@Override
-	public void setAlternatives(List l) {
+	public void setAlternatives(List<AnswerChoice> l) {
 		if (l.size() > 0) {
 			Logger.getLogger(this.getClass().getName()).severe(
 					"Tried to set AnswerAlternatives for QuestionZC");

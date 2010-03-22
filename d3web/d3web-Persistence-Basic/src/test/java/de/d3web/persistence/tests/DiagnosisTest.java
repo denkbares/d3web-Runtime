@@ -70,7 +70,7 @@ public class DiagnosisTest extends TestCase {
 		}
 		//create the diagnosis
 		diag = new Diagnosis("d1");
-		diag.setText("d1-text");
+		diag.setName("d1-text");
 		
 		dh = new DiagnosisHandler();
 

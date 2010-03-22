@@ -307,7 +307,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 		result.append(cfg.get("correctColor"));
 //		result.append(getColor(derived, cfg));
 		result.append("\" >");
-		result.append(bh.pretty(derived.getSolution().getText()));
+		result.append(bh.pretty(derived.getSolution().getName()));
 		result.append("</td>");
 		result.append("<td colspan=\"2\" bgcolor=\"");
 		result.append(cfg.get("correctColor"));
@@ -344,8 +344,8 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 
 		StringBuilder result = new StringBuilder();
 		String solName = (expected == null ? 
-						  derived.getSolution().getText() : 
-						  expected.getSolution().getText());
+						  derived.getSolution().getName() : 
+						  expected.getSolution().getName());
 		
 		result.append("<tr>");
 		result.append("<td bgcolor=\"");
@@ -537,7 +537,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 			result.append(cfg.get("nodeColor"));
 			result.append("\">");
 			result.append("<center>");
-			result.append(bh.pretty(q.getText()));
+			result.append(bh.pretty(q.getName()));
 			result.append("</center>");
 			result.append("</td>");
 			result.append("</tr>");

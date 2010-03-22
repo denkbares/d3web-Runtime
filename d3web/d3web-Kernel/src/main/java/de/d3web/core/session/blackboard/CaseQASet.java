@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.QASet.Reason;
 /**
  * Stores the dynamic, user specific values for an QASet
  * object. It corresponds to the static QASet object.<br>
@@ -32,14 +33,14 @@ import de.d3web.core.knowledge.terminology.QASet;
  * @see QASet
  */
 public abstract class CaseQASet extends XPSCaseObject {
-	private List proReasons = null;
-	private List contraReasons = null;
+	private List<Reason> proReasons = null;
+	private List<Reason> contraReasons = null;
 
 	public CaseQASet(QASet qaset) {
 		super(qaset);
 
-		proReasons = new LinkedList();
-		contraReasons = new LinkedList();
+		proReasons = new LinkedList<Reason>();
+		contraReasons = new LinkedList<Reason>();
 	}
 
 	/**
@@ -48,7 +49,7 @@ public abstract class CaseQASet extends XPSCaseObject {
 	 * @param reason contra reason (RuleContraIndication) that blocks this QASet until
 	 * 		  it has been undone.
 	 */
-	public void addContraReason(Object reason) {
+	public void addContraReason(Reason reason) {
 		contraReasons.add(reason);
 	}
 
@@ -58,21 +59,21 @@ public abstract class CaseQASet extends XPSCaseObject {
 	 * @param reason reason to add to pro reason list (either RuleQASet for activation or
 	 *		  KnowledgeBase in case of initialization).
 	 */
-	public void addProReason(Object reason) {
+	public void addProReason(Reason reason) {
 		proReasons.add(reason);
 	}
 
 	/**
 	 * @return a List of contraReasons for this CaseQASet
 	 */
-	public List getContraReasons() {
+	public List<Reason> getContraReasons() {
 		return contraReasons;
 	}
 
 	/**
 	 * @return a List of proReasons for this CaseQASet
 	 */
-	public List getProReasons() {
+	public List<Reason> getProReasons() {
 		return proReasons;
 	}
 
@@ -86,7 +87,7 @@ public abstract class CaseQASet extends XPSCaseObject {
 
 	/**
 	 * Creation date: (26.10.2000 11:10:19)
-	 * @return true, iff there are any proReasons
+	 * @return true, if there are any proReasons
 	 */
 	public boolean hasProReason() {
 		return !proReasons.isEmpty();

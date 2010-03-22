@@ -158,7 +158,7 @@ public abstract class QContainerRenderer {
 			if (layoutDef.getQContainerHeadlineAltText() != null) {
 				writer.writeText(layoutDef.getQContainerHeadlineAltText(), "value");
 			} else {
-				writer.writeText(DialogUtils.getQuestionPageBean().getActualQContainer().getText(), "value");
+				writer.writeText(DialogUtils.getQuestionPageBean().getActualQContainer().getName(), "value");
 			}
 
 			writer.endElement("th");

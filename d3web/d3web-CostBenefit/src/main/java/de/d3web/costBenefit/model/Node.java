@@ -204,6 +204,6 @@ public class Node {
 
 	@Override
 	public String toString() {
-		return qContainer.getText();
+		return qContainer.getName();
 	}
 }

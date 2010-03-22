@@ -98,7 +98,7 @@ public class DiagnosisVerbalizer implements Verbalizer{
 			if (paraIDVisible instanceof Boolean) idVisible = (Boolean) paraIDVisible;
 		}
 		
-		String s = diag.getText();
+		String s = diag.getName();
 		if (idVisible) {
 			s += " (" + diag.getId() + ")";
 		} 

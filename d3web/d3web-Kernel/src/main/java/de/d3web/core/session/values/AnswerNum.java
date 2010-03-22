@@ -29,6 +29,8 @@ import de.d3web.core.session.XPSCase;
  * @author norman
  */
 public class AnswerNum extends Answer {
+	
+	private static final long serialVersionUID = 1073051860182787758L;
 	private EvaluatableAnswerNumValue value = null;
 
 	/**
@@ -79,21 +81,14 @@ public class AnswerNum extends Answer {
 
 	}
 
-	/**
-	 * Creates a new AnswerNum object
-	 * @param theValue numeric value of the answer (Double or FormulaElement).
-	 */
 	public AnswerNum() {
-	    super();
-	}
-
-	public AnswerNum(String id) {
-	    super(id);
+	    super(null);
 	}
 	
 	/**
 	 * getId method comment.
 	 */
+	@Override
 	public String getId() {
 		return getQuestion().getId() + "aNum";
 	}

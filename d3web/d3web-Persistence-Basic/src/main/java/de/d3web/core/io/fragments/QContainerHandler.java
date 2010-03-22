@@ -68,7 +68,7 @@ public class QContainerHandler implements FragmentHandler {
 		}
 		QContainer qcon = new QContainer(id);
 		qcon.setPriority(Integer.getInteger(priority));
-		qcon.setText(text);
+		qcon.setName(text);
 		if (properties != null) {
 			qcon.setProperties(properties);
 		}
@@ -85,7 +85,7 @@ public class QContainerHandler implements FragmentHandler {
 		if (priority!=null) {
 			element.setAttribute("priority", priority.toString());
 		}
-		XMLUtil.appendTextNode(qContainer.getText(), element);
+		XMLUtil.appendTextNode(qContainer.getName(), element);
 		Properties properties = qContainer.getProperties();
 		if (properties!=null && !properties.isEmpty()) {
 			element.appendChild(PersistenceManager.getInstance().writeFragment(properties, doc));

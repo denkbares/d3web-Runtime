@@ -94,7 +94,7 @@ public class XclVerbalizer implements Verbalizer {
 		
         ConditionVerbalizer v = new ConditionVerbalizer();
         
-		text.append(model.getSolution().getText() + " {\n");
+		text.append(model.getSolution().getName() + " {\n");
 		
         Map<XCLRelationType, Collection<XCLRelation>> relationMap = model.getTypedRelations();
         for (XCLRelationType type : types) {

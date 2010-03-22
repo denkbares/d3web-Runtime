@@ -394,7 +394,7 @@ public class InterviewBot {
 		
 		public Builder forbiddenAnswerCombination(FindingMC f) throws Exception {
 			if (allowedAnswerCombinations.containsKey(f.getQuestion()))
-				throw new Exception("There are already forbidden answer combinations defined for question \"" + f.getQuestion().getText() + "\".");
+				throw new Exception("There are already forbidden answer combinations defined for question \"" + f.getQuestion().getName() + "\".");
 			
 			Collection<Answer[]> answers = forbiddenAnswerCombinations.get(f.getQuestion());
 			if (answers == null) {
@@ -407,7 +407,7 @@ public class InterviewBot {
 		
 		public Builder allowedAnswerCombination(FindingMC f) {
 			if (forbiddenAnswerCombinations.containsKey(f.getQuestion()))
-				throw new IllegalArgumentException("There are already allowed answer combinations defined for question \"" + f.getQuestion().getText() + "\".");
+				throw new IllegalArgumentException("There are already allowed answer combinations defined for question \"" + f.getQuestion().getName() + "\".");
 			
 			Collection<Answer[]> answers = allowedAnswerCombinations.get(f.getQuestion());
 			if (answers == null) {

@@ -160,7 +160,7 @@ public class ExplanationRendererUtils {
 
     public static void renderDiagnosisObject(ResponseWriter writer,
 	    Diagnosis diag) throws IOException {
-	writer.writeText(diag.getText() + " (" + diag.getId() + ")", "value");
+	writer.writeText(diag.getName() + " (" + diag.getId() + ")", "value");
     }
 
     private static void renderECondition(ResponseWriter writer,
@@ -505,7 +505,7 @@ public class ExplanationRendererUtils {
 			CondEqual ce = (CondEqual) cond;
 			writer.writeAttribute("id", rcID + "_condequal_"
 					+ ce.getQuestion().getId(), "id");
-			writer.writeText(ce.getQuestion().getText() + " ("
+			writer.writeText(ce.getQuestion().getName() + " ("
 					+ ce.getQuestion().getId() + ")", "value");
 			writer.write(" = ");
 			Answer ans = ce.getValues();
@@ -522,7 +522,7 @@ public class ExplanationRendererUtils {
 	    CondKnown ck = (CondKnown) cond;
 	    writer.writeAttribute("id", rcID + "_condknown_"
 		    + ck.getQuestion().getId(), "id");
-	    writer.writeText(ck.getQuestion().getText() + " ("
+	    writer.writeText(ck.getQuestion().getName() + " ("
 		    + ck.getQuestion().getId() + ")", "value");
 	    writer
 		    .writeText(" = "
@@ -532,7 +532,7 @@ public class ExplanationRendererUtils {
 	    CondUnknown cuk = (CondUnknown) cond;
 	    writer.writeAttribute("id", rcID + "_condunknown_"
 		    + cuk.getQuestion().getId(), "id");
-	    writer.writeText(cuk.getQuestion().getText() + " ("
+	    writer.writeText(cuk.getQuestion().getName() + " ("
 		    + cuk.getQuestion().getId() + ")", "value");
 	    writer.writeText(" = "
 		    + DialogUtils.getMessageFor("explain.unknown"), "value");
@@ -552,7 +552,7 @@ public class ExplanationRendererUtils {
 	    CondNum cn = (CondNum) cond;
 	    writer.writeAttribute("id", rcID + "_condnumequal_"
 		    + cn.getQuestion().getId(), "id");
-	    writer.writeText(cn.getQuestion().getText() + " ("
+	    writer.writeText(cn.getQuestion().getName() + " ("
 		    + cn.getQuestion().getId() + ")", "value");
 
 	    if (cn instanceof CondNumEqual)
@@ -586,7 +586,7 @@ public class ExplanationRendererUtils {
 	    CondNumIn cni = (CondNumIn) cond;
 	    writer.writeAttribute("id", rcID + "_condnumin_"
 		    + cni.getQuestion().getId(), "id");
-	    writer.writeText(cni.getQuestion().getText() + " ("
+	    writer.writeText(cni.getQuestion().getName() + " ("
 		    + cni.getQuestion().getId() + ")", "value");
 	    writer.writeText(" "
 		    + DialogUtils
@@ -598,7 +598,7 @@ public class ExplanationRendererUtils {
 	    CondTextContains ctc = (CondTextContains) cond;
 	    writer.writeAttribute("id", rcID + "_condtextcont_"
 		    + ctc.getQuestion().getId(), "id");
-	    writer.writeText(ctc.getQuestion().getText() + " ("
+	    writer.writeText(ctc.getQuestion().getName() + " ("
 		    + ctc.getQuestion().getId() + ")", "value");
 	    writer.writeText(" "
 		    + DialogUtils.getMessageFor("explain.textcontains") + " ",
@@ -609,7 +609,7 @@ public class ExplanationRendererUtils {
 	    CondTextEqual cte = (CondTextEqual) cond;
 	    writer.writeAttribute("id", rcID + "_condtextequal_"
 		    + cte.getQuestion().getId(), "id");
-	    writer.writeText(cte.getQuestion().getText() + " ("
+	    writer.writeText(cte.getQuestion().getName() + " ("
 		    + cte.getQuestion().getId() + ")", "value");
 	    writer.writeText(" "
 		    + DialogUtils.getMessageFor("explain.textequals") + " ",

@@ -80,7 +80,7 @@ public class RuleComplexTest extends TestCase {
 		}
 		qnum1 = new QuestionNum("qnum1-id");
 		diag1 = new Diagnosis("diag1-id");
-		diag1.setText("diag1-text");
+		diag1.setName("diag1-text");
 		
 		cDState1 = new CondDState(diag1, new DiagnosisState(DiagnosisState.State.EXCLUDED));
 		

@@ -84,23 +84,6 @@ public class Diagnosis extends NamedObject implements ValuedObject, TerminologyO
 	private HDTType hdtType = null;
 
 	/**
-	 * Constructs a new Diagnosis object. For attributes, that have to be
-	 * filled with values, see the super class NamedObject. 
-	 * Important properties are:
-	 * <LI>knowledgeBase : belonging to this object
-	 * <LI>id : an unique identifier for this object
-	 * <LI>text : a name for this object
- 	 * <<br><b>Note:</b> Please use {@link KnowledgeBaseManagement}
-	 * to create Diagnosis instances.
-
-	 * 
-	 * @see NamedObject
-	 */
-	public Diagnosis() {
-		super();
-	}
-	
-	/**
 	 * Creates a new Diagnosis instance with a predefined
 	 * identifier. <br>
 	 * <b>Note:</b> Please use {@link KnowledgeBaseManagement}

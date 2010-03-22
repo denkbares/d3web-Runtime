@@ -23,6 +23,7 @@ package de.d3web.core.session.interviewmanager;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.NamedObject;
 
 /**
  * This is a marker class that will be returned by moveToNext/Newest methods of DialogController
@@ -31,9 +32,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
  */
 public class ExceptionQuestionNext extends ExceptionQuestion {
 
-	public ExceptionQuestionNext() {
-		super();
-	}
+	private static final long serialVersionUID = -2690476573123179472L;
 
 	public ExceptionQuestionNext(KnowledgeBase kb, String id, String text) {
 		super(kb, id, text);
@@ -43,7 +42,7 @@ public class ExceptionQuestionNext extends ExceptionQuestion {
 		KnowledgeBase kb,
 		String id,
 		String text,
-		List children) {
+		List<NamedObject> children) {
 		super(kb, id, text, children);
 	}
 

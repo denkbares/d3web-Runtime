@@ -24,13 +24,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Vector;
 
 import de.d3web.abstraction.inference.PSMethodQuestionSetter;
 import de.d3web.core.inference.MethodKind;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.SymptomValue;
 import de.d3web.core.session.ValuedObject;
@@ -52,17 +51,9 @@ import de.d3web.indication.inference.PSMethodNextQASet;
  * @see DerivationType
  */
 public abstract class Question extends QASet implements ValuedObject {
+	
+	private static final long serialVersionUID = 2542389028652586366L;
 	private AnswerUnknown unknown;
-
-	/**
-     * 
-     */
-	public Question() {
-		super();
-		// create "unknown"-alternative
-		unknown = new AnswerUnknown();
-		unknown.setQuestion(this);
-	}
 
 	public Question(String id) {
 		super(id);
@@ -80,12 +71,7 @@ public abstract class Question extends QASet implements ValuedObject {
 		((CaseQuestion) theCase.getCaseObject(this)).addProReason(source);
 	}
 
-	public boolean expand(List onList, XPSCase theCase) {
-		// Rekursionsabbruch, siehe QContainer
-		return false;
-	}
-
-	public List getContraReasons(XPSCase theCase) {
+	public List<Reason> getContraReasons(XPSCase theCase) {
 		return ((CaseQuestion) theCase.getCaseObject(this)).getContraReasons();
 	}
 
@@ -99,8 +85,8 @@ public abstract class Question extends QASet implements ValuedObject {
 	 *         DerivationType
 	 */
 	public DerivationType getDerivationType() {
-		final Class QUESTION_SETTER = PSMethodQuestionSetter.class;
-		final Class FOLLOW_QUESTION = PSMethodNextQASet.class;
+		final Class<? extends PSMethod> QUESTION_SETTER = PSMethodQuestionSetter.class;
+		final Class<? extends PSMethod> FOLLOW_QUESTION = PSMethodNextQASet.class;
 		final MethodKind KIND = MethodKind.BACKWARD;
 		if (hasElements(getKnowledge(QUESTION_SETTER, KIND))
 				&& hasElements(getKnowledge(FOLLOW_QUESTION, KIND))) return DerivationType.MIXED;
@@ -110,11 +96,11 @@ public abstract class Question extends QASet implements ValuedObject {
 
 	private boolean hasElements(Object list) {
 		if (list == null) return false;
-		else if ((list instanceof Collection) && ((Collection) list).isEmpty()) return false;
+		else if ((list instanceof Collection<?>) && ((Collection<?>) list).isEmpty()) return false;
 		else return true;
 	}
 
-	public List getProReasons(XPSCase theCase) {
+	public List<Reason> getProReasons(XPSCase theCase) {
 		return ((CaseQuestion) theCase.getCaseObject(this)).getProReasons();
 	}
 
@@ -149,7 +135,7 @@ public abstract class Question extends QASet implements ValuedObject {
 
 			// Falls auch nur ein einziges (valides) Children nicht abgearbeitet
 			// ist, ist auch die ganze FK nicht abgearbeitet.
-			Iterator iter = getChildren().iterator();
+			Iterator<? extends NamedObject> iter = getChildren().iterator();
 			while (iter.hasNext()) {
 				QASet child = (QASet) iter.next();
 				if (child.isValid(theCase)
@@ -171,22 +157,6 @@ public abstract class Question extends QASet implements ValuedObject {
 
 	public void removeProReason(Reason source, XPSCase theCase) {
 		((CaseQuestion) theCase.getCaseObject(this)).removeProReason(source);
-	}
-
-	/**
-	 * @return a list containing all items in list1 which are not in list2
-	 */
-
-	public static final List setDifference(List list1, List list2) {
-		Vector res = new Vector();
-		Iterator iter = list1.iterator();
-		while (iter.hasNext()) {
-			Object elem = iter.next();
-			if (!list2.contains(elem)) {
-				res.add(elem);
-			}
-		}
-		return res;
 	}
 
 	/**
@@ -252,12 +222,12 @@ public abstract class Question extends QASet implements ValuedObject {
 			setValue(theCase, new Object[] {});
 		}
 		else {
-			ListIterator valueIter = caseQuestion.getValueHistory()
+			ListIterator<SymptomValue> valueIter = caseQuestion.getValueHistory()
 					.listIterator();
 			SymptomValue symptomValue = null;
 			int index = 0;
 			while (valueIter.hasNext()) {
-				symptomValue = (SymptomValue) valueIter.next();
+				symptomValue = valueIter.next();
 				if (ruleSymptom.equals(symptomValue.getRule())) {
 					theCase.trace("loesche: " + ruleSymptom.getId()
 							+ " bei index " + index);
@@ -268,9 +238,7 @@ public abstract class Question extends QASet implements ValuedObject {
 								Property.TIME_VALUED))) {
 							if (getKnowledge(PSMethodQuestionSetter.class,
 									PSMethodQuestionSetter.NUM2CHOICE_SCHEMA) == null) {
-								theCase
-										.setValue(this, symptomValue
-										.getValues());
+								theCase.setValue(this, symptomValue.getValues());
 							}
 						}
 						else { // standard (non-temporal) case

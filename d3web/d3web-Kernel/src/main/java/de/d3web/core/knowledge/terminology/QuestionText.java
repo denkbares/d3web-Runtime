@@ -20,9 +20,6 @@
 
 package de.d3web.core.knowledge.terminology;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.logging.Logger;
 
 import de.d3web.core.session.XPSCase;
@@ -34,13 +31,11 @@ import de.d3web.core.session.values.AnswerText;
  * @author Joachim Baumeister
  */
 public class QuestionText extends Question {
+	
+	private static final long serialVersionUID = -6698919316187244884L;
 	private int height;
 	private int width;
 
-	public QuestionText() {
-		super();
-	}
-	
 	public QuestionText(String id) {
 		super(id);
 	}
@@ -108,7 +103,7 @@ public class QuestionText extends Question {
 	
 	public void setValue(XPSCase theCase, Object[] values) {
 		if (values.length <= 1) {
-			setValue(theCase, (Answer)values[1]);
+			setValue(theCase, (Answer)values[0]);
 		} else {
 			Logger.getLogger(this.getClass().getName()).warning("wrong number of answers");
 		}

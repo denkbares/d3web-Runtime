@@ -76,14 +76,6 @@ public class KnowledgeBaseManagement {
 	}
 	
 	/**
-	 * @Deprecated Will be exchanged by new implementation of terminology objects
-	 */
-	@Deprecated
-	public boolean changeID(IDObject o, String id) {
-		return knowledgeBase.changeID(o,id);
-	}
-
-	/**
 	 * @return a newly creates knowledge base with one root Diagnosis (P000) and
 	 *         one root QContainer (Q000).
 	 */
@@ -93,26 +85,37 @@ public class KnowledgeBaseManagement {
 		// we don't use internal methods, because we need to set
 		// the ID/Name/noParent manually.
 		Diagnosis p000 = new Diagnosis("P000");
-		p000.setText("P000");
+		p000.setName("P000");
 		theK.add(p000);
 
 		QContainer q000 = new QContainer("Q000");
-		q000.setText("Q000");
+		q000.setName("Q000");
 		theK.add(q000);
 
 		return theK;
 	}
 
-	public Diagnosis createDiagnosis(String name, Diagnosis parent) {
-
-		Diagnosis d = new Diagnosis(findNewIDFor(Diagnosis.class));
-		d.setText(name);
+	public Diagnosis createDiagnosis(String id, String name, Diagnosis parent) {
+		Diagnosis d;
+		if (id==null) {
+			d = new Diagnosis(findNewIDFor(Diagnosis.class));
+		} else {
+			d = new Diagnosis(id);
+		}
+		d.setName(name);
 		addToParent(d, parent);
 		knowledgeBase.add(d);
-		
-				
 		return d;
 	}
+
+	public Diagnosis createDiagnosis(String name, Diagnosis parent) {
+		return createDiagnosis(null, name, parent);
+	}
+	
+	public Diagnosis createDiagnosis(String id, String name) {
+		return createDiagnosis(id, name, knowledgeBase.getRootDiagnosis());
+	}
+	
 
 	/**
 	 * Creates a new solution and adds the instance as child of 
@@ -123,11 +126,36 @@ public class KnowledgeBaseManagement {
 	public Diagnosis createDiagnosis(String name) {
 		return createDiagnosis(name, knowledgeBase.getRootDiagnosis());
 	}
+	
+	/**
+	 * Creates a new questionnaire with the specified name
+	 * as a child of the root questionnaire hierarchy.
+	 * @param name the specified name of the questionnaire
+	 * @return the newly created {@link QContainer}
+	 */
+	public QContainer createQContainer(String name) {
+		return createQContainer(name, knowledgeBase.getRootQASet());
+	}
+	
+	public QContainer createQContainer(String id, String name) {
+		return createQContainer(id, name, knowledgeBase.getRootQASet());
+	}
 
-	// [TODO] joba : throw exception, of parent an instanceof question
 	public QContainer createQContainer(String name, QASet parent) {
-		QContainer q = new QContainer(findNewIDFor(QContainer.class));
-		q.setText(name);
+		return createQContainer(null, name, parent);
+	}
+	
+	public QContainer createQContainer(String id, String name, QASet parent) {
+		if (parent instanceof Question) {
+			throw new IllegalArgumentException("Parent is a question, only QContainers allowed");
+		}
+		QContainer q;
+		if (id==null) {
+			q = new QContainer(findNewIDFor(QContainer.class));
+		} else {
+			q = new QContainer(id);
+		}
+		q.setName(name);
 		addToParent(q, parent);
 		knowledgeBase.add(q);
 		return q;
@@ -135,83 +163,135 @@ public class KnowledgeBaseManagement {
 
 	public QuestionOC createQuestionOC(String name, QASet parent,
 			AnswerChoice[] answers) {
-		QuestionOC q = new QuestionOC(findNewIDFor(Question.class));
+		return createQuestionOC(null, name, parent, answers);
+	}
+	
+	public QuestionOC createQuestionOC(String id, String name, QASet parent,
+			AnswerChoice[] answers) {
+		if (id == null) id = findNewIDFor(Question.class);
+		QuestionOC q = new QuestionOC(id);
 		setChoiceProperties(q, name, parent, answers);
+		return q;
+	}
+	
+	public QuestionOC createQuestionOC(String name, QASet parent,
+			String[] answers) {
+		return createQuestionOC(null, name, parent, answers);
+	}
+	
+	public QuestionOC createQuestionOC(String id, String name, QASet parent,
+			String[] answers) {
+		QuestionOC q = createQuestionOC(id, name, parent, new AnswerChoice[] {});
+		q.setAlternatives(toList(createAnswers(q, answers)));
 		return q;
 	}
 
 	public QuestionZC createQuestionZC(String name, QASet parent) {
-		QuestionZC q = new QuestionZC(findNewIDFor(Question.class));
+		return createQuestionZC(null, name, parent);
+	}
+	
+	public QuestionZC createQuestionZC(String id, String name, QASet parent) {
+		if (id==null) id = findNewIDFor(Question.class);
+		QuestionZC q = new QuestionZC(id);
 		setChoiceProperties(q, name, parent, new AnswerChoice[] {});
 		return q;
 	}
 
 	private void setChoiceProperties(QuestionChoice q, String name,
 			QASet parent, AnswerChoice[] answers) {
-		q.setText(name);
+		q.setName(name);
 		addToParent(q, parent);
 		q.setAlternatives(toList(answers));
 		knowledgeBase.add(q);
 	}
 
-	public QuestionOC createQuestionOC(String name, QASet parent,
-			String[] answers) {
-		QuestionOC q = createQuestionOC(name, parent, new AnswerChoice[] {});
-		q.setAlternatives(toList(createAnswers(q, answers)));
-		return q;
-	}
-
 	public QuestionMC createQuestionMC(String name, QASet parent,
 			AnswerChoice[] answers) {
-		QuestionMC q = new QuestionMC(findNewIDFor(Question.class));
+		return createQuestionMC(null, name, parent, answers);
+	}
+	
+	public QuestionMC createQuestionMC(String id, String name, QASet parent,
+			AnswerChoice[] answers) {
+		if (id==null) id = findNewIDFor(Question.class);
+		QuestionMC q = new QuestionMC(id);
 		setChoiceProperties(q, name, parent, answers);
 		return q;
 	}
 
 	public QuestionMC createQuestionMC(String name, QASet parent,
 			String[] answers) {
-		QuestionMC q = createQuestionMC(name, parent, new AnswerChoice[] {});
+		return createQuestionMC(null, name, parent, answers);
+	}
+	
+	public QuestionMC createQuestionMC(String id, String name, QASet parent,
+			String[] answers) {
+		QuestionMC q = createQuestionMC(id, name, parent, new AnswerChoice[] {});
 		q.setAlternatives(toList(createAnswers(q, answers)));
 		return q;
 	}
 
 	public QuestionNum createQuestionNum(String name, QASet parent) {
-		QuestionNum q = new QuestionNum(findNewIDFor(Question.class));
-		q.setText(name);
+		return createQuestionNum(null, name, parent);
+	}
+	
+	public QuestionNum createQuestionNum(String id, String name, QASet parent) {
+		if (id==null) id = findNewIDFor(Question.class);
+		QuestionNum q = new QuestionNum(id);
+		q.setName(name);
 		addToParent(q, parent);
 		knowledgeBase.add(q);
 		return q;
 	}
-
+	
 	public QuestionYN createQuestionYN(String name, QASet parent) {
+		return createQuestionYN(null, name, parent);
+	}
+	
+	public QuestionYN createQuestionYN(String id, String name, QASet parent) {
 		return createQuestionYN(name, null, null, parent);
 	}
 
 	public QuestionYN createQuestionYN(String name, String yesAlternativeText,
 			String noAlternativeText, QASet parent) {
+		return createQuestionYN(null, name, yesAlternativeText, noAlternativeText, parent);
+	}
+	
+	public QuestionYN createQuestionYN(String id, String name, String yesAlternativeText,
+			String noAlternativeText, QASet parent) {
+		if (id==null) id = findNewIDFor(Question.class);
 		QuestionYN q = null;
 		if (yesAlternativeText != null && noAlternativeText != null) {
-			q = new QuestionYN(findNewIDFor(Question.class), yesAlternativeText, noAlternativeText);
+			q = new QuestionYN(id, yesAlternativeText, noAlternativeText);
 		} else {
-			q = new QuestionYN(findNewIDFor(Question.class));
+			q = new QuestionYN(id);
 		}
-		q.setText(name);
+		q.setName(name);
 		addToParent(q, parent);
 		knowledgeBase.add(q);
 		return q;
 	}
 
 	public QuestionDate createQuestionDate(String name, QASet parent) {
-		QuestionDate q = new QuestionDate(findNewIDFor(Question.class));
-		q.setText(name);
+		return createQuestionDate(null, name, parent);
+	}
+
+	public QuestionDate createQuestionDate(String id, String name, QASet parent) {
+		if (id==null) id = findNewIDFor(Question.class);
+		QuestionDate q = new QuestionDate(id);
+		q.setName(name);
 		addToParent(q, parent);
 		knowledgeBase.add(q);
 		return q;
 	}
 
 	public QuestionText createQuestionText(String name, QASet parent) {
-		QuestionText q = new QuestionText(findNewIDFor(Question.class));
-		q.setText(name);
+		return createQuestionText(null, name, parent);
+	}
+	
+	public QuestionText createQuestionText(String id, String name, QASet parent) {
+		if (id==null) id = findNewIDFor(Question.class);
+		QuestionText q = new QuestionText(id);
+		q.setName(name);
 		addToParent(q, parent);
 		knowledgeBase.add(q);
 		return q;
@@ -328,7 +408,7 @@ public class KnowledgeBaseManagement {
 		//old iterating search method
 		for (NamedObject o : namedObjects) {
 			if (o != null && name != null
-					&& (name.equals(o.getText()) || name.equals(o.getId()))) {
+					&& (name.equals(o.getName()) || name.equals(o.getId()))) {
 				return o;
 			}
 		}
@@ -518,15 +598,7 @@ public class KnowledgeBaseManagement {
 		return knowledgeBase;
 	}
 
-	/**
-	 * Creates a new questionnaire with the specified name
-	 * as a child of the root questionnaire hierarchy.
-	 * @param name the specified name of the questionnaire
-	 * @return the newly created {@link QContainer}
-	 */
-	public QContainer createQContainer(String name) {
-		return createQContainer(name, knowledgeBase.getRootQASet());
-	}
+	
 
 
 }

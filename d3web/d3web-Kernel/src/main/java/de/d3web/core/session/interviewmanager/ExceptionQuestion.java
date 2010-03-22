@@ -20,13 +20,12 @@
 
 package de.d3web.core.session.interviewmanager;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 
@@ -40,27 +39,25 @@ import de.d3web.core.session.blackboard.XPSCaseObject;
  */
 public abstract class ExceptionQuestion extends Question {
 
-    public ExceptionQuestion() {
-	super();
-    }
+    private static final long serialVersionUID = -8372897275886729061L;
 
-    /**
+	/**
      * fulfils the super-contructor
      */
     public ExceptionQuestion(KnowledgeBase kb, String id, String text) {
 	super(id);
 	setKnowledgeBase(kb);
-	setText(text);
+	setName(text);
     }
 
     /**
      * fulfils the super-contructor
      */
     public ExceptionQuestion(KnowledgeBase kb, String id, String text,
-	    List children) {
+	    List<NamedObject> children) {
 	super(id);
 	setKnowledgeBase(kb);
-	setText(text);
+	setName(text);
 	setChildren(children);
     }
 
@@ -86,15 +83,6 @@ public abstract class ExceptionQuestion extends Question {
      */
     public XPSCaseObject createCaseObject(XPSCase session) {
 	return null;
-    }
-
-    /**
-     * nothing to expand
-     * 
-     * @return false
-     */
-    public boolean expand(List onList, XPSCase theCase) {
-	return false;
     }
 
     /**

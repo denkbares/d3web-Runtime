@@ -34,14 +34,11 @@ import de.d3web.core.session.EventSource;
 abstract public class IDObject
 	extends EventSource
 	implements java.io.Serializable, IDReference {
-	private String id;
-
-	protected IDObject() {
-	    super();
-	}
 	
+	private static final long serialVersionUID = -5476364297254490944L;
+	private final String id;
+
 	public IDObject(String id) {
-	    this();
 	    this.id = id;
 	}
 	
@@ -81,20 +78,6 @@ abstract public class IDObject
 			return getId().hashCode();
 		else
 			return super.hashCode();
-	}
-
-	/**
-	 * Sets the new identifier for this object. This id must 
-	 * be unique but there is no check by the system of its uniqueness.
-	 * 
-	 * COMMENT(jochen): uniqueness now check by hashes, when changeID method is used --> deprecated
-	 * TODO: this method should be package visible only - lots of tests would have to be refactored.
-	 *   
-	 * @param newId java.lang.String a new identifier
-	 */
-	@Deprecated
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	/**

@@ -72,7 +72,7 @@ public class KnowledgeBaseExportTest extends TestCase {
 	public void testQuestionTextOutput() throws Exception {
 	
 		Question q1 = new QuestionText("q1");
-		q1.setText("q1-text");
+		q1.setName("q1-text");
 
 		QuestionHandler qw = new QuestionHandler();
 
@@ -92,7 +92,7 @@ public class KnowledgeBaseExportTest extends TestCase {
 	public void testQuestionNumOutput() throws Exception {
 	
 		Question q1 = new QuestionNum("q1");
-		q1.setText("q1-text");
+		q1.setName("q1-text");
 
 		QuestionHandler qw = new QuestionHandler();
 		
@@ -113,7 +113,7 @@ public class KnowledgeBaseExportTest extends TestCase {
 	public void testQuestionDateOutput() throws Exception {
 	
 		Question q1 = new QuestionDate("q1");
-		q1.setText("q1-text");
+		q1.setName("q1-text");
 
 		QuestionHandler qw = new QuestionHandler();
 		
@@ -133,7 +133,7 @@ public class KnowledgeBaseExportTest extends TestCase {
 	public void testQuestionOCOutput() throws Exception {
 	
 		QuestionOC q1 = new QuestionOC("q1");
-		q1.setText("q1-text");
+		q1.setName("q1-text");
 		List<AnswerChoice> alternatives = new LinkedList<AnswerChoice>();
 		AnswerChoice a1 = new AnswerChoice("q1a1");
 		a1.setText("q1a1-text");
@@ -168,11 +168,11 @@ public class KnowledgeBaseExportTest extends TestCase {
 	
 	public void testQContainerOutput() throws Exception {
 		QContainer c1 = new QContainer("c1");
-		c1.setText("c1-text");
+		c1.setName("c1-text");
 		c1.setPriority(new Integer(1));
 
 		Question q1 = new QuestionText("q1");
-		q1.setText("q1-text");
+		q1.setName("q1-text");
 		q1.addParent(c1);
 
 		
@@ -195,10 +195,10 @@ public class KnowledgeBaseExportTest extends TestCase {
 	
 	public void testDiagnosisOutput() throws Exception{
 		Diagnosis diag = new Diagnosis("d1");
-		diag.setText("d1-text");
+		diag.setName("d1-text");
 
 		Diagnosis diagChild = new Diagnosis("d11");
-		diagChild.setText("d11-text");
+		diagChild.setName("d11-text");
 		diagChild.addParent(diag);
 		
 		

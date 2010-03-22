@@ -73,7 +73,7 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 				Question q = theCase.getKnowledgeBase().searchQuestion(qID);
 				if (q != null && q instanceof QuestionChoice) {
 					QuestionChoice qCh = (QuestionChoice) q;
-					DataGroup group = new DataGroup(qCh.getText());
+					DataGroup group = new DataGroup(qCh.getName());
 					List<AnswerChoice> answers = qCh.getAllAlternatives();
 					for (AnswerChoice a : answers) {
 						int absoluteFreq = getAbsoluteFreq(qCh, a.getId(),
@@ -107,7 +107,7 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 			for (Question q : qList) {
 				if (q instanceof QuestionChoice) {
 					SelectItem item = new SelectItem();
-					item.setLabel(q.getText());
+					item.setLabel(q.getName());
 					item.setValue(q.getId());
 					items.add(item);
 				}

@@ -29,13 +29,6 @@ public class AnswerNo extends AnswerChoice {
 
 	private static final long serialVersionUID = 4580215611560294804L;
 	
-	/**
-	 * Creates a new AnswerNo object
-	 */
-	public AnswerNo() {
-		super();
-	}
-	
 	public AnswerNo(String id) {
 		super(id);
 	}

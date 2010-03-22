@@ -85,15 +85,15 @@ public class BasicPersistenceHandlerTest extends TestCase {
 		kb = new KnowledgeBase(); 
 		
 		q1 = new QuestionNum("q1");
-		q1.setText("q1-text");
+		q1.setName("q1-text");
 		q1.setKnowledgeBase(kb);
 		
 		q2 = new QuestionOC("q2");
-		q2.setText("q2-text");
+		q2.setName("q2-text");
 		q2.setKnowledgeBase(kb);
 		
 		diag1 = new Diagnosis("d1");
-		diag1.setText("d1-text");
+		diag1.setName("d1-text");
 	}
 	
 	public void testBasicPersistenceHandler() throws Exception{
@@ -168,10 +168,10 @@ public class BasicPersistenceHandlerTest extends TestCase {
 	
 	private void addQASets(){
 		QContainer qc1 = new QContainer("qc1");
-		qc1.setText("qc1-text");
+		qc1.setName("qc1-text");
 		
 		QContainer qc2 = new QContainer("qc2");
-		qc2.setText("qc2-text");
+		qc2.setName("qc2-text");
 		
 		kb.add(qc1);
 		kb.add(qc2);
@@ -217,7 +217,7 @@ public class BasicPersistenceHandlerTest extends TestCase {
 		kb.add(diag1);
 		
 		Diagnosis diag2 = new Diagnosis("d2");
-		diag2.setText("d2-text");
+		diag2.setName("d2-text");
 		kb.add(diag2);	
 		
 		XMLTag diagnosesTag = new XMLTag("Diagnoses");

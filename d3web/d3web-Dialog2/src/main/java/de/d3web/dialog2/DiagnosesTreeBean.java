@@ -88,7 +88,7 @@ public class DiagnosesTreeBean {
 			for (int i = 0; i < childrenList.size(); i++) {
 				Diagnosis diagChild = (Diagnosis) childrenList.get(i);
 				TreeNode newNode = new TreeNodeBase(
-						DiagnosesTreeBean.STANDARD_TYPE, diagChild.getText(),
+						DiagnosesTreeBean.STANDARD_TYPE, diagChild.getName(),
 						false);
 				parentNode.getChildren().add(newNode);
 				createTreeRecursive(diagChild, newNode);
@@ -131,7 +131,7 @@ public class DiagnosesTreeBean {
 	private void initTreeModel(XPSCase theCase) {
 		Diagnosis rootDiag = theCase.getKnowledgeBase().getRootDiagnosis();
 		TreeNode treeData = new TreeNodeBase(DiagnosesTreeBean.STANDARD_TYPE,
-				rootDiag.getText(), false);
+				rootDiag.getName(), false);
 		createTreeRecursive(rootDiag, treeData);
 		diagTreeModel = new TreeModelBase(treeData);
 	}

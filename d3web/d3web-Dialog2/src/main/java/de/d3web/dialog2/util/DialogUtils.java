@@ -281,13 +281,13 @@ public class DialogUtils {
 		}
 		MMInfoStorage mminfo = (MMInfoStorage) q.getProperties().getProperty(Property.MMINFO);
 		if (mminfo == null) {
-			return q.getText();
+			return q.getName();
 		}
 		DCMarkup markup = new DCMarkup();
 		markup.setContent(DCElement.SUBJECT, MMInfoSubject.PROMPT.getName());
 		Set<MMInfoObject> result = mminfo.getMMInfo(markup);
 		if (result.isEmpty()) {
-			return q.getText();
+			return q.getName();
 		} else {
 			MMInfoObject promptInfo = result.iterator().next();
 			return promptInfo.getContent();

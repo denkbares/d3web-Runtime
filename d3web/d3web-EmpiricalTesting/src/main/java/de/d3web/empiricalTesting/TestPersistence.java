@@ -294,8 +294,8 @@ public class TestPersistence {
 
 		xmlsw.writeCharacters("\n\t\t\t\t");
 		xmlsw.writeEmptyElement(FINDING);
-		xmlsw.writeAttribute(QUESTION, f.getQuestion().getText());
-		xmlsw.writeAttribute(QUESTIONNAIRE, findQuestionnaire(f.getQuestion()).getText());
+		xmlsw.writeAttribute(QUESTION, f.getQuestion().getName());
+		xmlsw.writeAttribute(QUESTIONNAIRE, findQuestionnaire(f.getQuestion()).getName());
 		Answer a = f.getAnswer();
 		if (a instanceof AnswerChoice) {
 			xmlsw.writeAttribute(ANSWER, ((AnswerChoice) a).getText());
@@ -313,7 +313,7 @@ public class TestPersistence {
 
 		xmlsw.writeCharacters("\n\t\t\t\t");
 		xmlsw.writeEmptyElement(SOLUTION);
-		xmlsw.writeAttribute(NAME, rs.getSolution().getText());
+		xmlsw.writeAttribute(NAME, rs.getSolution().getName());
 		Rating r = rs.getRating();
 		if (r instanceof ScoreRating) {
 			xmlsw.writeAttribute(RATING, ""

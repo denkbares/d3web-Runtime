@@ -38,7 +38,6 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
@@ -159,7 +158,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 
 		if (!objectIDMap.containsKey(d.getId())) {
 			objectIDMap.put(d.getId(), d);
-			objectNameMap.put(d.getText(), d);
+			objectNameMap.put(d.getName(), d);
 
 			diagnoses.add(d);
 			if (d.getKnowledgeBase() == null)
@@ -173,41 +172,6 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 			throw new IllegalStateException("IDObject " + ido
 					+ " has no assigned ID.");
 		}
-
-	}
-
-	/**
-	 * Allows to change IDs for QContainers, questions, answers and diagnosis -
-	 * sorted (for id) lists are resorted afterwards
-	 * 
-	 * @param o
-	 * @param newID
-	 * @return whether object-ID has been set
-	 * @Deprecated Will be exchanged by new implementation of terminology objects
-	 */
-	@Deprecated
-	public boolean changeID(IDObject o, String newID) {
-		if (newID == null) {
-			return false;
-		}
-		// TODO: vb: check if id is already used by an other object and return
-		// false or throw exception
-		// TODO: vb: make IDObject.setId unvisible (package) ?!?
-		// TODO: vb: how to handle is the id has been used (also how to handle
-		// add...() if id has already been used)
-		if (this.objectIDMap.containsKey(o.getId())) {
-			this.objectIDMap.remove(o.getId());
-			o.setId(newID);
-			this.objectIDMap.put(o.getId(), o);
-			return true;
-		}
-
-		if (o instanceof Answer) {
-			o.setId(newID);
-			return true;
-		}
-
-		return false;
 
 	}
 
@@ -371,7 +335,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		else {
 			o.removeAllKnowledge();
 			objectIDMap.remove(o.getId());
-			objectNameMap.remove(o.getText());
+			objectNameMap.remove(o.getName());
 			/*
 			 * // iteratively, clean the knowledge map Set keySet = new
 			 * HashSet(o.getKnowledgeMap().keySet()); for (Iterator iter =
@@ -812,7 +776,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		checkID(qaSet);
 		if (!objectIDMap.containsKey(qaSet.getId())) {
 			objectIDMap.put(qaSet.getId(), qaSet);
-			objectNameMap.put(qaSet.getText(), qaSet);
+			objectNameMap.put(qaSet.getName(), qaSet);
 			if (qaSet.getKnowledgeBase() == null)
 				qaSet.setKnowledgeBase(this);
 		}
