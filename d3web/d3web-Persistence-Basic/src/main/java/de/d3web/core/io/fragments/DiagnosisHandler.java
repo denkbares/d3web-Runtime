@@ -55,11 +55,7 @@ public class DiagnosisHandler implements FragmentHandler {
 		String apriori = element.getAttribute("aPriProb");
 		Diagnosis diag = new Diagnosis(id);
 		if (apriori != null) {
-			try {
-				diag.setAprioriProbability(Util.getScore(apriori));
-			} catch (Exception e) {
-				throw new IOException("Score not accepted", e);
-			}
+			diag.setAprioriProbability(Util.getScore(apriori));
 		}
 		Properties properties = null;
 		for (Element child: XMLUtil.getElementList(element.getChildNodes())) {

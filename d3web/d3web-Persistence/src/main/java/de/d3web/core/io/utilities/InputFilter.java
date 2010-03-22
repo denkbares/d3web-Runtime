@@ -20,16 +20,11 @@
 
 package de.d3web.core.io.utilities;
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.net.URL;
-import java.util.logging.Logger;
 
 import org.xml.sax.InputSource;
 
@@ -74,43 +69,6 @@ public class InputFilter {
 	 * Generates an InputSource that contains filtered XML-code
 	 * Creation date: (03.10.2001 15:47:44)
 	 * @return an InputSource containing the filtered XML-code
-	 * @param f file containing XML-code to filter
-	 */
-	public static InputSource getFilteredInputSource(File f) {
-		BufferedReader br = null;
-		try {
-
-			StringBuffer sb = new StringBuffer();
-
-			br = new BufferedReader(new FileReader(f));
-			String line;
-			while ((line = br.readLine()) != null) {
-				sb.append(filterString(line));
-			}
-
-			StringReader stgReader = new StringReader(sb.toString());
-
-			return new InputSource(stgReader);
-
-		} catch (Exception x) {
-			Logger.getLogger(InputSource.class.getName()).throwing(InputSource.class.getName(), "getFilteredInputSource(File)", x);
-			return null;
-		}finally{
-			if (br != null){
-				try {
-					br.close();
-				} catch (IOException e) {
-					Logger.getLogger(InputSource.class.getName()).throwing(InputSource.class.getName(), "getFilteredInputSource(File)", e);
-				}
-			}
-		}
-
-	}
-
-	/**
-	 * Generates an InputSource that contains filtered XML-code
-	 * Creation date: (03.10.2001 15:47:44)
-	 * @return an InputSource containing the filtered XML-code
 	 * @param url pointing on the source containing XML-code to filter
 	 */
 	public static InputSource getFilteredInputSource(URL url) throws IOException {
@@ -128,9 +86,6 @@ public class InputFilter {
 
 			return new InputSource(new ByteArrayInputStream(cache.toByteArray()));
 
-		} catch (Exception x) {
-            //x.printStackTrace();
-			throw new IOException(x.getMessage());
 		} finally {
 			if (in != null) {
 				in.close();

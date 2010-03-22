@@ -830,7 +830,11 @@ public class Property implements java.io.Serializable {
 			if (isOKField(f))
 				try {
 					allPropertys.add((Property) f.get(null));
-				} catch (Exception e) {
+				} catch (IllegalArgumentException e) {
+					Logger.getLogger(Property.class.getName()).throwing(
+							Property.class.getName(), "static {...}", e);
+				}
+				catch (IllegalAccessException e) {
 					Logger.getLogger(Property.class.getName()).throwing(
 							Property.class.getName(), "static {...}", e);
 				}

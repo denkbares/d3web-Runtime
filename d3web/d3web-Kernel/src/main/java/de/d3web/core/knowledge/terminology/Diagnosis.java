@@ -21,7 +21,6 @@
 package de.d3web.core.knowledge.terminology;
 import java.util.Comparator;
 import java.util.List;
-import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -52,6 +51,8 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  * @see DiagnosisState
  */
 public class Diagnosis extends NamedObject implements ValuedObject, TerminologyObject {
+
+	private static final long serialVersionUID = 6166822864646230860L;
 
 	/**
 	 * Compares the heuristic scores of two Diagnosis instances. 
@@ -98,19 +99,14 @@ public class Diagnosis extends NamedObject implements ValuedObject, TerminologyO
 	 * [FIXME]:?:CHECK FOR STATE UNCLEAR!!!
 	 */
 	private void checkForNewState(DiagnosisState oldState, DiagnosisState newStatus,
-			XPSCase theCase, Class context) {
-		try {
-			if (oldState != newStatus) {
-				if (newStatus == DiagnosisState.ESTABLISHED) {
-					establish(theCase);
-				}
-				if (oldState == DiagnosisState.ESTABLISHED) {
-					deestablish(theCase);
-				}
+			XPSCase theCase) {
+		if (oldState != newStatus) {
+			if (newStatus == DiagnosisState.ESTABLISHED) {
+				establish(theCase);
 			}
-		} catch (Exception e) {
-			theCase.trace("<<EXP>> " + e + " in Diagnosis.checkForNewState(" + newStatus + ", "
-					+ theCase + ", " + context + ")");
+			if (oldState == DiagnosisState.ESTABLISHED) {
+				deestablish(theCase);
+			}
 		}
 	}
 
@@ -179,7 +175,7 @@ public class Diagnosis extends NamedObject implements ValuedObject, TerminologyO
 	 * @param context the {@link PSMethod} context the score is valid for
 	 * @return the score of the Diagnosis in the context of an {@link XPSCase} and {@link PSMethod} class 
 	 */
-	public DiagnosisScore getScore(XPSCase theCase, Class context) {
+	public DiagnosisScore getScore(XPSCase theCase, Class<? extends PSMethod>  context) {
 		return (DiagnosisScore) ((CaseDiagnosis) theCase.getCaseObject(this)).getValue(context);
 	}
 
@@ -195,7 +191,7 @@ public class Diagnosis extends NamedObject implements ValuedObject, TerminologyO
 	 * @param context the {@link PSMethod} context the state is valid for
 	 * @return the state of the Diagnosis in the context of a given {@link XPSCase} and {@link PSMethod} class
 	 */
-	public DiagnosisState getState(XPSCase theCase, Class context) {
+	public DiagnosisState getState(XPSCase theCase, Class<? extends PSMethod> context) {
 		// TODO: this is wrong! getState computes the real state every time, but this method should return the stored value of its CaseDiagnosis instance
 		return theCase.getPSMethodInstance(context).getState(theCase, this);
 	}
@@ -266,11 +262,12 @@ public class Diagnosis extends NamedObject implements ValuedObject, TerminologyO
 	 * P5, P4, P3, P2, N2, N3, N4, N5. 
 	 * <p>Creation date: (25.09.00 15:13:34)
 	 * @param newAprioriPropability the new apriori probability of this instance
+	 * @throws IllegalArgumentException if the newAprioriProbability is not valid
 	 */
-	public void setAprioriProbability(Score newAprioriProbability) throws Exception {
+	public void setAprioriProbability(Score newAprioriProbability) throws IllegalArgumentException {
 		// check if legal probability entry
 		if (!Score.APRIORI.contains(newAprioriProbability) && (newAprioriProbability != null)) {
-			throw new Exception(newAprioriProbability
+			throw new IllegalArgumentException(newAprioriProbability
 					+ " not a valid apriori probability.");
 		} else
 			aprioriProbability = newAprioriProbability;
@@ -320,28 +317,24 @@ public class Diagnosis extends NamedObject implements ValuedObject, TerminologyO
 		setValue(theCase, (Value)values[0], null);
 	}
 
-	public void setValue(XPSCase theCase, Value value, Class context) {
-		try {
-			DiagnosisScore diagnosisScore = null;
-			DiagnosisState oldState = getState(theCase, context);
-			if (value != null)  {
-				if (value instanceof DiagnosisScore) {
-					diagnosisScore = (DiagnosisScore) value;
-					((CaseDiagnosis) theCase.getCaseObject(this)).setValue(diagnosisScore, context);
-				} else if (value instanceof DiagnosisState) {
-					((CaseDiagnosis) theCase.getCaseObject(this)).setValue(value, context);
-				}
+	public void setValue(XPSCase theCase, Value value, Class<? extends PSMethod> context) {
+		DiagnosisScore diagnosisScore = null;
+		DiagnosisState oldState = getState(theCase, context);
+		if (value != null) {
+			if (value instanceof DiagnosisScore) {
+				diagnosisScore = (DiagnosisScore) value;
+				((CaseDiagnosis) theCase.getCaseObject(this)).setValue(diagnosisScore,
+						context);
 			}
-			DiagnosisState newState = getState(theCase, context);
-			// this does simply a check if state has changed
-			checkForNewState(oldState, newState, theCase, context);
-			// d3web.debug
-			notifyListeners(theCase, this);
-
-		} catch (Exception ex) {
-			Logger.getLogger(this.getClass().getName()).throwing(this.getClass().getName(),
-					"setValue(XPSCase, values(" + value + ")", ex);
+			else if (value instanceof DiagnosisState) {
+				((CaseDiagnosis) theCase.getCaseObject(this)).setValue(value, context);
+			}
 		}
+		DiagnosisState newState = getState(theCase, context);
+		// this does simply a check if state has changed
+		checkForNewState(oldState, newState, theCase);
+		// d3web.debug
+		notifyListeners(theCase, this);
 	}
 
 	/**
@@ -358,29 +351,25 @@ public class Diagnosis extends NamedObject implements ValuedObject, TerminologyO
 	 * @param context the {@link PSMethod} class that set the new value 
 	 */
 	@Deprecated
-	public void setValue(XPSCase theCase, Object[] values, Class context) {
-		try {
-			DiagnosisScore diagnosisScore = null;
-			DiagnosisState oldState = getState(theCase, context);
-			if ((values != null) && (values.length > 0)) {
-				Object value = values[0];
-				if (value instanceof DiagnosisScore) {
-					diagnosisScore = (DiagnosisScore) values[0];
-					((CaseDiagnosis) theCase.getCaseObject(this)).setValue(diagnosisScore, context);
-				} else if (value instanceof DiagnosisState) {
-					((CaseDiagnosis) theCase.getCaseObject(this)).setValue(value, context);
-				}
+	public void setValue(XPSCase theCase, Object[] values, Class<? extends PSMethod> context) {
+		DiagnosisScore diagnosisScore = null;
+		DiagnosisState oldState = getState(theCase, context);
+		if ((values != null) && (values.length > 0)) {
+			Object value = values[0];
+			if (value instanceof DiagnosisScore) {
+				diagnosisScore = (DiagnosisScore) values[0];
+				((CaseDiagnosis) theCase.getCaseObject(this)).setValue(diagnosisScore,
+						context);
 			}
-			DiagnosisState newState = getState(theCase, context);
-			// this does simply a check if state has changed
-			checkForNewState(oldState, newState, theCase, context);
-			// d3web.debug
-			notifyListeners(theCase, this);
-
-		} catch (Exception ex) {
-			Logger.getLogger(this.getClass().getName()).throwing(this.getClass().getName(),
-					"setValue(XPSCase, values(" + values[0] + ")", ex);
+			else if (value instanceof DiagnosisState) {
+				((CaseDiagnosis) theCase.getCaseObject(this)).setValue(value, context);
+			}
 		}
+		DiagnosisState newState = getState(theCase, context);
+		// this does simply a check if state has changed
+		checkForNewState(oldState, newState, theCase);
+		// d3web.debug
+		notifyListeners(theCase, this);
 	}
 
 	/**

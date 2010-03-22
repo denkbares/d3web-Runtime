@@ -22,7 +22,6 @@ package de.d3web.scoring.inference;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
@@ -159,39 +158,33 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 	 * Check if NamedObject has nextQASet rules and check them, if available
 	 */
 	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
-	    
-	    // do nothing, if case has been finished
-	    if (theCase.isFinished()) {
-	        wasPreviouslyStopped = true;
-	        return;
-	    }
-	    else if (wasPreviouslyStopped) {
-	        wasPreviouslyStopped = false;
-	        reCheckAllRules(theCase);
-	    }
-	    
-		try {
-			//[MISC]:Peter: decide where to check if the subPS should be used:
-			for (PSSubMethod subMethod : subPSMethods) {
-				if(subMethod.isActivated(theCase)) {
-					subMethod.propagate(theCase, changes);
-				}
-			}
-			
-			for (PropagationEntry change : changes) {
-				checkRulesFor(theCase, change.getObject());
-			}
-		} 
-		catch (Exception ex) {
-			Logger.getLogger(this.getClass().getName()).throwing(
-				this.getClass().getName(), "propagate", ex);
+
+		// do nothing, if case has been finished
+		if (theCase.isFinished()) {
+			wasPreviouslyStopped = true;
+			return;
 		}
-		
-	    // If SFA: if a diagnosis is established, then finish the case 
-	    if ((isSFA(theCase)) && (finalSolutionIsEstablished(theCase))) {
-            theCase.finish(RuleSet.class);
-            return;
-	    }
+		else if (wasPreviouslyStopped) {
+			wasPreviouslyStopped = false;
+			reCheckAllRules(theCase);
+		}
+
+		// [MISC]:Peter: decide where to check if the subPS should be used:
+		for (PSSubMethod subMethod : subPSMethods) {
+			if (subMethod.isActivated(theCase)) {
+				subMethod.propagate(theCase, changes);
+			}
+		}
+
+		for (PropagationEntry change : changes) {
+			checkRulesFor(theCase, change.getObject());
+		}
+
+		// If SFA: if a diagnosis is established, then finish the case
+		if ((isSFA(theCase)) && (finalSolutionIsEstablished(theCase))) {
+			theCase.finish(RuleSet.class);
+			return;
+		}
 
 	}
 
@@ -218,14 +211,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
         if (knowledgeSlices != null) {
         	RuleSet rs = (RuleSet) knowledgeSlices;
             for (Rule rule: rs.getRules()) {
-                try {
-                    rule.check(theCase);
-                } 
-                catch (Exception e) {
-                	//TODO MF: Do not catch exceptions!
-                    Logger.getLogger(this.getClass().getName()).throwing(
-                            this.getClass().getName(), "propagate", e);
-                }
+            	rule.check(theCase);
             }
         }
     }

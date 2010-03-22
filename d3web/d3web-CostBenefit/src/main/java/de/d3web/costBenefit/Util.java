@@ -67,10 +67,9 @@ public class Util {
 
 	public static String getAttribute(String name, Node node) {
 		if ((node != null) && (node.getAttributes() != null)) {
-			try {
-				return node.getAttributes().getNamedItem(name).getNodeValue();
-			} catch (Exception e) {
-				return null;
+			Node namedItem = node.getAttributes().getNamedItem(name);
+			if (namedItem!=null) {
+				return namedItem.getNodeValue();
 			}
 		}
 		return null;

@@ -20,7 +20,6 @@
 
 package de.d3web.indication.inference;
 import java.util.Collection;
-import java.util.logging.Logger;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
@@ -87,14 +86,7 @@ public class PSMethodTherapyIndication extends PSMethodAdapter {
 			if (knowledgeSlices == null) return;
 			RuleSet rs = (RuleSet) knowledgeSlices;
 			for (Rule rule: rs.getRules()) {
-				try {
-					rule.check(theCase);
-				} 
-				catch (Exception e) {
-					//TODO MF: Don't catch exception!
-					Logger.getLogger(this.getClass().getName()).throwing(
-						this.getClass().getName(), "propagate", e);
-				}
+				rule.check(theCase);
 			}
 		}
 	}

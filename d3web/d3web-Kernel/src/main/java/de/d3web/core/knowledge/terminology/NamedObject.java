@@ -34,7 +34,6 @@ import de.d3web.core.knowledge.KnowledgeContainer;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 import de.d3web.core.session.CaseObjectSource;
-import de.d3web.core.session.D3WebCase;
 import de.d3web.core.session.XPSCase;
 
 /**
@@ -243,30 +242,22 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	 */
 	public synchronized void addKnowledge(Class<? extends PSMethod> problemsolver,
 			KnowledgeSlice knowledgeSlice, MethodKind knowledgeContext) {
-		try {
-			/* make sure, that a storage for the problem-solver is available */
-			if (knowledgeMap.get(problemsolver) == null) {
-				// for rules (default) two types (FORWARD and BACKWARD) of
-				// knowledge are required
-				Map<MethodKind, KnowledgeSlice> kinds = 
+		/* make sure, that a storage for the problem-solver is available */
+		if (knowledgeMap.get(problemsolver) == null) {
+			// for rules (default) two types (FORWARD and BACKWARD) of
+			// knowledge are required
+			Map<MethodKind, KnowledgeSlice> kinds =
 					new HashMap<MethodKind, KnowledgeSlice>(2);
-				knowledgeMap.put(problemsolver, kinds);
-			}
-			Map<MethodKind, KnowledgeSlice> storage = (knowledgeMap
-					.get(problemsolver));
+			knowledgeMap.put(problemsolver, kinds);
+		}
+		Map<MethodKind, KnowledgeSlice> storage = (knowledgeMap
+				.get(problemsolver));
 
-			storage.put(knowledgeContext, knowledgeSlice);
-			
-			if (getKnowledgeBase() != null) {
-				getKnowledgeBase().addKnowledge(problemsolver, knowledgeSlice,
-						knowledgeContext);
-			}
+		storage.put(knowledgeContext, knowledgeSlice);
 
-		} catch (Exception e) {
-			//TODO MF: Remove catching Exception!
-			D3WebCase.strace(e + " occured in " + getClass() + ".addKnowledge("
-					+ problemsolver + "," + knowledgeSlice + ","
-					+ knowledgeContext + ")");
+		if (getKnowledgeBase() != null) {
+			getKnowledgeBase().addKnowledge(problemsolver, knowledgeSlice,
+					knowledgeContext);
 		}
 	}
 
@@ -462,20 +453,13 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	 */
 	public synchronized void removeKnowledge(Class<? extends PSMethod> problemsolver,
 			KnowledgeSlice knowledgeSlice, MethodKind knowledgeContext) {
-		try {
-			removeLocalKnowledge(problemsolver, knowledgeSlice,
-					knowledgeContext);
-
-			if (getKnowledgeBase() != null) {
-				// FIXME: the slice must not be removed if it is used at any other NamedObject
-				getKnowledgeBase().removeKnowledge(problemsolver,
-						knowledgeSlice);
-			}
-
-		} catch (Exception e) {
-			D3WebCase.strace(e + " occured in " + getClass()
-					+ ".removeKnowledge(" + problemsolver + ","
-					+ knowledgeSlice + "," + knowledgeContext + ")");
+		removeLocalKnowledge(problemsolver, knowledgeSlice,
+				knowledgeContext);
+		if (getKnowledgeBase() != null) {
+			// FIXME: the slice must not be removed if it is used at any other
+			// NamedObject
+			getKnowledgeBase().removeKnowledge(problemsolver,
+					knowledgeSlice);
 		}
 	}
 
@@ -547,33 +531,26 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	 */
 	private synchronized boolean removeLocalKnowledge(Class<? extends PSMethod> problemsolver,
 			KnowledgeSlice knowledgeSlice, MethodKind knowledgeContext) {
-		try {
-			// List knowledgeSlices;
+		// List knowledgeSlices;
 
-			/* make sure, that a storage for the problem-solver is available */
-			if (knowledgeMap.get(problemsolver) == null) {
-				return false;
-			}
-
-			Map<MethodKind, KnowledgeSlice> storage = (knowledgeMap.get(problemsolver));
-
-			/* make sure, that a storage for the kind of knowledge is available */
-			if (storage.get(knowledgeContext) == null) {
-				return false;
-			}
-			//return if there is another knowledgeslice stored
-			if (storage.get(knowledgeContext)!=knowledgeSlice) {
-				return false;
-			} else {
-				storage.remove(knowledgeContext);
-				return true;
-			}
-		} catch (Exception e) {
-			//TODO MF: remove catching Exception!
-			D3WebCase.strace(e + " occured in " + getClass()
-					+ ".removeLocalKnowledge(" + problemsolver + ","
-					+ knowledgeSlice + "," + knowledgeContext + ")");
+		/* make sure, that a storage for the problem-solver is available */
+		if (knowledgeMap.get(problemsolver) == null) {
 			return false;
+		}
+
+		Map<MethodKind, KnowledgeSlice> storage = (knowledgeMap.get(problemsolver));
+
+		/* make sure, that a storage for the kind of knowledge is available */
+		if (storage.get(knowledgeContext) == null) {
+			return false;
+		}
+		// return if there is another knowledgeslice stored
+		if (storage.get(knowledgeContext) != knowledgeSlice) {
+			return false;
+		}
+		else {
+			storage.remove(knowledgeContext);
+			return true;
 		}
 	}
 

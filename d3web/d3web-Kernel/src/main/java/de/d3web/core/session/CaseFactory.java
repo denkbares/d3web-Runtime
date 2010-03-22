@@ -21,6 +21,7 @@
 package de.d3web.core.session;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -31,8 +32,6 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.QASet.Reason;
-import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.interviewmanager.DefaultQASetManagerFactory;
 import de.d3web.core.session.interviewmanager.DialogProxy;
 import de.d3web.core.session.interviewmanager.MQDialogController;
@@ -65,7 +64,23 @@ public class CaseFactory {
 					qaSetManagerClass.getConstructor(new Class[] { XPSCase.class });
 				return (QASetManager) constructor.newInstance(
 					new Object[] { theCase });
-			} catch (Exception e) {
+			} 
+			catch (IllegalArgumentException e) {
+				throw new RuntimeException(e);
+			}
+			catch (InstantiationException e) {
+				throw new RuntimeException(e);
+			}
+			catch (IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
+			catch (InvocationTargetException e) {
+				throw new RuntimeException(e);
+			}
+			catch (SecurityException e) {
+				throw new RuntimeException(e);
+			}
+			catch (NoSuchMethodException e) {
 				throw new RuntimeException(e);
 			}
 		}

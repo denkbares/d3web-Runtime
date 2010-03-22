@@ -42,6 +42,7 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.session.CaseFactory;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.interviewmanager.DialogController;
+import de.d3web.core.session.interviewmanager.InvalidQASetRequestException;
 import de.d3web.core.session.interviewmanager.OQDialogController;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerNum;
@@ -337,19 +338,16 @@ public void testFormulaSchema() {
 /**
  * Assures that every type of question can be set and retrieved.
  * Creation date: (08.09.2000 16:11:48)
+ * @throws InvalidQASetRequestException 
  */
-public void testCase() {
+public void testCase() throws InvalidQASetRequestException {
 	XPSCase theCase = CaseFactory.createXPSCase(kb, OQDialogController.class);
 
 	while (((DialogController) theCase.getQASetManager()).hasNewestQASet()) {
 
 		((DialogController) theCase.getQASetManager()).moveToNewestQASet();
 		QASet qaSet = null;
-		try {
-			qaSet = ((DialogController)theCase.getQASetManager()).getCurrentQASet();
-		} catch (Exception e) {
-			assertTrue("Ups, eine Exception", false);
-		}
+		qaSet = ((DialogController)theCase.getQASetManager()).getCurrentQASet();
 		assertNotNull(qaSet);
 		assertTrue(
 			"Keine Frage, sondern ein " + qaSet.getClass() + "-Objekt",

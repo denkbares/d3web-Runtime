@@ -87,7 +87,7 @@ public class Butil {
 				b = r.readLine();
 			}
 			return buffi.toString();
-		} catch (Exception e) {
+		} catch (IOException e) {
 			// Nothing
 		}
 		return null;

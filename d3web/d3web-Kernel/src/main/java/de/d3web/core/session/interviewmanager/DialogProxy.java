@@ -39,7 +39,7 @@ public class DialogProxy {
 
 	public DialogProxy() {
 		super();
-		Comparator c = new DialogClientComparator();
+		Comparator<Integer> c = new DialogClientComparator();
 		clients = new TreeMap<Integer, DialogClient>(c);
 	}
 
@@ -54,12 +54,12 @@ public class DialogProxy {
 	 * asks all (sorted) clients for answer
 	 * @return first not-null-answer
 	 */
-	public Collection getAnswers(String questionID) {
+	public Collection<?> getAnswers(String questionID) {
 		if (questionID == null) {
 			return null;
 		}
 		for (DialogClient client : getClients()) {
-			Collection answers = client.getAnswers(questionID);
+			Collection<?> answers = client.getAnswers(questionID);
 			if (answers != null) {
 				return answers;
 			}
@@ -70,7 +70,7 @@ public class DialogProxy {
 	/**
 	 * @return an Iterator over all clients sorted by their priority
 	 */
-	public Iterator getClientsIterator() {
+	public Iterator<?> getClientsIterator() {
 		return clients.values().iterator();
 	}
 	
@@ -93,7 +93,10 @@ public class DialogProxy {
 			DialogClient client = (DialogClient) clients.get(new Integer(prio));
 			client.putCase(theCase);
 			return true;
-		} catch (Exception x) {
+		} catch (ClassCastException x) {
+			return false;
+		}
+		catch (NullPointerException x) {
 			return false;
 		}
 	}

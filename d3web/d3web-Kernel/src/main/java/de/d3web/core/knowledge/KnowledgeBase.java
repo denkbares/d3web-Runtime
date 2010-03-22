@@ -49,7 +49,6 @@ import de.d3web.core.knowledge.terminology.info.DCMarkedUp;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
-import de.d3web.core.session.D3WebCase;
 import de.d3web.core.session.values.AnswerChoice;
 
 /**
@@ -247,32 +246,24 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	 */
 	public synchronized void addKnowledge(Class<? extends PSMethod> problemsolver,
 			KnowledgeSlice knowledgeSlice, MethodKind knowledgeContext) {
-		try {
-			/* make sure, that a storage for the problemsolver is available */
-			if (knowledgeMap.get(problemsolver) == null) {
-				// usually only 2 kinds (FORWARD and BACKWARD) of knowledge is
-				// needed
-				knowledgeMap.put(problemsolver,
-						new HashMap<MethodKind, List<KnowledgeSlice>>());
-			}
-			Map<MethodKind, List<KnowledgeSlice>> storage = knowledgeMap
-					.get(problemsolver);
-
-			/* make sure, that a storage for the kind of knowledge is available */
-			if (storage.get(knowledgeContext) == null) {
-				List<KnowledgeSlice> knowledgeSlices = new LinkedList<KnowledgeSlice>();
-				storage.put(knowledgeContext, knowledgeSlices);
-			}
-
-			/* all right: now put that slice of knowledge in its slot */
-			storage.get(knowledgeContext).add(knowledgeSlice);
-
+		/* make sure, that a storage for the problemsolver is available */
+		if (knowledgeMap.get(problemsolver) == null) {
+			// usually only 2 kinds (FORWARD and BACKWARD) of knowledge is
+			// needed
+			knowledgeMap.put(problemsolver,
+					new HashMap<MethodKind, List<KnowledgeSlice>>());
 		}
-		catch (Exception e) {
-			D3WebCase.strace(e + " occured in " + getClass() + ".addKnowledge("
-					+ problemsolver + "," + knowledgeSlice + ","
-					+ knowledgeContext + ")");
+		Map<MethodKind, List<KnowledgeSlice>> storage = knowledgeMap
+				.get(problemsolver);
+
+		/* make sure, that a storage for the kind of knowledge is available */
+		if (storage.get(knowledgeContext) == null) {
+			List<KnowledgeSlice> knowledgeSlices = new LinkedList<KnowledgeSlice>();
+			storage.put(knowledgeContext, knowledgeSlices);
 		}
+
+		/* all right: now put that slice of knowledge in its slot */
+		storage.get(knowledgeContext).add(knowledgeSlice);
 	}
 
 	public boolean removeKnowledge(Class<? extends PSMethod> problemsolver,
@@ -291,26 +282,18 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 
 	public boolean removeKnowledge(Class<? extends PSMethod> problemsolver,
 			KnowledgeSlice knowledgeSlice, MethodKind knowledgeContext) {
-		try {
-			Map<MethodKind, List<KnowledgeSlice>> knowledge = knowledgeMap
-					.get(problemsolver);
-			if (knowledge != null) {
-				List<KnowledgeSlice> slices = knowledge.get(knowledgeContext);
-				if (slices != null) {
-					while (slices.remove(knowledgeSlice)) {
-						// remove all occurring slices
-					}
-					return true;
+		Map<MethodKind, List<KnowledgeSlice>> knowledge = knowledgeMap
+				.get(problemsolver);
+		if (knowledge != null) {
+			List<KnowledgeSlice> slices = knowledge.get(knowledgeContext);
+			if (slices != null) {
+				while (slices.remove(knowledgeSlice)) {
+					// remove all occurring slices
 				}
+				return true;
 			}
-			return false;
 		}
-		catch (Exception e) {
-			D3WebCase.strace(e + " occured in " + getClass()
-					+ ".removeKnowledge(" + problemsolver + ","
-					+ knowledgeSlice + "," + knowledgeContext + ")");
-			return false;
-		}
+		return false;
 	}
 
 	/**
@@ -729,14 +712,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	 * @return a String representation of this kb.
 	 */
 	public String toString() {
-		String className = this.getClass().getName();
-		try {
-			className = className.substring(className.lastIndexOf(".") + 1);
-		}
-		catch (Exception ex) {
-			// Exception ignored ...
-		}
-		return "<" + className + ">";
+		return "KnowledgeBase ID: "+kbID;
 	}
 
 	public DCMarkup getDCMarkup() {

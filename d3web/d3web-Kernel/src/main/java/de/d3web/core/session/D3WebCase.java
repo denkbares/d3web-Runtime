@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 import de.d3web.abstraction.inference.PSMethodQuestionSetter;
 import de.d3web.core.inference.DefaultPropagationController;
@@ -464,15 +463,7 @@ public class D3WebCase implements XPSCase {
 	 */
 	public QASetManager getQASetManager() {
 		if (qaSetManager == null) {
-			try {
-				qaSetManager = getQASetManagerFactory().createQASetManager(this);
-			}
-			catch (Exception e) {
-				Logger.getLogger(this.getClass().getName()).throwing(
-						this.getClass().getName(),
-						"initializing dialog controller", e);
-				qaSetManager = null;
-			}
+			qaSetManager = getQASetManagerFactory().createQASetManager(this);		
 		}
 		return qaSetManager;
 	}

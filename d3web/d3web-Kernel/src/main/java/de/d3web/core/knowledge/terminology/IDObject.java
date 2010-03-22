@@ -84,11 +84,6 @@ abstract public class IDObject
 	 * @return the ID of the object.
 	 */
 	public String toString() {
-		String className = this.getClass().getName();
-		try {
-			className = className.substring(className.lastIndexOf(".") + 1);
-		} catch (Exception ex) {
-		}
-		return className + " " + getId();
+		return this.getClass().getSimpleName() + " " + getId();
 	}
 }

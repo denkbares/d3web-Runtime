@@ -25,6 +25,8 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.inference.condition.NoAnswerException;
+import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -115,7 +117,9 @@ public class StateTransition implements KnowledgeSlice {
 						setAnswer(theCase, q, cvs.getAnswer(), map);
 						break;
 					}
-				} catch (Exception e) {
+				} catch (NoAnswerException e) {
+					// Nothing to do
+				} catch(UnknownAnswerException e) {
 					// Nothing to do
 				}
 			}

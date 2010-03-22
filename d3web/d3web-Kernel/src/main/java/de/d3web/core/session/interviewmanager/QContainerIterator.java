@@ -22,7 +22,6 @@ package de.d3web.core.session.interviewmanager;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
@@ -131,49 +130,43 @@ public class QContainerIterator {
 		// different rules
 		List<List<QASet>> follow2d = new LinkedList<List<QASet>>();
 
-		try {
-			Iterator<? extends PSMethod> psmethod = theCase.getUsedPSMethods().iterator();
-			while (psmethod.hasNext()) {
+		Iterator<? extends PSMethod> psmethod = theCase.getUsedPSMethods().iterator();
+		while (psmethod.hasNext()) {
 
-				PSMethod p = (PSMethod) psmethod.next();
+			PSMethod p = (PSMethod) psmethod.next();
 
-				KnowledgeSlice kslices = q.getKnowledge(p.getClass(), MethodKind.FORWARD);
-				if (kslices != null && kslices instanceof RuleSet) {
-					RuleSet rs = (RuleSet) kslices;
-					for (Rule rule: rs.getRules()) {
+			KnowledgeSlice kslices = q.getKnowledge(p.getClass(), MethodKind.FORWARD);
+			if (kslices != null && kslices instanceof RuleSet) {
+				RuleSet rs = (RuleSet) kslices;
+				for (Rule rule : rs.getRules()) {
 
-						if (rule.getAction() instanceof ActionNextQASet) {
-							Iterator<? extends NamedObject> termiter = rule.getCondition().getTerminalObjects().iterator();
-							while (termiter.hasNext()) {
-								if (termiter.next().equals(q)) {
-									// follows of the same action have to stay
-									// in the given order
-									List<QASet> ruleFollows = new LinkedList<QASet>();
+					if (rule.getAction() instanceof ActionNextQASet) {
+						Iterator<? extends NamedObject> termiter = rule.getCondition().getTerminalObjects().iterator();
+						while (termiter.hasNext()) {
+							if (termiter.next().equals(q)) {
+								// follows of the same action have to stay
+								// in the given order
+								List<QASet> ruleFollows = new LinkedList<QASet>();
 
-									Iterator<QASet> qiter = ((ActionNextQASet) rule.getAction())
-											.getQASets().iterator();
-									while (qiter.hasNext()) {
-										QASet o = qiter.next();
-										if ((o instanceof Question) && (!ruleFollows.contains(o))) {
-											ruleFollows.add(o);
-										}
-									}
-									if (!ruleFollows.isEmpty()) {
-										follow2d.add(ruleFollows);
+								Iterator<QASet> qiter = ((ActionNextQASet) rule.getAction())
+										.getQASets().iterator();
+								while (qiter.hasNext()) {
+									QASet o = qiter.next();
+									if ((o instanceof Question)
+											&& (!ruleFollows.contains(o))) {
+										ruleFollows.add(o);
 									}
 								}
+								if (!ruleFollows.isEmpty()) {
+									follow2d.add(ruleFollows);
+								}
 							}
-
 						}
+
 					}
 				}
 			}
-		} catch (Exception ex) {
-			//TODO MF: Don't catch exception
-			Logger.getLogger(QContainerIterator.class.getName()).throwing(
-					QContainerIterator.class.getName(), "createFollowList", ex);
 		}
-
 		// put the follows from different rules in the right order
 		return getSortedFollows(follow2d, q);
 	}
