@@ -449,6 +449,7 @@ public class DialogUtils {
 
 	public static boolean unknownAnswerInValueList(Question q, XPSCase theCase) {
 		Answer answer = q.getValue(theCase);
+		if (answer == null) return false;
 		List<? extends Answer> valueList = new LinkedList<Answer>();
 		if (q instanceof QuestionMC) {
 			valueList = ((AnswerMultipleChoice)answer).getChoices();
