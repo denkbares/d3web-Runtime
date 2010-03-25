@@ -302,7 +302,7 @@ public class D3WebCase implements XPSCase {
 		propagationContoller.openPropagation();
 		try {
 			for (Question question : this.getAnsweredQuestions()) {
-				Object oldValue = new Object();
+				Object oldValue = null;
 				Object newValue = getValue(question);
 				propagationContoller.propagate(question, oldValue, newValue, psmethod);
 			}
