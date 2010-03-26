@@ -27,7 +27,7 @@ import java.util.List;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -262,7 +262,7 @@ public class OQDialogController implements DialogController {
 	 */
 	private boolean isQASetRule(QASet.Reason reason) {
 		if (reason.getRule() != null) {
-			RuleAction action = reason.getRule().getAction();
+			PSAction action = reason.getRule().getAction();
 			return (action instanceof de.d3web.indication.ActionNextQASet);
 		} else
 			return false;

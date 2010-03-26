@@ -25,7 +25,7 @@ import java.util.List;
 
 import de.d3web.abstraction.ActionSetValue;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondAnd;
 
@@ -59,7 +59,7 @@ public class FlowFactory {
 		
 	}
 	
-	public INode createNode(String id, RuleAction action) {
+	public INode createNode(String id, PSAction action) {
 		return new Node(id, action);
 		
 	}
@@ -72,7 +72,7 @@ public class FlowFactory {
 		return new StartNode(id, name);
 	}
 	
-	public INode createEndNode(String id, String name, RuleAction action) {
+	public INode createEndNode(String id, String name, PSAction action) {
 			
 		
 		return new EndNode(id, name, action);
@@ -84,7 +84,6 @@ public class FlowFactory {
 		Rule rule = new Rule("FlowchartRule" + System.currentTimeMillis());
 		
 		ActionSetValue action = new ActionSetValue();
-		action.setRule(rule);
 		rule.setAction(action);
 		rule.setCondition(new CondAnd(new ArrayList()));
 		return action;

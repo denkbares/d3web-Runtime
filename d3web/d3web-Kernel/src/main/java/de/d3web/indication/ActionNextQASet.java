@@ -22,10 +22,9 @@ package de.d3web.indication;
 
 import java.util.List;
 
-import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.XPSCase;
@@ -38,7 +37,7 @@ import de.d3web.indication.inference.PSMethodNextQASet;
  * 
  * @author Christian Betz
  */
-public abstract class ActionNextQASet extends RuleAction {
+public abstract class ActionNextQASet extends PSAction {
 	
 	private static final long serialVersionUID = 8873284669648124113L;
 	private List<QASet> qasets;
@@ -46,14 +45,13 @@ public abstract class ActionNextQASet extends RuleAction {
 	/**
 	 * Indicates all QASets specified by "setQASets"-Method
 	 */
-	public void doIt(XPSCase theCase) {
-		doItWithContext(theCase, getCorrespondingRule()
-				.getProblemsolverContext());
+	public void doIt(XPSCase theCase, Rule rule) {
+		doItWithContext(theCase, rule);
 	}
 
-	protected void doItWithContext(XPSCase theCase, Class<? extends PSMethod> context) {
+	protected void doItWithContext(XPSCase theCase, Rule rule) {
 		for (QASet nextQASet : getQASets()) {
-			nextQASet.activate(theCase, getCorrespondingRule(), context);
+			nextQASet.activate(theCase, rule, rule.getProblemsolverContext());
 
 			if (nextQASet instanceof QContainer) {
 				theCase.getIndicatedQContainers().add((QContainer) nextQASet);
@@ -84,35 +82,19 @@ public abstract class ActionNextQASet extends RuleAction {
 	}
 
 	/**
-	 * Inserts the corresponding rule as Knowledge to the given QASets
-	 */
-	private void insertRuleIntoQASets(List<QASet> theQasets) {
-		Rule.insertInto(getCorrespondingRule(), theQasets, getProblemsolverContext(), MethodKind.BACKWARD);
-	}
-
-	/**
-	 * Removes the corresponding rule from the given QASets
-	 */
-	private void removeRuleFromOldQASets(List<QASet> theQasets) {
-		Rule.removeFrom(getCorrespondingRule(), theQasets, getProblemsolverContext(), MethodKind.BACKWARD);
-	}
-
-	/**
 	 * sets a List of QASets that this Action can activate
 	 */
 	public void setQASets(List<QASet> qasets) {
-		removeRuleFromOldQASets(this.qasets);
 		this.qasets = qasets;
-		insertRuleIntoQASets(this.qasets);
 	}
 
 	/**
 	 * Deactivates all activated QASets
 	 */
-	public void undo(XPSCase theCase) {
+	@Override
+	public void undo(XPSCase theCase, Rule rule) {
 		for (QASet qaset : getQASets()) {
-			qaset.deactivate(theCase, getCorrespondingRule(),
-					getCorrespondingRule().getProblemsolverContext());
+			qaset.deactivate(theCase, rule, rule.getProblemsolverContext());
 		}
 	}
 

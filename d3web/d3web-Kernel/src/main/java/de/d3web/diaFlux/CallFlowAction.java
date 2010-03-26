@@ -22,7 +22,10 @@ package de.d3web.diaFlux;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.Rule;
+import de.d3web.core.inference.PSAction;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.XPSCase;
 import de.d3web.diaFlux.inference.FluxSolver;
 
@@ -31,9 +34,10 @@ import de.d3web.diaFlux.inference.FluxSolver;
  * @author Reinhard Hatko
  * Created on: 03.11.2009
  */
-public class CallFlowAction extends RuleAction {
+public class CallFlowAction extends PSAction {
 	
 
+	private static final long serialVersionUID = -8275056690367249020L;
 	private final String flowName;
 	private final String startNodeName;
 
@@ -45,27 +49,27 @@ public class CallFlowAction extends RuleAction {
 	}
 
 	@Override
-	public RuleAction copy() {
+	public PSAction copy() {
 		return new CallFlowAction(flowName, startNodeName);
 	}
 
 	@Override
-	public void doIt(XPSCase theCase) {
+	public void doIt(XPSCase theCase, Rule rule) {
 
 	}
 
 	@Override
-	public Class getProblemsolverContext() {
+	public Class<? extends PSMethod> getProblemsolverContext() {
 		return FluxSolver.class;
 	}
 
 	@Override
-	public List getTerminalObjects() {
-		return new ArrayList(0);
+	public List<NamedObject> getTerminalObjects() {
+		return new ArrayList<NamedObject> (0);
 	}
 
 	@Override
-	public void undo(XPSCase theCase) {
+	public void undo(XPSCase theCase, Rule rule) {
 		
 	}
 	

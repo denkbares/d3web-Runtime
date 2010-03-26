@@ -30,7 +30,7 @@ import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.abstraction.inference.PSMethodQuestionSetter;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -218,9 +218,10 @@ public class ActionAddValue extends ActionQuestionSetter {
 	 * @param theCase
 	 *            current case
 	 */
-	public void doIt(XPSCase theCase) {
+	@Override
+	public void doIt(XPSCase theCase, Rule rule) {
 		if (!lastFiredRuleEqualsCurrentRuleAndNotFired(theCase)) {
-			getQuestion().addProReason(new QASet.Reason(getCorrespondingRule()), theCase);
+			getQuestion().addProReason(new QASet.Reason(rule), theCase);
 
 			Answer resultAnswer;
 
@@ -251,7 +252,7 @@ public class ActionAddValue extends ActionQuestionSetter {
 				}
 			} else {
 				// else, set the resultList-values
-				theCase.setValue(getQuestion(), new Answer[] {resultAnswer}, getCorrespondingRule());
+				theCase.setValue(getQuestion(), new Answer[] {resultAnswer}, rule);
 			}
 		}
 	}
@@ -264,10 +265,11 @@ public class ActionAddValue extends ActionQuestionSetter {
 	/**
 	 * Tries to undo the included action.
 	 */
-	public void undo(XPSCase theCase) {
-		getQuestion().removeProReason(new QASet.Reason(getCorrespondingRule()), theCase);
+	@Override
+	public void undo(XPSCase theCase, Rule rule) {
+		getQuestion().removeProReason(new QASet.Reason(rule), theCase);
 
-		removeRuleFromSymptomValueHistory(theCase, getCorrespondingRule());
+		removeRuleFromSymptomValueHistory(theCase, rule);
 
 		// if the question is an oc-si-question without schema, the severest
 		// answer has to be set
@@ -314,17 +316,14 @@ public class ActionAddValue extends ActionQuestionSetter {
 					// r.addValue((Answer)null, theCase);
 				}
 			}
-			theCase.setValue(getQuestion(), Collections.EMPTY_LIST.toArray(), getCorrespondingRule());
+			theCase.setValue(getQuestion(), Collections.EMPTY_LIST.toArray(), rule);
 		}
 	}
 
 	private void removeRuleFromSymptomValueHistory(XPSCase theCase, Rule rule) {
 		CaseQuestion q = (CaseQuestion) theCase.getCaseObject(getQuestion());
-		Object o = q.getValueHistory();
-		if ((o != null) && (o instanceof List)) {
-
-			List l = ((List) o);
-
+		List<SymptomValue> l = q.getValueHistory();
+		if ((l != null)) {
 			if (l.size() >= 1) {
 				if (rule.equals(((SymptomValue) (l.get(0))).getRule())) {
 					l.remove(0);
@@ -334,9 +333,8 @@ public class ActionAddValue extends ActionQuestionSetter {
 		}
 	}
 
-	public RuleAction copy() {
+	public PSAction copy() {
 		ActionAddValue a = new ActionAddValue();
-		a.setRule(getCorrespondingRule());
 		a.setQuestion(getQuestion());
 		a.setValues(getValues());
 		return a;

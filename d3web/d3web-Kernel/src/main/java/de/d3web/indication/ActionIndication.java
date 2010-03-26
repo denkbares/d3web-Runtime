@@ -22,7 +22,7 @@ package de.d3web.indication;
 
 import java.util.ArrayList;
 
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.QASet;
 
 /**
@@ -41,9 +41,8 @@ public class ActionIndication extends ActionNextQASet {
 		super();
 	}
 	
-	public RuleAction copy() {
+	public PSAction copy() {
 		ActionIndication a = new ActionIndication();
-		a.setRule(getCorrespondingRule());
 		a.setQASets(new ArrayList<QASet>(getQASets()));
 		return a;
 	}

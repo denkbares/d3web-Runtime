@@ -22,8 +22,8 @@ package de.d3web.indication;
 
 import java.util.ArrayList;
 
-import de.d3web.core.inference.PSMethodInit;
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.Rule;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.XPSCase;
 
@@ -41,9 +41,8 @@ public class ActionInstantIndication extends ActionIndication {
 		super();
 	}
 	
-	public RuleAction copy() {
+	public PSAction copy() {
 		ActionInstantIndication a = new ActionInstantIndication();
-		a.setRule(getCorrespondingRule());
 		a.setQASets(new ArrayList<QASet>(getQASets()));
 		return a;
 	}
@@ -60,8 +59,8 @@ public class ActionInstantIndication extends ActionIndication {
 	}
 	
 	@Override
-	public void doIt(XPSCase theCase) {
-		doItWithContext(theCase, PSMethodInit.class);
+	public void doIt(XPSCase theCase, Rule rule) {
+		doItWithContext(theCase, rule);
 	}
 
 }

@@ -24,7 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.Rule;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.XPSCase;
 import de.d3web.diaFlux.inference.FluxSolver;
@@ -35,7 +36,7 @@ import de.d3web.diaFlux.inference.FluxSolver;
  * Created: 14.09.2009
  *
  */
-public class NoopAction extends RuleAction {
+public class NoopAction extends PSAction {
 
 	private static final long serialVersionUID = -5920305686485574489L;
 	public static final NoopAction INSTANCE = new NoopAction();
@@ -45,12 +46,12 @@ public class NoopAction extends RuleAction {
 		
 	}
 
-	public RuleAction copy() {
+	public PSAction copy() {
 		return this;
 	}
 
 	@Override
-	public void doIt(XPSCase theCase) {
+	public void doIt(XPSCase theCase, Rule rule) {
 
 	}
 
@@ -65,7 +66,7 @@ public class NoopAction extends RuleAction {
 	}
 
 	@Override
-	public void undo(XPSCase theCase) {
+	public void undo(XPSCase theCase, Rule rule) {
 
 	}
 

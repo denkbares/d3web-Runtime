@@ -121,7 +121,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		caseObject.setRule(rule);
 		rule.setActive(true);
 		ActionIndication action = new ActionIndication();
-		action.setRule(rule);
+		rule.setAction(action);
 		List<QASet> list = new LinkedList<QASet>();
 		list.add(qc);
 		action.setQASets(list);

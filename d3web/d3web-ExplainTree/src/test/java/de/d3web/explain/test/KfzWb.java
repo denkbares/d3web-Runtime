@@ -689,7 +689,6 @@ public class KfzWb extends KnowledgeBase {
 		// (Radd59) Und (($= Mf4 3) ($= Mf3 4)) -> Msi21
 		Rule Radd59 = new Rule("Radd59");
 		ActionSetValue a_Radd59 = new ActionSetValue();
-		a_Radd59.setRule(Radd59);
 		a_Radd59.setQuestion(Msi21);
 		a_Radd59.setValues(new Object[] { Msi21a2 });
 		Radd59.setAction(a_Radd59);
@@ -699,7 +698,6 @@ public class KfzWb extends KnowledgeBase {
 		// (Radd4) Und (($Or Mf3 1 2 3)) -> Msi21
 		Rule Radd4 = new Rule("Radd4");
 		ActionSetValue a_Radd4 = new ActionSetValue();
-		a_Radd4.setRule(Radd4);
 		a_Radd4.setQuestion(Msi21);
 		a_Radd4.setValues(new Object[] { Msi21a1 });
 		Radd4.setAction(a_Radd4);
@@ -711,7 +709,6 @@ public class KfzWb extends KnowledgeBase {
 		// (Radd2) Und (($= Mf3 4) ($= Mf4 1)) -> Msi21 
 		Rule Radd2 = new Rule("Radd2");
 		ActionSetValue a_Radd2 = new ActionSetValue();
-		a_Radd2.setRule(Radd2);
 		a_Radd2.setQuestion(Msi21);
 		a_Radd2.setValues(new Object[] { Msi21a1 });
 		Radd2.setAction(a_Radd2);
@@ -723,7 +720,6 @@ public class KfzWb extends KnowledgeBase {
 		/* (Rdq4) Und (($> Mf5 0) ($Isvalue Mf6 True)) -> Msi4 */
 		Rule Rdq4 = new Rule("Rdq4");
 		ActionSetValue a_Rdq4 = new ActionSetValue();
-		a_Rdq4.setRule(Rdq4);
 		a_Rdq4.setQuestion(Msi4);
 
 		FormulaExpression formula =

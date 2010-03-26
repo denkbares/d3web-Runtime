@@ -21,7 +21,7 @@
 package de.d3web.indication;
 import java.util.LinkedList;
 
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.QASet;
 
@@ -56,7 +56,7 @@ public class ActionClarify extends ActionNextQASet {
 		target = newTarget;
 	}
 	
-	public RuleAction copy() {
+	public PSAction copy() {
 		ActionClarify a = new ActionClarify();
 		a.setQASets(new LinkedList<QASet>(getQASets()));
 		a.setTarget(getTarget());

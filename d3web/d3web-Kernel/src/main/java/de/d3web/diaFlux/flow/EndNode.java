@@ -20,7 +20,7 @@
 
 package de.d3web.diaFlux.flow;
 
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.PSAction;
 
 
 /**
@@ -30,18 +30,18 @@ import de.d3web.core.inference.RuleAction;
  */
 public class EndNode extends NamedNode {
 
-	private final RuleAction action;
+	private final PSAction action;
 	
 	
 	//TODO action dirty Hack
-	public EndNode(String id, String name, RuleAction action) {
+	public EndNode(String id, String name, PSAction action) {
 		super(id, name);
 		this.action = action;
 	}
 	
 	
 	@Override
-	public RuleAction getAction() {
+	public PSAction getAction() {
 		return action;
 	}
 	

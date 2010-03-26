@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.XPSCaseObject;
@@ -38,11 +38,11 @@ class Node implements INode, CaseObjectSource {
 
 	
 	private final List<IEdge> outgoing;
-	private final RuleAction action;
+	private final PSAction action;
 	private final String id;
 	private Flow flow;
 	
-	public Node(String id, RuleAction action) {
+	public Node(String id, PSAction action) {
 		
 		if (action == null)
 			throw new IllegalArgumentException("'action' must not be null.");
@@ -72,7 +72,7 @@ class Node implements INode, CaseObjectSource {
 	}
 
 	@Override
-	public RuleAction getAction() {
+	public PSAction getAction() {
 		return action;
 	}
 	

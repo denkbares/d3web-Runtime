@@ -157,7 +157,7 @@ public class ActionTest extends TestCase {
 		suppressList.add(ac2);
 		
 		ActionSuppressAnswer asa = new ActionSuppressAnswer();
-		asa.setRule(rcomp);
+		rcomp.setAction(asa);
 		asa.setQuestion(quest1);
 		asa.setSuppress(suppressList);
 	
@@ -190,7 +190,7 @@ public class ActionTest extends TestCase {
 		clarifyList.add(qcon1);
 		
 		ActionClarify acl = new ActionClarify();
-		acl.setRule(rcomp);
+		rcomp.setAction(acl);
 		acl.setTarget(diag1);
 		acl.setQASets(clarifyList);
 		
@@ -223,7 +223,7 @@ public class ActionTest extends TestCase {
 		refineList.add(quest1);
 		
 		ActionRefine are = new ActionRefine();
-		are.setRule(rcomp);
+		rcomp.setAction(are);
 		are.setTarget(diag1);
 		are.setQASets(refineList);
 		
@@ -255,7 +255,7 @@ public class ActionTest extends TestCase {
 		indicationList.add(quest1);
 		
 		ActionIndication ai = new ActionIndication();
-		ai.setRule(rcomp);
+		rcomp.setAction(ai);
 		ai.setQASets(indicationList);
 		
 		shouldTag = new XMLTag("Action");
@@ -304,7 +304,7 @@ public class ActionTest extends TestCase {
 	
 	public void testActionHeuristicPS() throws Exception{
 		ActionHeuristicPS ah = new ActionHeuristicPS();
-		ah.setRule(rcomp);
+		rcomp.setAction(ah);
 		ah.setDiagnosis(diag1);
 		ah.setScore(Score.P1);
 		
@@ -335,12 +335,12 @@ public class ActionTest extends TestCase {
 		setValueList.add(ac2);
 		
 		ActionAddValue aav = new ActionAddValue();
-		aav.setRule(rcomp);
+		rcomp.setAction(aav);
 		aav.setQuestion(quest1);
 		aav.setValues(setValueList.toArray());
 		
 		ActionSetValue asv = new ActionSetValue();
-		asv.setRule(rcomp);
+		rcomp.setAction(asv);
 		asv.setQuestion(quest1);
 		asv.setValues(setValueList.toArray());				
 		
@@ -418,12 +418,12 @@ public class ActionTest extends TestCase {
 		setValueList.add(fe);
 		
 		ActionAddValue aav = new ActionAddValue();
-		aav.setRule(rcomp);
+		rcomp.setAction(aav);
 		aav.setQuestion(qdate1);
 		aav.setValues(setValueList.toArray());
 		
 		ActionSetValue asv = new ActionSetValue();
-		asv.setRule(rcomp);
+		rcomp.setAction(asv);
 		asv.setQuestion(qdate1);
 		asv.setValues(setValueList.toArray());				
 		

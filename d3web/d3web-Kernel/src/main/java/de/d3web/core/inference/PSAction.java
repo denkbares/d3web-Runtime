@@ -30,30 +30,14 @@ import de.d3web.core.session.XPSCase;
  * when their conditions are true.
  * @author Joachim Baumeister
  */
-public abstract class RuleAction implements Cloneable, java.io.Serializable {
-	
-	private Rule rule = null;
-	
-	public Rule getCorrespondingRule() {
-		return rule;
-	}
-	
-	/**
-	 * Notlösung!!!
-	 * 
-	 * Eine Action sollte seine Regel nicht kennen müssen. Das QASetManager Interface und seine Implementierer müssen dringend überarbeitet werden.
-	 * @param rule
-	 */
-	public void setRule(Rule rule) {
-		this.rule=rule;
-	}
+public abstract class PSAction implements Cloneable, java.io.Serializable {
 	
 	private static final long serialVersionUID = -7734602381846137317L;
 	
 	/**
 	 * Executes the included action.
 	 */
-	public abstract void doIt(de.d3web.core.session.XPSCase theCase);
+	public abstract void doIt(de.d3web.core.session.XPSCase theCase, Rule rule);
 
 	/**
 	 * @return all objects participating on the action.<BR>
@@ -78,7 +62,7 @@ public abstract class RuleAction implements Cloneable, java.io.Serializable {
 	/**
 	 * Tries to undo the included action.
 	 */
-	public abstract void undo(de.d3web.core.session.XPSCase theCase);
+	public abstract void undo(de.d3web.core.session.XPSCase theCase, Rule rule);
 	
 	/**
 	 * Returns a clone of this RuleAction.<p>
@@ -87,5 +71,5 @@ public abstract class RuleAction implements Cloneable, java.io.Serializable {
 		return super.clone();
 	}
 	
-	public abstract RuleAction copy();
+	public abstract PSAction copy();
 }

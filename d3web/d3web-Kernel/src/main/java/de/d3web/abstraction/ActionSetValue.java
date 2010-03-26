@@ -26,7 +26,8 @@ import de.d3web.abstraction.formula.FormulaDateExpression;
 import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.abstraction.inference.PSMethodQuestionSetter;
 import de.d3web.core.inference.MethodKind;
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.Rule;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.Property;
@@ -64,7 +65,8 @@ public class ActionSetValue extends ActionQuestionSetter implements CaseObjectSo
 	/**
 	 * Sets the specified value for the specified question.
 	 */
-	public void doIt(XPSCase theCase) {
+	@Override
+	public void doIt(XPSCase theCase, Rule rule) {
 
 		if ((getValues() != null) && (getValues().length > 0)) {
 			if (!lastFiredRuleEqualsCurrentRuleAndNotFired(theCase)) {
@@ -104,7 +106,7 @@ public class ActionSetValue extends ActionQuestionSetter implements CaseObjectSo
 
 				}
 				storeActionValues(theCase, getValues());
-				theCase.setValue(getQuestion(), tempVal, getCorrespondingRule());
+				theCase.setValue(getQuestion(), tempVal, rule);
 
 				// if the question is an oc-si-question without schema, the
 				// severest answer has to be set
@@ -128,7 +130,8 @@ public class ActionSetValue extends ActionQuestionSetter implements CaseObjectSo
 	/**
 	 * Tries to undo the included action.
 	 */
-	public void undo(XPSCase theCase) {
+	@Override
+	public void undo(XPSCase theCase, Rule rule) {
 
 		if (!Boolean.TRUE.equals(getQuestion().getProperties().getProperty(Property.TIME_VALUED))
 				&& (getQuestion() instanceof QuestionOC)
@@ -161,14 +164,13 @@ public class ActionSetValue extends ActionQuestionSetter implements CaseObjectSo
 				}
 			}
 		} else {
-			getQuestion().undoSymptomValue(theCase, getCorrespondingRule());
+			getQuestion().undoSymptomValue(theCase, rule);
 		}
 
 
 	}
-	public RuleAction copy() {
+	public PSAction copy() {
 		ActionSetValue a = new ActionSetValue();
-		a.setRule(getCorrespondingRule());
 		a.setQuestion(getQuestion());
 		a.setValues(getValues());
 		return a;

@@ -80,7 +80,7 @@ public class Rule
 	  *	,<it>exception</it> is false/undefined and <it>diagnosisContext</it> is 
 	  *	true/undefined.
 	 */
-	private RuleAction ruleAction;
+	private PSAction ruleAction;
 
 	/**
 	  * Creates a new rule. The following properties have to be 
@@ -225,12 +225,12 @@ public class Rule
 		notifyListeners(theCase, this);
 
 		if (getAction() != null) {
-			getAction().doIt(theCase);
+			getAction().doIt(theCase, this);
 		}
 
 	}
 
-	public RuleAction getAction() {
+	public PSAction getAction() {
 		return ruleAction;
 	}
 
@@ -287,7 +287,7 @@ public class Rule
 		return hasFired(theCase);
 	}
 
-	public void setAction(RuleAction theRuleAction) {
+	public void setAction(PSAction theRuleAction) {
 		updateActionReferences(ruleAction, theRuleAction);
 		ruleAction = theRuleAction;
 	}
@@ -305,8 +305,8 @@ public class Rule
 	 * diagnosisContext, rule exceptions.
 	 * */
 	protected void updateActionReferences(
-		RuleAction oldAction,
-		RuleAction newAction) {
+		PSAction oldAction,
+		PSAction newAction) {
 		if ((oldAction != null)
 			&& (oldAction.getTerminalObjects() != null)
 			&& (oldAction.getProblemsolverContext() != null)) {
@@ -336,8 +336,8 @@ public class Rule
 	 * and insert them into the specified new action.
 	 * */
 	protected void updateConditionTerminals(
-		RuleAction oldAction,
-		RuleAction newAction,
+		PSAction oldAction,
+		PSAction newAction,
 		Condition condi) {
 		if (condi != null) {
 			if (oldAction != null) {
@@ -540,7 +540,7 @@ public class Rule
 		notifyListeners(theCase, this);
 
 		if (getAction() != null) {
-			getAction().undo(theCase);
+			getAction().undo(theCase, this);
 		}
 	}
 
@@ -585,7 +585,7 @@ public class Rule
         return hash;
     }
     
-    private static boolean equalActions(RuleAction a1, RuleAction a2) {
+    private static boolean equalActions(PSAction a1, PSAction a2) {
         if (a1 != null && a2 != null)
             return a1.equals(a2);
         else if (a1 == null && a2 == null)

@@ -23,10 +23,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.XPSCase;
 import de.d3web.indication.inference.PSMethodContraIndication;
@@ -36,7 +35,7 @@ import de.d3web.indication.inference.PSMethodContraIndication;
  * Creation date: (19.06.2001 18:32:09)
  * @author Joachim Baumeister
  */
-public class ActionContraIndication extends RuleAction {
+public class ActionContraIndication extends PSAction {
 	
 	private static final long serialVersionUID = 3218797752146535382L;
 	private List<QASet> qasets;
@@ -48,11 +47,12 @@ public class ActionContraIndication extends RuleAction {
 	 * Creation date: (02.11.2000 14:38:26)
 	 * @param theCase current case
 	 */
-	public void doIt(XPSCase theCase) {
+	@Override
+	public void doIt(XPSCase theCase, Rule rule) {
 		Iterator<QASet> qaset = getQASets().iterator();
 		while (qaset.hasNext()) {
 			(qaset.next()).addContraReason(
-				new QASet.Reason(getCorrespondingRule()),
+				new QASet.Reason(rule),
 				theCase);
 		}
 	}
@@ -79,40 +79,23 @@ public class ActionContraIndication extends RuleAction {
 		return getQASets();
 	}
 
-	/**
-	 * inserts the corresponding rule as knowledge to all
-	 * QASets participating on the action.
-	 */
-	private void insertRuleIntoQASets(List<QASet> sets) {
-		Rule.insertInto(getCorrespondingRule(), qasets, getProblemsolverContext(), MethodKind.BACKWARD);
-	}
-
-	/**
-	 * removes the corresponding rule as knowledge to all
-	 * QASets participating on the action.
-	 */
-	private void removeRuleFromOldQASets(List<QASet> qasets) {
-		Rule.removeFrom(getCorrespondingRule(), qasets, getProblemsolverContext(), MethodKind.BACKWARD);
-	}
-
-	/**
+		/**
 	 * sets the QASets for contraindication
 	 */
 	public void setQASets(List<QASet> theQasets) {
-		removeRuleFromOldQASets(getQASets());
 		qasets = theQasets;
-		insertRuleIntoQASets(getQASets());
 	}
 
 	/**
 	 * Invoked, if rule is undone (undoing action)
 	 * @param theCase current case
 	 */
-	public void undo(XPSCase theCase) {
+	@Override
+	public void undo(XPSCase theCase, Rule rule) {
 		Iterator<QASet> qaset = getQASets().iterator();
 		while (qaset.hasNext()) {
 			((QASet) qaset.next()).removeContraReason(
-				new QASet.Reason(getCorrespondingRule()),
+				new QASet.Reason(rule),
 				theCase);
 		}
 	}
@@ -142,7 +125,7 @@ public class ActionContraIndication extends RuleAction {
 			return false;
 	}
 	
-	public RuleAction copy() {
+	public PSAction copy() {
 		ActionContraIndication newAction = new ActionContraIndication();
 		newAction.setQASets(new LinkedList<QASet>(getQASets()));
 		return newAction;

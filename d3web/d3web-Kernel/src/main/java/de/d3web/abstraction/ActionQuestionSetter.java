@@ -33,10 +33,9 @@ import de.d3web.abstraction.formula.FormulaDateExpression;
 import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.abstraction.formula.FormulaNumberElement;
 import de.d3web.abstraction.inference.PSMethodQuestionSetter;
-import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.NamedObject;
@@ -46,6 +45,7 @@ import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.QASet.Reason;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.SymptomValue;
 import de.d3web.core.session.XPSCase;
@@ -61,8 +61,8 @@ import de.d3web.core.session.values.EvaluatableAnswerNumValue;
 /**
  * @author baumeister, bates
  */
-public abstract class ActionQuestionSetter extends RuleAction implements CaseObjectSource {
-	
+public abstract class ActionQuestionSetter extends PSAction implements CaseObjectSource {
+
 	private static final long serialVersionUID = 9036655281237588136L;
 	private Question question;
 	private Object[] values;
@@ -88,17 +88,7 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 	 * knowledge)
 	 */
 	public void setQuestion(Question question) {
-		removeRuleFromOldQuestion(this.question);
 		this.question = question;
-		insertRuleIntoQuestion(this.question);
-	}
-
-	private void insertRuleIntoQuestion(Question questionArg) {
-		Rule.insertInto(getCorrespondingRule(), getProblemsolverContext(), MethodKind.BACKWARD, questionArg);
-	}
-
-	private void removeRuleFromOldQuestion(Question questionArg) {
-		Rule.removeFrom(getCorrespondingRule(), getProblemsolverContext(), MethodKind.BACKWARD, questionArg);
 	}
 
 	/**
@@ -136,16 +126,17 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 			Enumeration<Question> keys = questionToValuesHash.keys();
 			while (keys.hasMoreElements()) {
 				Question q = (Question) keys.nextElement();
-				//theCase.trace("key: " + q.getId());
+				// theCase.trace("key: " + q.getId());
 				Object oldValue = questionToValuesHash.get(q); // can be Double
-															   // or Date
+				// or Date
 				assert (oldValue instanceof Double || oldValue instanceof Date) : "Unknown oldValue-Type: "
 						+ oldValue;
 
 				Answer newValues = null;
 				if (q instanceof QuestionNum || q instanceof QuestionDate) {
 					newValues = q.getValue(theCase);
-				} else if (q instanceof QuestionOC) {
+				}
+				else if (q instanceof QuestionOC) {
 					newValues = new AnswerNum();
 					if ((this.values != null) && (this.values.length > 0)) {
 						EvaluatableAnswerNumValue evalAnsnumVal = (EvaluatableAnswerNumValue) this.values[0];
@@ -162,19 +153,21 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 					if (oldValue == null)
 						return true;
 					Answer ans = newValues; // can be AnswerDate
-											// or AnswerDouble
+					// or AnswerDouble
 					assert (ans instanceof AnswerDate || ans instanceof AnswerNum) : "Unknown newValue-Answer-Type: "
 							+ ans;
 					Object newValue = ans.getValue(theCase); // can be Double or
-															 // Date
+					// Date
 					assert (newValue instanceof Double || newValue instanceof Date) : "Unknown newValue-Type: "
 							+ newValue;
-					//theCase.trace("old:" + oldValue + ", new:" + newValue + ": equals? "
-					//		+ oldValue.equals(newValue));
+					// theCase.trace("old:" + oldValue + ", new:" + newValue +
+					// ": equals? "
+					// + oldValue.equals(newValue));
 					if (!oldValue.equals(newValue)) {
 						return true;
 					}
-				} else {
+				}
+				else {
 					if (oldValue != null)
 						return true;
 				}
@@ -188,7 +181,7 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 	 */
 	protected void storeActionValues(XPSCase theCase, Object[] valuesArg) {
 		Hashtable<Question, Object> questionToValuesHash = new Hashtable<Question, Object>();
-		//theCase.trace("attempting to store action values (elementary formulaExpression values)");
+		// theCase.trace("attempting to store action values (elementary formulaExpression values)");
 		if (valuesArg.length == 0) {
 			return; // should only be one value!
 		}
@@ -196,19 +189,24 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 		Object obj = valuesArg[0];
 
 		if ((obj instanceof FormulaExpression) || (obj instanceof FormulaNumberElement)
-				|| (obj instanceof FormulaDateElement) || (obj instanceof FormulaDateExpression)) {
+				|| (obj instanceof FormulaDateElement)
+				|| (obj instanceof FormulaDateExpression)) {
 			Collection<Object> terminalObjects;
 			if (obj instanceof FormulaExpression) {
 				terminalObjects = ((FormulaExpression) obj).getFormulaElement()
 						.getTerminalObjects();
-			} else if (obj instanceof FormulaNumberElement) {
+			}
+			else if (obj instanceof FormulaNumberElement) {
 				terminalObjects = ((FormulaNumberElement) obj).getTerminalObjects();
-			} else if (obj instanceof FormulaDateExpression) {
+			}
+			else if (obj instanceof FormulaDateExpression) {
 				terminalObjects = ((FormulaDateExpression) obj).getFormulaDateElement()
 						.getTerminalObjects();
-			} else if (obj instanceof FormulaDateElement) {
+			}
+			else if (obj instanceof FormulaDateElement) {
 				terminalObjects = ((FormulaDateElement) obj).getTerminalObjects();
-			} else {
+			}
+			else {
 				throw new Error("Programmerror. Bad Type: " + obj);
 			}
 
@@ -222,12 +220,14 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 						Object val = value.getValue(theCase);
 						questionToValuesHash.put(q, val);
 					}
-				} else if (q instanceof QuestionMC) {
+				}
+				else if (q instanceof QuestionMC) {
 					QuestionMC qMC = (QuestionMC) q;
-					AnswerMultipleChoice value = (AnswerMultipleChoice)qMC.getValue(theCase);
+					AnswerMultipleChoice value = (AnswerMultipleChoice) qMC.getValue(theCase);
 					Double val = new Double(value.numberOfChoices());
 					questionToValuesHash.put(q, val);
-				} else if (q instanceof QuestionDate) {
+				}
+				else if (q instanceof QuestionDate) {
 					QuestionDate qDate = (QuestionDate) q;
 					Answer value = qDate.getValue(theCase);
 					if (value != null) {
@@ -236,18 +236,21 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 					}
 				}
 			}
-		} else if (obj instanceof AnswerNum || obj instanceof AnswerDate) {
+		}
+		else if (obj instanceof AnswerNum || obj instanceof AnswerDate) {
 			Answer ans = (Answer) obj;
 			Object val = ans.getValue(theCase);
 			Question q = ans.getQuestion();
 			if (q != null) {
 				questionToValuesHash.put(q, val);
-				//theCase.trace("put to hash: " + q.getId() + "; " + val);
-			} else {
+				// theCase.trace("put to hash: " + q.getId() + "; " + val);
+			}
+			else {
 				theCase.trace("Question was null! Answer: " + ans);
 				theCase.trace("taking Question from Action: " + question.getId());
 				questionToValuesHash.put(question, val);
-				//theCase.trace("put to hash: " + question.getId() + "; " + val);
+				// theCase.trace("put to hash: " + question.getId() + "; " +
+				// val);
 			}
 		}
 
@@ -259,12 +262,14 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 	 * this method is needed for protection from cycles in rule firing
 	 */
 	protected boolean lastFiredRuleEqualsCurrentRuleAndNotFired(XPSCase theCase) {
-		if (getLastFiredRule(theCase) != null) {
-			return !getLastFiredRule(theCase).hasFired(theCase)
-					&& getCorrespondingRule().equals(getLastFiredRule(theCase));
-		} else
-			return false;
+		Rule lastFiredRule = getLastFiredRule(theCase);
+		if (lastFiredRule != null) {
+			return !lastFiredRule.hasFired(theCase)
+					&& lastFiredRule.getAction().equals(this);
+		}
+		else return false;
 	}
+
 	/**
 	 * this method is needed for protection from cycles in rule firing
 	 */
@@ -275,10 +280,10 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 			if (!((List<?>) o).isEmpty()) {
 				SymptomValue v = (SymptomValue) ((List<?>) o).get(0);
 				return v.getRule();
-			} else
-				return null;
-		} else
-			return null;
+			}
+			else return null;
+		}
+		else return null;
 	}
 
 	/**
@@ -300,40 +305,41 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 		Object[] allAnswers = siQuestionOC.getAllAlternatives().toArray();
 
 		// go through all proreasons (only QASet.Reasons)
-		Iterator<?> proIter = getQuestion().getProReasons(theCase).iterator();
+		Iterator<Reason> proIter = getQuestion().getProReasons(theCase).iterator();
 		while (proIter.hasNext()) {
-			Object reason = proIter.next();
-			if (reason instanceof QASet.Reason) {
-				Rule rule = ((QASet.Reason) reason).getRule();
-				RuleAction action = rule.getAction();
-				if (action instanceof ActionQuestionSetter) {
-					Object[] actionValues = ((ActionQuestionSetter) action).getValues();
-					if ((actionValues[0] instanceof AnswerChoice)
-							|| (actionValues[0] instanceof AnswerUnknown)) {
-						// determine the more severe answer between the
-						// newAnswer and the
-						// up-to-now severest answer
-						Answer newAnswer = (Answer) actionValues[0];
-						if ((severestAnswer != null) && (!severestAnswer.equals(newAnswer))) {
-							theCase.trace("(" + siQuestionOC.getId() + "): of \""
-									+ ((AnswerChoice) severestAnswer).getText() + "\" and \""
-									+ ((AnswerChoice) newAnswer).getText() + "\"");
-							int i = 0;
-							boolean found = false;
-							while ((i < allAnswers.length) && (!found)) {
-								if (severestAnswer.equals(allAnswers[i])) {
-									found = true;
-								} else if (newAnswer.equals(allAnswers[i])) {
-									found = true;
-									severestAnswer = newAnswer;
-								}
-								i++;
+			Reason reason = proIter.next();
+			Rule rule = reason.getRule();
+			PSAction action = rule.getAction();
+			if (action instanceof ActionQuestionSetter) {
+				Object[] actionValues = ((ActionQuestionSetter) action).getValues();
+				if ((actionValues[0] instanceof AnswerChoice)
+						|| (actionValues[0] instanceof AnswerUnknown)) {
+					// determine the more severe answer between the
+					// newAnswer and the
+					// up-to-now severest answer
+					Answer newAnswer = (Answer) actionValues[0];
+					if ((severestAnswer != null) && (!severestAnswer.equals(newAnswer))) {
+						theCase.trace("(" + siQuestionOC.getId() + "): of \""
+								+ ((AnswerChoice) severestAnswer).getText() + "\" and \""
+								+ ((AnswerChoice) newAnswer).getText() + "\"");
+						int i = 0;
+						boolean found = false;
+						while ((i < allAnswers.length) && (!found)) {
+							if (severestAnswer.equals(allAnswers[i])) {
+								found = true;
 							}
-							theCase.trace(" take \"" + ((AnswerChoice) severestAnswer).getText()
-									+ "\"");
-						} else {
-							severestAnswer = (Answer) actionValues[0];
+							else if (newAnswer.equals(allAnswers[i])) {
+								found = true;
+								severestAnswer = newAnswer;
+							}
+							i++;
 						}
+						theCase.trace(" take \""
+								+ ((AnswerChoice) severestAnswer).getText()
+								+ "\"");
+					}
+					else {
+						severestAnswer = (Answer) actionValues[0];
 					}
 				}
 			}
@@ -347,7 +353,6 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 	public XPSCaseObject createCaseObject(XPSCase session) {
 		return new CaseActionQuestionSetter(this);
 	}
-
 
 	/**
 	 * @return Hashtable
@@ -369,6 +374,7 @@ public abstract class ActionQuestionSetter extends RuleAction implements CaseObj
 	public Double getLastSetValue(XPSCase theCase) {
 		return ((CaseActionQuestionSetter) theCase.getCaseObject(this)).getLastSetValue();
 	}
+
 	/**
 	 * @param theCase
 	 * @param newValue

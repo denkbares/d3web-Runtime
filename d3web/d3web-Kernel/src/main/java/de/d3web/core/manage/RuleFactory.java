@@ -28,7 +28,7 @@ import de.d3web.abstraction.ActionSetValue;
 import de.d3web.abstraction.formula.FormulaDateExpression;
 import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -83,7 +83,6 @@ public class RuleFactory {
 		Rule rule = createRule(theId);
 
 		ActionAddValue theAction = new ActionAddValue();
-		theAction.setRule(rule);
 		theAction.setQuestion(theQuestion);
 		theAction.setValues(theAnswers);
 
@@ -122,7 +121,6 @@ public class RuleFactory {
 		Rule rule = createRule(theId);
 
 		ActionClarify ruleAction = new ActionClarify();
-		ruleAction.setRule(rule);
 		ruleAction.setQASets(theAction);
 		ruleAction.setTarget(target);
 
@@ -181,7 +179,7 @@ public class RuleFactory {
 			null);
 	}
 	
-	public static Rule createRule(String theId, RuleAction theAction, Condition theCondition, Condition theException, Condition theContext) {
+	public static Rule createRule(String theId, PSAction theAction, Condition theCondition, Condition theException, Condition theContext) {
 		Rule rule = createRule(theId);
 		setRuleParams(rule, theAction, theCondition, theException);
 		rule.setContext(theContext);
@@ -201,7 +199,6 @@ public class RuleFactory {
 		Rule rule = createRule(theId);
 
 		ActionHeuristicPS theAction = new ActionHeuristicPS();
-		theAction.setRule(rule);
 		theAction.setDiagnosis(theDiagnosisAction);
 		theAction.setScore(theDiagnosisScore);
 
@@ -251,7 +248,6 @@ public class RuleFactory {
 		Rule rule = createRule(theId);
 
 		ActionNextQASet ruleAction = new ActionIndication();
-		ruleAction.setRule(rule);
 		ruleAction.setQASets(theAction);
 
 		setRuleParams(rule, ruleAction, theCondition, theRuleException);
@@ -270,7 +266,6 @@ public class RuleFactory {
 		
 		Rule rule = createRule(id);
 		ActionNextQASet ruleAction = new ActionInstantIndication();
-		ruleAction.setRule(rule);
 		ruleAction.setQASets(theAction);
 		setRuleParams(rule, ruleAction, theCondition, theRuleException);
 		return rule;
@@ -333,7 +328,6 @@ public class RuleFactory {
 		Rule rule = createRule(theId);
 
 		ActionRefine ruleAction = new ActionRefine();
-		ruleAction.setRule(rule);
 		ruleAction.setQASets(theAction);
 		ruleAction.setTarget(target);
 
@@ -385,7 +379,6 @@ public class RuleFactory {
 		Rule rule = createRule(theId);
 
 		ActionSetValue theAction = new ActionSetValue();
-		theAction.setRule(rule);
 		theAction.setQuestion(theQuestion);
 		theAction.setValues(theAnswers);
 
@@ -442,7 +435,6 @@ public class RuleFactory {
 		Rule rule = createRule(theId);
 
 		ActionSetValue theAction = new ActionSetValue();
-		theAction.setRule(rule);
 		theAction.setQuestion(theQuestion);
 		theAction.setValues(new Object[] { theAnswers });
 
@@ -466,7 +458,6 @@ public class RuleFactory {
 		Rule rule = createRule(theId);
 
 		ActionSetValue theAction = new ActionSetValue();
-		theAction.setRule(rule);
 		theAction.setQuestion(theQuestion);
 		theAction.setValues(new Object[] { theAnswers });
 
@@ -507,7 +498,6 @@ public class RuleFactory {
 		Rule rule = createRule(theId);
 
 		ActionSuppressAnswer theAction = new ActionSuppressAnswer();
-		theAction.setRule(rule);
 		theAction.setQuestion(theQuestion);
 		theAction.setSuppress(theAnswers);
 
@@ -521,7 +511,7 @@ public class RuleFactory {
 	 */
 	public static void setRuleParams(
 		Rule rule,
-		RuleAction theAction,
+		PSAction theAction,
 		Condition theCondition,
 		Condition theRuleException) {
 

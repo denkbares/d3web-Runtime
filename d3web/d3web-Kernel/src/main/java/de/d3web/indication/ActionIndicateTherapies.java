@@ -22,10 +22,9 @@ package de.d3web.indication;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.session.XPSCase;
 import de.d3web.indication.inference.PSMethodTherapyIndication;
@@ -36,7 +35,7 @@ import de.d3web.indication.inference.PSMethodTherapyIndication;
  * 
  * @author Joachim Baumeister
  */
-public class ActionIndicateTherapies extends RuleAction {
+public class ActionIndicateTherapies extends PSAction {
 	
 	private static final long serialVersionUID = -1883766652217433924L;
 	private List<Diagnosis> therapies;
@@ -69,7 +68,8 @@ public class ActionIndicateTherapies extends RuleAction {
 	/**
 	 * Executes the included action.
 	 */
-	public void doIt(XPSCase theCase) {
+	@Override
+	public void doIt(XPSCase theCase, Rule rule) {
 		//
 		//		DiagnosisScore resultDS =
 		//			getDiagnosis().getScore(theCase, getProblemsolverContext()).add(
@@ -92,23 +92,10 @@ public class ActionIndicateTherapies extends RuleAction {
 	}
 
 	/**
-	 * Inserts the corresponding rule as Knowledge to the given entities
-	 */
-	private void registerRuleWithEntities(List<Diagnosis> entities) {
-		Rule.insertInto(getCorrespondingRule(), entities, getProblemsolverContext(), MethodKind.BACKWARD);
-	}
-
-	/**
-	 * Removes the corresponding rule from the given entities
-	 */
-	private void deregisterRuleFromOldEntities(List<Diagnosis> entities) {
-		Rule.removeFrom(getCorrespondingRule(), entities, getProblemsolverContext(), MethodKind.BACKWARD);
-	}
-
-	/**
 	 * Tries to undo the included action.
 	 */
-	public void undo(XPSCase theCase) {
+	@Override
+	public void undo(XPSCase theCase, Rule rule) {
 		//		DiagnosisScore resultDS = null;
 		//		if (getScore().equals(Score.N7)) {
 		//			Iterator iter =
@@ -154,14 +141,11 @@ public class ActionIndicateTherapies extends RuleAction {
 	 *            The therapies to set.
 	 */
 	public void setTherapies(List<Diagnosis> newTherapies) {
-		deregisterRuleFromOldEntities(therapies);
 		therapies = newTherapies;
-		registerRuleWithEntities(therapies);
 	}
 	
-	public RuleAction copy() {
+	public PSAction copy() {
 		ActionIndicateTherapies a = new ActionIndicateTherapies();
-		a.setRule(getCorrespondingRule());
 		a.setTherapies(new LinkedList<Diagnosis>(getTherapies()));
 		return a;
 	}

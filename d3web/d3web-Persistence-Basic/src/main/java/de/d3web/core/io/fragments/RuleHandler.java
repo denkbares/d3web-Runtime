@@ -27,7 +27,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.FragmentHandler;
@@ -67,7 +67,7 @@ public class RuleHandler implements FragmentHandler {
 		String id = node.getAttribute("ID");
 		String active = node.getAttribute("active");
 		String comment = node.getAttribute("comment");
-		RuleAction action = null;
+		PSAction action = null;
 		Condition condition = null;
 		Condition exception = null;
 		Condition context = null;
@@ -91,8 +91,8 @@ public class RuleHandler implements FragmentHandler {
 			} else {
 				Object object = pm.readFragment(child, kb);
 				if (object != null) {
-					if (object instanceof RuleAction && action == null) {
-						action = (RuleAction) object;
+					if (object instanceof PSAction && action == null) {
+						action = (PSAction) object;
 					} else if (object instanceof Condition && condition == null) {
 						condition = (Condition) object;
 					} else {
@@ -110,7 +110,6 @@ public class RuleHandler implements FragmentHandler {
 		if (comment != null && comment.length()>0) {
 			rule.setComment(comment);
 		}
-		action.setRule(rule);
 		return rule;
 	}
 
@@ -141,7 +140,7 @@ public class RuleHandler implements FragmentHandler {
 		}
 		PersistenceManager pm = PersistenceManager.getInstance();
 		// creating action node
-		RuleAction action = rule.getAction();
+		PSAction action = rule.getAction();
 		if (action != null) {
 			Element actionNode = pm.writeFragment(action, doc);
 			node.appendChild(actionNode);

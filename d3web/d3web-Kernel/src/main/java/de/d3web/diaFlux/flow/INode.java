@@ -26,7 +26,7 @@ package de.d3web.diaFlux.flow;
 import java.io.Serializable;
 import java.util.List;
 
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.session.CaseObjectSource;
 
 /**
@@ -48,7 +48,7 @@ public interface INode extends Serializable, CaseObjectSource {
 	 * 
 	 * @return s the action this node is doing when reached
 	 */
-	RuleAction getAction();
+	PSAction getAction();
 	
 	/**
 	 * @return s the id of the node

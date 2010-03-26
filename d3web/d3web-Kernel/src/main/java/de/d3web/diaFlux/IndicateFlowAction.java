@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.XPSCase;
 import de.d3web.diaFlux.flow.Flow;
@@ -39,33 +39,32 @@ import de.d3web.diaFlux.inference.FluxSolver;
  * @author Reinhard Hatko
  * Created on: 03.11.2009
  */
-public class IndicateFlowAction extends RuleAction {
+public class IndicateFlowAction extends PSAction {
 	
 	private static final long serialVersionUID = -157309383130821699L;
 	private final String flowName;
 	private final String startNodeName;
 
-	public IndicateFlowAction(Rule rule, String flow, String node) {
+	public IndicateFlowAction(String flow, String node) {
 		super();
-		super.setRule(rule);
 		this.flowName = flow;
 		this.startNodeName = node;
 	}
 
 	@Override
-	public RuleAction copy() {
-		return new IndicateFlowAction(getCorrespondingRule(), flowName, startNodeName);
+	public PSAction copy() {
+		return new IndicateFlowAction(flowName, startNodeName);
 	}
 
 	@Override
-	public void doIt(XPSCase theCase) {
+	public void doIt(XPSCase theCase, Rule rule) {
 		
 		
 		log("Indicating Startnode '"  + startNodeName +"' of flow '" + flowName + "'.", Level.FINE);
 		
 		StartNode startNode = findStartNode(theCase);
 		
-		FluxSolver.getInstance().indicateFlow(getCorrespondingRule(), startNode, theCase);
+		FluxSolver.getInstance().indicateFlow(rule, startNode, theCase);
 
 	}
 	
@@ -106,7 +105,7 @@ public class IndicateFlowAction extends RuleAction {
 	}
 
 	@Override
-	public void undo(XPSCase theCase) {
+	public void undo(XPSCase theCase, Rule rule) {
 		
 		
 		

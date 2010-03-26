@@ -26,7 +26,7 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -71,7 +71,7 @@ public class NextQASetActionHandler implements FragmentHandler {
 				diag = (Diagnosis) kb.search(id);
 			}
 		}
-		RuleAction action = null;
+		PSAction action = null;
 		if (type.equals("ActionNextQASet")) {
 			throw new IOException("Can not instantiate abstract class ActionNextQASet");
 		} else if (type.equals("ActionClarify")) {

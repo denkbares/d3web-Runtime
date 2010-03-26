@@ -26,7 +26,7 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.RuleSet;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.NamedObject;
@@ -40,7 +40,7 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  * Creation date: (19.06.2001 17:18:31)
  * @author Joachim Baumeister
  */
-public class ActionHeuristicPS extends RuleAction {
+public class ActionHeuristicPS extends PSAction {
 	
 	private static final long serialVersionUID = -717940157732427270L;
 	private Diagnosis diagnosis;
@@ -82,7 +82,8 @@ public class ActionHeuristicPS extends RuleAction {
 	/**
 	 * Executes the included action.
 	 */
-	public void doIt(XPSCase theCase) {
+	@Override
+	public void doIt(XPSCase theCase, Rule rule) {
 
 		DiagnosisScore resultDS =
 			getDiagnosis().getScore(theCase, getProblemsolverContext()).add(
@@ -115,27 +116,11 @@ public class ActionHeuristicPS extends RuleAction {
 		return score;
 	}
 
-	/**
-	 * Inserts the corresponding rule as Knowledge to the given Diagnosis
-	 */
-	private void insertRuleIntoDiagnosis(Diagnosis diagnosis) {
-		Rule.insertInto(getCorrespondingRule(), getProblemsolverContext(), MethodKind.BACKWARD, diagnosis);
-	}
-
-	/**
-	 * Removes the corresponding rule from the given Diagnosis
-	 */
-	private void removeRuleFromOldDiagnosis(Diagnosis diagnosis) {
-		Rule.insertInto(getCorrespondingRule(), getProblemsolverContext(), MethodKind.BACKWARD, diagnosis);
-	}
-
-	/**
+		/**
 	 * sets the given Diagnosis and resets the corresponding rule as Knowledge slice 
 	 */
 	public void setDiagnosis(Diagnosis theDiagnosis) {
-		removeRuleFromOldDiagnosis(diagnosis);
 		diagnosis = theDiagnosis;
-		insertRuleIntoDiagnosis(diagnosis);
 	}
 
 	/**
@@ -149,7 +134,8 @@ public class ActionHeuristicPS extends RuleAction {
 	/**
 	 * Tries to undo the included action.
 	 */
-	public void undo(XPSCase theCase) {
+	@Override
+	public void undo(XPSCase theCase, Rule rule) {
 		DiagnosisScore resultDS = null;
 		if (getScore().equals(Score.N7)) {
 			KnowledgeSlice knowledge = getDiagnosis().getKnowledge(PSMethodHeuristic.class, MethodKind.BACKWARD);
@@ -177,9 +163,8 @@ public class ActionHeuristicPS extends RuleAction {
 			getProblemsolverContext());
 	}
 
-	public RuleAction copy() {
+	public PSAction copy() {
 		ActionHeuristicPS a = new ActionHeuristicPS();
-		a.setRule(getCorrespondingRule());
 		a.setDiagnosis(getDiagnosis());
 		a.setScore(getScore());
 		return a;

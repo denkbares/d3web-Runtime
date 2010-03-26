@@ -32,7 +32,7 @@ import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.RuleSet;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
@@ -313,7 +313,7 @@ public class FluxSolver implements PSMethod {
 			return null; // TODO correct?
 		}
 
-		RuleAction action = nextNode.getAction();
+		PSAction action = nextNode.getAction();
 
 		doAction(theCase, action);
 
@@ -333,10 +333,9 @@ public class FluxSolver implements PSMethod {
 		return dataForNode;
 	}
 
-	private void doAction(XPSCase theCase, RuleAction action) {
+	private void doAction(XPSCase theCase, PSAction action) {
 		log("Starting action: " + action);
-
-		action.doIt(theCase);
+		action.doIt(theCase, null);
 	}
 
 	/**
@@ -509,9 +508,9 @@ public class FluxSolver implements PSMethod {
 
 	}
 
-	private void undoAction(XPSCase theCase, RuleAction action) {
+	private void undoAction(XPSCase theCase, PSAction action) {
 		log("Undoing action: " + action);
-		action.undo(theCase);
+		action.undo(theCase, null);
 	}
 
 	private void log(String message) {

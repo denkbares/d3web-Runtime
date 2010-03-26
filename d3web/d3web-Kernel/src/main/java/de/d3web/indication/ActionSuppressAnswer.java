@@ -23,10 +23,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.XPSCase;
@@ -39,7 +38,7 @@ import de.d3web.indication.inference.PSMethodSuppressAnswer;
  * Creation date: (19.06.2001 18:36:54)
  * @author Joachim Baumeister
  */
-public class ActionSuppressAnswer extends RuleAction {
+public class ActionSuppressAnswer extends PSAction {
 	
 	private static final long serialVersionUID = 5889412150933130689L;
 
@@ -60,9 +59,10 @@ public class ActionSuppressAnswer extends RuleAction {
 	 * Creation date: (21.08.2000 07:24:48)
 	 * @param theCase current case
 	 */
-	public void doIt(XPSCase theCase) {
+	@Override
+	public void doIt(XPSCase theCase, Rule rule) {
 		((CaseQuestion) theCase.getCaseObject(getQuestion())).addRuleSuppress(
-			getCorrespondingRule());
+			rule);
 	}
 
 	/**
@@ -100,26 +100,10 @@ public class ActionSuppressAnswer extends RuleAction {
 	}
 
 	/**
-	 * inserts the corresponding rule as knowledge to the specified Question
-	 */
-	private void insertRuleIntoQuestion(QuestionChoice theQuestion) {
-		Rule.insertInto(getCorrespondingRule(), getProblemsolverContext(), MethodKind.BACKWARD, theQuestion);
-	}
-
-	/**
-	 * removes the corresponding rule from the specified Question
-	 */
-	private void removeRuleFromOldQuestion(QuestionChoice theQuestion) {
-		Rule.removeFrom(getCorrespondingRule(), getProblemsolverContext(), MethodKind.BACKWARD, theQuestion);
-	}
-
-	/**
 	 * sets the Question whose alternatives shall be suppressed in case of firing.
 	 */
 	public void setQuestion(QuestionChoice theQuestion) {
-		removeRuleFromOldQuestion(this.question);
 		this.question = theQuestion;
-		insertRuleIntoQuestion(this.question);
 	}
 
 	/**
@@ -158,16 +142,15 @@ public class ActionSuppressAnswer extends RuleAction {
 	 * Creation date: (21.08.2000 07:25:41)
 	 * @param theCase current case
 	 */
-	public void undo(XPSCase theCase) {
+	@Override
+	public void undo(XPSCase theCase, Rule rule) {
 		(
 			(CaseQuestion) theCase.getCaseObject(
-				getQuestion())).removeRuleSuppress(
-			getCorrespondingRule());
+				getQuestion())).removeRuleSuppress(rule);
 	}
 
-	public RuleAction copy() {
+	public PSAction copy() {
 		ActionSuppressAnswer a = new ActionSuppressAnswer();
-		a.setRule(getCorrespondingRule());
 		a.setQuestion(getQuestion());
 		a.setSuppress(new LinkedList<AnswerChoice>(getSuppress()));
 		return a;

@@ -31,7 +31,7 @@ import de.d3web.abstraction.ActionAddValue;
 import de.d3web.abstraction.ActionSetValue;
 import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.abstraction.formula.FormulaNumber;
-import de.d3web.core.inference.RuleAction;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.indication.ActionClarify;
@@ -57,7 +57,7 @@ public class RuleActionVerbalizer implements Verbalizer {
 	private static ResourceBundle propertyRB = ResourceBundle.getBundle("properties.messages");
 
 	public Class[] getSupportedClassesForVerbalization() {
-		Class[] supportedClasses = { RuleAction.class };
+		Class[] supportedClasses = { PSAction.class };
 		return supportedClasses;
 	}
 
@@ -90,12 +90,12 @@ public class RuleActionVerbalizer implements Verbalizer {
 			return null;
 		}
 		// Test if object is legal for this verbalizer
-		if (!(o instanceof RuleAction)) {
+		if (!(o instanceof PSAction)) {
 			Logger.getLogger("Verbalizer").warning("Object " + o + " couldnt be rendered by RuleActionVerbalizer!");
 			return null;
 		}
 		// cast the given object to RuleAction
-		RuleAction ra = (RuleAction) o;
+		PSAction ra = (PSAction) o;
 
 		// read parameter from parameter map, default = null
 		Object context = null;
@@ -111,11 +111,11 @@ public class RuleActionVerbalizer implements Verbalizer {
 	/**
 	 * Creates a text-visualisation of the given action in HTML
 	 * 
-	 * @param RuleAction
+	 * @param PSAction
 	 *            the action that will be displayed
 	 * @return String the text view of the action
 	 */
-	private static String createHTMLfromAction(RuleAction ra, Object context) {
+	private static String createHTMLfromAction(PSAction ra, Object context) {
 		String s = "";
 
 		if (ra instanceof ActionHeuristicPS) {
