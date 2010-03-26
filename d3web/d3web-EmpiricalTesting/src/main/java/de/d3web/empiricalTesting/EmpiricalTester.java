@@ -83,6 +83,8 @@ public class EmpiricalTester {
 		TS.setKb(kb);
 		TS.loadRepository(workspace + caseFile);
 
+		System.out.println("DerivedSolutions-Precision (Non-Sequential): " + TS.totalNonSequentialPrecision());
+		System.out.println("DerivedSolutions-Recall (Non-Sequential): " + TS.totalNonSequentialRecall());
 		System.out.println("DerivedSolutions-Precision: " + TS.totalPrecision());
 		System.out.println("DerivedSolutions-Recall: " + TS.totalRecall());
 		System.out.println("Interview-Precision: " + TS.totalPrecisionInterview());
@@ -140,6 +142,7 @@ public class EmpiricalTester {
 	
 		InterviewBot bot = new InterviewBot.Builder(kb).
 			ratingStrategy(new StateRatingStrategy()).
+			maxCases(50).
 			build();
 		List<SequentialTestCase> cases = bot.generate();
 	

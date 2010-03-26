@@ -46,26 +46,33 @@ public class EmpiricalTestingFunctions {
 	 * @return Precision of the SequentialTestCase
 	 */
 	public double precision(SequentialTestCase stc) {
-		return precision(stc, DerivedSolutionsCalculator.getInstance());
+		return precision(stc, DerivedSolutionsCalculator.getInstance(), false);
 	}
  
 	/**
 	 * Returns the Precision for a specified state (e.g. derived solutions, interview etc.).
 	 * @param stc The underlying STC
 	 * @param state The state for precision calculation
+	 * @param nonsequential if true, only the last rtc of each stc is taken into account
 	 * @return Precision of the SequentialTestCase and state
 	 */
-	public double precision(SequentialTestCase stc, PrecisionRecallCalculator state) {
+	public double precision(SequentialTestCase stc, PrecisionRecallCalculator state, boolean nonsequential) {
 		if (stc.getCases().size() == 0) {
 			return 0;
 		} else {
 			double numerator = 0;
 			double denominator = 0;
-		
-			for (int i = 0; i < stc.getCases().size(); i++) {
-				numerator += wp(i) * state.precision(stc.getCases().get(i));
-				denominator += wp(i);
+			
+			if (nonsequential) {
+				numerator += 1 * state.precision(stc.getCases().get(stc.getCases().size() - 1));
+				denominator += 1;
+			} else {
+				for (int i = 0; i < stc.getCases().size(); i++) {
+					numerator += wp(i) * state.precision(stc.getCases().get(i));
+					denominator += wp(i);
+				}
 			}
+				
 			return numerator / denominator;
 		}
 	}
@@ -86,25 +93,31 @@ public class EmpiricalTestingFunctions {
 	 * @return Recall of the SequentialTestCase
 	 */
 	public double recall(SequentialTestCase stc) {
-		return recall(stc, DerivedSolutionsCalculator.getInstance());
+		return recall(stc, DerivedSolutionsCalculator.getInstance(), false);
 	}
 	
 	/**
 	 * Returns the Recall for a specified state (e.g. derived solutions, interview etc.).
 	 * @param stc The underlying STC
 	 * @param state The state for recall calculation
+	 * @param nonsequential if true, only the last rtc of each stc is taken into account
 	 * @return Recall of the SequentialTestCase and state
 	 */
-	public double recall(SequentialTestCase stc, PrecisionRecallCalculator state) {
+	public double recall(SequentialTestCase stc, PrecisionRecallCalculator state, boolean nonsequential) {
 		if (stc.getCases().size() == 0) {
 			return 1;
 		} else {
 			double numerator = 0;
 			double denominator = 0;
-
-			for (int i = 0; i < stc.getCases().size(); i++) {
-				numerator += wr(i) * state.recall(stc.getCases().get(i));
-				denominator += wr(i);
+			
+			if (nonsequential) {
+				numerator += 1 * state.recall(stc.getCases().get(stc.getCases().size() - 1));
+				denominator += 1;
+			} else {
+				for (int i = 0; i < stc.getCases().size(); i++) {
+					numerator += wr(i) * state.recall(stc.getCases().get(i));
+					denominator += wr(i);
+				}
 			}
 			return numerator / denominator;
 		}

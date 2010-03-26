@@ -48,6 +48,8 @@ public class DerivedSolutionsCalculator extends PrecisionRecallCalculator{
 	 */
 	@Override
 	public double prec(RatedTestCase rtc) {
+		if (rtc.getDerivedSolutions().size() == 0)
+			return 0;
 		double numerator = similarity(rtc);
 		numerator /= rtc.getDerivedSolutions().size();
 		return numerator;
