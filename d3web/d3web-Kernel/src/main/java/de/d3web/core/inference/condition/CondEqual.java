@@ -112,8 +112,13 @@ public class CondEqual extends CondQuestion {
 		checkAnswer(theCase);
 		Answer value = question.getValue(theCase);
 		if (question instanceof QuestionMC) {
-			AnswerMultipleChoice mcans = (AnswerMultipleChoice)value;
-			return mcans.contains(this.value);
+			if (value instanceof AnswerMultipleChoice) {
+				AnswerMultipleChoice mcans = (AnswerMultipleChoice)value;
+				return mcans.contains(this.value);
+			} else {
+				//workaround if there is a AnswerChoice set
+				return this.value.equals(value);
+			}
 		} else
 			return this.value.equals(value);
 	}

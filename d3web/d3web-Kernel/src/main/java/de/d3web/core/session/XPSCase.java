@@ -216,7 +216,7 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	void setValue(ValuedObject o, Object[] value);
 
 	/**
-	 * Deprecated: Please use void setValue(ValuedObject valuedObject, Answer value)
+	 * Deprecated: Please use void setValue(ValuedObject valuedObject, Answer value, Rule rule)
 	 */
 	@Deprecated
 	void setValue(ValuedObject o, Object[] value, Rule rule);

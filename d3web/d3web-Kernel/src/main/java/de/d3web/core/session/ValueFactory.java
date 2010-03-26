@@ -45,16 +45,31 @@ public class ValueFactory {
 //			}
 //			return new MultipleChoiceValue(values);
 //		} else {
+			for (Object o: newValue) {
+				if (o instanceof AnswerUnknown) {
+					return new Unknown();
+				}
+			}
 			Object o = newValue[0];
-			if (o instanceof AnswerUnknown) {
-				return new Unknown();
-			} else if (valuedObject instanceof QuestionNum) {
+			if (valuedObject instanceof QuestionNum) {
 				Double d = (Double) ((AnswerNum)o).getValue(theCase);
 				return new NumValue(d);
 			} else if (valuedObject instanceof QuestionOC) {
 				return new ChoiceValue((AnswerChoice)o);
 			} else if (valuedObject instanceof QuestionMC) {
-				return new MultipleChoiceValue((AnswerMultipleChoice)o);
+				if (o instanceof AnswerMultipleChoice) {
+					return new MultipleChoiceValue((AnswerMultipleChoice)o);
+				} else {
+					List<AnswerChoice> answers = new ArrayList<AnswerChoice>(newValue.length);;
+					for (Object o2: newValue) {
+						if (o2 instanceof AnswerChoice) {
+							answers.add((AnswerChoice) o2);
+						} else {
+							throw new IllegalArgumentException(o2.toString()+"is no AnswerChoice");
+						}
+					}
+					return new MultipleChoiceValue(new AnswerMultipleChoice(answers));
+				}
 			} else if (o instanceof QuestionDate) {
 				Date date = (Date) ((AnswerDate)o).getValue(theCase);
 				return new DateValue(date);
