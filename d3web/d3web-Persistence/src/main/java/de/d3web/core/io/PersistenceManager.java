@@ -27,6 +27,8 @@ import java.io.InputStream;
 import java.net.URLDecoder;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
@@ -120,15 +122,16 @@ public class PersistenceManager {
 			}
 			CombinedProgressListener cpl = new CombinedProgressListener(size, listener);
 			entries = zipfile.entries();
+			List<ZipEntry> files = new LinkedList<ZipEntry>();
 			while (entries.hasMoreElements()) {
 				ZipEntry entry = entries.nextElement();
-				if (entry.isDirectory()) {
-					continue;
+				if (!entry.isDirectory()) {
+					files.add(entry);
 				}
-				cpl.next(entry.getSize());
-				boolean parsed = false;
-				String name = entry.getName();
-				for (Extension plugin: readerPlugins) {
+			}
+			for (Extension plugin: readerPlugins) {
+				for (ZipEntry entry: new LinkedList<ZipEntry>(files)) {
+					String name = entry.getName();
 					//checks if this entry can be parsed with this plugin
 					boolean canparse = false;
 					String filepattern = plugin.getParameter("filepattern");
@@ -145,21 +148,20 @@ public class PersistenceManager {
 					if (canparse) {
 						KnowledgeReader reader = (KnowledgeReader) plugin.getSingleton();
 						reader.read(kb, zipfile.getInputStream(entry), cpl);
-						parsed = true;
-						//parse each entry only once
-						break;
+						files.remove(entry);
 					} 
 				}
-				if (!parsed) {
-					if (name.startsWith(MULTIMEDIA_PATH_PREFIX)) {
-						JarBinaryRessource jarBinaryRessource = new JarBinaryRessource(entry, file);
-						kb.addResouce(jarBinaryRessource);
-					} else if (notNeeded(entry)) {
-						//nothing to to, files were necessary for previous versions of persistence
-					} else {
-						Logger.getLogger("Persistence").warning("No parser for entry "+name+
-								" available. This file will be lost when saving the KnowledgeBase.");
-					}
+			}
+			for (ZipEntry entry: files) {
+				String name = entry.getName();
+				if (name.startsWith(MULTIMEDIA_PATH_PREFIX)) {
+					JarBinaryRessource jarBinaryRessource = new JarBinaryRessource(entry, file);
+					kb.addResouce(jarBinaryRessource);
+				} else if (notNeeded(entry)) {
+					//nothing to to, files were necessary for previous versions of persistence
+				} else {
+					Logger.getLogger("Persistence").warning("No parser for entry "+name+
+					" available. This file will be lost when saving the KnowledgeBase.");
 				}
 			}
 			return kb;
