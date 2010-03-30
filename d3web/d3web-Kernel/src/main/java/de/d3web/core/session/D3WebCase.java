@@ -150,10 +150,6 @@ public class D3WebCase implements XPSCase {
 		for (PSMethod method : commonPSMethods) {
 			addUsedPSMethod(method);
 		}
-		//adding preconfigured psmethods from the kb to the case
-		for (PSConfig psConfig: kb.getPsConfigs()) {
-			checkStateAndInsertPSM(kb, psConfig);
-		}
 		//get PluginConfiguration
 		PluginConfig pc = PluginConfig.getPluginConfig(kb);
 		//add plugged PS with default config, only if none instance of this plugin was configured in the kb
@@ -179,8 +175,11 @@ public class D3WebCase implements XPSCase {
 			//get autodetect of the psMethod
 			Autodetect auto = pluginEntry.getAutodetect();
 			//add the newly created configuration
-			PSConfig psConfig = new PSConfig(PSConfig.PSState.autodetect, psMethod, auto, e.getID(), e.getPluginID());
+			PSConfig psConfig = new PSConfig(PSConfig.PSState.autodetect, psMethod, auto, e.getID(), e.getPluginID(), e.getPriority());
 			kb.addPSConfig(psConfig);
+		}
+		//adding preconfigured psmethods from the kb to the case
+		for (PSConfig psConfig: kb.getPsConfigs()) {
 			checkStateAndInsertPSM(kb, psConfig);
 		}
 		trace("\n------------------------------------------------\nNeuer Fall\n");

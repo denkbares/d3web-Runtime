@@ -769,7 +769,13 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		return qASets;
 	}
 
+	/**
+	 * Returns a sorted List of PSConfigs
+	 * @return PSConfigs sorted by Priority
+	 */
 	public List<PSConfig> getPsConfigs() {
+		//the list is sorted 
+		Collections.sort(psConfigs);
 		return Collections.unmodifiableList(psConfigs);
 	}
 

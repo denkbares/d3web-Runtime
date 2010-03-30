@@ -56,6 +56,7 @@ public class DefaultPSConfigHandler implements FragmentHandler {
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		String extensionID = element.getAttribute(EXTENSION_ID);
 		String pluginID = element.getAttribute("pluginID");
+		Double priority = Double.parseDouble(element.getAttribute("priority"));
 		PluginManager pluginManager = PluginManager.getInstance();
 		PSState psState = PSConfig.PSState.valueOf(element.getAttribute("state"));
 		Extension extension = null;
@@ -78,7 +79,7 @@ public class DefaultPSConfigHandler implements FragmentHandler {
 			}
 		}
 		PSMethod psMethod = (PSMethod) extension.getNewInstance();
-		return new PSConfig(psState, psMethod, auto, extensionID, pluginID);
+		return new PSConfig(psState, psMethod, auto, extensionID, pluginID, priority);
 	}
 
 	@Override
@@ -92,6 +93,7 @@ public class DefaultPSConfigHandler implements FragmentHandler {
 		element.setAttribute(EXTENSION_ID, psConfig.getExtensionID());
 		element.setAttribute("pluginID", psConfig.getPluginID());
 		element.setAttribute("state", psConfig.getPsState().name());
+		element.setAttribute("priority", ""+psConfig.getPriority());
 		return element;
 	}
 

@@ -25,7 +25,7 @@ import de.d3web.plugin.Autodetect;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class PSConfig {
+public class PSConfig implements Comparable<PSConfig> {
 
 	private static final long serialVersionUID = -8392435221734086888L;
 
@@ -40,17 +40,23 @@ public class PSConfig {
 	private Autodetect autodetect;
 	private String extensionID;
 	private String pluginID;
+	private double priority;
 
-	public PSConfig(PSState psState, PSMethod psMethod, String extensionID, String pluginID) {
-		this(psState, psMethod, null, extensionID, pluginID);
+	public double getPriority() {
+		return priority;
 	}
 
-	public PSConfig(PSState psState, PSMethod psMethod, Autodetect autodetect, String extensionID, String pluginID) {
+	public PSConfig(PSState psState, PSMethod psMethod, String extensionID, String pluginID, double priority) {
+		this(psState, psMethod, null, extensionID, pluginID, priority);
+	}
+
+	public PSConfig(PSState psState, PSMethod psMethod, Autodetect autodetect, String extensionID, String pluginID, double priority) {
 		this.psState = psState;
 		this.psMethod = psMethod;
 		this.autodetect = autodetect;
 		this.extensionID = extensionID;
 		this.pluginID = pluginID;
+		this.priority = priority;
 	}
 
 	public PSState getPsState() {
@@ -71,5 +77,10 @@ public class PSConfig {
 
 	public String getPluginID() {
 		return pluginID;
+	}
+
+	@Override
+	public int compareTo(PSConfig o) {
+		return Double.compare(priority, o.getPriority());
 	}
 }

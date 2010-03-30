@@ -37,7 +37,8 @@ public class DummyPSConfig extends PSConfig{
 	}
 
 	public DummyPSConfig(PSState psState, String extensionID, String pluginID, Element e) {
-		super(psState, null, null, extensionID, pluginID);
+		//priority is set to 10, it is not used anyway (e is loaded and saved, which includes a priority)
+		super(psState, null, null, extensionID, pluginID, 10);
 		this.element=e;
 	}
 	

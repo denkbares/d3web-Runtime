@@ -20,7 +20,7 @@
 		<parameter id="name" value="PSMethodCostBenefit" />
 		<parameter id="description" value="PSMethod for CostBenefit" />
 		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
+		<parameter id="priority" value="6" />
 	</extension>
 
 	<extension plugin-id="KnowledgePersistenceExtensionPoints"
