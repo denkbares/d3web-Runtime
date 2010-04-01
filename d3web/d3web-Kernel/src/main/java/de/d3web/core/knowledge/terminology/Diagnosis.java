@@ -222,40 +222,6 @@ public class Diagnosis extends NamedObject implements ValuedObject, TerminologyO
 		return state;
 	}
 
-	
-	
-	/**
-	 * Removes the specified child from this object. The 
-	 * double-linked children/parent links are removed as well. 
-	 * @param theDiagnosis a child of this instance
-	 * @return true, if the deletion was successful
-	 */
-	public synchronized boolean removeChildren(Diagnosis diagnosis) {
-		if (removeFromList(diagnosis, getChildren()))
-			diagnosis.removeParent(this);
-		return false;
-	}
-
-	private boolean removeFromList(Diagnosis diagnosis, List<? extends NamedObject> list) {
-		if (list.contains(diagnosis)) {
-			list.remove(diagnosis);
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Removes the specified child from this object. The 
-	 * double-linked children/parent links are removed as well. 
-	 * @param theDiagnosis a parent of this object
-	 * @return true, if the removal was successful
-	 */
-	public synchronized boolean removeParent(Diagnosis diagnosis) {
-		if (removeFromList(diagnosis, getParents()))
-			diagnosis.removeChildren(this);
-		return false;
-	}
-
 	/**
 	 * Sets the new apriori probability of this instance. 
 	 * The value is fixed to the predefined {@link Score} values: 

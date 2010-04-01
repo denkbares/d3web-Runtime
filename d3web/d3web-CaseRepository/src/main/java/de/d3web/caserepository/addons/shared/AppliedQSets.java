@@ -35,6 +35,7 @@ import java.util.logging.Logger;
 
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.addons.IAppliedQSets;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 
@@ -92,9 +93,9 @@ public class AppliedQSets implements IAppliedQSets {
 	public String getXMLCode() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<QContainers>\n");
-		Iterator iter = a.iterator();
+		Iterator<QContainer> iter = a.iterator();
 		while (iter.hasNext()) {
-			QContainer q = (QContainer) iter.next();
+			QContainer q = iter.next();
 			sb.append(
 				"<QContainer"
 				+ " id=\"" + q.getId() + "\""
@@ -190,8 +191,8 @@ public class AppliedQSets implements IAppliedQSets {
 			
 		// order of a
 		
-		Iterator iter = a.iterator();
-		Iterator oiter = other.a.iterator();
+		Iterator<QContainer> iter = a.iterator();
+		Iterator<QContainer> oiter = other.a.iterator();
 		while (iter.hasNext())
 			if (!iter.next().equals(oiter.next()))
 				return false;
@@ -204,20 +205,16 @@ public class AppliedQSets implements IAppliedQSets {
 	 */
 	public void update(CaseObject co, Question question) {
 		
-		Collection answers = co.getAnswers(question);
+		Collection<?> answers = co.getAnswers(question);
 		
-		List parentQContainers = new LinkedList();
-		Iterator iter = question.getParents().iterator();
-		while (iter.hasNext()) {
-			Object o = iter.next(); 
+		List<QContainer> parentQContainers = new LinkedList<QContainer>();
+		for (TerminologyObject o: question.getParents()) {
 			if (o instanceof QContainer)
-				parentQContainers.add(o);
+				parentQContainers.add((QContainer) o);
 		}
 		
 		if ((answers == null) || (answers.isEmpty())) {
-			iter = parentQContainers.iterator();
-			while (iter.hasNext()) {
-				QContainer o = (QContainer) iter.next(); 
+			for (QContainer o: parentQContainers) {
 				if (!hasAnsweredChildren(co, o))
 					resetApplied(o);
 			}
@@ -238,15 +235,13 @@ public class AppliedQSets implements IAppliedQSets {
 			if (parentQContainers.size() == 1)
 				setApplied((QContainer) parentQContainers.get(0));
 			else {
-				iter = parentQContainers.iterator();
-				List activeParents = new LinkedList();
-				while (iter.hasNext()) {
-					Object o = iter.next(); 
-					if (isApplied((QContainer) o))
+				List<QContainer> activeParents = new LinkedList<QContainer>();
+				for (QContainer o: parentQContainers) {
+					if (isApplied(o))
 						activeParents.add(o);
 				}
 				if (activeParents.isEmpty()) {
-					Iterator iter2 = parentQContainers.iterator();
+					Iterator<QContainer> iter2 = parentQContainers.iterator();
 					while (iter2.hasNext())
 						setApplied((QContainer) iter2.next());
 				}
@@ -259,12 +254,10 @@ public class AppliedQSets implements IAppliedQSets {
 	 * @return
 	 */
 	private boolean hasAnsweredChildren(CaseObject co, QContainer container) {
-		Iterator iter = container.getChildren().iterator();
-		while (iter.hasNext()) {
-			Object o = iter.next();
+		for (TerminologyObject o: container.getChildren()) {
 			if (o instanceof Question) {
-				Object a = co.getAnswers((Question) o);
-				if (a != null && !((Collection) a).isEmpty()) return true;
+				Collection<?> a = co.getAnswers((Question) o);
+				if (a != null && !a.isEmpty()) return true;
 			} else if (o instanceof QContainer)
 				return hasAnsweredChildren(co, (QContainer) o);
 		}

@@ -27,9 +27,9 @@ import java.util.List;
 import java.util.Map;
 
 import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.XPSCase;
 import de.d3web.scoring.DiagnosisScore;
@@ -123,10 +123,10 @@ public class EDSMethod extends PSSubMethod {
 	 */
 	private void setAllChildrenToExcluded(XPSCase theCase, Diagnosis parentDiagnosis) {
 		Map<Diagnosis, List<ChangeOfDiagnosis>> innerMap = getInnerMap(theCase);
-		List<? extends NamedObject> children = parentDiagnosis.getChildren();
-		if (children == null || children.isEmpty())
+		TerminologyObject[] children = parentDiagnosis.getChildren();
+		if (children == null || children.length==0)
 			return;
-		for (NamedObject object : children) {
+		for (TerminologyObject object : children) {
 			if(object instanceof Diagnosis) {
 				Diagnosis eachDiagnosis = (Diagnosis) object;
 				if (eachDiagnosis.getState(theCase, PSCONTEXT).equals(DiagnosisState.UNCLEAR)) {
@@ -177,11 +177,11 @@ public class EDSMethod extends PSSubMethod {
 		List<ChangeOfDiagnosis> listOfChanges = innerMap.get(diagnosis);
 		if(listOfChanges == null || listOfChanges.isEmpty())
 			return;
-		List<? extends NamedObject> children = diagnosis.getChildren();
-		if (children == null || children.isEmpty()) {
+		TerminologyObject[] children = diagnosis.getChildren();
+		if (children == null || children.length==0) {
 			return;
 		}
-		for (NamedObject object : children) {
+		for (TerminologyObject object : children) {
 			if(object instanceof Diagnosis) {
 				Diagnosis eachChildren = (Diagnosis) object;
 				ChangeOfDiagnosis change = getChangeOf(listOfChanges, eachChildren);

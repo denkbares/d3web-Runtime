@@ -21,6 +21,7 @@
 package de.d3web.core.knowledge.terminology;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,7 @@ import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.KnowledgeContainer;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 import de.d3web.core.session.CaseObjectSource;
@@ -52,7 +54,7 @@ import de.d3web.core.session.XPSCase;
  * @see de.d3web.core.knowledge.terminology.IDObject
  * @see de.d3web.kernel.misc.PropertiesAdapter
  */
-public abstract class NamedObject implements IDObject, CaseObjectSource,
+public abstract class NamedObject implements TerminologyObject, CaseObjectSource,
 		KnowledgeContainer, PropertiesContainer {
 
 	private static final long serialVersionUID = -3561319946758513307L;
@@ -333,16 +335,6 @@ public abstract class NamedObject implements IDObject, CaseObjectSource,
 	}
 
 	/**
-	 * Returns all children (including the linked ones) of this
-	 * {@link NamedObject} instance.
-	 * 
-	 * @return all children of this object
-	 */
-	public List<? extends NamedObject> getChildren() {
-		return children;
-	}
-
-	/**
 	 * Returns the list of knowledge slices for a given problem-solver class
 	 * and the specified context of the problem-solving method ({@link MethodKind}).
 	 *
@@ -371,16 +363,6 @@ public abstract class NamedObject implements IDObject, CaseObjectSource,
 	}
 
 	/**
-	 * Returns the list of {@link NamedObject} instances, that are the 
-	 * parents of this instance.
-	 * 
-	 * @return the list of parents of this object
-	 */
-	public List<? extends NamedObject> getParents() {
-		return parents;
-	}
-
-	/**
 	 * Checks, whether this instance has the specified 
 	 * {@link NamedObject} as parent.
 	 * 
@@ -390,7 +372,7 @@ public abstract class NamedObject implements IDObject, CaseObjectSource,
 	public boolean hasParent(NamedObject namedObject) {
 		if (getParents() == null)
 			return false;
-		return getParents().contains(namedObject);
+		return Arrays.asList(getParents()).contains(namedObject);
 	}
 
 	/**
@@ -427,10 +409,12 @@ public abstract class NamedObject implements IDObject, CaseObjectSource,
 	 * 
 	 * @param child the specified child to be removed from the list
 	 */
-	public void removeChild(NamedObject child) {
+	public boolean removeChild(NamedObject child) {
 		if (hasChild(child)) {
 			removeParentChildLink(this, child);
+			return true;
 		}
+		return false;
 	}
 
 	/**
@@ -724,6 +708,16 @@ public abstract class NamedObject implements IDObject, CaseObjectSource,
 				return super.equals(other);
 			}
 		}
+	}
+	
+	@Override
+	public TerminologyObject[] getParents() {
+		return parents.toArray(new TerminologyObject[parents.size()]);
+	}
+	
+	@Override
+	public TerminologyObject[] getChildren() {
+		return children.toArray(new TerminologyObject[children.size()]);
 	}
 
 }

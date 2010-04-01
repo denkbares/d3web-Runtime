@@ -24,6 +24,7 @@ import java.util.List;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.InterviewObject;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.D3WebCase;
 import de.d3web.core.session.XPSCase;
@@ -216,7 +217,7 @@ public abstract class QASet extends NamedObject implements InterviewObject {
 				return true;
             
 			if (this instanceof Question)
-				for (NamedObject parent : getParents())
+				for (TerminologyObject parent : getParents())
 					if (parent instanceof QContainer) {
 						QContainer qcon = (QContainer) parent;
 						if (qcon.isValid(theCase)) {

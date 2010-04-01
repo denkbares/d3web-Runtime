@@ -85,7 +85,7 @@ public class BotHelper {
 		if (next != null && next instanceof QuestionChoice) {
 			return (QuestionChoice) next;
 		} else if (next != null) {
-			List<QASet> validQuestions = controller
+			List<Question> validQuestions = controller
 					.getAllValidQuestionsOf((QContainer) next);
 			return (QuestionChoice) validQuestions.get(0);
 		} else {
@@ -192,14 +192,14 @@ public class BotHelper {
 	
 	private boolean checkQuestionnaire(NamedObject q, String questionnaireText) {
 		NamedObject question = q;
-		while (!(question.getParents().get(0) instanceof QContainer)) {
-			if (question.getParents().get(0) instanceof Question)
-				question = (Question) question.getParents().get(0);
+		while (!(question.getParents()[0] instanceof QContainer)) {
+			if (question.getParents()[0] instanceof Question)
+				question = (Question) question.getParents()[0];
 			else 
 				return false;
 		}
 		
-		if (question.getParents().get(0).getName().equals(questionnaireText))
+		if (question.getParents()[0].getName().equals(questionnaireText))
 			return true;
 		
 		return false;

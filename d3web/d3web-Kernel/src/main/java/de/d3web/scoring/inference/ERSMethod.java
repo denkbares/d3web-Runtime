@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.NamedObject;
@@ -126,10 +127,10 @@ public class ERSMethod extends PSSubMethod {
 	 */
 	private void setAllChildrenToSuggested(XPSCase theCase, Diagnosis parentDiagnosis) {
 		Map<Diagnosis, List<ChangeOfDiagnosis>> innerMap = getInnerMap(theCase);
-		List<? extends NamedObject> children = parentDiagnosis.getChildren();
-		if (children == null || children.isEmpty())
+		TerminologyObject[] children = parentDiagnosis.getChildren();
+		if (children == null || children.length==0)
 			return;
-		for (NamedObject object : children) {
+		for (TerminologyObject object : children) {
 			if(object instanceof Diagnosis) {
 				Diagnosis eachDiagnosis = (Diagnosis) object;
 				if (eachDiagnosis.getState(theCase, PSCONTEXT).equals(DiagnosisState.UNCLEAR)) {
@@ -180,10 +181,10 @@ public class ERSMethod extends PSSubMethod {
 		List<ChangeOfDiagnosis> listOfChanges = innerMap.get(diagnosis);
 		if(listOfChanges == null || listOfChanges.isEmpty())
 			return;
-		List<? extends NamedObject> children = diagnosis.getChildren();
+		TerminologyObject[] children = diagnosis.getChildren();
 		if (children == null)
 			return;
-		for (NamedObject object : children) {
+		for (TerminologyObject object : children) {
 			if(object instanceof Diagnosis) {
 				Diagnosis eachChildren = (Diagnosis) object;
 				ChangeOfDiagnosis change = getChangeOf(listOfChanges, eachChildren);

@@ -28,9 +28,9 @@ import org.apache.myfaces.custom.tree2.TreeModelBase;
 import org.apache.myfaces.custom.tree2.TreeNode;
 import org.apache.myfaces.custom.tree2.TreeNodeBase;
 
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.XPSCase;
 import de.d3web.dialog2.util.DialogUtils;
 import de.d3web.scoring.inference.PSMethodHeuristic;
@@ -80,13 +80,13 @@ public class DiagnosesTreeBean {
 
 	private void createTreeRecursive(Diagnosis diag, TreeNode parentNode) {
 		parentNode.setIdentifier(diag.getId());
-		if (diag.getChildren().size() == 0) {
+		if (diag.getChildren().length == 0) {
 			parentNode.setLeaf(true);
 			return;
 		} else {
-			List<? extends NamedObject> childrenList = diag.getChildren();
-			for (int i = 0; i < childrenList.size(); i++) {
-				Diagnosis diagChild = (Diagnosis) childrenList.get(i);
+			TerminologyObject[] childrenList = diag.getChildren();
+			for (int i = 0; i < childrenList.length; i++) {
+				Diagnosis diagChild = (Diagnosis) childrenList[i];
 				TreeNode newNode = new TreeNodeBase(
 						DiagnosesTreeBean.STANDARD_TYPE, diagChild.getName(),
 						false);

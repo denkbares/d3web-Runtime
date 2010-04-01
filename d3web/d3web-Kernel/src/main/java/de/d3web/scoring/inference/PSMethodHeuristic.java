@@ -246,8 +246,8 @@ public class PSMethodHeuristic extends PSMethodAdapter {
      * @return
      */
     private boolean isFinalDiagnosis(Diagnosis diagnosis) {
-        List<?> c = diagnosis.getChildren();
-        boolean hasNoChildren = ((c == null) || (c.isEmpty()));
+    	TerminologyObject[] c = diagnosis.getChildren();
+        boolean hasNoChildren = ((c == null) || (c.length==0));
         HDTType type = diagnosis.getHdtType();
         if (type != null) {
             return ((type.equals(HDTType.SOLUTION)) ||

@@ -19,6 +19,7 @@
  */
 
 package de.d3web.core.session.interviewmanager;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +29,7 @@ import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -46,7 +48,7 @@ public class QContainerIterator {
 
 	private XPSCase theCase = null;
 
-	private Iterator<? extends NamedObject> childIter = null;
+	private Iterator<TerminologyObject> childIter = null;
 
 	private Question currentQuestion = null;
 
@@ -113,7 +115,8 @@ public class QContainerIterator {
 	 */
 	public QContainerIterator(XPSCase theCase, QContainer container) {
 		this.theCase = theCase;
-		childIter = container.getChildren().iterator();
+		List<TerminologyObject> children = Arrays.asList(container.getChildren());
+		childIter = children.iterator();
 		this.container = container;
 
 	}
@@ -184,9 +187,8 @@ public class QContainerIterator {
 
 		// try to keep the order of q.getChildren-list
 		// (as measured by the first element of the rule-follow-lists)
-		Iterator<? extends NamedObject> childrenIter = q.getChildren().iterator();
-		while (childrenIter.hasNext()) {
-			QASet child = (QASet) childrenIter.next();
+		for (TerminologyObject to: q.getChildren()) {
+			QASet child = (QASet) to;
 
 			// iterate through rule-follow-lists, until a list is found which
 			// starts
@@ -227,7 +229,7 @@ public class QContainerIterator {
 		return result;
 	}
 
-	private void flatten(int depth, Question q, Iterator<? extends NamedObject> children) {
+	private void flatten(int depth, Question q, Iterator<TerminologyObject> children) {
 
 		currentQuestion = q;
 
@@ -240,7 +242,7 @@ public class QContainerIterator {
 		}
 
 		if (hasNextFollow()) {
-			Iterator<QASet> follows = createFollowList(theCase, q).iterator();
+			Iterator<TerminologyObject> follows = new LinkedList<TerminologyObject>(createFollowList(theCase, q)).iterator();
 			// must be a Question here, has been checked earlier...
 			Question newQ = (Question) follows.next();
 			flatten(depth + 1, newQ, follows);
@@ -295,7 +297,8 @@ public class QContainerIterator {
 	 */
 	public Question getNextFollow() {
 		if (hasNextFollow()) {
-			childIter = createFollowList(theCase, currentQuestion).iterator();
+			List<TerminologyObject> followList = new LinkedList<TerminologyObject>(createFollowList(theCase, currentQuestion));
+			childIter = followList.iterator();
 			currentQuestion = (Question) childIter.next();
 			return currentQuestion;
 		}
@@ -313,10 +316,10 @@ public class QContainerIterator {
 
 			tempQuestions = new LinkedList<Question>();
 
-			Iterator<? extends NamedObject> childIterSave = childIter;
+			Iterator<TerminologyObject> childIterSave = childIter;
 			Question currentQuestionSave = currentQuestion;
 
-			childIter = container.getChildren().iterator();
+			childIter = Arrays.asList(container.getChildren()).iterator();
 
 			try {
 				Question topQuestion = (Question) childIter.next();

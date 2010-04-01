@@ -33,6 +33,7 @@ import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.DerivationType;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -141,13 +142,11 @@ public class MQDialogController implements DialogController {
 
 			// bei Frageklassenoberbegriff die children-Frageklassen anhängen
 			boolean hasQuestions = false;
-			Iterator childrenIter = q.getChildren().iterator();
-			while (childrenIter.hasNext()) {
-				NamedObject element = (NamedObject) childrenIter.next();
-				if (element instanceof QContainer) {
-					addContainer(containerList, (QContainer) element, ((QContainer) element)
+			for (TerminologyObject to: q.getChildren()) {
+				if (to instanceof QContainer) {
+					addContainer(containerList, (QContainer) to, ((QContainer) to)
 							.getPriority());
-				} else if (element instanceof Question) {
+				} else if (to instanceof Question) {
 					hasQuestions = true;
 				}
 			}
@@ -397,9 +396,8 @@ public class MQDialogController implements DialogController {
 						// to avoid cycles:
 						processedQASets.add(q);
 						// go through all children
-						Iterator iter = q.getChildren().iterator();
-						while (iter.hasNext()) {
-							if (isValidForDC((QASet) iter.next(), processedQASets)) {
+						for (TerminologyObject to: q.getChildren()) {
+							if (isValidForDC((QASet) to, processedQASets)) {
 								// a child is valid
 								processedQASets.remove(processedQASets.size() - 1);
 								return true;
@@ -459,17 +457,16 @@ public class MQDialogController implements DialogController {
 		}
 		if (isIndicated(c)) {
 			return true;
-		} else if (!c.getChildren().isEmpty()) {
-			if (c.getChildren().get(0) instanceof Question) {
+		} else if (c.getChildren().length!=0) {
+			if (c.getChildren()[0] instanceof Question) {
 				if (considerQuestionsAsChildren && somethingIsDoneInContainer(c)) {
 					return true;
 				}
 			} else {
 				processedQASets.add(c);
 				// go through all container-children
-				Iterator iter = c.getChildren().iterator();
-				while (iter.hasNext()) {
-					if (isIndicatedOrHasIndicatedChild((QContainer) iter.next(), processedQASets, considerQuestionsAsChildren)) {
+				for (TerminologyObject to: c.getChildren()) {
+					if (isIndicatedOrHasIndicatedChild((QContainer) to, processedQASets, considerQuestionsAsChildren)) {
 						return true;
 					}
 				}
@@ -485,9 +482,7 @@ public class MQDialogController implements DialogController {
 	 * @return boolean
 	 */
 	public boolean isAnyChildValid(QContainer c) {
-		Iterator iter = c.getChildren().iterator();
-		while (iter.hasNext()) {
-			QASet q = (QASet) iter.next();
+		for (TerminologyObject q: c.getChildren()) {
 			if (q instanceof QContainer) {
 				QContainer childC = (QContainer) q;
 				if ((isValidForDC(childC)) || (isAnyChildValid(childC))) {
@@ -531,22 +526,20 @@ public class MQDialogController implements DialogController {
 		}
 
 		// container-parents have a higher priority than question-parents for being logical parents
-		Iterator parentIter = followQuestion.getParents().iterator();
-		List remainingQuestions = new LinkedList();
-		while (parentIter.hasNext()) {
-			QASet parent = (QASet) parentIter.next();
+		List<Question> remainingQuestions = new LinkedList<Question>();
+		for (TerminologyObject parent: followQuestion.getParents()) {
 			if (parent instanceof Question) {
-				remainingQuestions.add(parent);
+				remainingQuestions.add((Question) parent);
 			}
 			if (parent instanceof QContainer) {
 				if ((getQASetQueue().contains(parent)) || (history.contains(parent))) {
-					return parent;
+					return (QContainer) parent;
 				}
 			}
 		}
 		
 		if (!remainingQuestions.isEmpty()) {
-			return (Question) remainingQuestions.get(0);
+			return remainingQuestions.get(0);
 		}
 
 		return null;
@@ -591,18 +584,17 @@ public class MQDialogController implements DialogController {
 	 * below "qc" in hierarchy. If "qc" is not a "leaf"-container, the first
 	 * "leaf"-container, that is hierarchically under "qc" will be considered.
 	 */
-	public List getAllValidQuestionsOf(QContainer qc) {
+	public List<Question> getAllValidQuestionsOf(QContainer qc) {
 		if (qc == null) {
-			return (new LinkedList());
+			return (new LinkedList<Question>());
 		}
 
-		List validQuestions = new LinkedList();
-		Iterator iter = qc.getChildren().iterator();
-		while (iter.hasNext()) {
-			QASet qaSet = (QASet) iter.next();
+		List<Question> validQuestions = new LinkedList<Question>();
+		for (TerminologyObject to: qc.getChildren()) {
+			QASet qaSet = (QASet) to;
 			if (qaSet instanceof Question) {
 				if (!qaSet.isDone(theCase)) {
-					validQuestions.add(qaSet);
+					validQuestions.add((Question) qaSet);
 				}
 				validQuestions.addAll(getAllValidFollowQuestionsOf((Question) qaSet));
 			} else {
@@ -611,16 +603,16 @@ public class MQDialogController implements DialogController {
 				}
 			}
 		}
-		return (validQuestions);
+		return validQuestions;
 	}
 
 	/**
 	 * Returns a List, that contains all valid (to ask) follow-questions and
 	 * follow-follow-questions ... of the given question "q".
 	 */
-	private List getAllValidFollowQuestionsOf(Question q) {
-		List validQuestions = new LinkedList();
-		Iterator iter = QContainerIterator.createFollowList(theCase, q).iterator();
+	private List<Question> getAllValidFollowQuestionsOf(Question q) {
+		List<Question> validQuestions = new LinkedList<Question>();
+		Iterator<QASet> iter = QContainerIterator.createFollowList(theCase, q).iterator();
 		while (iter.hasNext()) {
 			Question follow = (Question) iter.next();
 			if (isValidForDC(follow)) {
@@ -665,7 +657,7 @@ public class MQDialogController implements DialogController {
 			boolean inactiveHierarchicalChildrenOnly) {
 
 		List questionList = new LinkedList();
-		if ((qC.getChildren().size() > 0) && (qC.getChildren().get(0) instanceof Question)) {
+		if ((qC.getChildren().length > 0) && (qC.getChildren()[0] instanceof Question)) {
 			QContainerIterator containerIterator = new QContainerIterator(theCase, qC);
 
 			while (containerIterator.hasNextChild()) {
@@ -735,16 +727,25 @@ public class MQDialogController implements DialogController {
 		Boolean showAlways = (Boolean) follow.getProperties().getProperty(
 				Property.DIALOG_MQDIALOGS_SHOW_FOLLOWQ_ALWAYS);
 		if ((showAlways != null) && (showAlways.booleanValue())
-			&& (parent.getChildren().contains(follow) || !inactiveHierarchicalChildrenOnly)) {
+			&& (arrayContains(parent.getChildren(),follow) || !inactiveHierarchicalChildrenOnly)) {
 			return true;
 		}
 
 		if ((includingInactiveQuestions)
 		// (intersect with hierarchical children)
-				&& (parent.getChildren().contains(follow) || !inactiveHierarchicalChildrenOnly)) {
+				&& (arrayContains(parent.getChildren(),follow) || !inactiveHierarchicalChildrenOnly)) {
 			return true;
 		}
 
+		return false;
+	}
+	
+	private boolean arrayContains(TerminologyObject[] array, TerminologyObject object) {
+		for (TerminologyObject to: array) {
+			if (to == object) {
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -774,9 +775,7 @@ public class MQDialogController implements DialogController {
 	 *         user-selected)
 	 */
 	public boolean nothingIsDoneInContainer(QContainer c) {
-		Iterator iter = c.getChildren().iterator();
-		while (iter.hasNext()) {
-			QASet qaSet = (QASet) iter.next();
+		for (TerminologyObject qaSet: c.getChildren()) {
 			if (qaSet instanceof Question) {
 				Question q = (Question) qaSet;
 
@@ -786,9 +785,8 @@ public class MQDialogController implements DialogController {
 				} else if (logicalParent == null) {
 
 					boolean aParentIsValid = false;
-					Iterator parentIter = q.getParents().iterator();
-					while ((parentIter.hasNext()) && (!aParentIsValid)) {
-						QASet parent = (QASet) parentIter.next();
+					for (TerminologyObject to: q.getParents()) {
+						QASet parent = (QASet) to;
 						if (parent != c) {
 							// determine, if the parent is user-selected
 							QASet.Reason userSelectionReason = new QASet.Reason(null,
@@ -828,9 +826,7 @@ public class MQDialogController implements DialogController {
 	 * Returns true, if at least one of the children-questions is done.
 	 */
 	public boolean somethingIsDoneInContainer(QContainer c) {
-		Iterator iter = c.getChildren().iterator();
-		while (iter.hasNext()) {
-			QASet qaSet = (QASet) iter.next();
+		for (TerminologyObject qaSet: c.getChildren()) {
 			if (qaSet instanceof Question) {
 				Question q = (Question) qaSet;
 				if (q.hasValue(theCase)) {
@@ -1039,10 +1035,7 @@ public class MQDialogController implements DialogController {
 	private static QContainer getFirstContainerParent(Question q) {
 		if (q == null)
 			return (null);
-
-		Iterator iter = q.getParents().iterator();
-		if (iter.hasNext()) {
-			QASet qaSet = (QASet) iter.next();
+		for (TerminologyObject qaSet: q.getParents()) {
 			if (qaSet instanceof Question)
 				return (getFirstContainerParent((Question) qaSet));
 			else
@@ -1080,7 +1073,7 @@ public class MQDialogController implements DialogController {
 		QContainer qContainer = null;
 		if (q instanceof QContainer) {
 			// only "leaf"-containers should be added
-			if (!q.getChildren().isEmpty()) {
+			if (q.getChildren().length!=0) {
 				qContainer = getFirstIndicatedLeafContainer((QContainer) q, true);
 				if (qContainer == null) {
 					qContainer = getFirstIndicatedLeafContainer((QContainer) q, false);
@@ -1121,8 +1114,8 @@ public class MQDialogController implements DialogController {
 		if (startC == null)
 			return null;
 
-		while ((startC.getChildren()).get(0) instanceof QContainer) {
-			startC = (QContainer) startC.getChildren().get(0);
+		while ((startC.getChildren())[0] instanceof QContainer) {
+			startC = (QContainer) startC.getChildren()[0];
 		}
 		return startC;
 	}
@@ -1135,10 +1128,8 @@ public class MQDialogController implements DialogController {
 		if (startC == null) {
 			return null;
 		}
-
-		Iterator iter = startC.getChildren().iterator();
-		while (iter.hasNext()) {
-			QASet qaSet = (QASet) iter.next();
+		for (TerminologyObject to: startC.getChildren()) {
+			QASet qaSet = (QASet) to;
 			if (qaSet instanceof Question) {
 				if ((isIndicated(startC)) && ((!mustBeValid) || (isValidForDC(startC)))) {
 					return startC;

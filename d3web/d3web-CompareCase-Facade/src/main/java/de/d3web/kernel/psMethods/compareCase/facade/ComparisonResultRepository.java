@@ -32,6 +32,7 @@ import java.util.Set;
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.utilities.CaseConverter;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
@@ -139,11 +140,8 @@ public class ComparisonResultRepository {
 			}
 
 			if (quest != null) {
-				List parents = quest.getParents();
-
-				Iterator piter = parents.iterator();
-				while (piter.hasNext()) {
-					QASet qaset = (QASet) piter.next();
+				for (TerminologyObject to: quest.getParents()) {
+					QASet qaset = (QASet) to;
 					QASet foundParent = findNextContainerParent(qaset);
 					if (foundParent instanceof QContainer) {
 						QContainer parent = (QContainer) foundParent;
@@ -168,10 +166,8 @@ public class ComparisonResultRepository {
 		if (qaset instanceof QContainer) {
 			return qaset;
 		} else {
-			List parents = qaset.getParents();
-			Iterator iter = parents.iterator();
-			while (iter.hasNext()) {
-				QASet parent = (QASet) iter.next();
+			for (TerminologyObject to: qaset.getParents()) {
+				QASet parent = (QASet) to;
 				QASet found = findNextContainerParent(parent);
 				if (found instanceof QContainer) {
 					return found;

@@ -23,8 +23,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.d3web.core.inference.StrategicSupport;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Diagnosis;
-import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.XPSCase;
@@ -50,8 +50,8 @@ public class DefaultTargetFunction implements TargetFunction {
 		return set;
 	}
 
-	private static void addParentContainers(Set<Target> targets, NamedObject q) {
-		for (NamedObject qaset : q.getParents()) {
+	private static void addParentContainers(Set<Target> targets, TerminologyObject q) {
+		for (TerminologyObject qaset : q.getParents()) {
 			if (qaset instanceof QContainer) {
 				targets.add(new Target((QContainer) qaset));
 			} else {

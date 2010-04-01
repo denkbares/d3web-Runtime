@@ -30,7 +30,7 @@ import javax.faces.event.ActionEvent;
 import org.apache.log4j.Logger;
 import org.apache.myfaces.component.html.ext.HtmlInputHidden;
 
-import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -121,10 +121,7 @@ public class QuestionPageBean {
 	private QContainer getQContainerForQuestion(Question q) {
 		if (q == null)
 			return (null);
-
-		Iterator<? extends NamedObject> iter = q.getParents().iterator();
-		if (iter.hasNext()) {
-			QASet qaSet = (QASet) iter.next();
+		for (TerminologyObject qaSet: q.getParents()) {
 			if (qaSet instanceof Question)
 				return (getQContainerForQuestion((Question) qaSet));
 			else

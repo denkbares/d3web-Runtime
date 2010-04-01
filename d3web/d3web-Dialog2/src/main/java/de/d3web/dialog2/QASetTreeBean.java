@@ -20,8 +20,6 @@
 
 package de.d3web.dialog2;
 
-import java.util.List;
-
 import javax.faces.event.ActionEvent;
 
 import org.apache.myfaces.custom.tree2.HtmlTree;
@@ -31,7 +29,7 @@ import org.apache.myfaces.custom.tree2.TreeNode;
 import org.apache.myfaces.custom.tree2.TreeNodeBase;
 import org.apache.myfaces.custom.tree2.TreeWalker;
 
-import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -102,13 +100,13 @@ public class QASetTreeBean {
 	}
 
 	private void createTreeRecursive(QASet qaset, TreeNode parentNode) {
-		if (qaset.getChildren().size() == 0) {
+		if (qaset.getChildren().length == 0) {
 			parentNode.setLeaf(true);
 			return;
 		} else {
-			List<? extends NamedObject> childrenList = qaset.getChildren();
-			for (int i = 0; i < childrenList.size(); i++) {
-				QASet qaSetchild = (QASet) childrenList.get(i);
+			TerminologyObject[] childrenList = qaset.getChildren();
+			for (int i = 0; i < childrenList.length; i++) {
+				QASet qaSetchild = (QASet) childrenList[i];
 				if (!(qaSetchild instanceof Question)) {
 					TreeNode newNode = new TreeNodeBase(
 							QASetTreeBean.STANDARD_TYPE, qaSetchild.getName(),

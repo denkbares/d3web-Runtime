@@ -28,10 +28,12 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.PSAction;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QASet.Reason;
 import de.d3web.core.session.XPSCase;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
@@ -44,7 +46,7 @@ import de.d3web.indication.inference.PSMethodUserSelected;
  */
 public class OQDialogController implements DialogController {
 	
-	private List history = null;
+	private List<QASet> history = null;
 	private int historyCursor = -1;
 	
 	private MQDialogController mqdc;
@@ -53,7 +55,7 @@ public class OQDialogController implements DialogController {
 
 		public OQDialogController(XPSCase theCase) {
 		mqdc = new MQDialogController(theCase);
-		history = new LinkedList();
+		history = new LinkedList<QASet>();
 		this.theCase = theCase;
 		theCase.setQASetManager(this);
 		moveToNewestQASet();
@@ -76,7 +78,7 @@ public class OQDialogController implements DialogController {
 	/**
 	 * @return the internal history. 
 	 */
-	public List getHistory() {
+	public List<QASet> getHistory() {
 		return history;
 	}
 	
@@ -116,11 +118,11 @@ public class OQDialogController implements DialogController {
 		return mqdc.moveToNextRemainingQASet();
 	}
 	
-	public List getProcessedContainers() {
+	public List<?> getProcessedContainers() {
 		return mqdc.getProcessedContainers();
 	}
 	
-	public List getQASetQueue() {
+	public List<? extends QASet> getQASetQueue() {
 		return mqdc.getQASetQueue();
 	}
 
@@ -131,11 +133,11 @@ public class OQDialogController implements DialogController {
 	public QASet moveToNewestQASet() {
 		QContainer qc = (QContainer) mqdc.moveToNewestQASet();
 		if (qc != null) {
-			Iterator questionIter =
+			Iterator<?> questionIter =
 				mqdc.getAllQuestionsToRender(qc)
 					.iterator();
 			while (questionIter.hasNext()) {
-				Question q = (Question) ((List) questionIter.next()).get(0);
+				Question q = (Question) ((List<?>) questionIter.next()).get(0);
 				if (! q.isDone(theCase)) {
 					if ((history.isEmpty()) || (!history.get(history.size()-1).equals(q))) {
 						history.add(q);
@@ -222,7 +224,7 @@ public class OQDialogController implements DialogController {
 	private Question checkUnblocked() {
 		Question tempQ = (Question) history.get(historyCursor);
 
-		List proList = getProReasonsOfParent(theCase, tempQ);
+		List<Reason> proList = getProReasonsOfParent(theCase, tempQ);
 
 		theCase.trace("pro reasons: " + tempQ.getProReasons(theCase));
 		theCase.trace("determined recursively:" + proList);
@@ -234,9 +236,9 @@ public class OQDialogController implements DialogController {
 			//  - InitQASets
 			//  - User-Activated
 
-			Iterator proIter = proList.iterator();
+			Iterator<Reason> proIter = proList.iterator();
 			while (proIter.hasNext()) {
-				QASet.Reason pro = (QASet.Reason) proIter.next();
+				Reason pro = proIter.next();
 				if (isQASetRule(pro)
 					|| PSMethodInit.class.equals(pro.getProblemSolverContext())
 					|| PSMethodUserSelected.class.equals(pro.getProblemSolverContext())) {
@@ -247,11 +249,10 @@ public class OQDialogController implements DialogController {
 		return null;
 	}
 	
-	private List getProReasonsOfParent(XPSCase theCase, Question q) {
-		List proReasons = new LinkedList();
-		Iterator iter = q.getParents().iterator();
-		while (iter.hasNext()) {
-			QASet qaSet = (QASet) iter.next();
+	private List<Reason> getProReasonsOfParent(XPSCase theCase, Question q) {
+		List<Reason> proReasons = new LinkedList<Reason>();
+		for (TerminologyObject to: q.getParents()) {
+			QASet qaSet = (QASet) to;
 			proReasons.addAll(qaSet.getProReasons(theCase));
 		}
 		return proReasons;

@@ -34,6 +34,7 @@ import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondOr;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.NamedObject;
@@ -201,8 +202,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 
 	
 
-	private void makeOKQuestionsUndone(NamedObject container, XPSCase theCase) {
-		for (NamedObject nob : container.getChildren()) {
+	private void makeOKQuestionsUndone(TerminologyObject container, XPSCase theCase) {
+		for (TerminologyObject nob : container.getChildren()) {
 			// if ok-question
 			if (nob instanceof QuestionOC) {
 				QuestionOC qoc = (QuestionOC) nob;
@@ -299,8 +300,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 	}
 
 	private static void addParentContainers(Set<QContainer> targets,
-			NamedObject q) {
-		for (NamedObject qaset : q.getParents()) {
+			TerminologyObject q) {
+		for (TerminologyObject qaset : q.getParents()) {
 			if (qaset instanceof QContainer) {
 				targets.add((QContainer) qaset);
 			} else {

@@ -23,7 +23,7 @@ package de.d3web.core.knowledge.terminology;
 
 
 /**
- * Abstract class for knowledge base objects, which provide
+ * Interface for knowledge base objects, which provide
  * an ID for retrieval. Nearly all knowledge base objects
  * should extend this class.
  * 

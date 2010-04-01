@@ -29,11 +29,11 @@ import java.util.Map;
 import java.util.Set;
 
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
@@ -226,18 +226,17 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 	}
 
 	private static void addRelationConditions(Set<Condition> pot,
-			NamedObject qaset, XCLModel model) {
+			TerminologyObject qaset, XCLModel model) {
 		if (qaset instanceof Question) {
 			Set<XCLRelation> coveringRelations = model
-					.getCoveringRelations(qaset);
+					.getCoveringRelations((Question) qaset);
 			if (coveringRelations != null) {
 				for (XCLRelation relation : coveringRelations) {
 					pot.add(relation.getConditionedFinding());
 				}
 			}
 		}
-		List<? extends NamedObject> children = qaset.getChildren();
-		for (NamedObject child : children) {
+		for (TerminologyObject child : qaset.getChildren()) {
 			addRelationConditions(pot, child, model);
 		}
 

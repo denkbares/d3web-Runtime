@@ -20,13 +20,13 @@
 
 package de.d3web.core.knowledge.terminology;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseQASet;
 import de.d3web.core.session.blackboard.CaseQContainer;
@@ -43,7 +43,6 @@ import de.d3web.indication.inference.PSMethodUserSelected;
  */
 public class QContainer extends QASet {
 
-	private static final long serialVersionUID = -3786994343103529901L;
 	private Integer priority;
 
 	public QContainer(String id) {
@@ -70,9 +69,7 @@ public class QContainer extends QASet {
 	 * @param theCase
 	 */
 	private void delegateContraReason(XPSCase theCase) {
-		Iterator<? extends NamedObject> childrenIter = this.getChildren().iterator();
-		while (childrenIter.hasNext()) {
-			QASet qaSet = (QASet) childrenIter.next();
+		for (TerminologyObject qaSet: getChildren()) {
 			if (qaSet instanceof QContainer) {
 				((QContainer) qaSet).addContraReason(new QASet.Reason(
 						PSMethodParentQASet.class), theCase);
@@ -113,9 +110,7 @@ public class QContainer extends QASet {
 	 * @param theCase
 	 */
 	private void delegateProReason(XPSCase theCase) {
-		Iterator<? extends NamedObject> childrenIter = this.getChildren().iterator();
-		while (childrenIter.hasNext()) {
-			QASet qaSet = (QASet) childrenIter.next();
+		for (TerminologyObject qaSet: getChildren()) {
 			if (qaSet instanceof QContainer) {
 				((QContainer) qaSet).addProReason(new QASet.Reason(
 						PSMethodParentQASet.class), theCase);
@@ -185,12 +180,10 @@ public class QContainer extends QASet {
 	}
 
 	public boolean isDone(XPSCase theCase) {
-
 		// Falls auch nur ein einziges Children nicht abgearbeitet ist, ist auch
 		// die ganze FK nicht abgearbeitet.
-		Iterator<? extends NamedObject> iter = getChildren().iterator();
-		while (iter.hasNext()) {
-			QASet qaset = (QASet) iter.next();
+		for (TerminologyObject to: getChildren()) {
+			QASet qaset = (QASet) to;
 			if (!qaset.isDone(theCase)) {
 				theCase.trace("isDone von " + getId() + " liefert false!");
 				return false;
@@ -204,9 +197,8 @@ public class QContainer extends QASet {
 
 		// Falls auch nur ein einziges (valides) Children nicht abgearbeitet
 		// ist, ist auch die ganze FK nicht abgearbeitet.
-		Iterator<? extends NamedObject> iter = getChildren().iterator();
-		while (iter.hasNext()) {
-			if (!((QASet) iter.next()).isDone(theCase,
+		for (TerminologyObject to: getChildren()) {
+			if (!((QASet) to).isDone(theCase,
 					respectValidFollowQuestions)) {
 				theCase.trace("isDone von " + getId() + " liefert false!");
 				return false;
@@ -241,19 +233,18 @@ public class QContainer extends QASet {
 	 * @param theCase
 	 */
 	private void delegateRemoveContraReason(XPSCase theCase) {
-		Iterator<? extends NamedObject> childrenIter = this.getChildren().iterator();
-		while (childrenIter.hasNext()) {
-			QASet qaSet = (QASet) childrenIter.next();
-			if (qaSet instanceof QContainer) {
+		for (TerminologyObject to: getChildren()) {
+			if (to instanceof QContainer) {
+				QContainer qaSet = (QContainer) to;
 				boolean parentContraIndicated = false;
-				Iterator<? extends NamedObject> parentIter = qaSet.getParents().iterator();
-				while ((parentIter.hasNext()) && (!parentContraIndicated)) {
-					QASet parent = (QASet) parentIter.next();
-					if (!parent.getContraReasons(theCase).isEmpty()) {
-						parentContraIndicated = true;
+				for (TerminologyObject parentTo: qaSet.getParents()) {
+					if (!parentContraIndicated) {
+						QASet parent = (QASet) parentTo;
+						if (!parent.getContraReasons(theCase).isEmpty()) {
+							parentContraIndicated = true;
+						}
 					}
 				}
-
 				if (!parentContraIndicated) {
 					qaSet.removeContraReason(new QASet.Reason(
 							PSMethodParentQASet.class), theCase);
@@ -269,19 +260,18 @@ public class QContainer extends QASet {
 	 * @param theCase
 	 */
 	private void delegateRemoveProReason(XPSCase theCase) {
-		Iterator<? extends NamedObject> childrenIter = this.getChildren().iterator();
-		while (childrenIter.hasNext()) {
-			QASet qaSet = (QASet) childrenIter.next();
+		for (TerminologyObject to: getChildren()) {
+			QASet qaSet = (QASet) to;
 			if (qaSet instanceof QContainer) {
 				boolean parentIndicated = false;
-				Iterator<? extends NamedObject> parentIter = qaSet.getParents().iterator();
-				while ((parentIter.hasNext()) && (!parentIndicated)) {
-					QASet parent = (QASet) parentIter.next();
-					if (!parent.getProReasons(theCase).isEmpty()) {
-						parentIndicated = true;
+				for (TerminologyObject to2: qaSet.getParents()) {
+					if (!parentIndicated) {
+						QASet parent = (QASet) to2;
+						if (!parent.getProReasons(theCase).isEmpty()) {
+							parentIndicated = true;
+						}
 					}
 				}
-
 				if (!parentIndicated) {
 					qaSet.removeProReason(new QASet.Reason(
 							PSMethodParentQASet.class), theCase);

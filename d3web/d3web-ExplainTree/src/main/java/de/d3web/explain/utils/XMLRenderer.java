@@ -23,7 +23,6 @@ package de.d3web.explain.utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -55,7 +54,6 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
-import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondChoiceNo;
 import de.d3web.core.inference.condition.CondChoiceYes;
@@ -76,10 +74,12 @@ import de.d3web.core.inference.condition.CondQuestion;
 import de.d3web.core.inference.condition.CondTextContains;
 import de.d3web.core.inference.condition.CondTextEqual;
 import de.d3web.core.inference.condition.CondUnknown;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.inference.condition.TerminalCondition;
 import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
@@ -334,7 +334,7 @@ public class XMLRenderer {
 		KnowledgeSlice knowledgeList = diag.getKnowledge(PSMethodHeuristic.class, MethodKind.BACKWARD);
 		if (knowledgeList != null) {
 			RuleSet rs = (RuleSet) knowledgeList;
-			LinkedList sortedRules = new LinkedList();
+			LinkedList<Rule> sortedRules = new LinkedList<Rule>();
 			for (Rule rc: rs.getRules()) {
 				insertIntoSortedList(sortedRules,renderRuleComplex(rc,theCase,showStatus));
 			}
@@ -522,22 +522,22 @@ public class XMLRenderer {
 		KnowledgeSlice c = qaSet.getKnowledge(context,MethodKind.BACKWARD);
 		if (c != null) {
 			RuleSet rs = (RuleSet) c;
-			List sortedList = new LinkedList();
+			List<?> sortedList = new LinkedList<Object>();
 			for (Rule rc: rs.getRules()) {
 				insertIntoSortedList(sortedList,renderRuleComplex(rc,theCase,showStatus));
 			}
 			// merge the strings in reverse order
 			StringBuffer ruleB = new StringBuffer();
-			Iterator sortedIter = sortedList.iterator();
+			Iterator<?> sortedIter = sortedList.iterator();
 			while (sortedIter.hasNext()) {
-				List oneRule = (List) sortedIter.next();
+				List<?> oneRule = (List<?>) sortedIter.next();
 				ruleB.insert(0,oneRule.get(0));
 			}
 			sb.append(ruleB);
 		} else if (context == PSMethodInit.class) {
 			if (qaSet instanceof QContainer) {
 				// Frageklasse ist Startfrageklasse, wenn es in getInitQuestions() enthalten ist
-				Iterator iter = qaSet.getKnowledgeBase().getInitQuestions().iterator();
+				Iterator<? extends QASet> iter = qaSet.getKnowledgeBase().getInitQuestions().iterator();
 				boolean isInitQContainer = false;
 				while ((!isInitQContainer) && (iter.hasNext())) {
 					if (iter.next().equals(qaSet))
@@ -548,10 +548,9 @@ public class XMLRenderer {
 			} else {
 				// Frage ist Initialfrage innerhalb einer Frageklasse, wenn einer der
 				// Parents eine Frageklasse ist
-				Iterator iter = qaSet.getParents().iterator();
 				boolean isInitQuestion = false;
-				while ((!isInitQuestion) && (iter.hasNext())) {
-					if (iter.next() instanceof QContainer) 
+				for (TerminologyObject to: qaSet.getParents()) {
+					if (to instanceof QContainer) 
 						isInitQuestion = true;
 				}
 				if (isInitQuestion)
@@ -579,15 +578,15 @@ public class XMLRenderer {
 	 * @param showStatus
 	 * @return List (List of (StringBuffer) or List of (StringBuffer,Double)
 	 */
-	private static List renderRuleComplex(Rule rc, XPSCase theCase, boolean showStatus) {
-		List returnList = new LinkedList();
+	private static List<?> renderRuleComplex(Rule rc, XPSCase theCase, boolean showStatus) {
+		List<Object> returnList = new LinkedList<Object>();
 		StringBuffer sb = new StringBuffer();
 		sb.append("<KnowledgeSlice ID=\"" + rc.getId() + "\"");
 		if (rc.isUsed(theCase))
 			sb.append(" status=\"fired\"");
 		sb.append(">");	
 	
-		List actionList = renderAction(rc);
+		List<?> actionList = renderAction(rc);
 		sb.append(actionList.get(0));
 		if (actionList.size() > 1) 
 			returnList.add(actionList.get(1));
@@ -632,8 +631,8 @@ public class XMLRenderer {
 	 * @param rc
 	 * @return List (List of (StringBuffer) or List of (StringBuffer,Double)
 	 */
-	public static List renderAction(Rule rc) {
-		List returnList = new LinkedList();
+	public static List<?> renderAction(Rule rc) {
+		List<Object> returnList = new LinkedList<Object>();
 		StringBuffer sb = new StringBuffer();
 		sb.append("<Action>");
 		if (rc.getAction() instanceof ActionHeuristicPS) {
@@ -707,9 +706,8 @@ public class XMLRenderer {
 		sb.append("<Action>");
 		if (qaSet instanceof Question) {
 			sb.append("<InitialQuestion>");
-			Iterator parentIter = (qaSet.getParents()).iterator();
-			while (parentIter.hasNext()) {
-				sb.append(renderQASetObject((QASet)parentIter.next()));
+			for (TerminologyObject to: qaSet.getParents()) {
+				sb.append(renderQASetObject((QASet)to));
 			}
 			sb.append("</InitialQuestion>");
 		} else {
@@ -741,9 +739,8 @@ public class XMLRenderer {
 		sb.append(">");
 		sb.append("<Action>");
 		sb.append("<ParentQASetPro>");
-		Iterator parentIter = (qaSet.getParents()).iterator();
-		while (parentIter.hasNext()) {
-			QContainer parent = (QContainer) parentIter.next();
+		for (TerminologyObject to: qaSet.getParents()) {
+			QContainer parent = (QContainer) to;
 			if (!parent.getProReasons(theCase).isEmpty()) {
 				sb.append(renderQASetObject(parent));
 			}
@@ -763,9 +760,8 @@ public class XMLRenderer {
 		sb.append(">");
 		sb.append("<Action>");
 		sb.append("<ParentQASetContra>");
-		Iterator parentIter = (qaSet.getParents()).iterator();
-		while (parentIter.hasNext()) {
-			QContainer parent = (QContainer) parentIter.next();
+		for(TerminologyObject to: qaSet.getParents()) {
+			QContainer parent = (QContainer) to;
 			if (!parent.getContraReasons(theCase).isEmpty()) {
 				sb.append(renderQASetObject(parent));
 			}
@@ -811,7 +807,7 @@ public class XMLRenderer {
 	public static StringBuffer renderTCondition(TerminalCondition cond, XPSCase theCase,
 							boolean showStatus, boolean asException, boolean parentFired) {
 		StringBuffer sb = new StringBuffer();
-		List statusValues = null;
+		List<?> statusValues = null;
 		if (showStatus)
 			statusValues = getStatusFor(cond,theCase,asException,parentFired);
 		sb.append("<TCondition");
@@ -935,7 +931,7 @@ public class XMLRenderer {
 	private static StringBuffer renderNonTCondition(NonTerminalCondition cond, XPSCase theCase,
 							boolean showStatus, boolean asException, boolean parentFired) {
 		StringBuffer sb = new StringBuffer();
-		List statusValues = null;
+		List<?> statusValues = null;
 		if (showStatus)
 			statusValues = getStatusFor(cond,theCase,asException,parentFired);
 		sb.append("<Condition");
@@ -958,7 +954,7 @@ public class XMLRenderer {
 		}
 		sb.append(">");
 	
-		Iterator iter = cond.getTerms().iterator();
+		Iterator<Condition> iter = cond.getTerms().iterator();
 		while (iter.hasNext()) {
 			// "parentFired" ist nur solange auf "true", wie alle Parents gefeuert haben
 			if (asException)
@@ -984,7 +980,7 @@ public class XMLRenderer {
 
 	private static StringBuffer getSchemaInfoFor(QuestionOC q) {
 		StringBuffer sb = new StringBuffer();
-		List alternatives = q.getAlternatives();
+		List<AnswerChoice> alternatives = q.getAlternatives();
 		Double[] schemaArray = getSchemaForQuestion(q).getSchemaArray();
 		// show the schema only, if there is exactly one more alternative than schema-value
 		if ((alternatives != null) && (alternatives.size() != 0) 

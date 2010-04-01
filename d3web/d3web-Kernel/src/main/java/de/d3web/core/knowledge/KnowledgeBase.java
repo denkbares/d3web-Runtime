@@ -69,9 +69,7 @@ import de.d3web.core.session.values.AnswerChoice;
  * 
  */
 public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
-		PropertiesContainer, java.io.Serializable {
-
-	private static final long serialVersionUID = -7990131776582821585L;
+		PropertiesContainer {
 
 	private Properties properties;
 
@@ -310,7 +308,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	 *             see above
 	 */
 	public void remove(NamedObject o) throws IllegalAccessException {
-		if ((o.getChildren() != null) && (o.getChildren().size() > 0)) {
+		if ((o.getChildren() != null) && (o.getChildren().length > 0)) {
 			throw new IllegalAccessException(
 					o
 							+ " has some children, that should be removed/relinked before removing.");
@@ -482,7 +480,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		Iterator<Diagnosis> iter = getDiagnoses().iterator();
 		while (iter.hasNext()) {
 			Diagnosis d = iter.next();
-			if (d.getParents() == null || d.getParents().isEmpty()) {
+			if (d.getParents() == null || d.getParents().length==0) {
 				retVec.add(d);
 			}
 		}
@@ -530,7 +528,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		Iterator<QASet> iter = getQASets().iterator();
 		while (iter.hasNext()) {
 			QASet fk = iter.next();
-			if (fk.getParents() == null || fk.getParents().isEmpty()) {
+			if (fk.getParents() == null || fk.getParents().length==0) {
 				retVec.add(fk);
 			}
 		}

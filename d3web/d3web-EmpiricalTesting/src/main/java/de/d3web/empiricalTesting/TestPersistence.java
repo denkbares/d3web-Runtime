@@ -451,14 +451,14 @@ public class TestPersistence {
 	
 	private QASet findQuestionnaire (Question q) {
 		Question question = q;
-		while (!(question.getParents().get(0) instanceof QContainer)) {
-			if (question.getParents().get(0) instanceof Question)
-				question = (Question) question.getParents().get(0);
+		while (!(question.getParents()[0] instanceof QContainer)) {
+			if (question.getParents()[0] instanceof Question)
+				question = (Question) question.getParents()[0];
 			else 
 				return q.getKnowledgeBase().getRootQASet();
 		}
 		
-		return (QASet) question.getParents().get(0);
+		return (QASet) question.getParents()[0];
 	}
 	
 }

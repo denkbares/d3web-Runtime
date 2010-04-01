@@ -31,6 +31,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.NamedObject;
@@ -255,7 +256,7 @@ public class XMLUtil {
 		return ret;
 	}
 
-	private static boolean isLinkedChild(NamedObject topQ, NamedObject theChild) {
+	private static boolean isLinkedChild(NamedObject topQ, TerminologyObject theChild) {
 		return topQ.getLinkedChildren().contains(theChild);
 	}
 
@@ -266,10 +267,10 @@ public class XMLUtil {
 	 */
 	public static void appendChildren(NamedObject namedObject, Element element) {
 		Document doc = element.getOwnerDocument();
-		List<? extends NamedObject> children = namedObject.getChildren();
-		if (children.size()!=0) {
+		TerminologyObject[] children = namedObject.getChildren();
+		if (children.length!=0) {
 			Element childrenElement = doc.createElement("Children");
-			for (NamedObject child: children) {
+			for (TerminologyObject child: children) {
 				Element childElement = doc.createElement("Child");
 				childElement.setAttribute("ID", child.getId());
 				if (isLinkedChild(namedObject, child)) {

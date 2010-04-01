@@ -70,21 +70,6 @@ public class DDNetBuilder {
 		return nodes;
 	}
 
-	private void fillNodeMap(HashMap<String, DDNode> nodes,
-			List<SequentialTestCase> cases, List<SequentialTestCase> oldCases) {
-		List<SequentialTestCase> allCases = new ArrayList<SequentialTestCase>(
-				cases);
-		allCases.addAll(oldCases);
-		for (SequentialTestCase sequentialTestCase : allCases) {
-			List<RatedTestCase> rcases = sequentialTestCase.getCases();
-			for (RatedTestCase rtc : rcases) {
-				String name = rtc.getName();
-				if (nodes.get(name) == null)
-					nodes.put(name, new DDNode(rtc));
-			}
-		}
-	}
-
 	private void generateDDNet(List<SequentialTestCase> cases,
 			caseType theCaseType, HashMap<String, DDNode> nodes) {
 
@@ -152,7 +137,7 @@ public class DDNetBuilder {
 
 	private QASet findRootQuestion(QASet q) {
 		QASet root = q.getKnowledgeBase().getRootQASet();
-		QASet parent = (QASet) q.getParents().get(0);
+		QASet parent = (QASet) q.getParents()[0];
 		if (parent.equals(root) || getRegisteredContainers().contains(parent))
 			return parent;
 		else

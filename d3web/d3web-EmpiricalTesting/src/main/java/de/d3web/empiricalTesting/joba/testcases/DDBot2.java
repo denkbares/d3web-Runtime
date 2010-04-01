@@ -167,7 +167,7 @@ public class DDBot2 {
 		if (next != null && next instanceof QuestionChoice) {
 			return (QuestionChoice) next;
 		} else if (next != null) {
-			List<QASet> validQuestions = controller
+			List<Question> validQuestions = controller
 					.getAllValidQuestionsOf((QContainer) next);
 			return (QuestionChoice) validQuestions.get(0);
 		} else {

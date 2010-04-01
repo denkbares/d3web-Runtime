@@ -29,8 +29,8 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
@@ -67,11 +67,11 @@ public class Node {
 		}
 	}
 
-	private void collectQuestions(NamedObject namedObject, List<QuestionOC> result) {
+	private void collectQuestions(TerminologyObject namedObject, List<QuestionOC> result) {
 		if (namedObject instanceof QuestionOC && !result.contains(namedObject)) {
 			result.add((QuestionOC) namedObject);
 		}
-		for (NamedObject child : namedObject.getChildren()) {
+		for (TerminologyObject child : namedObject.getChildren()) {
 			collectQuestions(child, result);
 		}
 	}

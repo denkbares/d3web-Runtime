@@ -130,10 +130,10 @@ public class InterviewCalculator extends PrecisionRecallCalculator{
 		
 		// if currentQASet is a QContainer return the first remaining Question
 		} else if (currentQASet != null) {
-			List<QASet> validQuestions = 
+			List<Question> validQuestions = 
 				controller.getAllValidQuestionsOf((QContainer) currentQASet);
 			currentQC = (QContainer) currentQASet;
-			nextQuestion = (Question) validQuestions.get(0);
+			nextQuestion = validQuestions.get(0);
 		
 		} 
 		

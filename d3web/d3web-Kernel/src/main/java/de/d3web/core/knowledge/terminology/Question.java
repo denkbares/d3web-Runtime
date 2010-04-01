@@ -21,7 +21,6 @@
 package de.d3web.core.knowledge.terminology;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -30,6 +29,7 @@ import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.SymptomValue;
 import de.d3web.core.session.ValuedObject;
@@ -52,7 +52,6 @@ import de.d3web.indication.inference.PSMethodNextQASet;
  */
 public abstract class Question extends QASet implements ValuedObject {
 	
-	private static final long serialVersionUID = 2542389028652586366L;
 	private AnswerUnknown unknown;
 
 	public Question(String id) {
@@ -135,9 +134,8 @@ public abstract class Question extends QASet implements ValuedObject {
 
 			// Falls auch nur ein einziges (valides) Children nicht abgearbeitet
 			// ist, ist auch die ganze FK nicht abgearbeitet.
-			Iterator<? extends NamedObject> iter = getChildren().iterator();
-			while (iter.hasNext()) {
-				QASet child = (QASet) iter.next();
+			for (TerminologyObject to: getChildren()) {
+				QASet child = (QASet) to;
 				if (child.isValid(theCase)
 						&& !child.isDone(theCase, respectValidFollowQuestions)) {
 					return false;

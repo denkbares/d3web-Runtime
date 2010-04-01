@@ -113,7 +113,7 @@ public class SFAMethod extends PSSubMethod{
 		return false;
 	}
 	private boolean isLeafDiagnosis(Diagnosis diagnosis) {
-		return diagnosis.getChildren() == null || diagnosis.getChildren().isEmpty();
+		return diagnosis.getChildren() == null || diagnosis.getChildren().length==0;
 	}
 	private boolean isEstablished(XPSCase theCase, Diagnosis diagnosis) {
 		return diagnosis.getState(theCase, PSCONTEXT).equals(DiagnosisState.ESTABLISHED);
