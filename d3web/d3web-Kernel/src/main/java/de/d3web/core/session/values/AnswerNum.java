@@ -30,7 +30,6 @@ import de.d3web.core.session.XPSCase;
  */
 public class AnswerNum extends Answer {
 	
-	private static final long serialVersionUID = 1073051860182787758L;
 	private EvaluatableAnswerNumValue value = null;
 
 	/**

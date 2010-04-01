@@ -23,7 +23,7 @@ package de.d3web.empiricalTesting;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 
 public class DerivedSolutionsCalculator extends PrecisionRecallCalculator{
 	
@@ -82,11 +82,11 @@ public class DerivedSolutionsCalculator extends PrecisionRecallCalculator{
 		if (!rtc.getDerivedSolutionsAreUpToDate())
 			return sum;
 
-		List<Diagnosis> inter = intersect(rtc.getExpectedSolutions(), rtc
+		List<Solution> inter = intersect(rtc.getExpectedSolutions(), rtc
 				.getDerivedSolutions());
 		RatingSimilarity comparator = new IndividualSimilarity();
 		
-		for (Diagnosis d : inter) {
+		for (Solution d : inter) {
 			sum += comparator.rsim(r(d, rtc.getExpectedSolutions()), r(d, rtc.getDerivedSolutions()));
 		}
 		return sum;
@@ -99,9 +99,9 @@ public class DerivedSolutionsCalculator extends PrecisionRecallCalculator{
 	 * @param RS2 Second List of RatedSolutions
 	 * @return List of intersecting diagnosises
 	 */
-	private List<Diagnosis> intersect(List<RatedSolution> RS1,
+	private List<Solution> intersect(List<RatedSolution> RS1,
 			List<RatedSolution> RS2) {
-		ArrayList<Diagnosis> ret = new ArrayList<Diagnosis>();
+		ArrayList<Solution> ret = new ArrayList<Solution>();
 		for (RatedSolution rs1 : RS1)
 			for (RatedSolution rs2 : RS2)
 				if (rs1.getSolution().equals(rs2.getSolution()))
@@ -116,7 +116,7 @@ public class DerivedSolutionsCalculator extends PrecisionRecallCalculator{
 	 * @param RS List of RatedSolutions
 	 * @return The rating of the diagnosis.
 	 */
-	private Rating r(Diagnosis s, List<RatedSolution> RS) {
+	private Rating r(Solution s, List<RatedSolution> RS) {
 		for (RatedSolution rs : RS)
 			if (rs.getSolution().equals(s))
 				return rs.getRating();

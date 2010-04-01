@@ -81,7 +81,7 @@ import de.d3web.core.inference.condition.TerminalCondition;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -190,7 +190,7 @@ public class XMLRenderer {
 	}
 	
 	
-	private static StringBuffer renderDiagnosisObject(Diagnosis diag) {
+	private static StringBuffer renderDiagnosisObject(Solution diag) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<Diagnosis ID=\"");
 		sb.append(diag.getId());
@@ -326,7 +326,7 @@ public class XMLRenderer {
 	 * Renders the complete explanation of a diagnosis.
 	 * If "showStatus" is true, the current status of the diagnosis and all reasons will be regarded.
 	 */
-	public static StringBuffer renderDiagnosisExplanation(Diagnosis diag, XPSCase theCase, boolean showStatus) {
+	public static StringBuffer renderDiagnosisExplanation(Solution diag, XPSCase theCase, boolean showStatus) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(renderReference(diag,theCase,showStatus));
 	
@@ -501,7 +501,7 @@ public class XMLRenderer {
 	 * Renders the referenced Diagnosis.
 	 * If "showStatus" is true, the current status of the diagnosis will be regarded.
 	 */
-	public static StringBuffer renderReference(Diagnosis diag, XPSCase theCase, boolean showStatus) {
+	public static StringBuffer renderReference(Solution diag, XPSCase theCase, boolean showStatus) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<Reference>");
 		sb.append(renderDiagnosisObject(diag));

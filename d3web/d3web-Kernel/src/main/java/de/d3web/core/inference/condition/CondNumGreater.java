@@ -33,8 +33,6 @@ import de.d3web.core.session.values.AnswerNum;
  */
 public class CondNumGreater extends CondNum {
 
-	private static final long serialVersionUID = 4544477310920618499L;
-
 	/**
 	 * Creates a new condition, where a the specified numerical question needs to
 	 * be greater than the specified value.

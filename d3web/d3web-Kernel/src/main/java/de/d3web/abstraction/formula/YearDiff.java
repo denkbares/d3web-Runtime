@@ -39,8 +39,6 @@ import de.d3web.core.session.XPSCase;
  */
 public class YearDiff extends FormulaDateArgumentsTerm implements FormulaNumberElement {
 
-	private static final long serialVersionUID = 251059089145929107L;
-
 	/**
 	 * Creates a new FormulaTerm with null-arguments.
 	 */

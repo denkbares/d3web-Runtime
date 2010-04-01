@@ -42,7 +42,6 @@ public class Num2ChoiceSchema implements KnowledgeSlice {
 
 	private String id;
 	
-	private static final long serialVersionUID = -3081963703740657373L;
 	private Double[] schemaArray;
 	private Question question;
 

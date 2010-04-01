@@ -31,8 +31,6 @@ import de.d3web.core.session.XPSCase;
  */
 public class AnswerUnknown extends Answer {
 	
-	private static final long serialVersionUID = -1234474189907420204L;
-
 	public final static String UNKNOWN_ID = "MaU";
 	
 	public final static String UNKNOWN_VALUE = "-?-";

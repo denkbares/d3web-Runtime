@@ -32,8 +32,6 @@ import de.d3web.core.session.values.AnswerNum;
  */
 public class CondNumLess extends CondNum {
 
-	private static final long serialVersionUID = 9106223944823822308L;
-
 	/**
 	 * Creates a new condition, where the specified numerical question needs to
 	 * be less than the specified value.

@@ -38,7 +38,7 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -83,7 +83,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 
 	private List<? extends QASet> initQuestions;
 
-	private List<Diagnosis> diagnoses;
+	private List<Solution> diagnoses;
 
 	private List<Resource> resouces = new ArrayList<Resource>();
 	
@@ -131,7 +131,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	}
 
 	public KnowledgeBase() {
-		diagnoses = new ArrayList<Diagnosis>();
+		diagnoses = new ArrayList<Solution>();
 		initQuestions = new ArrayList<QASet>();
 		costVerbalization = new TreeMap<String, String>();
 		costUnit = new TreeMap<String, String>();
@@ -150,7 +150,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	 * @param d
 	 *            the new diagnosis to be added
 	 */
-	public void add(Diagnosis d) {
+	public void add(Solution d) {
 		checkID(d);
 
 		if (!objectIDMap.containsKey(d.getId())) {
@@ -333,7 +333,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 			 * (MethodKind)methodKind); } } } }
 			 */
 			// remove object from list of contained objects
-			if (o instanceof Diagnosis) {
+			if (o instanceof Solution) {
 				diagnoses.remove(o);
 				// } else if (o instanceof Question) {
 				// questions.remove(o);
@@ -426,12 +426,12 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	}
 
 	/**
-	 * Returns all {@link Diagnosis} instances contained in this knowledge base
+	 * Returns all {@link Solution} instances contained in this knowledge base
 	 * as a sequential list. The returned list may be unmodifiable.
 	 * 
 	 * @return list of all diagnoses contained in this KnowledgeBase
 	 */
-	public List<Diagnosis> getDiagnoses() {
+	public List<Solution> getDiagnoses() {
 		return Collections.unmodifiableList(diagnoses);
 	}
 
@@ -475,11 +475,11 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	/**
 	 * @return the qasets that do not have any parent.
 	 */
-	public Diagnosis getRootDiagnosis() {
-		Vector<Diagnosis> retVec = new Vector<Diagnosis>();
-		Iterator<Diagnosis> iter = getDiagnoses().iterator();
+	public Solution getRootDiagnosis() {
+		Vector<Solution> retVec = new Vector<Solution>();
+		Iterator<Solution> iter = getDiagnoses().iterator();
 		while (iter.hasNext()) {
-			Diagnosis d = iter.next();
+			Solution d = iter.next();
 			if (d.getParents() == null || d.getParents().length==0) {
 				retVec.add(d);
 			}
@@ -489,11 +489,11 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 					"more than one diagnosis root node!");
 
 			// [HOTFIX]:aha:multiple root / orphan handling
-			Collection<Diagnosis> orphans = new Vector<Diagnosis>();
-			Diagnosis root = null;
+			Collection<Solution> orphans = new Vector<Solution>();
+			Solution root = null;
 			iter = retVec.iterator();
 			while (iter.hasNext()) {
-				Diagnosis d = iter.next();
+				Solution d = iter.next();
 				if (d.getId().equals("P000")) root = d;
 				else orphans.add(d);
 			}
@@ -502,7 +502,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 						"fixed: single root is now " + root.getId());
 				iter = orphans.iterator();
 				while (iter.hasNext()) {
-					Diagnosis d = (Diagnosis) iter.next();
+					Solution d = (Solution) iter.next();
 					d.addParent(root);
 					Logger.getLogger(this.getClass().getName()).warning(
 							"fixed: node " + d.getId() + " is now child of "
@@ -517,7 +517,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 					"no root node in diagnosis tree!");
 			return null;
 		}
-		return (Diagnosis) retVec.get(0);
+		return (Solution) retVec.get(0);
 	}
 
 	/**
@@ -620,11 +620,11 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	 * 
 	 * @return found diagnosis, null if not present.
 	 */
-	public Diagnosis searchDiagnosis(String id) {
+	public Solution searchDiagnosis(String id) {
 		if (objectIDMap.containsKey(id)) {
 			IDObject o = objectIDMap.get(id);
-			if (o instanceof Diagnosis)
-				return (Diagnosis) o;
+			if (o instanceof Solution)
+				return (Solution) o;
 		}
 		return null;
 	}

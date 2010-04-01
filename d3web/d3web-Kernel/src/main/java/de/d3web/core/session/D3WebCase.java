@@ -42,7 +42,7 @@ import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -93,7 +93,7 @@ public class D3WebCase implements XPSCase {
 	private final DefaultPropagationController propagationController;
 	private Map<CaseObjectSource, XPSCaseObject> dynamicStore;
 
-	private List<Diagnosis> establishedDiagnoses = new LinkedList<Diagnosis>();
+	private List<Solution> establishedDiagnoses = new LinkedList<Solution>();
 	private List<Question> answeredQuestions = new LinkedList<Question>();
 
 	private List<PSMethod> usedPSMethods;
@@ -271,7 +271,7 @@ public class D3WebCase implements XPSCase {
 	/**
 	 * adds an established Diagnosis to this case
 	 */
-	public void addEstablishedDiagnoses(Diagnosis diag) {
+	public void addEstablishedDiagnoses(Solution diag) {
 		if (!establishedDiagnoses.contains(diag)) {
 			establishedDiagnoses.add(diag);
 		}
@@ -353,7 +353,7 @@ public class D3WebCase implements XPSCase {
 	 * @return a list of Diagnosis instances contained in the knowledge base
 	 * @see XPSCase#getDiagnoses()
 	 */
-	public List<Diagnosis> getDiagnoses() {
+	public List<Solution> getDiagnoses() {
 		return getKnowledgeBase().getDiagnoses();
 	}
 
@@ -362,7 +362,7 @@ public class D3WebCase implements XPSCase {
 	 *         DiagnosisState. All used PSMethods of this case are considered.
 	 * @see XPSCase#getDiagnoses(DiagnosisState state)
 	 */
-	public List<Diagnosis> getDiagnoses(DiagnosisState state) {
+	public List<Solution> getDiagnoses(DiagnosisState state) {
 		return getDiagnoses(state, getUsedPSMethods());
 	}
 
@@ -371,9 +371,9 @@ public class D3WebCase implements XPSCase {
 	 *         DiagnosisState. Only these diagnoses are considered, whose states
 	 *         have been set by one of the given PSMethods.
 	 */
-	public List<Diagnosis> getDiagnoses(DiagnosisState state, List<? extends PSMethod> psMethods) {
-		List<Diagnosis> result = new LinkedList<Diagnosis>();
-		for (Diagnosis diag : getDiagnoses()) {
+	public List<Solution> getDiagnoses(DiagnosisState state, List<? extends PSMethod> psMethods) {
+		List<Solution> result = new LinkedList<Solution>();
+		for (Solution diag : getDiagnoses()) {
 			for (PSMethod psm : psMethods) {
 				if (psm.isContributingToResult()
 						&& diag.getState(this, psm.getClass()).equals(state)) {
@@ -403,7 +403,7 @@ public class D3WebCase implements XPSCase {
 	/**
 	 * @return a list of all established diagnoses
 	 */
-	public List<Diagnosis> getEstablishedDiagnoses() {
+	public List<Solution> getEstablishedDiagnoses() {
 		return establishedDiagnoses;
 	}
 
@@ -414,7 +414,7 @@ public class D3WebCase implements XPSCase {
 	 * @param context
 	 *            java.lang.Class
 	 */
-	public List<KnowledgeSlice> getExplanation(Diagnosis diagnosis, PSMethod psMethod) {
+	public List<KnowledgeSlice> getExplanation(Solution diagnosis, PSMethod psMethod) {
 
 		List<KnowledgeSlice> result = new LinkedList<KnowledgeSlice>();
 
@@ -522,7 +522,7 @@ public class D3WebCase implements XPSCase {
 	 * @param diag
 	 *            Diagnosis to remove
 	 */
-	public void removeEstablishedDiagnoses(Diagnosis diagnosis) {
+	public void removeEstablishedDiagnoses(Solution diagnosis) {
 		establishedDiagnoses.remove(diagnosis);
 	}
 
@@ -665,8 +665,8 @@ public class D3WebCase implements XPSCase {
 	 */
 	public void setValue(ValuedObject valuedObject, Object[] values, Class<? extends PSMethod> context) {
 		Object oldValue = getValue(valuedObject);
-		if (valuedObject instanceof Diagnosis) {
-			((Diagnosis) valuedObject).setValue(this, values, context);
+		if (valuedObject instanceof Solution) {
+			((Solution) valuedObject).setValue(this, values, context);
 		}
 		else {
 			valuedObject.setValue(this, values);
@@ -683,8 +683,8 @@ public class D3WebCase implements XPSCase {
 	}
 
 	private Object getValue(ValuedObject valuedObject) {
-		if (valuedObject instanceof Diagnosis) {
-			return ((Diagnosis) valuedObject).getState(this) ;
+		if (valuedObject instanceof Solution) {
+			return ((Solution) valuedObject).getState(this) ;
 		}
 		else if (valuedObject instanceof Question) {
 			return ((Question) valuedObject).getValue(this);

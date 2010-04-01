@@ -22,7 +22,7 @@ package de.d3web.scoring;
 
 import java.util.logging.Logger;
 
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.Value;
 
@@ -31,7 +31,7 @@ import de.d3web.core.session.Value;
  * a problem-solving method. The score has meaning to
  * the state of a diagnosis.
  * @author joba, Chris - fixing an essential bug by returning new Scores for add and subtract.
- * @see Diagnosis
+ * @see Solution
  * @see DiagnosisState
  */
 public class DiagnosisScore implements Value {

@@ -34,7 +34,6 @@ import de.d3web.core.session.XPSCase;
  */
 public class AnswerChoice extends Answer {
 
-	private static final long serialVersionUID = -4155370058888998997L;
 	private String text;
 
 	public AnswerChoice(String theId) {

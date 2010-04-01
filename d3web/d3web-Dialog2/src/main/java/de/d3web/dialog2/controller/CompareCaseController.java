@@ -20,15 +20,12 @@
 
 package de.d3web.dialog2.controller;
 
-import java.io.Serializable;
-
 import org.apache.log4j.Logger;
 
 import de.d3web.kernel.psMethods.compareCase.comparators.CompareMode;
 
-public class CompareCaseController implements Serializable {
+public class CompareCaseController {
 
-	private static final long serialVersionUID = 182601765291893850L;
 
 	public static int CMODE_NO = 0;
 

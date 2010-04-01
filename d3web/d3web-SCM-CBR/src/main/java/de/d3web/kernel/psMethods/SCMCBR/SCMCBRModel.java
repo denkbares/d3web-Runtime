@@ -13,7 +13,7 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.IEventSource;
 import de.d3web.core.session.KBOEventListener;
@@ -29,7 +29,6 @@ import de.d3web.xcl.XCLRelationType;
  */
 public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 	
-	private static final long serialVersionUID = -7948460623330603066L;
 
 	public final static MethodKind SCMCBR = new MethodKind("SCMCBR");
 
@@ -59,9 +58,9 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 	private Map<XPSCase, SCMCBRInferenceTrace> explanation = new HashMap<XPSCase, SCMCBRInferenceTrace>();
 	
 	
-	private Diagnosis solution;
+	private Solution solution;
 	
-	public SCMCBRModel(Diagnosis solution) {
+	public SCMCBRModel(Solution solution) {
 		this.solution = solution;
 		
 		relations = new ArrayList<SCMCBRRelation>();
@@ -75,33 +74,33 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 	}
 
 	public static String insertSCMCBRRelation(KnowledgeBase kb,
-			Condition theCondition, Diagnosis d) {
+			Condition theCondition, Solution d) {
 		return insertSCMCBRRelation(kb, theCondition, d, XCLRelationType.explains, null);
 	}
 	
 	public static String insertSCMCBRRelation(KnowledgeBase kb,
-			Condition theCondition, Diagnosis d, String kdomNodeID) {
+			Condition theCondition, Solution d, String kdomNodeID) {
 		return insertSCMCBRRelation(kb, theCondition, d, XCLRelationType.explains,kdomNodeID);
 	}
 	
 	public static String insertSCMCBRRelation(KnowledgeBase kb,
-			Condition theCondition, Diagnosis d, XCLRelationType type) {
+			Condition theCondition, Solution d, XCLRelationType type) {
 		return insertSCMCBRRelation(kb, theCondition, d, type, 1, null);
 	}
 
 	public static String insertSCMCBRRelation(KnowledgeBase kb,
-			Condition theCondition, Diagnosis d, XCLRelationType type, String kdomNodeID) {
+			Condition theCondition, Solution d, XCLRelationType type, String kdomNodeID) {
 		return insertSCMCBRRelation(kb, theCondition, d, type, 1, kdomNodeID);
 	}
 	
 	public static String insertSCMCBRRelation(KnowledgeBase kb,
-			Condition theCondition, Diagnosis d, XCLRelationType type,
+			Condition theCondition, Solution d, XCLRelationType type,
 			double weight) {
 		return insertSCMCBRRelation(kb, theCondition, d, type, weight, null);
 	}
 
 	public static String insertSCMCBRRelation(KnowledgeBase kb,
-			Condition theCondition, Diagnosis d, XCLRelationType type,
+			Condition theCondition, Solution d, XCLRelationType type,
 			double weight, String kdomNodeID) {
 		
 		//Nullchecks
@@ -376,11 +375,11 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		return null;
 	}
 
-	public Diagnosis getSolution() {
+	public Solution getSolution() {
 		return solution;
 	}
 
-	public void setSolution(Diagnosis solution) {
+	public void setSolution(Solution solution) {
 		this.solution = solution;
 	}
 

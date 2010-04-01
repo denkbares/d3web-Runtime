@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 
 import de.d3web.caserepository.XMLCodeGenerator;
 import de.d3web.caserepository.addons.ITherapyConfiguration;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 
 /**
  * TherapyConfiguration (in ) de.d3web.caserepository.addons.train
@@ -142,16 +142,16 @@ public class TherapyConfiguration implements ITherapyConfiguration {
 
 	public static class TCLeaf implements ITCNode {
 
-		private Diagnosis d;
+		private Solution d;
 
 		private TCLeaf() { /* hide */
 		}
 
-		public TCLeaf(Diagnosis d) {
+		public TCLeaf(Solution d) {
 			this.d = d;
 		}
 
-		public Diagnosis getDiagnosis() {
+		public Solution getDiagnosis() {
 			return d;
 		}
 

@@ -33,7 +33,6 @@ import de.d3web.core.session.values.AnswerNum;
  */
 public class CondNumIn extends CondNum {
 
-	private static final long serialVersionUID = -7671429466069982930L;
 	private NumericalInterval _interval;
 
 	/**

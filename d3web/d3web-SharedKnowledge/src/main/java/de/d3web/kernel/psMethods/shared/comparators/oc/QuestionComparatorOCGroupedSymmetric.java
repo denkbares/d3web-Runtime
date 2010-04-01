@@ -30,8 +30,6 @@ import de.d3web.kernel.psMethods.shared.comparators.PairRelation;
 public class QuestionComparatorOCGroupedSymmetric extends
 		QuestionComparatorOCGrouped implements GroupedComparatorSymmetric{
 	
-	private static final long serialVersionUID = 1L;
-	
 	public double compare(List<?> answers1, List<?> answers2) {
 		try {
 			AnswerChoice ans1 = (AnswerChoice) answers1.get(0);

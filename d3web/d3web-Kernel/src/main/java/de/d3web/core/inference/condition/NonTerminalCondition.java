@@ -35,7 +35,6 @@ import de.d3web.core.knowledge.terminology.NamedObject;
  */
 public abstract class NonTerminalCondition implements Condition {
 
-	private static final long serialVersionUID = -5469533685946905130L;
 	/**
 	 * The list of conditions enclosed in this {@link NonTerminalCondition}.
 	 */

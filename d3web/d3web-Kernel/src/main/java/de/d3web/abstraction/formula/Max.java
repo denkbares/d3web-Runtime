@@ -27,8 +27,6 @@ import de.d3web.core.session.XPSCase;
  */
 public class Max extends FormulaNumberArgumentsTerm implements FormulaNumberElement{
 
-	private static final long serialVersionUID = 7090086396806848888L;
-
 	/** 
 	 * Creates a new FormulaTerm with null-arguments.
 	 */

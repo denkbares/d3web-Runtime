@@ -27,8 +27,6 @@ package de.d3web.core.session.values;
  */
 public class AnswerYes extends AnswerChoice {
 
-	private static final long serialVersionUID = -8797607249815331777L;
-
 	/**
 	 * creates a new AnswerYes.
 	 */

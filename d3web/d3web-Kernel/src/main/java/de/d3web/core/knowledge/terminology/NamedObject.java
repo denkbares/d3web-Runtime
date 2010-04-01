@@ -57,8 +57,6 @@ import de.d3web.core.session.XPSCase;
 public abstract class NamedObject implements TerminologyObject, CaseObjectSource,
 		KnowledgeContainer, PropertiesContainer {
 
-	private static final long serialVersionUID = -3561319946758513307L;
-
 	private Properties properties;
 
 	/**
@@ -389,7 +387,7 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	 * The text of a {@link NamedObject} is the name or a short 
 	 * description of the object. Please keep it brief and use other  
 	 * fields for longer content (e.g., prompt for {@link Question},  
-	 * and comments for {@link Diagnosis}).
+	 * and comments for {@link Solution}).
 	 * 
 	 * @return the name of this object
 	 */
@@ -639,7 +637,7 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	 * The text of a {@link NamedObject} is the name or a short 
 	 * description of the object. Please keep it brief and use other  
 	 * fields for longer content (e.g., prompt for {@link Question},  
-	 * and comments for {@link Diagnosis}).
+	 * and comments for {@link Solution}).
 	 * 
 	 * @param text the new text of this instance
 	 */

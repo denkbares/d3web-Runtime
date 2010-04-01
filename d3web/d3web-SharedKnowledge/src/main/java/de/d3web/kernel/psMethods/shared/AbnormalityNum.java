@@ -42,7 +42,6 @@ import de.d3web.shared.AbstractAbnormality;
  */
 public class AbnormalityNum extends AbstractAbnormality {
 
-	private static final long serialVersionUID = 8229775727799410392L;
 	private List<AbnormalityInterval> intervals = new LinkedList<AbnormalityInterval>();
 	
 	

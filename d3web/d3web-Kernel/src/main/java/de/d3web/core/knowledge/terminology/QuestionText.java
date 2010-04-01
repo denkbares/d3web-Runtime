@@ -32,7 +32,6 @@ import de.d3web.core.session.values.AnswerText;
  */
 public class QuestionText extends Question {
 	
-	private static final long serialVersionUID = -6698919316187244884L;
 	private int height;
 	private int width;
 

@@ -30,11 +30,7 @@ import de.d3web.shared.PSMethodShared;
  * @author: Norman Brümmer
  */
 public abstract class QuestionComparator implements KnowledgeSlice {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -7940425720868244820L;
-
+	
 	private de.d3web.core.knowledge.terminology.Question question = null;
 
 	private double unknownSimilarity = -1;

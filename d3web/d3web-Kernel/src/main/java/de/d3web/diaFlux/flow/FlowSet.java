@@ -38,7 +38,6 @@ import de.d3web.diaFlux.inference.FluxSolver;
  */
 public class FlowSet implements KnowledgeSlice, CaseObjectSource {
 	
-	private static final long serialVersionUID = 2498725033186477477L;
 	private final String setID;
 	private final Map<String, Flow> map;
 

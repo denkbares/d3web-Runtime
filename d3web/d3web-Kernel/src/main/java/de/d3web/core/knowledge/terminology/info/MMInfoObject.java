@@ -27,9 +27,8 @@ import java.util.logging.Logger;
  * Storing descriptor and content.
  * @author Christian Betz, hoernlein
  */
-public class MMInfoObject implements DCMarkedUp, java.io.Serializable {
+public class MMInfoObject implements DCMarkedUp{
 	
-	private static final long serialVersionUID = -2724066948400335342L;
 	private DCMarkup dcData;
 	private String content;
 

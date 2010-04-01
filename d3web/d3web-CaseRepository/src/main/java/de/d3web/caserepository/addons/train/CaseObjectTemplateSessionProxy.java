@@ -41,7 +41,7 @@ import de.d3web.caserepository.addons.ITherapyConfiguration;
 import de.d3web.caserepository.addons.fus.FUSConfiguration;
 import de.d3web.config.Config;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.DCElement;
@@ -266,7 +266,7 @@ public class CaseObjectTemplateSessionProxy implements CaseObject {
 	 * @see de.d3web.caserepository.ISolutionContainer#getSolution(de.d3web.kernel.domainModel.Diagnosis,
 	 *      java.lang.Class)
 	 */
-	public Solution getSolution(Diagnosis d, Class psMethodClass) {
+	public Solution getSolution(de.d3web.core.knowledge.terminology.Solution d, Class psMethodClass) {
 		return getTemplateSession().getCaseObject().getSolution(d, psMethodClass);
 	}
 

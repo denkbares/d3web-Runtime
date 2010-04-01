@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.empiricalTesting.ConfigLoader;
@@ -199,11 +199,11 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 	private String transformSolutions(RatedTestCase rtc,
 			HashMap<String, String> cfg) {
 		
-		HashMap<Diagnosis, RatedSolution> expSolutions = 
+		HashMap<Solution, RatedSolution> expSolutions = 
 			getSolutionsInHashMap(rtc.getExpectedSolutions());
-		HashMap<Diagnosis, RatedSolution> derSolutions = 
+		HashMap<Solution, RatedSolution> derSolutions = 
 			getSolutionsInHashMap(rtc.getDerivedSolutions());
-		HashSet<Diagnosis> solutions = new HashSet<Diagnosis>();
+		HashSet<Solution> solutions = new HashSet<Solution>();
 				
 		solutions.addAll(expSolutions.keySet());
 		solutions.addAll(derSolutions.keySet());
@@ -211,7 +211,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 		StringBuilder result = new StringBuilder();
 		result.append(transformSolutionsHeader(cfg));
 		
-		for (Diagnosis d : solutions) {
+		for (Solution d : solutions) {
 			RatedSolution expected = expSolutions.get(d);
 			RatedSolution derived = derSolutions.get(d);
 			
@@ -234,11 +234,11 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 	 * 
 	 * @return HashMap<Diagnosis, RatedSolution>
 	 */
-	private HashMap<Diagnosis, RatedSolution> getSolutionsInHashMap(
+	private HashMap<Solution, RatedSolution> getSolutionsInHashMap(
 			List<RatedSolution> solutions) {
 		
-		HashMap<Diagnosis, RatedSolution> result = 
-			new HashMap<Diagnosis, RatedSolution>();
+		HashMap<Solution, RatedSolution> result = 
+			new HashMap<Solution, RatedSolution>();
 		
 		for (RatedSolution rs : solutions) {
 			result.put(rs.getSolution(), rs);

@@ -31,7 +31,7 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.XPSCase;
@@ -41,7 +41,7 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
 public class HeuristicDiagnosesBoxRenderer extends Renderer {
 
 	private static void renderDiagnoses(ResponseWriter writer, UIComponent component,
-			List<Diagnosis> diagList, XPSCase theCase, String headline, boolean showScore) throws IOException {
+			List<Solution> diagList, XPSCase theCase, String headline, boolean showScore) throws IOException {
 		writer.startElement("tr", component);
 		writer.startElement("th", component);
 		writer.writeAttribute("colspan", "2", "colspan");
@@ -50,8 +50,8 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 		writer.endElement("th");
 		writer.endElement("tr");
 
-		for (Iterator<Diagnosis> iter = diagList.iterator(); iter.hasNext();) {
-			Diagnosis diag = iter.next();
+		for (Iterator<Solution> iter = diagList.iterator(); iter.hasNext();) {
+			Solution diag = iter.next();
 			Integer score = new Double(diag.getScore(theCase, PSMethodHeuristic.class).getScore()).intValue();
 			if (score != 0) {
 				writer.startElement("tr", component);
@@ -97,7 +97,7 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 			writer.endElement("tr");
 
 			// render ESTABLISHED...
-			List<Diagnosis> diagListEstablished = theCase.getDiagnoses(DiagnosisState.ESTABLISHED,
+			List<Solution> diagListEstablished = theCase.getDiagnoses(DiagnosisState.ESTABLISHED,
 					getPsMethodHeur(theCase));
 			if (!diagListEstablished.isEmpty()
 					&& DialogUtils.getDialogSettings().isShowHeuristicEstablishedDiagnoses()) {
@@ -107,7 +107,7 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 			}
 
 			// render SUGGESTED...
-			List<Diagnosis> diagListSuggested = theCase.getDiagnoses(DiagnosisState.SUGGESTED,
+			List<Solution> diagListSuggested = theCase.getDiagnoses(DiagnosisState.SUGGESTED,
 					getPsMethodHeur(theCase));
 			if (!diagListSuggested.isEmpty()
 					&& DialogUtils.getDialogSettings().isShowHeuristicSuggestedDiagnoses()) {
@@ -117,7 +117,7 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 			}
 
 			// render EXCLUDED...
-			List<Diagnosis> diagListExcluded = theCase.getDiagnoses(DiagnosisState.EXCLUDED,
+			List<Solution> diagListExcluded = theCase.getDiagnoses(DiagnosisState.EXCLUDED,
 					getPsMethodHeur(theCase));
 			if (!diagListExcluded.isEmpty()
 					&& DialogUtils.getDialogSettings().isShowHeuristicExcludedDiagnoses()) {
@@ -140,9 +140,9 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 	}
 
 	private boolean heuristicDiagnosesAvailable(XPSCase theCase) {
-		List<Diagnosis> established = theCase.getDiagnoses(DiagnosisState.ESTABLISHED, getPsMethodHeur(theCase));
-		List<Diagnosis> suggested = theCase.getDiagnoses(DiagnosisState.SUGGESTED, getPsMethodHeur(theCase));
-		List<Diagnosis> excluded = theCase.getDiagnoses(DiagnosisState.EXCLUDED, getPsMethodHeur(theCase));
+		List<Solution> established = theCase.getDiagnoses(DiagnosisState.ESTABLISHED, getPsMethodHeur(theCase));
+		List<Solution> suggested = theCase.getDiagnoses(DiagnosisState.SUGGESTED, getPsMethodHeur(theCase));
+		List<Solution> excluded = theCase.getDiagnoses(DiagnosisState.EXCLUDED, getPsMethodHeur(theCase));
 		if ((established.size() != 0 && DialogUtils.getDialogSettings().isShowHeuristicEstablishedDiagnoses())
 				|| (suggested.size() != 0 && DialogUtils.getDialogSettings()
 						.isShowHeuristicSuggestedDiagnoses())

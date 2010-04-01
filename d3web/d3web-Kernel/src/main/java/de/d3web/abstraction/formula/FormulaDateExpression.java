@@ -40,9 +40,7 @@ import de.d3web.core.session.values.AnswerDate;
  * <P>
  * @see FormulaExpression
  */
-public class FormulaDateExpression implements java.io.Serializable {
-
-	private static final long serialVersionUID = 2918085886051189808L;
+public class FormulaDateExpression {
 
 	/** the Question this expression belongs to */
 	private Question question;

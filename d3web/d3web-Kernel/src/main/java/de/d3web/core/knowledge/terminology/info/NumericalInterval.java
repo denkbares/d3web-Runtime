@@ -27,9 +27,7 @@ package de.d3web.core.knowledge.terminology.info;
  * Borders can be open or closed.
  * @author mweniger
  */
-public class NumericalInterval implements Comparable, java.io.Serializable {
-
-	private static final long serialVersionUID = -8068881112171407172L;
+public class NumericalInterval implements Comparable<NumericalInterval> {
 
 	public static class IntervalException extends IllegalArgumentException {
 		/**
@@ -253,8 +251,7 @@ public class NumericalInterval implements Comparable, java.io.Serializable {
 	/* (non-Javadoc)
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
-	public int compareTo(Object o) {
-		NumericalInterval ni = (NumericalInterval) o;
+	public int compareTo(NumericalInterval ni) {
 		if (left < ni.left) {
 			return -1;
 		} else if (left > ni.left) {

@@ -39,8 +39,6 @@ import de.d3web.core.session.blackboard.XPSCaseObject;
  */
 public abstract class ExceptionQuestion extends Question {
 
-    private static final long serialVersionUID = -8372897275886729061L;
-
 	/**
      * fulfils the super-contructor
      */

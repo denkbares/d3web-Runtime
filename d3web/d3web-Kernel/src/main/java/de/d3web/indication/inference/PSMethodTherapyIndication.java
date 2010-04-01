@@ -27,7 +27,7 @@ import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.DiagnosisState.State;
 import de.d3web.core.session.XPSCase;
@@ -68,7 +68,7 @@ public class PSMethodTherapyIndication extends PSMethodAdapter {
 	 * Creation date: (05.10.00 13:41:07)
 	 * @return de.d3web.kernel.domainModel.DiagnosisState
 	 */
-	public DiagnosisState getState(XPSCase theCase, Diagnosis diagnosis) {
+	public DiagnosisState getState(XPSCase theCase, Solution diagnosis) {
 		DiagnosisScore diagnosisScore =
 			diagnosis.getScore(theCase, this.getClass());
 		if (diagnosisScore == null)

@@ -29,8 +29,6 @@ import de.d3web.kernel.psMethods.shared.comparators.IndividualComparator;
  */
 public class QuestionComparatorOCIndividual extends QuestionComparatorOC implements IndividualComparator {
 
-	private static final long serialVersionUID = -637870285182263247L;
-
 	public double compare(List<?> ans1, List<?> ans2) {
 		try {
 			if (ans1.get(0).equals(ans2.get(0))) {

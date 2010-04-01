@@ -31,7 +31,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseDiagnosis;
@@ -63,8 +63,8 @@ public class CorrectionPageRenderer extends Renderer {
 	// also save userselected diags in case...
 	WebDialog dia = DialogUtils.getDialog();
 
-	List<Diagnosis> allDiags = dia.getTheCase().getDiagnoses();
-	for (Diagnosis diag : allDiags) {
+	List<Solution> allDiags = dia.getTheCase().getDiagnoses();
+	for (Solution diag : allDiags) {
 	    if (diagIsUserSelected(dia, userSelDiagIDs, diag)) {
 		// set as user selected
 		diag.setValue(dia.getTheCase(),
@@ -79,7 +79,7 @@ public class CorrectionPageRenderer extends Renderer {
     }
 
     private boolean diagIsUserSelected(WebDialog dia,
-	    List<String> userSelDiagIDs, Diagnosis diag) {
+	    List<String> userSelDiagIDs, Solution diag) {
 	for (String userSelDiagID : userSelDiagIDs) {
 	    if (userSelDiagID.equals(diag.getId())) {
 		// diag is user selected..
@@ -108,17 +108,17 @@ public class CorrectionPageRenderer extends Renderer {
 	writer.endElement("h2");
 
 	// get established and suggested diagnoses
-	List<Diagnosis> diagListEstablished = theCase
+	List<Solution> diagListEstablished = theCase
 		.getDiagnoses(DiagnosisState.ESTABLISHED);
-	List<Diagnosis> diagListSuggested = theCase
+	List<Solution> diagListSuggested = theCase
 		.getDiagnoses(DiagnosisState.SUGGESTED);
 	// filter duplicate diagoses (some are userselected established and
 	// heuristic suggested)
-	List<Diagnosis> diagListSuggestedFiltered = new ArrayList<Diagnosis>();
-	for (Diagnosis d : diagListSuggested) {
+	List<Solution> diagListSuggestedFiltered = new ArrayList<Solution>();
+	for (Solution d : diagListSuggested) {
 	    String diagID = d.getId();
 	    boolean alreadyAdded = false;
-	    for (Diagnosis dFiltered : diagListEstablished) {
+	    for (Solution dFiltered : diagListEstablished) {
 		if (dFiltered.getId().equals(diagID)) {
 		    // diag is already added -> we dont have to add it again
 		    alreadyAdded = true;
@@ -170,7 +170,7 @@ public class CorrectionPageRenderer extends Renderer {
 	}
 	writer.endElement("table");
 
-	List<Diagnosis> remainingDiags = getRemainingDiags(theCase,
+	List<Solution> remainingDiags = getRemainingDiags(theCase,
 		diagListEstablished, diagListSuggestedFiltered);
 
 	if (!remainingDiags.isEmpty()) {
@@ -206,14 +206,14 @@ public class CorrectionPageRenderer extends Renderer {
 	}
     }
 
-    private List<Diagnosis> getRemainingDiags(XPSCase theCase,
-	    List<Diagnosis> diagListEstablished,
-	    List<Diagnosis> diagListSuggested) {
-	List<Diagnosis> diagList = theCase.getDiagnoses();
-	Diagnosis root = theCase.getKnowledgeBase().getRootDiagnosis();
-	List<Diagnosis> retList = new ArrayList<Diagnosis>();
+    private List<Solution> getRemainingDiags(XPSCase theCase,
+	    List<Solution> diagListEstablished,
+	    List<Solution> diagListSuggested) {
+	List<Solution> diagList = theCase.getDiagnoses();
+	Solution root = theCase.getKnowledgeBase().getRootDiagnosis();
+	List<Solution> retList = new ArrayList<Solution>();
 	for (int i = 0; i < diagList.size(); i++) {
-	    Diagnosis actual = diagList.get(i);
+	    Solution actual = diagList.get(i);
 	    if (!actual.equals(root)
 		    && !(diagListEstablished.contains(actual) || diagListSuggested
 			    .contains(actual))) {
@@ -245,10 +245,10 @@ public class CorrectionPageRenderer extends Renderer {
     }
 
     private void renderDiags(ResponseWriter writer, UIComponent component,
-	    List<Diagnosis> diagList, boolean heuristic, boolean checked)
+	    List<Solution> diagList, boolean heuristic, boolean checked)
 	    throws IOException {
-	for (Iterator<Diagnosis> iter = diagList.iterator(); iter.hasNext();) {
-	    Diagnosis diag = iter.next();
+	for (Iterator<Solution> iter = diagList.iterator(); iter.hasNext();) {
+	    Solution diag = iter.next();
 	    writer.startElement("tr", component);
 
 	    writer.startElement("td", component);

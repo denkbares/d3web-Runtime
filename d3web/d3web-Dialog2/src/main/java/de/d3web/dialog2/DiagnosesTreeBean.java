@@ -29,7 +29,7 @@ import org.apache.myfaces.custom.tree2.TreeNode;
 import org.apache.myfaces.custom.tree2.TreeNodeBase;
 
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.XPSCase;
 import de.d3web.dialog2.util.DialogUtils;
@@ -56,7 +56,7 @@ public class DiagnosesTreeBean {
 	}
 
 	private void checkNodeStylesRecursive(TreeNode node, XPSCase theCase) {
-		Diagnosis actual = theCase.getKnowledgeBase().searchDiagnosis(
+		Solution actual = theCase.getKnowledgeBase().searchDiagnosis(
 				node.getIdentifier());
 		if (actual.getState(theCase, PSMethodHeuristic.class).equals(
 				DiagnosisState.ESTABLISHED)) {
@@ -78,7 +78,7 @@ public class DiagnosesTreeBean {
 		}
 	}
 
-	private void createTreeRecursive(Diagnosis diag, TreeNode parentNode) {
+	private void createTreeRecursive(Solution diag, TreeNode parentNode) {
 		parentNode.setIdentifier(diag.getId());
 		if (diag.getChildren().length == 0) {
 			parentNode.setLeaf(true);
@@ -86,7 +86,7 @@ public class DiagnosesTreeBean {
 		} else {
 			TerminologyObject[] childrenList = diag.getChildren();
 			for (int i = 0; i < childrenList.length; i++) {
-				Diagnosis diagChild = (Diagnosis) childrenList[i];
+				Solution diagChild = (Solution) childrenList[i];
 				TreeNode newNode = new TreeNodeBase(
 						DiagnosesTreeBean.STANDARD_TYPE, diagChild.getName(),
 						false);
@@ -97,11 +97,11 @@ public class DiagnosesTreeBean {
 	}
 
 	public boolean getDiagnosesAvailable() {
-		List<Diagnosis> established = DialogUtils.getDialog().getTheCase()
+		List<Solution> established = DialogUtils.getDialog().getTheCase()
 				.getDiagnoses(DiagnosisState.ESTABLISHED);
-		List<Diagnosis> suggested = DialogUtils.getDialog().getTheCase()
+		List<Solution> suggested = DialogUtils.getDialog().getTheCase()
 				.getDiagnoses(DiagnosisState.SUGGESTED);
-		List<Diagnosis> excluded = DialogUtils.getDialog().getTheCase()
+		List<Solution> excluded = DialogUtils.getDialog().getTheCase()
 				.getDiagnoses(DiagnosisState.EXCLUDED);
 		if (established.size() != 0 || suggested.size() != 0
 				|| excluded.size() != 0) {
@@ -129,7 +129,7 @@ public class DiagnosesTreeBean {
 	}
 
 	private void initTreeModel(XPSCase theCase) {
-		Diagnosis rootDiag = theCase.getKnowledgeBase().getRootDiagnosis();
+		Solution rootDiag = theCase.getKnowledgeBase().getRootDiagnosis();
 		TreeNode treeData = new TreeNodeBase(DiagnosesTreeBean.STANDARD_TYPE,
 				rootDiag.getName(), false);
 		createTreeRecursive(rootDiag, treeData);

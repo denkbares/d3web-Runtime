@@ -28,6 +28,7 @@ import java.util.Set;
 
 public abstract class AbstractSetMap<Key, Type> extends HashMap<Key, Set<Type>> implements ISetMap<Key, Type> {
 		
+	private static final long serialVersionUID = 1103362229468046173L;
 	protected boolean removeEmtpy = true;
 
 	public void addAll(Key key, Collection<Type> objects) {
@@ -92,7 +93,7 @@ public abstract class AbstractSetMap<Key, Type> extends HashMap<Key, Set<Type>> 
 		Set<Type> result = new HashSet<Type>();
 		if(keys == null) return result;
 		for (Key key : new ArrayList<Key>(keys)) {
-			Set set = get(key);
+			Set<Type> set = get(key);
 			if(set != null) {
 				result.addAll(set);
 			}

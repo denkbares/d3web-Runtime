@@ -20,8 +20,6 @@
 
 package de.d3web.core.inference.condition;
 
-import java.util.List;
-
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.Question;
@@ -36,7 +34,6 @@ import de.d3web.core.session.values.AnswerUnknown;
  */
 public abstract class CondQuestion extends TerminalCondition {
 	
-	private static final long serialVersionUID = -2872772676232795811L;
 	protected Question question = null;
 
 	/**

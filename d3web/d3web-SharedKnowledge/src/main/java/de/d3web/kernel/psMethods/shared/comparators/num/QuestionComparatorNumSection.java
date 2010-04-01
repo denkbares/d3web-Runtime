@@ -33,7 +33,6 @@ import de.d3web.core.session.values.AnswerNum;
  * @author: Norman Brümmer
  */
 public class QuestionComparatorNumSection extends QuestionComparatorNum {
-	private static final long serialVersionUID = 7865286934799745265L;
 	protected List<Double> xValues = null;
 	
 	public List<Double> getxValues() {

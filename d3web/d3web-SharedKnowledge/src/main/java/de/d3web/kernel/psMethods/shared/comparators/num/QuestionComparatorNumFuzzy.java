@@ -63,7 +63,6 @@ import de.d3web.core.session.values.AnswerNum;
  */
 public class QuestionComparatorNumFuzzy extends QuestionComparatorNum {
 	
-	private static final long serialVersionUID = 9050181706018462531L;
 	public final static String POSITIVE_INFINITY_STR = "+INFINITY";
 	public final static String NEGATIVE_INFINITY_STR = "-INFINITY";
 

@@ -25,7 +25,7 @@ import java.util.List;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.PSAction;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.XPSCase;
 import de.d3web.indication.inference.PSMethodTherapyIndication;
 
@@ -37,8 +37,7 @@ import de.d3web.indication.inference.PSMethodTherapyIndication;
  */
 public class ActionIndicateTherapies extends PSAction {
 	
-	private static final long serialVersionUID = -1883766652217433924L;
-	private List<Diagnosis> therapies;
+	private List<Solution> therapies;
 
 	public String toString() {
 		return "<RuleAction type=\"IndicateTherapies\">\n"
@@ -52,7 +51,7 @@ public class ActionIndicateTherapies extends PSAction {
 	/**
 	 * @return all objects participating on the action. <BR>
 	 */
-	public List<Diagnosis> getTerminalObjects() {
+	public List<Solution> getTerminalObjects() {
 		// This relies on a plain list of therapies.
 		return getTherapies();
 	}
@@ -132,7 +131,7 @@ public class ActionIndicateTherapies extends PSAction {
 	/**
 	 * @return Returns the therapies.
 	 */
-	public List<Diagnosis> getTherapies() {
+	public List<Solution> getTherapies() {
 		return therapies;
 	}
 
@@ -140,13 +139,13 @@ public class ActionIndicateTherapies extends PSAction {
 	 * @param therapies
 	 *            The therapies to set.
 	 */
-	public void setTherapies(List<Diagnosis> newTherapies) {
+	public void setTherapies(List<Solution> newTherapies) {
 		therapies = newTherapies;
 	}
 	
 	public PSAction copy() {
 		ActionIndicateTherapies a = new ActionIndicateTherapies();
-		a.setTherapies(new LinkedList<Diagnosis>(getTherapies()));
+		a.setTherapies(new LinkedList<Solution>(getTherapies()));
 		return a;
 	}
 	

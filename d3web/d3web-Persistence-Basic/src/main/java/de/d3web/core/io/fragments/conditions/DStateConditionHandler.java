@@ -27,7 +27,7 @@ import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.IDObject;
 /**
@@ -53,8 +53,8 @@ public class DStateConditionHandler implements FragmentHandler {
 		String value = element.getAttribute("value");
 		if (solutionID!=null && value != null) {
 			IDObject idObject = kb.search(solutionID);
-			if (idObject instanceof Diagnosis) {
-				Diagnosis diag = (Diagnosis) idObject;
+			if (idObject instanceof Solution) {
+				Solution diag = (Solution) idObject;
 				DiagnosisState diagnosisState = getDiagnosisState(value);
 				return new CondDState(diag, diagnosisState);
 			}

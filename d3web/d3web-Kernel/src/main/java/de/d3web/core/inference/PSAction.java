@@ -30,9 +30,7 @@ import de.d3web.core.session.XPSCase;
  * when their conditions are true.
  * @author Joachim Baumeister
  */
-public abstract class PSAction implements Cloneable, java.io.Serializable {
-	
-	private static final long serialVersionUID = -7734602381846137317L;
+public abstract class PSAction implements Cloneable {
 	
 	/**
 	 * Executes the included action.

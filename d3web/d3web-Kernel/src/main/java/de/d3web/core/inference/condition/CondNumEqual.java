@@ -32,8 +32,6 @@ import de.d3web.core.session.values.AnswerNum;
  */
 public class CondNumEqual extends CondNum {
 
-	private static final long serialVersionUID = 6904756198495948623L;
-
 	/**
 	 * Creates a new condition, where a the specified numerical question 
 	 * needs to be equal to the specified value.

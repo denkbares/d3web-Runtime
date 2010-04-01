@@ -37,7 +37,7 @@ import de.d3web.core.inference.RuleSet;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.XPSCase;
@@ -522,7 +522,7 @@ public class FluxSolver implements PSMethod {
 	}
 
 	@Override
-	public DiagnosisState getState(XPSCase theCase, Diagnosis theDiagnosis) {
+	public DiagnosisState getState(XPSCase theCase, Solution theDiagnosis) {
 		return theDiagnosis.getState(theCase, PSMethodHeuristic.class);
 	}
 

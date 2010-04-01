@@ -31,11 +31,6 @@ import de.d3web.core.session.XPSCase;
 public class CondAnd extends NonTerminalCondition {
 
 	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 130666501884397100L;
-
-	/**
 	 * Creates a new AND-condition based on the conjunction of the specified
 	 * terms ({@link Condition} instances).
 	 * @param terms a collection of {@link Condition} instances 

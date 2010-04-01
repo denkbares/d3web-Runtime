@@ -33,7 +33,7 @@ import java.util.LinkedList;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.explain.ExplanationFactory;
@@ -99,7 +99,7 @@ public class ENode {
 				if (getValue() == QState.ACTIVE) {
 					proReasons = getQASetActivationReasons();
 				}
-			} else if (getTarget() instanceof Diagnosis) {
+			} else if (getTarget() instanceof Solution) {
 				if (getValue() == DiagnosticValue.getInstance()) {
 					initDiagnosticReasons();
 				}
@@ -116,7 +116,7 @@ public class ENode {
 				if (getValue() == QState.ACTIVE) {
 					contraReasons = getQASetContraReasons();
 				}
-			} else if (getTarget() instanceof Diagnosis) {
+			} else if (getTarget() instanceof Solution) {
 				if (getValue() == DiagnosticValue.getInstance()) {
 					initDiagnosticReasons();
 				}
@@ -130,7 +130,7 @@ public class ENode {
 		if (unrealized == null) {
 			if (getTarget() instanceof QASet) {
 				unrealized = getQASetUnrealizedReasons();
-			} else if (getTarget() instanceof Diagnosis) {
+			} else if (getTarget() instanceof Solution) {
 				if (getValue() == DiagnosticValue.getInstance()) {
 					initDiagnosticReasons();
 				}
@@ -189,7 +189,7 @@ public class ENode {
 		contraReasons = new LinkedList();
 		unrealized = new LinkedList();
 
-		KnowledgeSlice backwardKnowledge = ((Diagnosis) getTarget()).getKnowledge(PSMethodHeuristic.class, MethodKind.BACKWARD);
+		KnowledgeSlice backwardKnowledge = ((Solution) getTarget()).getKnowledge(PSMethodHeuristic.class, MethodKind.BACKWARD);
 		if (backwardKnowledge == null) {
 			return;
 		}

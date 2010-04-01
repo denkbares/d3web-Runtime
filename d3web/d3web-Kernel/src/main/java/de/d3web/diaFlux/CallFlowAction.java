@@ -36,8 +36,6 @@ import de.d3web.diaFlux.inference.FluxSolver;
  */
 public class CallFlowAction extends PSAction {
 	
-
-	private static final long serialVersionUID = -8275056690367249020L;
 	private final String flowName;
 	private final String startNodeName;
 

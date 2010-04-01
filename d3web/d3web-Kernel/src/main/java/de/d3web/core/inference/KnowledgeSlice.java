@@ -28,7 +28,7 @@ import de.d3web.core.session.XPSCase;
  * if it has already been used (e.g. rule = hasFired).
  * @author joba
  */
-public interface KnowledgeSlice extends java.io.Serializable {
+public interface KnowledgeSlice {
 
 	/**
 	 * Provide a unique id for each part of knowledge.

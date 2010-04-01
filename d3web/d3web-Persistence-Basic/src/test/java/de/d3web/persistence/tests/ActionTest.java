@@ -45,7 +45,7 @@ import de.d3web.core.io.fragments.actions.NextQASetActionHandler;
 import de.d3web.core.io.fragments.actions.QuestionSetterActionHandler;
 import de.d3web.core.io.fragments.actions.SuppressAnswerActionHandler;
 import de.d3web.core.io.utilities.Util;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -87,7 +87,7 @@ public class ActionTest extends TestCase {
 	private QuestionNum qnum1;
 	private QuestionDate qdate1;
 	
-	private Diagnosis diag1;
+	private Solution diag1;
 	private QContainer qcon1;
 	
 	private XMLTag isTag;
@@ -142,7 +142,7 @@ public class ActionTest extends TestCase {
 		
 		qdate1 = new QuestionDate("qdate1-id");
 		
-		diag1 = new Diagnosis("diag1-id");
+		diag1 = new Solution("diag1-id");
 		diag1.setName("diag1-text");
 		
 		qcon1 = new QContainer("qcon1-id");

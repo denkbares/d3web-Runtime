@@ -18,7 +18,7 @@ import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.kernel.psMethods.SCMCBR.PSMethodSCMCBR;
 import de.d3web.kernel.psMethods.SCMCBR.SCMCBRModel;
@@ -111,7 +111,7 @@ public class SCMCBRModelPersistenceHandler implements KnowledgeReader,
 		String completenessSuggestedThreshold = getAttribute("completenessSuggestedThreshold", current);
 		String completenessEstablishedThreshold = getAttribute("completenessEstablishedThreshold",
 				current);
-		Diagnosis diag = kbm.findDiagnosis(solutionID);
+		Solution diag = kbm.findDiagnosis(solutionID);
 		SCMCBRModel model = new SCMCBRModel(diag);
 		NodeList relations =  current.getChildNodes();
 		for(int i = 0; i < relations.getLength(); i++) {

@@ -35,7 +35,7 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.XPSCase;
 import de.d3web.dialog2.component.html.UIExplanation;
 import de.d3web.dialog2.util.DialogUtils;
@@ -45,7 +45,7 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
 public class ExplanationRenderer extends Renderer {
 
 	public static void renderDiagStatusAndScore(FacesContext context,
-			XPSCase theCase, Diagnosis diag) throws IOException {
+			XPSCase theCase, Solution diag) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		writer.writeText(" (= "
 				+ ExplanationRendererUtils.getStateTranslation(diag.getState(
@@ -82,7 +82,7 @@ public class ExplanationRenderer extends Renderer {
 		// diagnosis ...
 		if (explainReason || explainDerivation || explainConcreteDerivation) {
 
-			Diagnosis diag = theCase.getKnowledgeBase().searchDiagnosis(
+			Solution diag = theCase.getKnowledgeBase().searchDiagnosis(
 					toExplain);
 
 			writer.startElement("h3", component);

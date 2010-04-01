@@ -31,7 +31,7 @@ import de.d3web.caserepository.CaseObjectImpl;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -233,11 +233,11 @@ public class CaseConverter {
 			}
 		}
 
-		List diags = theCase.getDiagnoses(state);
+		List<de.d3web.core.knowledge.terminology.Solution> diags = theCase.getDiagnoses(state);
 		if (diags != null) {
-			Iterator diter = diags.iterator();
+			Iterator<de.d3web.core.knowledge.terminology.Solution> diter = diags.iterator();
 			while (diter.hasNext()) {
-				Diagnosis d = (Diagnosis) diter.next();
+				de.d3web.core.knowledge.terminology.Solution d = diter.next();
 
 				Iterator psMethodIter = usedPsm.iterator();
 				while (psMethodIter.hasNext()) {

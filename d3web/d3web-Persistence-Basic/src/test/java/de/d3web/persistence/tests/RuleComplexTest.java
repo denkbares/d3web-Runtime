@@ -30,7 +30,7 @@ import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.inference.condition.CondNumEqual;
 import de.d3web.core.io.fragments.RuleHandler;
 import de.d3web.core.io.utilities.Util;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.persistence.tests.utils.XMLTag;
@@ -46,7 +46,7 @@ public class RuleComplexTest extends TestCase {
 	private RuleHandler rcw;
 	
 	private ActionHeuristicPS ah;
-	private Diagnosis diag1;
+	private Solution diag1;
 	private CondNumEqual cNumL1;
 	private CondDState cDState1;
 	private QuestionNum qnum1;
@@ -79,7 +79,7 @@ public class RuleComplexTest extends TestCase {
 			assertTrue("Error initialising plugin framework", false);
 		}
 		qnum1 = new QuestionNum("qnum1-id");
-		diag1 = new Diagnosis("diag1-id");
+		diag1 = new Solution("diag1-id");
 		diag1.setName("diag1-text");
 		
 		cDState1 = new CondDState(diag1, new DiagnosisState(DiagnosisState.State.EXCLUDED));

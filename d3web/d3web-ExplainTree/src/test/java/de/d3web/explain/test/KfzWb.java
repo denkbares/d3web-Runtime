@@ -14,7 +14,6 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
-import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.inference.condition.CondEqual;
@@ -22,9 +21,9 @@ import de.d3web.core.inference.condition.CondKnown;
 import de.d3web.core.inference.condition.CondNot;
 import de.d3web.core.inference.condition.CondNumGreater;
 import de.d3web.core.inference.condition.CondOr;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -46,9 +45,7 @@ import de.d3web.scoring.Score;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 public class KfzWb extends KnowledgeBase {
 	
-	private static final long serialVersionUID = -4494935321080196161L;
-/* Hier kommen die Fragen */
-
+	/* Hier kommen die Fragen */
 	private QContainer Q000 = new QContainer("Q000");
 	private QContainer Q16 = new QContainer("Q16");
 	private QContainer Qcl16 = new QContainer("Qcl16");
@@ -145,12 +142,12 @@ public class KfzWb extends KnowledgeBase {
 
 	/* Diagnoses ...*/
 
-	private Diagnosis P000 = new Diagnosis("P000");
-	private Diagnosis P8 = new Diagnosis("P8");
-	private Diagnosis P13 = new Diagnosis("P13");
-	private Diagnosis P14 = new Diagnosis("P14");
-	private Diagnosis P15 = new Diagnosis("P15");
-	private Diagnosis P16 = new Diagnosis("P16");
+	private Solution P000 = new Solution("P000");
+	private Solution P8 = new Solution("P8");
+	private Solution P13 = new Solution("P13");
+	private Solution P14 = new Solution("P14");
+	private Solution P15 = new Solution("P15");
+	private Solution P16 = new Solution("P16");
 
 	private void setProperties0() {
 		try {
@@ -855,9 +852,9 @@ public class KfzWb extends KnowledgeBase {
 			}
 		}
 	}
-	Iterator<Diagnosis> iter2 = kb.getDiagnoses().iterator();
+	Iterator<Solution> iter2 = kb.getDiagnoses().iterator();
 	while (iter.hasNext()) {
-	    Diagnosis diagnose = iter2.next();
+	    Solution diagnose = iter2.next();
 	    System.out.println("<" + diagnose.getClass().getName() + " "
 		    + diagnose.getId() + ": " + diagnose.getName() + ">");
 	    KnowledgeSlice knowledge = diagnose.getKnowledge(PSMethodHeuristic.class, MethodKind.FORWARD);

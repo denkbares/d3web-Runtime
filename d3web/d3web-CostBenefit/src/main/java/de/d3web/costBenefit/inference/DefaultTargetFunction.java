@@ -24,7 +24,7 @@ import java.util.Set;
 
 import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.XPSCase;
@@ -41,7 +41,7 @@ public class DefaultTargetFunction implements TargetFunction {
 	@Override
 	public Collection<Target> getTargets(XPSCase theCase,
 			Collection<Question> relevantQuestions,
-			Collection<Diagnosis> diagnosisToDiscriminate, StrategicSupport strategicSupport) {
+			Collection<Solution> diagnosisToDiscriminate, StrategicSupport strategicSupport) {
 		Set<Target> set = new HashSet<Target>();
 		for (Question q : relevantQuestions) {
 			if (!q.isDone(theCase))

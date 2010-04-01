@@ -28,8 +28,7 @@ package de.d3web.core.inference;
  * Creation date: (07.09.00 13:40:08)
  * @author Joachim Baumeister
  */
-public class MethodKind implements java.io.Serializable {
-	private static final long serialVersionUID = 7807082872089949082L;
+public class MethodKind {
 
 	private final String kind;
 	

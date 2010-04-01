@@ -41,7 +41,6 @@ import de.d3web.core.session.XPSCase;
  */
 public class StateTransition implements KnowledgeSlice {
 
-	private static final long serialVersionUID = -5761339624924522001L;
 	public static final MethodKind STATE_TRANSITION= new MethodKind("STATE_TRANSITION");
 	
 	private Condition activationCondition;

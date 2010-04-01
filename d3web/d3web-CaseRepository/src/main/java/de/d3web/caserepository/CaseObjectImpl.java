@@ -42,7 +42,6 @@ import de.d3web.caserepository.addons.PSMethodAuthorSelected;
 import de.d3web.caserepository.addons.shared.AppliedQSets;
 import de.d3web.config.Config;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
@@ -436,7 +435,7 @@ public class CaseObjectImpl implements CaseObject {
 	 * @see de.d3web.caserepository.ISolutionContainer#getSolution(de.d3web.kernel.domainModel.Diagnosis,
 	 *      java.lang.Class)
 	 */
-	public Solution getSolution(Diagnosis d, Class psMethodClass) {
+	public Solution getSolution(de.d3web.core.knowledge.terminology.Solution d, Class psMethodClass) {
 		return s.getSolution(d, psMethodClass);
 	}
 

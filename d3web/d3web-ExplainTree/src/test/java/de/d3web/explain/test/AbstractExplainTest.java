@@ -28,7 +28,7 @@ package de.d3web.explain.test;
 
 import junit.framework.TestCase;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
 
 /**
@@ -49,7 +49,7 @@ public abstract class AbstractExplainTest  extends TestCase {
     public static QASet findQ(String text, KnowledgeBase kb) {
         return kb.searchQASet(text);
     }
-    public static Diagnosis findD(String text, KnowledgeBase kb) {
+    public static Solution findD(String text, KnowledgeBase kb) {
         return kb.searchDiagnosis(text);
     }
     

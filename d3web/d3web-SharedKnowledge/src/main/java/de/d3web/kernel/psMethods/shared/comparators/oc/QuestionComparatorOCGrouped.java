@@ -32,7 +32,6 @@ import de.d3web.kernel.psMethods.shared.comparators.PairRelation;
  */
 public abstract class QuestionComparatorOCGrouped extends QuestionComparatorOC implements GroupedComparator {
 
-	private static final long serialVersionUID = -8561958209519346771L;
 	protected List<PairRelation> pairRelations = null;
 
 	/**

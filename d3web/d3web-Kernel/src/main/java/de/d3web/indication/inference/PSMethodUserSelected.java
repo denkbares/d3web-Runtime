@@ -21,7 +21,7 @@
 package de.d3web.indication.inference;
 
 import de.d3web.core.inference.PSMethodRulebased;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseDiagnosis;
@@ -57,7 +57,7 @@ public class PSMethodUserSelected extends PSMethodRulebased {
 	 * @return the (calculated) state of the given Diagnosis for the current
 	 *         (given) case. Creation date: (03.01.2002 17:32:38)
 	 */
-	public DiagnosisState getState(XPSCase theCase, Diagnosis diagnosis) {
+	public DiagnosisState getState(XPSCase theCase, Solution diagnosis) {
 		Object value = ((CaseDiagnosis) (theCase.getCaseObject(diagnosis))).getValue(this.getClass());
 		if (value instanceof DiagnosisScore) {
 			return DiagnosisState.getState((DiagnosisScore) value);

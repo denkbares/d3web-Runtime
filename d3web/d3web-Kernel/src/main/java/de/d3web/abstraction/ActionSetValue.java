@@ -47,8 +47,6 @@ import de.d3web.core.session.values.EvaluatableAnswerNumValue;
  */
 public class ActionSetValue extends ActionQuestionSetter implements CaseObjectSource {
 
-	private static final long serialVersionUID = -1213290904090399929L;
-
 	// private Map schemaValueHash = null;
 	public String toString() {
 		return "<RuleAction type=\"SetValue\">\n" + "  [" + getQuestion().getId() + ": "

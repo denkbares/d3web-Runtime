@@ -42,7 +42,6 @@ import de.d3web.core.session.XPSCase;
  */
 public class Today implements FormulaDateElement {
 	
-	private static final long serialVersionUID = 5007129759534680384L;
 	private FormulaNumberElement arg;
 	private Double evaluatedArg;
 

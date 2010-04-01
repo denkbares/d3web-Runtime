@@ -29,61 +29,61 @@ import de.d3web.kernel.psMethods.shared.comparators.PairRelation;
 
 /**
  * Creation date: (07.08.2001 09:55:57)
+ * 
  * @author: Norman Brümmer
  */
 public abstract class QuestionComparatorMCGrouped extends QuestionComparatorMC implements
-        GroupedComparator {
+		GroupedComparator {
 
-   private static final long serialVersionUID = -4337435566756738090L;
 	protected List<PairRelation> pairRelations = null;
 
-    /**
-     * Creation date: (03.08.2001 15:23:14)
-     * 
-     * @param ans1
-     *            de.d3web.kernel.domainModel.answers.AnswerChoice
-     */
-    public void addPairRelation(AnswerChoice ans1, AnswerChoice ans2,
-            double value) {
-        PairRelation rel = new PairRelation(ans1, ans2, value);
-        if (pairRelations.contains(rel)) {
-            pairRelations.remove(rel);
-        }
+	/**
+	 * Creation date: (03.08.2001 15:23:14)
+	 * 
+	 * @param ans1
+	 *            de.d3web.kernel.domainModel.answers.AnswerChoice
+	 */
+	public void addPairRelation(AnswerChoice ans1, AnswerChoice ans2,
+			double value) {
+		PairRelation rel = new PairRelation(ans1, ans2, value);
+		if (pairRelations.contains(rel)) {
+			pairRelations.remove(rel);
+		}
 
-        pairRelations.add(rel);
+		pairRelations.add(rel);
 
-    }
-    
-    public void addPairRelation(PairRelation pairRelation) {
-    	pairRelations.add(pairRelation);
-    }
+	}
 
-    public double getPairRelationValue(AnswerChoice ans1, AnswerChoice ans2) {
-        PairRelation rel = new PairRelation(ans1, ans2, 0.0);
-        boolean found = pairRelations.contains(rel);
-        if (found) {
-            int index = pairRelations.indexOf(rel);
-            PairRelation foundrel = (PairRelation) pairRelations.get(index);
-            return foundrel.getValue();
-        } else
-            return 0.0;
-    }
+	public void addPairRelation(PairRelation pairRelation) {
+		pairRelations.add(pairRelation);
+	}
 
-    /**
-     * Creation date: (07.08.2001 10:56:41)
-     */
-    public QuestionComparatorMCGrouped() {
-        pairRelations = new LinkedList<PairRelation>();
-    }
+	public double getPairRelationValue(AnswerChoice ans1, AnswerChoice ans2) {
+		PairRelation rel = new PairRelation(ans1, ans2, 0.0);
+		boolean found = pairRelations.contains(rel);
+		if (found) {
+			int index = pairRelations.indexOf(rel);
+			PairRelation foundrel = (PairRelation) pairRelations.get(index);
+			return foundrel.getValue();
+		}
+		else return 0.0;
+	}
 
-    public void addPairRelation(AnswerChoice ans1, AnswerChoice ans2) {
-        addPairRelation(ans1, ans2, 1.0);
-    }
+	/**
+	 * Creation date: (07.08.2001 10:56:41)
+	 */
+	public QuestionComparatorMCGrouped() {
+		pairRelations = new LinkedList<PairRelation>();
+	}
 
-    /**
-     * @return Returns the pairRelations.
-     */
-    public List<PairRelation> getPairRelations() {
-        return pairRelations;
-    }
+	public void addPairRelation(AnswerChoice ans1, AnswerChoice ans2) {
+		addPairRelation(ans1, ans2, 1.0);
+	}
+
+	/**
+	 * @return Returns the pairRelations.
+	 */
+	public List<PairRelation> getPairRelations() {
+		return pairRelations;
+	}
 }

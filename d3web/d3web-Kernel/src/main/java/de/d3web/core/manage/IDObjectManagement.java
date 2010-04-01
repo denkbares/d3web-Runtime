@@ -21,7 +21,7 @@
 package de.d3web.core.manage;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -49,7 +49,7 @@ public interface IDObjectManagement {
 	
 	Question findQuestion(String name);
 	
-	Diagnosis findDiagnosis(String name);
+	Solution findDiagnosis(String name);
 	
 	AnswerChoice findAnswerChoice(QuestionChoice qc, String name);
 	
@@ -80,8 +80,8 @@ public interface IDObjectManagement {
 	QuestionDate createQuestionDate(String name, QASet parent);
 	QuestionText createQuestionText(String name, QASet parent);
 	
-	Diagnosis createDiagnosis(String id, String name, Diagnosis parent);
-	Diagnosis createDiagnosis(String name, Diagnosis parent);
+	Solution createDiagnosis(String id, String name, Solution parent);
+	Solution createDiagnosis(String name, Solution parent);
 
 	Answer addChoiceAnswer(QuestionChoice qc, String value);
 	KnowledgeBase getKnowledgeBase();

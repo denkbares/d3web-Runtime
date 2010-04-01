@@ -30,8 +30,6 @@ import de.d3web.kernel.psMethods.shared.comparators.IndividualComparator;
  */
 public class QuestionComparatorNumIndividual extends QuestionComparatorNum implements IndividualComparator {
 
-	private static final long serialVersionUID = -2716446824920270409L;
-
 	public double compare(List<?> ans1, List<?> ans2) {
 		double x1 = 0;
 		double x2 = 0;

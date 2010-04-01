@@ -36,7 +36,7 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.session.XPSCase;
@@ -72,7 +72,7 @@ public class XCLPageRenderer extends Renderer {
     	theCase = DialogUtils.getDialog().getTheCase();
     	String diagnosis = ((UIXCLPage) component).getDiag();
     	
-    	Diagnosis solution = 
+    	Solution solution = 
     		theCase.getKnowledgeBase().searchDiagnosis(diagnosis);
     	
 		Collection<KnowledgeSlice> models = 

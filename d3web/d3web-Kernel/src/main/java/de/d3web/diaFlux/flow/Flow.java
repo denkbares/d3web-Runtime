@@ -20,7 +20,6 @@
 
 package de.d3web.diaFlux.flow;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,9 +38,7 @@ import de.d3web.diaFlux.inference.FluxSolver;
  * @author Reinhard Hatko
  *
  */
-public class Flow implements Serializable, CaseObjectSource, KnowledgeSlice {
-	
-	private static final long serialVersionUID = -8432405209778184118L;
+public class Flow implements CaseObjectSource, KnowledgeSlice {
 	
 	private final List<IEdge> edges;
 	private final List<INode> nodes;

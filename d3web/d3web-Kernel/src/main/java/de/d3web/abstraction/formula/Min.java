@@ -30,8 +30,6 @@ import de.d3web.core.session.XPSCase;
 public class Min extends FormulaNumberArgumentsTerm implements FormulaNumberElement{
 
 
-	private static final long serialVersionUID = -7206289688436849915L;
-
 	/** 
 	 * Creates a new FormulaTerm with null-arguments.
 	 */

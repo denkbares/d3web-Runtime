@@ -38,7 +38,6 @@ import de.d3web.diaFlux.inference.FluxSolver;
  */
 public class NoopAction extends PSAction {
 
-	private static final long serialVersionUID = -5920305686485574489L;
 	public static final NoopAction INSTANCE = new NoopAction();
 	
 	private NoopAction() {

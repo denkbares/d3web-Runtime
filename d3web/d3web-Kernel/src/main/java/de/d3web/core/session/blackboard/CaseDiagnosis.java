@@ -23,7 +23,7 @@ package de.d3web.core.session.blackboard;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.scoring.DiagnosisScore;
 /**
  * Stores the dynamic, user specific values of a diagnosis object. It
@@ -33,7 +33,7 @@ import de.d3web.scoring.DiagnosisScore;
  * <li>state for each applied problem-solver
  * 
  * @author Christian Betz, joba
- * @see Diagnosis
+ * @see Solution
  */
 public class CaseDiagnosis extends XPSCaseObject {
 
@@ -46,7 +46,7 @@ public class CaseDiagnosis extends XPSCaseObject {
 	 * @param diagnosis
 	 *            the static diagnosis object related to this object
 	 */
-	public CaseDiagnosis(Diagnosis diagnosis) {
+	public CaseDiagnosis(Solution diagnosis) {
 		super(diagnosis);
 		value = new HashMap();
 	}
@@ -62,7 +62,7 @@ public class CaseDiagnosis extends XPSCaseObject {
 	public Object getValue(Class context) {
 		Object o = value.get(context);
 		if (o == null) {
-			DiagnosisScore d = new DiagnosisScore(((Diagnosis) getSourceObject())
+			DiagnosisScore d = new DiagnosisScore(((Solution) getSourceObject())
 					.getAprioriProbability());
 			setValue(d, context);
 			return d;
@@ -92,7 +92,7 @@ public class CaseDiagnosis extends XPSCaseObject {
 	public DiagnosisScore getScore(Class context) {
 		Object o = getValue(context);
 		if (o == null) {
-			DiagnosisScore d = new DiagnosisScore(((Diagnosis) getSourceObject())
+			DiagnosisScore d = new DiagnosisScore(((Solution) getSourceObject())
 					.getAprioriProbability());
 			setScore(d, context);
 			o = d;

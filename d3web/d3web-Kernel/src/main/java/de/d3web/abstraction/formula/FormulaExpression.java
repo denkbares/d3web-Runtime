@@ -35,9 +35,7 @@ import de.d3web.core.session.values.AnswerNum;
  * [joba] changed QuestionNum to Question, since QuestionOC 
  * can also belong to a FormulaExpression (-> Num2ChoiceSchema)
  */
-public class FormulaExpression implements java.io.Serializable {
-
-	private static final long serialVersionUID = -996240637815991111L;
+public class FormulaExpression {
 
 	/** the Question this expression belongs to */
 	private Question question;

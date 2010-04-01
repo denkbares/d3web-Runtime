@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -403,11 +403,11 @@ public class DDBuilder implements CaseVisualizer {
 //				nodeColor + "\">" + bh.pretty(nodeName) + "</TD> </TR>\n");
 
 		// Put all RatedSolutions in HashMaps
-		HashMap<Diagnosis, RatedSolution> expSolutions = 
+		HashMap<Solution, RatedSolution> expSolutions = 
 			getSolutionsInHashMap(node.getTestCase().getExpectedSolutions());
-		HashMap<Diagnosis, RatedSolution> derSolutions = 
+		HashMap<Solution, RatedSolution> derSolutions = 
 			getSolutionsInHashMap(node.getTestCase().getDerivedSolutions());
-		HashSet<Diagnosis> solutions = new HashSet<Diagnosis>();
+		HashSet<Solution> solutions = new HashSet<Solution>();
 				
 		solutions.addAll(expSolutions.keySet());
 		solutions.addAll(derSolutions.keySet());
@@ -415,7 +415,7 @@ public class DDBuilder implements CaseVisualizer {
 		// Print Solutions
 		b.append(transformSolutionsHeader(nodeColor, intColSpan));
 		
-		for (Diagnosis d : solutions) {
+		for (Solution d : solutions) {
 			RatedSolution expected = expSolutions.get(d);
 			RatedSolution derived = derSolutions.get(d);
 						
@@ -450,11 +450,11 @@ public class DDBuilder implements CaseVisualizer {
 	 * 
 	 * @return HashMap<Diagnosis, RatedSolution>
 	 */
-	private HashMap<Diagnosis, RatedSolution> getSolutionsInHashMap(
+	private HashMap<Solution, RatedSolution> getSolutionsInHashMap(
 			List<RatedSolution> solutions) {
 		
-		HashMap<Diagnosis, RatedSolution> result = 
-			new HashMap<Diagnosis, RatedSolution>();
+		HashMap<Solution, RatedSolution> result = 
+			new HashMap<Solution, RatedSolution>();
 		
 		for (RatedSolution rs : solutions) {
 			result.put(rs.getSolution(), rs);

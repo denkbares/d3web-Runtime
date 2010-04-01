@@ -40,8 +40,6 @@ import de.d3web.core.session.values.AnswerDate;
  */
 public class FormulaDate extends FormulaDatePrimitive {
 
-	private static final long serialVersionUID = 2745627018166279006L;
-
 	/** 
 	 * Creates a new FormulaNubmer with 0 as value.
 	 */

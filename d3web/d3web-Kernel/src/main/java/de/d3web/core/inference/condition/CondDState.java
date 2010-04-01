@@ -19,7 +19,7 @@
  */
 
 package de.d3web.core.inference.condition;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.XPSCase;
 
@@ -31,11 +31,8 @@ import de.d3web.core.session.XPSCase;
  * @author Christian Betz
  */
 public class CondDState extends TerminalCondition {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5690604452964483692L;
-	private Diagnosis diagnosis;
+	
+	private Solution diagnosis;
 	private DiagnosisState solutionState;
 
 	/**
@@ -45,7 +42,7 @@ public class CondDState extends TerminalCondition {
 	 * @param context the context in which the diagnosis has the state
 	 */
 	public CondDState(
-		Diagnosis diagnosis,
+		Solution diagnosis,
 		DiagnosisState solutionState) {
 		super(diagnosis);
 		this.diagnosis = diagnosis;
@@ -63,7 +60,7 @@ public class CondDState extends TerminalCondition {
 		return solutionState.equals(diagnosis.getState(theCase));
 	}
 
-	public Diagnosis getDiagnosis() {
+	public Solution getDiagnosis() {
 		return diagnosis;
 	}
 
@@ -71,7 +68,7 @@ public class CondDState extends TerminalCondition {
 		return solutionState;
 	}
 
-	public void setDiagnosis(Diagnosis newDiagnosis) {
+	public void setDiagnosis(Solution newDiagnosis) {
 		diagnosis = newDiagnosis;
 	}
 

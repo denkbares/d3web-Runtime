@@ -23,14 +23,13 @@
  */
 package de.d3web.diaFlux.flow;
 
-import java.io.Serializable;
 
 /**
  * @author Reinhard Hatko
  * Created: 14.09.2009
  *
  */
-public interface IEdgeData extends Serializable {
+public interface IEdgeData {
 	
 	
 	IEdge getEdge();

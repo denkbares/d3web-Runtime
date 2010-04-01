@@ -37,10 +37,7 @@ import de.d3web.indication.inference.PSMethodContraIndication;
  */
 public class ActionContraIndication extends PSAction {
 	
-	private static final long serialVersionUID = 3218797752146535382L;
 	private List<QASet> qasets;
-
-	
 
 	/**
 	 * Invoked, if rule fires (action)

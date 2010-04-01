@@ -27,8 +27,6 @@ import de.d3web.plugin.Autodetect;
  */
 public class PSConfig implements Comparable<PSConfig> {
 
-	private static final long serialVersionUID = -8392435221734086888L;
-
 	public enum PSState {
 		active,
 		deactivated,

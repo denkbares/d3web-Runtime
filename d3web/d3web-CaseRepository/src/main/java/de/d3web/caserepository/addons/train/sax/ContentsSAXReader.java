@@ -34,7 +34,7 @@ import de.d3web.caserepository.addons.train.findings.Finding;
 import de.d3web.caserepository.addons.train.findings.FindingsContents;
 import de.d3web.caserepository.addons.train.findings.Rating;
 import de.d3web.caserepository.sax.AbstractTagReader;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
 
 /**
@@ -250,7 +250,7 @@ public class ContentsSAXReader extends AbstractTagReader {
 	}
 
 	private void startFindingDiagnosisRelation(Attributes attributes) {
-		Diagnosis diag = getKnowledgeBase().searchDiagnosis(
+		Solution diag = getKnowledgeBase().searchDiagnosis(
 				attributes.getValue("id"));
 		if (diag != null) {
 			Rating score = Rating.getRating(attributes.getValue("rating"));

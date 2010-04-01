@@ -35,8 +35,6 @@ import de.d3web.xcl.inference.PSMethodXCL;
  */
 public class XCLContributedModelSet implements KnowledgeSlice {
 
-	private static final long serialVersionUID = 3178851992700334096L;
-	
 	/**
 	 * MethodKind for backward referenced xclModels from the NamedObjects of the
 	 * Conditions of the contained relations

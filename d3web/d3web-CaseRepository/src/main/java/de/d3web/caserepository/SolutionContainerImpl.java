@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import de.d3web.caserepository.CaseObject.Solution;
-import de.d3web.core.knowledge.terminology.Diagnosis;
 
 /**
  * 30.09.2003 12:09:05
@@ -83,7 +82,7 @@ public class SolutionContainerImpl implements ISolutionContainer {
 	/* (non-Javadoc)
 	 * @see de.d3web.caserepository.CaseObject#getSolution(de.d3web.kernel.domainModel.Diagnosis, java.lang.Class)
 	 */
-	public Solution getSolution(Diagnosis d, Class psMethodClass) {
+	public Solution getSolution(de.d3web.core.knowledge.terminology.Solution d, Class psMethodClass) {
 		Iterator iter = solutions.iterator();
 		while (iter.hasNext()) {
 			CaseObject.Solution s = (CaseObject.Solution) iter.next();

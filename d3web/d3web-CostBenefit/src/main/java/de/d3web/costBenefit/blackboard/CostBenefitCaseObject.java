@@ -22,7 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.d3web.core.inference.Rule;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.XPSCase;
@@ -41,7 +41,7 @@ public class CostBenefitCaseObject extends XPSCaseObject{
 	private Rule rule;
 	private int currentPathIndex = -1;
 	private boolean hasBegun = false;
-	private Set<Diagnosis> diags = new HashSet<Diagnosis>();
+	private Set<Solution> diags = new HashSet<Solution>();
 	private XPSCase session;
 	
 	public CostBenefitCaseObject(CaseObjectSource theSourceObject, XPSCase session) {
@@ -108,11 +108,11 @@ public class CostBenefitCaseObject extends XPSCaseObject{
 		this.hasBegun = hasBegun;
 	}
 
-	public Set<Diagnosis> getDiags() {
+	public Set<Solution> getDiags() {
 		return diags;
 	}
 
-	public void setDiags(Set<Diagnosis> diags) {
+	public void setDiags(Set<Solution> diags) {
 		this.diags = diags;
 	}
 	

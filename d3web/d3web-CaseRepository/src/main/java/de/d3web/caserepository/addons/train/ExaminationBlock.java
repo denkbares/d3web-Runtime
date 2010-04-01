@@ -40,7 +40,6 @@ import de.d3web.caserepository.SolutionContainerImpl;
 import de.d3web.caserepository.CaseObject.Solution;
 import de.d3web.caserepository.addons.IExaminationBlock;
 import de.d3web.core.io.utilities.XMLTools;
-import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.QContainer;
 
 /**
@@ -89,7 +88,7 @@ public class ExaminationBlock implements IExaminationBlock {
 		sb.append("<Solutioncomments>\n");
 		iter = diagnosis2content.keySet().iterator();
 		while (iter.hasNext()) {
-		    Diagnosis d = (Diagnosis) iter.next();
+		    de.d3web.core.knowledge.terminology.Solution d = (de.d3web.core.knowledge.terminology.Solution) iter.next();
 		    String c = getCommentFor(d);
 		    sb.append("<Solutioncomment" +
 	    		" id='" + d.getId() + "'>" +
@@ -128,7 +127,7 @@ public class ExaminationBlock implements IExaminationBlock {
 	 * @see de.d3web.caserepository.ISolutionContainer#getSolution(de.d3web.kernel.domainModel.Diagnosis,
 	 *      java.lang.Class)
 	 */
-	public Solution getSolution(Diagnosis d, Class psMethodClass) {
+	public Solution getSolution(de.d3web.core.knowledge.terminology.Solution d, Class psMethodClass) {
 		return s.getSolution(d, psMethodClass);
 	}
 
@@ -222,14 +221,14 @@ public class ExaminationBlock implements IExaminationBlock {
     /* (non-Javadoc)
      * @see de.d3web.caserepository.addons.IExaminationBlock#getCommentFor(de.d3web.kernel.domainModel.Diagnosis)
      */
-    public String getCommentFor(Diagnosis d) {
+    public String getCommentFor(de.d3web.core.knowledge.terminology.Solution d) {
         return (String) diagnosis2content.get(d);
     }
 
     /* (non-Javadoc)
      * @see de.d3web.caserepository.addons.IExaminationBlock#setCommentFor(de.d3web.kernel.domainModel.Diagnosis, java.lang.String)
      */
-    public void setCommentFor(Diagnosis d, String s) {
+    public void setCommentFor(de.d3web.core.knowledge.terminology.Solution d, String s) {
         diagnosis2content.put(d, s);
     }
 

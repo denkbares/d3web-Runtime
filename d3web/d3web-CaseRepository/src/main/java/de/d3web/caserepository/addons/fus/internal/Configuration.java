@@ -25,7 +25,7 @@ package de.d3web.caserepository.addons.fus.internal;
 
 import java.util.Set;
 
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 
 
 /**
@@ -37,7 +37,7 @@ public class Configuration {
 	private ProbabilityList caseObjectIDProbabilityList;
 	private AbstractCNode node;
 	
-	public boolean matches(Set<Diagnosis> diagnoses) {
+	public boolean matches(Set<Solution> diagnoses) {
 		return getNode().matches(diagnoses);
 	}
 

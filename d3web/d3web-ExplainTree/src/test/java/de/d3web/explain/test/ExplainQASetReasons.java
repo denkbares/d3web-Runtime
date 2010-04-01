@@ -37,7 +37,7 @@ import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.CaseFactory;
@@ -143,7 +143,7 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 		explainContext.add(PSMethodSuppressAnswer.class);
 
 		// set P8 to suggested since it will activate Q17
-		Diagnosis P8 = findD("P8", testKb);
+		Solution P8 = findD("P8", testKb);
 		DiagnosisScore score = new DiagnosisScore();
 		score = score.add(Score.P7);
 		theCase.setValue(P8, new Object[] { score }, PSMethodUserSelected.class);
@@ -185,7 +185,7 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 		explainContext.add(PSMethodSuppressAnswer.class);
 
 		// set P8 to suggested since it will activate Q17
-		Diagnosis P8 = findD("P8", testKb);
+		Solution P8 = findD("P8", testKb);
 		DiagnosisScore score = new DiagnosisScore();
 		score = score.add(Score.P4);
 		theCase.setValue(P8, new Object[] { score }, PSMethodUserSelected.class);

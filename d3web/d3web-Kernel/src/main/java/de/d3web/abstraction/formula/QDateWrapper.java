@@ -43,8 +43,6 @@ import de.d3web.core.session.values.EvaluatableAnswerDateValue;
  */
 public class QDateWrapper extends FormulaDatePrimitive {
 
-	private static final long serialVersionUID = 1776598462654255384L;
-
 	/** 
 	 * Creates a new FormulaTerm with null-arguments.
 	 */

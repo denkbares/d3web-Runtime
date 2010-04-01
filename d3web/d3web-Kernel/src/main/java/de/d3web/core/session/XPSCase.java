@@ -30,7 +30,7 @@ import de.d3web.core.inference.PropagationContoller;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -44,7 +44,7 @@ import de.d3web.core.session.interviewmanager.QASetManager;
 /**
  * Every problem-solving session is represented by a an XPSCase. It manages the
  * used problem-solving methods {@link PSMethod}, the entered findings (
- * {@link Question} and {@link Answer}), derived solutions ({@link Diagnosis}).
+ * {@link Question} and {@link Answer}), derived solutions ({@link Solution}).
  * The XPSCase also holds the used {@link KnowledgeBase}. <BR>
  * Most importantly, all entered answers have to set through the setValue
  * methods of XPSCase, since XPSCase acts as a mediator during problem-solving
@@ -77,7 +77,7 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	/**
 	 * Returns the {@link XPSCaseObject} (dynamic flyweight object)
 	 * corresponding to the specified {@link CaseObjectSource} instance (often
-	 * this is a {@link Question} or a {@link Diagnosis}.
+	 * this is a {@link Question} or a {@link Solution}.
 	 * 
 	 * @param item
 	 *            Object whose case object should be returned
@@ -86,34 +86,34 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	XPSCaseObject getCaseObject(CaseObjectSource item);
 
 	/**
-	 * Returns all {@link Diagnosis} instances contained in the knowledge base
+	 * Returns all {@link Solution} instances contained in the knowledge base
 	 * as a sequential list.
 	 * 
-	 * @return a list of all {@link Diagnosis} instances
+	 * @return a list of all {@link Solution} instances
 	 * @deprecated use getKnowledgeBase().getDiagnoses instead
 	 */
 	// TODO: remove this method
-	List<Diagnosis> getDiagnoses();
+	List<Solution> getDiagnoses();
 
 	/**
-	 * Returns all {@link Diagnosis} instances, that hold the specified
+	 * Returns all {@link Solution} instances, that hold the specified
 	 * {@link DiagnosisState} in this {@link XPSCase}. All registered
-	 * {@link PSMethod} instances are considered, so a {@link Diagnosis} is
+	 * {@link PSMethod} instances are considered, so a {@link Solution} is
 	 * returned, if it haves the specified {@link DiagnosisState} for at least
 	 * one {@link PSMethod}.
 	 * 
 	 * @param the
 	 *            specified {@link DiagnosisState} that the diagnoses should
 	 *            have
-	 * @return a list of {@link Diagnosis} instances having the specified state
+	 * @return a list of {@link Solution} instances having the specified state
 	 */
-	List<Diagnosis> getDiagnoses(DiagnosisState state);
+	List<Solution> getDiagnoses(DiagnosisState state);
 
 	/**
-	 * Returns all {@link Diagnosis} instances, that hold the specified
+	 * Returns all {@link Solution} instances, that hold the specified
 	 * {@link DiagnosisState} for at least one {@link PSMethod} specified. in
 	 * this {@link XPSCase}. Only the specified {@link PSMethod} instances are
-	 * considered, so a {@link Diagnosis} is returned, if it haves the specified
+	 * considered, so a {@link Solution} is returned, if it haves the specified
 	 * {@link DiagnosisState} for at least one of these {@link PSMethod}.
 	 * 
 	 * @param state
@@ -123,7 +123,7 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	 *            set by one of the given PSMethods
 	 * @return a list of diagnoses in this case that have the state 'state'
 	 */
-	List<Diagnosis> getDiagnoses(DiagnosisState state, List<? extends PSMethod> psMethods);
+	List<Solution> getDiagnoses(DiagnosisState state, List<? extends PSMethod> psMethods);
 
 	/**
 	 * Returns the {@link KnowledgeBase} instance this object belongs to.
@@ -231,7 +231,7 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	
 	/**
 	 * Assigns the specified value to the specified {@link ValuedObject},
-	 * e.g., a {@link Question} or a {@link Diagnosis} receives a new value.
+	 * e.g., a {@link Question} or a {@link Solution} receives a new value.
 	 * 
 	 * @param valuedObject
 	 *            the object, that receives a new value
@@ -244,7 +244,7 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 
 	/**
 	 * Assigns the specified value to the specified {@link ValuedObject},
-	 * e.g., a {@link Question} or a {@link Diagnosis} receives a new value. The
+	 * e.g., a {@link Question} or a {@link Solution} receives a new value. The
 	 * knowledge source of this assignment is also given, here it is a
 	 * {@link Rule}.
 	 * 
@@ -260,7 +260,7 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 
 	/**
 	 * Assigns the specified value to the specified {@link ValuedObject},
-	 * e.g., a {@link Question} or a {@link Diagnosis} receives a new value. The
+	 * e.g., a {@link Question} or a {@link Solution} receives a new value. The
 	 * {@link PSMethod} responsible of this assignment is also given
 	 * 
 	 * @param valuedObject

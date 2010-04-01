@@ -28,8 +28,6 @@ import de.d3web.core.session.XPSCase;
  */
 public class Div extends FormulaNumberArgumentsTerm implements FormulaNumberElement{
 
-	private static final long serialVersionUID = -4952479872831378840L;
-
 	/** 
 	 * Creates a new FormulaTerm with null-arguments.
 	 */

@@ -13,7 +13,6 @@ import de.d3web.core.session.XPSCase;
  */
 public class ConditionTrue extends TerminalCondition {
 	
-	private static final long serialVersionUID = 9073242686723969312L;
 	public static final Condition INSTANCE = new ConditionTrue();
 	
 	

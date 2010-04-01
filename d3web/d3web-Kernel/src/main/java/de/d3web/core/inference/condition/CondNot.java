@@ -32,7 +32,6 @@ import de.d3web.core.session.XPSCase;
  */
 public class CondNot extends NonTerminalCondition {
 	
-	private static final long serialVersionUID = -7497966202263366382L;
 	/**
 	 * The enclosed condition the be negated.
 	 */

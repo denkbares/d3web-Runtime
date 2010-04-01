@@ -32,7 +32,6 @@ import de.d3web.core.session.values.AnswerText;
  */
 public class CondTextEqual extends CondQuestion {
 	
-	private static final long serialVersionUID = 5624328022212587525L;
 	private String value;
 
 	/**

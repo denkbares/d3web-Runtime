@@ -31,7 +31,6 @@ import de.d3web.core.session.XPSCase;
  */
 public class CondMofN extends NonTerminalCondition {
 
-	private static final long serialVersionUID = 1L;
 	private int min;
 	private int max;
 

@@ -20,17 +20,14 @@
 
 package de.d3web.diaFlux.flow;
 
-import java.io.Serializable;
-
 import de.d3web.core.inference.condition.Condition;
-import de.d3web.core.session.CaseObjectSource;
 
 /**
  * 
  * @author Reinhard Hatko
  *
  */
-public interface IEdge extends Serializable {
+public interface IEdge {
 	
 	/**
 	 * 

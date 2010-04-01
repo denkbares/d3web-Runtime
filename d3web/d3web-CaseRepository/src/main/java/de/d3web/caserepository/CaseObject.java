@@ -33,8 +33,8 @@ import de.d3web.caserepository.addons.ISimpleTextFUSs;
 import de.d3web.caserepository.addons.ITemplateSession;
 import de.d3web.caserepository.addons.ITherapyConfiguration;
 import de.d3web.config.ConfigContainer;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.IDReference;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -95,16 +95,16 @@ public interface CaseObject
 
 		private int hashCode;
 
-		private Diagnosis diagnosis = null;
+		private de.d3web.core.knowledge.terminology.Solution diagnosis = null;
 		private double weight = 1.0;
 
-		private Class psMethodClass = null;
+		private Class<? extends PSMethod> psMethodClass = null;
 		private DiagnosisState state = null;
 
-		public Diagnosis getDiagnosis() {
+		public de.d3web.core.knowledge.terminology.Solution getDiagnosis() {
 			return diagnosis;
 		}
-		public void setDiagnosis(Diagnosis newDiag) {
+		public void setDiagnosis(de.d3web.core.knowledge.terminology.Solution newDiag) {
 			diagnosis = newDiag;
 			calculateHash();
 		}
@@ -117,10 +117,10 @@ public interface CaseObject
 			calculateHash();
 		}
 
-		public Class getPSMethodClass() {
+		public Class<? extends PSMethod> getPSMethodClass() {
 			return psMethodClass;
 		}
-		public void setPSMethodClass(Class psMethodClass) {
+		public void setPSMethodClass(Class<? extends PSMethod> psMethodClass) {
 			this.psMethodClass = psMethodClass;
 			calculateHash();
 		}

@@ -33,7 +33,7 @@ import de.d3web.caseGeneration.StateRatingStrategy;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.CaseFactory;
 import de.d3web.core.session.XPSCase;
@@ -167,7 +167,7 @@ public class SequentialTestCase {
 	private void deriveSolutionsForPSMethod(XPSCase thecase, RatedTestCase rtc,
 			Class<? extends PSMethod> psMethodContext, RatingStrategy ratingStrategy) {
 		
-		for (Diagnosis solution : thecase.getDiagnoses()) {
+		for (Solution solution : thecase.getDiagnoses()) {
 			Rating rating = ratingStrategy.getRatingFor(solution, thecase);
 			if (rating.isProblemSolvingRelevant()) {
 				RatedSolution ratedSolution = new RatedSolution(solution, rating);
@@ -198,7 +198,7 @@ public class SequentialTestCase {
 	private void deriveXCLSolutions(XPSCase thecase, RatedTestCase rtc, Collection<KnowledgeSlice> slices) {
 		for (KnowledgeSlice slice : slices) {
 			if (slice instanceof XCLModel) {
-				Diagnosis d = ((XCLModel) slice).getSolution();
+				Solution d = ((XCLModel) slice).getSolution();
 				DiagnosisState s = ((XCLModel) slice).getState(thecase);
 				if (!s.equals(DiagnosisState.UNCLEAR) && !s.equals(DiagnosisState.EXCLUDED)) {
 					RatedSolution rs = new RatedSolution(d, new StateRating(s));

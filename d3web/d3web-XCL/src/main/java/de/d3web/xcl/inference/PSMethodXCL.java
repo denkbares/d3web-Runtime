@@ -35,7 +35,7 @@ import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -66,7 +66,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 
 	
 
-	public DiagnosisState getState(XPSCase theCase, Diagnosis diagnosis) {
+	public DiagnosisState getState(XPSCase theCase, Solution diagnosis) {
 		KnowledgeSlice model = diagnosis.getKnowledge(
 				PSMethodXCL.class, XCLModel.XCLMODEL);
 		if (model == null)
@@ -188,10 +188,10 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 	}
 
 	public double getEntropy(Collection<? extends QASet> qasets,
-			Collection<Diagnosis> solutions, XPSCase theCase) {
+			Collection<Solution> solutions, XPSCase theCase) {
 		Map<Set<Condition>, Float> map = new HashMap<Set<Condition>, Float>();
 		float totalweight = 0;
-		for (Diagnosis solution : solutions) {
+		for (Solution solution : solutions) {
 			Set<Condition> pot = new HashSet<Condition>();
 			KnowledgeSlice ks = solution.getKnowledge(PSMethodXCL.class,
 					XCLModel.XCLMODEL);
@@ -242,10 +242,10 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 
 	}
 
-	public Collection<Diagnosis> getPossibleDiagnoses(XPSCase theCase) {
+	public Collection<Solution> getPossibleDiagnoses(XPSCase theCase) {
 		List<PSMethod> solvers = new LinkedList<PSMethod>();
 		solvers.add(this);
-		List<Diagnosis> solutions = theCase.getDiagnoses(
+		List<Solution> solutions = theCase.getDiagnoses(
 				DiagnosisState.ESTABLISHED, solvers);
 		if (solutions.size() > 0) {
 			return solutions;
@@ -258,9 +258,9 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 	}
 
 	public Collection<Question> getDiscriminatingQuestions(
-			Collection<Diagnosis> solutions, XPSCase theCase) {
+			Collection<Solution> solutions, XPSCase theCase) {
 		Set<Question> coveredSymptoms = new HashSet<Question>();
-		for (Diagnosis solution : solutions) {
+		for (Solution solution : solutions) {
 			KnowledgeSlice ks = solution.getKnowledge(
 					PSMethodXCL.class, XCLModel.XCLMODEL);
 			if (ks == null)

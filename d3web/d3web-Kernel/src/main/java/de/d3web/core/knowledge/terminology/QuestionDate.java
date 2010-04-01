@@ -38,8 +38,6 @@ import de.d3web.core.session.values.AnswerDate;
 public class QuestionDate extends Question {
 	
 
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * These constants are used for Property.QUESTION_DATE_TYPE to specify the type
 	 * of input.

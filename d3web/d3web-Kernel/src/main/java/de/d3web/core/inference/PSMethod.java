@@ -22,7 +22,7 @@ package de.d3web.core.inference;
 
 import java.util.Collection;
 
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.Fact;
@@ -47,7 +47,7 @@ public interface PSMethod {
 	 */
 	// TODO: should be moved as blackboard functionality: get merged facts for a
 	// specific problem solver
-	DiagnosisState getState(XPSCase theCase, Diagnosis theDiagnosis);
+	DiagnosisState getState(XPSCase theCase, Solution theDiagnosis);
 
 	/**
 	 * initialization method for this PSMethod

@@ -34,8 +34,6 @@ import de.d3web.core.session.values.AnswerUnknown;
  */
 public class CondUnknown extends CondQuestion {
 
-	private static final long serialVersionUID = -7896716669763250004L;
-
 	/**
 	 * Creates a new CondUnknown instance, where a {@link Question}
 	 * has to be answered by {@link AnswerUnknown}.

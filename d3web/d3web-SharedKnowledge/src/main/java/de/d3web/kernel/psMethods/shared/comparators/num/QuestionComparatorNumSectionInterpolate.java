@@ -31,8 +31,6 @@ import de.d3web.core.session.values.AnswerNum;
  */
 public class QuestionComparatorNumSectionInterpolate extends QuestionComparatorNumSection {
 
-	private static final long serialVersionUID = 3188155211284462544L;
-
 	public double compare(List<?> ans1, List<?> ans2) {
 		try {
 			//       (g(x) / g(y))

@@ -31,8 +31,6 @@ import de.d3web.core.session.values.AnswerNum;
  */
 public class CondNumGreaterEqual extends CondNum {
 
-	private static final long serialVersionUID = 5588986396054749678L;
-
 	/**
 	 * Creates a new condition, where a specified numerical question 
 	 * needs to be greater or equal than the specified value.

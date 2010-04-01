@@ -24,7 +24,7 @@
  */
 package de.d3web.caserepository.addons.train.findings;
 
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 
 
 /**
@@ -41,7 +41,7 @@ public abstract class FindingDiagnosisRelation {
 	/**
 	 * @return Returns the diagnosis.
 	 */
-	public abstract Diagnosis getDiagnosis();
+	public abstract Solution getDiagnosis();
 
 	/**
 	 * @return Returns the score.

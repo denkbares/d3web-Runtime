@@ -27,7 +27,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import de.d3web.core.io.fragments.DiagnosisHandler;
 import de.d3web.core.io.utilities.Util;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.plugin.test.InitPluginManager;
@@ -40,7 +40,7 @@ import de.d3web.scoring.Score;
  */
 public class DiagnosisTest extends TestCase {
 	
-	private Diagnosis diag;
+	private Solution diag;
 	private DiagnosisHandler dh;
 	private XMLTag isTag;
 	private XMLTag shouldTag;
@@ -69,7 +69,7 @@ public class DiagnosisTest extends TestCase {
 			assertTrue("Error initialising plugin framework", false);
 		}
 		//create the diagnosis
-		diag = new Diagnosis("d1");
+		diag = new Solution("d1");
 		diag.setName("d1-text");
 		
 		dh = new DiagnosisHandler();

@@ -30,8 +30,6 @@ import de.d3web.kernel.psMethods.shared.comparators.QuestionComparator;
  */
 public class QuestionComparatorYN extends QuestionComparator {
 
-	private static final long serialVersionUID = 416820120354219536L;
-
 	/**
 	 * Insert the method's description here.
 	 * Creation date: (02.08.2001 18:04:08)

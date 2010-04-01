@@ -31,7 +31,7 @@ import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.scoring.ActionHeuristicPS;
 import de.d3web.scoring.Score;
 /**
@@ -53,7 +53,7 @@ public class HeuristicPSActionHandler implements FragmentHandler {
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		Score score = null;
-		Diagnosis diag = null;
+		Solution diag = null;
 		NodeList children = element.getChildNodes();
 		for (int i = 0; i < children.getLength(); ++i) {
 			Node child = children.item(i);
@@ -77,7 +77,7 @@ public class HeuristicPSActionHandler implements FragmentHandler {
 		Element element = doc.createElement("Action");
 		element.setAttribute("type", "ActionHeuristicPS");
 		Score theScore = action.getScore();
-		Diagnosis theDiag = action.getDiagnosis();
+		Solution theDiag = action.getDiagnosis();
 		String scoreSymbol = "";
 		String diagId = "";
 		if(theScore != null) {

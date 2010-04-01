@@ -34,7 +34,6 @@ import de.d3web.core.session.values.AnswerChoice;
  */
 public class Count implements FormulaNumberElement {
 
-	private static final long serialVersionUID = 332901233837459047L;
 	private QuestionMC questionMC = null;
 
 	/** 

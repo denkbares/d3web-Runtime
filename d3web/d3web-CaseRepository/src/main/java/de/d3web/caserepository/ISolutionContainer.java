@@ -25,7 +25,7 @@ package de.d3web.caserepository;
 
 import java.util.Set;
 
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 
 /**
  * 23.09.2003 11:14:43
@@ -43,7 +43,7 @@ public interface ISolutionContainer {
 	 * @param psMethodClass Class (implements PSMethod)
 	 * @return CaseObject.Solution
 	 */
-	public CaseObject.Solution getSolution(Diagnosis d, Class psMethodClass);
+	public CaseObject.Solution getSolution(Solution d, Class psMethodClass);
     
 	/**
 	 * Returns all CaseObject.Solutionss set in this case

@@ -19,7 +19,6 @@ import de.d3web.core.knowledge.terminology.info.NumericalInterval;
  */
 public class AbnormalityInterval extends NumericalInterval {
 
-	private static final long serialVersionUID = 641297301842171931L;
 	private double value;
 
 	public AbnormalityInterval(

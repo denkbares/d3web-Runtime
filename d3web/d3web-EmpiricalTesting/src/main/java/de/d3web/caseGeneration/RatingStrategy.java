@@ -20,10 +20,10 @@
 
 package de.d3web.caseGeneration;
 
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.XPSCase;
 import de.d3web.empiricalTesting.Rating;
 
 public interface RatingStrategy {
-	public Rating getRatingFor(Diagnosis solution, XPSCase theCase);
+	public Rating getRatingFor(Solution solution, XPSCase theCase);
 }

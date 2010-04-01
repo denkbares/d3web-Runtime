@@ -30,7 +30,8 @@ import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.addons.PSMethodAuthorSelected;
 import de.d3web.caserepository.addons.PSMethodClassicD3;
 import de.d3web.caserepository.utilities.Utilities;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.inference.PSMethod;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
@@ -90,7 +91,7 @@ public class SolutionTagReader extends AbstractTagReader {
 		currentSolution.setWeight(Double.parseDouble(weight));
 
 		String id = checkAttribute("id", attributes.getValue("id"), "<not set>");
-		Diagnosis diag = getKnowledgeBase().searchDiagnosis(id);
+		Solution diag = getKnowledgeBase().searchDiagnosis(id);
 		if (diag == null) {
 		    Logger.getLogger(this.getClass().getName()).warning("no Diagnosis found for " + id + " - omitting");
 		    currentSolution = null;
@@ -102,7 +103,7 @@ public class SolutionTagReader extends AbstractTagReader {
 		String psMethod = attributes.getValue("psmethod");
 		if (psMethod != null) { // i.e. it's the new Solution format
 			try {
-				currentSolution.setPSMethodClass(Class.forName(psMethod));
+				currentSolution.setPSMethodClass((Class<? extends PSMethod>) Class.forName(psMethod));
 			} catch (ClassNotFoundException e) {
 				Logger.getLogger(this.getClass().getName()).warning("no Class found for " + psMethod);
 				currentSolution = null;

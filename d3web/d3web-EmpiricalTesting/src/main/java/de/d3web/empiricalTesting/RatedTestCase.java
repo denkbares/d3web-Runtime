@@ -27,7 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Date;
 
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 
 public class RatedTestCase {
 
@@ -259,7 +259,7 @@ public class RatedTestCase {
 	}
 
 	@Deprecated
-	public void update(Diagnosis solution, Rating rating) {
+	public void update(Solution solution, Rating rating) {
 		RatedSolution rsolution = getBySolution(solution);
 		if (rsolution == null) {
 			addExpected(new RatedSolution(solution, rating));
@@ -269,7 +269,7 @@ public class RatedTestCase {
 	}
 
 	@Deprecated
-	private RatedSolution getBySolution(Diagnosis solution) {
+	private RatedSolution getBySolution(Solution solution) {
 		for (RatedSolution rsol : expectedSolutions) {
 			if (rsol.solution.equals(solution))
 				return rsol;

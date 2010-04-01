@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -175,10 +175,10 @@ public class BotHelper {
 			return foundQuestion;
 	}
 
-	public Diagnosis getDiagnosisByIDorText(String diagnosisIDorText,
+	public Solution getDiagnosisByIDorText(String diagnosisIDorText,
 			KnowledgeBase kb) throws Exception {
-		Diagnosis foundDiagnosis = null;
-		for (Diagnosis d : kb.getDiagnoses()) {
+		Solution foundDiagnosis = null;
+		for (Solution d : kb.getDiagnoses()) {
 			if (diagnosisIDorText.equals(d.getId())
 					|| diagnosisIDorText.equals(d.getName()))
 				foundDiagnosis = d;

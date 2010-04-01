@@ -25,7 +25,7 @@ import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -136,7 +136,7 @@ public class DDBot2 {
 
 	private List<RatedSolution> toRatedSolutions(XPSCase theCase) {
 		List<RatedSolution> ratedSolutions = new ArrayList<RatedSolution>();
-		for (Diagnosis diagnosis : theCase.getDiagnoses()) {
+		for (Solution diagnosis : theCase.getDiagnoses()) {
 			double score = diagnosis.getScore(theCase, PSMethodHeuristic.class)
 					.getScore();
 			if (score >= SCORE_THRESHOLD) {

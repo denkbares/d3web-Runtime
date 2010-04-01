@@ -28,9 +28,8 @@ import de.d3web.core.session.values.AnswerChoice;
  * 
  * @author: Norman Brümmer
  */
-public class PairRelation implements java.io.Serializable {
+public class PairRelation {
 
-	private static final long serialVersionUID = -5038955289180555039L;
 	private AnswerChoice ans1 = null;
 	private AnswerChoice ans2 = null;
 

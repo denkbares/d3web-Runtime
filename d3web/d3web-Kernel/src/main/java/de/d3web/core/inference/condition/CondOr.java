@@ -32,8 +32,6 @@ import de.d3web.core.session.XPSCase;
  */
 public class CondOr extends NonTerminalCondition {
 
-	private static final long serialVersionUID = -7653603629850085254L;
-
 	/**
 	 * Creates a new OR-condition with a list of 
 	 * disjunctive sub-conditions.

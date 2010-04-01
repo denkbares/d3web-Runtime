@@ -26,7 +26,7 @@ package de.d3web.caserepository.addons.fus.internal;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 
 /**
  * 21.10.2003 15:48:17
@@ -44,11 +44,11 @@ public class CLeaf extends AbstractCNode {
 		public String getName() { return name; }
 	}
 	
-	private Diagnosis d;
+	private Solution d;
 	private Type type;
 	
 	private CLeaf() { /* hide empty constructor */ }
-	public CLeaf(Diagnosis d, Type type) {
+	public CLeaf(Solution d, Type type) {
 		this.d = d;
 		this.type = type;
 	}
@@ -56,7 +56,7 @@ public class CLeaf extends AbstractCNode {
 	/* (non-Javadoc)
 	 * @see de.d3web.Train.FUS.AbstractCNode#matches(java.util.Set)
 	 */
-	public boolean matches(Set<Diagnosis> diagnoses) {
+	public boolean matches(Set<Solution> diagnoses) {
 		if (type == INCLUDED) {
 			return diagnoses.contains(d);
 		} else if (type == EXCLUDED) {
@@ -70,7 +70,7 @@ public class CLeaf extends AbstractCNode {
 	/**
 	 * @return
 	 */
-	public Diagnosis getDiagnosis() {
+	public Solution getDiagnosis() {
 		return d;
 	}
 

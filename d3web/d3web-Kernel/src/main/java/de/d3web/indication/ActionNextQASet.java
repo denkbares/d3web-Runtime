@@ -39,7 +39,6 @@ import de.d3web.indication.inference.PSMethodNextQASet;
  */
 public abstract class ActionNextQASet extends PSAction {
 	
-	private static final long serialVersionUID = 8873284669648124113L;
 	private List<QASet> qasets;
 
 	/**

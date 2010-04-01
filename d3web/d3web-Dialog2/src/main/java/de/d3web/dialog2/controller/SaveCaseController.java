@@ -37,7 +37,7 @@ import de.d3web.caserepository.CaseObjectImpl;
 import de.d3web.caserepository.MetaDataImpl;
 import de.d3web.caserepository.utilities.CaseConverter;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.core.knowledge.terminology.info.Property;
@@ -274,7 +274,7 @@ public class SaveCaseController {
 		for (Iterator<String> iter = userSelectedDiags.iterator(); iter
 				.hasNext();) {
 			String diagId = iter.next();
-			Diagnosis d = kb.searchDiagnosis(diagId);
+			Solution d = kb.searchDiagnosis(diagId);
 			if (d != null) {
 				CaseObject.Solution sol = co.getSolution(d,
 						PSMethodUserSelected.class);

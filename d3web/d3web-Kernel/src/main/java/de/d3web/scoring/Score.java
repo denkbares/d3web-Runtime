@@ -22,7 +22,7 @@ package de.d3web.scoring;
 import java.util.Iterator;
 import java.util.List;
 
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.utilities.Utils;
 
@@ -32,10 +32,10 @@ import de.d3web.core.utilities.Utils;
  * the state of a diagnosis.
  * 
  * @author joba
- * @see Diagnosis
+ * @see Solution
  * @see DiagnosisState
  */
-public class Score implements Comparable, java.io.Serializable {
+public class Score implements Comparable<Object> {
 
 	public static final Score P7 = new Score(999, 1, "P7");
 	public static final Score P6 = new Score(80, 1, "P6");
@@ -53,8 +53,8 @@ public class Score implements Comparable, java.io.Serializable {
 	public static final Score N3 = new Score(-10, -10, "N3");
 	public static final Score N2 = new Score(-5, -5, "N2");
 	public static final Score N1 = new Score(-2, 0, "N1");
-	public static final List APRIORI = Utils.createList(new Score[] { P5, P4, P3, P2, N2, N3, N4, N5 });
-	private static final List allScores = Utils.createList(new Score[] { P7, P6, P5x, P5, P4, P3, P2, P1, N1, N2, N3, N4, N5, N5x, N6, N7 });
+	public static final List<Score> APRIORI = Utils.createList(new Score[] { P5, P4, P3, P2, N2, N3, N4, N5 });
+	private static final List<Score> allScores = Utils.createList(new Score[] { P7, P6, P5x, P5, P4, P3, P2, P1, N1, N2, N3, N4, N5, N5x, N6, N7 });
 
 	private String symbol;
 	private double score;
@@ -166,7 +166,7 @@ public class Score implements Comparable, java.io.Serializable {
 	/**
 	 * @return a List of all predefined scores.
 	 */
-	public static List getAllScores() {
+	public static List<Score> getAllScores() {
 		return allScores;
 	}
 	
@@ -178,9 +178,9 @@ public class Score implements Comparable, java.io.Serializable {
 	 * @author georg
 	 */
 	private Object readResolve() {
-		Iterator iter = getAllScores().iterator();
+		Iterator<Score> iter = getAllScores().iterator();
 		while (iter.hasNext()) {
-			Score s = (Score) iter.next();
+			Score s = iter.next();
 			if ((s.getScore() == getScore()) && (s.getSymbol().equals(getSymbol()))) {
 				return s;
 			}

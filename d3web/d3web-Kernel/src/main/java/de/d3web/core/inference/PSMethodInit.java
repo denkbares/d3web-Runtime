@@ -26,7 +26,7 @@ import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -57,7 +57,7 @@ public class PSMethodInit implements PSMethod {
 	/**
 	 * @return null
 	 */
-	public DiagnosisState getState(XPSCase theCase, Diagnosis theDiagnosis) {
+	public DiagnosisState getState(XPSCase theCase, Solution theDiagnosis) {
 		return null;
 	}
 

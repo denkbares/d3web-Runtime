@@ -29,8 +29,6 @@ import de.d3web.shared.PSMethodShared;
  */
 public class KnowledgeBaseUnknownSimilarity implements KnowledgeSlice{
 	
-	private static final long serialVersionUID = -5141583840097744293L;
-
 	private String id = null;
 
 	private double similarity = 0.1;

@@ -33,7 +33,7 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.CaseObjectSource;
@@ -44,7 +44,6 @@ import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.xcl.inference.PSMethodXCL;
 
 public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLModel>, CaseObjectSource {
-	private static final long serialVersionUID = 1068721270222432667L;
 
 	public final static MethodKind XCLMODEL = new MethodKind("XCLMODEL");
 	
@@ -53,7 +52,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	public static double defaultSuggestedThreshold = 0.3;
 	public static double defaultMinSupport = 0.01;
 
-	private Diagnosis solution;
+	private Solution solution;
 
 	private double establishedThreshold = defaultEstablishedThreshold;
 	private double suggestedThreshold = defaultSuggestedThreshold;
@@ -71,7 +70,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	// efficient propagation
 	private transient Map<NamedObject, Set<XCLRelation>> coverage = new HashMap<NamedObject, Set<XCLRelation>>();
 
-	public XCLModel(Diagnosis solution) {
+	public XCLModel(Solution solution) {
 		this.solution = solution;
 
 		relations = new LinkedList<XCLRelation>();
@@ -89,34 +88,34 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	}
 
 	public static String insertXCLRelation(KnowledgeBase kb,
-			Condition theCondition, Diagnosis d) {
+			Condition theCondition, Solution d) {
 		return insertXCLRelation(kb, theCondition, d, XCLRelationType.explains, null);
 	}
 
 	public static String insertXCLRelation(KnowledgeBase kb,
-			Condition theCondition, Diagnosis d, String kdomNodeID) {
+			Condition theCondition, Solution d, String kdomNodeID) {
 		return insertXCLRelation(kb, theCondition, d, XCLRelationType.explains,
 				kdomNodeID);
 	}
 
 	public static String insertXCLRelation(KnowledgeBase kb,
-			Condition theCondition, Diagnosis d, XCLRelationType type) {
+			Condition theCondition, Solution d, XCLRelationType type) {
 		return insertXCLRelation(kb, theCondition, d, type, 1, null);
 	}
 
 	public static String insertXCLRelation(KnowledgeBase kb,
-			Condition theCondition, Diagnosis d, XCLRelationType type, String kdomNodeID) {
+			Condition theCondition, Solution d, XCLRelationType type, String kdomNodeID) {
 		return insertXCLRelation(kb, theCondition, d, type, 1, kdomNodeID);
 	}
 
 	public static String insertXCLRelation(KnowledgeBase kb,
-			Condition theCondition, Diagnosis d, XCLRelationType type,
+			Condition theCondition, Solution d, XCLRelationType type,
 			double weight) {
 		return insertXCLRelation(kb, theCondition, d, type, weight, null);
 	}
 
 	public static String insertXCLRelation(KnowledgeBase kb,
-			Condition theCondition, Diagnosis d, XCLRelationType type,
+			Condition theCondition, Solution d, XCLRelationType type,
 			double weight, String kdomNodeID) {
 
 		// Nullchecks
@@ -297,11 +296,11 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		return null;
 	}
 
-	public Diagnosis getSolution() {
+	public Solution getSolution() {
 		return solution;
 	}
 
-	public void setSolution(Diagnosis solution) {
+	public void setSolution(Solution solution) {
 		this.solution = solution;
 	}
 

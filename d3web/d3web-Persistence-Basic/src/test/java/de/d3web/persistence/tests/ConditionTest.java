@@ -47,7 +47,7 @@ import de.d3web.core.io.fragments.conditions.AndConditionHandler;
 import de.d3web.core.io.fragments.conditions.OrConditionHandler;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
@@ -73,7 +73,7 @@ public class ConditionTest extends TestCase {
 	private CondTextEqual cTextEqual1;
 	private CondUnknown cUnknown1;
 
-	private Diagnosis d1;
+	private Solution d1;
 	
 
 	private XMLTag isTag;
@@ -100,7 +100,7 @@ public class ConditionTest extends TestCase {
 			assertTrue("Error initialising plugin framework", false);
 		}
 		
-		d1 = new Diagnosis("d1-id");
+		d1 = new Solution("d1-id");
 		
 		Question qoc1 = new QuestionOC("qoc1-id");
 		QuestionNum qnum1 = new QuestionNum("qnum1-id");

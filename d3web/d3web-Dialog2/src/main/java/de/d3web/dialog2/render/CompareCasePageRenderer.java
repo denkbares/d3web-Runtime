@@ -36,7 +36,7 @@ import org.apache.log4j.Logger;
 import org.apache.myfaces.component.html.ext.HtmlInputHidden;
 
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.core.session.XPSCase;
@@ -476,13 +476,13 @@ public class CompareCasePageRenderer extends Renderer {
 
 		writer.startElement("td", component);
 		writer.writeAttribute("id", "casesolutions_" + caseName, "id");
-		Iterator<Diagnosis> diags = simres.getDiagnoses().iterator();
+		Iterator<Solution> diags = simres.getDiagnoses().iterator();
 		if (!diags.hasNext()) {
 		    writer.writeText(DialogUtils
 			    .getMessageFor("cbr.simple.nosolution"), "value");
 		}
 		while (diags.hasNext()) {
-		    Diagnosis diag = diags.next();
+		    Solution diag = diags.next();
 		    writer.startElement("p", component);
 		    writer.writeAttribute("id", "casesolution_" + caseName
 			    + "_" + diag.getId(), "id");

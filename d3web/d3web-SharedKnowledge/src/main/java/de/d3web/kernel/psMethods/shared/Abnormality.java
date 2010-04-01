@@ -31,7 +31,6 @@ import de.d3web.shared.AbstractAbnormality;
  */
 public class Abnormality extends AbstractAbnormality {
 
-	private static final long serialVersionUID = 7777097400967327079L;
 	private Hashtable<Answer, Double> values = new Hashtable<Answer, Double>();
 
 	/**

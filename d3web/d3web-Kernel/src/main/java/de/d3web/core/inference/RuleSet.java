@@ -32,7 +32,6 @@ import de.d3web.core.session.XPSCase;
 public class RuleSet implements KnowledgeSlice {
 
 	private static int count = 0;
-	private static final long serialVersionUID = 7023130006741958537L;
 	private List<Rule> rules = new ArrayList<Rule>();
 	private Class<? extends PSMethod> psContext;
 	private String id;

@@ -25,7 +25,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import de.d3web.core.io.fragments.DiagnosisHandler;
 import de.d3web.core.io.utilities.Util;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.persistence.tests.utils.XMLTag;
 
 /**
@@ -42,7 +42,7 @@ public class TestDummy extends TestCase {
 
 //	private TestClass test;
 //	private TestWriter tw;
-	private Diagnosis diag;
+	private Solution diag;
 	private DiagnosisHandler dw;
 	
 	private XMLTag isTag;
@@ -66,7 +66,7 @@ public class TestDummy extends TestCase {
 	
 	protected void setUp() {
 		
-		diag = new Diagnosis("d1");
+		diag = new Solution("d1");
 		diag.setName("d1-text");
 		
 		dw = new DiagnosisHandler();

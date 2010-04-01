@@ -34,7 +34,6 @@ import de.d3web.core.session.values.AnswerChoice;
  */
 public class QuestionComparatorOCScaled extends QuestionComparatorOC {
 	
-	private static final long serialVersionUID = 2507886291700616036L;
 	private List<Double> values = null;
 	private double constant = 0;
 

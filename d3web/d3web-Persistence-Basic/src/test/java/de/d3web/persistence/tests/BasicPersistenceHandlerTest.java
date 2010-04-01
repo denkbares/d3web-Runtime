@@ -30,7 +30,7 @@ import junit.textui.TestRunner;
 import de.d3web.core.io.BasicPersistenceHandler;
 import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
@@ -54,7 +54,7 @@ public class BasicPersistenceHandlerTest extends TestCase {
 	private String xmlcode;
 	
 	private Question q1,q2;
-	private Diagnosis diag1;
+	private Solution diag1;
 	
 	private XMLTag isTag;
 	private XMLTag shouldTag;
@@ -92,7 +92,7 @@ public class BasicPersistenceHandlerTest extends TestCase {
 		q2.setName("q2-text");
 		q2.setKnowledgeBase(kb);
 		
-		diag1 = new Diagnosis("d1");
+		diag1 = new Solution("d1");
 		diag1.setName("d1-text");
 	}
 	
@@ -216,7 +216,7 @@ public class BasicPersistenceHandlerTest extends TestCase {
 	public void addDiagnoses(){
 		kb.add(diag1);
 		
-		Diagnosis diag2 = new Diagnosis("d2");
+		Solution diag2 = new Solution("d2");
 		diag2.setName("d2-text");
 		kb.add(diag2);	
 		

@@ -28,7 +28,7 @@ import java.util.Map;
 
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.info.Property;
@@ -59,7 +59,7 @@ public class ERSMethod extends PSSubMethod {
 	 * innerMap key:	parentDiagnosis
 	 * innerMap Object:	list of ChangeOfDiagnosis
 	 */
-	private Map<XPSCase, Map<Diagnosis, List<ChangeOfDiagnosis>>> hDT_establishedDiagnoses = new HashMap<XPSCase, Map<Diagnosis,List<ChangeOfDiagnosis>>>();
+	private Map<XPSCase, Map<Solution, List<ChangeOfDiagnosis>>> hDT_establishedDiagnoses = new HashMap<XPSCase, Map<Solution,List<ChangeOfDiagnosis>>>();
 	Class<PSMethodHeuristic> PSCONTEXT = PSMethodHeuristic.class;
 	
 	/**
@@ -67,17 +67,17 @@ public class ERSMethod extends PSSubMethod {
 	 * @author Peter Klügl
 	 */
 	private class ChangeOfDiagnosis {
-		private Diagnosis diagnosis;
+		private Solution diagnosis;
 		private Score score;
 		
-		public ChangeOfDiagnosis(Diagnosis diagnosis, Score score) {
+		public ChangeOfDiagnosis(Solution diagnosis, Score score) {
 			setDiagnosis(diagnosis);
 			setScore(score);
 		}
-		public Diagnosis getDiagnosis() {
+		public Solution getDiagnosis() {
 			return diagnosis;
 		}
-		public void setDiagnosis(Diagnosis diagnosis) {
+		public void setDiagnosis(Solution diagnosis) {
 			this.diagnosis = diagnosis;
 		}
 		public Score getScore() {
@@ -103,8 +103,8 @@ public class ERSMethod extends PSSubMethod {
 	 */
 	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
 		for (PropagationEntry change : changes) {
-			if (change.getObject() instanceof Diagnosis) {
-				Diagnosis diagnosis = (Diagnosis) change.getObject();
+			if (change.getObject() instanceof Solution) {
+				Solution diagnosis = (Solution) change.getObject();
 				checkHashMap(theCase);
 				if (isEstablished(theCase, diagnosis)) {
 					setAllChildrenToSuggested(theCase, diagnosis);
@@ -125,14 +125,14 @@ public class ERSMethod extends PSSubMethod {
 	 * @param theCase
 	 * @param parentDiagnosis
 	 */
-	private void setAllChildrenToSuggested(XPSCase theCase, Diagnosis parentDiagnosis) {
-		Map<Diagnosis, List<ChangeOfDiagnosis>> innerMap = getInnerMap(theCase);
+	private void setAllChildrenToSuggested(XPSCase theCase, Solution parentDiagnosis) {
+		Map<Solution, List<ChangeOfDiagnosis>> innerMap = getInnerMap(theCase);
 		TerminologyObject[] children = parentDiagnosis.getChildren();
 		if (children == null || children.length==0)
 			return;
 		for (TerminologyObject object : children) {
-			if(object instanceof Diagnosis) {
-				Diagnosis eachDiagnosis = (Diagnosis) object;
+			if(object instanceof Solution) {
+				Solution eachDiagnosis = (Solution) object;
 				if (eachDiagnosis.getState(theCase, PSCONTEXT).equals(DiagnosisState.UNCLEAR)) {
 					rememberChange(theCase, innerMap, parentDiagnosis, eachDiagnosis);
 					setDiagnosisToSuggested(theCase, eachDiagnosis);
@@ -145,7 +145,7 @@ public class ERSMethod extends PSSubMethod {
 	 * @param parentDiagnosis
 	 * @param diagnosis
 	 */
-	private void rememberChange(XPSCase theCase, Map<Diagnosis, List<ChangeOfDiagnosis>> innerMap, Diagnosis parentDiagnosis, Diagnosis diagnosis) {
+	private void rememberChange(XPSCase theCase, Map<Solution, List<ChangeOfDiagnosis>> innerMap, Solution parentDiagnosis, Solution diagnosis) {
 		List<ChangeOfDiagnosis> listOfChanges = innerMap.get(parentDiagnosis);
 		if(listOfChanges == null) {
 			listOfChanges = new LinkedList<ChangeOfDiagnosis>();
@@ -165,7 +165,7 @@ public class ERSMethod extends PSSubMethod {
 	 * @param theCase
 	 * @param diagnosis
 	 */
-	private DiagnosisScore setDiagnosisToSuggested(XPSCase theCase, Diagnosis diagnosis) {
+	private DiagnosisScore setDiagnosisToSuggested(XPSCase theCase, Solution diagnosis) {
 		DiagnosisScore resultDS = diagnosis.getScore(theCase, PSCONTEXT).add(getDifferenceToSuggested(theCase, diagnosis));
 		theCase.setValue(diagnosis, new Object[] { resultDS }, PSCONTEXT);
 		return resultDS;
@@ -176,8 +176,8 @@ public class ERSMethod extends PSSubMethod {
 	 * @param theCase
 	 * @param diagnosis
 	 */
-	private void resetAllChildren(XPSCase theCase, Diagnosis diagnosis) {
-		Map<Diagnosis, List<ChangeOfDiagnosis>> innerMap = getInnerMap(theCase);
+	private void resetAllChildren(XPSCase theCase, Solution diagnosis) {
+		Map<Solution, List<ChangeOfDiagnosis>> innerMap = getInnerMap(theCase);
 		List<ChangeOfDiagnosis> listOfChanges = innerMap.get(diagnosis);
 		if(listOfChanges == null || listOfChanges.isEmpty())
 			return;
@@ -185,8 +185,8 @@ public class ERSMethod extends PSSubMethod {
 		if (children == null)
 			return;
 		for (TerminologyObject object : children) {
-			if(object instanceof Diagnosis) {
-				Diagnosis eachChildren = (Diagnosis) object;
+			if(object instanceof Solution) {
+				Solution eachChildren = (Solution) object;
 				ChangeOfDiagnosis change = getChangeOf(listOfChanges, eachChildren);
 				if (change != null) {
 					innerMap.remove(diagnosis);
@@ -198,10 +198,10 @@ public class ERSMethod extends PSSubMethod {
 	}
 	
 
-	private boolean isEstablished(XPSCase theCase, Diagnosis diagnosis) {
+	private boolean isEstablished(XPSCase theCase, Solution diagnosis) {
 		return diagnosis.getState(theCase, PSCONTEXT).equals(DiagnosisState.ESTABLISHED);
 	}
-	private boolean wasEstablished(XPSCase theCase, Diagnosis diagnosis) {
+	private boolean wasEstablished(XPSCase theCase, Solution diagnosis) {
 		return hDT_establishedDiagnoses.get(theCase).containsKey(diagnosis);
 	}
 	
@@ -220,7 +220,7 @@ public class ERSMethod extends PSSubMethod {
 	 * @param diagnosis
 	 * @return the correct Tupel
 	 */
-	private ChangeOfDiagnosis getChangeOf(List<ChangeOfDiagnosis> listOfChanges, Diagnosis diagnosis) {
+	private ChangeOfDiagnosis getChangeOf(List<ChangeOfDiagnosis> listOfChanges, Solution diagnosis) {
 		for (ChangeOfDiagnosis change : listOfChanges) {
 			if(change.getDiagnosis().equals(diagnosis))
 				return change;
@@ -235,7 +235,7 @@ public class ERSMethod extends PSSubMethod {
 	 */
 	private void checkHashMap(XPSCase theCase) {
 		if(!hDT_establishedDiagnoses.containsKey(theCase)) {
-			Map<Diagnosis, List<ChangeOfDiagnosis>> innerMap = new HashMap<Diagnosis, List<ChangeOfDiagnosis>>();
+			Map<Solution, List<ChangeOfDiagnosis>> innerMap = new HashMap<Solution, List<ChangeOfDiagnosis>>();
 			hDT_establishedDiagnoses.put(theCase, innerMap);
 		}
 	}
@@ -245,7 +245,7 @@ public class ERSMethod extends PSSubMethod {
 	 * @param theCase
 	 * @return HashMap (innerMap) of the changes of the child - diagnoses
  	 */
-	private Map<Diagnosis, List<ChangeOfDiagnosis>> getInnerMap(XPSCase theCase) {
+	private Map<Solution, List<ChangeOfDiagnosis>> getInnerMap(XPSCase theCase) {
 		return hDT_establishedDiagnoses.get(theCase);
 	}
 	/**
@@ -254,7 +254,7 @@ public class ERSMethod extends PSSubMethod {
 	 * @param diagnosis
 	 * @return the Score that the diagnosis need to be suggested
 	 */
-	private Score getDifferenceToSuggested(XPSCase theCase, Diagnosis diagnosis) {		
+	private Score getDifferenceToSuggested(XPSCase theCase, Solution diagnosis) {		
 		double diff = getScoreForSuggestedDiagnosis() - diagnosis.getScore(theCase, PSCONTEXT).getScore();
 		//[HOTFIX]: Peter: hat hier nix zu suchen!!
 		if (diff >= Score.P5x.getScore())

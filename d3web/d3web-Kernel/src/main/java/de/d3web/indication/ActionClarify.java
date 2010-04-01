@@ -22,7 +22,7 @@ package de.d3web.indication;
 import java.util.LinkedList;
 
 import de.d3web.core.inference.PSAction;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
 
 /**
@@ -32,8 +32,7 @@ import de.d3web.core.knowledge.terminology.QASet;
  */
 public class ActionClarify extends ActionNextQASet {
 
-	private static final long serialVersionUID = -3173779628907752837L;
-	private Diagnosis target = null;
+	private Solution target = null;
 
 	/**
 	 * @param Creates a new clarification action for the given corresponding rule
@@ -45,14 +44,14 @@ public class ActionClarify extends ActionNextQASet {
 	/**
 	 * @return the Diagnosis to clarify
 	 */
-	public Diagnosis getTarget() {
+	public Solution getTarget() {
 		return target;
 	}
 
 	/**
 	 * sets the Diagnosis to clarify
 	 */
-	public void setTarget(de.d3web.core.knowledge.terminology.Diagnosis newTarget) {
+	public void setTarget(de.d3web.core.knowledge.terminology.Solution newTarget) {
 		target = newTarget;
 	}
 	

@@ -29,9 +29,6 @@ import de.d3web.kernel.psMethods.shared.comparators.PairRelation;
 public class QuestionComparatorMCGroupedSymmetric extends
 		QuestionComparatorMCGrouped implements GroupedComparatorSymmetric{
 	
-	private static final long serialVersionUID = -3082678347929593706L;
-
-	
 	public double compare(List<?> ans1, List<?> ans2) {
         if (isSameAnswerListContent(ans1, ans2)) { return 1; }
 

@@ -28,7 +28,7 @@ import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.scoring.Score;
 /**
@@ -46,14 +46,14 @@ public class DiagnosisHandler implements FragmentHandler {
 
 	@Override
 	public boolean canWrite(Object object) {
-		return (object instanceof Diagnosis);
+		return (object instanceof Solution);
 	}
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		String id = element.getAttribute("ID");
 		String apriori = element.getAttribute("aPriProb");
-		Diagnosis diag = new Diagnosis(id);
+		Solution diag = new Solution(id);
 		if (apriori != null) {
 			diag.setAprioriProbability(Util.getScore(apriori));
 		}
@@ -78,7 +78,7 @@ public class DiagnosisHandler implements FragmentHandler {
 
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
-		Diagnosis diag = (Diagnosis) object;
+		Solution diag = (Solution) object;
 		Element element = doc.createElement("Diagnosis");
 		element.setAttribute("ID", diag.getId());
 		XMLUtil.appendTextNode(diag.getName(), element);

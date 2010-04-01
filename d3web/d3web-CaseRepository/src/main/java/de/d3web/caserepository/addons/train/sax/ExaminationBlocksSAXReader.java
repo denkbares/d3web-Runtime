@@ -38,7 +38,7 @@ import de.d3web.caserepository.addons.train.ExaminationBlock;
 import de.d3web.caserepository.addons.train.ExaminationBlocks;
 import de.d3web.caserepository.sax.AbstractTagReader;
 import de.d3web.core.io.utilities.XMLTools;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QContainer;
 
 /**
@@ -169,7 +169,7 @@ public class ExaminationBlocksSAXReader extends AbstractTagReader {
 	    currentContainers.add(q);
 	}
 	
-	private Diagnosis currentDiagnosis = null; 
+	private Solution currentDiagnosis = null; 
 	
 	private void startSolutioncomment(Attributes attributes) {
 	    String id = attributes.getValue("id");

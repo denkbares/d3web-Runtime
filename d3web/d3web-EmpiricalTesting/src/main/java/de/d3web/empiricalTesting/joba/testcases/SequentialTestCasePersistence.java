@@ -39,7 +39,7 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.values.AnswerChoice;
@@ -96,9 +96,9 @@ public class SequentialTestCasePersistence {
 		return doc;
 	}
 
-	private Collection<Diagnosis> computeUsedSolutions(
+	private Collection<Solution> computeUsedSolutions(
 			List<SequentialTestCase> theTestCases) {
-		Set<Diagnosis> solutions = new HashSet<Diagnosis>();
+		Set<Solution> solutions = new HashSet<Solution>();
 		for (SequentialTestCase sequentialTestCase : theTestCases) {
 			for (RatedTestCase rCase : sequentialTestCase.getCases()) {
 				for (RatedSolution rSolution : rCase.getExpectedSolutions()) {
@@ -190,7 +190,7 @@ public class SequentialTestCasePersistence {
 
 				// Diagnosis solution =
 				// getKnowledge().searchDiagnosis(solutionID);
-				Diagnosis solution = bh.getDiagnosisByIDorText(solutionID,
+				Solution solution = bh.getDiagnosisByIDorText(solutionID,
 						getKnowledge());
 
 				ScoreRating rating = new ScoreRating(new Double(ratingVal)

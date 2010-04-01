@@ -40,8 +40,6 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  */
 public class Rule implements CaseObjectSource {
 
-	private static final long serialVersionUID = 1648330152712439470L;
-
 	private String id;
 	
 	/**

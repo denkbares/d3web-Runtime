@@ -23,7 +23,6 @@
  */
 package de.d3web.diaFlux.flow;
 
-import java.io.Serializable;
 import java.util.List;
 
 import de.d3web.core.inference.PSAction;
@@ -33,9 +32,7 @@ import de.d3web.core.session.CaseObjectSource;
  * @author hatko
  *
  */
-public interface INode extends Serializable, CaseObjectSource {
-	
-	
+public interface INode extends CaseObjectSource {
 	
 	/**
 	 * 

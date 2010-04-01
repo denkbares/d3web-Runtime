@@ -40,8 +40,6 @@ import de.d3web.core.session.XPSCase;
  */
 public class AnswerDate extends Answer {
 
-	private static final long serialVersionUID = 245080751144689421L;
-
 	/**
 	 * This wrapper class is necessary for the evaluation of
 	 * AnswerDate values which are EvaluatableAnswerDateValues 

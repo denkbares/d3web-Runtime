@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.List;
 
 import de.d3web.core.inference.PropagationEntry;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.XPSCase;
@@ -57,8 +57,8 @@ public class SFAMethod extends PSSubMethod{
 	 */
 	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
 		for (PropagationEntry change : changes) {
-			if (change.getObject() instanceof Diagnosis) {
-				Diagnosis diagnosis = (Diagnosis) change.getObject();
+			if (change.getObject() instanceof Solution) {
+				Solution diagnosis = (Solution) change.getObject();
 				if (canCaseBeReenabled(theCase)) {
 					enableCase(theCase);
 				}
@@ -105,17 +105,17 @@ public class SFAMethod extends PSSubMethod{
 	 * @param diagnoses
 	 * @return
 	 */
-	private boolean containsLeafDianosis(List<Diagnosis> diagnoses) {
-		for (Diagnosis diag : diagnoses) {
+	private boolean containsLeafDianosis(List<Solution> diagnoses) {
+		for (Solution diag : diagnoses) {
 			if (isLeafDiagnosis(diag))
 				return true;
 		}
 		return false;
 	}
-	private boolean isLeafDiagnosis(Diagnosis diagnosis) {
+	private boolean isLeafDiagnosis(Solution diagnosis) {
 		return diagnosis.getChildren() == null || diagnosis.getChildren().length==0;
 	}
-	private boolean isEstablished(XPSCase theCase, Diagnosis diagnosis) {
+	private boolean isEstablished(XPSCase theCase, Solution diagnosis) {
 		return diagnosis.getState(theCase, PSCONTEXT).equals(DiagnosisState.ESTABLISHED);
 	}
 	

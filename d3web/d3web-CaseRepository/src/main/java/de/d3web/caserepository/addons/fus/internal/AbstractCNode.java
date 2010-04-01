@@ -25,7 +25,7 @@ package de.d3web.caserepository.addons.fus.internal;
 
 import java.util.Set;
 
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 
 /**
  * 21.10.2003 15:47:43
@@ -39,7 +39,7 @@ public abstract class AbstractCNode {
 	 * @param setOfSolutions Set of CaseObject.Solution
 	 * @return
 	 */
-	public abstract boolean matches(Set<Diagnosis> diagnoses);
+	public abstract boolean matches(Set<Solution> diagnoses);
 	
 	public AbstractCNode getParent() {
 		return parent;

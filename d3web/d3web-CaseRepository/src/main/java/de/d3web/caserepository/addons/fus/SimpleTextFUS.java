@@ -31,7 +31,6 @@ import de.d3web.caserepository.SolutionContainerImpl;
 import de.d3web.caserepository.XMLCodeGenerator;
 import de.d3web.caserepository.CaseObject.Solution;
 import de.d3web.core.io.utilities.XMLTools;
-import de.d3web.core.knowledge.terminology.Diagnosis;
 
 /**
  * SimpleTextFUS (in ) de.d3web.caserepository.addons.fus d3web-CaseRepository
@@ -107,7 +106,7 @@ public class SimpleTextFUS implements XMLCodeGenerator, ISolutionContainer {
 	 * @see de.d3web.caserepository.ISolutionContainer#getSolution(de.d3web.kernel.domainModel.Diagnosis,
 	 *      java.lang.Class)
 	 */
-	public Solution getSolution(Diagnosis d, Class psMethodClass) {
+	public Solution getSolution(de.d3web.core.knowledge.terminology.Solution d, Class psMethodClass) {
 		return myISC.getSolution(d, psMethodClass);
 	}
 	/*

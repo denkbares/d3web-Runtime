@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 import de.d3web.caserepository.addons.IFUSConfiguration;
 import de.d3web.caserepository.addons.fus.internal.*;
 import de.d3web.caserepository.addons.fus.internal.ProbabilityList.Item;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 
 /**
  * 21.10.2003 16:22:25
@@ -42,7 +42,7 @@ public class FUSConfiguration implements IFUSConfiguration {
 
 	private Set<Configuration> set = new HashSet<Configuration>();
 	
-	public ProbabilityList findFor(Set<Diagnosis> setOfSolutions) {
+	public ProbabilityList findFor(Set<Solution> setOfSolutions) {
 		ProbabilityList result = new ProbabilityList();
 		Iterator<Configuration> iter = set.iterator();
 		while (iter.hasNext()) {

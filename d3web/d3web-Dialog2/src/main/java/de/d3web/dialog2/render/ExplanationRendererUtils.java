@@ -58,7 +58,7 @@ import de.d3web.core.inference.condition.TerminalCondition;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.XPSCase;
@@ -86,7 +86,7 @@ public class ExplanationRendererUtils {
     private static boolean hasActiveRules = false;
 
     public static void explainConcreteDerivation(ResponseWriter writer,
-	    UIComponent component, Diagnosis diag, XPSCase theCase)
+	    UIComponent component, Solution diag, XPSCase theCase)
 	    throws IOException {
 	Collection<Class<?>> explainContext = new LinkedList<Class<?>>();
 	explainContext.add(PSMethodHeuristic.class);
@@ -159,7 +159,7 @@ public class ExplanationRendererUtils {
     }
 
     public static void renderDiagnosisObject(ResponseWriter writer,
-	    Diagnosis diag) throws IOException {
+	    Solution diag) throws IOException {
 	writer.writeText(diag.getName() + " (" + diag.getId() + ")", "value");
     }
 

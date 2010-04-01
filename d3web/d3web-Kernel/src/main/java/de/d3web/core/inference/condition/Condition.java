@@ -22,7 +22,7 @@ package de.d3web.core.inference.condition;
 import java.util.List;
 
 import de.d3web.core.inference.Rule;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.XPSCase;
@@ -37,7 +37,7 @@ import de.d3web.core.session.values.AnswerUnknown;
  * with respect to a given {@link XPSCase}. 
  * @author Joachim Baumeister, Christian Betz
  */
-public interface Condition extends java.io.Serializable {
+public interface Condition {
 
 	/**
 	 * Evaluates this condition with respect to the findings
@@ -59,7 +59,7 @@ public interface Condition extends java.io.Serializable {
 		throws NoAnswerException, UnknownAnswerException;
 
 	/**
-	 * Returns the collection of {@link Question} and {@link Diagnosis} 
+	 * Returns the collection of {@link Question} and {@link Solution} 
 	 * instances, that are constrained in this condition.
 	 * @return all used questions and diagnoses used in this condition
 	 */

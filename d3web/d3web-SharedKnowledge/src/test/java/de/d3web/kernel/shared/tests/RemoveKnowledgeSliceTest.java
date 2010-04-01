@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionYN;
@@ -51,9 +51,9 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 
 	private QuestionYN qyn2;
 
-	private Diagnosis d1;
+	private Solution d1;
 
-	private Diagnosis d2;
+	private Solution d2;
 
 	public static Test suite() {
 		return new TestSuite(RemoveKnowledgeSliceTest.class);
@@ -80,11 +80,11 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		qyn2.setKnowledgeBase(base);
 		qyn2.setParents(Arrays.asList(new NamedObject[] { qc }));
 
-		d1 = new Diagnosis("d1");
+		d1 = new Solution("d1");
 		d1.setName("d1");
 		d1.setKnowledgeBase(base);
 
-		d2 = new Diagnosis("d2");
+		d2 = new Solution("d2");
 		d2.setName("d2");
 		d2.setKnowledgeBase(base);
 

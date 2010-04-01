@@ -27,7 +27,7 @@ import java.util.List;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.shared.PSMethodShared;
 /**
  * Represents the weight of a symptom
@@ -36,10 +36,6 @@ import de.d3web.shared.PSMethodShared;
  */
 public class Weight implements KnowledgeSlice {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5362682008300174209L;
 	public static int G0 = 0;
 	public static int G1 = 1;
 	public static int G2 = 2;
@@ -53,7 +49,7 @@ public class Weight implements KnowledgeSlice {
 
 	private List<DiagnosisWeightValue> diagnosisWeightValues = null;
 
-	private Hashtable<Diagnosis, DiagnosisWeightValue> diagnoseDiagnosisWeightValueHash = null;
+	private Hashtable<Solution, DiagnosisWeightValue> diagnoseDiagnosisWeightValueHash = null;
 
 	/**
 	 * Weight constructor comment.
@@ -61,7 +57,7 @@ public class Weight implements KnowledgeSlice {
 	public Weight() {
 		super();
 		diagnosisWeightValues = new LinkedList<DiagnosisWeightValue>();
-		diagnoseDiagnosisWeightValueHash = new Hashtable<Diagnosis, DiagnosisWeightValue>();
+		diagnoseDiagnosisWeightValueHash = new Hashtable<Solution, DiagnosisWeightValue>();
 	}
 
 	/**
@@ -184,9 +180,9 @@ public class Weight implements KnowledgeSlice {
 	 * @return int
 	 * @param diagnoses java.util.Collection
 	 */
-	public int getMaxDiagnosisWeightValueFromDiagnoses(Collection<Diagnosis> diagnoses) {
+	public int getMaxDiagnosisWeightValueFromDiagnoses(Collection<Solution> diagnoses) {
 		int ret = -1;
-		Iterator<Diagnosis> iter = diagnoses.iterator();
+		Iterator<Solution> iter = diagnoses.iterator();
 		while (iter.hasNext()) {
 			DiagnosisWeightValue val = (DiagnosisWeightValue) diagnoseDiagnosisWeightValueHash.get(iter.next());
 			if (val != null) {

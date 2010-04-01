@@ -41,7 +41,6 @@ import de.d3web.diaFlux.inference.FluxSolver;
  */
 public class IndicateFlowAction extends PSAction {
 	
-	private static final long serialVersionUID = -157309383130821699L;
 	private final String flowName;
 	private final String startNodeName;
 

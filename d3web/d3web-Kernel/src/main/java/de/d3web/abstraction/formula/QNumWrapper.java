@@ -33,8 +33,6 @@ import de.d3web.core.session.values.AnswerNum;
  */
 public class QNumWrapper extends FormulaNumberPrimitive {
 
-	private static final long serialVersionUID = 7316671292127035523L;
-
 	/**
 	 * Creates a new FormulaTerm with null-arguments.
 	 */

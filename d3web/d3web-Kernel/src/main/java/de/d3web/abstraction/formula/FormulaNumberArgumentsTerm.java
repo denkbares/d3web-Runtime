@@ -31,8 +31,6 @@ import de.d3web.core.session.XPSCase;
  */
 public abstract class FormulaNumberArgumentsTerm implements FormulaElement {
 	
-	private static final long serialVersionUID = 3935587662481357454L;
-
 	/** first argument of the term*/
 	private FormulaNumberElement arg1 = null;
 

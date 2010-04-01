@@ -25,7 +25,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import de.d3web.core.io.fragments.PropertiesHandler;
 import de.d3web.core.io.utilities.Util;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.persistence.tests.utils.XMLTag;
@@ -42,7 +42,7 @@ public class PropertyTest extends TestCase {
 
 	private PropertiesHandler pdh;
 	
-	private Diagnosis diag;
+	private Solution diag;
 	
 	private XMLTag isTag;
 	
@@ -60,7 +60,7 @@ public class PropertyTest extends TestCase {
 	}
 	
 	protected void setUp() {
-		diag = new Diagnosis("D1");
+		diag = new Solution("D1");
 		
 		pdh = new PropertiesHandler();
 	}

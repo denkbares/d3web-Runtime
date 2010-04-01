@@ -34,7 +34,7 @@ import de.d3web.caserepository.utilities.CaseConverter;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -384,7 +384,7 @@ public class ComparisonResultRepository {
 				sb.append("<diagnoses>\n");
 				Iterator diags = getEstablishedDiagnoses(cc).iterator();
 				while (diags.hasNext()) {
-					Diagnosis diag = (Diagnosis) diags.next();
+					Solution diag = (Solution) diags.next();
 					sb.append("<diagnosis ID='" + diag.getId() + "' />\n");
 				}
 				sb.append("</diagnoses>\n");

@@ -26,7 +26,7 @@ package de.d3web.caserepository.addons;
 import java.util.List;
 
 import de.d3web.caserepository.ISolutionContainer;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QContainer;
 
 /**
@@ -44,7 +44,7 @@ public interface IExaminationBlock extends ISolutionContainer {
 	
 	public List<QContainer> getContents();
 	
-    public String getCommentFor(Diagnosis d);
-    public void setCommentFor(Diagnosis d, String s);
+    public String getCommentFor(Solution d);
+    public void setCommentFor(Solution d, String s);
     
 }

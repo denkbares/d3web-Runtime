@@ -35,8 +35,6 @@ import de.d3web.core.session.XPSCase;
  */
 public class ActionInstantIndication extends ActionIndication {
 
-	private static final long serialVersionUID = 114426903858814069L;
-
 	public ActionInstantIndication() {
 		super();
 	}

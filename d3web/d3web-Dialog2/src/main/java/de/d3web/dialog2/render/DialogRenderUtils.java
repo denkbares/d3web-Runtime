@@ -34,7 +34,7 @@ import javax.faces.context.ResponseWriter;
 
 import org.apache.log4j.Logger;
 
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
@@ -55,7 +55,7 @@ public class DialogRenderUtils {
 
 	public static Logger logger = Logger.getLogger(DialogRenderUtils.class);
 
-	private static String getDiagnosesLinkOnclickString(Diagnosis diag) {
+	private static String getDiagnosesLinkOnclickString(Solution diag) {
 		StringBuffer onclickString = new StringBuffer();
 		onclickString.append("Tip(initExpPopup('" + diag.getId() + "'");
 		if (DialogUtils.getDialogSettings().isShowDiagReason()) {
@@ -308,7 +308,7 @@ public class DialogRenderUtils {
 	}
 
 	public static void renderDiagnosesLink(ResponseWriter writer,
-			UIComponent component, Diagnosis diag, XPSCase theCase,
+			UIComponent component, Solution diag, XPSCase theCase,
 			String styleClass, String score, boolean showScore)
 			throws IOException {
 
@@ -573,11 +573,11 @@ public class DialogRenderUtils {
 		writer.writeAttribute("cellpadding", padding, "cellpadding");
 	}
 
-	public static void sortDiagnosisList(List<Diagnosis> diagList,
+	public static void sortDiagnosisList(List<Solution> diagList,
 			final XPSCase theCase) {
-		Comparator<Diagnosis> diagCompAsc = new Comparator<Diagnosis>() {
+		Comparator<Solution> diagCompAsc = new Comparator<Solution>() {
 
-			public int compare(Diagnosis a, Diagnosis b) {
+			public int compare(Solution a, Solution b) {
 				if (a.getScore(theCase, PSMethodHeuristic.class).getScore() < b
 						.getScore(theCase, PSMethodHeuristic.class).getScore())
 					return 1;

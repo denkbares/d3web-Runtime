@@ -28,7 +28,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 
 /**
  * 21.10.2003 15:48:35
@@ -55,7 +55,7 @@ public class CNode extends AbstractCNode {
 		protected void setName(String name) {
 			this.name = name;
 		}
-		protected abstract boolean matches(CNode node, Set<Diagnosis> diagnoses);
+		protected abstract boolean matches(CNode node, Set<Solution> diagnoses);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class CNode extends AbstractCNode {
 		/* (non-Javadoc)
 		 * @see de.d3web.caserepository.addons.fus.internal.CNode.Type#matches(de.d3web.caserepository.addons.fus.internal.CNode, java.util.Set)
 		 */
-		protected boolean matches(CNode node, Set<Diagnosis> diagnoses) {
+		protected boolean matches(CNode node, Set<Solution> diagnoses) {
 			Iterator iter = node.getNodes().iterator();
 			while (iter.hasNext()) {
 				AbstractCNode c = (AbstractCNode) iter.next();
@@ -95,7 +95,7 @@ public class CNode extends AbstractCNode {
 		/* (non-Javadoc)
 		 * @see de.d3web.caserepository.addons.fus.internal.CNode.Type#matches(de.d3web.caserepository.addons.fus.internal.CNode, java.util.Set)
 		 */
-		protected boolean matches(CNode node, Set<Diagnosis> diagnoses) {
+		protected boolean matches(CNode node, Set<Solution> diagnoses) {
 			Iterator iter = node.getNodes().iterator();
 			while (iter.hasNext()) {
 				AbstractCNode c = (AbstractCNode) iter.next();
@@ -123,7 +123,7 @@ public class CNode extends AbstractCNode {
          * @see de.d3web.caserepository.addons.fus.internal.CNode.ANDType#matches(de.d3web.caserepository.addons.fus.internal.CNode, java.util.Set)
          */
         @Override
-        protected boolean matches(CNode node, Set<Diagnosis> diagnoses) {
+        protected boolean matches(CNode node, Set<Solution> diagnoses) {
 			Iterator iter = node.getNodes().iterator();
 			while (iter.hasNext()) {
 				AbstractCNode c = (AbstractCNode) iter.next();
@@ -150,7 +150,7 @@ public class CNode extends AbstractCNode {
 		/* (non-Javadoc)
 		 * @see de.d3web.caserepository.addons.fus.internal.CNode.Type#matches(de.d3web.caserepository.addons.fus.internal.CNode, java.util.Set)
 		 */
-		protected boolean matches(CNode node, Set<Diagnosis> diagnoses) {
+		protected boolean matches(CNode node, Set<Solution> diagnoses) {
 			int hits = 0;
 			Iterator iter = node.getNodes().iterator();
 			while (iter.hasNext()) {
@@ -191,7 +191,7 @@ public class CNode extends AbstractCNode {
 		/* (non-Javadoc)
 		 * @see de.d3web.caserepository.addons.fus.internal.CNode.Type#matches(de.d3web.caserepository.addons.fus.internal.CNode, java.util.Set)
 		 */
-		protected boolean matches(CNode node, Set<Diagnosis> diagnoses) {
+		protected boolean matches(CNode node, Set<Solution> diagnoses) {
 			if (n <= 1 || n >= node.getNodes().size()) {
 				Logger.getLogger(this.getClass().getName()).warning("n must be between 2 and #nodes - 1, but is: " + n);
 				return false;
@@ -231,7 +231,7 @@ public class CNode extends AbstractCNode {
 	/* (non-Javadoc)
 	 * @see de.d3web.Train.FUS.AbstractCNode#matches(java.util.Set)
 	 */
-	public boolean matches(Set<Diagnosis> diagnoses) {
+	public boolean matches(Set<Solution> diagnoses) {
 		return getType().matches(this, diagnoses);
 	}
 

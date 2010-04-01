@@ -22,11 +22,11 @@ package de.d3web.empiricalTesting;
 
 import java.util.Comparator;
 
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 
 public class RatedSolution implements Comparable<RatedSolution> {
 
-	Diagnosis solution;
+	Solution solution;
 	Rating rating;
 
 	static class InverseRatingComparator implements Comparator<RatedSolution> {
@@ -48,7 +48,7 @@ public class RatedSolution implements Comparable<RatedSolution> {
 	 * @param solution Diagnosis
 	 * @param rating Rating
 	 */
-	public RatedSolution(Diagnosis solution, Rating rating) {
+	public RatedSolution(Solution solution, Rating rating) {
 		this.solution = solution;
 		this.rating = rating;
 	}
@@ -121,7 +121,7 @@ public class RatedSolution implements Comparable<RatedSolution> {
 	 * Returns Solution of this RatedSolution
 	 * @return solution
 	 */
-	public synchronized Diagnosis getSolution() {
+	public synchronized Solution getSolution() {
 		return solution;
 	}
 

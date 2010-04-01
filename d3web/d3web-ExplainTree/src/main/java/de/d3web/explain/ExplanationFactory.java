@@ -28,7 +28,7 @@ package de.d3web.explain;
 
 import java.util.Collection;
 
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.XPSCase;
 import de.d3web.explain.eNodes.ENode;
@@ -59,7 +59,7 @@ public class ExplanationFactory {
      * Explains the reasons for a diagnostic value under a given context.
      * 
      */
-    public ENode explain(Diagnosis target, Collection context) {
+    public ENode explain(Solution target, Collection context) {
         return new ENode(this, target, DiagnosticValue.getInstance(), context);
     }
     

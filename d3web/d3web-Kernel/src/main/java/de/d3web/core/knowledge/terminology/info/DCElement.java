@@ -36,9 +36,7 @@ import java.util.logging.Logger;
  * @see de.d3web.core.knowledge.terminology.info.DCMarkup
  * @author hoernlein
  */
-public class DCElement implements java.io.Serializable {
-
-	private static final long serialVersionUID = 3422299195047203671L;
+public class DCElement {
 
 	private static List<DCElement> dcElements = new ArrayList<DCElement>();
 

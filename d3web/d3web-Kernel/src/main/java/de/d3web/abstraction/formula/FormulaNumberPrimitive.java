@@ -29,7 +29,6 @@ package de.d3web.abstraction.formula;
  */
 public abstract class FormulaNumberPrimitive implements FormulaNumberElement {
 
-	private static final long serialVersionUID = 1815927179653196338L;
 	/**
 	 * Value of the primitive FormulaElement
 	 */

@@ -32,8 +32,6 @@ public class QuestionComparatorTextIndividual
 	extends de.d3web.kernel.psMethods.shared.comparators.QuestionComparator
 	implements IndividualComparator {
 
-	private static final long serialVersionUID = 6525444701160878370L;
-
 	public double compare(List<?> answers1, List<?> answers2) {
 		try {
 			AnswerText ans1 = (AnswerText) answers1.get(0);

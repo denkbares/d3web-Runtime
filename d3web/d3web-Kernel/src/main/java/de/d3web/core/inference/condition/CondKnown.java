@@ -34,8 +34,6 @@ import de.d3web.core.session.values.AnswerUnknown;
  */
 public class CondKnown extends CondQuestion {
 
-	private static final long serialVersionUID = -8494189870196724391L;
-
 	/**
 	 * Creates a new CondKnown object for the given {@link Question}.
 	 * @param the given question

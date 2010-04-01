@@ -35,7 +35,7 @@ import java.util.Hashtable;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.XPSCase;
 import de.d3web.shared.PSMethodShared;
@@ -45,11 +45,6 @@ import de.d3web.shared.PSMethodShared;
  */
 public class LocalWeight implements KnowledgeSlice {
 
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6449769676166771342L;
 	public static double G0 = 0;
 	public static double G1 = 1;
 	public static double G2 = 2;
@@ -60,7 +55,7 @@ public class LocalWeight implements KnowledgeSlice {
 	public static double G7 = 64;
 	
 	private Question q;
-	private Diagnosis d;
+	private Solution d;
 	private Hashtable<Answer, Double> values = null;
 	
 	/**
@@ -105,7 +100,7 @@ public class LocalWeight implements KnowledgeSlice {
 		return q;
 	}
 
-	public void setDiagnosis(de.d3web.core.knowledge.terminology.Diagnosis newDiagnosis){
+	public void setDiagnosis(de.d3web.core.knowledge.terminology.Solution newDiagnosis){
 		if (d != null) {
 			d.removeKnowledge(
 				getProblemsolverContext(),
@@ -121,7 +116,7 @@ public class LocalWeight implements KnowledgeSlice {
 		}
 	}
 	
-	public Diagnosis getDiagnosis(){
+	public Solution getDiagnosis(){
 		return d;
 	}
 	

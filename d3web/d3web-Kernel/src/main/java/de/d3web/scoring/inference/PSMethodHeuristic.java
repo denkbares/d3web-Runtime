@@ -30,7 +30,7 @@ import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.info.Property;
@@ -95,7 +95,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 	 * Creation date: (05.10.00 13:41:07)
 	 * @return de.d3web.kernel.domainModel.DiagnosisState
 	 */
-	public DiagnosisState getState(XPSCase theCase, Diagnosis diagnosis) {
+	public DiagnosisState getState(XPSCase theCase, Solution diagnosis) {
 		DiagnosisScore diagnosisScore =
 			diagnosis.getScore(theCase, this.getClass());
 		if (diagnosisScore == null)
@@ -104,7 +104,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 		    if (isSFA(theCase) || isBestSolutionOnly(theCase)) { 
 		        DiagnosisState orgState = DiagnosisState.getState(diagnosisScore);
 		        if (orgState.equals(DiagnosisState.ESTABLISHED)) {
-		            Diagnosis bestDiagnosis = computeBestDiagnosis(theCase);
+		            Solution bestDiagnosis = computeBestDiagnosis(theCase);
 		            if (greaterScore(theCase, bestDiagnosis, diagnosis)) {
 		                return DiagnosisState.SUGGESTED;
 		            }
@@ -124,7 +124,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 	 * Tests the double value of the Scores: d1 > d2 ?  
      * @return (d1.score > d2.score)
      */
-    private boolean greaterScore(XPSCase theCase, Diagnosis d1, Diagnosis d2) {
+    private boolean greaterScore(XPSCase theCase, Solution d1, Solution d2) {
         return d1.getScore(theCase, getClass()).getScore() > d2.getScore(theCase, getClass()).getScore();
     }
 
@@ -134,10 +134,10 @@ public class PSMethodHeuristic extends PSMethodAdapter {
      * @param theCase
      * @return Diagnosis instance
      */
-    private Diagnosis computeBestDiagnosis(XPSCase theCase) {
-        Diagnosis best = null;
+    private Solution computeBestDiagnosis(XPSCase theCase) {
+        Solution best = null;
         DiagnosisScore bestScore = null;
-        for (Diagnosis d : theCase.getKnowledgeBase().getDiagnoses()) {
+        for (Solution d : theCase.getKnowledgeBase().getDiagnoses()) {
             if (isFinalDiagnosis(d)) {
                 if (best == null) {
                     best = d;
@@ -192,7 +192,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 	
 
     private boolean finalSolutionIsEstablished(XPSCase theCase) {
-        for (Diagnosis d : theCase.getKnowledgeBase().getDiagnoses()) {
+        for (Solution d : theCase.getKnowledgeBase().getDiagnoses()) {
             if ((isFinalDiagnosis(d)) && 
                 (getState(theCase, d).equals(DiagnosisState.ESTABLISHED))){
                 return true;
@@ -223,14 +223,14 @@ public class PSMethodHeuristic extends PSMethodAdapter {
      * @param theCase
      */
     private void reCheckAllRules(XPSCase theCase) {
-        List<Diagnosis> oldEstablishedDiagnoses = theCase.getDiagnoses(DiagnosisState.ESTABLISHED);
+        List<Solution> oldEstablishedDiagnoses = theCase.getDiagnoses(DiagnosisState.ESTABLISHED);
         List<NamedObject> objects = new LinkedList<NamedObject>(theCase.getKnowledgeBase().getQuestions());
         objects.addAll(theCase.getKnowledgeBase().getDiagnoses());
         for (NamedObject o : objects) {
             checkRulesFor(theCase, o);
         }
         
-        List<Diagnosis> newEstalishedDiagnoses = theCase.getDiagnoses(DiagnosisState.ESTABLISHED);
+        List<Solution> newEstalishedDiagnoses = theCase.getDiagnoses(DiagnosisState.ESTABLISHED);
         if ((!oldEstablishedDiagnoses.isEmpty()) &&
             (oldEstablishedDiagnoses.containsAll(newEstalishedDiagnoses)) &&
             (newEstalishedDiagnoses.containsAll(oldEstablishedDiagnoses))) {
@@ -245,7 +245,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
      * @param diagnosis
      * @return
      */
-    private boolean isFinalDiagnosis(Diagnosis diagnosis) {
+    private boolean isFinalDiagnosis(Solution diagnosis) {
     	TerminologyObject[] c = diagnosis.getChildren();
         boolean hasNoChildren = ((c == null) || (c.length==0));
         HDTType type = diagnosis.getHdtType();

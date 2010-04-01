@@ -32,7 +32,7 @@ import javax.activation.UnsupportedDataTypeException;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -276,7 +276,7 @@ public class InterviewBot {
 
 	private List<RatedSolution> toRatedSolutions(XPSCase theCase) {
 		List<RatedSolution> ratedSolutions = new LinkedList<RatedSolution>();
-		for (Diagnosis solution : theCase.getDiagnoses()) {
+		for (Solution solution : theCase.getDiagnoses()) {
 			Rating rating = ratingStrategy.getRatingFor(solution, theCase);
 			if (rating.isProblemSolvingRelevant()) {
 				RatedSolution ratedSolution = new RatedSolution(solution, rating);

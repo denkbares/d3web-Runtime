@@ -39,7 +39,6 @@ import de.d3web.core.session.values.AnswerChoice;
  */
 public class QuestionZC extends QuestionOC {
 
-	private static final long serialVersionUID = -2285319927790751950L;
 	public static final String XML_IDENTIFIER = "Info";
 
 	public QuestionZC(String id) {

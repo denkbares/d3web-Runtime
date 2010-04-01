@@ -27,8 +27,6 @@ package de.d3web.core.session.values;
  */
 public class AnswerNo extends AnswerChoice {
 
-	private static final long serialVersionUID = 4580215611560294804L;
-	
 	public AnswerNo(String id) {
 		super(id);
 	}

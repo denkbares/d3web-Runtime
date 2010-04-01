@@ -24,7 +24,7 @@
  */
 package de.d3web.caserepository.addons.train.findings;
 
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 
 /**
  * DiagnosisRefRelation
@@ -33,7 +33,7 @@ import de.d3web.core.knowledge.terminology.Diagnosis;
  */
 public class DiagnosisRelation extends FindingDiagnosisRelation {
 
-	private Diagnosis diag;
+	private Solution diag;
 
 	public DiagnosisRelation() {
 		super();
@@ -44,11 +44,11 @@ public class DiagnosisRelation extends FindingDiagnosisRelation {
 	 * 
 	 * @see de.d3web.caserepository.addons.train.findings.FindingDiagnosisRelation#getDiagnosis()
 	 */
-	public Diagnosis getDiagnosis() {
+	public Solution getDiagnosis() {
 		return diag;
 	}
 
-	public void setDiagnosis(Diagnosis diag) {
+	public void setDiagnosis(Solution diag) {
 		this.diag = diag;
 	}
 	

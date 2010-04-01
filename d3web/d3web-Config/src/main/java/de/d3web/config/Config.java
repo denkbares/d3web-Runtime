@@ -23,7 +23,6 @@
  */
 package de.d3web.config;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -40,10 +39,8 @@ import de.d3web.config.persistence.*;
 /**
  * @author bannert
  */
-public class Config implements Serializable {
+public class Config {
 	
-    private static final long serialVersionUID = 1L;
-
     public static Config baseConfig;
 	
 	public final static String BOOLEAN = "Boolean";
@@ -63,7 +60,7 @@ public class Config implements Serializable {
 	public final static String TYPE_CASE = "case";
 	public final static String TYPE_USER = "user";
 
-	public final static List TYPE_ORDER = Arrays.asList(new String[] {
+	public final static List<String> TYPE_ORDER = Arrays.asList(new String[] {
 		Config.TYPE_BASE,
 		Config.TYPE_SYSTEM,
 		Config.TYPE_CONTEXT,
@@ -166,7 +163,7 @@ public class Config implements Serializable {
 	
 	public String getComment(String lang, String key){
 		if (this.comments.containsKey(lang)){
-			return (String) ((HashMap) this.comments.get(lang)).get(key);
+			return this.comments.get(lang).get(key);
 		} else return null;
 	}
 	
@@ -179,7 +176,7 @@ public class Config implements Serializable {
 		Config result = new Config(configs.get(configs.size()-1).getType());
 		
 		String name = "derived from (";
-		Iterator iter = configs.iterator();
+		Iterator<Config> iter = configs.iterator();
 		while (iter.hasNext()) {
 		    name += ((Config) iter.next()).getName();
 		    if (iter.hasNext())
@@ -243,7 +240,7 @@ public class Config implements Serializable {
 	 */
 	private static Set<String> getKeySet(List<Config> configs) {
 		Set<String> result = new HashSet<String>();
-		Iterator iter = configs.iterator();
+		Iterator<Config> iter = configs.iterator();
 		while (iter.hasNext()) {
 			Config config = (Config) iter.next();
 			result.addAll(config.getKeySet());
@@ -258,7 +255,7 @@ public class Config implements Serializable {
 		return this.type;
 	}
 	
-	public Set getLanguages(){
+	public Set<String> getLanguages(){
 		return this.comments.keySet();
 	}
 

@@ -19,7 +19,7 @@
  */
 
 package de.d3web.core.inference;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.XPSCase;
 import de.d3web.scoring.DiagnosisScore;
@@ -46,7 +46,7 @@ public abstract class PSMethodAdapter implements PSMethod {
 	 * 
 	 * @see DiagnosisState
 	 */
-	public DiagnosisState getState(XPSCase theCase, Diagnosis diagnosis) {
+	public DiagnosisState getState(XPSCase theCase, Solution diagnosis) {
 		DiagnosisScore diagnosisScore = diagnosis.getScore(theCase, PSMethodHeuristic.class);
 		if (diagnosisScore == null)
 			return DiagnosisState.UNCLEAR;

@@ -45,8 +45,6 @@ import de.d3web.indication.inference.PSMethodUserSelected;
  */
 public abstract class QASet extends NamedObject implements InterviewObject {
 	
-	private static final long serialVersionUID = -6129285010227602284L;
-
 	public static class Reason {
 		private Rule rule;
 		private Class<? extends PSMethod> psm;

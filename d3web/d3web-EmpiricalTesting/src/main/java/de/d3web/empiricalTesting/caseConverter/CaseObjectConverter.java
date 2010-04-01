@@ -32,7 +32,6 @@ import de.d3web.caserepository.sax.CaseObjectListCreator;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Diagnosis;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.DCElement;
@@ -123,7 +122,7 @@ public abstract class CaseObjectConverter {
 	private void cleanExpectedSolutions(RatedTestCase rtc) {
 		List<RatedSolution> expectedSolutions = rtc.getExpectedSolutions();		
 		
-		List<Diagnosis> distinctDiagnosises = getDistinctDiagnosises(expectedSolutions);
+		List<de.d3web.core.knowledge.terminology.Solution> distinctDiagnosises = getDistinctDiagnosises(expectedSolutions);
 		
 		rtc.setExpectedSolutions(getCleanedSolutions(expectedSolutions, distinctDiagnosises));
 	}
@@ -136,11 +135,11 @@ public abstract class CaseObjectConverter {
 	 */
 	private List<RatedSolution> getCleanedSolutions(
 			List<RatedSolution> expectedSolutions,
-			List<Diagnosis> distinctDiagnosises) {
+			List<de.d3web.core.knowledge.terminology.Solution> distinctDiagnosises) {
 		
 		List<RatedSolution> cleanedSolutions = new ArrayList<RatedSolution>();
 		
-		for (Diagnosis d : distinctDiagnosises) {
+		for (de.d3web.core.knowledge.terminology.Solution d : distinctDiagnosises) {
 			List<RatedSolution> equalDiagnosises = new ArrayList<RatedSolution>();
 			for (RatedSolution s : expectedSolutions) {
 				if (s.getSolution().equals(d)) {
@@ -158,13 +157,13 @@ public abstract class CaseObjectConverter {
 	 * @param expectedSolutions a List of RatedSolutions
 	 * @return
 	 */
-	private List<Diagnosis> getDistinctDiagnosises(
+	private List<de.d3web.core.knowledge.terminology.Solution> getDistinctDiagnosises(
 			List<RatedSolution> expectedSolutions) {
 		
-		List<Diagnosis> distinctDiagnosises = new ArrayList<Diagnosis>();
+		List<de.d3web.core.knowledge.terminology.Solution> distinctDiagnosises = new ArrayList<de.d3web.core.knowledge.terminology.Solution>();
 		
 		for (RatedSolution s : expectedSolutions) {
-			Diagnosis tmp = s.getSolution();
+			de.d3web.core.knowledge.terminology.Solution tmp = s.getSolution();
 			if (!distinctDiagnosises.contains(tmp)) {
 				distinctDiagnosises.add(tmp);
 			}
@@ -194,7 +193,7 @@ public abstract class CaseObjectConverter {
 
 	private void addRatedSolution(RatedTestCase rtc, Solution s) {
 		DiagnosisState state = s.getState();
-		Diagnosis d = s.getDiagnosis();
+		de.d3web.core.knowledge.terminology.Solution d = s.getDiagnosis();
 		if (state.isRelevant()) {
 			StateRating r = new StateRating(state);
 			rtc.addExpected(new RatedSolution(d, r));
@@ -202,7 +201,6 @@ public abstract class CaseObjectConverter {
 		
 	}
 
-	@SuppressWarnings("unchecked")
 	private void computeFindings(RatedTestCase rtc, CaseObject co, KnowledgeBase k) {
 		List<Question> questions = new ArrayList<Question>(co.getQuestions());
 		for (Question q : questions) {

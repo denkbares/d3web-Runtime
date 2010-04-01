@@ -20,9 +20,6 @@
 
 package de.d3web.diaFlux.inference;
 
-import java.io.Serializable;
-
-import de.d3web.diaFlux.flow.IEdge;
 import de.d3web.diaFlux.flow.INode;
 import de.d3web.diaFlux.flow.INodeData;
 import de.d3web.diaFlux.flow.ISupport;
@@ -33,7 +30,7 @@ import de.d3web.diaFlux.flow.ISupport;
  * Created: 10.09.2009
  *
  */
-public class PathEntry implements Serializable {
+public class PathEntry {
 	
 	
 	private final PathEntry path;

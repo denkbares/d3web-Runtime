@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
@@ -136,11 +136,11 @@ public class Blackboard {
 	 * 
 	 * @return the collection of valued diagnoses
 	 */
-	public Collection<Diagnosis> getValuedSolutions() {
-		Collection<Diagnosis> result = new LinkedList<Diagnosis>();
+	public Collection<Solution> getValuedSolutions() {
+		Collection<Solution> result = new LinkedList<Solution>();
 		for (TerminologyObject object : getValuedObjects()) {
-			if (object instanceof Diagnosis) {
-				result.add((Diagnosis) object);
+			if (object instanceof Solution) {
+				result.add((Solution) object);
 			}
 		}
 		return result;
@@ -223,14 +223,14 @@ public class Blackboard {
 	/**
 	 * Returns the current rating of the diagnosis. The returned rating is the
 	 * merged rating over all problem solvers available. This is a typed
-	 * shortcut for accessing the value {@link Fact} of the {@link Diagnosis}
+	 * shortcut for accessing the value {@link Fact} of the {@link Solution}
 	 * and read out its current value.
 	 * 
 	 * @param solution
 	 *            the solution to take the rating from
 	 * @return the total rating of the solution
 	 */
-	public DiagnosisState getState(Diagnosis solution) {
+	public DiagnosisState getState(Solution solution) {
 		return (DiagnosisState) getValueFact(solution).getValue();
 	}
 

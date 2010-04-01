@@ -20,7 +20,7 @@
 
 package de.d3web.empiricalTesting.joba.testcases;
 
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -33,7 +33,7 @@ import de.d3web.empiricalTesting.ScoreRating;
 public class SeqTestCaseTester {
 	KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance();
 	Question q1, q2, q3;
-	Diagnosis d1, d2, d3;
+	Solution d1, d2, d3;
 
 	public static void main(String[] args) throws Exception {
 		new SeqTestCaseTester().run();
@@ -80,7 +80,7 @@ public class SeqTestCaseTester {
 	}
 
 	private void createKnowledgeBase() {
-		Diagnosis root = kbm.getKnowledgeBase().getRootDiagnosis();
+		Solution root = kbm.getKnowledgeBase().getRootDiagnosis();
 		QASet rootContainer = kbm.getKnowledgeBase().getRootQASet();
 		d1 = kbm.createDiagnosis("d1", root);
 		d2 = kbm.createDiagnosis("d2", root);

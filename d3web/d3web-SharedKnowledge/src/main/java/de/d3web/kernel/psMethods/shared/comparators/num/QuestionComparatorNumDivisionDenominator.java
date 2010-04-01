@@ -30,7 +30,6 @@ import de.d3web.core.session.values.AnswerNum;
  */
 public class QuestionComparatorNumDivisionDenominator extends QuestionComparatorNum {
 	
-	private static final long serialVersionUID = -5963775179465850285L;
 	private double denominator = 0;
 
 	public double compare(List<?> ans1, List<?> ans2) {

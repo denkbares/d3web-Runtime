@@ -32,7 +32,7 @@ import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.kernel.psMethods.shared.LocalWeight;
@@ -57,7 +57,7 @@ public class LocalWeightHandler implements FragmentHandler {
 		String questionID = null;
 		String diagnosisID = null;
 		Question q = null;
-		Diagnosis d = null;
+		Solution d = null;
 		questionID = n.getAttributes().getNamedItem("questionID")
 				.getNodeValue();
 		diagnosisID = n.getAttributes().getNamedItem("diagnosisID")

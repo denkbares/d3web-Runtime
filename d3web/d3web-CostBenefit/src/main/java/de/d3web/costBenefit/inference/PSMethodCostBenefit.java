@@ -36,7 +36,7 @@ import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -145,12 +145,12 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 	private void calculateNewPath(CostBenefitCaseObject caseObject) {
 		XPSCase theCase = caseObject.getSession();
 		List<StrategicSupport> stratgicSupports = getStrategicSupports(theCase);
-		HashSet<Diagnosis> diags = new HashSet<Diagnosis>();
+		HashSet<Solution> diags = new HashSet<Solution>();
 		caseObject.setDiags(diags);
 		SearchModel cbm = new SearchModel(theCase);
 		caseObject.setCbm(cbm);
 		for (StrategicSupport strategicSupport: stratgicSupports){
-			Collection<Diagnosis> solutions = strategicSupport
+			Collection<Solution> solutions = strategicSupport
 					.getPossibleDiagnoses(theCase);
 			diags.addAll(solutions);
 			Collection<Question> discriminatingQuestions = strategicSupport
@@ -252,13 +252,13 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		// be calculated is set
 		boolean changeddiags = false;
 		List<StrategicSupport> strategicSupports = getStrategicSupports(theCase);
-		HashSet<Diagnosis> possibleDiagnoses = new HashSet<Diagnosis>();
+		HashSet<Solution> possibleDiagnoses = new HashSet<Solution>();
 		for (StrategicSupport strategicSupport: strategicSupports) {
 			possibleDiagnoses.addAll(strategicSupport.getPossibleDiagnoses(theCase));
 		}
-		final Set<Diagnosis> diags = caseObject.getDiags();
+		final Set<Solution> diags = caseObject.getDiags();
 		if (possibleDiagnoses.size() == diags .size()) {
-			for (Diagnosis d : possibleDiagnoses) {
+			for (Solution d : possibleDiagnoses) {
 				if (!diags.contains(d)) {
 					changeddiags = true;
 					break;

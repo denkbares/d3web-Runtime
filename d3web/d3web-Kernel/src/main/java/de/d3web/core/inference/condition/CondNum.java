@@ -34,8 +34,6 @@ import de.d3web.core.session.values.AnswerNum;
  */
 public abstract class CondNum extends CondQuestion {
 	
-	private static final long serialVersionUID = -3597849696812714194L;
-
 	/** 
 	 * Level of impression for numerical comparison.
 	 */

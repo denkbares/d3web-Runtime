@@ -40,8 +40,6 @@ import de.d3web.indication.inference.PSMethodSuppressAnswer;
  */
 public class ActionSuppressAnswer extends PSAction {
 	
-	private static final long serialVersionUID = 5889412150933130689L;
-
 	private QuestionChoice question = null;
 
 	/* alternatives that should be suppressed, if rule fires */

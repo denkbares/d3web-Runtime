@@ -46,7 +46,7 @@ import de.d3web.core.io.utilities.IDObjectComparator;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
@@ -216,7 +216,7 @@ public class BasicPersistenceHandler implements
 		if (diagnosisNodes!=null) {
 			for (Element child: diagnosisNodes) {
 				listener.updateProgress(time++/abstime, "Building diagnosis");
-				Diagnosis diag = (Diagnosis) pm.readFragment(child, kb);
+				Solution diag = (Solution) pm.readFragment(child, kb);
 				hierarchiemap.put(child, diag);
 			}
 		}
@@ -306,7 +306,7 @@ public class BasicPersistenceHandler implements
 //		father.appendChild(questionsElement);
 
 		Element diagnosisElement = doc.createElement("Diagnoses");
-		for (Diagnosis diag: kb.getDiagnoses()) {
+		for (Solution diag: kb.getDiagnoses()) {
 			listener.updateProgress(time++/abstime, "Saving knowledge base: diagnosis");
 			Element singleDiagnosisElement = pm.writeFragment(diag, doc);
 			diagnosisElement.appendChild(singleDiagnosisElement);

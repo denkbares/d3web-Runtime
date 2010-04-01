@@ -31,8 +31,6 @@ import de.d3web.core.session.XPSCase;
  */
 public class FormulaNumber extends FormulaNumberPrimitive {
 
-	private static final long serialVersionUID = 4658860639252377370L;
-
 	/** 
 	 * Creates a new FormulaNubmer with 0 as value.
 	 */

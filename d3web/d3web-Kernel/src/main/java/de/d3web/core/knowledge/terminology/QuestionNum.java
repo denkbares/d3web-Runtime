@@ -40,8 +40,6 @@ import de.d3web.core.session.values.AnswerUnknown;
  */
 public class QuestionNum extends Question {
 
- 	private static final long serialVersionUID = 1L;
-
 	public QuestionNum(String id){
 		super(id);
 	}

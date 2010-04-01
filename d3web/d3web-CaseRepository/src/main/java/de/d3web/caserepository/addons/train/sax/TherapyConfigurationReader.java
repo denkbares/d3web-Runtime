@@ -34,7 +34,7 @@ import de.d3web.caserepository.CaseObjectImpl;
 import de.d3web.caserepository.addons.train.TherapyConfiguration;
 import de.d3web.caserepository.sax.AbstractTagReader;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 
 /**
  * 21.10.2003 17:29:59
@@ -115,7 +115,7 @@ public class TherapyConfigurationReader extends AbstractTagReader {
 	private void startLeaf(Attributes attributes) {
 		
 		String did = attributes.getValue("id");
-		Diagnosis d = getKnowledgeBase().searchDiagnosis(did);
+		Solution d = getKnowledgeBase().searchDiagnosis(did);
 		if (d == null) {
 			Logger.getLogger(this.getClass().getName()).warning("no diagnosis found for '" + did + "'");
 			return;

@@ -32,8 +32,6 @@ import de.d3web.core.knowledge.terminology.NamedObject;
  */
 public class ExceptionQuestionNext extends ExceptionQuestion {
 
-	private static final long serialVersionUID = -2690476573123179472L;
-
 	public ExceptionQuestionNext(KnowledgeBase kb, String id, String text) {
 		super(kb, id, text);
 	}

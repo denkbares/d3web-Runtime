@@ -31,7 +31,7 @@ import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -84,7 +84,7 @@ public class KnowledgeBaseManagement {
 
 		// we don't use internal methods, because we need to set
 		// the ID/Name/noParent manually.
-		Diagnosis p000 = new Diagnosis("P000");
+		Solution p000 = new Solution("P000");
 		p000.setName("P000");
 		theK.add(p000);
 
@@ -95,12 +95,12 @@ public class KnowledgeBaseManagement {
 		return theK;
 	}
 
-	public Diagnosis createDiagnosis(String id, String name, Diagnosis parent) {
-		Diagnosis d;
+	public Solution createDiagnosis(String id, String name, Solution parent) {
+		Solution d;
 		if (id==null) {
-			d = new Diagnosis(findNewIDFor(Diagnosis.class));
+			d = new Solution(findNewIDFor(Solution.class));
 		} else {
-			d = new Diagnosis(id);
+			d = new Solution(id);
 		}
 		d.setName(name);
 		addToParent(d, parent);
@@ -108,11 +108,11 @@ public class KnowledgeBaseManagement {
 		return d;
 	}
 
-	public Diagnosis createDiagnosis(String name, Diagnosis parent) {
+	public Solution createDiagnosis(String name, Solution parent) {
 		return createDiagnosis(null, name, parent);
 	}
 	
-	public Diagnosis createDiagnosis(String id, String name) {
+	public Solution createDiagnosis(String id, String name) {
 		return createDiagnosis(id, name, knowledgeBase.getRootDiagnosis());
 	}
 	
@@ -123,7 +123,7 @@ public class KnowledgeBaseManagement {
 	 * @param name The name of the new solution
 	 * @return the newly created solution
 	 */
-	public Diagnosis createDiagnosis(String name) {
+	public Solution createDiagnosis(String name) {
 		return createDiagnosis(name, knowledgeBase.getRootDiagnosis());
 	}
 	
@@ -362,9 +362,9 @@ public class KnowledgeBaseManagement {
 	 *            a specified name string
 	 * @return a Diagnosis object or null, if nothing found
 	 */
-	public Diagnosis findDiagnosis(String name) {
+	public Solution findDiagnosis(String name) {
 		NamedObject o = findNamedObject(name, knowledgeBase.getDiagnoses());
-		if(o instanceof Diagnosis) return (Diagnosis)o;
+		if(o instanceof Solution) return (Solution)o;
 		return null;
 	}
 
@@ -468,7 +468,7 @@ public class KnowledgeBaseManagement {
 	}
 
 	public String findNewIDFor(Class<? extends IDObject> o) {
-		if (o == Diagnosis.class) {
+		if (o == Solution.class) {
 			int idC = getMaxCountOf(knowledgeBase.getDiagnoses()) + 1;
 			return "P" + idC;
 
@@ -589,7 +589,7 @@ public class KnowledgeBaseManagement {
 		if (parent != null) {
 			parent.addChild(theObject);
 		} else {
-			if (theObject instanceof Diagnosis) {
+			if (theObject instanceof Solution) {
 				knowledgeBase.getRootDiagnosis().addChild(theObject);
 			} else if (theObject instanceof QASet) {
 				knowledgeBase.getRootQASet().addChild(theObject);

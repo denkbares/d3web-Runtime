@@ -19,7 +19,6 @@
  */
 
 package de.d3web.core.knowledge.terminology.info;
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -29,9 +28,8 @@ import java.util.Set;
  * 
  * @author bates, hoernlein
  */
-public class MMInfoStorage implements Serializable {
+public class MMInfoStorage {
 	
-	private static final long serialVersionUID = -3808620586019274794L;
 	private Set<MMInfoObject> mmios = new LinkedHashSet<MMInfoObject>();
 
 	public void addMMInfo(MMInfoObject mmio) { mmios.add(mmio); }

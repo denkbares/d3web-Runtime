@@ -46,7 +46,7 @@ import javax.xml.stream.XMLStreamWriter;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -372,7 +372,7 @@ public class TestPersistence {
 			}
 
 		} else if (elName.equals(SOLUTION)) {
-			Diagnosis d = null;
+			Solution d = null;
 			try {
 				d = bh.getDiagnosisByIDorText(sr.getAttributeValue(null, NAME), kb);
 			} catch (Exception e) {
@@ -425,9 +425,9 @@ public class TestPersistence {
 		}
 	}
 	
-	private Collection<Diagnosis> computeUsedSolutions(
+	private Collection<Solution> computeUsedSolutions(
 			List<SequentialTestCase> theTestCases) {
-		Set<Diagnosis> solutions = new HashSet<Diagnosis>();
+		Set<Solution> solutions = new HashSet<Solution>();
 		for (SequentialTestCase sequentialTestCase : theTestCases) {
 			for (RatedTestCase rCase : sequentialTestCase.getCases()) {
 				for (RatedSolution rSolution : rCase.getExpectedSolutions()) {

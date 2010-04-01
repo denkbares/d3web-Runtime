@@ -31,7 +31,7 @@ import de.d3web.core.io.fragments.DiagnosisHandler;
 import de.d3web.core.io.fragments.QContainerHandler;
 import de.d3web.core.io.fragments.QuestionHandler;
 import de.d3web.core.io.utilities.Util;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionDate;
@@ -194,10 +194,10 @@ public class KnowledgeBaseExportTest extends TestCase {
 
 	
 	public void testDiagnosisOutput() throws Exception{
-		Diagnosis diag = new Diagnosis("d1");
+		Solution diag = new Solution("d1");
 		diag.setName("d1-text");
 
-		Diagnosis diagChild = new Diagnosis("d11");
+		Solution diagChild = new Solution("d11");
 		diagChild.setName("d11-text");
 		diagChild.addParent(diag);
 		

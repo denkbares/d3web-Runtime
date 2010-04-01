@@ -29,8 +29,6 @@ import de.d3web.core.session.values.AnswerNum;
  */
 public class QuestionComparatorNumDivision extends QuestionComparatorNum {
 
-	private static final long serialVersionUID = -2797253845633333005L;
-
 	public double compare(List<?> ans1, List<?> ans2) {
 
 		try {

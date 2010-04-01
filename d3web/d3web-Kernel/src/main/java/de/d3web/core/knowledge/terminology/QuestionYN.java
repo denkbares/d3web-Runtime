@@ -33,7 +33,6 @@ import de.d3web.core.utilities.Utils;
  */
 public class QuestionYN extends QuestionOC {
 
-   private static final long serialVersionUID = 756090022125833331L;
 	protected final static String YES_STRING = "Yes";
     protected final static String NO_STRING = "No";
 

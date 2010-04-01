@@ -4,7 +4,7 @@ import java.util.Collection;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.XPSCase;
@@ -28,7 +28,7 @@ public class PSMethodSCMCBR extends PSMethodAdapter {
 		return instance;
 	}
 	
-	public DiagnosisState getState(XPSCase theCase, Diagnosis diagnosis) {
+	public DiagnosisState getState(XPSCase theCase, Solution diagnosis) {
 		KnowledgeSlice models = diagnosis.getKnowledge(PSMethodSCMCBR.class, SCMCBRModel.SCMCBR);
 		if (models == null) return DiagnosisState.UNCLEAR; 
 		SCMCBRModel model = (SCMCBRModel) models;

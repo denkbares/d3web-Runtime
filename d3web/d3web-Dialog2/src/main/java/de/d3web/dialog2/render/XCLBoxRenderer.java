@@ -29,7 +29,7 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.XPSCase;
 import de.d3web.dialog2.util.DialogUtils;
@@ -98,7 +98,7 @@ public class XCLBoxRenderer extends Renderer {
 	for (KnowledgeSlice d : sortedDiags) {
 	    if (d instanceof XCLModel) {
 		XCLModel model = (XCLModel) d;
-		Diagnosis origDiag = model.getSolution();
+		Solution origDiag = model.getSolution();
 		DiagnosisState state = model.getState(theCase);
 
 		double score = model.getInferenceTrace(theCase).getScore();

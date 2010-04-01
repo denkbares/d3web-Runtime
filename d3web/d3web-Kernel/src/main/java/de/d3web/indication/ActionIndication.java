@@ -32,8 +32,6 @@ import de.d3web.core.knowledge.terminology.QASet;
  */
 public class ActionIndication extends ActionNextQASet {
 
-	private static final long serialVersionUID = 272476961557836941L;
-
 	/**
 	 * Creates a new indication action for the given corresponding rule
 	 */

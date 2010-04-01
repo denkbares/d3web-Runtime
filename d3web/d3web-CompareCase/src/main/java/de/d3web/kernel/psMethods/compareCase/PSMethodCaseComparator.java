@@ -25,7 +25,7 @@ import java.util.List;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.Fact;
@@ -81,7 +81,7 @@ public class PSMethodCaseComparator implements PSMethod {
 	 * @return EasyXPS.domainModel.DiagnosisState
 	 * @param theCase EasyXPS.domainModel.XPSCase
 	 */
-	public DiagnosisState getState(XPSCase theCase, Diagnosis diagnosis) {
+	public DiagnosisState getState(XPSCase theCase, Solution diagnosis) {
 		//TODO: vb: das ist falsch. diagnosis.getState ruft wiederum diese Method auf. Hier liegt eine Endlosrekursion vor, oder?
 		return diagnosis.getState(theCase, PSMethodCaseComparator.class);
 	}

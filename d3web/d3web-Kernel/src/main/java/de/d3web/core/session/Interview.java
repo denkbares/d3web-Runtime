@@ -1,7 +1,7 @@
 package de.d3web.core.session;
 
 import de.d3web.core.knowledge.InterviewObject;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.Question;
 
 public interface Interview {
@@ -17,7 +17,7 @@ public interface Interview {
 	 * {@link Question#isValid(de.d3web.kernel.XPSCase)}.
 	 * <li> {@link Question}: The caller should only answer exactly that
 	 * question.
-	 * <li> {@link Diagnosis}: The caller should present the user exactly that
+	 * <li> {@link Solution}: The caller should present the user exactly that
 	 * solution and "answer" it by setting a state for this solution.
 	 * </ul>
 	 * 

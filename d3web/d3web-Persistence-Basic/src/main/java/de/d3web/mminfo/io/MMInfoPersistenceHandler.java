@@ -43,7 +43,7 @@ import de.d3web.core.io.utilities.IDObjectComparator;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -155,7 +155,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		float aktvalue=0;
 		
 		List<QContainer> qContainers = kb.getQContainers();
-		List<Diagnosis> diagnoses = kb.getDiagnoses();
+		List<Solution> diagnoses = kb.getDiagnoses();
 		List<Question> questions = kb.getQuestions();
 		Collections.sort(questions, new IDObjectComparator());
 		Collections.sort(qContainers, new IDObjectComparator());
@@ -176,9 +176,9 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		root.appendChild(mmiElement);
 		
 		// diagnoses
-		Iterator<Diagnosis> diter = diagnoses.iterator();
+		Iterator<Solution> diter = diagnoses.iterator();
 		while (diter.hasNext()) {
-			Diagnosis d = diter.next();
+			Solution d = diter.next();
 			MMInfoStorage mms = (MMInfoStorage) d.getProperties().getProperty(Property.MMINFO);
 			if (mms != null) {
 				listener.updateProgress(aktvalue++/maxvalue, "Saving multimedia "+Math.round(aktvalue)+" of "+ maxvalue);
@@ -226,16 +226,16 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 	public int getEstimatedSize(KnowledgeBase kb) {
 		int count = 0;
 
-		List<Diagnosis> diagnoses = kb.getDiagnoses();
+		List<Solution> diagnoses = kb.getDiagnoses();
 		List<QContainer> qcontainers = kb.getQContainers();
 		List<Question> questions = kb.getQuestions();
 		List<AnswerChoice> answers = catchAnswersFromQuestions(questions);
 
 		// diagnoses
 
-		Iterator<Diagnosis> diter = diagnoses.iterator();
+		Iterator<Solution> diter = diagnoses.iterator();
 		while (diter.hasNext()) {
-			Diagnosis d = diter.next();
+			Solution d = diter.next();
 			MMInfoStorage mms = (MMInfoStorage) d.getProperties().getProperty(Property.MMINFO);
 			if (mms != null) {
 				count++;

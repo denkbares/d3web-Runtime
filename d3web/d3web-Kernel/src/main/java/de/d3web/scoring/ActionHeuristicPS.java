@@ -28,7 +28,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.RuleSet;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.D3WebCase;
 import de.d3web.core.session.XPSCase;
@@ -42,8 +42,7 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  */
 public class ActionHeuristicPS extends PSAction {
 	
-	private static final long serialVersionUID = -717940157732427270L;
-	private Diagnosis diagnosis;
+	private Solution diagnosis;
 	private Score score;
 
 	public String toString() {
@@ -64,7 +63,7 @@ public class ActionHeuristicPS extends PSAction {
 	 * @return all objects participating on the action.<BR>
 	 */
 	public List<? extends NamedObject> getTerminalObjects() {
-		List<Diagnosis> terminals = new ArrayList<Diagnosis>(1);
+		List<Solution> terminals = new ArrayList<Solution>(1);
 		if (getDiagnosis() != null) {
 			terminals.add(getDiagnosis());
 		}
@@ -98,7 +97,7 @@ public class ActionHeuristicPS extends PSAction {
 	/**
 	 * @return the Diagnosis this Action can add scores to
 	 */
-	public Diagnosis getDiagnosis() {
+	public Solution getDiagnosis() {
 		return diagnosis;
 	}
 
@@ -119,7 +118,7 @@ public class ActionHeuristicPS extends PSAction {
 		/**
 	 * sets the given Diagnosis and resets the corresponding rule as Knowledge slice 
 	 */
-	public void setDiagnosis(Diagnosis theDiagnosis) {
+	public void setDiagnosis(Solution theDiagnosis) {
 		diagnosis = theDiagnosis;
 	}
 

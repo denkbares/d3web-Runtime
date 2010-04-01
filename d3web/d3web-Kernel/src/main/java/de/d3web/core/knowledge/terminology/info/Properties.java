@@ -29,10 +29,8 @@ import java.util.Set;
  * @see de.d3web.core.knowledge.terminology.info.PropertiesContainer
  * @author hoernlein
  */
-public class Properties implements java.io.Serializable {
+public class Properties {
 	
-	private static final long serialVersionUID = 3220708494712501553L;
-
 	public String toString() {
 	return properties.toString();}
 	

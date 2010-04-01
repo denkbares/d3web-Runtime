@@ -34,8 +34,7 @@ import java.util.List;
  * @author hoernlein
  * 
  */
-public class MMInfoSubject implements java.io.Serializable {
-	private static final long serialVersionUID = 4496885373902478779L;
+public class MMInfoSubject {
 
 	private String name;
 	private MMInfoSubject() { /* hide empty constructor */ }

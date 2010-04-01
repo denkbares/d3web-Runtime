@@ -30,8 +30,6 @@ import de.d3web.kernel.psMethods.shared.comparators.PairRelation;
 public class QuestionComparatorMCGroupedAsymmetric extends
 		QuestionComparatorMCGrouped implements GroupedComparatorAsymmetric{
 
-	private static final long serialVersionUID = -2538401656126234739L;
-
 	public double compare(List<?> answers1, List<?> answers2) {
 		try {
 			AnswerChoice ans1 = (AnswerChoice) answers1.get(0);

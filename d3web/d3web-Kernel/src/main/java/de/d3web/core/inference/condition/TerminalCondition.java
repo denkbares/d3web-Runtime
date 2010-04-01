@@ -34,7 +34,6 @@ import de.d3web.core.knowledge.terminology.NamedObject;
  */
 public abstract class TerminalCondition implements Condition {
 	
-	private static final long serialVersionUID = 985715059851028211L;
 	private List<NamedObject> terminal = new ArrayList<NamedObject>(1);
 
 	/**

@@ -33,7 +33,6 @@ import java.util.List;
  */
 public class DefaultQuestionComparator extends QuestionComparator {
 
-	private static final long serialVersionUID = -7001760486842461686L;
 	private static DefaultQuestionComparator instance = null;
 	
 	private DefaultQuestionComparator() {

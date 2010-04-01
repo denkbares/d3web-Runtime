@@ -30,7 +30,7 @@ import java.util.Collection;
  * Creation date: (14.08.2000 15:40:15)
  * @author Norman Brümmer
  */
-public interface FormulaElement extends java.io.Serializable {
+public interface FormulaElement {
 
 
 	/**

@@ -27,7 +27,6 @@ import de.d3web.core.knowledge.terminology.Question;
 
 public abstract class AbstractAbnormality implements KnowledgeSlice {
 
-	private static final long serialVersionUID = -6145840249505356476L;
 	public static double A0 = 0;
 	public static double A1 = 0.0625;
 	public static double A2 = 0.125;

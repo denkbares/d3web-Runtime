@@ -32,8 +32,6 @@ import de.d3web.kernel.psMethods.shared.comparators.QuestionComparator;
  */
 public abstract class QuestionComparatorNum extends QuestionComparator {
 
-	private static final long serialVersionUID = -1992509726813677004L;
-
 	public double compare(List<?> ans1, List<?> ans2) {
 		Object o1 = convertToIntervalOrDouble(ans1);
 		Object o2 = convertToIntervalOrDouble(ans2);

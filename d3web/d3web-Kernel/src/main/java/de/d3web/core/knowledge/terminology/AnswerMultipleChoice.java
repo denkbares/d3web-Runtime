@@ -10,7 +10,6 @@ import de.d3web.core.session.values.AnswerChoice;
 
 public class AnswerMultipleChoice extends Answer {
 
-	private static final long serialVersionUID = 1L;
 	private List<AnswerChoice> choices = new ArrayList<AnswerChoice>();
 	
 

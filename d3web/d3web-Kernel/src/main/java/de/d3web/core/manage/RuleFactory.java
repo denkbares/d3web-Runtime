@@ -30,7 +30,7 @@ import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.condition.Condition;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -97,7 +97,7 @@ public class RuleFactory {
 	public static Rule createClarificationRule(
 		String theId,
 		List<QASet> theAction,
-		Diagnosis target,
+		Solution target,
 		Condition theCondition) {
 
 		return createClarificationRule(
@@ -114,7 +114,7 @@ public class RuleFactory {
 	public static Rule createClarificationRule(
 		String theId,
 		List<QASet> theAction,
-		Diagnosis target,
+		Solution target,
 		Condition theCondition,
 		Condition theRuleException) {
 
@@ -161,13 +161,13 @@ public class RuleFactory {
 	/**
 	 * Creates a heuristic-rule with the specified parameters.
 	 * @param String theId
-	 * @param Diagnosis theDiagnosisAction
+	 * @param Solution theDiagnosisAction
 	 * @param Score theDiagnosisScore
 	 * @param Condition theCondition
 	 */
 	public static Rule createHeuristicPSRule(
 		String theId,
-		Diagnosis theDiagnosisAction,
+		Solution theDiagnosisAction,
 		Score theDiagnosisScore,
 		Condition theCondition) {
 
@@ -191,7 +191,7 @@ public class RuleFactory {
 	 */
 	public static Rule createHeuristicPSRule(
 		String theId,
-		Diagnosis theDiagnosisAction,
+		Solution theDiagnosisAction,
 		Score theDiagnosisScore,
 		Condition theCondition,
 		Condition theRuleException) {
@@ -304,7 +304,7 @@ public class RuleFactory {
 	public static Rule createRefinementRule(
 		String theId,
 		List<QASet> theAction,
-		Diagnosis target,
+		Solution target,
 		Condition theCondition) {
 
 		return createRefinementRule(
@@ -321,7 +321,7 @@ public class RuleFactory {
 	public static Rule createRefinementRule(
 		String theId,
 		List<QASet> theAction,
-		Diagnosis target,
+		Solution target,
 		Condition theCondition,
 		Condition theRuleException) {
 

@@ -13,8 +13,7 @@ import java.util.logging.Logger;
  * @author Joachim Baumeister / hoernlein
  * @see de.d3web.core.knowledge.terminology.info.Properties
  */
-public class Property implements java.io.Serializable {
-	private static final long serialVersionUID = -1016612117059425424L;
+public class Property {
 
 	/**
 	 * used for: {KnowledgeBase, QASet, QContainer, QuestionChoice, Answer, ...}

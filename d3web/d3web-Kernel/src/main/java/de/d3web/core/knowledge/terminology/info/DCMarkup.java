@@ -30,9 +30,8 @@ import java.util.Map;
  * @see de.d3web.core.knowledge.terminology.info.DCMarkedUp
  * @author hoernlein
  */
-public class DCMarkup implements java.io.Serializable {
+public class DCMarkup {
 	
-	private static final long serialVersionUID = 1362896727981840722L;
 	private Map<DCElement, String> data = new HashMap<DCElement, String>(15);
 	
 	/**

@@ -28,7 +28,7 @@ import java.util.Map;
 
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.XPSCase;
@@ -59,7 +59,7 @@ public class EDSMethod extends PSSubMethod {
 	 * innerMap key:	parentDiagnosis
 	 * innerMap Object:	list of ChangeOfDiagnosis
 	 */
-	private Map<XPSCase, Map<Diagnosis, List<ChangeOfDiagnosis>>> hDT_excludedDiagnoses = new HashMap<XPSCase, Map<Diagnosis, List<ChangeOfDiagnosis>>>();
+	private Map<XPSCase, Map<Solution, List<ChangeOfDiagnosis>>> hDT_excludedDiagnoses = new HashMap<XPSCase, Map<Solution, List<ChangeOfDiagnosis>>>();
 	Class<PSMethodHeuristic> PSCONTEXT = PSMethodHeuristic.class;
 	
 	/**
@@ -67,17 +67,17 @@ public class EDSMethod extends PSSubMethod {
 	 * @author Peter Klügl
 	 */
 	private class ChangeOfDiagnosis {
-		private Diagnosis diagnosis;
+		private Solution diagnosis;
 		private Score score;
 		
-		public ChangeOfDiagnosis(Diagnosis diagnosis, Score score) {
+		public ChangeOfDiagnosis(Solution diagnosis, Score score) {
 			setDiagnosis(diagnosis);
 			setScore(score);
 		}
-		public Diagnosis getDiagnosis() {
+		public Solution getDiagnosis() {
 			return diagnosis;
 		}
-		public void setDiagnosis(Diagnosis diagnosis) {
+		public void setDiagnosis(Solution diagnosis) {
 			this.diagnosis = diagnosis;
 		}
 		public Score getScore() {
@@ -103,8 +103,8 @@ public class EDSMethod extends PSSubMethod {
 	 */
 	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
 		for (PropagationEntry change : changes) {
-			if (change.getObject() instanceof Diagnosis) {
-				Diagnosis diagnosis = (Diagnosis) change.getObject();
+			if (change.getObject() instanceof Solution) {
+				Solution diagnosis = (Solution) change.getObject();
 				checkMap(theCase);
 				if (isExcluded(theCase, diagnosis)) {
 					setAllChildrenToExcluded(theCase, diagnosis);
@@ -121,14 +121,14 @@ public class EDSMethod extends PSSubMethod {
 	 * @param theCase
 	 * @param parentDiagnosis
 	 */
-	private void setAllChildrenToExcluded(XPSCase theCase, Diagnosis parentDiagnosis) {
-		Map<Diagnosis, List<ChangeOfDiagnosis>> innerMap = getInnerMap(theCase);
+	private void setAllChildrenToExcluded(XPSCase theCase, Solution parentDiagnosis) {
+		Map<Solution, List<ChangeOfDiagnosis>> innerMap = getInnerMap(theCase);
 		TerminologyObject[] children = parentDiagnosis.getChildren();
 		if (children == null || children.length==0)
 			return;
 		for (TerminologyObject object : children) {
-			if(object instanceof Diagnosis) {
-				Diagnosis eachDiagnosis = (Diagnosis) object;
+			if(object instanceof Solution) {
+				Solution eachDiagnosis = (Solution) object;
 				if (eachDiagnosis.getState(theCase, PSCONTEXT).equals(DiagnosisState.UNCLEAR)) {
 					rememberChange(theCase, innerMap, parentDiagnosis, eachDiagnosis);
 					setDiagnosisToExcluded(theCase, eachDiagnosis);
@@ -141,7 +141,7 @@ public class EDSMethod extends PSSubMethod {
 	 * @param parentDiagnosis
 	 * @param diagnosis
 	 */
-	private void rememberChange(XPSCase theCase, Map<Diagnosis, List<ChangeOfDiagnosis>> innerMap, Diagnosis parentDiagnosis, Diagnosis diagnosis) {
+	private void rememberChange(XPSCase theCase, Map<Solution, List<ChangeOfDiagnosis>> innerMap, Solution parentDiagnosis, Solution diagnosis) {
 		List<ChangeOfDiagnosis> listOfChanges = innerMap.get(parentDiagnosis);
 		if(listOfChanges == null) {
 			listOfChanges = new LinkedList<ChangeOfDiagnosis>();
@@ -161,7 +161,7 @@ public class EDSMethod extends PSSubMethod {
 	 * @param theCase
 	 * @param diagnosis
 	 */
-	private DiagnosisScore setDiagnosisToExcluded(XPSCase theCase, Diagnosis diagnosis) {
+	private DiagnosisScore setDiagnosisToExcluded(XPSCase theCase, Solution diagnosis) {
 		DiagnosisScore resultDS = diagnosis.getScore(theCase, PSCONTEXT).add(getDifferenceToExcluded(theCase, diagnosis));
 		theCase.setValue(diagnosis, new Object[] { resultDS }, PSCONTEXT);
 		return resultDS;
@@ -172,8 +172,8 @@ public class EDSMethod extends PSSubMethod {
 	 * @param theCase
 	 * @param diagnosis
 	 */
-	private void resetAllChildren(XPSCase theCase, Diagnosis diagnosis) {
-		Map<Diagnosis, List<ChangeOfDiagnosis>> innerMap = getInnerMap(theCase);
+	private void resetAllChildren(XPSCase theCase, Solution diagnosis) {
+		Map<Solution, List<ChangeOfDiagnosis>> innerMap = getInnerMap(theCase);
 		List<ChangeOfDiagnosis> listOfChanges = innerMap.get(diagnosis);
 		if(listOfChanges == null || listOfChanges.isEmpty())
 			return;
@@ -182,8 +182,8 @@ public class EDSMethod extends PSSubMethod {
 			return;
 		}
 		for (TerminologyObject object : children) {
-			if(object instanceof Diagnosis) {
-				Diagnosis eachChildren = (Diagnosis) object;
+			if(object instanceof Solution) {
+				Solution eachChildren = (Solution) object;
 				ChangeOfDiagnosis change = getChangeOf(listOfChanges, eachChildren);
 				if (change != null) {
 					innerMap.remove(diagnosis);
@@ -195,10 +195,10 @@ public class EDSMethod extends PSSubMethod {
 	}
 	
 
-	private boolean isExcluded(XPSCase theCase, Diagnosis diagnosis) {
+	private boolean isExcluded(XPSCase theCase, Solution diagnosis) {
 		return diagnosis.getState(theCase, PSCONTEXT).equals(DiagnosisState.EXCLUDED);
 	}
-	private boolean wasExcluded(XPSCase theCase, Diagnosis diagnosis) {
+	private boolean wasExcluded(XPSCase theCase, Solution diagnosis) {
 		return hDT_excludedDiagnoses.get(theCase).containsKey(diagnosis);
 	}
 	
@@ -217,7 +217,7 @@ public class EDSMethod extends PSSubMethod {
 	 * @param diagnosis
 	 * @return the correct Tupel
 	 */
-	private ChangeOfDiagnosis getChangeOf(List<ChangeOfDiagnosis> listOfChanges, Diagnosis diagnosis) {
+	private ChangeOfDiagnosis getChangeOf(List<ChangeOfDiagnosis> listOfChanges, Solution diagnosis) {
 		for (ChangeOfDiagnosis change : listOfChanges) {
 			if(change.getDiagnosis().equals(diagnosis))
 				return change;
@@ -232,7 +232,7 @@ public class EDSMethod extends PSSubMethod {
 	 */
 	private void checkMap(XPSCase theCase) {
 		if(!hDT_excludedDiagnoses.containsKey(theCase)) {
-			Map<Diagnosis, List<ChangeOfDiagnosis>> innerMap = new HashMap<Diagnosis, List<ChangeOfDiagnosis>>();
+			Map<Solution, List<ChangeOfDiagnosis>> innerMap = new HashMap<Solution, List<ChangeOfDiagnosis>>();
 			hDT_excludedDiagnoses.put(theCase, innerMap);
 		}
 	}
@@ -242,7 +242,7 @@ public class EDSMethod extends PSSubMethod {
 	 * @param theCase
 	 * @return HashMap (innerMap) of the changes of the child - diagnoses
  	 */
-	private Map<Diagnosis, List<ChangeOfDiagnosis>> getInnerMap(XPSCase theCase) {
+	private Map<Solution, List<ChangeOfDiagnosis>> getInnerMap(XPSCase theCase) {
 		return hDT_excludedDiagnoses.get(theCase);
 	}
 	/**
@@ -251,7 +251,7 @@ public class EDSMethod extends PSSubMethod {
 	 * @param diagnosis
 	 * @return the Score that the diagnosis need to be suggested
 	 */
-	private Score getDifferenceToExcluded(XPSCase theCase, Diagnosis diagnosis) {		
+	private Score getDifferenceToExcluded(XPSCase theCase, Solution diagnosis) {		
 		double diff = getScoreForExcludedDiagnosis() - diagnosis.getScore(theCase, PSCONTEXT).getScore();
 		//[HOTFIX]: Peter: hat hier nix zu suchen!!
 		if (diff >= Score.N1.getScore())

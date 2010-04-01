@@ -29,7 +29,7 @@ import de.d3web.scoring.HeuristicRating;
  * state is computed with respect to the score a diagnosis.
  * 
  * @author joba, Christian Betz
- * @see Diagnosis
+ * @see Solution
  * @see DiagnosisScore
  */
 public class DiagnosisState implements Value {

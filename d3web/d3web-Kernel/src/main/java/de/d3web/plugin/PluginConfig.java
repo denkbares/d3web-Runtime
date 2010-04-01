@@ -33,8 +33,6 @@ import de.d3web.core.session.XPSCase;
  */
 public class PluginConfig implements KnowledgeSlice {
 
-	private static final long serialVersionUID = -3148626378108269574L;
-
 	private KnowledgeBase kb;
 	private HashMap<String, PluginEntry> entries = new HashMap<String, PluginEntry>();
 	

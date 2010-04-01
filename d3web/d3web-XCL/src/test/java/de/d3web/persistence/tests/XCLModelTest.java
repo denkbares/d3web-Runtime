@@ -32,7 +32,7 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.Properties;
@@ -57,7 +57,7 @@ public class XCLModelTest extends TestCase{
 		XCLModel model;
 		KnowledgeBase k ;
 		KnowledgeBaseManagement kbm=KnowledgeBaseManagement.createInstance();
-		Diagnosis  terminator = new Diagnosis("D1");
+		Solution  terminator = new Solution("D1");
 		
 		QuestionOC genre = new QuestionOC("GENRE");
 		AnswerChoice action; 
@@ -132,7 +132,7 @@ public class XCLModelTest extends TestCase{
 
 		private void createKnowledgeBase() {
 			k=kbm.getKnowledgeBase();
-			Diagnosis rootdia=k.getRootDiagnosis();
+			Solution rootdia=k.getRootDiagnosis();
 			QContainer rootContainer = (QContainer) k.getRootQASet();
 			
 			// init diagnosis "Terminator"

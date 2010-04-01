@@ -32,8 +32,6 @@ import de.d3web.kernel.psMethods.shared.comparators.IndividualComparator;
  */
 public class QuestionComparatorMCIndividual extends QuestionComparatorMC implements IndividualComparator {
 
-	private static final long serialVersionUID = 7222326846652642522L;
-
 	public double compare(List<?> ans1, List<?> ans2) {
 		List<Answer> proved = new LinkedList<Answer>();
 		double compCount = 0;

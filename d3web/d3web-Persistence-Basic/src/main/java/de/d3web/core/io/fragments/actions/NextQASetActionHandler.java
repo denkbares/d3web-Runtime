@@ -30,7 +30,7 @@ import de.d3web.core.inference.PSAction;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Diagnosis;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.indication.ActionClarify;
 import de.d3web.indication.ActionIndication;
@@ -62,13 +62,13 @@ public class NextQASetActionHandler implements FragmentHandler {
 		String type = element.getAttribute("type");
 		List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
 		List<QASet> qaSets = null;
-		Diagnosis diag = null;
+		Solution diag = null;
 		for (Element child: childNodes) {
 			if (child.getNodeName().equalsIgnoreCase("targetQASets")) {
 				qaSets = XMLUtil.getTargetQASets((Element) child, kb);
 			} else if (child.getNodeName().equalsIgnoreCase("targetDiagnosis")) {
 				String id = child.getAttributes().getNamedItem("ID").getNodeValue();
-				diag = (Diagnosis) kb.search(id);
+				diag = (Solution) kb.search(id);
 			}
 		}
 		PSAction action = null;
@@ -123,7 +123,7 @@ public class NextQASetActionHandler implements FragmentHandler {
 		return element;
 	}
 	
-	private void appendDiag(Document doc, Element element, Diagnosis diag) {
+	private void appendDiag(Document doc, Element element, Solution diag) {
 		Element diagElement = doc.createElement("targetDiagnosis");
 		if (diag != null) {
 			diagElement.setAttribute("ID", diag.getId());
