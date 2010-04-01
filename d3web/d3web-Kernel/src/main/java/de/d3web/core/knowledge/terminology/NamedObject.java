@@ -52,7 +52,7 @@ import de.d3web.core.session.XPSCase;
  * @see de.d3web.core.knowledge.terminology.IDObject
  * @see de.d3web.kernel.misc.PropertiesAdapter
  */
-public abstract class NamedObject extends IDObject implements CaseObjectSource,
+public abstract class NamedObject implements IDObject, CaseObjectSource,
 		KnowledgeContainer, PropertiesContainer {
 
 	private static final long serialVersionUID = -3561319946758513307L;
@@ -99,6 +99,8 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	 */
 	private transient Map<Class<? extends PSMethod>, Map<MethodKind, KnowledgeSlice>> knowledgeMap;
 
+	private String id;
+
 	public static final int BEFORE = 1;
 
 	public static final int AFTER = 2;
@@ -120,8 +122,13 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	 * @param id The global identifier of the instance
 	 */
 	public NamedObject(String id) {
-		super(id);
+		this.id = id;
 		init();
+	}
+	
+	@Override
+	public String getId() {
+		return id;
 	}
 
 	/**
@@ -695,6 +702,28 @@ public abstract class NamedObject extends IDObject implements CaseObjectSource,
 	 */
 	private Collection<NamedObject> getLinkedParents() {
 		return linkedParents;
+	}
+	
+	/**
+	 * Checks, if other object is an IDObject and if
+	 * it contains the same ID.
+	 * @return true, if equal
+	 * @param other Object to compare for equality
+	 */
+	@Override
+	public boolean equals(Object other) {
+		if (this == other)
+			return true;
+		else if ((other == null) || (getClass() != other.getClass())) {
+			return false;
+		} else {
+			IDObject otherIDO = (IDObject) other;
+			if ((getId() != null) && (otherIDO.getId() != null)) {
+				return getId().equals(otherIDO.getId());
+			} else {
+				return super.equals(other);
+			}
+		}
 	}
 
 }

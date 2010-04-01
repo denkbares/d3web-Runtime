@@ -234,7 +234,7 @@ public class XMLRenderer {
 		sb.append("<AnswerChoice ID=\"");
 		sb.append(answer.getId());
 		sb.append("\"><![CDATA[");
-		sb.append(answer.getText());
+		sb.append(answer.getName());
 		sb.append("]]></AnswerChoice>");
 		return(sb);
 	}

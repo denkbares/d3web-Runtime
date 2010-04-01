@@ -320,8 +320,8 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 					Answer newAnswer = (Answer) actionValues[0];
 					if ((severestAnswer != null) && (!severestAnswer.equals(newAnswer))) {
 						theCase.trace("(" + siQuestionOC.getId() + "): of \""
-								+ ((AnswerChoice) severestAnswer).getText() + "\" and \""
-								+ ((AnswerChoice) newAnswer).getText() + "\"");
+								+ ((AnswerChoice) severestAnswer).getName() + "\" and \""
+								+ ((AnswerChoice) newAnswer).getName() + "\"");
 						int i = 0;
 						boolean found = false;
 						while ((i < allAnswers.length) && (!found)) {
@@ -335,7 +335,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 							i++;
 						}
 						theCase.trace(" take \""
-								+ ((AnswerChoice) severestAnswer).getText()
+								+ ((AnswerChoice) severestAnswer).getName()
 								+ "\"");
 					}
 					else {

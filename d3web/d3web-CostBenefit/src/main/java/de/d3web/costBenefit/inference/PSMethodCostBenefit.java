@@ -208,7 +208,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 				QuestionOC qoc = (QuestionOC) nob;
 				List<AnswerChoice> choices = qoc.getAllAlternatives();
 				if (choices.size() == 1
-						&& "OK".equals(choices.get(0).getText())) {
+						&& "OK".equals(choices.get(0).getName())) {
 					qoc.setValue(theCase, new Answer[0]);
 					theCase.getAnsweredQuestions().remove(qoc);
 				}

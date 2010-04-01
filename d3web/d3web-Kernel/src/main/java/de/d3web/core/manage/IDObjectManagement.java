@@ -89,4 +89,6 @@ public interface IDObjectManagement {
 	String findNewIDForAnswerChoice(QuestionChoice currentQuestion);
 
 	String findNewIDFor(Class<? extends IDObject> object);
+	
+	String createRuleID();
 }

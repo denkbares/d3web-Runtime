@@ -1,15 +1,15 @@
 package de.d3web.core.knowledge;
 
+import de.d3web.core.knowledge.terminology.IDObject;
 
 
-public interface TerminologyObject {
+
+public interface TerminologyObject extends IDObject {
 	
-	// --- header information ---
-	//String getId();
-	//String getName();
+	
 	
 	// --- structure of terminology ---
-	//TerminologyObject[] getParents();
+//	TerminologyObject[] getParents();
 	//TerminologyObject[] getChildren();
 
 	// --- storing knowledge ---

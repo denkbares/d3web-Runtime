@@ -131,7 +131,6 @@ public class QuestionNum extends Question {
 		} else {
 			Logger.getLogger(this.getClass().getName()).warning("wrong number of answers");
 		}
-		notifyListeners(theCase,this);
 	}
 
 	public void setValue(XPSCase theCase, Answer value) {
@@ -154,7 +153,6 @@ public class QuestionNum extends Question {
 					answerNum);
 			}
 		} 
-		notifyListeners(theCase,this);
 	}
 
 	/**

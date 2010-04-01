@@ -511,10 +511,10 @@ public class ExplanationRendererUtils {
 			Answer ans = ce.getValues();
 			if (ans instanceof AnswerChoice) {
 					AnswerChoice ansC = (AnswerChoice) ans;
-					writer.writeText(ansC.getText() + " (" + ansC.getId()+ ")", "value");
+					writer.writeText(ansC.getName() + " (" + ansC.getId()+ ")", "value");
 			} else if (ans instanceof AnswerMultipleChoice) {
 				AnswerMultipleChoice ansC = (AnswerMultipleChoice) ans;
-				writer.writeText(ansC.getText() + " (" + ansC.getId()+ ")", "value");
+				writer.writeText(ansC.getName() + " (" + ansC.getId()+ ")", "value");
 			} else if (ans instanceof AnswerUnknown) {
 					writer.writeText(AnswerUnknown.UNKNOWN_VALUE, "value");
 			}

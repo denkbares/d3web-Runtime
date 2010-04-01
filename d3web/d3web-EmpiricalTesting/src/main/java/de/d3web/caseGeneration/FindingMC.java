@@ -55,7 +55,7 @@ public class FindingMC {
 					List<Answer> answers = new ArrayList<Answer>();
 					for (AnswerChoice answer : ((QuestionMC) q).getAllAlternatives()) {
 						for (String s : answerNames) {
-							if (answer.getText().equals(s)) {
+							if (answer.getName().equals(s)) {
 								answers.add(answer);
 							}
 						}

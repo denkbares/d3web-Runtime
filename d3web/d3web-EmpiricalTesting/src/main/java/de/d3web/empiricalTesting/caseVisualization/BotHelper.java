@@ -71,7 +71,7 @@ public class BotHelper {
 			throws Exception {
 		for (AnswerChoice answer : q.getAllAlternatives()) {
 			if (answer.getId().equalsIgnoreCase(answerId)
-					|| answer.getText().equalsIgnoreCase(answerId))
+					|| answer.getName().equalsIgnoreCase(answerId))
 				return answer;
 		}
 		throw new Exception("Not found id [" + answerId + "] for question ["

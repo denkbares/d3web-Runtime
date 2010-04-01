@@ -27,7 +27,6 @@ import de.d3web.abstraction.inference.PSMethodQuestionSetter;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
@@ -39,15 +38,17 @@ import de.d3web.core.session.values.AnswerChoice;
  * 
  * @author baumeister
  */
-public class Num2ChoiceSchema extends IDObject implements KnowledgeSlice {
+public class Num2ChoiceSchema implements KnowledgeSlice {
 
+	private String id;
+	
 	private static final long serialVersionUID = -3081963703740657373L;
 	private Double[] schemaArray;
 	private Question question;
 
 
 	public Num2ChoiceSchema(String id) {
-		super(id);
+		this.id = id;
 	}
 	
 	public void setSchemaArray(Double[] newArray) {
@@ -122,4 +123,8 @@ public class Num2ChoiceSchema extends IDObject implements KnowledgeSlice {
 		question.removeKnowledge(getProblemsolverContext(), this, PSMethodQuestionSetter.NUM2CHOICE_SCHEMA);
 	}
 
+	@Override
+	public String getId() {
+		return id;
+	}
 }

@@ -120,7 +120,7 @@ public class QuestionSetterActionHandler implements FragmentHandler{
 			if (o != null && o instanceof Answer) {
 				Answer a = (Answer) o;
 				if (a.getId()==null) {
-					throw new IOException("Answer "+a.getText()+" has no ID");
+					throw new IOException("Answer "+a.getName()+" has no ID");
 				}
 				Element valueNode = doc.createElement("Value");
 				valueNode.setAttribute("type", "answer");

@@ -33,11 +33,11 @@ public class AnswerMultipleChoice extends Answer {
 	// }
 
 	@Override
-	public String getText() {
+	public String getName() {
 		StringBuffer b = new StringBuffer();
 		for (Iterator<AnswerChoice> iterator = choices.iterator(); iterator.hasNext();) {
 			AnswerChoice answer = (AnswerChoice) iterator.next();
-			b.append(answer.getText());
+			b.append(answer.getName());
 			if (iterator.hasNext())
 				b.append(", ");
 		}

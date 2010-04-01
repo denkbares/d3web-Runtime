@@ -20,7 +20,6 @@
 
 package de.d3web.core.knowledge.terminology;
 
-import de.d3web.core.session.EventSource;
 
 
 /**
@@ -31,59 +30,21 @@ import de.d3web.core.session.EventSource;
  * @author joba, Christian Betz
  * @see NamedObject
  */
-abstract public class IDObject
-	extends EventSource
-	implements java.io.Serializable, IDReference {
+public interface IDObject {
 	
-	private static final long serialVersionUID = -5476364297254490944L;
-	private final String id;
 
-	public IDObject(String id) {
-	    this.id = id;
-	}
+	// --- header information ---
+	/**
+	 * Returns the id of the terminology object
+	 * @return id
+	 */
+	String getId();
+	/**
+	 * Returns the name of the terminology object
+	 * @return name
+	 */
+	String getName();
 	
-	/**
-	 * Checks, if other object is an IDObject and if
-	 * it contains the same ID.
-	 * @return true, if equal
-	 * @param other Object to compare for equality
-	 */
-	public boolean equals(Object other) {
-		if (this == other)
-			return true;
-		else if ((other == null) || (getClass() != other.getClass())) {
-			return false;
-		} else {
-			IDObject otherIDO = (IDObject) other;
-			if ((getId() != null) && (otherIDO.getId() != null)) {
-				return getId().equals(otherIDO.getId());
-			} else {
-				return super.equals(other);
-			}
-		}
-	}
+	//InfoStore getInfoStore(); // formerly known as PropertyContainer
 
-	/**
-	 * @return the unique identifier of this object.
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * @return the hash code of the ID (String).
-	 */
-	public int hashCode() {
-		if (getId() != null)
-			return getId().hashCode();
-		else
-			return super.hashCode();
-	}
-
-	/**
-	 * @return the ID of the object.
-	 */
-	public String toString() {
-		return this.getClass().getSimpleName() + " " + getId();
-	}
 }

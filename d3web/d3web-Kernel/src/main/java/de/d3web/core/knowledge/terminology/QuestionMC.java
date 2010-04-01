@@ -93,7 +93,6 @@ public class QuestionMC extends QuestionChoice {
 			amc = (Answer) values[0];
 		}
 		((CaseQuestionMC) theCase.getCaseObject(this)).setValue(amc);
-		notifyListeners(theCase,this);
 	}
 	
 	/**
@@ -107,7 +106,6 @@ public class QuestionMC extends QuestionChoice {
 	@Override
 	public void setValue(XPSCase theCase, Answer value) {
 		((CaseQuestionMC) theCase.getCaseObject(this)).setValue((AnswerMultipleChoice)value);
-		notifyListeners(theCase,this);
 	}
 
 	@Override

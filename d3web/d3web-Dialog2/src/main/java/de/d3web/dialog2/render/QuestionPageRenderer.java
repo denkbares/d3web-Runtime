@@ -285,7 +285,7 @@ public class QuestionPageRenderer extends Renderer {
 		List<String> answerNameList = new ArrayList<String>();
 		for (String answerID : answerIDs) {
 			AnswerChoice a = (AnswerChoice) ((QuestionChoice) q).getAnswer(theCase, answerID);
-			answerNameList.add(a.getText());
+			answerNameList.add(a.getName());
 		}
 		return answerNameList;
 	}

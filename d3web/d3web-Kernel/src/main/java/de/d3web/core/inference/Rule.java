@@ -38,12 +38,12 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  * Additionally it is possible to store an exception, when this rule must not fire. 
  * @author Michael Wolber, joba
  */
-public class Rule
-	extends IDObject
-	implements CaseObjectSource {
+public class Rule implements CaseObjectSource {
 
 	private static final long serialVersionUID = 1648330152712439470L;
 
+	private String id;
+	
 	/**
 	 * Flag indicates, if the rule is activated.
 	 */
@@ -90,7 +90,11 @@ public class Rule
 	  * @see IDObject
 	  */
 	public Rule(String id) {
-		super(id);
+		this.id = id;
+	}
+	
+	public String getId() {
+		return id;
 	}
 	
 	/**
@@ -220,10 +224,6 @@ public class Rule
 	public void doIt(XPSCase theCase) {
 		setFired(true, theCase);
 		//theCase.trace("  <<RULE FIRE>> " + getId());
-
-		// d3web.debug
-		notifyListeners(theCase, this);
-
 		if (getAction() != null) {
 			getAction().doIt(theCase, this);
 		}
@@ -535,10 +535,6 @@ public class Rule
 	public void undo(XPSCase theCase) {
 		setFired(false, theCase);
 		//theCase.trace("  <<RULE UNDO>> " + getId());
-
-		// d3web.debug
-		notifyListeners(theCase, this);
-
 		if (getAction() != null) {
 			getAction().undo(theCase, this);
 		}

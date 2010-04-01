@@ -296,7 +296,7 @@ public class TestPersistence {
 		xmlsw.writeAttribute(QUESTIONNAIRE, findQuestionnaire(f.getQuestion()).getName());
 		Answer a = f.getAnswer();
 		if (a instanceof AnswerChoice) {
-			xmlsw.writeAttribute(ANSWER, ((AnswerChoice) a).getText());
+			xmlsw.writeAttribute(ANSWER, ((AnswerChoice) a).getName());
 		}
 		if (a instanceof AnswerNum) {
 			xmlsw.writeAttribute(ANSWER, ((AnswerNum) a).toString());
@@ -403,7 +403,7 @@ public class TestPersistence {
 
 	private AnswerChoice findAnswer(QuestionChoice qc, String string) {
 		for (AnswerChoice choice : qc.getAllAlternatives()) {
-			if (string.equals(choice.getText()))
+			if (string.equals(choice.getName()))
 				return choice;
 		}
 		return null;

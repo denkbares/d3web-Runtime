@@ -154,7 +154,7 @@ public class PersistenceManager {
 			}
 			for (ZipEntry entry: files) {
 				String name = entry.getName();
-				if (name.startsWith(MULTIMEDIA_PATH_PREFIX)) {
+				if (name.toLowerCase().startsWith(MULTIMEDIA_PATH_PREFIX)) {
 					JarBinaryRessource jarBinaryRessource = new JarBinaryRessource(entry, file);
 					kb.addResouce(jarBinaryRessource);
 				} else if (notNeeded(entry)) {

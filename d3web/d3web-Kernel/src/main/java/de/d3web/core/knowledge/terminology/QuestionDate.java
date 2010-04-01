@@ -68,13 +68,11 @@ public class QuestionDate extends Question {
 			Logger.getLogger(this.getClass().getName()).warning("wrong number of answeralternatives");
 		} else {
 			((CaseQuestionDate) theCase.getCaseObject(this)).setValue((Answer)values[0]);
-			notifyListeners(theCase, this);
 		}
 	}
 
 	public void setValue(XPSCase theCase, Answer answer) {
 		((CaseQuestionDate) theCase.getCaseObject(this)).setValue(answer);
-			notifyListeners(theCase, this);
 	}
 
 

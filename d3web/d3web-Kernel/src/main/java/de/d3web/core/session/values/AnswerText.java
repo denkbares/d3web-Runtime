@@ -44,7 +44,7 @@ public class AnswerText extends Answer {
 		return getQuestion().getId() + "aText"; // äußerst fragwürdig!!! 
 	}
 
-	public String getText() {
+	public String getName() {
 		return text;
 	}
 
@@ -53,7 +53,7 @@ public class AnswerText extends Answer {
 	 * @return answer text (instanceof String)
 	 */
 	public Object getValue(XPSCase theCase) {
-		return getText();
+		return getName();
 	}
 
 	public void setText(String newText) {
@@ -62,28 +62,28 @@ public class AnswerText extends Answer {
 
 	@Override
 	public String toString() {
-		return getText();
+		return getName();
 	}
 	
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof AnswerText) {
 			AnswerText other = (AnswerText) o;
-			return getId().equals(other.getId()) && getText().equals(other.getText());
+			return getId().equals(other.getId()) && getName().equals(other.getName());
 		}
 		return false;
 	}
 	
 	@Override
 	public int hashCode() {
-		return getId().hashCode() + getText().hashCode();
+		return getId().hashCode() + getName().hashCode();
 	}
 
 	@Override
 	public int compareTo(Answer other) {
 		if (other instanceof AnswerText) {
-			String s1 = ((AnswerText) this).getText();
-			String s2 = ((AnswerText) other).getText();
+			String s1 = ((AnswerText) this).getName();
+			String s2 = ((AnswerText) other).getName();
 			return String.CASE_INSENSITIVE_ORDER.compare(s1, s2);
 		}
 		if (other instanceof AnswerUnknown) {

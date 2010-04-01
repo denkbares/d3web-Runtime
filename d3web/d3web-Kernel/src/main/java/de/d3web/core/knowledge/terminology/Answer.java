@@ -41,10 +41,14 @@ import de.d3web.core.session.values.AnswerUnknown;
  * @see Question
  * TODO: remove IDOPbject from Answer. They do not should have any ids.
  */
-public abstract class Answer extends IDObject implements PropertiesContainer, Comparable<Answer> {
+public abstract class Answer implements IDObject, PropertiesContainer, Comparable<Answer> {
 	
-	private static final long serialVersionUID = 5842799720984682025L;
-
+	private String id;
+	
+	@Override
+	public String getId() {
+		return id;
+	}
 	/**
 	 * The {@link Question} instance this {@link Answer} belongs to
 	 */
@@ -61,7 +65,7 @@ public abstract class Answer extends IDObject implements PropertiesContainer, Co
 	 * Not for public use. Please use {@link AnswerFactory}. 
 	 */
 	public Answer(String id) {
-	    super(id);
+		this.id = id;
 	}
 	
 	/** 
@@ -170,8 +174,30 @@ public abstract class Answer extends IDObject implements PropertiesContainer, Co
 	public abstract int hashCode();
 	
 	
-	public String getText() {
+	public String getName() {
 		return getValue(null).toString();
 	}
 	// [TODO] where is the equals implementation?
+	
+	/**
+	 * Checks, if other object is an IDObject and if
+	 * it contains the same ID.
+	 * @return true, if equal
+	 * @param other Object to compare for equality
+	 */
+	@Override
+	public boolean equals(Object other) {
+		if (this == other)
+			return true;
+		else if ((other == null) || (getClass() != other.getClass())) {
+			return false;
+		} else {
+			IDObject otherIDO = (IDObject) other;
+			if ((getId() != null) && (otherIDO.getId() != null)) {
+				return getId().equals(otherIDO.getId());
+			} else {
+				return super.equals(other);
+			}
+		}
+	}
 }

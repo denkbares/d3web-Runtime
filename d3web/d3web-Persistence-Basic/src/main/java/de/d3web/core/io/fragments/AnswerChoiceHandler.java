@@ -90,7 +90,7 @@ public class AnswerChoiceHandler implements FragmentHandler {
 		} else {
 			element.setAttribute("type", "AnswerChoice");
 		}
-		XMLUtil.appendTextNode(a.getText(), element);
+		XMLUtil.appendTextNode(a.getName(), element);
 		Properties properties = a.getProperties();
 		if (properties!=null && !properties.isEmpty()) {
 			element.appendChild(PersistenceManager.getInstance().writeFragment(properties, doc));

@@ -114,8 +114,6 @@ public class QuestionOC extends QuestionChoice {
 				"setValue",
 				new Exception("too many answers given to question \"" + getId() + "\" (> 1)"));
 		}
-		notifyListeners(theCase,this);
-
 	}
 
 	public void setValue(XPSCase theCase, Answer value) {
@@ -129,8 +127,6 @@ public class QuestionOC extends QuestionChoice {
 			}
 			((CaseQuestionOC) theCase.getCaseObject(this)).setValue(value);
 		} 
-		notifyListeners(theCase,this);
-
 	}
 
 	public String toString() {

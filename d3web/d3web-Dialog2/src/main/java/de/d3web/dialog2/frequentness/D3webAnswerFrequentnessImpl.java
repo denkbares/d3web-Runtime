@@ -80,7 +80,7 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 								theCase);
 						double relFreq = getRelFreq(absoluteFreq);
 						DataWithFrequentness data = new DataWithFrequentness(a
-								.getText(), absoluteFreq, relFreq);
+								.getName(), absoluteFreq, relFreq);
 						group.addDataWithFrequentness(data);
 					}
 					dataGroupWithFrequentnessData.add(group);

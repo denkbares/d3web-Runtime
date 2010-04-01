@@ -334,7 +334,6 @@ public class Diagnosis extends NamedObject implements ValuedObject, TerminologyO
 		// this does simply a check if state has changed
 		checkForNewState(oldState, newState, theCase);
 		// d3web.debug
-		notifyListeners(theCase, this);
 	}
 
 	/**
@@ -369,7 +368,6 @@ public class Diagnosis extends NamedObject implements ValuedObject, TerminologyO
 		// this does simply a check if state has changed
 		checkForNewState(oldState, newState, theCase);
 		// d3web.debug
-		notifyListeners(theCase, this);
 	}
 
 	/**

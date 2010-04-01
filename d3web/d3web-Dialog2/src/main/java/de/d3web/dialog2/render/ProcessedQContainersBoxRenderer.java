@@ -297,12 +297,12 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 			for (Iterator<AnswerChoice> it = alterList.iterator(); it.hasNext();) {
 				AnswerChoice alterAns = it.next();
 				if (alterAns.getId().equals(ans.getId())) {
-					writer.writeText(alterAns.getText(), "value");
+					writer.writeText(alterAns.getName(), "value");
 					break;
 				}
 			}
 		} else if (ans instanceof AnswerMultipleChoice) {
-			writer.writeText(ans.getText(), "value");
+			writer.writeText(ans.getName(), "value");
 		} else if (ans instanceof AnswerUnknown) {
 			writer.writeText(DialogRenderUtils.getUnknownAnswerString(q,
 					theCase), "value");

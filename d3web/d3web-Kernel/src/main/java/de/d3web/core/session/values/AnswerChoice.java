@@ -42,7 +42,7 @@ public class AnswerChoice extends Answer {
 	}
 
 
-	public String getText() {
+	public String getName() {
 		return text;
 	}
 
@@ -52,7 +52,7 @@ public class AnswerChoice extends Answer {
 	 * @return the value of this answer object depending on the current case
 	 */
 	public Object getValue(XPSCase theCase) {
-		return getText();
+		return getName();
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class AnswerChoice extends Answer {
 	 * @return String representation of the answer
 	 */
 	public String toString() {
-		return getText();
+		return getName();
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class AnswerChoice extends Answer {
 	 * @see de.d3web.kernel.domainModel.Answer#hashCode()
 	 */
 	public int hashCode() {
-		return getId().hashCode() + getText().hashCode();
+		return getId().hashCode() + getName().hashCode();
 	}
 
 	@Override

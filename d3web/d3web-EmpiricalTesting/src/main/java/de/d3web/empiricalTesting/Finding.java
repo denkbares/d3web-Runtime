@@ -50,7 +50,7 @@ public class Finding implements Comparable<Finding> {
 		Answer foundAnswer = null;
 		for (AnswerChoice ac : question.getAllAlternatives()) {
 			if (answerIDorText.equals(ac.getId())
-					|| answerIDorText.equals(ac.getText()))
+					|| answerIDorText.equals(ac.getName()))
 				foundAnswer = ac;
 		}
 		if (foundAnswer == null)
@@ -175,8 +175,8 @@ public class Finding implements Comparable<Finding> {
 		comp = answer.getId().compareTo(o.getAnswer().getId());
 		if (comp != 0)
 			return comp;
-		comp = ((AnswerChoice) answer).getText().compareTo(
-				((AnswerChoice) o.getAnswer()).getText());
+		comp = ((AnswerChoice) answer).getName().compareTo(
+				((AnswerChoice) o.getAnswer()).getName());
 		return comp;
 	}
 

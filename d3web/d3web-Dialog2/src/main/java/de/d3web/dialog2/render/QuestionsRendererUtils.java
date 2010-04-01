@@ -311,7 +311,7 @@ public class QuestionsRendererUtils {
 		+ theCase.getId() + "'); doSubmit(); return false;", "onclick");
 	String imageName = DialogUtils.getMessageWithParamsFor(
 		"dialog.questionImageAnswerTitle", new Object[] { answer
-			.getText() });
+			.getName() });
 	writer.writeAttribute("title", imageName, "title");
 	writer.writeAttribute("alt", imageName, "alt");
 
@@ -759,7 +759,7 @@ public class QuestionsRendererUtils {
 			    + "'); doSubmit();", "onclick");
 		}
 	    }
-	    writer.writeText(specAns.getText(), "value");
+	    writer.writeText(specAns.getName(), "value");
 	    writer.endElement("option");
 	}
 
@@ -896,7 +896,7 @@ public class QuestionsRendererUtils {
 		// kind of grayed out
 		writer.writeAttribute("style", "color: #999;", "style");
 	    }
-	    writer.writeText(specAns.getText(), "value");
+	    writer.writeText(specAns.getName(), "value");
 	    writer.endElement("label");
 	    writer.endElement("td");
 

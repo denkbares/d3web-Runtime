@@ -98,7 +98,6 @@ public class QuestionText extends Question {
 	public void setValue(XPSCase theCase, Answer value) {
 		Answer answeredValue = (Answer)value;
 		((CaseQuestionText) theCase.getCaseObject(this)).setValue(answeredValue);
-		notifyListeners(theCase,this);
 	}
 	
 	public void setValue(XPSCase theCase, Object[] values) {

@@ -434,7 +434,7 @@ public class KnowledgeBaseManagement {
 			return null;
 		}
 		for (AnswerChoice answer : question.getAllAlternatives()) {
-			if (answerText.equals(answer.getText())
+			if (answerText.equals(answer.getName())
 					|| answerText.equals(answer.getId())
 					|| answer.getId().equals((question.getId() + answerText))) {
 				return answer;
@@ -479,9 +479,6 @@ public class KnowledgeBaseManagement {
 		} else if (o == Question.class) {
 			int idC = getMaxCountOf(knowledgeBase.getQuestions()) + 1;
 			return "Q" + idC;
-
-		} else if (o == Rule.class) {
-			return createRuleID();
 
 		} else {
 			internalCounter++;
@@ -536,6 +533,12 @@ public class KnowledgeBaseManagement {
 			Object obj = iter.next();
 			if (obj instanceof IDObject) {
 				String id = ((IDObject) obj).getId();
+				int suffix = getSuffix(id);
+				if ((suffix != -1) && (suffix > maxCount))
+					maxCount = suffix;
+			}
+			if (obj instanceof Rule) {
+				String id = ((Rule) obj).getId();
 				int suffix = getSuffix(id);
 				if ((suffix != -1) && (suffix > maxCount))
 					maxCount = suffix;

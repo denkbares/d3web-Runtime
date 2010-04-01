@@ -61,7 +61,7 @@ public abstract class QuestionComparatorNum extends QuestionComparator {
 		try {
 			Object o = answers.get(0);
 			if (o instanceof AnswerChoice) {
-				return new Double(((AnswerChoice) o).getText());
+				return new Double(((AnswerChoice) o).getName());
 			} else if (o instanceof AnswerNum) {
 				return ((AnswerNum) o).getValue(null);
 			} else {

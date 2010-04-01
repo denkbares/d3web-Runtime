@@ -74,7 +74,7 @@ public class ValueFactory {
 				Date date = (Date) ((AnswerDate)o).getValue(theCase);
 				return new DateValue(date);
 			} else if (o instanceof QuestionText) {
-				String text = ((AnswerText)o).getText();
+				String text = ((AnswerText)o).getName();
 				return new TextValue(text);
 			} 
 //		}
