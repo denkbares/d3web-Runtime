@@ -56,7 +56,6 @@ public class DefaultPSConfigHandler implements FragmentHandler {
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		String extensionID = element.getAttribute(EXTENSION_ID);
 		String pluginID = element.getAttribute("pluginID");
-		Double priority = Double.parseDouble(element.getAttribute("priority"));
 		PluginManager pluginManager = PluginManager.getInstance();
 		PSState psState = PSConfig.PSState.valueOf(element.getAttribute("state"));
 		Extension extension = null;
@@ -79,6 +78,14 @@ public class DefaultPSConfigHandler implements FragmentHandler {
 			}
 		}
 		PSMethod psMethod = (PSMethod) extension.getNewInstance();
+		//Getting the priority
+		//setting the priority to the priority of the extension
+		double priority = extension.getPriority();
+		//if the priority is set in the xml file, this priority will be used
+		String priorityString = element.getAttribute("priority");
+		if (priorityString.length()>0) {
+			priority = Double.parseDouble(priorityString);
+		}
 		return new PSConfig(psState, psMethod, auto, extensionID, pluginID, priority);
 	}
 
