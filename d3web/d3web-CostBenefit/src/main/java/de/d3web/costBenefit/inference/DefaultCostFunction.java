@@ -35,7 +35,12 @@ public class DefaultCostFunction implements CostFunction {
 
 	@Override
 	public double getCosts(QContainer qcon, XPSCase theCase) {
-		return (Double) qcon.getProperties().getProperty(Property.COST);
+		Object property = qcon.getProperties().getProperty(Property.COST);
+		if (property!=null) {
+			return (Double) property;
+		} else {
+			return 1;
+		}
 	}
 	
 }

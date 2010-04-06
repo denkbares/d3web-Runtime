@@ -11,7 +11,6 @@ public interface TerminologyObject extends IDObject {
 	TerminologyObject[] getChildren();
 
 	// --- storing knowledge ---
-	//InfoStore getInfoStore(); // formerly known as PropertyContainer
 	//KnowledgeStore getKnowledgeStore();
 	
 }
