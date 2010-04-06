@@ -70,6 +70,11 @@ public class DefaultPSConfigHandler implements FragmentHandler {
 				return new DummyPSConfig(psState, extensionID, pluginID, element);
 			}
 		}
+		if (psState.equals(PSConfig.PSState.active) && extension==null) {
+			throw new IOException("Problemsolver "+extensionID+" not found");
+		} else  if (psState.equals(PSConfig.PSState.active)){
+			return new DummyPSConfig(psState, extensionID, pluginID, element);
+		}
 		Autodetect auto =  null;
 		for (Extension e: pluginManager.getExtensions("d3web-Kernel-ExtensionPoints", Autodetect.EXTENSIONPOINT_ID)) {
 			if (e.getPluginID().equals(pluginID)) {
