@@ -74,16 +74,16 @@ public class DStateConditionHandler implements FragmentHandler {
 	
 	private static DiagnosisState getDiagnosisState(String status) {
 
-		if (status.equals("established"))
+		if (status.equalsIgnoreCase("established"))
 			return DiagnosisState.ESTABLISHED;
 
-		if (status.equals("excluded"))
+		if (status.equalsIgnoreCase("excluded"))
 			return DiagnosisState.EXCLUDED;
 
-		if (status.equals("suggested"))
+		if (status.equalsIgnoreCase("suggested"))
 			return DiagnosisState.SUGGESTED;
 
-		if (status.equals("unclear"))
+		if (status.equalsIgnoreCase("unclear"))
 			return DiagnosisState.UNCLEAR;
 
 		return null;
