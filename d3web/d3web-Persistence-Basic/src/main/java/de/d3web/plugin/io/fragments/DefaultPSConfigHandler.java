@@ -72,7 +72,7 @@ public class DefaultPSConfigHandler implements FragmentHandler {
 		}
 		if (psState.equals(PSConfig.PSState.active) && extension==null) {
 			throw new IOException("Problemsolver "+extensionID+" not found");
-		} else  if (psState.equals(PSConfig.PSState.active)){
+		} else  if (extension==null) {
 			return new DummyPSConfig(psState, extensionID, pluginID, element);
 		}
 		Autodetect auto =  null;
