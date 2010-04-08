@@ -33,8 +33,10 @@ import java.util.logging.Logger;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
 import org.xml.sax.InputSource;
 
+import de.d3web.caserepository.CaseRepository;
 import de.d3web.caserepository.utilities.Checker;
 import de.d3web.core.knowledge.KnowledgeBase;
 
@@ -46,11 +48,11 @@ import de.d3web.core.knowledge.KnowledgeBase;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class CaseObjectListCreator {
+public class CaseRepositoryReader {
 
 	private List additionalTagReaders = new LinkedList();
 
-	private List createCaseObjectListInternal(Object source, KnowledgeBase kb) {
+	private CaseRepository createCaseRepositoryInternal(Object source, KnowledgeBase kb) {
 		
 		boolean shouldBeReadWithOld = false;
 		
@@ -60,7 +62,7 @@ public class CaseObjectListCreator {
 			Logger.getLogger(this.getClass().getName()).throwing(this.getClass().getName(), "Checker.check...", e);
 		}
 		
-		List ret = null;
+		CaseRepository ret = null;
 		
 		Logger.getLogger(this.getClass().getName()).info("loading the case base ...");
 		if (shouldBeReadWithOld)
@@ -92,7 +94,7 @@ public class CaseObjectListCreator {
 			else if(source instanceof Reader) {
 				parser.parse(new InputSource((Reader) source), dh);
 			}
-			ret = dh.getCaseObjectList();
+			ret = dh.getCaseRepository();
 
 		} catch (Exception x) {
 			Logger.getLogger(this.getClass().getName()).throwing(this.getClass().getName(), "createCaseObjectListInternal", x);
@@ -113,24 +115,24 @@ public class CaseObjectListCreator {
 		return ret;
 	}
 
-	public List createCaseObjectList(String xmlCode, KnowledgeBase kb) {
-		return createCaseObjectListInternal(xmlCode, kb);
+	public CaseRepository createCaseRepository(String xmlCode, KnowledgeBase kb) {
+		return createCaseRepositoryInternal(xmlCode, kb);
 	}
 
-	public List createCaseObjectList(File xmlfile, KnowledgeBase kb) {
-		return createCaseObjectListInternal(xmlfile, kb);
+	public CaseRepository createCaseRepository(File xmlfile, KnowledgeBase kb) {
+		return createCaseRepositoryInternal(xmlfile, kb);
 	}
 
-	public List createCaseObjectList(URL jarInternalURL, KnowledgeBase kb) {
-		return createCaseObjectListInternal(jarInternalURL, kb);
+	public CaseRepository createCaseRepository(URL jarInternalURL, KnowledgeBase kb) {
+		return createCaseRepositoryInternal(jarInternalURL, kb);
 	}
 	
-	public List createCaseObjectList(InputStream inputStream, KnowledgeBase kb) {
-		return createCaseObjectListInternal(inputStream, kb);
+	public CaseRepository createCaseRepository(InputStream inputStream, KnowledgeBase kb) {
+		return createCaseRepositoryInternal(inputStream, kb);
 	}
 	
-	public List createCaseObjectList(Reader reader, KnowledgeBase kb) {
-		return createCaseObjectListInternal(reader, kb);
+	public CaseRepository createCaseRepository(Reader reader, KnowledgeBase kb) {
+		return createCaseRepositoryInternal(reader, kb);
 	}
 
 	private void registerTagReaders(CaseRepositoryDefaultHandler dh) {

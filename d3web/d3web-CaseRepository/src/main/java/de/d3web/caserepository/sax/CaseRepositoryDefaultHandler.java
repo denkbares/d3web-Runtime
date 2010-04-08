@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -36,6 +34,8 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.CaseObjectImpl;
+import de.d3web.caserepository.CaseRepository;
+import de.d3web.caserepository.CaseRepositoryImpl;
 import de.d3web.core.knowledge.KnowledgeBase;
 /**
  * @author bates
@@ -57,14 +57,14 @@ public class CaseRepositoryDefaultHandler extends DefaultHandler {
 
 	private KnowledgeBase knowledgeBase = null;
 
-	private List caseObjects = new LinkedList();
+	private CaseRepository repository = new CaseRepositoryImpl();
 
 	public void setKnowledgeBase(KnowledgeBase knowledgeBase) {
 		this.knowledgeBase = knowledgeBase;
 	}
 
-	public List getCaseObjectList() {
-		return caseObjects;
+	public CaseRepository getCaseRepository() {
+		return repository;
 	}
 		
 	public void registerReader(AbstractTagReader reader) {
@@ -172,7 +172,7 @@ public class CaseRepositoryDefaultHandler extends DefaultHandler {
 		if (caseObjectsIDMap.containsKey(id)) {
 			// do nothing, because we don't want double cases
 		} else {
-			caseObjects.add(currentCaseObject);
+			repository.add(currentCaseObject);
 			caseObjectsIDMap.put(id, currentCaseObject);
 		}
 		

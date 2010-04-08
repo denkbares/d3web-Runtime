@@ -1,0 +1,213 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+
+<CaseRepository>
+
+<Cases>
+
+<Problem>
+<DCMarkup>
+<DCElement label="DC.TITLE"><![CDATA[Battery empty]]></DCElement>
+<DCElement label="DC.CREATOR"><![CDATA[joba]]></DCElement>
+<DCElement label="DC.DATE" value="2003-10-6 10:50"/>
+<DCElement label="DC.RESOURCE_IDENTIFIER" value="8558590"/>
+</DCMarkup>
+<Properties>
+<Property name="case_comment" class="de.d3web.persistence.xml.loader.PropertiesUtilities$CDataString"><![CDATA[]]></Property>
+<Property name="case_metadata" class="de.d3web.caserepository.MetaDataImpl"><Metadata>
+<Account>guest@guest</Account>
+</Metadata>
+</Property>
+<Property name="case_source_system" class="java.lang.String">d3web.dialog</Property>
+</Properties>
+<Questions>
+<Question id='MMC2'>
+<Answer id='MMC2a7'/>
+</Question>
+<Question id='MMC1'>
+<Answer id='MMC1a1'/>
+</Question>
+<Question id='MNUM2'>
+<Answer value='15.0'/>
+</Question>
+<Question id='MOC9'>
+<Answer id='MOC9a3'/>
+</Question>
+<Question id='MNUM1'>
+<Answer value='10.0'/>
+</Question>
+<Question id='MOC8'>
+<Answer id='MOC8a1'/>
+</Question>
+<Question id='MOC7'>
+<Answer id='MOC7a3'/>
+</Question>
+<Question id='MOC6'>
+<Answer id='MaNO'/>
+</Question>
+<Question id='MOC11'>
+<Answer id='MOC11a2'/>
+</Question>
+<Question id='MOC10'>
+<Answer id='MOC10a1'/>
+</Question>
+<Question id='MOC1'>
+<Answer id='MOC1a3'/>
+</Question>
+</Questions>
+<Solutions>
+<Solution id="P5" weight="1.0" psmethod="de.d3web.kernel.psMethods.userSelected.PSMethodUserSelected" state="established"/>
+<Solution id="P5" weight="1.0" psmethod="de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic" state="established"/>
+</Solutions>
+</Problem>
+
+<Problem>
+<DCMarkup>
+<DCElement label="DC.TITLE"><![CDATA[CloggedFilter]]></DCElement>
+<DCElement label="DC.CREATOR"><![CDATA[joba]]></DCElement>
+<DCElement label="DC.DATE" value="2003-10-6 10:50"/>
+<DCElement label="DC.RESOURCE_IDENTIFIER" value="9979645"/>
+</DCMarkup>
+<Properties>
+<Property name="case_comment" class="de.d3web.persistence.xml.loader.PropertiesUtilities$CDataString"><![CDATA[]]></Property>
+<Property name="case_metadata" class="de.d3web.caserepository.MetaDataImpl"><Metadata>
+<Account>guest@guest</Account>
+</Metadata>
+</Property>
+<Property name="case_source_system" class="java.lang.String">d3web.dialog</Property>
+</Properties>
+<Questions>
+<Question id='MMC2'>
+<Answer id='MMC2a7'/>
+</Question>
+<Question id='MMC1'>
+<Answer id='MMC1a3'/>
+</Question>
+<Question id='MNUM2'>
+<UnknownAnswer />
+</Question>
+<Question id='MOC9'>
+<Answer id='MOC9a1'/>
+</Question>
+<Question id='MNUM1'>
+<UnknownAnswer />
+</Question>
+<Question id='MOC8'>
+<Answer id='MOC8a1'/>
+</Question>
+<Question id='MOC7'>
+<Answer id='MOC7a4'/>
+</Question>
+<Question id='MOC4'>
+<Answer id='MaNO'/>
+</Question>
+<Question id='MOC10'>
+<Answer id='MOC10a2'/>
+</Question>
+<Question id='MOC1'>
+<Answer id='MOC1a1'/>
+</Question>
+</Questions>
+<Solutions>
+<Solution id="P3" weight="1.0" psmethod="de.d3web.kernel.psMethods.userSelected.PSMethodUserSelected" state="established"/>
+<Solution id="P3" weight="1.0" psmethod="de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic" state="established"/>
+</Solutions>
+</Problem>
+
+<Problem>
+<DCMarkup>
+<DCElement label="DC.TITLE"><![CDATA[Idle speed system]]></DCElement>
+<DCElement label="DC.CREATOR"><![CDATA[joba]]></DCElement>
+<DCElement label="DC.DATE" value="2003-10-6 10:51"/>
+<DCElement label="DC.RESOURCE_IDENTIFIER" value="10981489"/>
+</DCMarkup>
+<Properties>
+<Property name="case_comment" class="de.d3web.persistence.xml.loader.PropertiesUtilities$CDataString"><![CDATA[]]></Property>
+<Property name="case_metadata" class="de.d3web.caserepository.MetaDataImpl"><Metadata>
+<Account>guest@guest</Account>
+</Metadata>
+</Property>
+<Property name="case_source_system" class="java.lang.String">d3web.dialog</Property>
+</Properties>
+<Questions>
+<Question id='MMC2'>
+<Answer id='MMC2a1'/>
+<Answer id='MMC2a2'/>
+</Question>
+<Question id='MMC1'>
+<Answer id='MMC1a1'/>
+<Answer id='MMC1a2'/>
+</Question>
+<Question id='MNUM2'>
+<UnknownAnswer />
+</Question>
+<Question id='MOC9'>
+<Answer id='MOC9a2'/>
+</Question>
+<Question id='MNUM1'>
+<UnknownAnswer />
+</Question>
+<Question id='MOC8'>
+<Answer id='MOC8a1'/>
+</Question>
+<Question id='MOC7'>
+<Answer id='MOC7a3'/>
+</Question>
+<Question id='MOC6'>
+<Answer id='MaYES'/>
+</Question>
+<Question id='MOC11'>
+<Answer id='MOC11a1'/>
+</Question>
+<Question id='MOC2'>
+<Answer id='MaNO'/>
+</Question>
+<Question id='MOC10'>
+<Answer id='MOC10a1'/>
+</Question>
+<Question id='MOC1'>
+<Answer id='MOC1a3'/>
+</Question>
+</Questions>
+<Solutions>
+<Solution id="P1" weight="1.0" psmethod="de.d3web.kernel.psMethods.userSelected.PSMethodUserSelected" state="established"/>
+<Solution id="P1" weight="1.0" psmethod="de.d3web.kernel.psMethods.heuristic.PSMethodHeuristic" state="established"/>
+</Solutions>
+</Problem>
+
+</Cases>
+
+<_AppliedQSets>
+
+<Case id="8558590">
+
+<QContainers>
+<QContainer id="Q1"/>
+<QContainer id="Q7"/>
+</QContainers>
+
+</Case>
+
+<Case id="9979645">
+
+<QContainers>
+<QContainer id="Q1"/>
+<QContainer id="Q4"/>
+</QContainers>
+
+</Case>
+
+<Case id="10981489">
+
+<QContainers>
+<QContainer id="Q1"/>
+<QContainer id="Q5"/>
+<QContainer id="Q7"/>
+<QContainer id="Q3"/>
+</QContainers>
+
+</Case>
+
+</_AppliedQSets>
+
+</CaseRepository>
+

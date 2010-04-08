@@ -11,6 +11,42 @@
 		<groupId>de.uniwue.d3web</groupId>
 		<version>0-SNAPSHOT</version>
 	</parent>
+	
+	<build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>-Xmx1024M</argLine>
+          <includes>
+            <include>**/CaseRepositoryPersistenceTest.java</include>
+          </includes>
+        </configuration>
+      </plugin>
+      <plugin>
+  			<groupId>org.apache.maven.plugins</groupId>
+	        <artifactId>maven-dependency-plugin</artifactId>
+        	<executions>
+    	      <execution>
+	            <id>copy-dependencies</id>
+            	<phase>test-compile</phase>
+        	    <goals>
+    	          <goal>build-classpath</goal>
+	            </goals>
+            	<configuration>
+        	      <outputDirectory>target/dependencies</outputDirectory>
+    	          <overWriteReleases>false</overWriteReleases>
+	              <overWriteSnapshots>false</overWriteSnapshots>
+            	  <overWriteIfNewer>true</overWriteIfNewer>
+            	  <pathSeparator>;</pathSeparator>
+            	  <outputFile>target/dependencies/output.txt</outputFile>
+        	    </configuration>
+    	      </execution>
+	        </executions>
+  		</plugin>
+    </plugins>
+  </build>
 
 	<dependencies>
 		<dependency>
@@ -31,5 +67,16 @@
 			<version>0-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+	  		<groupId>de.uniwue.d3web</groupId>
+	  		<artifactId>d3web-PluginManager</artifactId>
+	  		<version>0-SNAPSHOT</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>de.uniwue.d3web</groupId>
+	  		<artifactId>d3web-Persistence-Basic-jpf-plugin</artifactId>
+	  		<version>0-SNAPSHOT</version>
+	  		<scope>runtime</scope>
+	  	</dependency>	  	
 	</dependencies>
 </project>
