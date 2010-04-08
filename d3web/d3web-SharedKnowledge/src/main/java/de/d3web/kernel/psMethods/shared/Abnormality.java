@@ -56,7 +56,7 @@ public class Abnormality extends AbstractAbnormality {
 			return ret.doubleValue();
 		}
 
-		return A0;
+		return A5;
 	}
 
 	public boolean isSet(Answer ans) {
