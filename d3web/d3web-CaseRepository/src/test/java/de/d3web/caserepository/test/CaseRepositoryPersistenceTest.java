@@ -1,6 +1,9 @@
 package de.d3web.caserepository.test;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
+
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -89,7 +92,12 @@ public class CaseRepositoryPersistenceTest extends TestCase {
 		MultipleXMLCaseRepositoryHandler.getInstance().save(repository, directory);
 		
 		// Test the number of files in the directory
-		assertEquals("There should be three XML Files.", 3, directory.listFiles().length);
+		int fileCounter = 0;
+		for (File f : directory.listFiles()) {
+			if (f.getName().endsWith(".xml"))
+				fileCounter++;
+		}
+		assertEquals("There should be three XML Files.", 3, fileCounter);
 	}
 	
 	public void testMultipleXMLLoading() throws Exception {
@@ -103,8 +111,10 @@ public class CaseRepositoryPersistenceTest extends TestCase {
 		assertNotNull("CaseObject with ID \"10981489\" wasn't found.", repository.getCaseObjectById("10981489"));
 		
 		// Delete the files in the directory
-		for (File f : directory.listFiles())
-			f.delete();
+		for (File f : directory.listFiles()) {
+			if (f.getName().endsWith(".xml"))
+				f.delete();
+		}
 	}
 
 }
