@@ -23,10 +23,10 @@ package de.d3web.kernel.psMethods.compareCase.tests.plausibility;
 import java.io.File;
 import java.net.URL;
 import java.util.Iterator;
-import java.util.List;
 
 import de.d3web.caserepository.CaseObject;
-import de.d3web.caserepository.sax.CaseObjectListCreator;
+import de.d3web.caserepository.CaseRepository;
+import de.d3web.caserepository.sax.CaseRepositoryReader;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ConsoleProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -43,20 +43,20 @@ public class SonoCasesComparator {
 			PersistenceManager pm = PersistenceManager.getInstance();
 			KnowledgeBase kb = pm.load(new File(new URL(args[0]).getFile()), new ConsoleProgressListener());
 
-			CaseObjectListCreator colc = new CaseObjectListCreator();
+			CaseRepositoryReader colc = new CaseRepositoryReader();
 
-			List cases = colc.createCaseObjectList(new File(args[1]), kb);
+			CaseRepository repository = colc.createCaseRepository(new File(args[1]), kb);
 
 			long start = System.currentTimeMillis();
 
-			Iterator iter0 = cases.iterator();
+			Iterator<CaseObject> iter0 = repository.iterator();
 			while (iter0.hasNext()) {
 
 				double maxSim = 0;
 				double minSim = 1.1;
-				CaseObject case0 = (CaseObject) iter0.next();
+				CaseObject case0 = iter0.next();
 
-				Iterator iter = cases.iterator();
+				Iterator iter = repository.iterator();
 				while (iter.hasNext()) {
 					CaseObject cobj = (CaseObject) iter.next();
 

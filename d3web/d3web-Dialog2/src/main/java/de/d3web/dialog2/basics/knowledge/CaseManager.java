@@ -32,6 +32,7 @@ import java.util.ResourceBundle;
 import org.apache.log4j.Logger;
 
 import de.d3web.caserepository.CaseObject;
+import de.d3web.caserepository.CaseRepository;
 import de.d3web.dialog2.basics.settings.ResourceRepository;
 
 /**
@@ -184,7 +185,10 @@ public class CaseManager {
 		Iterator<AbstractCaseRepositoryManager> iter = caseRepositoryManagers
 				.iterator();
 		while (iter.hasNext()) {
-			ret.addAll(iter.next().getCasesForKb(kbid));
+			CaseRepository repository = iter.next().getCasesForKb(kbid);
+			Iterator<CaseObject> repoIterator = repository.iterator();
+			while (repoIterator.hasNext())
+				ret.add(repoIterator.next());
 		}
 		return ret;
 	}

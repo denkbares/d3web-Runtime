@@ -34,9 +34,10 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import de.d3web.caserepository.CaseObject;
+import de.d3web.caserepository.CaseRepositoryImpl;
 import de.d3web.caserepository.sax.AbstractTagReader;
 import de.d3web.caserepository.utilities.CaseObjectListAdditionalWriter;
-import de.d3web.caserepository.utilities.CaseObjectListWriter;
+import de.d3web.caserepository.utilities.CaseRepositoryWriter;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.utilities.caseLoaders.CaseRepository;
 import de.d3web.utilities.caseLoaders.DefaultXMLCaseLoader;
@@ -86,7 +87,7 @@ public class CaseRepositoryManager extends AbstractCaseRepositoryManager {
 	@Override
 	public void addCase(CaseObject co, CaseRepositoryDescriptor crd)
 			throws Exception {
-		Collection<CaseObject> cases = getCasesForKb(crd.getKbId());
+		de.d3web.caserepository.CaseRepository cases = getCasesForKb(crd.getKbId());
 		String caseName = co.getDCMarkup().getContent(DCElement.TITLE);
 		Iterator<CaseObject> caseIter = cases.iterator();
 		while (caseIter.hasNext()) {
@@ -124,8 +125,8 @@ public class CaseRepositoryManager extends AbstractCaseRepositoryManager {
 		return caseloader;
 	}
 
-	private CaseObjectListWriter createCaseObjectListWriter() {
-		CaseObjectListWriter writer = new CaseObjectListWriter();
+	private CaseRepositoryWriter createCaseObjectListWriter() {
+		CaseRepositoryWriter writer = new CaseRepositoryWriter();
 
 		Iterator<CaseObjectListAdditionalWriter> iter = getCaseObjectListAdditionalWriters()
 				.iterator();
@@ -162,26 +163,33 @@ public class CaseRepositoryManager extends AbstractCaseRepositoryManager {
 		return coDescriptors;
 	}
 
-	private List<CaseObject> getCasesByCrd(CaseRepositoryDescriptor crd) {
-		List<CaseObject> cases = new LinkedList<CaseObject>();
+	private de.d3web.caserepository.CaseRepository getCasesByCrd(CaseRepositoryDescriptor crd) {
+		de.d3web.caserepository.CaseRepository repository = new CaseRepositoryImpl();
 		Iterator<String> iter = caseIdsByCrd.get(crd).iterator();
 		while (iter.hasNext()) {
 			String caseid = iter.next();
 			CaseObject co = CaseRepository.getInstance().getCaseById(
 					crd.getKbId(), caseid);
 			if (co != null) {
-				cases.add(co);
+				repository.add(co);
 			}
 		}
-		return cases;
+		return repository;
 	}
 
 	/**
 	 * @see AbstractCaseRepositoryManager
 	 */
 	@Override
-	public Collection<CaseObject> getCasesForKb(String kbid) {
-		return CaseRepository.getInstance().getCasesForKnowledgeBase(kbid);
+	public de.d3web.caserepository.CaseRepository getCasesForKb(String kbid) {
+		de.d3web.caserepository.CaseRepository repository = new CaseRepositoryImpl();
+		for (Object co : CaseRepository.getInstance().getCasesForKnowledgeBase(kbid)) {
+			if (co instanceof CaseObject) 
+				repository.add((CaseObject) co);
+			else 
+				throw new ClassCastException("Cannot cast from " + co.getClass() + " to CaseObject");
+		}
+		return repository;
 	}
 
 	/**
@@ -304,7 +312,7 @@ public class CaseRepositoryManager extends AbstractCaseRepositoryManager {
 		}
 	}
 
-	private void writeCasesToRepository(String fileName, List<CaseObject> cases) {
+	private void writeCasesToRepository(String fileName, de.d3web.caserepository.CaseRepository cases) {
 		if (fileName != null) {
 			try {
 				File file = new File(fileName);
@@ -312,7 +320,7 @@ public class CaseRepositoryManager extends AbstractCaseRepositoryManager {
 					file.getParentFile().mkdirs();
 				}
 
-				CaseObjectListWriter writer = createCaseObjectListWriter();
+				CaseRepositoryWriter writer = createCaseObjectListWriter();
 
 				writer.saveToFile(file, cases);
 			} catch (Exception x) {

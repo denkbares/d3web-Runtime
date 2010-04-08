@@ -36,8 +36,10 @@ import org.apache.log4j.Logger;
 
 import sun.net.www.ParseUtil;
 import de.d3web.caserepository.CaseObject;
-import de.d3web.caserepository.sax.CaseObjectListCreator;
-import de.d3web.caserepository.utilities.CaseObjectListWriter;
+import de.d3web.caserepository.CaseRepository;
+import de.d3web.caserepository.CaseRepositoryImpl;
+import de.d3web.caserepository.sax.CaseRepositoryReader;
+import de.d3web.caserepository.utilities.CaseRepositoryWriter;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 
 /**
@@ -74,9 +76,9 @@ public class CaseFileRepository {
 
 	private Long maxCaseId = null; // the maximum caseId of all cases within
 	// this repository
-	private CaseObjectListWriter coWriter = null;
+	private CaseRepositoryWriter coWriter = null;
 
-	private CaseObjectListCreator coCreator = null;
+	private CaseRepositoryReader coCreator = null;
 
 	public static Logger logger = Logger.getLogger(CaseFileRepository.class);
 
@@ -94,7 +96,7 @@ public class CaseFileRepository {
 	 *            CaseObjectListCreator
 	 */
 	public CaseFileRepository(File repositoryDir, String kbid,
-			CaseObjectListWriter coWriter, CaseObjectListCreator coCreator) {
+			CaseRepositoryWriter coWriter, CaseRepositoryReader coCreator) {
 		this.repositoryDir = repositoryDir;
 		this.kbid = kbid;
 		this.coWriter = coWriter;
@@ -115,7 +117,7 @@ public class CaseFileRepository {
 	 *            CaseObjectListCreator
 	 */
 	public CaseFileRepository(URL repositoryURL, String kbid,
-			CaseObjectListWriter coWriter, CaseObjectListCreator coCreator) {
+			CaseRepositoryWriter coWriter, CaseRepositoryReader coCreator) {
 		String s = ParseUtil.decode(repositoryURL.getPath());
 		repositoryDir = new File(s.replace('/', File.separatorChar));
 		this.kbid = kbid;
@@ -145,8 +147,10 @@ public class CaseFileRepository {
 		if (!caseFile.getParentFile().exists()) {
 			caseFile.getParentFile().mkdirs();
 		}
-
-		coWriter.saveToFile(caseFile, Collections.singletonList(co));
+		
+		CaseRepository repository = new CaseRepositoryImpl();
+		repository.add(co);
+		coWriter.saveToFile(caseFile, repository);
 
 		try {
 			long numId = Long.parseLong(co.getId());
@@ -186,7 +190,7 @@ public class CaseFileRepository {
 	public CaseObject getCaseById(String caseId) {
 		File caseFile = getCaseFileById(caseId);
 		if (caseFile != null) {
-			List<CaseObject> cases = coCreator.createCaseObjectList(caseFile,
+			CaseRepository cases = coCreator.createCaseRepository(caseFile,
 					KnowledgeBaseRepository.getInstance()
 							.getKnowledgeBase(kbid));
 

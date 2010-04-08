@@ -29,10 +29,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.caserepository.CaseObject;
+import de.d3web.caserepository.CaseRepository;
+import de.d3web.caserepository.CaseRepositoryImpl;
 import de.d3web.caserepository.sax.AbstractTagReader;
-import de.d3web.caserepository.sax.CaseObjectListCreator;
+import de.d3web.caserepository.sax.CaseRepositoryReader;
 import de.d3web.caserepository.utilities.CaseObjectListAdditionalWriter;
-import de.d3web.caserepository.utilities.CaseObjectListWriter;
+import de.d3web.caserepository.utilities.CaseRepositoryWriter;
 
 /**
  * This extension of AbstractCaseRepositoryManager can be used, to manage
@@ -55,9 +57,9 @@ public class CaseFileRepositoryManager extends AbstractCaseRepositoryManager {
 	}
 
 	private Hashtable<CaseRepositoryDescriptor, CaseFileRepository> crd2CaseFileRepositoryTable = new Hashtable<CaseRepositoryDescriptor, CaseFileRepository>();
-	private List<CaseObjectListWriter> createdCaseObjectListWriters = null;
+	private List<CaseRepositoryWriter> createdCaseObjectListWriters = null;
 
-	private List<CaseObjectListCreator> createdCaseObjectListCreators = null;
+	private List<CaseRepositoryReader> createdCaseObjectListCreators = null;
 
 	/**
 	 * Creates a new CaseFileRepositoryManager which will manage all cases for
@@ -69,18 +71,18 @@ public class CaseFileRepositoryManager extends AbstractCaseRepositoryManager {
 	 *            location-types)
 	 */
 	private CaseFileRepositoryManager() {
-		this.createdCaseObjectListWriters = new LinkedList<CaseObjectListWriter>();
-		this.createdCaseObjectListCreators = new LinkedList<CaseObjectListCreator>();
+		this.createdCaseObjectListWriters = new LinkedList<CaseRepositoryWriter>();
+		this.createdCaseObjectListCreators = new LinkedList<CaseRepositoryReader>();
 	}
 
 	@Override
 	public void addAdditionalCaseObjectListWriter(
 			CaseObjectListAdditionalWriter addWriter) {
 		super.addAdditionalCaseObjectListWriter(addWriter);
-		Iterator<CaseObjectListWriter> iter = createdCaseObjectListWriters
+		Iterator<CaseRepositoryWriter> iter = createdCaseObjectListWriters
 				.iterator();
 		while (iter.hasNext()) {
-			CaseObjectListWriter listWriter = iter.next();
+			CaseRepositoryWriter listWriter = iter.next();
 			listWriter.addAdditionalWriter(addWriter);
 		}
 	}
@@ -88,7 +90,7 @@ public class CaseFileRepositoryManager extends AbstractCaseRepositoryManager {
 	@Override
 	public void addAdditionalTagReader(AbstractTagReader reader) {
 		super.addAdditionalTagReader(reader);
-		Iterator<CaseObjectListCreator> iter = createdCaseObjectListCreators
+		Iterator<CaseRepositoryReader> iter = createdCaseObjectListCreators
 				.iterator();
 		while (iter.hasNext()) {
 			iter.next().addTagReader(reader);
@@ -119,8 +121,8 @@ public class CaseFileRepositoryManager extends AbstractCaseRepositoryManager {
 		}
 	}
 
-	private CaseObjectListCreator createCaseObjectListCreator() {
-		CaseObjectListCreator creator = new CaseObjectListCreator();
+	private CaseRepositoryReader createCaseObjectListCreator() {
+		CaseRepositoryReader creator = new CaseRepositoryReader();
 		createdCaseObjectListCreators.add(creator);
 		Iterator<AbstractTagReader> iter = getAdditionalTagReaders().iterator();
 		while (iter.hasNext()) {
@@ -129,8 +131,8 @@ public class CaseFileRepositoryManager extends AbstractCaseRepositoryManager {
 		return creator;
 	}
 
-	private CaseObjectListWriter createCaseObjectListWriter() {
-		CaseObjectListWriter writer = new CaseObjectListWriter();
+	private CaseRepositoryWriter createCaseObjectListWriter() {
+		CaseRepositoryWriter writer = new CaseRepositoryWriter();
 		createdCaseObjectListWriters.add(writer);
 		Iterator<CaseObjectListAdditionalWriter> iter = getCaseObjectListAdditionalWriters()
 				.iterator();
@@ -187,8 +189,8 @@ public class CaseFileRepositoryManager extends AbstractCaseRepositoryManager {
 	 * @see AbstractCaseRepositoryManager
 	 */
 	@Override
-	public Collection<CaseObject> getCasesForKb(String kbid) {
-		List<CaseObject> caseList = new LinkedList<CaseObject>();
+	public CaseRepository getCasesForKb(String kbid) {
+		CaseRepository repository = new CaseRepositoryImpl();
 
 		Enumeration<CaseRepositoryDescriptor> enu = crd2CaseFileRepositoryTable
 				.keys();
@@ -199,11 +201,11 @@ public class CaseFileRepositoryManager extends AbstractCaseRepositoryManager {
 				Iterator<String> idIter = cfr.getCaseIds().iterator();
 				while (idIter.hasNext()) {
 					String caseId = idIter.next();
-					caseList.add(cfr.getCaseById(caseId));
+					repository.add(cfr.getCaseById(caseId));
 				}
 			}
 		}
-		return caseList;
+		return repository;
 	}
 
 	/**

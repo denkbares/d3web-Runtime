@@ -23,12 +23,11 @@ import java.io.File;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.sax.AbstractTagReader;
-import de.d3web.caserepository.sax.CaseObjectListCreator;
+import de.d3web.caserepository.sax.CaseRepositoryReader;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 /**
  * Default implementation of an XML-loader (uses sax.CaseObjectListCreator)
@@ -40,7 +39,7 @@ public class DefaultXMLCaseLoader implements XMLCaseLoader {
 	private String xmlFile = null;
 	private URL xmlFileUrl = null;
 	
-	private CaseObjectListCreator creator = null;
+	private CaseRepositoryReader creator = null;
 
 	private de.d3web.core.knowledge.KnowledgeBase knowledgeBase = null;
 
@@ -49,15 +48,15 @@ public class DefaultXMLCaseLoader implements XMLCaseLoader {
 	 */
 	public DefaultXMLCaseLoader() {
 		super();
-		creator = new CaseObjectListCreator();
+		creator = new CaseRepositoryReader();
 	}
 
 	public Set loadAppend(String kbid) {
 		Set ret = new HashSet();	
-		List cases = creator.createCaseObjectList(new File(xmlFile), knowledgeBase);
-		Iterator iter = cases.iterator();
+		de.d3web.caserepository.CaseRepository cases = creator.createCaseRepository(new File(xmlFile), knowledgeBase);
+		Iterator<CaseObject> iter = cases.iterator();
 		while (iter.hasNext()) {
-			CaseObject co = (CaseObject) iter.next();
+			CaseObject co = iter.next();
 			if (co.getId() == null) {
 				co.getDCMarkup().setContent(DCElement.IDENTIFIER, Integer.toString(co.hashCode()));
 			}

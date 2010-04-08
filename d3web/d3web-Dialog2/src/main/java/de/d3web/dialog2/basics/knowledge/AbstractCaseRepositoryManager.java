@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.caserepository.CaseObject;
+import de.d3web.caserepository.CaseRepository;
 import de.d3web.caserepository.addons.shared.AppliedQSetsReader;
 import de.d3web.caserepository.addons.shared.AppliedQSetsWriter;
 import de.d3web.caserepository.sax.AbstractTagReader;
@@ -128,7 +129,7 @@ public abstract class AbstractCaseRepositoryManager {
 	 *            String id of the knowledgebase
 	 * @return Collection
 	 */
-	public abstract Collection<CaseObject> getCasesForKb(String kbid);
+	public abstract CaseRepository getCasesForKb(String kbid);
 
 	/**
 	 * Returns the maximum caseId of all cases in all repositories for the

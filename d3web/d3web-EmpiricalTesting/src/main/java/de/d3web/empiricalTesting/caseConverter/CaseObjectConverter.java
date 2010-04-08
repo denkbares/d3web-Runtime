@@ -24,11 +24,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import de.d3web.caserepository.CaseObject;
+import de.d3web.caserepository.CaseRepository;
 import de.d3web.caserepository.CaseObject.Solution;
-import de.d3web.caserepository.sax.CaseObjectListCreator;
+import de.d3web.caserepository.sax.CaseRepositoryReader;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
@@ -64,7 +66,7 @@ public abstract class CaseObjectConverter {
 		throws IOException {
 		
 		KnowledgeBase knowledge = loadKnowledgeBase(knowledgebase);
-		List<CaseObject> cases = loadCaseRepository(casespath, knowledge);
+		CaseRepository cases = loadCaseRepository(casespath, knowledge);
 		return convertToTestsuite(cases, knowledge);
 	}
 	
@@ -74,13 +76,17 @@ public abstract class CaseObjectConverter {
 	 * @param k The underlying KnowledgeBase
 	 * @return TestSuite containing the Data from the list of CaseObjects
 	 */
-	public TestSuite convertToTestsuite(List<CaseObject> cases, KnowledgeBase k) {
+	public TestSuite convertToTestsuite(CaseRepository cases, KnowledgeBase k) {
 		
 		TestSuite t = new TestSuite();
 		t.setKb(k);
 		List<SequentialTestCase> stc = new ArrayList<SequentialTestCase>();
+		Iterator<CaseObject> iter = cases.iterator();
 		
-		for (CaseObject co : cases) {
+		while (iter.hasNext()) {
+			
+			CaseObject co = iter.next();
+			
 			// new SequentialTestCase
 			SequentialTestCase s = new SequentialTestCase();
 			s.setName(getCaseID(co));
@@ -223,9 +229,9 @@ public abstract class CaseObjectConverter {
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<CaseObject> loadCaseRepository(String xmlFile, KnowledgeBase kb) {
-		CaseObjectListCreator loader = new CaseObjectListCreator();
-		return loader.createCaseObjectList(new File(xmlFile), kb);
+	private CaseRepository loadCaseRepository(String xmlFile, KnowledgeBase kb) {
+		CaseRepositoryReader loader = new CaseRepositoryReader();
+		return loader.createCaseRepository(new File(xmlFile), kb);
 	}
 
 }
