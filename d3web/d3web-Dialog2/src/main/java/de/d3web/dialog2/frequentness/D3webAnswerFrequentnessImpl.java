@@ -27,9 +27,10 @@ import java.util.List;
 import javax.faces.model.SelectItem;
 
 import de.d3web.caserepository.CaseObject;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.ValueFactory;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.dialog2.basics.knowledge.CaseManager;
@@ -55,8 +56,8 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 		// all cases...
 		int absoluteFreq = 0;
 		for (XPSCase oneCase : savedCases) {
-			Answer answer = q.getValue(oneCase);
-			if (answer.getId().equals(ansID)) {
+			Value answer = q.getValue(oneCase);
+			if (ValueFactory.getID_or_Value(answer).equals(ansID)) {
 				absoluteFreq++;
 			}
 		}

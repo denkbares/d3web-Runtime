@@ -25,6 +25,7 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -37,16 +38,18 @@ import javax.faces.render.Renderer;
 import org.ajax4jsf.ajax.html.HtmlAjaxCommandLink;
 import org.apache.myfaces.component.html.ext.HtmlOutputText;
 
-import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
-import de.d3web.core.session.values.AnswerDate;
-import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.DateValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.Unknown;
 import de.d3web.dialog2.controller.ProcessedQContainersController;
 import de.d3web.dialog2.util.DialogUtils;
 import de.d3web.dialog2.util.QuestionDateUtils;
@@ -289,26 +292,31 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 		writer.startElement("span", component);
 		writer.writeAttribute("id", component.getId() + "_ans_" + q.getId(), "id");
 
-		Answer ans = q.getValue(theCase);
+		Value ans = q.getValue(theCase);
 
-		if (ans instanceof AnswerChoice) {
+		if (ans instanceof ChoiceValue) {
+			String valueID = ((AnswerChoice) ans.getValue()).getId();
 			QuestionChoice qC = (QuestionChoice) q;
 			List<AnswerChoice> alterList = qC.getAllAlternatives();
 			for (Iterator<AnswerChoice> it = alterList.iterator(); it.hasNext();) {
 				AnswerChoice alterAns = it.next();
-				if (alterAns.getId().equals(ans.getId())) {
+				if (alterAns.getId().equals(valueID)) {
 					writer.writeText(alterAns.getName(), "value");
 					break;
 				}
 			}
-		} else if (ans instanceof AnswerMultipleChoice) {
-			writer.writeText(ans.getName(), "value");
-		} else if (ans instanceof AnswerUnknown) {
+		}
+		else if (ans instanceof MultipleChoiceValue) {
+			writer.writeText(((MultipleChoiceValue) ans).getName(), "value");
+		}
+		else if (ans instanceof Unknown) {
 			writer.writeText(DialogRenderUtils.getUnknownAnswerString(q,
 					theCase), "value");
-		} else if (ans instanceof AnswerDate) {
-			String dateanswer = QuestionDateUtils.dateToString((AnswerDate) ans
-					.getQuestion().getValue(theCase), theCase);
+		}
+		else if (ans instanceof DateValue) {
+			String dateanswer = QuestionDateUtils.dateToString(
+					(QuestionDate) q,
+					(Date) ans.getValue(), theCase);
 			writer.writeText(dateanswer, "value");
 		} else {
 			writer.writeText(ans.toString(), "value");

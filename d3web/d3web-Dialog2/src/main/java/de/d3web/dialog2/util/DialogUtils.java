@@ -55,10 +55,7 @@ import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.utilities.CaseConverter;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.MMInfoObject;
@@ -67,9 +64,11 @@ import de.d3web.core.knowledge.terminology.info.MMInfoSubject;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.CaseFactory;
 import de.d3web.core.session.D3WebCase;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.interviewmanager.DialogController;
 import de.d3web.core.session.interviewmanager.MQDialogController;
+import de.d3web.core.session.values.Unknown;
 import de.d3web.dialog2.DiagnosesTreeBean;
 import de.d3web.dialog2.QASetTreeBean;
 import de.d3web.dialog2.QuestionPageBean;
@@ -448,20 +447,9 @@ public class DialogUtils {
 	}
 
 	public static boolean unknownAnswerInValueList(Question q, XPSCase theCase) {
-		Answer answer = q.getValue(theCase);
+		Value answer = q.getValue(theCase);
 		if (answer == null) return false;
-		List<? extends Answer> valueList = new LinkedList<Answer>();
-		if (q instanceof QuestionMC) {
-			valueList = ((AnswerMultipleChoice)answer).getChoices();
-			for (Answer a : valueList) {
-				if (a.isUnknown()) {
-					return true;
-				}
-			}
-		} else {
-			return answer.isUnknown();
-		}
-		return false;
+		return answer instanceof Unknown;
 	}
 
 }

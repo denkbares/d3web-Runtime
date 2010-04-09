@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +36,6 @@ import javax.faces.render.Renderer;
 import org.apache.log4j.Logger;
 
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
@@ -46,9 +44,17 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.DateValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.TextValue;
+import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.core.session.values.Unknown;
 import de.d3web.core.utilities.Utils;
 import de.d3web.dialog2.basics.layout.QContainerLayout;
 import de.d3web.dialog2.basics.layout.QuestionPageLayout;
@@ -82,16 +88,21 @@ public class QuestionPageRenderer extends Renderer {
 		}
 	}
 
-	private static Answer getAnswer(UIComponent component, XPSCase theCase, Question q, String idOrValue) {
+	private static Value getAnswer(UIComponent component, XPSCase theCase, Question q, String idOrValue) {
 		if (idOrValue.equals(AnswerUnknown.UNKNOWN_ID)) {
-			return q.getUnknownAlternative();
-		} else if (q instanceof QuestionChoice) {
-			return ((QuestionChoice) q).getAnswer(theCase, idOrValue);
-		} else if (q instanceof QuestionText) {
+			return Unknown.getInstance();
+		}
+		else if (q instanceof QuestionChoice) {
+			AnswerChoice choice = (AnswerChoice) ((QuestionChoice) q).getAnswer(theCase,
+					idOrValue);
+			return new ChoiceValue(choice);
+		}
+		else if (q instanceof QuestionText) {
 			if (!idOrValue.equals("")) {
-				return ((QuestionText) q).getAnswer(theCase, idOrValue);
+				return new TextValue(idOrValue);
 			}
-		} else if (q instanceof QuestionNum) {
+		}
+		else if (q instanceof QuestionNum) {
 			if (!idOrValue.equals("")) {
 				try {
 					Double ans = new Double(idOrValue);
@@ -99,38 +110,75 @@ public class QuestionPageRenderer extends Renderer {
 							Property.QUESTION_NUM_RANGE);
 					if (interval != null) {
 						if (!interval.contains(ans)) {
-							addValidationFailedMessage(component, q.getId(), idOrValue, DialogUtils
-									.getMessageWithParamsFor("error.wrongrange", new Object[] { idOrValue,
-											interval.toString() }));
-						} else {
-							return ((QuestionNum) q).getAnswer(theCase, ans);
+							addValidationFailedMessage(component, q.getId(), idOrValue,
+									DialogUtils
+									.getMessageWithParamsFor("error.wrongrange",
+									new Object[] {
+									idOrValue,
+									interval.toString() }));
 						}
-					} else {
-						return ((QuestionNum) q).getAnswer(theCase, ans);
+						else {
+							return new NumValue(ans);
+						}
 					}
-				} catch (NumberFormatException e) {
+					else {
+						return new NumValue(ans);
+					}
+				}
+				catch (NumberFormatException e) {
 					logger.info(idOrValue + " is not a number.");
-					addValidationFailedMessage(component, q.getId(), idOrValue, DialogUtils
-							.getMessageWithParamsFor("error.no_number", new Object[] { idOrValue }));
+					addValidationFailedMessage(component, q.getId(), idOrValue,
+							DialogUtils
+							.getMessageWithParamsFor("error.no_number",
+							new Object[] { idOrValue }));
 				}
 			}
-		} else if (q instanceof QuestionDate) {
-			InvalidAnswerError error = QuestionDateUtils.parseAnswerDate(idOrValue, (QuestionDate) q);
+		}
+		else if (q instanceof QuestionDate) {
+			InvalidAnswerError error = QuestionDateUtils.parseAnswerDate(idOrValue,
+					(QuestionDate) q);
 			if (error.getErrorType().equals(InvalidAnswerError.NO_ERROR)) {
-				return ((QuestionDate) q).getAnswer(theCase, (Date) error.getAnswer());
-			} else {
-				if (error.getErrorType().equals(InvalidAnswerError.INVALID_DATEFORMAT_DATE)) {
-					addValidationFailedMessage(component, q.getId(), idOrValue, DialogUtils
-							.getMessageWithParamsFor("error.invalid_dateformat_date", new Object[] {
-									idOrValue, DialogUtils.getMessageFor("questiondate.date_format") }));
-				} else if (error.getErrorType().equals(InvalidAnswerError.INVALID_DATEFORMAT_TIME)) {
-					addValidationFailedMessage(component, q.getId(), idOrValue, DialogUtils
-							.getMessageWithParamsFor("error.invalid_dateformat_time", new Object[] {
-									idOrValue, DialogUtils.getMessageFor("questiondate.time_format") }));
-				} else if (error.getErrorType().equals(InvalidAnswerError.INVALID_DATEFORMAT_FULL)) {
-					addValidationFailedMessage(component, q.getId(), idOrValue, DialogUtils
-							.getMessageWithParamsFor("error.invalid_dateformat_full", new Object[] {
-									idOrValue, DialogUtils.getMessageFor("questiondate.full_format") }));
+				return new DateValue((Date) error.getAnswer());
+			}
+			else {
+				if (error.getErrorType().equals(
+						InvalidAnswerError.INVALID_DATEFORMAT_DATE)) {
+					addValidationFailedMessage(
+							component,
+							q.getId(),
+							idOrValue,
+							DialogUtils
+							.getMessageWithParamsFor(
+							"error.invalid_dateformat_date",
+							new Object[] {
+							idOrValue,
+							DialogUtils.getMessageFor("questiondate.date_format") }));
+				}
+				else if (error.getErrorType().equals(
+						InvalidAnswerError.INVALID_DATEFORMAT_TIME)) {
+					addValidationFailedMessage(
+							component,
+							q.getId(),
+							idOrValue,
+							DialogUtils
+							.getMessageWithParamsFor(
+							"error.invalid_dateformat_time",
+							new Object[] {
+							idOrValue,
+							DialogUtils.getMessageFor("questiondate.time_format") }));
+				}
+				else if (error.getErrorType().equals(
+						InvalidAnswerError.INVALID_DATEFORMAT_FULL)) {
+					addValidationFailedMessage(
+							component,
+							q.getId(),
+							idOrValue,
+							DialogUtils
+							.getMessageWithParamsFor(
+							"error.invalid_dateformat_full",
+							new Object[] {
+							idOrValue,
+							DialogUtils.getMessageFor("questiondate.full_format") }));
 				}
 			}
 		}
@@ -141,38 +189,48 @@ public class QuestionPageRenderer extends Renderer {
 		if (q == null || answerids == null || answerids.length == 0) {
 			return;
 		}
-
 		List<Object> answeridList = Utils.createList(answerids);
-		List<Answer> value = new LinkedList<Answer>();
-
+		Value value = null;
 		if (answeridList.contains(AnswerUnknown.UNKNOWN_ID)) {
-			value.add(q.getUnknownAlternative());
-		} else {
-			// if QuestionMC -> check the bad answer-combinations
-			if (q instanceof QuestionMC) {
-				// get badanswerLists and add an error if a bad answer
-				// combination is found
-				List<List<String>> badanswersLists = (List<List<String>>) q.getProperties().getProperty(
-						Property.MC_CONSTRAINTS);
-				if (badanswersLists != null && badanswersLists.size() > 0) {
-					for (List<String> badanswersList : badanswersLists) {
-						if (QuestionsRendererUtils.currentAnswersAreBad(answeridList, badanswersList)) {
-							addValidationFailedMessage(component, q.getId(), null, DialogUtils
-									.getMessageWithParamsFor("error.badmccombination",
-											new Object[] { getAnswerNameListFromIDList(badanswersList, q,
-													theCase) }));
-							return;
-						}
+			value = Unknown.getInstance();
+		}
+		// if QuestionMC -> check the bad answer-combinations
+		else if (q instanceof QuestionMC) {
+			// get badanswerLists and add an error if a bad answer
+			// combination is found
+			List<List<String>> badanswersLists = (List<List<String>>) q.getProperties().getProperty(
+					Property.MC_CONSTRAINTS);
+			if (badanswersLists != null && badanswersLists.size() > 0) {
+				for (List<String> badanswersList : badanswersLists) {
+					if (QuestionsRendererUtils.currentAnswersAreBad(answeridList,
+							badanswersList)) {
+						addValidationFailedMessage(component, q.getId(), null,
+								DialogUtils
+								.getMessageWithParamsFor(
+								"error.badmccombination",
+								new Object[] { getAnswerNameListFromIDList(
+								badanswersList, q,
+								theCase) }));
+						return;
 					}
 				}
+
 			}
+			List<ChoiceValue> choices = new ArrayList<ChoiceValue>(answeridList.size());
 			Iterator<Object> iter = answeridList.iterator();
 			while (iter.hasNext()) {
-				value.add(getAnswer(component, theCase, q, iter.next().toString()));
+				ChoiceValue v = (ChoiceValue) (getAnswer(component, theCase, q,
+						iter.next().toString()));
+				choices.add(v);
 			}
+			value = new MultipleChoiceValue(choices);
 		}
-		if ((value.size() == 0) || (value.get(0) != null)) {
-			setValueInCase(theCase, q, value.toArray());
+		// OC and num and date and text
+		else {
+			value = getAnswer(component, theCase, q, answeridList.get(0).toString());
+		}
+		if ((value != null)) {
+			setValueInCase(theCase, q, value);
 		}
 	}
 
@@ -210,16 +268,20 @@ public class QuestionPageRenderer extends Renderer {
 			Question q = iter.next();
 			if (q != null && !isAbstractQuestion(q)) {
 				// answer question / update the case
-				if (requestMap.containsKey(q.getId()) && !hasEmptyString(requestMap.get(q.getId()))) {
+				if (requestMap.containsKey(q.getId())
+						&& !hasEmptyString(requestMap.get(q.getId()))) {
 					answerQuestion(component, requestMap.get(q.getId()), theCase, q);
-				} else {
+				}
+				else {
 					// if "set all unknown" button was clicked, all questions
 					// which are valid and not yet answered are set to "unknown"
-					if (unknownString.equals("true") && !q.hasValue(theCase) && q.isValid(theCase)) {
-						setValueInCase(theCase, q, new Object[] { q.getUnknownAlternative() });
-					} else {
+					if (unknownString.equals("true") && !q.hasValue(theCase)
+							&& q.isValid(theCase)) {
+						setValueInCase(theCase, q, Unknown.getInstance());
+					}
+					else {
 						// delete the answer(s) ...
-						setValueInCase(theCase, q, new Object[] {});
+						setValueInCase(theCase, q, UndefinedValue.getInstance());
 						theCase.getAnsweredQuestions().remove(q);
 					}
 				}
@@ -259,14 +321,18 @@ public class QuestionPageRenderer extends Renderer {
 		XPSCase theCase = DialogUtils.getDialog().getTheCase();
 		ResponseWriter writer = context.getResponseWriter();
 		if (DialogUtils.getImageMapBean().hasImagesForQContainer(qList)) {
-			QuestionImageMapRendererUtils.renderQuestionsImageMap(writer, component, theCase, qList,
+			QuestionImageMapRendererUtils.renderQuestionsImageMap(writer, component,
+					theCase, qList,
 					layoutDef);
-		} else if (layoutDef instanceof QContainerLayout) {
+		}
+		else if (layoutDef instanceof QContainerLayout) {
 			new QContainerRendererForDefinedLayout(writer, component, theCase, qList,
 					(QContainerLayout) layoutDef).render();
 			// (QContainerLayout) layoutDef);
-		} else {
-			new QContainerRendererForUndefinedLayout(writer, component, theCase, qList, layoutDef).render();
+		}
+		else {
+			new QContainerRendererForUndefinedLayout(writer, component, theCase, qList,
+					layoutDef).render();
 		}
 	}
 
@@ -275,8 +341,10 @@ public class QuestionPageRenderer extends Renderer {
 
 		// if no QContainerlayout is defined, then take questionpagelayout
 		if (DialogUtils.getDialogLayout().hasDefinitonsForQContainerID(qContainerID)) {
-			return DialogUtils.getDialogLayout().getQContainerLayoutDefinitionForID(qContainerID);
-		} else {
+			return DialogUtils.getDialogLayout().getQContainerLayoutDefinitionForID(
+					qContainerID);
+		}
+		else {
 			return DialogUtils.getDialogLayout().getQuestionPageLayout();
 		}
 	}
@@ -284,7 +352,8 @@ public class QuestionPageRenderer extends Renderer {
 	private Object getAnswerNameListFromIDList(List<String> answerIDs, Question q, XPSCase theCase) {
 		List<String> answerNameList = new ArrayList<String>();
 		for (String answerID : answerIDs) {
-			AnswerChoice a = (AnswerChoice) ((QuestionChoice) q).getAnswer(theCase, answerID);
+			AnswerChoice a = (AnswerChoice) ((QuestionChoice) q).getAnswer(theCase,
+					answerID);
 			answerNameList.add(a.getName());
 		}
 		return answerNameList;
@@ -307,7 +376,7 @@ public class QuestionPageRenderer extends Renderer {
 		return false;
 	}
 
-	private void setValueInCase(XPSCase theCase, Question q, Object[] answers) {
+	private void setValueInCase(XPSCase theCase, Question q, Value answers) {
 		if (theCase.isFinished()) {
 			continueCaseByUser(theCase);
 		}

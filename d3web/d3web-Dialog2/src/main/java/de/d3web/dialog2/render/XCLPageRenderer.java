@@ -34,12 +34,13 @@ import javax.faces.render.Renderer;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.condition.Condition;
-import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
+import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.dialog2.component.html.UIXCLPage;
 import de.d3web.dialog2.util.DialogUtils;
 import de.d3web.kernel.verbalizer.VerbalizationManager;
@@ -61,7 +62,7 @@ public class XCLPageRenderer extends Renderer {
 	
     
     @Override
-    public void encodeEnd(FacesContext context, UIComponent component) 
+    public void encodeEnd(FacesContext context, UIComponent component)
     	throws IOException {
     	
     	this.component = component;
@@ -72,10 +73,10 @@ public class XCLPageRenderer extends Renderer {
     	theCase = DialogUtils.getDialog().getTheCase();
     	String diagnosis = ((UIXCLPage) component).getDiag();
     	
-    	Solution solution = 
+    	Solution solution =
     		theCase.getKnowledgeBase().searchDiagnosis(diagnosis);
     	
-		Collection<KnowledgeSlice> models = 
+		Collection<KnowledgeSlice> models =
 			theCase.getKnowledgeBase().getAllKnowledgeSlicesFor(PSMethodXCL.class);
 		
 		for (KnowledgeSlice knowledgeSlice : models) {
@@ -89,7 +90,7 @@ public class XCLPageRenderer extends Renderer {
 					if (trace != null) {
 						
 						verbalizeTrace(trace, solution.getName());
-					}					
+					}
 					
 				}
 			}
@@ -151,9 +152,9 @@ public class XCLPageRenderer extends Renderer {
 	 * @param state the state to be rendered
 	 * @param score the explanation score
 	 * @param support the explanation support
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	private void renderState(String state, Double score, Double support, String solution) 
+	private void renderState(String state, Double score, Double support, String solution)
 		throws IOException{
 		
 		if(score != null && support != null) {
@@ -219,7 +220,7 @@ public class XCLPageRenderer extends Renderer {
 	}
 	
 
-	private void renderTable(String type, Collection<XCLRelation> content) 
+	private void renderTable(String type, Collection<XCLRelation> content)
 		throws IOException{
 
 		if(content != null && content.size() >0){
@@ -276,12 +277,12 @@ public class XCLPageRenderer extends Renderer {
 	 * Renders the table content, new row for every answer
 	 * @param content the answers to be rendered
 	 * @return a table representation of the content
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private void renderContent(Collection<XCLRelation> content) throws IOException{
 		
 		for (XCLRelation rel : content) {
-			Condition cond = rel.getConditionedFinding();	
+			Condition cond = rel.getConditionedFinding();
 			writer.startElement("tr", component);
 			writer.startElement("td", component);
 			writer.writeText(VerbalizationManager.getInstance().verbalize(cond,
@@ -298,7 +299,7 @@ public class XCLPageRenderer extends Renderer {
 	 * the question, the answer given and the expected answer (verbalized condition)
 	 * @param content the content to get rendered
 	 * @return a table representation of the content
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private void renderContentNotExplained(Collection<XCLRelation> content) throws IOException{
 
@@ -325,7 +326,7 @@ public class XCLPageRenderer extends Renderer {
 		for (XCLRelation rel : content) {
 			writer.startElement("tr", component);
 			writer.startElement("td", component);
-			Condition cond = rel.getConditionedFinding();	
+			Condition cond = rel.getConditionedFinding();
 			List questions = cond.getTerminalObjects();
 			ListIterator condIt = questions.listIterator();
 			List<Question> askedQuestions = new ArrayList<Question>();
@@ -340,26 +341,26 @@ public class XCLPageRenderer extends Renderer {
 					writer.writeText(cq.getName(), "value");
 					count = count +1;
 					askedQuestions.add(cq);
-				}				
+				}
 			}
 			writer.endElement("td");
 			writer.startElement("td", component);
-			Answer answer = cq.getValue(theCase);
-			List<Answer> answers = new ArrayList<Answer>();
+			Value answer = cq.getValue(theCase);
+			List<Value> answers = new ArrayList<Value>();
 			if (cq instanceof QuestionMC) {
-				answers.addAll(((AnswerMultipleChoice)answer).getChoices());
+				answers.addAll((List<ChoiceValue>) ((MultipleChoiceValue) answer).getValue());
 			} else {
 				answers.add(answer);
 			}
 				
-			ListIterator<Answer> iterator = answers.listIterator();
+			ListIterator<Value> iterator = answers.listIterator();
 			count = 0;
 			while(iterator.hasNext()){
 				if(count > 0){
 					writer.startElement("br", component);
 				}
-				Answer a = iterator.next();
-				writer.writeText(a.getValue(theCase), "value");
+				Value a = iterator.next();
+				writer.writeText(a.getValue(), "value");
 				count = count+1;
 			}
 			writer.endElement("td");
@@ -370,7 +371,7 @@ public class XCLPageRenderer extends Renderer {
 					RenderingFormat.HTML, parameterMap).replaceAll("<b>", "").replaceAll("</b>", ""), "value");
 			writer.endElement("td");
 			writer.endElement("tr");
-		}	
+		}
 
 	}
 

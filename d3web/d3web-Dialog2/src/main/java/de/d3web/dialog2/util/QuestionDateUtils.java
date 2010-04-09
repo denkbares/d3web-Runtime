@@ -30,8 +30,6 @@ import org.apache.log4j.Logger;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.session.values.AnswerDate;
-import de.d3web.core.session.values.EvaluatableAnswerDateValue;
 
 /**
  * Converts Date to String and vice versa.
@@ -67,11 +65,9 @@ public class QuestionDateUtils {
      * Returns the string-representation of the given AnswerDate as it is
      * specified by the question's properties and the current resourcebundle.
      */
-    public static String dateToString(AnswerDate ansDate, XPSCase theCase) {
-	Date date = ((EvaluatableAnswerDateValue) ansDate.getValue(theCase))
-		.eval(theCase);
-	String dateSection = (String) ansDate.getQuestion().getProperties()
-		.getProperty(Property.QUESTION_DATE_TYPE);
+	public static String dateToString(QuestionDate question, Date date, XPSCase theCase) {
+		String dateSection = (String) question.getProperties()
+				.getProperty(Property.QUESTION_DATE_TYPE);
 	if (dateSection == null) {
 	    dateSection = DialogUtils.getDialogSettings()
 		    .getQuestionDateDefaultdateSection();

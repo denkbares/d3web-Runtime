@@ -34,7 +34,6 @@ import org.apache.log4j.Logger;
 import de.d3web.abstraction.ActionQuestionSetter;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.inference.condition.CondEqual;
@@ -52,18 +51,21 @@ import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.CondTextContains;
 import de.d3web.core.inference.condition.CondTextEqual;
 import de.d3web.core.inference.condition.CondUnknown;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.inference.condition.TerminalCondition;
 import de.d3web.core.inference.condition.UnknownAnswerException;
-import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.Unknown;
 import de.d3web.dialog2.util.DialogUtils;
 import de.d3web.explain.ExplanationFactory;
 import de.d3web.explain.eNodes.ECondition;
@@ -508,14 +510,17 @@ public class ExplanationRendererUtils {
 			writer.writeText(ce.getQuestion().getName() + " ("
 					+ ce.getQuestion().getId() + ")", "value");
 			writer.write(" = ");
-			Answer ans = ce.getValues();
-			if (ans instanceof AnswerChoice) {
-					AnswerChoice ansC = (AnswerChoice) ans;
+			Value ans = ce.getValue();
+			if (ans instanceof ChoiceValue) {
+				AnswerChoice ansC = (AnswerChoice) ans.getValue();
 					writer.writeText(ansC.getName() + " (" + ansC.getId()+ ")", "value");
-			} else if (ans instanceof AnswerMultipleChoice) {
-				AnswerMultipleChoice ansC = (AnswerMultipleChoice) ans;
-				writer.writeText(ansC.getName() + " (" + ansC.getId()+ ")", "value");
-			} else if (ans instanceof AnswerUnknown) {
+			}
+			else if (ans instanceof MultipleChoiceValue) {
+				MultipleChoiceValue ansC = (MultipleChoiceValue) ans;
+				writer.writeText(ansC.getName() + " (" + ansC.getAnswerChoicesID() + ")",
+						"value");
+			}
+			else if (ans instanceof Unknown) {
 					writer.writeText(AnswerUnknown.UNKNOWN_VALUE, "value");
 			}
 	} else if (cond instanceof CondKnown) {
@@ -574,7 +579,7 @@ public class ExplanationRendererUtils {
 			+ DialogUtils.getMessageFor("explain.numless_equal")
 			+ " ", "value");
 
-	    writer.writeText(cn.getAnswerValue().toString(), "value");
+	    writer.writeText(cn.getConditionValue().toString(), "value");
 
 	    String unit = (String) cn.getQuestion().getProperties()
 		    .getProperty(Property.UNIT);

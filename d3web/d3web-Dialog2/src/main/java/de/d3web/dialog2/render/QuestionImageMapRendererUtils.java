@@ -23,6 +23,7 @@ package de.d3web.dialog2.render;
 import java.awt.Dimension;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -31,13 +32,13 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.ValueFactory;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
-import de.d3web.core.session.values.AnswerDate;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.dialog2.basics.layout.QContainerLayout;
 import de.d3web.dialog2.basics.layout.QuestionPageLayout;
@@ -59,7 +60,7 @@ public class QuestionImageMapRendererUtils {
 		return true;
 	}
 
-	private static Answer currentAnswerIDsForQuestionID(String questionID, XPSCase theCase,
+	private static Value currentAnswerIDsForQuestionID(String questionID, XPSCase theCase,
 			List<Question> qList) {
 		for (Question question : qList) {
 			if (question.getId().equals(questionID)) {
@@ -69,22 +70,23 @@ public class QuestionImageMapRendererUtils {
 		return null;
 	}
 
-	private static ImageMapAnswerIcon getActualAnswerImage(Image image, Answer answer) {
+	private static ImageMapAnswerIcon getActualAnswerImage(Image image, Value answer) {
 		for (ImageMapAnswerIcon ai : image.getAnswerImages()) {
-			if (answer.getId().equals(ai.getId())) {
+			String ID_or_value = ValueFactory.getID_or_Value(answer);
+			if (ID_or_value.equals(ai.getId())) {
 				return ai;
 			}
 		}
 		return null;
 	}
 
-	private static String getAnswerText(Question q, XPSCase theCase, Answer answer) {
+	private static String getAnswerText(Question q, XPSCase theCase, Value answer) {
 		String answerText = answer.toString();
 		if (answerText.equals(AnswerUnknown.UNKNOWN_VALUE)) {
 			return DialogUtils.getMessageFor("dialog.unknown");
 		} else if (q != null && q instanceof QuestionDate) {
-			Answer ans = q.getValue(theCase);
-			return QuestionDateUtils.dateToString((AnswerDate) ans, theCase);
+			Date ans = (Date) (q.getValue(theCase)).getValue();
+			return QuestionDateUtils.dateToString((QuestionDate) q, ans, theCase);
 		}
 		return answerText;
 	}
@@ -182,7 +184,7 @@ public class QuestionImageMapRendererUtils {
 		return remainingQuestions;
 	}
 
-	private static Object getToolTipString(Question q, XPSCase theCase, Answer answer) {
+	private static Object getToolTipString(Question q, XPSCase theCase, Value answer) {
 		return "Tip('" + getAnswerText(q, theCase, answer) + "', CLOSEBTN, false, STICKY, false)";
 	}
 
@@ -201,7 +203,8 @@ public class QuestionImageMapRendererUtils {
 		// Draw clickable regions
 		for (Region region : image.getRegions()) {
 
-			Answer answer = currentAnswerIDsForQuestionID(region.getQuestionID(), theCase, qList);
+			Value answer = currentAnswerIDsForQuestionID(region.getQuestionID(), theCase,
+					qList);
 			Question q = theCase.getKnowledgeBase().searchQuestion(region.getQuestionID());
 
 			ImageMapAnswerIcon answerImage = getActualAnswerImage(image, answer);
@@ -227,9 +230,10 @@ public class QuestionImageMapRendererUtils {
 				QuestionChoice qc = (QuestionChoice) DialogUtils.getQuestionFromQList(qList, region
 						.getQuestionID());
 
+				String answerID = ValueFactory.getID_or_Value(answer);
 				boolean useNext = false;
 				if (answer != null) {
-					if (answer.getId().equals(AnswerUnknown.UNKNOWN_ID)) {
+					if (answerID.equals(AnswerUnknown.UNKNOWN_ID)) {
 						useNext = true;
 					}
 				} else {
@@ -245,7 +249,7 @@ public class QuestionImageMapRendererUtils {
 						break;
 					}
 					if (answer != null) {
-						if (ac.getId().equals(answer.getId())) {
+						if (ac.getId().equals(answerID)) {
 							// This is the current answer. The next one is to be
 							// selected on clicking
 							useNext = true;
@@ -327,10 +331,11 @@ public class QuestionImageMapRendererUtils {
 	}
 
 	private static void renderImageMapAnswerIcon(ResponseWriter writer, UIComponent component, Question q,
-			Answer answer, String imageSrc) throws IOException {
+			Value answer, String imageSrc) throws IOException {
 		writer.startElement("img", component);
 		if (q != null && answer != null) {
-			writer.writeAttribute("id", "answerImg_q_" + q.getId() + "_" + answer.getId(), "id");
+			String id = ValueFactory.getID_or_Value(answer);
+			writer.writeAttribute("id", "answerImg_q_" + q.getId() + "_" + id, "id");
 		}
 		writer.writeAttribute("src", imageSrc, "src");
 		writer.writeAttribute("alt", "ans", "alt");
