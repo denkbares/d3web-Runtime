@@ -19,9 +19,8 @@
  */
 
 package de.d3web.kernel.psMethods.compareCase.comparators;
-import java.util.Collection;
-
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.Value;
 
 /**
  * Class that describes a comparator result.
@@ -54,14 +53,14 @@ public class ComparatorResult {
 		return abnormality;
 	}
 
-	public void setQueryQuestionAndAnswers(Question question, Collection answers) {
+	public void setQueryQuestionAndAnswers(Question question, Value value) {
 		queryQaPair[0] = question;
-		queryQaPair[1] = answers;
+		queryQaPair[1] = value;
 	}
 
-	public void setStoredQuestionAndAnswers(Question question, Collection answers) {
+	public void setStoredQuestionAndAnswers(Question question, Value value) {
 		storedQaPair[0] = question;
-		storedQaPair[1] = answers;
+		storedQaPair[1] = value;
 	}
 
 	public Question getQueryQuestion() {
@@ -72,12 +71,12 @@ public class ComparatorResult {
 		return (Question) storedQaPair[0];
 	}
 
-	public Collection getQueryAnswers() {
-		return (Collection) queryQaPair[1];
+	public Value getQueryValue() {
+		return (Value) queryQaPair[1];
 	}
 
-	public Collection getStoredAnswers() {
-		return (Collection) storedQaPair[1];
+	public Value getStoredValue() {
+		return (Value) storedQaPair[1];
 	}
 
 	/**
@@ -140,6 +139,7 @@ public class ComparatorResult {
 	 * Creation date: (05.08.2001 16:08:06)
 	 * @return java.lang.String
 	 */
+	@Override
 	public String toString() {
 		return (queryQaPair[0])
 			+ ": "
