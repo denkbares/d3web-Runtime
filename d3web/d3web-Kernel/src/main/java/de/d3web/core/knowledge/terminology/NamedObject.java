@@ -99,7 +99,7 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	 */
 	private transient Map<Class<? extends PSMethod>, Map<MethodKind, KnowledgeSlice>> knowledgeMap;
 
-	private String id;
+	private final String id;
 
 	public static final int BEFORE = 1;
 

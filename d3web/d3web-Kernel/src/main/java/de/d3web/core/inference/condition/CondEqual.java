@@ -161,7 +161,6 @@ public class CondEqual extends CondQuestion {
 		String ret = "\u2190 CondEqual question: "
 		+ question.getId()
 		+ " value: " + this.value;
-		ret = ret.substring(0, ret.length()-1);
 		return ret;
 	}
 	
