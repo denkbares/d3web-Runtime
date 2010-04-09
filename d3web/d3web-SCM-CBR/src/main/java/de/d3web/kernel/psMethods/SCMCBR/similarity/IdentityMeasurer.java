@@ -1,39 +1,24 @@
 package de.d3web.kernel.psMethods.SCMCBR.similarity;
 
-import java.util.List;
-
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.session.blackboard.CaseQuestion;
 
 public class IdentityMeasurer implements ISimilarityMeasurer {
-
-	
-	private final Answer rightAnswer;
+	private final Value expectedValue;
 	private final Question question;
 	
-	
-	
-	/**
-	 * @param rightAnswer
-	 */
-	public IdentityMeasurer(Question question, Answer rightAnswer) {
-		this.rightAnswer = rightAnswer;
+	public IdentityMeasurer(Question question, Value expectedValue) {
+		this.expectedValue = expectedValue;
 		this.question = question;
 	}
 
-
 	@Override
 	public double computeSimilarity(XPSCase theCase) {
-		
-		CaseQuestion caseQuestino = (CaseQuestion) theCase.getCaseObject(question);
-		
-		Answer value = question.getValue(theCase);
-		
-		if (value.equals(rightAnswer)) //TODO Fix
+		Value value = question.getValue(theCase);
+		if (value.equals(expectedValue)) // TODO Fix
 			return 1;
-		else 
+		else
 			return 0;
 	}
 

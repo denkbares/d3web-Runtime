@@ -4,9 +4,9 @@ import java.util.Collection;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseDiagnosis;
 import de.d3web.core.session.blackboard.Fact;
@@ -28,9 +28,10 @@ public class PSMethodSCMCBR extends PSMethodAdapter {
 		return instance;
 	}
 	
+	@Override
 	public DiagnosisState getState(XPSCase theCase, Solution diagnosis) {
 		KnowledgeSlice models = diagnosis.getKnowledge(PSMethodSCMCBR.class, SCMCBRModel.SCMCBR);
-		if (models == null) return DiagnosisState.UNCLEAR; 
+		if (models == null) return DiagnosisState.UNCLEAR;
 		SCMCBRModel model = (SCMCBRModel) models;
 		return model.getState(theCase);
 	}
@@ -83,11 +84,11 @@ public class PSMethodSCMCBR extends PSMethodAdapter {
 				//model.refreshState(theCase);
 				DiagnosisState newState = model.getState(theCase);
 				if (!oldState.equals(newState)) {
-					theCase.setValue(model.getSolution(), new DiagnosisState[]{newState}, this.getClass());
+					theCase.setValue(model.getSolution(), newState, this.getClass());
 				}
 				model.notifyListeners(theCase, model);
 			}
-		} 
+		}
 	}
 	
 	@Override

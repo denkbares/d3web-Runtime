@@ -1,12 +1,13 @@
 package de.d3web.kernel.psMethods.SCMCBR;
 
-import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondEqual;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.ChoiceValue;
 
 /**
  * 
@@ -50,14 +51,14 @@ public class SCMCBRRelation {
 		}
 	}
 
-	public static SCMCBRRelation createSCMCBRRelation(Condition conditionedFinding, 
+	public static SCMCBRRelation createSCMCBRRelation(Condition conditionedFinding,
 			double weight) {
 		SCMCBRRelation r = new SCMCBRRelation();
 		r.setConditionedFinding(conditionedFinding);
 		r.setWeight(weight);
 		return r;
 	}
-	public static SCMCBRRelation createSCMCBRRelation(Condition conditionedFinding, 
+	public static SCMCBRRelation createSCMCBRRelation(Condition conditionedFinding,
 			double weight, String id) {
 		SCMCBRRelation r = new SCMCBRRelation(id);
 		r.setConditionedFinding(conditionedFinding);
@@ -74,11 +75,13 @@ public class SCMCBRRelation {
 	}
 
 	public static SCMCBRRelation createSCMCBRRelation(QuestionChoice question, AnswerChoice answer, double weight) {
-		return createSCMCBRRelation(new CondEqual(question, answer), weight);
+		return createSCMCBRRelation(new CondEqual(question, new ChoiceValue(answer)),
+				weight);
 	}
 
 	public static SCMCBRRelation createSCMCBRRelation(String id, QuestionChoice question, AnswerChoice answer) {
-		SCMCBRRelation r = createSCMCBRRelation(new CondEqual(question, answer));
+		SCMCBRRelation r = createSCMCBRRelation(new CondEqual(question, new ChoiceValue(
+				answer)));
 		r.setId(id);
 		return r;
 	}
@@ -119,23 +122,26 @@ public class SCMCBRRelation {
 		this.id = id;
 	}
 	
+	@Override
 	public boolean equals(Object o) {
 		if (o instanceof SCMCBRRelation) {
 			SCMCBRRelation r = (SCMCBRRelation)o;
 			return (id.equals(r.id) &&
-					conditionedFinding.equals(r.conditionedFinding) && 
+					conditionedFinding.equals(r.conditionedFinding) &&
 					weight == r.weight);
 		}
 		return false;
 	}
 	
+	@Override
 	public String toString() {
 		String w = " ";
-		if (weight != DEFAULT_WEIGHT) 
+		if (weight != DEFAULT_WEIGHT)
 			w += weight;
 		return conditionedFinding.toString() + w;
 	}
 		
+	@Override
 	public int hashCode() {
 		return toString().hashCode();
 	}
