@@ -33,17 +33,16 @@ import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.utilities.CaseConverter;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
-import de.d3web.core.session.values.AnswerNo;
-import de.d3web.core.session.values.AnswerUnknown;
-import de.d3web.core.session.values.AnswerYes;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.Unknown;
 import de.d3web.kernel.psMethods.compareCase.CompareCaseException;
 import de.d3web.kernel.psMethods.compareCase.CompareObjectsHashContainer;
 import de.d3web.kernel.psMethods.compareCase.comparators.CaseComparator;
@@ -77,6 +76,7 @@ public class ComparisonResultRepository {
 	 *            de.d3web.psMethods.compareCase.facade.SimpleResult
 	 * @deprecated
 	 */
+	@Deprecated
 	private void addSortedToSimpleResults(SimpleResult res) {
 		if (!simpleResults.contains(res)) {
 			Iterator iter = simpleResults.iterator();
@@ -223,6 +223,7 @@ public class ComparisonResultRepository {
 	 * @return java.util.List
 	 * @deprecated this method is not for use with CaseFileRepository!
 	 */
+	@Deprecated
 	public List getSimpleResults(String kbid) throws CompareCaseException {
 		simpleResults = new LinkedList();
 
@@ -308,22 +309,27 @@ public class ComparisonResultRepository {
 			Question q = (Question) iter.next();
 			sb.append("<question ID='" + q.getId() + "'>\n");
 			sb.append("<answers>\n");
-			Collection answersColl = currentCase.getAnswers(q);
-			if (answersColl != null) {
-				Iterator answers = answersColl.iterator();
-				while (answers.hasNext()) {
-					Answer ans = (Answer) answers.next();
-					if (ans instanceof AnswerYes) {
-						sb.append("<answer value='MaYes'/>\n");
-					} else if (ans instanceof AnswerNo) {
+			Value value = currentCase.getValue(q);
+			if (value != null) {
+				if (value instanceof ChoiceValue) {
+					ChoiceValue cv = (ChoiceValue) value;
+					AnswerChoice ac = (AnswerChoice) cv.getValue();
+					if (ac.isAnswerNo()) {
 						sb.append("<answer value='MaNo'/>\n");
-					} else if (ans instanceof AnswerUnknown) {
-						sb.append("<answer value='MaU'/>\n");
-					} else if (ans instanceof AnswerChoice) {
-						sb.append("<answer value='" + ((AnswerChoice) ans).getId() + "'/>\n");
-					} else {
-						sb.append("<answer value='" + ans.getValue(null) + "'/>\n");
 					}
+					else if (ac.isAnswerYes()) {
+						sb.append("<answer value='MaYes'/>\n");
+					}
+					else {
+						sb.append("<answer value='" + ac.getId()
+								+ "'/>\n");
+					}
+				}
+				else if (value instanceof Unknown) {
+					sb.append("<answer value='MaU'/>\n");
+				}
+				else {
+					sb.append("<answer value='" + value.getValue() + "'/>\n");
 				}
 			}
 			sb.append("</answers>\n");
@@ -359,22 +365,28 @@ public class ComparisonResultRepository {
 					sb.append("<quesiton ID='" + cr.getQueryQuestion().getId() + "' maxWeight='"
 							+ cr.getMaxPoints() + "' similarity='" + cr.getSimilarity() + "'>\n");
 					sb.append("<answers>\n");
-					if (cr.getStoredAnswers() != null) {
-						Iterator answers = cr.getStoredAnswers().iterator();
-						while (answers.hasNext()) {
-							Answer ans = (Answer) answers.next();
-							if (ans instanceof AnswerYes) {
-								sb.append("<answer value='MaYes'/>\n");
-							} else if (ans instanceof AnswerNo) {
+					if (cr.getStoredValue() != null) {
+						Question q = cr.getQueryQuestion();
+						Value value = cr.getStoredValue();
+						if (value instanceof ChoiceValue) {
+							ChoiceValue cv = (ChoiceValue) value;
+							AnswerChoice ac = (AnswerChoice) cv.getValue();
+							if (ac.isAnswerNo()) {
 								sb.append("<answer value='MaNo'/>\n");
-							} else if (ans instanceof AnswerUnknown) {
-								sb.append("<answer value='MaU'/>\n");
-							} else if (ans instanceof AnswerChoice) {
-								sb.append("<answer value='" + ((AnswerChoice) ans).getId()
-										+ "'/>\n");
-							} else {
-								sb.append("<answer value='" + ans.getValue(null) + "'/>\n");
 							}
+							else if (ac.isAnswerYes()) {
+								sb.append("<answer value='MaYes'/>\n");
+							}
+							else {
+								sb.append("<answer value='" + ac.getId()
+										+ "'/>\n");
+							}
+						}
+						else if (value instanceof Unknown) {
+							sb.append("<answer value='MaU'/>\n");
+						}
+						else {
+							sb.append("<answer value='" + value.getValue() + "'/>\n");
 						}
 					}
 					sb.append("</answers>\n");
