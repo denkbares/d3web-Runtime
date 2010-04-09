@@ -20,13 +20,14 @@
 
 package de.d3web.xcl;
 
-import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondEqual;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.ChoiceValue;
 
 public class XCLRelation {
 	public static double DEFAULT_WEIGHT = 1;
@@ -63,14 +64,14 @@ public class XCLRelation {
 		}
 	}
 
-	public static XCLRelation createXCLRelation(Condition conditionedFinding, 
+	public static XCLRelation createXCLRelation(Condition conditionedFinding,
 			double weight) {
 		XCLRelation r = new XCLRelation();
 		r.setConditionedFinding(conditionedFinding);
 		r.setWeight(weight);
 		return r;
 	}
-	public static XCLRelation createXCLRelation(Condition conditionedFinding, 
+	public static XCLRelation createXCLRelation(Condition conditionedFinding,
 			double weight, String id) {
 		XCLRelation r = new XCLRelation(id);
 		r.setConditionedFinding(conditionedFinding);
@@ -87,11 +88,11 @@ public class XCLRelation {
 	}
 
 	public static XCLRelation createXCLRelation(QuestionChoice question, AnswerChoice answer, double weight) {
-		return createXCLRelation(new CondEqual(question, answer), weight);
+		return createXCLRelation(new CondEqual(question, new ChoiceValue(answer)), weight);
 	}
 
 	public static XCLRelation createXCLRelation(String id, QuestionChoice question, AnswerChoice answer) {
-		XCLRelation r = createXCLRelation(new CondEqual(question, answer));
+		XCLRelation r = createXCLRelation(new CondEqual(question, new ChoiceValue(answer)));
 		r.setId(id);
 		return r;
 	}
@@ -124,23 +125,26 @@ public class XCLRelation {
 		this.id = id;
 	}
 	
+	@Override
 	public boolean equals(Object o) {
 		if (o instanceof XCLRelation) {
 			XCLRelation r = (XCLRelation)o;
 			return (id.equals(r.id) &&
-					conditionedFinding.equals(r.conditionedFinding) && 
+					conditionedFinding.equals(r.conditionedFinding) &&
 					weight == r.weight);
 		}
 		return false;
 	}
 	
+	@Override
 	public String toString() {
 		String w = " ";
-		if (weight != DEFAULT_WEIGHT) 
+		if (weight != DEFAULT_WEIGHT)
 			w += weight;
 		return conditionedFinding.toString() + w;
 	}
 		
+	@Override
 	public int hashCode() {
 		return toString().hashCode();
 	}

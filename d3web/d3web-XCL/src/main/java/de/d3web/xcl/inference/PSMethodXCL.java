@@ -34,18 +34,19 @@ import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.CaseObjectSource;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.core.session.blackboard.XPSCaseObject;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.shared.AbstractAbnormality;
 import de.d3web.shared.PSMethodShared;
 import de.d3web.xcl.DefaultScoreAlgorithm;
@@ -117,7 +118,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 				Question question = (Question) entry.getObject();
 				
 				// update count of question
-				if (entry.hasOldValue()) caseObject.totalAnsweredCount--; 
+				if (entry.hasOldValue()) caseObject.totalAnsweredCount--;
 				if (entry.hasNewValue()) caseObject.totalAnsweredCount++;
 				
 				// update abnormalities
@@ -135,8 +136,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		double restWeight = caseObject.totalAnsweredAbnormality;
 		for (Question question : answeredQuestions) {
 			AbstractAbnormality abnormality = getAbnormalitySlice(question);
-			Answer answer = question.getValue(theCase);
-			restWeight -= getAbnormality(abnormality, answer);
+			restWeight -= getAbnormality(abnormality, question.getValue(theCase));
 		}
 
 		if (Math.abs(restWeight) > 1e-6) {
@@ -146,13 +146,15 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 
 	public double getAbnormality(AbstractAbnormality abnormality, Object answer) {
 		// no answer ==> not abnormal
-		if (answer == null) return 0.0;
+		if (answer == null || answer instanceof UndefinedValue) {
+			return 0.0;
+		}
 		// no slice ==> every answer is abnormal
-		if (abnormality == null || (!(answer instanceof Answer))) return 1.0;
+		if (abnormality == null || (!(answer instanceof Value))) return 1.0;
 		
 		double max = 0;
 		// TODO: Explicit Handling for MC Answers! (joba, 2010-03-11)
-		max = abnormality.getValue((Answer)answer);
+		max = abnormality.getValue((Value) answer);
 //		for (Object a : answers) {
 //			max = Math.max(max, abnormality.getValue((Answer) a));
 //		}

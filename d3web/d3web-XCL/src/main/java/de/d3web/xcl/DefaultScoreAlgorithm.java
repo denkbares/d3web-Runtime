@@ -26,7 +26,7 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 			trace.setSupport(currentSupport);
 			trace.setState(currentState);
 			if (!oldState.equals(currentState)) {
-				xpsCase.setValue(model.getSolution(), new DiagnosisState[]{currentState}, PSMethodXCL.class);
+				xpsCase.setValue(model.getSolution(), currentState, PSMethodXCL.class);
 			}
 			model.notifyListeners(xpsCase, model);
 		}
@@ -40,17 +40,17 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 		
 		if (hasContradiction) {
 			return DiagnosisState.EXCLUDED;
-		} 
+		}
 
 		if (hasSufficient) {
 			return DiagnosisState.ESTABLISHED;
-		} 
+		}
 
 		double minSupport = model.getMinSupport();
 		if (minSupport <= support) {
 			if (score >= model.getEstablishedThreshold()) {
 				return hasAllNecessary ? DiagnosisState.ESTABLISHED : DiagnosisState.SUGGESTED;
-			} 
+			}
 			if (score >= model.getSuggestedThreshold() && hasAllNecessary) {
 				return DiagnosisState.SUGGESTED;
 			}
