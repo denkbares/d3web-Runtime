@@ -32,6 +32,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.costBenefit.inference.CostFunction;
 import de.d3web.costBenefit.inference.DefaultCostFunction;
@@ -45,12 +46,12 @@ import de.d3web.costBenefit.inference.PSMethodCostBenefit;
  */
 public class SearchModel {
 
-	private Set<Target> targets = new HashSet<Target>();
-	private Map<Node, List<Target>> referencingTargets = new HashMap<Node, List<Target>>();
+	private final Set<Target> targets = new HashSet<Target>();
+	private final Map<Node, List<Target>> referencingTargets = new HashMap<Node, List<Target>>();
 	private Target bestBenefitTarget;
 	private Target bestCostBenefitTarget;
-	private Map<QContainer, Node> map = new HashMap<QContainer, Node>();
-	private Map<Question, List<Answer>> expectedValues = new HashMap<Question, List<Answer>>();
+	private final Map<QContainer, Node> map = new HashMap<QContainer, Node>();
+	private final Map<Question, List<Value>> expectedValues = new HashMap<Question, List<Value>>();
 	private int countMinPaths = 0;
 	private CostFunction costFunction;
 	
@@ -67,13 +68,13 @@ public class SearchModel {
 		for (QContainer qcon: theCase.getKnowledgeBase().getQContainers()) {
 			Node containerNode = new Node(qcon, this);
 			map.put(qcon, containerNode);
-			Map<Question, Answer> expected = containerNode.getExpectedValues(theCase);
-			for (Entry<Question, Answer> entry: expected.entrySet()) {
-				Answer answer = entry.getValue();
-				List<Answer> answers = new LinkedList<Answer>();
+			Map<Question, Value> expected = containerNode.getExpectedValues(theCase);
+			for (Entry<Question, Value> entry : expected.entrySet()) {
+				Value answer = entry.getValue();
+				List<Value> answers = new LinkedList<Value>();
 				answers.add(answer);
 //				for (Object a: answers) {
-//					if (a instanceof Answer) answersCast.add((Answer) a); 
+//					if (a instanceof Answer) answersCast.add((Answer) a);
 //				}
 				expectedValues.put(entry.getKey(), answers);
 			}
@@ -128,7 +129,7 @@ public class SearchModel {
 			if (bestCostBenefitTarget==null||t.getCostBenefit()<bestCostBenefitTarget.getCostBenefit()) {
 				bestCostBenefitTarget=t;
 			}
-		}		
+		}
 	}
 
 	/**

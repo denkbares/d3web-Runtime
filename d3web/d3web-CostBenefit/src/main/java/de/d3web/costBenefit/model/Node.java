@@ -35,7 +35,10 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.costBenefit.inference.StateTransition;
 import de.d3web.kernel.psMethods.shared.Abnormality;
 import de.d3web.shared.AbstractAbnormality;
@@ -43,16 +46,16 @@ import de.d3web.shared.PSMethodShared;
 
 /**
  * QContainer Node for the virtual graph.
- * Provides easy access to cost-benefit issues of QContainers. 
+ * Provides easy access to cost-benefit issues of QContainers.
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class Node {
 	
-	private QContainer qContainer;
-	private List<QuestionOC> questions;
+	private final QContainer qContainer;
+	private final List<QuestionOC> questions;
 	private StateTransition st;
-	private SearchModel cbm;
+	private final SearchModel cbm;
 	
 	
 	
@@ -89,7 +92,7 @@ public class Node {
 		if (activationCondition==null) return true;
 		try {
 			return activationCondition.eval(theCase);
-		} 
+		}
 		catch (NoAnswerException e) {
 		}
 		catch (UnknownAnswerException e) {
@@ -112,11 +115,9 @@ public class Node {
 	}
 
 	private void setAnswer(XPSCase theCase, Question q,
-			Answer answer, Map<Question, Answer> map) {
+			Value answer, Map<Question, Value> map) {
 		map.put(q, q.getValue(theCase));
-		Answer[] a = new Answer[1];
-		a[0] = answer;
-		theCase.setValue(q, a);
+		theCase.setValue(q, answer);
 	}
 	
 	public double getCosts(XPSCase xpsCase) {
@@ -138,7 +139,7 @@ public class Node {
 	 * @param testCase
 	 * @return
 	 */
-	public Map<Question, Answer> getExpectedValues(XPSCase testCase) {
+	public Map<Question, Value> getExpectedValues(XPSCase testCase) {
 		return answerGetterAndSetter(testCase, false);
 	}
 	
@@ -149,14 +150,14 @@ public class Node {
 	 * @param testCase
 	 * @return
 	 */
-	public Map<Question, Answer> setNormalValues(XPSCase testCase) {
+	public Map<Question, Value> setNormalValues(XPSCase testCase) {
 		return answerGetterAndSetter(testCase, true);
 	}
 	
-	private Map<Question, Answer> answerGetterAndSetter(XPSCase testCase, boolean set) {
+	private Map<Question, Value> answerGetterAndSetter(XPSCase testCase, boolean set) {
 		List<? extends Question> answeredQuestions = testCase.getAnsweredQuestions();
-		Map<Question, Answer> undomap = new HashMap<Question, Answer>();
-		Map<Question, Answer> expectedmap = new HashMap<Question, Answer>();
+		Map<Question, Value> undomap = new HashMap<Question, Value>();
+		Map<Question, Value> expectedmap = new HashMap<Question, Value>();
 		for (QuestionOC q: questions) {
 			if (!answeredQuestions.contains(q)) {
 				KnowledgeSlice ks = q.getKnowledge(new Abnormality().getProblemsolverContext(), PSMethodShared.SHARED_ABNORMALITY);
@@ -170,11 +171,12 @@ public class Node {
 					Abnormality abnormality = (Abnormality) ks;
 					List<Answer> alternatives = q.getAlternatives(testCase);
 					for (Answer a: alternatives) {
-						if (abnormality.getValue(a)==AbstractAbnormality.A0) {
+						ChoiceValue avalue = new ChoiceValue((AnswerChoice) a);
+						if (abnormality.getValue(avalue) == AbstractAbnormality.A0) {
 							if (set) {
-								setAnswer(testCase, q, a, undomap);
+								setAnswer(testCase, q, avalue, undomap);
 							} else {
-								expectedmap.put(q, a);
+								expectedmap.put(q, avalue);
 							}
 							break;
 						}

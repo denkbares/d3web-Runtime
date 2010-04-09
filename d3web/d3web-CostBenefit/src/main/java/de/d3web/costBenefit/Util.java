@@ -27,12 +27,12 @@ import org.w3c.dom.Node;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.CaseFactory;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.costBenefit.inference.PSMethodCostBenefit;
 import de.d3web.costBenefit.inference.StateTransition;
@@ -50,14 +50,14 @@ public class Util {
 		List<? extends Question> answeredQuestions = new LinkedList<Question>(
 				theCase.getAnsweredQuestions());
 		for (Question q : answeredQuestions) {
-			Answer a = q.getValue(theCase);
+			Value a = q.getValue(theCase);
 			testCase.setValue(q, a);
 		}
 		return testCase;
-	} 
+	}
 
-	public static void undo(XPSCase theCase, Map<Question, Answer> undo) {
-		for (Entry<Question, Answer> entry : undo.entrySet()) {
+	public static void undo(XPSCase theCase, Map<Question, Value> undo) {
+		for (Entry<Question, Value> entry : undo.entrySet()) {
 			entry.getKey().setValue(theCase, entry.getValue());
 			if (entry.getValue() == null) {
 				theCase.getAnsweredQuestions().remove(entry.getKey());
@@ -79,7 +79,9 @@ public class Util {
 		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(theCase.getKnowledgeBase());
 		theCase.getPropagationContoller().openPropagation();
 		QuestionOC question1 = (QuestionOC) kbm.findQuestion(question);
-		theCase.setValue(question1, new Answer[] { kbm.findAnswer(question1, answer) });
+		theCase.setValue(question1, kbm.findValue(question1, answer));
+		// theCase.setValue(question1, new Answer[] { kbm.findAnswer(question1,
+		// answer) });
 		theCase.getPropagationContoller().commitPropagation();
 	}
 	

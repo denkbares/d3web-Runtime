@@ -42,10 +42,11 @@ import de.d3web.core.io.utilities.KnowledgeSliceComparator;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.ValueFactory;
 import de.d3web.costBenefit.inference.ConditionalValueSetter;
 import de.d3web.costBenefit.inference.PSMethodCostBenefit;
 import de.d3web.costBenefit.inference.StateTransition;
@@ -110,7 +111,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 		for (KnowledgeSlice model : knowledgeSlices) {
 			if (model instanceof StateTransition){
 				ksNode.appendChild(getElement((StateTransition) model, doc));
-			} 
+			}
 		}
 		
 		Util.writeDocumentToOutputStream(doc, stream);
@@ -149,7 +150,8 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 
 	private Element getElement(ConditionalValueSetter cvs, Document doc) throws IOException {
 		Element element = doc.createElement("ConditionalValueSetter");
-		element.setAttribute("AID", cvs.getAnswer().getId());
+		String id_or_value = ValueFactory.getID_or_Value(cvs.getAnswer());
+		element.setAttribute("AID", id_or_value);
 		Condition condition = cvs.getCondition();
 		if (condition!=null) {
 			element.appendChild(PersistenceManager.getInstance().writeFragment(condition, doc));
@@ -177,7 +179,9 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 				for (int j=0; j<childNodes.getLength(); j++) {
 					Node child = childNodes.item(j);
 					if (child.getNodeName().equals("ConditionalValueSetter")) {
-						Answer answer = kbm.findAnswer(q, child.getAttributes().getNamedItem("AID").getTextContent());
+						Value answer = kbm.findValue(
+								q,
+								child.getAttributes().getNamedItem("AID").getTextContent());
 						Condition condition = null;
 						for (Element grandchild: XMLUtil.getElementList(child.getChildNodes())) {
 							condition = (Condition) PersistenceManager.getInstance().readFragment(grandchild, kbm.getKnowledgeBase());

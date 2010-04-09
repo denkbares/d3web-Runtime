@@ -18,7 +18,7 @@
  */
 package de.d3web.costBenefit.inference;
 import de.d3web.core.inference.condition.Condition;
-import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.session.Value;
 
 /**
  * This class contains a condition and an answer. If the condition is true and no condition
@@ -29,20 +29,20 @@ import de.d3web.core.knowledge.terminology.Answer;
  */
 public class ConditionalValueSetter {
 
-	private Answer answer;
+	private Value answer;
 	private Condition condition;
 	
-	public ConditionalValueSetter(Answer answer, Condition condition) {
+	public ConditionalValueSetter(Value answer, Condition condition) {
 		super();
 		this.answer = answer;
 		this.condition = condition;
 	}
 	
-	public Answer getAnswer() {
+	public Value getAnswer() {
 		return answer;
 	}
 	
-	public void setAnswer(Answer answer) {
+	public void setAnswer(Value answer) {
 		this.answer = answer;
 	}
 	

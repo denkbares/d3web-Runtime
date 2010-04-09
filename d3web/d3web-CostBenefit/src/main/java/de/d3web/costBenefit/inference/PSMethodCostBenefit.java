@@ -31,23 +31,23 @@ import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.StrategicSupport;
-import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondOr;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costBenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costBenefit.ids.IterativeDeepeningSearchAlgorithm;
 import de.d3web.costBenefit.model.Node;
@@ -210,7 +210,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 				List<AnswerChoice> choices = qoc.getAllAlternatives();
 				if (choices.size() == 1
 						&& "OK".equals(choices.get(0).getName())) {
-					qoc.setValue(theCase, new Answer[0]);
+					qoc.setValue(theCase, UndefinedValue.getInstance());
 					theCase.getAnsweredQuestions().remove(qoc);
 				}
 			}

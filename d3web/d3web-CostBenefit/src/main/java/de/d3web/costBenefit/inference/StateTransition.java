@@ -27,9 +27,9 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 
 /**
@@ -45,7 +45,7 @@ public class StateTransition implements KnowledgeSlice {
 	
 	private Condition activationCondition;
 	private List<ValueTransition> postTransitions;
-	private QContainer qcontainer;
+	private final QContainer qcontainer;
 	
 	public StateTransition(Condition activationCondition, List<ValueTransition> postTransitions, QContainer qcontainer) {
 		super();
@@ -104,8 +104,8 @@ public class StateTransition implements KnowledgeSlice {
 	 * @param theCase
 	 * @return
 	 */
-	public Map<Question, Answer> fire(XPSCase theCase) {
-		Map<Question, Answer> map = new HashMap<Question, Answer>();
+	public Map<Question, Value> fire(XPSCase theCase) {
+		Map<Question, Value> map = new HashMap<Question, Value>();
 		for (ValueTransition vt: postTransitions) {
 			Question q = vt.getQuestion();
 			List<ConditionalValueSetter> setters = vt.getSetters();
@@ -127,11 +127,9 @@ public class StateTransition implements KnowledgeSlice {
 	}
 	
 	private void setAnswer(XPSCase theCase, Question q,
-			Answer answer, Map<Question, Answer> map) {
+			Value answer, Map<Question, Value> map) {
 		map.put(q, q.getValue(theCase));
-		Answer[] a = new Answer[1];
-		a[0] = answer;
-		theCase.setValue(q, a);
+		theCase.setValue(q, answer);
 	}
 
 }

@@ -27,9 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.costBenefit.Util;
 import de.d3web.costBenefit.inference.AbortException;
@@ -48,10 +48,10 @@ import de.d3web.costBenefit.model.Target;
  */
 class IterativeDeepeningSearch {
 
-	private Node[] successorNodes;
-	private Node[] finalNodes;
+	private final Node[] successorNodes;
+	private final Node[] finalNodes;
 	public long count = 0;
-	private SearchModel model;
+	private final SearchModel model;
 	private Path minSearchedPath;
 	// TODO move to constructor...
 	private AbortStrategy abortStrategy = new DefaultAbortStrategy();
@@ -195,7 +195,7 @@ class IterativeDeepeningSearch {
 			for (Node successor : successorNodes) {
 				if (!isValidSuccessor(actual, successor, theCase))
 					continue;
-				Map<Question, Answer> undo = new HashMap<Question, Answer>();
+				Map<Question, Value> undo = new HashMap<Question, Value>();
 				actual.add(successor, theCase);
 				abortStrategy.nextStep(actual);
 				undo.putAll(successor.setNormalValues(theCase));
