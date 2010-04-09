@@ -23,6 +23,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.session.Value;
 import de.d3web.shared.AbstractAbnormality;
 /**
  * Represents the abnormality of a symptom
@@ -31,7 +32,7 @@ import de.d3web.shared.AbstractAbnormality;
  */
 public class Abnormality extends AbstractAbnormality {
 
-	private Hashtable<Answer, Double> values = new Hashtable<Answer, Double>();
+	private final Hashtable<Value, Double> values = new Hashtable<Value, Double>();
 
 	/**
 	 * with this method you can add an answer-abnorm.Value pair
@@ -39,7 +40,7 @@ public class Abnormality extends AbstractAbnormality {
 	 * @param ans de.d3web.kernel.domainModel.Answer
 	 * @param value double
 	 */
-	public void addValue(Answer ans, double value) {
+	public void addValue(Value ans, double value) {
 		values.put(ans, new Double(value));
 	}
 
@@ -49,10 +50,10 @@ public class Abnormality extends AbstractAbnormality {
 	 * @return double
 	 * @param ans de.d3web.kernel.domainModel.Answer
 	 */
-	public double getValue(Answer ans) {
+	@Override
+	public double getValue(Value ans) {
 		Double ret = values.get(ans);
-		if (ret != null)
-		{
+		if (ret != null) {
 			return ret.doubleValue();
 		}
 
@@ -67,7 +68,7 @@ public class Abnormality extends AbstractAbnormality {
 		}
 	}
 	
-	public Enumeration<Answer> getAnswerEnumeration() {
+	public Enumeration<Value> getAnswerEnumeration() {
 		return values.keys();
 	}
 

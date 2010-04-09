@@ -19,9 +19,8 @@
  */
 
 package de.d3web.kernel.psMethods.shared.comparators.oc;
-import java.util.List;
 
-import de.d3web.core.session.values.AnswerNo;
+import de.d3web.core.session.Value;
 import de.d3web.kernel.psMethods.shared.comparators.QuestionComparator;
 /**
  * Insert the type's description here.
@@ -37,14 +36,10 @@ public class QuestionComparatorYN extends QuestionComparator {
 	public QuestionComparatorYN() {
 	}
 
-	public double compare(List<?> ans1, List<?> ans2) {
+	@Override
+	public double compare(Value ans1, Value ans2) {
 		try {
-
-			boolean isNo1 = (ans1.get(0) instanceof AnswerNo);
-			boolean isNo2 = (ans2.get(0) instanceof AnswerNo);
-
-			return (isNo1 == isNo2) ? 1 : 0;
-
+			return (ans1.equals(ans2)) ? 1 : 0;
 		} catch (Exception x) {
 			System.err.println("Exception while comparing (YN): " + x);
 			return 0;

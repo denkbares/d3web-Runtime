@@ -23,7 +23,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.kernel.psMethods.shared.comparators.IndividualComparator;
 
 /**
@@ -32,24 +34,28 @@ import de.d3web.kernel.psMethods.shared.comparators.IndividualComparator;
  */
 public class QuestionComparatorMCIndividual extends QuestionComparatorMC implements IndividualComparator {
 
-	public double compare(List<?> ans1, List<?> ans2) {
-		List<Answer> proved = new LinkedList<Answer>();
+	@Override
+	public double compare(Value ans1, Value ans2) {
+		List<ChoiceValue> proved = new LinkedList<ChoiceValue>();
 		double compCount = 0;
 		double succCount = 0;
 
-		Iterator<?> iter = ans1.iterator();
+		List<ChoiceValue> ans1List = (List<ChoiceValue>) ((MultipleChoiceValue) ans1).getValue();
+		List<ChoiceValue> ans2List = (List<ChoiceValue>) ((MultipleChoiceValue) ans2).getValue();
+
+		Iterator<?> iter = ans1List.iterator();
 		while (iter.hasNext()) {
-			Answer ans = (Answer) iter.next();
+			ChoiceValue ans = (ChoiceValue) iter.next();
 			compCount++;
-			if (ans2.contains(ans)) {
+			if (ans2List.contains(ans)) {
 				succCount++;
 			}
 			proved.add(ans);
 		}
 
-		iter = ans2.iterator();
+		iter = ans2List.iterator();
 		while (iter.hasNext()) {
-			Answer ans = (Answer) iter.next();
+			ChoiceValue ans = (ChoiceValue) iter.next();
 			if (!proved.contains(ans)) {
 				compCount++;
 			}

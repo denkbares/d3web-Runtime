@@ -19,22 +19,24 @@
  */
 
 package de.d3web.kernel.psMethods.shared.comparators.num;
+
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import de.d3web.core.session.values.AnswerNum;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.NumValue;
 
 /**
- * Insert the type's description here.
- * Creation date: (06.08.2001 18:45:02)
+ * Insert the type's description here. Creation date: (06.08.2001 18:45:02)
+ * 
  * @author: Norman Brümmer
  */
 public class QuestionComparatorNumSection extends QuestionComparatorNum {
 	protected List<Double> xValues = null;
-	
+
 	public List<Double> getxValues() {
 		return Collections.unmodifiableList(xValues);
 	}
@@ -46,10 +48,13 @@ public class QuestionComparatorNumSection extends QuestionComparatorNum {
 	protected List<Double> yValues = null;
 
 	/**
-	 * Insert the method's description here.
-	 * Creation date: (06.08.2001 18:53:08)
-	 * @param ans de.d3web.kernel.domainModel.Answer
-	 * @param val double
+	 * Insert the method's description here. Creation date: (06.08.2001
+	 * 18:53:08)
+	 * 
+	 * @param ans
+	 *            de.d3web.kernel.domainModel.Answer
+	 * @param val
+	 *            double
 	 */
 	public void addValuePair(Double x, Double y) {
 		if ((xValues == null) || (yValues == null)) {
@@ -97,26 +102,24 @@ public class QuestionComparatorNumSection extends QuestionComparatorNum {
 		}
 	}
 
-	public double compare(List<?> ans1, List<?> ans2) {
-		try {
-			Double x1 = (Double) ((AnswerNum) ans1.get(0)).getValue(null);
-			Double x2 = (Double) ((AnswerNum) ans2.get(0)).getValue(null);
+	@Override
+	public double compare(Value ans1, Value ans2) {
+		Double x1 = (Double) ((NumValue) ans1).getValue();
+		Double x2 = (Double) ((NumValue) ans2).getValue();
 
-			double gx = getFunctionValue(x1);
-			double gy = getFunctionValue(x2);
+		double gx = getFunctionValue(x1);
+		double gy = getFunctionValue(x2);
 
-			return Math.min(gx, gy) / Math.max(gx, gy);
-		} catch (Exception e) {
-			return super.compare(ans1, ans2);
-		}
-
+		return Math.min(gx, gy) / Math.max(gx, gy);
 	}
 
 	/**
-	 * Insert the method's description here.
-	 * Creation date: (06.08.2001 21:10:28)
+	 * Insert the method's description here. Creation date: (06.08.2001
+	 * 21:10:28)
+	 * 
 	 * @return double
-	 * @param val java.lang.Double
+	 * @param val
+	 *            java.lang.Double
 	 */
 	public double getFunctionValue(Double val) {
 
@@ -137,8 +140,9 @@ public class QuestionComparatorNumSection extends QuestionComparatorNum {
 	}
 
 	/**
-	 * Insert the method's description here.
-	 * Creation date: (06.08.2001 21:30:15)
+	 * Insert the method's description here. Creation date: (06.08.2001
+	 * 21:30:15)
+	 * 
 	 * @return java.util.Iterator
 	 */
 	public List<Double> getValues() {

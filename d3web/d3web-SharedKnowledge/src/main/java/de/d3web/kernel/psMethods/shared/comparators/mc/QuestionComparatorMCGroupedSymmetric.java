@@ -23,14 +23,24 @@ package de.d3web.kernel.psMethods.shared.comparators.mc;
 import java.util.Iterator;
 import java.util.List;
 
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.kernel.psMethods.shared.comparators.GroupedComparatorSymmetric;
 import de.d3web.kernel.psMethods.shared.comparators.PairRelation;
 
 public class QuestionComparatorMCGroupedSymmetric extends
 		QuestionComparatorMCGrouped implements GroupedComparatorSymmetric{
 	
-	public double compare(List<?> ans1, List<?> ans2) {
-        if (isSameAnswerListContent(ans1, ans2)) { return 1; }
+	@Override
+	public double compare(Value val1, Value val2) {
+		if (isSameAnswerListContent(val1.getValue(), val2.getValue())) {
+			return 1;
+		}
+
+		List<AnswerChoice> ans1 = ((MultipleChoiceValue) val1).asChoiceList();
+		List<AnswerChoice> ans2 = ((MultipleChoiceValue) val2).asChoiceList();
 
         double value = 0;
         double countComp = 0;
@@ -59,13 +69,16 @@ public class QuestionComparatorMCGroupedSymmetric extends
         }
     }
 	
-	private boolean isSameAnswerListContent(List<?> l1, List<?> l2) {
-        Iterator<?> iter1 = l1.iterator();
+	private boolean isSameAnswerListContent(Object ol1, Object ol2) {
+		List<ChoiceValue> l1 = (List<ChoiceValue>) ol1;
+		List<ChoiceValue> l2 = (List<ChoiceValue>) ol2;
+
+		Iterator<ChoiceValue> iter1 = l1.iterator();
         while (iter1.hasNext()) {
             if (!l2.contains(iter1.next())) { return false; }
         }
 
-        Iterator<?> iter2 = l2.iterator();
+		Iterator<ChoiceValue> iter2 = l2.iterator();
         while (iter2.hasNext()) {
             if (!l1.contains(iter2.next())) { return false; }
         }

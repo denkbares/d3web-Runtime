@@ -19,9 +19,7 @@
  */
 
 package de.d3web.kernel.psMethods.shared.comparators.text;
-import java.util.List;
-
-import de.d3web.core.session.values.AnswerText;
+import de.d3web.core.session.Value;
 import de.d3web.kernel.psMethods.shared.comparators.IndividualComparator;
 /**
  * Insert the type's description here.
@@ -32,12 +30,10 @@ public class QuestionComparatorTextIndividual
 	extends de.d3web.kernel.psMethods.shared.comparators.QuestionComparator
 	implements IndividualComparator {
 
-	public double compare(List<?> answers1, List<?> answers2) {
+	@Override
+	public double compare(Value answers1, Value answers2) {
 		try {
-			AnswerText ans1 = (AnswerText) answers1.get(0);
-			AnswerText ans2 = (AnswerText) answers2.get(0);
-
-			if (ans1.getValue(null).equals(ans2.getValue(null))) {
+			if (answers1.equals(answers2)) {
 				return 1;
 			}
 		} catch (Exception x) {

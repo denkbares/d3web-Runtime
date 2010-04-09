@@ -19,42 +19,42 @@
  */
 
 package de.d3web.kernel.psMethods.shared.comparators.num;
-import java.util.List;
 
-import de.d3web.core.session.values.AnswerNum;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.NumValue;
 
 /**
- * Insert the type's description here.
- * Creation date: (07.08.2001 02:02:34)
+ * Insert the type's description here. Creation date: (07.08.2001 02:02:34)
+ * 
  * @author: Norman Brümmer
  */
 public class QuestionComparatorNumDivisionDenominator extends QuestionComparatorNum {
-	
+
 	private double denominator = 0;
 
-	public double compare(List<?> ans1, List<?> ans2) {
-		try {
-			double x1 = ((Double) ((AnswerNum) ans1.get(0)).getValue(null)).doubleValue();
-			double x2 = ((Double) ((AnswerNum) ans2.get(0)).getValue(null)).doubleValue();
+	@Override
+	public double compare(Value ans1, Value ans2) {
+		double x1 = ((Double) ((NumValue) ans1).getValue()).doubleValue();
+		double x2 = ((Double) ((NumValue) ans2).getValue()).doubleValue();
 
-			if (denominator == 0) {
-				denominator = Math.abs(x1 - x2);
-			}
-			return 1 - (Math.abs(x1 - x2) / denominator);
-		} catch (Exception e) {
-			return super.compare(ans1, ans2);
+		if (denominator == 0) {
+			denominator = Math.abs(x1 - x2);
 		}
+		return 1 - (Math.abs(x1 - x2) / denominator);
 
 	}
 
 	/**
-	 * Insert the method's description here.
-	 * Creation date: (07.08.2001 02:05:42)
-	 * @param newDenominator double
+	 * Insert the method's description here. Creation date: (07.08.2001
+	 * 02:05:42)
+	 * 
+	 * @param newDenominator
+	 *            double
 	 */
 	public void setDenominator(double newDenominator) {
 		denominator = newDenominator;
 	}
+
 	/**
 	 * @return
 	 */

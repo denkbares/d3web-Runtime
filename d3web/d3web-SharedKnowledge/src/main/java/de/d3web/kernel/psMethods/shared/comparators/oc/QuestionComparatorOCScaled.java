@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.AnswerChoice;
 
 /**
@@ -37,7 +38,8 @@ public class QuestionComparatorOCScaled extends QuestionComparatorOC {
 	private List<Double> values = null;
 	private double constant = 0;
 
-	public double compare(List<?> ans1, List<?> ans2) {
+	@Override
+	public double compare(Value ans1, Value ans2) {
 		if (getQuestion() == null) {
 			return 0;
 		}
@@ -52,8 +54,10 @@ public class QuestionComparatorOCScaled extends QuestionComparatorOC {
 		while (altIter.hasNext()) {
 			ansValHash.put(altIter.next(), valIter.next());
 		}
-		double val1 = (ansValHash.get(ans1.get(0))).doubleValue();
-		double val2 = (ansValHash.get(ans2.get(0))).doubleValue();
+		AnswerChoice answer1 = (AnswerChoice) ans1.getValue();
+		AnswerChoice answer2 = (AnswerChoice) ans2.getValue();
+		double val1 = (ansValHash.get(answer1)).doubleValue();
+		double val2 = (ansValHash.get(answer2)).doubleValue();
 		double delta = Math.abs((val2 - val1));
 		return (delta == 0) ? 1 : (delta>=constant) ? 0 : 1 - delta / constant;
 	}

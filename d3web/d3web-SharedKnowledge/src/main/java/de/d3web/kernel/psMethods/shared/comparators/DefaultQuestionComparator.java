@@ -20,7 +20,7 @@
 
 package de.d3web.kernel.psMethods.shared.comparators;
 
-import java.util.List;
+import de.d3web.core.session.Value;
 
 /**
  * This comparator simply checks if the answers are equal.
@@ -46,16 +46,8 @@ public class DefaultQuestionComparator extends QuestionComparator {
 		return instance;
 	}
 
-
-	/**
-	 * @see QuestionComparator#compare(List, List)
-	 */
-	public double compare(List<?> answers1, List<?> answers2) {
-		if (answers1.size() == answers2.size() 
-				&& answers1.containsAll(answers2)) {
-			return 1;
-		} else {
-			return 0;
-		}
+	@Override
+	public double compare(Value value1, Value value2) {
+		return value1.compareTo(value2);
 	}
 }

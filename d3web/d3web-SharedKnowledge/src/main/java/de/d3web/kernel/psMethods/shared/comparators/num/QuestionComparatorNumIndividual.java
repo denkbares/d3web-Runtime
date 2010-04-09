@@ -19,9 +19,9 @@
  */
 
 package de.d3web.kernel.psMethods.shared.comparators.num;
-import java.util.List;
 
-import de.d3web.core.session.values.AnswerNum;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.NumValue;
 import de.d3web.kernel.psMethods.shared.comparators.IndividualComparator;
 
 /**
@@ -30,18 +30,10 @@ import de.d3web.kernel.psMethods.shared.comparators.IndividualComparator;
  */
 public class QuestionComparatorNumIndividual extends QuestionComparatorNum implements IndividualComparator {
 
-	public double compare(List<?> ans1, List<?> ans2) {
-		double x1 = 0;
-		double x2 = 0;
-		try {
-			x1 = ((Double) ((AnswerNum) ans1.get(0)).getValue(null)).doubleValue();
-			x2 = ((Double) ((AnswerNum) ans2.get(0)).getValue(null)).doubleValue();
-
-			return (x1 == x2) ? 1 : 0;
-
-		} catch (Exception e) {
-			return super.compare(ans1, ans2);
-		}
-
+	@Override
+	public double compare(Value ans1, Value ans2) {
+		Double d1 = (Double) ((NumValue) ans1).getValue();
+		Double d2 = (Double) ((NumValue) ans2).getValue();
+		return (d1.equals(d2)) ? 1 : 0;
 	}
 }

@@ -20,9 +20,9 @@
 
 package de.d3web.kernel.psMethods.shared.comparators.num;
 
-import java.util.List;
-
-import de.d3web.core.session.values.AnswerNum;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.Unknown;
 
 /**
  * Fuzzy comparator for numerical values. A value "toCompare" can be compared
@@ -39,7 +39,7 @@ import de.d3web.core.session.values.AnswerNum;
  *       0 ------      |        -------------
  *              A  B   |  C     D
  *                     R
- *       
+ * 
  * </pre>
  * 
  * R: the reference value<br>
@@ -111,18 +111,20 @@ public class QuestionComparatorNumFuzzy extends QuestionComparatorNum {
 	 * the reference value. (e.g. the reference value can be the numerical
 	 * value, which is covered by a diagnosis)
 	 */
-	public double compare(List<?> toCompareAnswer, List<?> referenceAnswer) {
-		if (referenceAnswer.isEmpty()
-				|| !(referenceAnswer.get(0) instanceof AnswerNum)
-				|| toCompareAnswer.isEmpty()
-				|| !(toCompareAnswer.get(0) instanceof AnswerNum)) {
+	@Override
+	public double compare(Value toCompareAnswer, Value referenceAnswer) {
+		if (referenceAnswer == null
+				|| !(referenceAnswer instanceof NumValue)
+				|| toCompareAnswer == null
+				|| !(toCompareAnswer instanceof NumValue)
+				|| (Unknown.assignedTo(toCompareAnswer) || Unknown.assignedTo(referenceAnswer))) {
 			return 0;
 		}
 
-		Double reference = (Double) ((AnswerNum) referenceAnswer.get(0))
-				.getValue(null);
-		Double toCompare = (Double) ((AnswerNum) toCompareAnswer.get(0))
-				.getValue(null);
+		Double reference = (Double) ((NumValue) referenceAnswer)
+				.getValue();
+		Double toCompare = (Double) ((NumValue) toCompareAnswer)
+				.getValue();
 		Double constLeftPoint = new Double(reference);
 		Double constRightPoint = new Double(reference);
 

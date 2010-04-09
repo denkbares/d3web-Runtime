@@ -34,9 +34,9 @@ import java.util.Hashtable;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.shared.PSMethodShared;
 
@@ -56,22 +56,22 @@ public class LocalWeight implements KnowledgeSlice {
 	
 	private Question q;
 	private Solution d;
-	private Hashtable<Answer, Double> values = null;
+	private Hashtable<Value, Double> values = null;
 	
 	/**
 	 * Weight constructor comment.
 	 */
 	public LocalWeight() {
 		super();
-		values = new Hashtable<Answer, Double>();
+		values = new Hashtable<Value, Double>();
 	}
 	
-	public void setValue(Answer ans, double value) {
+	public void setValue(Value ans, double value) {
 		values.put(ans, new Double(value));
 	}
 
 	
-	public double getValue(Answer ans) {
+	public double getValue(Value ans) {
 		Double ret = values.get(ans);
 		if (ret != null)
 		{
@@ -204,7 +204,7 @@ public class LocalWeight implements KnowledgeSlice {
 		setDiagnosis(null);
 	}
 	
-	public Enumeration<Answer> getAnswerEnumeration() {
+	public Enumeration<Value> getAnswerEnumeration() {
 		return values.keys();
 	}
 

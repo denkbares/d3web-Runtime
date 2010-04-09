@@ -19,9 +19,8 @@
  */
 
 package de.d3web.kernel.psMethods.shared.comparators;
-import java.util.List;
-
 import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.session.Value;
 import de.d3web.shared.PSMethodShared;
 
 /**
@@ -39,7 +38,7 @@ public abstract class QuestionComparator implements KnowledgeSlice {
 	/**
 	 * compare method wihthout ComparableQuestions. just needs the answer-arrays.
 	 */
-	public abstract double compare(List<?> answers1, List<?> answers2);
+	public abstract double compare(Value answers1, Value answers2);
 
 	/**
 	 * @return java.lang.String

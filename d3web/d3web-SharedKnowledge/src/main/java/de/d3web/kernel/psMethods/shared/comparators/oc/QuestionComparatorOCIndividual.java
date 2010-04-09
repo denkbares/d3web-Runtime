@@ -19,8 +19,7 @@
  */
 
 package de.d3web.kernel.psMethods.shared.comparators.oc;
-import java.util.List;
-
+import de.d3web.core.session.Value;
 import de.d3web.kernel.psMethods.shared.comparators.IndividualComparator;
 /**
  * Insert the type's description here.
@@ -29,9 +28,10 @@ import de.d3web.kernel.psMethods.shared.comparators.IndividualComparator;
  */
 public class QuestionComparatorOCIndividual extends QuestionComparatorOC implements IndividualComparator {
 
-	public double compare(List<?> ans1, List<?> ans2) {
+	@Override
+	public double compare(Value ans1, Value ans2) {
 		try {
-			if (ans1.get(0).equals(ans2.get(0))) {
+			if (ans1.equals(ans2)) {
 				return 1;
 			}
 		} catch (Exception x) {

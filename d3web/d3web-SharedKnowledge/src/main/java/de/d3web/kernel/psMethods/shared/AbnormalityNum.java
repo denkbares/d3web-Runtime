@@ -24,9 +24,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
-import de.d3web.core.session.values.AnswerNum;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.NumValue;
 import de.d3web.shared.AbnormalityInterval;
 import de.d3web.shared.AbstractAbnormality;
 
@@ -34,7 +34,7 @@ import de.d3web.shared.AbstractAbnormality;
  * AbnormalityNum is for handling abnormality when working with QuestionNums
  * QuestionNums have no distinct values but can have as Answer an AnswerNum encapsulating any double value
  * 
- * instead of a associative memory associating AnswerQuestions with abnormality values, 
+ * instead of a associative memory associating AnswerQuestions with abnormality values,
  * AbnormalityNum uses AbnormalityIntervals to associate ranges of doubles with abnormality values
  * 
  * the addValue method takes an interval (defined by lower and upper boundary and type) instead of an Answer (like Abnormalites addValue method)
@@ -107,10 +107,11 @@ public class AbnormalityNum extends AbstractAbnormality {
 	 * @param answerValue double
 	 * @return double, value of abnormality of the AbnormalityInterval which contains answerValue, A0 if answerValue is not contained in any AbnormalityInterval
 	 */
-	public double getValue(Answer ans) {
-		if (ans instanceof AnswerNum) {
+	@Override
+	public double getValue(Value ans) {
+		if (ans instanceof NumValue) {
 			double d = 0;
-			Double D = (Double) ((AnswerNum) ans).getValue(null);
+			Double D = (Double) ((NumValue) ans).getValue();
 			if (D != null) d = D.doubleValue();
 			return getValue(d);
 		}
