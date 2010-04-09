@@ -23,15 +23,16 @@ import de.d3web.core.inference.condition.CondNumGreater;
 import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
@@ -39,6 +40,7 @@ import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.manage.AnswerFactory;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.utilities.Utils;
 import de.d3web.indication.inference.PSMethodNextQASet;
 import de.d3web.scoring.Score;
@@ -46,108 +48,108 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
 public class KfzWb extends KnowledgeBase {
 	
 	/* Hier kommen die Fragen */
-	private QContainer Q000 = new QContainer("Q000");
-	private QContainer Q16 = new QContainer("Q16");
-	private QContainer Qcl16 = new QContainer("Qcl16");
-	private QContainer Q17 = new QContainer("Q17");
-	private QContainer Q18 = new QContainer("Q18");
-	private QContainer Q19 = new QContainer("Q19");
-	private QContainer Q20 = new QContainer("Q20");
-	private QContainer Q21 = new QContainer("Q21");
-	private QContainer Q56 = new QContainer("Q56");
+	private final QContainer Q000 = new QContainer("Q000");
+	private final QContainer Q16 = new QContainer("Q16");
+	private final QContainer Qcl16 = new QContainer("Qcl16");
+	private final QContainer Q17 = new QContainer("Q17");
+	private final QContainer Q18 = new QContainer("Q18");
+	private final QContainer Q19 = new QContainer("Q19");
+	private final QContainer Q20 = new QContainer("Q20");
+	private final QContainer Q21 = new QContainer("Q21");
+	private final QContainer Q56 = new QContainer("Q56");
 
-	private AnswerChoice Mf2a1 = AnswerFactory.createAnswerChoice("Mf2a1", "schwarz");
-	private AnswerChoice Mf2a2 = AnswerFactory.createAnswerChoice("Mf2a2", "bläulich");
-	private AnswerChoice Mf2a3 = AnswerFactory.createAnswerChoice("Mf2a3", "farblos");
-	private QuestionOC Mf2 = new QuestionOC("Mf2");
+	private final AnswerChoice Mf2a1 = AnswerFactory.createAnswerChoice("Mf2a1", "schwarz");
+	private final AnswerChoice Mf2a2 = AnswerFactory.createAnswerChoice("Mf2a2", "bläulich");
+	private final AnswerChoice Mf2a3 = AnswerFactory.createAnswerChoice("Mf2a3", "farblos");
+	private final QuestionOC Mf2 = new QuestionOC("Mf2");
 
-	private AnswerChoice Mf3a1 = AnswerFactory.createAnswerChoice("Mf3a1", "braun");
-	private AnswerChoice Mf3a2 = AnswerFactory.createAnswerChoice("Mf3a2", "grau");
-	private AnswerChoice Mf3a3 = AnswerFactory.createAnswerChoice("Mf3a3", "hellgrau");
-	private AnswerChoice Mf3a4 = AnswerFactory.createAnswerChoice("Mf3a4", "schwarzverrußt");
-	private QuestionOC Mf3 = new QuestionOC("Mf3");
+	private final AnswerChoice Mf3a1 = AnswerFactory.createAnswerChoice("Mf3a1", "braun");
+	private final AnswerChoice Mf3a2 = AnswerFactory.createAnswerChoice("Mf3a2", "grau");
+	private final AnswerChoice Mf3a3 = AnswerFactory.createAnswerChoice("Mf3a3", "hellgrau");
+	private final AnswerChoice Mf3a4 = AnswerFactory.createAnswerChoice("Mf3a4", "schwarzverrußt");
+	private final QuestionOC Mf3 = new QuestionOC("Mf3");
 
-	private AnswerChoice Msi21a1 = AnswerFactory.createAnswerChoice("Msi21a1", "normal");
-	private AnswerChoice Msi21a2 = AnswerFactory.createAnswerChoice("Msi21a2", "abnorm");
-	private QuestionOC Msi21 = new QuestionOC("Msi21");
+	private final AnswerChoice Msi21a1 = AnswerFactory.createAnswerChoice("Msi21a1", "normal");
+	private final AnswerChoice Msi21a2 = AnswerFactory.createAnswerChoice("Msi21a2", "abnorm");
+	private final QuestionOC Msi21 = new QuestionOC("Msi21");
 
-	private AnswerChoice Mf4a1 = AnswerFactory.createAnswerChoice("Mf4a1", "Diesel");
-	private AnswerChoice Mf4a3 = AnswerFactory.createAnswerChoice("Mf4a3", "Normal oder Super");
-	private QuestionOC Mf4 = new QuestionOC("Mf4");
+	private final AnswerChoice Mf4a1 = AnswerFactory.createAnswerChoice("Mf4a1", "Diesel");
+	private final AnswerChoice Mf4a3 = AnswerFactory.createAnswerChoice("Mf4a3", "Normal oder Super");
+	private final QuestionOC Mf4 = new QuestionOC("Mf4");
 
-	private QuestionNum Mf5 = new QuestionNum("Mf5");
+	private final QuestionNum Mf5 = new QuestionNum("Mf5");
 
-	private AnswerChoice Msi4a1 = AnswerFactory.createAnswerChoice("Msi4a1", "normal");
-	private AnswerChoice Msi4a2 = AnswerFactory.createAnswerChoice("Msi4a2", "leicht erhöht");
-	private AnswerChoice Msi4a3 = AnswerFactory.createAnswerChoice("Msi4a3", "erhöht");
-	private QuestionOC Msi4 = new QuestionOC("Msi4");
+	private final AnswerChoice Msi4a1 = AnswerFactory.createAnswerChoice("Msi4a1", "normal");
+	private final AnswerChoice Msi4a2 = AnswerFactory.createAnswerChoice("Msi4a2", "leicht erhöht");
+	private final AnswerChoice Msi4a3 = AnswerFactory.createAnswerChoice("Msi4a3", "erhöht");
+	private final QuestionOC Msi4 = new QuestionOC("Msi4");
 
-	private QuestionNum Mf6 = new QuestionNum("Mf6");
+	private final QuestionNum Mf6 = new QuestionNum("Mf6");
 
-	private AnswerChoice Mf7a1 = AnswerFactory.createAnswerChoice("Mf7a1", "klopfen");
-	private AnswerChoice Mf7a2 = AnswerFactory.createAnswerChoice("Mf7a2", "klingeln");
-	private AnswerChoice Mf7a0 = AnswerFactory.createAnswerNo("Mf7a0", "Nein/Sonstiges");
-	private QuestionMC Mf7 = new QuestionMC("Mf7");
+	private final AnswerChoice Mf7a1 = AnswerFactory.createAnswerChoice("Mf7a1", "klopfen");
+	private final AnswerChoice Mf7a2 = AnswerFactory.createAnswerChoice("Mf7a2", "klingeln");
+	private final AnswerChoice Mf7a0 = AnswerFactory.createAnswerNo("Mf7a0", "Nein/Sonstiges");
+	private final QuestionMC Mf7 = new QuestionMC("Mf7");
 
-	private AnswerChoice Mf8a1 = AnswerFactory.createAnswerChoice("Mf8a1", "springt normal an");
-	private AnswerChoice Mf8a2 = AnswerFactory.createAnswerChoice("Mf8a2", "springt schlecht an");
-	private AnswerChoice Mf8a3 = AnswerFactory.createAnswerChoice("Mf8a3", "springt überhaupt nicht an");
-	private QuestionOC Mf8 = new QuestionOC("Mf8");
+	private final AnswerChoice Mf8a1 = AnswerFactory.createAnswerChoice("Mf8a1", "springt normal an");
+	private final AnswerChoice Mf8a2 = AnswerFactory.createAnswerChoice("Mf8a2", "springt schlecht an");
+	private final AnswerChoice Mf8a3 = AnswerFactory.createAnswerChoice("Mf8a3", "springt überhaupt nicht an");
+	private final QuestionOC Mf8 = new QuestionOC("Mf8");
 
-	private AnswerChoice Mf10a1 = AnswerFactory.createAnswerChoice("Mf10a1", "dreht durch");
-	private AnswerChoice Mf10a2 = AnswerFactory.createAnswerChoice("Mf10a2", "dreht nicht richtig durch");
-	private QuestionOC Mf10 = new QuestionOC("Mf10");
+	private final AnswerChoice Mf10a1 = AnswerFactory.createAnswerChoice("Mf10a1", "dreht durch");
+	private final AnswerChoice Mf10a2 = AnswerFactory.createAnswerChoice("Mf10a2", "dreht nicht richtig durch");
+	private final QuestionOC Mf10 = new QuestionOC("Mf10");
 
-	private AnswerChoice Mf9a1 = AnswerFactory.createAnswerChoice("Mf9a1", "verzögertes Anfahren");
-	private AnswerChoice Mf9a2 = AnswerFactory.createAnswerChoice("Mf9a2", "schlechte Beschleunigung");
-	private AnswerChoice Mf9a3 = AnswerFactory.createAnswerChoice("Mf9a3", "Leerlauf ist zu niedrig");
-	private AnswerChoice Mf9a4 = AnswerFactory.createAnswerChoice("Mf9a4", "Leerlauf ist unregelmäßig");
-	private AnswerChoice Mf9a5 = AnswerFactory.createAnswerChoice("Mf9a5", "zu wenig Leistung bei Teillast");
-	private AnswerChoice Mf9a6 = AnswerFactory.createAnswerChoice("Mf9a6", "zu wenig Leistung bei Volllast");
-	private AnswerChoice Mf9a0 = AnswerFactory.createAnswerNo("Mf9a0", "Nein/Sonstiges");
-	private QuestionMC Mf9 = new QuestionMC("Mf9");
+	private final AnswerChoice Mf9a1 = AnswerFactory.createAnswerChoice("Mf9a1", "verzögertes Anfahren");
+	private final AnswerChoice Mf9a2 = AnswerFactory.createAnswerChoice("Mf9a2", "schlechte Beschleunigung");
+	private final AnswerChoice Mf9a3 = AnswerFactory.createAnswerChoice("Mf9a3", "Leerlauf ist zu niedrig");
+	private final AnswerChoice Mf9a4 = AnswerFactory.createAnswerChoice("Mf9a4", "Leerlauf ist unregelmäßig");
+	private final AnswerChoice Mf9a5 = AnswerFactory.createAnswerChoice("Mf9a5", "zu wenig Leistung bei Teillast");
+	private final AnswerChoice Mf9a6 = AnswerFactory.createAnswerChoice("Mf9a6", "zu wenig Leistung bei Volllast");
+	private final AnswerChoice Mf9a0 = AnswerFactory.createAnswerNo("Mf9a0", "Nein/Sonstiges");
+	private final QuestionMC Mf9 = new QuestionMC("Mf9");
 
-	private AnswerChoice Mf13a1 = AnswerFactory.createAnswerChoice("Mf13a1", "ja");
-	private AnswerChoice Mf13a0 = AnswerFactory.createAnswerChoice("Mf13a0", "nein");
-	private QuestionOC Mf13 = new QuestionOC("Mf13");
+	private final AnswerChoice Mf13a1 = AnswerFactory.createAnswerChoice("Mf13a1", "ja");
+	private final AnswerChoice Mf13a0 = AnswerFactory.createAnswerChoice("Mf13a0", "nein");
+	private final QuestionOC Mf13 = new QuestionOC("Mf13");
 
-	private AnswerChoice Mf15a1 = AnswerFactory.createAnswerChoice("Mf15a1", "ja");
-	private AnswerChoice Mf15a0 = AnswerFactory.createAnswerChoice("Mf15a0", "nein");
-	private QuestionOC Mf15 = new QuestionOC("Mf15");
+	private final AnswerChoice Mf15a1 = AnswerFactory.createAnswerChoice("Mf15a1", "ja");
+	private final AnswerChoice Mf15a0 = AnswerFactory.createAnswerChoice("Mf15a0", "nein");
+	private final QuestionOC Mf15 = new QuestionOC("Mf15");
 
-	private AnswerChoice Mf17a1 = AnswerFactory.createAnswerChoice("Mf17a1", "ja");
-	private AnswerChoice Mf17a0 = AnswerFactory.createAnswerChoice("Mf17a0", "nein");
-	private QuestionOC Mf17 = new QuestionOC("Mf17");
+	private final AnswerChoice Mf17a1 = AnswerFactory.createAnswerChoice("Mf17a1", "ja");
+	private final AnswerChoice Mf17a0 = AnswerFactory.createAnswerChoice("Mf17a0", "nein");
+	private final QuestionOC Mf17 = new QuestionOC("Mf17");
 
-	private AnswerChoice Mf19a1 = AnswerFactory.createAnswerChoice("Mf19a1", "ja");
-	private AnswerChoice Mf19a0 = AnswerFactory.createAnswerChoice("Mf19a0", "nein");
-	private QuestionOC Mf19 = new QuestionOC("Mf19");
+	private final AnswerChoice Mf19a1 = AnswerFactory.createAnswerChoice("Mf19a1", "ja");
+	private final AnswerChoice Mf19a0 = AnswerFactory.createAnswerChoice("Mf19a0", "nein");
+	private final QuestionOC Mf19 = new QuestionOC("Mf19");
 
-	private AnswerChoice Mf11a1 = AnswerFactory.createAnswerChoice("Mf11a1", "ja");
-	private AnswerChoice Mf11a0 = AnswerFactory.createAnswerChoice("Mf11a0", "nein");
-	private QuestionOC Mf11 = new QuestionOC("Mf11");
+	private final AnswerChoice Mf11a1 = AnswerFactory.createAnswerChoice("Mf11a1", "ja");
+	private final AnswerChoice Mf11a0 = AnswerFactory.createAnswerChoice("Mf11a0", "nein");
+	private final QuestionOC Mf11 = new QuestionOC("Mf11");
 
-	private AnswerChoice Mf57a1 = AnswerFactory.createAnswerChoice("Mf57a1", "VW");
-	private AnswerChoice Mf57a2 = AnswerFactory.createAnswerChoice("Mf57a2", "Opel");
-	private AnswerChoice Mf57a3 = AnswerFactory.createAnswerChoice("Mf57a3", "Mercedes Benz");
-	private AnswerChoice Mf57a4 = AnswerFactory.createAnswerChoice("Mf57a4", "BMW");
-	private AnswerChoice Mf57a5 = AnswerFactory.createAnswerChoice("Mf57a5", "Porsche");
-	private AnswerChoice Mf57a6 = AnswerFactory.createAnswerChoice("Mf57a6", "Fiat");
-	private AnswerChoice Mf57a7 = AnswerFactory.createAnswerChoice("Mf57a7", "Toyota");
-	private AnswerChoice Mf57a8 = AnswerFactory.createAnswerChoice("Mf57a8", "Mazda");
-	private AnswerChoice Mf57a9 = AnswerFactory.createAnswerChoice("Mf57a9", "sonstige");
-	private QuestionOC Mf57 = new QuestionOC("Mf57");
+	private final AnswerChoice Mf57a1 = AnswerFactory.createAnswerChoice("Mf57a1", "VW");
+	private final AnswerChoice Mf57a2 = AnswerFactory.createAnswerChoice("Mf57a2", "Opel");
+	private final AnswerChoice Mf57a3 = AnswerFactory.createAnswerChoice("Mf57a3", "Mercedes Benz");
+	private final AnswerChoice Mf57a4 = AnswerFactory.createAnswerChoice("Mf57a4", "BMW");
+	private final AnswerChoice Mf57a5 = AnswerFactory.createAnswerChoice("Mf57a5", "Porsche");
+	private final AnswerChoice Mf57a6 = AnswerFactory.createAnswerChoice("Mf57a6", "Fiat");
+	private final AnswerChoice Mf57a7 = AnswerFactory.createAnswerChoice("Mf57a7", "Toyota");
+	private final AnswerChoice Mf57a8 = AnswerFactory.createAnswerChoice("Mf57a8", "Mazda");
+	private final AnswerChoice Mf57a9 = AnswerFactory.createAnswerChoice("Mf57a9", "sonstige");
+	private final QuestionOC Mf57 = new QuestionOC("Mf57");
 
-	private QuestionNum Mf58 = new QuestionNum("Mf58");
+	private final QuestionNum Mf58 = new QuestionNum("Mf58");
 
 	/* Diagnoses ...*/
 
-	private Solution P000 = new Solution("P000");
-	private Solution P8 = new Solution("P8");
-	private Solution P13 = new Solution("P13");
-	private Solution P14 = new Solution("P14");
-	private Solution P15 = new Solution("P15");
-	private Solution P16 = new Solution("P16");
+	private final Solution P000 = new Solution("P000");
+	private final Solution P8 = new Solution("P8");
+	private final Solution P13 = new Solution("P13");
+	private final Solution P14 = new Solution("P14");
+	private final Solution P15 = new Solution("P15");
+	private final Solution P16 = new Solution("P16");
 
 	private void setProperties0() {
 		try {
@@ -336,7 +338,8 @@ public class KfzWb extends KnowledgeBase {
 			RuleFactory.createIndicationRule(
 				"RASK10",
 				Utils.createList(new QASet[] { Mf10 }),
-				new CondOr(Utils.createList(new Condition[] { new CondEqual(Mf8, Mf8a2), new CondEqual(Mf8, Mf8a3)})));
+				new CondOr(Utils.createList(new Condition[] {
+				mce(Mf8, Mf8a2), mce(Mf8, Mf8a3) })));
 
 		/* Next von P000: rqsug14766
 		*/
@@ -439,7 +442,7 @@ public class KfzWb extends KnowledgeBase {
 		/*(R_FB_57) Und (($= Mf10 1)) -> P16, N4
 		*/
 		// RuleComplex R_FB_57 =
-			RuleFactory.createHeuristicPSRule("R_FB_57", P16, Score.N4, new CondEqual(Mf10, Mf10a1));
+		RuleFactory.createHeuristicPSRule("R_FB_57", P16, Score.N4, mce(Mf10, Mf10a1));
 
 		/*(R_FB_56) Und (($Or Mf8 3 2)) -> P16, P5
 		*/
@@ -448,42 +451,44 @@ public class KfzWb extends KnowledgeBase {
 				"R_FB_56",
 				P16,
 				Score.P5,
-				new CondOr(Utils.createList(new Condition[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)})));
+				new CondOr(Utils.createList(new Condition[] {
+				mce(Mf8, Mf8a3), mce(Mf8, Mf8a2) })));
 
 		/*(R_FB_29) Und (($= Mf9 4)) -> P14, P4
 		*/
 		// RuleComplex R_FB_29 =
-			RuleFactory.createHeuristicPSRule("R_FB_29", P14, Score.P4, new CondEqual(Mf9, Mf9a4));
+		RuleFactory.createHeuristicPSRule("R_FB_29", P14, Score.P4, mce(Mf9, Mf9a4));
 
 		/*(R_FB_28) Und (($= Msi4 1)) -> P13, N4
 		*/
 		// RuleComplex R_FB_28 =
-			RuleFactory.createHeuristicPSRule("R_FB_28", P13, Score.N4, new CondEqual(Msi4, Msi4a1));
+		RuleFactory.createHeuristicPSRule("R_FB_28", P13, Score.N4, mce(Msi4, Msi4a1));
 
 		/*(R_FB_27) Und (($= Mf9 5)) -> P13, P3
 		*/
 		// RuleComplex R_FB_27 =
-			RuleFactory.createHeuristicPSRule("R_FB_27", P13, Score.P3, new CondEqual(Mf9, Mf9a5));
+		RuleFactory.createHeuristicPSRule("R_FB_27", P13, Score.P3, mce(Mf9, Mf9a5));
 
 		/*(R_FB_26) Und (($= Mf9 4)) -> P13, P4
 		*/
 		// RuleComplex R_FB_26 =
-			RuleFactory.createHeuristicPSRule("R_FB_26", P13, Score.P4, new CondEqual(Mf9, Mf9a4));
+		RuleFactory.createHeuristicPSRule("R_FB_26", P13, Score.P4, mce(Mf9, Mf9a4));
 
 		/*(R_FB_25) Und (($= Msi4 2)) -> P13, P3
 		*/
 		// RuleComplex R_FB_25 =
-			RuleFactory.createHeuristicPSRule("R_FB_25", P13, Score.P3, new CondEqual(Msi4, Msi4a2));
+		RuleFactory.createHeuristicPSRule("R_FB_25", P13, Score.P3, mce(Msi4, Msi4a2));
 
 		/*(R_FB_24) Und (($= Msi4 3)) -> P13, P4
 		*/
 		// RuleComplex R_FB_24 =
-			RuleFactory.createHeuristicPSRule("R_FB_24", P13, Score.P4, new CondEqual(Msi4, Msi4a3));
+		RuleFactory.createHeuristicPSRule("R_FB_24", P13, Score.P4, mce(Msi4, Msi4a3));
 
 		/*(R_FB_22) Und ((Non $= Mf10 1)) -> P14, N6
 		*/
 		// RuleComplex R_FB_22 =
-			RuleFactory.createHeuristicPSRule("R_FB_22", P14, Score.N6, new CondNot(new CondEqual(Mf10, Mf10a1)));
+		RuleFactory.createHeuristicPSRule("R_FB_22", P14, Score.N6, new CondNot(mce(Mf10,
+				Mf10a1)));
 
 		/*(R_FB_21) Und ((Non $Or Mf8 3 2)) -> P14, N4
 		*/
@@ -494,7 +499,8 @@ public class KfzWb extends KnowledgeBase {
 				Score.N4,
 				new CondNot(
 					new CondOr(
-						Utils.createList(new Condition[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)}))));
+				Utils.createList(new Condition[] {
+				mce(Mf8, Mf8a3), mce(Mf8, Mf8a2) }))));
 
 		/*(R_FB_20) Und (($Or Mf8 3 2) ($= Mf10 1)) -> P14, P4
 		*/
@@ -507,34 +513,35 @@ public class KfzWb extends KnowledgeBase {
 					Utils.createList(
 						new Condition[] {
 							new CondOr(
-								Utils.createList(new Condition[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)})),
-							new CondEqual(Mf10, Mf10a1)
+						Utils.createList(new Condition[] {
+						mce(Mf8, Mf8a3), mce(Mf8, Mf8a2) })),
+				mce(Mf10, Mf10a1)
 		})));
 
 		/*(R_FB_18) Und (($= Msi4 1)) -> P14, N4
 		*/
 		// RuleComplex R_FB_18 =
-			RuleFactory.createHeuristicPSRule("R_FB_18", P14, Score.N4, new CondEqual(Msi4, Msi4a1));
+		RuleFactory.createHeuristicPSRule("R_FB_18", P14, Score.N4, mce(Msi4, Msi4a1));
 
 		/*(R_FB_17) Und (($= Msi4 2)) -> P14, P3
 		*/
 		// RuleComplex R_FB_17 =
-			RuleFactory.createHeuristicPSRule("R_FB_17", P14, Score.P3, new CondEqual(Msi4, Msi4a2));
+		RuleFactory.createHeuristicPSRule("R_FB_17", P14, Score.P3, mce(Msi4, Msi4a2));
 
 		/*(R_FB_16) Und (($= Msi4 3)) -> P14, P4
 		*/
 		// RuleComplex R_FB_16 =
-			RuleFactory.createHeuristicPSRule("R_FB_16", P14, Score.P4, new CondEqual(Msi4, Msi4a3));
+		RuleFactory.createHeuristicPSRule("R_FB_16", P14, Score.P4, mce(Msi4, Msi4a3));
 
 		/*(R_FB_15) Und (($= Msi21 2)) -> P14, P5
 		*/
 		// RuleComplex R_FB_15 =
-			RuleFactory.createHeuristicPSRule("R_FB_15", P14, Score.P5, new CondEqual(Msi21, Msi21a2));
+		RuleFactory.createHeuristicPSRule("R_FB_15", P14, Score.P5, mce(Msi21, Msi21a2));
 
 		/*(R_FB_14) Und (($= Mf2 1)) -> P14, P5
 		*/
 		// RuleComplex R_FB_14 =
-			RuleFactory.createHeuristicPSRule("R_FB_14", P14, Score.P5, new CondEqual(Mf2, Mf2a1));
+		RuleFactory.createHeuristicPSRule("R_FB_14", P14, Score.P5, mce(Mf2, Mf2a1));
 
 		/*(R_FB_13) Und ((Non $Or Mf8 3 2)) -> P15, N5
 		*/
@@ -545,7 +552,8 @@ public class KfzWb extends KnowledgeBase {
 				Score.N5,
 				new CondNot(
 					new CondOr(
-						Utils.createList(new Condition[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)}))));
+				Utils.createList(new Condition[] {
+				mce(Mf8, Mf8a3), mce(Mf8, Mf8a2) }))));
 
 		/*(R_FB_12) Und ((Non $Or Mf7 2 1)) -> P15, N3
 		*/
@@ -556,12 +564,14 @@ public class KfzWb extends KnowledgeBase {
 				Score.N3,
 				new CondNot(
 					new CondOr(
-						Utils.createList(new Condition[] { new CondEqual(Mf7, Mf7a2), new CondEqual(Mf7, Mf7a1)}))));
+				Utils.createList(new Condition[] {
+				mce(Mf7, Mf7a2), mce(Mf7, Mf7a1) }))));
 
 		/*(R_FB_11) Und ((Non $= Mf10 1)) -> P15, N6
 		*/
 		// RuleComplex R_FB_11 =
-			RuleFactory.createHeuristicPSRule("R_FB_11", P15, Score.N6, new CondNot(new CondEqual(Mf10, Mf10a1)));
+		RuleFactory.createHeuristicPSRule("R_FB_11", P15, Score.N6, new CondNot(mce(Mf10,
+				Mf10a1)));
 
 		/*(R_FB_10) Und (($Or Mf8 3 2) ($= Mf10 1)) -> P15, P5
 		*/
@@ -574,8 +584,9 @@ public class KfzWb extends KnowledgeBase {
 					Utils.createList(
 						new Condition[] {
 							new CondOr(
-								Utils.createList(new Condition[] { new CondEqual(Mf8, Mf8a3), new CondEqual(Mf8, Mf8a2)})),
-							new CondEqual(Mf10, Mf10a1)
+						Utils.createList(new Condition[] {
+						mce(Mf8, Mf8a3), mce(Mf8, Mf8a2) })),
+				mce(Mf10, Mf10a1)
 		})));
 
 		/*(R_FB_9) Und (($Or Mf7 2 1)) -> P15, P5
@@ -585,132 +596,138 @@ public class KfzWb extends KnowledgeBase {
 				"R_FB_9",
 				P15,
 				Score.P5,
-				new CondOr(Utils.createList(new Condition[] { new CondEqual(Mf7, Mf7a2), new CondEqual(Mf7, Mf7a1)})));
+				new CondOr(Utils.createList(new Condition[] {
+				mce(Mf7, Mf7a2), mce(Mf7, Mf7a1) })));
 
 		/*(R_FB_8) Und (($= Mf9 4)) -> P15, P3
 		*/
 		// RuleComplex R_FB_8 =
-			RuleFactory.createHeuristicPSRule("R_FB_8", P15, Score.P3, new CondEqual(Mf9, Mf9a4));
+		RuleFactory.createHeuristicPSRule("R_FB_8", P15, Score.P3, mce(Mf9, Mf9a4));
 
 		/*(R_FB_7) Und (($= Mf9 1)) -> P15, P3
 		*/
 		// RuleComplex R_FB_7 =
-			RuleFactory.createHeuristicPSRule("R_FB_7", P15, Score.P3, new CondEqual(Mf9, Mf9a1));
+		RuleFactory.createHeuristicPSRule("R_FB_7", P15, Score.P3, mce(Mf9, Mf9a1));
 
 		/*(R_FB_6) Und ((Non $= Mf9 3)) -> P8, N3
 		*/
 		// RuleComplex R_FB_6 =
-			RuleFactory.createHeuristicPSRule("R_FB_6", P8, Score.N3, new CondNot(new CondEqual(Mf9, Mf9a3)));
+		RuleFactory.createHeuristicPSRule("R_FB_6", P8, Score.N3, new CondNot(mce(Mf9,
+				Mf9a3)));
 
 		/*(R_FB_5) Und ((Non $= Mf9 4)) -> P8, N4
 		*/
 		// RuleComplex R_FB_5 =
-			RuleFactory.createHeuristicPSRule("R_FB_5", P8, Score.N4, new CondNot(new CondEqual(Mf9, Mf9a4)));
+		RuleFactory.createHeuristicPSRule("R_FB_5", P8, Score.N4, new CondNot(mce(Mf9,
+				Mf9a4)));
 
 		/*(R_FB_4) Und (($= Mf8 2)) -> P8, P5
 		*/
 		// RuleComplex R_FB_4 =
-			RuleFactory.createHeuristicPSRule("R_FB_4", P8, Score.P5, new CondEqual(Mf8, Mf8a2));
+		RuleFactory.createHeuristicPSRule("R_FB_4", P8, Score.P5, mce(Mf8, Mf8a2));
 
 		/*(R_FB_3) Und (($= Mf9 3)) -> P8, P4
 		*/
 		// RuleComplex R_FB_3 =
-			RuleFactory.createHeuristicPSRule("R_FB_3", P8, Score.P4, new CondEqual(Mf9, Mf9a3));
+		RuleFactory.createHeuristicPSRule("R_FB_3", P8, Score.P4, mce(Mf9, Mf9a3));
 
 		/*(R_FB_2) Und (($= Mf9 4)) -> P8, P5
 		*/
 		// RuleComplex R_FB_2 =
-			RuleFactory.createHeuristicPSRule("R_FB_2", P8, Score.P5, new CondEqual(Mf9, Mf9a4));
+		RuleFactory.createHeuristicPSRule("R_FB_2", P8, Score.P5, mce(Mf9, Mf9a4));
 
 		/*(RFB21) Und (($Isvalue Mf19 True)) -> P15, P7
 		*/
 		// RuleComplex RFB21 =
-			RuleFactory.createHeuristicPSRule("RFB21", P15, Score.P7, new CondEqual(Mf19, Mf19a1));
+		RuleFactory.createHeuristicPSRule("RFB21", P15, Score.P7, mce(Mf19, Mf19a1));
 
 		/*(RFB20) Und (($Isvalue Mf19 False)) -> P15, N7
 		*/
 		// RuleComplex RFB20 =
-			RuleFactory.createHeuristicPSRule("RFB20", P15, Score.N7, new CondEqual(Mf19, Mf19a0));
+		RuleFactory.createHeuristicPSRule("RFB20", P15, Score.N7, mce(Mf19, Mf19a0));
 
 		/*(RFB19) Und (($Isvalue Mf17 True)) -> P14, P7
 		*/
 		// RuleComplex RFB19 =
-			RuleFactory.createHeuristicPSRule("RFB19", P14, Score.P7, new CondEqual(Mf17, Mf17a1));
+		RuleFactory.createHeuristicPSRule("RFB19", P14, Score.P7, mce(Mf17, Mf17a1));
 
 		/*(RFB18) Und (($Isvalue Mf17 False)) -> P14, N7
 		*/
 		// RuleComplex RFB18 =
-			RuleFactory.createHeuristicPSRule("RFB18", P14, Score.N7, new CondEqual(Mf17, Mf17a0));
+		RuleFactory.createHeuristicPSRule("RFB18", P14, Score.N7, mce(Mf17, Mf17a0));
 
 		/*(RFB17) Und (($Isvalue Mf15 True)) -> P13, P7
 		*/
 		// RuleComplex RFB17 =
-			RuleFactory.createHeuristicPSRule("RFB17", P13, Score.P7, new CondEqual(Mf15, Mf15a1));
+		RuleFactory.createHeuristicPSRule("RFB17", P13, Score.P7, mce(Mf15, Mf15a1));
 
 		/*(RFB16) Und (($Isvalue Mf15 False)) -> P13, N7
 		*/
 		// RuleComplex RFB16 =
-			RuleFactory.createHeuristicPSRule("RFB16", P13, Score.N7, new CondEqual(Mf15, Mf15a0));
+		RuleFactory.createHeuristicPSRule("RFB16", P13, Score.N7, mce(Mf15, Mf15a0));
 
 		/*(RFB15) Und (($Isvalue Mf13 True)) -> P8, P7
 		*/
 		// RuleComplex RFB15 =
-			RuleFactory.createHeuristicPSRule("RFB15", P8, Score.P7, new CondEqual(Mf13, Mf13a1));
+		RuleFactory.createHeuristicPSRule("RFB15", P8, Score.P7, mce(Mf13, Mf13a1));
 
 		/*(RFB14) Und (($Isvalue Mf13 False)) -> P8, N7
 		*/
 		// RuleComplex RFB14 =
-			RuleFactory.createHeuristicPSRule("RFB14", P8, Score.N7, new CondEqual(Mf13, Mf13a0));
+		RuleFactory.createHeuristicPSRule("RFB14", P8, Score.N7, mce(Mf13, Mf13a0));
 
 		/*(RFB13) Und (($Isvalue Mf11 True)) -> P16, P7
 		*/
 		// RuleComplex RFB13 =
-			RuleFactory.createHeuristicPSRule("RFB13", P16, Score.P7, new CondEqual(Mf11, Mf11a1));
+		RuleFactory.createHeuristicPSRule("RFB13", P16, Score.P7, mce(Mf11, Mf11a1));
 
 		/*(RFB12) Und (($Isvalue Mf11 False)) -> P16, N7
 		*/
 		// RuleComplex RFB12 =
-			RuleFactory.createHeuristicPSRule("RFB12", P16, Score.N7, new CondEqual(Mf11, Mf11a0));
+		RuleFactory.createHeuristicPSRule("RFB12", P16, Score.N7, mce(Mf11, Mf11a0));
 
 		/*(RFB11) Und (($= Mf10 2)) -> P16, P5
 		*/
 		// RuleComplex RFB11 =
-			RuleFactory.createHeuristicPSRule("RFB11", P16, Score.P5, new CondEqual(Mf10, Mf10a2));
+		RuleFactory.createHeuristicPSRule("RFB11", P16, Score.P5, mce(Mf10, Mf10a2));
 
 	}
 
 	private void addRules1() {
 
-		// Die Symptom-Interpretations-Regeln 
+		// Die Symptom-Interpretations-Regeln
 
 		// (Radd59) Und (($= Mf4 3) ($= Mf3 4)) -> Msi21
 		Rule Radd59 = new Rule("Radd59");
 		ActionSetValue a_Radd59 = new ActionSetValue();
 		a_Radd59.setQuestion(Msi21);
-		a_Radd59.setValues(new Object[] { Msi21a2 });
+		a_Radd59.setValue(new ChoiceValue(Msi21a2));
 		Radd59.setAction(a_Radd59);
 		Radd59.setCondition(
-			new CondAnd(Utils.createList(new Condition[] { new CondEqual(Mf4, Mf4a3), new CondEqual(Mf3, Mf3a4)})));
+				new CondAnd(Utils.createList(new Condition[] {
+				mce(Mf4, Mf4a3), mce(Mf3, Mf3a4) })));
 
 		// (Radd4) Und (($Or Mf3 1 2 3)) -> Msi21
 		Rule Radd4 = new Rule("Radd4");
 		ActionSetValue a_Radd4 = new ActionSetValue();
 		a_Radd4.setQuestion(Msi21);
-		a_Radd4.setValues(new Object[] { Msi21a1 });
+		a_Radd4.setValue(new ChoiceValue(Msi21a1));
 		Radd4.setAction(a_Radd4);
 		Radd4.setCondition(
 			new CondOr(
 				Utils.createList(
-					new Condition[] { new CondEqual(Mf3, Mf3a1), new CondEqual(Mf3, Mf3a2), new CondEqual(Mf3, Mf3a3)})));
+				new Condition[] {
+				mce(Mf3, Mf3a1), mce(Mf3, Mf3a2), mce(Mf3, Mf3a3) })));
 
-		// (Radd2) Und (($= Mf3 4) ($= Mf4 1)) -> Msi21 
+		// (Radd2) Und (($= Mf3 4) ($= Mf4 1)) -> Msi21
 		Rule Radd2 = new Rule("Radd2");
 		ActionSetValue a_Radd2 = new ActionSetValue();
 		a_Radd2.setQuestion(Msi21);
-		a_Radd2.setValues(new Object[] { Msi21a1 });
+		a_Radd2.setValue(new ChoiceValue(Msi21a1));
 		Radd2.setAction(a_Radd2);
 		Radd2.setCondition(
-			new CondAnd(Utils.createList(new Condition[] { new CondEqual(Mf3, Mf3a4), new CondEqual(Mf4, Mf4a1)})));
+				new CondAnd(Utils.createList(new Condition[] {
+				mce(Mf3, Mf3a4), mce(Mf4, Mf4a1) })));
 
 		/* Die Symptom-Interpretations-Regeln (Numerische) */
 
@@ -726,18 +743,18 @@ public class KfzWb extends KnowledgeBase {
 					new Div(new Sub(new QNumWrapper(Mf6), new QNumWrapper(Mf5)), new QNumWrapper(Mf5)),
 					new FormulaNumber(new Double(100))));
 
-		a_Rdq4.setValues(new Object[] { formula
+		a_Rdq4.setValue(formula
 			//			 new Schema(
 			//				new Mult(new Div(new Sub(new QNumWrapper(Mf6), new QNumWrapper(Mf5)), new QNumWrapper(Mf5)), new FormulaNumber(new Double(100))),
 			//				((QuestionChoice) Msi4).getAllAlternatives(),
 			//				new Double[] { new Double(10), new Double(20)})
-		});
+		);
 		Rdq4.setAction(a_Rdq4);
 		Rdq4.setCondition(
 			new CondAnd(Utils.createList(new Condition[] { new CondNumGreater(Mf5, new Double(0)), new CondKnown(Mf6)})));
 
 		/*
-		// (Radd59) Und (($= Mf4 3) ($= Mf3 4)) -> Msi21 
+		// (Radd59) Und (($= Mf4 3) ($= Mf3 4)) -> Msi21
 		RuleAddValue Radd59 = new RuleAddValue();
 		Radd59.setId("Radd59");
 		Radd59.setQuestion(Msi21);
@@ -875,4 +892,12 @@ public class KfzWb extends KnowledgeBase {
 		}
 	}
     }
+
+	/**
+	 * Make CondEqual
+	 */
+	private CondEqual mce(QuestionChoice q, AnswerChoice a) {
+		return new CondEqual(q, new ChoiceValue(a));
+	}
+
 }

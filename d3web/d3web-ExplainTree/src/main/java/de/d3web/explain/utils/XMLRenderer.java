@@ -80,8 +80,6 @@ import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.inference.condition.TerminalCondition;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -92,15 +90,18 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.QuestionYN;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
-import de.d3web.core.session.values.AnswerDate;
-import de.d3web.core.session.values.AnswerNum;
-import de.d3web.core.session.values.AnswerText;
 import de.d3web.core.session.values.AnswerUnknown;
-import de.d3web.core.session.values.EvaluatableAnswerDateValue;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.DateValue;
+import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.TextValue;
+import de.d3web.core.session.values.Unknown;
 import de.d3web.indication.ActionContraIndication;
 import de.d3web.indication.ActionNextQASet;
 import de.d3web.indication.inference.PSMethodContraIndication;
@@ -127,7 +128,7 @@ public class XMLRenderer {
 	public static StringBuffer renderVerbalizations(ResourceBundle rb) {
 		StringBuffer sb = new StringBuffer();
 	
-		sb.append("<Verbalizations>");	
+		sb.append("<Verbalizations>");
 	
 		sb.append("<ReasonBeginning><![CDATA["+rb.getString("explain.reason_beginning")+"]]></ReasonBeginning>");
 		sb.append("<ConcrDerivationBeginning><![CDATA["+rb.getString("explain.concrete_derivation_beginning")+"]]></ConcrDerivationBeginning>");
@@ -172,11 +173,11 @@ public class XMLRenderer {
 		sb.append("<QuestionVerb><![CDATA["+rb.getString("explain.question_verb")+"]]></QuestionVerb>");
 		sb.append("<QContainerVerb><![CDATA["+rb.getString("explain.container_verb")+"]]></QContainerVerb>");
 		sb.append("<DiagnosisVerb><![CDATA["+rb.getString("explain.diagnosis_verb")+"]]></DiagnosisVerb>");
-		sb.append("<UserSelectedVerb><![CDATA["+rb.getString("explain.user_selected")+"]]></UserSelectedVerb>");		
-		sb.append("<SchemaVerb><![CDATA["+rb.getString("explain.schema_verb")+"]]></SchemaVerb>");		
-		sb.append("<SchemaSmallerVerb><![CDATA["+rb.getString("explain.schema_smaller_verb")+"]]></SchemaSmallerVerb>");		
-		sb.append("<SchemaBetweenVerb><![CDATA["+rb.getString("explain.schema_between_verb")+"]]></SchemaBetweenVerb>");		
-		sb.append("<SchemaGreaterEqualVerb><![CDATA["+rb.getString("explain.schema_greater-equal_verb")+"]]></SchemaGreaterEqualVerb>");		
+		sb.append("<UserSelectedVerb><![CDATA["+rb.getString("explain.user_selected")+"]]></UserSelectedVerb>");
+		sb.append("<SchemaVerb><![CDATA["+rb.getString("explain.schema_verb")+"]]></SchemaVerb>");
+		sb.append("<SchemaSmallerVerb><![CDATA["+rb.getString("explain.schema_smaller_verb")+"]]></SchemaSmallerVerb>");
+		sb.append("<SchemaBetweenVerb><![CDATA["+rb.getString("explain.schema_between_verb")+"]]></SchemaBetweenVerb>");
+		sb.append("<SchemaGreaterEqualVerb><![CDATA["+rb.getString("explain.schema_greater-equal_verb")+"]]></SchemaGreaterEqualVerb>");
 
 		sb.append("</Verbalizations>");
 	
@@ -286,9 +287,9 @@ public class XMLRenderer {
 				}
 				sb.append("</FormulaPrimitive>");
 			} else if (element instanceof QNumWrapper) {
-				sb.append("<FormulaPrimitive type=\"QNumWrapper\">");			
+				sb.append("<FormulaPrimitive type=\"QNumWrapper\">");
 				sb.append(renderQASetObject(((QNumWrapper)element).getQuestion()));
-				sb.append("</FormulaPrimitive>");				
+				sb.append("</FormulaPrimitive>");
 			}
 		} else if (element instanceof YearDiff) {
 			YearDiff diff = (YearDiff) element;
@@ -408,17 +409,18 @@ public class XMLRenderer {
 		if (qaSet instanceof Question) {
 			Question q = (Question)qaSet;
 			if (q instanceof QuestionChoice) {
-				Answer answer = q.getValue(theCase);
+				Value answer = q.getValue(theCase);
 				questionState.append("<Answers>");
-				if (answer instanceof AnswerUnknown) {
+				if (answer instanceof Unknown) {
 					questionState.append(renderAnswerUnknownObject());
 				} else {
-					questionState.append(renderAnswerChoiceObject((AnswerChoice)answer));
+					AnswerChoice choice = (AnswerChoice) answer.getValue();
+					questionState.append(renderAnswerChoiceObject(choice));
 				}
 				questionState.append("</Answers>");
 			
 				if ((qaSet instanceof QuestionOC) && (isSiQASet(qaSet))) {
-					QuestionOC qOC = (QuestionOC)qaSet;				
+					QuestionOC qOC = (QuestionOC)qaSet;
 					// if the SI-Question has a schema, show Answer- and numerical value
 					// of the question (diagnosis-like)
 					if (getSchemaForQuestion(qOC) != null) {
@@ -428,15 +430,16 @@ public class XMLRenderer {
 						schemaInfos = getSchemaInfoFor(qOC);
 					}
 				
-				}		
+				}
 			} else if (q instanceof QuestionNum) {
-				Answer numValue = q.getValue(theCase);
+				Value numValue = q.getValue(theCase);
 				if (numValue!= null) {
 					questionState.append("<Answers>");
-					if (numValue instanceof AnswerUnknown) {
+					if (numValue instanceof Unknown) {
 						questionState.append(renderAnswerUnknownObject());
-					} else if (numValue instanceof AnswerNum) {
-						Object value = ((AnswerNum)numValue).getValue(theCase);
+					}
+					else if (numValue instanceof NumValue) {
+						Object value = numValue.getValue();
 						questionState.append("<Number value=\"");
 						if (value instanceof Double) {
 							if (((Double)value).doubleValue() % 1 == 0)
@@ -448,20 +451,21 @@ public class XMLRenderer {
 						}
 						questionState.append("\">");
 						Object unit = q.getProperties().getProperty(Property.UNIT);
-						if (unit instanceof String) 
+						if (unit instanceof String)
 							questionState.append("<![CDATA[" +(String)unit +"]]>");
 						questionState.append("</Number>");
 					}
 					questionState.append("</Answers>");
 				}
 			} else if (q instanceof QuestionText) {
-				Answer textValue = q.getValue(theCase);
+				Value textValue = q.getValue(theCase);
 				if (textValue != null) {
 					questionState.append("<Answers>");
-					if (textValue instanceof AnswerUnknown) {
+					if (textValue instanceof Unknown) {
 						questionState.append(renderAnswerUnknownObject());
-					} else if (textValue instanceof AnswerText) {
-						Object value = ((AnswerText)textValue).getValue(theCase);
+					}
+					else if (textValue instanceof TextValue) {
+						String value = textValue.getValue().toString();
 						questionState.append("<AnswerText><![CDATA[");
 						questionState.append(value.toString());
 						questionState.append("]]></AnswerText>");
@@ -469,13 +473,16 @@ public class XMLRenderer {
 					questionState.append("</Answers>");
 				}
 			} else if (q instanceof QuestionDate) {
-				Answer dateValue= q.getValue(theCase);
+				Value dateValue = q.getValue(theCase);
 				if (dateValue != null) {
 					questionState.append("<Answers>");
-					if (dateValue instanceof AnswerUnknown) {
+					if (dateValue instanceof Unknown) {
 						questionState.append(renderAnswerUnknownObject());
-					} else if (dateValue instanceof AnswerDate) {
-						Date date = ((EvaluatableAnswerDateValue) ((AnswerDate)dateValue).getValue(theCase)).eval(theCase);
+					}
+					else if (dateValue instanceof DateValue) {
+						Date date = (Date) dateValue.getValue();
+						// Date date = ((EvaluatableAnswerDateValue)
+						// ((AnswerDate)dateValue).getValue(theCase)).eval(theCase);
 						DateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 						questionState.append("<AnswerText><![CDATA[");
 						questionState.append(format.format(date));
@@ -550,7 +557,7 @@ public class XMLRenderer {
 				// Parents eine Frageklasse ist
 				boolean isInitQuestion = false;
 				for (TerminologyObject to: qaSet.getParents()) {
-					if (to instanceof QContainer) 
+					if (to instanceof QContainer)
 						isInitQuestion = true;
 				}
 				if (isInitQuestion)
@@ -584,11 +591,11 @@ public class XMLRenderer {
 		sb.append("<KnowledgeSlice ID=\"" + rc.getId() + "\"");
 		if (rc.isUsed(theCase))
 			sb.append(" status=\"fired\"");
-		sb.append(">");	
+		sb.append(">");
 	
 		List<?> actionList = renderAction(rc);
 		sb.append(actionList.get(0));
-		if (actionList.size() > 1) 
+		if (actionList.size() > 1)
 			returnList.add(actionList.get(1));
 
 		// Condition
@@ -662,32 +669,81 @@ public class XMLRenderer {
 			returnList.add(new Double(100));
 		} else if (rc.getAction() instanceof ActionQuestionSetter) {
 			ActionQuestionSetter ac = (ActionQuestionSetter)rc.getAction();
-			Object[] values = ac.getValues();
-			for (int i = 0; i < values.length; i++) {
-				if (values[i] instanceof AnswerChoice) {
-					sb.append(renderAnswerChoiceObject((AnswerChoice)values[i]));
-					// sort answerchoices by their position in the allAnswer-list
-					returnList.add(new Double(
-						((QuestionChoice)ac.getQuestion()).getAllAlternatives().indexOf(values[i])));
-				} else if (values[i] instanceof AnswerUnknown) {
-					sb.append(renderAnswerUnknownObject());
-				} else if (values[i] instanceof FormulaNumberElement) {
-					sb.append("<Formula>");
-					sb.append(renderFormulaElement((FormulaNumberElement)values[i]));
-					sb.append("</Formula>");
-				} else if (values[i] instanceof FormulaExpression) {
-					sb.append("<Formula>");
-					sb.append(renderFormulaElement(((FormulaExpression)values[i]).getFormulaElement()));
-					sb.append("</Formula>");
-				} else if (values[i] instanceof FormulaDateElement) {
-					sb.append("<Formula>");
-					sb.append(renderFormulaElement((FormulaDateElement)values[i]));
-					sb.append("</Formula>");
-				} else {
-					System.err.println("nicht definierte Action: "+values[i].getClass());
+			Object value = ac.getValue();
+			if (value instanceof ChoiceValue) {
+				AnswerChoice cvalue = (AnswerChoice) ((Value) value).getValue();
+				sb.append(renderAnswerChoiceObject(cvalue));
+				// sort answerchoices by their position in the allAnswer-list
+				returnList.add(new Double(
+						((QuestionChoice) ac.getQuestion()).getAllAlternatives().indexOf(
+						cvalue)));
+			}
+			else if (value instanceof Unknown) {
+				sb.append(renderAnswerUnknownObject());
+			}
+			else if (value instanceof Object[]) {
+				Object[] values = (Object[]) value;
+				for (int i = 0; i < values.length; i++) {
+					if (values[i] instanceof AnswerChoice) {
+						sb.append(renderAnswerChoiceObject((AnswerChoice) values[i]));
+						// sort answerchoices by their position in the
+						// allAnswer-list
+						returnList.add(new Double(
+								((QuestionChoice) ac.getQuestion()).getAllAlternatives().indexOf(
+										values[i])));
+					}
+					else if (values[i] instanceof AnswerUnknown) {
+						sb.append(renderAnswerUnknownObject());
+					}
+					else if (values[i] instanceof FormulaNumberElement) {
+						sb.append("<Formula>");
+						sb.append(renderFormulaElement((FormulaNumberElement) values[i]));
+						sb.append("</Formula>");
+					}
+					else if (values[i] instanceof FormulaExpression) {
+						sb.append("<Formula>");
+						sb.append(renderFormulaElement(((FormulaExpression) values[i]).getFormulaElement()));
+						sb.append("</Formula>");
+					}
+					else if (values[i] instanceof FormulaDateElement) {
+						sb.append("<Formula>");
+						sb.append(renderFormulaElement((FormulaDateElement) values[i]));
+						sb.append("</Formula>");
+					}
+					else {
+						System.err.println("Undefined Action: " + values[i].getClass());
+					}
 				}
 			}
-		} 
+			else {
+				System.err.println("Undefined Action: " + value.getClass());
+			}
+
+			// for (int i = 0; i < values.length; i++) {
+			// if (values[i] instanceof AnswerChoice) {
+			// sb.append(renderAnswerChoiceObject((AnswerChoice)values[i]));
+			// // sort answerchoices by their position in the allAnswer-list
+			// returnList.add(new Double(
+			// ((QuestionChoice)ac.getQuestion()).getAllAlternatives().indexOf(values[i])));
+			// } else if (values[i] instanceof AnswerUnknown) {
+			// sb.append(renderAnswerUnknownObject());
+			// } else if (values[i] instanceof FormulaNumberElement) {
+			// sb.append("<Formula>");
+			// sb.append(renderFormulaElement((FormulaNumberElement)values[i]));
+			// sb.append("</Formula>");
+			// } else if (values[i] instanceof FormulaExpression) {
+			// sb.append("<Formula>");
+			// sb.append(renderFormulaElement(((FormulaExpression)values[i]).getFormulaElement()));
+			// sb.append("</Formula>");
+			// } else if (values[i] instanceof FormulaDateElement) {
+			// sb.append("<Formula>");
+			// sb.append(renderFormulaElement((FormulaDateElement)values[i]));
+			// sb.append("</Formula>");
+			// } else {
+			// System.err.println("nicht definierte Action: "+values[i].getClass());
+			// }
+			// }
+		}
 		// ActionSuppressAnswer wird nicht erklärt
 	
 		sb.append("</Action>");
@@ -819,10 +875,12 @@ public class XMLRenderer {
 			}
 			sb.append(">");
 			sb.append(renderQASetObject(ce.getQuestion()));
-			Answer ceAnswer = ce.getValues();
-			if (ceAnswer instanceof AnswerChoice) 
-				sb.append(renderAnswerChoiceObject((AnswerChoice)ceAnswer));
-			else if (ceAnswer instanceof AnswerUnknown)
+			Value ceAnswer = ce.getValue();
+			if (ceAnswer instanceof ChoiceValue) {
+				AnswerChoice choice = (AnswerChoice) ceAnswer.getValue();
+				sb.append(renderAnswerChoiceObject(choice));
+			}
+			else if (ceAnswer instanceof Unknown)
 				sb.append("<AnswerUnknown/>");
 					
 		} else if ((cond instanceof CondChoiceNo) || (cond instanceof CondChoiceYes)) {
@@ -838,7 +896,7 @@ public class XMLRenderer {
 				toRender = ((QuestionYN)cq.getQuestion()).no;
 			else
 				toRender = ((QuestionYN)cq.getQuestion()).yes;
-			sb.append(renderAnswerChoiceObject(toRender));		
+			sb.append(renderAnswerChoiceObject(toRender));
 		} else if (cond instanceof CondKnown) {
 			CondKnown ck = (CondKnown)cond;
 			sb.append(" type=\"known\"");
@@ -887,9 +945,9 @@ public class XMLRenderer {
 			}
 			sb.append(">");
 			sb.append(renderQASetObject(cn.getQuestion()));
-			sb.append("<Number value=\""+ cn.getAnswerValue() +"\">");
+			sb.append("<Number value=\""+ cn.getConditionValue() +"\">");
 			Object unit = cn.getQuestion().getProperties().getProperty(Property.UNIT);
-			if (unit instanceof String) 
+			if (unit instanceof String)
 				sb.append("<![CDATA[" +(String)unit +"]]>");
 			sb.append("</Number>");
 		} else if (cond instanceof CondNumIn) {
@@ -902,7 +960,7 @@ public class XMLRenderer {
 			sb.append(renderQASetObject(cni.getQuestion()));
 			sb.append("<Number min=\"" +cni.getMinValue() +"\" max=\"" +cni.getMaxValue() +"\">");
 			Object unit = cni.getQuestion().getProperties().getProperty(Property.UNIT);
-			if (unit instanceof String) 
+			if (unit instanceof String)
 				sb.append("<![CDATA[" +(String)unit +"]]>");
 			sb.append("</Number>");
 		} else if (cond instanceof CondTextContains) {
@@ -923,7 +981,7 @@ public class XMLRenderer {
 			sb.append(">");
 			sb.append(renderQASetObject(cte.getQuestion()));
 			sb.append("<Text><![CDATA[" +cte.getValue() +"]]></Text>");
-		} 	
+		}
 		sb.append("</TCondition>");
 		return(sb);
 	}
@@ -983,7 +1041,7 @@ public class XMLRenderer {
 		List<AnswerChoice> alternatives = q.getAlternatives();
 		Double[] schemaArray = getSchemaForQuestion(q).getSchemaArray();
 		// show the schema only, if there is exactly one more alternative than schema-value
-		if ((alternatives != null) && (alternatives.size() != 0) 
+		if ((alternatives != null) && (alternatives.size() != 0)
 				&& (schemaArray.length != 0) && (alternatives.size() == schemaArray.length+1)) {
 			sb.append("<Schema>");
 		
@@ -1016,7 +1074,7 @@ public class XMLRenderer {
 	 * 					Boolean: condition is active
 	 * 					String: kind of condition-status
 	 */
-	private static List getStatusFor(Condition cond, XPSCase theCase, 
+	private static List getStatusFor(Condition cond, XPSCase theCase,
 							boolean asException, boolean parentFired) {
 		LinkedList returnList = new LinkedList();
 		try {
@@ -1037,7 +1095,7 @@ public class XMLRenderer {
 		}
 		if (returnList.size() == 0) {
 			returnList.add(new Boolean(false));
-			if (asException) 
+			if (asException)
 				returnList.add("exNotFired");
 			else
 				returnList.add("notFired");
@@ -1048,7 +1106,7 @@ public class XMLRenderer {
 	/**
 	 * The List "toInsert" has to have one or two Elements. If one: (Object); if two: (Object,Double).
 	 * If the list has only one Element, it will be inserted at the end.
-	 * If it has two Elements, it will be inserted, so that the "sortedList"is sorted 
+	 * If it has two Elements, it will be inserted, so that the "sortedList"is sorted
 	 * by the Double-values of the "toInsert"-Lists (descending)
 	 * @param sortedList
 	 * @param toInsert (List of (Object) or List of (Object,Double))
@@ -1060,8 +1118,8 @@ public class XMLRenderer {
 		else {		// else, insert it at the right position (depends on the Double-object)
 			int i = 0;
 			double insertScore = ((Double)toInsert.get(1)).doubleValue();
-			while ((i < sortedList.size()) 
-					&& (((List)sortedList.get(i)).size() > 1) 
+			while ((i < sortedList.size())
+					&& (((List)sortedList.get(i)).size() > 1)
 					&& (insertScore <= ((Double)((List)sortedList.get(i)).get(1)).doubleValue())) {
 				i++;
 			}

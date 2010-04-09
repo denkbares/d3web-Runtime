@@ -30,16 +30,16 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondKnown;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.inference.condition.TerminalCondition;
 import de.d3web.core.inference.condition.UnknownAnswerException;
-import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.ValuedObject;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.explain.ExplanationFactory;
 /**
  *
@@ -128,6 +128,7 @@ public class ECondition {
 		this.activeParts = activeParts;
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<cond type='" + getCondition().getClass().getName() + "'>\n");
@@ -139,9 +140,9 @@ public class ECondition {
 				sb.append("<target id='" + elem.getId() + "'");
 				sb.append(" value='");
 				if (getCondition() instanceof CondEqual) {
-					Answer answer = ((CondEqual)getCondition()).getValues();
+					Value answer = ((CondEqual) getCondition()).getValue();
 					if (answer != null) {
-						sb.append(((AnswerChoice)answer).getId());
+						sb.append(((ChoiceValue) answer).getAnswerChoiceID());
 					}
 				} else if (getCondition() instanceof CondKnown) {
 					sb.append("known");
@@ -176,7 +177,7 @@ public class ECondition {
 //			sb.append("<target id='" + con.getQuestion().getId() + "'");
 //			sb.append(" value='known'/>\n");
 //		} if (con instanceof CondDState) {
-//		} 
+//		}
 //	}
 	
 }
