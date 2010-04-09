@@ -21,6 +21,7 @@ package de.d3web.core.io.utilities;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,18 +33,23 @@ import org.w3c.dom.NodeList;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
-import de.d3web.core.session.values.AnswerNum;
-import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.DateValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.TextValue;
+import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.core.session.values.Unknown;
 /**
  * Provides useful static functions for xml persistence handlers
  *
@@ -179,7 +185,7 @@ public class XMLUtil {
 	 *             Unknown Answer
 	 */
 	public static Element writeCondition(Document doc, NamedObject nob, String type,
-			Answer value) throws IOException {
+			Value value) throws IOException {
 		Element element = writeCondition(doc, nob, type);
 		if (value != null) {
 			String s = getId(value);
@@ -189,18 +195,23 @@ public class XMLUtil {
 	}
 	
 	private static String getId(Object answer) throws IOException {
-		if (answer instanceof AnswerChoice)
-			return ((AnswerChoice) answer).getId();
-		else if (answer instanceof AnswerUnknown)
-			return ((AnswerUnknown) answer).getId();
-		else if (answer instanceof AnswerMultipleChoice) {
-			return ((AnswerMultipleChoice) answer).getId();
-		} // for num answers, not the ID, but their actual value is returned
-		else if (answer instanceof AnswerNum) {
-			return ((AnswerNum) answer).getValue(null).toString();
+		if (answer instanceof ChoiceValue) {
+			ChoiceValue v = (ChoiceValue)answer;
+			return v.getAnswerChoiceID();
+		}
+		else if (answer instanceof Unknown) {
+			return Unknown.UNKNOWN_ID;
+		}
+		else if (answer instanceof MultipleChoiceValue) {
+			return ((MultipleChoiceValue) answer).getAnswerChoicesID();
+		}
+		// for num answers, not the ID, but their actual value is returned
+		else if (answer instanceof NumValue) {
+			return ((NumValue) answer).getValue().toString();
 		}
 		else {
-			throw new IOException("Answer is neighter a Choice nor a Unknown Answer");
+			throw new IOException(
+					"The given value is neighter a Choice nor a Unknown Value.");
 		}
 	}
 
@@ -361,33 +372,41 @@ public class XMLUtil {
 		}
 		return col;
 	}
-	
+
 	/**
-	 * Gets the Answer with the specified id for a Question
-	 * @param theCase the actual case
-	 * @param q Question
-	 * @param idOrValue ID of the Answer
-	 * @return Answer
+	 * Determines the value with the specified id or value for a Question
+	 * 
+	 * @param theCase
+	 *            the actual case
+	 * @param q
+	 *            Question
+	 * @param id
+	 *            or value of the Answer
+	 * @return value instance
 	 */
-	public static Answer getAnswer(XPSCase theCase, Question q, String idOrValue) {
+	public static Value getAnswer(XPSCase theCase, Question q, String idOrValue) {
 
 		if (idOrValue.equals("MaU")) {
-			return q.getUnknownAlternative();
+			return Unknown.getInstance();
 		}
 
 		if (q instanceof QuestionChoice) {
-			return ((QuestionChoice) q).getAnswer(theCase, idOrValue);
+			AnswerChoice choice = (AnswerChoice) ((QuestionChoice) q).getAnswer(theCase,
+					idOrValue);
+			return new ChoiceValue(choice);
 		}
-
-		if (q instanceof QuestionText) {
-			return ((QuestionText) q).getAnswer(theCase, idOrValue);
+		else if (q instanceof QuestionText) {
+			return new TextValue(idOrValue);
 		}
-
-		if (q instanceof QuestionNum) {
-			return ((QuestionNum) q).getAnswer(theCase, new Double(idOrValue));
+		else if (q instanceof QuestionNum) {
+			return new NumValue(new Double(idOrValue));
 		}
-
-		return null;
+		else if (q instanceof QuestionDate) {
+			return new DateValue(new Date(idOrValue));
+		}
+		else {
+			return UndefinedValue.getInstance();
+		}
 	}
 
 	/**
