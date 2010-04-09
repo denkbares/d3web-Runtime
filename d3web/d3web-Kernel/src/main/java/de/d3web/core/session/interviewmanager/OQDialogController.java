@@ -226,9 +226,6 @@ public class OQDialogController implements DialogController {
 
 		List<Reason> proList = getProReasonsOfParent(theCase, tempQ);
 
-		theCase.trace("pro reasons: " + tempQ.getProReasons(theCase));
-		theCase.trace("determined recursively:" + proList);
-
 		if (tempQ.isValid(theCase)) {
 			// question valid but answered (of course).
 			// check if there are proper pro-reasons:

@@ -70,7 +70,6 @@ public abstract class Question extends QASet implements ValuedObject {
 
 	@Override
 	public void addProReason(Reason source, XPSCase theCase) {
-		theCase.trace(this.getId() + " + proReason: " + source.toString());
 		((CaseQuestion) theCase.getCaseObject(this)).addProReason(source);
 	}
 
@@ -258,10 +257,6 @@ public abstract class Question extends QASet implements ValuedObject {
 			while (valueIter.hasNext()) {
 				symptomValue = valueIter.next();
 				if (ruleSymptom.equals(symptomValue.getRule())) {
-					theCase.trace("loesche: " + ruleSymptom.getId()
-							+ " bei index " + index);
-					theCase.trace("his vor remove: "
-							+ caseQuestion.getValueHistory());
 					if (index == 0) {
 						if (Boolean.TRUE.equals(getProperties().getProperty(
 								Property.TIME_VALUED))) {
@@ -281,8 +276,6 @@ public abstract class Question extends QASet implements ValuedObject {
 					}
 
 					caseQuestion.getValueHistory().remove(index);
-					theCase.trace("his nach remove: "
-							+ caseQuestion.getValueHistory());
 					break;
 				}
 				index++;

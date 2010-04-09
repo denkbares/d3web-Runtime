@@ -248,8 +248,6 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 				// theCase.trace("put to hash: " + q.getId() + "; " + val);
 			}
 			else {
-				theCase.trace("Question was null! Answer: " + ans);
-				theCase.trace("taking Question from Action: " + question.getId());
 				questionToValuesHash.put(question, val);
 				// theCase.trace("put to hash: " + question.getId() + "; " +
 				// val);

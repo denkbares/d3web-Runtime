@@ -97,12 +97,13 @@ public class DiagnosesTreeBean {
 	}
 
 	public boolean getDiagnosesAvailable() {
-		List<Solution> established = DialogUtils.getDialog().getTheCase()
-				.getDiagnoses(DiagnosisState.ESTABLISHED);
-		List<Solution> suggested = DialogUtils.getDialog().getTheCase()
-				.getDiagnoses(DiagnosisState.SUGGESTED);
-		List<Solution> excluded = DialogUtils.getDialog().getTheCase()
-				.getDiagnoses(DiagnosisState.EXCLUDED);
+		XPSCase theCase = DialogUtils.getDialog().getTheCase();
+		List<Solution> established = theCase
+				.getDiagnoses(DiagnosisState.ESTABLISHED, theCase.getUsedPSMethods());
+		List<Solution> suggested = theCase
+				.getDiagnoses(DiagnosisState.SUGGESTED, theCase.getUsedPSMethods());
+		List<Solution> excluded = theCase
+				.getDiagnoses(DiagnosisState.EXCLUDED, theCase.getUsedPSMethods());
 		if (established.size() != 0 || suggested.size() != 0
 				|| excluded.size() != 0) {
 			return true;

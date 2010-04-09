@@ -226,7 +226,7 @@ public class CaseConverter {
 			}
 		}
 
-		List<de.d3web.core.knowledge.terminology.Solution> diags = theCase.getDiagnoses(state);
+		List<de.d3web.core.knowledge.terminology.Solution> diags = theCase.getDiagnoses(state, theCase.getUsedPSMethods());
 		if (diags != null) {
 			Iterator<de.d3web.core.knowledge.terminology.Solution> diter = diags.iterator();
 			while (diter.hasNext()) {

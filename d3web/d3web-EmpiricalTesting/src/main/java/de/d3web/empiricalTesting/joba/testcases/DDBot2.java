@@ -139,7 +139,7 @@ public class DDBot2 {
 
 	private List<RatedSolution> toRatedSolutions(XPSCase theCase) {
 		List<RatedSolution> ratedSolutions = new ArrayList<RatedSolution>();
-		for (Solution diagnosis : theCase.getDiagnoses()) {
+		for (Solution diagnosis : theCase.getKnowledgeBase().getDiagnoses()) {
 			double score = diagnosis.getScore(theCase, PSMethodHeuristic.class)
 					.getScore();
 			if (score >= SCORE_THRESHOLD) {

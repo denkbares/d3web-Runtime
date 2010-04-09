@@ -99,26 +99,15 @@ public abstract class QASet extends NamedObject implements InterviewObject {
 		Reason source = getReason(rule, psm);
 		Boolean external = (Boolean) getProperties().getProperty(Property.EXTERNAL);
 		if(external != null && external) {
-			((D3WebCase) theCase).addQASet(this, rule, psm);
+			theCase.getQASetManager().propagate(this, rule, theCase.getPSMethodInstance(psm));
 		}
 		if (!isDone(theCase)) {
-			theCase.trace("in activate./!isDone(theCase)");
 			if (caseQA.getContraReasons().contains(source)) {
 				removeContraReason(source, theCase);
-				theCase.trace(
-					"Question "
-						+ getId()
-						+ "wurde eine contra reason entzogen.");
 			} else {
 				addProReason(source, theCase);
-				theCase.trace(
-					"Question "
-						+ getId()
-						+ " wurde eine pro reason hinzugefügt:"
-						+ source);
 				if (!caseQA.hasContraReason()) {
-					theCase.trace("... und aktiviert");
-					((D3WebCase) theCase).addQASet(this, rule, psm);
+					theCase.getQASetManager().propagate(this, rule, theCase.getPSMethodInstance(psm));
 //					if (PSMethodUserSelected
 //						.class
 //						.equals(source.getProblemSolverContext())) {
@@ -160,26 +149,9 @@ public abstract class QASet extends NamedObject implements InterviewObject {
 		Reason source = getReason(rule, psm);
 		if (caseQA.getProReasons().contains(source)) {
 			removeProReason(source, theCase);
-			theCase.trace(
-				"Question " + getId() + " wurde eine pro reason entzogen.");
 		} else {
 			addContraReason(source, theCase);
-			theCase.trace(
-				"Question "
-					+ getId()
-					+ " wurde eine contra reason hinzugefügt.");
 		}
-
-		if (!caseQA.hasProReason()) {
-			theCase.trace("Question " + getId() + " wird deaktiviert");
-			//((D3WebCase)theCase).removeQuestion(this);
-		} else {
-			theCase.trace(
-				"Question "
-					+ getId()
-					+ " sollte deaktiviert werden, hat aber noch andere Begründungen.");
-		}
-
 	}
 
 	public List<Reason> getContraReasons(XPSCase theCase) {

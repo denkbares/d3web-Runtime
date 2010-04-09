@@ -124,8 +124,7 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	 * @param theCase the specified {@link XPSCase}
 	 */
 	private void deestablish(XPSCase theCase) {
-		theCase.trace("ziehe etablierte Diagnosis " + getId() + " zurueck.");
-		((D3WebCase) theCase).removeEstablishedDiagnoses(this);
+		theCase.removeEstablishedDiagnoses(this);
 	}
 
 	/**
@@ -134,8 +133,7 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	 * @param theCase the specified {@link XPSCase}
 	 */
 	private void establish(XPSCase theCase) {
-		theCase.trace("etabliere Diagnose: " + getId());
-		((D3WebCase) theCase).addEstablishedDiagnoses(this);
+		theCase.addEstablishedDiagnoses(this);
 	}
 
 	/**

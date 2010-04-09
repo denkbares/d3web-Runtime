@@ -44,7 +44,6 @@ public class QuestionTests extends TestCase {
 	}
 	
 	public static Test suite() {
-		de.d3web.core.session.D3WebCase.TRACE = true;
 		TestSuite suite = new junit.framework.TestSuite("Suite for question-tests");
 		
 		suite.addTest(QuestionNumTest.suite());

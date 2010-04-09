@@ -96,7 +96,7 @@ public class SFAMethod extends PSSubMethod{
 		Boolean b = (Boolean)theCase.getProperties().getProperty(Property.HDT_ABORT_CASE_SFA);
 		if(b != null 
 			&& b.booleanValue()
-			&& !containsLeafDianosis(theCase.getDiagnoses(DiagnosisState.ESTABLISHED)))
+			&& !containsLeafDianosis(theCase.getDiagnoses(DiagnosisState.ESTABLISHED, theCase.getUsedPSMethods())))
 			return true;
 		return false;
 	}

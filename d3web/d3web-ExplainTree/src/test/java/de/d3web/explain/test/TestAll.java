@@ -39,7 +39,6 @@ public class TestAll {
      * @param args java.lang.String[]
      */
     public static void main(String[] args) {
-        de.d3web.core.session.D3WebCase.TRACE = false;
         junit.swingui.TestRunner.main(new String [] { "de.d3web.explain.test.TestAll"});
     }
     

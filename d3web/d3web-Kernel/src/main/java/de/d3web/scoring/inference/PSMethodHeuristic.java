@@ -223,14 +223,14 @@ public class PSMethodHeuristic extends PSMethodAdapter {
      * @param theCase
      */
     private void reCheckAllRules(XPSCase theCase) {
-        List<Solution> oldEstablishedDiagnoses = theCase.getDiagnoses(DiagnosisState.ESTABLISHED);
+        List<Solution> oldEstablishedDiagnoses = theCase.getDiagnoses(DiagnosisState.ESTABLISHED, theCase.getUsedPSMethods());
         List<NamedObject> objects = new LinkedList<NamedObject>(theCase.getKnowledgeBase().getQuestions());
         objects.addAll(theCase.getKnowledgeBase().getDiagnoses());
         for (NamedObject o : objects) {
             checkRulesFor(theCase, o);
         }
         
-        List<Solution> newEstalishedDiagnoses = theCase.getDiagnoses(DiagnosisState.ESTABLISHED);
+        List<Solution> newEstalishedDiagnoses = theCase.getDiagnoses(DiagnosisState.ESTABLISHED, theCase.getUsedPSMethods());
         if ((!oldEstablishedDiagnoses.isEmpty()) &&
             (oldEstablishedDiagnoses.containsAll(newEstalishedDiagnoses)) &&
             (newEstalishedDiagnoses.containsAll(oldEstablishedDiagnoses))) {

@@ -20,7 +20,6 @@
 
 package de.d3web.core.inference.condition;
 
-import de.d3web.core.session.D3WebCase;
 
 /**
  * Exception that will be thrown if a question has an "unknown" answer when it should have a known one.
@@ -30,6 +29,7 @@ import de.d3web.core.session.D3WebCase;
  */
 public class UnknownAnswerException extends Exception {
 
+	private static final long serialVersionUID = 6088241033278509430L;
 	private static UnknownAnswerException instance =
 		new UnknownAnswerException();
 
@@ -38,10 +38,5 @@ public class UnknownAnswerException extends Exception {
 	 */
 	public static UnknownAnswerException getInstance() {
 		return instance;
-	}
-
-	public void printStackTrace() {
-		D3WebCase.strace(
-			"Unknown answer in Condition");
 	}
 }

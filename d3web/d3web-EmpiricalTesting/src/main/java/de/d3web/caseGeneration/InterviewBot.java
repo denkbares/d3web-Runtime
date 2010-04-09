@@ -278,7 +278,7 @@ public class InterviewBot {
 
 	private List<RatedSolution> toRatedSolutions(XPSCase theCase) {
 		List<RatedSolution> ratedSolutions = new LinkedList<RatedSolution>();
-		for (Solution solution : theCase.getDiagnoses()) {
+		for (Solution solution : theCase.getKnowledgeBase().getDiagnoses()) {
 			Rating rating = ratingStrategy.getRatingFor(solution, theCase);
 			if (rating.isProblemSolvingRelevant()) {
 				RatedSolution ratedSolution = new RatedSolution(solution, rating);

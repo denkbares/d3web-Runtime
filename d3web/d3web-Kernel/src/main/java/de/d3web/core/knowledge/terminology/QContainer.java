@@ -192,11 +192,9 @@ public class QContainer extends QASet {
 		for (TerminologyObject to: getChildren()) {
 			QASet qaset = (QASet) to;
 			if (!qaset.isDone(theCase)) {
-				theCase.trace("isDone von " + getId() + " liefert false!");
 				return false;
 			}
 		}
-		theCase.trace("isDone von " + getId() + " liefert true!");
 		return true;
 	}
 
@@ -208,11 +206,9 @@ public class QContainer extends QASet {
 		for (TerminologyObject to: getChildren()) {
 			if (!((QASet) to).isDone(theCase,
 					respectValidFollowQuestions)) {
-				theCase.trace("isDone von " + getId() + " liefert false!");
 				return false;
 			}
 		}
-		theCase.trace("isDone von " + getId() + " liefert true!");
 		return true;
 	}
 

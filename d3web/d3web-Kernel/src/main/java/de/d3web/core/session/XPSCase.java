@@ -20,9 +20,7 @@
 
 package de.d3web.core.session;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
@@ -31,7 +29,6 @@ import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCMarkedUp;
@@ -57,16 +54,6 @@ import de.d3web.core.session.interviewmanager.QASetManager;
 public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 
 	/**
-	 * Returns all registered {@link PSMethod} instances that also have an
-	 * impact on the interview behavior.
-	 * 
-	 * @return all {@link PSMethod} instances influencing the interview behavior
-	 */
-	Collection<? extends PSMethod> getDialogControllingPSMethods();
-
-	List<QContainer> getIndicatedQContainers();
-
-	/**
 	 * Returns all {@link Question} instances, that have been already answered
 	 * in the case.
 	 * 
@@ -84,31 +71,6 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	 * @return the corresponding {@link XPSCaseObject} of the given item
 	 */
 	XPSCaseObject getCaseObject(CaseObjectSource item);
-
-	/**
-	 * Returns all {@link Solution} instances contained in the knowledge base
-	 * as a sequential list.
-	 * 
-	 * @return a list of all {@link Solution} instances
-	 * @deprecated use getKnowledgeBase().getDiagnoses instead
-	 */
-	@Deprecated
-	// TODO: remove this method
-	List<Solution> getDiagnoses();
-
-	/**
-	 * Returns all {@link Solution} instances, that hold the specified
-	 * {@link DiagnosisState} in this {@link XPSCase}. All registered
-	 * {@link PSMethod} instances are considered, so a {@link Solution} is
-	 * returned, if it haves the specified {@link DiagnosisState} for at least
-	 * one {@link PSMethod}.
-	 * 
-	 * @param the
-	 *            specified {@link DiagnosisState} that the diagnoses should
-	 *            have
-	 * @return a list of {@link Solution} instances having the specified state
-	 */
-	List<Solution> getDiagnoses(DiagnosisState state);
 
 	/**
 	 * Returns all {@link Solution} instances, that hold the specified
@@ -177,20 +139,9 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	void finish(Class<? extends KnowledgeSlice> reasonForFinishCase);
 
 	/**
-	 * Returns all registered reasons for setting the case into the 'finished'
-	 * state.
-	 * 
-	 * @return all reasons for finishing the case
+	 * Removes all finish reasons from the set of reasons for quitting the case.
 	 */
-	Set<Class<? extends KnowledgeSlice>> getFinishReasons();
-
-	/**
-	 * Removes a specified reason from the set of reasons for quitting the case.
-	 * 
-	 * @param reasonForContinueCase
-	 *            the quit-reason to be removed from the reasons list.
-	 */
-	void continueCase(Class<? extends KnowledgeSlice> reasonForContinueCase);
+	void continueCase();
 
 	/**
 	 * Sets a {@link QASetManager}, that will be used to control the interview
@@ -201,39 +152,6 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	 */
 	void setQASetManager(QASetManager cd);
 
-	/**
-	 * Sets the list of registered {@link PSMethod} instances, that will be used
-	 * during the problem-solving session.
-	 * 
-	 * @param methods
-	 *            the list of registered problem-solvers
-	 */
-	void setUsedPSMethods(List<? extends PSMethod> methods);
-
-	// /**
-	// * Deprecated: Please use void setValue(ValuedObject valuedObject, Answer
-	// value)
-	// */
-	// @Deprecated
-	// void setValue(ValuedObject o, Object[] value);
-	//
-	// /**
-	// * Deprecated: Please use void setValue(ValuedObject valuedObject, Answer
-	// value, Rule rule)
-	// */
-	// @Deprecated
-	// void setValue(ValuedObject o, Object[] value, Rule rule);
-	//
-	//
-	// /**
-	// * Deprecated: Please use void setValue(ValuedObject valuedObject, Answer
-	// value, Class context)
-	// */
-	// void setValue(ValuedObject o, Object[] value, Class<? extends PSMethod>
-	// context);
-
-
-	
 	/**
 	 * Assigns the specified value to the specified {@link ValuedObject},
 	 * e.g., a {@link Question} or a {@link Solution} receives a new value.
@@ -279,14 +197,6 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	void setValue(ValuedObject valuedObject, Value value, Class<? extends PSMethod> context);
 
 	/**
-	 * Takes a specified log message, that is relevant for this case.
-	 * 
-	 * @param message
-	 *            the specified log message
-	 */
-	void trace(String message);
-
-	/**
 	 * Registers a new listener to this case. If something in this case changes,
 	 * the all registered listeners will be notified.
 	 * 
@@ -309,4 +219,17 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	 * @return
 	 */
 	Blackboard getBlackboard();
+	
+	/**
+	 * adds an established Diagnosis to this case
+	 */
+	public void addEstablishedDiagnoses(Solution diag);
+	
+	/**
+	 * removes a Diagnosis from the list of established diagnosis
+	 * 
+	 * @param diag
+	 *            Diagnosis to remove
+	 */
+	public void removeEstablishedDiagnoses(Solution diagnosis);
 }

@@ -63,7 +63,7 @@ public class CorrectionPageRenderer extends Renderer {
 	// also save userselected diags in case...
 	WebDialog dia = DialogUtils.getDialog();
 
-	List<Solution> allDiags = dia.getTheCase().getDiagnoses();
+	List<Solution> allDiags = dia.getTheCase().getKnowledgeBase().getDiagnoses();
 	for (Solution diag : allDiags) {
 	    if (diagIsUserSelected(dia, userSelDiagIDs, diag)) {
 		// set as user selected
@@ -109,9 +109,9 @@ public class CorrectionPageRenderer extends Renderer {
 
 	// get established and suggested diagnoses
 	List<Solution> diagListEstablished = theCase
-		.getDiagnoses(DiagnosisState.ESTABLISHED);
+		.getDiagnoses(DiagnosisState.ESTABLISHED, theCase.getUsedPSMethods());
 	List<Solution> diagListSuggested = theCase
-		.getDiagnoses(DiagnosisState.SUGGESTED);
+		.getDiagnoses(DiagnosisState.SUGGESTED, theCase.getUsedPSMethods());
 	// filter duplicate diagoses (some are userselected established and
 	// heuristic suggested)
 	List<Solution> diagListSuggestedFiltered = new ArrayList<Solution>();
@@ -209,7 +209,7 @@ public class CorrectionPageRenderer extends Renderer {
     private List<Solution> getRemainingDiags(XPSCase theCase,
 	    List<Solution> diagListEstablished,
 	    List<Solution> diagListSuggested) {
-	List<Solution> diagList = theCase.getDiagnoses();
+	List<Solution> diagList = theCase.getKnowledgeBase().getDiagnoses();
 	Solution root = theCase.getKnowledgeBase().getRootDiagnosis();
 	List<Solution> retList = new ArrayList<Solution>();
 	for (int i = 0; i < diagList.size(); i++) {

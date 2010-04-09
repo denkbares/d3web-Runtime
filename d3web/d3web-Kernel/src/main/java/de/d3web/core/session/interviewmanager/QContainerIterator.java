@@ -321,12 +321,9 @@ public class QContainerIterator {
 
 			childIter = Arrays.asList(container.getChildren()).iterator();
 
-			try {
-				Question topQuestion = (Question) childIter.next();
-				flatten(0, topQuestion, childIter);
-			} catch (NullPointerException x) {
-				theCase.trace("Container is empty!!!");
-			}
+			Question topQuestion = (Question) childIter.next();
+			flatten(0, topQuestion, childIter);
+			
 			childIter = childIterSave;
 			currentQuestion = currentQuestionSave;
 		}

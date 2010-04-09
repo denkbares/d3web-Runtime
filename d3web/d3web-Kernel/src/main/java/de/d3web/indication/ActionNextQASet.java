@@ -51,10 +51,6 @@ public abstract class ActionNextQASet extends PSAction {
 	protected void doItWithContext(XPSCase theCase, Rule rule) {
 		for (QASet nextQASet : getQASets()) {
 			nextQASet.activate(theCase, rule, rule.getProblemsolverContext());
-
-			if (nextQASet instanceof QContainer) {
-				theCase.getIndicatedQContainers().add((QContainer) nextQASet);
-			}
 		}
 	}
 

@@ -75,7 +75,6 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 	}
 
 	public static void main(String[] args) {
-		de.d3web.core.session.D3WebCase.TRACE = false;
 		junit.textui.TestRunner.main(
 			new String[] { "de.d3web.explain.test.ExplainQASetReasonsTest" });
 	}

@@ -34,6 +34,7 @@ import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.core.session.interviewmanager.PSMethodCombined;
+import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
  * This is a combined PSMethod used for dialog controlling
@@ -58,7 +59,13 @@ public class PSMethodDialogControlling extends PSMethodCombined {
 	 * Creation date: (03.01.2002 16:17:28)
 	 */
 	public void init(XPSCase theCase) {
-		setPSMethods(new LinkedList<PSMethod>(theCase.getDialogControllingPSMethods()));
+		//List moved from d3webCase (because it wasn't modfied anyway
+		//TODO: getAll PSMethods and screen them for the correct ones 
+		PSMethodUserSelected psmUser = PSMethodUserSelected.getInstance();
+		LinkedList<PSMethod> dialogControllingPSMethods = new LinkedList<PSMethod>();
+		dialogControllingPSMethods.add(psmUser);
+		dialogControllingPSMethods.add(PSMethodHeuristic.getInstance());
+		setPSMethods(new LinkedList<PSMethod>(dialogControllingPSMethods));
 	}
 
 	/**

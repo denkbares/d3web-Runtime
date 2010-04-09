@@ -15,6 +15,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.java.plugin.registry.Library;
+import org.java.plugin.registry.PluginAttribute;
 import org.java.plugin.registry.PluginDescriptor;
 
 public class JPFPlugin implements Plugin {
@@ -223,6 +224,15 @@ public class JPFPlugin implements Plugin {
 
 	public PluginDescriptor getDescriptor() {
 		return descriptor;
+	}
+	
+	public String getBuild() {
+		PluginAttribute attribute = descriptor.getAttribute("build");
+		if (attribute!=null) {
+			return attribute.getValue();
+		} else {
+			return null;
+		}
 	}
 	
 	

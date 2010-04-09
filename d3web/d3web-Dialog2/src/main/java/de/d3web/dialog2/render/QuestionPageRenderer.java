@@ -35,7 +35,6 @@ import javax.faces.render.Renderer;
 
 import org.apache.log4j.Logger;
 
-import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
@@ -73,19 +72,6 @@ public class QuestionPageRenderer extends Renderer {
 
 		FacesContext.getCurrentInstance().addMessage(id, new FacesMessage(facesMsg));
 		FacesContext.getCurrentInstance().renderResponse();
-	}
-
-	/**
-	 * Removes all finish-reasons from the given XPSCase.
-	 * 
-	 * @param theCase
-	 *            XPSCase
-	 */
-	private static void continueCaseByUser(XPSCase theCase) {
-		Iterator<Class<? extends KnowledgeSlice>> iter = theCase.getFinishReasons().iterator();
-		while (iter.hasNext()) {
-			theCase.continueCase(iter.next());
-		}
 	}
 
 	private static Value getAnswer(UIComponent component, XPSCase theCase, Question q, String idOrValue) {
@@ -378,7 +364,7 @@ public class QuestionPageRenderer extends Renderer {
 
 	private void setValueInCase(XPSCase theCase, Question q, Value answers) {
 		if (theCase.isFinished()) {
-			continueCaseByUser(theCase);
+			theCase.continueCase();
 		}
 		theCase.setValue(q, answers);
 	}

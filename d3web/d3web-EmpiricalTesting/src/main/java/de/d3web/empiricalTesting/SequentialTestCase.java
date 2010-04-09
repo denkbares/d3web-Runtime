@@ -164,7 +164,7 @@ public class SequentialTestCase {
 	private void deriveSolutionsForPSMethod(XPSCase thecase, RatedTestCase rtc,
 			Class<? extends PSMethod> psMethodContext, RatingStrategy ratingStrategy) {
 		
-		for (Solution solution : thecase.getDiagnoses()) {
+		for (Solution solution : thecase.getKnowledgeBase().getDiagnoses()) {
 			Rating rating = ratingStrategy.getRatingFor(solution, thecase);
 			if (rating.isProblemSolvingRelevant()) {
 				RatedSolution ratedSolution = new RatedSolution(solution, rating);
