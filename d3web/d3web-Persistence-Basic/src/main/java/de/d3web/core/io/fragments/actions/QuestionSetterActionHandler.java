@@ -148,10 +148,31 @@ public class QuestionSetterActionHandler implements FragmentHandler{
 			valuesNode.appendChild(valueNode);
 		}
 		else if (action != null) {
-			Element valueNode = doc.createElement("Value");
-			valueNode.appendChild(pm.writeFragment(action.getValue(), doc));
-			valueNode.setAttribute("type", "evaluatable");
-			valuesNode.appendChild(valueNode);
+			if (action.getValue() instanceof Object[]) {
+				Object[] list = (Object[]) action.getValue();
+				for (Object o: list) {
+					if (o != null && o instanceof AnswerChoice) {
+						AnswerChoice a = (AnswerChoice) o;
+						if (a.getId()==null) {
+							throw new IOException("Answer "+a.getName()+" has no ID");
+						}
+						Element valueNode = doc.createElement("Value");
+						valueNode.setAttribute("type", "answer");
+						valueNode.setAttribute("ID", a.getId());
+						valuesNode.appendChild(valueNode);
+					} else if (o != null) {
+						Element valueNode = doc.createElement("Value");
+						valueNode.appendChild(pm.writeFragment(o, doc));
+						valueNode.setAttribute("type", "evaluatable");
+						valuesNode.appendChild(valueNode);
+					}
+				}
+			} else {
+				Element valueNode = doc.createElement("Value");
+				valueNode.appendChild(pm.writeFragment(action.getValue(), doc));
+				valueNode.setAttribute("type", "evaluatable");
+				valuesNode.appendChild(valueNode);
+			}
 		}
 		else {
 			throw new IOException("Tried to write an Action that is null.");
