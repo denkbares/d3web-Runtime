@@ -150,5 +150,5 @@ public class AbstractAbnormalityHandler implements FragmentHandler {
 		}
 		return element;
 	}
-}
 
+}
