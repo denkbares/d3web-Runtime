@@ -20,10 +20,10 @@
 
 package de.d3web.core.inference.condition;
 
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.session.values.Unknown;
 
 /**
  * Condition that checks if a Question has been answered by
@@ -45,12 +45,13 @@ public class CondUnknown extends CondQuestion {
 
 	@Override
 	public boolean eval(XPSCase theCase) throws NoAnswerException {
-		try {
-			checkAnswer(theCase);
-			return false;
-		} catch (UnknownAnswerException ex) {
-			return ((Answer) question.getValue(theCase)).isUnknown();
-		}
+		return (question.getValue(theCase) instanceof Unknown);
+		// try {
+		// checkAnswer(theCase);
+		// return false;
+		// } catch (UnknownAnswerException ex) {
+		// return ((Answer) question.getValue(theCase)).isUnknown();
+		// }
 	}
 
 	@Override
@@ -61,7 +62,7 @@ public class CondUnknown extends CondQuestion {
 	@Override
 	public Condition copy() {
 		return new CondUnknown(getQuestion());
-	}	
+	}
 	
 
 }

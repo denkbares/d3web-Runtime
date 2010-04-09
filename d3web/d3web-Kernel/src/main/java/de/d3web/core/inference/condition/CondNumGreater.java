@@ -21,8 +21,6 @@
 package de.d3web.core.inference.condition;
 
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.session.XPSCase;
-import de.d3web.core.session.values.AnswerNum;
 
 /**
  * Condition for numerical questions, where the value
@@ -44,17 +42,8 @@ public class CondNumGreater extends CondNum {
 	}
 
 	@Override
-	public boolean eval(XPSCase theCase)
-		throws NoAnswerException, UnknownAnswerException {
-		checkAnswer(theCase);
-
-		AnswerNum answer = (AnswerNum) getQuestion().getValue(theCase);
-		Double value = (Double) answer.getValue(theCase);
-		if (value != null) {
-			return (value.doubleValue() > getAnswerValue().doubleValue());
-		} else {
-			return false;
-		}
+	protected boolean compare(Double caseValue, Double conditionedValue) {
+		return (caseValue.doubleValue() > conditionedValue.doubleValue());
 	}
 
 	@Override
@@ -62,12 +51,13 @@ public class CondNumGreater extends CondNum {
 		return "\u2190 CondNumGreater question: "
 			+ question.getId()
 			+ " value: "
-			+ getAnswerValue();
+			+ getConditionValue();
 	}
 	
 	@Override
 	public Condition copy() {
-		return new CondNumGreater((QuestionNum)getQuestion(),  getAnswerValue());
+		return new CondNumGreater((QuestionNum)getQuestion(),  getConditionValue());
 	}
+
 
 }

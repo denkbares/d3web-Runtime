@@ -21,8 +21,6 @@
 package de.d3web.core.inference.condition;
 
 import de.d3web.core.knowledge.terminology.QuestionText;
-import de.d3web.core.session.XPSCase;
-import de.d3web.core.session.values.AnswerText;
 
 /**
  * Condition for text questions, where a specified value
@@ -31,12 +29,10 @@ import de.d3web.core.session.values.AnswerText;
  * 
  * @author joba
  */
-public class CondTextContains extends CondQuestion {
+public class CondTextContains extends CondTextQuestion {
 	
-	private String value;
-
 	/**
-	 * Creates a new condition, where a specified {@link String} value 
+	 * Creates a new condition, where a specified {@link String} value
 	 * needs to be contained in the specified {@link QuestionText}.
 	 * @param question the specified text question
 	 * @param value the specified value (String)
@@ -46,37 +42,13 @@ public class CondTextContains extends CondQuestion {
 		this.value = value;
 	}
 
+	
 	@Override
-	public boolean eval(XPSCase theCase)
-		throws NoAnswerException, UnknownAnswerException {
-		checkAnswer(theCase);
-		AnswerText answer = (AnswerText) question.getValue(theCase);
-		String value = (String) answer.getValue(theCase);
-		if (value != null) {
-			return (value.indexOf(this.value) > -1);
-		} else {
-			return false;
-		}
+	protected boolean compare(String caseValue) {
+		return (caseValue.indexOf(this.value) > -1);
 	}
 
-	/**
-	 * Returns the {@link String} value, that has to be contained in the answer
-	 * of the contained {@link QuestionText}.
-	 * @return the specified String value
-	 */
-	public String getValue() {
-		return value;
-	}
-
-	/**
-	 * Sets the {@link String} value, that has to be contained in the answer
-	 * of the contained {@link QuestionText}.
-	 * @param newValue specified String value
-	 */
-	public void setValue(String newValue) {
-		value = newValue;
-	}
-
+	
 	@Override
 	public String toString() {
 		return "\u2190 CondTextContains question: "
@@ -91,7 +63,7 @@ public class CondTextContains extends CondQuestion {
 		
 		if (this.getValue() != null && ((CondTextContains)other).getValue() != null)
 					return this.getValue().equals(((CondTextContains)other).getValue());
-				else return this.getValue() == ((CondTextContains)other).getValue();	
+				else return this.getValue() == ((CondTextContains)other).getValue();
 	}
 	
 	@Override

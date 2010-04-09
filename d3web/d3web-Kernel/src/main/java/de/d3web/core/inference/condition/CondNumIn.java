@@ -21,8 +21,6 @@
 package de.d3web.core.inference.condition;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
-import de.d3web.core.session.XPSCase;
-import de.d3web.core.session.values.AnswerNum;
 
 /**
  * Condition for numerical questions, where the question
@@ -36,7 +34,7 @@ public class CondNumIn extends CondNum {
 	private NumericalInterval _interval;
 
 	/**
-	 * Creates a new condition, where the value of a specified numerical 
+	 * Creates a new condition, where the value of a specified numerical
 	 * question needs to be within the specified minimum and maximum range.
 	 * @param question the specified numerical question
 	 * @param minValue the specified minimum value (Double)
@@ -47,7 +45,7 @@ public class CondNumIn extends CondNum {
 	}
 
 	/**
-	 * Creates a new condition, where the value of a specified numerical 
+	 * Creates a new condition, where the value of a specified numerical
 	 * question needs to be within the specified interval.
 	 * @param question the specified numerical question
 	 * @param theInterval the specified interval
@@ -58,19 +56,8 @@ public class CondNumIn extends CondNum {
 	}
 
 	@Override
-	public boolean eval(XPSCase theCase) throws NoAnswerException, UnknownAnswerException {
-		checkAnswer(theCase);
-		AnswerNum answer = (AnswerNum) getQuestion().getValue(theCase);
-		Double value = (Double) answer.getValue(theCase);
-		if (value != null) {
-			if (_interval != null) {
-				return _interval.contains(value.doubleValue());
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
+	protected boolean compare(Double caseValue, Double conditionedValue) {
+		return _interval.contains(caseValue.doubleValue());
 	}
 
 	/**
@@ -136,7 +123,7 @@ public class CondNumIn extends CondNum {
 		out.append(getInterval().isLeftOpen() ? "(" : "[");
 		out.append(getInterval().getLeft()+", "+getInterval().getRight());
 		out.append(getInterval().isRightOpen() ? ")" : "]");
-		return out.toString();	
+		return out.toString();
 	}
 
 	@Override

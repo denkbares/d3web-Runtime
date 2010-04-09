@@ -22,6 +22,7 @@ package de.d3web.core.manage;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,7 +32,6 @@ import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -45,7 +45,14 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.knowledge.terminology.QuestionZC;
+import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.DateValue;
+import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.TextValue;
+import de.d3web.core.session.values.UndefinedValue;
 
 /**
  * A facade controlling (all) operations on a knowledge base. Created on
@@ -118,7 +125,7 @@ public class KnowledgeBaseManagement {
 	
 
 	/**
-	 * Creates a new solution and adds the instance as child of 
+	 * Creates a new solution and adds the instance as child of
 	 * the root of the solution hierarchy.
 	 * @param name The name of the new solution
 	 * @return the newly created solution
@@ -403,7 +410,7 @@ public class KnowledgeBaseManagement {
 		
 		//Uses hash for name in KB
 		IDObject ob = knowledgeBase.searchObjectForName(name);
-		if(ob != null && ob instanceof NamedObject) return (NamedObject) ob; 
+		if(ob != null && ob instanceof NamedObject) return (NamedObject) ob;
 		
 		//old iterating search method
 		for (NamedObject o : namedObjects) {
@@ -454,6 +461,7 @@ public class KnowledgeBaseManagement {
 	 *            the requested answer text or id
 	 * @return null, if no answer found for specified params
 	 */
+	@Deprecated
 	public Answer findAnswer(Question question, String answerText) {
 		Answer result = null;
 		if (question instanceof QuestionChoice) {
@@ -465,6 +473,25 @@ public class KnowledgeBaseManagement {
 			}
 		}
 		return result;
+	}
+
+	public Value findValue(Question question, String valueString) {
+		if (question instanceof QuestionChoice) {
+			AnswerChoice choice = findAnswerChoice((QuestionChoice) question, valueString);
+			return new ChoiceValue(choice);
+		}
+		else if (question instanceof QuestionNum) {
+			return new NumValue(Double.parseDouble(valueString));
+		}
+		else if (question instanceof QuestionText) {
+			return new TextValue(valueString);
+		}
+		else if (question instanceof QuestionDate) {
+			return new DateValue(new Date(valueString));
+		}
+		else {
+			return UndefinedValue.getInstance();
+		}
 	}
 
 	public String findNewIDFor(Class<? extends IDObject> o) {

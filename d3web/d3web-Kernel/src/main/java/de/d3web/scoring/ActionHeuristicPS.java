@@ -19,49 +19,52 @@
  */
 
 package de.d3web.scoring;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.RuleSet;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.D3WebCase;
 import de.d3web.core.session.XPSCase;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
- * Action to add scores to diagnoses 
- * (heuristic problemsolver)
+ * Action to add scores to diagnoses (heuristic problemsolver) <br>
  * Creation date: (19.06.2001 17:18:31)
+ * 
  * @author Joachim Baumeister
  */
 public class ActionHeuristicPS extends PSAction {
-	
+
 	private Solution diagnosis;
 	private Score score;
 
+	@Override
 	public String toString() {
 		String diagnosisId = null;
-		if(getDiagnosis() != null) {
+		if (getDiagnosis() != null) {
 			diagnosisId = getDiagnosis().getId();
 		}
 		return "<RuleAction type=\"Heuristic\">\n"
-			+ "  ["
-			+ diagnosisId
-			+ ": "
-			+ getScore()
-			+ "]"
-			+ "\n</RuleAction>";
+				+ "  ["
+				+ diagnosisId
+				+ ": "
+				+ getScore()
+				+ "]"
+				+ "\n</RuleAction>";
 	}
 
 	/**
 	 * @return all objects participating on the action.<BR>
 	 */
+	@Override
 	public List<? extends NamedObject> getTerminalObjects() {
 		List<Solution> terminals = new ArrayList<Solution>(1);
 		if (getDiagnosis() != null) {
@@ -71,8 +74,8 @@ public class ActionHeuristicPS extends PSAction {
 	}
 
 	/**
-	 * Creates a new ActionHeuristicPS for the given corresponding Rule
-	 * Creation date: (19.06.2001 17:41:53)
+	 * Creates a new ActionHeuristicPS for the given corresponding Rule Creation
+	 * date: (19.06.2001 17:41:53)
 	 */
 	public ActionHeuristicPS() {
 		super();
@@ -85,13 +88,11 @@ public class ActionHeuristicPS extends PSAction {
 	public void doIt(XPSCase theCase, Rule rule) {
 
 		DiagnosisScore resultDS =
-			getDiagnosis().getScore(theCase, getProblemsolverContext()).add(
+				getDiagnosis().getScore(theCase, getProblemsolverContext()).add(
 				getScore());
 
-		((D3WebCase) theCase).setValue(
-			getDiagnosis(),
-			new Object[] { resultDS },
-			getProblemsolverContext());
+		((D3WebCase) theCase).setValue(getDiagnosis(), resultDS,
+				getProblemsolverContext());
 	}
 
 	/**
@@ -104,6 +105,7 @@ public class ActionHeuristicPS extends PSAction {
 	/**
 	 * @return PSMethosHeuristic.class
 	 */
+	@Override
 	public Class<? extends PSMethod> getProblemsolverContext() {
 		return PSMethodHeuristic.class;
 	}
@@ -115,17 +117,18 @@ public class ActionHeuristicPS extends PSAction {
 		return score;
 	}
 
-		/**
-	 * sets the given Diagnosis and resets the corresponding rule as Knowledge slice 
+	/**
+	 * sets the given Diagnosis and resets the corresponding rule as Knowledge
+	 * slice
 	 */
 	public void setDiagnosis(Solution theDiagnosis) {
 		diagnosis = theDiagnosis;
 	}
 
 	/**
-	  * Sets the score to be added to the specified diagnosis,
-	  * if the rule can fire.
-	  */
+	 * Sets the score to be added to the specified diagnosis, if the rule can
+	 * fire.
+	 */
 	public void setScore(Score score) {
 		this.score = score;
 	}
@@ -137,63 +140,68 @@ public class ActionHeuristicPS extends PSAction {
 	public void undo(XPSCase theCase, Rule rule) {
 		DiagnosisScore resultDS = null;
 		if (getScore().equals(Score.N7)) {
-			KnowledgeSlice knowledge = getDiagnosis().getKnowledge(PSMethodHeuristic.class, MethodKind.BACKWARD);
-			resultDS =	new DiagnosisScore(getDiagnosis().getAprioriProbability());
-			if (knowledge!=null) {
+			KnowledgeSlice knowledge = getDiagnosis().getKnowledge(
+					PSMethodHeuristic.class, MethodKind.BACKWARD);
+			resultDS = new DiagnosisScore(getDiagnosis().getAprioriProbability());
+			if (knowledge != null) {
 				RuleSet rs = (RuleSet) knowledge;
-				for (Rule r: rs.getRules()) {
+				for (Rule r : rs.getRules()) {
 					if (r.isUsed(theCase)) {
 						resultDS =
-							resultDS.add(
+								resultDS.add(
 								((ActionHeuristicPS) r.getAction()).getScore());
 					}
 				}
 			}
-		} else {
+		}
+		else {
 			resultDS =
-				getDiagnosis().getScore(
+					getDiagnosis().getScore(
 					theCase,
 					getProblemsolverContext()).subtract(
 					getScore());
 		}
 		((D3WebCase) theCase).setValue(
-			getDiagnosis(),
-			new Object[] { resultDS },
-			getProblemsolverContext());
+				getDiagnosis(),
+				resultDS,
+				getProblemsolverContext());
 	}
 
+	@Override
 	public PSAction copy() {
 		ActionHeuristicPS a = new ActionHeuristicPS();
 		a.setDiagnosis(getDiagnosis());
 		a.setScore(getScore());
 		return a;
 	}
-	
+
+	@Override
 	public int hashCode() {
 		int hash = 0;
-		if(getDiagnosis() != null) {
+		if (getDiagnosis() != null) {
 			hash += getDiagnosis().hashCode();
 		}
-		if(getScore() != null) {
+		if (getScore() != null) {
 			hash += getScore().hashCode();
 		}
 		return hash;
 	}
-	
+
+	@Override
 	public boolean equals(Object o) {
-		if (o==this) 
+		if (o == this)
 			return true;
 		if (o instanceof ActionHeuristicPS) {
-			ActionHeuristicPS a = (ActionHeuristicPS)o;
-			return isSame(a.getDiagnosis(), getDiagnosis()) && isSame(a.getScore(), getScore());
+			ActionHeuristicPS a = (ActionHeuristicPS) o;
+			return isSame(a.getDiagnosis(), getDiagnosis())
+					&& isSame(a.getScore(), getScore());
 		}
-		else
-			return false;
+		else return false;
 	}
-	
+
 	private boolean isSame(Object obj1, Object obj2) {
-		if(obj1 == null && obj2 == null) return true;
-		if(obj1 != null && obj2 != null) return obj1.equals(obj2);
+		if (obj1 == null && obj2 == null) return true;
+		if (obj1 != null && obj2 != null) return obj1.equals(obj2);
 		return false;
 	}
 }

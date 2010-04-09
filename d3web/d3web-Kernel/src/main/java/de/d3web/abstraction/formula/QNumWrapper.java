@@ -23,8 +23,10 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.session.values.AnswerNum;
+import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.core.session.values.Unknown;
 
 /**
  * Delegate-Pattern: Wraps a QuestionNum to use it as FormulaElement. Creation date: (25.07.2001 15:51:18)
@@ -51,14 +53,18 @@ public class QNumWrapper extends FormulaNumberPrimitive {
 	/**
 	 * @param theCase
 	 *            current case
-	 * @return evaluated AnswerNumValue (Double) of the wrapped QuestionNum
+	 * @return the Double value of the wrapped QuestionNum
 	 */
 	public Double eval(XPSCase theCase) {
-		if (getQuestion().getValue(theCase) == null
-			|| getQuestion().getValue(theCase).equals(getQuestion().getUnknownAlternative())) {
+		Value val = getQuestion().getValue(theCase);
+		if (val == null
+			|| val instanceof UndefinedValue
+				|| val instanceof Unknown) {
 			return null;
 		}
-		return (Double) ((AnswerNum) (getQuestion().getValue(theCase))).getValue(theCase);
+		else {
+			return (Double) val.getValue();
+		}
 	}
 
 	/**
@@ -70,6 +76,7 @@ public class QNumWrapper extends FormulaNumberPrimitive {
 		return (QuestionNum) value;
 	}
 
+	@Override
 	public void setValue(Object o) {
 		setQuestion((QuestionNum) o);
 	}
@@ -91,6 +98,7 @@ public class QNumWrapper extends FormulaNumberPrimitive {
 		return ret;
 	}
 
+	@Override
 	public String toString() {
 		return value.toString();
 	}

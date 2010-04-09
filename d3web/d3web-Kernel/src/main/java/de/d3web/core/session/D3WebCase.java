@@ -41,13 +41,12 @@ import de.d3web.core.inference.PropagationContoller;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.session.blackboard.Blackboard;
@@ -93,8 +92,8 @@ public class D3WebCase implements XPSCase {
 	private final DefaultPropagationController propagationController;
 	private Map<CaseObjectSource, XPSCaseObject> dynamicStore;
 
-	private List<Solution> establishedDiagnoses = new LinkedList<Solution>();
-	private List<Question> answeredQuestions = new LinkedList<Question>();
+	private final List<Solution> establishedDiagnoses = new LinkedList<Solution>();
+	private final List<Question> answeredQuestions = new LinkedList<Question>();
 
 	private List<PSMethod> usedPSMethods;
 
@@ -105,7 +104,7 @@ public class D3WebCase implements XPSCase {
 	private QASetManager qaSetManager = null;
 	private QASetManagerFactory qamFactory = null;
 
-	private List<QContainer> indicatedQContainers = new LinkedList<QContainer>();
+	private final List<QContainer> indicatedQContainers = new LinkedList<QContainer>();
 
 	public static boolean TRACE = false;
 	private Collection<PSMethod> dialogControllingPSMethods;
@@ -127,7 +126,7 @@ public class D3WebCase implements XPSCase {
 			FluxSolver.getInstance()));
 
 	/**
-	 * Returns the current common PSMethods. These PSMethods will be added 
+	 * Returns the current common PSMethods. These PSMethods will be added
 	 * to a newly created case as default PSMethods.
 	 * 
 	 * @return the current common (default) PSMethods
@@ -462,7 +461,7 @@ public class D3WebCase implements XPSCase {
 	 */
 	public QASetManager getQASetManager() {
 		if (qaSetManager == null) {
-			qaSetManager = getQASetManagerFactory().createQASetManager(this);		
+			qaSetManager = getQASetManagerFactory().createQASetManager(this);
 		}
 		return qaSetManager;
 	}
@@ -499,20 +498,21 @@ public class D3WebCase implements XPSCase {
 		// only propagate to ValuedObjects which are
 		// NamedObjects (and so have KnowledgeMaps)
 		if (valuedObject instanceof NamedObject) {
-			this.propagationController.propagate((NamedObject) valuedObject, 
+			this.propagationController.propagate((NamedObject) valuedObject,
 					oldValue,
 					newValue);
 		}
 	}
 
-	private void updateBlackboard(ValuedObject valuedObject, Object[] newValue, 
+	private void updateBlackboard(ValuedObject valuedObject, Value newValue,
 			Object source, PSMethod method) {
 		// TODO: consider 'context' and 'psMethod' when adding a fact
 		if (valuedObject instanceof TerminologyObject) {
-			Fact fact = new DefaultFact((TerminologyObject)valuedObject, 
-					ValueFactory.toValue(valuedObject, newValue, this), 
+			Fact fact = new DefaultFact((TerminologyObject)valuedObject,
+					//ValueFactory.toValue(valuedObject, newValue, this),
+					newValue,
 					source, method);
-			getBlackboard().addValueFact(fact);			
+			getBlackboard().addValueFact(fact);
 		}
 	}
 
@@ -590,30 +590,28 @@ public class D3WebCase implements XPSCase {
 	
 
 	@Override
-	public void setValue(ValuedObject valuedObject, Object[] values) {
+	public void setValue(ValuedObject valuedObject, Value value) {
 		// do not know the real context, so send PSMethod.class as context
-		setValue(valuedObject, values, PSMethodUserSelected.class);
-		
-		/*updateBlackboard(valuedObject, values, 
-				this, 
-				PSMethodUserSelected.getInstance());*/
-
+		setValue(valuedObject, value, PSMethodUserSelected.class);
 	}
 	
-	@Override
-	public void setValue(ValuedObject o, Answer value) {
-		setValue(o, new Object[] {value});
-	}
-	
-	@Override
-	public void setValue(ValuedObject valuedObject, Answer value, Rule rule) {
-		setValue(valuedObject, new Object[] {value}, rule);
-	}
 
-	@Override
-	public void setValue(ValuedObject valuedObject, Answer value, Class<? extends PSMethod> context) {
-		setValue(valuedObject, new Object[] {value}, context);
-	}
+	// @Override
+	// public void setValue(ValuedObject o, Value value) {
+	// setValue(o, new Object[] {value});
+	// }
+	
+
+	// @Override
+	// public void setValue(ValuedObject valuedObject, Value value, Rule rule) {
+	// setValue(valuedObject, new Object[] {value}, rule);
+	// }
+
+	// @Override
+	// public void setValue(ValuedObject valuedObject, Value value, Class<?
+	// extends PSMethod> context) {
+	// setValue(valuedObject, new Object[] {value}, context);
+	// }
 
 
 	/**
@@ -629,22 +627,23 @@ public class D3WebCase implements XPSCase {
 	 * @param ruleContext
 	 *            rule, which sets the value
 	 */
-	public void setValue(ValuedObject valuedObject, Object[] values, Rule ruleContext) {
+	@Deprecated
+	public void setValue(ValuedObject valuedObject, Value value, Rule ruleContext) {
 		Object oldValue = getValue(valuedObject);
 		if (valuedObject instanceof Question) {
-			((Question) valuedObject).setValue(this, ruleContext, values);
+			((Question) valuedObject).setValue(this, ruleContext, value);
 		}
 		else {
-			valuedObject.setValue(this, values);
+			valuedObject.setValue(this, value);
 		}
 		Object newValue = getValue(valuedObject);
 		notifyListeners(valuedObject, ruleContext);
 		propagateValue(valuedObject, oldValue, newValue);
 
-		// TODO: currently we do not distinguish PSMethods 
+		// TODO: currently we do not distinguish PSMethods
 		//       different than UserSelected
-		updateBlackboard(valuedObject, values, 
-				ruleContext, 
+		updateBlackboard(valuedObject, value,
+				ruleContext,
 				PSMethodUserSelected.getInstance());
 
 	}
@@ -663,22 +662,22 @@ public class D3WebCase implements XPSCase {
 	 * @param context
 	 *            problem-solver context
 	 */
-	public void setValue(ValuedObject valuedObject, Object[] values, Class<? extends PSMethod> context) {
+	public void setValue(ValuedObject valuedObject, Value value, Class<? extends PSMethod> context) {
 		Object oldValue = getValue(valuedObject);
 		if (valuedObject instanceof Solution) {
-			((Solution) valuedObject).setValue(this, values, context);
+			((Solution) valuedObject).setValue(this, value, context);
 		}
 		else {
-			valuedObject.setValue(this, values);
+			valuedObject.setValue(this, value);
 		}
 		Object newValue = getValue(valuedObject);
 		notifyListeners(valuedObject, context);
 		propagateValue(valuedObject, oldValue, newValue);
 		
-		// TODO: currently we do not distinguish PSMethods 
+		// TODO: currently we do not distinguish PSMethods
 		//       different than UserSelected
-		updateBlackboard(valuedObject, values, 
-				this, 
+		updateBlackboard(valuedObject, value,
+				this,
 				PSMethodUserSelected.getInstance());
 	}
 
@@ -715,6 +714,7 @@ public class D3WebCase implements XPSCase {
 			System.out.println("TRACE: " + s);
 	}
 
+	@Override
 	protected void finalize() throws Throwable {
 		super.finalize();
 		trace("D3Webcase finalized!");

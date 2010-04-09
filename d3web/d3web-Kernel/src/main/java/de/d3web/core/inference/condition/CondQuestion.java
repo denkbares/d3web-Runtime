@@ -20,24 +20,28 @@
 
 package de.d3web.core.inference.condition;
 
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.core.session.values.Unknown;
+
 /**
- * Abstract class for all conditions that constrain a
- * {@link Question} to a specific value.
+ * Abstract class for all conditions that constrain a {@link Question} to a
+ * specific value.
  * 
  * Creation date: (23.11.2000 15:59:09)
- * @author Norman Bruemmer
+ * 
+ * @author Norman Bruemmer, joba
  */
 public abstract class CondQuestion extends TerminalCondition {
 	
 	protected Question question = null;
 
 	/**
-	 * Creates a new CondQuestion instance with 
+	 * Creates a new CondQuestion instance with
 	 * the specified {@link IDObject}.
 	 * @param idobject the specified {@link IDObject}
 	 */
@@ -48,20 +52,19 @@ public abstract class CondQuestion extends TerminalCondition {
 
 	/**
 	 * Shortcut to be used for the eval methods of inheriting classes:
-	 * This method checks if there exists a given value for this 
-	 * condition in the specified {@link XPSCase}. 
+	 * This method checks if there exists a given value for this
+	 * condition in the specified {@link XPSCase}.
 	 * @throws NoAnswerException if the question has currently no answer
 	 * @throws UnknownAnswerException if the question is answered with {@link AnswerUnknown}
 	 */
 	protected void checkAnswer(XPSCase theCase)
 		throws NoAnswerException, UnknownAnswerException {
-		Answer values = question.getValue(theCase);
-		if (values == null) {
+		Value value = question.getValue(theCase);
+		if (value instanceof UndefinedValue || value == null) {
 			throw NoAnswerException.getInstance();
-		} else {
-			if (values.equals(question.getUnknownAlternative())) {
+		}
+		else if (value instanceof Unknown) {
 				throw UnknownAnswerException.getInstance();
-			}
 		}
 	}
 

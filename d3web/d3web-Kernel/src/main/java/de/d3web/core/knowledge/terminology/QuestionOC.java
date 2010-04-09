@@ -20,16 +20,18 @@
 
 package de.d3web.core.knowledge.terminology;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseQuestionOC;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.core.session.values.AnswerChoice;
-import de.d3web.core.session.values.AnswerNum;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.core.session.values.Unknown;
 
 /**
  * Storage for Questions with predefined single answers (alternatives).
@@ -63,71 +65,37 @@ public class QuestionOC extends QuestionChoice {
 	/**
 	 * @return a List of Answers which are currently the value of the question.
 	 */
-	public Answer getValue(XPSCase theCase) {
-		Answer value =
-			((CaseQuestionOC) theCase.getCaseObject(this)).getValue();
-		return value;
-		//		if (value != null) {
-//			ArrayList<Answer> v = new ArrayList<Answer>(1);
-//			v.add(value);
-//			return (v);
-//		} else {
-//			return new ArrayList<Answer>(0);
-//		}
+	@Override
+	public Value getValue(XPSCase theCase) {
+		return ((CaseQuestionOC) theCase.getCaseObject(this)).getValue();
 	}
 
-	/**
-	 * Sets the current value of this OC-question belonging to the
-	 * specified XPSCase.<BR>
-	 * <B>Caution:</B> It is possible to set numerical values to a one-choice
-	 * question. In this case, a Num2ChoiceSchema must be defined a KnowledgeSlice.
-	 * @param theCase the belonging XPSCase
-	 * @param antwort an array of Answer instances
-	 */
-	public void setValue(XPSCase theCase, Object[] values) {
-		List<Answer> newValues = new ArrayList<Answer>();
 
-		if (values.length == 0) {
-			((CaseQuestionOC) theCase.getCaseObject(this)).setValue(null);
-		} else if (values.length == 1) {
-
-			// check, if numerical value was set to oc-question
-			// if so, then convert numerical value to choice and
-			// set converted choice to values[0]
-			if (values[0] instanceof AnswerNum) {
-				values[0] = convertNumericalValue(theCase, (AnswerNum)values[0]);
-			}
-
-			// Bei OC-Fragen kann nur höchstens eine AntwortAlternative angegeben sein.
-			Answer newValue;
-			if (values.length == 1) {
-				newValue = (Answer) values[0];
-				newValues.add(newValue);
-			} else {
-				newValue = null;
-			}
-			((CaseQuestionOC) theCase.getCaseObject(this)).setValue(newValue);
-		} else {
-			Logger.getLogger(this.getClass().getName()).throwing(
-				this.getClass().getName(),
-				"setValue",
-				new Exception("too many answers given to question \"" + getId() + "\" (> 1)"));
+	@Override
+	public void setValue(XPSCase theCase, Value value) throws IllegalArgumentException {
+		if (value == null) {
+			((CaseQuestionOC) theCase.getCaseObject(this)).setValue(UndefinedValue.getInstance());
+		}
+		else if (value instanceof ChoiceValue) {
+			((CaseQuestionOC) theCase.getCaseObject(this)).setValue(value);
+		}
+		// if num value was passed, then convert numerical value to choice and
+		// check, if numerical value was set to oc-question
+		else if (value instanceof NumValue) {
+			Double doubleValue = (Double) ((NumValue) value).getValue();
+			value = convertNumericalValue(theCase, doubleValue.doubleValue());
+			((CaseQuestionOC) theCase.getCaseObject(this)).setValue(value);
+		}
+		else if (value instanceof Unknown || value instanceof UndefinedValue) {
+			((CaseQuestionOC)(theCase.getCaseObject(this))).setValue(value);
+		}
+		else {
+			throw new IllegalArgumentException(value
+					+ " is not an accepted Value implementation for " + getClass() +".");
 		}
 	}
 
-	public void setValue(XPSCase theCase, Answer value) {
-		if (value == null) {
-			((CaseQuestionOC) theCase.getCaseObject(this)).setValue(null);
-		} else {
-			// if num value was passed, then convert numerical value to choice and
-			// check, if numerical value was set to oc-question
-			if (value instanceof AnswerNum) {
-				value = convertNumericalValue(theCase, (AnswerNum)value);
-			}
-			((CaseQuestionOC) theCase.getCaseObject(this)).setValue(value);
-		} 
-	}
-
+	@Override
 	public String toString() {
 		return super.toString();
 	}

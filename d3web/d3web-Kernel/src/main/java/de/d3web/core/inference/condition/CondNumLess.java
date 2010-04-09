@@ -21,8 +21,6 @@
 package de.d3web.core.inference.condition;
 
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.session.XPSCase;
-import de.d3web.core.session.values.AnswerNum;
 /**
  * Condition for numerical questions, where the value
  * has to be less than a given value (Double value).
@@ -44,28 +42,21 @@ public class CondNumLess extends CondNum {
 	}
 
 	@Override
-	public boolean eval(XPSCase theCase)
-		throws NoAnswerException, UnknownAnswerException {
-		checkAnswer(theCase);
-		AnswerNum answer = (AnswerNum) getQuestion().getValue(theCase);
-		Double value = (Double) answer.getValue(theCase);
-		if (value != null) {
-			return (value.doubleValue() < getAnswerValue().doubleValue());
-		} else {
-			return false;
-		}
+	protected boolean compare(Double caseValue, Double conditionedValue) {
+		return (caseValue.doubleValue() < conditionedValue.doubleValue());
 	}
+
 
 	@Override
 	public String toString() {
 		return "\u2190 CondNumLess question: "
 			+ question.getId()
 			+ " value: "
-			+ getAnswerValue();
+			+ getConditionValue();
 	}
 	
 	@Override
 	public Condition copy() {
-		return new CondNumLess((QuestionNum)getQuestion(),  getAnswerValue());
+		return new CondNumLess((QuestionNum)getQuestion(),  getConditionValue());
 	}
 }

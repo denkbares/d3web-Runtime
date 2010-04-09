@@ -20,12 +20,10 @@
 
 package de.d3web.core.inference.condition;
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.session.XPSCase;
-import de.d3web.core.session.values.AnswerNum;
 
 /**
  * Condition for numerical questions, where the value
- * has to be equal to a given value (Double value). 
+ * has to be equal to a given value (Double value).
  * The comparison is performed with a predefined impression.
  * The composite pattern is used for this. This class is a "leaf".
  * @author Michael Wolber, joba
@@ -33,7 +31,7 @@ import de.d3web.core.session.values.AnswerNum;
 public class CondNumEqual extends CondNum {
 
 	/**
-	 * Creates a new condition, where a the specified numerical question 
+	 * Creates a new condition, where a the specified numerical question
 	 * needs to be equal to the specified value.
 	 * @param question the specified numerical question
 	 * @param value the specified value (Double)
@@ -43,18 +41,8 @@ public class CondNumEqual extends CondNum {
 	}
 
 	@Override
-	public boolean eval(XPSCase theCase)
-		throws NoAnswerException, UnknownAnswerException {
-		checkAnswer(theCase);
-		AnswerNum answer = (AnswerNum) getQuestion().getValue(theCase);
-		Double value = (Double) answer.getValue(theCase);
-		if (value != null) {
-			return (
-				Math.abs(value.doubleValue() - getAnswerValue().doubleValue())
-					<= CondNum.EPSILON);
-		} else {
-			return false;
-		}
+	protected boolean compare(Double caseValue, Double conditionedValue) {
+		return (Math.abs(caseValue.doubleValue() - conditionedValue.doubleValue()) <= CondNum.EPSILON);
 	}
 
 	@Override
@@ -62,12 +50,12 @@ public class CondNumEqual extends CondNum {
 		return "\u2190 CondNumEqual question: "
 			+ question.getId()
 			+ " value: "
-			+ getAnswerValue();
+				+ getConditionValue();
 	}
 
 	@Override
 	public Condition copy() {
-		return new CondNumEqual((QuestionNum)getQuestion(),  getAnswerValue());
+		return new CondNumEqual((QuestionNum) getQuestion(), getConditionValue());
 	}
 
 }

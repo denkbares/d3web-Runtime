@@ -37,7 +37,6 @@ import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionDate;
@@ -47,15 +46,17 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QASet.Reason;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.SymptomValue;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseActionQuestionSetter;
 import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.core.session.values.AnswerChoice;
-import de.d3web.core.session.values.AnswerDate;
-import de.d3web.core.session.values.AnswerNum;
-import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.EvaluatableAnswerNumValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.NumValue;
 
 /**
  * @author baumeister, bates
@@ -63,7 +64,7 @@ import de.d3web.core.session.values.EvaluatableAnswerNumValue;
 public abstract class ActionQuestionSetter extends PSAction implements CaseObjectSource {
 
 	private Question question;
-	private Object[] values;
+	private Object value;
 
 	public ActionQuestionSetter() {
 		super();
@@ -72,6 +73,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	/**
 	 * @return all objects participating on the action.
 	 */
+	@Override
 	public List<? extends NamedObject> getTerminalObjects() {
 		List<NamedObject> terminals = new ArrayList<NamedObject>(1);
 		if (getQuestion() != null) {
@@ -92,15 +94,15 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	/**
 	 * @return the values this action can set to the question that is defined
 	 */
-	public Object[] getValues() {
-		return values;
+	public Object getValue() {
+		return this.value;
 	}
 
 	/**
 	 * sets the values to set to the defined Question
 	 */
-	public void setValues(Object[] theValues) {
-		values = theValues;
+	public void setValue(Object theValue) {
+		this.value = theValue;
 	}
 
 	/**
@@ -130,38 +132,33 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 				assert (oldValue instanceof Double || oldValue instanceof Date) : "Unknown oldValue-Type: "
 						+ oldValue;
 
-				Answer newValues = null;
+				Value newValue = null;
 				if (q instanceof QuestionNum || q instanceof QuestionDate) {
-					newValues = q.getValue(theCase);
+					newValue = q.getValue(theCase);
 				}
 				else if (q instanceof QuestionOC) {
-					newValues = new AnswerNum();
-					if ((this.values != null) && (this.values.length > 0)) {
-						EvaluatableAnswerNumValue evalAnsnumVal = (EvaluatableAnswerNumValue) this.values[0];
+					if (this.value != null) {
+						EvaluatableAnswerNumValue evalAnsnumVal = (EvaluatableAnswerNumValue) this.value;
 						Double value = evalAnsnumVal.eval(theCase);
-						AnswerNum ansNum = new AnswerNum();
-						ansNum.setQuestion(getQuestion());
-						ansNum.setValue(value);
-						newValues = ansNum;
+						newValue = new NumValue(value);
 					}
-
 				}
 
-				if (values != null) {
+				if (this.value != null) {
 					if (oldValue == null)
 						return true;
-					Answer ans = newValues; // can be AnswerDate
+					Value val = newValue; // can be AnswerDate
 					// or AnswerDouble
-					assert (ans instanceof AnswerDate || ans instanceof AnswerNum) : "Unknown newValue-Answer-Type: "
-							+ ans;
-					Object newValue = ans.getValue(theCase); // can be Double or
+					assert (val instanceof DateValue || val instanceof NumValue) : "Unknown newValue-Answer-Type: "
+							+ val;
+					Object updatedVal = val.getValue(); // can be Double or
 					// Date
-					assert (newValue instanceof Double || newValue instanceof Date) : "Unknown newValue-Type: "
-							+ newValue;
+					assert (updatedVal instanceof Double || updatedVal instanceof Date) : "Unknown newValue-Type: "
+							+ updatedVal;
 					// theCase.trace("old:" + oldValue + ", new:" + newValue +
 					// ": equals? "
 					// + oldValue.equals(newValue));
-					if (!oldValue.equals(newValue)) {
+					if (!oldValue.equals(updatedVal)) {
 						return true;
 					}
 				}
@@ -177,14 +174,14 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	/**
 	 * stores the current state of terminal objects of the given action values
 	 */
-	protected void storeActionValues(XPSCase theCase, Object[] valuesArg) {
+	protected void storeActionValues(XPSCase theCase, Object valuesArg) {
 		Hashtable<Question, Object> questionToValuesHash = new Hashtable<Question, Object>();
 		// theCase.trace("attempting to store action values (elementary formulaExpression values)");
-		if (valuesArg.length == 0) {
+		if (valuesArg == null) {
 			return; // should only be one value!
 		}
 
-		Object obj = valuesArg[0];
+		Object obj = valuesArg;
 
 		if ((obj instanceof FormulaExpression) || (obj instanceof FormulaNumberElement)
 				|| (obj instanceof FormulaDateElement)
@@ -213,29 +210,36 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 				Question q = (Question) iter.next();
 				if (q instanceof QuestionNum) {
 					QuestionNum qNum = (QuestionNum) q;
-					Answer value = qNum.getValue(theCase);
+					Value value = qNum.getValue(theCase);
 					if (value != null) {
-						Object val = value.getValue(theCase);
+						Object val = value.getValue();
 						questionToValuesHash.put(q, val);
 					}
 				}
 				else if (q instanceof QuestionMC) {
 					QuestionMC qMC = (QuestionMC) q;
-					AnswerMultipleChoice value = (AnswerMultipleChoice) qMC.getValue(theCase);
-					Double val = new Double(value.numberOfChoices());
+					Double val = null;
+					Value value = qMC.getValue(theCase);
+					if (value instanceof MultipleChoiceValue) {
+						List<ChoiceValue> l = (List<ChoiceValue>)(value.getValue());
+						val = new Double(l.size());
+					}
+					else {
+						val = new Double(0);
+					}
 					questionToValuesHash.put(q, val);
 				}
 				else if (q instanceof QuestionDate) {
 					QuestionDate qDate = (QuestionDate) q;
-					Answer value = qDate.getValue(theCase);
-					if (value != null) {
-						Object val = value.getValue(theCase);
+					Value value = qDate.getValue(theCase);
+					if (value != null && value instanceof DateValue) {
+						Object val = value.getValue();
 						questionToValuesHash.put(q, val);
 					}
 				}
 			}
 		}
-		else if (obj instanceof AnswerNum || obj instanceof AnswerDate) {
+		else if (obj instanceof NumValue || obj instanceof DateValue) {
 			Answer ans = (Answer) obj;
 			Object val = ans.getValue(theCase);
 			Question q = ans.getQuestion();
@@ -287,6 +291,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	/**
 	 * @return PSMethodQuestionSetter.class
 	 */
+	@Override
 	public Class<? extends PSMethod> getProblemsolverContext() {
 		return PSMethodQuestionSetter.class;
 	}
@@ -297,8 +302,8 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	 *         severeness is defined by the order of the alternatives; the first
 	 *         answer is the severest.)
 	 */
-	protected Answer getSeverestAnswer(QuestionOC siQuestionOC, XPSCase theCase) {
-		Answer severestAnswer = null;
+	protected AnswerChoice getSeverestAnswer(QuestionOC siQuestionOC, XPSCase theCase) {
+		AnswerChoice severestAnswer = null;
 		// use an array to accelerate
 		Object[] allAnswers = siQuestionOC.getAllAlternatives().toArray();
 
@@ -309,35 +314,30 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 			Rule rule = reason.getRule();
 			PSAction action = rule.getAction();
 			if (action instanceof ActionQuestionSetter) {
-				Object[] actionValues = ((ActionQuestionSetter) action).getValues();
-				if ((actionValues[0] instanceof AnswerChoice)
-						|| (actionValues[0] instanceof AnswerUnknown)) {
+				Object actionValue = ((ActionQuestionSetter) action).getValue();
+				if (actionValue instanceof ChoiceValue) {
 					// determine the more severe answer between the
 					// newAnswer and the
 					// up-to-now severest answer
-					Answer newAnswer = (Answer) actionValues[0];
-					if ((severestAnswer != null) && (!severestAnswer.equals(newAnswer))) {
-						theCase.trace("(" + siQuestionOC.getId() + "): of \""
-								+ ((AnswerChoice) severestAnswer).getName() + "\" and \""
-								+ ((AnswerChoice) newAnswer).getName() + "\"");
+					AnswerChoice choice = (AnswerChoice) ((ChoiceValue) actionValue).getValue();
+
+					if ((severestAnswer != null) && (!severestAnswer.equals(choice))) {
 						int i = 0;
 						boolean found = false;
 						while ((i < allAnswers.length) && (!found)) {
 							if (severestAnswer.equals(allAnswers[i])) {
 								found = true;
 							}
-							else if (newAnswer.equals(allAnswers[i])) {
+							else if (choice.equals(allAnswers[i])) {
 								found = true;
-								severestAnswer = newAnswer;
+								severestAnswer = choice;
 							}
 							i++;
 						}
-						theCase.trace(" take \""
-								+ ((AnswerChoice) severestAnswer).getName()
-								+ "\"");
 					}
 					else {
-						severestAnswer = (Answer) actionValues[0];
+						severestAnswer = choice;
+						// severestAnswer = (Answer) actionValues[0];
 					}
 				}
 			}

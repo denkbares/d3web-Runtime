@@ -23,9 +23,10 @@
  */
 package de.d3web.core.session.blackboard;
 
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionDate;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.UndefinedValue;
 
 /**
  * Stores the dynamic, user specific values for an QuestionDate
@@ -33,21 +34,21 @@ import de.d3web.core.knowledge.terminology.QuestionDate;
  * Values to be stored:<br>
  * <li> Current date value corresponding to a given user case.
  * @author Tobias vogele
- * @see QuestionDate 
+ * @see QuestionDate
  */
 public class CaseQuestionDate extends CaseQuestion {
-
-	private Answer value = null;
+	private Value value = UndefinedValue.getInstance();
 
 	public CaseQuestionDate(Question question) {
 		super(question);
 	}
 
-	public Answer getValue() {
+	public Value getValue() {
 		return value;
 	}
 
-	public void setValue(Answer value) {
+	@Override
+	public void setValue(Value value) {
 		this.value = value;
 	}
 }

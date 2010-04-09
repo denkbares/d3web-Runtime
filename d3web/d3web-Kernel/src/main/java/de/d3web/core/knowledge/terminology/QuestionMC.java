@@ -20,15 +20,18 @@
 
 package de.d3web.core.knowledge.terminology;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.blackboard.CaseQuestionMC;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.core.session.values.AnswerChoice;
-import de.d3web.core.session.values.AnswerNum;
+import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.core.session.values.Unknown;
 
 /**
  * Storage for Questions with predefined multiple answers (alternatives).
@@ -56,41 +59,8 @@ public class QuestionMC extends QuestionChoice {
 	}
 
 	@Override
-	public Answer getValue(XPSCase theCase) {
-		Answer value = ((CaseQuestionMC) theCase.getCaseObject(this)).getValue();
-		if (value != null) {
-			return value;
-		} else {
-			// System.err.println("Fehlerhafte initialisierung des Fall-Wertes von MC-Fragen");
-			return null;
-		}
-	}
-
-	/**
-	 * Sets the current values of this MC-question belonging to the
-	 * specified XPSCase.<BR>
-	 * <B>Caution:</B> It is possible to set numerical values to a MC-
-	 * question. In this case, a Num2ChoiceSchema must be defined a KnowledgeSlice.
-	 * @param theCase the belonging XPSCase
-	 * @param antwort an array of Answer instances
-	 */
-	@Override
-	public void setValue(XPSCase theCase, Object[] values) {
-		List<AnswerChoice> newValues = new ArrayList<AnswerChoice>(values.length);
-		Answer amc = null;
-		if (values.length > 1) {
-			for (int i = 0; i < values.length; i++) {
-				if (values[i] instanceof AnswerNum) {
-					values[i] = convertNumericalValue(theCase,
-							(AnswerNum) values[i]);
-				}
-				newValues.add((AnswerChoice) values[i]);
-			}
-			amc = new AnswerMultipleChoice(newValues);
-		} else if (values.length == 1) {
-			amc = (Answer) values[0];
-		}
-		((CaseQuestionMC) theCase.getCaseObject(this)).setValue(amc);
+	public Value getValue(XPSCase theCase) {
+		return ((CaseQuestionMC) theCase.getCaseObject(this)).getValue();
 	}
 	
 	/**
@@ -102,8 +72,17 @@ public class QuestionMC extends QuestionChoice {
 	 * @param antwort an array of Answer instances
 	 */
 	@Override
-	public void setValue(XPSCase theCase, Answer value) {
-		((CaseQuestionMC) theCase.getCaseObject(this)).setValue((AnswerMultipleChoice)value);
+	public void setValue(XPSCase theCase, Value value) throws IllegalArgumentException {
+		if (value instanceof MultipleChoiceValue) {
+			((CaseQuestionMC) theCase.getCaseObject(this)).setValue((MultipleChoiceValue) value);
+		}
+		else if (value instanceof Unknown || value instanceof UndefinedValue) {
+			((CaseQuestion) (theCase.getCaseObject(this))).setValue(value);
+		}
+		else {
+			throw new IllegalArgumentException(value
+					+ " is not an instance of MultipleChoiceValue.");
+		}
 	}
 
 	@Override

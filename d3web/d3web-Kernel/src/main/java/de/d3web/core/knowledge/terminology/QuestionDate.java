@@ -24,12 +24,16 @@
 package de.d3web.core.knowledge.terminology;
 
 import java.util.Date;
-import java.util.logging.Logger;
 
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.blackboard.CaseQuestionDate;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.core.session.values.AnswerDate;
+import de.d3web.core.session.values.DateValue;
+import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.core.session.values.Unknown;
 
 /**
  * A Question which asks for a date.
@@ -51,26 +55,32 @@ public class QuestionDate extends Question {
 	}
 
 
-	public Answer getValue(XPSCase theCase) {
-		Answer value = ((CaseQuestionDate) theCase.getCaseObject(this)).getValue();
-		if (value != null) {
-			return value;
-		} else {
-			return null;
-		}
+	@Override
+	public Value getValue(XPSCase theCase) {
+		return ((CaseQuestionDate) theCase.getCaseObject(this)).getValue();
 	}
 
-	@Deprecated
-	public void setValue(XPSCase theCase, Object[] values) {
-		if (values.length != 1) {
-			Logger.getLogger(this.getClass().getName()).warning("wrong number of answeralternatives");
-		} else {
-			((CaseQuestionDate) theCase.getCaseObject(this)).setValue((Answer)values[0]);
-		}
-	}
+	// @Override
+	// @Deprecated
+	// public void setValue(XPSCase theCase, Object[] values) {
+	// if (values.length != 1) {
+	// Logger.getLogger(this.getClass().getName()).warning("wrong number of answeralternatives");
+	// } else {
+	// ((CaseQuestionDate)
+	// theCase.getCaseObject(this)).setValue((Answer)values[0]);
+	// }
+	// }
 
-	public void setValue(XPSCase theCase, Answer answer) {
-		((CaseQuestionDate) theCase.getCaseObject(this)).setValue(answer);
+	@Override
+	public void setValue(XPSCase theCase, Value value) throws IllegalArgumentException {
+		if (value instanceof DateValue) {
+			((CaseQuestionDate) theCase.getCaseObject(this)).setValue((DateValue) value);
+		}
+		else if (value instanceof Unknown || value instanceof UndefinedValue) {
+			((CaseQuestion) (theCase.getCaseObject(this))).setValue(value);
+		}
+		else throw new IllegalArgumentException(value
+				+ " is not an instance of DateValue.");
 	}
 
 
@@ -104,5 +114,5 @@ public class QuestionDate extends Question {
 			result.setQuestion(this);
 			return result;
 		}
-	}	
+	}
 }

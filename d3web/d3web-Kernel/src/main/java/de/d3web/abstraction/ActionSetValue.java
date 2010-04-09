@@ -20,23 +20,24 @@
 
 package de.d3web.abstraction;
 
-import java.util.Arrays;
-
 import de.d3web.abstraction.formula.FormulaDateExpression;
 import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.abstraction.inference.PSMethodQuestionSetter;
 import de.d3web.core.inference.MethodKind;
-import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.PSAction;
+import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.CaseObjectSource;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.session.values.AnswerDate;
-import de.d3web.core.session.values.AnswerNum;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.EvaluatableAnswerDateValue;
 import de.d3web.core.session.values.EvaluatableAnswerNumValue;
+import de.d3web.core.session.values.NumValue;
 
 /**
  * Sets a specified value for a specified question.
@@ -48,9 +49,10 @@ import de.d3web.core.session.values.EvaluatableAnswerNumValue;
 public class ActionSetValue extends ActionQuestionSetter implements CaseObjectSource {
 
 	// private Map schemaValueHash = null;
+	@Override
 	public String toString() {
 		return "<RuleAction type=\"SetValue\">\n" + "  [" + getQuestion().getId() + ": "
-				+ getValues() + "]" + "\n</RuleAction>";
+				+ getValue() + "]" + "\n</RuleAction>";
 	}
 
 	/**
@@ -66,44 +68,47 @@ public class ActionSetValue extends ActionQuestionSetter implements CaseObjectSo
 	@Override
 	public void doIt(XPSCase theCase, Rule rule) {
 
-		if ((getValues() != null) && (getValues().length > 0)) {
+		if (getValue() != null) {
 			if (!lastFiredRuleEqualsCurrentRuleAndNotFired(theCase)) {
-				Object[] tempVal = new Object[getValues().length];
-				for (int i = 0; i < getValues().length; i++) {
-					if (getValues()[i] instanceof FormulaExpression) {
-						tempVal[i] = ((FormulaExpression) getValues()[i]).eval(theCase);
-						setLastSetValue(theCase, (Double) ((AnswerNum) tempVal[i])
-								.getValue(theCase));
-					} else if (getValues()[i] instanceof EvaluatableAnswerNumValue) {
-						AnswerNum ans = new AnswerNum();
-						ans.setQuestion(getQuestion());
-						EvaluatableAnswerNumValue evaluatableValue = (EvaluatableAnswerNumValue) getValues()[i];
+				Value tempVal;
 
-						// put the evaluated value to hashtable for undo
-						Double newValue = evaluatableValue.eval(theCase);
-
-						setLastSetValue(theCase, newValue);
-
-						ans.setValue(evaluatableValue);
-						tempVal[i] = ans;
-					} else if (getValues()[i] instanceof FormulaDateExpression) {
-						tempVal[i] = ((FormulaDateExpression) getValues()[i]).eval(theCase);
-					} else if (getValues()[i] instanceof EvaluatableAnswerDateValue) {
-						AnswerDate ans = new AnswerDate();
-						ans.setQuestion(getQuestion());
-						EvaluatableAnswerDateValue evaluatableValue = (EvaluatableAnswerDateValue) getValues()[i];
-						// we don't need to store the value in the hashtable,
-						// because this is only used for QuestionOC, which
-						// can not take a AnswerDate
-
-						ans.setValue(evaluatableValue);
-						tempVal[i] = ans;
-					} else {
-						tempVal[i] = getValues()[i];
-					}
-
+				// for (int i = 0; i < getValues().length; i++) {
+				if (getValue() instanceof FormulaExpression) {
+					tempVal = ((FormulaExpression) getValue()).eval(theCase);
+					setLastSetValue(theCase, (Double) ((NumValue) tempVal)
+							.getValue());
 				}
-				storeActionValues(theCase, getValues());
+				else if (getValue() instanceof EvaluatableAnswerNumValue) {
+					EvaluatableAnswerNumValue evaluatableValue = (EvaluatableAnswerNumValue) getValue();
+
+					// put the evaluated value to hashtable for undo
+					Double newValue = evaluatableValue.eval(theCase);
+					setLastSetValue(theCase, newValue);
+					tempVal = new NumValue(newValue);
+				}
+				else if (getValue() instanceof FormulaDateExpression) {
+					tempVal = ((FormulaDateExpression) getValue()).eval(theCase);
+				}
+				else if (getValue() instanceof EvaluatableAnswerDateValue) {
+					// AnswerDate ans = new AnswerDate();
+					// ans.setQuestion(getQuestion());
+					EvaluatableAnswerDateValue evaluatableValue = (EvaluatableAnswerDateValue) getValue();
+					// we don't need to store the value in the hashtable,
+					// because this is only used for QuestionOC, which
+					// can not take a AnswerDate
+					//
+					// ans.setValue(evaluatableValue);
+					tempVal = new DateValue(evaluatableValue.eval(theCase)); // ans;
+				}
+				else {
+					tempVal = (Value) getValue();
+				}
+
+				// }
+
+				// TODO: joba 4.2010 : replace this with the Blackboard
+				// storeActionValues(theCase, getValue());
+
 				theCase.setValue(getQuestion(), tempVal, rule);
 
 				// if the question is an oc-si-question without schema, the
@@ -112,12 +117,12 @@ public class ActionSetValue extends ActionQuestionSetter implements CaseObjectSo
 				if ((getQuestion() instanceof QuestionOC)
 						&& (((QuestionOC) getQuestion()).getSchemaForQuestion() == null)
 						&& (getQuestion().getKnowledge(PSMethodQuestionSetter.class,
-								MethodKind.BACKWARD) != null)) {
+						MethodKind.BACKWARD) != null)) {
 					Answer ans = getSeverestAnswer((QuestionOC) getQuestion(), theCase);
-					if ((ans != null) && (!ans.equals(tempVal[0]))) {
-						Object[] newValues = new Object[1];
-						newValues[0] = ans;
-						theCase.setValue(getQuestion(), getValues());
+					if (ans != null) {
+						AnswerChoice tempValChoice = (AnswerChoice) tempVal.getValue();
+						if (!ans.equals(tempValChoice))
+							theCase.setValue(getQuestion(), (Value) getValue());
 					}
 				}
 			}
@@ -131,7 +136,8 @@ public class ActionSetValue extends ActionQuestionSetter implements CaseObjectSo
 	@Override
 	public void undo(XPSCase theCase, Rule rule) {
 
-		if (!Boolean.TRUE.equals(getQuestion().getProperties().getProperty(Property.TIME_VALUED))
+		if (!Boolean.TRUE.equals(getQuestion().getProperties().getProperty(
+				Property.TIME_VALUED))
 				&& (getQuestion() instanceof QuestionOC)
 				&& (((QuestionOC) getQuestion()).getSchemaForQuestion() != null)) {
 			// must take the value from hashtable, because it may be the
@@ -143,46 +149,45 @@ public class ActionSetValue extends ActionQuestionSetter implements CaseObjectSo
 				lastSetValue = new Double(0);
 			}
 			Double valueToSubstract = new Double(lastSetValue.doubleValue() * -1.0);
-			AnswerNum substractAnswer = new AnswerNum();
-			substractAnswer.setQuestion(getQuestion());
-			substractAnswer.setValue(valueToSubstract);
-			theCase.setValue(getQuestion(), new Object[]{substractAnswer});
-			
+			theCase.setValue(getQuestion(), new NumValue(valueToSubstract));
+
 			// if the question is an oc-si-question without schema, the severest
 			// answer has to be set
 			// (of all answers, which shall be set)
 			if ((getQuestion() instanceof QuestionOC)
 					&& (((QuestionOC) getQuestion()).getSchemaForQuestion() == null)
-					&& (getQuestion().getKnowledge(PSMethodQuestionSetter.class, MethodKind.BACKWARD) != null)) {
+					&& (getQuestion().getKnowledge(PSMethodQuestionSetter.class,
+					MethodKind.BACKWARD) != null)) {
 				Answer ans = getSeverestAnswer((QuestionOC) getQuestion(), theCase);
-				if (ans != null) {
-					Object[] values = new Object[1];
-					values[0] = ans;
-					theCase.setValue(getQuestion(), values);
+				if (ans != null && ans instanceof AnswerChoice) {
+					theCase.setValue(getQuestion(), new ChoiceValue((AnswerChoice) ans));
 				}
 			}
-		} else {
+		}
+		else {
 			getQuestion().undoSymptomValue(theCase, rule);
 		}
 
-
 	}
+
+	@Override
 	public PSAction copy() {
 		ActionSetValue a = new ActionSetValue();
 		a.setQuestion(getQuestion());
-		a.setValues(getValues());
+		a.setValue(getValue());
 		return a;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (o == this)
 			return true;
 		if (o instanceof ActionSetValue) {
 			ActionSetValue a = (ActionSetValue) o;
-			return (isSame(a.getQuestion(), getQuestion()) && Arrays.equals(a.getValues(),
-					getValues()));
-		} else
-			return false;
+			return (isSame(a.getQuestion(), getQuestion()) && a.getValue().equals(
+					getValue()));
+		}
+		else return false;
 	}
 
 	private boolean isSame(Object obj1, Object obj2) {
@@ -193,12 +198,13 @@ public class ActionSetValue extends ActionQuestionSetter implements CaseObjectSo
 		return false;
 	}
 
+	@Override
 	public int hashCode() {
 		int hash = 0;
 		if (getQuestion() != null)
 			hash += getQuestion().hashCode();
-		if (getValues() != null)
-			hash += getValues().hashCode();
+		if (getValue() != null)
+			hash += getValue().hashCode();
 		return hash;
 	}
 

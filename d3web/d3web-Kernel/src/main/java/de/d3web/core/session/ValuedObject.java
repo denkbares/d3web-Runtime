@@ -31,6 +31,6 @@ public interface ValuedObject extends IDReference {
 	 * sets the value for this valued object for the current case
 	 */
 	@Deprecated
-	void setValue(XPSCase theCase, Object[] values);
+	void setValue(XPSCase theCase, Value value);
 
 }

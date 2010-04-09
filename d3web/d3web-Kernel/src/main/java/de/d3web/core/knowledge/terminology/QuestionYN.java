@@ -23,11 +23,13 @@ package de.d3web.core.knowledge.terminology;
 import de.d3web.core.manage.AnswerFactory;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.utilities.Utils;
 
 /**
- * This is a simple extension of the QuestionChoice with only has two ansers,
- * which are sixed to a YES and NO answer. Creation date: (28.09.00 16:51:21)
+ * This is a simple extension of the QuestionChoice with only has two possible
+ * values, that are restricted to a YES and NO answer. <Br>
+ * Creation date: (28.09.00 16:51:21)
  * 
  * @author Joachim Baumeister
  */
@@ -36,58 +38,56 @@ public class QuestionYN extends QuestionOC {
 	protected final static String YES_STRING = "Yes";
     protected final static String NO_STRING = "No";
 
-    public AnswerChoice yes;
-    public AnswerChoice no;
+	public AnswerChoice yes;
+	public AnswerChoice no;
 
-    /**
-     * Creates a new Yes-No Question, which is a simple QuestionChoice with only
-     * instance-dependend two alternatives (YES, NO). Additionally you must set
-     * some properties by the settter/getters. Important properties are:
-     * <LI> knowledgeBase : belonging to the KBObject
-     * <LI> id : an unique identifier for the KBObject
-     * <LI> text : a name for the KBObject
-     * 
-     * @see QuestionOC
-     * @see Question
-     * @see NamedObject
-     */
+	/**
+	 * Creates a new Yes-No Question, which is a simple QuestionChoice with only
+	 * instance-dependent two alternatives (YES, NO).
+	 * 
+	 * @see QuestionOC
+	 * @see Question
+	 * @see NamedObject
+	 */
     
     public QuestionYN(String id) {
-	super(id);
-
-	yes = AnswerFactory.createAnswerYes(id + "YES", YES_STRING);
-	no = AnswerFactory.createAnswerNo(id + "NO", NO_STRING);
-
-	setAlternatives(Utils.createList(new AnswerChoice[] { yes, no }));
+		super(id);
+		yes = AnswerFactory.createAnswerYes(id + "YES", YES_STRING);
+		no = AnswerFactory.createAnswerNo(id + "NO", NO_STRING);
+		setAlternatives(Utils.createList(new AnswerChoice[] {
+				yes, no }));
     }
 
     public QuestionYN(String id, String yesText, String noText) {
-	super(id);
-
-	yes = AnswerFactory.createAnswerYes(id + "YES", yesText);
-	no = AnswerFactory.createAnswerNo(id + "NO", noText);
-
-	setAlternatives(Utils.createList(new AnswerChoice[] { yes, no }));
-
+		super(id);
+		yes = AnswerFactory.createAnswerYes(id + "YES", yesText);
+		no = AnswerFactory.createAnswerNo(id + "NO", noText);
+    	setAlternatives(Utils.createList(new AnswerChoice[] {
+				yes, no }));
     }
 
-    /**
-     * Sets this question to the NO answer.
-     * 
-     * @param theCase
-     *                de.d3web.kernel.domainModel.XPSCase
-     */
+	/**
+	 * Sets this question to the NO answer.
+	 * 
+	 * @Deprecated Use the standard setters.
+	 * @param theCase
+	 *            XPSCase
+	 */
+	@Deprecated
     public void setValueNo(XPSCase theCase) {
-	super.setValue(theCase, new Object[] { no });
+		super.setValue(theCase, new ChoiceValue(no));
     }
 
-    /**
-     * Sets this question to the YES answer.
-     * 
-     * @param theCase
-     *                de.d3web.kernel.domainModel.XPSCase
-     */
+	/**
+	 * Sets this question to the YES answer.
+	 * 
+	 * @Deprecated Use the standard setters.
+	 * 
+	 * @param theCase
+	 *            de.d3web.kernel.domainModel.XPSCase
+	 */
+	@Deprecated
     public void setValueYes(XPSCase theCase) {
-	super.setValue(theCase, new Object[] { yes });
+		super.setValue(theCase, new ChoiceValue(yes));
     }
 }

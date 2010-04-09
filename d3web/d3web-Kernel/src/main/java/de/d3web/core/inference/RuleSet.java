@@ -32,9 +32,9 @@ import de.d3web.core.session.XPSCase;
 public class RuleSet implements KnowledgeSlice {
 
 	private static int count = 0;
-	private List<Rule> rules = new ArrayList<Rule>();
-	private Class<? extends PSMethod> psContext;
-	private String id;
+	private final List<Rule> rules = new ArrayList<Rule>();
+	private final Class<? extends PSMethod> psContext;
+	private final String id;
 	
 	
 	public RuleSet(Class<? extends PSMethod> psContext) {
@@ -92,5 +92,10 @@ public class RuleSet implements KnowledgeSlice {
 	
 	public void addRule(Rule r) {
 		rules.add(r);
+	}
+
+	@Override
+	public String toString() {
+		return rules.toString();
 	}
 }

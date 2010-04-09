@@ -25,7 +25,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.values.UndefinedValue;
 
 /**
  * This is a by Proxy that you can get a list of Answers by giving the Question-ID
@@ -54,17 +56,20 @@ public class DialogProxy {
 	 * asks all (sorted) clients for answer
 	 * @return first not-null-answer
 	 */
-	public Collection<?> getAnswers(String questionID) {
+	public Value getAnswers(String questionID) {
 		if (questionID == null) {
 			return null;
 		}
 		for (DialogClient client : getClients()) {
-			Collection<?> answers = client.getAnswers(questionID);
-			if (answers != null) {
-				return answers;
+			Value value = client.getAnswers(questionID);
+			if (value instanceof UndefinedValue || value == null) {
+				;
+			}
+			else {
+				return value;
 			}
 		}
-		return null;
+		return UndefinedValue.getInstance();
 	}
 
 	/**

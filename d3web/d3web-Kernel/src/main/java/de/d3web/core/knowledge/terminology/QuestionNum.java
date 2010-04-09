@@ -20,15 +20,18 @@
 
 package de.d3web.core.knowledge.terminology;
 import java.util.List;
-import java.util.logging.Logger;
 
 import de.d3web.abstraction.formula.FormulaNumberElement;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.blackboard.CaseQuestionNum;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.core.session.values.AnswerNum;
-import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.core.session.values.Unknown;
 
 /**
  * Storage for Questions which have a numerical (Double value) answer.
@@ -47,7 +50,7 @@ public class QuestionNum extends Question {
 	/**
 	 * List of meaningful partitions for the numerical
 	 * value range of this question.
-	 */ 
+	 */
 	private List<NumericalInterval> valuePartitions = null;
 
 	public XPSCaseObject createCaseObject(XPSCase session) {
@@ -56,27 +59,19 @@ public class QuestionNum extends Question {
 
 	/**
 	 * @param theCase current case
-	 * @return 1-element list containing an AnswerNum 
+	 * @return 1-element list containing an AnswerNum
 	 */
-	public Answer getValue(XPSCase theCase) {
+	@Override
+	public Value getValue(XPSCase theCase) {
 		Object value =
 			((CaseQuestionNum) theCase.getCaseObject(this)).getValue();
 
-		Object tempValue = null;
-		if (value instanceof FormulaNumberElement)
-			tempValue = ((FormulaNumberElement) value).eval(theCase);
-		else
-			tempValue = value;
-
-		return (Answer)tempValue;
-		
-//		if (tempValue != null) {
-//			List<Answer> v = new LinkedList<Answer>();
-//			v.add((Answer)tempValue);
-//			return (v);
-//		} else {
-//			return new LinkedList<Answer>();
-//		}
+		if (value instanceof FormulaNumberElement) {
+			return new NumValue(((FormulaNumberElement) value).eval(theCase));
+		}
+		else {
+			return (Value) value;
+		}
 	}
 
 	/**
@@ -100,64 +95,32 @@ public class QuestionNum extends Question {
 		return "<QuestionNum ID='" + this.getId() + "'></QuestionNum>\n";
 	}
 	
-	@Deprecated
-	public void setValue(XPSCase theCase, Object[] values) {
-		if (values.length == 0) {
-			((CaseQuestionNum) theCase.getCaseObject(this)).setValue(null);
-		} else if (values.length == 1) {
-			if (values[0] instanceof AnswerUnknown) {
-				((CaseQuestionNum) theCase.getCaseObject(this)).setValue(
-					(AnswerUnknown) values[0]);
-			} else {
-				// Object[] ist ein Array aus AnswerNums
-				Object value = ((AnswerNum) values[0]).getValue(theCase);
-				Double newValue;
-				if (values.length == 1) {
-					if (value instanceof FormulaNumberElement)
-						newValue = ((FormulaNumberElement) value).eval(theCase);
-					else
-						newValue = (Double) value;
-				} else {
-					newValue = null;
-				}
-				AnswerNum answerNum = new AnswerNum();
-				answerNum.setValue(newValue);
-				answerNum.setQuestion(this);
-				((CaseQuestionNum) theCase.getCaseObject(this)).setValue(
-					answerNum);
-			}
-		} else {
-			Logger.getLogger(this.getClass().getName()).warning("wrong number of answers");
+	@Override
+	public void setValue(XPSCase theCase, Value value) {
+		if (value instanceof NumValue
+				|| value instanceof UndefinedValue
+				|| value instanceof Unknown) {
+			((CaseQuestionNum) theCase.getCaseObject(this)).setValue(value);
 		}
-	}
-
-	public void setValue(XPSCase theCase, Answer value) {
-		if (value == null) {
-			((CaseQuestionNum) theCase.getCaseObject(this)).setValue(null);
-		} else {
-			if (value instanceof AnswerUnknown) {
-				((CaseQuestionNum) theCase.getCaseObject(this)).setValue(
-					(AnswerUnknown) value);
-			} else {
-				Double newValue = null;
-				if (value instanceof FormulaNumberElement)
-					newValue = ((FormulaNumberElement) value).eval(theCase);
-				else
-					newValue = (Double) value.getValue(theCase);
-				AnswerNum answerNum = new AnswerNum();
-				answerNum.setValue(newValue);
-				answerNum.setQuestion(this);
-				((CaseQuestionNum) theCase.getCaseObject(this)).setValue(
-					answerNum);
-			}
-		} 
+		else if (value instanceof FormulaNumberElement) {
+			CaseQuestionNum question = ((CaseQuestionNum) theCase.getCaseObject(this));
+			question.setValue(new NumValue(
+					((FormulaNumberElement) value).eval(theCase)));
+		}
+		else if (value instanceof Unknown || value instanceof UndefinedValue) {
+			((CaseQuestion) (theCase.getCaseObject(this))).setValue(value);
+		}
+		else {
+			throw new IllegalArgumentException(value
+					+ " is not an applicable instance.");
+		}
 	}
 
 	/**
 	 * Returns the list of meaningful partitions for the numerical
 	 * value range of this question.
 	 * @return partitions of the numerical value range.
-	 */ 
+	 */
 	public List<NumericalInterval> getValuePartitions() {
 		return valuePartitions;
 	}

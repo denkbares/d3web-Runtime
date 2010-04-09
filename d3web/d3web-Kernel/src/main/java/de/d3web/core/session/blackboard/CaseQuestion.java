@@ -29,6 +29,7 @@ import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.SymptomValue;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.indication.ActionSuppressAnswer;
 /**
@@ -54,6 +55,8 @@ public abstract class CaseQuestion extends CaseQASet {
 		suppressRules = new HashSet<Rule>();
 		unknownVisible = true;
 	}
+
+	public abstract void setValue(Value value);
 
 	/**
 	 * adds a RuleComplex with an action that can suppress alternatives Creation

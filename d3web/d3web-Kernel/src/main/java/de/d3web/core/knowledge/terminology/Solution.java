@@ -52,12 +52,12 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
 public class Solution extends NamedObject implements ValuedObject, TerminologyObject {
 
 	/**
-	 * Compares the heuristic scores of two Diagnosis instances. 
-	 * For other problem-solvers a new comparator should be 
+	 * Compares the heuristic scores of two Diagnosis instances.
+	 * For other problem-solvers a new comparator should be
 	 * implemented.
 	 */
 	static class DiagComp implements Comparator<Solution> {
-		private XPSCase theCase;
+		private final XPSCase theCase;
 		public DiagComp(XPSCase theCase) {
 			this.theCase = theCase;
 		}
@@ -70,8 +70,8 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	/**
 	 * A diagnosis can have a prior probability, that is taken
 	 * into account by the particular problem-solvers differently.
-	 * The {@link PSMethodHeuristic}, for example, adds the apriori 
-	 * probability as soon as the diagnosis receives scores from a rule. 
+	 * The {@link PSMethodHeuristic}, for example, adds the apriori
+	 * probability as soon as the diagnosis receives scores from a rule.
 	 */
 	private Score aprioriProbability;
 
@@ -110,7 +110,7 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	/**
 	 * Creates a new dynamic flyweight for this object. For every
 	 * new {@link XPSCase} flyweights are created on demand for the
-	 * used {@link IDObject} instances. This method is only used 
+	 * used {@link IDObject} instances. This method is only used
 	 * in the context of the d3web-Kernel project.
 	 * @return a flyweight instance of this object.
 	 */
@@ -119,7 +119,7 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	}
 
 	/**
-	 * Removes this object from the established diagnoses in the 
+	 * Removes this object from the established diagnoses in the
 	 * given {@link XPSCase} and propagates the state change.
 	 * @param theCase the specified {@link XPSCase}
 	 */
@@ -150,10 +150,10 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	}
 
 	/**
-	 * Returns a comparator that compares the {@link Score} values 
+	 * Returns a comparator that compares the {@link Score} values
 	 * in the context of the given {@link XPSCase} and the
 	 * {@link PSMethodHeuristic} solver.
-	 * For other problem-solvers, you will need to implement your 
+	 * For other problem-solvers, you will need to implement your
 	 * own {@link Comparator}.
 	 * @param theCase the case the scores are computed for
 	 * @return a comparator for two Diagnosis objects
@@ -165,12 +165,12 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	/**
 	 * Returns the computed score of this {@link Solution} for a specified
 	 * {@link XPSCase} and a specified {@link PSMethod} context.
-	 * The score of a diagnosis is only valid in the context of <b>one</b> 
-	 * {@link PSMethod}, and can differ for other {@link PSMethod} 
-	 * instances. 
+	 * The score of a diagnosis is only valid in the context of <b>one</b>
+	 * {@link PSMethod}, and can differ for other {@link PSMethod}
+	 * instances.
 	 * @param theCase the context case of the score
 	 * @param context the {@link PSMethod} context the score is valid for
-	 * @return the score of the Diagnosis in the context of an {@link XPSCase} and {@link PSMethod} class 
+	 * @return the score of the Diagnosis in the context of an {@link XPSCase} and {@link PSMethod} class
 	 */
 	public DiagnosisScore getScore(XPSCase theCase, Class<? extends PSMethod>  context) {
 		return (DiagnosisScore) ((CaseDiagnosis) theCase.getCaseObject(this)).getValue(context);
@@ -179,9 +179,9 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	/**
 	 * Returns the derived state of this {@link Solution} for a specified
 	 * {@link XPSCase} and a specified {@link PSMethod} context.
-	 * The state of a diagnosis is only valid in the context of <b>one</b> 
-	 * {@link PSMethod}, and can differ for other {@link PSMethod} 
-	 * instances. 
+	 * The state of a diagnosis is only valid in the context of <b>one</b>
+	 * {@link PSMethod}, and can differ for other {@link PSMethod}
+	 * instances.
 	 * For {@link PSMethodHeuristic} the state is derived by the {@link Score}
 	 * of the {@link Solution}.
 	 * @param theCase the context case of the state
@@ -220,9 +220,9 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	}
 
 	/**
-	 * Sets the new apriori probability of this instance. 
-	 * The value is fixed to the predefined {@link Score} values: 
-	 * P5, P4, P3, P2, N2, N3, N4, N5. 
+	 * Sets the new apriori probability of this instance.
+	 * The value is fixed to the predefined {@link Score} values:
+	 * P5, P4, P3, P2, N2, N3, N4, N5.
 	 * <p>Creation date: (25.09.00 15:13:34)
 	 * @param newAprioriPropability the new apriori probability of this instance
 	 * @throws IllegalArgumentException if the newAprioriProbability is not valid
@@ -239,7 +239,7 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	/**
 	 * Returns the role of this diagnosis in the context of
 	 * the Heuristic Decision Tree pattern. Usually not
-	 * useful for {@link PSMethod}s except {@link PSMethodHeuristic}.  
+	 * useful for {@link PSMethod}s except {@link PSMethodHeuristic}.
 	 * @return the type of the heuristic decision tree
 	 */
 	public HDTType getHdtType() {
@@ -249,7 +249,7 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	/**
 	 * Sets the role of this diagnosis in the context of
 	 * the Heuristic Decision Tree pattern. Usually not
-	 * useful for {@link PSMethod}s except {@link PSMethodHeuristic}.  
+	 * useful for {@link PSMethod}s except {@link PSMethodHeuristic}.
 	 * @param newHdtType the type of the heuristic decision tree
 	 */
 	public void setHdtType(HDTType hdtType) {
@@ -257,13 +257,14 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	}
 
 	/**
-	 * Sets the knowledge base instance, to which this object belongs 
-	 * to. This method also adds this object to the knowledge base 
-	 * (reverse link). 
-	 * <br><b>Note:</b> Currently, this object is not removed from a 
+	 * Sets the knowledge base instance, to which this object belongs
+	 * to. This method also adds this object to the knowledge base
+	 * (reverse link).
+	 * <br><b>Note:</b> Currently, this object is not removed from a
 	 * previously registered knowledge base.
-	 * @param newKnowledgeBase the knowledge base, to which this object belongs to 
+	 * @param newKnowledgeBase the knowledge base, to which this object belongs to
 	 */
+	@Override
 	public void setKnowledgeBase(KnowledgeBase kb) {
 		super.setKnowledgeBase(kb);
 		// maybe somebody should remove this object from the old
@@ -275,9 +276,10 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	 * This is the official method to change the state of the Diagnosis. The
 	 * first Object in the values array must be an DiagnosisScore Object.
 	 */
+	@Override
 	@Deprecated
-	public void setValue(XPSCase theCase, Object[] values) {
-		setValue(theCase, (Value)values[0], null);
+	public void setValue(XPSCase theCase, Value value) {
+		setValue(theCase, value, null);
 	}
 
 	public void setValue(XPSCase theCase, Value value, Class<? extends PSMethod> context) {
@@ -302,15 +304,15 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	/**
 	 * This method officially changes the state of the Diagnosis using the
 	 * standard setValue method signature.
-	 * The value is set in the context of an {@link XPSCase} instance, and in the 
+	 * The value is set in the context of an {@link XPSCase} instance, and in the
 	 * context of a {@link PSMethod} class context (the {@link PSMethod} responsible
-	 * for deriving this state). 
+	 * for deriving this state).
 	 * The value array usually contains only one element: the first element of the
-	 * array is required to be either a {@link DiagnosisScore} or 
+	 * array is required to be either a {@link DiagnosisScore} or
 	 * {@link DiagnosisState} instance.
 	 * @param theCase the context in which the new value was derived
 	 * @param values an array, where the first element holds the new value of the Diagnosis
-	 * @param context the {@link PSMethod} class that set the new value 
+	 * @param context the {@link PSMethod} class that set the new value
 	 */
 	@Deprecated
 	public void setValue(XPSCase theCase, Object[] values, Class<? extends PSMethod> context) {
@@ -338,6 +340,7 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	 * Delegates to {@link NamedObject}.toString().
 	 * @return a String representation of this object
 	 */
+	@Override
 	public String toString() {
 		return super.toString();
 	}

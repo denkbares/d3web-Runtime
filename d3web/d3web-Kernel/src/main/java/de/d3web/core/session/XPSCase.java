@@ -30,10 +30,10 @@ import de.d3web.core.inference.PropagationContoller;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCMarkedUp;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 import de.d3web.core.session.blackboard.Blackboard;
@@ -92,6 +92,7 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	 * @return a list of all {@link Solution} instances
 	 * @deprecated use getKnowledgeBase().getDiagnoses instead
 	 */
+	@Deprecated
 	// TODO: remove this method
 	List<Solution> getDiagnoses();
 
@@ -209,23 +210,27 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	 */
 	void setUsedPSMethods(List<? extends PSMethod> methods);
 
-	/**
-	 * Deprecated: Please use void setValue(ValuedObject valuedObject, Answer value)
-	 */
-	@Deprecated
-	void setValue(ValuedObject o, Object[] value);
-
-	/**
-	 * Deprecated: Please use void setValue(ValuedObject valuedObject, Answer value, Rule rule)
-	 */
-	@Deprecated
-	void setValue(ValuedObject o, Object[] value, Rule rule);
-
-
-	/**
-	 * Deprecated: Please use void setValue(ValuedObject valuedObject, Answer value, Class context)
-	 */
-	void setValue(ValuedObject o, Object[] value, Class<? extends PSMethod> context);
+	// /**
+	// * Deprecated: Please use void setValue(ValuedObject valuedObject, Answer
+	// value)
+	// */
+	// @Deprecated
+	// void setValue(ValuedObject o, Object[] value);
+	//
+	// /**
+	// * Deprecated: Please use void setValue(ValuedObject valuedObject, Answer
+	// value, Rule rule)
+	// */
+	// @Deprecated
+	// void setValue(ValuedObject o, Object[] value, Rule rule);
+	//
+	//
+	// /**
+	// * Deprecated: Please use void setValue(ValuedObject valuedObject, Answer
+	// value, Class context)
+	// */
+	// void setValue(ValuedObject o, Object[] value, Class<? extends PSMethod>
+	// context);
 
 
 	
@@ -239,7 +244,7 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	 *            the (array of new) values for the specified
 	 *            {@link ValuedObject}
 	 */
-	void setValue(ValuedObject valuedObject, Answer value);
+	void setValue(ValuedObject valuedObject, Value value);
 	
 
 	/**
@@ -255,8 +260,8 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	 *            {@link ValuedObject}
 	 * @param rule
 	 *            the knowledge element responsible for making the assignment
-	 */	
-	void setValue(ValuedObject valuedObject, Answer value, Rule rule);
+	 */
+	void setValue(ValuedObject valuedObject, Value value, Rule rule);
 
 	/**
 	 * Assigns the specified value to the specified {@link ValuedObject},
@@ -271,7 +276,7 @@ public interface XPSCase extends DCMarkedUp, PropertiesContainer {
 	 * @param context
 	 *            the problem-solver responsible for this assignment
 	 */
-	void setValue(ValuedObject valuedObject, Answer value, Class<? extends PSMethod> context);
+	void setValue(ValuedObject valuedObject, Value value, Class<? extends PSMethod> context);
 
 	/**
 	 * Takes a specified log message, that is relevant for this case.

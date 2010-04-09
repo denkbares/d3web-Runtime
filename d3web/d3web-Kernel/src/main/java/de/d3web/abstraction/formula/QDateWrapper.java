@@ -32,8 +32,7 @@ import java.util.Date;
 
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.session.values.AnswerDate;
-import de.d3web.core.session.values.EvaluatableAnswerDateValue;
+import de.d3web.core.session.values.DateValue;
 
 /**
  * Delegate-Pattern: Wraps a QuestionNum to use it as FormulaElement. Creation
@@ -43,7 +42,7 @@ import de.d3web.core.session.values.EvaluatableAnswerDateValue;
  */
 public class QDateWrapper extends FormulaDatePrimitive {
 
-	/** 
+	/**
 	 * Creates a new FormulaTerm with null-arguments.
 	 */
 	public QDateWrapper() {
@@ -68,9 +67,10 @@ public class QDateWrapper extends FormulaDatePrimitive {
 		if (getQuestion().getValue(theCase) == null) {
 			return null;
 		}
-		AnswerDate ans = (AnswerDate) (getQuestion().getValue(theCase));
-		EvaluatableAnswerDateValue ret =(EvaluatableAnswerDateValue)ans.getValue(theCase); 
-		return ret.eval(theCase);
+		DateValue value = (DateValue) getQuestion().getValue(theCase);
+		// EvaluatableAnswerDateValue ret
+		// =(EvaluatableAnswerDateValue)ans.getValue(theCase);
+		return (Date) value.getValue();
 			
 	}
 
@@ -97,11 +97,13 @@ public class QDateWrapper extends FormulaDatePrimitive {
 		return Collections.singletonList(value);
 	}
 
+	@Override
 	public String toString() {
 		return value == null ? "question:null" : value.toString();
 	}
 	
+	@Override
 	public void setValue(Object o) {
 		setQuestion((QuestionDate)o);
-	}	
+	}
 }

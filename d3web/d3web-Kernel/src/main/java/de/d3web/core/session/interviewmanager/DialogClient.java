@@ -19,8 +19,8 @@
  */
 
 package de.d3web.core.session.interviewmanager;
-import java.util.Collection;
 
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 
 /**
@@ -42,7 +42,7 @@ public abstract class DialogClient {
 	/**
 	 * @return a List of Answers for the Question with the given ID, if such answers exist, otherwise null
 	 */
-	public abstract Collection getAnswers(String QuestionID);
+	public abstract Value getAnswers(String QuestionID);
 
 	/**
 	 * @return the Priority of this client. 1 is the highest.

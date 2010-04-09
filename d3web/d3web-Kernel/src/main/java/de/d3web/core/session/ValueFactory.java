@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
@@ -20,14 +22,42 @@ import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 
 public class ValueFactory {
 
+	public static String getID_or_Value(Value value) {
+		if (value instanceof ChoiceValue) {
+			return ((AnswerChoice) (value.getValue())).getId();
+		}
+		else {
+			return value.getValue().toString();
+		}
+	}
+
+	public static Value toValue(Question question, Answer answer) {
+		if (question instanceof QuestionOC) {
+			return new ChoiceValue((AnswerChoice) answer);
+		}
+		else if (question instanceof QuestionMC) {
+			return new MultipleChoiceValue((AnswerMultipleChoice) answer);
+		}
+		else if (question instanceof QuestionNum) {
+			AnswerNum numa = (AnswerNum) answer;
+			Double d = (Double) numa.getValue(null);
+			return new NumValue(d);
+		}
+		// TODO 04.2010 insert handling for text and date
+		else {
+			return UndefinedValue.getInstance();
+		}
+	}
+
 	// it's planned to eliminate this method later, since
-	// the dialog should yield Value instances not 
+	// the dialog should yield Value instances not
 	// Answer instances any more
-	public static Value toValue(ValuedObject valuedObject, 
+	public static Value toValue(ValuedObject valuedObject,
 			Object[] newValue, XPSCase theCase) {
 		if (newValue == null || newValue.length == 0) {
 			return null;
@@ -47,7 +77,7 @@ public class ValueFactory {
 //		} else {
 			for (Object o: newValue) {
 				if (o instanceof AnswerUnknown) {
-					return new Unknown();
+				return Unknown.getInstance();
 				}
 			}
 			Object o = newValue[0];
@@ -76,7 +106,7 @@ public class ValueFactory {
 			} else if (o instanceof QuestionText) {
 				String text = ((AnswerText)o).getName();
 				return new TextValue(text);
-			} 
+			}
 //		}
 		return null;
 	}

@@ -19,8 +19,9 @@
  */
 
 package de.d3web.core.session.blackboard;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.UndefinedValue;
 /**
  * Stores the dynamic, user specific values for an QuestionOC
  * object. It corresponds to the static QuestionOC object.<br>
@@ -30,17 +31,17 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
  * @see QuestionOC
  */
 public class CaseQuestionOC extends CaseQuestionChoice {
-	private Answer value = null;
+	private Value value = UndefinedValue.getInstance();
 
 	public CaseQuestionOC(QuestionOC question) {
 		super(question);
 	}
 
-	public Answer getValue() {
+	public Value getValue() {
 		return value;
 	}
 
-	public void setValue(Answer value) {
+	public void setValue(Value value) {
 		this.value = value;
 	}
 }

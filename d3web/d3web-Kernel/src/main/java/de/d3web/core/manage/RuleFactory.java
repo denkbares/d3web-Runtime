@@ -27,13 +27,13 @@ import de.d3web.abstraction.ActionAddValue;
 import de.d3web.abstraction.ActionSetValue;
 import de.d3web.abstraction.formula.FormulaDateExpression;
 import de.d3web.abstraction.formula.FormulaExpression;
-import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.PSAction;
+import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.condition.Condition;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.indication.ActionClarify;
 import de.d3web.indication.ActionContraIndication;
@@ -52,31 +52,31 @@ import de.d3web.scoring.Score;
 public class RuleFactory {
 
 	/**
-	 * Creates a rule to set values for a given question 
+	 * Creates a rule to set values for a given question
 	 * with the specified parameters.
 	 */
 	public static Rule createAddValueRule(
 		String theId,
 		Question theQuestion,
-		Object[] theAnswers,
+			Object theValue,
 		Condition theCondition) {
 
 		return createAddValueRule(
 			theId,
 			theQuestion,
-			theAnswers,
+				theValue,
 			theCondition,
 			null);
 	}
 
 	/**
-	 * Creates a rule to add values to a given question 
+	 * Creates a rule to add values to a given question
 	 * with the specified parameters.
 	 */
 	public static Rule createAddValueRule(
 		String theId,
 		Question theQuestion,
-		Object[] theAnswers,
+			Object theValue,
 		Condition theCondition,
 		Condition theRuleException) {
 
@@ -84,7 +84,7 @@ public class RuleFactory {
 
 		ActionAddValue theAction = new ActionAddValue();
 		theAction.setQuestion(theQuestion);
-		theAction.setValues(theAnswers);
+		theAction.setValue(theValue);
 
 		setRuleParams(rule, theAction, theCondition, theRuleException);
 
@@ -255,12 +255,12 @@ public class RuleFactory {
 	}
 	
 	/**
-	 * Creates a rule, that instantly (directly after current qaset) 
+	 * Creates a rule, that instantly (directly after current qaset)
 	 * indicates the specified qasets.
 	 */
 	public static Rule createInstantIndicationRule(
-			String id, 
-			List<QASet> theAction, 
+			String id,
+			List<QASet> theAction,
 			Condition theCondition,
 			Condition theRuleException) {
 		
@@ -272,8 +272,8 @@ public class RuleFactory {
 	}
 
 	public static Rule createInstantIndicationRule(
-			String id, 
-			List<QASet> theAction, 
+			String id,
+			List<QASet> theAction,
 			Condition theCondition) {
 		
 		return createInstantIndicationRule(id, theAction, theCondition, null);
@@ -281,7 +281,7 @@ public class RuleFactory {
 
 	
 	/**
-	 * Creates a rule, that instantly (directly after current qaset) 
+	 * Creates a rule, that instantly (directly after current qaset)
 	 * indicates the specified qasets.
 	 */
 	public static Rule createInstantIndicationRule(
@@ -344,35 +344,40 @@ public class RuleFactory {
 	}
 
 	/**
-	 * Creates a rule to set values for a given question 
-	 * with the specified parameters.
-	 * @param String theId
-	 * @param Question theQuestion
-	 * @param Object[] theAnswers
-	 * @param Condition theCondition
+	 * Creates a rule to set values for a given question with the specified
+	 * parameters.
+	 * 
+	 * @param String
+	 *            theId
+	 * @param Question
+	 *            theQuestion
+	 * @param Object
+	 *            theValue
+	 * @param Condition
+	 *            theCondition
 	 */
 	public static Rule createSetValueRule(
 		String theId,
 		Question theQuestion,
-		Object[] theAnswers,
+			Object theValue,
 		Condition theCondition) {
 
 		return createSetValueRule(
 			theId,
 			theQuestion,
-			theAnswers,
+				theValue,
 			theCondition,
 			null);
 	}
 
 	/**
-	 * Creates a rule to set values for a given question 
+	 * Creates a rule to set values for a given question
 	 * with the specified parameters.
 	 */
 	public static Rule createSetValueRule(
 		String theId,
 		Question theQuestion,
-		Object[] theAnswers,
+			Object theValue,
 		Condition theCondition,
 		Condition theRuleException) {
 
@@ -380,7 +385,7 @@ public class RuleFactory {
 
 		ActionSetValue theAction = new ActionSetValue();
 		theAction.setQuestion(theQuestion);
-		theAction.setValues(theAnswers);
+		theAction.setValue(theValue);
 
 		setRuleParams(rule, theAction, theCondition, theRuleException);
 
@@ -388,7 +393,7 @@ public class RuleFactory {
 	}
 
 	/**
-	 * Creates a rule to set values for a given question 
+	 * Creates a rule to set values for a given question
 	 * with the specified parameters.
 	 */
 	public static Rule createSetValueRule(
@@ -405,7 +410,7 @@ public class RuleFactory {
 	}
 	
 	/**
-	 * Creates a rule to set values for a given question 
+	 * Creates a rule to set values for a given question
 	 * with the specified parameters.
 	 */
 	public static Rule createSetValueRule(
@@ -419,16 +424,16 @@ public class RuleFactory {
 			theAnswer,
 			theCondition,
 			null);
-	}	
+	}
 
 	/**
-	 * Creates a rule to set values for a given question 
+	 * Creates a rule to set values for a given question
 	 * with the specified parameters.
 	 */
 	public static Rule createSetValueRule(
 		String theId,
 		Question theQuestion,
-		FormulaExpression theAnswers,
+			FormulaExpression theValue,
 		Condition theCondition,
 		Condition theRuleException) {
 
@@ -436,7 +441,7 @@ public class RuleFactory {
 
 		ActionSetValue theAction = new ActionSetValue();
 		theAction.setQuestion(theQuestion);
-		theAction.setValues(new Object[] { theAnswers });
+		theAction.setValue(theValue);
 
 		setRuleParams(rule, theAction, theCondition, theRuleException);
 
@@ -445,13 +450,13 @@ public class RuleFactory {
 	
 
 	/**
-	 * Creates a rule to set values for a given question 
+	 * Creates a rule to set values for a given question
 	 * with the specified parameters.
 	 */
 	public static Rule createSetValueRule(
 		String theId,
 		Question theQuestion,
-		FormulaDateExpression theAnswers,
+			FormulaDateExpression theValue,
 		Condition theCondition,
 		Condition theRuleException) {
 
@@ -459,15 +464,15 @@ public class RuleFactory {
 
 		ActionSetValue theAction = new ActionSetValue();
 		theAction.setQuestion(theQuestion);
-		theAction.setValues(new Object[] { theAnswers });
+		theAction.setValue(theValue);
 
 		setRuleParams(rule, theAction, theCondition, theRuleException);
 
 		return rule;
-	}	
+	}
 
 	/**
-	 * Creates a rule to add values to a given question 
+	 * Creates a rule to add values to a given question
 	 * with the specified parameters.
 	 */
 	public static Rule createSuppressAnswerRule(
@@ -485,7 +490,7 @@ public class RuleFactory {
 	}
 
 	/**
-	 * Creates a rule to add values to a given question 
+	 * Creates a rule to add values to a given question
 	 * with the specified parameters.
 	 */
 	public static Rule createSuppressAnswerRule(

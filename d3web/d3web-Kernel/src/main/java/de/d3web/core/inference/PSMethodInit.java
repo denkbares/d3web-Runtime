@@ -25,14 +25,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.ChoiceValue;
 
 /**
  * This is a 'marker' psmethod to represent all the initial values.
@@ -84,13 +85,11 @@ public class PSMethodInit implements PSMethod {
 						posend = s.indexOf(";", posstart);
 					}
 					ids.add(s.substring(posstart));
-					if (q instanceof QuestionChoice) {
-						QuestionChoice qc = (QuestionChoice) q;
-						Answer[] a = new Answer[ids.size()];
-						for (int i = 0; i < a.length; i++) {
-							a[i] = qc.getAnswer(theCase, ids.get(i));
-						}
-						theCase.setValue(qc, a);
+					if (q instanceof QuestionOC) {
+						QuestionOC qc = (QuestionOC) q;
+						AnswerChoice choice = (AnswerChoice) qc.getAnswer(theCase,
+								ids.get(0));
+						theCase.setValue(qc, new ChoiceValue(choice));
 					} else {
 						//TODO QuestionNum, QuestionDate
 					}

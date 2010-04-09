@@ -23,10 +23,10 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.MultipleChoiceValue;
 /**
  * FormulaElement term that can count the answers of a QuestionMC
  * Creation date: (14.08.2000 16:33:00)
@@ -36,12 +36,12 @@ public class Count implements FormulaNumberElement {
 
 	private QuestionMC questionMC = null;
 
-	/** 
+	/**
 	 * Creates a new Count with null-question.
 	 */
 	public Count() {
 		this(null);
-	}	
+	}
 	
 	/**
 	 *	Creates a new Count object that counts the answers of questionMC
@@ -62,26 +62,16 @@ public class Count implements FormulaNumberElement {
 	 * 0, if the active answer is "No" or "unknown".
 	 */
 	public Double eval(XPSCase theCase) {
-//		double count = 0;
-		AnswerMultipleChoice answer = (AnswerMultipleChoice)(getQuestionMC().getValue(theCase));
-		List<AnswerChoice> choices = answer.getChoices();
+		MultipleChoiceValue value = (MultipleChoiceValue) getQuestionMC().getValue(
+				theCase);
+		List<AnswerChoice> choices = (List<AnswerChoice>) value.getValue();
 		
 		// check, if AnswerNo oder AnswerUnknown is included
 		for (AnswerChoice answerChoice : choices) {
-			if (answerChoice.isAnswerNo() || answerChoice.isUnknown()) 
+			if (answerChoice.isAnswerNo() || answerChoice.isUnknown())
 				return new Double(0);
 		}
 		return new Double(choices.size());
-		
-//		Iterator<?> iter = getQuestionMC().getValue(theCase).iterator();
-//		while (iter.hasNext()) {
-//			AnswerChoice answer = (AnswerChoice) iter.next();
-//			if ((answer.isAnswerNo() || answer.isUnknown())) {
-//				return new Double(0);
-//			}
-//			count++;
-//		}
-//		return new Double(count);
 	}
 
 	public QuestionMC getQuestionMC() {
@@ -100,6 +90,7 @@ public class Count implements FormulaNumberElement {
 		return sb.toString();
 	}
 
+	@Override
 	public String toString() {
 		return "#" + (getQuestionMC() != null ?  " "+getQuestionMC().toString() : ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}

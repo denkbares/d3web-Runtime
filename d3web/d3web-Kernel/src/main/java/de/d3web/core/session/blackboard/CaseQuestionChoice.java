@@ -33,7 +33,7 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
  * @author Tobias Vogele
  * @see QuestionChoice
  */
-public class CaseQuestionChoice extends CaseQuestion {
+public abstract class CaseQuestionChoice extends CaseQuestion {
 
 	private Double numSchemaValue = null;
 
@@ -42,7 +42,7 @@ public class CaseQuestionChoice extends CaseQuestion {
 	}
 
 	/**
-	 * @return the current numerical value of the question 
+	 * @return the current numerical value of the question
 	 * according to a give XPSCase. This value is used to
 	 * be processed by a Num2ChoiceSchema.
 	 */

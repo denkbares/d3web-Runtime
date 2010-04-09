@@ -20,8 +20,9 @@
 
 package de.d3web.core.session.blackboard;
 
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QuestionText;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.UndefinedValue;
 
 /**
  * Stores the dynamic, user specific values for an QuestionText
@@ -32,17 +33,17 @@ import de.d3web.core.knowledge.terminology.QuestionText;
  * @see QuestionText
  */
 public class CaseQuestionText extends CaseQuestion {
-	private Answer value = null;
+	private Value value = UndefinedValue.getInstance();
 
 	public CaseQuestionText(QuestionText question) {
 		super(question);
 	}
 
-	public Answer getValue() {
+	public Value getValue() {
 		return value;
 	}
 
-	public void setValue(Answer value) {
+	public void setValue(Value value) {
 		this.value = value;
 	}
 }

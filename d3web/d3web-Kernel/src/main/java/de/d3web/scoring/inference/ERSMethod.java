@@ -28,19 +28,18 @@ import java.util.Map;
 
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.XPSCase;
 import de.d3web.scoring.DiagnosisScore;
 import de.d3web.scoring.Score;
 
 /**
- * Etablish-Refine-Strategy
+ * Establish-Refine-Strategy
  * 
  * @author pkluegl
- *
+ * 
  */
 public class ERSMethod extends PSSubMethod {
 	
@@ -55,11 +54,11 @@ public class ERSMethod extends PSSubMethod {
 	
 	/*
 	 * key:				the case
-	 * Object:			HashMap (called innerMap) 
+	 * Object:			HashMap (called innerMap)
 	 * innerMap key:	parentDiagnosis
 	 * innerMap Object:	list of ChangeOfDiagnosis
 	 */
-	private Map<XPSCase, Map<Solution, List<ChangeOfDiagnosis>>> hDT_establishedDiagnoses = new HashMap<XPSCase, Map<Solution,List<ChangeOfDiagnosis>>>();
+	private final Map<XPSCase, Map<Solution, List<ChangeOfDiagnosis>>> hDT_establishedDiagnoses = new HashMap<XPSCase, Map<Solution,List<ChangeOfDiagnosis>>>();
 	Class<PSMethodHeuristic> PSCONTEXT = PSMethodHeuristic.class;
 	
 	/**
@@ -86,6 +85,7 @@ public class ERSMethod extends PSSubMethod {
 		public void setScore(Score score) {
 			this.score = score;
 		}
+		@Override
 		public String toString() {
 			return "[Diagnose : "+diagnosis+"] - [Score : "+score+"]";
 		}
@@ -95,6 +95,7 @@ public class ERSMethod extends PSSubMethod {
 	/**
 	 * initialization method for this PSMethod
 	 */
+	@Override
 	public void init(XPSCase theCase) {
 	}
 	
@@ -108,12 +109,12 @@ public class ERSMethod extends PSSubMethod {
 				checkHashMap(theCase);
 				if (isEstablished(theCase, diagnosis)) {
 					setAllChildrenToSuggested(theCase, diagnosis);
-				} 
+				}
 				else if(wasEstablished(theCase, diagnosis)){
 					resetAllChildren(theCase, diagnosis);
 				}
 			}
-		}	
+		}
 	}
 	
 	
@@ -167,7 +168,7 @@ public class ERSMethod extends PSSubMethod {
 	 */
 	private DiagnosisScore setDiagnosisToSuggested(XPSCase theCase, Solution diagnosis) {
 		DiagnosisScore resultDS = diagnosis.getScore(theCase, PSCONTEXT).add(getDifferenceToSuggested(theCase, diagnosis));
-		theCase.setValue(diagnosis, new Object[] { resultDS }, PSCONTEXT);
+		theCase.setValue(diagnosis, resultDS, PSCONTEXT);
 		return resultDS;
 	}
 	
@@ -191,7 +192,7 @@ public class ERSMethod extends PSSubMethod {
 				if (change != null) {
 					innerMap.remove(diagnosis);
 					DiagnosisScore resultDS = eachChildren.getScore(theCase, PSCONTEXT).subtract(change.getScore());
-					theCase.setValue(eachChildren, new Object[] { resultDS }, PSCONTEXT);
+					theCase.setValue(eachChildren, resultDS, PSCONTEXT);
 				}
 			}
 		}
@@ -254,12 +255,12 @@ public class ERSMethod extends PSSubMethod {
 	 * @param diagnosis
 	 * @return the Score that the diagnosis need to be suggested
 	 */
-	private Score getDifferenceToSuggested(XPSCase theCase, Solution diagnosis) {		
+	private Score getDifferenceToSuggested(XPSCase theCase, Solution diagnosis) {
 		double diff = getScoreForSuggestedDiagnosis() - diagnosis.getScore(theCase, PSCONTEXT).getScore();
 		//[HOTFIX]: Peter: hat hier nix zu suchen!!
 		if (diff >= Score.P5x.getScore())
 			return Score.P5x;
-		else if (diff >= Score.P5.getScore()) 
+		else if (diff >= Score.P5.getScore())
 			return Score.P5;
 		else if (diff >= Score.P4.getScore())
 			return Score.P4;
@@ -271,9 +272,10 @@ public class ERSMethod extends PSSubMethod {
 		
 	}
 		
+	@Override
 	public boolean isActivated(XPSCase theCase) {
 		Boolean b = (Boolean)theCase.getKnowledgeBase().getProperties().getProperty(Property.ESTABLISH_REFINE_STRATEGY);
-		return  b != null && b.booleanValue(); 
+		return  b != null && b.booleanValue();
 	}
 	
 	

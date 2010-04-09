@@ -35,12 +35,12 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  * Abstract super class for all rules. <BR>
  * It stores the condition, the check routine and if it has fired or not.
  * The action of a rule is specified by the extensions of RuleComplex.
- * Additionally it is possible to store an exception, when this rule must not fire. 
+ * Additionally it is possible to store an exception, when this rule must not fire.
  * @author Michael Wolber, joba
  */
 public class Rule implements CaseObjectSource {
 
-	private String id;
+	private final String id;
 	
 	/**
 	 * Flag indicates, if the rule is activated.
@@ -58,14 +58,14 @@ public class Rule implements CaseObjectSource {
 	protected Condition condition;
 
 	/**
-	  * A condition that must be false or undefined, if 
+	  * A condition that must be false or undefined, if
 	  * rule should fire (optional).
 	 */
 	protected Condition exception;
 
 	/**
 	  * A condition which contains CondDState(diagnosis, ESTABLISHED)
-	  * to formulate a context of established diagnoses in which the 
+	  * to formulate a context of established diagnoses in which the
 	  * rule is able to fire. If specified diagnoses are not established,
 	  * then rule must not fire.
 	 */
@@ -75,15 +75,15 @@ public class Rule implements CaseObjectSource {
 
 	/**
 	  * The specified action the rule activates, if <it>condition</it> is true
-	  *	,<it>exception</it> is false/undefined and <it>diagnosisContext</it> is 
+	  *	,<it>exception</it> is false/undefined and <it>diagnosisContext</it> is
 	  *	true/undefined.
 	 */
 	private PSAction ruleAction;
 
 	/**
-	  * Creates a new rule. The following properties have to be 
+	  * Creates a new rule. The following properties have to be
 	  * setted by hand:
-	  * <LI> condition 
+	  * <LI> condition
 	  * <LI> exception (optional)
 	  * @see IDObject
 	  */
@@ -96,7 +96,7 @@ public class Rule implements CaseObjectSource {
 	}
 	
 	/**
-	  * Checks if the rule is able to fire in context of the values of 
+	  * Checks if the rule is able to fire in context of the values of
 	  * the specified case.
 	  * In detail it evaluates the condition, which must be true and
 	  * <OL>
@@ -243,7 +243,7 @@ public class Rule implements CaseObjectSource {
 	 * @return the specified <it>diagnosis context</it>. If not defined
 	 * this method returns null. <BR>
 	 * A diagnosis context is a condition which contains CondDState(diagnosis, ESTABLISHED)
-	 * to formulate a context of established diagnoses in which the 
+	 * to formulate a context of established diagnoses in which the
 	 * rule is able to fire. If specified diagnoses are not established,
 	 * then rule must not fire.
 	 */
@@ -262,9 +262,9 @@ public class Rule implements CaseObjectSource {
 		if ((problemsolverContext == null) && (getAction() != null))
 			return getAction().getProblemsolverContext();
 		else
-			/* 
-			 * joba: this else-brach should be deleted, when 
-			 * rule-action-refactoring is finished 
+			/*
+			 * joba: this else-brach should be deleted, when
+			 * rule-action-refactoring is finished
 			 */
 			return problemsolverContext;
 	}
@@ -291,14 +291,14 @@ public class Rule implements CaseObjectSource {
 	}
 
 	/**
-	 * Remove entries of the old action from the 
+	 * Remove entries of the old action from the
 	 * named objects participating in the old
-	 * rule action, and insert rule into 
+	 * rule action, and insert rule into
 	 * the new action objects.
 	 * <BR>
-	 * If the rule action changes, we also have to 
-	 * change the references for the condition 
-	 * entries (since the knowledge map key changes 
+	 * If the rule action changes, we also have to
+	 * change the references for the condition
+	 * entries (since the knowledge map key changes
 	 * for them as well) and
 	 * diagnosisContext, rule exceptions.
 	 * */
@@ -464,7 +464,7 @@ public class Rule implements CaseObjectSource {
 	/**
 	 * Sets the specified <it>diagnosis context</it>. <BR>
 	 * Diagnosis context is a  condition which contains CondDState(diagnosis, ESTABLISHED)
-	 * to formulate a context of established diagnoses in which the 
+	 * to formulate a context of established diagnoses in which the
 	 * rule is able to fire. If specified diagnoses are not established,
 	 * then rule must not fire. For checking the state of the diagnosis, the
 	 * heuristic problem solver is used.
@@ -546,7 +546,8 @@ public class Rule implements CaseObjectSource {
 		return toString() + "\n fired: " + hasFired(theCase);
 	}
     
-    public boolean equals(Object o) {
+    @Override
+	public boolean equals(Object o) {
         if (o == null)
             return false;
         else if (this == o)
@@ -566,13 +567,14 @@ public class Rule implements CaseObjectSource {
 
     }
     
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         int hash = super.hashCode();
-        if (getAction() != null) 
+        if (getAction() != null)
             hash += getAction().hashCode();
         if (getCondition() != null)
             hash += getCondition().hashCode();
-        if (getException() != null) 
+        if (getException() != null)
             hash += getException().hashCode();
         if (getContext() != null)
             hash += getContext().hashCode();
@@ -584,7 +586,7 @@ public class Rule implements CaseObjectSource {
             return a1.equals(a2);
         else if (a1 == null && a2 == null)
             return true;
-        else 
+        else
             return false;
     }
 
@@ -593,7 +595,7 @@ public class Rule implements CaseObjectSource {
             return c1.equals(c2);
         else if (c1 == null && c2 == null)
             return true;
-        else 
+        else
             return false;
     }
 
@@ -618,6 +620,21 @@ public class Rule implements CaseObjectSource {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	@Override
+	public String toString() {
+		StringBuffer b = new StringBuffer();
+		b.append("IF   " + this.getCondition() + " \n");
+		b.append("THEN " + this.getAction() + "\n");
+		if (this.getException() != null) {
+			b.append("EXCEPT  " + this.getException());
+		}
+		if (this.getContext() != null) {
+			b.append("CONTEXT " + this.getCondition());
+		}
+
+		return b.toString();
 	}
 
 }

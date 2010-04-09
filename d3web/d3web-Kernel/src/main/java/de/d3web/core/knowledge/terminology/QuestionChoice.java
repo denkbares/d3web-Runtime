@@ -28,10 +28,11 @@ import de.d3web.abstraction.inference.PSMethodQuestionSetter;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseQuestionChoice;
 import de.d3web.core.session.values.AnswerChoice;
-import de.d3web.core.session.values.AnswerNum;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.utilities.Tester;
 import de.d3web.core.utilities.Utils;
 
@@ -62,8 +63,8 @@ public abstract class QuestionChoice extends Question {
 		return alternatives;
 	}
 
-	private Answer findAlternative(List<? extends Answer> alternativesArg, final String id) {
-		return (Answer) Utils.findIf(alternativesArg, new Tester() {
+	private AnswerChoice findAlternative(List<? extends Answer> alternativesArg, final String id) {
+		return (AnswerChoice) Utils.findIf(alternativesArg, new Tester() {
 			public boolean test(Object testObj) {
 				if ((testObj instanceof AnswerChoice)
 					&& (((AnswerChoice) testObj).getId().equalsIgnoreCase(id))) {
@@ -89,6 +90,15 @@ public abstract class QuestionChoice extends Question {
 			return findAlternative(getAlternatives(theCase), id);
 	}
 
+	public AnswerChoice findChoice(String choiceID) {
+		if (choiceID == null) {
+			return null;
+		}
+		else {
+			return findAlternative(alternatives, choiceID);
+		}
+	}
+
 	/**
 	 * Gives you only the possible answers (alternatives) which
 	 * are not suppressed by any rule.
@@ -108,7 +118,8 @@ public abstract class QuestionChoice extends Question {
 		return result;
 	}
 
-	public abstract Answer getValue(XPSCase theCase);
+	@Override
+	public abstract Value getValue(XPSCase theCase);
 
 
 	/**
@@ -134,8 +145,7 @@ public abstract class QuestionChoice extends Question {
         }
     }
 
-	public abstract void setValue(XPSCase theCase, Object[] values);
-
+	@Override
 	public String toString() {
 		String res = super.toString();
 		return res;
@@ -149,6 +159,7 @@ public abstract class QuestionChoice extends Question {
 		return res;
 	}
 
+	@Override
 	public String verbalizeWithValue(XPSCase theCase) {
 		return verbalizeWithoutValue(theCase)
 			+ "\n Wert -> "
@@ -156,7 +167,7 @@ public abstract class QuestionChoice extends Question {
 	}
 
 	/**
-	 * @return the current numerical value of the question 
+	 * @return the current numerical value of the question
 	 * according to a give XPSCase. This value is used to
 	 * be processed by a Num2ChoiceSchema.
 	 */
@@ -182,40 +193,40 @@ public abstract class QuestionChoice extends Question {
 		}
 	}
 	
-	protected Answer convertNumericalValue(XPSCase theCase, AnswerNum value) {
+	protected Value convertNumericalValue(XPSCase theCase, double doubleValue) {
 		Num2ChoiceSchema schema = getSchemaForQuestion();
 		if (schema != null) {
-			double newValue = ((Double) (value.getValue(theCase))).doubleValue();
 			Double numValue = null;
 			if (Boolean.TRUE.equals(getProperties().getProperty(Property.TIME_VALUED))) {
-				numValue = new Double(newValue);
+				numValue = new Double(doubleValue);
 			} else {
-				numValue = new Double(getNumericalSchemaValue(theCase).doubleValue() + newValue);
+				numValue = new Double(getNumericalSchemaValue(theCase).doubleValue()
+						+ doubleValue);
 			}
 			setNumericalSchemaValue(theCase, numValue);
-			Answer answer = schema.getAnswerForNum(numValue, getAllAlternatives(), theCase);
-			return answer;
+			return schema.getValueForNum(numValue, getAllAlternatives(), theCase);
 		} else {
 			Logger.getLogger(this.getClass().getName()).throwing(
 				this.getClass().getName(),
 				"convertNumericalValue",
 					new RuntimeException("No Num2ChoiceSchema defined for " + getId() + ":"
 							+ getName()));
-			return value;
+			return UndefinedValue.getInstance();
 		}
 	}
 	
-	public Answer getAnswer(XPSCase theCase, Double value) {
-		if (value == null)
-			return null;
+	public Value getValue(XPSCase theCase, Double value) {
+		if (value == null) {
+			return UndefinedValue.getInstance();
+		}
 		else {
 			Num2ChoiceSchema schema = getSchemaForQuestion();
 			if (schema != null) {
-				Answer answer = schema.getAnswerForNum(value, getAllAlternatives(), theCase);
-				answer.setQuestion(this);
-				return answer;
-			} else
-				return null;
+				return schema.getValueForNum(value, getAllAlternatives(), theCase);
+			}
+			else {
+				return UndefinedValue.getInstance();
+			}
 		}
-	}	
+	}
 }

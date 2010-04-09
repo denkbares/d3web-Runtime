@@ -27,6 +27,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseQASet;
 import de.d3web.core.session.blackboard.CaseQContainer;
@@ -53,6 +54,7 @@ public class QContainer extends QASet {
 	/**
 	 * adds a contra reason to the case object of this QContainer
 	 */
+	@Override
 	public void addContraReason(Reason source, XPSCase theCase) {
 		((CaseQASet) theCase.getCaseObject(this)).addContraReason(source);
 		if ((theCase.getUsedPSMethods().contains(PSMethodParentQASet
@@ -80,6 +82,7 @@ public class QContainer extends QASet {
 	/**
 	 * @see QASet
 	 */
+	@Override
 	public void activate(XPSCase theCase, Rule rule, Class<? extends PSMethod> psm) {
 		super.activate(theCase, rule, psm);
 	}
@@ -87,6 +90,7 @@ public class QContainer extends QASet {
 	/**
 	 * @see QASet
 	 */
+	@Override
 	public void deactivate(XPSCase theCase, Rule rule, Class<? extends PSMethod> psm) {
 		super.deactivate(theCase, rule, psm);
 	}
@@ -94,6 +98,7 @@ public class QContainer extends QASet {
 	/**
 	 * addProReason method comment.
 	 */
+	@Override
 	public void addProReason(Reason source, XPSCase theCase) {
 		((CaseQASet) theCase.getCaseObject(this)).addProReason(source);
 		if ((theCase.getUsedPSMethods().contains(PSMethodParentQASet
@@ -175,10 +180,12 @@ public class QContainer extends QASet {
 	 * 
 	 * @return false
 	 */
+	@Override
 	public boolean hasValue(XPSCase theCase) {
 		return false;
 	}
 
+	@Override
 	public boolean isDone(XPSCase theCase) {
 		// Falls auch nur ein einziges Children nicht abgearbeitet ist, ist auch
 		// die ganze FK nicht abgearbeitet.
@@ -193,6 +200,7 @@ public class QContainer extends QASet {
 		return true;
 	}
 
+	@Override
 	public boolean isDone(XPSCase theCase, boolean respectValidFollowQuestions) {
 
 		// Falls auch nur ein einziges (valides) Children nicht abgearbeitet
@@ -208,6 +216,7 @@ public class QContainer extends QASet {
 		return true;
 	}
 
+	@Override
 	public void removeContraReason(Reason source, XPSCase theCase) {
 		((CaseQASet) theCase.getCaseObject(this)).removeContraReason(source);
 		if ((theCase.getUsedPSMethods().contains(PSMethodParentQASet
@@ -217,6 +226,7 @@ public class QContainer extends QASet {
 		}
 	}
 
+	@Override
 	public void removeProReason(Reason source, XPSCase theCase) {
 		((CaseQASet) theCase.getCaseObject(this)).removeProReason(source);
 		if ((theCase.getUsedPSMethods().contains(PSMethodParentQASet
@@ -287,6 +297,7 @@ public class QContainer extends QASet {
 	 * @param newKnowledgeBase
 	 *            de.d3web.kernel.domainModel.KnowledgeBase
 	 */
+	@Override
 	public void setKnowledgeBase(KnowledgeBase knowledgeBase) {
 		super.setKnowledgeBase(knowledgeBase);
 		// maybe somebody should remove this object from the old
@@ -316,7 +327,8 @@ public class QContainer extends QASet {
 	 * Sets the list of QASets contained in the QContainer to the specified
 	 * values. The XPSCase has no meaning in this case.
 	 */
-	public void setValue(XPSCase theCase, Object[] values) {
+	@Override
+	public void setValue(XPSCase theCase, Value value) {
 		Logger.getLogger(this.getClass().getName()).warning(
 				"deedless QContainer.setValue was called");
 	}

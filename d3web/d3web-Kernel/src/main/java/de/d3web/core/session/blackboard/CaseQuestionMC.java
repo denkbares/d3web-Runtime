@@ -22,9 +22,9 @@ package de.d3web.core.session.blackboard;
 
 import java.util.List;
 
-import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.UndefinedValue;
 /**
  * Stores the dynamic, user specific values for an QuestionMC
  * object. It corresponds to the static QuestionMC object.<br>
@@ -34,7 +34,7 @@ import de.d3web.core.knowledge.terminology.QuestionMC;
  * @see QuestionMC
  */
 public class CaseQuestionMC extends CaseQuestionChoice {
-	Answer theAnswer;
+	private Value value = UndefinedValue.getInstance();
 	
 	public CaseQuestionMC(QuestionMC question) {
 		super(question);
@@ -43,23 +43,25 @@ public class CaseQuestionMC extends CaseQuestionChoice {
 	/**
 	 * @return the user-specific value of the depending questionMC
 	 */
-	public Answer getValue() {
-		return theAnswer;
+	public Value getValue() {
+		return value;
 	}
 
 	/**
 	 * Sets the user-specific value of the depending questionMC
 	 */
-	public void setValue(List value) {
-		theAnswer = new AnswerMultipleChoice(value);
+	// TODO: deleteme!
+	private void setValue(List value) {
+		// theAnswer = new AnswerMultipleChoice(value);
 	}
 	
 
 	/**
 	 * Sets the user-specific value of the depending questionMC
 	 */
-	public void setValue(Answer answer) {
-		theAnswer = answer;
+	@Override
+	public void setValue(Value answer) {
+		value = answer;
 	}
 
 }

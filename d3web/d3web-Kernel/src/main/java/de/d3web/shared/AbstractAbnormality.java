@@ -22,8 +22,8 @@ package de.d3web.shared;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.Value;
 
 public abstract class AbstractAbnormality implements KnowledgeSlice {
 
@@ -71,7 +71,7 @@ public abstract class AbstractAbnormality implements KnowledgeSlice {
 	 * @param answerValue double
 	 * @return double, value of abnormality of the AbnormalityInterval which contains answerValue, A0 if answerValue is not contained in any AbnormalityInterval
 	 */
-	public abstract double getValue(Answer ans);
+	public abstract double getValue(Value ans);
 
 	/**
 	 * Creation date: (06.08.2001 16:00:34)

@@ -38,6 +38,7 @@ import de.d3web.core.session.interviewmanager.MQDialogController;
 import de.d3web.core.session.interviewmanager.OQDialogController;
 import de.d3web.core.session.interviewmanager.QASetManager;
 import de.d3web.core.session.interviewmanager.QASetManagerFactory;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
@@ -64,7 +65,7 @@ public class CaseFactory {
 					qaSetManagerClass.getConstructor(new Class[] { XPSCase.class });
 				return (QASetManager) constructor.newInstance(
 					new Object[] { theCase });
-			} 
+			}
 			catch (IllegalArgumentException e) {
 				throw new RuntimeException(e);
 			}
@@ -137,7 +138,7 @@ public class CaseFactory {
 	/**
 	 * Factory-method that returns an instance of XPSCase. All normally indicated questions are answered
 	 * with the values of "proxy" (if any). The questions are answered in the order that is
-	 * defined by the MQDialogController. 
+	 * defined by the MQDialogController.
 	 * @param kb the knowledge base used in the case.
 	 * @param dialogControllerType used in the case
 	 * @param proxy DialogProxy that contains values of questions
@@ -154,12 +155,12 @@ public class CaseFactory {
 	/**
 	 * Factory-method that returns an instance of XPSCase. All questions that are indicated normally
 	 * or that are children of registered containers are answered with the values of "proxy" (if any).
-	 * The questions are answered in the order that is defined by the MQDialogController. 
+	 * The questions are answered in the order that is defined by the MQDialogController.
 	 * @param kb the knowledge base used in the case.
 	 * @param dialogControllerType used in the case (MQ- or OQDialogController)
 	 * @param proxy DialogProxy that contains values of questions
 	 * @param registeredQContainers Collection that contains all containers that have to be asked in any
-	 * 			circumstance (esp. user selected containers); 
+	 * 			circumstance (esp. user selected containers);
 	 * 			(see de.d3web.caserepository.CaseObject#getAllQContainers())
 	 * @return XPSCase
 	 */
@@ -196,7 +197,7 @@ public class CaseFactory {
 	 * @see #createAnsweredXPSCase
 	 */
 	private static void answerQuestionsWithMQdc(MQDialogController mqdc,
-			XPSCase newCase, 
+			XPSCase newCase,
 			KnowledgeBase kb,
 			DialogProxy proxy,
 			Collection<? extends QContainer> registeredQContainers) {
@@ -237,7 +238,7 @@ public class CaseFactory {
 	}
 
 	/**
-	 * Answers all valid questions in the given container with values of the given proxy 
+	 * Answers all valid questions in the given container with values of the given proxy
 	 * in an order that is defined by the given MQDialogController.
 	 * @param qaSet (QASet the container whose question-children are to answer)
 	 * @param proxy (DialogProxy contains answers for the questions)
@@ -255,9 +256,9 @@ public class CaseFactory {
 				Iterator qIter = validQuestions.iterator();
 				while (qIter.hasNext()) {
 					Question q = (Question) qIter.next();
-					Collection answers = proxy.getAnswers(q.getId());
-					if (answers != null) {
-						inCase.setValue(q, answers.toArray());
+					Value value = proxy.getAnswers(q.getId());
+					if (value != null && (!(value instanceof UndefinedValue))) {
+						inCase.setValue(q, value);
 					}
 				}
 				formerValidQuestions = validQuestions;
@@ -265,9 +266,10 @@ public class CaseFactory {
 			}
 		} else {
 			Question q = (Question) qaSet;
-			Collection answers = proxy.getAnswers(q.getId());
-			if (answers != null)
-				inCase.setValue(q, answers.toArray());
+			Value value = proxy.getAnswers(q.getId());
+			if (value != null && (!(value instanceof UndefinedValue))) {
+				inCase.setValue(q, value);
+			}
 		}
 	}
 }

@@ -22,8 +22,6 @@
 package de.d3web.core.inference.condition;
 
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.session.XPSCase;
-import de.d3web.core.session.values.AnswerNum;
 
 /**
  * A condition, where the specified numerical question needs to
@@ -33,7 +31,7 @@ import de.d3web.core.session.values.AnswerNum;
 public class CondNumLessEqual extends CondNum {
 	
 	/**
-	 * Creates a new instance, where the specified numerical question 
+	 * Creates a new instance, where the specified numerical question
 	 * needs to be less or equal than the specified value.
 	 * @param question the specified question
 	 * @param value the specified value
@@ -43,16 +41,8 @@ public class CondNumLessEqual extends CondNum {
 	}
 
 	@Override
-	public boolean eval(XPSCase theCase)
-		throws NoAnswerException, UnknownAnswerException {
-		checkAnswer(theCase);
-		AnswerNum answer = (AnswerNum) getQuestion().getValue(theCase);
-		Double value = (Double) answer.getValue(theCase);
-		if (value != null) {
-			return (value.doubleValue() <= getAnswerValue().doubleValue());
-		} else {
-			return false;
-		}
+	protected boolean compare(Double caseValue, Double conditionedValue) {
+		return (caseValue.doubleValue() <= conditionedValue.doubleValue());
 	}
 
 	@Override
@@ -60,11 +50,11 @@ public class CondNumLessEqual extends CondNum {
 		return "\u2190 CondNumLessEqual question: "
 			+ question.getId()
 			+ " value: "
-			+ getAnswerValue();
+			+ getConditionValue();
 	}
 
 	@Override
 	public Condition copy() {
-		return new CondNumLessEqual((QuestionNum)getQuestion(),  getAnswerValue());
-	}	
+		return new CondNumLessEqual((QuestionNum)getQuestion(),  getConditionValue());
+	}
 }

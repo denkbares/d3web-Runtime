@@ -28,8 +28,8 @@ import java.util.Map;
 
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.XPSCase;
 import de.d3web.scoring.DiagnosisScore;
@@ -55,11 +55,11 @@ public class EDSMethod extends PSSubMethod {
 	
 	/*
 	 * key:				the case
-	 * Object:			HashMap (called innerMap) 
+	 * Object:			HashMap (called innerMap)
 	 * innerMap key:	parentDiagnosis
 	 * innerMap Object:	list of ChangeOfDiagnosis
 	 */
-	private Map<XPSCase, Map<Solution, List<ChangeOfDiagnosis>>> hDT_excludedDiagnoses = new HashMap<XPSCase, Map<Solution, List<ChangeOfDiagnosis>>>();
+	private final Map<XPSCase, Map<Solution, List<ChangeOfDiagnosis>>> hDT_excludedDiagnoses = new HashMap<XPSCase, Map<Solution, List<ChangeOfDiagnosis>>>();
 	Class<PSMethodHeuristic> PSCONTEXT = PSMethodHeuristic.class;
 	
 	/**
@@ -86,6 +86,7 @@ public class EDSMethod extends PSSubMethod {
 		public void setScore(Score score) {
 			this.score = score;
 		}
+		@Override
 		public String toString() {
 			return "[Diagnose : "+diagnosis+"] - [Score : "+score+"]";
 		}
@@ -95,6 +96,7 @@ public class EDSMethod extends PSSubMethod {
 	/**
 	 * initialization method for this PSMethod
 	 */
+	@Override
 	public void init(XPSCase theCase) {
 	}
 	
@@ -108,10 +110,10 @@ public class EDSMethod extends PSSubMethod {
 				checkMap(theCase);
 				if (isExcluded(theCase, diagnosis)) {
 					setAllChildrenToExcluded(theCase, diagnosis);
-				} 
+				}
 				else if (wasExcluded(theCase, diagnosis)){
 					resetAllChildren(theCase, diagnosis);
-				}		
+				}
 			}
 		}
 	}
@@ -163,7 +165,7 @@ public class EDSMethod extends PSSubMethod {
 	 */
 	private DiagnosisScore setDiagnosisToExcluded(XPSCase theCase, Solution diagnosis) {
 		DiagnosisScore resultDS = diagnosis.getScore(theCase, PSCONTEXT).add(getDifferenceToExcluded(theCase, diagnosis));
-		theCase.setValue(diagnosis, new Object[] { resultDS }, PSCONTEXT);
+		theCase.setValue(diagnosis, resultDS, PSCONTEXT);
 		return resultDS;
 	}
 	
@@ -188,7 +190,7 @@ public class EDSMethod extends PSSubMethod {
 				if (change != null) {
 					innerMap.remove(diagnosis);
 					DiagnosisScore resultDS = eachChildren.getScore(theCase, PSCONTEXT).subtract(change.getScore());
-					theCase.setValue(eachChildren, new Object[] { resultDS }, PSCONTEXT);
+					theCase.setValue(eachChildren, resultDS, PSCONTEXT);
 				}
 			}
 		}
@@ -251,14 +253,14 @@ public class EDSMethod extends PSSubMethod {
 	 * @param diagnosis
 	 * @return the Score that the diagnosis need to be suggested
 	 */
-	private Score getDifferenceToExcluded(XPSCase theCase, Solution diagnosis) {		
+	private Score getDifferenceToExcluded(XPSCase theCase, Solution diagnosis) {
 		double diff = getScoreForExcludedDiagnosis() - diagnosis.getScore(theCase, PSCONTEXT).getScore();
 		//[HOTFIX]: Peter: hat hier nix zu suchen!!
 		if (diff >= Score.N1.getScore())
 			return Score.N1;
 		else if (diff >= Score.N2.getScore())
 			return Score.N2;
-		else if (diff >= Score.N3.getScore()) 
+		else if (diff >= Score.N3.getScore())
 			return Score.N3;
 		else if (diff >= Score.N4.getScore())
 			return Score.N4;
@@ -273,9 +275,10 @@ public class EDSMethod extends PSSubMethod {
 		
 	}
 		
+	@Override
 	public boolean isActivated(XPSCase theCase) {
 		Boolean b = (Boolean)theCase.getKnowledgeBase().getProperties().getProperty(Property.EXCLUDE_DISCARD_STRATEGY);
-		return  b != null && b.booleanValue(); 
+		return  b != null && b.booleanValue();
 	}
 	
 	

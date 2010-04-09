@@ -21,17 +21,17 @@
 /*
  * Created on 13.10.2003
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package de.d3web.abstraction.formula;
 
 import java.util.Date;
 
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.session.values.AnswerDate;
+import de.d3web.core.session.values.DateValue;
 
 /**
  * Encapsulates a FormulaDateElement and ensures the return of an answer date
@@ -43,11 +43,12 @@ import de.d3web.core.session.values.AnswerDate;
 public class FormulaDateExpression {
 
 	/** the Question this expression belongs to */
-	private Question question;
+	private final Question question;
 
 	/** The encapsulated formula date element */
-	private FormulaDateElement fElement;
+	private final FormulaDateElement fElement;
 
+	@Override
 	public String toString() {
 		return "[FormulaDateExpression, " + question.getId() + "] " + fElement.toString();
 	}
@@ -65,13 +66,10 @@ public class FormulaDateExpression {
 	 * Evaluates the formulaDateElement and creates the returned value into an AnswerDate
 	 * @return an AnswerDate containing the evaluated value
 	 */
-	public Answer eval(XPSCase theCase) {
+	public Value eval(XPSCase theCase) {
 		Date answer = fElement.eval(theCase);
 		if (answer != null) {
-			AnswerDate answerD = new AnswerDate();
-			answerD.setQuestion(question);
-			answerD.setValue(answer);
-			return answerD;
+			return new DateValue(answer);
 		} else
 			return null;
 	}

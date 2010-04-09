@@ -36,6 +36,7 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 import de.d3web.core.session.CaseObjectSource;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 
 /**
@@ -70,7 +71,7 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	private KnowledgeBase knowledgeBase;
 
 	/**
-	 * The parents of this object  (including the linked parents).
+	 * The parents of this object (including the linked parents).
 	 */
 	private List<NamedObject> parents;
 
@@ -90,12 +91,11 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	private Collection<NamedObject> linkedParents;
 
 	/**
-	 * Knowledge storage of this object: Problem-solving knowledge,
-	 * that is related to this object, is stored with the combined key
-	 * {@link PSMethod} and {@link MethodKind}: In general, a {@link List} of
-	 * {@link KnowledgeSlice} instances is returned. 
-	 * The map has to be transient, so that huge knowledge bases can be
-	 * serialized!
+	 * Knowledge storage of this object: Problem-solving knowledge, that is
+	 * related to this object, is stored with the combined key {@link PSMethod}
+	 * and {@link MethodKind}: In general, a {@link List} of
+	 * {@link KnowledgeSlice} instances is returned. The map has to be
+	 * transient, so that huge knowledge bases can be serialized!
 	 */
 	private transient Map<Class<? extends PSMethod>, Map<MethodKind, KnowledgeSlice>> knowledgeMap;
 
@@ -107,7 +107,7 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 
 	private void init() {
 		// unsynchronized version, allows null values
-		knowledgeMap = new HashMap<Class <? extends PSMethod>, Map<MethodKind, KnowledgeSlice>>();
+		knowledgeMap = new HashMap<Class<? extends PSMethod>, Map<MethodKind, KnowledgeSlice>>();
 
 		children = new ArrayList<NamedObject>();
 		parents = new ArrayList<NamedObject>();
@@ -119,21 +119,22 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	/**
 	 * Creates a new {@link NamedObject} instance with a given ID.
 	 * 
-	 * @param id The global identifier of the instance
+	 * @param id
+	 *            The global identifier of the instance
 	 */
 	public NamedObject(String id) {
 		this.id = id;
 		init();
 	}
-	
+
 	@Override
 	public String getId() {
 		return id;
 	}
 
 	/**
-	 * Returns the {@link Properties} instance of this {@link NamedObject}.
-	 * The properties are stored in a map, dynamically storing arbitrary data.
+	 * Returns the {@link Properties} instance of this {@link NamedObject}. The
+	 * properties are stored in a map, dynamically storing arbitrary data.
 	 * 
 	 * @return the properties of this instance
 	 */
@@ -142,21 +143,22 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	}
 
 	/**
-	 * Sets the {@link Properties} instance of this {@link NamedObject}.
-	 * The properties are stored in a map, dynamically storing arbitrary data.
+	 * Sets the {@link Properties} instance of this {@link NamedObject}. The
+	 * properties are stored in a map, dynamically storing arbitrary data.
 	 * 
-	 * @param properties the properties of this instance 
+	 * @param properties
+	 *            the properties of this instance
 	 */
 	public void setProperties(Properties properties) {
 		this.properties = properties;
 	}
 
 	/**
-	 * Appends the specified {@link NamedObject} as a child to
-	 * the list of children. This object is also linked as a 
-	 * parent to the specified child. 
+	 * Appends the specified {@link NamedObject} as a child to the list of
+	 * children. This object is also linked as a parent to the specified child.
 	 * 
-	 * @param child a new child of this {@link NamedObject}
+	 * @param child
+	 *            a new child of this {@link NamedObject}
 	 * @see #addParent(NamedObject parent)
 	 */
 	public void addChild(NamedObject child) {
@@ -166,14 +168,13 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	}
 
 	/**
-	 * Appends the specified {@link NamedObject} as a 'linked 
-	 * child' to the list of children. A linked child relation
-	 * denotes, that the link is not static, but the child is
-	 * located at another position in the hierarchy.
-	 * This object is also linked as a linked parent 
-	 * to the specified child. 
+	 * Appends the specified {@link NamedObject} as a 'linked child' to the list
+	 * of children. A linked child relation denotes, that the link is not
+	 * static, but the child is located at another position in the hierarchy.
+	 * This object is also linked as a linked parent to the specified child.
 	 * 
-	 * @param child the new linked child
+	 * @param child
+	 *            the new linked child
 	 */
 	public void addLinkedChild(NamedObject child) {
 		if (!hasChild(child)) {
@@ -186,20 +187,22 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	}
 
 	/**
-	 * Adds the specified {@link NamedObject} as a child to
-	 * the list of children. The position of the insertion is
-	 * specified by the {@link NamedObject} childToMarkPosition:
-	 * For position=1 the new child is added right before this 
-	 * instance; for position=2 the new child is added right after 
-	 * the instance. 
-	 * This object is also linked as a parent to the specified child. 
+	 * Adds the specified {@link NamedObject} as a child to the list of
+	 * children. The position of the insertion is specified by the
+	 * {@link NamedObject} childToMarkPosition: For position=1 the new child is
+	 * added right before this instance; for position=2 the new child is added
+	 * right after the instance. This object is also linked as a parent to the
+	 * specified child.
 	 * 
 	 * @see #addParent(NamedObject parent)
-	 * @param childToAdd the new child instance
-	 * @param childToMarkPosition an already existing child, where 
-	 *        the new child should be added before or after
-	 * @param position with values 1 (before childToMarkPosition) 
-	 *        and 2 (after childToMarkPosition)
+	 * @param childToAdd
+	 *            the new child instance
+	 * @param childToMarkPosition
+	 *            an already existing child, where the new child should be added
+	 *            before or after
+	 * @param position
+	 *            with values 1 (before childToMarkPosition) and 2 (after
+	 *            childToMarkPosition)
 	 */
 	public void addChild(NamedObject childToAdd,
 			NamedObject childToMarkPosition, int position) {
@@ -211,22 +214,24 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	}
 
 	/**
-	 * Adds the specified {@link NamedObject} as a linked child to
-	 * the list of children. The position of the insertion is
-	 * specified by the {@link NamedObject} childToMarkPosition:
-	 * For position=1 the new child is added right before this 
-	 * instance; for position=2 the new child is added right after 
-	 * the instance. 
-	 * This object is also linked as a linked parent to the 
-	 * specified child. 
+	 * Adds the specified {@link NamedObject} as a linked child to the list of
+	 * children. The position of the insertion is specified by the
+	 * {@link NamedObject} childToMarkPosition: For position=1 the new child is
+	 * added right before this instance; for position=2 the new child is added
+	 * right after the instance. This object is also linked as a linked parent
+	 * to the specified child.
 	 * 
 	 * @see #addParent(NamedObject parent)
-	 * @param childToAdd the new linked child instance
-	 * @param childToMarkPosition an already existing child, where 
-	 *        the new child should be added before or after
-	 * @param position with values 1 (before childToMarkPosition) 
-	 *        and 2 (after childToMarkPosition)
-	 */	public void addLinkedChild(NamedObject childToAdd,
+	 * @param childToAdd
+	 *            the new linked child instance
+	 * @param childToMarkPosition
+	 *            an already existing child, where the new child should be added
+	 *            before or after
+	 * @param position
+	 *            with values 1 (before childToMarkPosition) and 2 (after
+	 *            childToMarkPosition)
+	 */
+	public void addLinkedChild(NamedObject childToAdd,
 			NamedObject childToMarkPosition, int position) {
 		if (!hasChild(childToAdd)) {
 			addChild(childToAdd);
@@ -237,15 +242,16 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	}
 
 	/**
-	 * Adds a new {@link KnowledgeSlice} instance to the 
-	 * knowledge storage of this {@link NamedObject} instance.
-	 * The knowledge is added to the given {@link PSMethod} 
-	 * context with the specified {@link MethodKind} as key.
-	 *   
-	 * @param poblemsolver the {@link PSMethod} context of 
-	 *        the added knowledge
-	 * @param knowlegeSlice the piece of knowledge to be added
-	 * @param knowledgeContext The context, in which the knowledge acts
+	 * Adds a new {@link KnowledgeSlice} instance to the knowledge storage of
+	 * this {@link NamedObject} instance. The knowledge is added to the given
+	 * {@link PSMethod} context with the specified {@link MethodKind} as key.
+	 * 
+	 * @param poblemsolver
+	 *            the {@link PSMethod} context of the added knowledge
+	 * @param knowlegeSlice
+	 *            the piece of knowledge to be added
+	 * @param knowledgeContext
+	 *            The context, in which the knowledge acts
 	 */
 	public synchronized void addKnowledge(Class<? extends PSMethod> problemsolver,
 			KnowledgeSlice knowledgeSlice, MethodKind knowledgeContext) {
@@ -280,12 +286,12 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	}
 
 	/**
-	 * Adds the specified list of {@link NamedObject} instances
-	 * as parents to the list of parents. 
-	 * The objects are also linked as children to the specified 
-	 * parent. 
+	 * Adds the specified list of {@link NamedObject} instances as parents to
+	 * the list of parents. The objects are also linked as children to the
+	 * specified parent.
 	 * 
-	 * @param newParents the list parents to be added 
+	 * @param newParents
+	 *            the list parents to be added
 	 */
 	private synchronized void addToNewParents(List<NamedObject> newParents) {
 		if (newParents != null) {
@@ -296,12 +302,12 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	}
 
 	/**
-	 * Adds this {@link NamedObject} as a child to the specified 
-	 * parent and the specified parent is added to the 'parents' 
-	 * list of this instance. This instance is appended to the 
-	 * parent's list of children.
+	 * Adds this {@link NamedObject} as a child to the specified parent and the
+	 * specified parent is added to the 'parents' list of this instance. This
+	 * instance is appended to the parent's list of children.
 	 * 
-	 * @param parent a new parent of this instance
+	 * @param parent
+	 *            a new parent of this instance
 	 */
 	public synchronized void addParent(NamedObject parent) {
 		if (!hasParent(parent)) {
@@ -315,12 +321,13 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	}
 
 	/**
-	 * Adds this {@link NamedObject} as a linked child to the specified 
-	 * parent and the specified parent is added to the 'linked parents' 
-	 * list of this instance. This instance is appended to the 
-	 * linked parent's list of children.
+	 * Adds this {@link NamedObject} as a linked child to the specified parent
+	 * and the specified parent is added to the 'linked parents' list of this
+	 * instance. This instance is appended to the linked parent's list of
+	 * children.
 	 * 
-	 * @param parent a new linked parent of this instance
+	 * @param parent
+	 *            a new linked parent of this instance
 	 */
 	public synchronized void addLinkedParent(NamedObject parent) {
 		if (!hasParent(parent)) {
@@ -333,22 +340,21 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	}
 
 	/**
-	 * Returns the list of knowledge slices for a given problem-solver class
-	 * and the specified context of the problem-solving method ({@link MethodKind}).
-	 *
-	 * @param problemsolver 
+	 * Returns the list of knowledge slices for a given problem-solver class and
+	 * the specified context of the problem-solving method ({@link MethodKind}).
+	 * 
+	 * @param problemsolver
 	 *            the given problem-solver class, for which the knowledge should
 	 *            be retrieved ({@link PSMethod})
-	 * @param kind the context of the knowledge (e.g. MethodKind.FORWARD 
-	 *        or MethodKind.BACKWARD)
+	 * @param kind
+	 *            the context of the knowledge (e.g. MethodKind.FORWARD or
+	 *            MethodKind.BACKWARD)
 	 */
 	public KnowledgeSlice getKnowledge(Class<? extends PSMethod> problemsolver,
 			MethodKind kind) {
 		Map<MethodKind, KnowledgeSlice> o = knowledgeMap.get(problemsolver);
-		if (o != null)
-			return o.get(kind);
-		else
-			return null;
+		if (o != null) return o.get(kind);
+		else return null;
 	}
 
 	/**
@@ -361,10 +367,11 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	}
 
 	/**
-	 * Checks, whether this instance has the specified 
-	 * {@link NamedObject} as parent.
+	 * Checks, whether this instance has the specified {@link NamedObject} as
+	 * parent.
 	 * 
-	 * @param namedObject the specified object that is possibly a parent
+	 * @param namedObject
+	 *            the specified object that is possibly a parent
 	 * @return true, if namedObject is a parent of this instance
 	 */
 	public boolean hasParent(NamedObject namedObject) {
@@ -376,7 +383,8 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	/**
 	 * Tests, if the specified object is a child of this instance.
 	 * 
-	 * @param child the object to test
+	 * @param child
+	 *            the object to test
 	 * @return true if the specified object is a child of this instance
 	 */
 	public boolean hasChild(NamedObject child) {
@@ -384,10 +392,9 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	}
 
 	/**
-	 * The text of a {@link NamedObject} is the name or a short 
-	 * description of the object. Please keep it brief and use other  
-	 * fields for longer content (e.g., prompt for {@link Question},  
-	 * and comments for {@link Solution}).
+	 * The text of a {@link NamedObject} is the name or a short description of
+	 * the object. Please keep it brief and use other fields for longer content
+	 * (e.g., prompt for {@link Question}, and comments for {@link Solution}).
 	 * 
 	 * @return the name of this object
 	 */
@@ -402,10 +409,10 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	}
 
 	/**
-	 * Removes the specified instance from the children
-	 * of this instance. 
+	 * Removes the specified instance from the children of this instance.
 	 * 
-	 * @param child the specified child to be removed from the list
+	 * @param child
+	 *            the specified child to be removed from the list
 	 */
 	public boolean removeChild(NamedObject child) {
 		if (hasChild(child)) {
@@ -416,10 +423,10 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	}
 
 	/**
-	 * Removes the specified instance from the linked children
-	 * of this instance. 
+	 * Removes the specified instance from the linked children of this instance.
 	 * 
-	 * @param child the specified linked child to be removed from the list
+	 * @param child
+	 *            the specified linked child to be removed from the list
 	 */
 	public void removeLinkedChild(NamedObject child) {
 		if (getLinkedChildren().contains(child)) {
@@ -431,14 +438,17 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	}
 
 	/**
-	 * Removes the specified {@link KnowledgeSlice} instance from the 
-	 * knowledge storage of this {@link NamedObject} instance.
-	 * The knowledge is assumed to be contained in the given {@link PSMethod} 
-	 * context with the specified {@link MethodKind} as key.
+	 * Removes the specified {@link KnowledgeSlice} instance from the knowledge
+	 * storage of this {@link NamedObject} instance. The knowledge is assumed to
+	 * be contained in the given {@link PSMethod} context with the specified
+	 * {@link MethodKind} as key.
 	 * 
-	 * @param problemsolver the {@link PSMethod} context
-	 * @param knowledgeSlice the element to be removed 
-	 * @param knowledgeContext the {@link MethodKind} key of the context
+	 * @param problemsolver
+	 *            the {@link PSMethod} context
+	 * @param knowledgeSlice
+	 *            the element to be removed
+	 * @param knowledgeContext
+	 *            the {@link MethodKind} key of the context
 	 */
 	public synchronized void removeKnowledge(Class<? extends PSMethod> problemsolver,
 			KnowledgeSlice knowledgeSlice, MethodKind knowledgeContext) {
@@ -453,8 +463,8 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	}
 
 	/**
-	 * Returns all {@link KnowledgeSlice} instances contained
-	 * in the knowledge storage of this object.
+	 * Returns all {@link KnowledgeSlice} instances contained in the knowledge
+	 * storage of this object.
 	 * 
 	 * @return all {@link KnowledgeSlice} instances of this instance
 	 */
@@ -470,14 +480,15 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	 * Returns all {@link KnowledgeSlice} instances in all {@link PSMethod}
 	 * contexts, that have the specified {@link MethodKind} as key.
 	 * 
-	 * @return all {@link KnowledgeSlice} instances of this instance with the 
+	 * @return all {@link KnowledgeSlice} instances of this instance with the
 	 *         specified {@link MethodKind} key
-	 */	
+	 */
 	public Collection<KnowledgeSlice> getAllKnowledge(MethodKind methodKind) {
 		Collection<KnowledgeSlice> result = new ArrayList<KnowledgeSlice>();
 		for (Class<? extends PSMethod> problemsolverKeyClass : knowledgeMap.keySet()) {
-			KnowledgeSlice knowledgeSlice = knowledgeMap.get(problemsolverKeyClass).get(methodKind);
-			if (knowledgeSlice!=null) {
+			KnowledgeSlice knowledgeSlice = knowledgeMap.get(problemsolverKeyClass).get(
+					methodKind);
+			if (knowledgeSlice != null) {
 				result.add(knowledgeSlice);
 			}
 		}
@@ -486,11 +497,11 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 
 	/**
 	 * Erase them all: Removes all {@link KnowledgeSlice} instances contained
-	 * over the entire knowledge storage.
-	 * This means, that <i>all</i> knowledge slices are deleted from the 
-	 * {@link KnowledgeBase}, where this instance is contained.  
+	 * over the entire knowledge storage. This means, that <i>all</i> knowledge
+	 * slices are deleted from the {@link KnowledgeBase}, where this instance is
+	 * contained.
 	 * 
-	 * @return the collection of removed {@link KnowledgeSlice} instances 
+	 * @return the collection of removed {@link KnowledgeSlice} instances
 	 */
 	public synchronized Collection<KnowledgeSlice> removeAllKnowledge() {
 		Collection<KnowledgeSlice> result = new ArrayList<KnowledgeSlice>();
@@ -507,16 +518,17 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	}
 
 	/**
-	 * Similar to the method removeKnowledge, but the specified 
-	 * {@link KnowledgeSlice} instance with the {@link PSMethod} 
-	 * context and the given {@link MethodKind} key  
-	 * is only removed from the knowledge storage, but not globally
-	 * from the {@link KnowledgeBase}.
-	 * Use with care!  
+	 * Similar to the method removeKnowledge, but the specified
+	 * {@link KnowledgeSlice} instance with the {@link PSMethod} context and the
+	 * given {@link MethodKind} key is only removed from the knowledge storage,
+	 * but not globally from the {@link KnowledgeBase}. Use with care!
 	 * 
-	 * @param poblemsolver the {@link PSMethod} context of the knowledge to be removed
-	 * @param knowlegeSlice the {@link KnowledgeSlice} to be removed
-	 * @param knowledgeContext the {@link MethodKind} key of the knowledge
+	 * @param poblemsolver
+	 *            the {@link PSMethod} context of the knowledge to be removed
+	 * @param knowlegeSlice
+	 *            the {@link KnowledgeSlice} to be removed
+	 * @param knowledgeContext
+	 *            the {@link MethodKind} key of the knowledge
 	 */
 	private synchronized boolean removeLocalKnowledge(Class<? extends PSMethod> problemsolver,
 			KnowledgeSlice knowledgeSlice, MethodKind knowledgeContext) {
@@ -565,10 +577,11 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	}
 
 	/**
-	 * Removes the specified {@link NamedObject} instance from
-	 * the list of parents.
-	 *   
-	 * @param parent the instance to be removed from the list of parents
+	 * Removes the specified {@link NamedObject} instance from the list of
+	 * parents.
+	 * 
+	 * @param parent
+	 *            the instance to be removed from the list of parents
 	 */
 	public synchronized void removeParent(NamedObject parent) {
 		if (hasParent(parent)) {
@@ -578,10 +591,11 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	}
 
 	/**
-	 * Removes the specified {@link NamedObject} instance from
-	 * the list of linked parents.
-	 *   
-	 * @param parent the instance to be removed from the list of linked parents
+	 * Removes the specified {@link NamedObject} instance from the list of
+	 * linked parents.
+	 * 
+	 * @param parent
+	 *            the instance to be removed from the list of linked parents
 	 */
 	public synchronized void removeLinkedParent(NamedObject parent) {
 		if (getLinkedParents().contains(parent)) {
@@ -592,10 +606,11 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	}
 
 	/**
-	 * Sets the specified list of {@link NamedObject} instances as the
-	 * complete list of children of this object.
+	 * Sets the specified list of {@link NamedObject} instances as the complete
+	 * list of children of this object.
 	 * 
-	 * @param the new list of children of this instance
+	 * @param the
+	 *            new list of children of this instance
 	 */
 	public void setChildren(List<NamedObject> children) {
 		removeAllChildren();
@@ -606,24 +621,28 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	/**
 	 * Relates this instance to the specified {@link KnowledgeBase}.
 	 * 
-	 * @param knowledgeBase the new knowledge base this object is related to
+	 * @param knowledgeBase
+	 *            the new knowledge base this object is related to
 	 * @throws KnowledgeBaseObjectModificationException
-	 *         if a {@link KnowledgeBase} has been already defined previously
+	 *             if a {@link KnowledgeBase} has been already defined
+	 *             previously
 	 */
 	public void setKnowledgeBase(KnowledgeBase knowledgeBase) {
 		if (this.knowledgeBase == null) {
 			this.knowledgeBase = knowledgeBase;
-		} else if (!knowledgeBase.equals(getKnowledgeBase())) {
+		}
+		else if (!knowledgeBase.equals(getKnowledgeBase())) {
 			throw new IllegalStateException(
 					"KnowledgeBase already defined!");
 		}
 	}
 
 	/**
-	 * Sets the specified list of {@link NamedObject} instances as the
-	 * complete list of parents of this object.
+	 * Sets the specified list of {@link NamedObject} instances as the complete
+	 * list of parents of this object.
 	 * 
-	 * @param the new list of parents of this instance
+	 * @param the
+	 *            new list of parents of this instance
 	 */
 	public void setParents(List<NamedObject> parents) {
 		removeAllParents(); // from the old parents
@@ -633,38 +652,39 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	}
 
 	/**
-	 * Sets the new text of this object.
-	 * The text of a {@link NamedObject} is the name or a short 
-	 * description of the object. Please keep it brief and use other  
-	 * fields for longer content (e.g., prompt for {@link Question},  
+	 * Sets the new text of this object. The text of a {@link NamedObject} is
+	 * the name or a short description of the object. Please keep it brief and
+	 * use other fields for longer content (e.g., prompt for {@link Question},
 	 * and comments for {@link Solution}).
 	 * 
-	 * @param text the new text of this instance
+	 * @param text
+	 *            the new text of this instance
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * Sets the specified values for this object in the context of
-	 * a specified {@link XPSCase}.
+	 * Sets the specified values for this object in the context of a specified
+	 * {@link XPSCase}.
 	 * 
-	 * @param theCase the context, the values are stored 
-	 * @param values the values of this instance to be set
+	 * @param theCase
+	 *            the context, the values are stored
+	 * @param values
+	 *            the values of this instance to be set
 	 */
-	public abstract void setValue(XPSCase theCase, Object[] values);
+	public abstract void setValue(XPSCase theCase, Value value);
 
+	@Override
 	public String toString() {
 		return getName();
 	}
 
 	/**
-	 * Returns the linked children of this instance.
-	 * A linked child relation
-	 * denotes, that the link is not static, but the child is
-	 * located at another position in the hierarchy.
-	 * This object is also linked as a linked parent 
-	 * to the specified child. 
+	 * Returns the linked children of this instance. A linked child relation
+	 * denotes, that the link is not static, but the child is located at another
+	 * position in the hierarchy. This object is also linked as a linked parent
+	 * to the specified child.
 	 * 
 	 * @return the linked children of this instance
 	 */
@@ -673,46 +693,46 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 	}
 
 	/**
-	 * Returns the linked parents of this instance.
-	 * A linked parent relation
-	 * denotes, that the link is not static, but the parent 
-	 * is located at another position in the hierarchy.
-	 * This object is also linked as a linked child
-	 * to the specified parent. 
+	 * Returns the linked parents of this instance. A linked parent relation
+	 * denotes, that the link is not static, but the parent is located at
+	 * another position in the hierarchy. This object is also linked as a linked
+	 * child to the specified parent.
 	 * 
 	 * @return the linked children of this instance
 	 */
 	private Collection<NamedObject> getLinkedParents() {
 		return linkedParents;
 	}
-	
+
 	/**
-	 * Checks, if other object is an IDObject and if
-	 * it contains the same ID.
+	 * Checks, if other object is an IDObject and if it contains the same ID.
+	 * 
 	 * @return true, if equal
-	 * @param other Object to compare for equality
+	 * @param other
+	 *            Object to compare for equality
 	 */
 	@Override
 	public boolean equals(Object other) {
-		if (this == other)
-			return true;
+		if (this == other) return true;
 		else if ((other == null) || (getClass() != other.getClass())) {
 			return false;
-		} else {
+		}
+		else {
 			IDObject otherIDO = (IDObject) other;
 			if ((getId() != null) && (otherIDO.getId() != null)) {
 				return getId().equals(otherIDO.getId());
-			} else {
+			}
+			else {
 				return super.equals(other);
 			}
 		}
 	}
-	
+
 	@Override
 	public TerminologyObject[] getParents() {
 		return parents.toArray(new TerminologyObject[parents.size()]);
 	}
-	
+
 	@Override
 	public TerminologyObject[] getChildren() {
 		return children.toArray(new TerminologyObject[children.size()]);

@@ -23,11 +23,12 @@ package de.d3web.core.session.interviewmanager;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.XPSCaseObject;
+import de.d3web.core.session.values.UndefinedValue;
 
 /**
  * This type of Question will be returned by a moveTo... method of
@@ -95,8 +96,9 @@ public abstract class ExceptionQuestion extends Question {
     /**
      * has no value
      */
-    public Answer getValue(XPSCase theCase) {
-    	return null;
+    @Override
+	public Value getValue(XPSCase theCase) {
+		return UndefinedValue.getInstance();
     }
 
     /**
@@ -104,14 +106,16 @@ public abstract class ExceptionQuestion extends Question {
      * 
      * @return false
      */
-    public boolean hasValue(XPSCase theCase) {
+    @Override
+	public boolean hasValue(XPSCase theCase) {
 	return false;
     }
 
     /**
      * @return true
      */
-    public boolean isDone(XPSCase theCase) {
+    @Override
+	public boolean isDone(XPSCase theCase) {
 	return true;
     }
 
@@ -131,19 +135,12 @@ public abstract class ExceptionQuestion extends Question {
     /**
      * does nothing because this marker class needs no value
      */
-    @Deprecated
-    public void setValue(de.d3web.core.session.XPSCase theCase,
-	    java.lang.Object[] values) {
-    }
-
-    /**
-     * does nothing because this marker class needs no value
-     */
     @Override
-    public void setValue(XPSCase theCase, Answer value) {
+	public void setValue(XPSCase theCase, Value value) {
 	}
 
-    public String toString() {
+    @Override
+	public String toString() {
 	return "ExQ";
     }
 

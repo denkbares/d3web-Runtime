@@ -21,8 +21,6 @@
 package de.d3web.core.inference.condition;
 
 import de.d3web.core.knowledge.terminology.QuestionText;
-import de.d3web.core.session.XPSCase;
-import de.d3web.core.session.values.AnswerText;
 /**
  * Condition for text questions, where the value
  * has to be equal to a given value (String value).
@@ -30,10 +28,8 @@ import de.d3web.core.session.values.AnswerText;
  * 
  * @author joba
  */
-public class CondTextEqual extends CondQuestion {
+public class CondTextEqual extends CondTextQuestion {
 	
-	private String value;
-
 	/**
 	 * Creates a new condition, where the specified text question needs to
 	 * be equal to the specified value.
@@ -46,35 +42,10 @@ public class CondTextEqual extends CondQuestion {
 	}
 
 	@Override
-	public boolean eval(XPSCase theCase)
-		throws NoAnswerException, UnknownAnswerException {
-		checkAnswer(theCase);
-		AnswerText answer = (AnswerText) question.getValue(theCase);
-		String value = (String) answer.getValue(theCase);
-		if (value != null) {
-			return (value.equals(this.value));
-		} else {
-			return false;
-		}
+	protected boolean compare(String caseValue) {
+		return caseValue.equals(this.value);
 	}
 
-	/** 
-	 * Returns the {@link String} value that has to be 
-	 * equal to the answer given to the text value.
-	 * @return the required String value
-	 */
-	public String getValue() {
-		return value;
-	}
-
-	/**
-	 * Sets the {@link String} value that has to be 
-	 * equal to the answer given to the text value. 
-	 * @param newValue the required String value
-	 */
-	public void setValue(String newValue) {
-		value = newValue;
-	}
 
 	@Override
 	public String toString() {
@@ -90,7 +61,7 @@ public class CondTextEqual extends CondQuestion {
 	
 		if (this.getValue() != null && ((CondTextEqual)other).getValue() != null)
 			return this.getValue().equals(((CondTextEqual)other).getValue());
-		else return this.getValue() == ((CondTextEqual)other).getValue();	
+		else return this.getValue() == ((CondTextEqual)other).getValue();
 	}
 	
 	@Override

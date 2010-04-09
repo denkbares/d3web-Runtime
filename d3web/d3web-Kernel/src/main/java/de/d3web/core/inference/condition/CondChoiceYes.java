@@ -21,7 +21,7 @@
 package de.d3web.core.inference.condition;
 import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.ChoiceValue;
 /**
  * This condition checks, if a YES/NO question has the YES value.
  * The composite pattern is used for this. This class is a "leaf".
@@ -30,32 +30,36 @@ import de.d3web.core.session.values.AnswerChoice;
  */
 @Deprecated
 public class CondChoiceYes extends CondEqual {
-
+	private final ChoiceValue yesValue;
 
 	/**
-	 * Creates a new equal-condition. 
+	 * Creates a new equal-condition.
 	 * @param quest the question to check
 	 */
 	public CondChoiceYes(QuestionYN question) {
-		super(question, question.yes);
+		super(question, new ChoiceValue(question.yes));
+		yesValue = new ChoiceValue(question.yes);
 	}
 
 	/**
 	 * Checks if the question has the value(s) specified in the constructor.
 	 */
+	@Override
 	public boolean eval(XPSCase theCase)
 		throws NoAnswerException, UnknownAnswerException {
 		checkAnswer(theCase);
-		return ((AnswerChoice) question.getValue(theCase)).isAnswerYes();
+		return question.getValue(theCase).equals(yesValue);
 	}
 
 	/**
 	 * Verbalizes the condition.
 	 */
+	@Override
 	public String toString() {
 		return "\u2190 CondChoiceYes question: " + question.getId();
 	}
 	
+	@Override
 	public Condition copy() {
 		return new CondChoiceYes((QuestionYN)getQuestion());
 	}

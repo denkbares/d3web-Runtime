@@ -19,12 +19,12 @@
  */
 
 package de.d3web.core.session.interviewmanager;
-import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 /**
  * This is a DialogClient that can store answers of Quesitons in the random access memory.
@@ -49,8 +49,9 @@ public class ShadowMemory extends DialogClient {
 	/**
 	 * @return List of Answers stored for the Question with id quesitonID, null, if no answeres have been stored.
 	 */
-	public Collection getAnswers(String questionID) {
-		return (Collection) questionIdAnswersHash.get(questionID);
+	@Override
+	public Value getAnswers(String questionID) {
+		return (Value) questionIdAnswersHash.get(questionID);
 	}
 
 	public void initialize() {
@@ -61,6 +62,7 @@ public class ShadowMemory extends DialogClient {
 	 * stores all questionID-Answers-Pairs of the given XPSCase
 	 * @param XPSCase to put
 	 */
+	@Override
 	public void putCase(XPSCase theCase) {
 		List questions = theCase.getAnsweredQuestions();
 

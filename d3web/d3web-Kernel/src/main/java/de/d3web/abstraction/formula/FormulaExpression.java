@@ -19,10 +19,10 @@
  */
 
 package de.d3web.abstraction.formula;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
-import de.d3web.core.session.values.AnswerNum;
+import de.d3web.core.session.values.NumValue;
 
 /**
  * Encapsulates a FormulaElement and ensures the return of an answer num
@@ -32,22 +32,23 @@ import de.d3web.core.session.values.AnswerNum;
  * Creation date: (15.11.2000 16:24:01)
  * @author Christian Betz, joba
  * <P>
- * [joba] changed QuestionNum to Question, since QuestionOC 
+ * [joba] changed QuestionNum to Question, since QuestionOC
  * can also belong to a FormulaExpression (-> Num2ChoiceSchema)
  */
 public class FormulaExpression {
 
 	/** the Question this expression belongs to */
-	private Question question;
+	private final Question question;
 
 	/** The encapsulated formula element */
-	private FormulaNumberElement fElement;
+	private final FormulaNumberElement fElement;
 
+	@Override
 	public String toString() {
 		return "[FormulaExpression, " + question.getId() + "] " + fElement.toString();
 	}
 
-	/** 
+	/**
 	 * Creates a new FormulaExpression with null-arguments.
 	 */
 	public FormulaExpression() {
@@ -67,13 +68,10 @@ public class FormulaExpression {
 	 * Evaluates the formulaElement and creates the returned value into an AnswerNum
 	 * @return an AnswerNum containing the evaluated value
 	 */
-	public Answer eval(XPSCase theCase) {
+	public Value eval(XPSCase theCase) {
 		Double answer = fElement.eval(theCase);
 		if (answer != null) {
-			AnswerNum answerN = new AnswerNum();
-			answerN.setQuestion(question);
-			answerN.setValue(answer);
-			return answerN;
+			return new NumValue(answer);
 		} else
 			return null;
 	}

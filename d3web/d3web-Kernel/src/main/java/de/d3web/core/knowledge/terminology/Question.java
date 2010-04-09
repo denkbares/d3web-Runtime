@@ -32,10 +32,12 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.SymptomValue;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.ValuedObject;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.indication.inference.PSMethodNextQASet;
 
 /**
@@ -52,7 +54,7 @@ import de.d3web.indication.inference.PSMethodNextQASet;
  */
 public abstract class Question extends QASet implements ValuedObject {
 	
-	private AnswerUnknown unknown;
+	private final AnswerUnknown unknown;
 
 	public Question(String id) {
 		super(id);
@@ -61,15 +63,18 @@ public abstract class Question extends QASet implements ValuedObject {
 		unknown.setQuestion(this);
 	}
 
+	@Override
 	public void addContraReason(Reason source, XPSCase theCase) {
 		((CaseQuestion) theCase.getCaseObject(this)).addContraReason(source);
 	}
 
+	@Override
 	public void addProReason(Reason source, XPSCase theCase) {
 		theCase.trace(this.getId() + " + proReason: " + source.toString());
 		((CaseQuestion) theCase.getCaseObject(this)).addProReason(source);
 	}
 
+	@Override
 	public List<Reason> getContraReasons(XPSCase theCase) {
 		return ((CaseQuestion) theCase.getCaseObject(this)).getContraReasons();
 	}
@@ -99,6 +104,7 @@ public abstract class Question extends QASet implements ValuedObject {
 		else return true;
 	}
 
+	@Override
 	public List<Reason> getProReasons(XPSCase theCase) {
 		return ((CaseQuestion) theCase.getCaseObject(this)).getProReasons();
 	}
@@ -110,22 +116,36 @@ public abstract class Question extends QASet implements ValuedObject {
 		return unknown;
 	}
 
-	public abstract Answer getValue(XPSCase theCase);
+	/**
+	 * Returns the value of the question given in the specified {@link XPSCase};
+	 * returns {@link UndefinedValue} if no value is assigned.
+	 * 
+	 * @param theCase
+	 *            the given {@link XPSCase}
+	 * @return {@link UndefinedValue} if no value is assigned, the actual value
+	 *         otherwise.
+	 * @author joba
+	 * @date 07.04.2010
+	 */
+	public abstract Value getValue(XPSCase theCase);
 
+	@Override
 	public boolean hasValue(XPSCase theCase) {
 		return (getValue(theCase) != null);
 	}
 
+	@Override
 	public boolean isDone(XPSCase theCase) {
 		if (!getContraReasons(theCase).isEmpty()) {
 			// Question has ContraIndication (probably)
 			return true;
 		}
 		else {
-			return getValue(theCase) != null;
+			return (getValue(theCase) != null && getValue(theCase) != UndefinedValue.getInstance());
 		}
 	}
 
+	@Override
 	public boolean isDone(XPSCase theCase, boolean respectValidFollowQuestions) {
 		if (respectValidFollowQuestions) {
 			if (!isDone(theCase)) {
@@ -149,10 +169,12 @@ public abstract class Question extends QASet implements ValuedObject {
 		}
 	}
 
+	@Override
 	public void removeContraReason(Reason source, XPSCase theCase) {
 		((CaseQuestion) theCase.getCaseObject(this)).removeContraReason(source);
 	}
 
+	@Override
 	public void removeProReason(Reason source, XPSCase theCase) {
 		((CaseQuestion) theCase.getCaseObject(this)).removeProReason(source);
 	}
@@ -164,6 +186,7 @@ public abstract class Question extends QASet implements ValuedObject {
 	 * @param newKnowledgeBase
 	 *            de.d3web.kernel.domainModel.KnowledgeBase
 	 */
+	@Override
 	public void setKnowledgeBase(KnowledgeBase knowledgeBase) {
 		super.setKnowledgeBase(knowledgeBase);
 		// maybe somebody should remove this object from the old
@@ -171,9 +194,11 @@ public abstract class Question extends QASet implements ValuedObject {
 		getKnowledgeBase().add(this);
 	}
 
-	public abstract void setValue(XPSCase theCase, Object[] values);
+	// @Override
+	// public abstract void setValue(XPSCase theCase, Object[] values);
 
-	public abstract void setValue(XPSCase theCase, Answer value);
+	@Override
+	public abstract void setValue(XPSCase theCase, Value value) throws IllegalArgumentException;
 
 	/**
 	 * Sets a new value to the case object of this question and saves the
@@ -188,17 +213,23 @@ public abstract class Question extends QASet implements ValuedObject {
 	 *            new value-array which will be set to the question.
 	 */
 	public void setValue(XPSCase theCase, Rule ruleSymptom,
-			Object[] values) {
-		CaseQuestion caseQuestion = ((CaseQuestion) theCase.getCaseObject(this));
-		if (ruleSymptom != null) {
-			// get old value and push it (with new Rule) on historyStack.
-			SymptomValue symptomValue = new SymptomValue(getValue(theCase), ruleSymptom);
-			caseQuestion.getValueHistory().add(0, symptomValue);
-		}
-		setValue(theCase, values);
+			Value value) throws IllegalArgumentException {
+		// CaseQuestion caseQuestion = ((CaseQuestion)
+		// theCase.getCaseObject(this));
+		
+		// TODO: Finally remove this block, since it is replaced by the Blackboard
+		// joba 04.2010
+//		if (ruleSymptom != null) {
+//			// get old value and push it (with new Rule) on historyStack.
+//			SymptomValue symptomValue = new SymptomValue(getValue(theCase), ruleSymptom);
+//			caseQuestion.getValueHistory().add(0, symptomValue);
+//		}
+		
+		setValue(theCase, value);
 
 	}
 
+	@Override
 	public String toString() {
 		return super.toString();
 	}
@@ -217,7 +248,7 @@ public abstract class Question extends QASet implements ValuedObject {
 	public void undoSymptomValue(XPSCase theCase, Rule ruleSymptom) {
 		CaseQuestion caseQuestion = ((CaseQuestion) theCase.getCaseObject(this));
 		if (caseQuestion.getValueHistory().size() == 0) {
-			setValue(theCase, new Object[] {});
+			setValue(theCase, UndefinedValue.getInstance());
 		}
 		else {
 			ListIterator<SymptomValue> valueIter = caseQuestion.getValueHistory()

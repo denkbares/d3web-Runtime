@@ -28,8 +28,11 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.UndefinedValue;
 
 /**
  * A Num2ChoiceSchema is a knowledge slice of QuestionOC, which facilitates the
@@ -40,7 +43,7 @@ import de.d3web.core.session.values.AnswerChoice;
  */
 public class Num2ChoiceSchema implements KnowledgeSlice {
 
-	private String id;
+	private final String id;
 	
 	private Double[] schemaArray;
 	private Question question;
@@ -77,7 +80,7 @@ public class Num2ChoiceSchema implements KnowledgeSlice {
 	 * @return the answer selected from the given answer collection according to
 	 *         the given numeric value
 	 */
-	public Answer getAnswerForNum(Double num, Collection<AnswerChoice> answers, XPSCase theCase) {
+	public Value getValueForNum(Double num, Collection<AnswerChoice> answers, XPSCase theCase) {
 		boolean ascending = isAscending();
 		for (int i = 0; i < schemaArray.length; i++) {
 			if ((ascending && num.doubleValue() < schemaArray[i].doubleValue())
@@ -97,17 +100,17 @@ public class Num2ChoiceSchema implements KnowledgeSlice {
 		return true;
 	}
 
-	protected Answer nth(Collection<AnswerChoice> answers, int pos) {
+	protected Value nth(Collection<AnswerChoice> answers, int pos) {
 		Iterator<AnswerChoice> iter = answers.iterator();
 		int position = 0;
 		while (iter.hasNext()) {
 			Answer element = iter.next();
 			if (position == pos) {
-				return element;
+				return new ChoiceValue((AnswerChoice) element);
 			}
 			position++;
 		}
-		return null;
+		return UndefinedValue.getInstance();
 	}
 
 	public Question getQuestion() {

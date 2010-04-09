@@ -19,8 +19,9 @@
  */
 
 package de.d3web.core.session.blackboard;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.UndefinedValue;
 /**
  * Stores the dynamic, user specific values for an QuestionNum
  * object. It corresponds to the static QuestionNum object.<br>
@@ -30,7 +31,7 @@ import de.d3web.core.knowledge.terminology.Question;
  * @see de.d3web.core.knowledge.terminology.QuestionNum
  */
 public class CaseQuestionNum extends CaseQuestion {
-	Answer value = null;
+	private Value value = UndefinedValue.getInstance();
 
 	/**
 	 * Creates a new dynamic store for the given QuestionNum
@@ -39,14 +40,15 @@ public class CaseQuestionNum extends CaseQuestion {
 		super(question);
 	}
 
-	public Answer getValue() {
+	public Value getValue() {
 		return value;
 	}
 
-	public void setValue(Answer value) {
+	public void setValue(Value value) {
 		this.value = value;
 	}
 
+	@Override
 	public String toString() {
 		return getValue().toString();
 	}

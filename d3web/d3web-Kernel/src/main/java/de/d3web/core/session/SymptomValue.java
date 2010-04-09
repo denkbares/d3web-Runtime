@@ -21,63 +21,49 @@
 package de.d3web.core.session;
 
 import de.d3web.core.inference.Rule;
-import de.d3web.core.knowledge.terminology.Answer;
 
 /**
- * Type definition for a tupel of rule and values (extensible) There will be
- * saved a rule and the values it has overwritten by firing Creation date:
- * (18.08.2000 17:38:21)
+ * Type definition for a tuple of rule and values (extensible) There will be
+ * saved a rule and the values it has overwritten by firing. <br>
+ * Creation date: (18.08.2000 17:38:21)
  * 
  * @author Norman Brümmer
  */
 public class SymptomValue {
-    private Object[] values = null;
+	private Value value = null;
     private Rule rule = null;
 
-    /**
-     * Creates a new SymptomValue-Object - a tupel of an overwritten value-array
-     * and the rule that has overwritten it
-     * 
-     * @param values
-     *            overwritten question-value-array
-     * @param rule
-     *            rule that has overwritten it
-     * 
-     */
-    public SymptomValue(Object[] values, Rule rule) {
-        this.values = values;
-        this.rule = rule;
-    }
     
-    public SymptomValue(Answer value, Rule rule) {
-        this.values = new Answer[] {value};
+	public SymptomValue(Value value, Rule rule) {
+		this.value = value;
         this.rule = rule;
     }
 
-    /**
-     * 
-     * Creation date: (17.08.2000 14:36:58)
-     * 
-     * @return rule of this tupel
-     */
+	/**
+	 * 
+	 * Creation date: (17.08.2000 14:36:58)
+	 * 
+	 * @return rule of this tuple
+	 */
     public Rule getRule() {
         return rule;
     }
 
-    /**
-     * Creation date: (17.08.2000 14:45:39)
-     * 
-     * @return value-array of this tupel
-     */
-    public Object[] getValues() {
-        return values;
+	/**
+	 * Creation date: (17.08.2000 14:45:39)
+	 * 
+	 * @return value-array of this tuple
+	 */
+	public Value getValues() {
+        return value;
     }
 
-    public void setValues(Object[] values) {
-        this.values = values;
+	public void setValues(Value value) {
+		this.value = value;
     }
 
-    public String toString() {
-        return rule.getId() + ":" + de.d3web.core.utilities.Utils.createVector(values);
+    @Override
+	public String toString() {
+		return rule.getId() + ":" + value;
     }
 }

@@ -19,30 +19,29 @@
  */
 
 package de.d3web.abstraction;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.abstraction.formula.FormulaDateExpression;
 import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.abstraction.inference.PSMethodQuestionSetter;
 import de.d3web.core.inference.MethodKind;
-import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.PSAction;
-import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.session.SymptomValue;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.values.AnswerChoice;
-import de.d3web.core.session.values.AnswerDate;
-import de.d3web.core.session.values.AnswerNum;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.EvaluatableAnswerDateValue;
 import de.d3web.core.session.values.EvaluatableAnswerNumValue;
+import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.UndefinedValue;
 
 /**
  * Adds a specified value to the value of a specified question.
@@ -60,8 +59,8 @@ public class ActionAddValue extends ActionQuestionSetter {
 		super();
 	}
 
-	private Answer addValue(Answer currentValue, Answer val) {
-		Answer newValue = currentValue;
+	private Value addValue(Value currentValue, Value val) {
+		Value newValue = currentValue;
 		if (currentValue == null) {
 			newValue = val;
 		} else if (getQuestion() instanceof QuestionOC) {
@@ -73,7 +72,7 @@ public class ActionAddValue extends ActionQuestionSetter {
 		return newValue;
 	}
 
-	private Answer addValue(Answer currentValue, AnswerDate val) {
+	private Value addValue(Value currentValue, DateValue val) {
 		// does the same like an ActionSetValue-Object
 		if (currentValue == null) {
 			return val;
@@ -82,65 +81,54 @@ public class ActionAddValue extends ActionQuestionSetter {
 		}
 	}
 
-	private Answer addValue(Answer currentVal, AnswerNum val, XPSCase theCase) {
+	private Value addValue(Value currentVal, NumValue val, XPSCase theCase) {
 		if (currentVal != null) {
-			Answer ans = currentVal;
-			if (ans instanceof AnswerNum) {
-				Double ansval = (Double) ((AnswerNum) ans).getValue(theCase);
+			Value ans = currentVal;
+			if (ans instanceof NumValue) {
+				Double ansval = (Double) ((NumValue) ans).getValue();
 				Double newValue = new Double(ansval.doubleValue()
-						+ ((Double) val.getValue(theCase)).doubleValue());
-				AnswerNum ansnum = new AnswerNum();
-				ansnum.setQuestion(getQuestion());
-				ansnum.setValue(newValue);
-				currentVal = ansnum;
+						+ ((Double) val.getValue()).doubleValue());
+				currentVal = new NumValue(newValue);
 		} else {
 			currentVal = val;
 		}
 			
 		if ((getQuestion() instanceof QuestionOC)
 				&& (((QuestionOC) getQuestion()).getSchemaForQuestion() != null)) {
-			setLastSetValue(theCase, (Double) val.getValue(theCase));
+				setLastSetValue(theCase, (Double) val.getValue());
 		}
 		}
 		return currentVal;
 	}
 
-	private Answer addValue(Answer currentVal, EvaluatableAnswerNumValue val, XPSCase theCase) {
-
-		AnswerNum ans = new AnswerNum();
-		ans.setQuestion(getQuestion());
-		ans.setValue(val);
-
+	private Value addValue(Value currentVal, EvaluatableAnswerNumValue val, XPSCase theCase) {
+		NumValue ans = new NumValue(val.eval(theCase));
 		return addValue(currentVal, ans, theCase);
 	}
 
-	private Answer addValue(Answer currentVals, EvaluatableAnswerDateValue val) {
-
-		AnswerDate ans = new AnswerDate();
-		ans.setQuestion(getQuestion());
-		ans.setValue(val);
-
-		return addValue(currentVals, ans);
+	private Value addValue(Value currentVals, EvaluatableAnswerDateValue val, XPSCase theCase) {
+		return addValue(currentVals, new DateValue(val.eval(theCase)));
 	}
 
-	private Answer addValue(Answer currentVals, FormulaExpression val, XPSCase theCase) {
-		Answer evalAns = val.eval(theCase);
-
-		if (evalAns instanceof AnswerChoice) {
-			return addValue(currentVals, (AnswerChoice) evalAns);
-		} else if (evalAns instanceof AnswerNum) {
-			return addValue(currentVals, (AnswerNum) evalAns, theCase);
+	private Value addValue(Value currentVals, FormulaExpression val, XPSCase theCase) {
+		Value evalAns = val.eval(theCase);
+		if (evalAns instanceof ChoiceValue) {
+			return addValue(currentVals, (ChoiceValue) evalAns);
+		}
+		else if (evalAns instanceof NumValue) {
+			return addValue(currentVals, (NumValue) evalAns, theCase);
 		} else
 			return null;
 	}
 
-	private Answer addValue(Answer currentVals, FormulaDateExpression val, XPSCase theCase) {
-		Answer evalAns = val.eval(theCase);
-
-		if (evalAns instanceof AnswerDate) {
-			return addValue(currentVals, (AnswerDate) evalAns);
-		} else
-			return null;
+	private Value addValue(Value currentVals, FormulaDateExpression val, XPSCase theCase) {
+		Value evalAns = val.eval(theCase);
+		if (evalAns instanceof DateValue) {
+			return addValue(currentVals, (DateValue) evalAns);
+		}
+		else {
+			return UndefinedValue.getInstance();
+		}
 	}
 
 	/**
@@ -148,26 +136,32 @@ public class ActionAddValue extends ActionQuestionSetter {
 	 * call theCase.SetValue to propagate the changes. Creation date:
 	 * (30.01.2002 16:10:28)
 	 */
-	private Answer addValues(Answer currentValue, XPSCase theCase) {
-		Object[] val = getValues();
+	private Value addValues(Value currentValue, XPSCase theCase) {
+		Object val = getValue();
 		if (val != null) {
-			for (int i = 0; i < val.length; ++i) {
-				if (val[i] instanceof AnswerNum) {
-					currentValue = addValue(currentValue, (AnswerNum) val[i], theCase);
-				} else if (val[i] instanceof AnswerChoice) {
-					currentValue = addValue(currentValue, (AnswerChoice) val[i]);
-				} else if (val[i] instanceof FormulaExpression) {
-					currentValue = addValue(currentValue, (FormulaExpression) val[i], theCase);
-				} else if (val[i] instanceof EvaluatableAnswerNumValue) {
-					currentValue = addValue(currentValue, (EvaluatableAnswerNumValue) val[i],
+			if (val instanceof NumValue) {
+				currentValue = addValue(currentValue, (NumValue) val, theCase);
+			}
+			else if (val instanceof ChoiceValue) {
+				currentValue = addValue(currentValue, (ChoiceValue) val);
+			}
+			else if (val instanceof FormulaExpression) {
+				currentValue = addValue(currentValue, (FormulaExpression) val, theCase);
+			}
+			else if (val instanceof EvaluatableAnswerNumValue) {
+				currentValue = addValue(currentValue, (EvaluatableAnswerNumValue) val,
 							theCase);
-				} else if (val[i] instanceof AnswerDate) {
-					currentValue = addValue(currentValue, (AnswerDate) val[i]);
-				} else if (val[i] instanceof FormulaDateExpression) {
-					currentValue = addValue(currentValue, (FormulaDateExpression) val[i], theCase);
-				} else if (val[i] instanceof EvaluatableAnswerDateValue) {
-					currentValue = addValue(currentValue, (EvaluatableAnswerDateValue) val[i]);
-				}
+			}
+			else if (val instanceof DateValue) {
+				currentValue = addValue(currentValue, (DateValue) val);
+			}
+			else if (val instanceof FormulaDateExpression) {
+				currentValue = addValue(currentValue, (FormulaDateExpression) val,
+						theCase);
+			}
+			else if (val instanceof EvaluatableAnswerDateValue) {
+				currentValue = addValue(currentValue, (EvaluatableAnswerDateValue) val,
+						theCase);
 			}
 		}
 		return currentValue;
@@ -176,34 +170,26 @@ public class ActionAddValue extends ActionQuestionSetter {
 	/**
 	 * Returns a list which contains an AnswerNum with the value to add.
 	 */
-	private Answer addSchemaValue(QuestionChoice q, XPSCase theCase) {
-		Object[] val = getValues();
-		Answer resultAnswer = null;
+	private Value addSchemaValue(QuestionChoice q, XPSCase theCase) {
+		Object val = getValue();
+		Value resultAnswer = null;
 		if (val != null) {
-			if (val[0] instanceof FormulaExpression) {
-				AnswerNum ans = (AnswerNum) ((FormulaExpression) val[0]).eval(theCase);
-				setLastSetValue(theCase, (Double) ans.getValue(theCase));
-				ans.setValue((Double) ans.getValue(theCase));
+			if (val instanceof FormulaExpression) {
+				NumValue ans = (NumValue) ((FormulaExpression) val).eval(theCase);
+				setLastSetValue(theCase, (Double) ans.getValue());
 				resultAnswer = ans;
-			} else if (val[0] instanceof EvaluatableAnswerNumValue) {
-				AnswerNum ans = new AnswerNum();
-				ans.setQuestion(getQuestion());
-				EvaluatableAnswerNumValue evaluatableValue = (EvaluatableAnswerNumValue) val[0];
-
+			}
+			else if (val instanceof EvaluatableAnswerNumValue) {
+				EvaluatableAnswerNumValue evaluatableValue = (EvaluatableAnswerNumValue) val;
 				// put the evaluated value to hashtable for undo
 				Double newValue = evaluatableValue.eval(theCase);
-
 				setLastSetValue(theCase, newValue);
-
-				ans.setValue(evaluatableValue);
-				resultAnswer = ans;
-			} else if (val[0] instanceof AnswerNum) {
-				Double ansValue = (Double) ((AnswerNum) val[0]).getValue(theCase);
-				setLastSetValue(theCase, ansValue);
-				AnswerNum newAnswer = new AnswerNum();
-				newAnswer.setQuestion(getQuestion());
-				newAnswer.setValue(ansValue);
-				resultAnswer = newAnswer;
+				resultAnswer = new NumValue(newValue);
+			}
+			else if (val instanceof NumValue) {
+				NumValue nv = (NumValue) val;
+				setLastSetValue(theCase, (Double) (nv.getValue()));
+				resultAnswer = nv;
 			}
 		}
 		return resultAnswer;
@@ -222,44 +208,39 @@ public class ActionAddValue extends ActionQuestionSetter {
 	public void doIt(XPSCase theCase, Rule rule) {
 		if (!lastFiredRuleEqualsCurrentRuleAndNotFired(theCase)) {
 			getQuestion().addProReason(new QASet.Reason(rule), theCase);
-
-			Answer resultAnswer;
-
+			Value resultValue;
 			if ((getQuestion() instanceof QuestionOC)
 					&& (((QuestionOC) getQuestion()).getSchemaForQuestion() != null)
-					&& (getValues().length > 0)
-					&& (!(getValues()[0] instanceof AnswerChoice))) {
-				resultAnswer = addSchemaValue((QuestionChoice) getQuestion(), theCase);
+					&& (!(getValue() instanceof ChoiceValue))) {
+				resultValue = addSchemaValue((QuestionChoice) getQuestion(), theCase);
 			} else {
-				resultAnswer = addValues(getQuestion().getValue(theCase), theCase);
+				resultValue = addValues(getQuestion().getValue(theCase), theCase);
 			}
-			storeActionValues(theCase, getValues());
+			storeActionValues(theCase, getValue());
 
 			// if the question is an oc-si-question without schema, the severest
-			// answer
-			// has to be set (of all answers, which shall be set)
+			// answer has to be set (of all answers, which shall be set)
 			if ((getQuestion() instanceof QuestionOC)
 					&& (((QuestionOC) getQuestion()).getSchemaForQuestion() == null)
 					&& (getQuestion().getKnowledge(PSMethodQuestionSetter.class,
 							MethodKind.BACKWARD) != null)) {
-				Answer ans = getSeverestAnswer((QuestionOC) getQuestion(), theCase);
-				if ((ans != null)
-						&& ((!getQuestion().hasValue(theCase)) || (!ans.equals(getQuestion()
+				AnswerChoice severestAnswer = getSeverestAnswer((QuestionOC) getQuestion(), theCase);
+				if ((severestAnswer != null)
+						&& ((!getQuestion().hasValue(theCase)) || (!severestAnswer.equals(getQuestion()
 								.getValue(theCase))))) {
-					Object[] newValues = new Object[1];
-					newValues[0] = ans;
-					theCase.setValue(getQuestion(), newValues);
+					theCase.setValue(getQuestion(), new ChoiceValue(severestAnswer));
 				}
 			} else {
 				// else, set the resultList-values
-				theCase.setValue(getQuestion(), new Answer[] {resultAnswer}, rule);
+				theCase.setValue(getQuestion(), resultValue, rule);
 			}
 		}
 	}
 
+	@Override
 	public String toString() {
 		return "<RuleAction type=\"AddValue\">\n" + "  [" + getQuestion().getId() + ": "
-				+ getValues() + "]" + "\n</RuleAction>";
+				+ getValue() + "]" + "\n</RuleAction>";
 	}
 
 	/**
@@ -268,7 +249,6 @@ public class ActionAddValue extends ActionQuestionSetter {
 	@Override
 	public void undo(XPSCase theCase, Rule rule) {
 		getQuestion().removeProReason(new QASet.Reason(rule), theCase);
-
 		removeRuleFromSymptomValueHistory(theCase, rule);
 
 		// if the question is an oc-si-question without schema, the severest
@@ -277,16 +257,14 @@ public class ActionAddValue extends ActionQuestionSetter {
 		if ((getQuestion() instanceof QuestionOC)
 				&& (((QuestionOC) getQuestion()).getSchemaForQuestion() == null)
 				&& (getQuestion().getKnowledge(PSMethodQuestionSetter.class, MethodKind.BACKWARD) != null)) {
-			Answer ans = getSeverestAnswer((QuestionOC) getQuestion(), theCase);
-			if (ans != null) {
+			AnswerChoice severestAnswer = getSeverestAnswer((QuestionOC) getQuestion(), theCase);
+			if (severestAnswer != null) {
 				if ((!getQuestion().hasValue(theCase))
-						| (!ans.equals(getQuestion().getValue(theCase)))) {
-					Object[] values = new Object[1];
-					values[0] = ans;
-					theCase.setValue(getQuestion(), values);
+						|| (!severestAnswer.equals(getQuestion().getValue(theCase)))) {
+					theCase.setValue(getQuestion(), new ChoiceValue(severestAnswer));
 				}
 			} else {
-				theCase.setValue(getQuestion(), new Object[0]);
+				theCase.setValue(getQuestion(), UndefinedValue.getInstance());
 			}
 
 		} else if ((getQuestion() instanceof QuestionOC)
@@ -298,12 +276,8 @@ public class ActionAddValue extends ActionQuestionSetter {
 			if (lastSetValue == null) {
 				lastSetValue = new Double(0);
 			}
-
 			Double valueToSubstract = new Double(lastSetValue.doubleValue() * -1.0);
-			AnswerNum substractAnswer = new AnswerNum();
-			substractAnswer.setQuestion(getQuestion());
-			substractAnswer.setValue(valueToSubstract);
-			theCase.setValue(getQuestion(), new Object[]{substractAnswer});
+			theCase.setValue(getQuestion(), new NumValue(valueToSubstract));
 
 		} else {
 			List pros = getQuestion().getProReasons(theCase);
@@ -316,7 +290,7 @@ public class ActionAddValue extends ActionQuestionSetter {
 					// r.addValue((Answer)null, theCase);
 				}
 			}
-			theCase.setValue(getQuestion(), Collections.EMPTY_LIST.toArray(), rule);
+			theCase.setValue(getQuestion(), UndefinedValue.getInstance(), rule);
 		}
 	}
 
@@ -333,20 +307,22 @@ public class ActionAddValue extends ActionQuestionSetter {
 		}
 	}
 
+	@Override
 	public PSAction copy() {
 		ActionAddValue a = new ActionAddValue();
 		a.setQuestion(getQuestion());
-		a.setValues(getValues());
+		a.setValue(getValue());
 		return a;
 	}
 
-    public boolean equals(Object o) {
-        if (o==this) 
+    @Override
+	public boolean equals(Object o) {
+        if (o==this)
             return true;
         if (o instanceof ActionAddValue) {
             ActionAddValue a = (ActionAddValue)o;
-            return (isSame(a.getQuestion(), getQuestion()) &&
-                   Arrays.equals(a.getValues(), getValues()));
+			return isSame(a.getQuestion(), getQuestion()) &&
+					getValue().equals(a.getValue());
         }
         else
             return false;
@@ -358,10 +334,11 @@ public class ActionAddValue extends ActionQuestionSetter {
 		return false;
 	}
 	
-    public int hashCode() {
+    @Override
+	public int hashCode() {
 		int hash = 0;
 		if(getQuestion() != null) hash += getQuestion().hashCode();
-		if(getValues() != null) hash += getValues().hashCode();
-        return hash; 
+		if (getValue() != null) hash += getValue().hashCode();
+        return hash;
     }
 }

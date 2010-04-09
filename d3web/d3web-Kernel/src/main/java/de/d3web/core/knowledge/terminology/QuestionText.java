@@ -20,12 +20,15 @@
 
 package de.d3web.core.knowledge.terminology;
 
-import java.util.logging.Logger;
-
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.blackboard.CaseQuestionText;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.core.session.values.AnswerText;
+import de.d3web.core.session.values.TextValue;
+import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.core.session.values.Unknown;
 /**
  * A question which asks for a string text.
  * @author Joachim Baumeister
@@ -63,17 +66,9 @@ public class QuestionText extends Question {
 		return height;
 	}
 
-	public Answer getValue(XPSCase theCase) {
-		Answer value =
-			((CaseQuestionText) theCase.getCaseObject(this)).getValue();
-		return value;		
-//		if (value != null) {
-//			ArrayList<Answer> v = new ArrayList<Answer>(1);
-//			v.add(value);
-//			return (v);
-//		} else {
-//			return Collections.EMPTY_LIST;
-//		}
+	@Override
+	public Value getValue(XPSCase theCase) {
+		return ((CaseQuestionText) theCase.getCaseObject(this)).getValue();
 	}
 
 	/**
@@ -94,19 +89,22 @@ public class QuestionText extends Question {
 			this.height = height;
 	}
 
-	public void setValue(XPSCase theCase, Answer value) {
-		Answer answeredValue = (Answer)value;
-		((CaseQuestionText) theCase.getCaseObject(this)).setValue(answeredValue);
-	}
-	
-	public void setValue(XPSCase theCase, Object[] values) {
-		if (values.length <= 1) {
-			setValue(theCase, (Answer)values[0]);
-		} else {
-			Logger.getLogger(this.getClass().getName()).warning("wrong number of answers");
+	@Override
+	public void setValue(XPSCase theCase, Value value) throws IllegalArgumentException {
+		if (value instanceof TextValue ||
+				value instanceof Unknown ||
+				value instanceof UndefinedValue) {
+			((CaseQuestionText) theCase.getCaseObject(this)).setValue(value);
+		}
+		else if (value instanceof Unknown || value instanceof UndefinedValue) {
+			((CaseQuestion) (theCase.getCaseObject(this))).setValue(value);
+		}
+		else {
+			throw new IllegalArgumentException(value
+					+ " is not an accpepted Value instance.");
 		}
 	}
-
+	
 	/**
 	 * Sets the width of the displayed text field
 	 * asking the text question. The specified
