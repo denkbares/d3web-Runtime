@@ -31,10 +31,11 @@ import org.w3c.dom.NodeList;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.ValueFactory;
 import de.d3web.kernel.psMethods.shared.LocalWeight;
 /**
  * Handles LocalWeights
@@ -81,7 +82,7 @@ public class LocalWeightHandler implements FragmentHandler {
 								"localweight")) {
 							String ansID = valChild.getAttributes()
 									.getNamedItem("ID").getNodeValue();
-							Answer ans = XMLUtil.getAnswer(null, q, ansID);
+							Value ans = XMLUtil.getAnswer(null, q, ansID);
 							String value = valChild.getAttributes()
 									.getNamedItem("value").getNodeValue();
 							lw.setValue(ans, LocalWeight
@@ -107,11 +108,11 @@ public class LocalWeightHandler implements FragmentHandler {
 		element.setAttribute("questionID", localWeight.getQuestion().getId());
 		element.setAttribute("diagnosisID", localWeight.getDiagnosis().getId());
 		Element valuesNode = doc.createElement("values");
-		Enumeration<Answer> answers = localWeight.getAnswerEnumeration();
+		Enumeration<Value> answers = localWeight.getAnswerEnumeration();
 		while (answers.hasMoreElements()) {
-			Answer answer = answers.nextElement();
+			Value answer = answers.nextElement();
 			Element localweightNode = doc.createElement("localweight");
-			localweightNode.setAttribute("ID", answer.getId());
+			localweightNode.setAttribute("ID", ValueFactory.getID_or_Value(answer));
 			localweightNode.setAttribute("value", LocalWeight.convertValueToConstantString(localWeight.getValue(answer)));
 			valuesNode.appendChild(localweightNode);
 		}

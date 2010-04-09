@@ -33,16 +33,17 @@ import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.ValueFactory;
 import de.d3web.kernel.psMethods.shared.Abnormality;
 import de.d3web.kernel.psMethods.shared.AbnormalityNum;
 import de.d3web.shared.AbnormalityInterval;
 import de.d3web.shared.AbstractAbnormality;
 /**
- * Handles the default implementations of AbstractAbnormality. Other Handlers for descendants of AbstractAbnormality must have a higher priority. 
+ * Handles the default implementations of AbstractAbnormality. Other Handlers for descendants of AbstractAbnormality must have a higher priority.
  * @author Norman Brümmer, Markus Friedrich (denkbares GmbH)
  */
 public class AbstractAbnormalityHandler implements FragmentHandler {
@@ -85,7 +86,7 @@ public class AbstractAbnormalityHandler implements FragmentHandler {
 								"abnormality")) {
 							String ansID = valChild.getAttributes()
 									.getNamedItem("ID").getNodeValue();
-							Answer ans = XMLUtil.getAnswer(null, question, ansID);
+							Value ans = XMLUtil.getAnswer(null, question, ansID);
 							String value = valChild.getAttributes()
 									.getNamedItem("value").getNodeValue();
 							abnorm.addValue(ans, AbstractAbnormality
@@ -132,11 +133,11 @@ public class AbstractAbnormalityHandler implements FragmentHandler {
 		if (abstractAbnormality instanceof Abnormality) {
 			Abnormality abnormality = (Abnormality) abstractAbnormality;
 			Element valuesNode = doc.createElement("values");
-			Enumeration<Answer> answers = abnormality.getAnswerEnumeration();
+			Enumeration<Value> answers = abnormality.getAnswerEnumeration();
 			while (answers.hasMoreElements()) {
-				Answer answer = answers.nextElement();
+				Value answer = answers.nextElement();
 				Element abnormalityElement = doc.createElement("abnormality");
-				abnormalityElement.setAttribute("ID", answer.getId());
+				abnormalityElement.setAttribute("ID", ValueFactory.getID_or_Value(answer));
 				abnormalityElement.setAttribute("value", Abnormality.convertValueToConstantString(abstractAbnormality.getValue(answer)));
 				valuesNode.appendChild(abnormalityElement);
 			}
@@ -149,5 +150,5 @@ public class AbstractAbnormalityHandler implements FragmentHandler {
 		}
 		return element;
 	}
-
 }
+
