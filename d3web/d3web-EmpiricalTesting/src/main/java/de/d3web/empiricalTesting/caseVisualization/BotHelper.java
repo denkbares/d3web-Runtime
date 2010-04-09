@@ -25,21 +25,22 @@ import java.util.List;
 import java.util.Map;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.interviewmanager.MQDialogController;
 import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.ChoiceValue;
 
 public class BotHelper {
 
 	private static BotHelper instance;
 
-	private Map<String, AnswerChoice> answerHash;
+	private final Map<String, AnswerChoice> answerHash;
 
 	private BotHelper() {
 		answerHash = new HashMap<String, AnswerChoice>();
@@ -57,13 +58,13 @@ public class BotHelper {
 				.searchQuestion(questionID);
 		if (answerID != null) {
 			AnswerChoice a = findAnswer(q, answerID);
-			setCaseValue(theCase, q, a);
+			setCaseValue(theCase, q, new ChoiceValue(a));
 		}
 	}
 
-	public void setCaseValue(XPSCase theCase, QuestionChoice q, AnswerChoice a)
+	public void setCaseValue(XPSCase theCase, QuestionChoice q, ChoiceValue a)
 			throws Exception {
-		theCase.setValue(q, new Object[] { a });
+		theCase.setValue(q, a);
 
 	}
 
@@ -195,7 +196,7 @@ public class BotHelper {
 		while (!(question.getParents()[0] instanceof QContainer)) {
 			if (question.getParents()[0] instanceof Question)
 				question = (Question) question.getParents()[0];
-			else 
+			else
 				return false;
 		}
 		

@@ -44,7 +44,7 @@ import de.d3web.empiricalTesting.TestSuite;
  */
 public class CaseObjectToKnOffice extends CaseObjectConverter {
 	
-	// quote the verbalized text, if at least on character of 
+	// quote the verbalized text, if at least on character of
 	// these is contained in the verbalization text
 	private final String BAD_CHARS= "()=-,:;?/";
 	// the default indent for each line within a case
@@ -65,7 +65,7 @@ public class CaseObjectToKnOffice extends CaseObjectConverter {
 	}
 
 	/**
-	 * Writes a TestSuite to the specified file 
+	 * Writes a TestSuite to the specified file
 	 * using the TestSuite-KnOffice-Format
 	 * @param t The TestSuite which shall be written to a file
 	 * @param the path of the output file
@@ -104,7 +104,7 @@ public class CaseObjectToKnOffice extends CaseObjectConverter {
 				convertRTCToKnOfficeFormat(rtc, out);
 			}
 			out.write("\n}\n\n");
-		}	
+		}
 		out.flush();
 		out.close();
 	}
@@ -121,7 +121,7 @@ public class CaseObjectToKnOffice extends CaseObjectConverter {
 			out.write("\n" + INDENT);
 			out.write(quoteTextIfRequired(f.getQuestion().getName()));
 			out.write(" = ");
-			out.write(quoteTextIfRequired(f.getAnswer().toString()));
+			out.write(quoteTextIfRequired(f.getValue().getValue().toString()));
 			if (rtc.getFindings().indexOf(f) < rtc.getFindings().size() - 1) {
 				out.write(",");
 			}

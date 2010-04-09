@@ -20,6 +20,7 @@
 
 package de.d3web.caseGeneration;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -28,46 +29,49 @@ import java.util.List;
 import java.util.Map;
 
 import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.MultipleChoiceValue;
 
 /**
- * This class is used to compute a list of Answer[] 
+ * This class is used to compute a list of Answer[]
  * which represent all possible combinations of QuestionMC
  * answers.
  * 
  * @author Sebastian Furth
  */
-public class AnswerCombinator {
+public class ValueCombinator {
 
 	// Singleton instance
-	private static AnswerCombinator instance = new AnswerCombinator();
+	private static ValueCombinator instance = new ValueCombinator();
 	
 	// forbidden answer combinations for specified questions
-	private Map<Question, Collection<Answer[]>> forbiddenAnswerCombinations = 
+	private Map<Question, Collection<Answer[]>> forbiddenAnswerCombinations =
 		new HashMap<Question, Collection<Answer[]>>();
 	
 	// allowed answer combinations for specified questions
-	private Map<Question, Collection<Answer[]>> allowedAnswerCombinations = 
+	private Map<Question, Collection<Answer[]>> allowedAnswerCombinations =
 		new HashMap<Question, Collection<Answer[]>>();
 	
 	// stores the answer combinations for better performance
-	private Map<Question, Collection<Answer[]>> existingCombinations = 
-		new HashMap<Question, Collection<Answer[]>>();
+	private final Map<Question, Collection<Value>> existingCombinations =
+			new HashMap<Question, Collection<Value>>();
 	
 	
 	/**
 	 * Private constructor to ensure noninstantiability
 	 */
-	private AnswerCombinator() {}
+	private ValueCombinator() {}
 	
 	
 	/**
 	 * Returns an instance of AnswerCombinator
 	 * @return AnswerCombinator instance
 	 */
-	public static AnswerCombinator getInstance() {
+	public static ValueCombinator getInstance() {
 		return instance;
 	}
 	
@@ -81,13 +85,13 @@ public class AnswerCombinator {
 	 * @param question QuestionMC for which all answer combinations are computed
 	 * @return Collection<Answer[]> power set of committed List of answers.
 	 */
-	public Collection<Answer[]> getAllPossibleCombinations(QuestionMC question) {
+	public Collection<Value> getAllPossibleCombinations(QuestionMC question) {
 				
 		if (question == null) {
 			throw new IllegalArgumentException("The question is null!");
 		}
 		
-		Collection<Answer[]> combinations = existingCombinations.get(question);
+		Collection<Value> combinations = existingCombinations.get(question);
 		
 		if (combinations != null) {
 			return combinations;
@@ -96,7 +100,7 @@ public class AnswerCombinator {
 		List<AnswerChoice> answers = question.getAllAlternatives();
 		
 		//create the empty power set
-		combinations = new LinkedHashSet<Answer[]>();
+		combinations = new LinkedHashSet<Value>();
 
 		//get the number of elements in the set
 		int maxLength = answers.size();
@@ -111,7 +115,7 @@ public class AnswerCombinator {
 			String binary = intToBinary(i, maxLength);
          
 			//create a new set
-			LinkedHashSet<Answer> innerSet = new LinkedHashSet<Answer>();
+			LinkedHashSet<AnswerChoice> innerSet = new LinkedHashSet<AnswerChoice>();
          
 			//convert each digit in the current binary number to the corresponding element
 			//in the given set
@@ -122,13 +126,15 @@ public class AnswerCombinator {
          
 			//add the new set to the power set
 			if (innerSet.size() > 0 && allowedCombination(question, innerSet)) {
-				combinations.add(innerSet.toArray(new Answer[innerSet.size()]));
+				Value value = new MultipleChoiceValue(new AnswerMultipleChoice(
+						new ArrayList<AnswerChoice>(innerSet)));
+				combinations.add(value);
 			}
            
 		}
 		
 		existingCombinations.put(question, combinations);
-		return combinations;   
+		return combinations;
 	}
 
 
@@ -150,7 +156,7 @@ public class AnswerCombinator {
 		}
 		
 		return binary.toString();
-	} 
+	}
 	
 	
 	/**
@@ -186,7 +192,7 @@ public class AnswerCombinator {
 	 * @param currentCombination LinkedHashSet<Answer> the combination to be checked
 	 * @return true, if combination is allowed otherwise false
 	 */
-	private boolean allowedCombination(QuestionMC question, LinkedHashSet<Answer> currentCombination) {
+	private boolean allowedCombination(QuestionMC question, LinkedHashSet<AnswerChoice> currentCombination) {
 				
 		if (forbiddenAnswerCombinations.containsKey(question)) {
 			for (Answer[] combination : forbiddenAnswerCombinations.get(question)) {
@@ -211,7 +217,7 @@ public class AnswerCombinator {
 	 * @param constraint Answer[] in most cases a defined constraint
 	 * @return true if combinations are equal, otherwise false.
 	 */
-	private boolean equalCombinations(LinkedHashSet<Answer> combination, Answer[] constraint) {
+	private boolean equalCombinations(LinkedHashSet<AnswerChoice> combination, Answer[] constraint) {
 		if (combination.size() == constraint.length) {
 			if (combination.containsAll(Arrays.asList(constraint)))
 				return true;

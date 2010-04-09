@@ -43,7 +43,7 @@ import de.d3web.plugin.test.InitPluginManager;
 /**
  * This test offers the ability to test the problem
  * solving mechanism of the d3web-kernel using the
- * EmpiricalTesting Project. 
+ * EmpiricalTesting Project.
  * 
  * The KnowledgeBases and TestCases can be configured
  * in resources/cases.properties
@@ -63,7 +63,7 @@ public class KBTester {
 	 * precision and recall for the interview will also be tested.
 	 */
 	@Test
-	public void testKB() {	
+	public void testKB() {
 		for (TestSuite t : testsuites) {
 			t.deriveAllSolutions();
 			testCorrectnessAndActuallity(t);
@@ -124,22 +124,19 @@ public class KBTester {
 					notUpToDateErrorMsg.append("\nDerived Solutions aren't up to date\n in test suite ");
 					notUpToDateErrorMsg.append(t.getName() + "\n in STC ");
 					notUpToDateErrorMsg.append(stc.getName() + "\n in RTC ");
-					notUpToDateErrorMsg.append(rtc.toString() + "!\n");				
+					notUpToDateErrorMsg.append(rtc.toString() + "!\n");
 					assertEquals(notUpToDateErrorMsg.toString(), true, rtc.getDerivedSolutionsAreUpToDate());
 					
 					StringBuilder notCorrectErrorMsg = new StringBuilder();
 					notCorrectErrorMsg.append("\nDerived Solutions aren't up to date\n in test suite ");
 					notCorrectErrorMsg.append(t.getName() + "\n    in STC ");
 					notCorrectErrorMsg.append(stc.getName() + "\n      in RTC ");
-					notCorrectErrorMsg.append(rtc.toString() + "!\n");	
+					notCorrectErrorMsg.append(rtc.toString() + "!\n");
 					assertEquals(notCorrectErrorMsg.toString(), true, rtc.isCorrect());
 				}
 			}
 	}
-	
-	private void print(String string) {
-		System.out.println(string);
-	}
+
 
 	/**
 	 * Creates the TestSuites necessary for this JUNIT-Test.
@@ -147,7 +144,7 @@ public class KBTester {
 	 * The configuration file contains a list of KnowledgeBases with
 	 * corresponding SequentialTestCases and a declaration whether
 	 * the InterviewCalculator should be used or not for this case.
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@Before
 	public void initialize() throws IOException {
@@ -183,7 +180,7 @@ public class KBTester {
 	 * Loads the KnowledgeBase.
 	 * @param kbPath URL-formatted String representing the path to the KnowledgeBase
 	 * @return the loaded KnowledgeBase
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private static KnowledgeBase loadKnowledgeBase(String kbPath)
 			throws IOException {

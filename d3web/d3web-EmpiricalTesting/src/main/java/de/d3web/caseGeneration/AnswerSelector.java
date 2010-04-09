@@ -21,6 +21,7 @@
 package de.d3web.caseGeneration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,13 +38,15 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.manage.AnswerFactory;
-import de.d3web.core.session.values.AnswerNum;
-import de.d3web.core.session.values.AnswerText;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.TextValue;
 
 /**
  * This class is used to compute a list of suitable answers for a given
- * question. 
+ * question.
  * Currently supported:
  * <UL>
  * <LI> {@link QuestionChoice}
@@ -60,10 +63,11 @@ public class AnswerSelector {
 	 */
 	public int numberOfNumericalValues = 3;
 
-	private Map<Question, List<Answer>> forbiddenAnswers = new HashMap<Question, List<Answer>>();
+	private Map<Question, List<Value>> forbiddenAnswers = new HashMap<Question, List<Value>>();
 
 
 	public static NumericalInterval DEFAULT_INTERVAL = new NumericalInterval(0, 10);
+	private static final List<Value> EMPTY_FORBIDDEN_LIST = Collections.emptyList();
 	
 	private static AnswerSelector instance = new AnswerSelector();
 	private AnswerSelector() {}
@@ -72,11 +76,11 @@ public class AnswerSelector {
 	}
 	
 //	/**
-//	 * Compute a list of {@link Finding} combinations that are possible for a 
+//	 * Compute a list of {@link Finding} combinations that are possible for a
 //	 * specified collection of questions
 //	 * @param questions a specified collection of {@link Question} instances
 //	 * @return All {@link Finding} combinations allowed for the specified list of questions
-//	 * @throws UnsupportedDataTypeException when an unsupported question type is contained in the questions 
+//	 * @throws UnsupportedDataTypeException when an unsupported question type is contained in the questions
 //	 */
 //	public List<List<Finding>> determineAnswers(List<Question> questions) throws UnsupportedDataTypeException {
 //		List<List<Finding>> findingCombinations = new LinkedList<List<Finding>>();
@@ -90,7 +94,7 @@ public class AnswerSelector {
 //		// recursive combinations of the remaining questions and answers, respectively
 //		return determineAnswers(findingCombinations, questions);
 //	}
-//	
+//
 //	private List<List<Finding>> determineAnswers(List<List<Finding>> findingCombinations, List<Question> questions) throws UnsupportedDataTypeException {
 //		if (questions.isEmpty()) {
 //			return findingCombinations;
@@ -109,82 +113,92 @@ public class AnswerSelector {
 //	}
 	
 	/**
-	 * Compute all allowed {@link Answer} instances for a specified 
+	 * Compute all allowed {@link Answer} instances for a specified
 	 * {@link Question}.
 	 * @param question the specified question
 	 * @return a list of allowed answer values for the specified question
 	 * @throws UnsupportedDataTypeException when an unsupported question is given in the parameter
 	 */
-	public List<? extends Answer[]> determineAnswers(Question question) throws UnsupportedDataTypeException {
+	public List<? extends Value> determineValues(Question question) throws UnsupportedDataTypeException {
 		if (question instanceof QuestionChoice) {
-			return determineChoiceAnswers((QuestionChoice)question);
+			return determineChoiceValues((QuestionChoice)question);
 		} else if (question instanceof QuestionNum) {
-			return determineNumAnswers((QuestionNum)question);
+			return determineNumValues((QuestionNum)question);
 		} else if (question instanceof QuestionText) {
-			return determineTextAnswers((QuestionText)question);
+			return determineTextValues((QuestionText)question);
 		}
 		
 		throw new UnsupportedDataTypeException();
 	}
 	
-	private List<? extends Answer[]> determineTextAnswers(QuestionText question) {
-		List<AnswerText[]> answers = new LinkedList<AnswerText[]>();
-		answers.add(new AnswerText[] {AnswerFactory.createAnswerText("test")});
-		answers.add(new AnswerText[] {AnswerFactory.createAnswerText(".")});
-		answers.add(new AnswerText[] {AnswerFactory.createAnswerText("")});
+	private List<? extends Value> determineTextValues(QuestionText question) {
+		List<Value> answers = new ArrayList<Value>(3);
+		answers.add(new TextValue("test"));
+		answers.add(new TextValue("."));
+		answers.add(new TextValue(""));
 		return answers;
 	}
 	
-	private List<? extends Answer[]> determineNumAnswers(QuestionNum question) {
-		List<AnswerNum[]> answers = new LinkedList<AnswerNum[]>();
+	private List<? extends Value> determineNumValues(QuestionNum question) {
+		List<Value> answers = new LinkedList<Value>();
 		NumericalInterval range = (NumericalInterval)question.getProperties().getProperty(Property.QUESTION_NUM_RANGE);
 		if (range == null) {
 			range = DEFAULT_INTERVAL;
 		}
 		int indent = (int) ((range.getRight()-range.getLeft()) / (numberOfNumericalValues-1));
 		for (double i = range.getLeft(); i <= range.getRight(); i=i+indent) {
-			answers.add(new AnswerNum[] {AnswerFactory.createAnswerNum(i)});
+			answers.add(new NumValue(new Double(i)));
 		}
 		
 		return answers;
 	}
 	
-	private List<? extends Answer[]> determineChoiceAnswers(QuestionChoice question) {
-		List<Answer[]> answers = new ArrayList<Answer[]>();
-		List<? extends Answer> answerCandidates = question.getAllAlternatives();
+	private List<? extends Value> determineChoiceValues(QuestionChoice question) {
+		List<Value> answers = new ArrayList<Value>();
+
+		List<Value> answerCandidates = new ArrayList<Value>();
+		// only add candidates, that are not forbidden
+		if (forbiddenAnswers.get(question) == null) {
+			forbiddenAnswers.put(question, EMPTY_FORBIDDEN_LIST);
+		}
+		for (AnswerChoice choice : question.getAllAlternatives()) {
+			ChoiceValue choiceValue = new ChoiceValue(choice);
+			if (!forbiddenAnswers.get(question).contains(choiceValue)) {
+				answerCandidates.add(choiceValue);
+			}
+		}
 		
-		// remove all answers which are forbidden
 		if (forbiddenAnswers.get(question) != null) {
 			answerCandidates.removeAll(forbiddenAnswers.get(question));
 		}
-		
-		// if the question is a QuestionOC add each possible answer to an Answer[]
+
+		// if the question is a QuestionOC add each possible answer to a value
 		if (question instanceof QuestionOC) {
-			for (Answer answer : answerCandidates) {
-				answers.add(new Answer[] {answer});
+			for (Value value : answerCandidates) {
+				answers.add(value);
 			}
 			
 		// if the question is a QuestionMC get all possible answer combinations
 		} else if (question instanceof QuestionMC) {
-			answers.addAll(AnswerCombinator.getInstance().getAllPossibleCombinations((QuestionMC) question));
+			answers.addAll(ValueCombinator.getInstance().getAllPossibleCombinations((QuestionMC) question));
 		}
 		
 		return answers;
 	}
 
 	/**
-	 * Return the {@link Map} storing the non-allowed answers for 
+	 * Return the {@link Map} storing the non-allowed answers for
 	 * questions (in the key).
 	 * @return the forbidden list of answers
 	 */
-	public Map<Question, List<Answer>> getForbiddenAnswers() {
+	public Map<Question, List<Value>> getForbiddenAnswers() {
 		return forbiddenAnswers;
 	}
 	/**
 	 * Sets the {@link Map} storing all non-allowed answers
 	 * @param forbiddedAnswers the forbidden answers
 	 */
-	public void setForbiddenAnswers(Map<Question, List<Answer>> forbiddedAnswers) {
+	public void setForbiddenAnswers(Map<Question, List<Value>> forbiddedAnswers) {
 		this.forbiddenAnswers = forbiddedAnswers;
 	}
 

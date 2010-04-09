@@ -32,12 +32,13 @@ import javax.activation.UnsupportedDataTypeException;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.CaseFactory;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.interviewmanager.MQDialogController;
 import de.d3web.empiricalTesting.Finding;
@@ -89,9 +90,9 @@ public class InterviewBot {
 	private RatingStrategy ratingStrategy;
 	// this findings are answered with a given value, WHEN they are asked during
 	// the interview
-	private Map<Question, Answer> knownAnswers;
+	private Map<Question, Value> knownAnswers;
 	// the answers for the given question are omitted during the interview
-	private Map<Question, List<Answer>> forbiddenAnswers;
+	private Map<Question, List<Value>> forbiddenAnswers;
 	// default 0 means no restriction in the number of answer combinations
 	private int maxAnswerCombinations;
 	// number of combinations for specified questions
@@ -108,7 +109,7 @@ public class InterviewBot {
 	private int casesCounter = 1;
 
 	private AnswerSelector answerSelector = AnswerSelector.getInstance();
-	private AnswerCombinator answerCombinator = AnswerCombinator.getInstance();
+	private final ValueCombinator answerCombinator = ValueCombinator.getInstance();
 
 	/**
 	 * Generates a collection of {@link SequentialTestCase} instances based on
@@ -153,18 +154,19 @@ public class InterviewBot {
 		}
 
 		// Get all possible answers (combinations) for the question
-		List<? extends Answer[]> possibleAnswers = 
-			new ArrayList<Answer[]>(answerSelector.determineAnswers(currentQuestion));	
+		List<? extends Value> possibleAnswers =
+				new ArrayList<Value>(answerSelector.determineValues(currentQuestion));
 		
 		// check if there is a limitation of combinations for QuestionMC
-		int numberOfCombinations = determineNumberOfCombinations(possibleAnswers, currentQuestion);	
+		int numberOfCombinations = determineNumberOfCombinations(possibleAnswers, currentQuestion);
 		
 		// Iterate over all possible answers of the next question
 		for (int i = 0; i < numberOfCombinations; i++) {
-			Answer[] nextAnswers = possibleAnswers.get(i);
+			Value nextValue = possibleAnswers.get(i);
 			XPSCase theCase = createCase(sqCase);
-			setCaseValue(theCase, currentQuestion, nextAnswers);
-			SequentialTestCase newSequentialCase = packNewSequence(sqCase, currentQuestion, nextAnswers, theCase);
+			setCaseValue(theCase, currentQuestion, nextValue);
+			SequentialTestCase newSequentialCase = packNewSequence(sqCase,
+					currentQuestion, nextValue, theCase);
 
 			// step down in recursion with the next suitable question to ask
 			Question nextQuestion = getNextQuestion(theCase, newSequentialCase);
@@ -172,16 +174,19 @@ public class InterviewBot {
 		}
 	}
 
-
 	/**
-	 * Determines how many combinations of the available answer combinations are considered.
-	 * @param currentNumberOfCombinations List<Answer[]> all available combinations
-	 * @param currentQuestion Question the current Question
+	 * Determines how many combinations of the available value combinations are
+	 * considered.
+	 * 
+	 * @param currentNumberOfCombinations
+	 *            List<Value> all available combinations
+	 * @param currentQuestion
+	 *            Question the current Question
 	 * @return int number of considered combinations
 	 */
-	private int determineNumberOfCombinations(Collection<? extends Answer[]> possibleAnswers, Question currentQuestion) {
+	private int determineNumberOfCombinations(Collection<? extends Value> possibleValues, Question currentQuestion) {
 
-		int availableCombinations = possibleAnswers.size();
+		int availableCombinations = possibleValues.size();
 		
 		// The combination constraints apply only to QuestionMCs
 		if (currentQuestion instanceof QuestionMC) {
@@ -199,19 +204,18 @@ public class InterviewBot {
 		
 	}
 
-	private SequentialTestCase packNewSequence(SequentialTestCase sqCase, Question currentQuestion, Answer[] nextAnswer, XPSCase theCase) {
+	private SequentialTestCase packNewSequence(SequentialTestCase sqCase, Question currentQuestion, Value nextValue, XPSCase theCase) {
 		SequentialTestCase newSequentialCase = sqCase.flatClone();
 		newSequentialCase.setName(sqtcasePraefix + dateToString());
-		newSequentialCase.add(createRatedTestCase(currentQuestion, nextAnswer, theCase, sqCase));
+		newSequentialCase.add(createRatedTestCase(currentQuestion, nextValue, theCase,
+				sqCase));
 		return newSequentialCase;
 	}
 
-	private RatedTestCase createRatedTestCase(Question currentQuestion, Answer[] nextAnswers, XPSCase theCase, SequentialTestCase sqCase) {
+	private RatedTestCase createRatedTestCase(Question currentQuestion, Value nextValue, XPSCase theCase, SequentialTestCase sqCase) {
 
 		RatedTestCase ratedCase = new RatedTestCase();
-		for (Answer nextAnswer : nextAnswers) {
-			ratedCase.add(new Finding(currentQuestion, nextAnswer));	
-		}
+		ratedCase.add(new Finding(currentQuestion, nextValue));
 		ratedCase.addExpected(toRatedSolutions(theCase));
 		ratedCase.inverseSortSolutions();
 
@@ -251,11 +255,9 @@ public class InterviewBot {
 	private Question getNextQuestion(XPSCase theCase, SequentialTestCase sqCase) {
 		Question question = nextQuestionFromAgenda(theCase);
 		while (knownAnswers.get(question) != null) {
-			Answer answer = knownAnswers.get(question);
-			setCaseValue(theCase, question, answer);
-
-			sqCase.add(createRatedTestCase(question, new Answer[] { answer }, theCase, sqCase));
-
+			Value value = knownAnswers.get(question);
+			setCaseValue(theCase, question, value);
+			sqCase.add(createRatedTestCase(question, value, theCase, sqCase));
 			question = nextQuestionFromAgenda(theCase);
 		}
 		return question;
@@ -290,7 +292,7 @@ public class InterviewBot {
 		XPSCase theCase = CaseFactory.createXPSCase(knowledge, MQDialogController.class);
 		for (RatedTestCase c : sqCase.getCases()) {
 			for (Finding finding : c.getFindings()) {
-				setCaseValue(theCase, finding.getQuestion(), finding.getAnswer());
+				setCaseValue(theCase, finding.getQuestion(), finding.getValue());
 			}
 		}
 		return theCase;
@@ -299,19 +301,15 @@ public class InterviewBot {
 	private XPSCase createCase(List<Finding> findings) {
 		XPSCase theCase = CaseFactory.createXPSCase(knowledge, MQDialogController.class);
 		for (Finding finding : findings) {
-			setCaseValue(theCase, finding.getQuestion(), finding.getAnswer());
+			setCaseValue(theCase, finding.getQuestion(), finding.getValue());
 		}
 		return theCase;
 	}
 
-	private void setCaseValue(XPSCase theCase, Question q, Answer[] a) {
-		theCase.setValue(q, a);
+	private void setCaseValue(XPSCase theCase, Question q, Value v) {
+		theCase.setValue(q, v);
 	}
 	
-	private void setCaseValue(XPSCase theCase, Question q, Answer a) {
-		theCase.setValue(q, new Object[] { a });
-	}
-
 	/**
 	 * This builder creates a configured interview bot.
 	 * 
@@ -324,12 +322,12 @@ public class InterviewBot {
 		private String rtcasePraefix = "RTC";
 		private List<Finding> initFindings = new LinkedList<Finding>();
 		private RatingStrategy ratingStrategy = new StateRatingStrategy();
-		private Map<Question, Answer> knownAnswers = new HashMap<Question, Answer>();
-		private Map<Question, List<Answer>> forbiddenAnswers = new HashMap<Question, List<Answer>>();
+		private final Map<Question, Value> knownAnswers = new HashMap<Question, Value>();
+		private final Map<Question, List<Value>> forbiddenAnswers = new HashMap<Question, List<Value>>();
 		private int maxAnswerCombinations = 0;
-		private Map<Question, Integer> maxAnswerCombinationsForQuestion = new HashMap<Question, Integer>();
-		private Map<Question, Collection<Answer[]>> forbiddenAnswerCombinations = new HashMap<Question, Collection<Answer[]>>();
-		private Map<Question, Collection<Answer[]>> allowedAnswerCombinations = new HashMap<Question, Collection<Answer[]>>();
+		private final Map<Question, Integer> maxAnswerCombinationsForQuestion = new HashMap<Question, Integer>();
+		private final Map<Question, Collection<Answer[]>> forbiddenAnswerCombinations = new HashMap<Question, Collection<Answer[]>>();
+		private final Map<Question, Collection<Answer[]>> allowedAnswerCombinations = new HashMap<Question, Collection<Answer[]>>();
 		
 		private KnowledgeBase knowledge;
 
@@ -368,16 +366,16 @@ public class InterviewBot {
 		}
 
 		public Builder knownAnswers(Finding f) {
-			knownAnswers.put(f.getQuestion(), f.getAnswer());
+			knownAnswers.put(f.getQuestion(), f.getValue());
 			return this;
 		}
 
 		public Builder forbiddenAnswer(Finding f) {
-			List<Answer> answers = forbiddenAnswers.get(f.getQuestion());
+			List<Value> answers = forbiddenAnswers.get(f.getQuestion());
 			if (answers == null) {
-				answers = new LinkedList<Answer>();
+				answers = new ArrayList<Value>();
 			}
-			answers.add(f.getAnswer());
+			answers.add(f.getValue());
 			forbiddenAnswers.put(f.getQuestion(), answers);
 			return this;
 		}
@@ -440,7 +438,7 @@ public class InterviewBot {
 		maxAnswerCombinations = builder.maxAnswerCombinations;
 		maxAnswerCombinationsForQuestion = builder.maxAnswerCombinationsForQuestion;
 		forbiddenAnswerCombinations = builder.forbiddenAnswerCombinations;
-		allowedAnswerCombinations = builder.allowedAnswerCombinations;		
+		allowedAnswerCombinations = builder.allowedAnswerCombinations;
 	}
 
 	private String dateToString() {

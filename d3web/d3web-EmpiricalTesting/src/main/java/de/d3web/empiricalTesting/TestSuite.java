@@ -35,8 +35,8 @@ public class TestSuite {
 	@SuppressWarnings("unchecked")
 	private static Class psMethodContext = PSMethodHeuristic.class;
 
-	private TestPersistence persistence = TestPersistence.getInstance();
-	private EmpiricalTestingFunctions functions = EmpiricalTestingFunctions.getInstance();
+	private final TestPersistence persistence = TestPersistence.getInstance();
+	private final EmpiricalTestingFunctions functions = EmpiricalTestingFunctions.getInstance();
 	
 	private List<SequentialTestCase> repository;
 	private KnowledgeBase kb;
@@ -122,7 +122,7 @@ public class TestSuite {
 	 */
 	public void setRepository(List<SequentialTestCase> repository) {
 		this.repository = repository;
-	}		
+	}
 	
 	/**
 	 * Loads a SequentialTestCase Repository into this TestSuite.
@@ -151,7 +151,7 @@ public class TestSuite {
 			System.err.println("Malformed URL: "+casesUrl);
 			e.printStackTrace();
 		}
-	}		
+	}
 
 	/**
 	 * Saves TestSuite without derivedSolutions
@@ -159,7 +159,7 @@ public class TestSuite {
 	 */
 	public void saveRepository_expectedSolutions(String casesUrl){
 		saveRepository(casesUrl, false);
-	}	
+	}
 	
 	/**
 	 * Saves TestSuite with derivedSolutions
@@ -194,7 +194,7 @@ public class TestSuite {
 							System.err.println(rtc2);
 							return false;
 						}
-					}else 
+					}else
 						break;
 				}
 		return true;
@@ -232,7 +232,7 @@ public class TestSuite {
 	/**
 	 * Calculates the TotalPrecision of this (consistent!) TestSuite.
 	 * NonSequential means, that only the last RatedTestCase of each SequentialTestCase
-	 * is taken into account. 
+	 * is taken into account.
 	 * @return 0, if this TestSuite is not consistent. Else: The Total Precision
 	 */
 	public double totalNonSequentialPrecision() {
@@ -259,7 +259,7 @@ public class TestSuite {
 		if (!isConsistent()) {
 			return prec;
 		}
-		deriveAllSolutions();	
+		deriveAllSolutions();
 		for (SequentialTestCase stc : repository) {
 			prec += functions.precision(stc, new InterviewCalculator(kb), false);
 		}
@@ -287,7 +287,7 @@ public class TestSuite {
 	/**
 	 * Calculates the TotalRecall of this (consistent!) TestSuite.
 	 * NonSequential means, that only the last RatedTestCase of each SequentialTestCase
-	 * is taken into account. 
+	 * is taken into account.
 	 * @return 0, if this TestSuite is not consistent. Else: The Total Recall
 	 */
 	public double totalNonSequentialRecall() {
@@ -314,7 +314,7 @@ public class TestSuite {
 		if (!isConsistent()) {
 			return rec;
 		}
-		deriveAllSolutions();	
+		deriveAllSolutions();
 		for (SequentialTestCase stc : repository) {
 			rec += functions.recall(stc, new InterviewCalculator(kb), false);
 		}
@@ -323,12 +323,12 @@ public class TestSuite {
 	}
 	
 	
-	//TODO: Nicht nur eine Antwort (auf eine Frage) sondern mehrere 
+	//TODO: Nicht nur eine Antwort (auf eine Frage) sondern mehrere
 	//Antworten auf mehrere (erste) Fragen möglich
 	public TestSuite getPartiallyAnsweredSuite(AnswerChoice answer){
 		TestSuite ret = new TestSuite();
 		for(SequentialTestCase stc : getRepository())
-			if(stc.getCases().get(0).getFindings().get(0).getAnswer().equals(answer))
+			if (stc.getCases().get(0).getFindings().get(0).getValue().equals(answer))
 				ret.getRepository().add(stc);
 		return ret;
 	}

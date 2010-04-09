@@ -25,8 +25,10 @@ import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.session.CaseFactory;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.NumValue;
 
 
 /**
@@ -37,7 +39,7 @@ import de.d3web.core.session.values.AnswerChoice;
 public class Finding implements Comparable<Finding> {
 
 	private Question question;
-	private Answer answer;
+	private Value value;
 
 	/**
 	 * Constructs a new Finding by searching.
@@ -47,7 +49,7 @@ public class Finding implements Comparable<Finding> {
 	 * @return new Finding consisting of committed question and searched answer.
 	 */
 	public Finding(QuestionChoice question, String answerIDorText) throws Exception {
-		Answer foundAnswer = null;
+		AnswerChoice foundAnswer = null;
 		for (AnswerChoice ac : question.getAllAlternatives()) {
 			if (answerIDorText.equals(ac.getId())
 					|| answerIDorText.equals(ac.getName()))
@@ -56,8 +58,9 @@ public class Finding implements Comparable<Finding> {
 		if (foundAnswer == null)
 			throw new Exception("Answer not found for ID/Text: "
 					+ answerIDorText);
-		else
-			setup(question, foundAnswer);
+		else {
+			setup(question, new ChoiceValue(foundAnswer));
+		}
 	}
 	
 	/**
@@ -69,13 +72,7 @@ public class Finding implements Comparable<Finding> {
 	 * @return new Finding consisting of committed question and searched answer.
 	 */
 	public Finding(QuestionNum question, String value) throws Exception {
-		double val = Double.parseDouble(value);
-		Answer foundAnswer = question.getAnswer(CaseFactory.createXPSCase(question.getKnowledgeBase()), val);
-		if (foundAnswer == null)
-			throw new Exception("Answer not found for ID/Text: "
-					+ value);
-		else
-			setup(question, foundAnswer);
+		setup(question, new NumValue(Double.parseDouble(value)));
 	}
 
 	/**
@@ -84,20 +81,20 @@ public class Finding implements Comparable<Finding> {
 	 * @param answer The committed answer
 	 * @return new Finding consisting of committed question and answer
 	 */
-	public Finding(Question question, Answer answer) {
-		setup(question, answer);
+	public Finding(Question question, Value value) {
+		setup(question, value);
 	}
 
 
 	/**
-	 * Creates a new {@link Finding} based on the {@link QuestionChoice} 
+	 * Creates a new {@link Finding} based on the {@link QuestionChoice}
 	 * contained in the specified {@link KnowledgeBase} with
-	 * the specified questionName and the specified answerName. 
+	 * the specified questionName and the specified answerName.
 	 * @param questionName the specified questionName
 	 * @param answerName the specified answerName
-	 * @return a created Finding based on the specified names 
-	 * @throws Exception when null delivered in one of the arguments 
-	 *         or inappropriate Question type used 
+	 * @return a created Finding based on the specified names
+	 * @throws Exception when null delivered in one of the arguments
+	 *         or inappropriate Question type used
 	 */
 	public static Finding createFinding(KnowledgeBase k, String questionName, String answerName) throws Exception  {
 		if (k == null || questionName == null || answerName == null)
@@ -117,35 +114,38 @@ public class Finding implements Comparable<Finding> {
 	}
 	
 	
-	private void setup(Question question, Answer answer) {
+	private void setup(Question question, Value value) {
 		this.question = question;
-		this.answer = answer;
+		this.value = value;
 	}
 
 	/**
-	 * Returns String representation of this Finding.
-	 * question = answer
+	 * Returns String representation of this Finding. question = value
+	 * 
 	 * @return String representation of this Finding.
 	 */
 	@Override
 	public String toString() {
-		return question + " = " + answer;
+		return question + " = " + value;
 	}
 
 	/**
-	 * Returns answer of this Finding
-	 * @return answer
+	 * Returns value of this Finding
+	 * 
+	 * @return value
 	 */
-	public Answer getAnswer() {
-		return answer;
+	public Value getValue() {
+		return value;
 	}
 
 	/**
-	 * Sets answer of this Finding to a
-	 * @param a answer
+	 * Sets value of this Finding to v
+	 * 
+	 * @param v
+	 *            the value
 	 */
-	public void setAnswer(Answer a) {
-		this.answer = a;
+	public void setValue(Value v) {
+		this.value = v;
 	}
 
 	/**
@@ -172,11 +172,7 @@ public class Finding implements Comparable<Finding> {
 		comp = question.getName().compareTo(o.getQuestion().getName());
 		if (comp != 0)
 			return comp;
-		comp = answer.getId().compareTo(o.getAnswer().getId());
-		if (comp != 0)
-			return comp;
-		comp = ((AnswerChoice) answer).getName().compareTo(
-				((AnswerChoice) o.getAnswer()).getName());
+		comp = value.compareTo(o.value);
 		return comp;
 	}
 
@@ -184,7 +180,7 @@ public class Finding implements Comparable<Finding> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((answer == null) ? 0 : answer.hashCode());
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
 		result = prime * result
 				+ ((question == null) ? 0 : question.hashCode());
 		return result;
@@ -199,10 +195,11 @@ public class Finding implements Comparable<Finding> {
 		if (!(obj instanceof Finding))
 			return false;
 		Finding other = (Finding) obj;
-		if (answer == null) {
-			if (other.answer != null)
+		if (value == null) {
+			if (other.value != null)
 				return false;
-		} else if (!answer.equals(other.answer))
+		}
+		else if (!value.equals(other.value))
 			return false;
 		if (question == null) {
 			if (other.question != null)

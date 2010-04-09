@@ -38,6 +38,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.empiricalTesting.Finding;
 import de.d3web.empiricalTesting.SequentialTestCase;
 import de.d3web.empiricalTesting.caseVisualization.BotHelper;
@@ -47,12 +48,13 @@ import de.d3web.empiricalTesting.caseVisualization.BotHelper;
  * @author joba
  * @deprecated Please use InterviewBotRunner
  */
+@Deprecated
 public class DDBot2Runner {
 
 	final static int FROM = 1;
 	final static int TO = 1;
 
-	private KnowledgeBase knowledge;
+	private final KnowledgeBase knowledge;
 	private String caseNamePraefix;
 
 	boolean cutQuationnaireSibling = false;
@@ -252,7 +254,7 @@ public class DDBot2Runner {
 		QuestionChoice q = (QuestionChoice) k.searchQuestion(questionID);
 		AnswerChoice a = BotHelper.getInstance().findAnswer(q,
 				questionID + "a" + answerNo);
-		return new Finding(q, a);
+		return new Finding(q, new ChoiceValue(a));
 	}
 
 	public synchronized String getCaseNamePraefix() {

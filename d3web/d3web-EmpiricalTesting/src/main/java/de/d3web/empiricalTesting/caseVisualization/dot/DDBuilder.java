@@ -34,10 +34,10 @@ import java.util.List;
 import java.util.Set;
 
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.empiricalTesting.ConfigLoader;
 import de.d3web.empiricalTesting.Finding;
@@ -102,8 +102,8 @@ public class DDBuilder implements CaseVisualizer {
 	 * will be created at the committed filepath.
 	 * 
 	 * @param cases List<SequentialTestCase> which's elements
-	 *              will be visualized by this class. 
-	 * @param filepath String which specifies where the 
+	 *              will be visualized by this class.
+	 * @param filepath String which specifies where the
 	 *                 created <b>DOT file</b> will be stored.
 	 */
 	@Override
@@ -122,9 +122,9 @@ public class DDBuilder implements CaseVisualizer {
 	 * Saves the graph visualization to a <b>DOT file</b> which
 	 * will be created at the committed filepath.
 	 * 
-	 * @param TS TestSuite which's cases will be 
-	 * 					visualized by this class. 
-	 * @param filepath String which specifies where the 
+	 * @param TS TestSuite which's cases will be
+	 * 					visualized by this class.
+	 * @param filepath String which specifies where the
 	 *                 created <b>DOT file</b> will be stored.
 	 */
 	@Override
@@ -136,14 +136,14 @@ public class DDBuilder implements CaseVisualizer {
 			//Die erste Frage ermitteln
 			QuestionChoice firstQuestion = (QuestionChoice)TS.getRepository().get(0).
 								getCases().get(0).getFindings().get(0).getQuestion();
-			//Die Antwortalternativen 
+			//Die Antwortalternativen
 			List<AnswerChoice> firstAnswers = firstQuestion.getAllAlternatives();
 			for(Answer answerOfFirstQuestion : firstAnswers){
-				TestSuite partitioned = 
+				TestSuite partitioned =
 					TS.getPartiallyAnsweredSuite((AnswerChoice)answerOfFirstQuestion);
 				if(partitioned.getRepository().size()>0){
-					generateDDNet(partitioned.getRepository());				
-					String printFilePath = 
+					generateDDNet(partitioned.getRepository());
+					String printFilePath =
 						checkDotFilePath(dotFile, answerOfFirstQuestion.getId());
 					System.out.println(printFilePath);
 					try {
@@ -178,7 +178,7 @@ public class DDBuilder implements CaseVisualizer {
 			else
 				ret = dotFile.substring(0, dotFile.length() - 4) + "_" + addOn + ".dot";
 		else//we suppose, its a Path without trailing "/"
-			ret = dotFile + "/" + addOn + ".dot";		
+			ret = dotFile + "/" + addOn + ".dot";
 		
 		return ret;
 	}
@@ -201,7 +201,7 @@ public class DDBuilder implements CaseVisualizer {
 				String name = ratedTestCase.getName() + ratedTestCase.getFindings().get(0).toString();
 				
 				if (nodes.get(name) == null )
-					nodes.put(name, new DDNode(ratedTestCase));				
+					nodes.put(name, new DDNode(ratedTestCase));
 				
 				DDNode node = nodes.get(name);
 
@@ -221,7 +221,7 @@ public class DDBuilder implements CaseVisualizer {
 				prec = node;
 			}
 		}
-	}	
+	}
 	
 	@Deprecated
 	public String generateDOT(boolean cutQuestionnaireSiblingIndication) {
@@ -241,11 +241,11 @@ public class DDBuilder implements CaseVisualizer {
 	}
 	
 	private void write(OutputStream out) throws IOException {
-		OutputStreamWriter dotwriter = 
+		OutputStreamWriter dotwriter =
 			new OutputStreamWriter(out , "UTF-8");
 		dotwriter.write(generateDOT());
 		dotwriter.close();
-	}	
+	}
 
 	private List<Question> computeOutgoing(DDNode node) {
 		List<Question> outgoingQuestions = new ArrayList<Question>(1);
@@ -271,14 +271,14 @@ public class DDBuilder implements CaseVisualizer {
 		s0name.append("_");
 		s0name.append(bh.removeBadChars(edge.getBegin().getTestCase().getFindings().get(0).getQuestion().toString()));
 		s0name.append("_");
-		s0name.append(bh.removeBadChars(edge.getBegin().getTestCase().getFindings().get(0).getAnswer().toString()));
+		s0name.append(bh.removeBadChars(edge.getBegin().getTestCase().getFindings().get(0).getValue().toString()));
 		
 		StringBuilder s1name = new StringBuilder();
 		s1name.append(bh.removeBadChars(edge.getEnd().getTestCase().getName()));
 		s1name.append("_");
 		s1name.append(bh.removeBadChars(edge.getEnd().getTestCase().getFindings().get(0).getQuestion().toString()));
 		s1name.append("_");
-		s1name.append(bh.removeBadChars(edge.getEnd().getTestCase().getFindings().get(0).getAnswer().toString()));
+		s1name.append(bh.removeBadChars(edge.getEnd().getTestCase().getFindings().get(0).getValue().toString()));
 		
 		String arcName = s0name.toString() + "-" + s1name.toString();
 		if (createdEdges.contains(arcName))
@@ -286,47 +286,47 @@ public class DDBuilder implements CaseVisualizer {
 		else {
 			createdEdges.add(arcName);
 //			String label = edge.getLabel().getAnswer().toString();
-//			
+//
 //			b.append("\"" + s0name + "\" -> \"" + s1name + "\" [");
 //			b.append("label = " + bh.prettyLabel(label));
 			
 			b.append("\"" + s0name + "\" -> \"" + s1name + "\" [");
 			b.append("label = \"");
 			for (Finding f : edge.getEnd().getFindings()) {
-				b.append(bh.prettyLabel(f.getAnswer().toString()));
+				b.append(bh.prettyLabel(f.getValue().toString()));
 				b.append("\\l");
 			}
 			b.append("\"");
 			
-			boolean bolOldCasesLikeNewCases = 
+			boolean bolOldCasesLikeNewCases =
 				config.getProperty("renderOldCasesLikeNewCases").equals("true");
 			
 			switch(edge.getTheCasetype()){
 				case new_case:
-					b.append(" color = \"" + 
+					b.append(" color = \"" +
 							config.getProperty("edgeColorNewCase") + "\"");
-					b.append(" penwidth = " + 
+					b.append(" penwidth = " +
 							config.getProperty("edgeWidthNewCase"));
 					break;
 				case old_case:
 					
 					if(bolOldCasesLikeNewCases){
-						b.append(" color = \"" + 
+						b.append(" color = \"" +
 								config.getProperty("edgeColorNewCase") + "\"");
-						b.append(" penwidth = " + 
-								config.getProperty("edgeWidthNewCase"));						
+						b.append(" penwidth = " +
+								config.getProperty("edgeWidthNewCase"));
 					}else{
-						b.append(" color = \"" + 
+						b.append(" color = \"" +
 								config.getProperty("edgeColorOldCase") + "\"");
-						b.append(" penwidth = " + 
-								config.getProperty("edgeWidthOldCase"));						
+						b.append(" penwidth = " +
+								config.getProperty("edgeWidthOldCase"));
 					}
 
 					break;
 				case incorrect:
-					b.append(" color = \"" + 
+					b.append(" color = \"" +
 							config.getProperty("edgeColorIncorrectCase") + "\"");
-					b.append(" penwidth = " + 
+					b.append(" penwidth = " +
 							config.getProperty("edgeWidthIncorrectCase"));
 					break;
 			}
@@ -341,26 +341,26 @@ public class DDBuilder implements CaseVisualizer {
 		b.append("_");
 		b.append(bh.removeBadChars(node.getTestCase().getFindings().get(0).getQuestion().toString()));
 		b.append("_");
-		b.append(bh.removeBadChars(node.getTestCase().getFindings().get(0).getAnswer().toString()));
+		b.append(bh.removeBadChars(node.getTestCase().getFindings().get(0).getValue().toString()));
 		b.append(" [\n  label=<\n");
 		b.append("   <TABLE>\n");
 
 		//Colspan
 		int intColSpan = 3;
 		
-		String strSolutionColorCorrect = 
+		String strSolutionColorCorrect =
 			config.getProperty("nodeColorNewCase");
 		
-		String strSolutionColorSuggested = 
+		String strSolutionColorSuggested =
 			config.getProperty("solutionColorSuggested");
-		String strSolutionColorEstablished = 
+		String strSolutionColorEstablished =
 			config.getProperty("solutionColorEstablished");
 		
 		String nodeColor = "";
-		boolean bolOldCasesLikeNewCases = 
+		boolean bolOldCasesLikeNewCases =
 			config.getProperty("renderOldCasesLikeNewCases").equals("true");
 		
-		boolean bolCompareOnlySymbolicStates = 
+		boolean bolCompareOnlySymbolicStates =
 			config.getProperty("compareOnlySymbolicStates").equals("true");
 		
 		switch(node.getTheCaseType()){
@@ -378,12 +378,12 @@ public class DDBuilder implements CaseVisualizer {
 				
 				strSolutionColorCorrect = nodeColor;
 				strSolutionColorSuggested = nodeColor;
-				strSolutionColorEstablished = nodeColor;				
+				strSolutionColorEstablished = nodeColor;
 				break;
 			case incorrect:
 				nodeColor = config.getProperty("nodeColorIncorrectCase");
 				if(config.getProperty("printCorrectionColumn").equals("true"))
-					intColSpan = 4;				
+					intColSpan = 4;
 				break;
 		}
 
@@ -392,20 +392,20 @@ public class DDBuilder implements CaseVisualizer {
 		String nodeName;
 		for (Finding f : node.getTestCase().getFindings()) {
 			nodeName = f.toString();
-			b.append("    <TR><TD COLSPAN=\""+intColSpan+"\" BGCOLOR=\"" + 
+			b.append("    <TR><TD COLSPAN=\""+intColSpan+"\" BGCOLOR=\"" +
 					nodeColor + "\">" + bh.pretty(nodeName) + "</TD> </TR>\n");
 		}
 		
 //		Finding currentFinding = node.getTestCase().getFindings().get(0);
 //		String nodeName = currentFinding.toString();
 //
-//		b.append("    <TR><TD COLSPAN=\""+intColSpan+"\" BGCOLOR=\"" + 
+//		b.append("    <TR><TD COLSPAN=\""+intColSpan+"\" BGCOLOR=\"" +
 //				nodeColor + "\">" + bh.pretty(nodeName) + "</TD> </TR>\n");
 
 		// Put all RatedSolutions in HashMaps
-		HashMap<Solution, RatedSolution> expSolutions = 
+		HashMap<Solution, RatedSolution> expSolutions =
 			getSolutionsInHashMap(node.getTestCase().getExpectedSolutions());
-		HashMap<Solution, RatedSolution> derSolutions = 
+		HashMap<Solution, RatedSolution> derSolutions =
 			getSolutionsInHashMap(node.getTestCase().getDerivedSolutions());
 		HashSet<Solution> solutions = new HashSet<Solution>();
 				
@@ -420,21 +420,21 @@ public class DDBuilder implements CaseVisualizer {
 			RatedSolution derived = derSolutions.get(d);
 						
 			if (expected != null && derived != null && expected.equals(derived)) {
-				b.append(transformCorrectSolution(derived, strSolutionColorCorrect, 
+				b.append(transformCorrectSolution(derived, strSolutionColorCorrect,
 						intColSpan, bolCompareOnlySymbolicStates));
 			} else {
-				String expColor = getColor(expected, strSolutionColorSuggested, 
+				String expColor = getColor(expected, strSolutionColorSuggested,
 						strSolutionColorEstablished, nodeColor);
-				String derColor = getColor(derived, strSolutionColorSuggested, 
+				String derColor = getColor(derived, strSolutionColorSuggested,
 						strSolutionColorEstablished, nodeColor);
-				b.append(transformIncorrectSolutions(expected, derived, intColSpan, 
+				b.append(transformIncorrectSolutions(expected, derived, intColSpan,
 						expColor, derColor, nodeColor, bolCompareOnlySymbolicStates));
 			}
 		}
 
 		// print questions to be asked next (mostly only one)
 		for (Question question : nextQuestions) {
-			b.append("    <TR><TD COLSPAN=\""+intColSpan+"\" BGCOLOR=\"" + 
+			b.append("    <TR><TD COLSPAN=\""+intColSpan+"\" BGCOLOR=\"" +
 				nodeColor + "\">" + bh.pretty(question.getName()) + "</TD> </TR>\n");
 		}
 
@@ -453,7 +453,7 @@ public class DDBuilder implements CaseVisualizer {
 	private HashMap<Solution, RatedSolution> getSolutionsInHashMap(
 			List<RatedSolution> solutions) {
 		
-		HashMap<Solution, RatedSolution> result = 
+		HashMap<Solution, RatedSolution> result =
 			new HashMap<Solution, RatedSolution>();
 		
 		for (RatedSolution rs : solutions) {
@@ -470,8 +470,8 @@ public class DDBuilder implements CaseVisualizer {
 	 * 
 	 * @param color String containing coloration information
 	 * @parm colspan int containing colspan information
-	 *            
-	 * @return String representing the header of the 
+	 * 
+	 * @return String representing the header of the
 	 *                solutions part of the table
 	 */
 	private String transformSolutionsHeader(String color, int colspan) {
@@ -520,11 +520,11 @@ public class DDBuilder implements CaseVisualizer {
 	
 	/**
 	 * Transforms a correct (expected = derived) solution
-	 * to a nice formatted String representation in 
+	 * to a nice formatted String representation in
 	 * preparation for rendering.
 	 * 
 	 * @param derived RatedSolution the derived solution
-	 *                which will be transformed       
+	 *                which will be transformed
 	 * @param color String containing coloration information
 	 * @parm colspan int containing colspan information
 	 * @parm symbolicstates boolean containing information whether
@@ -550,23 +550,23 @@ public class DDBuilder implements CaseVisualizer {
 		result.append(transformState(derived, symbolicstates));
 		result.append("</TD>");
 		result.append(createCorrectionColumn(colspan));
-		result.append("</TR>\n");		
+		result.append("</TR>\n");
 		
 		return result.toString();
 	}
 	
 	
 	/**
-	 * Transforms two incorrect (expected != derived) 
-	 * solutions to a nice formatted String representation 
+	 * Transforms two incorrect (expected != derived)
+	 * solutions to a nice formatted String representation
 	 * in preparation for rendering.
 	 * 
 	 * @param expected RatedSolution the expected solution
 	 *                which will be transformed
-	 *                
+	 * 
 	 * @param derived RatedSolution the derived solution
 	 *                which will be transformed
-	 * @parm colspan int containing colspan information          
+	 * @parm colspan int containing colspan information
 	 * @param expectedcolor String containing coloration information
 	 *                      for expected solution
 	 * @param derivedcolor String containing coloration information
@@ -580,13 +580,13 @@ public class DDBuilder implements CaseVisualizer {
 	 * @return String representing the transformed RatedSolutions
 	 */
 	private String transformIncorrectSolutions(RatedSolution expected,
-			RatedSolution derived, int colSpan, String expectedColor, 
+			RatedSolution derived, int colSpan, String expectedColor,
 			String derivedColor, String nodeColor, boolean symbolicstates) {
 		
 
 		StringBuilder result = new StringBuilder();
-		String solName = (expected == null ? 
-						  derived.getSolution().getName() : 
+		String solName = (expected == null ?
+						  derived.getSolution().getName() :
 						  expected.getSolution().getName());
 		
 		result.append("    <TR>");
@@ -606,18 +606,18 @@ public class DDBuilder implements CaseVisualizer {
 		result.append(derived == null ? "N/A" : transformState(derived, symbolicstates));
 		result.append("</TD>");
 		result.append(createCorrectionColumn(colSpan));
-		result.append("</TR>\n");		
+		result.append("</TR>\n");
 		
 		return result.toString();
 	}
 	
 	
 	/**
-	 * Transforms the state of a RatedSolution 
-	 * to a nice formatted String in preparation 
+	 * Transforms the state of a RatedSolution
+	 * to a nice formatted String in preparation
 	 * for rendering.
 	 * 
-	 * @param rs RatedSolution representing the currently 
+	 * @param rs RatedSolution representing the currently
 	 *           processed RatedSolution
 
 	 * @parm symbolicstates boolean containing information whether
@@ -631,11 +631,11 @@ public class DDBuilder implements CaseVisualizer {
 							
 		StringBuilder result = new StringBuilder();
 		
-		if (symbolicstates) {					
+		if (symbolicstates) {
 			result.append(transformSymbolicStates(rs.getRating()));
 									
 		} else {
-			result.append(transformScores(rs.getRating()));					
+			result.append(transformScores(rs.getRating()));
 			
 		}
 				
@@ -643,13 +643,13 @@ public class DDBuilder implements CaseVisualizer {
 	}
 	
 	/**
-	 * Transforms the state of a RatedSolution 
-	 * to nice a formatted String in preparation 
-	 * for rendering. This Method transforms the 
+	 * Transforms the state of a RatedSolution
+	 * to nice a formatted String in preparation
+	 * for rendering. This Method transforms the
 	 * scores to symbolic states like "established" or
 	 * "suggested".
 	 * 
-	 * @param score Score representing the currently 
+	 * @param score Score representing the currently
 	 *              processed score of the solution
 	 * 
 	 * @return String representing the state of the
@@ -666,11 +666,11 @@ public class DDBuilder implements CaseVisualizer {
 	
 	/**
 	 * Transforms the state of a RatedSolution
-	 * to a nice formatted String in preparation 
-	 * for rendering. This Method transforms the 
+	 * to a nice formatted String in preparation
+	 * for rendering. This Method transforms the
 	 * scores to numbers.
 	 * 
-	 * @param score Score representing the currently 
+	 * @param score Score representing the currently
 	 *              processed score of the solution
 	 * 
 	 * @return String representing the score of the
@@ -680,7 +680,7 @@ public class DDBuilder implements CaseVisualizer {
 		
 		if (score instanceof ScoreRating) {
 			return formater.format(score.getRating());
-		} 
+		}
 			
 		return score.getRating().toString();
 		
@@ -711,7 +711,7 @@ public class DDBuilder implements CaseVisualizer {
 	 * 
 	 * @param rs RatedSolution which's backgroundcolor
 	 *           we are looking for.
-	 *           
+	 * 
 	 * @param suggested String containing coloration information
 	 *                      for solutions which are suggested
 	 * @param established String containing coloration information
@@ -719,7 +719,7 @@ public class DDBuilder implements CaseVisualizer {
 	 * 
 	 * @return String representing the color
 	 */
-	private String getColor(RatedSolution rs, String suggested, 
+	private String getColor(RatedSolution rs, String suggested,
 			String established, String nodeColor) {
 		
 		if (rs == null) {
@@ -730,7 +730,7 @@ public class DDBuilder implements CaseVisualizer {
 		DiagnosisState state = getState(score);
 		
 		if(state.equals(DiagnosisState.ESTABLISHED)) {
-			return established;	
+			return established;
 		} else {
 			return suggested;
 		}

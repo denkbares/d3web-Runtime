@@ -24,16 +24,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.CaseFactory;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.interviewmanager.MQDialogController;
 import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.empiricalTesting.Finding;
 import de.d3web.empiricalTesting.RatedSolution;
 import de.d3web.empiricalTesting.RatedTestCase;
@@ -44,6 +45,7 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
 /**
  * @deprecated Please use InterviewBot
  */
+@Deprecated
 public class DDBot2 {
 
 	private static final double SCORE_THRESHOLD = 10;
@@ -87,10 +89,11 @@ public class DDBot2 {
 		List<AnswerChoice> nextAnswers = currentQuestion.getAllAlternatives();
 		for (AnswerChoice nextAnswer : nextAnswers) {
 			XPSCase theCase = createCase(knowledge, flattendFindings);
-			setCaseValue(theCase, currentQuestion, nextAnswer);
+			ChoiceValue choiceValue = new ChoiceValue(nextAnswer);
+			setCaseValue(theCase, currentQuestion, choiceValue);
 
 			RatedTestCase ratedCase = createRatedTestCase(currentQuestion,
-					nextAnswer, theCase);
+					choiceValue, theCase);
 			SequentialTestCase newSequentialCase = theSeqCase.flatClone();
 
 			newSequentialCase.add(ratedCase);
@@ -116,7 +119,7 @@ public class DDBot2 {
 				MQDialogController.class);
 
 		for (Finding finding : findings) {
-			setCaseValue(theCase, finding.getQuestion(), finding.getAnswer());
+			setCaseValue(theCase, finding.getQuestion(), finding.getValue());
 		}
 
 		return theCase;
@@ -150,7 +153,7 @@ public class DDBot2 {
 	}
 
 	private RatedTestCase createRatedTestCase(QuestionChoice currentQuestion,
-			AnswerChoice nextAnswer, XPSCase theCase) {
+			ChoiceValue nextAnswer, XPSCase theCase) {
 		RatedTestCase ratedCase = new RatedTestCase();
 		ratedCase.add(new Finding(currentQuestion, nextAnswer));
 		ratedCase.addExpected(toRatedSolutions(theCase));
@@ -175,9 +178,9 @@ public class DDBot2 {
 		}
 	}
 
-	public void setCaseValue(XPSCase theCase, Question q, Answer a)
+	public void setCaseValue(XPSCase theCase, Question q, Value a)
 			throws Exception {
-		theCase.setValue(q, new Object[] { a });
+		theCase.setValue(q, a);
 
 	}
 

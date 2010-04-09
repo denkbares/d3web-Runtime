@@ -39,10 +39,11 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.empiricalTesting.Finding;
 import de.d3web.empiricalTesting.RatedSolution;
 import de.d3web.empiricalTesting.RatedTestCase;
@@ -67,7 +68,7 @@ public class SequentialTestCasePersistence {
 	private static SequentialTestCasePersistence instance = new SequentialTestCasePersistence();
 	private boolean verbose = false;
 	private KnowledgeBase knowledge;
-	private BotHelper bh = BotHelper.getInstance();
+	private final BotHelper bh = BotHelper.getInstance();
 
 	private SequentialTestCasePersistence() {
 		super();
@@ -220,7 +221,7 @@ public class SequentialTestCasePersistence {
 				throw new Exception("Answer with ID " + answerID
 						+ " not found.");
 
-			ratedTestCase.add(new Finding(q, a));
+			ratedTestCase.add(new Finding(q, new ChoiceValue(a)));
 		}
 
 	}
@@ -256,10 +257,13 @@ public class SequentialTestCasePersistence {
 		for (Finding finding : findings) {
 			Element findi = new Element(FINDING);
 			findi.setAttribute(QUESTION, finding.getQuestion().getId());
-			if (finding.getAnswer() instanceof AnswerChoice)
-				findi.setAttribute(ANSWER, finding.getAnswer().getId());
-			else
-				findi.setAttribute(ANSWER, finding.getAnswer().toString());
+			if (finding.getValue() instanceof ChoiceValue) {
+				AnswerChoice choice = (AnswerChoice) finding.getValue().getValue();
+				findi.setAttribute(ANSWER, choice.getId());
+			}
+			else {
+				findi.setAttribute(ANSWER, finding.getValue().getValue().toString());
+			}
 			if (verbose) {
 				elem.addContent(new Comment(finding.toString()));
 			}

@@ -23,17 +23,17 @@ package de.d3web.empiricalTesting;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.CaseFactory;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.XPSCase;
 import de.d3web.core.session.interviewmanager.MQDialogController;
 
 public class InterviewCalculator extends PrecisionRecallCalculator{
 	
-	private XPSCase thecase;
+	private final XPSCase thecase;
 	private QContainer currentQC;
 	
 	public InterviewCalculator(KnowledgeBase kb) {
@@ -62,6 +62,7 @@ public class InterviewCalculator extends PrecisionRecallCalculator{
 	 * @param rtc The RatedTestCase necessary for the calculation
 	 * @return Interview-Recall of RatedTestCase
 	 */
+	@Override
 	public double rec(RatedTestCase rtc) {
 		double numerator = similarity(rtc);
 		numerator /= rtc.getFindings().size();
@@ -85,18 +86,18 @@ public class InterviewCalculator extends PrecisionRecallCalculator{
 		
 		for (Finding f : findings) {
 						
-			Question expected = f.getQuestion();		
+			Question expected = f.getQuestion();
 			Question asked = getNextQuestion();
 			
 			// Compare expected question with asked question
 			if (expected.equals(asked)) {
-				sum += 1;	
+				sum += 1;
 			}
 			
 			// Set answer of current question in XPS-Case
-			setCaseValue(f.getQuestion(), f.getAnswer());
+			setCaseValue(f.getQuestion(), f.getValue());
 			
-		}			
+		}
 		return sum;
 	}
 	
@@ -105,8 +106,8 @@ public class InterviewCalculator extends PrecisionRecallCalculator{
 	 * @param q Question which will be set.
 	 * @param a Answer which will be set.
 	 */
-	private void setCaseValue(Question q, Answer a) {
-		thecase.setValue(q, new Object[] { a });
+	private void setCaseValue(Question q, Value v) {
+		thecase.setValue(q, v);
 	}
 	
 	/**
@@ -130,12 +131,12 @@ public class InterviewCalculator extends PrecisionRecallCalculator{
 		
 		// if currentQASet is a QContainer return the first remaining Question
 		} else if (currentQASet != null) {
-			List<Question> validQuestions = 
+			List<Question> validQuestions =
 				controller.getAllValidQuestionsOf((QContainer) currentQASet);
 			currentQC = (QContainer) currentQASet;
 			nextQuestion = validQuestions.get(0);
 		
-		} 
+		}
 		
 		return nextQuestion;
 		
@@ -150,9 +151,9 @@ public class InterviewCalculator extends PrecisionRecallCalculator{
 	 */
 	private QASet getCorrectQASet(MQDialogController controller) {
 		
-		QASet correctQASet = currentQC;	
+		QASet correctQASet = currentQC;
 		
-		if (controller.getAllValidQuestionsOf(currentQC).size() == 0) {	
+		if (controller.getAllValidQuestionsOf(currentQC).size() == 0) {
 			correctQASet = controller.moveToNextRemainingQASet();
 		}
 		

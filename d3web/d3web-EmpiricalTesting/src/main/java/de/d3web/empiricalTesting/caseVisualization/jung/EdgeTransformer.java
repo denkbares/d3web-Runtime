@@ -41,7 +41,7 @@ public class EdgeTransformer implements Transformer<EdgeFinding, String> {
 	 * This reference is necessary for getting
 	 * the answers of all asked questions.
 	 */
-	private CaseTree<RatedTestCase, EdgeFinding> graph;
+	private final CaseTree<RatedTestCase, EdgeFinding> graph;
 	
 	/**
 	 * Creates an instance of EdgeTransformer backed on
@@ -49,7 +49,7 @@ public class EdgeTransformer implements Transformer<EdgeFinding, String> {
 	 * @param graph CaseTree which's elements are transformed.
 	 */
 	public EdgeTransformer(CaseTree<RatedTestCase, EdgeFinding> graph) {
-		this.graph = graph;		
+		this.graph = graph;
 	}
 	
 	/**
@@ -62,7 +62,7 @@ public class EdgeTransformer implements Transformer<EdgeFinding, String> {
     	StringBuilder result = new StringBuilder();
     	result.append("<html><center>");
     	for (Finding f : graph.getDest(ef).getFindings()) {
-    		result.append(f.getAnswer().toString());
+			result.append(f.getValue().getValue().toString());
     		result.append("<br/>");
     	}
     	result.delete(result.length() - 4, result.length());

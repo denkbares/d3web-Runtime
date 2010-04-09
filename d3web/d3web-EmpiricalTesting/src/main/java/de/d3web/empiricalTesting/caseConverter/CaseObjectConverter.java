@@ -33,7 +33,6 @@ import de.d3web.caserepository.CaseObject.Solution;
 import de.d3web.caserepository.sax.CaseRepositoryReader;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.DCElement;
@@ -47,8 +46,8 @@ import de.d3web.empiricalTesting.TestSuite;
 
 /**
  * This class converts CaseObject XML-Files to a TestSuite.
- * The created TestSuite can be written to a file by 
- * using either CaseObjectToKnOffice class or 
+ * The created TestSuite can be written to a file by
+ * using either CaseObjectToKnOffice class or
  * CaseObjectToTestSuiteXML class.
  * @author Sebastian Furth
  *
@@ -58,9 +57,9 @@ public abstract class CaseObjectConverter {
 	/**
 	 * Creates a Test Suite from a CaseObject XML-File.
 	 * @param knowledgebase Path to the underlying KnowledgeBase
-	 * @param casespath Path to the CaseObject XML-File 
+	 * @param casespath Path to the CaseObject XML-File
 	 * @return TestSuite containing the Data from the CaseObject File
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public TestSuite convert(String knowledgebase, String casespath) 
 		throws IOException {
@@ -126,7 +125,7 @@ public abstract class CaseObjectConverter {
 	 * @param rtc The RatedTestCase which shall be cleaned.
 	 */
 	private void cleanExpectedSolutions(RatedTestCase rtc) {
-		List<RatedSolution> expectedSolutions = rtc.getExpectedSolutions();		
+		List<RatedSolution> expectedSolutions = rtc.getExpectedSolutions();
 		
 		List<de.d3web.core.knowledge.terminology.Solution> distinctDiagnosises = getDistinctDiagnosises(expectedSolutions);
 		
@@ -179,7 +178,7 @@ public abstract class CaseObjectConverter {
 
 	private void computeExpectedSolutions(RatedTestCase rtc, CaseObject co) {
 
-		List<CaseObject.Solution> solutions = new ArrayList<CaseObject.Solution>(co.getSolutions());	
+		List<CaseObject.Solution> solutions = new ArrayList<CaseObject.Solution>(co.getSolutions());
 		for (CaseObject.Solution s : solutions) {
 			addRatedSolution(rtc, s);
 		}
@@ -187,7 +186,7 @@ public abstract class CaseObjectConverter {
 	}
 	
 	private RatedSolution findSolutionWithHighestRating(List<RatedSolution> equalSolutions) {
-		RatedSolution s = equalSolutions.get(0);					
+		RatedSolution s = equalSolutions.get(0);
 		for (int j = 1; j < equalSolutions.size(); j++) {
 			RatedSolution temp = equalSolutions.get(j);
 			if (temp.getRating().compareTo(s.getRating()) == 1) {
@@ -210,11 +209,7 @@ public abstract class CaseObjectConverter {
 	private void computeFindings(RatedTestCase rtc, CaseObject co, KnowledgeBase k) {
 		List<Question> questions = new ArrayList<Question>(co.getQuestions());
 		for (Question q : questions) {
-			Object[] answers = co.getAnswers(q).toArray();
-			for (int i = 0; i < answers.length; i++) {
-				Answer a = (Answer) answers[i];
-				rtc.add(new Finding(q, a));
-			}		
+			rtc.add(new Finding(q, co.getValue(q)));
 		}
 	}
 

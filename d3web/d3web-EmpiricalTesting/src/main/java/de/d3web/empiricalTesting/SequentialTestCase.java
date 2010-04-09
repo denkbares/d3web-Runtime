@@ -33,8 +33,8 @@ import de.d3web.caseGeneration.StateRatingStrategy;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.CaseFactory;
 import de.d3web.core.session.XPSCase;
 import de.d3web.xcl.XCLModel;
@@ -43,7 +43,7 @@ import de.d3web.xcl.inference.PSMethodXCL;
 public class SequentialTestCase {
 
 	private String name = "";
-	private List<RatedTestCase> ratedTestCases;
+	private final List<RatedTestCase> ratedTestCases;
 
 	/**
 	 * Default Constructor
@@ -123,7 +123,7 @@ public class SequentialTestCase {
 	/**
 	 * Finds the derived solutions for this SequentialTestCase.
 	 * @param kb the underlying KnowledgeBase
-	 * @param psMethodContext the problem solver which is used to 
+	 * @param psMethodContext the problem solver which is used to
 	 * 						  get the derived solutions
 	 */
 	@SuppressWarnings("unchecked")
@@ -134,13 +134,10 @@ public class SequentialTestCase {
 		for (RatedTestCase rtc : ratedTestCases) {
 			// Answer and Question setting in Case
 			for (Finding f : rtc.getFindings()) {
-				Object q = f.getQuestion();
-				List answers = new ArrayList();
-				answers.add(f.getAnswer());
-				thecase.setValue(f.getQuestion(), f.getAnswer());
+				thecase.setValue(f.getQuestion(), f.getValue());
 			}
 			
-			// Check used Rating (StateRating or ScoreRating) in ExpectedSolutions	
+			// Check used Rating (StateRating or ScoreRating) in ExpectedSolutions
 			for (RatedSolution rs : rtc.getExpectedSolutions()) {
 				Rating r = rs.getRating();
 				if (!(r instanceof StateRating)) {
@@ -151,11 +148,11 @@ public class SequentialTestCase {
 
 			// Derive Solutions
 			Collection<KnowledgeSlice> slices = thecase.getKnowledgeBase().getAllKnowledgeSlicesFor(PSMethodXCL.class);
-			if (slices.size() != 0) {	
+			if (slices.size() != 0) {
 				deriveXCLSolutions(thecase, rtc, slices);
-			} else { 
+			} else {
 				deriveSolutionsForPSMethod(thecase, rtc, psMethodContext, ratingStrategy);
-			}			
+			}
 
 			// Mark this RatedTestCase as successfully derived
 			rtc.setDerivedSolutionsAreUpToDate(true);
@@ -176,7 +173,7 @@ public class SequentialTestCase {
 		}
 		
 //		for (Diagnosis dia : thecase.getDiagnoses()) {
-//			
+//
 //			DiagnosisState state = dia.getState(thecase, psMethodContext);
 //			// Only suggested and established diagnoses are taken into account
 //			if (!state.equals(DiagnosisState.UNCLEAR)
@@ -185,7 +182,7 @@ public class SequentialTestCase {
 //					DiagnosisScore sco = dia.getScore(thecase, psMethodContext);
 //					RatedSolution rs = new RatedSolution(dia, new ScoreRating(
 //							sco.getScore()));
-//					rtc.addDerived(rs);	
+//					rtc.addDerived(rs);
 //				} else { // use StateRating
 //					RatedSolution rs = new RatedSolution(dia, new StateRating(state));
 //					rtc.addDerived(rs);
@@ -212,29 +209,29 @@ public class SequentialTestCase {
 	
 //	public List<Answer> getAnswerForQuestionNum(KnowledgeBase kb, String questionname) {
 //		XPSCase thecase = CaseFactory.createXPSCase(kb);
-//		
+//
 //		for (RatedTestCase rtc : ratedTestCases) {
 //			// Answer and Question setting in Case
 //			for (Finding f : rtc.getFindings()) {
 //				Object q = f.getQuestion();
 //				List answers = new ArrayList();
-//				
+//
 //				// Necessary for QuestionMC, otherwise only one answer can be given
 //				if (q instanceof QuestionMC) {
 //					answers.addAll(((QuestionMC) q).getValue(thecase));
 //				}
-//				
+//
 //				answers.add(f.getAnswer());
 //				thecase.setValue((Question) q, answers.toArray());
-//			}		
+//			}
 //		}
-//		
+//
 //		List<? extends Question> answeredQuestions = thecase.getAnsweredQuestions();
 //		for (Question question : answeredQuestions) {
 //			if (question.getText().equals(questionname))
 //				return question.getValue(thecase);
 //		}
-//		
+//
 //		return null;
 //	}
 	
@@ -282,7 +279,7 @@ public class SequentialTestCase {
 
 	/**
 	 * Tests if this SequentialTestCase contains the same
-	 * RatedTestCase as another SequentialTestCase 
+	 * RatedTestCase as another SequentialTestCase
 	 * @param obj Other SequentialTestCase
 	 * @return true, if RatedTestCases are equal
 	 * 		   false, if RatedTestCases aren't equal

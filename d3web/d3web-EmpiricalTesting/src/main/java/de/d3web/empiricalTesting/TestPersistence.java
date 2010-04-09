@@ -44,18 +44,20 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.AnswerChoice;
-import de.d3web.core.session.values.AnswerNum;
-import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.Unknown;
 import de.d3web.empiricalTesting.caseVisualization.BotHelper;
 
 public class TestPersistence {
@@ -72,17 +74,17 @@ public class TestPersistence {
 	private static final String MC_ANSWER_SEPARATOR = "#####";
 	
 	//The Parameters
-	private static final String NAME = "Name";	
+	private static final String NAME = "Name";
 	private static final String QUESTION = "Question";
 	private static final String QUESTIONNAIRE = "Questionnaire";
 	private static final String ANSWER = "Answer";
-	private static final String RATING = "Rating";	
+	private static final String RATING = "Rating";
 	
 	private static final String CREATIONDATE = "CreationDate";
 	private static final String NUMOFCASES = "NumberOfCases";
 	private static final String USEDSOLUTIONS = "UsedSolutions";
 	private static final String USEDFINDINGS = "UsedFindings";
-	private static final String LASTTESTED = "LastTested";	
+	private static final String LASTTESTED = "LastTested";
 
 	private List<SequentialTestCase> imported = null;
 
@@ -100,7 +102,7 @@ public class TestPersistence {
 		if (instance == null)
 			instance = new TestPersistence();
 		return instance;
-	}	
+	}
 	
 	private boolean bWriteDerivedSolutions;
 	
@@ -128,11 +130,11 @@ public class TestPersistence {
 	 * @param casesUrl
 	 * @param kb
 	 * @return
-	 * @throws FileNotFoundException 
-	 * @throws XMLStreamException 
-	 * @throws URISyntaxException 
+	 * @throws FileNotFoundException
+	 * @throws XMLStreamException
+	 * @throws URISyntaxException
 	 */
-	private List<SequentialTestCase> _loadCases(URL casesUrl, 
+	private List<SequentialTestCase> _loadCases(URL casesUrl,
 			KnowledgeBase kb) throws FileNotFoundException, XMLStreamException, URISyntaxException {
 
 		int etype;
@@ -197,9 +199,9 @@ public class TestPersistence {
 
 	public void writeCases(URL casesUrl, TestSuite TS, boolean bWriteDerivedSolutions){
 		writeCases(casesUrl, TS.getRepository(), bWriteDerivedSolutions);
-	}	
+	}
 	
-	private void _writeCases(OutputStream out, List<SequentialTestCase> cases, boolean bWriteDerivedSolutions) 
+	private void _writeCases(OutputStream out, List<SequentialTestCase> cases, boolean bWriteDerivedSolutions)
 		throws FileNotFoundException, XMLStreamException, URISyntaxException{
 
 		this.bWriteDerivedSolutions = bWriteDerivedSolutions;
@@ -278,7 +280,7 @@ public class TestPersistence {
 		}else{
 			for (RatedSolution rs : rtc.getExpectedSolutions()) {
 				write(rs, xmlsw);
-			}			
+			}
 		}
 		xmlsw.writeCharacters("\n\t\t\t");
 		xmlsw.writeEndElement();
@@ -294,14 +296,15 @@ public class TestPersistence {
 		xmlsw.writeEmptyElement(FINDING);
 		xmlsw.writeAttribute(QUESTION, f.getQuestion().getName());
 		xmlsw.writeAttribute(QUESTIONNAIRE, findQuestionnaire(f.getQuestion()).getName());
-		Answer a = f.getAnswer();
-		if (a instanceof AnswerChoice) {
-			xmlsw.writeAttribute(ANSWER, ((AnswerChoice) a).getName());
+		Value v = f.getValue();
+		if (v instanceof ChoiceValue) {
+			AnswerChoice choice = (AnswerChoice) ((ChoiceValue) v).getValue();
+			xmlsw.writeAttribute(ANSWER, choice.getName());
 		}
-		if (a instanceof AnswerNum) {
-			xmlsw.writeAttribute(ANSWER, ((AnswerNum) a).toString());
+		if (v instanceof NumValue) {
+			xmlsw.writeAttribute(ANSWER, ((NumValue) v).getValue().toString());
 		}
-		if (a instanceof AnswerUnknown) {
+		if (v instanceof Unknown) {
 			xmlsw.writeAttribute(ANSWER, "unknown");
 		}
 	}
@@ -354,12 +357,12 @@ public class TestPersistence {
 			try {
 				Question q = bh.getQuestionByIDorText(questionText, questionnaireText, kb);
 				if (answerText.equals("unknown")) {
-					f = new Finding(q, new AnswerUnknown());
+					f = new Finding(q, Unknown.getInstance());
 				} else if (q instanceof QuestionMC) {
 					// '#####' separates two MCAnswers for a MCQuestion
-					AnswerChoice[] answers = toChoices(q, answerText.split(MC_ANSWER_SEPARATOR));
-					AnswerMultipleChoice answer = new AnswerMultipleChoice(answers);
-					f = new Finding((QuestionChoice)q, answer);
+					AnswerMultipleChoice answer = new AnswerMultipleChoice(
+							toChoices(q, answerText.split(MC_ANSWER_SEPARATOR)));
+					f = new Finding((QuestionChoice) q, new MultipleChoiceValue(answer));
 				} else if (q instanceof QuestionChoice) {
 					f = new Finding((QuestionChoice) q, answerText);
 				} else if (q instanceof QuestionNum) {
@@ -397,7 +400,7 @@ public class TestPersistence {
 		QuestionChoice qc = (QuestionChoice)q;
 		for (int i = 0; i < strings.length; i++) {
 			answers[i] = findAnswer(qc, strings[i]);
-		}	
+		}
 		return answers;
 	}
 
@@ -454,7 +457,7 @@ public class TestPersistence {
 		while (!(question.getParents()[0] instanceof QContainer)) {
 			if (question.getParents()[0] instanceof Question)
 				question = (Question) question.getParents()[0];
-			else 
+			else
 				return q.getKnowledgeBase().getRootQASet();
 		}
 		
