@@ -36,8 +36,11 @@ import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.UndefinedValue;
 /**
  * Handels the two default successors ActionAddValue and ActionSetValue of ActionQuestionSetter.
  * Other successors must have their own FragementHandler with a higher priority
@@ -60,7 +63,8 @@ public class QuestionSetterActionHandler implements FragmentHandler{
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		String roottype = element.getAttribute("type");
 		Question question = null;
-		List<Object> value = new LinkedList<Object>();
+		// value will be later determined, now set to undefined for safety
+		Object value = UndefinedValue.getInstance();
 		NodeList nl = element.getChildNodes();
 		for (int i = 0; i < nl.getLength(); ++i) {
 			Node child = nl.item(i);
@@ -69,23 +73,35 @@ public class QuestionSetterActionHandler implements FragmentHandler{
 				question = kb.searchQuestion(id);
 			} else if (child.getNodeName().equalsIgnoreCase("values")) {
 				NodeList values = child.getChildNodes();
+
+				List<Object> parsedValues = new LinkedList<Object>();
 				for (int k = 0; k < values.getLength(); ++k) {
 					Node valNode = values.item(k);
 					if (valNode.getNodeName().equalsIgnoreCase("value")) {
 						String type = valNode.getAttributes().getNamedItem("type").getNodeValue();
-						if (type.equalsIgnoreCase("answer") || type.equalsIgnoreCase("answerChoice")) {
+						if (type.equalsIgnoreCase("answer")
+								|| type.equalsIgnoreCase("answerChoice")) {
 							String id = valNode.getAttributes().getNamedItem("ID").getNodeValue();
-							value.add(kb.searchAnswerChoice(id));
-						} else if (type.equalsIgnoreCase("evaluatable")) {
+							parsedValues.add(new ChoiceValue(kb.searchAnswerChoice(id)));
+						}
+						else if (type.equalsIgnoreCase("evaluatable")) {
 							List<Element> childNodes = XMLUtil.getElementList(valNode.getChildNodes());
-							for (Element e: childNodes) {
-								value.add(PersistenceManager.getInstance().readFragment(e, kb));
+							for (Element e : childNodes) {
+								parsedValues.add(PersistenceManager.getInstance().readFragment(
+										e, kb));
 							}
 						}
 					}
 				}
+				if (parsedValues.size() == 1) {
+					value = parsedValues.get(0);
+				}
+				else {
+					value = parsedValues;
+				}
 			}
 		}
+
 		ActionQuestionSetter action = null;
 		if (roottype.equals("ActionAddValue")) {
 			action = new ActionAddValue();
@@ -93,7 +109,7 @@ public class QuestionSetterActionHandler implements FragmentHandler{
 			action = new ActionSetValue();
 		}
 		action.setQuestion(question);
-		action.setValues(value.toArray());
+		action.setValue(value);
 		return action;
 	}
 
@@ -116,23 +132,31 @@ public class QuestionSetterActionHandler implements FragmentHandler{
 		element.appendChild(questionNode);
 		Element valuesNode = doc.createElement("Values");
 		PersistenceManager pm = PersistenceManager.getInstance();
-		for (Object o: action.getValues()) {
-			if (o != null && o instanceof Answer) {
-				Answer a = (Answer) o;
-				if (a.getId()==null) {
-					throw new IOException("Answer "+a.getName()+" has no ID");
-				}
-				Element valueNode = doc.createElement("Value");
-				valueNode.setAttribute("type", "answer");
-				valueNode.setAttribute("ID", a.getId());
-				valuesNode.appendChild(valueNode);
-			} else if (o != null) {
-				Element valueNode = doc.createElement("Value");
-				valueNode.appendChild(pm.writeFragment(o, doc));
-				valueNode.setAttribute("type", "evaluatable");
-				valuesNode.appendChild(valueNode);
+		if (action != null && action.getValue() instanceof Value) {
+			String id = "";
+			if (action.getValue() instanceof ChoiceValue) {
+				ChoiceValue cv = (ChoiceValue) (action.getValue());
+				AnswerChoice choice = (AnswerChoice) (cv.getValue());
+				id = choice.getId();
 			}
+			else {
+				id = ((Value) (action.getValue())).getValue().toString();
+			}
+			Element valueNode = doc.createElement("Value");
+			valueNode.setAttribute("type", "answer");
+			valueNode.setAttribute("ID", id);
+			valuesNode.appendChild(valueNode);
 		}
+		else if (action != null) {
+			Element valueNode = doc.createElement("Value");
+			valueNode.appendChild(pm.writeFragment(action.getValue(), doc));
+			valueNode.setAttribute("type", "evaluatable");
+			valuesNode.appendChild(valueNode);
+		}
+		else {
+			throw new IOException("Tried to write an Action that is null.");
+		}
+		
 		element.appendChild(valuesNode);
 		return element;
 	}

@@ -27,10 +27,8 @@ import java.util.Vector;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondDState;
-import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondKnown;
 import de.d3web.core.inference.condition.CondMofN;
 import de.d3web.core.inference.condition.CondNot;
@@ -43,19 +41,18 @@ import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.CondTextContains;
 import de.d3web.core.inference.condition.CondTextEqual;
 import de.d3web.core.inference.condition.CondUnknown;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.fragments.conditions.AndConditionHandler;
 import de.d3web.core.io.fragments.conditions.OrConditionHandler;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.values.AnswerChoice;
-import de.d3web.core.session.values.AnswerNum;
-import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.plugin.test.InitPluginManager;
 
@@ -66,7 +63,7 @@ public class ConditionTest extends TestCase {
 	private Condition ac1, ac21, ac22, ac3;
 
 	private CondDState cDState1;
-	private CondEqual cEqual1;
+	private CondNumEqual cEqual1;
 	private CondKnown cKnown1;
 	private CondNum cNumE1, cNumG1, cNumIn1, cNumL1;
 	private CondTextContains cTextContains1;
@@ -121,12 +118,7 @@ public class ConditionTest extends TestCase {
 		val2.add(ach2);
 
 		cDState1 = new CondDState(d1, new DiagnosisState(DiagnosisState.State.SUGGESTED));
-
-		cEqual1 = new CondEqual(qnum1, new AnswerUnknown());
-		AnswerNum num = new AnswerNum();
-		num.setValue(10.0);
-		cEqual1.setValues(num);
-
+		cEqual1 = new CondNumEqual(qnum1, new Double(10));
 		cKnown1 = new CondKnown(qnum1);
 
 		cNumL1 = new CondNumEqual(qnum1, new Double(4.5));

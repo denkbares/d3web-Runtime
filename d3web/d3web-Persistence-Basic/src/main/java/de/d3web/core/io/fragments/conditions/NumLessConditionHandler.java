@@ -64,7 +64,7 @@ public class NumLessConditionHandler implements FragmentHandler {
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
 		CondNum cond = (CondNum) object;
-		return XMLUtil.writeCondition(doc, cond.getQuestion(), "numLess", cond.getAnswerValue().toString());
+		return XMLUtil.writeCondition(doc, cond.getQuestion(), "numLess", cond.getConditionValue().toString());
 	}
 
 }

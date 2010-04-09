@@ -64,6 +64,6 @@ public class NumEqualConditionHandler implements FragmentHandler{
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
 		CondNum cond = (CondNum) object;
-		return XMLUtil.writeCondition(doc, cond.getQuestion(), "numEqual", cond.getAnswerValue().toString());
+		return XMLUtil.writeCondition(doc, cond.getQuestion(), "numEqual", cond.getConditionValue().toString());
 	}
 }

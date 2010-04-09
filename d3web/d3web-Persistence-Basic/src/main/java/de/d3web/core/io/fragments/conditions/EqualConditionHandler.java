@@ -29,12 +29,15 @@ import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionYN;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.Unknown;
 /**
  * FragmentHandler for CondEquals
  * It can also read choiceYes and choiceNo elements of former persistence versions
@@ -64,17 +67,19 @@ public class EqualConditionHandler implements FragmentHandler {
 			IDObject idObject = kb.search(questionID);
 			if (idObject instanceof QuestionChoice) {
 				QuestionChoice q = (QuestionChoice) idObject;
-				List<Answer> a = new ArrayList<Answer>();
+				Value a = null;
 				if (value!=null && value.length()>0) {
 					String[] values = value.split(",");
+					List<ChoiceValue> conds = new ArrayList<ChoiceValue>();
 					for (String s: values) {
 						if (s.equals(AnswerUnknown.UNKNOWN_ID)) {
-							a.add(q.getUnknownAlternative());
-						} else {
+							a = Unknown.getInstance();
+						}
+						else {
 							boolean answerfound = false;
 							for (AnswerChoice ac : q.getAllAlternatives()) {
 								if (ac.getId().equals(s)) {
-									a.add(ac);
+									conds.add(new ChoiceValue(ac));
 									answerfound = true;
 									break;
 								}
@@ -83,15 +88,27 @@ public class EqualConditionHandler implements FragmentHandler {
 								throw new IOException("Answer "+s+" does not belong to question "+q.getId());
 						}
 					}
-					return new CondEqual(q, a);
+					if (a != null && conds.isEmpty()) {
+						return new CondEqual(q, a);
+					}
+					else if (conds.size() == 1) {
+						return new CondEqual(q, conds.get(0));
+					}
+					else if (conds.size() > 1) {
+							return new CondEqual(q, new MultipleChoiceValue(conds));
+					}
+					else {
+						throw new IOException("Action could not be parsed.");
+					}
 				}
 				// in previous versions conditions of questions yn were stored in a different way
 				else if (q instanceof QuestionYN){
 					QuestionYN qyn = (QuestionYN) q;
 					if (type.equals("choiceYes")) {
-						return new CondEqual(q, qyn.yes);
-					} else {
-						return new CondEqual(q, qyn.no);
+						return new CondEqual(q, new ChoiceValue(qyn.yes));
+					}
+					else {
+						return new CondEqual(q, new ChoiceValue(qyn.no));
 					}
 				}
 			}
@@ -102,7 +119,7 @@ public class EqualConditionHandler implements FragmentHandler {
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
 		CondEqual cond = (CondEqual) object;
-		return XMLUtil.writeCondition(doc, cond.getQuestion(), "equal", cond.getValues());
+		return XMLUtil.writeCondition(doc, cond.getQuestion(), "equal", cond.getValue());
 	}
 
 }

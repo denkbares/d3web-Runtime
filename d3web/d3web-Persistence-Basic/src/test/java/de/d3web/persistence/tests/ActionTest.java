@@ -45,13 +45,13 @@ import de.d3web.core.io.fragments.actions.NextQASetActionHandler;
 import de.d3web.core.io.fragments.actions.QuestionSetterActionHandler;
 import de.d3web.core.io.fragments.actions.SuppressAnswerActionHandler;
 import de.d3web.core.io.utilities.Util;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerDate;
 import de.d3web.core.session.values.AnswerNo;
@@ -81,7 +81,7 @@ public class ActionTest extends TestCase {
 	private AnswerText atext1;
 	private AnswerNum anum1;
 	private AnswerDate adate1;
-	private Date date = new Date();
+	private final Date date = new Date();
 	
 	private QuestionChoice quest1;
 	private QuestionNum qnum1;
@@ -95,7 +95,7 @@ public class ActionTest extends TestCase {
 	private XMLTag shouldTagAdd;
 	private XMLTag shouldTagSet;
 	
-	Document doc; 
+	Document doc;
 	
 	public ActionTest(String arg0) {
 		super(arg0);
@@ -109,6 +109,7 @@ public class ActionTest extends TestCase {
 		return new TestSuite(ActionTest.class);
 	}
 	
+	@Override
 	protected void setUp() {
 		try {
 			InitPluginManager.init();
@@ -120,7 +121,7 @@ public class ActionTest extends TestCase {
 			doc = Util.createEmptyDocument();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} 
+		}
 		ac1 = new AnswerNo("ac1-id");
 		ac1.setText("a1-text");
 		
@@ -259,7 +260,7 @@ public class ActionTest extends TestCase {
 		ai.setQASets(indicationList);
 		
 		shouldTag = new XMLTag("Action");
-		shouldTag.addAttribute("type", "ActionIndication");		
+		shouldTag.addAttribute("type", "ActionIndication");
 		
 		XMLTag targets = new XMLTag("TargetQASets");
 		XMLTag qa1 = new XMLTag("QASet");
@@ -285,7 +286,7 @@ public class ActionTest extends TestCase {
 		aci.setQASets(contraindicationList);
 		
 		shouldTag = new XMLTag("Action");
-		shouldTag.addAttribute("type", "ActionContraIndication");		
+		shouldTag.addAttribute("type", "ActionContraIndication");
 		
 		XMLTag targets = new XMLTag("TargetQASets");
 		XMLTag qa1 = new XMLTag("QASet");
@@ -309,7 +310,7 @@ public class ActionTest extends TestCase {
 		ah.setScore(Score.P1);
 		
 		shouldTag = new XMLTag("Action");
-		shouldTag.addAttribute("type", "ActionHeuristicPS");		
+		shouldTag.addAttribute("type", "ActionHeuristicPS");
 		
 		XMLTag score = new XMLTag("Score");
 		score.addAttribute("value","P1");
@@ -326,7 +327,7 @@ public class ActionTest extends TestCase {
 	}
 	
 	public void testActionSetValueAndActionAddValue() throws Exception {
-		FormulaNumber fn = new FormulaNumber(new Double(13));	
+		FormulaNumber fn = new FormulaNumber(new Double(13));
 		FormulaExpression fe = new FormulaExpression(qnum1,fn);
 		
 		List<Object> setValueList = new LinkedList<Object>();
@@ -337,15 +338,15 @@ public class ActionTest extends TestCase {
 		ActionAddValue aav = new ActionAddValue();
 		rcomp.setAction(aav);
 		aav.setQuestion(quest1);
-		aav.setValues(setValueList.toArray());
+		aav.setValue(setValueList.toArray());
 		
 		ActionSetValue asv = new ActionSetValue();
 		rcomp.setAction(asv);
 		asv.setQuestion(quest1);
-		asv.setValues(setValueList.toArray());				
+		asv.setValue(setValueList.toArray());
 		
 		shouldTagAdd = new XMLTag("Action");
-		shouldTagAdd.addAttribute("type", "ActionAddValue");		
+		shouldTagAdd.addAttribute("type", "ActionAddValue");
 		
 		shouldTagSet = new XMLTag("Action");
 		shouldTagSet.addAttribute("type", "ActionSetValue");
@@ -399,7 +400,7 @@ public class ActionTest extends TestCase {
 		isTag = new XMLTag(aavw.write(aav, doc));
 		
 		// it is absolute nonsense that xml code must have the same spaces newlines tabs etc.
-		// (ok when it's a textnode then it's no nonsense but this did not work because of newlines between tags ...) 
+		// (ok when it's a textnode then it's no nonsense but this did not work because of newlines between tags ...)
 		// assertEquals("(6)", removeAllSpaces(shouldTagAdd), removeAllSpaces(isTag));
 		assertEquals("(6)", shouldTagAdd, isTag);
 		
@@ -411,24 +412,21 @@ public class ActionTest extends TestCase {
 	
 	
 	public void testActionSetValueAndActionAddValueDate() throws Exception {
-		FormulaDateElement fn = new Today(new FormulaNumber(new Double(13)));	
+		FormulaDateElement fn = new Today(new FormulaNumber(new Double(13)));
 		FormulaDateExpression fe = new FormulaDateExpression(qdate1,fn);
-		
-		List<Object> setValueList = new LinkedList<Object>();
-		setValueList.add(fe);
-		
+
 		ActionAddValue aav = new ActionAddValue();
 		rcomp.setAction(aav);
 		aav.setQuestion(qdate1);
-		aav.setValues(setValueList.toArray());
+		aav.setValue(fe);
 		
 		ActionSetValue asv = new ActionSetValue();
 		rcomp.setAction(asv);
 		asv.setQuestion(qdate1);
-		asv.setValues(setValueList.toArray());				
+		asv.setValue(fe);
 		
 		shouldTagAdd = new XMLTag("Action");
-		shouldTagAdd.addAttribute("type", "ActionAddValue");		
+		shouldTagAdd.addAttribute("type", "ActionAddValue");
 		
 		shouldTagSet = new XMLTag("Action");
 		shouldTagSet.addAttribute("type", "ActionSetValue");
@@ -472,7 +470,7 @@ public class ActionTest extends TestCase {
 		isTag = new XMLTag(aavw.write(aav, doc));
 		
 		// it is absolute nonsense that xml code must have the same spaces newlines tabs etc.
-		// (ok when it's a textnode then it's no nonsense but this did not work because of newlines between tags ...) 
+		// (ok when it's a textnode then it's no nonsense but this did not work because of newlines between tags ...)
 		// assertEquals("(6)", removeAllSpaces(shouldTagAdd), removeAllSpaces(isTag));
 		assertEquals("(date1)", shouldTagAdd, isTag);
 		
