@@ -20,25 +20,31 @@
 
 package de.d3web.caserepository.sax;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import org.xml.sax.Attributes;
 
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.QuestionYN;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerNo;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.AnswerYes;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.DateValue;
+import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.TextValue;
+import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.core.session.values.Unknown;
 
 /**
  * @author bates
@@ -48,14 +54,14 @@ public class QuestionTagReader extends AbstractTagReader {
 	private static AbstractTagReader instance = null;
 
 	private Question currentQuestion = null;
-	private Answer currentAnswer = null;
-	private Set currentAnswers = null;
+	private Value currentValue = null;
+	private Value finalQuestionValue = null;
 
-	private List tagNames = null;
+	private List<String> tagNames = null;
 
 	private QuestionTagReader(String id) {
 		super(id);
-		tagNames = new LinkedList();
+		tagNames = new ArrayList<String>(3);
 		tagNames.add("Question");
 		tagNames.add("Answer");
 		tagNames.add("UnknownAnswer");
@@ -68,10 +74,12 @@ public class QuestionTagReader extends AbstractTagReader {
 		return instance;
 	}
 
-	public List getTagNames() {
+	@Override
+	public List<String> getTagNames() {
 		return tagNames;
 	}
 
+	@Override
 	protected void startElement(String uri, String localName, String qName, Attributes attributes) {
 		if (qName.equals("Question")) {
 			startQuestion(attributes);
@@ -80,6 +88,7 @@ public class QuestionTagReader extends AbstractTagReader {
 		}
 	}
 
+	@Override
 	protected void endElement(String uri, String localName, String qName) {
 		if (qName.equals("Question")) {
 			endQuestion();
@@ -93,17 +102,17 @@ public class QuestionTagReader extends AbstractTagReader {
 	private void startQuestion(Attributes attributes) {
 		String id = checkAttribute("id", attributes.getValue("id"), "<not set>");
 		currentQuestion = getKnowledgeBase().searchQuestion(id);
-		currentAnswers = new HashSet(2);
+		finalQuestionValue = UndefinedValue.getInstance();
 	}
 
 	private void endQuestion() {
 		// avoid a NullPointerException in the case that the question doesn't
 		// exist in the knowledgebase
 		if (currentQuestion != null)
-			getCaseObject().addQuestionAndAnswers(currentQuestion, currentAnswers);
+			getCaseObject().addQuestionAndAnswers(currentQuestion, finalQuestionValue);
 
 		currentQuestion = null;
-		currentAnswers = null;
+		finalQuestionValue = null;
 	}
 
 	private void startAnswer(Attributes attributes) {
@@ -120,11 +129,14 @@ public class QuestionTagReader extends AbstractTagReader {
 			if (id == null || "".equals(id))
 				id = value;
 
-			currentAnswer = ((QuestionChoice) currentQuestion).getAnswer(null, id);
+			AnswerChoice c = (AnswerChoice) ((QuestionChoice) currentQuestion).getAnswer(
+					null, id);
+			currentValue = new ChoiceValue(c);
+				
 
 			// [MISC]:marty: legacy code, i.e. ultra downward compatibility for
 			// QuestionYN
-			if (currentAnswer == null && currentQuestion instanceof QuestionYN) {
+			if (currentValue == null && currentQuestion instanceof QuestionYN) {
 				if ("MaYES".equals(id)) {
 					AnswerYes yes = null;
 					Iterator aiter = ((QuestionYN) currentQuestion).getAllAlternatives().iterator();
@@ -134,7 +146,7 @@ public class QuestionTagReader extends AbstractTagReader {
 							yes = (AnswerYes) o;
 					}
 					if (yes != null)
-						currentAnswer = yes;
+						currentValue = new ChoiceValue(yes);
 				} else if ("MaNO".equals(id)) {
 					AnswerNo no = null;
 					Iterator aiter = ((QuestionYN) currentQuestion).getAllAlternatives().iterator();
@@ -144,22 +156,22 @@ public class QuestionTagReader extends AbstractTagReader {
 							no = (AnswerNo) o;
 					}
 					if (no != null)
-						currentAnswer = no;
+						currentValue = new ChoiceValue(no);
 				}
 			}
 		} else if (currentQuestion instanceof QuestionNum) {
-			currentAnswer = ((QuestionNum) currentQuestion).getAnswer(null, Double.valueOf(value));
+			currentValue = new NumValue(Double.valueOf(value));
 
 		} else if (currentQuestion instanceof QuestionText // [MISC]:aha:legacy
 														   // code
 				&& value != null) {
-			currentAnswer = ((QuestionText) currentQuestion).getAnswer(null, value);
+			currentValue = new TextValue(value);
 		} else if (currentQuestion instanceof QuestionDate) {
 			String date = attributes.getValue("date");
 			if (date == null || "".equals(date)) {
 				date = value;
 			}
-			currentAnswer = ((QuestionDate) currentQuestion).getAnswer(null, date);
+			currentValue = new DateValue(new Date(date));
 		}
 	}
 
@@ -168,16 +180,16 @@ public class QuestionTagReader extends AbstractTagReader {
 			return;
 
 		if (currentQuestion instanceof QuestionText && !"".equals(getTextBetweenCurrentTag())) {
-			Answer a = ((QuestionText) currentQuestion).getAnswer(null, getTextBetweenCurrentTag());
-			currentAnswers.add(a);
-		} else if (currentAnswer != null) {
-			currentAnswers.add(currentAnswer);
+			finalQuestionValue = new TextValue(getTextBetweenCurrentTag());
+		}
+		else if (currentValue != null) {
+			finalQuestionValue = currentValue;
 		} else {
 			Logger.getLogger(this.getClass().getName()).warning(
 					"QuestionTagReader: not adding <null> Answer to Question "
 							+ currentQuestion.getId());
 		}
-		currentAnswer = null;
+		currentValue = null;
 	}
 
 	private void endUnknownAnswer() {
@@ -185,8 +197,9 @@ public class QuestionTagReader extends AbstractTagReader {
 			return;
 
 		AnswerUnknown unknown = currentQuestion.getUnknownAlternative();
-		if (unknown != null)
-			currentAnswers.add(unknown);
+		if (unknown != null) {
+			finalQuestionValue = Unknown.getInstance();
+		}
 		else
 			Logger.getLogger(this.getClass().getName()).warning(
 					"QuestionTagReader: not adding AnswerUnknown because Question" + " ("

@@ -26,23 +26,25 @@ package de.d3web.caserepository;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.w3c.dom.Node;
 
 import de.d3web.caserepository.addons.IExaminationBlock;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.session.values.AnswerChoice;
-import de.d3web.core.session.values.AnswerDate;
-import de.d3web.core.session.values.AnswerNum;
-import de.d3web.core.session.values.AnswerText;
-import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.DateValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.TextValue;
+import de.d3web.core.session.values.Unknown;
 import de.d3web.persistence.xml.loader.DCMarkupUtilities;
 import de.d3web.persistence.xml.loader.PropertiesUtilities;
 
@@ -68,14 +70,16 @@ public class CaseObjectWriter implements XMLCodeGenerator {
         /* (non-Javadoc)
          * @see de.d3web.persistence.xml.loader.PropertiesUtilities.PropertyCodec#encode(java.lang.Object)
          */
-        public String encode(Object o) {
+        @Override
+		public String encode(Object o) {
             return ((CaseObject.SourceSystem) o).getName();
         }
 
         /* (non-Javadoc)
          * @see de.d3web.persistence.xml.loader.PropertiesUtilities.PropertyCodec#decode(org.w3c.dom.Node)
          */
-        public Object decode(Node n) {
+        @Override
+		public Object decode(Node n) {
             throw new UnsupportedOperationException("the CaseObjectImpl.SourceSystemCodec should not be used for decoding.");
         }
         
@@ -100,29 +104,39 @@ public class CaseObjectWriter implements XMLCodeGenerator {
         while (questionsIter.hasNext()) {
             Question quest = (Question) questionsIter.next();
             // nur um weitermachen zu können!
-            Collection answerColl = caseObject.getAnswers(quest);
-            if (answerColl != null && !answerColl.isEmpty()) {
+			Value answerColl = caseObject.getValue(quest);
+			if (answerColl != null) {
                 sb.append("<Question id='" + quest.getId() + "'>\n");
-                Iterator answerIter = answerColl.iterator();
-                if (answerIter != null) {
-                    while (answerIter.hasNext()) {
-                        Answer ans = (Answer) answerIter.next();
-                        if (ans != null) {
-                            if (ans instanceof AnswerUnknown)
-                                sb.append("<UnknownAnswer />\n");
-                            else if (ans instanceof AnswerChoice)
-                                sb.append("<Answer id='"  + ans.getId() + "'/>\n");
-                            else if (ans instanceof AnswerNum)
-                                sb.append("<Answer value='"  + ans.getValue(null).toString() + "'/>\n");
-                            else if (ans instanceof AnswerText) {
-                                sb.append("<Answer><![CDATA[" + ans.getValue(null).toString() + "]]></Answer>");
-                            }else if (ans instanceof AnswerDate) {
-                                sb.append("<Answer date='" + ((AnswerDate)ans).getDateString() + "'/>");
-                            } else
-                                Logger.getLogger(this.getClass().getName()).warning("no way to encode answers of type " + ans.getClass());
-                        }
-                    }
-                }
+				Value ans = (Value) answerColl;
+				if (ans instanceof Unknown) {
+					sb.append("<UnknownAnswer />\n");
+				}
+				else if (ans instanceof ChoiceValue) {
+					sb.append("<Answer id='" + ((ChoiceValue) ans).getAnswerChoiceID()
+							+ "'/>\n");
+				}
+				else if (ans instanceof NumValue) {
+					sb.append("<Answer value='" + ans.getValue().toString() + "'/>\n");
+				}
+				else if (ans instanceof TextValue) {
+					sb.append("<Answer><![CDATA[" + ans.getValue().toString()
+							+ "]]></Answer>");
+				}
+				else if (ans instanceof DateValue) {
+					sb.append("<Answer date='" + ((DateValue) ans).getDateString()
+							+ "'/>");
+				}
+				else if (ans instanceof MultipleChoiceValue) {
+					MultipleChoiceValue mcv = (MultipleChoiceValue) ans;
+					for (ChoiceValue choice : (List<ChoiceValue>) mcv.getValue()) {
+						sb.append("<Answer id='"
+								+ choice.getAnswerChoiceID()
+								+ "'/>\n");
+					}
+				}
+				else Logger.getLogger(this.getClass().getName()).warning(
+						"no way to encode values of type " + ans.getClass());
+
                 sb.append("</Question>\n");
             }
         }
@@ -140,7 +154,7 @@ public class CaseObjectWriter implements XMLCodeGenerator {
      * @return
      */
     private Object toXML(Properties properties) {
-        Collection c = Arrays.asList(new Property[] { 
+        Collection c = Arrays.asList(new Property[] {
                 Property.CASE_COMMENT,
                 Property.CASE_METADATA,
                 Property.CASE_SOURCE_SYSTEM,

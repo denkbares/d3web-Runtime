@@ -19,7 +19,6 @@
  */
 
 package de.d3web.caserepository;
-import java.util.Collection;
 import java.util.Set;
 
 import de.d3web.caserepository.addons.IAdditionalTrainData;
@@ -42,6 +41,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.DCMarkedUp;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
+import de.d3web.core.session.Value;
 
 /**
  * Represents one case.
@@ -138,6 +138,7 @@ public interface CaseObject
 		 * 
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
+		@Override
 		public boolean equals(Object o) {
 			if (o == null || !(o instanceof CaseObject.Solution))
 				return false;
@@ -171,6 +172,7 @@ public interface CaseObject
 		 * 
 		 * @see java.lang.Object#hashCode()
 		 */
+		@Override
 		public int hashCode() {
 			return hashCode;
 		}
@@ -193,6 +195,7 @@ public interface CaseObject
 		 * 
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString() {
 			return "CaseObject.Solution{"
 					+ (getDiagnosis() == null ? "(/)" : getDiagnosis().toString())
@@ -207,9 +210,10 @@ public interface CaseObject
 	}
 
 	/**
-	 * @deprecated do not add additional data until it is clear which representation 
+	 * @deprecated do not add additional data until it is clear which representation
 	 *  will be chosen (or re-designed)
 	 */
+	@Deprecated
 	public static class AdditionalDataKey {
 		public static AdditionalDataKey TEMPORAL_VALUE_HISTORIES = new AdditionalDataKey(
 				"temporal_value_histories");
@@ -252,7 +256,7 @@ public interface CaseObject
 	 * @param question
 	 *            Question
 	 */
-	public Collection getAnswers(Question question);
+	public Value getValue(Question question);
 
     /**
      * @param question
@@ -260,7 +264,7 @@ public interface CaseObject
      * @param answer
      *            Collection
      */
-    public void addQuestionAndAnswers(Question question, Collection answers);
+	public void addQuestionAndAnswers(Question question, Value value);
 	/**
 	 * returns the 'correct', i.e. user selected diagnoses with status
 	 * 'established'
@@ -271,7 +275,7 @@ public interface CaseObject
 
 	/**
 	 * returns the set of diagnoses, which have status 'established' and are
-	 * neither 'userSelected' nor 'authorselected'. In this way we grab all the
+	 * neither 'userSelected' nor 'author selected'. In this way we grab all the
 	 * system's 'raw' diagnoses.
 	 * 
 	 * @return Set of Diagnosis
@@ -307,14 +311,16 @@ public interface CaseObject
 	public void setSimpleTextFUSs(ISimpleTextFUSs stf);
 
 	/**
-	 * @deprecated do not add additional data until it is clear which representation 
+	 * @deprecated do not add additional data until it is clear which representation
 	 *  will be chosen (or re-designed)
 	 */
+	@Deprecated
 	public void addAdditionalData(AdditionalDataKey key, Object data);
 	/**
-	 * @deprecated do not add additional data until it is clear which representation 
+	 * @deprecated do not add additional data until it is clear which representation
 	 *  will be chosen (or re-designed)
 	 */
+	@Deprecated
 	public Object getAdditionalData(AdditionalDataKey key);
 
 	public ITherapyConfiguration getTherapyConfiguration();

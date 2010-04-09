@@ -49,6 +49,7 @@ import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.session.Value;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
@@ -62,8 +63,8 @@ public class CaseObjectImpl implements CaseObject {
 	private Properties properties = null; // lazy instantiation
 
 //	private Set questions = new HashSet();
-	private Map questions2AnswersMap = new HashMap();
-	private ISolutionContainer s = new SolutionContainerImpl();
+	private final Map<Question, Value> questions2AnswersMap = new HashMap<Question, Value>();
+	private final ISolutionContainer s = new SolutionContainerImpl();
 
 	private Config config = new Config(Config.TYPE_CASE);
 
@@ -141,11 +142,11 @@ public class CaseObjectImpl implements CaseObject {
 	 * @param answer
 	 *            Collection
 	 */
-	public void addQuestionAndAnswers(Question question, Collection answers) {
+	public void addQuestionAndAnswers(Question question, Value value) {
 //		if (!questions.contains(question))
 //			questions.add(question);
 
-		questions2AnswersMap.put(question, answers);
+		questions2AnswersMap.put(question, value);
 
 		getAppliedQSets().update(this, question);
 	}
@@ -155,8 +156,8 @@ public class CaseObjectImpl implements CaseObject {
 	 * 
 	 * @see de.d3web.caserepository.CaseObject#getAnswers(de.d3web.kernel.domainModel.Question)
 	 */
-	public Collection getAnswers(Question question) {
-		return (Collection) questions2AnswersMap.get(question);
+	public Value getValue(Question question) {
+		return (Value) questions2AnswersMap.get(question);
 	}
 
 	/*
@@ -184,6 +185,7 @@ public class CaseObjectImpl implements CaseObject {
 	 * @param o
 	 *            Object
 	 */
+	@Override
 	public boolean equals(Object o) {
 		if (o == null || !(o instanceof CaseObjectImpl))
 			return false;
@@ -264,13 +266,11 @@ public class CaseObjectImpl implements CaseObject {
 			Iterator iter = getQuestions().iterator();
 			while (iter.hasNext()) {
 				Question q = (Question) iter.next();
-
-				Collection thisAnswers = getAnswers(q);
-				Collection otherAnswers = other.getAnswers(q);
-
-				if (!(thisAnswers.containsAll(otherAnswers) && otherAnswers
-						.containsAll(thisAnswers)))
+				Value thisAnswers = getValue(q);
+				Value otherAnswers = other.getValue(q);
+				if (!thisAnswers.equals(otherAnswers))
 					return false;
+
 			}
 
 			return true;
@@ -586,6 +586,7 @@ public class CaseObjectImpl implements CaseObject {
 		this.ts = ts;
 	}
 
+	@Override
 	public String toString() {
 		return this.getDCMarkup().getContent(DCElement.TITLE);
 	}

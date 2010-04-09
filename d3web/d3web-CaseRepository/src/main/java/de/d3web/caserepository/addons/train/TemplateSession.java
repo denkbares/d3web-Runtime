@@ -160,14 +160,14 @@ public class TemplateSession implements ITemplateSession {
         iter = coi1.getQuestions().iterator();
         while (iter.hasNext()) {
             Question q = (Question) iter.next();
-            result.addQuestionAndAnswers(q, coi1.getAnswers(q));
+            result.addQuestionAndAnswers(q, coi1.getValue(q));
         }
         iter = coi2.getQuestions().iterator();
         while (iter.hasNext()) {
             Question q = (Question) iter.next();
             if (result.getQuestions().contains(q))
                 qasetsWithChangedValues.add(q);
-            result.addQuestionAndAnswers(q, coi2.getAnswers(q));
+            result.addQuestionAndAnswers(q, coi2.getValue(q));
         }
         
         /* solutions */

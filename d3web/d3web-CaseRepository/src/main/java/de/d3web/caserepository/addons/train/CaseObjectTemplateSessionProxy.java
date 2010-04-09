@@ -41,12 +41,12 @@ import de.d3web.caserepository.addons.ITherapyConfiguration;
 import de.d3web.caserepository.addons.fus.FUSConfiguration;
 import de.d3web.config.Config;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.Properties;
+import de.d3web.core.session.Value;
 
 /**
  * CaseObjectTemplateSessionProxy (in ) de.d3web.caserepository
@@ -93,8 +93,8 @@ public class CaseObjectTemplateSessionProxy implements CaseObject {
 	 * 
 	 * @see de.d3web.caserepository.CaseObject#getAnswers(de.d3web.kernel.domainModel.qasets.Question)
 	 */
-	public Collection getAnswers(Question question) {
-		return getTemplateSession().getCaseObject().getAnswers(question);
+	public Value getValue(Question question) {
+		return getTemplateSession().getCaseObject().getValue(question);
 	}
 
 	/*
@@ -453,7 +453,13 @@ public class CaseObjectTemplateSessionProxy implements CaseObject {
     }
 
     public void addQuestionAndAnswers(Question question, Collection answers) {
-        throw new UnsupportedOperationException();      
+        throw new UnsupportedOperationException();
     }
+
+	@Override
+	public void addQuestionAndAnswers(Question question, Value value) {
+		// TODO Auto-generated method stub
+
+	}
 
 }

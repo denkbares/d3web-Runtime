@@ -23,7 +23,6 @@
  */
 package de.d3web.caserepository.addons.shared;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -38,6 +37,8 @@ import de.d3web.caserepository.addons.IAppliedQSets;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.UndefinedValue;
 
 /**
  * 23.09.2003 15:21:29
@@ -45,9 +46,9 @@ import de.d3web.core.knowledge.terminology.Question;
  */
 public class AppliedQSets implements IAppliedQSets {
 	
-	private Set<QContainer> a = new LinkedHashSet<QContainer>();
-	private Set<QContainer> e = new HashSet<QContainer>();
-	private Set<QContainer> s = new HashSet<QContainer>();
+	private final Set<QContainer> a = new LinkedHashSet<QContainer>();
+	private final Set<QContainer> e = new HashSet<QContainer>();
+	private final Set<QContainer> s = new HashSet<QContainer>();
 
 	/* (non-Javadoc)
 	 * @see de.d3web.caserepository.addons.IAppliedQSets#getAllQSets()
@@ -171,6 +172,7 @@ public class AppliedQSets implements IAppliedQSets {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof AppliedQSets))
 			return false;
@@ -205,7 +207,7 @@ public class AppliedQSets implements IAppliedQSets {
 	 */
 	public void update(CaseObject co, Question question) {
 		
-		Collection<?> answers = co.getAnswers(question);
+		Value answers = co.getValue(question);
 		
 		List<QContainer> parentQContainers = new LinkedList<QContainer>();
 		for (TerminologyObject o: question.getParents()) {
@@ -213,7 +215,7 @@ public class AppliedQSets implements IAppliedQSets {
 				parentQContainers.add((QContainer) o);
 		}
 		
-		if ((answers == null) || (answers.isEmpty())) {
+		if (answers == null && answers != UndefinedValue.getInstance()) {
 			for (QContainer o: parentQContainers) {
 				if (!hasAnsweredChildren(co, o))
 					resetApplied(o);
@@ -256,8 +258,8 @@ public class AppliedQSets implements IAppliedQSets {
 	private boolean hasAnsweredChildren(CaseObject co, QContainer container) {
 		for (TerminologyObject o: container.getChildren()) {
 			if (o instanceof Question) {
-				Collection<?> a = co.getAnswers((Question) o);
-				if (a != null && !a.isEmpty()) return true;
+				Object a = co.getValue((Question) o);
+				if (a != null) return true;
 			} else if (o instanceof QContainer)
 				return hasAnsweredChildren(co, (QContainer) o);
 		}
