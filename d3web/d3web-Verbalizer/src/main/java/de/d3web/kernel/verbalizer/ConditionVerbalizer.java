@@ -30,7 +30,6 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.inference.condition.CondEqual;
@@ -43,6 +42,7 @@ import de.d3web.core.inference.condition.CondNumLessEqual;
 import de.d3web.core.inference.condition.CondQuestion;
 import de.d3web.core.inference.condition.CondTextContains;
 import de.d3web.core.inference.condition.CondTextEqual;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.inference.condition.TerminalCondition;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -76,7 +76,7 @@ public class ConditionVerbalizer implements Verbalizer {
 	private  ResourceBundle rb;
 
 	// just for convenience
-	private  String space = "&nbsp;";
+	private final  String space = "&nbsp;";
 	
 	public Map<String, Object> getParameter() {
 		return parameter;
@@ -89,7 +89,7 @@ public class ConditionVerbalizer implements Verbalizer {
 	private ResourceBundle getResourceBundle() {
 		if (rb == null) {
 			rb = ResourceBundle.getBundle("properties.ConditionVerbalizer", locale);
-		}		
+		}
 		return rb;
 	}
 	
@@ -220,7 +220,7 @@ public class ConditionVerbalizer implements Verbalizer {
 				}
 				s.append("<b>" + ntCond.getOperator() +"</b>");
 				s.append(getBlockStart(isSingleLine));
-				for (int i = 0; i < ntCond.getCondVerbalizations().size(); i++) {	
+				for (int i = 0; i < ntCond.getCondVerbalizations().size(); i++) {
 					s.append(renderCondVerbalizationHTML(ntCond.getCondVerbalizations().get(i), indent + 1, isSingleLine, false));
 					s.append(i == ntCond.getCondVerbalizations().size() - 1 ? "" : getBlockSeperator(isSingleLine));
 				}
@@ -236,9 +236,9 @@ public class ConditionVerbalizer implements Verbalizer {
 		
 		if (condVerb instanceof TerminalCondVerbalization) {
 			TerminalCondVerbalization tCond = (TerminalCondVerbalization) condVerb;
-			s.append(VerbalizationManager.quoteIfNecessary(tCond.getQuestion()) + " " 
-					+ tCond.getOperator() + " " 
-					+ (tCond.getOriginalClass().equals(CondNumIn.class.getSimpleName()) ? 
+			s.append(VerbalizationManager.quoteIfNecessary(tCond.getQuestion()) + " "
+					+ tCond.getOperator() + " "
+					+ (tCond.getOriginalClass().equals(CondNumIn.class.getSimpleName()) ?
 							tCond.getAnswer() : VerbalizationManager.quoteIfNecessary(tCond.getAnswer())));
 		} else {
 			NonTerminalCondVerbalization ntCond = (NonTerminalCondVerbalization) condVerb;
@@ -251,8 +251,8 @@ public class ConditionVerbalizer implements Verbalizer {
 			} else {
 				for (int i = 0; i < ntCond.getCondVerbalizations().size() - 1; i++) {
 					CondVerbalization cond = ntCond.getCondVerbalizations().get(i);
-					s.append(cond instanceof TerminalCondVerbalization ? 
-							renderCondVerbalizationPlainText(cond, quote) + " " + ntCond.getOperator() + " " : 
+					s.append(cond instanceof TerminalCondVerbalization ?
+							renderCondVerbalizationPlainText(cond, quote) + " " + ntCond.getOperator() + " " :
 							("(" + renderCondVerbalizationPlainText(cond, quote) + ")")
 						+ " " + ntCond.getOperator() + " ");
 				}
@@ -300,20 +300,20 @@ public class ConditionVerbalizer implements Verbalizer {
 				values.add(trimZeros(((CondNumIn) tCondition).getValue().replaceAll(",", "")));
 			} else if (tCondition instanceof CondEqual) {
 				values = new ArrayList<Object>();
-				values.add(((CondEqual) tCondition).getValues());
+				values.add(((CondEqual) tCondition).getValue());
 				if (object instanceof QuestionMC && values.size() > 1) {
 					List<CondVerbalization> tCondVerbs = new ArrayList<CondVerbalization>();
 					for (Object o:values) {
 						List<Object> value = new ArrayList<Object>();
 						value.add(o);
-						tCondVerbs.add(getTerminalCondVerbalization((IDObject) object, operator, 
+						tCondVerbs.add(getTerminalCondVerbalization((IDObject) object, operator,
 								value, tCondition.getClass().getSimpleName()));
 					}
-					return new NonTerminalCondVerbalization(tCondVerbs, getClassVerbalisation(new CondAnd(null)), 
+					return new NonTerminalCondVerbalization(tCondVerbs, getClassVerbalisation(new CondAnd(null)),
 							tCondition.getClass().getSimpleName());
 				}
 			} else if (tCondition instanceof CondNum) {
-				values.add(trimZeros(((CondNum) tCondition).getAnswerValue().toString()));
+				values.add(trimZeros(((CondNum) tCondition).getConditionValue().toString()));
 			} else if (tCondition instanceof CondTextEqual) {
 				values.add(((CondTextEqual) tCondition).getValue());
 			} else if (tCondition instanceof CondTextContains) {
@@ -325,13 +325,13 @@ public class ConditionVerbalizer implements Verbalizer {
 
 	private CondVerbalization createNonTerminalConditionVerbalization(NonTerminalCondition ntCondition) {
 
-		List<CondVerbalization> condVerbs = new ArrayList<CondVerbalization>(); 
+		List<CondVerbalization> condVerbs = new ArrayList<CondVerbalization>();
 		List<Condition> terms = new ArrayList<Condition>(ntCondition.getTerms());
 		Collections.reverse(terms);
 		for (Condition term:terms) {
 			condVerbs.add(createConditionVerbalization(term));
 		}
-		return new NonTerminalCondVerbalization(condVerbs, getClassVerbalisation(ntCondition), 
+		return new NonTerminalCondVerbalization(condVerbs, getClassVerbalisation(ntCondition),
 				ntCondition.getClass().getSimpleName());
 	}
 
@@ -351,7 +351,7 @@ public class ConditionVerbalizer implements Verbalizer {
 		return answerUnknownText;
 	}
 
-	private TerminalCondVerbalization getTerminalCondVerbalization(IDObject io, String operator, 
+	private TerminalCondVerbalization getTerminalCondVerbalization(IDObject io, String operator,
 			List<Object> values, String conditionClass) {
 		
 		StringBuffer answer = new StringBuffer();
@@ -368,11 +368,11 @@ public class ConditionVerbalizer implements Verbalizer {
 				} else if (tempValue instanceof AnswerNo) {
 					answer.append(getResourceBundle().getString("rule.CondNo"));
 					//This verbalizes answers of oc-questions also like yes/no-questions.
-					//which is most likely not what you want. 
-//				} else if (tempValue.toString().equalsIgnoreCase("yes") 
+					//which is most likely not what you want.
+//				} else if (tempValue.toString().equalsIgnoreCase("yes")
 //						|| tempValue.toString().equalsIgnoreCase("ja")) {
 //					answer.append(getResourceBundle().getString("rule.CondYes"));
-//				} else if (tempValue.toString().equalsIgnoreCase("no") 
+//				} else if (tempValue.toString().equalsIgnoreCase("no")
 //						|| tempValue.toString().equalsIgnoreCase("nein")) {
 //					answer.append(getResourceBundle().getString("rule.CondNo"));
 				} else {
@@ -393,11 +393,11 @@ public class ConditionVerbalizer implements Verbalizer {
 	}
 
 
-	private  String getClassVerbalisation(Condition absCond) {	
+	private  String getClassVerbalisation(Condition absCond) {
 		
 		String propertyKeyString = absCond.getClass().getSimpleName();
 		
-		if (targetFormat.equals(RenderingFormat.PLAIN_TEXT) && 
+		if (targetFormat.equals(RenderingFormat.PLAIN_TEXT) &&
 				(absCond instanceof CondNumLess || absCond instanceof CondNumLessEqual)) {
 			propertyKeyString = "PlainText." + propertyKeyString;
 		}
@@ -454,6 +454,6 @@ public class ConditionVerbalizer implements Verbalizer {
 	private String trimZeros(String s) {
 		s = s.replaceAll("\\.0", "");
 		return s;
-	}	
+	}
 
 }

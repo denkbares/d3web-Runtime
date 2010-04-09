@@ -148,7 +148,7 @@ public class RuleActionVerbalizer implements Verbalizer {
 				s += " (" + propertyRB.getString("rule.Refine") + "): ";
 
 			if (ar.getQASets() != null)
-				s += createActionList(ar.getQASets());		
+				s += createActionList(ar.getQASets());
 			return s;
 			
 		} else if (ra instanceof ActionContraIndication) {
@@ -161,7 +161,7 @@ public class RuleActionVerbalizer implements Verbalizer {
 			return s;
 
 		} else if (ra instanceof ActionSuppressAnswer) {
-			ActionSuppressAnswer asa = (ActionSuppressAnswer) ra;	
+			ActionSuppressAnswer asa = (ActionSuppressAnswer) ra;
 			s += propertyRB.getString("rule.do.SuppressAnswer") + " ";
 			if (asa.getQuestion() != null)
 				s += VerbalizationManager.getInstance().verbalize(asa.getQuestion(), RenderingFormat.HTML);
@@ -193,8 +193,8 @@ public class RuleActionVerbalizer implements Verbalizer {
 			if (aav.getQuestion() != null)
 				s += VerbalizationManager.getInstance().verbalize(aav.getQuestion(), RenderingFormat.HTML);
 			s += ": ";
-			if (aav.getValues() != null)
-				s += createActionList(Arrays.asList(aav.getValues()));
+			if (aav.getValue() != null)
+				s += createActionList(Arrays.asList(aav.getValue()));
 			return s;
 			
 		} else if (ra instanceof ActionSetValue) {
@@ -203,8 +203,8 @@ public class RuleActionVerbalizer implements Verbalizer {
 			if (asv.getQuestion() != null)
 				s += VerbalizationManager.getInstance().verbalize(asv.getQuestion(), RenderingFormat.HTML);
 			s += ": ";
-			if (asv.getValues() != null)
-				s += createActionList(Arrays.asList(asv.getValues()));
+			if (asv.getValue() != null)
+				s += createActionList(Arrays.asList(asv.getValue()));
 			return s;
 			
 		} else if (ra instanceof ActionIndicateTherapies) {
@@ -222,7 +222,7 @@ public class RuleActionVerbalizer implements Verbalizer {
 	public static String createActionList(List tempList) {
 		String s = "";
 
-		if (tempList.size() > 1) 
+		if (tempList.size() > 1)
 			s += "(";
 
 		//for each list member do
