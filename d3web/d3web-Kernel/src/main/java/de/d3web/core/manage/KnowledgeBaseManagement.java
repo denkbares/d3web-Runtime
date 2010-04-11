@@ -50,6 +50,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
@@ -476,6 +477,15 @@ public class KnowledgeBaseManagement {
 	}
 
 	public Value findValue(Question question, String valueString) {
+		// HOTFIX (20100411) workaround for setting a _single_ Answer to a MC-Question
+		// needs jobas healing hands...:-)
+		if (question instanceof QuestionMC) {
+			AnswerChoice choice = findAnswerChoice((QuestionChoice) question, valueString);
+			List<ChoiceValue> values = new LinkedList<ChoiceValue>();
+			values.add(new ChoiceValue(choice));
+			return new MultipleChoiceValue(values);
+		}
+		//
 		if (question instanceof QuestionChoice) {
 			AnswerChoice choice = findAnswerChoice((QuestionChoice) question, valueString);
 			return new ChoiceValue(choice);
