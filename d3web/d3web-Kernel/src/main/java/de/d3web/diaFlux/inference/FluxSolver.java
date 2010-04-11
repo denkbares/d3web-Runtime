@@ -335,7 +335,8 @@ public class FluxSolver implements PSMethod {
 
 	private void doAction(XPSCase theCase, PSAction action) {
 		log("Starting action: " + action);
-		action.doIt(theCase, null);
+		//TODO: HOTFIX: added rule
+		action.doIt(theCase, new Rule("bla"));
 	}
 
 	/**
