@@ -22,7 +22,6 @@ package de.d3web.kernel.psMethods.shared;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.session.Value;
 import de.d3web.shared.AbstractAbnormality;
 /**
@@ -60,7 +59,7 @@ public class Abnormality extends AbstractAbnormality {
 		return A5;
 	}
 
-	public boolean isSet(Answer ans) {
+	public boolean isSet(Value ans) {
 		if (values.get(ans)==null) {
 			return false;
 		} else {

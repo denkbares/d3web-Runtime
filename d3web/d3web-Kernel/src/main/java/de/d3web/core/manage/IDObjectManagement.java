@@ -54,7 +54,7 @@ public interface IDObjectManagement {
 	
 	AnswerChoice findAnswerChoice(QuestionChoice qc, String name);
 	
-	Value findAnswer(Question q, String name);
+	Value findValue(Question q, String name);
 	
 	QContainer createQContainer(String name, QASet parent);
 	QContainer createQContainer(String id, String name, QASet parent);
