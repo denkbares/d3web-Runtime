@@ -31,6 +31,12 @@ public class ValueFactory {
 		if (value instanceof ChoiceValue) {
 			return ((AnswerChoice) (value.getValue())).getId();
 		}
+		else if (value instanceof Unknown) {
+			return Unknown.UNKNOWN_ID;
+		}
+		else if (value instanceof UndefinedValue) {
+			return UndefinedValue.UNDEFINED_ID;
+		}
 		else {
 			return value.getValue().toString();
 		}

@@ -54,6 +54,7 @@ import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.core.session.values.Unknown;
 
 /**
  * A facade controlling (all) operations on a knowledge base. Created on
@@ -477,6 +478,12 @@ public class KnowledgeBaseManagement {
 	}
 
 	public Value findValue(Question question, String valueString) {
+		if (valueString.equals(UndefinedValue.UNDEFINED_ID)) {
+			return UndefinedValue.getInstance();
+		}
+		if (valueString.equals(Unknown.UNKNOWN_ID)) {
+			return Unknown.getInstance();
+		}
 		// HOTFIX (20100411) workaround for setting a _single_ Answer to a MC-Question
 		// needs jobas healing hands...:-)
 		if (question instanceof QuestionMC) {
@@ -488,7 +495,12 @@ public class KnowledgeBaseManagement {
 		//
 		if (question instanceof QuestionChoice) {
 			AnswerChoice choice = findAnswerChoice((QuestionChoice) question, valueString);
-			return new ChoiceValue(choice);
+			if (choice==null) {
+				return null;
+			}
+			else {
+				return new ChoiceValue(choice);
+			}
 		}
 		else if (question instanceof QuestionNum) {
 			return new NumValue(Double.parseDouble(valueString));

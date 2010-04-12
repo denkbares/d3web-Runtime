@@ -29,6 +29,8 @@ import de.d3web.core.session.Value;
  * @created 07.04.2010
  */
 public class UndefinedValue implements Value {
+	
+	public static final String UNDEFINED_ID = "Ma_Undefined"; 
 
 	private static final UndefinedValue instance = new UndefinedValue();
 
