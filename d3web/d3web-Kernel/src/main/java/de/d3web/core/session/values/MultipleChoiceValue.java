@@ -100,8 +100,6 @@ public class MultipleChoiceValue implements Value {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
-			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		MultipleChoiceValue other = (MultipleChoiceValue) obj;
