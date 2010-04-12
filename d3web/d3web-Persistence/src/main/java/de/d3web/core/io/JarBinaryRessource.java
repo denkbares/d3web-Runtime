@@ -56,7 +56,7 @@ public class JarBinaryRessource implements Resource {
 			byte[] buffer = new byte[size];
 			int read = 0;
 			int len = 0;
-			while (read != -1) {
+			while (read != -1 && len!=size) {
 				len+=read;
 				read = inputStream.read(buffer, len, size-len);
 			}
