@@ -23,7 +23,7 @@ package de.d3web.abstraction.formula;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 /**
  * Complex FormulaElement.
  * Creation date: (14.08.2000 15:41:43)
@@ -71,7 +71,7 @@ public abstract class FormulaNumberArgumentsTerm implements FormulaElement {
 	 * Creation date: (14.08.2000 17:05:38)
 	 * @return null, if one argument is "null", a "0"-Double else.
 	 */
-	public Double eval(XPSCase theCase) {
+	public Double eval(Session theCase) {
 		if (getArg1() == null || getArg2() == null) {
 			return null;
 		}

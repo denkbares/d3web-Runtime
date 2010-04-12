@@ -30,7 +30,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.ResponseWriter;
 
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.dialog2.basics.layout.HtmlTextLayout;
 import de.d3web.dialog2.basics.layout.MMInfo;
 import de.d3web.dialog2.basics.layout.QContainerLayout;
@@ -40,7 +40,7 @@ import de.d3web.dialog2.util.DialogUtils;
 public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 
     public QContainerRendererForDefinedLayout(ResponseWriter writer,
-	    UIComponent component, XPSCase theCase, List<Question> qList,
+	    UIComponent component, Session theCase, List<Question> qList,
 	    QContainerLayout layoutDef) {
 	super(writer, component, theCase, qList, layoutDef);
     }
@@ -176,7 +176,7 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
     }
 
     private static boolean rowHasContent(int y,
-	    QContainerLayout layoutDefinition, XPSCase theCase,
+	    QContainerLayout layoutDefinition, Session theCase,
 	    List<Question> qList) {
 	for (int x = 0; x < layoutDefinition.getCols(); x++) {
 	    QuestionLayout qDef = layoutDefinition
@@ -207,7 +207,7 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
     }
 
     private static void renderHtmlTextBox(ResponseWriter writer,
-	    UIComponent component, XPSCase theCase,
+	    UIComponent component, Session theCase,
 	    QContainerLayout layoutDefinition, HtmlTextLayout htmlTextDef)
 	    throws IOException {
 	writer.startElement("td", component);
@@ -278,7 +278,7 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
     }
 
     private static void renderHtmlText(ResponseWriter writer,
-	    UIComponent component, XPSCase theCase,
+	    UIComponent component, Session theCase,
 	    QContainerLayout layoutDefinition, String textToCheck)
 	    throws IOException {
 	String[] extraTags = HtmlTextLayout.getAllExtraTags();
@@ -320,7 +320,7 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
     }
 
     private static void renderExtraTagContent(ResponseWriter writer,
-	    UIComponent component, XPSCase theCase,
+	    UIComponent component, Session theCase,
 	    QContainerLayout layoutDefinition, String starttag, String content)
 	    throws IOException {
 	if (starttag.startsWith("<QPrompt")) {

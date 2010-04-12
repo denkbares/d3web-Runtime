@@ -73,7 +73,7 @@ public class Weight implements KnowledgeSlice {
 	/**
 	 * Has this knowledge already been used? (e.g. did a rule fire?)
 	 */
-	public boolean isUsed(de.d3web.core.session.XPSCase theCase) {
+	public boolean isUsed(de.d3web.core.session.Session theCase) {
 		return true;
 	}
 

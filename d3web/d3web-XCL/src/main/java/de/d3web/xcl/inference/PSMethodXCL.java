@@ -42,7 +42,7 @@ import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.core.session.blackboard.XPSCaseObject;
@@ -67,7 +67,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 
 	
 
-	public DiagnosisState getState(XPSCase theCase, Solution diagnosis) {
+	public DiagnosisState getState(Session theCase, Solution diagnosis) {
 		KnowledgeSlice model = diagnosis.getKnowledge(
 				PSMethodXCL.class, XCLModel.XCLMODEL);
 		if (model == null)
@@ -76,7 +76,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		return xclmodel.getState(theCase);
 	}
 
-	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
 
 		// update total weight
 		updateAnsweredWeight(theCase, changes);
@@ -110,7 +110,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		this.scoreAlgorithm.refreshStates(modelsToUpdate.keySet(), theCase);
 	}
 
-	private void updateAnsweredWeight(XPSCase theCase,
+	private void updateAnsweredWeight(Session theCase,
 			Collection<PropagationEntry> changes) {
 		XCLCaseObject caseObject = (XCLCaseObject) theCase.getCaseObject(this);
 		for (PropagationEntry entry : changes) {
@@ -190,7 +190,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 	}
 
 	public double getEntropy(Collection<? extends QASet> qasets,
-			Collection<Solution> solutions, XPSCase theCase) {
+			Collection<Solution> solutions, Session theCase) {
 		Map<Set<Condition>, Float> map = new HashMap<Set<Condition>, Float>();
 		float totalweight = 0;
 		for (Solution solution : solutions) {
@@ -244,7 +244,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 
 	}
 
-	public Collection<Solution> getPossibleDiagnoses(XPSCase theCase) {
+	public Collection<Solution> getPossibleDiagnoses(Session theCase) {
 		List<PSMethod> solvers = new LinkedList<PSMethod>();
 		solvers.add(this);
 		List<Solution> solutions = theCase.getDiagnoses(
@@ -260,7 +260,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 	}
 
 	public Collection<Question> getDiscriminatingQuestions(
-			Collection<Solution> solutions, XPSCase theCase) {
+			Collection<Solution> solutions, Session theCase) {
 		Set<Question> coveredSymptoms = new HashSet<Question>();
 		for (Solution solution : solutions) {
 			KnowledgeSlice ks = solution.getKnowledge(
@@ -277,7 +277,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		return coveredSymptoms;
 	}
 
-	public void init(XPSCase theCase) {
+	public void init(Session theCase) {
 	}
 
 	public boolean isContributingToResult() {
@@ -293,16 +293,16 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		}
 	}
 
-	public XPSCaseObject createCaseObject(XPSCase xpsCase) {
+	public XPSCaseObject createCaseObject(Session xpsCase) {
 		return new XCLCaseObject(this);
 	}
 
-	public int getAnsweredQuestionsCount(XPSCase theCase) {
+	public int getAnsweredQuestionsCount(Session theCase) {
 		XCLCaseObject caseObject = (XCLCaseObject) theCase.getCaseObject(this);
 		return caseObject.totalAnsweredCount;
 	}
 
-	public double getAnsweredQuestionsAbnormality(XPSCase theCase) {
+	public double getAnsweredQuestionsAbnormality(Session theCase) {
 		XCLCaseObject caseObject = (XCLCaseObject) theCase.getCaseObject(this);
 		return caseObject.totalAnsweredAbnormality;
 	}

@@ -28,7 +28,7 @@ import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQASet;
 import de.d3web.core.session.blackboard.CaseQContainer;
 import de.d3web.core.session.blackboard.XPSCaseObject;
@@ -55,9 +55,9 @@ public class QContainer extends QASet {
 	 * adds a contra reason to the case object of this QContainer
 	 */
 	@Override
-	public void addContraReason(Reason source, XPSCase theCase) {
+	public void addContraReason(Reason source, Session theCase) {
 		((CaseQASet) theCase.getCaseObject(this)).addContraReason(source);
-		if ((theCase.getUsedPSMethods().contains(PSMethodParentQASet
+		if ((theCase.getPSMethods().contains(PSMethodParentQASet
 				.getInstance()))
 				&& (!PSMethodUserSelected.class.equals(source
 				.getProblemSolverContext()))) {
@@ -70,7 +70,7 @@ public class QContainer extends QASet {
 	 * 
 	 * @param theCase
 	 */
-	private void delegateContraReason(XPSCase theCase) {
+	private void delegateContraReason(Session theCase) {
 		for (TerminologyObject qaSet: getChildren()) {
 			if (qaSet instanceof QContainer) {
 				((QContainer) qaSet).addContraReason(new QASet.Reason(
@@ -83,7 +83,7 @@ public class QContainer extends QASet {
 	 * @see QASet
 	 */
 	@Override
-	public void activate(XPSCase theCase, Rule rule, Class<? extends PSMethod> psm) {
+	public void activate(Session theCase, Rule rule, Class<? extends PSMethod> psm) {
 		super.activate(theCase, rule, psm);
 	}
 
@@ -91,7 +91,7 @@ public class QContainer extends QASet {
 	 * @see QASet
 	 */
 	@Override
-	public void deactivate(XPSCase theCase, Rule rule, Class<? extends PSMethod> psm) {
+	public void deactivate(Session theCase, Rule rule, Class<? extends PSMethod> psm) {
 		super.deactivate(theCase, rule, psm);
 	}
 
@@ -99,9 +99,9 @@ public class QContainer extends QASet {
 	 * addProReason method comment.
 	 */
 	@Override
-	public void addProReason(Reason source, XPSCase theCase) {
+	public void addProReason(Reason source, Session theCase) {
 		((CaseQASet) theCase.getCaseObject(this)).addProReason(source);
-		if ((theCase.getUsedPSMethods().contains(PSMethodParentQASet
+		if ((theCase.getPSMethods().contains(PSMethodParentQASet
 				.getInstance()))
 				&& (!PSMethodUserSelected.class.equals(source
 				.getProblemSolverContext()))) {
@@ -114,7 +114,7 @@ public class QContainer extends QASet {
 	 * 
 	 * @param theCase
 	 */
-	private void delegateProReason(XPSCase theCase) {
+	private void delegateProReason(Session theCase) {
 		for (TerminologyObject qaSet: getChildren()) {
 			if (qaSet instanceof QContainer) {
 				((QContainer) qaSet).addProReason(new QASet.Reason(
@@ -159,7 +159,7 @@ public class QContainer extends QASet {
 		return getPriority().compareTo(acPriority);
 	}
 
-	public XPSCaseObject createCaseObject(XPSCase session) {
+	public XPSCaseObject createCaseObject(Session session) {
 		return new CaseQContainer(this);
 	}
 
@@ -181,12 +181,12 @@ public class QContainer extends QASet {
 	 * @return false
 	 */
 	@Override
-	public boolean hasValue(XPSCase theCase) {
+	public boolean hasValue(Session theCase) {
 		return false;
 	}
 
 	@Override
-	public boolean isDone(XPSCase theCase) {
+	public boolean isDone(Session theCase) {
 		// Falls auch nur ein einziges Children nicht abgearbeitet ist, ist auch
 		// die ganze FK nicht abgearbeitet.
 		for (TerminologyObject to: getChildren()) {
@@ -199,7 +199,7 @@ public class QContainer extends QASet {
 	}
 
 	@Override
-	public boolean isDone(XPSCase theCase, boolean respectValidFollowQuestions) {
+	public boolean isDone(Session theCase, boolean respectValidFollowQuestions) {
 
 		// Falls auch nur ein einziges (valides) Children nicht abgearbeitet
 		// ist, ist auch die ganze FK nicht abgearbeitet.
@@ -213,9 +213,9 @@ public class QContainer extends QASet {
 	}
 
 	@Override
-	public void removeContraReason(Reason source, XPSCase theCase) {
+	public void removeContraReason(Reason source, Session theCase) {
 		((CaseQASet) theCase.getCaseObject(this)).removeContraReason(source);
-		if ((theCase.getUsedPSMethods().contains(PSMethodParentQASet
+		if ((theCase.getPSMethods().contains(PSMethodParentQASet
 				.getInstance()))
 				&& (getContraReasons(theCase).isEmpty())) {
 			delegateRemoveContraReason(theCase);
@@ -223,9 +223,9 @@ public class QContainer extends QASet {
 	}
 
 	@Override
-	public void removeProReason(Reason source, XPSCase theCase) {
+	public void removeProReason(Reason source, Session theCase) {
 		((CaseQASet) theCase.getCaseObject(this)).removeProReason(source);
-		if ((theCase.getUsedPSMethods().contains(PSMethodParentQASet
+		if ((theCase.getPSMethods().contains(PSMethodParentQASet
 				.getInstance()))
 				&& (getProReasons(theCase).isEmpty())) {
 			delegateRemoveProReason(theCase);
@@ -238,7 +238,7 @@ public class QContainer extends QASet {
 	 * 
 	 * @param theCase
 	 */
-	private void delegateRemoveContraReason(XPSCase theCase) {
+	private void delegateRemoveContraReason(Session theCase) {
 		for (TerminologyObject to: getChildren()) {
 			if (to instanceof QContainer) {
 				QContainer qaSet = (QContainer) to;
@@ -265,7 +265,7 @@ public class QContainer extends QASet {
 	 * 
 	 * @param theCase
 	 */
-	private void delegateRemoveProReason(XPSCase theCase) {
+	private void delegateRemoveProReason(Session theCase) {
 		for (TerminologyObject to: getChildren()) {
 			QASet qaSet = (QASet) to;
 			if (qaSet instanceof QContainer) {
@@ -324,7 +324,7 @@ public class QContainer extends QASet {
 	 * values. The XPSCase has no meaning in this case.
 	 */
 	@Override
-	public void setValue(XPSCase theCase, Value value) {
+	public void setValue(Session theCase, Value value) {
 		Logger.getLogger(this.getClass().getName()).warning(
 				"deedless QContainer.setValue was called");
 	}

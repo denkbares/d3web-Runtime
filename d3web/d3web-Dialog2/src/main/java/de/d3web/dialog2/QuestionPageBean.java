@@ -34,7 +34,7 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.interviewmanager.DialogController;
 import de.d3web.core.session.interviewmanager.MQDialogController;
 import de.d3web.dialog2.basics.settings.DialogSettings;
@@ -81,7 +81,7 @@ public class QuestionPageBean {
 		return firstQToAsk;
 	}
 
-	private Question getFirstQuestionToAskFromList(XPSCase theCase,
+	private Question getFirstQuestionToAskFromList(Session theCase,
 			List<Question> qList, String dialogMode) {
 		for (int i = 0; i < qList.size(); i++) {
 			Question currentQuestion = qList.get(i);
@@ -247,7 +247,7 @@ public class QuestionPageBean {
 				.get(oqListPointer)));
 	}
 
-	private void refreshTreeStyles(XPSCase theCase) {
+	private void refreshTreeStyles(Session theCase) {
 		if (theCase != null) {
 			DialogUtils.getQASetTreeBean().checkNodeStyles(theCase);
 			DialogUtils.getDiagnosesTreeBean().checkNodeStyles(theCase);
@@ -329,7 +329,7 @@ public class QuestionPageBean {
 	}
 
 	public String clearLastClickandSubmitAction() {
-		XPSCase theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getTheCase();
 		LastClickedAnswer.getInstance().setLastClickedAnswerID(null,
 				theCase.getId());
 		return submitAction();
@@ -357,7 +357,7 @@ public class QuestionPageBean {
 	public String getProgressBarStyle() {
 		StringBuffer result = new StringBuffer();
 
-		XPSCase theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getTheCase();
 		int answeredQuestionsCount = 0;
 
 		// 0 is used as default
@@ -386,7 +386,7 @@ public class QuestionPageBean {
 		return result.toString();
 	}
 
-	private int computeAnsweredQuestionsFractionPercentage(XPSCase theCase,
+	private int computeAnsweredQuestionsFractionPercentage(Session theCase,
 			int answeredQuestionsCount) {
 		double fractionOfAnsweredQuestions = 0.0;
 		int validQuestionsCounter = 0;

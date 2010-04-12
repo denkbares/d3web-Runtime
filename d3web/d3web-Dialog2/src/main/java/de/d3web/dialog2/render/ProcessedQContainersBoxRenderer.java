@@ -44,7 +44,7 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
@@ -56,7 +56,7 @@ import de.d3web.dialog2.util.QuestionDateUtils;
 
 public class ProcessedQContainersBoxRenderer extends Renderer {
 
-	private static boolean checkDisplayability(XPSCase theCase, List<QContainer> processedContainers) {
+	private static boolean checkDisplayability(Session theCase, List<QContainer> processedContainers) {
 		for (Iterator<QContainer> iter = processedContainers.iterator(); iter.hasNext();) {
 			QContainer cont = iter.next();
 			List<Question> qList = DialogUtils.getQuestionPageBean().convertQuestionsToRender(cont);
@@ -70,7 +70,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 		return false;
 	}
 
-	private static boolean qInContainerAnswered(XPSCase theCase, List<Question> qList, boolean showUnknown) {
+	private static boolean qInContainerAnswered(Session theCase, List<Question> qList, boolean showUnknown) {
 		for (Iterator<Question> iter2 = qList.iterator(); iter2.hasNext();) {
 			Question q = iter2.next();
 			// if we only want to display known answers and the answer is
@@ -120,7 +120,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 	}
 
 	private static void renderProcessedQContainersBox(FacesContext context, UIComponent component,
-			XPSCase theCase, List<QContainer> processedContainers,
+			Session theCase, List<QContainer> processedContainers,
 			ProcessedQContainersController processedBean) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 
@@ -255,7 +255,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 	}
 
 	private static void renderProcessedQuestion(ResponseWriter writer, UIComponent component, Question q,
-			XPSCase theCase, String qTextMode) throws IOException {
+			Session theCase, String qTextMode) throws IOException {
 		writer.startElement("tr", component);
 		writer.startElement("td", component);
 
@@ -329,7 +329,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 
 	@Override
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
-		XPSCase theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getTheCase();
 		ProcessedQContainersController processedBean = DialogUtils.getProcessedQContainersBean();
 		// MQDialogController mqdc = DialogUtils.getMQDialogController(theCase);
 		// List<QContainer> processedContainers = mqdc.getProcessedContainers();

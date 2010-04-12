@@ -32,7 +32,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * @author vogele
@@ -53,7 +53,7 @@ public class Today implements FormulaDateElement {
 		setArg(argument);
 	}
 
-	public Date eval(XPSCase theCase) {
+	public Date eval(Session theCase) {
 		if (getArg() == null) {
 			return null;
 		}

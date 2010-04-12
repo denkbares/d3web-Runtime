@@ -35,7 +35,7 @@ import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.PropertiesCloner;
 import de.d3web.core.session.CaseFactory;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.interviewmanager.DialogProxy;
 import de.d3web.core.session.interviewmanager.ShadowMemory;
 import de.d3web.indication.inference.PSMethodUserSelected;
@@ -75,7 +75,7 @@ public class CaseConverter {
 	 *            the dialog-controller to use
 	 * @return CaseObject
 	 */
-	public XPSCase caseObject2XPSCase(CaseObject cobj, KnowledgeBase kb,
+	public Session caseObject2XPSCase(CaseObject cobj, KnowledgeBase kb,
 			Class dialogControllerClass, List usedPSMethods) {
 		return caseObject2XPSCase(cobj, kb, dialogControllerClass, usedPSMethods, true, true);
 	}
@@ -94,7 +94,7 @@ public class CaseConverter {
 	 *            to the xpsCase
 	 * @return CaseObject
 	 */
-	public XPSCase caseObject2XPSCase(CaseObject cobj, KnowledgeBase kb,
+	public Session caseObject2XPSCase(CaseObject cobj, KnowledgeBase kb,
 			Class dialogControllerClass, List usedPSMethods, boolean copyDCMarkup,
 			boolean copyProperties) {
 		DialogProxy proxy = new DialogProxy();
@@ -115,7 +115,7 @@ public class CaseConverter {
 			registeredContainers.add(qcontainer);
 		}
 
-		XPSCase ret = CaseFactory.createAnsweredXPSCase(kb, dialogControllerClass, proxy,
+		Session ret = CaseFactory.createAnsweredXPSCase(kb, dialogControllerClass, proxy,
 				registeredContainers, usedPSMethods);
 
 		// user-selected diagnoses
@@ -150,7 +150,7 @@ public class CaseConverter {
 	 * 
 	 * @return CaseObjectImpl
 	 */
-	public CaseObjectImpl xpsCase2CaseObject(XPSCase theCase) {
+	public CaseObjectImpl xpsCase2CaseObject(Session theCase) {
 		return xpsCase2CaseObject(theCase, true, true);
 	}
 
@@ -167,7 +167,7 @@ public class CaseConverter {
 	 *            the caseObject
 	 * @return CaseObjectImpl
 	 */
-	public CaseObjectImpl xpsCase2CaseObject(XPSCase theCase, boolean copyDCMarkup,
+	public CaseObjectImpl xpsCase2CaseObject(Session theCase, boolean copyDCMarkup,
 			boolean copyProperties) {
 		CaseObjectImpl ret = new CaseObjectImpl(theCase.getKnowledgeBase());
 
@@ -216,9 +216,9 @@ public class CaseConverter {
 	 * Adds all solutions of the given XPSCase with the given DiagnosisState to
 	 * "co".
 	 */
-	private void addDiagnosesToSolutions(CaseObjectImpl co, XPSCase theCase, DiagnosisState state) {
+	private void addDiagnosesToSolutions(CaseObjectImpl co, Session theCase, DiagnosisState state) {
 		List usedPsm = new LinkedList();
-		Iterator usedPsmIter = theCase.getUsedPSMethods().iterator();
+		Iterator usedPsmIter = theCase.getPSMethods().iterator();
 		while (usedPsmIter.hasNext()) {
 			PSMethod psm = (PSMethod) usedPsmIter.next();
 			if (psm.isContributingToResult()) {
@@ -226,7 +226,7 @@ public class CaseConverter {
 			}
 		}
 
-		List<de.d3web.core.knowledge.terminology.Solution> diags = theCase.getDiagnoses(state, theCase.getUsedPSMethods());
+		List<de.d3web.core.knowledge.terminology.Solution> diags = theCase.getDiagnoses(state, theCase.getPSMethods());
 		if (diags != null) {
 			Iterator<de.d3web.core.knowledge.terminology.Solution> diter = diags.iterator();
 			while (diter.hasNext()) {

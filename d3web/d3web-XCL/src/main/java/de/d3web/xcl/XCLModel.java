@@ -39,7 +39,7 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.IEventSource;
 import de.d3web.core.session.KBOEventListener;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.xcl.inference.PSMethodXCL;
 
@@ -185,7 +185,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		return relationMap;
 	}
 
-	public DiagnosisState getState(XPSCase theCase) {
+	public DiagnosisState getState(Session theCase) {
 		return getInferenceTrace(theCase).getState();
 
 	}
@@ -199,7 +199,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		this.considerOnlyRelevantRelations = considerOnlyRelevantRelations;
 	}
 
-	private PSMethodXCL getPSMethodXCL(XPSCase theCase) {
+	private PSMethodXCL getPSMethodXCL(Session theCase) {
 		return (PSMethodXCL) theCase.getPSMethodInstance(getProblemsolverContext());
 	}
 
@@ -346,7 +346,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		return PSMethodXCL.class;
 	}
 
-	public boolean isUsed(XPSCase theCase) {
+	public boolean isUsed(Session theCase) {
 		return true;
 	}
 
@@ -411,7 +411,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		}
 	}
 
-	public void notifyListeners(XPSCase xpsCase, IEventSource source) {
+	public void notifyListeners(Session xpsCase, IEventSource source) {
 		if (listeners != null && xpsCase != null && source != null) {
 			for (KBOEventListener cl : new ArrayList<KBOEventListener>(listeners)) {
 				cl.notify(source, xpsCase);
@@ -431,22 +431,22 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	private static class XCLCaseModel extends XPSCaseObject {
 		private final InferenceTrace inferenceTrace;
 
-		private XCLCaseModel(XCLModel model, XPSCase xpsCase) {
+		private XCLCaseModel(XCLModel model, Session xpsCase) {
 			super(model);
 			ScoreAlgorithm scoreAlgorithm = model.getPSMethodXCL(xpsCase).getScoreAlgorithm();
 			this.inferenceTrace = scoreAlgorithm.createInferenceTrace(model);
 		}
 	}
 
-	public XPSCaseObject createCaseObject(XPSCase xpsCase) {
+	public XPSCaseObject createCaseObject(Session xpsCase) {
 		return new XCLCaseModel(this, xpsCase);
 	}
 
-	public InferenceTrace getInferenceTrace(XPSCase xpsCase) {
+	public InferenceTrace getInferenceTrace(Session xpsCase) {
 		return getXCLCaseModel(xpsCase).inferenceTrace;
 	}
 
-	private XCLCaseModel getXCLCaseModel(XPSCase xpsCase) {
+	private XCLCaseModel getXCLCaseModel(Session xpsCase) {
 		return (XCLCaseModel) xpsCase.getCaseObject(this);
 	}
 }

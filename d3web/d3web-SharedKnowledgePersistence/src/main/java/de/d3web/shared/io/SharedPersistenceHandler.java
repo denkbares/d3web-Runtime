@@ -48,7 +48,7 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.QuestionYN;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.kernel.psMethods.shared.QuestionWeightValue;
 import de.d3web.kernel.psMethods.shared.Weight;
@@ -119,7 +119,7 @@ public class SharedPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		return kb.getAllKnowledgeSlicesFor(PSMethodShared.class).size();
 	}
 	
-	public static Answer getAnswer(XPSCase theCase, Question q, String idOrValue) {
+	public static Answer getAnswer(Session theCase, Question q, String idOrValue) {
 
 		if (idOrValue.equals("MaU")) {
 			return new AnswerUnknown();

@@ -3,7 +3,7 @@ package de.d3web.xcl;
 import java.util.Collection;
 
 import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 public interface InferenceTrace {
 
@@ -25,6 +25,6 @@ public interface InferenceTrace {
 
 	public abstract double getSupport();
 	
-	public void refreshRelations(XCLModel xclModel, XPSCase xpsCase);
+	public void refreshRelations(XCLModel xclModel, Session xpsCase);
 
 }

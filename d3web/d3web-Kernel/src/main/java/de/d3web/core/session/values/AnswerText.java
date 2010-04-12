@@ -21,7 +21,7 @@
 package de.d3web.core.session.values;
 
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 /**
  * Answer class for textual questions
  * Creation date: (13.09.2000 13:50:23)
@@ -51,7 +51,7 @@ public class AnswerText extends Answer {
 	 * Creation date: (15.09.2000 11:06:43)
 	 * @return answer text (instanceof String)
 	 */
-	public Object getValue(XPSCase theCase) {
+	public Object getValue(Session theCase) {
 		return getName();
 	}
 

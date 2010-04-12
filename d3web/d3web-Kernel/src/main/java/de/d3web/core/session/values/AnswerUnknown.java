@@ -22,7 +22,7 @@ package de.d3web.core.session.values;
 
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * special answer: "unknown"
@@ -48,7 +48,7 @@ public class AnswerUnknown extends Answer {
 	 * @return AnswerUnknown.UNKNOWN_VALUE
 	 */
 	@Override
-	public Object getValue(XPSCase theCase) {
+	public Object getValue(Session theCase) {
 
 		String result = null;
 		if (getQuestion() != null) {

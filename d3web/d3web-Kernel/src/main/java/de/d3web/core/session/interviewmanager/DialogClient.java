@@ -21,7 +21,7 @@
 package de.d3web.core.session.interviewmanager;
 
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * A DialogClient is an Object that can be handled by the DialogProxy.
@@ -54,7 +54,7 @@ public abstract class DialogClient {
 	/**
 	 * fills this Client with Question-IDs and answers from the given case
 	 */
-	public abstract void putCase(XPSCase theCase);
+	public abstract void putCase(Session theCase);
 
 	/**
 	 * @param newPriority Priority of this Client. Neccessary for Proxy. 1 is the highest...

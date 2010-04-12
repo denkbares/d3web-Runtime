@@ -23,7 +23,7 @@ package de.d3web.core.knowledge.terminology;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 import de.d3web.core.manage.AnswerFactory;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerNum;
 import de.d3web.core.session.values.AnswerUnknown;
@@ -130,13 +130,13 @@ public abstract class Answer implements IDObject, PropertiesContainer, Comparabl
 
 	/**
 	 * Returns the current value of this Answer in
-	 * a specific {@link XPSCase}. 
+	 * a specific {@link Session}. 
 	 * This method is especially useful for numeric answers,
 	 * since, e.g., {@link AnswerChoice} objects have static values. 
 	 * @return text or numeric value of this {@link Answer} object
 	 * TODO: remove XPSCase from signature. This results to removing all dynamic evaluateable answer values (e.g. Formulas) from the answer. Evaluate them before creating the Answer
 	 */
-	public abstract Object getValue(XPSCase theCase);
+	public abstract Object getValue(Session theCase);
 
 	/**
 	 * Helper method, to test, if this {@link Answer} is an {@link AnswerUnknown} 
@@ -159,12 +159,12 @@ public abstract class Answer implements IDObject, PropertiesContainer, Comparabl
 
 	/**
 	 * Returns the verbalization of this {@link Answer} in the context
-	 * of an {@link XPSCase}. This is especially useful for Answers,
+	 * of an {@link Session}. This is especially useful for Answers,
 	 * dynamically changing, such as {@link AnswerNum}.
-	 * @param theCase the context {@link XPSCase}
-	 * @return value of this {@link Answer} in the context of an {@link XPSCase}
+	 * @param theCase the context {@link Session}
+	 * @return value of this {@link Answer} in the context of an {@link Session}
 	 */
-	public String verbalizeValue(XPSCase theCase) {
+	public String verbalizeValue(Session theCase) {
 		return getValue(theCase).toString();
 	}
 	

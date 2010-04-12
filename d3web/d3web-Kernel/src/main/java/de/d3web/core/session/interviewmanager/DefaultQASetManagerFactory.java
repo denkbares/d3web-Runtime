@@ -24,7 +24,7 @@
  */
 package de.d3web.core.session.interviewmanager;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * [DOC]
@@ -38,9 +38,9 @@ public class DefaultQASetManagerFactory implements QASetManagerFactory {
 	}
 
 	/**
-	 * @see de.d3web.core.session.interviewmanager.QASetManagerFactory#createQASetManager(de.d3web.core.session.XPSCase)
+	 * @see de.d3web.core.session.interviewmanager.QASetManagerFactory#createQASetManager(de.d3web.core.session.Session)
 	 */
-	public QASetManager createQASetManager(XPSCase theCase) {
+	public QASetManager createQASetManager(Session theCase) {
 		return new OQDialogController(theCase);
 	}
 

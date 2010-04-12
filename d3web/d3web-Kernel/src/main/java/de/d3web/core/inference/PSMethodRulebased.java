@@ -23,7 +23,7 @@ package de.d3web.core.inference;
 import java.util.Collection;
 
 import de.d3web.core.knowledge.terminology.NamedObject;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * @author jochen
@@ -38,7 +38,7 @@ public abstract class PSMethodRulebased extends PSMethodAdapter {
 	 * Check if NamedObject has rules connected with this problem-solver and
 	 * check them, if available
 	 */
-	protected final void propagate(XPSCase theCase, NamedObject nob) {
+	protected final void propagate(Session theCase, NamedObject nob) {
 		if (nob!=null) {
 			KnowledgeSlice slices = nob.getKnowledge(this
 					.getClass(), MethodKind.FORWARD);
@@ -51,7 +51,7 @@ public abstract class PSMethodRulebased extends PSMethodAdapter {
 		}
 	}
 
-	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
 		// for rules we check all rules sequentally
 		for (PropagationEntry change : changes) {
 			this.propagate(theCase, change.getObject());

@@ -24,7 +24,7 @@ import java.util.Collection;
 
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 
 /**
@@ -47,12 +47,12 @@ public interface PSMethod {
 	 */
 	// TODO: should be moved as blackboard functionality: get merged facts for a
 	// specific problem solver
-	DiagnosisState getState(XPSCase theCase, Solution theDiagnosis);
+	DiagnosisState getState(Session theCase, Solution theDiagnosis);
 
 	/**
 	 * initialization method for this PSMethod
 	 */
-	void init(XPSCase theCase);
+	void init(Session theCase);
 
 	/**
 	 * Indicates whether the problemsolver contributes to
@@ -63,7 +63,7 @@ public interface PSMethod {
 	/**
 	 * propergates the new value of the given NamedObject for the given XPSCase
 	 */
-	void propagate(XPSCase theCase, Collection<PropagationEntry> changes);
+	void propagate(Session theCase, Collection<PropagationEntry> changes);
 
 	/**
 	 * Merges the facts created by this problem solver to the final value. The

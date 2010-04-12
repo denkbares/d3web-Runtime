@@ -40,7 +40,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.NamedObject;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
@@ -79,7 +79,7 @@ public class FluxSolver implements PSMethod {
 	}
 
 	@Override
-	public void init(XPSCase theCase) {
+	public void init(Session theCase) {
 
 		if (!isFlowCase(theCase)) return;
 
@@ -87,26 +87,26 @@ public class FluxSolver implements PSMethod {
 
 	}
 
-	public void indicateFlow(Rule rule, INode startNode, XPSCase theCase) {
+	public void indicateFlow(Rule rule, INode startNode, Session theCase) {
 
 		addPathEntryForNode(theCase, null, startNode, new RuleSupport(rule));
 	}
 
-	public boolean isFlowCase(XPSCase theCase) {
+	public boolean isFlowCase(Session theCase) {
 
 		FlowSet flowSet = getFlowSet(theCase);
 
 		return flowSet != null && !flowSet.getFlows().isEmpty();
 	}
 
-	public static DiaFluxCaseObject getFlowData(XPSCase theCase) {
+	public static DiaFluxCaseObject getFlowData(Session theCase) {
 
 		FlowSet flowSet = getFlowSet(theCase);
 
 		return (DiaFluxCaseObject) theCase.getCaseObject(flowSet);
 	}
 
-	public static FlowSet getFlowSet(XPSCase theCase) {
+	public static FlowSet getFlowSet(Session theCase) {
 
 		return getFlowSet(theCase.getKnowledgeBase());
 
@@ -165,7 +165,7 @@ public class FluxSolver implements PSMethod {
 	 * @param currentNode
 	 * @return the new {@link PathEntry} for node
 	 */
-	private PathEntry addPathEntryForNode(XPSCase theCase, PathEntry currentEntry, INode nextNode, ISupport support) {
+	private PathEntry addPathEntryForNode(Session theCase, PathEntry currentEntry, INode nextNode, ISupport support) {
 
 		INode currentNode;
 
@@ -216,7 +216,7 @@ public class FluxSolver implements PSMethod {
 
 	}
 
-	private void addPathEnd(XPSCase theCase, PathEntry newEntry) {
+	private void addPathEnd(Session theCase, PathEntry newEntry) {
 		log("Adding new PathEnd for node: " + newEntry.getNode());
 		DiaFluxCaseObject caseObject = getFlowData(theCase);
 
@@ -227,7 +227,7 @@ public class FluxSolver implements PSMethod {
 		newEntry.getNodeData().addSupport(newEntry);
 	}
 
-	private void replacePathEnd(XPSCase theCase, PathEntry currentEntry, PathEntry newEntry) {
+	private void replacePathEnd(Session theCase, PathEntry currentEntry, PathEntry newEntry) {
 
 		log("Replacing PathEnd '" + currentEntry + "' by '" + newEntry + "'.");
 
@@ -260,7 +260,7 @@ public class FluxSolver implements PSMethod {
 	 * @param theCase
 	 * @param startEntry
 	 */
-	private void flow(XPSCase theCase, PathEntry startEntry) {
+	private void flow(Session theCase, PathEntry startEntry) {
 
 		log("Start flowing from node: " + startEntry.getNode());
 
@@ -300,7 +300,7 @@ public class FluxSolver implements PSMethod {
 	 * @param edge the egde to take
 	 * @return nextNode
 	 */
-	private PathEntry followEdge(XPSCase theCase, PathEntry entry, IEdge edge) {
+	private PathEntry followEdge(Session theCase, PathEntry entry, IEdge edge) {
 
 		INode nextNode = edge.getEndNode();
 		INodeData nextNodeData = getNodeData(nextNode, theCase);
@@ -324,7 +324,7 @@ public class FluxSolver implements PSMethod {
 
 	}
 
-	private INodeData getNodeData(INode nextNode, XPSCase theCase) {
+	private INodeData getNodeData(INode nextNode, Session theCase) {
 		DiaFluxCaseObject caseObject = getFlowData(theCase);
 
 		FlowData flowData = caseObject.getFlowDataFor(nextNode.getFlow().getId());
@@ -333,7 +333,7 @@ public class FluxSolver implements PSMethod {
 		return dataForNode;
 	}
 
-	private void doAction(XPSCase theCase, PSAction action) {
+	private void doAction(Session theCase, PSAction action) {
 		log("Starting action: " + action);
 		//TODO: HOTFIX: added rule
 		action.doIt(theCase, new Rule("bla"));
@@ -348,7 +348,7 @@ public class FluxSolver implements PSMethod {
 	 * 
 	 * @return
 	 */
-	private IEdge selectNextEdge(XPSCase theCase, PathEntry currentEntry) {
+	private IEdge selectNextEdge(Session theCase, PathEntry currentEntry) {
 
 		INode node = currentEntry.getNode();
 		// INodeData nodeData = getNodeData(node, theCase);
@@ -397,7 +397,7 @@ public class FluxSolver implements PSMethod {
 	// }
 
 	@Override
-	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
 
 		if (!isFlowCase(theCase)) return;
 
@@ -430,7 +430,7 @@ public class FluxSolver implements PSMethod {
 
 	}
 
-	private void checkFCIndications(Collection<PropagationEntry> changes, XPSCase theCase) {
+	private void checkFCIndications(Collection<PropagationEntry> changes, Session theCase) {
 
 		for (PropagationEntry entry : changes) {
 
@@ -445,7 +445,7 @@ public class FluxSolver implements PSMethod {
 		}
 	}
 
-	private void maintainTruth(XPSCase theCase, PathEntry startEntry, Collection<PropagationEntry> changes) {
+	private void maintainTruth(Session theCase, PathEntry startEntry, Collection<PropagationEntry> changes) {
 
 		log("Start maintaining truth.");
 
@@ -484,7 +484,7 @@ public class FluxSolver implements PSMethod {
 
 	}
 
-	private void collapsePathUntilEntry(XPSCase theCase, PathEntry startEntry,
+	private void collapsePathUntilEntry(Session theCase, PathEntry startEntry,
 			PathEntry endEntry) {
 
 		log("Collapsing path from '" + startEntry + "' back to " + endEntry);
@@ -509,7 +509,7 @@ public class FluxSolver implements PSMethod {
 
 	}
 
-	private void undoAction(XPSCase theCase, PSAction action) {
+	private void undoAction(Session theCase, PSAction action) {
 		log("Undoing action: " + action);
 		action.undo(theCase, null);
 	}
@@ -523,7 +523,7 @@ public class FluxSolver implements PSMethod {
 	}
 
 	@Override
-	public DiagnosisState getState(XPSCase theCase, Solution theDiagnosis) {
+	public DiagnosisState getState(Session theCase, Solution theDiagnosis) {
 		return theDiagnosis.getState(theCase, PSMethodHeuristic.class);
 	}
 

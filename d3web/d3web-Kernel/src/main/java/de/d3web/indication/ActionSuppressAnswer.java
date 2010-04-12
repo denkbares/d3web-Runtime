@@ -28,7 +28,7 @@ import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.utilities.Utils;
@@ -58,7 +58,7 @@ public class ActionSuppressAnswer extends PSAction {
 	 * @param theCase current case
 	 */
 	@Override
-	public void doIt(XPSCase theCase, Rule rule) {
+	public void doIt(Session theCase, Rule rule) {
 		((CaseQuestion) theCase.getCaseObject(getQuestion())).addRuleSuppress(
 			rule);
 	}
@@ -141,7 +141,7 @@ public class ActionSuppressAnswer extends PSAction {
 	 * @param theCase current case
 	 */
 	@Override
-	public void undo(XPSCase theCase, Rule rule) {
+	public void undo(Session theCase, Rule rule) {
 		(
 			(CaseQuestion) theCase.getCaseObject(
 				getQuestion())).removeRuleSuppress(rule);

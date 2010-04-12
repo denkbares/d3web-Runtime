@@ -33,7 +33,7 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.session.SymptomValue;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.ChoiceValue;
@@ -81,7 +81,7 @@ public class ActionAddValue extends ActionQuestionSetter {
 		}
 	}
 
-	private Value addValue(Value currentVal, NumValue val, XPSCase theCase) {
+	private Value addValue(Value currentVal, NumValue val, Session theCase) {
 		if (currentVal != null) {
 			Value ans = currentVal;
 			if (ans instanceof NumValue) {
@@ -101,16 +101,16 @@ public class ActionAddValue extends ActionQuestionSetter {
 		return currentVal;
 	}
 
-	private Value addValue(Value currentVal, EvaluatableAnswerNumValue val, XPSCase theCase) {
+	private Value addValue(Value currentVal, EvaluatableAnswerNumValue val, Session theCase) {
 		NumValue ans = new NumValue(val.eval(theCase));
 		return addValue(currentVal, ans, theCase);
 	}
 
-	private Value addValue(Value currentVals, EvaluatableAnswerDateValue val, XPSCase theCase) {
+	private Value addValue(Value currentVals, EvaluatableAnswerDateValue val, Session theCase) {
 		return addValue(currentVals, new DateValue(val.eval(theCase)));
 	}
 
-	private Value addValue(Value currentVals, FormulaExpression val, XPSCase theCase) {
+	private Value addValue(Value currentVals, FormulaExpression val, Session theCase) {
 		Value evalAns = val.eval(theCase);
 		if (evalAns instanceof ChoiceValue) {
 			return addValue(currentVals, (ChoiceValue) evalAns);
@@ -121,7 +121,7 @@ public class ActionAddValue extends ActionQuestionSetter {
 			return null;
 	}
 
-	private Value addValue(Value currentVals, FormulaDateExpression val, XPSCase theCase) {
+	private Value addValue(Value currentVals, FormulaDateExpression val, Session theCase) {
 		Value evalAns = val.eval(theCase);
 		if (evalAns instanceof DateValue) {
 			return addValue(currentVals, (DateValue) evalAns);
@@ -136,7 +136,7 @@ public class ActionAddValue extends ActionQuestionSetter {
 	 * call theCase.SetValue to propagate the changes. Creation date:
 	 * (30.01.2002 16:10:28)
 	 */
-	private Value addValues(Value currentValue, XPSCase theCase) {
+	private Value addValues(Value currentValue, Session theCase) {
 		Object val = getValue();
 		if (val != null) {
 			if (val instanceof NumValue) {
@@ -170,7 +170,7 @@ public class ActionAddValue extends ActionQuestionSetter {
 	/**
 	 * Returns a list which contains an AnswerNum with the value to add.
 	 */
-	private Value addSchemaValue(QuestionChoice q, XPSCase theCase) {
+	private Value addSchemaValue(QuestionChoice q, Session theCase) {
 		Object val = getValue();
 		Value resultAnswer = null;
 		if (val != null) {
@@ -205,7 +205,7 @@ public class ActionAddValue extends ActionQuestionSetter {
 	 *            current case
 	 */
 	@Override
-	public void doIt(XPSCase theCase, Rule rule) {
+	public void doIt(Session theCase, Rule rule) {
 		if (!lastFiredRuleEqualsCurrentRuleAndNotFired(theCase)) {
 			getQuestion().addProReason(new QASet.Reason(rule), theCase);
 			Value resultValue;
@@ -247,7 +247,7 @@ public class ActionAddValue extends ActionQuestionSetter {
 	 * Tries to undo the included action.
 	 */
 	@Override
-	public void undo(XPSCase theCase, Rule rule) {
+	public void undo(Session theCase, Rule rule) {
 		getQuestion().removeProReason(new QASet.Reason(rule), theCase);
 		removeRuleFromSymptomValueHistory(theCase, rule);
 
@@ -294,7 +294,7 @@ public class ActionAddValue extends ActionQuestionSetter {
 		}
 	}
 
-	private void removeRuleFromSymptomValueHistory(XPSCase theCase, Rule rule) {
+	private void removeRuleFromSymptomValueHistory(Session theCase, Rule rule) {
 		CaseQuestion q = (CaseQuestion) theCase.getCaseObject(getQuestion());
 		List<SymptomValue> l = q.getValueHistory();
 		if ((l != null)) {

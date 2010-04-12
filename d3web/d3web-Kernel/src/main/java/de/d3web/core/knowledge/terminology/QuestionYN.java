@@ -21,7 +21,7 @@
 package de.d3web.core.knowledge.terminology;
 
 import de.d3web.core.manage.AnswerFactory;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.utilities.Utils;
@@ -74,7 +74,7 @@ public class QuestionYN extends QuestionOC {
 	 *            XPSCase
 	 */
 	@Deprecated
-    public void setValueNo(XPSCase theCase) {
+    public void setValueNo(Session theCase) {
 		super.setValue(theCase, new ChoiceValue(no));
     }
 
@@ -87,7 +87,7 @@ public class QuestionYN extends QuestionOC {
 	 *            de.d3web.kernel.domainModel.XPSCase
 	 */
 	@Deprecated
-    public void setValueYes(XPSCase theCase) {
+    public void setValueYes(Session theCase) {
 		super.setValue(theCase, new ChoiceValue(yes));
     }
 }

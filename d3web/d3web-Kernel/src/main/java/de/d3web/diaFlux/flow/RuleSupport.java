@@ -2,7 +2,7 @@ package de.d3web.diaFlux.flow;
 
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.condition.UnknownAnswerException;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * @author Reinhard Hatko
@@ -23,7 +23,7 @@ public class RuleSupport implements ISupport {
 
 
 	@Override
-	public boolean isValid(XPSCase xpsCase) {
+	public boolean isValid(Session xpsCase) {
 		try {
 			
 			rule.check(xpsCase);

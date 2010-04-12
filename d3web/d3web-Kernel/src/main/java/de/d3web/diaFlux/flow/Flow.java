@@ -30,7 +30,7 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.CaseObjectSource;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.diaFlux.inference.FluxSolver;
 
@@ -79,7 +79,7 @@ public class Flow implements CaseObjectSource, KnowledgeSlice {
 	}
 	
 	@Override
-	public XPSCaseObject createCaseObject(XPSCase session) {
+	public XPSCaseObject createCaseObject(Session session) {
 		
 		Map<INode, INodeData> nodedata = new HashMap<INode, INodeData>(getNodes().size());
 		
@@ -185,7 +185,7 @@ public class Flow implements CaseObjectSource, KnowledgeSlice {
 	}
 
 	@Override
-	public boolean isUsed(XPSCase theCase) {
+	public boolean isUsed(Session theCase) {
 		// TODO Auto-generated method stub
 		return true;
 	}

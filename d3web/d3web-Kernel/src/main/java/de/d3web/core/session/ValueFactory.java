@@ -58,7 +58,7 @@ public class ValueFactory {
 	// the dialog should yield Value instances not
 	// Answer instances any more
 	public static Value toValue(ValuedObject valuedObject,
-			Object[] newValue, XPSCase theCase) {
+			Object[] newValue, Session theCase) {
 		if (newValue == null || newValue.length == 0) {
 			return null;
 		}

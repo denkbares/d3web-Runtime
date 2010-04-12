@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.xcl.inference.PSMethodXCL;
 
 public class DefaultScoreAlgorithm implements ScoreAlgorithm {
@@ -13,7 +13,7 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 		return new DefaultInferenceTrace();
 	}
 
-	public void refreshStates(Collection<XCLModel> updatedModels, XPSCase xpsCase) {
+	public void refreshStates(Collection<XCLModel> updatedModels, Session xpsCase) {
 		for (XCLModel model : updatedModels) {
 			DefaultInferenceTrace trace = (DefaultInferenceTrace) model.getInferenceTrace(xpsCase);
 			DiagnosisState oldState = model.getState(xpsCase);
@@ -59,12 +59,12 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 		return DiagnosisState.UNCLEAR;
 	}
 
-	public void update(XCLModel xclModel, Collection<PropagationEntry> entries, XPSCase xpsCase) {
+	public void update(XCLModel xclModel, Collection<PropagationEntry> entries, Session xpsCase) {
 		InferenceTrace trace = xclModel.getInferenceTrace(xpsCase);
 		trace.refreshRelations(xclModel, xpsCase);
 	}
 
-	private double computeScore(XCLModel model, InferenceTrace trace, XPSCase theCase) {
+	private double computeScore(XCLModel model, InferenceTrace trace, Session theCase) {
 
 		// score is the sum of matching relations compared to evaluated relations
 		double posSum = weightedSumOf(trace.getPosRelations()) + weightedSumOf(trace.getReqPosRelations());
@@ -75,7 +75,7 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 		return result;
 	}
 
-	private double computeSupport(XCLModel model, InferenceTrace trace, XPSCase theCase) {
+	private double computeSupport(XCLModel model, InferenceTrace trace, Session theCase) {
 		// support is the sum of evaluated relations compared to all relations
 		double posSum = weightedSumOf(trace.getPosRelations()) + weightedSumOf(trace.getReqPosRelations());
 		double negSum = weightedSumOf(trace.getNegRelations()) + weightedSumOf(trace.getReqNegRelations());

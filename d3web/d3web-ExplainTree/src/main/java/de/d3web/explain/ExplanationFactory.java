@@ -30,7 +30,7 @@ import java.util.Collection;
 
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.explain.eNodes.ENode;
 import de.d3web.explain.eNodes.values.DiagnosticValue;
 import de.d3web.explain.eNodes.values.QState;
@@ -41,9 +41,9 @@ import de.d3web.explain.eNodes.values.QState;
  */
 public class ExplanationFactory {
     
-    private XPSCase myCase;
+    private Session myCase;
     /** Creates a new instance of ExplainationFactory */
-    public ExplanationFactory(XPSCase theCase) {
+    public ExplanationFactory(Session theCase) {
         myCase = theCase;
     }
     
@@ -68,7 +68,7 @@ public class ExplanationFactory {
 	 * Gets the myCase.
 	 * @return Returns a XPSCase
 	 */
-	public XPSCase getXPSCase() {
+	public Session getXPSCase() {
 		return myCase;
 	}
 

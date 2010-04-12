@@ -32,14 +32,14 @@ public interface CaseObjectSource {
 	 * Create a session object for itself, to store all dynamic values (session
 	 * dependent values) of this instance into.
 	 * <p>
-	 * <b>Do not call this method directly.</b> It is created by the {@link XPSCase}
+	 * <b>Do not call this method directly.</b> It is created by the {@link Session}
 	 * implementations to create the dynamic objects. Use
-	 * {@link XPSCase#getCaseObject(CaseObjectSource)} instead.
+	 * {@link Session#getCaseObject(CaseObjectSource)} instead.
 	 * 
 	 * @param session
 	 *            the session instance this object is created for
 	 * 
 	 * @return the created session object for this instance
 	 */
-	public XPSCaseObject createCaseObject(XPSCase session);
+	public XPSCaseObject createCaseObject(Session session);
 }

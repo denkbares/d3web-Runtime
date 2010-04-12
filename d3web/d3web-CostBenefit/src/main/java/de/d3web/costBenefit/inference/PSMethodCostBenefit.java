@@ -42,7 +42,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.CaseObjectSource;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.core.session.blackboard.XPSCaseObject;
@@ -84,7 +84,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 	}
 
 	@Override
-	public void init(XPSCase theCase) {
+	public void init(Session theCase) {
 		CostBenefitCaseObject caseObject = (CostBenefitCaseObject) theCase.getCaseObject(this);
 		calculateNewPath(caseObject);
 		activateNextQContainer(caseObject);
@@ -92,7 +92,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 	
 	private void activateNextQContainer(CostBenefitCaseObject caseObject) {
 		QContainer[] currentSequence = caseObject.getCurrentSequence();
-		XPSCase theCase = caseObject.getSession();
+		Session theCase = caseObject.getSession();
 		if (currentSequence== null) {
 			deactivateCurrentQContainer(caseObject);
 		} else {
@@ -143,7 +143,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 	}
 
 	private void calculateNewPath(CostBenefitCaseObject caseObject) {
-		XPSCase theCase = caseObject.getSession();
+		Session theCase = caseObject.getSession();
 		List<StrategicSupport> stratgicSupports = getStrategicSupports(theCase);
 		HashSet<Solution> diags = new HashSet<Solution>();
 		caseObject.setDiags(diags);
@@ -190,9 +190,9 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		}
 	}
 
-	private List<StrategicSupport> getStrategicSupports(XPSCase theCase) {
+	private List<StrategicSupport> getStrategicSupports(Session theCase) {
 		List<StrategicSupport> ret = new ArrayList<StrategicSupport>();
-		for (PSMethod psm: theCase.getUsedPSMethods()) {
+		for (PSMethod psm: theCase.getPSMethods()) {
 			if (psm instanceof StrategicSupport) {
 				ret.add((StrategicSupport) psm);
 			}
@@ -202,7 +202,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 
 	
 
-	private void makeOKQuestionsUndone(TerminologyObject container, XPSCase theCase) {
+	private void makeOKQuestionsUndone(TerminologyObject container, Session theCase) {
 		for (TerminologyObject nob : container.getChildren()) {
 			// if ok-question
 			if (nob instanceof QuestionOC) {
@@ -219,7 +219,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 	}
 
 	@Override
-	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
 		CostBenefitCaseObject caseObject = (CostBenefitCaseObject) theCase.getCaseObject(this);
 		Set<QContainer> qcons = new HashSet<QContainer>();
 		for (PropagationEntry entry : changes) {
@@ -317,7 +317,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 	}
 
 	@Override
-	public XPSCaseObject createCaseObject(XPSCase session) {
+	public XPSCaseObject createCaseObject(Session session) {
 		return new CostBenefitCaseObject(this, session);
 	}
 }

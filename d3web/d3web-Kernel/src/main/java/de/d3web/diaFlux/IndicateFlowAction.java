@@ -28,7 +28,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.NamedObject;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowSet;
 import de.d3web.diaFlux.flow.StartNode;
@@ -56,7 +56,7 @@ public class IndicateFlowAction extends PSAction {
 	}
 
 	@Override
-	public void doIt(XPSCase theCase, Rule rule) {
+	public void doIt(Session theCase, Rule rule) {
 		
 		
 		log("Indicating Startnode '"  + startNodeName +"' of flow '" + flowName + "'.", Level.FINE);
@@ -70,7 +70,7 @@ public class IndicateFlowAction extends PSAction {
 	/**
 	 * returns the StartNode that is called by the supplied action
 	 */
-	private StartNode findStartNode(XPSCase theCase) {
+	private StartNode findStartNode(Session theCase) {
 		
 		FlowSet flowSet = FluxSolver.getFlowSet(theCase);
 		
@@ -104,7 +104,7 @@ public class IndicateFlowAction extends PSAction {
 	}
 
 	@Override
-	public void undo(XPSCase theCase, Rule rule) {
+	public void undo(Session theCase, Rule rule) {
 		
 		
 		

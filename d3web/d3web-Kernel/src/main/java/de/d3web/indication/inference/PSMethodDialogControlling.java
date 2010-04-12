@@ -30,7 +30,7 @@ import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.core.session.interviewmanager.PSMethodCombined;
@@ -50,7 +50,7 @@ public class PSMethodDialogControlling extends PSMethodCombined {
 	 * @return the maximum of scores as DiagnosisState.
 	 * Creation date: (03.01.2002 16:17:28)
 	 */
-	public DiagnosisState getState(XPSCase theCase, Solution theDiagnosis) {
+	public DiagnosisState getState(Session theCase, Solution theDiagnosis) {
 		return null;
 	}
 
@@ -58,7 +58,7 @@ public class PSMethodDialogControlling extends PSMethodCombined {
 	 * Retrieves all dialog controlling PSMethods from the given XPSCase
 	 * Creation date: (03.01.2002 16:17:28)
 	 */
-	public void init(XPSCase theCase) {
+	public void init(Session theCase) {
 		//List moved from d3webCase (because it wasn't modfied anyway
 		//TODO: getAll PSMethods and screen them for the correct ones 
 		PSMethodUserSelected psmUser = PSMethodUserSelected.getInstance();
@@ -71,7 +71,7 @@ public class PSMethodDialogControlling extends PSMethodCombined {
 	/**
 	 * @see PSMethod
 	 */
-	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
 		for (PropagationEntry change : changes) {
 			KnowledgeSlice knowledgeSlices = change.getObject().getKnowledge(this.getClass(), MethodKind.FORWARD);
 			if (knowledgeSlices == null) return;

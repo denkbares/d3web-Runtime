@@ -20,7 +20,7 @@
 
 package de.d3web.abstraction.formula;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 /**
  * Addition term
  * Creation date: (14.08.2000 16:33:00)
@@ -50,7 +50,7 @@ public class Add extends FormulaNumberArgumentsTerm implements FormulaNumberElem
 	 * Adds the evaluation values of both arguments
 	 * @return added evaluated arguments
 	 */
-	public Double eval(XPSCase theCase) {
+	public Double eval(Session theCase) {
 		super.eval(theCase);
 		Double arg1 = getEvaluatedArg1();
 		Double arg2 = getEvaluatedArg2();

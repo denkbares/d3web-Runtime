@@ -20,7 +20,7 @@ package de.d3web.costBenefit.inference;
 
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * The DefaultCostFunction returns the static costs of a QContainer. The actual
@@ -34,7 +34,7 @@ public class DefaultCostFunction implements CostFunction {
 	}
 
 	@Override
-	public double getCosts(QContainer qcon, XPSCase theCase) {
+	public double getCosts(QContainer qcon, Session theCase) {
 		Object property = qcon.getProperties().getProperty(Property.COST);
 		if (property!=null) {
 			return (Double) property;

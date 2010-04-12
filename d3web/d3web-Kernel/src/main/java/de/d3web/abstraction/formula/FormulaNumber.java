@@ -23,7 +23,7 @@ package de.d3web.abstraction.formula;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 /**
  * Primitive formula element in number format
  * Creation date: (14.08.2000 15:49:14)
@@ -50,7 +50,7 @@ public class FormulaNumber extends FormulaNumberPrimitive {
 	 * Creation date: (14.08.2000 15:51:57)
 	 * @return Double-value of this FormulaElement
 	 */
-	public Double eval(XPSCase theCase) {
+	public Double eval(Session theCase) {
 		return (Double) getValue();
 	}
 

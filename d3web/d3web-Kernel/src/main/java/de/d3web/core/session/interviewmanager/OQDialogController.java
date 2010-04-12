@@ -34,7 +34,7 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QASet.Reason;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
@@ -50,10 +50,10 @@ public class OQDialogController implements DialogController {
 	private int historyCursor = -1;
 	
 	private MQDialogController mqdc;
-	private XPSCase theCase;
+	private Session theCase;
 
 
-		public OQDialogController(XPSCase theCase) {
+		public OQDialogController(Session theCase) {
 		mqdc = new MQDialogController(theCase);
 		history = new LinkedList<QASet>();
 		this.theCase = theCase;
@@ -246,7 +246,7 @@ public class OQDialogController implements DialogController {
 		return null;
 	}
 	
-	private List<Reason> getProReasonsOfParent(XPSCase theCase, Question q) {
+	private List<Reason> getProReasonsOfParent(Session theCase, Question q) {
 		List<Reason> proReasons = new LinkedList<Reason>();
 		for (TerminologyObject to: q.getParents()) {
 			QASet qaSet = (QASet) to;

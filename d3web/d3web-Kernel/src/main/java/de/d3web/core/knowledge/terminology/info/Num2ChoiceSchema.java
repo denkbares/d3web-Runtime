@@ -29,7 +29,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
@@ -70,9 +70,9 @@ public class Num2ChoiceSchema implements KnowledgeSlice {
 	}
 	/**
 	 * @return true by default, not used in this context.
-	 * @see de.d3web.core.inference.KnowledgeSlice#isUsed(de.d3web.core.session.XPSCase)
+	 * @see de.d3web.core.inference.KnowledgeSlice#isUsed(de.d3web.core.session.Session)
 	 */
-	public boolean isUsed(XPSCase theCase) {
+	public boolean isUsed(Session theCase) {
 		return true;
 	}
 
@@ -80,7 +80,7 @@ public class Num2ChoiceSchema implements KnowledgeSlice {
 	 * @return the answer selected from the given answer collection according to
 	 *         the given numeric value
 	 */
-	public Value getValueForNum(Double num, Collection<AnswerChoice> answers, XPSCase theCase) {
+	public Value getValueForNum(Double num, Collection<AnswerChoice> answers, Session theCase) {
 		boolean ascending = isAscending();
 		for (int i = 0; i < schemaArray.length; i++) {
 			if ((ascending && num.doubleValue() < schemaArray[i].doubleValue())

@@ -24,7 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.knowledge.terminology.QuestionMC;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.MultipleChoiceValue;
 /**
@@ -61,7 +61,7 @@ public class Count implements FormulaNumberElement {
 	 * @return the number of active alternatives for a multiple-choice answer,
 	 * 0, if the active answer is "No" or "unknown".
 	 */
-	public Double eval(XPSCase theCase) {
+	public Double eval(Session theCase) {
 		MultipleChoiceValue value = (MultipleChoiceValue) getQuestionMC().getValue(
 				theCase);
 		List<AnswerChoice> choices = (List<AnswerChoice>) value.getValue();

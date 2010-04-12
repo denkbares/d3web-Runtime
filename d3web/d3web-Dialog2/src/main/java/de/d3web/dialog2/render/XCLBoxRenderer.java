@@ -31,14 +31,14 @@ import javax.faces.render.Renderer;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.dialog2.util.DialogUtils;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.inference.PSMethodXCL;
 
 public class XCLBoxRenderer extends Renderer {
 
-    public boolean checkDisplayability(XPSCase theCase) {
+    public boolean checkDisplayability(Session theCase) {
 	if (theCase != null) {
 	    Collection<KnowledgeSlice> solutions = theCase.getKnowledgeBase()
 		    .getAllKnowledgeSlicesFor(PSMethodXCL.class);
@@ -53,14 +53,14 @@ public class XCLBoxRenderer extends Renderer {
     @Override
     public void encodeEnd(FacesContext context, UIComponent component)
 	    throws IOException {
-	XPSCase theCase = DialogUtils.getDialog().getTheCase();
+	Session theCase = DialogUtils.getDialog().getTheCase();
 	if (checkDisplayability(theCase)) {
 	    renderXCLBox(context.getResponseWriter(), component, theCase);
 	}
     }
 
     protected boolean hasNonZeroSolution(Collection<KnowledgeSlice> solutions,
-	    XPSCase theCase) {
+	    Session theCase) {
 	for (KnowledgeSlice d : solutions) {
 	    if (d instanceof XCLModel) {
 		XCLModel model = (XCLModel) d;
@@ -75,7 +75,7 @@ public class XCLBoxRenderer extends Renderer {
     }
 
     private void renderXCLBox(ResponseWriter writer, UIComponent component,
-	    XPSCase theCase) throws IOException {
+	    Session theCase) throws IOException {
 
 	DialogRenderUtils.renderTableWithClass(writer, component, "panelBox");
 	writer.writeAttribute("id", component.getClientId(FacesContext

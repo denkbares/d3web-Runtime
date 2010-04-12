@@ -27,13 +27,13 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.ResponseWriter;
 
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.dialog2.basics.layout.QContainerLayout;
 import de.d3web.dialog2.basics.layout.QuestionPageLayout;
 
 public class QContainerRendererForUndefinedLayout extends QContainerRenderer {
 
-	public QContainerRendererForUndefinedLayout(ResponseWriter writer, UIComponent component, XPSCase theCase, List<Question> qList, QuestionPageLayout layoutDef) {
+	public QContainerRendererForUndefinedLayout(ResponseWriter writer, UIComponent component, Session theCase, List<Question> qList, QuestionPageLayout layoutDef) {
 		super(writer, component, theCase, qList, layoutDef);
 	}
 	

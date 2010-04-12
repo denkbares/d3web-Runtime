@@ -60,7 +60,7 @@ import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.ChoiceValue;
@@ -88,7 +88,7 @@ public class ExplanationRendererUtils {
     private static boolean hasActiveRules = false;
 
     public static void explainConcreteDerivation(ResponseWriter writer,
-	    UIComponent component, Solution diag, XPSCase theCase)
+	    UIComponent component, Solution diag, Session theCase)
 	    throws IOException {
 	Collection<Class<?>> explainContext = new LinkedList<Class<?>>();
 	explainContext.add(PSMethodHeuristic.class);
@@ -118,7 +118,7 @@ public class ExplanationRendererUtils {
      *         String: kind of condition-status
      */
     private static List<Object> getStatusFor(Condition cond,
-	    XPSCase theCase, boolean asException, boolean parentFired) {
+	    Session theCase, boolean asException, boolean parentFired) {
 	LinkedList<Object> returnList = new LinkedList<Object>();
 	try {
 	    if (cond.eval(theCase)) {
@@ -147,7 +147,7 @@ public class ExplanationRendererUtils {
     }
 
     public static void renderCondition(ResponseWriter writer,
-	    UIComponent component, Condition cond, XPSCase theCase,
+	    UIComponent component, Condition cond, Session theCase,
 	    boolean showStatus, boolean parentFired, String when,
 	    boolean parentIsNot, String rcID) throws IOException {
 	if (cond instanceof TerminalCondition) {
@@ -166,7 +166,7 @@ public class ExplanationRendererUtils {
     }
 
     private static void renderECondition(ResponseWriter writer,
-	    UIComponent component, ECondition eCond, XPSCase theCase,
+	    UIComponent component, ECondition eCond, Session theCase,
 	    boolean asException, String rcID) throws IOException {
 	if (eCond.getCondition() instanceof TerminalCondition) {
 	    renderTCondition(writer, component, (TerminalCondition) eCond
@@ -184,7 +184,7 @@ public class ExplanationRendererUtils {
     }
 
     private static void renderENode(ResponseWriter writer,
-	    UIComponent component, ENode eNode, XPSCase theCase)
+	    UIComponent component, ENode eNode, Session theCase)
 	    throws IOException {
 
 	DialogRenderUtils.renderTableWithClass(writer, component,
@@ -215,7 +215,7 @@ public class ExplanationRendererUtils {
     }
 
     private static void renderEReason(ResponseWriter writer,
-	    UIComponent component, EReason eReason, XPSCase theCase, ENode eNode)
+	    UIComponent component, EReason eReason, Session theCase, ENode eNode)
 	    throws IOException {
 	writer.startElement("tr", component);
 
@@ -271,7 +271,7 @@ public class ExplanationRendererUtils {
     }
 
     private static void renderNonTCondition(ResponseWriter writer,
-	    UIComponent component, NonTerminalCondition cond, XPSCase theCase,
+	    UIComponent component, NonTerminalCondition cond, Session theCase,
 	    boolean showStatus, boolean asException, boolean parentFired,
 	    String when, String rcID) throws IOException {
 
@@ -475,7 +475,7 @@ public class ExplanationRendererUtils {
     }
 
     public static void renderTCondition(ResponseWriter writer,
-	    UIComponent component, TerminalCondition cond, XPSCase theCase,
+	    UIComponent component, TerminalCondition cond, Session theCase,
 	    boolean showStatus, boolean asException, boolean parentFired,
 	    String when, boolean parentIsNot, String rcID) throws IOException {
 	List<Object> statusValues = null;

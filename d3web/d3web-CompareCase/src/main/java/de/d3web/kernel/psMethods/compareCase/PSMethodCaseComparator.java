@@ -27,7 +27,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.kernel.psMethods.compareCase.comparators.ComparatorResult;
@@ -81,7 +81,7 @@ public class PSMethodCaseComparator implements PSMethod {
 	 * @return EasyXPS.domainModel.DiagnosisState
 	 * @param theCase EasyXPS.domainModel.XPSCase
 	 */
-	public DiagnosisState getState(XPSCase theCase, Solution diagnosis) {
+	public DiagnosisState getState(Session theCase, Solution diagnosis) {
 		//TODO: vb: das ist falsch. diagnosis.getState ruft wiederum diese Method auf. Hier liegt eine Endlosrekursion vor, oder?
 		return diagnosis.getState(theCase, PSMethodCaseComparator.class);
 	}
@@ -91,14 +91,14 @@ public class PSMethodCaseComparator implements PSMethod {
 	 * Creation date: (08.08.2001 09:10:11)
 	 * @param theCase EasyXPS.domainModel.XPSCase the current case
 	 */
-	public void init(XPSCase theCase) {
+	public void init(Session theCase) {
 	}
 
 	/**
 	 * propagate method comment.
 	 */
 	@Override
-	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
 	}
 
 	/**

@@ -5,7 +5,7 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.ChoiceValue;
 
@@ -85,13 +85,13 @@ public class SCMCBRRelation {
 		r.setId(id);
 		return r;
 	}
-	public boolean eval(XPSCase theCase) throws NoAnswerException,UnknownAnswerException{
+	public boolean eval(Session theCase) throws NoAnswerException,UnknownAnswerException{
 			return conditionedFinding.eval(theCase);
 		
 	}
 
 	
-	public double getSimilarity(XPSCase theCase) {
+	public double getSimilarity(Session theCase) {
 		
 		
 		return 0;
@@ -146,7 +146,7 @@ public class SCMCBRRelation {
 		return toString().hashCode();
 	}
 
-	public double getDegreeOfTruth(XPSCase theCase) throws NoAnswerException, UnknownAnswerException {
+	public double getDegreeOfTruth(Session theCase) throws NoAnswerException, UnknownAnswerException {
 		if(conditionedFinding.eval(theCase)) {
 			return 1;
 		}

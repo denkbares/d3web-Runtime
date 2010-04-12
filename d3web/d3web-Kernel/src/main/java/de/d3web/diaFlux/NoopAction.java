@@ -27,7 +27,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.NamedObject;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.diaFlux.inference.FluxSolver;
 
 /**
@@ -50,7 +50,7 @@ public class NoopAction extends PSAction {
 	}
 
 	@Override
-	public void doIt(XPSCase theCase, Rule rule) {
+	public void doIt(Session theCase, Rule rule) {
 
 	}
 
@@ -65,7 +65,7 @@ public class NoopAction extends PSAction {
 	}
 
 	@Override
-	public void undo(XPSCase theCase, Rule rule) {
+	public void undo(Session theCase, Rule rule) {
 
 	}
 

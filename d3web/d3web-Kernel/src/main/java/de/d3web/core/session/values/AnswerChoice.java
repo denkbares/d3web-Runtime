@@ -24,7 +24,7 @@ import java.util.List;
 
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * Answer (alternative) class for choice questions Creation date: (13.09.2000
@@ -50,7 +50,7 @@ public class AnswerChoice extends Answer {
 	 * 
 	 * @return the value of this answer object depending on the current case
 	 */
-	public Object getValue(XPSCase theCase) {
+	public Object getValue(Session theCase) {
 		return getName();
 	}
 

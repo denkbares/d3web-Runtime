@@ -10,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.terminology.NamedObject;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 public class DefaultPropagationController implements PropagationContoller {
 
@@ -78,19 +78,19 @@ public class DefaultPropagationController implements PropagationContoller {
 	}
 
 	
-	private final XPSCase xpsCase;
+	private final Session xpsCase;
 	private List<PSMethodHandler> psHandlers = null;
 	private int recursiveCounter = 0;
 	private long propagationTime = 0;
 	
 
-	public DefaultPropagationController(XPSCase xpsCase) {
+	public DefaultPropagationController(Session xpsCase) {
 		this.xpsCase = xpsCase;
 	}
 		
 	private void initHandlers() {
 		this.psHandlers = new LinkedList<PSMethodHandler>();
-		for (PSMethod psMethod : xpsCase.getUsedPSMethods()) {
+		for (PSMethod psMethod : xpsCase.getPSMethods()) {
 			psHandlers.add(new PSMethodHandler(psMethod));
 		}
 	}

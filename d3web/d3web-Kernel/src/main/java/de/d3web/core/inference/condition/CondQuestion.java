@@ -23,7 +23,7 @@ package de.d3web.core.inference.condition;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
@@ -53,11 +53,11 @@ public abstract class CondQuestion extends TerminalCondition {
 	/**
 	 * Shortcut to be used for the eval methods of inheriting classes:
 	 * This method checks if there exists a given value for this
-	 * condition in the specified {@link XPSCase}.
+	 * condition in the specified {@link Session}.
 	 * @throws NoAnswerException if the question has currently no answer
 	 * @throws UnknownAnswerException if the question is answered with {@link AnswerUnknown}
 	 */
-	protected void checkAnswer(XPSCase theCase)
+	protected void checkAnswer(Session theCase)
 		throws NoAnswerException, UnknownAnswerException {
 		Value value = question.getValue(theCase);
 		if (value instanceof UndefinedValue || value == null) {

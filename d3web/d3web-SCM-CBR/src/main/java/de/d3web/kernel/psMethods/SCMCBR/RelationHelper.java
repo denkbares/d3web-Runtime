@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 public class RelationHelper {
 	private static RelationHelper instance; 
@@ -28,7 +28,7 @@ public class RelationHelper {
 	 * @param theCase
 	 * @return
 	 */
-	public boolean allRelationsTrue(Collection<SCMCBRRelation> relations, XPSCase theCase) {
+	public boolean allRelationsTrue(Collection<SCMCBRRelation> relations, Session theCase) {
 		for (SCMCBRRelation relation : relations) {
 			try {
 				if (!relation.eval(theCase))
@@ -42,7 +42,7 @@ public class RelationHelper {
 		return true;
 	}
 	
-	public boolean atLeastOneRelationTrue(Collection<SCMCBRRelation> relations, XPSCase theCase) {
+	public boolean atLeastOneRelationTrue(Collection<SCMCBRRelation> relations, Session theCase) {
 		for (SCMCBRRelation relation : relations) {
 			try {
 				if (relation.eval(theCase))

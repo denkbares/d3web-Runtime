@@ -28,6 +28,6 @@ package de.d3web.core.session;
  */
 public interface XPSCaseEventListener {
 
-	public abstract void notify(XPSCase source, ValuedObject o, Object context);
+	public abstract void notify(Session source, ValuedObject o, Object context);
 	
 }

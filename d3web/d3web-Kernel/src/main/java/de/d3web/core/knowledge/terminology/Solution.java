@@ -28,7 +28,7 @@ import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.D3WebCase;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.ValuedObject;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseDiagnosis;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.scoring.DiagnosisScore;
@@ -57,8 +57,8 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	 * implemented.
 	 */
 	static class DiagComp implements Comparator<Solution> {
-		private final XPSCase theCase;
-		public DiagComp(XPSCase theCase) {
+		private final Session theCase;
+		public DiagComp(Session theCase) {
 			this.theCase = theCase;
 		}
 		public int compare(Solution d1, Solution d2) {
@@ -96,7 +96,7 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	 * [FIXME]:?:CHECK FOR STATE UNCLEAR!!!
 	 */
 	private void checkForNewState(DiagnosisState oldState, DiagnosisState newStatus,
-			XPSCase theCase) {
+			Session theCase) {
 		if (oldState != newStatus) {
 			if (newStatus == DiagnosisState.ESTABLISHED) {
 				establish(theCase);
@@ -109,30 +109,30 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 
 	/**
 	 * Creates a new dynamic flyweight for this object. For every
-	 * new {@link XPSCase} flyweights are created on demand for the
+	 * new {@link Session} flyweights are created on demand for the
 	 * used {@link IDObject} instances. This method is only used
 	 * in the context of the d3web-Kernel project.
 	 * @return a flyweight instance of this object.
 	 */
-	public XPSCaseObject createCaseObject(XPSCase session) {
+	public XPSCaseObject createCaseObject(Session session) {
 		return new CaseDiagnosis(this);
 	}
 
 	/**
 	 * Removes this object from the established diagnoses in the
-	 * given {@link XPSCase} and propagates the state change.
-	 * @param theCase the specified {@link XPSCase}
+	 * given {@link Session} and propagates the state change.
+	 * @param theCase the specified {@link Session}
 	 */
-	private void deestablish(XPSCase theCase) {
+	private void deestablish(Session theCase) {
 		theCase.removeEstablishedDiagnoses(this);
 	}
 
 	/**
 	 * Adds this object to the list of established diagnoses in
-	 * the given {@link XPSCase} and propagated the state change.
-	 * @param theCase the specified {@link XPSCase}
+	 * the given {@link Session} and propagated the state change.
+	 * @param theCase the specified {@link Session}
 	 */
-	private void establish(XPSCase theCase) {
+	private void establish(Session theCase) {
 		theCase.addEstablishedDiagnoses(this);
 	}
 
@@ -149,34 +149,34 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 
 	/**
 	 * Returns a comparator that compares the {@link Score} values
-	 * in the context of the given {@link XPSCase} and the
+	 * in the context of the given {@link Session} and the
 	 * {@link PSMethodHeuristic} solver.
 	 * For other problem-solvers, you will need to implement your
 	 * own {@link Comparator}.
 	 * @param theCase the case the scores are computed for
 	 * @return a comparator for two Diagnosis objects
 	 */
-	public static Comparator<Solution> getComparator(XPSCase theCase) {
+	public static Comparator<Solution> getComparator(Session theCase) {
 		return new DiagComp(theCase);
 	}
 
 	/**
 	 * Returns the computed score of this {@link Solution} for a specified
-	 * {@link XPSCase} and a specified {@link PSMethod} context.
+	 * {@link Session} and a specified {@link PSMethod} context.
 	 * The score of a diagnosis is only valid in the context of <b>one</b>
 	 * {@link PSMethod}, and can differ for other {@link PSMethod}
 	 * instances.
 	 * @param theCase the context case of the score
 	 * @param context the {@link PSMethod} context the score is valid for
-	 * @return the score of the Diagnosis in the context of an {@link XPSCase} and {@link PSMethod} class
+	 * @return the score of the Diagnosis in the context of an {@link Session} and {@link PSMethod} class
 	 */
-	public DiagnosisScore getScore(XPSCase theCase, Class<? extends PSMethod>  context) {
+	public DiagnosisScore getScore(Session theCase, Class<? extends PSMethod>  context) {
 		return (DiagnosisScore) ((CaseDiagnosis) theCase.getCaseObject(this)).getValue(context);
 	}
 
 	/**
 	 * Returns the derived state of this {@link Solution} for a specified
-	 * {@link XPSCase} and a specified {@link PSMethod} context.
+	 * {@link Session} and a specified {@link PSMethod} context.
 	 * The state of a diagnosis is only valid in the context of <b>one</b>
 	 * {@link PSMethod}, and can differ for other {@link PSMethod}
 	 * instances.
@@ -184,9 +184,9 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	 * of the {@link Solution}.
 	 * @param theCase the context case of the state
 	 * @param context the {@link PSMethod} context the state is valid for
-	 * @return the state of the Diagnosis in the context of a given {@link XPSCase} and {@link PSMethod} class
+	 * @return the state of the Diagnosis in the context of a given {@link Session} and {@link PSMethod} class
 	 */
-	public DiagnosisState getState(XPSCase theCase, Class<? extends PSMethod> context) {
+	public DiagnosisState getState(Session theCase, Class<? extends PSMethod> context) {
 		// TODO: this is wrong! getState computes the real state every time, but this method should return the stored value of its CaseDiagnosis instance
 		return theCase.getPSMethodInstance(context).getState(theCase, this);
 	}
@@ -204,9 +204,9 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	 * @param theCase the case the state should be computed for
 	 * @return the combined state of this Diagnosis
 	 */
-	public DiagnosisState getState(XPSCase theCase) {
+	public DiagnosisState getState(Session theCase) {
 		DiagnosisState state = DiagnosisState.UNCLEAR;
-		for (PSMethod psm : theCase.getUsedPSMethods()) {
+		for (PSMethod psm : theCase.getPSMethods()) {
 			DiagnosisState psState = psm.getState(theCase, this);
 			if (psState == null) continue;
 			if (DiagnosisState.EXCLUDED.equals(psState)) return DiagnosisState.EXCLUDED;
@@ -276,11 +276,11 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	 */
 	@Override
 	@Deprecated
-	public void setValue(XPSCase theCase, Value value) {
+	public void setValue(Session theCase, Value value) {
 		setValue(theCase, value, null);
 	}
 
-	public void setValue(XPSCase theCase, Value value, Class<? extends PSMethod> context) {
+	public void setValue(Session theCase, Value value, Class<? extends PSMethod> context) {
 		DiagnosisScore diagnosisScore = null;
 		DiagnosisState oldState = getState(theCase, context);
 		if (value != null) {
@@ -302,7 +302,7 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	/**
 	 * This method officially changes the state of the Diagnosis using the
 	 * standard setValue method signature.
-	 * The value is set in the context of an {@link XPSCase} instance, and in the
+	 * The value is set in the context of an {@link Session} instance, and in the
 	 * context of a {@link PSMethod} class context (the {@link PSMethod} responsible
 	 * for deriving this state).
 	 * The value array usually contains only one element: the first element of the
@@ -313,7 +313,7 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	 * @param context the {@link PSMethod} class that set the new value
 	 */
 	@Deprecated
-	public void setValue(XPSCase theCase, Object[] values, Class<? extends PSMethod> context) {
+	public void setValue(Session theCase, Object[] values, Class<? extends PSMethod> context) {
 		DiagnosisScore diagnosisScore = null;
 		DiagnosisState oldState = getState(theCase, context);
 		if ((values != null) && (values.length > 0)) {

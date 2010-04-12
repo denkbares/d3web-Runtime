@@ -21,7 +21,7 @@
 package de.d3web.core.inference.condition;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * This condition checks, if a specified diagnosis is established or
@@ -56,7 +56,7 @@ public class CondDState extends TerminalCondition {
 	 * But we need to check for NoAnswerException,
 	 * if no rule has ever changed the state of the diagnosis.
 	 */
-	public boolean eval(XPSCase theCase) throws NoAnswerException {
+	public boolean eval(Session theCase) throws NoAnswerException {
 		return solutionState.equals(diagnosis.getState(theCase));
 	}
 

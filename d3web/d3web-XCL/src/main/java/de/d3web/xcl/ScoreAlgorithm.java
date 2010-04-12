@@ -3,7 +3,7 @@ package de.d3web.xcl;
 import java.util.Collection;
 
 import de.d3web.core.inference.PropagationEntry;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 public interface ScoreAlgorithm {
 	
@@ -22,7 +22,7 @@ public interface ScoreAlgorithm {
 	 * @param entries the propagation entries relevant for the model update
 	 * @param xpsCase the current case
 	 */
-	void update(XCLModel xclModel, Collection<PropagationEntry> entries, XPSCase xpsCase);
+	void update(XCLModel xclModel, Collection<PropagationEntry> entries, Session xpsCase);
 	
 	/**
 	 * Recalculates the states of the XCLModels of the case.
@@ -34,5 +34,5 @@ public interface ScoreAlgorithm {
 	 * @param updatedModels the models updated before this call
 	 * @param xpsCase the current case
 	 */
-	void refreshStates(Collection<XCLModel> updatedModels, XPSCase xpsCase);
+	void refreshStates(Collection<XCLModel> updatedModels, Session xpsCase);
 }

@@ -28,7 +28,7 @@ package de.d3web.core.session.values;
 
 import java.util.Date;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * This interface describes an evaluatable value of AnswerDate objects.
@@ -42,5 +42,5 @@ public interface EvaluatableAnswerDateValue extends EvaluatableDateValue{
 	 * Evaluates its value considering the given XPSCase.
 	 * @return evaluated AnswerDateValue (Date)
 	 */
-	public Date eval(XPSCase theCase);
+	public Date eval(Session theCase);
 }

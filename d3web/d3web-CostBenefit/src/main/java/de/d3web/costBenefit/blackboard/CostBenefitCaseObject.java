@@ -25,7 +25,7 @@ import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.CaseObjectSource;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.costBenefit.model.SearchModel;
 
@@ -42,14 +42,14 @@ public class CostBenefitCaseObject extends XPSCaseObject{
 	private int currentPathIndex = -1;
 	private boolean hasBegun = false;
 	private Set<Solution> diags = new HashSet<Solution>();
-	private XPSCase session;
+	private Session session;
 	
-	public CostBenefitCaseObject(CaseObjectSource theSourceObject, XPSCase session) {
+	public CostBenefitCaseObject(CaseObjectSource theSourceObject, Session session) {
 		super(theSourceObject);
 		this.session=session;
 	}
 	
-	public XPSCase getSession() {
+	public Session getSession() {
 		return session;
 	}
 

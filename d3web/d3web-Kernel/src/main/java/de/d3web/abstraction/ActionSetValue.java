@@ -31,7 +31,7 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
@@ -66,7 +66,7 @@ public class ActionSetValue extends ActionQuestionSetter implements CaseObjectSo
 	 * Sets the specified value for the specified question.
 	 */
 	@Override
-	public void doIt(XPSCase theCase, Rule rule) {
+	public void doIt(Session theCase, Rule rule) {
 
 		if (getValue() != null) {
 			if (!lastFiredRuleEqualsCurrentRuleAndNotFired(theCase)) {
@@ -134,7 +134,7 @@ public class ActionSetValue extends ActionQuestionSetter implements CaseObjectSo
 	 * Tries to undo the included action.
 	 */
 	@Override
-	public void undo(XPSCase theCase, Rule rule) {
+	public void undo(Session theCase, Rule rule) {
 
 		if (!Boolean.TRUE.equals(getQuestion().getProperties().getProperty(
 				Property.TIME_VALUED))

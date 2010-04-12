@@ -29,7 +29,7 @@ import javax.faces.context.ResponseWriter;
 
 import org.apache.log4j.Logger;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.dialog2.basics.knowledge.CaseManager;
 import de.d3web.dialog2.render.DialogRenderUtils;
 import de.d3web.dialog2.util.DialogUtils;
@@ -87,7 +87,7 @@ public class UICompareCaseBox extends UIOutput {
 
 	@SuppressWarnings( { "deprecation", "unchecked" })
 	public boolean isRenderable() {
-		XPSCase theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getTheCase();
 		ComparisonResultRepository crepos = new ComparisonResultRepository();
 		crepos.setCurrentCase(theCase);
 		crepos.setCompareMode(CompareMode.BOTH_FILL_UNKNOWN);

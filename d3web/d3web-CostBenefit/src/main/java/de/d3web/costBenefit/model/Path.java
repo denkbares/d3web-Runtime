@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Stack;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * A Path is a sequence of Nodes. It provides basic methods like adding and
@@ -50,7 +50,7 @@ public class Path {
 	 * @param node
 	 * @param theCase
 	 */
-	public void add(Node node, XPSCase theCase) {
+	public void add(Node node, Session theCase) {
 		stack.push(node);
 		double nodeCosts = node.getCosts(theCase);
 		costs += nodeCosts;

@@ -26,7 +26,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.core.session.values.UndefinedValue;
 
@@ -63,7 +63,7 @@ public abstract class ExceptionQuestion extends Question {
     /**
      * does nothing here
      */
-    public void addContraReason(Object source, XPSCase theCase) {/*
+    public void addContraReason(Object source, Session theCase) {/*
 								     * does
 								     * nothing
 								     */
@@ -72,7 +72,7 @@ public abstract class ExceptionQuestion extends Question {
     /**
      * does nothing here
      */
-    public void addProReason(Object source, XPSCase theCase) {/* does nothing */
+    public void addProReason(Object source, Session theCase) {/* does nothing */
     }
 
     /**
@@ -80,7 +80,7 @@ public abstract class ExceptionQuestion extends Question {
      * 
      * @return null
      */
-    public XPSCaseObject createCaseObject(XPSCase session) {
+    public XPSCaseObject createCaseObject(Session session) {
 	return null;
     }
 
@@ -97,7 +97,7 @@ public abstract class ExceptionQuestion extends Question {
      * has no value
      */
     @Override
-	public Value getValue(XPSCase theCase) {
+	public Value getValue(Session theCase) {
 		return UndefinedValue.getInstance();
     }
 
@@ -107,7 +107,7 @@ public abstract class ExceptionQuestion extends Question {
      * @return false
      */
     @Override
-	public boolean hasValue(XPSCase theCase) {
+	public boolean hasValue(Session theCase) {
 	return false;
     }
 
@@ -115,7 +115,7 @@ public abstract class ExceptionQuestion extends Question {
      * @return true
      */
     @Override
-	public boolean isDone(XPSCase theCase) {
+	public boolean isDone(Session theCase) {
 	return true;
     }
 
@@ -123,20 +123,20 @@ public abstract class ExceptionQuestion extends Question {
      * has no pro or contra reasons. just a marker class
      */
     public void removeContraReason(Object source,
-	    de.d3web.core.session.XPSCase theCase) {
+	    de.d3web.core.session.Session theCase) {
     }
 
     /**
      * has no pro or contra reasons. just a marker class
      */
-    public void removeProReason(Object source, de.d3web.core.session.XPSCase theCase) {
+    public void removeProReason(Object source, de.d3web.core.session.Session theCase) {
     }
 
     /**
      * does nothing because this marker class needs no value
      */
     @Override
-	public void setValue(XPSCase theCase, Value value) {
+	public void setValue(Session theCase, Value value) {
 	}
 
     @Override

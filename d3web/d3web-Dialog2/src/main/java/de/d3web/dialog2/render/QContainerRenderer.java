@@ -29,7 +29,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.ResponseWriter;
 
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.dialog2.LastClickedAnswer;
 import de.d3web.dialog2.basics.layout.QContainerLayout;
 import de.d3web.dialog2.basics.layout.QuestionLayout;
@@ -39,14 +39,14 @@ import de.d3web.dialog2.util.DialogUtils;
 
 public abstract class QContainerRenderer {
 
-	protected XPSCase theCase;
+	protected Session theCase;
 	protected ResponseWriter writer;
 	protected UIComponent component;
 	protected List<Question> qList;
 	protected String qContainerID;
 	protected QuestionPageLayout layoutDef;
 
-	public QContainerRenderer(ResponseWriter writer, UIComponent component, XPSCase theCase,
+	public QContainerRenderer(ResponseWriter writer, UIComponent component, Session theCase,
 			List<Question> qList, QuestionPageLayout layoutDef) {
 		super();
 		this.component = component;

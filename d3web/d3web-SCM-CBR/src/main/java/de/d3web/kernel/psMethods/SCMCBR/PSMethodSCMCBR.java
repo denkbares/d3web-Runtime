@@ -7,7 +7,7 @@ import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseDiagnosis;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
@@ -29,14 +29,14 @@ public class PSMethodSCMCBR extends PSMethodAdapter {
 	}
 	
 	@Override
-	public DiagnosisState getState(XPSCase theCase, Solution diagnosis) {
+	public DiagnosisState getState(Session theCase, Solution diagnosis) {
 		KnowledgeSlice models = diagnosis.getKnowledge(PSMethodSCMCBR.class, SCMCBRModel.SCMCBR);
 		if (models == null) return DiagnosisState.UNCLEAR;
 		SCMCBRModel model = (SCMCBRModel) models;
 		return model.getState(theCase);
 	}
 	
-	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
 		// TODO: implement well, as defined below
 //		Set<XCLModel> modelsToUpdate = new HashSet<XCLModel>();
 //		for (PropagationEntry change : changes) {

@@ -48,7 +48,7 @@ import de.d3web.core.knowledge.terminology.QuestionZC;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerNo;
 import de.d3web.core.session.values.AnswerUnknown;
@@ -73,7 +73,7 @@ public class QuestionsRendererUtils {
 	public static final String QUESTION_BLOCK_ID_PREFIX = "qTableCell_";
 
 	private static boolean currentAnswerIsSet(Value specAns, Question q,
-			XPSCase theCase) {
+			Session theCase) {
 		Value answer = q.getValue(theCase);
 		if (answer != null) {
 			if (answer.equals(specAns)) {
@@ -124,7 +124,7 @@ public class QuestionsRendererUtils {
 		return null;
 	}
 
-	private static String getAnswerValue(Question q, XPSCase theCase) {
+	private static String getAnswerValue(Question q, Session theCase) {
 		Value answer = q.getValue(theCase);
 		if (answer != null) {
 			return answer.getValue().toString();
@@ -132,7 +132,7 @@ public class QuestionsRendererUtils {
 		return "";
 	}
 
-	protected static String getBackgroundClass(XPSCase theCase, Question q) {
+	protected static String getBackgroundClass(Session theCase, Question q) {
 		if (q instanceof QuestionZC) {
 			return "infoQ";
 		}
@@ -148,7 +148,7 @@ public class QuestionsRendererUtils {
 		}
 	}
 
-	protected static String getBackgroundStyleString(XPSCase theCase,
+	protected static String getBackgroundStyleString(Session theCase,
 			Question q, QuestionPageLayout layoutDef) {
 		Question first = DialogUtils.getQuestionPageBean().getFirstQToAsk();
 		if (first != null && first.getId().equals(q.getId())) {
@@ -251,7 +251,7 @@ public class QuestionsRendererUtils {
 
 	private static void renderAnswerRegion(ResponseWriter writer,
 			UIComponent component, AnswerRegion answerRegion,
-			QuestionChoice qChoice, XPSCase theCase,
+			QuestionChoice qChoice, Session theCase,
 			QuestionPageLayout layoutDef, boolean hover) throws IOException {
 
 		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance();
@@ -358,7 +358,7 @@ public class QuestionsRendererUtils {
 	 * @return
 	 */
 	private static AnswerChoice getAnswerOfFollowingPopupQuestion(
-			String answerId, QuestionPageLayout layoutDef, XPSCase theCase) {
+			String answerId, QuestionPageLayout layoutDef, Session theCase) {
 		// there was no PopupQuestion
 		if (!(layoutDef instanceof QuestionLayout)) {
 			return null;
@@ -407,7 +407,7 @@ public class QuestionsRendererUtils {
 	}
 
 	public static void renderQuestion(ResponseWriter writer,
-			UIComponent component, XPSCase theCase, Question q,
+			UIComponent component, Session theCase, Question q,
 			QuestionPageLayout layoutDef, int cols, int colDiff)
 			throws IOException {
 		if (q.isValid(theCase) && showAbstract(q)) {
@@ -423,7 +423,7 @@ public class QuestionsRendererUtils {
 	}
 
 	protected static void renderValidQuestion(ResponseWriter writer,
-			UIComponent component, XPSCase theCase, Question q,
+			UIComponent component, Session theCase, Question q,
 			QuestionPageLayout layoutDef, int cols, int colDiff)
 			throws IOException {
 		writer.startElement("td", component);
@@ -531,7 +531,7 @@ public class QuestionsRendererUtils {
 	}
 
 	private static void renderQuestionChoice(ResponseWriter writer,
-			UIComponent component, XPSCase theCase, QuestionChoice qChoice,
+			UIComponent component, Session theCase, QuestionChoice qChoice,
 			int minanswrap, QuestionPageLayout layoutDef) throws IOException {
 		if (hasQuestionImages(layoutDef)) {
 			renderQuestionChoiceAsImages(writer, component, theCase, qChoice,
@@ -544,7 +544,7 @@ public class QuestionsRendererUtils {
 	}
 
 	private static void renderQuestionChoiceWithoutImage(ResponseWriter writer,
-			UIComponent component, XPSCase theCase, QuestionChoice qChoice,
+			UIComponent component, Session theCase, QuestionChoice qChoice,
 			int minanswrap, QuestionPageLayout layoutDef) throws IOException {
 		if (layoutDef.getAnswerChoiceType().equals("dropdown")) {
 			renderQuestionChoiceAsList(writer, component, theCase, qChoice,
@@ -561,7 +561,7 @@ public class QuestionsRendererUtils {
 	}
 
 	private static void renderQuestionChoiceAsCheckBox(ResponseWriter writer,
-			UIComponent component, XPSCase theCase, QuestionChoice qChoice,
+			UIComponent component, Session theCase, QuestionChoice qChoice,
 			int minanswrap, QuestionPageLayout layoutDef) throws IOException {
 		List<AnswerChoice> ans = qChoice.getAllAlternatives();
 
@@ -627,7 +627,7 @@ public class QuestionsRendererUtils {
 	}
 
 	private static void renderQuestionChoiceAsImage(ResponseWriter writer,
-			UIComponent component, XPSCase theCase, QuestionChoice qChoice,
+			UIComponent component, Session theCase, QuestionChoice qChoice,
 			int minanswrap, QuestionPageLayout layoutDef, QuestionImage qImage)
 			throws IOException {
 		DialogRenderUtils.renderTableWithClass(writer, component, "width100p");
@@ -714,7 +714,7 @@ public class QuestionsRendererUtils {
 	}
 
 	private static void renderQuestionChoiceAsImages(ResponseWriter writer,
-			UIComponent component, XPSCase theCase, QuestionChoice qChoice,
+			UIComponent component, Session theCase, QuestionChoice qChoice,
 			int minanswrap, QuestionPageLayout layoutDef,
 			List<QuestionImage> qImageList) throws IOException {
 		writer.startElement("tr", component);
@@ -729,7 +729,7 @@ public class QuestionsRendererUtils {
 	}
 
 	private static void renderQuestionChoiceAsList(ResponseWriter writer,
-			UIComponent component, XPSCase theCase, QuestionChoice qChoice,
+			UIComponent component, Session theCase, QuestionChoice qChoice,
 			QuestionPageLayout layoutDef, boolean asDropdownList)
 			throws IOException {
 		List<AnswerChoice> ans = qChoice.getAllAlternatives();
@@ -814,7 +814,7 @@ public class QuestionsRendererUtils {
 	}
 
 	private static void renderQuestionChoiceColumn(ResponseWriter writer,
-			UIComponent component, XPSCase theCase, QuestionChoice qChoice,
+			UIComponent component, Session theCase, QuestionChoice qChoice,
 			int startIndex, int qCount, QuestionPageLayout layoutDef)
 			throws IOException {
 		List<AnswerChoice> ans = qChoice.getAllAlternatives();
@@ -962,7 +962,7 @@ public class QuestionsRendererUtils {
 	}
 
 	private static void renderQuestionDate(ResponseWriter writer,
-			UIComponent component, XPSCase theCase, Question q,
+			UIComponent component, Session theCase, Question q,
 			QuestionPageLayout layoutDef) throws IOException {
 		writer.startElement("tr", component);
 		writer.startElement("td", component);
@@ -1082,7 +1082,7 @@ public class QuestionsRendererUtils {
 	}
 
 	private static void renderQuestionImage(ResponseWriter writer,
-			UIComponent component, XPSCase theCase, QuestionChoice qChoice,
+			UIComponent component, Session theCase, QuestionChoice qChoice,
 			QuestionImage questionImage, QuestionPageLayout layoutDef)
 			throws IOException {
 		writer.startElement("div", component);
@@ -1131,7 +1131,7 @@ public class QuestionsRendererUtils {
 	}
 
 	private static void renderQuestionImageColumn(ResponseWriter writer,
-			UIComponent component, XPSCase theCase, QuestionChoice qChoice,
+			UIComponent component, Session theCase, QuestionChoice qChoice,
 			QuestionPageLayout layoutDef, boolean invisible) throws IOException {
 		if (invisible) {
 			DialogRenderUtils.renderTableWithClass(writer, component, "invis");
@@ -1145,7 +1145,7 @@ public class QuestionsRendererUtils {
 	}
 
 	private static void renderQuestionNum(ResponseWriter writer,
-			UIComponent component, XPSCase theCase, Question q,
+			UIComponent component, Session theCase, Question q,
 			QuestionPageLayout layoutDef) throws IOException {
 		writer.startElement("tr", component);
 		writer.startElement("td", component);
@@ -1202,7 +1202,7 @@ public class QuestionsRendererUtils {
 	}
 
 	private static void renderQuestionText(ResponseWriter writer,
-			UIComponent component, XPSCase theCase, Question q,
+			UIComponent component, Session theCase, Question q,
 			QuestionPageLayout layoutDef) throws IOException {
 		writer.startElement("tr", component);
 		writer.startElement("td", component);
@@ -1265,7 +1265,7 @@ public class QuestionsRendererUtils {
 	}
 
 	private static void renderUnknownOptionElement(ResponseWriter writer,
-			UIComponent component, XPSCase theCase, Question q,
+			UIComponent component, Session theCase, Question q,
 			boolean qHasUnknownAnswer, Boolean fastAnswer) throws IOException {
 		writer.startElement("option", component);
 		writer.writeAttribute("value", AnswerUnknown.UNKNOWN_ID, "value");
@@ -1293,7 +1293,7 @@ public class QuestionsRendererUtils {
 	}
 
 	private static void renderUnknownRadioButton(ResponseWriter writer,
-			UIComponent component, XPSCase theCase, Question q,
+			UIComponent component, Session theCase, Question q,
 			boolean qHasUnknownAnswer, boolean fastAnswer) throws IOException {
 		writer.startElement("tr", component);
 		writer.startElement("td", component);
@@ -1362,7 +1362,7 @@ public class QuestionsRendererUtils {
 
 	private static void writeJsDeselectAllBut(ResponseWriter writer,
 			String questionID, String excludedID, boolean fastAnswer,
-			XPSCase theCase) throws IOException {
+			Session theCase) throws IOException {
 		StringBuffer jsBuf = new StringBuffer();
 		jsBuf.append("deselectAllBut(document.dialogForm." + questionID + ", '"
 				+ excludedID + "'); ");
@@ -1375,7 +1375,7 @@ public class QuestionsRendererUtils {
 
 	private static void writeJsDeselectAllOptionsBut(ResponseWriter writer,
 			String questionID, String excludedID, boolean fastAnswer,
-			XPSCase theCase) throws IOException {
+			Session theCase) throws IOException {
 		StringBuffer jsBuf = new StringBuffer();
 		jsBuf.append("deselectAllOptionsBut(document.dialogForm." + questionID
 				+ ", '" + excludedID + "'); ");
@@ -1387,7 +1387,7 @@ public class QuestionsRendererUtils {
 	}
 
 	private static void writeJsDeselectOptionsUnknownAnd(ResponseWriter writer,
-			String questionID, String andID, Boolean fastAnswer, XPSCase theCase)
+			String questionID, String andID, Boolean fastAnswer, Session theCase)
 			throws IOException {
 		StringBuffer jsBuf = new StringBuffer();
 		jsBuf.append("deselectOptionsUnknownAnd(document.dialogForm."
@@ -1400,7 +1400,7 @@ public class QuestionsRendererUtils {
 	}
 
 	private static void writeJsDeselectUnknownAnd(ResponseWriter writer,
-			QuestionChoice q, AnswerChoice specAns, XPSCase theCase,
+			QuestionChoice q, AnswerChoice specAns, Session theCase,
 			String andID, boolean fastAnswer, boolean mCConstraintsAutoGrayOut)
 			throws IOException {
 		StringBuffer jsBuf = new StringBuffer();
@@ -1465,7 +1465,7 @@ public class QuestionsRendererUtils {
 	}
 
 	private static void writeJsDisableTextField(ResponseWriter writer,
-			String questionID, boolean fastAnswer, XPSCase theCase)
+			String questionID, boolean fastAnswer, Session theCase)
 			throws IOException {
 		StringBuffer jsBuf = new StringBuffer();
 		jsBuf.append("disableTF(document.dialogForm." + questionID + "); ");

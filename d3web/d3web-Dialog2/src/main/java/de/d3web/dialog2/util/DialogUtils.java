@@ -65,7 +65,7 @@ import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.CaseFactory;
 import de.d3web.core.session.D3WebCase;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.interviewmanager.DialogController;
 import de.d3web.core.session.interviewmanager.MQDialogController;
 import de.d3web.core.session.values.Unknown;
@@ -92,7 +92,7 @@ public class DialogUtils {
 
 	public static String contextPath;
 
-	private static void addUsedPSMethods(XPSCase newCase) {
+	private static void addUsedPSMethods(Session newCase) {
 		Iterator<PSMethod> iter = getUsedPSMethods().iterator();
 		while (iter.hasNext()) {
 			PSMethod psm = iter.next();
@@ -141,8 +141,8 @@ public class DialogUtils {
 
 	}
 
-	public static XPSCase createNewAnsweredCase(CaseObject co, KnowledgeBase kb) {
-		XPSCase newCase = CaseConverter.getInstance().caseObject2XPSCase(co, kb, MQDialogController.class,
+	public static Session createNewAnsweredCase(CaseObject co, KnowledgeBase kb) {
+		Session newCase = CaseConverter.getInstance().caseObject2XPSCase(co, kb, MQDialogController.class,
 				getUsedPSMethods());
 		return newCase;
 	}
@@ -150,8 +150,8 @@ public class DialogUtils {
 	/**
 	 * Creates a new case.
 	 */
-	public static XPSCase createNewCase(KnowledgeBase kb) {
-		XPSCase newCase = CaseFactory.createXPSCase(kb, MQDialogController.class);
+	public static Session createNewCase(KnowledgeBase kb) {
+		Session newCase = CaseFactory.createXPSCase(kb, MQDialogController.class);
 		addUsedPSMethods(newCase);
 		return newCase;
 	}
@@ -197,7 +197,7 @@ public class DialogUtils {
 		return (DialogSettings) getBean("dialogSettings");
 	}
 
-	public static Dimension getImageDimension(XPSCase theCase, String file) {
+	public static Dimension getImageDimension(Session theCase, String file) {
 		try {
 			String destPath = ResourceRepository.getInstance().getBasicSettingValue(
 					ResourceRepository.MULTIMEDIAPATH).replaceAll("\\$kbid\\$",
@@ -257,7 +257,7 @@ public class DialogUtils {
 		return format.format(params);
 	}
 
-	public static MQDialogController getMQDialogController(XPSCase theCase) {
+	public static MQDialogController getMQDialogController(Session theCase) {
 		DialogController dc = (DialogController) theCase.getQASetManager();
 		return dc.getMQDialogcontroller();
 	}
@@ -446,7 +446,7 @@ public class DialogUtils {
 		return back;
 	}
 
-	public static boolean unknownAnswerInValueList(Question q, XPSCase theCase) {
+	public static boolean unknownAnswerInValueList(Question q, Session theCase) {
 		Value answer = q.getValue(theCase);
 		if (answer == null) return false;
 		return answer instanceof Unknown;

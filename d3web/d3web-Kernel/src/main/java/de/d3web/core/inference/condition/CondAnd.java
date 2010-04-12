@@ -21,7 +21,7 @@
 package de.d3web.core.inference.condition;
 import java.util.List;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 /**
  * Implements an "and"-condition, where all sub-conditions have to be true.
  * The composite pattern is used for this. This class is a "composite".
@@ -41,11 +41,11 @@ public class CondAnd extends NonTerminalCondition {
 
 	/**
 	 * Returns true, when <b>all</b> conjunctive elements are evaluated as true
-	 * based on the findings given in the specified {@link XPSCase}.
-	 * @param theCase the given {@link XPSCase}
+	 * based on the findings given in the specified {@link Session}.
+	 * @param theCase the given {@link Session}
 	 */
 	@Override
-	public boolean eval(XPSCase theCase) throws NoAnswerException, UnknownAnswerException {
+	public boolean eval(Session theCase) throws NoAnswerException, UnknownAnswerException {
 		boolean wasNoAnswer = false;
 		boolean wasUnknownAnswer = false;
 

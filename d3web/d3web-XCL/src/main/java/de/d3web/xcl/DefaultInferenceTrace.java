@@ -6,7 +6,7 @@ import java.util.HashSet;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 	
 public class DefaultInferenceTrace implements InferenceTrace {
@@ -71,14 +71,14 @@ public class DefaultInferenceTrace implements InferenceTrace {
 	 * 
 	 * @param theCase the current case
 	 */
-	public void refreshRelations(XCLModel xclModel, XPSCase xpsCase) {
+	public void refreshRelations(XCLModel xclModel, Session xpsCase) {
 		evalRelations(xpsCase, xclModel.getRelations(), posRelations, negRelations);
 		evalRelations(xpsCase, xclModel.getNecessaryRelations(), reqPosRelations, reqNegRelations);
 		evalRelations(xpsCase, xclModel.getContradictingRelations(), contrRelations, null);
 		evalRelations(xpsCase, xclModel.getSufficientRelations(), suffRelations, null);
 	}
 	
-	private void evalRelations(XPSCase xpsCase, Collection<XCLRelation> source, Collection<XCLRelation> trueSet, Collection<XCLRelation> falseSet) {
+	private void evalRelations(Session xpsCase, Collection<XCLRelation> source, Collection<XCLRelation> trueSet, Collection<XCLRelation> falseSet) {
 		// clear result sets
 		trueSet.clear();
 		if (falseSet != null) falseSet.clear();

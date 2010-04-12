@@ -44,7 +44,7 @@ import de.d3web.core.knowledge.terminology.info.MMInfoObject;
 import de.d3web.core.knowledge.terminology.info.MMInfoStorage;
 import de.d3web.core.knowledge.terminology.info.MMInfoSubject;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.dialog2.basics.layout.MMInfo;
 import de.d3web.dialog2.basics.settings.ResourceRepository;
@@ -154,7 +154,7 @@ public class DialogRenderUtils {
 				startpos) + 1);
 	}
 
-	public static String getUnknownAnswerString(Question q, XPSCase theCase) {
+	public static String getUnknownAnswerString(Question q, Session theCase) {
 		String answer = (String) q.getUnknownAlternative().getValue(theCase);
 		if (answer.equals(AnswerUnknown.UNKNOWN_VALUE)) {
 			answer = DialogUtils.getMessageFor("dialog.unknown");
@@ -308,7 +308,7 @@ public class DialogRenderUtils {
 	}
 
 	public static void renderDiagnosesLink(ResponseWriter writer,
-			UIComponent component, Solution diag, XPSCase theCase,
+			UIComponent component, Solution diag, Session theCase,
 			String styleClass, String score, boolean showScore)
 			throws IOException {
 
@@ -574,7 +574,7 @@ public class DialogRenderUtils {
 	}
 
 	public static void sortDiagnosisList(List<Solution> diagList,
-			final XPSCase theCase) {
+			final Session theCase) {
 		Comparator<Solution> diagCompAsc = new Comparator<Solution>() {
 
 			public int compare(Solution a, Solution b) {

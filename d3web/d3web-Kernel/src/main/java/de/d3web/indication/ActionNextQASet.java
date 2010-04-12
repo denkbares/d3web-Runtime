@@ -27,7 +27,7 @@ import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.indication.inference.PSMethodNextQASet;
 
 /**
@@ -44,11 +44,11 @@ public abstract class ActionNextQASet extends PSAction {
 	/**
 	 * Indicates all QASets specified by "setQASets"-Method
 	 */
-	public void doIt(XPSCase theCase, Rule rule) {
+	public void doIt(Session theCase, Rule rule) {
 		doItWithContext(theCase, rule);
 	}
 
-	protected void doItWithContext(XPSCase theCase, Rule rule) {
+	protected void doItWithContext(Session theCase, Rule rule) {
 		for (QASet nextQASet : getQASets()) {
 			nextQASet.activate(theCase, rule, rule.getProblemsolverContext());
 		}
@@ -87,7 +87,7 @@ public abstract class ActionNextQASet extends PSAction {
 	 * Deactivates all activated QASets
 	 */
 	@Override
-	public void undo(XPSCase theCase, Rule rule) {
+	public void undo(Session theCase, Rule rule) {
 		for (QASet qaset : getQASets()) {
 			qaset.deactivate(theCase, rule, rule.getProblemsolverContext());
 		}

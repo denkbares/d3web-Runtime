@@ -34,14 +34,14 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.dialog2.util.DialogUtils;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
 public class HeuristicDiagnosesBoxRenderer extends Renderer {
 
 	private static void renderDiagnoses(ResponseWriter writer, UIComponent component,
-			List<Solution> diagList, XPSCase theCase, String headline, boolean showScore) throws IOException {
+			List<Solution> diagList, Session theCase, String headline, boolean showScore) throws IOException {
 		writer.startElement("tr", component);
 		writer.startElement("th", component);
 		writer.writeAttribute("colspan", "2", "colspan");
@@ -85,7 +85,7 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 
-		XPSCase theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getTheCase();
 
 		if (heuristicDiagnosesAvailable(theCase)) {
 			DialogRenderUtils.renderTableWithClass(writer, component, "panelBox");
@@ -129,9 +129,9 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 		}
 	}
 
-	private List<PSMethod> getPsMethodHeur(XPSCase theCase) {
+	private List<PSMethod> getPsMethodHeur(Session theCase) {
 		List<PSMethod> psMethodHeur = new ArrayList<PSMethod>();
-		for (PSMethod psm: theCase.getUsedPSMethods()) {
+		for (PSMethod psm: theCase.getPSMethods()) {
 			if (psm instanceof PSMethodHeuristic) {
 				psMethodHeur.add(psm);
 			}
@@ -139,7 +139,7 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 		return psMethodHeur;
 	}
 
-	private boolean heuristicDiagnosesAvailable(XPSCase theCase) {
+	private boolean heuristicDiagnosesAvailable(Session theCase) {
 		List<Solution> established = theCase.getDiagnoses(DiagnosisState.ESTABLISHED, getPsMethodHeur(theCase));
 		List<Solution> suggested = theCase.getDiagnoses(DiagnosisState.SUGGESTED, getPsMethodHeur(theCase));
 		List<Solution> excluded = theCase.getDiagnoses(DiagnosisState.EXCLUDED, getPsMethodHeur(theCase));

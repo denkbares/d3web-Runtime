@@ -30,7 +30,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerDate;
 
 /**
@@ -59,7 +59,7 @@ public class FormulaDate extends FormulaDatePrimitive {
 	 * Creation date: (14.08.2000 15:51:57)
 	 * @return Double-value of this FormulaElement
 	 */
-	public Date eval(XPSCase theCase) {
+	public Date eval(Session theCase) {
 		return (Date) getValue();
 	}
 

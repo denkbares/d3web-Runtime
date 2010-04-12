@@ -2,7 +2,7 @@ package de.d3web.kernel.psMethods.SCMCBR.similarity;
 
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 public class IdentityMeasurer implements ISimilarityMeasurer {
 	private final Value expectedValue;
@@ -14,7 +14,7 @@ public class IdentityMeasurer implements ISimilarityMeasurer {
 	}
 
 	@Override
-	public double computeSimilarity(XPSCase theCase) {
+	public double computeSimilarity(Session theCase) {
 		Value value = question.getValue(theCase);
 		if (value.equals(expectedValue)) // TODO Fix
 			return 1;

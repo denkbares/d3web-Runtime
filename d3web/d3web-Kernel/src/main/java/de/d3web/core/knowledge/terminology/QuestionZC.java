@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerChoice;
 
 /**
@@ -65,12 +65,12 @@ public class QuestionZC extends QuestionOC {
 	}
 
 	@Override
-	public boolean isDone(XPSCase theCase) {
+	public boolean isDone(Session theCase) {
 		return true;
 	}
 
 	@Override
-	public boolean isDone(XPSCase theCase, boolean respectValidFollowQuestions) {
+	public boolean isDone(Session theCase, boolean respectValidFollowQuestions) {
 		return true;
 	}
 

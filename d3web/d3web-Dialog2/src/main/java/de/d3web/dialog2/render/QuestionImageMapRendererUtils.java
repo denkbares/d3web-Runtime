@@ -37,7 +37,7 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.ValueFactory;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.dialog2.basics.layout.QContainerLayout;
@@ -50,7 +50,7 @@ import de.d3web.dialog2.util.QuestionDateUtils;
 
 public class QuestionImageMapRendererUtils {
 
-	private static boolean allQuestionsInImageAnswered(Image image, XPSCase theCase) {
+	private static boolean allQuestionsInImageAnswered(Image image, Session theCase) {
 		for (Region r : image.getRegions()) {
 			Question q = theCase.getKnowledgeBase().searchQuestion(r.getQuestionID());
 			if (q != null && !q.isDone(theCase)) {
@@ -60,7 +60,7 @@ public class QuestionImageMapRendererUtils {
 		return true;
 	}
 
-	private static Value currentAnswerIDsForQuestionID(String questionID, XPSCase theCase,
+	private static Value currentAnswerIDsForQuestionID(String questionID, Session theCase,
 			List<Question> qList) {
 		for (Question question : qList) {
 			if (question.getId().equals(questionID)) {
@@ -80,7 +80,7 @@ public class QuestionImageMapRendererUtils {
 		return null;
 	}
 
-	private static String getAnswerText(Question q, XPSCase theCase, Value answer) {
+	private static String getAnswerText(Question q, Session theCase, Value answer) {
 		String answerText = answer.toString();
 		if (answerText.equals(AnswerUnknown.UNKNOWN_VALUE)) {
 			return DialogUtils.getMessageFor("dialog.unknown");
@@ -104,7 +104,7 @@ public class QuestionImageMapRendererUtils {
 		return sb.toString();
 	}
 
-	private static String getImageMapBackgroundClass(Image image, XPSCase theCase) {
+	private static String getImageMapBackgroundClass(Image image, Session theCase) {
 		Question firstToAsk = DialogUtils.getQuestionPageBean().getFirstQToAsk();
 		if (firstToAsk != null && questionIdInImage(image, firstToAsk.getId())) {
 			return "currentQ";
@@ -115,7 +115,7 @@ public class QuestionImageMapRendererUtils {
 		}
 	}
 
-	private static String getImageMapBackgroundColorString(Image image, XPSCase theCase,
+	private static String getImageMapBackgroundColorString(Image image, Session theCase,
 			QuestionPageLayout layoutDef) {
 		Question firstToAsk = DialogUtils.getQuestionPageBean().getFirstQToAsk();
 		if (firstToAsk != null && questionIdInImage(image, firstToAsk.getId())) {
@@ -184,7 +184,7 @@ public class QuestionImageMapRendererUtils {
 		return remainingQuestions;
 	}
 
-	private static Object getToolTipString(Question q, XPSCase theCase, Value answer) {
+	private static Object getToolTipString(Question q, Session theCase, Value answer) {
 		return "Tip('" + getAnswerText(q, theCase, answer) + "', CLOSEBTN, false, STICKY, false)";
 	}
 
@@ -198,7 +198,7 @@ public class QuestionImageMapRendererUtils {
 	}
 
 	private static void renderClickableRegions(ResponseWriter writer, UIComponent component, Image image,
-			XPSCase theCase, List<Question> qList, String srcDir, QuestionPageLayout layoutDef)
+			Session theCase, List<Question> qList, String srcDir, QuestionPageLayout layoutDef)
 			throws IOException {
 		// Draw clickable regions
 		for (Region region : image.getRegions()) {
@@ -311,7 +311,7 @@ public class QuestionImageMapRendererUtils {
 	}
 
 	private static void renderErrors(ResponseWriter writer, UIComponent component, List<String> idsInImage,
-			XPSCase theCase) throws IOException {
+			Session theCase) throws IOException {
 		for (String qID : idsInImage) {
 			Iterator<FacesMessage> it = FacesContext.getCurrentInstance().getMessages(qID);
 			while (it.hasNext()) {
@@ -343,7 +343,7 @@ public class QuestionImageMapRendererUtils {
 	}
 
 	private static void renderPopupMenus(ResponseWriter writer, UIComponent component, Image image,
-			XPSCase theCase, List<Question> qList, QuestionPageLayout layoutDef) throws IOException {
+			Session theCase, List<Question> qList, QuestionPageLayout layoutDef) throws IOException {
 		for (Region region : image.getRegions()) {
 			writer.startElement("div", component);
 			writer.writeAttribute("class", "popupmenu", "class");
@@ -388,7 +388,7 @@ public class QuestionImageMapRendererUtils {
 		}
 	}
 
-	public static void renderQuestionsImageMap(ResponseWriter writer, UIComponent component, XPSCase theCase,
+	public static void renderQuestionsImageMap(ResponseWriter writer, UIComponent component, Session theCase,
 			List<Question> qList, QuestionPageLayout layoutDef) throws IOException {
 		writer.startElement("tr", component);
 		writer.startElement("td", component);

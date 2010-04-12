@@ -20,7 +20,7 @@
 
 package de.d3web.abstraction.formula;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * Minimum-Term.
@@ -52,7 +52,7 @@ public class Min extends FormulaNumberArgumentsTerm implements FormulaNumberElem
 	/**
 	 * @return the minimum of the evaluated arguments
 	 */
-	public Double eval(XPSCase theCase) {
+	public Double eval(Session theCase) {
 		if (super.eval(theCase) == null)
 			return null;
 		else

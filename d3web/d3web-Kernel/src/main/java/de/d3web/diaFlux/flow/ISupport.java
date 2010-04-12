@@ -3,7 +3,7 @@
  */
 package de.d3web.diaFlux.flow;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * @author Reinhard Hatko
@@ -12,7 +12,7 @@ import de.d3web.core.session.XPSCase;
  */
 public interface ISupport {
 	
-	boolean isValid(XPSCase xpsCase);
+	boolean isValid(Session xpsCase);
 	
 
 }

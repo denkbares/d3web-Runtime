@@ -30,7 +30,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.ChoiceValue;
@@ -58,7 +58,7 @@ public class PSMethodInit implements PSMethod {
 	/**
 	 * @return null
 	 */
-	public DiagnosisState getState(XPSCase theCase, Solution theDiagnosis) {
+	public DiagnosisState getState(Session theCase, Solution theDiagnosis) {
 		return null;
 	}
 
@@ -67,7 +67,7 @@ public class PSMethodInit implements PSMethod {
 	 * Does nothing.
 	 * Creation date: (21.02.2002 16:51:10)
 	 */
-	public void init(XPSCase theCase) {
+	public void init(Session theCase) {
 		theCase.getPropagationContoller().openPropagation();
 		try {
 			//initialise all questions
@@ -112,7 +112,7 @@ public class PSMethodInit implements PSMethod {
 	/**
 	 * @see PSMethod
 	 */
-	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
 	}
 
 	@Override

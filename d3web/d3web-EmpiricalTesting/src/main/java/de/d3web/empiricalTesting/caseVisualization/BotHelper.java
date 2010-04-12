@@ -31,7 +31,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.interviewmanager.MQDialogController;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.ChoiceValue;
@@ -52,7 +52,7 @@ public class BotHelper {
 		return instance;
 	}
 
-	public void setCaseValue(XPSCase theCase, String questionID, String answerID)
+	public void setCaseValue(Session theCase, String questionID, String answerID)
 			throws Exception {
 		QuestionChoice q = (QuestionChoice) theCase.getKnowledgeBase()
 				.searchQuestion(questionID);
@@ -62,7 +62,7 @@ public class BotHelper {
 		}
 	}
 
-	public void setCaseValue(XPSCase theCase, QuestionChoice q, ChoiceValue a)
+	public void setCaseValue(Session theCase, QuestionChoice q, ChoiceValue a)
 			throws Exception {
 		theCase.setValue(q, a);
 
@@ -79,7 +79,7 @@ public class BotHelper {
 				+ q + "][" + q.getId() + "]");
 	}
 
-	public QuestionChoice getNextQuestion(XPSCase theCase) throws Exception {
+	public QuestionChoice getNextQuestion(Session theCase) throws Exception {
 		MQDialogController controller = (MQDialogController) theCase
 				.getQASetManager();
 		QASet next = controller.moveToNextRemainingQASet();

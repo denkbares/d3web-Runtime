@@ -37,7 +37,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.shared.PSMethodShared;
 
 /**
@@ -140,7 +140,7 @@ public class LocalWeight implements KnowledgeSlice {
 	/* (non-Javadoc)
 	 * @see de.d3web.kernel.domainModel.KnowledgeSlice#isUsed(de.d3web.kernel.XPSCase)
 	 */
-	public boolean isUsed(XPSCase theCase) {
+	public boolean isUsed(Session theCase) {
 		return true;
 	}
 	

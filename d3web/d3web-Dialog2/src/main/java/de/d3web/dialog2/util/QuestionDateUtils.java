@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * Converts Date to String and vice versa.
@@ -65,7 +65,7 @@ public class QuestionDateUtils {
      * Returns the string-representation of the given AnswerDate as it is
      * specified by the question's properties and the current resourcebundle.
      */
-	public static String dateToString(QuestionDate question, Date date, XPSCase theCase) {
+	public static String dateToString(QuestionDate question, Date date, Session theCase) {
 		String dateSection = (String) question.getProperties()
 				.getProperty(Property.QUESTION_DATE_TYPE);
 	if (dateSection == null) {

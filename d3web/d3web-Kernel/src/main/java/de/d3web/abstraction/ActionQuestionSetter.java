@@ -47,7 +47,7 @@ import de.d3web.core.knowledge.terminology.QASet.Reason;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.SymptomValue;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseActionQuestionSetter;
 import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.blackboard.XPSCaseObject;
@@ -115,11 +115,11 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	/**
 	 * does nothing here in this abstract Action
 	 */
-	public void undo(XPSCase theCase) {
+	public void undo(Session theCase) {
 	}
 
 	@Override
-	public boolean hasChangedValue(XPSCase theCase) {
+	public boolean hasChangedValue(Session theCase) {
 
 		Hashtable<Question, Object> questionToValuesHash = getActionValues(theCase);
 		if ((questionToValuesHash != null) && (!questionToValuesHash.isEmpty())) {
@@ -174,7 +174,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	/**
 	 * stores the current state of terminal objects of the given action values
 	 */
-	protected void storeActionValues(XPSCase theCase, Object valuesArg) {
+	protected void storeActionValues(Session theCase, Object valuesArg) {
 		Hashtable<Question, Object> questionToValuesHash = new Hashtable<Question, Object>();
 		// theCase.trace("attempting to store action values (elementary formulaExpression values)");
 		if (valuesArg == null) {
@@ -261,7 +261,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	/**
 	 * this method is needed for protection from cycles in rule firing
 	 */
-	protected boolean lastFiredRuleEqualsCurrentRuleAndNotFired(XPSCase theCase) {
+	protected boolean lastFiredRuleEqualsCurrentRuleAndNotFired(Session theCase) {
 		Rule lastFiredRule = getLastFiredRule(theCase);
 		if (lastFiredRule != null) {
 			return !lastFiredRule.hasFired(theCase)
@@ -273,7 +273,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	/**
 	 * this method is needed for protection from cycles in rule firing
 	 */
-	protected Rule getLastFiredRule(XPSCase theCase) {
+	protected Rule getLastFiredRule(Session theCase) {
 		CaseQuestion q = (CaseQuestion) theCase.getCaseObject(getQuestion());
 		Object o = q.getValueHistory();
 		if ((o != null) && (o instanceof List<?>)) {
@@ -300,7 +300,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	 *         severeness is defined by the order of the alternatives; the first
 	 *         answer is the severest.)
 	 */
-	protected AnswerChoice getSeverestAnswer(QuestionOC siQuestionOC, XPSCase theCase) {
+	protected AnswerChoice getSeverestAnswer(QuestionOC siQuestionOC, Session theCase) {
 		AnswerChoice severestAnswer = null;
 		// use an array to accelerate
 		Object[] allAnswers = siQuestionOC.getAllAlternatives().toArray();
@@ -344,30 +344,30 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	}
 
 	/**
-	 * @see de.d3web.core.session.CaseObjectSource#createCaseObject(XPSCase)
+	 * @see de.d3web.core.session.CaseObjectSource#createCaseObject(Session)
 	 */
-	public XPSCaseObject createCaseObject(XPSCase session) {
+	public XPSCaseObject createCaseObject(Session session) {
 		return new CaseActionQuestionSetter(this);
 	}
 
 	/**
 	 * @return Hashtable
 	 */
-	public Hashtable<Question, Object> getActionValues(XPSCase theCase) {
+	public Hashtable<Question, Object> getActionValues(Session theCase) {
 		return ((CaseActionQuestionSetter) theCase.getCaseObject(this)).getActionValues();
 	}
 
 	/**
 	 * @param hashtable
 	 */
-	public void setActionValues(XPSCase theCase, Hashtable<Question, Object> hashtable) {
+	public void setActionValues(Session theCase, Hashtable<Question, Object> hashtable) {
 		((CaseActionQuestionSetter) theCase.getCaseObject(this)).setActionValues(hashtable);
 	}
 
 	/**
 	 * @return Double
 	 */
-	public Double getLastSetValue(XPSCase theCase) {
+	public Double getLastSetValue(Session theCase) {
 		return ((CaseActionQuestionSetter) theCase.getCaseObject(this)).getLastSetValue();
 	}
 
@@ -375,7 +375,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	 * @param theCase
 	 * @param newValue
 	 */
-	public void setLastSetValue(XPSCase theCase, Double newValue) {
+	public void setLastSetValue(Session theCase, Double newValue) {
 		((CaseActionQuestionSetter) theCase.getCaseObject(this)).setLastSetValue(newValue);
 	}
 }

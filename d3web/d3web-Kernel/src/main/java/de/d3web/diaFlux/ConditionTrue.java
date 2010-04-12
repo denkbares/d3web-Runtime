@@ -4,7 +4,7 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.TerminalCondition;
 import de.d3web.core.inference.condition.UnknownAnswerException;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  *
@@ -21,7 +21,7 @@ public class ConditionTrue extends TerminalCondition {
 	}
 
 	@Override
-	public boolean eval(XPSCase theCase) throws NoAnswerException,
+	public boolean eval(Session theCase) throws NoAnswerException,
 			UnknownAnswerException {
 		return true;
 	}

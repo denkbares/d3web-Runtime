@@ -26,7 +26,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.indication.inference.PSMethodTherapyIndication;
 
 /**
@@ -68,7 +68,7 @@ public class ActionIndicateTherapies extends PSAction {
 	 * Executes the included action.
 	 */
 	@Override
-	public void doIt(XPSCase theCase, Rule rule) {
+	public void doIt(Session theCase, Rule rule) {
 		//
 		//		DiagnosisScore resultDS =
 		//			getDiagnosis().getScore(theCase, getProblemsolverContext()).add(
@@ -94,7 +94,7 @@ public class ActionIndicateTherapies extends PSAction {
 	 * Tries to undo the included action.
 	 */
 	@Override
-	public void undo(XPSCase theCase, Rule rule) {
+	public void undo(Session theCase, Rule rule) {
 		//		DiagnosisScore resultDS = null;
 		//		if (getScore().equals(Score.N7)) {
 		//			Iterator iter =

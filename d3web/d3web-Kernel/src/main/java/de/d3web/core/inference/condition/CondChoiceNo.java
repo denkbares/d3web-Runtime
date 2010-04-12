@@ -21,7 +21,7 @@
 package de.d3web.core.inference.condition;
 
 import de.d3web.core.knowledge.terminology.QuestionYN;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.ChoiceValue;
 
 /**
@@ -47,7 +47,7 @@ public class CondChoiceNo extends CondEqual {
 	 * Checks if the question has the value(s) specified in the constructor.
 	 */
 	@Override
-	public boolean eval(XPSCase theCase)
+	public boolean eval(Session theCase)
 		throws NoAnswerException, UnknownAnswerException {
 		checkAnswer(theCase);
 		return question.getValue(theCase).equals(noValue);

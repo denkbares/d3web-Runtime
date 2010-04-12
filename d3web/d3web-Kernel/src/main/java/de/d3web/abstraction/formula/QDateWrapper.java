@@ -31,7 +31,7 @@ import java.util.Collections;
 import java.util.Date;
 
 import de.d3web.core.knowledge.terminology.QuestionDate;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.DateValue;
 
 /**
@@ -63,7 +63,7 @@ public class QDateWrapper extends FormulaDatePrimitive {
 	 *            current case
 	 * @return evaluated AnswerNumValue (Double) of the wrapped QuestionNum
 	 */
-	public Date eval(XPSCase theCase) {
+	public Date eval(Session theCase) {
 		if (getQuestion().getValue(theCase) == null) {
 			return null;
 		}

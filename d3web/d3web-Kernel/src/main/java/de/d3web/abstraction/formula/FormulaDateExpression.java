@@ -30,7 +30,7 @@ import java.util.Date;
 
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.DateValue;
 
 /**
@@ -66,7 +66,7 @@ public class FormulaDateExpression {
 	 * Evaluates the formulaDateElement and creates the returned value into an AnswerDate
 	 * @return an AnswerDate containing the evaluated value
 	 */
-	public Value eval(XPSCase theCase) {
+	public Value eval(Session theCase) {
 		Date answer = fElement.eval(theCase);
 		if (answer != null) {
 			return new DateValue(answer);

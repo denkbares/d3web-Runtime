@@ -41,7 +41,7 @@ import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.CaseFactory;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.explain.ExplanationFactory;
@@ -66,7 +66,7 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
 public class ExplainQASetReasons extends AbstractExplainTest {
 
 	KnowledgeBase testKb = new KfzWb();
-	XPSCase theCase = null;
+	Session theCase = null;
 	private ExplanationFactory eFac = null;
 
 	/** Creates a new instance of ExplainQASetReasons */

@@ -30,7 +30,7 @@ import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * A StateTransition is a KnowledgeSlice which belongs to a QContainer.
@@ -89,7 +89,7 @@ public class StateTransition implements KnowledgeSlice {
 	}
 
 	@Override
-	public boolean isUsed(XPSCase theCase) {
+	public boolean isUsed(Session theCase) {
 		return true;
 	}
 
@@ -104,7 +104,7 @@ public class StateTransition implements KnowledgeSlice {
 	 * @param theCase
 	 * @return
 	 */
-	public Map<Question, Value> fire(XPSCase theCase) {
+	public Map<Question, Value> fire(Session theCase) {
 		Map<Question, Value> map = new HashMap<Question, Value>();
 		for (ValueTransition vt: postTransitions) {
 			Question q = vt.getQuestion();
@@ -126,7 +126,7 @@ public class StateTransition implements KnowledgeSlice {
 		return map;
 	}
 	
-	private void setAnswer(XPSCase theCase, Question q,
+	private void setAnswer(Session theCase, Question q,
 			Value answer, Map<Question, Value> map) {
 		map.put(q, q.getValue(theCase));
 		theCase.setValue(q, answer);

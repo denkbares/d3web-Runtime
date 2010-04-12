@@ -41,7 +41,7 @@ import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.dialog2.WebDialog;
 import de.d3web.dialog2.basics.knowledge.CaseManager;
 import de.d3web.dialog2.basics.knowledge.CaseRepositoryDescriptor;
@@ -137,7 +137,7 @@ public class SaveCaseController {
 		return new Date();
 	}
 
-	public CaseObjectImpl getCaseObject(XPSCase theCase, String caseName,
+	public CaseObjectImpl getCaseObject(Session theCase, String caseName,
 			User user, long processingtime) {
 		CaseObjectImpl co = CaseConverter.getInstance().xpsCase2CaseObject(
 				theCase, false, false);
@@ -269,7 +269,7 @@ public class SaveCaseController {
 		this.userEmail = userEmail;
 	}
 
-	private void setUserSelectedDiagnoses(CaseObjectImpl co, XPSCase theCase) {
+	private void setUserSelectedDiagnoses(CaseObjectImpl co, Session theCase) {
 		KnowledgeBase kb = theCase.getKnowledgeBase();
 		for (Iterator<String> iter = userSelectedDiags.iterator(); iter
 				.hasNext();) {

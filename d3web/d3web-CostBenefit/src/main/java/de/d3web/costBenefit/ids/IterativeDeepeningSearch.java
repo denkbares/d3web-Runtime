@@ -30,7 +30,7 @@ import java.util.Set;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.costBenefit.Util;
 import de.d3web.costBenefit.inference.AbortException;
 import de.d3web.costBenefit.inference.AbortStrategy;
@@ -109,12 +109,12 @@ class IterativeDeepeningSearch {
 	 * 
 	 * @param theCase
 	 */
-	public void search(XPSCase theCase) {
+	public void search(Session theCase) {
 		// Abort if there are no targets in the model
 		if (!model.hasTargets())
 			return;
 		abortStrategy.init(model);
-		XPSCase testcase = Util.copyCase(theCase);
+		Session testcase = Util.copyCase(theCase);
 		try {
 			search(testcase, 1);
 		} catch (AbortException e) {
@@ -123,7 +123,7 @@ class IterativeDeepeningSearch {
 		}
 	}
 
-	private void search(XPSCase testcase, int depth) throws AbortException {
+	private void search(Session testcase, int depth) throws AbortException {
 		if ((depth <= 0) || model.getTargets() == null
 				|| model.getTargets().size() == 0)
 			return;
@@ -164,7 +164,7 @@ class IterativeDeepeningSearch {
 		}
 	}
 
-	private void findCheapestPath(Path actual, int depth, XPSCase theCase)
+	private void findCheapestPath(Path actual, int depth, Session theCase)
 			throws AbortException {
 
 		if (actual.getCosts() / model.getBestBenefit() > model
@@ -208,7 +208,7 @@ class IterativeDeepeningSearch {
 		}
 	}
 
-	private boolean isValidSuccessor(Path actual, Node n, XPSCase theCase) {
+	private boolean isValidSuccessor(Path actual, Node n, Session theCase) {
 		// skip not applicable successors
 		if (!n.isApplicable(theCase))
 			return false;

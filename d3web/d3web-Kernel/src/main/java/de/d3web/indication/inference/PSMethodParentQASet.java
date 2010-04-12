@@ -26,7 +26,7 @@ import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 
@@ -55,11 +55,11 @@ public class PSMethodParentQASet extends PSMethodAdapter {
 	}
 
 
-	public DiagnosisState getState(XPSCase theCase, Solution diagnosis) {
+	public DiagnosisState getState(Session theCase, Solution diagnosis) {
 		return null;
 	}
 
-	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
 	}
 	
 	@Override

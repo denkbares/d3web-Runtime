@@ -34,7 +34,7 @@ import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.SymptomValue;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.ValuedObject;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.UndefinedValue;
@@ -64,17 +64,17 @@ public abstract class Question extends QASet implements ValuedObject {
 	}
 
 	@Override
-	public void addContraReason(Reason source, XPSCase theCase) {
+	public void addContraReason(Reason source, Session theCase) {
 		((CaseQuestion) theCase.getCaseObject(this)).addContraReason(source);
 	}
 
 	@Override
-	public void addProReason(Reason source, XPSCase theCase) {
+	public void addProReason(Reason source, Session theCase) {
 		((CaseQuestion) theCase.getCaseObject(this)).addProReason(source);
 	}
 
 	@Override
-	public List<Reason> getContraReasons(XPSCase theCase) {
+	public List<Reason> getContraReasons(Session theCase) {
 		return ((CaseQuestion) theCase.getCaseObject(this)).getContraReasons();
 	}
 
@@ -104,7 +104,7 @@ public abstract class Question extends QASet implements ValuedObject {
 	}
 
 	@Override
-	public List<Reason> getProReasons(XPSCase theCase) {
+	public List<Reason> getProReasons(Session theCase) {
 		return ((CaseQuestion) theCase.getCaseObject(this)).getProReasons();
 	}
 
@@ -116,25 +116,25 @@ public abstract class Question extends QASet implements ValuedObject {
 	}
 
 	/**
-	 * Returns the value of the question given in the specified {@link XPSCase};
+	 * Returns the value of the question given in the specified {@link Session};
 	 * returns {@link UndefinedValue} if no value is assigned.
 	 * 
 	 * @param theCase
-	 *            the given {@link XPSCase}
+	 *            the given {@link Session}
 	 * @return {@link UndefinedValue} if no value is assigned, the actual value
 	 *         otherwise.
 	 * @author joba
 	 * @date 07.04.2010
 	 */
-	public abstract Value getValue(XPSCase theCase);
+	public abstract Value getValue(Session theCase);
 
 	@Override
-	public boolean hasValue(XPSCase theCase) {
+	public boolean hasValue(Session theCase) {
 		return (getValue(theCase) != null);
 	}
 
 	@Override
-	public boolean isDone(XPSCase theCase) {
+	public boolean isDone(Session theCase) {
 		if (!getContraReasons(theCase).isEmpty()) {
 			// Question has ContraIndication (probably)
 			return true;
@@ -145,7 +145,7 @@ public abstract class Question extends QASet implements ValuedObject {
 	}
 
 	@Override
-	public boolean isDone(XPSCase theCase, boolean respectValidFollowQuestions) {
+	public boolean isDone(Session theCase, boolean respectValidFollowQuestions) {
 		if (respectValidFollowQuestions) {
 			if (!isDone(theCase)) {
 				return false;
@@ -169,12 +169,12 @@ public abstract class Question extends QASet implements ValuedObject {
 	}
 
 	@Override
-	public void removeContraReason(Reason source, XPSCase theCase) {
+	public void removeContraReason(Reason source, Session theCase) {
 		((CaseQuestion) theCase.getCaseObject(this)).removeContraReason(source);
 	}
 
 	@Override
-	public void removeProReason(Reason source, XPSCase theCase) {
+	public void removeProReason(Reason source, Session theCase) {
 		((CaseQuestion) theCase.getCaseObject(this)).removeProReason(source);
 	}
 
@@ -197,7 +197,7 @@ public abstract class Question extends QASet implements ValuedObject {
 	// public abstract void setValue(XPSCase theCase, Object[] values);
 
 	@Override
-	public abstract void setValue(XPSCase theCase, Value value) throws IllegalArgumentException;
+	public abstract void setValue(Session theCase, Value value) throws IllegalArgumentException;
 
 	/**
 	 * Sets a new value to the case object of this question and saves the
@@ -211,7 +211,7 @@ public abstract class Question extends QASet implements ValuedObject {
 	 * @param values
 	 *            new value-array which will be set to the question.
 	 */
-	public void setValue(XPSCase theCase, Rule ruleSymptom,
+	public void setValue(Session theCase, Rule ruleSymptom,
 			Value value) throws IllegalArgumentException {
 		// CaseQuestion caseQuestion = ((CaseQuestion)
 		// theCase.getCaseObject(this));
@@ -244,7 +244,7 @@ public abstract class Question extends QASet implements ValuedObject {
 	 * @param rule
 	 *            rule going to be undone
 	 */
-	public void undoSymptomValue(XPSCase theCase, Rule ruleSymptom) {
+	public void undoSymptomValue(Session theCase, Rule ruleSymptom) {
 		CaseQuestion caseQuestion = ((CaseQuestion) theCase.getCaseObject(this));
 		if (caseQuestion.getValueHistory().size() == 0) {
 			setValue(theCase, UndefinedValue.getInstance());
@@ -288,7 +288,7 @@ public abstract class Question extends QASet implements ValuedObject {
 		return res;
 	}
 
-	public String verbalizeWithValue(XPSCase theCase) {
+	public String verbalizeWithValue(Session theCase) {
 		return verbalizeWithoutValue() + "\n Wert -> " + getValue(theCase);
 	}
 }

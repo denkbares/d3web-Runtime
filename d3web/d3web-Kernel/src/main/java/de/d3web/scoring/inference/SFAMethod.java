@@ -27,7 +27,7 @@ import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 public class SFAMethod extends PSSubMethod{
 
@@ -49,13 +49,13 @@ public class SFAMethod extends PSSubMethod{
 	/**
 	 * initialization method for this PSMethod
 	 */
-	public void init(XPSCase theCase) {
+	public void init(Session theCase) {
 	}
 	
 	/**
 	 * propergates the new value of the given NamedObject for the given XPSCase
 	 */
-	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
 		for (PropagationEntry change : changes) {
 			if (change.getObject() instanceof Solution) {
 				Solution diagnosis = (Solution) change.getObject();
@@ -75,7 +75,7 @@ public class SFAMethod extends PSSubMethod{
 	/**
 	 * @param theCase
 	 */
-	private void disableCase(XPSCase theCase) {
+	private void disableCase(Session theCase) {
 		theCase.getProperties().setProperty(Property.HDT_ABORT_CASE_SFA, Boolean.TRUE);
 		
 	}		
@@ -83,7 +83,7 @@ public class SFAMethod extends PSSubMethod{
 	/**
 	 * @param theCase
 	 */
-	private void enableCase(XPSCase theCase) {
+	private void enableCase(Session theCase) {
 		theCase.getProperties().setProperty(Property.HDT_ABORT_CASE_SFA, Boolean.FALSE);	
 		
 	}
@@ -92,11 +92,11 @@ public class SFAMethod extends PSSubMethod{
 	 * @param diagnosis
 	 * @return
 	 */
-	private boolean canCaseBeReenabled(XPSCase theCase) {
+	private boolean canCaseBeReenabled(Session theCase) {
 		Boolean b = (Boolean)theCase.getProperties().getProperty(Property.HDT_ABORT_CASE_SFA);
 		if(b != null 
 			&& b.booleanValue()
-			&& !containsLeafDianosis(theCase.getDiagnoses(DiagnosisState.ESTABLISHED, theCase.getUsedPSMethods())))
+			&& !containsLeafDianosis(theCase.getDiagnoses(DiagnosisState.ESTABLISHED, theCase.getPSMethods())))
 			return true;
 		return false;
 	}
@@ -115,11 +115,11 @@ public class SFAMethod extends PSSubMethod{
 	private boolean isLeafDiagnosis(Solution diagnosis) {
 		return diagnosis.getChildren() == null || diagnosis.getChildren().length==0;
 	}
-	private boolean isEstablished(XPSCase theCase, Solution diagnosis) {
+	private boolean isEstablished(Session theCase, Solution diagnosis) {
 		return diagnosis.getState(theCase, PSCONTEXT).equals(DiagnosisState.ESTABLISHED);
 	}
 	
-	public boolean isActivated(XPSCase theCase) {
+	public boolean isActivated(Session theCase) {
 		Boolean b = (Boolean)theCase.getKnowledgeBase().getProperties().getProperty(Property.SINGLE_FAULT_ASSUMPTION);
 		return  b != null && b.booleanValue(); 
 	}

@@ -40,7 +40,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
@@ -66,7 +66,7 @@ public class CompareCasePageRenderer extends Renderer {
 			throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 
-		XPSCase theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getTheCase();
 
 		CompareCaseController compareCase = DialogUtils.getCompareCaseBean();
 		ComparisonResultRepository crepos = new ComparisonResultRepository();
@@ -151,7 +151,7 @@ public class CompareCasePageRenderer extends Renderer {
 	}
 
 	private void renderAnswerValue(ResponseWriter writer,
-			UIComponent component, Value ans, XPSCase theCase)
+			UIComponent component, Value ans, Session theCase)
 			throws IOException {
 		writer.startElement("p", component);
 		writer.writeText(ans.getValue().toString(), "value");
@@ -167,7 +167,7 @@ public class CompareCasePageRenderer extends Renderer {
 	}
 
 	private void renderContainer(ResponseWriter writer, UIComponent component,
-			XPSCase theCase, ComparisonResultRepository crepos,
+			Session theCase, ComparisonResultRepository crepos,
 			CompareCaseController compareCase, String compID)
 			throws IOException {
 		String kbid = theCase.getKnowledgeBase().getId();
@@ -224,7 +224,7 @@ public class CompareCasePageRenderer extends Renderer {
 	}
 
 	private void renderDetailled(ResponseWriter writer, UIComponent component,
-			XPSCase theCase, ComparisonResultRepository crepos,
+			Session theCase, ComparisonResultRepository crepos,
 			CompareCaseController compareCase, String caseid)
 			throws IOException {
 		String kbid = theCase.getKnowledgeBase().getId();
@@ -426,7 +426,7 @@ public class CompareCasePageRenderer extends Renderer {
 	}
 
 	private void renderSimple(ResponseWriter writer, UIComponent component,
-			XPSCase theCase, ComparisonResultRepository crepos,
+			Session theCase, ComparisonResultRepository crepos,
 			CompareCaseController compareCase) throws IOException {
 		List<SimpleResult> cases = null;
 		try {

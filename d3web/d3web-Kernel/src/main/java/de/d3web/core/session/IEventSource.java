@@ -33,7 +33,7 @@ public interface IEventSource {
 
 	public void removeListener(KBOEventListener listener);
 	
-	public void notifyListeners(XPSCase xpsCase, IEventSource source);
+	public void notifyListeners(Session xpsCase, IEventSource source);
 
 	public Collection getListeners();
 	

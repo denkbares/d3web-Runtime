@@ -39,7 +39,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.Unknown;
@@ -448,7 +448,7 @@ public class ComparisonResultRepository {
 	 * @param theCase
 	 *            de.d3web.kernel.XPSCase
 	 */
-	public void setCurrentCase(XPSCase theCase) {
+	public void setCurrentCase(Session theCase) {
 		KnowledgeBase kb = CompareObjectsHashContainer.getInstance().getKnowledgeBase();
 		if ((kb == null) || !kb.equals(theCase.getKnowledgeBase())) {
 			CompareObjectsHashContainer.getInstance().initialize(theCase.getKnowledgeBase());

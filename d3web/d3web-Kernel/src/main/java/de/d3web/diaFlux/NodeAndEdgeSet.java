@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.IEdge;
 import de.d3web.diaFlux.flow.INode;
 import de.d3web.diaFlux.inference.FluxSolver;
@@ -75,7 +75,7 @@ public class NodeAndEdgeSet implements KnowledgeSlice {
 	}
 
 	@Override
-	public boolean isUsed(XPSCase theCase) {
+	public boolean isUsed(Session theCase) {
 		// TODO Auto-generated method stub
 		return false;
 	}

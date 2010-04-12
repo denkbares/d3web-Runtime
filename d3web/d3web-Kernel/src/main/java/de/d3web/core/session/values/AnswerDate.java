@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QuestionDate;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * Answer-Class for DateQuestions
@@ -56,7 +56,7 @@ public class AnswerDate extends Answer {
 		}
 
 		/** @return evaluated wrapper-object of type Date*/
-		public Date eval(XPSCase theCase) {
+		public Date eval(Session theCase) {
 			return value;
 		}
 
@@ -105,7 +105,7 @@ public class AnswerDate extends Answer {
 		return getQuestion().getId() + "aDate";
 	}
 
-	public Object getValue(XPSCase theCase) {
+	public Object getValue(Session theCase) {
 		return value;
 	}
 

@@ -27,7 +27,7 @@ import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.D3WebCase;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQASet;
 import de.d3web.indication.ActionNextQASet;
 import de.d3web.indication.inference.PSMethodUserSelected;
@@ -92,7 +92,7 @@ public abstract class QASet extends NamedObject implements InterviewObject {
 	  * @param rule rule that has activated the question
 	  * @param theCase current case
 	  */
-	public void activate(XPSCase theCase, Rule rule, Class<? extends PSMethod> psm) {
+	public void activate(Session theCase, Rule rule, Class<? extends PSMethod> psm) {
 		CaseQASet caseQA =
 			((de.d3web.core.session.blackboard.CaseQASet) theCase
 				.getCaseObject(this));
@@ -134,15 +134,15 @@ public abstract class QASet extends NamedObject implements InterviewObject {
 		}
 	}
 
-	public abstract void addContraReason(Reason source, XPSCase theCase);
+	public abstract void addContraReason(Reason source, Session theCase);
 
-	public abstract void addProReason(Reason source, XPSCase theCase);
+	public abstract void addProReason(Reason source, Session theCase);
 
 	/**
 	   * removes "source" from the list of pro reasons, if the question has been activated from a pro reason
 	   * Otherwise "source" will be added to contra reason list
 	   */
-	public void deactivate(XPSCase theCase, Rule rule, Class<? extends PSMethod> psm) {
+	public void deactivate(Session theCase, Rule rule, Class<? extends PSMethod> psm) {
 		CaseQASet caseQA =
 			((de.d3web.core.session.blackboard.CaseQASet) theCase
 				.getCaseObject(this));
@@ -154,11 +154,11 @@ public abstract class QASet extends NamedObject implements InterviewObject {
 		}
 	}
 
-	public List<Reason> getContraReasons(XPSCase theCase) {
+	public List<Reason> getContraReasons(Session theCase) {
 		return ((CaseQASet) theCase.getCaseObject(this)).getContraReasons();
 	}
 
-	public List<Reason> getProReasons(XPSCase theCase) {
+	public List<Reason> getProReasons(Session theCase) {
 		return ((CaseQASet) theCase.getCaseObject(this)).getProReasons();
 	}
 
@@ -166,11 +166,11 @@ public abstract class QASet extends NamedObject implements InterviewObject {
 		return new Reason(rule, psm);
 	}
 
-	public abstract boolean hasValue(XPSCase theCase);
+	public abstract boolean hasValue(Session theCase);
 
-	public abstract boolean isDone(XPSCase theCase);
+	public abstract boolean isDone(Session theCase);
 
-	public abstract boolean isDone(XPSCase theCase, boolean respectFollowQuestions);
+	public abstract boolean isDone(Session theCase, boolean respectFollowQuestions);
 
 
 	/**
@@ -178,7 +178,7 @@ public abstract class QASet extends NamedObject implements InterviewObject {
 	 * It is valid, if it has proreasons or, in case of a question, if it has a 
 	 * QContainer-parent, which is valid.
 	 */
-	public boolean isValid(XPSCase theCase) {
+	public boolean isValid(Session theCase) {
 		CaseQASet caseQASet = (CaseQASet) theCase.getCaseObject(this);
 		List<Reason> pros = getProReasons(theCase);
 		if (!caseQASet.hasContraReason()
@@ -198,8 +198,8 @@ public abstract class QASet extends NamedObject implements InterviewObject {
 		return false;
 	}
 
-	public abstract void removeContraReason(Reason source, XPSCase theCase);
+	public abstract void removeContraReason(Reason source, Session theCase);
 
-	public abstract void removeProReason(Reason source, XPSCase theCase);
+	public abstract void removeProReason(Reason source, Session theCase);
 
 }

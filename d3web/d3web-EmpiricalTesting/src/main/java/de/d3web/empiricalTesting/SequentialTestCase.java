@@ -36,7 +36,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.CaseFactory;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.inference.PSMethodXCL;
 
@@ -129,7 +129,7 @@ public class SequentialTestCase {
 	@SuppressWarnings("unchecked")
 	public void deriveSolutions(KnowledgeBase kb, Class psMethodContext) {
 		RatingStrategy ratingStrategy = new StateRatingStrategy();
-		XPSCase thecase = CaseFactory.createXPSCase(kb);
+		Session thecase = CaseFactory.createXPSCase(kb);
 		
 		for (RatedTestCase rtc : ratedTestCases) {
 			// Answer and Question setting in Case
@@ -161,7 +161,7 @@ public class SequentialTestCase {
 		}
 	}
 
-	private void deriveSolutionsForPSMethod(XPSCase thecase, RatedTestCase rtc,
+	private void deriveSolutionsForPSMethod(Session thecase, RatedTestCase rtc,
 			Class<? extends PSMethod> psMethodContext, RatingStrategy ratingStrategy) {
 		
 		for (Solution solution : thecase.getKnowledgeBase().getDiagnoses()) {
@@ -192,7 +192,7 @@ public class SequentialTestCase {
 		
 	}
 
-	private void deriveXCLSolutions(XPSCase thecase, RatedTestCase rtc, Collection<KnowledgeSlice> slices) {
+	private void deriveXCLSolutions(Session thecase, RatedTestCase rtc, Collection<KnowledgeSlice> slices) {
 		for (KnowledgeSlice slice : slices) {
 			if (slice instanceof XCLModel) {
 				Solution d = ((XCLModel) slice).getSolution();

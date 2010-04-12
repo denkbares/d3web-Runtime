@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.dialog2.basics.knowledge.KnowledgeBaseRepository;
 import de.d3web.dialog2.controller.KBLoadController;
 import de.d3web.dialog2.util.DialogUtils;
@@ -122,10 +122,10 @@ public class FrontControllerServlet extends HttpServlet {
 		ServletContext servletContext = (ServletContext) jsfContext
 				.getExternalContext().getContext();
 
-		Map<String, XPSCase> sessionToCaseMap = (Map) servletContext
+		Map<String, Session> sessionToCaseMap = (Map) servletContext
 				.getAttribute("sessionToCaseMap");
 
-		XPSCase theCase = sessionToCaseMap.get(id);
+		Session theCase = sessionToCaseMap.get(id);
 
 		WebDialog dia = new WebDialog();
 		DialogUtils.setExpression(dia, "#{webDialog}");

@@ -40,7 +40,7 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.indication.inference.PSMethodNextQASet;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
@@ -73,12 +73,12 @@ public class MQDialogController implements DialogController {
 	private List remainingQASetQueue = null;
 	private boolean obtainRemainingQASetStatus = false;
 
-	protected XPSCase theCase = null;
+	protected Session theCase = null;
 
 	/**
 	 * MQDialogController constructor comment.
 	 */
-	public MQDialogController(XPSCase _theCase) {
+	public MQDialogController(Session _theCase) {
 		this(_theCase, new LinkedList());
 	}
 	
@@ -87,7 +87,7 @@ public class MQDialogController implements DialogController {
 	 * given list of initQASets. (attention: the case might add some
 	 * more initQASets that are specified in the knowledge base)
 	 */
-	public MQDialogController(XPSCase _theCase, List initQASets) {
+	public MQDialogController(Session _theCase, List initQASets) {
 		theCase = _theCase;
 		qasetQueue = new LinkedList();
 		this.initQASets = new LinkedList(initQASets);

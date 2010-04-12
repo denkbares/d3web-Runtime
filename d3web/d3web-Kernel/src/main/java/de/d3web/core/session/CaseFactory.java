@@ -59,10 +59,10 @@ public class CaseFactory {
 			this.qaSetManagerClass = qaSetManagerClass;
 		}
 		
-		public QASetManager createQASetManager(XPSCase theCase) {
+		public QASetManager createQASetManager(Session theCase) {
 			try {
 				Constructor<? extends QASetManager> constructor =
-					qaSetManagerClass.getConstructor(new Class[] { XPSCase.class });
+					qaSetManagerClass.getConstructor(new Class[] { Session.class });
 				return (QASetManager) constructor.newInstance(
 					new Object[] { theCase });
 			}
@@ -92,17 +92,17 @@ public class CaseFactory {
 	 *	@param kb the knowledge base used in the case.
 	 *  @return new XPSCase-object with KnowledgeBase kb
 	 */
-	public static synchronized XPSCase createXPSCase(KnowledgeBase kb) {
+	public static synchronized Session createXPSCase(KnowledgeBase kb) {
 		return createCase(kb, new DefaultQASetManagerFactory());
 	}
 	
-	public static synchronized XPSCase createXPSCase(KnowledgeBase kb, List<PSMethod> psms) {
+	public static synchronized Session createXPSCase(KnowledgeBase kb, List<PSMethod> psms) {
 		return new D3WebCase(kb, new DefaultQASetManagerFactory(), psms);
 	}
 	
-	private static XPSCase createCase(KnowledgeBase kb,
+	private static Session createCase(KnowledgeBase kb,
 			QASetManagerFactory defaultQASetManagerFactory) {
-		XPSCase theCase = new D3WebCase(kb, defaultQASetManagerFactory);
+		Session theCase = new D3WebCase(kb, defaultQASetManagerFactory);
 		return theCase;
 	}
 
@@ -111,7 +111,7 @@ public class CaseFactory {
 	 *	@param kb the knowledge base used in the case.
 	 *  @return new XPSCase-object with KnowledgeBase kb
 	 */
-	public static synchronized XPSCase createXPSCase(
+	public static synchronized Session createXPSCase(
 		KnowledgeBase kb,
 		QASetManagerFactory factory) {
 		return createCase(kb, factory);
@@ -122,13 +122,13 @@ public class CaseFactory {
 	 *	@param kb the knowledge base used in the case.
 	 *  @return new XPSCase-object with KnowledgeBase kb
 	 */
-	public static synchronized XPSCase createXPSCase(
+	public static synchronized Session createXPSCase(
 			KnowledgeBase kb,
 			Class<? extends QASetManager> qaManagerClass) {
 		return createCase(kb, new QASetManagerFactoryAdapter(qaManagerClass));
 	}
 	
-	private static void addUsedPSMethods(XPSCase newCase, List<? extends PSMethod> psMethods) {
+	private static void addUsedPSMethods(Session newCase, List<? extends PSMethod> psMethods) {
 		for (PSMethod psm : psMethods) {
 			((D3WebCase) newCase).addUsedPSMethod(psm);
 			psm.init(newCase);
@@ -144,7 +144,7 @@ public class CaseFactory {
 	 * @param proxy DialogProxy that contains values of questions
 	 * @return XPSCase
 	 */
-	public static XPSCase createAnsweredXPSCase(
+	public static Session createAnsweredXPSCase(
 		KnowledgeBase kb,
 		Class<? extends QASetManager> dialogControllerType,
 		DialogProxy proxy,
@@ -164,14 +164,14 @@ public class CaseFactory {
 	 * 			(see de.d3web.caserepository.CaseObject#getAllQContainers())
 	 * @return XPSCase
 	 */
-	public static XPSCase createAnsweredXPSCase(
+	public static Session createAnsweredXPSCase(
 		KnowledgeBase kb,
 		Class<? extends QASetManager> dialogControllerType,
 		DialogProxy proxy,
 		Collection<? extends QContainer> registeredQContainers,
 		List<? extends PSMethod> usedPSMethods) {
 
-		XPSCase newCase = createXPSCase(kb);
+		Session newCase = createXPSCase(kb);
 		addUsedPSMethods(newCase, usedPSMethods);
 		
 		MQDialogController mqdc = null;
@@ -197,7 +197,7 @@ public class CaseFactory {
 	 * @see #createAnsweredXPSCase
 	 */
 	private static void answerQuestionsWithMQdc(MQDialogController mqdc,
-			XPSCase newCase,
+			Session newCase,
 			KnowledgeBase kb,
 			DialogProxy proxy,
 			Collection<? extends QContainer> registeredQContainers) {
@@ -245,7 +245,7 @@ public class CaseFactory {
 	 * @param inCase (XPSCase in which unanswered questions shall be answered)
 	 * @param mqdc (MQDialogController defines the order of the questions to answer)
 	 */
-	private static void answerQuestions(QASet qaSet, DialogProxy proxy, XPSCase inCase, MQDialogController mqdc) {
+	private static void answerQuestions(QASet qaSet, DialogProxy proxy, Session inCase, MQDialogController mqdc) {
 		if (qaSet instanceof QContainer) {
 			// determine the valid questions of the current container as long as
 			// they change (due to a possible activation of follow-questions)

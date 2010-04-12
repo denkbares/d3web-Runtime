@@ -37,7 +37,7 @@ import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * NamedObject is parent of knowledge-base objects such as QASet, Question,
@@ -666,14 +666,14 @@ public abstract class NamedObject implements TerminologyObject, CaseObjectSource
 
 	/**
 	 * Sets the specified values for this object in the context of a specified
-	 * {@link XPSCase}.
+	 * {@link Session}.
 	 * 
 	 * @param theCase
 	 *            the context, the values are stored
 	 * @param values
 	 *            the values of this instance to be set
 	 */
-	public abstract void setValue(XPSCase theCase, Value value);
+	public abstract void setValue(Session theCase, Value value);
 
 	@Override
 	public String toString() {

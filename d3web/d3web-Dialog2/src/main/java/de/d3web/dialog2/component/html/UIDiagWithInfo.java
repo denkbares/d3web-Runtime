@@ -27,7 +27,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.dialog2.render.DialogRenderUtils;
 import de.d3web.dialog2.util.DialogUtils;
 
@@ -45,7 +45,7 @@ public class UIDiagWithInfo extends HtmlOutputText {
 	public void encodeEnd(FacesContext context) throws IOException {
 		ResponseWriter writer = FacesContext.getCurrentInstance()
 				.getResponseWriter();
-		XPSCase theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getTheCase();
 
 		Solution diag = theCase.getKnowledgeBase().searchDiagnosis(
 				(String) getValue());

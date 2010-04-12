@@ -28,12 +28,12 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.CaseFactory;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.interviewmanager.MQDialogController;
 
 public class InterviewCalculator extends PrecisionRecallCalculator{
 	
-	private final XPSCase thecase;
+	private final Session thecase;
 	private QContainer currentQC;
 	
 	public InterviewCalculator(KnowledgeBase kb) {

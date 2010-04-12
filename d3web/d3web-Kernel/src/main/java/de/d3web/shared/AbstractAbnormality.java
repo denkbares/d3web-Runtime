@@ -122,9 +122,9 @@ public abstract class AbstractAbnormality implements KnowledgeSlice {
 	}
 
 	/**
-	 * @see de.d3web.core.inference.KnowledgeSlice#isUsed(de.d3web.core.session.XPSCase)
+	 * @see de.d3web.core.inference.KnowledgeSlice#isUsed(de.d3web.core.session.Session)
 	 */
-	public boolean isUsed(de.d3web.core.session.XPSCase theCase) {
+	public boolean isUsed(de.d3web.core.session.Session theCase) {
 		return true;
 	}
 

@@ -27,7 +27,7 @@ import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.CaseObjectSource;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseRuleComplex;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.scoring.inference.PSMethodHeuristic;
@@ -104,7 +104,7 @@ public class Rule implements CaseObjectSource {
 	  * <LI>  if available - checks the diagnosis context to be true
 	  * </OL>
 	  */
-	public boolean canFire(XPSCase theCase) throws UnknownAnswerException {
+	public boolean canFire(Session theCase) throws UnknownAnswerException {
 		try {
 			/* if an exception is available and it is true, then do not fire! */
 			if ((getException() != null)
@@ -158,7 +158,7 @@ public class Rule implements CaseObjectSource {
 	  * elementary values have changed (e.g. terminals in a formula) it will be undone and fired again,
 	  * so that the e.g. depending formula will be recalculated.
 	  */
-	public void check(XPSCase theCase) {
+	public void check(Session theCase) {
 		// should we execute the rule action ???
 		boolean EXECUTE_ACTION = false;
 		// should we undo the rule action ???
@@ -212,14 +212,14 @@ public class Rule implements CaseObjectSource {
 	}
 
 	@Override
-	public XPSCaseObject createCaseObject(XPSCase session) {
+	public XPSCaseObject createCaseObject(Session session) {
 		return new CaseRuleComplex(this);
 	}
 
 	/**
 	  * Executes the action of the rule.
 	  */
-	public void doIt(XPSCase theCase) {
+	public void doIt(Session theCase) {
 		setFired(true, theCase);
 		//theCase.trace("  <<RULE FIRE>> " + getId());
 		if (getAction() != null) {
@@ -273,7 +273,7 @@ public class Rule implements CaseObjectSource {
 	  * Simply checks if the rule has already been fired in
 	  * context of the specified user case.
 	  */
-	public boolean hasFired(XPSCase theCase) {
+	public boolean hasFired(Session theCase) {
 		return ((CaseRuleComplex) theCase.getCaseObject(this)).hasFired();
 	}
 
@@ -281,7 +281,7 @@ public class Rule implements CaseObjectSource {
 	 * Checks if the rule has been fired
 	 * (like hasFired()).
 	 */
-	public boolean isUsed(XPSCase theCase) {
+	public boolean isUsed(Session theCase) {
 		return hasFired(theCase);
 	}
 
@@ -518,7 +518,7 @@ public class Rule implements CaseObjectSource {
 	  * Sets the state of the rule, if it has fired or not
 	  * in context of the specified userCase.
 	  */
-	protected void setFired(boolean newFired, XPSCase theCase) {
+	protected void setFired(boolean newFired, Session theCase) {
 		((CaseRuleComplex) theCase.getCaseObject(this)).setFired(newFired);
 	}
 
@@ -530,7 +530,7 @@ public class Rule implements CaseObjectSource {
 	  * Executes the backtracking mechanism of the
 	  * rule's action and sets the rule state to "not fired".
 	  */
-	public void undo(XPSCase theCase) {
+	public void undo(Session theCase) {
 		setFired(false, theCase);
 		//theCase.trace("  <<RULE UNDO>> " + getId());
 		if (getAction() != null) {
@@ -542,7 +542,7 @@ public class Rule implements CaseObjectSource {
 	  * Gives a description of the rule and the state of the
 	  * rule (fired or not).
 	  */
-	public String verbalize(XPSCase theCase) {
+	public String verbalize(Session theCase) {
 		return toString() + "\n fired: " + hasFired(theCase);
 	}
     

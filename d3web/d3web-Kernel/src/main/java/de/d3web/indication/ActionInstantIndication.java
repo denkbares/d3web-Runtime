@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.QASet;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * Indicates a QASet like ActionIndication, but for QContainers: Then, the QContainer is 
@@ -57,7 +57,7 @@ public class ActionInstantIndication extends ActionIndication {
 	}
 	
 	@Override
-	public void doIt(XPSCase theCase, Rule rule) {
+	public void doIt(Session theCase, Rule rule) {
 		doItWithContext(theCase, rule);
 	}
 

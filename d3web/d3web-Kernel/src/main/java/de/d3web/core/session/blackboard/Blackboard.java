@@ -12,7 +12,7 @@ import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * The Blackboard manages all dynamic values created within the case and
@@ -23,7 +23,7 @@ import de.d3web.core.session.XPSCase;
  */
 public class Blackboard {
 
-	private final XPSCase session;
+	private final Session session;
 	private final FactStorage valueStorage;
 	private final FactStorage interviewStorage;
 
@@ -35,7 +35,7 @@ public class Blackboard {
 	 * @param session
 	 *            the session the blackboard is created for
 	 */
-	public Blackboard(XPSCase session) {
+	public Blackboard(Session session) {
 		this.session = session;
 		this.valueStorage = new FactStorage(this);
 		this.interviewStorage = new FactStorage(this);
@@ -46,7 +46,7 @@ public class Blackboard {
 	 * 
 	 * @return the session of this blackboard
 	 */
-	public XPSCase getSession() {
+	public Session getSession() {
 		return session;
 	}
 

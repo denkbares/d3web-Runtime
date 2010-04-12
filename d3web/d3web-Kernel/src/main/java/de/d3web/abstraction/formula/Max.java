@@ -19,7 +19,7 @@
  */
 
 package de.d3web.abstraction.formula;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 /**
  * Maximum-Term.
  * Creation date: (14.08.2000 16:41:32)
@@ -48,7 +48,7 @@ public class Max extends FormulaNumberArgumentsTerm implements FormulaNumberElem
 	/**
 	 * @return the maximum of the evaluated arguments
 	 */
-	public Double eval(XPSCase theCase) {
+	public Double eval(Session theCase) {
 		if (super.eval(theCase) == null)
 			return null;
 		else

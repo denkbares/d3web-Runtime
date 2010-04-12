@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+
+<CaseRepository>
+
+<Cases>
+
+<Problem>
+<DCMarkup>
+<DCElement label="DC.title"><![CDATA[Battery empty]]></DCElement>
+<DCElement label="DC.creator"><![CDATA[joba]]></DCElement>
+<DCElement label="DC.date" value="2003-10-6 10:50"/>
+<DCElement label="DC.resource_identifier" value="8558590"/>
+</DCMarkup>
+<Properties>
+<Property name="case_comment" class="de.d3web.persistence.xml.loader.PropertiesUtilities$CDataString"><![CDATA[]]></Property>
+<Property name="case_metadata" class="de.d3web.caserepository.MetaDataImpl"><Metadata>
+<Account>guest@guest</Account>
+</Metadata>
+</Property>
+<Property name="case_source_system" class="java.lang.String"><![CDATA[d3web.dialog]]></Property>
+</Properties>
+<Questions>
+<Question id='MOC9'>
+<Answer id='MOC9a3'/>
+</Question>
+<Question id='MOC1'>
+<Answer id='MOC1a3'/>
+</Question>
+<Question id='MOC10'>
+<Answer id='MOC10a1'/>
+</Question>
+<Question id='MOC6'>
+<Answer id='MaNO'/>
+</Question>
+<Question id='MOC7'>
+<Answer id='MOC7a3'/>
+</Question>
+<Question id='MMC1'>
+<Answer id='MMC1a1'/>
+</Question>
+<Question id='MMC2'>
+<Answer id='MMC2a7'/>
+</Question>
+<Question id='MNUM1'>
+<Answer value='10.0'/>
+</Question>
+<Question id='MOC11'>
+<Answer id='MOC11a2'/>
+</Question>
+<Question id='MOC8'>
+<Answer id='MOC8a1'/>
+</Question>
+<Question id='MNUM2'>
+<Answer value='15.0'/>
+</Question>
+</Questions>
+<Solutions>
+</Solutions>
+</Problem>
+
+</Cases>
+
+</CaseRepository>
+

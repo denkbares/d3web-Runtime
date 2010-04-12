@@ -38,7 +38,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.dialog2.component.html.UIXCLPage;
@@ -58,7 +58,7 @@ public class XCLPageRenderer extends Renderer {
 	private ResponseWriter writer;
 	private UIComponent component;
 	private HashMap<String, Object> parameterMap;
-	private XPSCase theCase;
+	private Session theCase;
 	
     
     @Override

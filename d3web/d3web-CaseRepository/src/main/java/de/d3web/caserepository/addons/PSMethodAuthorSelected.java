@@ -25,7 +25,7 @@ import java.util.Collection;
 
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 
@@ -53,7 +53,7 @@ public class PSMethodAuthorSelected extends PSMethodAdapter {
 	}
 
 	@Override
-	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
 	}
 
 	@Override

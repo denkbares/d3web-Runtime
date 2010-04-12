@@ -24,7 +24,7 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * This KnowledgeSlice is used to store the configuration of the extensions
@@ -56,7 +56,7 @@ public class PluginConfig implements KnowledgeSlice {
 	}
 
 	@Override
-	public boolean isUsed(XPSCase theCase) {
+	public boolean isUsed(Session theCase) {
 		return false;
 	}
 

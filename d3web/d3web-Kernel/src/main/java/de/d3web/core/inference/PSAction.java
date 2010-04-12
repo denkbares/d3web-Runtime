@@ -23,7 +23,7 @@ package de.d3web.core.inference;
 import java.util.List;
 
 import de.d3web.core.knowledge.terminology.NamedObject;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * Abstract class to describe actions executed by rules,
@@ -35,7 +35,7 @@ public abstract class PSAction implements Cloneable {
 	/**
 	 * Executes the included action.
 	 */
-	public abstract void doIt(de.d3web.core.session.XPSCase theCase, Rule rule);
+	public abstract void doIt(de.d3web.core.session.Session theCase, Rule rule);
 
 	/**
 	 * @return all objects participating on the action.<BR>
@@ -49,18 +49,18 @@ public abstract class PSAction implements Cloneable {
 
 	/**
 	 * Checks if any action value (e.g. terminal objects of a formula) have
-	 * changed since last call to {@link #doIt(XPSCase)}.
+	 * changed since last call to {@link #doIt(Session)}.
 	 * 
 	 * @see RuleComplex
 	 */
-	public boolean hasChangedValue(XPSCase theCase) {
+	public boolean hasChangedValue(Session theCase) {
 		return false;
 	}
 	
 	/**
 	 * Tries to undo the included action.
 	 */
-	public abstract void undo(de.d3web.core.session.XPSCase theCase, Rule rule);
+	public abstract void undo(de.d3web.core.session.Session theCase, Rule rule);
 	
 	/**
 	 * Returns a clone of this RuleAction.<p>

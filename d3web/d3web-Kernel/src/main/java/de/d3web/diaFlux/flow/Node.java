@@ -26,7 +26,7 @@ import java.util.List;
 
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.session.CaseObjectSource;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 
 /**
@@ -125,7 +125,7 @@ class Node implements INode, CaseObjectSource {
 
 
 	@Override
-	public XPSCaseObject createCaseObject(XPSCase session) {
+	public XPSCaseObject createCaseObject(Session session) {
 		return new NodeData(this);
 	}
 

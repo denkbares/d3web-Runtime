@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 /**
  * Encapsulates rules of one PSMethod and one MethodKind to one KnowlegeSlice
  *
@@ -53,7 +53,7 @@ public class RuleSet implements KnowledgeSlice {
 	}
 
 	@Override
-	public boolean isUsed(XPSCase theCase) {
+	public boolean isUsed(Session theCase) {
 		for (Rule r: rules) {
 			if (r.isUsed(theCase)) {
 				return true;

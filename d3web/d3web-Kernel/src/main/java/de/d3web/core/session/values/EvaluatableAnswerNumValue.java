@@ -20,7 +20,7 @@
 
 package de.d3web.core.session.values;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * This interface describes an evaluatable value of AnswerNum objects.
@@ -34,5 +34,5 @@ public interface EvaluatableAnswerNumValue extends EvaluatableNumValue{
 	 * Evaluates its value considering the given XPSCase.
 	 * @return evaluated AnswerNumValue (Double)
 	 */
-	public Double eval(XPSCase theCase);
+	public Double eval(Session theCase);
 }

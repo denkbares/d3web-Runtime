@@ -24,7 +24,7 @@ import java.util.LinkedList;
 
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 
@@ -55,7 +55,7 @@ public class QNumWrapper extends FormulaNumberPrimitive {
 	 *            current case
 	 * @return the Double value of the wrapped QuestionNum
 	 */
-	public Double eval(XPSCase theCase) {
+	public Double eval(Session theCase) {
 		Value val = getQuestion().getValue(theCase);
 		if (val == null
 			|| val instanceof UndefinedValue

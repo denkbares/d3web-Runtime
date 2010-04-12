@@ -22,7 +22,7 @@ package de.d3web.core.inference.condition;
 import java.util.List;
 import java.util.logging.Logger;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * This condition creates a negation of the enclosed condition.
@@ -50,7 +50,7 @@ public class CondNot extends NonTerminalCondition {
 	}
 
 	@Override
-	public boolean eval(XPSCase theCase)
+	public boolean eval(Session theCase)
 		throws NoAnswerException, UnknownAnswerException {
 		return (!condition.eval(theCase));
 	}

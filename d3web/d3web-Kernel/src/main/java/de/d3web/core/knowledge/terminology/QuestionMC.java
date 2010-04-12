@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Vector;
 
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.blackboard.CaseQuestionMC;
 import de.d3web.core.session.blackboard.XPSCaseObject;
@@ -47,7 +47,7 @@ public class QuestionMC extends QuestionChoice {
 		super(id);
 	}
 
-	public XPSCaseObject createCaseObject(XPSCase session) {
+	public XPSCaseObject createCaseObject(Session session) {
 		return new CaseQuestionMC(this);
 	}
 
@@ -59,7 +59,7 @@ public class QuestionMC extends QuestionChoice {
 	}
 
 	@Override
-	public Value getValue(XPSCase theCase) {
+	public Value getValue(Session theCase) {
 		return ((CaseQuestionMC) theCase.getCaseObject(this)).getValue();
 	}
 	
@@ -72,7 +72,7 @@ public class QuestionMC extends QuestionChoice {
 	 * @param antwort an array of Answer instances
 	 */
 	@Override
-	public void setValue(XPSCase theCase, Value value) throws IllegalArgumentException {
+	public void setValue(Session theCase, Value value) throws IllegalArgumentException {
 		if (value instanceof MultipleChoiceValue) {
 			((CaseQuestionMC) theCase.getCaseObject(this)).setValue((MultipleChoiceValue) value);
 		}

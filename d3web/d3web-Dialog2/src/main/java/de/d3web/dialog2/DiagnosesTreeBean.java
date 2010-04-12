@@ -31,7 +31,7 @@ import org.apache.myfaces.custom.tree2.TreeNodeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.dialog2.util.DialogUtils;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
@@ -49,13 +49,13 @@ public class DiagnosesTreeBean {
 
 	private HtmlTree diagTree;
 
-	public void checkNodeStyles(XPSCase theCase) {
+	public void checkNodeStyles(Session theCase) {
 		TreeNode root = diagTreeModel.getNodeById("0");
 		checkNodeStylesRecursive(root, theCase);
 
 	}
 
-	private void checkNodeStylesRecursive(TreeNode node, XPSCase theCase) {
+	private void checkNodeStylesRecursive(TreeNode node, Session theCase) {
 		Solution actual = theCase.getKnowledgeBase().searchDiagnosis(
 				node.getIdentifier());
 		if (actual.getState(theCase, PSMethodHeuristic.class).equals(
@@ -97,13 +97,13 @@ public class DiagnosesTreeBean {
 	}
 
 	public boolean getDiagnosesAvailable() {
-		XPSCase theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getTheCase();
 		List<Solution> established = theCase
-				.getDiagnoses(DiagnosisState.ESTABLISHED, theCase.getUsedPSMethods());
+				.getDiagnoses(DiagnosisState.ESTABLISHED, theCase.getPSMethods());
 		List<Solution> suggested = theCase
-				.getDiagnoses(DiagnosisState.SUGGESTED, theCase.getUsedPSMethods());
+				.getDiagnoses(DiagnosisState.SUGGESTED, theCase.getPSMethods());
 		List<Solution> excluded = theCase
-				.getDiagnoses(DiagnosisState.EXCLUDED, theCase.getUsedPSMethods());
+				.getDiagnoses(DiagnosisState.EXCLUDED, theCase.getPSMethods());
 		if (established.size() != 0 || suggested.size() != 0
 				|| excluded.size() != 0) {
 			return true;
@@ -120,7 +120,7 @@ public class DiagnosesTreeBean {
 	}
 
 	public void init() {
-		XPSCase theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getTheCase();
 		initTreeModel(theCase);
 		diagTree = new HtmlTree();
 		diagTree.setModel(diagTreeModel);
@@ -129,7 +129,7 @@ public class DiagnosesTreeBean {
 		checkNodeStyles(theCase);
 	}
 
-	private void initTreeModel(XPSCase theCase) {
+	private void initTreeModel(Session theCase) {
 		Solution rootDiag = theCase.getKnowledgeBase().getRootDiagnosis();
 		TreeNode treeData = new TreeNodeBase(DiagnosesTreeBean.STANDARD_TYPE,
 				rootDiag.getName(), false);

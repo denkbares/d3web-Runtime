@@ -21,7 +21,7 @@
 package de.d3web.core.inference.condition;
 
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.Unknown;
 
@@ -44,7 +44,7 @@ public class CondUnknown extends CondQuestion {
 	}
 
 	@Override
-	public boolean eval(XPSCase theCase) throws NoAnswerException {
+	public boolean eval(Session theCase) throws NoAnswerException {
 		return (question.getValue(theCase) instanceof Unknown);
 		// try {
 		// checkAnswer(theCase);

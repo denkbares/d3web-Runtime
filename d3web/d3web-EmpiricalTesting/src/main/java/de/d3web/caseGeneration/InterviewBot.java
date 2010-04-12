@@ -39,7 +39,7 @@ import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.CaseFactory;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.interviewmanager.MQDialogController;
 import de.d3web.empiricalTesting.Finding;
 import de.d3web.empiricalTesting.RatedSolution;
@@ -122,7 +122,7 @@ public class InterviewBot {
 	 */
 	public List<SequentialTestCase> generate() throws UnsupportedDataTypeException {
 		init();
-		XPSCase theCase = createCase(initFindings);
+		Session theCase = createCase(initFindings);
 
 		SequentialTestCase stc = new SequentialTestCase();
 		stc.setName(sqtcasePraefix);
@@ -163,7 +163,7 @@ public class InterviewBot {
 		// Iterate over all possible answers of the next question
 		for (int i = 0; i < numberOfCombinations; i++) {
 			Value nextValue = possibleAnswers.get(i);
-			XPSCase theCase = createCase(sqCase);
+			Session theCase = createCase(sqCase);
 			setCaseValue(theCase, currentQuestion, nextValue);
 			SequentialTestCase newSequentialCase = packNewSequence(sqCase,
 					currentQuestion, nextValue, theCase);
@@ -204,7 +204,7 @@ public class InterviewBot {
 		
 	}
 
-	private SequentialTestCase packNewSequence(SequentialTestCase sqCase, Question currentQuestion, Value nextValue, XPSCase theCase) {
+	private SequentialTestCase packNewSequence(SequentialTestCase sqCase, Question currentQuestion, Value nextValue, Session theCase) {
 		SequentialTestCase newSequentialCase = sqCase.flatClone();
 		newSequentialCase.setName(sqtcasePraefix + dateToString());
 		newSequentialCase.add(createRatedTestCase(currentQuestion, nextValue, theCase,
@@ -212,7 +212,7 @@ public class InterviewBot {
 		return newSequentialCase;
 	}
 
-	private RatedTestCase createRatedTestCase(Question currentQuestion, Value nextValue, XPSCase theCase, SequentialTestCase sqCase) {
+	private RatedTestCase createRatedTestCase(Question currentQuestion, Value nextValue, Session theCase, SequentialTestCase sqCase) {
 
 		RatedTestCase ratedCase = new RatedTestCase();
 		ratedCase.add(new Finding(currentQuestion, nextValue));
@@ -225,7 +225,7 @@ public class InterviewBot {
 		return ratedCase;
 	}
 
-	private void addInitalCase(XPSCase theCase, SequentialTestCase stc) {
+	private void addInitalCase(Session theCase, SequentialTestCase stc) {
 		if (initFindings.isEmpty())
 			return;
 		else {
@@ -252,7 +252,7 @@ public class InterviewBot {
 		casesCounter++;
 	}
 
-	private Question getNextQuestion(XPSCase theCase, SequentialTestCase sqCase) {
+	private Question getNextQuestion(Session theCase, SequentialTestCase sqCase) {
 		Question question = nextQuestionFromAgenda(theCase);
 		while (knownAnswers.get(question) != null) {
 			Value value = knownAnswers.get(question);
@@ -263,7 +263,7 @@ public class InterviewBot {
 		return question;
 	}
 
-	private Question nextQuestionFromAgenda(XPSCase theCase) {
+	private Question nextQuestionFromAgenda(Session theCase) {
 		MQDialogController controller = (MQDialogController) theCase.getQASetManager();
 		QASet next = controller.moveToNextRemainingQASet();
 		if (next != null && next instanceof Question) {
@@ -276,7 +276,7 @@ public class InterviewBot {
 		}
 	}
 
-	private List<RatedSolution> toRatedSolutions(XPSCase theCase) {
+	private List<RatedSolution> toRatedSolutions(Session theCase) {
 		List<RatedSolution> ratedSolutions = new LinkedList<RatedSolution>();
 		for (Solution solution : theCase.getKnowledgeBase().getDiagnoses()) {
 			Rating rating = ratingStrategy.getRatingFor(solution, theCase);
@@ -288,8 +288,8 @@ public class InterviewBot {
 		return ratedSolutions;
 	}
 
-	private XPSCase createCase(SequentialTestCase sqCase) {
-		XPSCase theCase = CaseFactory.createXPSCase(knowledge, MQDialogController.class);
+	private Session createCase(SequentialTestCase sqCase) {
+		Session theCase = CaseFactory.createXPSCase(knowledge, MQDialogController.class);
 		for (RatedTestCase c : sqCase.getCases()) {
 			for (Finding finding : c.getFindings()) {
 				setCaseValue(theCase, finding.getQuestion(), finding.getValue());
@@ -298,15 +298,15 @@ public class InterviewBot {
 		return theCase;
 	}
 
-	private XPSCase createCase(List<Finding> findings) {
-		XPSCase theCase = CaseFactory.createXPSCase(knowledge, MQDialogController.class);
+	private Session createCase(List<Finding> findings) {
+		Session theCase = CaseFactory.createXPSCase(knowledge, MQDialogController.class);
 		for (Finding finding : findings) {
 			setCaseValue(theCase, finding.getQuestion(), finding.getValue());
 		}
 		return theCase;
 	}
 
-	private void setCaseValue(XPSCase theCase, Question q, Value v) {
+	private void setCaseValue(Session theCase, Question q, Value v) {
 		theCase.setValue(q, v);
 	}
 	

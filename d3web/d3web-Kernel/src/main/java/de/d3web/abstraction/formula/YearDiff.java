@@ -29,7 +29,7 @@ package de.d3web.abstraction.formula;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * @author vogele
@@ -60,7 +60,7 @@ public class YearDiff extends FormulaDateArgumentsTerm implements FormulaNumberE
 	 * Returns the _rounded-down_ difference between two dates with the accuracy
 	 * of one day.
 	 */
-	public Double eval(XPSCase theCase) {
+	public Double eval(Session theCase) {
 		evaluateArguments(theCase);
 		GregorianCalendar cal1 = new GregorianCalendar();
 		cal1.setTime(getEvaluatedArg1());

@@ -36,7 +36,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.costBenefit.inference.StateTransition;
@@ -86,7 +86,7 @@ public class Node {
 	 * @param theCase
 	 * @return
 	 */
-	public boolean isApplicable(XPSCase theCase) {
+	public boolean isApplicable(Session theCase) {
 		if (st==null) return false;
 		Condition activationCondition = st.getActivationCondition();
 		if (activationCondition==null) return true;
@@ -114,13 +114,13 @@ public class Node {
 		return st;
 	}
 
-	private void setAnswer(XPSCase theCase, Question q,
+	private void setAnswer(Session theCase, Question q,
 			Value answer, Map<Question, Value> map) {
 		map.put(q, q.getValue(theCase));
 		theCase.setValue(q, answer);
 	}
 	
-	public double getCosts(XPSCase xpsCase) {
+	public double getCosts(Session xpsCase) {
 		if (cbm==null) return getStaticCosts();
 		return cbm.getCostFunction().getCosts(qContainer, xpsCase);
 	}
@@ -139,7 +139,7 @@ public class Node {
 	 * @param testCase
 	 * @return
 	 */
-	public Map<Question, Value> getExpectedValues(XPSCase testCase) {
+	public Map<Question, Value> getExpectedValues(Session testCase) {
 		return answerGetterAndSetter(testCase, false);
 	}
 	
@@ -150,11 +150,11 @@ public class Node {
 	 * @param testCase
 	 * @return
 	 */
-	public Map<Question, Value> setNormalValues(XPSCase testCase) {
+	public Map<Question, Value> setNormalValues(Session testCase) {
 		return answerGetterAndSetter(testCase, true);
 	}
 	
-	private Map<Question, Value> answerGetterAndSetter(XPSCase testCase, boolean set) {
+	private Map<Question, Value> answerGetterAndSetter(Session testCase, boolean set) {
 		List<? extends Question> answeredQuestions = testCase.getAnsweredQuestions();
 		Map<Question, Value> undomap = new HashMap<Question, Value>();
 		Map<Question, Value> expectedmap = new HashMap<Question, Value>();

@@ -24,7 +24,7 @@ import java.util.Collection;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 /**
  * psmethod for shared knowledge
@@ -38,7 +38,7 @@ public class PSMethodShared extends PSMethodAdapter {
 	public static MethodKind SHARED_ABNORMALITY = new MethodKind("SHARED_ABNORMALITY");
 
 	@Override
-	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
 	}
 	
 	@Override

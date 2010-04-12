@@ -18,7 +18,7 @@
  */
 package de.d3web.costBenefit.inference;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.costBenefit.model.SearchModel;
 
 /**
@@ -33,5 +33,5 @@ public interface SearchAlgorithm {
 	 * @param theCase
 	 * @param model
 	 */
-	void search(XPSCase theCase, SearchModel model);
+	void search(Session theCase, SearchModel model);
 }

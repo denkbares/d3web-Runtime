@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * A Term which has 2 Dates as Arguments.  
@@ -70,7 +70,7 @@ public abstract class FormulaDateArgumentsTerm implements FormulaElement {
 	 * Evaluates the arguments.
 	 * @return true, if no argument is null.
 	 */
-	protected boolean evaluateArguments(XPSCase theCase) {
+	protected boolean evaluateArguments(Session theCase) {
 		if (getArg1() == null || getArg2() == null) {
 			return false;
 		}

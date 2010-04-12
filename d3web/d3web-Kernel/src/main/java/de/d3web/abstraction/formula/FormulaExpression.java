@@ -21,7 +21,7 @@
 package de.d3web.abstraction.formula;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.NumValue;
 
 /**
@@ -68,7 +68,7 @@ public class FormulaExpression {
 	 * Evaluates the formulaElement and creates the returned value into an AnswerNum
 	 * @return an AnswerNum containing the evaluated value
 	 */
-	public Value eval(XPSCase theCase) {
+	public Value eval(Session theCase) {
 		Double answer = fElement.eval(theCase);
 		if (answer != null) {
 			return new NumValue(answer);

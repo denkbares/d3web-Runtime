@@ -20,7 +20,7 @@
 
 package de.d3web.abstraction.formula;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 /**
  * Division term
  * Creation date: (14.08.2000 16:42:22)
@@ -51,7 +51,7 @@ public class Div extends FormulaNumberArgumentsTerm implements FormulaNumberElem
 	 * Divides the evaluation values of both arguments
 	 * @return divided evaluated arguments
 	 */
-	public Double eval(XPSCase theCase) {
+	public Double eval(Session theCase) {
 		if (super.eval(theCase) == null)
 			return null;
 		else

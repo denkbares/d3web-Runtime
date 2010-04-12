@@ -84,7 +84,9 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  * @author Christian Betz, joba
  * @see XPSCaseObject
  */
-public class D3WebCase implements XPSCase {
+public class D3WebCase implements Session {
+	
+	private final DefaultInterview interview;
 
 	private final KnowledgeBase kb;
 	private final DefaultPropagationController propagationController;
@@ -126,6 +128,7 @@ public class D3WebCase implements XPSCase {
 	D3WebCase(KnowledgeBase kb, QASetManagerFactory theQamFactory) {
 		this.kb = kb;
 		this.propagationController = new DefaultPropagationController(this);
+		this.interview = new DefaultInterview(this);
 		init(theQamFactory);
 		// register some common problem solving methods
 		// first add the methods
@@ -210,6 +213,7 @@ public class D3WebCase implements XPSCase {
 	D3WebCase(KnowledgeBase kb, QASetManagerFactory theQamFactory, List<PSMethod> psmethods) {
 		this.kb = kb;
 		this.propagationController = new DefaultPropagationController(this);
+		this.interview = new DefaultInterview(this);
 		init(theQamFactory);
 		// register psms
 		for (PSMethod method : psmethods) {
@@ -228,6 +232,11 @@ public class D3WebCase implements XPSCase {
 			id = createNewCaseId();
 		}
 		return id;
+	}
+	
+	@Override
+	public Interview getInterviewManager() {
+		return interview;
 	}
 
 	private String createNewCaseId() {
@@ -257,7 +266,7 @@ public class D3WebCase implements XPSCase {
 	 */
 	@Deprecated
 	public void addUsedPSMethod(PSMethod psmethod) {
-		if (getUsedPSMethods().contains(psmethod)) return;
+		if (getPSMethods().contains(psmethod)) return;
 
 		this.usedPSMethods.add(psmethod);
 		psmethod.init(this);
@@ -348,7 +357,7 @@ public class D3WebCase implements XPSCase {
 	 */
 	@Override
 	public PSMethod getPSMethodInstance(Class<? extends PSMethod> context) {
-		for (PSMethod psm : getUsedPSMethods()) {
+		for (PSMethod psm : getPSMethods()) {
 			if (psm.getClass().equals(context)) {
 				return psm;
 			}
@@ -368,14 +377,14 @@ public class D3WebCase implements XPSCase {
 	}
 
 	@Override
-	public List<PSMethod> getUsedPSMethods() {
+	public List<PSMethod> getPSMethods() {
 		return usedPSMethods;
 	}
 
 	/**
 	 * Checks if there are reasons for finishing the case.
 	 * 
-	 * @see XPSCase#isFinished()
+	 * @see Session#isFinished()
 	 */
 	@Override
 	public boolean isFinished() {
@@ -430,7 +439,7 @@ public class D3WebCase implements XPSCase {
 	/**
 	 * Adds a new reason for quiting the current case.
 	 * 
-	 * @see XPSCase#setFinished(boolean f)
+	 * @see Session#setFinished(boolean f)
 	 */
 	@Override
 	public void finish(Class<? extends KnowledgeSlice> reasonForFinishCase) {

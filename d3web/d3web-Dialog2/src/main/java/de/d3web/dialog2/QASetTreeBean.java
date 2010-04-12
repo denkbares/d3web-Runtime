@@ -33,7 +33,7 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.interviewmanager.MQDialogController;
 import de.d3web.dialog2.util.DialogUtils;
 
@@ -58,12 +58,12 @@ public class QASetTreeBean {
 		DialogUtils.getQuestionPageBean().moveToQASet(node.getIdentifier());
 	}
 
-	public void checkNodeStyles(XPSCase theCase) {
+	public void checkNodeStyles(Session theCase) {
 		TreeNode root = getQaSetTreeModel().getNodeById("0");
 		checkNodeStylesRecursive(root, theCase);
 	}
 
-	private void checkNodeStylesRecursive(TreeNode node, XPSCase theCase) {
+	private void checkNodeStylesRecursive(TreeNode node, Session theCase) {
 		QASet actual = theCase.getKnowledgeBase().searchQASet(
 				node.getIdentifier());
 		MQDialogController mqdc = DialogUtils.getMQDialogController(theCase);
@@ -142,7 +142,7 @@ public class QASetTreeBean {
 	}
 
 	public void init() {
-		XPSCase theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getTheCase();
 		QASet root = theCase.getKnowledgeBase().getRootQASet();
 		TreeNode treeData = new TreeNodeBase(QASetTreeBean.STANDARD_TYPE, root
 				.getName(), root.getId(), false);

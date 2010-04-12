@@ -21,7 +21,7 @@
 package de.d3web.caseGeneration;
 
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.empiricalTesting.Rating;
 import de.d3web.empiricalTesting.StateRating;
 
@@ -35,7 +35,7 @@ import de.d3web.empiricalTesting.StateRating;
 public class StateRatingStrategy implements RatingStrategy {
 
 	@Override
-	public Rating getRatingFor(Solution solution, XPSCase theCase) {
+	public Rating getRatingFor(Solution solution, Session theCase) {
 		return new StateRating(solution.getState(theCase));
 	}
 	

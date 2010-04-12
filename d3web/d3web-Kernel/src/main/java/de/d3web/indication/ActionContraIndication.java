@@ -27,7 +27,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.QASet;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.indication.inference.PSMethodContraIndication;
 
 /**
@@ -45,7 +45,7 @@ public class ActionContraIndication extends PSAction {
 	 * @param theCase current case
 	 */
 	@Override
-	public void doIt(XPSCase theCase, Rule rule) {
+	public void doIt(Session theCase, Rule rule) {
 		Iterator<QASet> qaset = getQASets().iterator();
 		while (qaset.hasNext()) {
 			(qaset.next()).addContraReason(
@@ -88,7 +88,7 @@ public class ActionContraIndication extends PSAction {
 	 * @param theCase current case
 	 */
 	@Override
-	public void undo(XPSCase theCase, Rule rule) {
+	public void undo(Session theCase, Rule rule) {
 		Iterator<QASet> qaset = getQASets().iterator();
 		while (qaset.hasNext()) {
 			((QASet) qaset.next()).removeContraReason(

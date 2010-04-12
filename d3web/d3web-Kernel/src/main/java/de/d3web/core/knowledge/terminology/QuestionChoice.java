@@ -29,7 +29,7 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestionChoice;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.UndefinedValue;
@@ -81,7 +81,7 @@ public abstract class QuestionChoice extends Question {
 	 * else find the alternative in all currently (depend on the case) available alternatives
 	 * @return Answer (either instanceof AnswerChoice or AnswerUnknown)
 	 **/
-	public Answer getAnswer(XPSCase theCase, String id) {
+	public Answer getAnswer(Session theCase, String id) {
 		if (id == null)
 			return null;
 		if (theCase == null)
@@ -105,7 +105,7 @@ public abstract class QuestionChoice extends Question {
 	 *	@param theCase currentCase
 	 *	@return a Vector of all alternatives that are not suppressed by any RuleSuppress
 	 **/
-	public List<Answer> getAlternatives(XPSCase theCase) {
+	public List<Answer> getAlternatives(Session theCase) {
 		CaseQuestionChoice caseQ = (CaseQuestionChoice) theCase.getCaseObject(this);
 		List<Answer> suppVec = caseQ.getMergedSuppressAlternatives();
 		List<Answer> result = new LinkedList<Answer>();
@@ -119,7 +119,7 @@ public abstract class QuestionChoice extends Question {
 	}
 
 	@Override
-	public abstract Value getValue(XPSCase theCase);
+	public abstract Value getValue(Session theCase);
 
 
 	/**
@@ -151,7 +151,7 @@ public abstract class QuestionChoice extends Question {
 		return res;
 	}
 
-	public String verbalizeWithoutValue(XPSCase theCase) {
+	public String verbalizeWithoutValue(Session theCase) {
 		String res = "\n " + super.toString();
 		Iterator<Answer> iter = getAlternatives(theCase).iterator();
 		while (iter.hasNext())
@@ -160,7 +160,7 @@ public abstract class QuestionChoice extends Question {
 	}
 
 	@Override
-	public String verbalizeWithValue(XPSCase theCase) {
+	public String verbalizeWithValue(Session theCase) {
 		return verbalizeWithoutValue(theCase)
 			+ "\n Wert -> "
 			+ getValue(theCase);
@@ -171,12 +171,12 @@ public abstract class QuestionChoice extends Question {
 	 * according to a give XPSCase. This value is used to
 	 * be processed by a Num2ChoiceSchema.
 	 */
-	public Double getNumericalSchemaValue(XPSCase theCase) {
+	public Double getNumericalSchemaValue(Session theCase) {
 		return ((CaseQuestionChoice) theCase.getCaseObject(this)).getNumericalSchemaValue();
 	}
 
 
-	private void setNumericalSchemaValue(XPSCase theCase, Double newValue) {
+	private void setNumericalSchemaValue(Session theCase, Double newValue) {
 		((CaseQuestionChoice) theCase.getCaseObject(this)).setNumericalSchemaValue(newValue);
 	}
 	
@@ -193,7 +193,7 @@ public abstract class QuestionChoice extends Question {
 		}
 	}
 	
-	protected Value convertNumericalValue(XPSCase theCase, double doubleValue) {
+	protected Value convertNumericalValue(Session theCase, double doubleValue) {
 		Num2ChoiceSchema schema = getSchemaForQuestion();
 		if (schema != null) {
 			Double numValue = null;
@@ -215,7 +215,7 @@ public abstract class QuestionChoice extends Question {
 		}
 	}
 	
-	public Value getValue(XPSCase theCase, Double value) {
+	public Value getValue(Session theCase, Double value) {
 		if (value == null) {
 			return UndefinedValue.getInstance();
 		}

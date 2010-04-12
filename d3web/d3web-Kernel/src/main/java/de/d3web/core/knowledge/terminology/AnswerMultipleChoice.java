@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerChoice;
 
 public class AnswerMultipleChoice extends Answer {
@@ -68,7 +68,7 @@ public class AnswerMultipleChoice extends Answer {
 	}
 	
 	@Override
-	public Object getValue(XPSCase theCase) {
+	public Object getValue(Session theCase) {
 		return choices.toString();
 	}
 

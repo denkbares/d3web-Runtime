@@ -44,7 +44,7 @@ import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.ChoiceValue;
@@ -74,7 +74,7 @@ public class QuestionPageRenderer extends Renderer {
 		FacesContext.getCurrentInstance().renderResponse();
 	}
 
-	private static Value getAnswer(UIComponent component, XPSCase theCase, Question q, String idOrValue) {
+	private static Value getAnswer(UIComponent component, Session theCase, Question q, String idOrValue) {
 		if (idOrValue.equals(AnswerUnknown.UNKNOWN_ID)) {
 			return Unknown.getInstance();
 		}
@@ -171,7 +171,7 @@ public class QuestionPageRenderer extends Renderer {
 		return null;
 	}
 
-	private void answerQuestion(UIComponent component, Object[] answerids, XPSCase theCase, Question q) {
+	private void answerQuestion(UIComponent component, Object[] answerids, Session theCase, Question q) {
 		if (q == null || answerids == null || answerids.length == 0) {
 			return;
 		}
@@ -222,7 +222,7 @@ public class QuestionPageRenderer extends Renderer {
 
 	@Override
 	public void decode(FacesContext context, UIComponent component) {
-		XPSCase theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getTheCase();
 		List<Question> qList = DialogUtils.getQuestionPageBean().getQuestionListToRender();
 
 		Map<String, String[]> requestMap = context.getExternalContext().getRequestParameterValuesMap();
@@ -304,7 +304,7 @@ public class QuestionPageRenderer extends Renderer {
 		List<Question> qList = DialogUtils.getQuestionPageBean().getQuestionListToRender();
 		QuestionPageLayout layoutDef = getLayout();
 
-		XPSCase theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getTheCase();
 		ResponseWriter writer = context.getResponseWriter();
 		if (DialogUtils.getImageMapBean().hasImagesForQContainer(qList)) {
 			QuestionImageMapRendererUtils.renderQuestionsImageMap(writer, component,
@@ -335,7 +335,7 @@ public class QuestionPageRenderer extends Renderer {
 		}
 	}
 
-	private Object getAnswerNameListFromIDList(List<String> answerIDs, Question q, XPSCase theCase) {
+	private Object getAnswerNameListFromIDList(List<String> answerIDs, Question q, Session theCase) {
 		List<String> answerNameList = new ArrayList<String>();
 		for (String answerID : answerIDs) {
 			AnswerChoice a = (AnswerChoice) ((QuestionChoice) q).getAnswer(theCase,
@@ -362,7 +362,7 @@ public class QuestionPageRenderer extends Renderer {
 		return false;
 	}
 
-	private void setValueInCase(XPSCase theCase, Question q, Value answers) {
+	private void setValueInCase(Session theCase, Question q, Value answers) {
 		if (theCase.isFinished()) {
 			theCase.continueCase();
 		}

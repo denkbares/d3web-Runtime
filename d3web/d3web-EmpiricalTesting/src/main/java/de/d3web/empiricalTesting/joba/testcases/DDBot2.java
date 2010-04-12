@@ -31,7 +31,7 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.CaseFactory;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.interviewmanager.MQDialogController;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.ChoiceValue;
@@ -60,7 +60,7 @@ public class DDBot2 {
 
 	public void traverse(KnowledgeBase knowledge, List<Finding> initFindings)
 			throws Exception {
-		XPSCase theCase = createCase(knowledge, initFindings);
+		Session theCase = createCase(knowledge, initFindings);
 
 		RatedTestCase ratedTestCase = new RatedTestCase();
 		ratedTestCase.addFindings(initFindings);
@@ -88,7 +88,7 @@ public class DDBot2 {
 		List<Finding> flattendFindings = flattenFindings(theSeqCase);
 		List<AnswerChoice> nextAnswers = currentQuestion.getAllAlternatives();
 		for (AnswerChoice nextAnswer : nextAnswers) {
-			XPSCase theCase = createCase(knowledge, flattendFindings);
+			Session theCase = createCase(knowledge, flattendFindings);
 			ChoiceValue choiceValue = new ChoiceValue(nextAnswer);
 			setCaseValue(theCase, currentQuestion, choiceValue);
 
@@ -113,9 +113,9 @@ public class DDBot2 {
 
 	}
 
-	private XPSCase createCase(KnowledgeBase knowledge, List<Finding> findings)
+	private Session createCase(KnowledgeBase knowledge, List<Finding> findings)
 			throws Exception {
-		XPSCase theCase = CaseFactory.createXPSCase(knowledge,
+		Session theCase = CaseFactory.createXPSCase(knowledge,
 				MQDialogController.class);
 
 		for (Finding finding : findings) {
@@ -137,7 +137,7 @@ public class DDBot2 {
 		return findings;
 	}
 
-	private List<RatedSolution> toRatedSolutions(XPSCase theCase) {
+	private List<RatedSolution> toRatedSolutions(Session theCase) {
 		List<RatedSolution> ratedSolutions = new ArrayList<RatedSolution>();
 		for (Solution diagnosis : theCase.getKnowledgeBase().getDiagnoses()) {
 			double score = diagnosis.getScore(theCase, PSMethodHeuristic.class)
@@ -153,7 +153,7 @@ public class DDBot2 {
 	}
 
 	private RatedTestCase createRatedTestCase(QuestionChoice currentQuestion,
-			ChoiceValue nextAnswer, XPSCase theCase) {
+			ChoiceValue nextAnswer, Session theCase) {
 		RatedTestCase ratedCase = new RatedTestCase();
 		ratedCase.add(new Finding(currentQuestion, nextAnswer));
 		ratedCase.addExpected(toRatedSolutions(theCase));
@@ -163,7 +163,7 @@ public class DDBot2 {
 		return ratedCase;
 	}
 
-	private QuestionChoice getNextQuestion(XPSCase theCase) throws Exception {
+	private QuestionChoice getNextQuestion(Session theCase) throws Exception {
 		MQDialogController controller = (MQDialogController) theCase
 				.getQASetManager();
 		QASet next = controller.moveToNextRemainingQASet();
@@ -178,7 +178,7 @@ public class DDBot2 {
 		}
 	}
 
-	public void setCaseValue(XPSCase theCase, Question q, Value a)
+	public void setCaseValue(Session theCase, Question q, Value a)
 			throws Exception {
 		theCase.setValue(q, a);
 

@@ -25,7 +25,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.dialog2.basics.knowledge.CaseManager;
 import de.d3web.dialog2.basics.knowledge.KBDescriptorLoader;
 import de.d3web.dialog2.basics.knowledge.KnowledgeBaseRepository;
@@ -37,7 +37,7 @@ import de.d3web.dialog2.util.SaveCaseThread;
 
 public class WebDialog {
 
-	private XPSCase theCase;
+	private Session theCase;
 
 	private long caseStartTime = System.currentTimeMillis();
 
@@ -71,7 +71,7 @@ public class WebDialog {
 		return caseStartTime;
 	}
 
-	public XPSCase getTheCase() {
+	public Session getTheCase() {
 		return theCase;
 	}
 
@@ -110,7 +110,7 @@ public class WebDialog {
 		caseStartTime = System.currentTimeMillis();
 	}
 
-	public void setTheCase(XPSCase theCase) {
+	public void setTheCase(Session theCase) {
 		this.theCase = theCase;
 		DialogUtils.getKBLoadBean().setLoadedKb(theCase.getKnowledgeBase());
 		DialogUtils.getKBLoadBean().setKbID(theCase.getKnowledgeBase().getId());

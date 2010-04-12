@@ -20,7 +20,7 @@ package de.d3web.core.inference.condition;
 
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionText;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.TextValue;
 
 public abstract class CondTextQuestion extends CondQuestion {
@@ -32,7 +32,7 @@ public abstract class CondTextQuestion extends CondQuestion {
 	protected String value;
 
 	@Override
-	public boolean eval(XPSCase theCase)
+	public boolean eval(Session theCase)
 			throws NoAnswerException, UnknownAnswerException {
 		checkAnswer(theCase);
 		TextValue value = (TextValue) question.getValue(theCase);

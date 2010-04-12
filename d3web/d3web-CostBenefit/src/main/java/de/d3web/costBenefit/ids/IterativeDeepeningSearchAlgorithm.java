@@ -18,7 +18,7 @@
  */
 package de.d3web.costBenefit.ids;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.costBenefit.inference.AbortStrategy;
 import de.d3web.costBenefit.inference.SearchAlgorithm;
 import de.d3web.costBenefit.model.SearchModel;
@@ -35,7 +35,7 @@ public class IterativeDeepeningSearchAlgorithm implements SearchAlgorithm {
 	private AbortStrategy abortStrategy;
 	
 	@Override
-	public void search(XPSCase theCase, SearchModel model) {
+	public void search(Session theCase, SearchModel model) {
 		IterativeDeepeningSearch iterativeDeepeningSearch = new IterativeDeepeningSearch(model);
 		if (abortStrategy!=null) iterativeDeepeningSearch.setAbortStrategy(abortStrategy);
 		iterativeDeepeningSearch.search(theCase);

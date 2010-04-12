@@ -31,7 +31,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.ValueFactory;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.dialog2.basics.knowledge.CaseManager;
 import de.d3web.dialog2.basics.knowledge.CaseObjectDescriptor;
@@ -46,16 +46,16 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 
 	private List<DataGroup> dataGroupWithFrequentnessData;
 
-	private List<XPSCase> savedCases;
+	private List<Session> savedCases;
 
-	private int getAbsoluteFreq(QuestionChoice q, String ansID, XPSCase theCase) {
+	private int getAbsoluteFreq(QuestionChoice q, String ansID, Session theCase) {
 		if (savedCases == null) {
 			setUpSavedCases(theCase);
 		}
 		// absolute frequency of this answer: how often is this answer set in
 		// all cases...
 		int absoluteFreq = 0;
-		for (XPSCase oneCase : savedCases) {
+		for (Session oneCase : savedCases) {
 			Value answer = q.getValue(oneCase);
 			if (ValueFactory.getID_or_Value(answer).equals(ansID)) {
 				absoluteFreq++;
@@ -70,7 +70,7 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 		// add stuff!!!
 		if (selectedData != null) {
 			for (String qID : selectedData) {
-				XPSCase theCase = DialogUtils.getDialog().getTheCase();
+				Session theCase = DialogUtils.getDialog().getTheCase();
 				Question q = theCase.getKnowledgeBase().searchQuestion(qID);
 				if (q != null && q instanceof QuestionChoice) {
 					QuestionChoice qCh = (QuestionChoice) q;
@@ -123,7 +123,7 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 
 	@Override
 	public boolean isDataAvailable() {
-		XPSCase theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getTheCase();
 		if (theCase == null) {
 			return false;
 		}
@@ -148,15 +148,15 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 		this.selectedData = selectedData;
 	}
 
-	private void setUpSavedCases(XPSCase theCase) {
-		savedCases = new ArrayList<XPSCase>();
+	private void setUpSavedCases(Session theCase) {
+		savedCases = new ArrayList<Session>();
 		Collection<CaseObjectDescriptor> codForKB = CaseManager.getInstance()
 				.getCaseObjectDescriptorsForKb(
 						theCase.getKnowledgeBase().getId());
 		for (CaseObjectDescriptor cod : codForKB) {
 			CaseObject o = CaseRepository.getInstance().getCaseById(
 					theCase.getKnowledgeBase().getId(), cod.getCaseId());
-			XPSCase newCase = DialogUtils.createNewAnsweredCase(o, theCase
+			Session newCase = DialogUtils.createNewAnsweredCase(o, theCase
 					.getKnowledgeBase());
 			savedCases.add(newCase);
 		}

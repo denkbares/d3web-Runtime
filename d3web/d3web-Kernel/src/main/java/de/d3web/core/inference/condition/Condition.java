@@ -25,7 +25,7 @@ import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerUnknown;
 
 /**
@@ -34,20 +34,20 @@ import de.d3web.core.session.values.AnswerUnknown;
  * ({@link XCLRelation}). 
  * Every condition holds a collection of objects, that are constrained
  * in this condition, and an eval method to evaluate this condition
- * with respect to a given {@link XPSCase}. 
+ * with respect to a given {@link Session}. 
  * @author Joachim Baumeister, Christian Betz
  */
 public interface Condition {
 
 	/**
 	 * Evaluates this condition with respect to the findings
-	 * given in the specified {@link XPSCase}. {@link NoAnswerException} and 
+	 * given in the specified {@link Session}. {@link NoAnswerException} and 
 	 * {@link UnknownAnswerException} exceptions are thrown in the case, when 
 	 * the condition cannot be strictly evaluated: If this condition is contained 
 	 * in a {@link CondNot} condition, then returning true/false is not
 	 * appropriate.
 	 * 
-	 * @param theCase the given {@link XPSCase}
+	 * @param theCase the given {@link Session}
 	 * @return true/false for positive/negative evaluation; 
 	 *         an appropriate {@link Exception} otherwise
 	 * @throws NoAnswerException when a required sub-condition of this 
@@ -55,7 +55,7 @@ public interface Condition {
 	 * @throws UnknownAnswerException when a required sub-conditions contains a 
 	 *         question having an {@link AnswerUnknown} assigned
 	 */
-	public boolean eval(XPSCase theCase)
+	public boolean eval(Session theCase)
 		throws NoAnswerException, UnknownAnswerException;
 
 	/**

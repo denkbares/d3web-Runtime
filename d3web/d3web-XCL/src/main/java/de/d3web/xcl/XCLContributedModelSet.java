@@ -26,7 +26,7 @@ import java.util.List;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.xcl.inference.PSMethodXCL;
 /**
  * Stores XCLModels in one KnowledgeSlice
@@ -59,7 +59,7 @@ public class XCLContributedModelSet implements KnowledgeSlice {
 	}
 
 	@Override
-	public boolean isUsed(XPSCase theCase) {
+	public boolean isUsed(Session theCase) {
 		return true;
 	}
 

@@ -32,7 +32,7 @@ import javax.faces.render.Renderer;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.info.MMInfoObject;
 import de.d3web.core.knowledge.terminology.info.MMInfoSubject;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.dialog2.basics.settings.ResourceRepository;
 import de.d3web.dialog2.component.html.UIMMInfoPage;
 import de.d3web.dialog2.util.DialogUtils;
@@ -44,7 +44,7 @@ public class MMInfoPageRenderer extends Renderer {
 	    throws IOException {
 	ResponseWriter writer = context.getResponseWriter();
 
-	XPSCase theCase = DialogUtils.getDialog().getTheCase();
+	Session theCase = DialogUtils.getDialog().getTheCase();
 
 	String kbid = theCase.getKnowledgeBase().getId();
 

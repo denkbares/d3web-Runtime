@@ -24,7 +24,7 @@
  */
 package de.d3web.core.session.interviewmanager;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * [DOC]
@@ -32,5 +32,5 @@ import de.d3web.core.session.XPSCase;
  *
  */
 public interface QASetManagerFactory {
-	public QASetManager createQASetManager(XPSCase theCase);
+	public QASetManager createQASetManager(Session theCase);
 }

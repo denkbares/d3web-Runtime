@@ -94,7 +94,7 @@ import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.ChoiceValue;
@@ -327,7 +327,7 @@ public class XMLRenderer {
 	 * Renders the complete explanation of a diagnosis.
 	 * If "showStatus" is true, the current status of the diagnosis and all reasons will be regarded.
 	 */
-	public static StringBuffer renderDiagnosisExplanation(Solution diag, XPSCase theCase, boolean showStatus) {
+	public static StringBuffer renderDiagnosisExplanation(Solution diag, Session theCase, boolean showStatus) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(renderReference(diag,theCase,showStatus));
 	
@@ -351,7 +351,7 @@ public class XMLRenderer {
 	 * Renders the complete explanation of an QASet.
 	 * If "showStatus" is true, the current status of the QASet and all reasons will be regarded.
 	 */
-	public static StringBuffer renderQASetExplanation(QASet qaSet, XPSCase theCase, boolean showStatus) {
+	public static StringBuffer renderQASetExplanation(QASet qaSet, Session theCase, boolean showStatus) {
 
 		StringBuffer reasons = new StringBuffer();
 		reasons.append(renderQASetReasons(qaSet,theCase,PSMethodInit.class,showStatus));
@@ -393,7 +393,7 @@ public class XMLRenderer {
 	 * Renders the explanation of a single RuleComplex.
 	 * If "showStatus" is true, the current status of the RuleComplex and all reasons will be regarded.
 	 */
-	public static StringBuffer renderRuleComplexExplanation(Rule rc, XPSCase theCase, boolean showStatus) {
+	public static StringBuffer renderRuleComplexExplanation(Rule rc, Session theCase, boolean showStatus) {
 		return (StringBuffer) renderRuleComplex(rc, theCase, showStatus).get(0);
 	}
 
@@ -401,7 +401,7 @@ public class XMLRenderer {
 	 * Renders the referenced QASet. (If existing, the schema will be included.)
 	 * If "showStatus" is true, the current status of the QASet will be regarded.
 	 */
-	public static StringBuffer renderReference(QASet qaSet, XPSCase theCase, boolean showStatus) {
+	public static StringBuffer renderReference(QASet qaSet, Session theCase, boolean showStatus) {
 		StringBuffer sb = new StringBuffer();
 		StringBuffer questionState = new StringBuffer();
 		StringBuffer schemaInfos = new StringBuffer();
@@ -508,7 +508,7 @@ public class XMLRenderer {
 	 * Renders the referenced Diagnosis.
 	 * If "showStatus" is true, the current status of the diagnosis will be regarded.
 	 */
-	public static StringBuffer renderReference(Solution diag, XPSCase theCase, boolean showStatus) {
+	public static StringBuffer renderReference(Solution diag, Session theCase, boolean showStatus) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<Reference>");
 		sb.append(renderDiagnosisObject(diag));
@@ -524,7 +524,7 @@ public class XMLRenderer {
 	}
 
 
-	public static StringBuffer renderQASetReasons(QASet qaSet, XPSCase theCase, Class<? extends PSMethod> context, boolean showStatus) {
+	public static StringBuffer renderQASetReasons(QASet qaSet, Session theCase, Class<? extends PSMethod> context, boolean showStatus) {
 		StringBuffer sb = new StringBuffer();
 		KnowledgeSlice c = qaSet.getKnowledge(context,MethodKind.BACKWARD);
 		if (c != null) {
@@ -585,7 +585,7 @@ public class XMLRenderer {
 	 * @param showStatus
 	 * @return List (List of (StringBuffer) or List of (StringBuffer,Double)
 	 */
-	private static List<?> renderRuleComplex(Rule rc, XPSCase theCase, boolean showStatus) {
+	private static List<?> renderRuleComplex(Rule rc, Session theCase, boolean showStatus) {
 		List<Object> returnList = new LinkedList<Object>();
 		StringBuffer sb = new StringBuffer();
 		sb.append("<KnowledgeSlice ID=\"" + rc.getId() + "\"");
@@ -786,7 +786,7 @@ public class XMLRenderer {
 	}
 	
 	
-	private static StringBuffer renderParentQASetProReason(QASet qaSet, boolean showStatus, XPSCase theCase) {
+	private static StringBuffer renderParentQASetProReason(QASet qaSet, boolean showStatus, Session theCase) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<KnowledgeSlice");
 		if (showStatus) {
@@ -807,7 +807,7 @@ public class XMLRenderer {
 		return(sb);
 	}
 	
-	private static StringBuffer renderParentQASetContraReason(QASet qaSet, boolean showStatus, XPSCase theCase) {
+	private static StringBuffer renderParentQASetContraReason(QASet qaSet, boolean showStatus, Session theCase) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<KnowledgeSlice");
 		if (showStatus) {
@@ -840,7 +840,7 @@ public class XMLRenderer {
 	}
 
 
-	public static StringBuffer renderCondition(Condition cond, XPSCase theCase,
+	public static StringBuffer renderCondition(Condition cond, Session theCase,
 							boolean showStatus, boolean parentFired) {
 		StringBuffer sb = new StringBuffer();
 		if (cond instanceof TerminalCondition)
@@ -850,7 +850,7 @@ public class XMLRenderer {
 		return(sb);
 	}
 
-	private static StringBuffer renderConditionAsException(Condition cond, XPSCase theCase,
+	private static StringBuffer renderConditionAsException(Condition cond, Session theCase,
 							boolean showStatus, boolean parentFired) {
 		StringBuffer sb = new StringBuffer();
 		if (cond instanceof TerminalCondition)
@@ -860,7 +860,7 @@ public class XMLRenderer {
 		return(sb);
 	}
 
-	public static StringBuffer renderTCondition(TerminalCondition cond, XPSCase theCase,
+	public static StringBuffer renderTCondition(TerminalCondition cond, Session theCase,
 							boolean showStatus, boolean asException, boolean parentFired) {
 		StringBuffer sb = new StringBuffer();
 		List<?> statusValues = null;
@@ -986,7 +986,7 @@ public class XMLRenderer {
 		return(sb);
 	}
 
-	private static StringBuffer renderNonTCondition(NonTerminalCondition cond, XPSCase theCase,
+	private static StringBuffer renderNonTCondition(NonTerminalCondition cond, Session theCase,
 							boolean showStatus, boolean asException, boolean parentFired) {
 		StringBuffer sb = new StringBuffer();
 		List<?> statusValues = null;
@@ -1074,7 +1074,7 @@ public class XMLRenderer {
 	 * 					Boolean: condition is active
 	 * 					String: kind of condition-status
 	 */
-	private static List getStatusFor(Condition cond, XPSCase theCase,
+	private static List getStatusFor(Condition cond, Session theCase,
 							boolean asException, boolean parentFired) {
 		LinkedList returnList = new LinkedList();
 		try {

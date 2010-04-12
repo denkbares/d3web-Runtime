@@ -33,7 +33,7 @@ import javax.faces.render.Renderer;
 
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseDiagnosis;
 import de.d3web.dialog2.WebDialog;
 import de.d3web.dialog2.util.DialogUtils;
@@ -93,7 +93,7 @@ public class CorrectionPageRenderer extends Renderer {
 	    throws IOException {
 	ResponseWriter writer = context.getResponseWriter();
 
-	XPSCase theCase = DialogUtils.getDialog().getTheCase();
+	Session theCase = DialogUtils.getDialog().getTheCase();
 
 	DialogRenderUtils.renderTableWithClass(writer, component, "panelBox",
 		2, 0);
@@ -109,9 +109,9 @@ public class CorrectionPageRenderer extends Renderer {
 
 	// get established and suggested diagnoses
 	List<Solution> diagListEstablished = theCase
-		.getDiagnoses(DiagnosisState.ESTABLISHED, theCase.getUsedPSMethods());
+		.getDiagnoses(DiagnosisState.ESTABLISHED, theCase.getPSMethods());
 	List<Solution> diagListSuggested = theCase
-		.getDiagnoses(DiagnosisState.SUGGESTED, theCase.getUsedPSMethods());
+		.getDiagnoses(DiagnosisState.SUGGESTED, theCase.getPSMethods());
 	// filter duplicate diagoses (some are userselected established and
 	// heuristic suggested)
 	List<Solution> diagListSuggestedFiltered = new ArrayList<Solution>();
@@ -206,7 +206,7 @@ public class CorrectionPageRenderer extends Renderer {
 	}
     }
 
-    private List<Solution> getRemainingDiags(XPSCase theCase,
+    private List<Solution> getRemainingDiags(Session theCase,
 	    List<Solution> diagListEstablished,
 	    List<Solution> diagListSuggested) {
 	List<Solution> diagList = theCase.getKnowledgeBase().getDiagnoses();

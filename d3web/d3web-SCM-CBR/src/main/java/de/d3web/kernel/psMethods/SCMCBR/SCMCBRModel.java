@@ -17,7 +17,7 @@ import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.IEventSource;
 import de.d3web.core.session.KBOEventListener;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.xcl.XCLRelationType;
 
 
@@ -55,7 +55,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 	private Collection<SCMCBRRelation> contradictingRelations;
 	public static String DEFAULT_SOLUTION = "default_solution";
 
-	private Map<XPSCase, SCMCBRInferenceTrace> explanation = new HashMap<XPSCase, SCMCBRInferenceTrace>();
+	private Map<Session, SCMCBRInferenceTrace> explanation = new HashMap<Session, SCMCBRInferenceTrace>();
 	
 	
 	private Solution solution;
@@ -69,7 +69,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		contradictingRelations = new ArrayList<SCMCBRRelation>();
 	}
 
-	public SCMCBRInferenceTrace getInferenceTrace(XPSCase c) {
+	public SCMCBRInferenceTrace getInferenceTrace(Session c) {
 		return explanation.get(c);
 	}
 
@@ -165,7 +165,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		return relationMap;
 	}
 
-	public DiagnosisState getState(XPSCase theCase) {
+	public DiagnosisState getState(Session theCase) {
 		SCMCBRInferenceTrace trace = new SCMCBRInferenceTrace();
 		explanation.put(theCase, trace);
 		evalRelations(trace, theCase);
@@ -201,7 +201,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		return DiagnosisState.UNCLEAR;
 	}
 
-	private void evalRelations(SCMCBRInferenceTrace trace, XPSCase c) {
+	private void evalRelations(SCMCBRInferenceTrace trace, Session c) {
 		for (SCMCBRRelation rel : relations) {
 			try {
 				boolean b = rel.eval(c);
@@ -264,7 +264,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 
 	}
 
-	public double computeSupport(XPSCase theCase) {
+	public double computeSupport(Session theCase) {
 		double positiveRelationsWeightedSum = weightedSumOf(computeRelations(
 				theCase, true));
 		double negativeRelationsWeightedSum = weightedSumOf(computeRelations(
@@ -285,7 +285,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		return all;
 	}
 
-	public double computeXCLScore(XPSCase theCase) {
+	public double computeXCLScore(Session theCase) {
 		double positiveRelationsWeightedSum = weightedSumOf(computeRelations(
 				theCase, true));
 		double negativeRelationsWeightedSum = weightedSumOf(computeRelations(
@@ -303,7 +303,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		return sum;
 	}
 
-	private Collection<SCMCBRRelation> computeRelations(XPSCase theCase,
+	private Collection<SCMCBRRelation> computeRelations(Session theCase,
 			boolean direction) {
 		Collection<SCMCBRRelation> r = new ArrayList<SCMCBRRelation>();
 		Collection<SCMCBRRelation> toTest = new ArrayList<SCMCBRRelation>();	
@@ -461,7 +461,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		return PSMethodSCMCBR.class;
 	}
 
-	public boolean isUsed(XPSCase theCase) {
+	public boolean isUsed(Session theCase) {
 		return true;
 	}
 
@@ -512,7 +512,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		}
 	}
 
-	public void notifyListeners(XPSCase xpsCase, IEventSource source) {
+	public void notifyListeners(Session xpsCase, IEventSource source) {
 		if (listeners != null && xpsCase != null && source != null) {
 			for (KBOEventListener cl : new ArrayList<KBOEventListener>(listeners)) {
 				cl.notify(source, xpsCase);

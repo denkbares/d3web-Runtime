@@ -21,7 +21,7 @@
 package de.d3web.core.session.values;
 
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * answer class for numeric questions
@@ -48,7 +48,7 @@ public class AnswerNum extends Answer {
 		}
 
 		/** @return evaluated wrapper-object of type Double*/
-		public Double eval(XPSCase theCase) {
+		public Double eval(Session theCase) {
 			return value;
 		}
 
@@ -96,7 +96,7 @@ public class AnswerNum extends Answer {
 	 * Creation date: (13.09.2000 13:39:57)
 	 * @return numeric value of the answer (is instanceof Double or FormulaElement or null!)
 	 */
-	public Object getValue(XPSCase theCase) {
+	public Object getValue(Session theCase) {
 		if (value == null)
 			return null;
 		else

@@ -30,7 +30,7 @@ import de.d3web.core.inference.RuleSet;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.DiagnosisState.State;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.scoring.DiagnosisScore;
@@ -68,7 +68,7 @@ public class PSMethodTherapyIndication extends PSMethodAdapter {
 	 * Creation date: (05.10.00 13:41:07)
 	 * @return de.d3web.kernel.domainModel.DiagnosisState
 	 */
-	public DiagnosisState getState(XPSCase theCase, Solution diagnosis) {
+	public DiagnosisState getState(Session theCase, Solution diagnosis) {
 		DiagnosisScore diagnosisScore =
 			diagnosis.getScore(theCase, this.getClass());
 		if (diagnosisScore == null)
@@ -80,7 +80,7 @@ public class PSMethodTherapyIndication extends PSMethodAdapter {
 	/**
 	 * Check if NamedObject has nextQASet rules and check them, if available
 	 */
-	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
 		for (PropagationEntry change : changes) {
 			KnowledgeSlice knowledgeSlices = change.getObject().getKnowledge(this.getClass(), MethodKind.FORWARD);
 			if (knowledgeSlices == null) return;

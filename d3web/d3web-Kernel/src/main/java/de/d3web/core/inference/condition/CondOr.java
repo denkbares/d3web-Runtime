@@ -22,7 +22,7 @@ package de.d3web.core.inference.condition;
 
 import java.util.List;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 /**
  * Implements an "OR"-condition, where at least 
  * one sub-condition has to be true.
@@ -41,7 +41,7 @@ public class CondOr extends NonTerminalCondition {
 	}
 
 	@Override
-	public boolean eval(XPSCase theCase)
+	public boolean eval(Session theCase)
 		throws NoAnswerException, UnknownAnswerException {
 
 		boolean wasNoAnswer = false;

@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestionOC;
 import de.d3web.core.session.blackboard.XPSCaseObject;
 import de.d3web.core.session.values.AnswerChoice;
@@ -47,7 +47,7 @@ public class QuestionOC extends QuestionChoice {
 		super(id);
 	}
 
-	public XPSCaseObject createCaseObject(XPSCase session) {
+	public XPSCaseObject createCaseObject(Session session) {
 		return new CaseQuestionOC(this);
 	}
 
@@ -66,13 +66,13 @@ public class QuestionOC extends QuestionChoice {
 	 * @return a List of Answers which are currently the value of the question.
 	 */
 	@Override
-	public Value getValue(XPSCase theCase) {
+	public Value getValue(Session theCase) {
 		return ((CaseQuestionOC) theCase.getCaseObject(this)).getValue();
 	}
 
 
 	@Override
-	public void setValue(XPSCase theCase, Value value) throws IllegalArgumentException {
+	public void setValue(Session theCase, Value value) throws IllegalArgumentException {
 		if (value == null) {
 			((CaseQuestionOC) theCase.getCaseObject(this)).setValue(UndefinedValue.getInstance());
 		}

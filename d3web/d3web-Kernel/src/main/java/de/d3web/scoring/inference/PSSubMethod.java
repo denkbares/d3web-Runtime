@@ -21,12 +21,12 @@
 package de.d3web.scoring.inference;
 
 import de.d3web.core.inference.PSMethodAdapter;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 
 public abstract class PSSubMethod extends PSMethodAdapter {
 
-	public abstract boolean isActivated(XPSCase theCase);
+	public abstract boolean isActivated(Session theCase);
 
 	@Override
 	public Fact mergeFacts(Fact[] fatcs) {

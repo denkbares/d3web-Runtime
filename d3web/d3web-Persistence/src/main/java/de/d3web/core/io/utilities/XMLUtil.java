@@ -41,7 +41,7 @@ import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerChoice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
@@ -384,7 +384,7 @@ public class XMLUtil {
 	 *            or value of the Answer
 	 * @return value instance
 	 */
-	public static Value getAnswer(XPSCase theCase, Question q, String idOrValue) {
+	public static Value getAnswer(Session theCase, Question q, String idOrValue) {
 
 		if (idOrValue.equals("MaU")) {
 			return Unknown.getInstance();

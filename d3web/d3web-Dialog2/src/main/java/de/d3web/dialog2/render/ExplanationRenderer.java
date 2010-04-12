@@ -36,7 +36,7 @@ import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.dialog2.component.html.UIExplanation;
 import de.d3web.dialog2.util.DialogUtils;
 import de.d3web.scoring.ActionHeuristicPS;
@@ -45,7 +45,7 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
 public class ExplanationRenderer extends Renderer {
 
 	public static void renderDiagStatusAndScore(FacesContext context,
-			XPSCase theCase, Solution diag) throws IOException {
+			Session theCase, Solution diag) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		writer.writeText(" (= "
 				+ ExplanationRendererUtils.getStateTranslation(diag.getState(
@@ -63,7 +63,7 @@ public class ExplanationRenderer extends Renderer {
 		String expl = (String) ((UIOutput) component).getValue();
 		String toExplain = ((UIExplanation) component).getDiag();
 
-		XPSCase theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getTheCase();
 
 		boolean explainReason = false;
 		boolean explainDerivation = false;

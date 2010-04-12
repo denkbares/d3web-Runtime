@@ -33,7 +33,7 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.CaseFactory;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.costBenefit.inference.PSMethodCostBenefit;
 import de.d3web.costBenefit.inference.StateTransition;
 
@@ -44,8 +44,8 @@ import de.d3web.costBenefit.inference.StateTransition;
  */
 public class Util {
 
-	public static XPSCase copyCase(XPSCase theCase) {
-		XPSCase testCase = CaseFactory
+	public static Session copyCase(Session theCase) {
+		Session testCase = CaseFactory
 				.createXPSCase(theCase.getKnowledgeBase(), new LinkedList<PSMethod>());
 		List<? extends Question> answeredQuestions = new LinkedList<Question>(
 				theCase.getAnsweredQuestions());
@@ -56,7 +56,7 @@ public class Util {
 		return testCase;
 	}
 
-	public static void undo(XPSCase theCase, Map<Question, Value> undo) {
+	public static void undo(Session theCase, Map<Question, Value> undo) {
 		for (Entry<Question, Value> entry : undo.entrySet()) {
 			entry.getKey().setValue(theCase, entry.getValue());
 			if (entry.getValue() == null) {
@@ -75,7 +75,7 @@ public class Util {
 		return null;
 	}
 	
-	public static void setQuestion(XPSCase theCase, String question, String answer) {
+	public static void setQuestion(Session theCase, String question, String answer) {
 		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(theCase.getKnowledgeBase());
 		theCase.getPropagationContoller().openPropagation();
 		QuestionOC question1 = (QuestionOC) kbm.findQuestion(question);

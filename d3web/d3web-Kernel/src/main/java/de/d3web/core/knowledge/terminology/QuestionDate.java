@@ -26,7 +26,7 @@ package de.d3web.core.knowledge.terminology;
 import java.util.Date;
 
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.blackboard.CaseQuestionDate;
 import de.d3web.core.session.blackboard.XPSCaseObject;
@@ -56,7 +56,7 @@ public class QuestionDate extends Question {
 
 
 	@Override
-	public Value getValue(XPSCase theCase) {
+	public Value getValue(Session theCase) {
 		return ((CaseQuestionDate) theCase.getCaseObject(this)).getValue();
 	}
 
@@ -72,7 +72,7 @@ public class QuestionDate extends Question {
 	// }
 
 	@Override
-	public void setValue(XPSCase theCase, Value value) throws IllegalArgumentException {
+	public void setValue(Session theCase, Value value) throws IllegalArgumentException {
 		if (value instanceof DateValue) {
 			((CaseQuestionDate) theCase.getCaseObject(this)).setValue((DateValue) value);
 		}
@@ -84,14 +84,14 @@ public class QuestionDate extends Question {
 	}
 
 
-	public XPSCaseObject createCaseObject(XPSCase session) {
+	public XPSCaseObject createCaseObject(Session session) {
 		return new CaseQuestionDate(this);
 	}
 
 	/**
 	 * @return AnswerNum (with value = value)
 	 */
-	public AnswerDate getAnswer(XPSCase theCase, String value) {
+	public AnswerDate getAnswer(Session theCase, String value) {
 		if (value == null) {
 			return null;
 		}else {
@@ -105,7 +105,7 @@ public class QuestionDate extends Question {
 	/**
 	 * @return AnswerNum (with value = value)
 	 */
-	public AnswerDate getAnswer(XPSCase theCase, Date value) {
+	public AnswerDate getAnswer(Session theCase, Date value) {
 		if (value == null) {
 			return null;
 		}else {

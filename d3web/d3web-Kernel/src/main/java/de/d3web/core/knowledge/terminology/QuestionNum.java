@@ -24,7 +24,7 @@ import java.util.List;
 import de.d3web.abstraction.formula.FormulaNumberElement;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.blackboard.CaseQuestionNum;
 import de.d3web.core.session.blackboard.XPSCaseObject;
@@ -53,7 +53,7 @@ public class QuestionNum extends Question {
 	 */
 	private List<NumericalInterval> valuePartitions = null;
 
-	public XPSCaseObject createCaseObject(XPSCase session) {
+	public XPSCaseObject createCaseObject(Session session) {
 		return new CaseQuestionNum(this);
 	}
 
@@ -62,7 +62,7 @@ public class QuestionNum extends Question {
 	 * @return 1-element list containing an AnswerNum
 	 */
 	@Override
-	public Value getValue(XPSCase theCase) {
+	public Value getValue(Session theCase) {
 		Object value =
 			((CaseQuestionNum) theCase.getCaseObject(this)).getValue();
 
@@ -77,7 +77,7 @@ public class QuestionNum extends Question {
 	/**
 	 * @return AnswerNum (with value = value)
 	 */
-	public AnswerNum getAnswer(XPSCase theCase, Double value) {
+	public AnswerNum getAnswer(Session theCase, Double value) {
 		if (value == null)
 			return null;
 		else {
@@ -96,7 +96,7 @@ public class QuestionNum extends Question {
 	}
 	
 	@Override
-	public void setValue(XPSCase theCase, Value value) {
+	public void setValue(Session theCase, Value value) {
 		if (value instanceof NumValue
 				|| value instanceof UndefinedValue
 				|| value instanceof Unknown) {

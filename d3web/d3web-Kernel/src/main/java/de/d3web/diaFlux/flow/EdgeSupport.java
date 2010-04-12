@@ -5,7 +5,7 @@ package de.d3web.diaFlux.flow;
 
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * 
@@ -26,7 +26,7 @@ public class EdgeSupport implements ISupport {
 
 
 
-	public boolean isValid(XPSCase theCase) {
+	public boolean isValid(Session theCase) {
 		
 		try {
 			return edge.getCondition().eval(theCase);

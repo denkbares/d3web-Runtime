@@ -20,7 +20,7 @@
 
 package de.d3web.core.inference;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 /**
  * Specifies that implementing classes are used as
  * explict knowledge. Each KnowledgeSlice needs to have
@@ -48,7 +48,7 @@ public interface KnowledgeSlice {
 	 * Has this knowledge already been used? (e.g. did a rule fire?)
 	 */
 	//TODO: vb: delete this method. It cannot is not useful and only used by unused methods or test methods. Does any one know the aimed goal to be reach by having this method??? 
-	public boolean isUsed(XPSCase theCase);
+	public boolean isUsed(Session theCase);
 
 	
 	/**

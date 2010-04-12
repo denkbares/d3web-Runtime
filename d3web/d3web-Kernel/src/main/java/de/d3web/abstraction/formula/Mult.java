@@ -20,7 +20,7 @@
 
 package de.d3web.abstraction.formula;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 /**
  * Multiplication-Term.
  * Creation date: (14.08.2000 16:41:32)
@@ -50,7 +50,7 @@ public class Mult extends FormulaNumberArgumentsTerm implements FormulaNumberEle
 	/**
 	 * @return multiplied evaluated arguments
 	 */
-	public Double eval(XPSCase theCase) {
+	public Double eval(Session theCase) {
 		if (super.eval(theCase) == null)
 			return null;
 		else

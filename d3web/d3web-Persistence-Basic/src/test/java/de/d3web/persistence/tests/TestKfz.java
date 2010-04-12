@@ -41,7 +41,7 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.session.CaseFactory;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.interviewmanager.DialogController;
 import de.d3web.core.session.interviewmanager.InvalidQASetRequestException;
 import de.d3web.core.session.interviewmanager.OQDialogController;
@@ -126,7 +126,7 @@ public class TestKfz extends TestCase {
 			file.mkdir();
 		}
 		PersistenceManager.getInstance().save(kb, new File("target/kbs/test2.jar"));
-		XPSCase theCase = CaseFactory.createXPSCase(kb);
+		Session theCase = CaseFactory.createXPSCase(kb);
 		Class<? extends PSMethod> context = de.d3web.scoring.inference.PSMethodHeuristic.class;
 
 		QuestionNum Mf5 = (QuestionNum) kb.searchQuestion("Mf5");
@@ -155,7 +155,7 @@ public class TestKfz extends TestCase {
 	 * date: (08.09.2000 16:11:48)
 	 */
 	public void testFormulaSchema() {
-		XPSCase theCase = CaseFactory.createXPSCase(kb);
+		Session theCase = CaseFactory.createXPSCase(kb);
 		Class<? extends PSMethod> context = de.d3web.scoring.inference.PSMethodHeuristic.class;
 
 		/*---------------------------------------------- */
@@ -228,7 +228,7 @@ public class TestKfz extends TestCase {
 	 * date: (08.09.2000 16:11:48)
 	 */
 	public void testNumericExpression() {
-		XPSCase theCase = CaseFactory.createXPSCase(kb);
+		Session theCase = CaseFactory.createXPSCase(kb);
 		Class<? extends PSMethod> context = de.d3web.scoring.inference.PSMethodHeuristic.class;
 
 		/*----------------------------------------------
@@ -262,7 +262,7 @@ public class TestKfz extends TestCase {
 	 * date: (08.09.2000 16:11:48)
 	 */
 	public void testSetValue() {
-		XPSCase theCase = CaseFactory.createXPSCase(kb);
+		Session theCase = CaseFactory.createXPSCase(kb);
 		Class<? extends PSMethod> context = de.d3web.scoring.inference.PSMethodHeuristic.class;
 
 		QuestionOC questionOC = (QuestionOC) kb.searchQuestion("Mf2");
@@ -330,7 +330,7 @@ public class TestKfz extends TestCase {
 	 * @throws InvalidQASetRequestException
 	 */
 	public void testCase() throws InvalidQASetRequestException {
-		XPSCase theCase = CaseFactory.createXPSCase(kb, OQDialogController.class);
+		Session theCase = CaseFactory.createXPSCase(kb, OQDialogController.class);
 
 		while (((DialogController) theCase.getQASetManager()).hasNewestQASet()) {
 

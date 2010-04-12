@@ -4,7 +4,7 @@ import java.util.List;
 
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 
 /**
  * 
@@ -40,7 +40,7 @@ public class NumericalSimilarity implements ISimilarityMeasurer {
 
 
 	@Override
-	public double computeSimilarity(XPSCase theCase) {
+	public double computeSimilarity(Session theCase) {
 		
 		//TODO
 		

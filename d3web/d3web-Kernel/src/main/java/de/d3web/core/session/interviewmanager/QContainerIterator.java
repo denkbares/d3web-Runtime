@@ -34,7 +34,7 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.indication.ActionNextQASet;
 
 /**
@@ -46,7 +46,7 @@ import de.d3web.indication.ActionNextQASet;
  */
 public class QContainerIterator {
 
-	private XPSCase theCase = null;
+	private Session theCase = null;
 
 	private Iterator<TerminologyObject> childIter = null;
 
@@ -62,19 +62,19 @@ public class QContainerIterator {
 	 * indentation for displaying in HTML/XML
 	 */
 	public class QuestionModel {
-		private XPSCase theCase = null;
+		private Session theCase = null;
 		private Question question = null;
 		private int indentation = 0;
 		private String nextAnchor = null;
 		private String nextAnchorHref = null;
 
-		QuestionModel(XPSCase _theCase, Question q, int indent) {
+		QuestionModel(Session _theCase, Question q, int indent) {
 			theCase = _theCase;
 			question = q;
 			indentation = indent;
 		}
 
-		public XPSCase getXPSCase() {
+		public Session getXPSCase() {
 			return theCase;
 		}
 		public Question getQuestion() {
@@ -113,7 +113,7 @@ public class QContainerIterator {
 	 * @param theCase
 	 *            current XPSCase
 	 */
-	public QContainerIterator(XPSCase theCase, QContainer container) {
+	public QContainerIterator(Session theCase, QContainer container) {
 		this.theCase = theCase;
 		List<TerminologyObject> children = Arrays.asList(container.getChildren());
 		childIter = children.iterator();
@@ -128,12 +128,12 @@ public class QContainerIterator {
 	 * 
 	 * @return List of follow questions of q
 	 */
-	public static List<QASet> createFollowList(XPSCase theCase, Question q) {
+	public static List<QASet> createFollowList(Session theCase, Question q) {
 		// two-dimensional list: elements are terminal-object-lists of the
 		// different rules
 		List<List<QASet>> follow2d = new LinkedList<List<QASet>>();
 
-		Iterator<? extends PSMethod> psmethod = theCase.getUsedPSMethods().iterator();
+		Iterator<? extends PSMethod> psmethod = theCase.getPSMethods().iterator();
 		while (psmethod.hasNext()) {
 
 			PSMethod p = (PSMethod) psmethod.next();

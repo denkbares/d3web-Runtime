@@ -26,7 +26,7 @@ import javax.servlet.http.HttpSessionListener;
 
 import org.apache.log4j.Logger;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.dialog2.WebDialog;
 
 
@@ -35,7 +35,7 @@ public class CaseFinalizationNotifier implements HttpSessionListener {
     public static Logger logger = Logger
 	    .getLogger(CaseFinalizationNotifier.class);
 
-    public static void finalizeCase(XPSCase theCase) {
+    public static void finalizeCase(Session theCase) {
     	//TODO: Does nothing, should be removed...
     }
 

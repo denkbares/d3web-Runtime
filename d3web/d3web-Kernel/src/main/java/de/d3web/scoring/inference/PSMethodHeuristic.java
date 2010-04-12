@@ -35,7 +35,7 @@ import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.scoring.DiagnosisScore;
@@ -95,7 +95,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 	 * Creation date: (05.10.00 13:41:07)
 	 * @return de.d3web.kernel.domainModel.DiagnosisState
 	 */
-	public DiagnosisState getState(XPSCase theCase, Solution diagnosis) {
+	public DiagnosisState getState(Session theCase, Solution diagnosis) {
 		DiagnosisScore diagnosisScore =
 			diagnosis.getScore(theCase, this.getClass());
 		if (diagnosisScore == null)
@@ -124,7 +124,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 	 * Tests the double value of the Scores: d1 > d2 ?  
      * @return (d1.score > d2.score)
      */
-    private boolean greaterScore(XPSCase theCase, Solution d1, Solution d2) {
+    private boolean greaterScore(Session theCase, Solution d1, Solution d2) {
         return d1.getScore(theCase, getClass()).getScore() > d2.getScore(theCase, getClass()).getScore();
     }
 
@@ -134,7 +134,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
      * @param theCase
      * @return Diagnosis instance
      */
-    private Solution computeBestDiagnosis(XPSCase theCase) {
+    private Solution computeBestDiagnosis(Session theCase) {
         Solution best = null;
         DiagnosisScore bestScore = null;
         for (Solution d : theCase.getKnowledgeBase().getDiagnoses()) {
@@ -157,7 +157,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
     /**
 	 * Check if NamedObject has nextQASet rules and check them, if available
 	 */
-	public void propagate(XPSCase theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
 
 		// do nothing, if case has been finished
 		if (theCase.isFinished()) {
@@ -191,7 +191,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 	
 	
 
-    private boolean finalSolutionIsEstablished(XPSCase theCase) {
+    private boolean finalSolutionIsEstablished(Session theCase) {
         for (Solution d : theCase.getKnowledgeBase().getDiagnoses()) {
             if ((isFinalDiagnosis(d)) && 
                 (getState(theCase, d).equals(DiagnosisState.ESTABLISHED))){
@@ -206,7 +206,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
      * @param theCase
      * @param nob
      */
-    private void checkRulesFor(XPSCase theCase, NamedObject nob) {
+    private void checkRulesFor(Session theCase, NamedObject nob) {
         KnowledgeSlice knowledgeSlices = nob.getKnowledge(this.getClass(), MethodKind.FORWARD);
         if (knowledgeSlices != null) {
         	RuleSet rs = (RuleSet) knowledgeSlices;
@@ -222,15 +222,15 @@ public class PSMethodHeuristic extends PSMethodAdapter {
      * Therefore, check all heuristic rules for all diagnoses. 
      * @param theCase
      */
-    private void reCheckAllRules(XPSCase theCase) {
-        List<Solution> oldEstablishedDiagnoses = theCase.getDiagnoses(DiagnosisState.ESTABLISHED, theCase.getUsedPSMethods());
+    private void reCheckAllRules(Session theCase) {
+        List<Solution> oldEstablishedDiagnoses = theCase.getDiagnoses(DiagnosisState.ESTABLISHED, theCase.getPSMethods());
         List<NamedObject> objects = new LinkedList<NamedObject>(theCase.getKnowledgeBase().getQuestions());
         objects.addAll(theCase.getKnowledgeBase().getDiagnoses());
         for (NamedObject o : objects) {
             checkRulesFor(theCase, o);
         }
         
-        List<Solution> newEstalishedDiagnoses = theCase.getDiagnoses(DiagnosisState.ESTABLISHED, theCase.getUsedPSMethods());
+        List<Solution> newEstalishedDiagnoses = theCase.getDiagnoses(DiagnosisState.ESTABLISHED, theCase.getPSMethods());
         if ((!oldEstablishedDiagnoses.isEmpty()) &&
             (oldEstablishedDiagnoses.containsAll(newEstalishedDiagnoses)) &&
             (newEstalishedDiagnoses.containsAll(oldEstablishedDiagnoses))) {
@@ -275,15 +275,15 @@ public class PSMethodHeuristic extends PSMethodAdapter {
      * is returned as "established" solution. 
      * @return Returns the sFA.
      */
-    public boolean isSFA(XPSCase theCase) {
+    public boolean isSFA(Session theCase) {
         return getProperty(theCase, Property.SINGLE_FAULT_ASSUMPTION);
     }
     
-    public boolean isBestSolutionOnly(XPSCase theCase) {
+    public boolean isBestSolutionOnly(Session theCase) {
         return getProperty(theCase, Property.BEST_SOLUTION_ONLY);
     }
 
-    private boolean getProperty(XPSCase theCase, Property property) {
+    private boolean getProperty(Session theCase, Property property) {
         Boolean b = (Boolean)theCase.getKnowledgeBase().getProperties().getProperty(property);
         if (b == null)
             return false;

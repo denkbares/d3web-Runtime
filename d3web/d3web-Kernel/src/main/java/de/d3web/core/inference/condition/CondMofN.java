@@ -21,7 +21,7 @@
 package de.d3web.core.inference.condition;
 import java.util.List;
 
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 /**
  * Implements a Min/Max condition: A list of sub-conditions is given, where
  * <i>min</i> conditions must hold at least and <i>max</i> conditions must 
@@ -48,7 +48,7 @@ public class CondMofN extends NonTerminalCondition {
 	}
 
 	@Override
-	public boolean eval(XPSCase theCase)
+	public boolean eval(Session theCase)
 		throws NoAnswerException, UnknownAnswerException {
 		int trueTillNow = 0;
 		boolean wasNoAnswer = false;

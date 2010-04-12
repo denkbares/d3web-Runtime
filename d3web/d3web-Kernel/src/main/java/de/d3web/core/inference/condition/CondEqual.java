@@ -22,7 +22,7 @@ package de.d3web.core.inference.condition;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 
@@ -52,7 +52,7 @@ public class CondEqual extends CondQuestion {
 
 
 	@Override
-	public boolean eval(XPSCase theCase)
+	public boolean eval(Session theCase)
 		throws NoAnswerException, UnknownAnswerException {
 		checkAnswer(theCase);
 		Value value = question.getValue(theCase);

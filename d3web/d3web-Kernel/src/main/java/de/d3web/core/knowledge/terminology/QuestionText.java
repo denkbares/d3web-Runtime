@@ -21,7 +21,7 @@
 package de.d3web.core.knowledge.terminology;
 
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.blackboard.CaseQuestionText;
 import de.d3web.core.session.blackboard.XPSCaseObject;
@@ -45,7 +45,7 @@ public class QuestionText extends Question {
 	/**
 	 * @return AnswerText (with value = value)
 	 */
-	public AnswerText getAnswer(XPSCase theCase, String value) {
+	public AnswerText getAnswer(Session theCase, String value) {
 		AnswerText result = new AnswerText();
 		result.setText(value);
 		result.setQuestion(this);
@@ -55,7 +55,7 @@ public class QuestionText extends Question {
 	/**
 	 * @return a newly created user-case dependent CaseQuestionText object.
 	 */
-	public XPSCaseObject createCaseObject(XPSCase session) {
+	public XPSCaseObject createCaseObject(Session session) {
 		return new CaseQuestionText(this);
 	}
 
@@ -67,7 +67,7 @@ public class QuestionText extends Question {
 	}
 
 	@Override
-	public Value getValue(XPSCase theCase) {
+	public Value getValue(Session theCase) {
 		return ((CaseQuestionText) theCase.getCaseObject(this)).getValue();
 	}
 
@@ -90,7 +90,7 @@ public class QuestionText extends Question {
 	}
 
 	@Override
-	public void setValue(XPSCase theCase, Value value) throws IllegalArgumentException {
+	public void setValue(Session theCase, Value value) throws IllegalArgumentException {
 		if (value instanceof TextValue ||
 				value instanceof Unknown ||
 				value instanceof UndefinedValue) {

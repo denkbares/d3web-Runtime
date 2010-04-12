@@ -184,7 +184,7 @@ class FactAggregator {
 			if (psMethod instanceof PSMethodUserSelected) {
 				return fact;
 			}
-			int index = this.blackboard.getSession().getUsedPSMethods().indexOf(psMethod);
+			int index = this.blackboard.getSession().getPSMethods().indexOf(psMethod);
 			assert index >= 0;
 			if (index < bestPSMIndex) {
 				bestFact = fact;

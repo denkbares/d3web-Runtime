@@ -33,7 +33,7 @@ import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.costBenefit.inference.CostFunction;
 import de.d3web.costBenefit.inference.DefaultCostFunction;
 import de.d3web.costBenefit.inference.PSMethodCostBenefit;
@@ -55,7 +55,7 @@ public class SearchModel {
 	private int countMinPaths = 0;
 	private CostFunction costFunction;
 	
-	public SearchModel(XPSCase theCase) {
+	public SearchModel(Session theCase) {
 		PSMethod problemsolver = theCase.getPSMethodInstance(PSMethodCostBenefit.class);
 		PSMethodCostBenefit ps = (PSMethodCostBenefit) problemsolver;
 		if (ps!=null) {

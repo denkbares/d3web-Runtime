@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import de.d3web.core.session.Value;
-import de.d3web.core.session.XPSCase;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.values.UndefinedValue;
 
 /**
@@ -91,9 +91,9 @@ public class DialogProxy {
 	/**
 	 * puts the given XPSCase to the Client that has the given Priority
 	 * @return false if no such client exists, otherwise true.
-	 * @see DialogClient#putCase(XPSCase theCase)
+	 * @see DialogClient#putCase(Session theCase)
 	 */
-	public boolean putCase(int prio, XPSCase theCase) {
+	public boolean putCase(int prio, Session theCase) {
 		try {
 			DialogClient client = (DialogClient) clients.get(new Integer(prio));
 			client.putCase(theCase);
