@@ -95,7 +95,7 @@ import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
@@ -230,7 +230,7 @@ public class XMLRenderer {
 	}
 
 
-	private static StringBuffer renderAnswerChoiceObject(AnswerChoice answer) {
+	private static StringBuffer renderAnswerChoiceObject(Choice answer) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<AnswerChoice ID=\"");
 		sb.append(answer.getId());
@@ -414,7 +414,7 @@ public class XMLRenderer {
 				if (answer instanceof Unknown) {
 					questionState.append(renderAnswerUnknownObject());
 				} else {
-					AnswerChoice choice = (AnswerChoice) answer.getValue();
+					Choice choice = (Choice) answer.getValue();
 					questionState.append(renderAnswerChoiceObject(choice));
 				}
 				questionState.append("</Answers>");
@@ -671,7 +671,7 @@ public class XMLRenderer {
 			ActionQuestionSetter ac = (ActionQuestionSetter)rc.getAction();
 			Object value = ac.getValue();
 			if (value instanceof ChoiceValue) {
-				AnswerChoice cvalue = (AnswerChoice) ((Value) value).getValue();
+				Choice cvalue = (Choice) ((Value) value).getValue();
 				sb.append(renderAnswerChoiceObject(cvalue));
 				// sort answerchoices by their position in the allAnswer-list
 				returnList.add(new Double(
@@ -684,8 +684,8 @@ public class XMLRenderer {
 			else if (value instanceof Object[]) {
 				Object[] values = (Object[]) value;
 				for (int i = 0; i < values.length; i++) {
-					if (values[i] instanceof AnswerChoice) {
-						sb.append(renderAnswerChoiceObject((AnswerChoice) values[i]));
+					if (values[i] instanceof Choice) {
+						sb.append(renderAnswerChoiceObject((Choice) values[i]));
 						// sort answerchoices by their position in the
 						// allAnswer-list
 						returnList.add(new Double(
@@ -877,7 +877,7 @@ public class XMLRenderer {
 			sb.append(renderQASetObject(ce.getQuestion()));
 			Value ceAnswer = ce.getValue();
 			if (ceAnswer instanceof ChoiceValue) {
-				AnswerChoice choice = (AnswerChoice) ceAnswer.getValue();
+				Choice choice = (Choice) ceAnswer.getValue();
 				sb.append(renderAnswerChoiceObject(choice));
 			}
 			else if (ceAnswer instanceof Unknown)
@@ -891,7 +891,7 @@ public class XMLRenderer {
 			}
 			sb.append(">");
 			sb.append(renderQASetObject(cq.getQuestion()));
-			AnswerChoice toRender;
+			Choice toRender;
 			if (cond instanceof CondChoiceNo)
 				toRender = ((QuestionYN)cq.getQuestion()).no;
 			else
@@ -1038,7 +1038,7 @@ public class XMLRenderer {
 
 	private static StringBuffer getSchemaInfoFor(QuestionOC q) {
 		StringBuffer sb = new StringBuffer();
-		List<AnswerChoice> alternatives = q.getAlternatives();
+		List<Choice> alternatives = q.getAlternatives();
 		Double[] schemaArray = getSchemaForQuestion(q).getSchemaArray();
 		// show the schema only, if there is exactly one more alternative than schema-value
 		if ((alternatives != null) && (alternatives.size() != 0)
@@ -1046,18 +1046,18 @@ public class XMLRenderer {
 			sb.append("<Schema>");
 		
 			sb.append("<Correlation max=\"" +(schemaArray[0]).intValue() +"\">");
-			sb.append(renderAnswerChoiceObject((AnswerChoice)alternatives.get(0)));
+			sb.append(renderAnswerChoiceObject((Choice)alternatives.get(0)));
 			sb.append("</Correlation>");
 		
 			for (int i = 1; i < schemaArray.length; i++) {
 				sb.append("<Correlation min=\"" +(schemaArray[i-1]).intValue() +"\" ");
 				sb.append("max=\"" +(schemaArray[i]).intValue() +"\">");
-				sb.append(renderAnswerChoiceObject((AnswerChoice)alternatives.get(i)));
+				sb.append(renderAnswerChoiceObject((Choice)alternatives.get(i)));
 				sb.append("</Correlation>");
 			}
 		
 			sb.append("<Correlation min=\"" +(schemaArray[schemaArray.length-1]).intValue() +"\">");
-			sb.append(renderAnswerChoiceObject((AnswerChoice)alternatives.get(alternatives.size()-1)));
+			sb.append(renderAnswerChoiceObject((Choice)alternatives.get(alternatives.size()-1)));
 			sb.append("</Correlation>");
 		
 			sb.append("</Schema>");

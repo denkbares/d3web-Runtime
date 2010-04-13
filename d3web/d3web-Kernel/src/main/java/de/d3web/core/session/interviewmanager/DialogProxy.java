@@ -89,7 +89,7 @@ public class DialogProxy {
 	
 	
 	/**
-	 * puts the given XPSCase to the Client that has the given Priority
+	 * puts the given Session to the Client that has the given Priority
 	 * @return false if no such client exists, otherwise true.
 	 * @see DialogClient#putCase(Session theCase)
 	 */

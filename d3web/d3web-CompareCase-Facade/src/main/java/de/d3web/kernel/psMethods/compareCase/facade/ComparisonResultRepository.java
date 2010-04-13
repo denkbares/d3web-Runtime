@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.d3web.caserepository.CaseObject;
-import de.d3web.caserepository.utilities.CaseConverter;
+import de.d3web.caserepository.utilities.SessionConverter;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
@@ -40,7 +40,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.kernel.psMethods.compareCase.CompareCaseException;
@@ -313,7 +313,7 @@ public class ComparisonResultRepository {
 			if (value != null) {
 				if (value instanceof ChoiceValue) {
 					ChoiceValue cv = (ChoiceValue) value;
-					AnswerChoice ac = (AnswerChoice) cv.getValue();
+					Choice ac = (Choice) cv.getValue();
 					if (ac.isAnswerNo()) {
 						sb.append("<answer value='MaNo'/>\n");
 					}
@@ -370,7 +370,7 @@ public class ComparisonResultRepository {
 						Value value = cr.getStoredValue();
 						if (value instanceof ChoiceValue) {
 							ChoiceValue cv = (ChoiceValue) value;
-							AnswerChoice ac = (AnswerChoice) cv.getValue();
+							Choice ac = (Choice) cv.getValue();
 							if (ac.isAnswerNo()) {
 								sb.append("<answer value='MaNo'/>\n");
 							}
@@ -446,14 +446,14 @@ public class ComparisonResultRepository {
 	 * Creation date: (22.08.01 00:27:16)
 	 * 
 	 * @param theCase
-	 *            de.d3web.kernel.XPSCase
+	 *            de.d3web.kernel.Session
 	 */
 	public void setCurrentCase(Session theCase) {
 		KnowledgeBase kb = CompareObjectsHashContainer.getInstance().getKnowledgeBase();
 		if ((kb == null) || !kb.equals(theCase.getKnowledgeBase())) {
 			CompareObjectsHashContainer.getInstance().initialize(theCase.getKnowledgeBase());
 		}
-		currentCase = CaseConverter.getInstance().xpsCase2CaseObject(theCase);
+		currentCase = SessionConverter.getInstance().session2CaseObject(theCase);
 	}
 
 	/**

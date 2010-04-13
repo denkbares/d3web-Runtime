@@ -28,7 +28,7 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.XPSCaseObject;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.diaFlux.inference.FluxSolver;
 
 /**
@@ -51,7 +51,7 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource {
 
 
 	@Override
-	public XPSCaseObject createCaseObject(Session session) {
+	public SessionObject createCaseObject(Session session) {
 		
 		Map<String, FlowData> flowdatas = new HashMap<String, FlowData>();
 		

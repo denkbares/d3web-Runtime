@@ -39,13 +39,13 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
-import de.d3web.core.session.CaseFactory;
+import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.interviewmanager.DialogController;
 import de.d3web.core.session.interviewmanager.InvalidQASetRequestException;
 import de.d3web.core.session.interviewmanager.OQDialogController;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
@@ -126,14 +126,14 @@ public class TestKfz extends TestCase {
 			file.mkdir();
 		}
 		PersistenceManager.getInstance().save(kb, new File("target/kbs/test2.jar"));
-		Session theCase = CaseFactory.createXPSCase(kb);
+		Session theCase = SessionFactory.createSession(kb);
 		Class<? extends PSMethod> context = de.d3web.scoring.inference.PSMethodHeuristic.class;
 
 		QuestionNum Mf5 = (QuestionNum) kb.searchQuestion("Mf5");
 		QuestionMC Mf7 = (QuestionMC) kb.searchQuestion("Mf7");
-		AnswerChoice Mf7a1 = (AnswerChoice) Mf7.getAnswer(theCase, "Mf7a1");
-		AnswerChoice Mf7a2 = (AnswerChoice) Mf7.getAnswer(theCase, "Mf7a2");
-		AnswerMultipleChoice answermc = new AnswerMultipleChoice(new AnswerChoice[] {
+		Choice Mf7a1 = (Choice) Mf7.getAnswer(theCase, "Mf7a1");
+		Choice Mf7a2 = (Choice) Mf7.getAnswer(theCase, "Mf7a2");
+		AnswerMultipleChoice answermc = new AnswerMultipleChoice(new Choice[] {
 				Mf7a1, Mf7a2 });
 		MultipleChoiceValue mcv = new MultipleChoiceValue(answermc);
 		theCase.setValue(Mf7, mcv, context);
@@ -155,7 +155,7 @@ public class TestKfz extends TestCase {
 	 * date: (08.09.2000 16:11:48)
 	 */
 	public void testFormulaSchema() {
-		Session theCase = CaseFactory.createXPSCase(kb);
+		Session theCase = SessionFactory.createSession(kb);
 		Class<? extends PSMethod> context = de.d3web.scoring.inference.PSMethodHeuristic.class;
 
 		/*---------------------------------------------- */
@@ -170,7 +170,7 @@ public class TestKfz extends TestCase {
 		NumValue Mf6Value = new NumValue(new Double(10));
 		theCase.setValue(Mf6, Mf6Value, context);
 
-		AnswerChoice ratingNormal = (AnswerChoice) Msi4.getAnswer(theCase, "Msi4a1");
+		Choice ratingNormal = (Choice) Msi4.getAnswer(theCase, "Msi4a1");
 		ChoiceValue ratingNormalValue = new ChoiceValue(ratingNormal);
 
 		System.out.println(
@@ -184,7 +184,7 @@ public class TestKfz extends TestCase {
 		// This is exactly the border ((Mf6-Mf5)/Mf5)*100 = 10
 		theCase.setValue(Mf6, new NumValue(new Double(11)), context);
 		//
-		AnswerChoice ratingHigh = (AnswerChoice) Msi4.getAnswer(theCase, "Msi4a2");
+		Choice ratingHigh = (Choice) Msi4.getAnswer(theCase, "Msi4a2");
 		ChoiceValue ratingHighValue = new ChoiceValue(ratingHigh);
 		System.out.println(
 				"(2) --> Msi4: "
@@ -211,7 +211,7 @@ public class TestKfz extends TestCase {
 				"(4) --> Msi4: "
 				+ Msi4.getValue(theCase));
 		//
-		AnswerChoice ratingVeryHigh = (AnswerChoice) Msi4.getAnswer(theCase, "Msi4a3");
+		Choice ratingVeryHigh = (Choice) Msi4.getAnswer(theCase, "Msi4a3");
 		ChoiceValue ratingVeryHighValue = new ChoiceValue(ratingVeryHigh);
 
 		//
@@ -228,7 +228,7 @@ public class TestKfz extends TestCase {
 	 * date: (08.09.2000 16:11:48)
 	 */
 	public void testNumericExpression() {
-		Session theCase = CaseFactory.createXPSCase(kb);
+		Session theCase = SessionFactory.createSession(kb);
 		Class<? extends PSMethod> context = de.d3web.scoring.inference.PSMethodHeuristic.class;
 
 		/*----------------------------------------------
@@ -237,7 +237,7 @@ public class TestKfz extends TestCase {
 		QuestionNum Mf58 = (QuestionNum) kb.searchQuestion("Mf58");
 		QuestionNum Mf6 = (QuestionNum) kb.searchQuestion("Mf6");
 		QuestionOC Mf4 = (QuestionOC) kb.searchQuestion("Mf4");
-		AnswerChoice Mf4a1 = (AnswerChoice) Mf4.getAnswer(theCase, "Mf4a1");
+		Choice Mf4a1 = (Choice) Mf4.getAnswer(theCase, "Mf4a1");
 		theCase.setValue(Mf4, new ChoiceValue(Mf4a1), context);
 		//
 		theCase.setValue(Mf6, new NumValue(new Double(10)), context);
@@ -262,7 +262,7 @@ public class TestKfz extends TestCase {
 	 * date: (08.09.2000 16:11:48)
 	 */
 	public void testSetValue() {
-		Session theCase = CaseFactory.createXPSCase(kb);
+		Session theCase = SessionFactory.createSession(kb);
 		Class<? extends PSMethod> context = de.d3web.scoring.inference.PSMethodHeuristic.class;
 
 		QuestionOC questionOC = (QuestionOC) kb.searchQuestion("Mf2");
@@ -271,7 +271,7 @@ public class TestKfz extends TestCase {
 				"Error: isDone should be false (1)",
 				false == questionOC.isDone(theCase));
 
-		AnswerChoice answerChoice = (AnswerChoice) questionOC.getAnswer(theCase, "Mf2a1");
+		Choice answerChoice = (Choice) questionOC.getAnswer(theCase, "Mf2a1");
 		theCase.setValue(questionOC, new ChoiceValue(answerChoice), context);
 
 		assertEquals(
@@ -330,7 +330,7 @@ public class TestKfz extends TestCase {
 	 * @throws InvalidQASetRequestException
 	 */
 	public void testCase() throws InvalidQASetRequestException {
-		Session theCase = CaseFactory.createXPSCase(kb, OQDialogController.class);
+		Session theCase = SessionFactory.createSession(kb, OQDialogController.class);
 
 		while (((DialogController) theCase.getQASetManager()).hasNewestQASet()) {
 

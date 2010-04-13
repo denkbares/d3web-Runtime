@@ -37,7 +37,7 @@ import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.empiricalTesting.Finding;
 import de.d3web.empiricalTesting.SequentialTestCase;
@@ -252,7 +252,7 @@ public class DDBot2Runner {
 	private Finding toFinding(KnowledgeBase k, String questionID, int answerNo)
 			throws Exception {
 		QuestionChoice q = (QuestionChoice) k.searchQuestion(questionID);
-		AnswerChoice a = BotHelper.getInstance().findAnswer(q,
+		Choice a = BotHelper.getInstance().findAnswer(q,
 				questionID + "a" + answerNo);
 		return new Finding(q, new ChoiceValue(a));
 	}

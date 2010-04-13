@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.kernel.psMethods.shared.comparators.GroupedComparatorSymmetric;
@@ -39,8 +39,8 @@ public class QuestionComparatorMCGroupedSymmetric extends
 			return 1;
 		}
 
-		List<AnswerChoice> ans1 = ((MultipleChoiceValue) val1).asChoiceList();
-		List<AnswerChoice> ans2 = ((MultipleChoiceValue) val2).asChoiceList();
+		List<Choice> ans1 = ((MultipleChoiceValue) val1).asChoiceList();
+		List<Choice> ans2 = ((MultipleChoiceValue) val2).asChoiceList();
 
         double value = 0;
         double countComp = 0;

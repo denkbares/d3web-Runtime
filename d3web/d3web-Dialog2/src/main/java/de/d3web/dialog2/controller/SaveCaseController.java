@@ -35,7 +35,7 @@ import org.apache.log4j.Logger;
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.CaseObjectImpl;
 import de.d3web.caserepository.MetaDataImpl;
-import de.d3web.caserepository.utilities.CaseConverter;
+import de.d3web.caserepository.utilities.SessionConverter;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
@@ -139,7 +139,7 @@ public class SaveCaseController {
 
 	public CaseObjectImpl getCaseObject(Session theCase, String caseName,
 			User user, long processingtime) {
-		CaseObjectImpl co = CaseConverter.getInstance().xpsCase2CaseObject(
+		CaseObjectImpl co = SessionConverter.getInstance().session2CaseObject(
 				theCase, false, false);
 		// DCMarkup
 		String id = ""

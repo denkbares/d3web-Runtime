@@ -42,7 +42,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.empiricalTesting.Finding;
 import de.d3web.empiricalTesting.RatedSolution;
@@ -216,7 +216,7 @@ public class SequentialTestCasePersistence {
 			// throw new Exception("Question with ID " + questionID +
 			// " not found.");
 
-			AnswerChoice a = bh.findAnswer((QuestionChoice) q, answerID);
+			Choice a = bh.findAnswer((QuestionChoice) q, answerID);
 			if (a == null)
 				throw new Exception("Answer with ID " + answerID
 						+ " not found.");
@@ -258,7 +258,7 @@ public class SequentialTestCasePersistence {
 			Element findi = new Element(FINDING);
 			findi.setAttribute(QUESTION, finding.getQuestion().getId());
 			if (finding.getValue() instanceof ChoiceValue) {
-				AnswerChoice choice = (AnswerChoice) finding.getValue().getValue();
+				Choice choice = (Choice) finding.getValue().getValue();
 				findi.setAttribute(ANSWER, choice.getId());
 			}
 			else {

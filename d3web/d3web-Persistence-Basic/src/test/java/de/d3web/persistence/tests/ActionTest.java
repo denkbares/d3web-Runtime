@@ -52,7 +52,7 @@ import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.AnswerDate;
 import de.d3web.core.session.values.AnswerNo;
 import de.d3web.core.session.values.AnswerNum;
@@ -76,8 +76,8 @@ public class ActionTest extends TestCase {
 	
 	private Rule rcomp;
 	
-	private AnswerChoice ac1;
-	private AnswerChoice ac2;
+	private Choice ac1;
+	private Choice ac2;
 	private AnswerText atext1;
 	private AnswerNum anum1;
 	private AnswerDate adate1;
@@ -153,7 +153,7 @@ public class ActionTest extends TestCase {
 	
 	public void testActionSuppressAnswer() throws Exception{
 		
-		List<AnswerChoice> suppressList = new LinkedList<AnswerChoice>();
+		List<Choice> suppressList = new LinkedList<Choice>();
 		suppressList.add(ac1);
 		suppressList.add(ac2);
 		

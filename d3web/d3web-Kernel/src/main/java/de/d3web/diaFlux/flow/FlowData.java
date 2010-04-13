@@ -25,10 +25,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import de.d3web.core.session.blackboard.XPSCaseObject;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.diaFlux.inference.PathEntry;
 
-public class FlowData extends XPSCaseObject {
+public class FlowData extends SessionObject {
 
 	private final Map<INode, INodeData> nodeData;
 	

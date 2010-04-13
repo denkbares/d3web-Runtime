@@ -45,7 +45,7 @@ import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
@@ -79,7 +79,7 @@ public class QuestionPageRenderer extends Renderer {
 			return Unknown.getInstance();
 		}
 		else if (q instanceof QuestionChoice) {
-			AnswerChoice choice = (AnswerChoice) ((QuestionChoice) q).getAnswer(theCase,
+			Choice choice = (Choice) ((QuestionChoice) q).getAnswer(theCase,
 					idOrValue);
 			return new ChoiceValue(choice);
 		}
@@ -338,7 +338,7 @@ public class QuestionPageRenderer extends Renderer {
 	private Object getAnswerNameListFromIDList(List<String> answerIDs, Question q, Session theCase) {
 		List<String> answerNameList = new ArrayList<String>();
 		for (String answerID : answerIDs) {
-			AnswerChoice a = (AnswerChoice) ((QuestionChoice) q).getAnswer(theCase,
+			Choice a = (Choice) ((QuestionChoice) q).getAnswer(theCase,
 					answerID);
 			answerNameList.add(a.getName());
 		}

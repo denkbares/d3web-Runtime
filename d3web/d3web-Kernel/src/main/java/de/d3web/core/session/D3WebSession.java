@@ -50,7 +50,7 @@ import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
-import de.d3web.core.session.blackboard.XPSCaseObject;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.interviewmanager.QASetManager;
 import de.d3web.core.session.interviewmanager.QASetManagerFactory;
 import de.d3web.diaFlux.inference.FluxSolver;
@@ -70,27 +70,27 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
  * Central class <BR>
- * The XPSCase is the facade for all activities handled by the dialog and
+ * The Session is the facade for all activities handled by the dialog and
  * associated problem-solvers. <BR>
- * All actions have to be stated through the XPSCase (especially the setValue
+ * All actions have to be stated through the Session (especially the setValue
  * operations for knowledge base objects!) <BR>
- * The XPSCase always knows the state of the <BR>
+ * The Session always knows the state of the <BR>
  * <LI>problem-solvers (which are used) <LI>questions (answerd, to be answerd),
  * <LI>diagnoses (state with respect to the problem-solvers) <br>
  * It's important to set values through this facade and not directly via the
- * knowledge base objects, because XPSCase is responsible for the propagation
+ * knowledge base objects, because Session is responsible for the propagation
  * mechanism of the connected problem-solvers.
  * 
  * @author Christian Betz, joba
- * @see XPSCaseObject
+ * @see SessionObject
  */
-public class D3WebCase implements Session {
+public class D3WebSession implements Session {
 	
 	private final DefaultInterview interview;
 
 	private final KnowledgeBase kb;
 	private final DefaultPropagationController propagationController;
-	private Map<CaseObjectSource, XPSCaseObject> dynamicStore;
+	private Map<CaseObjectSource, SessionObject> dynamicStore;
 
 	private final List<Solution> establishedDiagnoses = new LinkedList<Solution>();
 	private final List<Question> answeredQuestions = new LinkedList<Question>();
@@ -125,7 +125,7 @@ public class D3WebCase implements Session {
 	 * The default problem-solvers for each case are listed in static array
 	 * <code>commonPSMethods</code>. See class comment for further details.
 	 */
-	D3WebCase(KnowledgeBase kb, QASetManagerFactory theQamFactory) {
+	D3WebSession(KnowledgeBase kb, QASetManagerFactory theQamFactory) {
 		this.kb = kb;
 		this.propagationController = new DefaultPropagationController(this);
 		this.interview = new DefaultInterview(this);
@@ -195,7 +195,7 @@ public class D3WebCase implements Session {
 		dcMarkup = new DCMarkup();
 		finishReasons = new HashSet<Class<? extends KnowledgeSlice>>();
 
-		dynamicStore = new HashMap<CaseObjectSource, XPSCaseObject>();
+		dynamicStore = new HashMap<CaseObjectSource, SessionObject>();
 
 		// add problem-solving methods used for this case
 		usedPSMethods = new LinkedList<PSMethod>();
@@ -210,7 +210,7 @@ public class D3WebCase implements Session {
 		}
 	}
 	
-	D3WebCase(KnowledgeBase kb, QASetManagerFactory theQamFactory, List<PSMethod> psmethods) {
+	D3WebSession(KnowledgeBase kb, QASetManagerFactory theQamFactory, List<PSMethod> psmethods) {
 		this.kb = kb;
 		this.propagationController = new DefaultPropagationController(this);
 		this.interview = new DefaultInterview(this);
@@ -306,8 +306,8 @@ public class D3WebCase implements Session {
 	 *         knowledge base object.
 	 */
 	@Override
-	public XPSCaseObject getCaseObject(CaseObjectSource cos) {
-		XPSCaseObject co = dynamicStore.get(cos);
+	public SessionObject getCaseObject(CaseObjectSource cos) {
+		SessionObject co = dynamicStore.get(cos);
 		if (co == null) {
 			co = cos.createCaseObject(this);
 			dynamicStore.put(cos, co);
@@ -350,7 +350,7 @@ public class D3WebCase implements Session {
 
 	/**
 	 * @return the instance of a specified PSMethod class definition, which is
-	 *         used in this XPSCase; null if the PSMethod-class is not used in
+	 *         used in this Session; null if the PSMethod-class is not used in
 	 *         this case.
 	 * @param psmethodClass
 	 *            java.lang.Class
@@ -366,7 +366,7 @@ public class D3WebCase implements Session {
 	}
 
 	/**
-	 * @return the QASetManager (e.g. DialogController) defined for this XPSCase
+	 * @return the QASetManager (e.g. DialogController) defined for this Session
 	 */
 	@Override
 	public QASetManager getQASetManager() {
@@ -597,27 +597,27 @@ public class D3WebCase implements Session {
 
 	// ******************** event notification *********************
 
-	private Collection<XPSCaseEventListener> listeners = new LinkedList<XPSCaseEventListener>();
+	private Collection<SessionEventListener> listeners = new LinkedList<SessionEventListener>();
 
 	/**
 	 * this listener will be notified, if some value has been set in this case
 	 */
 	@Override
-	public void addListener(XPSCaseEventListener listener) {
+	public void addListener(SessionEventListener listener) {
 		if (!listeners.contains(listener)) {
 			listeners.add(listener);
 		}
 	}
 
 	@Override
-	public void removeListener(XPSCaseEventListener listener) {
+	public void removeListener(SessionEventListener listener) {
 		if (listeners.contains(listener)) {
 			listeners.remove(listener);
 		}
 	}
 
 	private void notifyListeners(ValuedObject o, Object context) {
-		for (XPSCaseEventListener listener : listeners) {
+		for (SessionEventListener listener : listeners) {
 			listener.notify(this, o, context);
 		}
 	}

@@ -20,7 +20,7 @@
 
 package de.d3web.kernel.psMethods.shared.comparators;
 
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 
 /**
  * Helper Class for managing a pair of answers and the depending value (for
@@ -30,22 +30,22 @@ import de.d3web.core.session.values.AnswerChoice;
  */
 public class PairRelation {
 
-	private AnswerChoice ans1 = null;
-	private AnswerChoice ans2 = null;
+	private Choice ans1 = null;
+	private Choice ans2 = null;
 
 	private double value = 1;
 
-	public PairRelation(AnswerChoice ans1, AnswerChoice ans2, double value) {
+	public PairRelation(Choice ans1, Choice ans2, double value) {
 		this.ans1 = ans1;
 		this.ans2 = ans2;
 		this.value = value;
 	}
 
-	public AnswerChoice getAnswer1() {
+	public Choice getAnswer1() {
 		return ans1;
 	}
 
-	public AnswerChoice getAnswer2() {
+	public Choice getAnswer2() {
 		return ans2;
 	}
 
@@ -53,7 +53,7 @@ public class PairRelation {
 		return value;
 	}
 
-	public boolean containsAnswer(AnswerChoice a) {
+	public boolean containsAnswer(Choice a) {
 		return ans1.equals(a) || ans2.equals(a);
 	}
 

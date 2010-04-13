@@ -25,12 +25,12 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.manage.KnowledgeBaseManagement;
-import de.d3web.core.session.D3WebCase;
+import de.d3web.core.session.D3WebSession;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.ValuedObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseDiagnosis;
-import de.d3web.core.session.blackboard.XPSCaseObject;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.scoring.DiagnosisScore;
 import de.d3web.scoring.HDTType;
 import de.d3web.scoring.Score;
@@ -114,7 +114,7 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	 * in the context of the d3web-Kernel project.
 	 * @return a flyweight instance of this object.
 	 */
-	public XPSCaseObject createCaseObject(Session session) {
+	public SessionObject createCaseObject(Session session) {
 		return new CaseDiagnosis(this);
 	}
 

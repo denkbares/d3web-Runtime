@@ -13,22 +13,22 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 		return new DefaultInferenceTrace();
 	}
 
-	public void refreshStates(Collection<XCLModel> updatedModels, Session xpsCase) {
+	public void refreshStates(Collection<XCLModel> updatedModels, Session session) {
 		for (XCLModel model : updatedModels) {
-			DefaultInferenceTrace trace = (DefaultInferenceTrace) model.getInferenceTrace(xpsCase);
-			DiagnosisState oldState = model.getState(xpsCase);
+			DefaultInferenceTrace trace = (DefaultInferenceTrace) model.getInferenceTrace(session);
+			DiagnosisState oldState = model.getState(session);
 			// calculate scores
 			// and the calculate states (based on that scores)
-			double currentScore = computeScore(model, trace, xpsCase);
-			double currentSupport = computeSupport(model, trace, xpsCase);
+			double currentScore = computeScore(model, trace, session);
+			double currentSupport = computeSupport(model, trace, session);
 			DiagnosisState currentState = computeState(model, trace, currentScore, currentSupport);
 			trace.setScore(currentScore);
 			trace.setSupport(currentSupport);
 			trace.setState(currentState);
 			if (!oldState.equals(currentState)) {
-				xpsCase.setValue(model.getSolution(), currentState, PSMethodXCL.class);
+				session.setValue(model.getSolution(), currentState, PSMethodXCL.class);
 			}
-			model.notifyListeners(xpsCase, model);
+			model.notifyListeners(session, model);
 		}
 	}
 
@@ -59,9 +59,9 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 		return DiagnosisState.UNCLEAR;
 	}
 
-	public void update(XCLModel xclModel, Collection<PropagationEntry> entries, Session xpsCase) {
-		InferenceTrace trace = xclModel.getInferenceTrace(xpsCase);
-		trace.refreshRelations(xclModel, xpsCase);
+	public void update(XCLModel xclModel, Collection<PropagationEntry> entries, Session session) {
+		InferenceTrace trace = xclModel.getInferenceTrace(session);
+		trace.refreshRelations(xclModel, session);
 	}
 
 	private double computeScore(XCLModel model, InferenceTrace trace, Session theCase) {

@@ -33,17 +33,17 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.interviewmanager.MQDialogController;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 
 public class BotHelper {
 
 	private static BotHelper instance;
 
-	private final Map<String, AnswerChoice> answerHash;
+	private final Map<String, Choice> answerHash;
 
 	private BotHelper() {
-		answerHash = new HashMap<String, AnswerChoice>();
+		answerHash = new HashMap<String, Choice>();
 	}
 
 	public static BotHelper getInstance() {
@@ -57,7 +57,7 @@ public class BotHelper {
 		QuestionChoice q = (QuestionChoice) theCase.getKnowledgeBase()
 				.searchQuestion(questionID);
 		if (answerID != null) {
-			AnswerChoice a = findAnswer(q, answerID);
+			Choice a = findAnswer(q, answerID);
 			setCaseValue(theCase, q, new ChoiceValue(a));
 		}
 	}
@@ -68,9 +68,9 @@ public class BotHelper {
 
 	}
 
-	public AnswerChoice findAnswer(QuestionChoice q, String answerId)
+	public Choice findAnswer(QuestionChoice q, String answerId)
 			throws Exception {
-		for (AnswerChoice answer : q.getAllAlternatives()) {
+		for (Choice answer : q.getAllAlternatives()) {
 			if (answer.getId().equalsIgnoreCase(answerId)
 					|| answer.getName().equalsIgnoreCase(answerId))
 				return answer;
@@ -125,7 +125,7 @@ public class BotHelper {
 	public void buildAnswerHashFor(KnowledgeBase k) {
 		for (Question q : k.getQuestions()) {
 			if (q instanceof QuestionChoice) {
-				for (AnswerChoice a : ((QuestionChoice) q).getAllAlternatives()) {
+				for (Choice a : ((QuestionChoice) q).getAllAlternatives()) {
 					answerHash.put(a.getId(), a);
 				}
 			}

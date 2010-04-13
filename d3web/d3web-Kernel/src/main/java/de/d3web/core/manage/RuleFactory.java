@@ -34,7 +34,7 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.indication.ActionClarify;
 import de.d3web.indication.ActionContraIndication;
 import de.d3web.indication.ActionIndication;
@@ -478,7 +478,7 @@ public class RuleFactory {
 	public static Rule createSuppressAnswerRule(
 		String theId,
 		QuestionChoice theQuestion,
-		AnswerChoice[] theAnswers,
+		Choice[] theAnswers,
 		Condition theCondition) {
 
 		return createSuppressAnswerRule(
@@ -496,7 +496,7 @@ public class RuleFactory {
 	public static Rule createSuppressAnswerRule(
 		String theId,
 		QuestionChoice theQuestion,
-		AnswerChoice[] theAnswers,
+		Choice[] theAnswers,
 		Condition theCondition,
 		Condition theRuleException) {
 

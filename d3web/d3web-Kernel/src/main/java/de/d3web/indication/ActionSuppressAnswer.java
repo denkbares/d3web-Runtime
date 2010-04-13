@@ -30,7 +30,7 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestion;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.utilities.Utils;
 import de.d3web.indication.inference.PSMethodSuppressAnswer;
 /**
@@ -43,7 +43,7 @@ public class ActionSuppressAnswer extends PSAction {
 	private QuestionChoice question = null;
 
 	/* alternatives that should be suppressed, if rule fires */
-	private List<AnswerChoice> suppress = null;
+	private List<Choice> suppress = null;
 
 	/**
 	 * Creates a new ActionSuppressAnswer for the given corresponding rule
@@ -93,7 +93,7 @@ public class ActionSuppressAnswer extends PSAction {
 	 * @return a list of alternatives to be suppressed.
 	 * Creation date: (26.10.00 14:57:55)
 	 */
-	public List<AnswerChoice> getSuppress() {
+	public List<Choice> getSuppress() {
 		return suppress;
 	}
 
@@ -108,7 +108,7 @@ public class ActionSuppressAnswer extends PSAction {
 	 * Sets the answers to be suppressed.
 	 * Creation date: (26.10.00 14:57:55)
 	 */
-	public void setSuppress(AnswerChoice[] theSuppressArray) {
+	public void setSuppress(Choice[] theSuppressArray) {
 		setSuppress(Utils.createList(theSuppressArray));
 	}
 
@@ -116,7 +116,7 @@ public class ActionSuppressAnswer extends PSAction {
 	 * Sets the answers to be suppressed.
 	 * Creation date: (26.10.00 14:57:55)
 	 */
-	public void setSuppress(List<AnswerChoice> theSuppress) {
+	public void setSuppress(List<Choice> theSuppress) {
 		this.suppress = theSuppress;
 	}
 
@@ -150,7 +150,7 @@ public class ActionSuppressAnswer extends PSAction {
 	public PSAction copy() {
 		ActionSuppressAnswer a = new ActionSuppressAnswer();
 		a.setQuestion(getQuestion());
-		a.setSuppress(new LinkedList<AnswerChoice>(getSuppress()));
+		a.setSuppress(new LinkedList<Choice>(getSuppress()));
 		return a;
 	}
 	

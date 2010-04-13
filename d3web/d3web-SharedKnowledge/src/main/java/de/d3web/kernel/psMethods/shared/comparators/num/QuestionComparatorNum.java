@@ -22,7 +22,7 @@ package de.d3web.kernel.psMethods.shared.comparators.num;
 import java.util.List;
 
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.AnswerNum;
 import de.d3web.kernel.psMethods.shared.comparators.QuestionComparator;
 
@@ -58,8 +58,8 @@ public abstract class QuestionComparatorNum extends QuestionComparator {
 	private Object convertToIntervalOrDouble(List<?> answers) {
 		try {
 			Object o = answers.get(0);
-			if (o instanceof AnswerChoice) {
-				return new Double(((AnswerChoice) o).getName());
+			if (o instanceof Choice) {
+				return new Double(((Choice) o).getName());
 			} else if (o instanceof AnswerNum) {
 				return ((AnswerNum) o).getValue(null);
 			} else {

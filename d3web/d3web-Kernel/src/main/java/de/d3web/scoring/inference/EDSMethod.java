@@ -101,7 +101,7 @@ public class EDSMethod extends PSSubMethod {
 	}
 	
 	/**
-	 * propergates the new value of the given NamedObject for the given XPSCase
+	 * propergates the new value of the given NamedObject for the given Session
 	 */
 	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
 		for (PropagationEntry change : changes) {

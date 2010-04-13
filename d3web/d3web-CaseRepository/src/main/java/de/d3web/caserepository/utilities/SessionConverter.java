@@ -33,7 +33,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.PropertiesCloner;
-import de.d3web.core.session.CaseFactory;
+import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.interviewmanager.DialogProxy;
@@ -41,21 +41,21 @@ import de.d3web.core.session.interviewmanager.ShadowMemory;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
- * Converter class for Case objects. It converts XPSCase to CaseObject and
- * CaseObject (XMLImport) to XPSCase
+ * Converter class for Case objects. It converts Session to CaseObject and
+ * CaseObject (XMLImport) to Session
  * 
  * @author gbuscher, bruememr
  */
-public class CaseConverter {
+public class SessionConverter {
 
-	private static CaseConverter instance = null;
-	public static CaseConverter getInstance() {
+	private static SessionConverter instance = null;
+	public static SessionConverter getInstance() {
 		if (instance == null) {
-			instance = new CaseConverter();
+			instance = new SessionConverter();
 		}
 		return instance;
 	}
-	private CaseConverter() {
+	private SessionConverter() {
 		additionalCaseConverters = new LinkedList();
 	}
 
@@ -66,35 +66,35 @@ public class CaseConverter {
 	}
 
 	/**
-	 * Converts CaseObject to XPSCase using the given dialog-controller-class.
+	 * Converts CaseObject to Session using the given dialog-controller-class.
 	 * The registered (user-selected) containers are considered. DCMarkup and
 	 * Properties of the caseObject will be cloned and added to the returned
-	 * xpsCase.
+	 * session.
 	 * 
 	 * @param dialogControllerClass
 	 *            the dialog-controller to use
 	 * @return CaseObject
 	 */
-	public Session caseObject2XPSCase(CaseObject cobj, KnowledgeBase kb,
+	public Session caseObject2Session(CaseObject cobj, KnowledgeBase kb,
 			Class dialogControllerClass, List usedPSMethods) {
-		return caseObject2XPSCase(cobj, kb, dialogControllerClass, usedPSMethods, true, true);
+		return caseObject2Session(cobj, kb, dialogControllerClass, usedPSMethods, true, true);
 	}
 
 	/**
-	 * Converts CaseObject to XPSCase using the given dialog-controller-class.
+	 * Converts CaseObject to Session using the given dialog-controller-class.
 	 * The registered (user-selected) containers are considered.
 	 * 
 	 * @param dialogControllerClass
 	 *            the dialog-controller to use
 	 * @param copyDCMarkup
 	 *            if true, DCMarkup of the caseObject will be cloned and added
-	 *            to the xpsCase
+	 *            to the session
 	 * @param copyProperties
 	 *            if true, Properties of the caseObject will be cloned and added
-	 *            to the xpsCase
+	 *            to the session
 	 * @return CaseObject
 	 */
-	public Session caseObject2XPSCase(CaseObject cobj, KnowledgeBase kb,
+	public Session caseObject2Session(CaseObject cobj, KnowledgeBase kb,
 			Class dialogControllerClass, List usedPSMethods, boolean copyDCMarkup,
 			boolean copyProperties) {
 		DialogProxy proxy = new DialogProxy();
@@ -115,7 +115,7 @@ public class CaseConverter {
 			registeredContainers.add(qcontainer);
 		}
 
-		Session ret = CaseFactory.createAnsweredXPSCase(kb, dialogControllerClass, proxy,
+		Session ret = SessionFactory.createAnsweredSession(kb, dialogControllerClass, proxy,
 				registeredContainers, usedPSMethods);
 
 		// user-selected diagnoses
@@ -136,38 +136,38 @@ public class CaseConverter {
 		Iterator iter = additionalCaseConverters.iterator();
 		while (iter.hasNext()) {
 			AdditionalCaseConverter conv = (AdditionalCaseConverter) iter.next();
-			conv.caseObject2XPSCase(cobj, ret);
+			conv.caseObject2Session(cobj, ret);
 		}
 
 		return ret;
 	}
 
 	/**
-	 * Converts XPSCase to CaseObject. The returned CaseObject has empty
+	 * Converts Session to CaseObject. The returned CaseObject has empty
 	 * IMetaData. The established system's diagnoses are stored within the
-	 * CaseObject. DCMarkup and Properties of the xpsCase will be cloned and
+	 * CaseObject. DCMarkup and Properties of the session will be cloned and
 	 * added to the returned caseObject.
 	 * 
 	 * @return CaseObjectImpl
 	 */
-	public CaseObjectImpl xpsCase2CaseObject(Session theCase) {
-		return xpsCase2CaseObject(theCase, true, true);
+	public CaseObjectImpl session2CaseObject(Session theCase) {
+		return session2CaseObject(theCase, true, true);
 	}
 
 	/**
-	 * Converts XPSCase to CaseObject. The returned CaseObject has empty
+	 * Converts Session to CaseObject. The returned CaseObject has empty
 	 * IMetaData. The established system's diagnoses are stored within the
 	 * CaseObject.
 	 * 
 	 * @param copyDCMarkup
-	 *            if true, DCMarkup of the xpsCase will be cloned and added to
+	 *            if true, DCMarkup of the session will be cloned and added to
 	 *            the caseObject
 	 * @param copyProperties
-	 *            if true, Properties of the xpsCase will be cloned and added to
+	 *            if true, Properties of the session will be cloned and added to
 	 *            the caseObject
 	 * @return CaseObjectImpl
 	 */
-	public CaseObjectImpl xpsCase2CaseObject(Session theCase, boolean copyDCMarkup,
+	public CaseObjectImpl session2CaseObject(Session theCase, boolean copyDCMarkup,
 			boolean copyProperties) {
 		CaseObjectImpl ret = new CaseObjectImpl(theCase.getKnowledgeBase());
 
@@ -207,13 +207,13 @@ public class CaseConverter {
 		Iterator iter = additionalCaseConverters.iterator();
 		while (iter.hasNext()) {
 			AdditionalCaseConverter conv = (AdditionalCaseConverter) iter.next();
-			conv.xpsCase2CaseObject(theCase, ret);
+			conv.session2CaseObject(theCase, ret);
 		}
 		return ret;
 	}
 
 	/**
-	 * Adds all solutions of the given XPSCase with the given DiagnosisState to
+	 * Adds all solutions of the given Session with the given DiagnosisState to
 	 * "co".
 	 */
 	private void addDiagnosesToSolutions(CaseObjectImpl co, Session theCase, DiagnosisState state) {

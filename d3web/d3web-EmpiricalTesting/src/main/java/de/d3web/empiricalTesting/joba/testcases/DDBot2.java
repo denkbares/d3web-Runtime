@@ -29,11 +29,11 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.CaseFactory;
+import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.interviewmanager.MQDialogController;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.empiricalTesting.Finding;
 import de.d3web.empiricalTesting.RatedSolution;
@@ -86,8 +86,8 @@ public class DDBot2 {
 
 		// Iterate over all possible answers of the next question
 		List<Finding> flattendFindings = flattenFindings(theSeqCase);
-		List<AnswerChoice> nextAnswers = currentQuestion.getAllAlternatives();
-		for (AnswerChoice nextAnswer : nextAnswers) {
+		List<Choice> nextAnswers = currentQuestion.getAllAlternatives();
+		for (Choice nextAnswer : nextAnswers) {
 			Session theCase = createCase(knowledge, flattendFindings);
 			ChoiceValue choiceValue = new ChoiceValue(nextAnswer);
 			setCaseValue(theCase, currentQuestion, choiceValue);
@@ -115,7 +115,7 @@ public class DDBot2 {
 
 	private Session createCase(KnowledgeBase knowledge, List<Finding> findings)
 			throws Exception {
-		Session theCase = CaseFactory.createXPSCase(knowledge,
+		Session theCase = SessionFactory.createSession(knowledge,
 				MQDialogController.class);
 
 		for (Finding finding : findings) {

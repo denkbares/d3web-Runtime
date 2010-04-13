@@ -25,7 +25,7 @@ package de.d3web.kernel.psMethods.shared.comparators;
 
 import java.util.List;
 
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 
 /**
  * Marks a question-comparator as grouped.
@@ -34,13 +34,13 @@ import de.d3web.core.session.values.AnswerChoice;
  */
 public interface GroupedComparator {
 
-	void addPairRelation(AnswerChoice ans1, AnswerChoice ans2, double value);
+	void addPairRelation(Choice ans1, Choice ans2, double value);
 	
 	void addPairRelation(PairRelation pairRelation);
 	
-	void addPairRelation(AnswerChoice ans1, AnswerChoice ans2);
+	void addPairRelation(Choice ans1, Choice ans2);
 
-	double getPairRelationValue(AnswerChoice ans1, AnswerChoice ans2);
+	double getPairRelationValue(Choice ans1, Choice ans2);
 
 	List<PairRelation> getPairRelations();
 	

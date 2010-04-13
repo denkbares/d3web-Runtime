@@ -49,7 +49,7 @@ import de.d3web.core.knowledge.terminology.info.DCMarkedUp;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 
 /**
  * Stores questions (specially initial questions), sets of questions and
@@ -600,12 +600,12 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	 *            ID of the Answer
 	 * @return AnswerChoice with the specified ID
 	 */
-	public AnswerChoice searchAnswerChoice(String answerID) {
+	public Choice searchAnswerChoice(String answerID) {
 		for (Question q : getQuestions()) {
 			if (q instanceof QuestionChoice) {
 				QuestionChoice qc = (QuestionChoice) q;
-				List<AnswerChoice> allAlternatives = qc.getAllAlternatives();
-				for (AnswerChoice a : allAlternatives) {
+				List<Choice> allAlternatives = qc.getAllAlternatives();
+				for (Choice a : allAlternatives) {
 					if (a.getId().equals(answerID)) {
 						return a;
 					}

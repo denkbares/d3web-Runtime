@@ -61,7 +61,7 @@ import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
@@ -512,7 +512,7 @@ public class ExplanationRendererUtils {
 			writer.write(" = ");
 			Value ans = ce.getValue();
 			if (ans instanceof ChoiceValue) {
-				AnswerChoice ansC = (AnswerChoice) ans.getValue();
+				Choice ansC = (Choice) ans.getValue();
 					writer.writeText(ansC.getName() + " (" + ansC.getId()+ ")", "value");
 			}
 			else if (ans instanceof MultipleChoiceValue) {

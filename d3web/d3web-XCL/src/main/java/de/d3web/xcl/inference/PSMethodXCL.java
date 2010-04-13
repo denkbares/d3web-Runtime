@@ -45,7 +45,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
-import de.d3web.core.session.blackboard.XPSCaseObject;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.shared.AbstractAbnormality;
 import de.d3web.shared.PSMethodShared;
@@ -284,7 +284,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		return true;
 	}
 
-	private static class XCLCaseObject extends XPSCaseObject {
+	private static class XCLCaseObject extends SessionObject {
 		private int		totalAnsweredCount = 0;
 		private double	totalAnsweredAbnormality = 0.0;
 
@@ -293,7 +293,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		}
 	}
 
-	public XPSCaseObject createCaseObject(Session xpsCase) {
+	public SessionObject createCaseObject(Session session) {
 		return new XCLCaseObject(this);
 	}
 

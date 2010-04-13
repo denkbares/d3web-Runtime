@@ -37,7 +37,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.CaseFactory;
+import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.interviewmanager.MQDialogController;
@@ -289,7 +289,7 @@ public class InterviewBot {
 	}
 
 	private Session createCase(SequentialTestCase sqCase) {
-		Session theCase = CaseFactory.createXPSCase(knowledge, MQDialogController.class);
+		Session theCase = SessionFactory.createSession(knowledge, MQDialogController.class);
 		for (RatedTestCase c : sqCase.getCases()) {
 			for (Finding finding : c.getFindings()) {
 				setCaseValue(theCase, finding.getQuestion(), finding.getValue());
@@ -299,7 +299,7 @@ public class InterviewBot {
 	}
 
 	private Session createCase(List<Finding> findings) {
-		Session theCase = CaseFactory.createXPSCase(knowledge, MQDialogController.class);
+		Session theCase = SessionFactory.createSession(knowledge, MQDialogController.class);
 		for (Finding finding : findings) {
 			setCaseValue(theCase, finding.getQuestion(), finding.getValue());
 		}

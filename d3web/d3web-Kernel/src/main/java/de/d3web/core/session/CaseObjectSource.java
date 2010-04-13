@@ -20,7 +20,7 @@
 
 package de.d3web.core.session;
 
-import de.d3web.core.session.blackboard.XPSCaseObject;
+import de.d3web.core.session.blackboard.SessionObject;
 
 /**
  * States the ability that the implementing object are able to create an session
@@ -41,5 +41,5 @@ public interface CaseObjectSource {
 	 * 
 	 * @return the created session object for this instance
 	 */
-	public XPSCaseObject createCaseObject(Session session);
+	public SessionObject createCaseObject(Session session);
 }

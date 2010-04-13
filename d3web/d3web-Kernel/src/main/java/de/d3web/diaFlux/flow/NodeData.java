@@ -23,10 +23,10 @@ package de.d3web.diaFlux.flow;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.d3web.core.session.blackboard.XPSCaseObject;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.diaFlux.inference.PathEntry;
 
-public class NodeData extends XPSCaseObject implements INodeData {
+public class NodeData extends SessionObject implements INodeData {
 
 	
 	private final List<PathEntry> support;

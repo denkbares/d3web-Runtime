@@ -29,9 +29,9 @@ import de.d3web.core.session.Value;
  */
 public class ChoiceValue implements Value {
 
-	AnswerChoice value;
+	Choice value;
 	
-	public ChoiceValue(AnswerChoice value) {
+	public ChoiceValue(Choice value) {
 		this.value = value;
 	}
 	

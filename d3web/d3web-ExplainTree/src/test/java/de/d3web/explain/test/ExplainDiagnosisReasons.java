@@ -35,9 +35,9 @@ import de.d3web.abstraction.inference.PSMethodQuestionSetter;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
-import de.d3web.core.session.CaseFactory;
+import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.explain.ExplanationFactory;
 import de.d3web.explain.eNodes.ENode;
@@ -73,7 +73,7 @@ public class ExplainDiagnosisReasons extends AbstractExplainTest {
 
 	@Override
 	protected void setUp() {
-		theCase = CaseFactory.createXPSCase(testKb);
+		theCase = SessionFactory.createSession(testKb);
 		/* Let me have some explanations of this test first:
 		 * We do have the following assumptions:
 		 * InitQASets: Q56, Q16
@@ -99,7 +99,7 @@ public class ExplainDiagnosisReasons extends AbstractExplainTest {
 
 		// set MF8a2 since it will give P8 the score P5 (and activate Mf10)
 		QuestionChoice Mf8 = (QuestionChoice) findQ("Mf8", testKb);
-		theCase.setValue(Mf8, new ChoiceValue((AnswerChoice) Mf8.getAnswer(theCase,
+		theCase.setValue(Mf8, new ChoiceValue((Choice) Mf8.getAnswer(theCase,
 				"Mf8a2")));
 
 		//  explain a diagnosis
@@ -121,11 +121,11 @@ public class ExplainDiagnosisReasons extends AbstractExplainTest {
 
 		// set MF8a2 since it will give P8 the score P5 (and activate Mf10)
 		QuestionChoice Mf13 = (QuestionChoice) findQ("Mf13", testKb);
-		theCase.setValue(Mf13, new ChoiceValue((AnswerChoice) Mf13.getAnswer(theCase,
+		theCase.setValue(Mf13, new ChoiceValue((Choice) Mf13.getAnswer(theCase,
 				"Mf13a1")));
 
 		QuestionChoice Mf8 = (QuestionChoice) findQ("Mf8", testKb);
-		theCase.setValue(Mf8, new ChoiceValue((AnswerChoice) Mf8.getAnswer(theCase,
+		theCase.setValue(Mf8, new ChoiceValue((Choice) Mf8.getAnswer(theCase,
 				"Mf8a2")));
 
 		//  explain a diagnosis

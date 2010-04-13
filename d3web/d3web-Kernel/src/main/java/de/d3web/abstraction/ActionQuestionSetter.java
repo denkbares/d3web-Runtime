@@ -50,8 +50,8 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseActionQuestionSetter;
 import de.d3web.core.session.blackboard.CaseQuestion;
-import de.d3web.core.session.blackboard.XPSCaseObject;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.EvaluatableAnswerNumValue;
@@ -300,8 +300,8 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	 *         severeness is defined by the order of the alternatives; the first
 	 *         answer is the severest.)
 	 */
-	protected AnswerChoice getSeverestAnswer(QuestionOC siQuestionOC, Session theCase) {
-		AnswerChoice severestAnswer = null;
+	protected Choice getSeverestAnswer(QuestionOC siQuestionOC, Session theCase) {
+		Choice severestAnswer = null;
 		// use an array to accelerate
 		Object[] allAnswers = siQuestionOC.getAllAlternatives().toArray();
 
@@ -317,7 +317,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 					// determine the more severe answer between the
 					// newAnswer and the
 					// up-to-now severest answer
-					AnswerChoice choice = (AnswerChoice) ((ChoiceValue) actionValue).getValue();
+					Choice choice = (Choice) ((ChoiceValue) actionValue).getValue();
 
 					if ((severestAnswer != null) && (!severestAnswer.equals(choice))) {
 						int i = 0;
@@ -346,7 +346,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	/**
 	 * @see de.d3web.core.session.CaseObjectSource#createCaseObject(Session)
 	 */
-	public XPSCaseObject createCaseObject(Session session) {
+	public SessionObject createCaseObject(Session session) {
 		return new CaseActionQuestionSetter(this);
 	}
 

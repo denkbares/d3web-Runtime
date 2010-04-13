@@ -27,6 +27,6 @@ import de.d3web.core.session.Session;
  * @author bruemmer
  */
 public interface AdditionalCaseConverter {
-	public void caseObject2XPSCase(CaseObject caseObject, Session xpsCase);
-	public void xpsCase2CaseObject(Session xpsCase, CaseObject caseObject);
+	public void caseObject2Session(CaseObject caseObject, Session session);
+	public void session2CaseObject(Session session, CaseObject caseObject);
 }

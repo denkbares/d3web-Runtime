@@ -31,7 +31,7 @@ import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.D3WebCase;
+import de.d3web.core.session.D3WebSession;
 import de.d3web.core.session.Session;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
@@ -91,7 +91,7 @@ public class ActionHeuristicPS extends PSAction {
 				getDiagnosis().getScore(theCase, getProblemsolverContext()).add(
 				getScore());
 
-		((D3WebCase) theCase).setValue(getDiagnosis(), resultDS,
+		((D3WebSession) theCase).setValue(getDiagnosis(), resultDS,
 				getProblemsolverContext());
 	}
 
@@ -161,7 +161,7 @@ public class ActionHeuristicPS extends PSAction {
 					getProblemsolverContext()).subtract(
 					getScore());
 		}
-		((D3WebCase) theCase).setValue(
+		((D3WebSession) theCase).setValue(
 				getDiagnosis(),
 				resultDS,
 				getProblemsolverContext());

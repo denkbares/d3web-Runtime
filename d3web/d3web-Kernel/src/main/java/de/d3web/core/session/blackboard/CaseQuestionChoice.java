@@ -43,7 +43,7 @@ public abstract class CaseQuestionChoice extends CaseQuestion {
 
 	/**
 	 * @return the current numerical value of the question
-	 * according to a give XPSCase. This value is used to
+	 * according to a give Session. This value is used to
 	 * be processed by a Num2ChoiceSchema.
 	 */
 	public Double getNumericalSchemaValue() {

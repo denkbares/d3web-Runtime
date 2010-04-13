@@ -545,7 +545,7 @@ public class Property {
 
 	/**
 	 * used for: KnowledgeBase doc: Generator-Object, which may automatically
-	 * generate the casename of an XPSCase handled by: d3web-dialog
+	 * generate the casename of an Session handled by: d3web-dialog
 	 * 
 	 * @return de.d3web.templateedit.core.Generator
 	 */
@@ -564,7 +564,7 @@ public class Property {
 			"dialog.modifiable_question");
 
 	/**
-	 * used for: XPSCase doc: name of the patient (there is no question for it
+	 * used for: Session doc: name of the patient (there is no question for it
 	 * in the kb) handled by: d3web-dentist
 	 * 
 	 * @return String
@@ -573,7 +573,7 @@ public class Property {
 			"dentist.patient_name");
 
 	/**
-	 * used for: XPSCase doc: birth of the patient (there is no question for it
+	 * used for: Session doc: birth of the patient (there is no question for it
 	 * in the kb) handled by: d3web-dentist
 	 * 
 	 * @return String
@@ -597,7 +597,7 @@ public class Property {
 	 */
 	
 	/**
-	 * used for: XPSCase<br>
+	 * used for: Session<br>
 	 * doc: Map maps Questions to user-defined weights<br>
 	 * handled by: *d3web-CaseRepository*
 	 * 
@@ -732,7 +732,7 @@ public class Property {
 	 */
 
 	/**
-	 * used for: XPSCase doc: hashtable for NuWiBs-properties handled by:
+	 * used for: Session doc: hashtable for NuWiBs-properties handled by:
 	 * NuWiBs-Dialog
 	 * 
 	 * @return Hashtable

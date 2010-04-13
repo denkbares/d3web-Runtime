@@ -26,7 +26,7 @@ import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 
 public class XCLRelation {
@@ -83,15 +83,15 @@ public class XCLRelation {
 		return createXCLRelation(conditionedFinding, DEFAULT_WEIGHT);
 	}
 	
-	public static XCLRelation createXCLRelation(QuestionChoice question, AnswerChoice answer) {
+	public static XCLRelation createXCLRelation(QuestionChoice question, Choice answer) {
 		return createXCLRelation(question, answer, DEFAULT_WEIGHT);
 	}
 
-	public static XCLRelation createXCLRelation(QuestionChoice question, AnswerChoice answer, double weight) {
+	public static XCLRelation createXCLRelation(QuestionChoice question, Choice answer, double weight) {
 		return createXCLRelation(new CondEqual(question, new ChoiceValue(answer)), weight);
 	}
 
-	public static XCLRelation createXCLRelation(String id, QuestionChoice question, AnswerChoice answer) {
+	public static XCLRelation createXCLRelation(String id, QuestionChoice question, Choice answer) {
 		XCLRelation r = createXCLRelation(new CondEqual(question, new ChoiceValue(answer)));
 		r.setId(id);
 		return r;

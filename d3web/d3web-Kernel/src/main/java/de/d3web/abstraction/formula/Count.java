@@ -25,7 +25,7 @@ import java.util.List;
 
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.MultipleChoiceValue;
 /**
  * FormulaElement term that can count the answers of a QuestionMC
@@ -64,10 +64,10 @@ public class Count implements FormulaNumberElement {
 	public Double eval(Session theCase) {
 		MultipleChoiceValue value = (MultipleChoiceValue) getQuestionMC().getValue(
 				theCase);
-		List<AnswerChoice> choices = (List<AnswerChoice>) value.getValue();
+		List<Choice> choices = (List<Choice>) value.getValue();
 		
 		// check, if AnswerNo oder AnswerUnknown is included
-		for (AnswerChoice answerChoice : choices) {
+		for (Choice answerChoice : choices) {
 			if (answerChoice.isAnswerNo() || answerChoice.isUnknown())
 				return new Double(0);
 		}

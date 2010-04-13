@@ -27,7 +27,7 @@ import java.util.List;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import de.d3web.core.io.fragments.DiagnosisHandler;
+import de.d3web.core.io.fragments.SolutionsHandler;
 import de.d3web.core.io.fragments.QContainerHandler;
 import de.d3web.core.io.fragments.QuestionHandler;
 import de.d3web.core.io.utilities.Util;
@@ -38,7 +38,7 @@ import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.plugin.test.InitPluginManager;
 
@@ -134,8 +134,8 @@ public class KnowledgeBaseExportTest extends TestCase {
 	
 		QuestionOC q1 = new QuestionOC("q1");
 		q1.setName("q1-text");
-		List<AnswerChoice> alternatives = new LinkedList<AnswerChoice>();
-		AnswerChoice a1 = new AnswerChoice("q1a1");
+		List<Choice> alternatives = new LinkedList<Choice>();
+		Choice a1 = new Choice("q1a1");
 		a1.setText("q1a1-text");
 		alternatives.add(a1);
 		q1.setAlternatives(alternatives);
@@ -202,7 +202,7 @@ public class KnowledgeBaseExportTest extends TestCase {
 		diagChild.addParent(diag);
 		
 		
-		DiagnosisHandler dw = new DiagnosisHandler();
+		SolutionsHandler dw = new SolutionsHandler();
 		
 		XMLTag isTag = new XMLTag(dw.write(diag, Util.createEmptyDocument()));		
 		

@@ -23,7 +23,7 @@ package de.d3web.kernel.psMethods.shared.comparators.mc;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.kernel.psMethods.shared.comparators.GroupedComparator;
 import de.d3web.kernel.psMethods.shared.comparators.PairRelation;
 
@@ -43,7 +43,7 @@ public abstract class QuestionComparatorMCGrouped extends QuestionComparatorMC i
 	 * @param ans1
 	 *            de.d3web.kernel.domainModel.answers.AnswerChoice
 	 */
-	public void addPairRelation(AnswerChoice ans1, AnswerChoice ans2,
+	public void addPairRelation(Choice ans1, Choice ans2,
 			double value) {
 		PairRelation rel = new PairRelation(ans1, ans2, value);
 		if (pairRelations.contains(rel)) {
@@ -58,7 +58,7 @@ public abstract class QuestionComparatorMCGrouped extends QuestionComparatorMC i
 		pairRelations.add(pairRelation);
 	}
 
-	public double getPairRelationValue(AnswerChoice ans1, AnswerChoice ans2) {
+	public double getPairRelationValue(Choice ans1, Choice ans2) {
 		PairRelation rel = new PairRelation(ans1, ans2, 0.0);
 		boolean found = pairRelations.contains(rel);
 		if (found) {
@@ -76,7 +76,7 @@ public abstract class QuestionComparatorMCGrouped extends QuestionComparatorMC i
 		pairRelations = new LinkedList<PairRelation>();
 	}
 
-	public void addPairRelation(AnswerChoice ans1, AnswerChoice ans2) {
+	public void addPairRelation(Choice ans1, Choice ans2) {
 		addPairRelation(ans1, ans2, 1.0);
 	}
 

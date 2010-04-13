@@ -19,83 +19,77 @@
 package de.d3web.core.io.fragments;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.FragmentHandler;
+import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Properties;
-import de.d3web.core.session.values.AnswerChoice;
-import de.d3web.core.session.values.AnswerNo;
-import de.d3web.core.session.values.AnswerYes;
+import de.d3web.scoring.Score;
 /**
- * Handels Choice Answers
+ * FragmentHanler for Diagnosis
+ * Children are ignored, hierarchies are read/written by the knowledge readers/writers.
  *
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class AnswerChoiceHandler implements FragmentHandler {
+public class SolutionsHandler implements FragmentHandler {
 
 	@Override
 	public boolean canRead(Element element) {
-		return element.getNodeName().equals("Answer");
+		return element.getNodeName().equals("Diagnosis");
 	}
 
 	@Override
 	public boolean canWrite(Object object) {
-		return (object instanceof AnswerChoice);
+		return (object instanceof Solution);
 	}
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		String type = element.getAttribute("type");
 		String id = element.getAttribute("ID");
-		AnswerChoice ac = null;
-		if (type.equals("AnswerNo")) {
-			ac = new AnswerNo(id);
-		} else if (type.equals("AnswerYes")) {
-			ac = new AnswerYes(id);
-		} else if (type.equals("AnswerChoice")) {
-			ac = new AnswerChoice(id);
+		String apriori = element.getAttribute("aPriProb");
+		Solution diag = new Solution(id);
+		if (apriori != null) {
+			diag.setAprioriProbability(Util.getScore(apriori));
 		}
-		if (ac !=  null) {
-			List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
-			for (Element node: childNodes) {
-				if (node.getNodeName().equals("Text")) {
-					ac.setText(node.getTextContent());
-				} else {
-					Object properties = PersistenceManager.getInstance().readFragment(node, kb);
-					if (properties instanceof Properties) {
-						ac.setProperties((Properties) properties);
-					}
-				}
+		Properties properties = null;
+		for (Element child: XMLUtil.getElementList(element.getChildNodes())) {
+			if (child.getNodeName().equals("Text")) {
+				diag.setName(child.getTextContent());
+			}
+			//If the child is none of the types above and it doesn't contain the children or the costs,
+			//it contains the properties.
+			//Costs are no longer stored in IDObjects, so they are ignored.
+			else if (!child.getNodeName().equals("Children")&&!child.getNodeName().equals("Costs")) {
+				properties=(Properties) PersistenceManager.getInstance().readFragment(child, kb);
 			}
 		}
-		return ac;
+		if (properties != null) {
+			diag.setProperties(properties);
+		}
+		diag.setKnowledgeBase(kb);
+		return diag;
 	}
 
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
-		Element element = doc.createElement("Answer");
-		AnswerChoice a = (AnswerChoice) object;
-		element.setAttribute("ID", a.getId());
-		element.setAttribute("type", "answer");
-		if (a instanceof AnswerNo) {
-			element.setAttribute("type", "AnswerNo");
-		} else if (a instanceof AnswerYes) {
-			element.setAttribute("type", "AnswerYes");
-		} else {
-			element.setAttribute("type", "AnswerChoice");
+		Solution diag = (Solution) object;
+		Element element = doc.createElement("Diagnosis");
+		element.setAttribute("ID", diag.getId());
+		XMLUtil.appendTextNode(diag.getName(), element);
+		Score apriori = diag.getAprioriProbability();
+		if (apriori != null) {
+			element.setAttribute("aPriProb", apriori.getSymbol());
 		}
-		XMLUtil.appendTextNode(a.getName(), element);
-		Properties properties = a.getProperties();
+		Properties properties = diag.getProperties();
 		if (properties!=null && !properties.isEmpty()) {
 			element.appendChild(PersistenceManager.getInstance().writeFragment(properties, doc));
 		}
 		return element;
 	}
-
 }

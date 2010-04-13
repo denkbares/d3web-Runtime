@@ -59,7 +59,7 @@ public class ShadowMemory extends DialogClient {
 	}
 
 	/**
-	 * stores all questionID-Answers-Pairs of the given XPSCase
+	 * stores all questionID-Answers-Pairs of the given Session
 	 * @param Session to put
 	 */
 	@Override

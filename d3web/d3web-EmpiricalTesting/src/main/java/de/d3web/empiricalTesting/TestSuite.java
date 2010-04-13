@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
 public class TestSuite {
@@ -325,7 +325,7 @@ public class TestSuite {
 	
 	//TODO: Nicht nur eine Antwort (auf eine Frage) sondern mehrere
 	//Antworten auf mehrere (erste) Fragen möglich
-	public TestSuite getPartiallyAnsweredSuite(AnswerChoice answer){
+	public TestSuite getPartiallyAnsweredSuite(Choice answer){
 		TestSuite ret = new TestSuite();
 		for(SequentialTestCase stc : getRepository())
 			if (stc.getCases().get(0).getFindings().get(0).getValue().equals(answer))

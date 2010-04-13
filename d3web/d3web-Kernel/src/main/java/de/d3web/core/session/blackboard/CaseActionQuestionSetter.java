@@ -34,7 +34,7 @@ import de.d3web.core.session.CaseObjectSource;
 /**
  * @author Atzmueller
  */
-public class CaseActionQuestionSetter extends XPSCaseObject {
+public class CaseActionQuestionSetter extends SessionObject {
 
 	private Hashtable<Question, Object> actionValues;
 	Double lastSetValue;

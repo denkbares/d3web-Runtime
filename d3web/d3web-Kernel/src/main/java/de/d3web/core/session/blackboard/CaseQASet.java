@@ -32,7 +32,7 @@ import de.d3web.core.knowledge.terminology.QASet.Reason;
  * @author Christian Betz, joba, norman
  * @see QASet
  */
-public abstract class CaseQASet extends XPSCaseObject {
+public abstract class CaseQASet extends SessionObject {
 	private List<Reason> proReasons = null;
 	private List<Reason> contraReasons = null;
 
@@ -107,7 +107,7 @@ public abstract class CaseQASet extends XPSCaseObject {
 	 * @param reason reason (rule or KnowledgeBase (when answered)) to remove from pro reason list
 	 */
 	public void removeProReason(Object reason) {
-		//XPSCase.trace(WBObjekt.getId() + ": removed pro Reason: " + reason.toString());	
+		//Session.trace(WBObjekt.getId() + ": removed pro Reason: " + reason.toString());	
 		proReasons.remove(reason);
 	}
 }

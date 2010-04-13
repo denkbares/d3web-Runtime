@@ -27,7 +27,7 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.XPSCaseObject;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.values.UndefinedValue;
 
 /**
@@ -76,11 +76,11 @@ public abstract class ExceptionQuestion extends Question {
     }
 
     /**
-     * Won´t return a XPSCaseObject, because this is just a "marker"-Class
+     * Won´t return a SessionObject, because this is just a "marker"-Class
      * 
      * @return null
      */
-    public XPSCaseObject createCaseObject(Session session) {
+    public SessionObject createCaseObject(Session session) {
 	return null;
     }
 

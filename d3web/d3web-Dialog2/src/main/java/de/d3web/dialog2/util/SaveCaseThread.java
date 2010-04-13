@@ -25,13 +25,13 @@ import org.apache.log4j.Logger;
 import de.d3web.caserepository.CaseObjectImpl;
 import de.d3web.core.session.ValuedObject;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.XPSCaseEventListener;
+import de.d3web.core.session.SessionEventListener;
 import de.d3web.dialog2.WebDialog;
 import de.d3web.dialog2.basics.knowledge.CaseManager;
 import de.d3web.dialog2.basics.usermanaging.User;
 import de.d3web.dialog2.controller.SaveCaseController;
 
-public class SaveCaseThread extends Thread implements XPSCaseEventListener {
+public class SaveCaseThread extends Thread implements SessionEventListener {
 
     private WebDialog dia;
 
@@ -64,7 +64,7 @@ public class SaveCaseThread extends Thread implements XPSCaseEventListener {
 	timeCaseStarted = System.currentTimeMillis();
     }
 
-    public void notify(Session xpsCase, ValuedObject o, Object context) {
+    public void notify(Session session, ValuedObject o, Object context) {
 	timeToSave = System.currentTimeMillis() + maxIdleTime;
 	hasBeenNotified = true;
     }

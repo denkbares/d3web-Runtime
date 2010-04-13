@@ -23,7 +23,7 @@ package de.d3web.diaFlux.flow;
 import java.util.List;
 
 import de.d3web.core.inference.PSAction;
-import de.d3web.core.session.blackboard.XPSCaseObject;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.diaFlux.NoopAction;
 
 public class SnapshotNode extends Node {

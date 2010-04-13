@@ -63,7 +63,7 @@ public class ECondition {
 
 		boolean isActive = false;
 		try {
-			isActive = cond.eval(factory.getXPSCase());
+			isActive = cond.eval(factory.getSession());
 		} catch (NoAnswerException e) {
 		} catch (UnknownAnswerException e) {
 		}

@@ -35,7 +35,7 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.AnswerNo;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.AnswerYes;
@@ -129,7 +129,7 @@ public class QuestionTagReader extends AbstractTagReader {
 			if (id == null || "".equals(id))
 				id = value;
 
-			AnswerChoice c = (AnswerChoice) ((QuestionChoice) currentQuestion).getAnswer(
+			Choice c = (Choice) ((QuestionChoice) currentQuestion).getAnswer(
 					null, id);
 			currentValue = new ChoiceValue(c);
 				

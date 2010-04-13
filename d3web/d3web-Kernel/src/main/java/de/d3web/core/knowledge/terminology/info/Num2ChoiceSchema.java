@@ -30,7 +30,7 @@ import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 
@@ -80,7 +80,7 @@ public class Num2ChoiceSchema implements KnowledgeSlice {
 	 * @return the answer selected from the given answer collection according to
 	 *         the given numeric value
 	 */
-	public Value getValueForNum(Double num, Collection<AnswerChoice> answers, Session theCase) {
+	public Value getValueForNum(Double num, Collection<Choice> answers, Session theCase) {
 		boolean ascending = isAscending();
 		for (int i = 0; i < schemaArray.length; i++) {
 			if ((ascending && num.doubleValue() < schemaArray[i].doubleValue())
@@ -100,13 +100,13 @@ public class Num2ChoiceSchema implements KnowledgeSlice {
 		return true;
 	}
 
-	protected Value nth(Collection<AnswerChoice> answers, int pos) {
-		Iterator<AnswerChoice> iter = answers.iterator();
+	protected Value nth(Collection<Choice> answers, int pos) {
+		Iterator<Choice> iter = answers.iterator();
 		int position = 0;
 		while (iter.hasNext()) {
 			Answer element = iter.next();
 			if (position == pos) {
-				return new ChoiceValue((AnswerChoice) element);
+				return new ChoiceValue((Choice) element);
 			}
 			position++;
 		}

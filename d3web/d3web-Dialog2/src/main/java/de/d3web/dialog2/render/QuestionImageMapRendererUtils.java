@@ -38,7 +38,7 @@ import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.ValueFactory;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.dialog2.basics.layout.QContainerLayout;
 import de.d3web.dialog2.basics.layout.QuestionPageLayout;
@@ -242,7 +242,7 @@ public class QuestionImageMapRendererUtils {
 
 				String nextAnswerID = "";
 				for (Object object : qc.getAllAlternatives()) {
-					AnswerChoice ac = (AnswerChoice) object;
+					Choice ac = (Choice) object;
 					if (useNext) {
 						nextAnswerID = ac.getId();
 						useNext = false;

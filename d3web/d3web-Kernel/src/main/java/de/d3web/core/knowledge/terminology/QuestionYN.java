@@ -22,7 +22,7 @@ package de.d3web.core.knowledge.terminology;
 
 import de.d3web.core.manage.AnswerFactory;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.utilities.Utils;
 
@@ -38,8 +38,8 @@ public class QuestionYN extends QuestionOC {
 	protected final static String YES_STRING = "Yes";
     protected final static String NO_STRING = "No";
 
-	public AnswerChoice yes;
-	public AnswerChoice no;
+	public Choice yes;
+	public Choice no;
 
 	/**
 	 * Creates a new Yes-No Question, which is a simple QuestionChoice with only
@@ -54,7 +54,7 @@ public class QuestionYN extends QuestionOC {
 		super(id);
 		yes = AnswerFactory.createAnswerYes(id + "YES", YES_STRING);
 		no = AnswerFactory.createAnswerNo(id + "NO", NO_STRING);
-		setAlternatives(Utils.createList(new AnswerChoice[] {
+		setAlternatives(Utils.createList(new Choice[] {
 				yes, no }));
     }
 
@@ -62,7 +62,7 @@ public class QuestionYN extends QuestionOC {
 		super(id);
 		yes = AnswerFactory.createAnswerYes(id + "YES", yesText);
 		no = AnswerFactory.createAnswerNo(id + "NO", noText);
-    	setAlternatives(Utils.createList(new AnswerChoice[] {
+    	setAlternatives(Utils.createList(new Choice[] {
 				yes, no }));
     }
 
@@ -71,7 +71,7 @@ public class QuestionYN extends QuestionOC {
 	 * 
 	 * @Deprecated Use the standard setters.
 	 * @param theCase
-	 *            XPSCase
+	 *            Session
 	 */
 	@Deprecated
     public void setValueNo(Session theCase) {
@@ -84,7 +84,7 @@ public class QuestionYN extends QuestionOC {
 	 * @Deprecated Use the standard setters.
 	 * 
 	 * @param theCase
-	 *            de.d3web.kernel.domainModel.XPSCase
+	 *            de.d3web.kernel.domainModel.Session
 	 */
 	@Deprecated
     public void setValueYes(Session theCase) {

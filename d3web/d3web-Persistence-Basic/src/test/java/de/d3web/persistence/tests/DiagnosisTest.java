@@ -25,7 +25,7 @@ import java.io.IOException;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import de.d3web.core.io.fragments.DiagnosisHandler;
+import de.d3web.core.io.fragments.SolutionsHandler;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
@@ -41,7 +41,7 @@ import de.d3web.scoring.Score;
 public class DiagnosisTest extends TestCase {
 	
 	private Solution diag;
-	private DiagnosisHandler dh;
+	private SolutionsHandler dh;
 	private XMLTag isTag;
 	private XMLTag shouldTag;
 	
@@ -72,7 +72,7 @@ public class DiagnosisTest extends TestCase {
 		diag = new Solution("d1");
 		diag.setName("d1-text");
 		
-		dh = new DiagnosisHandler();
+		dh = new SolutionsHandler();
 
 		// first step in building shouldTag: id and text always added in shouldTag
 		shouldTag = new XMLTag("Diagnosis");

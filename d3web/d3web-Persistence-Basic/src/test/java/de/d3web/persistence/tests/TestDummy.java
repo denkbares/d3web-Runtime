@@ -23,7 +23,7 @@ package de.d3web.persistence.tests;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import de.d3web.core.io.fragments.DiagnosisHandler;
+import de.d3web.core.io.fragments.SolutionsHandler;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.persistence.tests.utils.XMLTag;
@@ -43,7 +43,7 @@ public class TestDummy extends TestCase {
 //	private TestClass test;
 //	private TestWriter tw;
 	private Solution diag;
-	private DiagnosisHandler dw;
+	private SolutionsHandler dw;
 	
 	private XMLTag isTag;
 	private XMLTag shouldTag;
@@ -69,7 +69,7 @@ public class TestDummy extends TestCase {
 		diag = new Solution("d1");
 		diag.setName("d1-text");
 		
-		dw = new DiagnosisHandler();
+		dw = new SolutionsHandler();
 
 		shouldTag = new XMLTag("Diagnosis");
 		shouldTag.addAttribute("ID", "d1");

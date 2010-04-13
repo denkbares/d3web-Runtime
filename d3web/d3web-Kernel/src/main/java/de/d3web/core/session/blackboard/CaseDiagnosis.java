@@ -35,7 +35,7 @@ import de.d3web.scoring.DiagnosisScore;
  * @author Christian Betz, joba
  * @see Solution
  */
-public class CaseDiagnosis extends XPSCaseObject {
+public class CaseDiagnosis extends SessionObject {
 
 	private Map value;
 

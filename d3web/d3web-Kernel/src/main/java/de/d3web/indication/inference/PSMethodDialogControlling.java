@@ -55,7 +55,7 @@ public class PSMethodDialogControlling extends PSMethodCombined {
 	}
 
 	/**
-	 * Retrieves all dialog controlling PSMethods from the given XPSCase
+	 * Retrieves all dialog controlling PSMethods from the given Session
 	 * Creation date: (03.01.2002 16:17:28)
 	 */
 	public void init(Session theCase) {

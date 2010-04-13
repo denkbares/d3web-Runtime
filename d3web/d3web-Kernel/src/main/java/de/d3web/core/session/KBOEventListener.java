@@ -29,6 +29,6 @@ import java.util.EventListener;
  */
 public interface KBOEventListener extends EventListener {
 
-	public abstract void notify(IEventSource source, Session xpsCase);
+	public abstract void notify(IEventSource source, Session session);
 
 }

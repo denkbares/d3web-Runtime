@@ -386,7 +386,7 @@ public class FluxSolver implements PSMethod {
 
 	}
 
-	// private void assertOtherEdgesFalse(XPSCase theCase, Iterator<IEdge>
+	// private void assertOtherEdgesFalse(Session theCase, Iterator<IEdge>
 	// edges) throws NoAnswerException, UnknownAnswerException {
 	// while (edges.hasNext()) {
 	// if (edges.next().getCondition().eval(theCase)) {

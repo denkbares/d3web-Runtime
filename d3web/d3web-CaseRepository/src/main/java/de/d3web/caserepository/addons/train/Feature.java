@@ -29,7 +29,7 @@ import de.d3web.caserepository.XMLCodeGenerator;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.AnswerNum;
 import de.d3web.core.session.values.AnswerText;
 
@@ -295,7 +295,7 @@ public class Feature implements XMLCodeGenerator {
 			" weight=\"" + getWeight() + "\""
 		);
 
-		if (getAnswer() instanceof AnswerChoice)
+		if (getAnswer() instanceof Choice)
 			xmlCode.append(" answer=\"" + getAnswer().getId() + "\">");
 		else if (getAnswer() instanceof AnswerText)
 			xmlCode.append(" answer=\"" + getAnswer().getValue(null) + "\">");

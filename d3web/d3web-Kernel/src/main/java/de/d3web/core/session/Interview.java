@@ -14,7 +14,7 @@ public interface Interview {
 	 * <li> {@link Questionnaire}: All successor questions (direct and indirect
 	 * children) of the questionnaire should be answered by the caller as long
 	 * as they are relevant, see
-	 * {@link Question#isValid(de.d3web.kernel.XPSCase)}.
+	 * {@link Question#isValid(de.d3web.kernel.Session)}.
 	 * <li> {@link Question}: The caller should only answer exactly that
 	 * question.
 	 * <li> {@link Solution}: The caller should present the user exactly that

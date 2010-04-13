@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
 
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.kernel.psMethods.shared.comparators.PairRelation;
 /**
  * Handles PairRelations
@@ -52,8 +52,8 @@ public class PairRelationHandler implements FragmentHandler {
 				.getNodeValue();
 		double value = new Double(pair.getAttributes().getNamedItem("value")
 				.getNodeValue()).doubleValue();
-		AnswerChoice answer1 = kb.searchAnswerChoice(ans1);
-		AnswerChoice answer2 = kb.searchAnswerChoice(ans2);
+		Choice answer1 = kb.searchAnswerChoice(ans1);
+		Choice answer2 = kb.searchAnswerChoice(ans2);
 		return new PairRelation(answer1, answer2, value);
 	}
 

@@ -28,7 +28,7 @@ import de.d3web.core.inference.Rule;
  * @author Christian Betz, joba
  * @see Rule
  */
-public class CaseRuleComplex extends XPSCaseObject {
+public class CaseRuleComplex extends SessionObject {
 	private boolean fired = false;
 
 	/**

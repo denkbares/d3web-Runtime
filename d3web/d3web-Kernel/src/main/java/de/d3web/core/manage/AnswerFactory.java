@@ -22,7 +22,7 @@ package de.d3web.core.manage;
 
 import java.util.Date;
 
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.AnswerDate;
 import de.d3web.core.session.values.AnswerNo;
 import de.d3web.core.session.values.AnswerNum;
@@ -37,10 +37,10 @@ import de.d3web.core.session.values.AnswerYes;
  */
 public class AnswerFactory {
 
-	public static AnswerChoice createAnswerChoice(
+	public static Choice createAnswerChoice(
 		String theId,
 		String theValue) {
-		AnswerChoice theAnswer = new AnswerChoice(theId);
+		Choice theAnswer = new Choice(theId);
 		theAnswer.setText(theValue);
 		return theAnswer;
 	}

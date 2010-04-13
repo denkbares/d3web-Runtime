@@ -12,7 +12,7 @@ import de.d3web.core.session.Session;
  */
 public interface ISupport {
 	
-	boolean isValid(Session xpsCase);
+	boolean isValid(Session session);
 	
 
 }

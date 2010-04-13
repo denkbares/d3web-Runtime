@@ -32,7 +32,7 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.ValueFactory;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.dialog2.basics.knowledge.CaseManager;
 import de.d3web.dialog2.basics.knowledge.CaseObjectDescriptor;
 import de.d3web.dialog2.util.DialogUtils;
@@ -75,8 +75,8 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 				if (q != null && q instanceof QuestionChoice) {
 					QuestionChoice qCh = (QuestionChoice) q;
 					DataGroup group = new DataGroup(qCh.getName());
-					List<AnswerChoice> answers = qCh.getAllAlternatives();
-					for (AnswerChoice a : answers) {
+					List<Choice> answers = qCh.getAllAlternatives();
+					for (Choice a : answers) {
 						int absoluteFreq = getAbsoluteFreq(qCh, a.getId(),
 								theCase);
 						double relFreq = getRelFreq(absoluteFreq);

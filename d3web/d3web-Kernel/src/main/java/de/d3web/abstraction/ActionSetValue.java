@@ -32,7 +32,7 @@ import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.EvaluatableAnswerDateValue;
@@ -120,7 +120,7 @@ public class ActionSetValue extends ActionQuestionSetter implements CaseObjectSo
 						MethodKind.BACKWARD) != null)) {
 					Answer ans = getSeverestAnswer((QuestionOC) getQuestion(), theCase);
 					if (ans != null) {
-						AnswerChoice tempValChoice = (AnswerChoice) tempVal.getValue();
+						Choice tempValChoice = (Choice) tempVal.getValue();
 						if (!ans.equals(tempValChoice))
 							theCase.setValue(getQuestion(), (Value) getValue());
 					}
@@ -159,8 +159,8 @@ public class ActionSetValue extends ActionQuestionSetter implements CaseObjectSo
 					&& (getQuestion().getKnowledge(PSMethodQuestionSetter.class,
 					MethodKind.BACKWARD) != null)) {
 				Answer ans = getSeverestAnswer((QuestionOC) getQuestion(), theCase);
-				if (ans != null && ans instanceof AnswerChoice) {
-					theCase.setValue(getQuestion(), new ChoiceValue((AnswerChoice) ans));
+				if (ans != null && ans instanceof Choice) {
+					theCase.setValue(getQuestion(), new ChoiceValue((Choice) ans));
 				}
 			}
 		}

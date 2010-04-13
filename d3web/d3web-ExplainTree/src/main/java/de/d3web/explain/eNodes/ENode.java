@@ -143,7 +143,7 @@ public class ENode {
 	private Collection getQASetActivationReasons() {
 		Collection retValues = new LinkedList();
 		Iterator pros =
-			((QASet) getTarget()).getProReasons(getFactory().getXPSCase()).iterator();
+			((QASet) getTarget()).getProReasons(getFactory().getSession()).iterator();
 		while (pros.hasNext()) {
 			Object pro = pros.next();
 			if ((pro instanceof QASet.Reason) && (contexts.contains(((QASet.Reason) pro).getProblemSolverContext()))) {
@@ -158,7 +158,7 @@ public class ENode {
 	private Collection getQASetContraReasons() {
 		Collection retValues = new LinkedList();
 		Iterator cons =
-			((QASet) getTarget()).getContraReasons(getFactory().getXPSCase()).iterator();
+			((QASet) getTarget()).getContraReasons(getFactory().getSession()).iterator();
 		while (cons.hasNext()) {
 			Object con = cons.next();
 			if ((con instanceof QASet.Reason) && (contexts.contains(((QASet.Reason) con).getProblemSolverContext()))) {
@@ -177,7 +177,7 @@ public class ENode {
 		KnowledgeSlice ks = ((QASet)getTarget()).getKnowledge(context, MethodKind.BACKWARD);
 		if (ks != null) {
 			KnowledgeSlice rule = (KnowledgeSlice) ks;
-			if (!rule.isUsed(getFactory().getXPSCase())) {	//FIXME: right method "isUsed"?
+			if (!rule.isUsed(getFactory().getSession())) {	//FIXME: right method "isUsed"?
 				unrealized.add(EReason.createReason(getFactory(), rule));
 			}
 		}
@@ -194,7 +194,7 @@ public class ENode {
 			return;
 		}
 		KnowledgeSlice rule = (KnowledgeSlice) backwardKnowledge;
-		if (rule.isUsed(getFactory().getXPSCase())) {	//FIXME: right method "isUsed"?
+		if (rule.isUsed(getFactory().getSession())) {	//FIXME: right method "isUsed"?
 			try {
 				if (((ActionHeuristicPS)((Rule)rule).getAction()).getScore().aPrioriIsPositive()) {
 					proReasons.add(EReason.createReason(getFactory(), rule));

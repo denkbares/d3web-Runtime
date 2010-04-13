@@ -24,7 +24,7 @@ import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 import de.d3web.core.manage.AnswerFactory;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.AnswerNum;
 import de.d3web.core.session.values.AnswerUnknown;
 
@@ -35,7 +35,7 @@ import de.d3web.core.session.values.AnswerUnknown;
  * For the different types of {@link Question} there
  * also exist corresponding subclasses of {@link Answer}. 
  * For instance, we a {@link QuestionChoice} holds a 
- * list of {@link AnswerChoice} instances.
+ * list of {@link Choice} instances.
  * 
  * @author Christian Betz, joba, norman
  * @see Question
@@ -55,7 +55,7 @@ public abstract class Answer implements IDObject, PropertiesContainer, Comparabl
 	private Question question;
 	
 	/**
-	 * Especially {@link AnswerChoice} instances can hold additional properties, 
+	 * Especially {@link Choice} instances can hold additional properties, 
 	 * such as explanation text etc.
 	 */
 	private Properties properties = new Properties();
@@ -96,7 +96,7 @@ public abstract class Answer implements IDObject, PropertiesContainer, Comparabl
 	 */
 	// joba: I removed this method, since it appears to be not used in any way. 
 	// Please report any problems to me.
-	//	public XPSCaseObject createCaseObject() {
+	//	public SessionObject createCaseObject() {
 	//		return null;
 	//	}
 
@@ -132,9 +132,9 @@ public abstract class Answer implements IDObject, PropertiesContainer, Comparabl
 	 * Returns the current value of this Answer in
 	 * a specific {@link Session}. 
 	 * This method is especially useful for numeric answers,
-	 * since, e.g., {@link AnswerChoice} objects have static values. 
+	 * since, e.g., {@link Choice} objects have static values. 
 	 * @return text or numeric value of this {@link Answer} object
-	 * TODO: remove XPSCase from signature. This results to removing all dynamic evaluateable answer values (e.g. Formulas) from the answer. Evaluate them before creating the Answer
+	 * TODO: remove Session from signature. This results to removing all dynamic evaluateable answer values (e.g. Formulas) from the answer. Evaluate them before creating the Answer
 	 */
 	public abstract Object getValue(Session theCase);
 

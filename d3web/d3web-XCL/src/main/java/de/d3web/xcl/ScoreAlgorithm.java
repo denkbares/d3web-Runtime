@@ -20,9 +20,9 @@ public interface ScoreAlgorithm {
 	 * 
 	 * @param xclModel the XCLModel to be updated
 	 * @param entries the propagation entries relevant for the model update
-	 * @param xpsCase the current case
+	 * @param session the current case
 	 */
-	void update(XCLModel xclModel, Collection<PropagationEntry> entries, Session xpsCase);
+	void update(XCLModel xclModel, Collection<PropagationEntry> entries, Session session);
 	
 	/**
 	 * Recalculates the states of the XCLModels of the case.
@@ -32,7 +32,7 @@ public interface ScoreAlgorithm {
 	 * ScoreAlgorithm used).
 	 * 
 	 * @param updatedModels the models updated before this call
-	 * @param xpsCase the current case
+	 * @param session the current case
 	 */
-	void refreshStates(Collection<XCLModel> updatedModels, Session xpsCase);
+	void refreshStates(Collection<XCLModel> updatedModels, Session session);
 }

@@ -56,7 +56,7 @@ public class MultipleChoiceValue implements Value {
 
 	public MultipleChoiceValue(AnswerMultipleChoice values) {
 		this.values = new ArrayList<ChoiceValue>(values.getChoices().size());
-		for (AnswerChoice choices : values.getChoices()) {
+		for (Choice choices : values.getChoices()) {
 			this.values.add(new ChoiceValue(choices));
 		}
 	}
@@ -130,7 +130,7 @@ public class MultipleChoiceValue implements Value {
 		StringBuffer b = new StringBuffer();
 		for (Iterator<ChoiceValue> iterator = values.iterator(); iterator.hasNext();) {
 			ChoiceValue answer = (ChoiceValue) iterator.next();
-			b.append(((AnswerChoice) answer.getValue()).getName());
+			b.append(((Choice) answer.getValue()).getName());
 			if (iterator.hasNext())
 				b.append(", ");
 		}
@@ -142,10 +142,10 @@ public class MultipleChoiceValue implements Value {
 		return values.toString();
 	}
 
-	public List<AnswerChoice> asChoiceList() {
-		List<AnswerChoice> choices = new ArrayList<AnswerChoice>(values.size());
+	public List<Choice> asChoiceList() {
+		List<Choice> choices = new ArrayList<Choice>(values.size());
 		for (ChoiceValue value : values) {
-			choices.add((AnswerChoice) value.getValue());
+			choices.add((Choice) value.getValue());
 		}
 		return choices;
 	}

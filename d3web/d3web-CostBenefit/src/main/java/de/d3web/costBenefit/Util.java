@@ -31,7 +31,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.manage.KnowledgeBaseManagement;
-import de.d3web.core.session.CaseFactory;
+import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
 import de.d3web.costBenefit.inference.PSMethodCostBenefit;
@@ -45,8 +45,8 @@ import de.d3web.costBenefit.inference.StateTransition;
 public class Util {
 
 	public static Session copyCase(Session theCase) {
-		Session testCase = CaseFactory
-				.createXPSCase(theCase.getKnowledgeBase(), new LinkedList<PSMethod>());
+		Session testCase = SessionFactory
+				.createSession(theCase.getKnowledgeBase(), new LinkedList<PSMethod>());
 		List<? extends Question> answeredQuestions = new LinkedList<Question>(
 				theCase.getAnsweredQuestions());
 		for (Question q : answeredQuestions) {

@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 
 /**
  * @author Jochen
@@ -46,12 +46,12 @@ public class QuestionZC extends QuestionOC {
 	}
 	
 	@Override
-	public List<AnswerChoice> getAllAlternatives() {
-		return new ArrayList<AnswerChoice>();
+	public List<Choice> getAllAlternatives() {
+		return new ArrayList<Choice>();
 	}
 
 	@Override
-	public void setAlternatives(List<AnswerChoice> l) {
+	public void setAlternatives(List<Choice> l) {
 		if (l.size() > 0) {
 			Logger.getLogger(this.getClass().getName()).severe(
 					"Tried to set AnswerAlternatives for QuestionZC");
@@ -59,7 +59,7 @@ public class QuestionZC extends QuestionOC {
 	}
 
 	@Override
-	public void addAlternative(AnswerChoice a) {
+	public void addAlternative(Choice a) {
 		Logger.getLogger(this.getClass().getName()).severe(
 				"Tried to add AnswerAlternative for QuestionZC");
 	}

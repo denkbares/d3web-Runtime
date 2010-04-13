@@ -39,7 +39,7 @@ import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
@@ -161,7 +161,7 @@ public class AnswerSelector {
 		if (forbiddenAnswers.get(question) == null) {
 			forbiddenAnswers.put(question, EMPTY_FORBIDDEN_LIST);
 		}
-		for (AnswerChoice choice : question.getAllAlternatives()) {
+		for (Choice choice : question.getAllAlternatives()) {
 			ChoiceValue choiceValue = new ChoiceValue(choice);
 			if (!forbiddenAnswers.get(question).contains(choiceValue)) {
 				answerCandidates.add(choiceValue);

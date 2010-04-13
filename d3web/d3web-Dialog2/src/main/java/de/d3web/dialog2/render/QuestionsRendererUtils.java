@@ -49,7 +49,7 @@ import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.AnswerNo;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.ChoiceValue;
@@ -104,7 +104,7 @@ public class QuestionsRendererUtils {
 		return true;
 	}
 
-	private static String getAnsNoId(List<AnswerChoice> ans) {
+	private static String getAnsNoId(List<Choice> ans) {
 		for (int i = ans.size() - 1; i >= 0; i--) {
 			if (ans.get(i) instanceof AnswerNo) {
 				return ans.get(i).getId();
@@ -113,10 +113,10 @@ public class QuestionsRendererUtils {
 		return null;
 	}
 
-	private static AnswerChoice getAnswerChoiceForAnswerID(String answerID,
+	private static Choice getAnswerChoiceForAnswerID(String answerID,
 			QuestionChoice qCh) {
-		List<AnswerChoice> answerList = qCh.getAllAlternatives();
-		for (AnswerChoice ans : answerList) {
+		List<Choice> answerList = qCh.getAllAlternatives();
+		for (Choice ans : answerList) {
 			if (ans.getId().equals(answerID)) {
 				return ans;
 			}
@@ -256,7 +256,7 @@ public class QuestionsRendererUtils {
 
 		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance();
 		Value answer = kbm.findValue(qChoice, answerRegion.getAnswerID());
-		String answerID = ((AnswerChoice) (answer.getValue())).getId();
+		String answerID = ((Choice) (answer.getValue())).getId();
 
 		if (answer == null) {
 			// TODO fehlerbehandlung
@@ -265,7 +265,7 @@ public class QuestionsRendererUtils {
 
 		}
 
-		AnswerChoice followingPopupQuestionAnswer = getAnswerOfFollowingPopupQuestion(
+		Choice followingPopupQuestionAnswer = getAnswerOfFollowingPopupQuestion(
 				answerRegion.getAnswerID(), layoutDef, theCase);
 
 		writer.startElement("a", component);
@@ -357,7 +357,7 @@ public class QuestionsRendererUtils {
 	 * @param theCase
 	 * @return
 	 */
-	private static AnswerChoice getAnswerOfFollowingPopupQuestion(
+	private static Choice getAnswerOfFollowingPopupQuestion(
 			String answerId, QuestionPageLayout layoutDef, Session theCase) {
 		// there was no PopupQuestion
 		if (!(layoutDef instanceof QuestionLayout)) {
@@ -371,7 +371,7 @@ public class QuestionsRendererUtils {
 			if (q.getId().equals(questionId) && (q instanceof QuestionChoice)) {
 				Value answer = q.getValue(theCase);
 				if (answer != null) {
-					return (AnswerChoice) answer.getValue();
+					return (Choice) answer.getValue();
 				}
 			}
 		}
@@ -563,7 +563,7 @@ public class QuestionsRendererUtils {
 	private static void renderQuestionChoiceAsCheckBox(ResponseWriter writer,
 			UIComponent component, Session theCase, QuestionChoice qChoice,
 			int minanswrap, QuestionPageLayout layoutDef) throws IOException {
-		List<AnswerChoice> ans = qChoice.getAllAlternatives();
+		List<Choice> ans = qChoice.getAllAlternatives();
 
 		// Decide how much cols are used...
 		int cols = 1;
@@ -732,7 +732,7 @@ public class QuestionsRendererUtils {
 			UIComponent component, Session theCase, QuestionChoice qChoice,
 			QuestionPageLayout layoutDef, boolean asDropdownList)
 			throws IOException {
-		List<AnswerChoice> ans = qChoice.getAllAlternatives();
+		List<Choice> ans = qChoice.getAllAlternatives();
 		boolean unknownAnswer = DialogUtils.unknownAnswerInValueList(qChoice,
 				theCase);
 		writer.startElement("tr", component);
@@ -768,7 +768,7 @@ public class QuestionsRendererUtils {
 			writer.endElement("option");
 		}
 
-		for (AnswerChoice specAns : ans) {
+		for (Choice specAns : ans) {
 			writer.startElement("option", component);
 			writer.writeAttribute("value", specAns.getId(), "value");
 
@@ -817,7 +817,7 @@ public class QuestionsRendererUtils {
 			UIComponent component, Session theCase, QuestionChoice qChoice,
 			int startIndex, int qCount, QuestionPageLayout layoutDef)
 			throws IOException {
-		List<AnswerChoice> ans = qChoice.getAllAlternatives();
+		List<Choice> ans = qChoice.getAllAlternatives();
 		for (int i = startIndex; i < startIndex + qCount; i++) {
 			// rende unknown answer if i is out of answerlist or render
 			// invisible unknown answer...
@@ -842,7 +842,7 @@ public class QuestionsRendererUtils {
 			DialogRenderUtils.renderTable(writer, component);
 			writer.startElement("tr", component);
 
-			AnswerChoice specAns = ans.get(i);
+			Choice specAns = ans.get(i);
 
 			// 1. column : Checkbox
 			writer.startElement("td", component);
@@ -882,7 +882,7 @@ public class QuestionsRendererUtils {
 							.getProperties().getProperty(
 							Property.MC_CONSTRAINTS);
 					MultipleChoiceValue mcans = (MultipleChoiceValue) qChoice.getValue(theCase);
-					List<AnswerChoice> alreadySetAnsList = mcans.asChoiceList();
+					List<Choice> alreadySetAnsList = mcans.asChoiceList();
 					// only check if both lists have entries
 					if (badanswersLists != null && badanswersLists.size() > 0
 							&& alreadySetAnsList.size() > 0) {
@@ -1400,7 +1400,7 @@ public class QuestionsRendererUtils {
 	}
 
 	private static void writeJsDeselectUnknownAnd(ResponseWriter writer,
-			QuestionChoice q, AnswerChoice specAns, Session theCase,
+			QuestionChoice q, Choice specAns, Session theCase,
 			String andID, boolean fastAnswer, boolean mCConstraintsAutoGrayOut)
 			throws IOException {
 		StringBuffer jsBuf = new StringBuffer();

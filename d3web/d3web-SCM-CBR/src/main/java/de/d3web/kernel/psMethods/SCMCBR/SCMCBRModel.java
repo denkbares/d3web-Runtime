@@ -512,10 +512,10 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		}
 	}
 
-	public void notifyListeners(Session xpsCase, IEventSource source) {
-		if (listeners != null && xpsCase != null && source != null) {
+	public void notifyListeners(Session session, IEventSource source) {
+		if (listeners != null && session != null && source != null) {
 			for (KBOEventListener cl : new ArrayList<KBOEventListener>(listeners)) {
-				cl.notify(source, xpsCase);
+				cl.notify(source, session);
 			}
 		}
 	}

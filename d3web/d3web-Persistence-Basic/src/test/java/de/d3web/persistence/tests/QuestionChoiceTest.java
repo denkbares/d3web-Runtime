@@ -31,7 +31,7 @@ import de.d3web.core.io.fragments.QuestionHandler;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.plugin.test.InitPluginManager;
 
@@ -100,13 +100,13 @@ public class QuestionChoiceTest extends TestCase {
 		answersTag = new XMLTag("Answers");
 		shouldTag.addChild(answersTag);
 		
-		List<AnswerChoice> alternatives = new LinkedList<AnswerChoice>();
+		List<Choice> alternatives = new LinkedList<Choice>();
 		
-		AnswerChoice a1 = new AnswerChoice("q1a1");
+		Choice a1 = new Choice("q1a1");
 		a1.setText("q1a1-&text");
 		alternatives.add(a1);
 		
-		AnswerChoice a2 = new AnswerChoice("q1a2");
+		Choice a2 = new Choice("q1a2");
 		a2.setText("q1a2-testtext");
 		alternatives.add(a2);
 		

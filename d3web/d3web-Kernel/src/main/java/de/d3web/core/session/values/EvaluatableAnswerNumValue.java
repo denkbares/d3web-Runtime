@@ -31,7 +31,7 @@ import de.d3web.core.session.Session;
 public interface EvaluatableAnswerNumValue extends EvaluatableNumValue{
 
 	/**
-	 * Evaluates its value considering the given XPSCase.
+	 * Evaluates its value considering the given Session.
 	 * @return evaluated AnswerNumValue (Double)
 	 */
 	public Double eval(Session theCase);

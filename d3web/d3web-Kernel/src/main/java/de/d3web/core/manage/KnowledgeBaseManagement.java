@@ -47,7 +47,7 @@ import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.knowledge.terminology.QuestionZC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
@@ -171,12 +171,12 @@ public class KnowledgeBaseManagement {
 	}
 
 	public QuestionOC createQuestionOC(String name, QASet parent,
-			AnswerChoice[] answers) {
+			Choice[] answers) {
 		return createQuestionOC(null, name, parent, answers);
 	}
 	
 	public QuestionOC createQuestionOC(String id, String name, QASet parent,
-			AnswerChoice[] answers) {
+			Choice[] answers) {
 		if (id == null) id = findNewIDFor(Question.class);
 		QuestionOC q = new QuestionOC(id);
 		setChoiceProperties(q, name, parent, answers);
@@ -190,7 +190,7 @@ public class KnowledgeBaseManagement {
 	
 	public QuestionOC createQuestionOC(String id, String name, QASet parent,
 			String[] answers) {
-		QuestionOC q = createQuestionOC(id, name, parent, new AnswerChoice[] {});
+		QuestionOC q = createQuestionOC(id, name, parent, new Choice[] {});
 		q.setAlternatives(toList(createAnswers(q, answers)));
 		return q;
 	}
@@ -202,12 +202,12 @@ public class KnowledgeBaseManagement {
 	public QuestionZC createQuestionZC(String id, String name, QASet parent) {
 		if (id==null) id = findNewIDFor(Question.class);
 		QuestionZC q = new QuestionZC(id);
-		setChoiceProperties(q, name, parent, new AnswerChoice[] {});
+		setChoiceProperties(q, name, parent, new Choice[] {});
 		return q;
 	}
 
 	private void setChoiceProperties(QuestionChoice q, String name,
-			QASet parent, AnswerChoice[] answers) {
+			QASet parent, Choice[] answers) {
 		q.setName(name);
 		addToParent(q, parent);
 		q.setAlternatives(toList(answers));
@@ -215,12 +215,12 @@ public class KnowledgeBaseManagement {
 	}
 
 	public QuestionMC createQuestionMC(String name, QASet parent,
-			AnswerChoice[] answers) {
+			Choice[] answers) {
 		return createQuestionMC(null, name, parent, answers);
 	}
 	
 	public QuestionMC createQuestionMC(String id, String name, QASet parent,
-			AnswerChoice[] answers) {
+			Choice[] answers) {
 		if (id==null) id = findNewIDFor(Question.class);
 		QuestionMC q = new QuestionMC(id);
 		setChoiceProperties(q, name, parent, answers);
@@ -234,7 +234,7 @@ public class KnowledgeBaseManagement {
 	
 	public QuestionMC createQuestionMC(String id, String name, QASet parent,
 			String[] answers) {
-		QuestionMC q = createQuestionMC(id, name, parent, new AnswerChoice[] {});
+		QuestionMC q = createQuestionMC(id, name, parent, new Choice[] {});
 		q.setAlternatives(toList(createAnswers(q, answers)));
 		return q;
 	}
@@ -308,7 +308,7 @@ public class KnowledgeBaseManagement {
 
 	public Answer addChoiceAnswer(QuestionChoice question, String answerText) {
 		String answerID = getNewAnswerAlternativeFor(question);
-		AnswerChoice answer = AnswerFactory.createAnswerChoice(answerID,
+		Choice answer = AnswerFactory.createAnswerChoice(answerID,
 				answerText);
 		question.addAlternative(answer);
 		return answer;
@@ -316,9 +316,9 @@ public class KnowledgeBaseManagement {
 
 	private String getNewAnswerAlternativeFor(QuestionChoice question) {
 		int maxCount = 0;
-		for (Iterator<AnswerChoice> iter = question.getAllAlternatives().iterator(); iter
+		for (Iterator<Choice> iter = question.getAllAlternatives().iterator(); iter
 				.hasNext();) {
-			AnswerChoice answer = (AnswerChoice) iter.next();
+			Choice answer = (Choice) iter.next();
 			int position = answer.getId().lastIndexOf("a") + 1;
 			if (position < answer.getId().length()) {
 				String countStr = answer.getId().substring(position);
@@ -337,8 +337,8 @@ public class KnowledgeBaseManagement {
 		return question.getId() + "a" + (maxCount + 1);
 	}
 
-	private AnswerChoice[] createAnswers(QuestionChoice q, String[] answers) {
-		AnswerChoice[] a = new AnswerChoice[answers.length];
+	private Choice[] createAnswers(QuestionChoice q, String[] answers) {
+		Choice[] a = new Choice[answers.length];
 		for (int i = 0; i < answers.length; i++) {
 			a[i] = AnswerFactory.createAnswerChoice(q.getId() + "a" + (i + 1),
 					answers[i]);
@@ -352,11 +352,11 @@ public class KnowledgeBaseManagement {
 	 * @param answers
 	 * @return
 	 */
-	private static List<AnswerChoice> toList(AnswerChoice[] answers) {
+	private static List<Choice> toList(Choice[] answers) {
 		if (answers == null) {
-			return new LinkedList<AnswerChoice>();
+			return new LinkedList<Choice>();
 		}
-		ArrayList<AnswerChoice> l = new ArrayList<AnswerChoice>(answers.length);
+		ArrayList<Choice> l = new ArrayList<Choice>(answers.length);
 		for (int i = 0; i < answers.length; i++) {
 			l.add(answers[i]);
 		}
@@ -436,13 +436,13 @@ public class KnowledgeBaseManagement {
 	 *            the requested answer text or id
 	 * @return null, if no answer found for specified params
 	 */
-	public AnswerChoice findAnswerChoice(QuestionChoice question,
+	public Choice findAnswerChoice(QuestionChoice question,
 			String answerText) {
 		if (question == null || question.getAllAlternatives() == null
 				|| answerText == null) {
 			return null;
 		}
-		for (AnswerChoice answer : question.getAllAlternatives()) {
+		for (Choice answer : question.getAllAlternatives()) {
 			if (answerText.equals(answer.getName())
 					|| answerText.equals(answer.getId())
 					|| answer.getId().equals((question.getId() + answerText))) {
@@ -487,14 +487,14 @@ public class KnowledgeBaseManagement {
 		// HOTFIX (20100411) workaround for setting a _single_ Answer to a MC-Question
 		// needs jobas healing hands...:-)
 		if (question instanceof QuestionMC) {
-			AnswerChoice choice = findAnswerChoice((QuestionChoice) question, valueString);
+			Choice choice = findAnswerChoice((QuestionChoice) question, valueString);
 			List<ChoiceValue> values = new LinkedList<ChoiceValue>();
 			values.add(new ChoiceValue(choice));
 			return new MultipleChoiceValue(values);
 		}
 		//
 		if (question instanceof QuestionChoice) {
-			AnswerChoice choice = findAnswerChoice((QuestionChoice) question, valueString);
+			Choice choice = findAnswerChoice((QuestionChoice) question, valueString);
 			if (choice==null) {
 				return null;
 			}
@@ -551,7 +551,7 @@ public class KnowledgeBaseManagement {
 	public String findNewIDForAnswerChoice(QuestionChoice qc) {
 		int returnIDnumber = 1;
 		String questionID = qc.getId();
-		List<AnswerChoice> answerList = qc.getAllAlternatives();
+		List<Choice> answerList = qc.getAllAlternatives();
 		for (Answer a : answerList) {
 			String answerID = a.getId();
 			String beginning = questionID + "a";

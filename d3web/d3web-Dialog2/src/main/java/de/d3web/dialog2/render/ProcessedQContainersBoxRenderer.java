@@ -45,7 +45,7 @@ import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
@@ -295,11 +295,11 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 		Value ans = q.getValue(theCase);
 
 		if (ans instanceof ChoiceValue) {
-			String valueID = ((AnswerChoice) ans.getValue()).getId();
+			String valueID = ((Choice) ans.getValue()).getId();
 			QuestionChoice qC = (QuestionChoice) q;
-			List<AnswerChoice> alterList = qC.getAllAlternatives();
-			for (Iterator<AnswerChoice> it = alterList.iterator(); it.hasNext();) {
-				AnswerChoice alterAns = it.next();
+			List<Choice> alterList = qC.getAllAlternatives();
+			for (Iterator<Choice> it = alterList.iterator(); it.hasNext();) {
+				Choice alterAns = it.next();
 				if (alterAns.getId().equals(valueID)) {
 					writer.writeText(alterAns.getName(), "value");
 					break;

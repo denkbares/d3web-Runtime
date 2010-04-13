@@ -28,7 +28,7 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 
 /**
- * Interface for all problen-solver methods to implement. Each XPSCase has a
+ * Interface for all problen-solver methods to implement. Each Session has a
  * list of currently used problem-solvers. They are notified, if some value
  * (question or diagnosis) has changed. Creation date: (28.08.00 17:22:54)
  * 
@@ -43,7 +43,7 @@ public interface PSMethod {
 	 * diagnosis.
 	 * 
 	 * @return the DiagnosisState of the given Diagnosis depending on the given
-	 *         XPSCase
+	 *         Session
 	 */
 	// TODO: should be moved as blackboard functionality: get merged facts for a
 	// specific problem solver
@@ -56,12 +56,12 @@ public interface PSMethod {
 
 	/**
 	 * Indicates whether the problemsolver contributes to
-	 * XPSCase.getDiagnoses(DiangosisState)
+	 * Session.getDiagnoses(DiangosisState)
 	 */
 	boolean isContributingToResult();
 
 	/**
-	 * propergates the new value of the given NamedObject for the given XPSCase
+	 * propergates the new value of the given NamedObject for the given Session
 	 */
 	void propagate(Session theCase, Collection<PropagationEntry> changes);
 

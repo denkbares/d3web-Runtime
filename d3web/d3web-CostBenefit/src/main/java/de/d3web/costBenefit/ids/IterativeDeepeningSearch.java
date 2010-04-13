@@ -191,7 +191,7 @@ class IterativeDeepeningSearch {
 				actual.pop();
 			}
 		} else {
-			// XPSCase testcase = Util.copyCase(theCase);
+			// Session testcase = Util.copyCase(theCase);
 			for (Node successor : successorNodes) {
 				if (!isValidSuccessor(actual, successor, theCase))
 					continue;

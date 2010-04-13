@@ -35,7 +35,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.CaseFactory;
+import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Session;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.inference.PSMethodXCL;
@@ -129,7 +129,7 @@ public class SequentialTestCase {
 	@SuppressWarnings("unchecked")
 	public void deriveSolutions(KnowledgeBase kb, Class psMethodContext) {
 		RatingStrategy ratingStrategy = new StateRatingStrategy();
-		Session thecase = CaseFactory.createXPSCase(kb);
+		Session thecase = SessionFactory.createSession(kb);
 		
 		for (RatedTestCase rtc : ratedTestCases) {
 			// Answer and Question setting in Case
@@ -208,7 +208,7 @@ public class SequentialTestCase {
 
 	
 //	public List<Answer> getAnswerForQuestionNum(KnowledgeBase kb, String questionname) {
-//		XPSCase thecase = CaseFactory.createXPSCase(kb);
+//		Session thecase = CaseFactory.createSession(kb);
 //
 //		for (RatedTestCase rtc : ratedTestCases) {
 //			// Answer and Question setting in Case

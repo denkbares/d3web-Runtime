@@ -7,7 +7,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 
 /**
  * A FindingMC encapsulates a QuestionMC and an AnswerChoice[].
@@ -53,7 +53,7 @@ public class FindingMC {
 			if (q.getName().equals(questionName)) {
 				if (q instanceof QuestionMC) {
 					List<Answer> answers = new ArrayList<Answer>();
-					for (AnswerChoice answer : ((QuestionMC) q).getAllAlternatives()) {
+					for (Choice answer : ((QuestionMC) q).getAllAlternatives()) {
 						for (String s : answerNames) {
 							if (answer.getName().equals(s)) {
 								answers.add(answer);

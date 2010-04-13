@@ -35,7 +35,7 @@ import de.d3web.core.session.SymptomValue;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestion;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.EvaluatableAnswerDateValue;
@@ -224,7 +224,7 @@ public class ActionAddValue extends ActionQuestionSetter {
 					&& (((QuestionOC) getQuestion()).getSchemaForQuestion() == null)
 					&& (getQuestion().getKnowledge(PSMethodQuestionSetter.class,
 							MethodKind.BACKWARD) != null)) {
-				AnswerChoice severestAnswer = getSeverestAnswer((QuestionOC) getQuestion(), theCase);
+				Choice severestAnswer = getSeverestAnswer((QuestionOC) getQuestion(), theCase);
 				if ((severestAnswer != null)
 						&& ((!getQuestion().hasValue(theCase)) || (!severestAnswer.equals(getQuestion()
 								.getValue(theCase))))) {
@@ -257,7 +257,7 @@ public class ActionAddValue extends ActionQuestionSetter {
 		if ((getQuestion() instanceof QuestionOC)
 				&& (((QuestionOC) getQuestion()).getSchemaForQuestion() == null)
 				&& (getQuestion().getKnowledge(PSMethodQuestionSetter.class, MethodKind.BACKWARD) != null)) {
-			AnswerChoice severestAnswer = getSeverestAnswer((QuestionOC) getQuestion(), theCase);
+			Choice severestAnswer = getSeverestAnswer((QuestionOC) getQuestion(), theCase);
 			if (severestAnswer != null) {
 				if ((!getQuestion().hasValue(theCase))
 						|| (!severestAnswer.equals(getQuestion().getValue(theCase)))) {

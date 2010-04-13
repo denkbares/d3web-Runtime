@@ -22,7 +22,7 @@ package de.d3web.kernel.psMethods.shared.comparators.oc;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.kernel.psMethods.shared.comparators.GroupedComparator;
 import de.d3web.kernel.psMethods.shared.comparators.PairRelation;
 /**
@@ -47,7 +47,7 @@ public abstract class QuestionComparatorOCGrouped extends QuestionComparatorOC i
 	 * Creation date: (03.08.2001 15:23:14)
 	 * @param ans1 de.d3web.kernel.domainModel.answers.AnswerChoice
 	 */
-	public void addPairRelation(AnswerChoice ans1, AnswerChoice ans2) {
+	public void addPairRelation(Choice ans1, Choice ans2) {
 		addPairRelation(ans1, ans2, 1.0);
 	}
 	
@@ -65,12 +65,12 @@ public abstract class QuestionComparatorOCGrouped extends QuestionComparatorOC i
 	 * Creation date: (03.08.2001 15:23:14)
 	 * @param ans1 de.d3web.kernel.domainModel.answers.AnswerChoice
 	 */
-	public void addPairRelation(AnswerChoice ans1, AnswerChoice ans2, double value) {
+	public void addPairRelation(Choice ans1, Choice ans2, double value) {
 		PairRelation rel = new PairRelation(ans1, ans2, value);
 		addPairRelation(rel);
 	}
 
-	public double getPairRelationValue(AnswerChoice ans1, AnswerChoice ans2) {
+	public double getPairRelationValue(Choice ans1, Choice ans2) {
 		PairRelation rel = new PairRelation(ans1, ans2, 0.0);
 		boolean found = pairRelations.contains(rel);
 		if (found) {

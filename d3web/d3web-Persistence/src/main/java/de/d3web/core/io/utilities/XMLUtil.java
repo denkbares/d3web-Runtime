@@ -42,7 +42,7 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
@@ -391,7 +391,7 @@ public class XMLUtil {
 		}
 
 		if (q instanceof QuestionChoice) {
-			AnswerChoice choice = (AnswerChoice) ((QuestionChoice) q).getAnswer(theCase,
+			Choice choice = (Choice) ((QuestionChoice) q).getAnswer(theCase,
 					idOrValue);
 			return new ChoiceValue(choice);
 		}

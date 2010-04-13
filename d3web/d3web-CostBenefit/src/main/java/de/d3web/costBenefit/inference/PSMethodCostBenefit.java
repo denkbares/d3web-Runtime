@@ -45,8 +45,8 @@ import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
-import de.d3web.core.session.blackboard.XPSCaseObject;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costBenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costBenefit.ids.IterativeDeepeningSearchAlgorithm;
@@ -207,7 +207,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 			// if ok-question
 			if (nob instanceof QuestionOC) {
 				QuestionOC qoc = (QuestionOC) nob;
-				List<AnswerChoice> choices = qoc.getAllAlternatives();
+				List<Choice> choices = qoc.getAllAlternatives();
 				if (choices.size() == 1
 						&& "OK".equals(choices.get(0).getName())) {
 					qoc.setValue(theCase, UndefinedValue.getInstance());
@@ -317,7 +317,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 	}
 
 	@Override
-	public XPSCaseObject createCaseObject(Session session) {
+	public SessionObject createCaseObject(Session session) {
 		return new CostBenefitCaseObject(this, session);
 	}
 }

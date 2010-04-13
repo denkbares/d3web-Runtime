@@ -24,7 +24,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.blackboard.CaseQuestionText;
-import de.d3web.core.session.blackboard.XPSCaseObject;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.values.AnswerText;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
@@ -55,7 +55,7 @@ public class QuestionText extends Question {
 	/**
 	 * @return a newly created user-case dependent CaseQuestionText object.
 	 */
-	public XPSCaseObject createCaseObject(Session session) {
+	public SessionObject createCaseObject(Session session) {
 		return new CaseQuestionText(this);
 	}
 

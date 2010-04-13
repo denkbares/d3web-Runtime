@@ -194,7 +194,7 @@ public abstract class Question extends QASet implements ValuedObject {
 	}
 
 	// @Override
-	// public abstract void setValue(XPSCase theCase, Object[] values);
+	// public abstract void setValue(Session theCase, Object[] values);
 
 	@Override
 	public abstract void setValue(Session theCase, Value value) throws IllegalArgumentException;

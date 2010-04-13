@@ -52,7 +52,7 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.plugin.test.InitPluginManager;
 
@@ -108,11 +108,11 @@ public class ConditionTest extends TestCase {
 		Vector<Answer> val1 = new Vector<Answer>();
 		Vector<Answer> val2 = new Vector<Answer>();
 
-		AnswerChoice ach1 = new AnswerChoice("ach1-id");
+		Choice ach1 = new Choice("ach1-id");
 		ach1.setText("ach1-text");
 		val1.add(ach1);
 
-		AnswerChoice ach2 = new AnswerChoice("ach2-id");
+		Choice ach2 = new Choice("ach2-id");
 		ach2.setText("ach2-text");
 		val1.add(ach2);
 		val2.add(ach2);

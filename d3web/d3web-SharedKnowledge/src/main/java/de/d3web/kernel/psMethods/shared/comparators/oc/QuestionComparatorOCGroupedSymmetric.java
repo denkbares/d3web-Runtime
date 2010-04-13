@@ -23,7 +23,7 @@ package de.d3web.kernel.psMethods.shared.comparators.oc;
 import java.util.Iterator;
 
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.kernel.psMethods.shared.comparators.GroupedComparatorSymmetric;
 import de.d3web.kernel.psMethods.shared.comparators.PairRelation;
 
@@ -33,8 +33,8 @@ public class QuestionComparatorOCGroupedSymmetric extends
 	@Override
 	public double compare(Value answers1, Value answers2) {
 		try {
-			AnswerChoice ans1 = (AnswerChoice) answers1.getValue();
-			AnswerChoice ans2 = (AnswerChoice) answers2.getValue();
+			Choice ans1 = (Choice) answers1.getValue();
+			Choice ans2 = (Choice) answers2.getValue();
 
 			if (ans1.equals(ans2)) {
 				return 1;

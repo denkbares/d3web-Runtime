@@ -31,7 +31,7 @@ import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestionChoice;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.utilities.Tester;
 import de.d3web.core.utilities.Utils;
@@ -46,11 +46,11 @@ import de.d3web.core.utilities.Utils;
  */
 public abstract class QuestionChoice extends Question {
 	
-	protected List<AnswerChoice> alternatives;
+	protected List<Choice> alternatives;
 
 	public QuestionChoice(String id) {
 		super(id);
-		this.setAlternatives(new LinkedList<AnswerChoice>());
+		this.setAlternatives(new LinkedList<Choice>());
 	}
 
 	/**
@@ -59,15 +59,15 @@ public abstract class QuestionChoice extends Question {
 	 * @param theCase currentCase
 	 * @return a List of all alternatives that are not suppressed by any RuleSuppress
 	 **/
-	public List<AnswerChoice> getAllAlternatives() {
+	public List<Choice> getAllAlternatives() {
 		return alternatives;
 	}
 
-	private AnswerChoice findAlternative(List<? extends Answer> alternativesArg, final String id) {
-		return (AnswerChoice) Utils.findIf(alternativesArg, new Tester() {
+	private Choice findAlternative(List<? extends Answer> alternativesArg, final String id) {
+		return (Choice) Utils.findIf(alternativesArg, new Tester() {
 			public boolean test(Object testObj) {
-				if ((testObj instanceof AnswerChoice)
-					&& (((AnswerChoice) testObj).getId().equalsIgnoreCase(id))) {
+				if ((testObj instanceof Choice)
+					&& (((Choice) testObj).getId().equalsIgnoreCase(id))) {
 					return true;
 				} else {
 					return false;
@@ -90,7 +90,7 @@ public abstract class QuestionChoice extends Question {
 			return findAlternative(getAlternatives(theCase), id);
 	}
 
-	public AnswerChoice findChoice(String choiceID) {
+	public Choice findChoice(String choiceID) {
 		if (choiceID == null) {
 			return null;
 		}
@@ -109,7 +109,7 @@ public abstract class QuestionChoice extends Question {
 		CaseQuestionChoice caseQ = (CaseQuestionChoice) theCase.getCaseObject(this);
 		List<Answer> suppVec = caseQ.getMergedSuppressAlternatives();
 		List<Answer> result = new LinkedList<Answer>();
-        Iterator<AnswerChoice> e = alternatives.iterator();
+        Iterator<Choice> e = alternatives.iterator();
 		while (e.hasNext()) {
 			Answer elem = e.next();
 			if (!suppVec.contains(elem))
@@ -126,19 +126,19 @@ public abstract class QuestionChoice extends Question {
 	 * sets the answer alternatives from which a user or rule can
 	 * choose one or more to answer this question.
 	 */
-	public void setAlternatives(List<AnswerChoice> alternatives) {
+	public void setAlternatives(List<Choice> alternatives) {
 		if (alternatives != null) {
 			this.alternatives = alternatives;
-			Iterator<AnswerChoice> iter = this.alternatives.iterator();
+			Iterator<Choice> iter = this.alternatives.iterator();
 			while (iter.hasNext()) {
 				iter.next().setQuestion(this);
 			}
 		} else
-			setAlternatives(new LinkedList<AnswerChoice>());
+			setAlternatives(new LinkedList<Choice>());
 
 	}
     
-    public void addAlternative(AnswerChoice answer) {
+    public void addAlternative(Choice answer) {
         if ((answer != null) && (!getAllAlternatives().contains(answer))) {
             alternatives.add(answer);
             answer.setQuestion(this);
@@ -168,7 +168,7 @@ public abstract class QuestionChoice extends Question {
 
 	/**
 	 * @return the current numerical value of the question
-	 * according to a give XPSCase. This value is used to
+	 * according to a give Session. This value is used to
 	 * be processed by a Num2ChoiceSchema.
 	 */
 	public Double getNumericalSchemaValue(Session theCase) {

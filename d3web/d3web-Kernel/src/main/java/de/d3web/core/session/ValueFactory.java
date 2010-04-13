@@ -12,7 +12,7 @@ import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.AnswerDate;
 import de.d3web.core.session.values.AnswerNum;
 import de.d3web.core.session.values.AnswerText;
@@ -29,7 +29,7 @@ public class ValueFactory {
 
 	public static String getID_or_Value(Value value) {
 		if (value instanceof ChoiceValue) {
-			return ((AnswerChoice) (value.getValue())).getId();
+			return ((Choice) (value.getValue())).getId();
 		}
 		else if (value instanceof Unknown) {
 			return Unknown.UNKNOWN_ID;
@@ -44,7 +44,7 @@ public class ValueFactory {
 
 	public static Value toValue(Question question, Answer answer) {
 		if (question instanceof QuestionOC) {
-			return new ChoiceValue((AnswerChoice) answer);
+			return new ChoiceValue((Choice) answer);
 		}
 		else if (question instanceof QuestionMC) {
 			return new MultipleChoiceValue((AnswerMultipleChoice) answer);
@@ -91,15 +91,15 @@ public class ValueFactory {
 				Double d = (Double) ((AnswerNum)o).getValue(theCase);
 				return new NumValue(d);
 			} else if (valuedObject instanceof QuestionOC) {
-				return new ChoiceValue((AnswerChoice)o);
+				return new ChoiceValue((Choice)o);
 			} else if (valuedObject instanceof QuestionMC) {
 				if (o instanceof AnswerMultipleChoice) {
 					return new MultipleChoiceValue((AnswerMultipleChoice)o);
 				} else {
-					List<AnswerChoice> answers = new ArrayList<AnswerChoice>(newValue.length);;
+					List<Choice> answers = new ArrayList<Choice>(newValue.length);;
 					for (Object o2: newValue) {
-						if (o2 instanceof AnswerChoice) {
-							answers.add((AnswerChoice) o2);
+						if (o2 instanceof Choice) {
+							answers.add((Choice) o2);
 						} else {
 							throw new IllegalArgumentException(o2.toString()+"is no AnswerChoice");
 						}

@@ -26,7 +26,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.session.CaseFactory;
+import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.interviewmanager.MQDialogController;
@@ -37,7 +37,7 @@ public class InterviewCalculator extends PrecisionRecallCalculator{
 	private QContainer currentQC;
 	
 	public InterviewCalculator(KnowledgeBase kb) {
-		this.thecase = CaseFactory.createXPSCase(kb, MQDialogController.class);
+		this.thecase = SessionFactory.createSession(kb, MQDialogController.class);
 	}
 
 	// -------Rated Precision--------

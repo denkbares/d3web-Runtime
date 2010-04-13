@@ -30,7 +30,7 @@ import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.SymptomValue;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.indication.ActionSuppressAnswer;
 /**
  * Stores the dynamic, user specific values for an Question object. It
@@ -77,7 +77,7 @@ public abstract class CaseQuestion extends CaseQASet {
 			Rule r = (Rule) rule.next();
 			ActionSuppressAnswer tempAction = (ActionSuppressAnswer) r.getAction();
 			if (tempAction != null) {
-				Iterator<AnswerChoice> supp = (tempAction).getSuppress().iterator();
+				Iterator<Choice> supp = (tempAction).getSuppress().iterator();
 				while (supp.hasNext()) {
 					result.add(supp.next());
 				}

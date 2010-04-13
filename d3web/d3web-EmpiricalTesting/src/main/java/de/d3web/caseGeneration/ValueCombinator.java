@@ -33,7 +33,7 @@ import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.MultipleChoiceValue;
 
 /**
@@ -97,7 +97,7 @@ public class ValueCombinator {
 			return combinations;
 		}
 		
-		List<AnswerChoice> answers = question.getAllAlternatives();
+		List<Choice> answers = question.getAllAlternatives();
 		
 		//create the empty power set
 		combinations = new LinkedHashSet<Value>();
@@ -115,7 +115,7 @@ public class ValueCombinator {
 			String binary = intToBinary(i, maxLength);
          
 			//create a new set
-			LinkedHashSet<AnswerChoice> innerSet = new LinkedHashSet<AnswerChoice>();
+			LinkedHashSet<Choice> innerSet = new LinkedHashSet<Choice>();
          
 			//convert each digit in the current binary number to the corresponding element
 			//in the given set
@@ -127,7 +127,7 @@ public class ValueCombinator {
 			//add the new set to the power set
 			if (innerSet.size() > 0 && allowedCombination(question, innerSet)) {
 				Value value = new MultipleChoiceValue(new AnswerMultipleChoice(
-						new ArrayList<AnswerChoice>(innerSet)));
+						new ArrayList<Choice>(innerSet)));
 				combinations.add(value);
 			}
            
@@ -192,7 +192,7 @@ public class ValueCombinator {
 	 * @param currentCombination LinkedHashSet<Answer> the combination to be checked
 	 * @return true, if combination is allowed otherwise false
 	 */
-	private boolean allowedCombination(QuestionMC question, LinkedHashSet<AnswerChoice> currentCombination) {
+	private boolean allowedCombination(QuestionMC question, LinkedHashSet<Choice> currentCombination) {
 				
 		if (forbiddenAnswerCombinations.containsKey(question)) {
 			for (Answer[] combination : forbiddenAnswerCombinations.get(question)) {
@@ -217,7 +217,7 @@ public class ValueCombinator {
 	 * @param constraint Answer[] in most cases a defined constraint
 	 * @return true if combinations are equal, otherwise false.
 	 */
-	private boolean equalCombinations(LinkedHashSet<AnswerChoice> combination, Answer[] constraint) {
+	private boolean equalCombinations(LinkedHashSet<Choice> combination, Answer[] constraint) {
 		if (combination.size() == constraint.length) {
 			if (combination.containsAll(Arrays.asList(constraint)))
 				return true;

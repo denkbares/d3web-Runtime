@@ -25,7 +25,7 @@ package de.d3web.diaFlux.flow;
 
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.XPSCaseObject;
+import de.d3web.core.session.blackboard.SessionObject;
 
 
 /**

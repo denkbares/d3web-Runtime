@@ -32,11 +32,11 @@ import de.d3web.core.session.Session;
  * 
  * @author norman
  */
-public class AnswerChoice extends Answer {
+public class Choice extends Answer {
 
 	private String text;
 
-	public AnswerChoice(String theId) {
+	public Choice(String theId) {
 		super(theId);
 	}
 
@@ -92,7 +92,7 @@ public class AnswerChoice extends Answer {
 	 * */
 	public boolean equals(Object other) {
 		if (this == other) return true;
-		else if (other instanceof AnswerChoice) return ((AnswerChoice) other).getId().equals(
+		else if (other instanceof Choice) return ((Choice) other).getId().equals(
 				this.getId());
 		else return false;
 	}
@@ -108,8 +108,8 @@ public class AnswerChoice extends Answer {
 
 	@Override
 	public int compareTo(Answer other) {
-		if (other instanceof AnswerChoice) {
-			List<AnswerChoice> range = ((QuestionChoice) this.getQuestion()).getAllAlternatives();
+		if (other instanceof Choice) {
+			List<Choice> range = ((QuestionChoice) this.getQuestion()).getAllAlternatives();
 			int i1 = range.indexOf(this);
 			int i2 = range.indexOf(other);
 			return i1 - i2;

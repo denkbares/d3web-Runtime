@@ -31,7 +31,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQASet;
 import de.d3web.core.session.blackboard.CaseQContainer;
-import de.d3web.core.session.blackboard.XPSCaseObject;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.indication.inference.PSMethodParentQASet;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
@@ -159,7 +159,7 @@ public class QContainer extends QASet {
 		return getPriority().compareTo(acPriority);
 	}
 
-	public XPSCaseObject createCaseObject(Session session) {
+	public SessionObject createCaseObject(Session session) {
 		return new CaseQContainer(this);
 	}
 
@@ -321,7 +321,7 @@ public class QContainer extends QASet {
 
 	/**
 	 * Sets the list of QASets contained in the QContainer to the specified
-	 * values. The XPSCase has no meaning in this case.
+	 * values. The Session has no meaning in this case.
 	 */
 	@Override
 	public void setValue(Session theCase, Value value) {

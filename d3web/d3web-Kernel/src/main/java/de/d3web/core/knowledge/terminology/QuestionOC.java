@@ -26,8 +26,8 @@ import java.util.List;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestionOC;
-import de.d3web.core.session.blackboard.XPSCaseObject;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.UndefinedValue;
@@ -47,7 +47,7 @@ public class QuestionOC extends QuestionChoice {
 		super(id);
 	}
 
-	public XPSCaseObject createCaseObject(Session session) {
+	public SessionObject createCaseObject(Session session) {
 		return new CaseQuestionOC(this);
 	}
 
@@ -55,7 +55,7 @@ public class QuestionOC extends QuestionChoice {
 		return (Answer) getAlternatives().get(key);
 	}
 
-	public List<AnswerChoice> getAlternatives() {
+	public List<Choice> getAlternatives() {
 		if (alternatives == null) {
 			return Collections.emptyList();
 		} else

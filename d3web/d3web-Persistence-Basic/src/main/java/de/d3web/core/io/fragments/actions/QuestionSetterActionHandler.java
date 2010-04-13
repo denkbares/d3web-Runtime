@@ -38,7 +38,7 @@ import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 /**
@@ -136,7 +136,7 @@ public class QuestionSetterActionHandler implements FragmentHandler{
 			String id = "";
 			if (action.getValue() instanceof ChoiceValue) {
 				ChoiceValue cv = (ChoiceValue) (action.getValue());
-				AnswerChoice choice = (AnswerChoice) (cv.getValue());
+				Choice choice = (Choice) (cv.getValue());
 				id = choice.getId();
 			}
 			else {
@@ -151,8 +151,8 @@ public class QuestionSetterActionHandler implements FragmentHandler{
 			if (action.getValue() instanceof Object[]) {
 				Object[] list = (Object[]) action.getValue();
 				for (Object o: list) {
-					if (o != null && o instanceof AnswerChoice) {
-						AnswerChoice a = (AnswerChoice) o;
+					if (o != null && o instanceof Choice) {
+						Choice a = (Choice) o;
 						if (a.getId()==null) {
 							throw new IOException("Answer "+a.getName()+" has no ID");
 						}

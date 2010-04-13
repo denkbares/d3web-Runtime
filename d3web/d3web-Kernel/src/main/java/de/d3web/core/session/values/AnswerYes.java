@@ -25,7 +25,7 @@ package de.d3web.core.session.values;
  * Creation date: (28.09.00 17:52:09)
  * @author Joachim Baumeister
  */
-public class AnswerYes extends AnswerChoice {
+public class AnswerYes extends Choice {
 
 	/**
 	 * creates a new AnswerYes.

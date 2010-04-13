@@ -26,7 +26,7 @@ import java.util.List;
 
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 
 /**
  * Insert the type's description here.
@@ -44,18 +44,18 @@ public class QuestionComparatorOCScaled extends QuestionComparatorOC {
 			return 0;
 		}
 
-		Hashtable<AnswerChoice, Double> ansValHash = new Hashtable<AnswerChoice, Double>();
+		Hashtable<Choice, Double> ansValHash = new Hashtable<Choice, Double>();
 		checkValues();
 		checkConstant();
 		// build ansValHash
-		List<AnswerChoice> alternatives = ((QuestionOC) getQuestion()).getAllAlternatives();
-		Iterator<AnswerChoice> altIter = alternatives.iterator();
+		List<Choice> alternatives = ((QuestionOC) getQuestion()).getAllAlternatives();
+		Iterator<Choice> altIter = alternatives.iterator();
 		Iterator<Double> valIter = values.iterator();
 		while (altIter.hasNext()) {
 			ansValHash.put(altIter.next(), valIter.next());
 		}
-		AnswerChoice answer1 = (AnswerChoice) ans1.getValue();
-		AnswerChoice answer2 = (AnswerChoice) ans2.getValue();
+		Choice answer1 = (Choice) ans1.getValue();
+		Choice answer2 = (Choice) ans2.getValue();
 		double val1 = (ansValHash.get(answer1)).doubleValue();
 		double val2 = (ansValHash.get(answer2)).doubleValue();
 		double delta = Math.abs((val2 - val1));
@@ -107,7 +107,7 @@ public class QuestionComparatorOCScaled extends QuestionComparatorOC {
 
 	protected void checkValues() {
 		// check values (if null or inconsistent create default-values (1,2,3,...))
-		List<AnswerChoice> alternatives = ((QuestionOC) getQuestion()).getAllAlternatives();
+		List<Choice> alternatives = ((QuestionOC) getQuestion()).getAllAlternatives();
 		if ((values == null) || (values.size() != alternatives.size())) {
 			values = new LinkedList<Double>();
 			for (int i = 0; i < alternatives.size(); ++i) {

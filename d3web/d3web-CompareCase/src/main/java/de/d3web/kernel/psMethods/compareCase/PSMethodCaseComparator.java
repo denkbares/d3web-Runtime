@@ -79,7 +79,7 @@ public class PSMethodCaseComparator implements PSMethod {
 	 * the diagnosisState was given by the problemSolver
 	 * Creation date: (08.08.2001 09:10:11)
 	 * @return EasyXPS.domainModel.DiagnosisState
-	 * @param theCase EasyXPS.domainModel.XPSCase
+	 * @param theCase EasyXPS.domainModel.Session
 	 */
 	public DiagnosisState getState(Session theCase, Solution diagnosis) {
 		//TODO: vb: das ist falsch. diagnosis.getState ruft wiederum diese Method auf. Hier liegt eine Endlosrekursion vor, oder?
@@ -89,7 +89,7 @@ public class PSMethodCaseComparator implements PSMethod {
 	/**
 	 * Some space for initial methods of a PSMethod.
 	 * Creation date: (08.08.2001 09:10:11)
-	 * @param theCase EasyXPS.domainModel.XPSCase the current case
+	 * @param theCase EasyXPS.domainModel.Session the current case
 	 */
 	public void init(Session theCase) {
 	}

@@ -52,7 +52,7 @@ import org.apache.log4j.Logger;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
 
 import de.d3web.caserepository.CaseObject;
-import de.d3web.caserepository.utilities.CaseConverter;
+import de.d3web.caserepository.utilities.SessionConverter;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
@@ -62,8 +62,8 @@ import de.d3web.core.knowledge.terminology.info.MMInfoObject;
 import de.d3web.core.knowledge.terminology.info.MMInfoStorage;
 import de.d3web.core.knowledge.terminology.info.MMInfoSubject;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.session.CaseFactory;
-import de.d3web.core.session.D3WebCase;
+import de.d3web.core.session.SessionFactory;
+import de.d3web.core.session.D3WebSession;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.interviewmanager.DialogController;
@@ -96,7 +96,7 @@ public class DialogUtils {
 		Iterator<PSMethod> iter = getUsedPSMethods().iterator();
 		while (iter.hasNext()) {
 			PSMethod psm = iter.next();
-			((D3WebCase) newCase).addUsedPSMethod(psm);
+			((D3WebSession) newCase).addUsedPSMethod(psm);
 			psm.init(newCase);
 			logger.info("ProblemSolver '" + psm.getClass() + "' initialized...");
 		}
@@ -142,7 +142,7 @@ public class DialogUtils {
 	}
 
 	public static Session createNewAnsweredCase(CaseObject co, KnowledgeBase kb) {
-		Session newCase = CaseConverter.getInstance().caseObject2XPSCase(co, kb, MQDialogController.class,
+		Session newCase = SessionConverter.getInstance().caseObject2Session(co, kb, MQDialogController.class,
 				getUsedPSMethods());
 		return newCase;
 	}
@@ -151,7 +151,7 @@ public class DialogUtils {
 	 * Creates a new case.
 	 */
 	public static Session createNewCase(KnowledgeBase kb) {
-		Session newCase = CaseFactory.createXPSCase(kb, MQDialogController.class);
+		Session newCase = SessionFactory.createSession(kb, MQDialogController.class);
 		addUsedPSMethods(newCase);
 		return newCase;
 	}

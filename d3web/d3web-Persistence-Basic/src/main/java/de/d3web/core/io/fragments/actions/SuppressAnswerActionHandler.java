@@ -34,7 +34,7 @@ import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.indication.ActionSuppressAnswer;
 /**
  * Handels actions supressing answers
@@ -56,7 +56,7 @@ public class SuppressAnswerActionHandler implements FragmentHandler {
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		Question q = null;
-		List<AnswerChoice> suppress = new LinkedList<AnswerChoice>();
+		List<Choice> suppress = new LinkedList<Choice>();
 		NodeList nl = element.getChildNodes();
 		for (int i = 0; i < nl.getLength(); ++i) {
 			Node n = nl.item(i);
@@ -69,7 +69,7 @@ public class SuppressAnswerActionHandler implements FragmentHandler {
 					Node answer = sanslist.item(k);
 					if (answer.getNodeName().equalsIgnoreCase("Answer")) {
 						String id = answer.getAttributes().getNamedItem("ID").getNodeValue();
-						AnswerChoice ans = kb.searchAnswerChoice(id);
+						Choice ans = kb.searchAnswerChoice(id);
 						suppress.add(ans);
 					}
 				}
@@ -88,7 +88,7 @@ public class SuppressAnswerActionHandler implements FragmentHandler {
 		element.setAttribute("type", "ActionSuppressAnswer");
 		XMLUtil.appendQuestionLinkElement(element, action.getQuestion());
 		Element suppressNode = doc.createElement("Suppress");
-		for (AnswerChoice a: action.getSuppress()) {
+		for (Choice a: action.getSuppress()) {
 			Element answerNode = doc.createElement("Answer");
 			answerNode.setAttribute("ID", a.getId());
 			suppressNode.appendChild(answerNode);

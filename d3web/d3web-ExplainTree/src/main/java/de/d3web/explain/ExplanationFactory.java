@@ -66,9 +66,9 @@ public class ExplanationFactory {
     
 	/**
 	 * Gets the myCase.
-	 * @return Returns a XPSCase
+	 * @return Returns a Session
 	 */
-	public Session getXPSCase() {
+	public Session getSession() {
 		return myCase;
 	}
 

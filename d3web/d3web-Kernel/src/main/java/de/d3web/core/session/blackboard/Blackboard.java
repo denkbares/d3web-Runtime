@@ -27,7 +27,7 @@ public class Blackboard {
 	private final FactStorage valueStorage;
 	private final FactStorage interviewStorage;
 
-	// TODO: also manage the XPSCaseObjects here
+	// TODO: also manage the SessionObjects here
 
 	/**
 	 * Creates a new Blackboard for the specified xps session.

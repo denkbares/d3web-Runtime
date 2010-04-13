@@ -71,21 +71,21 @@ public class DefaultInferenceTrace implements InferenceTrace {
 	 * 
 	 * @param theCase the current case
 	 */
-	public void refreshRelations(XCLModel xclModel, Session xpsCase) {
-		evalRelations(xpsCase, xclModel.getRelations(), posRelations, negRelations);
-		evalRelations(xpsCase, xclModel.getNecessaryRelations(), reqPosRelations, reqNegRelations);
-		evalRelations(xpsCase, xclModel.getContradictingRelations(), contrRelations, null);
-		evalRelations(xpsCase, xclModel.getSufficientRelations(), suffRelations, null);
+	public void refreshRelations(XCLModel xclModel, Session session) {
+		evalRelations(session, xclModel.getRelations(), posRelations, negRelations);
+		evalRelations(session, xclModel.getNecessaryRelations(), reqPosRelations, reqNegRelations);
+		evalRelations(session, xclModel.getContradictingRelations(), contrRelations, null);
+		evalRelations(session, xclModel.getSufficientRelations(), suffRelations, null);
 	}
 	
-	private void evalRelations(Session xpsCase, Collection<XCLRelation> source, Collection<XCLRelation> trueSet, Collection<XCLRelation> falseSet) {
+	private void evalRelations(Session session, Collection<XCLRelation> source, Collection<XCLRelation> trueSet, Collection<XCLRelation> falseSet) {
 		// clear result sets
 		trueSet.clear();
 		if (falseSet != null) falseSet.clear();
 		// eval all relations
 		for (XCLRelation rel : source) {
 			try {
-				boolean b = rel.eval(xpsCase);
+				boolean b = rel.eval(session);
 				if (b) {
 					trueSet.add(rel);
 				} 

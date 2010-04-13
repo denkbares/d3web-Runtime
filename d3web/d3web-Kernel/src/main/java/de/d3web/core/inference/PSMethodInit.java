@@ -32,7 +32,7 @@ import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 
 /**
@@ -87,7 +87,7 @@ public class PSMethodInit implements PSMethod {
 					ids.add(s.substring(posstart));
 					if (q instanceof QuestionOC) {
 						QuestionOC qc = (QuestionOC) q;
-						AnswerChoice choice = (AnswerChoice) qc.getAnswer(theCase,
+						Choice choice = (Choice) qc.getAnswer(theCase,
 								ids.get(0));
 						theCase.setValue(qc, new ChoiceValue(choice));
 					} else {
@@ -101,7 +101,7 @@ public class PSMethodInit implements PSMethod {
 	}
 
 	/**
-	 * Indicates whether the problemsolver contributes to XPSCase.getDiagnoses(DiangosisState)
+	 * Indicates whether the problemsolver contributes to Session.getDiagnoses(DiangosisState)
 	 * Creation date: (21.02.2002 16:51:10)
 	 * @return false
 	 */

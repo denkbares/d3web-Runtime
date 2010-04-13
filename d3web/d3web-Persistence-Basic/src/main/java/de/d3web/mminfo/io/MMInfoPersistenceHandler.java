@@ -53,7 +53,7 @@ import de.d3web.core.knowledge.terminology.info.MMInfoObject;
 import de.d3web.core.knowledge.terminology.info.MMInfoStorage;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 /**
  * PersistanceHandler for MMInfos
  * Creation date: (25.01.2002 14:18:47)
@@ -159,7 +159,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		List<Question> questions = kb.getQuestions();
 		Collections.sort(questions, new IDObjectComparator());
 		Collections.sort(qContainers, new IDObjectComparator());
-		List<AnswerChoice> answers = catchAnswersFromQuestions(questions);
+		List<Choice> answers = catchAnswersFromQuestions(questions);
 
 		
 		
@@ -209,9 +209,9 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		}
 
 		// answers
-		Iterator<AnswerChoice> aiter = answers.iterator();
+		Iterator<Choice> aiter = answers.iterator();
 		while (aiter.hasNext()) {
-			AnswerChoice a = aiter.next();
+			Choice a = aiter.next();
 			MMInfoStorage mms = (MMInfoStorage) a.getProperties().getProperty(Property.MMINFO);
 			if (mms != null) {
 				listener.updateProgress(aktvalue++/maxvalue, "Saving multimedia "+Math.round(aktvalue)+" of "+ maxvalue);
@@ -229,7 +229,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		List<Solution> diagnoses = kb.getDiagnoses();
 		List<QContainer> qcontainers = kb.getQContainers();
 		List<Question> questions = kb.getQuestions();
-		List<AnswerChoice> answers = catchAnswersFromQuestions(questions);
+		List<Choice> answers = catchAnswersFromQuestions(questions);
 
 		// diagnoses
 
@@ -264,9 +264,9 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 
 		// answers
 
-		Iterator<AnswerChoice> aiter = answers.iterator();
+		Iterator<Choice> aiter = answers.iterator();
 		while (aiter.hasNext()) {
-			AnswerChoice a = aiter.next();
+			Choice a = aiter.next();
 			MMInfoStorage mms = (MMInfoStorage) a.getProperties().getProperty(Property.MMINFO);
 			if (mms != null) {
 				count++;
@@ -286,10 +286,10 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 			Object o = iter.next();
 			if (o instanceof QuestionChoice) {
 				QuestionChoice q = (QuestionChoice) o;
-				Iterator<AnswerChoice> ansiter = q.getAllAlternatives()
+				Iterator<Choice> ansiter = q.getAllAlternatives()
 						.iterator();
 				while (ansiter.hasNext()) {
-					AnswerChoice ans = ansiter.next();
+					Choice ans = ansiter.next();
 					ansIdAnswerHash.put(ans.getId(), ans);
 				}
 			}
@@ -297,8 +297,8 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		return ansIdAnswerHash;
 	}
 	
-	private static List<AnswerChoice> catchAnswersFromQuestions(List<Question> questions) {
-		List<AnswerChoice>  ret = new LinkedList<AnswerChoice> ();
+	private static List<Choice> catchAnswersFromQuestions(List<Question> questions) {
+		List<Choice>  ret = new LinkedList<Choice> ();
 
 		Iterator<Question> iter = questions.iterator();
 		while (iter.hasNext()) {

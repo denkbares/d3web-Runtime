@@ -39,7 +39,7 @@ import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.knowledge.terminology.QuestionZC;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.knowledge.terminology.info.Properties;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 /**
  * FragmentHandler for Questions
  * Children are ignored, hierarchies are read/written by the knowledge readers/writers.
@@ -121,9 +121,9 @@ public class QuestionHandler implements FragmentHandler {
 		if (answersElement!= null && q instanceof QuestionChoice) {
 			QuestionChoice qc = (QuestionChoice) q;
 			List<Element> answerNodes = XMLUtil.getElementList(answersElement.getChildNodes());
-			List<AnswerChoice> answers = new ArrayList<AnswerChoice>();
+			List<Choice> answers = new ArrayList<Choice>();
 			for (Element answerElement: answerNodes) {
-				answers.add((AnswerChoice) PersistenceManager.getInstance().readFragment(answerElement, kb));
+				answers.add((Choice) PersistenceManager.getInstance().readFragment(answerElement, kb));
 			}
 			qc.setAlternatives(answers);
 		}
@@ -160,10 +160,10 @@ public class QuestionHandler implements FragmentHandler {
 		
 		if (q instanceof QuestionChoice) {
 			QuestionChoice qc = (QuestionChoice) q;
-			List<AnswerChoice> children = qc.getAllAlternatives();
+			List<Choice> children = qc.getAllAlternatives();
 			if (children != null) {
 				Element answerNodes = doc.createElement("Answers");
-				for (AnswerChoice child: children) {
+				for (Choice child: children) {
 					answerNodes.appendChild(PersistenceManager.getInstance().writeFragment(child, doc));
 				}
 				e.appendChild(answerNodes);

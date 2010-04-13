@@ -18,31 +18,16 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.core.session.blackboard;
-import de.d3web.core.session.CaseObjectSource;
+package de.d3web.core.session;
+
+
 /**
- * Superclass for any dynamic, session specific object.
+ * Interface for event listeners for Session instances.
  * 
- * @author Christian Betz, joba
+ * @author gbuscher
  */
-public abstract class XPSCaseObject {
-	private CaseObjectSource sourceObject;
+public interface SessionEventListener {
 
-	public XPSCaseObject(CaseObjectSource theSourceObject) {
-		super();
-		setSourceObject(theSourceObject);
-	}
-
-	/**
-	 * Creation date: (23.05.2001 15:35:43)
-	 * @return the IDObject this dynamic XPSCaseObject has been created for
-	 */
-	protected CaseObjectSource getSourceObject() {
-		return sourceObject;
-	}
-
-	private void setSourceObject(
-		CaseObjectSource newSourceObject) {
-		sourceObject = newSourceObject;
-	}
+	public abstract void notify(Session source, ValuedObject o, Object context);
+	
 }

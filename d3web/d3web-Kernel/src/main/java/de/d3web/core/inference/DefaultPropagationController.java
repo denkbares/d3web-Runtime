@@ -65,7 +65,7 @@ public class DefaultPropagationController implements PropagationContoller {
 			propagationEntries = new HashMap<NamedObject, PropagationEntry>();
 			try {
 				// propagate the changes, using the new interface
-				getPSMethod().propagate(DefaultPropagationController.this.xpsCase, entries);
+				getPSMethod().propagate(DefaultPropagationController.this.session, entries);
 			} 
 			catch (Throwable e) {
 				Logger.getLogger("Kernel").log(
@@ -78,19 +78,19 @@ public class DefaultPropagationController implements PropagationContoller {
 	}
 
 	
-	private final Session xpsCase;
+	private final Session session;
 	private List<PSMethodHandler> psHandlers = null;
 	private int recursiveCounter = 0;
 	private long propagationTime = 0;
 	
 
-	public DefaultPropagationController(Session xpsCase) {
-		this.xpsCase = xpsCase;
+	public DefaultPropagationController(Session session) {
+		this.session = session;
 	}
 		
 	private void initHandlers() {
 		this.psHandlers = new LinkedList<PSMethodHandler>();
-		for (PSMethod psMethod : xpsCase.getPSMethods()) {
+		for (PSMethod psMethod : session.getPSMethods()) {
 			psHandlers.add(new PSMethodHandler(psMethod));
 		}
 	}

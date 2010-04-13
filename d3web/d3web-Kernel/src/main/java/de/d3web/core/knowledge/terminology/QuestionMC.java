@@ -27,8 +27,8 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.blackboard.CaseQuestionMC;
-import de.d3web.core.session.blackboard.XPSCaseObject;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
@@ -47,13 +47,13 @@ public class QuestionMC extends QuestionChoice {
 		super(id);
 	}
 
-	public XPSCaseObject createCaseObject(Session session) {
+	public SessionObject createCaseObject(Session session) {
 		return new CaseQuestionMC(this);
 	}
 
-	public List<AnswerChoice> getAlternatives() {
+	public List<Choice> getAlternatives() {
 		if (alternatives == null) {
-			return new Vector<AnswerChoice>();
+			return new Vector<Choice>();
 		} else
 			return alternatives;
 	}
@@ -65,10 +65,10 @@ public class QuestionMC extends QuestionChoice {
 	
 	/**
 	 * Sets the current values of this MC-question belonging to the
-	 * specified XPSCase.<BR>
+	 * specified Session.<BR>
 	 * <B>Caution:</B> It is possible to set numerical values to a MC-
 	 * question. In this case, a Num2ChoiceSchema must be defined a KnowledgeSlice.
-	 * @param theCase the belonging XPSCase
+	 * @param theCase the belonging Session
 	 * @param antwort an array of Answer instances
 	 */
 	@Override

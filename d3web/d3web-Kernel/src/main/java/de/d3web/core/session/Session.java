@@ -33,13 +33,13 @@ import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCMarkedUp;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 import de.d3web.core.session.blackboard.Blackboard;
-import de.d3web.core.session.blackboard.XPSCaseObject;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.interviewmanager.DialogController;
 import de.d3web.core.session.interviewmanager.QASetManager;
 
 /**
  * The Session interface represents a running xps session.
- * This interface replaces the formerly used XPSCase.
+ * This interface replaces the formerly used Session.
  * 
  * @author Norman Bruemmer, joba, Volker Belli (denkbares GmbH)
  */
@@ -95,15 +95,15 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	List<? extends Question> getAnsweredQuestions();
 
 	/**
-	 * Returns the {@link XPSCaseObject} (dynamic flyweight object)
+	 * Returns the {@link SessionObject} (dynamic flyweight object)
 	 * corresponding to the specified {@link CaseObjectSource} instance (often
 	 * this is a {@link Question} or a {@link Solution}.
 	 * 
 	 * @param item
 	 *            Object whose case object should be returned
-	 * @return the corresponding {@link XPSCaseObject} of the given item
+	 * @return the corresponding {@link SessionObject} of the given item
 	 */
-	XPSCaseObject getCaseObject(CaseObjectSource item);
+	SessionObject getCaseObject(CaseObjectSource item);
 
 	/**
 	 * Returns all {@link Solution} instances, that hold the specified
@@ -211,7 +211,7 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 * @param listener
 	 *            one new listener of this case to register
 	 */
-	void addListener(XPSCaseEventListener listener);
+	void addListener(SessionEventListener listener);
 
 	/**
 	 * Removes the specified listener from the list of registered listeners. All
@@ -220,7 +220,7 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 * @param listener
 	 *            the specified listener to be removed
 	 */
-	void removeListener(XPSCaseEventListener listener);
+	void removeListener(SessionEventListener listener);
 	
 	/**
 	 * adds an established Diagnosis to this case

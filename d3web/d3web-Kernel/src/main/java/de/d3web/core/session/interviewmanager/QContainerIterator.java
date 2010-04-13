@@ -74,7 +74,7 @@ public class QContainerIterator {
 			indentation = indent;
 		}
 
-		public Session getXPSCase() {
+		public Session getSession() {
 			return theCase;
 		}
 		public Question getQuestion() {
@@ -111,7 +111,7 @@ public class QContainerIterator {
 	 * @param container
 	 *            the Root-Container
 	 * @param theCase
-	 *            current XPSCase
+	 *            current Session
 	 */
 	public QContainerIterator(Session theCase, QContainer container) {
 		this.theCase = theCase;

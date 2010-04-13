@@ -25,6 +25,6 @@ public interface InferenceTrace {
 
 	public abstract double getSupport();
 	
-	public void refreshRelations(XCLModel xclModel, Session xpsCase);
+	public void refreshRelations(XCLModel xclModel, Session session);
 
 }

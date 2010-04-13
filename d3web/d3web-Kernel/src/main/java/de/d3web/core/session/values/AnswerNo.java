@@ -25,7 +25,7 @@ package de.d3web.core.session.values;
  * Creation date: (28.09.00 17:52:43)
  * @author Joachim Baumeister
  */
-public class AnswerNo extends AnswerChoice {
+public class AnswerNo extends Choice {
 
 	public AnswerNo(String id) {
 		super(id);

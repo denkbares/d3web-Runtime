@@ -29,7 +29,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.blackboard.CaseQuestionDate;
-import de.d3web.core.session.blackboard.XPSCaseObject;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.values.AnswerDate;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.UndefinedValue;
@@ -62,7 +62,7 @@ public class QuestionDate extends Question {
 
 	// @Override
 	// @Deprecated
-	// public void setValue(XPSCase theCase, Object[] values) {
+	// public void setValue(Session theCase, Object[] values) {
 	// if (values.length != 1) {
 	// Logger.getLogger(this.getClass().getName()).warning("wrong number of answeralternatives");
 	// } else {
@@ -84,7 +84,7 @@ public class QuestionDate extends Question {
 	}
 
 
-	public XPSCaseObject createCaseObject(Session session) {
+	public SessionObject createCaseObject(Session session) {
 		return new CaseQuestionDate(this);
 	}
 

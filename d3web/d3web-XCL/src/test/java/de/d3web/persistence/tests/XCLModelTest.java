@@ -39,7 +39,7 @@ import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.manage.AnswerFactory;
 import de.d3web.core.manage.KnowledgeBaseManagement;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
@@ -60,16 +60,16 @@ public class XCLModelTest extends TestCase{
 		Solution  terminator = new Solution("D1");
 		
 		QuestionOC genre = new QuestionOC("GENRE");
-		AnswerChoice action; 
-		AnswerChoice love;
+		Choice action; 
+		Choice love;
 		
 		QuestionOC player = new QuestionOC("PLAYER");
-		AnswerChoice arnold;
-		AnswerChoice will;
+		Choice arnold;
+		Choice will;
 		
 		QuestionOC rated = new QuestionOC("RATED");
-		AnswerChoice plus18;
-		AnswerChoice baby;
+		Choice plus18;
+		Choice baby;
 
 		
 		
@@ -148,7 +148,7 @@ public class XCLModelTest extends TestCase{
 			genre.setName("Genre");
 			action = AnswerFactory.createAnswerChoice("Ga1", "action");
 			love = AnswerFactory.createAnswerChoice("Ga2", "love");
-			List<AnswerChoice> alternatives = new ArrayList<AnswerChoice>();
+			List<Choice> alternatives = new ArrayList<Choice>();
 			alternatives.add(action);
 			alternatives.add(love);
 			genre.setAlternatives(alternatives);
@@ -159,7 +159,7 @@ public class XCLModelTest extends TestCase{
 			player.setName("Player");
 			arnold = AnswerFactory.createAnswerChoice("Ga1", "arnold");
 			will = AnswerFactory.createAnswerChoice("Ga2", "will");
-			List<AnswerChoice> alt = new ArrayList<AnswerChoice>();
+			List<Choice> alt = new ArrayList<Choice>();
 			alt.add(arnold);
 			alt.add(will);
 			player.setAlternatives(alt);
@@ -168,7 +168,7 @@ public class XCLModelTest extends TestCase{
 			
 			// the question "rated"
 			rated.setName("Rated");
-			List<AnswerChoice> aPlayer = new ArrayList<AnswerChoice>();
+			List<Choice> aPlayer = new ArrayList<Choice>();
 			plus18 = AnswerFactory.createAnswerChoice("Ra1", "18+");
 			baby = AnswerFactory.createAnswerChoice("Ra2", "baby");
 			aPlayer.add(plus18);

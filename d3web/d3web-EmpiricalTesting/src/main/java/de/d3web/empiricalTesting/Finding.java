@@ -26,7 +26,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
 
@@ -49,8 +49,8 @@ public class Finding implements Comparable<Finding> {
 	 * @return new Finding consisting of committed question and searched answer.
 	 */
 	public Finding(QuestionChoice question, String answerIDorText) throws Exception {
-		AnswerChoice foundAnswer = null;
-		for (AnswerChoice ac : question.getAllAlternatives()) {
+		Choice foundAnswer = null;
+		for (Choice ac : question.getAllAlternatives()) {
 			if (answerIDorText.equals(ac.getId())
 					|| answerIDorText.equals(ac.getName()))
 				foundAnswer = ac;

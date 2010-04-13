@@ -39,7 +39,7 @@ import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.manage.AnswerFactory;
 import de.d3web.core.manage.RuleFactory;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.utilities.Utils;
 import de.d3web.indication.inference.PSMethodNextQASet;
@@ -58,86 +58,86 @@ public class KfzWb extends KnowledgeBase {
 	private final QContainer Q21 = new QContainer("Q21");
 	private final QContainer Q56 = new QContainer("Q56");
 
-	private final AnswerChoice Mf2a1 = AnswerFactory.createAnswerChoice("Mf2a1", "schwarz");
-	private final AnswerChoice Mf2a2 = AnswerFactory.createAnswerChoice("Mf2a2", "bläulich");
-	private final AnswerChoice Mf2a3 = AnswerFactory.createAnswerChoice("Mf2a3", "farblos");
+	private final Choice Mf2a1 = AnswerFactory.createAnswerChoice("Mf2a1", "schwarz");
+	private final Choice Mf2a2 = AnswerFactory.createAnswerChoice("Mf2a2", "bläulich");
+	private final Choice Mf2a3 = AnswerFactory.createAnswerChoice("Mf2a3", "farblos");
 	private final QuestionOC Mf2 = new QuestionOC("Mf2");
 
-	private final AnswerChoice Mf3a1 = AnswerFactory.createAnswerChoice("Mf3a1", "braun");
-	private final AnswerChoice Mf3a2 = AnswerFactory.createAnswerChoice("Mf3a2", "grau");
-	private final AnswerChoice Mf3a3 = AnswerFactory.createAnswerChoice("Mf3a3", "hellgrau");
-	private final AnswerChoice Mf3a4 = AnswerFactory.createAnswerChoice("Mf3a4", "schwarzverrußt");
+	private final Choice Mf3a1 = AnswerFactory.createAnswerChoice("Mf3a1", "braun");
+	private final Choice Mf3a2 = AnswerFactory.createAnswerChoice("Mf3a2", "grau");
+	private final Choice Mf3a3 = AnswerFactory.createAnswerChoice("Mf3a3", "hellgrau");
+	private final Choice Mf3a4 = AnswerFactory.createAnswerChoice("Mf3a4", "schwarzverrußt");
 	private final QuestionOC Mf3 = new QuestionOC("Mf3");
 
-	private final AnswerChoice Msi21a1 = AnswerFactory.createAnswerChoice("Msi21a1", "normal");
-	private final AnswerChoice Msi21a2 = AnswerFactory.createAnswerChoice("Msi21a2", "abnorm");
+	private final Choice Msi21a1 = AnswerFactory.createAnswerChoice("Msi21a1", "normal");
+	private final Choice Msi21a2 = AnswerFactory.createAnswerChoice("Msi21a2", "abnorm");
 	private final QuestionOC Msi21 = new QuestionOC("Msi21");
 
-	private final AnswerChoice Mf4a1 = AnswerFactory.createAnswerChoice("Mf4a1", "Diesel");
-	private final AnswerChoice Mf4a3 = AnswerFactory.createAnswerChoice("Mf4a3", "Normal oder Super");
+	private final Choice Mf4a1 = AnswerFactory.createAnswerChoice("Mf4a1", "Diesel");
+	private final Choice Mf4a3 = AnswerFactory.createAnswerChoice("Mf4a3", "Normal oder Super");
 	private final QuestionOC Mf4 = new QuestionOC("Mf4");
 
 	private final QuestionNum Mf5 = new QuestionNum("Mf5");
 
-	private final AnswerChoice Msi4a1 = AnswerFactory.createAnswerChoice("Msi4a1", "normal");
-	private final AnswerChoice Msi4a2 = AnswerFactory.createAnswerChoice("Msi4a2", "leicht erhöht");
-	private final AnswerChoice Msi4a3 = AnswerFactory.createAnswerChoice("Msi4a3", "erhöht");
+	private final Choice Msi4a1 = AnswerFactory.createAnswerChoice("Msi4a1", "normal");
+	private final Choice Msi4a2 = AnswerFactory.createAnswerChoice("Msi4a2", "leicht erhöht");
+	private final Choice Msi4a3 = AnswerFactory.createAnswerChoice("Msi4a3", "erhöht");
 	private final QuestionOC Msi4 = new QuestionOC("Msi4");
 
 	private final QuestionNum Mf6 = new QuestionNum("Mf6");
 
-	private final AnswerChoice Mf7a1 = AnswerFactory.createAnswerChoice("Mf7a1", "klopfen");
-	private final AnswerChoice Mf7a2 = AnswerFactory.createAnswerChoice("Mf7a2", "klingeln");
-	private final AnswerChoice Mf7a0 = AnswerFactory.createAnswerNo("Mf7a0", "Nein/Sonstiges");
+	private final Choice Mf7a1 = AnswerFactory.createAnswerChoice("Mf7a1", "klopfen");
+	private final Choice Mf7a2 = AnswerFactory.createAnswerChoice("Mf7a2", "klingeln");
+	private final Choice Mf7a0 = AnswerFactory.createAnswerNo("Mf7a0", "Nein/Sonstiges");
 	private final QuestionMC Mf7 = new QuestionMC("Mf7");
 
-	private final AnswerChoice Mf8a1 = AnswerFactory.createAnswerChoice("Mf8a1", "springt normal an");
-	private final AnswerChoice Mf8a2 = AnswerFactory.createAnswerChoice("Mf8a2", "springt schlecht an");
-	private final AnswerChoice Mf8a3 = AnswerFactory.createAnswerChoice("Mf8a3", "springt überhaupt nicht an");
+	private final Choice Mf8a1 = AnswerFactory.createAnswerChoice("Mf8a1", "springt normal an");
+	private final Choice Mf8a2 = AnswerFactory.createAnswerChoice("Mf8a2", "springt schlecht an");
+	private final Choice Mf8a3 = AnswerFactory.createAnswerChoice("Mf8a3", "springt überhaupt nicht an");
 	private final QuestionOC Mf8 = new QuestionOC("Mf8");
 
-	private final AnswerChoice Mf10a1 = AnswerFactory.createAnswerChoice("Mf10a1", "dreht durch");
-	private final AnswerChoice Mf10a2 = AnswerFactory.createAnswerChoice("Mf10a2", "dreht nicht richtig durch");
+	private final Choice Mf10a1 = AnswerFactory.createAnswerChoice("Mf10a1", "dreht durch");
+	private final Choice Mf10a2 = AnswerFactory.createAnswerChoice("Mf10a2", "dreht nicht richtig durch");
 	private final QuestionOC Mf10 = new QuestionOC("Mf10");
 
-	private final AnswerChoice Mf9a1 = AnswerFactory.createAnswerChoice("Mf9a1", "verzögertes Anfahren");
-	private final AnswerChoice Mf9a2 = AnswerFactory.createAnswerChoice("Mf9a2", "schlechte Beschleunigung");
-	private final AnswerChoice Mf9a3 = AnswerFactory.createAnswerChoice("Mf9a3", "Leerlauf ist zu niedrig");
-	private final AnswerChoice Mf9a4 = AnswerFactory.createAnswerChoice("Mf9a4", "Leerlauf ist unregelmäßig");
-	private final AnswerChoice Mf9a5 = AnswerFactory.createAnswerChoice("Mf9a5", "zu wenig Leistung bei Teillast");
-	private final AnswerChoice Mf9a6 = AnswerFactory.createAnswerChoice("Mf9a6", "zu wenig Leistung bei Volllast");
-	private final AnswerChoice Mf9a0 = AnswerFactory.createAnswerNo("Mf9a0", "Nein/Sonstiges");
+	private final Choice Mf9a1 = AnswerFactory.createAnswerChoice("Mf9a1", "verzögertes Anfahren");
+	private final Choice Mf9a2 = AnswerFactory.createAnswerChoice("Mf9a2", "schlechte Beschleunigung");
+	private final Choice Mf9a3 = AnswerFactory.createAnswerChoice("Mf9a3", "Leerlauf ist zu niedrig");
+	private final Choice Mf9a4 = AnswerFactory.createAnswerChoice("Mf9a4", "Leerlauf ist unregelmäßig");
+	private final Choice Mf9a5 = AnswerFactory.createAnswerChoice("Mf9a5", "zu wenig Leistung bei Teillast");
+	private final Choice Mf9a6 = AnswerFactory.createAnswerChoice("Mf9a6", "zu wenig Leistung bei Volllast");
+	private final Choice Mf9a0 = AnswerFactory.createAnswerNo("Mf9a0", "Nein/Sonstiges");
 	private final QuestionMC Mf9 = new QuestionMC("Mf9");
 
-	private final AnswerChoice Mf13a1 = AnswerFactory.createAnswerChoice("Mf13a1", "ja");
-	private final AnswerChoice Mf13a0 = AnswerFactory.createAnswerChoice("Mf13a0", "nein");
+	private final Choice Mf13a1 = AnswerFactory.createAnswerChoice("Mf13a1", "ja");
+	private final Choice Mf13a0 = AnswerFactory.createAnswerChoice("Mf13a0", "nein");
 	private final QuestionOC Mf13 = new QuestionOC("Mf13");
 
-	private final AnswerChoice Mf15a1 = AnswerFactory.createAnswerChoice("Mf15a1", "ja");
-	private final AnswerChoice Mf15a0 = AnswerFactory.createAnswerChoice("Mf15a0", "nein");
+	private final Choice Mf15a1 = AnswerFactory.createAnswerChoice("Mf15a1", "ja");
+	private final Choice Mf15a0 = AnswerFactory.createAnswerChoice("Mf15a0", "nein");
 	private final QuestionOC Mf15 = new QuestionOC("Mf15");
 
-	private final AnswerChoice Mf17a1 = AnswerFactory.createAnswerChoice("Mf17a1", "ja");
-	private final AnswerChoice Mf17a0 = AnswerFactory.createAnswerChoice("Mf17a0", "nein");
+	private final Choice Mf17a1 = AnswerFactory.createAnswerChoice("Mf17a1", "ja");
+	private final Choice Mf17a0 = AnswerFactory.createAnswerChoice("Mf17a0", "nein");
 	private final QuestionOC Mf17 = new QuestionOC("Mf17");
 
-	private final AnswerChoice Mf19a1 = AnswerFactory.createAnswerChoice("Mf19a1", "ja");
-	private final AnswerChoice Mf19a0 = AnswerFactory.createAnswerChoice("Mf19a0", "nein");
+	private final Choice Mf19a1 = AnswerFactory.createAnswerChoice("Mf19a1", "ja");
+	private final Choice Mf19a0 = AnswerFactory.createAnswerChoice("Mf19a0", "nein");
 	private final QuestionOC Mf19 = new QuestionOC("Mf19");
 
-	private final AnswerChoice Mf11a1 = AnswerFactory.createAnswerChoice("Mf11a1", "ja");
-	private final AnswerChoice Mf11a0 = AnswerFactory.createAnswerChoice("Mf11a0", "nein");
+	private final Choice Mf11a1 = AnswerFactory.createAnswerChoice("Mf11a1", "ja");
+	private final Choice Mf11a0 = AnswerFactory.createAnswerChoice("Mf11a0", "nein");
 	private final QuestionOC Mf11 = new QuestionOC("Mf11");
 
-	private final AnswerChoice Mf57a1 = AnswerFactory.createAnswerChoice("Mf57a1", "VW");
-	private final AnswerChoice Mf57a2 = AnswerFactory.createAnswerChoice("Mf57a2", "Opel");
-	private final AnswerChoice Mf57a3 = AnswerFactory.createAnswerChoice("Mf57a3", "Mercedes Benz");
-	private final AnswerChoice Mf57a4 = AnswerFactory.createAnswerChoice("Mf57a4", "BMW");
-	private final AnswerChoice Mf57a5 = AnswerFactory.createAnswerChoice("Mf57a5", "Porsche");
-	private final AnswerChoice Mf57a6 = AnswerFactory.createAnswerChoice("Mf57a6", "Fiat");
-	private final AnswerChoice Mf57a7 = AnswerFactory.createAnswerChoice("Mf57a7", "Toyota");
-	private final AnswerChoice Mf57a8 = AnswerFactory.createAnswerChoice("Mf57a8", "Mazda");
-	private final AnswerChoice Mf57a9 = AnswerFactory.createAnswerChoice("Mf57a9", "sonstige");
+	private final Choice Mf57a1 = AnswerFactory.createAnswerChoice("Mf57a1", "VW");
+	private final Choice Mf57a2 = AnswerFactory.createAnswerChoice("Mf57a2", "Opel");
+	private final Choice Mf57a3 = AnswerFactory.createAnswerChoice("Mf57a3", "Mercedes Benz");
+	private final Choice Mf57a4 = AnswerFactory.createAnswerChoice("Mf57a4", "BMW");
+	private final Choice Mf57a5 = AnswerFactory.createAnswerChoice("Mf57a5", "Porsche");
+	private final Choice Mf57a6 = AnswerFactory.createAnswerChoice("Mf57a6", "Fiat");
+	private final Choice Mf57a7 = AnswerFactory.createAnswerChoice("Mf57a7", "Toyota");
+	private final Choice Mf57a8 = AnswerFactory.createAnswerChoice("Mf57a8", "Mazda");
+	private final Choice Mf57a9 = AnswerFactory.createAnswerChoice("Mf57a9", "sonstige");
 	private final QuestionOC Mf57 = new QuestionOC("Mf57");
 
 	private final QuestionNum Mf58 = new QuestionNum("Mf58");
@@ -189,24 +189,24 @@ public class KfzWb extends KnowledgeBase {
 			Mf2.setName("SI: Abgase");
             Mf2.setKnowledgeBase(this);
 			Mf2.setParents(Utils.createList(new NamedObject[] { Q16 }));
-			Mf2.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf2a1, Mf2a2, Mf2a3 }));
+			Mf2.setAlternatives(Utils.createVector(new Choice[] { Mf2a1, Mf2a2, Mf2a3 }));
 			Mf3.setName("SI: Auspuffrohrfarbe");
             Mf3.setKnowledgeBase(this);
 			Mf3.setParents(Utils.createList(new NamedObject[] { Q16 }));
-			Mf3.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf3a1, Mf3a2, Mf3a3, Mf3a4 }));
+			Mf3.setAlternatives(Utils.createVector(new Choice[] { Mf3a1, Mf3a2, Mf3a3, Mf3a4 }));
 			Msi21.setName("SI: Bewertung Auspuffrohrfarbe");
             Msi21.setKnowledgeBase(this);
-			Msi21.setAlternatives(Utils.createVector(new AnswerChoice[] { Msi21a1, Msi21a2 }));
+			Msi21.setAlternatives(Utils.createVector(new Choice[] { Msi21a1, Msi21a2 }));
 			Mf4.setName("SI: Benzinart");
             Mf4.setKnowledgeBase(this);
 			Mf4.setParents(Utils.createList(new NamedObject[] { Q16 }));
-			Mf4.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf4a1, Mf4a3 }));
+			Mf4.setAlternatives(Utils.createVector(new Choice[] { Mf4a1, Mf4a3 }));
 			Mf5.setName("SI: Üblicher Kraftstoffverbrauch/100km");
             Mf5.setKnowledgeBase(this);
 			Mf5.setParents(Utils.createList(new NamedObject[] { Q16 }));
 			Msi4.setName("SI: Bewertung Kraftstoffverbrauch");
             Msi4.setKnowledgeBase(this);
-			Msi4.setAlternatives(Utils.createVector(new AnswerChoice[] { Msi4a1, Msi4a2, Msi4a3 }));
+			Msi4.setAlternatives(Utils.createVector(new Choice[] { Msi4a1, Msi4a2, Msi4a3 }));
 			Num2ChoiceSchema schema = new Num2ChoiceSchema("Msi4_Schema00");
 			schema.setSchemaArray(new Double[] { new Double(10), new Double(20)});
 			Msi4.addKnowledge(PSMethodQuestionSetter.class, schema, PSMethodQuestionSetter.NUM2CHOICE_SCHEMA);
@@ -219,18 +219,18 @@ public class KfzWb extends KnowledgeBase {
 			Mf7.setName("SI: Motorgeräusche");
             Mf7.setKnowledgeBase(this);
 			Mf7.setParents(Utils.createList(new NamedObject[] { Q16 }));
-			Mf7.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf7a1, Mf7a2, Mf7a0 }));
+			Mf7.setAlternatives(Utils.createVector(new Choice[] { Mf7a1, Mf7a2, Mf7a0 }));
 			Mf8.setName("SI: Verhalten bei Motorstart");
             Mf8.setKnowledgeBase(this);
 			Mf8.setParents(Utils.createList(new NamedObject[] { Q16 }));
-			Mf8.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf8a1, Mf8a2, Mf8a3 }));
+			Mf8.setAlternatives(Utils.createVector(new Choice[] { Mf8a1, Mf8a2, Mf8a3 }));
 			Mf10.setName("Wie verhält sich der Anlasser bei Motorstartversuchen?");
             Mf10.setKnowledgeBase(this);
-			Mf10.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf10a1, Mf10a2 }));
+			Mf10.setAlternatives(Utils.createVector(new Choice[] { Mf10a1, Mf10a2 }));
 			Mf9.setName("SI: Fahrverhalten");
             Mf9.setKnowledgeBase(this);
 			Mf9.setParents(Utils.createList(new NamedObject[] { Q16 }));
-			Mf9.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf9a1, Mf9a2, Mf9a3, Mf9a4, Mf9a5, Mf9a6, Mf9a0 }));
+			Mf9.setAlternatives(Utils.createVector(new Choice[] { Mf9a1, Mf9a2, Mf9a3, Mf9a4, Mf9a5, Mf9a6, Mf9a0 }));
 
 			Qcl16.setName("Technische Untersuchungen");
             Qcl16.setKnowledgeBase(this);
@@ -254,15 +254,15 @@ public class KfzWb extends KnowledgeBase {
 			Mf13.setName("Ist ein Fehler im Leerlaufsystem?");
             Mf13.setKnowledgeBase(this);
 			Mf13.setParents(Utils.createList(new NamedObject[] { Q17 }));
-			Mf13.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf13a1, Mf13a0 }));
+			Mf13.setAlternatives(Utils.createVector(new Choice[] { Mf13a1, Mf13a0 }));
 			Mf15.setName("Ist ein Fehler im Ansaugsystem?");
             Mf15.setKnowledgeBase(this);
 			Mf15.setParents(Utils.createList(new NamedObject[] { Q18 }));
-			Mf15.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf15a1, Mf15a0 }));
+			Mf15.setAlternatives(Utils.createVector(new Choice[] { Mf15a1, Mf15a0 }));
 			Mf17.setName("Ist der Luftfilter verschmutzt?");
             Mf17.setKnowledgeBase(this);
 			Mf17.setParents(Utils.createList(new NamedObject[] { Q19 }));
-			Mf17.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf17a1, Mf17a0 }));
+			Mf17.setAlternatives(Utils.createVector(new Choice[] { Mf17a1, Mf17a0 }));
 
 		} catch (Exception e) {
 			System.out.println("" + e);
@@ -275,17 +275,17 @@ public class KfzWb extends KnowledgeBase {
 			Mf19.setName("Ist die Zündeinstellung fehlerhaft?");
             Mf19.setKnowledgeBase(this);
 			Mf19.setParents(Utils.createList(new NamedObject[] { Q20 }));
-			Mf19.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf19a1, Mf19a0 }));
+			Mf19.setAlternatives(Utils.createVector(new Choice[] { Mf19a1, Mf19a0 }));
 			Mf11.setName("Ist die Batterie leer?");
             Mf11.setKnowledgeBase(this);
 			Mf11.setParents(Utils.createList(new NamedObject[] { Q21 }));
-			Mf11.setAlternatives(Utils.createVector(new AnswerChoice[] { Mf11a1, Mf11a0 }));
+			Mf11.setAlternatives(Utils.createVector(new Choice[] { Mf11a1, Mf11a0 }));
 			Mf57.setName("Automarke?");
             Mf57.setKnowledgeBase(this);
 			Mf57.setParents(Utils.createList(new NamedObject[] { Q56 }));
 			Mf57.setAlternatives(
 				Utils.createVector(
-					new AnswerChoice[] { Mf57a1, Mf57a2, Mf57a3, Mf57a4, Mf57a5, Mf57a6, Mf57a7, Mf57a8, Mf57a9 }));
+					new Choice[] { Mf57a1, Mf57a2, Mf57a3, Mf57a4, Mf57a5, Mf57a6, Mf57a7, Mf57a8, Mf57a9 }));
 			Mf58.setName("Baujahr des Autos?");
             Mf58.setKnowledgeBase(this);
 			Mf58.setParents(Utils.createList(new NamedObject[] { Q56 }));
@@ -896,7 +896,7 @@ public class KfzWb extends KnowledgeBase {
 	/**
 	 * Make CondEqual
 	 */
-	private CondEqual mce(QuestionChoice q, AnswerChoice a) {
+	private CondEqual mce(QuestionChoice q, Choice a) {
 		return new CondEqual(q, new ChoiceValue(a));
 	}
 

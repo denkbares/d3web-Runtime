@@ -29,7 +29,7 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseRuleComplex;
-import de.d3web.core.session.blackboard.XPSCaseObject;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 /**
  * Abstract super class for all rules. <BR>
@@ -212,7 +212,7 @@ public class Rule implements CaseObjectSource {
 	}
 
 	@Override
-	public XPSCaseObject createCaseObject(Session session) {
+	public SessionObject createCaseObject(Session session) {
 		return new CaseRuleComplex(this);
 	}
 

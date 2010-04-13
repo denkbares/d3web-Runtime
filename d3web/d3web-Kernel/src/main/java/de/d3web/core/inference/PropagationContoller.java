@@ -3,7 +3,7 @@ package de.d3web.core.inference;
 import de.d3web.core.knowledge.terminology.NamedObject;
 
 /**
- * A PropagationController is responsible for propagate all changes of a XPSCase
+ * A PropagationController is responsible for propagate all changes of a Session
  * through the registered PSMethods of the case. 
  * 
  * For each case a single instance of a PropagationContoller implementation 

@@ -6,7 +6,7 @@ import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 
 /**
@@ -70,16 +70,16 @@ public class SCMCBRRelation {
 		return createSCMCBRRelation(conditionedFinding, DEFAULT_WEIGHT);
 	}
 	
-	public static SCMCBRRelation createSCMCBRRelation(QuestionChoice question, AnswerChoice answer) {
+	public static SCMCBRRelation createSCMCBRRelation(QuestionChoice question, Choice answer) {
 		return createSCMCBRRelation(question, answer, DEFAULT_WEIGHT);
 	}
 
-	public static SCMCBRRelation createSCMCBRRelation(QuestionChoice question, AnswerChoice answer, double weight) {
+	public static SCMCBRRelation createSCMCBRRelation(QuestionChoice question, Choice answer, double weight) {
 		return createSCMCBRRelation(new CondEqual(question, new ChoiceValue(answer)),
 				weight);
 	}
 
-	public static SCMCBRRelation createSCMCBRRelation(String id, QuestionChoice question, AnswerChoice answer) {
+	public static SCMCBRRelation createSCMCBRRelation(String id, QuestionChoice question, Choice answer) {
 		SCMCBRRelation r = createSCMCBRRelation(new CondEqual(question, new ChoiceValue(
 				answer)));
 		r.setId(id);

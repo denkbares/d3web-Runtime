@@ -53,7 +53,7 @@ import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
@@ -298,7 +298,7 @@ public class TestPersistence {
 		xmlsw.writeAttribute(QUESTIONNAIRE, findQuestionnaire(f.getQuestion()).getName());
 		Value v = f.getValue();
 		if (v instanceof ChoiceValue) {
-			AnswerChoice choice = (AnswerChoice) ((ChoiceValue) v).getValue();
+			Choice choice = (Choice) ((ChoiceValue) v).getValue();
 			xmlsw.writeAttribute(ANSWER, choice.getName());
 		}
 		if (v instanceof NumValue) {
@@ -395,8 +395,8 @@ public class TestPersistence {
 		}
 	}
 
-	private AnswerChoice[] toChoices(Question q, String[] strings) {
-		AnswerChoice[] answers = new AnswerChoice[strings.length];
+	private Choice[] toChoices(Question q, String[] strings) {
+		Choice[] answers = new Choice[strings.length];
 		QuestionChoice qc = (QuestionChoice)q;
 		for (int i = 0; i < strings.length; i++) {
 			answers[i] = findAnswer(qc, strings[i]);
@@ -404,8 +404,8 @@ public class TestPersistence {
 		return answers;
 	}
 
-	private AnswerChoice findAnswer(QuestionChoice qc, String string) {
-		for (AnswerChoice choice : qc.getAllAlternatives()) {
+	private Choice findAnswer(QuestionChoice qc, String string) {
+		for (Choice choice : qc.getAllAlternatives()) {
 			if (string.equals(choice.getName()))
 				return choice;
 		}

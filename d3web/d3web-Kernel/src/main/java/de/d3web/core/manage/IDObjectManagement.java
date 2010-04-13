@@ -35,7 +35,7 @@ import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.knowledge.terminology.QuestionZC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 
 
 /**
@@ -52,17 +52,17 @@ public interface IDObjectManagement {
 	
 	Solution findDiagnosis(String name);
 	
-	AnswerChoice findAnswerChoice(QuestionChoice qc, String name);
+	Choice findAnswerChoice(QuestionChoice qc, String name);
 	
 	Value findValue(Question q, String name);
 	
 	QContainer createQContainer(String name, QASet parent);
 	QContainer createQContainer(String id, String name, QASet parent);
 	
-	QuestionOC createQuestionOC(String id, String name, QASet parent, AnswerChoice[] answers);
+	QuestionOC createQuestionOC(String id, String name, QASet parent, Choice[] answers);
 	QuestionZC createQuestionZC(String id, String name, QASet parent);
 	QuestionOC createQuestionOC(String id, String name, QASet parent, String[] answers);
-	QuestionMC createQuestionMC(String id, String name, QASet parent, AnswerChoice[] answers);
+	QuestionMC createQuestionMC(String id, String name, QASet parent, Choice[] answers);
 	QuestionMC createQuestionMC(String id, String name, QASet parent, String[] answers);
 	QuestionNum createQuestionNum(String id, String name, QASet parent);
 	QuestionYN createQuestionYN(String id, String name, QASet parent);
@@ -70,10 +70,10 @@ public interface IDObjectManagement {
 	QuestionDate createQuestionDate(String id, String name, QASet parent);
 	QuestionText createQuestionText(String id, String name, QASet parent);
 	
-	QuestionOC createQuestionOC(String name, QASet parent, AnswerChoice[] answers);
+	QuestionOC createQuestionOC(String name, QASet parent, Choice[] answers);
 	QuestionZC createQuestionZC(String name, QASet parent);
 	QuestionOC createQuestionOC(String name, QASet parent, String[] answers);
-	QuestionMC createQuestionMC(String name, QASet parent, AnswerChoice[] answers);
+	QuestionMC createQuestionMC(String name, QASet parent, Choice[] answers);
 	QuestionMC createQuestionMC(String name, QASet parent, String[] answers);
 	QuestionNum createQuestionNum(String name, QASet parent);
 	QuestionYN createQuestionYN(String name, QASet parent);

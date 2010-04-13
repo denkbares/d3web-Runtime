@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.d3web.core.session.CaseObjectSource;
-import de.d3web.core.session.blackboard.XPSCaseObject;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.diaFlux.inference.PathEntry;
 
 /**
@@ -35,7 +35,7 @@ import de.d3web.diaFlux.inference.PathEntry;
  * @author Reinhard Hatko
  * Created on: 04.11.2009
  */
-public class DiaFluxCaseObject extends XPSCaseObject {
+public class DiaFluxCaseObject extends SessionObject {
 	
 	private final Map<String, FlowData> map;
 	private final List<PathEntry> pathEnds;

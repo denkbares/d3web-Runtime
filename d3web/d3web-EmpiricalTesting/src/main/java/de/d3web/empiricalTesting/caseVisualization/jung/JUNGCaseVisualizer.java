@@ -42,7 +42,7 @@ import com.lowagie.text.pdf.PdfWriter;
 
 import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.empiricalTesting.ConfigLoader;
 import de.d3web.empiricalTesting.RatedTestCase;
 import de.d3web.empiricalTesting.SequentialTestCase;
@@ -159,12 +159,12 @@ public class JUNGCaseVisualizer implements CaseVisualizer {
 		
 			QuestionChoice firstQuestion = (QuestionChoice) t.getRepository().get(0).
 								getCases().get(0).getFindings().get(0).getQuestion();
-			List<AnswerChoice> firstAnswers = firstQuestion.getAllAlternatives();
+			List<Choice> firstAnswers = firstQuestion.getAllAlternatives();
 			
 			for (Answer answerOfFirstQuestion : firstAnswers) {
 				
 				TestSuite partitioned = 
-					t.getPartiallyAnsweredSuite((AnswerChoice) answerOfFirstQuestion);
+					t.getPartiallyAnsweredSuite((Choice) answerOfFirstQuestion);
 				
 				if(partitioned.getRepository().size() > 0) {
 					writeToFile(partitioned.getRepository(), 

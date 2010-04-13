@@ -138,7 +138,7 @@ public class LocalWeight implements KnowledgeSlice {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.d3web.kernel.domainModel.KnowledgeSlice#isUsed(de.d3web.kernel.XPSCase)
+	 * @see de.d3web.kernel.domainModel.KnowledgeSlice#isUsed(de.d3web.kernel.Session)
 	 */
 	public boolean isUsed(Session theCase) {
 		return true;

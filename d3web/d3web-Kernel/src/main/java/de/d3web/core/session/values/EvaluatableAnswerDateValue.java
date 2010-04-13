@@ -39,7 +39,7 @@ import de.d3web.core.session.Session;
 public interface EvaluatableAnswerDateValue extends EvaluatableDateValue{
 
 	/**
-	 * Evaluates its value considering the given XPSCase.
+	 * Evaluates its value considering the given Session.
 	 * @return evaluated AnswerDateValue (Date)
 	 */
 	public Date eval(Session theCase);

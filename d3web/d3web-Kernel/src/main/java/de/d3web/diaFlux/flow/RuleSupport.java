@@ -23,12 +23,12 @@ public class RuleSupport implements ISupport {
 
 
 	@Override
-	public boolean isValid(Session xpsCase) {
+	public boolean isValid(Session session) {
 		try {
 			
-			rule.check(xpsCase);
+			rule.check(session);
 			
-			return rule.canFire(xpsCase);
+			return rule.canFire(session);
 		} catch (UnknownAnswerException e) {
 			return false;
 		}

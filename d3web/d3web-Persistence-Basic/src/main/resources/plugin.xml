@@ -34,11 +34,11 @@
 	</extension>
 	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="AnswerChoiceHandler">
+		id="ChoiceHandler">
 		<parameter id="class"
-			value="de.d3web.core.io.fragments.AnswerChoiceHandler" />
-		<parameter id="name" value="AnswerChoiceHandler" />
-		<parameter id="description" value="Handles choice answers" />
+			value="de.d3web.core.io.fragments.ChoiceHandler" />
+		<parameter id="name" value="ChoiceHandler" />
+		<parameter id="description" value="Handles choices" />
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>
@@ -64,11 +64,11 @@
 	</extension>
 	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="DiagnosisHandler">
+		id="SolutionsHandler">
 		<parameter id="class"
-			value="de.d3web.core.io.fragments.DiagnosisHandler" />
-		<parameter id="name" value="DiagnosisHandler" />
-		<parameter id="description" value="FragmentHanler for diagnosis" />
+			value="de.d3web.core.io.fragments.SolutionsHandler" />
+		<parameter id="name" value="SolutionsHandler" />
+		<parameter id="description" value="FragmentHanler for solutions" />
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>

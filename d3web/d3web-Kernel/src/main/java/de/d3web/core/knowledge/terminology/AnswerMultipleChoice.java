@@ -6,21 +6,21 @@ import java.util.Iterator;
 import java.util.List;
 
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 
 public class AnswerMultipleChoice extends Answer {
 
-	private List<AnswerChoice> choices = new ArrayList<AnswerChoice>();
+	private List<Choice> choices = new ArrayList<Choice>();
 	
 
-	public AnswerMultipleChoice(List<AnswerChoice> answers) {
+	public AnswerMultipleChoice(List<Choice> answers) {
 		super(null);
 		setChoices(answers);
 	}
 
-	public AnswerMultipleChoice(AnswerChoice[] answers) {
+	public AnswerMultipleChoice(Choice[] answers) {
 		super(null);
-		for (AnswerChoice answerChoice : answers) {
+		for (Choice answerChoice : answers) {
 			choices.add(answerChoice);
 		}
 	}
@@ -34,8 +34,8 @@ public class AnswerMultipleChoice extends Answer {
 	@Override
 	public String getName() {
 		StringBuffer b = new StringBuffer();
-		for (Iterator<AnswerChoice> iterator = choices.iterator(); iterator.hasNext();) {
-			AnswerChoice answer = (AnswerChoice) iterator.next();
+		for (Iterator<Choice> iterator = choices.iterator(); iterator.hasNext();) {
+			Choice answer = (Choice) iterator.next();
 			b.append(answer.getName());
 			if (iterator.hasNext())
 				b.append(", ");
@@ -43,11 +43,11 @@ public class AnswerMultipleChoice extends Answer {
 		return b.toString();
 	}
 
-	public List<AnswerChoice> getChoices() {
+	public List<Choice> getChoices() {
 		return Collections.unmodifiableList(choices);
 	}
 	
-	public void setChoices(List<AnswerChoice> answers) {
+	public void setChoices(List<Choice> answers) {
 		choices = answers;
 	}
 	
@@ -131,8 +131,8 @@ public class AnswerMultipleChoice extends Answer {
 	public boolean contains(Answer value) {
 		if (value instanceof AnswerMultipleChoice) {
 			return choices.containsAll(((AnswerMultipleChoice)value).choices);
-		} else if (value instanceof AnswerChoice) {
-			return choices.contains((AnswerChoice)value);
+		} else if (value instanceof Choice) {
+			return choices.contains((Choice)value);
 		}
 		return false;
 	}

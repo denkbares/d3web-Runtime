@@ -37,7 +37,7 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.costBenefit.inference.StateTransition;
 import de.d3web.kernel.psMethods.shared.Abnormality;
@@ -120,9 +120,9 @@ public class Node {
 		theCase.setValue(q, answer);
 	}
 	
-	public double getCosts(Session xpsCase) {
+	public double getCosts(Session session) {
 		if (cbm==null) return getStaticCosts();
-		return cbm.getCostFunction().getCosts(qContainer, xpsCase);
+		return cbm.getCostFunction().getCosts(qContainer, session);
 	}
 	
 	public double getStaticCosts() {
@@ -171,7 +171,7 @@ public class Node {
 					Abnormality abnormality = (Abnormality) ks;
 					List<Answer> alternatives = q.getAlternatives(testCase);
 					for (Answer a: alternatives) {
-						ChoiceValue avalue = new ChoiceValue((AnswerChoice) a);
+						ChoiceValue avalue = new ChoiceValue((Choice) a);
 						if (abnormality.getValue(avalue) == AbstractAbnormality.A0) {
 							if (set) {
 								setAnswer(testCase, q, avalue, undomap);

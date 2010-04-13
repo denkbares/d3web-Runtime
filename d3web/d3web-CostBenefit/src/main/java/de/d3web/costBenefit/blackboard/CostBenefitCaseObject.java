@@ -26,7 +26,7 @@ import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.XPSCaseObject;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.costBenefit.model.SearchModel;
 
 /**
@@ -34,7 +34,7 @@ import de.d3web.costBenefit.model.SearchModel;
  *
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class CostBenefitCaseObject extends XPSCaseObject{
+public class CostBenefitCaseObject extends SessionObject{
 
 	private QContainer[] currentSequence;
 	private SearchModel cbm;

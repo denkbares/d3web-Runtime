@@ -33,7 +33,7 @@ import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.AnswerChoice;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
@@ -77,7 +77,7 @@ public class EqualConditionHandler implements FragmentHandler {
 						}
 						else {
 							boolean answerfound = false;
-							for (AnswerChoice ac : q.getAllAlternatives()) {
+							for (Choice ac : q.getAllAlternatives()) {
 								if (ac.getId().equals(s)) {
 									conds.add(new ChoiceValue(ac));
 									answerfound = true;
