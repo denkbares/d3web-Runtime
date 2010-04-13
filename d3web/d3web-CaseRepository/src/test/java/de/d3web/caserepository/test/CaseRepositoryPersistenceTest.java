@@ -1,9 +1,6 @@
 package de.d3web.caserepository.test;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
-
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -12,8 +9,8 @@ import junit.textui.TestRunner;
 import de.d3web.caserepository.CaseRepository;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.persistence.xml.MultipleXMLCaseRepositoryHandler;
-import de.d3web.persistence.xml.SingleXMLCaseRepositoryHandler;
+import de.d3web.core.records.io.MultipleXMLCaseRepositoryHandler;
+import de.d3web.core.records.io.SingleXMLCaseRepositoryHandler;
 import de.d3web.plugin.test.InitPluginManager;
 
 
@@ -40,6 +37,8 @@ public class CaseRepositoryPersistenceTest extends TestCase {
 		catch (IOException e1) {
 			assertTrue("Error initialising plugin framework", false);
 		}
+		//create tests folders
+		new File("target/tests/multi").mkdirs();
 		try {
 			loadKnowledgeBase();
 		} catch (IOException e2) {
@@ -68,7 +67,7 @@ public class CaseRepositoryPersistenceTest extends TestCase {
 		CaseRepository repository = SingleXMLCaseRepositoryHandler.getInstance().load(kb, oldFile);
 		
 		// Save the new file / repository
-		File newFile = new File(System.getProperty("user.dir") + "/src/test/resources/carDiagnosis_cases_new.xml");
+		File newFile = new File("target/tests/carDiagnosis_cases_new.xml");
 		SingleXMLCaseRepositoryHandler.getInstance().save(repository, newFile);
 		
 		// Load the new file / repository
@@ -88,7 +87,7 @@ public class CaseRepositoryPersistenceTest extends TestCase {
 		CaseRepository repository = SingleXMLCaseRepositoryHandler.getInstance().load(kb, oldFile);
 		
 		// Save the repositories to multiple files
-		File directory = new File(System.getProperty("user.dir") + "/src/test/resources/temp/");
+		File directory = new File("target/tests/multi");
 		MultipleXMLCaseRepositoryHandler.getInstance().save(repository, directory);
 		
 		// Test the number of files in the directory
@@ -102,7 +101,7 @@ public class CaseRepositoryPersistenceTest extends TestCase {
 	
 	public void testMultipleXMLLoading() throws Exception {
 		// Load the old files / repository (the files are created in the test before)
-		File directory = new File(System.getProperty("user.dir") + "/src/test/resources/temp/");
+		File directory = new File("target/tests/multi");
 		CaseRepository repository = MultipleXMLCaseRepositoryHandler.getInstance().load(kb, directory);
 		
 		assertNotNull("The loaded repository is null.", repository);
