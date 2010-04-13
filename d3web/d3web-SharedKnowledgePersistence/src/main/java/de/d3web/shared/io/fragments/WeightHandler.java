@@ -32,9 +32,9 @@ import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.kernel.psMethods.shared.DiagnosisWeightValue;
-import de.d3web.kernel.psMethods.shared.QuestionWeightValue;
-import de.d3web.kernel.psMethods.shared.Weight;
+import de.d3web.shared.DiagnosisWeightValue;
+import de.d3web.shared.QuestionWeightValue;
+import de.d3web.shared.Weight;
 /**
  * Handels Weights
  * @author Norman Brümmer, Markus Friedrich (denkbares GmbH)

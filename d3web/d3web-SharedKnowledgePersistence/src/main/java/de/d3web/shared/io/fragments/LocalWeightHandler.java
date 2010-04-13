@@ -36,7 +36,7 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.ValueFactory;
-import de.d3web.kernel.psMethods.shared.LocalWeight;
+import de.d3web.shared.LocalWeight;
 /**
  * Handles LocalWeights
  * @author Norman Brümmer, Markus Friedrich (denkbares GmbH)

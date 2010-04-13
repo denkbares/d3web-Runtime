@@ -40,18 +40,18 @@ import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.kernel.psMethods.compareCase.CompareObjectsHashContainer;
 import de.d3web.kernel.psMethods.compareCase.tests.utils.CaseObjectTestDummy;
-import de.d3web.kernel.psMethods.shared.Abnormality;
-import de.d3web.kernel.psMethods.shared.PSContextFinder;
-import de.d3web.kernel.psMethods.shared.QuestionWeightValue;
-import de.d3web.kernel.psMethods.shared.Weight;
-import de.d3web.kernel.psMethods.shared.comparators.KnowledgeBaseUnknownSimilarity;
-import de.d3web.kernel.psMethods.shared.comparators.QuestionComparator;
-import de.d3web.kernel.psMethods.shared.comparators.mc.QuestionComparatorMCIndividual;
-import de.d3web.kernel.psMethods.shared.comparators.num.QuestionComparatorNumDivision;
-import de.d3web.kernel.psMethods.shared.comparators.oc.QuestionComparatorOCIndividual;
-import de.d3web.kernel.psMethods.shared.comparators.oc.QuestionComparatorYN;
-import de.d3web.kernel.psMethods.shared.comparators.text.QuestionComparatorTextIndividual;
+import de.d3web.shared.Abnormality;
+import de.d3web.shared.PSContextFinder;
 import de.d3web.shared.PSMethodShared;
+import de.d3web.shared.QuestionWeightValue;
+import de.d3web.shared.Weight;
+import de.d3web.shared.comparators.KnowledgeBaseUnknownSimilarity;
+import de.d3web.shared.comparators.QuestionComparator;
+import de.d3web.shared.comparators.mc.QuestionComparatorMCIndividual;
+import de.d3web.shared.comparators.num.QuestionComparatorNumDivision;
+import de.d3web.shared.comparators.oc.QuestionComparatorOCIndividual;
+import de.d3web.shared.comparators.oc.QuestionComparatorYN;
+import de.d3web.shared.comparators.text.QuestionComparatorTextIndividual;
 
 /**
  * Class that compares two cases and returns a List of ComparatorResult objects

@@ -27,9 +27,9 @@ import org.w3c.dom.Element;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.kernel.psMethods.shared.comparators.GroupedComparator;
-import de.d3web.kernel.psMethods.shared.comparators.PairRelation;
-import de.d3web.kernel.psMethods.shared.comparators.QuestionComparator;
+import de.d3web.shared.comparators.GroupedComparator;
+import de.d3web.shared.comparators.PairRelation;
+import de.d3web.shared.comparators.QuestionComparator;
 /**
  * Provides basic functions for QuestionComparatorGroupedHandlers
  *

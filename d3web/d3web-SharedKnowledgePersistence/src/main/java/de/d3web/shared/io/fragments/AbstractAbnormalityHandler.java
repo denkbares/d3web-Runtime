@@ -38,9 +38,9 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.ValueFactory;
-import de.d3web.kernel.psMethods.shared.Abnormality;
-import de.d3web.kernel.psMethods.shared.AbnormalityNum;
+import de.d3web.shared.Abnormality;
 import de.d3web.shared.AbnormalityInterval;
+import de.d3web.shared.AbnormalityNum;
 import de.d3web.shared.AbstractAbnormality;
 /**
  * Handles the default implementations of AbstractAbnormality. Other Handlers for descendants of AbstractAbnormality must have a higher priority.

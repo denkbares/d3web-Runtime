@@ -27,8 +27,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.kernel.psMethods.shared.comparators.QuestionComparator;
-import de.d3web.kernel.psMethods.shared.comparators.num.QuestionComparatorNumSection;
+import de.d3web.shared.comparators.QuestionComparator;
+import de.d3web.shared.comparators.num.QuestionComparatorNumSection;
 /**
  * Handles QuestionComparatorNumSection
  *

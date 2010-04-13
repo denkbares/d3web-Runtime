@@ -21,8 +21,8 @@ package de.d3web.shared.io.fragments;
 import org.w3c.dom.Element;
 
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.kernel.psMethods.shared.comparators.QuestionComparator;
-import de.d3web.kernel.psMethods.shared.comparators.oc.QuestionComparatorOCGroupedSymmetric;
+import de.d3web.shared.comparators.QuestionComparator;
+import de.d3web.shared.comparators.oc.QuestionComparatorOCGroupedSymmetric;
 /**
  * Handles QuestionComparatorOCGroupedSymmetric
  *

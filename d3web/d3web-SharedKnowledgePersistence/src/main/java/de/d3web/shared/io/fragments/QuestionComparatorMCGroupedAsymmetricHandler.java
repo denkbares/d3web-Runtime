@@ -18,8 +18,8 @@
  */
 package de.d3web.shared.io.fragments;
 
-import de.d3web.kernel.psMethods.shared.comparators.QuestionComparator;
-import de.d3web.kernel.psMethods.shared.comparators.mc.QuestionComparatorMCGroupedAsymmetric;
+import de.d3web.shared.comparators.QuestionComparator;
+import de.d3web.shared.comparators.mc.QuestionComparatorMCGroupedAsymmetric;
 /**
  * Handles QuestionComparatorMCGroupedAsymmetric
  * @author Markus Friedrich

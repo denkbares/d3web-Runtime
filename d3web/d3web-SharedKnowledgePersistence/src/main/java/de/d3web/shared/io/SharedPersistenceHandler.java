@@ -50,15 +50,15 @@ import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerUnknown;
-import de.d3web.kernel.psMethods.shared.QuestionWeightValue;
-import de.d3web.kernel.psMethods.shared.Weight;
-import de.d3web.kernel.psMethods.shared.comparators.QuestionComparator;
-import de.d3web.kernel.psMethods.shared.comparators.mc.QuestionComparatorMCIndividual;
-import de.d3web.kernel.psMethods.shared.comparators.num.QuestionComparatorNumDivision;
-import de.d3web.kernel.psMethods.shared.comparators.oc.QuestionComparatorOCIndividual;
-import de.d3web.kernel.psMethods.shared.comparators.oc.QuestionComparatorYN;
-import de.d3web.kernel.psMethods.shared.comparators.text.QuestionComparatorTextIndividual;
 import de.d3web.shared.PSMethodShared;
+import de.d3web.shared.QuestionWeightValue;
+import de.d3web.shared.Weight;
+import de.d3web.shared.comparators.QuestionComparator;
+import de.d3web.shared.comparators.mc.QuestionComparatorMCIndividual;
+import de.d3web.shared.comparators.num.QuestionComparatorNumDivision;
+import de.d3web.shared.comparators.oc.QuestionComparatorOCIndividual;
+import de.d3web.shared.comparators.oc.QuestionComparatorYN;
+import de.d3web.shared.comparators.text.QuestionComparatorTextIndividual;
 /**
  * Loads and saves shared knowledge from/to XML
  * Creation date: (14.08.2001 14:04:56)

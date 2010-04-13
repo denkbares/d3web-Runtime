@@ -40,7 +40,7 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.costBenefit.inference.StateTransition;
-import de.d3web.kernel.psMethods.shared.Abnormality;
+import de.d3web.shared.Abnormality;
 import de.d3web.shared.AbstractAbnormality;
 import de.d3web.shared.PSMethodShared;
 

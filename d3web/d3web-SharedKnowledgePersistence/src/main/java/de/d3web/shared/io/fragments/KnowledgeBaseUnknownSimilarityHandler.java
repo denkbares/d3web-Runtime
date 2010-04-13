@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
 
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.kernel.psMethods.shared.comparators.KnowledgeBaseUnknownSimilarity;
+import de.d3web.shared.comparators.KnowledgeBaseUnknownSimilarity;
 /**
  * Handles KnowledgeBaseUnknownSimilaritys
  * In contrary to other KnowledgeSlices, the nodename for the xml representation

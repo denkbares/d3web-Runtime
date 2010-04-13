@@ -18,8 +18,8 @@
  */
 package de.d3web.shared.io.fragments;
 
-import de.d3web.kernel.psMethods.shared.comparators.QuestionComparator;
-import de.d3web.kernel.psMethods.shared.comparators.num.QuestionComparatorNumIndividual;
+import de.d3web.shared.comparators.QuestionComparator;
+import de.d3web.shared.comparators.num.QuestionComparatorNumIndividual;
 /**
  * Handles QuestionComparatorNumIndividual
  *
