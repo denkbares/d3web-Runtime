@@ -54,8 +54,8 @@ public class NoAbortStrategyHandler implements FragmentHandler {
 
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
-		Element element = doc.createElement("abortStrategie");
-		element.setAttribute("name", "NoAbortStrategie");
+		Element element = doc.createElement("abortStrategy");
+		element.setAttribute("name", "NoAbortStrategy");
 		return element;
 	}
 
