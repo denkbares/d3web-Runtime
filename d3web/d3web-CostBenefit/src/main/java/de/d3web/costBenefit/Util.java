@@ -34,6 +34,7 @@ import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costBenefit.inference.PSMethodCostBenefit;
 import de.d3web.costBenefit.inference.StateTransition;
 
@@ -59,7 +60,7 @@ public class Util {
 	public static void undo(Session theCase, Map<Question, Value> undo) {
 		for (Entry<Question, Value> entry : undo.entrySet()) {
 			entry.getKey().setValue(theCase, entry.getValue());
-			if (entry.getValue() == null) {
+			if (entry.getValue() == UndefinedValue.getInstance()) {
 				theCase.getAnsweredQuestions().remove(entry.getKey());
 			}
 		}

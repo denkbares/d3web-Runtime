@@ -181,7 +181,6 @@ public class Node {
 							break;
 						}
 					}
-					break;
 				}
 			} else {
 				expectedmap.put(q, q.getValue(testCase));
