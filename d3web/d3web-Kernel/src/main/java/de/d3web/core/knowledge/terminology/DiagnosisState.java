@@ -20,13 +20,17 @@
 
 package de.d3web.core.knowledge.terminology;
 
+import java.util.Comparator;
+
 import de.d3web.core.session.Value;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.scoring.DiagnosisScore;
 import de.d3web.scoring.HeuristicRating;
 
 /**
- * Stores the state of a diagnosis in context to a problem-solving method. The
- * state is computed with respect to the score a diagnosis.
+ * Stores the state of a {@link Solution} instance in context to a
+ * problem-solving method. The state is computed with respect to the values of
+ * the problem-solver actively contributing to the solution's state.
  * 
  * @author joba, Christian Betz
  * @see Solution
@@ -34,57 +38,70 @@ import de.d3web.scoring.HeuristicRating;
  */
 public class DiagnosisState implements Value {
 
+	/**
+	 * The four possible states of a {@link Solution}:
+	 * <UL>
+	 * <li>ESTABLISHED: categorically derived
+	 * <li>SUGGESTED: possibly derived
+	 * <li>UNCLEAR: no exact state, similar to {@link UndefinedValue} for
+	 * {@link Question}
+	 * <li>EXCLUDED: categorically derived as no possible solution
+	 * </UL>
+	 * 
+	 * @author joba (denkbares GmbH)
+	 * @created 15.04.2010
+	 */
 	public enum State {
 		EXCLUDED, UNCLEAR, SUGGESTED, ESTABLISHED;
 	}
 
 	/**
-	 * The Diagnosis is meant to be excluded.
-	 * 
 	 * @deprecated you should not use these constants any longer. For checking
 	 *             the state use {@link #hasState(State state)} instead.
 	 */
+	@Deprecated
 	public static DiagnosisState EXCLUDED = new DiagnosisState(State.EXCLUDED);
+
 	/**
-	 * The Diagnosis is meant to be unclear.
-	 * 
 	 * @deprecated you should not use these constants any longer. For checking
 	 *             the state use {@link #hasState(State state)} instead.
 	 */
+	@Deprecated
 	public static DiagnosisState UNCLEAR = new DiagnosisState(State.UNCLEAR);
+
 	/**
-	 * The Diagnosis is meant to be suggested (nearly established).
-	 * 
 	 * @deprecated you should not use these constants any longer. For checking
 	 *             the state use {@link #hasState(State state)} instead.
 	 */
+	@Deprecated
 	public static DiagnosisState SUGGESTED = new DiagnosisState(State.SUGGESTED);
+
 	/**
-	 * The Diagnosis is meant to be established.
-	 * 
 	 * @deprecated you should not use these constants any longer. For checking
 	 *             the state use {@link #hasState(State state)} instead.
 	 */
+	@Deprecated
 	public static DiagnosisState ESTABLISHED = new DiagnosisState(State.ESTABLISHED);
 
 	private final State state;
 
 	/**
-	 * Creates a new solution rating value based on the string representation.
-	 * The string representation is case insensitive for backward compatibility.
+	 * Creates a new solution state based on the specified {@link String} value.
+	 * The {@link String} value is case insensitive for backward compatibility.
 	 * 
-	 * @param name
-	 *            the name of the rating state
+	 * @param statename
+	 *            the name of the solution state
 	 */
-	public DiagnosisState(String name) {
-		this(State.valueOf(name.toUpperCase()));
+	public DiagnosisState(String statename) {
+		this(State.valueOf(statename.toUpperCase()));
 	}
 
 	/**
-	 * Creates a new solution rating value based on the rating state.
+	 * Creates a new solution state instance based on the specified
+	 * {@link State} instance.
 	 * 
 	 * @param state
-	 *            the state of the new rating value
+	 *            the specified state instance
 	 */
 	public DiagnosisState(State state) {
 		if (state == null) throw new NullPointerException();
@@ -92,16 +109,16 @@ public class DiagnosisState implements Value {
 	}
 
 	/**
-	 * Returns the state's name of this rating value.
+	 * Returns the name of this {@link State} instance.
 	 * 
-	 * @return the state's name
+	 * @return the name of this state instance
 	 */
 	public String getName() {
 		return this.state.name();
 	}
 
 	/**
-	 * Returns the current state of this rating value.
+	 * Returns the current {@link State} of this instance.
 	 * 
 	 * @return the current state
 	 */
@@ -110,11 +127,12 @@ public class DiagnosisState implements Value {
 	}
 
 	/**
-	 * Returns whether the state of this rating equals to the specified state.
+	 * Compares the specified {@link State} instance with the {@link State}
+	 * instance contained in this instance.
 	 * 
 	 * @param state
-	 *            the state to be checked
-	 * @return whether the state is equal to the specified one
+	 *            the specified state to be compared
+	 * @return true, if both states are equal; false otherwise
 	 */
 	public boolean hasState(State state) {
 		return this.state.equals(state);
@@ -125,7 +143,7 @@ public class DiagnosisState implements Value {
 	 * as a possible fault. This means that the rating is suggested or
 	 * established.
 	 * 
-	 * @return if the solution is suggested or established
+	 * @return true, if the solution has the state suggested or established
 	 */
 	public boolean isRelevant() {
 		return hasState(State.SUGGESTED) || hasState(State.ESTABLISHED);
@@ -142,6 +160,10 @@ public class DiagnosisState implements Value {
 	 * This method uses the {@link #compareTo(DiagnosisState)} method to check
 	 * for equality, therefore subclasses usually have no need to overwrite this
 	 * method.
+	 * 
+	 * @param other
+	 *            the other {@link DiagnosisState} to be compared
+	 * @return true, when both states are equal; false otherwise
 	 */
 	@Override
 	public boolean equals(Object other) {
@@ -169,6 +191,11 @@ public class DiagnosisState implements Value {
 	 * state is compared to a instance with its class being identical to {@link
 	 * DiagnosisState#class}. An overwriting method shall call this method if
 	 * the state is compared to an instance of a different subclass.
+	 * 
+	 * @param other
+	 *            another {@link DiagnosisState}
+	 * @return the comparison result according to the {@link Comparator}
+	 *         definition
 	 */
 	@Override
 	public int compareTo(Value other) {
@@ -185,8 +212,9 @@ public class DiagnosisState implements Value {
 
 	/**
 	 * @return the first status in allStati, for which checkState returns true;
-	 * @deprecated new HeuristicRating(score) instead
+	 * @deprecated Use new HeuristicRating(score) instead.
 	 */
+	@Deprecated
 	public static DiagnosisState getState(double score) {
 		return new HeuristicRating(score);
 	}
@@ -194,8 +222,9 @@ public class DiagnosisState implements Value {
 	/**
 	 * @return the first status in allStati, for which checkState returns true
 	 *         for the score of the given DiagnosisScore;
-	 * @deprecated new HeuristicRating(diagnosisScore.getScore()) instead
+	 * @deprecated Use new HeuristicRating(diagnosisScore.getScore()) instead.
 	 */
+	@Deprecated
 	public static DiagnosisState getState(DiagnosisScore diagnosisScore) {
 		if (diagnosisScore == null) {
 			return null;

@@ -31,8 +31,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseDiagnosis;
 import de.d3web.dialog2.WebDialog;
@@ -41,7 +41,8 @@ import de.d3web.indication.inference.PSMethodUserSelected;
 
 public class CorrectionPageRenderer extends Renderer {
 
-    public void decode(FacesContext context, UIComponent component) {
+    @Override
+	public void decode(FacesContext context, UIComponent component) {
 	Map<String, String[]> requestMap = context.getExternalContext()
 		.getRequestParameterValuesMap();
 
@@ -68,7 +69,7 @@ public class CorrectionPageRenderer extends Renderer {
 	    if (diagIsUserSelected(dia, userSelDiagIDs, diag)) {
 		// set as user selected
 		diag.setValue(dia.getTheCase(),
-			new Object[] { DiagnosisState.ESTABLISHED },
+						DiagnosisState.ESTABLISHED,
 			PSMethodUserSelected.class);
 	    } else {
 		// delete user selected diagnosis
@@ -89,7 +90,8 @@ public class CorrectionPageRenderer extends Renderer {
 	return false;
     }
 
-    public void encodeEnd(FacesContext context, UIComponent component)
+    @Override
+	public void encodeEnd(FacesContext context, UIComponent component)
 	    throws IOException {
 	ResponseWriter writer = context.getResponseWriter();
 

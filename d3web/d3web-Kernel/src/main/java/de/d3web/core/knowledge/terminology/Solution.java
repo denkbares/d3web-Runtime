@@ -24,24 +24,22 @@ import java.util.Comparator;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.DiagnosisState.State;
 import de.d3web.core.manage.KnowledgeBaseManagement;
-import de.d3web.core.session.D3WebSession;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.ValuedObject;
-import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseDiagnosis;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.scoring.DiagnosisScore;
-import de.d3web.scoring.HDTType;
 import de.d3web.scoring.Score;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
- * This class stores the static, non case-dependent parts of a solutions. You're
- * able to retrieve the score and state of a diagnosis through specified
- * methods. The state and score of a diagnosis is dependent from the
- * problem-solver context. If no problem-solver context is given the heuristic
- * problem-solver is assumed to be the context.
+ * This class stores the static, non case-dependent parts of a solutions. The
+ * value of a solution, i.e., its state and score, is dependent from the
+ * problem-solver context. If no problem-solver context is given, then the
+ * heuristic problem-solver is the default context.
  * 
  * @author joba, chris
  * @see IDObject
@@ -52,95 +50,94 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
 public class Solution extends NamedObject implements ValuedObject, TerminologyObject {
 
 	/**
-	 * Compares the heuristic scores of two Diagnosis instances.
+	 * Compares the heuristic scores of two {@link Solution} instances.
 	 * For other problem-solvers a new comparator should be
 	 * implemented.
 	 */
-	static class DiagComp implements Comparator<Solution> {
-		private final Session theCase;
-		public DiagComp(Session theCase) {
-			this.theCase = theCase;
+	static class HeuristicSolutionComparator implements Comparator<Solution> {
+		private final Session session;
+		public HeuristicSolutionComparator(Session theCase) {
+			this.session = theCase;
 		}
 		public int compare(Solution d1, Solution d2) {
-			return d1.getScore(theCase, PSMethodHeuristic.class).compareTo(
-					d2.getScore(theCase, PSMethodHeuristic.class));
+			return d1.getScore(session, PSMethodHeuristic.class).compareTo(
+					d2.getScore(session, PSMethodHeuristic.class));
 		}
 	}
 
 	/**
-	 * A diagnosis can have a prior probability, that is taken
-	 * into account by the particular problem-solvers differently.
-	 * The {@link PSMethodHeuristic}, for example, adds the apriori
-	 * probability as soon as the diagnosis receives scores from a rule.
+	 * A solution can have a prior probability, that is taken into account by
+	 * the particular problem-solvers differently. The {@link PSMethodHeuristic}
+	 * , for example, adds the a-priori probability as soon as the solution
+	 * receives scores from a rule.
 	 */
 	private Score aprioriProbability;
 
 	/**
-	 * Defines the role of this diagnosis in the context of
-	 * the Heuristic Decision Tree pattern.
-	 */
-	private HDTType hdtType = null;
-
-	/**
-	 * Creates a new Diagnosis instance with a predefined
+	 * Creates a new {@link Solution} instance with the specified unique
 	 * identifier. <br>
-	 * <b>Note:</b> Please use {@link KnowledgeBaseManagement}
-	 * to create Diagnosis instances.
-	 * @param id the unique identifier for this object
+	 * <b>Note:</b> Please use {@link KnowledgeBaseManagement} to create
+	 * Diagnosis instances.
+	 * 
+	 * @param id
+	 *            the specified unique identifier for this instance
 	 */
 	public Solution(String id) {
 	    super(id);
 	}
 
-	/**
-	 * [FIXME]:?:CHECK FOR STATE UNCLEAR!!!
-	 */
 	private void checkForNewState(DiagnosisState oldState, DiagnosisState newStatus,
 			Session theCase) {
 		if (oldState != newStatus) {
-			if (newStatus == DiagnosisState.ESTABLISHED) {
+			if (newStatus.hasState(State.ESTABLISHED)) {
 				establish(theCase);
 			}
-			if (oldState == DiagnosisState.ESTABLISHED) {
+			if (oldState.hasState(State.ESTABLISHED)) {
 				deestablish(theCase);
 			}
 		}
 	}
 
 	/**
-	 * Creates a new dynamic flyweight for this object. For every
-	 * new {@link Session} flyweights are created on demand for the
-	 * used {@link IDObject} instances. This method is only used
-	 * in the context of the d3web-Kernel project.
-	 * @return a flyweight instance of this object.
+	 * Creates a new dynamic flyweight for this object in the context of the
+	 * specified {@link Session} instance. For every new {@link Session}
+	 * flyweights are created on demand for the used {@link IDObject} instances.
+	 * 
+	 * @param session
+	 *            the specified Session instance
+	 * @return a flyweight instance of this object
 	 */
 	public SessionObject createCaseObject(Session session) {
 		return new CaseDiagnosis(this);
 	}
 
 	/**
-	 * Removes this object from the established diagnoses in the
-	 * given {@link Session} and propagates the state change.
-	 * @param theCase the specified {@link Session}
+	 * Removes this object from the established solutions in the given
+	 * {@link Session} and propagates the state change.
+	 * 
+	 * @param session
+	 *            the specified {@link Session}
 	 */
-	private void deestablish(Session theCase) {
-		theCase.removeEstablishedDiagnoses(this);
+	private void deestablish(Session session) {
+		session.removeEstablishedSolution(this);
 	}
 
 	/**
-	 * Adds this object to the list of established diagnoses in
-	 * the given {@link Session} and propagated the state change.
-	 * @param theCase the specified {@link Session}
+	 * Adds this object to the list of established solutions in the given
+	 * {@link Session} and propagates the state change.
+	 * 
+	 * @param session
+	 *            the specified {@link Session}
 	 */
-	private void establish(Session theCase) {
-		theCase.addEstablishedDiagnoses(this);
+	private void establish(Session session) {
+		session.addEstablishedSolution(this);
 	}
 
 	/**
-	 * Returns the prior probability of this diagnosis.
-	 * The 'probability' is represented by a {@link Score}, and
-	 * the use of this probability depends on the particular
-	 * {@link PSMethod}.
+	 * Returns the prior probability of this solution. The 'probability' is
+	 * represented by a {@link Score}, and the use of this probability depends
+	 * on the particular {@link PSMethod}.
+	 * 
 	 * @return the apripori probability
 	 */
 	public Score getAprioriProbability() {
@@ -148,73 +145,67 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	}
 
 	/**
-	 * Returns a comparator that compares the {@link Score} values
-	 * in the context of the given {@link Session} and the
-	 * {@link PSMethodHeuristic} solver.
-	 * For other problem-solvers, you will need to implement your
-	 * own {@link Comparator}.
-	 * @param theCase the case the scores are computed for
-	 * @return a comparator for two Diagnosis objects
+	 * Returns a comparator that compares the {@link Score} values in the
+	 * context of the given {@link Session} and the {@link PSMethodHeuristic}
+	 * problem-solver. For further problem-solvers, you will need to implement
+	 * your own {@link Comparator} class.
+	 * 
+	 * @param session
+	 *            the {@link Session} instance for with the current scores are
+	 *            compares
+	 * @return a {@link Comparator} for two {@link Solution} objects
 	 */
-	public static Comparator<Solution> getComparator(Session theCase) {
-		return new DiagComp(theCase);
+	public static Comparator<Solution> getComparator(Session session) {
+		return new HeuristicSolutionComparator(session);
 	}
 
 	/**
 	 * Returns the computed score of this {@link Solution} for a specified
-	 * {@link Session} and a specified {@link PSMethod} context.
-	 * The score of a diagnosis is only valid in the context of <b>one</b>
-	 * {@link PSMethod}, and can differ for other {@link PSMethod}
-	 * instances.
-	 * @param theCase the context case of the score
-	 * @param context the {@link PSMethod} context the score is valid for
-	 * @return the score of the Diagnosis in the context of an {@link Session} and {@link PSMethod} class
+	 * {@link Session} and a specified {@link PSMethod} context. The score of a
+	 * solution is only valid in the context of <b>one</b> {@link PSMethod}, and
+	 * can differ for other {@link PSMethod} instances.
+	 * 
+	 * @param session
+	 *            the session in which the score is valid
+	 * @param context
+	 *            the {@link PSMethod} context the score is valid for
+	 * @return the score of the {@link Solution} in the context of a
+	 *         {@link Session} and {@link PSMethod} class
 	 */
-	public DiagnosisScore getScore(Session theCase, Class<? extends PSMethod>  context) {
-		return (DiagnosisScore) ((CaseDiagnosis) theCase.getCaseObject(this)).getValue(context);
+	public DiagnosisScore getScore(Session session, Class<? extends PSMethod> context) {
+		return (DiagnosisScore) ((CaseDiagnosis) session.getCaseObject(this)).getValue(context);
 	}
 
 	/**
-	 * Returns the derived state of this {@link Solution} for a specified
-	 * {@link Session} and a specified {@link PSMethod} context.
-	 * The state of a diagnosis is only valid in the context of <b>one</b>
-	 * {@link PSMethod}, and can differ for other {@link PSMethod}
-	 * instances.
-	 * For {@link PSMethodHeuristic} the state is derived by the {@link Score}
-	 * of the {@link Solution}.
-	 * @param theCase the context case of the state
-	 * @param context the {@link PSMethod} context the state is valid for
-	 * @return the state of the Diagnosis in the context of a given {@link Session} and {@link PSMethod} class
+	 * @deprecated please use the corresponding method {@link Session}
+	 *             .getState(...)
 	 */
-	public DiagnosisState getState(Session theCase, Class<? extends PSMethod> context) {
+	@Deprecated
+	public DiagnosisState getState(Session session, Class<? extends PSMethod> context) {
 		// TODO: this is wrong! getState computes the real state every time, but this method should return the stored value of its CaseDiagnosis instance
-		return theCase.getPSMethodInstance(context).getState(theCase, this);
+		return session.getPSMethodInstance(context).getState(session, this);
 	}
 
 	/**
-	 * Returns the <b>combined</b> state of this diagnosis. The combined state
-	 * is the maximum state value of all {@link PSMethod} instances for this diagnosis.
-	 * The maximum is defined by the following order:
+	 * Returns the <b>combined</b> state of this instance. The combined state is
+	 * the maximum state value of all {@link PSMethod} instances for this
+	 * {@link Solution}. The maximum is defined by the following order:
 	 * <ol>
-	 * <li> DiagnosisState.EXCLUDED
-	 * <li> DiagnosisState.ESTABLISHED
-	 * <li> DiagnosisState.SUGGESTED
-	 * <li> DiagnosisState.UNCLEAR
+	 * <li>State.EXCLUDED
+	 * <li>State.ESTABLISHED
+	 * <li>State.SUGGESTED
+	 * <li>State.UNCLEAR
 	 * </ol>
-	 * @param theCase the case the state should be computed for
+	 * 
+	 * @param session
+	 *            the case the state should be computed for
 	 * @return the combined state of this Diagnosis
+	 * @deprecated please use corresponding method {@link Session}
+	 *             .getState(Solution solution)
 	 */
-	public DiagnosisState getState(Session theCase) {
-		DiagnosisState state = DiagnosisState.UNCLEAR;
-		for (PSMethod psm : theCase.getPSMethods()) {
-			DiagnosisState psState = psm.getState(theCase, this);
-			if (psState == null) continue;
-			if (DiagnosisState.EXCLUDED.equals(psState)) return DiagnosisState.EXCLUDED;
-			if (psState.compareTo(state) > 0) {
-				state = psState;
-			}
-		}
-		return state;
+	@Deprecated
+	public DiagnosisState getState(Session session) {
+		return session.getState(this);
 	}
 
 	/**
@@ -235,109 +226,60 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	}
 
 	/**
-	 * Returns the role of this diagnosis in the context of
-	 * the Heuristic Decision Tree pattern. Usually not
-	 * useful for {@link PSMethod}s except {@link PSMethodHeuristic}.
-	 * @return the type of the heuristic decision tree
-	 */
-	public HDTType getHdtType() {
-		return hdtType;
-	}
-
-	/**
-	 * Sets the role of this diagnosis in the context of
-	 * the Heuristic Decision Tree pattern. Usually not
-	 * useful for {@link PSMethod}s except {@link PSMethodHeuristic}.
-	 * @param newHdtType the type of the heuristic decision tree
-	 */
-	public void setHdtType(HDTType hdtType) {
-		this.hdtType = hdtType;
-	}
-
-	/**
-	 * Sets the knowledge base instance, to which this object belongs
-	 * to. This method also adds this object to the knowledge base
-	 * (reverse link).
-	 * <br><b>Note:</b> Currently, this object is not removed from a
-	 * previously registered knowledge base.
-	 * @param newKnowledgeBase the knowledge base, to which this object belongs to
+	 * Sets the knowledge base instance, to which this object belongs to. This
+	 * method also adds this object to the knowledge base (reverse link). <br>
+	 * <b>Note:</b> Currently, this object is not removed from a previously
+	 * registered knowledge base.
+	 * 
+	 * @param knowledgeBase
+	 *            the knowledge base, to which this object belongs to
 	 */
 	@Override
-	public void setKnowledgeBase(KnowledgeBase kb) {
-		super.setKnowledgeBase(kb);
+	public void setKnowledgeBase(KnowledgeBase knowledgeBase) {
+		super.setKnowledgeBase(knowledgeBase);
 		// maybe somebody should remove this object from the old
 		// knowledge base if available
 		getKnowledgeBase().add(this);
 	}
 
-	/**
-	 * This is the official method to change the state of the Diagnosis. The
-	 * first Object in the values array must be an DiagnosisScore Object.
-	 */
 	@Override
 	@Deprecated
 	public void setValue(Session theCase, Value value) {
 		setValue(theCase, value, null);
 	}
 
-	public void setValue(Session theCase, Value value, Class<? extends PSMethod> context) {
+	/**
+	 * Please use: {@link Session}.setValue. <BR>
+	 * Sets the specified value for this instance in the specified
+	 * {@link Session} instance and {@link PSMethod} context.
+	 * 
+	 * @param session
+	 *            the specified session
+	 * @param value
+	 *            the specified value
+	 * @param context
+	 *            the specified PSMethod context
+	 * @author joba
+	 * @date 15.04.2010
+	 */
+	public void setValue(Session session, Value value, Class<? extends PSMethod> context) {
 		DiagnosisScore diagnosisScore = null;
-		DiagnosisState oldState = getState(theCase, context);
+		DiagnosisState oldState = session.getState(this, context);
 		if (value != null) {
 			if (value instanceof DiagnosisScore) {
 				diagnosisScore = (DiagnosisScore) value;
-				((CaseDiagnosis) theCase.getCaseObject(this)).setValue(diagnosisScore,
+				((CaseDiagnosis) session.getCaseObject(this)).setValue(diagnosisScore,
 						context);
 			}
 			else if (value instanceof DiagnosisState) {
-				((CaseDiagnosis) theCase.getCaseObject(this)).setValue(value, context);
+				((CaseDiagnosis) session.getCaseObject(this)).setValue(value, context);
 			}
 		}
-		DiagnosisState newState = getState(theCase, context);
+		DiagnosisState newState = session.getState(this, context);
 		// this does simply a check if state has changed
-		checkForNewState(oldState, newState, theCase);
-		// d3web.debug
+		checkForNewState(oldState, newState, session);
 	}
 
-	/**
-	 * This method officially changes the state of the Diagnosis using the
-	 * standard setValue method signature.
-	 * The value is set in the context of an {@link Session} instance, and in the
-	 * context of a {@link PSMethod} class context (the {@link PSMethod} responsible
-	 * for deriving this state).
-	 * The value array usually contains only one element: the first element of the
-	 * array is required to be either a {@link DiagnosisScore} or
-	 * {@link DiagnosisState} instance.
-	 * @param theCase the context in which the new value was derived
-	 * @param values an array, where the first element holds the new value of the Diagnosis
-	 * @param context the {@link PSMethod} class that set the new value
-	 */
-	@Deprecated
-	public void setValue(Session theCase, Object[] values, Class<? extends PSMethod> context) {
-		DiagnosisScore diagnosisScore = null;
-		DiagnosisState oldState = getState(theCase, context);
-		if ((values != null) && (values.length > 0)) {
-			Object value = values[0];
-			if (value instanceof DiagnosisScore) {
-				diagnosisScore = (DiagnosisScore) values[0];
-				((CaseDiagnosis) theCase.getCaseObject(this)).setValue(diagnosisScore,
-						context);
-			}
-			else if (value instanceof DiagnosisState) {
-				((CaseDiagnosis) theCase.getCaseObject(this)).setValue(value, context);
-			}
-		}
-		DiagnosisState newState = getState(theCase, context);
-		// this does simply a check if state has changed
-		checkForNewState(oldState, newState, theCase);
-		// d3web.debug
-	}
-
-	/**
-	 * Returns a simple {@link String} representation of this object.
-	 * Delegates to {@link NamedObject}.toString().
-	 * @return a String representation of this object
-	 */
 	@Override
 	public String toString() {
 		return super.toString();

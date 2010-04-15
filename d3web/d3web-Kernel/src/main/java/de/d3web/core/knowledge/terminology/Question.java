@@ -38,17 +38,16 @@ import de.d3web.core.session.ValuedObject;
 import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.core.session.values.Unknown;
 import de.d3web.indication.inference.PSMethodNextQASet;
 
 /**
- * Abstract Class to store static parts of a question (symptom) independent from
- * the dynamic case-sensitive values. Part of the Composite design pattern (see
- * QASet for further description) DerivationType ({BASIC, DERIVED, MIXED})
- * means: <LI>BASIC: question should be asked in a basic dialogue <LI>DERIVED:
- * question should not be asked, but is set by a RuleSymptom <LI>MIXED: both,
- * should be asked but can also be derived
+ * This is an abstract class, that stores the static parts of a question
+ * (symptom, input) independent from the dynamic session-specific values. This
+ * class is part of the applied design pattern <i>Composite</i> (including
+ * {@link QASet} and {@link QContainer}).
  * 
- * @author joba, Christian Betz, norman
+ * @author joba, norman
  * @see QASet
  * @see DerivationType
  */
@@ -56,6 +55,13 @@ public abstract class Question extends QASet implements ValuedObject {
 	
 	private final AnswerUnknown unknown;
 
+	/**
+	 * Creates a new {@link Question} instance with the specified unique
+	 * identifier.
+	 * 
+	 * @param id
+	 *            the specified unique identifier
+	 */
 	public Question(String id) {
 		super(id);
 		// create "unknown"-alternative
@@ -109,8 +115,10 @@ public abstract class Question extends QASet implements ValuedObject {
 	}
 
 	/**
-	 * @return the 'unkown'-alternative object.
+	 * We do not use AnswerUnknown anymore, but we can set {@link Unknown} in a
+	 * given session.
 	 */
+	@Deprecated
 	public AnswerUnknown getUnknownAlternative() {
 		return unknown;
 	}
@@ -126,11 +134,12 @@ public abstract class Question extends QASet implements ValuedObject {
 	 * @author joba
 	 * @date 07.04.2010
 	 */
+	@Deprecated
 	public abstract Value getValue(Session theCase);
 
 	@Override
-	public boolean hasValue(Session theCase) {
-		return (getValue(theCase) != null);
+	public boolean hasValue(Session session) {
+		return (session.getValue(this) != null);
 	}
 
 	@Override
@@ -151,8 +160,7 @@ public abstract class Question extends QASet implements ValuedObject {
 				return false;
 			}
 
-			// Falls auch nur ein einziges (valides) Children nicht abgearbeitet
-			// ist, ist auch die ganze FK nicht abgearbeitet.
+			// The question is NOT done, until every valid children is also done
 			for (TerminologyObject to: getChildren()) {
 				QASet child = (QASet) to;
 				if (child.isValid(theCase)
@@ -179,7 +187,7 @@ public abstract class Question extends QASet implements ValuedObject {
 	}
 
 	/**
-	 * Sets the knowledgebase, to which this objects belongs to and adds this
+	 * Sets the knowledge base, to which this objects belongs to and adds this
 	 * object to the knowledge base (reverse link).
 	 * 
 	 * @param newKnowledgeBase
@@ -193,8 +201,6 @@ public abstract class Question extends QASet implements ValuedObject {
 		getKnowledgeBase().add(this);
 	}
 
-	// @Override
-	// public abstract void setValue(Session theCase, Object[] values);
 
 	@Override
 	public abstract void setValue(Session theCase, Value value) throws IllegalArgumentException;
@@ -213,19 +219,7 @@ public abstract class Question extends QASet implements ValuedObject {
 	 */
 	public void setValue(Session theCase, Rule ruleSymptom,
 			Value value) throws IllegalArgumentException {
-		// CaseQuestion caseQuestion = ((CaseQuestion)
-		// theCase.getCaseObject(this));
-		
-		// TODO: Finally remove this block, since it is replaced by the Blackboard
-		// joba 04.2010
-//		if (ruleSymptom != null) {
-//			// get old value and push it (with new Rule) on historyStack.
-//			SymptomValue symptomValue = new SymptomValue(getValue(theCase), ruleSymptom);
-//			caseQuestion.getValueHistory().add(0, symptomValue);
-//		}
-		
 		setValue(theCase, value);
-
 	}
 
 	@Override
@@ -234,20 +228,20 @@ public abstract class Question extends QASet implements ValuedObject {
 	}
 
 	/**
-	 * This method is invoked if a rule is going to be undone. That means that
-	 * either if this rule is on top of the history-stack the value that has
-	 * been overwritten by it will be set to this question or (else) the
-	 * history-stack-entry will be removed
+	 * This method is invoked if a rule in the specified {@link Session} is
+	 * retracted. That means that either if this rule is on top of the
+	 * history-stack the value that has been overwritten by it will be set to
+	 * this question or (else) the history-stack-entry will be removed.
 	 * 
-	 * @param theCase
-	 *            current case
-	 * @param rule
-	 *            rule going to be undone
+	 * @param session
+	 *            the specified problem-solving session
+	 * @param ruleSymptom
+	 *            the retracted rule
 	 */
-	public void undoSymptomValue(Session theCase, Rule ruleSymptom) {
-		CaseQuestion caseQuestion = ((CaseQuestion) theCase.getCaseObject(this));
+	public void undoSymptomValue(Session session, Rule ruleSymptom) {
+		CaseQuestion caseQuestion = ((CaseQuestion) session.getCaseObject(this));
 		if (caseQuestion.getValueHistory().size() == 0) {
-			setValue(theCase, UndefinedValue.getInstance());
+			setValue(session, UndefinedValue.getInstance());
 		}
 		else {
 			ListIterator<SymptomValue> valueIter = caseQuestion.getValueHistory()
@@ -262,11 +256,11 @@ public abstract class Question extends QASet implements ValuedObject {
 								Property.TIME_VALUED))) {
 							if (getKnowledge(PSMethodQuestionSetter.class,
 									PSMethodQuestionSetter.NUM2CHOICE_SCHEMA) == null) {
-								theCase.setValue(this, symptomValue.getValues());
+								session.setValue(this, symptomValue.getValues());
 							}
 						}
 						else { // standard (non-temporal) case
-							theCase.setValue(this, symptomValue.getValues());
+							session.setValue(this, symptomValue.getValues());
 						}
 					}
 					else {
@@ -283,12 +277,12 @@ public abstract class Question extends QASet implements ValuedObject {
 		}
 	}
 
-	public String verbalizeWithoutValue() {
-		String res = "\n " + super.toString();
-		return res;
-	}
-
-	public String verbalizeWithValue(Session theCase) {
-		return verbalizeWithoutValue() + "\n Wert -> " + getValue(theCase);
-	}
+	// deleteme: joba: 04.2010
+	// private String verbalizeWithoutValue() {
+	// return "\n " + super.toString();
+	// }
+	//
+	// public String verbalizeWithValue(Session session) {
+	// return verbalizeWithoutValue() + "\n Value -> " + session.getValue(this);
+	// }
 }

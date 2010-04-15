@@ -36,10 +36,15 @@ import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.interviewmanager.DialogController;
 import de.d3web.core.session.interviewmanager.QASetManager;
+import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.scoring.Score;
+import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
- * The Session interface represents a running xps session.
- * This interface replaces the formerly used Session.
+ * The Session interface represents an active problem-solving session. Here,
+ * values of answered questions are submitted and derived states of solutions
+ * are retrieved. <br>
+ * Note: This interface replaces the formerly used XPSCase.
  * 
  * @author Norman Bruemmer, joba, Volker Belli (denkbares GmbH)
  */
@@ -57,26 +62,29 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	
 	// --- access information ---
 	Interview getInterviewManager();
-	
+
 	/**
-	 * The blackboard manages all entered and derived facts of the session.
-	 * @return
+	 * The {@link Blackboard} manages all entered and all derived facts of this
+	 * {@link Session}.
+	 * 
+	 * @return the blackboard instance used in this session
 	 */
 	Blackboard getBlackboard();
-	
+
 	/**
-	 * Returns the {@link PropagationContoller} instance, responsible for do all
-	 * propagation of this case.
+	 * Returns the {@link PropagationContoller} instance, responsible for all
+	 * propagation actions of this session.
 	 * 
-	 * @return the PropagationManager of this case
+	 * @return the propagation controller of this session
 	 */
 	PropagationContoller getPropagationContoller();
 	
 	// --- access header information ---
 	/**
-	 * Returns the {@link KnowledgeBase} instance this object belongs to.
+	 * Returns the {@link KnowledgeBase} instance that is used in this session
+	 * for the problem-solving task.
 	 * 
-	 * @return the knowledge base used to solve this case
+	 * @return the knowledge base used in this session
 	 */
 	KnowledgeBase getKnowledgeBase();
 	//InfoStore getInfoStore(); // some information will be created/updated automatically (id, change-date, create-date), increment2
@@ -85,25 +93,32 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	//Protocol getProtocol();
 
 	//-----------------------from here on old stuff, TODO: remove?
-	
+
 	/**
-	 * Returns all {@link Question} instances, that have been already answered
-	 * in the case.
+	 * Returns all {@link Question} instances, that have already been answered
+	 * in this session.
 	 * 
-	 * @return all currently answered questions in this case
+	 * @return all currently answered questions of this session
 	 */
 	List<? extends Question> getAnsweredQuestions();
 
 	/**
-	 * Returns the {@link SessionObject} (dynamic flyweight object)
+	 * Returns the {@link SessionObject} (dynamically created flyweight object)
 	 * corresponding to the specified {@link CaseObjectSource} instance (often
 	 * this is a {@link Question} or a {@link Solution}.
 	 * 
 	 * @param item
-	 *            Object whose case object should be returned
-	 * @return the corresponding {@link SessionObject} of the given item
+	 *            the specified object for which the corresponding session
+	 *            object should be returned
+	 * @return the corresponding {@link SessionObject} of the specified object
 	 */
 	SessionObject getCaseObject(CaseObjectSource item);
+
+	/**
+	 * <b>Deprecated:</b> Use {@link Session}.getSolutions(...) now.
+	 */
+	@Deprecated
+	List<Solution> getDiagnoses(DiagnosisState state, List<? extends PSMethod> psMethods);
 
 	/**
 	 * Returns all {@link Solution} instances, that hold the specified
@@ -119,10 +134,11 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 *            set by one of the given PSMethods
 	 * @return a list of diagnoses in this case that have the state 'state'
 	 */
-	List<Solution> getDiagnoses(DiagnosisState state, List<? extends PSMethod> psMethods);
+	List<Solution> getSolutions(DiagnosisState state, List<? extends PSMethod> psMethods);
 
 	/**
-	 * Returns the {@link QASetManager} used in this case.
+	 * Returns the {@link QASetManager} used in this case, that is responsible
+	 * for the dialog management.
 	 * 
 	 * @return the {@link QASetManager} defined for this case, for example a
 	 *         {@link DialogController}
@@ -131,14 +147,14 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 
 	/**
 	 * Tests, if the case is finished with respect to the problem-solving
-	 * behavior, e.g., no more question are required to asked.
+	 * session, e.g., no more question are required to be asked.
 	 * 
 	 * @return true, if there exists at least one reason to quit the case
 	 */
 	boolean isFinished();
 
 	/**
-	 * Adds a new reason for quitting this case.
+	 * Adds a new reason for quitting this session.
 	 * 
 	 * @see Session#setFinished(boolean f)
 	 * @param reasonForFinishCase
@@ -147,7 +163,8 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	void finish(Class<? extends KnowledgeSlice> reasonForFinishCase);
 
 	/**
-	 * Removes all finish reasons from the set of reasons for quitting the case.
+	 * Removes all finish reasons from the set of reasons for quitting the
+	 * session and thus enables the continuation of the session.
 	 */
 	void continueCase();
 
@@ -172,6 +189,36 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 */
 	void setValue(ValuedObject valuedObject, Value value);
 	
+	/**
+	 * Returns the value of the specified {@link Question} valid in this
+	 * {@link Session}; returns {@link UndefinedValue} if no value is assigned.
+	 * 
+	 * @param question
+	 *            the specified {@link Question}
+	 * @return the value of the question valid in this session;
+	 *         {@link UndefinedValue} if no value is assigned.
+	 * @author joba
+	 * @date 15.04.2010
+	 */
+	public Value getValue(Question question);
+
+	/**
+	 * Returns the <b>combined</b> state of the specified {@link Solution}
+	 * instance. The combined state is the maximum state value of all
+	 * {@link PSMethod} instances for the {@link Solution}. The maximum is
+	 * defined by the following order:
+	 * <ol>
+	 * <li>State.EXCLUDED
+	 * <li>State.ESTABLISHED
+	 * <li>State.SUGGESTED
+	 * <li>State.UNCLEAR
+	 * </ol>
+	 * 
+	 * @param solution
+	 *            the specified {@link Solution} instance
+	 * @return the combined state of the specified solution valid in this case
+	 */
+	public DiagnosisState getState(Solution solution);
 
 	/**
 	 * Assigns the specified value to the specified {@link ValuedObject},
@@ -190,9 +237,9 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	void setValue(ValuedObject valuedObject, Value value, Rule rule);
 
 	/**
-	 * Assigns the specified value to the specified {@link ValuedObject},
-	 * e.g., a {@link Question} or a {@link Solution} receives a new value. The
-	 * {@link PSMethod} responsible of this assignment is also given
+	 * Assigns the specified value to the specified {@link ValuedObject}, e.g.,
+	 * a {@link Question} or a {@link Solution} receives a new value. The
+	 * {@link PSMethod} responsible of this assignment is also given.
 	 * 
 	 * @param valuedObject
 	 *            ValuedObject the object, that receives a new value
@@ -205,33 +252,57 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	void setValue(ValuedObject valuedObject, Value value, Class<? extends PSMethod> context);
 
 	/**
-	 * Registers a new listener to this case. If something in this case changes,
-	 * the all registered listeners will be notified.
+	 * Registers a new listener to this session. If something in this session
+	 * changes, then all registered listeners will be notified.
 	 * 
 	 * @param listener
-	 *            one new listener of this case to register
+	 *            one new listener of this session to register
 	 */
 	void addListener(SessionEventListener listener);
 
 	/**
 	 * Removes the specified listener from the list of registered listeners. All
-	 * listeners will be notified, if something in the case changes.
+	 * listeners will be notified, if something in the session changes.
 	 * 
 	 * @param listener
 	 *            the specified listener to be removed
 	 */
 	void removeListener(SessionEventListener listener);
-	
+
 	/**
-	 * adds an established Diagnosis to this case
-	 */
-	public void addEstablishedDiagnoses(Solution diag);
-	
-	/**
-	 * removes a Diagnosis from the list of established diagnosis
+	 * Adds an established {@link Solution} to this {@link Session}.
 	 * 
-	 * @param diag
-	 *            Diagnosis to remove
+	 * @param solution
+	 *            the specified solution
+	 * @author joba
+	 * @date 15.04.2010
 	 */
-	public void removeEstablishedDiagnoses(Solution diagnosis);
+	public void addEstablishedSolution(Solution solution);
+
+	/**
+	 * Removes the specified solution from the list of established solutions.
+	 * 
+	 * @param solution
+	 *            the specified solution
+	 * @author joba
+	 * @date 15.04.2010
+	 */
+	public void removeEstablishedSolution(Solution solution);
+
+	/**
+	 * Returns the derived state of the specified {@link Solution} for this
+	 * {@link Session} instance and a specified {@link PSMethod} context. The
+	 * state of a solution is only valid in the context of <b>one</b>
+	 * {@link PSMethod}, and can differ for other {@link PSMethod} instances.
+	 * For {@link PSMethodHeuristic} the state is derived by the {@link Score}
+	 * of the {@link Solution}.
+	 * 
+	 * @param solution
+	 *            the specified solution
+	 * @param context
+	 *            the {@link PSMethod} context the state is valid for
+	 * @return the state of the specified {@link Solution} in the context of
+	 *         this {@link Session} instance and {@link PSMethod} class
+	 */
+	public DiagnosisState getState(Solution solution, Class<? extends PSMethod> context);
 }

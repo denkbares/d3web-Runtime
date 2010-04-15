@@ -30,22 +30,21 @@ import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.scoring.DiagnosisScore;
-import de.d3web.scoring.HDTType;
 import de.d3web.scoring.HeuristicRating;
 
 /**
  * Heuristic problem-solver which adds scores to diagnoses
- * on the basis of question values. 
- * If score of a diagnosis exceeds a threshold value, then 
+ * on the basis of question values.
+ * If score of a diagnosis exceeds a threshold value, then
  * this diagnosis will be suggested/established/excluded.
  * <p>
  * <B>Currently implemented strategies:</B>
@@ -63,7 +62,7 @@ import de.d3web.scoring.HeuristicRating;
  */
 public class PSMethodHeuristic extends PSMethodAdapter {
 	
-	private Collection<PSSubMethod> subPSMethods = new LinkedList<PSSubMethod>();
+	private final Collection<PSSubMethod> subPSMethods = new LinkedList<PSSubMethod>();
 	// remembers if the case was stopped before (e.g., by SFA)
 	private boolean wasPreviouslyStopped = false;
 	
@@ -95,13 +94,14 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 	 * Creation date: (05.10.00 13:41:07)
 	 * @return de.d3web.kernel.domainModel.DiagnosisState
 	 */
+	@Override
 	public DiagnosisState getState(Session theCase, Solution diagnosis) {
 		DiagnosisScore diagnosisScore =
 			diagnosis.getScore(theCase, this.getClass());
 		if (diagnosisScore == null)
 			return DiagnosisState.UNCLEAR;
 		else {
-		    if (isSFA(theCase) || isBestSolutionOnly(theCase)) { 
+		    if (isSFA(theCase) || isBestSolutionOnly(theCase)) {
 		        DiagnosisState orgState = DiagnosisState.getState(diagnosisScore);
 		        if (orgState.equals(DiagnosisState.ESTABLISHED)) {
 		            Solution bestDiagnosis = computeBestDiagnosis(theCase);
@@ -115,13 +115,13 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 		            return orgState;
 		        }
 		    }
-		    else // the usual case 
+		    else // the usual case
 		        return DiagnosisState.getState(diagnosisScore);
 		}
 	}
 
 	/**
-	 * Tests the double value of the Scores: d1 > d2 ?  
+	 * Tests the double value of the Scores: d1 > d2 ?
      * @return (d1.score > d2.score)
      */
     private boolean greaterScore(Session theCase, Solution d1, Solution d2) {
@@ -193,7 +193,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 
     private boolean finalSolutionIsEstablished(Session theCase) {
         for (Solution d : theCase.getKnowledgeBase().getDiagnoses()) {
-            if ((isFinalDiagnosis(d)) && 
+            if ((isFinalDiagnosis(d)) &&
                 (getState(theCase, d).equals(DiagnosisState.ESTABLISHED))){
                 return true;
             }
@@ -217,9 +217,9 @@ public class PSMethodHeuristic extends PSMethodAdapter {
     }
 
     /**
-     * If a case was stopped and then continued, some question 
+     * If a case was stopped and then continued, some question
      * values may have not propagated to the heuristic rules.
-     * Therefore, check all heuristic rules for all diagnoses. 
+     * Therefore, check all heuristic rules for all diagnoses.
      * @param theCase
      */
     private void reCheckAllRules(Session theCase) {
@@ -248,17 +248,11 @@ public class PSMethodHeuristic extends PSMethodAdapter {
     private boolean isFinalDiagnosis(Solution diagnosis) {
     	TerminologyObject[] c = diagnosis.getChildren();
         boolean hasNoChildren = ((c == null) || (c.length==0));
-        HDTType type = diagnosis.getHdtType();
-        if (type != null) {
-            return ((type.equals(HDTType.SOLUTION)) ||
-                    (type.equals(HDTType.NONE) && hasNoChildren));
-        }
-        else {
-            return hasNoChildren;
-        }
+		return hasNoChildren;
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
 		return "heuristic problem-solver";
 	}
 	
@@ -270,9 +264,9 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 	}
     /**
      * Single Fault Assumption:
-     * Once a diagnosis is established the case is finished. 
-     * Only the best diagnosis (if some were established in parallel) 
-     * is returned as "established" solution. 
+     * Once a diagnosis is established the case is finished.
+     * Only the best diagnosis (if some were established in parallel)
+     * is returned as "established" solution.
      * @return Returns the sFA.
      */
     public boolean isSFA(Session theCase) {

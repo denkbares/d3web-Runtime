@@ -33,9 +33,9 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.PropertiesCloner;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.Session;
 import de.d3web.core.session.interviewmanager.DialogProxy;
 import de.d3web.core.session.interviewmanager.ShadowMemory;
 import de.d3web.indication.inference.PSMethodUserSelected;
@@ -122,7 +122,7 @@ public class SessionConverter {
 		Iterator solIter = cobj.getSolutions(PSMethodUserSelected.class).iterator();
 		while (solIter.hasNext()) {
 			CaseObject.Solution sol = (CaseObject.Solution) solIter.next();
-			sol.getDiagnosis().setValue(ret, new Object[]{sol.getState()},
+			sol.getDiagnosis().setValue(ret, sol.getState(),
 					PSMethodUserSelected.class);
 		}
 

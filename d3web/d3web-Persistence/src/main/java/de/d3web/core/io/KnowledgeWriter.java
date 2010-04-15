@@ -25,25 +25,37 @@ import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
 
 /**
- * Interface for all writing persistance handlers.
+ * Interface for all writing persistence handlers.
+ * 
  * @author Markus Friedrich (denkbares GmbH)
  */
 public interface KnowledgeWriter {
 
 	/**
-	 * Writes the Knowledge this KnowledgeWriter can handle into the OutputStream
-	 * @param kb Knowledgebase in which the Knowledge is contained
-	 * @param stream Outputstream
-	 * @param listener listner which will be informed during this operation, null is not accepted
-	 * @throws IOException if an error occurs, an IO Exception is thrown
+	 * Writes the parts of the specified {@link KnowledgeBase} instance, that
+	 * this KnowledgeWriter can handle, into the {@link OutputStream}.
+	 * 
+	 * @param knowledgeBase
+	 *            the specified knowledge base in which the handled knowledge is
+	 *            included
+	 * @param stream
+	 *            the specified {@link OutputStream} to which the handled
+	 *            knowledge is written
+	 * @param listener
+	 *            the specified listener which will be notified during this
+	 *            operation, null is not accepted
+	 * @throws IOException
+	 *             when an IO expection ocurrs during the write action
 	 */
-	public void write(KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException;
-	
+	public void write(KnowledgeBase knowledgeBase, OutputStream stream, ProgressListener listener) throws IOException;
+
 	/**
-	 * The size of the knowledge which can be written with this KnowledgeWriter can be
-	 * valued with this method
-	 * @param kb KnowledgeBase containing the Knowledge
+	 * The size of the knowledge--written by this {@link KnowledgeWriter}--is
+	 * valued by this method.
+	 * 
+	 * @param knowledgeBase
+	 *            knowledge base containing the knowledge under estimation
 	 * @return the valued size of the write method
 	 */
-	public int getEstimatedSize(KnowledgeBase kb);
+	public int getEstimatedSize(KnowledgeBase knowledgeBase);
 }

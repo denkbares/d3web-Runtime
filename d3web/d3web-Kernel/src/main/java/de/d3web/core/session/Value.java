@@ -19,13 +19,27 @@
  */
 package de.d3web.core.session;
 
+import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.QuestionText;
+
 /**
- * This instance represents the value that is assigned
- * to a question, when a respective answer is given by
- * a user.
+ * This instance stores the value, that is assigned to a question, e.g., when a
+ * user answers a question in a problem-solving session.
  * 
  * @author joba
  */
 public interface Value extends Comparable<Value> {
-	Object getValue();
+
+	/**
+	 * Returns the stored (primitive) value of this instance. For example, such
+	 * values can be Choice instances (for {@link QuestionOC}, {@link String}
+	 * instances for {@link QuestionText}, and {@link Double} for
+	 * {@link QuestionNum}.
+	 * 
+	 * @return the primitive value of this instance.
+	 * @author joba
+	 * @date 15.04.2010
+	 */
+	public Object getValue();
 }

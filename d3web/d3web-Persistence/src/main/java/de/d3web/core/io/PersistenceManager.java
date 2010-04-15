@@ -55,7 +55,13 @@ import de.d3web.plugin.PluginEntry;
 import de.d3web.plugin.PluginManager;
 
 /**
- * A singleton to save or load knowledge bases.
+ * This class provides the management features to load and save
+ * {@link KnowledgeBase} instances to a file system. This manager stores the
+ * {@link KnowledgeBase} instance in a compressed file, that contains knowledge
+ * base items as XML files together with additional resources.
+ * 
+ * Access this class via the singleton <code>getInstance()</code> method.
+ * 
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class PersistenceManager {
@@ -72,10 +78,9 @@ public class PersistenceManager {
 	private Extension[] readerPlugins;
 	private Extension[] writerPlugins;
 	private Extension[] fragmentPlugins;
-	
+
 	/**
-	 * Private constructor
-	 * For public access getInstance should be used
+	 * Private constructor: For public access getInstance() should be used
 	 */
 	private PersistenceManager() {
 		updatePlugins();
@@ -87,11 +92,12 @@ public class PersistenceManager {
 		writerPlugins = manager.getExtensions(EXTENDED_PLUGIN_ID, EXTENDED_POINT_WRITER);
 		fragmentPlugins = manager.getExtensions(EXTENDED_PLUGIN_ID, EXTENDED_POINT_FRAGMENT);
 	}
-	
+
 	/**
-	 * Method to access the singleton of the PersistanceManager.
-	 * If none has been created yet, the instance is initialized.
-	 * @return the Singleton
+	 * Method to access the singleton instance of this
+	 * {@link PersistenceManager}.
+	 * 
+	 * @return the instance of this {@link PersistenceManager}
 	 */
 	public static PersistenceManager getInstance() {
 		if (instance==null) {
@@ -101,11 +107,18 @@ public class PersistenceManager {
 	}
 
 	/**
-	 * Loads a knowledgebase from a zip file and informes a listener about the progress
-	 * @param file zip file (usually a jar file)
-	 * @param listener listener which should be informed 
-	 * @return a KnowledgeBase containing the knowledge from the zip file
-	 * @throws IOException if an error occurs, an IO Exception is thrown
+	 * Loads a knowledge base from a specified ZIP file and notifies the
+	 * specified listener about the working progress.
+	 * 
+	 * @param file
+	 *            the specified ZIP {@link File} (usually a jar file)
+	 * @param listener
+	 *            the specified listener which should be notified about the load
+	 *            progress
+	 * @return a {@link KnowledgeBase} instance with the knowledge contained in
+	 *         the specified ZIP file
+	 * @throws IOException
+	 *             if an error occurs during opening and reading the file
 	 */
 	public KnowledgeBase load(File file, ProgressListener listener) throws IOException {
 		updatePlugins();
@@ -149,7 +162,7 @@ public class PersistenceManager {
 						KnowledgeReader reader = (KnowledgeReader) plugin.getSingleton();
 						reader.read(kb, zipfile.getInputStream(entry), cpl);
 						files.remove(entry);
-					} 
+					}
 				}
 			}
 			for (ZipEntry entry: files) {
@@ -176,35 +189,48 @@ public class PersistenceManager {
 				||name.equalsIgnoreCase("CRS-INF/Index.xml")
 				||name.equals("META-INF/MANIFEST.MF");
 	}
-	
+
 	/**
-	 * Loads a knowledgebase from a zip file
-	 * @param file zip file (usually a jar file)
-	 * @return a KnowledgeBase containing the knowledge from the zip file
-	 * @throws IOException if an error occurs, an IO Exception is thrown
+	 * Loads a knowledge base from the specified ZIP file.
+	 * 
+	 * @param file
+	 *            the specified ZIP {@link File} (usually a jar file)
+	 * @return a {@link KnowledgeBase} instance with the knowledge contained in
+	 *         the specified ZIP file
+	 * @throws IOException
+	 *             if an error occurs during opening and reading the file
 	 */
 	public KnowledgeBase load(File file) throws IOException {
 		return load(file, new DummyProgressListener());
 	}
-	
+
 	/**
-	 * Saves the knowledge base to a file
-	 * During this process, a temporary file is created. If the process is successful,
-	 * the temporary file replaces the input file. 
-	 * @param kb Knowledge Base to be saved
-	 * @param file File in which the knowledge base should be stored
-	 * @param listener listener which should be informed
-	 * @throws IOException if an error occurs, an IO Exception is thrown
+	 * Saves the knowledge base to the specified {@link File}. The file is a
+	 * compressed ZIP containing different XML files and resources comprising
+	 * the knowledge base.
+	 * 
+	 * @param knowledgeBase
+	 *            the specified knowledge base to be saved
+	 * @param file
+	 *            the specified file to which the knowledge base should be
+	 *            stored
+	 * @param listener
+	 *            listener which should be informed about the progress of the
+	 *            save operation
+	 * @throws IOException
+	 *             if an error occurs during saving the files
 	 */
-	public void save(KnowledgeBase kb, File file, ProgressListener listener) throws IOException {
+	public void save(KnowledgeBase knowledgeBase, File file, ProgressListener listener) throws IOException {
 		updatePlugins();
 		Manifest manifest = new Manifest();
 		Attributes mainAttributes = manifest.getMainAttributes();
 		mainAttributes.put(Attributes.Name.MANIFEST_VERSION, "2.0");
 		mainAttributes.put(new Attributes.Name("Date"),new Date().toString());
-		mainAttributes.put(new Attributes.Name("Name"), kb.getDCMarkup().getContent(DCElement.TITLE));
-		mainAttributes.put(new Attributes.Name("ID"), kb.getId());
-		mainAttributes.put(new Attributes.Name("Author"), kb.getDCMarkup().getContent(DCElement.CREATOR));
+		mainAttributes.put(new Attributes.Name("Name"),
+				knowledgeBase.getDCMarkup().getContent(DCElement.TITLE));
+		mainAttributes.put(new Attributes.Name("ID"), knowledgeBase.getId());
+		mainAttributes.put(new Attributes.Name("Author"),
+				knowledgeBase.getDCMarkup().getContent(DCElement.CREATOR));
 		mainAttributes.put(new Attributes.Name("User"), System.getProperty ("user.name"));
 		File tempfile = new File(file.getCanonicalPath()+".temp");
 		
@@ -213,15 +239,15 @@ public class PersistenceManager {
 		int size = 0;
 		for (Extension plugin : writerPlugins) {
 			KnowledgeWriter writer = (KnowledgeWriter) plugin.getSingleton();
-			size += writer.getEstimatedSize(kb);
+			size += writer.getEstimatedSize(knowledgeBase);
 		}
-		size += kb.getResources().size();
+		size += knowledgeBase.getResources().size();
 		CombinedProgressListener cpl = new CombinedProgressListener(size, listener);
 		//update plugin configuration
-		PluginConfig pc = PluginConfig.getPluginConfig(kb);
+		PluginConfig pc = PluginConfig.getPluginConfig(knowledgeBase);
 		for (Plugin plugin: PluginManager.getInstance().getPlugins()) {
 			PluginEntry pluginEntry = pc.getPluginEntry(plugin.getPluginID());
-			//when there is no entry, create one with autodetect = true
+			// when there is no entry, create one with auto-detect = true
 			if (pluginEntry==null) {
 				pluginEntry = new PluginEntry(plugin, false, true);
 				pc.addEntry(pluginEntry);
@@ -232,7 +258,7 @@ public class PersistenceManager {
 				if (auto==null) {
 					pluginEntry.setNecessary(true);
 				} else {
-					pluginEntry.setNecessary(auto.check(kb));
+					pluginEntry.setNecessary(auto.check(knowledgeBase));
 				}
 			}
 		}
@@ -241,7 +267,7 @@ public class PersistenceManager {
 			for (Extension plugin : writerPlugins) {
 				//if autodetect is available, the file is only written when the autodetect check is positive
 				Autodetect autodetect = pc.getPluginEntry(plugin.getPluginID()).getAutodetect();
-				if (autodetect!=null&&!autodetect.check(kb)) {
+				if (autodetect != null && !autodetect.check(knowledgeBase)) {
 					continue;
 				}
 				String filename = plugin.getParameter("filename");
@@ -251,12 +277,12 @@ public class PersistenceManager {
 				ZipEntry entry = new ZipEntry(filename);
 				jarOutputStream.putNextEntry(entry);
 				KnowledgeWriter writer = (KnowledgeWriter) plugin.getSingleton();
-				cpl.next(writer.getEstimatedSize(kb));
-				writer.write(kb, jarOutputStream, cpl);
+				cpl.next(writer.getEstimatedSize(knowledgeBase));
+				writer.write(knowledgeBase, jarOutputStream, cpl);
 			}
-			cpl.next(kb.getResources().size());
+			cpl.next(knowledgeBase.getResources().size());
 			int i = 0;
-			for (Resource ressource: kb.getResources()) {
+			for (Resource ressource : knowledgeBase.getResources()) {
 				ZipEntry entry = new ZipEntry(MULTIMEDIA_PATH_PREFIX+ressource.getPathName());
 				jarOutputStream.putNextEntry(entry);
 				InputStream inputStream = ressource.getInputStream();
@@ -267,10 +293,10 @@ public class PersistenceManager {
 					inputStream.close();
 				}
 				i++;
-				float percent = i / (float) kb.getResources().size();
+				float percent = i / (float) knowledgeBase.getResources().size();
 				cpl.updateProgress(percent, "Saving binary ressources");
 			}
-		} 
+		}
 		finally {
 			jarOutputStream.close();
 		}
@@ -284,19 +310,28 @@ public class PersistenceManager {
 			//if not successful, restore backup and delete created output file
 			if (bakfile.exists()) bakfile.renameTo(file);
 			tempfile.delete();
-			throw new IOException("Cannot rename temporary file");	
+			throw new IOException("Cannot rename temporary file");
 		}
 		//if successful backup is not needed any more
-		bakfile.delete(); 
+		bakfile.delete();
 	}
 
 	/**
-	 * This method is used to create an xml element for an object using the fragment handler with the highest priority who can create the element.
-	 * @param object Inputobject
-	 * @param doc Document in which the element should be created
-	 * @return The element representing the input object
+	 * This method is used to create an XML element ({@link Document})for the
+	 * specified object using the {@link FragmentHandler} with the highest
+	 * priority who can create the element.
+	 * 
+	 * @param object
+	 *            the specified object
+	 * @param doc
+	 *            the specified XML element, in which the element should be
+	 *            created
+	 * @return the {@link Element} representing the input object
 	 * @throws NoSuchFragmentHandlerException
-	 * @throws IOException if an error occurs, an IO Exception is thrown
+	 *             if no appropriate {@link FragmentHandler} is available for
+	 *             the specified object
+	 * @throws IOException
+	 *             if an error occurs during saving the specified object
 	 */
 	public Element writeFragment(Object object, Document doc) throws NoSuchFragmentHandlerException, IOException {
 		for (Extension plugin: fragmentPlugins) {
@@ -308,34 +343,49 @@ public class PersistenceManager {
 		}
 		throw new NoSuchFragmentHandlerException("No fragment handler found for: "+object);
 	}
-	
+
 	/**
-	 * Reads an xml element an creates its corresponding object. For this operation, the fragment handler with the highest priority, who can handle the element, is used.
-	 * @param child xml Element
-	 * @param kb The knowledge base is used to get instances of the objects linked to the created object
+	 * Reads the specified XML {@link Element} and creates its corresponding
+	 * object. For this operation, the {@link FragmentHandler} with the highest
+	 * priority and ability to handle the element is used. The specified
+	 * {@link KnowledgeBase} instance is used to retrieve the appropriate object
+	 * instances.
+	 * 
+	 * @param child
+	 *            the specified XML Element
+	 * @param knowledgeBase
+	 *            the specified knowledge base
 	 * @return the created object
 	 * @throws NoSuchFragmentHandlerException
-	 * @throws IOException if an error occurs, an IO Exception is thrown
+	 *             if no appropriate {@link FragmentHandler} is available
+	 * @throws IOException
+	 *             if an IO error occurs during the read operation
 	 */
-	public Object readFragment(Element child, KnowledgeBase kb) throws NoSuchFragmentHandlerException, IOException {
+	public Object readFragment(Element child, KnowledgeBase knowledgeBase) throws NoSuchFragmentHandlerException, IOException {
 		for (Extension plugin: fragmentPlugins) {
 			FragmentHandler handler = (FragmentHandler) plugin.getSingleton();
 			if (handler.canRead(child)) {
-				return handler.read(kb, child);
+				return handler.read(knowledgeBase, child);
 			}
 		}
 		throw new NoSuchFragmentHandlerException("No fragment handler found for: "+child);
 	}
 
 	/**
-	 * Saves the knowledge base to a file
-	 * During this process, a temporary file is created. If the process is successful,
-	 * the temporary file replaces the input file. 
-	 * @param kb Knowledge Base to be saved
-	 * @param file File in which the knowledge base should be stored
-	 * @throws IOException if an error occurs, an IO Exception is thrown
+	 * Saves the specified {@link KnowledgeBase} instance to the specified
+	 * {@link File}. During this process, a temporary file is created. If the
+	 * process is successful, the temporary file replaces the input file.
+	 * 
+	 * @param knowledgeBase
+	 *            the specified {@link KnowledgeBase} instance to be saved to
+	 *            the file
+	 * @param file
+	 *            the specified {@link File} in which the knowledge base is
+	 *            written
+	 * @throws IOException
+	 *             if an error occurs, an IO Exception is thrown
 	 */
-	public void save(KnowledgeBase kb, File file) throws IOException {
-		save(kb, file, new DummyProgressListener());
+	public void save(KnowledgeBase knowledgeBase, File file) throws IOException {
+		save(knowledgeBase, file, new DummyProgressListener());
 	}
 }

@@ -27,8 +27,8 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.CaseQASet;
 import de.d3web.core.session.blackboard.CaseQContainer;
 import de.d3web.core.session.blackboard.SessionObject;
@@ -36,39 +36,50 @@ import de.d3web.indication.inference.PSMethodParentQASet;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
- * Storage for QASets (Questions or QContainers again) Part of the Composite
- * design pattern (see QASet for further description)
+ * This class stores {@link Question} instances or (recursively) other
+ * {@link QContainer} instances. Typically, this class is used to represent a
+ * questionnaire that is jointly presented in a problem-solving session.
  * 
- * @author joba, Christian Betz, norman
+ * @author joba, norman
  * @see QASet
  */
 public class QContainer extends QASet {
 
 	private Integer priority;
 
+	/**
+	 * Creates a new instance with the specified unique identifier.
+	 * 
+	 * @param id
+	 *            the unique identifier
+	 */
 	public QContainer(String id) {
 		super(id);
 		setChildren(new LinkedList<NamedObject>());
 	}
 
 	/**
-	 * adds a contra reason to the case object of this QContainer
+	 * Adds a new contra-reason to this instance. Contra-reasons are used during
+	 * the dialog to omit some questionnaires.
+	 * 
+	 * @param source
+	 *            the source of the reason
+	 * @param session
+	 *            the session for which the contra-reason is valid
 	 */
 	@Override
-	public void addContraReason(Reason source, Session theCase) {
-		((CaseQASet) theCase.getCaseObject(this)).addContraReason(source);
-		if ((theCase.getPSMethods().contains(PSMethodParentQASet
+	public void addContraReason(Reason source, Session session) {
+		((CaseQASet) session.getCaseObject(this)).addContraReason(source);
+		if ((session.getPSMethods().contains(PSMethodParentQASet
 				.getInstance()))
 				&& (!PSMethodUserSelected.class.equals(source
 				.getProblemSolverContext()))) {
-			delegateContraReason(theCase);
+			delegateContraReason(session);
 		}
 	}
 
 	/**
-	 * Adds contrareasons to all children-QContainers.
-	 * 
-	 * @param theCase
+	 * Propagates contra-reasons to all children-QContainers.
 	 */
 	private void delegateContraReason(Session theCase) {
 		for (TerminologyObject qaSet: getChildren()) {
@@ -79,25 +90,16 @@ public class QContainer extends QASet {
 		}
 	}
 
-	/**
-	 * @see QASet
-	 */
 	@Override
 	public void activate(Session theCase, Rule rule, Class<? extends PSMethod> psm) {
 		super.activate(theCase, rule, psm);
 	}
 
-	/**
-	 * @see QASet
-	 */
 	@Override
 	public void deactivate(Session theCase, Rule rule, Class<? extends PSMethod> psm) {
 		super.deactivate(theCase, rule, psm);
 	}
 
-	/**
-	 * addProReason method comment.
-	 */
 	@Override
 	public void addProReason(Reason source, Session theCase) {
 		((CaseQASet) theCase.getCaseObject(this)).addProReason(source);
@@ -110,9 +112,7 @@ public class QContainer extends QASet {
 	}
 
 	/**
-	 * Adds proreasons to all children-QContainers.
-	 * 
-	 * @param theCase
+	 * Propagates the pro-reasons to all children QContainers.
 	 */
 	private void delegateProReason(Session theCase) {
 		for (TerminologyObject qaSet: getChildren()) {
@@ -124,7 +124,8 @@ public class QContainer extends QASet {
 	}
 
 	/**
-	 * Compares the priority with that of another QContainer.
+	 * Compares the priority with the priority of another {@link QContainer}
+	 * instance.
 	 * <table>
 	 * <tr>
 	 * <td>Returns</td>
@@ -144,7 +145,7 @@ public class QContainer extends QASet {
 	 * 
 	 * @param QContainer
 	 *            anotherQContainer
-	 * @return int
+	 * @return int the result of the comparison
 	 */
 	public int comparePriority(QContainer anotherQContainer) {
 		Integer acPriority = anotherQContainer.getPriority();
@@ -159,39 +160,48 @@ public class QContainer extends QASet {
 		return getPriority().compareTo(acPriority);
 	}
 
+	/**
+	 * Creates and returns a new fylweight object of this instance, that is
+	 * corresponding to the specified {@link Session} instance.
+	 * 
+	 * @param session
+	 *            the corresponding session instance
+	 * @return a created fylweight representation of this instance
+	 */
 	public SessionObject createCaseObject(Session session) {
 		return new CaseQContainer(this);
 	}
 
 	/**
-	 * Gets the QContainers priority. This is a non-negative Integer value
-	 * specifying the order of the QContainers to be brought up by a dialogue
-	 * component. Thus priority is not an absolute number but relative to all
-	 * the other QContainers priorities.
+	 * <b>Deprecated:</b> not used anymore. <br>
+	 * Returns the {@link QContainer}s priority. This is a non-negative
+	 * {@link Integer} value specifying the order of the QContainers to be
+	 * brought-up by a dialog component. Thus, priority is not an absolute
+	 * number, but relative to all the other QContainers priorities.
 	 * 
 	 * @return java.lang.Integer
 	 */
+	@Deprecated
 	public Integer getPriority() {
 		return priority;
 	}
 
 	/**
-	 * Containers don´t have value
-	 * 
-	 * @return false
+	 * {@link QContainer} instances do not have value.
+	 * @return false always
 	 */
 	@Override
-	public boolean hasValue(Session theCase) {
+	public boolean hasValue(Session session) {
 		return false;
 	}
 
+
 	@Override
-	public boolean isDone(Session theCase) {
-		// Falls auch nur ein einziges Children nicht abgearbeitet ist, ist auch
-		// die ganze FK nicht abgearbeitet.
+	public boolean isDone(Session session) {
+		// recursively check, whether all children of this instance are "done"
 		for (TerminologyObject to: getChildren()) {
 			QASet qaset = (QASet) to;
-			if (!qaset.isDone(theCase)) {
+			if (!qaset.isDone(session)) {
 				return false;
 			}
 		}
@@ -199,12 +209,10 @@ public class QContainer extends QASet {
 	}
 
 	@Override
-	public boolean isDone(Session theCase, boolean respectValidFollowQuestions) {
-
-		// Falls auch nur ein einziges (valides) Children nicht abgearbeitet
-		// ist, ist auch die ganze FK nicht abgearbeitet.
+	public boolean isDone(Session session, boolean respectValidFollowQuestions) {
+		// recursively check, whether all children of this instance are "done"
 		for (TerminologyObject to: getChildren()) {
-			if (!((QASet) to).isDone(theCase,
+			if (!((QASet) to).isDone(session,
 					respectValidFollowQuestions)) {
 				return false;
 			}
@@ -233,10 +241,9 @@ public class QContainer extends QASet {
 	}
 
 	/**
-	 * Removes the PSMethodParentQASet-contrareason of all children-qcontainers,
-	 * which do not have any parent which is contraindicated
-	 * 
-	 * @param theCase
+	 * Removes the PSMethodParentQASet contra-reason of all
+	 * children-qcontainers, which do not have any parent which is
+	 * contra-indicated.
 	 */
 	private void delegateRemoveContraReason(Session theCase) {
 		for (TerminologyObject to: getChildren()) {
@@ -260,10 +267,8 @@ public class QContainer extends QASet {
 	}
 
 	/**
-	 * Removes the PSMethodParentQASet-proreason of all children-qcontainers,
-	 * which do not have any parent which is indicated
-	 * 
-	 * @param theCase
+	 * Removes the PSMethodParentQASet pro-reason of all children-qcontainers,
+	 * which do not have any parent which is indicated.
 	 */
 	private void delegateRemoveProReason(Session theCase) {
 		for (TerminologyObject to: getChildren()) {
@@ -287,11 +292,11 @@ public class QContainer extends QASet {
 	}
 
 	/**
-	 * Sets the knowledgebase, to which this objects belongs to and adds this
-	 * object to the knowledge base (reverse link).
+	 * Defines the relation to the specified {@link KnowledgeBase} instance, to
+	 * which this objects belongs to.
 	 * 
-	 * @param newKnowledgeBase
-	 *            de.d3web.kernel.domainModel.KnowledgeBase
+	 * @param knowledgeBase
+	 *            the specified {@link KnowledgeBase} instance.
 	 */
 	@Override
 	public void setKnowledgeBase(KnowledgeBase knowledgeBase) {
@@ -302,15 +307,18 @@ public class QContainer extends QASet {
 	}
 
 	/**
-	 * Sets the QContainers priority to the given non-negative int value.
-	 * Specifying the order of the QContainers (in special dialogue situations)
-	 * with this property is optional. Any QContainer without an assigned
-	 * priority value gets a positive infinite default value and will thus be
-	 * asked latest by those dialog components respecting the priority value.
+	 * <b>Deprecated:</b> not used anymore. <br>
+	 * Sets the priority of this instance to the specified non-negative
+	 * {@link Integer} value. Specifying the order of the QContainers (in
+	 * special dialog situations) with this property is optional. Any
+	 * {@link QContainer} without a defined priority value receives a positive
+	 * infinite default value and will thus be asked latest by those dialog
+	 * components respecting the priority value.
 	 * 
-	 * @param newPriority
-	 *            java.lang.Integer
+	 * @param priority
+	 *            the priority value of this instance
 	 */
+	@Deprecated
 	public void setPriority(Integer priority) {
 		/*
 		 * if (priority.intValue() < 0) { throw new
@@ -320,11 +328,11 @@ public class QContainer extends QASet {
 	}
 
 	/**
-	 * Sets the list of QASets contained in the QContainer to the specified
-	 * values. The Session has no meaning in this case.
+	 * This method does nothing, since {@link QContainer} instances do not
+	 * receive values.
 	 */
 	@Override
-	public void setValue(Session theCase, Value value) {
+	public void setValue(Session session, Value value) {
 		Logger.getLogger(this.getClass().getName()).warning(
 				"deedless QContainer.setValue was called");
 	}

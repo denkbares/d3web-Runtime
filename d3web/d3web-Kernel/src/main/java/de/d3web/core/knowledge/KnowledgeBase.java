@@ -38,28 +38,31 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCMarkedUp;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
+import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.values.Choice;
 
 /**
- * Stores questions (specially initial questions), sets of questions and
- * diagnoses which are relevant to a single knowledge base. The knotting
- * knowledge (e.g. rules) between the questions and diagnoses is not stored
- * explicitly here. This is weaved in the questions and diagnoses where it is
- * used.
+ * The KnowledgeBase stores all terminology objects (Question, Solution, etc.) and
+ * provides interfaces to access the problem-solving/dialog knowledge of the domain.
+ * 
+ * New terminology objects should be added here and should be created using the
+ * KnowlegdeBaseManagement factory. For the creation of problem-solving/dialog
+ * knowledge, you should use the factories provided with the particular
+ * KnowledgeSlices (e.g., Rule, XCLModel).
  * 
  * @author joba, Christian Betz
- * @see Diagnosis
+ * @see Solution
  * @see Question
  * @see RuleComplex
  * @see QASet
@@ -77,52 +80,63 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 
 	private String kbID;
 
-	private Map<String, String> costVerbalization;
+	private final Map<String, String> costVerbalization;
 
-	private Map<String, String> costUnit;
+	private final Map<String, String> costUnit;
 
 	private List<? extends QASet> initQuestions;
 
-	private List<Solution> diagnoses;
+	private final List<Solution> solutions;
 
-	private List<Resource> resouces = new ArrayList<Resource>();
-	
-	private List<PSConfig> psConfigs = new ArrayList<PSConfig>();
+	private final List<Resource> resouces = new ArrayList<Resource>();
+
+	private final List<PSConfig> psConfigs = new ArrayList<PSConfig>();
 
 	/**
 	 * Hashes the objects for ID
 	 */
-	private Map<String, IDObject> objectIDMap = new HashMap<String, IDObject>();
+	private final Map<String, IDObject> objectIDMap = new HashMap<String, IDObject>();
 
 	/**
 	 * Hashes the objects for names (unique name assumption required)
 	 */
-	private Map<String, IDObject> objectNameMap = new HashMap<String, IDObject>();
+	private final Map<String, IDObject> objectNameMap = new HashMap<String, IDObject>();
 
 	/**
 	 * Map with key="ps-method type" value="list of e.g. rules provided by this
 	 * type"
 	 */
-	private Map<Class<? extends PSMethod>, Map<MethodKind, List<KnowledgeSlice>>> knowledgeMap;
+	private final Map<Class<? extends PSMethod>, Map<MethodKind, List<KnowledgeSlice>>> knowledgeMap;
 
 	/**
-	 * @see de.d3web.core.knowledge.terminology.IDReference#getId()
+	 * @return the unique identifier of this KnowledgeBase instance.
 	 */
 	public String getId() {
 		return kbID;
 	}
 
+	/**
+	 * Sets a unique identifier for this KnowledgeBase instance.
+	 * 
+	 * @param id
+	 *            a unique identifier
+	 * @author joba
+	 * @date 15.04.2010
+	 */
 	public void setId(String id) {
 		kbID = id;
 	}
 
 	/**
+	 * An access method to retrieve the particular {@link KnowledgeSlice}
+	 * instance for a given problem-solver and the access key {@link MethodKind}
+	 * 
 	 * @return usually a List of knowledge slices relating to this NamedObject,
-	 *         the specified problemsolver class and it's kind.
+	 *         the specified problem-solver class and it's kind.
 	 * @param problemsolver
-	 *            java.lang.Class
+	 *            the specified problem-solver
 	 * @param kind
-	 *            kind of knowledgeUsed (e.g. FORWARD or BACKWARD)
+	 *            the access key for the type of knowledge to be retrieved
 	 */
 	public Object getKnowledge(Class<? extends PSMethod> problemsolver, MethodKind kind) {
 		Map<MethodKind, List<KnowledgeSlice>> o = knowledgeMap.get(problemsolver);
@@ -130,8 +144,13 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		else return null;
 	}
 
+	/**
+	 * Creates a new knowledge base instance. For the general creation of a
+	 * knowledge base and its corresponding objects we recommend to use the
+	 * {@link KnowledgeBaseManagement} class.
+	 */
 	public KnowledgeBase() {
-		diagnoses = new ArrayList<Solution>();
+		solutions = new ArrayList<Solution>();
 		initQuestions = new ArrayList<QASet>();
 		costVerbalization = new TreeMap<String, String>();
 		costUnit = new TreeMap<String, String>();
@@ -144,22 +163,22 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	}
 
 	/**
-	 * Adds a new diagnosis d to the knowledge base. The new object is not
-	 * added, if it is already in the knowledge base.
+	 * Adds a new solution to the knowledge base. The new object is only added,
+	 * if it is not already contained in the knowledge base.
 	 * 
-	 * @param d
-	 *            the new diagnosis to be added
+	 * @param solution
+	 *            the new solution to be added to the knowledge base
 	 */
-	public void add(Solution d) {
-		checkID(d);
+	public void add(Solution solution) {
+		checkID(solution);
 
-		if (!objectIDMap.containsKey(d.getId())) {
-			objectIDMap.put(d.getId(), d);
-			objectNameMap.put(d.getName(), d);
+		if (!objectIDMap.containsKey(solution.getId())) {
+			objectIDMap.put(solution.getId(), solution);
+			objectNameMap.put(solution.getName(), solution);
 
-			diagnoses.add(d);
-			if (d.getKnowledgeBase() == null)
-				d.setKnowledgeBase(this);
+			solutions.add(solution);
+			if (solution.getKnowledgeBase() == null)
+				solution.setKnowledgeBase(this);
 
 		}
 	}
@@ -173,62 +192,44 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	}
 
 	/**
-	 * Adds a new qcontainer q to the knowledge base. The new object is not
-	 * added, if it is already in the knowledge base.
+	 * Inserts a new questionnaire (QContainer) to the knowledge base. The new
+	 * object is only inserted, if it is not already contained in the knowledge
+	 * base.
 	 * 
-	 * @param q
-	 *            the new qcontainer to be added
+	 * @param questionnaire
+	 *            the new questionnaire to be added
 	 */
-	public void add(QContainer q) {
-		addQASet(q);
-		// checkID(q);
-		//
-		// if (!objectIDMap.containsKey(q.getId())) {
-		// objectIDMap.put(q.getId(), q);
-		// objectNameMap.put(q.getText(), q);
-		//
-		// qcontainers.add(q);
-		// if (q.getKnowledgeBase() == null)
-		// q.setKnowledgeBase(this);
-		// }
-
+	public void add(QContainer questionnaire) {
+		addQASet(questionnaire);
 	}
 
 	/**
-	 * Adds a new question q to the knowledge base. The new object is not added,
-	 * if it is already in the knowledge base.
+	 * Inserts a new {@link Question} instance to the knowledge base. The new
+	 * object is only inserted, if it is not already contained in the knowledge
+	 * base.
 	 * 
-	 * @param q
+	 * @param question
 	 *            the new question to be added
 	 */
-	public void add(Question q) {
-		addQASet(q);
-		// checkID(q);
-		//
-		// if (!objectIDMap.containsKey(q.getId())) {
-		// objectIDMap.put(q.getId(), q);
-		// objectNameMap.put(q.getText(), q);
-		//
-		// questions.add(q);
-		// if (q.getKnowledgeBase() == null)
-		// q.setKnowledgeBase(this);
-		// }
-
+	public void add(Question question) {
+		addQASet(question);
 	}
 
 	/**
-	 * Removes the specified rule from the knowledge base. <BR>
+	 * Removes the specified {@link KnowledgeSlice} instance from the knowledge
+	 * base. <BR>
 	 * How it is done: <BR>
 	 * <OL>
-	 * <LI>rule internal linking is removed (forward, backward)
-	 * <LI>rule is set to <code>null</code> (garbage collector removes rule from
-	 * memory)
+	 * <LI>Internal linking/indexes of the {@link KnowledgeSlice} are removed.
+	 * <LI>Instance is set to <code>null</code> (garbage collector removes
+	 * {@link KnowledgeSlice} instance from memory).
 	 * </OL>
 	 * 
-	 * @param rule
-	 *            the rule to be removed
-	 * @return true, if rule was contained in knowledge base, and if it could be
-	 *         removed
+	 * @param slice
+	 *            the {@link KnowledgeSlice} instance to be removed from the
+	 *            {@link KnowledgeBase}
+	 * @return true, if the knowledge slice was contained in knowledge base and
+	 *         could be successfully removed
 	 */
 	public boolean remove(KnowledgeSlice slice) {
 		boolean removed = removeKnowledge(slice.getProblemsolverContext(),
@@ -239,8 +240,19 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	}
 
 	/**
-	 * Adds any kind of knowledge for the given problem solver and knowledge
-	 * context.
+	 * Inserts a {@link KnowledgeSlice} instance to this {@link KnowledgeBase}
+	 * instance. The knowledge is indexed in the knowledge base according to its
+	 * corresponding problem-solver and the access key within the
+	 * problem-solver.
+	 * 
+	 * @param problemsolver
+	 *            the problem-solver, that uses the added {@link KnowledgeSlice}
+	 *            instance
+	 * @param knowledgeSlice
+	 *            the {@link KnowledgeSlice} instance to be added to this
+	 *            {@link KnowledgeBase}
+	 * @param knowledgeContext
+	 *            the access key for the indexing with the problem-solver
 	 */
 	public synchronized void addKnowledge(Class<? extends PSMethod> problemsolver,
 			KnowledgeSlice knowledgeSlice, MethodKind knowledgeContext) {
@@ -264,6 +276,22 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		storage.get(knowledgeContext).add(knowledgeSlice);
 	}
 
+	/**
+	 * Deletes a specified {@link KnowledgeSlice} instance from the
+	 * {@link KnowledgeBase} independently from the {@link MethodKind} access
+	 * key.
+	 * 
+	 * @param problemsolver
+	 *            the problem-solver, that uses the added {@link KnowledgeSlice}
+	 *            instance
+	 * @param knowledgeSlice
+	 *            the {@link KnowledgeSlice} instance to be deleted from this
+	 *            {@link KnowledgeBase}
+	 * @return true, if the {@link KnowledgeSlice} instance was removed
+	 *         successfully
+	 * @author joba
+	 * @date 15.04.2010
+	 */
 	public boolean removeKnowledge(Class<? extends PSMethod> problemsolver,
 			KnowledgeSlice knowledgeSlice) {
 		boolean result = false;
@@ -278,12 +306,31 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		return result;
 	}
 
+	/**
+	 * Deletes a specified {@link KnowledgeSlice} instance from the
+	 * {@link KnowledgeBase}. The {@link KnowledgeSlice} is assumed to be
+	 * indexed by the specified problem-solver and access key.
+	 * 
+	 * @param problemsolver
+	 *            the problem-solver, that uses the added {@link KnowledgeSlice}
+	 *            instance
+	 * @param knowledgeSlice
+	 *            the {@link KnowledgeSlice} instance to be deleted from this
+	 *            {@link KnowledgeBase}
+	 * @param accessKey
+	 *            the access key specifying how the {@link KnowledgeSlice}
+	 *            instance is indexed
+	 * @return true, if the {@link KnowledgeSlice} instance was removed
+	 *         successfully
+	 * @author joba
+	 * @date 15.04.2010
+	 */
 	public boolean removeKnowledge(Class<? extends PSMethod> problemsolver,
-			KnowledgeSlice knowledgeSlice, MethodKind knowledgeContext) {
+			KnowledgeSlice knowledgeSlice, MethodKind accessKey) {
 		Map<MethodKind, List<KnowledgeSlice>> knowledge = knowledgeMap
 				.get(problemsolver);
 		if (knowledge != null) {
-			List<KnowledgeSlice> slices = knowledge.get(knowledgeContext);
+			List<KnowledgeSlice> slices = knowledge.get(accessKey);
 			if (slices != null) {
 				while (slices.remove(knowledgeSlice)) {
 					// remove all occurring slices
@@ -295,79 +342,61 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	}
 
 	/**
-	 * A NamedObject is removed from the knowledge base. Before deletion the
-	 * corresponding knowledge is also removed (by calling removeKnowledge).
-	 * Exception thrown: An object cannot be removed, if
-	 * <OL>
-	 * <LI>Object has some children</LI>
-	 * </OL>
+	 * Deletes a terminology object from the knowledge base. Before the deletion
+	 * the corresponding knowledge instances (KnowledgeSlices) are also removed.
+	 * Exception thrown: An object cannot be removed, if it has children
+	 * relations.
 	 * 
-	 * @param o
+	 * @param object
 	 *            the object to be removed
 	 * @throws IllegalAccessException
-	 *             see above
+	 *             if the knowledge could not be removed from the
+	 *             {@link KnowledgeBase}
 	 */
-	public void remove(NamedObject o) throws IllegalAccessException {
-		if ((o.getChildren() != null) && (o.getChildren().length > 0)) {
+	public void remove(NamedObject object) throws IllegalAccessException {
+		if ((object.getChildren() != null) && (object.getChildren().length > 0)) {
 			throw new IllegalAccessException(
-					o
-							+ " has some children, that should be removed/relinked before removing.");
+					object
+							+ " has some children, that should be removed/relinked before deletion.");
 		}
 		else {
-			o.removeAllKnowledge();
-			objectIDMap.remove(o.getId());
-			objectNameMap.remove(o.getName());
-			/*
-			 * // iteratively, clean the knowledge map Set keySet = new
-			 * HashSet(o.getKnowledgeMap().keySet()); for (Iterator iter =
-			 * keySet.iterator(); iter.hasNext();) { Object psMethod =
-			 * iter.next(); Map kMap = (Map)(o.getKnowledgeMap().get(psMethod));
-			 * Set kMapKeys = new HashSet(kMap.keySet()); for (Iterator iterator
-			 * = kMapKeys.iterator(); iterator.hasNext();) { Object methodKind =
-			 * iterator.next(); if (methodKind instanceof MethodKind) {
-			 * Collection slices = new LinkedList((Collection)
-			 * (o.getKnowledge((Class) psMethod, (MethodKind) methodKind))); for
-			 * (Iterator iter2 = slices.iterator(); iter2.hasNext();) {
-			 * KnowledgeSlice slice = (KnowledgeSlice) iter2.next();
-			 * o.removeKnowledge((Class)psMethod, slice,
-			 * (MethodKind)methodKind); } } } }
-			 */
+			object.removeAllKnowledge();
+			objectIDMap.remove(object.getId());
+			objectNameMap.remove(object.getName());
+
 			// remove object from list of contained objects
-			if (o instanceof Solution) {
-				diagnoses.remove(o);
-				// } else if (o instanceof Question) {
-				// questions.remove(o);
-				// } else if (o instanceof QContainer) {
-				// qcontainers.remove(o);
-				// } else {
-				// Logger.getLogger(this.getClass().getName()).warning(
-				// "Did not remove object " + o + " (" + o.getClass()
-				// + ") from knowledge base because no"
-				// + "instanceof Diagnosis/Question!");
+			if (object instanceof Solution) {
+				solutions.remove(object);
 			}
 		}
 	}
 
-	/**
-	 * are query and item case insentitive equal or is item a substring of
-	 * query?
-	 */
-	public static boolean fuzzyEqual(String query, String item) {
-		return item.toLowerCase().indexOf(query.toLowerCase()) != -1;
-	}
+	// /**
+	// * Are query and item case insensitive equal or is item a substring of
+	// * query?
+	// *
+	// */
+	// public static boolean fuzzyEqual(String query, String item) {
+	// return item.toLowerCase().indexOf(query.toLowerCase()) != -1;
+	// }
 
 	/**
+	 * Returns all problem-solvers, for which {@link KnowledgeSlice} instances
+	 * are stores in the {@link KnowledgeBase}.
 	 * 
-	 * @return a Collection of all stored Problem Solver
+	 * @return a {@link Collection} of all problem-solvers storing knowledge in
+	 *         this {@link KnowledgeBase}
 	 */
 	public Collection<Class<? extends PSMethod>> getAllKnownProblemSolver() {
 		return knowledgeMap.keySet();
 	}
 
 	/**
-	 * Get all knowledge slices contained in this knowledge base.
+	 * Collects and returns all {@link KnowledgeSlice} instances that are stored
+	 * in this {@link KnowledgeBase}.
 	 * 
-	 * @return a Collection containing objects of type KnowledgeSlice
+	 * @return a {@link Collection} of all {@link KnowledgeSlice} instances
+	 *         contained in the {@link KnowledgeBase}
 	 */
 	public Collection<KnowledgeSlice> getAllKnowledgeSlices() {
 		Set<KnowledgeSlice> allKnowledgeSlices = new HashSet<KnowledgeSlice>();
@@ -378,11 +407,11 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	}
 
 	/**
-	 * Get all knowledge slices contained in this knowledge base for the given
-	 * problem solver.
+	 * Collects and returns all {@link KnowledgeSlice} instances that are stored
+	 * in this {@link KnowledgeBase} for a specified problem-solver.
 	 * 
-	 * @return Collection containing objects of type KnowledgeSlice for the
-	 *         given PSContext
+	 * @return Collection containing objects of type {@link KnowledgeSlice} for
+	 *         the specified problem-solver
 	 */
 	public Collection<KnowledgeSlice> getAllKnowledgeSlicesFor(
 			Class<? extends PSMethod> problemSolverContext) {
@@ -396,55 +425,73 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		}
 		return slices;
 	}
-	
+
 	/**
-	 * Get all knowledge slices contained in this knowledge base for the given
-	 * problem solver and method kins.
-	 * @param problemSolverContext problemsolver
-	 * @param kind MethodKind
-	 * @return a Collection containing the specified KnowledgeSlices
+	 * Collects and returns all {@link KnowledgeSlice} instances that are stored
+	 * in this {@link KnowledgeBase} for a specified problem-solver and
+	 * specified access key.
+	 * 
+	 * @return Collection containing objects of type {@link KnowledgeSlice} for
+	 *         the specified problem-solver and access key
+	 * 
+	 * @param problemsolver
+	 *            the specified problem-solver
+	 * @param accesskey
+	 *            the specified access key how the knowledge is stored in the
+	 *            problem-solver
+	 * @return a {@link Collection} of {@link KnowledgeSlice} instances
+	 *         containing all knowledge for the specified problem-solver and
+	 *         access key
 	 */
-	public Collection<KnowledgeSlice> getAllKnowledgeSlicesFor(Class<? extends PSMethod> problemSolverContext, MethodKind kind) {
+	public Collection<KnowledgeSlice> getAllKnowledgeSlicesFor(Class<? extends PSMethod> problemsolver, MethodKind accesskey) {
 		Map<MethodKind, List<KnowledgeSlice>> knowledge = knowledgeMap
-				.get(problemSolverContext);
+				.get(problemsolver);
 		if (knowledge != null) {
-			return knowledge.get(kind);
+			return knowledge.get(accesskey);
 		}
 		return new ArrayList<KnowledgeSlice>();
 	}
 
-	public Set<String> getCostIDs() {
-		return costVerbalization.keySet();
-	}
-
-	public String getCostUnit(String id) {
-		return costUnit.get(id);
-	}
-
-	public String getCostVerbalization(String id) {
-		return costVerbalization.get(id);
-	}
-
 	/**
-	 * Returns all {@link Solution} instances contained in this knowledge base
-	 * as a sequential list. The returned list may be unmodifiable.
+	 * <b>Deprecated:</b> use {@link KnowledgeBase}.getSolutions(). <br>
+	 * Returns all {@link Solution} instances stored in this knowledge base. The
+	 * returned list is unmodifiable.
 	 * 
-	 * @return list of all diagnoses contained in this KnowledgeBase
+	 * @return list of all {@link Solution} instances contained in this
+	 *         {@link KnowledgeBase}
 	 */
+	@Deprecated
 	public List<Solution> getDiagnoses() {
-		return Collections.unmodifiableList(diagnoses);
+		return getSolutions();
 	}
 
 	/**
-	 * @return a list of initial questions (questions to be asked in a new case)
+	 * Returns all {@link Solution} instances stored in this knowledge base. The
+	 * returned list is unmodifiable.
+	 * 
+	 * @return list of all {@link Solution} instances contained in this
+	 *         {@link KnowledgeBase}
+	 */
+	public List<Solution> getSolutions() {
+		return Collections.unmodifiableList(solutions);
+	}
+
+	/**
+	 * Returns the ordered {@link List} of all initial questions (
+	 * {@link Question})/questionnaires ({@link QContainer}) . These
+	 * questions/questionnaires are prompted first when starting a new dialog.
+	 * 
+	 * @return a list of the initial questions/questionnaires
 	 */
 	public List<? extends QASet> getInitQuestions() {
 		return initQuestions;
 	}
 
 	/**
-	 * @return an unmodifiable List of all QContainers contained in this
-	 *         KnowledgeBase
+	 * Returns all questionnaires contained in this {@link KnowledgeBase}.
+	 * 
+	 * @return an unmodifiable {@link List} of all {@link QContainer} instances
+	 *         contained in this {@link KnowledgeBase}
 	 */
 	public List<QContainer> getQContainers() {
 		List<QContainer> qcontainers = new ArrayList<QContainer>();
@@ -457,8 +504,9 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	}
 
 	/**
-	 * Returns the (flattened) list of all {@link Question} instances contained
-	 * in this knowledge base. The returned list may be unmodifiable.
+	 * Returns the (flattened) {@link List} of all {@link Question} instances
+	 * represented in this knowledge base. The returned list may be
+	 * unmodifiable.
 	 * 
 	 * @return list of all questions contained in this KnowledgeBase
 	 */
@@ -469,18 +517,37 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 				questions.add((Question) o);
 			}
 		}
-		return questions;
+		return Collections.unmodifiableList(questions);
 	}
 
 	/**
-	 * @return the qasets that do not have any parent.
+	 * <b>Deprecated:</b> Use {@link KnowledgeBase}.getRootSolution(). <br>
+	 * The solutions contained in this {@link KnowledgeBase} are organized in a
+	 * hierarchy. This method returns the root solution.
+	 * 
+	 * @return the root solution of this {@link KnowledgeBase}
+	 * @author joba
+	 * @date 15.04.2010
 	 */
+	@Deprecated
 	public Solution getRootDiagnosis() {
+		return getRootSolution();
+	}
+
+	/**
+	 * The solutions contained in this {@link KnowledgeBase} are organized in a
+	 * hierarchy. This method returns the root solution.
+	 * 
+	 * @return the root solution of this {@link KnowledgeBase}
+	 * @author joba
+	 * @date 15.04.2010
+	 */
+	public Solution getRootSolution() {
 		Vector<Solution> retVec = new Vector<Solution>();
-		Iterator<Solution> iter = getDiagnoses().iterator();
+		Iterator<Solution> iter = getSolutions().iterator();
 		while (iter.hasNext()) {
 			Solution d = iter.next();
-			if (d.getParents() == null || d.getParents().length==0) {
+			if (d.getParents() == null || d.getParents().length == 0) {
 				retVec.add(d);
 			}
 		}
@@ -521,25 +588,31 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	}
 
 	/**
-	 * @return the qasets that do not have any parent.
+	 * The questionnaires and contained questions are organized in a hierarchy.
+	 * This method returns the root object (usually a {@link QContainer}).
+	 * Actually, the method collects all {@link QASet} instances, that have
+	 * parent relation. Then, the first instance is returned (it's assumed that
+	 * further instances are only temporarily have not parent).
+	 * 
+	 * @return the root {@link QASet} instance of this {@link KnowledgeBase}
 	 */
 	public QASet getRootQASet() {
-		Vector<QASet> retVec = new Vector<QASet>();
+		List<QASet> noParents = new ArrayList<QASet>();
 		Iterator<QASet> iter = getQASets().iterator();
 		while (iter.hasNext()) {
 			QASet fk = iter.next();
-			if (fk.getParents() == null || fk.getParents().length==0) {
-				retVec.add(fk);
+			if (fk.getParents() == null || fk.getParents().length == 0) {
+				noParents.add(fk);
 			}
 		}
-		if (retVec.size() > 1) {
+		if (noParents.size() > 1) {
 			Logger.getLogger(this.getClass().getName()).warning(
 					"more than one root node in qaset tree!");
 
 			// [HOTFIX]:aha:multiple root / orphan handling
 			Collection<QASet> orphans = new Vector<QASet>();
 			QASet root = null;
-			iter = retVec.iterator();
+			iter = noParents.iterator();
 			while (iter.hasNext()) {
 				QASet q = iter.next();
 				if (q.getId().equals("Q000")) root = q;
@@ -560,53 +633,54 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 			return root;
 
 		}
-		else if (retVec.size() < 1) {
+		else if (noParents.size() < 1) {
 			Logger.getLogger(this.getClass().getName()).severe(
 					"no root node in qaset tree!");
 			return null;
 		}
-		return retVec.get(0);
+		return noParents.get(0);
 	}
 
 	/**
-	 * Searches for an Object by its id.
+	 * Tries to retrieve an terminology object with the specified identifier,
+	 * that is contained in this knowledge base.
 	 * 
-	 * @return found object, null if not present.
+	 * @param id
+	 *            the specified identifier
+	 * @return the terminology object with the specified identifier;
+	 *         <code>null</code> if none found
+	 * @author joba
+	 * @date 15.04.2010
 	 */
 	public IDObject search(String id) {
-		// suche erst bei Fragen
 		IDObject o = searchQuestion(id);
 		if (o != null)
 			return o;
-		// ... bei Frageklassen
 		o = searchQContainers(id);
 		if (o != null)
 			return o;
-		// ... bei Diagnosen
-		o = searchDiagnosis(id);
+		o = searchSolution(id);
 		if (o != null)
 			return o;
-		/*
-		 * // ... bei Regeln o = sucheId(getRules(), id); if (o != null) return
-		 * o;
-		 */
 		return null;
 	}
 
 	/**
-	 * Searches the Answer with the specified ID
+	 * Tries to find a {@link Choice} with the specified identifier. Choices are
+	 * only contained in {@link QuestionChoice} instances.
 	 * 
-	 * @param answerID
-	 *            ID of the Answer
-	 * @return AnswerChoice with the specified ID
+	 * @param choiceID
+	 *            the unique identifier of the
+	 * @return a {@link Choice} instance having the specified unique identifier,
+	 *         <code>null</code> if no {@link Choice} was found.
 	 */
-	public Choice searchAnswerChoice(String answerID) {
+	public Choice searchAnswerChoice(String choiceID) {
 		for (Question q : getQuestions()) {
 			if (q instanceof QuestionChoice) {
 				QuestionChoice qc = (QuestionChoice) q;
 				List<Choice> allAlternatives = qc.getAllAlternatives();
 				for (Choice a : allAlternatives) {
-					if (a.getId().equals(answerID)) {
+					if (a.getId().equals(choiceID)) {
 						return a;
 					}
 				}
@@ -616,11 +690,21 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	}
 
 	/**
-	 * Searches for a diagnosis by its id
-	 * 
-	 * @return found diagnosis, null if not present.
+	 * <b>Deprecated: </b> use {@link KnowledgeBase}.searchSolution(id).
 	 */
+	@Deprecated
 	public Solution searchDiagnosis(String id) {
+		return searchSolution(id);
+	}
+
+	/**
+	 * Tries to find a {@link Solution} instance with the specified unique
+	 * identifier.
+	 * 
+	 * @return a {@link Solution} instance with the specified unique identifier;
+	 *         <code>null</code> if none found
+	 */
+	public Solution searchSolution(String id) {
 		if (objectIDMap.containsKey(id)) {
 			IDObject o = objectIDMap.get(id);
 			if (o instanceof Solution)
@@ -630,9 +714,11 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	}
 
 	/**
-	 * Searches for a QASet by its id
+	 * Tries to find a {@link QASet} instance (questions, questionnaires) with
+	 * the specified unique identifier.
 	 * 
-	 * @return found QASet, null if not present.
+	 * @return a {@link QASet} instance with the specified unique identifier;
+	 *         <code>null</code> if none found
 	 */
 	public QASet searchQASet(String id) {
 		if (objectIDMap.containsKey(id)) {
@@ -651,9 +737,11 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	}
 
 	/**
-	 * Searches for a QContainer by its id
+	 * Tries to find a {@link QContainer} instance with the specified unique
+	 * identifier.
 	 * 
-	 * @return found QContainer, null if not present.
+	 * @return a {@link QContainer} instance with the specified unique
+	 *         identifier; <code>null</code> if none found
 	 */
 	public QContainer searchQContainers(String id) {
 		if (objectIDMap.containsKey(id)) {
@@ -665,19 +753,28 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	}
 
 	/**
-	 * Searches an Object for a given name (unique name assumption required)
+	 * Tries to find a terminology object (solutions, questions, questionnaires)
+	 * with the specified name.
 	 * 
 	 * @param name
-	 * @return
+	 *            the specified name of the searched terminology object
+	 * @return the search terminology object; <code>null</code> if none found
+	 * @author joba
+	 * @date 15.04.2010
 	 */
 	public IDObject searchObjectForName(String name) {
 		return this.objectNameMap.get(name);
 	}
 
 	/**
-	 * Searches for a Question by its id
+	 * Tries to find a {@link Question} instance with the specified unique
+	 * identifier.
 	 * 
-	 * @return found question, null if not present.
+	 * @param id
+	 *            the unique identifier of the search {@link Question}
+	 * @return the searched question; <code>null</code> if none found
+	 * @author joba
+	 * @date 15.04.2010
 	 */
 	public Question searchQuestion(String id) {
 		if (objectIDMap.containsKey(id)) {
@@ -689,54 +786,103 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	}
 
 	/**
-	 * Stores information about the unit of a specific cost.
-	 */
-	public void setCostUnit(String id, String name) {
-		costUnit.put(id, name);
-	}
-
-	public void setCostVerbalization(String id, String name) {
-		costVerbalization.put(id, name);
-	}
-
-	/**
-	 * Sets the initial question list.
+	 * Defines the ordered list of initial questions/questionnaires. This
+	 * {@link List} of {@link QASet}s is prompted at the beginning of every new
+	 * problem-solving session.
+	 * 
+	 * @param initQuestions
+	 *            the collection of init questions/questionnaires
+	 * @author joba
+	 * @date 15.04.2010
 	 */
 	public void setInitQuestions(List<? extends QASet> initQuestions) {
 		this.initQuestions = initQuestions;
 	}
 
 	/**
-	 * @return a String representation of this kb.
+	 * Returns a compact {@link String} representation of this
+	 * {@link KnowledgeBase} instance (usually only the ID).
+	 * 
+	 * @return a compact {@link String} representation of this instance
 	 */
+	@Override
 	public String toString() {
-		return "KnowledgeBase ID: "+kbID;
+		return "KnowledgeBase ID: " + kbID;
 	}
 
+	/**
+	 * Returning the meta-description of this {@link KnowledgeBase} instance.
+	 * 
+	 * @return the meta-description of this {@link KnowledgeBase} instance.
+	 */
 	public DCMarkup getDCMarkup() {
 		return dcMarkup;
 	}
 
+	/**
+	 * Sets the meta-description of this {@link KnowledgeBase} instance.
+	 * 
+	 * @param dcMarkup
+	 *            the meta-description of this {@link KnowledgeBase} instance.
+	 */
 	public void setDCMarkup(DCMarkup dcMarkup) {
 		this.dcMarkup = dcMarkup;
 	}
 
+	/**
+	 * Returns properties defined for this {@link KnowledgeBase} instance.
+	 * 
+	 * @return additional properties defined for this knowledge base
+	 */
 	public Properties getProperties() {
 		return properties;
 	}
 
+	/**
+	 * Sets the properties defined for this {@link KnowledgeBase} instance.
+	 * 
+	 * @param properties
+	 *            the properties of this knowledge base
+	 */
 	public void setProperties(Properties properties) {
 		this.properties = properties;
 	}
 
+	/**
+	 * Inserts a new resource for this {@link KnowledgeBase} instance. For
+	 * example, a resource is a multi-media file attached to the
+	 * {@link KnowledgeBase}.
+	 * 
+	 * @param resource
+	 *            a new resource
+	 * @author joba
+	 * @date 15.04.2010
+	 */
 	public void addResouce(Resource resource) {
 		this.resouces.add(resource);
 	}
 
+	/**
+	 * Returns all resources stored in this {@link KnowledgeBase} instance. For
+	 * example, a multi-media is a resource.
+	 * 
+	 * @return all resources of this knowledge base
+	 * @author joba
+	 * @date 15.04.2010
+	 */
 	public List<Resource> getResources() {
 		return Collections.unmodifiableList(this.resouces);
 	}
 
+	/**
+	 * Returns a stored resource for a specified pathname accessor.
+	 * 
+	 * @param pathname
+	 *            the specified pathname accessor.
+	 * @return a resource stored by the specified accessor
+	 * @author joba
+	 * @date 15.04.2010
+	 */
 	public Resource getResource(String pathname) {
 		for (Resource resource : resouces) {
 			if (pathname.equalsIgnoreCase(resource.getPathName())) {
@@ -746,6 +892,15 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		return null;
 	}
 
+	/**
+	 * Inserts a new question/questionnaire to this {@link KnowledgeBase}
+	 * instance
+	 * 
+	 * @param qaSet
+	 *            the question/questionnaire to be added to this knowledge base
+	 * @author joba
+	 * @date 15.04.2010
+	 */
 	public void addQASet(QASet qaSet) {
 		checkID(qaSet);
 		if (!objectIDMap.containsKey(qaSet.getId())) {
@@ -757,6 +912,14 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 
 	}
 
+	/**
+	 * Returns all question/questionnaires stored in this {@link KnowledgeBase}
+	 * instance.
+	 * 
+	 * @return all question/questionnaires contained in this knowledge base
+	 * @author joba
+	 * @date 15.04.2010
+	 */
 	public List<QASet> getQASets() {
 		List<QASet> qASets = new ArrayList<QASet>();
 		for (IDObject o : objectIDMap.values()) {
@@ -768,20 +931,80 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	}
 
 	/**
-	 * Returns a sorted List of PSConfigs
-	 * @return PSConfigs sorted by Priority
+	 * Returns the configurations of all registered problem-solvers.
+	 * 
+	 * @return the list of problem-solver configurations sorted by priority
 	 */
 	public List<PSConfig> getPsConfigs() {
-		//the list is sorted 
+		// the list is sorted
 		Collections.sort(psConfigs);
 		return Collections.unmodifiableList(psConfigs);
 	}
 
+	/**
+	 * Inserts a new problem-solver configuration.
+	 * 
+	 * @param psConfig
+	 *            the new problem-solver configuration
+	 * @author joba
+	 * @date 15.04.2010
+	 */
 	public void addPSConfig(PSConfig psConfig) {
 		psConfigs.add(psConfig);
 	}
-	
+
+	/**
+	 * Removes a specified problem-solver configuration.
+	 * 
+	 * @param psConfig
+	 *            the specified problem-solver configuration
+	 * @author joba
+	 * @date 15.04.2010
+	 */
 	public void removePSConfig(PSConfig psConfig) {
 		psConfigs.remove(psConfig);
 	}
+
+	// +++++++++++++++++ Deprecated Methods ++++++++++++++++++
+
+	/**
+	 * Not used anymore.
+	 */
+	@Deprecated
+	public void setCostUnit(String id, String name) {
+		costUnit.put(id, name);
+	}
+
+	/**
+	 * Not used anymore.
+	 */
+	@Deprecated
+	public void setCostVerbalization(String id, String name) {
+		costVerbalization.put(id, name);
+	}
+
+	/**
+	 * Not used anymore.
+	 */
+	@Deprecated
+	public Set<String> getCostIDs() {
+		return costVerbalization.keySet();
+	}
+
+	/**
+	 * Not used anymore.
+	 */
+	@Deprecated
+	public String getCostUnit(String id) {
+		return costUnit.get(id);
+	}
+
+	/**
+	 * Not used anymore.
+	 */
+	@Deprecated
+	public String getCostVerbalization(String id) {
+		return costVerbalization.get(id);
+	}
+
 }

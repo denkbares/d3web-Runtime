@@ -21,63 +21,70 @@ package de.d3web.caserepository;
 import java.util.Iterator;
 
 /**
- * This interface specifies the methods required for
- * all CaseRepository implementations.
+ * This interface specifies the methods required for all CaseRepository
+ * implementations.
  * 
- * A CaseRepository stores multiple CaseObjects. 
- * CaseObjects can be added and removed directly.
+ * A CaseRepository stores multiple {@link CaseObject} instances. CaseObjects
+ * can be added and removed directly.
  * 
- * The stored CaseObjects are accessible via an
- * Iterator.
+ * The stored {@link CaseObject} instances are accessible via an
+ * {@link Iterator}.
  * 
  * @author Sebastian Furth (denkbares GmbH)
- *
+ * 
  */
 public interface CaseRepository {
-	
+
 	/**
-	 * Tries to add the specified CaseObject (@link CaseObject)
-	 * to this CaseRepository. 
+	 * Tries to add the specified {@link CaseObject} to this CaseRepository.
 	 * 
-	 * If the CaseObject was successfully added true will be returned. 
-	 * Otherwise the returned value will be false.
+	 * If the CaseObject was successfully added, the true is returned. Otherwise
+	 * the returned value will be false.
 	 * 
-	 * If you try to add null, an IllegalArgumentException will be thrown.
+	 * If you try to add null, an {@link IllegalArgumentException} will be
+	 * thrown.
 	 * 
-	 * @param caseObject the CaseObject which will be added (null is not allowed).
-	 * @return true if the CaseObject was added to the CaseRepository, otherwise false.
+	 * @param caseObject
+	 *            the CaseObject which will be added (null is not allowed)
+	 * @return true, if the CaseObject was added to the CaseRepository; false
+	 *         otherwise
 	 */
 	public boolean add(CaseObject caseObject);
-	
+
 	/**
-	 * Tries to remove the specified CaseObject(@link CaseObject)
-	 * from this CaseRepository.
+	 * Tries to remove the specified {@link CaseObject} from this
+	 * CaseRepository.
 	 * 
-	 * If the CaseObject was successfully removed true will be returned.
+	 * If the CaseObject was successfully removed, then true will be returned.
 	 * Otherwise the returned value will be false.
 	 * 
-	 * If you try to remove null, an IllegalArgumentException will be thrown.
+	 * If you try to remove null, then an {@link IllegalArgumentException} will
+	 * be thrown.
 	 * 
-	 * @param caseObject the CaseObject which will be removed (null is not allowed).
-	 * @return true if the CaseObject was removed from the CaseRepository, otherwise false.
+	 * @param caseObject
+	 *            the CaseObject to be removed (null is not allowed).
+	 * @return true, if the CaseObject was removed from the CaseRepository,
+	 *         false otherwise.
 	 */
 	public boolean remove(CaseObject caseObject);
-	
+
 	/**
-	 * Returns an Iterotor which offers access to the CaseObjects (@link CaseObject)
-	 * stored in this CaseRepository.
+	 * Returns an {@link Iterator} instance, that offers access to the
+	 * {@link CaseObject} instances stored in this CaseRepository.
 	 * 
 	 * @return the Iterator which offers access to the stored CaseObjects.
 	 */
 	public Iterator<CaseObject> iterator();
-	
+
 	/**
-	 * Searches the CaseRepository for a CaseObject with the specified ID. If a
-	 * CaseObject with this ID was found it will be returned. Otherwise the
-	 * returned value will be null.
+	 * Traverses the CaseRepository for a {@link CaseObject} with the specified
+	 * unique identifier. If a CaseObject with this identifier was found, the it
+	 * will be returned. Otherwise the returned value will be null.
 	 * 
-	 * @param id the ID of the desired CaseObject
-	 * @return the CaseObject with the specified ID if it exists, otherwise null.
+	 * @param id
+	 *            the specified identifier of the desired CaseObject
+	 * @return the CaseObject with the specified ID if it exists, otherwise
+	 *         null.
 	 */
 	public CaseObject getCaseObjectById(String id);
 

@@ -25,14 +25,16 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * DCMarkup is for characterising an object according to the Dublin Core
+ * DCMarkup is for characterizing an object according to the DublinCore
+ * standard; i.e. giving a meta-description of the object.
+ * 
  * @link http://dublincore.org/
  * @see de.d3web.core.knowledge.terminology.info.DCMarkedUp
  * @author hoernlein
  */
 public class DCMarkup {
 	
-	private Map<DCElement, String> data = new HashMap<DCElement, String>(15);
+	private final Map<DCElement, String> data = new HashMap<DCElement, String>(15);
 	
 	/**
 	 * if content == null the saved content is ""
@@ -61,6 +63,7 @@ public class DCMarkup {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof DCMarkup)) return false;
 		Iterator<DCElement> iter = DCElement.getIterator();
@@ -75,6 +78,7 @@ public class DCMarkup {
 	 * Returns a new instance of DCMarkup which with the same values
 	 * as this instance.
 	 */
+	@Override
 	public Object clone() {
 		DCMarkup clonedDC = new DCMarkup();
 		Iterator<DCElement> iter = data.keySet().iterator();

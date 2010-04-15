@@ -25,19 +25,28 @@ import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
 
 /**
- * Interface for all reading persistance handlers.
+ * Interface for all reading persistence handlers.
+ * 
  * @author Markus Friedrich (denkbares GmbH)
  */
 public interface KnowledgeReader {
 
 	/**
-	 * This method reads the input stream and inserts the knowledge in the kb
-	 * @param kb KnowledgeBase in whicht die knowledge should be inserted
-	 * @param stream InputStream containing the knowledgte
-	 * @param listerner listner which will be informed during this operation, null is not accepted
-	 * @throws IOException if an error occurs, an IO Exception is thrown
+	 * This method reads the input stream and inserts the knowledge in the
+	 * {@link KnowledgeBase} instance.
+	 * 
+	 * @param knowledgeBase
+	 *            KnowledgeBase in which die knowledge should be inserted
+	 * @param stream
+	 *            InputStream containing the knowledge
+	 * @param listerner
+	 *            listener which will be informed during this operation, null is
+	 *            not accepted
+	 * @throws IOException
+	 *             when an IO errors occurs during reading the part of the
+	 *             knowledge base
 	 */
-	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listerner) throws IOException;
+	public void read(KnowledgeBase knowledgeBase, InputStream stream, ProgressListener listerner) throws IOException;
 	
 	
 }

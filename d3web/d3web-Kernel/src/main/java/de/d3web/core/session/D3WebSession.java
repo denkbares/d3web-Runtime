@@ -45,6 +45,7 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.DiagnosisState.State;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.session.blackboard.Blackboard;
@@ -250,7 +251,7 @@ public class D3WebSession implements Session {
 	}
 
 	@Override
-	public void addEstablishedDiagnoses(Solution diag) {
+	public void addEstablishedSolution(Solution diag) {
 		if (!establishedDiagnoses.contains(diag)) {
 			establishedDiagnoses.add(diag);
 		}
@@ -322,18 +323,7 @@ public class D3WebSession implements Session {
 	 */
 	@Override
 	public List<Solution> getDiagnoses(DiagnosisState state, List<? extends PSMethod> psMethods) {
-		List<Solution> result = new LinkedList<Solution>();
-		for (Solution diag : getKnowledgeBase().getDiagnoses()) {
-			for (PSMethod psm : psMethods) {
-				if (psm.isContributingToResult()
-						&& diag.getState(this, psm.getClass()).equals(state)) {
-					result.add(diag);
-					// do not need to look at the remaining psms
-					break;
-				}
-			}
-		}
-		return result;
+		return getSolutions(state, psMethods);
 	}
 
 	private QASetManagerFactory getQASetManagerFactory() {
@@ -428,7 +418,7 @@ public class D3WebSession implements Session {
 	}
 
 	@Override
-	public void removeEstablishedDiagnoses(Solution diagnosis) {
+	public void removeEstablishedSolution(Solution diagnosis) {
 		establishedDiagnoses.remove(diagnosis);
 	}
 
@@ -462,6 +452,35 @@ public class D3WebSession implements Session {
 		setValue(valuedObject, value, PSMethodUserSelected.class);
 	}
 	
+	@Override
+	public Value getValue(Question question) {
+		// 2010.04 joba: use the deprecated method, until the Blackboard has
+		// been established in the Session implementation.
+		return question.getValue(this);
+	}
+
+	@Override
+	public DiagnosisState getState(Solution solution) {
+		DiagnosisState state = new DiagnosisState(State.UNCLEAR);
+		for (PSMethod psm : getPSMethods()) {
+			DiagnosisState psState = psm.getState(this, solution);
+			if (psState == null) continue;
+			if (State.EXCLUDED.equals(psState))
+				return new DiagnosisState(State.EXCLUDED);
+			if (psState.compareTo(state) > 0) {
+				state = psState;
+			}
+		}
+		return state;
+	}
+
+	@Override
+	public DiagnosisState getState(Solution solution, Class<? extends PSMethod> context) {
+		// TODO: this is wrong! getState computes the real state every time, but
+		// this method should return the stored value of its CaseDiagnosis
+		// instance
+		return this.getPSMethodInstance(context).getState(this, solution);
+	}
 
 	// @Override
 	// public void setValue(ValuedObject o, Value value) {
@@ -535,8 +554,12 @@ public class D3WebSession implements Session {
 		if (valuedObject instanceof Solution) {
 			((Solution) valuedObject).setValue(this, value, context);
 		}
+		else if (valuedObject instanceof Question) {
+			((Question) valuedObject).setValue(this, value);
+		}
 		else {
-			valuedObject.setValue(this, value);
+			throw new IllegalArgumentException("Specified argument " + valuedObject
+					+ " is neither Solution nor Question.");
 		}
 		Object newValue = getValue(valuedObject);
 		notifyListeners(valuedObject, context);
@@ -597,7 +620,7 @@ public class D3WebSession implements Session {
 
 	// ******************** event notification *********************
 
-	private Collection<SessionEventListener> listeners = new LinkedList<SessionEventListener>();
+	private final Collection<SessionEventListener> listeners = new LinkedList<SessionEventListener>();
 
 	/**
 	 * this listener will be notified, if some value has been set in this case
@@ -626,6 +649,24 @@ public class D3WebSession implements Session {
 	public PropagationContoller getPropagationContoller() {
 		return propagationController;
 	}
+
+	@Override
+	public List<Solution> getSolutions(DiagnosisState state, List<? extends PSMethod> psMethods) {
+		List<Solution> result = new LinkedList<Solution>();
+		for (Solution diag : getKnowledgeBase().getSolutions()) {
+			for (PSMethod psm : psMethods) {
+				if (psm.isContributingToResult()
+						&& diag.getState(this, psm.getClass()).equals(state)) {
+					result.add(diag);
+					// do not need to look at the remaining psms
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
+
 
 	// ******************** /event notification ********************
 

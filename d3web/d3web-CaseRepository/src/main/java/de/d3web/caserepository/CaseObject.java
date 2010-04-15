@@ -41,12 +41,17 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.DCMarkedUp;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 
 /**
- * Represents one case.
+ * This class is the static representation of a problem-solving session. Whereas
+ * an active problem-solving session is represented by a {@link Session}
+ * instance, the sessions are persistently stored in {@link CaseObject}
+ * instances. This, sessions are stored and saved by {@link CaseObject}
+ * instances.
  * 
- * @author: Patrick von Schoen
+ * @author Patrick von Schoen
  */
 public interface CaseObject
 		extends
@@ -57,6 +62,11 @@ public interface CaseObject
 			IDReference,
 			ConfigContainer {
 
+	/**
+	 * The source system that created the {@link CaseObject}.
+	 * 
+	 * @created 15.04.2010
+	 */
 	public static class SourceSystem {
 
 		public final static SourceSystem D3 = new SourceSystem("D3");
@@ -91,6 +101,11 @@ public interface CaseObject
 		}
 	}
 
+	/**
+	 * Solutions, that were derived by the session.
+	 * 
+	 * @created 15.04.2010
+	 */
 	public static class Solution {
 
 		private int hashCode;
@@ -133,11 +148,6 @@ public interface CaseObject
 			calculateHash();
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
 		@Override
 		public boolean equals(Object o) {
 			if (o == null || !(o instanceof CaseObject.Solution))
@@ -167,34 +177,15 @@ public interface CaseObject
 			}
 		}
         
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.lang.Object#hashCode()
-		 */
 		@Override
 		public int hashCode() {
 			return hashCode;
 		}
 
 		private void calculateHash() {
-			// [HOTFIX]:aha:we use a perverted HashSet here until we find a
-			// better solution
-			//			hashCode = 0;
-			//			if (getDiagnosis() != null)
-			//				hashCode += getDiagnosis().hashCode();
-			//			if (getPSMethodClass() != null)
-			//				hashCode += getPSMethodClass().hashCode();
-			//			if (getState() != null)
-			//				hashCode += getState().hashCode();
 			hashCode = 42;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString() {
 			return "CaseObject.Solution{"
@@ -206,7 +197,6 @@ public interface CaseObject
 							getPSMethodClass().getName().lastIndexOf("."))) + ", " + getWeight()
 					+ "}";
 		}
-
 	}
 
 	/**
@@ -231,99 +221,244 @@ public interface CaseObject
 	public final static Boolean VISIBLITY_UNCLEAR = null;
 
 	/**
+	 * Returns {@link KnowledgeBase} instance, that was used to generate this
+	 * {@link CaseObject} instance.
 	 * 
-	 * @return KnowledgeBase
+	 * @return the {@link KnowledgeBase} instance that was used for generating
+	 *         this case
 	 */
 	public KnowledgeBase getKnowledgeBase();
 
 	/**
+	 * Returns all {@link Question} instances that are contained in this
+	 * {@link CaseObject} instance.
 	 * 
-	 * @return Set
+	 * @return Set all questions contained in this {@link CaseObject}
 	 */
 	public Set<Question> getQuestions();
 
 	/**
+	 * Returns whether the specified {@link QASet} instance is visible in the
+	 * case.
 	 * 
 	 * @param item
-	 *            QASet
-	 * @return Boolean
+	 *            the specified {@link QASet} instance
+	 * @return true, if the {@link QASet} is visible in this case
 	 */
 	public Boolean visibility(QASet item);
 
 	/**
+	 * Returns the {@link Value} of the specified {@link Question} instance,
+	 * that was stored in this case.
 	 * 
-	 * @return Collection
 	 * @param question
-	 *            Question
+	 *            the specified {@link Question} instance
+	 * 
+	 * @return the value of the specified question; <code>null</code> if no
+	 *         value is stored
 	 */
 	public Value getValue(Question question);
 
-    /**
-     * @param question
-     *            Question
-     * @param answer
-     *            Collection
-     */
-	public void addQuestionAndAnswers(Question question, Value value);
 	/**
-	 * returns the 'correct', i.e. user selected diagnoses with status
-	 * 'established'
+	 * Inserts the specified {@link Value} instance that was assigned to the
+	 * specified {@link Question} instance into the case.
 	 * 
-	 * @return Set of Diagnosis
+	 * @param question
+	 *            the specified question
+	 * @param value
+	 *            the specified value
+	 */
+	public void addQuestionAndAnswers(Question question, Value value);
+
+	/**
+	 * Returns a {@link Set} of {@link Solution} instances, that were
+	 * established in this {@link CaseObject} instance.
+	 * 
+	 * @return a set of established solutions
 	 */
 	public Set getCorrectSystemDiagnoses();
 
 	/**
-	 * returns the set of diagnoses, which have status 'established' and are
-	 * neither 'userSelected' nor 'author selected'. In this way we grab all the
-	 * system's 'raw' diagnoses.
+	 * Return a {@link Set} of {@link Solution} instances, that were both
+	 * established and are not tagged as neither 'userSelected' nor 'author
+	 * selected'. That way, we collect all solutions, that are originally
+	 * <i>derived</i> by the system.
 	 * 
-	 * @return Set of Diagnosis
+	 * @return a set of solutions, that are originally derived by the system
 	 */
 	public Set getSystemDiagnoses();
-	public IExaminationBlocks getExaminationBlocks();
-	public void setExaminationBlocks(IExaminationBlocks eb);
 
-	public IMultimedia getMultimedia();
-	public void setMultimedia(IMultimedia newMM);
+	/**
+	 * Returns the meta-information concerning this {@link CaseObject}.
+	 */
+	public DCMarkup getDCMarkup();
 
-	public IAppliedQSets getAppliedQSets();
-	public void setAppliedQSets(IAppliedQSets aq);
 
-	public IContents getContents();
-	public void setContents(IContents c);
-
-    public DCMarkup getDCMarkup();
-    
 	public IAdditionalTrainData getAdditionalTrainData();
+
+	/**
+	 * Do not use this anymore (Trainer related method).
+	 * 
+	 * @deprecated Do not use this anymore.
+	 */
+	@Deprecated
 	public void setAdditionalTrainData(IAdditionalTrainData atd);
 
+	/**
+	 * Do not use this anymore (Trainer related method).
+	 * 
+	 * @deprecated Do not use this anymore.
+	 */
+	@Deprecated
 	public IFUSConfiguration getFUSConfiguration();
+
+	/**
+	 * Do not use this anymore (Trainer related method).
+	 * 
+	 * @deprecated Do not use this anymore.
+	 */
+	@Deprecated
 	public void setFUSConfiguration(IFUSConfiguration fusc);
 
+	/**
+	 * Do not use this anymore (Trainer related method).
+	 * 
+	 * @deprecated Do not use this anymore.
+	 */
+	@Deprecated
 	public ITemplateSession getTemplateSession();
+
+	/**
+	 * Do not use this anymore (Trainer related method).
+	 * 
+	 * @deprecated Do not use this anymore.
+	 */
+	@Deprecated
 	public void setTemplateSession(ITemplateSession ts);
 
+	/**
+	 * Do not use this anymore (Trainer related method).
+	 * 
+	 * @deprecated Do not use this anymore.
+	 */
+	@Deprecated
 	public ISimpleQuestions getMultimediaSimpleQuestions();
+
+	/**
+	 * Do not use this anymore (Trainer related method).
+	 * 
+	 * @deprecated Do not use this anymore.
+	 */
+	@Deprecated
 	public void setMultimediaSimpleQuestions(ISimpleQuestions mmsq);
 
+	/**
+	 * Do not use this anymore (Trainer related method).
+	 * 
+	 * @deprecated Do not use this anymore.
+	 */
+	@Deprecated
 	public ISimpleTextFUSs getSimpleTextFUSs();
+
+	/**
+	 * Do not use this anymore (Trainer related method).
+	 * 
+	 * @deprecated Do not use this anymore.
+	 */
+	@Deprecated
 	public void setSimpleTextFUSs(ISimpleTextFUSs stf);
 
 	/**
-	 * @deprecated do not add additional data until it is clear which representation
-	 *  will be chosen (or re-designed)
+	 * @deprecated do not add additional data until it is clear which
+	 *             representation will be chosen (or re-designed)
 	 */
 	@Deprecated
 	public void addAdditionalData(AdditionalDataKey key, Object data);
+
 	/**
-	 * @deprecated do not add additional data until it is clear which representation
-	 *  will be chosen (or re-designed)
+	 * @deprecated do not add additional data until it is clear which
+	 *             representation will be chosen (or re-designed)
 	 */
 	@Deprecated
 	public Object getAdditionalData(AdditionalDataKey key);
 
+	/**
+	 * Do not use this anymore (Trainer related method).
+	 * 
+	 * @deprecated Do not use this anymore.
+	 */
+	@Deprecated
 	public ITherapyConfiguration getTherapyConfiguration();
+
+	/**
+	 * Do not use this anymore (Trainer related method).
+	 * 
+	 * @deprecated Do not use this anymore.
+	 */
+	@Deprecated
 	public void setTherapyConfiguration(ITherapyConfiguration tc);
 
+	/**
+	 * Do not use this anymore (Trainer related method).
+	 * 
+	 * @deprecated Do not use this anymore.
+	 */
+	@Deprecated
+	public IExaminationBlocks getExaminationBlocks();
+
+	/**
+	 * Do not use this anymore (Trainer related method).
+	 * 
+	 * @deprecated Do not use this anymore.
+	 */
+	@Deprecated
+	public void setExaminationBlocks(IExaminationBlocks eb);
+
+	/**
+	 * Do not use this anymore (Trainer related method).
+	 * 
+	 * @deprecated Do not use this anymore.
+	 */
+	@Deprecated
+	public IMultimedia getMultimedia();
+
+	/**
+	 * Do not use this anymore (Trainer related method).
+	 * 
+	 * @deprecated Do not use this anymore.
+	 */
+	@Deprecated
+	public void setMultimedia(IMultimedia newMM);
+
+	/**
+	 * Do not use this anymore (Trainer related method).
+	 * 
+	 * @deprecated Do not use this anymore.
+	 */
+	@Deprecated
+	public IAppliedQSets getAppliedQSets();
+
+	/**
+	 * Do not use this anymore (Trainer related method).
+	 * 
+	 * @deprecated Do not use this anymore.
+	 */
+	@Deprecated
+	public void setAppliedQSets(IAppliedQSets aq);
+
+	/**
+	 * Do not use this anymore (Trainer related method).
+	 * 
+	 * @deprecated Do not use this anymore.
+	 */
+	@Deprecated
+	public IContents getContents();
+
+	/**
+	 * Do not use this anymore (Trainer related method).
+	 * 
+	 * @deprecated Do not use this anymore.
+	 */
+	@Deprecated
+	public void setContents(IContents c);
 }
