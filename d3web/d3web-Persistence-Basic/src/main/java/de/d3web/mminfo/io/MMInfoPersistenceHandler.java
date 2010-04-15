@@ -23,6 +23,7 @@ package de.d3web.mminfo.io;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -43,10 +44,10 @@ import de.d3web.core.io.utilities.IDObjectComparator;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.MMInfoObject;
@@ -155,13 +156,11 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		float aktvalue=0;
 		
 		List<QContainer> qContainers = kb.getQContainers();
-		List<Solution> diagnoses = kb.getDiagnoses();
-		List<Question> questions = kb.getQuestions();
+		List<Solution> solutions = new ArrayList<Solution>(kb.getSolutions());
+		List<Question> questions = new ArrayList<Question>(kb.getQuestions());
 		Collections.sort(questions, new IDObjectComparator());
 		Collections.sort(qContainers, new IDObjectComparator());
 		List<Choice> answers = catchAnswersFromQuestions(questions);
-
-		
 		
 		Document doc = Util.createEmptyDocument();
 		Element root = doc.createElement("KnowledgeBase");
@@ -176,7 +175,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		root.appendChild(mmiElement);
 		
 		// diagnoses
-		Iterator<Solution> diter = diagnoses.iterator();
+		Iterator<Solution> diter = solutions.iterator();
 		while (diter.hasNext()) {
 			Solution d = diter.next();
 			MMInfoStorage mms = (MMInfoStorage) d.getProperties().getProperty(Property.MMINFO);
