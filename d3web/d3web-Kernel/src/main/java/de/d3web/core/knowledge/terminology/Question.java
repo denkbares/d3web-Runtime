@@ -139,7 +139,7 @@ public abstract class Question extends QASet implements ValuedObject {
 
 	@Override
 	public boolean hasValue(Session session) {
-		return UndefinedValue.isUndefinedValue(session.getValue(this));
+		return !UndefinedValue.isUndefinedValue(session.getValue(this));
 	}
 
 	@Override
