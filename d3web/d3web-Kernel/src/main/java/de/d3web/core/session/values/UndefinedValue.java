@@ -75,8 +75,8 @@ public class UndefinedValue implements Value {
 	 * @author joba
 	 * @date 15.04.2010
 	 */
-	public boolean isUndefined(Value value) {
-		return value.equals(this);
+	public static boolean isUndefinedValue(Value value) {
+		return getInstance().equals(value);
 	}
 
 }
