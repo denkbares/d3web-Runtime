@@ -30,7 +30,7 @@ import de.d3web.core.session.Value;
  */
 public class UndefinedValue implements Value {
 	
-	public static final String UNDEFINED_ID = "Ma_Undefined"; 
+	public static final String UNDEFINED_ID = "Ma_Undefined";
 
 	private static final UndefinedValue instance = new UndefinedValue();
 
@@ -44,7 +44,12 @@ public class UndefinedValue implements Value {
 
 	@Override
 	public Object getValue() {
-		return null;
+		return "";
+	}
+
+	@Override
+	public String toString() {
+		return "Undefined";
 	}
 
 	@Override
@@ -54,6 +59,24 @@ public class UndefinedValue implements Value {
 		} else {
 			return -1;
 		}
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return (o instanceof UndefinedValue);
+	}
+
+	/**
+	 * Returns true, if the specified value is an {@link UndefinedValue}.
+	 * 
+	 * @param value
+	 *            the specified {@link Value} instance
+	 * @return true if the specified value is an {@link UndefinedValue}
+	 * @author joba
+	 * @date 15.04.2010
+	 */
+	public boolean isUndefined(Value value) {
+		return value.equals(this);
 	}
 
 }

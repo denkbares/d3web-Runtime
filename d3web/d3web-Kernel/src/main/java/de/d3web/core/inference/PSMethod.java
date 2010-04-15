@@ -22,55 +22,66 @@ package de.d3web.core.inference;
 
 import java.util.Collection;
 
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 
 /**
- * Interface for all problen-solver methods to implement. Each Session has a
- * list of currently used problem-solvers. They are notified, if some value
- * (question or diagnosis) has changed. Creation date: (28.08.00 17:22:54)
+ * Interface representing the access to problen-solving methods. Each
+ * {@link Session} has a list of currently used problem-solvers. They are
+ * notified, if some value (question or solution) has changed. <br>
+ * Creation date: (28.08.00 17:22:54)
  * 
  * @author joba
  */
 public interface PSMethod {
 
 	public final static String EXTENSIONPOINT_ID = "PSMethod";
-	
+
 	/**
 	 * Every problem-solver has to decide how it calculates the state of a
-	 * diagnosis.
+	 * solution.
 	 * 
 	 * @return the DiagnosisState of the given Diagnosis depending on the given
 	 *         Session
 	 */
 	// TODO: should be moved as blackboard functionality: get merged facts for a
 	// specific problem solver
-	DiagnosisState getState(Session theCase, Solution theDiagnosis);
+	DiagnosisState getState(Session session, Solution solution);
 
 	/**
-	 * initialization method for this PSMethod
+	 * Initialization method for this PSMethod; will be called when a new
+	 * {@link Session} instance is created.
 	 */
 	void init(Session theCase);
 
 	/**
-	 * Indicates whether the problemsolver contributes to
+	 * Indicates whether the problem-solver contributes to
 	 * Session.getDiagnoses(DiangosisState)
+	 * 
+	 * @return true if the problem-solver contributes to the derivation of
+	 *         {@link Solution} instances
 	 */
 	boolean isContributingToResult();
 
 	/**
-	 * propergates the new value of the given NamedObject for the given Session
+	 * Propagates the specified changes of the specified {@link Session} to this
+	 * problem-solver instance.
+	 * 
+	 * @param session
+	 *            the specified {@link Session} instance
+	 * @param changes
+	 *            the changes that should be propagated to this problem-solver
 	 */
-	void propagate(Session theCase, Collection<PropagationEntry> changes);
+	void propagate(Session session, Collection<PropagationEntry> changes);
 
 	/**
-	 * Merges the facts created by this problem solver to the final value. The
-	 * method will receive a non-empty set of facts created by this problem
-	 * solver to merge it to the final value. The method may rely on that every
-	 * fact has a unique source. The method may also rely on that all facts are
-	 * created by their own. Therefore it may cast the facts to the
+	 * Merges the facts created by this problem-solver to the final value. The
+	 * method will receive a non-empty set of facts created by this
+	 * problem-solver to merge it to the final value. The method may rely on
+	 * that every fact has a unique source. The method may also rely on that all
+	 * facts are created by their own. Therefore it may cast the facts to the
 	 * implementation class it uses for creating facts.
 	 * 
 	 * @param facts

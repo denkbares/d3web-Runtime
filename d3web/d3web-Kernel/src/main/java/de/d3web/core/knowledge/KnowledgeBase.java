@@ -61,15 +61,12 @@ import de.d3web.core.session.values.Choice;
  * knowledge, you should use the factories provided with the particular
  * KnowledgeSlices (e.g., Rule, XCLModel).
  * 
- * @author joba, Christian Betz
+ * @author joba
+ * @author Christian Betz
  * @see Solution
  * @see Question
  * @see RuleComplex
  * @see QASet
- */
-/**
- * @author Administrator
- * 
  */
 public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		PropertiesContainer {
@@ -452,18 +449,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		return new ArrayList<KnowledgeSlice>();
 	}
 
-	/**
-	 * <b>Deprecated:</b> use {@link KnowledgeBase}.getSolutions(). <br>
-	 * Returns all {@link Solution} instances stored in this knowledge base. The
-	 * returned list is unmodifiable.
-	 * 
-	 * @return list of all {@link Solution} instances contained in this
-	 *         {@link KnowledgeBase}
-	 */
-	@Deprecated
-	public List<Solution> getDiagnoses() {
-		return getSolutions();
-	}
+
 
 	/**
 	 * Returns all {@link Solution} instances stored in this knowledge base. The
@@ -969,6 +955,8 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 
 	/**
 	 * Not used anymore.
+	 * 
+	 * @deprecated Not used anymore.
 	 */
 	@Deprecated
 	public void setCostUnit(String id, String name) {
@@ -977,6 +965,8 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 
 	/**
 	 * Not used anymore.
+	 * 
+	 * @deprecated Not used anymore.
 	 */
 	@Deprecated
 	public void setCostVerbalization(String id, String name) {
@@ -985,6 +975,8 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 
 	/**
 	 * Not used anymore.
+	 * 
+	 * @deprecated Not used anymore.
 	 */
 	@Deprecated
 	public Set<String> getCostIDs() {
@@ -993,6 +985,8 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 
 	/**
 	 * Not used anymore.
+	 * 
+	 * @deprecated Not used anymore.
 	 */
 	@Deprecated
 	public String getCostUnit(String id) {
@@ -1001,10 +995,24 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 
 	/**
 	 * Not used anymore.
+	 * 
+	 * @deprecated Not used anymore.
 	 */
 	@Deprecated
 	public String getCostVerbalization(String id) {
 		return costVerbalization.get(id);
 	}
 
+	/**
+	 * Returns all {@link Solution} instances stored in this knowledge base. The
+	 * returned list is unmodifiable.
+	 * 
+	 * @return list of all {@link Solution} instances contained in this
+	 *         {@link KnowledgeBase}
+	 * @deprecated Use {@link KnowledgeBase}.getSolutions().
+	 */
+	@Deprecated
+	public List<Solution> getDiagnoses() {
+		return getSolutions();
+	}
 }

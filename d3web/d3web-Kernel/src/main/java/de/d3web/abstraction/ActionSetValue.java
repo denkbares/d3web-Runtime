@@ -30,8 +30,8 @@ import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.CaseObjectSource;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
@@ -99,6 +99,9 @@ public class ActionSetValue extends ActionQuestionSetter implements CaseObjectSo
 					//
 					// ans.setValue(evaluatableValue);
 					tempVal = new DateValue(evaluatableValue.eval(theCase)); // ans;
+				}
+				else if (getValue() instanceof Choice) {
+					tempVal = new ChoiceValue((Choice) getValue());
 				}
 				else {
 					tempVal = (Value) getValue();

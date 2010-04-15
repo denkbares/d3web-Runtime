@@ -45,9 +45,9 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QASet.Reason;
 import de.d3web.core.session.CaseObjectSource;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.SymptomValue;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseActionQuestionSetter;
 import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.blackboard.SessionObject;
@@ -119,9 +119,9 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	}
 
 	@Override
-	public boolean hasChangedValue(Session theCase) {
+	public boolean hasChangedValue(Session session) {
 
-		Hashtable<Question, Object> questionToValuesHash = getActionValues(theCase);
+		Hashtable<Question, Object> questionToValuesHash = getActionValues(session);
 		if ((questionToValuesHash != null) && (!questionToValuesHash.isEmpty())) {
 			Enumeration<Question> keys = questionToValuesHash.keys();
 			while (keys.hasMoreElements()) {
@@ -134,12 +134,12 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 
 				Value newValue = null;
 				if (q instanceof QuestionNum || q instanceof QuestionDate) {
-					newValue = q.getValue(theCase);
+					newValue = session.getValue(q);
 				}
 				else if (q instanceof QuestionOC) {
 					if (this.value != null) {
 						EvaluatableAnswerNumValue evalAnsnumVal = (EvaluatableAnswerNumValue) this.value;
-						Double value = evalAnsnumVal.eval(theCase);
+						Double value = evalAnsnumVal.eval(session);
 						newValue = new NumValue(value);
 					}
 				}

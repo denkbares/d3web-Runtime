@@ -51,4 +51,9 @@ public class NumValue implements Value {
 		return -1;
 	}
 
+	@Override
+	public String toString() {
+		return getValue().toString();
+	}
+
 }
