@@ -372,7 +372,7 @@ public class KnowledgeBaseManagement {
 	 * @return a Diagnosis object or null, if nothing found
 	 */
 	public Solution findDiagnosis(String name) {
-		NamedObject o = findNamedObject(name, knowledgeBase.getDiagnoses());
+		NamedObject o = findNamedObject(name, knowledgeBase.getSolutions());
 		if(o instanceof Solution) return (Solution)o;
 		return null;
 	}
@@ -442,11 +442,11 @@ public class KnowledgeBaseManagement {
 				|| answerText == null) {
 			return null;
 		}
-		for (Choice answer : question.getAllAlternatives()) {
-			if (answerText.equals(answer.getName())
-					|| answerText.equals(answer.getId())
-					|| answer.getId().equals((question.getId() + answerText))) {
-				return answer;
+		for (Choice choice : question.getAllAlternatives()) {
+			if (answerText.equals(choice.getName())
+					|| answerText.equals(choice.getId())
+					|| choice.getId().equals((question.getId() + answerText))) {
+				return choice;
 			}
 		}
 		return null;
@@ -475,6 +475,17 @@ public class KnowledgeBaseManagement {
 			}
 		}
 		return result;
+	}
+
+	public MultipleChoiceValue findMultipleChoiceValue(QuestionMC quesiton, List<String> valueNames) {
+		List<ChoiceValue> choiceValues = new ArrayList<ChoiceValue>(valueNames.size());
+		for (String name : valueNames) {
+			Choice choice = findAnswerChoice(quesiton, name);
+			if (choice != null) {
+				choiceValues.add(new ChoiceValue(choice));
+			}
+		}
+		return new MultipleChoiceValue(choiceValues);
 	}
 
 	public Value findValue(Question question, String valueString) {

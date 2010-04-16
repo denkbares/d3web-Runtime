@@ -81,5 +81,8 @@ public class Unknown implements Value {
 			return -1;
 	}
 	
+	public String getId() {
+		return UNKNOWN_ID;
+	}
 	
 }

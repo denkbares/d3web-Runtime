@@ -46,7 +46,9 @@ public class MultipleChoiceValue implements Value {
 			for (ChoiceValue choiceValue : this.values) {
 				id += choiceValue.getAnswerChoiceID() + ID_SEPARATOR;
 			}
-			id = id.substring(0, id.length() - ID_SEPARATOR.length());
+			if (id.length() > ID_SEPARATOR.length()) {
+				id = id.substring(0, id.length() - ID_SEPARATOR.length());
+			}
 		}
 	}
 
@@ -92,7 +94,7 @@ public class MultipleChoiceValue implements Value {
 	 * @author joba
 	 * @date 08.04.2010
 	 */
-	public boolean contains(ChoiceValue value) {
+	public boolean contains(Value value) {
 		return this.values.contains(value);
 	}
 
