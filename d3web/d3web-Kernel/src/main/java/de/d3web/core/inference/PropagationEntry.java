@@ -22,6 +22,8 @@ package de.d3web.core.inference;
 import java.util.Arrays;
 
 import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.UndefinedValue;
 
 public class PropagationEntry {
 	
@@ -44,7 +46,7 @@ public class PropagationEntry {
 	}
 
 	public boolean hasOldValue() {
-		return oldValue != null;
+		return oldValue != null && !UndefinedValue.isUndefinedValue((Value) oldValue);
 	}
 
 	public Object getNewValue() {
@@ -52,7 +54,7 @@ public class PropagationEntry {
 	}
 
 	public boolean hasNewValue() {
-		return newValue != null;
+		return newValue != null && !UndefinedValue.isUndefinedValue((Value) newValue);
 	}
 	
 	@Override

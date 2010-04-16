@@ -63,7 +63,7 @@ public class SearchModel {
 		} else {
 			costFunction = new DefaultCostFunction();
 			Logger.getLogger(this.getClass().getName()).throwing(
-					  this.getClass().getName(), "Kein Costbenefit-Probleml�ser im Fall. Es wird die Standartkostenfunktion verwendet.", null);
+					  this.getClass().getName(), "Kein Costbenefit-Problemlöser im Fall. Es wird die Standartkostenfunktion verwendet.", null);
 		}
 		for (QContainer qcon: theCase.getKnowledgeBase().getQContainers()) {
 			Node containerNode = new Node(qcon, this);
