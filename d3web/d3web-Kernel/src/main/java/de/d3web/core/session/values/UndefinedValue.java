@@ -79,4 +79,18 @@ public class UndefinedValue implements Value {
 		return getInstance().equals(value);
 	}
 
+	/**
+	 * Returns true, if the specified value is not an {@link UndefinedValue}.
+	 * 
+	 * @param value
+	 *            the specified {@link Value} instance
+	 * @return true if the specified value is not an {@link UndefinedValue};
+	 *         false otherwise
+	 * @author joba
+	 * @date 15.04.2010
+	 */
+	public static boolean isNotUndefinedValue(Value value) {
+		return !getInstance().equals(value);
+	}
+
 }

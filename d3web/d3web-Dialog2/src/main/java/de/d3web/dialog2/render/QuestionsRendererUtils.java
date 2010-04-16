@@ -47,13 +47,14 @@ import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.QuestionZC;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.manage.KnowledgeBaseManagement;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.Choice;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.AnswerNo;
 import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.Unknown;
 import de.d3web.dialog2.basics.layout.AnswerRegion;
 import de.d3web.dialog2.basics.layout.MMInfo;
 import de.d3web.dialog2.basics.layout.QContainerLayout;
@@ -72,15 +73,10 @@ public class QuestionsRendererUtils {
 
 	public static final String QUESTION_BLOCK_ID_PREFIX = "qTableCell_";
 
-	private static boolean currentAnswerIsSet(Value specAns, Question q,
-			Session theCase) {
-		Value answer = q.getValue(theCase);
-		if (answer != null) {
-			if (answer.equals(specAns)) {
-				return true;
-			}
-		}
-		return false;
+	private static boolean currentAnswerIsSet(Value specifiedValue, Question q,
+			Session session) {
+		Value sessionValue = session.getValue(q);
+		return specifiedValue.equals(sessionValue);
 	}
 
 	public static boolean currentAnswersAreBad(List<Object> answeridList,
@@ -113,23 +109,20 @@ public class QuestionsRendererUtils {
 		return null;
 	}
 
-	private static Choice getAnswerChoiceForAnswerID(String answerID,
-			QuestionChoice qCh) {
-		List<Choice> answerList = qCh.getAllAlternatives();
-		for (Choice ans : answerList) {
-			if (ans.getId().equals(answerID)) {
-				return ans;
-			}
-		}
-		return null;
-	}
+	// private static Choice getAnswerChoiceForAnswerID(String answerID,
+	// QuestionChoice qCh) {
+	// List<Choice> answerList = qCh.getAllAlternatives();
+	// for (Choice ans : answerList) {
+	// if (ans.getId().equals(answerID)) {
+	// return ans;
+	// }
+	// }
+	// return null;
+	// }
 
-	private static String getAnswerValue(Question q, Session theCase) {
-		Value answer = q.getValue(theCase);
-		if (answer != null) {
-			return answer.getValue().toString();
-		}
-		return "";
+	private static String getAnswerValue(Question q, Session session) {
+		Value v = session.getValue(q);
+		return v.toString();
 	}
 
 	protected static String getBackgroundClass(Session theCase, Question q) {
@@ -1293,7 +1286,7 @@ public class QuestionsRendererUtils {
 	}
 
 	private static void renderUnknownRadioButton(ResponseWriter writer,
-			UIComponent component, Session theCase, Question q,
+			UIComponent component, Session session, Question q,
 			boolean qHasUnknownAnswer, boolean fastAnswer) throws IOException {
 		writer.startElement("tr", component);
 		writer.startElement("td", component);
@@ -1310,9 +1303,9 @@ public class QuestionsRendererUtils {
 		writer.startElement("td", component);
 		writer.startElement("input", component);
 
-		writer.writeAttribute("id", q.getId() + AnswerUnknown.UNKNOWN_ID, "id");
+		writer.writeAttribute("id", q.getId() + Unknown.UNKNOWN_ID, "id");
 		writer.writeAttribute("type", "radio", "type");
-		writer.writeAttribute("value", AnswerUnknown.UNKNOWN_ID, "value");
+		writer.writeAttribute("value", Unknown.UNKNOWN_ID, "value");
 		writer.writeAttribute("name", q.getId(), "name");
 
 		if (qHasUnknownAnswer) {
@@ -1322,16 +1315,16 @@ public class QuestionsRendererUtils {
 		// Javascript...
 		if (q instanceof QuestionNum || q instanceof QuestionText
 				|| q instanceof QuestionDate) {
-			writeJsDisableTextField(writer, q.getId(), fastAnswer, theCase);
+			writeJsDisableTextField(writer, q.getId(), fastAnswer, session);
 		}
 		else if (q instanceof QuestionMC) {
 			writeJsDeselectAllBut(writer, q.getId(), AnswerUnknown.UNKNOWN_ID,
-					fastAnswer, theCase);
+					fastAnswer, session);
 		}
 		else if (q instanceof QuestionOC) {
 			if (fastAnswer) {
 				writer.writeAttribute("onclick", "saveLastClickedAnswer('" + ""
-						+ "', '" + theCase.getId() + "'); doSubmit()",
+						+ "', '" + session.getId() + "'); doSubmit()",
 						"onclick");
 			}
 
@@ -1345,10 +1338,10 @@ public class QuestionsRendererUtils {
 		writer.startElement("td", component);
 
 		writer.startElement("label", component);
-		writer.writeAttribute("for", q.getId() + AnswerUnknown.UNKNOWN_ID,
+		writer.writeAttribute("for", q.getId() + Unknown.UNKNOWN_ID,
 				"for");
 
-		writer.writeText(DialogRenderUtils.getUnknownAnswerString(q, theCase),
+		writer.writeText(DialogRenderUtils.getUnknownAnswerString(q, session),
 				"value");
 		writer.endElement("label");
 

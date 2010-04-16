@@ -482,23 +482,6 @@ public class D3WebSession implements Session {
 		return this.getPSMethodInstance(context).getState(this, solution);
 	}
 
-	// @Override
-	// public void setValue(ValuedObject o, Value value) {
-	// setValue(o, new Object[] {value});
-	// }
-	
-
-	// @Override
-	// public void setValue(ValuedObject valuedObject, Value value, Rule rule) {
-	// setValue(valuedObject, new Object[] {value}, rule);
-	// }
-
-	// @Override
-	// public void setValue(ValuedObject valuedObject, Value value, Class<?
-	// extends PSMethod> context) {
-	// setValue(valuedObject, new Object[] {value}, context);
-	// }
-
 
 	/**
 	 * Sets the values for a specified question and propagates it to connected

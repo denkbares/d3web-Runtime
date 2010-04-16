@@ -156,7 +156,6 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	/**
 	 * Adds a new reason for quitting this session.
 	 * 
-	 * @see Session#setFinished(boolean f)
 	 * @param reasonForFinishCase
 	 *            the new reason to quit the case
 	 */
