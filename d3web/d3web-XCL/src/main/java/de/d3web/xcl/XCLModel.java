@@ -48,7 +48,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	public final static MethodKind XCLMODEL = new MethodKind("XCLMODEL");
 	
 
-	public static double defaultEstablishedThreshold = 0.8;
+	public static double defaultEstablishedThreshold = 0.99;
 	public static double defaultSuggestedThreshold = 0.3;
 	public static double defaultMinSupport = 0.01;
 
