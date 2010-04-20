@@ -59,8 +59,8 @@ public class JarBinaryRessource implements Resource {
 			while (read != -1 && len!=size) {
 				len+=read;
 				read = inputStream.read(buffer, len, size-len);
-			}
-			if (size!=inputStream.read(buffer)) {
+			} 
+			if (size!=len) {
 				throw new IOException("Cannot read complete entry");
 			}
 			return new ByteArrayInputStream(buffer);
