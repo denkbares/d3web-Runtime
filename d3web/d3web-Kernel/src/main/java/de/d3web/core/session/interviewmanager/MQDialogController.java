@@ -39,6 +39,7 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.indication.inference.PSMethodNextQASet;
@@ -466,8 +467,16 @@ public class MQDialogController implements DialogController {
 				processedQASets.add(c);
 				// go through all container-children
 				for (TerminologyObject to: c.getChildren()) {
-					if (isIndicatedOrHasIndicatedChild((QContainer) to, processedQASets, considerQuestionsAsChildren)) {
-						return true;
+					if (to instanceof QContainer) {
+						if (isIndicatedOrHasIndicatedChild((QContainer) to, processedQASets, considerQuestionsAsChildren)) {
+							return true;
+						}
+					} else {
+						if (to instanceof Question) {
+							if (considerQuestionsAsChildren && somethingIsDoneInContainer(c)) {
+								return true;
+							}
+						}
 					}
 				}
 			}
