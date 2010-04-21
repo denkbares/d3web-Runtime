@@ -44,6 +44,7 @@ import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.persistence.xml.loader.DCMarkupUtilities;
 import de.d3web.persistence.xml.loader.PropertiesUtilities;
@@ -105,7 +106,7 @@ public class CaseObjectWriter implements XMLCodeGenerator {
             Question quest = (Question) questionsIter.next();
             // nur um weitermachen zu können!
 			Value answerColl = caseObject.getValue(quest);
-			if (answerColl != null) {
+			if (UndefinedValue.isNotUndefinedValue(answerColl)) {
                 sb.append("<Question id='" + quest.getId() + "'>\n");
 				Value ans = (Value) answerColl;
 				if (ans instanceof Unknown) {

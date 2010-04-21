@@ -49,13 +49,19 @@ public class DefaultAbortStrategyHandler implements FragmentHandler {
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
+		String maxsteps = element.getAttribute("maxsteps");
+		if (maxsteps.length()!= 0) {
+			return new DefaultAbortStrategy(Integer.parseInt(maxsteps));
+		}
 		return new DefaultAbortStrategy();
 	}
 
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
+		DefaultAbortStrategy strategie = (DefaultAbortStrategy) object;
 		Element element = doc.createElement("abortStrategy");
 		element.setAttribute("name", "DefaultAbortStrategy");
+		element.setAttribute("maxsteps", "" + strategie.getMaxsteps());
 		return element;
 	}
 

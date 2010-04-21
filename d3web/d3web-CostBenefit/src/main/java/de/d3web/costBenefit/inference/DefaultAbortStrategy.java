@@ -32,6 +32,11 @@ public class DefaultAbortStrategy implements AbortStrategy {
 	private long steps;
 
 	private long maxsteps;
+	
+	public long getMaxsteps() {
+		return maxsteps;
+	}
+
 	private SearchModel model;
 
 	@Override
