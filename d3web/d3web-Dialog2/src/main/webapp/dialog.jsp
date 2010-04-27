@@ -40,6 +40,12 @@
 		<script type="text/javascript" src="javascript/tooltip/wz_tooltip.js"></script>
 	<script type="text/javascript" src="javascript/tooltip/tip_balloon.js"></script>
 
+	<%-- DEBUG 
+	<div><h2><jsp:text>debug</jsp:text></h2>
+		<p><jsp:text>method:</jsp:text> <%= request.getMethod() %></p>
+		<p><%= request.getParameterMap().toString() %></p>
+	</div>
+	--%>
 
 	<h:form id="dialogForm" enctype="multipart/form-data">
 		<a4j:region id="outerRegion" selfRendered="true">

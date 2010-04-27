@@ -21,6 +21,7 @@
 package de.d3web.dialog2.controller;
 
 import java.io.File;
+import java.io.Serializable;
 
 import javax.faces.event.ActionEvent;
 
@@ -36,7 +37,9 @@ import de.d3web.dialog2.basics.knowledge.KnowledgeBaseRepository;
 import de.d3web.dialog2.basics.settings.ResourceRepository;
 import de.d3web.dialog2.util.DialogUtils;
 
-public class KBUploadController {
+public class KBUploadController implements Serializable {
+
+	private static final long serialVersionUID = 2742975237726346413L;
 
 	private UploadedFile upFile;
 

@@ -874,8 +874,14 @@ public class QuestionsRendererUtils {
 					List<List<String>> badanswersLists = (List<List<String>>) qChoice
 							.getProperties().getProperty(
 							Property.MC_CONSTRAINTS);
-					MultipleChoiceValue mcans = (MultipleChoiceValue) qChoice.getValue(theCase);
-					List<Choice> alreadySetAnsList = mcans.asChoiceList();
+					
+					Value mcans = qChoice.getValue(theCase);
+					List<Choice> alreadySetAnsList = new ArrayList<Choice>();
+
+					if (mcans instanceof MultipleChoiceValue) {
+						alreadySetAnsList = ((MultipleChoiceValue) mcans).asChoiceList();
+					}
+					
 					// only check if both lists have entries
 					if (badanswersLists != null && badanswersLists.size() > 0
 							&& alreadySetAnsList.size() > 0) {
