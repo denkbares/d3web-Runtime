@@ -19,6 +19,7 @@
  */
 
 package de.d3web.shared.comparators.mc;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,10 +27,12 @@ import java.util.List;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.shared.comparators.IndividualComparator;
 
 /**
  * Creation date: (07.08.2001 02:42:47)
+ * 
  * @author: Norman Brümmer
  */
 public class QuestionComparatorMCIndividual extends QuestionComparatorMC implements IndividualComparator {
@@ -40,6 +43,16 @@ public class QuestionComparatorMCIndividual extends QuestionComparatorMC impleme
 		double compCount = 0;
 		double succCount = 0;
 
+		if (UndefinedValue.isUndefinedValue(ans1)
+				&& UndefinedValue.isUndefinedValue(ans2)) {
+			return 1;
+		}
+		else if (UndefinedValue.isUndefinedValue(ans1)) {
+			return 0;
+		}
+		else if (UndefinedValue.isUndefinedValue(ans2)) {
+			return 0;
+		}
 		List<ChoiceValue> ans1List = (List<ChoiceValue>) ((MultipleChoiceValue) ans1).getValue();
 		List<ChoiceValue> ans2List = (List<ChoiceValue>) ((MultipleChoiceValue) ans2).getValue();
 
