@@ -21,6 +21,7 @@ package de.d3web.core.session.values;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import de.d3web.core.knowledge.terminology.QuestionDate;
@@ -29,7 +30,7 @@ import de.d3web.core.session.Value;
 /**
  * This class stores a date assigned as value to a {@link QuestionDate}.
  * 
- * @author joba (denkbares GmbH)
+ * @author joba (denkbares GmbH), Sebastian Furth
  * @created 07.04.2010
  */
 public class DateValue implements Value {
@@ -59,16 +60,6 @@ public class DateValue implements Value {
 	}
 
 	@Override
-	public int compareTo(Value o) {
-		if (o instanceof DateValue) {
-			return value.compareTo(((DateValue)o).value);
-		}
-		else {
-			return 0;
-		}
-	}
-
-	@Override
 	public String toString() {
 		return value.toString();
 	}
@@ -93,9 +84,31 @@ public class DateValue implements Value {
 		if (value == null) {
 			if (other.value != null)
 				return false;
-		} else if (!value.equals(other.value))
+		}
+		Calendar thisCalendar = Calendar.getInstance();
+		thisCalendar.setTime(value);
+		Calendar otherCalendar = Calendar.getInstance();
+		otherCalendar.setTime(other.value);
+		if (!(thisCalendar.get(Calendar.YEAR) == otherCalendar.get(Calendar.YEAR)))
+			return false;
+		if (!(thisCalendar.get(Calendar.MONTH) == otherCalendar.get(Calendar.MONTH)))
+			return false;
+		if (!(thisCalendar.get(Calendar.DAY_OF_MONTH) == otherCalendar.get(Calendar.DAY_OF_MONTH)))
+			return false;
+		if (!(thisCalendar.get(Calendar.HOUR_OF_DAY) == otherCalendar.get(Calendar.HOUR_OF_DAY)))
+			return false;
+		if (!(thisCalendar.get(Calendar.MINUTE) == otherCalendar.get(Calendar.MINUTE)))
+			return false;
+		if (!(thisCalendar.get(Calendar.SECOND) == otherCalendar.get(Calendar.SECOND)))
 			return false;
 		return true;
+	}
+
+	@Override
+	public int compareTo(Value o) {
+		if (!(o instanceof DateValue))
+			throw new IllegalArgumentException();
+		return value.compareTo(((DateValue)o).value);
 	}
 
 }
