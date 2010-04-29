@@ -7,12 +7,12 @@ import java.util.LinkedList;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.session.Value;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 
 /**
  * The Blackboard manages all dynamic values created within the case and
@@ -223,15 +223,21 @@ public class Blackboard {
 	/**
 	 * Returns the current rating of the diagnosis. The returned rating is the
 	 * merged rating over all problem solvers available. This is a typed
-	 * shortcut for accessing the value {@link Fact} of the {@link Solution}
-	 * and read out its current value.
+	 * shortcut for accessing the value {@link Fact} of the {@link Solution} and
+	 * read out its current value.
 	 * 
 	 * @param solution
 	 *            the solution to take the rating from
 	 * @return the total rating of the solution
 	 */
 	public DiagnosisState getState(Solution solution) {
-		return (DiagnosisState) getValueFact(solution).getValue();
+		Fact valueFact = getValueFact(solution);
+		if (valueFact != null) {
+			return (DiagnosisState) valueFact.getValue();
+		}
+		else {
+			return new DiagnosisState(DiagnosisState.State.UNCLEAR);
+		}
 	}
 
 	/**
@@ -244,10 +250,10 @@ public class Blackboard {
 	 *            the question to take the rating from
 	 * @return the answer of the question
 	 */
-//	public Answer getAnswer(Question question) {
-//		return (Answer) getValueFact(question).getValue();
-//	}
-	
+	// public Answer getAnswer(Question question) {
+	// return (Answer) getValueFact(question).getValue();
+	// }
+
 	public Value getValue(Question question) {
 		return getValueFact(question).getValue();
 	}

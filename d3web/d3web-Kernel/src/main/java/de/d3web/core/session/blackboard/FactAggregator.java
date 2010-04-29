@@ -107,10 +107,10 @@ class FactAggregator {
 		if (facts.size() == 0) return;
 
 		// use the one fact if there is only one
-		if (facts.size() == 1) {
-			this.mergedFact = this.facts.get(0);
-			return;
-		}
+		// if (facts.size() == 1) {
+		// this.mergedFact = this.facts.get(0);
+		// return;
+		// }
 
 		// merge the facts if they are all of the same problem solver
 		// (normal case for solutions)
