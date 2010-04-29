@@ -19,6 +19,7 @@
  */
 
 package de.d3web.shared.comparators.oc;
+
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -27,19 +28,30 @@ import java.util.List;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.Choice;
+import de.d3web.core.session.values.UndefinedValue;
 
 /**
- * Insert the type's description here.
- * Creation date: (03.08.2001 16:06:16)
+ * Insert the type's description here. Creation date: (03.08.2001 16:06:16)
+ * 
  * @author: Norman Brümmer
  */
 public class QuestionComparatorOCScaled extends QuestionComparatorOC {
-	
+
 	private List<Double> values = null;
 	private double constant = 0;
 
 	@Override
 	public double compare(Value ans1, Value ans2) {
+		if (UndefinedValue.isUndefinedValue(ans1)
+				&& UndefinedValue.isUndefinedValue(ans2)) {
+			return 1;
+		}
+		else if (UndefinedValue.isUndefinedValue(ans1)) {
+			return 0;
+		}
+		else if (UndefinedValue.isUndefinedValue(ans2)) {
+			return 0;
+		}
 		if (getQuestion() == null) {
 			return 0;
 		}
@@ -59,13 +71,15 @@ public class QuestionComparatorOCScaled extends QuestionComparatorOC {
 		double val1 = (ansValHash.get(answer1)).doubleValue();
 		double val2 = (ansValHash.get(answer2)).doubleValue();
 		double delta = Math.abs((val2 - val1));
-		return (delta == 0) ? 1 : (delta>=constant) ? 0 : 1 - delta / constant;
+		return (delta == 0) ? 1 : (delta >= constant) ? 0 : 1 - delta / constant;
 	}
 
 	/**
-	 * Insert the method's description here.
-	 * Creation date: (06.08.2001 17:19:46)
-	 * @param newConstant int
+	 * Insert the method's description here. Creation date: (06.08.2001
+	 * 17:19:46)
+	 * 
+	 * @param newConstant
+	 *            int
 	 */
 	public void setConstant(double newConstant) {
 		constant = newConstant;
@@ -80,9 +94,11 @@ public class QuestionComparatorOCScaled extends QuestionComparatorOC {
 	}
 
 	/**
-	 * Insert the method's description here.
-	 * Creation date: (06.08.2001 17:01:47)
-	 * @param newValues java.util.List
+	 * Insert the method's description here. Creation date: (06.08.2001
+	 * 17:01:47)
+	 * 
+	 * @param newValues
+	 *            java.util.List
 	 */
 	public void setValues(double[] newValues) {
 		values = new LinkedList<Double>();
@@ -92,9 +108,11 @@ public class QuestionComparatorOCScaled extends QuestionComparatorOC {
 	}
 
 	/**
-	 * Insert the method's description here.
-	 * Creation date: (06.08.2001 17:01:47)
-	 * @param newValues java.util.List
+	 * Insert the method's description here. Creation date: (06.08.2001
+	 * 17:01:47)
+	 * 
+	 * @param newValues
+	 *            java.util.List
 	 */
 	public void setValues(List<Double> newValues) {
 		values = newValues;
@@ -106,7 +124,8 @@ public class QuestionComparatorOCScaled extends QuestionComparatorOC {
 	}
 
 	protected void checkValues() {
-		// check values (if null or inconsistent create default-values (1,2,3,...))
+		// check values (if null or inconsistent create default-values
+		// (1,2,3,...))
 		List<Choice> alternatives = ((QuestionOC) getQuestion()).getAllAlternatives();
 		if ((values == null) || (values.size() != alternatives.size())) {
 			values = new LinkedList<Double>();
@@ -119,7 +138,7 @@ public class QuestionComparatorOCScaled extends QuestionComparatorOC {
 	protected void checkConstant() {
 		// check constant (if 0, build default-const.)
 		if (constant == 0 && values != null && !values.isEmpty()) {
-			double max = ((Double) values.get(0)).doubleValue();
+			double max = (values.get(0)).doubleValue();
 			double min = max;
 			Iterator<Double> iter = values.iterator();
 			while (iter.hasNext()) {

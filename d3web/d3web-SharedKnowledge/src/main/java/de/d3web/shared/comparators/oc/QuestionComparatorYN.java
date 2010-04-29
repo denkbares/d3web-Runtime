@@ -22,27 +22,23 @@ package de.d3web.shared.comparators.oc;
 
 import de.d3web.core.session.Value;
 import de.d3web.shared.comparators.QuestionComparator;
+
 /**
- * Insert the type's description here.
- * Creation date: (02.08.2001 16:07:44)
+ * Insert the type's description here. Creation date: (02.08.2001 16:07:44)
+ * 
  * @author: Norman Brümmer
  */
 public class QuestionComparatorYN extends QuestionComparator {
 
 	/**
-	 * Insert the method's description here.
-	 * Creation date: (02.08.2001 18:04:08)
+	 * Insert the method's description here. Creation date: (02.08.2001
+	 * 18:04:08)
 	 */
 	public QuestionComparatorYN() {
 	}
 
 	@Override
 	public double compare(Value ans1, Value ans2) {
-		try {
-			return (ans1.equals(ans2)) ? 1 : 0;
-		} catch (Exception x) {
-			System.err.println("Exception while comparing (YN): " + x);
-			return 0;
-		}
+		return (ans1.equals(ans2)) ? 1 : 0;
 	}
 }

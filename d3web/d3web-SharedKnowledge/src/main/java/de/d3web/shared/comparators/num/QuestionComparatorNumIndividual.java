@@ -22,16 +22,28 @@ package de.d3web.shared.comparators.num;
 
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.shared.comparators.IndividualComparator;
 
 /**
  * Creation date: (10.08.2001 22:55:40)
+ * 
  * @author: Norman Brümmer
  */
 public class QuestionComparatorNumIndividual extends QuestionComparatorNum implements IndividualComparator {
 
 	@Override
 	public double compare(Value ans1, Value ans2) {
+		if (UndefinedValue.isUndefinedValue(ans1)
+				&& UndefinedValue.isUndefinedValue(ans2)) {
+			return 1;
+		}
+		else if (UndefinedValue.isUndefinedValue(ans1)) {
+			return 0;
+		}
+		else if (UndefinedValue.isUndefinedValue(ans2)) {
+			return 0;
+		}
 		Double d1 = (Double) ((NumValue) ans1).getValue();
 		Double d2 = (Double) ((NumValue) ans2).getValue();
 		return (d1.equals(d2)) ? 1 : 0;

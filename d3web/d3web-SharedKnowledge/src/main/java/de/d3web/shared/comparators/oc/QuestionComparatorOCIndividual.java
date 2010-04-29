@@ -19,26 +19,22 @@
  */
 
 package de.d3web.shared.comparators.oc;
+
 import de.d3web.core.session.Value;
 import de.d3web.shared.comparators.IndividualComparator;
+
 /**
- * Insert the type's description here.
- * Creation date: (03.08.2001 14:28:19)
+ * Insert the type's description here. Creation date: (03.08.2001 14:28:19)
+ * 
  * @author: Norman Brümmer
  */
 public class QuestionComparatorOCIndividual extends QuestionComparatorOC implements IndividualComparator {
 
 	@Override
 	public double compare(Value ans1, Value ans2) {
-		try {
-			if (ans1.equals(ans2)) {
-				return 1;
-			}
-		} catch (Exception x) {
-			System.err.println("OCindivCompare: answer missing");
-			return 0;
+		if (ans1.equals(ans2)) {
+			return 1;
 		}
-
 		return 0;
 
 	}

@@ -28,6 +28,7 @@ import java.util.ListIterator;
 
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.UndefinedValue;
 
 /**
  * Insert the type's description here. Creation date: (06.08.2001 18:45:02)
@@ -104,6 +105,16 @@ public class QuestionComparatorNumSection extends QuestionComparatorNum {
 
 	@Override
 	public double compare(Value ans1, Value ans2) {
+		if (UndefinedValue.isUndefinedValue(ans1)
+				&& UndefinedValue.isUndefinedValue(ans2)) {
+			return 1;
+		}
+		else if (UndefinedValue.isUndefinedValue(ans1)) {
+			return 0;
+		}
+		else if (UndefinedValue.isUndefinedValue(ans2)) {
+			return 0;
+		}
 		Double x1 = (Double) ((NumValue) ans1).getValue();
 		Double x2 = (Double) ((NumValue) ans2).getValue();
 

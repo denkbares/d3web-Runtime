@@ -24,33 +24,40 @@ import java.util.Iterator;
 
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.Choice;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.shared.comparators.GroupedComparatorSymmetric;
 import de.d3web.shared.comparators.PairRelation;
 
 public class QuestionComparatorOCGroupedSymmetric extends
-		QuestionComparatorOCGrouped implements GroupedComparatorSymmetric{
-	
+		QuestionComparatorOCGrouped implements GroupedComparatorSymmetric {
+
 	@Override
 	public double compare(Value answers1, Value answers2) {
-		try {
-			Choice ans1 = (Choice) answers1.getValue();
-			Choice ans2 = (Choice) answers2.getValue();
-
-			if (ans1.equals(ans2)) {
-				return 1;
-			}
-
-			Iterator<PairRelation> iter = pairRelations.iterator();
-			while (iter.hasNext()) {
-				PairRelation r = (PairRelation) iter.next();
-				if (r.containsAnswer(ans1) && r.containsAnswer(ans2)) {
-					return r.getValue();
-				}
-			}
-		} catch (Exception x) {
-			System.err.println("OCGrouped: Exception while comparing: " + x);
+		if (UndefinedValue.isUndefinedValue(answers1)
+				&& UndefinedValue.isUndefinedValue(answers2)) {
+			return 1;
+		}
+		else if (UndefinedValue.isUndefinedValue(answers1)) {
 			return 0;
 		}
+		else if (UndefinedValue.isUndefinedValue(answers2)) {
+			return 0;
+		}
+		Choice ans1 = (Choice) answers1.getValue();
+		Choice ans2 = (Choice) answers2.getValue();
+
+		if (ans1.equals(ans2)) {
+			return 1;
+		}
+
+		Iterator<PairRelation> iter = pairRelations.iterator();
+		while (iter.hasNext()) {
+			PairRelation r = iter.next();
+			if (r.containsAnswer(ans1) && r.containsAnswer(ans2)) {
+				return r.getValue();
+			}
+		}
+
 		return 0;
 	}
 }

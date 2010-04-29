@@ -19,25 +19,23 @@
  */
 
 package de.d3web.shared.comparators.text;
+
 import de.d3web.core.session.Value;
 import de.d3web.shared.comparators.IndividualComparator;
+
 /**
- * Insert the type's description here.
- * Creation date: (27.02.2002 13:46:53)
+ * Insert the type's description here. Creation date: (27.02.2002 13:46:53)
+ * 
  * @author: Norman Brümmer
  */
 public class QuestionComparatorTextIndividual
-	extends de.d3web.shared.comparators.QuestionComparator
-	implements IndividualComparator {
+		extends de.d3web.shared.comparators.QuestionComparator
+		implements IndividualComparator {
 
 	@Override
 	public double compare(Value answers1, Value answers2) {
-		try {
-			if (answers1.equals(answers2)) {
-				return 1;
-			}
-		} catch (Exception x) {
-			return 0;
+		if (answers1.equals(answers2)) {
+			return 1;
 		}
 		return 0;
 	}
