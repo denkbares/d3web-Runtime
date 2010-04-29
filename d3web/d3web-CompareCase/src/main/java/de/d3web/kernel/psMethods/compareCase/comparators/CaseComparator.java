@@ -35,8 +35,8 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.QuestionYN;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.kernel.psMethods.compareCase.CompareObjectsHashContainer;
 import de.d3web.kernel.psMethods.compareCase.tests.utils.CaseObjectTestDummy;
@@ -60,8 +60,6 @@ import de.d3web.shared.comparators.text.QuestionComparatorTextIndividual;
  * @author: Norman Brümmer
  */
 public class CaseComparator {
-
-	private static final AnswerUnknown UNKNOWN_ANSWER = new AnswerUnknown();
 
 	private static final double DEFAULT_UNKNOWN_FACTOR = 0.1;
 
@@ -95,9 +93,9 @@ public class CaseComparator {
 		double reachedPoints = 0;
 		double maxPoints = 0;
 
-		Iterator queryQuestionIter = queryCase.getQuestions().iterator();
+		Iterator<Question> queryQuestionIter = queryCase.getQuestions().iterator();
 		while (queryQuestionIter.hasNext()) {
-			Question queryQuestion = (Question) queryQuestionIter.next();
+			Question queryQuestion = queryQuestionIter.next();
 			QuestionComparator qcomp = getQuestionComparator(queryQuestion);
 			double weight = getWeight(queryCase, queryQuestion);
 			Value queryValue = queryCase.getValue(queryQuestion);
@@ -105,7 +103,7 @@ public class CaseComparator {
 			double abnormality = 1;
 			KnowledgeSlice abnorm = queryQuestion.getKnowledge(
 					PSContextFinder.getInstance()
-							.findPSContext(Abnormality.class),
+					.findPSContext(Abnormality.class),
 					PSMethodShared.SHARED_ABNORMALITY);
 			if (abnorm != null) {
 				abnormality = calcAbnormality((Abnormality) abnorm, storedValue);
@@ -153,9 +151,9 @@ public class CaseComparator {
 		// look for not considered stored questions if BOTH_FILL_UNKNOWN is the
 		// CompareMode
 		if (cmode.equals(CompareMode.BOTH_FILL_UNKNOWN)) {
-			Iterator storedQuestionsIter = storedCase.getQuestions().iterator();
+			Iterator<Question> storedQuestionsIter = storedCase.getQuestions().iterator();
 			while (storedQuestionsIter.hasNext()) {
-				Question storedQuestion = (Question) storedQuestionsIter.next();
+				Question storedQuestion = storedQuestionsIter.next();
 				QuestionComparator qcomp = getQuestionComparator(storedQuestion);
 				Value storedValue = storedCase.getValue(storedQuestion);
 				if (!queryCase.getQuestions().contains(storedQuestion)
@@ -178,11 +176,11 @@ public class CaseComparator {
 		return reachedPoints / maxPoints;
 	}
 
-	public static List compareCases(CompareMode cmode, CaseObject queryCase, CaseObject storedCase) {
-		List ret = new LinkedList();
-		Iterator queryQuestionIter = queryCase.getQuestions().iterator();
+	public static List<ComparatorResult> compareCases(CompareMode cmode, CaseObject queryCase, CaseObject storedCase) {
+		List<ComparatorResult> ret = new LinkedList<ComparatorResult>();
+		Iterator<Question> queryQuestionIter = queryCase.getQuestions().iterator();
 		while (storedCase != null && queryQuestionIter.hasNext()) {
-			Question queryQuestion = (Question) queryQuestionIter.next();
+			Question queryQuestion = queryQuestionIter.next();
 
 			Value queryValue = queryCase.getValue(queryQuestion);
 			Value storedValue = storedCase.getValue(queryQuestion);
@@ -230,9 +228,9 @@ public class CaseComparator {
 		// CompareMode
 		if (cmode.equals(CompareMode.BOTH_FILL_UNKNOWN)) {
 			if (storedCase != null) {
-				Iterator storedQuestionsIter = storedCase.getQuestions().iterator();
+				Iterator<Question> storedQuestionsIter = storedCase.getQuestions().iterator();
 				while (storedQuestionsIter.hasNext()) {
-					Question storedQuestion = (Question) storedQuestionsIter.next();
+					Question storedQuestion = storedQuestionsIter.next();
 					Value storedAnswers = storedCase.getValue(storedQuestion);
 					if (!queryCase.getQuestions().contains(storedQuestion)
 							&& !(storedAnswers instanceof Unknown)) {
@@ -248,7 +246,7 @@ public class CaseComparator {
 	}
 
 	private static void addDefaultComparisonResult(CaseObject storedCase, Question queryQuestion,
-			Value queryAnswers, Value storedAnswers, List ret) {
+			Value queryAnswers, Value storedAnswers, List<ComparatorResult> ret) {
 
 		int weight = getWeight(storedCase, queryQuestion);
 		QuestionComparator qcomp = getQuestionComparator(queryQuestion);
@@ -274,7 +272,7 @@ public class CaseComparator {
 			}
 			else {
 
-				Collection knowledge = null;
+				Collection<KnowledgeSlice> knowledge = null;
 				if (queryQuestion != null) {
 					knowledge = queryQuestion.getKnowledgeBase().getAllKnowledgeSlicesFor(
 							PSMethodShared.class);
@@ -282,7 +280,7 @@ public class CaseComparator {
 
 				boolean found = false;
 				if ((knowledge != null) && !knowledge.isEmpty()) {
-					Iterator iter = knowledge.iterator();
+					Iterator<KnowledgeSlice> iter = knowledge.iterator();
 					while (!found && iter.hasNext()) {
 						Object o = iter.next();
 						if (o instanceof KnowledgeBaseUnknownSimilarity) {
@@ -322,7 +320,7 @@ public class CaseComparator {
 		double weightedSimilarity = 0;
 		KnowledgeSlice abnorm = question.getKnowledge(
 				PSContextFinder.getInstance().findPSContext(
-						Abnormality.class), PSMethodShared.SHARED_ABNORMALITY);
+				Abnormality.class), PSMethodShared.SHARED_ABNORMALITY);
 		if (abnorm != null) {
 			abnormality = calcAbnormality((Abnormality) abnorm, storedAnswers);
 		}
@@ -336,7 +334,7 @@ public class CaseComparator {
 		return weightedSimilarity * abnormality;
 	}
 
-	private static void compareQuestion(CompareMode cmode, CaseObject storedCase, List ret,
+	private static void compareQuestion(CompareMode cmode, CaseObject storedCase, List<ComparatorResult> ret,
 			Object[] queryQuestionAndAnswers, Object[] storedQuestionAndAnswers) {
 
 		Question question = (Question) queryQuestionAndAnswers[0];
@@ -345,7 +343,7 @@ public class CaseComparator {
 		double abnormality = 1;
 		KnowledgeSlice abnorm = question.getKnowledge(
 				PSContextFinder.getInstance().findPSContext(
-						Abnormality.class), PSMethodShared.SHARED_ABNORMALITY);
+				Abnormality.class), PSMethodShared.SHARED_ABNORMALITY);
 		if (abnorm != null) {
 			abnormality = calcAbnormality((Abnormality) abnorm, storedValue);
 		}
@@ -367,13 +365,8 @@ public class CaseComparator {
 		ret.add(result);
 	}
 
-	private static boolean isUnknown(Collection answers) {
-		return (answers == null) || (answers.isEmpty())
-				|| answers.contains(UNKNOWN_ANSWER);
-	}
-
 	public static QuestionComparator getQuestionComparator(Question q) {
-		Object o = q.getKnowledge(PSContextFinder.getInstance().findPSContext(
+		KnowledgeSlice o = q.getKnowledge(PSContextFinder.getInstance().findPSContext(
 				QuestionComparator.class), PSMethodShared.SHARED_SIMILARITY);
 		QuestionComparator qcomp = null;
 		if (o == null) {
@@ -381,12 +374,7 @@ public class CaseComparator {
 			qcomp = addDefaultKnowledge(q);
 		}
 		else {
-			try {
-				qcomp = (QuestionComparator) ((List) o).get(0);
-			}
-			catch (IndexOutOfBoundsException e) {
-				return addDefaultKnowledge(q);
-			}
+			qcomp = (QuestionComparator) o;
 		}
 		return qcomp;
 	}
@@ -430,7 +418,7 @@ public class CaseComparator {
 		else {
 			qWeight = (Weight) o;
 		}
-		Collection establishedDiagnoses = getEstablishedDiagnoses(aCase);
+		Collection<Solution> establishedDiagnoses = getEstablishedDiagnoses(aCase);
 
 		int weight = qWeight.getMaxDiagnosisWeightValueFromDiagnoses(establishedDiagnoses);
 		if (weight == -1) {
@@ -452,12 +440,12 @@ public class CaseComparator {
 		return w;
 	}
 
-	private static Collection getEstablishedDiagnoses(CaseObject aCase) {
-		List establishedDiagnoses = new LinkedList();
-		Iterator iter = aCase.getSolutions().iterator();
+	private static Collection<Solution> getEstablishedDiagnoses(CaseObject aCase) {
+		List<Solution> establishedDiagnoses = new LinkedList<Solution>();
+		Iterator<CaseObject.Solution> iter = aCase.getSolutions().iterator();
 		while (iter.hasNext()) {
-			CaseObject.Solution sol = (CaseObject.Solution) iter.next();
-			if (DiagnosisState.ESTABLISHED.equals(sol.getState())) {
+			CaseObject.Solution sol = iter.next();
+			if (new DiagnosisState(DiagnosisState.State.ESTABLISHED).equals(sol.getState())) {
 				establishedDiagnoses.add(sol.getDiagnosis());
 			}
 		}
