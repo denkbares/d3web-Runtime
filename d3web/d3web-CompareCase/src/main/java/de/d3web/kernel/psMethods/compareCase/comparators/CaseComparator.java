@@ -103,8 +103,10 @@ public class CaseComparator {
 			Value queryValue = queryCase.getValue(queryQuestion);
 			Value storedValue = storedCase.getValue(queryQuestion);
 			double abnormality = 1;
-			KnowledgeSlice abnorm = queryQuestion.getKnowledge(PSContextFinder.getInstance()
-					.findPSContext(Abnormality.class), PSMethodShared.SHARED_ABNORMALITY);
+			KnowledgeSlice abnorm = queryQuestion.getKnowledge(
+					PSContextFinder.getInstance()
+							.findPSContext(Abnormality.class),
+					PSMethodShared.SHARED_ABNORMALITY);
 			if (abnorm != null) {
 				abnormality = calcAbnormality((Abnormality) abnorm, storedValue);
 			}
@@ -115,10 +117,12 @@ public class CaseComparator {
 					if (!(storedValue instanceof Unknown)) {
 						// normal comparison
 						reachedPoints += compareQuestionForClustering(cmode, queryCase,
-								new Object[]{queryQuestion, queryValue}, new Object[]{
-										queryQuestion, storedValue});
+								new Object[] {
+								queryQuestion, queryValue }, new Object[] {
+								queryQuestion, storedValue });
 						maxPoints += weight * abnormality;
-					} else {
+					}
+					else {
 						if (cmode.covers(CompareMode.COMPARE_CASE_FILL_UNKNOWN)) {
 							// create default unknown comparisonResult
 							reachedPoints += getDefaultComparisonResultForClustering();
@@ -126,14 +130,16 @@ public class CaseComparator {
 							maxPoints += weight * unkSim;
 						}
 					}
-				} else {
+				}
+				else {
 					if (cmode.covers(CompareMode.CURRENT_CASE_FILL_UNKNOWN)) {
 						if (!(storedValue instanceof Unknown)) {
 							// create default unknown comparisonResult
 							reachedPoints += getDefaultComparisonResultForClustering();
 							double unkSim = getUnknownFactor(queryQuestion, qcomp);
 							maxPoints += weight * unkSim;
-						} else if (cmode.covers(CompareMode.BOTH_FILL_UNKNOWN)) {
+						}
+						else if (cmode.covers(CompareMode.BOTH_FILL_UNKNOWN)) {
 							// create default unknown comparisonResult
 							reachedPoints += getDefaultComparisonResultForClustering();
 							double unkSim = getUnknownFactor(queryQuestion, qcomp);
@@ -164,7 +170,8 @@ public class CaseComparator {
 		}
 
 		if (reachedPoints > maxPoints) {
-			System.err.println("reached > max!  : query: " + queryCase.getId() + " stored: "
+			System.err.println("reached > max!  : query: " + queryCase.getId()
+					+ " stored: "
 					+ storedCase.getId());
 		}
 
@@ -185,10 +192,12 @@ public class CaseComparator {
 				if (!(queryValue instanceof Unknown)) {
 					if (!(storedValue instanceof Unknown)) {
 						// normal comparison
-						compareQuestion(cmode, queryCase, ret, new Object[]{queryQuestion,
+						compareQuestion(cmode, queryCase, ret, new Object[] {
+								queryQuestion,
 								queryValue }, new Object[] {
 								queryQuestion, storedValue });
-					} else {
+					}
+					else {
 						if (cmode.covers(CompareMode.COMPARE_CASE_FILL_UNKNOWN)) {
 							// create default unknown comparisonResult
 							addDefaultComparisonResult(storedCase, queryQuestion,
@@ -196,7 +205,8 @@ public class CaseComparator {
 									storedValue, ret);
 						}
 					}
-				} else {
+				}
+				else {
 					if (cmode.covers(CompareMode.CURRENT_CASE_FILL_UNKNOWN)) {
 						if (!(storedValue instanceof Unknown)) {
 							// create default unknown comparisonResult
@@ -204,7 +214,8 @@ public class CaseComparator {
 									queryValue,
 									storedValue, ret);
 
-						} else if (cmode.covers(CompareMode.BOTH_FILL_UNKNOWN)) {
+						}
+						else if (cmode.covers(CompareMode.BOTH_FILL_UNKNOWN)) {
 							// create default unknown comparisonResult
 							addDefaultComparisonResult(storedCase, queryQuestion,
 									queryValue,
@@ -226,7 +237,8 @@ public class CaseComparator {
 					if (!queryCase.getQuestions().contains(storedQuestion)
 							&& !(storedAnswers instanceof Unknown)) {
 						// create default unknown comparisonResult
-						addDefaultComparisonResult(storedCase, storedQuestion, null, storedAnswers,
+						addDefaultComparisonResult(storedCase, storedQuestion, null,
+								storedAnswers,
 								ret);
 					}
 				}
@@ -259,7 +271,8 @@ public class CaseComparator {
 		if (unkSim == -1) {
 			if (isKnowledgeBaseUnknownSimilarityCached) {
 				unkSim = knowledgeBaseUnknownSimilarity.getSimilarity();
-			} else {
+			}
+			else {
 
 				Collection knowledge = null;
 				if (queryQuestion != null) {
@@ -307,8 +320,9 @@ public class CaseComparator {
 		double weight = getWeight(storedCase, question);
 		double abnormality = 1;
 		double weightedSimilarity = 0;
-		KnowledgeSlice abnorm = question.getKnowledge(PSContextFinder.getInstance().findPSContext(
-				Abnormality.class), PSMethodShared.SHARED_ABNORMALITY);
+		KnowledgeSlice abnorm = question.getKnowledge(
+				PSContextFinder.getInstance().findPSContext(
+						Abnormality.class), PSMethodShared.SHARED_ABNORMALITY);
 		if (abnorm != null) {
 			abnormality = calcAbnormality((Abnormality) abnorm, storedAnswers);
 		}
@@ -329,8 +343,9 @@ public class CaseComparator {
 		Value queryValue = (Value) queryQuestionAndAnswers[1];
 		Value storedValue = (Value) storedQuestionAndAnswers[1];
 		double abnormality = 1;
-		KnowledgeSlice abnorm = question.getKnowledge(PSContextFinder.getInstance().findPSContext(
-				Abnormality.class), PSMethodShared.SHARED_ABNORMALITY);
+		KnowledgeSlice abnorm = question.getKnowledge(
+				PSContextFinder.getInstance().findPSContext(
+						Abnormality.class), PSMethodShared.SHARED_ABNORMALITY);
 		if (abnorm != null) {
 			abnormality = calcAbnormality((Abnormality) abnorm, storedValue);
 		}
@@ -342,7 +357,8 @@ public class CaseComparator {
 			result.setSimilarity(qcomp.compare(storedValue, queryValue));
 			result.setMaxPoints(weight);
 			result.setReachedPoints(weight * result.getSimilarity());
-		} else {
+		}
+		else {
 			result = createUnknownSimResult(question, weight, qcomp);
 		}
 		result.setQueryQuestionAndAnswers(question, queryValue);
@@ -352,7 +368,8 @@ public class CaseComparator {
 	}
 
 	private static boolean isUnknown(Collection answers) {
-		return (answers == null) || (answers.isEmpty()) || answers.contains(UNKNOWN_ANSWER);
+		return (answers == null) || (answers.isEmpty())
+				|| answers.contains(UNKNOWN_ANSWER);
 	}
 
 	public static QuestionComparator getQuestionComparator(Question q) {
@@ -362,29 +379,35 @@ public class CaseComparator {
 		if (o == null) {
 			// default similarity !
 			qcomp = addDefaultKnowledge(q);
-		} else {
-			try{
-			qcomp = (QuestionComparator) ((List) o).get(0);
-			} catch (IndexOutOfBoundsException e){
+		}
+		else {
+			try {
+				qcomp = (QuestionComparator) ((List) o).get(0);
+			}
+			catch (IndexOutOfBoundsException e) {
 				return addDefaultKnowledge(q);
 			}
 		}
 		return qcomp;
 	}
-	
+
 	public static QuestionComparator addDefaultKnowledge(Question q) {
 
 		QuestionComparator qc = null;
 
 		if (q instanceof QuestionYN) {
 			qc = new QuestionComparatorYN();
-		} else if (q instanceof QuestionOC) {
+		}
+		else if (q instanceof QuestionOC) {
 			qc = new QuestionComparatorOCIndividual();
-		} else if (q instanceof QuestionMC) {
+		}
+		else if (q instanceof QuestionMC) {
 			qc = new QuestionComparatorMCIndividual();
-		} else if (q instanceof QuestionNum) {
+		}
+		else if (q instanceof QuestionNum) {
 			qc = new QuestionComparatorNumDivision();
-		} else if (q instanceof QuestionText) {
+		}
+		else if (q instanceof QuestionText) {
 			qc = new QuestionComparatorTextIndividual();
 		}
 
@@ -395,18 +418,17 @@ public class CaseComparator {
 	}
 
 	public static int getWeight(CaseObject aCase, Question q) {
-		Object o = q.getKnowledge(PSContextFinder.getInstance().findPSContext(Weight.class),
+		KnowledgeSlice o = q.getKnowledge(PSContextFinder.getInstance().findPSContext(
+				Weight.class),
 				PSMethodShared.SHARED_WEIGHT);
 
 		Weight qWeight = null;
 		if (o == null) {
 			// default knowledge !
 			qWeight = addDefaultWeight(q);
-		} else {
-			qWeight = (Weight) ((List) o).get(0);
-			if (qWeight == null) {
-				qWeight = addDefaultWeight(q);
-			}
+		}
+		else {
+			qWeight = (Weight) o;
 		}
 		Collection establishedDiagnoses = getEstablishedDiagnoses(aCase);
 
@@ -416,7 +438,7 @@ public class CaseComparator {
 		}
 		return weight;
 	}
-	
+
 	private static Weight addDefaultWeight(Question q) {
 
 		Weight w = new Weight();
