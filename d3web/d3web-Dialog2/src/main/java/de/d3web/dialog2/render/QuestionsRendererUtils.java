@@ -54,6 +54,7 @@ import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.dialog2.basics.layout.AnswerRegion;
 import de.d3web.dialog2.basics.layout.MMInfo;
@@ -122,7 +123,12 @@ public class QuestionsRendererUtils {
 
 	private static String getAnswerValue(Question q, Session session) {
 		Value v = session.getValue(q);
-		return v.toString();
+		if (UndefinedValue.isNotUndefinedValue(v)) {
+			return v.toString();
+		}
+		else {
+			return "";
+		}
 	}
 
 	protected static String getBackgroundClass(Session theCase, Question q) {
@@ -874,14 +880,14 @@ public class QuestionsRendererUtils {
 					List<List<String>> badanswersLists = (List<List<String>>) qChoice
 							.getProperties().getProperty(
 							Property.MC_CONSTRAINTS);
-					
+
 					Value mcans = qChoice.getValue(theCase);
 					List<Choice> alreadySetAnsList = new ArrayList<Choice>();
 
 					if (mcans instanceof MultipleChoiceValue) {
 						alreadySetAnsList = ((MultipleChoiceValue) mcans).asChoiceList();
 					}
-					
+
 					// only check if both lists have entries
 					if (badanswersLists != null && badanswersLists.size() > 0
 							&& alreadySetAnsList.size() > 0) {
