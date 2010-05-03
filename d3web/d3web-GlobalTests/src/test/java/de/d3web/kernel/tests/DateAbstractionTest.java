@@ -23,13 +23,18 @@ package de.d3web.kernel.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import de.d3web.core.inference.condition.CondAnd;
+import de.d3web.core.inference.condition.CondDateAfter;
+import de.d3web.core.inference.condition.CondDateBefore;
 import de.d3web.core.inference.condition.CondDateEqual;
+import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionDate;
@@ -53,6 +58,9 @@ import de.d3web.plugin.test.InitPluginManager;
  * 
  * <b>Questions</b>
  * Date [date]
+ * Is Germany separated? [oc] <abstract>
+ * - Yes
+ * - No
  * Event [oc] <abstract>
  * - Fall of the Berlin Wall
  * - German unity
@@ -61,6 +69,8 @@ import de.d3web.plugin.test.InitPluginManager;
  * 
  * Date = 1989-11-09 => Event = Fall of the Berlin Wall
  * Date = 1990-10-03 => Event = German unity
+ * Date > 1949-10-07 AND Date < 1990-10-03 => Germany is separated = Yes
+ * Date < 1949-10-07 OR Date > 1990-10-03 => Germany is separated = No
  * 
  * 
  * @author Sebastian Furth
@@ -84,6 +94,11 @@ public class DateAbstractionTest {
 		
 		kbm.createQuestionDate("Date", kbm.getKnowledgeBase().getRootQASet());
 		
+		String[] separationAlternatives = {"Yes", "No"};
+		Question separation = 
+			kbm.createQuestionOC("Is Germany separated?", kbm.getKnowledgeBase().getRootQASet(), separationAlternatives);
+		separation.getProperties().setProperty(Property.ABSTRACTION_QUESTION, Boolean.TRUE);
+		
 		String[] eventAlternatives = {"Fall of the Berlin Wall", "German unity"};
 		Question event = kbm.createQuestionOC("Event", kbm.getKnowledgeBase().getRootQASet(), eventAlternatives);
 		event.getProperties().setProperty(Property.ABSTRACTION_QUESTION, Boolean.TRUE);
@@ -94,6 +109,7 @@ public class DateAbstractionTest {
 		Calendar calendar = GregorianCalendar.getInstance();
 		QuestionDate date =  (QuestionDate) kbm.findQuestion("Date");
 		Question event = kbm.findQuestion("Event");
+		Question separation = kbm.findQuestion("Is Germany separated?");
 		
 		// Date = 1989-11-09 => Event = Fall of the Berlin Wall
 		calendar.set(1989, Calendar.NOVEMBER, 9, 0, 0, 0);
@@ -108,6 +124,26 @@ public class DateAbstractionTest {
 		Condition germanUnityCondition = new CondDateEqual(date, germanUnityDate);
 		Value germanUnity = kbm.findValue(event, "German unity");
 		RuleFactory.createSetValueRule(kbm.createRuleID(), event, germanUnity, germanUnityCondition);
+		
+		// Date > 1949-10-07 AND Date < 1990-10-03 => Germany is separated = Yes
+		calendar.set(1949, Calendar.OCTOBER, 7, 0, 0, 0);
+		DateValue beginSeparationDate = new DateValue(calendar.getTime());
+		Condition beginSeparationCondition = new CondDateAfter(date, beginSeparationDate);
+		
+		calendar.set(1990, Calendar.OCTOBER, 3, 0, 0, 0);
+		DateValue endSeparationDate = new DateValue(calendar.getTime());
+		Condition endSeparationCondition = new CondDateBefore(date, endSeparationDate);
+		
+		Condition separationAndCondition = new CondAnd(Arrays.asList(beginSeparationCondition, endSeparationCondition));
+		Value yes = kbm.findValue(separation, "Yes");
+		RuleFactory.createSetValueRule(kbm.createRuleID(), separation, yes, separationAndCondition);
+		
+		// Date < 1949-10-07 OR Date > 1990-10-03 => Germany is separated = No
+		Condition preSeparationCondition = new CondDateBefore(date, beginSeparationDate);
+		Condition postSeparationCondition = new CondDateAfter(date, endSeparationDate);
+		Condition unityOrCondition = new CondOr(Arrays.asList(preSeparationCondition, postSeparationCondition));
+		Value no = kbm.findValue(separation, "No");
+		RuleFactory.createSetValueRule(kbm.createRuleID(), separation, no, unityOrCondition);
 	}
 	
 	@Test
@@ -116,6 +152,16 @@ public class DateAbstractionTest {
 		// Question 'Date'
 		Question date = kbm.findQuestion("Date");
 		assertNotNull("Question 'Date' isn't in the Knowledgebase.", date);
+		
+		// Question 'Is Germany separated?'
+		Question separation = kbm.findQuestion("Is Germany separated?");
+		assertNotNull("Question 'Is Germany separated?' isn't in the Knowledgebase.", separation);
+		
+		// Values of 'Is Germany separated?'
+		Value yes = kbm.findValue(separation, "Yes");
+		assertNotNull("Value 'Yes' of Question 'Is Germany separated?' isn't in the Knowledgebase", yes);
+		Value no = kbm.findValue(separation, "No");
+		assertNotNull("Value 'No' of Question 'Is Germany separated?' isn't in the Knowledgebase", no);
 		
 		// Question 'Event'
 		Question event = kbm.findQuestion("Event");
@@ -131,12 +177,59 @@ public class DateAbstractionTest {
 	@Test
 	public void testAbstractionProperty() {
 		
+		// 'Is Germany separated?' <abstract> ?
+		Question separation = kbm.findQuestion("Is Germany separated?");
+		Boolean separationAbstractionProperty = (Boolean) separation.getProperties().getProperty(Property.ABSTRACTION_QUESTION);
+		assertEquals("Question 'Is Germany separated?' isn't abstract.", Boolean.TRUE, separationAbstractionProperty);
+		
 		// Event <abstract> ?
 		Question event = kbm.findQuestion("Event");
 		Boolean eventAbstractionProperty = (Boolean) event.getProperties().getProperty(Property.ABSTRACTION_QUESTION);
 		assertEquals("Question 'BMI' isn't abstract.", Boolean.TRUE, eventAbstractionProperty);
 	}
-
+	
+	@Test
+	public void testCondDateAfter() {
+		Calendar calendar = GregorianCalendar.getInstance();
+		Question date = kbm.findQuestion("Date");
+		Question separation = kbm.findQuestion("Is Germany separated?");
+		
+		// SET 'Date' = 1960-01-01
+		calendar.set(1960, Calendar.JANUARY, 1, 0, 0, 0);
+		DateValue duringSeparationDate = new DateValue(calendar.getTime());
+		session.setValue(date, duringSeparationDate);
+		
+		// TEST 'Date' == 1960-01-01
+		Value currentDateValue = session.getValue(date);
+		assertEquals("Question 'Date' has wrong value", duringSeparationDate, currentDateValue);
+		
+		// TEST 'Germany is separated?' == 'Yes'
+		Value currentSeparationValue = session.getValue(separation);
+		Value yes = kbm.findValue(separation, "Yes");
+		assertEquals("Question 'Is Germany separated?' has wrong value", yes, currentSeparationValue);
+	}
+	
+	@Test
+	public void testCondDateBefore() {
+		Calendar calendar = GregorianCalendar.getInstance();
+		Question date = kbm.findQuestion("Date");
+		Question separation = kbm.findQuestion("Is Germany separated?");
+		
+		// SET 'Date' = 1900-01-01
+		calendar.set(1900, Calendar.JANUARY, 1, 0, 0, 0);
+		DateValue preSeparationDate = new DateValue(calendar.getTime());
+		session.setValue(date, preSeparationDate);
+		
+		// TEST 'Date' == 1900-01-01
+		Value currentDateValue = session.getValue(date);
+		assertEquals("Question 'Date' has wrong value", preSeparationDate, currentDateValue);
+		
+		// TEST 'Germany is separated?' == 'No'
+		Value currentSeparationValue = session.getValue(separation);
+		Value no = kbm.findValue(separation, "No");
+		assertEquals("Question 'Is Germany separated?' has wrong value", no, currentSeparationValue);
+	}
+	
 	@Test
 	public void testSetAndChangeValue() {
 		
