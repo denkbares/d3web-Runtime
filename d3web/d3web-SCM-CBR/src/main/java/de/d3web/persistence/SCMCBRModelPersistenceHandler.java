@@ -111,7 +111,7 @@ public class SCMCBRModelPersistenceHandler implements KnowledgeReader,
 		String completenessSuggestedThreshold = getAttribute("completenessSuggestedThreshold", current);
 		String completenessEstablishedThreshold = getAttribute("completenessEstablishedThreshold",
 				current);
-		Solution diag = kbm.findDiagnosis(solutionID);
+		Solution diag = kbm.findSolution(solutionID);
 		SCMCBRModel model = new SCMCBRModel(diag);
 		NodeList relations =  current.getChildNodes();
 		for(int i = 0; i < relations.getLength(); i++) {

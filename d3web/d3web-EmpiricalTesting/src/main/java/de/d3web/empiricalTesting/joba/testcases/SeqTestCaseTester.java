@@ -82,9 +82,9 @@ public class SeqTestCaseTester {
 	private void createKnowledgeBase() {
 		Solution root = kbm.getKnowledgeBase().getRootDiagnosis();
 		QASet rootContainer = kbm.getKnowledgeBase().getRootQASet();
-		d1 = kbm.createDiagnosis("d1", root);
-		d2 = kbm.createDiagnosis("d2", root);
-		d3 = kbm.createDiagnosis("d3", root);
+		d1 = kbm.createSolution("d1", root);
+		d2 = kbm.createSolution("d2", root);
+		d3 = kbm.createSolution("d3", root);
 		QContainer qc1 = kbm.createQContainer("qc1", rootContainer);
 		q1 = kbm.createQuestionOC("qoc1", qc1, new String[] { "qoc1A1",
 				"qocq1A2" });

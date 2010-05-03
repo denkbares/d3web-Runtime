@@ -136,8 +136,8 @@ public class XCLModelTest extends TestCase{
 			QContainer rootContainer = (QContainer) k.getRootQASet();
 			
 			// init diagnosis "Terminator"
-			kbm.createDiagnosis("Terminator", rootdia );
-			terminator=kbm.findDiagnosis("Terminator");			
+			kbm.createSolution("Terminator", rootdia );
+			terminator=kbm.findSolution("Terminator");			
 			Properties p=new Properties();
 			p.setProperty(Property.DIAGNOSIS_TYPE, new String("xclpattern"));
 			k.setProperties(p);

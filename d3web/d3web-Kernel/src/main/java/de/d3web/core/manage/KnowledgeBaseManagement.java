@@ -20,9 +20,10 @@
 
 package de.d3web.core.manage;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -85,7 +86,7 @@ public class KnowledgeBaseManagement {
 	}
 	
 	/**
-	 * @return a newly creates knowledge base with one root Diagnosis (P000) and
+	 * @return a newly creates knowledge base with one root Solution (P000) and
 	 *         one root QContainer (Q000).
 	 */
 	private static KnowledgeBase createKnowledgeBase() {
@@ -104,7 +105,7 @@ public class KnowledgeBaseManagement {
 		return theK;
 	}
 
-	public Solution createDiagnosis(String id, String name, Solution parent) {
+	public Solution createSolution(String id, String name, Solution parent) {
 		Solution d;
 		if (id==null) {
 			d = new Solution(findNewIDFor(Solution.class));
@@ -117,12 +118,12 @@ public class KnowledgeBaseManagement {
 		return d;
 	}
 
-	public Solution createDiagnosis(String name, Solution parent) {
-		return createDiagnosis(null, name, parent);
+	public Solution createSolution(String name, Solution parent) {
+		return createSolution(null, name, parent);
 	}
 	
-	public Solution createDiagnosis(String id, String name) {
-		return createDiagnosis(id, name, knowledgeBase.getRootDiagnosis());
+	public Solution createSolution(String id, String name) {
+		return createSolution(id, name, knowledgeBase.getRootSolution());
 	}
 	
 
@@ -132,8 +133,8 @@ public class KnowledgeBaseManagement {
 	 * @param name The name of the new solution
 	 * @return the newly created solution
 	 */
-	public Solution createDiagnosis(String name) {
-		return createDiagnosis(name, knowledgeBase.getRootDiagnosis());
+	public Solution createSolution(String name) {
+		return createSolution(name, knowledgeBase.getRootSolution());
 	}
 	
 	/**
@@ -364,14 +365,14 @@ public class KnowledgeBaseManagement {
 	}
 
 	/**
-	 * Returns the Diagnosis object for which either the text or the id is equal
+	 * Returns the Solution object for which either the text or the id is equal
 	 * to the specified name String
 	 * 
 	 * @param name
 	 *            a specified name string
 	 * @return a Diagnosis object or null, if nothing found
 	 */
-	public Solution findDiagnosis(String name) {
+	public Solution findSolution(String name) {
 		NamedObject o = findNamedObject(name, knowledgeBase.getSolutions());
 		if(o instanceof Solution) return (Solution)o;
 		return null;
@@ -520,7 +521,11 @@ public class KnowledgeBaseManagement {
 			return new TextValue(valueString);
 		}
 		else if (question instanceof QuestionDate) {
-			return new DateValue(new Date(valueString));
+			try {
+				return new DateValue(DateFormat.getInstance().parse(valueString));
+			} catch (ParseException e) {
+				throw new IllegalArgumentException("The committed String is not a correctly formatted date: " + e.getMessage());
+			}
 		}
 		else {
 			return UndefinedValue.getInstance();
@@ -529,7 +534,7 @@ public class KnowledgeBaseManagement {
 
 	public String findNewIDFor(Class<? extends IDObject> o) {
 		if (o == Solution.class) {
-			int idC = getMaxCountOf(knowledgeBase.getDiagnoses()) + 1;
+			int idC = getMaxCountOf(knowledgeBase.getSolutions()) + 1;
 			return "P" + idC;
 
 		} else if (o == QContainer.class) {
@@ -650,7 +655,7 @@ public class KnowledgeBaseManagement {
 			parent.addChild(theObject);
 		} else {
 			if (theObject instanceof Solution) {
-				knowledgeBase.getRootDiagnosis().addChild(theObject);
+				knowledgeBase.getRootSolution().addChild(theObject);
 			} else if (theObject instanceof QASet) {
 				knowledgeBase.getRootQASet().addChild(theObject);
 			}

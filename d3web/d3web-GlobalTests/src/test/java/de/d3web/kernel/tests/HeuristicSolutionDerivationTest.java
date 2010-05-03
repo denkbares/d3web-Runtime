@@ -96,12 +96,12 @@ public class HeuristicSolutionDerivationTest {
 		kbm.createQuestionOC(fuel, kbm.getKnowledgeBase().getRootQASet(), fuelAlternatives);
 		
 		// Solution 'Clogged air filter'
-		kbm.createDiagnosis("Clogged air filter");
+		kbm.createSolution("Clogged air filter");
 	}
 	
 	private static void addRules() {
 		
-		Solution cloggedAirFilter = kbm.findDiagnosis("Clogged air filter");
+		Solution cloggedAirFilter = kbm.findSolution("Clogged air filter");
 		
 		// Exhaust fumes = black => Clogged air filter = P3
 		Question exhaustFumes = kbm.findQuestion("Exhaust fumes");
@@ -142,7 +142,7 @@ public class HeuristicSolutionDerivationTest {
 		assertNotNull("Value 'diesel' for Question 'Fuel' isn't in the Knowledgebase", diesel); 
 		
 		// Solution 'Clogged air filter'
-		Solution cloggedAirFilter = kbm.findDiagnosis("Clogged air filter");
+		Solution cloggedAirFilter = kbm.findSolution("Clogged air filter");
 		assertNotNull("Solution 'Clogged air filter' isn't in the Knowledgebase", cloggedAirFilter); 
 	}
 
@@ -151,7 +151,7 @@ public class HeuristicSolutionDerivationTest {
 		
 		Question exhaustFumes = kbm.findQuestion("Exhaust fumes");
 		Question fuel = kbm.findQuestion("Fuel");
-		Solution solution = kbm.findDiagnosis("Clogged air filter");
+		Solution solution = kbm.findSolution("Clogged air filter");
 		
 		// SET 'Exhaust fumes' = 'black'
 		Value black = kbm.findValue(exhaustFumes, "black");
@@ -185,7 +185,7 @@ public class HeuristicSolutionDerivationTest {
 		
 		Question fuel = kbm.findQuestion("Fuel");
 		Question exhaustFumes = kbm.findQuestion("Exhaust fumes");
-		Solution cloggedAirFilter = kbm.findDiagnosis("Clogged air filter");
+		Solution cloggedAirFilter = kbm.findSolution("Clogged air filter");
 		
 		// SET 'Fuel' = 'diesel'
 		Value diesel = kbm.findValue(fuel, "diesel");
@@ -218,7 +218,7 @@ public class HeuristicSolutionDerivationTest {
 	public void testSetUndefinedValue() {
 		
 		Question exhaustFumes = kbm.findQuestion("Exhaust fumes");
-		Solution cloggedAirFilter = kbm.findDiagnosis("Clogged air filter");
+		Solution cloggedAirFilter = kbm.findSolution("Clogged air filter");
 		
 		// SET 'Exhaust fumes' = 'black'
 		Value black = kbm.findValue(exhaustFumes, "black");
