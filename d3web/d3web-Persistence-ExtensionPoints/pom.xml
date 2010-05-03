@@ -1,15 +1,32 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <parent>
-    <artifactId>d3web</artifactId>
-    <groupId>de.uniwue.d3web</groupId>
-    <version>0-SNAPSHOT</version>
-  </parent>
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>de.uniwue.d3web</groupId>
-  <artifactId>d3web-Persistence-ExtensionPoints-jpf-plugin</artifactId>
-  <name>d3web-Persistence</name>
-  <version>0-SNAPSHOT</version>
-  <build>
-  	<finalName>d3web-Persistence-ExtensionPoints-Plugin</finalName>
-  </build>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<artifactId>d3web</artifactId>
+		<groupId>de.uniwue.d3web</groupId>
+		<version>0-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.uniwue.d3web</groupId>
+	<artifactId>d3web-Persistence-ExtensionPoints-jpf-plugin</artifactId>
+	<name>d3web-Persistence</name>
+	<version>0-SNAPSHOT</version>
+	<build>
+		<finalName>d3web-Persistence-ExtensionPoints-Plugin</finalName>
+		<plugins>
+			<plugin>
+				<groupId>de.uniwue.maven.plugins</groupId>
+				<artifactId>knowwe-versionator</artifactId>
+				<version>1.0</version>
+				<executions>
+					<execution>
+						<id>versionate-plugin</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>versionate-plugin</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
