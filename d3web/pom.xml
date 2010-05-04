@@ -69,6 +69,7 @@
 	</build>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<versionatorVersion>1.1</versionatorVersion>
 	</properties>
 	<repositories>
 		<repository>
@@ -118,6 +119,11 @@
 	</reporting>
 
 	<distributionManagement>
+		<repository>
+			<id>knowwe</id>
+			<name>KnowWE Releases</name>
+			<url>http://isci.informatik.uni-wuerzburg.de:8080/artifactory/knowwe/</url>
+		</repository>
 		<snapshotRepository>
 			<id>knowwe-snapshots</id>
 			<name>d3web Snapshots</name>
@@ -136,6 +142,11 @@
 			</roles>
 		</developer>
 	</developers>
+	<scm>
+		<connection>scm:svn:https://isci.informatik.uni-wuerzburg.de/svn/d3web-core/trunk</connection>
+		<developerConnection>scm:svn:https://isci.informatik.uni-wuerzburg.de/svn/d3web-core/trunk</developerConnection>
+		<url>scm:svn:https://isci.informatik.uni-wuerzburg.de/svn/d3web-core/trunk</url>
+	</scm>
 	<organization>
 		<name>Universität Würzburg</name>
 		<url>http://uni-wuerzburg.de/</url>
