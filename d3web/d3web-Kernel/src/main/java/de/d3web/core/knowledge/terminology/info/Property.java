@@ -219,7 +219,7 @@ public class Property {
 	 * @return boolean
 	 */
 	public static final Property IS_RISK_DIAGNOSIS = new Property("is_risk_diagnosis");
-		
+
 	/**
 	 * used for: Diagnosis doc: for follow-up-sessions other diagnoses and
 	 * therapies may be important as opposed to 'normal' sessions * in 'normal'
@@ -280,13 +280,12 @@ public class Property {
 	public static final Property DIAGNOSIS_TYPE = new Property("diagnosisType");
 
 	/**
-	 * used for Diagnosis
-	 * Saves the apriori probability of a diagnosis
+	 * used for Diagnosis Saves the apriori probability of a diagnosis
 	 * 
 	 * @return float
 	 */
 	public static final Property APRIORI = new Property("apriori");
-	
+
 	/**
 	 * used for: PSMethodHeuristic - decision tree doc: [TODO]:doc for
 	 * PROBLEM_TYPE handled by: [TODO]:handled by for PROBLEM_TYPE
@@ -343,16 +342,15 @@ public class Property {
 	public static final Property QUESTION_TEXT_ROWCOUNT = new Property(
 			"rowCount");
 
-	
 	/**
-	 * used for: Question doc: should text of a question be suppressed 
-	 * handled * by: d3web-Dialog
+	 * used for: Question doc: should text of a question be suppressed handled *
+	 * by: d3web-Dialog
 	 * 
 	 * @return Boolean
 	 */
 	public static final Property SUPPRESS_QUESTION_TEXT = new Property(
 			"suppressQuestionText");
-	
+
 	/**
 	 * used for: Question doc: should UNKNOWN be invisible in questions handled
 	 * by: d3web-Persistence
@@ -370,7 +368,7 @@ public class Property {
 	 */
 	public static final Property UNKNOWN_VERBALISATION = new Property(
 			"unknown_verbalisation");
-	
+
 	/**
 	 * used for: Question doc: verbalisation of AnswerChoiceYes handled by:
 	 * d3web-Persistence, KnowME
@@ -379,7 +377,7 @@ public class Property {
 	 */
 	public static final Property YES_VERBALISATION = new Property(
 			"yes_verbalisation");
-	
+
 	/**
 	 * used for: Question doc: verbalisation of AnswerChoiceNo handled by:
 	 * d3web-Persistence, KnowME
@@ -390,7 +388,8 @@ public class Property {
 			"no_verbalisation");
 
 	/*
-	 * ############################################################################
+	 * ##########################################################################
+	 * ##
 	 */
 
 	/**
@@ -403,21 +402,22 @@ public class Property {
 	public static final Property CONFIG = new Property("config");
 
 	/*
-	 * ############################################################################
+	 * ##########################################################################
+	 * ##
 	 */
 
 	/**
 	 * used for QuestionMC <br>
-	 * doc: if this property is set, an "all"-alternative will be shown for MC-questions
-	 * in the dialog. If the user activates this alternative, the MC-alternatives
-	 * of the question will be set all together.<br>
+	 * doc: if this property is set, an "all"-alternative will be shown for
+	 * MC-questions in the dialog. If the user activates this alternative, the
+	 * MC-alternatives of the question will be set all together.<br>
 	 * handled by: d3web-dialog
 	 * 
 	 * @return Boolean
 	 */
 	public static final Property DIALOG_SHOW_SELECT_ALL_ALTERNATIVE = new Property(
 			"dialog.mcq.show_select_all_alternative");
-	
+
 	/**
 	 * used for Question doc: if the question is an inactive follow-question and
 	 * this property is set (true), it will be displayed inactivated on the
@@ -492,19 +492,21 @@ public class Property {
 			"dialog.boxed.force_linebreak_after");
 
 	/**
-	 * used for question doc: the ids of the answers(seperated by ";"), which is set in PSMethodInit
+	 * used for question doc: the ids of the answers(seperated by ";"), which is
+	 * set in PSMethodInit
 	 * 
 	 * @return String
 	 */
 	public static final Property INIT = new Property("INIT");
-	
+
 	/**
-	 * used for question doc: the ids of the answers(seperated by ";"), which is preselected in dialogs
+	 * used for question doc: the ids of the answers(seperated by ";"), which is
+	 * preselected in dialogs
 	 * 
 	 * @return String
 	 */
 	public static final Property DEFAULT = new Property("DEFAULT");
-	
+
 	/**
 	 * used for: QContainer doc: the column-count within MQBoxedDialog (number
 	 * of questions side by side in a row) will not be greater than this limit
@@ -515,7 +517,6 @@ public class Property {
 	public static final Property DIALOG_BOXED_MAXCOLWIDTH = new Property(
 			"dialog.boxed.maxcolwidth");
 
-	
 	/**
 	 * used for: QContainer doc: the minimal count of chars that have to fit in
 	 * a column handled by: d3web-dialog
@@ -551,7 +552,7 @@ public class Property {
 	 */
 	public static final Property DIALOG_CASENAME_GEN = new Property(
 			"dialog.casename_gen");
-	
+
 	/**
 	 * used for: QuestionChoice <br>
 	 * doc: true for questions that can be modified (answers changed) through a
@@ -580,7 +581,7 @@ public class Property {
 	 */
 	public static final Property DENTIST_PATIENT_BIRTH = new Property(
 			"dentist.patient_birth");
-	
+
 	/**
 	 * used for: Answer <br>
 	 * doc: the value "true" states that the answer is visible (esp.
@@ -593,9 +594,10 @@ public class Property {
 			"dialog.onlinemodificationplugin.ans_visibility");
 
 	/*
-	 * ############################################################################
+	 * ##########################################################################
+	 * ##
 	 */
-	
+
 	/**
 	 * used for: Session<br>
 	 * doc: Map maps Questions to user-defined weights<br>
@@ -603,7 +605,8 @@ public class Property {
 	 * 
 	 * @return Map<Question, Double>
 	 */
-	public static final Property CASE_USER_DEFINED_WEIGHTS = new Property("case_user_defined_weights");
+	public static final Property CASE_USER_DEFINED_WEIGHTS = new Property(
+			"case_user_defined_weights");
 
 	/**
 	 * used for: CaseObject doc: this is the metadata blob handled by:
@@ -626,9 +629,10 @@ public class Property {
 	 * used for: CaseObject doc: this is a comment for a case handled by:
 	 * d3web-CaseRepository
 	 * 
-     * @deprecated use DCElement.DESCRIPTION instead
+	 * @deprecated use DCElement.DESCRIPTION instead
 	 * @return PropertiesUtilities$CDataString
 	 */
+	@Deprecated
 	public static final Property CASE_COMMENT = new Property("case_comment");
 
 	/**
@@ -639,11 +643,11 @@ public class Property {
 	 */
 	public static final Property CASE_SOURCE_SYSTEM = new Property(
 			"case_source_system");
-	
+
 	/**
 	 * used for: CaseObject <br>
-	 * doc: critiquing reports from NLP (natural language processing) which compares the
-	 * user's diagnoses with the system's using text analysis.<br>
+	 * doc: critiquing reports from NLP (natural language processing) which
+	 * compares the user's diagnoses with the system's using text analysis.<br>
 	 * handled by: d3web-Dialog-MedicalKbPlugin
 	 * 
 	 * @return LinkedList of PropertiesUtilities$CDataString
@@ -652,7 +656,8 @@ public class Property {
 			"case_critique_text");
 
 	/*
-	 * ############################################################################
+	 * ##########################################################################
+	 * ##
 	 */
 
 	/**
@@ -663,7 +668,6 @@ public class Property {
 	public static final Property HEURISTIC_DECISION_TREE = new Property(
 			"heuristic_decision_tree");
 
-	
 	/**
 	 * used for: heuristic problem solver. If one diagnosis is established, then
 	 * suggest all children
@@ -673,7 +677,6 @@ public class Property {
 	public static final Property ESTABLISH_REFINE_STRATEGY = new Property(
 			"establish_refine_strategy");
 
-	
 	/**
 	 * used for: heuristic problem solver. If one diagnosis is excluded, then
 	 * exclude all children
@@ -682,7 +685,7 @@ public class Property {
 	 */
 	public static final Property EXCLUDE_DISCARD_STRATEGY = new Property(
 			"exclude_discard_strategy");
-	
+
 	/**
 	 * used for: heuristic problem solver. If one diagnosis is established, then
 	 * finish case Only the best diagnosis is returned as solution
@@ -707,28 +710,27 @@ public class Property {
 	public static final Property HDT_ABORT_CASE_SFA = new Property(
 			"abort_case_sfa");
 
-	
 	/**
-	 * used for: scm problem-solver: if activated, then the scm sets its score 
+	 * used for: scm problem-solver: if activated, then the scm sets its score
 	 * to 0 by default, when the heuristic ps has excluded the solution
 	 */
 	public static final Property RULEBASED_EXCLUSION = new Property("rulebased_exclusion");
-	
+
 	/**
-	 * used for: scm problem-solver: wether to use simple SC-ProblemSolver 
+	 * used for: scm problem-solver: wether to use simple SC-ProblemSolver
 	 */
 	public static final Property SC_PROBLEMSOLVER_SIMPLE = new Property(
 			"simple_sc_problem_solver");
-	
+
 	/**
-	 * used for: d3web-distributed: storing namespace id of used terminology 
+	 * used for: d3web-distributed: storing namespace id of used terminology
 	 */
 	public static final Property TERMINOLOGY_USED = new Property(
 			"terminology");
-	
-	
+
 	/*
-	 * ############################################################################
+	 * ##########################################################################
+	 * ##
 	 */
 
 	/**
@@ -741,12 +743,13 @@ public class Property {
 			"nuwibs_properties");
 
 	/*
-	 * ############################################################################
+	 * ##########################################################################
+	 * ##
 	 */
 
 	/**
-	 * used for: knowledgebase doc: optional (!) short descriptions for NamedObjects
-	 * handled by: VIKAMINE
+	 * used for: knowledgebase doc: optional (!) short descriptions for
+	 * NamedObjects handled by: VIKAMINE
 	 * 
 	 * @return String
 	 */
@@ -754,10 +757,8 @@ public class Property {
 	public static final Property SHORT_DESCRIPTION = new Property(
 			"short_description");
 
-	
 	/**
-	 * used for: Dialog. Boolean flag
-	 * handled by: KnowME
+	 * used for: Dialog. Boolean flag handled by: KnowME
 	 * 
 	 * @return Boolean
 	 */
@@ -766,59 +767,92 @@ public class Property {
 			"picture_question");
 
 	/**
-	 * used for distributed reasoning and dialog control
-	 * handled by special projects -> KnowWE
+	 * used for distributed reasoning and dialog control handled by special
+	 * projects -> KnowWE
+	 * 
 	 * @return Boolean
 	 */
 	public static final Property EXTERNAL = new Property("external");
 
 	/**
-	 * used for distributed reasoning and dialog control
-	 * handled by special projects -> KnowWE
+	 * used for distributed reasoning and dialog control handled by special
+	 * projects -> KnowWE
+	 * 
 	 * @return String
 	 */
 	public static final Property FOREIGN_NAMESPACE = new Property("foreign_namespace");
 
 	/**
-	 * used for distributed reasoning and dialog control
-	 * handled by special projects -> KnowWE
+	 * used for distributed reasoning and dialog control handled by special
+	 * projects -> KnowWE
+	 * 
 	 * @return Boolean
 	 */
 	public static final Property PRIVATE = new Property("private");
 
 	/**
-	 * used for terminological interface -> intergration (no) and alignment (yes)
-	 * handled by special projects -> KnowWE
+	 * used for terminological interface -> intergration (no) and alignment
+	 * (yes) handled by special projects -> KnowWE
+	 * 
 	 * @return Boolean
 	 */
 	public static final Property FOREIGN = new Property("foreign");
-	
+
 	/**
-	 * used for constraint between mc answers
-	 * handled especially by dialog(2) 
+	 * used for constraint between mc answers handled especially by dialog(2)
+	 * 
 	 * @return LinkedList<LinkedList<String>>
 	 */
 	public static final Property MC_CONSTRAINTS = new Property("mc_constraints");
-	
+
 	/**
-	 * used for knowledge base constants
-	 * handled by denkbar/cc formula expressions
+	 * used for knowledge base constants handled by denkbar/cc formula
+	 * expressions
 	 * 
 	 * @return cc.knowme.expression.eval.ConstantsCollection
 	 */
 	public static final Property CONSTANTS = new Property("constants");
-	
+
 	/**
-	 * used for time database purge hints
-	 * handled by denkbar/cc DefaultPurgeHandler
+	 * used for time database purge hints handled by denkbar/cc
+	 * DefaultPurgeHandler
 	 * 
 	 * @return java.lang.String
 	 */
 	public static final Property PURGE_HINT = new Property("timeDB.purge_hint");
-	
-	
+
+	/**
+	 * The actual version
+	 * 
+	 * @return String
+	 */
+	public static final Property VERSION = new Property("Version");
+
+	/**
+	 * Simply Property to store dates as Strings
+	 * 
+	 * @return String
+	 */
+	public static final Property DATE = new Property("Date");
+
+	/**
+	 * The available languages of the kb
+	 * 
+	 * @return String
+	 */
+	public static final Property LANGUAGES = new Property("Languages");
+
+	/**
+	 * A KMW specific object, will be removed in increment 2 (second half of
+	 * 2010)
+	 * 
+	 * @return KMWMasterData
+	 */
+	public static final Property KMW_MASTER_DATA = new Property("KMWMasterData");
+
 	/*
-	 * ############################################################################
+	 * ##########################################################################
+	 * ##
 	 */
 
 	private static Collection<Property> allPropertys;
@@ -828,15 +862,16 @@ public class Property {
 		for (Field f : Property.class.getFields()) {
 			if (isOKField(f))
 				try {
-					allPropertys.add((Property) f.get(null));
-				} catch (IllegalArgumentException e) {
-					Logger.getLogger(Property.class.getName()).throwing(
-							Property.class.getName(), "static {...}", e);
-				}
-				catch (IllegalAccessException e) {
-					Logger.getLogger(Property.class.getName()).throwing(
-							Property.class.getName(), "static {...}", e);
-				}
+				allPropertys.add((Property) f.get(null));
+			}
+			catch (IllegalArgumentException e) {
+				Logger.getLogger(Property.class.getName()).throwing(
+						Property.class.getName(), "static {...}", e);
+			}
+			catch (IllegalAccessException e) {
+				Logger.getLogger(Property.class.getName()).throwing(
+						Property.class.getName(), "static {...}", e);
+			}
 		}
 	}
 
@@ -906,6 +941,10 @@ public class Property {
 		basicPropertys.add(Property.INIT);
 		basicPropertys.add(Property.DEFAULT);
 		basicPropertys.add(Property.PURGE_HINT);
+		basicPropertys.add(Property.VERSION);
+		basicPropertys.add(Property.DATE);
+		basicPropertys.add(Property.LANGUAGES);
+		basicPropertys.add(Property.KMW_MASTER_DATA);
 	}
 
 	private String name;
@@ -931,6 +970,7 @@ public class Property {
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		return name;
 	}
@@ -958,7 +998,7 @@ public class Property {
 	public static Collection<Property> getBasicPropertys() {
 		return Collections.synchronizedCollection(basicPropertys);
 	}
-	
+
 	public static Collection<Property> getAllPropertys() {
 		return allPropertys;
 	}
@@ -968,6 +1008,7 @@ public class Property {
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof Property))
 			return false;
