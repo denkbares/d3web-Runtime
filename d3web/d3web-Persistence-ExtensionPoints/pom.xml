@@ -8,7 +8,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.uniwue.d3web</groupId>
 	<artifactId>d3web-Persistence-ExtensionPoints-jpf-plugin</artifactId>
-	<name>d3web-Persistence</name>
+	<name>d3web-Persistence-ExtensionPoints</name>
 	<version>0-SNAPSHOT</version>
 	<build>
 		<finalName>d3web-Persistence-ExtensionPoints-Plugin</finalName>
