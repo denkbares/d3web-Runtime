@@ -3,8 +3,7 @@
 <plugin id="d3web-CostBenefit" version="0.0.1">
 
 	<attributes>
-		<attribute id="build" value="testbuild" />
-		<attribute id="revision" value="testrevision" />
+		<attribute id="placeholder" value="foobar" />
 	</attributes>
 
 	<requires>

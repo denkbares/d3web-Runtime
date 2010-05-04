@@ -3,6 +3,7 @@
 <plugin id="d3web-XCL" version="0.0.1">
 
 	<attributes>
+		<attribute id="placeholder" value="foobar" />
 	</attributes>
 	
 	<requires>

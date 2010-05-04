@@ -4,6 +4,7 @@
 	<!-- This plugin only defines extension points for knowledge reader, knowledge writer and fragment handler. -->
 	
 	<attributes>
+		<attribute id="placeholder" value="foobar" />
 	</attributes>
 	
 	<extension-point id="KnowledgeReader">

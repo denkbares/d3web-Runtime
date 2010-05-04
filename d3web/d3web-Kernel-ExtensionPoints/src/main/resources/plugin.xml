@@ -4,6 +4,7 @@
 <plugin id="d3web-Kernel-ExtensionPoints" version="0.0.1">
 
 	<attributes>
+		<attribute id="placeholder" value="foobar" />
 	</attributes>
 	
 	<extension-point id="PSMethod">
