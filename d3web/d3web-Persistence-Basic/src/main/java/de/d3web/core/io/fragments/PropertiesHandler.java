@@ -29,13 +29,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.io.PersistenceManager;
-import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.knowledge.terminology.info.Property;
+
 /**
  * Handler for properties
+ * 
  * @author hoernlein, Markus Friedrich (denkbares GmbH)
  */
 public class PropertiesHandler implements FragmentHandler {
@@ -54,34 +55,45 @@ public class PropertiesHandler implements FragmentHandler {
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		Properties ret = new Properties();
 		List<Element> proplist = XMLUtil.getElementList(element.getChildNodes());
-		for (Element prop: proplist) {
+		for (Element prop : proplist) {
 			if (prop.getNodeName().equals("Property")) {
-				// [MISC]:aha:obsolete after supportknowledge refactoring is propagated
+				// [MISC]:aha:obsolete after supportknowledge refactoring is
+				// propagated
 				String name = "";
-				if (prop.getAttributes().getNamedItem("name")!=null) {
+				if (prop.getAttributes().getNamedItem("name") != null) {
 					name = prop.getAttributes().getNamedItem("name").getNodeValue();
-				} else {
+				}
+				else {
 					name = prop.getAttributes().getNamedItem("descriptor").getNodeValue();
 				}
 				Property property = Property.getProperty(name);
 				if (property == null) {
-					// [MISC]:aha:obsolete after supportknowledge refactoring is propagated
+					// [MISC]:aha:obsolete after supportknowledge refactoring is
+					// propagated
 					if (name.equals("isTherapy")) {
 						property = Property.IS_THERAPY;
-					} else {
-						throw new IOException("Property "+name+" is not a valid property.");
+					}
+					else {
+						throw new IOException("Property " + name
+								+ " is not a valid property.");
 					}
 				}
 				String textContent = prop.getTextContent();
-				if (textContent!=null && !textContent.trim().equals("")) {
-					Object o = XMLUtil.getPrimitiveValue(textContent,prop.getAttribute("class"));
+				List<Element> elementList = XMLUtil.getElementList(prop.getChildNodes());
+				if (elementList.size() == 0 && !textContent.trim().equals("")) {
+					Object o = XMLUtil.getPrimitiveValue(textContent,
+							prop.getAttribute("class"));
 					ret.setProperty(property, o);
-				} else {
-					List<Element> childNodes = XMLUtil.getElementList(prop.getChildNodes());
-					if (childNodes.size()==0) {
+				}
+				else {
+					List<Element> childNodes = elementList;
+					if (childNodes.size() == 0) {
 						ret.setProperty(property, "");
-					} else if (childNodes.size()==1) {
-						ret.setProperty(property, PersistenceManager.getInstance().readFragment(childNodes.get(0), kb));
+					}
+					else if (childNodes.size() == 1) {
+						ret.setProperty(property,
+								PersistenceManager.getInstance().readFragment(
+										childNodes.get(0), kb));
 					}
 					else {
 						throw new IOException("Property must have exactly one child.");
@@ -98,16 +110,20 @@ public class PropertiesHandler implements FragmentHandler {
 		Properties properties = (Properties) object;
 		Collection<Property> basicPropertys = Property.getBasicPropertys();
 		if (basicPropertys.size() > 0) {
-			for (Property p: basicPropertys) {
+			for (Property p : basicPropertys) {
 				Object value = properties.getProperty(p);
-				if (value!=null) {
+				if (value != null) {
 					Element propertyElement = doc.createElement("Property");
 					propertyElement.setAttribute("name", p.getName());
 					propertyElement.setAttribute("class", value.getClass().getName());
-					if (value instanceof String||value instanceof Integer || value instanceof Double || value instanceof Float || value instanceof Boolean || value instanceof URL) {
+					if (value instanceof String || value instanceof Integer
+							|| value instanceof Double || value instanceof Float
+							|| value instanceof Boolean || value instanceof URL) {
 						propertyElement.setTextContent(value.toString());
-					} else {
-						propertyElement.appendChild(PersistenceManager.getInstance().writeFragment(value, doc));
+					}
+					else {
+						propertyElement.appendChild(PersistenceManager.getInstance().writeFragment(
+								value, doc));
 					}
 					element.appendChild(propertyElement);
 				}
