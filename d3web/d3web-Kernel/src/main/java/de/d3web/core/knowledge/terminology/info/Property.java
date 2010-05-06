@@ -836,6 +836,13 @@ public class Property {
 	public static final Property DATE = new Property("Date");
 
 	/**
+	 * Simple Property to store as kb description as String
+	 * 
+	 * @return String
+	 */
+	public static final Property DESCRIPTION = new Property("Description");
+	
+	/**
 	 * The available languages of the kb
 	 * 
 	 * @return String
@@ -943,8 +950,9 @@ public class Property {
 		basicPropertys.add(Property.PURGE_HINT);
 		basicPropertys.add(Property.VERSION);
 		basicPropertys.add(Property.DATE);
+		basicPropertys.add(Property.DESCRIPTION);
 		basicPropertys.add(Property.LANGUAGES);
-		basicPropertys.add(Property.KMW_MASTER_DATA);
+		basicPropertys.add(Property.KMW_MASTER_DATA);		
 	}
 
 	private String name;
