@@ -35,11 +35,13 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.dialog2.component.html.UIExplanation;
 import de.d3web.dialog2.util.DialogUtils;
 import de.d3web.scoring.ActionHeuristicPS;
+import de.d3web.scoring.HeuristicRating;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
 public class ExplanationRenderer extends Renderer {
@@ -47,11 +49,18 @@ public class ExplanationRenderer extends Renderer {
 	public static void renderDiagStatusAndScore(FacesContext context,
 			Session theCase, Solution diag) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
-		writer.writeText(" (= "
-				+ ExplanationRendererUtils.getStateTranslation(diag.getState(
-				theCase, PSMethodHeuristic.class)) + "; "
-				+ diag.getScore(theCase, PSMethodHeuristic.class) + " "
-				+ DialogUtils.getMessageFor("explain.diag_scoreunit") + "):",
+		String score = "";
+		DiagnosisState state = theCase.getBlackboard().getState(diag);
+		if (state instanceof HeuristicRating) {
+			HeuristicRating hr = (HeuristicRating) state;
+			score = "" + hr.getScore();
+		}
+		writer.writeText(
+				" (= "
+						+ ExplanationRendererUtils.getStateTranslation(theCase.getBlackboard().getState(
+								diag)) + "; "
+						+ score + " "
+						+ DialogUtils.getMessageFor("explain.diag_scoreunit") + "):",
 				"value");
 	}
 
@@ -82,7 +91,7 @@ public class ExplanationRenderer extends Renderer {
 		// diagnosis ...
 		if (explainReason || explainDerivation || explainConcreteDerivation) {
 
-			Solution diag = theCase.getKnowledgeBase().searchDiagnosis(
+			Solution diag = theCase.getKnowledgeBase().searchSolution(
 					toExplain);
 
 			writer.startElement("h3", component);

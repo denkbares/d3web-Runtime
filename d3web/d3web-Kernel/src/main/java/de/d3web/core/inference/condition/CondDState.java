@@ -19,31 +19,36 @@
  */
 
 package de.d3web.core.inference.condition;
-import de.d3web.core.knowledge.terminology.Solution;
+
 import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 
 /**
- * This condition checks, if a specified diagnosis is established or
- * is in a specified state.
- * The composite pattern is used for this. This class is "leaf".
+ * This condition checks, if a specified diagnosis is established or is in a
+ * specified state. The composite pattern is used for this. This class is
+ * "leaf".
  * 
  * @author Christian Betz
  */
 public class CondDState extends TerminalCondition {
-	
+
 	private Solution diagnosis;
 	private DiagnosisState solutionState;
 
 	/**
 	 * Creates a new CondDState Expression:
-	 * @param diagnose diagnosis to check
-	 * @param solutionState state of the diagnosis to check
-	 * @param context the context in which the diagnosis has the state
+	 * 
+	 * @param diagnose
+	 *            diagnosis to check
+	 * @param solutionState
+	 *            state of the diagnosis to check
+	 * @param context
+	 *            the context in which the diagnosis has the state
 	 */
 	public CondDState(
-		Solution diagnosis,
-		DiagnosisState solutionState) {
+			Solution diagnosis,
+			DiagnosisState solutionState) {
 		super(diagnosis);
 		this.diagnosis = diagnosis;
 		this.solutionState = solutionState;
@@ -52,12 +57,12 @@ public class CondDState extends TerminalCondition {
 	/**
 	 * This method checks the condition
 	 * 
-	 * Problem: UNCLEAR is default state of diagnosis. 
-	 * But we need to check for NoAnswerException,
-	 * if no rule has ever changed the state of the diagnosis.
+	 * Problem: UNCLEAR is default state of diagnosis. But we need to check for
+	 * NoAnswerException, if no rule has ever changed the state of the
+	 * diagnosis.
 	 */
 	public boolean eval(Session theCase) throws NoAnswerException {
-		return solutionState.equals(diagnosis.getState(theCase));
+		return solutionState.equals(theCase.getBlackboard().getState(diagnosis));
 	}
 
 	public Solution getDiagnosis() {
@@ -79,43 +84,42 @@ public class CondDState extends TerminalCondition {
 	@Override
 	public String toString() {
 		return "\u2190 CondDState diagnosis: "
-			+ diagnosis.getId()
-			+ " value: "
-			+ this.getStatus();
+				+ diagnosis.getId()
+				+ " value: "
+				+ this.getStatus();
 	}
-	
-	
+
 	@Override
 	public boolean equals(Object other) {
 		if (!super.equals(other)) return false;
-			CondDState otherCDS = (CondDState)other;
-			boolean test = true;
-			if(this.getDiagnosis() != null)
-				test = this.getDiagnosis().equals(otherCDS.getDiagnosis()) && test;
-			else //== null
-				test = (otherCDS.getDiagnosis() == null) && test;
-				
-			if(this.getStatus() != null)
-				test = this.getStatus().equals(otherCDS.getStatus()) && test;
-			else
-				test = (otherCDS.getStatus() == null) && test;
-			return test;
+		CondDState otherCDS = (CondDState) other;
+		boolean test = true;
+		if (this.getDiagnosis() != null) test = this.getDiagnosis().equals(
+				otherCDS.getDiagnosis())
+				&& test;
+		else // == null
+		test = (otherCDS.getDiagnosis() == null) && test;
+
+		if (this.getStatus() != null) test = this.getStatus().equals(otherCDS.getStatus())
+				&& test;
+		else test = (otherCDS.getStatus() == null) && test;
+		return test;
 	}
-	
+
 	@Override
 	public int hashCode() {
-		
+
 		String str = getClass().toString();
-		
+
 		if (getDiagnosis() != null)
-			str+=getDiagnosis().toString();
-			
+			str += getDiagnosis().toString();
+
 		if (getStatus() != null)
-			str+=getStatus().toString();
-		
+			str += getStatus().toString();
+
 		if (getTerminalObjects() != null)
-			str+=getTerminalObjects().toString();
-			
+			str += getTerminalObjects().toString();
+
 		return str.hashCode();
 	}
 

@@ -35,297 +35,304 @@ import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseDiagnosis;
+import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.dialog2.WebDialog;
 import de.d3web.dialog2.util.DialogUtils;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 public class CorrectionPageRenderer extends Renderer {
 
-    @Override
+	@Override
 	public void decode(FacesContext context, UIComponent component) {
-	Map<String, String[]> requestMap = context.getExternalContext()
-		.getRequestParameterValuesMap();
+		Map<String, String[]> requestMap = context.getExternalContext()
+				.getRequestParameterValuesMap();
 
-	String[] selectedDiagsHeur = requestMap.get("userseldiagsheuristic");
-	String[] selectedDiagsOther = requestMap.get("userseldiagsother");
+		String[] selectedDiagsHeur = requestMap.get("userseldiagsheuristic");
+		String[] selectedDiagsOther = requestMap.get("userseldiagsother");
 
-	List<String> userSelDiagIDs = new ArrayList<String>();
-	if (selectedDiagsHeur != null && selectedDiagsHeur.length > 0) {
-	    for (String id : selectedDiagsHeur) {
-		userSelDiagIDs.add(id);
-	    }
-	}
-	if (selectedDiagsOther != null && selectedDiagsOther.length > 0) {
-	    for (String id : selectedDiagsOther) {
-		userSelDiagIDs.add(id);
-	    }
-	}
-	DialogUtils.getSaveCaseBean().setUserSelectedDiags(userSelDiagIDs);
-	// also save userselected diags in case...
-	WebDialog dia = DialogUtils.getDialog();
-
-	List<Solution> allDiags = dia.getTheCase().getKnowledgeBase().getDiagnoses();
-	for (Solution diag : allDiags) {
-	    if (diagIsUserSelected(dia, userSelDiagIDs, diag)) {
-		// set as user selected
-		diag.setValue(dia.getTheCase(),
-						DiagnosisState.ESTABLISHED,
-			PSMethodUserSelected.class);
-	    } else {
-		// delete user selected diagnosis
-		((CaseDiagnosis) dia.getTheCase().getCaseObject(diag))
-			.setValue(null, PSMethodUserSelected.class);
-	    }
-	}
-    }
-
-    private boolean diagIsUserSelected(WebDialog dia,
-	    List<String> userSelDiagIDs, Solution diag) {
-	for (String userSelDiagID : userSelDiagIDs) {
-	    if (userSelDiagID.equals(diag.getId())) {
-		// diag is user selected..
-		return true;
-	    }
-	}
-	return false;
-    }
-
-    @Override
-	public void encodeEnd(FacesContext context, UIComponent component)
-	    throws IOException {
-	ResponseWriter writer = context.getResponseWriter();
-
-	Session theCase = DialogUtils.getDialog().getTheCase();
-
-	DialogRenderUtils.renderTableWithClass(writer, component, "panelBox",
-		2, 0);
-	writer.startElement("tr", component);
-	writer.startElement("th", component);
-	writer.writeAttribute("colspan", "3", "colspan");
-
-	writer.startElement("h2", component);
-	writer.writeAttribute("class", "panelBoxCenteredHeadline", "class");
-	writer.writeText(DialogUtils.getMessageFor("correctcase.title"),
-		"value");
-	writer.endElement("h2");
-
-	// get established and suggested diagnoses
-	List<Solution> diagListEstablished = theCase
-		.getDiagnoses(DiagnosisState.ESTABLISHED, theCase.getPSMethods());
-	List<Solution> diagListSuggested = theCase
-		.getDiagnoses(DiagnosisState.SUGGESTED, theCase.getPSMethods());
-	// filter duplicate diagoses (some are userselected established and
-	// heuristic suggested)
-	List<Solution> diagListSuggestedFiltered = new ArrayList<Solution>();
-	for (Solution d : diagListSuggested) {
-	    String diagID = d.getId();
-	    boolean alreadyAdded = false;
-	    for (Solution dFiltered : diagListEstablished) {
-		if (dFiltered.getId().equals(diagID)) {
-		    // diag is already added -> we dont have to add it again
-		    alreadyAdded = true;
-		    break;
+		List<String> userSelDiagIDs = new ArrayList<String>();
+		if (selectedDiagsHeur != null && selectedDiagsHeur.length > 0) {
+			for (String id : selectedDiagsHeur) {
+				userSelDiagIDs.add(id);
+			}
 		}
-	    }
-	    if (!alreadyAdded) {
-		diagListSuggestedFiltered.add(d);
-	    }
+		if (selectedDiagsOther != null && selectedDiagsOther.length > 0) {
+			for (String id : selectedDiagsOther) {
+				userSelDiagIDs.add(id);
+			}
+		}
+		DialogUtils.getSaveCaseBean().setUserSelectedDiags(userSelDiagIDs);
+		// also save userselected diags in case...
+		WebDialog dia = DialogUtils.getDialog();
+
+		Session theCase = dia.getTheCase();
+		List<Solution> allDiags = theCase.getKnowledgeBase().getSolutions();
+		for (Solution diag : allDiags) {
+			if (diagIsUserSelected(dia, userSelDiagIDs, diag)) {
+				// set as user selected
+				theCase.getBlackboard().addValueFact(
+						new DefaultFact(diag, new DiagnosisState(
+						DiagnosisState.State.ESTABLISHED), this,
+						PSMethodUserSelected.getInstance()));
+			}
+			else {
+				// delete user selected diagnosis
+				((CaseDiagnosis) theCase.getCaseObject(diag))
+						.setValue(null, PSMethodUserSelected.class);
+			}
+		}
 	}
 
-	if (diagListEstablished.isEmpty()
-		&& diagListSuggestedFiltered.isEmpty()) {
-	    // no diags found...
-	    writer.endElement("th");
-	    writer.endElement("tr");
-	    writer.startElement("tr", component);
-	    writer.startElement("td", component);
-	    writer.writeAttribute("colspan", "3", "colspan");
-	    writer.writeText(DialogUtils.getMessageFor("correctcase.nodiags"),
-		    "value");
-	    writer.endElement("td");
-	    writer.endElement("tr");
-	} else {
-	    writer.startElement("div", component);
-	    writer.writeAttribute("class", "smaller", "class");
-	    writer.writeText(DialogUtils.getMessageFor("correctcase.advice"),
-		    "value");
-	    writer.endElement("div");
-
-	    writer.endElement("th");
-	    writer.endElement("tr");
-
-	    renderCorrectionTableSubHeadline(writer, component);
-
-	    if (!diagListEstablished.isEmpty()) {
-		DialogRenderUtils.sortDiagnosisList(diagListEstablished,
-			theCase);
-		renderDiags(writer, component, diagListEstablished, true, true);
-	    }
-	    if (!diagListSuggestedFiltered.isEmpty()) {
-		DialogRenderUtils.sortDiagnosisList(diagListSuggestedFiltered,
-			theCase);
-		renderDiags(writer, component, diagListSuggestedFiltered, true,
-			false);
-	    }
-
-	    renderMarkAllLink(writer, component, true);
-	}
-	writer.endElement("table");
-
-	List<Solution> remainingDiags = getRemainingDiags(theCase,
-		diagListEstablished, diagListSuggestedFiltered);
-
-	if (!remainingDiags.isEmpty()) {
-
-	    DialogRenderUtils.renderTableWithClass(writer, component,
-		    "panelBox", 2, 0);
-	    writer.startElement("tr", component);
-	    writer.startElement("th", component);
-	    writer.writeAttribute("colspan", "3", "colspan");
-
-	    writer.startElement("h2", component);
-	    writer.writeAttribute("class", "panelBoxCenteredHeadline", "class");
-	    writer.writeText(DialogUtils
-		    .getMessageFor("correctcase.title_other"), "value");
-	    writer.endElement("h2");
-
-	    writer.startElement("div", component);
-	    writer.writeAttribute("class", "smaller", "class");
-	    writer.writeText(DialogUtils
-		    .getMessageFor("correctcase.advice_other"), "value");
-	    writer.endElement("div");
-
-	    writer.endElement("th");
-	    writer.endElement("tr");
-
-	    renderCorrectionTableSubHeadline(writer, component);
-
-	    renderDiags(writer, component, remainingDiags, false, false);
-
-	    renderMarkAllLink(writer, component, false);
-
-	    writer.endElement("table");
-	}
-    }
-
-    private List<Solution> getRemainingDiags(Session theCase,
-	    List<Solution> diagListEstablished,
-	    List<Solution> diagListSuggested) {
-	List<Solution> diagList = theCase.getKnowledgeBase().getDiagnoses();
-	Solution root = theCase.getKnowledgeBase().getRootDiagnosis();
-	List<Solution> retList = new ArrayList<Solution>();
-	for (int i = 0; i < diagList.size(); i++) {
-	    Solution actual = diagList.get(i);
-	    if (!actual.equals(root)
-		    && !(diagListEstablished.contains(actual) || diagListSuggested
-			    .contains(actual))) {
-		retList.add(actual);
-	    }
-	}
-	return retList;
-    }
-
-    private void renderCorrectionTableSubHeadline(ResponseWriter writer,
-	    UIComponent component) throws IOException {
-	writer.startElement("tr", component);
-	writer.startElement("td", component);
-	renderTableHeadline(writer, component, DialogUtils
-		.getMessageFor("correctcase.name"));
-	writer.endElement("td");
-	writer.startElement("td", component);
-	writer.writeAttribute("class", "centered", "class");
-	renderTableHeadline(writer, component, DialogUtils
-		.getMessageFor("correctcase.info"));
-	writer.endElement("td");
-	writer.startElement("td", component);
-	writer.writeAttribute("class", "centered", "class");
-	renderTableHeadline(writer, component, DialogUtils
-		.getMessageFor("correctcase.choice"));
-	writer.endElement("td");
-	writer.endElement("tr");
-
-    }
-
-    private void renderDiags(ResponseWriter writer, UIComponent component,
-	    List<Solution> diagList, boolean heuristic, boolean checked)
-	    throws IOException {
-	for (Iterator<Solution> iter = diagList.iterator(); iter.hasNext();) {
-	    Solution diag = iter.next();
-	    writer.startElement("tr", component);
-
-	    writer.startElement("td", component);
-	    writer.writeText(diag.getName(), "value");
-	    writer.endElement("td");
-
-	    writer.startElement("td", component);
-	    writer.writeAttribute("class", "centered", "class");
-	    DialogRenderUtils.renderMMInfoPopupLink(writer, component, diag,
-		    false, null);
-	    writer.endElement("td");
-
-	    writer.startElement("td", component);
-	    writer.writeAttribute("class", "centered", "class");
-
-	    writer.startElement("input", component);
-	    writer.writeAttribute("type", "checkbox", "type");
-	    if (heuristic) {
-		writer.writeAttribute("name", "userseldiagsheuristic", "name");
-	    } else {
-		writer.writeAttribute("name", "userseldiagsother", "name");
-	    }
-
-	    writer.writeAttribute("id", "corr_" + diag.getId(), "id");
-	    writer.writeAttribute("value", diag.getId(), "value");
-	    if (checked) {
-		writer.writeAttribute("checked", "checked", "checked");
-	    }
-	    writer.endElement("input");
-	    writer.endElement("td");
-	    writer.endElement("tr");
-	}
-    }
-
-    private void renderMarkAllLink(ResponseWriter writer,
-	    UIComponent component, boolean heuristic) throws IOException {
-
-	writer.startElement("tr", component);
-	writer.startElement("th", component);
-	writer.writeAttribute("colspan", "3", "colspan");
-	writer.writeAttribute("align", "right", "align");
-
-	writer.startElement("a", component);
-	writer.writeAttribute("href", "#", "href");
-	writer.writeAttribute("title", DialogUtils
-		.getMessageFor("correctcase.markall"), "title");
-	if (heuristic) {
-	    writer.writeAttribute("id", "markallheur", "id");
-	    writer
-		    .writeAttribute(
-			    "onclick",
-			    "toggleUserSelectedDiags('userseldiagsheuristic'); return false;",
-			    "onclick");
-	} else {
-	    writer.writeAttribute("id", "markallother", "id");
-	    writer
-		    .writeAttribute(
-			    "onclick",
-			    "toggleUserSelectedDiags('userseldiagsother'); return false;",
-			    "onclick");
+	private boolean diagIsUserSelected(WebDialog dia,
+			List<String> userSelDiagIDs, Solution diag) {
+		for (String userSelDiagID : userSelDiagIDs) {
+			if (userSelDiagID.equals(diag.getId())) {
+				// diag is user selected..
+				return true;
+			}
+		}
+		return false;
 	}
 
-	writer.writeText(DialogUtils.getMessageFor("correctcase.markall"),
-		"value");
+	@Override
+	public void encodeEnd(FacesContext context, UIComponent component)
+			throws IOException {
+		ResponseWriter writer = context.getResponseWriter();
 
-	writer.endElement("a");
-	writer.endElement("th");
-	writer.endElement("tr");
-    }
+		Session theCase = DialogUtils.getDialog().getTheCase();
 
-    private void renderTableHeadline(ResponseWriter writer,
-	    UIComponent component, String text) throws IOException {
-	writer.startElement("span", component);
-	writer.writeAttribute("style", "font-weight: bold;", "style");
-	writer.writeText(text, "value");
-	writer.endElement("span");
-    }
+		DialogRenderUtils.renderTableWithClass(writer, component, "panelBox",
+				2, 0);
+		writer.startElement("tr", component);
+		writer.startElement("th", component);
+		writer.writeAttribute("colspan", "3", "colspan");
+
+		writer.startElement("h2", component);
+		writer.writeAttribute("class", "panelBoxCenteredHeadline", "class");
+		writer.writeText(DialogUtils.getMessageFor("correctcase.title"),
+				"value");
+		writer.endElement("h2");
+
+		// get established and suggested diagnoses
+		List<Solution> diagListEstablished = theCase.getSolutions(new DiagnosisState(
+				DiagnosisState.State.ESTABLISHED));
+		List<Solution> diagListSuggested = theCase.getSolutions(new DiagnosisState(
+				DiagnosisState.State.SUGGESTED));
+		// filter duplicate diagoses (some are userselected established and
+		// heuristic suggested)
+		List<Solution> diagListSuggestedFiltered = new ArrayList<Solution>();
+		for (Solution d : diagListSuggested) {
+			String diagID = d.getId();
+			boolean alreadyAdded = false;
+			for (Solution dFiltered : diagListEstablished) {
+				if (dFiltered.getId().equals(diagID)) {
+					// diag is already added -> we dont have to add it again
+					alreadyAdded = true;
+					break;
+				}
+			}
+			if (!alreadyAdded) {
+				diagListSuggestedFiltered.add(d);
+			}
+		}
+
+		if (diagListEstablished.isEmpty()
+				&& diagListSuggestedFiltered.isEmpty()) {
+			// no diags found...
+			writer.endElement("th");
+			writer.endElement("tr");
+			writer.startElement("tr", component);
+			writer.startElement("td", component);
+			writer.writeAttribute("colspan", "3", "colspan");
+			writer.writeText(DialogUtils.getMessageFor("correctcase.nodiags"),
+					"value");
+			writer.endElement("td");
+			writer.endElement("tr");
+		}
+		else {
+			writer.startElement("div", component);
+			writer.writeAttribute("class", "smaller", "class");
+			writer.writeText(DialogUtils.getMessageFor("correctcase.advice"),
+					"value");
+			writer.endElement("div");
+
+			writer.endElement("th");
+			writer.endElement("tr");
+
+			renderCorrectionTableSubHeadline(writer, component);
+
+			if (!diagListEstablished.isEmpty()) {
+				DialogRenderUtils.sortDiagnosisList(diagListEstablished,
+						theCase);
+				renderDiags(writer, component, diagListEstablished, true, true);
+			}
+			if (!diagListSuggestedFiltered.isEmpty()) {
+				DialogRenderUtils.sortDiagnosisList(diagListSuggestedFiltered,
+						theCase);
+				renderDiags(writer, component, diagListSuggestedFiltered, true,
+						false);
+			}
+
+			renderMarkAllLink(writer, component, true);
+		}
+		writer.endElement("table");
+
+		List<Solution> remainingDiags = getRemainingDiags(theCase,
+				diagListEstablished, diagListSuggestedFiltered);
+
+		if (!remainingDiags.isEmpty()) {
+
+			DialogRenderUtils.renderTableWithClass(writer, component,
+					"panelBox", 2, 0);
+			writer.startElement("tr", component);
+			writer.startElement("th", component);
+			writer.writeAttribute("colspan", "3", "colspan");
+
+			writer.startElement("h2", component);
+			writer.writeAttribute("class", "panelBoxCenteredHeadline", "class");
+			writer.writeText(DialogUtils
+					.getMessageFor("correctcase.title_other"), "value");
+			writer.endElement("h2");
+
+			writer.startElement("div", component);
+			writer.writeAttribute("class", "smaller", "class");
+			writer.writeText(DialogUtils
+					.getMessageFor("correctcase.advice_other"), "value");
+			writer.endElement("div");
+
+			writer.endElement("th");
+			writer.endElement("tr");
+
+			renderCorrectionTableSubHeadline(writer, component);
+
+			renderDiags(writer, component, remainingDiags, false, false);
+
+			renderMarkAllLink(writer, component, false);
+
+			writer.endElement("table");
+		}
+	}
+
+	private List<Solution> getRemainingDiags(Session theCase,
+			List<Solution> diagListEstablished,
+			List<Solution> diagListSuggested) {
+		List<Solution> diagList = theCase.getKnowledgeBase().getSolutions();
+		Solution root = theCase.getKnowledgeBase().getRootSolution();
+		List<Solution> retList = new ArrayList<Solution>();
+		for (int i = 0; i < diagList.size(); i++) {
+			Solution actual = diagList.get(i);
+			if (!actual.equals(root)
+					&& !(diagListEstablished.contains(actual) || diagListSuggested
+					.contains(actual))) {
+				retList.add(actual);
+			}
+		}
+		return retList;
+	}
+
+	private void renderCorrectionTableSubHeadline(ResponseWriter writer,
+			UIComponent component) throws IOException {
+		writer.startElement("tr", component);
+		writer.startElement("td", component);
+		renderTableHeadline(writer, component, DialogUtils
+				.getMessageFor("correctcase.name"));
+		writer.endElement("td");
+		writer.startElement("td", component);
+		writer.writeAttribute("class", "centered", "class");
+		renderTableHeadline(writer, component, DialogUtils
+				.getMessageFor("correctcase.info"));
+		writer.endElement("td");
+		writer.startElement("td", component);
+		writer.writeAttribute("class", "centered", "class");
+		renderTableHeadline(writer, component, DialogUtils
+				.getMessageFor("correctcase.choice"));
+		writer.endElement("td");
+		writer.endElement("tr");
+
+	}
+
+	private void renderDiags(ResponseWriter writer, UIComponent component,
+			List<Solution> diagList, boolean heuristic, boolean checked)
+			throws IOException {
+		for (Iterator<Solution> iter = diagList.iterator(); iter.hasNext();) {
+			Solution diag = iter.next();
+			writer.startElement("tr", component);
+
+			writer.startElement("td", component);
+			writer.writeText(diag.getName(), "value");
+			writer.endElement("td");
+
+			writer.startElement("td", component);
+			writer.writeAttribute("class", "centered", "class");
+			DialogRenderUtils.renderMMInfoPopupLink(writer, component, diag,
+					false, null);
+			writer.endElement("td");
+
+			writer.startElement("td", component);
+			writer.writeAttribute("class", "centered", "class");
+
+			writer.startElement("input", component);
+			writer.writeAttribute("type", "checkbox", "type");
+			if (heuristic) {
+				writer.writeAttribute("name", "userseldiagsheuristic", "name");
+			}
+			else {
+				writer.writeAttribute("name", "userseldiagsother", "name");
+			}
+
+			writer.writeAttribute("id", "corr_" + diag.getId(), "id");
+			writer.writeAttribute("value", diag.getId(), "value");
+			if (checked) {
+				writer.writeAttribute("checked", "checked", "checked");
+			}
+			writer.endElement("input");
+			writer.endElement("td");
+			writer.endElement("tr");
+		}
+	}
+
+	private void renderMarkAllLink(ResponseWriter writer,
+			UIComponent component, boolean heuristic) throws IOException {
+
+		writer.startElement("tr", component);
+		writer.startElement("th", component);
+		writer.writeAttribute("colspan", "3", "colspan");
+		writer.writeAttribute("align", "right", "align");
+
+		writer.startElement("a", component);
+		writer.writeAttribute("href", "#", "href");
+		writer.writeAttribute("title", DialogUtils
+				.getMessageFor("correctcase.markall"), "title");
+		if (heuristic) {
+			writer.writeAttribute("id", "markallheur", "id");
+			writer
+					.writeAttribute(
+					"onclick",
+					"toggleUserSelectedDiags('userseldiagsheuristic'); return false;",
+					"onclick");
+		}
+		else {
+			writer.writeAttribute("id", "markallother", "id");
+			writer
+					.writeAttribute(
+					"onclick",
+					"toggleUserSelectedDiags('userseldiagsother'); return false;",
+					"onclick");
+		}
+
+		writer.writeText(DialogUtils.getMessageFor("correctcase.markall"),
+				"value");
+
+		writer.endElement("a");
+		writer.endElement("th");
+		writer.endElement("tr");
+	}
+
+	private void renderTableHeadline(ResponseWriter writer,
+			UIComponent component, String text) throws IOException {
+		writer.startElement("span", component);
+		writer.writeAttribute("style", "font-weight: bold;", "style");
+		writer.writeText(text, "value");
+		writer.endElement("span");
+	}
 }

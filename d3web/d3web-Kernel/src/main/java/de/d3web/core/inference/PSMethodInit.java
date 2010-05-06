@@ -25,10 +25,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
@@ -36,9 +34,10 @@ import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 
 /**
- * This is a 'marker' psmethod to represent all the initial values.
- * Especially used to add the initQASets to the QASetManager
- * Creation date: (21.02.2002 16:51:10)
+ * This is a 'marker' psmethod to represent all the initial values. Especially
+ * used to add the initQASets to the QASetManager Creation date: (21.02.2002
+ * 16:51:10)
+ * 
  * @author Christian Betz
  */
 public class PSMethodInit implements PSMethod {
@@ -56,32 +55,24 @@ public class PSMethodInit implements PSMethod {
 	}
 
 	/**
-	 * @return null
-	 */
-	public DiagnosisState getState(Session theCase, Solution theDiagnosis) {
-		return null;
-	}
-
-	/**
-	 * Some space for initial methods of a PSMethod.
-	 * Does nothing.
-	 * Creation date: (21.02.2002 16:51:10)
+	 * Some space for initial methods of a PSMethod. Does nothing. Creation
+	 * date: (21.02.2002 16:51:10)
 	 */
 	public void init(Session theCase) {
 		theCase.getPropagationContoller().openPropagation();
 		try {
-			//initialise all questions
+			// initialise all questions
 			KnowledgeBase kb = theCase.getKnowledgeBase();
-			for (Question q: kb.getQuestions()) {
+			for (Question q : kb.getQuestions()) {
 				Object property = q.getProperties().getProperty(Property.INIT);
 				if (property != null) {
 					String s = (String) property;
 					List<String> ids = new LinkedList<String>();
 					int posstart = 0;
 					int posend = s.indexOf(";");
-					while (posend!=-1) {
+					while (posend != -1) {
 						ids.add(s.substring(posstart, posend));
-						posstart = posend+1;
+						posstart = posend + 1;
 						posend = s.indexOf(";", posstart);
 					}
 					ids.add(s.substring(posstart));
@@ -90,19 +81,22 @@ public class PSMethodInit implements PSMethod {
 						Choice choice = (Choice) qc.getAnswer(theCase,
 								ids.get(0));
 						theCase.setValue(qc, new ChoiceValue(choice));
-					} else {
-						//TODO QuestionNum, QuestionDate
+					}
+					else {
+						// TODO QuestionNum, QuestionDate
 					}
 				}
 			}
-		} finally {
+		}
+		finally {
 			theCase.getPropagationContoller().commitPropagation();
 		}
 	}
 
 	/**
-	 * Indicates whether the problemsolver contributes to Session.getDiagnoses(DiangosisState)
-	 * Creation date: (21.02.2002 16:51:10)
+	 * Indicates whether the problemsolver contributes to
+	 * Session.getDiagnoses(DiangosisState) Creation date: (21.02.2002 16:51:10)
+	 * 
 	 * @return false
 	 */
 	public boolean isContributingToResult() {

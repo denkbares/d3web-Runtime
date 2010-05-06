@@ -34,10 +34,10 @@ import javax.faces.context.ResponseWriter;
 
 import org.apache.log4j.Logger;
 
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.MMInfoObject;
@@ -49,7 +49,6 @@ import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.dialog2.basics.layout.MMInfo;
 import de.d3web.dialog2.basics.settings.ResourceRepository;
 import de.d3web.dialog2.util.DialogUtils;
-import de.d3web.scoring.inference.PSMethodHeuristic;
 
 public class DialogRenderUtils {
 
@@ -61,22 +60,25 @@ public class DialogRenderUtils {
 		if (DialogUtils.getDialogSettings().isShowDiagReason()) {
 			onclickString.append(", '"
 					+ DialogUtils.getMessageFor("explain.popup.reason") + "'");
-		} else {
+		}
+		else {
 			onclickString.append(", ''");
 		}
 		if (DialogUtils.getDialogSettings().isShowDiagConcreteDerivation()) {
 			onclickString.append(", '"
 					+ DialogUtils
-							.getMessageFor("explain.popup.concrete_derivation")
+					.getMessageFor("explain.popup.concrete_derivation")
 					+ "'");
-		} else {
+		}
+		else {
 			onclickString.append(", ''");
 		}
 		if (DialogUtils.getDialogSettings().isShowDiagDerivation()) {
 			onclickString.append(", '"
 					+ DialogUtils.getMessageFor("explain.popup.derivation")
 					+ "'");
-		} else {
+		}
+		else {
 			onclickString.append(", ''");
 		}
 		onclickString.append(")); return false;");
@@ -104,7 +106,8 @@ public class DialogRenderUtils {
 				}
 			}
 			return ret;
-		} else {
+		}
+		else {
 			return new ArrayList<MMInfoObject>();
 		}
 	}
@@ -139,8 +142,10 @@ public class DialogRenderUtils {
 			}
 		}
 		if (lowestPos != Integer.MAX_VALUE) {
-			return new Object[] { lowestPos, extraTags[arrayPos] };
-		} else {
+			return new Object[] {
+					lowestPos, extraTags[arrayPos] };
+		}
+		else {
 			return null;
 		}
 	}
@@ -276,7 +281,8 @@ public class DialogRenderUtils {
 			// render remaining text...
 			// don't escape strings because html is allowed...
 			writer.write(textToCheck);
-		} else {
+		}
+		else {
 			// don't escape strings because html is allowed...
 			writer.write(textToCheck);
 		}
@@ -290,7 +296,8 @@ public class DialogRenderUtils {
 		child.encodeBegin(facesContext);
 		if (child.getRendersChildren()) {
 			child.encodeChildren(facesContext);
-		} else {
+		}
+		else {
 			renderChildren(facesContext, child);
 		}
 		child.encodeEnd(facesContext);
@@ -314,8 +321,7 @@ public class DialogRenderUtils {
 
 		if (DialogUtils.getDialogSettings().isShowDiagExplanation()) {
 			writer.startElement("a", component);
-			DiagnosisState diagState = diag.getState(theCase,
-					PSMethodHeuristic.class);
+			DiagnosisState diagState = theCase.getBlackboard().getState(diag);
 			writer.writeAttribute("id", component.getId() + "_heur_"
 					+ diagState.getName() + "_" + diag.getId(), "id");
 			writer.writeAttribute("class", styleClass, "class");
@@ -327,19 +333,22 @@ public class DialogRenderUtils {
 					"title");
 			if (score == null || !showScore) {
 				writer.writeText(diag.getName(), "value");
-			} else {
+			}
+			else {
 				writer
 						.writeText(diag.getName() + " (" + score.toString()
-								+ ")", "value");
+						+ ")", "value");
 			}
 			writer.endElement("a");
-		} else {
+		}
+		else {
 			if (score == null || !showScore) {
 				writer.writeText(diag.getName(), "value");
-			} else {
+			}
+			else {
 				writer
 						.writeText(diag.getName() + " (" + score.toString()
-								+ ")", "value");
+						+ ")", "value");
 			}
 		}
 	}
@@ -362,7 +371,8 @@ public class DialogRenderUtils {
 			if (explicitWidth || infoObj.getContent().length() <= maxCharCount) {
 				renderAdditionalInfoWithReplacedExtraMarkup(writer, component,
 						diagOrQuestion, infoObj.getContent());
-			} else {
+			}
+			else {
 				writer.startElement("a", component);
 				writer.writeAttribute("href", "#", "href");
 				writer.writeAttribute("title", DialogUtils
@@ -393,7 +403,7 @@ public class DialogRenderUtils {
 					.getMessageFor("mminfo.multimedialink.title"), "title");
 			writer
 					.writeText(DialogUtils
-							.getMessageFor("mminfo.multimedialink"), "value");
+					.getMessageFor("mminfo.multimedialink"), "value");
 			writer.endElement("a");
 			writer.endElement("li");
 		}
@@ -414,7 +424,8 @@ public class DialogRenderUtils {
 			// if info-length longer than maxlength, then render a substring
 			if (explicitWidth || infoObj.getContent().length() <= maxCharCount) {
 				writer.writeText(infoObj.getContent(), "value");
-			} else {
+			}
+			else {
 				writer.writeText(infoObj.getContent()
 						.substring(0, maxCharCount)
 						+ DialogUtils.getMessageFor("mminfo.shortenedstring"),
@@ -453,12 +464,14 @@ public class DialogRenderUtils {
 				}
 				writer.writeAttribute(info.getMouseEvent(), tooltipString, info
 						.getMouseEvent());
-			} else {
+			}
+			else {
 				writer.writeAttribute(info.getMouseEvent(), "TagToTip('"
 						+ spanIDString + "_" + diagOrQuestion.getId()
 						+ "'); return false;", info.getMouseEvent());
 			}
-		} else { // popup for a diagnosis
+		}
+		else { // popup for a diagnosis
 			writer.writeAttribute("onclick", "TagToTip('" + spanIDString + "_"
 					+ diagOrQuestion.getId() + "'); return false;", "onclick");
 		}
@@ -478,7 +491,8 @@ public class DialogRenderUtils {
 			List<MMInfoObject> mmInfoMultimediaList = getMMInfo(diagOrQuestion,
 					MMInfoSubject.MULTIMEDIA);
 			// if MMInfo available
-			if (isMMInfoAvailable(new List[] { mmInfoTextList, mmInfoURLList,
+			if (isMMInfoAvailable(new List[] {
+					mmInfoTextList, mmInfoURLList,
 					mmInfoMultimediaList })) {
 				if (inTableRow) {
 					writer.startElement("td", component);
@@ -509,13 +523,13 @@ public class DialogRenderUtils {
 				}
 				renderHtmlForMMInfo(component, writer, mmInfoTextList,
 						diagOrQuestion, DialogUtils.getDialogSettings()
-								.getMaxCharLengthInMMInfoPopup(), explicitWidth);
+						.getMaxCharLengthInMMInfoPopup(), explicitWidth);
 				renderHtmlForMMURL(component, writer, mmInfoURLList,
 						DialogUtils.getDialogSettings()
-								.getMaxCharLengthInMMInfoPopup(), explicitWidth);
+						.getMaxCharLengthInMMInfoPopup(), explicitWidth);
 				renderHtmlForMMMultimedia(component, writer,
 						mmInfoMultimediaList, DialogUtils.getDialog()
-								.getTheCase().getKnowledgeBase().getId());
+						.getTheCase().getKnowledgeBase().getId());
 				writer.endElement("ul");
 				writer.endElement("div");
 
@@ -576,17 +590,10 @@ public class DialogRenderUtils {
 	public static void sortDiagnosisList(List<Solution> diagList,
 			final Session theCase) {
 		Comparator<Solution> diagCompAsc = new Comparator<Solution>() {
-
+			// TODO: check order, reverse?
 			public int compare(Solution a, Solution b) {
-				if (a.getScore(theCase, PSMethodHeuristic.class).getScore() < b
-						.getScore(theCase, PSMethodHeuristic.class).getScore())
-					return 1;
-				else if (a.getScore(theCase, PSMethodHeuristic.class)
-						.getScore() > b.getScore(theCase,
-						PSMethodHeuristic.class).getScore())
-					return -1;
-				else
-					return 0;
+				return theCase.getBlackboard().getState(a).compareTo(
+						theCase.getBlackboard().getState(b));
 			}
 		};
 		Collections.sort(diagList, diagCompAsc);

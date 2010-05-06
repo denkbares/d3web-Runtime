@@ -32,6 +32,7 @@ import java.util.LinkedList;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import de.d3web.abstraction.inference.PSMethodQuestionSetter;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.inference.condition.CondEqual;
@@ -40,8 +41,8 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.explain.ExplanationFactory;
@@ -60,8 +61,8 @@ import de.d3web.scoring.Score;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
- *
- * @author  betz
+ * 
+ * @author betz
  */
 public class ExplainQASetReasons extends AbstractExplainTest {
 
@@ -76,7 +77,7 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 
 	public static void main(String[] args) {
 		junit.textui.TestRunner.main(
-			new String[] { "de.d3web.explain.test.ExplainQASetReasonsTest" });
+				new String[] { "de.d3web.explain.test.ExplainQASetReasonsTest" });
 	}
 
 	public static Test suite() {
@@ -86,21 +87,20 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 	@Override
 	protected void setUp() {
 		theCase = SessionFactory.createSession(testKb);
-		/* Let me have some explanations of this test first:
-		 * We do have the following assumptions:
-		 * InitQASets: Q56, Q16
-		 * Children of Q56: Mf2, Mf3, Mf4, Mf5, Mf6, Mf7, Mf8, Mf9
-		 * Consequences of setting Mf8 to Mf8a2: Activation of Mf10
-		 *       + adding Diagnosis P8 the score P5.
-		 * Consequences of P8 = suggested: Activate Q17
-		 * Consequences of P8 = established: Acitvate Q17
+		/*
+		 * Let me have some explanations of this test first: We do have the
+		 * following assumptions: InitQASets: Q56, Q16 Children of Q56: Mf2,
+		 * Mf3, Mf4, Mf5, Mf6, Mf7, Mf8, Mf9 Consequences of setting Mf8 to
+		 * Mf8a2: Activation of Mf10 + adding Diagnosis P8 the score P5.
+		 * Consequences of P8 = suggested: Activate Q17 Consequences of P8 =
+		 * established: Acitvate Q17
 		 */
 
 		eFac = new ExplanationFactory(theCase);
 	}
 
 	public void testInitQASets() {
-		Collection explainContext = new LinkedList();
+		Collection<Class<? extends PSMethod>> explainContext = new LinkedList<Class<? extends PSMethod>>();
 		explainContext.add(PSMethodInit.class);
 		explainContext.add(PSMethodHeuristic.class);
 		explainContext.add(PSMethodUserSelected.class);
@@ -114,28 +114,26 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 		// Test the activation-explanation of Q56: It's an init-qaset.
 
 		assertSame("Target won't match", expl.getTarget(), findQ("Q56", testKb));
-		Collection reasons = expl.getProReasons();
+		Collection<?> reasons = expl.getProReasons();
 		assertTrue(reasons.size() == 1);
 		EReason firstReason = (EReason) reasons.iterator().next();
 		assertTrue("Incorrect type", firstReason instanceof EPSMethodReason);
-		assertTrue(
-			((EPSMethodReason) firstReason).getContext() == PSMethodInit.class);
+		assertTrue(((EPSMethodReason) firstReason).getContext() == PSMethodInit.class);
 
-
-
-		/* This won't work properly due to the problem mentioned in ToDo-List
-		 * I think I won't need it in WebTrain
-		 *
-		   // then explain a (indirect) start-qaset
-		   expl = eFac.explainActive(findQ("Mf2",testKb), explainContext);
-		   System.out.println("expl" + expl.toString());
-		*/
+		/*
+		 * This won't work properly due to the problem mentioned in ToDo-List I
+		 * think I won't need it in WebTrain
+		 * 
+		 * // then explain a (indirect) start-qaset expl =
+		 * eFac.explainActive(findQ("Mf2",testKb), explainContext);
+		 * System.out.println("expl" + expl.toString());
+		 */
 
 	}
 
 	public void testRefinement() {
 
-		Collection explainContext = new LinkedList();
+		Collection<Class<? extends PSMethod>> explainContext = new LinkedList<Class<? extends PSMethod>>();
 		explainContext.add(PSMethodInit.class);
 		explainContext.add(PSMethodHeuristic.class);
 		explainContext.add(PSMethodUserSelected.class);
@@ -150,34 +148,33 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 		score = score.add(Score.P7);
 		theCase.setValue(P8, score, PSMethodUserSelected.class);
 
-		assertEquals(DiagnosisState.ESTABLISHED, P8.getState(theCase, PSMethodUserSelected.class));
+		assertEquals(new DiagnosisState(DiagnosisState.State.ESTABLISHED),
+				theCase.getBlackboard().getState(P8));
 
 		assertTrue(findQ("Q17", testKb).isValid(theCase));
 
-		//  explain a followup-question not active
+		// explain a followup-question not active
 		ENode expl = eFac.explainActive(findQ("Q17", testKb), explainContext);
 
 		log(expl.toString());
 
 		assertSame(findQ("Q17", testKb), expl.getTarget());
 		assertSame(expl.getValue(), QState.ACTIVE);
-		assertTrue(expl.getProReasons().size()==1);
+		assertTrue(expl.getProReasons().size() == 1);
 		Object firstReason = expl.getProReasons().iterator().next();
 		assertTrue(firstReason instanceof ERuleReason);
 		ERuleReason reason = (ERuleReason) firstReason;
-		assertTrue(reason.getActiveException()==null);
-		assertTrue(reason.getActiveContext()==null);
+		assertTrue(reason.getActiveException() == null);
+		assertTrue(reason.getActiveContext() == null);
 		ECondition activeCondition = reason.getActiveCondition();
-		assertTrue(activeCondition!=null);
+		assertTrue(activeCondition != null);
 		assertTrue(activeCondition.getCondition() instanceof CondDState);
-
-
 
 	}
 
 	public void testClarification() {
 
-		Collection explainContext = new LinkedList();
+		Collection<Class<? extends PSMethod>> explainContext = new LinkedList<Class<? extends PSMethod>>();
 		explainContext.add(PSMethodInit.class);
 		explainContext.add(PSMethodHeuristic.class);
 		explainContext.add(PSMethodUserSelected.class);
@@ -192,36 +189,35 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 		score = score.add(Score.P4);
 		theCase.setValue(P8, score, PSMethodUserSelected.class);
 
-		assertEquals(DiagnosisState.SUGGESTED, P8.getState(theCase, PSMethodUserSelected.class));
+		assertEquals(new DiagnosisState(DiagnosisState.State.SUGGESTED),
+				theCase.getBlackboard().getState(P8));
 
 		assertTrue(findQ("Q17", testKb).isValid(theCase));
 
-		//  explain a followup-question not active
+		// explain a followup-question not active
 		ENode expl = eFac.explainActive(findQ("Q17", testKb), explainContext);
 
 		log(expl.toString());
 
 		assertSame(findQ("Q17", testKb), expl.getTarget());
 		assertSame(expl.getValue(), QState.ACTIVE);
-		assertTrue(expl.getProReasons().size()==1);
+		assertTrue(expl.getProReasons().size() == 1);
 		Object firstReason = expl.getProReasons().iterator().next();
 		assertTrue(firstReason instanceof ERuleReason);
 		ERuleReason reason = (ERuleReason) firstReason;
-		assertTrue(reason.getActiveException()==null);
-		assertTrue(reason.getActiveContext()==null);
+		assertTrue(reason.getActiveException() == null);
+		assertTrue(reason.getActiveContext() == null);
 		ECondition activeCondition = reason.getActiveCondition();
-		assertTrue(activeCondition!=null);
+		assertTrue(activeCondition != null);
 		assertTrue(activeCondition.getCondition() instanceof CondDState);
 
-
-
-
 	}
+
 	public void _testInactive() {
 	}
 
 	public void testIndication() {
-		Collection explainContext = new LinkedList();
+		Collection<Class<? extends PSMethod>> explainContext = new LinkedList<Class<? extends PSMethod>>();
 		explainContext.add(PSMethodInit.class);
 		explainContext.add(PSMethodHeuristic.class);
 		explainContext.add(PSMethodUserSelected.class);
@@ -235,25 +231,25 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 		theCase.setValue(Mf8, new ChoiceValue((Choice) Mf8.getAnswer(theCase,
 				"Mf8a2")));
 
-
-		//  explain a followup-question not active
+		// explain a followup-question not active
 		ENode expl = eFac.explainActive(findQ("Mf10", testKb), explainContext);
 
 		// log(expl.toString());
 
 		assertSame(expl.getTarget(), findQ("Mf10", testKb));
 		assertSame(expl.getValue(), QState.ACTIVE);
-		assertTrue(expl.getProReasons().size()==1);
+		assertTrue(expl.getProReasons().size() == 1);
 		Object firstReason = expl.getProReasons().iterator().next();
 		assertTrue(firstReason instanceof ERuleReason);
 		ERuleReason reason = (ERuleReason) firstReason;
-		assertTrue(reason.getActiveException()==null);
-		assertTrue(reason.getActiveContext()==null);
+		assertTrue(reason.getActiveException() == null);
+		assertTrue(reason.getActiveContext() == null);
 		ECondition activeCondition = reason.getActiveCondition();
-		assertTrue(activeCondition!=null);
+		assertTrue(activeCondition != null);
 		assertTrue(activeCondition.getCondition() instanceof CondOr);
-		assertTrue(activeCondition.getActiveParts()!=null && !activeCondition.getActiveParts().isEmpty());
-		assertTrue(((ECondition)activeCondition.getActiveParts().get(0)).getCondition() instanceof CondEqual);
+		assertTrue(activeCondition.getActiveParts() != null
+				&& !activeCondition.getActiveParts().isEmpty());
+		assertTrue(((ECondition) activeCondition.getActiveParts().get(0)).getCondition() instanceof CondEqual);
 		// das sollte hier genügen. Es müsste noch Mf8 überprüft werden...
 	}
 

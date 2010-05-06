@@ -21,13 +21,8 @@
 package de.d3web.indication.inference;
 
 import de.d3web.core.inference.PSMethodRulebased;
-import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.CaseDiagnosis;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
-import de.d3web.scoring.DiagnosisScore;
 
 /**
  * This PSMethod is for user selections (e.g. in a Dialog) Creation date:
@@ -54,28 +49,13 @@ public class PSMethodUserSelected extends PSMethodRulebased {
 	}
 
 	/**
-	 * @return the (calculated) state of the given Diagnosis for the current
-	 *         (given) case. Creation date: (03.01.2002 17:32:38)
-	 */
-	public DiagnosisState getState(Session theCase, Solution diagnosis) {
-		Object value = ((CaseDiagnosis) (theCase.getCaseObject(diagnosis))).getValue(this.getClass());
-		if (value instanceof DiagnosisScore) {
-			return DiagnosisState.getState((DiagnosisScore) value);
-		}
-		else if (value instanceof DiagnosisState) {
-			return (DiagnosisState) value;
-		}
-		else {
-			return DiagnosisState.UNCLEAR;
-		}
-	}
-
-	/**
 	 * @see de.d3web.core.inference.PSMethod
 	 */
+	@Override
 	public void init(de.d3web.core.session.Session theCase) {
 	}
 
+	@Override
 	public String toString() {
 		return "User selections";
 	}

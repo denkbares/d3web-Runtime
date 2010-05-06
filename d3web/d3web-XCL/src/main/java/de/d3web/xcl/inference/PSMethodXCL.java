@@ -41,8 +41,8 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.CaseObjectSource;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.core.session.blackboard.SessionObject;
@@ -58,22 +58,10 @@ import de.d3web.xcl.XCLRelation;
 public class PSMethodXCL implements PSMethod, StrategicSupport,
 		CaseObjectSource {
 
-	
 	private ScoreAlgorithm scoreAlgorithm = new DefaultScoreAlgorithm();
 
 	public PSMethodXCL() {
 		super();
-	}
-
-	
-
-	public DiagnosisState getState(Session theCase, Solution diagnosis) {
-		KnowledgeSlice model = diagnosis.getKnowledge(
-				PSMethodXCL.class, XCLModel.XCLMODEL);
-		if (model == null)
-			return DiagnosisState.UNCLEAR;
-		XCLModel xclmodel = (XCLModel) model;
-		return xclmodel.getState(theCase);
 	}
 
 	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
@@ -93,7 +81,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 					List<PropagationEntry> entries = modelsToUpdate.get(model);
 					if (entries == null) {
 						entries = new LinkedList<PropagationEntry>();
-						modelsToUpdate.put((XCLModel) model, entries);
+						modelsToUpdate.put(model, entries);
 					}
 					entries.add(change);
 				}
@@ -116,11 +104,11 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		for (PropagationEntry entry : changes) {
 			if (entry.getObject() instanceof Question) {
 				Question question = (Question) entry.getObject();
-				
+
 				// update count of question
 				if (entry.hasOldValue()) caseObject.totalAnsweredCount--;
 				if (entry.hasNewValue()) caseObject.totalAnsweredCount++;
-				
+
 				// update abnormalities
 				AbstractAbnormality abnormality = getAbnormalitySlice(question);
 				double oldAbnormality = getAbnormality(abnormality, entry.getOldValue());
@@ -151,39 +139,43 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		}
 		// no slice ==> every answer is abnormal
 		if (abnormality == null || (!(answer instanceof Value))) return 1.0;
-		
+
 		double max = 0;
 		// TODO: Explicit Handling for MC Answers! (joba, 2010-03-11)
 		max = abnormality.getValue((Value) answer);
-//		for (Object a : answers) {
-//			max = Math.max(max, abnormality.getValue((Answer) a));
-//		}
+		// for (Object a : answers) {
+		// max = Math.max(max, abnormality.getValue((Answer) a));
+		// }
 		return max;
 	}
 
-//	public double getAbnormality(AbstractAbnormality abnormality, List<?> answers) {
-//		// no answer ==> not abnormal
-//		if (answers == null || answers.size()==0)
-//			return 0.0;
-//		// no slice ==> every answer is abnormal
-//		if (abnormality == null) return 1.0;
-//		double max = 0;
-//		for (Object a : answers) {
-//			max = Math.max(max, abnormality.getValue((Answer) a));
-//		}
-//		return max;
-//	}
+	// public double getAbnormality(AbstractAbnormality abnormality, List<?>
+	// answers) {
+	// // no answer ==> not abnormal
+	// if (answers == null || answers.size()==0)
+	// return 0.0;
+	// // no slice ==> every answer is abnormal
+	// if (abnormality == null) return 1.0;
+	// double max = 0;
+	// for (Object a : answers) {
+	// max = Math.max(max, abnormality.getValue((Answer) a));
+	// }
+	// return max;
+	// }
 
 	public AbstractAbnormality getAbnormalitySlice(Question question) {
 		try {
-			KnowledgeSlice knowledge = question.getKnowledge(PSMethodShared.class, PSMethodShared.SHARED_ABNORMALITY);
+			KnowledgeSlice knowledge = question.getKnowledge(PSMethodShared.class,
+					PSMethodShared.SHARED_ABNORMALITY);
 			if (knowledge == null)
 				return null;
 			return (AbstractAbnormality) knowledge;
-		} catch (IllegalArgumentException e) {
+		}
+		catch (IllegalArgumentException e) {
 			throw new IllegalStateException(
 					"internal error accessing shared knowledge", e);
-		} catch (SecurityException e) {
+		}
+		catch (SecurityException e) {
 			throw new IllegalStateException(
 					"internal error accessing shared knowledge", e);
 		}
@@ -200,15 +192,17 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 			if (ks == null) continue;
 			XCLModel model = (XCLModel) ks;
 			addRelationConditions(pot, qasets, model);
-			
+
 			Float count = map.get(pot);
-			Number apriori = (Number) solution.getProperties().getProperty(Property.APRIORI);
+			Number apriori = (Number) solution.getProperties().getProperty(
+					Property.APRIORI);
 			float weight = (apriori == null) ? 1f : apriori.floatValue();
 			totalweight += weight;
 			if (count == null) {
 				map.put(pot, weight);
-			} else {
-				map.put(pot, weight+count);
+			}
+			else {
+				map.put(pot, weight + count);
 			}
 		}
 		// Russel & Norvig p. 805
@@ -245,18 +239,17 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 	}
 
 	public Collection<Solution> getPossibleDiagnoses(Session theCase) {
-		List<PSMethod> solvers = new LinkedList<PSMethod>();
-		solvers.add(this);
-		List<Solution> solutions = theCase.getDiagnoses(
-				DiagnosisState.ESTABLISHED, solvers);
+		List<Solution> solutions = theCase.getSolutions(new DiagnosisState(
+				DiagnosisState.State.ESTABLISHED));
 		if (solutions.size() > 0) {
 			return solutions;
 		}
-		solutions = theCase.getDiagnoses(DiagnosisState.SUGGESTED, solvers);
+		solutions = theCase.getSolutions(new DiagnosisState(
+				DiagnosisState.State.SUGGESTED));
 		if (solutions.size() > 0) {
 			return solutions;
 		}
-		return theCase.getDiagnoses(DiagnosisState.UNCLEAR, solvers);
+		return theCase.getSolutions(new DiagnosisState(DiagnosisState.State.UNCLEAR));
 	}
 
 	public Collection<Question> getDiscriminatingQuestions(
@@ -285,8 +278,8 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 	}
 
 	private static class XCLCaseObject extends SessionObject {
-		private int		totalAnsweredCount = 0;
-		private double	totalAnsweredAbnormality = 0.0;
+		private int totalAnsweredCount = 0;
+		private double totalAnsweredAbnormality = 0.0;
 
 		private XCLCaseObject(PSMethodXCL methodXCL) {
 			super(methodXCL);

@@ -45,7 +45,6 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.DiagnosisState.State;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.session.blackboard.Blackboard;
@@ -86,7 +85,7 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  * @see SessionObject
  */
 public class D3WebSession implements Session {
-	
+
 	private final DefaultInterview interview;
 
 	private final KnowledgeBase kb;
@@ -98,7 +97,7 @@ public class D3WebSession implements Session {
 
 	private List<PSMethod> usedPSMethods;
 
-	//TODO: maybe change to rule
+	// TODO: maybe change to rule
 	private Set<Class<? extends KnowledgeSlice>> finishReasons;
 	// private boolean finished = false;
 
@@ -136,14 +135,16 @@ public class D3WebSession implements Session {
 		for (PSMethod method : commonPSMethods) {
 			addUsedPSMethod(method);
 		}
-		//get PluginConfiguration
+		// get PluginConfiguration
 		PluginConfig pc = PluginConfig.getPluginConfig(kb);
-		//add plugged PS with default config, only if none instance of this plugin was configured in the kb
-		//psMethods with state deactivated are not inserted
-		for (Extension e: PluginManager.getInstance().getExtensions("d3web-Kernel-ExtensionPoints", PSMethod.EXTENSIONPOINT_ID)) {
+		// add plugged PS with default config, only if none instance of this
+		// plugin was configured in the kb
+		// psMethods with state deactivated are not inserted
+		for (Extension e : PluginManager.getInstance().getExtensions(
+				"d3web-Kernel-ExtensionPoints", PSMethod.EXTENSIONPOINT_ID)) {
 			PSMethod psMethod = (PSMethod) e.getNewInstance();
 			boolean found = false;
-			for (PSConfig psConfig: kb.getPsConfigs()) {
+			for (PSConfig psConfig : kb.getPsConfigs()) {
 				PSMethod psm = psConfig.getPsMethod();
 				if (psm.getClass().equals(psMethod.getClass())) {
 					found = true;
@@ -151,45 +152,48 @@ public class D3WebSession implements Session {
 				}
 			}
 			if (found) continue;
-			//get PluginEntry, if none is found, one will be created
+			// get PluginEntry, if none is found, one will be created
 			PluginEntry pluginEntry = pc.getPluginEntry(e.getPluginID());
-			if (pluginEntry==null) {
+			if (pluginEntry == null) {
 				Plugin plugin = PluginManager.getInstance().getPlugin(e.getPluginID());
 				pluginEntry = new PluginEntry(plugin, false, true);
 				pc.addEntry(pluginEntry);
 			}
-			//get autodetect of the psMethod
+			// get autodetect of the psMethod
 			Autodetect auto = pluginEntry.getAutodetect();
-			//add the newly created configuration
-			PSConfig psConfig = new PSConfig(PSConfig.PSState.autodetect, psMethod, auto, e.getID(), e.getPluginID(), e.getPriority());
+			// add the newly created configuration
+			PSConfig psConfig = new PSConfig(PSConfig.PSState.autodetect, psMethod, auto,
+					e.getID(), e.getPluginID(), e.getPriority());
 			kb.addPSConfig(psConfig);
 		}
-		//adding preconfigured psmethods from the kb to the case
-		for (PSConfig psConfig: kb.getPsConfigs()) {
+		// adding preconfigured psmethods from the kb to the case
+		for (PSConfig psConfig : kb.getPsConfigs()) {
 			checkStateAndInsertPSM(kb, psConfig);
 		}
 	}
 
 	private void checkStateAndInsertPSM(KnowledgeBase kb, PSConfig psConfig) {
-		if (psConfig.getPsState()==PSConfig.PSState.autodetect) {
+		if (psConfig.getPsState() == PSConfig.PSState.autodetect) {
 			Autodetect auto = psConfig.getAutodetect();
-			//if it is set to autodetect and there is no implementation
-			//the psmethod is added
-			if (auto==null) {
+			// if it is set to autodetect and there is no implementation
+			// the psmethod is added
+			if (auto == null) {
 				addUsedPSMethod(psConfig.getPsMethod());
-			} else {
+			}
+			else {
 				if (auto.check(kb)) {
 					addUsedPSMethod(psConfig.getPsMethod());
 				}
 			}
-		} else if (psConfig.getPsState()==PSConfig.PSState.active) {
+		}
+		else if (psConfig.getPsState() == PSConfig.PSState.active) {
 			addUsedPSMethod(psConfig.getPsMethod());
 		}
 	}
 
 	private void init(QASetManagerFactory theQamFactory) {
 		blackboard = new Blackboard(this);
-		
+
 		setQASetManagerFactory(theQamFactory);
 
 		properties = new Properties();
@@ -210,7 +214,7 @@ public class D3WebSession implements Session {
 			qaSet.activate(this, null, PSMethodInit.class);
 		}
 	}
-	
+
 	D3WebSession(KnowledgeBase kb, QASetManagerFactory theQamFactory, List<PSMethod> psmethods) {
 		this.kb = kb;
 		this.propagationController = new DefaultPropagationController(this);
@@ -234,7 +238,7 @@ public class D3WebSession implements Session {
 		}
 		return id;
 	}
-	
+
 	@Override
 	public Interview getInterviewManager() {
 		return interview;
@@ -284,13 +288,13 @@ public class D3WebSession implements Session {
 			// bräuchte eine Liste der bewerteten Lösungen im Fall (analog
 			// beantwortete Fragen)
 			/*
-			for (Diagnosis diagnosis : this.getDiagnoses()) {
-				if (DiagnosisState.UNCLEAR.equals(diagnosis.getState(this))) continue;
-				Object[] oldValue = new Object[] { DiagnosisState.UNCLEAR };
-				Object[] newValue = getValue(diagnosis, null);
-				propagationContoller.propagate(diagnosis, oldValue, newValue, psmethod);
-			}
-			*/
+			 * for (Diagnosis diagnosis : this.getDiagnoses()) { if
+			 * (DiagnosisState.UNCLEAR.equals(diagnosis.getState(this)))
+			 * continue; Object[] oldValue = new Object[] {
+			 * DiagnosisState.UNCLEAR }; Object[] newValue = getValue(diagnosis,
+			 * null); propagationContoller.propagate(diagnosis, oldValue,
+			 * newValue, psmethod); }
+			 */
 		}
 		finally {
 			propagationContoller.commitPropagation();
@@ -314,16 +318,6 @@ public class D3WebSession implements Session {
 			dynamicStore.put(cos, co);
 		}
 		return co;
-	}
-
-	/**
-	 * @return a list of Diagnosis instances, which have the specified
-	 *         DiagnosisState. Only these diagnoses are considered, whose states
-	 *         have been set by one of the given PSMethods.
-	 */
-	@Override
-	public List<Solution> getDiagnoses(DiagnosisState state, List<? extends PSMethod> psMethods) {
-		return getSolutions(state, psMethods);
 	}
 
 	private QASetManagerFactory getQASetManagerFactory() {
@@ -372,16 +366,6 @@ public class D3WebSession implements Session {
 	}
 
 	/**
-	 * Checks if there are reasons for finishing the case.
-	 * 
-	 * @see Session#isFinished()
-	 */
-	@Override
-	public boolean isFinished() {
-		return !finishReasons.isEmpty();
-	}
-
-	/**
 	 * Propagate new value of a specified ValuedObject to all
 	 * Problem-Solving-Methods connected to this ValuedObject (e.g. Question,
 	 * Diagnosis)
@@ -389,7 +373,7 @@ public class D3WebSession implements Session {
 	 * @author joba
 	 */
 	private void propagateValue(ValuedObject valuedObject, Object oldValue, Object newValue) {
-		
+
 		// notify the dialog control if questions have been changed
 		if (valuedObject instanceof Question) {
 			// removeQuestion((Question) valuedObject);
@@ -409,8 +393,8 @@ public class D3WebSession implements Session {
 			Object source, PSMethod method) {
 		// TODO: consider 'context' and 'psMethod' when adding a fact
 		if (valuedObject instanceof TerminologyObject) {
-			Fact fact = new DefaultFact((TerminologyObject)valuedObject,
-					//ValueFactory.toValue(valuedObject, newValue, this),
+			Fact fact = new DefaultFact((TerminologyObject) valuedObject,
+								// ValueFactory.toValue(valuedObject, newValue, this),
 					newValue,
 					source, method);
 			getBlackboard().addValueFact(fact);
@@ -424,16 +408,6 @@ public class D3WebSession implements Session {
 
 	private void setQASetManagerFactory(QASetManagerFactory factory) {
 		qamFactory = factory;
-	}
-
-	/**
-	 * Adds a new reason for quiting the current case.
-	 * 
-	 * @see Session#setFinished(boolean f)
-	 */
-	@Override
-	public void finish(Class<? extends KnowledgeSlice> reasonForFinishCase) {
-		finishReasons.add(reasonForFinishCase);
 	}
 
 	@Override
@@ -451,37 +425,13 @@ public class D3WebSession implements Session {
 		// do not know the real context, so send PSMethod.class as context
 		setValue(valuedObject, value, PSMethodUserSelected.class);
 	}
-	
+
 	@Override
 	public Value getValue(Question question) {
 		// 2010.04 joba: use the deprecated method, until the Blackboard has
 		// been established in the Session implementation.
 		return question.getValue(this);
 	}
-
-	@Override
-	public DiagnosisState getState(Solution solution) {
-		DiagnosisState state = new DiagnosisState(State.UNCLEAR);
-		for (PSMethod psm : getPSMethods()) {
-			DiagnosisState psState = psm.getState(this, solution);
-			if (psState == null) continue;
-			if (State.EXCLUDED.equals(psState))
-				return new DiagnosisState(State.EXCLUDED);
-			if (psState.compareTo(state) > 0) {
-				state = psState;
-			}
-		}
-		return state;
-	}
-
-	@Override
-	public DiagnosisState getState(Solution solution, Class<? extends PSMethod> context) {
-		// TODO: this is wrong! getState computes the real state every time, but
-		// this method should return the stored value of its CaseDiagnosis
-		// instance
-		return this.getPSMethodInstance(context).getState(this, solution);
-	}
-
 
 	/**
 	 * Sets the values for a specified question and propagates it to connected
@@ -510,7 +460,7 @@ public class D3WebSession implements Session {
 		propagateValue(valuedObject, oldValue, newValue);
 
 		// TODO: currently we do not distinguish PSMethods
-		//       different than UserSelected
+		// different than UserSelected
 		updateBlackboard(valuedObject, value,
 				ruleContext,
 				PSMethodUserSelected.getInstance());
@@ -535,7 +485,9 @@ public class D3WebSession implements Session {
 	public void setValue(ValuedObject valuedObject, Value value, Class<? extends PSMethod> context) {
 		Object oldValue = getValue(valuedObject);
 		if (valuedObject instanceof Solution) {
-			((Solution) valuedObject).setValue(this, value, context);
+			getBlackboard().addValueFact(
+					new DefaultFact((TerminologyObject) valuedObject, value,
+							new Object(), getPSMethodInstance(context)));
 		}
 		else if (valuedObject instanceof Question) {
 			((Question) valuedObject).setValue(this, value);
@@ -547,9 +499,9 @@ public class D3WebSession implements Session {
 		Object newValue = getValue(valuedObject);
 		notifyListeners(valuedObject, context);
 		propagateValue(valuedObject, oldValue, newValue);
-		
+
 		// TODO: currently we do not distinguish PSMethods
-		//       different than UserSelected
+		// different than UserSelected
 		updateBlackboard(valuedObject, value,
 				this,
 				PSMethodUserSelected.getInstance());
@@ -557,7 +509,8 @@ public class D3WebSession implements Session {
 
 	private Object getValue(ValuedObject valuedObject) {
 		if (valuedObject instanceof Solution) {
-			return ((Solution) valuedObject).getState(this) ;
+			Solution solution = (Solution) valuedObject;
+			return getBlackboard().getState(solution);
 		}
 		else if (valuedObject instanceof Question) {
 			return ((Question) valuedObject).getValue(this);
@@ -634,22 +587,15 @@ public class D3WebSession implements Session {
 	}
 
 	@Override
-	public List<Solution> getSolutions(DiagnosisState state, List<? extends PSMethod> psMethods) {
+	public List<Solution> getSolutions(DiagnosisState state) {
 		List<Solution> result = new LinkedList<Solution>();
 		for (Solution diag : getKnowledgeBase().getSolutions()) {
-			for (PSMethod psm : psMethods) {
-				if (psm.isContributingToResult()
-						&& diag.getState(this, psm.getClass()).equals(state)) {
-					result.add(diag);
-					// do not need to look at the remaining psms
-					break;
-				}
+			if (getBlackboard().getState(diag).equals(state)) {
+				result.add(diag);
 			}
 		}
 		return result;
 	}
-
-
 
 	// ******************** /event notification ********************
 

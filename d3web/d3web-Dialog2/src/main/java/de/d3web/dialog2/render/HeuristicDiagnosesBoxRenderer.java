@@ -21,7 +21,6 @@
 package de.d3web.dialog2.render;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,13 +29,12 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
-import de.d3web.core.inference.PSMethod;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.dialog2.util.DialogUtils;
-import de.d3web.scoring.inference.PSMethodHeuristic;
+import de.d3web.scoring.HeuristicRating;
 
 public class HeuristicDiagnosesBoxRenderer extends Renderer {
 
@@ -52,25 +50,33 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 
 		for (Iterator<Solution> iter = diagList.iterator(); iter.hasNext();) {
 			Solution diag = iter.next();
-			Integer score = new Double(diag.getScore(theCase, PSMethodHeuristic.class).getScore()).intValue();
+			DiagnosisState state = theCase.getBlackboard().getState(diag);
+			Integer score = 0;
+			if (state instanceof HeuristicRating) {
+				HeuristicRating hr = (HeuristicRating) state;
+				score = new Double(hr.getScore()).intValue();
+			}
 			if (score != 0) {
 				writer.startElement("tr", component);
 				writer.startElement("td", component);
 
-				DialogRenderUtils.renderDiagnosesLink(writer, component, diag, theCase, "underline", score
+				DialogRenderUtils.renderDiagnosesLink(writer, component, diag, theCase,
+						"underline", score
 						.toString(), showScore);
 				writer.endElement("td");
 
-				DialogRenderUtils.renderMMInfoPopupLink(writer, component, diag, true, null);
+				DialogRenderUtils.renderMMInfoPopupLink(writer, component, diag, true,
+						null);
 				writer.endElement("tr");
-		
-				Object diagExplanationObj = diag.getProperties().getProperty(Property.EXPLANATION);
+
+				Object diagExplanationObj = diag.getProperties().getProperty(
+						Property.EXPLANATION);
 				if (diagExplanationObj != null && diagExplanationObj instanceof String) {
 					String diagExplanation = (String) diagExplanationObj;
-					
+
 					writer.startElement("tr", component);
 					writer.startElement("td", component);
-					
+
 					writer.write(diagExplanation);
 					writer.endElement("td");
 					writer.startElement("td", component);
@@ -92,33 +98,36 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 			writer.writeAttribute("id", component.getClientId(context), "id");
 			writer.startElement("tr", component);
 			writer.startElement("th", component);
-			writer.writeText(DialogUtils.getMessageFor("solution.heuristicdiagnoses"), "value");
+			writer.writeText(DialogUtils.getMessageFor("solution.heuristicdiagnoses"),
+					"value");
 			writer.endElement("th");
 			writer.endElement("tr");
 
 			// render ESTABLISHED...
-			List<Solution> diagListEstablished = theCase.getDiagnoses(DiagnosisState.ESTABLISHED,
-					getPsMethodHeur(theCase));
+			List<Solution> diagListEstablished = theCase.getSolutions(new DiagnosisState(
+					DiagnosisState.State.ESTABLISHED));
 			if (!diagListEstablished.isEmpty()
 					&& DialogUtils.getDialogSettings().isShowHeuristicEstablishedDiagnoses()) {
 				DialogRenderUtils.sortDiagnosisList(diagListEstablished, theCase);
-				renderDiagnoses(writer, component, diagListEstablished, theCase, DialogUtils
+				renderDiagnoses(writer, component, diagListEstablished, theCase,
+						DialogUtils
 						.getMessageFor("solution.established"), false);
 			}
 
 			// render SUGGESTED...
-			List<Solution> diagListSuggested = theCase.getDiagnoses(DiagnosisState.SUGGESTED,
-					getPsMethodHeur(theCase));
+			List<Solution> diagListSuggested = theCase.getSolutions(new DiagnosisState(
+					DiagnosisState.State.SUGGESTED));
 			if (!diagListSuggested.isEmpty()
 					&& DialogUtils.getDialogSettings().isShowHeuristicSuggestedDiagnoses()) {
 				DialogRenderUtils.sortDiagnosisList(diagListSuggested, theCase);
-				renderDiagnoses(writer, component, diagListSuggested, theCase, DialogUtils
+				renderDiagnoses(writer, component, diagListSuggested, theCase,
+						DialogUtils
 						.getMessageFor("solution.suggested"), false);
 			}
 
 			// render EXCLUDED...
-			List<Solution> diagListExcluded = theCase.getDiagnoses(DiagnosisState.EXCLUDED,
-					getPsMethodHeur(theCase));
+			List<Solution> diagListExcluded = theCase.getSolutions(new DiagnosisState(
+					DiagnosisState.State.EXCLUDED));
 			if (!diagListExcluded.isEmpty()
 					&& DialogUtils.getDialogSettings().isShowHeuristicExcludedDiagnoses()) {
 				DialogRenderUtils.sortDiagnosisList(diagListExcluded, theCase);
@@ -129,20 +138,13 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 		}
 	}
 
-	private List<PSMethod> getPsMethodHeur(Session theCase) {
-		List<PSMethod> psMethodHeur = new ArrayList<PSMethod>();
-		for (PSMethod psm: theCase.getPSMethods()) {
-			if (psm instanceof PSMethodHeuristic) {
-				psMethodHeur.add(psm);
-			}
-		}
-		return psMethodHeur;
-	}
-
 	private boolean heuristicDiagnosesAvailable(Session theCase) {
-		List<Solution> established = theCase.getDiagnoses(DiagnosisState.ESTABLISHED, getPsMethodHeur(theCase));
-		List<Solution> suggested = theCase.getDiagnoses(DiagnosisState.SUGGESTED, getPsMethodHeur(theCase));
-		List<Solution> excluded = theCase.getDiagnoses(DiagnosisState.EXCLUDED, getPsMethodHeur(theCase));
+		List<Solution> established = theCase.getSolutions(new DiagnosisState(
+				DiagnosisState.State.ESTABLISHED));
+		List<Solution> suggested = theCase.getSolutions(new DiagnosisState(
+				DiagnosisState.State.SUGGESTED));
+		List<Solution> excluded = theCase.getSolutions(new DiagnosisState(
+				DiagnosisState.State.EXCLUDED));
 		if ((established.size() != 0 && DialogUtils.getDialogSettings().isShowHeuristicEstablishedDiagnoses())
 				|| (suggested.size() != 0 && DialogUtils.getDialogSettings()
 						.isShowHeuristicSuggestedDiagnoses())

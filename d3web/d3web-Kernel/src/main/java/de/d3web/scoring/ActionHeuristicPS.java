@@ -23,16 +23,13 @@ package de.d3web.scoring;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.RuleSet;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.D3WebSession;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
@@ -86,13 +83,9 @@ public class ActionHeuristicPS extends PSAction {
 	 */
 	@Override
 	public void doIt(Session theCase, Rule rule) {
-
-		DiagnosisScore resultDS =
-				getDiagnosis().getScore(theCase, getProblemsolverContext()).add(
-				getScore());
-
-		((D3WebSession) theCase).setValue(getDiagnosis(), resultDS,
-				getProblemsolverContext());
+		theCase.getBlackboard().addValueFact(
+				new DefaultFact(diagnosis, new HeuristicRating(getScore()), rule,
+				theCase.getPSMethodInstance(getProblemsolverContext())));
 	}
 
 	/**
@@ -138,33 +131,9 @@ public class ActionHeuristicPS extends PSAction {
 	 */
 	@Override
 	public void undo(Session theCase, Rule rule) {
-		DiagnosisScore resultDS = null;
-		if (getScore().equals(Score.N7)) {
-			KnowledgeSlice knowledge = getDiagnosis().getKnowledge(
-					PSMethodHeuristic.class, MethodKind.BACKWARD);
-			resultDS = new DiagnosisScore(getDiagnosis().getAprioriProbability());
-			if (knowledge != null) {
-				RuleSet rs = (RuleSet) knowledge;
-				for (Rule r : rs.getRules()) {
-					if (r.isUsed(theCase)) {
-						resultDS =
-								resultDS.add(
-								((ActionHeuristicPS) r.getAction()).getScore());
-					}
-				}
-			}
-		}
-		else {
-			resultDS =
-					getDiagnosis().getScore(
-					theCase,
-					getProblemsolverContext()).subtract(
-					getScore());
-		}
-		((D3WebSession) theCase).setValue(
-				getDiagnosis(),
-				resultDS,
-				getProblemsolverContext());
+		theCase.getBlackboard().removeValueFact(diagnosis, rule);
+		// nothing to do, the fact created in doIt will be automatically deleted
+		// from blackboard
 	}
 
 	@Override

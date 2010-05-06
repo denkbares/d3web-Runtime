@@ -24,8 +24,6 @@ import java.util.Collection;
 
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
-import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
@@ -33,6 +31,7 @@ import de.d3web.core.session.blackboard.Facts;
 /**
  * This is a psmethod to mark QContainers (QASets) which are (contra-)indicated
  * due to the (contra-)indication of a parent-QContainer (QASet).
+ * 
  * @author Georg
  */
 public class PSMethodParentQASet extends PSMethodAdapter {
@@ -54,14 +53,9 @@ public class PSMethodParentQASet extends PSMethodAdapter {
 		return instance;
 	}
 
-
-	public DiagnosisState getState(Session theCase, Solution diagnosis) {
-		return null;
-	}
-
 	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
 	}
-	
+
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
 		return Facts.mergeIndicationFacts(facts);

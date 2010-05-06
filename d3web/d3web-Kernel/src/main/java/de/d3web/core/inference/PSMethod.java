@@ -22,7 +22,6 @@ package de.d3web.core.inference;
 
 import java.util.Collection;
 
-import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
@@ -38,17 +37,6 @@ import de.d3web.core.session.blackboard.Fact;
 public interface PSMethod {
 
 	public final static String EXTENSIONPOINT_ID = "PSMethod";
-
-	/**
-	 * Every problem-solver has to decide how it calculates the state of a
-	 * solution.
-	 * 
-	 * @return the DiagnosisState of the given Diagnosis depending on the given
-	 *         Session
-	 */
-	// TODO: should be moved as blackboard functionality: get merged facts for a
-	// specific problem solver
-	DiagnosisState getState(Session session, Solution solution);
 
 	/**
 	 * Initialization method for this PSMethod; will be called when a new

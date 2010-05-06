@@ -20,8 +20,6 @@
 
 package de.d3web.dialog2;
 
-import java.util.List;
-
 import org.apache.myfaces.custom.tree2.HtmlTree;
 import org.apache.myfaces.custom.tree2.TreeModel;
 import org.apache.myfaces.custom.tree2.TreeModelBase;
@@ -29,11 +27,10 @@ import org.apache.myfaces.custom.tree2.TreeNode;
 import org.apache.myfaces.custom.tree2.TreeNodeBase;
 
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.dialog2.util.DialogUtils;
-import de.d3web.scoring.inference.PSMethodHeuristic;
 
 public class DiagnosesTreeBean {
 
@@ -56,18 +53,19 @@ public class DiagnosesTreeBean {
 	}
 
 	private void checkNodeStylesRecursive(TreeNode node, Session theCase) {
-		Solution actual = theCase.getKnowledgeBase().searchDiagnosis(
+		Solution actual = theCase.getKnowledgeBase().searchSolution(
 				node.getIdentifier());
-		if (actual.getState(theCase, PSMethodHeuristic.class).equals(
-				DiagnosisState.ESTABLISHED)) {
+		DiagnosisState state = theCase.getBlackboard().getState(actual);
+		if (state.equals(new DiagnosisState(DiagnosisState.State.ESTABLISHED))) {
 			node.setType(DiagnosesTreeBean.ESTABLISHED_TYPE);
-		} else if (actual.getState(theCase, PSMethodHeuristic.class).equals(
-				DiagnosisState.EXCLUDED)) {
+		}
+		else if (state.equals((new DiagnosisState(DiagnosisState.State.EXCLUDED)))) {
 			node.setType(DiagnosesTreeBean.EXCLUDED_TYPE);
-		} else if (actual.getState(theCase, PSMethodHeuristic.class).equals(
-				DiagnosisState.SUGGESTED)) {
+		}
+		else if (state.equals((new DiagnosisState(DiagnosisState.State.SUGGESTED)))) {
 			node.setType(DiagnosesTreeBean.SUGGESTED_TYPE);
-		} else {
+		}
+		else {
 			node.setType(DiagnosesTreeBean.STANDARD_TYPE);
 		}
 		if (node.getChildCount() > 0) {
@@ -83,7 +81,8 @@ public class DiagnosesTreeBean {
 		if (diag.getChildren().length == 0) {
 			parentNode.setLeaf(true);
 			return;
-		} else {
+		}
+		else {
 			TerminologyObject[] childrenList = diag.getChildren();
 			for (int i = 0; i < childrenList.length; i++) {
 				Solution diagChild = (Solution) childrenList[i];
@@ -94,21 +93,6 @@ public class DiagnosesTreeBean {
 				createTreeRecursive(diagChild, newNode);
 			}
 		}
-	}
-
-	public boolean getDiagnosesAvailable() {
-		Session theCase = DialogUtils.getDialog().getTheCase();
-		List<Solution> established = theCase
-				.getDiagnoses(DiagnosisState.ESTABLISHED, theCase.getPSMethods());
-		List<Solution> suggested = theCase
-				.getDiagnoses(DiagnosisState.SUGGESTED, theCase.getPSMethods());
-		List<Solution> excluded = theCase
-				.getDiagnoses(DiagnosisState.EXCLUDED, theCase.getPSMethods());
-		if (established.size() != 0 || suggested.size() != 0
-				|| excluded.size() != 0) {
-			return true;
-		}
-		return false;
 	}
 
 	public HtmlTree getDiagTree() {
@@ -130,7 +114,7 @@ public class DiagnosesTreeBean {
 	}
 
 	private void initTreeModel(Session theCase) {
-		Solution rootDiag = theCase.getKnowledgeBase().getRootDiagnosis();
+		Solution rootDiag = theCase.getKnowledgeBase().getRootSolution();
 		TreeNode treeData = new TreeNodeBase(DiagnosesTreeBean.STANDARD_TYPE,
 				rootDiag.getName(), false);
 		createTreeRecursive(rootDiag, treeData);

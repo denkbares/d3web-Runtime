@@ -54,7 +54,7 @@ public class HeuristicRating extends DiagnosisState {
 	public double getScore() {
 		return score;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return super.hashCode() + 47 * (int) score;
@@ -79,14 +79,22 @@ public class HeuristicRating extends DiagnosisState {
 	 * @param ratings
 	 *            the ratings to be summed
 	 */
-	public static HeuristicRating add(HeuristicRating... ratings) {
+	public static HeuristicRating add(Score aprioriScore, HeuristicRating... ratings) {
 		double score = 0.0;
 		for (HeuristicRating rating : ratings) {
 			score += rating.getScore();
 		}
+		if (aprioriScore != null) {
+			if (aprioriScore.aPrioriIsPositive()) {
+				score *= aprioriScore.getAPriori();
+			}
+			else {
+				score += aprioriScore.getAPriori();
+			}
+		}
 		return new HeuristicRating(score);
 	}
-	
+
 	@Override
 	public Object getValue() {
 		return getScore();

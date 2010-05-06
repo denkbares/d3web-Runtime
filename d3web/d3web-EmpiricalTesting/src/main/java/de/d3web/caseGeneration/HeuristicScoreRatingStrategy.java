@@ -20,16 +20,28 @@
 
 package de.d3web.caseGeneration;
 
+import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.empiricalTesting.Rating;
 import de.d3web.empiricalTesting.ScoreRating;
-import de.d3web.scoring.inference.PSMethodHeuristic;
+import de.d3web.scoring.HeuristicRating;
 
 public class HeuristicScoreRatingStrategy implements RatingStrategy {
 
 	@Override
 	public Rating getRatingFor(Solution solution, Session theCase) {
-		return new ScoreRating(solution.getScore(theCase, PSMethodHeuristic.class).getScore());
+		DiagnosisState state = theCase.getBlackboard().getState(solution);
+		if (state instanceof HeuristicRating) {
+			HeuristicRating hr = (HeuristicRating) state;
+			return new ScoreRating(hr.getScore());
+		}
+		else if (state.equals(new DiagnosisState(DiagnosisState.State.UNCLEAR))) {
+			return new ScoreRating(0.0);
+		}
+		else {
+			// TODO: Better solution?
+			return null;
+		}
 	}
 }

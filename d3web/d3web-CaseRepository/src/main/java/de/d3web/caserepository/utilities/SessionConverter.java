@@ -36,6 +36,7 @@ import de.d3web.core.knowledge.terminology.info.PropertiesCloner;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.interviewmanager.DialogProxy;
 import de.d3web.core.session.interviewmanager.ShadowMemory;
 import de.d3web.indication.inference.PSMethodUserSelected;
@@ -49,12 +50,14 @@ import de.d3web.indication.inference.PSMethodUserSelected;
 public class SessionConverter {
 
 	private static SessionConverter instance = null;
+
 	public static SessionConverter getInstance() {
 		if (instance == null) {
 			instance = new SessionConverter();
 		}
 		return instance;
 	}
+
 	private SessionConverter() {
 		additionalCaseConverters = new LinkedList();
 	}
@@ -77,7 +80,8 @@ public class SessionConverter {
 	 */
 	public Session caseObject2Session(CaseObject cobj, KnowledgeBase kb,
 			Class dialogControllerClass, List usedPSMethods) {
-		return caseObject2Session(cobj, kb, dialogControllerClass, usedPSMethods, true, true);
+		return caseObject2Session(cobj, kb, dialogControllerClass, usedPSMethods, true,
+				true);
 	}
 
 	/**
@@ -115,22 +119,26 @@ public class SessionConverter {
 			registeredContainers.add(qcontainer);
 		}
 
-		Session ret = SessionFactory.createAnsweredSession(kb, dialogControllerClass, proxy,
+		Session ret = SessionFactory.createAnsweredSession(kb, dialogControllerClass,
+				proxy,
 				registeredContainers, usedPSMethods);
 
 		// user-selected diagnoses
 		Iterator solIter = cobj.getSolutions(PSMethodUserSelected.class).iterator();
 		while (solIter.hasNext()) {
 			CaseObject.Solution sol = (CaseObject.Solution) solIter.next();
-			sol.getDiagnosis().setValue(ret, sol.getState(),
-					PSMethodUserSelected.class);
+			// TODO: Needs revision
+			ret.getBlackboard().addValueFact(
+					new DefaultFact(sol.getDiagnosis(), sol.getState(), new Object(),
+							PSMethodUserSelected.getInstance()));
 		}
 
 		if (copyDCMarkup) {
 			ret.setDCMarkup((DCMarkup) cobj.getDCMarkup().clone());
 		}
 		if (copyProperties) {
-			ret.setProperties(PropertiesCloner.getInstance().cloneProperties(cobj.getProperties()));
+			ret.setProperties(PropertiesCloner.getInstance().cloneProperties(
+					cobj.getProperties()));
 		}
 
 		Iterator iter = additionalCaseConverters.iterator();
@@ -226,7 +234,8 @@ public class SessionConverter {
 			}
 		}
 
-		List<de.d3web.core.knowledge.terminology.Solution> diags = theCase.getDiagnoses(state, theCase.getPSMethods());
+		List<de.d3web.core.knowledge.terminology.Solution> diags = theCase.getSolutions(
+				state);
 		if (diags != null) {
 			Iterator<de.d3web.core.knowledge.terminology.Solution> diter = diags.iterator();
 			while (diter.hasNext()) {
@@ -235,7 +244,9 @@ public class SessionConverter {
 				Iterator psMethodIter = usedPsm.iterator();
 				while (psMethodIter.hasNext()) {
 					PSMethod psm = (PSMethod) psMethodIter.next();
-					if (d.getState(theCase, psm.getClass()).equals(state)) {
+					// TODO: needs revision, while iteration over psm not
+					// usefull
+					if (theCase.getBlackboard().getState(d).equals(state)) {
 						CaseObject.Solution s = new CaseObject.Solution();
 						s.setDiagnosis(d);
 						s.setState(state);

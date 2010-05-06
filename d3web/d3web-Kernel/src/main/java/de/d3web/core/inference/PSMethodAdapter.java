@@ -19,11 +19,8 @@
  */
 
 package de.d3web.core.inference;
-import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+
 import de.d3web.core.session.Session;
-import de.d3web.scoring.DiagnosisScore;
-import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
  * An adapter class with some empty method bodies and some defulat
@@ -37,21 +34,6 @@ public abstract class PSMethodAdapter implements PSMethod {
 
 	protected PSMethodAdapter() {
 		super();
-	}
-
-	/**
-	 * By default the problem solver does not count for a diagnosis. :-) Every
-	 * problem-solver has to decide how it calculates the state of a diagnosis.
-	 * Creation date: (05.10.00 13:41:07)
-	 * 
-	 * @see DiagnosisState
-	 */
-	public DiagnosisState getState(Session theCase, Solution diagnosis) {
-		DiagnosisScore diagnosisScore = diagnosis.getScore(theCase, PSMethodHeuristic.class);
-		if (diagnosisScore == null)
-			return DiagnosisState.UNCLEAR;
-		else
-			return DiagnosisState.getState(diagnosisScore);
 	}
 
 	/**

@@ -24,14 +24,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.Session;
 import de.d3web.core.session.interviewmanager.MQDialogController;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
@@ -40,7 +41,7 @@ import de.d3web.empiricalTesting.RatedSolution;
 import de.d3web.empiricalTesting.RatedTestCase;
 import de.d3web.empiricalTesting.ScoreRating;
 import de.d3web.empiricalTesting.SequentialTestCase;
-import de.d3web.scoring.inference.PSMethodHeuristic;
+import de.d3web.scoring.HeuristicRating;
 
 /**
  * @deprecated Please use InterviewBot
@@ -140,13 +141,16 @@ public class DDBot2 {
 	private List<RatedSolution> toRatedSolutions(Session theCase) {
 		List<RatedSolution> ratedSolutions = new ArrayList<RatedSolution>();
 		for (Solution diagnosis : theCase.getKnowledgeBase().getDiagnoses()) {
-			double score = diagnosis.getScore(theCase, PSMethodHeuristic.class)
-					.getScore();
-			if (score >= SCORE_THRESHOLD) {
-				ScoreRating rating = new ScoreRating(score);
-				RatedSolution ratedSolution = new RatedSolution(diagnosis,
-						rating);
-				ratedSolutions.add(ratedSolution);
+			DiagnosisState state = theCase.getBlackboard().getState(diagnosis);
+			if (state instanceof HeuristicRating) {
+				HeuristicRating hr = (HeuristicRating) state;
+				double score = hr.getScore();
+				if (score >= SCORE_THRESHOLD) {
+					ScoreRating rating = new ScoreRating(score);
+					RatedSolution ratedSolution = new RatedSolution(diagnosis,
+							rating);
+					ratedSolutions.add(ratedSolution);
+				}
 			}
 		}
 		return ratedSolutions;
@@ -169,11 +173,13 @@ public class DDBot2 {
 		QASet next = controller.moveToNextRemainingQASet();
 		if (next != null && next instanceof QuestionChoice) {
 			return (QuestionChoice) next;
-		} else if (next != null) {
+		}
+		else if (next != null) {
 			List<Question> validQuestions = controller
 					.getAllValidQuestionsOf((QContainer) next);
 			return (QuestionChoice) validQuestions.get(0);
-		} else {
+		}
+		else {
 			return null;
 		}
 	}

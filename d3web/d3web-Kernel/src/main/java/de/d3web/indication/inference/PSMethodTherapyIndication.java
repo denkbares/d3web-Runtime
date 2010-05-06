@@ -19,6 +19,7 @@
  */
 
 package de.d3web.indication.inference;
+
 import java.util.Collection;
 
 import de.d3web.core.inference.KnowledgeSlice;
@@ -27,20 +28,15 @@ import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
-import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.knowledge.terminology.DiagnosisState.State;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
-import de.d3web.scoring.DiagnosisScore;
-import de.d3web.scoring.HeuristicRating;
 
 /**
- * Heuristic problem-solver which adds scores to diagnoses
- * on the basis of question values. If score of a diagnosis exceeds
- * a threshold this diagnosis will be established.
- * Creation date: (28.08.00 18:04:09)
+ * Heuristic problem-solver which adds scores to diagnoses on the basis of
+ * question values. If score of a diagnosis exceeds a threshold this diagnosis
+ * will be established. Creation date: (28.08.00 18:04:09)
+ * 
  * @author joba
  */
 public class PSMethodTherapyIndication extends PSMethodAdapter {
@@ -53,6 +49,7 @@ public class PSMethodTherapyIndication extends PSMethodAdapter {
 
 	/**
 	 * Creation date: (04.12.2001 12:36:25)
+	 * 
 	 * @return the one and only instance of this ps-method (Singleton)
 	 */
 	public static PSMethodTherapyIndication getInstance() {
@@ -63,34 +60,21 @@ public class PSMethodTherapyIndication extends PSMethodAdapter {
 	}
 
 	/**
-	 * Calculates the state by checking the score of the diagnosis
-	 * against a threshold value.
-	 * Creation date: (05.10.00 13:41:07)
-	 * @return de.d3web.kernel.domainModel.DiagnosisState
-	 */
-	public DiagnosisState getState(Session theCase, Solution diagnosis) {
-		DiagnosisScore diagnosisScore =
-			diagnosis.getScore(theCase, this.getClass());
-		if (diagnosisScore == null)
-			return new DiagnosisState(State.UNCLEAR);
-		else
-			return new HeuristicRating(diagnosisScore.getScore());
-	}
-
-	/**
 	 * Check if NamedObject has nextQASet rules and check them, if available
 	 */
 	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
 		for (PropagationEntry change : changes) {
-			KnowledgeSlice knowledgeSlices = change.getObject().getKnowledge(this.getClass(), MethodKind.FORWARD);
+			KnowledgeSlice knowledgeSlices = change.getObject().getKnowledge(
+					this.getClass(), MethodKind.FORWARD);
 			if (knowledgeSlices == null) return;
 			RuleSet rs = (RuleSet) knowledgeSlices;
-			for (Rule rule: rs.getRules()) {
+			for (Rule rule : rs.getRules()) {
 				rule.check(theCase);
 			}
 		}
 	}
 
+	@Override
 	public String toString() {
 		return "heuristic problem-solver";
 	}

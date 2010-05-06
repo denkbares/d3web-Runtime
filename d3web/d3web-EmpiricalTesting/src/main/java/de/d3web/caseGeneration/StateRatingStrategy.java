@@ -26,17 +26,17 @@ import de.d3web.empiricalTesting.Rating;
 import de.d3web.empiricalTesting.StateRating;
 
 /**
- * This uses the general state of a solution as the rating.
- * Every problem-solver can contribute to this state.
+ * This uses the general state of a solution as the rating. Every problem-solver
+ * can contribute to this state.
  * 
  * @author joba
- *
+ * 
  */
 public class StateRatingStrategy implements RatingStrategy {
 
 	@Override
 	public Rating getRatingFor(Solution solution, Session theCase) {
-		return new StateRating(solution.getState(theCase));
+		return new StateRating(theCase.getBlackboard().getState(solution));
 	}
-	
+
 }

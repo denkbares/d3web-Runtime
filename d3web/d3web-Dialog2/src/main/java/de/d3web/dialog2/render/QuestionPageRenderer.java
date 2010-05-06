@@ -43,10 +43,10 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.Choice;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
@@ -363,9 +363,6 @@ public class QuestionPageRenderer extends Renderer {
 	}
 
 	private void setValueInCase(Session theCase, Question q, Value answers) {
-		if (theCase.isFinished()) {
-			theCase.continueCase();
-		}
 		theCase.setValue(q, answers);
 	}
 
