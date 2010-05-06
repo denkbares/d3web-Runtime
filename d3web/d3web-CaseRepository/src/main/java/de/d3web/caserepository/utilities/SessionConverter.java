@@ -37,6 +37,7 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
+import de.d3web.core.session.interviewmanager.DialogController;
 import de.d3web.core.session.interviewmanager.DialogProxy;
 import de.d3web.core.session.interviewmanager.ShadowMemory;
 import de.d3web.indication.inference.PSMethodUserSelected;
@@ -59,10 +60,10 @@ public class SessionConverter {
 	}
 
 	private SessionConverter() {
-		additionalCaseConverters = new LinkedList();
+		additionalCaseConverters = new LinkedList<AdditionalCaseConverter>();
 	}
 
-	private List additionalCaseConverters = null;
+	private List<AdditionalCaseConverter> additionalCaseConverters = null;
 
 	public void addAdditionalConverter(AdditionalCaseConverter converter) {
 		additionalCaseConverters.add(converter);
@@ -79,7 +80,7 @@ public class SessionConverter {
 	 * @return CaseObject
 	 */
 	public Session caseObject2Session(CaseObject cobj, KnowledgeBase kb,
-			Class dialogControllerClass, List usedPSMethods) {
+			Class<? extends DialogController> dialogControllerClass, List<PSMethod> usedPSMethods) {
 		return caseObject2Session(cobj, kb, dialogControllerClass, usedPSMethods, true,
 				true);
 	}
@@ -99,21 +100,21 @@ public class SessionConverter {
 	 * @return CaseObject
 	 */
 	public Session caseObject2Session(CaseObject cobj, KnowledgeBase kb,
-			Class dialogControllerClass, List usedPSMethods, boolean copyDCMarkup,
+			Class<? extends DialogController> dialogControllerClass, List<PSMethod> usedPSMethods, boolean copyDCMarkup,
 			boolean copyProperties) {
 		DialogProxy proxy = new DialogProxy();
 		ShadowMemory shmem = new ShadowMemory();
 		shmem.setPriority(1);
 		proxy.addClient(shmem);
 
-		Iterator qiter = cobj.getQuestions().iterator();
+		Iterator<Question> qiter = cobj.getQuestions().iterator();
 		while (qiter.hasNext()) {
-			Question q = (Question) qiter.next();
+			Question q = qiter.next();
 			shmem.addAnswers(q.getId(), cobj.getValue(q));
 		}
 
-		List registeredContainers = new LinkedList();
-		Iterator contIter = cobj.getAppliedQSets().getAllApplied().iterator();
+		List<QContainer> registeredContainers = new LinkedList<QContainer>();
+		Iterator<?> contIter = cobj.getAppliedQSets().getAllApplied().iterator();
 		while (contIter.hasNext()) {
 			QContainer qcontainer = (QContainer) contIter.next();
 			registeredContainers.add(qcontainer);
@@ -124,13 +125,13 @@ public class SessionConverter {
 				registeredContainers, usedPSMethods);
 
 		// user-selected diagnoses
-		Iterator solIter = cobj.getSolutions(PSMethodUserSelected.class).iterator();
+		Iterator<CaseObject.Solution> solIter = cobj.getSolutions(
+				PSMethodUserSelected.class).iterator();
 		while (solIter.hasNext()) {
-			CaseObject.Solution sol = (CaseObject.Solution) solIter.next();
-			// TODO: Needs revision
+			CaseObject.Solution sol = solIter.next();
 			ret.getBlackboard().addValueFact(
 					new DefaultFact(sol.getDiagnosis(), sol.getState(), new Object(),
-							PSMethodUserSelected.getInstance()));
+					PSMethodUserSelected.getInstance()));
 		}
 
 		if (copyDCMarkup) {
@@ -141,9 +142,9 @@ public class SessionConverter {
 					cobj.getProperties()));
 		}
 
-		Iterator iter = additionalCaseConverters.iterator();
+		Iterator<AdditionalCaseConverter> iter = additionalCaseConverters.iterator();
 		while (iter.hasNext()) {
-			AdditionalCaseConverter conv = (AdditionalCaseConverter) iter.next();
+			AdditionalCaseConverter conv = iter.next();
 			conv.caseObject2Session(cobj, ret);
 		}
 
@@ -181,9 +182,9 @@ public class SessionConverter {
 
 		// Questions
 
-		Iterator qiter = theCase.getKnowledgeBase().getQuestions().iterator();
+		Iterator<Question> qiter = theCase.getKnowledgeBase().getQuestions().iterator();
 		while (qiter.hasNext()) {
-			Question q = (Question) qiter.next();
+			Question q = qiter.next();
 			Value value = q.getValue(theCase);
 			ret.addQuestionAndAnswers(q, value);
 		}
@@ -195,15 +196,18 @@ public class SessionConverter {
 
 		// then add the containers from which the qaSetManager has taken
 		// protocol of
-		Iterator citer = theCase.getQASetManager().getProcessedContainers().iterator();
+		Iterator<?> citer = theCase.getQASetManager().getProcessedContainers().iterator();
 		while (citer.hasNext()) {
 			ret.getAppliedQSets().setApplied((QContainer) citer.next());
 		}
 
 		// Diagnoses
-		addDiagnosesToSolutions(ret, theCase, DiagnosisState.ESTABLISHED);
-		addDiagnosesToSolutions(ret, theCase, DiagnosisState.SUGGESTED);
-		addDiagnosesToSolutions(ret, theCase, DiagnosisState.EXCLUDED);
+		addDiagnosesToSolutions(ret, theCase, new DiagnosisState(
+				DiagnosisState.State.ESTABLISHED));
+		addDiagnosesToSolutions(ret, theCase, new DiagnosisState(
+				DiagnosisState.State.SUGGESTED));
+		addDiagnosesToSolutions(ret, theCase, new DiagnosisState(
+				DiagnosisState.State.EXCLUDED));
 
 		if (copyDCMarkup) {
 			ret.setDCMarkup((DCMarkup) theCase.getDCMarkup().clone());
@@ -212,9 +216,9 @@ public class SessionConverter {
 			ret.setProperties(PropertiesCloner.getInstance().cloneProperties(
 					theCase.getProperties()));
 		}
-		Iterator iter = additionalCaseConverters.iterator();
+		Iterator<AdditionalCaseConverter> iter = additionalCaseConverters.iterator();
 		while (iter.hasNext()) {
-			AdditionalCaseConverter conv = (AdditionalCaseConverter) iter.next();
+			AdditionalCaseConverter conv = iter.next();
 			conv.session2CaseObject(theCase, ret);
 		}
 		return ret;
@@ -225,10 +229,10 @@ public class SessionConverter {
 	 * "co".
 	 */
 	private void addDiagnosesToSolutions(CaseObjectImpl co, Session theCase, DiagnosisState state) {
-		List usedPsm = new LinkedList();
-		Iterator usedPsmIter = theCase.getPSMethods().iterator();
+		List<PSMethod> usedPsm = new LinkedList<PSMethod>();
+		Iterator<? extends PSMethod> usedPsmIter = theCase.getPSMethods().iterator();
 		while (usedPsmIter.hasNext()) {
-			PSMethod psm = (PSMethod) usedPsmIter.next();
+			PSMethod psm = usedPsmIter.next();
 			if (psm.isContributingToResult()) {
 				usedPsm.add(psm);
 			}
@@ -241,17 +245,19 @@ public class SessionConverter {
 			while (diter.hasNext()) {
 				de.d3web.core.knowledge.terminology.Solution d = diter.next();
 
-				Iterator psMethodIter = usedPsm.iterator();
+				Iterator<PSMethod> psMethodIter = usedPsm.iterator();
 				while (psMethodIter.hasNext()) {
-					PSMethod psm = (PSMethod) psMethodIter.next();
-					// TODO: needs revision, while iteration over psm not
-					// usefull
-					if (theCase.getBlackboard().getState(d).equals(state)) {
-						CaseObject.Solution s = new CaseObject.Solution();
-						s.setDiagnosis(d);
-						s.setState(state);
-						s.setPSMethodClass(psm.getClass());
-						co.addSolution(s);
+					PSMethod psm = psMethodIter.next();
+					Value value = theCase.getBlackboard().getValue(d, psm);
+					if (value instanceof DiagnosisState) {
+						DiagnosisState ds = (DiagnosisState) value;
+						if (ds.equals(state)) {
+							CaseObject.Solution s = new CaseObject.Solution();
+							s.setDiagnosis(d);
+							s.setState(state);
+							s.setPSMethodClass(psm.getClass());
+							co.addSolution(s);
+						}
 					}
 				}
 			}

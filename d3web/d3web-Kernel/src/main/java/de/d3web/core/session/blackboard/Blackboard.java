@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -256,6 +257,20 @@ public class Blackboard {
 
 	public Value getValue(Question question) {
 		return getValueFact(question).getValue();
+	}
+
+	/**
+	 * Returns the Value of a TerminologyObject, calculated by the specified
+	 * psmethod
+	 * 
+	 * @param object
+	 *            TerminologyObject
+	 * @param psmethod
+	 *            PSMethod
+	 * @return Value
+	 */
+	public Value getValue(TerminologyObject object, PSMethod psmethod) {
+		return valueStorage.getAggregator(object).getMergedFact(psmethod).getValue();
 	}
 
 	/**

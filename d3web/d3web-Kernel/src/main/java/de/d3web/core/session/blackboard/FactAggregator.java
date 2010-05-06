@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -227,6 +228,22 @@ class FactAggregator {
 	 */
 	public boolean isEmpty() {
 		return this.facts.isEmpty();
+	}
+
+	/**
+	 * Merges and returns all facts of one psmethod
+	 * 
+	 * @param psMethod
+	 * @return merged Fact
+	 */
+	public Fact getMergedFact(PSMethod psMethod) {
+		List<Fact> psmfacts = new LinkedList<Fact>();
+		for (Fact f : facts) {
+			if (f.getPSMethod().equals(psMethod)) {
+				psmfacts.add(f);
+			}
+		}
+		return psMethod.mergeFacts(psmfacts.toArray(new Fact[psmfacts.size()]));
 	}
 
 }
