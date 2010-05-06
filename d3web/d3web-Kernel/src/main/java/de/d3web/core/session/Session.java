@@ -226,16 +226,6 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	void removeListener(SessionEventListener listener);
 
 	/**
-	 * Adds an established {@link Solution} to this {@link Session}.
-	 * 
-	 * @param solution
-	 *            the specified solution
-	 * @author joba
-	 * @date 15.04.2010
-	 */
-	public void addEstablishedSolution(Solution solution);
-
-	/**
 	 * Removes the specified solution from the list of established solutions.
 	 * 
 	 * @param solution

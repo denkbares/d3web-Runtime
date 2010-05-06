@@ -254,13 +254,6 @@ public class D3WebSession implements Session {
 		}
 	}
 
-	@Override
-	public void addEstablishedSolution(Solution diag) {
-		if (!establishedDiagnoses.contains(diag)) {
-			establishedDiagnoses.add(diag);
-		}
-	}
-
 	/**
 	 * Adds a new PSMethod to the used PSMethods of this case. Creation date:
 	 * (28.08.00 17:33:43)
@@ -487,7 +480,7 @@ public class D3WebSession implements Session {
 		if (valuedObject instanceof Solution) {
 			getBlackboard().addValueFact(
 					new DefaultFact((TerminologyObject) valuedObject, value,
-							new Object(), getPSMethodInstance(context)));
+					new Object(), getPSMethodInstance(context)));
 		}
 		else if (valuedObject instanceof Question) {
 			((Question) valuedObject).setValue(this, value);

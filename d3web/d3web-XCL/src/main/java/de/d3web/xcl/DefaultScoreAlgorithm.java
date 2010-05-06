@@ -21,7 +21,8 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 			// and the calculate states (based on that scores)
 			double currentScore = computeScore(model, trace, session);
 			double currentSupport = computeSupport(model, trace, session);
-			DiagnosisState currentState = computeState(model, trace, currentScore, currentSupport);
+			DiagnosisState currentState = computeState(model, trace, currentScore,
+					currentSupport);
 			trace.setScore(currentScore);
 			trace.setSupport(currentSupport);
 			trace.setState(currentState);
@@ -36,27 +37,29 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 
 		boolean hasContradiction = trace.getContrRelations().size() > 0;
 		boolean hasSufficient = trace.getSuffRelations().size() > 0;
-		boolean hasAllNecessary = trace.getReqPosRelations().size()  == model.getNecessaryRelations().size();
-		
+		boolean hasAllNecessary = trace.getReqPosRelations().size() == model.getNecessaryRelations().size();
+
 		if (hasContradiction) {
-			return DiagnosisState.EXCLUDED;
+			return new DiagnosisState(DiagnosisState.State.EXCLUDED);
 		}
 
 		if (hasSufficient) {
-			return DiagnosisState.ESTABLISHED;
+			return new DiagnosisState(DiagnosisState.State.ESTABLISHED);
 		}
 
 		double minSupport = model.getMinSupport();
 		if (minSupport <= support) {
 			if (score >= model.getEstablishedThreshold()) {
-				return hasAllNecessary ? DiagnosisState.ESTABLISHED : DiagnosisState.SUGGESTED;
+				return hasAllNecessary
+						? new DiagnosisState(DiagnosisState.State.ESTABLISHED)
+						: new DiagnosisState(DiagnosisState.State.SUGGESTED);
 			}
 			if (score >= model.getSuggestedThreshold() && hasAllNecessary) {
-				return DiagnosisState.SUGGESTED;
+				return new DiagnosisState(DiagnosisState.State.SUGGESTED);
 			}
 		}
 
-		return DiagnosisState.UNCLEAR;
+		return new DiagnosisState(DiagnosisState.State.UNCLEAR);
 	}
 
 	public void update(XCLModel xclModel, Collection<PropagationEntry> entries, Session session) {
@@ -66,20 +69,26 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 
 	private double computeScore(XCLModel model, InferenceTrace trace, Session theCase) {
 
-		// score is the sum of matching relations compared to evaluated relations
-		double posSum = weightedSumOf(trace.getPosRelations()) + weightedSumOf(trace.getReqPosRelations());
+		// score is the sum of matching relations compared to evaluated
+		// relations
+		double posSum = weightedSumOf(trace.getPosRelations())
+				+ weightedSumOf(trace.getReqPosRelations());
 		if (posSum <= 0) return 0;
-		double negSum = weightedSumOf(trace.getNegRelations()) + weightedSumOf(trace.getReqNegRelations());
-		
+		double negSum = weightedSumOf(trace.getNegRelations())
+				+ weightedSumOf(trace.getReqNegRelations());
+
 		double result = posSum / (negSum + posSum);
 		return result;
 	}
 
 	private double computeSupport(XCLModel model, InferenceTrace trace, Session theCase) {
 		// support is the sum of evaluated relations compared to all relations
-		double posSum = weightedSumOf(trace.getPosRelations()) + weightedSumOf(trace.getReqPosRelations());
-		double negSum = weightedSumOf(trace.getNegRelations()) + weightedSumOf(trace.getReqNegRelations());
-		double allSum = weightedSumOf(model.getRelations()) + weightedSumOf(model.getNecessaryRelations());
+		double posSum = weightedSumOf(trace.getPosRelations())
+				+ weightedSumOf(trace.getReqPosRelations());
+		double negSum = weightedSumOf(trace.getNegRelations())
+				+ weightedSumOf(trace.getReqNegRelations());
+		double allSum = weightedSumOf(model.getRelations())
+				+ weightedSumOf(model.getNecessaryRelations());
 		return (posSum + negSum) / (allSum);
 	}
 
