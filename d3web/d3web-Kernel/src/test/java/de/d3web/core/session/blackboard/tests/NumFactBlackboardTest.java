@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
  *                    Computer Science VI, University of Wuerzburg
  *
  * This is free software; you can redistribute it and/or modify it
@@ -17,42 +17,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+package de.d3web.core.session.blackboard.tests;
 
-package de.d3web.core.inference;
-
-import de.d3web.core.session.Session;
+import de.d3web.core.session.blackboard.Blackboard;
+import de.d3web.core.session.values.NumValue;
 
 /**
- * An adapter class with some empty method bodies and some default
- * implementations. Creation date: (27.09.00 14:22:54)
+ * This test class simulates the functionality of the {@link Blackboard} without
+ * any problem-solver activity.
  * 
- * @author Joachim Baumeister
- * @see PSMethod
+ * {@link NumValue} instances are added to, removed from and merged within the
+ * {@link Blackboard}. 
+ * 
+ * @author joba  (denkbares GmbH)
+ *
  */
-public abstract class PSMethodAdapter implements PSMethod {
-	private boolean contributingToResult = false;
+public class NumFactBlackboardTest {
 
-	protected PSMethodAdapter() {
-		super();
-	}
-
-	/**
-	 * Does nothing.
-	 */
-	public void init(Session theCase) {
-	}
-
-	/**
-	 * @see PSMethod
-	 */
-	public boolean isContributingToResult() {
-		return contributingToResult;
-	}
-
-	/**
-	 * @see PSMethod
-	 */
-	public void setContributingToResult(boolean newContributingToResult) {
-		contributingToResult = newContributingToResult;
-	}
 }

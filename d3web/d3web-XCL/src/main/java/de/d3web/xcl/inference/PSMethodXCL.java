@@ -64,10 +64,10 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		super();
 	}
 
-	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session session, Collection<PropagationEntry> changes) {
 
 		// update total weight
-		updateAnsweredWeight(theCase, changes);
+		updateAnsweredWeight(session, changes);
 
 		// find xcl models to be updated (and remember affecting changes)
 		Map<XCLModel, List<PropagationEntry>> modelsToUpdate = new HashMap<XCLModel, List<PropagationEntry>>();
@@ -91,11 +91,11 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		// update required xcl models / inference traces
 		for (XCLModel model : modelsToUpdate.keySet()) {
 			List<PropagationEntry> entries = modelsToUpdate.get(model);
-			this.scoreAlgorithm.update(model, entries, theCase);
+			this.scoreAlgorithm.update(model, entries, session);
 		}
 
 		// refresh the solutions states
-		this.scoreAlgorithm.refreshStates(modelsToUpdate.keySet(), theCase);
+		this.scoreAlgorithm.refreshStates(modelsToUpdate.keySet(), session);
 	}
 
 	private void updateAnsweredWeight(Session theCase,
@@ -124,7 +124,8 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		double restWeight = caseObject.totalAnsweredAbnormality;
 		for (Question question : answeredQuestions) {
 			AbstractAbnormality abnormality = getAbnormalitySlice(question);
-			restWeight -= getAbnormality(abnormality, question.getValue(theCase));
+			restWeight -= getAbnormality(abnormality, 
+					theCase.getBlackboard().getValue(question));
 		}
 
 		if (Math.abs(restWeight) > 1e-6) {

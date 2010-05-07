@@ -22,12 +22,15 @@ package de.d3web.indication;
 
 import java.util.List;
 
-import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.PSAction;
+import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.inference.Rule;
+import de.d3web.core.knowledge.Indication;
+import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.terminology.QASet;
-import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.indication.inference.PSMethodNextQASet;
 
 /**
@@ -38,7 +41,7 @@ import de.d3web.indication.inference.PSMethodNextQASet;
  * @author Christian Betz
  */
 public abstract class ActionNextQASet extends PSAction {
-	
+
 	private List<QASet> qasets;
 
 	/**
@@ -48,9 +51,20 @@ public abstract class ActionNextQASet extends PSAction {
 		doItWithContext(theCase, rule);
 	}
 
-	protected void doItWithContext(Session theCase, Rule rule) {
+	protected void doItWithContext(Session session, Rule rule) {
+		// New handling of indications: Notify blackboard of indication and let
+		// the blackboard do all the work
+		if (getQASets().size() > 1) {
+			// todo: how to create facts with more than one QASet?!
+			System.err.println("Not implemented yet.");
+		}
+		session.setValue(getQASets().get(0), new Indication(State.INDICATED),
+				this, session.getPSMethodInstance(getProblemsolverContext()));
+
+		// --- delete from here after blackboard refactoring (joba, 05.2010)
+		// Old handling of indication:
 		for (QASet nextQASet : getQASets()) {
-			nextQASet.activate(theCase, rule, rule.getProblemsolverContext());
+			nextQASet.activate(session, rule, rule.getProblemsolverContext());
 		}
 	}
 
@@ -87,9 +101,23 @@ public abstract class ActionNextQASet extends PSAction {
 	 * Deactivates all activated QASets
 	 */
 	@Override
-	public void undo(Session theCase, Rule rule) {
+	public void undo(Session session, Rule rule) {
+		// New handling of indications: Notify blackboard of indication and let
+		// the blackboard do all the work
+		if (getQASets().size() > 1) {
+			// todo: how to create facts with more than one QASet?!
+			System.err.println("Not implemented yet.");
+		}
+		Value oldValue = session.getBlackboard().getIndication(getQASets().get(0));;
+		session.getBlackboard().removeInterviewFact(getQASets().get(0), this);
+		Value newValue = session.getBlackboard().getIndication(getQASets().get(0));
+		session.getInterviewManager().notifyFactChange(new PropagationEntry(getQASets().get(0), 
+				oldValue, newValue));
+
+		// --- delete from here after blackboard refactoring (joba, 05.2010)
+		// Old handling of indication:
 		for (QASet qaset : getQASets()) {
-			qaset.deactivate(theCase, rule, rule.getProblemsolverContext());
+			qaset.deactivate(session, rule, rule.getProblemsolverContext());
 		}
 	}
 

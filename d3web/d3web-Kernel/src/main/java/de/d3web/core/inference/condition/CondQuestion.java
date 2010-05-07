@@ -57,9 +57,9 @@ public abstract class CondQuestion extends TerminalCondition {
 	 * @throws NoAnswerException if the question has currently no answer
 	 * @throws UnknownAnswerException if the question is answered with {@link AnswerUnknown}
 	 */
-	protected void checkAnswer(Session theCase)
+	protected void checkAnswer(Session session)
 		throws NoAnswerException, UnknownAnswerException {
-		Value value = question.getValue(theCase);
+		Value value = session.getBlackboard().getValue(question);;
 		if (value instanceof UndefinedValue || value == null) {
 			throw NoAnswerException.getInstance();
 		}

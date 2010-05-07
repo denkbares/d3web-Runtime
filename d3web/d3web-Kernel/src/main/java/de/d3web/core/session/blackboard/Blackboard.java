@@ -14,6 +14,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.values.UndefinedValue;
 
 /**
  * The Blackboard manages all dynamic values created within the case and
@@ -256,10 +257,17 @@ public class Blackboard {
 	// }
 
 	public Value getValue(Question question) {
-		return getValueFact(question).getValue();
+		Fact fact = getValueFact(question);
+		if (fact == null) {
+			return UndefinedValue.getInstance();
+		}
+		else {
+			return fact.getValue();
+		}
 	}
 
-	/**
+	
+		/**
 	 * Returns the Value of a TerminologyObject, calculated by the specified
 	 * psmethod
 	 * 
@@ -284,7 +292,13 @@ public class Blackboard {
 	 * @return the indication of the interview element
 	 */
 	public Indication getIndication(InterviewObject interviewElement) {
-		return (Indication) getInterviewFact(interviewElement).getValue();
+		Fact fact = getInterviewFact(interviewElement);
+		if (fact == null) {
+			return Indication.getDefaultIndication();
+		}
+		else {
+			return (Indication) getInterviewFact(interviewElement).getValue();
+		}
 	}
 
 }

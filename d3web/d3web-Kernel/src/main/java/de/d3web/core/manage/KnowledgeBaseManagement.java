@@ -437,7 +437,7 @@ public class KnowledgeBaseManagement {
 	 *            the requested answer text or id
 	 * @return null, if no answer found for specified params
 	 */
-	public Choice findAnswerChoice(QuestionChoice question,
+	public Choice findChoice(QuestionChoice question,
 			String answerText) {
 		if (question == null || question.getAllAlternatives() == null
 				|| answerText == null) {
@@ -468,7 +468,7 @@ public class KnowledgeBaseManagement {
 	public Answer findAnswer(Question question, String answerText) {
 		Answer result = null;
 		if (question instanceof QuestionChoice) {
-			result = findAnswerChoice((QuestionChoice) question, answerText);
+			result = findChoice((QuestionChoice) question, answerText);
 		}
 		if (result == null) {
 			if (question.getUnknownAlternative().getId().equals(answerText)) {
@@ -481,7 +481,7 @@ public class KnowledgeBaseManagement {
 	public MultipleChoiceValue findMultipleChoiceValue(QuestionMC quesiton, List<String> valueNames) {
 		List<ChoiceValue> choiceValues = new ArrayList<ChoiceValue>(valueNames.size());
 		for (String name : valueNames) {
-			Choice choice = findAnswerChoice(quesiton, name);
+			Choice choice = findChoice(quesiton, name);
 			if (choice != null) {
 				choiceValues.add(new ChoiceValue(choice));
 			}
@@ -499,14 +499,14 @@ public class KnowledgeBaseManagement {
 		// HOTFIX (20100411) workaround for setting a _single_ Answer to a MC-Question
 		// needs jobas healing hands...:-)
 		if (question instanceof QuestionMC) {
-			Choice choice = findAnswerChoice((QuestionChoice) question, valueString);
+			Choice choice = findChoice((QuestionChoice) question, valueString);
 			List<ChoiceValue> values = new LinkedList<ChoiceValue>();
 			values.add(new ChoiceValue(choice));
 			return new MultipleChoiceValue(values);
 		}
 		//
 		if (question instanceof QuestionChoice) {
-			Choice choice = findAnswerChoice((QuestionChoice) question, valueString);
+			Choice choice = findChoice((QuestionChoice) question, valueString);
 			if (choice==null) {
 				return null;
 			}

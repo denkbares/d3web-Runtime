@@ -51,7 +51,7 @@ import de.d3web.indication.inference.PSMethodNextQASet;
  * @see QASet
  * @see DerivationType
  */
-public abstract class Question extends QASet implements ValuedObject {
+public abstract class Question extends QASet {
 	
 	private final AnswerUnknown unknown;
 

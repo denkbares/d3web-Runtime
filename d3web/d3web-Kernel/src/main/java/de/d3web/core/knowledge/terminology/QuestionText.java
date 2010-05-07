@@ -67,8 +67,9 @@ public class QuestionText extends Question {
 	}
 
 	@Override
-	public Value getValue(Session theCase) {
-		return ((CaseQuestionText) theCase.getCaseObject(this)).getValue();
+	public Value getValue(Session session) {
+		return session.getBlackboard().getValue(this); 	
+//		return ((CaseQuestionText) session.getCaseObject(this)).getValue();
 	}
 
 	/**

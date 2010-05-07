@@ -23,11 +23,15 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.PSAction;
+import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.inference.Rule;
+import de.d3web.core.knowledge.Indication;
+import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.indication.inference.PSMethodContraIndication;
 
 /**
@@ -36,7 +40,7 @@ import de.d3web.indication.inference.PSMethodContraIndication;
  * @author Joachim Baumeister
  */
 public class ActionContraIndication extends PSAction {
-	
+	// the indication fact will be initialized with the first activation of this action in "doIt()" 
 	private List<QASet> qasets;
 
 	/**
@@ -45,12 +49,26 @@ public class ActionContraIndication extends PSAction {
 	 * @param theCase current case
 	 */
 	@Override
-	public void doIt(Session theCase, Rule rule) {
+	public void doIt(Session session, Rule rule) {
+		// New handling of indications: Notify blackboard of indication and let the blackboard do all the work
+		if (getQASets().size() > 1) {
+			// todo: how to create facts with more than one QASet?!
+			System.err.println("Not implemented yet.");
+		}
+		session.setValue(getQASets().get(0), 
+				new Indication(State.CONTRA_INDICATED), 
+				this, 
+				session.getPSMethodInstance(getProblemsolverContext())
+				);
+		
+		
+		// --- delete from here after blackboard refactoring (joba, 05.2010)
+		// Old handling of indication:
 		Iterator<QASet> qaset = getQASets().iterator();
 		while (qaset.hasNext()) {
 			(qaset.next()).addContraReason(
 				new QASet.Reason(rule),
-				theCase);
+				session);
 		}
 	}
 
@@ -88,12 +106,26 @@ public class ActionContraIndication extends PSAction {
 	 * @param theCase current case
 	 */
 	@Override
-	public void undo(Session theCase, Rule rule) {
+	public void undo(Session session, Rule rule) {
+		// New handling of indications: Notify blackboard of indication and let the blackboard do all the work
+		if (getQASets().size() > 1) {
+			// todo: how to create facts with more than one QASet?!
+			System.err.println("Not implemented yet.");
+		}
+		Value oldValue = session.getBlackboard().getIndication(getQASets().get(0));;
+		session.getBlackboard().removeInterviewFact(getQASets().get(0), this);
+		Value newValue = session.getBlackboard().getIndication(getQASets().get(0));
+		session.getInterviewManager().notifyFactChange(new PropagationEntry(getQASets().get(0), 
+				oldValue, newValue));
+		
+		
+		// --- delete from here after blackboard refactoring (joba, 05.2010)
+		// Old handling of indication:		
 		Iterator<QASet> qaset = getQASets().iterator();
 		while (qaset.hasNext()) {
 			((QASet) qaset.next()).removeContraReason(
 				new QASet.Reason(rule),
-				theCase);
+				session);
 		}
 	}
 	

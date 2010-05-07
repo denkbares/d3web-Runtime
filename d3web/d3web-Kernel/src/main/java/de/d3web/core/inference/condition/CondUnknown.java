@@ -45,7 +45,7 @@ public class CondUnknown extends CondQuestion {
 
 	@Override
 	public boolean eval(Session theCase) throws NoAnswerException {
-		return (question.getValue(theCase) instanceof Unknown);
+		return (theCase.getBlackboard().getValue(question) instanceof Unknown);
 		// try {
 		// checkAnswer(theCase);
 		// return false;

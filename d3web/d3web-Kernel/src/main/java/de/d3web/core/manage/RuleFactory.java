@@ -20,6 +20,7 @@
 
 package de.d3web.core.manage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,10 +30,12 @@ import de.d3web.abstraction.formula.FormulaDateExpression;
 import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.values.Choice;
 import de.d3web.indication.ActionClarify;
@@ -157,6 +160,15 @@ public class RuleFactory {
 
 		return rule;
 	}
+	
+	public static void createContraIndicationRule(String theId,
+			Question question, 
+			Condition theCondition) {
+		createContraIndicationRule(theId, 
+				Arrays.asList(new QASet[] {question}), 
+				theCondition);
+	}
+
 
 	/**
 	 * Creates a heuristic-rule with the specified parameters.
@@ -525,5 +537,6 @@ public class RuleFactory {
 		rule.setException(theRuleException);
 
 	}
+
 
 }

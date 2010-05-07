@@ -45,10 +45,10 @@ public class CondChoiceYes extends CondEqual {
 	 * Checks if the question has the value(s) specified in the constructor.
 	 */
 	@Override
-	public boolean eval(Session theCase)
+	public boolean eval(Session session)
 		throws NoAnswerException, UnknownAnswerException {
-		checkAnswer(theCase);
-		return question.getValue(theCase).equals(yesValue);
+		checkAnswer(session);
+		return session.getBlackboard().getValue(question).equals(yesValue);
 	}
 
 	/**

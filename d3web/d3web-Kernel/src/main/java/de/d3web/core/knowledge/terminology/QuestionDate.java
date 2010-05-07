@@ -57,7 +57,8 @@ public class QuestionDate extends Question {
 
 	@Override
 	public Value getValue(Session theCase) {
-		return ((CaseQuestionDate) theCase.getCaseObject(this)).getValue();
+		return theCase.getBlackboard().getValue(this); 
+//		return ((CaseQuestionDate) theCase.getCaseObject(this)).getValue();
 	}
 
 	// @Override

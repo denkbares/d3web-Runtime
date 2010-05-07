@@ -9,6 +9,9 @@ public class Indication implements Value {
 		CONTRA_INDICATED, NEUTRAL, INDICATED, INSTANT_INDICATED;
 	}
 
+	// by default, a qaset is neutral
+	private static final Indication DEFAULT_INDICATION = new Indication(State.NEUTRAL);
+
 	private final State state;
 
 	/**
@@ -115,4 +118,8 @@ public class Indication implements Value {
 		return getName();
 	}
 
+	public static Indication getDefaultIndication() {
+		return DEFAULT_INDICATION;
+	}
+	
 }

@@ -207,6 +207,25 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 */
 	void setValue(ValuedObject valuedObject, Value value, Class<? extends PSMethod> context);
 
+
+	/**
+	 * Assigns the specified value to the specified {@link ValuedObject}, e.g.,
+	 * a {@link Question} or a {@link Solution} receives a new value. The
+	 * {@link PSMethod} responsible of this assignment and the concrete action of this 
+	 * setting (e.g., a rule action) is also given.
+	 * 
+	 * @param valuedObject
+	 *            ValuedObject the object, that receives a new value
+	 * @param value
+	 *            value the (array of new) values for the specified
+	 *            {@link ValuedObject}
+	 * @param source the actual action responsible for setting the value, e.g., a rule action
+	 * @param psMethod
+	 *            the problem-solver responsible for this assignment
+	 */
+	void setValue(ValuedObject valuedObject, Value value, Object source, PSMethod psMethod);
+
+	
 	/**
 	 * Registers a new listener to this session. If something in this session
 	 * changes, then all registered listeners will be notified.
@@ -224,6 +243,7 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 *            the specified listener to be removed
 	 */
 	void removeListener(SessionEventListener listener);
+
 
 	/**
 	 * Removes the specified solution from the list of established solutions.

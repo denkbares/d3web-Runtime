@@ -35,6 +35,8 @@ import de.d3web.core.session.SymptomValue;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestion;
+import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
@@ -201,22 +203,22 @@ public class ActionAddValue extends ActionQuestionSetter {
 	 * 
 	 * Creation date: (15.08.2000 11:21:21)
 	 * 
-	 * @param theCase
+	 * @param session
 	 *            current case
 	 */
 	@Override
-	public void doIt(Session theCase, Rule rule) {
-		if (!lastFiredRuleEqualsCurrentRuleAndNotFired(theCase)) {
-			getQuestion().addProReason(new QASet.Reason(rule), theCase);
+	public void doIt(Session session, Rule rule) {
+		if (!lastFiredRuleEqualsCurrentRuleAndNotFired(session)) {
+			getQuestion().addProReason(new QASet.Reason(rule), session);
 			Value resultValue;
 			if ((getQuestion() instanceof QuestionOC)
 					&& (((QuestionOC) getQuestion()).getSchemaForQuestion() != null)
 					&& (!(getValue() instanceof ChoiceValue))) {
-				resultValue = addSchemaValue((QuestionChoice) getQuestion(), theCase);
+				resultValue = addSchemaValue((QuestionChoice) getQuestion(), session);
 			} else {
-				resultValue = addValues(getQuestion().getValue(theCase), theCase);
+				resultValue = addValues(session.getBlackboard().getValue(getQuestion()), session);
 			}
-			storeActionValues(theCase, getValue());
+			storeActionValues(session, getValue());
 
 			// if the question is an oc-si-question without schema, the severest
 			// answer has to be set (of all answers, which shall be set)
@@ -224,15 +226,21 @@ public class ActionAddValue extends ActionQuestionSetter {
 					&& (((QuestionOC) getQuestion()).getSchemaForQuestion() == null)
 					&& (getQuestion().getKnowledge(PSMethodQuestionSetter.class,
 							MethodKind.BACKWARD) != null)) {
-				Choice severestAnswer = getSeverestAnswer((QuestionOC) getQuestion(), theCase);
+				Choice severestAnswer = getSeverestAnswer((QuestionOC) getQuestion(), session);
 				if ((severestAnswer != null)
-						&& ((!getQuestion().hasValue(theCase)) || (!severestAnswer.equals(getQuestion()
-								.getValue(theCase))))) {
-					theCase.setValue(getQuestion(), new ChoiceValue(severestAnswer));
+						&& ((!getQuestion().hasValue(session)) || (!severestAnswer.equals(session.getValue(getQuestion()))))) {
+					
+//					Fact fact = FactFactory.createFact(getQuestion(), 
+//							new ChoiceValue(severestAnswer),
+//							this, 
+//							session.getPSMethodInstance(getProblemsolverContext()));
+//					session.getBlackboard().addValueFact(fact);
+					
+					session.setValue(getQuestion(), new ChoiceValue(severestAnswer));
 				}
 			} else {
 				// else, set the resultList-values
-				theCase.setValue(getQuestion(), resultValue, rule);
+				session.setValue(getQuestion(), resultValue, rule);
 			}
 		}
 	}

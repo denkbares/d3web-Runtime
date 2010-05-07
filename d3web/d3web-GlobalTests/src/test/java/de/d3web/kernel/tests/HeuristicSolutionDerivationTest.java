@@ -54,8 +54,8 @@ import de.d3web.scoring.Score;
  * 
  * The problem solving is based on the following <b>Rules</b>:
  * 
- * Exhaust fumes = black => Clogged air filter = P3 Fuel = unleaded gasoline =>
- * Clogged air filter = P5
+ * Exhaust fumes = black => Clogged air filter = P3 
+ * Fuel = unleaded gasoline => Clogged air filter = P5
  * 
  * 
  * @author Sebastian Furth

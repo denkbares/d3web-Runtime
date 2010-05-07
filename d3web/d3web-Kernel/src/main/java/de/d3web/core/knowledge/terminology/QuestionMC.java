@@ -60,7 +60,8 @@ public class QuestionMC extends QuestionChoice {
 
 	@Override
 	public Value getValue(Session theCase) {
-		return ((CaseQuestionMC) theCase.getCaseObject(this)).getValue();
+		return theCase.getBlackboard().getValue(this); 
+//		 return ((CaseQuestionMC) theCase.getCaseObject(this)).getValue();
 	}
 	
 	/**

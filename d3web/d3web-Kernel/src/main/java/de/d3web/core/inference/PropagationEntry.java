@@ -19,8 +19,6 @@
  */
 package de.d3web.core.inference;
 
-import java.util.Arrays;
-
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.UndefinedValue;

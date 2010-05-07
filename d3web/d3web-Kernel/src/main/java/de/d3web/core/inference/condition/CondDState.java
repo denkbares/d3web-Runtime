@@ -33,7 +33,7 @@ import de.d3web.core.session.Session;
  */
 public class CondDState extends TerminalCondition {
 
-	private Solution diagnosis;
+	private Solution solution;
 	private DiagnosisState solutionState;
 
 	/**
@@ -50,7 +50,7 @@ public class CondDState extends TerminalCondition {
 			Solution diagnosis,
 			DiagnosisState solutionState) {
 		super(diagnosis);
-		this.diagnosis = diagnosis;
+		this.solution = diagnosis;
 		this.solutionState = solutionState;
 	}
 
@@ -61,12 +61,12 @@ public class CondDState extends TerminalCondition {
 	 * NoAnswerException, if no rule has ever changed the state of the
 	 * diagnosis.
 	 */
-	public boolean eval(Session theCase) throws NoAnswerException {
-		return solutionState.equals(theCase.getBlackboard().getState(diagnosis));
+	public boolean eval(Session session) throws NoAnswerException {
+		return solutionState.equals(session.getBlackboard().getState(solution));
 	}
 
 	public Solution getDiagnosis() {
-		return diagnosis;
+		return solution;
 	}
 
 	public DiagnosisState getStatus() {
@@ -74,7 +74,7 @@ public class CondDState extends TerminalCondition {
 	}
 
 	public void setDiagnosis(Solution newDiagnosis) {
-		diagnosis = newDiagnosis;
+		solution = newDiagnosis;
 	}
 
 	public void setStatus(DiagnosisState newStatus) {
@@ -84,7 +84,7 @@ public class CondDState extends TerminalCondition {
 	@Override
 	public String toString() {
 		return "\u2190 CondDState diagnosis: "
-				+ diagnosis.getId()
+				+ solution.getId()
 				+ " value: "
 				+ this.getStatus();
 	}

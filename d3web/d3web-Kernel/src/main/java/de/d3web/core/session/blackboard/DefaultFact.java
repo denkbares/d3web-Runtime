@@ -39,5 +39,9 @@ public class DefaultFact implements Fact {
 	public Value getValue() {
 		return value;
 	}
-
+	
+	@Override
+	public String toString() {
+		return getTerminologyObject() + " = " + getValue() + " ["+getSource()+" / "+getPSMethod()+"]";
+	}
 }

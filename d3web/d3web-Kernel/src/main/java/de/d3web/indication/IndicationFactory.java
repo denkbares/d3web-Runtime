@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+ * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
  *                    Computer Science VI, University of Wuerzburg
  *
  * This is free software; you can redistribute it and/or modify it
@@ -17,42 +17,26 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+package de.d3web.indication;
 
-package de.d3web.core.inference;
-
-import de.d3web.core.session.Session;
+import de.d3web.core.inference.PSMethod;
+import de.d3web.core.knowledge.Indication;
+import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.session.blackboard.DefaultFact;
+import de.d3web.core.session.blackboard.Fact;
 
 /**
- * An adapter class with some empty method bodies and some default
- * implementations. Creation date: (27.09.00 14:22:54)
+ * This factory is used to create indication facts.
  * 
- * @author Joachim Baumeister
- * @see PSMethod
+ * @author joba
+ *
  */
-public abstract class PSMethodAdapter implements PSMethod {
-	private boolean contributingToResult = false;
+public class IndicationFactory {
 
-	protected PSMethodAdapter() {
-		super();
+	public static Fact createIndicationFact(TerminologyObject terminologyObject,
+			Indication indication, Object source, PSMethod psMethodContext) {
+		
+		return new DefaultFact(terminologyObject, indication, source, psMethodContext);
 	}
 
-	/**
-	 * Does nothing.
-	 */
-	public void init(Session theCase) {
-	}
-
-	/**
-	 * @see PSMethod
-	 */
-	public boolean isContributingToResult() {
-		return contributingToResult;
-	}
-
-	/**
-	 * @see PSMethod
-	 */
-	public void setContributingToResult(boolean newContributingToResult) {
-		contributingToResult = newContributingToResult;
-	}
 }

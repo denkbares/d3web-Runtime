@@ -129,12 +129,12 @@ public class SequentialTestCase {
 	@SuppressWarnings("unchecked")
 	public void deriveSolutions(KnowledgeBase kb, Class psMethodContext) {
 		RatingStrategy ratingStrategy = new StateRatingStrategy();
-		Session thecase = SessionFactory.createSession(kb);
+		Session session = SessionFactory.createSession(kb);
 		
 		for (RatedTestCase rtc : ratedTestCases) {
 			// Answer and Question setting in Case
 			for (Finding f : rtc.getFindings()) {
-				thecase.setValue(f.getQuestion(), f.getValue());
+				session.setValue(f.getQuestion(), f.getValue());
 			}
 			
 			// Check used Rating (StateRating or ScoreRating) in ExpectedSolutions
@@ -147,11 +147,11 @@ public class SequentialTestCase {
 			}
 
 			// Derive Solutions
-			Collection<KnowledgeSlice> slices = thecase.getKnowledgeBase().getAllKnowledgeSlicesFor(PSMethodXCL.class);
+			Collection<KnowledgeSlice> slices = session.getKnowledgeBase().getAllKnowledgeSlicesFor(PSMethodXCL.class);
 			if (slices.size() != 0) {
-				deriveXCLSolutions(thecase, rtc, slices);
+				deriveXCLSolutions(session, rtc, slices);
 			} else {
-				deriveSolutionsForPSMethod(thecase, rtc, psMethodContext, ratingStrategy);
+				deriveSolutionsForPSMethod(session, rtc, psMethodContext, ratingStrategy);
 			}
 
 			// Mark this RatedTestCase as successfully derived
@@ -164,7 +164,7 @@ public class SequentialTestCase {
 	private void deriveSolutionsForPSMethod(Session thecase, RatedTestCase rtc,
 			Class<? extends PSMethod> psMethodContext, RatingStrategy ratingStrategy) {
 		
-		for (Solution solution : thecase.getKnowledgeBase().getDiagnoses()) {
+		for (Solution solution : thecase.getKnowledgeBase().getSolutions()) {
 			Rating rating = ratingStrategy.getRatingFor(solution, thecase);
 			if (rating.isProblemSolvingRelevant()) {
 				RatedSolution ratedSolution = new RatedSolution(solution, rating);
@@ -195,10 +195,10 @@ public class SequentialTestCase {
 	private void deriveXCLSolutions(Session thecase, RatedTestCase rtc, Collection<KnowledgeSlice> slices) {
 		for (KnowledgeSlice slice : slices) {
 			if (slice instanceof XCLModel) {
-				Solution d = ((XCLModel) slice).getSolution();
+				Solution solution = ((XCLModel) slice).getSolution();
 				DiagnosisState s = ((XCLModel) slice).getState(thecase);
 				if (!s.equals(DiagnosisState.UNCLEAR) && !s.equals(DiagnosisState.EXCLUDED)) {
-					RatedSolution rs = new RatedSolution(d, new StateRating(s));
+					RatedSolution rs = new RatedSolution(solution, new StateRating(s));
 					rtc.addDerived(rs);
 				}
 			}

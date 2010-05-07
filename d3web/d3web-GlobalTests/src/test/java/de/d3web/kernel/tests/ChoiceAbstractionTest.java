@@ -42,7 +42,7 @@ import de.d3web.plugin.test.InitPluginManager;
  * This test is designed to control the setting
  * of abstract choice questions' values
  * 
- * The tested knowledgebase contains the following terminology
+ * The tested knowledge base contains the following terminology
  * objects:
  * 
  * <b>Questions</b>

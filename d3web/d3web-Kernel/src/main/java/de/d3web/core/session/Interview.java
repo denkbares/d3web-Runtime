@@ -1,5 +1,6 @@
 package de.d3web.core.session;
 
+import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.Question;
@@ -25,6 +26,10 @@ public interface Interview {
 	 */
 	InterviewObject getCurrentInterviewObject();
 	
-	
+	/**
+	 * Interface to notify the Interview, that the value of a fact has changed.
+	 * @param changedFact the changed fact with the new and the old value
+	 */
+	public void notifyFactChange(PropagationEntry changedFact);
 
 }

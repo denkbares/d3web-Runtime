@@ -67,7 +67,11 @@ public class QuestionOC extends QuestionChoice {
 	 */
 	@Override
 	public Value getValue(Session theCase) {
-		return ((CaseQuestionOC) theCase.getCaseObject(this)).getValue();
+		Value deprecatedValue = ((CaseQuestionOC) theCase.getCaseObject(this)).getValue();
+		Value blackboardValue = theCase.getBlackboard().getValue(this);
+		
+		return theCase.getBlackboard().getValue(this); 
+//		 return ((CaseQuestionOC) theCase.getCaseObject(this)).getValue();
 	}
 
 

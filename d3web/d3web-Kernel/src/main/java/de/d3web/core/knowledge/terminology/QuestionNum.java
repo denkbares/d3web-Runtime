@@ -58,16 +58,18 @@ public class QuestionNum extends Question {
 	}
 
 	/**
-	 * @param theCase current case
+	 * @param session current case
 	 * @return 1-element list containing an AnswerNum
 	 */
 	@Override
-	public Value getValue(Session theCase) {
+	public Value getValue(Session session) {
 		Object value =
-			((CaseQuestionNum) theCase.getCaseObject(this)).getValue();
+			session.getBlackboard().getValue(this); 
+//		Object value =
+//			((CaseQuestionNum) theCase.getCaseObject(this)).getValue();
 
 		if (value instanceof FormulaNumberElement) {
-			return new NumValue(((FormulaNumberElement) value).eval(theCase));
+			return new NumValue(((FormulaNumberElement) value).eval(session));
 		}
 		else {
 			return (Value) value;

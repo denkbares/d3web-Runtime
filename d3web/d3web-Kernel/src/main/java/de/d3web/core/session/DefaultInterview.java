@@ -3,6 +3,7 @@ package de.d3web.core.session;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.InterviewObject;
 
@@ -52,4 +53,35 @@ public class DefaultInterview implements Interview {
 		this.session.getBlackboard().removeInterviewFacts(object);
 		this.agenda.remove(object);
 	}
+
+	@Override
+	public void notifyFactChange(PropagationEntry changedFact) {
+		Value oldValue = (Value)changedFact.getOldValue();
+		Value newValue = (Value)changedFact.getNewValue();
+		if (newValue instanceof Indication) {
+			// System.out.println(oldValue + " \t => \t " + newValue + "\t for " + changedFact.getObject()) ;
+		} 
+		
+		// NEUTRAL           => INDICATED         : 1) append to agenda 2) activate
+		// NEUTRAL           => CONTRA_INDICATED  : noop
+		// INDICATED         => NEUTRAL           : deactivate
+		// INDICATED         => CONTRA_INDICATED  : deactivate
+		// CONTRA_INDICATED  => INDICATED         : 1) append to agenda if not included 2) activate
+		// CONTRA_INDICATED  => NEUTRAL           : noop
+		
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

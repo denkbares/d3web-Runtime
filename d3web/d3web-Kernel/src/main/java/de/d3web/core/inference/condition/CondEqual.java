@@ -52,10 +52,10 @@ public class CondEqual extends CondQuestion {
 
 
 	@Override
-	public boolean eval(Session theCase)
+	public boolean eval(Session session)
 		throws NoAnswerException, UnknownAnswerException {
-		checkAnswer(theCase);
-		Value value = question.getValue(theCase);
+		checkAnswer(session);
+		Value value = session.getBlackboard().getValue(question); //question.getValue(session);
 
 		if (question instanceof QuestionMC) {
 			if (value instanceof MultipleChoiceValue) {

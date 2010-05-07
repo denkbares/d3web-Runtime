@@ -38,11 +38,14 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.PropagationContoller;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.knowledge.Indication;
+import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
@@ -51,8 +54,10 @@ import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.core.session.interviewmanager.PSMethodInterview;
 import de.d3web.core.session.interviewmanager.QASetManager;
 import de.d3web.core.session.interviewmanager.QASetManagerFactory;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.diaFlux.inference.FluxSolver;
 import de.d3web.indication.inference.PSMethodContraIndication;
 import de.d3web.indication.inference.PSMethodDialogControlling;
@@ -75,7 +80,7 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  * All actions have to be stated through the Session (especially the setValue
  * operations for knowledge base objects!) <BR>
  * The Session always knows the state of the <BR>
- * <LI>problem-solvers (which are used) <LI>questions (answerd, to be answerd),
+ * <LI>problem-solvers (which are used) <LI>questions (answered, to be answered),
  * <LI>diagnoses (state with respect to the problem-solvers) <br>
  * It's important to set values through this facade and not directly via the
  * knowledge base objects, because Session is responsible for the propagation
@@ -118,7 +123,9 @@ public class D3WebSession implements Session {
 			PSMethodHeuristic.getInstance(),
 			PSMethodInit.getInstance(),
 			PSMethodParentQASet.getInstance(),
-			FluxSolver.getInstance()));
+			FluxSolver.getInstance(),
+			PSMethodInterview.getInstance()
+			));
 
 	/**
 	 * Creates a new user case with the specified knowledge base. <br>
@@ -390,7 +397,13 @@ public class D3WebSession implements Session {
 								// ValueFactory.toValue(valuedObject, newValue, this),
 					newValue,
 					source, method);
-			getBlackboard().addValueFact(fact);
+			// Distinguish 'value' between: Indication values and given answer/derived states
+			if (newValue instanceof Indication) {
+				getBlackboard().addInterviewFact(fact);
+			} 
+			else { 
+				getBlackboard().addValueFact(fact);
+			}
 		}
 	}
 
@@ -421,9 +434,7 @@ public class D3WebSession implements Session {
 
 	@Override
 	public Value getValue(Question question) {
-		// 2010.04 joba: use the deprecated method, until the Blackboard has
-		// been established in the Session implementation.
-		return question.getValue(this);
+		return getBlackboard().getValue(question);
 	}
 
 	/**
@@ -441,23 +452,30 @@ public class D3WebSession implements Session {
 	 */
 	@Deprecated
 	public void setValue(ValuedObject valuedObject, Value value, Rule ruleContext) {
-		Object oldValue = getValue(valuedObject);
-		if (valuedObject instanceof Question) {
-			((Question) valuedObject).setValue(this, ruleContext, value);
-		}
-		else {
-			valuedObject.setValue(this, value);
-		}
-		Object newValue = getValue(valuedObject);
+		Value oldValue = getQualifiedValueFromBlackboard(valuedObject, value);
+		updateBlackboard(valuedObject, value,
+				ruleContext,
+				getPSMethodInstance(ruleContext.getProblemsolverContext()));
+		Value newValue = getQualifiedValueFromBlackboard(valuedObject, value);
 		notifyListeners(valuedObject, ruleContext);
 		propagateValue(valuedObject, oldValue, newValue);
 
-		// TODO: currently we do not distinguish PSMethods
-		// different than UserSelected
-		updateBlackboard(valuedObject, value,
-				ruleContext,
-				PSMethodUserSelected.getInstance());
-
+		//		Object oldValue = getValue(valuedObject);
+//		if (valuedObject instanceof Question) {
+//			((Question) valuedObject).setValue(this, ruleContext, value);
+//		}
+//		else {
+//			valuedObject.setValue(this, value);
+//		}
+//		
+//		Object newValue = getValue(valuedObject);
+//
+//		updateBlackboard(valuedObject, value,
+//				ruleContext,
+//				getPSMethodInstance(ruleContext.getProblemsolverContext()));
+//		
+//		notifyListeners(valuedObject, ruleContext);
+//		propagateValue(valuedObject, oldValue, newValue);
 	}
 
 	/**
@@ -476,37 +494,78 @@ public class D3WebSession implements Session {
 	 */
 	@Override
 	public void setValue(ValuedObject valuedObject, Value value, Class<? extends PSMethod> context) {
-		Object oldValue = getValue(valuedObject);
-		if (valuedObject instanceof Solution) {
-			getBlackboard().addValueFact(
-					new DefaultFact((TerminologyObject) valuedObject, value,
-					new Object(), getPSMethodInstance(context)));
-		}
-		else if (valuedObject instanceof Question) {
-			((Question) valuedObject).setValue(this, value);
-		}
-		else {
-			throw new IllegalArgumentException("Specified argument " + valuedObject
-					+ " is neither Solution nor Question.");
-		}
-		Object newValue = getValue(valuedObject);
-		notifyListeners(valuedObject, context);
+		// TODO: there is no "real" source that is responsible for setting this value
+		setValue(valuedObject, value, new Object(), getPSMethodInstance(context));
+	}
+	
+	@Override
+	public void setValue(ValuedObject valuedObject, Value value, Object source, PSMethod psMethod) {
+		Value oldValue = getQualifiedValueFromBlackboard(valuedObject, value);
+		updateBlackboard(valuedObject, value,
+				source,
+				psMethod);
+		Value newValue = getQualifiedValueFromBlackboard(valuedObject, value);
+		notifyListeners(valuedObject, psMethod);
 		propagateValue(valuedObject, oldValue, newValue);
 
-		// TODO: currently we do not distinguish PSMethods
-		// different than UserSelected
-		updateBlackboard(valuedObject, value,
-				this,
-				PSMethodUserSelected.getInstance());
+		
+//		Object oldValue;
+//		if (value instanceof Indication) {
+//			oldValue = getBlackboard().getIndication((InterviewObject)valuedObject);
+//		}
+//		else {
+//			oldValue = getValue(valuedObject);
+//		}
+//		
+//		if (valuedObject instanceof Solution) {
+//			getBlackboard().addValueFact(
+//					new DefaultFact((TerminologyObject) valuedObject, value,
+//							source, psMethod));
+//		}
+//		else if (valuedObject instanceof Question) {
+//			if (!(value instanceof Indication)) {
+//				((Question) valuedObject).setValue(this, value);				
+//			}
+//		}
+//		else if (valuedObject instanceof QContainer) {
+//			// do nothing, since here only the indication is propagated - remove the 
+//			// whole stack after balckboard refactoring (05.2010, joba)
+//		}
+//		else {
+//			throw new IllegalArgumentException("Specified argument " + valuedObject
+//					+ " is neither Solution nor Question/QContainer.");
+//		}
+//		
+//		// rerieve new value of the object: distinguish indication and real value
+//		Object newValue;
+//		if (value instanceof Indication) {
+//			newValue = value;
+//		}
+//		else {
+//			newValue = getValue(valuedObject);
+//		}
+//		
+//		notifyListeners(valuedObject, psMethod);
+//		updateBlackboard(valuedObject, value,
+//				source,
+//				psMethod);		
+//		propagateValue(valuedObject, oldValue, newValue);
+
 	}
 
-	private Object getValue(ValuedObject valuedObject) {
+
+	private Value getQualifiedValueFromBlackboard(ValuedObject valuedObject, Value newValue) {
+		if (newValue instanceof Indication) {
+			return getBlackboard().getIndication((InterviewObject)valuedObject);
+		}
+		
 		if (valuedObject instanceof Solution) {
 			Solution solution = (Solution) valuedObject;
 			return getBlackboard().getState(solution);
 		}
 		else if (valuedObject instanceof Question) {
-			return ((Question) valuedObject).getValue(this);
+			return getBlackboard().getValue((Question)valuedObject);
+//			return ((Question) valuedObject).getValue(this);
 		}
 		else {
 			throw new IllegalStateException("unexpected ValuedObject");
