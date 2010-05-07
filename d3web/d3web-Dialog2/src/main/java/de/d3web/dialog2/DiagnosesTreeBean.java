@@ -20,6 +20,8 @@
 
 package de.d3web.dialog2;
 
+import java.util.List;
+
 import org.apache.myfaces.custom.tree2.HtmlTree;
 import org.apache.myfaces.custom.tree2.TreeModel;
 import org.apache.myfaces.custom.tree2.TreeModelBase;
@@ -93,6 +95,21 @@ public class DiagnosesTreeBean {
 				createTreeRecursive(diagChild, newNode);
 			}
 		}
+	}
+
+	public boolean getDiagnosesAvailable() {
+		Session theCase = DialogUtils.getDialog().getTheCase();
+		List<Solution> established = theCase
+				.getSolutions(new DiagnosisState(DiagnosisState.State.ESTABLISHED));
+		List<Solution> suggested = theCase
+				.getSolutions(new DiagnosisState(DiagnosisState.State.SUGGESTED));
+		List<Solution> excluded = theCase
+				.getSolutions(new DiagnosisState(DiagnosisState.State.EXCLUDED));
+		if (established.size() != 0 || suggested.size() != 0
+				|| excluded.size() != 0) {
+			return true;
+		}
+		return false;
 	}
 
 	public HtmlTree getDiagTree() {
