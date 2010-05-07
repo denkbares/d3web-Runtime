@@ -3,10 +3,6 @@
 <plugin id="KnowledgePersistenceExtensionPoints" version="0.0.1">
 	<!-- This plugin only defines extension points for knowledge reader, knowledge writer and fragment handler. -->
 	
-	<attributes>
-		<attribute id="placeholder" value="foobar" />
-	</attributes>
-	
 	<extension-point id="KnowledgeReader">
 		<parameter-def id="class" />
 		<parameter-def id="name" />

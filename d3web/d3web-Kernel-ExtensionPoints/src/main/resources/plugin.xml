@@ -3,10 +3,6 @@
 <!-- This plugin only defines extension points for the core structure of d3web. -->
 <plugin id="d3web-Kernel-ExtensionPoints" version="0.0.1">
 
-	<attributes>
-		<attribute id="placeholder" value="foobar" />
-	</attributes>
-	
 	<extension-point id="PSMethod">
 		<parameter-def id="class" />
 		<parameter-def id="name" />
