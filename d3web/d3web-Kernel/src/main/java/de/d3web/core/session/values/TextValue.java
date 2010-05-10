@@ -20,6 +20,7 @@
 package de.d3web.core.session.values;
 
 import de.d3web.core.knowledge.terminology.QuestionText;
+import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Value;
 
 /**
@@ -28,7 +29,7 @@ import de.d3web.core.session.Value;
  * @author joba (denkbares GmbH)
  * @created 07.04.2010
  */
-public class TextValue implements Value {
+public class TextValue implements QuestionValue {
 
 	private final String value;
 

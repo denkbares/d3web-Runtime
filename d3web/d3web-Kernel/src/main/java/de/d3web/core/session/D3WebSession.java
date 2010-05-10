@@ -45,7 +45,6 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
-import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
@@ -54,10 +53,11 @@ import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.core.session.interviewmanager.DefaultInterview;
+import de.d3web.core.session.interviewmanager.Interview;
 import de.d3web.core.session.interviewmanager.PSMethodInterview;
 import de.d3web.core.session.interviewmanager.QASetManager;
 import de.d3web.core.session.interviewmanager.QASetManagerFactory;
-import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.diaFlux.inference.FluxSolver;
 import de.d3web.indication.inference.PSMethodContraIndication;
 import de.d3web.indication.inference.PSMethodDialogControlling;
@@ -135,7 +135,7 @@ public class D3WebSession implements Session {
 	D3WebSession(KnowledgeBase kb, QASetManagerFactory theQamFactory) {
 		this.kb = kb;
 		this.propagationController = new DefaultPropagationController(this);
-		this.interview = new DefaultInterview(this);
+		this.interview = new DefaultInterview(this.getKnowledgeBase());
 		init(theQamFactory);
 		// register some common problem solving methods
 		// first add the methods
@@ -225,7 +225,7 @@ public class D3WebSession implements Session {
 	D3WebSession(KnowledgeBase kb, QASetManagerFactory theQamFactory, List<PSMethod> psmethods) {
 		this.kb = kb;
 		this.propagationController = new DefaultPropagationController(this);
-		this.interview = new DefaultInterview(this);
+		this.interview = new DefaultInterview(this.getKnowledgeBase());
 		init(theQamFactory);
 		// register psms
 		for (PSMethod method : psmethods) {

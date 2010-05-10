@@ -32,6 +32,8 @@ import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.blackboard.DefaultFact;
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.indication.inference.PSMethodContraIndication;
 
 /**
@@ -51,16 +53,10 @@ public class ActionContraIndication extends PSAction {
 	@Override
 	public void doIt(Session session, Rule rule) {
 		// New handling of indications: Notify blackboard of indication and let the blackboard do all the work
-		if (getQASets().size() > 1) {
-			// todo: how to create facts with more than one QASet?!
-			System.err.println("Not implemented yet.");
+		for (QASet qaset : getQASets()) {
+			Fact fact = new DefaultFact(qaset, new Indication(State.CONTRA_INDICATED), this, getProblemsolver());
+			session.getBlackboard().addInterviewFact(fact);
 		}
-		session.setValue(getQASets().get(0), 
-				new Indication(State.CONTRA_INDICATED), 
-				this, 
-				session.getPSMethodInstance(getProblemsolverContext())
-				);
-		
 		
 		// --- delete from here after blackboard refactoring (joba, 05.2010)
 		// Old handling of indication:
@@ -70,6 +66,10 @@ public class ActionContraIndication extends PSAction {
 				new QASet.Reason(rule),
 				session);
 		}
+	}
+
+	private PSMethod getProblemsolver() {
+		return PSMethodContraIndication.getInstance();
 	}
 
 	/**

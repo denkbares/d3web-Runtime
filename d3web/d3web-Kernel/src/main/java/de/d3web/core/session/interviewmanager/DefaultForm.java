@@ -17,44 +17,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package de.d3web.core.session.values;
+package de.d3web.core.session.interviewmanager;
 
-import de.d3web.core.session.QuestionValue;
-import de.d3web.core.session.Value;
+import java.util.Collections;
+import java.util.List;
 
-/**
- * Represents a numerical value (internally stored as a {@link Double}).
- * @author joba
- *
- */
-public class NumValue implements QuestionValue {
+import de.d3web.core.knowledge.InterviewObject;
 
-	private final Double value;
-	
-	public NumValue(double value) {
-		this.value = Double.valueOf(value);
+public class DefaultForm implements Form {
+	private List<InterviewObject> interviewObjects;
+	private String                title = "noname";
+
+	public DefaultForm(String title, List<InterviewObject> interviewObjects) {
+		this.title = title;
+		this.interviewObjects = interviewObjects;
 	}
 	
-	public NumValue(Double value) {
-		this.value = value;
+	@Override
+	public List<InterviewObject> getInterviewObjects() {
+		return Collections.unmodifiableList(this.interviewObjects);
 	}
 
 	@Override
-	public Object getValue() {
-		return value;
-	}
-
-	@Override
-	public int compareTo(Value o) {
-		if (o instanceof NumValue) {
-			return value.compareTo(((NumValue) o).value);
-		}
-		return -1;
+	public String getTitle() {
+		return this.title;
 	}
 
 	@Override
 	public String toString() {
-		return getValue().toString();
+		return this.title + ": " + this.interviewObjects;
 	}
-
 }

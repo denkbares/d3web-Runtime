@@ -19,6 +19,7 @@
  */
 package de.d3web.core.session.values;
 
+import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Value;
 
 /**
@@ -27,7 +28,7 @@ import de.d3web.core.session.Value;
  * @author joba (denkbares GmbH)
  * @created 07.04.2010
  */
-public class Unknown implements Value {
+public class Unknown implements Value, QuestionValue {
 
 	public final static String UNKNOWN_ID = "MaU";
 	private static final Unknown instance = new Unknown();

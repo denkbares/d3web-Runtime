@@ -26,7 +26,6 @@ import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.session.D3WebSession;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.ValuedObject;
 import de.d3web.core.session.blackboard.CaseQASet;

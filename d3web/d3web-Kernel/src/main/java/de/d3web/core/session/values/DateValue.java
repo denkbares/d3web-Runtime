@@ -25,6 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import de.d3web.core.knowledge.terminology.QuestionDate;
+import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Value;
 
 /**
@@ -33,7 +34,7 @@ import de.d3web.core.session.Value;
  * @author joba (denkbares GmbH), Sebastian Furth
  * @created 07.04.2010
  */
-public class DateValue implements Value {
+public class DateValue implements QuestionValue {
 	/**
 	 * The Format, in which the dates are saved and loaded. The Format is for
 	 * example 2003-10-20-13-51-23

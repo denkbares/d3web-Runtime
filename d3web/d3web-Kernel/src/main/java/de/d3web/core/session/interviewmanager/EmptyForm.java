@@ -17,44 +17,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package de.d3web.core.session.values;
+package de.d3web.core.session.interviewmanager;
 
-import de.d3web.core.session.QuestionValue;
-import de.d3web.core.session.Value;
+import java.util.Collections;
+import java.util.List;
+
+import de.d3web.core.knowledge.InterviewObject;
 
 /**
- * Represents a numerical value (internally stored as a {@link Double}).
+ * Null object to represent an empty form, where no
+ * questions are presented in the dialog.
+ * 
  * @author joba
  *
  */
-public class NumValue implements QuestionValue {
+public class EmptyForm implements Form {
 
-	private final Double value;
+	public static final Form instance = new EmptyForm();
 	
-	public NumValue(double value) {
-		this.value = Double.valueOf(value);
-	}
-	
-	public NumValue(Double value) {
-		this.value = value;
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<InterviewObject> getInterviewObjects() {
+		return Collections.EMPTY_LIST;
 	}
 
 	@Override
-	public Object getValue() {
-		return value;
+	public String getTitle() {
+		return "EMPTY";
 	}
 
-	@Override
-	public int compareTo(Value o) {
-		if (o instanceof NumValue) {
-			return value.compareTo(((NumValue) o).value);
-		}
-		return -1;
-	}
-
-	@Override
-	public String toString() {
-		return getValue().toString();
+	public static Form getInstance() {
+		return instance;
 	}
 
 }

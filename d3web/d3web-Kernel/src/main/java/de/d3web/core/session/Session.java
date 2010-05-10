@@ -34,6 +34,7 @@ import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.interviewmanager.DialogController;
+import de.d3web.core.session.interviewmanager.Interview;
 import de.d3web.core.session.interviewmanager.QASetManager;
 import de.d3web.core.session.values.UndefinedValue;
 

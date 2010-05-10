@@ -26,6 +26,7 @@ import java.util.List;
 
 import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
+import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Value;
 
 /**
@@ -35,7 +36,7 @@ import de.d3web.core.session.Value;
  * @author joba (denkbares GmbH)
  * @created 07.04.2010
  */
-public class MultipleChoiceValue implements Value {
+public class MultipleChoiceValue implements QuestionValue {
 	private List<ChoiceValue> values = new LinkedList<ChoiceValue>();
 	private String id = "";
 	public static String ID_SEPARATOR = "#####";

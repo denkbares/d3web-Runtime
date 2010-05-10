@@ -31,6 +31,8 @@ import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.blackboard.DefaultFact;
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.indication.inference.PSMethodNextQASet;
 
 /**
@@ -54,13 +56,11 @@ public abstract class ActionNextQASet extends PSAction {
 	protected void doItWithContext(Session session, Rule rule) {
 		// New handling of indications: Notify blackboard of indication and let
 		// the blackboard do all the work
-		if (getQASets().size() > 1) {
-			// todo: how to create facts with more than one QASet?!
-			System.err.println("Not implemented yet.");
+		for (QASet qaset : getQASets()) {
+			Fact fact = new DefaultFact(qaset, new Indication(State.INDICATED), this, getProblemsolver());
+			session.getBlackboard().addInterviewFact(fact);
 		}
-		session.setValue(getQASets().get(0), new Indication(State.INDICATED),
-				this, session.getPSMethodInstance(getProblemsolverContext()));
-
+		
 		// --- delete from here after blackboard refactoring (joba, 05.2010)
 		// Old handling of indication:
 		for (QASet nextQASet : getQASets()) {
@@ -74,7 +74,11 @@ public abstract class ActionNextQASet extends PSAction {
 	public Class<? extends PSMethod> getProblemsolverContext() {
 		return PSMethodNextQASet.class;
 	}
-
+	
+	public PSMethod getProblemsolver() {
+		return PSMethodNextQASet.getInstance();
+	}
+	
 	/**
 	 * @return List of QASets this Action can indicate
 	 */
@@ -104,15 +108,9 @@ public abstract class ActionNextQASet extends PSAction {
 	public void undo(Session session, Rule rule) {
 		// New handling of indications: Notify blackboard of indication and let
 		// the blackboard do all the work
-		if (getQASets().size() > 1) {
-			// todo: how to create facts with more than one QASet?!
-			System.err.println("Not implemented yet.");
+		for (QASet qaset : getQASets()) {
+			session.getBlackboard().removeInterviewFact(qaset, this);
 		}
-		Value oldValue = session.getBlackboard().getIndication(getQASets().get(0));;
-		session.getBlackboard().removeInterviewFact(getQASets().get(0), this);
-		Value newValue = session.getBlackboard().getIndication(getQASets().get(0));
-		session.getInterviewManager().notifyFactChange(new PropagationEntry(getQASets().get(0), 
-				oldValue, newValue));
 
 		// --- delete from here after blackboard refactoring (joba, 05.2010)
 		// Old handling of indication:

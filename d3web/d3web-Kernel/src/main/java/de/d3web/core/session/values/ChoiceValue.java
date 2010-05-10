@@ -19,6 +19,7 @@
  */
 package de.d3web.core.session.values;
 
+import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Value;
 
 /**
@@ -27,7 +28,7 @@ import de.d3web.core.session.Value;
  * @author joba
  *
  */
-public class ChoiceValue implements Value {
+public class ChoiceValue implements QuestionValue {
 
 	Choice value;
 	
