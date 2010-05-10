@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.caserepository.utilities;
@@ -75,8 +75,7 @@ public class SessionConverter {
 	 * Properties of the caseObject will be cloned and added to the returned
 	 * session.
 	 * 
-	 * @param dialogControllerClass
-	 *            the dialog-controller to use
+	 * @param dialogControllerClass the dialog-controller to use
 	 * @return CaseObject
 	 */
 	public Session caseObject2Session(CaseObject cobj, KnowledgeBase kb,
@@ -89,14 +88,11 @@ public class SessionConverter {
 	 * Converts CaseObject to Session using the given dialog-controller-class.
 	 * The registered (user-selected) containers are considered.
 	 * 
-	 * @param dialogControllerClass
-	 *            the dialog-controller to use
-	 * @param copyDCMarkup
-	 *            if true, DCMarkup of the caseObject will be cloned and added
-	 *            to the session
-	 * @param copyProperties
-	 *            if true, Properties of the caseObject will be cloned and added
-	 *            to the session
+	 * @param dialogControllerClass the dialog-controller to use
+	 * @param copyDCMarkup if true, DCMarkup of the caseObject will be cloned
+	 *        and added to the session
+	 * @param copyProperties if true, Properties of the caseObject will be
+	 *        cloned and added to the session
 	 * @return CaseObject
 	 */
 	public Session caseObject2Session(CaseObject cobj, KnowledgeBase kb,
@@ -168,12 +164,10 @@ public class SessionConverter {
 	 * IMetaData. The established system's diagnoses are stored within the
 	 * CaseObject.
 	 * 
-	 * @param copyDCMarkup
-	 *            if true, DCMarkup of the session will be cloned and added to
-	 *            the caseObject
-	 * @param copyProperties
-	 *            if true, Properties of the session will be cloned and added to
-	 *            the caseObject
+	 * @param copyDCMarkup if true, DCMarkup of the session will be cloned and
+	 *        added to the caseObject
+	 * @param copyProperties if true, Properties of the session will be cloned
+	 *        and added to the caseObject
 	 * @return CaseObjectImpl
 	 */
 	public CaseObjectImpl session2CaseObject(Session theCase, boolean copyDCMarkup,
@@ -185,7 +179,7 @@ public class SessionConverter {
 		Iterator<Question> qiter = theCase.getKnowledgeBase().getQuestions().iterator();
 		while (qiter.hasNext()) {
 			Question q = qiter.next();
-			Value value = q.getValue(theCase);
+			Value value = theCase.getValue(q);
 			ret.addQuestionAndAnswers(q, value);
 		}
 

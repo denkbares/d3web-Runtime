@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.explain.utils;
@@ -479,7 +479,7 @@ public class XMLRenderer {
 		if (qaSet instanceof Question) {
 			Question q = (Question) qaSet;
 			if (q instanceof QuestionChoice) {
-				Value answer = q.getValue(theCase);
+				Value answer = theCase.getValue(q);
 				questionState.append("<Answers>");
 				if (answer instanceof Unknown) {
 					questionState.append(renderAnswerUnknownObject());
@@ -507,7 +507,7 @@ public class XMLRenderer {
 				}
 			}
 			else if (q instanceof QuestionNum) {
-				Value numValue = q.getValue(theCase);
+				Value numValue = theCase.getValue(q);
 				if (numValue != null) {
 					questionState.append("<Answers>");
 					if (numValue instanceof Unknown) {
@@ -525,15 +525,15 @@ public class XMLRenderer {
 						}
 						questionState.append("\">");
 						Object unit = q.getProperties().getProperty(Property.UNIT);
-						if (unit instanceof String)
-							questionState.append("<![CDATA[" + (String) unit + "]]>");
+						if (unit instanceof String) questionState.append("<![CDATA["
+								+ (String) unit + "]]>");
 						questionState.append("</Number>");
 					}
 					questionState.append("</Answers>");
 				}
 			}
 			else if (q instanceof QuestionText) {
-				Value textValue = q.getValue(theCase);
+				Value textValue = theCase.getValue(q);
 				if (textValue != null) {
 					questionState.append("<Answers>");
 					if (textValue instanceof Unknown) {
@@ -549,7 +549,7 @@ public class XMLRenderer {
 				}
 			}
 			else if (q instanceof QuestionDate) {
-				Value dateValue = q.getValue(theCase);
+				Value dateValue = theCase.getValue(q);
 				if (dateValue != null) {
 					questionState.append("<Answers>");
 					if (dateValue instanceof Unknown) {
@@ -627,11 +627,9 @@ public class XMLRenderer {
 				Iterator<? extends QASet> iter = qaSet.getKnowledgeBase().getInitQuestions().iterator();
 				boolean isInitQContainer = false;
 				while ((!isInitQContainer) && (iter.hasNext())) {
-					if (iter.next().equals(qaSet))
-						isInitQContainer = true;
+					if (iter.next().equals(qaSet)) isInitQContainer = true;
 				}
-				if (isInitQContainer)
-					sb.append(renderInitialQASet(qaSet, true));
+				if (isInitQContainer) sb.append(renderInitialQASet(qaSet, true));
 			}
 			else {
 				// Frage ist Initialfrage innerhalb einer Frageklasse, wenn
@@ -639,11 +637,9 @@ public class XMLRenderer {
 				// Parents eine Frageklasse ist
 				boolean isInitQuestion = false;
 				for (TerminologyObject to : qaSet.getParents()) {
-					if (to instanceof QContainer)
-						isInitQuestion = true;
+					if (to instanceof QContainer) isInitQuestion = true;
 				}
-				if (isInitQuestion)
-					sb.append(renderInitialQASet(qaSet, true));
+				if (isInitQuestion) sb.append(renderInitialQASet(qaSet, true));
 			}
 		}
 		else if (context == PSMethodUserSelected.class) {
@@ -676,14 +672,12 @@ public class XMLRenderer {
 		List<Object> returnList = new LinkedList<Object>();
 		StringBuffer sb = new StringBuffer();
 		sb.append("<KnowledgeSlice ID=\"" + rc.getId() + "\"");
-		if (rc.isUsed(theCase))
-			sb.append(" status=\"fired\"");
+		if (rc.isUsed(theCase)) sb.append(" status=\"fired\"");
 		sb.append(">");
 
 		List<?> actionList = renderAction(rc);
 		sb.append(actionList.get(0));
-		if (actionList.size() > 1)
-			returnList.add(actionList.get(1));
+		if (actionList.size() > 1) returnList.add(actionList.get(1));
 
 		// Condition
 		sb.append(renderCondition(rc.getCondition(), theCase, showStatus, true));
@@ -692,8 +686,7 @@ public class XMLRenderer {
 		if (rc.getException() != null) {
 			sb.append("<Exception");
 			try {
-				if (rc.getException().eval(theCase))
-					sb.append(" status=\"fired\"");
+				if (rc.getException().eval(theCase)) sb.append(" status=\"fired\"");
 			}
 			catch (Exception ex) {
 			}
@@ -707,8 +700,7 @@ public class XMLRenderer {
 		if (rc.getContext() != null) {
 			sb.append("<Context");
 			try {
-				if (rc.getContext().eval(theCase))
-					sb.append(" status=\"fired\"");
+				if (rc.getContext().eval(theCase)) sb.append(" status=\"fired\"");
 			}
 			catch (Exception ex) {
 			}
@@ -785,7 +777,7 @@ public class XMLRenderer {
 						// allAnswer-list
 						returnList.add(new Double(
 								((QuestionChoice) ac.getQuestion()).getAllAlternatives().indexOf(
-										values[i])));
+								values[i])));
 					}
 					else if (values[i] instanceof AnswerUnknown) {
 						sb.append(renderAnswerUnknownObject());
@@ -955,8 +947,7 @@ public class XMLRenderer {
 			boolean showStatus, boolean asException, boolean parentFired) {
 		StringBuffer sb = new StringBuffer();
 		List<?> statusValues = null;
-		if (showStatus)
-			statusValues = getStatusFor(cond, theCase, asException, parentFired);
+		if (showStatus) statusValues = getStatusFor(cond, theCase, asException, parentFired);
 		sb.append("<TCondition");
 		if (cond instanceof CondEqual) {
 			CondEqual ce = (CondEqual) cond;
@@ -971,8 +962,7 @@ public class XMLRenderer {
 				Choice choice = (Choice) ceAnswer.getValue();
 				sb.append(renderAnswerChoiceObject(choice));
 			}
-			else if (ceAnswer instanceof Unknown)
-				sb.append("<AnswerUnknown/>");
+			else if (ceAnswer instanceof Unknown) sb.append("<AnswerUnknown/>");
 
 		}
 		else if ((cond instanceof CondChoiceNo) || (cond instanceof CondChoiceYes)) {
@@ -1027,8 +1017,7 @@ public class XMLRenderer {
 			else if (cn instanceof CondNumGreater) sb.append(" type=\"numGreater\"");
 			else if (cn instanceof CondNumGreaterEqual) sb.append(" type=\"numGreaterEqual\"");
 			else if (cn instanceof CondNumLess) sb.append(" type=\"numLess\"");
-			else if (cn instanceof CondNumLessEqual)
-				sb.append(" type=\"numLessEqual\"");
+			else if (cn instanceof CondNumLessEqual) sb.append(" type=\"numLessEqual\"");
 
 			if (statusValues != null) {
 				sb.append(" status=\"" + statusValues.get(1) + "\"");
@@ -1037,8 +1026,7 @@ public class XMLRenderer {
 			sb.append(renderQASetObject(cn.getQuestion()));
 			sb.append("<Number value=\"" + cn.getConditionValue() + "\">");
 			Object unit = cn.getQuestion().getProperties().getProperty(Property.UNIT);
-			if (unit instanceof String)
-				sb.append("<![CDATA[" + (String) unit + "]]>");
+			if (unit instanceof String) sb.append("<![CDATA[" + (String) unit + "]]>");
 			sb.append("</Number>");
 		}
 		else if (cond instanceof CondNumIn) {
@@ -1052,8 +1040,7 @@ public class XMLRenderer {
 			sb.append("<Number min=\"" + cni.getMinValue() + "\" max=\""
 					+ cni.getMaxValue() + "\">");
 			Object unit = cni.getQuestion().getProperties().getProperty(Property.UNIT);
-			if (unit instanceof String)
-				sb.append("<![CDATA[" + (String) unit + "]]>");
+			if (unit instanceof String) sb.append("<![CDATA[" + (String) unit + "]]>");
 			sb.append("</Number>");
 		}
 		else if (cond instanceof CondTextContains) {
@@ -1084,8 +1071,7 @@ public class XMLRenderer {
 			boolean showStatus, boolean asException, boolean parentFired) {
 		StringBuffer sb = new StringBuffer();
 		List<?> statusValues = null;
-		if (showStatus)
-			statusValues = getStatusFor(cond, theCase, asException, parentFired);
+		if (showStatus) statusValues = getStatusFor(cond, theCase, asException, parentFired);
 		sb.append("<Condition");
 		if (cond instanceof CondAnd) {
 			sb.append(" type=\"and\"");
@@ -1099,10 +1085,8 @@ public class XMLRenderer {
 		else if (cond instanceof CondMofN) {
 			sb.append(" type=\"mofn\"");
 			CondMofN cmofn = (CondMofN) cond;
-			if (cmofn.getMin() != 0)
-				sb.append(" min=\"" + cmofn.getMin() + "\"");
-			if (cmofn.getMax() != 0)
-				sb.append(" max=\"" + cmofn.getMax() + "\"");
+			if (cmofn.getMin() != 0) sb.append(" min=\"" + cmofn.getMin() + "\"");
+			if (cmofn.getMax() != 0) sb.append(" max=\"" + cmofn.getMax() + "\"");
 		}
 		if (statusValues != null) {
 			sb.append(" status=\"" + statusValues.get(1) + "\"");
@@ -1116,7 +1100,7 @@ public class XMLRenderer {
 			if (asException) sb.append(renderConditionAsException(iter.next(), theCase,
 					showStatus,
 					parentFired && (statusValues != null)
-							&& ((Boolean) statusValues.get(0)).booleanValue()));
+					&& ((Boolean) statusValues.get(0)).booleanValue()));
 			else sb.append(renderCondition(iter.next(), theCase, showStatus,
 					parentFired && (statusValues != null)
 					&& ((Boolean) statusValues.get(0)).booleanValue()));
@@ -1175,9 +1159,9 @@ public class XMLRenderer {
 	 * @return List : List of (Boolean, String) Boolean: condition is active
 	 *         String: kind of condition-status
 	 */
-	private static List getStatusFor(Condition cond, Session theCase,
+	private static List<Object> getStatusFor(Condition cond, Session theCase,
 			boolean asException, boolean parentFired) {
-		LinkedList returnList = new LinkedList();
+		LinkedList<Object> returnList = new LinkedList<Object>();
 		try {
 			if (cond.eval(theCase)) {
 				returnList.add(new Boolean(true));
@@ -1210,16 +1194,15 @@ public class XMLRenderer {
 	 * (descending)
 	 * 
 	 * @param sortedList
-	 * @param toInsert
-	 *            (List of (Object) or List of (Object,Double))
+	 * @param toInsert (List of (Object) or List of (Object,Double))
 	 * @return List (the sorted list: List of (List) )
 	 */
 	public static List insertIntoSortedList(List sortedList, List toInsert) {
 		if (toInsert.size() <= 1) sortedList.add(toInsert); // append it, if no
-															// Double-object
-															// exists
+		// Double-object
+		// exists
 		else { // else, insert it at the right position (depends on the
-				// Double-object)
+			// Double-object)
 			int i = 0;
 			double insertScore = ((Double) toInsert.get(1)).doubleValue();
 			while ((i < sortedList.size())
@@ -1235,9 +1218,8 @@ public class XMLRenderer {
 	/**
 	 * Returns a merged StringBuffer of all little StringBuffers in the list.
 	 * 
-	 * @param list
-	 *            (a List of List's, the List's are Lists of
-	 *            (StringBuffer,Double) or Lists of (StringBuffer))
+	 * @param list (a List of List's, the List's are Lists of
+	 *        (StringBuffer,Double) or Lists of (StringBuffer))
 	 * @return StringBuffer
 	 */
 	public static StringBuffer getMergedString(List listOfLists) {

@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.render;
@@ -43,8 +43,8 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
@@ -78,9 +78,11 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 			if (!showUnknown && DialogUtils.unknownAnswerInValueList(q, theCase)) {
 				continue;
 			}
-			
-			//if we do not want to show abstract Questions, and q is abstract => continue
-			if (isAbstractQuestion(q) && !DialogUtils.getDialogSettings().isShowAbstractQuestionsInResultPage()) {
+
+			// if we do not want to show abstract Questions, and q is abstract
+			// => continue
+			if (isAbstractQuestion(q)
+					&& !DialogUtils.getDialogSettings().isShowAbstractQuestionsInResultPage()) {
 				continue;
 			}
 			if (q.isDone(theCase)) {
@@ -112,7 +114,8 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 				comp.encodeAll(FacesContext.getCurrentInstance());
 				facet.encodeEnd(FacesContext.getCurrentInstance());
 			}
-		} else {
+		}
+		else {
 			writer.writeText(cont.getName(), "value");
 		}
 		writer.endElement("th");
@@ -176,10 +179,12 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 			for (int j = 0; j < qList.size(); j++) {
 				Question q = qList.get(j);
 				if (q.hasValue(theCase)) {
-					if (!processedBean.isShowUnknown() && DialogUtils.unknownAnswerInValueList(q, theCase)) {
+					if (!processedBean.isShowUnknown()
+							&& DialogUtils.unknownAnswerInValueList(q, theCase)) {
 						continue;
 					}
-					if (isAbstractQuestion(q) && !DialogUtils.getDialogSettings().isShowAbstractQuestionsInResultPage() ) {
+					if (isAbstractQuestion(q)
+							&& !DialogUtils.getDialogSettings().isShowAbstractQuestionsInResultPage()) {
 						continue;
 					}
 					if (finish) {
@@ -195,8 +200,10 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 						renderMoreLessLink = true;
 					}
 					if (processedBean.isShowQContainerNames()) {
-						renderProcessedQuestion(writer, component, q, theCase, processedBean.getQTextMode());
-					} else {
+						renderProcessedQuestion(writer, component, q, theCase,
+								processedBean.getQTextMode());
+					}
+					else {
 						questionToRenderList.add(q);
 					}
 
@@ -206,7 +213,8 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 						// "finished"
 						if (!processedBean.isShowAll()) {
 							finish = true;
-						} else {
+						}
+						else {
 							// all should be shown
 							moreThanMaxShown = true;
 						}
@@ -217,14 +225,17 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 		if (!processedBean.isShowQContainerNames() && questionToRenderList.size() > 0) {
 			// sort list alphabetical
 			Comparator<Question> qCompAsc = new Comparator<Question>() {
+
 				public int compare(Question a, Question b) {
 					Collator collator = Collator.getInstance(DialogUtils.getLocaleBean().getLocale());
 					if (collator.compare(a.getName(), b.getName()) < 0) {
 						return -1;
-					} else if (collator.compare(a.getName(), b.getName()) > 0) {
+					}
+					else if (collator.compare(a.getName(), b.getName()) > 0) {
 						return 1;
-					} else
-						return 0;
+					}
+					else
+					return 0;
 				}
 			};
 			Collections.sort(questionToRenderList, qCompAsc);
@@ -243,7 +254,8 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 			if (facet != null) {
 				if (processedBean.isShowAll()) {
 					facet.setValue(DialogUtils.getMessageFor("processed.showless"));
-				} else {
+				}
+				else {
 					facet.setValue(DialogUtils.getMessageFor("processed.showall"));
 				}
 				DialogRenderUtils.renderChild(FacesContext.getCurrentInstance(), facet);
@@ -262,8 +274,9 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 		// render link
 		HtmlAjaxCommandLink facet = (HtmlAjaxCommandLink) component.getFacet("link");
 		if (facet != null) {
-			facet.setTitle(DialogUtils.getMessageWithParamsFor("processed.moveToQuestion", new Object[] { q
-					.getName() }));
+			facet.setTitle(DialogUtils.getMessageWithParamsFor("processed.moveToQuestion",
+					new Object[] { q
+							.getName() }));
 			facet.setOnclick("cursor_wait();setClickedQASet('" + q.getId() + "')");
 
 			HtmlOutputText comp = (HtmlOutputText) FacesContext.getCurrentInstance().getApplication()
@@ -277,7 +290,8 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 			}
 			if (qTextMode.equals(ProcessedQContainersController.QTEXTMODE_PROMPT + abstractFlag)) {
 				comp.setValue(DialogUtils.getQPrompt(q));
-			} else {
+			}
+			else {
 
 				comp.setValue(q.getName() + abstractFlag);
 			}
@@ -292,7 +306,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 		writer.startElement("span", component);
 		writer.writeAttribute("id", component.getId() + "_ans_" + q.getId(), "id");
 
-		Value ans = q.getValue(theCase);
+		Value ans = theCase.getValue(q);
 
 		if (ans instanceof ChoiceValue) {
 			String valueID = ((Choice) ans.getValue()).getId();
@@ -318,7 +332,8 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 					(QuestionDate) q,
 					(Date) ans.getValue(), theCase);
 			writer.writeText(dateanswer, "value");
-		} else {
+		}
+		else {
 			writer.writeText(ans.toString(), "value");
 		}
 
@@ -335,11 +350,12 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 		// List<QContainer> processedContainers = mqdc.getProcessedContainers();
 		List<QContainer> processedContainers = theCase.getKnowledgeBase().getQContainers();
 		if (checkDisplayability(theCase, processedContainers)) {
-			renderProcessedQContainersBox(context, component, theCase, processedContainers, processedBean);
+			renderProcessedQContainersBox(context, component, theCase, processedContainers,
+					processedBean);
 		}
 	}
 
-	private static boolean isAbstractQuestion (Question q) {
+	private static boolean isAbstractQuestion(Question q) {
 		Object qIsAbstract = q.getProperties().getProperty(Property.ABSTRACTION_QUESTION);
 		if (qIsAbstract != null && Boolean.parseBoolean(qIsAbstract.toString()) == true) {
 			// this question is abstract and we don't want to display it!
@@ -347,5 +363,5 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 		}
 		return false;
 	}
-	
+
 }

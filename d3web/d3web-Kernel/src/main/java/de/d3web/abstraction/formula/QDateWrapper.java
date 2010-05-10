@@ -48,8 +48,7 @@ public class QDateWrapper extends FormulaDatePrimitive {
 	public QDateWrapper() {
 		this(null);
 	}
-	
-	
+
 	/**
 	 * QNumWrapper constructor comment.
 	 */
@@ -64,14 +63,14 @@ public class QDateWrapper extends FormulaDatePrimitive {
 	 * @return evaluated AnswerNumValue (Double) of the wrapped QuestionNum
 	 */
 	public Date eval(Session theCase) {
-		if (getQuestion().getValue(theCase) == null) {
+		if (theCase.getValue(getQuestion()) == null) {
 			return null;
 		}
-		DateValue value = (DateValue) getQuestion().getValue(theCase);
+		DateValue value = (DateValue) theCase.getValue(getQuestion());
 		// EvaluatableAnswerDateValue ret
 		// =(EvaluatableAnswerDateValue)ans.getValue(theCase);
 		return (Date) value.getValue();
-			
+
 	}
 
 	/**
@@ -80,7 +79,7 @@ public class QDateWrapper extends FormulaDatePrimitive {
 	 * @return the wrapped QuestionNum
 	 */
 	public QuestionDate getQuestion() {
-		return (QuestionDate)value;
+		return (QuestionDate) value;
 	}
 
 	/**
@@ -101,9 +100,9 @@ public class QDateWrapper extends FormulaDatePrimitive {
 	public String toString() {
 		return value == null ? "question:null" : value.toString();
 	}
-	
+
 	@Override
 	public void setValue(Object o) {
-		setQuestion((QuestionDate)o);
+		setQuestion((QuestionDate) o);
 	}
 }

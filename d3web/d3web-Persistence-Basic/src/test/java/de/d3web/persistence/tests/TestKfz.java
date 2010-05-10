@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.persistence.tests;
@@ -39,9 +39,9 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.Session;
 import de.d3web.core.session.interviewmanager.DialogController;
 import de.d3web.core.session.interviewmanager.InvalidQASetRequestException;
 import de.d3web.core.session.interviewmanager.OQDialogController;
@@ -50,6 +50,7 @@ import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.Unknown;
+import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
@@ -59,14 +60,14 @@ import de.d3web.plugin.test.InitPluginManager;
  * @author bates
  */
 public class TestKfz extends TestCase {
+
 	private static KnowledgeBase kb = null;
 	private static URL kbURL = TestKfz.class.getClassLoader().getResource("Kfz2K.xml");
 
 	/**
 	 * Creates a new test-object with name ´name´
 	 * 
-	 * @param name
-	 *            Name of the test
+	 * @param name Name of the test
 	 */
 	public TestKfz(String name) {
 		super(name);
@@ -76,8 +77,7 @@ public class TestKfz extends TestCase {
 	 * use it, if you only want to run TestKfz (console) Creation date:
 	 * (08.09.2000 16:06:00)
 	 * 
-	 * @param args
-	 *            java.lang.String[]
+	 * @param args java.lang.String[]
 	 */
 	public static void main(String[] args) {
 		junit.textui.TestRunner.run(TestKfz.suite());
@@ -127,7 +127,7 @@ public class TestKfz extends TestCase {
 		}
 		PersistenceManager.getInstance().save(kb, new File("target/kbs/test2.jar"));
 		Session theCase = SessionFactory.createSession(kb);
-		Class<? extends PSMethod> context = de.d3web.scoring.inference.PSMethodHeuristic.class;
+		Class<? extends PSMethod> context = PSMethodUserSelected.class;
 
 		QuestionNum Mf5 = (QuestionNum) kb.searchQuestion("Mf5");
 		QuestionMC Mf7 = (QuestionMC) kb.searchQuestion("Mf7");
@@ -139,7 +139,7 @@ public class TestKfz extends TestCase {
 		theCase.setValue(Mf7, mcv, context);
 		//
 
-		Value value = Mf5.getValue(theCase);
+		Value value = theCase.getValue(Mf5);
 		if (value == null) {
 			System.out.println("(1) --> NULL!!!!");
 		}
@@ -156,7 +156,7 @@ public class TestKfz extends TestCase {
 	 */
 	public void testFormulaSchema() {
 		Session theCase = SessionFactory.createSession(kb);
-		Class<? extends PSMethod> context = de.d3web.scoring.inference.PSMethodHeuristic.class;
+		Class<? extends PSMethod> context = PSMethodUserSelected.class;
 
 		/*---------------------------------------------- */
 
@@ -173,54 +173,28 @@ public class TestKfz extends TestCase {
 		Choice ratingNormal = (Choice) Msi4.getAnswer(theCase, "Msi4a1");
 		ChoiceValue ratingNormalValue = new ChoiceValue(ratingNormal);
 
-		System.out.println(
-				"(1) --> Msi4: "
-				+ Msi4.getValue(theCase));
+		System.out.println("(1) --> Msi4: " + theCase.getValue(Msi4));
 
-		assertEquals(
-				"Error with formula (1)",
-				ratingNormalValue, Msi4.getValue(theCase));
+		assertEquals("Error with formula (1)", ratingNormalValue, theCase.getValue(Msi4));
 
 		// This is exactly the border ((Mf6-Mf5)/Mf5)*100 = 10
 		theCase.setValue(Mf6, new NumValue(new Double(11)), context);
-		//
 		Choice ratingHigh = (Choice) Msi4.getAnswer(theCase, "Msi4a2");
 		ChoiceValue ratingHighValue = new ChoiceValue(ratingHigh);
-		System.out.println(
-				"(2) --> Msi4: "
-				+ Msi4.getValue(theCase));
-		//
-		assertEquals(
-				"Error with formula (2)",
-				ratingHighValue, Msi4.getValue(theCase));
+		System.out.println("(2) --> Msi4: " + theCase.getValue(Msi4));
+		assertEquals("Error with formula (2)", ratingHighValue, theCase.getValue(Msi4));
 
-		// 10+9.5 < 20 so answer is "leicht erhöht" as expected
-		theCase.setValue(Msi4, new NumValue(new Double(9.5)), context);
-		//
-		System.out.println(
-				"(3) --> Msi4: "
-				+ Msi4.getValue(theCase));
-		//
-		assertEquals(
-				"Error with formula (3)",
-				ratingHighValue, Msi4.getValue(theCase));
-
-		//
 		theCase.setValue(Mf6, new NumValue(new Double(15)), context);
-		System.out.println(
-				"(4) --> Msi4: "
-				+ Msi4.getValue(theCase));
-		//
+		System.out.println("(4) --> Msi4: " + theCase.getValue(Msi4));
 		Choice ratingVeryHigh = (Choice) Msi4.getAnswer(theCase, "Msi4a3");
 		ChoiceValue ratingVeryHighValue = new ChoiceValue(ratingVeryHigh);
 
-		//
-		assertEquals(
-				"Error with formula (4)",
-				ratingVeryHighValue, Msi4.getValue(theCase));
+		assertEquals("Error with formula (4)", ratingVeryHighValue, theCase.getValue(Msi4));
 
-		//
-
+		// user sets the value to 19.5 (user overrides all other values)
+		theCase.setValue(Msi4, new NumValue(new Double(19.5)), context);
+		System.out.println("(3) --> Msi4: " + theCase.getValue(Msi4));
+		assertEquals("Error with formula (3)", ratingHighValue, theCase.getValue(Msi4));
 	}
 
 	/**
@@ -229,7 +203,7 @@ public class TestKfz extends TestCase {
 	 */
 	public void testNumericExpression() {
 		Session theCase = SessionFactory.createSession(kb);
-		Class<? extends PSMethod> context = de.d3web.scoring.inference.PSMethodHeuristic.class;
+		Class<? extends PSMethod> context = PSMethodUserSelected.class;
 
 		/*----------------------------------------------
 		 */
@@ -241,16 +215,13 @@ public class TestKfz extends TestCase {
 		theCase.setValue(Mf4, new ChoiceValue(Mf4a1), context);
 		//
 		theCase.setValue(Mf6, new NumValue(new Double(10)), context);
-		Value Mf58Value = Mf58.getValue(theCase);
+		Value Mf58Value = theCase.getValue(Mf58);
 		if (Mf58Value == null) {
 			System.out.println("(1) --> NULL!!!!");
 		}
 		else {
-			System.out.println(
-					"(1) --> Mf58: " + Mf58Value.getValue());
+			System.out.println("(1) --> Mf58: " + Mf58Value.getValue());
 		}
-		//
-		//
 		// assertTrue("Error with formula (1)",
 		// ratingNormal == Msi4.getValue(theCase).get(0));
 
@@ -263,7 +234,7 @@ public class TestKfz extends TestCase {
 	 */
 	public void testSetValue() {
 		Session theCase = SessionFactory.createSession(kb);
-		Class<? extends PSMethod> context = de.d3web.scoring.inference.PSMethodHeuristic.class;
+		Class<? extends PSMethod> context = PSMethodUserSelected.class;
 
 		QuestionOC questionOC = (QuestionOC) kb.searchQuestion("Mf2");
 
@@ -276,13 +247,13 @@ public class TestKfz extends TestCase {
 
 		assertEquals(
 				"Error while setting/getting known OC-Value (2)",
-				new ChoiceValue(answerChoice), questionOC.getValue(theCase));
+				new ChoiceValue(answerChoice), theCase.getValue(questionOC));
 
 		theCase.setValue(questionOC, Unknown.getInstance(), context);
 
 		assertEquals(
 				"Error while setting/getting unknown OC-Value (3)",
-				Unknown.getInstance(), questionOC.getValue(theCase));
+				Unknown.getInstance(), theCase.getValue(questionOC));
 
 		assertTrue(
 				"Error: isDone shouldn't be false (4)",

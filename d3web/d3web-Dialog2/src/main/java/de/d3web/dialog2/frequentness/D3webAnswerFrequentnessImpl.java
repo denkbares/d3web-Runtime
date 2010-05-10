@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.frequentness;
@@ -29,9 +29,9 @@ import javax.faces.model.SelectItem;
 import de.d3web.caserepository.CaseObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.ValueFactory;
-import de.d3web.core.session.Session;
 import de.d3web.core.session.values.Choice;
 import de.d3web.dialog2.basics.knowledge.CaseManager;
 import de.d3web.dialog2.basics.knowledge.CaseObjectDescriptor;
@@ -56,7 +56,7 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 		// all cases...
 		int absoluteFreq = 0;
 		for (Session oneCase : savedCases) {
-			Value answer = q.getValue(oneCase);
+			Value answer = oneCase.getValue(q);
 			if (ValueFactory.getID_or_Value(answer).equals(ansID)) {
 				absoluteFreq++;
 			}
@@ -94,7 +94,8 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 	private double getRelFreq(int absoluteFreq) {
 		if (absoluteFreq == 0 || savedCases == null || savedCases.size() == 0) {
 			return 0.0;
-		} else {
+		}
+		else {
 			return absoluteFreq / (double) savedCases.size();
 		}
 
@@ -129,7 +130,7 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 		}
 		Collection<CaseObjectDescriptor> casesForKB = CaseManager.getInstance()
 				.getCaseObjectDescriptorsForKb(
-						theCase.getKnowledgeBase().getId());
+				theCase.getKnowledgeBase().getId());
 		if (casesForKB.size() > 0) {
 			return true;
 		}
@@ -152,7 +153,7 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 		savedCases = new ArrayList<Session>();
 		Collection<CaseObjectDescriptor> codForKB = CaseManager.getInstance()
 				.getCaseObjectDescriptorsForKb(
-						theCase.getKnowledgeBase().getId());
+				theCase.getKnowledgeBase().getId());
 		for (CaseObjectDescriptor cod : codForKB) {
 			CaseObject o = CaseRepository.getInstance().getCaseById(
 					theCase.getKnowledgeBase().getId(), cod.getCaseId());

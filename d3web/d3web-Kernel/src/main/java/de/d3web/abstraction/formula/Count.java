@@ -19,6 +19,7 @@
  */
 
 package de.d3web.abstraction.formula;
+
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,9 +28,11 @@ import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.MultipleChoiceValue;
+
 /**
- * FormulaElement term that can count the answers of a QuestionMC
- * Creation date: (14.08.2000 16:33:00)
+ * FormulaElement term that can count the answers of a QuestionMC Creation date:
+ * (14.08.2000 16:33:00)
+ * 
  * @author Christian
  */
 public class Count implements FormulaNumberElement {
@@ -42,9 +45,9 @@ public class Count implements FormulaNumberElement {
 	public Count() {
 		this(null);
 	}
-	
+
 	/**
-	 *	Creates a new Count object that counts the answers of questionMC
+	 * Creates a new Count object that counts the answers of questionMC
 	 **/
 	public Count(QuestionMC questionMC) {
 		this.questionMC = questionMC;
@@ -59,13 +62,12 @@ public class Count implements FormulaNumberElement {
 
 	/**
 	 * @return the number of active alternatives for a multiple-choice answer,
-	 * 0, if the active answer is "No" or "unknown".
+	 *         0, if the active answer is "No" or "unknown".
 	 */
 	public Double eval(Session theCase) {
-		MultipleChoiceValue value = (MultipleChoiceValue) getQuestionMC().getValue(
-				theCase);
+		MultipleChoiceValue value = (MultipleChoiceValue) theCase.getValue(getQuestionMC());
 		List<Choice> choices = (List<Choice>) value.getValue();
-		
+
 		// check, if AnswerNo oder AnswerUnknown is included
 		for (Choice answerChoice : choices) {
 			if (answerChoice.isAnswerNo() || answerChoice.isUnknown())
@@ -80,6 +82,7 @@ public class Count implements FormulaNumberElement {
 
 	/**
 	 * Creation date: (20.06.2001 15:34:57)
+	 * 
 	 * @return the XML-representation of this Count object
 	 */
 	public String getXMLString() {
@@ -92,6 +95,6 @@ public class Count implements FormulaNumberElement {
 
 	@Override
 	public String toString() {
-		return "#" + (getQuestionMC() != null ?  " "+getQuestionMC().toString() : ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return "#" + (getQuestionMC() != null ? " " + getQuestionMC().toString() : ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }

@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.render;
@@ -35,11 +35,11 @@ import javax.faces.context.ResponseWriter;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.ValueFactory;
-import de.d3web.core.session.Session;
-import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.session.values.Choice;
 import de.d3web.dialog2.basics.layout.QContainerLayout;
 import de.d3web.dialog2.basics.layout.QuestionPageLayout;
 import de.d3web.dialog2.imagemap.Image;
@@ -64,7 +64,7 @@ public class QuestionImageMapRendererUtils {
 			List<Question> qList) {
 		for (Question question : qList) {
 			if (question.getId().equals(questionID)) {
-				return question.getValue(theCase);
+				return theCase.getValue(question);
 			}
 		}
 		return null;
@@ -84,8 +84,9 @@ public class QuestionImageMapRendererUtils {
 		String answerText = answer.toString();
 		if (answerText.equals(AnswerUnknown.UNKNOWN_VALUE)) {
 			return DialogUtils.getMessageFor("dialog.unknown");
-		} else if (q != null && q instanceof QuestionDate) {
-			Date ans = (Date) (q.getValue(theCase)).getValue();
+		}
+		else if (q != null && q instanceof QuestionDate) {
+			Date ans = (Date) (theCase.getValue(q)).getValue();
 			return QuestionDateUtils.dateToString((QuestionDate) q, ans, theCase);
 		}
 		return answerText;
@@ -96,9 +97,11 @@ public class QuestionImageMapRendererUtils {
 		if (answerIcon == null) {
 			String[] coordsSplit = region.getCoords().split(",");
 			// no ImageMapAnswerIcon -> dimension from coords
-			sb.append("width: " + (Integer.parseInt(coordsSplit[2]) - Integer.parseInt(coordsSplit[0]))
+			sb.append("width: "
+					+ (Integer.parseInt(coordsSplit[2]) - Integer.parseInt(coordsSplit[0]))
 					+ "px; ");
-			sb.append("height: " + (Integer.parseInt(coordsSplit[3]) - Integer.parseInt(coordsSplit[1]))
+			sb.append("height: "
+					+ (Integer.parseInt(coordsSplit[3]) - Integer.parseInt(coordsSplit[1]))
 					+ "px; ");
 		}
 		return sb.toString();
@@ -108,9 +111,11 @@ public class QuestionImageMapRendererUtils {
 		Question firstToAsk = DialogUtils.getQuestionPageBean().getFirstQToAsk();
 		if (firstToAsk != null && questionIdInImage(image, firstToAsk.getId())) {
 			return "currentQ";
-		} else if (allQuestionsInImageAnswered(image, theCase)) {
+		}
+		else if (allQuestionsInImageAnswered(image, theCase)) {
 			return "answeredQ";
-		} else {
+		}
+		else {
 			return "unansweredQ";
 		}
 	}
@@ -120,9 +125,11 @@ public class QuestionImageMapRendererUtils {
 		Question firstToAsk = DialogUtils.getQuestionPageBean().getFirstQToAsk();
 		if (firstToAsk != null && questionIdInImage(image, firstToAsk.getId())) {
 			return layoutDef.getCurrentQuestionBackground();
-		} else if (allQuestionsInImageAnswered(image, theCase)) {
+		}
+		else if (allQuestionsInImageAnswered(image, theCase)) {
 			return layoutDef.getAnsweredQuestionBackground();
-		} else {
+		}
+		else {
 			return layoutDef.getUnansweredQuestionBackground();
 		}
 	}
@@ -141,23 +148,30 @@ public class QuestionImageMapRendererUtils {
 			// Region has an ImageMapAnswerIcon
 			if (!answerIcon.getCoords().equals("")) {
 				String[] coordsSplit = answerIcon.getCoords().split(",");
-				sb.append("left: " + coordsSplit[0] + "px; top:" + coordsSplit[1] + "px; ");
-			} else {
+				sb.append("left: " + coordsSplit[0] + "px; top:" + coordsSplit[1]
+						+ "px; ");
+			}
+			else {
 				String[] coordsSplit = region.getCoords().split(",");
 				if (region.getShape().equals("rect")) {
 					// centered
 					sb.append("left: "
-							+ ((Integer.parseInt(coordsSplit[2]) - Integer.parseInt(coordsSplit[0])) / 2
+							+ ((Integer.parseInt(coordsSplit[2]) - Integer.parseInt(coordsSplit[0]))
+									/ 2
 									+ Integer.parseInt(coordsSplit[0]) - 6) + "px; ");
 					sb.append("top: "
-							+ ((Integer.parseInt(coordsSplit[3]) - Integer.parseInt(coordsSplit[1])) / 2
+							+ ((Integer.parseInt(coordsSplit[3]) - Integer.parseInt(coordsSplit[1]))
+									/ 2
 									+ Integer.parseInt(coordsSplit[1]) - 10) + "px; ");
-				} else if (region.getShape().equals("circle")) {
-					sb.append("left: " + (Integer.parseInt(coordsSplit[0]) - 8) + "px; top: "
+				}
+				else if (region.getShape().equals("circle")) {
+					sb.append("left: " + (Integer.parseInt(coordsSplit[0]) - 8)
+							+ "px; top: "
 							+ (Integer.parseInt(coordsSplit[1]) - 7) + "px; ");
 				}
 			}
-		} else {
+		}
+		else {
 			// region has no ImageMapAnswerIcon, so we start at position of
 			// coords
 			String[] coordsSplit = region.getCoords().split(",");
@@ -185,7 +199,8 @@ public class QuestionImageMapRendererUtils {
 	}
 
 	private static Object getToolTipString(Question q, Session theCase, Value answer) {
-		return "Tip('" + getAnswerText(q, theCase, answer) + "', CLOSEBTN, false, STICKY, false)";
+		return "Tip('" + getAnswerText(q, theCase, answer)
+				+ "', CLOSEBTN, false, STICKY, false)";
 	}
 
 	private static boolean questionIdInImage(Image image, String id) {
@@ -220,14 +235,16 @@ public class QuestionImageMapRendererUtils {
 			writer.writeAttribute("class", buf, "class");
 			writer.writeAttribute("id", "clickable_" + region.getQuestionID(), "id");
 			writer.writeAttribute("href", "#", "href");
-			writer.writeAttribute("title", DialogUtils.getMessageWithParamsFor("dialog.imagemapAnswerTitle",
+			writer.writeAttribute("title", DialogUtils.getMessageWithParamsFor(
+					"dialog.imagemapAnswerTitle",
 					new Object[] { q.getName() }), "title");
 
 			writer.writeAttribute("style", getPositionString(region, answerImage)
 					+ getDimensionString(region, answerImage), "style");
 
 			if (region.isRotate()) {
-				QuestionChoice qc = (QuestionChoice) DialogUtils.getQuestionFromQList(qList, region
+				QuestionChoice qc = (QuestionChoice) DialogUtils.getQuestionFromQList(
+						qList, region
 						.getQuestionID());
 
 				String answerID = ValueFactory.getID_or_Value(answer);
@@ -236,7 +253,8 @@ public class QuestionImageMapRendererUtils {
 					if (answerID.equals(AnswerUnknown.UNKNOWN_ID)) {
 						useNext = true;
 					}
-				} else {
+				}
+				else {
 					useNext = true;
 				}
 
@@ -261,22 +279,30 @@ public class QuestionImageMapRendererUtils {
 				}
 
 				if (imageSrc != null) {
-					writer.writeAttribute("onclick", "setAns('" + region.getQuestionID() + "','"
+					writer.writeAttribute("onclick", "setAns('" + region.getQuestionID()
+							+ "','"
 							+ nextAnswerID + "'); return false", "onclick");
 					writer
-							.writeAttribute("onmouseover", getToolTipString(q, theCase, answer),
-									"onmouseover");
+							.writeAttribute("onmouseover", getToolTipString(q, theCase,
+							answer),
+							"onmouseover");
 					renderImageMapAnswerIcon(writer, component, q, answer, imageSrc);
-				} else {
-					writer.writeAttribute("onclick", "setAns('" + region.getQuestionID() + "','"
-							+ nextAnswerID + "'); return false;", "onclick");
-					renderSpacerImage(writer, component, getDimensionString(region, answerImage));
 				}
-			} else if (!region.getTextCoords().equals("")) {
+				else {
+					writer.writeAttribute("onclick", "setAns('" + region.getQuestionID()
+							+ "','"
+							+ nextAnswerID + "'); return false;", "onclick");
+					renderSpacerImage(writer, component, getDimensionString(region,
+							answerImage));
+				}
+			}
+			else if (!region.getTextCoords().equals("")) {
 				// Open menu on questionable region
-				writer.writeAttribute("onclick", "openQuestion(event,'" + region.getQuestionID()
+				writer.writeAttribute("onclick", "openQuestion(event,'"
+						+ region.getQuestionID()
 						+ "'); return false;", "onclick");
-				renderSpacerImage(writer, component, getDimensionString(region, answerImage));
+				renderSpacerImage(writer, component, getDimensionString(region,
+						answerImage));
 				writer.endElement("a");
 
 				// And also open menu on answer text region
@@ -285,25 +311,34 @@ public class QuestionImageMapRendererUtils {
 				writer.startElement("a", component);
 				writer.writeAttribute("href", "#", "href");
 				writer.writeAttribute("title", DialogUtils.getMessageWithParamsFor(
-						"dialog.imagemapAnswerTitle", new Object[] { q.getName() }), "title");
-				writer.writeAttribute("style", "position: absolute; cursor: pointer; left: " + textCoords[0]
+						"dialog.imagemapAnswerTitle", new Object[] { q.getName() }),
+						"title");
+				writer.writeAttribute("style",
+						"position: absolute; cursor: pointer; left: " + textCoords[0]
 						+ "px; top: " + textCoords[1] + "px;", "style");
-				writer.writeAttribute("onclick", "openQuestion(event,'" + region.getQuestionID()
+				writer.writeAttribute("onclick", "openQuestion(event,'"
+						+ region.getQuestionID()
 						+ "'); return false;", "onclick");
 				writer.writeText(getAnswerText(q, theCase, answer), "value");
-			} else {
+			}
+			else {
 				if (imageSrc != null) {
 					if (!(region.isRotate() || region.isMC())) {
-						writer.writeAttribute("onclick", "openQuestion(event,'" + region.getQuestionID()
+						writer.writeAttribute("onclick", "openQuestion(event,'"
+								+ region.getQuestionID()
 								+ "'); return false;", "onclick");
-						writer.writeAttribute("onmouseover", getToolTipString(q, theCase, answer),
+						writer.writeAttribute("onmouseover", getToolTipString(q, theCase,
+								answer),
 								"onmouseover");
 						renderImageMapAnswerIcon(writer, component, q, answer, imageSrc);
 					}
-				} else {
-					writer.writeAttribute("onclick", "openQuestion(event,'" + region.getQuestionID()
+				}
+				else {
+					writer.writeAttribute("onclick", "openQuestion(event,'"
+							+ region.getQuestionID()
 							+ "'); return false;", "onclick");
-					renderSpacerImage(writer, component, getDimensionString(region, answerImage));
+					renderSpacerImage(writer, component, getDimensionString(region,
+							answerImage));
 				}
 			}
 			writer.endElement("a");
@@ -322,7 +357,8 @@ public class QuestionImageMapRendererUtils {
 				Question q = theCase.getKnowledgeBase().searchQuestion(qID);
 				if (q != null) {
 					writer.writeText(q.getName() + ": " + msg.getSummary(), "value");
-				} else {
+				}
+				else {
 					writer.writeText(msg.getSummary(), "value");
 				}
 				writer.endElement("div");
@@ -380,7 +416,8 @@ public class QuestionImageMapRendererUtils {
 
 			DialogRenderUtils.renderTable(writer, component);
 			writer.startElement("tr", component);
-			QuestionsRendererUtils.renderQuestion(writer, component, theCase, q, layout, 1, 0);
+			QuestionsRendererUtils.renderQuestion(writer, component, theCase, q, layout,
+					1, 0);
 			writer.endElement("tr");
 			writer.endElement("table");
 
@@ -396,8 +433,10 @@ public class QuestionImageMapRendererUtils {
 		Image image = DialogUtils.getImageMapBean().getImageForQList(qList);
 		int cols = layoutDef.getQuestionColumns();
 
-		writer.writeAttribute("style", QuestionsRendererUtils.getStyleStringForMainTableCell(layoutDef,
-				getImageMapBackgroundColorString(image, theCase, layoutDef), null, cols, cols, 0, false),
+		writer.writeAttribute("style",
+				QuestionsRendererUtils.getStyleStringForMainTableCell(layoutDef,
+				getImageMapBackgroundColorString(image, theCase, layoutDef),
+				null, cols, cols, 0, false),
 				"style");
 
 		// check out colspan...
@@ -406,7 +445,8 @@ public class QuestionImageMapRendererUtils {
 			QContainerLayout qContLayout = (QContainerLayout) layoutDef;
 			writer.writeAttribute("colspan", qContLayout.getCols(), "colspan");
 			cols = qContLayout.getCols();
-		} else {
+		}
+		else {
 			writer.writeAttribute("colspan", cols, "colspan");
 		}
 
@@ -419,10 +459,12 @@ public class QuestionImageMapRendererUtils {
 
 		// render question headline
 		if (layoutDef.getShowQuestionHeadline()) {
-			QuestionsRendererUtils.renderQuestionHeadline(writer, component, null, layoutDef);
+			QuestionsRendererUtils.renderQuestionHeadline(writer, component, null,
+					layoutDef);
 		}
 
-		QuestionsRendererUtils.renderQuestionContentTableStart(writer, component, layoutDef);
+		QuestionsRendererUtils.renderQuestionContentTableStart(writer, component,
+				layoutDef);
 		writer.startElement("tr", component);
 		writer.startElement("td", component);
 
@@ -470,10 +512,13 @@ public class QuestionImageMapRendererUtils {
 		List<Question> questionsNotInImage = getQuestionsNotInImage(image, qList);
 		if (questionsNotInImage.size() > 0) {
 			if (layoutDef instanceof QContainerLayout) {
-				new QContainerRendererForDefinedLayout(writer, component, theCase, questionsNotInImage,
+				new QContainerRendererForDefinedLayout(writer, component, theCase,
+						questionsNotInImage,
 						(QContainerLayout) layoutDef).render();
-			} else {
-				new QContainerRendererForUndefinedLayout(writer, component, theCase, questionsNotInImage,
+			}
+			else {
+				new QContainerRendererForUndefinedLayout(writer, component, theCase,
+						questionsNotInImage,
 						layoutDef).render();
 			}
 		}

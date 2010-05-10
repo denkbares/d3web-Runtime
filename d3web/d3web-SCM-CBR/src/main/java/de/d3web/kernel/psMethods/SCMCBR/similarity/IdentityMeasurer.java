@@ -1,13 +1,13 @@
 package de.d3web.kernel.psMethods.SCMCBR.similarity;
 
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 
 public class IdentityMeasurer implements ISimilarityMeasurer {
 	private final Value expectedValue;
 	private final Question question;
-	
+
 	public IdentityMeasurer(Question question, Value expectedValue) {
 		this.expectedValue = expectedValue;
 		this.question = question;
@@ -15,11 +15,10 @@ public class IdentityMeasurer implements ISimilarityMeasurer {
 
 	@Override
 	public double computeSimilarity(Session theCase) {
-		Value value = question.getValue(theCase);
+		Value value = theCase.getValue(question);
 		if (value.equals(expectedValue)) // TODO Fix
-			return 1;
-		else
-			return 0;
+		return 1;
+		else return 0;
 	}
 
 }

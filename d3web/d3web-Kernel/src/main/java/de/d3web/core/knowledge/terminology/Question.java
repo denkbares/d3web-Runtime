@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.core.knowledge.terminology;
@@ -34,7 +34,6 @@ import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SymptomValue;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.ValuedObject;
 import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.UndefinedValue;
@@ -52,15 +51,14 @@ import de.d3web.indication.inference.PSMethodNextQASet;
  * @see DerivationType
  */
 public abstract class Question extends QASet {
-	
+
 	private final AnswerUnknown unknown;
 
 	/**
 	 * Creates a new {@link Question} instance with the specified unique
 	 * identifier.
 	 * 
-	 * @param id
-	 *            the specified unique identifier
+	 * @param id the specified unique identifier
 	 */
 	public Question(String id) {
 		super(id);
@@ -123,20 +121,6 @@ public abstract class Question extends QASet {
 		return unknown;
 	}
 
-	/**
-	 * Returns the value of the question given in the specified {@link Session};
-	 * returns {@link UndefinedValue} if no value is assigned.
-	 * 
-	 * @param theCase
-	 *            the given {@link Session}
-	 * @return {@link UndefinedValue} if no value is assigned, the actual value
-	 *         otherwise.
-	 * @author joba
-	 * @date 07.04.2010
-	 */
-	@Deprecated
-	public abstract Value getValue(Session theCase);
-
 	@Override
 	public boolean hasValue(Session session) {
 		return !UndefinedValue.isUndefinedValue(session.getValue(this));
@@ -163,7 +147,7 @@ public abstract class Question extends QASet {
 			}
 
 			// The question is NOT done, until every valid children is also done
-			for (TerminologyObject to: getChildren()) {
+			for (TerminologyObject to : getChildren()) {
 				QASet child = (QASet) to;
 				if (child.isValid(theCase)
 						&& !child.isDone(theCase, respectValidFollowQuestions)) {
@@ -192,8 +176,7 @@ public abstract class Question extends QASet {
 	 * Sets the knowledge base, to which this objects belongs to and adds this
 	 * object to the knowledge base (reverse link).
 	 * 
-	 * @param newKnowledgeBase
-	 *            de.d3web.kernel.domainModel.KnowledgeBase
+	 * @param newKnowledgeBase de.d3web.kernel.domainModel.KnowledgeBase
 	 */
 	@Override
 	public void setKnowledgeBase(KnowledgeBase knowledgeBase) {
@@ -203,7 +186,6 @@ public abstract class Question extends QASet {
 		getKnowledgeBase().add(this);
 	}
 
-
 	@Override
 	public abstract void setValue(Session theCase, Value value) throws IllegalArgumentException;
 
@@ -211,13 +193,10 @@ public abstract class Question extends QASet {
 	 * Sets a new value to the case object of this question and saves the
 	 * overwritten value-array in its historyStack.
 	 * 
-	 * @param theCase
-	 *            current case
-	 * @param newRule
-	 *            rule that has modified the question´s value-array It will be
-	 *            stored together with the overwritten value-array
-	 * @param values
-	 *            new value-array which will be set to the question.
+	 * @param theCase current case
+	 * @param newRule rule that has modified the question´s value-array It will
+	 *        be stored together with the overwritten value-array
+	 * @param values new value-array which will be set to the question.
 	 */
 	public void setValue(Session theCase, Rule ruleSymptom,
 			Value value) throws IllegalArgumentException {
@@ -235,10 +214,8 @@ public abstract class Question extends QASet {
 	 * history-stack the value that has been overwritten by it will be set to
 	 * this question or (else) the history-stack-entry will be removed.
 	 * 
-	 * @param session
-	 *            the specified problem-solving session
-	 * @param ruleSymptom
-	 *            the retracted rule
+	 * @param session the specified problem-solving session
+	 * @param ruleSymptom the retracted rule
 	 */
 	public void undoSymptomValue(Session session, Rule ruleSymptom) {
 		CaseQuestion caseQuestion = ((CaseQuestion) session.getCaseObject(this));
@@ -266,7 +243,7 @@ public abstract class Question extends QASet {
 						}
 					}
 					else {
-						SymptomValue nextValue = (SymptomValue) caseQuestion
+						SymptomValue nextValue = caseQuestion
 								.getValueHistory().get(index - 1);
 						nextValue.setValues(symptomValue.getValues());
 					}

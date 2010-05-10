@@ -11,9 +11,12 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.UndefinedValue;
 
 /**
@@ -34,8 +37,7 @@ public class Blackboard {
 	/**
 	 * Creates a new Blackboard for the specified xps session.
 	 * 
-	 * @param session
-	 *            the session the blackboard is created for
+	 * @param session the session the blackboard is created for
 	 */
 	public Blackboard(Session session) {
 		this.session = session;
@@ -57,8 +59,7 @@ public class Blackboard {
 	 * terminology object and with the same source has already been added, that
 	 * fact will be replaced by the specified one.
 	 * 
-	 * @param fact
-	 *            the fact to be added
+	 * @param fact the fact to be added
 	 */
 	public void addValueFact(Fact fact) {
 		this.valueStorage.add(fact);
@@ -68,8 +69,7 @@ public class Blackboard {
 	 * Removes a value fact from this blackboard. If the fact does not exists in
 	 * the blackboard, this method has no effect.
 	 * 
-	 * @param fact
-	 *            the fact to be removed
+	 * @param fact the fact to be removed
 	 */
 	public void removeValueFact(Fact fact) {
 		this.valueStorage.remove(fact);
@@ -80,10 +80,8 @@ public class Blackboard {
 	 * for the specified terminology object. If no such fact exists in the
 	 * blackboard, this method has no effect.
 	 * 
-	 * @param termObject
-	 *            the terminology object to remove the value facts from
-	 * @param source
-	 *            the fact source to be removed
+	 * @param termObject the terminology object to remove the value facts from
+	 * @param source the fact source to be removed
 	 */
 	public void removeValueFact(TerminologyObject terminologyObject, Object source) {
 		this.valueStorage.remove(terminologyObject, source);
@@ -93,8 +91,8 @@ public class Blackboard {
 	 * Returns the merged fact for all value facts of the specified terminology
 	 * object.
 	 * 
-	 * @param terminologyObject
-	 *            the terminology object to access the merged fact for
+	 * @param terminologyObject the terminology object to access the merged fact
+	 *        for
 	 * @return the merged fact
 	 */
 	public Fact getValueFact(TerminologyObject terminologyObject) {
@@ -153,8 +151,7 @@ public class Blackboard {
 	 * for the same terminology object and with the same source has already been
 	 * added, that fact will be replaced by the specified one.
 	 * 
-	 * @param fact
-	 *            the fact to be added
+	 * @param fact the fact to be added
 	 */
 	public void addInterviewFact(Fact fact) {
 		this.interviewStorage.add(fact);
@@ -164,8 +161,7 @@ public class Blackboard {
 	 * Removes a interview fact from this blackboard. If the interview fact does
 	 * not exists in the blackboard, this method has no effect.
 	 * 
-	 * @param fact
-	 *            the fact to be removed
+	 * @param fact the fact to be removed
 	 */
 	public void removeInterviewFact(Fact fact) {
 		this.interviewStorage.remove(fact);
@@ -176,10 +172,9 @@ public class Blackboard {
 	 * blackboard for the specified terminology object. If no such fact exists
 	 * in the blackboard, this method has no effect.
 	 * 
-	 * @param termObject
-	 *            the terminology object to remove the interview facts from
-	 * @param source
-	 *            the fact source to be removed
+	 * @param termObject the terminology object to remove the interview facts
+	 *        from
+	 * @param source the fact source to be removed
 	 */
 	public void removeInterviewFact(TerminologyObject terminologyObject, Object source) {
 		this.interviewStorage.remove(terminologyObject, source);
@@ -190,8 +185,8 @@ public class Blackboard {
 	 * terminology object. If no such fact exists in the blackboard, this method
 	 * has no effect.
 	 * 
-	 * @param termObject
-	 *            the terminology object to remove the interview facts from
+	 * @param termObject the terminology object to remove the interview facts
+	 *        from
 	 */
 	public void removeInterviewFacts(TerminologyObject terminologyObject) {
 		this.interviewStorage.remove(terminologyObject);
@@ -201,8 +196,8 @@ public class Blackboard {
 	 * Returns the merged fact for all interview facts of the specified
 	 * terminology object.
 	 * 
-	 * @param terminologyObject
-	 *            the terminology object to access the merged fact for
+	 * @param terminologyObject the terminology object to access the merged fact
+	 *        for
 	 * @return the merged fact
 	 */
 	public Fact getInterviewFact(TerminologyObject terminologyObject) {
@@ -228,8 +223,7 @@ public class Blackboard {
 	 * shortcut for accessing the value {@link Fact} of the {@link Solution} and
 	 * read out its current value.
 	 * 
-	 * @param solution
-	 *            the solution to take the rating from
+	 * @param solution the solution to take the rating from
 	 * @return the total rating of the solution
 	 */
 	public DiagnosisState getState(Solution solution) {
@@ -248,8 +242,7 @@ public class Blackboard {
 	 * shortcut for accessing the value {@link Fact} of the {@link Question} and
 	 * read out its current value.
 	 * 
-	 * @param question
-	 *            the question to take the rating from
+	 * @param question the question to take the rating from
 	 * @return the answer of the question
 	 */
 	// public Answer getAnswer(Question question) {
@@ -262,19 +255,26 @@ public class Blackboard {
 			return UndefinedValue.getInstance();
 		}
 		else {
-			return fact.getValue();
+			Value value = fact.getValue();
+			if (question instanceof QuestionOC && value instanceof NumValue) {
+				QuestionOC qoc = (QuestionOC) question;
+				Num2ChoiceSchema schema = qoc.getSchemaForQuestion();
+				NumValue numValue = (NumValue) value;
+				if (schema != null) {
+					return schema.getValueForNum((Double) numValue.getValue(),
+							qoc.getAllAlternatives(), session);
+				}
+			}
+			return value;
 		}
 	}
 
-	
-		/**
+	/**
 	 * Returns the Value of a TerminologyObject, calculated by the specified
 	 * psmethod
 	 * 
-	 * @param object
-	 *            TerminologyObject
-	 * @param psmethod
-	 *            PSMethod
+	 * @param object TerminologyObject
+	 * @param psmethod PSMethod
 	 * @return Value
 	 */
 	public Value getValue(TerminologyObject object, PSMethod psmethod) {
@@ -287,8 +287,7 @@ public class Blackboard {
 	 * solvers available. This is a typed shortcut for accessing the interview
 	 * {@link Fact} of the {@link QASet} and read out its current value.
 	 * 
-	 * @param question
-	 *            the question to take the rating from
+	 * @param question the question to take the rating from
 	 * @return the indication of the interview element
 	 */
 	public Indication getIndication(InterviewObject interviewElement) {

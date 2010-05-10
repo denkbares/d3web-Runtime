@@ -31,9 +31,9 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.Session;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costBenefit.inference.PSMethodCostBenefit;
 import de.d3web.costBenefit.inference.StateTransition;
@@ -51,7 +51,7 @@ public class Util {
 		List<? extends Question> answeredQuestions = new LinkedList<Question>(
 				theCase.getAnsweredQuestions());
 		for (Question q : answeredQuestions) {
-			Value a = q.getValue(theCase);
+			Value a = theCase.getValue(q);
 			testCase.setValue(q, a);
 		}
 		return testCase;
@@ -69,13 +69,13 @@ public class Util {
 	public static String getAttribute(String name, Node node) {
 		if ((node != null) && (node.getAttributes() != null)) {
 			Node namedItem = node.getAttributes().getNamedItem(name);
-			if (namedItem!=null) {
+			if (namedItem != null) {
 				return namedItem.getNodeValue();
 			}
 		}
 		return null;
 	}
-	
+
 	public static void setQuestion(Session theCase, String question, String answer) {
 		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(theCase.getKnowledgeBase());
 		theCase.getPropagationContoller().openPropagation();
@@ -85,10 +85,11 @@ public class Util {
 		// answer) });
 		theCase.getPropagationContoller().commitPropagation();
 	}
-	
+
 	public static StateTransition extractStateTransition(QContainer qcon) {
-		KnowledgeSlice knowledge = qcon.getKnowledge(PSMethodCostBenefit.class, StateTransition.STATE_TRANSITION);
-		if(knowledge!=null) {
+		KnowledgeSlice knowledge = qcon.getKnowledge(PSMethodCostBenefit.class,
+				StateTransition.STATE_TRANSITION);
+		if (knowledge != null) {
 			if (knowledge instanceof StateTransition) {
 				return (StateTransition) knowledge;
 			}

@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.core.knowledge.terminology;
@@ -23,8 +23,8 @@ package de.d3web.core.knowledge.terminology;
 import java.util.Collections;
 import java.util.List;
 
-import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.CaseQuestionOC;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.values.Choice;
@@ -34,8 +34,7 @@ import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 
 /**
- * Storage for Questions with predefined single answers (alternatives).
- * <BR>
+ * Storage for Questions with predefined single answers (alternatives). <BR>
  * Part of the Composite design pattern (see QASet for further description)
  * 
  * @author joba, Christian Betz
@@ -52,28 +51,15 @@ public class QuestionOC extends QuestionChoice {
 	}
 
 	public Answer getAlternative(int key) {
-		return (Answer) getAlternatives().get(key);
+		return getAlternatives().get(key);
 	}
 
 	public List<Choice> getAlternatives() {
 		if (alternatives == null) {
 			return Collections.emptyList();
-		} else
-			return alternatives;
+		}
+		else return alternatives;
 	}
-
-	/**
-	 * @return a List of Answers which are currently the value of the question.
-	 */
-	@Override
-	public Value getValue(Session theCase) {
-		Value deprecatedValue = ((CaseQuestionOC) theCase.getCaseObject(this)).getValue();
-		Value blackboardValue = theCase.getBlackboard().getValue(this);
-		
-		return theCase.getBlackboard().getValue(this); 
-//		 return ((CaseQuestionOC) theCase.getCaseObject(this)).getValue();
-	}
-
 
 	@Override
 	public void setValue(Session theCase, Value value) throws IllegalArgumentException {
@@ -91,11 +77,11 @@ public class QuestionOC extends QuestionChoice {
 			((CaseQuestionOC) theCase.getCaseObject(this)).setValue(value);
 		}
 		else if (value instanceof Unknown || value instanceof UndefinedValue) {
-			((CaseQuestionOC)(theCase.getCaseObject(this))).setValue(value);
+			((CaseQuestionOC) (theCase.getCaseObject(this))).setValue(value);
 		}
 		else {
 			throw new IllegalArgumentException(value
-					+ " is not an accepted Value implementation for " + getClass() +".");
+					+ " is not an accepted Value implementation for " + getClass() + ".");
 		}
 	}
 

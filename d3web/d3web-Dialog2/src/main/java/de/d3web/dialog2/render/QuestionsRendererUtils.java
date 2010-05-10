@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.render;
@@ -368,7 +368,7 @@ public class QuestionsRendererUtils {
 				.getFollowingPopupQuestionId(answerId);
 		for (Question q : theCase.getAnsweredQuestions()) {
 			if (q.getId().equals(questionId) && (q instanceof QuestionChoice)) {
-				Value answer = q.getValue(theCase);
+				Value answer = theCase.getValue(q);
 				if (answer != null) {
 					return (Choice) answer.getValue();
 				}
@@ -881,7 +881,7 @@ public class QuestionsRendererUtils {
 							.getProperties().getProperty(
 							Property.MC_CONSTRAINTS);
 
-					Value mcans = qChoice.getValue(theCase);
+					Value mcans = theCase.getValue(qChoice);
 					List<Choice> alreadySetAnsList = new ArrayList<Choice>();
 
 					if (mcans instanceof MultipleChoiceValue) {
@@ -986,7 +986,7 @@ public class QuestionsRendererUtils {
 			writer.writeAttribute("value", "", "value");
 		}
 		else {
-			Value answer = q.getValue(theCase);
+			Value answer = theCase.getValue(q);
 			// List<Answer> valueList = q.getValue(theCase);
 			String errorValue = ((UIQuestionPage) component)
 					.getErrorIDsToSubmittedValues().get(q.getId());

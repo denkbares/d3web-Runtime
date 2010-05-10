@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.util;
@@ -62,10 +62,10 @@ import de.d3web.core.knowledge.terminology.info.MMInfoObject;
 import de.d3web.core.knowledge.terminology.info.MMInfoStorage;
 import de.d3web.core.knowledge.terminology.info.MMInfoSubject;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.D3WebSession;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.SessionFactory;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.interviewmanager.DialogController;
 import de.d3web.core.session.interviewmanager.MQDialogController;
 import de.d3web.core.session.values.Unknown;
@@ -129,12 +129,14 @@ public class DialogUtils {
 				URL u = new URL(realUrl);
 				backupFile(u.getFile());
 				return true;
-			} else if (type.equals("xml")) {
+			}
+			else if (type.equals("xml")) {
 				backupFile(url);
 				return true;
-			} else
-				return false;
-		} catch (Exception e) {
+			}
+			else return false;
+		}
+		catch (Exception e) {
 			logger.error(e);
 			return false;
 		}
@@ -142,7 +144,8 @@ public class DialogUtils {
 	}
 
 	public static Session createNewAnsweredCase(CaseObject co, KnowledgeBase kb) {
-		Session newCase = SessionConverter.getInstance().caseObject2Session(co, kb, MQDialogController.class,
+		Session newCase = SessionConverter.getInstance().caseObject2Session(co, kb,
+				MQDialogController.class,
 				getUsedPSMethods());
 		return newCase;
 	}
@@ -162,7 +165,7 @@ public class DialogUtils {
 		if (new File(DialogUtils.getRealPath(destPath), fileName).exists()) {
 			return true;
 		}
-		if (new File(DialogUtils.getRealPath(destPath.replaceAll( "\\.", "P")), fileName).exists()) {
+		if (new File(DialogUtils.getRealPath(destPath.replaceAll("\\.", "P")), fileName).exists()) {
 			return true;
 		}
 		return false;
@@ -203,15 +206,16 @@ public class DialogUtils {
 					ResourceRepository.MULTIMEDIAPATH).replaceAll("\\$kbid\\$",
 					theCase.getKnowledgeBase().getId());
 			File imageMapFile = new File(DialogUtils.getRealPath(destPath), file);
-			if(! imageMapFile.exists()) {
+			if (!imageMapFile.exists()) {
 				destPath = ResourceRepository.getInstance().getBasicSettingValue(
 						ResourceRepository.MULTIMEDIAPATH).replaceAll("\\$kbid\\$",
 						theCase.getKnowledgeBase().getId().replaceAll("\\.", "\\$p"));
-				 imageMapFile = new File(DialogUtils.getRealPath(destPath), file);
+				imageMapFile = new File(DialogUtils.getRealPath(destPath), file);
 			}
 			BufferedImage img = ImageIO.read(imageMapFile.toURI().toURL());
 			return new Dimension(img.getWidth(), img.getHeight());
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			logger.error(e);
 		}
 		return null;
@@ -233,10 +237,12 @@ public class DialogUtils {
 		PropertyResourceBundle messages = (PropertyResourceBundle) getBean("msgs");
 		if (messages != null) {
 			return messages.getString(messageString);
-		} else {
+		}
+		else {
 			ResourceBundle bundle = ResourceBundle.getBundle(FacesContext.getCurrentInstance()
-					.getApplication().getMessageBundle(), FacesContext.getCurrentInstance().getViewRoot()
-					.getLocale());
+					.getApplication().getMessageBundle(),
+					FacesContext.getCurrentInstance().getViewRoot()
+							.getLocale());
 			return bundle.getString(messageString);
 		}
 	}
@@ -246,14 +252,17 @@ public class DialogUtils {
 		PropertyResourceBundle messages = (PropertyResourceBundle) getBean("msgs");
 		if (messages != null) {
 			message = messages.getString(messageString);
-		} else {
+		}
+		else {
 			ResourceBundle bundle = ResourceBundle.getBundle(FacesContext.getCurrentInstance()
-					.getApplication().getMessageBundle(), FacesContext.getCurrentInstance().getViewRoot()
-					.getLocale());
+					.getApplication().getMessageBundle(),
+					FacesContext.getCurrentInstance().getViewRoot()
+							.getLocale());
 			message = bundle.getString(messageString);
 		}
-		MessageFormat format = new MessageFormat(message, FacesContext.getCurrentInstance().getViewRoot()
-				.getLocale());
+		MessageFormat format = new MessageFormat(message,
+				FacesContext.getCurrentInstance().getViewRoot()
+						.getLocale());
 		return format.format(params);
 	}
 
@@ -287,7 +296,8 @@ public class DialogUtils {
 		Set<MMInfoObject> result = mminfo.getMMInfo(markup);
 		if (result.isEmpty()) {
 			return q.getName();
-		} else {
+		}
+		else {
 			MMInfoObject promptInfo = result.iterator().next();
 			return promptInfo.getContent();
 		}
@@ -334,12 +344,14 @@ public class DialogUtils {
 					try {
 						Method getInstanceMethod = c.getMethod("getInstance", new Class[] {});
 						psm = (PSMethod) getInstanceMethod.invoke(null, new Object[] {});
-					} catch (NoSuchMethodException e) {
+					}
+					catch (NoSuchMethodException e) {
 						logger.warn(e);
 						psm = (PSMethod) c.newInstance();
 					}
 					usedPSMethods.add(psm);
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					logger.error("psm " + psMethodClassNames[i] + " could not be loaded.");
 				}
 			}
@@ -396,10 +408,12 @@ public class DialogUtils {
 			}
 			logger.info("saved file: " + target.getAbsolutePath());
 			return target;
-		} catch (Exception x) {
+		}
+		catch (Exception x) {
 			logger.error(x + " -> error while saving: " + file.getName() + " to " + path);
 			return null;
-		} finally {
+		}
+		finally {
 			try {
 				if (fileIn != null) {
 					fileIn.close();
@@ -407,7 +421,8 @@ public class DialogUtils {
 				if (fileOut != null) {
 					fileOut.close();
 				}
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				logger.error(e);
 			}
 		}
@@ -424,8 +439,7 @@ public class DialogUtils {
 	/**
 	 * Returns a String which represents the "value" in a time-format "H:MM:SS".
 	 * 
-	 * @param value
-	 *            (time in s)
+	 * @param value (time in s)
 	 */
 	public static String toFormattedTimeString(long value) {
 		String back = "";
@@ -447,7 +461,7 @@ public class DialogUtils {
 	}
 
 	public static boolean unknownAnswerInValueList(Question q, Session theCase) {
-		Value answer = q.getValue(theCase);
+		Value answer = theCase.getValue(q);
 		if (answer == null) return false;
 		return answer instanceof Unknown;
 	}

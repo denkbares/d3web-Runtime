@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.abstraction;
@@ -125,7 +125,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 		if ((questionToValuesHash != null) && (!questionToValuesHash.isEmpty())) {
 			Enumeration<Question> keys = questionToValuesHash.keys();
 			while (keys.hasMoreElements()) {
-				Question q = (Question) keys.nextElement();
+				Question q = keys.nextElement();
 				// theCase.trace("key: " + q.getId());
 				Object oldValue = questionToValuesHash.get(q); // can be Double
 				// or Date
@@ -145,8 +145,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 				}
 
 				if (this.value != null) {
-					if (oldValue == null)
-						return true;
+					if (oldValue == null) return true;
 					Value val = newValue; // can be AnswerDate
 					// or AnswerDouble
 					assert (val instanceof DateValue || val instanceof NumValue) : "Unknown newValue-Answer-Type: "
@@ -163,8 +162,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 					}
 				}
 				else {
-					if (oldValue != null)
-						return true;
+					if (oldValue != null) return true;
 				}
 			}
 		}
@@ -210,7 +208,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 				Question q = (Question) iter.next();
 				if (q instanceof QuestionNum) {
 					QuestionNum qNum = (QuestionNum) q;
-					Value value = qNum.getValue(theCase);
+					Value value = theCase.getValue(qNum);
 					if (value != null) {
 						Object val = value.getValue();
 						questionToValuesHash.put(q, val);
@@ -219,9 +217,9 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 				else if (q instanceof QuestionMC) {
 					QuestionMC qMC = (QuestionMC) q;
 					Double val = null;
-					Value value = qMC.getValue(theCase);
+					Value value = theCase.getValue(qMC);
 					if (value instanceof MultipleChoiceValue) {
-						List<ChoiceValue> l = (List<ChoiceValue>)(value.getValue());
+						List<ChoiceValue> l = (List<ChoiceValue>) (value.getValue());
 						val = new Double(l.size());
 					}
 					else {
@@ -231,7 +229,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 				}
 				else if (q instanceof QuestionDate) {
 					QuestionDate qDate = (QuestionDate) q;
-					Value value = qDate.getValue(theCase);
+					Value value = theCase.getValue(qDate);
 					if (value != null && value instanceof DateValue) {
 						Object val = value.getValue();
 						questionToValuesHash.put(q, val);
