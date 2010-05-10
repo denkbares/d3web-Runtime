@@ -241,17 +241,18 @@ public class IndicationOQQuestionsNextFormTest {
 		Question sex = kbm.findQuestion("Sex");
 		Question pregnant = kbm.findQuestion("Pregnant");
 		Question askHead = kbm.findQuestion("Ask_Headache");
-		
+
 		// SET Sex == Male
 		Value male = kbm.findValue(sex, "Male");
 		session.setValue(sex, male);
 
 		// TEST whether value-setting worked correctly: Sex == Male
 		Value sexValue = session.getValue(sex);
-		assertEquals("Question Sex has wrong value", male, sexValue);
+		assertEquals("Question Sex has wrong value ", male, sexValue);
 
 		// One Question Form Strategy should return exactly one element here.
 		intervObjs = session.getInterviewManager().nextForm().getInterviewObjects();
+		// System.out.println("test" + intervObjs);
 		// assertTrue("InterviewManager.nextForm() should have provided one " +
 		// "next element, but returned " + intervObjs.size() +
 		// " elements instead", intervObjs.size() == 1);
@@ -262,7 +263,7 @@ public class IndicationOQQuestionsNextFormTest {
 		// "up Ask_Headache as next question", askHead, intervObjs.get(0));
 
 		// EXPECTED: indication state (Ask_Headache) == NEUTRAL
-		assertEquals("Question Ask_Headache has wrong indication state", 
+		assertEquals("Question Ask_Headache has wrong indication state ",
 				new Indication(State.NEUTRAL),
 				session.getBlackboard().getIndication(askHead));
 
@@ -273,13 +274,13 @@ public class IndicationOQQuestionsNextFormTest {
 		
 		// TEST whether value-setting worked correctly: Sex == Female
 		sexValue = session.getValue(sex);
-		assertEquals("Question Sex has wrong value", female, sexValue);
+		assertEquals("Question Sex has wrong value ", female, sexValue);
 
 		// One Question Form Strategy should return exactly one element here.
 		intervObjs = session.getInterviewManager().nextForm().getInterviewObjects();
 		assertTrue("InterviewManager.nextForm() should have provided one " +
 				"next element, but returned " + intervObjs.size() +
-				" elements instead", intervObjs.size() == 1);
+				" elements instead ", intervObjs.size() == 1);
 
 		// Sex == Female, thus Pregnant is indicated. First question on
 		// indicated list should be Pregnant here.
@@ -288,7 +289,7 @@ public class IndicationOQQuestionsNextFormTest {
 		// "Pregnant as next question", pregnant, intervObjs.get(0));
 		
 		// EXPECTED: indication state (Pregnant) == INDICATED
-		assertEquals("Question Pregnant has wrong indication state",
+		assertEquals("Question Pregnant has wrong indication state ",
 				new Indication(State.INDICATED),
 				session.getBlackboard().getIndication(pregnant));
 		
@@ -299,7 +300,7 @@ public class IndicationOQQuestionsNextFormTest {
 		
 		// TEST whether value-setting worked correctly: Sex == Male
 		sexValue = session.getValue(sex);
-		assertEquals("Question Sex has wrong value", male, sexValue);
+		assertEquals("Question Sex has wrong value ", male, sexValue);
 		
 		// One Question Form Strategy should return exactly one element here.
 		intervObjs = session.getInterviewManager().nextForm().getInterviewObjects();
@@ -314,7 +315,7 @@ public class IndicationOQQuestionsNextFormTest {
 		// "Ask_Headache as next question", askHead, intervObjs.get(0));
 
 		// EXPECTED: indication state (Ask_Headache) == INDICATED
-		assertEquals("Question Ask_Headache has wrong indication state",
+		assertEquals("Question Ask_Headache has wrong indication state ",
 				new Indication(State.NEUTRAL),
 				session.getBlackboard().getIndication(askHead));
 	}
@@ -345,7 +346,61 @@ public class IndicationOQQuestionsNextFormTest {
 	@Test
 	public void testContraIndication() {
 
-		// TODO
+		List<InterviewObject> intervObjs;
+		Question askHead = kbm.findQuestion("Ask_Headache");
+		Question headache = kbm.findQuestion("Headache");
+		Question nausea = kbm.findQuestion("Nausea");
+
+		// SET Ask_Headache == Yes
+		Value yes = kbm.findValue(askHead, "Yes");
+		session.setValue(askHead, yes);
+
+		// TEST whether value-setting worked correctly: Ask_Headache == Yes
+		Value askHValue = session.getValue(askHead);
+		assertEquals("Question Ask_Headache has wrong value ", yes, askHValue);
+
+		// One Question Form Strategy should return exactly one element here.
+		intervObjs = session.getInterviewManager().nextForm().getInterviewObjects();
+		// System.out.println("test" + intervObjs);
+		// assertTrue("InterviewManager.nextForm() should have provided one " +
+		// "next element, but returned " + intervObjs.size() +
+		// " elements instead", intervObjs.size() == 1);
+
+		// Ask_Headache == Yes, thus Headache is indicated. First question
+		// on indicated list should be Headache now.
+		// assertEquals("Answering question Ask_Headache with value Yes should bring "
+		// + "up Headache as next question", headache, intervObjs.get(0));
+
+		// EXPECTED: indication state (Headache) == INDICATED
+		assertEquals("Question Headache has wrong indication state ",
+				new Indication(State.INDICATED),
+				session.getBlackboard().getIndication(headache));
+
+
+		// SET Ask_Headache == No
+		Value no = kbm.findValue(askHead, "No");
+		session.setValue(askHead, no);
+
+		// TEST whether value-setting worked correctly: Ask_Headache == No
+		askHValue = session.getValue(askHead);
+		assertEquals("Question Ask_Headache has wrong value ", no, askHValue);
+
+		// One Question Form Strategy should return exactly one element here.
+		intervObjs = session.getInterviewManager().nextForm().getInterviewObjects();
+		// System.out.println("test" + intervObjs);
+		// assertTrue("InterviewManager.nextForm() should have provided one " +
+		// "next element, but returned " + intervObjs.size() +
+		// " elements instead", intervObjs.size() == 1);
+
+		// Ask_Headache == No, thus Headache is contra_indicated. First question
+		// on indicated list should be Nausea then.
+		// assertEquals("Answering question Ask_Headache with value No should bring "
+		// + "up Nausea as next question", nausea, intervObjs.get(0));
+
+		// EXPECTED: indication state (Headache) == CONTRA_INDICATED
+		assertEquals("Question Headache has wrong indication state ",
+				new Indication(State.CONTRA_INDICATED),
+				session.getBlackboard().getIndication(headache));
 	}
 
 	
