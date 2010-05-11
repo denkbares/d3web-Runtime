@@ -1,36 +1,33 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.costBenefit.ids;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import de.d3web.core.knowledge.terminology.QContainer;
-import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.costBenefit.Util;
 import de.d3web.costBenefit.inference.AbortException;
 import de.d3web.costBenefit.inference.AbortStrategy;
@@ -76,7 +73,7 @@ class IterativeDeepeningSearch {
 			if (node.getStateTransition() != null
 					&& node.getStateTransition().getPostTransitions() != null
 					&& !node.getStateTransition().getPostTransitions()
-							.isEmpty()) {
+					.isEmpty()) {
 				relevantNodes.add(node);
 			}
 		}
@@ -88,6 +85,7 @@ class IterativeDeepeningSearch {
 				.size()]);
 		// cheaper nodes are tried as successors first
 		Arrays.sort(successorNodes, new Comparator<Node>() {
+
 			@Override
 			public int compare(Node o1, Node o2) {
 				return (int) (o1.getStaticCosts() - o2.getStaticCosts());
@@ -111,13 +109,13 @@ class IterativeDeepeningSearch {
 	 */
 	public void search(Session theCase) {
 		// Abort if there are no targets in the model
-		if (!model.hasTargets())
-			return;
+		if (!model.hasTargets()) return;
 		abortStrategy.init(model);
 		Session testcase = Util.copyCase(theCase);
 		try {
 			search(testcase, 1);
-		} catch (AbortException e) {
+		}
+		catch (AbortException e) {
 			// we have stopped at the search due to time restrictions.
 			// use the best found path till now
 		}
@@ -125,8 +123,7 @@ class IterativeDeepeningSearch {
 
 	private void search(Session testcase, int depth) throws AbortException {
 		if ((depth <= 0) || model.getTargets() == null
-				|| model.getTargets().size() == 0)
-			return;
+				|| model.getTargets().size() == 0) return;
 		Path actual = new Path();
 		minSearchedPath = null;
 		findCheapestPath(actual, depth, testcase);
@@ -135,7 +132,8 @@ class IterativeDeepeningSearch {
 			// if no minSearchedPath is found, all paths have been cut due to
 			// high cost/benefit relation
 			return;
-		} else {
+		}
+		else {
 			// if a minSearchPath is found, the costs are at least the costs of
 			// the minSearchPath plus the cheapest unused teststep
 			mincosts = minSearchedPath.getCosts();
@@ -148,16 +146,18 @@ class IterativeDeepeningSearch {
 		}
 		if (model.allTargetsReached()
 				|| (model.getBestCostBenefit() < mincosts
-						/ model.getBestUnreachedBenefit())) {
+				/ model.getBestUnreachedBenefit())) {
 			// stop iterative deep search if each target node has been reached
 			// or if the minimal costs are to high for even for the most
 			// beneficial
 			// test step
 			return;
-		} else if (depth > successorNodes.length) {
+		}
+		else if (depth > successorNodes.length) {
 			// stop iterative depth search if all test steps have been used
 			return;
-		} else {
+		}
+		else {
 			// otherwise try to find solutions with one more iteration
 			// if (depth>7) return;
 			search(testcase, ++depth);
@@ -170,18 +170,17 @@ class IterativeDeepeningSearch {
 		if (actual.getCosts() / model.getBestBenefit() > model
 				.getBestCostBenefit()) {
 			// nothing to do
-		} else if (depth == 1) {
+		}
+		else if (depth == 1) {
 			for (Node n : finalNodes) {
-				if (!isValidSuccessor(actual, n, theCase))
-					continue;
+				if (!isValidSuccessor(actual, n, theCase)) continue;
 				actual.add(n, theCase);
 				abortStrategy.nextStep(actual);
 				model.minimizePath(actual);
 				actual.pop();
 			}
 			for (Node n : successorNodes) {
-				if (!isValidSuccessor(actual, n, theCase))
-					continue;
+				if (!isValidSuccessor(actual, n, theCase)) continue;
 				actual.add(n, theCase);
 				abortStrategy.nextStep(actual);
 				if (minSearchedPath == null
@@ -190,16 +189,16 @@ class IterativeDeepeningSearch {
 				}
 				actual.pop();
 			}
-		} else {
+		}
+		else {
 			// Session testcase = Util.copyCase(theCase);
 			for (Node successor : successorNodes) {
-				if (!isValidSuccessor(actual, successor, theCase))
-					continue;
-				Map<Question, Value> undo = new HashMap<Question, Value>();
+				if (!isValidSuccessor(actual, successor, theCase)) continue;
+				List<Fact> undo = new LinkedList<Fact>();
 				actual.add(successor, theCase);
 				abortStrategy.nextStep(actual);
-				undo.putAll(successor.setNormalValues(theCase));
-				undo.putAll(successor.getStateTransition().fire(theCase));
+				undo.addAll(successor.setNormalValues(theCase));
+				undo.addAll(successor.getStateTransition().fire(theCase));
 				findCheapestPath(actual, depth - 1, theCase);
 				count += undo.size();
 				actual.pop();
@@ -210,10 +209,8 @@ class IterativeDeepeningSearch {
 
 	private boolean isValidSuccessor(Path actual, Node n, Session theCase) {
 		// skip not applicable successors
-		if (!n.isApplicable(theCase))
-			return false;
-		if (actual.isEmpty())
-			return true;
+		if (!n.isApplicable(theCase)) return false;
+		if (actual.isEmpty()) return true;
 		return true;
 	}
 

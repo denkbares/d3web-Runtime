@@ -366,7 +366,7 @@ public class QuestionsRendererUtils {
 		QuestionLayout questionLayoutDef = (QuestionLayout) layoutDef;
 		String questionId = questionLayoutDef
 				.getFollowingPopupQuestionId(answerId);
-		for (Question q : theCase.getAnsweredQuestions()) {
+		for (Question q : theCase.getBlackboard().getAnsweredQuestions()) {
 			if (q.getId().equals(questionId) && (q instanceof QuestionChoice)) {
 				Value answer = theCase.getValue(q);
 				if (answer != null) {

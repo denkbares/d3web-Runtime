@@ -35,8 +35,7 @@ class FactAggregator {
 	 * Adds a new fact to the aggregator. If a fact with the same source as the
 	 * new fact already exists, it will be overwritten.
 	 * 
-	 * @param fact
-	 *            the fact to be added
+	 * @param fact the fact to be added
 	 */
 	public void addFact(Fact fact) {
 		// first make sure that the source remains unique
@@ -48,8 +47,7 @@ class FactAggregator {
 	/**
 	 * Removes the specified fact from this aggregator.
 	 * 
-	 * @param fact
-	 *            the fact to be removed
+	 * @param fact the fact to be removed
 	 */
 	public void removeFact(Fact fact) {
 		this.facts.remove(fact);
@@ -59,8 +57,7 @@ class FactAggregator {
 	/**
 	 * Removes all facts from this aggregator.
 	 * 
-	 * @param fact
-	 *            the fact to be removed
+	 * @param fact the fact to be removed
 	 */
 	public void clear() {
 		this.facts.clear();
@@ -70,8 +67,7 @@ class FactAggregator {
 	/**
 	 * Removes the fact for the specified source from this aggregator.
 	 * 
-	 * @param source
-	 *            the source to remove facts for
+	 * @param source the source to remove facts for
 	 */
 	public void removeFactsBySource(Object source) {
 		Iterator<Fact> iterator = facts.iterator();
@@ -108,10 +104,10 @@ class FactAggregator {
 		if (facts.size() == 0) return;
 
 		// use the one fact if there is only one
-		// if (facts.size() == 1) {
-		// this.mergedFact = this.facts.get(0);
-		// return;
-		// }
+		if (facts.size() == 1) {
+			this.mergedFact = this.facts.get(0);
+			return;
+		}
 
 		// merge the facts if they are all of the same problem solver
 		// (normal case for solutions)
@@ -170,8 +166,7 @@ class FactAggregator {
 	 * This method if used, if the facts does not have a priority of their own,
 	 * such as Answers.
 	 * 
-	 * @param mergedFacts
-	 *            the facts to be merged
+	 * @param mergedFacts the facts to be merged
 	 * @return the fact with the highest PSMethod's priority
 	 */
 	private Fact mergeFactsByPriority(List<Fact> mergedFacts) {
@@ -200,8 +195,7 @@ class FactAggregator {
 	 * addition it is considered, that the source solvers (e.g. user) have a
 	 * higher priority as other solvers.
 	 * 
-	 * @param facts
-	 *            the facts to be merged
+	 * @param facts the facts to be merged
 	 * @return the fact with the highest priority
 	 */
 	private Fact mergeSolutionFacts(List<Fact> facts) {
@@ -213,8 +207,7 @@ class FactAggregator {
 	 * addition it is considered, that the source solvers (e.g. user) have a
 	 * higher priority as other solvers.
 	 * 
-	 * @param facts
-	 *            the facts to be merged
+	 * @param facts the facts to be merged
 	 * @return the fact with the highest priority
 	 */
 	private Fact mergeIndicationFacts(List<Fact> facts) {

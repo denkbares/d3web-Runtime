@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2;
@@ -93,7 +93,8 @@ public class QuestionPageBean {
 		}
 		if (dialogMode.equals("MQ")) {
 			return null;
-		} else {
+		}
+		else {
 			return qList.get(0);
 		}
 	}
@@ -119,13 +120,10 @@ public class QuestionPageBean {
 	}
 
 	private QContainer getQContainerForQuestion(Question q) {
-		if (q == null)
-			return (null);
-		for (TerminologyObject qaSet: q.getParents()) {
-			if (qaSet instanceof Question)
-				return (getQContainerForQuestion((Question) qaSet));
-			else
-				return ((QContainer) qaSet);
+		if (q == null) return (null);
+		for (TerminologyObject qaSet : q.getParents()) {
+			if (qaSet instanceof Question) return (getQContainerForQuestion((Question) qaSet));
+			else return ((QContainer) qaSet);
 		}
 		return (null);
 	}
@@ -141,7 +139,8 @@ public class QuestionPageBean {
 			controller.moveToPreviousQASet();
 			if (lastContainer != null) {
 				qContainer = lastContainer;
-			} else {
+			}
+			else {
 				qContainer = (QContainer) controller.getCurrentQASet();
 			}
 		}
@@ -156,7 +155,8 @@ public class QuestionPageBean {
 		QContainer container = getQContainerToRender();
 		if (container != null) {
 			setQuestionListToRender(container);
-		} else {
+		}
+		else {
 			// we move to result page because all questions are answered..
 			// but we set the actual qcontainer to the previous qcontainer
 			DialogController cont = DialogUtils
@@ -274,7 +274,8 @@ public class QuestionPageBean {
 		if (userIndicatedQASet != null) {
 			if (userIndicatedQASet instanceof Question) {
 				listToSet.add((Question) userIndicatedQASet);
-			} else if (userIndicatedQASet instanceof QContainer) {
+			}
+			else if (userIndicatedQASet instanceof QContainer) {
 				List<Question> temp = convertQuestionsToRender((QContainer) userIndicatedQASet);
 				listToSet.add(getFirstQuestionToAskFromList(DialogUtils
 						.getDialog().getTheCase(), temp, "OQ"));
@@ -286,7 +287,8 @@ public class QuestionPageBean {
 		else if (oqListPointer == oqHistoryList.size() - 1) {
 			listToSet.add(getFirstQuestionToAskFromList(DialogUtils.getDialog()
 					.getTheCase(), convertQuestionsToRender(container), "OQ"));
-		} else {
+		}
+		else {
 			listToSet.add(oqHistoryList.get(oqListPointer));
 		}
 		this.questionListToRender = listToSet;
@@ -304,7 +306,8 @@ public class QuestionPageBean {
 			// System.out.println("notyetlisted -> add it to queue");
 			oqHistoryList.add(listToSet.get(0));
 			oqListPointer = oqHistoryList.size() - 1;
-		} else {
+		}
+		else {
 			// TODO the question is listed.. what to do here?
 			// actual implementation: pointer is not changed
 		}
@@ -323,7 +326,8 @@ public class QuestionPageBean {
 			// mark "firstToAsk" question (will be overwritten if necessary)
 			setFirstQToAsk(getFirstQuestionToAskFromList(DialogUtils
 					.getDialog().getTheCase(), questionListToRender, "MQ"));
-		} else {
+		}
+		else {
 			setQuestionListOQToRender(container);
 		}
 	}
@@ -372,9 +376,10 @@ public class QuestionPageBean {
 		if (fractionOfAnsweredQuestionsPercentage < 51) {
 			colorString = "rgb(255, "
 					+ (int) (Math
-							.floor((double) fractionOfAnsweredQuestionsPercentage
-									/ (double) 50 * 255)) + ", 0)";
-		} else {
+					.floor((double) fractionOfAnsweredQuestionsPercentage
+					/ (double) 50 * 255)) + ", 0)";
+		}
+		else {
 			colorString = "rgb("
 					+ (int) (Math
 							.floor(255 - (((double) fractionOfAnsweredQuestionsPercentage - (double) 50) / 50 * 255)))
@@ -397,7 +402,7 @@ public class QuestionPageBean {
 			for (Question q : qList) {
 				if (q.isValid(theCase)) {
 					validQuestionsCounter++;
-					if (theCase.getAnsweredQuestions().contains(q)) {
+					if (theCase.getBlackboard().getAnsweredQuestions().contains(q)) {
 						answeredQuestionsCount++;
 					}
 				}

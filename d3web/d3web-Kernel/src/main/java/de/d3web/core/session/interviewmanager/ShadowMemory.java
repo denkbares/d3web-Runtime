@@ -70,7 +70,7 @@ public class ShadowMemory extends DialogClient {
 	 */
 	@Override
 	public void putCase(Session theCase) {
-		List<? extends Question> questions = theCase.getAnsweredQuestions();
+		List<? extends Question> questions = theCase.getBlackboard().getAnsweredQuestions();
 
 		Iterator<? extends Question> iter = questions.iterator();
 		while (iter.hasNext()) {

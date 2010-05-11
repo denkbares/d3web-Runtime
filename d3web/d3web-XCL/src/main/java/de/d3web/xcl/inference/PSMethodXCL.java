@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.xcl.inference;
@@ -119,12 +119,12 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		}
 
 		// TODO: remove this assert calculation
-		List<? extends Question> answeredQuestions = theCase
+		List<? extends Question> answeredQuestions = theCase.getBlackboard()
 				.getAnsweredQuestions();
 		double restWeight = caseObject.totalAnsweredAbnormality;
 		for (Question question : answeredQuestions) {
 			AbstractAbnormality abnormality = getAbnormalitySlice(question);
-			restWeight -= getAbnormality(abnormality, 
+			restWeight -= getAbnormality(abnormality,
 					theCase.getBlackboard().getValue(question));
 		}
 
@@ -168,8 +168,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		try {
 			KnowledgeSlice knowledge = question.getKnowledge(PSMethodShared.class,
 					PSMethodShared.SHARED_ABNORMALITY);
-			if (knowledge == null)
-				return null;
+			if (knowledge == null) return null;
 			return (AbstractAbnormality) knowledge;
 		}
 		catch (IllegalArgumentException e) {
@@ -259,8 +258,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		for (Solution solution : solutions) {
 			KnowledgeSlice ks = solution.getKnowledge(
 					PSMethodXCL.class, XCLModel.XCLMODEL);
-			if (ks == null)
-				continue;
+			if (ks == null) continue;
 			XCLModel model = (XCLModel) ks;
 			for (NamedObject nob : model.getCoveredSymptoms()) {
 				if (nob instanceof Question) {
@@ -279,6 +277,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 	}
 
 	private static class XCLCaseObject extends SessionObject {
+
 		private int totalAnsweredCount = 0;
 		private double totalAnsweredAbnormality = 0.0;
 
@@ -302,8 +301,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 	}
 
 	/**
-	 * @param scoreAlgorithm
-	 *            the scoreAlgorithm to set
+	 * @param scoreAlgorithm the scoreAlgorithm to set
 	 */
 	public void setScoreAlgorithm(ScoreAlgorithm scoreAlgorithm) {
 		this.scoreAlgorithm = scoreAlgorithm;

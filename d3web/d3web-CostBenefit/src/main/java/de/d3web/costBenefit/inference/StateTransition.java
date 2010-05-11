@@ -18,9 +18,8 @@
  */
 package de.d3web.costBenefit.inference;
 
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
@@ -31,7 +30,9 @@ import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
+import de.d3web.core.session.blackboard.DefaultFact;
+import de.d3web.core.session.blackboard.Fact;
+import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
  * A StateTransition is a KnowledgeSlice which belongs to a QContainer. It
@@ -110,8 +111,8 @@ public class StateTransition implements KnowledgeSlice {
 	 * @param theCase
 	 * @return
 	 */
-	public Map<Question, Value> fire(Session theCase) {
-		Map<Question, Value> map = new HashMap<Question, Value>();
+	public List<Fact> fire(Session theCase) {
+		List<Fact> facts = new LinkedList<Fact>();
 		for (ValueTransition vt : postTransitions) {
 			Question q = vt.getQuestion();
 			List<ConditionalValueSetter> setters = vt.getSetters();
@@ -119,7 +120,11 @@ public class StateTransition implements KnowledgeSlice {
 				try {
 					Condition condition = cvs.getCondition();
 					if (condition == null || cvs.getCondition().eval(theCase)) {
-						setAnswer(theCase, q, cvs.getAnswer(), map);
+						Fact fact = new DefaultFact(q, cvs.getAnswer(),
+								PSMethodUserSelected.getInstance(),
+								PSMethodUserSelected.getInstance());
+						theCase.getBlackboard().addValueFact(fact);
+						facts.add(fact);
 						break;
 					}
 				}
@@ -131,13 +136,6 @@ public class StateTransition implements KnowledgeSlice {
 				}
 			}
 		}
-		return map;
+		return facts;
 	}
-
-	private void setAnswer(Session theCase, Question q,
-			Value answer, Map<Question, Value> map) {
-		map.put(q, theCase.getValue(q));
-		theCase.setValue(q, answer);
-	}
-
 }

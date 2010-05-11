@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.core.session;
@@ -80,8 +80,8 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  * All actions have to be stated through the Session (especially the setValue
  * operations for knowledge base objects!) <BR>
  * The Session always knows the state of the <BR>
- * <LI>problem-solvers (which are used) <LI>questions (answered, to be answered),
- * <LI>diagnoses (state with respect to the problem-solvers) <br>
+ * <LI>problem-solvers (which are used) <LI>questions (answered, to be
+ * answered), <LI>diagnoses (state with respect to the problem-solvers) <br>
  * It's important to set values through this facade and not directly via the
  * knowledge base objects, because Session is responsible for the propagation
  * mechanism of the connected problem-solvers.
@@ -98,7 +98,6 @@ public class D3WebSession implements Session {
 	private Map<CaseObjectSource, SessionObject> dynamicStore;
 
 	private final List<Solution> establishedDiagnoses = new LinkedList<Solution>();
-	private final List<Question> answeredQuestions = new LinkedList<Question>();
 
 	private List<PSMethod> usedPSMethods;
 
@@ -255,18 +254,11 @@ public class D3WebSession implements Session {
 		return UUID.randomUUID().toString();
 	}
 
-	private synchronized void addAnsweredQuestions(Question frage) {
-		if (!getAnsweredQuestions().contains(frage)) {
-			getAnsweredQuestions().add(frage);
-		}
-	}
-
 	/**
 	 * Adds a new PSMethod to the used PSMethods of this case. Creation date:
 	 * (28.08.00 17:33:43)
 	 * 
-	 * @param newUsedPSMethods
-	 *            java.util.List
+	 * @param newUsedPSMethods java.util.List
 	 * @Deprecated use pluginmechnasim to add psmethods
 	 */
 	@Deprecated
@@ -279,7 +271,7 @@ public class D3WebSession implements Session {
 		PropagationContoller propagationContoller = getPropagationContoller();
 		propagationContoller.openPropagation();
 		try {
-			for (Question question : this.getAnsweredQuestions()) {
+			for (Question question : blackboard.getAnsweredQuestions()) {
 				Object oldValue = null;
 				Object newValue = getValue(question);
 				propagationContoller.propagate(question, oldValue, newValue, psmethod);
@@ -301,14 +293,9 @@ public class D3WebSession implements Session {
 		}
 	}
 
-	@Override
-	public List<Question> getAnsweredQuestions() {
-		return answeredQuestions;
-	}
-
 	/**
-	 * @return the unique and dynamic user case object for the specifed (static)
-	 *         knowledge base object.
+	 * @return the unique and dynamic user case object for the specified
+	 *         (static) knowledge base object.
 	 */
 	@Override
 	public SessionObject getCaseObject(CaseObjectSource cos) {
@@ -336,8 +323,7 @@ public class D3WebSession implements Session {
 	 * @return the instance of a specified PSMethod class definition, which is
 	 *         used in this Session; null if the PSMethod-class is not used in
 	 *         this case.
-	 * @param psmethodClass
-	 *            java.lang.Class
+	 * @param psmethodClass java.lang.Class
 	 */
 	@Override
 	public PSMethod getPSMethodInstance(Class<? extends PSMethod> context) {
@@ -373,13 +359,6 @@ public class D3WebSession implements Session {
 	 * @author joba
 	 */
 	private void propagateValue(ValuedObject valuedObject, Object oldValue, Object newValue) {
-
-		// notify the dialog control if questions have been changed
-		if (valuedObject instanceof Question) {
-			// removeQuestion((Question) valuedObject);
-			addAnsweredQuestions((Question) valuedObject);
-		}
-
 		// only propagate to ValuedObjects which are
 		// NamedObjects (and so have KnowledgeMaps)
 		if (valuedObject instanceof NamedObject) {
@@ -397,11 +376,12 @@ public class D3WebSession implements Session {
 								// ValueFactory.toValue(valuedObject, newValue, this),
 					newValue,
 					source, method);
-			// Distinguish 'value' between: Indication values and given answer/derived states
+			// Distinguish 'value' between: Indication values and given
+			// answer/derived states
 			if (newValue instanceof Indication) {
 				getBlackboard().addInterviewFact(fact);
-			} 
-			else { 
+			}
+			else {
 				getBlackboard().addValueFact(fact);
 			}
 		}
@@ -429,7 +409,7 @@ public class D3WebSession implements Session {
 	@Override
 	public void setValue(ValuedObject valuedObject, Value value) {
 		// do not know the real context, so send PSMethod.class as context
-		setValue(valuedObject, value, PSMethodUserSelected.class);
+		setValue(valuedObject, value, new Object(), PSMethodUserSelected.getInstance());
 	}
 
 	@Override
@@ -443,12 +423,9 @@ public class D3WebSession implements Session {
 	 * where this setValue was called. In this case a rule has set the new value
 	 * of a question. Creation date: (28.08.00 17:16:13)
 	 * 
-	 * @param valuedObject
-	 *            ValuedObject
-	 * @param answers
-	 *            Object[]
-	 * @param ruleContext
-	 *            rule, which sets the value
+	 * @param valuedObject ValuedObject
+	 * @param answers Object[]
+	 * @param ruleContext rule, which sets the value
 	 */
 	@Deprecated
 	public void setValue(ValuedObject valuedObject, Value value, Rule ruleContext) {
@@ -460,22 +437,22 @@ public class D3WebSession implements Session {
 		notifyListeners(valuedObject, ruleContext);
 		propagateValue(valuedObject, oldValue, newValue);
 
-		//		Object oldValue = getValue(valuedObject);
-//		if (valuedObject instanceof Question) {
-//			((Question) valuedObject).setValue(this, ruleContext, value);
-//		}
-//		else {
-//			valuedObject.setValue(this, value);
-//		}
-//		
-//		Object newValue = getValue(valuedObject);
-//
-//		updateBlackboard(valuedObject, value,
-//				ruleContext,
-//				getPSMethodInstance(ruleContext.getProblemsolverContext()));
-//		
-//		notifyListeners(valuedObject, ruleContext);
-//		propagateValue(valuedObject, oldValue, newValue);
+		// Object oldValue = getValue(valuedObject);
+		// if (valuedObject instanceof Question) {
+		// ((Question) valuedObject).setValue(this, ruleContext, value);
+		// }
+		// else {
+		// valuedObject.setValue(this, value);
+		// }
+		//		
+		// Object newValue = getValue(valuedObject);
+		//
+		// updateBlackboard(valuedObject, value,
+		// ruleContext,
+		// getPSMethodInstance(ruleContext.getProblemsolverContext()));
+		//		
+		// notifyListeners(valuedObject, ruleContext);
+		// propagateValue(valuedObject, oldValue, newValue);
 	}
 
 	/**
@@ -485,19 +462,17 @@ public class D3WebSession implements Session {
 	 * state a context for scores of diagnoses (with a context we all know where
 	 * to write a diagnosis value). Creation date: (28.08.00 17:16:13)
 	 * 
-	 * @param namedObject
-	 *            ValuedObject
-	 * @param answers
-	 *            Object[]
-	 * @param context
-	 *            problem-solver context
+	 * @param namedObject ValuedObject
+	 * @param answers Object[]
+	 * @param context problem-solver context
 	 */
 	@Override
 	public void setValue(ValuedObject valuedObject, Value value, Class<? extends PSMethod> context) {
-		// TODO: there is no "real" source that is responsible for setting this value
+		// TODO: there is no "real" source that is responsible for setting this
+		// value
 		setValue(valuedObject, value, new Object(), getPSMethodInstance(context));
 	}
-	
+
 	@Override
 	public void setValue(ValuedObject valuedObject, Value value, Object source, PSMethod psMethod) {
 		Value oldValue = getQualifiedValueFromBlackboard(valuedObject, value);
@@ -508,64 +483,66 @@ public class D3WebSession implements Session {
 		notifyListeners(valuedObject, psMethod);
 		propagateValue(valuedObject, oldValue, newValue);
 
-		
-//		Object oldValue;
-//		if (value instanceof Indication) {
-//			oldValue = getBlackboard().getIndication((InterviewObject)valuedObject);
-//		}
-//		else {
-//			oldValue = getValue(valuedObject);
-//		}
-//		
-//		if (valuedObject instanceof Solution) {
-//			getBlackboard().addValueFact(
-//					new DefaultFact((TerminologyObject) valuedObject, value,
-//							source, psMethod));
-//		}
-//		else if (valuedObject instanceof Question) {
-//			if (!(value instanceof Indication)) {
-//				((Question) valuedObject).setValue(this, value);				
-//			}
-//		}
-//		else if (valuedObject instanceof QContainer) {
-//			// do nothing, since here only the indication is propagated - remove the 
-//			// whole stack after balckboard refactoring (05.2010, joba)
-//		}
-//		else {
-//			throw new IllegalArgumentException("Specified argument " + valuedObject
-//					+ " is neither Solution nor Question/QContainer.");
-//		}
-//		
-//		// rerieve new value of the object: distinguish indication and real value
-//		Object newValue;
-//		if (value instanceof Indication) {
-//			newValue = value;
-//		}
-//		else {
-//			newValue = getValue(valuedObject);
-//		}
-//		
-//		notifyListeners(valuedObject, psMethod);
-//		updateBlackboard(valuedObject, value,
-//				source,
-//				psMethod);		
-//		propagateValue(valuedObject, oldValue, newValue);
+		// Object oldValue;
+		// if (value instanceof Indication) {
+		// oldValue =
+		// getBlackboard().getIndication((InterviewObject)valuedObject);
+		// }
+		// else {
+		// oldValue = getValue(valuedObject);
+		// }
+		//		
+		// if (valuedObject instanceof Solution) {
+		// getBlackboard().addValueFact(
+		// new DefaultFact((TerminologyObject) valuedObject, value,
+		// source, psMethod));
+		// }
+		// else if (valuedObject instanceof Question) {
+		// if (!(value instanceof Indication)) {
+		// ((Question) valuedObject).setValue(this, value);
+		// }
+		// }
+		// else if (valuedObject instanceof QContainer) {
+		// // do nothing, since here only the indication is propagated - remove
+		// the
+		// // whole stack after balckboard refactoring (05.2010, joba)
+		// }
+		// else {
+		// throw new IllegalArgumentException("Specified argument " +
+		// valuedObject
+		// + " is neither Solution nor Question/QContainer.");
+		// }
+		//		
+		// // rerieve new value of the object: distinguish indication and real
+		// value
+		// Object newValue;
+		// if (value instanceof Indication) {
+		// newValue = value;
+		// }
+		// else {
+		// newValue = getValue(valuedObject);
+		// }
+		//		
+		// notifyListeners(valuedObject, psMethod);
+		// updateBlackboard(valuedObject, value,
+		// source,
+		// psMethod);
+		// propagateValue(valuedObject, oldValue, newValue);
 
 	}
 
-
 	private Value getQualifiedValueFromBlackboard(ValuedObject valuedObject, Value newValue) {
 		if (newValue instanceof Indication) {
-			return getBlackboard().getIndication((InterviewObject)valuedObject);
+			return getBlackboard().getIndication((InterviewObject) valuedObject);
 		}
-		
+
 		if (valuedObject instanceof Solution) {
 			Solution solution = (Solution) valuedObject;
 			return getBlackboard().getState(solution);
 		}
 		else if (valuedObject instanceof Question) {
-			return getBlackboard().getValue((Question)valuedObject);
-//			return ((Question) valuedObject).getValue(this);
+			return getBlackboard().getValue((Question) valuedObject);
+			// return ((Question) valuedObject).getValue(this);
 		}
 		else {
 			throw new IllegalStateException("unexpected ValuedObject");

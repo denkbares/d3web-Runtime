@@ -37,8 +37,11 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.blackboard.DefaultFact;
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.costBenefit.inference.PSMethodCostBenefit;
 import de.d3web.costBenefit.inference.StateTransition;
 import de.d3web.shared.Abnormality;
 import de.d3web.shared.AbstractAbnormality;
@@ -112,12 +115,6 @@ public class Node {
 		return st;
 	}
 
-	private void setAnswer(Session theCase, Question q,
-			Value answer, Map<Question, Value> map) {
-		map.put(q, theCase.getValue(q));
-		theCase.setValue(q, answer);
-	}
-
 	public double getCosts(Session session) {
 		if (cbm == null) return getStaticCosts();
 		return cbm.getCostFunction().getCosts(qContainer, session);
@@ -152,13 +149,21 @@ public class Node {
 	 * @param testCase
 	 * @return
 	 */
-	public Map<Question, Value> setNormalValues(Session testCase) {
-		return answerGetterAndSetter(testCase, true);
+	public List<Fact> setNormalValues(Session testCase) {
+		Map<Question, Value> valuesToSet = answerGetterAndSetter(testCase, true);
+		List<Fact> facts = new LinkedList<Fact>();
+		for (Question q : valuesToSet.keySet()) {
+			Fact fact = new DefaultFact(q, valuesToSet.get(q), this,
+					testCase.getPSMethodInstance(PSMethodCostBenefit.class));
+			testCase.getBlackboard().addValueFact(fact);
+			facts.add(fact);
+		}
+		return facts;
 	}
 
 	private Map<Question, Value> answerGetterAndSetter(Session testCase, boolean set) {
-		List<? extends Question> answeredQuestions = testCase.getAnsweredQuestions();
-		Map<Question, Value> undomap = new HashMap<Question, Value>();
+		List<? extends Question> answeredQuestions = testCase.getBlackboard().getAnsweredQuestions();
+		Map<Question, Value> valuesToSet = new HashMap<Question, Value>();
 		Map<Question, Value> expectedmap = new HashMap<Question, Value>();
 		for (QuestionOC q : questions) {
 			if (!answeredQuestions.contains(q)) {
@@ -178,7 +183,7 @@ public class Node {
 						ChoiceValue avalue = new ChoiceValue((Choice) a);
 						if (abnormality.getValue(avalue) == AbstractAbnormality.A0) {
 							if (set) {
-								setAnswer(testCase, q, avalue, undomap);
+								valuesToSet.put(q, avalue);
 							}
 							else {
 								expectedmap.put(q, avalue);
@@ -193,7 +198,7 @@ public class Node {
 			}
 		}
 		if (set) {
-			return undomap;
+			return valuesToSet;
 		}
 		else {
 			return expectedmap;

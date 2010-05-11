@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.render;
@@ -45,6 +45,7 @@ import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
@@ -61,6 +62,7 @@ import de.d3web.dialog2.component.html.UIQuestionPage;
 import de.d3web.dialog2.util.DialogUtils;
 import de.d3web.dialog2.util.InvalidAnswerError;
 import de.d3web.dialog2.util.QuestionDateUtils;
+import de.d3web.indication.inference.PSMethodUserSelected;
 
 public class QuestionPageRenderer extends Renderer {
 
@@ -268,7 +270,6 @@ public class QuestionPageRenderer extends Renderer {
 					else {
 						// delete the answer(s) ...
 						setValueInCase(theCase, q, UndefinedValue.getInstance());
-						theCase.getAnsweredQuestions().remove(q);
 					}
 				}
 			}
@@ -276,8 +277,7 @@ public class QuestionPageRenderer extends Renderer {
 	}
 
 	private boolean isAbstractQuestion(Question q) {
-		if (q == null)
-			return false;
+		if (q == null) return false;
 		Object o = q.getProperties().getProperty(Property.ABSTRACTION_QUESTION);
 		boolean abstractQ = false;
 		if (o instanceof Boolean) {
@@ -363,7 +363,9 @@ public class QuestionPageRenderer extends Renderer {
 	}
 
 	private void setValueInCase(Session theCase, Question q, Value answers) {
-		theCase.setValue(q, answers);
+		theCase.getBlackboard().addValueFact(
+				new DefaultFact(q, answers, PSMethodUserSelected.getInstance(),
+				PSMethodUserSelected.getInstance()));
 	}
 
 }

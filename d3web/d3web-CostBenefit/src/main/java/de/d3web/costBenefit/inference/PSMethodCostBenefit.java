@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.costBenefit.inference;
 
@@ -43,6 +43,7 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.core.session.blackboard.SessionObject;
@@ -55,6 +56,7 @@ import de.d3web.costBenefit.model.Path;
 import de.d3web.costBenefit.model.SearchModel;
 import de.d3web.costBenefit.model.Target;
 import de.d3web.indication.ActionIndication;
+import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
  * The PSMethodCostBenefit indicates QContainer to establish a diagnosis as
@@ -63,12 +65,11 @@ import de.d3web.indication.ActionIndication;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSource  {
+public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSource {
 
 	private TargetFunction targetFunction;
 	private CostFunction costFunction;
 	private SearchAlgorithm searchAlgorithm;
-	
 
 	public PSMethodCostBenefit(TargetFunction targetFunction,
 			CostFunction costFunction, SearchAlgorithm searchAlgorithm) {
@@ -76,7 +77,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		this.costFunction = costFunction;
 		this.searchAlgorithm = searchAlgorithm;
 	}
-	
+
 	public PSMethodCostBenefit() {
 		this.targetFunction = new DefaultTargetFunction();
 		this.costFunction = new DefaultCostFunction();
@@ -89,19 +90,20 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		calculateNewPath(caseObject);
 		activateNextQContainer(caseObject);
 	}
-	
+
 	private void activateNextQContainer(CostBenefitCaseObject caseObject) {
 		QContainer[] currentSequence = caseObject.getCurrentSequence();
 		Session theCase = caseObject.getSession();
-		if (currentSequence== null) {
+		if (currentSequence == null) {
 			deactivateCurrentQContainer(caseObject);
-		} else {
+		}
+		else {
 			if (caseObject.getCurrentPathIndex() == -1
 					|| currentSequence[caseObject.getCurrentPathIndex()].isDone(theCase, true)) {
 				deactivateCurrentQContainer(caseObject);
 				caseObject.incCurrentPathIndex();
 				caseObject.setHasBegun(false);
-				if (caseObject.getCurrentPathIndex()>=currentSequence.length) {
+				if (caseObject.getCurrentPathIndex() >= currentSequence.length) {
 					calculateNewPath(caseObject);
 					activateNextQContainer(caseObject);
 					return;
@@ -109,7 +111,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 				QContainer qc = currentSequence[caseObject.getCurrentPathIndex()];
 				if (new Node(qc, null).isApplicable(theCase)) {
 					activateQContainer(caseObject, qc);
-				} else {
+				}
+				else {
 					calculateNewPath(caseObject);
 					activateNextQContainer(caseObject);
 				}
@@ -135,8 +138,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 
 	private void deactivateCurrentQContainer(CostBenefitCaseObject caseObject) {
 		Rule rule = caseObject.getRule();
-		if (rule == null)
-			return;
+		if (rule == null) return;
 		rule.setCondition(new CondOr(new LinkedList<Condition>()));
 		rule.check(caseObject.getSession());
 		caseObject.setRule(null);
@@ -149,7 +151,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		caseObject.setDiags(diags);
 		SearchModel cbm = new SearchModel(theCase);
 		caseObject.setCbm(cbm);
-		for (StrategicSupport strategicSupport: stratgicSupports){
+		for (StrategicSupport strategicSupport : stratgicSupports) {
 			Collection<Solution> solutions = strategicSupport
 					.getPossibleDiagnoses(theCase);
 			diags.addAll(solutions);
@@ -159,22 +161,23 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 					discriminatingQuestions, solutions, strategicSupport);
 			for (Target target : targets) {
 				double benefit = strategicSupport.getEntropy(target, solutions, theCase);
-				if (benefit == 0)
-					continue;
+				if (benefit == 0) continue;
 				cbm.addTarget(target);
 				cbm.maximizeBenefit(target, benefit);
 			}
 		}
 		if (cbm.getBestBenefit() == 0) {
 			caseObject.resetPath();
-		} else {
+		}
+		else {
 			searchAlgorithm.search(theCase, cbm);
 			Target bestTarget = cbm.getBestCostBenefitTarget();
 			if (bestTarget == null || bestTarget.getMinPath() == null) {
 				// es wurde kein bestes Ziel erreicht, bzw. dessen MinPath ist
 				// nicht gefunden worden.
 				caseObject.resetPath();
-			} else {
+			}
+			else {
 				Path minPath = bestTarget.getMinPath();
 				Collection<Node> nodes = minPath.getNodes();
 				QContainer[] currentSequence = new QContainer[nodes.size()];
@@ -192,15 +195,13 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 
 	private List<StrategicSupport> getStrategicSupports(Session theCase) {
 		List<StrategicSupport> ret = new ArrayList<StrategicSupport>();
-		for (PSMethod psm: theCase.getPSMethods()) {
+		for (PSMethod psm : theCase.getPSMethods()) {
 			if (psm instanceof StrategicSupport) {
 				ret.add((StrategicSupport) psm);
 			}
 		}
 		return ret;
 	}
-
-	
 
 	private void makeOKQuestionsUndone(TerminologyObject container, Session theCase) {
 		for (TerminologyObject nob : container.getChildren()) {
@@ -210,8 +211,10 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 				List<Choice> choices = qoc.getAllAlternatives();
 				if (choices.size() == 1
 						&& "OK".equals(choices.get(0).getName())) {
-					qoc.setValue(theCase, UndefinedValue.getInstance());
-					theCase.getAnsweredQuestions().remove(qoc);
+					theCase.getBlackboard().addValueFact(
+							new DefaultFact(qoc, UndefinedValue.getInstance(),
+									PSMethodUserSelected.getInstance(),
+									PSMethodUserSelected.getInstance()));
 				}
 			}
 			makeOKQuestionsUndone(nob, theCase);
@@ -245,7 +248,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 			caseObject.setHasBegun(qcons.contains(currentSequence[caseObject.getCurrentPathIndex()]));
 		}
 		// returns if the actual QContainer is not done and has begun yet
-		if (caseObject.isHasBegun() && !currentSequence[caseObject.getCurrentPathIndex()].isDone(theCase, true)) {
+		if (caseObject.isHasBegun()
+				&& !currentSequence[caseObject.getCurrentPathIndex()].isDone(theCase, true)) {
 			return;
 		}
 		// if the possible Diagnosis have changed, a flag that a new path has to
@@ -253,18 +257,19 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		boolean changeddiags = false;
 		List<StrategicSupport> strategicSupports = getStrategicSupports(theCase);
 		HashSet<Solution> possibleDiagnoses = new HashSet<Solution>();
-		for (StrategicSupport strategicSupport: strategicSupports) {
+		for (StrategicSupport strategicSupport : strategicSupports) {
 			possibleDiagnoses.addAll(strategicSupport.getPossibleDiagnoses(theCase));
 		}
 		final Set<Solution> diags = caseObject.getDiags();
-		if (possibleDiagnoses.size() == diags .size()) {
+		if (possibleDiagnoses.size() == diags.size()) {
 			for (Solution d : possibleDiagnoses) {
 				if (!diags.contains(d)) {
 					changeddiags = true;
 					break;
 				}
 			}
-		} else {
+		}
+		else {
 			changeddiags = true;
 		}
 		// if there is no sequence calculated, the possible diags have changed
@@ -282,7 +287,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 	public CostFunction getCostFunction() {
 		return costFunction;
 	}
-	
+
 	public SearchAlgorithm getSearchAlgorithm() {
 		return searchAlgorithm;
 	}
@@ -304,7 +309,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		for (TerminologyObject qaset : q.getParents()) {
 			if (qaset instanceof QContainer) {
 				targets.add((QContainer) qaset);
-			} else {
+			}
+			else {
 				addParentContainers(targets, qaset);
 			}
 		}

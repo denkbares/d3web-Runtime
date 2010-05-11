@@ -1,27 +1,25 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.costBenefit;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.w3c.dom.Node;
 
@@ -33,8 +31,8 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
-import de.d3web.core.session.Value;
-import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.core.session.blackboard.Blackboard;
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.costBenefit.inference.PSMethodCostBenefit;
 import de.d3web.costBenefit.inference.StateTransition;
 
@@ -48,21 +46,19 @@ public class Util {
 	public static Session copyCase(Session theCase) {
 		Session testCase = SessionFactory
 				.createSession(theCase.getKnowledgeBase(), new LinkedList<PSMethod>());
+		Blackboard blackboard = theCase.getBlackboard();
 		List<? extends Question> answeredQuestions = new LinkedList<Question>(
-				theCase.getAnsweredQuestions());
+				blackboard.getAnsweredQuestions());
 		for (Question q : answeredQuestions) {
-			Value a = theCase.getValue(q);
-			testCase.setValue(q, a);
+			Fact fact = blackboard.getValueFact(q);
+			testCase.getBlackboard().addValueFact(fact);
 		}
 		return testCase;
 	}
 
-	public static void undo(Session theCase, Map<Question, Value> undo) {
-		for (Entry<Question, Value> entry : undo.entrySet()) {
-			entry.getKey().setValue(theCase, entry.getValue());
-			if (entry.getValue() == UndefinedValue.getInstance()) {
-				theCase.getAnsweredQuestions().remove(entry.getKey());
-			}
+	public static void undo(Session theCase, List<Fact> facts) {
+		for (Fact fact : facts) {
+			theCase.getBlackboard().removeValueFact(fact);
 		}
 	}
 

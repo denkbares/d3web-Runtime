@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.core.session;
@@ -96,21 +96,12 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	// -----------------------from here on old stuff, TODO: remove?
 
 	/**
-	 * Returns all {@link Question} instances, that have already been answered
-	 * in this session.
-	 * 
-	 * @return all currently answered questions of this session
-	 */
-	List<? extends Question> getAnsweredQuestions();
-
-	/**
 	 * Returns the {@link SessionObject} (dynamically created flyweight object)
 	 * corresponding to the specified {@link CaseObjectSource} instance (often
 	 * this is a {@link Question} or a {@link Solution}.
 	 * 
-	 * @param item
-	 *            the specified object for which the corresponding session
-	 *            object should be returned
+	 * @param item the specified object for which the corresponding session
+	 *        object should be returned
 	 * @return the corresponding {@link SessionObject} of the specified object
 	 */
 	SessionObject getCaseObject(CaseObjectSource item);
@@ -122,8 +113,7 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 * considered, so a {@link Solution} is returned, if it haves the specified
 	 * {@link DiagnosisState} for at least one of these {@link PSMethod}.
 	 * 
-	 * @param state
-	 *            the DiagnosisState the diagnoses must have to be returned
+	 * @param state the DiagnosisState the diagnoses must have to be returned
 	 * @return a list of diagnoses in this case that have the state 'state'
 	 */
 	List<Solution> getSolutions(DiagnosisState state);
@@ -147,8 +137,7 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 * Sets a {@link QASetManager}, that will be used to control the interview
 	 * behavior of this case.
 	 * 
-	 * @param cd
-	 *            the {@link QASetManager} of this case
+	 * @param cd the {@link QASetManager} of this case
 	 */
 	void setQASetManager(QASetManager cd);
 
@@ -156,11 +145,9 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 * Assigns the specified value to the specified {@link ValuedObject}, e.g.,
 	 * a {@link Question} or a {@link Solution} receives a new value.
 	 * 
-	 * @param valuedObject
-	 *            the object, that receives a new value
-	 * @param value
-	 *            the (array of new) values for the specified
-	 *            {@link ValuedObject}
+	 * @param valuedObject the object, that receives a new value
+	 * @param value the (array of new) values for the specified
+	 *        {@link ValuedObject}
 	 */
 	void setValue(ValuedObject valuedObject, Value value);
 
@@ -168,8 +155,7 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 * Returns the value of the specified {@link Question} valid in this
 	 * {@link Session}; returns {@link UndefinedValue} if no value is assigned.
 	 * 
-	 * @param question
-	 *            the specified {@link Question}
+	 * @param question the specified {@link Question}
 	 * @return the value of the question valid in this session;
 	 *         {@link UndefinedValue} if no value is assigned.
 	 * @author joba
@@ -183,13 +169,10 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 * knowledge source of this assignment is also given, here it is a
 	 * {@link Rule}.
 	 * 
-	 * @param valuedObject
-	 *            ValuedObject the object, that receives a new value
-	 * @param value
-	 *            value the (array of new) values for the specified
-	 *            {@link ValuedObject}
-	 * @param rule
-	 *            the knowledge element responsible for making the assignment
+	 * @param valuedObject ValuedObject the object, that receives a new value
+	 * @param value value the (array of new) values for the specified
+	 *        {@link ValuedObject}
+	 * @param rule the knowledge element responsible for making the assignment
 	 */
 	void setValue(ValuedObject valuedObject, Value value, Rule rule);
 
@@ -198,41 +181,33 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 * a {@link Question} or a {@link Solution} receives a new value. The
 	 * {@link PSMethod} responsible of this assignment is also given.
 	 * 
-	 * @param valuedObject
-	 *            ValuedObject the object, that receives a new value
-	 * @param value
-	 *            value the (array of new) values for the specified
-	 *            {@link ValuedObject}
-	 * @param context
-	 *            the problem-solver responsible for this assignment
+	 * @param valuedObject ValuedObject the object, that receives a new value
+	 * @param value value the (array of new) values for the specified
+	 *        {@link ValuedObject}
+	 * @param context the problem-solver responsible for this assignment
 	 */
 	void setValue(ValuedObject valuedObject, Value value, Class<? extends PSMethod> context);
-
 
 	/**
 	 * Assigns the specified value to the specified {@link ValuedObject}, e.g.,
 	 * a {@link Question} or a {@link Solution} receives a new value. The
-	 * {@link PSMethod} responsible of this assignment and the concrete action of this 
-	 * setting (e.g., a rule action) is also given.
+	 * {@link PSMethod} responsible of this assignment and the concrete action
+	 * of this setting (e.g., a rule action) is also given.
 	 * 
-	 * @param valuedObject
-	 *            ValuedObject the object, that receives a new value
-	 * @param value
-	 *            value the (array of new) values for the specified
-	 *            {@link ValuedObject}
-	 * @param source the actual action responsible for setting the value, e.g., a rule action
-	 * @param psMethod
-	 *            the problem-solver responsible for this assignment
+	 * @param valuedObject ValuedObject the object, that receives a new value
+	 * @param value value the (array of new) values for the specified
+	 *        {@link ValuedObject}
+	 * @param source the actual action responsible for setting the value, e.g.,
+	 *        a rule action
+	 * @param psMethod the problem-solver responsible for this assignment
 	 */
 	void setValue(ValuedObject valuedObject, Value value, Object source, PSMethod psMethod);
 
-	
 	/**
 	 * Registers a new listener to this session. If something in this session
 	 * changes, then all registered listeners will be notified.
 	 * 
-	 * @param listener
-	 *            one new listener of this session to register
+	 * @param listener one new listener of this session to register
 	 */
 	void addListener(SessionEventListener listener);
 
@@ -240,17 +215,14 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 * Removes the specified listener from the list of registered listeners. All
 	 * listeners will be notified, if something in the session changes.
 	 * 
-	 * @param listener
-	 *            the specified listener to be removed
+	 * @param listener the specified listener to be removed
 	 */
 	void removeListener(SessionEventListener listener);
-
 
 	/**
 	 * Removes the specified solution from the list of established solutions.
 	 * 
-	 * @param solution
-	 *            the specified solution
+	 * @param solution the specified solution
 	 * @author joba
 	 * @date 15.04.2010
 	 */
