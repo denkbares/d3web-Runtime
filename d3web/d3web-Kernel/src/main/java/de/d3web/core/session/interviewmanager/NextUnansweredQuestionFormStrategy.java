@@ -24,11 +24,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import javax.jws.Oneway;
+
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.UndefinedValue;
 
 /**
  * This class always creates a new {@link Form} that contains the one
@@ -37,10 +42,10 @@ import de.d3web.core.knowledge.terminology.Question;
  * @author joba
  *
  */
-public class OneQuestionFormStrategy implements FormStrategy {
+public class NextUnansweredQuestionFormStrategy implements FormStrategy {
 
 	@Override
-	public Form nextForm(List<InterviewObject> agendaEnties) {
+	public Form nextForm(List<InterviewObject> agendaEnties, Session session) {
 		if (agendaEnties.isEmpty()) {
 			return EmptyForm.getInstance();
 		}
@@ -51,54 +56,42 @@ public class OneQuestionFormStrategy implements FormStrategy {
 				return new DefaultForm(((Question)object).getName(), interviewObjects);
 			}
 			else if (object instanceof QASet) {
-				String title = ((QContainer)object).getName();
-				return new DefaultForm(title, getFirstActiveQContainerWithChildren((QASet)object));
+				Question nextQuestion = retrieveNextQuestionToBeAnswered((QASet)object, session);
+				if (nextQuestion == null) {
+					return EmptyForm.getInstance();
+				}
+				return new DefaultForm(nextQuestion.getName(), nextQuestion);
 			}
 			return null;			
 		}
 	}
 
 	/**
-	 * Traverses the specified qaset and returns the list of questions contained in the 
-	 * qaset, that are active and contained in a sub-qcontainer.
-	 * @param qaset the specified {@link QASet} instance
-	 * @return the list of questions, contained in the first and active qcontainer, where the specified qaset is a parent 
+	 * Traverses in a depth-first-search all children of the specified {@link QASet} and 
+	 * returns the first question, that has no value assigned in the specified session.
+	 * If no unanswered {@link Question} was be found, then null is returned.
+	 * @param qaset the specified {@link QASet}
+	 * @param session the specified session
+	 * @return the first {@link Question} instance, that is a child of the specified {@link QASet} and is not answered; null otherwise 
 	 */
-	@SuppressWarnings("unchecked")
-	private List<InterviewObject> getFirstActiveQContainerWithChildren(
-			TerminologyObject qaset) {
-		// Return an empty, when qaset has no children
-		if (qaset == null || qaset.getChildren().length == 0) return Collections.EMPTY_LIST;
-		
-		InterviewObject firstItem = (InterviewObject)qaset.getChildren()[0];
-		if (firstItem instanceof Question) {
-			return flatten(qaset.getChildren());
+	private Question retrieveNextQuestionToBeAnswered(QASet qaset, Session session) {
+		if (qaset instanceof Question && hasNoValue((Question)qaset,session)) {
+			return (Question) qaset;
 		}
-		else if (firstItem instanceof QContainer) {
-			return getFirstActiveQContainerWithChildren(qaset.getChildren()[0]);
+		else if (qaset instanceof QContainer) {
+			TerminologyObject[] children = qaset.getChildren();
+			for (TerminologyObject terminologyObject : children) {
+				Question nextqaset = retrieveNextQuestionToBeAnswered((QASet)terminologyObject, session);
+				if (nextqaset != null) {
+					return nextqaset;
+				}
+			}
 		}
-		else {
-			// TODO: throw a nice exception here
-			System.err.println("UNKNOWN QASET passed: " + qaset);
-			return Collections.EMPTY_LIST;
-		}
+		return null;
 	}
 
-	private List<InterviewObject> flatten(TerminologyObject[] objects) {
-		List<InterviewObject> flattenedList = new ArrayList<InterviewObject>(objects.length);
-		for (TerminologyObject object : objects) {
-			flattenedList.addAll(flatten(object)); 
-		}
-		return flattenedList;
+	private boolean hasNoValue(Question question, Session session) {
+		Value value = session.getBlackboard().getValue(question);
+		return (value instanceof UndefinedValue);	
 	}
-
-	private List<InterviewObject> flatten(TerminologyObject object) {
-		List<InterviewObject> flattenedList = new ArrayList<InterviewObject>();
-		flattenedList.add((InterviewObject)object);
-		for (TerminologyObject child: object.getChildren()) {
-			flattenedList.addAll(flatten(child)); 
-		}
-		return flattenedList;
-	}
-
 }

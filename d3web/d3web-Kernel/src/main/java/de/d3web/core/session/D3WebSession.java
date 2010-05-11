@@ -134,7 +134,7 @@ public class D3WebSession implements Session {
 	D3WebSession(KnowledgeBase kb, QASetManagerFactory theQamFactory) {
 		this.kb = kb;
 		this.propagationController = new DefaultPropagationController(this);
-		this.interview = new DefaultInterview(this.getKnowledgeBase());
+		this.interview = new DefaultInterview(this, this.getKnowledgeBase());
 		init(theQamFactory);
 		// register some common problem solving methods
 		// first add the methods
@@ -224,7 +224,7 @@ public class D3WebSession implements Session {
 	D3WebSession(KnowledgeBase kb, QASetManagerFactory theQamFactory, List<PSMethod> psmethods) {
 		this.kb = kb;
 		this.propagationController = new DefaultPropagationController(this);
-		this.interview = new DefaultInterview(this.getKnowledgeBase());
+		this.interview = new DefaultInterview(this, this.getKnowledgeBase());
 		init(theQamFactory);
 		// register psms
 		for (PSMethod method : psmethods) {

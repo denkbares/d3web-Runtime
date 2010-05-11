@@ -5,6 +5,9 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.assertEquals;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,7 +35,7 @@ public class OneQuestionFormTest {
 	QContainer pregnancyQuestions, heightWeightQuestions;
 	QuestionOC sex, pregnant, ask_for_pregnancy, initQuestion;
 	QuestionNum weight, height;
-	ChoiceValue female, dont_ask; 
+	ChoiceValue female, male, dont_ask;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -55,6 +58,7 @@ public class OneQuestionFormTest {
 		pregnancyQuestions = kbm.createQContainer("pregnancyQuestions", root);
 		sex = kbm.createQuestionOC("sex", pregnancyQuestions, new String[] {"male", "female"});
 		female = new ChoiceValue(kbm.findChoice(sex, "female"));
+		male = new ChoiceValue(kbm.findChoice(sex, "male"));
 		pregnant = kbm.createQuestionOC("pregnant", sex, new String[] {"yes", "no"});
 		ask_for_pregnancy = kbm.createQuestionOC("ask for pregnancy", pregnancyQuestions, 
 				new String[] {"yes", "no"});
@@ -81,24 +85,71 @@ public class OneQuestionFormTest {
 		assertFalse(agenda.isEmpty());
 		
 		// EXPECT: 'sex' to be the first question
-		Form form = session.getInterviewManager().nextForm();
-		InterviewObject formQuestion = form.getInterviewObjects().get(0);
-		assertEquals(sex, formQuestion);
+		List<InterviewObject>  formQuestions = session.getInterviewManager().nextForm().getInterviewObjects();
+		assertEquals(Arrays.asList(sex), formQuestions);
 
 		// ANSWER: sex=female
 		// EXPECT: pregnant to be the next question
 		setValue(sex, female);
-		form = session.getInterviewManager().nextForm();
-		formQuestion = form.getInterviewObjects().get(0);
-		assertEquals(pregnant, formQuestion);
+		formQuestions = session.getInterviewManager().nextForm().getInterviewObjects();
+		assertEquals(Arrays.asList(pregnant), formQuestions);
 		
 		// ANSWER: pregnant=no
 		// EXPECT: no more questions to ask
 		setValue(pregnant, new ChoiceValue(kbm.findChoice(pregnant, "no")));
-		form = session.getInterviewManager().nextForm();
+		Form form = session.getInterviewManager().nextForm();
 		assertEquals(EmptyForm.getInstance(), form);
 	}
+	
+	@Test
+	public void testWithOneQContainerOnAgenda_WithoutFollowUpQuestions() {
+		// initially the agenda is empty
+		assertTrue(agenda.isEmpty());
+		// Put the QContainer pregnancyQuestions on the agenda
+		agenda.append(pregnancyQuestions);
+		assertFalse(agenda.isEmpty());
+		
+		// EXPECT the first question 'sex' to be the next question in the form
+		List<InterviewObject> nextQuestions = session.getInterviewManager().nextForm().getInterviewObjects();
+		assertEquals(Arrays.asList(sex), nextQuestions);
+		
+		// SET question sex=male
+		// EXPECT the second question 'ask_for_pregnancy' to be the next question in the form
+		setValue(sex, male);
+		nextQuestions = session.getInterviewManager().nextForm().getInterviewObjects();
+		assertEquals(Arrays.asList(ask_for_pregnancy), nextQuestions);
+		
+		// SET   : question ask_for_pregnancy=no
+		// EXPECT: since all questions of the qcontainer are answered, we expect no more 
+		//         questions to be asked next, i.e., the EmptyForm singleton is returned
+		setValue(ask_for_pregnancy, kbm.findValue(ask_for_pregnancy, "no"));
+		assertEquals(EmptyForm.getInstance(), session.getInterviewManager().nextForm());
+	}
 
+	@Test
+	public void testWithOneQContainerOnAgenda_WithFollowUpQuestions() {
+		// initially the agenda is empty
+		assertTrue(agenda.isEmpty());
+		// Put the QContainer pregnancyQuestions on the agenda
+		agenda.append(pregnancyQuestions);
+		assertFalse(agenda.isEmpty());
+		
+		// EXPECT the first question 'sex' to be the next question in the form
+		List<InterviewObject> nextQuestions = session.getInterviewManager().nextForm().getInterviewObjects();
+		assertEquals(Arrays.asList(sex), nextQuestions);
+		
+		// SET question sex=female
+		// EXPECT the follow-up question 'pregnant' to be the next question in the form
+		setValue(sex, female);
+		nextQuestions = session.getInterviewManager().nextForm().getInterviewObjects();
+
+		// TODO: overwork FormStrategy to copy with follow-up questions 
+		// assertEquals(Arrays.asList(pregnant), nextQuestions);
+
+	}
+
+	
+	
 	private void setValue(Question question, Value value) {
 		session.setValue(question, value);
 	}

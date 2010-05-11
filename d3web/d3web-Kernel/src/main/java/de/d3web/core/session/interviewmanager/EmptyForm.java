@@ -33,7 +33,7 @@ import de.d3web.core.knowledge.InterviewObject;
  */
 public class EmptyForm implements Form {
 
-	public static final Form instance = new EmptyForm();
+	private static final Form instance = new EmptyForm();
 	
 	@SuppressWarnings("unchecked")
 	@Override

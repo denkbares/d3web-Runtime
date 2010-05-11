@@ -10,12 +10,14 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
@@ -34,7 +36,7 @@ public class DialogAgendaTest {
 	QContainer pregnancyQuestions, heightWeightQuestions;
 	QuestionOC sex, pregnant, ask_for_pregnancy, initQuestion;
 	QuestionNum weight, height;
-	ChoiceValue female, dont_ask; 
+	ChoiceValue female, male, dont_ask; 
 
 	
 	@Before
@@ -58,6 +60,7 @@ public class DialogAgendaTest {
 		pregnancyQuestions = kbm.createQContainer("pregnancyQuestions", root);
 		sex = kbm.createQuestionOC("sex", pregnancyQuestions, new String[] {"male", "female"});
 		female = new ChoiceValue(kbm.findChoice(sex, "female"));
+		male = new ChoiceValue(kbm.findChoice(sex, "male"));
 		pregnant = kbm.createQuestionOC("pregnant", sex, new String[] {"yes", "no"});
 		ask_for_pregnancy = kbm.createQuestionOC("ask for pregnancy", pregnancyQuestions, 
 				new String[] {"yes", "no"});
@@ -130,7 +133,6 @@ public class DialogAgendaTest {
 		List expectedAgenda = Arrays.asList(sex, pregnant, ask_for_pregnancy, weight, height);
 		assertEquals(expectedAgenda, agenda.getCurrentlyActiveObjects());
 	}
-	
 
 	@Test
 	public void testDeactivationOfQuestions() {
@@ -154,6 +156,42 @@ public class DialogAgendaTest {
 		assertTrue(agenda.hasState(sex, InterviewState.ACTIVE));
 	}
 
+	@Test
+	public void testIndicationOfOneQContainer() {
+		// We need this rule for the later indication of the follow-up question "pregnant"
+		// Rule: sex = female => INDICATE ( pregnant ) 
+		RuleFactory.createIndicationRule("r1", pregnant, new CondEqual(sex, female));
+
+		
+		// initially the agenda is empty
+		assertTrue(agenda.isEmpty());
+		
+		// put one qcontainer on the agenda, it should be active
+		agenda.append(pregnancyQuestions);
+		assertFalse(agenda.isEmpty());
+		assertTrue(agenda.hasState(pregnancyQuestions, InterviewState.ACTIVE));
+
+		// Answer the first question in the qcontainer, should be still active
+		setValue(sex, male);
+		assertTrue(agenda.hasState(pregnancyQuestions, InterviewState.ACTIVE));
+		
+		// Answer the second & last question in the qcontainer, so the qcontainer should be INACTIVE
+		setValue(ask_for_pregnancy, new ChoiceValue(kbm.findChoice(ask_for_pregnancy, "no")));
+		assertTrue(agenda.hasState(pregnancyQuestions, InterviewState.INACTIVE));
+
+		// Set the first answer to undefined, so the qcontainer should be ACTIVE again
+		setValue(sex, UndefinedValue.getInstance());
+		assertTrue(agenda.hasState(pregnancyQuestions, InterviewState.ACTIVE));
+
+		// Set the Question SEX=female
+		// EXPECT 1) the qcontainer should be INACTIVE
+		//        2) the follow-up question "pregnant" should be put onto the agenda
+		setValue(sex, female);
+		assertTrue(agenda.hasState(pregnancyQuestions, InterviewState.INACTIVE));
+		assertTrue(agenda.onAgenda(pregnant));
+		assertTrue(agenda.hasState(pregnant, InterviewState.ACTIVE));
+	}	
+	
 	private void setValue(Question question, Value value) {
 		session.setValue(question, value);
 	}
