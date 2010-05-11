@@ -19,12 +19,8 @@
  */
 package de.d3web.core.session.interviewmanager;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-
-import javax.jws.Oneway;
 
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -33,6 +29,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
 import de.d3web.core.session.values.UndefinedValue;
 
 /**
@@ -72,12 +69,35 @@ public class NextUnansweredQuestionFormStrategy implements FormStrategy {
 	 * If no unanswered {@link Question} was be found, then null is returned.
 	 * @param qaset the specified {@link QASet}
 	 * @param session the specified session
-	 * @return the first {@link Question} instance, that is a child of the specified {@link QASet} and is not answered; null otherwise 
+	 * @return the first {@link Question} instance, that is a child of the specified {@link QASet} 
+	 *         and is not answered; null otherwise 
 	 */
 	private Question retrieveNextQuestionToBeAnswered(QASet qaset, Session session) {
-		if (qaset instanceof Question && hasNoValue((Question)qaset,session)) {
-			return (Question) qaset;
+		if (qaset instanceof Question) {
+			Question question = (Question)qaset;
+			// Return question, when it is directly located in a questionnaire and has not been answered.
+			if (isDirectQContainerQuestion(question) &&
+				hasNoValue(question,session)) {
+				return question;
+			}
+			// Return question, when it is not directly located in a questionnaire but is 
+			// active on agenda (follow-up question).
+			else if (isNotDirectQContainerQuestion(question) &&
+					isActiveOnAgenda(question, session)) {
+				return question;
+			}
+			// Recursively traverse for finding follow-up questions and check these, whether they are active on agenda
+			else {
+				for (TerminologyObject child : question.getChildren()) {
+					Question nextqaset = retrieveNextQuestionToBeAnswered((QASet)child, session);
+					if (nextqaset != null) {
+						return nextqaset;
+					}
+				}
+			}
 		}
+		// For a QContainer we try to find the first question that is included in the 
+		// container and has not been answered
 		else if (qaset instanceof QContainer) {
 			TerminologyObject[] children = qaset.getChildren();
 			for (TerminologyObject terminologyObject : children) {
@@ -88,6 +108,33 @@ public class NextUnansweredQuestionFormStrategy implements FormStrategy {
 			}
 		}
 		return null;
+	}
+
+
+
+	private boolean isActiveOnAgenda(Question question, Session session) {
+		return session.getInterviewManager().getInterviewAgenda().hasState(question, InterviewState.ACTIVE);
+	}
+
+	/**
+	 * A direct-qcontainer question must qcontainers as its parents. 
+	 * @param question the specified question
+	 * @return true, when the parents are only instances of {@link QContainer}.
+	 */
+	private boolean isDirectQContainerQuestion(Question question) {
+		for (TerminologyObject parent : question.getParents()) {
+			if ((parent instanceof QContainer) == false) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * @see NextUnansweredQuestionFormStrategy.isDirectQContainerQuestion(question)
+	 */
+	private boolean isNotDirectQContainerQuestion(Question question) {
+		return !isDirectQContainerQuestion(question);
 	}
 
 	private boolean hasNoValue(Question question, Session session) {

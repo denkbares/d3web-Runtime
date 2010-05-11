@@ -209,4 +209,9 @@ public class DefaultInterview implements Interview {
 	public InterviewAgenda getInterviewAgenda() {
 		return this.agenda;
 	}
+
+	@Override
+	public void setFormStrategy(FormStrategy strategy) {
+		this.formStrategy = strategy;
+	}
 }

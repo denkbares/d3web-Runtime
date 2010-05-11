@@ -11,6 +11,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -18,16 +19,18 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.interviewmanager.EmptyForm;
 import de.d3web.core.session.interviewmanager.Form;
 import de.d3web.core.session.interviewmanager.InterviewAgenda;
+import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.plugin.test.InitPluginManager;
 
-public class OneQuestionFormTest {
+public class NextUnansweredQuestionFormTest {
 	KnowledgeBaseManagement kbm;
 	Session session;
 	InterviewAgenda agenda;
@@ -71,7 +74,8 @@ public class OneQuestionFormTest {
 		initQuestion = kbm.createQuestionOC("initQuestion", root, 
 				new String[] {"all","pregnacyQuestions","height+weight"});
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
-		agenda = session.getInterviewManager().getInterviewAgenda(); 
+		session.getInterviewManager().setFormStrategy(new NextUnansweredQuestionFormStrategy());
+		agenda = session.getInterviewManager().getInterviewAgenda();
 	}
 	
 	@Test
@@ -128,6 +132,10 @@ public class OneQuestionFormTest {
 
 	@Test
 	public void testWithOneQContainerOnAgenda_WithFollowUpQuestions() {
+		// We need this rule for the later indication of the follow-up question "pregnant"
+		// Rule: sex = female => INDICATE ( pregnant ) 
+		RuleFactory.createIndicationRule("r1", pregnant, new CondEqual(sex, female));
+		
 		// initially the agenda is empty
 		assertTrue(agenda.isEmpty());
 		// Put the QContainer pregnancyQuestions on the agenda
@@ -144,8 +152,7 @@ public class OneQuestionFormTest {
 		nextQuestions = session.getInterviewManager().nextForm().getInterviewObjects();
 
 		// TODO: overwork FormStrategy to copy with follow-up questions 
-		// assertEquals(Arrays.asList(pregnant), nextQuestions);
-
+		assertEquals(Arrays.asList(pregnant), nextQuestions);
 	}
 
 	

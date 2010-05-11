@@ -26,6 +26,14 @@ public interface Interview {
 	Form nextForm();
 	
 	/**
+	 * Optional configuration: Explicitly set a strategy that defines how the nextForm 
+	 * method computes the next form. On example is the 
+	 * {@link NextUnansweredQuestionFormStrategy}.
+	 * @param strategy the specified FormStrategy
+	 */
+	void setFormStrategy(FormStrategy strategy);
+	
+	/**
 	 * Interface to notify the Interview, that the value of a fact has changed.
 	 * @param changedFact the changed fact with the new and the old value
 	 */
