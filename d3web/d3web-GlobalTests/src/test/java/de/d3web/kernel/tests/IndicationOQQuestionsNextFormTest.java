@@ -73,12 +73,12 @@ import de.d3web.plugin.test.InitPluginManager;
  * 
  * The control flow is defined by the following (contra) indication <b>Rules</b>:
  * 
- * Sex == Female 		=> Pregnant INDICATED  		(ask Pregnant, Ask_Headache...)
- * Sex == Male 			=> 							(ask Ask_Headache...)
- * Pregnant == Yes 		=> Nausea INSTANT_INDICATED	(ask Nausea, Ask_Headache...?!)
- * Pregnant == No 		=>							(ask Ask_Headache...) 
- * Ask_Headache == No 	=> Headache CONTRA_INDICATED (ask Nausea)
- * Ask_Headache == Yes 	=> 							(ask Headache, Nausea...)
+ * Sex == Female 		=> Pregnant INDICATED  			(ask Pregnant)
+ * Sex == Male 			=> 								(ask Ask_Headache)
+ * Pregnant == Yes 		=> Nausea INSTANT_INDICATED		(ask Nausea)
+ * Pregnant == No 		=>								(ask Ask_Headache) 
+ * Ask_Headache == No 	=> Headache CONTRA_INDICATED 	(ask Nausea)
+ * Ask_Headache == Yes 	=> 								(ask Headache)
  *  
  * @author Martina Freiberg
  *
@@ -319,20 +319,6 @@ public class IndicationOQQuestionsNextFormTest {
 				new Indication(State.NEUTRAL),
 				session.getBlackboard().getIndication(askHead));
 	}
-
-	/**
-	 * Tests, whether rule Pregnant == Yes => INSTANT_INDICATE Nausea implies
-	 * the correct return values in the indicated list of
-	 * InterviewManager.nextForm()
-	 * 
-	 * @author Martina Freiberg
-	 * @created 10.05.2010
-	 */
-	@Test
-	public void testInstantIndication() {
-		
-		// TODO
-	}
 	
 	
 	/**
@@ -404,4 +390,22 @@ public class IndicationOQQuestionsNextFormTest {
 	}
 
 	
+	/**
+	 * Tests, whether rule Pregnant == Yes => INSTANT_INDICATE Nausea implies
+	 * the correct return values in the indicated list of
+	 * InterviewManager.nextForm()
+	 * 
+	 * @author Martina Freiberg
+	 * @created 10.05.2010
+	 */
+	@Test
+	public void testInstantIndication() {
+
+		// TODO
+		// Pregnant == Yes => INSTANTINDICATE Nausea
+		// Nausea next on the agenda and instant indicated?!
+		// Pregnant == No =>
+		// Headache next on the agenda, Nausea NEUTRAL
+	}
+
 }
