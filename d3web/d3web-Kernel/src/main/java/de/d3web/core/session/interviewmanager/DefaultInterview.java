@@ -85,7 +85,9 @@ public class DefaultInterview implements Interview {
 				else {
 					System.out.println("UNKNOWN VALUE CHANGE: old=(" + oldValue+ ") new=("+newValue+")");
 				}
-
+				// TODO: Need to update indicated QContainers: 
+				// 1)x When all contained questions have been answered, then deactivate
+				// 2) When all contained qcontainers are deactivated, then also deactivate
 			}
 		}
 

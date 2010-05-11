@@ -30,6 +30,13 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 
+/**
+ * This class always creates a new {@link Form} that contains the one
+ * {@link Question}, that should be presented/asked next in the dialog system. 
+ * 
+ * @author joba
+ *
+ */
 public class OneQuestionFormStrategy implements FormStrategy {
 
 	@Override

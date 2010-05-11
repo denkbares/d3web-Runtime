@@ -20,7 +20,9 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.interviewmanager.InterviewAgenda;
+import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.plugin.test.InitPluginManager;
 
 public class DialogAgendaTest {
@@ -68,7 +70,7 @@ public class DialogAgendaTest {
 		initQuestion = kbm.createQuestionOC("initQuestion", root, 
 				new String[] {"all","pregnacyQuestions","height+weight"});
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
-		agenda = new InterviewAgenda(this.kbm.getKnowledgeBase());
+		agenda = session.getInterviewManager().getInterviewAgenda();
 	}
 
 	@Test
@@ -130,27 +132,27 @@ public class DialogAgendaTest {
 	}
 	
 
-//	@Test
-//	public void testDeactivationOfQuestions() {
-//		// initially the agenda is empty
-//		assertTrue(agenda.isEmpty());
-//		// put two questions onto the agenda, both should be ACTIVE
-//		agenda.append(sex);
-//		agenda.append(height);
-//		assertFalse(agenda.isEmpty());
-//		assertTrue(agenda.hasState(sex, InterviewState.ACTIVE));
-//		assertTrue(agenda.hasState(height, InterviewState.ACTIVE));
-//		
-//		// SET:    sex = female
-//		// EXPECT: sex is INACTVE on the agenda
-//		setValue(sex, female);
-//		assertTrue(agenda.hasState(sex, InterviewState.INACTIVE));
-//		
-//		// SET:    sex = undefined
-//		// EXPECT: sex is active on the agenda again
-//		setValue(sex, UndefinedValue.getInstance());
-//		assertTrue(agenda.hasState(sex, InterviewState.ACTIVE));
-//	}
+	@Test
+	public void testDeactivationOfQuestions() {
+		// initially the agenda is empty
+		assertTrue(agenda.isEmpty());
+		// put two questions onto the agenda, both should be ACTIVE
+		agenda.append(sex);
+		agenda.append(height);
+		assertFalse(agenda.isEmpty());
+		assertTrue(agenda.hasState(sex, InterviewState.ACTIVE));
+		assertTrue(agenda.hasState(height, InterviewState.ACTIVE));
+		
+		// SET:    sex = female
+		// EXPECT: sex is INACTVE on the agenda
+		setValue(sex, female);
+		assertTrue(agenda.hasState(sex, InterviewState.INACTIVE));
+		
+		// SET:    sex = undefined
+		// EXPECT: sex is active on the agenda again
+		setValue(sex, UndefinedValue.getInstance());
+		assertTrue(agenda.hasState(sex, InterviewState.ACTIVE));
+	}
 
 	private void setValue(Question question, Value value) {
 		session.setValue(question, value);
