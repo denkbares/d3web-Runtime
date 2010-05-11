@@ -20,9 +20,6 @@
 
 package de.d3web.kernel.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -173,88 +170,76 @@ public class IndicationOQQuestionnairesNextFormTest {
 	
 	// TODO rework
 	// tests, whether all kb-terminology objects are contained as hard coded
-	@Test
-	public void testTerminlogyObjectExistence() {
-		
-		// Question 'Sex'
-		Question sex = kbm.findQuestion("Sex");
-		assertNotNull("Question 'Sex' isn't contained in the knowledge base.", sex);
-		
-		// Values of 'Sex'
-		Value male = kbm.findValue(sex, "Male");
-		assertNotNull("Value 'Male' for Question 'Sex' isn't contained " +
-				"in the knowledge base", male);
-		Value female = kbm.findValue(sex, "Female");
-		assertNotNull("Value 'Female' for Question 'Sex' isn't contained " +
-				"in the knowledge base", female);
-				
-		// Question 'Pregnant'
-		Question pregnant = kbm.findQuestion("Pregnant");
-		assertNotNull("Question 'Pregnant' isn't contained in the knowledge " +
-				"base.", pregnant);
-		
-		// Values of 'Pregnant'
-		Value yes = kbm.findValue(pregnant, "Yes");
-		assertNotNull("Value 'Yes' for Question 'Pregnant' isn't " +
-				"contained in the knowledge base", yes);
-		Value no = kbm.findValue(pregnant, "No");
-		assertNotNull("Value 'No' for Question 'Pregnant' isn't " +
-				"contained in the knowledge base", no);
-		
-		// QContainer 'Pregnancy Probelms'
-		QContainer pregProbs = kbm.findQContainer("Pregnancy Problems");
-		assertNotNull("QContainer 'Pregnancy Problems' isn't contained in the " +
-				"knowledge base.", pregProbs);
-		assertEquals("QContainer 'Pregnancy Problems' does not contain " +
-				"one question as expected.", 1 , pregProbs.getChildren().length);
-		
-		// Question 'Nausea'
-		Question nausea = kbm.findQuestion("Nausea");
-		assertNotNull("Question 'Nausea' isn't contained in the knowledge " +
-				"base.", nausea);
-		
-		// Values of 'Nausea'
-		yes = kbm.findValue(nausea, "Yes");
-		assertNotNull("Value 'Yes' for Question 'Nausea' isn't " +
-				"contained in the knowledge base", yes);
-		no = kbm.findValue(nausea, "No");
-		assertNotNull("Value 'No' for Question 'Nausea' isn't " +
-				"contained in the knowledge base", no);
-		
-		// QContainer 'Other Problems'
-		QContainer otherProbs = kbm.findQContainer("Other Problems");
-		assertNotNull("QContainer 'Other Problems' isn't contained in the " +
-				"knowledge base.", otherProbs);
-		assertEquals("QContainer 'Other Problems' does not contain " +
-				"two questions as expected.", 2 , otherProbs.getChildren().length);
-		
-		// Question 'Headache'
-		Question headache = kbm.findQuestion("Headache");
-		assertNotNull("Question 'Headache' isn't contained in the knowledge " +
-				"base.", headache);
-		
-		// Values of 'Headache'
-		yes = kbm.findValue(headache, "Yes");
-		assertNotNull("Value 'Yes' for Question 'Headache' isn't " +
-				"contained in the knowledge base", yes);
-		no = kbm.findValue(headache, "No");
-		assertNotNull("Value 'No' for Question 'Headache' isn't " +
-				"contained in the knowledge base", no);
-		
-		// Question 'Circulatory Problems'
-		Question circu = kbm.findQuestion("Circulatory Problems");
-		assertNotNull("Question 'Circulatory Problems' isn't contained " +
-				"in the knowledge base.", circu);
-		
-		// Values of 'Circulatory Problems'
-		yes = kbm.findValue(circu, "Yes");
-		assertNotNull("Value 'Yes' for Question 'Circulatory Problems' isn't " +
-				"contained in the knowledge base", yes);
-		no = kbm.findValue(circu, "No");
-		assertNotNull("Value 'No' for Question 'Circulatory Problems' isn't " +
-				"contained in the knowledge base", no);
-	}
-	
+	/*
+	 * @Test public void testTerminlogyObjectExistence() {
+	 * 
+	 * // Question 'Sex' Question sex = kbm.findQuestion("Sex");
+	 * assertNotNull("Question 'Sex' isn't contained in the knowledge base.",
+	 * sex);
+	 * 
+	 * // Values of 'Sex' Value male = kbm.findValue(sex, "Male");
+	 * assertNotNull("Value 'Male' for Question 'Sex' isn't contained " +
+	 * "in the knowledge base", male); Value female = kbm.findValue(sex,
+	 * "Female");
+	 * assertNotNull("Value 'Female' for Question 'Sex' isn't contained " +
+	 * "in the knowledge base", female);
+	 * 
+	 * // Question 'Pregnant' Question pregnant = kbm.findQuestion("Pregnant");
+	 * assertNotNull("Question 'Pregnant' isn't contained in the knowledge " +
+	 * "base.", pregnant);
+	 * 
+	 * // Values of 'Pregnant' Value yes = kbm.findValue(pregnant, "Yes");
+	 * assertNotNull("Value 'Yes' for Question 'Pregnant' isn't " +
+	 * "contained in the knowledge base", yes); Value no =
+	 * kbm.findValue(pregnant, "No");
+	 * assertNotNull("Value 'No' for Question 'Pregnant' isn't " +
+	 * "contained in the knowledge base", no);
+	 * 
+	 * // QContainer 'Pregnancy Probelms' QContainer pregProbs =
+	 * kbm.findQContainer("Pregnancy Problems");
+	 * assertNotNull("QContainer 'Pregnancy Problems' isn't contained in the " +
+	 * "knowledge base.", pregProbs);
+	 * assertEquals("QContainer 'Pregnancy Problems' does not contain " +
+	 * "one question as expected.", 1 , pregProbs.getChildren().length);
+	 * 
+	 * // Question 'Nausea' Question nausea = kbm.findQuestion("Nausea");
+	 * assertNotNull("Question 'Nausea' isn't contained in the knowledge " +
+	 * "base.", nausea);
+	 * 
+	 * // Values of 'Nausea' yes = kbm.findValue(nausea, "Yes");
+	 * assertNotNull("Value 'Yes' for Question 'Nausea' isn't " +
+	 * "contained in the knowledge base", yes); no = kbm.findValue(nausea,
+	 * "No"); assertNotNull("Value 'No' for Question 'Nausea' isn't " +
+	 * "contained in the knowledge base", no);
+	 * 
+	 * // QContainer 'Other Problems' QContainer otherProbs =
+	 * kbm.findQContainer("Other Problems");
+	 * assertNotNull("QContainer 'Other Problems' isn't contained in the " +
+	 * "knowledge base.", otherProbs);
+	 * assertEquals("QContainer 'Other Problems' does not contain " +
+	 * "two questions as expected.", 2 , otherProbs.getChildren().length);
+	 * 
+	 * // Question 'Headache' Question headache = kbm.findQuestion("Headache");
+	 * assertNotNull("Question 'Headache' isn't contained in the knowledge " +
+	 * "base.", headache);
+	 * 
+	 * // Values of 'Headache' yes = kbm.findValue(headache, "Yes");
+	 * assertNotNull("Value 'Yes' for Question 'Headache' isn't " +
+	 * "contained in the knowledge base", yes); no = kbm.findValue(headache,
+	 * "No"); assertNotNull("Value 'No' for Question 'Headache' isn't " +
+	 * "contained in the knowledge base", no);
+	 * 
+	 * // Question 'Circulatory Problems' Question circu =
+	 * kbm.findQuestion("Circulatory Problems");
+	 * assertNotNull("Question 'Circulatory Problems' isn't contained " +
+	 * "in the knowledge base.", circu);
+	 * 
+	 * // Values of 'Circulatory Problems' yes = kbm.findValue(circu, "Yes");
+	 * assertNotNull("Value 'Yes' for Question 'Circulatory Problems' isn't " +
+	 * "contained in the knowledge base", yes); no = kbm.findValue(circu, "No");
+	 * assertNotNull("Value 'No' for Question 'Circulatory Problems' isn't " +
+	 * "contained in the knowledge base", no); }
+	 */
 
 	
 	@Test
