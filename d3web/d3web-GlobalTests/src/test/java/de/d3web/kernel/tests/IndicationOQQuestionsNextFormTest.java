@@ -256,7 +256,6 @@ public class IndicationOQQuestionsNextFormTest {
 		session.setValue(sex, male);
 		Value sexValue = session.getValue(sex);
 		assertEquals("Question Sex has wrong value ", male, sexValue);
-
 		// OQ Strategy should return exactly one element here.
 		intervObjs = interview.nextForm().getInterviewObjects();
 		assertTrue("InterviewManager.nextForm() should have provided one " +
