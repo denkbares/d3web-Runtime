@@ -1,34 +1,32 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.core.knowledge.terminology;
 
 import java.util.LinkedList;
-import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.CaseQASet;
 import de.d3web.core.session.blackboard.CaseQContainer;
 import de.d3web.core.session.blackboard.SessionObject;
@@ -50,8 +48,7 @@ public class QContainer extends QASet {
 	/**
 	 * Creates a new instance with the specified unique identifier.
 	 * 
-	 * @param id
-	 *            the unique identifier
+	 * @param id the unique identifier
 	 */
 	public QContainer(String id) {
 		super(id);
@@ -62,10 +59,8 @@ public class QContainer extends QASet {
 	 * Adds a new contra-reason to this instance. Contra-reasons are used during
 	 * the dialog to omit some questionnaires.
 	 * 
-	 * @param source
-	 *            the source of the reason
-	 * @param session
-	 *            the session for which the contra-reason is valid
+	 * @param source the source of the reason
+	 * @param session the session for which the contra-reason is valid
 	 */
 	@Override
 	public void addContraReason(Reason source, Session session) {
@@ -82,7 +77,7 @@ public class QContainer extends QASet {
 	 * Propagates contra-reasons to all children-QContainers.
 	 */
 	private void delegateContraReason(Session theCase) {
-		for (TerminologyObject qaSet: getChildren()) {
+		for (TerminologyObject qaSet : getChildren()) {
 			if (qaSet instanceof QContainer) {
 				((QContainer) qaSet).addContraReason(new QASet.Reason(
 						PSMethodParentQASet.class), theCase);
@@ -115,7 +110,7 @@ public class QContainer extends QASet {
 	 * Propagates the pro-reasons to all children QContainers.
 	 */
 	private void delegateProReason(Session theCase) {
-		for (TerminologyObject qaSet: getChildren()) {
+		for (TerminologyObject qaSet : getChildren()) {
 			if (qaSet instanceof QContainer) {
 				((QContainer) qaSet).addProReason(new QASet.Reason(
 						PSMethodParentQASet.class), theCase);
@@ -143,8 +138,7 @@ public class QContainer extends QASet {
 	 * <td>, if <code>this</code> has lower priority</td>
 	 * </table>
 	 * 
-	 * @param QContainer
-	 *            anotherQContainer
+	 * @param QContainer anotherQContainer
 	 * @return int the result of the comparison
 	 */
 	public int comparePriority(QContainer anotherQContainer) {
@@ -164,8 +158,7 @@ public class QContainer extends QASet {
 	 * Creates and returns a new fylweight object of this instance, that is
 	 * corresponding to the specified {@link Session} instance.
 	 * 
-	 * @param session
-	 *            the corresponding session instance
+	 * @param session the corresponding session instance
 	 * @return a created fylweight representation of this instance
 	 */
 	public SessionObject createCaseObject(Session session) {
@@ -186,20 +179,10 @@ public class QContainer extends QASet {
 		return priority;
 	}
 
-	/**
-	 * {@link QContainer} instances do not have value.
-	 * @return false always
-	 */
-	@Override
-	public boolean hasValue(Session session) {
-		return false;
-	}
-
-
 	@Override
 	public boolean isDone(Session session) {
 		// recursively check, whether all children of this instance are "done"
-		for (TerminologyObject to: getChildren()) {
+		for (TerminologyObject to : getChildren()) {
 			QASet qaset = (QASet) to;
 			if (!qaset.isDone(session)) {
 				return false;
@@ -211,7 +194,7 @@ public class QContainer extends QASet {
 	@Override
 	public boolean isDone(Session session, boolean respectValidFollowQuestions) {
 		// recursively check, whether all children of this instance are "done"
-		for (TerminologyObject to: getChildren()) {
+		for (TerminologyObject to : getChildren()) {
 			if (!((QASet) to).isDone(session,
 					respectValidFollowQuestions)) {
 				return false;
@@ -246,11 +229,11 @@ public class QContainer extends QASet {
 	 * contra-indicated.
 	 */
 	private void delegateRemoveContraReason(Session theCase) {
-		for (TerminologyObject to: getChildren()) {
+		for (TerminologyObject to : getChildren()) {
 			if (to instanceof QContainer) {
 				QContainer qaSet = (QContainer) to;
 				boolean parentContraIndicated = false;
-				for (TerminologyObject parentTo: qaSet.getParents()) {
+				for (TerminologyObject parentTo : qaSet.getParents()) {
 					if (!parentContraIndicated) {
 						QASet parent = (QASet) parentTo;
 						if (!parent.getContraReasons(theCase).isEmpty()) {
@@ -271,11 +254,11 @@ public class QContainer extends QASet {
 	 * which do not have any parent which is indicated.
 	 */
 	private void delegateRemoveProReason(Session theCase) {
-		for (TerminologyObject to: getChildren()) {
+		for (TerminologyObject to : getChildren()) {
 			QASet qaSet = (QASet) to;
 			if (qaSet instanceof QContainer) {
 				boolean parentIndicated = false;
-				for (TerminologyObject to2: qaSet.getParents()) {
+				for (TerminologyObject to2 : qaSet.getParents()) {
 					if (!parentIndicated) {
 						QASet parent = (QASet) to2;
 						if (!parent.getProReasons(theCase).isEmpty()) {
@@ -295,8 +278,7 @@ public class QContainer extends QASet {
 	 * Defines the relation to the specified {@link KnowledgeBase} instance, to
 	 * which this objects belongs to.
 	 * 
-	 * @param knowledgeBase
-	 *            the specified {@link KnowledgeBase} instance.
+	 * @param knowledgeBase the specified {@link KnowledgeBase} instance.
 	 */
 	@Override
 	public void setKnowledgeBase(KnowledgeBase knowledgeBase) {
@@ -315,8 +297,7 @@ public class QContainer extends QASet {
 	 * infinite default value and will thus be asked latest by those dialog
 	 * components respecting the priority value.
 	 * 
-	 * @param priority
-	 *            the priority value of this instance
+	 * @param priority the priority value of this instance
 	 */
 	@Deprecated
 	public void setPriority(Integer priority) {
@@ -325,15 +306,5 @@ public class QContainer extends QASet {
 		 * ValueNotAcceptedException("Negative Priority"); }
 		 */
 		this.priority = priority;
-	}
-
-	/**
-	 * This method does nothing, since {@link QContainer} instances do not
-	 * receive values.
-	 */
-	@Override
-	public void setValue(Session session, Value value) {
-		Logger.getLogger(this.getClass().getName()).warning(
-				"deedless QContainer.setValue was called");
 	}
 }

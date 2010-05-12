@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.empiricalTesting;
@@ -35,8 +35,10 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.SessionFactory;
+import de.d3web.core.session.blackboard.FactFactory;
+import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.inference.PSMethodXCL;
 
@@ -54,6 +56,7 @@ public class SequentialTestCase {
 
 	/**
 	 * Adds RatedTestCase to this SequentialTestCase.
+	 * 
 	 * @param ratedTestCase The RatedTestCase which will be added
 	 * @return true if the RatedTestCase was added to this SequntialTestCase
 	 */
@@ -62,8 +65,8 @@ public class SequentialTestCase {
 	}
 
 	/**
-	 * Inverses the rating comparator of all RatedSolutions
-	 * in all RatedTestCases of this SequentialTestCase.
+	 * Inverses the rating comparator of all RatedSolutions in all
+	 * RatedTestCases of this SequentialTestCase.
 	 */
 	public void inverseSortSolutions() {
 		for (RatedTestCase ratedTestCase : ratedTestCases) {
@@ -99,12 +102,13 @@ public class SequentialTestCase {
 			buffy.append(rtc.toString() + ", ");
 		}
 		buffy.replace(buffy.length() - 2, buffy.length(), ""); // remove last
-																// ", "
+		// ", "
 		return buffy.toString();
 	}
 
 	/**
 	 * Returns the name of this SequentialTestCase.
+	 * 
 	 * @return name of this SequentialTestCase
 	 */
 	public synchronized String getName() {
@@ -113,31 +117,36 @@ public class SequentialTestCase {
 
 	/**
 	 * Sets the name of this SequentialTestCase.
+	 * 
 	 * @param name desired name of this SequentialTestCase
 	 */
 	public synchronized void setName(String name) {
 		this.name = name;
 	}
 
-	
 	/**
 	 * Finds the derived solutions for this SequentialTestCase.
+	 * 
 	 * @param kb the underlying KnowledgeBase
-	 * @param psMethodContext the problem solver which is used to
-	 * 						  get the derived solutions
+	 * @param psMethodContext the problem solver which is used to get the
+	 *        derived solutions
 	 */
 	@SuppressWarnings("unchecked")
 	public void deriveSolutions(KnowledgeBase kb, Class psMethodContext) {
 		RatingStrategy ratingStrategy = new StateRatingStrategy();
 		Session session = SessionFactory.createSession(kb);
-		
+
 		for (RatedTestCase rtc : ratedTestCases) {
 			// Answer and Question setting in Case
 			for (Finding f : rtc.getFindings()) {
-				session.setValue(f.getQuestion(), f.getValue());
+				session.getBlackboard().addValueFact(
+						FactFactory.createFact(f.getQuestion(), f.getValue(),
+								PSMethodUserSelected.getInstance(),
+								PSMethodUserSelected.getInstance()));
 			}
-			
-			// Check used Rating (StateRating or ScoreRating) in ExpectedSolutions
+
+			// Check used Rating (StateRating or ScoreRating) in
+			// ExpectedSolutions
 			for (RatedSolution rs : rtc.getExpectedSolutions()) {
 				Rating r = rs.getRating();
 				if (!(r instanceof StateRating)) {
@@ -147,10 +156,12 @@ public class SequentialTestCase {
 			}
 
 			// Derive Solutions
-			Collection<KnowledgeSlice> slices = session.getKnowledgeBase().getAllKnowledgeSlicesFor(PSMethodXCL.class);
+			Collection<KnowledgeSlice> slices = session.getKnowledgeBase().getAllKnowledgeSlicesFor(
+					PSMethodXCL.class);
 			if (slices.size() != 0) {
 				deriveXCLSolutions(session, rtc, slices);
-			} else {
+			}
+			else {
 				deriveSolutionsForPSMethod(session, rtc, psMethodContext, ratingStrategy);
 			}
 
@@ -163,7 +174,7 @@ public class SequentialTestCase {
 
 	private void deriveSolutionsForPSMethod(Session thecase, RatedTestCase rtc,
 			Class<? extends PSMethod> psMethodContext, RatingStrategy ratingStrategy) {
-		
+
 		for (Solution solution : thecase.getKnowledgeBase().getSolutions()) {
 			Rating rating = ratingStrategy.getRatingFor(solution, thecase);
 			if (rating.isProblemSolvingRelevant()) {
@@ -171,25 +182,25 @@ public class SequentialTestCase {
 				rtc.addDerived(ratedSolution);
 			}
 		}
-		
-//		for (Diagnosis dia : thecase.getDiagnoses()) {
-//
-//			DiagnosisState state = dia.getState(thecase, psMethodContext);
-//			// Only suggested and established diagnoses are taken into account
-//			if (!state.equals(DiagnosisState.UNCLEAR)
-//					&& !state.equals(DiagnosisState.EXCLUDED)) {
-//				if (!useStateRatings) { // use ScoreRating
-//					DiagnosisScore sco = dia.getScore(thecase, psMethodContext);
-//					RatedSolution rs = new RatedSolution(dia, new ScoreRating(
-//							sco.getScore()));
-//					rtc.addDerived(rs);
-//				} else { // use StateRating
-//					RatedSolution rs = new RatedSolution(dia, new StateRating(state));
-//					rtc.addDerived(rs);
-//				}
-//			}
-//		}
-		
+
+		// for (Diagnosis dia : thecase.getDiagnoses()) {
+		//
+		// DiagnosisState state = dia.getState(thecase, psMethodContext);
+		// // Only suggested and established diagnoses are taken into account
+		// if (!state.equals(DiagnosisState.UNCLEAR)
+		// && !state.equals(DiagnosisState.EXCLUDED)) {
+		// if (!useStateRatings) { // use ScoreRating
+		// DiagnosisScore sco = dia.getScore(thecase, psMethodContext);
+		// RatedSolution rs = new RatedSolution(dia, new ScoreRating(
+		// sco.getScore()));
+		// rtc.addDerived(rs);
+		// } else { // use StateRating
+		// RatedSolution rs = new RatedSolution(dia, new StateRating(state));
+		// rtc.addDerived(rs);
+		// }
+		// }
+		// }
+
 	}
 
 	private void deriveXCLSolutions(Session thecase, RatedTestCase rtc, Collection<KnowledgeSlice> slices) {
@@ -197,46 +208,46 @@ public class SequentialTestCase {
 			if (slice instanceof XCLModel) {
 				Solution solution = ((XCLModel) slice).getSolution();
 				DiagnosisState s = ((XCLModel) slice).getState(thecase);
-				if (!s.equals(DiagnosisState.UNCLEAR) && !s.equals(DiagnosisState.EXCLUDED)) {
+				if (!s.equals(new DiagnosisState(DiagnosisState.State.UNCLEAR))
+						&& !s.equals(new DiagnosisState(DiagnosisState.State.EXCLUDED))) {
 					RatedSolution rs = new RatedSolution(solution, new StateRating(s));
 					rtc.addDerived(rs);
 				}
 			}
 		}
-		
+
 	}
 
-	
-//	public List<Answer> getAnswerForQuestionNum(KnowledgeBase kb, String questionname) {
-//		Session thecase = CaseFactory.createSession(kb);
-//
-//		for (RatedTestCase rtc : ratedTestCases) {
-//			// Answer and Question setting in Case
-//			for (Finding f : rtc.getFindings()) {
-//				Object q = f.getQuestion();
-//				List answers = new ArrayList();
-//
-//				// Necessary for QuestionMC, otherwise only one answer can be given
-//				if (q instanceof QuestionMC) {
-//					answers.addAll(((QuestionMC) q).getValue(thecase));
-//				}
-//
-//				answers.add(f.getAnswer());
-//				thecase.setValue((Question) q, answers.toArray());
-//			}
-//		}
-//
-//		List<? extends Question> answeredQuestions = thecase.getAnsweredQuestions();
-//		for (Question question : answeredQuestions) {
-//			if (question.getText().equals(questionname))
-//				return question.getValue(thecase);
-//		}
-//
-//		return null;
-//	}
-	
-	
-	
+	// public List<Answer> getAnswerForQuestionNum(KnowledgeBase kb, String
+	// questionname) {
+	// Session thecase = CaseFactory.createSession(kb);
+	//
+	// for (RatedTestCase rtc : ratedTestCases) {
+	// // Answer and Question setting in Case
+	// for (Finding f : rtc.getFindings()) {
+	// Object q = f.getQuestion();
+	// List answers = new ArrayList();
+	//
+	// // Necessary for QuestionMC, otherwise only one answer can be given
+	// if (q instanceof QuestionMC) {
+	// answers.addAll(((QuestionMC) q).getValue(thecase));
+	// }
+	//
+	// answers.add(f.getAnswer());
+	// thecase.setValue((Question) q, answers.toArray());
+	// }
+	// }
+	//
+	// List<? extends Question> answeredQuestions =
+	// thecase.getAnsweredQuestions();
+	// for (Question question : answeredQuestions) {
+	// if (question.getText().equals(questionname))
+	// return question.getValue(thecase);
+	// }
+	//
+	// return null;
+	// }
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -249,28 +260,24 @@ public class SequentialTestCase {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof SequentialTestCase))
-			return false;
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (!(obj instanceof SequentialTestCase)) return false;
 		SequentialTestCase other = (SequentialTestCase) obj;
 		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
+			if (other.name != null) return false;
+		}
+		else if (!name.equals(other.name)) return false;
 		if (ratedTestCases == null) {
-			if (other.ratedTestCases != null)
-				return false;
-		} else if (!ratedTestCases.equals(other.ratedTestCases))
-			return false;
+			if (other.ratedTestCases != null) return false;
+		}
+		else if (!ratedTestCases.equals(other.ratedTestCases)) return false;
 		return true;
 	}
 
 	/**
 	 * Returns the SequentialTestCase's RatedTestCases
+	 * 
 	 * @return List of RatedTestCases
 	 */
 	public List<RatedTestCase> getCases() {
@@ -278,25 +285,22 @@ public class SequentialTestCase {
 	}
 
 	/**
-	 * Tests if this SequentialTestCase contains the same
-	 * RatedTestCase as another SequentialTestCase
+	 * Tests if this SequentialTestCase contains the same RatedTestCase as
+	 * another SequentialTestCase
+	 * 
 	 * @param obj Other SequentialTestCase
-	 * @return true, if RatedTestCases are equal
-	 * 		   false, if RatedTestCases aren't equal
+	 * @return true, if RatedTestCases are equal false, if RatedTestCases aren't
+	 *         equal
 	 */
 	public boolean testTo(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof SequentialTestCase))
-			return false;
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (!(obj instanceof SequentialTestCase)) return false;
 		SequentialTestCase other = (SequentialTestCase) obj;
 		if (ratedTestCases == null) {
-			if (other.ratedTestCases != null)
-				return false;
-		} else if (!ratedTestCases.containsAll(other.ratedTestCases))
-			return false;
+			if (other.ratedTestCases != null) return false;
+		}
+		else if (!ratedTestCases.containsAll(other.ratedTestCases)) return false;
 		return true;
 	}
 

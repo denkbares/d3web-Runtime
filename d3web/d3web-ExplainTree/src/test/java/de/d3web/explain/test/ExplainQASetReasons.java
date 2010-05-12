@@ -1,26 +1,26 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 /*
  * ExplainQASetReasons.java
- *
+ * 
  * Created on 26. März 2002, 09:18
  */
 
@@ -43,6 +43,7 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
+import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.explain.ExplanationFactory;
@@ -56,7 +57,7 @@ import de.d3web.indication.inference.PSMethodContraIndication;
 import de.d3web.indication.inference.PSMethodNextQASet;
 import de.d3web.indication.inference.PSMethodSuppressAnswer;
 import de.d3web.indication.inference.PSMethodUserSelected;
-import de.d3web.scoring.DiagnosisScore;
+import de.d3web.scoring.HeuristicRating;
 import de.d3web.scoring.Score;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
@@ -144,9 +145,9 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 
 		// set P8 to suggested since it will activate Q17
 		Solution P8 = findD("P8", testKb);
-		DiagnosisScore score = new DiagnosisScore();
-		score = score.add(Score.P7);
-		theCase.setValue(P8, score, PSMethodUserSelected.class);
+		theCase.getBlackboard().addValueFact(
+				FactFactory.createFact(P8, new HeuristicRating(Score.P7),
+				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		assertEquals(new DiagnosisState(DiagnosisState.State.ESTABLISHED),
 				theCase.getBlackboard().getState(P8));
@@ -185,9 +186,9 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 
 		// set P8 to suggested since it will activate Q17
 		Solution P8 = findD("P8", testKb);
-		DiagnosisScore score = new DiagnosisScore();
-		score = score.add(Score.P4);
-		theCase.setValue(P8, score, PSMethodUserSelected.class);
+		theCase.getBlackboard().addValueFact(
+				FactFactory.createFact(P8, new HeuristicRating(Score.P4),
+				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		assertEquals(new DiagnosisState(DiagnosisState.State.SUGGESTED),
 				theCase.getBlackboard().getState(P8));
@@ -228,8 +229,10 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 
 		// set MF8a2 since it will activate Mf10 (and give P8 the score P5
 		QuestionChoice Mf8 = (QuestionChoice) findQ("Mf8", testKb);
-		theCase.setValue(Mf8, new ChoiceValue((Choice) Mf8.getAnswer(theCase,
-				"Mf8a2")));
+		theCase.getBlackboard().addValueFact(
+				FactFactory.createFact(Mf8, new ChoiceValue((Choice) Mf8.getAnswer(theCase,
+						"Mf8a2")), PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 
 		// explain a followup-question not active
 		ENode expl = eFac.explainActive(findQ("Mf10", testKb), explainContext);
@@ -249,7 +252,7 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 		assertTrue(activeCondition.getCondition() instanceof CondOr);
 		assertTrue(activeCondition.getActiveParts() != null
 				&& !activeCondition.getActiveParts().isEmpty());
-		assertTrue(((ECondition) activeCondition.getActiveParts().get(0)).getCondition() instanceof CondEqual);
+		assertTrue((activeCondition.getActiveParts().get(0)).getCondition() instanceof CondEqual);
 		// das sollte hier genügen. Es müsste noch Mf8 überprüft werden...
 	}
 

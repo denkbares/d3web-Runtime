@@ -21,14 +21,9 @@
 package de.d3web.core.knowledge.terminology;
 
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
-import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.blackboard.CaseQuestionText;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.values.AnswerText;
-import de.d3web.core.session.values.TextValue;
-import de.d3web.core.session.values.UndefinedValue;
-import de.d3web.core.session.values.Unknown;
 
 /**
  * A question which asks for a string text.
@@ -83,22 +78,6 @@ public class QuestionText extends Question {
 	 */
 	public void setHeight(int height) {
 		if (height > 0) this.height = height;
-	}
-
-	@Override
-	public void setValue(Session theCase, Value value) throws IllegalArgumentException {
-		if (value instanceof TextValue ||
-				value instanceof Unknown ||
-				value instanceof UndefinedValue) {
-			((CaseQuestionText) theCase.getCaseObject(this)).setValue(value);
-		}
-		else if (value instanceof Unknown || value instanceof UndefinedValue) {
-			((CaseQuestion) (theCase.getCaseObject(this))).setValue(value);
-		}
-		else {
-			throw new IllegalArgumentException(value
-					+ " is not an accpepted Value instance.");
-		}
 	}
 
 	/**

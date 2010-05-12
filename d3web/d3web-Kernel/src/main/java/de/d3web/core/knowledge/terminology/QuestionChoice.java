@@ -217,19 +217,4 @@ public abstract class QuestionChoice extends Question {
 			return UndefinedValue.getInstance();
 		}
 	}
-
-	public Value getValue(Session theCase, Double value) {
-		if (value == null) {
-			return UndefinedValue.getInstance();
-		}
-		else {
-			Num2ChoiceSchema schema = getSchemaForQuestion();
-			if (schema != null) {
-				return schema.getValueForNum(value, getAllAlternatives(), theCase);
-			}
-			else {
-				return UndefinedValue.getInstance();
-			}
-		}
-	}
 }

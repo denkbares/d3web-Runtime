@@ -26,7 +26,6 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.SessionObject;
 
 /**
@@ -92,16 +91,6 @@ public abstract class ExceptionQuestion extends Question {
 	}
 
 	/**
-	 * this marker class never gets a value
-	 * 
-	 * @return false
-	 */
-	@Override
-	public boolean hasValue(Session theCase) {
-		return false;
-	}
-
-	/**
 	 * @return true
 	 */
 	@Override
@@ -120,13 +109,6 @@ public abstract class ExceptionQuestion extends Question {
 	 * has no pro or contra reasons. just a marker class
 	 */
 	public void removeProReason(Object source, de.d3web.core.session.Session theCase) {
-	}
-
-	/**
-	 * does nothing because this marker class needs no value
-	 */
-	@Override
-	public void setValue(Session theCase, Value value) {
 	}
 
 	@Override

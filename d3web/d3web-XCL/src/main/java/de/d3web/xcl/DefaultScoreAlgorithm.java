@@ -5,6 +5,7 @@ import java.util.Collection;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.xcl.inference.PSMethodXCL;
 
 public class DefaultScoreAlgorithm implements ScoreAlgorithm {
@@ -27,7 +28,9 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 			trace.setSupport(currentSupport);
 			trace.setState(currentState);
 			if (!oldState.equals(currentState)) {
-				session.setValue(model.getSolution(), currentState, PSMethodXCL.class);
+				session.getBlackboard().addValueFact(
+						FactFactory.createFact(model.getSolution(), currentState, model,
+						session.getPSMethodInstance(PSMethodXCL.class)));
 			}
 			model.notifyListeners(session, model);
 		}

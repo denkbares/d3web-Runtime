@@ -22,18 +22,13 @@ package de.d3web.core.knowledge.terminology;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.ListIterator;
 
 import de.d3web.abstraction.inference.PSMethodQuestionSetter;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.SymptomValue;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.UndefinedValue;
@@ -122,11 +117,6 @@ public abstract class Question extends QASet {
 	}
 
 	@Override
-	public boolean hasValue(Session session) {
-		return !UndefinedValue.isUndefinedValue(session.getValue(this));
-	}
-
-	@Override
 	public boolean isDone(Session theCase) {
 		if (!getContraReasons(theCase).isEmpty()) {
 			// Question has ContraIndication (probably)
@@ -187,81 +177,7 @@ public abstract class Question extends QASet {
 	}
 
 	@Override
-	public abstract void setValue(Session theCase, Value value) throws IllegalArgumentException;
-
-	/**
-	 * Sets a new value to the case object of this question and saves the
-	 * overwritten value-array in its historyStack.
-	 * 
-	 * @param theCase current case
-	 * @param newRule rule that has modified the question´s value-array It will
-	 *        be stored together with the overwritten value-array
-	 * @param values new value-array which will be set to the question.
-	 */
-	public void setValue(Session theCase, Rule ruleSymptom,
-			Value value) throws IllegalArgumentException {
-		setValue(theCase, value);
-	}
-
-	@Override
 	public String toString() {
 		return super.toString();
 	}
-
-	/**
-	 * This method is invoked if a rule in the specified {@link Session} is
-	 * retracted. That means that either if this rule is on top of the
-	 * history-stack the value that has been overwritten by it will be set to
-	 * this question or (else) the history-stack-entry will be removed.
-	 * 
-	 * @param session the specified problem-solving session
-	 * @param ruleSymptom the retracted rule
-	 */
-	public void undoSymptomValue(Session session, Rule ruleSymptom) {
-		CaseQuestion caseQuestion = ((CaseQuestion) session.getCaseObject(this));
-		if (caseQuestion.getValueHistory().size() == 0) {
-			setValue(session, UndefinedValue.getInstance());
-		}
-		else {
-			ListIterator<SymptomValue> valueIter = caseQuestion.getValueHistory()
-					.listIterator();
-			SymptomValue symptomValue = null;
-			int index = 0;
-			while (valueIter.hasNext()) {
-				symptomValue = valueIter.next();
-				if (ruleSymptom.equals(symptomValue.getRule())) {
-					if (index == 0) {
-						if (Boolean.TRUE.equals(getProperties().getProperty(
-								Property.TIME_VALUED))) {
-							if (getKnowledge(PSMethodQuestionSetter.class,
-									PSMethodQuestionSetter.NUM2CHOICE_SCHEMA) == null) {
-								session.setValue(this, symptomValue.getValues());
-							}
-						}
-						else { // standard (non-temporal) case
-							session.setValue(this, symptomValue.getValues());
-						}
-					}
-					else {
-						SymptomValue nextValue = caseQuestion
-								.getValueHistory().get(index - 1);
-						nextValue.setValues(symptomValue.getValues());
-					}
-
-					caseQuestion.getValueHistory().remove(index);
-					break;
-				}
-				index++;
-			}
-		}
-	}
-
-	// deleteme: joba: 04.2010
-	// private String verbalizeWithoutValue() {
-	// return "\n " + super.toString();
-	// }
-	//
-	// public String verbalizeWithValue(Session session) {
-	// return verbalizeWithoutValue() + "\n Value -> " + session.getValue(this);
-	// }
 }

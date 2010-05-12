@@ -263,7 +263,8 @@ public class QuestionPageRenderer extends Renderer {
 				else {
 					// if "set all unknown" button was clicked, all questions
 					// which are valid and not yet answered are set to "unknown"
-					if (unknownString.equals("true") && !q.hasValue(theCase)
+					if (unknownString.equals("true")
+							&& UndefinedValue.isUndefinedValue(theCase.getBlackboard().getValue(q))
 							&& q.isValid(theCase)) {
 						setValueInCase(theCase, q, Unknown.getInstance());
 					}

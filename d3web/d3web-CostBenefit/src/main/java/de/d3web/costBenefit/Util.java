@@ -33,8 +33,10 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.costBenefit.inference.PSMethodCostBenefit;
 import de.d3web.costBenefit.inference.StateTransition;
+import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
  * Provides basic static functions for the CostBenefit package.
@@ -76,9 +78,9 @@ public class Util {
 		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(theCase.getKnowledgeBase());
 		theCase.getPropagationContoller().openPropagation();
 		QuestionOC question1 = (QuestionOC) kbm.findQuestion(question);
-		theCase.setValue(question1, kbm.findValue(question1, answer));
-		// theCase.setValue(question1, new Answer[] { kbm.findAnswer(question1,
-		// answer) });
+		theCase.getBlackboard().addValueFact(
+				FactFactory.createFact(question1, kbm.findValue(question1, answer),
+				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		theCase.getPropagationContoller().commitPropagation();
 	}
 

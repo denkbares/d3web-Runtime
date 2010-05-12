@@ -20,8 +20,6 @@
 
 package de.d3web.abstraction;
 
-import java.util.List;
-
 import de.d3web.abstraction.formula.FormulaDateExpression;
 import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.abstraction.inference.PSMethodQuestionSetter;
@@ -32,9 +30,9 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.SymptomValue;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.blackboard.CaseQuestion;
+import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
@@ -230,20 +228,19 @@ public class ActionAddValue extends ActionQuestionSetter {
 					MethodKind.BACKWARD) != null)) {
 				Choice severestAnswer = getSeverestAnswer((QuestionOC) getQuestion(), session);
 				if ((severestAnswer != null)
-						&& ((!getQuestion().hasValue(session)) || (!severestAnswer.equals(session.getValue(getQuestion()))))) {
-
-					// Fact fact = FactFactory.createFact(getQuestion(),
-					// new ChoiceValue(severestAnswer),
-					// this,
-					// session.getPSMethodInstance(getProblemsolverContext()));
-					// session.getBlackboard().addValueFact(fact);
-
-					session.setValue(getQuestion(), new ChoiceValue(severestAnswer));
+						&& (UndefinedValue.isUndefinedValue(session.getValue(getQuestion())) || (!severestAnswer.equals(session.getValue(getQuestion()))))) {
+					Fact fact = FactFactory.createFact(getQuestion(),
+							new ChoiceValue(severestAnswer),
+							this,
+							session.getPSMethodInstance(getProblemsolverContext()));
+					session.getBlackboard().addValueFact(fact);
 				}
 			}
 			else {
 				// else, set the resultList-values
-				session.setValue(getQuestion(), resultValue, rule);
+				session.getBlackboard().addValueFact(
+						FactFactory.createFact(getQuestion(), resultValue, rule,
+						session.getPSMethodInstance(getProblemsolverContext())));
 			}
 		}
 	}
@@ -260,19 +257,6 @@ public class ActionAddValue extends ActionQuestionSetter {
 	@Override
 	public void undo(Session theCase, Rule rule) {
 		theCase.getBlackboard().removeValueFact(getQuestion(), rule);
-	}
-
-	private void removeRuleFromSymptomValueHistory(Session theCase, Rule rule) {
-		CaseQuestion q = (CaseQuestion) theCase.getCaseObject(getQuestion());
-		List<SymptomValue> l = q.getValueHistory();
-		if ((l != null)) {
-			if (l.size() >= 1) {
-				if (rule.equals(((l.get(0))).getRule())) {
-					l.remove(0);
-				}
-			}
-
-		}
 	}
 
 	@Override

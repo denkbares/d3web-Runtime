@@ -11,7 +11,6 @@ import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
@@ -65,7 +64,23 @@ public class Blackboard {
 	 * @param fact the fact to be added
 	 */
 	public void addValueFact(Fact fact) {
+		Value oldValue;
+		TerminologyObject object = fact.getTerminologyObject();
+		if (object instanceof Solution) {
+			oldValue = getState((Solution) object);
+		}
+		else if (object instanceof Question) {
+			oldValue = getValue((Question) object);
+		}
+		else {
+			oldValue = getValueFact(fact.getTerminologyObject()).getValue();
+		}
 		this.valueStorage.add(fact);
+		Fact newFact = getValueFact(fact.getTerminologyObject());
+		session.getPropagationContoller().openPropagation();
+		session.getPropagationContoller().propagate(fact.getTerminologyObject(),
+				oldValue, newFact.getValue());
+		session.getPropagationContoller().commitPropagation();
 	}
 
 	/**
@@ -221,7 +236,7 @@ public class Blackboard {
 
 	private void propagateIndicationChange(TerminologyObject interviewObject, Value oldValue,
 			Value newValue) {
-		PropagationEntry entry = new PropagationEntry((NamedObject) interviewObject, oldValue,
+		PropagationEntry entry = new PropagationEntry(interviewObject, oldValue,
 				newValue);
 		session.getInterviewManager().notifyFactChange(entry);
 	}

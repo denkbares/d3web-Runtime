@@ -24,14 +24,9 @@ import java.util.List;
 import java.util.Vector;
 
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
-import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.blackboard.CaseQuestionMC;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.values.Choice;
-import de.d3web.core.session.values.MultipleChoiceValue;
-import de.d3web.core.session.values.UndefinedValue;
-import de.d3web.core.session.values.Unknown;
 
 /**
  * Storage for Questions with predefined multiple answers (alternatives). <BR>
@@ -55,29 +50,6 @@ public class QuestionMC extends QuestionChoice {
 			return new Vector<Choice>();
 		}
 		else return alternatives;
-	}
-
-	/**
-	 * Sets the current values of this MC-question belonging to the specified
-	 * Session.<BR>
-	 * <B>Caution:</B> It is possible to set numerical values to a MC- question.
-	 * In this case, a Num2ChoiceSchema must be defined a KnowledgeSlice.
-	 * 
-	 * @param theCase the belonging Session
-	 * @param antwort an array of Answer instances
-	 */
-	@Override
-	public void setValue(Session theCase, Value value) throws IllegalArgumentException {
-		if (value instanceof MultipleChoiceValue) {
-			((CaseQuestionMC) theCase.getCaseObject(this)).setValue(value);
-		}
-		else if (value instanceof Unknown || value instanceof UndefinedValue) {
-			((CaseQuestion) (theCase.getCaseObject(this))).setValue(value);
-		}
-		else {
-			throw new IllegalArgumentException(value
-					+ " is not an instance of MultipleChoiceValue.");
-		}
 	}
 
 	@Override

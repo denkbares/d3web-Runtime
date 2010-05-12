@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.caseGeneration;
@@ -37,15 +37,17 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.Session;
+import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.interviewmanager.MQDialogController;
 import de.d3web.empiricalTesting.Finding;
 import de.d3web.empiricalTesting.RatedSolution;
 import de.d3web.empiricalTesting.RatedTestCase;
 import de.d3web.empiricalTesting.Rating;
 import de.d3web.empiricalTesting.SequentialTestCase;
+import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
  * This class generates sequential test cases simulating an interview with the
@@ -76,6 +78,7 @@ import de.d3web.empiricalTesting.SequentialTestCase;
  * 
  */
 public class InterviewBot {
+
 	// default 0 means no restriction in the number of cases to be generated
 	private long maxCases;
 	// praefix of a sequential test case
@@ -102,7 +105,6 @@ public class InterviewBot {
 	// allowed answer combinations for a specified question
 	private Map<Question, Collection<Answer[]>> allowedAnswerCombinations;
 
-
 	// the generated cases
 	private List<SequentialTestCase> cases;
 	// the number of generated cases
@@ -116,9 +118,8 @@ public class InterviewBot {
 	 * the settings defined by the Builder.
 	 * 
 	 * @return a collection of {@link SequentialTestCase} instances
-	 * @throws UnsupportedDataTypeException
-	 *             when the knowledge bases uses a question type not supported
-	 *             by the generator
+	 * @throws UnsupportedDataTypeException when the knowledge bases uses a
+	 *         question type not supported by the generator
 	 */
 	public List<SequentialTestCase> generate() throws UnsupportedDataTypeException {
 		init();
@@ -140,7 +141,7 @@ public class InterviewBot {
 		answerSelector.setForbiddenAnswers(forbiddenAnswers);
 		answerCombinator.setAllowedAnswerCombinations(allowedAnswerCombinations);
 		answerCombinator.setForbiddenAnswerCombinations(forbiddenAnswerCombinations);
-		
+
 	}
 
 	private void traverse(SequentialTestCase sqCase, Question currentQuestion, KnowledgeBase knowledge) throws UnsupportedDataTypeException {
@@ -149,17 +150,18 @@ public class InterviewBot {
 		if (currentQuestion == null) {
 			store(sqCase);
 			return;
-		} else if (maxCases > 0 && casesCounter >= maxCases) {
+		}
+		else if (maxCases > 0 && casesCounter >= maxCases) {
 			return;
 		}
 
 		// Get all possible answers (combinations) for the question
 		List<? extends Value> possibleAnswers =
 				new ArrayList<Value>(answerSelector.determineValues(currentQuestion));
-		
+
 		// check if there is a limitation of combinations for QuestionMC
 		int numberOfCombinations = determineNumberOfCombinations(possibleAnswers, currentQuestion);
-		
+
 		// Iterate over all possible answers of the next question
 		for (int i = 0; i < numberOfCombinations; i++) {
 			Value nextValue = possibleAnswers.get(i);
@@ -178,16 +180,14 @@ public class InterviewBot {
 	 * Determines how many combinations of the available value combinations are
 	 * considered.
 	 * 
-	 * @param currentNumberOfCombinations
-	 *            List<Value> all available combinations
-	 * @param currentQuestion
-	 *            Question the current Question
+	 * @param currentNumberOfCombinations List<Value> all available combinations
+	 * @param currentQuestion Question the current Question
 	 * @return int number of considered combinations
 	 */
 	private int determineNumberOfCombinations(Collection<? extends Value> possibleValues, Question currentQuestion) {
 
 		int availableCombinations = possibleValues.size();
-		
+
 		// The combination constraints apply only to QuestionMCs
 		if (currentQuestion instanceof QuestionMC) {
 			if (maxAnswerCombinationsForQuestion.get(currentQuestion) != null) {
@@ -195,13 +195,14 @@ public class InterviewBot {
 				if (maxCombinationsQuestion < availableCombinations) {
 					return maxCombinationsQuestion;
 				}
-			} else if (maxAnswerCombinations > 0 && maxAnswerCombinations < availableCombinations) {
+			}
+			else if (maxAnswerCombinations > 0 && maxAnswerCombinations < availableCombinations) {
 				return maxAnswerCombinations;
 			}
 		}
 
 		return availableCombinations;
-		
+
 	}
 
 	private SequentialTestCase packNewSequence(SequentialTestCase sqCase, Question currentQuestion, Value nextValue, Session theCase) {
@@ -226,8 +227,7 @@ public class InterviewBot {
 	}
 
 	private void addInitalCase(Session theCase, SequentialTestCase stc) {
-		if (initFindings.isEmpty())
-			return;
+		if (initFindings.isEmpty()) return;
 		else {
 			RatedTestCase ratedTestCase = new RatedTestCase();
 			ratedTestCase.addFindings(initFindings);
@@ -242,9 +242,8 @@ public class InterviewBot {
 	 * Give the sequential test case a name and add it to the collection of
 	 * generated cases.
 	 * 
-	 * @param theSeqCase
-	 *            the {@link SequentialTestCase} instance to be added to the
-	 *            collection of generated cases
+	 * @param theSeqCase the {@link SequentialTestCase} instance to be added to
+	 *        the collection of generated cases
 	 */
 	private void store(SequentialTestCase theSeqCase) {
 		theSeqCase.setName(sqtcasePraefix + casesCounter);
@@ -268,10 +267,12 @@ public class InterviewBot {
 		QASet next = controller.moveToNextRemainingQASet();
 		if (next != null && next instanceof Question) {
 			return (Question) next;
-		} else if (next != null) {
+		}
+		else if (next != null) {
 			List<?> validQuestions = controller.getAllValidQuestionsOf((QContainer) next);
 			return (Question) validQuestions.get(0);
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
@@ -307,9 +308,11 @@ public class InterviewBot {
 	}
 
 	private void setCaseValue(Session theCase, Question q, Value v) {
-		theCase.setValue(q, v);
+		theCase.getBlackboard().addValueFact(
+				FactFactory.createFact(q, v, PSMethodUserSelected.getInstance(),
+				PSMethodUserSelected.getInstance()));
 	}
-	
+
 	/**
 	 * This builder creates a configured interview bot.
 	 * 
@@ -317,6 +320,7 @@ public class InterviewBot {
 	 * 
 	 */
 	public static class Builder {
+
 		private long maxCases = 0;
 		private String sqtcasePraefix = "STC";
 		private String rtcasePraefix = "RTC";
@@ -328,7 +332,7 @@ public class InterviewBot {
 		private final Map<Question, Integer> maxAnswerCombinationsForQuestion = new HashMap<Question, Integer>();
 		private final Map<Question, Collection<Answer[]>> forbiddenAnswerCombinations = new HashMap<Question, Collection<Answer[]>>();
 		private final Map<Question, Collection<Answer[]>> allowedAnswerCombinations = new HashMap<Question, Collection<Answer[]>>();
-		
+
 		private KnowledgeBase knowledge;
 
 		public Builder(KnowledgeBase knowledge) {
@@ -379,21 +383,22 @@ public class InterviewBot {
 			forbiddenAnswers.put(f.getQuestion(), answers);
 			return this;
 		}
-		
+
 		public Builder maxAnswerCombinations(int val) {
 			maxAnswerCombinations = val;
 			return this;
 		}
-		
+
 		public Builder maxAnswerCombinations(Question q, int val) {
 			maxAnswerCombinationsForQuestion.put(q, new Integer(val));
 			return this;
 		}
-		
+
 		public Builder forbiddenAnswerCombination(FindingMC f) throws Exception {
-			if (allowedAnswerCombinations.containsKey(f.getQuestion()))
-				throw new Exception("There are already forbidden answer combinations defined for question \"" + f.getQuestion().getName() + "\".");
-			
+			if (allowedAnswerCombinations.containsKey(f.getQuestion())) throw new Exception(
+					"There are already forbidden answer combinations defined for question \""
+							+ f.getQuestion().getName() + "\".");
+
 			Collection<Answer[]> answers = forbiddenAnswerCombinations.get(f.getQuestion());
 			if (answers == null) {
 				answers = new LinkedList<Answer[]>();
@@ -402,11 +407,12 @@ public class InterviewBot {
 			forbiddenAnswerCombinations.put(f.getQuestion(), answers);
 			return this;
 		}
-		
+
 		public Builder allowedAnswerCombination(FindingMC f) {
-			if (forbiddenAnswerCombinations.containsKey(f.getQuestion()))
-				throw new IllegalArgumentException("There are already allowed answer combinations defined for question \"" + f.getQuestion().getName() + "\".");
-			
+			if (forbiddenAnswerCombinations.containsKey(f.getQuestion())) throw new IllegalArgumentException(
+					"There are already allowed answer combinations defined for question \""
+							+ f.getQuestion().getName() + "\".");
+
 			Collection<Answer[]> answers = allowedAnswerCombinations.get(f.getQuestion());
 			if (answers == null) {
 				answers = new LinkedList<Answer[]>();
@@ -419,7 +425,7 @@ public class InterviewBot {
 		public InterviewBot build() throws Exception {
 			return new InterviewBot(this);
 		}
-		
+
 	}
 
 	private InterviewBot() {

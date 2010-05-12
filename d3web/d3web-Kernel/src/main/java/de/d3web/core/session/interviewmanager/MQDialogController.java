@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.core.session.interviewmanager;
@@ -42,6 +42,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.indication.inference.PSMethodNextQASet;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
@@ -52,17 +53,18 @@ import de.d3web.indication.inference.PSMethodUserSelected;
  * @author Georg Buscher
  */
 public class MQDialogController implements DialogController {
+
 	private List<? extends QASet> initQASets = null; // contains the
-														// init-QContainers at
-														// the
+	// init-QContainers at
+	// the
 	// beginning
 	private List<? extends QASet> qasetQueue = null; // contains all QContainers
-														// which have to be
+	// which have to be
 	// presented
 	private List history = null; // contains QContainers in the order in which
 	// they have been presented
 	private List<QContainer> processedContainers = null; // contains all
-															// QContainers that
+	// QContainers that
 	// have been (partially) answered
 	private List<QASet> userIndicationList = null; // contains QContainers that
 	// currently are indicated by the
@@ -111,8 +113,7 @@ public class MQDialogController implements DialogController {
 	 * 
 	 * Creation date: (08.06.2002 18:42:38)
 	 * 
-	 * @param q
-	 *            de.d3web.kernel.domainModel.QASet
+	 * @param q de.d3web.kernel.domainModel.QASet
 	 */
 	private void addQASet(List qaSetList, de.d3web.core.knowledge.terminology.QASet q) {
 		QContainer toAdd = null;
@@ -139,10 +140,8 @@ public class MQDialogController implements DialogController {
 	 * 
 	 * Creation date: (11.10.2002 18:42:38)
 	 * 
-	 * @param q
-	 *            de.d3web.kernel.domainModel.QContainer
-	 * @param priority
-	 *            Integer
+	 * @param q de.d3web.kernel.domainModel.QContainer
+	 * @param priority Integer
 	 */
 	private static void addContainer(List containerList, QContainer q, Integer priority) {
 		if (!containerList.contains(q)) {
@@ -175,7 +174,7 @@ public class MQDialogController implements DialogController {
 						tempQA = (QASet) queueIter.next();
 						if ((tempQA instanceof QContainer)
 								&& ((((QContainer) tempQA).getPriority() == null) || (priority
-										.compareTo(((QContainer) tempQA).getPriority()) < 0))) {
+								.compareTo(((QContainer) tempQA).getPriority()) < 0))) {
 							containerList.add(i, q);
 							added = true;
 						}
@@ -199,14 +198,11 @@ public class MQDialogController implements DialogController {
 	 * Adds "q" to the current history position and shifts the last "current
 	 * QASet" (if any) to the right. Creation date: (27.02.2001 12:58:41)
 	 * 
-	 * @param q
-	 *            de.d3web.kernel.domainModel.QASet
+	 * @param q de.d3web.kernel.domainModel.QASet
 	 */
 	protected void addToCurrentHistoryPos(QASet q) {
-		if (historyCursor < 0)
-			historyCursor = 0;
-		if (historyCursor > history.size())
-			historyCursor = history.size();
+		if (historyCursor < 0) historyCursor = 0;
+		if (historyCursor > history.size()) historyCursor = history.size();
 		history.add(historyCursor, q);
 		if ((q instanceof QContainer) && (!processedContainers.contains(q))) {
 			processedContainers.add((QContainer) q);
@@ -345,8 +341,7 @@ public class MQDialogController implements DialogController {
 	 * 13:12:22)
 	 * 
 	 * @return boolean
-	 * @param q
-	 *            de.d3web.kernel.domainModel.QASet
+	 * @param q de.d3web.kernel.domainModel.QASet
 	 */
 	public boolean isValidForDC(QASet q) {
 		return (isValidForDC(q, new LinkedList()));
@@ -436,10 +431,9 @@ public class MQDialogController implements DialogController {
 	/**
 	 * Returns true, if the given container or any child of it is indicated.
 	 * 
-	 * @param considerQuestionsAsChildren
-	 *            determines, if the quesiton-children of a container shall also
-	 *            be considered (if false, only children-containers will be
-	 *            considered).
+	 * @param considerQuestionsAsChildren determines, if the quesiton-children
+	 *        of a container shall also be considered (if false, only
+	 *        children-containers will be considered).
 	 */
 	public boolean isIndicatedOrHasIndicatedChild(QContainer container, boolean considerQuestionsAsChildren) {
 		return isIndicatedOrHasIndicatedChild(container, new LinkedList(),
@@ -464,14 +458,11 @@ public class MQDialogController implements DialogController {
 	/**
 	 * Returns true, if the given container or any child of it is indicated.
 	 * 
-	 * @param c
-	 *            (QContainer to test)
-	 * @param processedQASets
-	 *            (to avoid cycles)
-	 * @param considerQuestionsAsChildren
-	 *            determines, if the quesiton-children of a container shall also
-	 *            be considered (if false, only children-containers will be
-	 *            considered).
+	 * @param c (QContainer to test)
+	 * @param processedQASets (to avoid cycles)
+	 * @param considerQuestionsAsChildren determines, if the quesiton-children
+	 *        of a container shall also be considered (if false, only
+	 *        children-containers will be considered).
 	 * @return boolean
 	 */
 	private boolean isIndicatedOrHasIndicatedChild(QContainer c, List processedQASets, boolean considerQuestionsAsChildren) {
@@ -687,12 +678,12 @@ public class MQDialogController implements DialogController {
 	 * the screen.
 	 * 
 	 * @param qC
-	 * @param includingInactiveOnes
-	 *            boolean (include questions that are not valid?)
-	 * @param inactiveHierarchicalChildrenOnly
-	 *            boolean (If "inactiveHierarchicalChildrenOnly" is set, then
-	 *            the inactive follow-questions, that are not hierarchical
-	 *            children, will not be added.)
+	 * @param includingInactiveOnes boolean (include questions that are not
+	 *        valid?)
+	 * @param inactiveHierarchicalChildrenOnly boolean (If
+	 *        "inactiveHierarchicalChildrenOnly" is set, then the inactive
+	 *        follow-questions, that are not hierarchical children, will not be
+	 *        added.)
 	 * @return List
 	 */
 	public List getAllQuestionsToRender(QContainer qC, boolean includingInactiveOnes,
@@ -794,19 +785,16 @@ public class MQDialogController implements DialogController {
 	}
 
 	/**
-	 * @param q
-	 *            Question (the question, which is to search)
-	 * @param toSearch
-	 *            List (a List of List's; only if the question is contained in
-	 *            one of the List's, this method returns true)
+	 * @param q Question (the question, which is to search)
+	 * @param toSearch List (a List of List's; only if the question is contained
+	 *        in one of the List's, this method returns true)
 	 * @return boolean
 	 */
 	private static boolean isInListOfQuestionLists(Question q, List toSearch) {
 		Iterator iter = toSearch.iterator();
 		while (iter.hasNext()) {
 			List oneQuestion = (List) iter.next();
-			if (oneQuestion.get(0).equals(q))
-				return (true);
+			if (oneQuestion.get(0).equals(q)) return (true);
 		}
 		return (false);
 	}
@@ -876,7 +864,7 @@ public class MQDialogController implements DialogController {
 		for (TerminologyObject qaSet : c.getChildren()) {
 			if (qaSet instanceof Question) {
 				Question q = (Question) qaSet;
-				if (q.hasValue(theCase)) {
+				if (UndefinedValue.isNotUndefinedValue(theCase.getValue(q))) {
 					return true;
 				}
 			}
@@ -978,8 +966,7 @@ public class MQDialogController implements DialogController {
 	/**
 	 * Trys to remove the user-selection (if existing).
 	 * 
-	 * @param container
-	 *            (QContainer)
+	 * @param container (QContainer)
 	 */
 	public void tryToRemoveUserSelection(QContainer container) {
 		if (container == null) {
@@ -987,8 +974,8 @@ public class MQDialogController implements DialogController {
 		}
 		if ((userSelectedQASets.contains(container))
 				&& ((nothingIsDoneInContainer(container)) || ((container.getProReasons(
-						theCase)
-						.size() > 1) && (container.getContraReasons(theCase).isEmpty())))) {
+				theCase)
+				.size() > 1) && (container.getContraReasons(theCase).isEmpty())))) {
 			// if nothing is answered in the container or if the container has
 			// proreasons
 			// and no contrareason, remove the user-selection
@@ -1047,8 +1034,7 @@ public class MQDialogController implements DialogController {
 	 * Insert the method's description here. Creation date: (27.02.2001
 	 * 11:33:05)
 	 * 
-	 * @param id
-	 *            java.lang.String
+	 * @param id java.lang.String
 	 */
 	public QASet moveToQASet(QASet searchQASet) {
 		addUserIndicationQASet(searchQASet);
@@ -1059,8 +1045,7 @@ public class MQDialogController implements DialogController {
 	 * Insert the method's description here. Creation date: (27.02.2001
 	 * 11:33:05)
 	 * 
-	 * @param id
-	 *            java.lang.String
+	 * @param id java.lang.String
 	 */
 	public QASet moveToQuestion(QASet searchQuestion) {
 
@@ -1081,8 +1066,7 @@ public class MQDialogController implements DialogController {
 	 * Returns a "leaf"-QContainer, that is parent of the question
 	 */
 	private static QContainer getFirstContainerParent(Question q) {
-		if (q == null)
-			return (null);
+		if (q == null) return (null);
 		for (TerminologyObject qaSet : q.getParents()) {
 			if (qaSet instanceof Question) return (getFirstContainerParent((Question) qaSet));
 			else return ((QContainer) qaSet);
@@ -1161,8 +1145,7 @@ public class MQDialogController implements DialogController {
 	 * questions as children.
 	 */
 	private QContainer getFirstLeafContainer(QContainer startC) {
-		if (startC == null)
-			return null;
+		if (startC == null) return null;
 
 		while ((startC.getChildren())[0] instanceof QContainer) {
 			startC = (QContainer) startC.getChildren()[0];

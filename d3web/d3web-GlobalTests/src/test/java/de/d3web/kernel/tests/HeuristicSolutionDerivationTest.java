@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.kernel.tests;
@@ -37,7 +37,9 @@ import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.scoring.Score;
 
@@ -54,8 +56,8 @@ import de.d3web.scoring.Score;
  * 
  * The problem solving is based on the following <b>Rules</b>:
  * 
- * Exhaust fumes = black => Clogged air filter = P3 
- * Fuel = unleaded gasoline => Clogged air filter = P5
+ * Exhaust fumes = black => Clogged air filter = P3 Fuel = unleaded gasoline =>
+ * Clogged air filter = P5
  * 
  * 
  * @author Sebastian Furth
@@ -164,7 +166,9 @@ public class HeuristicSolutionDerivationTest {
 
 		// SET 'Exhaust fumes' = 'black'
 		Value black = kbm.findValue(exhaustFumes, "black");
-		session.setValue(exhaustFumes, black);
+		session.getBlackboard().addValueFact(
+				FactFactory.createFact(exhaustFumes, black,
+				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Exhaust fumes' == 'black'
 		Value exhaustFumesValue = session.getValue(exhaustFumes);
@@ -177,7 +181,9 @@ public class HeuristicSolutionDerivationTest {
 
 		// SET 'Fuel' = 'unleaded gasoline'
 		Value unleadedGasoline = kbm.findValue(fuel, "unleaded gasoline");
-		session.setValue(fuel, unleadedGasoline);
+		session.getBlackboard().addValueFact(
+				FactFactory.createFact(fuel, unleadedGasoline,
+				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Fuel' == 'unleaded gasoline'
 		Value fuelValue = session.getValue(fuel);
@@ -199,7 +205,9 @@ public class HeuristicSolutionDerivationTest {
 
 		// SET 'Fuel' = 'diesel'
 		Value diesel = kbm.findValue(fuel, "diesel");
-		session.setValue(fuel, diesel);
+		session.getBlackboard().addValueFact(
+				FactFactory.createFact(fuel, diesel,
+				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Fuel' == 'diesel'
 		Value fuelValue = session.getValue(fuel);
@@ -213,7 +221,9 @@ public class HeuristicSolutionDerivationTest {
 
 		// SET 'Exhaust fumes' = 'blue'
 		Value blue = kbm.findValue(exhaustFumes, "blue");
-		session.setValue(exhaustFumes, blue);
+		session.getBlackboard().addValueFact(
+				FactFactory.createFact(exhaustFumes, blue,
+				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Exhaust fumes' == 'blue'
 		Value exhaustFumesValue = session.getValue(exhaustFumes);
@@ -233,7 +243,9 @@ public class HeuristicSolutionDerivationTest {
 
 		// SET 'Exhaust fumes' = 'black'
 		Value black = kbm.findValue(exhaustFumes, "black");
-		session.setValue(exhaustFumes, black);
+		session.getBlackboard().addValueFact(
+				FactFactory.createFact(exhaustFumes, black,
+				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Exhaust fumes' == 'black'
 		Value exhaustFumesValue = session.getValue(exhaustFumes);
@@ -246,7 +258,9 @@ public class HeuristicSolutionDerivationTest {
 				cloggedAirFilterState.hasState(DiagnosisState.State.SUGGESTED));
 
 		// SET 'Exhaust fumes' = 'UNDEFINED'
-		session.setValue(exhaustFumes, UndefinedValue.getInstance());
+		session.getBlackboard().addValueFact(
+				FactFactory.createFact(exhaustFumes, UndefinedValue.getInstance(),
+				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Exhaust fumes' == 'UNDEFINED'
 		exhaustFumesValue = session.getValue(exhaustFumes);

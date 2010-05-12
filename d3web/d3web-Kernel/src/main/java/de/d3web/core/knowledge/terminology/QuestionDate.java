@@ -26,14 +26,9 @@ package de.d3web.core.knowledge.terminology;
 import java.util.Date;
 
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
-import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.blackboard.CaseQuestionDate;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.values.AnswerDate;
-import de.d3web.core.session.values.DateValue;
-import de.d3web.core.session.values.UndefinedValue;
-import de.d3web.core.session.values.Unknown;
 
 /**
  * A Question which asks for a date.
@@ -52,29 +47,6 @@ public class QuestionDate extends Question {
 
 	public QuestionDate(String id) {
 		super(id);
-	}
-
-	// @Override
-	// @Deprecated
-	// public void setValue(Session theCase, Object[] values) {
-	// if (values.length != 1) {
-	// Logger.getLogger(this.getClass().getName()).warning("wrong number of answeralternatives");
-	// } else {
-	// ((CaseQuestionDate)
-	// theCase.getCaseObject(this)).setValue((Answer)values[0]);
-	// }
-	// }
-
-	@Override
-	public void setValue(Session theCase, Value value) throws IllegalArgumentException {
-		if (value instanceof DateValue) {
-			((CaseQuestionDate) theCase.getCaseObject(this)).setValue(value);
-		}
-		else if (value instanceof Unknown || value instanceof UndefinedValue) {
-			((CaseQuestion) (theCase.getCaseObject(this))).setValue(value);
-		}
-		else throw new IllegalArgumentException(value
-				+ " is not an instance of DateValue.");
 	}
 
 	public SessionObject createCaseObject(Session session) {

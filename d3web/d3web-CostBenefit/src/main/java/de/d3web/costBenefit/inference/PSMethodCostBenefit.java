@@ -35,7 +35,6 @@ import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -213,8 +212,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 						&& "OK".equals(choices.get(0).getName())) {
 					theCase.getBlackboard().addValueFact(
 							new DefaultFact(qoc, UndefinedValue.getInstance(),
-									PSMethodUserSelected.getInstance(),
-									PSMethodUserSelected.getInstance()));
+							PSMethodUserSelected.getInstance(),
+							PSMethodUserSelected.getInstance()));
 				}
 			}
 			makeOKQuestionsUndone(nob, theCase);
@@ -226,7 +225,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		CostBenefitCaseObject caseObject = (CostBenefitCaseObject) theCase.getCaseObject(this);
 		Set<QContainer> qcons = new HashSet<QContainer>();
 		for (PropagationEntry entry : changes) {
-			NamedObject object = entry.getObject();
+			TerminologyObject object = entry.getObject();
 			if (object instanceof Question) {
 				addParentContainers(qcons, object);
 			}

@@ -37,21 +37,14 @@ import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.PropagationContoller;
-import de.d3web.core.inference.Rule;
-import de.d3web.core.knowledge.Indication;
-import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.session.blackboard.Blackboard;
-import de.d3web.core.session.blackboard.DefaultFact;
-import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.interviewmanager.DefaultInterview;
 import de.d3web.core.session.interviewmanager.Interview;
@@ -351,42 +344,6 @@ public class D3WebSession implements Session {
 		return usedPSMethods;
 	}
 
-	/**
-	 * Propagate new value of a specified ValuedObject to all
-	 * Problem-Solving-Methods connected to this ValuedObject (e.g. Question,
-	 * Diagnosis)
-	 * 
-	 * @author joba
-	 */
-	private void propagateValue(ValuedObject valuedObject, Object oldValue, Object newValue) {
-		// only propagate to ValuedObjects which are
-		// NamedObjects (and so have KnowledgeMaps)
-		if (valuedObject instanceof NamedObject) {
-			this.propagationController.propagate((NamedObject) valuedObject,
-					oldValue,
-					newValue);
-		}
-	}
-
-	private void updateBlackboard(ValuedObject valuedObject, Value newValue,
-			Object source, PSMethod method) {
-		// TODO: consider 'context' and 'psMethod' when adding a fact
-		if (valuedObject instanceof TerminologyObject) {
-			Fact fact = new DefaultFact((TerminologyObject) valuedObject,
-								// ValueFactory.toValue(valuedObject, newValue, this),
-					newValue,
-					source, method);
-			// Distinguish 'value' between: Indication values and given
-			// answer/derived states
-			if (newValue instanceof Indication) {
-				getBlackboard().addInterviewFact(fact);
-			}
-			else {
-				getBlackboard().addValueFact(fact);
-			}
-		}
-	}
-
 	@Override
 	public void removeEstablishedSolution(Solution diagnosis) {
 		establishedDiagnoses.remove(diagnosis);
@@ -407,146 +364,8 @@ public class D3WebSession implements Session {
 	}
 
 	@Override
-	public void setValue(ValuedObject valuedObject, Value value) {
-		// do not know the real context, so send PSMethod.class as context
-		setValue(valuedObject, value, new Object(), PSMethodUserSelected.getInstance());
-	}
-
-	@Override
 	public Value getValue(Question question) {
 		return getBlackboard().getValue(question);
-	}
-
-	/**
-	 * Sets the values for a specified question and propagates it to connected
-	 * problem-solving-methods. There is some information (context) given from
-	 * where this setValue was called. In this case a rule has set the new value
-	 * of a question. Creation date: (28.08.00 17:16:13)
-	 * 
-	 * @param valuedObject ValuedObject
-	 * @param answers Object[]
-	 * @param ruleContext rule, which sets the value
-	 */
-	@Deprecated
-	public void setValue(ValuedObject valuedObject, Value value, Rule ruleContext) {
-		Value oldValue = getQualifiedValueFromBlackboard(valuedObject, value);
-		updateBlackboard(valuedObject, value,
-				ruleContext,
-				getPSMethodInstance(ruleContext.getProblemsolverContext()));
-		Value newValue = getQualifiedValueFromBlackboard(valuedObject, value);
-		notifyListeners(valuedObject, ruleContext);
-		propagateValue(valuedObject, oldValue, newValue);
-
-		// Object oldValue = getValue(valuedObject);
-		// if (valuedObject instanceof Question) {
-		// ((Question) valuedObject).setValue(this, ruleContext, value);
-		// }
-		// else {
-		// valuedObject.setValue(this, value);
-		// }
-		//		
-		// Object newValue = getValue(valuedObject);
-		//
-		// updateBlackboard(valuedObject, value,
-		// ruleContext,
-		// getPSMethodInstance(ruleContext.getProblemsolverContext()));
-		//		
-		// notifyListeners(valuedObject, ruleContext);
-		// propagateValue(valuedObject, oldValue, newValue);
-	}
-
-	/**
-	 * Sets the values for a specified question and propagates it to connected
-	 * problem-solving-methods. There is some information (context) given from
-	 * where this setValue was called. Typically problem solvers use this to
-	 * state a context for scores of diagnoses (with a context we all know where
-	 * to write a diagnosis value). Creation date: (28.08.00 17:16:13)
-	 * 
-	 * @param namedObject ValuedObject
-	 * @param answers Object[]
-	 * @param context problem-solver context
-	 */
-	@Override
-	public void setValue(ValuedObject valuedObject, Value value, Class<? extends PSMethod> context) {
-		// TODO: there is no "real" source that is responsible for setting this
-		// value
-		setValue(valuedObject, value, new Object(), getPSMethodInstance(context));
-	}
-
-	@Override
-	public void setValue(ValuedObject valuedObject, Value value, Object source, PSMethod psMethod) {
-		Value oldValue = getQualifiedValueFromBlackboard(valuedObject, value);
-		updateBlackboard(valuedObject, value,
-				source,
-				psMethod);
-		Value newValue = getQualifiedValueFromBlackboard(valuedObject, value);
-		notifyListeners(valuedObject, psMethod);
-		propagateValue(valuedObject, oldValue, newValue);
-
-		// Object oldValue;
-		// if (value instanceof Indication) {
-		// oldValue =
-		// getBlackboard().getIndication((InterviewObject)valuedObject);
-		// }
-		// else {
-		// oldValue = getValue(valuedObject);
-		// }
-		//		
-		// if (valuedObject instanceof Solution) {
-		// getBlackboard().addValueFact(
-		// new DefaultFact((TerminologyObject) valuedObject, value,
-		// source, psMethod));
-		// }
-		// else if (valuedObject instanceof Question) {
-		// if (!(value instanceof Indication)) {
-		// ((Question) valuedObject).setValue(this, value);
-		// }
-		// }
-		// else if (valuedObject instanceof QContainer) {
-		// // do nothing, since here only the indication is propagated - remove
-		// the
-		// // whole stack after balckboard refactoring (05.2010, joba)
-		// }
-		// else {
-		// throw new IllegalArgumentException("Specified argument " +
-		// valuedObject
-		// + " is neither Solution nor Question/QContainer.");
-		// }
-		//		
-		// // rerieve new value of the object: distinguish indication and real
-		// value
-		// Object newValue;
-		// if (value instanceof Indication) {
-		// newValue = value;
-		// }
-		// else {
-		// newValue = getValue(valuedObject);
-		// }
-		//		
-		// notifyListeners(valuedObject, psMethod);
-		// updateBlackboard(valuedObject, value,
-		// source,
-		// psMethod);
-		// propagateValue(valuedObject, oldValue, newValue);
-
-	}
-
-	private Value getQualifiedValueFromBlackboard(ValuedObject valuedObject, Value newValue) {
-		if (newValue instanceof Indication) {
-			return getBlackboard().getIndication((InterviewObject) valuedObject);
-		}
-
-		if (valuedObject instanceof Solution) {
-			Solution solution = (Solution) valuedObject;
-			return getBlackboard().getState(solution);
-		}
-		else if (valuedObject instanceof Question) {
-			return getBlackboard().getValue((Question) valuedObject);
-			// return ((Question) valuedObject).getValue(this);
-		}
-		else {
-			throw new IllegalStateException("unexpected ValuedObject");
-		}
 	}
 
 	@Override
@@ -601,12 +420,6 @@ public class D3WebSession implements Session {
 	public void removeListener(SessionEventListener listener) {
 		if (listeners.contains(listener)) {
 			listeners.remove(listener);
-		}
-	}
-
-	private void notifyListeners(ValuedObject o, Object context) {
-		for (SessionEventListener listener : listeners) {
-			listener.notify(this, o, context);
 		}
 	}
 

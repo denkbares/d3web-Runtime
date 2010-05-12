@@ -24,7 +24,6 @@ import java.util.List;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationContoller;
-import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Question;
@@ -142,16 +141,6 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	void setQASetManager(QASetManager cd);
 
 	/**
-	 * Assigns the specified value to the specified {@link ValuedObject}, e.g.,
-	 * a {@link Question} or a {@link Solution} receives a new value.
-	 * 
-	 * @param valuedObject the object, that receives a new value
-	 * @param value the (array of new) values for the specified
-	 *        {@link ValuedObject}
-	 */
-	void setValue(ValuedObject valuedObject, Value value);
-
-	/**
 	 * Returns the value of the specified {@link Question} valid in this
 	 * {@link Session}; returns {@link UndefinedValue} if no value is assigned.
 	 * 
@@ -162,46 +151,6 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 * @date 15.04.2010
 	 */
 	public Value getValue(Question question);
-
-	/**
-	 * Assigns the specified value to the specified {@link ValuedObject}, e.g.,
-	 * a {@link Question} or a {@link Solution} receives a new value. The
-	 * knowledge source of this assignment is also given, here it is a
-	 * {@link Rule}.
-	 * 
-	 * @param valuedObject ValuedObject the object, that receives a new value
-	 * @param value value the (array of new) values for the specified
-	 *        {@link ValuedObject}
-	 * @param rule the knowledge element responsible for making the assignment
-	 */
-	void setValue(ValuedObject valuedObject, Value value, Rule rule);
-
-	/**
-	 * Assigns the specified value to the specified {@link ValuedObject}, e.g.,
-	 * a {@link Question} or a {@link Solution} receives a new value. The
-	 * {@link PSMethod} responsible of this assignment is also given.
-	 * 
-	 * @param valuedObject ValuedObject the object, that receives a new value
-	 * @param value value the (array of new) values for the specified
-	 *        {@link ValuedObject}
-	 * @param context the problem-solver responsible for this assignment
-	 */
-	void setValue(ValuedObject valuedObject, Value value, Class<? extends PSMethod> context);
-
-	/**
-	 * Assigns the specified value to the specified {@link ValuedObject}, e.g.,
-	 * a {@link Question} or a {@link Solution} receives a new value. The
-	 * {@link PSMethod} responsible of this assignment and the concrete action
-	 * of this setting (e.g., a rule action) is also given.
-	 * 
-	 * @param valuedObject ValuedObject the object, that receives a new value
-	 * @param value value the (array of new) values for the specified
-	 *        {@link ValuedObject}
-	 * @param source the actual action responsible for setting the value, e.g.,
-	 *        a rule action
-	 * @param psMethod the problem-solver responsible for this assignment
-	 */
-	void setValue(ValuedObject valuedObject, Value value, Object source, PSMethod psMethod);
 
 	/**
 	 * Registers a new listener to this session. If something in this session

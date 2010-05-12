@@ -27,7 +27,6 @@ import java.net.URL;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import de.d3web.core.inference.PSMethod;
 import de.d3web.core.io.BasicPersistenceHandler;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.DummyProgressListener;
@@ -42,6 +41,7 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.interviewmanager.DialogController;
 import de.d3web.core.session.interviewmanager.InvalidQASetRequestException;
 import de.d3web.core.session.interviewmanager.OQDialogController;
@@ -127,7 +127,6 @@ public class TestKfz extends TestCase {
 		}
 		PersistenceManager.getInstance().save(kb, new File("target/kbs/test2.jar"));
 		Session theCase = SessionFactory.createSession(kb);
-		Class<? extends PSMethod> context = PSMethodUserSelected.class;
 
 		QuestionNum Mf5 = (QuestionNum) kb.searchQuestion("Mf5");
 		QuestionMC Mf7 = (QuestionMC) kb.searchQuestion("Mf7");
@@ -136,9 +135,9 @@ public class TestKfz extends TestCase {
 		AnswerMultipleChoice answermc = new AnswerMultipleChoice(new Choice[] {
 				Mf7a1, Mf7a2 });
 		MultipleChoiceValue mcv = new MultipleChoiceValue(answermc);
-		theCase.setValue(Mf7, mcv, context);
-		//
-
+		theCase.getBlackboard().addValueFact(
+				FactFactory.createFact(Mf7, mcv,
+				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		Value value = theCase.getValue(Mf5);
 		if (value == null) {
 			System.out.println("(1) --> NULL!!!!");
@@ -156,7 +155,6 @@ public class TestKfz extends TestCase {
 	 */
 	public void testFormulaSchema() {
 		Session theCase = SessionFactory.createSession(kb);
-		Class<? extends PSMethod> context = PSMethodUserSelected.class;
 
 		/*---------------------------------------------- */
 
@@ -165,10 +163,14 @@ public class TestKfz extends TestCase {
 		QuestionOC Msi4 = (QuestionOC) kb.searchQuestion("Msi4");
 
 		NumValue Mf5Value = new NumValue(new Double(10));
-		theCase.setValue(Mf5, Mf5Value, context);
+		theCase.getBlackboard().addValueFact(
+				FactFactory.createFact(Mf5, Mf5Value,
+				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		NumValue Mf6Value = new NumValue(new Double(10));
-		theCase.setValue(Mf6, Mf6Value, context);
+		theCase.getBlackboard().addValueFact(
+				FactFactory.createFact(Mf6, Mf6Value,
+				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		Choice ratingNormal = (Choice) Msi4.getAnswer(theCase, "Msi4a1");
 		ChoiceValue ratingNormalValue = new ChoiceValue(ratingNormal);
@@ -178,13 +180,17 @@ public class TestKfz extends TestCase {
 		assertEquals("Error with formula (1)", ratingNormalValue, theCase.getValue(Msi4));
 
 		// This is exactly the border ((Mf6-Mf5)/Mf5)*100 = 10
-		theCase.setValue(Mf6, new NumValue(new Double(11)), context);
+		theCase.getBlackboard().addValueFact(
+				FactFactory.createFact(Mf6, new NumValue(new Double(11)),
+				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		Choice ratingHigh = (Choice) Msi4.getAnswer(theCase, "Msi4a2");
 		ChoiceValue ratingHighValue = new ChoiceValue(ratingHigh);
 		System.out.println("(2) --> Msi4: " + theCase.getValue(Msi4));
 		assertEquals("Error with formula (2)", ratingHighValue, theCase.getValue(Msi4));
 
-		theCase.setValue(Mf6, new NumValue(new Double(15)), context);
+		theCase.getBlackboard().addValueFact(
+				FactFactory.createFact(Mf6, new NumValue(new Double(15)),
+				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		System.out.println("(4) --> Msi4: " + theCase.getValue(Msi4));
 		Choice ratingVeryHigh = (Choice) Msi4.getAnswer(theCase, "Msi4a3");
 		ChoiceValue ratingVeryHighValue = new ChoiceValue(ratingVeryHigh);
@@ -192,7 +198,9 @@ public class TestKfz extends TestCase {
 		assertEquals("Error with formula (4)", ratingVeryHighValue, theCase.getValue(Msi4));
 
 		// user sets the value to 19.5 (user overrides all other values)
-		theCase.setValue(Msi4, new NumValue(new Double(19.5)), context);
+		theCase.getBlackboard().addValueFact(
+				FactFactory.createFact(Msi4, new NumValue(new Double(19.5)),
+				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		System.out.println("(3) --> Msi4: " + theCase.getValue(Msi4));
 		assertEquals("Error with formula (3)", ratingHighValue, theCase.getValue(Msi4));
 	}
@@ -203,7 +211,6 @@ public class TestKfz extends TestCase {
 	 */
 	public void testNumericExpression() {
 		Session theCase = SessionFactory.createSession(kb);
-		Class<? extends PSMethod> context = PSMethodUserSelected.class;
 
 		/*----------------------------------------------
 		 */
@@ -212,9 +219,13 @@ public class TestKfz extends TestCase {
 		QuestionNum Mf6 = (QuestionNum) kb.searchQuestion("Mf6");
 		QuestionOC Mf4 = (QuestionOC) kb.searchQuestion("Mf4");
 		Choice Mf4a1 = (Choice) Mf4.getAnswer(theCase, "Mf4a1");
-		theCase.setValue(Mf4, new ChoiceValue(Mf4a1), context);
+		theCase.getBlackboard().addValueFact(
+				FactFactory.createFact(Mf4, new ChoiceValue(Mf4a1),
+				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		//
-		theCase.setValue(Mf6, new NumValue(new Double(10)), context);
+		theCase.getBlackboard().addValueFact(
+				FactFactory.createFact(Mf6, new NumValue(new Double(10)),
+				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		Value Mf58Value = theCase.getValue(Mf58);
 		if (Mf58Value == null) {
 			System.out.println("(1) --> NULL!!!!");
@@ -234,7 +245,6 @@ public class TestKfz extends TestCase {
 	 */
 	public void testSetValue() {
 		Session theCase = SessionFactory.createSession(kb);
-		Class<? extends PSMethod> context = PSMethodUserSelected.class;
 
 		QuestionOC questionOC = (QuestionOC) kb.searchQuestion("Mf2");
 
@@ -243,13 +253,16 @@ public class TestKfz extends TestCase {
 				false == questionOC.isDone(theCase));
 
 		Choice answerChoice = (Choice) questionOC.getAnswer(theCase, "Mf2a1");
-		theCase.setValue(questionOC, new ChoiceValue(answerChoice), context);
+		theCase.getBlackboard().addValueFact(
+				FactFactory.createFact(questionOC, new ChoiceValue(answerChoice),
+				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		assertEquals(
 				"Error while setting/getting known OC-Value (2)",
 				new ChoiceValue(answerChoice), theCase.getValue(questionOC));
-
-		theCase.setValue(questionOC, Unknown.getInstance(), context);
+		theCase.getBlackboard().addValueFact(
+				FactFactory.createFact(questionOC, Unknown.getInstance(),
+				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		assertEquals(
 				"Error while setting/getting unknown OC-Value (3)",
@@ -322,8 +335,9 @@ public class TestKfz extends TestCase {
 				System.out.println("Antworten: "
 						+ ((QuestionChoice) q1).getAllAlternatives());
 			}
-
-			theCase.setValue(q1, Unknown.getInstance());
+			theCase.getBlackboard().addValueFact(
+					FactFactory.createFact(q1, Unknown.getInstance(),
+					PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		}
 
 	}

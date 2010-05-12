@@ -4,13 +4,9 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -18,7 +14,6 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.manage.KnowledgeBaseManagement;
-import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
@@ -26,12 +21,11 @@ import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.interviewmanager.EmptyForm;
 import de.d3web.core.session.interviewmanager.Form;
 import de.d3web.core.session.interviewmanager.InterviewAgenda;
-import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.plugin.test.InitPluginManager;
 
-public class NextUnansweredQuestionFormTest {
+public class OneQuestionFormTest {
 
 	KnowledgeBaseManagement kbm;
 	Session session;
@@ -40,7 +34,7 @@ public class NextUnansweredQuestionFormTest {
 	QContainer pregnancyQuestions, heightWeightQuestions;
 	QuestionOC sex, pregnant, ask_for_pregnancy, initQuestion;
 	QuestionNum weight, height;
-	ChoiceValue female, male, dont_ask;
+	ChoiceValue female, dont_ask;
 
 	@Before
 	public void setUp() throws Exception {
@@ -65,7 +59,6 @@ public class NextUnansweredQuestionFormTest {
 		sex = kbm.createQuestionOC("sex", pregnancyQuestions, new String[] {
 				"male", "female" });
 		female = new ChoiceValue(kbm.findChoice(sex, "female"));
-		male = new ChoiceValue(kbm.findChoice(sex, "male"));
 		pregnant = kbm.createQuestionOC("pregnant", sex, new String[] {
 				"yes", "no" });
 		ask_for_pregnancy = kbm.createQuestionOC("ask for pregnancy", pregnancyQuestions,
@@ -81,7 +74,6 @@ public class NextUnansweredQuestionFormTest {
 				new String[] {
 				"all", "pregnacyQuestions", "height+weight" });
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
-		session.getInterviewManager().setFormStrategy(new NextUnansweredQuestionFormStrategy());
 		agenda = session.getInterviewManager().getInterviewAgenda();
 	}
 
@@ -96,74 +88,22 @@ public class NextUnansweredQuestionFormTest {
 		assertFalse(agenda.isEmpty());
 
 		// EXPECT: 'sex' to be the first question
-		List<InterviewObject> formQuestions = session.getInterviewManager().nextForm().getInterviewObjects();
-		assertEquals(Arrays.asList(sex), formQuestions);
+		Form form = session.getInterviewManager().nextForm();
+		InterviewObject formQuestion = form.getInterviewObjects().get(0);
+		assertEquals(sex, formQuestion);
 
 		// ANSWER: sex=female
 		// EXPECT: pregnant to be the next question
 		setValue(sex, female);
-		formQuestions = session.getInterviewManager().nextForm().getInterviewObjects();
-		assertEquals(Arrays.asList(pregnant), formQuestions);
+		form = session.getInterviewManager().nextForm();
+		formQuestion = form.getInterviewObjects().get(0);
+		assertEquals(pregnant, formQuestion);
 
 		// ANSWER: pregnant=no
 		// EXPECT: no more questions to ask
 		setValue(pregnant, new ChoiceValue(kbm.findChoice(pregnant, "no")));
-		Form form = session.getInterviewManager().nextForm();
+		form = session.getInterviewManager().nextForm();
 		assertEquals(EmptyForm.getInstance(), form);
-	}
-
-	@Test
-	public void testWithOneQContainerOnAgenda_WithoutFollowUpQuestions() {
-		// initially the agenda is empty
-		assertTrue(agenda.isEmpty());
-		// Put the QContainer pregnancyQuestions on the agenda
-		agenda.append(pregnancyQuestions);
-		assertFalse(agenda.isEmpty());
-
-		// EXPECT the first question 'sex' to be the next question in the form
-		List<InterviewObject> nextQuestions = session.getInterviewManager().nextForm().getInterviewObjects();
-		assertEquals(Arrays.asList(sex), nextQuestions);
-
-		// SET question sex=male
-		// EXPECT the second question 'ask_for_pregnancy' to be the next
-		// question in the form
-		setValue(sex, male);
-		nextQuestions = session.getInterviewManager().nextForm().getInterviewObjects();
-		assertEquals(Arrays.asList(ask_for_pregnancy), nextQuestions);
-
-		// SET : question ask_for_pregnancy=no
-		// EXPECT: since all questions of the qcontainer are answered, we expect
-		// no more
-		// questions to be asked next, i.e., the EmptyForm singleton is returned
-		setValue(ask_for_pregnancy, kbm.findValue(ask_for_pregnancy, "no"));
-		assertEquals(EmptyForm.getInstance(), session.getInterviewManager().nextForm());
-	}
-
-	@Test
-	public void testWithOneQContainerOnAgenda_WithFollowUpQuestions() {
-		// We need this rule for the later indication of the follow-up question
-		// "pregnant"
-		// Rule: sex = female => INDICATE ( pregnant )
-		RuleFactory.createIndicationRule("r1", pregnant, new CondEqual(sex, female));
-
-		// initially the agenda is empty
-		assertTrue(agenda.isEmpty());
-		// Put the QContainer pregnancyQuestions on the agenda
-		agenda.append(pregnancyQuestions);
-		assertFalse(agenda.isEmpty());
-
-		// EXPECT the first question 'sex' to be the next question in the form
-		List<InterviewObject> nextQuestions = session.getInterviewManager().nextForm().getInterviewObjects();
-		assertEquals(Arrays.asList(sex), nextQuestions);
-
-		// SET question sex=female
-		// EXPECT the follow-up question 'pregnant' to be the next question in
-		// the form
-		setValue(sex, female);
-		nextQuestions = session.getInterviewManager().nextForm().getInterviewObjects();
-
-		// TODO: overwork FormStrategy to copy with follow-up questions
-		assertEquals(Arrays.asList(pregnant), nextQuestions);
 	}
 
 	private void setValue(Question question, Value value) {

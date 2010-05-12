@@ -1,26 +1,26 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 /*
  * EConditiion.java
- *
+ * 
  * Created on 27. März 2002, 16:15
  */
 
@@ -37,25 +37,31 @@ import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.inference.condition.TerminalCondition;
 import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.ValuedObject;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.explain.ExplanationFactory;
+
 /**
- *
- * @author  betz
+ * 
+ * @author betz
  */
 public class ECondition {
 
-	private Condition condition = null;	// the "original" condition object
-	private List activeParts = null;
-
+	private Condition condition = null; // the "original" condition object
+	private List<ECondition> activeParts = null;
 
 	/**
-	 * returns an ECondition only, if the condition "cond" is active (can fire), else null	 * @param factory ExplanationFactory	 * @param cond AbstractCondition	 * @return ECondition	 */
+	 * returns an ECondition only, if the condition "cond" is active (can fire),
+	 * else null
+	 * 
+	 * @param factory ExplanationFactory
+	 * @param cond AbstractCondition
+	 * @return ECondition
+	 */
 	public static ECondition createECondition(
-		ExplanationFactory factory,
-		Condition cond) {
+			ExplanationFactory factory,
+			Condition cond) {
 
 		if (cond == null) {
 			return null;
@@ -64,8 +70,10 @@ public class ECondition {
 		boolean isActive = false;
 		try {
 			isActive = cond.eval(factory.getSession());
-		} catch (NoAnswerException e) {
-		} catch (UnknownAnswerException e) {
+		}
+		catch (NoAnswerException e) {
+		}
+		catch (UnknownAnswerException e) {
 		}
 		if (isActive) {
 			ECondition eCond = new ECondition(factory, cond);
@@ -74,7 +82,6 @@ public class ECondition {
 		return null;
 	}
 
-
 	/** Creates a new instance of EConditiion */
 	private ECondition(ExplanationFactory factory, Condition cond) {
 		setCondition(cond);
@@ -82,11 +89,11 @@ public class ECondition {
 	}
 
 	private void init(ExplanationFactory factory) {
-		List aParts = new LinkedList();
+		List<ECondition> aParts = new LinkedList<ECondition>();
 		if (getCondition() instanceof NonTerminalCondition) {
-			Iterator iter = ((NonTerminalCondition) getCondition()).getTerms().iterator();
+			Iterator<Condition> iter = ((NonTerminalCondition) getCondition()).getTerms().iterator();
 			while (iter.hasNext()) {
-				Condition cond = (Condition) iter.next();
+				Condition cond = iter.next();
 				ECondition eCond = createECondition(factory, cond);
 				if (eCond != null) {
 					aParts.add(eCond);
@@ -98,6 +105,7 @@ public class ECondition {
 
 	/**
 	 * Gets the condition.
+	 * 
 	 * @return Returns a AbstractCondition
 	 */
 	public Condition getCondition() {
@@ -106,6 +114,7 @@ public class ECondition {
 
 	/**
 	 * Sets the condition.
+	 * 
 	 * @param condition The condition to set
 	 */
 	private void setCondition(Condition condition) {
@@ -114,17 +123,19 @@ public class ECondition {
 
 	/**
 	 * Gets the activeParts.
+	 * 
 	 * @return Returns a List
 	 */
-	public List getActiveParts() {
+	public List<ECondition> getActiveParts() {
 		return activeParts;
 	}
 
 	/**
 	 * Sets the activeParts.
+	 * 
 	 * @param activeParts The activeParts to set
 	 */
-	private void setActiveParts(List activeParts) {
+	private void setActiveParts(List<ECondition> activeParts) {
 		this.activeParts = activeParts;
 	}
 
@@ -133,10 +144,10 @@ public class ECondition {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<cond type='" + getCondition().getClass().getName() + "'>\n");
 		if (getCondition() instanceof TerminalCondition) {
-			Iterator iter =
-				((TerminalCondition) getCondition()).getTerminalObjects().iterator();
+			Iterator<? extends NamedObject> iter =
+					((TerminalCondition) getCondition()).getTerminalObjects().iterator();
 			while (iter.hasNext()) {
-				ValuedObject elem = (ValuedObject) iter.next();
+				NamedObject elem = iter.next();
 				sb.append("<target id='" + elem.getId() + "'");
 				sb.append(" value='");
 				if (getCondition() instanceof CondEqual) {
@@ -144,40 +155,42 @@ public class ECondition {
 					if (answer != null) {
 						sb.append(((ChoiceValue) answer).getAnswerChoiceID());
 					}
-				} else if (getCondition() instanceof CondKnown) {
+				}
+				else if (getCondition() instanceof CondKnown) {
 					sb.append("known");
 				}
 				sb.append("'");
 				sb.append("/>\n");
 			}
-		} else if (activeParts != null) {
-			Iterator iterator = activeParts.iterator();
+		}
+		else if (activeParts != null) {
+			Iterator<ECondition> iterator = activeParts.iterator();
 			while (iterator.hasNext()) {
-				ECondition cond = (ECondition) iterator.next();
+				ECondition cond = iterator.next();
 				sb.append(cond.toString());
 			}
 		}
 		sb.append("</cond>\n");
 		return sb.toString();
 	}
-	
-//	private void showRuleCondition(AbstractCondition con) {
-//		TerminalCondition con;
-//		if (con instanceof CondEqual) {
-//			CondEqual ce = (CondEqual)con;
-//			sb.append("<target id='" + ce.getQuestion().getId() + "'");
-//			sb.append(" value='");
-//			Iterator iter = ce.getValues().iterator();
-//			while(iter.hasNext()) {
-//			        sb.append(((AnswerChoice)iter.next()).getId());
-//			}
-//			sb.append("'");
-//			sb.append("/>\n");
-//		} else if (con instanceof CondKnown) {
-//			sb.append("<target id='" + con.getQuestion().getId() + "'");
-//			sb.append(" value='known'/>\n");
-//		} if (con instanceof CondDState) {
-//		}
-//	}
-	
+
+	// private void showRuleCondition(AbstractCondition con) {
+	// TerminalCondition con;
+	// if (con instanceof CondEqual) {
+	// CondEqual ce = (CondEqual)con;
+	// sb.append("<target id='" + ce.getQuestion().getId() + "'");
+	// sb.append(" value='");
+	// Iterator iter = ce.getValues().iterator();
+	// while(iter.hasNext()) {
+	// sb.append(((AnswerChoice)iter.next()).getId());
+	// }
+	// sb.append("'");
+	// sb.append("/>\n");
+	// } else if (con instanceof CondKnown) {
+	// sb.append("<target id='" + con.getQuestion().getId() + "'");
+	// sb.append(" value='known'/>\n");
+	// } if (con instanceof CondDState) {
+	// }
+	// }
+
 }

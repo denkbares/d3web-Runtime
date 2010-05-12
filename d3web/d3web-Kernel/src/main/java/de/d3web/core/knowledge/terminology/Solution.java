@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.core.knowledge.terminology;
@@ -25,11 +25,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
-import de.d3web.core.session.ValuedObject;
 import de.d3web.core.session.blackboard.CaseDiagnosis;
-import de.d3web.core.session.blackboard.DefaultFact;
-import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.scoring.DiagnosisScore;
 import de.d3web.scoring.Score;
@@ -47,7 +43,7 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  * @see DiagnosisScore
  * @see DiagnosisState
  */
-public class Solution extends NamedObject implements ValuedObject, TerminologyObject {
+public class Solution extends NamedObject implements TerminologyObject {
 
 	/**
 	 * A solution can have a prior probability, that is taken into account by
@@ -63,8 +59,7 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	 * <b>Note:</b> Please use {@link KnowledgeBaseManagement} to create
 	 * Diagnosis instances.
 	 * 
-	 * @param id
-	 *            the specified unique identifier for this instance
+	 * @param id the specified unique identifier for this instance
 	 */
 	public Solution(String id) {
 		super(id);
@@ -88,8 +83,7 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	 * specified {@link Session} instance. For every new {@link Session}
 	 * flyweights are created on demand for the used {@link IDObject} instances.
 	 * 
-	 * @param session
-	 *            the specified Session instance
+	 * @param session the specified Session instance
 	 * @return a flyweight instance of this object
 	 */
 	public SessionObject createCaseObject(Session session) {
@@ -100,8 +94,7 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	 * Removes this object from the established solutions in the given
 	 * {@link Session} and propagates the state change.
 	 * 
-	 * @param session
-	 *            the specified {@link Session}
+	 * @param session the specified {@link Session}
 	 */
 	// private void deestablish(Session session) {
 	// session.removeEstablishedSolution(this);
@@ -111,8 +104,7 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	 * Adds this object to the list of established solutions in the given
 	 * {@link Session} and propagates the state change.
 	 * 
-	 * @param session
-	 *            the specified {@link Session}
+	 * @param session the specified {@link Session}
 	 */
 	// private void establish(Session session) {
 	// session.addEstablishedSolution(this);
@@ -135,10 +127,9 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	 * <p>
 	 * Creation date: (25.09.00 15:13:34)
 	 * 
-	 * @param newAprioriPropability
-	 *            the new apriori probability of this instance
-	 * @throws IllegalArgumentException
-	 *             if the newAprioriProbability is not valid
+	 * @param newAprioriPropability the new apriori probability of this instance
+	 * @throws IllegalArgumentException if the newAprioriProbability is not
+	 *         valid
 	 */
 	public void setAprioriProbability(Score newAprioriProbability) throws IllegalArgumentException {
 		// check if legal probability entry
@@ -156,8 +147,7 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 	 * <b>Note:</b> Currently, this object is not removed from a previously
 	 * registered knowledge base.
 	 * 
-	 * @param knowledgeBase
-	 *            the knowledge base, to which this object belongs to
+	 * @param knowledgeBase the knowledge base, to which this object belongs to
 	 */
 	@Override
 	public void setKnowledgeBase(KnowledgeBase knowledgeBase) {
@@ -165,13 +155,6 @@ public class Solution extends NamedObject implements ValuedObject, TerminologyOb
 		// maybe somebody should remove this object from the old
 		// knowledge base if available
 		getKnowledgeBase().add(this);
-	}
-
-	@Override
-	@Deprecated
-	public void setValue(Session session, Value value) {
-		Fact fact = new DefaultFact(this, value, new Object(), null);
-		session.getBlackboard().addValueFact(fact);
 	}
 
 	@Override

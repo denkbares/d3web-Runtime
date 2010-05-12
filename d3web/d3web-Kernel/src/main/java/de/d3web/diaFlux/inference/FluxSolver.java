@@ -37,6 +37,7 @@ import de.d3web.core.inference.RuleSet;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
@@ -294,10 +295,8 @@ public class FluxSolver implements PSMethod {
 	 * 
 	 * @param theCase
 	 * @param currentNode
-	 * @param entry
-	 *            the pathentry from where to activate the node
-	 * @param edge
-	 *            the egde to take
+	 * @param entry the pathentry from where to activate the node
+	 * @param edge the egde to take
 	 * @return nextNode
 	 */
 	private PathEntry followEdge(Session theCase, PathEntry entry, IEdge edge) {
@@ -434,8 +433,8 @@ public class FluxSolver implements PSMethod {
 
 		for (PropagationEntry entry : changes) {
 
-			NamedObject object = entry.getObject();
-			KnowledgeSlice knowledge = object.getKnowledge(FluxSolver.class,
+			TerminologyObject object = entry.getObject();
+			KnowledgeSlice knowledge = ((NamedObject) object).getKnowledge(FluxSolver.class,
 					MethodKind.FORWARD);
 			if (knowledge != null) {
 				RuleSet rs = (RuleSet) knowledge;
@@ -502,10 +501,9 @@ public class FluxSolver implements PSMethod {
 
 			currentEntry = currentEntry.getPath();
 
-			if (counter++ > 250)
-				log("Endloss loop in collapsePath? Trying to reach '" + endEntry
-						+ "' starting from '" + startEntry + "'. Now being at '"
-						+ currentEntry + "'.");
+			if (counter++ > 250) log("Endloss loop in collapsePath? Trying to reach '" + endEntry
+					+ "' starting from '" + startEntry + "'. Now being at '"
+					+ currentEntry + "'.");
 
 		}
 		replacePathEnd(theCase, startEntry, endEntry);

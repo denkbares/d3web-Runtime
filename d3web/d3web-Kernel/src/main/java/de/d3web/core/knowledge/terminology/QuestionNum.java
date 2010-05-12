@@ -22,17 +22,11 @@ package de.d3web.core.knowledge.terminology;
 
 import java.util.List;
 
-import de.d3web.abstraction.formula.FormulaNumberElement;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
-import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.blackboard.CaseQuestionNum;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.values.AnswerNum;
-import de.d3web.core.session.values.NumValue;
-import de.d3web.core.session.values.UndefinedValue;
-import de.d3web.core.session.values.Unknown;
 
 /**
  * Storage for Questions which have a numerical (Double value) answer. <BR>
@@ -75,27 +69,6 @@ public class QuestionNum extends Question {
 	 */
 	public String getXMLString() {
 		return "<QuestionNum ID='" + this.getId() + "'></QuestionNum>\n";
-	}
-
-	@Override
-	public void setValue(Session theCase, Value value) {
-		if (value instanceof NumValue
-				|| value instanceof UndefinedValue
-				|| value instanceof Unknown) {
-			((CaseQuestionNum) theCase.getCaseObject(this)).setValue(value);
-		}
-		else if (value instanceof FormulaNumberElement) {
-			CaseQuestionNum question = ((CaseQuestionNum) theCase.getCaseObject(this));
-			question.setValue(new NumValue(
-					((FormulaNumberElement) value).eval(theCase)));
-		}
-		else if (value instanceof Unknown || value instanceof UndefinedValue) {
-			((CaseQuestion) (theCase.getCaseObject(this))).setValue(value);
-		}
-		else {
-			throw new IllegalArgumentException(value
-					+ " is not an applicable instance.");
-		}
 	}
 
 	/**

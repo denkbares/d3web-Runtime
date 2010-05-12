@@ -49,6 +49,7 @@ import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.dialog2.controller.ProcessedQContainersController;
 import de.d3web.dialog2.util.DialogUtils;
@@ -178,7 +179,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 
 			for (int j = 0; j < qList.size(); j++) {
 				Question q = qList.get(j);
-				if (q.hasValue(theCase)) {
+				if (UndefinedValue.isNotUndefinedValue(theCase.getValue(q))) {
 					if (!processedBean.isShowUnknown()
 							&& DialogUtils.unknownAnswerInValueList(q, theCase)) {
 						continue;
@@ -276,7 +277,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 		if (facet != null) {
 			facet.setTitle(DialogUtils.getMessageWithParamsFor("processed.moveToQuestion",
 					new Object[] { q
-							.getName() }));
+					.getName() }));
 			facet.setOnclick("cursor_wait();setClickedQASet('" + q.getId() + "')");
 
 			HtmlOutputText comp = (HtmlOutputText) FacesContext.getCurrentInstance().getApplication()

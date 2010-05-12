@@ -100,6 +100,7 @@ import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.indication.ActionContraIndication;
 import de.d3web.indication.ActionNextQASet;
@@ -496,7 +497,8 @@ public class XMLRenderer {
 					// numerical value
 					// of the question (diagnosis-like)
 					if (getSchemaForQuestion(qOC) != null) {
-						if ((showStatus) && (qOC.hasValue(theCase))) {
+						if ((showStatus)
+								&& (UndefinedValue.isNotUndefinedValue(theCase.getValue(qOC)))) {
 							questionState.append("<SIScore value=\""
 									+ (qOC.getNumericalSchemaValue(theCase)).intValue()
 									+ "\"/>");

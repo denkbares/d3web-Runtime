@@ -10,6 +10,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseDiagnosis;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.scoring.DiagnosisScore;
 
@@ -76,7 +77,8 @@ public class PSMethodSCMCBR extends PSMethodAdapter {
 				// model.refreshState(theCase);
 				DiagnosisState newState = model.getState(theCase);
 				if (!oldState.equals(newState)) {
-					theCase.setValue(model.getSolution(), newState, this.getClass());
+					theCase.getBlackboard().addValueFact(
+							FactFactory.createFact(model.getSolution(), newState, model, this));
 				}
 				model.notifyListeners(theCase, model);
 			}
