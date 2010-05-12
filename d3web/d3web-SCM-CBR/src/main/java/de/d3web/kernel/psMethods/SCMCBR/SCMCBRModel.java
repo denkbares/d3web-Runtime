@@ -1,4 +1,5 @@
 package de.d3web.kernel.psMethods.SCMCBR;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,22 +14,20 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.DiagnosisState.State;
 import de.d3web.core.session.IEventSource;
 import de.d3web.core.session.KBOEventListener;
 import de.d3web.core.session.Session;
 import de.d3web.xcl.XCLRelationType;
 
-
 /**
  * 
- * @author Reinhard Hatko
- * Created: 17.09.2009
- *
+ * @author Reinhard Hatko Created: 17.09.2009
+ * 
  */
 public class SCMCBRModel implements KnowledgeSlice, IEventSource {
-	
 
 	public final static MethodKind SCMCBR = new MethodKind("SCMCBR");
 
@@ -36,14 +35,13 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 	public static double defaultSuggestedThreshold = 0.3;
 	public static double defaultMinSupport = 0.01;
 
-
 	private double establishedThreshold = defaultEstablishedThreshold;
 	private double suggestedThreshold = defaultSuggestedThreshold;
 	private double minSupport = defaultMinSupport;
-	
+
 	private double coveringSuggestedThreshold = .5;
 	private double coveringEstablishedThreshold = .8;
-	
+
 	private double completenessSuggestedThreshold = .5;
 	private double completenessEstablishedThreshold = .8;
 
@@ -56,13 +54,12 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 	public static String DEFAULT_SOLUTION = "default_solution";
 
 	private Map<Session, SCMCBRInferenceTrace> explanation = new HashMap<Session, SCMCBRInferenceTrace>();
-	
-	
+
 	private Solution solution;
-	
+
 	public SCMCBRModel(Solution solution) {
 		this.solution = solution;
-		
+
 		relations = new ArrayList<SCMCBRRelation>();
 		necessaryRelations = new ArrayList<SCMCBRRelation>();
 		sufficientRelations = new ArrayList<SCMCBRRelation>();
@@ -77,12 +74,12 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 			Condition theCondition, Solution d) {
 		return insertSCMCBRRelation(kb, theCondition, d, XCLRelationType.explains, null);
 	}
-	
+
 	public static String insertSCMCBRRelation(KnowledgeBase kb,
 			Condition theCondition, Solution d, String kdomNodeID) {
-		return insertSCMCBRRelation(kb, theCondition, d, XCLRelationType.explains,kdomNodeID);
+		return insertSCMCBRRelation(kb, theCondition, d, XCLRelationType.explains, kdomNodeID);
 	}
-	
+
 	public static String insertSCMCBRRelation(KnowledgeBase kb,
 			Condition theCondition, Solution d, XCLRelationType type) {
 		return insertSCMCBRRelation(kb, theCondition, d, type, 1, null);
@@ -92,7 +89,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 			Condition theCondition, Solution d, XCLRelationType type, String kdomNodeID) {
 		return insertSCMCBRRelation(kb, theCondition, d, type, 1, kdomNodeID);
 	}
-	
+
 	public static String insertSCMCBRRelation(KnowledgeBase kb,
 			Condition theCondition, Solution d, XCLRelationType type,
 			double weight) {
@@ -102,14 +99,14 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 	public static String insertSCMCBRRelation(KnowledgeBase kb,
 			Condition theCondition, Solution d, XCLRelationType type,
 			double weight, String kdomNodeID) {
-		
-		//Nullchecks
-		if(theCondition == null || d == null) {
+
+		// Nullchecks
+		if (theCondition == null || d == null) {
 			return null;
 		}
-		
+
 		// insert XCL
-		
+
 		String relationID = null;
 		Collection<KnowledgeSlice> models = kb
 				.getAllKnowledgeSlicesFor(PSMethodSCMCBR.class);
@@ -120,7 +117,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 				if (((SCMCBRModel) knowledgeSlice).getSolution().equals(d)) {
 					SCMCBRRelation rel = SCMCBRRelation.createSCMCBRRelation(
 							theCondition, weight);
-					if(kdomNodeID != null) {
+					if (kdomNodeID != null) {
 						rel.setKdmomID(kdomNodeID);
 					}
 					relationID = rel.getId();
@@ -133,7 +130,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 			SCMCBRModel newModel = new SCMCBRModel(d);
 			SCMCBRRelation rel = SCMCBRRelation.createSCMCBRRelation(theCondition,
 					weight);
-			if(kdomNodeID != null) {
+			if (kdomNodeID != null) {
 				rel.setKdmomID(kdomNodeID);
 			}
 
@@ -171,34 +168,45 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		evalRelations(trace, theCase);
 
 		if (rh.atLeastOneRelationTrue(contradictingRelations, theCase)) {
-			trace.setState(DiagnosisState.EXCLUDED);
-			return DiagnosisState.EXCLUDED;
-		} else if (rh.atLeastOneRelationTrue(sufficientRelations, theCase)) {
-			trace.setState(DiagnosisState.ESTABLISHED);
-			return DiagnosisState.ESTABLISHED;
-		} else {
-			double currentXCLScore = computeXCLScore(theCase);
-			double currentSupport = computeSupport(theCase);
-			trace.setScore(currentXCLScore);
-			trace.setSupport(currentSupport);
-			if (minSupport <= currentSupport) {
-				if (currentXCLScore >= establishedThreshold
-						&& rh.allRelationsTrue(necessaryRelations, theCase)) {
-					trace.setState(DiagnosisState.ESTABLISHED);
-					return DiagnosisState.ESTABLISHED;
-				} else if (currentXCLScore >= establishedThreshold
-						&& !rh.allRelationsTrue(necessaryRelations, theCase)) {
-					trace.setState(DiagnosisState.SUGGESTED);
-					return DiagnosisState.SUGGESTED;
-				} else if (currentXCLScore >= suggestedThreshold
-						&& rh.allRelationsTrue(necessaryRelations, theCase)) {
-					trace.setState(DiagnosisState.SUGGESTED);
-					return DiagnosisState.SUGGESTED;
+			DiagnosisState excluded = new DiagnosisState(State.EXCLUDED);
+			trace.setState(excluded);
+			return excluded;
+		}
+		else {
+			DiagnosisState established = new DiagnosisState(State.ESTABLISHED);
+			if (rh.atLeastOneRelationTrue(sufficientRelations, theCase)) {
+				trace.setState(established);
+				return established;
+			}
+			else {
+				double currentXCLScore = computeXCLScore(theCase);
+				double currentSupport = computeSupport(theCase);
+				trace.setScore(currentXCLScore);
+				trace.setSupport(currentSupport);
+				if (minSupport <= currentSupport) {
+					if (currentXCLScore >= establishedThreshold
+							&& rh.allRelationsTrue(necessaryRelations, theCase)) {
+						trace.setState(established);
+						return established;
+					}
+					else {
+						DiagnosisState suggested = new DiagnosisState(State.SUGGESTED);
+						if (currentXCLScore >= establishedThreshold
+								&& !rh.allRelationsTrue(necessaryRelations, theCase)) {
+							trace.setState(suggested);
+							return suggested;
+						}
+						else if (currentXCLScore >= suggestedThreshold
+								&& rh.allRelationsTrue(necessaryRelations, theCase)) {
+							trace.setState(suggested);
+							return suggested;
+						}
+					}
 				}
 			}
 		}
 
-		return DiagnosisState.UNCLEAR;
+		return new DiagnosisState(State.UNCLEAR);
 	}
 
 	private void evalRelations(SCMCBRInferenceTrace trace, Session c) {
@@ -207,12 +215,15 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 				boolean b = rel.eval(c);
 				if (b) {
 					trace.addPosRelation(rel);
-				} else {
+				}
+				else {
 					trace.addNegRelation(rel);
 				}
-			} catch (NoAnswerException e) {
+			}
+			catch (NoAnswerException e) {
 				// do nothing
-			} catch (UnknownAnswerException e) {
+			}
+			catch (UnknownAnswerException e) {
 				// do nothing
 			}
 
@@ -223,12 +234,15 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 				boolean b = rel.eval(c);
 				if (b) {
 					trace.addReqPosRelation(rel);
-				} else {
+				}
+				else {
 					trace.addReqPNegRelation(rel);
 				}
-			} catch (NoAnswerException e) {
+			}
+			catch (NoAnswerException e) {
 				// do nothing
-			} catch (UnknownAnswerException e) {
+			}
+			catch (UnknownAnswerException e) {
 				// do nothing
 			}
 
@@ -240,9 +254,11 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 				if (b) {
 					trace.addContrRelation(rel);
 				}
-			} catch (NoAnswerException e) {
+			}
+			catch (NoAnswerException e) {
 				// do nothing
-			} catch (UnknownAnswerException e) {
+			}
+			catch (UnknownAnswerException e) {
 				// do nothing
 			}
 
@@ -254,9 +270,11 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 				if (b) {
 					trace.addSuffRelation(rel);
 				}
-			} catch (NoAnswerException e) {
+			}
+			catch (NoAnswerException e) {
 				// do nothing
-			} catch (UnknownAnswerException e) {
+			}
+			catch (UnknownAnswerException e) {
 				// do nothing
 			}
 
@@ -306,16 +324,17 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 	private Collection<SCMCBRRelation> computeRelations(Session theCase,
 			boolean direction) {
 		Collection<SCMCBRRelation> r = new ArrayList<SCMCBRRelation>();
-		Collection<SCMCBRRelation> toTest = new ArrayList<SCMCBRRelation>();	
+		Collection<SCMCBRRelation> toTest = new ArrayList<SCMCBRRelation>();
 		toTest.addAll(relations);
 		toTest.addAll(this.necessaryRelations);
 		for (SCMCBRRelation relation : toTest) {
 			try {
-				if (relation.eval(theCase) == direction)
-					r.add(relation);
-			} catch (NoAnswerException e) {
+				if (relation.eval(theCase) == direction) r.add(relation);
+			}
+			catch (NoAnswerException e) {
 				// Do not count relation
-			} catch (UnknownAnswerException e) {
+			}
+			catch (UnknownAnswerException e) {
 				// Do not count relation
 			}
 		}
@@ -327,17 +346,13 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 	}
 
 	public boolean addRelation(SCMCBRRelation relation, XCLRelationType type) {
-		if (type.equals(XCLRelationType.explains))
-			return addRelationTo(relation, relations);
+		if (type.equals(XCLRelationType.explains)) return addRelationTo(relation, relations);
 
-		if (type.equals(XCLRelationType.contradicted))
-			return addContradictingRelation(relation);
+		if (type.equals(XCLRelationType.contradicted)) return addContradictingRelation(relation);
 
-		if (type.equals(XCLRelationType.requires))
-			return addNecessaryRelation(relation);
+		if (type.equals(XCLRelationType.requires)) return addNecessaryRelation(relation);
 
-		if (type.equals(XCLRelationType.sufficiently))
-			return addSufficientRelation(relation);
+		if (type.equals(XCLRelationType.sufficiently)) return addSufficientRelation(relation);
 
 		return false;
 	}
@@ -356,8 +371,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 
 	private boolean addRelationTo(SCMCBRRelation relation,
 			Collection<SCMCBRRelation> theRelations) {
-		if (theRelations.contains(relation))
-			return false;
+		if (theRelations.contains(relation)) return false;
 		theRelations.add(relation);
 		return true;
 	}
@@ -369,8 +383,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		r.addAll(sufficientRelations);
 		r.addAll(contradictingRelations);
 		for (SCMCBRRelation relation : r) {
-			if (id.equals(relation.getId()))
-				return relation;
+			if (id.equals(relation.getId())) return relation;
 		}
 		return null;
 	}
@@ -420,8 +433,6 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		}
 		return id;
 	}
-	
-	
 
 	public double getCoveringSuggestedThreshold() {
 		return coveringSuggestedThreshold;
@@ -493,8 +504,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 	Collection<KBOEventListener> listeners;
 
 	public void addListener(KBOEventListener listener) {
-		if (listeners == null)
-			listeners = new LinkedList<KBOEventListener>();
+		if (listeners == null) listeners = new LinkedList<KBOEventListener>();
 		if (!listeners.contains(listener)) {
 			listeners.add(listener);
 		}
@@ -523,8 +533,5 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 	public Collection<KBOEventListener> getListeners() {
 		return listeners;
 	}
-
-	
-	
 
 }

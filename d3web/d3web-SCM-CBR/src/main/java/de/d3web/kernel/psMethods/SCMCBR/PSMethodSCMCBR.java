@@ -13,6 +13,7 @@ import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.scoring.DiagnosisScore;
+import de.d3web.scoring.HeuristicRating;
 
 public class PSMethodSCMCBR extends PSMethodAdapter {
 
@@ -69,7 +70,10 @@ public class PSMethodSCMCBR extends PSMethodAdapter {
 				}
 				if (o instanceof DiagnosisScore) {
 					DiagnosisScore oldScore = (DiagnosisScore) o;
-					oldState = DiagnosisState.getState(oldScore);
+					if (oldScore == null) {
+						oldState = null;
+					}
+					oldState = new HeuristicRating(oldScore.getScore());
 				}
 
 				// TODO: split getState into getState and refreshState

@@ -171,7 +171,7 @@ public class HeuristicSolutionDerivationTest {
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Exhaust fumes' == 'black'
-		Value exhaustFumesValue = session.getValue(exhaustFumes);
+		Value exhaustFumesValue = session.getBlackboard().getValue(exhaustFumes);
 		assertEquals("Question 'Exhaust fumes' has wrong value", black, exhaustFumesValue);
 
 		// TEST 'Clogged air filter' == SUGGESTED
@@ -186,7 +186,7 @@ public class HeuristicSolutionDerivationTest {
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Fuel' == 'unleaded gasoline'
-		Value fuelValue = session.getValue(fuel);
+		Value fuelValue = session.getBlackboard().getValue(fuel);
 		assertEquals("Question 'Fuel' has wrong value", unleadedGasoline, fuelValue);
 
 		// TEST 'Clogged air filter' == ESTABLISHED
@@ -210,7 +210,7 @@ public class HeuristicSolutionDerivationTest {
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Fuel' == 'diesel'
-		Value fuelValue = session.getValue(fuel);
+		Value fuelValue = session.getBlackboard().getValue(fuel);
 		assertEquals("Question 'Fuel' has wrong value", diesel, fuelValue);
 
 		// TEST 'Clogged air filter' == SUGGESTED
@@ -226,7 +226,7 @@ public class HeuristicSolutionDerivationTest {
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Exhaust fumes' == 'blue'
-		Value exhaustFumesValue = session.getValue(exhaustFumes);
+		Value exhaustFumesValue = session.getBlackboard().getValue(exhaustFumes);
 		assertEquals("Question 'Exhaust fumes' has wrong value", blue, exhaustFumesValue);
 
 		// TEST 'Clogged air filter' == UNCLEAR
@@ -248,7 +248,7 @@ public class HeuristicSolutionDerivationTest {
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Exhaust fumes' == 'black'
-		Value exhaustFumesValue = session.getValue(exhaustFumes);
+		Value exhaustFumesValue = session.getBlackboard().getValue(exhaustFumes);
 		assertEquals("Question 'Exhaust fumes' has wrong value", black, exhaustFumesValue);
 
 		// TEST 'Clogged air filter' == SUGGESTED
@@ -263,7 +263,7 @@ public class HeuristicSolutionDerivationTest {
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Exhaust fumes' == 'UNDEFINED'
-		exhaustFumesValue = session.getValue(exhaustFumes);
+		exhaustFumesValue = session.getBlackboard().getValue(exhaustFumes);
 		assertEquals("Question 'Exhaust fumes' has wrong value",
 				UndefinedValue.getInstance(), exhaustFumesValue);
 

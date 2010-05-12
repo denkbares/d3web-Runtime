@@ -1,22 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *                    denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg denkbares GmbH
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.shared.io.fragments;
 
@@ -37,8 +36,10 @@ import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.ValueFactory;
 import de.d3web.shared.LocalWeight;
+
 /**
  * Handles LocalWeights
+ * 
  * @author Norman Brümmer, Markus Friedrich (denkbares GmbH)
  */
 public class LocalWeightHandler implements FragmentHandler {
@@ -65,7 +66,7 @@ public class LocalWeightHandler implements FragmentHandler {
 				.getNodeValue();
 
 		q = kb.searchQuestion(questionID);
-		d = kb.searchDiagnosis(diagnosisID);
+		d = kb.searchSolution(diagnosisID);
 
 		if (q instanceof QuestionChoice) {
 			LocalWeight lw = new LocalWeight();
@@ -92,10 +93,11 @@ public class LocalWeightHandler implements FragmentHandler {
 				}
 			}
 			return lw;
-		} else {
+		}
+		else {
 			throw new IOException(
 					"no abnormality handling for questions of type "
-							+ q.getClass());
+					+ q.getClass());
 		}
 	}
 
@@ -103,7 +105,7 @@ public class LocalWeightHandler implements FragmentHandler {
 	public Element write(Object object, Document doc) throws IOException {
 		LocalWeight localWeight = (LocalWeight) object;
 		Element element = doc.createElement("KnowledgeSlice");
-		element.setAttribute("ID", "W"+localWeight.getQuestion().getId());
+		element.setAttribute("ID", "W" + localWeight.getQuestion().getId());
 		element.setAttribute("type", "localweight");
 		element.setAttribute("questionID", localWeight.getQuestion().getId());
 		element.setAttribute("diagnosisID", localWeight.getDiagnosis().getId());
@@ -113,7 +115,8 @@ public class LocalWeightHandler implements FragmentHandler {
 			Value answer = answers.nextElement();
 			Element localweightNode = doc.createElement("localweight");
 			localweightNode.setAttribute("ID", ValueFactory.getID_or_Value(answer));
-			localweightNode.setAttribute("value", LocalWeight.convertValueToConstantString(localWeight.getValue(answer)));
+			localweightNode.setAttribute("value",
+					LocalWeight.convertValueToConstantString(localWeight.getValue(answer)));
 			valuesNode.appendChild(localweightNode);
 		}
 		element.appendChild(valuesNode);

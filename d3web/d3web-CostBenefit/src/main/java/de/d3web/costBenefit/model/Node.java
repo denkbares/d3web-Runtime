@@ -194,7 +194,7 @@ public class Node {
 				}
 			}
 			else {
-				expectedmap.put(q, testCase.getValue(q));
+				expectedmap.put(q, testCase.getBlackboard().getValue(q));
 			}
 		}
 		if (set) {

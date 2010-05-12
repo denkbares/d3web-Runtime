@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2;
@@ -31,6 +31,7 @@ import org.apache.myfaces.custom.tree2.TreeNodeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.DiagnosisState.State;
 import de.d3web.core.session.Session;
 import de.d3web.dialog2.util.DialogUtils;
 
@@ -58,13 +59,13 @@ public class DiagnosesTreeBean {
 		Solution actual = theCase.getKnowledgeBase().searchSolution(
 				node.getIdentifier());
 		DiagnosisState state = theCase.getBlackboard().getState(actual);
-		if (state.equals(new DiagnosisState(DiagnosisState.State.ESTABLISHED))) {
+		if (state.hasState(State.ESTABLISHED)) {
 			node.setType(DiagnosesTreeBean.ESTABLISHED_TYPE);
 		}
-		else if (state.equals((new DiagnosisState(DiagnosisState.State.EXCLUDED)))) {
+		else if (state.hasState(State.EXCLUDED)) {
 			node.setType(DiagnosesTreeBean.EXCLUDED_TYPE);
 		}
-		else if (state.equals((new DiagnosisState(DiagnosisState.State.SUGGESTED)))) {
+		else if (state.hasState(State.SUGGESTED)) {
 			node.setType(DiagnosesTreeBean.SUGGESTED_TYPE);
 		}
 		else {

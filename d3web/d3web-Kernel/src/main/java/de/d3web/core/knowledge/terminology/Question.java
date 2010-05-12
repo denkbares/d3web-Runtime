@@ -123,7 +123,7 @@ public abstract class Question extends QASet {
 			return true;
 		}
 		else {
-			return !UndefinedValue.isUndefinedValue(theCase.getValue(this));
+			return !UndefinedValue.isUndefinedValue(theCase.getBlackboard().getValue(this));
 			// (getValue(theCase) != null && theCase.getValue(this) !=
 			// UndefinedValue.getInstance());
 		}

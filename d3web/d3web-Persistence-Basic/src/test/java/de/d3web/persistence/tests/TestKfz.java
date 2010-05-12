@@ -138,7 +138,7 @@ public class TestKfz extends TestCase {
 		theCase.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf7, mcv,
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
-		Value value = theCase.getValue(Mf5);
+		Value value = theCase.getBlackboard().getValue(Mf5);
 		if (value == null) {
 			System.out.println("(1) --> NULL!!!!");
 		}
@@ -175,9 +175,10 @@ public class TestKfz extends TestCase {
 		Choice ratingNormal = (Choice) Msi4.getAnswer(theCase, "Msi4a1");
 		ChoiceValue ratingNormalValue = new ChoiceValue(ratingNormal);
 
-		System.out.println("(1) --> Msi4: " + theCase.getValue(Msi4));
+		System.out.println("(1) --> Msi4: " + theCase.getBlackboard().getValue(Msi4));
 
-		assertEquals("Error with formula (1)", ratingNormalValue, theCase.getValue(Msi4));
+		assertEquals("Error with formula (1)", ratingNormalValue, theCase.getBlackboard().getValue(
+				Msi4));
 
 		// This is exactly the border ((Mf6-Mf5)/Mf5)*100 = 10
 		theCase.getBlackboard().addValueFact(
@@ -185,24 +186,27 @@ public class TestKfz extends TestCase {
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		Choice ratingHigh = (Choice) Msi4.getAnswer(theCase, "Msi4a2");
 		ChoiceValue ratingHighValue = new ChoiceValue(ratingHigh);
-		System.out.println("(2) --> Msi4: " + theCase.getValue(Msi4));
-		assertEquals("Error with formula (2)", ratingHighValue, theCase.getValue(Msi4));
+		System.out.println("(2) --> Msi4: " + theCase.getBlackboard().getValue(Msi4));
+		assertEquals("Error with formula (2)", ratingHighValue, theCase.getBlackboard().getValue(
+				Msi4));
 
 		theCase.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf6, new NumValue(new Double(15)),
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
-		System.out.println("(4) --> Msi4: " + theCase.getValue(Msi4));
+		System.out.println("(4) --> Msi4: " + theCase.getBlackboard().getValue(Msi4));
 		Choice ratingVeryHigh = (Choice) Msi4.getAnswer(theCase, "Msi4a3");
 		ChoiceValue ratingVeryHighValue = new ChoiceValue(ratingVeryHigh);
 
-		assertEquals("Error with formula (4)", ratingVeryHighValue, theCase.getValue(Msi4));
+		assertEquals("Error with formula (4)", ratingVeryHighValue,
+				theCase.getBlackboard().getValue(Msi4));
 
 		// user sets the value to 19.5 (user overrides all other values)
 		theCase.getBlackboard().addValueFact(
 				FactFactory.createFact(Msi4, new NumValue(new Double(19.5)),
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
-		System.out.println("(3) --> Msi4: " + theCase.getValue(Msi4));
-		assertEquals("Error with formula (3)", ratingHighValue, theCase.getValue(Msi4));
+		System.out.println("(3) --> Msi4: " + theCase.getBlackboard().getValue(Msi4));
+		assertEquals("Error with formula (3)", ratingHighValue, theCase.getBlackboard().getValue(
+				Msi4));
 	}
 
 	/**
@@ -226,7 +230,7 @@ public class TestKfz extends TestCase {
 		theCase.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf6, new NumValue(new Double(10)),
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
-		Value Mf58Value = theCase.getValue(Mf58);
+		Value Mf58Value = theCase.getBlackboard().getValue(Mf58);
 		if (Mf58Value == null) {
 			System.out.println("(1) --> NULL!!!!");
 		}
@@ -259,14 +263,14 @@ public class TestKfz extends TestCase {
 
 		assertEquals(
 				"Error while setting/getting known OC-Value (2)",
-				new ChoiceValue(answerChoice), theCase.getValue(questionOC));
+				new ChoiceValue(answerChoice), theCase.getBlackboard().getValue(questionOC));
 		theCase.getBlackboard().addValueFact(
 				FactFactory.createFact(questionOC, Unknown.getInstance(),
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		assertEquals(
 				"Error while setting/getting unknown OC-Value (3)",
-				Unknown.getInstance(), theCase.getValue(questionOC));
+				Unknown.getInstance(), theCase.getBlackboard().getValue(questionOC));
 
 		assertTrue(
 				"Error: isDone shouldn't be false (4)",

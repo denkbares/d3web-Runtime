@@ -142,11 +142,11 @@ public class TextAbstractionTest {
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Emoticon' == ':-)'
-		Value currentEmoticonValue = session.getValue(emoticon);
+		Value currentEmoticonValue = session.getBlackboard().getValue(emoticon);
 		assertEquals("Question 'Emoticon' has wrong value", happinessIcon, currentEmoticonValue);
 
 		// TEST 'Feeling' == 'Happiness'
-		Value currentFeelingValue = session.getValue(feeling);
+		Value currentFeelingValue = session.getBlackboard().getValue(feeling);
 		Value happiness = kbm.findValue(feeling, "Happiness");
 		assertEquals("Question 'Feeling' has wrong value", happiness, currentFeelingValue);
 
@@ -157,11 +157,11 @@ public class TextAbstractionTest {
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Emoticon' == ':-('
-		currentEmoticonValue = session.getValue(emoticon);
+		currentEmoticonValue = session.getBlackboard().getValue(emoticon);
 		assertEquals("Question 'Emoticon' has wrong value", sadnessIcon, currentEmoticonValue);
 
 		// TEST 'Feeling' == 'Sadness'
-		currentFeelingValue = session.getValue(feeling);
+		currentFeelingValue = session.getBlackboard().getValue(feeling);
 		Value sadness = kbm.findValue(feeling, "Sadness");
 		assertEquals("Question 'Feeling' has wrong value", sadness, currentFeelingValue);
 	}
@@ -178,12 +178,12 @@ public class TextAbstractionTest {
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Emoticon' == 'UNDEFINED'
-		Value currentEmoticonValue = session.getValue(emoticon);
+		Value currentEmoticonValue = session.getBlackboard().getValue(emoticon);
 		assertEquals("Question 'Emoticon' has wrong value", UndefinedValue.getInstance(),
 				currentEmoticonValue);
 
 		// TEST 'Feeling' == 'UNDEFINED'
-		Value currentFeelingValue = session.getValue(feeling);
+		Value currentFeelingValue = session.getBlackboard().getValue(feeling);
 		assertEquals("Question 'Feeling' has wrong value", UndefinedValue.getInstance(),
 				currentFeelingValue);
 

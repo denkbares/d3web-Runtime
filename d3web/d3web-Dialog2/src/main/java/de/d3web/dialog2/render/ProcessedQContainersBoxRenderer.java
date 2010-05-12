@@ -179,7 +179,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 
 			for (int j = 0; j < qList.size(); j++) {
 				Question q = qList.get(j);
-				if (UndefinedValue.isNotUndefinedValue(theCase.getValue(q))) {
+				if (UndefinedValue.isNotUndefinedValue(theCase.getBlackboard().getValue(q))) {
 					if (!processedBean.isShowUnknown()
 							&& DialogUtils.unknownAnswerInValueList(q, theCase)) {
 						continue;
@@ -307,7 +307,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 		writer.startElement("span", component);
 		writer.writeAttribute("id", component.getId() + "_ans_" + q.getId(), "id");
 
-		Value ans = theCase.getValue(q);
+		Value ans = theCase.getBlackboard().getValue(q);
 
 		if (ans instanceof ChoiceValue) {
 			String valueID = ((Choice) ans.getValue()).getId();

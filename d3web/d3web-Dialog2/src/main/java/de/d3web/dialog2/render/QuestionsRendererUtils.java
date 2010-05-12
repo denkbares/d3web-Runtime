@@ -76,7 +76,7 @@ public class QuestionsRendererUtils {
 
 	private static boolean currentAnswerIsSet(Value specifiedValue, Question q,
 			Session session) {
-		Value sessionValue = session.getValue(q);
+		Value sessionValue = session.getBlackboard().getValue(q);
 		return specifiedValue.equals(sessionValue);
 	}
 
@@ -122,7 +122,7 @@ public class QuestionsRendererUtils {
 	// }
 
 	private static String getAnswerValue(Question q, Session session) {
-		Value v = session.getValue(q);
+		Value v = session.getBlackboard().getValue(q);
 		if (UndefinedValue.isNotUndefinedValue(v)) {
 			return v.toString();
 		}
@@ -368,7 +368,7 @@ public class QuestionsRendererUtils {
 				.getFollowingPopupQuestionId(answerId);
 		for (Question q : theCase.getBlackboard().getAnsweredQuestions()) {
 			if (q.getId().equals(questionId) && (q instanceof QuestionChoice)) {
-				Value answer = theCase.getValue(q);
+				Value answer = theCase.getBlackboard().getValue(q);
 				if (answer != null) {
 					return (Choice) answer.getValue();
 				}
@@ -881,7 +881,7 @@ public class QuestionsRendererUtils {
 							.getProperties().getProperty(
 							Property.MC_CONSTRAINTS);
 
-					Value mcans = theCase.getValue(qChoice);
+					Value mcans = theCase.getBlackboard().getValue(qChoice);
 					List<Choice> alreadySetAnsList = new ArrayList<Choice>();
 
 					if (mcans instanceof MultipleChoiceValue) {
@@ -986,7 +986,7 @@ public class QuestionsRendererUtils {
 			writer.writeAttribute("value", "", "value");
 		}
 		else {
-			Value answer = theCase.getValue(q);
+			Value answer = theCase.getBlackboard().getValue(q);
 			// List<Answer> valueList = q.getValue(theCase);
 			String errorValue = ((UIQuestionPage) component)
 					.getErrorIDsToSubmittedValues().get(q.getId());

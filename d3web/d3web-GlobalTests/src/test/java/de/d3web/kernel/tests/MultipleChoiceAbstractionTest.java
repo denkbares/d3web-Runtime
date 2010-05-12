@@ -206,11 +206,11 @@ public class MultipleChoiceAbstractionTest {
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Day' == 'Workday'
-		Value dayValue = session.getValue(day);
+		Value dayValue = session.getBlackboard().getValue(day);
 		assertEquals("Question 'Day' has wrong value", workday, dayValue);
 
 		// TEST 'Weekday' == 'Monday, Tuesday, Wednesday, Thursday, Friday'
-		Value weekdayValue = session.getValue(weekday);
+		Value weekdayValue = session.getBlackboard().getValue(weekday);
 		List<String> ignoredValues = Arrays.asList("Saturday", "Sunday");
 		MultipleChoiceValue workdayValues = getWeekdayMCValue(ignoredValues);
 		assertEquals("Abstract question 'Weekday' has wrong value", workdayValues, weekdayValue);
@@ -222,11 +222,11 @@ public class MultipleChoiceAbstractionTest {
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Day' == 'Weekend'
-		dayValue = session.getValue(day);
+		dayValue = session.getBlackboard().getValue(day);
 		assertEquals("Question 'Day' has wrong value", weekend, dayValue);
 
 		// TEST 'Weekday' == 'Saturday, Sunday'
-		weekdayValue = session.getValue(weekday);
+		weekdayValue = session.getBlackboard().getValue(weekday);
 		ignoredValues = Arrays.asList("Monday", "Tuesday", "Wednesday", "Thursday", "Friday");
 		MultipleChoiceValue weekendValues = getWeekdayMCValue(ignoredValues);
 		assertEquals("Abstract question 'Weekday' has wrong value", weekendValues, weekdayValue);
@@ -244,13 +244,13 @@ public class MultipleChoiceAbstractionTest {
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Day' == 'Weekend, Workday'
-		Value dayValue = session.getValue(day);
+		Value dayValue = session.getBlackboard().getValue(day);
 		assertEquals("Question 'Day' has wrong value", getWeekdayMCValue(Arrays.asList("")),
 				dayValue);
 
 		// TEST 'Weekday' == 'Monday, Tuesday, Wednesday, Thursday, Friday,
 		// Saturday, Sunday'
-		Value weekdayValue = session.getValue(weekday);
+		Value weekdayValue = session.getBlackboard().getValue(weekday);
 		MultipleChoiceValue completeWeekValues = getWeekdayMCValue(null);
 		assertEquals("Abstract question 'Weekday' has wrong value", completeWeekValues,
 				weekdayValue);
@@ -268,11 +268,11 @@ public class MultipleChoiceAbstractionTest {
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Day' == 'UNDEFINED'
-		Value dayValue = session.getValue(day);
+		Value dayValue = session.getBlackboard().getValue(day);
 		assertEquals("Question 'Day' has wrong value", UndefinedValue.getInstance(), dayValue);
 
 		// TEST 'Weekday' == 'UNDEFINED' ?
-		Value weekdayValue = session.getValue(weekday);
+		Value weekdayValue = session.getBlackboard().getValue(weekday);
 		assertEquals("Abstract question 'Day' has wrong value", UndefinedValue.getInstance(),
 				weekdayValue);
 	}

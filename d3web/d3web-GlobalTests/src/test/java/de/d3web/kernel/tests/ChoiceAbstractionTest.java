@@ -193,30 +193,30 @@ public class ChoiceAbstractionTest {
 		Value monday = kbm.findValue(weekday, "Monday");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(weekday, monday, PSMethodUserSelected.getInstance(),
-						PSMethodUserSelected.getInstance()));
+				PSMethodUserSelected.getInstance()));
 
 		// TEST 'Weekday' == 'Monday'
-		Value weekdayValue = session.getValue(weekday);
+		Value weekdayValue = session.getBlackboard().getValue(weekday);
 		assertEquals("Question 'Weekday' has wrong value", monday, weekdayValue);
 
 		// TEST 'Day' == 'Workday'
 		Value workday = kbm.findValue(day, "Workday");
-		Value dayValue = session.getValue(day);
+		Value dayValue = session.getBlackboard().getValue(day);
 		assertEquals("Abstract question 'Day' has wrong value", workday, dayValue);
 
 		// SET 'Weekday' = 'Saturday'
 		Value saturday = kbm.findValue(weekday, "Saturday");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(weekday, saturday, PSMethodUserSelected.getInstance(),
-						PSMethodUserSelected.getInstance()));
+				PSMethodUserSelected.getInstance()));
 
 		// TEST 'Weekday' == 'Saturday'
-		weekdayValue = session.getValue(weekday);
+		weekdayValue = session.getBlackboard().getValue(weekday);
 		assertEquals("Question 'Weekday' has wrong value", saturday, weekdayValue);
 
 		// TEST 'Day' == 'Weekend'
 		Value weekend = kbm.findValue(day, "Weekend");
-		dayValue = session.getValue(day);
+		dayValue = session.getBlackboard().getValue(day);
 		assertEquals("Abstract question 'Day' has wrong value", weekend, dayValue);
 	}
 
@@ -229,15 +229,15 @@ public class ChoiceAbstractionTest {
 		// SET 'Weekday' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(weekday, UndefinedValue.getInstance(),
-						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Weekday' == 'UNDEFINED'
-		Value weekdayValue = session.getValue(weekday);
+		Value weekdayValue = session.getBlackboard().getValue(weekday);
 		assertEquals("Question 'Weekday' has wrong value", UndefinedValue.getInstance(),
 				weekdayValue);
 
 		// TEST 'Day' == 'UNDEFINED'
-		Value dayValue = session.getValue(day);
+		Value dayValue = session.getBlackboard().getValue(day);
 		assertEquals("Abstract question 'Day' has wrong value", UndefinedValue.getInstance(),
 				dayValue);
 	}

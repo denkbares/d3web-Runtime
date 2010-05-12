@@ -65,19 +65,6 @@ public class Solution extends NamedObject implements TerminologyObject {
 		super(id);
 	}
 
-	// private void checkForNewState(DiagnosisState oldState, DiagnosisState
-	// newStatus,
-	// Session theCase) {
-	// if (oldState != newStatus) {
-	// if (newStatus.hasState(State.ESTABLISHED)) {
-	// establish(theCase);
-	// }
-	// if (oldState.hasState(State.ESTABLISHED)) {
-	// deestablish(theCase);
-	// }
-	// }
-	// }
-
 	/**
 	 * Creates a new dynamic flyweight for this object in the context of the
 	 * specified {@link Session} instance. For every new {@link Session}
@@ -89,26 +76,6 @@ public class Solution extends NamedObject implements TerminologyObject {
 	public SessionObject createCaseObject(Session session) {
 		return new CaseDiagnosis(this);
 	}
-
-	/**
-	 * Removes this object from the established solutions in the given
-	 * {@link Session} and propagates the state change.
-	 * 
-	 * @param session the specified {@link Session}
-	 */
-	// private void deestablish(Session session) {
-	// session.removeEstablishedSolution(this);
-	// }
-
-	/**
-	 * Adds this object to the list of established solutions in the given
-	 * {@link Session} and propagates the state change.
-	 * 
-	 * @param session the specified {@link Session}
-	 */
-	// private void establish(Session session) {
-	// session.addEstablishedSolution(this);
-	// }
 
 	/**
 	 * Returns the prior probability of this solution. The 'probability' is

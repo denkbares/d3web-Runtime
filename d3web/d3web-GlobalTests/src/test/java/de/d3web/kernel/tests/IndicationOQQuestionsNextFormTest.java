@@ -242,7 +242,7 @@ public class IndicationOQQuestionsNextFormTest {
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(sex, male,
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
-		Value sexValue = session.getValue(sex);
+		Value sexValue = session.getBlackboard().getValue(sex);
 		assertEquals("Question Sex has wrong value ", male, sexValue);
 		// OQ Strategy should return exactly one element here.
 		intervObjs = interview.nextForm().getInterviewObjects();
@@ -267,7 +267,7 @@ public class IndicationOQQuestionsNextFormTest {
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(sex, female,
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
-		sexValue = session.getValue(sex);
+		sexValue = session.getBlackboard().getValue(sex);
 		assertEquals("Question Sex has wrong value ", female, sexValue);
 
 		// OQ Strategy should return exactly one element here.
@@ -290,7 +290,7 @@ public class IndicationOQQuestionsNextFormTest {
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(sex, male,
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
-		sexValue = session.getValue(sex);
+		sexValue = session.getBlackboard().getValue(sex);
 		assertEquals("Question Sex has wrong value ", male, sexValue);
 
 		// OQ Strategy should return exactly one element here.
@@ -336,7 +336,7 @@ public class IndicationOQQuestionsNextFormTest {
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(askHead, yes,
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
-		Value askHValue = session.getValue(askHead);
+		Value askHValue = session.getBlackboard().getValue(askHead);
 		assertEquals("Question Ask_Headache has wrong value ", yes, askHValue);
 
 		// OQ Strategy should return exactly one element here.
@@ -361,7 +361,7 @@ public class IndicationOQQuestionsNextFormTest {
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(askHead, no,
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
-		askHValue = session.getValue(askHead);
+		askHValue = session.getBlackboard().getValue(askHead);
 		assertEquals("Question Ask_Headache has wrong value ", no, askHValue);
 
 		// OQ Strategy should return exactly one element here.

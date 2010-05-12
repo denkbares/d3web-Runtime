@@ -228,7 +228,9 @@ public class ActionAddValue extends ActionQuestionSetter {
 					MethodKind.BACKWARD) != null)) {
 				Choice severestAnswer = getSeverestAnswer((QuestionOC) getQuestion(), session);
 				if ((severestAnswer != null)
-						&& (UndefinedValue.isUndefinedValue(session.getValue(getQuestion())) || (!severestAnswer.equals(session.getValue(getQuestion()))))) {
+						&& (UndefinedValue.isUndefinedValue(session.getBlackboard().getValue(
+								getQuestion())) || (!severestAnswer.equals(session.getBlackboard().getValue(
+								getQuestion()))))) {
 					Fact fact = FactFactory.createFact(getQuestion(),
 							new ChoiceValue(severestAnswer),
 							this,

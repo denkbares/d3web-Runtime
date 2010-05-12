@@ -279,7 +279,7 @@ public class InterviewBot {
 
 	private List<RatedSolution> toRatedSolutions(Session theCase) {
 		List<RatedSolution> ratedSolutions = new LinkedList<RatedSolution>();
-		for (Solution solution : theCase.getKnowledgeBase().getDiagnoses()) {
+		for (Solution solution : theCase.getKnowledgeBase().getSolutions()) {
 			Rating rating = ratingStrategy.getRatingFor(solution, theCase);
 			if (rating.isProblemSolvingRelevant()) {
 				RatedSolution ratedSolution = new RatedSolution(solution, rating);
@@ -397,7 +397,7 @@ public class InterviewBot {
 		public Builder forbiddenAnswerCombination(FindingMC f) throws Exception {
 			if (allowedAnswerCombinations.containsKey(f.getQuestion())) throw new Exception(
 					"There are already forbidden answer combinations defined for question \""
-							+ f.getQuestion().getName() + "\".");
+					+ f.getQuestion().getName() + "\".");
 
 			Collection<Answer[]> answers = forbiddenAnswerCombinations.get(f.getQuestion());
 			if (answers == null) {
@@ -411,7 +411,7 @@ public class InterviewBot {
 		public Builder allowedAnswerCombination(FindingMC f) {
 			if (forbiddenAnswerCombinations.containsKey(f.getQuestion())) throw new IllegalArgumentException(
 					"There are already allowed answer combinations defined for question \""
-							+ f.getQuestion().getName() + "\".");
+					+ f.getQuestion().getName() + "\".");
 
 			Collection<Answer[]> answers = allowedAnswerCombinations.get(f.getQuestion());
 			if (answers == null) {

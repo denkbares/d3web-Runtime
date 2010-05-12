@@ -23,16 +23,13 @@ package de.d3web.core.session;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import de.d3web.abstraction.inference.PSMethodQuestionSetter;
 import de.d3web.core.inference.DefaultPropagationController;
-import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodInit;
@@ -90,13 +87,7 @@ public class D3WebSession implements Session {
 	private final DefaultPropagationController propagationController;
 	private Map<CaseObjectSource, SessionObject> dynamicStore;
 
-	private final List<Solution> establishedDiagnoses = new LinkedList<Solution>();
-
 	private List<PSMethod> usedPSMethods;
-
-	// TODO: maybe change to rule
-	private Set<Class<? extends KnowledgeSlice>> finishReasons;
-	// private boolean finished = false;
 
 	private QASetManager qaSetManager = null;
 	private QASetManagerFactory qamFactory = null;
@@ -197,7 +188,6 @@ public class D3WebSession implements Session {
 
 		properties = new Properties();
 		dcMarkup = new DCMarkup();
-		finishReasons = new HashSet<Class<? extends KnowledgeSlice>>();
 
 		dynamicStore = new HashMap<CaseObjectSource, SessionObject>();
 
@@ -266,7 +256,7 @@ public class D3WebSession implements Session {
 		try {
 			for (Question question : blackboard.getAnsweredQuestions()) {
 				Object oldValue = null;
-				Object newValue = getValue(question);
+				Object newValue = getBlackboard().getValue(question);
 				propagationContoller.propagate(question, oldValue, newValue, psmethod);
 			}
 			// TODO: das ist so viel zu aufwendig, wenn viele Lösungen sind. Man
@@ -344,28 +334,13 @@ public class D3WebSession implements Session {
 		return usedPSMethods;
 	}
 
-	@Override
-	public void removeEstablishedSolution(Solution diagnosis) {
-		establishedDiagnoses.remove(diagnosis);
-	}
-
 	private void setQASetManagerFactory(QASetManagerFactory factory) {
 		qamFactory = factory;
 	}
 
 	@Override
-	public void continueCase() {
-		finishReasons.clear();
-	}
-
-	@Override
 	public void setQASetManager(QASetManager newQASetManager) {
 		qaSetManager = newQASetManager;
-	}
-
-	@Override
-	public Value getValue(Question question) {
-		return getBlackboard().getValue(question);
 	}
 
 	@Override

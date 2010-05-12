@@ -864,7 +864,7 @@ public class MQDialogController implements DialogController {
 		for (TerminologyObject qaSet : c.getChildren()) {
 			if (qaSet instanceof Question) {
 				Question q = (Question) qaSet;
-				if (UndefinedValue.isNotUndefinedValue(theCase.getValue(q))) {
+				if (UndefinedValue.isNotUndefinedValue(theCase.getBlackboard().getValue(q))) {
 					return true;
 				}
 			}

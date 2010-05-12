@@ -211,11 +211,11 @@ public class DateAbstractionTest {
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Date' == 1960-01-01
-		Value currentDateValue = session.getValue(date);
+		Value currentDateValue = session.getBlackboard().getValue(date);
 		assertEquals("Question 'Date' has wrong value", duringSeparationDate, currentDateValue);
 
 		// TEST 'Germany is separated?' == 'Yes'
-		Value currentSeparationValue = session.getValue(separation);
+		Value currentSeparationValue = session.getBlackboard().getValue(separation);
 		Value yes = kbm.findValue(separation, "Yes");
 		assertEquals("Question 'Is Germany separated?' has wrong value", yes,
 				currentSeparationValue);
@@ -235,11 +235,11 @@ public class DateAbstractionTest {
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Date' == 1900-01-01
-		Value currentDateValue = session.getValue(date);
+		Value currentDateValue = session.getBlackboard().getValue(date);
 		assertEquals("Question 'Date' has wrong value", preSeparationDate, currentDateValue);
 
 		// TEST 'Germany is separated?' == 'No'
-		Value currentSeparationValue = session.getValue(separation);
+		Value currentSeparationValue = session.getBlackboard().getValue(separation);
 		Value no = kbm.findValue(separation, "No");
 		assertEquals("Question 'Is Germany separated?' has wrong value", no, currentSeparationValue);
 	}
@@ -259,11 +259,11 @@ public class DateAbstractionTest {
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Date' == 1989-11-09
-		Value currentDateValue = session.getValue(date);
+		Value currentDateValue = session.getBlackboard().getValue(date);
 		assertEquals("Question 'Date' has wrong value", fallOfTheWallDate, currentDateValue);
 
 		// TEST 'Event' == 'Fall of the Berlin Wall'
-		Value currentEventValue = session.getValue(event);
+		Value currentEventValue = session.getBlackboard().getValue(event);
 		Value fallOfTheWallValue = kbm.findValue(event, "Fall of the Berlin Wall");
 		assertEquals("Question 'Event' has wrong value", fallOfTheWallValue, currentEventValue);
 
@@ -275,11 +275,11 @@ public class DateAbstractionTest {
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Date' == 1990-10-03
-		currentDateValue = session.getValue(date);
+		currentDateValue = session.getBlackboard().getValue(date);
 		assertEquals("Question 'Date' has wrong value", germanUnityDate, currentDateValue);
 
 		// TEST 'Event' == 'German Unity'
-		currentEventValue = session.getValue(event);
+		currentEventValue = session.getBlackboard().getValue(event);
 		Value germanUnityValue = kbm.findValue(event, "German unity");
 		assertEquals("Question 'Event' has wrong value", germanUnityValue, currentEventValue);
 	}
@@ -296,12 +296,12 @@ public class DateAbstractionTest {
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Date' == 'UNDEFINED'
-		Value currentDateValue = session.getValue(date);
+		Value currentDateValue = session.getBlackboard().getValue(date);
 		assertEquals("Question 'Date' has wrong value", UndefinedValue.getInstance(),
 				currentDateValue);
 
 		// TEST 'Event' == 'UNDEFINED'
-		Value currentEventValue = session.getValue(event);
+		Value currentEventValue = session.getBlackboard().getValue(event);
 		assertEquals("Question 'Event' has wrong value", UndefinedValue.getInstance(),
 				currentEventValue);
 

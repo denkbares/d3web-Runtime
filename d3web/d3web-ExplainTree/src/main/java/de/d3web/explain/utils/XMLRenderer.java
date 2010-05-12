@@ -480,7 +480,7 @@ public class XMLRenderer {
 		if (qaSet instanceof Question) {
 			Question q = (Question) qaSet;
 			if (q instanceof QuestionChoice) {
-				Value answer = theCase.getValue(q);
+				Value answer = theCase.getBlackboard().getValue(q);
 				questionState.append("<Answers>");
 				if (answer instanceof Unknown) {
 					questionState.append(renderAnswerUnknownObject());
@@ -498,7 +498,8 @@ public class XMLRenderer {
 					// of the question (diagnosis-like)
 					if (getSchemaForQuestion(qOC) != null) {
 						if ((showStatus)
-								&& (UndefinedValue.isNotUndefinedValue(theCase.getValue(qOC)))) {
+								&& (UndefinedValue.isNotUndefinedValue(theCase.getBlackboard().getValue(
+										qOC)))) {
 							questionState.append("<SIScore value=\""
 									+ (qOC.getNumericalSchemaValue(theCase)).intValue()
 									+ "\"/>");
@@ -509,7 +510,7 @@ public class XMLRenderer {
 				}
 			}
 			else if (q instanceof QuestionNum) {
-				Value numValue = theCase.getValue(q);
+				Value numValue = theCase.getBlackboard().getValue(q);
 				if (numValue != null) {
 					questionState.append("<Answers>");
 					if (numValue instanceof Unknown) {
@@ -535,7 +536,7 @@ public class XMLRenderer {
 				}
 			}
 			else if (q instanceof QuestionText) {
-				Value textValue = theCase.getValue(q);
+				Value textValue = theCase.getBlackboard().getValue(q);
 				if (textValue != null) {
 					questionState.append("<Answers>");
 					if (textValue instanceof Unknown) {
@@ -551,7 +552,7 @@ public class XMLRenderer {
 				}
 			}
 			else if (q instanceof QuestionDate) {
-				Value dateValue = theCase.getValue(q);
+				Value dateValue = theCase.getBlackboard().getValue(q);
 				if (dateValue != null) {
 					questionState.append("<Answers>");
 					if (dateValue instanceof Unknown) {

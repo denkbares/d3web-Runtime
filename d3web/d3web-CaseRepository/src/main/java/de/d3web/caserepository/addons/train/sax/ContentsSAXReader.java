@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 /*
@@ -34,8 +34,8 @@ import de.d3web.caserepository.addons.train.findings.Finding;
 import de.d3web.caserepository.addons.train.findings.FindingsContents;
 import de.d3web.caserepository.addons.train.findings.Rating;
 import de.d3web.caserepository.sax.AbstractTagReader;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.Solution;
 
 /**
  * 22.09.2003 18:08:00
@@ -74,8 +74,7 @@ public class ContentsSAXReader extends AbstractTagReader {
 	}
 
 	public static AbstractTagReader getInstance() {
-		if (instance == null)
-			instance = new ContentsSAXReader();
+		if (instance == null) instance = new ContentsSAXReader();
 		return instance;
 	}
 
@@ -84,56 +83,50 @@ public class ContentsSAXReader extends AbstractTagReader {
 	 * 
 	 * @see de.d3web.caserepository.sax.readers.AbstractTagReader#getTagNames()
 	 */
-	public List getTagNames() {
-		return Arrays.asList(new String[] { "Contents", "Content", "Paragraph",
+	@Override
+	public List<String> getTagNames() {
+		return Arrays.asList(new String[] {
+				"Contents", "Content", "Paragraph",
 				"Finding", "DummyFinding", "FindingDiagnosisRelation" });
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.d3web.caserepository.sax.readers.AbstractTagReader#startElement(java.lang.String,
-	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 * @see
+	 * de.d3web.caserepository.sax.readers.AbstractTagReader#startElement(java
+	 * .lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
+	@Override
 	protected void startElement(String uri, String localName, String qName,
 			Attributes attributes) {
-		//		System.out.println("start reading " + qName);
+		// System.out.println("start reading " + qName);
 
-		if ("Contents".equals(qName))
-			startContents();
-		else if ("Content".equals(qName))
-			startContent(attributes);
-		else if ("Paragraph".equals(qName))
-			startParagraph();
-		else if ("Finding".equals(qName))
-			startFinding();
-		else if ("DummyFinding".equals(qName))
-			startDummyFinding();
-		else if ("FindingDiagnosisRelation".equals(qName))
-			startFindingDiagnosisRelation(attributes);
+		if ("Contents".equals(qName)) startContents();
+		else if ("Content".equals(qName)) startContent(attributes);
+		else if ("Paragraph".equals(qName)) startParagraph();
+		else if ("Finding".equals(qName)) startFinding();
+		else if ("DummyFinding".equals(qName)) startDummyFinding();
+		else if ("FindingDiagnosisRelation".equals(qName)) startFindingDiagnosisRelation(attributes);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.d3web.caserepository.sax.readers.AbstractTagReader#endElement(java.lang.String,
-	 *      java.lang.String, java.lang.String)
+	 * @see
+	 * de.d3web.caserepository.sax.readers.AbstractTagReader#endElement(java
+	 * .lang.String, java.lang.String, java.lang.String)
 	 */
+	@Override
 	protected void endElement(String uri, String localName, String qName) {
-		//		System.out.println(" end reading " + qName);
+		// System.out.println(" end reading " + qName);
 
-		if ("Contents".equals(qName))
-			endContents();
-		else if ("Content".equals(qName))
-			endContent();
-		else if ("Paragraph".equals(qName))
-			endParagraph();
-		else if ("Finding".equals(qName))
-			endFinding();
-		else if ("DummyFinding".equals(qName))
-			endDummyFinding();
-		else if ("FindingDiagnosisRelation".equals(qName))
-			endFindingDiagnosisRelation();
+		if ("Contents".equals(qName)) endContents();
+		else if ("Content".equals(qName)) endContent();
+		else if ("Paragraph".equals(qName)) endParagraph();
+		else if ("Finding".equals(qName)) endFinding();
+		else if ("DummyFinding".equals(qName)) endDummyFinding();
+		else if ("FindingDiagnosisRelation".equals(qName)) endFindingDiagnosisRelation();
 	}
 
 	/**
@@ -142,21 +135,25 @@ public class ContentsSAXReader extends AbstractTagReader {
 	 * @see de.d3web.caserepository.sax.AbstractTagReader#characters(char[],
 	 *      int, int)
 	 */
+	@Override
 	public void characters(char[] chars, int start, int length) {
 		if (findingContent != null) {
 			// i'm inside a finding content tag
 			// System.out.println("reading finding content " +
 			// String.copyValueOf(chars, start, length));
 			findingContent.append(chars, start, length);
-		} else if (dummyFindingContent != null) {
+		}
+		else if (dummyFindingContent != null) {
 			// i'm inside a dummy finding tag
 			dummyFindingContent.append(chars, start, length);
-		} else if (caseParagraphContent != null) {
+		}
+		else if (caseParagraphContent != null) {
 			// i'm inside a caseParagraph
 			// System.out.println("reading case paragraph content " +
 			// String.copyValueOf(chars, start, length));
 			caseParagraphContent.append(chars, start, length);
-		} else if (q != null && caseParagraph == null) {
+		}
+		else if (q != null && caseParagraph == null) {
 			// i'm inside a contents>content tag and therefore this is an old
 			// styled case file
 			if (oldStyleContent == null) {
@@ -165,7 +162,8 @@ public class ContentsSAXReader extends AbstractTagReader {
 			// System.out.println("reading content-content " +
 			// String.copyValueOf(chars, start, length));
 			oldStyleContent.append(chars, start, length);
-		} else {
+		}
+		else {
 			// ignore
 		}
 	}
@@ -174,7 +172,8 @@ public class ContentsSAXReader extends AbstractTagReader {
 		if (f != null) {
 			// this is part of a finding
 			startFindingContent();
-		} else {
+		}
+		else {
 			// this is subtag to Contents
 			startContentsContent(attributes);
 		}
@@ -183,7 +182,8 @@ public class ContentsSAXReader extends AbstractTagReader {
 	private void endContent() {
 		if (f != null) {
 			endFindingContent();
-		} else {
+		}
+		else {
 			endContentsContent();
 		}
 	}
@@ -250,7 +250,7 @@ public class ContentsSAXReader extends AbstractTagReader {
 	}
 
 	private void startFindingDiagnosisRelation(Attributes attributes) {
-		Solution diag = getKnowledgeBase().searchDiagnosis(
+		Solution diag = getKnowledgeBase().searchSolution(
 				attributes.getValue("id"));
 		if (diag != null) {
 			Rating score = Rating.getRating(attributes.getValue("rating"));
@@ -288,7 +288,8 @@ public class ContentsSAXReader extends AbstractTagReader {
 			// und machen also nichts eigenes, da ja nur q zurückgesetzt
 			// werden
 			// muss
-		} else {
+		}
+		else {
 			// und hier haben wir einen Fall in alter Schreibweise
 			CaseParagraph theCaseParagraph = new CaseParagraph();
 			theCaseParagraph.addContent(oldStyleContent.toString());

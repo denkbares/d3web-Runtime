@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.core.knowledge.terminology;
@@ -25,7 +25,6 @@ import java.util.Comparator;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.scoring.DiagnosisScore;
-import de.d3web.scoring.HeuristicRating;
 
 /**
  * Stores the state of a {@link Solution} instance in context to a
@@ -55,42 +54,13 @@ public class DiagnosisState implements Value {
 		EXCLUDED, UNCLEAR, SUGGESTED, ESTABLISHED;
 	}
 
-	/**
-	 * @deprecated you should not use these constants any longer. For checking
-	 *             the state use {@link #hasState(State state)} instead.
-	 */
-	@Deprecated
-	public static DiagnosisState EXCLUDED = new DiagnosisState(State.EXCLUDED);
-
-	/**
-	 * @deprecated you should not use these constants any longer. For checking
-	 *             the state use {@link #hasState(State state)} instead.
-	 */
-	@Deprecated
-	public static DiagnosisState UNCLEAR = new DiagnosisState(State.UNCLEAR);
-
-	/**
-	 * @deprecated you should not use these constants any longer. For checking
-	 *             the state use {@link #hasState(State state)} instead.
-	 */
-	@Deprecated
-	public static DiagnosisState SUGGESTED = new DiagnosisState(State.SUGGESTED);
-
-	/**
-	 * @deprecated you should not use these constants any longer. For checking
-	 *             the state use {@link #hasState(State state)} instead.
-	 */
-	@Deprecated
-	public static DiagnosisState ESTABLISHED = new DiagnosisState(State.ESTABLISHED);
-
 	private final State state;
 
 	/**
 	 * Creates a new solution state based on the specified {@link String} value.
 	 * The {@link String} value is case insensitive for backward compatibility.
 	 * 
-	 * @param statename
-	 *            the name of the solution state
+	 * @param statename the name of the solution state
 	 */
 	public DiagnosisState(String statename) {
 		this(State.valueOf(statename.toUpperCase()));
@@ -100,8 +70,7 @@ public class DiagnosisState implements Value {
 	 * Creates a new solution state instance based on the specified
 	 * {@link State} instance.
 	 * 
-	 * @param state
-	 *            the specified state instance
+	 * @param state the specified state instance
 	 */
 	public DiagnosisState(State state) {
 		if (state == null) throw new NullPointerException();
@@ -130,8 +99,7 @@ public class DiagnosisState implements Value {
 	 * Compares the specified {@link State} instance with the {@link State}
 	 * instance contained in this instance.
 	 * 
-	 * @param state
-	 *            the specified state to be compared
+	 * @param state the specified state to be compared
 	 * @return true, if both states are equal; false otherwise
 	 */
 	public boolean hasState(State state) {
@@ -161,8 +129,7 @@ public class DiagnosisState implements Value {
 	 * for equality, therefore subclasses usually have no need to overwrite this
 	 * method.
 	 * 
-	 * @param other
-	 *            the other {@link DiagnosisState} to be compared
+	 * @param other the other {@link DiagnosisState} to be compared
 	 * @return true, when both states are equal; false otherwise
 	 */
 	@Override
@@ -192,15 +159,14 @@ public class DiagnosisState implements Value {
 	 * DiagnosisState#class}. An overwriting method shall call this method if
 	 * the state is compared to an instance of a different subclass.
 	 * 
-	 * @param other
-	 *            another {@link DiagnosisState}
+	 * @param other another {@link DiagnosisState}
 	 * @return the comparison result according to the {@link Comparator}
 	 *         definition
 	 */
 	@Override
 	public int compareTo(Value other) {
 		if (other instanceof DiagnosisState) {
-			return this.state.ordinal() - ((DiagnosisState)other).state.ordinal();
+			return this.state.ordinal() - ((DiagnosisState) other).state.ordinal();
 		}
 		return -1;
 	}
@@ -208,28 +174,6 @@ public class DiagnosisState implements Value {
 	@Override
 	public String toString() {
 		return getName();
-	}
-
-	/**
-	 * @return the first status in allStati, for which checkState returns true;
-	 * @deprecated Use new HeuristicRating(score) instead.
-	 */
-	@Deprecated
-	public static DiagnosisState getState(double score) {
-		return new HeuristicRating(score);
-	}
-
-	/**
-	 * @return the first status in allStati, for which checkState returns true
-	 *         for the score of the given DiagnosisScore;
-	 * @deprecated Use new HeuristicRating(diagnosisScore.getScore()) instead.
-	 */
-	@Deprecated
-	public static DiagnosisState getState(DiagnosisScore diagnosisScore) {
-		if (diagnosisScore == null) {
-			return null;
-		}
-		return getState(diagnosisScore.getScore());
 	}
 
 	@Override

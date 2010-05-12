@@ -64,7 +64,7 @@ public class QuestionImageMapRendererUtils {
 			List<Question> qList) {
 		for (Question question : qList) {
 			if (question.getId().equals(questionID)) {
-				return theCase.getValue(question);
+				return theCase.getBlackboard().getValue(question);
 			}
 		}
 		return null;
@@ -86,7 +86,7 @@ public class QuestionImageMapRendererUtils {
 			return DialogUtils.getMessageFor("dialog.unknown");
 		}
 		else if (q != null && q instanceof QuestionDate) {
-			Date ans = (Date) (theCase.getValue(q)).getValue();
+			Date ans = (Date) (theCase.getBlackboard().getValue(q)).getValue();
 			return QuestionDateUtils.dateToString((QuestionDate) q, ans, theCase);
 		}
 		return answerText;

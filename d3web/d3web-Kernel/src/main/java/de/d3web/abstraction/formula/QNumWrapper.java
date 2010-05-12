@@ -57,7 +57,7 @@ public class QNumWrapper extends FormulaNumberPrimitive {
 	 * @return the Double value of the wrapped QuestionNum
 	 */
 	public Double eval(Session theCase) {
-		Value val = theCase.getValue(getQuestion());
+		Value val = theCase.getBlackboard().getValue(getQuestion());
 		if (val == null
 				|| val instanceof UndefinedValue
 				|| val instanceof Unknown) {

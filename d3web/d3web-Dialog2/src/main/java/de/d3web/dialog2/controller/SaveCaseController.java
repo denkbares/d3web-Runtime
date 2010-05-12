@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.controller;
@@ -37,8 +37,8 @@ import de.d3web.caserepository.CaseObjectImpl;
 import de.d3web.caserepository.MetaDataImpl;
 import de.d3web.caserepository.utilities.SessionConverter;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
@@ -82,7 +82,8 @@ public class SaveCaseController {
 		// add "autosave" to case
 		if (caseTitle != null && caseTitle.indexOf("autosave") == -1) {
 			caseTitle += "autosave";
-		} else {
+		}
+		else {
 			caseTitle = "case_autosave";
 		}
 		caseAuthor = getUserBean().getCompleteName();
@@ -114,7 +115,8 @@ public class SaveCaseController {
 				out = response.getOutputStream();
 				out.write(co.getXMLCode().getBytes());
 				out.flush();
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				logger.error(e);
 			}
 			ctx.responseComplete();
@@ -144,7 +146,7 @@ public class SaveCaseController {
 		// DCMarkup
 		String id = ""
 				+ (CaseManager.getInstance().getMaxCaseIdForKb(
-						theCase.getKnowledgeBase().getId()) + 1);
+				theCase.getKnowledgeBase().getId()) + 1);
 		co.getDCMarkup().setContent(DCElement.IDENTIFIER, id);
 		lastSavedCaseID = id;
 
@@ -170,7 +172,7 @@ public class SaveCaseController {
 		co.getProperties().setProperty(
 				Property.CASE_CRITIQUE_TEXT,
 				theCase.getProperties()
-						.getProperty(Property.CASE_CRITIQUE_TEXT));
+				.getProperty(Property.CASE_CRITIQUE_TEXT));
 
 		// MetaData
 		MetaDataImpl md = new MetaDataImpl();
@@ -240,7 +242,7 @@ public class SaveCaseController {
 		CaseRepositoryDescriptor crd = cman.getCRDforUser(dia.getTheCase()
 				.getKnowledgeBase().getId(), getUserBean().getEmail(),
 				ResourceRepository.getInstance().getBasicSettingValue(
-						ResourceRepository.CR_LOCATIONTYPE));
+				ResourceRepository.CR_LOCATIONTYPE));
 		logger.info("Saving case...");
 		if (!cman.addCase(co, crd)) {
 			logger.error("Case could not be saved!");
@@ -274,7 +276,7 @@ public class SaveCaseController {
 		for (Iterator<String> iter = userSelectedDiags.iterator(); iter
 				.hasNext();) {
 			String diagId = iter.next();
-			Solution d = kb.searchDiagnosis(diagId);
+			Solution d = kb.searchSolution(diagId);
 			if (d != null) {
 				CaseObject.Solution sol = co.getSolution(d,
 						PSMethodUserSelected.class);
@@ -282,10 +284,11 @@ public class SaveCaseController {
 					sol = new CaseObject.Solution();
 					sol.setDiagnosis(d);
 					sol.setPSMethodClass(PSMethodUserSelected.class);
-					sol.setState(DiagnosisState.ESTABLISHED);
+					sol.setState(new DiagnosisState(DiagnosisState.State.ESTABLISHED));
 					co.addSolution(sol);
-				} else {
-					sol.setState(DiagnosisState.ESTABLISHED);
+				}
+				else {
+					sol.setState(new DiagnosisState(DiagnosisState.State.ESTABLISHED));
 				}
 			}
 		}

@@ -1,24 +1,25 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.caserepository;
+
 import java.rmi.server.UID;
 import java.util.Collection;
 import java.util.HashMap;
@@ -42,9 +43,9 @@ import de.d3web.caserepository.addons.PSMethodAuthorSelected;
 import de.d3web.caserepository.addons.shared.AppliedQSets;
 import de.d3web.config.Config;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.DiagnosisState.State;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.Properties;
@@ -62,7 +63,7 @@ public class CaseObjectImpl implements CaseObject {
 	private DCMarkup dcData = null; // lazy instantiation
 	private Properties properties = null; // lazy instantiation
 
-//	private Set questions = new HashSet();
+	// private Set questions = new HashSet();
 	private final Map<Question, Value> questions2AnswersMap = new HashMap<Question, Value>();
 	private final ISolutionContainer s = new SolutionContainerImpl();
 
@@ -82,10 +83,8 @@ public class CaseObjectImpl implements CaseObject {
 
 	private Map additionalData = null;
 
-	private Map visibility = null; // lazy instantiation
+	private Map<QASet, Boolean> visibility = null; // lazy instantiation
 
-	private CaseObjectImpl() { /* hide empty constructor */
-	}
 	public CaseObjectImpl(KnowledgeBase kb) {
 		this.kb = kb;
 		getProperties().setProperty(Property.CASE_METADATA, new MetaDataImpl());
@@ -96,26 +95,24 @@ public class CaseObjectImpl implements CaseObject {
 	}
 
 	/**
-	 * @param item
-	 *            QASet
-	 * @param value
-	 *            Boolean
+	 * @param item QASet
+	 * @param value Boolean
 	 */
 	public void setVisibility(QASet item, Boolean value) {
-		if (visibility == null)
-			visibility = new HashMap();
+		if (visibility == null) visibility = new HashMap<QASet, Boolean>();
 		visibility.put(item, value);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.d3web.caserepository.CaseObject#visibility(de.d3web.kernel.domainModel.QASet)
+	 * @see
+	 * de.d3web.caserepository.CaseObject#visibility(de.d3web.kernel.domainModel
+	 * .QASet)
 	 */
 	public Boolean visibility(QASet item) {
-		if (visibility == null)
-			visibility = new HashMap();
-		return (Boolean) visibility.get(item);
+		if (visibility == null) visibility = new HashMap<QASet, Boolean>();
+		return visibility.get(item);
 	}
 
 	/*
@@ -137,14 +134,12 @@ public class CaseObjectImpl implements CaseObject {
 	}
 
 	/**
-	 * @param question
-	 *            Question
-	 * @param answer
-	 *            Collection
+	 * @param question Question
+	 * @param answer Collection
 	 */
 	public void addQuestionAndAnswers(Question question, Value value) {
-//		if (!questions.contains(question))
-//			questions.add(question);
+		// if (!questions.contains(question))
+		// questions.add(question);
 
 		questions2AnswersMap.put(question, value);
 
@@ -154,10 +149,12 @@ public class CaseObjectImpl implements CaseObject {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.d3web.caserepository.CaseObject#getAnswers(de.d3web.kernel.domainModel.Question)
+	 * @see
+	 * de.d3web.caserepository.CaseObject#getAnswers(de.d3web.kernel.domainModel
+	 * .Question)
 	 */
 	public Value getValue(Question question) {
-		return (Value) questions2AnswersMap.get(question);
+		return questions2AnswersMap.get(question);
 	}
 
 	/*
@@ -165,7 +162,7 @@ public class CaseObjectImpl implements CaseObject {
 	 * 
 	 * @see de.d3web.caserepository.CaseObject#getQuestions()
 	 */
-	public Set getQuestions() {
+	public Set<Question> getQuestions() {
 		return questions2AnswersMap.keySet();
 	}
 
@@ -182,16 +179,13 @@ public class CaseObjectImpl implements CaseObject {
 	 * it's quite like equals but it ignores the Config
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
-	 * @param o
-	 *            Object
+	 * @param o Object
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (o == null || !(o instanceof CaseObjectImpl))
-			return false;
+		if (o == null || !(o instanceof CaseObjectImpl)) return false;
 
-		if (this == o)
-			return true;
+		if (this == o) return true;
 
 		CaseObject other = (CaseObject) o;
 
@@ -199,82 +193,79 @@ public class CaseObjectImpl implements CaseObject {
 
 		getDCMarkup().equals(other.getDCMarkup())
 
-				&&
+		&&
 
-				getProperties().equals(other.getProperties())
+		getProperties().equals(other.getProperties())
 
-				&&
+		&&
 
-				checkEqualityOfQuestionsAndAnswers(other)
+		checkEqualityOfQuestionsAndAnswers(other)
 
-				&&
+		&&
 
-				checkEqualityOfSolutions(other)
+		checkEqualityOfSolutions(other)
 
-				&&
+		&&
 
-				((getAppliedQSets() == null && other.getAppliedQSets() == null)
-				        || getAppliedQSets().equals(other.getAppliedQSets()))
+		((getAppliedQSets() == null && other.getAppliedQSets() == null)
+				|| getAppliedQSets().equals(other.getAppliedQSets()))
 
-				&&
+		&&
 
-				((getExaminationBlocks() == null && other.getExaminationBlocks() == null)
-				        || getExaminationBlocks().equals(other.getExaminationBlocks()))
+		((getExaminationBlocks() == null && other.getExaminationBlocks() == null)
+				|| getExaminationBlocks().equals(other.getExaminationBlocks()))
 
-				&&
+		&&
 
-				((getContents() == null && other.getContents() == null)
-				        || getContents().equals(other.getContents()))
+		((getContents() == null && other.getContents() == null)
+				|| getContents().equals(other.getContents()))
 
-				&&
+		&&
 
-				((getAdditionalTrainData() == null && other.getAdditionalTrainData() == null)
-				        || getAdditionalTrainData().equals(other.getAdditionalTrainData()))
+		((getAdditionalTrainData() == null && other.getAdditionalTrainData() == null)
+				|| getAdditionalTrainData().equals(other.getAdditionalTrainData()))
 
-				&&
+		&&
 
-				((getMultimedia() == null && other.getMultimedia() == null)
-				        || getMultimedia().equals(other.getMultimedia()))
+		((getMultimedia() == null && other.getMultimedia() == null)
+				|| getMultimedia().equals(other.getMultimedia()))
 
-				&&
+		&&
 
-				((getFUSConfiguration() == null && other.getFUSConfiguration() == null)
-				        || getFUSConfiguration().equals(other.getFUSConfiguration()))
+		((getFUSConfiguration() == null && other.getFUSConfiguration() == null)
+				|| getFUSConfiguration().equals(other.getFUSConfiguration()))
 
-				&&
+		&&
 
-				((getTherapyConfiguration() == null && other.getTherapyConfiguration() == null)
-				        || getTherapyConfiguration().equals(other.getTherapyConfiguration()))
-		;
+		((getTherapyConfiguration() == null && other.getTherapyConfiguration() == null)
+				|| getTherapyConfiguration().equals(other.getTherapyConfiguration()));
 
 	}
 
 	/**
 	 * 
-	 * @param cobj
-	 *            CaseObject
+	 * @param cobj CaseObject
 	 * @return boolean
 	 */
 	private boolean checkEqualityOfQuestionsAndAnswers(CaseObject other) {
 		try {
-			Set otherQuestions = other.getQuestions();
+			Set<Question> otherQuestions = other.getQuestions();
 
 			if (!(getQuestions().containsAll(otherQuestions) && otherQuestions
-					.containsAll(getQuestions())))
-				return false;
+					.containsAll(getQuestions()))) return false;
 
-			Iterator iter = getQuestions().iterator();
+			Iterator<Question> iter = getQuestions().iterator();
 			while (iter.hasNext()) {
-				Question q = (Question) iter.next();
+				Question q = iter.next();
 				Value thisAnswers = getValue(q);
 				Value otherAnswers = other.getValue(q);
-				if (!thisAnswers.equals(otherAnswers))
-					return false;
+				if (!thisAnswers.equals(otherAnswers)) return false;
 
 			}
 
 			return true;
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			Logger.getLogger(this.getClass().getName()).throwing(this.getClass().getName(),
 					"checkEqualityOfQuestionsAndAnswers", e);
 			return false;
@@ -283,32 +274,32 @@ public class CaseObjectImpl implements CaseObject {
 
 	/**
 	 * 
-	 * @param cobj
-	 *            CaseObject
+	 * @param cobj CaseObject
 	 * @return boolean
 	 */
 	private boolean checkEqualityOfSolutions(CaseObject other) {
 		try {
 
-			//			if (getSolutions().size() != other.getSolutions().size())
-			//				return false;
-			//			Iterator iter = getSolutions().iterator();
-			//			while (iter.hasNext()) {
-			//				Object o = iter.next();
-			//				boolean found = false;
-			//				Iterator iter2 = other.getSolutions().iterator();
-			//				while (iter2.hasNext() && !found) {
-			//					if (o.equals(iter2.next()))
-			//						found = true;
-			//				}
-			//				if (!found)
-			//					return false;
-			//			}
-			//			return true;
+			// if (getSolutions().size() != other.getSolutions().size())
+			// return false;
+			// Iterator iter = getSolutions().iterator();
+			// while (iter.hasNext()) {
+			// Object o = iter.next();
+			// boolean found = false;
+			// Iterator iter2 = other.getSolutions().iterator();
+			// while (iter2.hasNext() && !found) {
+			// if (o.equals(iter2.next()))
+			// found = true;
+			// }
+			// if (!found)
+			// return false;
+			// }
+			// return true;
 
 			return getSolutions().containsAll(other.getSolutions())
 					&& other.getSolutions().containsAll(getSolutions());
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			Logger.getLogger(this.getClass().getName()).throwing(this.getClass().getName(),
 					"checkEqualityOfSolutions", e);
 			return false;
@@ -321,15 +312,15 @@ public class CaseObjectImpl implements CaseObject {
 	 * @see de.d3web.kernel.misc.DCDataAdapter#getDCData()
 	 */
 	public DCMarkup getDCMarkup() {
-		if (dcData == null)
-			dcData = new DCMarkup();
+		if (dcData == null) dcData = new DCMarkup();
 		return dcData;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.d3web.kernel.misc.DCDataAdapter#setDCData(de.d3web.kernel.misc.DCData)
+	 * @see
+	 * de.d3web.kernel.misc.DCDataAdapter#setDCData(de.d3web.kernel.misc.DCData)
 	 */
 	public void setDCMarkup(DCMarkup dcData) {
 		this.dcData = dcData;
@@ -341,15 +332,16 @@ public class CaseObjectImpl implements CaseObject {
 	 * @see de.d3web.kernel.misc.PropertiesAdapter#getProperties()
 	 */
 	public Properties getProperties() {
-		if (properties == null)
-			properties = new Properties();
+		if (properties == null) properties = new Properties();
 		return properties;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.d3web.kernel.misc.PropertiesAdapter#setProperties(de.d3web.kernel.misc.Properties)
+	 * @see
+	 * de.d3web.kernel.misc.PropertiesAdapter#setProperties(de.d3web.kernel.
+	 * misc.Properties)
 	 */
 	public void setProperties(Properties properties) {
 		this.properties = properties;
@@ -361,15 +353,16 @@ public class CaseObjectImpl implements CaseObject {
 	 * @see de.d3web.caserepository.CaseObject#getAppliedQSets()
 	 */
 	public IAppliedQSets getAppliedQSets() {
-		if (appliedQSets == null)
-			appliedQSets = new AppliedQSets();
+		if (appliedQSets == null) appliedQSets = new AppliedQSets();
 		return appliedQSets;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.d3web.caserepository.CaseObject#setAppliedQSets(de.d3web.caserepository.addons.IAppliedQSets)
+	 * @see
+	 * de.d3web.caserepository.CaseObject#setAppliedQSets(de.d3web.caserepository
+	 * .addons.IAppliedQSets)
 	 */
 	public void setAppliedQSets(IAppliedQSets aq) {
 		this.appliedQSets = aq;
@@ -387,7 +380,9 @@ public class CaseObjectImpl implements CaseObject {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.d3web.caserepository.CaseObject#setContent(de.d3web.caserepository.addons.IContents)
+	 * @see
+	 * de.d3web.caserepository.CaseObject#setContent(de.d3web.caserepository
+	 * .addons.IContents)
 	 */
 	public void setContents(IContents c) {
 		this.contents = c;
@@ -405,7 +400,9 @@ public class CaseObjectImpl implements CaseObject {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.d3web.caserepository.CaseObject#setMultimedia(de.d3web.caserepository.IMultimedia)
+	 * @see
+	 * de.d3web.caserepository.CaseObject#setMultimedia(de.d3web.caserepository
+	 * .IMultimedia)
 	 */
 	public void setMultimedia(IMultimedia newMultimedia) {
 		this.multimedia = newMultimedia;
@@ -423,7 +420,8 @@ public class CaseObjectImpl implements CaseObject {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.d3web.caserepository.CaseObject#setExaminationBlocks(de.d3web.caserepository.IExaminationBlocks)
+	 * @seede.d3web.caserepository.CaseObject#setExaminationBlocks(de.d3web.
+	 * caserepository.IExaminationBlocks)
 	 */
 	public void setExaminationBlocks(IExaminationBlocks blocks) {
 		examinationBlocks = blocks;
@@ -432,8 +430,9 @@ public class CaseObjectImpl implements CaseObject {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.d3web.caserepository.ISolutionContainer#getSolution(de.d3web.kernel.domainModel.Diagnosis,
-	 *      java.lang.Class)
+	 * @see
+	 * de.d3web.caserepository.ISolutionContainer#getSolution(de.d3web.kernel
+	 * .domainModel.Diagnosis, java.lang.Class)
 	 */
 	public Solution getSolution(de.d3web.core.knowledge.terminology.Solution d, Class psMethodClass) {
 		return s.getSolution(d, psMethodClass);
@@ -444,23 +443,25 @@ public class CaseObjectImpl implements CaseObject {
 	 * 
 	 * @see de.d3web.caserepository.ISolutionContainer#getSolutions()
 	 */
-	public Set getSolutions() {
+	public Set<Solution> getSolutions() {
 		return s.getSolutions();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.d3web.caserepository.ISolutionContainer#getSolutions(java.lang.Class)
+	 * @see
+	 * de.d3web.caserepository.ISolutionContainer#getSolutions(java.lang.Class)
 	 */
-	public Set getSolutions(Class psMethodClass) {
+	public Set<Solution> getSolutions(Class psMethodClass) {
 		return s.getSolutions(psMethodClass);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.d3web.caserepository.ISolutionContainer#addSolution(de.d3web.caserepository.CaseObject.Solution)
+	 * @seede.d3web.caserepository.ISolutionContainer#addSolution(de.d3web.
+	 * caserepository.CaseObject.Solution)
 	 */
 	public void addSolution(Solution solution) {
 		s.addSolution(solution);
@@ -469,7 +470,8 @@ public class CaseObjectImpl implements CaseObject {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.d3web.caserepository.ISolutionContainer#removeSolution(de.d3web.caserepository.CaseObject.Solution)
+	 * @seede.d3web.caserepository.ISolutionContainer#removeSolution(de.d3web.
+	 * caserepository.CaseObject.Solution)
 	 */
 	public void removeSolution(CaseObject.Solution solution) {
 		s.removeSolution(solution);
@@ -480,19 +482,17 @@ public class CaseObjectImpl implements CaseObject {
 	 * 
 	 * @see de.d3web.caserepository.CaseObject#getCorrectDiagnoses()
 	 */
-	public Set getCorrectSystemDiagnoses() {
-		Set result = new HashSet();
+	public Set<de.d3web.core.knowledge.terminology.Solution> getCorrectSystemDiagnoses() {
+		Set<de.d3web.core.knowledge.terminology.Solution> result = new HashSet<de.d3web.core.knowledge.terminology.Solution>();
 
-		Collection solutions = getSolutions(PSMethodUserSelected.class);
+		Collection<Solution> solutions = getSolutions(PSMethodUserSelected.class);
 		// if there are no user selected diagnoses, then we fall back to all!!
-		if ((solutions == null) || (solutions.isEmpty()))
-			solutions = getSolutions();
+		if ((solutions == null) || (solutions.isEmpty())) solutions = getSolutions();
 
-		Iterator solIter = solutions.iterator();
+		Iterator<Solution> solIter = solutions.iterator();
 		while (solIter.hasNext()) {
-			Solution sol = (Solution) solIter.next();
-			if (sol.getState().equals(DiagnosisState.ESTABLISHED))
-				result.add(sol.getDiagnosis());
+			Solution sol = solIter.next();
+			if (sol.getState().hasState(State.ESTABLISHED)) result.add(sol.getDiagnosis());
 		}
 		return result;
 	}
@@ -502,18 +502,17 @@ public class CaseObjectImpl implements CaseObject {
 	 * 
 	 * @see de.d3web.caserepository.CaseObject#getSystemDiagnoses()
 	 */
-	public Set getSystemDiagnoses() {
-		Set result = new HashSet();
-		Collection solutions = getSolutions();
+	public Set<de.d3web.core.knowledge.terminology.Solution> getSystemDiagnoses() {
+		Set<de.d3web.core.knowledge.terminology.Solution> result = new HashSet<de.d3web.core.knowledge.terminology.Solution>();
+		Collection<Solution> solutions = getSolutions();
 
-		Iterator solIter = solutions.iterator();
+		Iterator<Solution> solIter = solutions.iterator();
 		while (solIter.hasNext()) {
-			Solution sol = (Solution) solIter.next();
+			Solution sol = solIter.next();
 
 			if ((sol.getPSMethodClass() != PSMethodUserSelected.class)
 					&& (sol.getPSMethodClass() != PSMethodAuthorSelected.class)
-					&& (sol.getState().equals(DiagnosisState.ESTABLISHED)))
-				result.add(sol.getDiagnosis());
+					&& (sol.getState().hasState(State.ESTABLISHED))) result.add(sol.getDiagnosis());
 		}
 		return result;
 	}
@@ -530,7 +529,8 @@ public class CaseObjectImpl implements CaseObject {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.d3web.caserepository.CaseObject#setAdditionalTrainData(de.d3web.caserepository.addons.IAdditionalTrainData)
+	 * @seede.d3web.caserepository.CaseObject#setAdditionalTrainData(de.d3web.
+	 * caserepository.addons.IAdditionalTrainData)
 	 */
 	public void setAdditionalTrainData(IAdditionalTrainData atd) {
 		this.atd = atd;
@@ -548,11 +548,13 @@ public class CaseObjectImpl implements CaseObject {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.d3web.caserepository.CaseObject#setFUSConfiguration(de.d3web.caserepository.addons.IFUSConfiguration)
+	 * @seede.d3web.caserepository.CaseObject#setFUSConfiguration(de.d3web.
+	 * caserepository.addons.IFUSConfiguration)
 	 */
 	public void setFUSConfiguration(IFUSConfiguration fusc) {
 		this.fusc = fusc;
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -561,6 +563,7 @@ public class CaseObjectImpl implements CaseObject {
 	public Config getConfig() {
 		return config;
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -569,6 +572,7 @@ public class CaseObjectImpl implements CaseObject {
 	public void setConfig(Config config) {
 		this.config = config;
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -577,10 +581,13 @@ public class CaseObjectImpl implements CaseObject {
 	public ITemplateSession getTemplateSession() {
 		return ts;
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.d3web.caserepository.CaseObject#setTemplateSession(de.d3web.caserepository.addons.ITemplateSession)
+	 * @see
+	 * de.d3web.caserepository.CaseObject#setTemplateSession(de.d3web.caserepository
+	 * .addons.ITemplateSession)
 	 */
 	public void setTemplateSession(ITemplateSession ts) {
 		this.ts = ts;
@@ -590,6 +597,7 @@ public class CaseObjectImpl implements CaseObject {
 	public String toString() {
 		return this.getDCMarkup().getContent(DCElement.TITLE);
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -598,14 +606,18 @@ public class CaseObjectImpl implements CaseObject {
 	public ISimpleQuestions getMultimediaSimpleQuestions() {
 		return mmsq;
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.d3web.caserepository.CaseObject#setMultimediaSimpleQuestions(de.d3web.caserepository.addons.IMultimediaSimpleQuestions)
+	 * @see
+	 * de.d3web.caserepository.CaseObject#setMultimediaSimpleQuestions(de.d3web
+	 * .caserepository.addons.IMultimediaSimpleQuestions)
 	 */
 	public void setMultimediaSimpleQuestions(ISimpleQuestions mmsq) {
 		this.mmsq = mmsq;
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -614,10 +626,13 @@ public class CaseObjectImpl implements CaseObject {
 	public ISimpleTextFUSs getSimpleTextFUSs() {
 		return stf;
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.d3web.caserepository.CaseObject#setSimpleTextFUSs(de.d3web.caserepository.addons.ISimpleTextFUSs)
+	 * @see
+	 * de.d3web.caserepository.CaseObject#setSimpleTextFUSs(de.d3web.caserepository
+	 * .addons.ISimpleTextFUSs)
 	 */
 	public void setSimpleTextFUSs(ISimpleTextFUSs stf) {
 		this.stf = stf;
@@ -629,25 +644,31 @@ public class CaseObjectImpl implements CaseObject {
 		}
 		additionalData.put(key, data);
 	}
-	
+
 	public Object getAdditionalData(AdditionalDataKey key) {
 		if (additionalData != null) {
 			return additionalData.get(key);
 		}
 		return null;
 	}
-	
-    /* (non-Javadoc)
-     * @see de.d3web.caserepository.CaseObject#getTherapyConfiguration()
-     */
-    public ITherapyConfiguration getTherapyConfiguration() {
-        return tc;
-    }
-    /* (non-Javadoc)
-     * @see de.d3web.caserepository.CaseObject#setTherapyConfiguration(de.d3web.caserepository.addons.ITherapyConfiguration)
-     */
-    public void setTherapyConfiguration(ITherapyConfiguration tc) {
-        this.tc = tc;
-    }
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.d3web.caserepository.CaseObject#getTherapyConfiguration()
+	 */
+	public ITherapyConfiguration getTherapyConfiguration() {
+		return tc;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seede.d3web.caserepository.CaseObject#setTherapyConfiguration(de.d3web.
+	 * caserepository.addons.ITherapyConfiguration)
+	 */
+	public void setTherapyConfiguration(ITherapyConfiguration tc) {
+		this.tc = tc;
+	}
 
 }

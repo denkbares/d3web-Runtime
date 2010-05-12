@@ -5,6 +5,7 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 
 public class IdentityMeasurer implements ISimilarityMeasurer {
+
 	private final Value expectedValue;
 	private final Question question;
 
@@ -15,7 +16,7 @@ public class IdentityMeasurer implements ISimilarityMeasurer {
 
 	@Override
 	public double computeSimilarity(Session theCase) {
-		Value value = theCase.getValue(question);
+		Value value = theCase.getBlackboard().getValue(question);
 		if (value.equals(expectedValue)) // TODO Fix
 		return 1;
 		else return 0;

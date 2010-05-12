@@ -75,7 +75,7 @@ public class ShadowMemory extends DialogClient {
 		Iterator<? extends Question> iter = questions.iterator();
 		while (iter.hasNext()) {
 			Question q = iter.next();
-			addAnswers(q.getId(), theCase.getValue(q));
+			addAnswers(q.getId(), theCase.getBlackboard().getValue(q));
 		}
 	}
 

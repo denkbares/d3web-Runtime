@@ -134,7 +134,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 
 				Value newValue = null;
 				if (q instanceof QuestionNum || q instanceof QuestionDate) {
-					newValue = session.getValue(q);
+					newValue = session.getBlackboard().getValue(q);
 				}
 				else if (q instanceof QuestionOC) {
 					if (this.value != null) {
@@ -208,7 +208,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 				Question q = (Question) iter.next();
 				if (q instanceof QuestionNum) {
 					QuestionNum qNum = (QuestionNum) q;
-					Value value = theCase.getValue(qNum);
+					Value value = theCase.getBlackboard().getValue(qNum);
 					if (value != null) {
 						Object val = value.getValue();
 						questionToValuesHash.put(q, val);
@@ -217,7 +217,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 				else if (q instanceof QuestionMC) {
 					QuestionMC qMC = (QuestionMC) q;
 					Double val = null;
-					Value value = theCase.getValue(qMC);
+					Value value = theCase.getBlackboard().getValue(qMC);
 					if (value instanceof MultipleChoiceValue) {
 						List<ChoiceValue> l = (List<ChoiceValue>) (value.getValue());
 						val = new Double(l.size());
@@ -229,7 +229,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 				}
 				else if (q instanceof QuestionDate) {
 					QuestionDate qDate = (QuestionDate) q;
-					Value value = theCase.getValue(qDate);
+					Value value = theCase.getBlackboard().getValue(qDate);
 					if (value != null && value instanceof DateValue) {
 						Object val = value.getValue();
 						questionToValuesHash.put(q, val);

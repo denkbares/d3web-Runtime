@@ -1,24 +1,25 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.kernel.psMethods.compareCase.facade;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -38,8 +39,9 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.Value;
+import de.d3web.core.knowledge.terminology.DiagnosisState.State;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.Unknown;
@@ -72,8 +74,7 @@ public class ComparisonResultRepository {
 	/**
 	 * Creation date: (27.09.2001 11:44:30)
 	 * 
-	 * @param res
-	 *            de.d3web.psMethods.compareCase.facade.SimpleResult
+	 * @param res de.d3web.psMethods.compareCase.facade.SimpleResult
 	 * @deprecated
 	 */
 	@Deprecated
@@ -85,7 +86,8 @@ public class ComparisonResultRepository {
 				SimpleResult s = (SimpleResult) iter.next();
 				if (s.getSimilarity() <= res.getSimilarity()) {
 					break;
-				} else {
+				}
+				else {
 					index++;
 				}
 			}
@@ -97,8 +99,7 @@ public class ComparisonResultRepository {
 	 * Creation date: (05.09.01 10:44:43)
 	 * 
 	 * @return java.util.List
-	 * @param detResList
-	 *            java.util.List
+	 * @param detResList java.util.List
 	 */
 	public List buildAllQuestionResultsFromDetailledResults(List detResList) {
 		List ret = new LinkedList();
@@ -123,8 +124,7 @@ public class ComparisonResultRepository {
 	 * Creation date: (05.09.01 09:56:46)
 	 * 
 	 * @return java.util.Hashtable
-	 * @param results
-	 *            java.util.List
+	 * @param results java.util.List
 	 */
 	private Hashtable createHashForDetailledResults(List results) {
 		Hashtable ret = new Hashtable();
@@ -135,12 +135,13 @@ public class ComparisonResultRepository {
 			Question quest = null;
 			if (res.getStoredQuestion() == null) {
 				quest = res.getQueryQuestion();
-			} else {
+			}
+			else {
 				quest = res.getStoredQuestion();
 			}
 
 			if (quest != null) {
-				for (TerminologyObject to: quest.getParents()) {
+				for (TerminologyObject to : quest.getParents()) {
 					QASet qaset = (QASet) to;
 					QASet foundParent = findNextContainerParent(qaset);
 					if (foundParent instanceof QContainer) {
@@ -165,8 +166,9 @@ public class ComparisonResultRepository {
 	private QASet findNextContainerParent(QASet qaset) {
 		if (qaset instanceof QContainer) {
 			return qaset;
-		} else {
-			for (TerminologyObject to: qaset.getParents()) {
+		}
+		else {
+			for (TerminologyObject to : qaset.getParents()) {
 				QASet parent = (QASet) to;
 				QASet found = findNextContainerParent(parent);
 				if (found instanceof QContainer) {
@@ -190,13 +192,12 @@ public class ComparisonResultRepository {
 	 * Creation date: (22.08.01 17:21:06)
 	 * 
 	 * @return java.util.List
-	 * @param cc
-	 *            de.d3web.kernel.psMethods.compareCase.StaticCase
+	 * @param cc de.d3web.kernel.psMethods.compareCase.StaticCase
 	 */
 	public List getDetailledResults(CaseObject cc) throws CompareCaseException {
 		List ret = new LinkedList();
 		try {
-			//			CaseObject cc = (CaseObject)
+			// CaseObject cc = (CaseObject)
 			// CaseRepository.getInstance().getCaseById(kbid, caseid);
 			List results = CaseComparator.compareCases(compareMode, currentCase, cc);
 			Hashtable containerHash = createHashForDetailledResults(results);
@@ -210,7 +211,8 @@ public class ComparisonResultRepository {
 					ret.add(dres);
 				}
 			}
-		} catch (Exception x) {
+		}
+		catch (Exception x) {
 			x.printStackTrace();
 			throw new CompareCaseException("detailled Results failed.");
 		}
@@ -227,16 +229,16 @@ public class ComparisonResultRepository {
 	public List getSimpleResults(String kbid) throws CompareCaseException {
 		simpleResults = new LinkedList();
 
-		//		if (!ClusterRepository.getInstance(kbid).isInitialized()) {
-		//			ClusterRepository.getInstance(kbid).initialize(
-		//				CaseRepository.getInstance().getCaseIds(kbid),
-		//				compareMode,
-		//				0.4);
-		//		}
+		// if (!ClusterRepository.getInstance(kbid).isInitialized()) {
+		// ClusterRepository.getInstance(kbid).initialize(
+		// CaseRepository.getInstance().getCaseIds(kbid),
+		// compareMode,
+		// 0.4);
+		// }
 
-		//String currentCaseId = ((MetaData)
+		// String currentCaseId = ((MetaData)
 		// currentCase.getProperties().getProperty(Property.CASE_METADATA)).getId();
-		//Iterator iter =
+		// Iterator iter =
 		// ClusterRepository.getInstance(kbid).retrieveMostSimilarCaseIds(currentCase).iterator();
 
 		Iterator iter = CaseRepository.getInstance().getCaseIds(kbid).iterator();
@@ -247,7 +249,7 @@ public class ComparisonResultRepository {
 			double similarity = CaseComparator.calculateSimilarityBetweenCases(compareMode,
 					currentCase, cobj);
 			SimpleResult simRes = new SimpleResult(cobj, similarity, getEstablishedDiagnoses(cobj));
-			//addSortedToSimpleResults(simRes);
+			// addSortedToSimpleResults(simRes);
 			simpleResults.add(simRes);
 		}
 
@@ -266,7 +268,7 @@ public class ComparisonResultRepository {
 			double similarity = CaseComparator.calculateSimilarityBetweenCases(compareMode,
 					currentCase, cobj);
 			SimpleResult simRes = new SimpleResult(cobj, similarity, getEstablishedDiagnoses(cobj));
-			//addSortedToSimpleResults(simRes);
+			// addSortedToSimpleResults(simRes);
 			simpleResults.add(simRes);
 		}
 
@@ -274,6 +276,7 @@ public class ComparisonResultRepository {
 
 		return simpleResults;
 	}
+
 	/**
 	 * Creation date: (27.09.2001 11:46:12)
 	 * 
@@ -349,7 +352,7 @@ public class ComparisonResultRepository {
 				sb.append("<containers>");
 				// TODO das sollte nicht auskommentiert sein.
 				List detRes = null; // = (List) getDetailledResults(kbid,
-									// caseid);
+				// caseid);
 				Iterator detIter = detRes.iterator();
 				while (detIter.hasNext()) {
 					DetailledResult dres = (DetailledResult) detIter.next();
@@ -403,7 +406,8 @@ public class ComparisonResultRepository {
 				sb.append("</case>\n");
 			}
 
-		} catch (Exception x) {
+		}
+		catch (Exception x) {
 			x.printStackTrace();
 		}
 
@@ -417,7 +421,7 @@ public class ComparisonResultRepository {
 		Iterator iter = aCase.getSolutions().iterator();
 		while (iter.hasNext()) {
 			CaseObject.Solution sol = (CaseObject.Solution) iter.next();
-			if (DiagnosisState.ESTABLISHED.equals(sol.getState())) {
+			if (new DiagnosisState(State.ESTABLISHED).equals(sol.getState())) {
 				establishedDiagnoses.add(sol.getDiagnosis());
 			}
 		}
@@ -435,8 +439,7 @@ public class ComparisonResultRepository {
 	/**
 	 * Creation date: (22.08.01 00:26:56)
 	 * 
-	 * @param newCurrentCase
-	 *            CaseObject
+	 * @param newCurrentCase CaseObject
 	 */
 	public void setCurrentCase(CaseObject newCurrentCase) {
 		currentCase = newCurrentCase;
@@ -445,8 +448,7 @@ public class ComparisonResultRepository {
 	/**
 	 * Creation date: (22.08.01 00:27:16)
 	 * 
-	 * @param theCase
-	 *            de.d3web.kernel.Session
+	 * @param theCase de.d3web.kernel.Session
 	 */
 	public void setCurrentCase(Session theCase) {
 		KnowledgeBase kb = CompareObjectsHashContainer.getInstance().getKnowledgeBase();
@@ -468,8 +470,7 @@ public class ComparisonResultRepository {
 	/**
 	 * Sets the compareMode.
 	 * 
-	 * @param compareMode
-	 *            The compareMode to set
+	 * @param compareMode The compareMode to set
 	 */
 	public void setCompareMode(CompareMode compareMode) {
 		this.compareMode = compareMode;

@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.empiricalTesting;
@@ -24,16 +24,20 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.DiagnosisState.State;
+import de.d3web.scoring.HeuristicRating;
 import de.d3web.scoring.Score;
 
 public class ScoreRating implements Rating {
+
 	private static NumberFormat formater = new DecimalFormat("#########");
 	private double rating;
 
 	private ConfigLoader config = ConfigLoader.getInstance();
-	
+
 	/**
 	 * Creates new Rating with committed score
+	 * 
 	 * @param rating committed score
 	 */
 	public ScoreRating(Score rating) {
@@ -42,6 +46,7 @@ public class ScoreRating implements Rating {
 
 	/**
 	 * Creates new Rating with committed double
+	 * 
 	 * @param rating committed double
 	 */
 	public ScoreRating(double rating) {
@@ -55,6 +60,7 @@ public class ScoreRating implements Rating {
 
 	/**
 	 * Returns the double value of this Rating.
+	 * 
 	 * @return double value representing the rating.
 	 */
 	public Double getRating() {
@@ -65,8 +71,7 @@ public class ScoreRating implements Rating {
 	 * Sets rating to the double value of committed object
 	 */
 	public void setRating(Object o) {
-		if (o instanceof Double)
-			rating = ((Double) o).doubleValue();
+		if (o instanceof Double) rating = ((Double) o).doubleValue();
 	}
 
 	@Override
@@ -82,21 +87,19 @@ public class ScoreRating implements Rating {
 	@Override
 	public boolean equals(Object obj) {
 		String compareOnlySymbolicStates = config.getProperty("compareOnlySymbolicStates");
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof ScoreRating))
-			return false;
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (!(obj instanceof ScoreRating)) return false;
 		ScoreRating otherRating = (ScoreRating) obj;
-		if(compareOnlySymbolicStates.equals("true")){
-			DiagnosisState thisState = DiagnosisState.getState(this.rating);
-			DiagnosisState otherState = DiagnosisState.getState(otherRating.rating);
-			//System.out.println(this.rating+"-"+otherRating.rating+" <--> "+thisState + "-" + otherState);
+		if (compareOnlySymbolicStates.equals("true")) {
+			DiagnosisState thisState = new HeuristicRating(this.rating);
+			DiagnosisState otherState = new HeuristicRating(otherRating.rating);
+			// System.out.println(this.rating+"-"+otherRating.rating+" <--> "+thisState
+			// + "-" + otherState);
 			return thisState.equals(otherState);
-		}else{
-			if (Double.doubleToLongBits(rating) != Double.doubleToLongBits(otherRating.rating))
-				return false;			
+		}
+		else {
+			if (Double.doubleToLongBits(rating) != Double.doubleToLongBits(otherRating.rating)) return false;
 		}
 		return true;
 	}
@@ -106,18 +109,17 @@ public class ScoreRating implements Rating {
 		String compareOnlySymbolicStates = config.getProperty("compareOnlySymbolicStates");
 		if (o instanceof ScoreRating) {
 			ScoreRating otherRating = (ScoreRating) o;
-			if(compareOnlySymbolicStates.equals("true")){
-				DiagnosisState thisState = DiagnosisState.getState(this.rating);
-				DiagnosisState otherState = DiagnosisState.getState(otherRating.rating);
-				//System.out.println(this.rating+"-"+otherRating.rating+" <--> "+thisState + "-" + otherState);
+			if (compareOnlySymbolicStates.equals("true")) {
+				DiagnosisState thisState = new HeuristicRating(this.rating);
+				DiagnosisState otherState = new HeuristicRating(otherRating.rating);
+				// System.out.println(this.rating+"-"+otherRating.rating+" <--> "+thisState
+				// + "-" + otherState);
 				return thisState.compareTo(otherState);
-			}else{
-				if (rating < otherRating.rating)
-					return -1;
-				else if (rating > otherRating.rating)
-					return 1;
-				else
-					return 0;				
+			}
+			else {
+				if (rating < otherRating.rating) return -1;
+				else if (rating > otherRating.rating) return 1;
+				else return 0;
 			}
 		}
 		return 0;
@@ -128,8 +130,8 @@ public class ScoreRating implements Rating {
 	 * Checks if the score exceeds either 20 or -20 points.
 	 */
 	public boolean isProblemSolvingRelevant() {
-		DiagnosisState s = DiagnosisState.getState(rating);
-		return !(s.equals(DiagnosisState.UNCLEAR) || (s.equals(DiagnosisState.EXCLUDED)));
+		HeuristicRating hr = new HeuristicRating(rating);
+		return !(hr.hasState(State.UNCLEAR) || hr.hasState(State.EXCLUDED));
 	}
 
 }

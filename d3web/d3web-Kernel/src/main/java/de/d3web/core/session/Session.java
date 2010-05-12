@@ -35,7 +35,6 @@ import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.interviewmanager.DialogController;
 import de.d3web.core.session.interviewmanager.Interview;
 import de.d3web.core.session.interviewmanager.QASetManager;
-import de.d3web.core.session.values.UndefinedValue;
 
 /**
  * The Session interface represents an active problem-solving session. Here,
@@ -127,30 +126,12 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	QASetManager getQASetManager();
 
 	/**
-	 * Removes all finish reasons from the set of reasons for quitting the
-	 * session and thus enables the continuation of the session.
-	 */
-	void continueCase();
-
-	/**
 	 * Sets a {@link QASetManager}, that will be used to control the interview
 	 * behavior of this case.
 	 * 
 	 * @param cd the {@link QASetManager} of this case
 	 */
 	void setQASetManager(QASetManager cd);
-
-	/**
-	 * Returns the value of the specified {@link Question} valid in this
-	 * {@link Session}; returns {@link UndefinedValue} if no value is assigned.
-	 * 
-	 * @param question the specified {@link Question}
-	 * @return the value of the question valid in this session;
-	 *         {@link UndefinedValue} if no value is assigned.
-	 * @author joba
-	 * @date 15.04.2010
-	 */
-	public Value getValue(Question question);
 
 	/**
 	 * Registers a new listener to this session. If something in this session
@@ -168,12 +149,4 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 */
 	void removeListener(SessionEventListener listener);
 
-	/**
-	 * Removes the specified solution from the list of established solutions.
-	 * 
-	 * @param solution the specified solution
-	 * @author joba
-	 * @date 15.04.2010
-	 */
-	public void removeEstablishedSolution(Solution solution);
 }

@@ -1,28 +1,28 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 /*
  * Created on 16.09.2003
- *
- * To change this generated comment go to 
- * Window>Preferences>Java>Code Generation>Code Template
+ * 
+ * To change this generated comment go to Window>Preferences>Java>Code
+ * Generation>Code Template
  */
 package de.d3web.caserepository.utilities;
 
@@ -33,17 +33,12 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Logger;
 import java.util.zip.ZipInputStream;
 
-import de.d3web.caserepository.CaseObject;
-import de.d3web.caserepository.addons.train.Multimedia;
-import de.d3web.caserepository.addons.train.MultimediaItem;
 import de.d3web.core.io.utilities.URLUtils;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.DiagnosisState.State;
 
 /**
  * @author Atzmueller
@@ -52,91 +47,89 @@ public class Utilities {
 
 	public static DiagnosisState string2stateNarrow(String state) {
 		DiagnosisState result = null;
-		if (DiagnosisState.ESTABLISHED.getName().equals(state))
-			result = DiagnosisState.ESTABLISHED;
-		else if (DiagnosisState.EXCLUDED.getName().equals(state))
-			result = DiagnosisState.EXCLUDED;
-		else if (DiagnosisState.SUGGESTED.getName().equals(state))
-			result = DiagnosisState.SUGGESTED;
-		else if (DiagnosisState.UNCLEAR.getName().equals(state))
-			result = DiagnosisState.UNCLEAR;
+		if (new DiagnosisState(State.ESTABLISHED).getName().equals(state)) result = new DiagnosisState(
+				State.ESTABLISHED);
+		else if (State.EXCLUDED.name().equals(state)) result = new DiagnosisState(State.EXCLUDED);
+		else if (State.SUGGESTED.name().equals(state)) result = new DiagnosisState(State.SUGGESTED);
+		else if (State.UNCLEAR.name().equals(state)) result = new DiagnosisState(State.UNCLEAR);
 		else {
 			Logger.getLogger(Utilities.class.getName()).warning("awkward state '" + state + "'");
-			result = DiagnosisState.UNCLEAR;
+			result = new DiagnosisState(State.UNCLEAR);
 		}
 		return result;
 	}
 
 	public static DiagnosisState string2stateBroad(String ratingString) {
 
-		Collection established = Arrays.asList(new Object[] {
-			DiagnosisState.ESTABLISHED.toString().toLowerCase(),
-			"sicher",
-			"hoechstwahrscheinlich",
-			"nebendiag_sicher",
-			"nebendiag_hoechstwahr",
-			"gesichert",
-			"sichergesichert",
-			"sicherhoechstwahrscheinlich",
-			"hoechstwahrscheinlichhoechstwahrscheinlich",
-			"aus_hoechstwahrwahrscheinlich"
-		});
+		Collection<String> established = Arrays.asList(new String[] {
+				State.ESTABLISHED.name().toLowerCase(),
+				"sicher",
+				"hoechstwahrscheinlich",
+				"nebendiag_sicher",
+				"nebendiag_hoechstwahr",
+				"gesichert",
+				"sichergesichert",
+				"sicherhoechstwahrscheinlich",
+				"hoechstwahrscheinlichhoechstwahrscheinlich",
+				"aus_hoechstwahrwahrscheinlich"
+				});
 
-		Collection suggested = Arrays.asList(new Object[] {
-			DiagnosisState.SUGGESTED.toString().toLowerCase(),
-			"wahrscheinlich",
-			"nebendiag_wahr",
-			"moeglich",
-			"verdaechtig",
-			"sicherwahrscheinlich",
-			"sicherverdaechtig",
-			"nebendiag_wahrwahrscheinlich",
-			"hoechstwahrscheinlichwahrscheinlich",
-			"wahrscheinlichverdaechtig"
-		});
+		Collection<String> suggested = Arrays.asList(new String[] {
+				State.SUGGESTED.name().toLowerCase(),
+				"wahrscheinlich",
+				"nebendiag_wahr",
+				"moeglich",
+				"verdaechtig",
+				"sicherwahrscheinlich",
+				"sicherverdaechtig",
+				"nebendiag_wahrwahrscheinlich",
+				"hoechstwahrscheinlichwahrscheinlich",
+				"wahrscheinlichverdaechtig"
+				});
 
-		Collection unclear = Arrays.asList(new Object[] {   
-			DiagnosisState.UNCLEAR.toString().toLowerCase(),
-			"unklar",
-			"nebendiag_wahrunklar",
-			"sicherunklar",
-			"wahrscheinlichunklar",
-			"aus_sicherunklar",
-			"aus_hoechstwahrunklar",
-			"nebendiag_hoechstwahrunklar"
-		});
+		Collection<String> unclear = Arrays.asList(new String[] {
+				State.UNCLEAR.name().toLowerCase(),
+				"unklar",
+				"nebendiag_wahrunklar",
+				"sicherunklar",
+				"wahrscheinlichunklar",
+				"aus_sicherunklar",
+				"aus_hoechstwahrunklar",
+				"nebendiag_hoechstwahrunklar"
+				});
 
-		Collection excluded = Arrays.asList(new Object[] {
-			DiagnosisState.EXCLUDED.toString().toLowerCase(),
-			"unwahrscheinlich",
-			"aus_sicherunwahrscheinlich",
-			"sicherunwahrscheinlich"
-		});
+		Collection<String> excluded = Arrays.asList(new String[] {
+				State.EXCLUDED.name().toLowerCase(),
+				"unwahrscheinlich",
+				"aus_sicherunwahrscheinlich",
+				"sicherunwahrscheinlich"
+				});
 
 		// [FIXME]:aha:to what DiagnosisState do these two strings map?
-		//	can't translate 'Aus_Hoechstwahr' to some DiagnosisState.
-		//	can't translate 'Aus_Sicher' to some DiagnosisState.
-		//  can't translate 'Irrelevant' to some DiagnosisState.
+		// can't translate 'Aus_Hoechstwahr' to some DiagnosisState.
+		// can't translate 'Aus_Sicher' to some DiagnosisState.
+		// can't translate 'Irrelevant' to some DiagnosisState.
 
-		if (established.contains(ratingString.toLowerCase()))
-			return DiagnosisState.ESTABLISHED;
-		else if (suggested.contains(ratingString.toLowerCase()))
-			return DiagnosisState.SUGGESTED;
-		else if (unclear.contains(ratingString.toLowerCase()))
-			return DiagnosisState.UNCLEAR;
-		else if (excluded.contains(ratingString.toLowerCase()))
-			return DiagnosisState.EXCLUDED;
+		if (established.contains(ratingString.toLowerCase())) return new DiagnosisState(
+				State.ESTABLISHED);
+		else if (suggested.contains(ratingString.toLowerCase())) return new DiagnosisState(
+				State.SUGGESTED);
+		else if (unclear.contains(ratingString.toLowerCase())) return new DiagnosisState(
+				State.UNCLEAR);
+		else if (excluded.contains(ratingString.toLowerCase())) return new DiagnosisState(
+				State.EXCLUDED);
 		else {
-			Logger.getLogger(Utilities.class.getName()).warning("can't translate '" + ratingString + "' to some DiagnosisState.");
+			Logger.getLogger(Utilities.class.getName()).warning(
+					"can't translate '" + ratingString + "' to some DiagnosisState.");
 			// this is awkward
-			return DiagnosisState.UNCLEAR;
+			return new DiagnosisState(State.UNCLEAR);
 		}
 	}
 
 	/**
-	 * idify will return a String consisting of lowercase alphanumeric chars and '_';
-	 * uppercase chars will changed to lowercase
-	 * other chars will be replaced by _
+	 * idify will return a String consisting of lowercase alphanumeric chars and
+	 * '_'; uppercase chars will changed to lowercase other chars will be
+	 * replaced by _
 	 * 
 	 * @param string
 	 * @return String
@@ -146,47 +139,35 @@ public class Utilities {
 	}
 
 	public static InputStream getInputStreamFromZipJarURL(URL jarURL)
-		throws IOException {
+			throws IOException {
 		String fileName = jarURL.getPath();
-		if (fileName.endsWith("!/"))
-			fileName = fileName.substring(0, fileName.length() - 2);
+		if (fileName.endsWith("!/")) fileName = fileName.substring(0, fileName.length() - 2);
 		URL zipJarURL = new URL(fileName);
 		InputStream jarInputStream = zipJarURL.openStream();
-	
+
 		ZipInputStream zipInput = new ZipInputStream(jarInputStream);
 		zipInput.getNextEntry();
 		return zipInput;
 	}
 
 	public static boolean hasCasesInf(URL jarFileURL) {
-	
-	    try {
-	        URL indexedJarURL = new URL(jarFileURL, "CRS-INF/index.xml");
-	        URLUtils.openStream(indexedJarURL); // test for indexed jar
-	        return true;
-	    } catch (IOException ex1) {
-	        // [MISC]:aha:legacy code
-	        try {
-	            URL indexedJarURL = new URL(jarFileURL, "CASES-INF/index.xml");
-	            URLUtils.openStream(indexedJarURL); // test for indexed jar
-	            return true;
-	        } catch (IOException ex) {
-	            return false;
-	        }
-	    }
-	}
 
-	public static List getMultimediaItems(Collection cases) {
-		List result = new LinkedList();
-		Iterator iter = cases.iterator();
-		while (iter.hasNext()) {
-			CaseObject co = (CaseObject) iter.next();
-			Iterator mmIter =
-				((Multimedia) co.getMultimedia()).getMultimediaItems().iterator();
-			while (mmIter.hasNext())
-				result.add(((MultimediaItem) mmIter.next()).getURL());
+		try {
+			URL indexedJarURL = new URL(jarFileURL, "CRS-INF/index.xml");
+			URLUtils.openStream(indexedJarURL); // test for indexed jar
+			return true;
 		}
-		return result;
+		catch (IOException ex1) {
+			// [MISC]:aha:legacy code
+			try {
+				URL indexedJarURL = new URL(jarFileURL, "CASES-INF/index.xml");
+				URLUtils.openStream(indexedJarURL); // test for indexed jar
+				return true;
+			}
+			catch (IOException ex) {
+				return false;
+			}
+		}
 	}
 
 	/**
@@ -200,12 +181,13 @@ public class Utilities {
 			String line = br.readLine();
 			while (line != null) {
 				if (line.indexOf("<CaseRepository>") != -1
-					|| line.indexOf("<ProblemRepository>") != -1)
-					return true;
+						|| line.indexOf("<ProblemRepository>") != -1) return true;
 				line = br.readLine();
 			}
-		} catch (IOException e) {
-			Logger.getLogger(Utilities.class.getName()).warning(e.getLocalizedMessage() + ": " + url.toExternalForm());
+		}
+		catch (IOException e) {
+			Logger.getLogger(Utilities.class.getName()).warning(
+					e.getLocalizedMessage() + ": " + url.toExternalForm());
 		}
 		return false;
 	}

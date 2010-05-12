@@ -342,7 +342,7 @@ public class XCLPageRenderer extends Renderer {
 			}
 			writer.endElement("td");
 			writer.startElement("td", component);
-			Value answer = theCase.getValue(cq);
+			Value answer = theCase.getBlackboard().getValue(cq);
 			List<Value> answers = new ArrayList<Value>();
 			if (cq instanceof QuestionMC) {
 				answers.addAll((List<ChoiceValue>) ((MultipleChoiceValue) answer).getValue());

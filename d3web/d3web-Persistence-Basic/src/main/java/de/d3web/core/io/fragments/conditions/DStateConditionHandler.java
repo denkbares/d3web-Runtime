@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.io.fragments.conditions;
 
@@ -27,12 +27,14 @@ import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.IDObject;
+import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.DiagnosisState.State;
+
 /**
  * FragementHandler for CondDStates
- *
+ * 
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class DStateConditionHandler implements FragmentHandler {
@@ -51,7 +53,7 @@ public class DStateConditionHandler implements FragmentHandler {
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		String solutionID = element.getAttribute("ID");
 		String value = element.getAttribute("value");
-		if (solutionID!=null && value != null) {
+		if (solutionID != null && value != null) {
 			IDObject idObject = kb.search(solutionID);
 			if (idObject instanceof Solution) {
 				Solution diag = (Solution) idObject;
@@ -66,25 +68,21 @@ public class DStateConditionHandler implements FragmentHandler {
 	public Element write(Object object, Document doc) throws IOException {
 		CondDState cond = (CondDState) object;
 		String status = "";
-		if(cond.getStatus() != null) {
+		if (cond.getStatus() != null) {
 			status = cond.getStatus().toString();
 		}
 		return XMLUtil.writeCondition(doc, cond.getDiagnosis(), "DState", status);
 	}
-	
+
 	private static DiagnosisState getDiagnosisState(String status) {
 
-		if (status.equalsIgnoreCase("established"))
-			return DiagnosisState.ESTABLISHED;
+		if (status.equalsIgnoreCase("established")) return new DiagnosisState(State.ESTABLISHED);
 
-		if (status.equalsIgnoreCase("excluded"))
-			return DiagnosisState.EXCLUDED;
+		if (status.equalsIgnoreCase("excluded")) return new DiagnosisState(State.EXCLUDED);
 
-		if (status.equalsIgnoreCase("suggested"))
-			return DiagnosisState.SUGGESTED;
+		if (status.equalsIgnoreCase("suggested")) return new DiagnosisState(State.SUGGESTED);
 
-		if (status.equalsIgnoreCase("unclear"))
-			return DiagnosisState.UNCLEAR;
+		if (status.equalsIgnoreCase("unclear")) return new DiagnosisState(State.UNCLEAR);
 
 		return null;
 	}

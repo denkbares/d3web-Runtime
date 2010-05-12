@@ -242,7 +242,7 @@ public class DialogUtils {
 			ResourceBundle bundle = ResourceBundle.getBundle(FacesContext.getCurrentInstance()
 					.getApplication().getMessageBundle(),
 					FacesContext.getCurrentInstance().getViewRoot()
-							.getLocale());
+					.getLocale());
 			return bundle.getString(messageString);
 		}
 	}
@@ -257,12 +257,12 @@ public class DialogUtils {
 			ResourceBundle bundle = ResourceBundle.getBundle(FacesContext.getCurrentInstance()
 					.getApplication().getMessageBundle(),
 					FacesContext.getCurrentInstance().getViewRoot()
-							.getLocale());
+					.getLocale());
 			message = bundle.getString(messageString);
 		}
 		MessageFormat format = new MessageFormat(message,
 				FacesContext.getCurrentInstance().getViewRoot()
-						.getLocale());
+				.getLocale());
 		return format.format(params);
 	}
 
@@ -461,7 +461,7 @@ public class DialogUtils {
 	}
 
 	public static boolean unknownAnswerInValueList(Question q, Session theCase) {
-		Value answer = theCase.getValue(q);
+		Value answer = theCase.getBlackboard().getValue(q);
 		if (answer == null) return false;
 		return answer instanceof Unknown;
 	}

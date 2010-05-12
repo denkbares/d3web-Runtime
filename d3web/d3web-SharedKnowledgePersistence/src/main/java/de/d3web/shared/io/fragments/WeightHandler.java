@@ -1,22 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *                    denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg denkbares GmbH
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.shared.io.fragments;
 
@@ -35,8 +34,10 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.shared.DiagnosisWeightValue;
 import de.d3web.shared.QuestionWeightValue;
 import de.d3web.shared.Weight;
+
 /**
  * Handels Weights
+ * 
  * @author Norman Brümmer, Markus Friedrich (denkbares GmbH)
  */
 public class WeightHandler implements FragmentHandler {
@@ -76,11 +77,11 @@ public class WeightHandler implements FragmentHandler {
 						.getNodeValue();
 				String valueD = diagNode.getAttributes().getNamedItem(
 						"value").getNodeValue();
-					DiagnosisWeightValue diagnosisWV = new DiagnosisWeightValue();
-				diagnosisWV.setDiagnosis(kb.searchDiagnosis(diagID));
+				DiagnosisWeightValue diagnosisWV = new DiagnosisWeightValue();
+				diagnosisWV.setDiagnosis(kb.searchSolution(diagID));
 				diagnosisWV.setValue(Weight
 						.convertConstantStringToValue(valueD));
-					weight.addDiagnosisWeightValue(diagnosisWV);
+				weight.addDiagnosisWeightValue(diagnosisWV);
 			}
 		}
 		return weight;
@@ -90,12 +91,13 @@ public class WeightHandler implements FragmentHandler {
 	public Element write(Object object, Document doc) throws IOException {
 		Weight weight = (Weight) object;
 		Element element = doc.createElement("KnowledgeSlice");
-		element.setAttribute("ID", "W"+weight.getQuestionWeightValue().getQuestion().getId());
+		element.setAttribute("ID", "W" + weight.getQuestionWeightValue().getQuestion().getId());
 		element.setAttribute("type", "weight");
 		element.setAttribute("questionID", weight.getQuestionWeightValue().getQuestion().getId());
-		element.setAttribute("value", Weight.convertValueToConstantString(weight.getQuestionWeightValue().getValue()));
+		element.setAttribute("value",
+				Weight.convertValueToConstantString(weight.getQuestionWeightValue().getValue()));
 		List<DiagnosisWeightValue> diagnosisWeightValues = weight.getDiagnosisWeightValues();
-		for (DiagnosisWeightValue dwv: diagnosisWeightValues) {
+		for (DiagnosisWeightValue dwv : diagnosisWeightValues) {
 			Element dwvNode = doc.createElement("diagnosis");
 			dwvNode.setAttribute("ID", dwv.getDiagnosis().getId());
 			dwvNode.setAttribute("value", Weight.convertValueToConstantString(dwv.getValue()));

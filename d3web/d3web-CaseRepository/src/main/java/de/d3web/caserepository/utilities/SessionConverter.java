@@ -179,7 +179,7 @@ public class SessionConverter {
 		Iterator<Question> qiter = theCase.getKnowledgeBase().getQuestions().iterator();
 		while (qiter.hasNext()) {
 			Question q = qiter.next();
-			Value value = theCase.getValue(q);
+			Value value = theCase.getBlackboard().getValue(q);
 			ret.addQuestionAndAnswers(q, value);
 		}
 

@@ -35,6 +35,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.DiagnosisState.State;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.FactFactory;
@@ -141,8 +142,8 @@ public class SequentialTestCase {
 			for (Finding f : rtc.getFindings()) {
 				session.getBlackboard().addValueFact(
 						FactFactory.createFact(f.getQuestion(), f.getValue(),
-								PSMethodUserSelected.getInstance(),
-								PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 			}
 
 			// Check used Rating (StateRating or ScoreRating) in
@@ -208,8 +209,8 @@ public class SequentialTestCase {
 			if (slice instanceof XCLModel) {
 				Solution solution = ((XCLModel) slice).getSolution();
 				DiagnosisState s = ((XCLModel) slice).getState(thecase);
-				if (!s.equals(new DiagnosisState(DiagnosisState.State.UNCLEAR))
-						&& !s.equals(new DiagnosisState(DiagnosisState.State.EXCLUDED))) {
+				if (!s.hasState(State.UNCLEAR)
+						&& !s.hasState(State.EXCLUDED)) {
 					RatedSolution rs = new RatedSolution(solution, new StateRating(s));
 					rtc.addDerived(rs);
 				}

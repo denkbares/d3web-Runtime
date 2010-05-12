@@ -1,36 +1,37 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.empiricalTesting.joba.testcases;
 
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.empiricalTesting.Finding;
 import de.d3web.empiricalTesting.RatedTestCase;
 import de.d3web.empiricalTesting.ScoreRating;
 
 public class SeqTestCaseTester {
+
 	KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance();
 	Question q1, q2, q3;
 	Solution d1, d2, d3;
@@ -80,15 +81,17 @@ public class SeqTestCaseTester {
 	}
 
 	private void createKnowledgeBase() {
-		Solution root = kbm.getKnowledgeBase().getRootDiagnosis();
+		Solution root = kbm.getKnowledgeBase().getRootSolution();
 		QASet rootContainer = kbm.getKnowledgeBase().getRootQASet();
 		d1 = kbm.createSolution("d1", root);
 		d2 = kbm.createSolution("d2", root);
 		d3 = kbm.createSolution("d3", root);
 		QContainer qc1 = kbm.createQContainer("qc1", rootContainer);
-		q1 = kbm.createQuestionOC("qoc1", qc1, new String[] { "qoc1A1",
+		q1 = kbm.createQuestionOC("qoc1", qc1, new String[] {
+				"qoc1A1",
 				"qocq1A2" });
-		q2 = kbm.createQuestionOC("qoc2", qc1, new String[] { "qoc2A1",
+		q2 = kbm.createQuestionOC("qoc2", qc1, new String[] {
+				"qoc2A1",
 				"qoc2qA2" });
 		q3 = kbm.createQuestionNum("qnum1", qc1);
 	}
