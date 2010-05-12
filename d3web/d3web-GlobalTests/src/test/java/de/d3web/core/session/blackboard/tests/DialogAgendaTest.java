@@ -194,10 +194,10 @@ public class DialogAgendaTest {
 		assertTrue(agenda.hasState(pregnancyQuestions, InterviewState.ACTIVE));
 
 		// Set the Question SEX=female
-		// EXPECT 1) the qcontainer should be INACTIVE
+		// EXPECT 1) the qcontainer should be still ACTIVE due to indication of follow-up question 'pregnant'
 		//        2) the follow-up question "pregnant" should be put onto the agenda
 		setValue(sex, female);
-		assertTrue(agenda.hasState(pregnancyQuestions, InterviewState.INACTIVE));
+		assertTrue(agenda.hasState(pregnancyQuestions, InterviewState.ACTIVE));
 		assertTrue(agenda.onAgenda(pregnant));
 		assertTrue(agenda.hasState(pregnant, InterviewState.ACTIVE));
 	}	

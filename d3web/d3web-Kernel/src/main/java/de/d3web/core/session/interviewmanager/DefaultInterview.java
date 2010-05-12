@@ -20,6 +20,7 @@
 package de.d3web.core.session.interviewmanager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.d3web.core.inference.PropagationEntry;
@@ -137,7 +138,8 @@ public class DefaultInterview implements Interview {
 				}
 			}
 			// Need to update indicated QContainers: 
-			// 1)x When all contained questions have been answered, then deactivate
+			// 1)x When all contained questions have been answered 
+			//     (and no follow-up questions are active), then deactivate
 			// 2) When all contained qcontainers are deactivated, then also deactivate
 			checkParentalQContainer(indicatedObject);
 		}
@@ -170,12 +172,20 @@ public class DefaultInterview implements Interview {
 
 	private InterviewState checkChildrenState(TerminologyObject[] children) {
 		// If all children are Question instances:
-		//   If all questions are answered, then return State=INACTIVE
-		//   If at least on question is not answered, then return State=ACTIVE
+		//   Consider not only the direct children, but also their follow-up questions
+		//     If all questions are answered, then return State=INACTIVE
+		//     If at least on question is not answered, then return State=ACTIVE
 		if (allQuestions(children)) {
+			// ACTIVE, when at least one direct children is not answered 
 			for (TerminologyObject child : children) {
 				Value value = session.getBlackboard().getValue((Question)child);
 				if (value instanceof UndefinedValue) {
+					return InterviewState.ACTIVE;
+				}
+			}
+			// ACTIVE, when at least one follow-up question is ACTIVE
+			for (TerminologyObject followup_question : getAllFollowUpChildrenOf(children)) {
+				if (isActive((InterviewObject)followup_question)) {
 					return InterviewState.ACTIVE;
 				}
 			}
@@ -198,6 +208,15 @@ public class DefaultInterview implements Interview {
 		return InterviewState.INACTIVE;
 	}
 	
+	private List<TerminologyObject> getAllFollowUpChildrenOf(TerminologyObject[] objects) {
+		List<TerminologyObject> children = new ArrayList<TerminologyObject>();
+		for (TerminologyObject object : objects) {
+			children.addAll(Arrays.asList(object.getChildren()));
+			children.addAll(getAllFollowUpChildrenOf(object.getChildren()));
+		}
+		return children;
+	}
+
 	private InterviewState checkChildrenState(QContainer container) {
 		return checkChildrenState(container.getChildren());
 	}
@@ -244,9 +263,7 @@ public class DefaultInterview implements Interview {
 				containers.add((QContainer)parent);
 			}
 			if (parent.getParents().length > 0) {
-				for (TerminologyObject parentOfParent : parent.getParents()) {
-					containers.addAll(computeParentalContainersOnAgenda((InterviewObject)parentOfParent));
-				}
+				containers.addAll(computeParentalContainersOnAgenda((InterviewObject)parent));
 			}
 		}
 		return containers;

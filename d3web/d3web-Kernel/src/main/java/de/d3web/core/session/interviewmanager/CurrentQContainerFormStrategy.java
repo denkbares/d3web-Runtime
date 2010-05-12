@@ -27,66 +27,73 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
-import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
-import de.d3web.core.session.values.UndefinedValue;
 
 /**
- * This class always creates a new {@link Form} that contains the 
- * {@link QContainer}, that should be presented/asked next in the dialog system. 
- * This {@link QContainer} is not a non-terminal QContainer (i.e., it does not contain 
- * other {@link QContainer} instances) and it contains at least one unansered 
- * but active question.
+ * This class always creates a new {@link Form} that contains the
+ * {@link QContainer}, that should be presented/asked next in the dialog system.
+ * This {@link QContainer} is not a non-terminal QContainer (i.e., it does not
+ * contain other {@link QContainer} instances) and it contains at least one
+ * unansered but active question.
  * 
  * For Dialog implementations: Please use helper methods in {@link Interview} to
  * find out, whether a {@link Question} or follow-up {@link Question} is active
  * or not.
- *  
+ * 
  * @author joba
- *
+ * 
  */
-public class CurrentQContainerFormStrategy implements FormStrategy {
+public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
 
 	@Override
 	public Form nextForm(List<InterviewObject> agendaEnties, Session session) {
 		if (agendaEnties.isEmpty()) {
 			return EmptyForm.getInstance();
-		}
-		else {
+		} else {
 			InterviewObject object = agendaEnties.get(0);
 			if (object instanceof Question) {
-				return new DefaultForm(((Question)object).getName(), object);
-			}
-			else if (object instanceof QContainer) {
-				QContainer nextQContainer = retrieveNextUnfinishedQContainer((QContainer)object, session);
-				if (nextQContainer  == null) {
+				return new DefaultForm(((Question) object).getName(), object);
+			} else if (object instanceof QContainer) {
+				QContainer nextQContainer = retrieveNextUnfinishedQContainer(
+						(QContainer) object, session);
+				if (nextQContainer == null) {
 					return EmptyForm.getInstance();
 				}
-				return new DefaultForm(nextQContainer .getName(), nextQContainer);
+				return new DefaultForm(nextQContainer.getName(), nextQContainer);
 			}
-			return null;			
-		}	}
+			return null;
+		}
+	}
 
 	/**
-	 * Staring with the specified {@link QContainer}, recursively find the next {@link QContainer}
-	 * instance, that only contains {@link Question} instances (i.e., a terminal {@link QContainer}) 
-	 * and that contains active questions with respect to the specified {@link Session} instance. 
-	 * @param container the specified {@link QContainer}
-	 * @param session the specified session
+	 * Staring with the specified {@link QContainer}, recursively find the next
+	 * {@link QContainer} instance, that only contains {@link Question}
+	 * instances (i.e., a terminal {@link QContainer}) and that contains active
+	 * questions with respect to the specified {@link Session} instance.
+	 * 
+	 * @param container
+	 *            the specified {@link QContainer}
+	 * @param session
+	 *            the specified session
 	 * @return an active {@link QContainer} instance
 	 */
-	private QContainer retrieveNextUnfinishedQContainer(QContainer container, Session session) {
-		if (isTerminalQContainer(container) && hasActiveQuestions(container, session)) {
-			return (QContainer)container;
+	private QContainer retrieveNextUnfinishedQContainer(QContainer container,
+			Session session) {
+		if (isTerminalQContainer(container)
+				&& hasActiveQuestions(container, session)) {
+			return (QContainer) container;
 		}
-		// container is not a terminal qcontainer, i.e., contains further qcontainers 
+		// container is not a terminal qcontainer, i.e., contains further
+		// qcontainers
 		// => traverse to the next active child in a DFS style
-		else  {
+		else {
 			TerminologyObject[] children = container.getChildren();
 			for (TerminologyObject child : children) {
-				QContainer candidate = retrieveNextUnfinishedQContainer((QContainer)child, session);
-				if (candidate != null) {
-					return candidate;
+				if (child instanceof QContainer) {
+					QContainer candidate = retrieveNextUnfinishedQContainer(
+							(QContainer) child, session);
+					if (candidate != null) {
+						return candidate;
+					}
 				}
 			}
 		}
@@ -94,21 +101,24 @@ public class CurrentQContainerFormStrategy implements FormStrategy {
 	}
 
 	/**
-	 * Checks, whether the specified container contains active (follow-up) questions or
-	 * direct child questions, that have no value with respect to the specified 
-	 * {@link Session} instance. 
-	 * @param container the specified {@link QContainer} instance
-	 * @param session the specified {@link Session} instance
-	 * @return true, when it contains an unanswered direct question or an active (possible follow-up) question
+	 * Checks, whether the specified container contains active (follow-up)
+	 * questions or direct child questions, that have no value with respect to
+	 * the specified {@link Session} instance.
+	 * 
+	 * @param container
+	 *            the specified {@link QContainer} instance
+	 * @param session
+	 *            the specified {@link Session} instance
+	 * @return true, when it contains an unanswered direct question or an active
+	 *         (possible follow-up) question
 	 */
 	private boolean hasActiveQuestions(QContainer container, Session session) {
 		for (TerminologyObject child : container.getChildren()) {
 			if (child instanceof Question) {
-				Question question = (Question)child;
+				Question question = (Question) child;
 				if (hasValueUndefined(question, session)) {
 					return true;
-				}
-				else {
+				} else {
 					List<Question> follow_up_questions = collectFollowUpQuestions(question);
 					for (Question follow_up : follow_up_questions) {
 						if (isActiveOnAgenda(follow_up, session)) {
@@ -122,14 +132,13 @@ public class CurrentQContainerFormStrategy implements FormStrategy {
 	}
 
 	private List<Question> collectFollowUpQuestions(Question question) {
-		List<Question> children = new ArrayList<Question>(); 
+		List<Question> children = new ArrayList<Question>();
 		for (TerminologyObject object : question.getChildren()) {
 			if (object instanceof Question) {
-				Question child = (Question)object;
+				Question child = (Question) object;
 				children.add(child);
 				children.addAll(collectFollowUpQuestions(child));
-			}
-			else {
+			} else {
 				System.err.println("UNHANDLED QASET TYPE");
 				// TODO: throw a bad logger message here.
 			}
@@ -145,23 +154,6 @@ public class CurrentQContainerFormStrategy implements FormStrategy {
 		}
 		return true;
 	}
-	
-	private boolean hasValueUndefined(Question question, Session session) {
-		Value value = session.getBlackboard().getValue(question);
-		return (value instanceof UndefinedValue);	
-	}
-	private boolean isActiveOnAgenda(Question question, Session session) {
-		return session.getInterviewManager().getInterviewAgenda().hasState(question, InterviewState.ACTIVE);
-	}
+
+
 }
-
-
-
-
-
-
-
-
-
-
-

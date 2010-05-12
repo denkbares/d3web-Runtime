@@ -27,9 +27,6 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
-import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
-import de.d3web.core.session.values.UndefinedValue;
 
 /**
  * This class always creates a new {@link Form} that contains the one
@@ -41,7 +38,7 @@ import de.d3web.core.session.values.UndefinedValue;
  * @author joba
  *
  */
-public class NextUnansweredQuestionFormStrategy implements FormStrategy {
+public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 
 	@Override
 	public Form nextForm(List<InterviewObject> agendaEnties, Session session) {
@@ -111,11 +108,6 @@ public class NextUnansweredQuestionFormStrategy implements FormStrategy {
 		return null;
 	}
 
-
-	private boolean isActiveOnAgenda(Question question, Session session) {
-		return session.getInterviewManager().getInterviewAgenda().hasState(question, InterviewState.ACTIVE);
-	}
-
 	/**
 	 * A direct-qcontainer question must qcontainers as its parents. 
 	 * @param question the specified question
@@ -135,10 +127,5 @@ public class NextUnansweredQuestionFormStrategy implements FormStrategy {
 	 */
 	private boolean isNotDirectQContainerQuestion(Question question) {
 		return !isDirectQContainerQuestion(question);
-	}
-
-	private boolean hasValueUndefined(Question question, Session session) {
-		Value value = session.getBlackboard().getValue(question);
-		return (value instanceof UndefinedValue);	
 	}
 }
