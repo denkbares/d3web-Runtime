@@ -19,10 +19,17 @@
  */
 package de.d3web.core.session.interviewmanager;
 
+import java.util.List;
+
 import de.d3web.core.knowledge.InterviewObject;
+import de.d3web.core.session.Session;
 
+public class NextQContainerFormStrategy implements FormStrategy {
 
-public interface Form {
-	String getTitle();
-	InterviewObject getInterviewObject();
+	@Override
+	public Form nextForm(List<InterviewObject> agendaEnties, Session session) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

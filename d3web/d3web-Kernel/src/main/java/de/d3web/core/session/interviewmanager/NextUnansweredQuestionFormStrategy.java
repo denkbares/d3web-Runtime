@@ -19,7 +19,6 @@
  */
 package de.d3web.core.session.interviewmanager;
 
-import java.util.Arrays;
 import java.util.List;
 
 import de.d3web.core.knowledge.InterviewObject;
@@ -35,6 +34,9 @@ import de.d3web.core.session.values.UndefinedValue;
 /**
  * This class always creates a new {@link Form} that contains the one
  * {@link Question}, that should be presented/asked next in the dialog system. 
+ * Here, the next question is the question that 
+ * 1) is the next active question on the {@link InterviewAgenda} OR
+ * 2) for an indicated {@link QContainer} the next unanswered question in this container
  * 
  * @author joba
  *
@@ -49,8 +51,7 @@ public class NextUnansweredQuestionFormStrategy implements FormStrategy {
 		else {
 			InterviewObject object = agendaEnties.get(0);
 			if (object instanceof Question) {
-				List<InterviewObject> interviewObjects = Arrays.asList(object);
-				return new DefaultForm(((Question)object).getName(), interviewObjects);
+				return new DefaultForm(((Question)object).getName(), object);
 			}
 			else if (object instanceof QASet) {
 				Question nextQuestion = retrieveNextQuestionToBeAnswered((QASet)object, session);
@@ -77,7 +78,7 @@ public class NextUnansweredQuestionFormStrategy implements FormStrategy {
 			Question question = (Question)qaset;
 			// Return question, when it is directly located in a questionnaire and has not been answered.
 			if (isDirectQContainerQuestion(question) &&
-				hasNoValue(question,session)) {
+				hasValueUndefined(question,session)) {
 				return question;
 			}
 			// Return question, when it is not directly located in a questionnaire but is 
@@ -111,7 +112,6 @@ public class NextUnansweredQuestionFormStrategy implements FormStrategy {
 	}
 
 
-
 	private boolean isActiveOnAgenda(Question question, Session session) {
 		return session.getInterviewManager().getInterviewAgenda().hasState(question, InterviewState.ACTIVE);
 	}
@@ -137,7 +137,7 @@ public class NextUnansweredQuestionFormStrategy implements FormStrategy {
 		return !isDirectQContainerQuestion(question);
 	}
 
-	private boolean hasNoValue(Question question, Session session) {
+	private boolean hasValueUndefined(Question question, Session session) {
 		Value value = session.getBlackboard().getValue(question);
 		return (value instanceof UndefinedValue);	
 	}

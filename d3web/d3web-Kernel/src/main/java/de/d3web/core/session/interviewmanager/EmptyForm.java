@@ -19,9 +19,6 @@
  */
 package de.d3web.core.session.interviewmanager;
 
-import java.util.Collections;
-import java.util.List;
-
 import de.d3web.core.knowledge.InterviewObject;
 
 /**
@@ -34,11 +31,10 @@ import de.d3web.core.knowledge.InterviewObject;
 public class EmptyForm implements Form {
 
 	private static final Form instance = new EmptyForm();
-	
-	@SuppressWarnings("unchecked")
+		
 	@Override
-	public List<InterviewObject> getInterviewObjects() {
-		return Collections.EMPTY_LIST;
+	public InterviewObject getInterviewObject() {
+		return null;
 	}
 
 	@Override

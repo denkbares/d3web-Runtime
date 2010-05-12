@@ -24,8 +24,6 @@ import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -228,7 +226,7 @@ public class IndicationOQQuestionsNextFormTest {
 	@Test
 	public void testIndication() {
 
-		List<InterviewObject> intervObjs;
+		InterviewObject intervObj;
 		Question sex = kbm.findQuestion("Sex");
 		Question pregnant = kbm.findQuestion("Pregnant");
 		Question askHead = kbm.findQuestion("Ask_Headache");
@@ -245,14 +243,13 @@ public class IndicationOQQuestionsNextFormTest {
 		Value sexValue = session.getBlackboard().getValue(sex);
 		assertEquals("Question Sex has wrong value ", male, sexValue);
 		// OQ Strategy should return exactly one element here.
-		intervObjs = interview.nextForm().getInterviewObjects();
+		intervObj = interview.nextForm().getInterviewObject();
 		assertTrue("InterviewManager.nextForm() should have provided one " +
-				"next element, but returned " + intervObjs.size() +
-				" elements instead", intervObjs.size() == 1);
+				"next element, but returned.", intervObj != null);
 
 		// Sex == Male => EXPECTED: Ask_Headache
 		assertEquals("Answering question Sex with value Male should bring " +
-				"up Ask_Headache as next question", askHead, intervObjs.get(0));
+				"up Ask_Headache as next question", askHead, intervObj);
 
 		// EXPECTED: Ask_Headache == NEUTRAL, Pregnant == NEUTRAL
 		assertEquals("Question Ask_Headache has wrong indication state ",
@@ -271,14 +268,13 @@ public class IndicationOQQuestionsNextFormTest {
 		assertEquals("Question Sex has wrong value ", female, sexValue);
 
 		// OQ Strategy should return exactly one element here.
-		intervObjs = session.getInterviewManager().nextForm().getInterviewObjects();
+		intervObj = session.getInterviewManager().nextForm().getInterviewObject();
 		assertTrue("InterviewManager.nextForm() should have provided one " +
-				"next element, but returned " + intervObjs.size() +
-				" elements instead ", intervObjs.size() == 1);
+				"next element.", intervObj != null);
 
 		// Sex == Female => EXPECTED: Pregnant
 		assertEquals("Answering question Sex with value Female should bring up " +
-				"Pregnant as next question", pregnant, intervObjs.get(0));
+				"Pregnant as next question", pregnant, intervObj);
 
 		// EXPECTED: Pregnant == INDICATED
 		assertEquals("Question Pregnant has wrong indication state ",
@@ -294,14 +290,13 @@ public class IndicationOQQuestionsNextFormTest {
 		assertEquals("Question Sex has wrong value ", male, sexValue);
 
 		// OQ Strategy should return exactly one element here.
-		intervObjs = session.getInterviewManager().nextForm().getInterviewObjects();
+		intervObj = session.getInterviewManager().nextForm().getInterviewObject();
 		assertTrue("InterviewManager.nextForm() should have provided one " +
-				"next element, but returned " + intervObjs.size() +
-				" elements instead", intervObjs.size() == 1);
+				"next element, but returned .", intervObj != null);
 
 		// Sex == Male => EXPECTED: Ask_Headache (again now).
 		assertEquals("Answering question Sex with value Male should bring up "
-				+ "Ask_Headache as next question", askHead, intervObjs.get(0));
+				+ "Ask_Headache as next question", askHead, intervObj);
 
 		// EXPECTED: Pregnant == NEUTRAL, Ask_Headache == NEUTRAL
 		assertEquals("Question Pregnant has wrong indication state ",
@@ -323,7 +318,7 @@ public class IndicationOQQuestionsNextFormTest {
 	@Test
 	public void testContraIndication() {
 
-		List<InterviewObject> intervObjs;
+		InterviewObject intervObj;
 		Question askHead = kbm.findQuestion("Ask_Headache");
 		Question headache = kbm.findQuestion("Headache");
 		Question nausea = kbm.findQuestion("Nausea");
@@ -340,10 +335,9 @@ public class IndicationOQQuestionsNextFormTest {
 		assertEquals("Question Ask_Headache has wrong value ", yes, askHValue);
 
 		// OQ Strategy should return exactly one element here.
-		intervObjs = session.getInterviewManager().nextForm().getInterviewObjects();
+		intervObj = session.getInterviewManager().nextForm().getInterviewObject();
 		assertTrue("InterviewManager.nextForm() should have provided one " +
-				"next element, but returned " + intervObjs.size() +
-				" elements instead", intervObjs.size() == 1);
+				"next element. ", intervObj != null);
 
 		// EXPECTED: Headache == NEUTRAL
 		assertEquals("Question Headache has wrong indication state ",
@@ -352,7 +346,7 @@ public class IndicationOQQuestionsNextFormTest {
 
 		// EXPECTED next question: Headache
 		assertEquals("Answering question Ask_Headache with value Yes should bring "
-				+ "up Headache as next question", headache, intervObjs.get(0));
+				+ "up Headache as next question", headache, intervObj);
 
 		// SET Ask_Headache == No and test setting
 		agenda.activate(headache);
@@ -365,10 +359,9 @@ public class IndicationOQQuestionsNextFormTest {
 		assertEquals("Question Ask_Headache has wrong value ", no, askHValue);
 
 		// OQ Strategy should return exactly one element here.
-		intervObjs = session.getInterviewManager().nextForm().getInterviewObjects();
+		intervObj = session.getInterviewManager().nextForm().getInterviewObject();
 		assertTrue("InterviewManager.nextForm() should have provided one " +
-				"next element, but returned " + intervObjs.size() +
-				" elements instead", intervObjs.size() == 1);
+				"next element.", intervObj != null);
 
 		// EXPECTED: Headache == CONTRA_INDICATED
 		assertEquals("Question Headache has wrong indication state ",

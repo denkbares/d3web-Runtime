@@ -25,6 +25,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.UndefinedValue;
 
 /**
  * This condition checks, whether a specified value is assigned to a question
@@ -55,9 +56,12 @@ public class CondEqual extends CondQuestion {
 	public boolean eval(Session session)
 		throws NoAnswerException, UnknownAnswerException {
 		checkAnswer(session);
-		Value value = session.getBlackboard().getValue(question); //question.getValue(session);
+		Value value = session.getBlackboard().getValue(question); 
 
-		if (question instanceof QuestionMC) {
+		if (this.value instanceof UndefinedValue) {
+			return (value instanceof UndefinedValue);
+		}
+		else if (question instanceof QuestionMC) {
 			if (value instanceof MultipleChoiceValue) {
 				MultipleChoiceValue currentValue = (MultipleChoiceValue) value;
 				if (this.value instanceof MultipleChoiceValue) {

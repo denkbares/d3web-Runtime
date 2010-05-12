@@ -19,28 +19,20 @@
  */
 package de.d3web.core.session.interviewmanager;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import de.d3web.core.knowledge.InterviewObject;
 
 public class DefaultForm implements Form {
-	private List<InterviewObject> interviewObjects;
-	private String                title = "noname";
+	private InterviewObject   interviewObject;
+	private String            title = "noname";
 
-	public DefaultForm(String title, List<InterviewObject> interviewObjects) {
+	public DefaultForm(String title, InterviewObject interviewObject) {
 		this.title = title;
-		this.interviewObjects = interviewObjects;
+		this.interviewObject = interviewObject;
 	}
 	
-	public DefaultForm(String title, InterviewObject interviewObject) {
-		this(title, Arrays.asList(interviewObject));
-	}
-
 	@Override
-	public List<InterviewObject> getInterviewObjects() {
-		return Collections.unmodifiableList(this.interviewObjects);
+	public InterviewObject getInterviewObject() {
+		return this.interviewObject;
 	}
 
 	@Override
@@ -50,6 +42,6 @@ public class DefaultForm implements Form {
 
 	@Override
 	public String toString() {
-		return this.title + ": " + this.interviewObjects;
+		return this.title + ": " + this.interviewObject;
 	}
 }

@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
+ *                    Computer Science VI, University of Wuerzburg
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package de.d3web.core.session.interviewmanager;
 
 import java.util.ArrayList;
@@ -9,6 +28,7 @@ import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.Indication.State;
+import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.QuestionValue;
@@ -17,6 +37,19 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
 import de.d3web.core.session.values.UndefinedValue;
 
+/**
+ * The default implementation of {@link Interview}: This class 
+ * stores an {@link InterviewAgenda} managing the activation/deactivation 
+ * of {@link Question}/{@link QContainer} instances, that are indicated 
+ * due to values entered in the specified {@link Session}.
+ * 
+ * By the default--the {@link QASet} to be answered next by a dialog-- is
+ * wrapped in a {@link Form}, that can be retrieved by nextForm().  
+ * A {@link FormStrategy} decides about the nature of the next {@link QASet} 
+ * to be presented in the dialog.
+ * 
+ * @author joba
+ */
 public class DefaultInterview implements Interview {
 
 	private final InterviewAgenda agenda;
@@ -28,7 +61,12 @@ public class DefaultInterview implements Interview {
 	private FormStrategy formStrategy; 
 
 	
-	
+	/**
+	 * Initializes an interview for a specified session based on a specified
+	 * knowledge base.
+	 * @param session the specified session
+	 * @param knowledgeBase the specified knowledge base
+	 */
 	public DefaultInterview(Session session, KnowledgeBase knowledgeBase) {
 		this.session = session;
 		this.knowledgeBase = knowledgeBase;
@@ -164,6 +202,11 @@ public class DefaultInterview implements Interview {
 		return checkChildrenState(container.getChildren());
 	}
 
+	/**
+	 * Checks, whether the specified objects are all instances of {@link QContainer}. 
+	 * @param objects the specified objects
+	 * @return true, when the specified objects are all instances of {@link QContainer}.
+	 */
 	private boolean allQContainers(TerminologyObject[] objects) {
 		for (TerminologyObject object : objects) {
 			if ((object instanceof QContainer) == false) {
@@ -173,6 +216,11 @@ public class DefaultInterview implements Interview {
 		return true;
 	}
 
+	/**
+	 * Checks, whether the specified objects are all instances of {@link Question}. 
+	 * @param objects the specified objects
+	 * @return true, when the specified objects are all instances of {@link Question}.
+	 */
 	private boolean allQuestions(TerminologyObject[] objects) {
 		for (TerminologyObject object : objects) {
 			if ((object instanceof Question) == false) {
@@ -213,5 +261,10 @@ public class DefaultInterview implements Interview {
 	@Override
 	public void setFormStrategy(FormStrategy strategy) {
 		this.formStrategy = strategy;
+	}
+
+	@Override
+	public boolean isActive(InterviewObject interviewObject) {
+		return getInterviewAgenda().hasState(interviewObject, InterviewState.ACTIVE);
 	}
 }

@@ -1,6 +1,7 @@
 package de.d3web.core.session.interviewmanager;
 
 import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 
@@ -44,4 +45,12 @@ public interface Interview {
 	 * @return the {@link InterviewAgenda} instance of the currently running {@link Interview}.
 	 */
 	InterviewAgenda getInterviewAgenda();
+
+	/**
+	 * Test, if the specified {@link InterviewObject} instance is ACTIVE
+	 * with respect to the given state on the {@link InterviewAgenda}.
+	 * @param interviewObject the specified {@link InterviewObject} instance
+	 * @return true, if the specified {@link InterviewObject} instance has an active state on the {@link InterviewAgenda}
+	 */
+	boolean isActive(InterviewObject interviewObject);
 }
