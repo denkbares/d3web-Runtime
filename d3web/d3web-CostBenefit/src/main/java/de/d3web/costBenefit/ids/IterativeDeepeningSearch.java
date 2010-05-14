@@ -19,6 +19,7 @@
 package de.d3web.costBenefit.ids;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -44,6 +45,14 @@ import de.d3web.costBenefit.model.Target;
  * @author Markus Friedrich (denkbares GmbH)
  */
 class IterativeDeepeningSearch {
+
+	private final class StaticCostComparator implements Comparator<Node> {
+
+		@Override
+		public int compare(Node o1, Node o2) {
+			return (int) (o1.getStaticCosts() - o2.getStaticCosts());
+		}
+	}
 
 	private final Node[] successorNodes;
 	private final Node[] finalNodes;
@@ -84,13 +93,7 @@ class IterativeDeepeningSearch {
 		this.successorNodes = relevantNodes.toArray(new Node[relevantNodes
 				.size()]);
 		// cheaper nodes are tried as successors first
-		Arrays.sort(successorNodes, new Comparator<Node>() {
-
-			@Override
-			public int compare(Node o1, Node o2) {
-				return (int) (o1.getStaticCosts() - o2.getStaticCosts());
-			}
-		});
+		Arrays.sort(successorNodes, new StaticCostComparator());
 
 	}
 
@@ -137,7 +140,11 @@ class IterativeDeepeningSearch {
 			// if a minSearchPath is found, the costs are at least the costs of
 			// the minSearchPath plus the cheapest unused teststep
 			mincosts = minSearchedPath.getCosts();
-			for (Node node : successorNodes) {
+			List<Node> nextnodes = new LinkedList<Node>();
+			nextnodes.addAll(Arrays.asList(successorNodes));
+			nextnodes.addAll(Arrays.asList(finalNodes));
+			Collections.sort(nextnodes, new StaticCostComparator());
+			for (Node node : nextnodes) {
 				if (!minSearchedPath.contains(node)) {
 					mincosts += node.getStaticCosts();
 					break;

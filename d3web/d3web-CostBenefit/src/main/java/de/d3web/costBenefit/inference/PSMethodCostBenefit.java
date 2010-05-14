@@ -42,6 +42,7 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
@@ -210,10 +211,13 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 				List<Choice> choices = qoc.getAllAlternatives();
 				if (choices.size() == 1
 						&& "OK".equals(choices.get(0).getName())) {
-					theCase.getBlackboard().addValueFact(
-							new DefaultFact(qoc, UndefinedValue.getInstance(),
-							PSMethodUserSelected.getInstance(),
-							PSMethodUserSelected.getInstance()));
+					Blackboard blackboard = theCase.getBlackboard();
+					if (UndefinedValue.isNotUndefinedValue(blackboard.getValue(qoc))) {
+						blackboard.addValueFact(
+								new DefaultFact(qoc, UndefinedValue.getInstance(),
+								PSMethodUserSelected.getInstance(),
+								PSMethodUserSelected.getInstance()));
+					}
 				}
 			}
 			makeOKQuestionsUndone(nob, theCase);

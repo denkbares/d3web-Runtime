@@ -77,10 +77,13 @@ public class Blackboard {
 		}
 		this.valueStorage.add(fact);
 		Fact newFact = getValueFact(fact.getTerminologyObject());
-		session.getPropagationContoller().openPropagation();
-		session.getPropagationContoller().propagate(fact.getTerminologyObject(),
-				oldValue, newFact.getValue());
-		session.getPropagationContoller().commitPropagation();
+		Value newValue = newFact.getValue();
+		if (newValue != oldValue) {
+			session.getPropagationContoller().openPropagation();
+			session.getPropagationContoller().propagate(fact.getTerminologyObject(),
+					oldValue, newValue);
+			session.getPropagationContoller().commitPropagation();
+		}
 	}
 
 	/**
