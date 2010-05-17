@@ -20,9 +20,6 @@
 
 package de.d3web.explain.utils;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -79,16 +76,13 @@ import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.inference.condition.TerminalCondition;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
-import de.d3web.core.knowledge.terminology.QuestionDate;
-import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
-import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.QuestionYN;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 import de.d3web.core.knowledge.terminology.info.Property;
@@ -97,15 +91,9 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
-import de.d3web.core.session.values.DateValue;
-import de.d3web.core.session.values.NumValue;
-import de.d3web.core.session.values.TextValue;
-import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.indication.ActionContraIndication;
 import de.d3web.indication.ActionNextQASet;
-import de.d3web.indication.inference.PSMethodContraIndication;
-import de.d3web.indication.inference.PSMethodNextQASet;
 import de.d3web.indication.inference.PSMethodParentQASet;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.scoring.ActionHeuristicPS;
@@ -408,178 +396,11 @@ public class XMLRenderer {
 	}
 
 	/**
-	 * Renders the complete explanation of an QASet. If "showStatus" is true,
-	 * the current status of the QASet and all reasons will be regarded.
-	 */
-	public static StringBuffer renderQASetExplanation(QASet qaSet, Session theCase, boolean showStatus) {
-
-		StringBuffer reasons = new StringBuffer();
-		reasons.append(renderQASetReasons(qaSet, theCase, PSMethodInit.class, showStatus));
-		if (showStatus) {
-			reasons.append(renderQASetReasons(qaSet, theCase, PSMethodUserSelected.class,
-					showStatus));
-		}
-		reasons.append(renderQASetReasons(qaSet, theCase, PSMethodParentQASet.class,
-				showStatus));
-		if (qaSet instanceof Question) {
-			Question q = (Question) qaSet;
-			if (isSiQASet(q)) {
-				// bei SI's: PSMethodQuestionSetter
-				reasons.append(renderQASetReasons(q, theCase,
-						PSMethodQuestionSetter.class, showStatus));
-			}
-			else {
-				// bei Question: PSMethodNextQASet
-				reasons.append(renderQASetReasons(q, theCase, PSMethodNextQASet.class,
-						showStatus));
-			}
-		}
-		else if (qaSet instanceof QContainer) {
-			// bei QContainer: PSMethodNextQASet und PSMethodContraIndication
-			reasons.append(renderQASetReasons(qaSet, theCase, PSMethodNextQASet.class,
-					showStatus));
-			reasons.append(renderQASetReasons(qaSet, theCase,
-					PSMethodContraIndication.class, showStatus));
-		}
-		else {
-			System.err.println("undefiniertes QASet - kann nicht erklaert werden!");
-		}
-
-		StringBuffer sb = new StringBuffer();
-		sb.append(renderReference(qaSet, theCase, showStatus));
-
-		if (reasons.length() == 0) {
-			// no knowledge available
-			sb.append(renderNoKnowledge());
-		}
-		else {
-			sb.append(reasons);
-		}
-
-		return (sb);
-	}
-
-	/**
 	 * Renders the explanation of a single RuleComplex. If "showStatus" is true,
 	 * the current status of the RuleComplex and all reasons will be regarded.
 	 */
 	public static StringBuffer renderRuleComplexExplanation(Rule rc, Session theCase, boolean showStatus) {
 		return (StringBuffer) renderRuleComplex(rc, theCase, showStatus).get(0);
-	}
-
-	/**
-	 * Renders the referenced QASet. (If existing, the schema will be included.)
-	 * If "showStatus" is true, the current status of the QASet will be
-	 * regarded.
-	 */
-	public static StringBuffer renderReference(QASet qaSet, Session theCase, boolean showStatus) {
-		StringBuffer sb = new StringBuffer();
-		StringBuffer questionState = new StringBuffer();
-		StringBuffer schemaInfos = new StringBuffer();
-
-		if (qaSet instanceof Question) {
-			Question q = (Question) qaSet;
-			if (q instanceof QuestionChoice) {
-				Value answer = theCase.getBlackboard().getValue(q);
-				questionState.append("<Answers>");
-				if (answer instanceof Unknown) {
-					questionState.append(renderAnswerUnknownObject());
-				}
-				else {
-					Choice choice = (Choice) answer.getValue();
-					questionState.append(renderAnswerChoiceObject(choice));
-				}
-				questionState.append("</Answers>");
-
-				if ((qaSet instanceof QuestionOC) && (isSiQASet(qaSet))) {
-					QuestionOC qOC = (QuestionOC) qaSet;
-					// if the SI-Question has a schema, show Answer- and
-					// numerical value
-					// of the question (diagnosis-like)
-					if (getSchemaForQuestion(qOC) != null) {
-						if ((showStatus)
-								&& (UndefinedValue.isNotUndefinedValue(theCase.getBlackboard().getValue(
-										qOC)))) {
-							questionState.append("<SIScore value=\""
-									+ (qOC.getNumericalSchemaValue(theCase)).intValue()
-									+ "\"/>");
-						}
-						schemaInfos = getSchemaInfoFor(qOC);
-					}
-
-				}
-			}
-			else if (q instanceof QuestionNum) {
-				Value numValue = theCase.getBlackboard().getValue(q);
-				if (numValue != null) {
-					questionState.append("<Answers>");
-					if (numValue instanceof Unknown) {
-						questionState.append(renderAnswerUnknownObject());
-					}
-					else if (numValue instanceof NumValue) {
-						Object value = numValue.getValue();
-						questionState.append("<Number value=\"");
-						if (value instanceof Double) {
-							if (((Double) value).doubleValue() % 1 == 0) questionState.append(((Double) value).intValue());
-							else questionState.append(((Double) value).doubleValue());
-						}
-						else {
-							questionState.append(numValue);
-						}
-						questionState.append("\">");
-						Object unit = q.getProperties().getProperty(Property.UNIT);
-						if (unit instanceof String) questionState.append("<![CDATA["
-								+ (String) unit + "]]>");
-						questionState.append("</Number>");
-					}
-					questionState.append("</Answers>");
-				}
-			}
-			else if (q instanceof QuestionText) {
-				Value textValue = theCase.getBlackboard().getValue(q);
-				if (textValue != null) {
-					questionState.append("<Answers>");
-					if (textValue instanceof Unknown) {
-						questionState.append(renderAnswerUnknownObject());
-					}
-					else if (textValue instanceof TextValue) {
-						String value = textValue.getValue().toString();
-						questionState.append("<AnswerText><![CDATA[");
-						questionState.append(value.toString());
-						questionState.append("]]></AnswerText>");
-					}
-					questionState.append("</Answers>");
-				}
-			}
-			else if (q instanceof QuestionDate) {
-				Value dateValue = theCase.getBlackboard().getValue(q);
-				if (dateValue != null) {
-					questionState.append("<Answers>");
-					if (dateValue instanceof Unknown) {
-						questionState.append(renderAnswerUnknownObject());
-					}
-					else if (dateValue instanceof DateValue) {
-						Date date = (Date) dateValue.getValue();
-						// Date date = ((EvaluatableAnswerDateValue)
-						// ((AnswerDate)dateValue).getValue(theCase)).eval(theCase);
-						DateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-						questionState.append("<AnswerText><![CDATA[");
-						questionState.append(format.format(date));
-						questionState.append("]]></AnswerText>");
-					}
-					questionState.append("</Answers>");
-				}
-			}
-		}
-
-		sb.append("<Reference>");
-		sb.append(renderQASetObject(qaSet));
-		sb.append(questionState);
-		sb.append("</Reference>");
-
-		sb.append(schemaInfos);
-
-		return (sb);
 	}
 
 	/**

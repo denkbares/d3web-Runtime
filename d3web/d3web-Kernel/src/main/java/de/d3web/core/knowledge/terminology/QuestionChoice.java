@@ -23,17 +23,13 @@ package de.d3web.core.knowledge.terminology;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import de.d3web.abstraction.inference.PSMethodQuestionSetter;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
-import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.CaseQuestionChoice;
 import de.d3web.core.session.values.Choice;
-import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.utilities.Tester;
 import de.d3web.core.utilities.Utils;
 
@@ -160,25 +156,6 @@ public abstract class QuestionChoice extends Question {
 		return res;
 	}
 
-	// public String verbalizeWithValue(Session theCase) {
-	// return verbalizeWithoutValue(theCase)
-	// + "\n Wert -> "
-	// + getValue(theCase);
-	// }
-
-	/**
-	 * @return the current numerical value of the question according to a give
-	 *         Session. This value is used to be processed by a
-	 *         Num2ChoiceSchema.
-	 */
-	public Double getNumericalSchemaValue(Session theCase) {
-		return ((CaseQuestionChoice) theCase.getCaseObject(this)).getNumericalSchemaValue();
-	}
-
-	private void setNumericalSchemaValue(Session theCase, Double newValue) {
-		((CaseQuestionChoice) theCase.getCaseObject(this)).setNumericalSchemaValue(newValue);
-	}
-
 	/**
 	 * @return the Num2ChoiceSchema that has been set to this question, null, if
 	 *         no such schema exists.
@@ -191,30 +168,6 @@ public abstract class QuestionChoice extends Question {
 		}
 		else {
 			return null;
-		}
-	}
-
-	protected Value convertNumericalValue(Session theCase, double doubleValue) {
-		Num2ChoiceSchema schema = getSchemaForQuestion();
-		if (schema != null) {
-			Double numValue = null;
-			if (Boolean.TRUE.equals(getProperties().getProperty(Property.TIME_VALUED))) {
-				numValue = new Double(doubleValue);
-			}
-			else {
-				numValue = new Double(getNumericalSchemaValue(theCase).doubleValue()
-						+ doubleValue);
-			}
-			setNumericalSchemaValue(theCase, numValue);
-			return schema.getValueForNum(numValue, getAllAlternatives(), theCase);
-		}
-		else {
-			Logger.getLogger(this.getClass().getName()).throwing(
-					this.getClass().getName(),
-					"convertNumericalValue",
-					new RuntimeException("No Num2ChoiceSchema defined for " + getId() + ":"
-					+ getName()));
-			return UndefinedValue.getInstance();
 		}
 	}
 }
