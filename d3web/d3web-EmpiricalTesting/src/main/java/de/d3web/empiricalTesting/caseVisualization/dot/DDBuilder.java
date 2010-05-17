@@ -34,11 +34,10 @@ import java.util.List;
 import java.util.Set;
 
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.DiagnosisState.State;
+import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.session.values.Choice;
 import de.d3web.empiricalTesting.ConfigLoader;
 import de.d3web.empiricalTesting.Finding;
@@ -639,7 +638,7 @@ public class DDBuilder implements CaseVisualizer {
 	 */
 	private String transformSymbolicStates(Rating score) {
 
-		DiagnosisState state = getState(score);
+		de.d3web.core.knowledge.terminology.Rating state = getState(score);
 
 		return state.getName();
 
@@ -671,7 +670,7 @@ public class DDBuilder implements CaseVisualizer {
 	 * @param score Rating representing the score of a RatedSolution.
 	 * @return DiagnosisState corresponding to the committed scored.
 	 */
-	private DiagnosisState getState(Rating score) {
+	private de.d3web.core.knowledge.terminology.Rating getState(Rating score) {
 
 		if (score instanceof ScoreRating) {
 			return new HeuristicRating(((ScoreRating) score).getRating());
@@ -704,9 +703,9 @@ public class DDBuilder implements CaseVisualizer {
 		}
 
 		Rating score = rs.getRating();
-		DiagnosisState state = getState(score);
+		de.d3web.core.knowledge.terminology.Rating state = getState(score);
 
-		if (state.equals(new DiagnosisState(State.ESTABLISHED))) {
+		if (state.equals(new de.d3web.core.knowledge.terminology.Rating(State.ESTABLISHED))) {
 			return established;
 		}
 		else {

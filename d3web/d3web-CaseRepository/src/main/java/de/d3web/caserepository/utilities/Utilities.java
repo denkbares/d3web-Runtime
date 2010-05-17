@@ -37,29 +37,29 @@ import java.util.logging.Logger;
 import java.util.zip.ZipInputStream;
 
 import de.d3web.core.io.utilities.URLUtils;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.knowledge.terminology.DiagnosisState.State;
+import de.d3web.core.knowledge.terminology.Rating;
+import de.d3web.core.knowledge.terminology.Rating.State;
 
 /**
  * @author Atzmueller
  */
 public class Utilities {
 
-	public static DiagnosisState string2stateNarrow(String state) {
-		DiagnosisState result = null;
-		if (new DiagnosisState(State.ESTABLISHED).getName().equals(state)) result = new DiagnosisState(
+	public static Rating string2stateNarrow(String state) {
+		Rating result = null;
+		if (new Rating(State.ESTABLISHED).getName().equals(state)) result = new Rating(
 				State.ESTABLISHED);
-		else if (State.EXCLUDED.name().equals(state)) result = new DiagnosisState(State.EXCLUDED);
-		else if (State.SUGGESTED.name().equals(state)) result = new DiagnosisState(State.SUGGESTED);
-		else if (State.UNCLEAR.name().equals(state)) result = new DiagnosisState(State.UNCLEAR);
+		else if (State.EXCLUDED.name().equals(state)) result = new Rating(State.EXCLUDED);
+		else if (State.SUGGESTED.name().equals(state)) result = new Rating(State.SUGGESTED);
+		else if (State.UNCLEAR.name().equals(state)) result = new Rating(State.UNCLEAR);
 		else {
 			Logger.getLogger(Utilities.class.getName()).warning("awkward state '" + state + "'");
-			result = new DiagnosisState(State.UNCLEAR);
+			result = new Rating(State.UNCLEAR);
 		}
 		return result;
 	}
 
-	public static DiagnosisState string2stateBroad(String ratingString) {
+	public static Rating string2stateBroad(String ratingString) {
 
 		Collection<String> established = Arrays.asList(new String[] {
 				State.ESTABLISHED.name().toLowerCase(),
@@ -110,19 +110,19 @@ public class Utilities {
 		// can't translate 'Aus_Sicher' to some DiagnosisState.
 		// can't translate 'Irrelevant' to some DiagnosisState.
 
-		if (established.contains(ratingString.toLowerCase())) return new DiagnosisState(
+		if (established.contains(ratingString.toLowerCase())) return new Rating(
 				State.ESTABLISHED);
-		else if (suggested.contains(ratingString.toLowerCase())) return new DiagnosisState(
+		else if (suggested.contains(ratingString.toLowerCase())) return new Rating(
 				State.SUGGESTED);
-		else if (unclear.contains(ratingString.toLowerCase())) return new DiagnosisState(
+		else if (unclear.contains(ratingString.toLowerCase())) return new Rating(
 				State.UNCLEAR);
-		else if (excluded.contains(ratingString.toLowerCase())) return new DiagnosisState(
+		else if (excluded.contains(ratingString.toLowerCase())) return new Rating(
 				State.EXCLUDED);
 		else {
 			Logger.getLogger(Utilities.class.getName()).warning(
 					"can't translate '" + ratingString + "' to some DiagnosisState.");
 			// this is awkward
-			return new DiagnosisState(State.UNCLEAR);
+			return new Rating(State.UNCLEAR);
 		}
 	}
 

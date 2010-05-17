@@ -1,9 +1,9 @@
 package de.d3web.scoring;
 
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.session.Value;
 
-public class HeuristicRating extends DiagnosisState {
+public class HeuristicRating extends Rating {
 
 	private final double score;
 

@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2;
@@ -33,7 +33,6 @@ import de.d3web.dialog2.basics.settings.ResourceRepository;
 import de.d3web.dialog2.basics.usermanaging.UserManager;
 import de.d3web.dialog2.util.CaseFinalizationNotifier;
 import de.d3web.dialog2.util.DialogUtils;
-import de.d3web.dialog2.util.SaveCaseThread;
 
 public class WebDialog {
 
@@ -130,17 +129,6 @@ public class WebDialog {
 		caseSaved = false;
 		// reset savecase data...
 		DialogUtils.getSaveCaseBean().resetData();
-
-		// init saveCaseThread
-		long saveCaseThreadMaxIdleTime = DialogUtils.getDialogSettings()
-				.getSaveCaseThreadMaxIdleTime();
-		if (saveCaseThreadMaxIdleTime > 0) {
-			SaveCaseThread saveCaseThread = new SaveCaseThread(this,
-					DialogUtils.getSaveCaseBean(), theCase, DialogUtils
-							.getUserBean().getUser(), saveCaseThreadMaxIdleTime);
-			theCase.addListener(saveCaseThread);
-			saveCaseThread.start();
-		}
 
 		DialogUtils.getQuestionPageBean().init();
 

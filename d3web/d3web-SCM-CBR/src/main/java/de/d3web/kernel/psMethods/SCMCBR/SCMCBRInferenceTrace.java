@@ -3,7 +3,7 @@ package de.d3web.kernel.psMethods.SCMCBR;
 import java.util.Collection;
 import java.util.HashSet;
 
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 
 public class SCMCBRInferenceTrace {
 	
@@ -14,15 +14,15 @@ public class SCMCBRInferenceTrace {
 	private Collection<SCMCBRRelation> reqNegRelations = new HashSet<SCMCBRRelation>();
 	private Collection<SCMCBRRelation> suffRelations = new HashSet<SCMCBRRelation>();
 	
-	private DiagnosisState state = null;
+	private Rating state = null;
 	
 	private Double score = -1.0;
 	private Double support = -1.0;
 	
-	public DiagnosisState getState() {
+	public Rating getState() {
 		return state;
 	}
-	public void setState(DiagnosisState state) {
+	public void setState(Rating state) {
 		this.state = state;
 	}
 	public Collection<SCMCBRRelation> getPosRelations() {

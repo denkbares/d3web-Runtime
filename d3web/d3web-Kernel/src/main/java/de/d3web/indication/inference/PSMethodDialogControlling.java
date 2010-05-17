@@ -29,7 +29,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
@@ -53,7 +53,7 @@ public class PSMethodDialogControlling extends PSMethodCombined {
 	 * @return the maximum of scores as DiagnosisState. Creation date:
 	 *         (03.01.2002 16:17:28)
 	 */
-	public DiagnosisState getState(Session theCase, Solution theDiagnosis) {
+	public Rating getState(Session theCase, Solution theDiagnosis) {
 		return null;
 	}
 

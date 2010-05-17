@@ -1,39 +1,39 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.scoring;
+
 import java.util.Iterator;
 import java.util.List;
 
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.utilities.Utils;
 
 /**
- * Stores the score of a diagnosis in context to
- * a problem-solving method. The score has meaning to
- * the state of a diagnosis.
+ * Stores the score of a diagnosis in context to a problem-solving method. The
+ * score has meaning to the state of a diagnosis.
  * 
  * @author joba
  * @see Solution
- * @see DiagnosisState
+ * @see Rating
  */
 public class Score implements Comparable<Object> {
 
@@ -53,8 +53,10 @@ public class Score implements Comparable<Object> {
 	public static final Score N3 = new Score(-10, -10, "N3");
 	public static final Score N2 = new Score(-5, -5, "N2");
 	public static final Score N1 = new Score(-2, 0, "N1");
-	public static final List<Score> APRIORI = Utils.createList(new Score[] { P5, P4, P3, P2, N2, N3, N4, N5 });
-	private static final List<Score> allScores = Utils.createList(new Score[] { P7, P6, P5x, P5, P4, P3, P2, P1, N1, N2, N3, N4, N5, N5x, N6, N7 });
+	public static final List<Score> APRIORI = Utils.createList(new Score[] {
+			P5, P4, P3, P2, N2, N3, N4, N5 });
+	private static final List<Score> allScores = Utils.createList(new Score[] {
+			P7, P6, P5x, P5, P4, P3, P2, P1, N1, N2, N3, N4, N5, N5x, N6, N7 });
 
 	private String symbol;
 	private double score;
@@ -70,8 +72,10 @@ public class Score implements Comparable<Object> {
 
 	/**
 	 * Creates a new score given to a diagnosis with a fixed amount of points
-	 * and an symbolic name. 
-	 * @param theAPriori is the score a Diagnosis has as "offset". If it is &lt;0, it will be added, otherwise multiplied with theScore.
+	 * and an symbolic name.
+	 * 
+	 * @param theAPriori is the score a Diagnosis has as "offset". If it is
+	 *        &lt;0, it will be added, otherwise multiplied with theScore.
 	 */
 	private Score(double theScore, double theAPriori, String symbol) {
 		setScore(theScore);
@@ -80,51 +84,29 @@ public class Score implements Comparable<Object> {
 	}
 
 	/**
-	* Compares this object with the specified object for order.
-	* Returns a negative integer, zero, or a positive integer 
-	* as this object is less than, equal to, or greater than the specified object.
-	*/
+	 * Compares this object with the specified object for order. Returns a
+	 * negative integer, zero, or a positive integer as this object is less
+	 * than, equal to, or greater than the specified object.
+	 */
 	public int compareTo(Object o) {
 		if (o instanceof Score) {
 			double ret = getScore() - ((Score) o).getScore();
-			if (ret > 0)
-				return 1;
-			if (ret < 0)
-				return -1;
+			if (ret > 0) return 1;
+			if (ret < 0) return -1;
 			return 0;
-		} else if (o instanceof DiagnosisScore) {
-			DiagnosisScore d = (DiagnosisScore) o;
-			double p = d.getScore();
-			if (p > getScore())
-				return +1;
-			else if (p == getScore())
-				return 0;
-			else
-				return -1;
-
-		} else
-			throw new ClassCastException(); //nicht vergleichbar
+		}
+		else throw new ClassCastException(); // nicht vergleichbar
 	}
 
 	/**
-	 * Compares the internal scores of the
-	 * two instances of DiagnosisScore. If the symbol is available
-	 * for both, then these are checked as well.
-	 * @return boolean the equality of the two int-values
-	 */
-	public boolean equals(DiagnosisScore theScore) {
-		return (theScore.getScore() == getScore());
-	}
-
-	/**
-	 * Compares the internal scores of the
-	 * two instances of DiagnosisScore. If the symbol is available
-	 * for both, then these are checked as well.
+	 * Compares the internal scores of the two instances of DiagnosisScore. If
+	 * the symbol is available for both, then these are checked as well.
+	 * 
 	 * @return boolean the equality of the two int-values
 	 */
 	public boolean equals(Score score) {
-		if ((score.getSymbol() != null) && (this.getSymbol() != null) && (score.getSymbol() != this.getSymbol()))
-			return false;
+		if ((score.getSymbol() != null) && (this.getSymbol() != null)
+				&& (score.getSymbol() != this.getSymbol())) return false;
 		return (score.getScore() == getScore());
 
 	}
@@ -154,27 +136,28 @@ public class Score implements Comparable<Object> {
 	}
 
 	/**
-	 * @return the name of the symbol if avialable or the score
-	 * if the symbol is not available.
+	 * @return the name of the symbol if avialable or the score if the symbol is
+	 *         not available.
 	 */
+	@Override
 	public String toString() {
-		if ((getSymbol() == null) || (getSymbol() == ""))
-			return "" + getScore();
-		else
-			return getSymbol();
+		if ((getSymbol() == null) || (getSymbol() == "")) return "" + getScore();
+		else return getSymbol();
 	}
+
 	/**
 	 * @return a List of all predefined scores.
 	 */
 	public static List<Score> getAllScores() {
 		return allScores;
 	}
-	
-	
+
 	/**
-	 * This method is called immediately after an object of this class is deserialized.
-	 * To avoid that several instances of a unique object are created, this method returns
-	 * the current unique instance that is equal to the object that was deserialized.
+	 * This method is called immediately after an object of this class is
+	 * deserialized. To avoid that several instances of a unique object are
+	 * created, this method returns the current unique instance that is equal to
+	 * the object that was deserialized.
+	 * 
 	 * @author georg
 	 */
 	private Object readResolve() {

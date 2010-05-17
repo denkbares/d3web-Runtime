@@ -37,7 +37,7 @@ import de.d3web.caserepository.CaseObjectImpl;
 import de.d3web.caserepository.MetaDataImpl;
 import de.d3web.caserepository.utilities.SessionConverter;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.core.knowledge.terminology.info.Property;
@@ -284,11 +284,11 @@ public class SaveCaseController {
 					sol = new CaseObject.Solution();
 					sol.setDiagnosis(d);
 					sol.setPSMethodClass(PSMethodUserSelected.class);
-					sol.setState(new DiagnosisState(DiagnosisState.State.ESTABLISHED));
+					sol.setState(new Rating(Rating.State.ESTABLISHED));
 					co.addSolution(sol);
 				}
 				else {
-					sol.setState(new DiagnosisState(DiagnosisState.State.ESTABLISHED));
+					sol.setState(new Rating(Rating.State.ESTABLISHED));
 				}
 			}
 		}

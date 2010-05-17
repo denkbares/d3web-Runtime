@@ -62,7 +62,7 @@ import de.d3web.core.knowledge.terminology.info.MMInfoObject;
 import de.d3web.core.knowledge.terminology.info.MMInfoStorage;
 import de.d3web.core.knowledge.terminology.info.MMInfoSubject;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.session.D3WebSession;
+import de.d3web.core.session.DefaultSession;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
@@ -96,7 +96,7 @@ public class DialogUtils {
 		Iterator<PSMethod> iter = getUsedPSMethods().iterator();
 		while (iter.hasNext()) {
 			PSMethod psm = iter.next();
-			((D3WebSession) newCase).addUsedPSMethod(psm);
+			((DefaultSession) newCase).addUsedPSMethod(psm);
 			psm.init(newCase);
 			logger.info("ProblemSolver '" + psm.getClass() + "' initialized...");
 		}

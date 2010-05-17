@@ -5,7 +5,7 @@ import java.util.HashSet;
 
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.session.Session;
 
 public class DefaultInferenceTrace implements InferenceTrace {
@@ -16,16 +16,16 @@ public class DefaultInferenceTrace implements InferenceTrace {
 	private Collection<XCLRelation> reqNegRelations = new HashSet<XCLRelation>();
 	private Collection<XCLRelation> suffRelations = new HashSet<XCLRelation>();
 
-	private DiagnosisState state = new DiagnosisState(DiagnosisState.State.UNCLEAR);
+	private Rating state = new Rating(Rating.State.UNCLEAR);
 
 	private double score = -1.0;
 	private double support = -1.0;
 
-	public DiagnosisState getState() {
+	public Rating getState() {
 		return state;
 	}
 
-	public void setState(DiagnosisState state) {
+	public void setState(Rating state) {
 		this.state = state;
 	}
 

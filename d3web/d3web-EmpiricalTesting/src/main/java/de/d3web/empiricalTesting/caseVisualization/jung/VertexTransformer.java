@@ -30,10 +30,9 @@ import java.util.List;
 
 import org.apache.commons.collections15.Transformer;
 
-import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.DiagnosisState.State;
+import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.empiricalTesting.ConfigLoader;
 import de.d3web.empiricalTesting.Finding;
 import de.d3web.empiricalTesting.RatedSolution;
@@ -402,7 +401,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 	 */
 	private String transformSymbolicStates(Rating score) {
 
-		DiagnosisState state = getState(score);
+		de.d3web.core.knowledge.terminology.Rating state = getState(score);
 
 		return state.getName();
 
@@ -445,9 +444,9 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 		}
 
 		Rating score = rs.getRating();
-		DiagnosisState state = getState(score);
+		de.d3web.core.knowledge.terminology.Rating state = getState(score);
 
-		if (state.equals(new DiagnosisState(State.ESTABLISHED))) {
+		if (state.equals(new de.d3web.core.knowledge.terminology.Rating(State.ESTABLISHED))) {
 			return cfg.get("colorEstablished");
 		}
 		else {
@@ -461,7 +460,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 	 * @param score Rating representing the score of a RatedSolution.
 	 * @return DiagnosisState corresponding to the committed scored.
 	 */
-	private DiagnosisState getState(Rating score) {
+	private de.d3web.core.knowledge.terminology.Rating getState(Rating score) {
 
 		if (score instanceof ScoreRating) {
 			return new HeuristicRating(((ScoreRating) score).getRating());

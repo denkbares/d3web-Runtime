@@ -1,25 +1,18 @@
 package de.d3web.core.session.blackboard;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.NumValue;
-import de.d3web.core.session.values.UndefinedValue;
 
 /**
  * The Blackboard manages all dynamic values created within the case and
@@ -28,33 +21,14 @@ import de.d3web.core.session.values.UndefinedValue;
  * @author volker_belli
  * 
  */
-public class Blackboard {
-
-	private final Session session;
-	private final FactStorage valueStorage;
-	private final FactStorage interviewStorage;
-
-	// TODO: also manage the SessionObjects here
-
-	/**
-	 * Creates a new Blackboard for the specified xps session.
-	 * 
-	 * @param session the session the blackboard is created for
-	 */
-	public Blackboard(Session session) {
-		this.session = session;
-		this.valueStorage = new FactStorage(this);
-		this.interviewStorage = new FactStorage(this);
-	}
+public interface Blackboard {
 
 	/**
 	 * Returns the session this blackboard has been created for.
 	 * 
 	 * @return the session of this blackboard
 	 */
-	public Session getSession() {
-		return session;
-	}
+	public Session getSession();
 
 	/**
 	 * Adds a new value fact to this blackboard. If an other fact for the same
@@ -63,28 +37,7 @@ public class Blackboard {
 	 * 
 	 * @param fact the fact to be added
 	 */
-	public void addValueFact(Fact fact) {
-		Value oldValue;
-		TerminologyObject object = fact.getTerminologyObject();
-		if (object instanceof Solution) {
-			oldValue = getState((Solution) object);
-		}
-		else if (object instanceof Question) {
-			oldValue = getValue((Question) object);
-		}
-		else {
-			oldValue = getValueFact(fact.getTerminologyObject()).getValue();
-		}
-		this.valueStorage.add(fact);
-		Fact newFact = getValueFact(fact.getTerminologyObject());
-		Value newValue = newFact.getValue();
-		if (newValue != oldValue) {
-			session.getPropagationContoller().openPropagation();
-			session.getPropagationContoller().propagate(fact.getTerminologyObject(),
-					oldValue, newValue);
-			session.getPropagationContoller().commitPropagation();
-		}
-	}
+	public void addValueFact(Fact fact);
 
 	/**
 	 * Removes a value fact from this blackboard. If the fact does not exists in
@@ -92,9 +45,7 @@ public class Blackboard {
 	 * 
 	 * @param fact the fact to be removed
 	 */
-	public void removeValueFact(Fact fact) {
-		this.valueStorage.remove(fact);
-	}
+	public void removeValueFact(Fact fact);
 
 	/**
 	 * Removes all value facts with the specified source from this blackboard
@@ -104,9 +55,7 @@ public class Blackboard {
 	 * @param termObject the terminology object to remove the value facts from
 	 * @param source the fact source to be removed
 	 */
-	public void removeValueFact(TerminologyObject terminologyObject, Object source) {
-		this.valueStorage.remove(terminologyObject, source);
-	}
+	public void removeValueFact(TerminologyObject terminologyObject, Object source);
 
 	/**
 	 * Returns the merged fact for all value facts of the specified terminology
@@ -116,9 +65,7 @@ public class Blackboard {
 	 *        for
 	 * @return the merged fact
 	 */
-	public Fact getValueFact(TerminologyObject terminologyObject) {
-		return this.valueStorage.getAggregator(terminologyObject).getMergedFact();
-	}
+	public Fact getValueFact(TerminologyObject terminologyObject);
 
 	/**
 	 * Returns a collection of all terminology objects that have a value. This
@@ -128,10 +75,7 @@ public class Blackboard {
 	 * 
 	 * @return the collection of valued terminology objects
 	 */
-	public Collection<TerminologyObject> getValuedObjects() {
-		return Collections.unmodifiableCollection(
-				this.valueStorage.getValuedObjects());
-	}
+	public Collection<TerminologyObject> getValuedObjects();
 
 	/**
 	 * Returns a collection of all questions that have a value. This means this
@@ -140,15 +84,7 @@ public class Blackboard {
 	 * 
 	 * @return the collection of valued questions
 	 */
-	public Collection<Question> getValuedQuestions() {
-		Collection<Question> result = new LinkedList<Question>();
-		for (TerminologyObject object : getValuedObjects()) {
-			if (object instanceof Question) {
-				result.add((Question) object);
-			}
-		}
-		return result;
-	}
+	public Collection<Question> getValuedQuestions();
 
 	/**
 	 * Returns a collection of all diagnoses that have a value. This means this
@@ -157,15 +93,7 @@ public class Blackboard {
 	 * 
 	 * @return the collection of valued diagnoses
 	 */
-	public Collection<Solution> getValuedSolutions() {
-		Collection<Solution> result = new LinkedList<Solution>();
-		for (TerminologyObject object : getValuedObjects()) {
-			if (object instanceof Solution) {
-				result.add((Solution) object);
-			}
-		}
-		return result;
-	}
+	public Collection<Solution> getValuedSolutions();
 
 	/**
 	 * Adds a new interview fact to this blackboard. If an other interview fact
@@ -174,22 +102,7 @@ public class Blackboard {
 	 * 
 	 * @param fact the fact to be added
 	 */
-	public void addInterviewFact(Fact fact) {
-		// Besides adding the new fact to the interview management, we also do
-		// the notification
-		// of this new indication fact: this notification may be removed due to
-		// Session/Blackboard
-		// refactoring, i.e., when the notification is done at an upper place
-
-		InterviewObject factObject = (InterviewObject) fact.getTerminologyObject();
-
-		Value oldValue = getIndication(factObject);
-
-		this.interviewStorage.add(fact);
-
-		Value newValue = getIndication(factObject);
-		propagateIndicationChange(fact.getTerminologyObject(), oldValue, newValue);
-	}
+	public void addInterviewFact(Fact fact);
 
 	/**
 	 * Removes a interview fact from this blackboard. If the interview fact does
@@ -197,20 +110,7 @@ public class Blackboard {
 	 * 
 	 * @param fact the fact to be removed
 	 */
-	public void removeInterviewFact(Fact fact) {
-		// Besides removing the fact to the interview management, we also do the
-		// notification
-		// of this deletion: this notification may be removed due to
-		// Session/Blackboard
-		// refactoring, i.e., when the notification is done at an upper place
-		InterviewObject factObject = (InterviewObject) fact.getTerminologyObject();
-		Value oldValue = getIndication(factObject);
-
-		this.interviewStorage.remove(fact);
-
-		Value newValue = getIndication(factObject);
-		propagateIndicationChange(factObject, oldValue, newValue);
-	}
+	public void removeInterviewFact(Fact fact);
 
 	/**
 	 * Removes all interview facts with the specified source from this
@@ -221,28 +121,7 @@ public class Blackboard {
 	 *        from
 	 * @param source the fact source to be removed
 	 */
-	public void removeInterviewFact(TerminologyObject terminologyObject, Object source) {
-		// Besides removing the fact to the interview management, we also do the
-		// notification
-		// of this deletion: this notification may be removed due to
-		// Session/Blackboard
-		// refactoring, i.e., when the notification is done at an upper place
-
-		InterviewObject factObject = (InterviewObject) terminologyObject;
-		Value oldValue = getIndication(factObject);
-
-		this.interviewStorage.remove(terminologyObject, source);
-
-		Value newValue = getIndication(factObject);
-		propagateIndicationChange(terminologyObject, oldValue, newValue);
-	}
-
-	private void propagateIndicationChange(TerminologyObject interviewObject, Value oldValue,
-			Value newValue) {
-		PropagationEntry entry = new PropagationEntry(interviewObject, oldValue,
-				newValue);
-		session.getInterviewManager().notifyFactChange(entry);
-	}
+	public void removeInterviewFact(TerminologyObject terminologyObject, Object source);
 
 	/**
 	 * Removes all interview facts from this blackboard for the specified
@@ -252,9 +131,7 @@ public class Blackboard {
 	 * @param termObject the terminology object to remove the interview facts
 	 *        from
 	 */
-	public void removeInterviewFacts(TerminologyObject terminologyObject) {
-		this.interviewStorage.remove(terminologyObject);
-	}
+	public void removeInterviewFacts(TerminologyObject terminologyObject);
 
 	/**
 	 * Returns the merged fact for all interview facts of the specified
@@ -264,9 +141,7 @@ public class Blackboard {
 	 *        for
 	 * @return the merged fact
 	 */
-	public Fact getInterviewFact(TerminologyObject terminologyObject) {
-		return this.interviewStorage.getAggregator(terminologyObject).getMergedFact();
-	}
+	public Fact getInterviewFact(TerminologyObject terminologyObject);
 
 	/**
 	 * Returns a collection of all terminology objects that have been rated for
@@ -276,10 +151,7 @@ public class Blackboard {
 	 * 
 	 * @return the collection of interview rated terminology objects
 	 */
-	public Collection<TerminologyObject> getInterviewObjects() {
-		return Collections.unmodifiableCollection(
-				this.interviewStorage.getValuedObjects());
-	}
+	public Collection<TerminologyObject> getInterviewObjects();
 
 	/**
 	 * Returns the current rating of the diagnosis. The returned rating is the
@@ -290,15 +162,7 @@ public class Blackboard {
 	 * @param solution the solution to take the rating from
 	 * @return the total rating of the solution
 	 */
-	public DiagnosisState getState(Solution solution) {
-		Fact valueFact = getValueFact(solution);
-		if (valueFact != null) {
-			return (DiagnosisState) valueFact.getValue();
-		}
-		else {
-			return new DiagnosisState(DiagnosisState.State.UNCLEAR);
-		}
-	}
+	public Rating getState(Solution solution);
 
 	/**
 	 * Returns the current answer of the question. The returned answer is the
@@ -313,25 +177,7 @@ public class Blackboard {
 	// return (Answer) getValueFact(question).getValue();
 	// }
 
-	public Value getValue(Question question) {
-		Fact fact = getValueFact(question);
-		if (fact == null) {
-			return UndefinedValue.getInstance();
-		}
-		else {
-			Value value = fact.getValue();
-			if (question instanceof QuestionOC && value instanceof NumValue) {
-				QuestionOC qoc = (QuestionOC) question;
-				Num2ChoiceSchema schema = qoc.getSchemaForQuestion();
-				NumValue numValue = (NumValue) value;
-				if (schema != null) {
-					return schema.getValueForNum((Double) numValue.getValue(),
-							qoc.getAllAlternatives(), session);
-				}
-			}
-			return value;
-		}
-	}
+	public Value getValue(Question question);
 
 	/**
 	 * Returns the Value of a TerminologyObject, calculated by the specified
@@ -341,9 +187,7 @@ public class Blackboard {
 	 * @param psmethod PSMethod
 	 * @return Value
 	 */
-	public Value getValue(TerminologyObject object, PSMethod psmethod) {
-		return valueStorage.getAggregator(object).getMergedFact(psmethod).getValue();
-	}
+	public Value getValue(TerminologyObject object, PSMethod psmethod);
 
 	/**
 	 * Returns the current indication state of the interview element. The
@@ -354,15 +198,7 @@ public class Blackboard {
 	 * @param question the question to take the rating from
 	 * @return the indication of the interview element
 	 */
-	public Indication getIndication(InterviewObject interviewElement) {
-		Fact fact = getInterviewFact(interviewElement);
-		if (fact == null) {
-			return Indication.getDefaultIndication();
-		}
-		else {
-			return (Indication) getInterviewFact(interviewElement).getValue();
-		}
-	}
+	public Indication getIndication(InterviewObject interviewElement);
 
 	/**
 	 * Return a list of all answered questions
@@ -371,14 +207,14 @@ public class Blackboard {
 	 * @created 11.05.2010
 	 * @return List of answered questions
 	 */
-	public List<Question> getAnsweredQuestions() {
-		List<Question> questions = new LinkedList<Question>();
-		for (Question q : session.getKnowledgeBase().getQuestions()) {
-			Fact mergedFact = valueStorage.getAggregator(q).getMergedFact();
-			if (mergedFact != null && UndefinedValue.isNotUndefinedValue(mergedFact.getValue())) {
-				questions.add(q);
-			}
-		}
-		return questions;
-	}
+	public List<Question> getAnsweredQuestions();
+
+	/**
+	 * Returns all {@link Solution} instances, that hold the specified
+	 * {@link Rating}.
+	 * 
+	 * @param state the Rating the diagnoses must have to be returned
+	 * @return a list of diagnoses in this case that have the state 'state'
+	 */
+	public List<Solution> getSolutions(Rating.State state);
 }

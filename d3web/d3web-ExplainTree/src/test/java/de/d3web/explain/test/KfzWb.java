@@ -24,7 +24,7 @@ import de.d3web.core.inference.condition.CondNumGreater;
 import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -373,13 +373,13 @@ public class KfzWb extends KnowledgeBase {
 		 */
 		// RuleComplex rqsug14766 =
 		RuleFactory.createClarificationRule("rqsug14766", Utils.createList(new QASet[] {
-				}), P000, new CondDState(P000, new DiagnosisState(DiagnosisState.State.SUGGESTED)));
+				}), P000, new CondDState(P000, new Rating(Rating.State.SUGGESTED)));
 
 		/* Frageklassen nach Etablierung von P000: Nil */
 		// RuleComplex rqetab14767 =
 		RuleFactory.createRefinementRule("rqetab14767", Utils.createList(
-				new QASet[] {}), P000, new CondDState(P000, new DiagnosisState(
-				DiagnosisState.State.ESTABLISHED)));
+				new QASet[] {}), P000, new CondDState(P000, new Rating(
+				Rating.State.ESTABLISHED)));
 
 		/*
 		 * Next von P8: rqsug14769
@@ -389,7 +389,7 @@ public class KfzWb extends KnowledgeBase {
 				"rqsug14769",
 				Utils.createList(new QASet[] { Q17 }),
 				P8,
-				new CondDState(P8, new DiagnosisState(DiagnosisState.State.SUGGESTED)));
+				new CondDState(P8, new Rating(Rating.State.SUGGESTED)));
 
 		/* Frageklassen nach Etablierung von P8: (Q17) */
 		// RuleComplex rqetab14770 =
@@ -397,7 +397,7 @@ public class KfzWb extends KnowledgeBase {
 				"rqetab14770",
 				Utils.createList(new QASet[] { Q17 }),
 				P8,
-				new CondDState(P8, new DiagnosisState(DiagnosisState.State.ESTABLISHED)));
+				new CondDState(P8, new Rating(Rating.State.ESTABLISHED)));
 
 		/*
 		 * Next von P13: rqsug14772
@@ -407,7 +407,7 @@ public class KfzWb extends KnowledgeBase {
 				"rqsug14772",
 				Utils.createList(new QASet[] { Q18 }),
 				P13,
-				new CondDState(P13, new DiagnosisState(DiagnosisState.State.SUGGESTED)));
+				new CondDState(P13, new Rating(Rating.State.SUGGESTED)));
 
 		/* Frageklassen nach Etablierung von P13: (Q18) */
 		// RuleComplex rqetab14773 =
@@ -415,7 +415,7 @@ public class KfzWb extends KnowledgeBase {
 				"rqetab14773",
 				Utils.createList(new QASet[] { Q18 }),
 				P13,
-				new CondDState(P13, new DiagnosisState(DiagnosisState.State.ESTABLISHED)));
+				new CondDState(P13, new Rating(Rating.State.ESTABLISHED)));
 
 		/*
 		 * Next von P14: rqsug14775
@@ -425,7 +425,7 @@ public class KfzWb extends KnowledgeBase {
 				"rqsug14775",
 				Utils.createList(new QASet[] { Q19 }),
 				P14,
-				new CondDState(P14, new DiagnosisState(DiagnosisState.State.SUGGESTED)));
+				new CondDState(P14, new Rating(Rating.State.SUGGESTED)));
 
 		/* Frageklassen nach Etablierung von P14: (Q19) */
 		// RuleComplex rqetab14776 =
@@ -433,7 +433,7 @@ public class KfzWb extends KnowledgeBase {
 				"rqetab14776",
 				Utils.createList(new QASet[] { Q19 }),
 				P14,
-				new CondDState(P14, new DiagnosisState(DiagnosisState.State.ESTABLISHED)));
+				new CondDState(P14, new Rating(Rating.State.ESTABLISHED)));
 
 		/*
 		 * Next von P15: rqsug14778
@@ -443,7 +443,7 @@ public class KfzWb extends KnowledgeBase {
 				"rqsug14778",
 				Utils.createList(new QASet[] { Q20 }),
 				P15,
-				new CondDState(P15, new DiagnosisState(DiagnosisState.State.SUGGESTED)));
+				new CondDState(P15, new Rating(Rating.State.SUGGESTED)));
 
 		/* Frageklassen nach Etablierung von P15: (Q20) */
 		// RuleComplex rqetab14779 =
@@ -451,7 +451,7 @@ public class KfzWb extends KnowledgeBase {
 				"rqetab14779",
 				Utils.createList(new QASet[] { Q20 }),
 				P15,
-				new CondDState(P15, new DiagnosisState(DiagnosisState.State.ESTABLISHED)));
+				new CondDState(P15, new Rating(Rating.State.ESTABLISHED)));
 
 		/*
 		 * Next von P16: rqsug14781
@@ -461,7 +461,7 @@ public class KfzWb extends KnowledgeBase {
 				"rqsug14781",
 				Utils.createList(new QASet[] { Q21 }),
 				P16,
-				new CondDState(P16, new DiagnosisState(DiagnosisState.State.SUGGESTED)));
+				new CondDState(P16, new Rating(Rating.State.SUGGESTED)));
 
 		/* Frageklassen nach Etablierung von P16: (Q21) */
 		// RuleComplex rqetab14782 =
@@ -469,7 +469,7 @@ public class KfzWb extends KnowledgeBase {
 				"rqetab14782",
 				Utils.createList(new QASet[] { Q21 }),
 				P16,
-				new CondDState(P16, new DiagnosisState(DiagnosisState.State.ESTABLISHED)));
+				new CondDState(P16, new Rating(Rating.State.ESTABLISHED)));
 
 		/* Die Diagnose-Regeln */
 

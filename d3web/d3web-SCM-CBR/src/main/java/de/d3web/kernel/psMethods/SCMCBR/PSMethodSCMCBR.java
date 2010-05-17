@@ -5,15 +5,12 @@ import java.util.Collection;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.CaseDiagnosis;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.Facts;
-import de.d3web.scoring.DiagnosisScore;
-import de.d3web.scoring.HeuristicRating;
 
 public class PSMethodSCMCBR extends PSMethodAdapter {
 
@@ -63,23 +60,12 @@ public class PSMethodSCMCBR extends PSMethodAdapter {
 				SCMCBRModel model = (SCMCBRModel) knowledgeSlice;
 
 				// Quick fix for ClassCastException:
-				Object o = ((CaseDiagnosis) theCase.getCaseObject(model.getSolution())).getValue(this.getClass());
-				DiagnosisState oldState = null;
-				if (o instanceof DiagnosisState) {
-					oldState = (DiagnosisState) o;
-				}
-				if (o instanceof DiagnosisScore) {
-					DiagnosisScore oldScore = (DiagnosisScore) o;
-					if (oldScore == null) {
-						oldState = null;
-					}
-					oldState = new HeuristicRating(oldScore.getScore());
-				}
+				Rating oldState = theCase.getBlackboard().getState(model.getSolution());
 
 				// TODO: split getState into getState and refreshState
 				// DiagnosisState oldState = model.getState(theCase);
 				// model.refreshState(theCase);
-				DiagnosisState newState = model.getState(theCase);
+				Rating newState = model.getState(theCase);
 				if (!oldState.equals(newState)) {
 					theCase.getBlackboard().addValueFact(
 							FactFactory.createFact(model.getSolution(), newState, model, this));

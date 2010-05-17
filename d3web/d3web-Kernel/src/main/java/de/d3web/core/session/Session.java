@@ -25,7 +25,6 @@ import java.util.List;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationContoller;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCMarkedUp;
@@ -91,8 +90,6 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	// --- reserved for later implementation --- (inkrement 2)
 	// Protocol getProtocol();
 
-	// -----------------------from here on old stuff, TODO: remove?
-
 	/**
 	 * Returns the {@link SessionObject} (dynamically created flyweight object)
 	 * corresponding to the specified {@link CaseObjectSource} instance (often
@@ -104,17 +101,7 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 */
 	SessionObject getCaseObject(CaseObjectSource item);
 
-	/**
-	 * Returns all {@link Solution} instances, that hold the specified
-	 * {@link DiagnosisState} for at least one {@link PSMethod} specified. in
-	 * this {@link Session}. Only the specified {@link PSMethod} instances are
-	 * considered, so a {@link Solution} is returned, if it haves the specified
-	 * {@link DiagnosisState} for at least one of these {@link PSMethod}.
-	 * 
-	 * @param state the DiagnosisState the diagnoses must have to be returned
-	 * @return a list of diagnoses in this case that have the state 'state'
-	 */
-	List<Solution> getSolutions(DiagnosisState state);
+	// -----------------------from here on old stuff, TODO: remove?
 
 	/**
 	 * Returns the {@link QASetManager} used in this case, that is responsible

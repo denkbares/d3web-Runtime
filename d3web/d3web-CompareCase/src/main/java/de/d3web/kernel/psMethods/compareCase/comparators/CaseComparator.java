@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 
 import de.d3web.caserepository.CaseObject;
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
@@ -445,7 +445,7 @@ public class CaseComparator {
 		Iterator<CaseObject.Solution> iter = aCase.getSolutions().iterator();
 		while (iter.hasNext()) {
 			CaseObject.Solution sol = iter.next();
-			if (new DiagnosisState(DiagnosisState.State.ESTABLISHED).equals(sol.getState())) {
+			if (new Rating(Rating.State.ESTABLISHED).equals(sol.getState())) {
 				establishedDiagnoses.add(sol.getDiagnosis());
 			}
 		}

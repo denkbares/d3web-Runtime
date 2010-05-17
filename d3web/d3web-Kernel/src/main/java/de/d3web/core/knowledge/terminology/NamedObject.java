@@ -35,7 +35,6 @@ import de.d3web.core.knowledge.KnowledgeContainer;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
-import de.d3web.core.session.CaseObjectSource;
 
 /**
  * NamedObject is parent of knowledge-base objects such as QASet, Question,
@@ -53,7 +52,7 @@ import de.d3web.core.session.CaseObjectSource;
  * @see de.d3web.core.knowledge.terminology.IDObject
  * @see de.d3web.kernel.misc.PropertiesAdapter
  */
-public abstract class NamedObject implements TerminologyObject, CaseObjectSource,
+public abstract class NamedObject implements TerminologyObject,
 		KnowledgeContainer, PropertiesContainer {
 
 	private Properties properties;

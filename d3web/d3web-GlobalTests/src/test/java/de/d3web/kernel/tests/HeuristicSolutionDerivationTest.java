@@ -29,7 +29,7 @@ import org.junit.Test;
 
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.manage.KnowledgeBaseManagement;
@@ -175,9 +175,9 @@ public class HeuristicSolutionDerivationTest {
 		assertEquals("Question 'Exhaust fumes' has wrong value", black, exhaustFumesValue);
 
 		// TEST 'Clogged air filter' == SUGGESTED
-		DiagnosisState cloggedAirFilterState = session.getBlackboard().getState(solution);
+		Rating cloggedAirFilterState = session.getBlackboard().getState(solution);
 		assertTrue("Solution 'Clogged air filter' has wrong state. Expected 'SUGGESTED'",
-				cloggedAirFilterState.hasState(DiagnosisState.State.SUGGESTED));
+				cloggedAirFilterState.hasState(Rating.State.SUGGESTED));
 
 		// SET 'Fuel' = 'unleaded gasoline'
 		Value unleadedGasoline = kbm.findValue(fuel, "unleaded gasoline");
@@ -193,7 +193,7 @@ public class HeuristicSolutionDerivationTest {
 		cloggedAirFilterState = session.getBlackboard().getState(solution);
 		assertTrue(
 				"Solution 'Clogged air filter' has wrong state. Expected 'ESTABLISHED'",
-				cloggedAirFilterState.hasState(DiagnosisState.State.ESTABLISHED));
+				cloggedAirFilterState.hasState(Rating.State.ESTABLISHED));
 	}
 
 	@Test
@@ -214,10 +214,10 @@ public class HeuristicSolutionDerivationTest {
 		assertEquals("Question 'Fuel' has wrong value", diesel, fuelValue);
 
 		// TEST 'Clogged air filter' == SUGGESTED
-		DiagnosisState cloggedAirFilterState = session.getBlackboard().getState(
+		Rating cloggedAirFilterState = session.getBlackboard().getState(
 				cloggedAirFilter);
 		assertTrue("Solution 'Clogged air filter' has wrong state. Expected 'SUGGESTED'",
-				cloggedAirFilterState.hasState(DiagnosisState.State.SUGGESTED));
+				cloggedAirFilterState.hasState(Rating.State.SUGGESTED));
 
 		// SET 'Exhaust fumes' = 'blue'
 		Value blue = kbm.findValue(exhaustFumes, "blue");
@@ -232,7 +232,7 @@ public class HeuristicSolutionDerivationTest {
 		// TEST 'Clogged air filter' == UNCLEAR
 		cloggedAirFilterState = session.getBlackboard().getState(cloggedAirFilter);
 		assertTrue("Solution 'Clogged air filter' has wrong state. Expected 'UNCLEAR'",
-				cloggedAirFilterState.hasState(DiagnosisState.State.UNCLEAR));
+				cloggedAirFilterState.hasState(Rating.State.UNCLEAR));
 	}
 
 	@Test
@@ -252,10 +252,10 @@ public class HeuristicSolutionDerivationTest {
 		assertEquals("Question 'Exhaust fumes' has wrong value", black, exhaustFumesValue);
 
 		// TEST 'Clogged air filter' == SUGGESTED
-		DiagnosisState cloggedAirFilterState = session.getBlackboard().getState(
+		Rating cloggedAirFilterState = session.getBlackboard().getState(
 				cloggedAirFilter);
 		assertTrue("Solution 'Clogged air filter' has wrong state. Expected 'SUGGESTED'",
-				cloggedAirFilterState.hasState(DiagnosisState.State.SUGGESTED));
+				cloggedAirFilterState.hasState(Rating.State.SUGGESTED));
 
 		// SET 'Exhaust fumes' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(
@@ -270,7 +270,7 @@ public class HeuristicSolutionDerivationTest {
 		// TEST 'Clogged air filter' == UNCLEAR
 		cloggedAirFilterState = session.getBlackboard().getState(cloggedAirFilter);
 		assertTrue("Solution 'Clogged air filter' has wrong state. Expected 'UNCLEAR'",
-				cloggedAirFilterState.hasState(DiagnosisState.State.UNCLEAR));
+				cloggedAirFilterState.hasState(Rating.State.UNCLEAR));
 	}
 
 }

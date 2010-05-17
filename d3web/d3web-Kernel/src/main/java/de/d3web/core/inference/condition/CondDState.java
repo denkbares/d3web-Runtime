@@ -20,7 +20,7 @@
 
 package de.d3web.core.inference.condition;
 
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 
@@ -34,7 +34,7 @@ import de.d3web.core.session.Session;
 public class CondDState extends TerminalCondition {
 
 	private Solution solution;
-	private DiagnosisState solutionState;
+	private Rating solutionState;
 
 	/**
 	 * Creates a new CondDState Expression:
@@ -48,7 +48,7 @@ public class CondDState extends TerminalCondition {
 	 */
 	public CondDState(
 			Solution diagnosis,
-			DiagnosisState solutionState) {
+			Rating solutionState) {
 		super(diagnosis);
 		this.solution = diagnosis;
 		this.solutionState = solutionState;
@@ -69,7 +69,7 @@ public class CondDState extends TerminalCondition {
 		return solution;
 	}
 
-	public DiagnosisState getStatus() {
+	public Rating getStatus() {
 		return solutionState;
 	}
 
@@ -77,7 +77,7 @@ public class CondDState extends TerminalCondition {
 		solution = newDiagnosis;
 	}
 
-	public void setStatus(DiagnosisState newStatus) {
+	public void setStatus(Rating newStatus) {
 		solutionState = newStatus;
 	}
 

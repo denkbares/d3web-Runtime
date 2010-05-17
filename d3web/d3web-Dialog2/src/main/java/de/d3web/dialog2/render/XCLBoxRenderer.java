@@ -29,9 +29,9 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.DiagnosisState.State;
+import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.session.Session;
 import de.d3web.dialog2.util.DialogUtils;
 import de.d3web.xcl.XCLModel;
@@ -99,7 +99,7 @@ public class XCLBoxRenderer extends Renderer {
 			if (d instanceof XCLModel) {
 				XCLModel model = (XCLModel) d;
 				Solution origDiag = model.getSolution();
-				DiagnosisState state = model.getState(theCase);
+				Rating state = model.getState(theCase);
 
 				double score = model.getInferenceTrace(theCase).getScore();
 				if (score >= minValue || state.hasState(State.ESTABLISHED)) {

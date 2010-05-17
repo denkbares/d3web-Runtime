@@ -24,10 +24,6 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.manage.KnowledgeBaseManagement;
-import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.CaseDiagnosis;
-import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.scoring.DiagnosisScore;
 import de.d3web.scoring.Score;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
@@ -40,8 +36,8 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  * @author joba, chris
  * @see IDObject
  * @see NamedObject
- * @see DiagnosisScore
- * @see DiagnosisState
+ * @see ScoreRating
+ * @see Rating
  */
 public class Solution extends NamedObject implements TerminologyObject {
 
@@ -63,18 +59,6 @@ public class Solution extends NamedObject implements TerminologyObject {
 	 */
 	public Solution(String id) {
 		super(id);
-	}
-
-	/**
-	 * Creates a new dynamic flyweight for this object in the context of the
-	 * specified {@link Session} instance. For every new {@link Session}
-	 * flyweights are created on demand for the used {@link IDObject} instances.
-	 * 
-	 * @param session the specified Session instance
-	 * @return a flyweight instance of this object
-	 */
-	public SessionObject createCaseObject(Session session) {
-		return new CaseDiagnosis(this);
 	}
 
 	/**

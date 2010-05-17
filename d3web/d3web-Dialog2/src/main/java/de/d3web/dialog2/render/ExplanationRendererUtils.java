@@ -56,7 +56,7 @@ import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.inference.condition.TerminalCondition;
 import de.d3web.core.inference.condition.UnknownAnswerException;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Value;
@@ -99,7 +99,7 @@ public class ExplanationRendererUtils {
 	renderENode(writer, component, expl, theCase);
     }
 
-    public static String getStateTranslation(DiagnosisState state) {
+    public static String getStateTranslation(Rating state) {
 	if (state.getName().equals("established")) {
 	    return DialogUtils.getMessageFor("explain.diag_established");
 	} else if (state.getName().equals("suggested")) {

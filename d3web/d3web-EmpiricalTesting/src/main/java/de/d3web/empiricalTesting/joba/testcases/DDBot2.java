@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -142,7 +142,7 @@ public class DDBot2 {
 	private List<RatedSolution> toRatedSolutions(Session theCase) {
 		List<RatedSolution> ratedSolutions = new ArrayList<RatedSolution>();
 		for (Solution diagnosis : theCase.getKnowledgeBase().getSolutions()) {
-			DiagnosisState state = theCase.getBlackboard().getState(diagnosis);
+			Rating state = theCase.getBlackboard().getState(diagnosis);
 			if (state instanceof HeuristicRating) {
 				HeuristicRating hr = (HeuristicRating) state;
 				double score = hr.getScore();

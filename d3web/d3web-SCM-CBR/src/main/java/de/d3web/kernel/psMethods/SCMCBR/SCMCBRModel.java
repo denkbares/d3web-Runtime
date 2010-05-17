@@ -14,9 +14,9 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.DiagnosisState.State;
+import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.session.IEventSource;
 import de.d3web.core.session.KBOEventListener;
 import de.d3web.core.session.Session;
@@ -162,18 +162,18 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		return relationMap;
 	}
 
-	public DiagnosisState getState(Session theCase) {
+	public Rating getState(Session theCase) {
 		SCMCBRInferenceTrace trace = new SCMCBRInferenceTrace();
 		explanation.put(theCase, trace);
 		evalRelations(trace, theCase);
 
 		if (rh.atLeastOneRelationTrue(contradictingRelations, theCase)) {
-			DiagnosisState excluded = new DiagnosisState(State.EXCLUDED);
+			Rating excluded = new Rating(State.EXCLUDED);
 			trace.setState(excluded);
 			return excluded;
 		}
 		else {
-			DiagnosisState established = new DiagnosisState(State.ESTABLISHED);
+			Rating established = new Rating(State.ESTABLISHED);
 			if (rh.atLeastOneRelationTrue(sufficientRelations, theCase)) {
 				trace.setState(established);
 				return established;
@@ -190,7 +190,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 						return established;
 					}
 					else {
-						DiagnosisState suggested = new DiagnosisState(State.SUGGESTED);
+						Rating suggested = new Rating(State.SUGGESTED);
 						if (currentXCLScore >= establishedThreshold
 								&& !rh.allRelationsTrue(necessaryRelations, theCase)) {
 							trace.setState(suggested);
@@ -206,7 +206,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 			}
 		}
 
-		return new DiagnosisState(State.UNCLEAR);
+		return new Rating(State.UNCLEAR);
 	}
 
 	private void evalRelations(SCMCBRInferenceTrace trace, Session c) {

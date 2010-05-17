@@ -10,7 +10,7 @@ import java.util.Map;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.Indication;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
@@ -149,7 +149,7 @@ class FactAggregator {
 		}
 		// and find best of them, depending on the value type
 		Object exampleValue = this.facts.get(0).getValue();
-		if (exampleValue instanceof DiagnosisState) {
+		if (exampleValue instanceof Rating) {
 			this.mergedFact = mergeSolutionFacts(mergedFacts);
 		}
 		else if (exampleValue instanceof Indication) {

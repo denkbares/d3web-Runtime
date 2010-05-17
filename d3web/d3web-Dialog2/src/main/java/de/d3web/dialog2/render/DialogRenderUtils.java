@@ -34,7 +34,7 @@ import javax.faces.context.ResponseWriter;
 
 import org.apache.log4j.Logger;
 
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
@@ -321,7 +321,7 @@ public class DialogRenderUtils {
 
 		if (DialogUtils.getDialogSettings().isShowDiagExplanation()) {
 			writer.startElement("a", component);
-			DiagnosisState diagState = theCase.getBlackboard().getState(diag);
+			Rating diagState = theCase.getBlackboard().getState(diag);
 			writer.writeAttribute("id", component.getId() + "_heur_"
 					+ diagState.getName() + "_" + diag.getId(), "id");
 			writer.writeAttribute("class", styleClass, "class");

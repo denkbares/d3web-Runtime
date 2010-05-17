@@ -7,10 +7,10 @@ import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.Indication;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.knowledge.terminology.DiagnosisState.State;
+import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.Unknown;
@@ -35,14 +35,14 @@ public class Facts {
 	public static Fact mergeSolutionFacts(Fact[] facts) throws IllegalArgumentException {
 		Fact maxFact = null;
 		for (Fact fact : filterFactsForSourceSolvers(facts)) {
-			DiagnosisState rating = (DiagnosisState) fact.getValue();
+			Rating rating = (Rating) fact.getValue();
 			// if any is excluded, it will win the race
 			if (rating.hasState(State.EXCLUDED)) {
 				return fact;
 			}
 			// otherwise maximize the rating
 			if (maxFact == null
-					|| rating.compareTo((DiagnosisState) maxFact.getValue()) > 0) {
+					|| rating.compareTo((Rating) maxFact.getValue()) > 0) {
 				maxFact = fact;
 			}
 		}

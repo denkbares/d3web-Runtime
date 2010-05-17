@@ -33,7 +33,7 @@ import de.d3web.caserepository.CaseObject.Solution;
 import de.d3web.caserepository.sax.CaseRepositoryReader;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
@@ -197,7 +197,7 @@ public abstract class CaseObjectConverter {
 	}
 
 	private void addRatedSolution(RatedTestCase rtc, Solution s) {
-		DiagnosisState state = s.getState();
+		Rating state = s.getState();
 		de.d3web.core.knowledge.terminology.Solution d = s.getDiagnosis();
 		if (state.isRelevant()) {
 			StateRating r = new StateRating(state);

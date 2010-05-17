@@ -34,11 +34,11 @@ import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
@@ -239,17 +239,15 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 	}
 
 	public Collection<Solution> getPossibleDiagnoses(Session theCase) {
-		List<Solution> solutions = theCase.getSolutions(new DiagnosisState(
-				DiagnosisState.State.ESTABLISHED));
+		List<Solution> solutions = theCase.getBlackboard().getSolutions(State.ESTABLISHED);
 		if (solutions.size() > 0) {
 			return solutions;
 		}
-		solutions = theCase.getSolutions(new DiagnosisState(
-				DiagnosisState.State.SUGGESTED));
+		solutions = theCase.getBlackboard().getSolutions(State.SUGGESTED);
 		if (solutions.size() > 0) {
 			return solutions;
 		}
-		return theCase.getSolutions(new DiagnosisState(DiagnosisState.State.UNCLEAR));
+		return theCase.getBlackboard().getSolutions(State.UNCLEAR);
 	}
 
 	public Collection<Question> getDiscriminatingQuestions(

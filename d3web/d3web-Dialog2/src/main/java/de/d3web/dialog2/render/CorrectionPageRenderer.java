@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.render;
@@ -31,10 +31,10 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.CaseDiagnosis;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.dialog2.WebDialog;
 import de.d3web.dialog2.util.DialogUtils;
@@ -71,14 +71,13 @@ public class CorrectionPageRenderer extends Renderer {
 			if (diagIsUserSelected(dia, userSelDiagIDs, diag)) {
 				// set as user selected
 				theCase.getBlackboard().addValueFact(
-						new DefaultFact(diag, new DiagnosisState(
-						DiagnosisState.State.ESTABLISHED), this,
+						new DefaultFact(diag, new Rating(
+						Rating.State.ESTABLISHED), this,
 						PSMethodUserSelected.getInstance()));
 			}
 			else {
 				// delete user selected diagnosis
-				((CaseDiagnosis) theCase.getCaseObject(diag))
-						.setValue(null, PSMethodUserSelected.class);
+				theCase.getBlackboard().removeValueFact(diag, this);
 			}
 		}
 	}
@@ -114,10 +113,8 @@ public class CorrectionPageRenderer extends Renderer {
 		writer.endElement("h2");
 
 		// get established and suggested diagnoses
-		List<Solution> diagListEstablished = theCase.getSolutions(new DiagnosisState(
-				DiagnosisState.State.ESTABLISHED));
-		List<Solution> diagListSuggested = theCase.getSolutions(new DiagnosisState(
-				DiagnosisState.State.SUGGESTED));
+		List<Solution> diagListEstablished = theCase.getBlackboard().getSolutions(State.ESTABLISHED);
+		List<Solution> diagListSuggested = theCase.getBlackboard().getSolutions(State.SUGGESTED);
 		// filter duplicate diagoses (some are userselected established and
 		// heuristic suggested)
 		List<Solution> diagListSuggestedFiltered = new ArrayList<Solution>();

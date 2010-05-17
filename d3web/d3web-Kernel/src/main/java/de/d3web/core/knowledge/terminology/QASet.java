@@ -27,6 +27,7 @@ import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQASet;
 import de.d3web.indication.ActionNextQASet;
@@ -42,7 +43,7 @@ import de.d3web.indication.inference.PSMethodUserSelected;
  * @see QContainer
  * @see Question
  */
-public abstract class QASet extends NamedObject implements InterviewObject {
+public abstract class QASet extends NamedObject implements InterviewObject, CaseObjectSource {
 
 	public static class Reason {
 

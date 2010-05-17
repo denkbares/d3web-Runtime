@@ -31,7 +31,7 @@ import de.d3web.core.inference.condition.CondNumEqual;
 import de.d3web.core.io.fragments.RuleHandler;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.plugin.test.InitPluginManager;
@@ -82,7 +82,7 @@ public class RuleComplexTest extends TestCase {
 		diag1 = new Solution("diag1-id");
 		diag1.setName("diag1-text");
 		
-		cDState1 = new CondDState(diag1, new DiagnosisState(DiagnosisState.State.EXCLUDED));
+		cDState1 = new CondDState(diag1, new Rating(Rating.State.EXCLUDED));
 		
 		cNumL1 =  new CondNumEqual(qnum1, new Double(12.7));
 			

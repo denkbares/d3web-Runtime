@@ -33,9 +33,8 @@ import de.d3web.caseGeneration.StateRatingStrategy;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.DiagnosisState.State;
+import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.FactFactory;
@@ -208,7 +207,7 @@ public class SequentialTestCase {
 		for (KnowledgeSlice slice : slices) {
 			if (slice instanceof XCLModel) {
 				Solution solution = ((XCLModel) slice).getSolution();
-				DiagnosisState s = ((XCLModel) slice).getState(thecase);
+				de.d3web.core.knowledge.terminology.Rating s = ((XCLModel) slice).getState(thecase);
 				if (!s.hasState(State.UNCLEAR)
 						&& !s.hasState(State.EXCLUDED)) {
 					RatedSolution rs = new RatedSolution(solution, new StateRating(s));

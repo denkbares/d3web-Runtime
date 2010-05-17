@@ -23,8 +23,7 @@ package de.d3web.empiricalTesting;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-import de.d3web.core.knowledge.terminology.DiagnosisState;
-import de.d3web.core.knowledge.terminology.DiagnosisState.State;
+import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.scoring.HeuristicRating;
 import de.d3web.scoring.Score;
 
@@ -92,8 +91,9 @@ public class ScoreRating implements Rating {
 		if (!(obj instanceof ScoreRating)) return false;
 		ScoreRating otherRating = (ScoreRating) obj;
 		if (compareOnlySymbolicStates.equals("true")) {
-			DiagnosisState thisState = new HeuristicRating(this.rating);
-			DiagnosisState otherState = new HeuristicRating(otherRating.rating);
+			de.d3web.core.knowledge.terminology.Rating thisState = new HeuristicRating(this.rating);
+			de.d3web.core.knowledge.terminology.Rating otherState = new HeuristicRating(
+					otherRating.rating);
 			// System.out.println(this.rating+"-"+otherRating.rating+" <--> "+thisState
 			// + "-" + otherState);
 			return thisState.equals(otherState);
@@ -110,8 +110,10 @@ public class ScoreRating implements Rating {
 		if (o instanceof ScoreRating) {
 			ScoreRating otherRating = (ScoreRating) o;
 			if (compareOnlySymbolicStates.equals("true")) {
-				DiagnosisState thisState = new HeuristicRating(this.rating);
-				DiagnosisState otherState = new HeuristicRating(otherRating.rating);
+				de.d3web.core.knowledge.terminology.Rating thisState = new HeuristicRating(
+						this.rating);
+				de.d3web.core.knowledge.terminology.Rating otherState = new HeuristicRating(
+						otherRating.rating);
 				// System.out.println(this.rating+"-"+otherRating.rating+" <--> "+thisState
 				// + "-" + otherState);
 				return thisState.compareTo(otherState);

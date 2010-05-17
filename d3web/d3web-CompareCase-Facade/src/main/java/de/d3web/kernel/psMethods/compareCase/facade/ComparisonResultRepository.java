@@ -34,12 +34,12 @@ import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.utilities.SessionConverter;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.DiagnosisState.State;
+import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.Choice;
@@ -421,7 +421,7 @@ public class ComparisonResultRepository {
 		Iterator iter = aCase.getSolutions().iterator();
 		while (iter.hasNext()) {
 			CaseObject.Solution sol = (CaseObject.Solution) iter.next();
-			if (new DiagnosisState(State.ESTABLISHED).equals(sol.getState())) {
+			if (new Rating(State.ESTABLISHED).equals(sol.getState())) {
 				establishedDiagnoses.add(sol.getDiagnosis());
 			}
 		}

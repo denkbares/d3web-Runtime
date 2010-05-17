@@ -46,7 +46,7 @@ import de.d3web.core.io.fragments.conditions.AndConditionHandler;
 import de.d3web.core.io.fragments.conditions.OrConditionHandler;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
@@ -117,7 +117,7 @@ public class ConditionTest extends TestCase {
 		val1.add(ach2);
 		val2.add(ach2);
 
-		cDState1 = new CondDState(d1, new DiagnosisState(DiagnosisState.State.SUGGESTED));
+		cDState1 = new CondDState(d1, new Rating(Rating.State.SUGGESTED));
 		cEqual1 = new CondNumEqual(qnum1, new Double(10));
 		cKnown1 = new CondKnown(qnum1);
 

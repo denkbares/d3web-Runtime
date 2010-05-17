@@ -28,9 +28,10 @@ import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.CaseObjectImpl;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.Rating;
+import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.PropertiesCloner;
 import de.d3web.core.session.Session;
@@ -196,12 +197,9 @@ public class SessionConverter {
 		}
 
 		// Diagnoses
-		addDiagnosesToSolutions(ret, theCase, new DiagnosisState(
-				DiagnosisState.State.ESTABLISHED));
-		addDiagnosesToSolutions(ret, theCase, new DiagnosisState(
-				DiagnosisState.State.SUGGESTED));
-		addDiagnosesToSolutions(ret, theCase, new DiagnosisState(
-				DiagnosisState.State.EXCLUDED));
+		addDiagnosesToSolutions(ret, theCase, State.ESTABLISHED);
+		addDiagnosesToSolutions(ret, theCase, State.SUGGESTED);
+		addDiagnosesToSolutions(ret, theCase, State.EXCLUDED);
 
 		if (copyDCMarkup) {
 			ret.setDCMarkup((DCMarkup) theCase.getDCMarkup().clone());
@@ -222,7 +220,7 @@ public class SessionConverter {
 	 * Adds all solutions of the given Session with the given DiagnosisState to
 	 * "co".
 	 */
-	private void addDiagnosesToSolutions(CaseObjectImpl co, Session theCase, DiagnosisState state) {
+	private void addDiagnosesToSolutions(CaseObjectImpl co, Session theCase, Rating.State state) {
 		List<PSMethod> usedPsm = new LinkedList<PSMethod>();
 		Iterator<? extends PSMethod> usedPsmIter = theCase.getPSMethods().iterator();
 		while (usedPsmIter.hasNext()) {
@@ -232,7 +230,7 @@ public class SessionConverter {
 			}
 		}
 
-		List<de.d3web.core.knowledge.terminology.Solution> diags = theCase.getSolutions(
+		List<de.d3web.core.knowledge.terminology.Solution> diags = theCase.getBlackboard().getSolutions(
 				state);
 		if (diags != null) {
 			Iterator<de.d3web.core.knowledge.terminology.Solution> diter = diags.iterator();
@@ -243,12 +241,12 @@ public class SessionConverter {
 				while (psMethodIter.hasNext()) {
 					PSMethod psm = psMethodIter.next();
 					Value value = theCase.getBlackboard().getValue(d, psm);
-					if (value instanceof DiagnosisState) {
-						DiagnosisState ds = (DiagnosisState) value;
+					if (value instanceof Rating) {
+						Rating ds = (Rating) value;
 						if (ds.equals(state)) {
 							CaseObject.Solution s = new CaseObject.Solution();
 							s.setDiagnosis(d);
-							s.setState(state);
+							s.setState(new Rating(state));
 							s.setPSMethodClass(psm.getClass());
 							co.addSolution(s);
 						}

@@ -2,12 +2,12 @@ package de.d3web.xcl;
 
 import java.util.Collection;
 
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.session.Session;
 
 public interface InferenceTrace {
 
-	public abstract DiagnosisState getState();
+	public abstract Rating getState();
 
 	public abstract Collection<XCLRelation> getPosRelations();
 

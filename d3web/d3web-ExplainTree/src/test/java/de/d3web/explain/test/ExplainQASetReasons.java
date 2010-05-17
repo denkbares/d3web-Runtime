@@ -38,7 +38,7 @@ import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
@@ -149,7 +149,7 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 				FactFactory.createFact(P8, new HeuristicRating(Score.P7),
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
-		assertEquals(new DiagnosisState(DiagnosisState.State.ESTABLISHED),
+		assertEquals(new Rating(Rating.State.ESTABLISHED),
 				theCase.getBlackboard().getState(P8));
 
 		assertTrue(findQ("Q17", testKb).isValid(theCase));
@@ -190,7 +190,7 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 				FactFactory.createFact(P8, new HeuristicRating(Score.P4),
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
-		assertEquals(new DiagnosisState(DiagnosisState.State.SUGGESTED),
+		assertEquals(new Rating(Rating.State.SUGGESTED),
 				theCase.getBlackboard().getState(P8));
 
 		assertTrue(findQ("Q17", testKb).isValid(theCase));

@@ -79,7 +79,7 @@ import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.inference.condition.TerminalCondition;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -257,7 +257,7 @@ public class XMLRenderer {
 		return sb;
 	}
 
-	private static StringBuffer renderDiagnosisStateObject(DiagnosisState diagState) {
+	private static StringBuffer renderDiagnosisStateObject(Rating diagState) {
 		return (new StringBuffer("<DiagnosisState state=\"" + diagState.getName()
 				+ "\"/>"));
 	}
@@ -591,7 +591,7 @@ public class XMLRenderer {
 		sb.append("<Reference>");
 		sb.append(renderDiagnosisObject(diag));
 		if (showStatus) {// renderDiagnosisStateObject
-			DiagnosisState state = theCase.getBlackboard().getState(diag);
+			Rating state = theCase.getBlackboard().getState(diag);
 			if (state != null) {
 				sb.append("<DiagnosisState state=\"" + state.getName() + "\"/>");
 			}

@@ -29,9 +29,9 @@ import org.apache.myfaces.custom.tree2.TreeNode;
 import org.apache.myfaces.custom.tree2.TreeNodeBase;
 
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.DiagnosisState.State;
+import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.session.Session;
 import de.d3web.dialog2.util.DialogUtils;
 
@@ -58,7 +58,7 @@ public class DiagnosesTreeBean {
 	private void checkNodeStylesRecursive(TreeNode node, Session theCase) {
 		Solution actual = theCase.getKnowledgeBase().searchSolution(
 				node.getIdentifier());
-		DiagnosisState state = theCase.getBlackboard().getState(actual);
+		Rating state = theCase.getBlackboard().getState(actual);
 		if (state.hasState(State.ESTABLISHED)) {
 			node.setType(DiagnosesTreeBean.ESTABLISHED_TYPE);
 		}
@@ -100,12 +100,12 @@ public class DiagnosesTreeBean {
 
 	public boolean getDiagnosesAvailable() {
 		Session theCase = DialogUtils.getDialog().getTheCase();
-		List<Solution> established = theCase
-				.getSolutions(new DiagnosisState(DiagnosisState.State.ESTABLISHED));
-		List<Solution> suggested = theCase
-				.getSolutions(new DiagnosisState(DiagnosisState.State.SUGGESTED));
-		List<Solution> excluded = theCase
-				.getSolutions(new DiagnosisState(DiagnosisState.State.EXCLUDED));
+		List<Solution> established = theCase.getBlackboard()
+				.getSolutions(State.ESTABLISHED);
+		List<Solution> suggested = theCase.getBlackboard()
+				.getSolutions(State.SUGGESTED);
+		List<Solution> excluded = theCase.getBlackboard()
+				.getSolutions(State.EXCLUDED);
 		if (established.size() != 0 || suggested.size() != 0
 				|| excluded.size() != 0) {
 			return true;

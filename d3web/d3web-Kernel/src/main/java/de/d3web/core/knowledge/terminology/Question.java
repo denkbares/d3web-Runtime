@@ -28,6 +28,7 @@ import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.values.AnswerUnknown;
@@ -45,7 +46,7 @@ import de.d3web.indication.inference.PSMethodNextQASet;
  * @see QASet
  * @see DerivationType
  */
-public abstract class Question extends QASet {
+public abstract class Question extends QASet implements CaseObjectSource {
 
 	private final AnswerUnknown unknown;
 

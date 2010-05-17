@@ -34,7 +34,7 @@ import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.IEventSource;
@@ -185,7 +185,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		return relationMap;
 	}
 
-	public DiagnosisState getState(Session theCase) {
+	public Rating getState(Session theCase) {
 		return getInferenceTrace(theCase).getState();
 
 	}

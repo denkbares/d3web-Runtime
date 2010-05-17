@@ -27,10 +27,10 @@ import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.DiagnosisState.State;
+import de.d3web.core.knowledge.terminology.Rating.State;
 
 /**
  * FragementHandler for CondDStates
@@ -57,7 +57,7 @@ public class DStateConditionHandler implements FragmentHandler {
 			IDObject idObject = kb.search(solutionID);
 			if (idObject instanceof Solution) {
 				Solution diag = (Solution) idObject;
-				DiagnosisState diagnosisState = getDiagnosisState(value);
+				Rating diagnosisState = getDiagnosisState(value);
 				return new CondDState(diag, diagnosisState);
 			}
 		}
@@ -74,15 +74,15 @@ public class DStateConditionHandler implements FragmentHandler {
 		return XMLUtil.writeCondition(doc, cond.getDiagnosis(), "DState", status);
 	}
 
-	private static DiagnosisState getDiagnosisState(String status) {
+	private static Rating getDiagnosisState(String status) {
 
-		if (status.equalsIgnoreCase("established")) return new DiagnosisState(State.ESTABLISHED);
+		if (status.equalsIgnoreCase("established")) return new Rating(State.ESTABLISHED);
 
-		if (status.equalsIgnoreCase("excluded")) return new DiagnosisState(State.EXCLUDED);
+		if (status.equalsIgnoreCase("excluded")) return new Rating(State.EXCLUDED);
 
-		if (status.equalsIgnoreCase("suggested")) return new DiagnosisState(State.SUGGESTED);
+		if (status.equalsIgnoreCase("suggested")) return new Rating(State.SUGGESTED);
 
-		if (status.equalsIgnoreCase("unclear")) return new DiagnosisState(State.UNCLEAR);
+		if (status.equalsIgnoreCase("unclear")) return new Rating(State.UNCLEAR);
 
 		return null;
 	}

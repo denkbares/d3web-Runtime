@@ -3,7 +3,7 @@ package de.d3web.xcl;
 import java.util.Collection;
 
 import de.d3web.core.inference.PropagationEntry;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.xcl.inference.PSMethodXCL;
@@ -17,12 +17,12 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 	public void refreshStates(Collection<XCLModel> updatedModels, Session session) {
 		for (XCLModel model : updatedModels) {
 			DefaultInferenceTrace trace = (DefaultInferenceTrace) model.getInferenceTrace(session);
-			DiagnosisState oldState = model.getState(session);
+			Rating oldState = model.getState(session);
 			// calculate scores
 			// and the calculate states (based on that scores)
 			double currentScore = computeScore(model, trace, session);
 			double currentSupport = computeSupport(model, trace, session);
-			DiagnosisState currentState = computeState(model, trace, currentScore,
+			Rating currentState = computeState(model, trace, currentScore,
 					currentSupport);
 			trace.setScore(currentScore);
 			trace.setSupport(currentSupport);
@@ -36,33 +36,33 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 		}
 	}
 
-	private DiagnosisState computeState(XCLModel model, InferenceTrace trace, double score, double support) {
+	private Rating computeState(XCLModel model, InferenceTrace trace, double score, double support) {
 
 		boolean hasContradiction = trace.getContrRelations().size() > 0;
 		boolean hasSufficient = trace.getSuffRelations().size() > 0;
 		boolean hasAllNecessary = trace.getReqPosRelations().size() == model.getNecessaryRelations().size();
 
 		if (hasContradiction) {
-			return new DiagnosisState(DiagnosisState.State.EXCLUDED);
+			return new Rating(Rating.State.EXCLUDED);
 		}
 
 		if (hasSufficient) {
-			return new DiagnosisState(DiagnosisState.State.ESTABLISHED);
+			return new Rating(Rating.State.ESTABLISHED);
 		}
 
 		double minSupport = model.getMinSupport();
 		if (minSupport <= support) {
 			if (score >= model.getEstablishedThreshold()) {
 				return hasAllNecessary
-						? new DiagnosisState(DiagnosisState.State.ESTABLISHED)
-						: new DiagnosisState(DiagnosisState.State.SUGGESTED);
+						? new Rating(Rating.State.ESTABLISHED)
+						: new Rating(Rating.State.SUGGESTED);
 			}
 			if (score >= model.getSuggestedThreshold() && hasAllNecessary) {
-				return new DiagnosisState(DiagnosisState.State.SUGGESTED);
+				return new Rating(Rating.State.SUGGESTED);
 			}
 		}
 
-		return new DiagnosisState(DiagnosisState.State.UNCLEAR);
+		return new Rating(Rating.State.UNCLEAR);
 	}
 
 	public void update(XCLModel xclModel, Collection<PropagationEntry> entries, Session session) {

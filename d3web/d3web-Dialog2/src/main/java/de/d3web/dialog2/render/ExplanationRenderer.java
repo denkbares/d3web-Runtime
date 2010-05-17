@@ -35,7 +35,7 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.dialog2.component.html.UIExplanation;
@@ -50,7 +50,7 @@ public class ExplanationRenderer extends Renderer {
 			Session theCase, Solution diag) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		String score = "";
-		DiagnosisState state = theCase.getBlackboard().getState(diag);
+		Rating state = theCase.getBlackboard().getState(diag);
 		if (state instanceof HeuristicRating) {
 			HeuristicRating hr = (HeuristicRating) state;
 			score = "" + hr.getScore();

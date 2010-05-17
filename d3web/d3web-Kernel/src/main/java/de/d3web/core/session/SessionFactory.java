@@ -101,12 +101,12 @@ public class SessionFactory {
 	}
 
 	public static synchronized Session createSession(KnowledgeBase kb, List<PSMethod> psms) {
-		return new D3WebSession(kb, new DefaultQASetManagerFactory(), psms);
+		return new DefaultSession(kb, new DefaultQASetManagerFactory(), psms);
 	}
 
 	private static Session createD3WebSession(KnowledgeBase kb,
 			QASetManagerFactory defaultQASetManagerFactory) {
-		Session theCase = new D3WebSession(kb, defaultQASetManagerFactory);
+		Session theCase = new DefaultSession(kb, defaultQASetManagerFactory);
 		return theCase;
 	}
 
@@ -136,7 +136,7 @@ public class SessionFactory {
 
 	private static void addUsedPSMethods(Session newCase, List<? extends PSMethod> psMethods) {
 		for (PSMethod psm : psMethods) {
-			((D3WebSession) newCase).addUsedPSMethod(psm);
+			((DefaultSession) newCase).addUsedPSMethod(psm);
 			psm.init(newCase);
 		}
 	}

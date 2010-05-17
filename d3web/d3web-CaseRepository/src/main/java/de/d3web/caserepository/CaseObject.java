@@ -34,7 +34,7 @@ import de.d3web.caserepository.addons.ITherapyConfiguration;
 import de.d3web.config.ConfigContainer;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.IDReference;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
@@ -114,7 +114,7 @@ public interface CaseObject
 		private double weight = 1.0;
 
 		private Class<? extends PSMethod> psMethodClass = null;
-		private DiagnosisState state = null;
+		private Rating state = null;
 
 		public de.d3web.core.knowledge.terminology.Solution getDiagnosis() {
 			return diagnosis;
@@ -140,10 +140,10 @@ public interface CaseObject
 			calculateHash();
 		}
 
-		public DiagnosisState getState() {
+		public Rating getState() {
 			return state;
 		}
-		public void setState(DiagnosisState state) {
+		public void setState(Rating state) {
 			this.state = state;
 			calculateHash();
 		}

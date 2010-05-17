@@ -31,9 +31,9 @@ import de.d3web.caserepository.addons.PSMethodAuthorSelected;
 import de.d3web.caserepository.addons.PSMethodClassicD3;
 import de.d3web.caserepository.utilities.Utilities;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.knowledge.terminology.DiagnosisState;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.DiagnosisState.State;
+import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
@@ -118,7 +118,7 @@ public class SolutionTagReader extends AbstractTagReader {
 				return;
 			}
 			String state = attributes.getValue("state");
-			DiagnosisState ds = Utilities.string2stateNarrow(state);
+			Rating ds = Utilities.string2stateNarrow(state);
 			currentSolution.setState(ds);
 		}
 		else {
@@ -129,7 +129,7 @@ public class SolutionTagReader extends AbstractTagReader {
 			// will get psmethod/state anyway, and currentSolution (here!) is
 			// not used.
 			currentSolution.setPSMethodClass(PSMethodUserSelected.class);
-			currentSolution.setState(new DiagnosisState(State.ESTABLISHED));
+			currentSolution.setState(new Rating(State.ESTABLISHED));
 		}
 
 	}
