@@ -1,29 +1,28 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.core.inference.condition;
 
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerNum;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.NumValue;
 
 /**
@@ -49,10 +48,8 @@ public abstract class CondNum extends CondQuestion {
 	 * Creates a new numerical condition having the specified value constraining
 	 * to the specified question.
 	 * 
-	 * @param question
-	 *            the specified question
-	 * @param value
-	 *            the specified value
+	 * @param question the specified question
+	 * @param value the specified value
 	 */
 	protected CondNum(QuestionNum question, Double value) {
 		super(question);
@@ -72,8 +69,7 @@ public abstract class CondNum extends CondQuestion {
 	/**
 	 * Sets the numerical value that constrains this condition
 	 * 
-	 * @param answerValue
-	 *            the numerical value of this condition
+	 * @param answerValue the numerical value of this condition
 	 */
 	public void setAnswerValue(Double answerValue) {
 		this.conditionValue = answerValue;
@@ -82,8 +78,7 @@ public abstract class CondNum extends CondQuestion {
 	/**
 	 * Sets the question that is constrained by this condition.
 	 * 
-	 * @param question
-	 *            the constrained question
+	 * @param question the constrained question
 	 */
 	private void setQuestion(QuestionNum question) {
 		this.question = question;
@@ -133,7 +128,7 @@ public abstract class CondNum extends CondQuestion {
 			return false;
 		}
 	}
-	
+
 	protected abstract boolean compare(Double caseValue, Double conditionedValue);
 
 	@Override

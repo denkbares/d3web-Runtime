@@ -23,12 +23,9 @@
  */
 package de.d3web.core.knowledge.terminology;
 
-import java.util.Date;
-
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestionDate;
 import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.core.session.values.AnswerDate;
 
 /**
  * A Question which asks for a date.
@@ -53,33 +50,4 @@ public class QuestionDate extends Question {
 		return new CaseQuestionDate(this);
 	}
 
-	/**
-	 * @return AnswerNum (with value = value)
-	 */
-	public AnswerDate getAnswer(Session theCase, String value) {
-		if (value == null) {
-			return null;
-		}
-		else {
-			AnswerDate result = new AnswerDate();
-			result.setValue(value);
-			result.setQuestion(this);
-			return result;
-		}
-	}
-
-	/**
-	 * @return AnswerNum (with value = value)
-	 */
-	public AnswerDate getAnswer(Session theCase, Date value) {
-		if (value == null) {
-			return null;
-		}
-		else {
-			AnswerDate result = new AnswerDate();
-			result.setValue(value);
-			result.setQuestion(this);
-			return result;
-		}
-	}
 }

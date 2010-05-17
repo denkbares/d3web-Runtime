@@ -26,7 +26,6 @@ import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestionNum;
 import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.core.session.values.AnswerNum;
 
 /**
  * Storage for Questions which have a numerical (Double value) answer. <BR>
@@ -49,19 +48,6 @@ public class QuestionNum extends Question {
 
 	public SessionObject createCaseObject(Session session) {
 		return new CaseQuestionNum(this);
-	}
-
-	/**
-	 * @return AnswerNum (with value = value)
-	 */
-	public AnswerNum getAnswer(Session theCase, Double value) {
-		if (value == null) return null;
-		else {
-			AnswerNum result = new AnswerNum();
-			result.setValue(value);
-			result.setQuestion(this);
-			return result;
-		}
 	}
 
 	/**

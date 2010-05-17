@@ -23,6 +23,8 @@ package de.d3web.persistence.tests;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -31,7 +33,6 @@ import de.d3web.core.io.BasicPersistenceHandler;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -44,7 +45,6 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.interviewmanager.DialogController;
 import de.d3web.core.session.interviewmanager.InvalidQASetRequestException;
-import de.d3web.core.session.interviewmanager.OQDialogController;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
@@ -132,9 +132,13 @@ public class TestKfz extends TestCase {
 		QuestionMC Mf7 = (QuestionMC) kb.searchQuestion("Mf7");
 		Choice Mf7a1 = (Choice) Mf7.getAnswer(theCase, "Mf7a1");
 		Choice Mf7a2 = (Choice) Mf7.getAnswer(theCase, "Mf7a2");
-		AnswerMultipleChoice answermc = new AnswerMultipleChoice(new Choice[] {
-				Mf7a1, Mf7a2 });
-		MultipleChoiceValue mcv = new MultipleChoiceValue(answermc);
+		Choice[] choices = new Choice[] {
+				Mf7a1, Mf7a2 };
+		List<ChoiceValue> values = new ArrayList<ChoiceValue>(choices.length);
+		for (Choice choice : choices) {
+			values.add(new ChoiceValue(choice));
+		}
+		MultipleChoiceValue mcv = new MultipleChoiceValue(values);
 		theCase.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf7, mcv,
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));

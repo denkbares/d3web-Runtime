@@ -23,7 +23,6 @@ package de.d3web.core.knowledge.terminology;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestionText;
 import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.core.session.values.AnswerText;
 
 /**
  * A question which asks for a string text.
@@ -37,16 +36,6 @@ public class QuestionText extends Question {
 
 	public QuestionText(String id) {
 		super(id);
-	}
-
-	/**
-	 * @return AnswerText (with value = value)
-	 */
-	public AnswerText getAnswer(Session theCase, String value) {
-		AnswerText result = new AnswerText();
-		result.setText(value);
-		result.setQuestion(this);
-		return result;
 	}
 
 	/**

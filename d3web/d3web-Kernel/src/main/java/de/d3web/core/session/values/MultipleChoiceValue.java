@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.session.values;
 
@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.knowledge.terminology.AnswerMultipleChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Value;
@@ -37,10 +36,11 @@ import de.d3web.core.session.Value;
  * @created 07.04.2010
  */
 public class MultipleChoiceValue implements QuestionValue {
+
 	private List<ChoiceValue> values = new LinkedList<ChoiceValue>();
 	private String id = "";
 	public static String ID_SEPARATOR = "#####";
-	
+
 	public MultipleChoiceValue(List<ChoiceValue> values) {
 		this.values = values;
 		if (this.values != null) {
@@ -57,13 +57,6 @@ public class MultipleChoiceValue implements QuestionValue {
 		return id;
 	}
 
-	public MultipleChoiceValue(AnswerMultipleChoice values) {
-		this.values = new ArrayList<ChoiceValue>(values.getChoices().size());
-		for (Choice choices : values.getChoices()) {
-			this.values.add(new ChoiceValue(choices));
-		}
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -75,8 +68,7 @@ public class MultipleChoiceValue implements QuestionValue {
 	 * Checks, if all choices are included in the other
 	 * {@link MultipleChoiceValue}.
 	 * 
-	 * @param other
-	 *            another {@link MultipleChoiceValue}
+	 * @param other another {@link MultipleChoiceValue}
 	 * @return true, if all choice values are contained in the other value
 	 * @author joba
 	 * @date 08.04.2010
@@ -101,16 +93,13 @@ public class MultipleChoiceValue implements QuestionValue {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) return true;
+		if (getClass() != obj.getClass()) return false;
 		MultipleChoiceValue other = (MultipleChoiceValue) obj;
 		if (values == null) {
-			if (other.values != null)
-				return false;
-		} else if (!values.equals(other.values))
-			return false;
+			if (other.values != null) return false;
+		}
+		else if (!values.equals(other.values)) return false;
 		return true;
 	}
 
@@ -123,8 +112,9 @@ public class MultipleChoiceValue implements QuestionValue {
 	public int compareTo(Value o) {
 		if (o == null) throw new NullPointerException();
 		if (o instanceof MultipleChoiceValue) {
-			return values.size() - ((MultipleChoiceValue)o).values.size();
-		} else {
+			return values.size() - ((MultipleChoiceValue) o).values.size();
+		}
+		else {
 			return -1;
 		}
 	}
@@ -132,10 +122,9 @@ public class MultipleChoiceValue implements QuestionValue {
 	public String getName() {
 		StringBuffer b = new StringBuffer();
 		for (Iterator<ChoiceValue> iterator = values.iterator(); iterator.hasNext();) {
-			ChoiceValue answer = (ChoiceValue) iterator.next();
+			ChoiceValue answer = iterator.next();
 			b.append(((Choice) answer.getValue()).getName());
-			if (iterator.hasNext())
-				b.append(", ");
+			if (iterator.hasNext()) b.append(", ");
 		}
 		return b.toString();
 	}
