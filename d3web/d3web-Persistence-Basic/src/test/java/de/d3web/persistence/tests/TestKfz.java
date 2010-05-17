@@ -318,7 +318,7 @@ public class TestKfz extends TestCase {
 	 * @throws InvalidQASetRequestException
 	 */
 	public void testCase() throws InvalidQASetRequestException {
-		Session theCase = SessionFactory.createSession(kb, OQDialogController.class);
+		Session theCase = SessionFactory.createSession(kb);
 
 		while (((DialogController) theCase.getQASetManager()).hasNewestQASet()) {
 

@@ -80,8 +80,8 @@ public class SessionConverter {
 	 * @return CaseObject
 	 */
 	public Session caseObject2Session(CaseObject cobj, KnowledgeBase kb,
-			Class<? extends DialogController> dialogControllerClass, List<PSMethod> usedPSMethods) {
-		return caseObject2Session(cobj, kb, dialogControllerClass, usedPSMethods, true,
+			List<PSMethod> usedPSMethods) {
+		return caseObject2Session(cobj, kb, usedPSMethods, true,
 				true);
 	}
 
@@ -97,7 +97,7 @@ public class SessionConverter {
 	 * @return CaseObject
 	 */
 	public Session caseObject2Session(CaseObject cobj, KnowledgeBase kb,
-			Class<? extends DialogController> dialogControllerClass, List<PSMethod> usedPSMethods, boolean copyDCMarkup,
+			List<PSMethod> usedPSMethods, boolean copyDCMarkup,
 			boolean copyProperties) {
 		DialogProxy proxy = new DialogProxy();
 		ShadowMemory shmem = new ShadowMemory();
@@ -117,7 +117,7 @@ public class SessionConverter {
 			registeredContainers.add(qcontainer);
 		}
 
-		Session ret = SessionFactory.createAnsweredSession(kb, dialogControllerClass,
+		Session ret = SessionFactory.createAnsweredSession(kb,
 				proxy,
 				registeredContainers, usedPSMethods);
 
@@ -189,12 +189,12 @@ public class SessionConverter {
 		// first, empty the whole collection
 		ret.getAppliedQSets().clearAllApplied();
 
-		// then add the containers from which the qaSetManager has taken
-		// protocol of
-		Iterator<?> citer = theCase.getQASetManager().getProcessedContainers().iterator();
-		while (citer.hasNext()) {
-			ret.getAppliedQSets().setApplied((QContainer) citer.next());
-		}
+//		// then add the containers from which the qaSetManager has taken
+//		// protocol of
+//		Iterator<?> citer = theCase.getQASetManager().getProcessedContainers().iterator();
+//		while (citer.hasNext()) {
+//			ret.getAppliedQSets().setApplied((QContainer) citer.next());
+//		}
 
 		// Diagnoses
 		addDiagnosesToSolutions(ret, theCase, State.ESTABLISHED);

@@ -17,38 +17,48 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package de.d3web.core.session.interviewmanager;
+package de.d3web.core.session;
 
-import de.d3web.core.knowledge.InterviewObject;
+import java.util.List;
+
+import de.d3web.core.knowledge.terminology.Question;
 
 /**
- * Null object to represent an empty form, where no
- * questions are presented in the dialog.
+ * The {@link Protocol} stores all findings entered during a {@link Session}
+ * in a sequential order. 
+ * 
+ * Comment: Later also timestamps and further information are stored in
+ * the protocol, too.
  * 
  * @author joba
  *
  */
-public class EmptyForm implements Form {
-
-	private static final Form instance = new EmptyForm();
-		
-	@Override
-	public InterviewObject getInterviewObject() {
-		return null;
-	}
-
-	@Override
-	public String getTitle() {
-		return "EMPTY";
-	}
-
-	public static Form getInstance() {
-		return instance;
-	}
-
-	@Override
-	public boolean isNotEmpty() {
-		return false;
-	}
-
+public interface Protocol {
+	/**
+	 * Return the list of entered findings ({@link Value} instances assigned
+	 * to {@link Question} instances) in a chronological order. 
+	 * @return the entered findings in a chronological order
+	 */
+	public List<ProtocolEntry> getProtocolHistory();
+	
+	/**
+	 * Append a new protocol entry to the {@link Protocol}.
+	 * The entry is defined by the specified {@link Question} instance
+	 * and the specified {@link Value} instance
+	 * @param question the specified {@link Question} instance
+	 * @param value the specified {@link Value} instance
+	 */
+	public void addEntry(Question question, Value value);
+	
+	
 }
+
+
+
+
+
+
+
+
+
+

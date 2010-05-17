@@ -66,6 +66,7 @@ import de.d3web.core.session.DefaultSession;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.interviewmanager.CurrentQContainerFormStrategy;
 import de.d3web.core.session.interviewmanager.DialogController;
 import de.d3web.core.session.interviewmanager.MQDialogController;
 import de.d3web.core.session.values.Unknown;
@@ -145,7 +146,6 @@ public class DialogUtils {
 
 	public static Session createNewAnsweredCase(CaseObject co, KnowledgeBase kb) {
 		Session newCase = SessionConverter.getInstance().caseObject2Session(co, kb,
-				MQDialogController.class,
 				getUsedPSMethods());
 		return newCase;
 	}
@@ -154,7 +154,8 @@ public class DialogUtils {
 	 * Creates a new case.
 	 */
 	public static Session createNewCase(KnowledgeBase kb) {
-		Session newCase = SessionFactory.createSession(kb, MQDialogController.class);
+		Session newCase = SessionFactory.createSession(kb);
+		newCase.getInterviewManager().setFormStrategy(new CurrentQContainerFormStrategy());
 		addUsedPSMethods(newCase);
 		return newCase;
 	}

@@ -133,6 +133,12 @@ public class InterviewAgenda {
 		agenda = new ArrayList<AgendaEntry>();
 		this.knowledgeBase = knowledgeBase;
 		this.agendaSortingStrategy = new DFSTreeAgendaSortingStrategy(this.knowledgeBase);
+		
+		// Put the init questions to the agenda first:
+		List<? extends QASet> initQuestions = this.knowledgeBase.getInitQuestions();
+		for (QASet initQuestion : initQuestions) {
+			append(initQuestion);
+		}
 	}
 	
 	public boolean append(InterviewObject interviewObject) {

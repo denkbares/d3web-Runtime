@@ -44,4 +44,9 @@ public class DefaultForm implements Form {
 	public String toString() {
 		return this.title + ": " + this.interviewObject;
 	}
+
+	@Override
+	public boolean isNotEmpty() {
+		return true;
+	}
 }

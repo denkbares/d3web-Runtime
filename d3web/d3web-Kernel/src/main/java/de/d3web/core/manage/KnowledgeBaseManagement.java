@@ -48,6 +48,7 @@ import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.knowledge.terminology.QuestionZC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
@@ -453,31 +454,6 @@ public class KnowledgeBaseManagement {
 		return null;
 	}
 
-	/**
-	 * Retrieves the Answer object contained in the alternatives list or the
-	 * unknown alternative of the specified question, that either has the
-	 * specified text as answer text or as id (for the unknown question).
-	 * 
-	 * @param question
-	 *            the specified question
-	 * @param answerText
-	 *            the requested answer text or id
-	 * @return null, if no answer found for specified params
-	 */
-	@Deprecated
-	public Answer findAnswer(Question question, String answerText) {
-		Answer result = null;
-		if (question instanceof QuestionChoice) {
-			result = findChoice((QuestionChoice) question, answerText);
-		}
-		if (result == null) {
-			if (question.getUnknownAlternative().getId().equals(answerText)) {
-				result = question.getUnknownAlternative();
-			}
-		}
-		return result;
-	}
-
 	public MultipleChoiceValue findMultipleChoiceValue(QuestionMC quesiton, List<String> valueNames) {
 		List<ChoiceValue> choiceValues = new ArrayList<ChoiceValue>(valueNames.size());
 		for (String name : valueNames) {
@@ -667,6 +643,18 @@ public class KnowledgeBaseManagement {
 	}
 
 	
-
+	@Deprecated
+	public Answer findAnswer(Question question, String answerText) {
+		Answer result = null;
+		if (question instanceof QuestionChoice) {
+			result = findChoice((QuestionChoice) question, answerText);
+		}
+		if (result == null) {
+			if (Unknown.getInstance().getId().equals(answerText)) {
+				result = new AnswerUnknown();
+			}
+		}
+		return result;
+	}
 
 }

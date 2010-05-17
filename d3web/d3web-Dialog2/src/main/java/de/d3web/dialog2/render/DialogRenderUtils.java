@@ -46,6 +46,7 @@ import de.d3web.core.knowledge.terminology.info.MMInfoSubject;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.session.values.Unknown;
 import de.d3web.dialog2.basics.layout.MMInfo;
 import de.d3web.dialog2.basics.settings.ResourceRepository;
 import de.d3web.dialog2.util.DialogUtils;
@@ -160,7 +161,7 @@ public class DialogRenderUtils {
 	}
 
 	public static String getUnknownAnswerString(Question q, Session theCase) {
-		String answer = (String) q.getUnknownAlternative().getValue(theCase);
+		String answer = Unknown.getInstance().toString();
 		if (answer.equals(AnswerUnknown.UNKNOWN_VALUE)) {
 			answer = DialogUtils.getMessageFor("dialog.unknown");
 		}

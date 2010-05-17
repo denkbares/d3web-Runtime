@@ -290,7 +290,7 @@ public class InterviewBot {
 	}
 
 	private Session createCase(SequentialTestCase sqCase) {
-		Session theCase = SessionFactory.createSession(knowledge, MQDialogController.class);
+		Session theCase = SessionFactory.createSession(knowledge);
 		for (RatedTestCase c : sqCase.getCases()) {
 			for (Finding finding : c.getFindings()) {
 				setCaseValue(theCase, finding.getQuestion(), finding.getValue());
@@ -300,7 +300,7 @@ public class InterviewBot {
 	}
 
 	private Session createCase(List<Finding> findings) {
-		Session theCase = SessionFactory.createSession(knowledge, MQDialogController.class);
+		Session theCase = SessionFactory.createSession(knowledge);
 		for (Finding finding : findings) {
 			setCaseValue(theCase, finding.getQuestion(), finding.getValue());
 		}

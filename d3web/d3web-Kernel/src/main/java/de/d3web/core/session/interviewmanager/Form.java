@@ -25,4 +25,5 @@ import de.d3web.core.knowledge.InterviewObject;
 public interface Form {
 	String getTitle();
 	InterviewObject getInterviewObject();
+	boolean isNotEmpty();
 }

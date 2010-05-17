@@ -38,6 +38,7 @@ import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.FactFactory;
+import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.inference.PSMethodXCL;
@@ -135,6 +136,7 @@ public class SequentialTestCase {
 	public void deriveSolutions(KnowledgeBase kb, Class psMethodContext) {
 		RatingStrategy ratingStrategy = new StateRatingStrategy();
 		Session session = SessionFactory.createSession(kb);
+		session.getInterviewManager().setFormStrategy(new NextUnansweredQuestionFormStrategy());
 
 		for (RatedTestCase rtc : ratedTestCases) {
 			// Answer and Question setting in Case

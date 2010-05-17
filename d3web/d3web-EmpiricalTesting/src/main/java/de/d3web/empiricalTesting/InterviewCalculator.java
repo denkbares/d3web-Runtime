@@ -23,23 +23,21 @@ package de.d3web.empiricalTesting;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.QASet;
-import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.MQDialogController;
+import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 public class InterviewCalculator extends PrecisionRecallCalculator {
 
 	private final Session thecase;
-	private QContainer currentQC;
 
 	public InterviewCalculator(KnowledgeBase kb) {
-		this.thecase = SessionFactory.createSession(kb, MQDialogController.class);
+		this.thecase = SessionFactory.createSession(kb);
+		this.thecase.getInterviewManager().setFormStrategy(new NextUnansweredQuestionFormStrategy());
 	}
 
 	// -------Rated Precision--------
@@ -123,51 +121,50 @@ public class InterviewCalculator extends PrecisionRecallCalculator {
 	 * @return Question which will be asked next.
 	 */
 	private Question getNextQuestion() {
+		return (Question)thecase.getInterviewManager().nextForm().getInterviewObject();
 
-		Question nextQuestion = null;
-
-		// Get DialogController
-		MQDialogController controller = (MQDialogController) thecase.getQASetManager();
-
-		// Get correct QASet
-		QASet currentQASet = getCorrectQASet(controller);
-
-		// if currentQASet is a Question simply return the Question
-		if (currentQASet != null && currentQASet instanceof Question) {
-			currentQC = null;
-			nextQuestion = (Question) currentQASet;
-
-			// if currentQASet is a QContainer return the first remaining
-			// Question
-		}
-		else if (currentQASet != null) {
-			List<Question> validQuestions =
-					controller.getAllValidQuestionsOf((QContainer) currentQASet);
-			currentQC = (QContainer) currentQASet;
-			nextQuestion = validQuestions.get(0);
-
-		}
-
-		return nextQuestion;
+		//      // THIS IS NOT NECESSARY ANY MORE DUE TO NEW INTERVIEW IMPLEMENTATION		
+//		// Get DialogController
+//		MQDialogController controller = (MQDialogController) thecase.getQASetManager();
+//		// Get correct QASet
+//		QASet currentQASet = getCorrectQASet(controller);
+//
+//		// if currentQASet is a Question simply return the Question
+//		if (currentQASet != null && currentQASet instanceof Question) {
+//			currentQC = null;
+//			nextQuestion = (Question) currentQASet;
+//
+//			// if currentQASet is a QContainer return the first remaining
+//			// Question
+//		}
+//		else if (currentQASet != null) {
+//			List<Question> validQuestions =
+//					controller.getAllValidQuestionsOf((QContainer) currentQASet);
+//			currentQC = (QContainer) currentQASet;
+//			nextQuestion = validQuestions.get(0);
+//
+//		}
+//
+//		return nextQuestion;
 
 	}
 
-	/**
-	 * Checks if it is necessary to move to the next QASet It is necessary if
-	 * the current QContainer has no valid (to ask) questions left.
-	 * 
-	 * @param controller DialogController
-	 * @return The next correct QASet
-	 */
-	private QASet getCorrectQASet(MQDialogController controller) {
-
-		QASet correctQASet = currentQC;
-
-		if (controller.getAllValidQuestionsOf(currentQC).size() == 0) {
-			correctQASet = controller.moveToNextRemainingQASet();
-		}
-
-		return correctQASet;
-	}
+//	/**
+//	 * Checks if it is necessary to move to the next QASet It is necessary if
+//	 * the current QContainer has no valid (to ask) questions left.
+//	 * 
+//	 * @param controller DialogController
+//	 * @return The next correct QASet
+//	 */
+//	private QASet getCorrectQASet(MQDialogController controller) {
+//
+//		QASet correctQASet = currentQC;
+//
+//		if (controller.getAllValidQuestionsOf(currentQC).size() == 0) {
+//			correctQASet = controller.moveToNextRemainingQASet();
+//		}
+//
+//		return correctQASet;
+//	}
 
 }

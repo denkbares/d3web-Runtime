@@ -117,8 +117,7 @@ public class DDBot2 {
 	}
 
 	private Session createCase(KnowledgeBase knowledge, List<Finding> findings) {
-		Session theCase = SessionFactory.createSession(knowledge,
-				MQDialogController.class);
+		Session theCase = SessionFactory.createSession(knowledge);
 
 		for (Finding finding : findings) {
 			setCaseValue(theCase, finding.getQuestion(), finding.getValue());

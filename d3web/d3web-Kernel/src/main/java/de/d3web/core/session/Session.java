@@ -87,8 +87,10 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	// InfoStore getInfoStore(); // some information will be created/updated
 	// automatically (id, change-date, create-date), increment2
 
-	// --- reserved for later implementation --- (inkrement 2)
-	// Protocol getProtocol();
+	// --- full implementation is reserved for later implementation --- (inkrement 2)
+	Protocol getProtocol();
+
+	// -----------------------from here on old stuff, TODO: remove?
 
 	/**
 	 * Returns the {@link SessionObject} (dynamically created flyweight object)
@@ -107,8 +109,10 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 * Returns the {@link QASetManager} used in this case, that is responsible
 	 * for the dialog management.
 	 * 
+	 * @deprecated replaced by {@link Interview}
 	 * @return the {@link QASetManager} defined for this case, for example a
 	 *         {@link DialogController}
+	 *        
 	 */
 	QASetManager getQASetManager();
 
@@ -116,6 +120,7 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 * Sets a {@link QASetManager}, that will be used to control the interview
 	 * behavior of this case.
 	 * 
+	 * @deprecated replaced by {@link Interview}
 	 * @param cd the {@link QASetManager} of this case
 	 */
 	void setQASetManager(QASetManager cd);

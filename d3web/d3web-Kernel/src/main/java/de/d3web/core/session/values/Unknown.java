@@ -19,7 +19,10 @@
  */
 package de.d3web.core.session.values;
 
+import de.d3web.core.knowledge.terminology.Answer;
+import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.session.QuestionValue;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 
 /**
@@ -28,13 +31,10 @@ import de.d3web.core.session.Value;
  * @author joba (denkbares GmbH)
  * @created 07.04.2010
  */
-public class Unknown implements Value, QuestionValue {
+public class Unknown implements Value, IDObject, QuestionValue {
 
 	public final static String UNKNOWN_ID = "MaU";
 	private static final Unknown instance = new Unknown();
-
-	private Unknown() {
-	}
 
 	public static Unknown getInstance() {
 		return instance;
@@ -85,5 +85,11 @@ public class Unknown implements Value, QuestionValue {
 	public String getId() {
 		return UNKNOWN_ID;
 	}
+
+	@Override
+	public String getName() {
+		return "unknown";
+	}
+
 	
 }

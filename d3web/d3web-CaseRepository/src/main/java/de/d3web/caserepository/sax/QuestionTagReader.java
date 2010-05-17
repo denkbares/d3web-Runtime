@@ -35,10 +35,9 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.AnswerNo;
-import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.AnswerYes;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.NumValue;
@@ -195,15 +194,7 @@ public class QuestionTagReader extends AbstractTagReader {
 	private void endUnknownAnswer() {
 		if (currentQuestion == null)
 			return;
-
-		AnswerUnknown unknown = currentQuestion.getUnknownAlternative();
-		if (unknown != null) {
-			finalQuestionValue = Unknown.getInstance();
-		}
-		else
-			Logger.getLogger(this.getClass().getName()).warning(
-					"QuestionTagReader: not adding AnswerUnknown because Question" + " ("
-							+ currentQuestion.getId() + ") has no unknown answer");
+		finalQuestionValue = Unknown.getInstance();
 	}
 
 }

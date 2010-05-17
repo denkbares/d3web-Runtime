@@ -36,15 +36,18 @@ import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.PropagationContoller;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.DefaultBlackboard;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.interviewmanager.DefaultInterview;
+import de.d3web.core.session.interviewmanager.DefaultQASetManagerFactory;
+import de.d3web.core.session.interviewmanager.FormStrategy;
 import de.d3web.core.session.interviewmanager.Interview;
+import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
 import de.d3web.core.session.interviewmanager.PSMethodInterview;
 import de.d3web.core.session.interviewmanager.QASetManager;
 import de.d3web.core.session.interviewmanager.QASetManagerFactory;
@@ -64,36 +67,32 @@ import de.d3web.plugin.PluginManager;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
- * Central class <BR>
- * The Session is the facade for all activities handled by the dialog and
- * associated problem-solvers. <BR>
- * All actions have to be stated through the Session (especially the setValue
- * operations for knowledge base objects!) <BR>
- * The Session always knows the state of the <BR>
- * <LI>problem-solvers (which are used) <LI>questions (answered, to be
- * answered), <LI>diagnoses (state with respect to the problem-solvers) <br>
- * It's important to set values through this facade and not directly via the
- * knowledge base objects, because Session is responsible for the propagation
- * mechanism of the connected problem-solvers.
+ * The {@link D3WebSession} is the default implementation of {@link Session}.
+ * Here, the {@link Blackboard}, {@link Interview}, and {@link PropagationContoller} 
+ * are managed, that together represent the behavior of a {@link Session}.
  * 
- * @author Christian Betz, joba
+ * @author joba
  * @see SessionObject
  */
 public class DefaultSession implements Session {
-
-	private final DefaultInterview interview;
-
-	private final KnowledgeBase kb;
-	private final DefaultPropagationController propagationController;
+	// TODO knowledge base, interview and propagation controller should be final
+	private KnowledgeBase kb;
+	private DefaultPropagationController propagationController;
+	private Interview interview;
+	
 	private Map<CaseObjectSource, SessionObject> dynamicStore;
 
+	private String     id = null;
+	private Blackboard blackboard;
+	private Protocol   protocol = new DefaultProtocol();
+	
 	private List<PSMethod> usedPSMethods;
-
-	private QASetManager qaSetManager = null;
-	private QASetManagerFactory qamFactory = null;
-
 	private DCMarkup dcMarkup;
 	private Properties properties;
+
+	// remove qaSetManager and qamFactory after Interview Refactoring
+	private QASetManager qaSetManager;
+	private QASetManagerFactory qamFactory = new DefaultQASetManagerFactory();
 
 	private static LinkedList<PSMethod> commonPSMethods = new LinkedList<PSMethod>(
 			Arrays.asList(
@@ -115,18 +114,15 @@ public class DefaultSession implements Session {
 	 * The default problem-solvers for each case are listed in static array
 	 * <code>commonPSMethods</code>. See class comment for further details.
 	 */
-	DefaultSession(KnowledgeBase kb, QASetManagerFactory theQamFactory) {
-		this.kb = kb;
-		this.propagationController = new DefaultPropagationController(this);
-		this.interview = new DefaultInterview(this, this.getKnowledgeBase());
-		init(theQamFactory);
+	DefaultSession(KnowledgeBase knowledgebase) {
+		initSession(knowledgebase);
 		// register some common problem solving methods
 		// first add the methods
 		for (PSMethod method : commonPSMethods) {
 			addUsedPSMethod(method);
 		}
 		// get PluginConfiguration
-		PluginConfig pc = PluginConfig.getPluginConfig(kb);
+		PluginConfig pc = PluginConfig.getPluginConfig(knowledgebase);
 		// add plugged PS with default config, only if none instance of this
 		// plugin was configured in the kb
 		// psMethods with state deactivated are not inserted
@@ -134,7 +130,7 @@ public class DefaultSession implements Session {
 				"d3web-Kernel-ExtensionPoints", PSMethod.EXTENSIONPOINT_ID)) {
 			PSMethod psMethod = (PSMethod) e.getNewInstance();
 			boolean found = false;
-			for (PSConfig psConfig : kb.getPsConfigs()) {
+			for (PSConfig psConfig : knowledgebase.getPsConfigs()) {
 				PSMethod psm = psConfig.getPsMethod();
 				if (psm.getClass().equals(psMethod.getClass())) {
 					found = true;
@@ -154,14 +150,40 @@ public class DefaultSession implements Session {
 			// add the newly created configuration
 			PSConfig psConfig = new PSConfig(PSConfig.PSState.autodetect, psMethod, auto,
 					e.getID(), e.getPluginID(), e.getPriority());
-			kb.addPSConfig(psConfig);
+			knowledgebase.addPSConfig(psConfig);
 		}
 		// adding preconfigured psmethods from the kb to the case
-		for (PSConfig psConfig : kb.getPsConfigs()) {
-			checkStateAndInsertPSM(kb, psConfig);
+		for (PSConfig psConfig : knowledgebase.getPsConfigs()) {
+			checkStateAndInsertPSM(knowledgebase, psConfig);
 		}
 	}
 
+	DefaultSession(KnowledgeBase kb, List<PSMethod> psmethods) {
+		initSession(kb);
+		for (PSMethod method : psmethods) {
+			addUsedPSMethod(method);
+		}
+	}
+
+	DefaultSession(KnowledgeBase knowledgebase, FormStrategy formStrategy) {
+		this(knowledgebase);
+		getInterviewManager().setFormStrategy(formStrategy);
+	}
+	
+	private void initSession(KnowledgeBase kb) {
+		this.kb = kb;
+		this.propagationController = new DefaultPropagationController(this);
+		this.interview = new DefaultInterview(this, this.getKnowledgeBase());
+		this.interview.setFormStrategy(new NextUnansweredQuestionFormStrategy());
+		this.protocol = new DefaultProtocol();
+		this.blackboard = new DefaultBlackboard(this);
+		this.properties = new Properties();
+		this.dcMarkup = new DCMarkup();
+		this.dynamicStore = new HashMap<CaseObjectSource, SessionObject>();
+		// add problem-solving methods used for this case
+		this.usedPSMethods = new LinkedList<PSMethod>();
+	}
+	
 	private void checkStateAndInsertPSM(KnowledgeBase kb, PSConfig psConfig) {
 		if (psConfig.getPsState() == PSConfig.PSState.autodetect) {
 			Autodetect auto = psConfig.getAutodetect();
@@ -181,42 +203,7 @@ public class DefaultSession implements Session {
 		}
 	}
 
-	private void init(QASetManagerFactory theQamFactory) {
-		blackboard = new DefaultBlackboard(this);
 
-		setQASetManagerFactory(theQamFactory);
-
-		properties = new Properties();
-		dcMarkup = new DCMarkup();
-
-		dynamicStore = new HashMap<CaseObjectSource, SessionObject>();
-
-		// add problem-solving methods used for this case
-		usedPSMethods = new LinkedList<PSMethod>();
-		// activate InitQASets
-		for (QASet qaSet : getKnowledgeBase().getInitQuestions()) {
-			// //
-			// // das ist irgendwie doppelt gemoppelt. Nachschauen, ob das
-			// wirklich so gebraucht wird!!
-			// //
-			// addQASet(nextQASet, null, PSMethodInit.class);
-			qaSet.activate(this, null, PSMethodInit.class);
-		}
-	}
-
-	DefaultSession(KnowledgeBase kb, QASetManagerFactory theQamFactory, List<PSMethod> psmethods) {
-		this.kb = kb;
-		this.propagationController = new DefaultPropagationController(this);
-		this.interview = new DefaultInterview(this, this.getKnowledgeBase());
-		init(theQamFactory);
-		// register psms
-		for (PSMethod method : psmethods) {
-			addUsedPSMethod(method);
-		}
-	}
-
-	private String id = null;
-	private Blackboard blackboard;
 
 	/*
 	 * @see de.d3web.kernel.domainModel.IDReference#getId()
@@ -233,6 +220,11 @@ public class DefaultSession implements Session {
 		return interview;
 	}
 
+	@Override
+	public Protocol getProtocol() {
+		return this.protocol ;
+	}
+	
 	private String createNewCaseId() {
 		return UUID.randomUUID().toString();
 	}
@@ -334,10 +326,6 @@ public class DefaultSession implements Session {
 		return usedPSMethods;
 	}
 
-	private void setQASetManagerFactory(QASetManagerFactory factory) {
-		qamFactory = factory;
-	}
-
 	@Override
 	public void setQASetManager(QASetManager newQASetManager) {
 		qaSetManager = newQASetManager;
@@ -402,7 +390,7 @@ public class DefaultSession implements Session {
 	public PropagationContoller getPropagationContoller() {
 		return propagationController;
 	}
-
+	
 	public void notifyListeners(TerminologyObject o) {
 		for (SessionEventListener listener : listeners) {
 			listener.notify(this, o, this);

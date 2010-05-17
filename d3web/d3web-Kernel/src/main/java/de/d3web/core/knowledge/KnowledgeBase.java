@@ -82,7 +82,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 
 	private final Map<String, String> costUnit;
 
-	private List<? extends QASet> initQuestions;
+	private List<? extends QASet> initQuestions = new LinkedList<QASet>();
 
 	private final List<Solution> solutions;
 
