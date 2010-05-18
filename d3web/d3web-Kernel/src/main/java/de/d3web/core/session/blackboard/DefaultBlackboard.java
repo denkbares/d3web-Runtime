@@ -15,6 +15,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 import de.d3web.core.session.DefaultSession;
 import de.d3web.core.session.Session;
@@ -245,7 +246,21 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public Value getValue(TerminologyObject object, PSMethod psmethod) {
-		return valueStorage.getAggregator(object).getMergedFact(psmethod).getValue();
+		Fact mergedFact = valueStorage.getAggregator(object).getMergedFact(psmethod);
+		if (mergedFact == null) {
+			if (object instanceof Solution) {
+				return new Rating(State.UNCLEAR);
+			}
+			else if (object instanceof Question) {
+				return UndefinedValue.getInstance();
+			}
+			else {
+				return null;
+			}
+		}
+		else {
+			return mergedFact.getValue();
+		}
 	}
 
 	@Override

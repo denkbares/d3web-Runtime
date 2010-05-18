@@ -236,7 +236,12 @@ class FactAggregator {
 				psmfacts.add(f);
 			}
 		}
-		return psMethod.mergeFacts(psmfacts.toArray(new Fact[psmfacts.size()]));
+		if (psmfacts.size() > 0) {
+			return psMethod.mergeFacts(psmfacts.toArray(new Fact[psmfacts.size()]));
+		}
+		else {
+			return null;
+		}
 	}
 
 }
