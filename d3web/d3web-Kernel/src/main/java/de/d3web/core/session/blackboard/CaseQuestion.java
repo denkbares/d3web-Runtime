@@ -1,24 +1,25 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.core.session.blackboard;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -26,25 +27,25 @@ import java.util.List;
 import java.util.Set;
 
 import de.d3web.core.inference.Rule;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.SymptomValue;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.Choice;
 import de.d3web.indication.ActionSuppressAnswer;
+
 /**
  * Stores the dynamic, user specific values for an Question object. It
  * corresponds to the static Question object. <br>
  * Values to be stored: <br>
- * <li>Current value corresponding to a given user case.
- * <li>History of values the question was assigned to
- * <li>Set of suppress rules which do suppress a subset of the possible answers
- * (alternatives)
+ * <li>Current value corresponding to a given user case. <li>History of values
+ * the question was assigned to <li>Set of suppress rules which do suppress a
+ * subset of the possible answers (alternatives)
  * 
  * @author Christian Betz, joba, norman
  * @see Question
  */
 public abstract class CaseQuestion extends CaseQASet {
+
 	private List<SymptomValue> valueHistory = null;
 	private Set<Rule> suppressRules = null;
 	private boolean unknownVisible;
@@ -69,12 +70,12 @@ public abstract class CaseQuestion extends CaseQASet {
 	/**
 	 * @return alternatives which are not suppressed by suppress rules
 	 */
-	public List<Answer> getMergedSuppressAlternatives() {
-		//TreeSet suppSet = new TreeSet();
+	public List<Choice> getMergedSuppressAlternatives() {
+		// TreeSet suppSet = new TreeSet();
 		Iterator<Rule> rule = suppressRules.iterator();
-		List<Answer> result = new LinkedList<Answer>();
+		List<Choice> result = new LinkedList<Choice>();
 		while (rule.hasNext()) {
-			Rule r = (Rule) rule.next();
+			Rule r = rule.next();
 			ActionSuppressAnswer tempAction = (ActionSuppressAnswer) r.getAction();
 			if (tempAction != null) {
 				Iterator<Choice> supp = (tempAction).getSuppress().iterator();

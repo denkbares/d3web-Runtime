@@ -50,14 +50,14 @@ public class ExplanationRenderer extends Renderer {
 			Session theCase, Solution diag) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		String score = "";
-		Rating state = theCase.getBlackboard().getState(diag);
+		Rating state = theCase.getBlackboard().getRating(diag);
 		if (state instanceof HeuristicRating) {
 			HeuristicRating hr = (HeuristicRating) state;
 			score = "" + hr.getScore();
 		}
 		writer.writeText(
 				" (= "
-						+ ExplanationRendererUtils.getStateTranslation(theCase.getBlackboard().getState(
+						+ ExplanationRendererUtils.getStateTranslation(theCase.getBlackboard().getRating(
 								diag)) + "; "
 						+ score + " "
 						+ DialogUtils.getMessageFor("explain.diag_scoreunit") + "):",

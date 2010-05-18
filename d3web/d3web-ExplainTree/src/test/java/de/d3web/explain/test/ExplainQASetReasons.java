@@ -150,7 +150,7 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		assertEquals(new Rating(Rating.State.ESTABLISHED),
-				theCase.getBlackboard().getState(P8));
+				theCase.getBlackboard().getRating(P8));
 
 		assertTrue(findQ("Q17", testKb).isValid(theCase));
 
@@ -191,7 +191,7 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		assertEquals(new Rating(Rating.State.SUGGESTED),
-				theCase.getBlackboard().getState(P8));
+				theCase.getBlackboard().getRating(P8));
 
 		assertTrue(findQ("Q17", testKb).isValid(theCase));
 

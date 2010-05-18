@@ -30,7 +30,6 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
@@ -178,9 +177,9 @@ public class Node {
 				}
 				if (ks instanceof Abnormality) {
 					Abnormality abnormality = (Abnormality) ks;
-					List<Answer> alternatives = q.getAlternatives(testCase);
-					for (Answer a : alternatives) {
-						ChoiceValue avalue = new ChoiceValue((Choice) a);
+					List<Choice> alternatives = q.getAlternatives(testCase);
+					for (Choice a : alternatives) {
+						ChoiceValue avalue = new ChoiceValue(a);
 						if (abnormality.getValue(avalue) == AbstractAbnormality.A0) {
 							if (set) {
 								valuesToSet.put(q, avalue);

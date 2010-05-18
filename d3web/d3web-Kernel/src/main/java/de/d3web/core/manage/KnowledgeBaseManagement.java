@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.core.manage;
@@ -32,7 +32,6 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -48,7 +47,6 @@ import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.knowledge.terminology.QuestionZC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
@@ -85,7 +83,7 @@ public class KnowledgeBaseManagement {
 	public void clearKnowledgeBase() {
 		this.knowledgeBase = createKnowledgeBase();
 	}
-	
+
 	/**
 	 * @return a newly creates knowledge base with one root Solution (P000) and
 	 *         one root QContainer (Q000).
@@ -108,9 +106,10 @@ public class KnowledgeBaseManagement {
 
 	public Solution createSolution(String id, String name, Solution parent) {
 		Solution d;
-		if (id==null) {
+		if (id == null) {
 			d = new Solution(findNewIDFor(Solution.class));
-		} else {
+		}
+		else {
 			d = new Solution(id);
 		}
 		d.setName(name);
@@ -122,32 +121,33 @@ public class KnowledgeBaseManagement {
 	public Solution createSolution(String name, Solution parent) {
 		return createSolution(null, name, parent);
 	}
-	
+
 	public Solution createSolution(String id, String name) {
 		return createSolution(id, name, knowledgeBase.getRootSolution());
 	}
-	
 
 	/**
-	 * Creates a new solution and adds the instance as child of
-	 * the root of the solution hierarchy.
+	 * Creates a new solution and adds the instance as child of the root of the
+	 * solution hierarchy.
+	 * 
 	 * @param name The name of the new solution
 	 * @return the newly created solution
 	 */
 	public Solution createSolution(String name) {
 		return createSolution(name, knowledgeBase.getRootSolution());
 	}
-	
+
 	/**
-	 * Creates a new questionnaire with the specified name
-	 * as a child of the root questionnaire hierarchy.
+	 * Creates a new questionnaire with the specified name as a child of the
+	 * root questionnaire hierarchy.
+	 * 
 	 * @param name the specified name of the questionnaire
 	 * @return the newly created {@link QContainer}
 	 */
 	public QContainer createQContainer(String name) {
 		return createQContainer(name, knowledgeBase.getRootQASet());
 	}
-	
+
 	public QContainer createQContainer(String id, String name) {
 		return createQContainer(id, name, knowledgeBase.getRootQASet());
 	}
@@ -155,15 +155,16 @@ public class KnowledgeBaseManagement {
 	public QContainer createQContainer(String name, QASet parent) {
 		return createQContainer(null, name, parent);
 	}
-	
+
 	public QContainer createQContainer(String id, String name, QASet parent) {
 		if (parent instanceof Question) {
 			throw new IllegalArgumentException("Parent is a question, only QContainers allowed");
 		}
 		QContainer q;
-		if (id==null) {
+		if (id == null) {
 			q = new QContainer(findNewIDFor(QContainer.class));
-		} else {
+		}
+		else {
 			q = new QContainer(id);
 		}
 		q.setName(name);
@@ -176,7 +177,7 @@ public class KnowledgeBaseManagement {
 			Choice[] answers) {
 		return createQuestionOC(null, name, parent, answers);
 	}
-	
+
 	public QuestionOC createQuestionOC(String id, String name, QASet parent,
 			Choice[] answers) {
 		if (id == null) id = findNewIDFor(Question.class);
@@ -184,12 +185,12 @@ public class KnowledgeBaseManagement {
 		setChoiceProperties(q, name, parent, answers);
 		return q;
 	}
-	
+
 	public QuestionOC createQuestionOC(String name, QASet parent,
 			String[] answers) {
 		return createQuestionOC(null, name, parent, answers);
 	}
-	
+
 	public QuestionOC createQuestionOC(String id, String name, QASet parent,
 			String[] answers) {
 		QuestionOC q = createQuestionOC(id, name, parent, new Choice[] {});
@@ -200,9 +201,9 @@ public class KnowledgeBaseManagement {
 	public QuestionZC createQuestionZC(String name, QASet parent) {
 		return createQuestionZC(null, name, parent);
 	}
-	
+
 	public QuestionZC createQuestionZC(String id, String name, QASet parent) {
-		if (id==null) id = findNewIDFor(Question.class);
+		if (id == null) id = findNewIDFor(Question.class);
 		QuestionZC q = new QuestionZC(id);
 		setChoiceProperties(q, name, parent, new Choice[] {});
 		return q;
@@ -220,10 +221,10 @@ public class KnowledgeBaseManagement {
 			Choice[] answers) {
 		return createQuestionMC(null, name, parent, answers);
 	}
-	
+
 	public QuestionMC createQuestionMC(String id, String name, QASet parent,
 			Choice[] answers) {
-		if (id==null) id = findNewIDFor(Question.class);
+		if (id == null) id = findNewIDFor(Question.class);
 		QuestionMC q = new QuestionMC(id);
 		setChoiceProperties(q, name, parent, answers);
 		return q;
@@ -233,7 +234,7 @@ public class KnowledgeBaseManagement {
 			String[] answers) {
 		return createQuestionMC(null, name, parent, answers);
 	}
-	
+
 	public QuestionMC createQuestionMC(String id, String name, QASet parent,
 			String[] answers) {
 		QuestionMC q = createQuestionMC(id, name, parent, new Choice[] {});
@@ -244,20 +245,20 @@ public class KnowledgeBaseManagement {
 	public QuestionNum createQuestionNum(String name, QASet parent) {
 		return createQuestionNum(null, name, parent);
 	}
-	
+
 	public QuestionNum createQuestionNum(String id, String name, QASet parent) {
-		if (id==null) id = findNewIDFor(Question.class);
+		if (id == null) id = findNewIDFor(Question.class);
 		QuestionNum q = new QuestionNum(id);
 		q.setName(name);
 		addToParent(q, parent);
 		knowledgeBase.add(q);
 		return q;
 	}
-	
+
 	public QuestionYN createQuestionYN(String name, QASet parent) {
 		return createQuestionYN(null, name, parent);
 	}
-	
+
 	public QuestionYN createQuestionYN(String id, String name, QASet parent) {
 		return createQuestionYN(name, null, null, parent);
 	}
@@ -266,14 +267,15 @@ public class KnowledgeBaseManagement {
 			String noAlternativeText, QASet parent) {
 		return createQuestionYN(null, name, yesAlternativeText, noAlternativeText, parent);
 	}
-	
+
 	public QuestionYN createQuestionYN(String id, String name, String yesAlternativeText,
 			String noAlternativeText, QASet parent) {
-		if (id==null) id = findNewIDFor(Question.class);
+		if (id == null) id = findNewIDFor(Question.class);
 		QuestionYN q = null;
 		if (yesAlternativeText != null && noAlternativeText != null) {
 			q = new QuestionYN(id, yesAlternativeText, noAlternativeText);
-		} else {
+		}
+		else {
 			q = new QuestionYN(id);
 		}
 		q.setName(name);
@@ -287,7 +289,7 @@ public class KnowledgeBaseManagement {
 	}
 
 	public QuestionDate createQuestionDate(String id, String name, QASet parent) {
-		if (id==null) id = findNewIDFor(Question.class);
+		if (id == null) id = findNewIDFor(Question.class);
 		QuestionDate q = new QuestionDate(id);
 		q.setName(name);
 		addToParent(q, parent);
@@ -298,9 +300,9 @@ public class KnowledgeBaseManagement {
 	public QuestionText createQuestionText(String name, QASet parent) {
 		return createQuestionText(null, name, parent);
 	}
-	
+
 	public QuestionText createQuestionText(String id, String name, QASet parent) {
-		if (id==null) id = findNewIDFor(Question.class);
+		if (id == null) id = findNewIDFor(Question.class);
 		QuestionText q = new QuestionText(id);
 		q.setName(name);
 		addToParent(q, parent);
@@ -308,7 +310,7 @@ public class KnowledgeBaseManagement {
 		return q;
 	}
 
-	public Answer addChoiceAnswer(QuestionChoice question, String answerText) {
+	public Choice addChoiceAnswer(QuestionChoice question, String answerText) {
 		String answerID = getNewAnswerAlternativeFor(question);
 		Choice answer = AnswerFactory.createAnswerChoice(answerID,
 				answerText);
@@ -320,14 +322,15 @@ public class KnowledgeBaseManagement {
 		int maxCount = 0;
 		for (Iterator<Choice> iter = question.getAllAlternatives().iterator(); iter
 				.hasNext();) {
-			Choice answer = (Choice) iter.next();
+			Choice answer = iter.next();
 			int position = answer.getId().lastIndexOf("a") + 1;
 			if (position < answer.getId().length()) {
 				String countStr = answer.getId().substring(position);
 				int count = -1;
 				try {
 					count = Integer.parseInt(countStr);
-				}catch (NumberFormatException e) {
+				}
+				catch (NumberFormatException e) {
 					maxCount = question.getAllAlternatives().size();
 					break;
 				}
@@ -369,13 +372,12 @@ public class KnowledgeBaseManagement {
 	 * Returns the Solution object for which either the text or the id is equal
 	 * to the specified name String
 	 * 
-	 * @param name
-	 *            a specified name string
+	 * @param name a specified name string
 	 * @return a Diagnosis object or null, if nothing found
 	 */
 	public Solution findSolution(String name) {
 		NamedObject o = findNamedObject(name, knowledgeBase.getSolutions());
-		if(o instanceof Solution) return (Solution)o;
+		if (o instanceof Solution) return (Solution) o;
 		return null;
 	}
 
@@ -383,13 +385,12 @@ public class KnowledgeBaseManagement {
 	 * Returns the Question object for which either the text or the id is equal
 	 * to the specified name String
 	 * 
-	 * @param name
-	 *            a specified name string
+	 * @param name a specified name string
 	 * @return a Question object or null, if nothing found
 	 */
 	public Question findQuestion(String name) {
 		NamedObject o = findNamedObject(name, knowledgeBase.getQuestions());
-		if(o instanceof Question) return (Question)o;
+		if (o instanceof Question) return (Question) o;
 		return null;
 	}
 
@@ -397,26 +398,24 @@ public class KnowledgeBaseManagement {
 	 * Returns the QContainer object for which either the text or the id is
 	 * equal to the specified name String
 	 * 
-	 * @param name
-	 *            a specified name string
+	 * @param name a specified name string
 	 * @return a QContainer object or null, if nothing found
 	 */
 	public QContainer findQContainer(String name) {
 		NamedObject o = findNamedObject(name, knowledgeBase
 				.getQContainers());
-		if(o instanceof QContainer) return (QContainer)o;
+		if (o instanceof QContainer) return (QContainer) o;
 		return null;
 	}
 
 	private NamedObject findNamedObject(String name,
 			Collection<? extends NamedObject> namedObjects) {
-		
-		
-		//Uses hash for name in KB
+
+		// Uses hash for name in KB
 		IDObject ob = knowledgeBase.searchObjectForName(name);
-		if(ob != null && ob instanceof NamedObject) return (NamedObject) ob;
-		
-		//old iterating search method
+		if (ob != null && ob instanceof NamedObject) return (NamedObject) ob;
+
+		// old iterating search method
 		for (NamedObject o : namedObjects) {
 			if (o != null && name != null
 					&& (name.equals(o.getName()) || name.equals(o.getId()))) {
@@ -432,10 +431,8 @@ public class KnowledgeBaseManagement {
 	 * or as id or has an id that is a concatenation of questionId and the given
 	 * text.
 	 * 
-	 * @param question
-	 *            the specified question
-	 * @param answerText
-	 *            the requested answer text or id
+	 * @param question the specified question
+	 * @param answerText the requested answer text or id
 	 * @return null, if no answer found for specified params
 	 */
 	public Choice findChoice(QuestionChoice question,
@@ -472,7 +469,8 @@ public class KnowledgeBaseManagement {
 		if (valueString.equals(Unknown.UNKNOWN_ID)) {
 			return Unknown.getInstance();
 		}
-		// HOTFIX (20100411) workaround for setting a _single_ Answer to a MC-Question
+		// HOTFIX (20100411) workaround for setting a _single_ Answer to a
+		// MC-Question
 		// needs jobas healing hands...:-)
 		if (question instanceof QuestionMC) {
 			Choice choice = findChoice((QuestionChoice) question, valueString);
@@ -483,7 +481,7 @@ public class KnowledgeBaseManagement {
 		//
 		if (question instanceof QuestionChoice) {
 			Choice choice = findChoice((QuestionChoice) question, valueString);
-			if (choice==null) {
+			if (choice == null) {
 				return null;
 			}
 			else {
@@ -499,8 +497,10 @@ public class KnowledgeBaseManagement {
 		else if (question instanceof QuestionDate) {
 			try {
 				return new DateValue(DateFormat.getInstance().parse(valueString));
-			} catch (ParseException e) {
-				throw new IllegalArgumentException("The committed String is not a correctly formatted date: " + e.getMessage());
+			}
+			catch (ParseException e) {
+				throw new IllegalArgumentException(
+						"The committed String is not a correctly formatted date: " + e.getMessage());
 			}
 		}
 		else {
@@ -513,23 +513,26 @@ public class KnowledgeBaseManagement {
 			int idC = getMaxCountOf(knowledgeBase.getSolutions()) + 1;
 			return "P" + idC;
 
-		} else if (o == QContainer.class) {
+		}
+		else if (o == QContainer.class) {
 			int idC = getMaxCountOf(knowledgeBase.getQContainers()) + 1;
 			return "QC" + idC;
 
-		} else if (o == Question.class) {
+		}
+		else if (o == Question.class) {
 			int idC = getMaxCountOf(knowledgeBase.getQuestions()) + 1;
 			return "Q" + idC;
 
-		} else {
+		}
+		else {
 			internalCounter++;
 			return "O" + internalCounter;
 		}
 	}
-	
+
 	public String createRuleID() {
 		Collection<Rule> rules = new ArrayList<Rule>();
-		for (KnowledgeSlice ks: knowledgeBase.getAllKnowledgeSlices()) {
+		for (KnowledgeSlice ks : knowledgeBase.getAllKnowledgeSlices()) {
 			if (ks instanceof RuleSet) {
 				RuleSet rs = (RuleSet) ks;
 				rules.addAll(rs.getRules());
@@ -539,12 +542,11 @@ public class KnowledgeBaseManagement {
 		return "R" + idC;
 	}
 
-
 	public String findNewIDForAnswerChoice(QuestionChoice qc) {
 		int returnIDnumber = 1;
 		String questionID = qc.getId();
 		List<Choice> answerList = qc.getAllAlternatives();
-		for (Answer a : answerList) {
+		for (Choice a : answerList) {
 			String answerID = a.getId();
 			String beginning = questionID + "a";
 			if (answerID.startsWith(beginning)) {
@@ -564,8 +566,7 @@ public class KnowledgeBaseManagement {
 	 * (IDObject). For security reasons the methods _always_ runs through the
 	 * given list of objects and checks their suffices.
 	 * 
-	 * @param kbObjects
-	 *            IDObject instances
+	 * @param kbObjects IDObject instances
 	 * @return the maximum number used as suffix
 	 */
 	private int getMaxCountOf(Collection<?> kbObjects) {
@@ -575,14 +576,12 @@ public class KnowledgeBaseManagement {
 			if (obj instanceof IDObject) {
 				String id = ((IDObject) obj).getId();
 				int suffix = getSuffix(id);
-				if ((suffix != -1) && (suffix > maxCount))
-					maxCount = suffix;
+				if ((suffix != -1) && (suffix > maxCount)) maxCount = suffix;
 			}
 			if (obj instanceof Rule) {
 				String id = ((Rule) obj).getId();
 				int suffix = getSuffix(id);
-				if ((suffix != -1) && (suffix > maxCount))
-					maxCount = suffix;
+				if ((suffix != -1) && (suffix > maxCount)) maxCount = suffix;
 			}
 		}
 		return maxCount;
@@ -591,11 +590,9 @@ public class KnowledgeBaseManagement {
 	private int getSuffix(String id) {
 		String number = "";
 		for (int i = id.length() - 1; i > -1; i--) {
-			if (isNumber(id.charAt(i)))
-				number = id.charAt(i) + number;
+			if (isNumber(id.charAt(i))) number = id.charAt(i) + number;
 		}
-		if (number.length() > 0)
-			return Integer.parseInt(number);
+		if (number.length() > 0) return Integer.parseInt(number);
 		return -1;
 	}
 
@@ -603,7 +600,8 @@ public class KnowledgeBaseManagement {
 		try {
 			Integer.parseInt(c + "");
 			return true;
-		} catch (NumberFormatException e) {
+		}
+		catch (NumberFormatException e) {
 			return false;
 		}
 	}
@@ -615,9 +613,9 @@ public class KnowledgeBaseManagement {
 	 * @param name
 	 * @param parent
 	 */
-//	private void setBasicProperties(NamedObject theObject, String name) {
-//		theObject.setText(name);
-//	}
+	// private void setBasicProperties(NamedObject theObject, String name) {
+	// theObject.setText(name);
+	// }
 
 	/**
 	 * Adds the specified object to the given parent. If parent==null then add
@@ -629,10 +627,12 @@ public class KnowledgeBaseManagement {
 	private void addToParent(NamedObject theObject, NamedObject parent) {
 		if (parent != null) {
 			parent.addChild(theObject);
-		} else {
+		}
+		else {
 			if (theObject instanceof Solution) {
 				knowledgeBase.getRootSolution().addChild(theObject);
-			} else if (theObject instanceof QASet) {
+			}
+			else if (theObject instanceof QASet) {
 				knowledgeBase.getRootQASet().addChild(theObject);
 			}
 		}
@@ -641,20 +641,4 @@ public class KnowledgeBaseManagement {
 	public KnowledgeBase getKnowledgeBase() {
 		return knowledgeBase;
 	}
-
-	
-	@Deprecated
-	public Answer findAnswer(Question question, String answerText) {
-		Answer result = null;
-		if (question instanceof QuestionChoice) {
-			result = findChoice((QuestionChoice) question, answerText);
-		}
-		if (result == null) {
-			if (Unknown.getInstance().getId().equals(answerText)) {
-				result = new AnswerUnknown();
-			}
-		}
-		return result;
-	}
-
 }

@@ -175,7 +175,7 @@ public class HeuristicSolutionDerivationTest {
 		assertEquals("Question 'Exhaust fumes' has wrong value", black, exhaustFumesValue);
 
 		// TEST 'Clogged air filter' == SUGGESTED
-		Rating cloggedAirFilterState = session.getBlackboard().getState(solution);
+		Rating cloggedAirFilterState = session.getBlackboard().getRating(solution);
 		assertTrue("Solution 'Clogged air filter' has wrong state. Expected 'SUGGESTED'",
 				cloggedAirFilterState.hasState(Rating.State.SUGGESTED));
 
@@ -190,7 +190,7 @@ public class HeuristicSolutionDerivationTest {
 		assertEquals("Question 'Fuel' has wrong value", unleadedGasoline, fuelValue);
 
 		// TEST 'Clogged air filter' == ESTABLISHED
-		cloggedAirFilterState = session.getBlackboard().getState(solution);
+		cloggedAirFilterState = session.getBlackboard().getRating(solution);
 		assertTrue(
 				"Solution 'Clogged air filter' has wrong state. Expected 'ESTABLISHED'",
 				cloggedAirFilterState.hasState(Rating.State.ESTABLISHED));
@@ -214,7 +214,7 @@ public class HeuristicSolutionDerivationTest {
 		assertEquals("Question 'Fuel' has wrong value", diesel, fuelValue);
 
 		// TEST 'Clogged air filter' == SUGGESTED
-		Rating cloggedAirFilterState = session.getBlackboard().getState(
+		Rating cloggedAirFilterState = session.getBlackboard().getRating(
 				cloggedAirFilter);
 		assertTrue("Solution 'Clogged air filter' has wrong state. Expected 'SUGGESTED'",
 				cloggedAirFilterState.hasState(Rating.State.SUGGESTED));
@@ -230,7 +230,7 @@ public class HeuristicSolutionDerivationTest {
 		assertEquals("Question 'Exhaust fumes' has wrong value", blue, exhaustFumesValue);
 
 		// TEST 'Clogged air filter' == UNCLEAR
-		cloggedAirFilterState = session.getBlackboard().getState(cloggedAirFilter);
+		cloggedAirFilterState = session.getBlackboard().getRating(cloggedAirFilter);
 		assertTrue("Solution 'Clogged air filter' has wrong state. Expected 'UNCLEAR'",
 				cloggedAirFilterState.hasState(Rating.State.UNCLEAR));
 	}
@@ -252,7 +252,7 @@ public class HeuristicSolutionDerivationTest {
 		assertEquals("Question 'Exhaust fumes' has wrong value", black, exhaustFumesValue);
 
 		// TEST 'Clogged air filter' == SUGGESTED
-		Rating cloggedAirFilterState = session.getBlackboard().getState(
+		Rating cloggedAirFilterState = session.getBlackboard().getRating(
 				cloggedAirFilter);
 		assertTrue("Solution 'Clogged air filter' has wrong state. Expected 'SUGGESTED'",
 				cloggedAirFilterState.hasState(Rating.State.SUGGESTED));
@@ -268,7 +268,7 @@ public class HeuristicSolutionDerivationTest {
 				UndefinedValue.getInstance(), exhaustFumesValue);
 
 		// TEST 'Clogged air filter' == UNCLEAR
-		cloggedAirFilterState = session.getBlackboard().getState(cloggedAirFilter);
+		cloggedAirFilterState = session.getBlackboard().getRating(cloggedAirFilter);
 		assertTrue("Solution 'Clogged air filter' has wrong state. Expected 'UNCLEAR'",
 				cloggedAirFilterState.hasState(Rating.State.UNCLEAR));
 	}

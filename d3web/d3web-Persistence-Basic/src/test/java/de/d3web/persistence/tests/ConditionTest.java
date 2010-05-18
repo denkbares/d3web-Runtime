@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.persistence.tests;
@@ -45,12 +45,11 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.fragments.conditions.AndConditionHandler;
 import de.d3web.core.io.fragments.conditions.OrConditionHandler;
 import de.d3web.core.io.utilities.Util;
-import de.d3web.core.knowledge.terminology.Answer;
-import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.values.Choice;
 import de.d3web.persistence.tests.utils.XMLTag;
@@ -60,10 +59,10 @@ import de.d3web.plugin.test.InitPluginManager;
  * @author merz
  */
 public class ConditionTest extends TestCase {
+
 	private Condition ac1, ac21, ac22, ac3;
 
 	private CondDState cDState1;
-	private CondNumEqual cEqual1;
 	private CondKnown cKnown1;
 	private CondNum cNumE1, cNumG1, cNumIn1, cNumL1;
 	private CondTextContains cTextContains1;
@@ -71,7 +70,6 @@ public class ConditionTest extends TestCase {
 	private CondUnknown cUnknown1;
 
 	private Solution d1;
-	
 
 	private XMLTag isTag;
 	private XMLTag shouldTag;
@@ -96,17 +94,17 @@ public class ConditionTest extends TestCase {
 		catch (IOException e1) {
 			assertTrue("Error initialising plugin framework", false);
 		}
-		
+
 		d1 = new Solution("d1-id");
-		
+
 		Question qoc1 = new QuestionOC("qoc1-id");
 		QuestionNum qnum1 = new QuestionNum("qnum1-id");
 		QuestionNum qnum2 = new QuestionNum("qnum2-id");
 		QuestionText qt1 = new QuestionText("qt1-id");
 		qt1.setName("qt1-text");
 
-		Vector<Answer> val1 = new Vector<Answer>();
-		Vector<Answer> val2 = new Vector<Answer>();
+		Vector<Choice> val1 = new Vector<Choice>();
+		Vector<Choice> val2 = new Vector<Choice>();
 
 		Choice ach1 = new Choice("ach1-id");
 		ach1.setText("ach1-text");
@@ -118,7 +116,6 @@ public class ConditionTest extends TestCase {
 		val2.add(ach2);
 
 		cDState1 = new CondDState(d1, new Rating(Rating.State.SUGGESTED));
-		cEqual1 = new CondNumEqual(qnum1, new Double(10));
 		cKnown1 = new CondKnown(qnum1);
 
 		cNumL1 = new CondNumEqual(qnum1, new Double(4.5));

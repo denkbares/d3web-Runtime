@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.render;
@@ -34,9 +34,9 @@ import javax.faces.context.ResponseWriter;
 
 import org.apache.log4j.Logger;
 
-import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
@@ -45,7 +45,6 @@ import de.d3web.core.knowledge.terminology.info.MMInfoStorage;
 import de.d3web.core.knowledge.terminology.info.MMInfoSubject;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.dialog2.basics.layout.MMInfo;
 import de.d3web.dialog2.basics.settings.ResourceRepository;
@@ -162,7 +161,7 @@ public class DialogRenderUtils {
 
 	public static String getUnknownAnswerString(Question q, Session theCase) {
 		String answer = Unknown.getInstance().toString();
-		if (answer.equals(AnswerUnknown.UNKNOWN_VALUE)) {
+		if (answer.equals(Unknown.UNKNOWN_VALUE)) {
 			answer = DialogUtils.getMessageFor("dialog.unknown");
 		}
 		return answer;
@@ -322,7 +321,7 @@ public class DialogRenderUtils {
 
 		if (DialogUtils.getDialogSettings().isShowDiagExplanation()) {
 			writer.startElement("a", component);
-			Rating diagState = theCase.getBlackboard().getState(diag);
+			Rating diagState = theCase.getBlackboard().getRating(diag);
 			writer.writeAttribute("id", component.getId() + "_heur_"
 					+ diagState.getName() + "_" + diag.getId(), "id");
 			writer.writeAttribute("class", styleClass, "class");
@@ -591,10 +590,11 @@ public class DialogRenderUtils {
 	public static void sortDiagnosisList(List<Solution> diagList,
 			final Session theCase) {
 		Comparator<Solution> diagCompAsc = new Comparator<Solution>() {
+
 			// TODO: check order, reverse?
 			public int compare(Solution a, Solution b) {
-				return theCase.getBlackboard().getState(a).compareTo(
-						theCase.getBlackboard().getState(b));
+				return theCase.getBlackboard().getRating(a).compareTo(
+						theCase.getBlackboard().getRating(b));
 			}
 		};
 		Collections.sort(diagList, diagCompAsc);

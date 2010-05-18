@@ -56,16 +56,17 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public void addValueFact(Fact fact) {
-		// First: add the arriving fact to the protocol, 
-		//        if it was entered by the user
-		if (fact.getPSMethod().equals(PSMethodUserSelected.getInstance())) {
+		// First: add the arriving fact to the protocol,
+		// if it was entered by the user
+		PSMethod psMethod = fact.getPSMethod();
+		if (psMethod != null && psMethod.equals(PSMethodUserSelected.getInstance())) {
 			getSession().getProtocol().addEntry(fact);
 		}
-		
+
 		Value oldValue;
 		TerminologyObject terminologyObject = fact.getTerminologyObject();
 		if (terminologyObject instanceof Solution) {
-			oldValue = getState((Solution) terminologyObject);
+			oldValue = getRating((Solution) terminologyObject);
 		}
 		else if (terminologyObject instanceof Question) {
 			oldValue = getValue((Question) terminologyObject);
@@ -211,7 +212,7 @@ public class DefaultBlackboard implements Blackboard {
 	}
 
 	@Override
-	public Rating getState(Solution solution) {
+	public Rating getRating(Solution solution) {
 		Fact valueFact = getValueFact(solution);
 		if (valueFact != null) {
 			return (Rating) valueFact.getValue();
@@ -274,7 +275,7 @@ public class DefaultBlackboard implements Blackboard {
 	public List<Solution> getSolutions(Rating.State state) {
 		List<Solution> result = new LinkedList<Solution>();
 		for (Solution diag : getSession().getKnowledgeBase().getSolutions()) {
-			if (getState(diag).getState().equals(state)) {
+			if (getRating(diag).getState().equals(state)) {
 				result.add(diag);
 			}
 		}

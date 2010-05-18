@@ -64,26 +64,26 @@ public class SolutionStateBlackboardTest {
 	@Test
 	public void testHeuristicScoring() {
 		// initially the state of a solution has to be UNCLEAR
-		assertTrue(blackboard.getState(happy).hasState(State.UNCLEAR));
+		assertTrue(blackboard.getRating(happy).hasState(State.UNCLEAR));
 	
 		// put P4 => P4 = suggested
 		Fact p4Fact = new DefaultFact(happy, new HeuristicRating(Score.P4), rule1, heuristicSource);
 		blackboard.addValueFact(p4Fact);
-		assertTrue(blackboard.getState(happy).hasState(State.SUGGESTED));
+		assertTrue(blackboard.getRating(happy).hasState(State.SUGGESTED));
 		
 		// put another P5 => P4+P5 = established
 		Fact p5Fact = new DefaultFact(happy, new HeuristicRating(Score.P5), rule2, heuristicSource);
 		blackboard.addValueFact(p5Fact);
-		assertTrue(blackboard.getState(happy).hasState(State.ESTABLISHED));
+		assertTrue(blackboard.getRating(happy).hasState(State.ESTABLISHED));
 
 		// retract rule1 (P4) => P4 = suggested
 		blackboard.removeValueFact(p4Fact);
-		assertTrue(blackboard.getState(happy).hasState(State.SUGGESTED));
+		assertTrue(blackboard.getRating(happy).hasState(State.SUGGESTED));
 		
 		// categorically exclude by rule3 => P4+N7 = excluded
 		Fact n7Fact = new DefaultFact(happy, new HeuristicRating(Score.N7), rule3, heuristicSource);
 		blackboard.addValueFact(n7Fact);
-		assertTrue(blackboard.getState(happy).hasState(State.EXCLUDED));
+		assertTrue(blackboard.getRating(happy).hasState(State.EXCLUDED));
 		
 	}
 

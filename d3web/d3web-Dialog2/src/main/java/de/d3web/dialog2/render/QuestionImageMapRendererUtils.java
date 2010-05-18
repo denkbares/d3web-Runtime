@@ -38,8 +38,8 @@ import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.ValueFactory;
-import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.Choice;
+import de.d3web.core.session.values.Unknown;
 import de.d3web.dialog2.basics.layout.QContainerLayout;
 import de.d3web.dialog2.basics.layout.QuestionPageLayout;
 import de.d3web.dialog2.imagemap.Image;
@@ -82,7 +82,7 @@ public class QuestionImageMapRendererUtils {
 
 	private static String getAnswerText(Question q, Session theCase, Value answer) {
 		String answerText = answer.toString();
-		if (answerText.equals(AnswerUnknown.UNKNOWN_VALUE)) {
+		if (answerText.equals(Unknown.UNKNOWN_VALUE)) {
 			return DialogUtils.getMessageFor("dialog.unknown");
 		}
 		else if (q != null && q instanceof QuestionDate) {
@@ -250,7 +250,7 @@ public class QuestionImageMapRendererUtils {
 				String answerID = ValueFactory.getID_or_Value(answer);
 				boolean useNext = false;
 				if (answer != null) {
-					if (answerID.equals(AnswerUnknown.UNKNOWN_ID)) {
+					if (answerID.equals(Unknown.UNKNOWN_ID)) {
 						useNext = true;
 					}
 				}
@@ -275,7 +275,7 @@ public class QuestionImageMapRendererUtils {
 					}
 				}
 				if (nextAnswerID.equals("")) {
-					nextAnswerID = AnswerUnknown.UNKNOWN_ID;
+					nextAnswerID = Unknown.UNKNOWN_ID;
 				}
 
 				if (imageSrc != null) {

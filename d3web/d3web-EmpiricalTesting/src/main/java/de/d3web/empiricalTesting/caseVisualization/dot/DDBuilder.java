@@ -33,7 +33,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
@@ -140,9 +139,9 @@ public class DDBuilder implements CaseVisualizer {
 					getCases().get(0).getFindings().get(0).getQuestion();
 			// Die Antwortalternativen
 			List<Choice> firstAnswers = firstQuestion.getAllAlternatives();
-			for (Answer answerOfFirstQuestion : firstAnswers) {
+			for (Choice answerOfFirstQuestion : firstAnswers) {
 				TestSuite partitioned =
-						TS.getPartiallyAnsweredSuite((Choice) answerOfFirstQuestion);
+						TS.getPartiallyAnsweredSuite(answerOfFirstQuestion);
 				if (partitioned.getRepository().size() > 0) {
 					generateDDNet(partitioned.getRepository());
 					String printFilePath =

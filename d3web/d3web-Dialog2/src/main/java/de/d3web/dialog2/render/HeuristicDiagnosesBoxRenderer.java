@@ -51,7 +51,7 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 
 		for (Iterator<Solution> iter = diagList.iterator(); iter.hasNext();) {
 			Solution diag = iter.next();
-			Rating state = theCase.getBlackboard().getState(diag);
+			Rating state = theCase.getBlackboard().getRating(diag);
 			Integer score = 0;
 			if (state instanceof HeuristicRating) {
 				HeuristicRating hr = (HeuristicRating) state;

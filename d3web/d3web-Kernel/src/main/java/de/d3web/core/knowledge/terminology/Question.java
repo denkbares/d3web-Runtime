@@ -31,7 +31,6 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQuestion;
-import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.indication.inference.PSMethodNextQASet;
@@ -48,7 +47,6 @@ import de.d3web.indication.inference.PSMethodNextQASet;
  */
 public abstract class Question extends QASet implements CaseObjectSource {
 
-
 	/**
 	 * Creates a new {@link Question} instance with the specified unique
 	 * identifier.
@@ -60,19 +58,22 @@ public abstract class Question extends QASet implements CaseObjectSource {
 	}
 
 	@Override
-	@Deprecated // should die with the new interview management
+	@Deprecated
+	// should die with the new interview management
 	public void addContraReason(Reason source, Session theCase) {
 		((CaseQuestion) theCase.getCaseObject(this)).addContraReason(source);
 	}
 
 	@Override
-	@Deprecated // should die with the new interview management
+	@Deprecated
+	// should die with the new interview management
 	public void addProReason(Reason source, Session theCase) {
 		((CaseQuestion) theCase.getCaseObject(this)).addProReason(source);
 	}
 
 	@Override
-	@Deprecated // should die with the new interview management
+	@Deprecated
+	// should die with the new interview management
 	public List<Reason> getContraReasons(Session theCase) {
 		return ((CaseQuestion) theCase.getCaseObject(this)).getContraReasons();
 	}
@@ -117,7 +118,8 @@ public abstract class Question extends QASet implements CaseObjectSource {
 	}
 
 	@Override
-	@Deprecated // should die with the new interview management 
+	@Deprecated
+	// should die with the new interview management
 	public boolean isDone(Session theCase) {
 		if (!getContraReasons(theCase).isEmpty()) {
 			// Question has ContraIndication (probably)
@@ -131,7 +133,8 @@ public abstract class Question extends QASet implements CaseObjectSource {
 	}
 
 	@Override
-	@Deprecated // should die with the new interview management
+	@Deprecated
+	// should die with the new interview management
 	public boolean isDone(Session theCase, boolean respectValidFollowQuestions) {
 		if (respectValidFollowQuestions) {
 			if (!isDone(theCase)) {
@@ -155,13 +158,15 @@ public abstract class Question extends QASet implements CaseObjectSource {
 	}
 
 	@Override
-	@Deprecated // should die with the new interview management
+	@Deprecated
+	// should die with the new interview management
 	public void removeContraReason(Reason source, Session theCase) {
 		((CaseQuestion) theCase.getCaseObject(this)).removeContraReason(source);
 	}
 
 	@Override
-	@Deprecated // should die with the new interview management
+	@Deprecated
+	// should die with the new interview management
 	public void removeProReason(Reason source, Session theCase) {
 		((CaseQuestion) theCase.getCaseObject(this)).removeProReason(source);
 	}

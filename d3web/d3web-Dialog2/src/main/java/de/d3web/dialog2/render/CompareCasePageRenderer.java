@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.render;
@@ -35,13 +35,12 @@ import org.ajax4jsf.ajax.html.HtmlAjaxCommandLink;
 import org.apache.log4j.Logger;
 import org.apache.myfaces.component.html.ext.HtmlInputHidden;
 
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCElement;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.AnswerUnknown;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.dialog2.basics.knowledge.CaseManager;
@@ -55,8 +54,6 @@ import de.d3web.kernel.psMethods.compareCase.facade.DetailledResult;
 import de.d3web.kernel.psMethods.compareCase.facade.SimpleResult;
 
 public class CompareCasePageRenderer extends Renderer {
-
-	private final AnswerUnknown UNKNOWN_ANSWER = new AnswerUnknown();
 
 	public static Logger logger = Logger
 			.getLogger(CompareCasePageRenderer.class);
@@ -120,9 +117,9 @@ public class CompareCasePageRenderer extends Renderer {
 		}
 	}
 
-	private Collection<Answer> formatAnswersForOutput(Collection<Answer> answers) {
+	private Collection<Choice> formatAnswersForOutput(Collection<Choice> answers) {
 		if (answers == null) {
-			answers = new LinkedList<Answer>();
+			answers = new LinkedList<Choice>();
 		}
 		return answers;
 	}
@@ -138,16 +135,6 @@ public class CompareCasePageRenderer extends Renderer {
 			double res = k / 10.0;
 			return Double.toString(res);
 		}
-	}
-
-	private boolean isUnknown(Collection<Answer> storedAnswers) {
-		if (storedAnswers == null) {
-			return true;
-		}
-		if (storedAnswers.isEmpty()) {
-			return true;
-		}
-		return storedAnswers.contains(UNKNOWN_ANSWER);
 	}
 
 	private void renderAnswerValue(ResponseWriter writer,
@@ -329,7 +316,7 @@ public class CompareCasePageRenderer extends Renderer {
 							writer.write("-");
 						}
 						else {
-								renderAnswerValue(writer, component, queryAnswers, theCase);
+							renderAnswerValue(writer, component, queryAnswers, theCase);
 						}
 						writer.endElement("td");
 
@@ -342,7 +329,7 @@ public class CompareCasePageRenderer extends Renderer {
 							writer.write("-");
 						}
 						else {
-								renderAnswerValue(writer, component, storedAnswers, theCase);
+							renderAnswerValue(writer, component, storedAnswers, theCase);
 						}
 						writer.endElement("td");
 

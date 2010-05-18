@@ -36,7 +36,6 @@ import javax.faces.context.ResponseWriter;
 import org.ajax4jsf.ajax.html.HtmlAjaxCommandButton;
 import org.apache.log4j.Logger;
 
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
@@ -50,7 +49,6 @@ import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.AnswerNo;
-import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
@@ -896,7 +894,7 @@ public class QuestionsRendererUtils {
 						// bad...
 						List<Object> extendedAnswersIDList = new ArrayList<Object>();
 						extendedAnswersIDList.add(specAns.getId());
-						for (Answer a : alreadySetAnsList) {
+						for (Choice a : alreadySetAnsList) {
 							extendedAnswersIDList.add(a.getId());
 						}
 						for (List<String> badansList : badanswersLists) {
@@ -1006,7 +1004,7 @@ public class QuestionsRendererUtils {
 
 		// Javascript for Date input field
 		writeJsEnableAndDeselectUnknownAnd(writer, q.getId(),
-				AnswerUnknown.UNKNOWN_ID);
+				Unknown.UNKNOWN_ID);
 
 		writer.endElement("input");
 
@@ -1185,7 +1183,7 @@ public class QuestionsRendererUtils {
 
 		// Javascript on textfield
 		writeJsEnableAndDeselectUnknownAnd(writer, q.getId(),
-				AnswerUnknown.UNKNOWN_ID);
+				Unknown.UNKNOWN_ID);
 
 		writer.endElement("input");
 
@@ -1227,7 +1225,7 @@ public class QuestionsRendererUtils {
 
 			// Javascript on textfield
 			writeJsEnableAndDeselectUnknownAnd(writer, q.getId(),
-					AnswerUnknown.UNKNOWN_ID);
+					Unknown.UNKNOWN_ID);
 
 			if (unknownAnswer) {
 				writer.write("");
@@ -1248,7 +1246,7 @@ public class QuestionsRendererUtils {
 
 			// Javascript on textfield
 			writeJsEnableAndDeselectUnknownAnd(writer, q.getId(),
-					AnswerUnknown.UNKNOWN_ID);
+					Unknown.UNKNOWN_ID);
 
 			if (unknownAnswer) {
 				writer.writeAttribute("value", "", "value");
@@ -1273,7 +1271,7 @@ public class QuestionsRendererUtils {
 			UIComponent component, Session theCase, Question q,
 			boolean qHasUnknownAnswer, Boolean fastAnswer) throws IOException {
 		writer.startElement("option", component);
-		writer.writeAttribute("value", AnswerUnknown.UNKNOWN_ID, "value");
+		writer.writeAttribute("value", Unknown.UNKNOWN_ID, "value");
 		if (qHasUnknownAnswer) {
 			writer.writeAttribute("selected", "selected", "selected");
 		}
@@ -1282,7 +1280,7 @@ public class QuestionsRendererUtils {
 		}
 		if (q instanceof QuestionMC) {
 			writeJsDeselectAllOptionsBut(writer, q.getId(),
-					AnswerUnknown.UNKNOWN_ID, fastAnswer, theCase);
+					Unknown.UNKNOWN_ID, fastAnswer, theCase);
 		}
 		else {
 			if (fastAnswer) {
@@ -1330,7 +1328,7 @@ public class QuestionsRendererUtils {
 			writeJsDisableTextField(writer, q.getId(), fastAnswer, session);
 		}
 		else if (q instanceof QuestionMC) {
-			writeJsDeselectAllBut(writer, q.getId(), AnswerUnknown.UNKNOWN_ID,
+			writeJsDeselectAllBut(writer, q.getId(), Unknown.UNKNOWN_ID,
 					fastAnswer, session);
 		}
 		else if (q instanceof QuestionOC) {

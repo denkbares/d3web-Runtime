@@ -46,7 +46,6 @@ import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
-import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
@@ -77,7 +76,7 @@ public class QuestionPageRenderer extends Renderer {
 	}
 
 	private static Value getAnswer(UIComponent component, Session theCase, Question q, String idOrValue) {
-		if (idOrValue.equals(AnswerUnknown.UNKNOWN_ID)) {
+		if (idOrValue.equals(Unknown.UNKNOWN_ID)) {
 			return Unknown.getInstance();
 		}
 		else if (q instanceof QuestionChoice) {
@@ -179,7 +178,7 @@ public class QuestionPageRenderer extends Renderer {
 		}
 		List<Object> answeridList = Utils.createList(answerids);
 		Value value = null;
-		if (answeridList.contains(AnswerUnknown.UNKNOWN_ID)) {
+		if (answeridList.contains(Unknown.UNKNOWN_ID)) {
 			value = Unknown.getInstance();
 		}
 		// if QuestionMC -> check the bad answer-combinations

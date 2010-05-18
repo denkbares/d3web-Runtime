@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.kernel.verbalizer;
@@ -52,32 +52,31 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.values.AnswerNo;
-import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.AnswerYes;
 import de.d3web.kernel.verbalizer.VerbalizationManager.RenderingFormat;
 
 /**
- * This class verbalizes (renders to String representation) a condition.
- * It integrates the old VerbalizationFactory/RuleToHTML classes into the verbalizer framework.
+ * This class verbalizes (renders to String representation) a condition. It
+ * integrates the old VerbalizationFactory/RuleToHTML classes into the
+ * verbalizer framework.
  * 
  * @author lemmerich, astriffler
  * @date june 2008
  */
 public class ConditionVerbalizer implements Verbalizer {
 
-	
 	private Map<String, Object> parameter = new HashMap<String, Object>();
-	
+
 	private RenderingFormat targetFormat = RenderingFormat.PLAIN_TEXT;
-	
+
 	private Locale locale = Locale.ENGLISH;
 
 	// The ResourceBundle used
-	private  ResourceBundle rb;
+	private ResourceBundle rb;
 
 	// just for convenience
-	private final  String space = "&nbsp;";
-	
+	private final String space = "&nbsp;";
+
 	public Map<String, Object> getParameter() {
 		return parameter;
 	}
@@ -92,12 +91,12 @@ public class ConditionVerbalizer implements Verbalizer {
 		}
 		return rb;
 	}
-	
+
 	public void setLocale(Locale l) {
 		locale = l;
 		rb = ResourceBundle.getBundle("properties.ConditionVerbalizer", locale);
 	}
-	
+
 	public Locale getLocale() {
 		return locale;
 	}
@@ -116,7 +115,8 @@ public class ConditionVerbalizer implements Verbalizer {
 	 * RuleVerbalizer can render
 	 */
 	public RenderingFormat[] getSupportedRenderingTargets() {
-		RenderingFormat[] r = { RenderingFormat.HTML, RenderingFormat.PLAIN_TEXT };
+		RenderingFormat[] r = {
+				RenderingFormat.HTML, RenderingFormat.PLAIN_TEXT };
 		return r;
 	}
 
@@ -130,18 +130,18 @@ public class ConditionVerbalizer implements Verbalizer {
 		if (!(o instanceof Condition)) {
 			// this shouldnt happen, cause VerbalizationManager should not
 			// delegate here in this case!
-			Logger.getLogger("Verbalizer").warning("Object " + o + " couldnt be rendered by ConditionVerbalizer!");
+			Logger.getLogger("Verbalizer").warning(
+					"Object " + o + " couldnt be rendered by ConditionVerbalizer!");
 			return null;
 		}
 
 		Condition cond = (Condition) o;
-		
+
 		this.parameter = parameter;
 		this.targetFormat = targetFormat;
-		
+
 		return renderCondition(cond);
 	}
-	
 
 	/**
 	 * reads the parameter and delegates with parameter to createConditionText
@@ -180,14 +180,16 @@ public class ConditionVerbalizer implements Verbalizer {
 					&& parameter.get(Verbalizer.USE_QUOTES) instanceof Boolean) {
 				quote = (Boolean) parameter.get(Verbalizer.USE_QUOTES);
 			}
-			
+
 		}
 		CondVerbalization condVerb = createConditionVerbalization(cond);
 		if (getTargetFormat() == RenderingFormat.HTML) {
 			return renderCondVerbalizationHTML(condVerb, indent, isSingleLine, isNegative);
-		} else if (getTargetFormat() == RenderingFormat.PLAIN_TEXT) {
+		}
+		else if (getTargetFormat() == RenderingFormat.PLAIN_TEXT) {
 			return renderCondVerbalizationPlainText(condVerb, quote);
-		} else {
+		}
+		else {
 			// this shouldnt happen, cause VerbalizationManager should not
 			// delegate here in this case!
 			Logger.getLogger("Verbalizer").warning(
@@ -195,132 +197,148 @@ public class ConditionVerbalizer implements Verbalizer {
 			return null;
 		}
 	}
-	
 
 	private String renderCondVerbalizationHTML(CondVerbalization condVerb, int indent, boolean isSingleLine, boolean isNegative) {
 		StringBuffer s = new StringBuffer();
-		
+
 		if (condVerb instanceof TerminalCondVerbalization) {
 			if (!isNegative) {
 				s.append(getIndents(indent, isSingleLine));
 			}
 			TerminalCondVerbalization tCond = (TerminalCondVerbalization) condVerb;
 			s.append(tCond.getQuestion() + " " + tCond.getOperator() + " " + tCond.getAnswer());
-		} else {
+		}
+		else {
 			NonTerminalCondVerbalization ntCond = (NonTerminalCondVerbalization) condVerb;
 			if (ntCond.getOriginalClass().equals(CondNot.class.getSimpleName())) {
-					s.append(getIndents(indent, isSingleLine));
-					s.append("<b>" + getResourceBundle().getString("rule.CondNot") + "</b> ");
-					for (CondVerbalization cond:ntCond.getCondVerbalizations()) {
-						s.append(renderCondVerbalizationHTML(cond, indent, isSingleLine, false));
-					}
-			} else {
+				s.append(getIndents(indent, isSingleLine));
+				s.append("<b>" + getResourceBundle().getString("rule.CondNot") + "</b> ");
+				for (CondVerbalization cond : ntCond.getCondVerbalizations()) {
+					s.append(renderCondVerbalizationHTML(cond, indent, isSingleLine, false));
+				}
+			}
+			else {
 				if (!isNegative) {
 					s.append(getIndents(indent, isSingleLine));
 				}
-				s.append("<b>" + ntCond.getOperator() +"</b>");
+				s.append("<b>" + ntCond.getOperator() + "</b>");
 				s.append(getBlockStart(isSingleLine));
 				for (int i = 0; i < ntCond.getCondVerbalizations().size(); i++) {
-					s.append(renderCondVerbalizationHTML(ntCond.getCondVerbalizations().get(i), indent + 1, isSingleLine, false));
-					s.append(i == ntCond.getCondVerbalizations().size() - 1 ? "" : getBlockSeperator(isSingleLine));
+					s.append(renderCondVerbalizationHTML(ntCond.getCondVerbalizations().get(i),
+							indent + 1, isSingleLine, false));
+					s.append(i == ntCond.getCondVerbalizations().size() - 1
+							? ""
+							: getBlockSeperator(isSingleLine));
 				}
 				s.append(getBlockEnd(isSingleLine));
 			}
 		}
-			
+
 		return s.toString();
 	}
-	
+
 	private String renderCondVerbalizationPlainText(CondVerbalization condVerb, boolean quote) {
 		StringBuffer s = new StringBuffer();
-		
+
 		if (condVerb instanceof TerminalCondVerbalization) {
 			TerminalCondVerbalization tCond = (TerminalCondVerbalization) condVerb;
 			s.append(VerbalizationManager.quoteIfNecessary(tCond.getQuestion()) + " "
 					+ tCond.getOperator() + " "
 					+ (tCond.getOriginalClass().equals(CondNumIn.class.getSimpleName()) ?
-							tCond.getAnswer() : VerbalizationManager.quoteIfNecessary(tCond.getAnswer())));
-		} else {
+					tCond.getAnswer() : VerbalizationManager.quoteIfNecessary(tCond.getAnswer())));
+		}
+		else {
 			NonTerminalCondVerbalization ntCond = (NonTerminalCondVerbalization) condVerb;
 			if (ntCond.getOriginalClass().equals(CondNot.class.getSimpleName())) {
 				s.append(getResourceBundle().getString("rule.CondNot") + " (");
-				for (CondVerbalization cond:ntCond.getCondVerbalizations()) {
+				for (CondVerbalization cond : ntCond.getCondVerbalizations()) {
 					s.append(renderCondVerbalizationPlainText(cond, quote));
 				}
 				s.append(")");
-			} else {
+			}
+			else {
 				for (int i = 0; i < ntCond.getCondVerbalizations().size() - 1; i++) {
 					CondVerbalization cond = ntCond.getCondVerbalizations().get(i);
 					s.append(cond instanceof TerminalCondVerbalization ?
-							renderCondVerbalizationPlainText(cond, quote) + " " + ntCond.getOperator() + " " :
+							renderCondVerbalizationPlainText(cond, quote) + " "
+							+ ntCond.getOperator() + " " :
 							("(" + renderCondVerbalizationPlainText(cond, quote) + ")")
-						+ " " + ntCond.getOperator() + " ");
+							+ " " + ntCond.getOperator() + " ");
 				}
-				
-				if (ntCond.getCondVerbalizations().size() > 0) //Avoid AIOOBE for empty NTConds
-					s.append(renderCondVerbalizationPlainText(ntCond.getCondVerbalizations()
+
+				if (ntCond.getCondVerbalizations().size() > 0) // Avoid AIOOBE
+																// for empty
+																// NTConds
+				s.append(renderCondVerbalizationPlainText(ntCond.getCondVerbalizations()
 						.get(ntCond.getCondVerbalizations().size() - 1), quote));
 			}
 		}
-			
+
 		return s.toString();
 	}
-	
 
 	public CondVerbalization createConditionVerbalization(Condition absCondition) {
-		
+
 		if (absCondition instanceof NonTerminalCondition) {
 			return createNonTerminalConditionVerbalization((NonTerminalCondition) absCondition);
-		} else {
+		}
+		else {
 			return createTerminalConditionVerbalization((TerminalCondition) absCondition);
 		}
 	}
-	
+
 	private CondVerbalization createTerminalConditionVerbalization(TerminalCondition tCondition) {
-		
-		if(tCondition == null) {
-			//Fail-safe, shouldn't happen!
+
+		if (tCondition == null) {
+			// Fail-safe, shouldn't happen!
 			return new TerminalCondVerbalization("Condition", "=", "null", "");
 		}
-		
+
 		List<? extends NamedObject> terminalObjects = tCondition.getTerminalObjects();
-		if(terminalObjects == null) {
-			//Fail-safe, shouldn't happen!
+		if (terminalObjects == null) {
+			// Fail-safe, shouldn't happen!
 			return new TerminalCondVerbalization("TerminalObject", "=", "null", "");
 		}
 		Object object = terminalObjects.get(0);
 		String operator = getClassVerbalisation(tCondition);
 
 		List<Object> values = new ArrayList<Object>();
-		
+
 		if (tCondition instanceof CondDState) {
 			values.add(((CondDState) tCondition).getStatus());
-		} else if (tCondition instanceof CondQuestion) {
+		}
+		else if (tCondition instanceof CondQuestion) {
 			if (tCondition instanceof CondNumIn) {
 				values.add(trimZeros(((CondNumIn) tCondition).getValue().replaceAll(",", "")));
-			} else if (tCondition instanceof CondEqual) {
+			}
+			else if (tCondition instanceof CondEqual) {
 				values = new ArrayList<Object>();
 				values.add(((CondEqual) tCondition).getValue());
 				if (object instanceof QuestionMC && values.size() > 1) {
 					List<CondVerbalization> tCondVerbs = new ArrayList<CondVerbalization>();
-					for (Object o:values) {
+					for (Object o : values) {
 						List<Object> value = new ArrayList<Object>();
 						value.add(o);
 						tCondVerbs.add(getTerminalCondVerbalization((IDObject) object, operator,
 								value, tCondition.getClass().getSimpleName()));
 					}
-					return new NonTerminalCondVerbalization(tCondVerbs, getClassVerbalisation(new CondAnd(null)),
+					return new NonTerminalCondVerbalization(tCondVerbs,
+							getClassVerbalisation(new CondAnd(null)),
 							tCondition.getClass().getSimpleName());
 				}
-			} else if (tCondition instanceof CondNum) {
+			}
+			else if (tCondition instanceof CondNum) {
 				values.add(trimZeros(((CondNum) tCondition).getConditionValue().toString()));
-			} else if (tCondition instanceof CondTextEqual) {
+			}
+			else if (tCondition instanceof CondTextEqual) {
 				values.add(((CondTextEqual) tCondition).getValue());
-			} else if (tCondition instanceof CondTextContains) {
+			}
+			else if (tCondition instanceof CondTextContains) {
 				values.add(((CondTextContains) tCondition).getValue());
 			}
 		}
-		return getTerminalCondVerbalization((IDObject) object, operator, values, tCondition.getClass().getSimpleName());
+		return getTerminalCondVerbalization((IDObject) object, operator, values,
+				tCondition.getClass().getSimpleName());
 	}
 
 	private CondVerbalization createNonTerminalConditionVerbalization(NonTerminalCondition ntCondition) {
@@ -328,7 +346,7 @@ public class ConditionVerbalizer implements Verbalizer {
 		List<CondVerbalization> condVerbs = new ArrayList<CondVerbalization>();
 		List<Condition> terms = new ArrayList<Condition>(ntCondition.getTerms());
 		Collections.reverse(terms);
-		for (Condition term:terms) {
+		for (Condition term : terms) {
 			condVerbs.add(createConditionVerbalization(term));
 		}
 		return new NonTerminalCondVerbalization(condVerbs, getClassVerbalisation(ntCondition),
@@ -353,59 +371,57 @@ public class ConditionVerbalizer implements Verbalizer {
 
 	private TerminalCondVerbalization getTerminalCondVerbalization(IDObject io, String operator,
 			List<Object> values, String conditionClass) {
-		
+
 		StringBuffer answer = new StringBuffer();
-		
+
 		Object tempValue = null;
-		
+
 		if (values.size() > 0) {
 			tempValue = values.get(0);
 			if (tempValue != null) {
-				if (tempValue instanceof AnswerUnknown) {
-					answer.append(getVerbalisationForAnswerUnknown(io));
-				} else if (tempValue instanceof AnswerYes) {
+				if (tempValue instanceof AnswerYes) {
 					answer.append(getResourceBundle().getString("rule.CondYes"));
-				} else if (tempValue instanceof AnswerNo) {
+				}
+				else if (tempValue instanceof AnswerNo) {
 					answer.append(getResourceBundle().getString("rule.CondNo"));
-					//This verbalizes answers of oc-questions also like yes/no-questions.
-					//which is most likely not what you want.
-//				} else if (tempValue.toString().equalsIgnoreCase("yes")
-//						|| tempValue.toString().equalsIgnoreCase("ja")) {
-//					answer.append(getResourceBundle().getString("rule.CondYes"));
-//				} else if (tempValue.toString().equalsIgnoreCase("no")
-//						|| tempValue.toString().equalsIgnoreCase("nein")) {
-//					answer.append(getResourceBundle().getString("rule.CondNo"));
-				} else {
+					// This verbalizes answers of oc-questions also like
+					// yes/no-questions.
+					// which is most likely not what you want.
+					// } else if (tempValue.toString().equalsIgnoreCase("yes")
+					// || tempValue.toString().equalsIgnoreCase("ja")) {
+					// answer.append(getResourceBundle().getString("rule.CondYes"));
+					// } else if (tempValue.toString().equalsIgnoreCase("no")
+					// || tempValue.toString().equalsIgnoreCase("nein")) {
+					// answer.append(getResourceBundle().getString("rule.CondNo"));
+				}
+				else {
 					answer.append(tempValue.toString());
 				}
 			}
 			for (int i = 1; i < values.size(); i++) {
 				tempValue = values.get(i);
-				if (tempValue instanceof AnswerUnknown) {
-					answer.append(" / " + getVerbalisationForAnswerUnknown(io));
-				} else {
-					answer.append(" / " + tempValue.toString());
-				}
+				answer.append(" / " + tempValue.toString());
 			}
 		}
-		
-		return new TerminalCondVerbalization(io.toString(), operator, answer.toString(), conditionClass);
+
+		return new TerminalCondVerbalization(io.toString(), operator, answer.toString(),
+				conditionClass);
 	}
 
+	private String getClassVerbalisation(Condition absCond) {
 
-	private  String getClassVerbalisation(Condition absCond) {
-		
 		String propertyKeyString = absCond.getClass().getSimpleName();
-		
+
 		if (targetFormat.equals(RenderingFormat.PLAIN_TEXT) &&
 				(absCond instanceof CondNumLess || absCond instanceof CondNumLessEqual)) {
 			propertyKeyString = "PlainText." + propertyKeyString;
 		}
-		
+
 		String s = "";
 		try {
 			s = getResourceBundle().getString("rule." + propertyKeyString);
-		} catch (MissingResourceException e) {
+		}
+		catch (MissingResourceException e) {
 			s = "=";
 		}
 
@@ -422,8 +438,7 @@ public class ConditionVerbalizer implements Verbalizer {
 	 * @return String free space for displaying the tree-structure
 	 */
 	private String getIndents(int indent, boolean isSingleLine) {
-		if (isSingleLine)
-			return "";
+		if (isSingleLine) return "";
 
 		String s = "";
 		for (int i = 0; i < 3 * indent; i++) {
@@ -431,16 +446,15 @@ public class ConditionVerbalizer implements Verbalizer {
 		}
 		return s;
 	}
-	
-	
-	//convenience methods to return "block" starts and ends
+
+	// convenience methods to return "block" starts and ends
 	private String getBlockStart(boolean isSingleLine) {
-		if (isSingleLine)return (" (");
+		if (isSingleLine) return (" (");
 		return ("<br>");
 	}
 
 	private String getBlockEnd(boolean isSingleLine) {
-		if (isSingleLine)return (") ");
+		if (isSingleLine) return (") ");
 		return ("");
 	}
 
@@ -448,9 +462,7 @@ public class ConditionVerbalizer implements Verbalizer {
 		if (isSingleLine) return (", ");
 		return ("<br>");
 	}
-	
 
-	
 	private String trimZeros(String s) {
 		s = s.replaceAll("\\.0", "");
 		return s;

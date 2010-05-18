@@ -45,7 +45,7 @@ public class QuestionOC extends QuestionChoice {
 		return new CaseQuestionOC(this);
 	}
 
-	public Answer getAlternative(int key) {
+	public Choice getAlternative(int key) {
 		return getAlternatives().get(key);
 	}
 

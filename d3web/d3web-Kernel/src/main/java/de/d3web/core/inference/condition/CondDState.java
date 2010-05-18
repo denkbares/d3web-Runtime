@@ -62,7 +62,7 @@ public class CondDState extends TerminalCondition {
 	 * diagnosis.
 	 */
 	public boolean eval(Session session) throws NoAnswerException {
-		return solutionState.equals(session.getBlackboard().getState(solution));
+		return solutionState.equals(session.getBlackboard().getRating(solution));
 	}
 
 	public Solution getDiagnosis() {

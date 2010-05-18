@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.core.knowledge.terminology.info;
@@ -26,10 +26,9 @@ import java.util.Iterator;
 import de.d3web.abstraction.inference.PSMethodQuestionSetter;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
@@ -44,15 +43,14 @@ import de.d3web.core.session.values.UndefinedValue;
 public class Num2ChoiceSchema implements KnowledgeSlice {
 
 	private final String id;
-	
+
 	private Double[] schemaArray;
 	private Question question;
-
 
 	public Num2ChoiceSchema(String id) {
 		this.id = id;
 	}
-	
+
 	public void setSchemaArray(Double[] newArray) {
 		schemaArray = newArray;
 	}
@@ -68,6 +66,7 @@ public class Num2ChoiceSchema implements KnowledgeSlice {
 	public Class<? extends PSMethod> getProblemsolverContext() {
 		return PSMethodQuestionSetter.class;
 	}
+
 	/**
 	 * @return true by default, not used in this context.
 	 * @see de.d3web.core.inference.KnowledgeSlice#isUsed(de.d3web.core.session.Session)
@@ -104,9 +103,9 @@ public class Num2ChoiceSchema implements KnowledgeSlice {
 		Iterator<Choice> iter = answers.iterator();
 		int position = 0;
 		while (iter.hasNext()) {
-			Answer element = iter.next();
+			Choice element = iter.next();
 			if (position == pos) {
-				return new ChoiceValue((Choice) element);
+				return new ChoiceValue(element);
 			}
 			position++;
 		}
@@ -122,7 +121,8 @@ public class Num2ChoiceSchema implements KnowledgeSlice {
 	}
 
 	public void remove() {
-		question.removeKnowledge(getProblemsolverContext(), this, PSMethodQuestionSetter.NUM2CHOICE_SCHEMA);
+		question.removeKnowledge(getProblemsolverContext(), this,
+				PSMethodQuestionSetter.NUM2CHOICE_SCHEMA);
 	}
 
 	@Override

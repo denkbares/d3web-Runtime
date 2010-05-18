@@ -31,7 +31,6 @@ import java.util.Map;
 import javax.activation.UnsupportedDataTypeException;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -42,6 +41,7 @@ import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.interviewmanager.MQDialogController;
+import de.d3web.core.session.values.Choice;
 import de.d3web.empiricalTesting.Finding;
 import de.d3web.empiricalTesting.RatedSolution;
 import de.d3web.empiricalTesting.RatedTestCase;
@@ -101,9 +101,9 @@ public class InterviewBot {
 	// number of combinations for specified questions
 	private Map<Question, Integer> maxAnswerCombinationsForQuestion;
 	// forbidden answer combinations for a specified question
-	private Map<Question, Collection<Answer[]>> forbiddenAnswerCombinations;
+	private Map<Question, Collection<Choice[]>> forbiddenAnswerCombinations;
 	// allowed answer combinations for a specified question
-	private Map<Question, Collection<Answer[]>> allowedAnswerCombinations;
+	private Map<Question, Collection<Choice[]>> allowedAnswerCombinations;
 
 	// the generated cases
 	private List<SequentialTestCase> cases;
@@ -330,8 +330,8 @@ public class InterviewBot {
 		private final Map<Question, List<Value>> forbiddenAnswers = new HashMap<Question, List<Value>>();
 		private int maxAnswerCombinations = 0;
 		private final Map<Question, Integer> maxAnswerCombinationsForQuestion = new HashMap<Question, Integer>();
-		private final Map<Question, Collection<Answer[]>> forbiddenAnswerCombinations = new HashMap<Question, Collection<Answer[]>>();
-		private final Map<Question, Collection<Answer[]>> allowedAnswerCombinations = new HashMap<Question, Collection<Answer[]>>();
+		private final Map<Question, Collection<Choice[]>> forbiddenAnswerCombinations = new HashMap<Question, Collection<Choice[]>>();
+		private final Map<Question, Collection<Choice[]>> allowedAnswerCombinations = new HashMap<Question, Collection<Choice[]>>();
 
 		private KnowledgeBase knowledge;
 
@@ -399,9 +399,9 @@ public class InterviewBot {
 					"There are already forbidden answer combinations defined for question \""
 					+ f.getQuestion().getName() + "\".");
 
-			Collection<Answer[]> answers = forbiddenAnswerCombinations.get(f.getQuestion());
+			Collection<Choice[]> answers = forbiddenAnswerCombinations.get(f.getQuestion());
 			if (answers == null) {
-				answers = new LinkedList<Answer[]>();
+				answers = new LinkedList<Choice[]>();
 			}
 			answers.add(f.getAnswers());
 			forbiddenAnswerCombinations.put(f.getQuestion(), answers);
@@ -413,9 +413,9 @@ public class InterviewBot {
 					"There are already allowed answer combinations defined for question \""
 					+ f.getQuestion().getName() + "\".");
 
-			Collection<Answer[]> answers = allowedAnswerCombinations.get(f.getQuestion());
+			Collection<Choice[]> answers = allowedAnswerCombinations.get(f.getQuestion());
 			if (answers == null) {
-				answers = new LinkedList<Answer[]>();
+				answers = new LinkedList<Choice[]>();
 			}
 			answers.add(f.getAnswers());
 			allowedAnswerCombinations.put(f.getQuestion(), answers);

@@ -60,7 +60,7 @@ public class PSMethodSCMCBR extends PSMethodAdapter {
 				SCMCBRModel model = (SCMCBRModel) knowledgeSlice;
 
 				// Quick fix for ClassCastException:
-				Rating oldState = theCase.getBlackboard().getState(model.getSolution());
+				Rating oldState = theCase.getBlackboard().getRating(model.getSolution());
 
 				// TODO: split getState into getState and refreshState
 				// DiagnosisState oldState = model.getState(theCase);

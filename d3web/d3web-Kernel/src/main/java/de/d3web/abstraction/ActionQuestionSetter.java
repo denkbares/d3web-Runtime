@@ -36,7 +36,6 @@ import de.d3web.abstraction.inference.PSMethodQuestionSetter;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionDate;
@@ -238,18 +237,9 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 			}
 		}
 		else if (obj instanceof NumValue || obj instanceof DateValue) {
-			Answer ans = (Answer) obj;
-			Object val = ans.getValue(theCase);
-			Question q = ans.getQuestion();
-			if (q != null) {
-				questionToValuesHash.put(q, val);
-				// theCase.trace("put to hash: " + q.getId() + "; " + val);
-			}
-			else {
-				questionToValuesHash.put(question, val);
-				// theCase.trace("put to hash: " + question.getId() + "; " +
-				// val);
-			}
+			questionToValuesHash.put(question, obj);
+			// theCase.trace("put to hash: " + question.getId() + "; " +
+			// val);
 		}
 
 		setActionValues(theCase, questionToValuesHash);

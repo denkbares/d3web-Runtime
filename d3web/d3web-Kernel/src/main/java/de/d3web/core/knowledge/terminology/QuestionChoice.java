@@ -62,8 +62,8 @@ public abstract class QuestionChoice extends Question {
 		return alternatives;
 	}
 
-	private Choice findAlternative(List<? extends Answer> alternativesArg, final String id) {
-		return (Choice) Utils.findIf(alternativesArg, new Tester() {
+	private Choice findAlternative(List<? extends Choice> alternativesArg, final String id) {
+		return Utils.findIf(alternativesArg, new Tester() {
 
 			public boolean test(Object testObj) {
 				if ((testObj instanceof Choice)
@@ -84,7 +84,7 @@ public abstract class QuestionChoice extends Question {
 	 * 
 	 * @return Answer (either instanceof AnswerChoice or AnswerUnknown)
 	 **/
-	public Answer getAnswer(Session theCase, String id) {
+	public Choice getAnswer(Session theCase, String id) {
 		if (id == null) return null;
 		if (theCase == null) return findAlternative(alternatives, id);
 		else return findAlternative(getAlternatives(theCase), id);
@@ -107,13 +107,13 @@ public abstract class QuestionChoice extends Question {
 	 * @return a Vector of all alternatives that are not suppressed by any
 	 *         RuleSuppress
 	 **/
-	public List<Answer> getAlternatives(Session theCase) {
+	public List<Choice> getAlternatives(Session theCase) {
 		CaseQuestionChoice caseQ = (CaseQuestionChoice) theCase.getCaseObject(this);
-		List<Answer> suppVec = caseQ.getMergedSuppressAlternatives();
-		List<Answer> result = new LinkedList<Answer>();
+		List<Choice> suppVec = caseQ.getMergedSuppressAlternatives();
+		List<Choice> result = new LinkedList<Choice>();
 		Iterator<Choice> e = alternatives.iterator();
 		while (e.hasNext()) {
-			Answer elem = e.next();
+			Choice elem = e.next();
 			if (!suppVec.contains(elem)) result.add(elem);
 		}
 		return result;
@@ -150,7 +150,7 @@ public abstract class QuestionChoice extends Question {
 
 	public String verbalizeWithoutValue(Session theCase) {
 		String res = "\n " + super.toString();
-		Iterator<Answer> iter = getAlternatives(theCase).iterator();
+		Iterator<Choice> iter = getAlternatives(theCase).iterator();
 		while (iter.hasNext())
 			res += "\n  " + iter.next().toString();
 		return res;

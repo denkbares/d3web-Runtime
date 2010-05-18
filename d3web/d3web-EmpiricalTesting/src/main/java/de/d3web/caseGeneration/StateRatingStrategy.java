@@ -36,7 +36,7 @@ public class StateRatingStrategy implements RatingStrategy {
 
 	@Override
 	public Rating getRatingFor(Solution solution, Session theCase) {
-		return new StateRating(theCase.getBlackboard().getState(solution));
+		return new StateRating(theCase.getBlackboard().getRating(solution));
 	}
 
 }

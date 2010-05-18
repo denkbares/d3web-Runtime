@@ -58,7 +58,7 @@ public class DiagnosesTreeBean {
 	private void checkNodeStylesRecursive(TreeNode node, Session theCase) {
 		Solution actual = theCase.getKnowledgeBase().searchSolution(
 				node.getIdentifier());
-		Rating state = theCase.getBlackboard().getState(actual);
+		Rating state = theCase.getBlackboard().getRating(actual);
 		if (state.hasState(State.ESTABLISHED)) {
 			node.setType(DiagnosesTreeBean.ESTABLISHED_TYPE);
 		}

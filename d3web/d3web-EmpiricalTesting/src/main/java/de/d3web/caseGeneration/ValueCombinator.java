@@ -28,7 +28,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-import de.d3web.core.knowledge.terminology.Answer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.session.Value;
@@ -48,12 +47,12 @@ public class ValueCombinator {
 	private static ValueCombinator instance = new ValueCombinator();
 
 	// forbidden answer combinations for specified questions
-	private Map<Question, Collection<Answer[]>> forbiddenAnswerCombinations =
-			new HashMap<Question, Collection<Answer[]>>();
+	private Map<Question, Collection<Choice[]>> forbiddenAnswerCombinations =
+			new HashMap<Question, Collection<Choice[]>>();
 
 	// allowed answer combinations for specified questions
-	private Map<Question, Collection<Answer[]>> allowedAnswerCombinations =
-			new HashMap<Question, Collection<Answer[]>>();
+	private Map<Question, Collection<Choice[]>> allowedAnswerCombinations =
+			new HashMap<Question, Collection<Choice[]>>();
 
 	// stores the answer combinations for better performance
 	private final Map<Question, Collection<Value>> existingCombinations =
@@ -164,7 +163,7 @@ public class ValueCombinator {
 	 * @param combinations Map<Question, Collection<Answer[]>> forbidden
 	 *        combinations
 	 */
-	public void setForbiddenAnswerCombinations(Map<Question, Collection<Answer[]>> combinations) {
+	public void setForbiddenAnswerCombinations(Map<Question, Collection<Choice[]>> combinations) {
 		for (Question q : combinations.keySet()) {
 			if (allowedAnswerCombinations.containsKey(q)) throw new IllegalArgumentException(
 					"There are already allowed answer combinations defined for question \""
@@ -179,7 +178,7 @@ public class ValueCombinator {
 	 * @param combinations Map<Question, Collection<Answer[]>> forbidden
 	 *        combinations
 	 */
-	public void setAllowedAnswerCombinations(Map<Question, Collection<Answer[]>> combinations) {
+	public void setAllowedAnswerCombinations(Map<Question, Collection<Choice[]>> combinations) {
 		for (Question q : combinations.keySet()) {
 			if (forbiddenAnswerCombinations.containsKey(q)) throw new IllegalArgumentException(
 					"There are already forbidden answer combinations defined for question \""
@@ -200,12 +199,12 @@ public class ValueCombinator {
 	private boolean allowedCombination(QuestionMC question, LinkedHashSet<Choice> currentCombination) {
 
 		if (forbiddenAnswerCombinations.containsKey(question)) {
-			for (Answer[] combination : forbiddenAnswerCombinations.get(question)) {
+			for (Choice[] combination : forbiddenAnswerCombinations.get(question)) {
 				if (equalCombinations(currentCombination, combination)) return false;
 			}
 		}
 		else if (allowedAnswerCombinations.containsKey(question)) {
-			for (Answer[] combination : allowedAnswerCombinations.get(question)) {
+			for (Choice[] combination : allowedAnswerCombinations.get(question)) {
 				if (equalCombinations(currentCombination, combination)) return true;
 			}
 			return false;
@@ -222,7 +221,7 @@ public class ValueCombinator {
 	 * @param constraint Answer[] in most cases a defined constraint
 	 * @return true if combinations are equal, otherwise false.
 	 */
-	private boolean equalCombinations(LinkedHashSet<Choice> combination, Answer[] constraint) {
+	private boolean equalCombinations(LinkedHashSet<Choice> combination, Choice[] constraint) {
 		if (combination.size() == constraint.length) {
 			if (combination.containsAll(Arrays.asList(constraint))) return true;
 		}

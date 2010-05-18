@@ -162,7 +162,7 @@ public interface Blackboard {
 	 * @param solution the solution to take the rating from
 	 * @return the total rating of the solution
 	 */
-	public Rating getState(Solution solution);
+	public Rating getRating(Solution solution);
 
 	/**
 	 * Returns the current answer of the question. The returned answer is the

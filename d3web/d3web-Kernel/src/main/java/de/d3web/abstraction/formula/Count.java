@@ -71,7 +71,7 @@ public class Count implements FormulaNumberElement {
 
 		// check, if AnswerNo oder AnswerUnknown is included
 		for (Choice answerChoice : choices) {
-			if (answerChoice.isAnswerNo() || answerChoice.isUnknown()) return new Double(0);
+			if (answerChoice.isAnswerNo()) return new Double(0);
 		}
 		return new Double(choices.size());
 	}

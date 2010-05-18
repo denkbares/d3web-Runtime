@@ -82,15 +82,6 @@ public abstract class ExceptionQuestion extends Question {
 	}
 
 	/**
-	 * this marker class must not return any answer
-	 * 
-	 * @return null
-	 */
-	public de.d3web.core.knowledge.terminology.Answer getAnswer(Object value) {
-		return null;
-	}
-
-	/**
 	 * @return true
 	 */
 	@Override

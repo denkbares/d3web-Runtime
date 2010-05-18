@@ -141,7 +141,7 @@ public class DDBot2 {
 	private List<RatedSolution> toRatedSolutions(Session theCase) {
 		List<RatedSolution> ratedSolutions = new ArrayList<RatedSolution>();
 		for (Solution diagnosis : theCase.getKnowledgeBase().getSolutions()) {
-			Rating state = theCase.getBlackboard().getState(diagnosis);
+			Rating state = theCase.getBlackboard().getRating(diagnosis);
 			if (state instanceof HeuristicRating) {
 				HeuristicRating hr = (HeuristicRating) state;
 				double score = hr.getScore();

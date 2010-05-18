@@ -88,7 +88,6 @@ import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.AnswerUnknown;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.Unknown;
@@ -412,7 +411,7 @@ public class XMLRenderer {
 		sb.append("<Reference>");
 		sb.append(renderDiagnosisObject(diag));
 		if (showStatus) {// renderDiagnosisStateObject
-			Rating state = theCase.getBlackboard().getState(diag);
+			Rating state = theCase.getBlackboard().getRating(diag);
 			if (state != null) {
 				sb.append("<DiagnosisState state=\"" + state.getName() + "\"/>");
 			}
@@ -602,9 +601,6 @@ public class XMLRenderer {
 						returnList.add(new Double(
 								((QuestionChoice) ac.getQuestion()).getAllAlternatives().indexOf(
 								values[i])));
-					}
-					else if (values[i] instanceof AnswerUnknown) {
-						sb.append(renderAnswerUnknownObject());
 					}
 					else if (values[i] instanceof FormulaNumberElement) {
 						sb.append("<Formula>");
