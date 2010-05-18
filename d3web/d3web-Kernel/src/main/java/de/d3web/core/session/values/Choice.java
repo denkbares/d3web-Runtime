@@ -27,7 +27,6 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
-import de.d3web.core.session.Session;
 
 /**
  * Answer (alternative) class for choice questions Creation date: (13.09.2000
@@ -48,15 +47,6 @@ public class Choice implements IDObject, PropertiesContainer, Comparable<Choice>
 	@Override
 	public String getName() {
 		return text;
-	}
-
-	/**
-	 * Creation date: (15.09.2000 11:03:33)
-	 * 
-	 * @return the value of this answer object depending on the current case
-	 */
-	public Object getValue(Session theCase) {
-		return getName();
 	}
 
 	/**
