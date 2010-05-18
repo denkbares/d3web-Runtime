@@ -100,6 +100,7 @@ public abstract class QASet extends NamedObject implements InterviewObject, Case
 	 * 
 	 * @param rule rule that has activated the question
 	 * @param theCase current case
+	 * @deprecated delete this after interview refactoring
 	 */
 	public void activate(Session theCase, Rule rule, Class<? extends PSMethod> psm) {
 		CaseQASet caseQA =
@@ -186,6 +187,7 @@ public abstract class QASet extends NamedObject implements InterviewObject, Case
 	 * A QASet can be valid only, if it hasn't any contra-reasons or if it is
 	 * user-selected. It is valid, if it has proreasons or, in case of a
 	 * question, if it has a QContainer-parent, which is valid.
+	 * @deprecated delete this method after interview refactoring
 	 */
 	public boolean isValid(Session theCase) {
 		CaseQASet caseQASet = (CaseQASet) theCase.getCaseObject(this);

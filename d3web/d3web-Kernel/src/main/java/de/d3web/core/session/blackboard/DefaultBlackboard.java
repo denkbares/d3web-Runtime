@@ -21,6 +21,7 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
  * The Blackboard manages all dynamic values created within the case and
@@ -55,6 +56,12 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public void addValueFact(Fact fact) {
+		// First: add the arriving fact to the protocol, 
+		//        if it was entered by the user
+		if (fact.getPSMethod().equals(PSMethodUserSelected.getInstance())) {
+			getSession().getProtocol().addEntry(fact);
+		}
+		
 		Value oldValue;
 		TerminologyObject terminologyObject = fact.getTerminologyObject();
 		if (terminologyObject instanceof Solution) {

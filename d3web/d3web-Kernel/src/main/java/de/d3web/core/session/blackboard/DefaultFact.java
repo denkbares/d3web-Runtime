@@ -44,4 +44,51 @@ public class DefaultFact implements Fact {
 	public String toString() {
 		return getTerminologyObject() + " = " + getValue() + " ["+getSource()+" / "+getPSMethod()+"]";
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((psMethod == null) ? 0 : psMethod.hashCode());
+		result = prime * result + ((source == null) ? 0 : source.hashCode());
+		result = prime
+				* result
+				+ ((terminologyObject == null) ? 0 : terminologyObject
+						.hashCode());
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DefaultFact other = (DefaultFact) obj;
+		if (psMethod == null) {
+			if (other.psMethod != null)
+				return false;
+		} else if (!psMethod.equals(other.psMethod))
+			return false;
+		if (source == null) {
+			if (other.source != null)
+				return false;
+		} else if (!source.equals(other.source))
+			return false;
+		if (terminologyObject == null) {
+			if (other.terminologyObject != null)
+				return false;
+		} else if (!terminologyObject.equals(other.terminologyObject))
+			return false;
+		if (value == null) {
+			if (other.value != null)
+				return false;
+		} else if (!value.equals(other.value))
+			return false;
+		return true;
+	}
 }

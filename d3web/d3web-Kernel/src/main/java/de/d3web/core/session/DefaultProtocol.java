@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.blackboard.Fact;
 
 public class DefaultProtocol implements Protocol {
 
@@ -20,8 +20,8 @@ public class DefaultProtocol implements Protocol {
 	}
 
 	@Override
-	public void addEntry(Question question, Value value) {
-		this.entries.add(new DefaultProtocolEntry(question, value));
+	public void addEntry(Fact fact) {
+		this.entries.add(new DefaultProtocolEntry(fact));
 	}
 
 }

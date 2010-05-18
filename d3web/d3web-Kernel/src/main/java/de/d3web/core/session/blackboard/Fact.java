@@ -10,8 +10,8 @@ public interface Fact {
 	 * 
 	 * @return the fact's terminology object
 	 */
-	TerminologyObject getTerminologyObject(); 
-	
+	TerminologyObject getTerminologyObject();
+
 	/**
 	 * Returns the value of the fact. The possible value types depends on the
 	 * type of terminology object the fact is created for. It may be:
@@ -56,4 +56,8 @@ public interface Fact {
 	 * @return the PSMethod created the fact
 	 */
 	PSMethod getPSMethod();
+
+	int hashCode();
+
+	boolean equals(Object o);
 }

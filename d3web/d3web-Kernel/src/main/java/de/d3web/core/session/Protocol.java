@@ -22,6 +22,7 @@ package de.d3web.core.session;
 import java.util.List;
 
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.blackboard.Fact;
 
 /**
  * The {@link Protocol} stores all findings entered during a {@link Session}
@@ -43,12 +44,10 @@ public interface Protocol {
 	
 	/**
 	 * Append a new protocol entry to the {@link Protocol}.
-	 * The entry is defined by the specified {@link Question} instance
-	 * and the specified {@link Value} instance
-	 * @param question the specified {@link Question} instance
-	 * @param value the specified {@link Value} instance
+	 * The entry is defined by the specified {@link Fact}.
+	 * @param fact the specified {@link Fact} instance
 	 */
-	public void addEntry(Question question, Value value);
+	public void addEntry(Fact fact);
 	
 	
 }
