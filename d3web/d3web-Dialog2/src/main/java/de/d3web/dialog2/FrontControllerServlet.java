@@ -132,7 +132,7 @@ public class FrontControllerServlet extends HttpServlet {
 		Map sessionMap = jsfContext.getExternalContext().getSessionMap();
 		sessionMap.put("webDialog", dia);
 
-		dia.setTheCase(theCase);
+		dia.setSession(theCase);
 
 		DialogUtils.getQuestionPageBean().init();
 		KBLoadController kbLoadBean = DialogUtils.getKBLoadBean();

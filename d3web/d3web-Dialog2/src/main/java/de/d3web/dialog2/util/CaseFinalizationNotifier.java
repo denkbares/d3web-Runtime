@@ -48,8 +48,8 @@ public class CaseFinalizationNotifier implements HttpSessionListener {
 	logger.info("Session destroyed...");
 	HttpSession session = e.getSession();
 	WebDialog dia = (WebDialog) session.getAttribute("webDialog");
-	if (dia != null && dia.getTheCase() != null) {
-	    finalizeCase(dia.getTheCase());
+	if (dia != null && dia.getSession() != null) {
+	    finalizeCase(dia.getSession());
 	}
     }
 

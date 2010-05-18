@@ -92,7 +92,7 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 
-		Session theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getSession();
 
 		if (heuristicDiagnosesAvailable(theCase)) {
 			DialogRenderUtils.renderTableWithClass(writer, component, "panelBox");

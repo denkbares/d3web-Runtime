@@ -36,7 +36,7 @@ import de.d3web.dialog2.util.DialogUtils;
 
 public class WebDialog {
 
-	private Session theCase;
+	private Session session;
 
 	private long caseStartTime = System.currentTimeMillis();
 
@@ -70,8 +70,8 @@ public class WebDialog {
 		return caseStartTime;
 	}
 
-	public Session getTheCase() {
-		return theCase;
+	public Session getSession() {
+		return session;
 	}
 
 	public boolean isCaseLoaded() {
@@ -85,10 +85,10 @@ public class WebDialog {
 	public String killSession() {
 		logger.info("Sessions gets invalidated...");
 		resetWebApp();
-		HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
+		HttpSession hhtpsession = (HttpSession) FacesContext.getCurrentInstance()
 				.getExternalContext().getSession(false);
-		if (session != null) {
-			session.invalidate();
+		if (hhtpsession != null) {
+			hhtpsession.invalidate();
 		}
 		return "";
 	}
@@ -109,21 +109,21 @@ public class WebDialog {
 		caseStartTime = System.currentTimeMillis();
 	}
 
-	public void setTheCase(Session theCase) {
-		this.theCase = theCase;
-		DialogUtils.getKBLoadBean().setLoadedKb(theCase.getKnowledgeBase());
-		DialogUtils.getKBLoadBean().setKbID(theCase.getKnowledgeBase().getId());
+	public void setSession(Session session) {
+		this.session = session;
+		DialogUtils.getKBLoadBean().setLoadedKb(session.getKnowledgeBase());
+		DialogUtils.getKBLoadBean().setKbID(session.getKnowledgeBase().getId());
 	}
 
 	public String startNewCase() {
 		// we will start a new case, so we have to execute the casefinalizer...
-		if (theCase != null) {
-			CaseFinalizationNotifier.finalizeCase(theCase);
+		if (session != null) {
+			CaseFinalizationNotifier.finalizeCase(session);
 		}
 
 		setCaseStartTimeToNow();
 		caseProcessingTime = 0;
-		setTheCase(DialogUtils.createNewCase(DialogUtils.getKBLoadBean()
+		setSession(DialogUtils.createNewCase(DialogUtils.getKBLoadBean()
 				.getLoadedKb()));
 		caseLoaded = false;
 		caseSaved = false;

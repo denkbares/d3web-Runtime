@@ -54,7 +54,7 @@ public class XCLBoxRenderer extends Renderer {
 	@Override
 	public void encodeEnd(FacesContext context, UIComponent component)
 			throws IOException {
-		Session theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getSession();
 		if (checkDisplayability(theCase)) {
 			renderXCLBox(context.getResponseWriter(), component, theCase);
 		}

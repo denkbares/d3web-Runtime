@@ -44,7 +44,7 @@ public class MMInfoPageRenderer extends Renderer {
 			throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 
-		Session theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getSession();
 
 		String kbid = theCase.getKnowledgeBase().getId();
 

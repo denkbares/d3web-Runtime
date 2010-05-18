@@ -70,7 +70,7 @@ public class XCLPageRenderer extends Renderer {
 		this.parameterMap = new HashMap<String, Object>();
 		parameterMap.put(Verbalizer.IS_SINGLE_LINE, Boolean.TRUE);
 
-		theCase = DialogUtils.getDialog().getTheCase();
+		theCase = DialogUtils.getDialog().getSession();
 		String diagnosis = ((UIXCLPage) component).getDiag();
 
 		Solution solution =

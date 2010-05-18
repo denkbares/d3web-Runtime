@@ -21,6 +21,7 @@
 package de.d3web.dialog2;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,16 +31,21 @@ import javax.faces.event.ActionEvent;
 import org.apache.log4j.Logger;
 import org.apache.myfaces.component.html.ext.HtmlInputHidden;
 
+import de.d3web.core.knowledge.Indication;
+import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.interviewmanager.DialogController;
 import de.d3web.core.session.interviewmanager.MQDialogController;
 import de.d3web.dialog2.basics.settings.DialogSettings;
 import de.d3web.dialog2.render.QuestionsRendererUtils;
 import de.d3web.dialog2.util.DialogUtils;
+import de.d3web.indication.inference.PSMethodUserSelected;
 
 public class QuestionPageBean {
 
@@ -58,19 +64,52 @@ public class QuestionPageBean {
 	public static Logger logger = Logger.getLogger(QuestionPageBean.class);
 
 	public List<Question> convertQuestionsToRender(QContainer qContainer) {
-		List<List<Object>> tempList = DialogUtils.getMQDialogController(
-				DialogUtils.getDialog().getTheCase()).getAllQuestionsToRender(
-				qContainer, DialogSettings.INCLUDING_INACTIVE_QUESTIONS,
-				DialogSettings.INACTIVE_HIERARCHICAL_CHILDREN_ONLY);
-
 		List<Question> qListToRender = new ArrayList<Question>();
-		for (Iterator<List<Object>> iter = tempList.iterator(); iter.hasNext();) {
-			List<Object> temp = iter.next();
-			Question tempQ = (Question) temp.get(0);
-			qListToRender.add(tempQ);
-
+		for (TerminologyObject terminologyObject : qContainer.getChildren()) {
+			Question question = (Question)terminologyObject;
+			qListToRender.add(question);
+			qListToRender.addAll(followUpQuestionOf(question, DialogSettings.INCLUDING_INACTIVE_QUESTIONS,
+					DialogSettings.INACTIVE_HIERARCHICAL_CHILDREN_ONLY));
+			
 		}
+		
+		
+//		List<List<Object>> tempList = DialogUtils.getMQDialogController(
+//				DialogUtils.getDialog().getSession()).getAllQuestionsToRender(
+//				qContainer, DialogSettings.INCLUDING_INACTIVE_QUESTIONS,
+//				DialogSettings.INACTIVE_HIERARCHICAL_CHILDREN_ONLY);
+//
+//		for (Iterator<List<Object>> iter = tempList.iterator(); iter.hasNext();) {
+//			List<Object> temp = iter.next();
+//			Question tempQ = (Question) temp.get(0);
+//			qListToRender.add(tempQ);
+//
+//		}
 		return qListToRender;
+	}
+
+	private Collection<Question> followUpQuestionOf(Question question,
+			boolean includingInactiveQuestions,
+			boolean inactiveHierarchicalChildrenOnly) {
+		Session session = DialogUtils.getDialog().getSession();
+		List<Question> questions = new ArrayList<Question>();
+		for (TerminologyObject followup : question.getChildren()) {
+			if (followup instanceof Question) {
+				boolean isActive = session.getInterviewManager().isActive(
+						(InterviewObject) followup);
+				if (isActive
+						|| (includingInactiveQuestions || inactiveHierarchicalChildrenOnly)) {
+					questions.add((Question) followup);
+				}
+				// recursively investigate follow-up questions of this follow-up question
+				if (followup.getChildren().length > 0) {
+					questions.addAll(followUpQuestionOf((Question) followup,
+							includingInactiveQuestions,
+							inactiveHierarchicalChildrenOnly));
+				}
+			}
+		}
+		return questions;
 	}
 
 	public QContainer getActualQContainer() {
@@ -81,15 +120,19 @@ public class QuestionPageBean {
 		return firstQToAsk;
 	}
 
-	private Question getFirstQuestionToAskFromList(Session theCase,
+	private Question getFirstQuestionToAskFromList(Session session,
 			List<Question> qList, String dialogMode) {
 		for (int i = 0; i < qList.size(); i++) {
 			Question currentQuestion = qList.get(i);
-			if (currentQuestion.isValid(theCase)) {
-				if (!currentQuestion.isDone(theCase)) {
-					return currentQuestion;
-				}
+			if (session.getInterviewManager().isActive(currentQuestion)) {
+				return currentQuestion;
 			}
+//			OLD CODE: 
+//			if (currentQuestion.isValid(session)) {
+//				if (!currentQuestion.isDone(session)) {
+//					return currentQuestion;
+//				}
+//			}
 		}
 		if (dialogMode.equals("MQ")) {
 			return null;
@@ -129,21 +172,28 @@ public class QuestionPageBean {
 	}
 
 	public QContainer getQContainerToRender() {
-		MQDialogController controller = DialogUtils
-				.getMQDialogController(DialogUtils.getDialog().getTheCase());
-		QContainer lastContainer = (QContainer) controller.getCurrentQASet();
-		QContainer qContainer = (QContainer) controller.moveToNewestQASet();
-
-		if (qContainer == null
-				&& !DialogUtils.getDialogSettings().isAutoMoveToResultpage()) {
-			controller.moveToPreviousQASet();
-			if (lastContainer != null) {
-				qContainer = lastContainer;
-			}
-			else {
-				qContainer = (QContainer) controller.getCurrentQASet();
-			}
+//		MQDialogController controller = DialogUtils
+//				.getMQDialogController(DialogUtils.getDialog().getSession());
+		
+		Session session = DialogUtils.getDialog().getSession();
+		//QContainer lastContainer = (QContainer) controller.getCurrentQASet();
+		InterviewObject nextInterviewObject = session.getInterviewManager().nextForm().getInterviewObject(); // (QContainer) controller.moveToNewestQASet();
+		
+		QContainer qContainer = null;
+		if (nextInterviewObject instanceof QContainer) {
+			qContainer = (QContainer)nextInterviewObject;
 		}
+
+//		if (qContainer == null
+//				&& !DialogUtils.getDialogSettings().isAutoMoveToResultpage()) {
+//			controller.moveToPreviousQASet();
+//			if (lastContainer != null) {
+//				qContainer = lastContainer;
+//			}
+//			else {
+//				qContainer = (QContainer) controller.getCurrentQASet();
+//			}
+//		}
 		return qContainer;
 	}
 
@@ -159,9 +209,9 @@ public class QuestionPageBean {
 		else {
 			// we move to result page because all questions are answered..
 			// but we set the actual qcontainer to the previous qcontainer
-			DialogController cont = DialogUtils
-					.getMQDialogController(DialogUtils.getDialog().getTheCase());
-			cont.moveToPreviousQASet();
+//			DialogController cont = DialogUtils
+//					.getMQDialogController(DialogUtils.getDialog().getSession());
+//			cont.moveToPreviousQASet();
 			DialogUtils.getSaveCaseBean().autoSaveCase();
 			DialogUtils.getPageDisplay().moveToResultPage();
 		}
@@ -204,10 +254,17 @@ public class QuestionPageBean {
 	}
 
 	public void moveToQASet(String qaSetID) {
-		QASet qaSet = DialogUtils.getDialog().getTheCase().getKnowledgeBase()
+		Session session = DialogUtils.getDialog().getSession();
+		QASet qaSet = session.getKnowledgeBase()
 				.searchQASet(qaSetID);
-		DialogUtils.getMQDialogController(DialogUtils.getDialog().getTheCase())
-				.moveToQASet(qaSet);
+		if (qaSet != null) {
+			// TODO: here we would need an instance indication
+			session.getBlackboard().addInterviewFact(
+					FactFactory.createFact(qaSet, new Indication(State.INSTANT_INDICATED), 
+							PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+		}
+		//DialogUtils.getMQDialogController(DialogUtils.getDialog().getSession())
+		//		.moveToQASet(qaSet);
 
 		userIndicatedQASet = getQContainerToRender();
 		setQuestionListToRender((QContainer) userIndicatedQASet);
@@ -219,7 +276,7 @@ public class QuestionPageBean {
 		if (qaSet instanceof Question) {
 			setFirstQToAsk((Question) qaSet);
 		}
-		refreshTreeStyles(DialogUtils.getDialog().getTheCase());
+		refreshTreeStyles(DialogUtils.getDialog().getSession());
 		DialogUtils.getPageDisplay().moveToQuestionPage();
 	}
 
@@ -228,7 +285,7 @@ public class QuestionPageBean {
 		QContainer nextContainer = getQContainerToRender();
 		if (nextContainer != null) {
 			setQuestionListToRender(nextContainer);
-			refreshTreeStyles(DialogUtils.getDialog().getTheCase());
+			refreshTreeStyles(DialogUtils.getDialog().getSession());
 		}
 		// autosave-case
 		DialogUtils.getSaveCaseBean().autoSaveCase();
@@ -278,7 +335,7 @@ public class QuestionPageBean {
 			else if (userIndicatedQASet instanceof QContainer) {
 				List<Question> temp = convertQuestionsToRender((QContainer) userIndicatedQASet);
 				listToSet.add(getFirstQuestionToAskFromList(DialogUtils
-						.getDialog().getTheCase(), temp, "OQ"));
+						.getDialog().getSession(), temp, "OQ"));
 			}
 			userIndicatedQASet = null;
 		}
@@ -286,7 +343,7 @@ public class QuestionPageBean {
 		// if pointer is on the last position of oQList
 		else if (oqListPointer == oqHistoryList.size() - 1) {
 			listToSet.add(getFirstQuestionToAskFromList(DialogUtils.getDialog()
-					.getTheCase(), convertQuestionsToRender(container), "OQ"));
+					.getSession(), convertQuestionsToRender(container), "OQ"));
 		}
 		else {
 			listToSet.add(oqHistoryList.get(oqListPointer));
@@ -325,7 +382,7 @@ public class QuestionPageBean {
 
 			// mark "firstToAsk" question (will be overwritten if necessary)
 			setFirstQToAsk(getFirstQuestionToAskFromList(DialogUtils
-					.getDialog().getTheCase(), questionListToRender, "MQ"));
+					.getDialog().getSession(), questionListToRender, "MQ"));
 		}
 		else {
 			setQuestionListOQToRender(container);
@@ -333,14 +390,14 @@ public class QuestionPageBean {
 	}
 
 	public String clearLastClickandSubmitAction() {
-		Session theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getSession();
 		LastClickedAnswer.getInstance().setLastClickedAnswerID(null,
 				theCase.getId());
 		return submitAction();
 	}
 
 	public String getCaseId() {
-		return DialogUtils.getDialog().getTheCase().getId();
+		return DialogUtils.getDialog().getSession().getId();
 	}
 
 	public String submitAction() {
@@ -354,14 +411,14 @@ public class QuestionPageBean {
 		}
 		setQuestionListToRender(nextContainer);
 		// refresh styles...
-		refreshTreeStyles(DialogUtils.getDialog().getTheCase());
+		refreshTreeStyles(DialogUtils.getDialog().getSession());
 		return "";
 	}
 
 	public String getProgressBarStyle() {
 		StringBuffer result = new StringBuffer();
 
-		Session theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getSession();
 		int answeredQuestionsCount = 0;
 
 		// 0 is used as default
@@ -400,11 +457,9 @@ public class QuestionPageBean {
 		if (qList != null) {
 			// count the number of unanswered questions in this container;
 			for (Question q : qList) {
-				if (q.isValid(theCase)) {
-					validQuestionsCounter++;
-					if (theCase.getBlackboard().getAnsweredQuestions().contains(q)) {
-						answeredQuestionsCount++;
-					}
+				validQuestionsCounter++;
+				if (theCase.getBlackboard().getAnsweredQuestions().contains(q)) {
+					answeredQuestionsCount++;
 				}
 			}
 			fractionOfAnsweredQuestions = (double) answeredQuestionsCount

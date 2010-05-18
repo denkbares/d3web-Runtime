@@ -142,7 +142,7 @@ public class QASetTreeBean {
 	}
 
 	public void init() {
-		Session theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getSession();
 		QASet root = theCase.getKnowledgeBase().getRootQASet();
 		TreeNode treeData = new TreeNodeBase(QASetTreeBean.STANDARD_TYPE, root
 				.getName(), root.getId(), false);

@@ -87,7 +87,7 @@ public class UICompareCaseBox extends UIOutput {
 
 	@SuppressWarnings( { "deprecation", "unchecked" })
 	public boolean isRenderable() {
-		Session theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getSession();
 		ComparisonResultRepository crepos = new ComparisonResultRepository();
 		crepos.setCurrentCase(theCase);
 		crepos.setCompareMode(CompareMode.BOTH_FILL_UNKNOWN);

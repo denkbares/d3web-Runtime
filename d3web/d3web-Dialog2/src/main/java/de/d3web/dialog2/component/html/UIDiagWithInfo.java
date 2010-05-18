@@ -45,7 +45,7 @@ public class UIDiagWithInfo extends HtmlOutputText {
 	public void encodeEnd(FacesContext context) throws IOException {
 		ResponseWriter writer = FacesContext.getCurrentInstance()
 				.getResponseWriter();
-		Session theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getSession();
 
 		Solution diag = theCase.getKnowledgeBase().searchSolution(
 				(String) getValue());

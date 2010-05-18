@@ -99,7 +99,7 @@ public class DiagnosesTreeBean {
 	}
 
 	public boolean getDiagnosesAvailable() {
-		Session theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getSession();
 		List<Solution> established = theCase.getBlackboard()
 				.getSolutions(State.ESTABLISHED);
 		List<Solution> suggested = theCase.getBlackboard()
@@ -122,7 +122,7 @@ public class DiagnosesTreeBean {
 	}
 
 	public void init() {
-		Session theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getSession();
 		initTreeModel(theCase);
 		diagTree = new HtmlTree();
 		diagTree.setModel(diagTreeModel);

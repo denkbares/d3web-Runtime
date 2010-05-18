@@ -70,7 +70,7 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 		// add stuff!!!
 		if (selectedData != null) {
 			for (String qID : selectedData) {
-				Session theCase = DialogUtils.getDialog().getTheCase();
+				Session theCase = DialogUtils.getDialog().getSession();
 				Question q = theCase.getKnowledgeBase().searchQuestion(qID);
 				if (q != null && q instanceof QuestionChoice) {
 					QuestionChoice qCh = (QuestionChoice) q;
@@ -103,7 +103,7 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 
 	public Collection<SelectItem> getSelectData() {
 		if (items == null) {
-			List<Question> qList = DialogUtils.getDialog().getTheCase()
+			List<Question> qList = DialogUtils.getDialog().getSession()
 					.getKnowledgeBase().getQuestions();
 			items = new ArrayList<SelectItem>();
 			for (Question q : qList) {
@@ -124,7 +124,7 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 
 	@Override
 	public boolean isDataAvailable() {
-		Session theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getSession();
 		if (theCase == null) {
 			return false;
 		}

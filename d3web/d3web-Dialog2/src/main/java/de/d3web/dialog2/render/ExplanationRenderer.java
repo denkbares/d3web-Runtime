@@ -72,7 +72,7 @@ public class ExplanationRenderer extends Renderer {
 		String expl = (String) ((UIOutput) component).getValue();
 		String toExplain = ((UIExplanation) component).getDiag();
 
-		Session theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getSession();
 
 		boolean explainReason = false;
 		boolean explainDerivation = false;

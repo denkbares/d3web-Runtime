@@ -345,7 +345,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 
 	@Override
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
-		Session theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getSession();
 		ProcessedQContainersController processedBean = DialogUtils.getProcessedQContainersBean();
 		// MQDialogController mqdc = DialogUtils.getMQDialogController(theCase);
 		// List<QContainer> processedContainers = mqdc.getProcessedContainers();

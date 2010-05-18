@@ -94,7 +94,7 @@ public class SaveCaseController {
 
 	public String dlCase() {
 		WebDialog dia = DialogUtils.getDialog();
-		CaseObjectImpl co = getCaseObject(dia.getTheCase(), caseTitle,
+		CaseObjectImpl co = getCaseObject(dia.getSession(), caseTitle,
 				getUserBean(), dia.getCaseProcessingTime());
 		// also save case on server...
 		saveCase();
@@ -213,7 +213,7 @@ public class SaveCaseController {
 		if (lastSavedCaseID != null) {
 			WebDialog dia = DialogUtils.getDialog();
 			CaseManager.getInstance().removeCase(
-					dia.getTheCase().getKnowledgeBase().getId(),
+					dia.getSession().getKnowledgeBase().getId(),
 					lastSavedCaseID);
 		}
 		return saveCase();
@@ -229,7 +229,7 @@ public class SaveCaseController {
 
 	public String saveCase() {
 		WebDialog dia = DialogUtils.getDialog();
-		saveCaseObject(getCaseObject(dia.getTheCase(), caseTitle,
+		saveCaseObject(getCaseObject(dia.getSession(), caseTitle,
 				getUserBean(), dia.getCaseProcessingTime()), dia);
 
 		// TODO show a msg that the case was saved ?
@@ -239,7 +239,7 @@ public class SaveCaseController {
 	private void saveCaseObject(CaseObject co, WebDialog dia) {
 		// save case to repository
 		CaseManager cman = CaseManager.getInstance();
-		CaseRepositoryDescriptor crd = cman.getCRDforUser(dia.getTheCase()
+		CaseRepositoryDescriptor crd = cman.getCRDforUser(dia.getSession()
 				.getKnowledgeBase().getId(), getUserBean().getEmail(),
 				ResourceRepository.getInstance().getBasicSettingValue(
 				ResourceRepository.CR_LOCATIONTYPE));

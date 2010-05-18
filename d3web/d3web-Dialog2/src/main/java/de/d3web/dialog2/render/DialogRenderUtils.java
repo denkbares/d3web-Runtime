@@ -530,7 +530,7 @@ public class DialogRenderUtils {
 						.getMaxCharLengthInMMInfoPopup(), explicitWidth);
 				renderHtmlForMMMultimedia(component, writer,
 						mmInfoMultimediaList, DialogUtils.getDialog()
-						.getTheCase().getKnowledgeBase().getId());
+						.getSession().getKnowledgeBase().getId());
 				writer.endElement("ul");
 				writer.endElement("div");
 

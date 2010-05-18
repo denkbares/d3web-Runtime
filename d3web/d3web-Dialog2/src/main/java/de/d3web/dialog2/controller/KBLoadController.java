@@ -118,8 +118,8 @@ public class KBLoadController {
 		WebDialog dia = DialogUtils.getDialog();
 		// if the clicked kb is not the kb of the actual case -> start a new
 		// case and dont parse settings and layout again...
-		if (dia.getTheCase() != null
-				&& dia.getTheCase().getKnowledgeBase().getId().equals(kbID)) {
+		if (dia.getSession() != null
+				&& dia.getSession().getKnowledgeBase().getId().equals(kbID)) {
 			logger.info("Selected KB is already loaded... resuming case...");
 			return DialogUtils.getPageDisplay().moveToQuestionPage();
 		}

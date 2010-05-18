@@ -224,7 +224,7 @@ public class QuestionPageRenderer extends Renderer {
 
 	@Override
 	public void decode(FacesContext context, UIComponent component) {
-		Session theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getSession();
 		List<Question> qList = DialogUtils.getQuestionPageBean().getQuestionListToRender();
 
 		Map<String, String[]> requestMap = context.getExternalContext().getRequestParameterValuesMap();
@@ -305,7 +305,7 @@ public class QuestionPageRenderer extends Renderer {
 		List<Question> qList = DialogUtils.getQuestionPageBean().getQuestionListToRender();
 		QuestionPageLayout layoutDef = getLayout();
 
-		Session theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getSession();
 		ResponseWriter writer = context.getResponseWriter();
 		if (DialogUtils.getImageMapBean().hasImagesForQContainer(qList)) {
 			QuestionImageMapRendererUtils.renderQuestionsImageMap(writer, component,

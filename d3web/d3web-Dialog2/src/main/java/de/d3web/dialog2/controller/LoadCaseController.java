@@ -46,7 +46,7 @@ public class LoadCaseController {
 	public List<CaseObjectDescriptor> getCases() {
 		WebDialog dia = DialogUtils.getDialog();
 		List<CaseObjectDescriptor> cases = new LinkedList<CaseObjectDescriptor>();
-		String kbid = dia.getTheCase().getKnowledgeBase().getId();
+		String kbid = dia.getSession().getKnowledgeBase().getId();
 		if (!CaseManager.getInstance().hasCasesForKb(kbid)) {
 			CaseManager.getInstance().loadCases(kbid);
 		}
@@ -80,15 +80,15 @@ public class LoadCaseController {
 		CaseObjectDescriptor caseObject = (CaseObjectDescriptor) loadCaseDataTable
 				.getRowData();
 		CaseObject co = CaseManager.getInstance().getCase(
-				dia.getTheCase().getKnowledgeBase().getId(),
+				dia.getSession().getKnowledgeBase().getId(),
 				caseObject.getCaseId());
 
 		// a case will be loaded, so we have to execute the CaseFinalizer...
-		if (dia.getTheCase() != null) {
-			CaseFinalizationNotifier.finalizeCase(dia.getTheCase());
+		if (dia.getSession() != null) {
+			CaseFinalizationNotifier.finalizeCase(dia.getSession());
 		}
 
-		dia.setTheCase(DialogUtils.createNewAnsweredCase(co, dia.getTheCase()
+		dia.setSession(DialogUtils.createNewAnsweredCase(co, dia.getSession()
 				.getKnowledgeBase()));
 
 		dia.setCaseStartTimeToNow();

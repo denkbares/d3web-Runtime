@@ -66,7 +66,7 @@ public class CompareCasePageRenderer extends Renderer {
 			throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 
-		Session theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getSession();
 
 		CompareCaseController compareCase = DialogUtils.getCompareCaseBean();
 		ComparisonResultRepository crepos = new ComparisonResultRepository();

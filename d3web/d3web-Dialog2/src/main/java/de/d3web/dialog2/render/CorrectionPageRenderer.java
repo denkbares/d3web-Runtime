@@ -65,7 +65,7 @@ public class CorrectionPageRenderer extends Renderer {
 		// also save userselected diags in case...
 		WebDialog dia = DialogUtils.getDialog();
 
-		Session theCase = dia.getTheCase();
+		Session theCase = dia.getSession();
 		List<Solution> allDiags = theCase.getKnowledgeBase().getSolutions();
 		for (Solution diag : allDiags) {
 			if (diagIsUserSelected(dia, userSelDiagIDs, diag)) {
@@ -98,7 +98,7 @@ public class CorrectionPageRenderer extends Renderer {
 			throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 
-		Session theCase = DialogUtils.getDialog().getTheCase();
+		Session theCase = DialogUtils.getDialog().getSession();
 
 		DialogRenderUtils.renderTableWithClass(writer, component, "panelBox",
 				2, 0);
