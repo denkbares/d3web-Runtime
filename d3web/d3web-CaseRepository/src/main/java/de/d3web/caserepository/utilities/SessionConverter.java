@@ -38,7 +38,6 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
-import de.d3web.core.session.interviewmanager.DialogController;
 import de.d3web.core.session.interviewmanager.DialogProxy;
 import de.d3web.core.session.interviewmanager.ShadowMemory;
 import de.d3web.indication.inference.PSMethodUserSelected;
@@ -189,12 +188,13 @@ public class SessionConverter {
 		// first, empty the whole collection
 		ret.getAppliedQSets().clearAllApplied();
 
-//		// then add the containers from which the qaSetManager has taken
-//		// protocol of
-//		Iterator<?> citer = theCase.getQASetManager().getProcessedContainers().iterator();
-//		while (citer.hasNext()) {
-//			ret.getAppliedQSets().setApplied((QContainer) citer.next());
-//		}
+		// // then add the containers from which the qaSetManager has taken
+		// // protocol of
+		// Iterator<?> citer =
+		// theCase.getQASetManager().getProcessedContainers().iterator();
+		// while (citer.hasNext()) {
+		// ret.getAppliedQSets().setApplied((QContainer) citer.next());
+		// }
 
 		// Diagnoses
 		addDiagnosesToSolutions(ret, theCase, State.ESTABLISHED);
@@ -240,16 +240,13 @@ public class SessionConverter {
 				Iterator<PSMethod> psMethodIter = usedPsm.iterator();
 				while (psMethodIter.hasNext()) {
 					PSMethod psm = psMethodIter.next();
-					Value value = theCase.getBlackboard().getValue(d, psm);
-					if (value instanceof Rating) {
-						Rating ds = (Rating) value;
-						if (ds.equals(state)) {
-							CaseObject.Solution s = new CaseObject.Solution();
-							s.setDiagnosis(d);
-							s.setState(new Rating(state));
-							s.setPSMethodClass(psm.getClass());
-							co.addSolution(s);
-						}
+					Rating ds = theCase.getBlackboard().getRating(d, psm);
+					if (ds.equals(state)) {
+						CaseObject.Solution s = new CaseObject.Solution();
+						s.setDiagnosis(d);
+						s.setState(new Rating(state));
+						s.setPSMethodClass(psm.getClass());
+						co.addSolution(s);
 					}
 				}
 			}

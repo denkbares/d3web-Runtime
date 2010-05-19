@@ -245,18 +245,10 @@ public class DefaultBlackboard implements Blackboard {
 	}
 
 	@Override
-	public Value getValue(TerminologyObject object, PSMethod psmethod) {
+	public Value getValue(Question object, PSMethod psmethod) {
 		Fact mergedFact = valueStorage.getAggregator(object).getMergedFact(psmethod);
 		if (mergedFact == null) {
-			if (object instanceof Solution) {
-				return new Rating(State.UNCLEAR);
-			}
-			else if (object instanceof Question) {
-				return UndefinedValue.getInstance();
-			}
-			else {
-				return null;
-			}
+			return UndefinedValue.getInstance();
 		}
 		else {
 			return mergedFact.getValue();
@@ -295,5 +287,16 @@ public class DefaultBlackboard implements Blackboard {
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public Rating getRating(Solution solution, PSMethod psmethod) {
+		Fact mergedFact = valueStorage.getAggregator(solution).getMergedFact(psmethod);
+		if (mergedFact == null) {
+			return new Rating(State.UNCLEAR);
+		}
+		else {
+			return (Rating) mergedFact.getValue();
+		}
 	}
 }

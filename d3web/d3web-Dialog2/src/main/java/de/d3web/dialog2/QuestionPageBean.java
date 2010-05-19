@@ -22,7 +22,6 @@ package de.d3web.dialog2;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
@@ -40,8 +39,6 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.DialogController;
-import de.d3web.core.session.interviewmanager.MQDialogController;
 import de.d3web.dialog2.basics.settings.DialogSettings;
 import de.d3web.dialog2.render.QuestionsRendererUtils;
 import de.d3web.dialog2.util.DialogUtils;
@@ -66,25 +63,26 @@ public class QuestionPageBean {
 	public List<Question> convertQuestionsToRender(QContainer qContainer) {
 		List<Question> qListToRender = new ArrayList<Question>();
 		for (TerminologyObject terminologyObject : qContainer.getChildren()) {
-			Question question = (Question)terminologyObject;
+			Question question = (Question) terminologyObject;
 			qListToRender.add(question);
-			qListToRender.addAll(followUpQuestionOf(question, DialogSettings.INCLUDING_INACTIVE_QUESTIONS,
+			qListToRender.addAll(followUpQuestionOf(question,
+					DialogSettings.INCLUDING_INACTIVE_QUESTIONS,
 					DialogSettings.INACTIVE_HIERARCHICAL_CHILDREN_ONLY));
-			
+
 		}
-		
-		
-//		List<List<Object>> tempList = DialogUtils.getMQDialogController(
-//				DialogUtils.getDialog().getSession()).getAllQuestionsToRender(
-//				qContainer, DialogSettings.INCLUDING_INACTIVE_QUESTIONS,
-//				DialogSettings.INACTIVE_HIERARCHICAL_CHILDREN_ONLY);
-//
-//		for (Iterator<List<Object>> iter = tempList.iterator(); iter.hasNext();) {
-//			List<Object> temp = iter.next();
-//			Question tempQ = (Question) temp.get(0);
-//			qListToRender.add(tempQ);
-//
-//		}
+
+		// List<List<Object>> tempList = DialogUtils.getMQDialogController(
+		// DialogUtils.getDialog().getSession()).getAllQuestionsToRender(
+		// qContainer, DialogSettings.INCLUDING_INACTIVE_QUESTIONS,
+		// DialogSettings.INACTIVE_HIERARCHICAL_CHILDREN_ONLY);
+		//
+		// for (Iterator<List<Object>> iter = tempList.iterator();
+		// iter.hasNext();) {
+		// List<Object> temp = iter.next();
+		// Question tempQ = (Question) temp.get(0);
+		// qListToRender.add(tempQ);
+		//
+		// }
 		return qListToRender;
 	}
 
@@ -101,7 +99,8 @@ public class QuestionPageBean {
 						|| (includingInactiveQuestions || inactiveHierarchicalChildrenOnly)) {
 					questions.add((Question) followup);
 				}
-				// recursively investigate follow-up questions of this follow-up question
+				// recursively investigate follow-up questions of this follow-up
+				// question
 				if (followup.getChildren().length > 0) {
 					questions.addAll(followUpQuestionOf((Question) followup,
 							includingInactiveQuestions,
@@ -127,12 +126,12 @@ public class QuestionPageBean {
 			if (session.getInterviewManager().isActive(currentQuestion)) {
 				return currentQuestion;
 			}
-//			OLD CODE: 
-//			if (currentQuestion.isValid(session)) {
-//				if (!currentQuestion.isDone(session)) {
-//					return currentQuestion;
-//				}
-//			}
+			// OLD CODE:
+			// if (currentQuestion.isValid(session)) {
+			// if (!currentQuestion.isDone(session)) {
+			// return currentQuestion;
+			// }
+			// }
 		}
 		if (dialogMode.equals("MQ")) {
 			return null;
@@ -172,28 +171,29 @@ public class QuestionPageBean {
 	}
 
 	public QContainer getQContainerToRender() {
-//		MQDialogController controller = DialogUtils
-//				.getMQDialogController(DialogUtils.getDialog().getSession());
-		
+		// MQDialogController controller = DialogUtils
+		// .getMQDialogController(DialogUtils.getDialog().getSession());
+
 		Session session = DialogUtils.getDialog().getSession();
-		//QContainer lastContainer = (QContainer) controller.getCurrentQASet();
-		InterviewObject nextInterviewObject = session.getInterviewManager().nextForm().getInterviewObject(); // (QContainer) controller.moveToNewestQASet();
-		
+		// QContainer lastContainer = (QContainer) controller.getCurrentQASet();
+		InterviewObject nextInterviewObject = session.getInterviewManager().nextForm().getInterviewObject(); // (QContainer)
+																												// controller.moveToNewestQASet();
+
 		QContainer qContainer = null;
 		if (nextInterviewObject instanceof QContainer) {
-			qContainer = (QContainer)nextInterviewObject;
+			qContainer = (QContainer) nextInterviewObject;
 		}
 
-//		if (qContainer == null
-//				&& !DialogUtils.getDialogSettings().isAutoMoveToResultpage()) {
-//			controller.moveToPreviousQASet();
-//			if (lastContainer != null) {
-//				qContainer = lastContainer;
-//			}
-//			else {
-//				qContainer = (QContainer) controller.getCurrentQASet();
-//			}
-//		}
+		// if (qContainer == null
+		// && !DialogUtils.getDialogSettings().isAutoMoveToResultpage()) {
+		// controller.moveToPreviousQASet();
+		// if (lastContainer != null) {
+		// qContainer = lastContainer;
+		// }
+		// else {
+		// qContainer = (QContainer) controller.getCurrentQASet();
+		// }
+		// }
 		return qContainer;
 	}
 
@@ -209,9 +209,9 @@ public class QuestionPageBean {
 		else {
 			// we move to result page because all questions are answered..
 			// but we set the actual qcontainer to the previous qcontainer
-//			DialogController cont = DialogUtils
-//					.getMQDialogController(DialogUtils.getDialog().getSession());
-//			cont.moveToPreviousQASet();
+			// DialogController cont = DialogUtils
+			// .getMQDialogController(DialogUtils.getDialog().getSession());
+			// cont.moveToPreviousQASet();
 			DialogUtils.getSaveCaseBean().autoSaveCase();
 			DialogUtils.getPageDisplay().moveToResultPage();
 		}
@@ -260,11 +260,11 @@ public class QuestionPageBean {
 		if (qaSet != null) {
 			// TODO: here we would need an instance indication
 			session.getBlackboard().addInterviewFact(
-					FactFactory.createFact(qaSet, new Indication(State.INSTANT_INDICATED), 
-							PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+					FactFactory.createFact(qaSet, new Indication(State.INSTANT_INDICATED),
+					PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		}
-		//DialogUtils.getMQDialogController(DialogUtils.getDialog().getSession())
-		//		.moveToQASet(qaSet);
+		// DialogUtils.getMQDialogController(DialogUtils.getDialog().getSession())
+		// .moveToQASet(qaSet);
 
 		userIndicatedQASet = getQContainerToRender();
 		setQuestionListToRender((QContainer) userIndicatedQASet);

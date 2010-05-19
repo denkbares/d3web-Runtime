@@ -180,14 +180,22 @@ public interface Blackboard {
 	public Value getValue(Question question);
 
 	/**
-	 * Returns the Value of a TerminologyObject, calculated by the specified
-	 * psmethod
+	 * Returns the Value of a Question, calculated by the specified psmethod
 	 * 
 	 * @param object TerminologyObject
 	 * @param psmethod PSMethod
 	 * @return Value
 	 */
-	public Value getValue(TerminologyObject object, PSMethod psmethod);
+	public Value getValue(Question object, PSMethod psmethod);
+
+	/**
+	 * Returns the Value of a Solution, calculated by the specified psmethod
+	 * 
+	 * @param solution Solution
+	 * @param psmethod PSMethod
+	 * @return Rating
+	 */
+	public Rating getRating(Solution solution, PSMethod psmethod);
 
 	/**
 	 * Returns the current indication state of the interview element. The
