@@ -141,33 +141,33 @@ public class InterviewAgenda {
 		}
 	}
 	
-	public boolean append(InterviewObject interviewObject) {
+	public void append(InterviewObject interviewObject) {
 		trace("Append: " + interviewObject);
-		boolean result = agenda.add(new AgendaEntry(interviewObject, InterviewState.ACTIVE));
+		if (onAgenda(interviewObject)) {
+			activate(interviewObject);
+		}
+		else { 
+			agenda.add(new AgendaEntry(interviewObject, InterviewState.ACTIVE));
+		}
 		organizeAgenda();
-		return result;
 	}
 
-	public boolean deactivate(InterviewObject interviewObject) {
+	public void deactivate(InterviewObject interviewObject) {
 		trace("De-activate: " + interviewObject);
 		AgendaEntry entry = findAgendaEntry(interviewObject);
 		if (entry != null) {
 			entry.state = InterviewState.INACTIVE;
-			return true;
-		} else {
-			return false; 
 		}
 	}
 
-	public boolean activate(InterviewObject interviewObject) {
+	public void activate(InterviewObject interviewObject) {
 		trace("Activate: " + interviewObject);
 		AgendaEntry entry = findAgendaEntry(interviewObject);
 		if (entry == null) {
-			return append(interviewObject);
+			append(interviewObject);
 		}
 		else {
 			entry.state = InterviewState.ACTIVE;
-			return true;
 		}
 	}
 	
