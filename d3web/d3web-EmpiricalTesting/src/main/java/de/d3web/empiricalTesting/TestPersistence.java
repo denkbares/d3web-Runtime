@@ -366,7 +366,7 @@ public class TestPersistence {
 			Finding f = null;
 			try {
 				Question q = bh.getQuestionByIDorText(questionText, questionnaireText, kb);
-				if (answerText.equals("unknown")) {
+				if (answerText.equals("unknown") || answerText.equals("-?-")) {
 					f = new Finding(q, Unknown.getInstance());
 				}
 				else if (q instanceof QuestionMC) {

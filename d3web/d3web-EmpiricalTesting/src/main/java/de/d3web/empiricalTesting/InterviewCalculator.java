@@ -81,12 +81,14 @@ public class InterviewCalculator extends PrecisionRecallCalculator {
 	 * @return Total similarity of expected and actually asked questions
 	 */
 	private double similarity(RatedTestCase rtc) {
+		
+		TestSuite.pleaseRemoveMe.append("-----------------------------------------\n");
+		TestSuite.pleaseRemoveMe.append(rtc.getName() + "\n");
+		TestSuite.pleaseRemoveMe.append("-----------------------------------------\n");
+		
 		double sum = 0;
 
-		// Get all Findings
-		List<Finding> findings = rtc.getFindings();
-
-		for (Finding f : findings) {
+		for (Finding f : rtc.getFindings()) {
 
 			Question expected = f.getQuestion();
 			Question asked = getNextQuestion();
@@ -94,10 +96,13 @@ public class InterviewCalculator extends PrecisionRecallCalculator {
 			// Compare expected question with asked question
 			if (expected.equals(asked)) {
 				sum += 1;
+			} else {
+				TestSuite.pleaseRemoveMe.append("!\tExpected: " + expected + "\t|\t Asked: " + asked + "\n");
 			}
 
 			// Set answer of current question in XPS-Case
 			setCaseValue(f.getQuestion(), f.getValue());
+			TestSuite.pleaseRemoveMe.append("\t" + f.getQuestion() + " = " + f.getValue() + "\n");
 
 		}
 		return sum;

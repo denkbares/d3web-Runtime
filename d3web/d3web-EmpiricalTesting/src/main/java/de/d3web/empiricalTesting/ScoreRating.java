@@ -29,7 +29,7 @@ import de.d3web.scoring.Score;
 
 public class ScoreRating implements Rating {
 
-	private static NumberFormat formater = new DecimalFormat("#########");
+	private static NumberFormat formater = new DecimalFormat("#######.##");
 	private double rating;
 
 	private ConfigLoader config = ConfigLoader.getInstance();
