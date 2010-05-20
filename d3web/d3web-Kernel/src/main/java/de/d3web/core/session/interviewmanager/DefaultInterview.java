@@ -93,6 +93,12 @@ public class DefaultInterview implements Interview {
 			if (oldIndication.hasState(State.NEUTRAL) && newIndication.hasState(State.INDICATED)) {
 				this.agenda.append(indicatedObject);
 			}
+			// ANY => INSTANT_INDICATED : 1) append to agenda 2) activate
+			// TODO: finish the work on instance indication, currently INSTANCE_INDICATION is handled like 
+			//       standard indication
+			else if (newIndication.hasState(State.INSTANT_INDICATED)) {
+				this.agenda.append(indicatedObject);
+			}
 			// INDICATED => NEUTRAL : deactivate
 			else if  (oldIndication.hasState(State.INDICATED) && newIndication.hasState(State.NEUTRAL)) {
 				this.agenda.deactivate(indicatedObject);
@@ -114,13 +120,13 @@ public class DefaultInterview implements Interview {
 			else if  (oldIndication.hasState(State.NEUTRAL) && newIndication.hasState(State.CONTRA_INDICATED)) {
 				// NEUTRAL => CONTRA_INDICATED : noop
 			}
-			// TODO: INSTANT_INDICATION
 			else {
+				// TODO: use a logger here 
 				System.out.println("UNKNOWN INDICATION STATE: old=(" + oldIndication+ ") new=("+newIndication+")");
 			}
 		}
 		else if (newValue instanceof QuestionValue) {
-			// need to check, whether the aganda needs an update due to an answered question
+			// need to check, whether the agenda needs an update due to an answered question
 			InterviewObject indicatedObject = (InterviewObject)changedFact.getObject();
 			if (this.agenda.onAgenda(indicatedObject)) {
 				// Check: the VALUE has changed from DEFINED to UNDEFINED => activate 
@@ -133,7 +139,12 @@ public class DefaultInterview implements Interview {
 					this.agenda.deactivate(indicatedObject);
 					checkParentalQContainer(indicatedObject);
 				}
+				// Check: VALUE changed from DEFINED to DEFINED => noop
+				else if (!(newValue instanceof UndefinedValue) && !(oldValue instanceof UndefinedValue)) {
+					; // NOOP
+				}
 				else {
+					// TODO: use a logger here 
 					System.out.println("UNKNOWN VALUE CHANGE: old=(" + oldValue+ ") new=("+newValue+")");
 				}
 			}

@@ -231,7 +231,7 @@ public class InterviewAgenda {
 	}
 	
 	/**
-	 * 
+	 * Gives the (unmodifiable) list of currently active objects on the agenda. 
 	 * @return an immutable list of the objects that are currently active on the agenda 
 	 */
 	public List<InterviewObject> getCurrentlyActiveObjects() {

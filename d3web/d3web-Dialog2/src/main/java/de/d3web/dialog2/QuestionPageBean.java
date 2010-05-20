@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
+x * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
  * 
  * This is free software; you can redistribute it and/or modify it under the
@@ -31,7 +31,6 @@ import org.apache.log4j.Logger;
 import org.apache.myfaces.component.html.ext.HtmlInputHidden;
 
 import de.d3web.core.knowledge.Indication;
-import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -39,6 +38,8 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.FactFactory;
+import de.d3web.core.session.interviewmanager.CurrentQContainerFormStrategy;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.dialog2.basics.settings.DialogSettings;
 import de.d3web.dialog2.render.QuestionsRendererUtils;
 import de.d3web.dialog2.util.DialogUtils;
@@ -63,13 +64,21 @@ public class QuestionPageBean {
 	public List<Question> convertQuestionsToRender(QContainer qContainer) {
 		List<Question> qListToRender = new ArrayList<Question>();
 		for (TerminologyObject terminologyObject : qContainer.getChildren()) {
-			Question question = (Question) terminologyObject;
-			qListToRender.add(question);
-			qListToRender.addAll(followUpQuestionOf(question,
-					DialogSettings.INCLUDING_INACTIVE_QUESTIONS,
-					DialogSettings.INACTIVE_HIERARCHICAL_CHILDREN_ONLY));
-
+			if (terminologyObject instanceof QContainer) {
+				qListToRender.addAll(convertQuestionsToRender((QContainer)terminologyObject));
+			}
+			else if (terminologyObject instanceof Question) {
+				Question question = (Question) terminologyObject;
+				qListToRender.add(question);
+				qListToRender.addAll(followUpQuestionOf(question,
+						DialogSettings.INCLUDING_INACTIVE_QUESTIONS,
+						DialogSettings.INACTIVE_HIERARCHICAL_CHILDREN_ONLY));
+			}
+			else {
+				System.err.println("Unidentified TerminologyObject type: " + getClass());
+			}
 		}
+		
 
 		// List<List<Object>> tempList = DialogUtils.getMQDialogController(
 		// DialogUtils.getDialog().getSession()).getAllQuestionsToRender(
@@ -93,10 +102,8 @@ public class QuestionPageBean {
 		List<Question> questions = new ArrayList<Question>();
 		for (TerminologyObject followup : question.getChildren()) {
 			if (followup instanceof Question) {
-				boolean isActive = session.getInterviewManager().isActive(
-						(InterviewObject) followup);
-				if (isActive
-						|| (includingInactiveQuestions || inactiveHierarchicalChildrenOnly)) {
+				boolean isActive = DialogUtils.isValidQASet((Question)followup, session); 
+				if (isActive || (includingInactiveQuestions || inactiveHierarchicalChildrenOnly)) {
 					questions.add((Question) followup);
 				}
 				// recursively investigate follow-up questions of this follow-up
@@ -123,7 +130,8 @@ public class QuestionPageBean {
 			List<Question> qList, String dialogMode) {
 		for (int i = 0; i < qList.size(); i++) {
 			Question currentQuestion = qList.get(i);
-			if (session.getInterviewManager().isActive(currentQuestion)) {
+			
+			if (UndefinedValue.isUndefinedValue(session.getBlackboard().getValue(currentQuestion))) {
 				return currentQuestion;
 			}
 			// OLD CODE:
@@ -135,8 +143,7 @@ public class QuestionPageBean {
 		}
 		if (dialogMode.equals("MQ")) {
 			return null;
-		}
-		else {
+		} else {
 			return qList.get(0);
 		}
 	}
@@ -162,39 +169,47 @@ public class QuestionPageBean {
 	}
 
 	private QContainer getQContainerForQuestion(Question q) {
-		if (q == null) return (null);
+		if (q == null)
+			return (null);
 		for (TerminologyObject qaSet : q.getParents()) {
-			if (qaSet instanceof Question) return (getQContainerForQuestion((Question) qaSet));
-			else return ((QContainer) qaSet);
+			if (qaSet instanceof Question)
+				return (getQContainerForQuestion((Question) qaSet));
+			else
+				return ((QContainer) qaSet);
 		}
 		return (null);
 	}
 
 	public QContainer getQContainerToRender() {
-		// MQDialogController controller = DialogUtils
-		// .getMQDialogController(DialogUtils.getDialog().getSession());
+//		MQDialogController controller = DialogUtils
+//				.getMQDialogController(DialogUtils.getDialog().getSession());
 
 		Session session = DialogUtils.getDialog().getSession();
-		// QContainer lastContainer = (QContainer) controller.getCurrentQASet();
-		InterviewObject nextInterviewObject = session.getInterviewManager().nextForm().getInterviewObject(); // (QContainer)
-																												// controller.moveToNewestQASet();
-
-		QContainer qContainer = null;
-		if (nextInterviewObject instanceof QContainer) {
-			qContainer = (QContainer) nextInterviewObject;
-		}
-
-		// if (qContainer == null
-		// && !DialogUtils.getDialogSettings().isAutoMoveToResultpage()) {
-		// controller.moveToPreviousQASet();
-		// if (lastContainer != null) {
-		// qContainer = lastContainer;
-		// }
-		// else {
-		// qContainer = (QContainer) controller.getCurrentQASet();
-		// }
-		// }
+		session.getInterviewManager().setFormStrategy(new CurrentQContainerFormStrategy());
+//		QContainer nextInterviewObject = (QContainer) controller
+//				.getCurrentQASet();
+		
+		
+		QContainer qContainer =  (QContainer)session.getInterviewManager().nextForm().getInterviewObject();
 		return qContainer;
+//		 (QContainer)
+//		 controller.moveToNewestQASet();
+
+//		QContainer qContainer = null;
+//		if (nextInterviewObject instanceof QContainer) {
+//			qContainer = (QContainer) nextInterviewObject;
+//		}
+//
+//		if (qContainer == null
+//				&& !DialogUtils.getDialogSettings().isAutoMoveToResultpage()) {
+//			controller.moveToPreviousQASet();
+//			if (nextInterviewObject != null) {
+//				qContainer = nextInterviewObject;
+//			} else {
+//				qContainer = (QContainer) controller.getCurrentQASet();
+//			}
+//		}
+//		return qContainer;
 	}
 
 	public List<Question> getQuestionListToRender() {
@@ -205,13 +220,12 @@ public class QuestionPageBean {
 		QContainer container = getQContainerToRender();
 		if (container != null) {
 			setQuestionListToRender(container);
-		}
-		else {
+		} else {
 			// we move to result page because all questions are answered..
 			// but we set the actual qcontainer to the previous qcontainer
-			// DialogController cont = DialogUtils
-			// .getMQDialogController(DialogUtils.getDialog().getSession());
-			// cont.moveToPreviousQASet();
+//			 DialogController cont = DialogUtils
+//			 .getMQDialogController(DialogUtils.getDialog().getSession());
+//			 cont.moveToPreviousQASet();
 			DialogUtils.getSaveCaseBean().autoSaveCase();
 			DialogUtils.getPageDisplay().moveToResultPage();
 		}
@@ -255,13 +269,15 @@ public class QuestionPageBean {
 
 	public void moveToQASet(String qaSetID) {
 		Session session = DialogUtils.getDialog().getSession();
-		QASet qaSet = session.getKnowledgeBase()
-				.searchQASet(qaSetID);
+		QASet qaSet = session.getKnowledgeBase().searchQASet(qaSetID);
 		if (qaSet != null) {
 			// TODO: here we would need an instance indication
-			session.getBlackboard().addInterviewFact(
-					FactFactory.createFact(qaSet, new Indication(State.INSTANT_INDICATED),
-					PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+			session.getBlackboard()
+					.addInterviewFact(
+							FactFactory.createFact(qaSet, new Indication(
+									State.INSTANT_INDICATED),
+									PSMethodUserSelected.getInstance(),
+									PSMethodUserSelected.getInstance()));
 		}
 		// DialogUtils.getMQDialogController(DialogUtils.getDialog().getSession())
 		// .moveToQASet(qaSet);
@@ -331,8 +347,7 @@ public class QuestionPageBean {
 		if (userIndicatedQASet != null) {
 			if (userIndicatedQASet instanceof Question) {
 				listToSet.add((Question) userIndicatedQASet);
-			}
-			else if (userIndicatedQASet instanceof QContainer) {
+			} else if (userIndicatedQASet instanceof QContainer) {
 				List<Question> temp = convertQuestionsToRender((QContainer) userIndicatedQASet);
 				listToSet.add(getFirstQuestionToAskFromList(DialogUtils
 						.getDialog().getSession(), temp, "OQ"));
@@ -344,8 +359,7 @@ public class QuestionPageBean {
 		else if (oqListPointer == oqHistoryList.size() - 1) {
 			listToSet.add(getFirstQuestionToAskFromList(DialogUtils.getDialog()
 					.getSession(), convertQuestionsToRender(container), "OQ"));
-		}
-		else {
+		} else {
 			listToSet.add(oqHistoryList.get(oqListPointer));
 		}
 		this.questionListToRender = listToSet;
@@ -363,8 +377,7 @@ public class QuestionPageBean {
 			// System.out.println("notyetlisted -> add it to queue");
 			oqHistoryList.add(listToSet.get(0));
 			oqListPointer = oqHistoryList.size() - 1;
-		}
-		else {
+		} else {
 			// TODO the question is listed.. what to do here?
 			// actual implementation: pointer is not changed
 		}
@@ -383,8 +396,7 @@ public class QuestionPageBean {
 			// mark "firstToAsk" question (will be overwritten if necessary)
 			setFirstQToAsk(getFirstQuestionToAskFromList(DialogUtils
 					.getDialog().getSession(), questionListToRender, "MQ"));
-		}
-		else {
+		} else {
 			setQuestionListOQToRender(container);
 		}
 	}
@@ -433,10 +445,9 @@ public class QuestionPageBean {
 		if (fractionOfAnsweredQuestionsPercentage < 51) {
 			colorString = "rgb(255, "
 					+ (int) (Math
-					.floor((double) fractionOfAnsweredQuestionsPercentage
-					/ (double) 50 * 255)) + ", 0)";
-		}
-		else {
+							.floor((double) fractionOfAnsweredQuestionsPercentage
+									/ (double) 50 * 255)) + ", 0)";
+		} else {
 			colorString = "rgb("
 					+ (int) (Math
 							.floor(255 - (((double) fractionOfAnsweredQuestionsPercentage - (double) 50) / 50 * 255)))

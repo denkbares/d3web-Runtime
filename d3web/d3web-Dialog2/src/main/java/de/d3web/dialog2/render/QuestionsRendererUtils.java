@@ -404,12 +404,11 @@ public class QuestionsRendererUtils {
 	}
 
 	public static void renderQuestion(ResponseWriter writer,
-			UIComponent component, Session theCase, Question q,
+			UIComponent component, Session session, Question q,
 			QuestionPageLayout layoutDef, int cols, int colDiff)
 			throws IOException {
-		if (q.isValid(theCase) && showAbstract(q)) {
-
-			renderValidQuestion(writer, component, theCase, q, layoutDef, cols,
+		if (DialogUtils.isValidQASet(q,session)) {  
+			renderValidQuestion(writer, component, session, q, layoutDef, cols,
 					colDiff);
 		}
 		else {

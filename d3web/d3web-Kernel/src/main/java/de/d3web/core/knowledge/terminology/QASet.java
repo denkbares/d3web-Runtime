@@ -190,21 +190,23 @@ public abstract class QASet extends NamedObject implements InterviewObject, Case
 	 * @deprecated delete this method after interview refactoring
 	 */
 	public boolean isValid(Session theCase) {
-		CaseQASet caseQASet = (CaseQASet) theCase.getCaseObject(this);
-		List<Reason> pros = getProReasons(theCase);
-		if (!caseQASet.hasContraReason()
-				|| pros.contains(new QASet.Reason(null, PSMethodUserSelected.class))) {
-			if (!pros.isEmpty()) return true;
-
-			if (this instanceof Question) for (TerminologyObject parent : getParents())
-				if (parent instanceof QContainer) {
-					QContainer qcon = (QContainer) parent;
-					if (qcon.isValid(theCase)) {
-						return true;
-					}
-				}
-		}
-		return false;
+		return theCase.getInterviewManager().isActive(this);
+		
+//		CaseQASet caseQASet = (CaseQASet) theCase.getCaseObject(this);
+//		List<Reason> pros = getProReasons(theCase);
+//		if (!caseQASet.hasContraReason()
+//				|| pros.contains(new QASet.Reason(null, PSMethodUserSelected.class))) {
+//			if (!pros.isEmpty()) return true;
+//
+//			if (this instanceof Question) for (TerminologyObject parent : getParents())
+//				if (parent instanceof QContainer) {
+//					QContainer qcon = (QContainer) parent;
+//					if (qcon.isValid(theCase)) {
+//						return true;
+//					}
+//				}
+//		}
+//		return false;
 	}
 
 	public abstract void removeContraReason(Reason source, Session theCase);

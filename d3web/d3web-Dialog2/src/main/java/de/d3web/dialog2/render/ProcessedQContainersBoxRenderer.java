@@ -71,12 +71,12 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 		return false;
 	}
 
-	private static boolean qInContainerAnswered(Session theCase, List<Question> qList, boolean showUnknown) {
+	private static boolean qInContainerAnswered(Session session, List<Question> qList, boolean showUnknown) {
 		for (Iterator<Question> iter2 = qList.iterator(); iter2.hasNext();) {
 			Question q = iter2.next();
 			// if we only want to display known answers and the answer is
 			// unknown -> continue
-			if (!showUnknown && DialogUtils.unknownAnswerInValueList(q, theCase)) {
+			if (!showUnknown && DialogUtils.unknownAnswerInValueList(q, session)) {
 				continue;
 			}
 
@@ -86,7 +86,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 					&& !DialogUtils.getDialogSettings().isShowAbstractQuestionsInResultPage()) {
 				continue;
 			}
-			if (q.isDone(theCase)) {
+			if (DialogUtils.hasValue(q, session)) {
 				return true;
 			}
 		}

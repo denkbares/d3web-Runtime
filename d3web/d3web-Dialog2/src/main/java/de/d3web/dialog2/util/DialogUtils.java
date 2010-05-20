@@ -55,6 +55,9 @@ import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.utilities.SessionConverter;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
@@ -67,8 +70,7 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.interviewmanager.CurrentQContainerFormStrategy;
-import de.d3web.core.session.interviewmanager.DialogController;
-import de.d3web.core.session.interviewmanager.MQDialogController;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.dialog2.DiagnosesTreeBean;
 import de.d3web.dialog2.QASetTreeBean;
@@ -84,6 +86,7 @@ import de.d3web.dialog2.controller.PageDisplayController;
 import de.d3web.dialog2.controller.ProcessedQContainersController;
 import de.d3web.dialog2.controller.SaveCaseController;
 import de.d3web.dialog2.imagemap.ImageMapBean;
+import de.d3web.dialog2.render.QuestionsRendererUtils;
 
 public class DialogUtils {
 
@@ -93,6 +96,18 @@ public class DialogUtils {
 
 	public static String contextPath;
 
+	/**
+	 * Tests, whether a value (different from {@link UndefinedValue}) was assigned
+	 * to the specified question in the specified session. 
+	 * @param question the specified question
+	 * @param session the specified session
+	 * @return true, if the question has a value different from undefined
+	 */
+	public static boolean hasValue(Question question, Session session) {
+		return (UndefinedValue.isNotUndefinedValue(session.getBlackboard().getValue(question))); 
+	}
+	
+	
 	private static void addUsedPSMethods(Session newCase) {
 		Iterator<PSMethod> iter = getUsedPSMethods().iterator();
 		while (iter.hasNext()) {
@@ -267,10 +282,10 @@ public class DialogUtils {
 		return format.format(params);
 	}
 
-	public static MQDialogController getMQDialogController(Session theCase) {
-		DialogController dc = (DialogController) theCase.getQASetManager();
-		return dc.getMQDialogcontroller();
-	}
+//	public static MQDialogController getMQDialogController(Session theCase) {
+//		DialogController dc = (DialogController) theCase.getQASetManager();
+//		return dc.getMQDialogcontroller();
+//	}
 
 	public static PageDisplayController getPageDisplay() {
 		return (PageDisplayController) getBean("pageDisplay");
@@ -467,4 +482,37 @@ public class DialogUtils {
 		return answer instanceof Unknown;
 	}
 
+
+	public static boolean isValidQASet(QASet qaset, Session session) {
+		if (session.getInterviewManager().isActive(qaset)) {
+			if (qaset instanceof QContainer) {
+				return true;
+			}
+			else if (qaset instanceof Question) {
+				return showAbstract((Question)qaset);	
+			}
+		}
+		else if (qaset instanceof Question){
+			for (TerminologyObject tob : qaset.getParents()) {
+				if (isValidQASet((QASet)tob, session)) {
+					return showAbstract((Question)qaset);
+				}
+			}
+		}
+		return false;
+		//q.isValid(session) && showAbstract(q))
+	}
+	
+	public static boolean showAbstract(Question q) {
+		if (!DialogUtils.getDialogSettings().isShowAbstractQuestions()) {
+			Object qIsAbstract = q.getProperties().getProperty(
+					Property.ABSTRACTION_QUESTION);
+			if (qIsAbstract != null
+					&& Boolean.parseBoolean(qIsAbstract.toString()) == true) {
+				// this question is abstract and we don't want to display it!
+				return false;
+			}
+		}
+		return true;
+	}
 }

@@ -312,6 +312,7 @@ public class DefaultSession implements Session {
 
 	/**
 	 * @return the QASetManager (e.g. DialogController) defined for this Session
+	 * @deprecated will be replaced by {@link Interview}
 	 */
 	@Override
 	public QASetManager getQASetManager() {

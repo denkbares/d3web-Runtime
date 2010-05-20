@@ -223,7 +223,7 @@ public class QuestionPageRenderer extends Renderer {
 
 	@Override
 	public void decode(FacesContext context, UIComponent component) {
-		Session theCase = DialogUtils.getDialog().getSession();
+		Session session = DialogUtils.getDialog().getSession();
 		List<Question> qList = DialogUtils.getQuestionPageBean().getQuestionListToRender();
 
 		Map<String, String[]> requestMap = context.getExternalContext().getRequestParameterValuesMap();
@@ -257,19 +257,19 @@ public class QuestionPageRenderer extends Renderer {
 				// answer question / update the case
 				if (requestMap.containsKey(q.getId())
 						&& !hasEmptyString(requestMap.get(q.getId()))) {
-					answerQuestion(component, requestMap.get(q.getId()), theCase, q);
+					answerQuestion(component, requestMap.get(q.getId()), session, q);
 				}
 				else {
 					// if "set all unknown" button was clicked, all questions
 					// which are valid and not yet answered are set to "unknown"
 					if (unknownString.equals("true")
-							&& UndefinedValue.isUndefinedValue(theCase.getBlackboard().getValue(q))
-							&& q.isValid(theCase)) {
-						setValueInCase(theCase, q, Unknown.getInstance());
+							&& UndefinedValue.isUndefinedValue(session.getBlackboard().getValue(q))
+							&& DialogUtils.isValidQASet(q, session)) { //q.isValid(theCase)) {
+						setValueInCase(session, q, Unknown.getInstance());
 					}
 					else {
 						// delete the answer(s) ...
-						setValueInCase(theCase, q, UndefinedValue.getInstance());
+						setValueInCase(session, q, UndefinedValue.getInstance());
 					}
 				}
 			}

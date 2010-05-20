@@ -39,7 +39,7 @@ import de.d3web.dialog2.util.DialogUtils;
 
 public abstract class QContainerRenderer {
 
-	protected Session theCase;
+	protected Session session;
 	protected ResponseWriter writer;
 	protected UIComponent component;
 	protected List<Question> qList;
@@ -50,7 +50,7 @@ public abstract class QContainerRenderer {
 			List<Question> qList, QuestionPageLayout layoutDef) {
 		super();
 		this.component = component;
-		this.theCase = theCase;
+		this.session = theCase;
 		this.writer = writer;
 		this.qList = qList;
 		this.layoutDef = layoutDef;
@@ -98,7 +98,7 @@ public abstract class QContainerRenderer {
 				if (questionLayout != null && questionLayout.getFollowingPopupQuestions() != null) {
 					for (QuestionPopup questionPopup : questionLayout.getFollowingPopupQuestions()) {
 						if (questionPopup.getFiringAnswerID().equals(
-								LastClickedAnswer.getInstance().getLastClickedAnswerID(theCase.getId()))) {
+								LastClickedAnswer.getInstance().getLastClickedAnswerID(session.getId()))) {
 
 							writer.startElement("div", component);
 							// String divID = "popup" +
@@ -108,13 +108,13 @@ public abstract class QContainerRenderer {
 							writer.writeAttribute("id", divID, "id");
 							writer.writeAttribute("class", "questionPopup", "class");
 
-							Question popupQuestion = theCase.getKnowledgeBase().searchQuestion(
+							Question popupQuestion = session.getKnowledgeBase().searchQuestion(
 									questionPopup.getNextQuestionID());
 
 							DialogRenderUtils.renderTable(writer, component);
 							writer.writeAttribute("style", "width: 100%; height: 100%;", "style");
 							writer.startElement("tr", component);
-							QuestionsRendererUtils.renderValidQuestion(writer, component, theCase,
+							QuestionsRendererUtils.renderValidQuestion(writer, component, session,
 									popupQuestion, DialogUtils.getDialogLayout().getQuestionPageLayout(), 1,
 									0);
 							writer.endElement("tr");
@@ -170,7 +170,7 @@ public abstract class QContainerRenderer {
 		List<Question> validQuestions = new ArrayList<Question>();
 		for (Iterator<Question> iter = qList.iterator(); iter.hasNext();) {
 			Question q = iter.next();
-			if (q.isValid(theCase) && QuestionsRendererUtils.showAbstract(q)) {
+			if (DialogUtils.isValidQASet(q, session)) {// && QuestionsRendererUtils.showAbstract(q)) {
 				validQuestions.add(q);
 			}
 		}

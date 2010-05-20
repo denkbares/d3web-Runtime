@@ -70,7 +70,7 @@ public class QContainerRendererForUndefinedLayout extends QContainerRenderer {
 						.getQuestionLayoutForQuestionID(q.getId());
 			}
 
-			QuestionsRendererUtils.renderQuestion(writer, component, theCase, q, layoutForQuestion,
+			QuestionsRendererUtils.renderQuestion(writer, component, session, q, layoutForQuestion,
 					cols, diff);
 
 			if (i % cols == (cols - 1) || i == validQuestions.size() - 1) {
