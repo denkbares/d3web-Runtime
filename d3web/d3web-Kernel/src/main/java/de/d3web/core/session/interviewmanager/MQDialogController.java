@@ -42,6 +42,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.indication.inference.PSMethodNextQASet;
 import de.d3web.indication.inference.PSMethodUserSelected;
@@ -80,7 +81,7 @@ public class MQDialogController implements DialogController {
 	private List remainingQASetQueue = null;
 	private boolean obtainRemainingQASetStatus = false;
 
-	protected Session theCase = null;
+	protected Session session = null;
 
 	/**
 	 * MQDialogController constructor comment.
@@ -95,7 +96,7 @@ public class MQDialogController implements DialogController {
 	 * specified in the knowledge base)
 	 */
 	public MQDialogController(Session _theCase, List initQASets) {
-		theCase = _theCase;
+		session = _theCase;
 		qasetQueue = new LinkedList();
 		this.initQASets = new LinkedList(initQASets);
 		userIndicationList = new LinkedList();
@@ -103,7 +104,7 @@ public class MQDialogController implements DialogController {
 		history = new LinkedList();
 		processedContainers = new LinkedList();
 
-		theCase.setQASetManager(this);
+		session.setQASetManager(this);
 
 		moveToNewestQASet();
 	}
@@ -113,14 +114,15 @@ public class MQDialogController implements DialogController {
 	 * 
 	 * Creation date: (08.06.2002 18:42:38)
 	 * 
-	 * @param q de.d3web.kernel.domainModel.QASet
+	 * @param q
+	 *            de.d3web.kernel.domainModel.QASet
 	 */
-	private void addQASet(List qaSetList, de.d3web.core.knowledge.terminology.QASet q) {
+	private void addQASet(List qaSetList,
+			de.d3web.core.knowledge.terminology.QASet q) {
 		QContainer toAdd = null;
 		if (q instanceof QContainer) {
 			toAdd = (QContainer) q;
-		}
-		else if (q instanceof Question) {
+		} else if (q instanceof Question) {
 			toAdd = getFirstLogicalContainerParent((Question) q);
 		}
 		if (toAdd != null) {
@@ -140,20 +142,22 @@ public class MQDialogController implements DialogController {
 	 * 
 	 * Creation date: (11.10.2002 18:42:38)
 	 * 
-	 * @param q de.d3web.kernel.domainModel.QContainer
-	 * @param priority Integer
+	 * @param q
+	 *            de.d3web.kernel.domainModel.QContainer
+	 * @param priority
+	 *            Integer
 	 */
-	private static void addContainer(List containerList, QContainer q, Integer priority) {
+	private static void addContainer(List containerList, QContainer q,
+			Integer priority) {
 		if (!containerList.contains(q)) {
 
 			// bei Frageklassenoberbegriff die children-Frageklassen anhängen
 			boolean hasQuestions = false;
 			for (TerminologyObject to : q.getChildren()) {
 				if (to instanceof QContainer) {
-					addContainer(containerList, (QContainer) to, ((QContainer) to)
-							.getPriority());
-				}
-				else if (to instanceof Question) {
+					addContainer(containerList, (QContainer) to,
+							((QContainer) to).getPriority());
+				} else if (to instanceof Question) {
 					hasQuestions = true;
 				}
 			}
@@ -174,7 +178,8 @@ public class MQDialogController implements DialogController {
 						tempQA = (QASet) queueIter.next();
 						if ((tempQA instanceof QContainer)
 								&& ((((QContainer) tempQA).getPriority() == null) || (priority
-								.compareTo(((QContainer) tempQA).getPriority()) < 0))) {
+										.compareTo(((QContainer) tempQA)
+												.getPriority()) < 0))) {
 							containerList.add(i, q);
 							added = true;
 						}
@@ -185,8 +190,7 @@ public class MQDialogController implements DialogController {
 					if (!added) {
 						containerList.add(q);
 					}
-				}
-				else {
+				} else {
 					containerList.add(q);
 				}
 			}
@@ -198,11 +202,14 @@ public class MQDialogController implements DialogController {
 	 * Adds "q" to the current history position and shifts the last "current
 	 * QASet" (if any) to the right. Creation date: (27.02.2001 12:58:41)
 	 * 
-	 * @param q de.d3web.kernel.domainModel.QASet
+	 * @param q
+	 *            de.d3web.kernel.domainModel.QASet
 	 */
 	protected void addToCurrentHistoryPos(QASet q) {
-		if (historyCursor < 0) historyCursor = 0;
-		if (historyCursor > history.size()) historyCursor = history.size();
+		if (historyCursor < 0)
+			historyCursor = 0;
+		if (historyCursor > history.size())
+			historyCursor = history.size();
 		history.add(historyCursor, q);
 		if ((q instanceof QContainer) && (!processedContainers.contains(q))) {
 			processedContainers.add((QContainer) q);
@@ -222,8 +229,10 @@ public class MQDialogController implements DialogController {
 	 */
 	public QASet getCurrentQASet() {
 
-		if ((historyCursor < 0) || (historyCursor >= history.size())) return null;
-		else return (QASet) history.get(historyCursor);
+		if ((historyCursor < 0) || (historyCursor >= history.size()))
+			return null;
+		else
+			return (QASet) history.get(historyCursor);
 
 	}
 
@@ -296,7 +305,7 @@ public class MQDialogController implements DialogController {
 		// if there isn't any user-selected container:
 
 		// is the case aborted due to single fault assumption?
-		Boolean abortCaseSFA = (Boolean) theCase.getProperties().getProperty(
+		Boolean abortCaseSFA = (Boolean) session.getProperties().getProperty(
 				Property.HDT_ABORT_CASE_SFA);
 		if ((abortCaseSFA != null) && (abortCaseSFA.booleanValue())) {
 			return false;
@@ -341,7 +350,8 @@ public class MQDialogController implements DialogController {
 	 * 13:12:22)
 	 * 
 	 * @return boolean
-	 * @param q de.d3web.kernel.domainModel.QASet
+	 * @param q
+	 *            de.d3web.kernel.domainModel.QASet
 	 */
 	public boolean isValidForDC(QASet q) {
 		return (isValidForDC(q, new LinkedList()));
@@ -352,23 +362,22 @@ public class MQDialogController implements DialogController {
 			return false;
 		}
 
-		List pros = q.getProReasons(theCase);
-		List cons = q.getContraReasons(theCase);
+		// List pros = q.getProReasons(session);
+		// List cons = q.getContraReasons(session);
+
+		boolean active = (session.getInterview().isActive(q));
 
 		// user-selection outweight any contrareason!
-		if ((cons.isEmpty())
-				|| (pros.contains(new QASet.Reason(null, PSMethodUserSelected.class)))) {
-			if (!q.isDone(theCase) && !pros.isEmpty()) {
+		if (active) {
+			if (!isDone(session, q)) {
 				// if there are pro-reasons and and (some) question(s) are not
 				// answered
 				return true;
-			}
-			else {
+			} else {
 				if (q instanceof Question) {
 					// go through all follow-questions
-					Iterator iter = QContainerIterator.createFollowList(theCase,
-							(Question) q)
-							.iterator();
+					Iterator iter = QContainerIterator.createFollowList(
+							session, (Question) q).iterator();
 					// to avoid cycles:
 					processedQASets.add(q);
 					while (iter.hasNext()) {
@@ -377,20 +386,26 @@ public class MQDialogController implements DialogController {
 							Question followQ = (Question) follow;
 							if (isValidForDC(followQ, processedQASets)) {
 								QASet logicalParent = getFirstLogicalParent(followQ);
-								if ((logicalParent == null) || (logicalParent.equals(q))) {
+								if ((logicalParent == null)
+										|| (logicalParent.equals(q))) {
 									// a follow-question is valid
-									processedQASets.remove(processedQASets.size() - 1);
+									processedQASets.remove(processedQASets
+											.size() - 1);
 									return (true);
 								}
 							}
-						}
-						else {
+						} else {
 							if (isValidForDC(follow, processedQASets)) {
 								// a follow-container is valid
-								Logger.getLogger(this.getClass().getName()).warning(
-										"how can that be? : container " + follow.getId()
-										+ " is follow of question " + q.getId());
-								processedQASets.remove(processedQASets.size() - 1);
+								Logger
+										.getLogger(this.getClass().getName())
+										.warning(
+												"how can that be? : container "
+														+ follow.getId()
+														+ " is follow of question "
+														+ q.getId());
+								processedQASets
+										.remove(processedQASets.size() - 1);
 								return (true);
 							}
 						}
@@ -398,30 +413,27 @@ public class MQDialogController implements DialogController {
 					// no valid follow-question
 					processedQASets.remove(processedQASets.size() - 1);
 					return false;
-				}
-				else {
-					if (!pros.isEmpty()) {
-						// to avoid cycles:
-						processedQASets.add(q);
-						// go through all children
-						for (TerminologyObject to : q.getChildren()) {
-							if (isValidForDC((QASet) to, processedQASets)) {
-								// a child is valid
-								processedQASets.remove(processedQASets.size() - 1);
-								return true;
-							}
+				} else {
+					// to avoid cycles:
+					processedQASets.add(q);
+					// go through all children
+					for (TerminologyObject to : q.getChildren()) {
+						if (isValidForDC((QASet) to, processedQASets)) {
+							// a child is valid
+							processedQASets.remove(processedQASets.size() - 1);
+							return true;
 						}
 					}
-					else if ((theCase.getKnowledgeBase().getInitQuestions().contains(q))
-							&& (!q.isDone(theCase))) {
+					if ((session.getKnowledgeBase().getInitQuestions()
+							.contains(q))
+							&& (!isDone(session, q))) {
 						return true;
 					}
 					// container is not indicated or no child is valid
 					return (false);
 				}
 			}
-		}
-		else {
+		} else {
 			// there are contra-reasons against this QASet
 			return (false);
 		}
@@ -431,11 +443,13 @@ public class MQDialogController implements DialogController {
 	/**
 	 * Returns true, if the given container or any child of it is indicated.
 	 * 
-	 * @param considerQuestionsAsChildren determines, if the quesiton-children
-	 *        of a container shall also be considered (if false, only
-	 *        children-containers will be considered).
+	 * @param considerQuestionsAsChildren
+	 *            determines, if the quesiton-children of a container shall also
+	 *            be considered (if false, only children-containers will be
+	 *            considered).
 	 */
-	public boolean isIndicatedOrHasIndicatedChild(QContainer container, boolean considerQuestionsAsChildren) {
+	public boolean isIndicatedOrHasIndicatedChild(QContainer container,
+			boolean considerQuestionsAsChildren) {
 		return isIndicatedOrHasIndicatedChild(container, new LinkedList(),
 				considerQuestionsAsChildren);
 	}
@@ -444,41 +458,47 @@ public class MQDialogController implements DialogController {
 	 * Returns true, if the given QASet is indicated.
 	 */
 	private boolean isIndicated(QASet q) {
-		List pros = q.getProReasons(theCase);
-		List cons = q.getContraReasons(theCase);
+		return session.getInterview().isActive(q);
 
-		// user-selection outweight any contrareason!
-		if (((cons.isEmpty()) && (!pros.isEmpty()))
-				|| (pros.contains(new QASet.Reason(null, PSMethodUserSelected.class)))) {
-			return true;
-		}
-		return false;
+		// List pros = q.getProReasons(session);
+		// List cons = q.getContraReasons(session);
+		//
+		// // user-selection outweight any contrareason!
+		// if (((cons.isEmpty()) && (!pros.isEmpty()))
+		// || (pros.contains(new QASet.Reason(null,
+		// PSMethodUserSelected.class)))) {
+		// return true;
+		// }
+		// return false;
 	}
 
 	/**
 	 * Returns true, if the given container or any child of it is indicated.
 	 * 
-	 * @param c (QContainer to test)
-	 * @param processedQASets (to avoid cycles)
-	 * @param considerQuestionsAsChildren determines, if the quesiton-children
-	 *        of a container shall also be considered (if false, only
-	 *        children-containers will be considered).
+	 * @param c
+	 *            (QContainer to test)
+	 * @param processedQASets
+	 *            (to avoid cycles)
+	 * @param considerQuestionsAsChildren
+	 *            determines, if the quesiton-children of a container shall also
+	 *            be considered (if false, only children-containers will be
+	 *            considered).
 	 * @return boolean
 	 */
-	private boolean isIndicatedOrHasIndicatedChild(QContainer c, List processedQASets, boolean considerQuestionsAsChildren) {
+	private boolean isIndicatedOrHasIndicatedChild(QContainer c,
+			List processedQASets, boolean considerQuestionsAsChildren) {
 		if ((c == null) || (processedQASets.contains(c))) {
 			return false;
 		}
 		if (isIndicated(c)) {
 			return true;
-		}
-		else if (c.getChildren().length != 0) {
+		} else if (c.getChildren().length != 0) {
 			if (c.getChildren()[0] instanceof Question) {
-				if (considerQuestionsAsChildren && somethingIsDoneInContainer(c)) {
+				if (considerQuestionsAsChildren
+						&& somethingIsDoneInContainer(c)) {
 					return true;
 				}
-			}
-			else {
+			} else {
 				processedQASets.add(c);
 				// go through all container-children
 				for (TerminologyObject to : c.getChildren()) {
@@ -487,8 +507,7 @@ public class MQDialogController implements DialogController {
 								processedQASets, considerQuestionsAsChildren)) {
 							return true;
 						}
-					}
-					else {
+					} else {
 						if (to instanceof Question) {
 							if (considerQuestionsAsChildren
 									&& somethingIsDoneInContainer(c)) {
@@ -526,8 +545,8 @@ public class MQDialogController implements DialogController {
 	 * derivation-rule)
 	 */
 	public QASet getFirstLogicalParent(Question followQuestion) {
-		KnowledgeSlice knowledge = followQuestion.getKnowledge(PSMethodNextQASet.class,
-				MethodKind.BACKWARD);
+		KnowledgeSlice knowledge = followQuestion.getKnowledge(
+				PSMethodNextQASet.class, MethodKind.BACKWARD);
 		if (knowledge == null) {
 			knowledge = followQuestion.getKnowledge(PSMethodAbstraction.class,
 					MethodKind.BACKWARD);
@@ -537,20 +556,19 @@ public class MQDialogController implements DialogController {
 			for (Rule rule : rs.getRules()) {
 				try {
 					// TODO: Hotfix should be removed
-					if (rule == null) continue;
-					if (rule.getCondition().eval(theCase)) {
-						return getSuitableTerminalObjectForLogicalParent(rule.getCondition()
-								.getTerminalObjects());
+					if (rule == null)
+						continue;
+					if (rule.getCondition().eval(session)) {
+						return getSuitableTerminalObjectForLogicalParent(rule
+								.getCondition().getTerminalObjects());
 					}
-				}
-				catch (NoAnswerException ex) {
-				}
-				catch (UnknownAnswerException ex) {
-				}
-				catch (IndexOutOfBoundsException ex) {
+				} catch (NoAnswerException ex) {
+				} catch (UnknownAnswerException ex) {
+				} catch (IndexOutOfBoundsException ex) {
 					Logger.getLogger(this.getClass().getName()).warning(
-							"Rule " + rule.getId() + " is corrupted! See Question "
-							+ followQuestion.getId());
+							"Rule " + rule.getId()
+									+ " is corrupted! See Question "
+									+ followQuestion.getId());
 				}
 			}
 		}
@@ -563,7 +581,8 @@ public class MQDialogController implements DialogController {
 				remainingQuestions.add((Question) parent);
 			}
 			if (parent instanceof QContainer) {
-				if ((getQASetQueue().contains(parent)) || (history.contains(parent))) {
+				if ((getQASetQueue().contains(parent))
+						|| (history.contains(parent))) {
 					return (QContainer) parent;
 				}
 			}
@@ -589,14 +608,13 @@ public class MQDialogController implements DialogController {
 			Object obj = iter.next();
 			if (obj instanceof Question) {
 				Question qaSet = (Question) obj;
-				if (qaSet.isValid(theCase)) {
+				if (session.getInterview().isActive(qaSet)) {
 					if (isSiQuestion(qaSet)) {
 						return getFirstLogicalParent(qaSet);
 					}
 					return qaSet;
 				}
-			}
-			else if (qaset == null && obj instanceof QContainer) {
+			} else if (qaset == null && obj instanceof QContainer) {
 				qaset = (QContainer) obj;
 			}
 
@@ -625,14 +643,15 @@ public class MQDialogController implements DialogController {
 		for (TerminologyObject to : qc.getChildren()) {
 			QASet qaSet = (QASet) to;
 			if (qaSet instanceof Question) {
-				if (!qaSet.isDone(theCase)) {
+				if (!isDone(session, qaSet)) {
 					validQuestions.add((Question) qaSet);
 				}
-				validQuestions.addAll(getAllValidFollowQuestionsOf((Question) qaSet));
-			}
-			else {
+				validQuestions
+						.addAll(getAllValidFollowQuestionsOf((Question) qaSet));
+			} else {
 				if (isValidForDC(qaSet)) {
-					validQuestions.addAll(getAllValidQuestionsOf((QContainer) qaSet));
+					validQuestions
+							.addAll(getAllValidQuestionsOf((QContainer) qaSet));
 				}
 			}
 		}
@@ -645,7 +664,8 @@ public class MQDialogController implements DialogController {
 	 */
 	private List<Question> getAllValidFollowQuestionsOf(Question q) {
 		List<Question> validQuestions = new LinkedList<Question>();
-		Iterator<QASet> iter = QContainerIterator.createFollowList(theCase, q).iterator();
+		Iterator<QASet> iter = QContainerIterator.createFollowList(session, q)
+				.iterator();
 		while (iter.hasNext()) {
 			Question follow = (Question) iter.next();
 			if (isValidForDC(follow)) {
@@ -678,20 +698,23 @@ public class MQDialogController implements DialogController {
 	 * the screen.
 	 * 
 	 * @param qC
-	 * @param includingInactiveOnes boolean (include questions that are not
-	 *        valid?)
-	 * @param inactiveHierarchicalChildrenOnly boolean (If
-	 *        "inactiveHierarchicalChildrenOnly" is set, then the inactive
-	 *        follow-questions, that are not hierarchical children, will not be
-	 *        added.)
+	 * @param includingInactiveOnes
+	 *            boolean (include questions that are not valid?)
+	 * @param inactiveHierarchicalChildrenOnly
+	 *            boolean (If "inactiveHierarchicalChildrenOnly" is set, then
+	 *            the inactive follow-questions, that are not hierarchical
+	 *            children, will not be added.)
 	 * @return List
 	 */
-	public List getAllQuestionsToRender(QContainer qC, boolean includingInactiveOnes,
+	public List getAllQuestionsToRender(QContainer qC,
+			boolean includingInactiveOnes,
 			boolean inactiveHierarchicalChildrenOnly) {
 
 		List questionList = new LinkedList();
-		if ((qC.getChildren().length > 0) && (qC.getChildren()[0] instanceof Question)) {
-			QContainerIterator containerIterator = new QContainerIterator(theCase, qC);
+		if ((qC.getChildren().length > 0)
+				&& (qC.getChildren()[0] instanceof Question)) {
+			QContainerIterator containerIterator = new QContainerIterator(
+					session, qC);
 
 			while (containerIterator.hasNextChild()) {
 				QASet child = containerIterator.getNextChild();
@@ -700,8 +723,9 @@ public class MQDialogController implements DialogController {
 					oneQuestion.add(child);
 					oneQuestion.add(new Integer(0));
 					questionList.add(oneQuestion);
-					addAllFollowQuestionsToRender((Question) child, 1, questionList,
-							includingInactiveOnes, inactiveHierarchicalChildrenOnly);
+					addAllFollowQuestionsToRender((Question) child, 1,
+							questionList, includingInactiveOnes,
+							inactiveHierarchicalChildrenOnly);
 				}
 			}
 		}
@@ -718,32 +742,38 @@ public class MQDialogController implements DialogController {
 	 * "prevQuestions"-list ist exactly the order in which they shall be
 	 * presented on the screen.
 	 */
-	private void addAllFollowQuestionsToRender(Question q, int level, List prevQuestions,
-			boolean includingInactiveOnes, boolean inactiveHierarchicalChildrenOnly) {
+	private void addAllFollowQuestionsToRender(Question q, int level,
+			List prevQuestions, boolean includingInactiveOnes,
+			boolean inactiveHierarchicalChildrenOnly) {
 
 		// children (logical follow-questions, NOT hierarchical)
-		Iterator followiter = QContainerIterator.createFollowList(theCase, q).iterator();
+		Iterator followiter = QContainerIterator.createFollowList(session, q)
+				.iterator();
 		while (followiter.hasNext()) {
 			QASet follow = (QASet) followiter.next();
 			if ((follow instanceof Question)
-					&& ((!isInListOfQuestionLists((Question) follow, prevQuestions)))) {
+					&& ((!isInListOfQuestionLists((Question) follow,
+							prevQuestions)))) {
 				Question followQ = (Question) follow;
-				if ((followQ.isValid(theCase))
-						|| hasToShowInactiveQuestion(q, followQ, includingInactiveOnes,
-						inactiveHierarchicalChildrenOnly)) {
+				if (session.getInterview().isActive(followQ)
+						|| hasToShowInactiveQuestion(q, followQ,
+								includingInactiveOnes,
+								inactiveHierarchicalChildrenOnly)) {
 
 					QASet logicalParent = getFirstLogicalParent((Question) follow);
 
 					// logical parent has to be original question
-					if ((logicalParent == null) || (logicalParent.equals(q))
-							|| (!logicalParent.isValid(theCase))) {
+					if ((logicalParent == null)
+							|| (logicalParent.equals(q))
+							|| (!session.getInterview().isActive(logicalParent))) {
 
 						List oneQuestion = new LinkedList();
 						oneQuestion.add(followQ);
 						oneQuestion.add(new Integer(level));
 						prevQuestions.add(oneQuestion);
-						addAllFollowQuestionsToRender(followQ, level + 1, prevQuestions,
-								includingInactiveOnes, inactiveHierarchicalChildrenOnly);
+						addAllFollowQuestionsToRender(followQ, level + 1,
+								prevQuestions, includingInactiveOnes,
+								inactiveHierarchicalChildrenOnly);
 					}
 				}
 			}
@@ -757,7 +787,8 @@ public class MQDialogController implements DialogController {
 	 * @see addAllFollowQuestionsToRender
 	 */
 	private boolean hasToShowInactiveQuestion(Question parent, Question follow,
-			boolean includingInactiveQuestions, boolean inactiveHierarchicalChildrenOnly) {
+			boolean includingInactiveQuestions,
+			boolean inactiveHierarchicalChildrenOnly) {
 		Boolean showAlways = (Boolean) follow.getProperties().getProperty(
 				Property.DIALOG_MQDIALOGS_SHOW_FOLLOWQ_ALWAYS);
 		if ((showAlways != null)
@@ -767,7 +798,7 @@ public class MQDialogController implements DialogController {
 		}
 
 		if ((includingInactiveQuestions)
-						// (intersect with hierarchical children)
+		// (intersect with hierarchical children)
 				&& (arrayContains(parent.getChildren(), follow) || !inactiveHierarchicalChildrenOnly)) {
 			return true;
 		}
@@ -775,7 +806,8 @@ public class MQDialogController implements DialogController {
 		return false;
 	}
 
-	private boolean arrayContains(TerminologyObject[] array, TerminologyObject object) {
+	private boolean arrayContains(TerminologyObject[] array,
+			TerminologyObject object) {
 		for (TerminologyObject to : array) {
 			if (to == object) {
 				return true;
@@ -785,16 +817,19 @@ public class MQDialogController implements DialogController {
 	}
 
 	/**
-	 * @param q Question (the question, which is to search)
-	 * @param toSearch List (a List of List's; only if the question is contained
-	 *        in one of the List's, this method returns true)
+	 * @param q
+	 *            Question (the question, which is to search)
+	 * @param toSearch
+	 *            List (a List of List's; only if the question is contained in
+	 *            one of the List's, this method returns true)
 	 * @return boolean
 	 */
 	private static boolean isInListOfQuestionLists(Question q, List toSearch) {
 		Iterator iter = toSearch.iterator();
 		while (iter.hasNext()) {
 			List oneQuestion = (List) iter.next();
-			if (oneQuestion.get(0).equals(q)) return (true);
+			if (oneQuestion.get(0).equals(q))
+				return (true);
 		}
 		return (false);
 	}
@@ -814,41 +849,36 @@ public class MQDialogController implements DialogController {
 				QASet logicalParent = getFirstLogicalParent(q);
 				if (c.equals(logicalParent)) {
 					return false;
-				}
-				else if (logicalParent == null) {
+				} else if (logicalParent == null) {
 
 					boolean aParentIsValid = false;
 					for (TerminologyObject to : q.getParents()) {
 						QASet parent = (QASet) to;
 						if (parent != c) {
 							// determine, if the parent is user-selected
-							QASet.Reason userSelectionReason = new QASet.Reason(null,
-									PSMethodUserSelected.class);
-							List pros = parent.getProReasons(theCase);
+							
+//							QASet.Reason userSelectionReason = new QASet.Reason(
+//									null, PSMethodUserSelected.class);
+							Fact fact = session.getBlackboard().getInterviewFact(parent);
 							boolean wasUserSelected = false;
-							if (pros.contains(userSelectionReason)) {
+							if (fact.getPSMethod().equals(PSMethodUserSelected.getInstance())) {
 								wasUserSelected = true;
-								// remove the user-selection temporarily
-								pros.remove(userSelectionReason);
 							}
 
 							// check, if the parent is real valid (valid WITHOUT
 							// the
 							// user-selection)
 							aParentIsValid = aParentIsValid
-									|| ((parent instanceof QContainer) && (parent.isValid(theCase)));
+									|| ((parent instanceof QContainer) && (session
+											.getInterview().isActive(parent)));
 
-							// now, restore the user-selection
-							if (wasUserSelected) {
-								pros.add(userSelectionReason);
-							}
 						}
 					}
 					// if there is an answered question, which has no other real
 					// valid
 					// container-parent...
 					// (then the container has to be user-selected)
-					if ((!aParentIsValid) && (q.isDone(theCase))) {
+					if ((!aParentIsValid) && (isDone(session, q))) {
 						return false;
 					}
 				}
@@ -864,7 +894,8 @@ public class MQDialogController implements DialogController {
 		for (TerminologyObject qaSet : c.getChildren()) {
 			if (qaSet instanceof Question) {
 				Question q = (Question) qaSet;
-				if (UndefinedValue.isNotUndefinedValue(theCase.getBlackboard().getValue(q))) {
+				if (UndefinedValue.isNotUndefinedValue(session.getBlackboard()
+						.getValue(q))) {
 					return true;
 				}
 			}
@@ -906,7 +937,7 @@ public class MQDialogController implements DialogController {
 		// if there isn't any user-selected container:
 
 		// is the case aborted due to single fault assumption?
-		Boolean abortCaseSFA = (Boolean) theCase.getProperties().getProperty(
+		Boolean abortCaseSFA = (Boolean) session.getProperties().getProperty(
 				Property.HDT_ABORT_CASE_SFA);
 		if ((abortCaseSFA != null) && (abortCaseSFA.booleanValue())) {
 			return null;
@@ -915,8 +946,7 @@ public class MQDialogController implements DialogController {
 		// second, look at the current container
 		if (isValidForDC(getCurrentQASet())) {
 			return (getCurrentQASet());
-		}
-		else {
+		} else {
 			historyCursor++;
 		}
 
@@ -933,8 +963,7 @@ public class MQDialogController implements DialogController {
 			addToCurrentHistoryPos(qaSet);
 			if (isValidForDC(qaSet)) {
 				return (qaSet);
-			}
-			else {
+			} else {
 				historyCursor++;
 			}
 		}
@@ -953,8 +982,7 @@ public class MQDialogController implements DialogController {
 			addToCurrentHistoryPos(container);
 			if (isValidForDC(container)) {
 				return (container);
-			}
-			else {
+			} else {
 				historyCursor++;
 			}
 		}
@@ -966,22 +994,24 @@ public class MQDialogController implements DialogController {
 	/**
 	 * Trys to remove the user-selection (if existing).
 	 * 
-	 * @param container (QContainer)
+	 * @param container
+	 *            (QContainer)
 	 */
 	public void tryToRemoveUserSelection(QContainer container) {
 		if (container == null) {
 			return;
 		}
 		if ((userSelectedQASets.contains(container))
-				&& ((nothingIsDoneInContainer(container)) || ((container.getProReasons(
-				theCase)
-				.size() > 1) && (container.getContraReasons(theCase).isEmpty())))) {
+				&& ((nothingIsDoneInContainer(container)))) { // &&
+			// (container.getContraReasons(session).isEmpty()))))
+			// {
 			// if nothing is answered in the container or if the container has
 			// proreasons
 			// and no contrareason, remove the user-selection
 			userSelectedQASets.remove(container);
-			container.removeProReason(new QASet.Reason(null, PSMethodUserSelected.class),
-					theCase);
+			// container.removeProReason(new QASet.Reason(null,
+			// PSMethodUserSelected.class),
+			// session);
 		}
 	}
 
@@ -1006,7 +1036,8 @@ public class MQDialogController implements DialogController {
 			QASet next = (QASet) iter.next();
 			iter.remove();
 			if (isValidForDC(next)) {
-				if ((next instanceof QContainer) && (!processedContainers.contains(next))) {
+				if ((next instanceof QContainer)
+						&& (!processedContainers.contains(next))) {
 					processedContainers.add((QContainer) next);
 				}
 				return next;
@@ -1034,7 +1065,8 @@ public class MQDialogController implements DialogController {
 	 * Insert the method's description here. Creation date: (27.02.2001
 	 * 11:33:05)
 	 * 
-	 * @param id java.lang.String
+	 * @param id
+	 *            java.lang.String
 	 */
 	public QASet moveToQASet(QASet searchQASet) {
 		addUserIndicationQASet(searchQASet);
@@ -1045,14 +1077,14 @@ public class MQDialogController implements DialogController {
 	 * Insert the method's description here. Creation date: (27.02.2001
 	 * 11:33:05)
 	 * 
-	 * @param id java.lang.String
+	 * @param id
+	 *            java.lang.String
 	 */
 	public QASet moveToQuestion(QASet searchQuestion) {
 
 		if (searchQuestion == null) {
 			return (moveToNewestContainer());
-		}
-		else if (searchQuestion instanceof QContainer) {
+		} else if (searchQuestion instanceof QContainer) {
 			return (moveToQASet(searchQuestion));
 		}
 
@@ -1066,10 +1098,13 @@ public class MQDialogController implements DialogController {
 	 * Returns a "leaf"-QContainer, that is parent of the question
 	 */
 	private static QContainer getFirstContainerParent(Question q) {
-		if (q == null) return (null);
+		if (q == null)
+			return (null);
 		for (TerminologyObject qaSet : q.getParents()) {
-			if (qaSet instanceof Question) return (getFirstContainerParent((Question) qaSet));
-			else return ((QContainer) qaSet);
+			if (qaSet instanceof Question)
+				return (getFirstContainerParent((Question) qaSet));
+			else
+				return ((QContainer) qaSet);
 		}
 		return (null);
 	}
@@ -1091,8 +1126,7 @@ public class MQDialogController implements DialogController {
 		}
 		if (parent instanceof Question) {
 			return getFirstContainerParent((Question) parent);
-		}
-		else {
+		} else {
 			return getFirstContainerParent(q);
 		}
 	}
@@ -1100,41 +1134,42 @@ public class MQDialogController implements DialogController {
 	/**
 	 * addUserIndicationQASet method comment.
 	 */
-	public void addUserIndicationQASet(de.d3web.core.knowledge.terminology.QASet q) {
+	public void addUserIndicationQASet(
+			de.d3web.core.knowledge.terminology.QASet q) {
 		QContainer qContainer = null;
 		if (q instanceof QContainer) {
 			// only "leaf"-containers should be added
 			if (q.getChildren().length != 0) {
-				qContainer = getFirstIndicatedLeafContainer((QContainer) q, true);
+				qContainer = getFirstIndicatedLeafContainer((QContainer) q,
+						true);
 				if (qContainer == null) {
-					qContainer = getFirstIndicatedLeafContainer((QContainer) q, false);
+					qContainer = getFirstIndicatedLeafContainer((QContainer) q,
+							false);
 				}
 				if (qContainer == null) {
 					qContainer = getFirstLeafContainer((QContainer) q);
 				}
-			}
-			else {
+			} else {
 				qContainer = (QContainer) q;
 			}
-		}
-		else {
+		} else {
 			// questions shouldn't be added, so determine a parent-container
 			qContainer = getFirstContainerParent((Question) q);
 		}
 		if ((qContainer != null) && (!userIndicationList.contains(qContainer))) {
-			// if the container hasn't any proreasons or if it has some
-			// contrareasons,
-			// mark it as user-selected
-			List pros = qContainer.getProReasons(theCase);
-			List cons = qContainer.getContraReasons(theCase);
-			if ((pros.isEmpty()) || (!cons.isEmpty())) {
-				if (!userSelectedQASets.contains(qContainer)) {
-					userSelectedQASets.add(qContainer);
-				}
-				qContainer
-						.addProReason(new QASet.Reason(null, PSMethodUserSelected.class),
-						theCase);
+			// // if the container hasn't any proreasons or if it has some
+			// // contrareasons,
+			// // mark it as user-selected
+			// List pros = qContainer.getProReasons(session);
+			// List cons = qContainer.getContraReasons(session);
+			// if ((pros.isEmpty()) || (!cons.isEmpty())) {
+			if (!userSelectedQASets.contains(qContainer)) {
+				userSelectedQASets.add(qContainer);
 			}
+			// qContainer
+			// .addProReason(new QASet.Reason(null, PSMethodUserSelected.class),
+			// session);
+			// }
 			userIndicationList.add(0, qContainer);
 
 		}
@@ -1145,7 +1180,8 @@ public class MQDialogController implements DialogController {
 	 * questions as children.
 	 */
 	private QContainer getFirstLeafContainer(QContainer startC) {
-		if (startC == null) return null;
+		if (startC == null)
+			return null;
 
 		while ((startC.getChildren())[0] instanceof QContainer) {
 			startC = (QContainer) startC.getChildren()[0];
@@ -1157,24 +1193,24 @@ public class MQDialogController implements DialogController {
 	 * Returns the first container (below startC) which is indicated (and
 	 * valid?) and which has questions as children.
 	 */
-	private QContainer getFirstIndicatedLeafContainer(QContainer startC, boolean mustBeValid) {
+	private QContainer getFirstIndicatedLeafContainer(QContainer startC,
+			boolean mustBeValid) {
 		if (startC == null) {
 			return null;
 		}
 		for (TerminologyObject to : startC.getChildren()) {
 			QASet qaSet = (QASet) to;
 			if (qaSet instanceof Question) {
-				if ((isIndicated(startC)) && ((!mustBeValid) || (isValidForDC(startC)))) {
+				if ((isIndicated(startC))
+						&& ((!mustBeValid) || (isValidForDC(startC)))) {
 					return startC;
-				}
-				else {
+				} else {
 					return null;
 				}
-			}
-			else {
+			} else {
 				if (isIndicated(qaSet)) {
-					QContainer ret = getFirstIndicatedLeafContainer((QContainer) qaSet,
-							mustBeValid);
+					QContainer ret = getFirstIndicatedLeafContainer(
+							(QContainer) qaSet, mustBeValid);
 					if (ret != null) {
 						return ret;
 					}
@@ -1189,11 +1225,9 @@ public class MQDialogController implements DialogController {
 			QASet qaSet = (QASet) no;
 			if (psm instanceof PSMethodUserSelected) {
 				addUserIndicationQASet(qaSet);
-			}
-			else if (psm instanceof PSMethodInit) {
+			} else if (psm instanceof PSMethodInit) {
 				addQASet(initQASets, qaSet);
-			}
-			else {
+			} else {
 				addQASet(qasetQueue, qaSet);
 			}
 		}
@@ -1225,7 +1259,7 @@ public class MQDialogController implements DialogController {
 		// if there isn't any user-selected container:
 
 		// is the case aborted due to single fault assumption?
-		Boolean abortCaseSFA = (Boolean) theCase.getProperties().getProperty(
+		Boolean abortCaseSFA = (Boolean) session.getProperties().getProperty(
 				Property.HDT_ABORT_CASE_SFA);
 		if ((abortCaseSFA != null) && (abortCaseSFA.booleanValue())) {
 			return null;
@@ -1255,6 +1289,16 @@ public class MQDialogController implements DialogController {
 
 		// else, there is no container to show
 		return (null);
+	}
+
+	private boolean isDone(Session session, QASet object) {
+		if (object instanceof Question) {
+			return UndefinedValue.isNotUndefinedValue(session.getBlackboard()
+					.getValue((Question) object));
+		} else if (object instanceof QContainer) {
+			return session.getInterview().isActive((QContainer) object);
+		} else
+			return false;
 	}
 
 }

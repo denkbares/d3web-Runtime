@@ -40,8 +40,9 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
-import de.d3web.core.session.Value;
+import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
@@ -391,8 +392,7 @@ public class XMLUtil {
 		}
 
 		if (q instanceof QuestionChoice) {
-			Choice choice = (Choice) ((QuestionChoice) q).getAnswer(theCase,
-					idOrValue);
+			Choice choice =KnowledgeBaseManagement.createInstance(theCase.getKnowledgeBase()).findChoice((QuestionChoice) q, idOrValue); 
 			return new ChoiceValue(choice);
 		}
 		else if (q instanceof QuestionText) {

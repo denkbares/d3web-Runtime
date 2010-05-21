@@ -21,17 +21,11 @@
 package de.d3web.core.knowledge.terminology;
 
 import java.util.Collection;
-import java.util.List;
 
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.session.CaseObjectSource;
-import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.CaseQuestion;
-import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.indication.inference.PSMethodNextQASet;
 
@@ -45,7 +39,7 @@ import de.d3web.indication.inference.PSMethodNextQASet;
  * @see QASet
  * @see DerivationType
  */
-public abstract class Question extends QASet implements CaseObjectSource {
+public abstract class Question extends QASet {
 
 	/**
 	 * Creates a new {@link Question} instance with the specified unique
@@ -55,27 +49,6 @@ public abstract class Question extends QASet implements CaseObjectSource {
 	 */
 	public Question(String id) {
 		super(id);
-	}
-
-	@Override
-	@Deprecated
-	// should die with the new interview management
-	public void addContraReason(Reason source, Session theCase) {
-		((CaseQuestion) theCase.getCaseObject(this)).addContraReason(source);
-	}
-
-	@Override
-	@Deprecated
-	// should die with the new interview management
-	public void addProReason(Reason source, Session theCase) {
-		((CaseQuestion) theCase.getCaseObject(this)).addProReason(source);
-	}
-
-	@Override
-	@Deprecated
-	// should die with the new interview management
-	public List<Reason> getContraReasons(Session theCase) {
-		return ((CaseQuestion) theCase.getCaseObject(this)).getContraReasons();
 	}
 
 	/**
@@ -103,11 +76,6 @@ public abstract class Question extends QASet implements CaseObjectSource {
 		else return true;
 	}
 
-	@Override
-	public List<Reason> getProReasons(Session theCase) {
-		return ((CaseQuestion) theCase.getCaseObject(this)).getProReasons();
-	}
-
 	/**
 	 * We do not use AnswerUnknown anymore, but we can set {@link Unknown} in a
 	 * given session.
@@ -115,60 +83,6 @@ public abstract class Question extends QASet implements CaseObjectSource {
 	@Deprecated
 	public Unknown getUnknownAlternative() {
 		return Unknown.getInstance();
-	}
-
-	@Override
-	@Deprecated
-	// should die with the new interview management
-	public boolean isDone(Session theCase) {
-		if (!getContraReasons(theCase).isEmpty()) {
-			// Question has ContraIndication (probably)
-			return true;
-		}
-		else {
-			return !UndefinedValue.isUndefinedValue(theCase.getBlackboard().getValue(this));
-			// (getValue(theCase) != null && theCase.getValue(this) !=
-			// UndefinedValue.getInstance());
-		}
-	}
-
-	@Override
-	@Deprecated
-	// should die with the new interview management
-	public boolean isDone(Session theCase, boolean respectValidFollowQuestions) {
-		if (respectValidFollowQuestions) {
-			if (!isDone(theCase)) {
-				return false;
-			}
-
-			// The question is NOT done, until every valid children is also done
-			for (TerminologyObject to : getChildren()) {
-				QASet child = (QASet) to;
-				if (child.isValid(theCase)
-						&& !child.isDone(theCase, respectValidFollowQuestions)) {
-					return false;
-				}
-			}
-			return true;
-
-		}
-		else {
-			return isDone(theCase);
-		}
-	}
-
-	@Override
-	@Deprecated
-	// should die with the new interview management
-	public void removeContraReason(Reason source, Session theCase) {
-		((CaseQuestion) theCase.getCaseObject(this)).removeContraReason(source);
-	}
-
-	@Override
-	@Deprecated
-	// should die with the new interview management
-	public void removeProReason(Reason source, Session theCase) {
-		((CaseQuestion) theCase.getCaseObject(this)).removeProReason(source);
 	}
 
 	/**

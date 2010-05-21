@@ -137,7 +137,7 @@ public class QuestionsRendererUtils {
 		if (first != null && first.getId().equals(q.getId())) {
 			return "currentQ";
 		}
-		else if (q.isDone(theCase)) {
+		else if (DialogUtils.isDone(theCase, q)) {
 			return "answeredQ";
 		}
 		else {
@@ -151,7 +151,7 @@ public class QuestionsRendererUtils {
 		if (first != null && first.getId().equals(q.getId())) {
 			return layoutDef.getCurrentQuestionBackground();
 		}
-		else if (q.isDone(theCase)) {
+		else if (DialogUtils.isDone(theCase, q)) {
 			return layoutDef.getAnsweredQuestionBackground();
 		}
 		else {

@@ -27,11 +27,8 @@ import java.util.List;
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
-import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.CaseQuestionChoice;
+import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.values.Choice;
-import de.d3web.core.utilities.Tester;
-import de.d3web.core.utilities.Utils;
 
 /**
  * Storage for Questions with predefined answers (alternatives). Abstract
@@ -62,61 +59,11 @@ public abstract class QuestionChoice extends Question {
 		return alternatives;
 	}
 
-	private Choice findAlternative(List<? extends Choice> alternativesArg, final String id) {
-		return Utils.findIf(alternativesArg, new Tester() {
-
-			public boolean test(Object testObj) {
-				if ((testObj instanceof Choice)
-						&& (((Choice) testObj).getId().equalsIgnoreCase(id))) {
-					return true;
-				}
-				else {
-					return false;
-				}
-			}
-		});
-	}
-
 	/**
-	 * if theCase == null, find the alternative in all alternatives, else find
-	 * the alternative in all currently (depend on the case) available
-	 * alternatives
-	 * 
-	 * @return Answer (either instanceof AnswerChoice or AnswerUnknown)
-	 **/
-	public Choice getAnswer(Session theCase, String id) {
-		if (id == null) return null;
-		if (theCase == null) return findAlternative(alternatives, id);
-		else return findAlternative(getAlternatives(theCase), id);
-	}
-
+	 * @deprecated Use KnowledgeBaseManagement.findChoice(...)
+	 */
 	public Choice findChoice(String choiceID) {
-		if (choiceID == null) {
-			return null;
-		}
-		else {
-			return findAlternative(alternatives, choiceID);
-		}
-	}
-
-	/**
-	 * Gives you only the possible answers (alternatives) which are not
-	 * suppressed by any rule.
-	 * 
-	 * @param theCase currentCase
-	 * @return a Vector of all alternatives that are not suppressed by any
-	 *         RuleSuppress
-	 **/
-	public List<Choice> getAlternatives(Session theCase) {
-		CaseQuestionChoice caseQ = (CaseQuestionChoice) theCase.getCaseObject(this);
-		List<Choice> suppVec = caseQ.getMergedSuppressAlternatives();
-		List<Choice> result = new LinkedList<Choice>();
-		Iterator<Choice> e = alternatives.iterator();
-		while (e.hasNext()) {
-			Choice elem = e.next();
-			if (!suppVec.contains(elem)) result.add(elem);
-		}
-		return result;
+		return KnowledgeBaseManagement.createInstance(getKnowledgeBase()).findChoice(this, choiceID);
 	}
 
 	/**
@@ -148,13 +95,6 @@ public abstract class QuestionChoice extends Question {
 		return res;
 	}
 
-	public String verbalizeWithoutValue(Session theCase) {
-		String res = "\n " + super.toString();
-		Iterator<Choice> iter = getAlternatives(theCase).iterator();
-		while (iter.hasNext())
-			res += "\n  " + iter.next().toString();
-		return res;
-	}
 
 	/**
 	 * @return the Num2ChoiceSchema that has been set to this question, null, if

@@ -26,14 +26,12 @@ import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.EvaluatableAnswerDateValue;
@@ -207,8 +205,7 @@ public class ActionAddValue extends ActionQuestionSetter {
 	 */
 	@Override
 	public void doIt(Session session, Rule rule) {
-		if (!lastFiredRuleEqualsCurrentRuleAndNotFired(session)) {
-			getQuestion().addProReason(new QASet.Reason(rule), session);
+			// getQuestion().addProReason(new QASet.Reason(rule), session);
 			Value resultValue;
 			if ((getQuestion() instanceof QuestionOC)
 					&& (((QuestionOC) getQuestion()).getSchemaForQuestion() != null)
@@ -226,13 +223,13 @@ public class ActionAddValue extends ActionQuestionSetter {
 					&& (((QuestionOC) getQuestion()).getSchemaForQuestion() == null)
 					&& (getQuestion().getKnowledge(PSMethodAbstraction.class,
 					MethodKind.BACKWARD) != null)) {
-				Choice severestAnswer = getSeverestAnswer((QuestionOC) getQuestion(), session);
+				Value severestAnswer = (Value)getValue();
+					
 				if ((severestAnswer != null)
 						&& (UndefinedValue.isUndefinedValue(session.getBlackboard().getValue(
-								getQuestion())) || (!severestAnswer.equals(session.getBlackboard().getValue(
-								getQuestion()))))) {
+								getQuestion())))) {
 					Fact fact = FactFactory.createFact(getQuestion(),
-							new ChoiceValue(severestAnswer),
+							severestAnswer,
 							this,
 							session.getPSMethodInstance(getProblemsolverContext()));
 					session.getBlackboard().addValueFact(fact);
@@ -244,7 +241,7 @@ public class ActionAddValue extends ActionQuestionSetter {
 						FactFactory.createFact(getQuestion(), resultValue, rule,
 						session.getPSMethodInstance(getProblemsolverContext())));
 			}
-		}
+
 	}
 
 	@Override

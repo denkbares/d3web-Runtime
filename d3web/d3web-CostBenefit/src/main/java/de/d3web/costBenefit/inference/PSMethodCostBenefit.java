@@ -33,12 +33,14 @@ import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.Indication.State;
+import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
@@ -96,7 +98,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		Session theCase = caseObject.getSession();
 		if (currentSequence != null) {
 			if (caseObject.getCurrentPathIndex() == -1
-					|| currentSequence[caseObject.getCurrentPathIndex()].isDone(theCase, true)) {
+					|| isDone(currentSequence[caseObject.getCurrentPathIndex()],theCase)) {
 				caseObject.incCurrentPathIndex();
 				caseObject.setHasBegun(false);
 				if (caseObject.getCurrentPathIndex() >= currentSequence.length) {
@@ -212,7 +214,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 			}
 		}
 		for (QContainer qcon : qcons) {
-			if (qcon.isDone(theCase, true)) {
+			if (isDone(qcon,theCase)) {
 				KnowledgeSlice ks = qcon.getKnowledge(
 						PSMethodCostBenefit.class,
 						StateTransition.STATE_TRANSITION);
@@ -229,7 +231,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		}
 		// returns if the actual QContainer is not done and has begun yet
 		if (caseObject.isHasBegun()
-				&& !currentSequence[caseObject.getCurrentPathIndex()].isDone(theCase, true)) {
+				&& !isDone(currentSequence[caseObject.getCurrentPathIndex()], theCase)) {
 			return;
 		}
 		// if the possible Diagnosis have changed, a flag that a new path has to
@@ -258,6 +260,37 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 			calculateNewPath(caseObject);
 		}
 		activateNextQContainer(caseObject);
+	}
+
+	/**
+	 * Checks, if all questions, contained in the specified {@link QASet} 
+	 * have a value assigned to them in the specified session.
+	 * @param qaset the specified quaset
+	 * @param session the specified session
+	 * @return
+	 */
+	private boolean isDone(QASet qaset, Session session) {
+		if (qaset instanceof Question) {
+			Value value = session.getBlackboard().getValue((Question)qaset);
+			if (UndefinedValue.isNotUndefinedValue(value)) {
+				boolean done = true;
+				for (TerminologyObject object : qaset.getChildren()) {
+					done = done && isDone((QASet)object, session);
+				}
+				return done;
+			}
+			else {
+				return false;
+			}
+		}
+		else if (qaset instanceof QContainer) {
+			boolean done = true;
+			for (TerminologyObject object : qaset.getChildren()) {
+				done = done && isDone((QASet)object, session);
+			}
+			return done;
+		}
+		return true;
 	}
 
 	public TargetFunction getTargetFunction() {

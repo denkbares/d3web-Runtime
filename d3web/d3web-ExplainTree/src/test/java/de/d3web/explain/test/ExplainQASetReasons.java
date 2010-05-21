@@ -38,9 +38,10 @@ import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.FactFactory;
@@ -229,10 +230,13 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 
 		// set MF8a2 since it will activate Mf10 (and give P8 the score P5
 		QuestionChoice Mf8 = (QuestionChoice) findQ("Mf8", testKb);
+		Choice choice = KnowledgeBaseManagement.createInstance(theCase.getKnowledgeBase()).findChoice((QuestionChoice)Mf8, "Mf8a2");
+
 		theCase.getBlackboard().addValueFact(
-				FactFactory.createFact(Mf8, new ChoiceValue((Choice) Mf8.getAnswer(theCase,
-						"Mf8a2")), PSMethodUserSelected.getInstance(),
-						PSMethodUserSelected.getInstance()));
+				FactFactory.createUserEnteredFact(Mf8, new ChoiceValue(choice)));
+//				Fact(Mf8, new ChoiceValue((Choice) Mf8.getAnswer(theCase,
+//						"Mf8a2")), PSMethodUserSelected.getInstance(),
+//						PSMethodUserSelected.getInstance()));
 
 		// explain a followup-question not active
 		ENode expl = eFac.explainActive(findQ("Mf10", testKb), explainContext);

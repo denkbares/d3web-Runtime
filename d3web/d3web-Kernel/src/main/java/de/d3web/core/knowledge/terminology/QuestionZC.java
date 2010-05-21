@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import de.d3web.core.session.Session;
 import de.d3web.core.session.values.Choice;
 
 /**
@@ -63,15 +62,4 @@ public class QuestionZC extends QuestionOC {
 		Logger.getLogger(this.getClass().getName()).severe(
 				"Tried to add AnswerAlternative for QuestionZC");
 	}
-
-	@Override
-	public boolean isDone(Session theCase) {
-		return true;
-	}
-
-	@Override
-	public boolean isDone(Session theCase, boolean respectValidFollowQuestions) {
-		return true;
-	}
-
 }

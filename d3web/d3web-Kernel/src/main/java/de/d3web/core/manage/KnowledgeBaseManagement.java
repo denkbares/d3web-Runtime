@@ -450,6 +450,8 @@ public class KnowledgeBaseManagement {
 		}
 		return null;
 	}
+	
+	
 
 	public MultipleChoiceValue findMultipleChoiceValue(QuestionMC quesiton, List<String> valueNames) {
 		List<ChoiceValue> choiceValues = new ArrayList<ChoiceValue>(valueNames.size());

@@ -513,4 +513,15 @@ public class DialogUtils {
 		}
 		return true;
 	}
+	
+	public static boolean isDone(Session session, QASet object) {
+		if (object instanceof Question) {
+			return UndefinedValue.isNotUndefinedValue(session.getBlackboard().getValue((Question)object)); 
+		}
+		else if (object instanceof QContainer) {
+			return session.getInterview().isActive((QContainer)object);
+		}
+		else
+			return false;
+	}
 }

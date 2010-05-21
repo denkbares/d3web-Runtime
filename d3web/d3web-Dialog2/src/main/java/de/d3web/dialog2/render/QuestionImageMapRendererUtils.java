@@ -53,7 +53,7 @@ public class QuestionImageMapRendererUtils {
 	private static boolean allQuestionsInImageAnswered(Image image, Session theCase) {
 		for (Region r : image.getRegions()) {
 			Question q = theCase.getKnowledgeBase().searchQuestion(r.getQuestionID());
-			if (q != null && !q.isDone(theCase)) {
+			if (q != null && !DialogUtils.isDone(theCase, q)) {
 				return false;
 			}
 		}

@@ -23,9 +23,7 @@
  */
 package de.d3web.core.knowledge.terminology;
 
-import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.CaseQuestionDate;
-import de.d3web.core.session.blackboard.SessionObject;
+
 
 /**
  * A Question which asks for a date.
@@ -46,8 +44,5 @@ public class QuestionDate extends Question {
 		super(id);
 	}
 
-	public SessionObject createCaseObject(Session session) {
-		return new CaseQuestionDate(this);
-	}
 
 }

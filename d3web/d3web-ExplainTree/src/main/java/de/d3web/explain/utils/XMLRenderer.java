@@ -93,8 +93,6 @@ import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.indication.ActionContraIndication;
 import de.d3web.indication.ActionNextQASet;
-import de.d3web.indication.inference.PSMethodParentQASet;
-import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.scoring.ActionHeuristicPS;
 import de.d3web.scoring.HeuristicRating;
 import de.d3web.scoring.Score;
@@ -465,22 +463,22 @@ public class XMLRenderer {
 				if (isInitQuestion) sb.append(renderInitialQASet(qaSet, true));
 			}
 		}
-		else if (context == PSMethodUserSelected.class) {
-			if (qaSet.getProReasons(theCase).contains(
-					new QASet.Reason(null, PSMethodUserSelected.class))) {
-				sb.append(renderUserSelectedReason());
-			}
-		}
-		else if (context == PSMethodParentQASet.class) {
-			if (qaSet.getProReasons(theCase).contains(
-					new QASet.Reason(null, PSMethodParentQASet.class))) {
-				sb.append(renderParentQASetProReason(qaSet, showStatus, theCase));
-			}
-			if (qaSet.getContraReasons(theCase).contains(
-					new QASet.Reason(null, PSMethodParentQASet.class))) {
-				sb.append(renderParentQASetContraReason(qaSet, showStatus, theCase));
-			}
-		}
+//		else if (context == PSMethodUserSelected.class) {
+//			if (qaSet.getProReasons(theCase).contains(
+//					new QASet.Reason(null, PSMethodUserSelected.class))) {
+//				sb.append(renderUserSelectedReason());
+//			}
+//		}
+//		else if (context == PSMethodParentQASet.class) {
+//			if (qaSet.getProReasons(theCase).contains(
+//					new QASet.Reason(null, PSMethodParentQASet.class))) {
+//				sb.append(renderParentQASetProReason(qaSet, showStatus, theCase));
+//			}
+//			if (qaSet.getContraReasons(theCase).contains(
+//					new QASet.Reason(null, PSMethodParentQASet.class))) {
+//				sb.append(renderParentQASetContraReason(qaSet, showStatus, theCase));
+//			}
+//		}
 		return (sb);
 	}
 
@@ -700,12 +698,12 @@ public class XMLRenderer {
 		sb.append(">");
 		sb.append("<Action>");
 		sb.append("<ParentQASetPro>");
-		for (TerminologyObject to : qaSet.getParents()) {
-			QContainer parent = (QContainer) to;
-			if (!parent.getProReasons(theCase).isEmpty()) {
-				sb.append(renderQASetObject(parent));
-			}
-		}
+//		for (TerminologyObject to : qaSet.getParents()) {
+//			QContainer parent = (QContainer) to;
+//			if (!parent.getProReasons(theCase).isEmpty()) {
+//				sb.append(renderQASetObject(parent));
+//			}
+//		}
 		sb.append("</ParentQASetPro>");
 		sb.append("</Action>");
 		sb.append("</KnowledgeSlice>");
@@ -721,12 +719,12 @@ public class XMLRenderer {
 		sb.append(">");
 		sb.append("<Action>");
 		sb.append("<ParentQASetContra>");
-		for (TerminologyObject to : qaSet.getParents()) {
-			QContainer parent = (QContainer) to;
-			if (!parent.getContraReasons(theCase).isEmpty()) {
-				sb.append(renderQASetObject(parent));
-			}
-		}
+//		for (TerminologyObject to : qaSet.getParents()) {
+//			QContainer parent = (QContainer) to;
+//			if (!parent.getContraReasons(theCase).isEmpty()) {
+//				sb.append(renderQASetObject(parent));
+//			}
+//		}
 		sb.append("</ParentQASetContra>");
 		sb.append("</Action>");
 		sb.append("</KnowledgeSlice>");

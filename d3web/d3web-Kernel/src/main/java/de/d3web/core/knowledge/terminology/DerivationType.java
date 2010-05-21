@@ -85,7 +85,7 @@ public class DerivationType {
 	 * @author georg
 	 */
 	private Object readResolve() {
-		Iterator iter = Arrays.asList(new DerivationType[] {
+		Iterator<DerivationType> iter = Arrays.asList(new DerivationType[] {
 			DerivationType.BASIC,
 			DerivationType.DERIVED,
 			DerivationType.MIXED,

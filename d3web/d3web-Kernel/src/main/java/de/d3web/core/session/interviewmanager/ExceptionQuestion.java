@@ -59,47 +59,12 @@ public abstract class ExceptionQuestion extends Question {
 	}
 
 	/**
-	 * does nothing here
-	 */
-	public void addContraReason(Object source, Session theCase) {/*
-																 * does nothing
-																 */
-	}
-
-	/**
-	 * does nothing here
-	 */
-	public void addProReason(Object source, Session theCase) {/* does nothing */
-	}
-
-	/**
 	 * Won´t return a SessionObject, because this is just a "marker"-Class
 	 * 
 	 * @return null
 	 */
 	public SessionObject createCaseObject(Session session) {
 		return null;
-	}
-
-	/**
-	 * @return true
-	 */
-	@Override
-	public boolean isDone(Session theCase) {
-		return true;
-	}
-
-	/**
-	 * has no pro or contra reasons. just a marker class
-	 */
-	public void removeContraReason(Object source,
-			de.d3web.core.session.Session theCase) {
-	}
-
-	/**
-	 * has no pro or contra reasons. just a marker class
-	 */
-	public void removeProReason(Object source, de.d3web.core.session.Session theCase) {
 	}
 
 	@Override

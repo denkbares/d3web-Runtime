@@ -20,9 +20,6 @@
 
 package de.d3web.core.knowledge.terminology;
 
-import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.CaseQuestionText;
-import de.d3web.core.session.blackboard.SessionObject;
 
 /**
  * A question which asks for a string text.
@@ -36,13 +33,6 @@ public class QuestionText extends Question {
 
 	public QuestionText(String id) {
 		super(id);
-	}
-
-	/**
-	 * @return a newly created user-case dependent CaseQuestionText object.
-	 */
-	public SessionObject createCaseObject(Session session) {
-		return new CaseQuestionText(this);
 	}
 
 	/**

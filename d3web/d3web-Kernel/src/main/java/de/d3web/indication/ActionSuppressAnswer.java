@@ -23,13 +23,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.utilities.Utils;
 import de.d3web.indication.inference.PSMethodSuppressAnswer;
@@ -59,8 +58,9 @@ public class ActionSuppressAnswer extends PSAction {
 	 */
 	@Override
 	public void doIt(Session theCase, Rule rule) {
-		((CaseQuestion) theCase.getCaseObject(getQuestion())).addRuleSuppress(
-			rule);
+		// TODO: suppress actions are not working currently
+//		((CaseQuestion) theCase.getCaseObject(getQuestion())).addRuleSuppress(
+//			rule);
 	}
 
 	/**
@@ -142,9 +142,9 @@ public class ActionSuppressAnswer extends PSAction {
 	 */
 	@Override
 	public void undo(Session theCase, Rule rule) {
-		(
-			(CaseQuestion) theCase.getCaseObject(
-				getQuestion())).removeRuleSuppress(rule);
+//		(
+//			(CaseQuestion) theCase.getCaseObject(
+//				getQuestion())).removeRuleSuppress(rule);
 	}
 
 	public PSAction copy() {

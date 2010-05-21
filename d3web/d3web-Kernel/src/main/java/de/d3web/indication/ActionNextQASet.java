@@ -24,13 +24,11 @@ import java.util.List;
 
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.indication.inference.PSMethodNextQASet;
@@ -59,12 +57,6 @@ public abstract class ActionNextQASet extends PSAction {
 		for (QASet qaset : getQASets()) {
 			Fact fact = new DefaultFact(qaset, new Indication(State.INDICATED), this, getProblemsolver());
 			session.getBlackboard().addInterviewFact(fact);
-		}
-		
-		// --- delete from here after blackboard refactoring (joba, 05.2010)
-		// Old handling of indication:
-		for (QASet nextQASet : getQASets()) {
-			nextQASet.activate(session, rule, rule.getProblemsolverContext());
 		}
 	}
 
@@ -110,12 +102,6 @@ public abstract class ActionNextQASet extends PSAction {
 		// the blackboard do all the work
 		for (QASet qaset : getQASets()) {
 			session.getBlackboard().removeInterviewFact(qaset, this);
-		}
-
-		// --- delete from here after blackboard refactoring (joba, 05.2010)
-		// Old handling of indication:
-		for (QASet qaset : getQASets()) {
-			qaset.deactivate(session, rule, rule.getProblemsolverContext());
 		}
 	}
 

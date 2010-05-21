@@ -63,7 +63,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 			List<Question> qList = DialogUtils.getQuestionPageBean().convertQuestionsToRender(cont);
 			for (Iterator<Question> iter2 = qList.iterator(); iter2.hasNext();) {
 				Question q = iter2.next();
-				if (q.isDone(theCase)) {
+				if (DialogUtils.isDone(theCase, q)) {
 					return true;
 				}
 			}

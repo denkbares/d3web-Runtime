@@ -177,7 +177,7 @@ public class Node {
 				}
 				if (ks instanceof Abnormality) {
 					Abnormality abnormality = (Abnormality) ks;
-					List<Choice> alternatives = q.getAlternatives(testCase);
+					List<Choice> alternatives = q.getAllAlternatives();
 					for (Choice a : alternatives) {
 						ChoiceValue avalue = new ChoiceValue(a);
 						if (abnormality.getValue(avalue) == AbstractAbnormality.A0) {

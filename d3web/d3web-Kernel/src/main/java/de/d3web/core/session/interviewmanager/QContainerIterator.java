@@ -35,6 +35,7 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.indication.ActionNextQASet;
 
 /**
@@ -46,7 +47,7 @@ import de.d3web.indication.ActionNextQASet;
  */
 public class QContainerIterator {
 
-	private Session theCase = null;
+	private Session session = null;
 
 	private Iterator<TerminologyObject> childIter = null;
 
@@ -114,7 +115,7 @@ public class QContainerIterator {
 	 *            current Session
 	 */
 	public QContainerIterator(Session theCase, QContainer container) {
-		this.theCase = theCase;
+		this.session = theCase;
 		List<TerminologyObject> children = Arrays.asList(container.getChildren());
 		childIter = children.iterator();
 		this.container = container;
@@ -233,16 +234,16 @@ public class QContainerIterator {
 
 		currentQuestion = q;
 
-		if ((((DialogController) theCase.getQASetManager()).isValidForDC(q) || q.isDone(theCase))
+		if ((((DialogController) session.getQASetManager()).isValidForDC(q) || isDone(session, q))
 				&& !tempQuestions.contains(q)) {
 
-			QuestionModel qmod = new QuestionModel(theCase, q, depth);
+			QuestionModel qmod = new QuestionModel(session, q, depth);
 			flatList.add(qmod);
 			tempQuestions.add(q);
 		}
 
 		if (hasNextFollow()) {
-			Iterator<TerminologyObject> follows = new LinkedList<TerminologyObject>(createFollowList(theCase, q)).iterator();
+			Iterator<TerminologyObject> follows = new LinkedList<TerminologyObject>(createFollowList(session, q)).iterator();
 			// must be a Question here, has been checked earlier...
 			Question newQ = (Question) follows.next();
 			flatten(depth + 1, newQ, follows);
@@ -297,7 +298,7 @@ public class QContainerIterator {
 	 */
 	public Question getNextFollow() {
 		if (hasNextFollow()) {
-			List<TerminologyObject> followList = new LinkedList<TerminologyObject>(createFollowList(theCase, currentQuestion));
+			List<TerminologyObject> followList = new LinkedList<TerminologyObject>(createFollowList(session, currentQuestion));
 			childIter = followList.iterator();
 			currentQuestion = (Question) childIter.next();
 			return currentQuestion;
@@ -337,7 +338,7 @@ public class QContainerIterator {
 
 		while (iter.hasNext()) {
 			QuestionModel model = (QuestionModel) iter.next();
-			if (!model.getQuestion().isDone(theCase)) {
+			if (!isDone(session, model.getQuestion())) {
 				if (i == 0) {
 					model.setNextAnchor("next");
 					i++;
@@ -374,6 +375,18 @@ public class QContainerIterator {
 		if (currentQuestion == null)
 			return false;
 		else
-			return !createFollowList(theCase, currentQuestion).isEmpty();
+			return !createFollowList(session, currentQuestion).isEmpty();
+	}
+	
+
+	private boolean isDone(Session session, QASet object) {
+		if (object instanceof Question) {
+			return UndefinedValue.isNotUndefinedValue(session.getBlackboard().getValue((Question)object)); 
+		}
+		else if (object instanceof QContainer) {
+			return session.getInterview().isActive((QContainer)object);
+		}
+		else
+			return false;
 	}
 }

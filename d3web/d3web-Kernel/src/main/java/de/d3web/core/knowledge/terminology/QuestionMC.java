@@ -23,9 +23,6 @@ package de.d3web.core.knowledge.terminology;
 import java.util.List;
 import java.util.Vector;
 
-import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.CaseQuestionMC;
-import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.values.Choice;
 
 /**
@@ -39,10 +36,6 @@ public class QuestionMC extends QuestionChoice {
 
 	public QuestionMC(String id) {
 		super(id);
-	}
-
-	public SessionObject createCaseObject(Session session) {
-		return new CaseQuestionMC(this);
 	}
 
 	public List<Choice> getAlternatives() {

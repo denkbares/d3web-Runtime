@@ -34,6 +34,7 @@ import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.QuestionYN;
+import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.AnswerNo;
 import de.d3web.core.session.values.AnswerYes;
@@ -128,8 +129,7 @@ public class QuestionTagReader extends AbstractTagReader {
 			if (id == null || "".equals(id))
 				id = value;
 
-			Choice c = (Choice) ((QuestionChoice) currentQuestion).getAnswer(
-					null, id);
+			Choice c = KnowledgeBaseManagement.createInstance(getKnowledgeBase()).findChoice((QuestionChoice) currentQuestion, id);
 			currentValue = new ChoiceValue(c);
 				
 

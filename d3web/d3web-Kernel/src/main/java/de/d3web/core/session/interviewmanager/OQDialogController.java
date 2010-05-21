@@ -25,17 +25,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.PSAction;
-import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.QASet.Reason;
 import de.d3web.core.session.Session;
-import de.d3web.indication.inference.PSMethodUserSelected;
+import de.d3web.core.session.values.UndefinedValue;
 
 /**
  * one-question-controller class for the dialog; based on MQDialogController
@@ -50,13 +46,13 @@ public class OQDialogController implements DialogController {
 	private int historyCursor = -1;
 	
 	private MQDialogController mqdc;
-	private Session theCase;
+	private Session session;
 
 
 		public OQDialogController(Session theCase) {
 		mqdc = new MQDialogController(theCase);
 		history = new LinkedList<QASet>();
-		this.theCase = theCase;
+		this.session = theCase;
 		theCase.setQASetManager(this);
 		moveToNewestQASet();
 	}
@@ -138,7 +134,7 @@ public class OQDialogController implements DialogController {
 					.iterator();
 			while (questionIter.hasNext()) {
 				Question q = (Question) ((List<?>) questionIter.next()).get(0);
-				if (! q.isDone(theCase)) {
+				if (! isDone(session, q)) {
 					if ((history.isEmpty()) || (!history.get(history.size()-1).equals(q))) {
 						history.add(q);
 					}
@@ -224,47 +220,48 @@ public class OQDialogController implements DialogController {
 	private Question checkUnblocked() {
 		Question tempQ = (Question) history.get(historyCursor);
 
-		List<Reason> proList = getProReasonsOfParent(theCase, tempQ);
+//		List<Reason> proList = getProReasonsOfParent(session, tempQ);
 
-		if (tempQ.isValid(theCase)) {
-			// question valid but answered (of course).
-			// check if there are proper pro-reasons:
-			//  - ActionNextQASet
-			//  - InitQASets
-			//  - User-Activated
-
-			Iterator<Reason> proIter = proList.iterator();
-			while (proIter.hasNext()) {
-				Reason pro = proIter.next();
-				if (isQASetRule(pro)
-					|| PSMethodInit.class.equals(pro.getProblemSolverContext())
-					|| PSMethodUserSelected.class.equals(pro.getProblemSolverContext())) {
-					return tempQ;
-				}
-			}
+		if (session.getInterview().isActive(tempQ)) {
+			return tempQ;
+//			// question valid but answered (of course).
+//			// check if there are proper pro-reasons:
+//			//  - ActionNextQASet
+//			//  - InitQASets
+//			//  - User-Activated
+//
+//			Iterator<Reason> proIter = proList.iterator();
+//			while (proIter.hasNext()) {
+//				Reason pro = proIter.next();
+//				if (isQASetRule(pro)
+//					|| PSMethodInit.class.equals(pro.getProblemSolverContext())
+//					|| PSMethodUserSelected.class.equals(pro.getProblemSolverContext())) {
+//					return tempQ;
+//				}
+//			}
 		}
 		return null;
 	}
 	
-	private List<Reason> getProReasonsOfParent(Session theCase, Question q) {
-		List<Reason> proReasons = new LinkedList<Reason>();
-		for (TerminologyObject to: q.getParents()) {
-			QASet qaSet = (QASet) to;
-			proReasons.addAll(qaSet.getProReasons(theCase));
-		}
-		return proReasons;
-	}
+//	private List<Reason> getProReasonsOfParent(Session theCase, Question q) {
+//		List<Reason> proReasons = new LinkedList<Reason>();
+//		for (TerminologyObject to: q.getParents()) {
+//			QASet qaSet = (QASet) to;
+//			proReasons.addAll(qaSet.getProReasons(theCase));
+//		}
+//		return proReasons;
+//	}
 	
-	/**
-	 * @return true, if the specified rule contains the action ActionNextQASet
-	 */
-	private boolean isQASetRule(QASet.Reason reason) {
-		if (reason.getRule() != null) {
-			PSAction action = reason.getRule().getAction();
-			return (action instanceof de.d3web.indication.ActionNextQASet);
-		} else
-			return false;
-	}
+//	/**
+//	 * @return true, if the specified rule contains the action ActionNextQASet
+//	 */
+//	private boolean isQASetRule(QASet.Reason reason) {
+//		if (reason.getRule() != null) {
+//			PSAction action = reason.getRule().getAction();
+//			return (action instanceof de.d3web.indication.ActionNextQASet);
+//		} else
+//			return false;
+//	}
 	
 	public void propagate(NamedObject no, Rule rule, PSMethod psm) {
 		mqdc.propagate(no, rule, psm);
@@ -276,6 +273,17 @@ public class OQDialogController implements DialogController {
 
 	public OQDialogController getOQDialogcontroller() {
 		return this;
+	}
+
+	private boolean isDone(Session session, QASet object) {
+		if (object instanceof Question) {
+			return UndefinedValue.isNotUndefinedValue(session.getBlackboard().getValue((Question)object)); 
+		}
+		else if (object instanceof QContainer) {
+			return session.getInterview().isActive((QContainer)object);
+		}
+		else
+			return false;
 	}
 
 }

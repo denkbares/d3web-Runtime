@@ -19,7 +19,6 @@
  */
 
 package de.d3web.indication;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -56,15 +55,6 @@ public class ActionContraIndication extends PSAction {
 		for (QASet qaset : getQASets()) {
 			Fact fact = new DefaultFact(qaset, new Indication(State.CONTRA_INDICATED), this, getProblemsolver());
 			session.getBlackboard().addInterviewFact(fact);
-		}
-		
-		// --- delete from here after blackboard refactoring (joba, 05.2010)
-		// Old handling of indication:
-		Iterator<QASet> qaset = getQASets().iterator();
-		while (qaset.hasNext()) {
-			(qaset.next()).addContraReason(
-				new QASet.Reason(rule),
-				session);
 		}
 	}
 
@@ -117,16 +107,6 @@ public class ActionContraIndication extends PSAction {
 		Value newValue = session.getBlackboard().getIndication(getQASets().get(0));
 		session.getInterview().notifyFactChange(new PropagationEntry(getQASets().get(0), 
 				oldValue, newValue));
-		
-		
-		// --- delete from here after blackboard refactoring (joba, 05.2010)
-		// Old handling of indication:		
-		Iterator<QASet> qaset = getQASets().iterator();
-		while (qaset.hasNext()) {
-			((QASet) qaset.next()).removeContraReason(
-				new QASet.Reason(rule),
-				session);
-		}
 	}
 	
 	public int hashCode() {

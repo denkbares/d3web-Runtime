@@ -39,6 +39,7 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
@@ -49,6 +50,7 @@ import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.plugin.test.InitPluginManager;
@@ -130,8 +132,11 @@ public class TestKfz extends TestCase {
 
 		QuestionNum Mf5 = (QuestionNum) kb.searchQuestion("Mf5");
 		QuestionMC Mf7 = (QuestionMC) kb.searchQuestion("Mf7");
-		Choice Mf7a1 = (Choice) Mf7.getAnswer(theCase, "Mf7a1");
-		Choice Mf7a2 = (Choice) Mf7.getAnswer(theCase, "Mf7a2");
+		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(theCase.getKnowledgeBase());
+		
+
+		Choice Mf7a1 = (Choice) kbm.findChoice(Mf7,  "Mf7a1");
+		Choice Mf7a2 = (Choice) kbm.findChoice(Mf7,  "Mf7a2");
 		Choice[] choices = new Choice[] {
 				Mf7a1, Mf7a2 };
 		List<ChoiceValue> values = new ArrayList<ChoiceValue>(choices.length);
@@ -176,7 +181,8 @@ public class TestKfz extends TestCase {
 				FactFactory.createFact(Mf6, Mf6Value,
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
-		Choice ratingNormal = (Choice) Msi4.getAnswer(theCase, "Msi4a1");
+		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(theCase.getKnowledgeBase());
+		Choice ratingNormal = (Choice) kbm.findChoice(Msi4, "Msi4a1");
 		ChoiceValue ratingNormalValue = new ChoiceValue(ratingNormal);
 
 		System.out.println("(1) --> Msi4: " + theCase.getBlackboard().getValue(Msi4));
@@ -188,7 +194,7 @@ public class TestKfz extends TestCase {
 		theCase.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf6, new NumValue(new Double(11)),
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
-		Choice ratingHigh = (Choice) Msi4.getAnswer(theCase, "Msi4a2");
+		Choice ratingHigh = (Choice) kbm.findChoice(Msi4, "Msi4a2");
 		ChoiceValue ratingHighValue = new ChoiceValue(ratingHigh);
 		System.out.println("(2) --> Msi4: " + theCase.getBlackboard().getValue(Msi4));
 		assertEquals("Error with formula (2)", ratingHighValue, theCase.getBlackboard().getValue(
@@ -198,7 +204,7 @@ public class TestKfz extends TestCase {
 				FactFactory.createFact(Mf6, new NumValue(new Double(15)),
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		System.out.println("(4) --> Msi4: " + theCase.getBlackboard().getValue(Msi4));
-		Choice ratingVeryHigh = (Choice) Msi4.getAnswer(theCase, "Msi4a3");
+		Choice ratingVeryHigh = (Choice) kbm.findChoice(Msi4, "Msi4a3");
 		ChoiceValue ratingVeryHighValue = new ChoiceValue(ratingVeryHigh);
 
 		assertEquals("Error with formula (4)", ratingVeryHighValue,
@@ -226,7 +232,8 @@ public class TestKfz extends TestCase {
 		QuestionNum Mf58 = (QuestionNum) kb.searchQuestion("Mf58");
 		QuestionNum Mf6 = (QuestionNum) kb.searchQuestion("Mf6");
 		QuestionOC Mf4 = (QuestionOC) kb.searchQuestion("Mf4");
-		Choice Mf4a1 = (Choice) Mf4.getAnswer(theCase, "Mf4a1");
+		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(theCase.getKnowledgeBase());
+		Choice Mf4a1 = (Choice) kbm.findChoice(Mf4, "Mf4a1");
 		theCase.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf4, new ChoiceValue(Mf4a1),
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
@@ -258,9 +265,10 @@ public class TestKfz extends TestCase {
 
 		assertTrue(
 				"Error: isDone should be false (1)",
-				false == questionOC.isDone(theCase));
-
-		Choice answerChoice = (Choice) questionOC.getAnswer(theCase, "Mf2a1");
+				UndefinedValue.getInstance().equals(theCase.getBlackboard().getValue(questionOC)));
+				
+		
+		Choice answerChoice = KnowledgeBaseManagement.createInstance(kb).findChoice(questionOC, "Mf2a1");
 		theCase.getBlackboard().addValueFact(
 				FactFactory.createFact(questionOC, new ChoiceValue(answerChoice),
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
@@ -277,9 +285,9 @@ public class TestKfz extends TestCase {
 				Unknown.getInstance(), theCase.getBlackboard().getValue(questionOC));
 
 		assertTrue(
-				"Error: isDone shouldn't be false (4)",
-				questionOC.isDone(theCase));
-
+				"Error: should have value (4)",
+				!theCase.getBlackboard().getValue(questionOC).equals(UndefinedValue.getInstance()));
+				
 		/*----------------------------------------------
 		 */
 

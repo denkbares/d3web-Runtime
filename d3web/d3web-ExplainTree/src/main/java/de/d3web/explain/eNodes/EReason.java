@@ -27,7 +27,6 @@
 package de.d3web.explain.eNodes;
 
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.explain.ExplanationFactory;
 import de.d3web.explain.eNodes.reasons.EPSMethodReason;
 import de.d3web.explain.eNodes.reasons.ERuleReason;
@@ -50,8 +49,8 @@ public class EReason {
 
 	public static EReason createReason(
 		ExplanationFactory factory,
-		QASet.Reason reason) {
-		if (reason.getRule() != null) {
+		Object reason) {
+		if (reason != null) {
 			return new ERuleReason(factory, reason);
 		} else {
 			return new EPSMethodReason(factory, reason);

@@ -24,10 +24,11 @@ import java.util.Set;
 
 import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costBenefit.model.Target;
 
 /**
@@ -39,12 +40,12 @@ import de.d3web.costBenefit.model.Target;
 public class DefaultTargetFunction implements TargetFunction {
 
 	@Override
-	public Collection<Target> getTargets(Session theCase,
+	public Collection<Target> getTargets(Session session,
 			Collection<Question> relevantQuestions,
 			Collection<Solution> diagnosisToDiscriminate, StrategicSupport strategicSupport) {
 		Set<Target> set = new HashSet<Target>();
 		for (Question q : relevantQuestions) {
-			if (!q.isDone(theCase))
+			if (UndefinedValue.isUndefinedValue(session.getBlackboard().getValue(q)))
 				addParentContainers(set, q);
 		}
 		return set;

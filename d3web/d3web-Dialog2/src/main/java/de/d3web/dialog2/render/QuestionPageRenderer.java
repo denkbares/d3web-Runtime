@@ -43,6 +43,7 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
@@ -75,13 +76,12 @@ public class QuestionPageRenderer extends Renderer {
 		FacesContext.getCurrentInstance().renderResponse();
 	}
 
-	private static Value getAnswer(UIComponent component, Session theCase, Question q, String idOrValue) {
+	private static Value getAnswer(UIComponent component, Session session, Question q, String idOrValue) {
 		if (idOrValue.equals(Unknown.UNKNOWN_ID)) {
 			return Unknown.getInstance();
 		}
 		else if (q instanceof QuestionChoice) {
-			Choice choice = (Choice) ((QuestionChoice) q).getAnswer(theCase,
-					idOrValue);
+			Choice choice = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase()).findChoice((QuestionChoice) q, idOrValue);
 			return new ChoiceValue(choice);
 		}
 		else if (q instanceof QuestionText) {
@@ -338,8 +338,7 @@ public class QuestionPageRenderer extends Renderer {
 	private Object getAnswerNameListFromIDList(List<String> answerIDs, Question q, Session theCase) {
 		List<String> answerNameList = new ArrayList<String>();
 		for (String answerID : answerIDs) {
-			Choice a = (Choice) ((QuestionChoice) q).getAnswer(theCase,
-					answerID);
+			Choice a = KnowledgeBaseManagement.createInstance(theCase.getKnowledgeBase()).findChoice((QuestionChoice) q, answerID);
 			answerNameList.add(a.getName());
 		}
 		return answerNameList;

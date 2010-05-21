@@ -33,12 +33,11 @@ import java.util.LinkedList;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.explain.ExplanationFactory;
 import de.d3web.explain.eNodes.values.DiagnosticValue;
-import de.d3web.explain.eNodes.values.QState;
 import de.d3web.explain.eNodes.values.TargetValue;
 import de.d3web.indication.inference.PSMethodNextQASet;
 import de.d3web.scoring.ActionHeuristicPS;
@@ -94,34 +93,37 @@ public class ENode {
 
 	public Collection getProReasons() {
 		if (proReasons == null) {
-			//FIXME
-			if (getTarget() instanceof QASet) {	
-				if (getValue() == QState.ACTIVE) {
-					proReasons = getQASetActivationReasons();
-				}
-			} else if (getTarget() instanceof Solution) {
-				if (getValue() == DiagnosticValue.getInstance()) {
-					initDiagnosticReasons();
-				}
-			}
-			// so do other target objects. (welche?)
+			return new LinkedList();
+//			//FIXME
+//			if (getTarget() instanceof QASet) {	
+//				if (getValue() == QState.ACTIVE) {
+//					proReasons = getQASetActivationReasons();
+//				}
+//			} else if (getTarget() instanceof Solution) {
+//				if (getValue() == DiagnosticValue.getInstance()) {
+//					initDiagnosticReasons();
+//				}
+//			}
+//			// so do other target objects. (welche?)
 		}
 		return proReasons;
 	}
 
 	public Collection getContraReasons() {
 		if (contraReasons == null) {
-			//FIXME
-			if (getTarget() instanceof QASet) {
-				if (getValue() == QState.ACTIVE) {
-					contraReasons = getQASetContraReasons();
-				}
-			} else if (getTarget() instanceof Solution) {
-				if (getValue() == DiagnosticValue.getInstance()) {
-					initDiagnosticReasons();
-				}
-			}
-			// so do other target objects. (welche?)
+			// TODO: hotfix
+			return new LinkedList();
+//			//FIXME
+//			if (getTarget() instanceof QASet) {
+//				if (getValue() == QState.ACTIVE) {
+//					contraReasons = getQASetContraReasons();
+//				}
+//			} else if (getTarget() instanceof Solution) {
+//				if (getValue() == DiagnosticValue.getInstance()) {
+//					initDiagnosticReasons();
+//				}
+//			}
+//			// so do other target objects. (welche?)
 		}
 		return contraReasons;
 	}
@@ -140,33 +142,33 @@ public class ENode {
 		return unrealized;
 	}
 
-	private Collection getQASetActivationReasons() {
-		Collection retValues = new LinkedList();
-		Iterator pros =
-			((QASet) getTarget()).getProReasons(getFactory().getSession()).iterator();
-		while (pros.hasNext()) {
-			Object pro = pros.next();
-			if ((pro instanceof QASet.Reason) && (contexts.contains(((QASet.Reason) pro).getProblemSolverContext()))) {
-				retValues.add(EReason.createReason(getFactory(), (QASet.Reason) pro));
-			} else {
-				System.err.println("Ups, kein QASet.Reason. Dürfte eigentlich nicht sein!");
-			}
-		}
-		return retValues;
-	}
+//	private Collection getQASetActivationReasons() {
+//		Collection retValues = new LinkedList();
+//		Iterator pros =
+//			((QASet) getTarget()).getProReasons(getFactory().getSession()).iterator();
+//		while (pros.hasNext()) {
+//			Object pro = pros.next();
+//			if ((pro instanceof QASet.Reason) && (contexts.contains(((QASet.Reason) pro).getProblemSolverContext()))) {
+//				retValues.add(EReason.createReason(getFactory(), (QASet.Reason) pro));
+//			} else {
+//				System.err.println("Ups, kein QASet.Reason. Dürfte eigentlich nicht sein!");
+//			}
+//		}
+//		return retValues;
+//	}
 	
 	private Collection getQASetContraReasons() {
 		Collection retValues = new LinkedList();
-		Iterator cons =
-			((QASet) getTarget()).getContraReasons(getFactory().getSession()).iterator();
-		while (cons.hasNext()) {
-			Object con = cons.next();
-			if ((con instanceof QASet.Reason) && (contexts.contains(((QASet.Reason) con).getProblemSolverContext()))) {
-				retValues.add(EReason.createReason(getFactory(), (QASet.Reason) con));
-			} else {
-				System.err.println("Ups, kein QASet.Reason. Dürfte eigentlich nicht sein!");
-			}
-		}
+//		Iterator cons =
+//			((QASet) getTarget()).getContraReasons(getFactory().getSession()).iterator();
+//		while (cons.hasNext()) {
+//			Object con = cons.next();
+//			if ((con instanceof QASet.Reason) && (contexts.contains(((QASet.Reason) con).getProblemSolverContext()))) {
+//				retValues.add(EReason.createReason(getFactory(), (QASet.Reason) con));
+//			} else {
+//				System.err.println("Ups, kein QASet.Reason. Dürfte eigentlich nicht sein!");
+//			}
+//		}
 		return retValues;
 	}
 	

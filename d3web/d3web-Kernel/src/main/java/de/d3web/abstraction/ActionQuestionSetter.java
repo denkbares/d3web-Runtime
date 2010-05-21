@@ -35,22 +35,17 @@ import de.d3web.abstraction.formula.FormulaNumberElement;
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
-import de.d3web.core.knowledge.terminology.QASet.Reason;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.SymptomValue;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.CaseActionQuestionSetter;
-import de.d3web.core.session.blackboard.CaseQuestion;
 import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.EvaluatableAnswerNumValue;
@@ -249,30 +244,30 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	/**
 	 * this method is needed for protection from cycles in rule firing
 	 */
-	protected boolean lastFiredRuleEqualsCurrentRuleAndNotFired(Session theCase) {
-		Rule lastFiredRule = getLastFiredRule(theCase);
-		if (lastFiredRule != null) {
-			return !lastFiredRule.hasFired(theCase)
-					&& lastFiredRule.getAction().equals(this);
-		}
-		else return false;
-	}
+//	protected boolean lastFiredRuleEqualsCurrentRuleAndNotFired(Session theCase) {
+//		Rule lastFiredRule = getLastFiredRule(theCase);
+//		if (lastFiredRule != null) {
+//			return !lastFiredRule.hasFired(theCase)
+//					&& lastFiredRule.getAction().equals(this);
+//		}
+//		else return false;
+//	}
 
-	/**
-	 * this method is needed for protection from cycles in rule firing
-	 */
-	protected Rule getLastFiredRule(Session theCase) {
-		CaseQuestion q = (CaseQuestion) theCase.getCaseObject(getQuestion());
-		Object o = q.getValueHistory();
-		if ((o != null) && (o instanceof List<?>)) {
-			if (!((List<?>) o).isEmpty()) {
-				SymptomValue v = (SymptomValue) ((List<?>) o).get(0);
-				return v.getRule();
-			}
-			else return null;
-		}
-		else return null;
-	}
+//	/**
+//	 * this method is needed for protection from cycles in rule firing
+//	 */
+//	protected Rule getLastFiredRule(Session theCase) {
+//		CaseQuestion q = (CaseQuestion) theCase.getCaseObject(getQuestion());
+//		Object o = q.getValueHistory();
+//		if ((o != null) && (o instanceof List<?>)) {
+//			if (!((List<?>) o).isEmpty()) {
+//				SymptomValue v = (SymptomValue) ((List<?>) o).get(0);
+//				return v.getRule();
+//			}
+//			else return null;
+//		}
+//		else return null;
+//	}
 
 	/**
 	 * @return PSMethodQuestionSetter.class
@@ -282,54 +277,54 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 		return PSMethodAbstraction.class;
 	}
 
-	/**
-	 * @return the AnswerOC, that shall be set by an active Rule and that is
-	 *         more severe than all other answers, that shall be set. (The
-	 *         severeness is defined by the order of the alternatives; the first
-	 *         answer is the severest.)
-	 */
-	protected Choice getSeverestAnswer(QuestionOC siQuestionOC, Session theCase) {
-		Choice severestAnswer = null;
-		// use an array to accelerate
-		Object[] allAnswers = siQuestionOC.getAllAlternatives().toArray();
-
-		// go through all proreasons (only QASet.Reasons)
-		Iterator<Reason> proIter = getQuestion().getProReasons(theCase).iterator();
-		while (proIter.hasNext()) {
-			Reason reason = proIter.next();
-			Rule rule = reason.getRule();
-			PSAction action = rule.getAction();
-			if (action instanceof ActionQuestionSetter) {
-				Object actionValue = ((ActionQuestionSetter) action).getValue();
-				if (actionValue instanceof ChoiceValue) {
-					// determine the more severe answer between the
-					// newAnswer and the
-					// up-to-now severest answer
-					Choice choice = (Choice) ((ChoiceValue) actionValue).getValue();
-
-					if ((severestAnswer != null) && (!severestAnswer.equals(choice))) {
-						int i = 0;
-						boolean found = false;
-						while ((i < allAnswers.length) && (!found)) {
-							if (severestAnswer.equals(allAnswers[i])) {
-								found = true;
-							}
-							else if (choice.equals(allAnswers[i])) {
-								found = true;
-								severestAnswer = choice;
-							}
-							i++;
-						}
-					}
-					else {
-						severestAnswer = choice;
-						// severestAnswer = (Answer) actionValues[0];
-					}
-				}
-			}
-		}
-		return severestAnswer;
-	}
+//	/**
+//	 * @return the AnswerOC, that shall be set by an active Rule and that is
+//	 *         more severe than all other answers, that shall be set. (The
+//	 *         severeness is defined by the order of the alternatives; the first
+//	 *         answer is the severest.)
+//	 */
+//	protected Choice getSeverestAnswer(QuestionOC siQuestionOC, Session theCase) {
+//		Choice severestAnswer = null;
+//		// use an array to accelerate
+//		Object[] allAnswers = siQuestionOC.getAllAlternatives().toArray();
+//
+//		// go through all proreasons (only QASet.Reasons)
+//		Iterator<Reason> proIter = getQuestion().getProReasons(theCase).iterator();
+//		while (proIter.hasNext()) {
+//			Reason reason = proIter.next();
+//			Rule rule = reason.getRule();
+//			PSAction action = rule.getAction();
+//			if (action instanceof ActionQuestionSetter) {
+//				Object actionValue = ((ActionQuestionSetter) action).getValue();
+//				if (actionValue instanceof ChoiceValue) {
+//					// determine the more severe answer between the
+//					// newAnswer and the
+//					// up-to-now severest answer
+//					Choice choice = (Choice) ((ChoiceValue) actionValue).getValue();
+//
+//					if ((severestAnswer != null) && (!severestAnswer.equals(choice))) {
+//						int i = 0;
+//						boolean found = false;
+//						while ((i < allAnswers.length) && (!found)) {
+//							if (severestAnswer.equals(allAnswers[i])) {
+//								found = true;
+//							}
+//							else if (choice.equals(allAnswers[i])) {
+//								found = true;
+//								severestAnswer = choice;
+//							}
+//							i++;
+//						}
+//					}
+//					else {
+//						severestAnswer = choice;
+//						// severestAnswer = (Answer) actionValues[0];
+//					}
+//				}
+//			}
+//		}
+//		return severestAnswer;
+//	}
 
 	/**
 	 * @see de.d3web.core.session.CaseObjectSource#createCaseObject(Session)

@@ -22,14 +22,13 @@ package de.d3web.explain.eNodes.reasons;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.explain.ExplanationFactory;
 import de.d3web.explain.eNodes.ECondition;
 import de.d3web.explain.eNodes.EReason;
 
 public class ERuleReason extends EReason {
 
-	private Class context = null;	// Erklärungskontext
+	private Object context = null;	// Erklärungskontext
 	private Rule rule = null;				// the "original" rule object
 	private ECondition activeCondition = null;	
 	private ECondition activeContext = null;	// Fragekontext (muss immer beantwortet sein, damit die Regel feuert)
@@ -41,10 +40,10 @@ public class ERuleReason extends EReason {
 	 * Constructor for ERuleReason.
 	 * @param qaSetReason
 	 */
-	public ERuleReason(ExplanationFactory factory, QASet.Reason qaSetReason) {
+	public ERuleReason(ExplanationFactory factory, Object qaSetReason) {
 		super(factory);
-		setContext(qaSetReason.getProblemSolverContext());
-		setRule(qaSetReason.getRule());
+		setContext(qaSetReason);
+//		setRule(qaSetReason);
 	}
 		/**
 	 * Constructor for ERuleReason.
@@ -111,14 +110,14 @@ public class ERuleReason extends EReason {
 	/** Getter for property context.
 	 * @return Value of property context.
 	 */
-	public Class getContext() {
+	public Object getContext() {
 		return context;
 	}
 
 	/** Setter for property context.
 	 * @param context New value of property context.
 	 */
-	private void setContext(Class context) {
+	private void setContext(Object context) {
 		this.context = context;
 	}
 

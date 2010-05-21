@@ -23,9 +23,6 @@ package de.d3web.core.knowledge.terminology;
 import java.util.List;
 
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
-import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.CaseQuestionNum;
-import de.d3web.core.session.blackboard.SessionObject;
 
 /**
  * Storage for Questions which have a numerical (Double value) answer. <BR>
@@ -45,10 +42,6 @@ public class QuestionNum extends Question {
 	 * question.
 	 */
 	private List<NumericalInterval> valuePartitions = null;
-
-	public SessionObject createCaseObject(Session session) {
-		return new CaseQuestionNum(this);
-	}
 
 	/**
 	 * Generates a XML identification (not the complete representation)
