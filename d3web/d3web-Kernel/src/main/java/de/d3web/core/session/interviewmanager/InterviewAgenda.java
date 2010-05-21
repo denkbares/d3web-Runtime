@@ -107,8 +107,8 @@ public class InterviewAgenda {
 		}
 		else { 
 			agenda.add(new AgendaEntry(interviewObject, InterviewState.ACTIVE));
+			organizeAgenda();
 		}
-		organizeAgenda();
 	}
 
 	public void deactivate(InterviewObject interviewObject) {
@@ -117,6 +117,7 @@ public class InterviewAgenda {
 		if (entry != null) {
 			entry.state = InterviewState.INACTIVE;
 		}
+		organizeAgenda();
 	}
 
 	public void activate(InterviewObject interviewObject) {
@@ -128,6 +129,7 @@ public class InterviewAgenda {
 		else {
 			entry.state = InterviewState.ACTIVE;
 		}
+		organizeAgenda();
 	}
 	
 	/**
