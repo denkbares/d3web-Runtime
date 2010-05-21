@@ -29,13 +29,10 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
-import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.StrategicSupport;
-import de.d3web.core.inference.condition.CondAnd;
-import de.d3web.core.inference.condition.CondOr;
-import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
@@ -45,6 +42,7 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.values.Choice;
@@ -55,7 +53,7 @@ import de.d3web.costBenefit.model.Node;
 import de.d3web.costBenefit.model.Path;
 import de.d3web.costBenefit.model.SearchModel;
 import de.d3web.costBenefit.model.Target;
-import de.d3web.indication.ActionIndication;
+import de.d3web.costBenefit.session.interviewManager.CostBenefitAgendaSortingStrategy;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
@@ -86,8 +84,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 
 	@Override
 	public void init(Session theCase) {
-		// TODO: set NUllAgendaSortingStrategy
-
+		theCase.getInterview().getInterviewAgenda().setAgendaSortingStrategy(
+				new CostBenefitAgendaSortingStrategy());
 		CostBenefitCaseObject caseObject = (CostBenefitCaseObject) theCase.getCaseObject(this);
 		calculateNewPath(caseObject);
 		activateNextQContainer(caseObject);
@@ -96,13 +94,9 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 	private void activateNextQContainer(CostBenefitCaseObject caseObject) {
 		QContainer[] currentSequence = caseObject.getCurrentSequence();
 		Session theCase = caseObject.getSession();
-		if (currentSequence == null) {
-			deactivateCurrentQContainer(caseObject);
-		}
-		else {
+		if (currentSequence != null) {
 			if (caseObject.getCurrentPathIndex() == -1
 					|| currentSequence[caseObject.getCurrentPathIndex()].isDone(theCase, true)) {
-				deactivateCurrentQContainer(caseObject);
 				caseObject.incCurrentPathIndex();
 				caseObject.setHasBegun(false);
 				if (caseObject.getCurrentPathIndex() >= currentSequence.length) {
@@ -111,10 +105,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 					return;
 				}
 				QContainer qc = currentSequence[caseObject.getCurrentPathIndex()];
-				if (new Node(qc, null).isApplicable(theCase)) {
-					activateQContainer(caseObject, qc);
-				}
-				else {
+				if (!new Node(qc, null).isApplicable(theCase)) {
 					calculateNewPath(caseObject);
 					activateNextQContainer(caseObject);
 				}
@@ -122,77 +113,58 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		}
 	}
 
-	private void activateQContainer(CostBenefitCaseObject caseObject, QContainer qc) {
-		// TODO: activate the specific object directly to the agenda:  qc
-		
-		Rule rule = new Rule("TempRule");
-		caseObject.setRule(rule);
-		rule.setActive(true);
-		ActionIndication action = new ActionIndication();
-		rule.setAction(action);
-		List<QASet> list = new LinkedList<QASet>();
-		list.add(qc);
-		action.setQASets(list);
-		Condition cond = new CondAnd(
-				new LinkedList<Condition>());
-		rule.setAction(action);
-		rule.setCondition(cond);
-		rule.check(caseObject.getSession());
-	}
-
-	private void deactivateCurrentQContainer(CostBenefitCaseObject caseObject) {
-		Rule rule = caseObject.getRule();
-		if (rule == null) return;
-		rule.setCondition(new CondOr(new LinkedList<Condition>()));
-		rule.check(caseObject.getSession());
-		caseObject.setRule(null);
-	}
-
 	private void calculateNewPath(CostBenefitCaseObject caseObject) {
-		Session theCase = caseObject.getSession();
-		List<StrategicSupport> stratgicSupports = getStrategicSupports(theCase);
+		Session session = caseObject.getSession();
+		// remove old indications
+		Blackboard blackboard = session.getBlackboard();
+		List<Fact> indicatedFacts = caseObject.getIndicatedFacts();
+		if (indicatedFacts != null) {
+			for (Fact fact : indicatedFacts) {
+				blackboard.removeInterviewFact(fact);
+			}
+		}
+		caseObject.resetPath();
+		List<StrategicSupport> stratgicSupports = getStrategicSupports(session);
 		HashSet<Solution> diags = new HashSet<Solution>();
 		caseObject.setDiags(diags);
-		SearchModel cbm = new SearchModel(theCase);
+		SearchModel cbm = new SearchModel(session);
 		caseObject.setCbm(cbm);
 		for (StrategicSupport strategicSupport : stratgicSupports) {
 			Collection<Solution> solutions = strategicSupport
-					.getPossibleDiagnoses(theCase);
+					.getPossibleDiagnoses(session);
 			diags.addAll(solutions);
 			Collection<Question> discriminatingQuestions = strategicSupport
-					.getDiscriminatingQuestions(solutions, theCase);
-			Collection<Target> targets = targetFunction.getTargets(theCase,
+					.getDiscriminatingQuestions(solutions, session);
+			Collection<Target> targets = targetFunction.getTargets(session,
 					discriminatingQuestions, solutions, strategicSupport);
 			for (Target target : targets) {
-				double benefit = strategicSupport.getEntropy(target, solutions, theCase);
+				double benefit = strategicSupport.getEntropy(target, solutions, session);
 				if (benefit == 0) continue;
 				cbm.addTarget(target);
 				cbm.maximizeBenefit(target, benefit);
 			}
 		}
-		if (cbm.getBestBenefit() == 0) {
-			caseObject.resetPath();
-		}
-		else {
-			searchAlgorithm.search(theCase, cbm);
+		if (cbm.getBestBenefit() != 0) {
+			searchAlgorithm.search(session, cbm);
 			Target bestTarget = cbm.getBestCostBenefitTarget();
-			if (bestTarget == null || bestTarget.getMinPath() == null) {
-				// es wurde kein bestes Ziel erreicht, bzw. dessen MinPath ist
-				// nicht gefunden worden.
-				caseObject.resetPath();
-			}
-			else {
+			if (!(bestTarget == null || bestTarget.getMinPath() == null)) {
 				Path minPath = bestTarget.getMinPath();
 				Collection<Node> nodes = minPath.getNodes();
 				QContainer[] currentSequence = new QContainer[nodes.size()];
 				int i = 0;
+				List<Fact> facts = new LinkedList<Fact>();
 				for (Node node : nodes) {
-					currentSequence[i] = node.getQContainer();
-					makeOKQuestionsUndone(currentSequence[i], theCase);
+					QContainer qContainer = node.getQContainer();
+					currentSequence[i] = qContainer;
+					makeOKQuestionsUndone(currentSequence[i], session);
 					i++;
+					Fact fact = FactFactory.createFact(qContainer, new Indication(State.INDICATED),
+							this, this);
+					facts.add(fact);
+					blackboard.addInterviewFact(fact);
 				}
 				caseObject.setCurrentSequence(currentSequence);
-				// TODO: put minPath directly on as InterviewFact to Blackboard
+				caseObject.setIndicatedFacts(facts);
 			}
 			caseObject.setCurrentPathIndex(-1);
 		}
