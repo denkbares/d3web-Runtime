@@ -86,6 +86,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 
 	@Override
 	public void init(Session theCase) {
+		// TODO: set NUllAgendaSortingStrategy
+
 		CostBenefitCaseObject caseObject = (CostBenefitCaseObject) theCase.getCaseObject(this);
 		calculateNewPath(caseObject);
 		activateNextQContainer(caseObject);
@@ -121,6 +123,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 	}
 
 	private void activateQContainer(CostBenefitCaseObject caseObject, QContainer qc) {
+		// TODO: activate the specific object directly to the agenda:  qc
+		
 		Rule rule = new Rule("TempRule");
 		caseObject.setRule(rule);
 		rule.setActive(true);
@@ -188,6 +192,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 					i++;
 				}
 				caseObject.setCurrentSequence(currentSequence);
+				// TODO: put minPath directly on as InterviewFact to Blackboard
 			}
 			caseObject.setCurrentPathIndex(-1);
 		}

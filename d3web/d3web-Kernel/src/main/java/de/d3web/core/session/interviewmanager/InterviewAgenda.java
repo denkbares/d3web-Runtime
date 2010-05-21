@@ -2,14 +2,10 @@ package de.d3web.core.session.interviewmanager;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
 
 public class InterviewAgenda {
@@ -19,9 +15,9 @@ public class InterviewAgenda {
 	private List<AgendaEntry> agenda;
 	private KnowledgeBase knowledgeBase;
 	// Strategy: how to sort the entries on the agenda?
-	private DFSTreeAgendaSortingStrategy agendaSortingStrategy;
+	private AgendaSortingStrategy agendaSortingStrategy;
 
-	private class AgendaEntry implements Comparable<AgendaEntry> {
+	public class AgendaEntry implements Comparable<AgendaEntry> {
 		InterviewObject   interviewObject;
 		InterviewState             state;
 		private AgendaEntry(InterviewObject interviewObject, InterviewState state) {
@@ -82,53 +78,16 @@ public class InterviewAgenda {
 		}
 	}
 	
-	private class DFSTreeSortingComparator implements Comparator<AgendaEntry> {
-		private Map<TerminologyObject, Integer> index;
-		public DFSTreeSortingComparator(
-				Map<TerminologyObject, Integer> qasetIndex) {
-			this.index = qasetIndex;
-		}
-		@Override
-		public int compare(AgendaEntry entry1, AgendaEntry entry2) {
-			int order1 = this.index.get(entry1.interviewObject);
-			int order2 = this.index.get(entry2.interviewObject);
-			return order1 - order2;
-		}
-	}
-	
-	private class DFSTreeAgendaSortingStrategy {
-		private KnowledgeBase knowledgeBase;
-		private Map<TerminologyObject, Integer> qasetIndex;
-		private int maxOrderingNumber;
 
-		public DFSTreeAgendaSortingStrategy(KnowledgeBase knowledgeBase) {
-			this.knowledgeBase = knowledgeBase;
-			this.qasetIndex = new HashMap<TerminologyObject, Integer>();
-			reindex();
-		}
-		
-		/**
-		 * Traverses the QASet hierarchy using a depth-first search and
-		 * attaches an ordering number to each visited {@link QASet}.
-		 * This ordering number is used for the sorting of the 
-		 * agenda.
-		 */
-		private void reindex() {
-			this.maxOrderingNumber = 0;
-			reindex(knowledgeBase.getRootQASet());
-		}
-		private void reindex(TerminologyObject qaset) {
-			qasetIndex.put(qaset, maxOrderingNumber);
-			maxOrderingNumber++;
-			for (TerminologyObject child : qaset.getChildren()) {
-				reindex(child);
-			}
-		}
-		public void sort(List<AgendaEntry> entries) {
-			Collections.sort(entries, new DFSTreeSortingComparator(this.qasetIndex));
-		}
-	}
-	
+	/**
+	 * A new {@link InterviewAgenda} instance is created to be used with the
+	 * specified {@link KnowledgeBase} and the
+	 * {@link DFSTreeAgendaSortingStrategy} is used for ordering the
+	 * {@link AgendaEntry} instances on the agenda.
+	 * The initial questions are put on the agenda as the first action.
+	 * 
+	 * @param knowledgeBase the specified {@link KnowledgeBase}.
+	 */
 	public InterviewAgenda(KnowledgeBase knowledgeBase) {
 		agenda = new ArrayList<AgendaEntry>();
 		this.knowledgeBase = knowledgeBase;
@@ -176,7 +135,7 @@ public class InterviewAgenda {
 	 * added items.
 	 */
 	private void organizeAgenda() {
-		agendaSortingStrategy.sort(agenda);
+		agendaSortingStrategy.sort(this.agenda);
 	}
 
 	
@@ -242,6 +201,25 @@ public class InterviewAgenda {
 			}
 		}
 		return Collections.unmodifiableList(objects); 
+	}
+
+	/**
+	 * Returns the currently used {@link AgendaSortingStrategy} of this
+	 * {@link InterviewAgenda}.
+	 * @return the currently used sorting strategy of this agenda
+	 */
+	public AgendaSortingStrategy getAgendaSortingStrategy() {
+		return agendaSortingStrategy;
+	}
+
+	/**
+	 * Sets the {@link AgendaSortingStrategy} that should be used
+	 * for ordering the {@link AgendaEntry} instances on this agenda.
+	 * 
+	 * @param agendaSortingStrategy
+	 */
+	public void setAgendaSortingStrategy(AgendaSortingStrategy agendaSortingStrategy) {
+		this.agendaSortingStrategy = agendaSortingStrategy;
 	}
 	
 }
