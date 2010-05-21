@@ -23,7 +23,7 @@ package de.d3web.core.knowledge.terminology.info;
 import java.util.Collection;
 import java.util.Iterator;
 
-import de.d3web.abstraction.inference.PSMethodQuestionSetter;
+import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.Question;
@@ -64,7 +64,7 @@ public class Num2ChoiceSchema implements KnowledgeSlice {
 	 * @see de.d3web.core.inference.KnowledgeSlice#getProblemsolverContext()
 	 */
 	public Class<? extends PSMethod> getProblemsolverContext() {
-		return PSMethodQuestionSetter.class;
+		return PSMethodAbstraction.class;
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class Num2ChoiceSchema implements KnowledgeSlice {
 
 	public void remove() {
 		question.removeKnowledge(getProblemsolverContext(), this,
-				PSMethodQuestionSetter.NUM2CHOICE_SCHEMA);
+				PSMethodAbstraction.NUM2CHOICE_SCHEMA);
 	}
 
 	@Override

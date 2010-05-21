@@ -23,7 +23,7 @@ public class PSMethodInterview extends PSMethodAdapter {
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		for (PropagationEntry change : changes) {
-			session.getInterviewManager().notifyFactChange(change);	
+			session.getInterview().notifyFactChange(change);	
 		}
 	}
 

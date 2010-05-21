@@ -115,7 +115,7 @@ public class ActionContraIndication extends PSAction {
 		Value oldValue = session.getBlackboard().getIndication(getQASets().get(0));;
 		session.getBlackboard().removeInterviewFact(getQASets().get(0), this);
 		Value newValue = session.getBlackboard().getIndication(getQASets().get(0));
-		session.getInterviewManager().notifyFactChange(new PropagationEntry(getQASets().get(0), 
+		session.getInterview().notifyFactChange(new PropagationEntry(getQASets().get(0), 
 				oldValue, newValue));
 		
 		

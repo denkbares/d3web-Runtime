@@ -25,6 +25,7 @@ import java.util.List;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationContoller;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCMarkedUp;
@@ -57,7 +58,13 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	PSMethod getPSMethodInstance(Class<? extends PSMethod> solverClass);
 
 	// --- access information ---
-	Interview getInterviewManager();
+	/**
+	 * The interview controls the dialog behavior of the session, i.e. the
+	 * indication of {@link Question} and {@link QContainer} instances.
+	 * 
+	 * @return Interview
+	 */
+	Interview getInterview();
 
 	/**
 	 * The {@link Blackboard} manages all entered and all derived facts of this
@@ -87,8 +94,25 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	// InfoStore getInfoStore(); // some information will be created/updated
 	// automatically (id, change-date, create-date), increment2
 
-	// --- full implementation is reserved for later implementation --- (inkrement 2)
+	// --- full implementation is reserved for later implementation ---
+	// (inkrement 2)
 	Protocol getProtocol();
+
+	/**
+	 * Registers a new listener to this session. If something in this session
+	 * changes, then all registered listeners will be notified.
+	 * 
+	 * @param listener one new listener of this session to register
+	 */
+	void addListener(SessionEventListener listener);
+
+	/**
+	 * Removes the specified listener from the list of registered listeners. All
+	 * listeners will be notified, if something in the session changes.
+	 * 
+	 * @param listener the specified listener to be removed
+	 */
+	void removeListener(SessionEventListener listener);
 
 	// -----------------------from here on old stuff, TODO: remove?
 
@@ -112,8 +136,9 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 * @deprecated replaced by {@link Interview}
 	 * @return the {@link QASetManager} defined for this case, for example a
 	 *         {@link DialogController}
-	 *        
+	 * 
 	 */
+	@Deprecated
 	QASetManager getQASetManager();
 
 	/**
@@ -123,22 +148,7 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 * @deprecated replaced by {@link Interview}
 	 * @param cd the {@link QASetManager} of this case
 	 */
+	@Deprecated
 	void setQASetManager(QASetManager cd);
-
-	/**
-	 * Registers a new listener to this session. If something in this session
-	 * changes, then all registered listeners will be notified.
-	 * 
-	 * @param listener one new listener of this session to register
-	 */
-	void addListener(SessionEventListener listener);
-
-	/**
-	 * Removes the specified listener from the list of registered listeners. All
-	 * listeners will be notified, if something in the session changes.
-	 * 
-	 * @param listener the specified listener to be removed
-	 */
-	void removeListener(SessionEventListener listener);
 
 }

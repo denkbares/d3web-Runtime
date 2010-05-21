@@ -22,7 +22,7 @@ package de.d3web.abstraction;
 
 import de.d3web.abstraction.formula.FormulaDateExpression;
 import de.d3web.abstraction.formula.FormulaExpression;
-import de.d3web.abstraction.inference.PSMethodQuestionSetter;
+import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.Rule;
@@ -224,7 +224,7 @@ public class ActionAddValue extends ActionQuestionSetter {
 			// answer has to be set (of all answers, which shall be set)
 			if ((getQuestion() instanceof QuestionOC)
 					&& (((QuestionOC) getQuestion()).getSchemaForQuestion() == null)
-					&& (getQuestion().getKnowledge(PSMethodQuestionSetter.class,
+					&& (getQuestion().getKnowledge(PSMethodAbstraction.class,
 					MethodKind.BACKWARD) != null)) {
 				Choice severestAnswer = getSeverestAnswer((QuestionOC) getQuestion(), session);
 				if ((severestAnswer != null)

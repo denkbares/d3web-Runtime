@@ -79,8 +79,8 @@ public class CurrentQContainerFormTest {
 				new String[] {
 				"all", "pregnacyQuestions", "height+weight" });
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
-		session.getInterviewManager().setFormStrategy(new CurrentQContainerFormStrategy());
-		agenda = session.getInterviewManager().getInterviewAgenda();
+		session.getInterview().setFormStrategy(new CurrentQContainerFormStrategy());
+		agenda = session.getInterview().getInterviewAgenda();
 	}
 	
 	@Test
@@ -94,31 +94,31 @@ public class CurrentQContainerFormTest {
 		assertFalse(agenda.isEmpty());
 
 		// EXPECT: 'pregnancyQuestions' to be the first interview object
-		InterviewObject formObject = session.getInterviewManager().nextForm().getInterviewObject();
+		InterviewObject formObject = session.getInterview().nextForm().getInterviewObject();
 		assertEquals(pregnancyQuestions, formObject);
 		
 		// SET   : first question of pregnancyQuestions (no follow-up question indicated)
 		// EXPECT: pregnancyQuestions should be still active 
 		setValue(sex, male);
-		formObject = session.getInterviewManager().nextForm().getInterviewObject();
+		formObject = session.getInterview().nextForm().getInterviewObject();
 		assertEquals(pregnancyQuestions, formObject);
 
 		// SET   : second question of pregnancyQuestions
 		// EXPECT: now 'heightWeightQuestions' should be active 
 		setValue(ask_for_pregnancy, new ChoiceValue(kbm.findChoice(ask_for_pregnancy, "no")));
-		formObject = session.getInterviewManager().nextForm().getInterviewObject();
+		formObject = session.getInterview().nextForm().getInterviewObject();
 		assertEquals(heightWeightQuestions, formObject);
 		
 		// SET   : first question of 'heightWeightQuestions' 
 		// EXPECT: now 'heightWeightQuestions' should be still active 
 		setValue(height, new NumValue(100));
-		formObject = session.getInterviewManager().nextForm().getInterviewObject();
+		formObject = session.getInterview().nextForm().getInterviewObject();
 		assertEquals(heightWeightQuestions, formObject);
 
 		// SET   : second question of 'heightWeightQuestions' 
 		// EXPECT: now we expect an EMPTY_FORM since the agenda should be empty now 
 		setValue(weight, new NumValue(100));
-		assertEquals(EmptyForm.getInstance(), session.getInterviewManager().nextForm());
+		assertEquals(EmptyForm.getInstance(), session.getInterview().nextForm());
 	}
 
 	@Test
@@ -138,7 +138,7 @@ public class CurrentQContainerFormTest {
 		assertFalse(agenda.isEmpty());
 
 		// EXPECT: 'pregnancyQuestions' to be the first interview object
-		InterviewObject formObject = session.getInterviewManager().nextForm().getInterviewObject();
+		InterviewObject formObject = session.getInterview().nextForm().getInterviewObject();
 		assertEquals(pregnancyQuestions, formObject);
 		
 		// SET   : ask_for_pregnancy = no
@@ -146,21 +146,21 @@ public class CurrentQContainerFormTest {
 		// EXPECT: pregnancyQuestions should be still active, because of follow-up-questions 
 		setValue(ask_for_pregnancy,new ChoiceValue(kbm.findChoice(ask_for_pregnancy, "no")));
 		setValue(sex, female);
-		Form form = session.getInterviewManager().nextForm();
+		Form form = session.getInterview().nextForm();
 		assertEquals(pregnancyQuestions, form.getInterviewObject());
 		
 		// SET   : answer follow-up question 'pregnant=no'
 		// EXPECT: no the next qcontainer 'heightWeightQuestions' should be active, 
 		//         since all questions (including follow-ups) have been answered
 		setValue(pregnant, new ChoiceValue(kbm.findChoice(pregnant, "no")));
-		assertEquals(heightWeightQuestions, session.getInterviewManager().nextForm().getInterviewObject());
+		assertEquals(heightWeightQuestions, session.getInterview().nextForm().getInterviewObject());
 		
 		
 		// SET   : answer the questions 'height' and 'weight'
 		// EXPECT: all questions on the agenda are answered, so next form should be empty
 		setValue(height, new NumValue(100));
 		setValue(weight, new NumValue(100));
-		assertEquals(EmptyForm.getInstance(), session.getInterviewManager().nextForm());
+		assertEquals(EmptyForm.getInstance(), session.getInterview().nextForm());
 	}
 	
 	

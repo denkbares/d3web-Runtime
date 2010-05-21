@@ -10,7 +10,7 @@ import de.d3web.abstraction.formula.FormulaNumber;
 import de.d3web.abstraction.formula.Mult;
 import de.d3web.abstraction.formula.QNumWrapper;
 import de.d3web.abstraction.formula.Sub;
-import de.d3web.abstraction.inference.PSMethodQuestionSetter;
+import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.Rule;
@@ -224,8 +224,8 @@ public class KfzWb extends KnowledgeBase {
 			Num2ChoiceSchema schema = new Num2ChoiceSchema("Msi4_Schema00");
 			schema.setSchemaArray(new Double[] {
 					new Double(10), new Double(20) });
-			Msi4.addKnowledge(PSMethodQuestionSetter.class, schema,
-					PSMethodQuestionSetter.NUM2CHOICE_SCHEMA);
+			Msi4.addKnowledge(PSMethodAbstraction.class, schema,
+					PSMethodAbstraction.NUM2CHOICE_SCHEMA);
 
 			Mf6.setName("SI: Tatsächlicher Kraftstoffverbrauch/100km");
 			Mf6.setKnowledgeBase(this);

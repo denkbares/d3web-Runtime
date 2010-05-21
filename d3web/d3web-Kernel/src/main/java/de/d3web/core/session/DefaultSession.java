@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import de.d3web.abstraction.inference.PSMethodQuestionSetter;
+import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.DefaultPropagationController;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
@@ -37,7 +37,6 @@ import de.d3web.core.inference.PropagationContoller;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.session.blackboard.Blackboard;
@@ -68,24 +67,26 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
  * The {@link D3WebSession} is the default implementation of {@link Session}.
- * Here, the {@link Blackboard}, {@link Interview}, and {@link PropagationContoller} 
- * are managed, that together represent the behavior of a {@link Session}.
+ * Here, the {@link Blackboard}, {@link Interview}, and
+ * {@link PropagationContoller} are managed, that together represent the
+ * behavior of a {@link Session}.
  * 
  * @author joba
  * @see SessionObject
  */
 public class DefaultSession implements Session {
+
 	// TODO knowledge base, interview and propagation controller should be final
 	private KnowledgeBase kb;
 	private DefaultPropagationController propagationController;
 	private Interview interview;
-	
+
 	private Map<CaseObjectSource, SessionObject> dynamicStore;
 
-	private String     id = null;
+	private String id = null;
 	private Blackboard blackboard;
-	private Protocol   protocol = new DefaultProtocol();
-	
+	private Protocol protocol = new DefaultProtocol();
+
 	private List<PSMethod> usedPSMethods;
 	private DCMarkup dcMarkup;
 	private Properties properties;
@@ -100,7 +101,7 @@ public class DefaultSession implements Session {
 			new PSMethodDialogControlling(),
 			PSMethodContraIndication.getInstance(),
 			PSMethodNextQASet.getInstance(),
-			PSMethodQuestionSetter.getInstance(),
+			PSMethodAbstraction.getInstance(),
 			PSMethodSuppressAnswer.getInstance(),
 			PSMethodHeuristic.getInstance(),
 			PSMethodInit.getInstance(),
@@ -167,9 +168,9 @@ public class DefaultSession implements Session {
 
 	DefaultSession(KnowledgeBase knowledgebase, FormStrategy formStrategy) {
 		this(knowledgebase);
-		getInterviewManager().setFormStrategy(formStrategy);
+		getInterview().setFormStrategy(formStrategy);
 	}
-	
+
 	private void initSession(KnowledgeBase kb) {
 		this.kb = kb;
 		this.propagationController = new DefaultPropagationController(this);
@@ -183,7 +184,7 @@ public class DefaultSession implements Session {
 		// add problem-solving methods used for this case
 		this.usedPSMethods = new LinkedList<PSMethod>();
 	}
-	
+
 	private void checkStateAndInsertPSM(KnowledgeBase kb, PSConfig psConfig) {
 		if (psConfig.getPsState() == PSConfig.PSState.autodetect) {
 			Autodetect auto = psConfig.getAutodetect();
@@ -203,8 +204,6 @@ public class DefaultSession implements Session {
 		}
 	}
 
-
-
 	/*
 	 * @see de.d3web.kernel.domainModel.IDReference#getId()
 	 */
@@ -216,15 +215,15 @@ public class DefaultSession implements Session {
 	}
 
 	@Override
-	public Interview getInterviewManager() {
+	public Interview getInterview() {
 		return interview;
 	}
 
 	@Override
 	public Protocol getProtocol() {
-		return this.protocol ;
+		return this.protocol;
 	}
-	
+
 	private String createNewCaseId() {
 		return UUID.randomUUID().toString();
 	}
@@ -391,7 +390,7 @@ public class DefaultSession implements Session {
 	public PropagationContoller getPropagationContoller() {
 		return propagationController;
 	}
-	
+
 	public void notifyListeners(TerminologyObject o) {
 		for (SessionEventListener listener : listeners) {
 			listener.notify(this, o, this);

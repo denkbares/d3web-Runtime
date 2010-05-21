@@ -25,13 +25,11 @@ import java.util.List;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.InterviewObject;
-import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseQASet;
 import de.d3web.indication.ActionNextQASet;
-import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
  * This is a container to store Questions or Sets of Questions. <BR>
@@ -102,6 +100,7 @@ public abstract class QASet extends NamedObject implements InterviewObject, Case
 	 * @param theCase current case
 	 * @deprecated delete this after interview refactoring
 	 */
+	@Deprecated
 	public void activate(Session theCase, Rule rule, Class<? extends PSMethod> psm) {
 		CaseQASet caseQA =
 				((de.d3web.core.session.blackboard.CaseQASet) theCase
@@ -187,26 +186,30 @@ public abstract class QASet extends NamedObject implements InterviewObject, Case
 	 * A QASet can be valid only, if it hasn't any contra-reasons or if it is
 	 * user-selected. It is valid, if it has proreasons or, in case of a
 	 * question, if it has a QContainer-parent, which is valid.
+	 * 
 	 * @deprecated delete this method after interview refactoring
 	 */
+	@Deprecated
 	public boolean isValid(Session theCase) {
-		return theCase.getInterviewManager().isActive(this);
-		
-//		CaseQASet caseQASet = (CaseQASet) theCase.getCaseObject(this);
-//		List<Reason> pros = getProReasons(theCase);
-//		if (!caseQASet.hasContraReason()
-//				|| pros.contains(new QASet.Reason(null, PSMethodUserSelected.class))) {
-//			if (!pros.isEmpty()) return true;
-//
-//			if (this instanceof Question) for (TerminologyObject parent : getParents())
-//				if (parent instanceof QContainer) {
-//					QContainer qcon = (QContainer) parent;
-//					if (qcon.isValid(theCase)) {
-//						return true;
-//					}
-//				}
-//		}
-//		return false;
+		return theCase.getInterview().isActive(this);
+
+		// CaseQASet caseQASet = (CaseQASet) theCase.getCaseObject(this);
+		// List<Reason> pros = getProReasons(theCase);
+		// if (!caseQASet.hasContraReason()
+		// || pros.contains(new QASet.Reason(null, PSMethodUserSelected.class)))
+		// {
+		// if (!pros.isEmpty()) return true;
+		//
+		// if (this instanceof Question) for (TerminologyObject parent :
+		// getParents())
+		// if (parent instanceof QContainer) {
+		// QContainer qcon = (QContainer) parent;
+		// if (qcon.isValid(theCase)) {
+		// return true;
+		// }
+		// }
+		// }
+		// return false;
 	}
 
 	public abstract void removeContraReason(Reason source, Session theCase);

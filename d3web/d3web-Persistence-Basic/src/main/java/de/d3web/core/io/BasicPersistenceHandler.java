@@ -36,7 +36,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import de.d3web.abstraction.inference.PSMethodQuestionSetter;
+import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
@@ -85,8 +85,8 @@ public class BasicPersistenceHandler implements
 
 	private float saveSchemas(Element father, KnowledgeBase kb, ProgressListener listener, float time, int abstime) throws IOException {
 
-		final MethodKind methodKind = PSMethodQuestionSetter.NUM2CHOICE_SCHEMA;
-		final Class<? extends PSMethod> context = PSMethodQuestionSetter.class;
+		final MethodKind methodKind = PSMethodAbstraction.NUM2CHOICE_SCHEMA;
+		final Class<? extends PSMethod> context = PSMethodAbstraction.class;
 
 		Iterator<Question> questionsIter = kb.getQuestions().iterator();
 		while (questionsIter.hasNext()) {
@@ -341,8 +341,8 @@ public class BasicPersistenceHandler implements
 		time += kb.getSolutions().size();
 		time += kb.getInitQuestions().size();
 		// Schemas
-		final MethodKind methodKind = PSMethodQuestionSetter.NUM2CHOICE_SCHEMA;
-		final Class<? extends PSMethod> context = PSMethodQuestionSetter.class;
+		final MethodKind methodKind = PSMethodAbstraction.NUM2CHOICE_SCHEMA;
+		final Class<? extends PSMethod> context = PSMethodAbstraction.class;
 
 		Iterator<Question> questionsIter = kb.getQuestions().iterator();
 		while (questionsIter.hasNext()) {

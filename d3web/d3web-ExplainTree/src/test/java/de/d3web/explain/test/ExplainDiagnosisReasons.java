@@ -31,7 +31,7 @@ import java.util.LinkedList;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import de.d3web.abstraction.inference.PSMethodQuestionSetter;
+import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -95,7 +95,7 @@ public class ExplainDiagnosisReasons extends AbstractExplainTest {
 		explainContext.add(PSMethodUserSelected.class);
 		explainContext.add(PSMethodContraIndication.class);
 		explainContext.add(PSMethodNextQASet.class);
-		explainContext.add(PSMethodQuestionSetter.class);
+		explainContext.add(PSMethodAbstraction.class);
 		explainContext.add(PSMethodSuppressAnswer.class);
 
 		// set MF8a2 since it will give P8 the score P5 (and activate Mf10)
@@ -119,7 +119,7 @@ public class ExplainDiagnosisReasons extends AbstractExplainTest {
 		explainContext.add(PSMethodUserSelected.class);
 		explainContext.add(PSMethodContraIndication.class);
 		explainContext.add(PSMethodNextQASet.class);
-		explainContext.add(PSMethodQuestionSetter.class);
+		explainContext.add(PSMethodAbstraction.class);
 		explainContext.add(PSMethodSuppressAnswer.class);
 
 		// set MF8a2 since it will give P8 the score P5 (and activate Mf10)

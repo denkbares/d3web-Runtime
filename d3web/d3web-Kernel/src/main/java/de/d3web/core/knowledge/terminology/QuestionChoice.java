@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.abstraction.inference.PSMethodQuestionSetter;
+import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 import de.d3web.core.session.Session;
@@ -162,7 +162,7 @@ public abstract class QuestionChoice extends Question {
 	 */
 	public Num2ChoiceSchema getSchemaForQuestion() {
 		KnowledgeSlice schemaCol =
-				getKnowledge(PSMethodQuestionSetter.class, PSMethodQuestionSetter.NUM2CHOICE_SCHEMA);
+				getKnowledge(PSMethodAbstraction.class, PSMethodAbstraction.NUM2CHOICE_SCHEMA);
 		if (schemaCol != null) {
 			return (Num2ChoiceSchema) schemaCol;
 		}

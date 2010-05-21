@@ -43,7 +43,7 @@ import de.d3web.abstraction.formula.QNumWrapper;
 import de.d3web.abstraction.formula.Sub;
 import de.d3web.abstraction.formula.Today;
 import de.d3web.abstraction.formula.YearDiff;
-import de.d3web.abstraction.inference.PSMethodQuestionSetter;
+import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
@@ -932,8 +932,8 @@ public class XMLRenderer {
 
 	private static Num2ChoiceSchema getSchemaForQuestion(QuestionOC q) {
 		KnowledgeSlice schemaCol =
-				q.getKnowledge(PSMethodQuestionSetter.class,
-				PSMethodQuestionSetter.NUM2CHOICE_SCHEMA);
+				q.getKnowledge(PSMethodAbstraction.class,
+				PSMethodAbstraction.NUM2CHOICE_SCHEMA);
 		if (schemaCol != null) return (Num2ChoiceSchema) schemaCol;
 		else return null;
 	}
@@ -1053,7 +1053,7 @@ public class XMLRenderer {
 
 	public static boolean isSiQASet(QASet q) {
 		KnowledgeSlice rules =
-				q.getKnowledge(PSMethodQuestionSetter.class, MethodKind.BACKWARD);
+				q.getKnowledge(PSMethodAbstraction.class, MethodKind.BACKWARD);
 		if (rules != null) {
 			return true;
 		}

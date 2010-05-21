@@ -25,7 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import de.d3web.abstraction.inference.PSMethodQuestionSetter;
+import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
@@ -529,7 +529,7 @@ public class MQDialogController implements DialogController {
 		KnowledgeSlice knowledge = followQuestion.getKnowledge(PSMethodNextQASet.class,
 				MethodKind.BACKWARD);
 		if (knowledge == null) {
-			knowledge = followQuestion.getKnowledge(PSMethodQuestionSetter.class,
+			knowledge = followQuestion.getKnowledge(PSMethodAbstraction.class,
 					MethodKind.BACKWARD);
 		}
 		if (knowledge != null) {

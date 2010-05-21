@@ -1,6 +1,6 @@
 /*
-x * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- * Computer Science VI, University of Wuerzburg
+ * x * Copyright (C) 2009 Chair of Artificial Intelligence and Applied
+ * Informatics Computer Science VI, University of Wuerzburg
  * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
@@ -65,7 +65,7 @@ public class QuestionPageBean {
 		List<Question> qListToRender = new ArrayList<Question>();
 		for (TerminologyObject terminologyObject : qContainer.getChildren()) {
 			if (terminologyObject instanceof QContainer) {
-				qListToRender.addAll(convertQuestionsToRender((QContainer)terminologyObject));
+				qListToRender.addAll(convertQuestionsToRender((QContainer) terminologyObject));
 			}
 			else if (terminologyObject instanceof Question) {
 				Question question = (Question) terminologyObject;
@@ -78,7 +78,6 @@ public class QuestionPageBean {
 				System.err.println("Unidentified TerminologyObject type: " + getClass());
 			}
 		}
-		
 
 		// List<List<Object>> tempList = DialogUtils.getMQDialogController(
 		// DialogUtils.getDialog().getSession()).getAllQuestionsToRender(
@@ -102,7 +101,7 @@ public class QuestionPageBean {
 		List<Question> questions = new ArrayList<Question>();
 		for (TerminologyObject followup : question.getChildren()) {
 			if (followup instanceof Question) {
-				boolean isActive = DialogUtils.isValidQASet((Question)followup, session); 
+				boolean isActive = DialogUtils.isValidQASet((Question) followup, session);
 				if (isActive || (includingInactiveQuestions || inactiveHierarchicalChildrenOnly)) {
 					questions.add((Question) followup);
 				}
@@ -130,7 +129,7 @@ public class QuestionPageBean {
 			List<Question> qList, String dialogMode) {
 		for (int i = 0; i < qList.size(); i++) {
 			Question currentQuestion = qList.get(i);
-			
+
 			if (UndefinedValue.isUndefinedValue(session.getBlackboard().getValue(currentQuestion))) {
 				return currentQuestion;
 			}
@@ -143,7 +142,8 @@ public class QuestionPageBean {
 		}
 		if (dialogMode.equals("MQ")) {
 			return null;
-		} else {
+		}
+		else {
 			return qList.get(0);
 		}
 	}
@@ -169,47 +169,43 @@ public class QuestionPageBean {
 	}
 
 	private QContainer getQContainerForQuestion(Question q) {
-		if (q == null)
-			return (null);
+		if (q == null) return (null);
 		for (TerminologyObject qaSet : q.getParents()) {
-			if (qaSet instanceof Question)
-				return (getQContainerForQuestion((Question) qaSet));
-			else
-				return ((QContainer) qaSet);
+			if (qaSet instanceof Question) return (getQContainerForQuestion((Question) qaSet));
+			else return ((QContainer) qaSet);
 		}
 		return (null);
 	}
 
 	public QContainer getQContainerToRender() {
-//		MQDialogController controller = DialogUtils
-//				.getMQDialogController(DialogUtils.getDialog().getSession());
+		// MQDialogController controller = DialogUtils
+		// .getMQDialogController(DialogUtils.getDialog().getSession());
 
 		Session session = DialogUtils.getDialog().getSession();
-		session.getInterviewManager().setFormStrategy(new CurrentQContainerFormStrategy());
-//		QContainer nextInterviewObject = (QContainer) controller
-//				.getCurrentQASet();
-		
-		
-		QContainer qContainer =  (QContainer)session.getInterviewManager().nextForm().getInterviewObject();
-		return qContainer;
-//		 (QContainer)
-//		 controller.moveToNewestQASet();
+		session.getInterview().setFormStrategy(new CurrentQContainerFormStrategy());
+		// QContainer nextInterviewObject = (QContainer) controller
+		// .getCurrentQASet();
 
-//		QContainer qContainer = null;
-//		if (nextInterviewObject instanceof QContainer) {
-//			qContainer = (QContainer) nextInterviewObject;
-//		}
-//
-//		if (qContainer == null
-//				&& !DialogUtils.getDialogSettings().isAutoMoveToResultpage()) {
-//			controller.moveToPreviousQASet();
-//			if (nextInterviewObject != null) {
-//				qContainer = nextInterviewObject;
-//			} else {
-//				qContainer = (QContainer) controller.getCurrentQASet();
-//			}
-//		}
-//		return qContainer;
+		QContainer qContainer = (QContainer) session.getInterview().nextForm().getInterviewObject();
+		return qContainer;
+		// (QContainer)
+		// controller.moveToNewestQASet();
+
+		// QContainer qContainer = null;
+		// if (nextInterviewObject instanceof QContainer) {
+		// qContainer = (QContainer) nextInterviewObject;
+		// }
+		//
+		// if (qContainer == null
+		// && !DialogUtils.getDialogSettings().isAutoMoveToResultpage()) {
+		// controller.moveToPreviousQASet();
+		// if (nextInterviewObject != null) {
+		// qContainer = nextInterviewObject;
+		// } else {
+		// qContainer = (QContainer) controller.getCurrentQASet();
+		// }
+		// }
+		// return qContainer;
 	}
 
 	public List<Question> getQuestionListToRender() {
@@ -220,12 +216,13 @@ public class QuestionPageBean {
 		QContainer container = getQContainerToRender();
 		if (container != null) {
 			setQuestionListToRender(container);
-		} else {
+		}
+		else {
 			// we move to result page because all questions are answered..
 			// but we set the actual qcontainer to the previous qcontainer
-//			 DialogController cont = DialogUtils
-//			 .getMQDialogController(DialogUtils.getDialog().getSession());
-//			 cont.moveToPreviousQASet();
+			// DialogController cont = DialogUtils
+			// .getMQDialogController(DialogUtils.getDialog().getSession());
+			// cont.moveToPreviousQASet();
 			DialogUtils.getSaveCaseBean().autoSaveCase();
 			DialogUtils.getPageDisplay().moveToResultPage();
 		}
@@ -274,10 +271,10 @@ public class QuestionPageBean {
 			// TODO: here we would need an instance indication
 			session.getBlackboard()
 					.addInterviewFact(
-							FactFactory.createFact(qaSet, new Indication(
-									State.INSTANT_INDICATED),
-									PSMethodUserSelected.getInstance(),
-									PSMethodUserSelected.getInstance()));
+					FactFactory.createFact(qaSet, new Indication(
+					State.INSTANT_INDICATED),
+					PSMethodUserSelected.getInstance(),
+					PSMethodUserSelected.getInstance()));
 		}
 		// DialogUtils.getMQDialogController(DialogUtils.getDialog().getSession())
 		// .moveToQASet(qaSet);
@@ -347,7 +344,8 @@ public class QuestionPageBean {
 		if (userIndicatedQASet != null) {
 			if (userIndicatedQASet instanceof Question) {
 				listToSet.add((Question) userIndicatedQASet);
-			} else if (userIndicatedQASet instanceof QContainer) {
+			}
+			else if (userIndicatedQASet instanceof QContainer) {
 				List<Question> temp = convertQuestionsToRender((QContainer) userIndicatedQASet);
 				listToSet.add(getFirstQuestionToAskFromList(DialogUtils
 						.getDialog().getSession(), temp, "OQ"));
@@ -359,7 +357,8 @@ public class QuestionPageBean {
 		else if (oqListPointer == oqHistoryList.size() - 1) {
 			listToSet.add(getFirstQuestionToAskFromList(DialogUtils.getDialog()
 					.getSession(), convertQuestionsToRender(container), "OQ"));
-		} else {
+		}
+		else {
 			listToSet.add(oqHistoryList.get(oqListPointer));
 		}
 		this.questionListToRender = listToSet;
@@ -377,7 +376,8 @@ public class QuestionPageBean {
 			// System.out.println("notyetlisted -> add it to queue");
 			oqHistoryList.add(listToSet.get(0));
 			oqListPointer = oqHistoryList.size() - 1;
-		} else {
+		}
+		else {
 			// TODO the question is listed.. what to do here?
 			// actual implementation: pointer is not changed
 		}
@@ -396,7 +396,8 @@ public class QuestionPageBean {
 			// mark "firstToAsk" question (will be overwritten if necessary)
 			setFirstQToAsk(getFirstQuestionToAskFromList(DialogUtils
 					.getDialog().getSession(), questionListToRender, "MQ"));
-		} else {
+		}
+		else {
 			setQuestionListOQToRender(container);
 		}
 	}
@@ -445,9 +446,10 @@ public class QuestionPageBean {
 		if (fractionOfAnsweredQuestionsPercentage < 51) {
 			colorString = "rgb(255, "
 					+ (int) (Math
-							.floor((double) fractionOfAnsweredQuestionsPercentage
-									/ (double) 50 * 255)) + ", 0)";
-		} else {
+					.floor((double) fractionOfAnsweredQuestionsPercentage
+					/ (double) 50 * 255)) + ", 0)";
+		}
+		else {
 			colorString = "rgb("
 					+ (int) (Math
 							.floor(255 - (((double) fractionOfAnsweredQuestionsPercentage - (double) 50) / 50 * 255)))

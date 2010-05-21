@@ -78,8 +78,8 @@ public class NextUnansweredQuestionFormTest {
 				new String[] {
 				"all", "pregnacyQuestions", "height+weight" });
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
-		session.getInterviewManager().setFormStrategy(new NextUnansweredQuestionFormStrategy());
-		agenda = session.getInterviewManager().getInterviewAgenda();
+		session.getInterview().setFormStrategy(new NextUnansweredQuestionFormStrategy());
+		agenda = session.getInterview().getInterviewAgenda();
 	}
 
 	@Test
@@ -93,19 +93,19 @@ public class NextUnansweredQuestionFormTest {
 		assertFalse(agenda.isEmpty());
 
 		// EXPECT: 'sex' to be the first question
-		InterviewObject formQuestions = session.getInterviewManager().nextForm().getInterviewObject();
+		InterviewObject formQuestions = session.getInterview().nextForm().getInterviewObject();
 		assertEquals(sex, formQuestions);
 
 		// ANSWER: sex=female
 		// EXPECT: pregnant to be the next question
 		setValue(sex, female);
-		formQuestions = session.getInterviewManager().nextForm().getInterviewObject();
+		formQuestions = session.getInterview().nextForm().getInterviewObject();
 		assertEquals(pregnant, formQuestions);
 
 		// ANSWER: pregnant=no
 		// EXPECT: no more questions to ask
 		setValue(pregnant, new ChoiceValue(kbm.findChoice(pregnant, "no")));
-		Form form = session.getInterviewManager().nextForm();
+		Form form = session.getInterview().nextForm();
 		assertEquals(EmptyForm.getInstance(), form);
 	}
 
@@ -118,14 +118,14 @@ public class NextUnansweredQuestionFormTest {
 		assertFalse(agenda.isEmpty());
 
 		// EXPECT the first question 'sex' to be the next question in the form
-		InterviewObject nextQuestion = session.getInterviewManager().nextForm().getInterviewObject();
+		InterviewObject nextQuestion = session.getInterview().nextForm().getInterviewObject();
 		assertEquals(sex, nextQuestion);
 
 		// SET question sex=male
 		// EXPECT the second question 'ask_for_pregnancy' to be the next
 		// question in the form
 		setValue(sex, male);
-		nextQuestion = session.getInterviewManager().nextForm().getInterviewObject();
+		nextQuestion = session.getInterview().nextForm().getInterviewObject();
 		assertEquals(ask_for_pregnancy, nextQuestion);
 
 		// SET : question ask_for_pregnancy=no
@@ -133,7 +133,7 @@ public class NextUnansweredQuestionFormTest {
 		// no more
 		// questions to be asked next, i.e., the EmptyForm singleton is returned
 		setValue(ask_for_pregnancy, kbm.findValue(ask_for_pregnancy, "no"));
-		assertEquals(EmptyForm.getInstance(), session.getInterviewManager().nextForm());
+		assertEquals(EmptyForm.getInstance(), session.getInterview().nextForm());
 	}
 
 	@Test
@@ -150,14 +150,14 @@ public class NextUnansweredQuestionFormTest {
 		assertFalse(agenda.isEmpty());
 
 		// EXPECT the first question 'sex' to be the next question in the form
-		InterviewObject nextQuestion = session.getInterviewManager().nextForm().getInterviewObject();
+		InterviewObject nextQuestion = session.getInterview().nextForm().getInterviewObject();
 		assertEquals(sex, nextQuestion);
 
 		// SET question sex=female
 		// EXPECT the follow-up question 'pregnant' to be the next question in
 		// the form
 		setValue(sex, female);
-		nextQuestion = session.getInterviewManager().nextForm().getInterviewObject();
+		nextQuestion = session.getInterview().nextForm().getInterviewObject();
 
 		// TODO: overwork FormStrategy to copy with follow-up questions
 		assertEquals(pregnant, nextQuestion);

@@ -86,7 +86,6 @@ import de.d3web.dialog2.controller.PageDisplayController;
 import de.d3web.dialog2.controller.ProcessedQContainersController;
 import de.d3web.dialog2.controller.SaveCaseController;
 import de.d3web.dialog2.imagemap.ImageMapBean;
-import de.d3web.dialog2.render.QuestionsRendererUtils;
 
 public class DialogUtils {
 
@@ -97,17 +96,17 @@ public class DialogUtils {
 	public static String contextPath;
 
 	/**
-	 * Tests, whether a value (different from {@link UndefinedValue}) was assigned
-	 * to the specified question in the specified session. 
+	 * Tests, whether a value (different from {@link UndefinedValue}) was
+	 * assigned to the specified question in the specified session.
+	 * 
 	 * @param question the specified question
 	 * @param session the specified session
 	 * @return true, if the question has a value different from undefined
 	 */
 	public static boolean hasValue(Question question, Session session) {
-		return (UndefinedValue.isNotUndefinedValue(session.getBlackboard().getValue(question))); 
+		return (UndefinedValue.isNotUndefinedValue(session.getBlackboard().getValue(question)));
 	}
-	
-	
+
 	private static void addUsedPSMethods(Session newCase) {
 		Iterator<PSMethod> iter = getUsedPSMethods().iterator();
 		while (iter.hasNext()) {
@@ -170,7 +169,7 @@ public class DialogUtils {
 	 */
 	public static Session createNewCase(KnowledgeBase kb) {
 		Session newCase = SessionFactory.createSession(kb);
-		newCase.getInterviewManager().setFormStrategy(new CurrentQContainerFormStrategy());
+		newCase.getInterview().setFormStrategy(new CurrentQContainerFormStrategy());
 		addUsedPSMethods(newCase);
 		return newCase;
 	}
@@ -282,10 +281,10 @@ public class DialogUtils {
 		return format.format(params);
 	}
 
-//	public static MQDialogController getMQDialogController(Session theCase) {
-//		DialogController dc = (DialogController) theCase.getQASetManager();
-//		return dc.getMQDialogcontroller();
-//	}
+	// public static MQDialogController getMQDialogController(Session theCase) {
+	// DialogController dc = (DialogController) theCase.getQASetManager();
+	// return dc.getMQDialogcontroller();
+	// }
 
 	public static PageDisplayController getPageDisplay() {
 		return (PageDisplayController) getBean("pageDisplay");
@@ -482,27 +481,26 @@ public class DialogUtils {
 		return answer instanceof Unknown;
 	}
 
-
 	public static boolean isValidQASet(QASet qaset, Session session) {
-		if (session.getInterviewManager().isActive(qaset)) {
+		if (session.getInterview().isActive(qaset)) {
 			if (qaset instanceof QContainer) {
 				return true;
 			}
 			else if (qaset instanceof Question) {
-				return showAbstract((Question)qaset);	
+				return showAbstract((Question) qaset);
 			}
 		}
-		else if (qaset instanceof Question){
+		else if (qaset instanceof Question) {
 			for (TerminologyObject tob : qaset.getParents()) {
-				if (isValidQASet((QASet)tob, session)) {
-					return showAbstract((Question)qaset);
+				if (isValidQASet((QASet) tob, session)) {
+					return showAbstract((Question) qaset);
 				}
 			}
 		}
 		return false;
-		//q.isValid(session) && showAbstract(q))
+		// q.isValid(session) && showAbstract(q))
 	}
-	
+
 	public static boolean showAbstract(Question q) {
 		if (!DialogUtils.getDialogSettings().isShowAbstractQuestions()) {
 			Object qIsAbstract = q.getProperties().getProperty(

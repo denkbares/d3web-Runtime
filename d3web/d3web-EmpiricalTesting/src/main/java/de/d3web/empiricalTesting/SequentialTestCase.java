@@ -136,7 +136,7 @@ public class SequentialTestCase {
 	public void deriveSolutions(KnowledgeBase kb, Class psMethodContext) {
 		RatingStrategy ratingStrategy = new StateRatingStrategy();
 		Session session = SessionFactory.createSession(kb);
-		session.getInterviewManager().setFormStrategy(new NextUnansweredQuestionFormStrategy());
+		session.getInterview().setFormStrategy(new NextUnansweredQuestionFormStrategy());
 
 		for (RatedTestCase rtc : ratedTestCases) {
 			// Answer and Question setting in Case

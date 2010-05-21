@@ -21,7 +21,7 @@ package de.d3web.core.io.rules;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.d3web.abstraction.inference.PSMethodQuestionSetter;
+import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.PSMethod;
 /**
  * PersistenceHanlder for abstraction rules
@@ -38,7 +38,7 @@ public class AbstractionRulesPersistenceHandler extends
 	@Override
 	protected List<Class<? extends PSMethod>> getProblemSolverContent() {
 		List<Class<? extends PSMethod>> list = new ArrayList<Class<? extends PSMethod>>();
-		list.add(PSMethodQuestionSetter.class);
+		list.add(PSMethodAbstraction.class);
 		return list;
 	}
 }

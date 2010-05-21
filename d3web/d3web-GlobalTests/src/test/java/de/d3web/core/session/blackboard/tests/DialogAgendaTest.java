@@ -79,7 +79,7 @@ public class DialogAgendaTest {
 				new String[] {
 				"all", "pregnacyQuestions", "height+weight" });
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
-		agenda = session.getInterviewManager().getInterviewAgenda();
+		agenda = session.getInterview().getInterviewAgenda();
 	}
 
 	@Test

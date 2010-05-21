@@ -23,7 +23,7 @@ package de.d3web.core.knowledge.terminology;
 import java.util.Collection;
 import java.util.List;
 
-import de.d3web.abstraction.inference.PSMethodQuestionSetter;
+import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -88,7 +88,7 @@ public abstract class Question extends QASet implements CaseObjectSource {
 	 *         DerivationType
 	 */
 	public DerivationType getDerivationType() {
-		final Class<? extends PSMethod> QUESTION_SETTER = PSMethodQuestionSetter.class;
+		final Class<? extends PSMethod> QUESTION_SETTER = PSMethodAbstraction.class;
 		final Class<? extends PSMethod> FOLLOW_QUESTION = PSMethodNextQASet.class;
 		final MethodKind KIND = MethodKind.BACKWARD;
 		if (hasElements(getKnowledge(QUESTION_SETTER, KIND))

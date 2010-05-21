@@ -193,7 +193,7 @@ public class DefaultBlackboard implements Blackboard {
 			Value newValue) {
 		PropagationEntry entry = new PropagationEntry(interviewObject, oldValue,
 				newValue);
-		session.getInterviewManager().notifyFactChange(entry);
+		session.getInterview().notifyFactChange(entry);
 	}
 
 	@Override

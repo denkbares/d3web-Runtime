@@ -37,7 +37,7 @@ public class InterviewCalculator extends PrecisionRecallCalculator {
 
 	public InterviewCalculator(KnowledgeBase kb) {
 		this.thecase = SessionFactory.createSession(kb);
-		this.thecase.getInterviewManager().setFormStrategy(new NextUnansweredQuestionFormStrategy());
+		this.thecase.getInterview().setFormStrategy(new NextUnansweredQuestionFormStrategy());
 	}
 
 	// -------Rated Precision--------
@@ -126,7 +126,7 @@ public class InterviewCalculator extends PrecisionRecallCalculator {
 	 * @return Question which will be asked next.
 	 */
 	private Question getNextQuestion() {
-		return (Question)thecase.getInterviewManager().nextForm().getInterviewObject();
+		return (Question)thecase.getInterview().nextForm().getInterviewObject();
 
 		//      // THIS IS NOT NECESSARY ANY MORE DUE TO NEW INTERVIEW IMPLEMENTATION		
 //		// Get DialogController

@@ -85,8 +85,8 @@ public class IndicationOQQuestionsNextFormTest {
 		addTerminologyObjects();
 		addRules();
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
-		agenda = session.getInterviewManager().getInterviewAgenda();
-		interview = session.getInterviewManager();
+		agenda = session.getInterview().getInterviewAgenda();
+		interview = session.getInterview();
 	}
 
 	// add the knowledge base objects, i.e., questions and answers
@@ -268,7 +268,7 @@ public class IndicationOQQuestionsNextFormTest {
 		assertEquals("Question Sex has wrong value ", female, sexValue);
 
 		// OQ Strategy should return exactly one element here.
-		intervObj = session.getInterviewManager().nextForm().getInterviewObject();
+		intervObj = session.getInterview().nextForm().getInterviewObject();
 		assertTrue("InterviewManager.nextForm() should have provided one " +
 				"next element.", intervObj != null);
 
@@ -290,7 +290,7 @@ public class IndicationOQQuestionsNextFormTest {
 		assertEquals("Question Sex has wrong value ", male, sexValue);
 
 		// OQ Strategy should return exactly one element here.
-		intervObj = session.getInterviewManager().nextForm().getInterviewObject();
+		intervObj = session.getInterview().nextForm().getInterviewObject();
 		assertTrue("InterviewManager.nextForm() should have provided one " +
 				"next element, but returned .", intervObj != null);
 
@@ -335,7 +335,7 @@ public class IndicationOQQuestionsNextFormTest {
 		assertEquals("Question Ask_Headache has wrong value ", yes, askHValue);
 
 		// OQ Strategy should return exactly one element here.
-		intervObj = session.getInterviewManager().nextForm().getInterviewObject();
+		intervObj = session.getInterview().nextForm().getInterviewObject();
 		assertTrue("InterviewManager.nextForm() should have provided one " +
 				"next element. ", intervObj != null);
 
@@ -359,7 +359,7 @@ public class IndicationOQQuestionsNextFormTest {
 		assertEquals("Question Ask_Headache has wrong value ", no, askHValue);
 
 		// OQ Strategy should return exactly one element here.
-		intervObj = session.getInterviewManager().nextForm().getInterviewObject();
+		intervObj = session.getInterview().nextForm().getInterviewObject();
 		assertTrue("InterviewManager.nextForm() should have provided one " +
 				"next element.", intervObj != null);
 

@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.d3web.abstraction.inference.PSMethodQuestionSetter;
+import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -81,7 +81,7 @@ public class Num2ChoiceSchemaHandler implements FragmentHandler {
 		else {
 			Num2ChoiceSchema schema = new Num2ChoiceSchema(id);
 			schema.setQuestion(q);
-			q.addKnowledge(PSMethodQuestionSetter.class, schema, PSMethodQuestionSetter.NUM2CHOICE_SCHEMA);
+			q.addKnowledge(PSMethodAbstraction.class, schema, PSMethodAbstraction.NUM2CHOICE_SCHEMA);
 			schema.setSchemaArray(numArray);
 			return schema;
 		}

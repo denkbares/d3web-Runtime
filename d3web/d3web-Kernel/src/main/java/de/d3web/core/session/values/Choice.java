@@ -135,8 +135,7 @@ public class Choice implements IDObject, PropertiesContainer, Comparable<Choice>
 	 * Returns the {@link Question} instance corresponding to this
 	 * {@link Answer}.
 	 * 
-	 * @return the question related with this answer TODO: remove link to
-	 *         question from the answer.
+	 * @return the question related with this answer
 	 */
 	public Question getQuestion() {
 		return question;
@@ -146,8 +145,7 @@ public class Choice implements IDObject, PropertiesContainer, Comparable<Choice>
 	 * Sets the {@link Question} object, that is corresponding to this
 	 * {@link Answer}.
 	 * 
-	 * @param question the corresponding {@link Question} TODO: remove link to
-	 *        question from the answer.
+	 * @param question the corresponding {@link Question}
 	 */
 	public void setQuestion(Question question) {
 		this.question = question;

@@ -32,7 +32,7 @@ import de.d3web.abstraction.formula.FormulaDateElement;
 import de.d3web.abstraction.formula.FormulaDateExpression;
 import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.abstraction.formula.FormulaNumberElement;
-import de.d3web.abstraction.inference.PSMethodQuestionSetter;
+import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
@@ -279,7 +279,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	 */
 	@Override
 	public Class<? extends PSMethod> getProblemsolverContext() {
-		return PSMethodQuestionSetter.class;
+		return PSMethodAbstraction.class;
 	}
 
 	/**

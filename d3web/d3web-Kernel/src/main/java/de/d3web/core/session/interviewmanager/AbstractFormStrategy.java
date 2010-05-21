@@ -58,7 +58,7 @@ public abstract class AbstractFormStrategy implements FormStrategy {
 	 * @return true, when the specified question is ACTIVE on the interview agenda
 	 */
 	protected boolean isActiveOnAgenda(Question question, Session session) {
-		return session.getInterviewManager().getInterviewAgenda().hasState(
+		return session.getInterview().getInterviewAgenda().hasState(
 				question, InterviewState.ACTIVE);
 	}
 
