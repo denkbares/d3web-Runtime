@@ -1,4 +1,4 @@
-package de.d3web.core.session.blackboard.tests;
+package de.d3web.core.session.interviewManager.tests;
 
 import static junit.framework.Assert.assertEquals;
 

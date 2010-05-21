@@ -1,4 +1,4 @@
-package de.d3web.core.session.blackboard.tests;
+package de.d3web.core.session.interviewManager.tests;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -20,17 +20,16 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.CurrentQContainerFormStrategy;
 import de.d3web.core.session.interviewmanager.EmptyForm;
 import de.d3web.core.session.interviewmanager.Form;
 import de.d3web.core.session.interviewmanager.InterviewAgenda;
+import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
 import de.d3web.core.session.values.ChoiceValue;
-import de.d3web.core.session.values.NumValue;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.plugin.test.InitPluginManager;
 
+public class NextUnansweredQuestionFormTest {
 
-public class CurrentQContainerFormTest {
 	KnowledgeBaseManagement kbm;
 	Session session;
 	InterviewAgenda agenda;
@@ -79,114 +78,94 @@ public class CurrentQContainerFormTest {
 				new String[] {
 				"all", "pregnacyQuestions", "height+weight" });
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
-		session.getInterview().setFormStrategy(new CurrentQContainerFormStrategy());
+		session.getInterview().setFormStrategy(new NextUnansweredQuestionFormStrategy());
 		agenda = session.getInterview().getInterviewAgenda();
 	}
-	
+
 	@Test
-	public void testWithTwoQContainers() {
+	public void testWithQuestionsOnAgenda() {
 		// initially the agenda is empty
 		assertTrue(agenda.isEmpty());
 
-		// PUT the containers 'pregnancyQuestions' and 'heightWeightQuestions' onto the agenda
-		agenda.append(pregnancyQuestions);
-		agenda.append(heightWeightQuestions);
+		// PUT the questions 'sex' and 'pregnant' onto the agenda
+		agenda.append(sex);
+		agenda.append(pregnant);
 		assertFalse(agenda.isEmpty());
 
-		// EXPECT: 'pregnancyQuestions' to be the first interview object
-		InterviewObject formObject = session.getInterview().nextForm().getInterviewObject();
-		assertEquals(pregnancyQuestions, formObject);
-		
-		// SET   : first question of pregnancyQuestions (no follow-up question indicated)
-		// EXPECT: pregnancyQuestions should be still active 
+		// EXPECT: 'sex' to be the first question
+		InterviewObject formQuestions = session.getInterview().nextForm().getInterviewObject();
+		assertEquals(sex, formQuestions);
+
+		// ANSWER: sex=female
+		// EXPECT: pregnant to be the next question
+		setValue(sex, female);
+		formQuestions = session.getInterview().nextForm().getInterviewObject();
+		assertEquals(pregnant, formQuestions);
+
+		// ANSWER: pregnant=no
+		// EXPECT: no more questions to ask
+		setValue(pregnant, new ChoiceValue(kbm.findChoice(pregnant, "no")));
+		Form form = session.getInterview().nextForm();
+		assertEquals(EmptyForm.getInstance(), form);
+	}
+
+	@Test
+	public void testWithOneQContainerOnAgenda_WithoutFollowUpQuestions() {
+		// initially the agenda is empty
+		assertTrue(agenda.isEmpty());
+		// Put the QContainer pregnancyQuestions on the agenda
+		agenda.append(pregnancyQuestions);
+		assertFalse(agenda.isEmpty());
+
+		// EXPECT the first question 'sex' to be the next question in the form
+		InterviewObject nextQuestion = session.getInterview().nextForm().getInterviewObject();
+		assertEquals(sex, nextQuestion);
+
+		// SET question sex=male
+		// EXPECT the second question 'ask_for_pregnancy' to be the next
+		// question in the form
 		setValue(sex, male);
-		formObject = session.getInterview().nextForm().getInterviewObject();
-		assertEquals(pregnancyQuestions, formObject);
+		nextQuestion = session.getInterview().nextForm().getInterviewObject();
+		assertEquals(ask_for_pregnancy, nextQuestion);
 
-		// SET   : second question of pregnancyQuestions
-		// EXPECT: now 'heightWeightQuestions' should be active 
-		setValue(ask_for_pregnancy, new ChoiceValue(kbm.findChoice(ask_for_pregnancy, "no")));
-		formObject = session.getInterview().nextForm().getInterviewObject();
-		assertEquals(heightWeightQuestions, formObject);
-		
-		// SET   : first question of 'heightWeightQuestions' 
-		// EXPECT: now 'heightWeightQuestions' should be still active 
-		setValue(height, new NumValue(100));
-		formObject = session.getInterview().nextForm().getInterviewObject();
-		assertEquals(heightWeightQuestions, formObject);
-
-		// SET   : second question of 'heightWeightQuestions' 
-		// EXPECT: now we expect an EMPTY_FORM since the agenda should be empty now 
-		setValue(weight, new NumValue(100));
+		// SET : question ask_for_pregnancy=no
+		// EXPECT: since all questions of the qcontainer are answered, we expect
+		// no more
+		// questions to be asked next, i.e., the EmptyForm singleton is returned
+		setValue(ask_for_pregnancy, kbm.findValue(ask_for_pregnancy, "no"));
 		assertEquals(EmptyForm.getInstance(), session.getInterview().nextForm());
 	}
 
 	@Test
-	public void testContainersWithFollowUpQuestion() {
-		// We need this rule for the later indication of the 
-		// follow-up question 'pregnant'
+	public void testWithOneQContainerOnAgenda_WithFollowUpQuestions() {
+		// We need this rule for the later indication of the follow-up question
+		// "pregnant"
 		// Rule: sex = female => INDICATE ( pregnant )
 		RuleFactory.createIndicationRule("r1", pregnant, new CondEqual(sex, female));
 
-		
 		// initially the agenda is empty
 		assertTrue(agenda.isEmpty());
-
-		// PUT the container 'pregnancyQuestions' onto the agenda
+		// Put the QContainer pregnancyQuestions on the agenda
 		agenda.append(pregnancyQuestions);
-		agenda.append(heightWeightQuestions);
 		assertFalse(agenda.isEmpty());
 
-		// EXPECT: 'pregnancyQuestions' to be the first interview object
-		InterviewObject formObject = session.getInterview().nextForm().getInterviewObject();
-		assertEquals(pregnancyQuestions, formObject);
-		
-		// SET   : ask_for_pregnancy = no
-		//         sex=female => follow-up question is indicated
-		// EXPECT: pregnancyQuestions should be still active, because of follow-up-questions 
-		setValue(ask_for_pregnancy,new ChoiceValue(kbm.findChoice(ask_for_pregnancy, "no")));
+		// EXPECT the first question 'sex' to be the next question in the form
+		InterviewObject nextQuestion = session.getInterview().nextForm().getInterviewObject();
+		assertEquals(sex, nextQuestion);
+
+		// SET question sex=female
+		// EXPECT the follow-up question 'pregnant' to be the next question in
+		// the form
 		setValue(sex, female);
-		Form form = session.getInterview().nextForm();
-		assertEquals(pregnancyQuestions, form.getInterviewObject());
-		
-		// SET   : answer follow-up question 'pregnant=no'
-		// EXPECT: no the next qcontainer 'heightWeightQuestions' should be active, 
-		//         since all questions (including follow-ups) have been answered
-		setValue(pregnant, new ChoiceValue(kbm.findChoice(pregnant, "no")));
-		assertEquals(heightWeightQuestions, session.getInterview().nextForm().getInterviewObject());
-		
-		
-		// SET   : answer the questions 'height' and 'weight'
-		// EXPECT: all questions on the agenda are answered, so next form should be empty
-		setValue(height, new NumValue(100));
-		setValue(weight, new NumValue(100));
-		assertEquals(EmptyForm.getInstance(), session.getInterview().nextForm());
+		nextQuestion = session.getInterview().nextForm().getInterviewObject();
+
+		// TODO: overwork FormStrategy to copy with follow-up questions
+		assertEquals(pregnant, nextQuestion);
 	}
-	
-	
+
 	private void setValue(Question question, Value value) {
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(question, value,
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
