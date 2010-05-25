@@ -1,22 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *                    denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg denkbares GmbH
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.shared.io.fragments;
 
@@ -42,8 +41,11 @@ import de.d3web.shared.Abnormality;
 import de.d3web.shared.AbnormalityInterval;
 import de.d3web.shared.AbnormalityNum;
 import de.d3web.shared.AbstractAbnormality;
+
 /**
- * Handles the default implementations of AbstractAbnormality. Other Handlers for descendants of AbstractAbnormality must have a higher priority.
+ * Handles the default implementations of AbstractAbnormality. Other Handlers
+ * for descendants of AbstractAbnormality must have a higher priority.
+ * 
  * @author Norman Brümmer, Markus Friedrich (denkbares GmbH)
  */
 public class AbstractAbnormalityHandler implements FragmentHandler {
@@ -86,7 +88,7 @@ public class AbstractAbnormalityHandler implements FragmentHandler {
 								"abnormality")) {
 							String ansID = valChild.getAttributes()
 									.getNamedItem("ID").getNodeValue();
-							Value ans = XMLUtil.getAnswer(null, question, ansID);
+							Value ans = XMLUtil.getAnswer(question, ansID);
 							String value = valChild.getAttributes()
 									.getNamedItem("value").getNodeValue();
 							abnorm.addValue(ans, AbstractAbnormality
@@ -96,28 +98,36 @@ public class AbstractAbnormalityHandler implements FragmentHandler {
 				}
 			}
 
-		} else if (question instanceof QuestionNum) {
+		}
+		else if (question instanceof QuestionNum) {
 			AbnormalityNum abnorm = new AbnormalityNum();
 			ret = abnorm;
 			abnorm.setQuestion(question);
 			abChildren = n.getChildNodes();
-			for (Element child: XMLUtil.getElementList(abChildren)) {
+			for (Element child : XMLUtil.getElementList(abChildren)) {
 				Object readFragment = PersistenceManager.getInstance().readFragment(child, kb);
 				if (readFragment instanceof AbnormalityInterval) {
 					abnorm.addValue((AbnormalityInterval) readFragment);
-				} else if (readFragment instanceof List<?>) {
-					for (Object o: (List<?>) readFragment) {
+				}
+				else if (readFragment instanceof List<?>) {
+					for (Object o : (List<?>) readFragment) {
 						if (o instanceof AbnormalityInterval) {
 							abnorm.addValue((AbnormalityInterval) o);
-						} else {
-							throw new IOException("Object "+o+" is no AbnormalityInterval");
+						}
+						else {
+							throw new IOException("Object " + o + " is no AbnormalityInterval");
 						}
 					}
-				} else {
-					throw new IOException("Object "+readFragment+" is neighter an AbnormalityInterval nor a list of AbnormalityIntervals");
+				}
+				else {
+					throw new IOException(
+							"Object "
+									+ readFragment
+									+ " is neighter an AbnormalityInterval nor a list of AbnormalityIntervals");
 				}
 			}
-		} else {
+		}
+		else {
 			throw new IOException("no abnormality handling for questions of type "
 					+ question.getClass());
 		}
@@ -138,15 +148,20 @@ public class AbstractAbnormalityHandler implements FragmentHandler {
 				Value answer = answers.nextElement();
 				Element abnormalityElement = doc.createElement("abnormality");
 				abnormalityElement.setAttribute("ID", ValueFactory.getID_or_Value(answer));
-				abnormalityElement.setAttribute("value", Abnormality.convertValueToConstantString(abstractAbnormality.getValue(answer)));
+				abnormalityElement.setAttribute(
+						"value",
+						Abnormality.convertValueToConstantString(abstractAbnormality.getValue(answer)));
 				valuesNode.appendChild(abnormalityElement);
 			}
 			element.appendChild(valuesNode);
-		} else if (abstractAbnormality instanceof AbnormalityNum) {
+		}
+		else if (abstractAbnormality instanceof AbnormalityNum) {
 			AbnormalityNum abnormalityNum = (AbnormalityNum) abstractAbnormality;
-			element.appendChild(PersistenceManager.getInstance().writeFragment(abnormalityNum.getIntervals(),doc));
-		} else {
-			throw new IOException("AbstractAbnormalityHandler cannot handle "+object);
+			element.appendChild(PersistenceManager.getInstance().writeFragment(
+					abnormalityNum.getIntervals(), doc));
+		}
+		else {
+			throw new IOException("AbstractAbnormalityHandler cannot handle " + object);
 		}
 		return element;
 	}

@@ -83,7 +83,7 @@ public class LocalWeightHandler implements FragmentHandler {
 								"localweight")) {
 							String ansID = valChild.getAttributes()
 									.getNamedItem("ID").getNodeValue();
-							Value ans = XMLUtil.getAnswer(null, q, ansID);
+							Value ans = XMLUtil.getAnswer(q, ansID);
 							String value = valChild.getAttributes()
 									.getNamedItem("value").getNodeValue();
 							lw.setValue(ans, LocalWeight
