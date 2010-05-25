@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.io.utilities;
 
@@ -41,7 +41,6 @@ import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.manage.KnowledgeBaseManagement;
-import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
@@ -51,61 +50,74 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
+
 /**
  * Provides useful static functions for xml persistence handlers
- *
+ * 
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class XMLUtil {
-	
+
 	/**
-	 * Appends a question element to a parent element.
-	 * Appends no element, if the question is null.
+	 * Appends a question element to a parent element. Appends no element, if
+	 * the question is null.
+	 * 
 	 * @param parent Element where the question element should be appended
-	 * @param q Question which should be represented by the newly appended element
+	 * @param q Question which should be represented by the newly appended
+	 *        element
 	 * @throws IOException if the question has no ID
 	 */
 	public static void appendQuestionLinkElement(Element parent, QASet q) throws IOException {
 		Document doc = parent.getOwnerDocument();
-		if (q!=null) {
+		if (q != null) {
 			Element e = doc.createElement("Question");
-			if (q.getId()!=null) {
+			if (q.getId() != null) {
 				e.setAttribute("ID", q.getId());
 				parent.appendChild(e);
-			} else {
-				throw new IOException("Question "+q.getName()+" has no ID");
+			}
+			else {
+				throw new IOException("Question " + q.getName() + " has no ID");
 			}
 		}
 	}
-	
+
 	/**
-	 * Checks if the element has the specified element name and an attribute type with the value typeToCheck
+	 * Checks if the element has the specified element name and an attribute
+	 * type with the value typeToCheck
+	 * 
 	 * @param element Element be checked
 	 * @param elementname element name to check
 	 * @param typeToCheck Value for the Attribute type
-	 * @return true, if the given element fulfills the requirements, false otherwise
+	 * @return true, if the given element fulfills the requirements, false
+	 *         otherwise
 	 */
 	public static boolean checkNameAndType(Element element, String elementname, String typeToCheck) {
 		String nodeName = element.getNodeName();
 		String type = element.getAttribute("type");
-		if (nodeName!=null && nodeName.equals(elementname) && type!=null && type.equals(typeToCheck)) {
+		if (nodeName != null && nodeName.equals(elementname) && type != null
+				&& type.equals(typeToCheck)) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	/**
-	 * Checks if the element is named "Condition" and if has an attribute type with the value typeToCheck
+	 * Checks if the element is named "Condition" and if has an attribute type
+	 * with the value typeToCheck
+	 * 
 	 * @param element to be checked
 	 * @param typeToCheck Value for the Attribute type
-	 * @return true, if the given element fulfills the requirements, false otherwise
+	 * @return true, if the given element fulfills the requirements, false
+	 *         otherwise
 	 */
 	public static boolean checkCondition(Element element, String typeToCheck) {
 		return checkNameAndType(element, "Condition", typeToCheck);
 	}
-	
+
 	/**
-	 * Creates a condition element with the id of the named object and the given type
+	 * Creates a condition element with the id of the named object and the given
+	 * type
+	 * 
 	 * @param doc Document, where the Element should be created
 	 * @param nob NamedObject, whose ID should be used
 	 * @param type type of the condition
@@ -116,14 +128,17 @@ public class XMLUtil {
 		element.setAttribute("type", type);
 		if (nob != null) {
 			element.setAttribute("ID", nob.getId());
-		} else {
+		}
+		else {
 			element.setAttribute("ID", "");
 		}
 		return element;
 	}
-	
+
 	/**
-	 * Creates a condition element with the id of the named object, the given type and value
+	 * Creates a condition element with the id of the named object, the given
+	 * type and value
+	 * 
 	 * @param doc Document, where the Element should be created
 	 * @param nob NamedObject, whose ID should be used
 	 * @param type type of the condition
@@ -132,15 +147,16 @@ public class XMLUtil {
 	 */
 	public static Element writeCondition(Document doc, NamedObject nob, String type, String value) {
 		Element element = writeCondition(doc, nob, type);
-		if (value!=null) {
+		if (value != null) {
 			element.setAttribute("value", value);
 		}
 		return element;
 	}
-	
+
 	/**
-	 * Creates a condition element with the id of the named object, the given type and value.
-	 * The value is stored in a child element.
+	 * Creates a condition element with the id of the named object, the given
+	 * type and value. The value is stored in a child element.
+	 * 
 	 * @param doc Document, where the Element should be created
 	 * @param nob NamedObject, whose ID should be used
 	 * @param type type of the condition
@@ -152,10 +168,12 @@ public class XMLUtil {
 		valueElement.setTextContent(value);
 		return writeConditionWithValueNode(doc, nob, type, valueElement);
 	}
-	
+
 	/**
-	 * Creates a condition element with the id of the named object, the given type and value.
-	 * The value node is inserted as a child element in the newly created node.
+	 * Creates a condition element with the id of the named object, the given
+	 * type and value. The value node is inserted as a child element in the
+	 * newly created node.
+	 * 
 	 * @param doc Document, where the Element should be created
 	 * @param nob NamedObject, whose ID should be used
 	 * @param type type of the condition
@@ -172,18 +190,13 @@ public class XMLUtil {
 	 * Creates a condition element with the id of the named object, the given
 	 * type and values
 	 * 
-	 * @param doc
-	 *            Document, where the Element should be created
-	 * @param nob
-	 *            NamedObject, whose ID should be used
-	 * @param type
-	 *            type of the condition
-	 * @param values
-	 *            List of answers, which are used as values
+	 * @param doc Document, where the Element should be created
+	 * @param nob NamedObject, whose ID should be used
+	 * @param type type of the condition
+	 * @param values List of answers, which are used as values
 	 * @return condition element
-	 * @throws IOException
-	 *             if one of the elements in values is neither a Choice nor a
-	 *             Unknown Answer
+	 * @throws IOException if one of the elements in values is neither a Choice
+	 *         nor a Unknown Answer
 	 */
 	public static Element writeCondition(Document doc, NamedObject nob, String type,
 			Value value) throws IOException {
@@ -194,10 +207,10 @@ public class XMLUtil {
 		}
 		return element;
 	}
-	
+
 	private static String getId(Object answer) throws IOException {
 		if (answer instanceof ChoiceValue) {
-			ChoiceValue v = (ChoiceValue)answer;
+			ChoiceValue v = (ChoiceValue) answer;
 			return v.getAnswerChoiceID();
 		}
 		else if (answer instanceof Unknown) {
@@ -218,6 +231,7 @@ public class XMLUtil {
 
 	/**
 	 * Creates a condition element with the specified type
+	 * 
 	 * @param doc Document, where the Element should be created
 	 * @param type type of the condition
 	 * @return condition element
@@ -227,9 +241,10 @@ public class XMLUtil {
 		element.setAttribute("type", type);
 		return element;
 	}
-	
+
 	/**
 	 * Appends an Element TargetQASets containing elements for the given qaSets
+	 * 
 	 * @param element Element the TargetQASets Element should be appended
 	 * @param qaSets List of QASet being represented by the appended element
 	 */
@@ -237,7 +252,7 @@ public class XMLUtil {
 		Document doc = element.getOwnerDocument();
 		if (!qaSets.isEmpty()) {
 			Element targetQASets = doc.createElement("TargetQASets");
-			for (QASet qaset: qaSets) {
+			for (QASet qaset : qaSets) {
 				Element qasetElement = doc.createElement("QASet");
 				qasetElement.setAttribute("ID", qaset.getId());
 				targetQASets.appendChild(qasetElement);
@@ -245,9 +260,10 @@ public class XMLUtil {
 			element.appendChild(targetQASets);
 		}
 	}
-	
+
 	/**
 	 * Extract the qasets stored in the given element
+	 * 
 	 * @param element Element representing the QASets
 	 * @param kb knowledge base containing the qasets
 	 * @return List of represented QASets
@@ -274,15 +290,18 @@ public class XMLUtil {
 
 	/**
 	 * Adds the children of the NamedObject to the specified element
-	 * @param namedObject NamedObject, whose children should be appended as Elements
-	 * @param element Element representing the namedObject, where the children will be appended
+	 * 
+	 * @param namedObject NamedObject, whose children should be appended as
+	 *        Elements
+	 * @param element Element representing the namedObject, where the children
+	 *        will be appended
 	 */
 	public static void appendChildren(NamedObject namedObject, Element element) {
 		Document doc = element.getOwnerDocument();
 		TerminologyObject[] children = namedObject.getChildren();
-		if (children.length!=0) {
+		if (children.length != 0) {
 			Element childrenElement = doc.createElement("Children");
-			for (TerminologyObject child: children) {
+			for (TerminologyObject child : children) {
 				Element childElement = doc.createElement("Child");
 				childElement.setAttribute("ID", child.getId());
 				if (isLinkedChild(namedObject, child)) {
@@ -293,30 +312,33 @@ public class XMLUtil {
 			element.appendChild(childrenElement);
 		}
 	}
-	
+
 	/**
 	 * Adds the children given from the xml structure to the NamedObject
+	 * 
 	 * @param kb KnowledgeBase containing the children
 	 * @param namedObject where the children should be appended
-	 * @param element representing the namedObject and containing the children as childnodes
+	 * @param element representing the namedObject and containing the children
+	 *        as childnodes
 	 */
 	public static void appendChildren(KnowledgeBase kb, NamedObject namedObject, Element element) {
 		List<Element> children = null;
 		NodeList childNodes = element.getChildNodes();
-		for (int i=0; i<childNodes.getLength(); i++) {
+		for (int i = 0; i < childNodes.getLength(); i++) {
 			Node child = childNodes.item(i);
 			if (child.getNodeName().equals("Children")) {
 				children = XMLUtil.getElementList(child.getChildNodes());
 			}
 		}
 		if (children != null) {
-			for (Element child: children) {
+			for (Element child : children) {
 				String id = child.getAttribute("ID");
 				String link = child.getAttribute("link");
 				NamedObject no = (NamedObject) kb.search(id);
 				if (link != null && link.equals("true")) {
 					namedObject.addLinkedChild(no);
-				} else {
+				}
+				else {
 					namedObject.addChild(no);
 				}
 			}
@@ -325,6 +347,7 @@ public class XMLUtil {
 
 	/**
 	 * Appends an Element containing the text
+	 * 
 	 * @param text Text to be represented by the newly appended element
 	 * @param element, which should be appended
 	 */
@@ -336,6 +359,7 @@ public class XMLUtil {
 
 	/**
 	 * Extracts primitive Values form a string
+	 * 
 	 * @param textContent Sting containing the primitive value
 	 * @param clazz Name of the Class
 	 * @return Extracted Value
@@ -344,29 +368,37 @@ public class XMLUtil {
 	public static Object getPrimitiveValue(String textContent, String clazz) throws IOException {
 		if (clazz.equals(String.class.getName())) {
 			return textContent;
-		} else if (clazz.equals(Integer.class.getName())) {
+		}
+		else if (clazz.equals(Integer.class.getName())) {
 			return Integer.parseInt(textContent);
-		} else if (clazz.equals(Double.class.getName())) {
+		}
+		else if (clazz.equals(Double.class.getName())) {
 			return Double.parseDouble(textContent);
-		} else if (clazz.equals(Boolean.class.getName())) {
+		}
+		else if (clazz.equals(Boolean.class.getName())) {
 			return Boolean.parseBoolean(textContent);
-		} else if (clazz.equals(URL.class.getName())) {
+		}
+		else if (clazz.equals(URL.class.getName())) {
 			return new URL(textContent);
-		} else if (clazz.equals(Float.class.getName())) {
+		}
+		else if (clazz.equals(Float.class.getName())) {
 			return Float.parseFloat(textContent);
-		} else {
-			throw new IOException("Class "+clazz+" is not supported");
+		}
+		else {
+			throw new IOException("Class " + clazz + " is not supported");
 		}
 	}
-	
+
 	/**
 	 * Filters all elements of a NodeList and returns them in a collection.
+	 * 
 	 * @param list Nodelist containing all types of nodes (text nodes etc.)
-	 * @return a list containing all elements from nodelist, but not containing other nodes such as text nodes etc.
+	 * @return a list containing all elements from nodelist, but not containing
+	 *         other nodes such as text nodes etc.
 	 */
 	public static List<Element> getElementList(NodeList list) {
 		List<Element> col = new ArrayList<Element>();
-		for (int i = 0; i<list.getLength(); i++) {
+		for (int i = 0; i < list.getLength(); i++) {
 			if (list.item(i) instanceof Element) {
 				col.add((Element) list.item(i));
 			}
@@ -377,22 +409,20 @@ public class XMLUtil {
 	/**
 	 * Determines the value with the specified id or value for a Question
 	 * 
-	 * @param theCase
-	 *            the actual case
-	 * @param q
-	 *            Question
-	 * @param id
-	 *            or value of the Answer
+	 * @param session the actual case
+	 * @param q Question
+	 * @param id or value of the Answer
 	 * @return value instance
 	 */
-	public static Value getAnswer(Session theCase, Question q, String idOrValue) {
+	public static Value getAnswer(Question q, String idOrValue) {
 
 		if (idOrValue.equals("MaU")) {
 			return Unknown.getInstance();
 		}
 
 		if (q instanceof QuestionChoice) {
-			Choice choice =KnowledgeBaseManagement.createInstance(theCase.getKnowledgeBase()).findChoice((QuestionChoice) q, idOrValue); 
+			Choice choice = KnowledgeBaseManagement.createInstance(q.getKnowledgeBase()).findChoice(
+					(QuestionChoice) q, idOrValue);
 			return new ChoiceValue(choice);
 		}
 		else if (q instanceof QuestionText) {
@@ -411,24 +441,23 @@ public class XMLUtil {
 
 	/**
 	 * Returns the content of the text-section of the given DOM-Node
+	 * 
 	 * @param node Node to grab the text-section from
 	 * @return the content of the text-section of the given DOM-Node
 	 */
 	public static String getText(Node node) {
-	
+
 		Iterator<Node> iter = new ChildrenIterator(node);
 		while (iter.hasNext()) {
 			Node child = iter.next();
-			if (child.getNodeType() == Node.CDATA_SECTION_NODE)
-				return child.getNodeValue();
+			if (child.getNodeType() == Node.CDATA_SECTION_NODE) return child.getNodeValue();
 		}
-	
+
 		StringBuffer sb = new StringBuffer();
 		iter = new ChildrenIterator(node);
 		while (iter.hasNext()) {
-			Node child = (Node) iter.next();
-			if (child.getNodeType() == Node.TEXT_NODE)
-				sb.append(child.getNodeValue());
+			Node child = iter.next();
+			if (child.getNodeType() == Node.TEXT_NODE) sb.append(child.getNodeValue());
 		}
 		return sb.toString().trim();
 	}
