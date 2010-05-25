@@ -45,12 +45,9 @@ import de.d3web.core.inference.condition.CondTextEqual;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.inference.condition.TerminalCondition;
-import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
-import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
-import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.values.AnswerNo;
 import de.d3web.core.session.values.AnswerYes;
 import de.d3web.kernel.verbalizer.VerbalizationManager.RenderingFormat;
@@ -267,8 +264,8 @@ public class ConditionVerbalizer implements Verbalizer {
 				}
 
 				if (ntCond.getCondVerbalizations().size() > 0) // Avoid AIOOBE
-																// for empty
-																// NTConds
+				// for empty
+				// NTConds
 				s.append(renderCondVerbalizationPlainText(ntCond.getCondVerbalizations()
 						.get(ntCond.getCondVerbalizations().size() - 1), quote));
 			}
@@ -351,22 +348,6 @@ public class ConditionVerbalizer implements Verbalizer {
 		}
 		return new NonTerminalCondVerbalization(condVerbs, getClassVerbalisation(ntCondition),
 				ntCondition.getClass().getSimpleName());
-	}
-
-	private String getVerbalisationForAnswerUnknown(IDObject io) {
-		String answerUnknownText = "";
-		if (io instanceof Question) {
-			answerUnknownText = (String) ((Question) io).getProperties().getProperty(
-					Property.UNKNOWN_VERBALISATION);
-			if (answerUnknownText == null) {
-				answerUnknownText = (String) new KnowledgeBase().getProperties().getProperty(
-						Property.UNKNOWN_VERBALISATION);
-			}
-			if (answerUnknownText == null) {
-				answerUnknownText = ((Question) io).getUnknownAlternative().toString();
-			}
-		}
-		return answerUnknownText;
 	}
 
 	private TerminalCondVerbalization getTerminalCondVerbalization(IDObject io, String operator,

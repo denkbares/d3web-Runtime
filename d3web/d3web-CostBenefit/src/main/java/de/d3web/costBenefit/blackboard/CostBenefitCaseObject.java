@@ -91,6 +91,7 @@ public class CostBenefitCaseObject extends SessionObject {
 	 */
 	public void resetPath() {
 		currentSequence = null;
+		indicatedFacts = null;
 		this.currentPathIndex = -1;
 		hasBegun = false;
 	}

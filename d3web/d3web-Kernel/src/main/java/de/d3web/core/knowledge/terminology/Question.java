@@ -26,7 +26,6 @@ import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.session.values.Unknown;
 import de.d3web.indication.inference.PSMethodNextQASet;
 
 /**
@@ -74,15 +73,6 @@ public abstract class Question extends QASet {
 		if (list == null) return false;
 		else if ((list instanceof Collection<?>) && ((Collection<?>) list).isEmpty()) return false;
 		else return true;
-	}
-
-	/**
-	 * We do not use AnswerUnknown anymore, but we can set {@link Unknown} in a
-	 * given session.
-	 */
-	@Deprecated
-	public Unknown getUnknownAlternative() {
-		return Unknown.getInstance();
 	}
 
 	/**

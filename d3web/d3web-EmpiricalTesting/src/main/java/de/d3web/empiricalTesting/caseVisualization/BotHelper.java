@@ -21,19 +21,16 @@
 package de.d3web.empiricalTesting.caseVisualization;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.NamedObject;
-import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.MQDialogController;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.indication.inference.PSMethodUserSelected;
@@ -77,23 +74,6 @@ public class BotHelper {
 		}
 		throw new Exception("Not found id [" + answerId + "] for question ["
 				+ q + "][" + q.getId() + "]");
-	}
-
-	public QuestionChoice getNextQuestion(Session theCase) throws Exception {
-		MQDialogController controller = (MQDialogController) theCase
-				.getQASetManager();
-		QASet next = controller.moveToNextRemainingQASet();
-		if (next != null && next instanceof QuestionChoice) {
-			return (QuestionChoice) next;
-		}
-		else if (next != null) {
-			List<Question> validQuestions = controller
-					.getAllValidQuestionsOf((QContainer) next);
-			return (QuestionChoice) validQuestions.get(0);
-		}
-		else {
-			return null;
-		}
 	}
 
 	public String pretty(String text) {
