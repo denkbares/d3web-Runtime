@@ -60,7 +60,7 @@ public class DefaultAbortStrategy implements AbortStrategy {
 
 	public DefaultAbortStrategy() {
 		// about 1,4 sec on my laptop ;-)
-		this(1000000000);
+		this(100000);
 	}
 
 }
