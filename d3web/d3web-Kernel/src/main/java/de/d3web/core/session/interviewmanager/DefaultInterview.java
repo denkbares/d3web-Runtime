@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.session.interviewmanager;
 
@@ -39,15 +39,15 @@ import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
 import de.d3web.core.session.values.UndefinedValue;
 
 /**
- * The default implementation of {@link Interview}: This class 
- * stores an {@link InterviewAgenda} managing the activation/deactivation 
- * of {@link Question}/{@link QContainer} instances, that are indicated 
- * due to values entered in the specified {@link Session}.
+ * The default implementation of {@link Interview}: This class stores an
+ * {@link InterviewAgenda} managing the activation/deactivation of
+ * {@link Question}/{@link QContainer} instances, that are indicated due to
+ * values entered in the specified {@link Session}.
  * 
  * By the default--the {@link QASet} to be answered next by a dialog-- is
- * wrapped in a {@link Form}, that can be retrieved by nextForm().  
- * A {@link FormStrategy} decides about the nature of the next {@link QASet} 
- * to be presented in the dialog.
+ * wrapped in a {@link Form}, that can be retrieved by nextForm(). A
+ * {@link FormStrategy} decides about the nature of the next {@link QASet} to be
+ * presented in the dialog.
  * 
  * @author joba
  */
@@ -57,14 +57,14 @@ public class DefaultInterview implements Interview {
 	private KnowledgeBase knowledgeBase;
 	private Session session;
 
-	// Strategy: how to generate the forms for the dialog? 
+	// Strategy: how to generate the forms for the dialog?
 	// E.g.: One question vs. multiple questions presented by the dialog
-	private FormStrategy formStrategy; 
+	private FormStrategy formStrategy;
 
-	
 	/**
 	 * Initializes an interview for a specified session based on a specified
 	 * knowledge base.
+	 * 
 	 * @param session the specified session
 	 * @param knowledgeBase the specified knowledge base
 	 */
@@ -85,85 +85,104 @@ public class DefaultInterview implements Interview {
 		Value oldValue = (Value) changedFact.getOldValue();
 		Value newValue = (Value) changedFact.getNewValue();
 		if (newValue instanceof Indication) {
-			InterviewObject indicatedObject = (InterviewObject)changedFact.getObject();
-			Indication      oldIndication   = (Indication)oldValue;
-			Indication      newIndication   = (Indication)newValue;
-			
+			InterviewObject indicatedObject = (InterviewObject) changedFact.getObject();
+			Indication oldIndication = (Indication) oldValue;
+			Indication newIndication = (Indication) newValue;
+
 			// NEUTRAL => INDICATED : 1) append to agenda 2) activate
 			if (oldIndication.hasState(State.NEUTRAL) && newIndication.hasState(State.INDICATED)) {
 				this.agenda.append(indicatedObject);
 			}
 			// ANY => INSTANT_INDICATED : 1) append to agenda 2) activate
-			// TODO: finish the work on instance indication, currently INSTANCE_INDICATION is handled like 
-			//       standard indication
+			// TODO: finish the work on instance indication, currently
+			// INSTANCE_INDICATION is handled like
+			// standard indication
 			else if (newIndication.hasState(State.INSTANT_INDICATED)) {
 				this.agenda.append(indicatedObject);
 			}
 			// INDICATED => NEUTRAL : deactivate
-			else if  (oldIndication.hasState(State.INDICATED) && newIndication.hasState(State.NEUTRAL)) {
+			else if (oldIndication.hasState(State.INDICATED)
+					&& newIndication.hasState(State.NEUTRAL)) {
 				this.agenda.deactivate(indicatedObject);
 			}
 			// INDICATED => CONTRA_INDICATED : deactivate
-			else if  (oldIndication.hasState(State.INDICATED) && newIndication.hasState(State.CONTRA_INDICATED)) {
+			else if (oldIndication.hasState(State.INDICATED)
+					&& newIndication.hasState(State.CONTRA_INDICATED)) {
 				this.agenda.deactivate(indicatedObject);
 			}
-			// CONTRA_INDICATED => INDICATED : 1) append to agenda if not included 2) activate
-			else if  (oldIndication.hasState(State.CONTRA_INDICATED) && newIndication.hasState(State.INDICATED)) {
+			// CONTRA_INDICATED => INDICATED : 1) append to agenda if not
+			// included 2) activate
+			else if (oldIndication.hasState(State.CONTRA_INDICATED)
+					&& newIndication.hasState(State.INDICATED)) {
 				this.agenda.activate(indicatedObject);
 			}
-			else if  (oldIndication.hasState(State.INDICATED) && newIndication.hasState(State.INDICATED)) {
-				// INDICATED => INDICATED      : noop
+			else if (oldIndication.hasState(State.INDICATED)
+					&& newIndication.hasState(State.INDICATED)) {
+				// INDICATED => INDICATED : noop
 			}
-			else if  (oldIndication.hasState(State.CONTRA_INDICATED) && newIndication.hasState(State.NEUTRAL)) {
+			else if (oldIndication.hasState(State.CONTRA_INDICATED)
+					&& newIndication.hasState(State.NEUTRAL)) {
 				// CONTRA_INDICATED => NEUTRAL : noop
 			}
-			else if  (oldIndication.hasState(State.NEUTRAL) && newIndication.hasState(State.CONTRA_INDICATED)) {
+			else if (oldIndication.hasState(State.NEUTRAL)
+					&& newIndication.hasState(State.CONTRA_INDICATED)) {
 				// NEUTRAL => CONTRA_INDICATED : noop
 			}
 			else {
-				// TODO: use a logger here 
-				System.out.println("UNKNOWN INDICATION STATE: old=(" + oldIndication+ ") new=("+newIndication+")");
+				// TODO: use a logger here
+				System.out.println("UNKNOWN INDICATION STATE: old=(" + oldIndication + ") new=("
+						+ newIndication + ")");
 			}
 		}
 		else if (newValue instanceof QuestionValue) {
-			// need to check, whether the agenda needs an update due to an answered question
-			InterviewObject indicatedObject = (InterviewObject)changedFact.getObject();
+			// need to check, whether the agenda needs an update due to an
+			// answered question
+			InterviewObject indicatedObject = (InterviewObject) changedFact.getObject();
 			if (this.agenda.onAgenda(indicatedObject)) {
-				// Check: the VALUE has changed from DEFINED to UNDEFINED => activate 
+				// Check: the VALUE has changed from DEFINED to UNDEFINED =>
+				// activate
 				if (newValue instanceof UndefinedValue && !(oldValue instanceof UndefinedValue)) {
 					this.agenda.activate(indicatedObject);
 					checkParentalQContainer(indicatedObject);
 				}
-				// Check: the VALUE has changed from UNDEFINED to DEFINED => de-activate
-				else if (!(newValue instanceof UndefinedValue) && oldValue instanceof UndefinedValue) {
+				// Check: the VALUE has changed from UNDEFINED to DEFINED =>
+				// de-activate
+				else if (!(newValue instanceof UndefinedValue)
+						&& oldValue instanceof UndefinedValue) {
 					this.agenda.deactivate(indicatedObject);
 					checkParentalQContainer(indicatedObject);
 				}
-				// Check: VALUE changed from DEFINED to DEFINED => noop
-				else if (!(newValue instanceof UndefinedValue) && !(oldValue instanceof UndefinedValue)) {
-					; // NOOP
+				// Check: VALUE changed from DEFINED to DEFINED =>
+				// de-activate
+				else if (!(newValue instanceof UndefinedValue)
+						&& !(oldValue instanceof UndefinedValue)) {
+					this.agenda.deactivate(indicatedObject);
+					checkParentalQContainer(indicatedObject);
 				}
 				else {
-					// TODO: use a logger here 
-					System.out.println("UNKNOWN VALUE CHANGE: old=(" + oldValue+ ") new=("+newValue+")");
+					// TODO: use a logger here
+					System.out.println("UNKNOWN VALUE CHANGE: old=(" + oldValue + ") new=("
+							+ newValue + ")");
 				}
 			}
-			// Need to update indicated QContainers: 
-			// 1)x When all contained questions have been answered 
-			//     (and no follow-up questions are active), then deactivate
-			// 2) When all contained qcontainers are deactivated, then also deactivate
+			// Need to update indicated QContainers:
+			// 1)x When all contained questions have been answered
+			// (and no follow-up questions are active), then deactivate
+			// 2) When all contained qcontainers are deactivated, then also
+			// deactivate
 			checkParentalQContainer(indicatedObject);
 		}
 
 	}
 
 	/**
-	 * Usually, the specified interviewObject has changed. Therefore, we need to 
-	 * (recursively) check whether the parental {@link QContainer} instances need to be
-	 * activated/deactivated due to the value change. 
-	 * For instance, if every {@link Question} of a {@link QContainer} is inactive, then 
-	 * the parental {@link QContainer} should be deactivated, too. 
-	 * @param interviewObject 
+	 * Usually, the specified interviewObject has changed. Therefore, we need to
+	 * (recursively) check whether the parental {@link QContainer} instances
+	 * need to be activated/deactivated due to the value change. For instance,
+	 * if every {@link Question} of a {@link QContainer} is inactive, then the
+	 * parental {@link QContainer} should be deactivated, too.
+	 * 
+	 * @param interviewObject
 	 */
 	private void checkParentalQContainer(InterviewObject interviewObject) {
 		List<QContainer> containersOnAgenda = computeParentalContainersOnAgenda(interviewObject);
@@ -183,42 +202,44 @@ public class DefaultInterview implements Interview {
 
 	private InterviewState checkChildrenState(TerminologyObject[] children) {
 		// If all children are Question instances:
-		//   Consider not only the direct children, but also their follow-up questions
-		//     If all questions are answered, then return State=INACTIVE
-		//     If at least on question is not answered, then return State=ACTIVE
+		// Consider not only the direct children, but also their follow-up
+		// questions
+		// If all questions are answered, then return State=INACTIVE
+		// If at least on question is not answered, then return State=ACTIVE
 		if (allQuestions(children)) {
-			// ACTIVE, when at least one direct children is not answered 
+			// ACTIVE, when at least one direct children is not answered
 			for (TerminologyObject child : children) {
-				Value value = session.getBlackboard().getValue((Question)child);
+				Value value = session.getBlackboard().getValue((Question) child);
 				if (value instanceof UndefinedValue) {
 					return InterviewState.ACTIVE;
 				}
 			}
 			// ACTIVE, when at least one follow-up question is ACTIVE
 			for (TerminologyObject followup_question : getAllFollowUpChildrenOf(children)) {
-				if (isActive((InterviewObject)followup_question)) {
+				if (isActive((InterviewObject) followup_question)) {
 					return InterviewState.ACTIVE;
 				}
 			}
 			return InterviewState.INACTIVE;
 		}
 		// If all children are QContainer instances:
-		//   Compute the state of all qcontainers
-		//   If at least one is ACTIVE, then return State=ACTIVE
-		//   If all children are INACTIVE, then return State=INACTIVE
+		// Compute the state of all qcontainers
+		// If at least one is ACTIVE, then return State=ACTIVE
+		// If all children are INACTIVE, then return State=INACTIVE
 		else if (allQContainers(children)) {
 			for (TerminologyObject child : children) {
-				InterviewState childState = checkChildrenState((QContainer)child);
+				InterviewState childState = checkChildrenState((QContainer) child);
 				if (childState.equals(InterviewState.ACTIVE)) {
 					return InterviewState.ACTIVE;
 				}
 			}
 			return InterviewState.INACTIVE;
 		}
-		// TODO: logger message: Not able to handle the given collection of TerminologyObject instances
+		// TODO: logger message: Not able to handle the given collection of
+		// TerminologyObject instances
 		return InterviewState.INACTIVE;
 	}
-	
+
 	private List<TerminologyObject> getAllFollowUpChildrenOf(TerminologyObject[] objects) {
 		List<TerminologyObject> children = new ArrayList<TerminologyObject>();
 		for (TerminologyObject object : objects) {
@@ -233,9 +254,12 @@ public class DefaultInterview implements Interview {
 	}
 
 	/**
-	 * Checks, whether the specified objects are all instances of {@link QContainer}. 
+	 * Checks, whether the specified objects are all instances of
+	 * {@link QContainer}.
+	 * 
 	 * @param objects the specified objects
-	 * @return true, when the specified objects are all instances of {@link QContainer}.
+	 * @return true, when the specified objects are all instances of
+	 *         {@link QContainer}.
 	 */
 	private boolean allQContainers(TerminologyObject[] objects) {
 		for (TerminologyObject object : objects) {
@@ -247,9 +271,12 @@ public class DefaultInterview implements Interview {
 	}
 
 	/**
-	 * Checks, whether the specified objects are all instances of {@link Question}. 
+	 * Checks, whether the specified objects are all instances of
+	 * {@link Question}.
+	 * 
 	 * @param objects the specified objects
-	 * @return true, when the specified objects are all instances of {@link Question}.
+	 * @return true, when the specified objects are all instances of
+	 *         {@link Question}.
 	 */
 	private boolean allQuestions(TerminologyObject[] objects) {
 		for (TerminologyObject object : objects) {
@@ -261,25 +288,26 @@ public class DefaultInterview implements Interview {
 	}
 
 	/**
-	 * For a specified {@link InterviewObject} instance all parental QContainers are 
-	 * computed, that are included in the current {@link InterviewAgenda}.
+	 * For a specified {@link InterviewObject} instance all parental QContainers
+	 * are computed, that are included in the current {@link InterviewAgenda}.
+	 * 
 	 * @param interviewObject the specified {@link InterviewObject} instance
-	 * @return all (recursively) parental {@link QContainer} instances that are on the agenda
+	 * @return all (recursively) parental {@link QContainer} instances that are
+	 *         on the agenda
 	 */
 	private List<QContainer> computeParentalContainersOnAgenda(InterviewObject interviewObject) {
 		List<QContainer> containers = new ArrayList<QContainer>();
 		for (TerminologyObject parent : interviewObject.getParents()) {
 			if (parent instanceof QContainer &&
-				getInterviewAgenda().onAgenda((InterviewObject)parent)) {
-				containers.add((QContainer)parent);
+					getInterviewAgenda().onAgenda((InterviewObject) parent)) {
+				containers.add((QContainer) parent);
 			}
 			if (parent.getParents().length > 0) {
-				containers.addAll(computeParentalContainersOnAgenda((InterviewObject)parent));
+				containers.addAll(computeParentalContainersOnAgenda((InterviewObject) parent));
 			}
 		}
 		return containers;
 	}
-
 
 	@Override
 	public InterviewAgenda getInterviewAgenda() {

@@ -191,6 +191,17 @@ public class DefaultBlackboard implements Blackboard {
 
 	private void propagateIndicationChange(TerminologyObject interviewObject, Value oldValue,
 			Value newValue) {
+		// TODO MF: Move this somewhere else
+		if (interviewObject instanceof Question && newValue instanceof Indication) {
+			Question q = (Question) interviewObject;
+			Indication indication = (Indication) newValue;
+			if (UndefinedValue.isNotUndefinedValue(getValue(q))
+					&& (indication.hasState(Indication.State.INDICATED) || indication.hasState(Indication.State.INSTANT_INDICATED))) {
+				// do not put questions on the agenda, which have already been
+				// answered
+				return;
+			}
+		}
 		PropagationEntry entry = new PropagationEntry(interviewObject, oldValue,
 				newValue);
 		session.getInterview().notifyFactChange(entry);

@@ -30,9 +30,7 @@ import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
-import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
  * A StateTransition is a KnowledgeSlice which belongs to a QContainer. It
@@ -120,9 +118,12 @@ public class StateTransition implements KnowledgeSlice {
 				try {
 					Condition condition = cvs.getCondition();
 					if (condition == null || cvs.getCondition().eval(theCase)) {
-						Fact fact = new DefaultFact(q, cvs.getAnswer(),
-								PSMethodUserSelected.getInstance(),
-								PSMethodUserSelected.getInstance());
+						// Fact fact = FactFactory.createFact(q,
+						// cvs.getAnswer(), new Object(),
+						// PSMethodUserSelected.getInstance());
+						Fact fact = new
+								PSMethodStateTransition.StateTransitionFact(q,
+								cvs.getAnswer());
 						theCase.getBlackboard().addValueFact(fact);
 						facts.add(fact);
 						break;

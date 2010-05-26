@@ -172,7 +172,7 @@ class FactAggregator {
 	private Fact mergeFactsByPriority(List<Fact> mergedFacts) {
 		Fact bestFact = null;
 		int bestPSMIndex = Integer.MAX_VALUE;
-		for (Fact fact : facts) {
+		for (Fact fact : mergedFacts) {
 			// user wins it all
 			// TODO: check for "source solvers" instead of user
 			// TODO: shall we consider to have multiple source solvers?

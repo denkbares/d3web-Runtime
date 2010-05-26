@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.session.interviewmanager;
 
@@ -33,7 +33,7 @@ import de.d3web.core.session.Session;
  * {@link QContainer}, that should be presented/asked next in the dialog system.
  * This {@link QContainer} is not a non-terminal QContainer (i.e., it does not
  * contain other {@link QContainer} instances) and it contains at least one
- * unansered but active question.
+ * unanswered but active question.
  * 
  * For Dialog implementations: Please use helper methods in {@link Interview} to
  * find out, whether a {@link Question} or follow-up {@link Question} is active
@@ -48,11 +48,13 @@ public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
 	public Form nextForm(List<InterviewObject> agendaEnties, Session session) {
 		if (agendaEnties.isEmpty()) {
 			return EmptyForm.getInstance();
-		} else {
+		}
+		else {
 			InterviewObject object = agendaEnties.get(0);
 			if (object instanceof Question) {
 				return new DefaultForm(((Question) object).getName(), object);
-			} else if (object instanceof QContainer) {
+			}
+			else if (object instanceof QContainer) {
 				QContainer nextQContainer = retrieveNextUnfinishedQContainer(
 						(QContainer) object, session);
 				if (nextQContainer == null) {
@@ -70,17 +72,15 @@ public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
 	 * instances (i.e., a terminal {@link QContainer}) and that contains active
 	 * questions with respect to the specified {@link Session} instance.
 	 * 
-	 * @param container
-	 *            the specified {@link QContainer}
-	 * @param session
-	 *            the specified session
+	 * @param container the specified {@link QContainer}
+	 * @param session the specified session
 	 * @return an active {@link QContainer} instance
 	 */
 	private QContainer retrieveNextUnfinishedQContainer(QContainer container,
 			Session session) {
 		if (isTerminalQContainer(container)
 				&& hasActiveQuestions(container, session)) {
-			return (QContainer) container;
+			return container;
 		}
 		// container is not a terminal qcontainer, i.e., contains further
 		// qcontainers
@@ -105,10 +105,8 @@ public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
 	 * questions or direct child questions, that have no value with respect to
 	 * the specified {@link Session} instance.
 	 * 
-	 * @param container
-	 *            the specified {@link QContainer} instance
-	 * @param session
-	 *            the specified {@link Session} instance
+	 * @param container the specified {@link QContainer} instance
+	 * @param session the specified {@link Session} instance
 	 * @return true, when it contains an unanswered direct question or an active
 	 *         (possible follow-up) question
 	 */
@@ -118,7 +116,8 @@ public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
 				Question question = (Question) child;
 				if (hasValueUndefined(question, session)) {
 					return true;
-				} else {
+				}
+				else {
 					List<Question> follow_up_questions = collectFollowUpQuestions(question);
 					for (Question follow_up : follow_up_questions) {
 						if (isActiveOnAgenda(follow_up, session)) {
@@ -138,7 +137,8 @@ public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
 				Question child = (Question) object;
 				children.add(child);
 				children.addAll(collectFollowUpQuestions(child));
-			} else {
+			}
+			else {
 				System.err.println("UNHANDLED QASET TYPE");
 				// TODO: throw a bad logger message here.
 			}
@@ -154,6 +154,5 @@ public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
 		}
 		return true;
 	}
-
 
 }
