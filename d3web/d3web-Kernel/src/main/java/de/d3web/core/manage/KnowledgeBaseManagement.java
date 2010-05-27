@@ -376,6 +376,9 @@ public class KnowledgeBaseManagement {
 	 * @return a Diagnosis object or null, if nothing found
 	 */
 	public Solution findSolution(String name) {
+		// Uses hash for name in KB
+		IDObject ob = knowledgeBase.searchObjectForName(name);
+		if (ob != null && ob instanceof Solution) return (Solution) ob;
 		NamedObject o = findNamedObject(name, knowledgeBase.getSolutions());
 		if (o instanceof Solution) return (Solution) o;
 		return null;
@@ -389,6 +392,9 @@ public class KnowledgeBaseManagement {
 	 * @return a Question object or null, if nothing found
 	 */
 	public Question findQuestion(String name) {
+		// Uses hash for name in KB
+		IDObject ob = knowledgeBase.searchObjectForName(name);
+		if (ob != null && ob instanceof Question) return (Question) ob;
 		NamedObject o = findNamedObject(name, knowledgeBase.getQuestions());
 		if (o instanceof Question) return (Question) o;
 		return null;
@@ -402,6 +408,9 @@ public class KnowledgeBaseManagement {
 	 * @return a QContainer object or null, if nothing found
 	 */
 	public QContainer findQContainer(String name) {
+		// Uses hash for name in KB
+		IDObject ob = knowledgeBase.searchObjectForName(name);
+		if (ob != null && ob instanceof QContainer) return (QContainer) ob;
 		NamedObject o = findNamedObject(name, knowledgeBase
 				.getQContainers());
 		if (o instanceof QContainer) return (QContainer) o;
@@ -410,11 +419,6 @@ public class KnowledgeBaseManagement {
 
 	private NamedObject findNamedObject(String name,
 			Collection<? extends NamedObject> namedObjects) {
-
-		// Uses hash for name in KB
-		IDObject ob = knowledgeBase.searchObjectForName(name);
-		if (ob != null && ob instanceof NamedObject) return (NamedObject) ob;
-
 		// old iterating search method
 		for (NamedObject o : namedObjects) {
 			if (o != null && name != null
@@ -450,8 +454,6 @@ public class KnowledgeBaseManagement {
 		}
 		return null;
 	}
-	
-	
 
 	public MultipleChoiceValue findMultipleChoiceValue(QuestionMC quesiton, List<String> valueNames) {
 		List<ChoiceValue> choiceValues = new ArrayList<ChoiceValue>(valueNames.size());
