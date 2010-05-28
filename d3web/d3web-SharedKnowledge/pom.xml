@@ -3,7 +3,7 @@
 	<groupId>de.uniwue.d3web</groupId>
 	<artifactId>d3web-SharedKnowledge</artifactId>
 	<name>d3web-SharedKnowledge</name>
-	<version>0.1</version>
+	<version>0.2-SNAPSHOT</version>
 	<description>Creator: norman
 Creation Context: d3web.KnowME plugin
 Coders: norman, aha, marty, chris, joba
@@ -22,20 +22,20 @@ E.g., such knowledge is used by the CBR and the set-covering methods.</descripti
 	<parent>
 		<artifactId>d3web</artifactId>
 		<groupId>de.uniwue.d3web</groupId>
-		<version>0.1</version>
+		<version>0.2-SNAPSHOT</version>
 	</parent>
 
 	<dependencies>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Kernel</artifactId>
-			<version>0.1</version>
+			<version>0.2-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Persistence</artifactId>
-			<version>0.1</version>
+			<version>0.2-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

@@ -3,12 +3,12 @@
 	<groupId>de.uniwue.d3web</groupId>
 	<artifactId>d3web-CaseRepository</artifactId>
 	<name>d3web-CaseRepository</name>
-	<version>0.1</version>
+	<version>0.2-SNAPSHOT</version>
 
 	<parent>
 		<artifactId>d3web</artifactId>
 		<groupId>de.uniwue.d3web</groupId>
-		<version>0.1</version>
+		<version>0.2-SNAPSHOT</version>
 	</parent>
 	
 	<build>
@@ -51,30 +51,30 @@
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Kernel</artifactId>
-			<version>0.1</version>
+			<version>0.2-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Config</artifactId>
-			<version>0.1</version>
+			<version>0.2-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Persistence</artifactId>
-			<version>0.1</version>
+			<version>0.2-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 	  		<groupId>de.uniwue.d3web</groupId>
 	  		<artifactId>d3web-PluginManager</artifactId>
-	  		<version>0.1</version>
+	  		<version>0.2-SNAPSHOT</version>
 	  	</dependency>
 	  	<dependency>
 	  		<groupId>de.uniwue.d3web</groupId>
 	  		<artifactId>d3web-Persistence-Basic-jpf-plugin</artifactId>
-	  		<version>0.1</version>
+	  		<version>0.2-SNAPSHOT</version>
 	  		<scope>runtime</scope>
 	  	</dependency>	  	
 	</dependencies>

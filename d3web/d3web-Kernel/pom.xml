@@ -3,7 +3,7 @@
 	<groupId>de.uniwue.d3web</groupId>
 	<artifactId>d3web-Kernel</artifactId>
 	<name>d3web-Kernel</name>
-	<version>0.1</version>
+	<version>0.2-SNAPSHOT</version>
 	<build>
 		<finalName>d3web-Persistence-Basic-Plugin</finalName>
 		<plugins>
@@ -33,19 +33,19 @@
 	<parent>
 		<artifactId>d3web</artifactId>
 		<groupId>de.uniwue.d3web</groupId>
-		<version>0.1</version>
+		<version>0.2-SNAPSHOT</version>
 	</parent>
 	<dependencies>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-PluginManager</artifactId>
-			<version>0.1</version>
+			<version>0.2-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Kernel-ExtensionPoints-jpf-plugin</artifactId>
-			<version>0.1</version>
+			<version>0.2-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
