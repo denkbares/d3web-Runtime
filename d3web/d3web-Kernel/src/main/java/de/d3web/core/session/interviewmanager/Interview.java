@@ -3,8 +3,18 @@ package de.d3web.core.session.interviewmanager;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.InterviewObject;
 
+/**
+ * The Interview manages the interview state
+ * 
+ * @author Volker Belli & Joachim Baumeister (denkbares GmbH)
+ */
 public interface Interview {
 
+	/**
+	 * Returns the next form of the Interview
+	 * 
+	 * @return next Form
+	 */
 	Form nextForm();
 
 	/**

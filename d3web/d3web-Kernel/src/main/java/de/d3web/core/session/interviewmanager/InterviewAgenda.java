@@ -8,6 +8,12 @@ import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 
+/**
+ * The InterviewAgenda represents the Interview Objects, which should appear
+ * next in the Interview
+ * 
+ * @author Joachim Baumeister (denkbares GmbH)
+ */
 public class InterviewAgenda {
 
 	public enum InterviewState {
@@ -106,6 +112,11 @@ public class InterviewAgenda {
 		}
 	}
 
+	/**
+	 * Appends an {@link InterviewObject} to the agenda
+	 * 
+	 * @param interviewObject {@link InterviewObject}
+	 */
 	public void append(InterviewObject interviewObject) {
 		trace("Append: " + interviewObject);
 		if (onAgenda(interviewObject)) {
@@ -117,6 +128,11 @@ public class InterviewAgenda {
 		}
 	}
 
+	/**
+	 * Deactivates an {@link InterviewObject} on the agenda
+	 * 
+	 * @param interviewObject {@link InterviewObject}
+	 */
 	public void deactivate(InterviewObject interviewObject) {
 		trace("De-activate: " + interviewObject);
 		AgendaEntry entry = findAgendaEntry(interviewObject);
@@ -126,6 +142,11 @@ public class InterviewAgenda {
 		organizeAgenda();
 	}
 
+	/**
+	 * Activates an {@link InterviewObject} on the agenda
+	 * 
+	 * @param interviewObject {@link InterviewObject}
+	 */
 	public void activate(InterviewObject interviewObject) {
 		trace("Activate: " + interviewObject);
 		AgendaEntry entry = findAgendaEntry(interviewObject);
