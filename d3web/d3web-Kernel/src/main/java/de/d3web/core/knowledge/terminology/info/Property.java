@@ -841,7 +841,7 @@ public class Property {
 	 * @return String
 	 */
 	public static final Property DESCRIPTION = new Property("Description");
-	
+
 	/**
 	 * The available languages of the kb
 	 * 
@@ -857,6 +857,13 @@ public class Property {
 	 */
 	public static final Property KMW_MASTER_DATA = new Property("KMWMasterData");
 
+	/**
+	 * The mal-answering propability of a question
+	 * 
+	 * @return Double
+	 */
+	public static final Property malAnsweringPropability = new Property("malAnsweringPropability");
+
 	/*
 	 * ##########################################################################
 	 * ##
@@ -867,8 +874,7 @@ public class Property {
 	static {
 		allPropertys = new LinkedList<Property>();
 		for (Field f : Property.class.getFields()) {
-			if (isOKField(f))
-				try {
+			if (isOKField(f)) try {
 				allPropertys.add((Property) f.get(null));
 			}
 			catch (IllegalArgumentException e) {
@@ -883,16 +889,11 @@ public class Property {
 	}
 
 	private static boolean isOKField(Field f) {
-		if (!f.getType().equals(Property.class))
-			return false;
-		if (!f.getName().matches("[0-9A-Z_]+"))
-			return false;
-		if (!Modifier.isFinal(f.getModifiers()))
-			return false;
-		if (!Modifier.isPublic(f.getModifiers()))
-			return false;
-		if (!Modifier.isStatic(f.getModifiers()))
-			return false;
+		if (!f.getType().equals(Property.class)) return false;
+		if (!f.getName().matches("[0-9A-Z_]+")) return false;
+		if (!Modifier.isFinal(f.getModifiers())) return false;
+		if (!Modifier.isPublic(f.getModifiers())) return false;
+		if (!Modifier.isStatic(f.getModifiers())) return false;
 		return true;
 	}
 
@@ -952,7 +953,8 @@ public class Property {
 		basicPropertys.add(Property.DATE);
 		basicPropertys.add(Property.DESCRIPTION);
 		basicPropertys.add(Property.LANGUAGES);
-		basicPropertys.add(Property.KMW_MASTER_DATA);		
+		basicPropertys.add(Property.KMW_MASTER_DATA);
+		basicPropertys.add(Property.malAnsweringPropability);
 	}
 
 	private String name;
@@ -1018,8 +1020,7 @@ public class Property {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof Property))
-			return false;
+		if (obj == null || !(obj instanceof Property)) return false;
 		return ((Property) obj).getName().equals(this.getName());
 	}
 
