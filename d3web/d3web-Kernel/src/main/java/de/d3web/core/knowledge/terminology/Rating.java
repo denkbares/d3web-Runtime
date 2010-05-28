@@ -26,9 +26,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.values.UndefinedValue;
 
 /**
- * Stores the state of a {@link Solution} instance in context to a
- * problem-solving method. The state is computed with respect to the values of
- * the problem-solver actively contributing to the solution's state.
+ * Stores the rating of a {@link Solution} instance.
  * 
  * @author joba, Christian Betz
  * @see Solution
@@ -124,8 +122,8 @@ public class Rating implements Value {
 	 * such as like heuristic score of the rating. Therefore two ratings with
 	 * the same state may be considered to be unequal (!).
 	 * <p>
-	 * This method uses the {@link #compareTo(Rating)} method to check
-	 * for equality, therefore subclasses usually have no need to overwrite this
+	 * This method uses the {@link #compareTo(Rating)} method to check for
+	 * equality, therefore subclasses usually have no need to overwrite this
 	 * method.
 	 * 
 	 * @param other the other {@link Rating} to be compared
