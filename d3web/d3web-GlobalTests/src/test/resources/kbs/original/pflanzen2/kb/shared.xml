@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<KnowledgeBase system="d3web" type="shared">
+<KnowledgeSlices>
+<KnowledgeSlice ID="QCOMP_M1419" type="QuestionComparatorOCScaled">
+<Question ID="M1419"/>
+<unknownSimilarity value="-1.0"/>
+<scala>
+<scalavalue value="0.0"/>
+<scalavalue value="32.0"/>
+<scalavalue value="48.0"/>
+<scalavalue value="56.0"/>
+<scalavalue value="60.0"/>
+</scala>
+<constant value="60.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M1422" type="QuestionComparatorOCIndividual">
+<Question ID="M1422"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M1434" type="QuestionComparatorOCIndividual">
+<Question ID="M1434"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M1508" type="QuestionComparatorOCIndividual">
+<Question ID="M1508"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M1513" type="QuestionComparatorOCScaled">
+<Question ID="M1513"/>
+<unknownSimilarity value="-1.0"/>
+<scala>
+<scalavalue value="0.0"/>
+<scalavalue value="10.0"/>
+<scalavalue value="20.0"/>
+<scalavalue value="30.0"/>
+</scala>
+<constant value="30.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M1514" type="QuestionComparatorOCIndividual">
+<Question ID="M1514"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M1515" type="QuestionComparatorOCIndividual">
+<Question ID="M1515"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M1518" type="QuestionComparatorOCIndividual">
+<Question ID="M1518"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M1526" type="QuestionComparatorOCIndividual">
+<Question ID="M1526"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M1528" type="QuestionComparatorOCIndividual">
+<Question ID="M1528"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M1531" type="QuestionComparatorNumIndividual">
+<Question ID="M1531"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M1532" type="QuestionComparatorOCIndividual">
+<Question ID="M1532"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M1534" type="QuestionComparatorOCIndividual">
+<Question ID="M1534"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M1535" type="QuestionComparatorOCIndividual">
+<Question ID="M1535"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M1536" type="QuestionComparatorOCIndividual">
+<Question ID="M1536"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M1537" type="QuestionComparatorOCIndividual">
+<Question ID="M1537"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M180" type="QuestionComparatorOCIndividual">
+<Question ID="M180"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M1916" type="QuestionComparatorOCIndividual">
+<Question ID="M1916"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M192" type="QuestionComparatorOCScaled">
+<Question ID="M192"/>
+<unknownSimilarity value="-1.0"/>
+<scala>
+<scalavalue value="0.0"/>
+<scalavalue value="10.0"/>
+<scalavalue value="20.0"/>
+<scalavalue value="30.0"/>
+<scalavalue value="40.0"/>
+<scalavalue value="50.0"/>
+<scalavalue value="60.0"/>
+<scalavalue value="70.0"/>
+</scala>
+<constant value="70.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M1921" type="QuestionComparatorNumDivision">
+<Question ID="M1921"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M193" type="QuestionComparatorOCIndividual">
+<Question ID="M193"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M194" type="QuestionComparatorYN">
+<Question ID="M194"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M195" type="QuestionComparatorOCIndividual">
+<Question ID="M195"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M196" type="QuestionComparatorOCIndividual">
+<Question ID="M196"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M202" type="QuestionComparatorNumDivision">
+<Question ID="M202"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M2034" type="QuestionComparatorOCIndividual">
+<Question ID="M2034"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M204" type="QuestionComparatorNumIndividual">
+<Question ID="M204"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M214" type="QuestionComparatorOCGroupedSymmetric">
+<Question ID="M214"/>
+<unknownSimilarity value="-1.0"/>
+<pairRelations/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M215" type="QuestionComparatorOCScaled">
+<Question ID="M215"/>
+<unknownSimilarity value="-1.0"/>
+<scala>
+<scalavalue value="0.0"/>
+<scalavalue value="10.0"/>
+<scalavalue value="20.0"/>
+<scalavalue value="30.0"/>
+<scalavalue value="40.0"/>
+</scala>
+<constant value="40.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M219" type="QuestionComparatorOCGroupedSymmetric">
+<Question ID="M219"/>
+<unknownSimilarity value="-1.0"/>
+<pairRelations/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M220" type="QuestionComparatorOCIndividual">
+<Question ID="M220"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M221" type="QuestionComparatorOCScaled">
+<Question ID="M221"/>
+<unknownSimilarity value="-1.0"/>
+<scala>
+<scalavalue value="0.0"/>
+<scalavalue value="10.0"/>
+<scalavalue value="20.0"/>
+<scalavalue value="30.0"/>
+<scalavalue value="40.0"/>
+<scalavalue value="50.0"/>
+<scalavalue value="60.0"/>
+</scala>
+<constant value="60.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M222" type="QuestionComparatorOCGroupedSymmetric">
+<Question ID="M222"/>
+<unknownSimilarity value="-1.0"/>
+<pairRelations/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M223" type="QuestionComparatorOCIndividual">
+<Question ID="M223"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M224" type="QuestionComparatorOCScaled">
+<Question ID="M224"/>
+<unknownSimilarity value="-1.0"/>
+<scala>
+<scalavalue value="0.0"/>
+<scalavalue value="10.0"/>
+<scalavalue value="20.0"/>
+</scala>
+<constant value="20.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M225" type="QuestionComparatorOCGroupedSymmetric">
+<Question ID="M225"/>
+<unknownSimilarity value="-1.0"/>
+<pairRelations/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M226" type="QuestionComparatorYN">
+<Question ID="M226"/>
+<unknownSimilarity value="-1.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M4679" type="QuestionComparatorOCScaled">
+<Question ID="M4679"/>
+<unknownSimilarity value="-1.0"/>
+<scala>
+<scalavalue value="0.0"/>
+<scalavalue value="10.0"/>
+<scalavalue value="20.0"/>
+<scalavalue value="30.0"/>
+<scalavalue value="40.0"/>
+<scalavalue value="50.0"/>
+<scalavalue value="60.0"/>
+<scalavalue value="70.0"/>
+</scala>
+<constant value="70.0"/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M4830" type="QuestionComparatorOCGroupedSymmetric">
+<Question ID="M4830"/>
+<unknownSimilarity value="-1.0"/>
+<pairRelations/>
+</KnowledgeSlice>
+<KnowledgeSlice ID="QCOMP_M731" type="QuestionComparatorOCGroupedSymmetric">
+<Question ID="M731"/>
+<unknownSimilarity value="-1.0"/>
+<pairRelations>
+<pairRelation answer1="M731a1" answer2="M731a1" value="1.0"/>
+<pairRelation answer1="M731a2" answer2="M731a1" value="0.64"/>
+<pairRelation answer1="M731a2" answer2="M731a2" value="1.0"/>
+<pairRelation answer1="M731a3" answer2="M731a1" value="0.16"/>
+<pairRelation answer1="M731a3" answer2="M731a2" value="0.64"/>
+<pairRelation answer1="M731a3" answer2="M731a3" value="1.0"/>
+<pairRelation answer1="M731a4" answer2="M731a1" value="0.04"/>
+<pairRelation answer1="M731a4" answer2="M731a2" value="0.16"/>
+<pairRelation answer1="M731a4" answer2="M731a3" value="0.64"/>
+<pairRelation answer1="M731a4" answer2="M731a4" value="1.0"/>
+<pairRelation answer1="M731a5" answer2="M731a1" value="0.0"/>
+<pairRelation answer1="M731a5" answer2="M731a2" value="0.04"/>
+<pairRelation answer1="M731a5" answer2="M731a3" value="0.16"/>
+<pairRelation answer1="M731a5" answer2="M731a4" value="0.64"/>
+<pairRelation answer1="M731a5" answer2="M731a5" value="1.0"/>
+<pairRelation answer1="M731a6" answer2="M731a1" value="0.0"/>
+<pairRelation answer1="M731a6" answer2="M731a2" value="0.0"/>
+<pairRelation answer1="M731a6" answer2="M731a3" value="0.04"/>
+<pairRelation answer1="M731a6" answer2="M731a4" value="0.16"/>
+<pairRelation answer1="M731a6" answer2="M731a5" value="0.64"/>
+<pairRelation answer1="M731a6" answer2="M731a6" value="1.0"/>
+<pairRelation answer1="M731a7" answer2="M731a1" value="0.0"/>
+<pairRelation answer1="M731a7" answer2="M731a2" value="0.0"/>
+<pairRelation answer1="M731a7" answer2="M731a3" value="0.0"/>
+<pairRelation answer1="M731a7" answer2="M731a4" value="0.04"/>
+<pairRelation answer1="M731a7" answer2="M731a5" value="0.16"/>
+<pairRelation answer1="M731a7" answer2="M731a6" value="0.64"/>
+<pairRelation answer1="M731a7" answer2="M731a7" value="1.0"/>
+<pairRelation answer1="M731a8" answer2="M731a1" value="0.0"/>
+<pairRelation answer1="M731a8" answer2="M731a2" value="0.0"/>
+<pairRelation answer1="M731a8" answer2="M731a3" value="0.0"/>
+<pairRelation answer1="M731a8" answer2="M731a4" value="0.0"/>
+<pairRelation answer1="M731a8" answer2="M731a5" value="0.04"/>
+<pairRelation answer1="M731a8" answer2="M731a6" value="0.16"/>
+<pairRelation answer1="M731a8" answer2="M731a7" value="0.64"/>
+<pairRelation answer1="M731a8" answer2="M731a8" value="1.0"/>
+<pairRelation answer1="M731a9" answer2="M731a1" value="0.0"/>
+<pairRelation answer1="M731a9" answer2="M731a2" value="0.0"/>
+<pairRelation answer1="M731a9" answer2="M731a3" value="0.0"/>
+<pairRelation answer1="M731a9" answer2="M731a4" value="0.0"/>
+<pairRelation answer1="M731a9" answer2="M731a5" value="0.0"/>
+<pairRelation answer1="M731a9" answer2="M731a6" value="0.04"/>
+<pairRelation answer1="M731a9" answer2="M731a7" value="0.16"/>
+<pairRelation answer1="M731a9" answer2="M731a8" value="0.64"/>
+<pairRelation answer1="M731a9" answer2="M731a9" value="1.0"/>
+<pairRelation answer1="M731a10" answer2="M731a1" value="0.04"/>
+<pairRelation answer1="M731a10" answer2="M731a2" value="0.0"/>
+<pairRelation answer1="M731a10" answer2="M731a3" value="0.0"/>
+<pairRelation answer1="M731a10" answer2="M731a4" value="0.0"/>
+<pairRelation answer1="M731a10" answer2="M731a5" value="0.0"/>
+<pairRelation answer1="M731a10" answer2="M731a6" value="0.0"/>
+<pairRelation answer1="M731a10" answer2="M731a7" value="0.04"/>
+<pairRelation answer1="M731a10" answer2="M731a8" value="0.16"/>
+<pairRelation answer1="M731a10" answer2="M731a9" value="0.64"/>
+<pairRelation answer1="M731a10" answer2="M731a10" value="1.0"/>
+<pairRelation answer1="M731a11" answer2="M731a1" value="0.16"/>
+<pairRelation answer1="M731a11" answer2="M731a2" value="0.04"/>
+<pairRelation answer1="M731a11" answer2="M731a3" value="0.0"/>
+<pairRelation answer1="M731a11" answer2="M731a4" value="0.0"/>
+<pairRelation answer1="M731a11" answer2="M731a5" value="0.0"/>
+<pairRelation answer1="M731a11" answer2="M731a6" value="0.0"/>
+<pairRelation answer1="M731a11" answer2="M731a7" value="0.0"/>
+<pairRelation answer1="M731a11" answer2="M731a8" value="0.04"/>
+<pairRelation answer1="M731a11" answer2="M731a9" value="0.16"/>
+<pairRelation answer1="M731a11" answer2="M731a10" value="0.64"/>
+<pairRelation answer1="M731a11" answer2="M731a11" value="1.0"/>
+<pairRelation answer1="M731a12" answer2="M731a1" value="0.64"/>
+<pairRelation answer1="M731a12" answer2="M731a2" value="0.16"/>
+<pairRelation answer1="M731a12" answer2="M731a3" value="0.04"/>
+<pairRelation answer1="M731a12" answer2="M731a4" value="0.0"/>
+<pairRelation answer1="M731a12" answer2="M731a5" value="0.0"/>
+<pairRelation answer1="M731a12" answer2="M731a6" value="0.0"/>
+<pairRelation answer1="M731a12" answer2="M731a7" value="0.0"/>
+<pairRelation answer1="M731a12" answer2="M731a8" value="0.0"/>
+<pairRelation answer1="M731a12" answer2="M731a9" value="0.04"/>
+<pairRelation answer1="M731a12" answer2="M731a10" value="0.16"/>
+<pairRelation answer1="M731a12" answer2="M731a11" value="0.64"/>
+<pairRelation answer1="M731a12" answer2="M731a12" value="1.0"/>
+</pairRelations>
+</KnowledgeSlice>
+<KnowledgeSlice ID="WM1419" questionID="M1419" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM1422" questionID="M1422" type="weight" value="G4"/>
+<KnowledgeSlice ID="WM1434" questionID="M1434" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM1508" questionID="M1508" type="weight" value="G4"/>
+<KnowledgeSlice ID="WM1513" questionID="M1513" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM1514" questionID="M1514" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM1515" questionID="M1515" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM1518" questionID="M1518" type="weight" value="G4"/>
+<KnowledgeSlice ID="WM1526" questionID="M1526" type="weight" value="G4"/>
+<KnowledgeSlice ID="WM1528" questionID="M1528" type="weight" value="G2"/>
+<KnowledgeSlice ID="WM1531" questionID="M1531" type="weight" value="G4"/>
+<KnowledgeSlice ID="WM1532" questionID="M1532" type="weight" value="G4"/>
+<KnowledgeSlice ID="WM1534" questionID="M1534" type="weight" value="G4"/>
+<KnowledgeSlice ID="WM1535" questionID="M1535" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM1536" questionID="M1536" type="weight" value="G4"/>
+<KnowledgeSlice ID="WM1537" questionID="M1537" type="weight" value="G2"/>
+<KnowledgeSlice ID="WM180" questionID="M180" type="weight" value="G4"/>
+<KnowledgeSlice ID="WM1916" questionID="M1916" type="weight" value="G4"/>
+<KnowledgeSlice ID="WM192" questionID="M192" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM1921" questionID="M1921" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM193" questionID="M193" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM194" questionID="M194" type="weight" value="G4"/>
+<KnowledgeSlice ID="WM195" questionID="M195" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM196" questionID="M196" type="weight" value="G4"/>
+<KnowledgeSlice ID="WM202" questionID="M202" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM2034" questionID="M2034" type="weight" value="G2"/>
+<KnowledgeSlice ID="WM204" questionID="M204" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM214" questionID="M214" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM215" questionID="M215" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM219" questionID="M219" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM220" questionID="M220" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM221" questionID="M221" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM222" questionID="M222" type="weight" value="G4"/>
+<KnowledgeSlice ID="WM223" questionID="M223" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM224" questionID="M224" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM225" questionID="M225" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM226" questionID="M226" type="weight" value="G4"/>
+<KnowledgeSlice ID="WM4679" questionID="M4679" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM4830" questionID="M4830" type="weight" value="G3"/>
+<KnowledgeSlice ID="WM731" questionID="M731" type="weight" value="G3"/>
+</KnowledgeSlices>
+</KnowledgeBase>

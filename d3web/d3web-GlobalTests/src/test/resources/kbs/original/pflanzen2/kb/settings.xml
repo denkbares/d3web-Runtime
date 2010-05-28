@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<settings>
+<plugins>
+<plugin ID="KnowledgePersistenceBasicExtensions" autodetect="true" necessary="true"/>
+<plugin ID="KnowledgePersistenceExtensionPoints" autodetect="true" necessary="true"/>
+<plugin ID="d3web-CostBenefit" autodetect="true" necessary="false"/>
+<plugin ID="d3web-Kernel-ExtensionPoints" autodetect="true" necessary="true"/>
+<plugin ID="d3web-XCL" autodetect="true" necessary="false"/>
+<plugin ID="knowledgePersistenceShared" autodetect="true" necessary="true"/>
+</plugins>
+<psmethods/>
+</settings>
