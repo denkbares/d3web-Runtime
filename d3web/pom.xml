@@ -150,9 +150,9 @@
 		</developer>
 	</developers>
 	<scm>
-            <connection>scm:svn:https://isci.informatik.uni-wuerzburg.de/svn/d3web-core/trunk/d3web</connection>
-            <developerConnection>scm:svn:https://isci.informatik.uni-wuerzburg.de/svn/d3web-core/trunk/d3web</developerConnection>
-            <url>scm:svn:https://isci.informatik.uni-wuerzburg.de/svn/d3web-core/trunk/d3web</url>
+            <connection>scm:svn:https://isci.informatik.uni-wuerzburg.de/svn/d3web-core/branches/0.x</connection>
+            <developerConnection>scm:svn:https://isci.informatik.uni-wuerzburg.de/svn/d3web-core/branches/0.x</developerConnection>
+            <url>scm:svn:https://isci.informatik.uni-wuerzburg.de/svn/d3web-core/branches/0.x</url>
 	</scm>
 	<organization>
 		<name>Universität Würzburg</name>
