@@ -50,7 +50,13 @@ class IterativeDeepeningSearch {
 
 		@Override
 		public int compare(Node o1, Node o2) {
-			return (int) (o1.getStaticCosts() - o2.getStaticCosts());
+			int comparator = (int) (o1.getStaticCosts() - o2.getStaticCosts());
+			if (comparator != 0) {
+				return comparator;
+			}
+			else {
+				return -1 * o1.getQContainer().getId().compareTo(o2.getQContainer().getId());
+			}
 		}
 	}
 
@@ -65,7 +71,14 @@ class IterativeDeepeningSearch {
 	public IterativeDeepeningSearch(SearchModel model) {
 		this.model = model;
 		// get finalNodes
-		Set<Target> possibleTargets = model.getTargets();
+		List<Target> possibleTargets = new LinkedList<Target>(model.getTargets());
+		Collections.sort(possibleTargets, new Comparator<Target>() {
+
+			@Override
+			public int compare(Target o1, Target o2) {
+				return -1 * (o1.getFirst().getId().compareTo(o2.getFirst().getId()));
+			}
+		});
 		List<Node> temp = new LinkedList<Node>();
 		for (Target t : possibleTargets) {
 			for (QContainer qcon : t) {
