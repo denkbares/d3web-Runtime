@@ -2,13 +2,13 @@
   <parent>
     <artifactId>d3web</artifactId>
     <groupId>de.uniwue.d3web</groupId>
-    <version>0-SNAPSHOT</version>
+    <version>0.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.uniwue.d3web</groupId>
   <artifactId>d3web-GlobalTests</artifactId>
   <name>d3web-GlobalTests</name>
-  <version>0-SNAPSHOT</version>
+  <version>0.1</version>
   <build>
   	<plugins>
   		<plugin>
@@ -38,13 +38,13 @@
   	<dependency>
   		<groupId>de.uniwue.d3web</groupId>
   		<artifactId>d3web-Persistence-Basic-jpf-plugin</artifactId>
-  		<version>0-SNAPSHOT</version>
+  		<version>0.1</version>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
   		<groupId>de.uniwue.d3web</groupId>
   		<artifactId>d3web-XCL-jpf-plugin</artifactId>
-  		<version>0-SNAPSHOT</version>
+  		<version>0.1</version>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
@@ -57,13 +57,13 @@
   	<dependency>
   		<groupId>de.uniwue.d3web</groupId>
   		<artifactId>d3web-CostBenefit-jpf-plugin</artifactId>
-  		<version>0-SNAPSHOT</version>
+  		<version>0.1</version>
   		<scope>test</scope>
   	</dependency>
   	<dependency>
   		<groupId>de.uniwue.d3web</groupId>
   		<artifactId>d3web-SharedKnowledgePersistence-jpf-plugin</artifactId>
-  		<version>0-SNAPSHOT</version>
+  		<version>0.1</version>
   		<scope>test</scope>
   	</dependency>
   </dependencies>
