@@ -65,6 +65,14 @@
 					</execution>
 				</executions>
 			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.0</version>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 	<properties>
@@ -143,9 +151,9 @@
 		</developer>
 	</developers>
 	<scm>
-		<connection>scm:svn:https://isci.informatik.uni-wuerzburg.de/svn/d3web-core/trunk</connection>
-		<developerConnection>scm:svn:https://isci.informatik.uni-wuerzburg.de/svn/d3web-core/trunk</developerConnection>
-		<url>scm:svn:https://isci.informatik.uni-wuerzburg.de/svn/d3web-core/trunk</url>
+            <connection>scm:svn:https://isci.informatik.uni-wuerzburg.de/svn/d3web-core/trunk/d3web</connection>
+            <developerConnection>scm:svn:https://isci.informatik.uni-wuerzburg.de/svn/d3web-core/trunk/d3web</developerConnection>
+            <url>scm:svn:https://isci.informatik.uni-wuerzburg.de/svn/d3web-core/trunk/d3web</url>
 	</scm>
 	<organization>
 		<name>Universität Würzburg</name>
