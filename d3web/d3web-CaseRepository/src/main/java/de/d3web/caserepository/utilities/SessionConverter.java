@@ -241,7 +241,7 @@ public class SessionConverter {
 				while (psMethodIter.hasNext()) {
 					PSMethod psm = psMethodIter.next();
 					Rating ds = theCase.getBlackboard().getRating(d, psm);
-					if (ds.equals(state)) {
+					if (ds.hasState(state)) {
 						CaseObject.Solution s = new CaseObject.Solution();
 						s.setDiagnosis(d);
 						s.setState(new Rating(state));
