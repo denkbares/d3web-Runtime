@@ -56,5 +56,14 @@ public class NumValue implements QuestionValue {
 	public String toString() {
 		return getValue().toString();
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof NumValue) {
+			NumValue nv = (NumValue) o;
+			return nv.value.equals(value);
+		}
+		return super.equals(o);
+	}
 
 }
