@@ -48,13 +48,19 @@ public class DFSTreeAgendaSortingStrategy implements AgendaSortingStrategy {
 		this.maxOrderingNumber = 0;
 		reindex(knowledgeBase.getRootQASet());
 	}
+	
 	private void reindex(TerminologyObject qaset) {
 		qasetIndex.put(qaset, maxOrderingNumber);
 		maxOrderingNumber++;
 		for (TerminologyObject child : qaset.getChildren()) {
-			reindex(child);
+			if (!qasetIndex.containsKey(child)) {
+				reindex(child);
+			} else { 
+				continue;// terminate recursion in case of cyclic hierarchies
+			}
 		}
 	}
+	
 	@Override
 	public void sort(List<AgendaEntry> entries) {
 		Collections.sort(entries, new DFSTreeSortingComparator(this.qasetIndex));
