@@ -24,14 +24,19 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -47,6 +52,7 @@ import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.knowledge.terminology.QuestionZC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.interviewmanager.InterviewAgenda.AgendaEntry;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
@@ -66,7 +72,9 @@ public class KnowledgeBaseManagement {
 
 	KnowledgeBase knowledgeBase;
 	private int internalCounter = 0;
-
+	private Map<TerminologyObject, Integer> qcontainerIndex;
+	private int maxOrderingNumber;
+	
 	private KnowledgeBaseManagement(KnowledgeBase k) {
 		knowledgeBase = k;
 	}
@@ -645,4 +653,68 @@ public class KnowledgeBaseManagement {
 	public KnowledgeBase getKnowledgeBase() {
 		return knowledgeBase;
 	}
+	
+	
+	/**
+	 * Sorts a given list of QContainer according to DFS 
+	 * 
+	 * @param unsorted the unsorted list
+	 */
+	public void sortQContainers(List<QContainer> unsorted){
+		this.qcontainerIndex = new HashMap<TerminologyObject, Integer>();
+		reindex();
+		Collections.sort(unsorted, new DFSTreeSortingComparator(this.qcontainerIndex));
+	}
+	
+	
+
+	/**
+	 * Traverses the QASet hierarchy using a depth-first search and
+	 * attaches an ordering number to each visited {@link QASet}.
+	 * This ordering number is used for the sorting of the 
+	 * agenda.
+	 */
+	private void reindex() {
+		this.maxOrderingNumber = 0;
+		reindex(knowledgeBase.getRootQASet());
+	}
+	
+	
+	private void reindex(TerminologyObject qaset) {
+		if(qaset instanceof QContainer){
+			qcontainerIndex.put(qaset, maxOrderingNumber);
+			maxOrderingNumber++;
+		}
+		
+		for (TerminologyObject child : qaset.getChildren()) {
+			
+			if (!qcontainerIndex.containsKey(child)) {
+				reindex(child);
+			} else { 
+				continue;// terminate recursion in case of cyclic hierarchies
+			}
+		}
+	}
+	
+	
+	/**
+	 * Private Comparator class that sorts a given QContaier map, where the
+	 * QContainers have previously been traversed DFS and given the according
+	 * index number
+	 */
+	
+	private class DFSTreeSortingComparator implements Comparator<QContainer> {
+		private Map<TerminologyObject, Integer> index;
+		public DFSTreeSortingComparator(
+				Map<TerminologyObject, Integer> qasetIndex) {
+			this.index = qasetIndex;
+		}
+		@Override
+		public int compare(QContainer entry1, QContainer entry2) {
+			int order1 = this.index.get(entry1);
+			int order2 = this.index.get(entry2);
+			return order1 - order2;
+		}
+	}
+	
 }
