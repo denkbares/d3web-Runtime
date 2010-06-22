@@ -64,20 +64,20 @@ public class DefaultBlackboard implements Blackboard {
 			getSession().getProtocol().addEntry(fact);
 		}
 
-		Value oldValue;
 		TerminologyObject terminologyObject = fact.getTerminologyObject();
-		if (terminologyObject instanceof Solution) {
-			oldValue = getRating((Solution) terminologyObject);
-		}
-		else if (terminologyObject instanceof Question) {
-			oldValue = getValue((Question) terminologyObject);
-		}
-		else {
-			oldValue = getValueFact(terminologyObject).getValue();
-		}
+		Value oldValue = getActualValue(terminologyObject);
 		this.valueStorage.add(fact);
-		Fact newFact = getValueFact(terminologyObject);
-		Value newValue = newFact.getValue();
+		propergateIfNecessary(terminologyObject, oldValue);
+	}
+
+	/**
+	 * Propergates if the value of the terminology object has changed
+	 * @param terminologyObject
+	 * @param oldValue
+	 */
+	private void propergateIfNecessary(TerminologyObject terminologyObject,
+			Value oldValue) {
+		Value newValue = getActualValue(terminologyObject);
 		if (newValue != oldValue) {
 			PropagationContoller propagationContoller = session.getPropagationContoller();
 			propagationContoller.openPropagation();
@@ -88,9 +88,30 @@ public class DefaultBlackboard implements Blackboard {
 		}
 	}
 
+	/**
+	 * Returns the acutal value of a terminology object. Prevents getting null for Solutions and Questions
+	 * @param terminologyObject
+	 * @return actual Value
+	 */
+	private Value getActualValue(TerminologyObject terminologyObject) {
+		Value oldValue;
+		if (terminologyObject instanceof Solution) {
+			oldValue = getRating((Solution) terminologyObject);
+		}
+		else if (terminologyObject instanceof Question) {
+			oldValue = getValue((Question) terminologyObject);
+		}
+		else {
+			oldValue = getValueFact(terminologyObject).getValue();
+		}
+		return oldValue;
+	}
+
 	@Override
 	public void removeValueFact(Fact fact) {
+		Value oldValue = getActualValue(fact.getTerminologyObject());
 		this.valueStorage.remove(fact);
+		propergateIfNecessary(fact.getTerminologyObject(), oldValue);
 	}
 
 	/**
@@ -102,7 +123,9 @@ public class DefaultBlackboard implements Blackboard {
 	 * @param source the fact source to be removed
 	 */
 	public void removeValueFact(TerminologyObject terminologyObject, Object source) {
+		Value oldValue = getActualValue(terminologyObject);
 		this.valueStorage.remove(terminologyObject, source);
+		propergateIfNecessary(terminologyObject, oldValue);
 	}
 
 	@Override
