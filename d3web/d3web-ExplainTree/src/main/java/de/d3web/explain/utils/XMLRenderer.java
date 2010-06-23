@@ -32,7 +32,7 @@ import de.d3web.abstraction.formula.FormulaDateElement;
 import de.d3web.abstraction.formula.FormulaDatePrimitive;
 import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.abstraction.formula.FormulaNumber;
-import de.d3web.abstraction.formula.FormulaNumberArgumentsTerm;
+import de.d3web.abstraction.formula.Operator;
 import de.d3web.abstraction.formula.FormulaNumberElement;
 import de.d3web.abstraction.formula.FormulaNumberPrimitive;
 import de.d3web.abstraction.formula.Max;
@@ -281,8 +281,8 @@ public class XMLRenderer {
 
 	private static StringBuffer renderFormulaElement(FormulaNumberElement element) {
 		StringBuffer sb = new StringBuffer();
-		if (element instanceof FormulaNumberArgumentsTerm) {
-			FormulaNumberArgumentsTerm term = (FormulaNumberArgumentsTerm) element;
+		if (element instanceof Operator) {
+			Operator term = (Operator) element;
 			sb.append("<FormulaTerm type=\"");
 			if (element instanceof Add) {
 				sb.append("+");

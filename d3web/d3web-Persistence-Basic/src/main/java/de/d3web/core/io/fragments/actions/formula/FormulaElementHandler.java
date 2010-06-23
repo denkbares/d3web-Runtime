@@ -31,26 +31,21 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.d3web.abstraction.formula.Add;
 import de.d3web.abstraction.formula.Count;
-import de.d3web.abstraction.formula.Div;
 import de.d3web.abstraction.formula.FormulaDate;
 import de.d3web.abstraction.formula.FormulaDateArgumentsTerm;
 import de.d3web.abstraction.formula.FormulaDateElement;
 import de.d3web.abstraction.formula.FormulaDatePrimitive;
 import de.d3web.abstraction.formula.FormulaElement;
 import de.d3web.abstraction.formula.FormulaNumber;
-import de.d3web.abstraction.formula.FormulaNumberArgumentsTerm;
 import de.d3web.abstraction.formula.FormulaNumberElement;
 import de.d3web.abstraction.formula.FormulaNumberPrimitive;
-import de.d3web.abstraction.formula.Max;
-import de.d3web.abstraction.formula.Min;
-import de.d3web.abstraction.formula.Mult;
+import de.d3web.abstraction.formula.Operator;
 import de.d3web.abstraction.formula.QDateWrapper;
 import de.d3web.abstraction.formula.QNumWrapper;
-import de.d3web.abstraction.formula.Sub;
 import de.d3web.abstraction.formula.Today;
 import de.d3web.abstraction.formula.YearDiff;
+import de.d3web.abstraction.formula.Operator.Operation;
 import de.d3web.core.io.NoSuchFragmentHandlerException;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.FragmentHandler;
@@ -120,8 +115,8 @@ public class FormulaElementHandler implements FragmentHandler {
 			FormulaDateArgumentsTerm fa = (FormulaDateArgumentsTerm) object;
 			element = createFormulaTerm(doc, fa.getSymbol(), fa.getArg1(), fa.getArg2());
 		}
-		else if (object instanceof FormulaNumberArgumentsTerm) {
-			FormulaNumberArgumentsTerm fa = (FormulaNumberArgumentsTerm) object;
+		else if (object instanceof Operator) {
+			Operator fa = (Operator) object;
 			element = createFormulaTerm(doc, fa.getSymbol(), fa.getArg1(), fa.getArg2());
 		}
 		else if (object instanceof FormulaDate) {
@@ -238,28 +233,28 @@ public class FormulaElementHandler implements FragmentHandler {
 			}
 		}
 		if (type.equalsIgnoreCase("+")) {
-			ret = new Add((FormulaNumberElement) arg1,
-					(FormulaNumberElement) arg2);
+			ret = new Operator((FormulaNumberElement) arg1,
+					(FormulaNumberElement) arg2, Operation.Add);
 		}
 		else if (type.equalsIgnoreCase("-")) {
-			ret = new Sub((FormulaNumberElement) arg1,
-					(FormulaNumberElement) arg2);
+			ret = new Operator((FormulaNumberElement) arg1,
+					(FormulaNumberElement) arg2, Operation.Sub);
 		}
 		else if (type.equalsIgnoreCase("*")) {
-			ret = new Mult((FormulaNumberElement) arg1,
-					(FormulaNumberElement) arg2);
+			ret = new Operator((FormulaNumberElement) arg1,
+					(FormulaNumberElement) arg2, Operation.Mult);
 		}
 		else if (type.equalsIgnoreCase("/")) {
-			ret = new Div((FormulaNumberElement) arg1,
-					(FormulaNumberElement) arg2);
+			ret = new Operator((FormulaNumberElement) arg1,
+					(FormulaNumberElement) arg2, Operation.Div);
 		}
 		else if (type.equalsIgnoreCase("max")) {
-			ret = new Max((FormulaNumberElement) arg1,
-					(FormulaNumberElement) arg2);
+			ret = new Operator((FormulaNumberElement) arg1,
+					(FormulaNumberElement) arg2, Operation.Max);
 		}
 		else if (type.equalsIgnoreCase("min")) {
-			ret = new Min((FormulaNumberElement) arg1,
-					(FormulaNumberElement) arg2);
+			ret = new Operator((FormulaNumberElement) arg1,
+					(FormulaNumberElement) arg2, Operation.Min);
 		}
 		else if (type.equalsIgnoreCase("YEARDIFF")) {
 			ret = new YearDiff((FormulaDateElement) arg1,

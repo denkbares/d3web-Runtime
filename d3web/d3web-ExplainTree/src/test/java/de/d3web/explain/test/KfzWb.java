@@ -4,12 +4,11 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import de.d3web.abstraction.ActionSetValue;
-import de.d3web.abstraction.formula.Div;
 import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.abstraction.formula.FormulaNumber;
-import de.d3web.abstraction.formula.Mult;
+import de.d3web.abstraction.formula.Operator;
 import de.d3web.abstraction.formula.QNumWrapper;
-import de.d3web.abstraction.formula.Sub;
+import de.d3web.abstraction.formula.Operator.Operation;
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
@@ -24,7 +23,6 @@ import de.d3web.core.inference.condition.CondNumGreater;
 import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -33,6 +31,7 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
@@ -309,8 +308,9 @@ public class KfzWb extends KnowledgeBase {
 			Mf57.setParents(Utils.createList(new NamedObject[] { Q56 }));
 			Mf57.setAlternatives(
 					Utils.createVector(
-					new Choice[] {
-					Mf57a1, Mf57a2, Mf57a3, Mf57a4, Mf57a5, Mf57a6, Mf57a7, Mf57a8, Mf57a9 }));
+							new Choice[] {
+									Mf57a1, Mf57a2, Mf57a3, Mf57a4, Mf57a5, Mf57a6, Mf57a7, Mf57a8,
+									Mf57a9 }));
 			Mf58.setName("Baujahr des Autos?");
 			Mf58.setKnowledgeBase(this);
 			Mf58.setParents(Utils.createList(new NamedObject[] { Q56 }));
@@ -366,7 +366,7 @@ public class KfzWb extends KnowledgeBase {
 				"RASK10",
 				Utils.createList(new QASet[] { Mf10 }),
 				new CondOr(Utils.createList(new Condition[] {
-				mce(Mf8, Mf8a2), mce(Mf8, Mf8a3) })));
+						mce(Mf8, Mf8a2), mce(Mf8, Mf8a3) })));
 
 		/*
 		 * Next von P000: rqsug14766
@@ -488,7 +488,7 @@ public class KfzWb extends KnowledgeBase {
 				P16,
 				Score.P5,
 				new CondOr(Utils.createList(new Condition[] {
-				mce(Mf8, Mf8a3), mce(Mf8, Mf8a2) })));
+						mce(Mf8, Mf8a3), mce(Mf8, Mf8a2) })));
 
 		/*
 		 * (R_FB_29) Und (($= Mf9 4)) -> P14, P4
@@ -542,9 +542,9 @@ public class KfzWb extends KnowledgeBase {
 				P14,
 				Score.N4,
 				new CondNot(
-				new CondOr(
-				Utils.createList(new Condition[] {
-				mce(Mf8, Mf8a3), mce(Mf8, Mf8a2) }))));
+						new CondOr(
+								Utils.createList(new Condition[] {
+										mce(Mf8, Mf8a3), mce(Mf8, Mf8a2) }))));
 
 		/*
 		 * (R_FB_20) Und (($Or Mf8 3 2) ($= Mf10 1)) -> P14, P4
@@ -555,13 +555,13 @@ public class KfzWb extends KnowledgeBase {
 				P14,
 				Score.P4,
 				new CondAnd(
-				Utils.createList(
-				new Condition[] {
-				new CondOr(
-						Utils.createList(new Condition[] {
-						mce(Mf8, Mf8a3), mce(Mf8, Mf8a2) })),
-				mce(Mf10, Mf10a1)
-				})));
+						Utils.createList(
+								new Condition[] {
+										new CondOr(
+												Utils.createList(new Condition[] {
+														mce(Mf8, Mf8a3), mce(Mf8, Mf8a2) })),
+										mce(Mf10, Mf10a1)
+						})));
 
 		/*
 		 * (R_FB_18) Und (($= Msi4 1)) -> P14, N4
@@ -602,9 +602,9 @@ public class KfzWb extends KnowledgeBase {
 				P15,
 				Score.N5,
 				new CondNot(
-				new CondOr(
-				Utils.createList(new Condition[] {
-				mce(Mf8, Mf8a3), mce(Mf8, Mf8a2) }))));
+						new CondOr(
+								Utils.createList(new Condition[] {
+										mce(Mf8, Mf8a3), mce(Mf8, Mf8a2) }))));
 
 		/*
 		 * (R_FB_12) Und ((Non $Or Mf7 2 1)) -> P15, N3
@@ -615,9 +615,9 @@ public class KfzWb extends KnowledgeBase {
 				P15,
 				Score.N3,
 				new CondNot(
-				new CondOr(
-				Utils.createList(new Condition[] {
-				mce(Mf7, Mf7a2), mce(Mf7, Mf7a1) }))));
+						new CondOr(
+								Utils.createList(new Condition[] {
+										mce(Mf7, Mf7a2), mce(Mf7, Mf7a1) }))));
 
 		/*
 		 * (R_FB_11) Und ((Non $= Mf10 1)) -> P15, N6
@@ -635,13 +635,13 @@ public class KfzWb extends KnowledgeBase {
 				P15,
 				Score.P5,
 				new CondAnd(
-				Utils.createList(
-				new Condition[] {
-				new CondOr(
-						Utils.createList(new Condition[] {
-						mce(Mf8, Mf8a3), mce(Mf8, Mf8a2) })),
-				mce(Mf10, Mf10a1)
-				})));
+						Utils.createList(
+								new Condition[] {
+										new CondOr(
+												Utils.createList(new Condition[] {
+														mce(Mf8, Mf8a3), mce(Mf8, Mf8a2) })),
+										mce(Mf10, Mf10a1)
+						})));
 
 		/*
 		 * (R_FB_9) Und (($Or Mf7 2 1)) -> P15, P5
@@ -652,7 +652,7 @@ public class KfzWb extends KnowledgeBase {
 				P15,
 				Score.P5,
 				new CondOr(Utils.createList(new Condition[] {
-				mce(Mf7, Mf7a2), mce(Mf7, Mf7a1) })));
+						mce(Mf7, Mf7a2), mce(Mf7, Mf7a1) })));
 
 		/*
 		 * (R_FB_8) Und (($= Mf9 4)) -> P15, P3
@@ -778,7 +778,7 @@ public class KfzWb extends KnowledgeBase {
 		Radd59.setAction(a_Radd59);
 		Radd59.setCondition(
 				new CondAnd(Utils.createList(new Condition[] {
-				mce(Mf4, Mf4a3), mce(Mf3, Mf3a4) })));
+						mce(Mf4, Mf4a3), mce(Mf3, Mf3a4) })));
 
 		// (Radd4) Und (($Or Mf3 1 2 3)) -> Msi21
 		Rule Radd4 = new Rule("Radd4");
@@ -788,9 +788,9 @@ public class KfzWb extends KnowledgeBase {
 		Radd4.setAction(a_Radd4);
 		Radd4.setCondition(
 				new CondOr(
-				Utils.createList(
-				new Condition[] {
-				mce(Mf3, Mf3a1), mce(Mf3, Mf3a2), mce(Mf3, Mf3a3) })));
+						Utils.createList(
+								new Condition[] {
+										mce(Mf3, Mf3a1), mce(Mf3, Mf3a2), mce(Mf3, Mf3a3) })));
 
 		// (Radd2) Und (($= Mf3 4) ($= Mf4 1)) -> Msi21
 		Rule Radd2 = new Rule("Radd2");
@@ -800,7 +800,7 @@ public class KfzWb extends KnowledgeBase {
 		Radd2.setAction(a_Radd2);
 		Radd2.setCondition(
 				new CondAnd(Utils.createList(new Condition[] {
-				mce(Mf3, Mf3a4), mce(Mf4, Mf4a1) })));
+						mce(Mf3, Mf3a4), mce(Mf4, Mf4a1) })));
 
 		/* Die Symptom-Interpretations-Regeln (Numerische) */
 
@@ -811,22 +811,26 @@ public class KfzWb extends KnowledgeBase {
 
 		FormulaExpression formula =
 				new FormulaExpression(
-				Msi4,
-				new Mult(
-				new Div(new Sub(new QNumWrapper(Mf6), new QNumWrapper(Mf5)), new QNumWrapper(Mf5)),
-				new FormulaNumber(new Double(100))));
+						Msi4,
+						new Operator(
+								new Operator(new Operator(new QNumWrapper(Mf6),
+										new QNumWrapper(Mf5), Operation.Sub), new QNumWrapper(Mf5),
+										Operation.Div),
+								new FormulaNumber(new Double(100)), Operation.Mult));
 
 		a_Rdq4.setValue(formula
 						// new Schema(
-		// new Mult(new Div(new Sub(new QNumWrapper(Mf6), new QNumWrapper(Mf5)),
-		// new QNumWrapper(Mf5)), new FormulaNumber(new Double(100))),
-		// ((QuestionChoice) Msi4).getAllAlternatives(),
-		// new Double[] { new Double(10), new Double(20)})
-		);
+						// new Mult(new Div(new Sub(new QNumWrapper(Mf6), new
+						// QNumWrapper(Mf5)),
+						// new QNumWrapper(Mf5)), new FormulaNumber(new
+						// Double(100))),
+						// ((QuestionChoice) Msi4).getAllAlternatives(),
+						// new Double[] { new Double(10), new Double(20)})
+						);
 		Rdq4.setAction(a_Rdq4);
 		Rdq4.setCondition(
 				new CondAnd(Utils.createList(new Condition[] {
-				new CondNumGreater(Mf5, new Double(0)), new CondKnown(Mf6) })));
+						new CondNumGreater(Mf5, new Double(0)), new CondKnown(Mf6) })));
 
 		/*
 		 * // (Radd59) Und (($= Mf4 3) ($= Mf3 4)) -> Msi21 RuleAddValue Radd59
