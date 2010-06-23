@@ -72,8 +72,6 @@ public class KnowledgeBaseManagement {
 
 	KnowledgeBase knowledgeBase;
 	private int internalCounter = 0;
-	private Map<TerminologyObject, Integer> qcontainerIndex;
-	private int maxOrderingNumber;
 	
 	private KnowledgeBaseManagement(KnowledgeBase k) {
 		knowledgeBase = k;
@@ -661,35 +659,23 @@ public class KnowledgeBaseManagement {
 	 * @param unsorted the unsorted list
 	 */
 	public void sortQContainers(List<QContainer> unsorted){
-		this.qcontainerIndex = new HashMap<TerminologyObject, Integer>();
-		reindex();
-		Collections.sort(unsorted, new DFSTreeSortingComparator(this.qcontainerIndex));
+		HashMap<TerminologyObject, Integer> qcontainerIndex = new HashMap<TerminologyObject, Integer>();
+		reindex(knowledgeBase.getRootQASet(), qcontainerIndex, 0);
+		Collections.sort(unsorted, new DFSTreeSortingComparator(qcontainerIndex));
 	}
 	
-	
-
 	/**
 	 * Traverses the QASet hierarchy using a depth-first search and
 	 * attaches an ordering number to each visited {@link QASet}.
-	 * This ordering number is used for the sorting of the 
-	 * agenda.
 	 */
-	private void reindex() {
-		this.maxOrderingNumber = 0;
-		reindex(knowledgeBase.getRootQASet());
-	}
-	
-	
-	private void reindex(TerminologyObject qaset) {
-		if(qaset instanceof QContainer){
-			qcontainerIndex.put(qaset, maxOrderingNumber);
-			maxOrderingNumber++;
-		}
+	private void reindex(TerminologyObject qaset, HashMap<TerminologyObject,Integer> qcontainerIndex, int maxOrderingNumber) {
+		qcontainerIndex.put(qaset, maxOrderingNumber);
+		maxOrderingNumber++;
 		
 		for (TerminologyObject child : qaset.getChildren()) {
-			
+			System.out.println(child.getName());
 			if (!qcontainerIndex.containsKey(child)) {
-				reindex(child);
+				reindex(child, qcontainerIndex, maxOrderingNumber);
 			} else { 
 				continue;// terminate recursion in case of cyclic hierarchies
 			}
