@@ -26,21 +26,15 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import de.d3web.abstraction.ActionQuestionSetter;
-import de.d3web.abstraction.formula.Add;
-import de.d3web.abstraction.formula.Div;
 import de.d3web.abstraction.formula.FormulaDateElement;
 import de.d3web.abstraction.formula.FormulaDatePrimitive;
 import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.abstraction.formula.FormulaNumber;
-import de.d3web.abstraction.formula.Operator;
 import de.d3web.abstraction.formula.FormulaNumberElement;
 import de.d3web.abstraction.formula.FormulaNumberPrimitive;
-import de.d3web.abstraction.formula.Max;
-import de.d3web.abstraction.formula.Min;
-import de.d3web.abstraction.formula.Mult;
+import de.d3web.abstraction.formula.Operator;
 import de.d3web.abstraction.formula.QDateWrapper;
 import de.d3web.abstraction.formula.QNumWrapper;
-import de.d3web.abstraction.formula.Sub;
 import de.d3web.abstraction.formula.Today;
 import de.d3web.abstraction.formula.YearDiff;
 import de.d3web.abstraction.inference.PSMethodAbstraction;
@@ -284,24 +278,7 @@ public class XMLRenderer {
 		if (element instanceof Operator) {
 			Operator term = (Operator) element;
 			sb.append("<FormulaTerm type=\"");
-			if (element instanceof Add) {
-				sb.append("+");
-			}
-			else if (element instanceof Sub) {
-				sb.append("-");
-			}
-			else if (element instanceof Mult) {
-				sb.append("*");
-			}
-			else if (element instanceof Div) {
-				sb.append("/");
-			}
-			else if (element instanceof Min) {
-				sb.append("min");
-			}
-			else if (element instanceof Max) {
-				sb.append("max");
-			}
+			sb.append(term.getSymbol());
 			sb.append("\">");
 			sb.append("<Arg1>");
 			sb.append(renderFormulaElement(term.getArg1()));
@@ -463,22 +440,22 @@ public class XMLRenderer {
 				if (isInitQuestion) sb.append(renderInitialQASet(qaSet, true));
 			}
 		}
-//		else if (context == PSMethodUserSelected.class) {
-//			if (qaSet.getProReasons(theCase).contains(
-//					new QASet.Reason(null, PSMethodUserSelected.class))) {
-//				sb.append(renderUserSelectedReason());
-//			}
-//		}
-//		else if (context == PSMethodParentQASet.class) {
-//			if (qaSet.getProReasons(theCase).contains(
-//					new QASet.Reason(null, PSMethodParentQASet.class))) {
-//				sb.append(renderParentQASetProReason(qaSet, showStatus, theCase));
-//			}
-//			if (qaSet.getContraReasons(theCase).contains(
-//					new QASet.Reason(null, PSMethodParentQASet.class))) {
-//				sb.append(renderParentQASetContraReason(qaSet, showStatus, theCase));
-//			}
-//		}
+		// else if (context == PSMethodUserSelected.class) {
+		// if (qaSet.getProReasons(theCase).contains(
+		// new QASet.Reason(null, PSMethodUserSelected.class))) {
+		// sb.append(renderUserSelectedReason());
+		// }
+		// }
+		// else if (context == PSMethodParentQASet.class) {
+		// if (qaSet.getProReasons(theCase).contains(
+		// new QASet.Reason(null, PSMethodParentQASet.class))) {
+		// sb.append(renderParentQASetProReason(qaSet, showStatus, theCase));
+		// }
+		// if (qaSet.getContraReasons(theCase).contains(
+		// new QASet.Reason(null, PSMethodParentQASet.class))) {
+		// sb.append(renderParentQASetContraReason(qaSet, showStatus, theCase));
+		// }
+		// }
 		return (sb);
 	}
 
@@ -584,7 +561,7 @@ public class XMLRenderer {
 				// sort answerchoices by their position in the allAnswer-list
 				returnList.add(new Double(
 						((QuestionChoice) ac.getQuestion()).getAllAlternatives().indexOf(
-						cvalue)));
+								cvalue)));
 			}
 			else if (value instanceof Unknown) {
 				sb.append(renderAnswerUnknownObject());
@@ -598,7 +575,7 @@ public class XMLRenderer {
 						// allAnswer-list
 						returnList.add(new Double(
 								((QuestionChoice) ac.getQuestion()).getAllAlternatives().indexOf(
-								values[i])));
+										values[i])));
 					}
 					else if (values[i] instanceof FormulaNumberElement) {
 						sb.append("<Formula>");
@@ -698,12 +675,12 @@ public class XMLRenderer {
 		sb.append(">");
 		sb.append("<Action>");
 		sb.append("<ParentQASetPro>");
-//		for (TerminologyObject to : qaSet.getParents()) {
-//			QContainer parent = (QContainer) to;
-//			if (!parent.getProReasons(theCase).isEmpty()) {
-//				sb.append(renderQASetObject(parent));
-//			}
-//		}
+		// for (TerminologyObject to : qaSet.getParents()) {
+		// QContainer parent = (QContainer) to;
+		// if (!parent.getProReasons(theCase).isEmpty()) {
+		// sb.append(renderQASetObject(parent));
+		// }
+		// }
 		sb.append("</ParentQASetPro>");
 		sb.append("</Action>");
 		sb.append("</KnowledgeSlice>");
@@ -719,12 +696,12 @@ public class XMLRenderer {
 		sb.append(">");
 		sb.append("<Action>");
 		sb.append("<ParentQASetContra>");
-//		for (TerminologyObject to : qaSet.getParents()) {
-//			QContainer parent = (QContainer) to;
-//			if (!parent.getContraReasons(theCase).isEmpty()) {
-//				sb.append(renderQASetObject(parent));
-//			}
-//		}
+		// for (TerminologyObject to : qaSet.getParents()) {
+		// QContainer parent = (QContainer) to;
+		// if (!parent.getContraReasons(theCase).isEmpty()) {
+		// sb.append(renderQASetObject(parent));
+		// }
+		// }
 		sb.append("</ParentQASetContra>");
 		sb.append("</Action>");
 		sb.append("</KnowledgeSlice>");
@@ -918,10 +895,10 @@ public class XMLRenderer {
 			if (asException) sb.append(renderConditionAsException(iter.next(), theCase,
 					showStatus,
 					parentFired && (statusValues != null)
-					&& ((Boolean) statusValues.get(0)).booleanValue()));
+							&& ((Boolean) statusValues.get(0)).booleanValue()));
 			else sb.append(renderCondition(iter.next(), theCase, showStatus,
 					parentFired && (statusValues != null)
-					&& ((Boolean) statusValues.get(0)).booleanValue()));
+							&& ((Boolean) statusValues.get(0)).booleanValue()));
 		}
 
 		sb.append("</Condition>");
@@ -931,7 +908,7 @@ public class XMLRenderer {
 	private static Num2ChoiceSchema getSchemaForQuestion(QuestionOC q) {
 		KnowledgeSlice schemaCol =
 				q.getKnowledge(PSMethodAbstraction.class,
-				PSMethodAbstraction.NUM2CHOICE_SCHEMA);
+						PSMethodAbstraction.NUM2CHOICE_SCHEMA);
 		if (schemaCol != null) return (Num2ChoiceSchema) schemaCol;
 		else return null;
 	}
