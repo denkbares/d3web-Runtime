@@ -235,5 +235,22 @@ public class JPFPlugin implements Plugin {
 		}
 	}
 	
+	public String getReversion() {
+		PluginAttribute attribute = descriptor.getAttribute("revision");
+		if (attribute!=null) {
+			return attribute.getValue();
+		} else {
+			return null;
+		}
+	}
+
+	public String getBuildDate() {
+		PluginAttribute attribute = descriptor.getAttribute("builddate");
+		if (attribute!=null) {
+			return attribute.getValue();
+		} else {
+			return null;
+		}
+	}
 	
 }
