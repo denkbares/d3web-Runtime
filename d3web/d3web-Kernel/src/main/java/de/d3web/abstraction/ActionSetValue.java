@@ -64,25 +64,25 @@ public class ActionSetValue extends ActionQuestionSetter implements
 	 * Sets the specified value for the specified question.
 	 */
 	@Override
-	public void doIt(Session theCase, Rule rule) {
+	public void doIt(Session session, Rule rule) {
 		if (getValue() != null) {
-
+			storeActionValues(session, getValue());
 			Value tempVal;
 
 			// for (int i = 0; i < getValues().length; i++) {
 			if (getValue() instanceof FormulaExpression) {
-				tempVal = ((FormulaExpression) getValue()).eval(theCase);
-				setLastSetValue(theCase, (Double) ((NumValue) tempVal)
+				tempVal = ((FormulaExpression) getValue()).eval(session);
+				setLastSetValue(session, (Double) ((NumValue) tempVal)
 						.getValue());
 			} else if (getValue() instanceof EvaluatableAnswerNumValue) {
 				EvaluatableAnswerNumValue evaluatableValue = (EvaluatableAnswerNumValue) getValue();
 
 				// put the evaluated value to hashtable for undo
-				Double newValue = evaluatableValue.eval(theCase);
-				setLastSetValue(theCase, newValue);
+				Double newValue = evaluatableValue.eval(session);
+				setLastSetValue(session, newValue);
 				tempVal = new NumValue(newValue);
 			} else if (getValue() instanceof FormulaDateExpression) {
-				tempVal = ((FormulaDateExpression) getValue()).eval(theCase);
+				tempVal = ((FormulaDateExpression) getValue()).eval(session);
 			} else if (getValue() instanceof EvaluatableAnswerDateValue) {
 				// AnswerDate ans = new AnswerDate();
 				// ans.setQuestion(getQuestion());
@@ -92,7 +92,7 @@ public class ActionSetValue extends ActionQuestionSetter implements
 				// can not take a AnswerDate
 				//
 				// ans.setValue(evaluatableValue);
-				tempVal = new DateValue(evaluatableValue.eval(theCase)); // ans;
+				tempVal = new DateValue(evaluatableValue.eval(session)); // ans;
 			} else if (getValue() instanceof Choice) {
 				tempVal = new ChoiceValue((Choice) getValue());
 			} else {
@@ -100,9 +100,9 @@ public class ActionSetValue extends ActionQuestionSetter implements
 			}
 
 			// }
-			theCase.getBlackboard().addValueFact(
+			session.getBlackboard().addValueFact(
 					new DefaultFact(getQuestion(), tempVal, rule,
-							theCase.getPSMethodInstance(rule
+							session.getPSMethodInstance(rule
 									.getProblemsolverContext())));
 
 		}
