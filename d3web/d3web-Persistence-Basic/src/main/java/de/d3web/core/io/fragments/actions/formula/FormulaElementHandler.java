@@ -33,7 +33,7 @@ import org.w3c.dom.NodeList;
 
 import de.d3web.abstraction.formula.Count;
 import de.d3web.abstraction.formula.FormulaDate;
-import de.d3web.abstraction.formula.FormulaDateArgumentsTerm;
+import de.d3web.abstraction.formula.YearDiff;
 import de.d3web.abstraction.formula.FormulaDateElement;
 import de.d3web.abstraction.formula.FormulaDatePrimitive;
 import de.d3web.abstraction.formula.FormulaElement;
@@ -44,7 +44,6 @@ import de.d3web.abstraction.formula.Operator;
 import de.d3web.abstraction.formula.QDateWrapper;
 import de.d3web.abstraction.formula.QNumWrapper;
 import de.d3web.abstraction.formula.Today;
-import de.d3web.abstraction.formula.YearDiff;
 import de.d3web.abstraction.formula.Operator.Operation;
 import de.d3web.core.io.NoSuchFragmentHandlerException;
 import de.d3web.core.io.PersistenceManager;
@@ -111,8 +110,8 @@ public class FormulaElementHandler implements FragmentHandler {
 	public Element write(Object object, Document doc) throws IOException {
 		Element element = null;
 		PersistenceManager pm = PersistenceManager.getInstance();
-		if (object instanceof FormulaDateArgumentsTerm) {
-			FormulaDateArgumentsTerm fa = (FormulaDateArgumentsTerm) object;
+		if (object instanceof YearDiff) {
+			YearDiff fa = (YearDiff) object;
 			element = createFormulaTerm(doc, fa.getSymbol(), fa.getArg1(), fa.getArg2());
 		}
 		else if (object instanceof Operator) {
