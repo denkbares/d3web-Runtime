@@ -673,7 +673,6 @@ public class KnowledgeBaseManagement {
 		maxOrderingNumber++;
 		
 		for (TerminologyObject child : qaset.getChildren()) {
-			System.out.println(child.getName());
 			if (!qcontainerIndex.containsKey(child)) {
 				reindex(child, qcontainerIndex, maxOrderingNumber);
 			} else { 
