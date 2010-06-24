@@ -27,11 +27,9 @@ import java.util.ResourceBundle;
 
 import de.d3web.abstraction.ActionQuestionSetter;
 import de.d3web.abstraction.formula.FormulaDateElement;
-import de.d3web.abstraction.formula.FormulaDatePrimitive;
 import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.abstraction.formula.FormulaNumber;
 import de.d3web.abstraction.formula.FormulaNumberElement;
-import de.d3web.abstraction.formula.FormulaNumberPrimitive;
 import de.d3web.abstraction.formula.Operator;
 import de.d3web.abstraction.formula.QDateWrapper;
 import de.d3web.abstraction.formula.QNumWrapper;
@@ -288,29 +286,27 @@ public class XMLRenderer {
 			sb.append("</Arg2>");
 			sb.append("</FormulaTerm>");
 		}
-		else if (element instanceof FormulaNumberPrimitive) {
-			if (element instanceof FormulaNumber) {
-				FormulaNumber number = (FormulaNumber) element;
-				sb.append("<FormulaPrimitive type=\"FormulaNumber\">");
-				if (number.getValue() instanceof Double) {
-					Double value = (Double) number.getValue();
-					if (value.doubleValue() % 1 == 0) {
-						sb.append(value.intValue());
-					}
-					else {
-						sb.append(value.doubleValue());
-					}
+		else if (element instanceof FormulaNumber) {
+			FormulaNumber number = (FormulaNumber) element;
+			sb.append("<FormulaPrimitive type=\"FormulaNumber\">");
+			if (number.getValue() instanceof Double) {
+				Double value = number.getValue();
+				if (value.doubleValue() % 1 == 0) {
+					sb.append(value.intValue());
 				}
 				else {
-					sb.append("<![CDATA[" + number.getValue().toString() + "]]>");
+					sb.append(value.doubleValue());
 				}
-				sb.append("</FormulaPrimitive>");
 			}
-			else if (element instanceof QNumWrapper) {
-				sb.append("<FormulaPrimitive type=\"QNumWrapper\">");
-				sb.append(renderQASetObject(((QNumWrapper) element).getQuestion()));
-				sb.append("</FormulaPrimitive>");
+			else {
+				sb.append("<![CDATA[" + number.getValue().toString() + "]]>");
 			}
+			sb.append("</FormulaPrimitive>");
+		}
+		else if (element instanceof QNumWrapper) {
+			sb.append("<FormulaPrimitive type=\"QNumWrapper\">");
+			sb.append(renderQASetObject(((QNumWrapper) element).getQuestion()));
+			sb.append("</FormulaPrimitive>");
 		}
 		else if (element instanceof YearDiff) {
 			YearDiff diff = (YearDiff) element;
@@ -323,15 +319,14 @@ public class XMLRenderer {
 			sb.append("</Arg2>");
 			sb.append("</FormulaTerm>");
 		}
+		// TODO: Handle Count?
 		return (sb);
 	}
 
 	private static StringBuffer renderFormulaElement(FormulaDateElement element) {
 		StringBuffer sb = new StringBuffer();
-		if (element instanceof FormulaDatePrimitive) {
-			if (element instanceof QDateWrapper) {
-				sb.append(renderQASetObject(((QDateWrapper) element).getQuestion()));
-			}
+		if (element instanceof QDateWrapper) {
+			sb.append(renderQASetObject(((QDateWrapper) element).getQuestion()));
 		}
 		else if (element instanceof Today) {
 			sb.append("<FormulaToday>");

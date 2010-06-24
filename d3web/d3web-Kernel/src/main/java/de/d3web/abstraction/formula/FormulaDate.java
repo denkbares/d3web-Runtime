@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 
 /**
@@ -40,7 +41,9 @@ import de.d3web.core.session.Session;
  * 
  * @author Norman Brümmer
  */
-public class FormulaDate extends FormulaDatePrimitive {
+public class FormulaDate implements FormulaDateElement {
+
+	private final Date value;
 
 	/**
 	 * The Format, in which the dates are saved and loaded. The Format is for
@@ -61,7 +64,7 @@ public class FormulaDate extends FormulaDatePrimitive {
 	 * @param value value of this FormulaElement
 	 */
 	public FormulaDate(Date value) {
-		super(value);
+		this.value = value;
 	}
 
 	/**
@@ -70,7 +73,7 @@ public class FormulaDate extends FormulaDatePrimitive {
 	 * @return Double-value of this FormulaElement
 	 */
 	public Date eval(Session theCase) {
-		return (Date) getValue();
+		return value;
 	}
 
 	/**
@@ -78,15 +81,24 @@ public class FormulaDate extends FormulaDatePrimitive {
 	 **/
 	@Override
 	public String toString() {
-		if (getValue() == null) return "null";
-		else return "<" + format.format(getValue()) + ">";
+		if (value == null) return "null";
+		else return "<" + format.format(value) + ">";
 	}
 
 	/**
 	 * @see FormulaElement
 	 */
-	public Collection<Object> getTerminalObjects() {
-		return new LinkedList<Object>();
+	public Collection<? extends TerminologyObject> getTerminalObjects() {
+		return new LinkedList<TerminologyObject>();
+	}
+
+	/**
+	 * 
+	 * @created 24.06.2010
+	 * @return
+	 */
+	public Date getValue() {
+		return value;
 	}
 
 }

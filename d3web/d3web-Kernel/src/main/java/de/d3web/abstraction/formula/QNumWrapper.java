@@ -23,6 +23,7 @@ package de.d3web.abstraction.formula;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
@@ -35,7 +36,9 @@ import de.d3web.core.session.values.Unknown;
  * 
  * @author Christian Betz
  */
-public class QNumWrapper extends FormulaNumberPrimitive {
+public class QNumWrapper implements FormulaNumberElement {
+
+	private QuestionNum value;
 
 	/**
 	 * Creates a new FormulaTerm with null-arguments.
@@ -74,12 +77,7 @@ public class QNumWrapper extends FormulaNumberPrimitive {
 	 * @return the wrapped QuestionNum
 	 */
 	public de.d3web.core.knowledge.terminology.QuestionNum getQuestion() {
-		return (QuestionNum) value;
-	}
-
-	@Override
-	public void setValue(Object o) {
-		setQuestion((QuestionNum) o);
+		return value;
 	}
 
 	/**
@@ -92,8 +90,8 @@ public class QNumWrapper extends FormulaNumberPrimitive {
 	/**
 	 * @see FormulaElement
 	 */
-	public Collection<Object> getTerminalObjects() {
-		Collection<Object> ret = new LinkedList<Object>();
+	public Collection<? extends TerminologyObject> getTerminalObjects() {
+		Collection<QuestionNum> ret = new LinkedList<QuestionNum>();
 		ret.add(value);
 
 		return ret;

@@ -23,6 +23,7 @@ package de.d3web.abstraction.formula;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 
 /**
@@ -139,8 +140,9 @@ public class Operator implements FormulaNumberElement {
 	/**
 	 * @see FormulaElement
 	 */
-	public Collection<Object> getTerminalObjects() {
-		Collection<Object> ret = new LinkedList<Object>(getArg1().getTerminalObjects());
+	public Collection<? extends TerminologyObject> getTerminalObjects() {
+		Collection<TerminologyObject> ret = new LinkedList<TerminologyObject>(
+				getArg1().getTerminalObjects());
 		ret.addAll(getArg2().getTerminalObjects());
 
 		return ret;

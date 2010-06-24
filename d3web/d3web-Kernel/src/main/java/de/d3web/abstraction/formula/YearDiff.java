@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 
 /**
@@ -83,10 +84,10 @@ public class YearDiff implements FormulaNumberElement {
 	 * @see
 	 * de.d3web.kernel.domainModel.formula.FormulaElement#getTerminalObjects()
 	 */
-	public Collection<Object> getTerminalObjects() {
-		Collection<Object> c1 = getArg1().getTerminalObjects();
-		Collection<Object> c2 = getArg2().getTerminalObjects();
-		Collection<Object> both = new ArrayList<Object>(c1.size() + c2.size());
+	public Collection<? extends TerminologyObject> getTerminalObjects() {
+		Collection<? extends TerminologyObject> c1 = getArg1().getTerminalObjects();
+		Collection<? extends TerminologyObject> c2 = getArg2().getTerminalObjects();
+		Collection<TerminologyObject> both = new ArrayList<TerminologyObject>(c1.size() + c2.size());
 		both.addAll(c1);
 		both.addAll(c2);
 		return both;

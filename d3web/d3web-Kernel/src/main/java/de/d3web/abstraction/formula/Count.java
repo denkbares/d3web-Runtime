@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.values.Choice;
@@ -53,8 +54,8 @@ public class Count implements FormulaNumberElement {
 		this.questionMC = questionMC;
 	}
 
-	public Collection<Object> getTerminalObjects() {
-		Collection<Object> ret = new LinkedList<Object>();
+	public Collection<? extends TerminologyObject> getTerminalObjects() {
+		Collection<QuestionMC> ret = new LinkedList<QuestionMC>();
 		ret.add(questionMC);
 
 		return ret;
@@ -67,7 +68,7 @@ public class Count implements FormulaNumberElement {
 	public Double eval(Session theCase) {
 		MultipleChoiceValue value = (MultipleChoiceValue) theCase.getBlackboard().getValue(
 				getQuestionMC());
-		List<Choice> choices = (List<Choice>) value.getValue();
+		List<Choice> choices = value.asChoiceList();
 
 		// check, if AnswerNo oder AnswerUnknown is included
 		for (Choice answerChoice : choices) {

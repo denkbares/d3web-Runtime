@@ -33,17 +33,15 @@ import org.w3c.dom.NodeList;
 
 import de.d3web.abstraction.formula.Count;
 import de.d3web.abstraction.formula.FormulaDate;
-import de.d3web.abstraction.formula.YearDiff;
 import de.d3web.abstraction.formula.FormulaDateElement;
-import de.d3web.abstraction.formula.FormulaDatePrimitive;
 import de.d3web.abstraction.formula.FormulaElement;
 import de.d3web.abstraction.formula.FormulaNumber;
 import de.d3web.abstraction.formula.FormulaNumberElement;
-import de.d3web.abstraction.formula.FormulaNumberPrimitive;
 import de.d3web.abstraction.formula.Operator;
 import de.d3web.abstraction.formula.QDateWrapper;
 import de.d3web.abstraction.formula.QNumWrapper;
 import de.d3web.abstraction.formula.Today;
+import de.d3web.abstraction.formula.YearDiff;
 import de.d3web.abstraction.formula.Operator.Operation;
 import de.d3web.core.io.NoSuchFragmentHandlerException;
 import de.d3web.core.io.PersistenceManager;
@@ -178,8 +176,8 @@ public class FormulaElementHandler implements FragmentHandler {
 		return element;
 	}
 
-	private static FormulaNumberPrimitive createFormulaPrimitive(Node termNode, KnowledgeBase kb) {
-		FormulaNumberPrimitive ret = null;
+	private static FormulaNumberElement createFormulaPrimitive(Node termNode, KnowledgeBase kb) {
+		FormulaNumberElement ret = null;
 		String type = termNode.getAttributes().getNamedItem("type").getNodeValue();
 		NodeList nl = termNode.getChildNodes();
 		for (int i = 0; i < nl.getLength(); ++i) {
@@ -279,8 +277,8 @@ public class FormulaElementHandler implements FragmentHandler {
 		return ret;
 	}
 
-	private static FormulaDatePrimitive createFormulaDatePrimitive(Node termNode, KnowledgeBase kb) throws IOException {
-		FormulaDatePrimitive ret = null;
+	private static FormulaDateElement createFormulaDatePrimitive(Node termNode, KnowledgeBase kb) throws IOException {
+		FormulaDateElement ret = null;
 		String type = termNode.getAttributes().getNamedItem("type").getNodeValue();
 		NodeList nl = termNode.getChildNodes();
 		for (int i = 0; i < nl.getLength(); ++i) {

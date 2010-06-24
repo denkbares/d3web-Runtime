@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.values.DateValue;
@@ -40,7 +41,9 @@ import de.d3web.core.session.values.DateValue;
  * 
  * @author Christian Betz
  */
-public class QDateWrapper extends FormulaDatePrimitive {
+public class QDateWrapper implements FormulaDateElement {
+
+	private QuestionDate value;
 
 	/**
 	 * Creates a new FormulaTerm with null-arguments.
@@ -53,7 +56,6 @@ public class QDateWrapper extends FormulaDatePrimitive {
 	 * QNumWrapper constructor comment.
 	 */
 	public QDateWrapper(QuestionDate q) {
-		super();
 		setQuestion(q);
 	}
 
@@ -78,7 +80,7 @@ public class QDateWrapper extends FormulaDatePrimitive {
 	 * @return the wrapped QuestionNum
 	 */
 	public QuestionDate getQuestion() {
-		return (QuestionDate) value;
+		return value;
 	}
 
 	/**
@@ -91,7 +93,7 @@ public class QDateWrapper extends FormulaDatePrimitive {
 	/**
 	 * @see FormulaElement
 	 */
-	public Collection<Object> getTerminalObjects() {
+	public Collection<? extends TerminologyObject> getTerminalObjects() {
 		return Collections.singletonList(value);
 	}
 
@@ -100,8 +102,7 @@ public class QDateWrapper extends FormulaDatePrimitive {
 		return value == null ? "question:null" : value.toString();
 	}
 
-	@Override
-	public void setValue(Object o) {
-		setQuestion((QuestionDate) o);
+	public void setValue(QuestionDate o) {
+		setQuestion(o);
 	}
 }
