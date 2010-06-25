@@ -43,6 +43,8 @@ import de.d3web.core.session.blackboard.Fact;
  */
 public class StateTransition implements KnowledgeSlice {
 
+	private static final Class<PSMethodCostBenefit> PROBLEMSOLVER = PSMethodCostBenefit.class;
+
 	public static final MethodKind STATE_TRANSITION = new MethodKind("STATE_TRANSITION");
 
 	private Condition activationCondition;
@@ -88,7 +90,7 @@ public class StateTransition implements KnowledgeSlice {
 
 	@Override
 	public Class<? extends PSMethod> getProblemsolverContext() {
-		return PSMethodCostBenefit.class;
+		return PROBLEMSOLVER;
 	}
 
 	@Override
@@ -123,7 +125,7 @@ public class StateTransition implements KnowledgeSlice {
 						// PSMethodUserSelected.getInstance());
 						Fact fact = new
 								PSMethodStateTransition.StateTransitionFact(q,
-								cvs.getAnswer());
+										cvs.getAnswer());
 						theCase.getBlackboard().addValueFact(fact);
 						facts.add(fact);
 						break;
@@ -138,5 +140,36 @@ public class StateTransition implements KnowledgeSlice {
 			}
 		}
 		return facts;
+	}
+
+	/**
+	 * Returns the StateTransition of the QContainer
+	 * 
+	 * @created 25.06.2010
+	 * @param qcon QContainer
+	 * @return StateTransition of the QContainer or null if it has none
+	 */
+	public static StateTransition getStateTransition(QContainer qcon) {
+		return (StateTransition) qcon.getKnowledge(PROBLEMSOLVER, STATE_TRANSITION);
+	}
+
+	/**
+	 * Fires the state transition of the QContainer in the Session
+	 * 
+	 * @created 25.06.2010
+	 * @param qcon QContainer
+	 * @param session Session
+	 * @return List of Facts which where added during the firing of the
+	 *         StateTransition, null if there is no StateTransition for the
+	 *         QContainer
+	 */
+	public static List<Fact> fireStateTransition(QContainer qcon, Session session) {
+		StateTransition st = getStateTransition(qcon);
+		if (st != null) {
+			return st.fire(session);
+		}
+		else {
+			return null;
+		}
 	}
 }

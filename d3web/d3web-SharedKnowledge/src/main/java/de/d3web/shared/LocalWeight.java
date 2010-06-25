@@ -1,50 +1,51 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 /*
  * Created on 07.02.2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * 
+ * TODO To change the template for this generated file go to Window -
+ * Preferences - Java - Code Style - Code Templates
  */
 package de.d3web.shared;
-
-
-
 
 import java.util.Enumeration;
 import java.util.Hashtable;
 
 import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
-import de.d3web.shared.PSMethodShared;
+import de.d3web.core.session.Value;
 
 /**
  * @author heckel
  */
 public class LocalWeight implements KnowledgeSlice {
 
+	private static final MethodKind METHOD_KIND = PSMethodShared.SHARED_LOCAL_WEIGHT;
+	private static final Class<PSMethodShared> PROBLEMSOLVER = PSMethodShared.class;
 	public static double G0 = 0;
 	public static double G1 = 1;
 	public static double G2 = 2;
@@ -53,11 +54,11 @@ public class LocalWeight implements KnowledgeSlice {
 	public static double G5 = 16;
 	public static double G6 = 32;
 	public static double G7 = 64;
-	
+
 	private Question q;
 	private Solution d;
 	private Hashtable<Value, Double> values = null;
-	
+
 	/**
 	 * Weight constructor comment.
 	 */
@@ -65,85 +66,89 @@ public class LocalWeight implements KnowledgeSlice {
 		super();
 		values = new Hashtable<Value, Double>();
 	}
-	
+
 	public void setValue(Value ans, double value) {
 		values.put(ans, new Double(value));
 	}
 
-	
 	public double getValue(Value ans) {
 		Double ret = values.get(ans);
-		if (ret != null)
-		{
+		if (ret != null) {
 			return ret.doubleValue();
 		}
 		return G0;
 	}
-	
-	public void setQuestion(de.d3web.core.knowledge.terminology.Question newQuestion){
-	if (q != null) {
-		q.removeKnowledge(
-			getProblemsolverContext(),
-			this,
-			PSMethodShared.SHARED_LOCAL_WEIGHT);
+
+	public void setQuestion(de.d3web.core.knowledge.terminology.Question newQuestion) {
+		if (q != null) {
+			q.removeKnowledge(
+					getProblemsolverContext(),
+					this,
+					METHOD_KIND);
+		}
+		q = newQuestion;
+		if (newQuestion != null) {
+			q.addKnowledge(
+					getProblemsolverContext(),
+					this,
+					METHOD_KIND);
+		}
 	}
-	q = newQuestion;
-	if (newQuestion != null) {
-		q.addKnowledge(
-			getProblemsolverContext(),
-			this,
-			PSMethodShared.SHARED_LOCAL_WEIGHT);
-	}
-}
-	
-	public Question getQuestion(){
+
+	public Question getQuestion() {
 		return q;
 	}
 
-	public void setDiagnosis(de.d3web.core.knowledge.terminology.Solution newDiagnosis){
+	public void setDiagnosis(de.d3web.core.knowledge.terminology.Solution newDiagnosis) {
 		if (d != null) {
 			d.removeKnowledge(
-				getProblemsolverContext(),
-				this,
-				PSMethodShared.SHARED_LOCAL_WEIGHT);
+					getProblemsolverContext(),
+					this,
+					METHOD_KIND);
 		}
 		d = newDiagnosis;
 		if (newDiagnosis != null) {
 			q.addKnowledge(
-				getProblemsolverContext(),
-				this,
-				PSMethodShared.SHARED_LOCAL_WEIGHT);
+					getProblemsolverContext(),
+					this,
+					METHOD_KIND);
 		}
 	}
-	
-	public Solution getDiagnosis(){
+
+	public Solution getDiagnosis() {
 		return d;
 	}
-	
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.d3web.kernel.domainModel.KnowledgeSlice#getId()
 	 */
 	public java.lang.String getId() {
-		return "W"+getQuestion().getId();
+		return "W" + getQuestion().getId();
 	}
 
 	/**
-	 * Returns the class of the PSMethod in which this
-	 * KnowledgeSlice makes sense.
+	 * Returns the class of the PSMethod in which this KnowledgeSlice makes
+	 * sense.
+	 * 
 	 * @return java.lang.Class PSMethod class
 	 */
 	public Class<? extends PSMethod> getProblemsolverContext() {
-		return PSMethodShared.class;
+		return PROBLEMSOLVER;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.d3web.kernel.domainModel.KnowledgeSlice#isUsed(de.d3web.kernel.Session)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.d3web.kernel.domainModel.KnowledgeSlice#isUsed(de.d3web.kernel.Session
+	 * )
 	 */
 	public boolean isUsed(Session theCase) {
 		return true;
 	}
-	
+
 	public static double convertConstantStringToValue(String c) {
 
 		if (c.equalsIgnoreCase("G0")) {
@@ -173,6 +178,7 @@ public class LocalWeight implements KnowledgeSlice {
 
 		return 0;
 	}
+
 	public static String convertValueToConstantString(double value) {
 
 		if (value < G1) {
@@ -203,9 +209,57 @@ public class LocalWeight implements KnowledgeSlice {
 		setQuestion(null);
 		setDiagnosis(null);
 	}
-	
+
 	public Enumeration<Value> getAnswerEnumeration() {
 		return values.keys();
+	}
+
+	/**
+	 * Returns the LocalWeight of a terminology object for a given Value
+	 * 
+	 * @created 25.06.2010
+	 * @param object TerminologyObject
+	 * @param ans Value
+	 * @return LocalWeight
+	 */
+	public static double getLocalWeight(TerminologyObject object, Value ans) {
+		// TODO: Remove this after introduction of knowledge stores
+		NamedObject nob = (NamedObject) object;
+		LocalWeight lw = (LocalWeight) nob.getKnowledge(PROBLEMSOLVER, METHOD_KIND);
+		if (lw != null) {
+			return lw.getValue(ans);
+		}
+		else {
+			return G0;
+		}
+	}
+
+	/**
+	 * Sets the LocalWeight of a terminology object for a given Value
+	 * 
+	 * @created 25.06.2010
+	 * @param object TerminologyObject
+	 * @param ans Value
+	 * @param d LocalWeight
+	 */
+	public static void set(TerminologyObject object, Value ans, double d) {
+		// TODO: Remove this after introduction of knowledge stores
+		NamedObject nob = (NamedObject) object;
+		LocalWeight lw = (LocalWeight) nob.getKnowledge(PROBLEMSOLVER, METHOD_KIND);
+		if (lw == null) {
+			lw = new LocalWeight();
+			if (object instanceof Solution) {
+				lw.setDiagnosis((Solution) object);
+			}
+			else if (object instanceof Question) {
+				lw.setQuestion((Question) object);
+			}
+			else {
+				throw new IllegalArgumentException("Object " + object
+						+ " must be a question or a solution");
+			}
+		}
+		lw.setValue(ans, d);
 	}
 
 }

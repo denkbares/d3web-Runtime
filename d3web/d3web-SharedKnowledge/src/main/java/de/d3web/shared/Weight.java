@@ -1,24 +1,25 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.shared;
+
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -26,16 +27,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.shared.PSMethodShared;
+
 /**
- * Represents the weight of a symptom
- * Creation date: (03.08.2001 16:37:21)
+ * Represents the weight of a symptom Creation date: (03.08.2001 16:37:21)
+ * 
  * @author: Norman Brümmer
  */
 public class Weight implements KnowledgeSlice {
 
+	private static final Class<PSMethodShared> PROBLEMSOLVER = PSMethodShared.class;
+	private static final MethodKind METHOD_KIND = PSMethodShared.SHARED_WEIGHT;
 	public static int G0 = 0;
 	public static int G1 = 1;
 	public static int G2 = 2;
@@ -61,13 +65,13 @@ public class Weight implements KnowledgeSlice {
 	}
 
 	/**
-	 * Returns the class of the PSMethod in which this
-	 * KnowledgeSlice makes sense.
-	 * Creation date: (11.08.2001 00:39:38)
+	 * Returns the class of the PSMethod in which this KnowledgeSlice makes
+	 * sense. Creation date: (11.08.2001 00:39:38)
+	 * 
 	 * @return java.lang.Class PSMethod class
 	 */
 	public Class<? extends PSMethod> getProblemsolverContext() {
-		return PSMethodShared.class;
+		return PROBLEMSOLVER;
 	}
 
 	/**
@@ -78,8 +82,9 @@ public class Weight implements KnowledgeSlice {
 	}
 
 	/**
-	 * Insert the method's description here.
-	 * Creation date: (18.10.2001 19:10:53)
+	 * Insert the method's description here. Creation date: (18.10.2001
+	 * 19:10:53)
+	 * 
 	 * @param val de.d3web.kernel.psMethods.shared.DiagnosisWeightValue
 	 */
 	public void addDiagnosisWeightValue(DiagnosisWeightValue val) {
@@ -88,8 +93,9 @@ public class Weight implements KnowledgeSlice {
 	}
 
 	/**
-	 * Insert the method's description here.
-	 * Creation date: (18.10.2001 18:48:29)
+	 * Insert the method's description here. Creation date: (18.10.2001
+	 * 18:48:29)
+	 * 
 	 * @return int
 	 * @param c java.lang.String
 	 */
@@ -124,8 +130,9 @@ public class Weight implements KnowledgeSlice {
 	}
 
 	/**
-	 * Insert the method's description here.
-	 * Creation date: (18.10.2001 18:45:18)
+	 * Insert the method's description here. Creation date: (18.10.2001
+	 * 18:45:18)
+	 * 
 	 * @return java.lang.String
 	 * @param value int
 	 */
@@ -156,8 +163,9 @@ public class Weight implements KnowledgeSlice {
 	}
 
 	/**
-	 * Insert the method's description here.
-	 * Creation date: (18.10.2001 19:12:52)
+	 * Insert the method's description here. Creation date: (18.10.2001
+	 * 19:12:52)
+	 * 
 	 * @return java.util.List
 	 */
 	public List<DiagnosisWeightValue> getDiagnosisWeightValues() {
@@ -165,18 +173,19 @@ public class Weight implements KnowledgeSlice {
 	}
 
 	/**
-	 * Insert the method's description here.
-	 * Creation date: (18.10.2001 18:40:12)
+	 * Insert the method's description here. Creation date: (18.10.2001
+	 * 18:40:12)
+	 * 
 	 * @return java.lang.String
 	 */
 	public java.lang.String getId() {
-		return "W"+questionWeightValue.getQuestion().getId();
+		return "W" + questionWeightValue.getQuestion().getId();
 	}
 
 	/**
-	 * Returns the maximum of diagnosis-weights for the question, if such a weight exists.
-	 * if not, it returns -1
-	 * Creation date: (18.10.2001 19:14:08)
+	 * Returns the maximum of diagnosis-weights for the question, if such a
+	 * weight exists. if not, it returns -1 Creation date: (18.10.2001 19:14:08)
+	 * 
 	 * @return int
 	 * @param diagnoses java.util.Collection
 	 */
@@ -184,7 +193,7 @@ public class Weight implements KnowledgeSlice {
 		int ret = -1;
 		Iterator<Solution> iter = diagnoses.iterator();
 		while (iter.hasNext()) {
-			DiagnosisWeightValue val = (DiagnosisWeightValue) diagnoseDiagnosisWeightValueHash.get(iter.next());
+			DiagnosisWeightValue val = diagnoseDiagnosisWeightValueHash.get(iter.next());
 			if (val != null) {
 				if (val.getValue() > ret) {
 					ret = val.getValue();
@@ -196,8 +205,9 @@ public class Weight implements KnowledgeSlice {
 	}
 
 	/**
-	 * Insert the method's description here.
-	 * Creation date: (18.10.2001 19:07:16)
+	 * Insert the method's description here. Creation date: (18.10.2001
+	 * 19:07:16)
+	 * 
 	 * @return de.d3web.kernel.psMethods.shared.QuestionWeightValue
 	 */
 	public QuestionWeightValue getQuestionWeightValue() {
@@ -205,16 +215,19 @@ public class Weight implements KnowledgeSlice {
 	}
 
 	/**
-	 * Insert the method's description here.
-	 * Creation date: (18.10.2001 19:07:16)
-	 * @param newQuestionWeightValue de.d3web.kernel.psMethods.shared.QuestionWeightValue
+	 * Insert the method's description here. Creation date: (18.10.2001
+	 * 19:07:16)
+	 * 
+	 * @param newQuestionWeightValue
+	 *        de.d3web.kernel.psMethods.shared.QuestionWeightValue
 	 */
 	public void setQuestionWeightValue(QuestionWeightValue newQuestionWeightValue) {
 		questionWeightValue = newQuestionWeightValue;
-		questionWeightValue.getQuestion().addKnowledge(getProblemsolverContext(), this, PSMethodShared.SHARED_WEIGHT);
+		questionWeightValue.getQuestion().addKnowledge(getProblemsolverContext(), this, METHOD_KIND);
 	}
 
 	public void remove() {
-		getQuestionWeightValue().getQuestion().removeKnowledge(getProblemsolverContext(), this, PSMethodShared.SHARED_WEIGHT);
+		getQuestionWeightValue().getQuestion().removeKnowledge(getProblemsolverContext(), this,
+				METHOD_KIND);
 	}
 }
