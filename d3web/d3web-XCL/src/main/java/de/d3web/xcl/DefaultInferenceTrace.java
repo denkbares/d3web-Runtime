@@ -9,17 +9,18 @@ import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.session.Session;
 
 public class DefaultInferenceTrace implements InferenceTrace {
-	private Collection<XCLRelation> posRelations = new HashSet<XCLRelation>();
-	private Collection<XCLRelation> negRelations = new HashSet<XCLRelation>();
-	private Collection<XCLRelation> contrRelations = new HashSet<XCLRelation>();
-	private Collection<XCLRelation> reqPosRelations = new HashSet<XCLRelation>();
-	private Collection<XCLRelation> reqNegRelations = new HashSet<XCLRelation>();
-	private Collection<XCLRelation> suffRelations = new HashSet<XCLRelation>();
+
+	private final Collection<XCLRelation> posRelations = new HashSet<XCLRelation>();
+	private final Collection<XCLRelation> negRelations = new HashSet<XCLRelation>();
+	private final Collection<XCLRelation> contrRelations = new HashSet<XCLRelation>();
+	private final Collection<XCLRelation> reqPosRelations = new HashSet<XCLRelation>();
+	private final Collection<XCLRelation> reqNegRelations = new HashSet<XCLRelation>();
+	private final Collection<XCLRelation> suffRelations = new HashSet<XCLRelation>();
 
 	private Rating state = new Rating(Rating.State.UNCLEAR);
 
-	private double score = -1.0;
-	private double support = -1.0;
+	private double score = 0;
+	private double support = 0;
 
 	public Rating getState() {
 		return state;
@@ -73,8 +74,7 @@ public class DefaultInferenceTrace implements InferenceTrace {
 	 * Recalculates the inference trace relations for this model and the given
 	 * case.
 	 * 
-	 * @param theCase
-	 *            the current case
+	 * @param theCase the current case
 	 */
 	public void refreshRelations(XCLModel xclModel, Session session) {
 		evalRelations(session, xclModel.getRelations(), posRelations, negRelations);
