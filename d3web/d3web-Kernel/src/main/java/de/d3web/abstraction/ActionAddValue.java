@@ -25,7 +25,7 @@ import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSAction;
-import de.d3web.core.inference.Rule;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.session.Session;
@@ -200,11 +200,10 @@ public class ActionAddValue extends ActionQuestionSetter {
 	 * the specified values to those of the specified Question
 	 * 
 	 * Creation date: (15.08.2000 11:21:21)
-	 * 
 	 * @param session current case
 	 */
 	@Override
-	public void doIt(Session session, Rule rule) {
+	public void doIt(Session session, Object source, PSMethod psmethod) {
 			// getQuestion().addProReason(new QASet.Reason(rule), session);
 			Value resultValue;
 			if ((getQuestion() instanceof QuestionOC)
@@ -230,16 +229,15 @@ public class ActionAddValue extends ActionQuestionSetter {
 								getQuestion())))) {
 					Fact fact = FactFactory.createFact(getQuestion(),
 							severestAnswer,
-							this,
-							session.getPSMethodInstance(getProblemsolverContext()));
+							source, psmethod);
 					session.getBlackboard().addValueFact(fact);
 				}
 			}
 			else {
 				// else, set the resultList-values
 				session.getBlackboard().addValueFact(
-						FactFactory.createFact(getQuestion(), resultValue, rule,
-						session.getPSMethodInstance(getProblemsolverContext())));
+						FactFactory.createFact(getQuestion(), resultValue, source,
+						psmethod));
 			}
 
 	}
@@ -254,8 +252,8 @@ public class ActionAddValue extends ActionQuestionSetter {
 	 * Tries to undo the included action.
 	 */
 	@Override
-	public void undo(Session theCase, Rule rule) {
-		theCase.getBlackboard().removeValueFact(getQuestion(), rule);
+	public void undo(Session theCase, Object source, PSMethod psmethod) {
+		theCase.getBlackboard().removeValueFact(getQuestion(), source);
 	}
 
 	@Override

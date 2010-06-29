@@ -50,10 +50,10 @@ public class ActionContraIndication extends PSAction {
 	 * @param theCase current case
 	 */
 	@Override
-	public void doIt(Session session, Rule rule) {
+	public void doIt(Session session, Object source, PSMethod psmethod) {
 		// New handling of indications: Notify blackboard of indication and let the blackboard do all the work
 		for (QASet qaset : getQASets()) {
-			Fact fact = new DefaultFact(qaset, new Indication(State.CONTRA_INDICATED), this, getProblemsolver());
+			Fact fact = new DefaultFact(qaset, new Indication(State.CONTRA_INDICATED), source, getProblemsolver());
 			session.getBlackboard().addInterviewFact(fact);
 		}
 	}
@@ -96,14 +96,14 @@ public class ActionContraIndication extends PSAction {
 	 * @param theCase current case
 	 */
 	@Override
-	public void undo(Session session, Rule rule) {
+	public void undo(Session session, Object source, PSMethod psmethod) {
 		// New handling of indications: Notify blackboard of indication and let the blackboard do all the work
 		if (getQASets().size() > 1) {
 			// todo: how to create facts with more than one QASet?!
 			System.err.println("Not implemented yet.");
 		}
 		Value oldValue = session.getBlackboard().getIndication(getQASets().get(0));;
-		session.getBlackboard().removeInterviewFact(getQASets().get(0), this);
+		session.getBlackboard().removeInterviewFact(getQASets().get(0), source);
 		Value newValue = session.getBlackboard().getIndication(getQASets().get(0));
 		session.getInterview().notifyFactChange(new PropagationEntry(getQASets().get(0), 
 				oldValue, newValue));

@@ -23,6 +23,7 @@ package de.d3web.abstraction;
 import de.d3web.abstraction.formula.FormulaDateExpression;
 import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.core.inference.PSAction;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
@@ -64,7 +65,7 @@ public class ActionSetValue extends ActionQuestionSetter implements
 	 * Sets the specified value for the specified question.
 	 */
 	@Override
-	public void doIt(Session session, Rule rule) {
+	public void doIt(Session session, Object source, PSMethod psmethod) {
 		if (getValue() != null) {
 			storeActionValues(session, getValue());
 			Value tempVal;
@@ -101,9 +102,7 @@ public class ActionSetValue extends ActionQuestionSetter implements
 
 			// }
 			session.getBlackboard().addValueFact(
-					new DefaultFact(getQuestion(), tempVal, rule,
-							session.getPSMethodInstance(rule
-									.getProblemsolverContext())));
+					new DefaultFact(getQuestion(), tempVal, source, psmethod));
 
 		}
 
@@ -113,8 +112,8 @@ public class ActionSetValue extends ActionQuestionSetter implements
 	 * Tries to undo the included action.
 	 */
 	@Override
-	public void undo(Session theCase, Rule rule) {
-		theCase.getBlackboard().removeValueFact(getQuestion(), rule);
+	public void undo(Session theCase, Object source, PSMethod psmethod) {
+		theCase.getBlackboard().removeValueFact(getQuestion(), source);
 	}
 
 	@Override

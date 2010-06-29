@@ -32,9 +32,7 @@ import de.d3web.abstraction.formula.FormulaDateElement;
 import de.d3web.abstraction.formula.FormulaDateExpression;
 import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.abstraction.formula.FormulaNumberElement;
-import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.PSAction;
-import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
@@ -270,14 +268,6 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	// }
 	// else return null;
 	// }
-
-	/**
-	 * @return PSMethodQuestionSetter.class
-	 */
-	@Override
-	public Class<? extends PSMethod> getProblemsolverContext() {
-		return PSMethodAbstraction.class;
-	}
 
 	// /**
 	// * @return the AnswerOC, that shall be set by an active Rule and that is

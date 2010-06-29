@@ -47,11 +47,11 @@ public abstract class ActionNextQASet extends PSAction {
 	/**
 	 * Indicates all QASets specified by "setQASets"-Method
 	 */
-	public void doIt(Session theCase, Rule rule) {
-		doItWithContext(theCase, rule);
+	public void doIt(Session theCase, Object source, PSMethod psmethod) {
+		doItWithContext(theCase, source);
 	}
 
-	protected void doItWithContext(Session session, Rule rule) {
+	protected void doItWithContext(Session session, Object source) {
 		// New handling of indications: Notify blackboard of indication and let
 		// the blackboard do all the work
 		for (QASet qaset : getQASets()) {
@@ -97,7 +97,7 @@ public abstract class ActionNextQASet extends PSAction {
 	 * Deactivates all activated QASets
 	 */
 	@Override
-	public void undo(Session session, Rule rule) {
+	public void undo(Session session, Object source, PSMethod psmethod) {
 		// New handling of indications: Notify blackboard of indication and let
 		// the blackboard do all the work
 		for (QASet qaset : getQASets()) {

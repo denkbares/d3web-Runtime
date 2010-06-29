@@ -132,7 +132,7 @@ public class ActionTest extends TestCase {
 
 		qcon1 = new QContainer("qcon1-id");
 
-		rcomp = new Rule(null);
+		rcomp = new Rule(null, null);
 	}
 
 	public void testActionSuppressAnswer() throws Exception {

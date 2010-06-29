@@ -26,10 +26,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.abstraction.ActionAddValue;
+import de.d3web.abstraction.ActionQuestionSetter;
 import de.d3web.abstraction.ActionSetValue;
 import de.d3web.abstraction.formula.FormulaDateExpression;
 import de.d3web.abstraction.formula.FormulaExpression;
+import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.PSAction;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -39,13 +42,19 @@ import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.values.Choice;
 import de.d3web.indication.ActionClarify;
 import de.d3web.indication.ActionContraIndication;
+import de.d3web.indication.ActionIndicateTherapies;
 import de.d3web.indication.ActionIndication;
 import de.d3web.indication.ActionInstantIndication;
 import de.d3web.indication.ActionNextQASet;
 import de.d3web.indication.ActionRefine;
 import de.d3web.indication.ActionSuppressAnswer;
+import de.d3web.indication.inference.PSMethodContraIndication;
+import de.d3web.indication.inference.PSMethodNextQASet;
+import de.d3web.indication.inference.PSMethodSuppressAnswer;
+import de.d3web.indication.inference.PSMethodTherapyIndication;
 import de.d3web.scoring.ActionHeuristicPS;
 import de.d3web.scoring.Score;
+import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
  * Factory to create various rules via the appropriate Factory-methods.
@@ -83,7 +92,7 @@ public class RuleFactory {
 			Condition theCondition,
 			Condition theRuleException) {
 
-		Rule rule = createRule(theId);
+		Rule rule = new Rule(theId, PSMethodAbstraction.class);
 
 		ActionAddValue theAction = new ActionAddValue();
 		theAction.setQuestion(theQuestion);
@@ -121,7 +130,7 @@ public class RuleFactory {
 			Condition theCondition,
 			Condition theRuleException) {
 
-		Rule rule = createRule(theId);
+		Rule rule = new Rule(theId, PSMethodNextQASet.class);
 
 		ActionClarify ruleAction = new ActionClarify();
 		ruleAction.setQASets(theAction);
@@ -151,7 +160,7 @@ public class RuleFactory {
 			Condition theCondition,
 			Condition theRuleException) {
 
-		Rule rule = createRule(theId);
+		Rule rule = new Rule(theId, PSMethodContraIndication.class);
 
 		ActionContraIndication theAction = new ActionContraIndication();
 		theAction.setQASets(theQASets);
@@ -192,7 +201,7 @@ public class RuleFactory {
 	}
 
 	public static Rule createRule(String theId, PSAction theAction, Condition theCondition, Condition theException, Condition theContext) {
-		Rule rule = createRule(theId);
+		Rule rule = new Rule(theId, getContext(theAction));
 		setRuleParams(rule, theAction, theCondition, theException);
 		rule.setContext(theContext);
 		return rule;
@@ -208,7 +217,7 @@ public class RuleFactory {
 			Condition theCondition,
 			Condition theRuleException) {
 
-		Rule rule = createRule(theId);
+		Rule rule = new Rule(theId, PSMethodHeuristic.class);
 
 		ActionHeuristicPS theAction = new ActionHeuristicPS();
 		theAction.setDiagnosis(theDiagnosisAction);
@@ -258,7 +267,7 @@ public class RuleFactory {
 			Condition theCondition,
 			Condition theRuleException) {
 
-		Rule rule = createRule(theId);
+		Rule rule = new Rule(theId, PSMethodNextQASet.class);
 
 		ActionNextQASet ruleAction = new ActionIndication();
 		ruleAction.setQASets(theAction);
@@ -277,7 +286,7 @@ public class RuleFactory {
 			Condition theCondition,
 			Condition theRuleException) {
 
-		Rule rule = createRule(id);
+		Rule rule = new Rule(id, PSMethodNextQASet.class);
 		ActionNextQASet ruleAction = new ActionInstantIndication();
 		ruleAction.setQASets(theAction);
 		setRuleParams(rule, ruleAction, theCondition, theRuleException);
@@ -332,21 +341,13 @@ public class RuleFactory {
 			Condition theCondition,
 			Condition theRuleException) {
 
-		Rule rule = createRule(theId);
+		Rule rule = new Rule(theId, PSMethodNextQASet.class);
 
 		ActionRefine ruleAction = new ActionRefine();
 		ruleAction.setQASets(theAction);
 		ruleAction.setTarget(target);
 
 		setRuleParams(rule, ruleAction, theCondition, theRuleException);
-		return rule;
-	}
-
-	/**
-	 * Creates a ruleComplex with the specified ID
-	 */
-	public static Rule createRule(String theId) {
-		Rule rule = new Rule(theId);
 		return rule;
 	}
 
@@ -384,7 +385,7 @@ public class RuleFactory {
 			Condition theCondition,
 			Condition theRuleException) {
 
-		Rule rule = createRule(theId);
+		Rule rule = new Rule(theId, PSMethodAbstraction.class);
 
 		ActionSetValue theAction = new ActionSetValue();
 		theAction.setQuestion(theQuestion);
@@ -440,7 +441,7 @@ public class RuleFactory {
 			Condition theCondition,
 			Condition theRuleException) {
 
-		Rule rule = createRule(theId);
+		Rule rule = new Rule(theId, PSMethodAbstraction.class);
 
 		ActionSetValue theAction = new ActionSetValue();
 		theAction.setQuestion(theQuestion);
@@ -462,7 +463,7 @@ public class RuleFactory {
 			Condition theCondition,
 			Condition theRuleException) {
 
-		Rule rule = createRule(theId);
+		Rule rule = new Rule(theId, PSMethodAbstraction.class);
 
 		ActionSetValue theAction = new ActionSetValue();
 		theAction.setQuestion(theQuestion);
@@ -502,7 +503,7 @@ public class RuleFactory {
 			Condition theCondition,
 			Condition theRuleException) {
 
-		Rule rule = createRule(theId);
+		Rule rule = new Rule(theId, PSMethodSuppressAnswer.class);
 
 		ActionSuppressAnswer theAction = new ActionSuppressAnswer();
 		theAction.setQuestion(theQuestion);
@@ -526,6 +527,39 @@ public class RuleFactory {
 		rule.setCondition(theCondition);
 		rule.setException(theRuleException);
 
+	}
+
+	/**
+	 * Returns the Context used for creating a rule based on the action. This
+	 * only works for actions in the Kernel. This method should only be used
+	 * when it's absolutely necessary.
+	 * 
+	 * @created 29.06.2010
+	 * @param action PSAction
+	 * @return ProblemsolverContext
+	 */
+	public static Class<? extends PSMethod> getContext(PSAction action) {
+		if (action instanceof ActionContraIndication) {
+			return PSMethodContraIndication.class;
+		}
+		else if (action instanceof ActionHeuristicPS) {
+			return PSMethodHeuristic.class;
+		}
+		else if (action instanceof ActionIndicateTherapies) {
+			return PSMethodTherapyIndication.class;
+		}
+		else if (action instanceof ActionNextQASet) {
+			return PSMethodNextQASet.class;
+		}
+		else if (action instanceof ActionQuestionSetter) {
+			return PSMethodAbstraction.class;
+		}
+		else if (action instanceof ActionSuppressAnswer) {
+			return PSMethodSuppressAnswer.class;
+		}
+		else {
+			throw new IllegalArgumentException("Action " + action + " is not known to rule factory");
+		}
 	}
 
 }

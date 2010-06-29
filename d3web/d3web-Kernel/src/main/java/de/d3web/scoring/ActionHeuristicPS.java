@@ -82,10 +82,9 @@ public class ActionHeuristicPS extends PSAction {
 	 * Executes the included action.
 	 */
 	@Override
-	public void doIt(Session theCase, Rule rule) {
+	public void doIt(Session theCase, Object source, PSMethod psmethod) {
 		theCase.getBlackboard().addValueFact(
-				new DefaultFact(diagnosis, new HeuristicRating(getScore()), rule,
-				theCase.getPSMethodInstance(getProblemsolverContext())));
+				new DefaultFact(diagnosis, new HeuristicRating(getScore()), source, psmethod));
 	}
 
 	/**
@@ -93,14 +92,6 @@ public class ActionHeuristicPS extends PSAction {
 	 */
 	public Solution getDiagnosis() {
 		return diagnosis;
-	}
-
-	/**
-	 * @return PSMethosHeuristic.class
-	 */
-	@Override
-	public Class<? extends PSMethod> getProblemsolverContext() {
-		return PSMethodHeuristic.class;
 	}
 
 	/**
@@ -130,8 +121,8 @@ public class ActionHeuristicPS extends PSAction {
 	 * Tries to undo the included action.
 	 */
 	@Override
-	public void undo(Session theCase, Rule rule) {
-		theCase.getBlackboard().removeValueFact(diagnosis, rule);
+	public void undo(Session theCase, Object source, PSMethod psmethod) {
+		theCase.getBlackboard().removeValueFact(diagnosis, source);
 		// nothing to do, the fact created in doIt will be automatically deleted
 		// from blackboard
 	}

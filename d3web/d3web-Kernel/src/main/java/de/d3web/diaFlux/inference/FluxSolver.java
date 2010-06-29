@@ -334,8 +334,8 @@ public class FluxSolver implements PSMethod {
 
 	private void doAction(Session theCase, PSAction action) {
 		log("Starting action: " + action);
-		// TODO: HOTFIX: added rule
-		action.doIt(theCase, new Rule("bla"));
+		// TODO: needs check by hatko
+		action.doIt(theCase, this, this);
 	}
 
 	/**
@@ -512,7 +512,8 @@ public class FluxSolver implements PSMethod {
 
 	private void undoAction(Session theCase, PSAction action) {
 		log("Undoing action: " + action);
-		action.undo(theCase, null);
+		// TODO: needs check by hatko
+		action.undo(theCase, this, this);
 	}
 
 	private void log(String message) {

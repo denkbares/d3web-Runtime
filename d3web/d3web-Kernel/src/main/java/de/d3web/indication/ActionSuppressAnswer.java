@@ -57,7 +57,7 @@ public class ActionSuppressAnswer extends PSAction {
 	 * @param theCase current case
 	 */
 	@Override
-	public void doIt(Session theCase, Rule rule) {
+	public void doIt(Session theCase, Object source, PSMethod psmethod) {
 		// TODO: suppress actions are not working currently
 //		((CaseQuestion) theCase.getCaseObject(getQuestion())).addRuleSuppress(
 //			rule);
@@ -141,7 +141,7 @@ public class ActionSuppressAnswer extends PSAction {
 	 * @param theCase current case
 	 */
 	@Override
-	public void undo(Session theCase, Rule rule) {
+	public void undo(Session theCase, Object source, PSMethod psmethod) {
 //		(
 //			(CaseQuestion) theCase.getCaseObject(
 //				getQuestion())).removeRuleSuppress(rule);

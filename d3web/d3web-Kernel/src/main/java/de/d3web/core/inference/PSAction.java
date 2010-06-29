@@ -26,7 +26,7 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.Session;
 
 /**
- * Abstract class to describe actions executed by rules,
+ * Abstract class to describe actions executed by a given source,
  * when their conditions are true.
  * @author Joachim Baumeister
  */
@@ -34,8 +34,11 @@ public abstract class PSAction implements Cloneable {
 	
 	/**
 	 * Executes the included action.
+	 * @param theCase the Case
+	 * @param source the object executing the action 
+	 * @param psmethod the psmethod of the source
 	 */
-	public abstract void doIt(de.d3web.core.session.Session theCase, Rule rule);
+	public abstract void doIt(Session theCase, Object source, PSMethod psmethod);
 
 	/**
 	 * @return all objects participating on the action.<BR>
@@ -45,7 +48,7 @@ public abstract class PSAction implements Cloneable {
 	public abstract List<? extends NamedObject> getTerminalObjects();
 
 
-	public abstract Class<? extends PSMethod> getProblemsolverContext();
+//	public abstract Class<? extends PSMethod> getProblemsolverContext();
 
 	/**
 	 * Checks if any action value (e.g. terminal objects of a formula) have
@@ -59,8 +62,9 @@ public abstract class PSAction implements Cloneable {
 	
 	/**
 	 * Tries to undo the included action.
+	 * @param psmethod psmethod the psmethod of the source
 	 */
-	public abstract void undo(de.d3web.core.session.Session theCase, Rule rule);
+	public abstract void undo(Session theCase, Object source, PSMethod psmethod);
 	
 	/**
 	 * Returns a clone of this RuleAction.<p>

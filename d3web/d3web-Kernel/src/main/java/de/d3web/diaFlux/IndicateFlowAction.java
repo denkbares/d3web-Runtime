@@ -45,7 +45,6 @@ public class IndicateFlowAction extends PSAction {
 	private final String startNodeName;
 
 	public IndicateFlowAction(String flow, String node) {
-		super();
 		this.flowName = flow;
 		this.startNodeName = node;
 	}
@@ -56,14 +55,14 @@ public class IndicateFlowAction extends PSAction {
 	}
 
 	@Override
-	public void doIt(Session theCase, Rule rule) {
+	public void doIt(Session theCase, Object source, PSMethod psmethod) {
 		
 		
 		log("Indicating Startnode '"  + startNodeName +"' of flow '" + flowName + "'.", Level.FINE);
 		
 		StartNode startNode = findStartNode(theCase);
 		
-		FluxSolver.getInstance().indicateFlow(rule, startNode, theCase);
+		FluxSolver.getInstance().indicateFlow((Rule) source, startNode, theCase);
 
 	}
 	
@@ -93,18 +92,13 @@ public class IndicateFlowAction extends PSAction {
 		Logger.getLogger(getClass().getName()).log(level, message);
 	}
 
-	@Override
-	public Class<? extends PSMethod> getProblemsolverContext() {
-		return FluxSolver.class;
-	}
-
 	@Override 
 	public List<? extends NamedObject> getTerminalObjects() {
 		return new ArrayList<NamedObject>(0);
 	}
 
 	@Override
-	public void undo(Session theCase, Rule rule) {
+	public void undo(Session theCase, Object source, PSMethod psmethod) {
 		
 		
 		

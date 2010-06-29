@@ -50,13 +50,8 @@ public class NoopAction extends PSAction {
 	}
 
 	@Override
-	public void doIt(Session theCase, Rule rule) {
+	public void doIt(Session theCase, Object source, PSMethod psmethod) {
 
-	}
-
-	@Override
-	public Class<? extends PSMethod> getProblemsolverContext() {
-		return FluxSolver.class;
 	}
 
 	@Override
@@ -65,7 +60,7 @@ public class NoopAction extends PSAction {
 	}
 
 	@Override
-	public void undo(Session theCase, Rule rule) {
+	public void undo(Session theCase, Object source, PSMethod psmethod) {
 
 	}
 

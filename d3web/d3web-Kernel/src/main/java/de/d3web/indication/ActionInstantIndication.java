@@ -22,6 +22,7 @@ package de.d3web.indication;
 
 import java.util.ArrayList;
 
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -57,8 +58,8 @@ public class ActionInstantIndication extends ActionIndication {
 	}
 	
 	@Override
-	public void doIt(Session theCase, Rule rule) {
-		doItWithContext(theCase, rule);
+	public void doIt(Session theCase, Object source, PSMethod psmethod) {
+		doItWithContext(theCase, source);
 	}
 
 }

@@ -68,7 +68,7 @@ public class ActionIndicateTherapies extends PSAction {
 	 * Executes the included action.
 	 */
 	@Override
-	public void doIt(Session theCase, Rule rule) {
+	public void doIt(Session theCase, Object source, PSMethod psmethod) {
 		//
 		//		DiagnosisScore resultDS =
 		//			getDiagnosis().getScore(theCase, getProblemsolverContext()).add(
@@ -94,7 +94,7 @@ public class ActionIndicateTherapies extends PSAction {
 	 * Tries to undo the included action.
 	 */
 	@Override
-	public void undo(Session theCase, Rule rule) {
+	public void undo(Session theCase, Object source, PSMethod psmethod) {
 		//		DiagnosisScore resultDS = null;
 		//		if (getScore().equals(Score.N7)) {
 		//			Iterator iter =

@@ -1,163 +1,172 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.core.inference;
+
 import java.util.List;
 
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
-import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseRuleComplex;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.scoring.inference.PSMethodHeuristic;
+
 /**
  * Abstract super class for all rules. <BR>
- * It stores the condition, the check routine and if it has fired or not.
- * The action of a rule is specified by the extensions of RuleComplex.
- * Additionally it is possible to store an exception, when this rule must not fire.
+ * It stores the condition, the check routine and if it has fired or not. The
+ * action of a rule is specified by the extensions of RuleComplex. Additionally
+ * it is possible to store an exception, when this rule must not fire.
+ * 
  * @author Michael Wolber, joba
  */
 public class Rule implements CaseObjectSource {
 
 	private final String id;
-	
+
 	/**
 	 * Flag indicates, if the rule is activated.
 	 */
 	private boolean active = true;
-	
+
 	/**
 	 * contains a comment for this rule, extract later into e.g. properties
 	 */
 	private String comment;
-	
+
 	/**
-	  * A condition which must be true, if rule should fire (obligatory).
-	  */
+	 * A condition which must be true, if rule should fire (obligatory).
+	 */
 	protected Condition condition;
 
 	/**
-	  * A condition that must be false or undefined, if
-	  * rule should fire (optional).
+	 * A condition that must be false or undefined, if rule should fire
+	 * (optional).
 	 */
 	protected Condition exception;
 
 	/**
-	  * A condition which contains CondDState(diagnosis, ESTABLISHED)
-	  * to formulate a context of established diagnoses in which the
-	  * rule is able to fire. If specified diagnoses are not established,
-	  * then rule must not fire.
+	 * A condition which contains CondDState(diagnosis, ESTABLISHED) to
+	 * formulate a context of established diagnoses in which the rule is able to
+	 * fire. If specified diagnoses are not established, then rule must not
+	 * fire.
 	 */
 	protected Condition diagnosisContext;
 
 	private Class<? extends PSMethod> problemsolverContext;
 
 	/**
-	  * The specified action the rule activates, if <it>condition</it> is true
-	  *	,<it>exception</it> is false/undefined and <it>diagnosisContext</it> is
-	  *	true/undefined.
+	 * The specified action the rule activates, if <it>condition</it> is true
+	 * ,<it>exception</it> is false/undefined and <it>diagnosisContext</it> is
+	 * true/undefined.
 	 */
 	private PSAction ruleAction;
 
-	/**
-	  * Creates a new rule. The following properties have to be
-	  * setted by hand:
-	  * <LI> condition
-	  * <LI> exception (optional)
-	  * @see IDObject
-	  */
-	public Rule(String id) {
+	public Rule(String id, Class<? extends PSMethod> context) {
 		this.id = id;
+		this.problemsolverContext = context;
 	}
-	
+
 	public String getId() {
 		return id;
 	}
-	
+
 	/**
-	  * Checks if the rule is able to fire in context of the values of
-	  * the specified case.
-	  * In detail it evaluates the condition, which must be true and
-	  * <OL>
-	  * <LI>  if available - checks the exception not to be true.
-	  * <LI>  if available - checks the diagnosis context to be true
-	  * </OL>
-	  */
+	 * Checks if the rule is able to fire in context of the values of the
+	 * specified case. In detail it evaluates the condition, which must be true
+	 * and
+	 * <OL>
+	 * <LI>if available - checks the exception not to be true.
+	 * <LI>if available - checks the diagnosis context to be true
+	 * </OL>
+	 */
 	public boolean canFire(Session theCase) throws UnknownAnswerException {
 		try {
 			/* if an exception is available and it is true, then do not fire! */
 			if ((getException() != null)
-				&& (getException().eval(theCase) == true)) {
+					&& (getException().eval(theCase) == true)) {
 				return false;
 			}
 
-		} catch (NoAnswerException ex) {
-			/* The exception could not be testet --> just go on and treat it like there is no exception */
+		}
+		catch (NoAnswerException ex) {
+			/*
+			 * The exception could not be testet --> just go on and treat it
+			 * like there is no exception
+			 */
 			// D3WebCase.trace("Exception contained unknown term ");
-		} catch (UnknownAnswerException uex) {
-			/* The exception could not be testet --> just go on and treat it like there is no exception */
+		}
+		catch (UnknownAnswerException uex) {
+			/*
+			 * The exception could not be testet --> just go on and treat it
+			 * like there is no exception
+			 */
 		}
 
 		try {
-			/* if a diagnosis context is available and it is false, then do not fire! */
+			/*
+			 * if a diagnosis context is available and it is false, then do not
+			 * fire!
+			 */
 			if ((getContext() != null)
-				&& (getContext().eval(theCase) == false)) {
+					&& (getContext().eval(theCase) == false)) {
 				return false;
 			}
-		} catch (NoAnswerException e) {
+		}
+		catch (NoAnswerException e) {
 			return false;
 		}
 
 		try {
 			return getCondition().eval(theCase);
-		} catch (NoAnswerException ex) {
-			/* the condition could not be tested
-			--> return false
-			*/
+		}
+		catch (NoAnswerException ex) {
+			/*
+			 * the condition could not be tested --> return false
+			 */
 			// D3WebCase.trace("Condition contained unknown term ");
 			return false;
 		}
 	}
 
 	/**
-	  * Buawa: This method checks a lot:<BR>
-	  * is this rule able to fire? (check condition)
-	  * If it is able to fire the rule executes the action part.<BR>
-	  *
-	  * Different from rules which fire to diagnosis, this check-method does not need to check whether the
-	  * rule already has fired - since the value is not accumulative.
-	  * It is instead an error to do so - since the action of the rule might evaluate to another value when the
-	  * source values change.
-	  * 
-	  * If it has fired but is now not able to fire (cause the
-	  * conditions are now not fulfilled) the action's backtrack mechanism
-	  * is executed.
-	  * 
-	  * If the rule has already fired, can fire AND the depending Action is a ActionQuestionSetter whose
-	  * elementary values have changed (e.g. terminals in a formula) it will be undone and fired again,
-	  * so that the e.g. depending formula will be recalculated.
-	  */
+	 * Buawa: This method checks a lot:<BR>
+	 * is this rule able to fire? (check condition) If it is able to fire the
+	 * rule executes the action part.<BR>
+	 * 
+	 * Different from rules which fire to diagnosis, this check-method does not
+	 * need to check whether the rule already has fired - since the value is not
+	 * accumulative. It is instead an error to do so - since the action of the
+	 * rule might evaluate to another value when the source values change.
+	 * 
+	 * If it has fired but is now not able to fire (cause the conditions are now
+	 * not fulfilled) the action's backtrack mechanism is executed.
+	 * 
+	 * If the rule has already fired, can fire AND the depending Action is a
+	 * ActionQuestionSetter whose elementary values have changed (e.g. terminals
+	 * in a formula) it will be undone and fired again, so that the e.g.
+	 * depending formula will be recalculated.
+	 */
 	public void check(Session theCase) {
 		// should we execute the rule action ???
 		boolean EXECUTE_ACTION = false;
@@ -169,38 +178,40 @@ public class Rule implements CaseObjectSource {
 			boolean canFire = canFire(theCase);
 
 			// ... do nothing, if not active
-			if(!active) {
+			if (!active) {
 				/*
-				if(hasFired) {
-					undo(theCase);
-				}*/
+				 * if(hasFired) { undo(theCase); }
+				 */
 				return;
 			}
 
-			if (!hasFired && canFire)
-				EXECUTE_ACTION = true;
+			if (!hasFired && canFire) EXECUTE_ACTION = true;
 
-			if (hasFired && !canFire)
-				UNDO_ACTION = true;
+			if (hasFired && !canFire) UNDO_ACTION = true;
 
-			// if the action is a question setter action, changes in depending values (e.g. elements of a formula)
-			// will be noticed and stored in the boolean "isQuestionSetterActionWithChangedValues"
+			// if the action is a question setter action, changes in depending
+			// values (e.g. elements of a formula)
+			// will be noticed and stored in the boolean
+			// "isQuestionSetterActionWithChangedValues"
 			boolean isQuestionSetterActionWithChangedValues =
-				getAction().hasChangedValue(theCase);
-			// if this is a multipleFire-rule that has fired AND can fire again AND any depending value has
+					getAction().hasChangedValue(theCase);
+			// if this is a multipleFire-rule that has fired AND can fire again
+			// AND any depending value has
 			// changed, its action will be undone and executed again.
-			// This change fixes the "fire-undo-fire-bug" (when a question gets the same
-			// value several times (see MQDialogController)) and some problems with the "cycle-check".
+			// This change fixes the "fire-undo-fire-bug" (when a question gets
+			// the same
+			// value several times (see MQDialogController)) and some problems
+			// with the "cycle-check".
 			if (hasFired
-				&& canFire
-				&& isQuestionSetterActionWithChangedValues) {
+					&& canFire
+					&& isQuestionSetterActionWithChangedValues) {
 				UNDO_ACTION = true;
 				EXECUTE_ACTION = true;
 			}
 
-		} catch (UnknownAnswerException ex) {
-			if (hasFired(theCase))
-				UNDO_ACTION = true;
+		}
+		catch (UnknownAnswerException ex) {
+			if (hasFired(theCase)) UNDO_ACTION = true;
 		}
 
 		if (UNDO_ACTION) {
@@ -217,13 +228,13 @@ public class Rule implements CaseObjectSource {
 	}
 
 	/**
-	  * Executes the action of the rule.
-	  */
+	 * Executes the action of the rule.
+	 */
 	public void doIt(Session theCase) {
 		setFired(true, theCase);
-		//theCase.trace("  <<RULE FIRE>> " + getId());
+		// theCase.trace("  <<RULE FIRE>> " + getId());
 		if (getAction() != null) {
-			getAction().doIt(theCase, this);
+			getAction().doIt(theCase, this, theCase.getPSMethodInstance(getProblemsolverContext()));
 		}
 
 	}
@@ -240,12 +251,12 @@ public class Rule implements CaseObjectSource {
 	}
 
 	/**
-	 * @return the specified <it>diagnosis context</it>. If not defined
-	 * this method returns null. <BR>
-	 * A diagnosis context is a condition which contains CondDState(diagnosis, ESTABLISHED)
-	 * to formulate a context of established diagnoses in which the
-	 * rule is able to fire. If specified diagnoses are not established,
-	 * then rule must not fire.
+	 * @return the specified <it>diagnosis context</it>. If not defined this
+	 *         method returns null. <BR>
+	 *         A diagnosis context is a condition which contains
+	 *         CondDState(diagnosis, ESTABLISHED) to formulate a context of
+	 *         established diagnoses in which the rule is able to fire. If
+	 *         specified diagnoses are not established, then rule must not fire.
 	 */
 	public Condition getContext() {
 		return diagnosisContext;
@@ -259,27 +270,19 @@ public class Rule implements CaseObjectSource {
 	}
 
 	public Class<? extends PSMethod> getProblemsolverContext() {
-		if ((problemsolverContext == null) && (getAction() != null))
-			return getAction().getProblemsolverContext();
-		else
-			/*
-			 * joba: this else-brach should be deleted, when
-			 * rule-action-refactoring is finished
-			 */
-			return problemsolverContext;
+		return problemsolverContext;
 	}
 
 	/**
-	  * Simply checks if the rule has already been fired in
-	  * context of the specified user case.
-	  */
+	 * Simply checks if the rule has already been fired in context of the
+	 * specified user case.
+	 */
 	public boolean hasFired(Session theCase) {
 		return ((CaseRuleComplex) theCase.getCaseObject(this)).hasFired();
 	}
 
 	/**
-	 * Checks if the rule has been fired
-	 * (like hasFired()).
+	 * Checks if the rule has been fired (like hasFired()).
 	 */
 	public boolean isUsed(Session theCase) {
 		return hasFired(theCase);
@@ -291,37 +294,30 @@ public class Rule implements CaseObjectSource {
 	}
 
 	/**
-	 * Remove entries of the old action from the
-	 * named objects participating in the old
-	 * rule action, and insert rule into
-	 * the new action objects.
-	 * <BR>
-	 * If the rule action changes, we also have to
-	 * change the references for the condition
-	 * entries (since the knowledge map key changes
-	 * for them as well) and
-	 * diagnosisContext, rule exceptions.
+	 * Remove entries of the old action from the named objects participating in
+	 * the old rule action, and insert rule into the new action objects. <BR>
+	 * If the rule action changes, we also have to change the references for the
+	 * condition entries (since the knowledge map key changes for them as well)
+	 * and diagnosisContext, rule exceptions.
 	 * */
 	protected void updateActionReferences(
-		PSAction oldAction,
-		PSAction newAction) {
+			PSAction oldAction,
+			PSAction newAction) {
 		if ((oldAction != null)
-			&& (oldAction.getTerminalObjects() != null)
-			&& (oldAction.getProblemsolverContext() != null)) {
+				&& (oldAction.getTerminalObjects() != null)) {
 			removeFrom(
-				this,
-				oldAction.getTerminalObjects(),
-				oldAction.getProblemsolverContext(),
-				MethodKind.BACKWARD);
+					this,
+					oldAction.getTerminalObjects(),
+					getProblemsolverContext(),
+					MethodKind.BACKWARD);
 		}
 		if ((newAction != null)
-			&& (newAction.getTerminalObjects() != null)
-			&& (newAction.getProblemsolverContext() != null)) {
+				&& (newAction.getTerminalObjects() != null)) {
 			insertInto(
-				this,
-				newAction.getTerminalObjects(),
-				newAction.getProblemsolverContext(),
-				MethodKind.BACKWARD);
+					this,
+					newAction.getTerminalObjects(),
+					getProblemsolverContext(),
+					MethodKind.BACKWARD);
 
 		}
 		updateConditionTerminals(oldAction, newAction, getCondition());
@@ -330,44 +326,47 @@ public class Rule implements CaseObjectSource {
 	}
 
 	/**
-	 * Remove terminal objects of specified condition from the old action
-	 * and insert them into the specified new action.
+	 * Remove terminal objects of specified condition from the old action and
+	 * insert them into the specified new action.
 	 * */
 	protected void updateConditionTerminals(
-		PSAction oldAction,
-		PSAction newAction,
-		Condition condi) {
+			PSAction oldAction,
+			PSAction newAction,
+			Condition condi) {
 		if (condi != null) {
 			if (oldAction != null) {
 				removeFrom(
-					this,
-					condi.getTerminalObjects(),
-					oldAction.getProblemsolverContext(),
-					MethodKind.FORWARD);
+						this,
+						condi.getTerminalObjects(),
+						getProblemsolverContext(),
+						MethodKind.FORWARD);
 			}
 			if (newAction != null) {
 				insertInto(
-					this,
-					condi.getTerminalObjects(),
-					newAction.getProblemsolverContext(),
-					MethodKind.FORWARD);
+						this,
+						condi.getTerminalObjects(),
+						getProblemsolverContext(),
+						MethodKind.FORWARD);
 			}
 		}
 	}
 
 	/**
-	 * Removes the specified rule from the knowledge map of the specified objects.
-	 * @param namedObjects list of named objects, in which the rule should be removed
+	 * Removes the specified rule from the knowledge map of the specified
+	 * objects.
+	 * 
+	 * @param namedObjects list of named objects, in which the rule should be
+	 *        removed
 	 * @param psContext key for the specified knowledge map
 	 * @param kind key for the specified knowledge map
 	 * */
 	public static void removeFrom(
-		Rule r,
-		List<? extends NamedObject> namedObjects,
-		Class<? extends PSMethod> psContext,
-		MethodKind kind) {
+			Rule r,
+			List<? extends NamedObject> namedObjects,
+			Class<? extends PSMethod> psContext,
+			MethodKind kind) {
 		if (namedObjects != null) {
-			for (NamedObject nob: namedObjects) {
+			for (NamedObject nob : namedObjects) {
 				removeFrom(r, psContext, kind, nob);
 			}
 		}
@@ -375,6 +374,7 @@ public class Rule implements CaseObjectSource {
 
 	/**
 	 * Removes the specified rule from the knowledge of the specified object
+	 * 
 	 * @param r specified rule
 	 * @param psContext Problemsolver
 	 * @param kind Methodkind
@@ -383,7 +383,7 @@ public class Rule implements CaseObjectSource {
 	public static void removeFrom(Rule r, Class<? extends PSMethod> psContext, MethodKind kind, NamedObject nob) {
 		if (nob != null) {
 			KnowledgeSlice knowledge = nob.getKnowledge(psContext, kind);
-			if (knowledge!= null) {
+			if (knowledge != null) {
 				RuleSet rs = (RuleSet) knowledge;
 				rs.removeRule(r);
 				if (rs.isEmpty()) {
@@ -392,22 +392,22 @@ public class Rule implements CaseObjectSource {
 			}
 		}
 	}
-	
-	
 
 	/**
 	 * Adds the specified rule to the knowledge map of the specified objects.
-	 * @param namedObjects list of named objects, in which the rule should be added
+	 * 
+	 * @param namedObjects list of named objects, in which the rule should be
+	 *        added
 	 * @param psContext key for the specified knowledge map
 	 * @param kind key for the specified knowledge map
 	 * */
 	public static void insertInto(
-		Rule r,
-		List<? extends NamedObject> namedObjects,
-		Class<? extends PSMethod> psContext,
-		MethodKind kind) {
+			Rule r,
+			List<? extends NamedObject> namedObjects,
+			Class<? extends PSMethod> psContext,
+			MethodKind kind) {
 		if (namedObjects != null) {
-			for (NamedObject nob: namedObjects) {
+			for (NamedObject nob : namedObjects) {
 				insertInto(r, psContext, kind, nob);
 			}
 		}
@@ -415,18 +415,20 @@ public class Rule implements CaseObjectSource {
 
 	/**
 	 * Adds the specified rule to the knowledge map of the specified objects.
+	 * 
 	 * @param r specified rule
 	 * @param psContext Problemsolver
 	 * @param kind Methodkind
 	 * @param nob specified Object
 	 */
 	public static void insertInto(Rule r, Class<? extends PSMethod> psContext, MethodKind kind, NamedObject nob) {
-		if (nob!=null) {
+		if (nob != null) {
 			KnowledgeSlice knowledge = nob.getKnowledge(psContext, kind);
-			if (knowledge!= null) {
+			if (knowledge != null) {
 				RuleSet rs = (RuleSet) knowledge;
 				rs.addRule(r);
-			} else {
+			}
+			else {
 				RuleSet rs = new RuleSet(psContext);
 				rs.addRule(r);
 				nob.addKnowledge(psContext, rs, kind);
@@ -435,51 +437,47 @@ public class Rule implements CaseObjectSource {
 	}
 
 	/**
-	 * Sets the condtion which must be true, so that the rule can fire.
-	 * This Method also inserts this instance as knowledge (backward/forward)
-	 * into the involved objects contained in the condition.
+	 * Sets the condtion which must be true, so that the rule can fire. This
+	 * Method also inserts this instance as knowledge (backward/forward) into
+	 * the involved objects contained in the condition.
 	 */
 	public void setCondition(
-		de.d3web.core.inference.condition.Condition newCondition) {
+			de.d3web.core.inference.condition.Condition newCondition) {
 
 		/* check, if there are already some conditions */
-		if ((getCondition() != null) && (getAction() != null))
-			removeFrom(
+		if ((getCondition() != null) && (getAction() != null)) removeFrom(
 				this,
 				getCondition().getTerminalObjects(),
-				getAction().getProblemsolverContext(),
+				getProblemsolverContext(),
 				MethodKind.FORWARD);
-		//removeRuleFromObjects(getCondition().getTerminalObjects());
+		// removeRuleFromObjects(getCondition().getTerminalObjects());
 
 		condition = newCondition;
-		if ((getCondition() != null) && (getAction() != null))
-			insertInto(
+		if ((getCondition() != null) && (getAction() != null)) insertInto(
 				this,
 				getCondition().getTerminalObjects(),
-				getAction().getProblemsolverContext(),
+				getProblemsolverContext(),
 				MethodKind.FORWARD);
-		//insertRuleIntoObjects(getCondition().getTerminalObjects());
+		// insertRuleIntoObjects(getCondition().getTerminalObjects());
 	}
 
 	/**
 	 * Sets the specified <it>diagnosis context</it>. <BR>
-	 * Diagnosis context is a  condition which contains CondDState(diagnosis, ESTABLISHED)
-	 * to formulate a context of established diagnoses in which the
-	 * rule is able to fire. If specified diagnoses are not established,
-	 * then rule must not fire. For checking the state of the diagnosis, the
+	 * Diagnosis context is a condition which contains CondDState(diagnosis,
+	 * ESTABLISHED) to formulate a context of established diagnoses in which the
+	 * rule is able to fire. If specified diagnoses are not established, then
+	 * rule must not fire. For checking the state of the diagnosis, the
 	 * heuristic problem solver is used.
 	 */
 	public void setContext(Condition newDiagnosisContext) {
 
 		/* check, if there are already some conditions */
-		if (getContext() != null)
-			removeRuleFromObjects(
+		if (getContext() != null) removeRuleFromObjects(
 				getContext().getTerminalObjects(),
 				PSMethodHeuristic.class);
 
 		diagnosisContext = newDiagnosisContext;
-		if (getContext() != null)
-			insertRuleIntoObjects(
+		if (getContext() != null) insertRuleIntoObjects(
 				getContext().getTerminalObjects(),
 				PSMethodHeuristic.class);
 
@@ -492,6 +490,7 @@ public class Rule implements CaseObjectSource {
 	private void insertRuleIntoObjects(List<? extends NamedObject> objects) {
 		insertRuleIntoObjects(objects, getProblemsolverContext());
 	}
+
 	private void removeRuleFromObjects(List<? extends NamedObject> objects, Class<? extends PSMethod> context) {
 		removeFrom(this, objects, context, MethodKind.FORWARD);
 	}
@@ -504,20 +503,18 @@ public class Rule implements CaseObjectSource {
 	 * Sets exception when this rule must not fire.
 	 */
 	public void setException(
-		de.d3web.core.inference.condition.Condition newException) {
+			de.d3web.core.inference.condition.Condition newException) {
 		/* check, if there are already some conditions */
-		if (getException() != null)
-			removeRuleFromObjects(getException().getTerminalObjects());
+		if (getException() != null) removeRuleFromObjects(getException().getTerminalObjects());
 
 		exception = newException;
-		if (getException() != null)
-			insertRuleIntoObjects(getException().getTerminalObjects());
+		if (getException() != null) insertRuleIntoObjects(getException().getTerminalObjects());
 	}
 
 	/**
-	  * Sets the state of the rule, if it has fired or not
-	  * in context of the specified userCase.
-	  */
+	 * Sets the state of the rule, if it has fired or not in context of the
+	 * specified userCase.
+	 */
 	protected void setFired(boolean newFired, Session theCase) {
 		((CaseRuleComplex) theCase.getCaseObject(this)).setFired(newFired);
 	}
@@ -527,77 +524,63 @@ public class Rule implements CaseObjectSource {
 	}
 
 	/**
-	  * Executes the backtracking mechanism of the
-	  * rule's action and sets the rule state to "not fired".
-	  */
+	 * Executes the backtracking mechanism of the rule's action and sets the
+	 * rule state to "not fired".
+	 */
 	public void undo(Session theCase) {
 		setFired(false, theCase);
-		//theCase.trace("  <<RULE UNDO>> " + getId());
+		// theCase.trace("  <<RULE UNDO>> " + getId());
 		if (getAction() != null) {
-			getAction().undo(theCase, this);
+			getAction().undo(theCase, this, theCase.getPSMethodInstance(getProblemsolverContext()));
 		}
 	}
 
 	/**
-	  * Gives a description of the rule and the state of the
-	  * rule (fired or not).
-	  */
+	 * Gives a description of the rule and the state of the rule (fired or not).
+	 */
 	public String verbalize(Session theCase) {
 		return toString() + "\n fired: " + hasFired(theCase);
 	}
-    
-    @Override
+
+	@Override
 	public boolean equals(Object o) {
-        if (o == null)
-            return false;
-        else if (this == o)
-            return true;
-        if (o instanceof Rule) {
-            Rule r = (Rule)o;
-            boolean eq = super.equals(r);
-            if (eq == false)
-                return false;
-            eq = eq && equalConditions(getCondition(), r.getCondition());
-            eq = eq && equalConditions(getException(), r.getException());
-            eq = eq && equalConditions(getContext(), r.getContext());
-            eq = eq && equalActions(getAction(), r.getAction());
-            return eq;
-        }
-        return false;
+		if (o == null) return false;
+		else if (this == o) return true;
+		if (o instanceof Rule) {
+			Rule r = (Rule) o;
+			boolean eq = super.equals(r);
+			if (eq == false) return false;
+			eq = eq && equalConditions(getCondition(), r.getCondition());
+			eq = eq && equalConditions(getException(), r.getException());
+			eq = eq && equalConditions(getContext(), r.getContext());
+			eq = eq && equalActions(getAction(), r.getAction());
+			return eq;
+		}
+		return false;
 
-    }
-    
-    @Override
+	}
+
+	@Override
 	public int hashCode() {
-        int hash = super.hashCode();
-        if (getAction() != null)
-            hash += getAction().hashCode();
-        if (getCondition() != null)
-            hash += getCondition().hashCode();
-        if (getException() != null)
-            hash += getException().hashCode();
-        if (getContext() != null)
-            hash += getContext().hashCode();
-        return hash;
-    }
-    
-    private static boolean equalActions(PSAction a1, PSAction a2) {
-        if (a1 != null && a2 != null)
-            return a1.equals(a2);
-        else if (a1 == null && a2 == null)
-            return true;
-        else
-            return false;
-    }
+		int hash = super.hashCode();
+		if (getAction() != null) hash += getAction().hashCode();
+		if (getCondition() != null) hash += getCondition().hashCode();
+		if (getException() != null) hash += getException().hashCode();
+		if (getContext() != null) hash += getContext().hashCode();
+		return hash;
+	}
 
-    private static boolean equalConditions(Condition c1, Condition c2) {
-        if (c1 != null && c2 != null)
-            return c1.equals(c2);
-        else if (c1 == null && c2 == null)
-            return true;
-        else
-            return false;
-    }
+	private static boolean equalActions(PSAction a1, PSAction a2) {
+		if (a1 != null && a2 != null) return a1.equals(a2);
+		else if (a1 == null && a2 == null) return true;
+		else return false;
+	}
+
+	private static boolean equalConditions(Condition c1, Condition c2) {
+		if (c1 != null && c2 != null) return c1.equals(c2);
+		else if (c1 == null && c2 == null) return true;
+		else return false;
+	}
 
 	public void remove() {
 		setContext(null);

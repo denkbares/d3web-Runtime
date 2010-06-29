@@ -771,7 +771,7 @@ public class KfzWb extends KnowledgeBase {
 		// Die Symptom-Interpretations-Regeln
 
 		// (Radd59) Und (($= Mf4 3) ($= Mf3 4)) -> Msi21
-		Rule Radd59 = new Rule("Radd59");
+		Rule Radd59 = new Rule("Radd59", PSMethodAbstraction.class);
 		ActionSetValue a_Radd59 = new ActionSetValue();
 		a_Radd59.setQuestion(Msi21);
 		a_Radd59.setValue(new ChoiceValue(Msi21a2));
@@ -781,7 +781,7 @@ public class KfzWb extends KnowledgeBase {
 						mce(Mf4, Mf4a3), mce(Mf3, Mf3a4) })));
 
 		// (Radd4) Und (($Or Mf3 1 2 3)) -> Msi21
-		Rule Radd4 = new Rule("Radd4");
+		Rule Radd4 = new Rule("Radd4", PSMethodAbstraction.class);
 		ActionSetValue a_Radd4 = new ActionSetValue();
 		a_Radd4.setQuestion(Msi21);
 		a_Radd4.setValue(new ChoiceValue(Msi21a1));
@@ -793,7 +793,7 @@ public class KfzWb extends KnowledgeBase {
 										mce(Mf3, Mf3a1), mce(Mf3, Mf3a2), mce(Mf3, Mf3a3) })));
 
 		// (Radd2) Und (($= Mf3 4) ($= Mf4 1)) -> Msi21
-		Rule Radd2 = new Rule("Radd2");
+		Rule Radd2 = new Rule("Radd2", PSMethodAbstraction.class);
 		ActionSetValue a_Radd2 = new ActionSetValue();
 		a_Radd2.setQuestion(Msi21);
 		a_Radd2.setValue(new ChoiceValue(Msi21a1));
@@ -805,7 +805,7 @@ public class KfzWb extends KnowledgeBase {
 		/* Die Symptom-Interpretations-Regeln (Numerische) */
 
 		/* (Rdq4) Und (($> Mf5 0) ($Isvalue Mf6 True)) -> Msi4 */
-		Rule Rdq4 = new Rule("Rdq4");
+		Rule Rdq4 = new Rule("Rdq4", PSMethodAbstraction.class);
 		ActionSetValue a_Rdq4 = new ActionSetValue();
 		a_Rdq4.setQuestion(Msi4);
 
