@@ -10,6 +10,34 @@ import de.d3web.xcl.inference.PSMethodXCL;
 
 public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 
+	private double defaultEstablishedThreshold = 0.8;
+	private double defaultSuggestedThreshold = 0.3;
+	private double defaultMinSupport = 0.01;
+
+	public void setDefaultEstablishedThreshold(double defaultEstablishedThreshold) {
+		this.defaultEstablishedThreshold = defaultEstablishedThreshold;
+	}
+
+	public void setDefaultSuggestedThreshold(double defaultSuggestedThreshold) {
+		this.defaultSuggestedThreshold = defaultSuggestedThreshold;
+	}
+
+	public void setDefaultMinSupport(double defaultMinSupport) {
+		this.defaultMinSupport = defaultMinSupport;
+	}
+
+	public double getDefaultEstablishedThreshold() {
+		return defaultEstablishedThreshold;
+	}
+
+	public double getDefaultSuggestedThreshold() {
+		return defaultSuggestedThreshold;
+	}
+
+	public double getDefaultMinSupport() {
+		return defaultMinSupport;
+	}
+
 	public InferenceTrace createInferenceTrace(XCLModel xclModel) {
 		return new DefaultInferenceTrace();
 	}
@@ -30,7 +58,7 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 			if (!oldState.equals(currentState)) {
 				session.getBlackboard().addValueFact(
 						FactFactory.createFact(model.getSolution(), currentState, model,
-						session.getPSMethodInstance(PSMethodXCL.class)));
+								session.getPSMethodInstance(PSMethodXCL.class)));
 			}
 			model.notifyListeners(session, model);
 		}
@@ -50,14 +78,14 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 			return new Rating(Rating.State.ESTABLISHED);
 		}
 
-		double minSupport = model.getMinSupport();
+		double minSupport = getMinSupport(model);
 		if (minSupport <= support) {
-			if (score >= model.getEstablishedThreshold()) {
+			if (score >= getEstablishedThreshold(model)) {
 				return hasAllNecessary
 						? new Rating(Rating.State.ESTABLISHED)
 						: new Rating(Rating.State.SUGGESTED);
 			}
-			if (score >= model.getSuggestedThreshold() && hasAllNecessary) {
+			if (score >= getSuggestedThreshold(model) && hasAllNecessary) {
 				return new Rating(Rating.State.SUGGESTED);
 			}
 		}
@@ -101,6 +129,33 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 			sum += relation.getWeight();
 		}
 		return sum;
+	}
+
+	@Override
+	public double getEstablishedThreshold(XCLModel model) {
+		Double establishedThreshold = model.getEstablishedThreshold();
+		if (establishedThreshold == null) {
+			establishedThreshold = defaultEstablishedThreshold;
+		}
+		return establishedThreshold;
+	}
+
+	@Override
+	public double getMinSupport(XCLModel model) {
+		Double minSupport = model.getMinSupport();
+		if (minSupport == null) {
+			minSupport = defaultMinSupport;
+		}
+		return minSupport;
+	}
+
+	@Override
+	public double getSuggestedThreshold(XCLModel model) {
+		Double suggestedThreshold = model.getSuggestedThreshold();
+		if (suggestedThreshold == null) {
+			suggestedThreshold = defaultSuggestedThreshold;
+		}
+		return suggestedThreshold;
 	}
 
 }

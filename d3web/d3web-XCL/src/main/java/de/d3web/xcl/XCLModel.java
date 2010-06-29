@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.xcl;
@@ -33,9 +33,9 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.Rating;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.IEventSource;
 import de.d3web.core.session.KBOEventListener;
@@ -46,17 +46,12 @@ import de.d3web.xcl.inference.PSMethodXCL;
 public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLModel>, CaseObjectSource {
 
 	public final static MethodKind XCLMODEL = new MethodKind("XCLMODEL");
-	
-
-	public static double defaultEstablishedThreshold = 0.99;
-	public static double defaultSuggestedThreshold = 0.3;
-	public static double defaultMinSupport = 0.01;
 
 	private Solution solution;
 
-	private double establishedThreshold = defaultEstablishedThreshold;
-	private double suggestedThreshold = defaultSuggestedThreshold;
-	private double minSupport = defaultMinSupport;
+	private Double establishedThreshold = null;
+	private Double suggestedThreshold = null;
+	private Double minSupport = null;
 
 	private String id = null;
 	private final Collection<XCLRelation> relations;
@@ -68,7 +63,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	private boolean considerOnlyRelevantRelations = true;
 	// TODO: store these information in the NamedObjects, also required for
 	// efficient propagation
-	private transient Map<NamedObject, Set<XCLRelation>> coverage = new HashMap<NamedObject, Set<XCLRelation>>();
+	private transient final Map<NamedObject, Set<XCLRelation>> coverage = new HashMap<NamedObject, Set<XCLRelation>>();
 
 	public XCLModel(Solution solution) {
 		this.solution = solution;
@@ -157,7 +152,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 			relationID = rel.getId();
 			newModel.addRelation(rel, type);
 			// TODO: must it be added to the knowledge base?
-//			kb.addKnowledge(PSMethodXCL.class, newModel, XCLModel.XCLMODEL);
+			// kb.addKnowledge(PSMethodXCL.class, newModel, XCLModel.XCLMODEL);
 			d.addKnowledge(PSMethodXCL.class, newModel, XCLModel.XCLMODEL);
 
 		}
@@ -209,27 +204,26 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 
 	public boolean addRelation(XCLRelation relation, XCLRelationType type) {
 		for (NamedObject nob : relation.getConditionedFinding().getTerminalObjects()) {
-			KnowledgeSlice knowledge = nob.getKnowledge(PSMethodXCL.class, XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
+			KnowledgeSlice knowledge = nob.getKnowledge(PSMethodXCL.class,
+					XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
 			XCLContributedModelSet set = null;
-			if (knowledge==null) {
+			if (knowledge == null) {
 				set = new XCLContributedModelSet();
-				nob.addKnowledge(PSMethodXCL.class, set, XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
-			} else {
+				nob.addKnowledge(PSMethodXCL.class, set,
+						XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
+			}
+			else {
 				set = (XCLContributedModelSet) knowledge;
 			}
 			set.addModel(this);
 		}
-		if (type.equals(XCLRelationType.explains))
-			return addRelationTo(relation, relations);
+		if (type.equals(XCLRelationType.explains)) return addRelationTo(relation, relations);
 
-		if (type.equals(XCLRelationType.contradicted))
-			return addContradictingRelation(relation);
+		if (type.equals(XCLRelationType.contradicted)) return addContradictingRelation(relation);
 
-		if (type.equals(XCLRelationType.requires))
-			return addNecessaryRelation(relation);
+		if (type.equals(XCLRelationType.requires)) return addNecessaryRelation(relation);
 
-		if (type.equals(XCLRelationType.sufficiently))
-			return addSufficientRelation(relation);
+		if (type.equals(XCLRelationType.sufficiently)) return addSufficientRelation(relation);
 
 		return false;
 	}
@@ -248,12 +242,14 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 
 	public void removeRelation(XCLRelation rel) {
 		for (NamedObject nob : rel.getConditionedFinding().getTerminalObjects()) {
-			KnowledgeSlice knowledge = nob.getKnowledge(PSMethodXCL.class, XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
-			if (knowledge!=null && knowledge instanceof XCLContributedModelSet) {
+			KnowledgeSlice knowledge = nob.getKnowledge(PSMethodXCL.class,
+					XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
+			if (knowledge != null && knowledge instanceof XCLContributedModelSet) {
 				XCLContributedModelSet set = (XCLContributedModelSet) knowledge;
 				set.removeModel(this);
 				if (set.isEmpty()) {
-					nob.removeKnowledge(PSMethodXCL.class, set, XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
+					nob.removeKnowledge(PSMethodXCL.class, set,
+							XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
 				}
 			}
 		}
@@ -266,8 +262,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	private boolean addRelationTo(XCLRelation relation,
 			Collection<XCLRelation> theRelations) {
 
-		if (theRelations.contains(relation))
-			return false;
+		if (theRelations.contains(relation)) return false;
 		theRelations.add(relation);
 		List<? extends NamedObject> terminalObjects = relation.getConditionedFinding().getTerminalObjects();
 		for (NamedObject no : terminalObjects) {
@@ -290,8 +285,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 
 		r.addAll(contradictingRelations);
 		for (XCLRelation relation : r) {
-			if (id.equals(relation.getId()))
-				return relation;
+			if (id.equals(relation.getId())) return relation;
 		}
 		return null;
 	}
@@ -304,28 +298,89 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		this.solution = solution;
 	}
 
-	public double getEstablishedThreshold() {
+	/**
+	 * Returns the established threshold of a Model, if it is not the default.
+	 * To get the threshold of the current session, use the instance of XCL:
+	 * instance.getScoreAlgorithm().getEstablishedThreshold(model)
+	 * 
+	 * @created 29.06.2010
+	 * @return the established threshold, if it is not the default, null
+	 *         otherwise
+	 */
+	public Double getEstablishedThreshold() {
 		return establishedThreshold;
 	}
 
+	/**
+	 * Sets the EstablishedThreshold, if the value is smaller than 0, it is set
+	 * to the default value
+	 * 
+	 * @created 25.06.2010
+	 * @param establishedThreshold value of EstablishedThreshold
+	 */
 	public void setEstablishedThreshold(double establishedThreshold) {
-		this.establishedThreshold = establishedThreshold;
+		if (establishedThreshold >= 0) {
+			this.establishedThreshold = establishedThreshold;
+		}
+		else {
+			this.establishedThreshold = null;
+		}
 	}
 
-	public double getSuggestedThreshold() {
+	/**
+	 * Returns the suggested threshold of a Model, if it is not the default. To
+	 * get the threshold of the current session, use the instance of XCL:
+	 * instance.getScoreAlgorithm().getSuggestedThreshold(model)
+	 * 
+	 * @created 29.06.2010
+	 * @return the suggested threshold, if it is not the default, null otherwise
+	 */
+	public Double getSuggestedThreshold() {
 		return suggestedThreshold;
 	}
 
+	/**
+	 * Sets the SuggestedThreshold, if the value is smaller than 0, it is set to
+	 * the default value
+	 * 
+	 * @created 25.06.2010
+	 * @param suggestedThreshold value of SuggestedThreshold
+	 */
 	public void setSuggestedThreshold(double suggestedThreshold) {
-		this.suggestedThreshold = suggestedThreshold;
+		if (suggestedThreshold >= 0) {
+			this.suggestedThreshold = suggestedThreshold;
+		}
+		else {
+			this.suggestedThreshold = null;
+		}
 	}
 
-	public double getMinSupport() {
+	/**
+	 * Returns the minimal support this Model must have, if it is not the
+	 * default. To get the minimal support of the current session, use the
+	 * instance of XCL: instance.getScoreAlgorithm().getMinSupport(model)
+	 * 
+	 * @created 29.06.2010
+	 * @return the minimal support, if it is not the default, null otherwise
+	 */
+	public Double getMinSupport() {
 		return minSupport;
 	}
 
+	/**
+	 * Sets the MinSupport, if the value is smaller than 0, it is set to the
+	 * default value
+	 * 
+	 * @created 25.06.2010
+	 * @param minSupport value of MinSupport
+	 */
 	public void setMinSupport(double minSupport) {
-		this.minSupport = minSupport;
+		if (minSupport >= 0) {
+			this.minSupport = minSupport;
+		}
+		else {
+			this.minSupport = null;
+		}
 	}
 
 	public void setId(String id) {
@@ -392,8 +447,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	Collection<KBOEventListener> listeners;
 
 	public void addListener(KBOEventListener listener) {
-		if (listeners == null)
-			listeners = new LinkedList<KBOEventListener>();
+		if (listeners == null) listeners = new LinkedList<KBOEventListener>();
 		if (!listeners.contains(listener)) {
 			listeners.add(listener);
 		}
@@ -429,6 +483,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	}
 
 	private static class XCLCaseModel extends SessionObject {
+
 		private final InferenceTrace inferenceTrace;
 
 		private XCLCaseModel(XCLModel model, Session session) {
