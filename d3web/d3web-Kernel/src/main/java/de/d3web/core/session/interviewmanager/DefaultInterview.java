@@ -65,8 +65,10 @@ public class DefaultInterview implements Interview {
 	 * Initializes an interview for a specified session based on a specified
 	 * knowledge base.
 	 * 
-	 * @param session the specified session
-	 * @param knowledgeBase the specified knowledge base
+	 * @param session
+	 *            the specified session
+	 * @param knowledgeBase
+	 *            the specified knowledge base
 	 */
 	public DefaultInterview(Session session, KnowledgeBase knowledgeBase) {
 		this.session = session;
@@ -77,7 +79,8 @@ public class DefaultInterview implements Interview {
 
 	@Override
 	public Form nextForm() {
-		return formStrategy.nextForm(this.agenda.getCurrentlyActiveObjects(), session);
+		return formStrategy.nextForm(this.agenda.getCurrentlyActiveObjects(),
+				session);
 	}
 
 	@Override
@@ -85,12 +88,14 @@ public class DefaultInterview implements Interview {
 		Value oldValue = (Value) changedFact.getOldValue();
 		Value newValue = (Value) changedFact.getNewValue();
 		if (newValue instanceof Indication) {
-			InterviewObject indicatedObject = (InterviewObject) changedFact.getObject();
+			InterviewObject indicatedObject = (InterviewObject) changedFact
+					.getObject();
 			Indication oldIndication = (Indication) oldValue;
 			Indication newIndication = (Indication) newValue;
 
 			// NEUTRAL => INDICATED : 1) append to agenda 2) activate
-			if (oldIndication.hasState(State.NEUTRAL) && newIndication.hasState(State.INDICATED)) {
+			if (oldIndication.hasState(State.NEUTRAL)
+					&& newIndication.hasState(State.INDICATED)) {
 				this.agenda.append(indicatedObject);
 			}
 			// ANY => INSTANT_INDICATED : 1) append to agenda 2) activate
@@ -115,33 +120,30 @@ public class DefaultInterview implements Interview {
 			else if (oldIndication.hasState(State.CONTRA_INDICATED)
 					&& newIndication.hasState(State.INDICATED)) {
 				this.agenda.activate(indicatedObject);
-			}
-			else if (oldIndication.hasState(State.INDICATED)
+			} else if (oldIndication.hasState(State.INDICATED)
 					&& newIndication.hasState(State.INDICATED)) {
 				// INDICATED => INDICATED : noop
-			}
-			else if (oldIndication.hasState(State.CONTRA_INDICATED)
+			} else if (oldIndication.hasState(State.CONTRA_INDICATED)
 					&& newIndication.hasState(State.NEUTRAL)) {
 				// CONTRA_INDICATED => NEUTRAL : noop
-			}
-			else if (oldIndication.hasState(State.NEUTRAL)
+			} else if (oldIndication.hasState(State.NEUTRAL)
 					&& newIndication.hasState(State.CONTRA_INDICATED)) {
 				// NEUTRAL => CONTRA_INDICATED : noop
-			}
-			else {
+			} else {
 				// TODO: use a logger here
-				System.out.println("UNKNOWN INDICATION STATE: old=(" + oldIndication + ") new=("
-						+ newIndication + ")");
+				System.out.println("UNKNOWN INDICATION STATE: old=("
+						+ oldIndication + ") new=(" + newIndication + ")");
 			}
-		}
-		else if (newValue instanceof QuestionValue) {
+		} else if (newValue instanceof QuestionValue) {
 			// need to check, whether the agenda needs an update due to an
 			// answered question
-			InterviewObject indicatedObject = (InterviewObject) changedFact.getObject();
+			InterviewObject indicatedObject = (InterviewObject) changedFact
+					.getObject();
 			if (this.agenda.onAgenda(indicatedObject)) {
 				// Check: the VALUE has changed from DEFINED to UNDEFINED =>
 				// activate
-				if (newValue instanceof UndefinedValue && !(oldValue instanceof UndefinedValue)) {
+				if (newValue instanceof UndefinedValue
+						&& !(oldValue instanceof UndefinedValue)) {
 					this.agenda.activate(indicatedObject);
 					checkParentalQContainer(indicatedObject);
 				}
@@ -158,11 +160,10 @@ public class DefaultInterview implements Interview {
 						&& !(oldValue instanceof UndefinedValue)) {
 					this.agenda.deactivate(indicatedObject);
 					checkParentalQContainer(indicatedObject);
-				}
-				else {
+				} else {
 					// TODO: use a logger here
-					System.out.println("UNKNOWN VALUE CHANGE: old=(" + oldValue + ") new=("
-							+ newValue + ")");
+					System.out.println("UNKNOWN VALUE CHANGE: old=(" + oldValue
+							+ ") new=(" + newValue + ")");
 				}
 			}
 			// Need to update indicated QContainers:
@@ -209,7 +210,8 @@ public class DefaultInterview implements Interview {
 		if (allQuestions(children)) {
 			// ACTIVE, when at least one direct children is not answered
 			for (TerminologyObject child : children) {
-				Value value = session.getBlackboard().getValue((Question) child);
+				Value value = session.getBlackboard()
+						.getValue((Question) child);
 				if (value instanceof UndefinedValue) {
 					return InterviewState.ACTIVE;
 				}
@@ -240,7 +242,8 @@ public class DefaultInterview implements Interview {
 		return InterviewState.INACTIVE;
 	}
 
-	private List<TerminologyObject> getAllFollowUpChildrenOf(TerminologyObject[] objects) {
+	private List<TerminologyObject> getAllFollowUpChildrenOf(
+			TerminologyObject[] objects) {
 		List<TerminologyObject> children = new ArrayList<TerminologyObject>();
 		for (TerminologyObject object : objects) {
 			children.addAll(Arrays.asList(object.getChildren()));
@@ -257,7 +260,8 @@ public class DefaultInterview implements Interview {
 	 * Checks, whether the specified objects are all instances of
 	 * {@link QContainer}.
 	 * 
-	 * @param objects the specified objects
+	 * @param objects
+	 *            the specified objects
 	 * @return true, when the specified objects are all instances of
 	 *         {@link QContainer}.
 	 */
@@ -274,7 +278,8 @@ public class DefaultInterview implements Interview {
 	 * Checks, whether the specified objects are all instances of
 	 * {@link Question}.
 	 * 
-	 * @param objects the specified objects
+	 * @param objects
+	 *            the specified objects
 	 * @return true, when the specified objects are all instances of
 	 *         {@link Question}.
 	 */
@@ -291,22 +296,34 @@ public class DefaultInterview implements Interview {
 	 * For a specified {@link InterviewObject} instance all parental QContainers
 	 * are computed, that are included in the current {@link InterviewAgenda}.
 	 * 
-	 * @param interviewObject the specified {@link InterviewObject} instance
+	 * @param interviewObject
+	 *            the specified {@link InterviewObject} instance
 	 * @return all (recursively) parental {@link QContainer} instances that are
 	 *         on the agenda
 	 */
-	private List<QContainer> computeParentalContainersOnAgenda(InterviewObject interviewObject) {
-		List<QContainer> containers = new ArrayList<QContainer>();
+	private List<QContainer> computeParentalContainersOnAgenda(
+			InterviewObject interviewObject) {
+		List<QContainer> parentsOnAgenda = new ArrayList<QContainer>();
+		List<InterviewObject> visitedContainers = new ArrayList<InterviewObject>();
+		computeParentalContainersOnAgenda(interviewObject, parentsOnAgenda, visitedContainers);
+		return parentsOnAgenda;
+	}
+
+	private void computeParentalContainersOnAgenda(
+			InterviewObject interviewObject, List<QContainer> parentsOnAgenda, List<InterviewObject> visitedContainers) {
 		for (TerminologyObject parent : interviewObject.getParents()) {
-			if (parent instanceof QContainer &&
-					getInterviewAgenda().onAgenda((InterviewObject) parent)) {
-				containers.add((QContainer) parent);
-			}
-			if (parent.getParents().length > 0) {
-				containers.addAll(computeParentalContainersOnAgenda((InterviewObject) parent));
+			if (!visitedContainers.contains(parent)) {
+				visitedContainers.add((InterviewObject)parent);
+				if (parent instanceof QContainer
+						&& getInterviewAgenda().onAgenda(
+								(InterviewObject) parent)) {
+					parentsOnAgenda.add((QContainer) parent);
+				}
+				if (parent.getParents().length > 0) {
+					computeParentalContainersOnAgenda((InterviewObject) parent, parentsOnAgenda, visitedContainers);
+				}
 			}
 		}
-		return containers;
 	}
 
 	@Override
@@ -321,6 +338,7 @@ public class DefaultInterview implements Interview {
 
 	@Override
 	public boolean isActive(InterviewObject interviewObject) {
-		return getInterviewAgenda().hasState(interviewObject, InterviewState.ACTIVE);
+		return getInterviewAgenda().hasState(interviewObject,
+				InterviewState.ACTIVE);
 	}
 }
