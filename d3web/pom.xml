@@ -90,7 +90,7 @@
 				<enabled>false</enabled>
 			</releases>
 			<snapshots>
-				<updatePolicy>always</updatePolicy>
+				<updatePolicy>interval:120</updatePolicy>
 				<checksumPolicy>ignore</checksumPolicy>
 			</snapshots>
 		</repository>
