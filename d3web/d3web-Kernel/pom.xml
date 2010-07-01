@@ -5,7 +5,7 @@
 	<name>d3web-Kernel</name>
 	<version>0.2-SNAPSHOT</version>
 	<build>
-		<finalName>d3web-Persistence-Basic-Plugin</finalName>
+		<finalName>d3web-Kernel</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
