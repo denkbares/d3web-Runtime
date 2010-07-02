@@ -29,7 +29,6 @@ import java.util.logging.Logger;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
-import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.Rule;
@@ -244,7 +243,7 @@ public class FluxSolver implements PSMethod {
 			addPathEnd(theCase, newEntry);
 		}
 		else {
-
+			System.out.println("+++++TODO in FluxSolver.replacePathEnd()");
 		}
 
 	}
@@ -312,9 +311,7 @@ public class FluxSolver implements PSMethod {
 			return null; // TODO correct?
 		}
 
-		PSAction action = nextNode.getAction();
-
-		doAction(theCase, action);
+		doAction(theCase, nextNode);
 
 		PathEntry newPathEntry = addPathEntryForNode(theCase, entry, nextNode,
 				new EdgeSupport(edge));
@@ -332,10 +329,9 @@ public class FluxSolver implements PSMethod {
 		return dataForNode;
 	}
 
-	private void doAction(Session theCase, PSAction action) {
-		log("Starting action: " + action);
-		// TODO: needs check by hatko
-		action.doIt(theCase, this, this);
+	private void doAction(Session theCase, INode nextNode) {
+		log("Starting action: " + nextNode.getAction());
+		nextNode.getAction().doIt(theCase, nextNode, this);
 	}
 
 	/**
@@ -497,7 +493,7 @@ public class FluxSolver implements PSMethod {
 			INodeData data = currentEntry.getNodeData();
 			data.removeSupport(currentEntry);
 
-			undoAction(theCase, data.getNode().getAction());
+			undoAction(theCase, data.getNode());
 
 			currentEntry = currentEntry.getPath();
 
@@ -510,10 +506,9 @@ public class FluxSolver implements PSMethod {
 
 	}
 
-	private void undoAction(Session theCase, PSAction action) {
-		log("Undoing action: " + action);
-		// TODO: needs check by hatko
-		action.undo(theCase, this, this);
+	private void undoAction(Session theCase, INode node) {
+		log("Undoing action: " + node);
+		node.getAction().undo(theCase, node, this);
 	}
 
 	private void log(String message) {
