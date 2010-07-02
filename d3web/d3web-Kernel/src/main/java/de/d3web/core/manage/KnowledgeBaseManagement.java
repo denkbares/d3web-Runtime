@@ -52,7 +52,6 @@ import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.knowledge.terminology.QuestionZC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.interviewmanager.InterviewAgenda.AgendaEntry;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
@@ -660,7 +659,7 @@ public class KnowledgeBaseManagement {
 	 */
 	public void sortQContainers(List<QContainer> unsorted){
 		HashMap<TerminologyObject, Integer> qcontainerIndex = new HashMap<TerminologyObject, Integer>();
-		reindex(knowledgeBase.getRootQASet(), qcontainerIndex, 0);
+		reindex(knowledgeBase.getRootQASet(), qcontainerIndex, Integer.valueOf(0));
 		Collections.sort(unsorted, new DFSTreeSortingComparator(qcontainerIndex));
 	}
 	
@@ -668,11 +667,11 @@ public class KnowledgeBaseManagement {
 	 * Traverses the QASet hierarchy using a depth-first search and
 	 * attaches an ordering number to each visited {@link QASet}.
 	 */
-	private void reindex(TerminologyObject qaset, HashMap<TerminologyObject,Integer> qcontainerIndex, int maxOrderingNumber) {
+	private void reindex(TerminologyObject qaset, HashMap<TerminologyObject,Integer> qcontainerIndex, Integer maxOrderingNumber) {
 		qcontainerIndex.put(qaset, maxOrderingNumber);
-		maxOrderingNumber++;
 		
 		for (TerminologyObject child : qaset.getChildren()) {
+			maxOrderingNumber++;
 			if (!qcontainerIndex.containsKey(child)) {
 				reindex(child, qcontainerIndex, maxOrderingNumber);
 			} else { 
