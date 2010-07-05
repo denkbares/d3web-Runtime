@@ -53,7 +53,6 @@ import edu.uci.ics.jung.visualization.DefaultVisualizationModel;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.VisualizationModel;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
 import edu.uci.ics.jung.visualization.renderers.VertexLabelAsShapeRenderer;
 
@@ -298,11 +297,11 @@ public class JUNGCaseVisualizer implements CaseVisualizer {
 		vv.getRenderer().setVertexLabelRenderer(vlasr);
 		vv.setBackground(Color.WHITE);
 
-		final DefaultModalGraphMouse<String, Number> graphMouse =
-				new DefaultModalGraphMouse<String, Number>();
+		// final DefaultModalGraphMouse<String, Number> graphMouse =
+		// new DefaultModalGraphMouse<String, Number>();
 
-		vv.setGraphMouse(graphMouse);
-		vv.addKeyListener(graphMouse.getModeKeyListener());
+		// vv.setGraphMouse(graphMouse);
+		// vv.addKeyListener(graphMouse.getModeKeyListener());
 	}
 
 	/**
