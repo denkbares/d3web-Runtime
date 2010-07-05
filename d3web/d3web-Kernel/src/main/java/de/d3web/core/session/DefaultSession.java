@@ -50,7 +50,6 @@ import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy
 import de.d3web.core.session.interviewmanager.PSMethodInterview;
 import de.d3web.core.session.interviewmanager.QASetManager;
 import de.d3web.core.session.interviewmanager.QASetManagerFactory;
-import de.d3web.diaFlux.inference.FluxSolver;
 import de.d3web.indication.inference.PSMethodContraIndication;
 import de.d3web.indication.inference.PSMethodDialogControlling;
 import de.d3web.indication.inference.PSMethodNextQASet;
@@ -106,7 +105,6 @@ public class DefaultSession implements Session {
 			PSMethodHeuristic.getInstance(),
 			PSMethodInit.getInstance(),
 			PSMethodParentQASet.getInstance(),
-			FluxSolver.getInstance(),
 			PSMethodInterview.getInstance()
 			));
 
