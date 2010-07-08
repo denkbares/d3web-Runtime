@@ -5,10 +5,12 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.NumValue;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
@@ -77,4 +79,25 @@ public class FactFactory {
 		return null;
 	}
 
+	/**
+	 * A new fact is created assigning a {@link NumValue} to a
+	 * {@link QuestionNum}. The {@link QuestionNum} is searched by its id
+	 * in the given {@link KnowledgeBase}. The source
+	 * and psMethod context of this fact is the user (i.e.,
+	 * {@link PSMethodUserSelected}).
+	 * 
+	 * @param kb {@link KnowledgeBase}
+	 * @param questionID ID of the {@link QuestionNum}
+	 * @param value the Double value of the question
+	 * @return a newly created {@link Fact} instance or null, if the
+	 *         {@link QuestionChoice} could not be found
+	 */
+	public static Fact createUserEnteredFact(KnowledgeBase kb, String questionID, Double value) {
+		Question question = kb.searchQuestion(questionID);
+		if (question != null && question instanceof QuestionNum) {
+			QuestionNum qn = (QuestionNum) question;
+			return createUserEnteredFact(qn, new NumValue(value));
+		}
+		return null;
+	}
 }

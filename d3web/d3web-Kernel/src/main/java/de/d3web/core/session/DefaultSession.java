@@ -131,6 +131,9 @@ public class DefaultSession implements Session {
 			boolean found = false;
 			for (PSConfig psConfig : knowledgebase.getPsConfigs()) {
 				PSMethod psm = psConfig.getPsMethod();
+				if (psm == null || psMethod == null) {
+					continue;
+				}
 				if (psm.getClass().equals(psMethod.getClass())) {
 					found = true;
 					break;
