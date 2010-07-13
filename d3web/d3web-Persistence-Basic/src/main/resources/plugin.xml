@@ -539,5 +539,26 @@
 		<parameter id="filename" value="kb/settings.xml" />
 	</extension>
 
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeReader"
+		id="ImageQuestionPersistenceHandler">
+		<parameter id="class"
+			value="de.d3web.multimedia.io.ImageQuestionPersistenceHandler" />
+		<parameter id="name" value="ImageQuestionPersistenceHandler" />
+		<parameter id="description" value="KnowledgeReader for Picture Questions." />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+		<parameter id="filename" value="imagequestion/picturequestions.xml" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeWriter"
+		id="ImageQuestionPersistenceHandler.Writer">
+		<parameter id="class"
+			value="de.d3web.multimedia.io.ImageQuestionPersistenceHandler" />
+		<parameter id="name" value="ImageQuestionPersistenceHandler" />
+		<parameter id="description" value="KnowledgeWriter for Picture Questions" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+		<parameter id="filename" value="imagequestion/picturequestions.xml" />
+	</extension>
 	
 </plugin>
