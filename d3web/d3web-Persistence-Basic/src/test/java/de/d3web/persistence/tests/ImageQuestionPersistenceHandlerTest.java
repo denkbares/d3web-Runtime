@@ -25,10 +25,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URL;
 import java.util.List;
 
-import de.d3web.core.io.BasicPersistenceHandler;
 import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
@@ -53,7 +51,6 @@ public class ImageQuestionPersistenceHandlerTest extends TestCase {
 
 	private KnowledgeBase kb;
 	private Question q1,q2;
-	private URL kbURL;
 	private XMLTag shouldTag;
 	
 	/**
