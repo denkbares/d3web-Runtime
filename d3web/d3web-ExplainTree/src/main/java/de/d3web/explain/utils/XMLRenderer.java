@@ -793,7 +793,7 @@ public class XMLRenderer {
 				sb.append(" status=\"" + statusValues.get(1) + "\"");
 			}
 			sb.append(">");
-			sb.append(renderDiagnosisObject(cds.getDiagnosis()));
+			sb.append(renderDiagnosisObject(cds.getSolution()));
 			sb.append(renderDiagnosisStateObject(cds.getStatus()));
 		}
 		else if ((cond instanceof CondNumEqual)

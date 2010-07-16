@@ -47,7 +47,7 @@ public class SimpleTextFUS implements XMLCodeGenerator, ISolutionContainer {
 	public String getXMLCode() {
 		return "<SimpleTextFUS"
 			+ " dtrid=\""
-			+ getDiagnosesTreeRootId()
+			+ getSolutionsTreeRootId()
 			+ "\""
 			+ " ttrid=\""
 			+ getTherapiesTreeRootId()
@@ -78,7 +78,7 @@ public class SimpleTextFUS implements XMLCodeGenerator, ISolutionContainer {
 		this.name = name;
 		this.text = text;
 		this.myISC = s;
-        setDiagnosesTreeRootId(diagnosesTreeRootId);
+        setSolutionsTreeRootId(diagnosesTreeRootId);
         setTherapiesTreeRootId(therapiesTreeRootId);
 	}
 
@@ -93,7 +93,7 @@ public class SimpleTextFUS implements XMLCodeGenerator, ISolutionContainer {
 	public String getText() {
 		return text;
 	}
-	public String getDiagnosesTreeRootId() {
+	public String getSolutionsTreeRootId() {
 		return diagnosesTreeRootId;
 	}
 	public String getTherapiesTreeRootId() {
@@ -147,7 +147,7 @@ public class SimpleTextFUS implements XMLCodeGenerator, ISolutionContainer {
 	 * @param diagnosesTreeRootId
 	 *            The diagnosesTreeRootId to set.
 	 */
-	public void setDiagnosesTreeRootId(String diagnosesTreeRootId) {
+	public void setSolutionsTreeRootId(String diagnosesTreeRootId) {
         if (diagnosesTreeRootId != null && diagnosesTreeRootId.trim().equals(""))
             this.diagnosesTreeRootId = null;
         else

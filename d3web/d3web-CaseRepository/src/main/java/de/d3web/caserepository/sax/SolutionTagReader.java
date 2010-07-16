@@ -104,7 +104,7 @@ public class SolutionTagReader extends AbstractTagReader {
 			return;
 		}
 
-		currentSolution.setDiagnosis(diag);
+		currentSolution.setSolution(diag);
 
 		String psMethod = attributes.getValue("psmethod");
 		if (psMethod != null) { // i.e. it's the new Solution format
@@ -142,7 +142,7 @@ public class SolutionTagReader extends AbstractTagReader {
 
 	private void startRating(Attributes attributes) {
 		currentSolutionCopy = new CaseObject.Solution();
-		currentSolutionCopy.setDiagnosis(currentSolution.getDiagnosis());
+		currentSolutionCopy.setSolution(currentSolution.getSolution());
 		currentSolutionCopy.setWeight(currentSolution.getWeight());
 
 		String psmethodAttr = attributes.getValue("psmethod");

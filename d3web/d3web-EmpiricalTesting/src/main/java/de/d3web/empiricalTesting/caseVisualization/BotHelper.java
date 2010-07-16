@@ -153,7 +153,7 @@ public class BotHelper {
 		else return foundQuestion;
 	}
 
-	public Solution getDiagnosisByIDorText(String diagnosisIDorText,
+	public Solution getSolutionByIDorText(String diagnosisIDorText,
 			KnowledgeBase kb) throws Exception {
 		Solution foundDiagnosis = null;
 		for (Solution d : kb.getSolutions()) {

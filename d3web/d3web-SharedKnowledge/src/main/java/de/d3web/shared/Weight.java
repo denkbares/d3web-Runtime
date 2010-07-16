@@ -51,17 +51,17 @@ public class Weight implements KnowledgeSlice {
 
 	private QuestionWeightValue questionWeightValue = null;
 
-	private List<DiagnosisWeightValue> diagnosisWeightValues = null;
+	private List<SolutionWeightValue> solutionWeightValues = null;
 
-	private Hashtable<Solution, DiagnosisWeightValue> diagnoseDiagnosisWeightValueHash = null;
+	private Hashtable<Solution, SolutionWeightValue> diagnoseDiagnosisWeightValueHash = null;
 
 	/**
 	 * Weight constructor comment.
 	 */
 	public Weight() {
 		super();
-		diagnosisWeightValues = new LinkedList<DiagnosisWeightValue>();
-		diagnoseDiagnosisWeightValueHash = new Hashtable<Solution, DiagnosisWeightValue>();
+		solutionWeightValues = new LinkedList<SolutionWeightValue>();
+		diagnoseDiagnosisWeightValueHash = new Hashtable<Solution, SolutionWeightValue>();
 	}
 
 	/**
@@ -87,9 +87,9 @@ public class Weight implements KnowledgeSlice {
 	 * 
 	 * @param val de.d3web.kernel.psMethods.shared.DiagnosisWeightValue
 	 */
-	public void addDiagnosisWeightValue(DiagnosisWeightValue val) {
-		diagnosisWeightValues.add(val);
-		diagnoseDiagnosisWeightValueHash.put(val.getDiagnosis(), val);
+	public void addDiagnosisWeightValue(SolutionWeightValue val) {
+		solutionWeightValues.add(val);
+		diagnoseDiagnosisWeightValueHash.put(val.getSolution(), val);
 	}
 
 	/**
@@ -168,8 +168,8 @@ public class Weight implements KnowledgeSlice {
 	 * 
 	 * @return java.util.List
 	 */
-	public List<DiagnosisWeightValue> getDiagnosisWeightValues() {
-		return diagnosisWeightValues;
+	public List<SolutionWeightValue> getSolutionWeightValues() {
+		return solutionWeightValues;
 	}
 
 	/**
@@ -189,11 +189,11 @@ public class Weight implements KnowledgeSlice {
 	 * @return int
 	 * @param diagnoses java.util.Collection
 	 */
-	public int getMaxDiagnosisWeightValueFromDiagnoses(Collection<Solution> diagnoses) {
+	public int getMaxSolutionWeightValueFromSolutions(Collection<Solution> diagnoses) {
 		int ret = -1;
 		Iterator<Solution> iter = diagnoses.iterator();
 		while (iter.hasNext()) {
-			DiagnosisWeightValue val = diagnoseDiagnosisWeightValueHash.get(iter.next());
+			SolutionWeightValue val = diagnoseDiagnosisWeightValueHash.get(iter.next());
 			if (val != null) {
 				if (val.getValue() > ret) {
 					ret = val.getValue();

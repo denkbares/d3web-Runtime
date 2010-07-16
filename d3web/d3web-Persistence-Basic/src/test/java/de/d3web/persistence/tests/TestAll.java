@@ -52,7 +52,7 @@ public class TestAll {
 
 		suite.addTest(ActionTest.suite());
 		suite.addTest(ConditionTest.suite());
-		suite.addTest(DiagnosisTest.suite());
+		suite.addTest(SolutionTest.suite());
 		suite.addTest(QContainerTest.suite());
 		suite.addTest(QuestionTests.suite());
 		suite.addTest(CostTest.suite());

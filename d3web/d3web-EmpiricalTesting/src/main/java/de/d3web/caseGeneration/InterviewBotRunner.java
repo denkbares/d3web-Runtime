@@ -39,7 +39,7 @@ public class InterviewBotRunner {
 
 	public static void main(String[] args) {
 		try {
-			demoForCarDiagnosis();
+			demoForCarSolution();
 //			demoForGenerated1K_KB();
 //			demoForDigitalysKB();
 		} catch (Exception e) {
@@ -85,7 +85,7 @@ public class InterviewBotRunner {
 
 
 	@SuppressWarnings("unused")
-	private static void demoForCarDiagnosis() throws Exception {
+	private static void demoForCarSolution() throws Exception {
 		filename  = "minicar.jar";
 
 		KnowledgeBase k = loadKnowledgebase(filename);

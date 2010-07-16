@@ -80,7 +80,7 @@ public class TestDummy extends TestCase {
 		
 	}
 	
-	public void testDiagnosisSimpleState() throws Exception{
+	public void testSolutionSimpleState() throws Exception{
 		isTag = new XMLTag(dw.write(diag, Util.createEmptyDocument()));
 		assertEquals("(0)", shouldTag, isTag);
 	}

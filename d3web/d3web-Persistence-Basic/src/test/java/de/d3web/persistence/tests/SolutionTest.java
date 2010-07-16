@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.persistence.tests;
@@ -35,32 +35,34 @@ import de.d3web.scoring.Score;
 
 /**
  * @author merz
- *
- * !!! tests for checking prperties missing
+ * 
+ *         !!! tests for checking prperties missing
  */
-public class DiagnosisTest extends TestCase {
-	
+public class SolutionTest extends TestCase {
+
 	private Solution diag;
 	private SolutionsHandler dh;
 	private XMLTag isTag;
 	private XMLTag shouldTag;
-	
+
 	/**
 	 * Constructor for DiagnosisOutputTest.
+	 * 
 	 * @param arg0
 	 */
-	public DiagnosisTest(String arg0) {
+	public SolutionTest(String arg0) {
 		super(arg0);
 	}
 
 	public static void main(String[] args) {
-		junit.textui.TestRunner.run(DiagnosisTest.suite());
+		junit.textui.TestRunner.run(SolutionTest.suite());
 	}
-	
+
 	public static Test suite() {
-		return new TestSuite(DiagnosisTest.class);
+		return new TestSuite(SolutionTest.class);
 	}
-	
+
+	@Override
 	protected void setUp() {
 		try {
 			InitPluginManager.init();
@@ -68,93 +70,68 @@ public class DiagnosisTest extends TestCase {
 		catch (IOException e1) {
 			assertTrue("Error initialising plugin framework", false);
 		}
-		//create the diagnosis
+		// create the diagnosis
 		diag = new Solution("d1");
 		diag.setName("d1-text");
-		
+
 		dh = new SolutionsHandler();
 
-		// first step in building shouldTag: id and text always added in shouldTag
+		// first step in building shouldTag: id and text always added in
+		// shouldTag
 		shouldTag = new XMLTag("Diagnosis");
 		shouldTag.addAttribute("ID", "d1");
-		
+
 		XMLTag shouldTextTag = new XMLTag("Text");
 		shouldTextTag.setContent("d1-text");
 		shouldTag.addChild(shouldTextTag);
-		
+
 	}
-	
-	public void testDiagnosisSimpleState() throws Exception{
+
+	public void testSolutionSimpleState() throws Exception {
 		isTag = new XMLTag(dh.write(diag, Util.createEmptyDocument()));
-		
+
 		assertEquals("(0)", shouldTag, isTag);
 	}
-	
-	public void testDiagnosisWithApriori() throws Exception{
+
+	public void testSolutionWithApriori() throws Exception {
 		diag.setAprioriProbability(Score.N2);
-		
+
 		shouldTag.addAttribute("aPriProb", "N2");
-		
+
 		isTag = new XMLTag(dh.write(diag, Util.createEmptyDocument()));
-		
+
 		assertEquals("(1)", shouldTag, isTag);
 	}
-	
-	//Children are no longer parsed in the handlers
-//	public void testDiagnosisWithChildren() throws Exception {
-//		// add two children
-//		Diagnosis d11 = new Diagnosis("d11");
-//		d11.setText("d11-text");
-//		d11.addParent(diag);
-//		
-//		Diagnosis d12 = new Diagnosis("d12");
-//		d12.setText("d12-text");
-//		d12.addParent(diag);
-//		
-//		XMLTag shouldChildrenTag = new XMLTag("Children");
-//		XMLTag childTag1 = new XMLTag("Child");
-//		childTag1.addAttribute("ID", "d11");
-//		shouldChildrenTag.addChild(childTag1);
-//			
-//		XMLTag childTag2 = new XMLTag("Child");
-//		childTag2.addAttribute("ID", "d12");
-//		shouldChildrenTag.addChild(childTag2);
-//		
-//		shouldTag.addChild(shouldChildrenTag);
-//
-//		isTag = new XMLTag(dh.write(diag, Util.createEmptyDocument()));		
-//					
-//		assertEquals("(2)", shouldTag, isTag);
-//	}
-	
-	public void testDiagnosisWithProperties() throws Exception {
+
+	public void testSolutionWithProperties() throws Exception {
 		diag.getProperties().setProperty(Property.HIDE_IN_DIALOG, new Boolean(true));
 		diag.getProperties().setProperty(Property.COST, new Double(20));
-		
+
 		// Set propertyKeys = diag.getPropertyKeys();
-		// MockPropertyDescriptor mpd = new MockPropertyDescriptor(diag,propertyKeys);
-		
+		// MockPropertyDescriptor mpd = new
+		// MockPropertyDescriptor(diag,propertyKeys);
+
 		XMLTag propertiesTag = new XMLTag("Properties");
-		
+
 		XMLTag propertyTag1 = new XMLTag("Property");
 		propertyTag1.addAttribute("name", "hide_in_dialog");
 		// old: propertyTag1.addAttribute("descriptor", "hide_in_dialog");
 		propertyTag1.addAttribute("class", "java.lang.Boolean");
 		propertyTag1.setContent("true");
-		
+
 		XMLTag propertyTag2 = new XMLTag("Property");
 		propertyTag2.addAttribute("name", "cost");
 		// old: propertyTag2.addAttribute("descriptor", "cost");
 		propertyTag2.addAttribute("class", "java.lang.Double");
 		propertyTag2.setContent("20.0");
-		
+
 		propertiesTag.addChild(propertyTag1);
 		propertiesTag.addChild(propertyTag2);
-		
+
 		shouldTag.addChild(propertiesTag);
-		
-		isTag = new XMLTag(dh.write(diag, Util.createEmptyDocument()));		
-					
+
+		isTag = new XMLTag(dh.write(diag, Util.createEmptyDocument()));
+
 		assertEquals("(3)", shouldTag, isTag);
 	}
 }

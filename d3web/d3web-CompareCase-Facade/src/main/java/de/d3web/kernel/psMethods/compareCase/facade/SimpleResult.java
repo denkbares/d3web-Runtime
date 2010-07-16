@@ -74,7 +74,7 @@ public class SimpleResult {
 	 * Creation date: (23.08.2001 17:49:58)
 	 * @return java.util.List
 	 */
-	public Collection getDiagnoses() {
+	public Collection getSolutions() {
 		return diagnoses;
 	}
 

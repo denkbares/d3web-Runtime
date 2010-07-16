@@ -191,7 +191,7 @@ public class SequentialTestCasePersistence {
 
 				// Diagnosis solution =
 				// getKnowledge().searchDiagnosis(solutionID);
-				Solution solution = bh.getDiagnosisByIDorText(solutionID,
+				Solution solution = bh.getSolutionByIDorText(solutionID,
 						getKnowledge());
 
 				ScoreRating rating = new ScoreRating(new Double(ratingVal)

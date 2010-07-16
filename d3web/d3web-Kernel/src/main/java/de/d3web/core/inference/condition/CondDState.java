@@ -65,7 +65,7 @@ public class CondDState extends TerminalCondition {
 		return solutionState.equals(session.getBlackboard().getRating(solution));
 	}
 
-	public Solution getDiagnosis() {
+	public Solution getSolution() {
 		return solution;
 	}
 
@@ -73,7 +73,7 @@ public class CondDState extends TerminalCondition {
 		return solutionState;
 	}
 
-	public void setDiagnosis(Solution newDiagnosis) {
+	public void setSolution(Solution newDiagnosis) {
 		solution = newDiagnosis;
 	}
 
@@ -94,11 +94,11 @@ public class CondDState extends TerminalCondition {
 		if (!super.equals(other)) return false;
 		CondDState otherCDS = (CondDState) other;
 		boolean test = true;
-		if (this.getDiagnosis() != null) test = this.getDiagnosis().equals(
-				otherCDS.getDiagnosis())
+		if (this.getSolution() != null) test = this.getSolution().equals(
+				otherCDS.getSolution())
 				&& test;
 		else // == null
-		test = (otherCDS.getDiagnosis() == null) && test;
+		test = (otherCDS.getSolution() == null) && test;
 
 		if (this.getStatus() != null) test = this.getStatus().equals(otherCDS.getStatus())
 				&& test;
@@ -111,8 +111,8 @@ public class CondDState extends TerminalCondition {
 
 		String str = getClass().toString();
 
-		if (getDiagnosis() != null)
-			str += getDiagnosis().toString();
+		if (getSolution() != null)
+			str += getSolution().toString();
 
 		if (getStatus() != null)
 			str += getStatus().toString();
@@ -125,7 +125,7 @@ public class CondDState extends TerminalCondition {
 
 	@Override
 	public Condition copy() {
-		return new CondDState(getDiagnosis(), getStatus());
+		return new CondDState(getSolution(), getStatus());
 	}
 
 }

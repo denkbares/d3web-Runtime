@@ -418,9 +418,9 @@ public class CaseComparator {
 		else {
 			qWeight = (Weight) o;
 		}
-		Collection<Solution> establishedDiagnoses = getEstablishedDiagnoses(aCase);
+		Collection<Solution> establishedDiagnoses = getEstablishedSolutions(aCase);
 
-		int weight = qWeight.getMaxDiagnosisWeightValueFromDiagnoses(establishedDiagnoses);
+		int weight = qWeight.getMaxSolutionWeightValueFromSolutions(establishedDiagnoses);
 		if (weight == -1) {
 			weight = qWeight.getQuestionWeightValue().getValue();
 		}
@@ -440,13 +440,13 @@ public class CaseComparator {
 		return w;
 	}
 
-	private static Collection<Solution> getEstablishedDiagnoses(CaseObject aCase) {
+	private static Collection<Solution> getEstablishedSolutions(CaseObject aCase) {
 		List<Solution> establishedDiagnoses = new LinkedList<Solution>();
 		Iterator<CaseObject.Solution> iter = aCase.getSolutions().iterator();
 		while (iter.hasNext()) {
 			CaseObject.Solution sol = iter.next();
 			if (new Rating(Rating.State.ESTABLISHED).equals(sol.getState())) {
-				establishedDiagnoses.add(sol.getDiagnosis());
+				establishedDiagnoses.add(sol.getSolution());
 			}
 		}
 		return establishedDiagnoses;

@@ -44,7 +44,7 @@ public class SolutionContainerImpl implements ISolutionContainer {
         while (iter.hasNext()) {
             CaseObject.Solution s = (CaseObject.Solution) iter.next();
             sb.append("<Solution" +
-                    " id=\"" + s.getDiagnosis().getId() + "\"" +
+                    " id=\"" + s.getSolution().getId() + "\"" +
                     " weight=\"" + s.getWeight() + "\"" +
                     " psmethod=\"" + s.getPSMethodClass().getName() + "\"" +
                     " state=\"" + s.getState().toString() + "\"" +
@@ -86,7 +86,7 @@ public class SolutionContainerImpl implements ISolutionContainer {
 		Iterator iter = solutions.iterator();
 		while (iter.hasNext()) {
 			CaseObject.Solution s = (CaseObject.Solution) iter.next();
-			if (s.getDiagnosis().equals(d) && s.getPSMethodClass().equals(psMethodClass))
+			if (s.getSolution().equals(d) && s.getPSMethodClass().equals(psMethodClass))
 				return s;
 		}
 		return null;

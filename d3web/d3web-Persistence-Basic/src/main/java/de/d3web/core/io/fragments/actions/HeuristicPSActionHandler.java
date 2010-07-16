@@ -68,7 +68,7 @@ public class HeuristicPSActionHandler implements FragmentHandler {
 			}
 		}
 		ActionHeuristicPS actionHeuristicPS = new ActionHeuristicPS();
-		actionHeuristicPS.setDiagnosis(diag);
+		actionHeuristicPS.setSolution(diag);
 		actionHeuristicPS.setScore(score);
 		return actionHeuristicPS;
 	}
@@ -79,7 +79,7 @@ public class HeuristicPSActionHandler implements FragmentHandler {
 		Element element = doc.createElement("Action");
 		element.setAttribute("type", "ActionHeuristicPS");
 		Score theScore = action.getScore();
-		Solution theDiag = action.getDiagnosis();
+		Solution theDiag = action.getSolution();
 		String scoreSymbol = "";
 		String diagId = "";
 		if (theScore != null) {

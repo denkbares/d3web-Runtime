@@ -395,7 +395,7 @@ public class TestPersistence {
 		else if (elName.equals(SOLUTION)) {
 			Solution d = null;
 			try {
-				d = bh.getDiagnosisByIDorText(sr.getAttributeValue(null, NAME), kb);
+				d = bh.getSolutionByIDorText(sr.getAttributeValue(null, NAME), kb);
 			}
 			catch (Exception e) {
 				e.printStackTrace();

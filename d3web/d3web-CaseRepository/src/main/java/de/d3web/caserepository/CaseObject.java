@@ -116,10 +116,10 @@ public interface CaseObject
 		private Class<? extends PSMethod> psMethodClass = null;
 		private Rating state = null;
 
-		public de.d3web.core.knowledge.terminology.Solution getDiagnosis() {
+		public de.d3web.core.knowledge.terminology.Solution getSolution() {
 			return diagnosis;
 		}
-		public void setDiagnosis(de.d3web.core.knowledge.terminology.Solution newDiag) {
+		public void setSolution(de.d3web.core.knowledge.terminology.Solution newDiag) {
 			diagnosis = newDiag;
 			calculateHash();
 		}
@@ -168,8 +168,8 @@ public interface CaseObject
 				if (!methodEq)
 					return false;
 
-				boolean diagEq = (getDiagnosis() == null) && (sol.getDiagnosis() == null)
-						|| (getDiagnosis() != null && getDiagnosis().equals(sol.getDiagnosis()));
+				boolean diagEq = (getSolution() == null) && (sol.getSolution() == null)
+						|| (getSolution() != null && getSolution().equals(sol.getSolution()));
 				if (!diagEq)
 					return false;
 
@@ -189,7 +189,7 @@ public interface CaseObject
 		@Override
 		public String toString() {
 			return "CaseObject.Solution{"
-					+ (getDiagnosis() == null ? "(/)" : getDiagnosis().toString())
+					+ (getSolution() == null ? "(/)" : getSolution().toString())
 					+ ", "
 					+ (getState() == null ? "(/)" : getState().toString())
 					+ ", "
@@ -276,7 +276,7 @@ public interface CaseObject
 	 * 
 	 * @return a set of established solutions
 	 */
-	public Set getCorrectSystemDiagnoses();
+	public Set getCorrectSystemSolutions();
 
 	/**
 	 * Return a {@link Set} of {@link Solution} instances, that were both
@@ -286,7 +286,7 @@ public interface CaseObject
 	 * 
 	 * @return a set of solutions, that are originally derived by the system
 	 */
-	public Set getSystemDiagnoses();
+	public Set getSystemSolutions();
 
 	/**
 	 * Returns the meta-information concerning this {@link CaseObject}.

@@ -57,7 +57,7 @@ public class DStateConditionHandler implements FragmentHandler {
 			IDObject idObject = kb.search(solutionID);
 			if (idObject instanceof Solution) {
 				Solution diag = (Solution) idObject;
-				Rating diagnosisState = getDiagnosisState(value);
+				Rating diagnosisState = getRating(value);
 				return new CondDState(diag, diagnosisState);
 			}
 		}
@@ -71,10 +71,10 @@ public class DStateConditionHandler implements FragmentHandler {
 		if (cond.getStatus() != null) {
 			status = cond.getStatus().toString();
 		}
-		return XMLUtil.writeCondition(doc, cond.getDiagnosis(), "DState", status);
+		return XMLUtil.writeCondition(doc, cond.getSolution(), "DState", status);
 	}
 
-	private static Rating getDiagnosisState(String status) {
+	private static Rating getRating(String status) {
 
 		if (status.equalsIgnoreCase("established")) return new Rating(State.ESTABLISHED);
 

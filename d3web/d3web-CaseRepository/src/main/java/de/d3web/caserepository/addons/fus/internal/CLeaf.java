@@ -70,7 +70,7 @@ public class CLeaf extends AbstractCNode {
 	/**
 	 * @return
 	 */
-	public Solution getDiagnosis() {
+	public Solution geSolution() {
 		return d;
 	}
 

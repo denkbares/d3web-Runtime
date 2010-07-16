@@ -121,13 +121,13 @@ public class RuleActionVerbalizer implements Verbalizer {
 
 		if (ra instanceof ActionHeuristicPS) {
 			ActionHeuristicPS ah = (ActionHeuristicPS) ra;
-			if (ah.getDiagnosis() != null && ah.getDiagnosis() != context) {
-				s += VerbalizationManager.getInstance().verbalize(ah.getDiagnosis(),
+			if (ah.getSolution() != null && ah.getSolution() != context) {
+				s += VerbalizationManager.getInstance().verbalize(ah.getSolution(),
 						RenderingFormat.HTML)
 						+ ": ";
 			}
 			if (ah.getScore() != null) s += ah.getScore().getSymbol();
-			if (ah.getDiagnosis() != null && ah.getDiagnosis() != context) {
+			if (ah.getSolution() != null && ah.getSolution() != context) {
 				s += " (" + propertyRB.getString("rule.HeuristicScore") + ") ";
 			}
 			return s;

@@ -126,7 +126,7 @@ public class SessionConverter {
 		while (solIter.hasNext()) {
 			CaseObject.Solution sol = solIter.next();
 			ret.getBlackboard().addValueFact(
-					new DefaultFact(sol.getDiagnosis(), sol.getState(), new Object(),
+					new DefaultFact(sol.getSolution(), sol.getState(), new Object(),
 					PSMethodUserSelected.getInstance()));
 		}
 
@@ -197,9 +197,9 @@ public class SessionConverter {
 		// }
 
 		// Diagnoses
-		addDiagnosesToSolutions(ret, theCase, State.ESTABLISHED);
-		addDiagnosesToSolutions(ret, theCase, State.SUGGESTED);
-		addDiagnosesToSolutions(ret, theCase, State.EXCLUDED);
+		addSolutionsToCaseObject(ret, theCase, State.ESTABLISHED);
+		addSolutionsToCaseObject(ret, theCase, State.SUGGESTED);
+		addSolutionsToCaseObject(ret, theCase, State.EXCLUDED);
 
 		if (copyDCMarkup) {
 			ret.setDCMarkup((DCMarkup) theCase.getDCMarkup().clone());
@@ -220,7 +220,7 @@ public class SessionConverter {
 	 * Adds all solutions of the given Session with the given DiagnosisState to
 	 * "co".
 	 */
-	private void addDiagnosesToSolutions(CaseObjectImpl co, Session theCase, Rating.State state) {
+	private void addSolutionsToCaseObject(CaseObjectImpl co, Session theCase, Rating.State state) {
 		List<PSMethod> usedPsm = new LinkedList<PSMethod>();
 		Iterator<? extends PSMethod> usedPsmIter = theCase.getPSMethods().iterator();
 		while (usedPsmIter.hasNext()) {
@@ -243,7 +243,7 @@ public class SessionConverter {
 					Rating ds = theCase.getBlackboard().getRating(d, psm);
 					if (ds.hasState(state)) {
 						CaseObject.Solution s = new CaseObject.Solution();
-						s.setDiagnosis(d);
+						s.setSolution(d);
 						s.setState(new Rating(state));
 						s.setPSMethodClass(psm.getClass());
 						co.addSolution(s);

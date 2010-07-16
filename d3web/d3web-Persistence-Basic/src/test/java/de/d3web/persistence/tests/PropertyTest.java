@@ -69,7 +69,7 @@ public class PropertyTest extends TestCase {
 	// only an serial enumeration from properties, but a root is needed in a tree-structure.
 	// therefore, a test is better in diagnosis (for example) because there is also checked whether
 	// several properties are read out properly.
-	public void testDiagnosisSimpleState() throws Exception{
+	public void testSolutionSimpleState() throws Exception{
 		diag.getProperties().setProperty(Property.HIDE_IN_DIALOG, new Boolean(true));
 		
 		Properties props = diag.getProperties();

@@ -49,7 +49,7 @@ public interface IDObjectManagement {
 
 	Question findQuestion(String name);
 
-	Solution findDiagnosis(String name);
+	Solution findSolution(String name);
 
 	Choice findAnswerChoice(QuestionChoice qc, String name);
 
@@ -99,9 +99,9 @@ public interface IDObjectManagement {
 
 	QuestionText createQuestionText(String name, QASet parent);
 
-	Solution createDiagnosis(String id, String name, Solution parent);
+	Solution createSolution(String id, String name, Solution parent);
 
-	Solution createDiagnosis(String name, Solution parent);
+	Solution createSolution(String name, Solution parent);
 
 	Choice addChoiceAnswer(QuestionChoice qc, String value);
 

@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.scoring;
@@ -25,12 +25,10 @@ import java.util.List;
 
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.DefaultFact;
-import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
  * Action to add scores to diagnoses (heuristic problemsolver) <br>
@@ -40,14 +38,14 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  */
 public class ActionHeuristicPS extends PSAction {
 
-	private Solution diagnosis;
+	private Solution solution;
 	private Score score;
 
 	@Override
 	public String toString() {
 		String diagnosisId = null;
-		if (getDiagnosis() != null) {
-			diagnosisId = getDiagnosis().getId();
+		if (getSolution() != null) {
+			diagnosisId = getSolution().getId();
 		}
 		return "<RuleAction type=\"Heuristic\">\n"
 				+ "  ["
@@ -64,8 +62,8 @@ public class ActionHeuristicPS extends PSAction {
 	@Override
 	public List<? extends NamedObject> getTerminalObjects() {
 		List<Solution> terminals = new ArrayList<Solution>(1);
-		if (getDiagnosis() != null) {
-			terminals.add(getDiagnosis());
+		if (getSolution() != null) {
+			terminals.add(getSolution());
 		}
 		return terminals;
 	}
@@ -84,14 +82,14 @@ public class ActionHeuristicPS extends PSAction {
 	@Override
 	public void doIt(Session theCase, Object source, PSMethod psmethod) {
 		theCase.getBlackboard().addValueFact(
-				new DefaultFact(diagnosis, new HeuristicRating(getScore()), source, psmethod));
+				new DefaultFact(solution, new HeuristicRating(getScore()), source, psmethod));
 	}
 
 	/**
 	 * @return the Diagnosis this Action can add scores to
 	 */
-	public Solution getDiagnosis() {
-		return diagnosis;
+	public Solution getSolution() {
+		return solution;
 	}
 
 	/**
@@ -105,8 +103,8 @@ public class ActionHeuristicPS extends PSAction {
 	 * sets the given Diagnosis and resets the corresponding rule as Knowledge
 	 * slice
 	 */
-	public void setDiagnosis(Solution theDiagnosis) {
-		diagnosis = theDiagnosis;
+	public void setSolution(Solution solution) {
+		this.solution = solution;
 	}
 
 	/**
@@ -122,7 +120,7 @@ public class ActionHeuristicPS extends PSAction {
 	 */
 	@Override
 	public void undo(Session theCase, Object source, PSMethod psmethod) {
-		theCase.getBlackboard().removeValueFact(diagnosis, source);
+		theCase.getBlackboard().removeValueFact(solution, source);
 		// nothing to do, the fact created in doIt will be automatically deleted
 		// from blackboard
 	}
@@ -130,7 +128,7 @@ public class ActionHeuristicPS extends PSAction {
 	@Override
 	public PSAction copy() {
 		ActionHeuristicPS a = new ActionHeuristicPS();
-		a.setDiagnosis(getDiagnosis());
+		a.setSolution(getSolution());
 		a.setScore(getScore());
 		return a;
 	}
@@ -138,8 +136,8 @@ public class ActionHeuristicPS extends PSAction {
 	@Override
 	public int hashCode() {
 		int hash = 0;
-		if (getDiagnosis() != null) {
-			hash += getDiagnosis().hashCode();
+		if (getSolution() != null) {
+			hash += getSolution().hashCode();
 		}
 		if (getScore() != null) {
 			hash += getScore().hashCode();
@@ -149,11 +147,10 @@ public class ActionHeuristicPS extends PSAction {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == this)
-			return true;
+		if (o == this) return true;
 		if (o instanceof ActionHeuristicPS) {
 			ActionHeuristicPS a = (ActionHeuristicPS) o;
-			return isSame(a.getDiagnosis(), getDiagnosis())
+			return isSame(a.getSolution(), getSolution())
 					&& isSame(a.getScore(), getScore());
 		}
 		else return false;

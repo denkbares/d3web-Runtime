@@ -127,7 +127,7 @@ public abstract class CaseObjectConverter {
 	private void cleanExpectedSolutions(RatedTestCase rtc) {
 		List<RatedSolution> expectedSolutions = rtc.getExpectedSolutions();
 		
-		List<de.d3web.core.knowledge.terminology.Solution> distinctDiagnosises = getDistinctDiagnosises(expectedSolutions);
+		List<de.d3web.core.knowledge.terminology.Solution> distinctDiagnosises = getDistinctSolutions(expectedSolutions);
 		
 		rtc.setExpectedSolutions(getCleanedSolutions(expectedSolutions, distinctDiagnosises));
 	}
@@ -162,7 +162,7 @@ public abstract class CaseObjectConverter {
 	 * @param expectedSolutions a List of RatedSolutions
 	 * @return
 	 */
-	private List<de.d3web.core.knowledge.terminology.Solution> getDistinctDiagnosises(
+	private List<de.d3web.core.knowledge.terminology.Solution> getDistinctSolutions(
 			List<RatedSolution> expectedSolutions) {
 		
 		List<de.d3web.core.knowledge.terminology.Solution> distinctDiagnosises = new ArrayList<de.d3web.core.knowledge.terminology.Solution>();
@@ -198,7 +198,7 @@ public abstract class CaseObjectConverter {
 
 	private void addRatedSolution(RatedTestCase rtc, Solution s) {
 		Rating state = s.getState();
-		de.d3web.core.knowledge.terminology.Solution d = s.getDiagnosis();
+		de.d3web.core.knowledge.terminology.Solution d = s.getSolution();
 		if (state.isRelevant()) {
 			StateRating r = new StateRating(state);
 			rtc.addExpected(new RatedSolution(d, r));

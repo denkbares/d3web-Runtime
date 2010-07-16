@@ -108,7 +108,7 @@ public class BasicPersistenceHandlerTest extends TestCase {
 		
 		this.addQASets();
 		
-		this.addDiagnoses();
+		this.addSolutions();
 		
 		XMLTag knowledgeSlicesTag = new XMLTag("KnowledgeSlices");
 		shouldTag.addChild(knowledgeSlicesTag);
@@ -213,7 +213,7 @@ public class BasicPersistenceHandlerTest extends TestCase {
 		qASetTag.addChild(qContainerTag2);
 	}
 	
-	public void addDiagnoses(){
+	public void addSolutions(){
 		kb.add(diag1);
 		
 		Solution diag2 = new Solution("d2");

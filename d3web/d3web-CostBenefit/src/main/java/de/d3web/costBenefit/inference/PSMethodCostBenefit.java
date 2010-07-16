@@ -133,7 +133,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		caseObject.setCbm(cbm);
 		for (StrategicSupport strategicSupport : stratgicSupports) {
 			Collection<Solution> solutions = strategicSupport
-					.getPossibleDiagnoses(session);
+					.getPossibleSolutions(session);
 			diags.addAll(solutions);
 			Collection<Question> discriminatingQuestions = strategicSupport
 					.getDiscriminatingQuestions(solutions, session);
@@ -240,7 +240,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		List<StrategicSupport> strategicSupports = getStrategicSupports(theCase);
 		HashSet<Solution> possibleDiagnoses = new HashSet<Solution>();
 		for (StrategicSupport strategicSupport : strategicSupports) {
-			possibleDiagnoses.addAll(strategicSupport.getPossibleDiagnoses(theCase));
+			possibleDiagnoses.addAll(strategicSupport.getPossibleSolutions(theCase));
 		}
 		final Set<Solution> diags = caseObject.getDiags();
 		if (possibleDiagnoses.size() == diags.size()) {

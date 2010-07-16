@@ -129,7 +129,7 @@ public class FUSConfiguration implements IFUSConfiguration {
 			CLeaf _1 = (CLeaf) n1;
 			CLeaf _2 = (CLeaf) n2;
 			return _1.getType().equals(_2.getType())
-				&& _1.getDiagnosis().equals(_2.getDiagnosis());
+				&& _1.geSolution().equals(_2.geSolution());
 		} else {
 			Logger.getLogger(this.getClass().getName()).warning("no way to handle AbstractCNodes of type '" + n1.getClass() + "'");
 			return false;
@@ -208,7 +208,7 @@ public class FUSConfiguration implements IFUSConfiguration {
 		} else if (node instanceof CLeaf) {
 			sb.append("<Leaf" +
 				" type=\"" + ((CLeaf) node).getType().getName() + "\"" +
-				" diagnosis=\"" + ((CLeaf) node).getDiagnosis().getId() + "\"/>\n");
+				" diagnosis=\"" + ((CLeaf) node).geSolution().getId() + "\"/>\n");
 		} else
 			Logger.getLogger(this.getClass().getName()).warning("no way to handle AbstractCNodes of type '" + node.getClass() + "'");
 	}

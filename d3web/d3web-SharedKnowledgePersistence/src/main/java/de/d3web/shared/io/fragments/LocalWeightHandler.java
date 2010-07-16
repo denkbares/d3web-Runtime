@@ -71,7 +71,7 @@ public class LocalWeightHandler implements FragmentHandler {
 		if (q instanceof QuestionChoice) {
 			LocalWeight lw = new LocalWeight();
 			lw.setQuestion(q);
-			lw.setDiagnosis(d);
+			lw.setSolution(d);
 			NodeList abChildren = n.getChildNodes();
 			for (int k = 0; k < abChildren.getLength(); ++k) {
 				Node abChild = abChildren.item(k);
@@ -108,7 +108,7 @@ public class LocalWeightHandler implements FragmentHandler {
 		element.setAttribute("ID", "W" + localWeight.getQuestion().getId());
 		element.setAttribute("type", "localweight");
 		element.setAttribute("questionID", localWeight.getQuestion().getId());
-		element.setAttribute("diagnosisID", localWeight.getDiagnosis().getId());
+		element.setAttribute("diagnosisID", localWeight.getSolution().getId());
 		Element valuesNode = doc.createElement("values");
 		Enumeration<Value> answers = localWeight.getAnswerEnumeration();
 		while (answers.hasMoreElements()) {

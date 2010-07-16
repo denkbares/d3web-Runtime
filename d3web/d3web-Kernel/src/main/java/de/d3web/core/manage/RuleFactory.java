@@ -220,7 +220,7 @@ public class RuleFactory {
 		Rule rule = new Rule(theId, PSMethodHeuristic.class);
 
 		ActionHeuristicPS theAction = new ActionHeuristicPS();
-		theAction.setDiagnosis(theDiagnosisAction);
+		theAction.setSolution(theDiagnosisAction);
 		theAction.setScore(theDiagnosisScore);
 
 		setRuleParams(rule, theAction, theCondition, theRuleException);

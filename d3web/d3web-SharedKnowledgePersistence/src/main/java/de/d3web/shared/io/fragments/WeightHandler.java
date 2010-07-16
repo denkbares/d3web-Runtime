@@ -31,7 +31,7 @@ import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.shared.DiagnosisWeightValue;
+import de.d3web.shared.SolutionWeightValue;
 import de.d3web.shared.QuestionWeightValue;
 import de.d3web.shared.Weight;
 
@@ -77,8 +77,8 @@ public class WeightHandler implements FragmentHandler {
 						.getNodeValue();
 				String valueD = diagNode.getAttributes().getNamedItem(
 						"value").getNodeValue();
-				DiagnosisWeightValue diagnosisWV = new DiagnosisWeightValue();
-				diagnosisWV.setDiagnosis(kb.searchSolution(diagID));
+				SolutionWeightValue diagnosisWV = new SolutionWeightValue();
+				diagnosisWV.setSolution(kb.searchSolution(diagID));
 				diagnosisWV.setValue(Weight
 						.convertConstantStringToValue(valueD));
 				weight.addDiagnosisWeightValue(diagnosisWV);
@@ -96,10 +96,10 @@ public class WeightHandler implements FragmentHandler {
 		element.setAttribute("questionID", weight.getQuestionWeightValue().getQuestion().getId());
 		element.setAttribute("value",
 				Weight.convertValueToConstantString(weight.getQuestionWeightValue().getValue()));
-		List<DiagnosisWeightValue> diagnosisWeightValues = weight.getDiagnosisWeightValues();
-		for (DiagnosisWeightValue dwv : diagnosisWeightValues) {
+		List<SolutionWeightValue> diagnosisWeightValues = weight.getSolutionWeightValues();
+		for (SolutionWeightValue dwv : diagnosisWeightValues) {
 			Element dwvNode = doc.createElement("diagnosis");
-			dwvNode.setAttribute("ID", dwv.getDiagnosis().getId());
+			dwvNode.setAttribute("ID", dwv.getSolution().getId());
 			dwvNode.setAttribute("value", Weight.convertValueToConstantString(dwv.getValue()));
 			element.appendChild(dwvNode);
 		}

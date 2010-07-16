@@ -9,7 +9,7 @@ import de.d3web.core.session.Session;
 
 public interface StrategicSupport {
 	
-	Collection<Solution> getPossibleDiagnoses(Session theCase);
+	Collection<Solution> getPossibleSolutions(Session theCase);
 	Collection<Question> getDiscriminatingQuestions(Collection<Solution> solutions, Session theCase);
 	double getEntropy(Collection<? extends QASet> qasets, Collection<Solution> solutions, Session theCase);
 }

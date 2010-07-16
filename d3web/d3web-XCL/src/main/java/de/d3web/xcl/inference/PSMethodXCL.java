@@ -238,7 +238,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 
 	}
 
-	public Collection<Solution> getPossibleDiagnoses(Session theCase) {
+	public Collection<Solution> getPossibleSolutions(Session theCase) {
 		List<Solution> solutions = theCase.getBlackboard().getSolutions(State.ESTABLISHED);
 		if (solutions.size() > 0) {
 			return solutions;

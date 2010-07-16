@@ -248,7 +248,7 @@ public class ComparisonResultRepository {
 			CaseObject cobj = CaseRepository.getInstance().getCaseById(kbid, caseId);
 			double similarity = CaseComparator.calculateSimilarityBetweenCases(compareMode,
 					currentCase, cobj);
-			SimpleResult simRes = new SimpleResult(cobj, similarity, getEstablishedDiagnoses(cobj));
+			SimpleResult simRes = new SimpleResult(cobj, similarity, getEstablishedSolutions(cobj));
 			// addSortedToSimpleResults(simRes);
 			simpleResults.add(simRes);
 		}
@@ -267,7 +267,7 @@ public class ComparisonResultRepository {
 			CaseObject cobj = (CaseObject) iter.next();
 			double similarity = CaseComparator.calculateSimilarityBetweenCases(compareMode,
 					currentCase, cobj);
-			SimpleResult simRes = new SimpleResult(cobj, similarity, getEstablishedDiagnoses(cobj));
+			SimpleResult simRes = new SimpleResult(cobj, similarity, getEstablishedSolutions(cobj));
 			// addSortedToSimpleResults(simRes);
 			simpleResults.add(simRes);
 		}
@@ -397,7 +397,7 @@ public class ComparisonResultRepository {
 				}
 				sb.append("</questions>\n");
 				sb.append("<diagnoses>\n");
-				Iterator diags = getEstablishedDiagnoses(cc).iterator();
+				Iterator diags = getEstablishedSolutions(cc).iterator();
 				while (diags.hasNext()) {
 					Solution diag = (Solution) diags.next();
 					sb.append("<diagnosis ID='" + diag.getId() + "' />\n");
@@ -416,13 +416,13 @@ public class ComparisonResultRepository {
 		return sb.toString();
 	}
 
-	private static Collection getEstablishedDiagnoses(CaseObject aCase) {
+	private static Collection getEstablishedSolutions(CaseObject aCase) {
 		Set establishedDiagnoses = new HashSet();
 		Iterator iter = aCase.getSolutions().iterator();
 		while (iter.hasNext()) {
 			CaseObject.Solution sol = (CaseObject.Solution) iter.next();
 			if (new Rating(State.ESTABLISHED).equals(sol.getState())) {
-				establishedDiagnoses.add(sol.getDiagnosis());
+				establishedDiagnoses.add(sol.getSolution());
 			}
 		}
 		return establishedDiagnoses;

@@ -482,7 +482,7 @@ public class CaseObjectImpl implements CaseObject {
 	 * 
 	 * @see de.d3web.caserepository.CaseObject#getCorrectDiagnoses()
 	 */
-	public Set<de.d3web.core.knowledge.terminology.Solution> getCorrectSystemDiagnoses() {
+	public Set<de.d3web.core.knowledge.terminology.Solution> getCorrectSystemSolutions() {
 		Set<de.d3web.core.knowledge.terminology.Solution> result = new HashSet<de.d3web.core.knowledge.terminology.Solution>();
 
 		Collection<Solution> solutions = getSolutions(PSMethodUserSelected.class);
@@ -492,7 +492,7 @@ public class CaseObjectImpl implements CaseObject {
 		Iterator<Solution> solIter = solutions.iterator();
 		while (solIter.hasNext()) {
 			Solution sol = solIter.next();
-			if (sol.getState().hasState(State.ESTABLISHED)) result.add(sol.getDiagnosis());
+			if (sol.getState().hasState(State.ESTABLISHED)) result.add(sol.getSolution());
 		}
 		return result;
 	}
@@ -502,7 +502,7 @@ public class CaseObjectImpl implements CaseObject {
 	 * 
 	 * @see de.d3web.caserepository.CaseObject#getSystemDiagnoses()
 	 */
-	public Set<de.d3web.core.knowledge.terminology.Solution> getSystemDiagnoses() {
+	public Set<de.d3web.core.knowledge.terminology.Solution> getSystemSolutions() {
 		Set<de.d3web.core.knowledge.terminology.Solution> result = new HashSet<de.d3web.core.knowledge.terminology.Solution>();
 		Collection<Solution> solutions = getSolutions();
 
@@ -512,7 +512,7 @@ public class CaseObjectImpl implements CaseObject {
 
 			if ((sol.getPSMethodClass() != PSMethodUserSelected.class)
 					&& (sol.getPSMethodClass() != PSMethodAuthorSelected.class)
-					&& (sol.getState().hasState(State.ESTABLISHED))) result.add(sol.getDiagnosis());
+					&& (sol.getState().hasState(State.ESTABLISHED))) result.add(sol.getSolution());
 		}
 		return result;
 	}

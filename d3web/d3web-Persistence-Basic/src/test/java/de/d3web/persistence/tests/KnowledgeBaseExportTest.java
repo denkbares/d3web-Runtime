@@ -193,7 +193,7 @@ public class KnowledgeBaseExportTest extends TestCase {
 	}
 
 	
-	public void testDiagnosisOutput() throws Exception{
+	public void testSolutionOutput() throws Exception{
 		Solution diag = new Solution("d1");
 		diag.setName("d1-text");
 

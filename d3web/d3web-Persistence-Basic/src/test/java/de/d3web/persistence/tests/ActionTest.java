@@ -288,7 +288,7 @@ public class ActionTest extends TestCase {
 	public void testActionHeuristicPS() throws Exception {
 		ActionHeuristicPS ah = new ActionHeuristicPS();
 		rcomp.setAction(ah);
-		ah.setDiagnosis(diag1);
+		ah.setSolution(diag1);
 		ah.setScore(Score.P1);
 
 		shouldTag = new XMLTag("Action");

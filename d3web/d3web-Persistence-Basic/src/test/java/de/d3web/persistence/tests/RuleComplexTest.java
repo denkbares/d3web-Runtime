@@ -92,7 +92,7 @@ public class RuleComplexTest extends TestCase {
 		rcomp = new Rule("d1", PSMethodHeuristic.class);
 		ah = new ActionHeuristicPS();
 		rcomp.setAction(ah);
-		ah.setDiagnosis(diag1);
+		ah.setSolution(diag1);
 		ah.setScore(Score.P1);
 
 		rcw = new RuleHandler();

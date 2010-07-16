@@ -56,7 +56,7 @@ public class LocalWeight implements KnowledgeSlice {
 	public static double G7 = 64;
 
 	private Question q;
-	private Solution d;
+	private Solution s;
 	private Hashtable<Value, Double> values = null;
 
 	/**
@@ -99,15 +99,15 @@ public class LocalWeight implements KnowledgeSlice {
 		return q;
 	}
 
-	public void setDiagnosis(de.d3web.core.knowledge.terminology.Solution newDiagnosis) {
-		if (d != null) {
-			d.removeKnowledge(
+	public void setSolution(de.d3web.core.knowledge.terminology.Solution solution) {
+		if (s != null) {
+			s.removeKnowledge(
 					getProblemsolverContext(),
 					this,
 					METHOD_KIND);
 		}
-		d = newDiagnosis;
-		if (newDiagnosis != null) {
+		s = solution;
+		if (solution != null) {
 			q.addKnowledge(
 					getProblemsolverContext(),
 					this,
@@ -115,8 +115,8 @@ public class LocalWeight implements KnowledgeSlice {
 		}
 	}
 
-	public Solution getDiagnosis() {
-		return d;
+	public Solution getSolution() {
+		return s;
 	}
 
 	/*
@@ -207,7 +207,7 @@ public class LocalWeight implements KnowledgeSlice {
 
 	public void remove() {
 		setQuestion(null);
-		setDiagnosis(null);
+		setSolution(null);
 	}
 
 	public Enumeration<Value> getAnswerEnumeration() {
@@ -249,7 +249,7 @@ public class LocalWeight implements KnowledgeSlice {
 		if (lw == null) {
 			lw = new LocalWeight();
 			if (object instanceof Solution) {
-				lw.setDiagnosis((Solution) object);
+				lw.setSolution((Solution) object);
 			}
 			else if (object instanceof Question) {
 				lw.setQuestion((Question) object);
