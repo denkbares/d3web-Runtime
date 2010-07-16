@@ -35,6 +35,7 @@ import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.interviewmanager.DialogController;
 import de.d3web.core.session.interviewmanager.Interview;
 import de.d3web.core.session.interviewmanager.QASetManager;
+import de.d3web.core.session.protocol.Protocol;
 
 /**
  * The Session interface represents an active problem-solving session. Here,

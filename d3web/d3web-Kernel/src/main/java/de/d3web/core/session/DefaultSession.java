@@ -50,6 +50,8 @@ import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy
 import de.d3web.core.session.interviewmanager.PSMethodInterview;
 import de.d3web.core.session.interviewmanager.QASetManager;
 import de.d3web.core.session.interviewmanager.QASetManagerFactory;
+import de.d3web.core.session.protocol.DefaultProtocol;
+import de.d3web.core.session.protocol.Protocol;
 import de.d3web.indication.inference.PSMethodContraIndication;
 import de.d3web.indication.inference.PSMethodDialogControlling;
 import de.d3web.indication.inference.PSMethodNextQASet;

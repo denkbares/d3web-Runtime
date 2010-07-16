@@ -1,4 +1,4 @@
-package de.d3web.core.session;
+package de.d3web.core.session.protocol;
 
 import java.util.ArrayList;
 import java.util.Collections;

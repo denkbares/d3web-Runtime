@@ -17,11 +17,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package de.d3web.core.session;
+package de.d3web.core.session.protocol;
 
 import java.util.List;
 
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 
 /**
