@@ -146,7 +146,7 @@ public class SaveCaseController {
 		// DCMarkup
 		String id = ""
 				+ (CaseManager.getInstance().getMaxCaseIdForKb(
-				theCase.getKnowledgeBase().getId()) + 1);
+						theCase.getKnowledgeBase().getId()) + 1);
 		co.getDCMarkup().setContent(DCElement.IDENTIFIER, id);
 		lastSavedCaseID = id;
 
@@ -172,7 +172,7 @@ public class SaveCaseController {
 		co.getProperties().setProperty(
 				Property.CASE_CRITIQUE_TEXT,
 				theCase.getProperties()
-				.getProperty(Property.CASE_CRITIQUE_TEXT));
+						.getProperty(Property.CASE_CRITIQUE_TEXT));
 
 		// MetaData
 		MetaDataImpl md = new MetaDataImpl();
@@ -242,7 +242,7 @@ public class SaveCaseController {
 		CaseRepositoryDescriptor crd = cman.getCRDforUser(dia.getSession()
 				.getKnowledgeBase().getId(), getUserBean().getEmail(),
 				ResourceRepository.getInstance().getBasicSettingValue(
-				ResourceRepository.CR_LOCATIONTYPE));
+						ResourceRepository.CR_LOCATIONTYPE));
 		logger.info("Saving case...");
 		if (!cman.addCase(co, crd)) {
 			logger.error("Case could not be saved!");
@@ -282,7 +282,7 @@ public class SaveCaseController {
 						PSMethodUserSelected.class);
 				if (sol == null) {
 					sol = new CaseObject.Solution();
-					sol.setDiagnosis(d);
+					sol.setSolution(d);
 					sol.setPSMethodClass(PSMethodUserSelected.class);
 					sol.setState(new Rating(Rating.State.ESTABLISHED));
 					co.addSolution(sol);

@@ -177,8 +177,8 @@ public class CompareCasePageRenderer extends Renderer {
 					+ "_cont", "id");
 			DialogRenderUtils.renderTableHeadRow(writer, component,
 					new String[] {
-					DialogUtils.getMessageFor("cbr.container.name"),
-					DialogUtils.getMessageFor("cbr.similarity") });
+							DialogUtils.getMessageFor("cbr.container.name"),
+							DialogUtils.getMessageFor("cbr.similarity") });
 			Iterator<DetailledResult> iter = results.iterator();
 
 			while (iter.hasNext()) {
@@ -241,16 +241,16 @@ public class CompareCasePageRenderer extends Renderer {
 
 			DialogRenderUtils
 					.renderTableHeadRow(
-					writer,
-					component,
-					new String[] {
-					DialogUtils
-							.getMessageFor("cbr.detailled.name"),
-					DialogUtils
-							.getMessageFor("cbr.detailled.currentvalue"),
-					DialogUtils
-							.getMessageFor("cbr.detailled.casevalue"),
-					DialogUtils.getMessageFor("cbr.similarity") });
+							writer,
+							component,
+							new String[] {
+									DialogUtils
+											.getMessageFor("cbr.detailled.name"),
+									DialogUtils
+											.getMessageFor("cbr.detailled.currentvalue"),
+									DialogUtils
+											.getMessageFor("cbr.detailled.casevalue"),
+									DialogUtils.getMessageFor("cbr.similarity") });
 
 			Iterator<DetailledResult> iter = results.iterator();
 			while (iter.hasNext()) {
@@ -359,7 +359,7 @@ public class CompareCasePageRenderer extends Renderer {
 		writer.startElement("p", component);
 		writer
 				.writeText(DialogUtils.getMessageFor("cbr.errormessage"),
-				"value");
+						"value");
 		writer.endElement("p");
 	}
 
@@ -434,10 +434,10 @@ public class CompareCasePageRenderer extends Renderer {
 			// tableheadline rendern...
 			DialogRenderUtils.renderTableHeadRow(writer, component,
 					new String[] {
-					DialogUtils.getMessageFor("cbr.simple.name"),
-					DialogUtils.getMessageFor("cbr.similarity"),
-					DialogUtils.getMessageFor("cbr.simple.solution"),
-					DialogUtils.getMessageFor("cbr.simple.choice") });
+							DialogUtils.getMessageFor("cbr.simple.name"),
+							DialogUtils.getMessageFor("cbr.similarity"),
+							DialogUtils.getMessageFor("cbr.simple.solution"),
+							DialogUtils.getMessageFor("cbr.simple.choice") });
 
 			int index = 0;
 			Iterator<SimpleResult> iter = cases.iterator();
@@ -471,7 +471,7 @@ public class CompareCasePageRenderer extends Renderer {
 
 				writer.startElement("td", component);
 				writer.writeAttribute("id", "casesolutions_" + caseName, "id");
-				Iterator<Solution> diags = simres.getDiagnoses().iterator();
+				Iterator<Solution> diags = simres.getSolutions().iterator();
 				if (!diags.hasNext()) {
 					writer.writeText(DialogUtils
 							.getMessageFor("cbr.simple.nosolution"), "value");

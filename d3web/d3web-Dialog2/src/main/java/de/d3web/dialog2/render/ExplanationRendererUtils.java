@@ -318,9 +318,9 @@ public class ExplanationRendererUtils {
 				writer.startElement("tr", component);
 				renderCondition(writer, component, iter.next(), theCase,
 						showStatus, parentFired
-						&& (statusValues != null)
-						&& ((Boolean) statusValues.get(0))
-						.booleanValue(), null, true, rcID);
+								&& (statusValues != null)
+								&& ((Boolean) statusValues.get(0))
+										.booleanValue(), null, true, rcID);
 				writer.endElement("tr");
 			}
 			writer.endElement("table");
@@ -334,17 +334,17 @@ public class ExplanationRendererUtils {
 				if (i == 0) {
 					renderCondition(writer, component, terms.get(i), theCase,
 							showStatus, parentFired
-							&& (statusValues != null)
-							&& ((Boolean) statusValues.get(0))
-							.booleanValue(), null, false, rcID);
+									&& (statusValues != null)
+									&& ((Boolean) statusValues.get(0))
+											.booleanValue(), null, false, rcID);
 				}
 				else {
 					renderCondition(writer, component, terms.get(i), theCase,
 							showStatus, parentFired
-							&& (statusValues != null)
-							&& ((Boolean) statusValues.get(0))
-							.booleanValue(), DialogUtils
-							.getMessageFor("explain.or_verb"), false,
+									&& (statusValues != null)
+									&& ((Boolean) statusValues.get(0))
+											.booleanValue(), DialogUtils
+									.getMessageFor("explain.or_verb"), false,
 							rcID);
 				}
 				writer.endElement("tr");
@@ -360,17 +360,17 @@ public class ExplanationRendererUtils {
 				if (i == 0) {
 					renderCondition(writer, component, terms.get(i), theCase,
 							showStatus, parentFired
-							&& (statusValues != null)
-							&& ((Boolean) statusValues.get(0))
-							.booleanValue(), null, false, rcID);
+									&& (statusValues != null)
+									&& ((Boolean) statusValues.get(0))
+											.booleanValue(), null, false, rcID);
 				}
 				else {
 					renderCondition(writer, component, terms.get(i), theCase,
 							showStatus, parentFired
-							&& (statusValues != null)
-							&& ((Boolean) statusValues.get(0))
-							.booleanValue(), DialogUtils
-							.getMessageFor("explain.and_verb"), false,
+									&& (statusValues != null)
+									&& ((Boolean) statusValues.get(0))
+											.booleanValue(), DialogUtils
+									.getMessageFor("explain.and_verb"), false,
 							rcID);
 				}
 				writer.endElement("tr");
@@ -390,19 +390,19 @@ public class ExplanationRendererUtils {
 					if (cmofn.getMin() == 1) {
 						writer.writeText(DialogUtils.getMessageWithParamsFor(
 								"explain.mofn_exact_1", new Object[] { cmofn
-								.getMin() }), "value");
+										.getMin() }), "value");
 					}
 					else {
 						writer.writeText(DialogUtils.getMessageWithParamsFor(
 								"explain.mofn_exact_more", new Object[] { cmofn
-								.getMin() }), "value");
+										.getMin() }), "value");
 					}
 				}
 				else {
 					writer.writeText(DialogUtils.getMessageWithParamsFor(
 							"explain.mofn_in", new Object[] {
-							cmofn.getMin(),
-							cmofn.getMax() }), "value");
+									cmofn.getMin(),
+									cmofn.getMax() }), "value");
 				}
 			}
 			else if (cmofn.getMin() >= 0) {
@@ -414,7 +414,7 @@ public class ExplanationRendererUtils {
 				else {
 					writer.writeText(DialogUtils.getMessageWithParamsFor(
 							"explain.mofn_min_more", new Object[] { cmofn
-							.getMin() }), "value");
+									.getMin() }), "value");
 				}
 			}
 			else if (cmofn.getMax() >= 0) {
@@ -426,7 +426,7 @@ public class ExplanationRendererUtils {
 				else {
 					writer.writeText(DialogUtils.getMessageWithParamsFor(
 							"explain.mofn_max_more", new Object[] { cmofn
-							.getMax() }), "value");
+									.getMax() }), "value");
 				}
 			}
 			writer.endElement("tr");
@@ -436,9 +436,9 @@ public class ExplanationRendererUtils {
 				if (i == 0) {
 					renderCondition(writer, component, terms.get(i), theCase,
 							showStatus, parentFired
-							&& (statusValues != null)
-							&& ((Boolean) statusValues.get(0))
-							.booleanValue(), null, false, rcID);
+									&& (statusValues != null)
+									&& ((Boolean) statusValues.get(0))
+											.booleanValue(), null, false, rcID);
 				}
 				else {
 					renderCondition(
@@ -448,11 +448,11 @@ public class ExplanationRendererUtils {
 							theCase,
 							showStatus,
 							parentFired
-							&& (statusValues != null)
-							&& ((Boolean) statusValues.get(0))
-							.booleanValue(),
+									&& (statusValues != null)
+									&& ((Boolean) statusValues.get(0))
+											.booleanValue(),
 							DialogUtils
-							.getMessageFor("explain.mofn_connector_verb"),
+									.getMessageFor("explain.mofn_connector_verb"),
 							false, rcID);
 				}
 				writer.endElement("tr");
@@ -556,8 +556,8 @@ public class ExplanationRendererUtils {
 					+ ck.getQuestion().getId() + ")", "value");
 			writer
 					.writeText(" = "
-					+ DialogUtils.getMessageFor("explain.known"),
-					"value");
+							+ DialogUtils.getMessageFor("explain.known"),
+							"value");
 		}
 		else if (cond instanceof CondUnknown) {
 			CondUnknown cuk = (CondUnknown) cond;
@@ -571,8 +571,8 @@ public class ExplanationRendererUtils {
 		else if (cond instanceof CondDState) {
 			CondDState cds = (CondDState) cond;
 			writer.writeAttribute("id", rcID + "_condstate_"
-					+ cds.getDiagnosis().getId(), "id");
-			renderDiagnosisObject(writer, cds.getDiagnosis());
+					+ cds.getSolution().getId(), "id");
+			renderDiagnosisObject(writer, cds.getSolution());
 			writer.write(" = ");
 			writer.writeText(getStateTranslation(cds.getStatus()), "value");
 		}
@@ -591,7 +591,7 @@ public class ExplanationRendererUtils {
 			if (cn instanceof CondNumEqual) writer.write(" = ");
 			else if (cn instanceof CondNumGreater) writer.writeText(
 					" " + DialogUtils.getMessageFor("explain.numgreater")
-					+ " ", "value");
+							+ " ", "value");
 			else if (cn instanceof CondNumGreaterEqual) writer.writeText(" "
 					+ DialogUtils.getMessageFor("explain.numgreater_equal")
 					+ " ", "value");
@@ -619,10 +619,10 @@ public class ExplanationRendererUtils {
 					+ cni.getQuestion().getId() + ")", "value");
 			writer.writeText(" "
 					+ DialogUtils
-					.getMessageWithParamsFor("explain.numin",
-					new Object[] {
-					cni.getMinValue(),
-					cni.getMaxValue() }), "value");
+							.getMessageWithParamsFor("explain.numin",
+									new Object[] {
+											cni.getMinValue(),
+											cni.getMaxValue() }), "value");
 		}
 		else if (cond instanceof CondTextContains) {
 			// FIXME depends on sourceforge bug #1801281, has to be tested
