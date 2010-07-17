@@ -20,7 +20,6 @@
 
 package de.d3web.shared.tests;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -29,10 +28,10 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionYN;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.shared.Abnormality;
 import de.d3web.shared.LocalWeight;
 import de.d3web.shared.PSMethodShared;
@@ -63,6 +62,7 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		junit.textui.TestRunner.run(RemoveKnowledgeSliceTest.suite());
 	}
 
+	@Override
 	protected void setUp() {
 		base = new KnowledgeBase();
 
@@ -73,12 +73,14 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		qyn1 = new QuestionYN("qyn1");
 		qyn1.setName("qyn1");
 		qyn1.setKnowledgeBase(base);
-		qyn1.setParents(Arrays.asList(new NamedObject[] { qc }));
+		qc.addChild(qyn1);
+		// qyn1.setParents(Arrays.asList(new NamedObject[] { qc }));
 
 		qyn2 = new QuestionYN("qyn2");
 		qyn2.setName("qyn2");
 		qyn2.setKnowledgeBase(base);
-		qyn2.setParents(Arrays.asList(new NamedObject[] { qc }));
+		qc.addChild(qyn2);
+		// qyn2.setParents(Arrays.asList(new NamedObject[] { qc }));
 
 		d1 = new Solution("d1");
 		d1.setName("d1");
@@ -155,7 +157,8 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		List<?> all = (List<?>) qyn2.getAllKnowledge();
 		try {
 			base.remove(qyn2);
-		} catch (Exception e) {
+		}
+		catch (IllegalAccessException e) {
 			fail(qyn2.getName()+" should have had no children!");
 		}
 		Collection<KnowledgeSlice> slices = base
@@ -186,7 +189,8 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		Collection<KnowledgeSlice> all = qyn2.getAllKnowledge();
 		try {
 			base.remove(qyn2);
-		} catch (Exception e) {
+		}
+		catch (IllegalAccessException e) {
 			fail(qyn2.getName()+" should have had no children!");
 		}
 		Collection<KnowledgeSlice> slices = base
@@ -215,7 +219,8 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		Collection<KnowledgeSlice> all = qyn2.getAllKnowledge();
 		try {
 			base.remove(qyn2);
-		} catch (Exception e) {
+		}
+		catch (IllegalAccessException e) {
 			fail(qyn2.getName()+" should have had no children!");
 		}
 		Collection<KnowledgeSlice> slices = base
@@ -245,7 +250,8 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		Collection<KnowledgeSlice> all = qyn2.getAllKnowledge();
 		try {
 			base.remove(qyn2);
-		} catch (Exception e) {
+		}
+		catch (IllegalAccessException e) {
 			fail(qyn2.getName()+" should have had no children!");
 		}
 		Collection<KnowledgeSlice> slices = base
@@ -275,7 +281,8 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		Collection<KnowledgeSlice> all = qyn2.getAllKnowledge();
 		try {
 			base.remove(qyn2);
-		} catch (Exception e) {
+		}
+		catch (IllegalAccessException e) {
 			fail(qyn2.getName()+" should have had no children!");
 		}
 		Collection<KnowledgeSlice> slices = base
