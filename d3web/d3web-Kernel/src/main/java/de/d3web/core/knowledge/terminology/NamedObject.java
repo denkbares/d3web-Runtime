@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -106,10 +107,10 @@ public abstract class NamedObject implements TerminologyObject,
 		// unsynchronized version, allows null values
 		knowledgeMap = new HashMap<Class<? extends PSMethod>, Map<MethodKind, KnowledgeSlice>>();
 
-		children = new ArrayList<NamedObject>();
-		parents = new ArrayList<NamedObject>();
-		linkedChildren = new ArrayList<NamedObject>();
-		linkedParents = new ArrayList<NamedObject>();
+		children = new LinkedList<NamedObject>();
+		parents = new LinkedList<NamedObject>();
+		linkedChildren = new LinkedList<NamedObject>();
+		linkedParents = new LinkedList<NamedObject>();
 		properties = new Properties();
 	}
 
@@ -686,6 +687,16 @@ public abstract class NamedObject implements TerminologyObject,
 	@Override
 	public TerminologyObject[] getChildren() {
 		return children.toArray(new TerminologyObject[children.size()]);
+	}
+
+	public int getNumberOfChildren() {
+		return children != null ? children.size() : 0;
+	}
+
+	public void moveChildToPosition(NamedObject child, int pos) {
+		if (children.remove(child)) {
+			children.add(pos > children.size() ? children.size() : pos, child);
+		}
 	}
 
 }

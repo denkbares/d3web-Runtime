@@ -112,6 +112,13 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	public static String insertXCLRelation(KnowledgeBase kb,
 			Condition theCondition, Solution d, XCLRelationType type,
 			double weight, String kdomNodeID) {
+		return insertAndReturnXCLRelation(kb, theCondition, d, type,
+				weight, kdomNodeID).getId();
+	}
+
+	public static XCLRelation insertAndReturnXCLRelation(KnowledgeBase kb,
+			Condition theCondition, Solution d, XCLRelationType type,
+			double weight, String kdomNodeID) {
 
 		// Nullchecks
 		if (theCondition == null || d == null) {
@@ -119,8 +126,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		}
 
 		// insert XCL
-
-		String relationID = null;
+		XCLRelation relation = null;
 		Collection<KnowledgeSlice> models = kb
 				.getAllKnowledgeSlicesFor(PSMethodXCL.class);
 
@@ -128,13 +134,12 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		for (KnowledgeSlice knowledgeSlice : models) {
 			if (knowledgeSlice instanceof XCLModel) {
 				if (((XCLModel) knowledgeSlice).getSolution().equals(d)) {
-					XCLRelation rel = XCLRelation.createXCLRelation(
+					relation = XCLRelation.createXCLRelation(
 							theCondition, weight);
 					if (kdomNodeID != null) {
-						rel.setKdmomID(kdomNodeID);
+						relation.setKdmomID(kdomNodeID);
 					}
-					relationID = rel.getId();
-					((XCLModel) knowledgeSlice).addRelation(rel, type);
+					((XCLModel) knowledgeSlice).addRelation(relation, type);
 					foundModel = true;
 
 				}
@@ -142,22 +147,21 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		}
 		if (!foundModel) {
 			XCLModel newModel = new XCLModel(d);
-			XCLRelation rel = XCLRelation.createXCLRelation(theCondition,
+			relation = XCLRelation.createXCLRelation(theCondition,
 					weight);
 
 			if (kdomNodeID != null) {
-				rel.setKdmomID(kdomNodeID);
+				relation.setKdmomID(kdomNodeID);
 			}
 
-			relationID = rel.getId();
-			newModel.addRelation(rel, type);
+			newModel.addRelation(relation, type);
 			// TODO: must it be added to the knowledge base?
 			// kb.addKnowledge(PSMethodXCL.class, newModel, XCLModel.XCLMODEL);
 			d.addKnowledge(PSMethodXCL.class, newModel, XCLModel.XCLMODEL);
 
 		}
 
-		return relationID;
+		return relation;
 	}
 
 	public Map<XCLRelationType, Collection<XCLRelation>> getTypedRelations() {

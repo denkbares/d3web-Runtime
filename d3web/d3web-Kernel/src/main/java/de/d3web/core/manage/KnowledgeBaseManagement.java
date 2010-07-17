@@ -323,6 +323,14 @@ public class KnowledgeBaseManagement {
 		return answer;
 	}
 
+	public Choice addChoiceAnswer(QuestionChoice question, String answerText, int pos) {
+		String answerID = getNewAnswerAlternativeFor(question);
+		Choice answer = AnswerFactory.createAnswerChoice(answerID,
+				answerText);
+		question.addAlternative(answer, pos);
+		return answer;
+	}
+
 	private String getNewAnswerAlternativeFor(QuestionChoice question) {
 		int maxCount = 0;
 		for (Iterator<Choice> iter = question.getAllAlternatives().iterator(); iter
@@ -688,7 +696,7 @@ public class KnowledgeBaseManagement {
 	 */
 	
 	private class DFSTreeSortingComparator implements Comparator<QContainer> {
-		private Map<TerminologyObject, Integer> index;
+		private final Map<TerminologyObject, Integer> index;
 		public DFSTreeSortingComparator(
 				Map<TerminologyObject, Integer> qasetIndex) {
 			this.index = qasetIndex;

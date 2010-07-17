@@ -62,6 +62,7 @@ public abstract class QuestionChoice extends Question {
 	/**
 	 * @deprecated Use KnowledgeBaseManagement.findChoice(...)
 	 */
+	@Deprecated
 	public Choice findChoice(String choiceID) {
 		return KnowledgeBaseManagement.createInstance(getKnowledgeBase()).findChoice(this, choiceID);
 	}
@@ -87,6 +88,18 @@ public abstract class QuestionChoice extends Question {
 			alternatives.add(answer);
 			answer.setQuestion(this);
 		}
+	}
+
+	public void addAlternative(Choice answer, int pos) {
+		if ((answer != null) && (!getAllAlternatives().contains(answer))) {
+			alternatives.add(pos, answer);
+			answer.setQuestion(this);
+		}
+	}
+
+	public boolean removeAlternative(Choice answer) {
+		answer.setQuestion(null);
+		return alternatives.remove(answer);
 	}
 
 	@Override

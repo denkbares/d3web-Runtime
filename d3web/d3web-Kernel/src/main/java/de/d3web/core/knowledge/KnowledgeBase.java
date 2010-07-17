@@ -341,6 +341,8 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 					+ " has some children, that should be removed/relinked before deletion.");
 		}
 		else {
+			// removes object from list of children of all parents
+			object.setParents(new ArrayList<NamedObject>(0));
 			object.removeAllKnowledge();
 			objectIDMap.remove(object.getId());
 			objectNameMap.remove(object.getName());
