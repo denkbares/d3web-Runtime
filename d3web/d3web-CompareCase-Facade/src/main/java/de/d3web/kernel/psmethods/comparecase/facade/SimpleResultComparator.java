@@ -18,7 +18,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.kernel.psmethods2.comparecase.facade;
+package de.d3web.kernel.psmethods.comparecase.facade;
 
 import java.util.Comparator;
 

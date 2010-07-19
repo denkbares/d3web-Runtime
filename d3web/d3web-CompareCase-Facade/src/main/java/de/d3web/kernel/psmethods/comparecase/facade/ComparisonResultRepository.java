@@ -18,7 +18,7 @@
  * site: http://www.fsf.org.
  */
 
-package de.d3web.kernel.psmethods2.comparecase.facade;
+package de.d3web.kernel.psmethods.comparecase.facade;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -35,21 +35,21 @@ import de.d3web.caserepository.utilities.SessionConverter;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Rating.State;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.Unknown;
-import de.d3web.kernel.psMethods.compareCase.CompareCaseException;
-import de.d3web.kernel.psMethods.compareCase.CompareObjectsHashContainer;
-import de.d3web.kernel.psMethods.compareCase.comparators.CaseComparator;
-import de.d3web.kernel.psMethods.compareCase.comparators.ComparatorResult;
-import de.d3web.kernel.psMethods.compareCase.comparators.CompareMode;
+import de.d3web.kernel.psmethods.comparecase.CompareCaseException;
+import de.d3web.kernel.psmethods.comparecase.CompareObjectsHashContainer;
+import de.d3web.kernel.psmethods.comparecase.comparators.CaseComparator;
+import de.d3web.kernel.psmethods.comparecase.comparators.ComparatorResult;
+import de.d3web.kernel.psmethods.comparecase.comparators.CompareMode;
 import de.d3web.utilities.caseLoaders.CaseRepository;
 
 /**

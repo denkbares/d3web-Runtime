@@ -1,30 +1,30 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
-package de.d3web.kernel.psmethods2.comparecase.facade;
+package de.d3web.kernel.psmethods.comparecase.facade;
 
 import java.util.Iterator;
 import java.util.List;
 
 import de.d3web.core.knowledge.terminology.QContainer;
-import de.d3web.kernel.psMethods.compareCase.comparators.ComparatorResult;
+import de.d3web.kernel.psmethods.comparecase.comparators.ComparatorResult;
 
 /**
  * Insert the type's description here. Creation date: (22.08.01 01:45:07)
@@ -32,6 +32,7 @@ import de.d3web.kernel.psMethods.compareCase.comparators.ComparatorResult;
  * @author: Norman Brümmer
  */
 public class DetailledResult {
+
 	private QContainer container = null;
 	private double similarity = 0;
 	private double maxPoints = 0;
@@ -128,6 +129,7 @@ public class DetailledResult {
 	 * 
 	 * @return java.lang.String
 	 */
+	@Override
 	public String toString() {
 		return container.getId() + ": " + reachedPoints + " = " + similarity
 				+ " * " + maxPoints + "::::" + comparatorResults;
