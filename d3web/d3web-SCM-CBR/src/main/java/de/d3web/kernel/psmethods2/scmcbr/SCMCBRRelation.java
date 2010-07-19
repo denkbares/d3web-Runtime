@@ -1,4 +1,4 @@
-package de.d3web.kernel.psMethods.scmcbr2;
+package de.d3web.kernel.psmethods2.scmcbr;
 
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;

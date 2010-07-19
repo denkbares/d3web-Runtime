@@ -1,4 +1,4 @@
-package de.d3web.kernel.psMethods.scmcbr2;
+package de.d3web.kernel.psmethods2.scmcbr;
 
 import java.util.ArrayList;
 import java.util.Collection;

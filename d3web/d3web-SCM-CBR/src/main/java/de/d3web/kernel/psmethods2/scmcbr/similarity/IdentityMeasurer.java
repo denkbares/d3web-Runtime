@@ -1,4 +1,4 @@
-package de.d3web.kernel.psMethods.scmcbr2.similarity;
+package de.d3web.kernel.psmethods2.scmcbr.similarity;
 
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;

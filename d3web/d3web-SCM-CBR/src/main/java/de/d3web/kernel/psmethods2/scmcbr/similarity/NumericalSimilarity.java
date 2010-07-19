@@ -1,4 +1,4 @@
-package de.d3web.kernel.psMethods.scmcbr2.similarity;
+package de.d3web.kernel.psmethods2.scmcbr.similarity;
 
 import java.util.List;
 
