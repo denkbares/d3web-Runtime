@@ -16,7 +16,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="PSMethod"
 		id="PSMethodCostBenefit">
 		<parameter id="class"
-			value="de.d3web.costBenefit.inference.PSMethodCostBenefit" />
+			value="de.d3web.costbenefit.inference.PSMethodCostBenefit" />
 		<parameter id="name" value="PSMethodCostBenefit" />
 		<parameter id="description" value="PSMethod for CostBenefit" />
 		<parameter id="version" value="1.0" />
@@ -26,7 +26,7 @@
 	<extension plugin-id="KnowledgePersistenceExtensionPoints"
 		point-id="KnowledgeWriter" id="CostBenefitModelPersistenceHandler.Writer">
 		<parameter id="class"
-			value="de.d3web.costBenefit.io.CostBenefitModelPersistenceHandler" />
+			value="de.d3web.costbenefit.io.CostBenefitModelPersistenceHandler" />
 		<parameter id="name" value="CostBenefitModelPersistenceHandler" />
 		<parameter id="description" value="Saves cost benefit knowledge to XML" />
 		<parameter id="version" value="1.0" />
@@ -37,7 +37,7 @@
 	<extension plugin-id="KnowledgePersistenceExtensionPoints"
 		point-id="KnowledgeReader" id="CostBenefitModelPersistenceHandler">
 		<parameter id="class"
-			value="de.d3web.costBenefit.io.CostBenefitModelPersistenceHandler" />
+			value="de.d3web.costbenefit.io.CostBenefitModelPersistenceHandler" />
 		<parameter id="name" value="CostBenefitModelPersistenceHandler" />
 		<parameter id="description" value="Loads cost benefit knowledge from XML" />
 		<parameter id="version" value="1.0" />
@@ -48,7 +48,7 @@
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="DefaultAbortStrategyHandler">
 		<parameter id="class"
-			value="de.d3web.costBenefit.io.fragments.DefaultAbortStrategyHandler" />
+			value="de.d3web.costbenefit.io.fragments.DefaultAbortStrategyHandler" />
 		<parameter id="name" value="DefaultAbortStrategyHandler" />
 		<parameter id="description" value="Handler for DefaultAbortStrategy" />
 		<parameter id="version" value="1.0" />
@@ -58,7 +58,7 @@
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="DefaultCostFunctionHandler">
 		<parameter id="class"
-			value="de.d3web.costBenefit.io.fragments.DefaultCostFunctionHandler" />
+			value="de.d3web.costbenefit.io.fragments.DefaultCostFunctionHandler" />
 		<parameter id="name" value="DefaultCostFunctionHandler" />
 		<parameter id="description" value="Handler for DefaultCostFunctionHandler" />
 		<parameter id="version" value="1.0" />
@@ -68,7 +68,7 @@
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="DefaultTargetFunctionHandler">
 		<parameter id="class"
-			value="de.d3web.costBenefit.io.fragments.DefaultTargetFunctionHandler" />
+			value="de.d3web.costbenefit.io.fragments.DefaultTargetFunctionHandler" />
 		<parameter id="name" value="DefaultTargetFunctionHandler" />
 		<parameter id="description" value="Handler for DefaultTargetFunctionHandler" />
 		<parameter id="version" value="1.0" />
@@ -78,7 +78,7 @@
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="IterativeDeepeningSearchAlgorithmHandler">
 		<parameter id="class"
-			value="de.d3web.costBenefit.io.fragments.IterativeDeepeningSearchAlgorithmHandler" />
+			value="de.d3web.costbenefit.io.fragments.IterativeDeepeningSearchAlgorithmHandler" />
 		<parameter id="name" value="IterativeDeepeningSearchAlgorithmHandler" />
 		<parameter id="description" value="Handler for IterativeDeepeningSearchAlgorithmHandler" />
 		<parameter id="version" value="1.0" />
@@ -88,7 +88,7 @@
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="NoAbortStrategyHandler">
 		<parameter id="class"
-			value="de.d3web.costBenefit.io.fragments.NoAbortStrategyHandler" />
+			value="de.d3web.costbenefit.io.fragments.NoAbortStrategyHandler" />
 		<parameter id="name" value="NoAbortStrategyHandler" />
 		<parameter id="description" value="Handler for NoAbortStrategyHandler" />
 		<parameter id="version" value="1.0" />
@@ -98,7 +98,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Autodetect"
 		id="AutodetectCostBenefit">
 		<parameter id="class"
-			value="de.d3web.costBenefit.AutodetectCostBenefit" />
+			value="de.d3web.costbenefit.AutodetectCostBenefit" />
 		<parameter id="name" value="AutodetectCostBenefit" />
 		<parameter id="description" value="Autodetect if CostBenefit is needed for a kb" />
 		<parameter id="version" value="1.0" />
@@ -108,7 +108,7 @@
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="CostBenefitPSConfigHandler">
 		<parameter id="class"
-			value="de.d3web.costBenefit.io.fragments.CostBenefitPSConfigHandler" />
+			value="de.d3web.costbenefit.io.fragments.CostBenefitPSConfigHandler" />
 		<parameter id="name" value="CostBenefitPSConfigHandler" />
 		<parameter id="description" value="Handler for CostBenefitPSConfigHandler" />
 		<parameter id="version" value="1.0" />
