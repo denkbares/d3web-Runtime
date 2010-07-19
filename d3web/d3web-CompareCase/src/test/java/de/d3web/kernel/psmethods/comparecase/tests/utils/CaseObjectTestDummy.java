@@ -18,7 +18,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.kernel.psmethods2.comparecase.tests.utils;
+package de.d3web.kernel.psmethods.comparecase.tests.utils;
 
 import de.d3web.caserepository.CaseObjectImpl;
 import de.d3web.core.knowledge.terminology.info.DCElement;

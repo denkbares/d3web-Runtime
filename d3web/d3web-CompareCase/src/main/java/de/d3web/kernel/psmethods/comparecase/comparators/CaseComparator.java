@@ -18,7 +18,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.kernel.psmethods2.comparecase.comparators;
+package de.d3web.kernel.psmethods.comparecase.comparators;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -38,8 +38,8 @@ import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.Unknown;
-import de.d3web.kernel.psMethods.compareCase.tests.utils.CaseObjectTestDummy;
-import de.d3web.kernel.psmethods2.comparecase.CompareObjectsHashContainer;
+import de.d3web.kernel.psmethods.comparecase.CompareObjectsHashContainer;
+import de.d3web.kernel.psmethods.comparecase.tests.utils.CaseObjectTestDummy;
 import de.d3web.shared.Abnormality;
 import de.d3web.shared.PSContextFinder;
 import de.d3web.shared.PSMethodShared;

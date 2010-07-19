@@ -18,26 +18,26 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.kernel.psmethods2.comparecase.tests;
+package de.d3web.kernel.psmethods.comparecase;
+/**
+ * Insert the type's description here.
+ * Creation date: (22.08.01 00:32:35)
+ * @author: Norman Brümmer
+ */
+public class CompareCaseException extends Exception {
+/**
+ * CompareCaseException constructor comment.
+ */
+public CompareCaseException() {
+	super();
+}
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 /**
- * TestSuite for all tests that have to do with cbr
- * @author bruemmer
+ * CompareCaseException constructor comment.
+ * @param s java.lang.String
  */
-public class AllTests {
-
-	public static void main(String[] args) {
-		junit.swingui.TestRunner.run(AllTests.class);
-	}
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Tests for CBR");
-
-		suite.addTestSuite(ClusteringTest.class);
-
-		return suite;
-	}
+public CompareCaseException(String s) {
+	super(s);
+}
 }

@@ -18,12 +18,12 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.kernel.psmethods2.comparecase.comparators.clustering;
+package de.d3web.kernel.psmethods.comparecase.comparators.clustering;
 
 import java.util.*;
 
 import de.d3web.caserepository.CaseObject;
-import de.d3web.kernel.psmethods2.comparecase.comparators.*;
+import de.d3web.kernel.psmethods.comparecase.comparators.*;
 import de.d3web.utilities.caseLoaders.CaseRepository;
 
 /**
