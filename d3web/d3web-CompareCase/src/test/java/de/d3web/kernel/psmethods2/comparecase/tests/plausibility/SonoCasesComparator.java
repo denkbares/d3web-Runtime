@@ -18,7 +18,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.kernel.psMethods.compareCase.tests.plausibility;
+package de.d3web.kernel.psmethods2.comparecase.tests.plausibility;
 
 import java.io.File;
 import java.net.URL;
@@ -30,8 +30,8 @@ import de.d3web.caserepository.sax.CaseRepositoryReader;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ConsoleProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.kernel.psmethods2.comparecase.comparators.CaseComparator;
-import de.d3web.kernel.psmethods2.comparecase.comparators.CompareMode;
+import de.d3web.kernel.psmethods.comparecase.comparators.CaseComparator;
+import de.d3web.kernel.psmethods.comparecase.comparators.CompareMode;
 
 /**
  * @author bruemmer

@@ -18,7 +18,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.kernel.psMethods.compareCase.tests;
+package de.d3web.kernel.psmethods2.comparecase.tests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
