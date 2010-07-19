@@ -26,7 +26,7 @@ import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
-import de.d3web.costBenefit.inference.PSMethodCostBenefit;
+import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.plugin.test.InitPluginManager;
 
 public class CostBenefitAgendaSortingTest {
