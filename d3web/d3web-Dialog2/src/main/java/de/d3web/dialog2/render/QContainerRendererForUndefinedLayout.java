@@ -33,8 +33,8 @@ import de.d3web.dialog2.basics.layout.QuestionPageLayout;
 
 public class QContainerRendererForUndefinedLayout extends QContainerRenderer {
 
-	public QContainerRendererForUndefinedLayout(ResponseWriter writer, UIComponent component, Session theCase, List<Question> qList, QuestionPageLayout layoutDef) {
-		super(writer, component, theCase, qList, layoutDef);
+	public QContainerRendererForUndefinedLayout(ResponseWriter writer, UIComponent component, Session session, List<Question> qList, QuestionPageLayout layoutDef) {
+		super(writer, component, session, qList, layoutDef);
 	}
 	
 	@Override

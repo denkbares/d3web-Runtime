@@ -94,7 +94,7 @@ public class StateTransition implements KnowledgeSlice {
 	}
 
 	@Override
-	public boolean isUsed(Session theCase) {
+	public boolean isUsed(Session session) {
 		return true;
 	}
 
@@ -108,10 +108,10 @@ public class StateTransition implements KnowledgeSlice {
 	 * each question, the first ValueTransition whose condition is fulfilled, is
 	 * used.
 	 * 
-	 * @param theCase
+	 * @param session
 	 * @return
 	 */
-	public List<Fact> fire(Session theCase) {
+	public List<Fact> fire(Session session) {
 		List<Fact> facts = new LinkedList<Fact>();
 		for (ValueTransition vt : postTransitions) {
 			Question q = vt.getQuestion();
@@ -119,14 +119,14 @@ public class StateTransition implements KnowledgeSlice {
 			for (ConditionalValueSetter cvs : setters) {
 				try {
 					Condition condition = cvs.getCondition();
-					if (condition == null || cvs.getCondition().eval(theCase)) {
+					if (condition == null || cvs.getCondition().eval(session)) {
 						// Fact fact = FactFactory.createFact(q,
 						// cvs.getAnswer(), new Object(),
 						// PSMethodUserSelected.getInstance());
 						Fact fact = new
 								PSMethodStateTransition.StateTransitionFact(q,
 										cvs.getAnswer());
-						theCase.getBlackboard().addValueFact(fact);
+						session.getBlackboard().addValueFact(fact);
 						facts.add(fact);
 						break;
 					}

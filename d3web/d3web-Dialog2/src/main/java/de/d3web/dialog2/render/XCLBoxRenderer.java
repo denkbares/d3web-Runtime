@@ -39,12 +39,12 @@ import de.d3web.xcl.inference.PSMethodXCL;
 
 public class XCLBoxRenderer extends Renderer {
 
-	public boolean checkDisplayability(Session theCase) {
-		if (theCase != null) {
-			Collection<KnowledgeSlice> solutions = theCase.getKnowledgeBase()
+	public boolean checkDisplayability(Session session) {
+		if (session != null) {
+			Collection<KnowledgeSlice> solutions = session.getKnowledgeBase()
 					.getAllKnowledgeSlicesFor(PSMethodXCL.class);
 
-			if (solutions != null && hasNonZeroSolution(solutions, theCase)) {
+			if (solutions != null && hasNonZeroSolution(solutions, session)) {
 				return !solutions.isEmpty();
 			}
 		}
@@ -54,19 +54,19 @@ public class XCLBoxRenderer extends Renderer {
 	@Override
 	public void encodeEnd(FacesContext context, UIComponent component)
 			throws IOException {
-		Session theCase = DialogUtils.getDialog().getSession();
-		if (checkDisplayability(theCase)) {
-			renderXCLBox(context.getResponseWriter(), component, theCase);
+		Session session = DialogUtils.getDialog().getSession();
+		if (checkDisplayability(session)) {
+			renderXCLBox(context.getResponseWriter(), component, session);
 		}
 	}
 
 	protected boolean hasNonZeroSolution(Collection<KnowledgeSlice> solutions,
-			Session theCase) {
+			Session session) {
 		for (KnowledgeSlice d : solutions) {
 			if (d instanceof XCLModel) {
 				XCLModel model = (XCLModel) d;
-				if (model.getInferenceTrace(theCase).getScore() > 0
-						|| model.getState(theCase).hasState(State.ESTABLISHED)) {
+				if (model.getInferenceTrace(session).getScore() > 0
+						|| model.getState(session).hasState(State.ESTABLISHED)) {
 					return true;
 				}
 			}
@@ -75,7 +75,7 @@ public class XCLBoxRenderer extends Renderer {
 	}
 
 	private void renderXCLBox(ResponseWriter writer, UIComponent component,
-			Session theCase) throws IOException {
+			Session session) throws IOException {
 
 		DialogRenderUtils.renderTableWithClass(writer, component, "panelBox");
 		writer.writeAttribute("id", component.getClientId(FacesContext
@@ -86,7 +86,7 @@ public class XCLBoxRenderer extends Renderer {
 		writer.endElement("th");
 		writer.endElement("tr");
 
-		Collection<KnowledgeSlice> sortedDiags = theCase.getKnowledgeBase()
+		Collection<KnowledgeSlice> sortedDiags = session.getKnowledgeBase()
 				.getAllKnowledgeSlicesFor(PSMethodXCL.class);
 		double minValue = DialogUtils.getDialogSettings()
 				.getXCL_display_min_percentage();
@@ -99,9 +99,9 @@ public class XCLBoxRenderer extends Renderer {
 			if (d instanceof XCLModel) {
 				XCLModel model = (XCLModel) d;
 				Solution origDiag = model.getSolution();
-				Rating state = model.getState(theCase);
+				Rating state = model.getState(session);
 
-				double score = model.getInferenceTrace(theCase).getScore();
+				double score = model.getInferenceTrace(session).getScore();
 				if (score >= minValue || state.hasState(State.ESTABLISHED)) {
 					int percent = (int) (Math.round(score * 100));
 

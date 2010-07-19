@@ -25,5 +25,5 @@ import de.d3web.core.session.Session;
 import de.d3web.empiricalTesting.Rating;
 
 public interface RatingStrategy {
-	public Rating getRatingFor(Solution solution, Session theCase);
+	public Rating getRatingFor(Solution solution, Session session);
 }

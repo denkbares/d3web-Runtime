@@ -35,8 +35,8 @@ import de.d3web.empiricalTesting.StateRating;
 public class StateRatingStrategy implements RatingStrategy {
 
 	@Override
-	public Rating getRatingFor(Solution solution, Session theCase) {
-		return new StateRating(theCase.getBlackboard().getRating(solution));
+	public Rating getRatingFor(Solution solution, Session session) {
+		return new StateRating(session.getBlackboard().getRating(solution));
 	}
 
 }

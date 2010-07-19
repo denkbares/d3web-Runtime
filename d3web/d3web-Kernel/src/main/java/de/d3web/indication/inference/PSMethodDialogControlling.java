@@ -53,7 +53,7 @@ public class PSMethodDialogControlling extends PSMethodCombined {
 	 * @return the maximum of scores as DiagnosisState. Creation date:
 	 *         (03.01.2002 16:17:28)
 	 */
-	public Rating getState(Session theCase, Solution theDiagnosis) {
+	public Rating getState(Session session, Solution theDiagnosis) {
 		return null;
 	}
 
@@ -62,7 +62,7 @@ public class PSMethodDialogControlling extends PSMethodCombined {
 	 * Creation date: (03.01.2002 16:17:28)
 	 */
 	@Override
-	public void init(Session theCase) {
+	public void init(Session session) {
 		// List moved from d3webCase (because it wasn't modfied anyway
 		// TODO: getAll PSMethods and screen them for the correct ones
 		PSMethodUserSelected psmUser = PSMethodUserSelected.getInstance();
@@ -75,14 +75,14 @@ public class PSMethodDialogControlling extends PSMethodCombined {
 	/**
 	 * @see PSMethod
 	 */
-	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		for (PropagationEntry change : changes) {
 			KnowledgeSlice knowledgeSlices = ((NamedObject) change.getObject()).getKnowledge(
 					this.getClass(), MethodKind.FORWARD);
 			if (knowledgeSlices == null) return;
 			RuleSet rs = (RuleSet) knowledgeSlices;
 			for (Rule rule : rs.getRules()) {
-				rule.check(theCase);
+				rule.check(session);
 			}
 		}
 	}

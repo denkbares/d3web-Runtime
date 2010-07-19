@@ -45,13 +45,13 @@ public class RelationHelper {
 	 * used for the necessary relations: if unknown --> false
 	 * 
 	 * @param relations
-	 * @param theCase
+	 * @param session
 	 * @return
 	 */
-	public boolean allRelationsTrue(Collection<XCLRelation> relations, Session theCase) {
+	public boolean allRelationsTrue(Collection<XCLRelation> relations, Session session) {
 		for (XCLRelation relation : relations) {
 			try {
-				if (!relation.eval(theCase))
+				if (!relation.eval(session))
 					return false;
 			} catch (NoAnswerException e) {
 				return false;
@@ -62,10 +62,10 @@ public class RelationHelper {
 		return true;
 	}
 	
-	public boolean atLeastOneRelationTrue(Collection<XCLRelation> relations, Session theCase) {
+	public boolean atLeastOneRelationTrue(Collection<XCLRelation> relations, Session session) {
 		for (XCLRelation relation : relations) {
 			try {
-				if (relation.eval(theCase))
+				if (relation.eval(session))
 					return true;
 			} catch (NoAnswerException e) {
 				// do nothing

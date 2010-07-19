@@ -42,16 +42,16 @@ public class CondAnd extends NonTerminalCondition {
 	/**
 	 * Returns true, when <b>all</b> conjunctive elements are evaluated as true
 	 * based on the findings given in the specified {@link Session}.
-	 * @param theCase the given {@link Session}
+	 * @param session the given {@link Session}
 	 */
 	@Override
-	public boolean eval(Session theCase) throws NoAnswerException, UnknownAnswerException {
+	public boolean eval(Session session) throws NoAnswerException, UnknownAnswerException {
 		boolean wasNoAnswer = false;
 		boolean wasUnknownAnswer = false;
 
 		for (Condition condition : terms) {
 			try {
-				if (!condition.eval(theCase)) {
+				if (!condition.eval(session)) {
 					return false;
 				}
 			} catch (NoAnswerException nae) {

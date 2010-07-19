@@ -31,8 +31,8 @@ import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.knowledge.Indication;
-import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.Indication.State;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -85,20 +85,20 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 	}
 
 	@Override
-	public void init(Session theCase) {
-		theCase.getInterview().getInterviewAgenda().setAgendaSortingStrategy(
+	public void init(Session session) {
+		session.getInterview().getInterviewAgenda().setAgendaSortingStrategy(
 				new CostBenefitAgendaSortingStrategy());
-		CostBenefitCaseObject caseObject = (CostBenefitCaseObject) theCase.getCaseObject(this);
+		CostBenefitCaseObject caseObject = (CostBenefitCaseObject) session.getCaseObject(this);
 		calculateNewPath(caseObject);
 		activateNextQContainer(caseObject);
 	}
 
 	private void activateNextQContainer(CostBenefitCaseObject caseObject) {
 		QContainer[] currentSequence = caseObject.getCurrentSequence();
-		Session theCase = caseObject.getSession();
+		Session session = caseObject.getSession();
 		if (currentSequence != null) {
 			if (caseObject.getCurrentPathIndex() == -1
-					|| isDone(currentSequence[caseObject.getCurrentPathIndex()],theCase)) {
+					|| isDone(currentSequence[caseObject.getCurrentPathIndex()], session)) {
 				caseObject.incCurrentPathIndex();
 				caseObject.setHasBegun(false);
 				if (caseObject.getCurrentPathIndex() >= currentSequence.length) {
@@ -107,7 +107,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 					return;
 				}
 				QContainer qc = currentSequence[caseObject.getCurrentPathIndex()];
-				if (!new Node(qc, null).isApplicable(theCase)) {
+				if (!new Node(qc, null).isApplicable(session)) {
 					calculateNewPath(caseObject);
 					activateNextQContainer(caseObject);
 				}
@@ -172,9 +172,9 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		}
 	}
 
-	private List<StrategicSupport> getStrategicSupports(Session theCase) {
+	private List<StrategicSupport> getStrategicSupports(Session session) {
 		List<StrategicSupport> ret = new ArrayList<StrategicSupport>();
-		for (PSMethod psm : theCase.getPSMethods()) {
+		for (PSMethod psm : session.getPSMethods()) {
 			if (psm instanceof StrategicSupport) {
 				ret.add((StrategicSupport) psm);
 			}
@@ -182,7 +182,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		return ret;
 	}
 
-	private void makeOKQuestionsUndone(TerminologyObject container, Session theCase) {
+	private void makeOKQuestionsUndone(TerminologyObject container, Session session) {
 		for (TerminologyObject nob : container.getChildren()) {
 			// if ok-question
 			if (nob instanceof QuestionOC) {
@@ -190,22 +190,22 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 				List<Choice> choices = qoc.getAllAlternatives();
 				if (choices.size() == 1
 						&& "OK".equals(choices.get(0).getName())) {
-					Blackboard blackboard = theCase.getBlackboard();
+					Blackboard blackboard = session.getBlackboard();
 					if (UndefinedValue.isNotUndefinedValue(blackboard.getValue(qoc))) {
 						blackboard.addValueFact(
 								new DefaultFact(qoc, UndefinedValue.getInstance(),
-								PSMethodUserSelected.getInstance(),
-								PSMethodUserSelected.getInstance()));
+										PSMethodUserSelected.getInstance(),
+										PSMethodUserSelected.getInstance()));
 					}
 				}
 			}
-			makeOKQuestionsUndone(nob, theCase);
+			makeOKQuestionsUndone(nob, session);
 		}
 	}
 
 	@Override
-	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
-		CostBenefitCaseObject caseObject = (CostBenefitCaseObject) theCase.getCaseObject(this);
+	public void propagate(Session session, Collection<PropagationEntry> changes) {
+		CostBenefitCaseObject caseObject = (CostBenefitCaseObject) session.getCaseObject(this);
 		Set<QContainer> qcons = new HashSet<QContainer>();
 		for (PropagationEntry entry : changes) {
 			TerminologyObject object = entry.getObject();
@@ -214,13 +214,13 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 			}
 		}
 		for (QContainer qcon : qcons) {
-			if (isDone(qcon,theCase)) {
+			if (isDone(qcon, session)) {
 				KnowledgeSlice ks = qcon.getKnowledge(
 						PSMethodCostBenefit.class,
 						StateTransition.STATE_TRANSITION);
 				if (ks != null) {
 					StateTransition st = (StateTransition) ks;
-					st.fire(theCase);
+					st.fire(session);
 				}
 			}
 		}
@@ -231,16 +231,16 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		}
 		// returns if the actual QContainer is not done and has begun yet
 		if (caseObject.isHasBegun()
-				&& !isDone(currentSequence[caseObject.getCurrentPathIndex()], theCase)) {
+				&& !isDone(currentSequence[caseObject.getCurrentPathIndex()], session)) {
 			return;
 		}
 		// if the possible Diagnosis have changed, a flag that a new path has to
 		// be calculated is set
 		boolean changeddiags = false;
-		List<StrategicSupport> strategicSupports = getStrategicSupports(theCase);
+		List<StrategicSupport> strategicSupports = getStrategicSupports(session);
 		HashSet<Solution> possibleDiagnoses = new HashSet<Solution>();
 		for (StrategicSupport strategicSupport : strategicSupports) {
-			possibleDiagnoses.addAll(strategicSupport.getPossibleSolutions(theCase));
+			possibleDiagnoses.addAll(strategicSupport.getPossibleSolutions(session));
 		}
 		final Set<Solution> diags = caseObject.getDiags();
 		if (possibleDiagnoses.size() == diags.size()) {
@@ -263,19 +263,20 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 	}
 
 	/**
-	 * Checks, if all questions, contained in the specified {@link QASet} 
-	 * have a value assigned to them in the specified session.
+	 * Checks, if all questions, contained in the specified {@link QASet} have a
+	 * value assigned to them in the specified session.
+	 * 
 	 * @param qaset the specified quaset
 	 * @param session the specified session
 	 * @return
 	 */
 	private boolean isDone(QASet qaset, Session session) {
 		if (qaset instanceof Question) {
-			Value value = session.getBlackboard().getValue((Question)qaset);
+			Value value = session.getBlackboard().getValue((Question) qaset);
 			if (UndefinedValue.isNotUndefinedValue(value)) {
 				boolean done = true;
 				for (TerminologyObject object : qaset.getChildren()) {
-					done = done && isDone((QASet)object, session);
+					done = done && isDone((QASet) object, session);
 				}
 				return done;
 			}
@@ -286,7 +287,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		else if (qaset instanceof QContainer) {
 			boolean done = true;
 			for (TerminologyObject object : qaset.getChildren()) {
-				done = done && isDone((QASet)object, session);
+				done = done && isDone((QASet) object, session);
 			}
 			return done;
 		}

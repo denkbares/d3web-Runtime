@@ -41,7 +41,7 @@ public class CondOr extends NonTerminalCondition {
 	}
 
 	@Override
-	public boolean eval(Session theCase)
+	public boolean eval(Session session)
 		throws NoAnswerException, UnknownAnswerException {
 
 		boolean wasNoAnswer = false;
@@ -49,7 +49,7 @@ public class CondOr extends NonTerminalCondition {
 
 		for (Condition condition : terms) {
 			try {
-				if (condition.eval(theCase))
+				if (condition.eval(session))
 					return true;
 			} catch (NoAnswerException nae) {
 				wasNoAnswer = true;

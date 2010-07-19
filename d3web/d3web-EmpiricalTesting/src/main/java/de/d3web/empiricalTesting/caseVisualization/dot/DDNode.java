@@ -35,15 +35,15 @@ public class DDNode {
 	private List<DDEdge> incoming;
 	
 	private boolean isCuttedNode;
-	private caseType theCaseType;
+	private caseType sessionType;
 	private QASet cuttedQContainer;
 	
-	public DDNode(RatedTestCase testCase, caseType theCasetype) {
+	public DDNode(RatedTestCase testCase, caseType sessiontype) {
 		this.testCase = testCase;
 		this.outgoing= new ArrayList<DDEdge>();
 		this.setIncoming(new ArrayList<DDEdge>());
 		isCuttedNode = false;
-		setTheCaseType(theCasetype);
+		setTheCaseType(sessiontype);
 	}
 	
 	public DDNode(RatedTestCase testCase) {
@@ -68,8 +68,8 @@ public class DDNode {
 		return addChild(edge, false);
 	}
 
-	public boolean addChild(DDNode targetNode, Finding label, caseType theCasetype) {
-		return addChild(new DDEdge(this, targetNode, label, theCasetype));
+	public boolean addChild(DDNode targetNode, Finding label, caseType sessiontype) {
+		return addChild(new DDEdge(this, targetNode, label, sessiontype));
 	}	
 	
 	public boolean addChild(DDNode targetNode, Finding label) {
@@ -142,11 +142,11 @@ public class DDNode {
 	}
 
 	public caseType getTheCaseType() {
-		return theCaseType;
+		return sessionType;
 	}
 
-	public void setTheCaseType(caseType theCaseType) {
-		this.theCaseType = theCaseType;
+	public void setTheCaseType(caseType sessionType) {
+		this.sessionType = sessionType;
 	}
 
 	public void setIncoming(List<DDEdge> incoming) {

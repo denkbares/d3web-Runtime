@@ -86,8 +86,8 @@ public class MQDialogController implements DialogController {
 	/**
 	 * MQDialogController constructor comment.
 	 */
-	public MQDialogController(Session _theCase) {
-		this(_theCase, new LinkedList());
+	public MQDialogController(Session _session) {
+		this(_session, new LinkedList());
 	}
 
 	/**
@@ -95,8 +95,8 @@ public class MQDialogController implements DialogController {
 	 * initQASets. (attention: the case might add some more initQASets that are
 	 * specified in the knowledge base)
 	 */
-	public MQDialogController(Session _theCase, List initQASets) {
-		session = _theCase;
+	public MQDialogController(Session _session, List initQASets) {
+		session = _session;
 		qasetQueue = new LinkedList();
 		this.initQASets = new LinkedList(initQASets);
 		userIndicationList = new LinkedList();

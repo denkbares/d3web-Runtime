@@ -62,13 +62,13 @@ public class Operator implements FormulaNumberElement {
 	 * 
 	 * @return null, if one argument is "null", a "0"-Double else.
 	 */
-	public Double eval(Session theCase) {
+	public Double eval(Session session) {
 		if (getArg1() == null || getArg2() == null) {
 			return null;
 		}
 
-		Double evaluatedArg1 = (getArg1().eval(theCase));
-		Double evaluatedArg2 = (getArg2().eval(theCase));
+		Double evaluatedArg1 = (getArg1().eval(session));
+		Double evaluatedArg2 = (getArg2().eval(session));
 		if ((evaluatedArg1 == null) || (evaluatedArg2 == null)) {
 			return null;
 		}

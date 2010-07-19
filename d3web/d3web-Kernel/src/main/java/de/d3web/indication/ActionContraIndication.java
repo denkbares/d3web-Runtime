@@ -47,7 +47,7 @@ public class ActionContraIndication extends PSAction {
 	/**
 	 * Invoked, if rule fires (action)
 	 * Creation date: (02.11.2000 14:38:26)
-	 * @param theCase current case
+	 * @param session current case
 	 */
 	@Override
 	public void doIt(Session session, Object source, PSMethod psmethod) {
@@ -93,7 +93,7 @@ public class ActionContraIndication extends PSAction {
 
 	/**
 	 * Invoked, if rule is undone (undoing action)
-	 * @param theCase current case
+	 * @param session current case
 	 */
 	@Override
 	public void undo(Session session, Object source, PSMethod psmethod) {

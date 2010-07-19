@@ -72,7 +72,7 @@ public class FormulaDate implements FormulaDateElement {
 	 * 
 	 * @return Double-value of this FormulaElement
 	 */
-	public Date eval(Session theCase) {
+	public Date eval(Session session) {
 		return value;
 	}
 

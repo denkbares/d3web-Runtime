@@ -55,8 +55,8 @@ public class SearchModel {
 	private int countMinPaths = 0;
 	private CostFunction costFunction;
 
-	public SearchModel(Session theCase) {
-		PSMethod problemsolver = theCase.getPSMethodInstance(PSMethodCostBenefit.class);
+	public SearchModel(Session session) {
+		PSMethod problemsolver = session.getPSMethodInstance(PSMethodCostBenefit.class);
 		PSMethodCostBenefit ps = (PSMethodCostBenefit) problemsolver;
 		if (ps != null) {
 			costFunction = ps.getCostFunction();
@@ -68,10 +68,10 @@ public class SearchModel {
 					"Kein Costbenefit-Problemlöser im Fall. Es wird die Standartkostenfunktion verwendet.",
 					null);
 		}
-		for (QContainer qcon : theCase.getKnowledgeBase().getQContainers()) {
+		for (QContainer qcon : session.getKnowledgeBase().getQContainers()) {
 			Node containerNode = new Node(qcon, this);
 			map.put(qcon, containerNode);
-			Map<Question, Value> expected = containerNode.getExpectedValues(theCase);
+			Map<Question, Value> expected = containerNode.getExpectedValues(session);
 			for (Entry<Question, Value> entry : expected.entrySet()) {
 				Value answer = entry.getValue();
 				List<Value> answers = new LinkedList<Value>();

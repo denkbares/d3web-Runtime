@@ -65,7 +65,7 @@ public class QuestionDateUtils {
      * Returns the string-representation of the given AnswerDate as it is
      * specified by the question's properties and the current resourcebundle.
      */
-	public static String dateToString(QuestionDate question, Date date, Session theCase) {
+	public static String dateToString(QuestionDate question, Date date, Session session) {
 		String dateSection = (String) question.getProperties()
 				.getProperty(Property.QUESTION_DATE_TYPE);
 	if (dateSection == null) {

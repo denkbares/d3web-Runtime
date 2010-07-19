@@ -139,14 +139,14 @@ public class SaveCaseController {
 		return new Date();
 	}
 
-	public CaseObjectImpl getCaseObject(Session theCase, String caseName,
+	public CaseObjectImpl getCaseObject(Session session, String caseName,
 			User user, long processingtime) {
 		CaseObjectImpl co = SessionConverter.getInstance().session2CaseObject(
-				theCase, false, false);
+				session, false, false);
 		// DCMarkup
 		String id = ""
 				+ (CaseManager.getInstance().getMaxCaseIdForKb(
-						theCase.getKnowledgeBase().getId()) + 1);
+						session.getKnowledgeBase().getId()) + 1);
 		co.getDCMarkup().setContent(DCElement.IDENTIFIER, id);
 		lastSavedCaseID = id;
 
@@ -166,12 +166,12 @@ public class SaveCaseController {
 
 		// Properties
 		co.getProperties().setProperty(Property.CASE_KNOWLEDGEBASE_DESCRIPTOR,
-				theCase.getKnowledgeBase().getDCMarkup());
+				session.getKnowledgeBase().getDCMarkup());
 		co.getProperties().setProperty(Property.CASE_SOURCE_SYSTEM,
 				CaseObject.SourceSystem.DIALOG.getName());
 		co.getProperties().setProperty(
 				Property.CASE_CRITIQUE_TEXT,
-				theCase.getProperties()
+				session.getProperties()
 						.getProperty(Property.CASE_CRITIQUE_TEXT));
 
 		// MetaData
@@ -181,7 +181,7 @@ public class SaveCaseController {
 		md.setProcessingTime(time);
 		co.getProperties().setProperty(Property.CASE_METADATA, md);
 		// save user-selected diagnoses
-		setUserSelectedDiagnoses(co, theCase);
+		setUserSelectedDiagnoses(co, session);
 
 		return co;
 	}
@@ -271,8 +271,8 @@ public class SaveCaseController {
 		this.userEmail = userEmail;
 	}
 
-	private void setUserSelectedDiagnoses(CaseObjectImpl co, Session theCase) {
-		KnowledgeBase kb = theCase.getKnowledgeBase();
+	private void setUserSelectedDiagnoses(CaseObjectImpl co, Session session) {
+		KnowledgeBase kb = session.getKnowledgeBase();
 		for (Iterator<String> iter = userSelectedDiags.iterator(); iter
 				.hasNext();) {
 			String diagId = iter.next();

@@ -63,11 +63,11 @@ public class DDBot2 {
 
 	public void traverse(KnowledgeBase knowledge, List<Finding> initFindings)
 			throws Exception {
-		Session theCase = createCase(knowledge, initFindings);
+		Session session = createCase(knowledge, initFindings);
 
 		RatedTestCase ratedTestCase = new RatedTestCase();
 		ratedTestCase.addFindings(initFindings);
-		ratedTestCase.addExpected(toRatedSolutions(theCase));
+		ratedTestCase.addExpected(toRatedSolutions(session));
 		ratedTestCase.inverseSortSolutions();
 		ratedTestCase.setName("RTC" + rtcCounter);
 		rtcCounter++;
@@ -76,7 +76,7 @@ public class DDBot2 {
 		stc.setName(getCaseNamePraefix());
 		stc.add(ratedTestCase);
 
-		traverse(stc, getNextQuestion(theCase), knowledge);
+		traverse(stc, getNextQuestion(session), knowledge);
 	}
 
 	private void traverse(SequentialTestCase theSeqCase,
@@ -91,18 +91,18 @@ public class DDBot2 {
 		List<Finding> flattendFindings = flattenFindings(theSeqCase);
 		List<Choice> nextAnswers = currentQuestion.getAllAlternatives();
 		for (Choice nextAnswer : nextAnswers) {
-			Session theCase = createCase(knowledge, flattendFindings);
+			Session session = createCase(knowledge, flattendFindings);
 			ChoiceValue choiceValue = new ChoiceValue(nextAnswer);
-			setCaseValue(theCase, currentQuestion, choiceValue);
+			setCaseValue(session, currentQuestion, choiceValue);
 
 			RatedTestCase ratedCase = createRatedTestCase(currentQuestion,
-					choiceValue, theCase);
+					choiceValue, session);
 			SequentialTestCase newSequentialCase = theSeqCase.flatClone();
 
 			newSequentialCase.add(ratedCase);
 
 			// GET NEXT QUESTION nextQ
-			traverse(newSequentialCase, getNextQuestion(theCase), knowledge);
+			traverse(newSequentialCase, getNextQuestion(session), knowledge);
 		}
 
 	}
@@ -117,13 +117,13 @@ public class DDBot2 {
 	}
 
 	private Session createCase(KnowledgeBase knowledge, List<Finding> findings) {
-		Session theCase = SessionFactory.createSession(knowledge);
+		Session session = SessionFactory.createSession(knowledge);
 
 		for (Finding finding : findings) {
-			setCaseValue(theCase, finding.getQuestion(), finding.getValue());
+			setCaseValue(session, finding.getQuestion(), finding.getValue());
 		}
 
-		return theCase;
+		return session;
 	}
 
 	/**
@@ -138,10 +138,10 @@ public class DDBot2 {
 		return findings;
 	}
 
-	private List<RatedSolution> toRatedSolutions(Session theCase) {
+	private List<RatedSolution> toRatedSolutions(Session session) {
 		List<RatedSolution> ratedSolutions = new ArrayList<RatedSolution>();
-		for (Solution diagnosis : theCase.getKnowledgeBase().getSolutions()) {
-			Rating state = theCase.getBlackboard().getRating(diagnosis);
+		for (Solution diagnosis : session.getKnowledgeBase().getSolutions()) {
+			Rating state = session.getBlackboard().getRating(diagnosis);
 			if (state instanceof HeuristicRating) {
 				HeuristicRating hr = (HeuristicRating) state;
 				double score = hr.getScore();
@@ -157,18 +157,18 @@ public class DDBot2 {
 	}
 
 	private RatedTestCase createRatedTestCase(QuestionChoice currentQuestion,
-			ChoiceValue nextAnswer, Session theCase) {
+			ChoiceValue nextAnswer, Session session) {
 		RatedTestCase ratedCase = new RatedTestCase();
 		ratedCase.add(new Finding(currentQuestion, nextAnswer));
-		ratedCase.addExpected(toRatedSolutions(theCase));
+		ratedCase.addExpected(toRatedSolutions(session));
 		ratedCase.inverseSortSolutions();
 		ratedCase.setName("RTC" + rtcCounter);
 		rtcCounter++;
 		return ratedCase;
 	}
 
-	private QuestionChoice getNextQuestion(Session theCase) throws Exception {
-		MQDialogController controller = (MQDialogController) theCase
+	private QuestionChoice getNextQuestion(Session session) throws Exception {
+		MQDialogController controller = (MQDialogController) session
 				.getQASetManager();
 		QASet next = controller.moveToNextRemainingQASet();
 		if (next != null && next instanceof QuestionChoice) {
@@ -184,8 +184,8 @@ public class DDBot2 {
 		}
 	}
 
-	public void setCaseValue(Session theCase, Question q, Value a) {
-		theCase.getBlackboard().addValueFact(
+	public void setCaseValue(Session session, Question q, Value a) {
+		session.getBlackboard().addValueFact(
 				FactFactory.createFact(q, a, PSMethodUserSelected.getInstance(),
 				PSMethodUserSelected.getInstance()));
 	}

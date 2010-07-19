@@ -46,11 +46,11 @@ public abstract class QContainerRenderer {
 	protected String qContainerID;
 	protected QuestionPageLayout layoutDef;
 
-	public QContainerRenderer(ResponseWriter writer, UIComponent component, Session theCase,
+	public QContainerRenderer(ResponseWriter writer, UIComponent component, Session session,
 			List<Question> qList, QuestionPageLayout layoutDef) {
 		super();
 		this.component = component;
-		this.session = theCase;
+		this.session = session;
 		this.writer = writer;
 		this.qList = qList;
 		this.layoutDef = layoutDef;

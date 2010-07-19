@@ -98,7 +98,7 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 		trace.refreshRelations(xclModel, session);
 	}
 
-	private double computeScore(XCLModel model, InferenceTrace trace, Session theCase) {
+	private double computeScore(XCLModel model, InferenceTrace trace, Session session) {
 
 		// score is the sum of matching relations compared to evaluated
 		// relations
@@ -112,7 +112,7 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 		return result;
 	}
 
-	private double computeSupport(XCLModel model, InferenceTrace trace, Session theCase) {
+	private double computeSupport(XCLModel model, InferenceTrace trace, Session session) {
 		// support is the sum of evaluated relations compared to all relations
 		double posSum = weightedSumOf(trace.getPosRelations())
 				+ weightedSumOf(trace.getReqPosRelations());

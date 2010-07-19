@@ -54,7 +54,7 @@ public abstract class DialogClient {
 	/**
 	 * fills this Client with Question-IDs and answers from the given case
 	 */
-	public abstract void putCase(Session theCase);
+	public abstract void putCase(Session session);
 
 	/**
 	 * @param newPriority Priority of this Client. Neccessary for Proxy. 1 is the highest...

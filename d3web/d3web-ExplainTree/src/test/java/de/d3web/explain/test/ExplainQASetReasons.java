@@ -69,7 +69,7 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
 public class ExplainQASetReasons extends AbstractExplainTest {
 
 	KnowledgeBase testKb = new KfzWb();
-	Session theCase = null;
+	Session session = null;
 	private ExplanationFactory eFac = null;
 
 	/** Creates a new instance of ExplainQASetReasons */
@@ -88,7 +88,7 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 
 	@Override
 	protected void setUp() {
-		theCase = SessionFactory.createSession(testKb);
+		session = SessionFactory.createSession(testKb);
 		/*
 		 * Let me have some explanations of this test first: We do have the
 		 * following assumptions: InitQASets: Q56, Q16 Children of Q56: Mf2,
@@ -98,7 +98,7 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 		 * established: Acitvate Q17
 		 */
 
-		eFac = new ExplanationFactory(theCase);
+		eFac = new ExplanationFactory(session);
 	}
 
 	public void testInitQASets() {
@@ -146,14 +146,14 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 
 		// set P8 to suggested since it will activate Q17
 		Solution P8 = findD("P8", testKb);
-		theCase.getBlackboard().addValueFact(
+		session.getBlackboard().addValueFact(
 				FactFactory.createFact(P8, new HeuristicRating(Score.P7),
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		assertEquals(new Rating(Rating.State.ESTABLISHED),
-				theCase.getBlackboard().getRating(P8));
+				session.getBlackboard().getRating(P8));
 
-		//assertTrue(findQ("Q17", testKb).isValid(theCase));
+		//assertTrue(findQ("Q17", testKb).isValid(session));
 
 		// explain a followup-question not active
 		ENode expl = eFac.explainActive(findQ("Q17", testKb), explainContext);
@@ -187,14 +187,14 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 
 		// set P8 to suggested since it will activate Q17
 		Solution P8 = findD("P8", testKb);
-		theCase.getBlackboard().addValueFact(
+		session.getBlackboard().addValueFact(
 				FactFactory.createFact(P8, new HeuristicRating(Score.P4),
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		assertEquals(new Rating(Rating.State.SUGGESTED),
-				theCase.getBlackboard().getRating(P8));
+				session.getBlackboard().getRating(P8));
 
-		//assertTrue(findQ("Q17", testKb).isValid(theCase));
+		//assertTrue(findQ("Q17", testKb).isValid(session));
 
 		// explain a followup-question not active
 		ENode expl = eFac.explainActive(findQ("Q17", testKb), explainContext);
@@ -230,11 +230,11 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 
 		// set MF8a2 since it will activate Mf10 (and give P8 the score P5
 		QuestionChoice Mf8 = (QuestionChoice) findQ("Mf8", testKb);
-		Choice choice = KnowledgeBaseManagement.createInstance(theCase.getKnowledgeBase()).findChoice((QuestionChoice)Mf8, "Mf8a2");
+		Choice choice = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase()).findChoice((QuestionChoice)Mf8, "Mf8a2");
 
-		theCase.getBlackboard().addValueFact(
+		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(Mf8, new ChoiceValue(choice)));
-//				Fact(Mf8, new ChoiceValue((Choice) Mf8.getAnswer(theCase,
+//				Fact(Mf8, new ChoiceValue((Choice) Mf8.getAnswer(session,
 //						"Mf8a2")), PSMethodUserSelected.getInstance(),
 //						PSMethodUserSelected.getInstance()));
 

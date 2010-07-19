@@ -64,14 +64,14 @@ public class PSMethodTherapyIndication extends PSMethodAdapter {
 	/**
 	 * Check if NamedObject has nextQASet rules and check them, if available
 	 */
-	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		for (PropagationEntry change : changes) {
 			KnowledgeSlice knowledgeSlices = ((NamedObject) change.getObject()).getKnowledge(
 					this.getClass(), MethodKind.FORWARD);
 			if (knowledgeSlices == null) return;
 			RuleSet rs = (RuleSet) knowledgeSlices;
 			for (Rule rule : rs.getRules()) {
-				rule.check(theCase);
+				rule.check(session);
 			}
 		}
 	}

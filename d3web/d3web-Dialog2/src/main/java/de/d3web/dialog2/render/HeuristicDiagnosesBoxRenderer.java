@@ -40,7 +40,7 @@ import de.d3web.scoring.HeuristicRating;
 public class HeuristicDiagnosesBoxRenderer extends Renderer {
 
 	private static void renderDiagnoses(ResponseWriter writer, UIComponent component,
-			List<Solution> diagList, Session theCase, String headline, boolean showScore) throws IOException {
+			List<Solution> diagList, Session session, String headline, boolean showScore) throws IOException {
 		writer.startElement("tr", component);
 		writer.startElement("th", component);
 		writer.writeAttribute("colspan", "2", "colspan");
@@ -51,7 +51,7 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 
 		for (Iterator<Solution> iter = diagList.iterator(); iter.hasNext();) {
 			Solution diag = iter.next();
-			Rating state = theCase.getBlackboard().getRating(diag);
+			Rating state = session.getBlackboard().getRating(diag);
 			Integer score = 0;
 			if (state instanceof HeuristicRating) {
 				HeuristicRating hr = (HeuristicRating) state;
@@ -61,7 +61,7 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 				writer.startElement("tr", component);
 				writer.startElement("td", component);
 
-				DialogRenderUtils.renderDiagnosesLink(writer, component, diag, theCase,
+				DialogRenderUtils.renderDiagnosesLink(writer, component, diag, session,
 						"underline", score
 						.toString(), showScore);
 				writer.endElement("td");
@@ -92,9 +92,9 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 
-		Session theCase = DialogUtils.getDialog().getSession();
+		Session session = DialogUtils.getDialog().getSession();
 
-		if (heuristicDiagnosesAvailable(theCase)) {
+		if (heuristicDiagnosesAvailable(session)) {
 			DialogRenderUtils.renderTableWithClass(writer, component, "panelBox");
 			writer.writeAttribute("id", component.getClientId(context), "id");
 			writer.startElement("tr", component);
@@ -105,42 +105,42 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 			writer.endElement("tr");
 
 			// render ESTABLISHED...
-			List<Solution> diagListEstablished = theCase.getBlackboard().getSolutions(
+			List<Solution> diagListEstablished = session.getBlackboard().getSolutions(
 					Rating.State.ESTABLISHED);
 			if (!diagListEstablished.isEmpty()
 					&& DialogUtils.getDialogSettings().isShowHeuristicEstablishedDiagnoses()) {
-				DialogRenderUtils.sortDiagnosisList(diagListEstablished, theCase);
-				renderDiagnoses(writer, component, diagListEstablished, theCase,
+				DialogRenderUtils.sortDiagnosisList(diagListEstablished, session);
+				renderDiagnoses(writer, component, diagListEstablished, session,
 						DialogUtils
 						.getMessageFor("solution.established"), false);
 			}
 
 			// render SUGGESTED...
-			List<Solution> diagListSuggested = theCase.getBlackboard().getSolutions(State.SUGGESTED);
+			List<Solution> diagListSuggested = session.getBlackboard().getSolutions(State.SUGGESTED);
 			if (!diagListSuggested.isEmpty()
 					&& DialogUtils.getDialogSettings().isShowHeuristicSuggestedDiagnoses()) {
-				DialogRenderUtils.sortDiagnosisList(diagListSuggested, theCase);
-				renderDiagnoses(writer, component, diagListSuggested, theCase,
+				DialogRenderUtils.sortDiagnosisList(diagListSuggested, session);
+				renderDiagnoses(writer, component, diagListSuggested, session,
 						DialogUtils
 						.getMessageFor("solution.suggested"), false);
 			}
 
 			// render EXCLUDED...
-			List<Solution> diagListExcluded = theCase.getBlackboard().getSolutions(State.EXCLUDED);
+			List<Solution> diagListExcluded = session.getBlackboard().getSolutions(State.EXCLUDED);
 			if (!diagListExcluded.isEmpty()
 					&& DialogUtils.getDialogSettings().isShowHeuristicExcludedDiagnoses()) {
-				DialogRenderUtils.sortDiagnosisList(diagListExcluded, theCase);
-				renderDiagnoses(writer, component, diagListExcluded, theCase, DialogUtils
+				DialogRenderUtils.sortDiagnosisList(diagListExcluded, session);
+				renderDiagnoses(writer, component, diagListExcluded, session, DialogUtils
 						.getMessageFor("solution.excluded"), false);
 			}
 			writer.endElement("table");
 		}
 	}
 
-	private boolean heuristicDiagnosesAvailable(Session theCase) {
-		List<Solution> established = theCase.getBlackboard().getSolutions(State.ESTABLISHED);
-		List<Solution> suggested = theCase.getBlackboard().getSolutions(State.SUGGESTED);
-		List<Solution> excluded = theCase.getBlackboard().getSolutions(State.EXCLUDED);
+	private boolean heuristicDiagnosesAvailable(Session session) {
+		List<Solution> established = session.getBlackboard().getSolutions(State.ESTABLISHED);
+		List<Solution> suggested = session.getBlackboard().getSolutions(State.SUGGESTED);
+		List<Solution> excluded = session.getBlackboard().getSolutions(State.EXCLUDED);
 		if ((established.size() != 0 && DialogUtils.getDialogSettings().isShowHeuristicEstablishedDiagnoses())
 				|| (suggested.size() != 0 && DialogUtils.getDialogSettings()
 						.isShowHeuristicSuggestedDiagnoses())

@@ -87,14 +87,14 @@ public class UICompareCaseBox extends UIOutput {
 
 	@SuppressWarnings( { "deprecation", "unchecked" })
 	public boolean isRenderable() {
-		Session theCase = DialogUtils.getDialog().getSession();
+		Session session = DialogUtils.getDialog().getSession();
 		ComparisonResultRepository crepos = new ComparisonResultRepository();
-		crepos.setCurrentCase(theCase);
+		crepos.setCurrentCase(session);
 		crepos.setCompareMode(CompareMode.BOTH_FILL_UNKNOWN);
 		List<SimpleResult> cases = null;
 		try {
 			cases = crepos.getSimpleResults(CaseManager.getInstance()
-					.getCasesForKb(theCase.getKnowledgeBase().getId()));
+					.getCasesForKb(session.getKnowledgeBase().getId()));
 		} catch (CompareCaseException e) {
 			logger.error(e);
 		}

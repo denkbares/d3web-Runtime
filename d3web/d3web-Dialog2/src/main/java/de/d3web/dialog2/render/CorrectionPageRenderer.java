@@ -65,19 +65,19 @@ public class CorrectionPageRenderer extends Renderer {
 		// also save userselected diags in case...
 		WebDialog dia = DialogUtils.getDialog();
 
-		Session theCase = dia.getSession();
-		List<Solution> allDiags = theCase.getKnowledgeBase().getSolutions();
+		Session session = dia.getSession();
+		List<Solution> allDiags = session.getKnowledgeBase().getSolutions();
 		for (Solution diag : allDiags) {
 			if (diagIsUserSelected(dia, userSelDiagIDs, diag)) {
 				// set as user selected
-				theCase.getBlackboard().addValueFact(
+				session.getBlackboard().addValueFact(
 						new DefaultFact(diag, new Rating(
 						Rating.State.ESTABLISHED), this,
 						PSMethodUserSelected.getInstance()));
 			}
 			else {
 				// delete user selected diagnosis
-				theCase.getBlackboard().removeValueFact(diag, this);
+				session.getBlackboard().removeValueFact(diag, this);
 			}
 		}
 	}
@@ -98,7 +98,7 @@ public class CorrectionPageRenderer extends Renderer {
 			throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 
-		Session theCase = DialogUtils.getDialog().getSession();
+		Session session = DialogUtils.getDialog().getSession();
 
 		DialogRenderUtils.renderTableWithClass(writer, component, "panelBox",
 				2, 0);
@@ -113,8 +113,8 @@ public class CorrectionPageRenderer extends Renderer {
 		writer.endElement("h2");
 
 		// get established and suggested diagnoses
-		List<Solution> diagListEstablished = theCase.getBlackboard().getSolutions(State.ESTABLISHED);
-		List<Solution> diagListSuggested = theCase.getBlackboard().getSolutions(State.SUGGESTED);
+		List<Solution> diagListEstablished = session.getBlackboard().getSolutions(State.ESTABLISHED);
+		List<Solution> diagListSuggested = session.getBlackboard().getSolutions(State.SUGGESTED);
 		// filter duplicate diagoses (some are userselected established and
 		// heuristic suggested)
 		List<Solution> diagListSuggestedFiltered = new ArrayList<Solution>();
@@ -160,12 +160,12 @@ public class CorrectionPageRenderer extends Renderer {
 
 			if (!diagListEstablished.isEmpty()) {
 				DialogRenderUtils.sortDiagnosisList(diagListEstablished,
-						theCase);
+						session);
 				renderDiags(writer, component, diagListEstablished, true, true);
 			}
 			if (!diagListSuggestedFiltered.isEmpty()) {
 				DialogRenderUtils.sortDiagnosisList(diagListSuggestedFiltered,
-						theCase);
+						session);
 				renderDiags(writer, component, diagListSuggestedFiltered, true,
 						false);
 			}
@@ -174,7 +174,7 @@ public class CorrectionPageRenderer extends Renderer {
 		}
 		writer.endElement("table");
 
-		List<Solution> remainingDiags = getRemainingDiags(theCase,
+		List<Solution> remainingDiags = getRemainingDiags(session,
 				diagListEstablished, diagListSuggestedFiltered);
 
 		if (!remainingDiags.isEmpty()) {
@@ -210,11 +210,11 @@ public class CorrectionPageRenderer extends Renderer {
 		}
 	}
 
-	private List<Solution> getRemainingDiags(Session theCase,
+	private List<Solution> getRemainingDiags(Session session,
 			List<Solution> diagListEstablished,
 			List<Solution> diagListSuggested) {
-		List<Solution> diagList = theCase.getKnowledgeBase().getSolutions();
-		Solution root = theCase.getKnowledgeBase().getRootSolution();
+		List<Solution> diagList = session.getKnowledgeBase().getSolutions();
+		Solution root = session.getKnowledgeBase().getRootSolution();
 		List<Solution> retList = new ArrayList<Solution>();
 		for (int i = 0; i < diagList.size(); i++) {
 			Solution actual = diagList.get(i);

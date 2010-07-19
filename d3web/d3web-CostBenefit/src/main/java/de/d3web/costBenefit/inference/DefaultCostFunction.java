@@ -34,7 +34,7 @@ public class DefaultCostFunction implements CostFunction {
 	}
 
 	@Override
-	public double getCosts(QContainer qcon, Session theCase) {
+	public double getCosts(QContainer qcon, Session session) {
 		Object property = qcon.getProperties().getProperty(Property.COST);
 		if (property!=null) {
 			return (Double) property;

@@ -68,8 +68,8 @@ public class FormulaExpression {
 	 * Evaluates the formulaElement and creates the returned value into an AnswerNum
 	 * @return an AnswerNum containing the evaluated value
 	 */
-	public Value eval(Session theCase) {
-		Double answer = fElement.eval(theCase);
+	public Value eval(Session session) {
+		Double answer = fElement.eval(session);
 		if (answer != null) {
 			return new NumValue(answer);
 		} else

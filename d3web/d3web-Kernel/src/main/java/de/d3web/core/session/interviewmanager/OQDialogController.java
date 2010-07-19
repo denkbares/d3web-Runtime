@@ -49,11 +49,11 @@ public class OQDialogController implements DialogController {
 	private Session session;
 
 
-		public OQDialogController(Session theCase) {
-		mqdc = new MQDialogController(theCase);
+		public OQDialogController(Session session) {
+		mqdc = new MQDialogController(session);
 		history = new LinkedList<QASet>();
-		this.session = theCase;
-		theCase.setQASetManager(this);
+		this.session = session;
+		session.setQASetManager(this);
 		moveToNewestQASet();
 	}
 	
@@ -243,11 +243,11 @@ public class OQDialogController implements DialogController {
 		return null;
 	}
 	
-//	private List<Reason> getProReasonsOfParent(Session theCase, Question q) {
+//	private List<Reason> getProReasonsOfParent(Session session, Question q) {
 //		List<Reason> proReasons = new LinkedList<Reason>();
 //		for (TerminologyObject to: q.getParents()) {
 //			QASet qaSet = (QASet) to;
-//			proReasons.addAll(qaSet.getProReasons(theCase));
+//			proReasons.addAll(qaSet.getProReasons(session));
 //		}
 //		return proReasons;
 //	}

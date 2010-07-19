@@ -50,9 +50,9 @@ public class CondNot extends NonTerminalCondition {
 	}
 
 	@Override
-	public boolean eval(Session theCase)
+	public boolean eval(Session session)
 		throws NoAnswerException, UnknownAnswerException {
-		return (!condition.eval(theCase));
+		return (!condition.eval(session));
 	}
 
 	@Override

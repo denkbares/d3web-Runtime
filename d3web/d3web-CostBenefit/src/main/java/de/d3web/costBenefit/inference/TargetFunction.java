@@ -38,12 +38,12 @@ public interface TargetFunction {
 	 * Returns a collection of targets. These targets contain relevantQuestions
 	 * to discriminate the diagnosis.
 	 * 
-	 * @param theCase
+	 * @param session
 	 * @param relevantQuestions
 	 * @param diagnosisToDiscriminate
 	 * @return
 	 */
-	Collection<Target> getTargets(Session theCase,
+	Collection<Target> getTargets(Session session,
 			Collection<Question> relevantQuestions,
 			Collection<Solution> diagnosisToDiscriminate, StrategicSupport strategicSupport);
 }

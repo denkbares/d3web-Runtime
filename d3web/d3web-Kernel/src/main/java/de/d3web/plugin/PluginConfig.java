@@ -59,7 +59,7 @@ public class PluginConfig implements KnowledgeSlice {
 	}
 
 	@Override
-	public boolean isUsed(Session theCase) {
+	public boolean isUsed(Session session) {
 		return false;
 	}
 

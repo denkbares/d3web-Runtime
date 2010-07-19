@@ -66,8 +66,8 @@ public class FormulaDateExpression {
 	 * Evaluates the formulaDateElement and creates the returned value into an AnswerDate
 	 * @return an AnswerDate containing the evaluated value
 	 */
-	public Value eval(Session theCase) {
-		Date answer = fElement.eval(theCase);
+	public Value eval(Session session) {
+		Date answer = fElement.eval(session);
 		if (answer != null) {
 			return new DateValue(answer);
 		} else

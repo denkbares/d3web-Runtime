@@ -38,7 +38,7 @@ public class PSMethodShared extends PSMethodAdapter {
 	public static MethodKind SHARED_ABNORMALITY = new MethodKind("SHARED_ABNORMALITY");
 
 	@Override
-	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session session, Collection<PropagationEntry> changes) {
 	}
 	
 	@Override

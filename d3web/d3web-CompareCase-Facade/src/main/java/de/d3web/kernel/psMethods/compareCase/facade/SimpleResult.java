@@ -29,7 +29,7 @@ import de.d3web.core.knowledge.terminology.info.DCElement;
  * @author: Norman Brümmer
  */
 public class SimpleResult {
-	private CaseObject theCase = null;
+	private CaseObject session = null;
 	private double similarity = 0;
 	private Collection diagnoses = null;
 
@@ -42,7 +42,7 @@ public class SimpleResult {
 	}
 
 	public void initialize(CaseObject sc, double sim, Collection diagnoses) {
-		theCase = sc;
+		session = sc;
 		similarity = sim;
 		this.diagnoses = diagnoses;
 	}
@@ -55,7 +55,7 @@ public class SimpleResult {
 	public boolean equals(Object o) {
 		try {
 			SimpleResult res = (SimpleResult) o;
-			return (res.getCase().getId().equals(theCase.getId()) && (res.getSimilarity() == similarity));
+			return (res.getCase().getId().equals(session.getId()) && (res.getSimilarity() == similarity));
 		} catch (Exception x) {
 			return false;
 		}
@@ -67,7 +67,7 @@ public class SimpleResult {
 	 * @return de.d3web.kernel.psMethods.compareCase.StaticCase
 	 */
 	public CaseObject getCase() {
-		return theCase;
+		return session;
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class SimpleResult {
 	 * @return java.lang.String
 	 */
 	public String toString() {
-		String title = theCase.getDCMarkup().getContent(DCElement.TITLE);
+		String title = session.getDCMarkup().getContent(DCElement.TITLE);
 		if (title == null) {
 			title = "noname";
 		}

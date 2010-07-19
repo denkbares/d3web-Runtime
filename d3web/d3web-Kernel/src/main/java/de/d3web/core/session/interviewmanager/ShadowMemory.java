@@ -69,13 +69,13 @@ public class ShadowMemory extends DialogClient {
 	 * @param Session to put
 	 */
 	@Override
-	public void putCase(Session theCase) {
-		List<? extends Question> questions = theCase.getBlackboard().getAnsweredQuestions();
+	public void putCase(Session session) {
+		List<? extends Question> questions = session.getBlackboard().getAnsweredQuestions();
 
 		Iterator<? extends Question> iter = questions.iterator();
 		while (iter.hasNext()) {
 			Question q = iter.next();
-			addAnswers(q.getId(), theCase.getBlackboard().getValue(q));
+			addAnswers(q.getId(), session.getBlackboard().getValue(q));
 		}
 	}
 

@@ -63,11 +63,11 @@ public class CompareCasePageRenderer extends Renderer {
 			throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 
-		Session theCase = DialogUtils.getDialog().getSession();
+		Session session = DialogUtils.getDialog().getSession();
 
 		CompareCaseController compareCase = DialogUtils.getCompareCaseBean();
 		ComparisonResultRepository crepos = new ComparisonResultRepository();
-		crepos.setCurrentCase(theCase);
+		crepos.setCurrentCase(session);
 		crepos.setCompareMode(compareCase.retrieveCompareModeFromParam());
 
 		String compMethod;
@@ -102,14 +102,14 @@ public class CompareCasePageRenderer extends Renderer {
 		}
 
 		if (compMethod.equals("simple")) {
-			renderSimple(writer, component, theCase, crepos, compareCase);
+			renderSimple(writer, component, session, crepos, compareCase);
 		}
 		else if (compMethod.equals("container")) {
-			renderContainer(writer, component, theCase, crepos, compareCase,
+			renderContainer(writer, component, session, crepos, compareCase,
 					compID);
 		}
 		else if (compMethod.equals("detailled")) {
-			renderDetailled(writer, component, theCase, crepos, compareCase,
+			renderDetailled(writer, component, session, crepos, compareCase,
 					compID);
 		}
 		else {
@@ -138,7 +138,7 @@ public class CompareCasePageRenderer extends Renderer {
 	}
 
 	private void renderAnswerValue(ResponseWriter writer,
-			UIComponent component, Value ans, Session theCase)
+			UIComponent component, Value ans, Session session)
 			throws IOException {
 		writer.startElement("p", component);
 		writer.writeText(ans.getValue().toString(), "value");
@@ -154,10 +154,10 @@ public class CompareCasePageRenderer extends Renderer {
 	}
 
 	private void renderContainer(ResponseWriter writer, UIComponent component,
-			Session theCase, ComparisonResultRepository crepos,
+			Session session, ComparisonResultRepository crepos,
 			CompareCaseController compareCase, String compID)
 			throws IOException {
-		String kbid = theCase.getKnowledgeBase().getId();
+		String kbid = session.getKnowledgeBase().getId();
 
 		List<DetailledResult> results = null;
 		try {
@@ -211,10 +211,10 @@ public class CompareCasePageRenderer extends Renderer {
 	}
 
 	private void renderDetailled(ResponseWriter writer, UIComponent component,
-			Session theCase, ComparisonResultRepository crepos,
+			Session session, ComparisonResultRepository crepos,
 			CompareCaseController compareCase, String caseid)
 			throws IOException {
-		String kbid = theCase.getKnowledgeBase().getId();
+		String kbid = session.getKnowledgeBase().getId();
 
 		List<DetailledResult> results = null;
 
@@ -316,7 +316,7 @@ public class CompareCasePageRenderer extends Renderer {
 							writer.write("-");
 						}
 						else {
-							renderAnswerValue(writer, component, queryAnswers, theCase);
+							renderAnswerValue(writer, component, queryAnswers, session);
 						}
 						writer.endElement("td");
 
@@ -329,7 +329,7 @@ public class CompareCasePageRenderer extends Renderer {
 							writer.write("-");
 						}
 						else {
-							renderAnswerValue(writer, component, storedAnswers, theCase);
+							renderAnswerValue(writer, component, storedAnswers, session);
 						}
 						writer.endElement("td");
 
@@ -413,12 +413,12 @@ public class CompareCasePageRenderer extends Renderer {
 	}
 
 	private void renderSimple(ResponseWriter writer, UIComponent component,
-			Session theCase, ComparisonResultRepository crepos,
+			Session session, ComparisonResultRepository crepos,
 			CompareCaseController compareCase) throws IOException {
 		List<SimpleResult> cases = null;
 		try {
 			cases = crepos.getSimpleResults(CaseManager.getInstance()
-					.getCasesForKb(theCase.getKnowledgeBase().getId()));
+					.getCasesForKb(session.getKnowledgeBase().getId()));
 		}
 		catch (Exception e) {
 			logger.error(e);

@@ -65,8 +65,8 @@ public class Count implements FormulaNumberElement {
 	 * @return the number of active alternatives for a multiple-choice answer,
 	 *         0, if the active answer is "No" or "unknown".
 	 */
-	public Double eval(Session theCase) {
-		MultipleChoiceValue value = (MultipleChoiceValue) theCase.getBlackboard().getValue(
+	public Double eval(Session session) {
+		MultipleChoiceValue value = (MultipleChoiceValue) session.getBlackboard().getValue(
 				getQuestionMC());
 		List<Choice> choices = value.asChoiceList();
 

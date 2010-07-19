@@ -43,8 +43,8 @@ public class ExplanationFactory {
     
     private Session myCase;
     /** Creates a new instance of ExplainationFactory */
-    public ExplanationFactory(Session theCase) {
-        myCase = theCase;
+    public ExplanationFactory(Session session) {
+        myCase = session;
     }
     
     /**

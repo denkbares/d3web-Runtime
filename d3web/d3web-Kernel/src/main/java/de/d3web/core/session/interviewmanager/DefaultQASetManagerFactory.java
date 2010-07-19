@@ -40,8 +40,8 @@ public class DefaultQASetManagerFactory implements QASetManagerFactory {
 	/**
 	 * @see de.d3web.core.session.interviewmanager.QASetManagerFactory#createQASetManager(de.d3web.core.session.Session)
 	 */
-	public QASetManager createQASetManager(Session theCase) {
-		return new OQDialogController(theCase);
+	public QASetManager createQASetManager(Session session) {
+		return new OQDialogController(session);
 	}
 
 }

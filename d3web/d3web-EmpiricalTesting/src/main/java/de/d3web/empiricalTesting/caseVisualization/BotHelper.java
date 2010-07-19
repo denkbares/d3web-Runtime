@@ -50,18 +50,18 @@ public class BotHelper {
 		return instance;
 	}
 
-	public void setCaseValue(Session theCase, String questionID, String answerID)
+	public void setCaseValue(Session session, String questionID, String answerID)
 			throws Exception {
-		QuestionChoice q = (QuestionChoice) theCase.getKnowledgeBase()
+		QuestionChoice q = (QuestionChoice) session.getKnowledgeBase()
 				.searchQuestion(questionID);
 		if (answerID != null) {
 			Choice a = findAnswer(q, answerID);
-			setCaseValue(theCase, q, new ChoiceValue(a));
+			setCaseValue(session, q, new ChoiceValue(a));
 		}
 	}
 
-	public void setCaseValue(Session theCase, QuestionChoice q, ChoiceValue a) {
-		theCase.getBlackboard().addValueFact(
+	public void setCaseValue(Session session, QuestionChoice q, ChoiceValue a) {
+		session.getBlackboard().addValueFact(
 				FactFactory.createFact(q, a, PSMethodUserSelected.getInstance(),
 				PSMethodUserSelected.getInstance()));
 	}

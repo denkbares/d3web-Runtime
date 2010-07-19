@@ -30,8 +30,8 @@ import de.d3web.scoring.HeuristicRating;
 public class HeuristicScoreRatingStrategy implements RatingStrategy {
 
 	@Override
-	public Rating getRatingFor(Solution solution, Session theCase) {
-		de.d3web.core.knowledge.terminology.Rating state = theCase.getBlackboard().getRating(
+	public Rating getRatingFor(Solution solution, Session session) {
+		de.d3web.core.knowledge.terminology.Rating state = session.getBlackboard().getRating(
 				solution);
 		if (state instanceof HeuristicRating) {
 			HeuristicRating hr = (HeuristicRating) state;

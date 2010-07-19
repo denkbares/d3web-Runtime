@@ -78,7 +78,7 @@ public abstract class QuestionComparator implements KnowledgeSlice {
 	/**
 	 * Has this knowledge already been used? (e.g. did a rule fire?)
 	 */
-	public boolean isUsed(de.d3web.core.session.Session theCase) {
+	public boolean isUsed(de.d3web.core.session.Session session) {
 		return true;
 	}
 

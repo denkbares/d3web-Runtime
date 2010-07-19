@@ -58,8 +58,8 @@ public class ActionInstantIndication extends ActionIndication {
 	}
 	
 	@Override
-	public void doIt(Session theCase, Object source, PSMethod psmethod) {
-		doItWithContext(theCase, source);
+	public void doIt(Session session, Object source, PSMethod psmethod) {
+		doItWithContext(session, source);
 	}
 
 }

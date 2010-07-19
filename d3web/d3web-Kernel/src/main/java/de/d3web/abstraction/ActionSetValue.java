@@ -112,8 +112,8 @@ public class ActionSetValue extends ActionQuestionSetter implements
 	 * Tries to undo the included action.
 	 */
 	@Override
-	public void undo(Session theCase, Object source, PSMethod psmethod) {
-		theCase.getBlackboard().removeValueFact(getQuestion(), source);
+	public void undo(Session session, Object source, PSMethod psmethod) {
+		session.getBlackboard().removeValueFact(getQuestion(), source);
 	}
 
 	@Override

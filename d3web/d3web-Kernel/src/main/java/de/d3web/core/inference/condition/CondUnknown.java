@@ -45,13 +45,13 @@ public class CondUnknown extends CondQuestion {
 	}
 
 	@Override
-	public boolean eval(Session theCase) throws NoAnswerException {
-		return (theCase.getBlackboard().getValue(question) instanceof Unknown);
+	public boolean eval(Session session) throws NoAnswerException {
+		return (session.getBlackboard().getValue(question) instanceof Unknown);
 		// try {
-		// checkAnswer(theCase);
+		// checkAnswer(session);
 		// return false;
 		// } catch (UnknownAnswerException ex) {
-		// return ((Answer) question.getValue(theCase)).isUnknown();
+		// return ((Answer) question.getValue(session)).isUnknown();
 		// }
 	}
 

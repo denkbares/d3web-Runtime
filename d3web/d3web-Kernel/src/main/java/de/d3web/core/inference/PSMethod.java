@@ -42,7 +42,7 @@ public interface PSMethod {
 	 * Initialization method for this PSMethod; will be called when a new
 	 * {@link Session} instance is created.
 	 */
-	void init(Session theCase);
+	void init(Session session);
 
 	/**
 	 * Indicates whether the problem-solver contributes to

@@ -42,9 +42,9 @@ public class CondKnown extends CondQuestion {
 	}
 
 	@Override
-	public boolean eval(Session theCase) throws NoAnswerException {
+	public boolean eval(Session session) throws NoAnswerException {
 		try {
-			checkAnswer(theCase);
+			checkAnswer(session);
 			return true;
 		}
 		catch (UnknownAnswerException ex) {

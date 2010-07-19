@@ -85,13 +85,13 @@ public class SCMCBRRelation {
 		r.setId(id);
 		return r;
 	}
-	public boolean eval(Session theCase) throws NoAnswerException,UnknownAnswerException{
-			return conditionedFinding.eval(theCase);
+	public boolean eval(Session session) throws NoAnswerException,UnknownAnswerException{
+			return conditionedFinding.eval(session);
 		
 	}
 
 	
-	public double getSimilarity(Session theCase) {
+	public double getSimilarity(Session session) {
 		
 		
 		return 0;
@@ -146,8 +146,8 @@ public class SCMCBRRelation {
 		return toString().hashCode();
 	}
 
-	public double getDegreeOfTruth(Session theCase) throws NoAnswerException, UnknownAnswerException {
-		if(conditionedFinding.eval(theCase)) {
+	public double getDegreeOfTruth(Session session) throws NoAnswerException, UnknownAnswerException {
+		if(conditionedFinding.eval(session)) {
 			return 1;
 		}
 		return 0;

@@ -33,11 +33,11 @@ import de.d3web.indication.inference.PSMethodUserSelected;
 
 public class InterviewCalculator extends PrecisionRecallCalculator {
 
-	private final Session thecase;
+	private final Session session;
 
 	public InterviewCalculator(KnowledgeBase kb) {
-		this.thecase = SessionFactory.createSession(kb);
-		this.thecase.getInterview().setFormStrategy(new NextUnansweredQuestionFormStrategy());
+		this.session = SessionFactory.createSession(kb);
+		this.session.getInterview().setFormStrategy(new NextUnansweredQuestionFormStrategy());
 	}
 
 	// -------Rated Precision--------
@@ -115,7 +115,7 @@ public class InterviewCalculator extends PrecisionRecallCalculator {
 	 * @param a Answer which will be set.
 	 */
 	private void setCaseValue(Question q, Value v) {
-		thecase.getBlackboard().addValueFact(
+		session.getBlackboard().addValueFact(
 				FactFactory.createFact(q, v, PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 	}
@@ -126,11 +126,11 @@ public class InterviewCalculator extends PrecisionRecallCalculator {
 	 * @return Question which will be asked next.
 	 */
 	private Question getNextQuestion() {
-		return (Question)thecase.getInterview().nextForm().getInterviewObject();
+		return (Question)session.getInterview().nextForm().getInterviewObject();
 
 		//      // THIS IS NOT NECESSARY ANY MORE DUE TO NEW INTERVIEW IMPLEMENTATION		
 //		// Get DialogController
-//		MQDialogController controller = (MQDialogController) thecase.getQASetManager();
+//		MQDialogController controller = (MQDialogController) session.getQASetManager();
 //		// Get correct QASet
 //		QASet currentQASet = getCorrectQASet(controller);
 //

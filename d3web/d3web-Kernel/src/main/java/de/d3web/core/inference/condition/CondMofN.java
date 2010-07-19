@@ -48,14 +48,14 @@ public class CondMofN extends NonTerminalCondition {
 	}
 
 	@Override
-	public boolean eval(Session theCase)
+	public boolean eval(Session session)
 		throws NoAnswerException, UnknownAnswerException {
 		int trueTillNow = 0;
 		boolean wasNoAnswer = false;
 
 		for (Condition condition : terms) {
 			try {
-				if (condition.eval(theCase)) {
+				if (condition.eval(session)) {
 					trueTillNow++;
 					if (trueTillNow > getMax())
 						return false;

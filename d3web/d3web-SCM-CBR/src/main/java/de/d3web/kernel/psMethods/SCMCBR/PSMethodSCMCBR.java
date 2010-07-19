@@ -26,7 +26,7 @@ public class PSMethodSCMCBR extends PSMethodAdapter {
 		return instance;
 	}
 
-	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		// TODO: implement well, as defined below
 		// Set<XCLModel> modelsToUpdate = new HashSet<XCLModel>();
 		// for (PropagationEntry change : changes) {
@@ -40,10 +40,10 @@ public class PSMethodSCMCBR extends PSMethodAdapter {
 		// }
 		// }
 		// for (XCLModel model : modelsToUpdate) {
-		// DiagnosisState state = model.getState(theCase);
-		// theCase.setValue(model.getSolution(), new DiagnosisState[]{state},
+		// DiagnosisState state = model.getState(session);
+		// session.setValue(model.getSolution(), new DiagnosisState[]{state},
 		// this.getClass());
-		// model.notifyListeners(theCase, model);
+		// model.notifyListeners(session, model);
 		// }
 
 		// TODO: remove this hack
@@ -53,24 +53,24 @@ public class PSMethodSCMCBR extends PSMethodAdapter {
 			if (change.getObject() instanceof Question) hasQuestion = true;
 		}
 		if (!hasQuestion) return;
-		Collection<KnowledgeSlice> models = theCase.getKnowledgeBase().getAllKnowledgeSlicesFor(
+		Collection<KnowledgeSlice> models = session.getKnowledgeBase().getAllKnowledgeSlicesFor(
 				PSMethodSCMCBR.class);
 		for (KnowledgeSlice knowledgeSlice : models) {
 			if (knowledgeSlice instanceof SCMCBRModel) {
 				SCMCBRModel model = (SCMCBRModel) knowledgeSlice;
 
 				// Quick fix for ClassCastException:
-				Rating oldState = theCase.getBlackboard().getRating(model.getSolution());
+				Rating oldState = session.getBlackboard().getRating(model.getSolution());
 
 				// TODO: split getState into getState and refreshState
-				// DiagnosisState oldState = model.getState(theCase);
-				// model.refreshState(theCase);
-				Rating newState = model.getState(theCase);
+				// DiagnosisState oldState = model.getState(session);
+				// model.refreshState(session);
+				Rating newState = model.getState(session);
 				if (!oldState.equals(newState)) {
-					theCase.getBlackboard().addValueFact(
+					session.getBlackboard().addValueFact(
 							FactFactory.createFact(model.getSolution(), newState, model, this));
 				}
-				model.notifyListeners(theCase, model);
+				model.notifyListeners(session, model);
 			}
 		}
 	}

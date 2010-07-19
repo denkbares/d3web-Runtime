@@ -57,13 +57,13 @@ import de.d3web.dialog2.util.QuestionDateUtils;
 
 public class ProcessedQContainersBoxRenderer extends Renderer {
 
-	private static boolean checkDisplayability(Session theCase, List<QContainer> processedContainers) {
+	private static boolean checkDisplayability(Session session, List<QContainer> processedContainers) {
 		for (Iterator<QContainer> iter = processedContainers.iterator(); iter.hasNext();) {
 			QContainer cont = iter.next();
 			List<Question> qList = DialogUtils.getQuestionPageBean().convertQuestionsToRender(cont);
 			for (Iterator<Question> iter2 = qList.iterator(); iter2.hasNext();) {
 				Question q = iter2.next();
-				if (DialogUtils.isDone(theCase, q)) {
+				if (DialogUtils.isDone(session, q)) {
 					return true;
 				}
 			}
@@ -124,7 +124,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 	}
 
 	private static void renderProcessedQContainersBox(FacesContext context, UIComponent component,
-			Session theCase, List<QContainer> processedContainers,
+			Session session, List<QContainer> processedContainers,
 			ProcessedQContainersController processedBean) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 
@@ -161,7 +161,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 			QContainer cont = iter.next();
 			List<Question> qList = DialogUtils.getQuestionPageBean().convertQuestionsToRender(cont);
 			// if no answer is set in this QContainer -> take next QContainer
-			if (!qInContainerAnswered(theCase, qList, processedBean.isShowUnknown())) {
+			if (!qInContainerAnswered(session, qList, processedBean.isShowUnknown())) {
 				continue;
 			}
 			if (finish) {
@@ -179,9 +179,9 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 
 			for (int j = 0; j < qList.size(); j++) {
 				Question q = qList.get(j);
-				if (UndefinedValue.isNotUndefinedValue(theCase.getBlackboard().getValue(q))) {
+				if (UndefinedValue.isNotUndefinedValue(session.getBlackboard().getValue(q))) {
 					if (!processedBean.isShowUnknown()
-							&& DialogUtils.unknownAnswerInValueList(q, theCase)) {
+							&& DialogUtils.unknownAnswerInValueList(q, session)) {
 						continue;
 					}
 					if (isAbstractQuestion(q)
@@ -201,7 +201,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 						renderMoreLessLink = true;
 					}
 					if (processedBean.isShowQContainerNames()) {
-						renderProcessedQuestion(writer, component, q, theCase,
+						renderProcessedQuestion(writer, component, q, session,
 								processedBean.getQTextMode());
 					}
 					else {
@@ -241,7 +241,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 			};
 			Collections.sort(questionToRenderList, qCompAsc);
 			for (Question q : questionToRenderList) {
-				renderProcessedQuestion(writer, component, q, theCase, processedBean.getQTextMode());
+				renderProcessedQuestion(writer, component, q, session, processedBean.getQTextMode());
 			}
 		}
 
@@ -268,7 +268,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 	}
 
 	private static void renderProcessedQuestion(ResponseWriter writer, UIComponent component, Question q,
-			Session theCase, String qTextMode) throws IOException {
+			Session session, String qTextMode) throws IOException {
 		writer.startElement("tr", component);
 		writer.startElement("td", component);
 
@@ -307,7 +307,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 		writer.startElement("span", component);
 		writer.writeAttribute("id", component.getId() + "_ans_" + q.getId(), "id");
 
-		Value ans = theCase.getBlackboard().getValue(q);
+		Value ans = session.getBlackboard().getValue(q);
 
 		if (ans instanceof ChoiceValue) {
 			String valueID = ((Choice) ans.getValue()).getId();
@@ -326,12 +326,12 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 		}
 		else if (ans instanceof Unknown) {
 			writer.writeText(DialogRenderUtils.getUnknownAnswerString(q,
-					theCase), "value");
+					session), "value");
 		}
 		else if (ans instanceof DateValue) {
 			String dateanswer = QuestionDateUtils.dateToString(
 					(QuestionDate) q,
-					(Date) ans.getValue(), theCase);
+					(Date) ans.getValue(), session);
 			writer.writeText(dateanswer, "value");
 		}
 		else {
@@ -345,13 +345,13 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 
 	@Override
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
-		Session theCase = DialogUtils.getDialog().getSession();
+		Session session = DialogUtils.getDialog().getSession();
 		ProcessedQContainersController processedBean = DialogUtils.getProcessedQContainersBean();
-		// MQDialogController mqdc = DialogUtils.getMQDialogController(theCase);
+		// MQDialogController mqdc = DialogUtils.getMQDialogController(session);
 		// List<QContainer> processedContainers = mqdc.getProcessedContainers();
-		List<QContainer> processedContainers = theCase.getKnowledgeBase().getQContainers();
-		if (checkDisplayability(theCase, processedContainers)) {
-			renderProcessedQContainersBox(context, component, theCase, processedContainers,
+		List<QContainer> processedContainers = session.getKnowledgeBase().getQContainers();
+		if (checkDisplayability(session, processedContainers)) {
+			renderProcessedQContainersBox(context, component, session, processedContainers,
 					processedBean);
 		}
 	}

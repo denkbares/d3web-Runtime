@@ -59,7 +59,7 @@ public class XCLPageRenderer extends Renderer {
 	private ResponseWriter writer;
 	private UIComponent component;
 	private HashMap<String, Object> parameterMap;
-	private Session theCase;
+	private Session session;
 
 	@Override
 	public void encodeEnd(FacesContext context, UIComponent component)
@@ -70,14 +70,14 @@ public class XCLPageRenderer extends Renderer {
 		this.parameterMap = new HashMap<String, Object>();
 		parameterMap.put(Verbalizer.IS_SINGLE_LINE, Boolean.TRUE);
 
-		theCase = DialogUtils.getDialog().getSession();
+		session = DialogUtils.getDialog().getSession();
 		String diagnosis = ((UIXCLPage) component).getDiag();
 
 		Solution solution =
-				theCase.getKnowledgeBase().searchSolution(diagnosis);
+				session.getKnowledgeBase().searchSolution(diagnosis);
 
 		Collection<KnowledgeSlice> models =
-				theCase.getKnowledgeBase().getAllKnowledgeSlicesFor(PSMethodXCL.class);
+				session.getKnowledgeBase().getAllKnowledgeSlicesFor(PSMethodXCL.class);
 
 		for (KnowledgeSlice knowledgeSlice : models) {
 			if (knowledgeSlice instanceof XCLModel) {
@@ -85,7 +85,7 @@ public class XCLPageRenderer extends Renderer {
 						.equals(solution)) {
 
 					InferenceTrace trace = ((XCLModel) knowledgeSlice)
-							.getInferenceTrace(theCase);
+							.getInferenceTrace(session);
 
 					if (trace != null) {
 
@@ -342,7 +342,7 @@ public class XCLPageRenderer extends Renderer {
 			}
 			writer.endElement("td");
 			writer.startElement("td", component);
-			Value answer = theCase.getBlackboard().getValue(cq);
+			Value answer = session.getBlackboard().getValue(cq);
 			List<Value> answers = new ArrayList<Value>();
 			if (cq instanceof QuestionMC) {
 				answers.addAll((List<ChoiceValue>) ((MultipleChoiceValue) answer).getValue());

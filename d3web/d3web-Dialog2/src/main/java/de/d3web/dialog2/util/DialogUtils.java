@@ -215,16 +215,16 @@ public class DialogUtils {
 		return (DialogSettings) getBean("dialogSettings");
 	}
 
-	public static Dimension getImageDimension(Session theCase, String file) {
+	public static Dimension getImageDimension(Session session, String file) {
 		try {
 			String destPath = ResourceRepository.getInstance().getBasicSettingValue(
 					ResourceRepository.MULTIMEDIAPATH).replaceAll("\\$kbid\\$",
-					theCase.getKnowledgeBase().getId());
+					session.getKnowledgeBase().getId());
 			File imageMapFile = new File(DialogUtils.getRealPath(destPath), file);
 			if (!imageMapFile.exists()) {
 				destPath = ResourceRepository.getInstance().getBasicSettingValue(
 						ResourceRepository.MULTIMEDIAPATH).replaceAll("\\$kbid\\$",
-						theCase.getKnowledgeBase().getId().replaceAll("\\.", "\\$p"));
+						session.getKnowledgeBase().getId().replaceAll("\\.", "\\$p"));
 				imageMapFile = new File(DialogUtils.getRealPath(destPath), file);
 			}
 			BufferedImage img = ImageIO.read(imageMapFile.toURI().toURL());
@@ -281,8 +281,8 @@ public class DialogUtils {
 		return format.format(params);
 	}
 
-	// public static MQDialogController getMQDialogController(Session theCase) {
-	// DialogController dc = (DialogController) theCase.getQASetManager();
+	// public static MQDialogController getMQDialogController(Session session) {
+	// DialogController dc = (DialogController) session.getQASetManager();
 	// return dc.getMQDialogcontroller();
 	// }
 
@@ -475,8 +475,8 @@ public class DialogUtils {
 		return back;
 	}
 
-	public static boolean unknownAnswerInValueList(Question q, Session theCase) {
-		Value answer = theCase.getBlackboard().getValue(q);
+	public static boolean unknownAnswerInValueList(Question q, Session session) {
+		Value answer = session.getBlackboard().getValue(q);
 		if (answer == null) return false;
 		return answer instanceof Unknown;
 	}

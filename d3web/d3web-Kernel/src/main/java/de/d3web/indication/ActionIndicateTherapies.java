@@ -68,13 +68,13 @@ public class ActionIndicateTherapies extends PSAction {
 	 * Executes the included action.
 	 */
 	@Override
-	public void doIt(Session theCase, Object source, PSMethod psmethod) {
+	public void doIt(Session session, Object source, PSMethod psmethod) {
 		//
 		//		DiagnosisScore resultDS =
-		//			getDiagnosis().getScore(theCase, getProblemsolverContext()).add(
+		//			getDiagnosis().getScore(session, getProblemsolverContext()).add(
 		//				getScore());
 		//
-		//		((D3WebCase) theCase).setValue(
+		//		((D3WebCase) session).setValue(
 		//			getDiagnosis(),
 		//			new Object[] { resultDS },
 		//			getProblemsolverContext());
@@ -94,7 +94,7 @@ public class ActionIndicateTherapies extends PSAction {
 	 * Tries to undo the included action.
 	 */
 	@Override
-	public void undo(Session theCase, Object source, PSMethod psmethod) {
+	public void undo(Session session, Object source, PSMethod psmethod) {
 		//		DiagnosisScore resultDS = null;
 		//		if (getScore().equals(Score.N7)) {
 		//			Iterator iter =
@@ -105,7 +105,7 @@ public class ActionIndicateTherapies extends PSAction {
 		//				new DiagnosisScore(getDiagnosis().getAprioriProbability());
 		//			while (iter.hasNext()) {
 		//				RuleComplex rule = (RuleComplex) iter.next();
-		//				if (rule.isUsed(theCase)) {
+		//				if (rule.isUsed(session)) {
 		//					resultDS =
 		//						resultDS.add(
 		//							((ActionIndicateTherapies) rule.getAction()).getScore());
@@ -114,11 +114,11 @@ public class ActionIndicateTherapies extends PSAction {
 		//		} else {
 		//			resultDS =
 		//				getDiagnosis().getScore(
-		//					theCase,
+		//					session,
 		//					getProblemsolverContext()).subtract(
 		//					getScore());
 		//		}
-		//		((D3WebCase) theCase).setValue(
+		//		((D3WebCase) session).setValue(
 		//			getDiagnosis(),
 		//			new Object[] { resultDS },
 		//			getProblemsolverContext());

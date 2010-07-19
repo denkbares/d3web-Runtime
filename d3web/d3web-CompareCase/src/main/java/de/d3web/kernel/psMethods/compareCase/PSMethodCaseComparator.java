@@ -53,17 +53,17 @@ public class PSMethodCaseComparator implements PSMethod {
 	 * Some space for initial methods of a PSMethod. Creation date: (08.08.2001
 	 * 09:10:11)
 	 * 
-	 * @param theCase
+	 * @param session
 	 *            EasyXPS.domainModel.Session the current case
 	 */
-	public void init(Session theCase) {
+	public void init(Session session) {
 	}
 
 	/**
 	 * propagate method comment.
 	 */
 	@Override
-	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session session, Collection<PropagationEntry> changes) {
 	}
 
 	/**

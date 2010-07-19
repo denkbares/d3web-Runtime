@@ -45,10 +45,10 @@ import de.d3web.indication.inference.PSMethodUserSelected;
  */
 public class Util {
 
-	public static Session copyCase(Session theCase) {
+	public static Session copyCase(Session session) {
 		Session testCase = SessionFactory
-				.createSession(theCase.getKnowledgeBase(), new LinkedList<PSMethod>());
-		Blackboard blackboard = theCase.getBlackboard();
+				.createSession(session.getKnowledgeBase(), new LinkedList<PSMethod>());
+		Blackboard blackboard = session.getBlackboard();
 		List<? extends Question> answeredQuestions = new LinkedList<Question>(
 				blackboard.getAnsweredQuestions());
 		for (Question q : answeredQuestions) {
@@ -58,9 +58,9 @@ public class Util {
 		return testCase;
 	}
 
-	public static void undo(Session theCase, List<Fact> facts) {
+	public static void undo(Session session, List<Fact> facts) {
 		for (Fact fact : facts) {
-			theCase.getBlackboard().removeValueFact(fact);
+			session.getBlackboard().removeValueFact(fact);
 		}
 	}
 
@@ -74,14 +74,14 @@ public class Util {
 		return null;
 	}
 
-	public static void setQuestion(Session theCase, String question, String answer) {
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(theCase.getKnowledgeBase());
-		theCase.getPropagationManager().openPropagation();
+	public static void setQuestion(Session session, String question, String answer) {
+		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase());
+		session.getPropagationManager().openPropagation();
 		QuestionOC question1 = (QuestionOC) kbm.findQuestion(question);
-		theCase.getBlackboard().addValueFact(
+		session.getBlackboard().addValueFact(
 				FactFactory.createFact(question1, kbm.findValue(question1, answer),
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
-		theCase.getPropagationManager().commitPropagation();
+		session.getPropagationManager().commitPropagation();
 	}
 
 	public static StateTransition extractStateTransition(QContainer qcon) {

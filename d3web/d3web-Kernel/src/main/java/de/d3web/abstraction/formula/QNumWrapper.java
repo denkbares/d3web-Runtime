@@ -56,11 +56,11 @@ public class QNumWrapper implements FormulaNumberElement {
 	}
 
 	/**
-	 * @param theCase current case
+	 * @param session current case
 	 * @return the Double value of the wrapped QuestionNum
 	 */
-	public Double eval(Session theCase) {
-		Value val = theCase.getBlackboard().getValue(getQuestion());
+	public Double eval(Session session) {
+		Value val = session.getBlackboard().getValue(getQuestion());
 		if (val == null
 				|| val instanceof UndefinedValue
 				|| val instanceof Unknown) {

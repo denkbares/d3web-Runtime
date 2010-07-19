@@ -40,7 +40,7 @@ public class NumericalSimilarity implements ISimilarityMeasurer {
 
 
 	@Override
-	public double computeSimilarity(Session theCase) {
+	public double computeSimilarity(Session session) {
 		
 		//TODO
 		

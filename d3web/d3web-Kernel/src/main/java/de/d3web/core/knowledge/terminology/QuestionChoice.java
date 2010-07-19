@@ -50,7 +50,7 @@ public abstract class QuestionChoice extends Question {
 	 * Gives you all the answers (alternatives) and does not care about any
 	 * rules which could possibly suppress an answer.
 	 * 
-	 * @param theCase currentCase
+	 * @param session currentCase
 	 * @return a List of all alternatives that are not suppressed by any
 	 *         RuleSuppress
 	 **/

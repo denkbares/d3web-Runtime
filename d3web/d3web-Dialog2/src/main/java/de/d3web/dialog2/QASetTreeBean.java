@@ -61,9 +61,9 @@ public class QASetTreeBean {
 		DialogUtils.getQuestionPageBean().moveToQASet(node.getIdentifier());
 	}
 
-	public void checkNodeStyles(Session theCase) {
+	public void checkNodeStyles(Session session) {
 		TreeNode root = getQaSetTreeModel().getNodeById("0");
-		checkNodeStylesRecursive(root, theCase);
+		checkNodeStylesRecursive(root, session);
 	}
 
 	private void checkNodeStylesRecursive(TreeNode node, Session session) {
@@ -157,8 +157,8 @@ public class QASetTreeBean {
 	}
 
 	public void init() {
-		Session theCase = DialogUtils.getDialog().getSession();
-		QASet root = theCase.getKnowledgeBase().getRootQASet();
+		Session session = DialogUtils.getDialog().getSession();
+		QASet root = session.getKnowledgeBase().getRootQASet();
 		TreeNode treeData = new TreeNodeBase(QASetTreeBean.STANDARD_TYPE, root
 				.getName(), root.getId(), false);
 		qaSetTreeModel = new TreeModelBase(treeData);
@@ -166,7 +166,7 @@ public class QASetTreeBean {
 		qaSetHtmlTree.setModel(qaSetTreeModel);
 		qaSetHtmlTree.collapseAll();
 		createTreeRecursive(root, treeData);
-		checkNodeStyles(theCase);
+		checkNodeStyles(session);
 	}
 
 	public void setQaSetHtmlTree(HtmlTree qaSetHtmlTree) {

@@ -50,21 +50,21 @@ import de.d3web.dialog2.util.QuestionDateUtils;
 
 public class QuestionImageMapRendererUtils {
 
-	private static boolean allQuestionsInImageAnswered(Image image, Session theCase) {
+	private static boolean allQuestionsInImageAnswered(Image image, Session session) {
 		for (Region r : image.getRegions()) {
-			Question q = theCase.getKnowledgeBase().searchQuestion(r.getQuestionID());
-			if (q != null && !DialogUtils.isDone(theCase, q)) {
+			Question q = session.getKnowledgeBase().searchQuestion(r.getQuestionID());
+			if (q != null && !DialogUtils.isDone(session, q)) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	private static Value currentAnswerIDsForQuestionID(String questionID, Session theCase,
+	private static Value currentAnswerIDsForQuestionID(String questionID, Session session,
 			List<Question> qList) {
 		for (Question question : qList) {
 			if (question.getId().equals(questionID)) {
-				return theCase.getBlackboard().getValue(question);
+				return session.getBlackboard().getValue(question);
 			}
 		}
 		return null;
@@ -80,14 +80,14 @@ public class QuestionImageMapRendererUtils {
 		return null;
 	}
 
-	private static String getAnswerText(Question q, Session theCase, Value answer) {
+	private static String getAnswerText(Question q, Session session, Value answer) {
 		String answerText = answer.toString();
 		if (answerText.equals(Unknown.UNKNOWN_VALUE)) {
 			return DialogUtils.getMessageFor("dialog.unknown");
 		}
 		else if (q != null && q instanceof QuestionDate) {
-			Date ans = (Date) (theCase.getBlackboard().getValue(q)).getValue();
-			return QuestionDateUtils.dateToString((QuestionDate) q, ans, theCase);
+			Date ans = (Date) (session.getBlackboard().getValue(q)).getValue();
+			return QuestionDateUtils.dateToString((QuestionDate) q, ans, session);
 		}
 		return answerText;
 	}
@@ -107,12 +107,12 @@ public class QuestionImageMapRendererUtils {
 		return sb.toString();
 	}
 
-	private static String getImageMapBackgroundClass(Image image, Session theCase) {
+	private static String getImageMapBackgroundClass(Image image, Session session) {
 		Question firstToAsk = DialogUtils.getQuestionPageBean().getFirstQToAsk();
 		if (firstToAsk != null && questionIdInImage(image, firstToAsk.getId())) {
 			return "currentQ";
 		}
-		else if (allQuestionsInImageAnswered(image, theCase)) {
+		else if (allQuestionsInImageAnswered(image, session)) {
 			return "answeredQ";
 		}
 		else {
@@ -120,13 +120,13 @@ public class QuestionImageMapRendererUtils {
 		}
 	}
 
-	private static String getImageMapBackgroundColorString(Image image, Session theCase,
+	private static String getImageMapBackgroundColorString(Image image, Session session,
 			QuestionPageLayout layoutDef) {
 		Question firstToAsk = DialogUtils.getQuestionPageBean().getFirstQToAsk();
 		if (firstToAsk != null && questionIdInImage(image, firstToAsk.getId())) {
 			return layoutDef.getCurrentQuestionBackground();
 		}
-		else if (allQuestionsInImageAnswered(image, theCase)) {
+		else if (allQuestionsInImageAnswered(image, session)) {
 			return layoutDef.getAnsweredQuestionBackground();
 		}
 		else {
@@ -198,8 +198,8 @@ public class QuestionImageMapRendererUtils {
 		return remainingQuestions;
 	}
 
-	private static Object getToolTipString(Question q, Session theCase, Value answer) {
-		return "Tip('" + getAnswerText(q, theCase, answer)
+	private static Object getToolTipString(Question q, Session session, Value answer) {
+		return "Tip('" + getAnswerText(q, session, answer)
 				+ "', CLOSEBTN, false, STICKY, false)";
 	}
 
@@ -213,14 +213,14 @@ public class QuestionImageMapRendererUtils {
 	}
 
 	private static void renderClickableRegions(ResponseWriter writer, UIComponent component, Image image,
-			Session theCase, List<Question> qList, String srcDir, QuestionPageLayout layoutDef)
+			Session session, List<Question> qList, String srcDir, QuestionPageLayout layoutDef)
 			throws IOException {
 		// Draw clickable regions
 		for (Region region : image.getRegions()) {
 
-			Value answer = currentAnswerIDsForQuestionID(region.getQuestionID(), theCase,
+			Value answer = currentAnswerIDsForQuestionID(region.getQuestionID(), session,
 					qList);
-			Question q = theCase.getKnowledgeBase().searchQuestion(region.getQuestionID());
+			Question q = session.getKnowledgeBase().searchQuestion(region.getQuestionID());
 
 			ImageMapAnswerIcon answerImage = getActualAnswerImage(image, answer);
 			String imageSrc = getImageSrc(answerImage, srcDir);
@@ -283,7 +283,7 @@ public class QuestionImageMapRendererUtils {
 							+ "','"
 							+ nextAnswerID + "'); return false", "onclick");
 					writer
-							.writeAttribute("onmouseover", getToolTipString(q, theCase,
+							.writeAttribute("onmouseover", getToolTipString(q, session,
 							answer),
 							"onmouseover");
 					renderImageMapAnswerIcon(writer, component, q, answer, imageSrc);
@@ -319,7 +319,7 @@ public class QuestionImageMapRendererUtils {
 				writer.writeAttribute("onclick", "openQuestion(event,'"
 						+ region.getQuestionID()
 						+ "'); return false;", "onclick");
-				writer.writeText(getAnswerText(q, theCase, answer), "value");
+				writer.writeText(getAnswerText(q, session, answer), "value");
 			}
 			else {
 				if (imageSrc != null) {
@@ -327,7 +327,7 @@ public class QuestionImageMapRendererUtils {
 						writer.writeAttribute("onclick", "openQuestion(event,'"
 								+ region.getQuestionID()
 								+ "'); return false;", "onclick");
-						writer.writeAttribute("onmouseover", getToolTipString(q, theCase,
+						writer.writeAttribute("onmouseover", getToolTipString(q, session,
 								answer),
 								"onmouseover");
 						renderImageMapAnswerIcon(writer, component, q, answer, imageSrc);
@@ -346,7 +346,7 @@ public class QuestionImageMapRendererUtils {
 	}
 
 	private static void renderErrors(ResponseWriter writer, UIComponent component, List<String> idsInImage,
-			Session theCase) throws IOException {
+			Session session) throws IOException {
 		for (String qID : idsInImage) {
 			Iterator<FacesMessage> it = FacesContext.getCurrentInstance().getMessages(qID);
 			while (it.hasNext()) {
@@ -354,7 +354,7 @@ public class QuestionImageMapRendererUtils {
 				writer.startElement("div", component);
 				writer.writeAttribute("id", "imgmap_q_" + idsInImage + "_error", "id");
 				writer.writeAttribute("class", "validationerror", "class");
-				Question q = theCase.getKnowledgeBase().searchQuestion(qID);
+				Question q = session.getKnowledgeBase().searchQuestion(qID);
 				if (q != null) {
 					writer.writeText(q.getName() + ": " + msg.getSummary(), "value");
 				}
@@ -379,7 +379,7 @@ public class QuestionImageMapRendererUtils {
 	}
 
 	private static void renderPopupMenus(ResponseWriter writer, UIComponent component, Image image,
-			Session theCase, List<Question> qList, QuestionPageLayout layoutDef) throws IOException {
+			Session session, List<Question> qList, QuestionPageLayout layoutDef) throws IOException {
 		for (Region region : image.getRegions()) {
 			writer.startElement("div", component);
 			writer.writeAttribute("class", "popupmenu", "class");
@@ -416,7 +416,7 @@ public class QuestionImageMapRendererUtils {
 
 			DialogRenderUtils.renderTable(writer, component);
 			writer.startElement("tr", component);
-			QuestionsRendererUtils.renderQuestion(writer, component, theCase, q, layout,
+			QuestionsRendererUtils.renderQuestion(writer, component, session, q, layout,
 					1, 0);
 			writer.endElement("tr");
 			writer.endElement("table");
@@ -425,7 +425,7 @@ public class QuestionImageMapRendererUtils {
 		}
 	}
 
-	public static void renderQuestionsImageMap(ResponseWriter writer, UIComponent component, Session theCase,
+	public static void renderQuestionsImageMap(ResponseWriter writer, UIComponent component, Session session,
 			List<Question> qList, QuestionPageLayout layoutDef) throws IOException {
 		writer.startElement("tr", component);
 		writer.startElement("td", component);
@@ -435,7 +435,7 @@ public class QuestionImageMapRendererUtils {
 
 		writer.writeAttribute("style",
 				QuestionsRendererUtils.getStyleStringForMainTableCell(layoutDef,
-				getImageMapBackgroundColorString(image, theCase, layoutDef),
+				getImageMapBackgroundColorString(image, session, layoutDef),
 				null, cols, cols, 0, false),
 				"style");
 
@@ -451,7 +451,7 @@ public class QuestionImageMapRendererUtils {
 		}
 
 		StringBuffer classString = new StringBuffer();
-		classString.append("qTable " + getImageMapBackgroundClass(image, theCase));
+		classString.append("qTable " + getImageMapBackgroundClass(image, session));
 		if (layoutDef.getAdditionalCSSClass() != null) {
 			classString.append(" " + layoutDef.getAdditionalCSSClass());
 		}
@@ -474,7 +474,7 @@ public class QuestionImageMapRendererUtils {
 		writer.startElement("div", component);
 		writer.writeAttribute("id", "imagemap_image", "id");
 		// get width and height so that the pic can be centered...
-		Dimension d = DialogUtils.getImageDimension(theCase, image.getSrc());
+		Dimension d = DialogUtils.getImageDimension(session, image.getSrc());
 		if (d != null) {
 			StringBuffer buffer = new StringBuffer();
 			buffer.append("width: " + d.getWidth() + "px;");
@@ -488,10 +488,10 @@ public class QuestionImageMapRendererUtils {
 		writer.writeAttribute("alt", "image", "alt");
 		writer.endElement("img");
 
-		renderClickableRegions(writer, component, image, theCase, qList, src, layoutDef);
+		renderClickableRegions(writer, component, image, session, qList, src, layoutDef);
 		writer.endElement("div");
 
-		renderPopupMenus(writer, component, image, theCase, qList, layoutDef);
+		renderPopupMenus(writer, component, image, session, qList, layoutDef);
 
 		writer.endElement("td"); // end question-content cell
 		writer.endElement("tr");
@@ -503,7 +503,7 @@ public class QuestionImageMapRendererUtils {
 		for (Region r : image.getRegions()) {
 			idsInImage.add(r.getQuestionID());
 		}
-		renderErrors(writer, component, idsInImage, theCase);
+		renderErrors(writer, component, idsInImage, session);
 
 		writer.endElement("td"); // end main question cell
 		writer.endElement("tr");
@@ -512,12 +512,12 @@ public class QuestionImageMapRendererUtils {
 		List<Question> questionsNotInImage = getQuestionsNotInImage(image, qList);
 		if (questionsNotInImage.size() > 0) {
 			if (layoutDef instanceof QContainerLayout) {
-				new QContainerRendererForDefinedLayout(writer, component, theCase,
+				new QContainerRendererForDefinedLayout(writer, component, session,
 						questionsNotInImage,
 						(QContainerLayout) layoutDef).render();
 			}
 			else {
-				new QContainerRendererForUndefinedLayout(writer, component, theCase,
+				new QContainerRendererForUndefinedLayout(writer, component, session,
 						questionsNotInImage,
 						layoutDef).render();
 			}

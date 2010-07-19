@@ -44,20 +44,20 @@ public class MMInfoPageRenderer extends Renderer {
 			throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 
-		Session theCase = DialogUtils.getDialog().getSession();
+		Session session = DialogUtils.getDialog().getSession();
 
-		String kbid = theCase.getKnowledgeBase().getId();
+		String kbid = session.getKnowledgeBase().getId();
 
 		// TODO show not all infos?
 		// String infoValue = (String) ((UIMMInfoPage) component).getValue();
 
 		String qOrDiagID = ((UIMMInfoPage) component).getDiag();
 
-		NamedObject diagOrQuestion = theCase.getKnowledgeBase()
+		NamedObject diagOrQuestion = session.getKnowledgeBase()
 				.searchSolution(qOrDiagID);
 		// diagnosis or qaset
 		if (diagOrQuestion == null) {
-			diagOrQuestion = theCase.getKnowledgeBase().searchQASet(qOrDiagID);
+			diagOrQuestion = session.getKnowledgeBase().searchQASet(qOrDiagID);
 		}
 
 		DialogRenderUtils

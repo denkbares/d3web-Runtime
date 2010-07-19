@@ -100,11 +100,11 @@ public class Rule implements CaseObjectSource {
 	 * <LI>if available - checks the diagnosis context to be true
 	 * </OL>
 	 */
-	public boolean canFire(Session theCase) throws UnknownAnswerException {
+	public boolean canFire(Session session) throws UnknownAnswerException {
 		try {
 			/* if an exception is available and it is true, then do not fire! */
 			if ((getException() != null)
-					&& (getException().eval(theCase) == true)) {
+					&& (getException().eval(session) == true)) {
 				return false;
 			}
 
@@ -129,7 +129,7 @@ public class Rule implements CaseObjectSource {
 			 * fire!
 			 */
 			if ((getContext() != null)
-					&& (getContext().eval(theCase) == false)) {
+					&& (getContext().eval(session) == false)) {
 				return false;
 			}
 		}
@@ -138,7 +138,7 @@ public class Rule implements CaseObjectSource {
 		}
 
 		try {
-			return getCondition().eval(theCase);
+			return getCondition().eval(session);
 		}
 		catch (NoAnswerException ex) {
 			/*
@@ -167,20 +167,20 @@ public class Rule implements CaseObjectSource {
 	 * in a formula) it will be undone and fired again, so that the e.g.
 	 * depending formula will be recalculated.
 	 */
-	public void check(Session theCase) {
+	public void check(Session session) {
 		// should we execute the rule action ???
 		boolean EXECUTE_ACTION = false;
 		// should we undo the rule action ???
 		boolean UNDO_ACTION = false;
 
 		try {
-			boolean hasFired = hasFired(theCase);
-			boolean canFire = canFire(theCase);
+			boolean hasFired = hasFired(session);
+			boolean canFire = canFire(session);
 
 			// ... do nothing, if not active
 			if (!active) {
 				/*
-				 * if(hasFired) { undo(theCase); }
+				 * if(hasFired) { undo(session); }
 				 */
 				return;
 			}
@@ -194,7 +194,7 @@ public class Rule implements CaseObjectSource {
 			// will be noticed and stored in the boolean
 			// "isQuestionSetterActionWithChangedValues"
 			boolean isQuestionSetterActionWithChangedValues =
-					getAction().hasChangedValue(theCase);
+					getAction().hasChangedValue(session);
 			// if this is a multipleFire-rule that has fired AND can fire again
 			// AND any depending value has
 			// changed, its action will be undone and executed again.
@@ -211,14 +211,14 @@ public class Rule implements CaseObjectSource {
 
 		}
 		catch (UnknownAnswerException ex) {
-			if (hasFired(theCase)) UNDO_ACTION = true;
+			if (hasFired(session)) UNDO_ACTION = true;
 		}
 
 		if (UNDO_ACTION) {
-			undo(theCase);
+			undo(session);
 		}
 		if (EXECUTE_ACTION) {
-			doIt(theCase);
+			doIt(session);
 		}
 	}
 
@@ -230,11 +230,11 @@ public class Rule implements CaseObjectSource {
 	/**
 	 * Executes the action of the rule.
 	 */
-	public void doIt(Session theCase) {
-		setFired(true, theCase);
-		// theCase.trace("  <<RULE FIRE>> " + getId());
+	public void doIt(Session session) {
+		setFired(true, session);
+		// session.trace("  <<RULE FIRE>> " + getId());
 		if (getAction() != null) {
-			getAction().doIt(theCase, this, theCase.getPSMethodInstance(getProblemsolverContext()));
+			getAction().doIt(session, this, session.getPSMethodInstance(getProblemsolverContext()));
 		}
 
 	}
@@ -277,15 +277,15 @@ public class Rule implements CaseObjectSource {
 	 * Simply checks if the rule has already been fired in context of the
 	 * specified user case.
 	 */
-	public boolean hasFired(Session theCase) {
-		return ((CaseRuleComplex) theCase.getCaseObject(this)).hasFired();
+	public boolean hasFired(Session session) {
+		return ((CaseRuleComplex) session.getCaseObject(this)).hasFired();
 	}
 
 	/**
 	 * Checks if the rule has been fired (like hasFired()).
 	 */
-	public boolean isUsed(Session theCase) {
-		return hasFired(theCase);
+	public boolean isUsed(Session session) {
+		return hasFired(session);
 	}
 
 	public void setAction(PSAction theRuleAction) {
@@ -515,8 +515,8 @@ public class Rule implements CaseObjectSource {
 	 * Sets the state of the rule, if it has fired or not in context of the
 	 * specified userCase.
 	 */
-	protected void setFired(boolean newFired, Session theCase) {
-		((CaseRuleComplex) theCase.getCaseObject(this)).setFired(newFired);
+	protected void setFired(boolean newFired, Session session) {
+		((CaseRuleComplex) session.getCaseObject(this)).setFired(newFired);
 	}
 
 	public void setProblemsolverContext(Class<? extends PSMethod> problemsolverContext) {
@@ -527,19 +527,19 @@ public class Rule implements CaseObjectSource {
 	 * Executes the backtracking mechanism of the rule's action and sets the
 	 * rule state to "not fired".
 	 */
-	public void undo(Session theCase) {
-		setFired(false, theCase);
-		// theCase.trace("  <<RULE UNDO>> " + getId());
+	public void undo(Session session) {
+		setFired(false, session);
+		// session.trace("  <<RULE UNDO>> " + getId());
 		if (getAction() != null) {
-			getAction().undo(theCase, this, theCase.getPSMethodInstance(getProblemsolverContext()));
+			getAction().undo(session, this, session.getPSMethodInstance(getProblemsolverContext()));
 		}
 	}
 
 	/**
 	 * Gives a description of the rule and the state of the rule (fired or not).
 	 */
-	public String verbalize(Session theCase) {
-		return toString() + "\n fired: " + hasFired(theCase);
+	public String verbalize(Session session) {
+		return toString() + "\n fired: " + hasFired(session);
 	}
 
 	@Override

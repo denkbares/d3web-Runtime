@@ -57,7 +57,7 @@ public class FormulaNumber implements FormulaNumberElement {
 	 * 
 	 * @return Double-value of this FormulaElement
 	 */
-	public Double eval(Session theCase) {
+	public Double eval(Session session) {
 		return value;
 	}
 

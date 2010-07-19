@@ -47,7 +47,7 @@ public interface Condition {
 	 * contained in a {@link CondNot} condition, then returning true/false is
 	 * not appropriate.
 	 * 
-	 * @param theCase the given {@link Session}
+	 * @param session the given {@link Session}
 	 * @return true/false for positive/negative evaluation; an appropriate
 	 *         {@link Exception} otherwise
 	 * @throws NoAnswerException when a required sub-condition of this condition
@@ -55,7 +55,7 @@ public interface Condition {
 	 * @throws UnknownAnswerException when a required sub-conditions contains a
 	 *         question having an {@link AnswerUnknown} assigned
 	 */
-	public boolean eval(Session theCase)
+	public boolean eval(Session session)
 			throws NoAnswerException, UnknownAnswerException;
 
 	/**

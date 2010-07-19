@@ -184,8 +184,8 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		return relationMap;
 	}
 
-	public Rating getState(Session theCase) {
-		return getInferenceTrace(theCase).getState();
+	public Rating getState(Session session) {
+		return getInferenceTrace(session).getState();
 
 	}
 
@@ -198,8 +198,8 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		this.considerOnlyRelevantRelations = considerOnlyRelevantRelations;
 	}
 
-	private PSMethodXCL getPSMethodXCL(Session theCase) {
-		return (PSMethodXCL) theCase.getPSMethodInstance(getProblemsolverContext());
+	private PSMethodXCL getPSMethodXCL(Session session) {
+		return (PSMethodXCL) session.getPSMethodInstance(getProblemsolverContext());
 	}
 
 	public boolean addRelation(XCLRelation relation) {
@@ -405,7 +405,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		return PSMethodXCL.class;
 	}
 
-	public boolean isUsed(Session theCase) {
+	public boolean isUsed(Session session) {
 		return true;
 	}
 

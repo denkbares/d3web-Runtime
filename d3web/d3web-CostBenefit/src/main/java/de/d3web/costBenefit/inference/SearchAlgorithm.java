@@ -30,8 +30,8 @@ public interface SearchAlgorithm {
 
 	/**
 	 * Starts a search for the targets of the model. The result is stored in the model.
-	 * @param theCase
+	 * @param session
 	 * @param model
 	 */
-	void search(Session theCase, SearchModel model);
+	void search(Session session, SearchModel model);
 }

@@ -80,8 +80,8 @@ public class ActionHeuristicPS extends PSAction {
 	 * Executes the included action.
 	 */
 	@Override
-	public void doIt(Session theCase, Object source, PSMethod psmethod) {
-		theCase.getBlackboard().addValueFact(
+	public void doIt(Session session, Object source, PSMethod psmethod) {
+		session.getBlackboard().addValueFact(
 				new DefaultFact(solution, new HeuristicRating(getScore()), source, psmethod));
 	}
 
@@ -119,8 +119,8 @@ public class ActionHeuristicPS extends PSAction {
 	 * Tries to undo the included action.
 	 */
 	@Override
-	public void undo(Session theCase, Object source, PSMethod psmethod) {
-		theCase.getBlackboard().removeValueFact(solution, source);
+	public void undo(Session session, Object source, PSMethod psmethod) {
+		session.getBlackboard().removeValueFact(solution, source);
 		// nothing to do, the fact created in doIt will be automatically deleted
 		// from blackboard
 	}

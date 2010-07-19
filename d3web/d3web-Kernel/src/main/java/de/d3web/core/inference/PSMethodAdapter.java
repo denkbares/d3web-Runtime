@@ -39,7 +39,7 @@ public abstract class PSMethodAdapter implements PSMethod {
 	/**
 	 * Does nothing.
 	 */
-	public void init(Session theCase) {
+	public void init(Session session) {
 	}
 
 	/**

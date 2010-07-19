@@ -40,9 +40,9 @@ import de.d3web.dialog2.util.DialogUtils;
 public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 
 	public QContainerRendererForDefinedLayout(ResponseWriter writer,
-			UIComponent component, Session theCase, List<Question> qList,
+			UIComponent component, Session session, List<Question> qList,
 			QContainerLayout layoutDef) {
-		super(writer, component, theCase, qList, layoutDef);
+		super(writer, component, session, qList, layoutDef);
 	}
 
 	@Override
@@ -146,7 +146,7 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 		// .hasNext();) {
 		// remainingQuestions.add(renderedQuestionMap.get(it.next()));
 		// }
-		// new QContainerRendererForUndefinedLayout(writer, component, theCase,
+		// new QContainerRendererForUndefinedLayout(writer, component, session,
 		// remainingQuestions, layoutDefinition).renderQuestions();
 
 	}
@@ -189,7 +189,7 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 				Question q = DialogUtils.getQuestionFromQList(qList, qDef
 						.getQID());
 				if (q != null && DialogUtils.isValidQASet(q, session)) {
-					//q.isValid(theCase) && QuestionsRendererUtils.showAbstract(q)) {
+					//q.isValid(session) && QuestionsRendererUtils.showAbstract(q)) {
 					return true;
 				}
 			}
@@ -211,7 +211,7 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 	}
 
 	private static void renderHtmlTextBox(ResponseWriter writer,
-			UIComponent component, Session theCase,
+			UIComponent component, Session session,
 			QContainerLayout layoutDefinition, HtmlTextLayout htmlTextDef)
 			throws IOException {
 		writer.startElement("td", component);
@@ -232,7 +232,7 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 			QuestionLayout qLayout = layoutDefinition
 					.getQuestionLayoutForQuestionID(htmlTextDef
 							.getQuestionBinding());
-			Question q = theCase.getKnowledgeBase().searchQuestion(
+			Question q = session.getKnowledgeBase().searchQuestion(
 					qLayout.getQID());
 
 			if (qLayout.getAdditionalCSSClass() != null) {
@@ -242,18 +242,18 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 			}
 			if (additionalClass != null) {
 				writer.writeAttribute("class", "htmlbox "
-						+ QuestionsRendererUtils.getBackgroundClass(theCase, q)
+						+ QuestionsRendererUtils.getBackgroundClass(session, q)
 						+ " " + additionalClass, "class");
 			} else {
 				writer.writeAttribute("class",
 						"htmlbox "
 								+ QuestionsRendererUtils.getBackgroundClass(
-										theCase, q), "class");
+										session, q), "class");
 			}
 			writer.writeAttribute("style", QuestionsRendererUtils
 					.getStyleStringForMainTableCell(layoutDefinition,
 							QuestionsRendererUtils.getBackgroundStyleString(
-									theCase, q, qLayout), htmlTextDef
+									session, q, qLayout), htmlTextDef
 									.getAdditionalCSSStyle(), layoutDefinition
 									.getCols(), htmlTextDef.getColspan(), 0,
 							false), "style");
@@ -275,14 +275,14 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 									.getColspan(), 0, false), "style");
 		}
 
-		renderHtmlText(writer, component, theCase, layoutDefinition,
+		renderHtmlText(writer, component, session, layoutDefinition,
 				htmlTextDef.getText());
 
 		writer.endElement("td");
 	}
 
 	private static void renderHtmlText(ResponseWriter writer,
-			UIComponent component, Session theCase,
+			UIComponent component, Session session,
 			QContainerLayout layoutDefinition, String textToCheck)
 			throws IOException {
 		String[] extraTags = HtmlTextLayout.getAllExtraTags();
@@ -308,7 +308,7 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 					+ starttag.length(), textToCheck.indexOf(endtag));
 
 			// replace with ...
-			renderExtraTagContent(writer, component, theCase, layoutDefinition,
+			renderExtraTagContent(writer, component, session, layoutDefinition,
 					starttag, content);
 
 			// after
@@ -324,14 +324,14 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 	}
 
 	private static void renderExtraTagContent(ResponseWriter writer,
-			UIComponent component, Session theCase,
+			UIComponent component, Session session,
 			QContainerLayout layoutDefinition, String starttag, String content)
 			throws IOException {
 		if (starttag.startsWith("<QPrompt")) {
-			writer.writeText(DialogUtils.getQPrompt(theCase.getKnowledgeBase()
+			writer.writeText(DialogUtils.getQPrompt(session.getKnowledgeBase()
 					.searchQuestion(content)), "value");
 		} else if (starttag.startsWith("<QText")) {
-			writer.writeText(theCase.getKnowledgeBase().searchQuestion(content)
+			writer.writeText(session.getKnowledgeBase().searchQuestion(content)
 					.getName(), "value");
 		} else if (starttag.startsWith("<MMInfo")) {
 			QuestionLayout qLayout = layoutDefinition
@@ -339,11 +339,11 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 			MMInfo info = qLayout.getMmInfo();
 			if (info.getPosition().equals(MMInfo.POSITION_HEADLINE)) {
 				DialogRenderUtils.renderMMInfoPopupLink(writer, component,
-						theCase.getKnowledgeBase().searchQuestion(content),
+						session.getKnowledgeBase().searchQuestion(content),
 						false, info);
 			} else {
 				QuestionsRendererUtils.renderMMInfoWithoutPopup(writer,
-						component, theCase.getKnowledgeBase().searchQuestion(
+						component, session.getKnowledgeBase().searchQuestion(
 								content), layoutDefinition, null);
 			}
 		} else if (starttag.startsWith("<Image")) {
@@ -359,7 +359,7 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 			writer.startElement("img", component);
 			writer.writeAttribute("alt", content, "alt");
 			writer.writeAttribute("src", "kbResources/"
-					+ theCase.getKnowledgeBase().getId() + "/multimedia/"
+					+ session.getKnowledgeBase().getId() + "/multimedia/"
 					+ content, "src");
 			if (width != null) {
 

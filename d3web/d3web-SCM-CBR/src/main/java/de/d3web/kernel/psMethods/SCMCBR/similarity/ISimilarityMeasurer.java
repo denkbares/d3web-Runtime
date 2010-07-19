@@ -5,7 +5,7 @@ import de.d3web.core.session.Session;
 public interface ISimilarityMeasurer {
 	
 	
-	double computeSimilarity(Session theCase);
+	double computeSimilarity(Session session);
 	
 	
 

@@ -57,7 +57,7 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
 public class ExplainDiagnosisReasons extends AbstractExplainTest {
 
 	KnowledgeBase testKb = new KfzWb();
-	Session theCase = null;
+	Session session = null;
 	private ExplanationFactory eFac = null;
 
 	/** Creates a new instance of ExplainQASetReasons */
@@ -76,7 +76,7 @@ public class ExplainDiagnosisReasons extends AbstractExplainTest {
 
 	@Override
 	protected void setUp() {
-		theCase = SessionFactory.createSession(testKb);
+		session = SessionFactory.createSession(testKb);
 		/*
 		 * Let me have some explanations of this test first: We do have the
 		 * following assumptions: InitQASets: Q56, Q16 Children of Q56: Mf2,
@@ -86,7 +86,7 @@ public class ExplainDiagnosisReasons extends AbstractExplainTest {
 		 * established: Acitvate Q17
 		 */
 
-		eFac = new ExplanationFactory(theCase);
+		eFac = new ExplanationFactory(session);
 	}
 
 	public void testSimple() {
@@ -101,8 +101,8 @@ public class ExplainDiagnosisReasons extends AbstractExplainTest {
 
 		// set MF8a2 since it will give P8 the score P5 (and activate Mf10)
 		QuestionChoice Mf8 = (QuestionChoice) findQ("Mf8", testKb);
-		Choice choice = KnowledgeBaseManagement.createInstance(theCase.getKnowledgeBase()).findChoice((QuestionChoice)Mf8, "Mf8a2");
-		theCase.getBlackboard().addValueFact(
+		Choice choice = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase()).findChoice((QuestionChoice)Mf8, "Mf8a2");
+		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(Mf8, new ChoiceValue(choice)));
 
 		// explain a diagnosis
@@ -124,19 +124,19 @@ public class ExplainDiagnosisReasons extends AbstractExplainTest {
 
 		// set MF8a2 since it will give P8 the score P5 (and activate Mf10)
 		QuestionChoice Mf13 = (QuestionChoice) findQ("Mf13", testKb);
-		Choice choice = KnowledgeBaseManagement.createInstance(theCase.getKnowledgeBase()).findChoice((QuestionChoice)Mf13, "Mf13a1");
-		theCase.getBlackboard().addValueFact(
+		Choice choice = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase()).findChoice((QuestionChoice)Mf13, "Mf13a1");
+		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(Mf13, new ChoiceValue(choice))); 
-//						new ChoiceValue((Choice) Mf13.getAnswer(theCase,
+//						new ChoiceValue((Choice) Mf13.getAnswer(session,
 //						"Mf13a1")), 
 //						PSMethodUserSelected.getInstance(),
 //						PSMethodUserSelected.getInstance()));
 
 		QuestionChoice Mf8 = (QuestionChoice) findQ("Mf8", testKb);
-		Choice choiceMf8a2 = KnowledgeBaseManagement.createInstance(theCase.getKnowledgeBase()).findChoice((QuestionChoice)Mf8, "Mf8a2");
-		theCase.getBlackboard().addValueFact(
+		Choice choiceMf8a2 = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase()).findChoice((QuestionChoice)Mf8, "Mf8a2");
+		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(Mf8, new ChoiceValue(choiceMf8a2)));
-//						new ChoiceValue((Choice) Mf8.getAnswer(theCase,
+//						new ChoiceValue((Choice) Mf8.getAnswer(session,
 //						"Mf8a2")), PSMethodUserSelected.getInstance(),
 //						PSMethodUserSelected.getInstance()));
 

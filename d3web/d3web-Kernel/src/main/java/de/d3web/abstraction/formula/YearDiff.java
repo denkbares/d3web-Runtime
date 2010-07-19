@@ -67,12 +67,12 @@ public class YearDiff implements FormulaNumberElement {
 	 * 
 	 * @return true, if no argument is null.
 	 */
-	private boolean evaluateArguments(Session theCase) {
+	private boolean evaluateArguments(Session session) {
 		if (getArg1() == null || getArg2() == null) {
 			return false;
 		}
-		evaluatedArg1 = getArg1().eval(theCase);
-		evaluatedArg2 = getArg2().eval(theCase);
+		evaluatedArg1 = getArg1().eval(session);
+		evaluatedArg2 = getArg2().eval(session);
 
 		return evaluatedArg1 != null && evaluatedArg2 != null;
 
@@ -136,8 +136,8 @@ public class YearDiff implements FormulaNumberElement {
 		return buffy.toString();
 	}
 
-	public Double eval(Session theCase) {
-		evaluateArguments(theCase);
+	public Double eval(Session session) {
+		evaluateArguments(session);
 		GregorianCalendar cal1 = new GregorianCalendar();
 		cal1.setTime(evaluatedArg1);
 		GregorianCalendar cal2 = new GregorianCalendar();

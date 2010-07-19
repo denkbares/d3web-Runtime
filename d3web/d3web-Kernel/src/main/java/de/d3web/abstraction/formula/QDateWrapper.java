@@ -60,16 +60,16 @@ public class QDateWrapper implements FormulaDateElement {
 	}
 
 	/**
-	 * @param theCase current case
+	 * @param session current case
 	 * @return evaluated AnswerNumValue (Double) of the wrapped QuestionNum
 	 */
-	public Date eval(Session theCase) {
-		if (theCase.getBlackboard().getValue(getQuestion()) == null) {
+	public Date eval(Session session) {
+		if (session.getBlackboard().getValue(getQuestion()) == null) {
 			return null;
 		}
-		DateValue value = (DateValue) theCase.getBlackboard().getValue(getQuestion());
+		DateValue value = (DateValue) session.getBlackboard().getValue(getQuestion());
 		// EvaluatableAnswerDateValue ret
-		// =(EvaluatableAnswerDateValue)ans.getValue(theCase);
+		// =(EvaluatableAnswerDateValue)ans.getValue(session);
 		return (Date) value.getValue();
 
 	}

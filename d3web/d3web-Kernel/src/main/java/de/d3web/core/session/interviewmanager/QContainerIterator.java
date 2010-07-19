@@ -63,20 +63,20 @@ public class QContainerIterator {
 	 * indentation for displaying in HTML/XML
 	 */
 	public class QuestionModel {
-		private Session theCase = null;
+		private Session session = null;
 		private Question question = null;
 		private int indentation = 0;
 		private String nextAnchor = null;
 		private String nextAnchorHref = null;
 
-		QuestionModel(Session _theCase, Question q, int indent) {
-			theCase = _theCase;
+		QuestionModel(Session _session, Question q, int indent) {
+			session = _session;
 			question = q;
 			indentation = indent;
 		}
 
 		public Session getSession() {
-			return theCase;
+			return session;
 		}
 		public Question getQuestion() {
 			return question;
@@ -111,11 +111,11 @@ public class QContainerIterator {
 	 * 
 	 * @param container
 	 *            the Root-Container
-	 * @param theCase
+	 * @param session
 	 *            current Session
 	 */
-	public QContainerIterator(Session theCase, QContainer container) {
-		this.session = theCase;
+	public QContainerIterator(Session session, QContainer container) {
+		this.session = session;
 		List<TerminologyObject> children = Arrays.asList(container.getChildren());
 		childIter = children.iterator();
 		this.container = container;
@@ -129,12 +129,12 @@ public class QContainerIterator {
 	 * 
 	 * @return List of follow questions of q
 	 */
-	public static List<QASet> createFollowList(Session theCase, Question q) {
+	public static List<QASet> createFollowList(Session session, Question q) {
 		// two-dimensional list: elements are terminal-object-lists of the
 		// different rules
 		List<List<QASet>> follow2d = new LinkedList<List<QASet>>();
 
-		Iterator<? extends PSMethod> psmethod = theCase.getPSMethods().iterator();
+		Iterator<? extends PSMethod> psmethod = session.getPSMethods().iterator();
 		while (psmethod.hasNext()) {
 
 			PSMethod p = (PSMethod) psmethod.next();

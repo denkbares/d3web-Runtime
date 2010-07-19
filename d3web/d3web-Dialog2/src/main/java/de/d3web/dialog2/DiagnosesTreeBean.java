@@ -49,16 +49,16 @@ public class DiagnosesTreeBean {
 
 	private HtmlTree diagTree;
 
-	public void checkNodeStyles(Session theCase) {
+	public void checkNodeStyles(Session session) {
 		TreeNode root = diagTreeModel.getNodeById("0");
-		checkNodeStylesRecursive(root, theCase);
+		checkNodeStylesRecursive(root, session);
 
 	}
 
-	private void checkNodeStylesRecursive(TreeNode node, Session theCase) {
-		Solution actual = theCase.getKnowledgeBase().searchSolution(
+	private void checkNodeStylesRecursive(TreeNode node, Session session) {
+		Solution actual = session.getKnowledgeBase().searchSolution(
 				node.getIdentifier());
-		Rating state = theCase.getBlackboard().getRating(actual);
+		Rating state = session.getBlackboard().getRating(actual);
 		if (state.hasState(State.ESTABLISHED)) {
 			node.setType(DiagnosesTreeBean.ESTABLISHED_TYPE);
 		}
@@ -74,7 +74,7 @@ public class DiagnosesTreeBean {
 		if (node.getChildCount() > 0) {
 			for (int i = 0; i < node.getChildCount(); i++) {
 				checkNodeStylesRecursive((TreeNode) node.getChildren().get(i),
-						theCase);
+						session);
 			}
 		}
 	}
@@ -99,12 +99,12 @@ public class DiagnosesTreeBean {
 	}
 
 	public boolean getDiagnosesAvailable() {
-		Session theCase = DialogUtils.getDialog().getSession();
-		List<Solution> established = theCase.getBlackboard()
+		Session session = DialogUtils.getDialog().getSession();
+		List<Solution> established = session.getBlackboard()
 				.getSolutions(State.ESTABLISHED);
-		List<Solution> suggested = theCase.getBlackboard()
+		List<Solution> suggested = session.getBlackboard()
 				.getSolutions(State.SUGGESTED);
-		List<Solution> excluded = theCase.getBlackboard()
+		List<Solution> excluded = session.getBlackboard()
 				.getSolutions(State.EXCLUDED);
 		if (established.size() != 0 || suggested.size() != 0
 				|| excluded.size() != 0) {
@@ -122,17 +122,17 @@ public class DiagnosesTreeBean {
 	}
 
 	public void init() {
-		Session theCase = DialogUtils.getDialog().getSession();
-		initTreeModel(theCase);
+		Session session = DialogUtils.getDialog().getSession();
+		initTreeModel(session);
 		diagTree = new HtmlTree();
 		diagTree.setModel(diagTreeModel);
 		diagTree.expandAll();
 		// check nodes
-		checkNodeStyles(theCase);
+		checkNodeStyles(session);
 	}
 
-	private void initTreeModel(Session theCase) {
-		Solution rootDiag = theCase.getKnowledgeBase().getRootSolution();
+	private void initTreeModel(Session session) {
+		Solution rootDiag = session.getKnowledgeBase().getRootSolution();
 		TreeNode treeData = new TreeNodeBase(DiagnosesTreeBean.STANDARD_TYPE,
 				rootDiag.getName(), false);
 		createTreeRecursive(rootDiag, treeData);

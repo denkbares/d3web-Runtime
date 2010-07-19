@@ -80,7 +80,7 @@ public class ActionAddValue extends ActionQuestionSetter {
 		}
 	}
 
-	private Value addValue(Value currentVal, NumValue val, Session theCase) {
+	private Value addValue(Value currentVal, NumValue val, Session session) {
 		if (currentVal != null) {
 			Value ans = currentVal;
 			if (ans instanceof NumValue) {
@@ -95,34 +95,34 @@ public class ActionAddValue extends ActionQuestionSetter {
 
 			if ((getQuestion() instanceof QuestionOC)
 					&& (((QuestionOC) getQuestion()).getSchemaForQuestion() != null)) {
-				setLastSetValue(theCase, (Double) val.getValue());
+				setLastSetValue(session, (Double) val.getValue());
 			}
 		}
 		return currentVal;
 	}
 
-	private Value addValue(Value currentVal, EvaluatableAnswerNumValue val, Session theCase) {
-		NumValue ans = new NumValue(val.eval(theCase));
-		return addValue(currentVal, ans, theCase);
+	private Value addValue(Value currentVal, EvaluatableAnswerNumValue val, Session session) {
+		NumValue ans = new NumValue(val.eval(session));
+		return addValue(currentVal, ans, session);
 	}
 
-	private Value addValue(Value currentVals, EvaluatableAnswerDateValue val, Session theCase) {
-		return addValue(currentVals, new DateValue(val.eval(theCase)));
+	private Value addValue(Value currentVals, EvaluatableAnswerDateValue val, Session session) {
+		return addValue(currentVals, new DateValue(val.eval(session)));
 	}
 
-	private Value addValue(Value currentVals, FormulaExpression val, Session theCase) {
-		Value evalAns = val.eval(theCase);
+	private Value addValue(Value currentVals, FormulaExpression val, Session session) {
+		Value evalAns = val.eval(session);
 		if (evalAns instanceof ChoiceValue) {
 			return addValue(currentVals, evalAns);
 		}
 		else if (evalAns instanceof NumValue) {
-			return addValue(currentVals, (NumValue) evalAns, theCase);
+			return addValue(currentVals, (NumValue) evalAns, session);
 		}
 		else return null;
 	}
 
-	private Value addValue(Value currentVals, FormulaDateExpression val, Session theCase) {
-		Value evalAns = val.eval(theCase);
+	private Value addValue(Value currentVals, FormulaDateExpression val, Session session) {
+		Value evalAns = val.eval(session);
 		if (evalAns instanceof DateValue) {
 			return addValue(currentVals, (DateValue) evalAns);
 		}
@@ -133,35 +133,35 @@ public class ActionAddValue extends ActionQuestionSetter {
 
 	/**
 	 * Alters the list to add the values of this rule action. Don't forget to
-	 * call theCase.SetValue to propagate the changes. Creation date:
+	 * call session.SetValue to propagate the changes. Creation date:
 	 * (30.01.2002 16:10:28)
 	 */
-	private Value addValues(Value currentValue, Session theCase) {
+	private Value addValues(Value currentValue, Session session) {
 		Object val = getValue();
 		if (val != null) {
 			if (val instanceof NumValue) {
-				currentValue = addValue(currentValue, (NumValue) val, theCase);
+				currentValue = addValue(currentValue, (NumValue) val, session);
 			}
 			else if (val instanceof ChoiceValue) {
 				currentValue = addValue(currentValue, (ChoiceValue) val);
 			}
 			else if (val instanceof FormulaExpression) {
-				currentValue = addValue(currentValue, (FormulaExpression) val, theCase);
+				currentValue = addValue(currentValue, (FormulaExpression) val, session);
 			}
 			else if (val instanceof EvaluatableAnswerNumValue) {
 				currentValue = addValue(currentValue, (EvaluatableAnswerNumValue) val,
-						theCase);
+						session);
 			}
 			else if (val instanceof DateValue) {
 				currentValue = addValue(currentValue, (DateValue) val);
 			}
 			else if (val instanceof FormulaDateExpression) {
 				currentValue = addValue(currentValue, (FormulaDateExpression) val,
-						theCase);
+						session);
 			}
 			else if (val instanceof EvaluatableAnswerDateValue) {
 				currentValue = addValue(currentValue, (EvaluatableAnswerDateValue) val,
-						theCase);
+						session);
 			}
 		}
 		return currentValue;
@@ -170,25 +170,25 @@ public class ActionAddValue extends ActionQuestionSetter {
 	/**
 	 * Returns a list which contains an AnswerNum with the value to add.
 	 */
-	private Value addSchemaValue(QuestionChoice q, Session theCase) {
+	private Value addSchemaValue(QuestionChoice q, Session session) {
 		Object val = getValue();
 		Value resultAnswer = null;
 		if (val != null) {
 			if (val instanceof FormulaExpression) {
-				NumValue ans = (NumValue) ((FormulaExpression) val).eval(theCase);
-				setLastSetValue(theCase, (Double) ans.getValue());
+				NumValue ans = (NumValue) ((FormulaExpression) val).eval(session);
+				setLastSetValue(session, (Double) ans.getValue());
 				resultAnswer = ans;
 			}
 			else if (val instanceof EvaluatableAnswerNumValue) {
 				EvaluatableAnswerNumValue evaluatableValue = (EvaluatableAnswerNumValue) val;
 				// put the evaluated value to hashtable for undo
-				Double newValue = evaluatableValue.eval(theCase);
-				setLastSetValue(theCase, newValue);
+				Double newValue = evaluatableValue.eval(session);
+				setLastSetValue(session, newValue);
 				resultAnswer = new NumValue(newValue);
 			}
 			else if (val instanceof NumValue) {
 				NumValue nv = (NumValue) val;
-				setLastSetValue(theCase, (Double) (nv.getValue()));
+				setLastSetValue(session, (Double) (nv.getValue()));
 				resultAnswer = nv;
 			}
 		}
@@ -252,8 +252,8 @@ public class ActionAddValue extends ActionQuestionSetter {
 	 * Tries to undo the included action.
 	 */
 	@Override
-	public void undo(Session theCase, Object source, PSMethod psmethod) {
-		theCase.getBlackboard().removeValueFact(getQuestion(), source);
+	public void undo(Session session, Object source, PSMethod psmethod) {
+		session.getBlackboard().removeValueFact(getQuestion(), source);
 	}
 
 	@Override

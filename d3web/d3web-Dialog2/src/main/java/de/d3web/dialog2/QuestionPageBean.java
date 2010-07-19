@@ -317,10 +317,10 @@ public class QuestionPageBean {
 				.get(oqListPointer)));
 	}
 
-	private void refreshTreeStyles(Session theCase) {
-		if (theCase != null) {
-			DialogUtils.getQASetTreeBean().checkNodeStyles(theCase);
-			DialogUtils.getDiagnosesTreeBean().checkNodeStyles(theCase);
+	private void refreshTreeStyles(Session session) {
+		if (session != null) {
+			DialogUtils.getQASetTreeBean().checkNodeStyles(session);
+			DialogUtils.getDiagnosesTreeBean().checkNodeStyles(session);
 		}
 	}
 
@@ -403,9 +403,9 @@ public class QuestionPageBean {
 	}
 
 	public String clearLastClickandSubmitAction() {
-		Session theCase = DialogUtils.getDialog().getSession();
+		Session session = DialogUtils.getDialog().getSession();
 		LastClickedAnswer.getInstance().setLastClickedAnswerID(null,
-				theCase.getId());
+				session.getId());
 		return submitAction();
 	}
 
@@ -431,12 +431,12 @@ public class QuestionPageBean {
 	public String getProgressBarStyle() {
 		StringBuffer result = new StringBuffer();
 
-		Session theCase = DialogUtils.getDialog().getSession();
+		Session session = DialogUtils.getDialog().getSession();
 		int answeredQuestionsCount = 0;
 
 		// 0 is used as default
 		int fractionOfAnsweredQuestionsPercentage = computeAnsweredQuestionsFractionPercentage(
-				theCase, answeredQuestionsCount);
+				session, answeredQuestionsCount);
 
 		// append the width of the bar:
 		result.append("width: " + fractionOfAnsweredQuestionsPercentage + "%;");
@@ -461,7 +461,7 @@ public class QuestionPageBean {
 		return result.toString();
 	}
 
-	private int computeAnsweredQuestionsFractionPercentage(Session theCase,
+	private int computeAnsweredQuestionsFractionPercentage(Session session,
 			int answeredQuestionsCount) {
 		double fractionOfAnsweredQuestions = 0.0;
 		int validQuestionsCounter = 0;
@@ -471,7 +471,7 @@ public class QuestionPageBean {
 			// count the number of unanswered questions in this container;
 			for (Question q : qList) {
 				validQuestionsCounter++;
-				if (theCase.getBlackboard().getAnsweredQuestions().contains(q)) {
+				if (session.getBlackboard().getAnsweredQuestions().contains(q)) {
 					answeredQuestionsCount++;
 				}
 			}

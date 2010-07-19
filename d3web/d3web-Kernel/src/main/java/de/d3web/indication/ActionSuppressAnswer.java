@@ -54,12 +54,12 @@ public class ActionSuppressAnswer extends PSAction {
 	/**
 	 * Method called, if rule fires
 	 * Creation date: (21.08.2000 07:24:48)
-	 * @param theCase current case
+	 * @param session current case
 	 */
 	@Override
-	public void doIt(Session theCase, Object source, PSMethod psmethod) {
+	public void doIt(Session session, Object source, PSMethod psmethod) {
 		// TODO: suppress actions are not working currently
-//		((CaseQuestion) theCase.getCaseObject(getQuestion())).addRuleSuppress(
+//		((CaseQuestion) session.getCaseObject(getQuestion())).addRuleSuppress(
 //			rule);
 	}
 
@@ -138,12 +138,12 @@ public class ActionSuppressAnswer extends PSAction {
 	/**
 	 * method invoked in case of undoing (the action) of this rule
 	 * Creation date: (21.08.2000 07:25:41)
-	 * @param theCase current case
+	 * @param session current case
 	 */
 	@Override
-	public void undo(Session theCase, Object source, PSMethod psmethod) {
+	public void undo(Session session, Object source, PSMethod psmethod) {
 //		(
-//			(CaseQuestion) theCase.getCaseObject(
+//			(CaseQuestion) session.getCaseObject(
 //				getQuestion())).removeRuleSuppress(rule);
 	}
 

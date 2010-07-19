@@ -45,12 +45,12 @@ public class UIDiagWithInfo extends HtmlOutputText {
 	public void encodeEnd(FacesContext context) throws IOException {
 		ResponseWriter writer = FacesContext.getCurrentInstance()
 				.getResponseWriter();
-		Session theCase = DialogUtils.getDialog().getSession();
+		Session session = DialogUtils.getDialog().getSession();
 
-		Solution diag = theCase.getKnowledgeBase().searchSolution(
+		Solution diag = session.getKnowledgeBase().searchSolution(
 				(String) getValue());
 
-		DialogRenderUtils.renderDiagnosesLink(writer, this, diag, theCase,
+		DialogRenderUtils.renderDiagnosesLink(writer, this, diag, session,
 				getStyleClass(), null, false);
 		writer.write(" ");
 		DialogRenderUtils

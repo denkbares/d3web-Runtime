@@ -35,7 +35,7 @@ public class CaseFinalizationNotifier implements HttpSessionListener {
     public static Logger logger = Logger
 	    .getLogger(CaseFinalizationNotifier.class);
 
-    public static void finalizeCase(Session theCase) {
+    public static void finalizeCase(Session session) {
     	//TODO: Does nothing, should be removed...
     }
 

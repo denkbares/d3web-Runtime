@@ -61,11 +61,11 @@ public class PSMethodInit implements PSMethod {
 	 * Some space for initial methods of a PSMethod. Does nothing. Creation
 	 * date: (21.02.2002 16:51:10)
 	 */
-	public void init(Session theCase) {
-		theCase.getPropagationManager().openPropagation();
+	public void init(Session session) {
+		session.getPropagationManager().openPropagation();
 		try {
 			// initialise all questions
-			KnowledgeBase kb = theCase.getKnowledgeBase();
+			KnowledgeBase kb = session.getKnowledgeBase();
 			for (Question q : kb.getQuestions()) {
 				Object property = q.getProperties().getProperty(Property.INIT);
 				if (property != null) {
@@ -82,7 +82,7 @@ public class PSMethodInit implements PSMethod {
 					if (q instanceof QuestionOC) {
 						QuestionOC qc = (QuestionOC) q;
 						Choice choice = KnowledgeBaseManagement.createInstance(kb).findChoice(qc, ids.get(0));
-						theCase.getBlackboard().addValueFact(
+						session.getBlackboard().addValueFact(
 								new DefaultFact(qc, new ChoiceValue(choice), new Object(), this));
 					}
 					else {
@@ -92,7 +92,7 @@ public class PSMethodInit implements PSMethod {
 			}
 		}
 		finally {
-			theCase.getPropagationManager().commitPropagation();
+			session.getPropagationManager().commitPropagation();
 		}
 	}
 
@@ -109,7 +109,7 @@ public class PSMethodInit implements PSMethod {
 	/**
 	 * @see PSMethod
 	 */
-	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session session, Collection<PropagationEntry> changes) {
 	}
 
 	@Override

@@ -342,9 +342,9 @@ public class XMLRenderer {
 	 * Renders the complete explanation of a diagnosis. If "showStatus" is true,
 	 * the current status of the diagnosis and all reasons will be regarded.
 	 */
-	public static StringBuffer renderDiagnosisExplanation(Solution diag, Session theCase, boolean showStatus) {
+	public static StringBuffer renderDiagnosisExplanation(Solution diag, Session session, boolean showStatus) {
 		StringBuffer sb = new StringBuffer();
-		sb.append(renderReference(diag, theCase, showStatus));
+		sb.append(renderReference(diag, session, showStatus));
 
 		// ES WIRD NUR PSMETHODHEURISTIC VERWENDET!
 		KnowledgeSlice knowledgeList = diag.getKnowledge(PSMethodHeuristic.class,
@@ -353,7 +353,7 @@ public class XMLRenderer {
 			RuleSet rs = (RuleSet) knowledgeList;
 			LinkedList<Rule> sortedRules = new LinkedList<Rule>();
 			for (Rule rc : rs.getRules()) {
-				insertIntoSortedList(sortedRules, renderRuleComplex(rc, theCase,
+				insertIntoSortedList(sortedRules, renderRuleComplex(rc, session,
 						showStatus));
 			}
 			sb.append(getMergedString(sortedRules));
@@ -368,20 +368,20 @@ public class XMLRenderer {
 	 * Renders the explanation of a single RuleComplex. If "showStatus" is true,
 	 * the current status of the RuleComplex and all reasons will be regarded.
 	 */
-	public static StringBuffer renderRuleComplexExplanation(Rule rc, Session theCase, boolean showStatus) {
-		return (StringBuffer) renderRuleComplex(rc, theCase, showStatus).get(0);
+	public static StringBuffer renderRuleComplexExplanation(Rule rc, Session session, boolean showStatus) {
+		return (StringBuffer) renderRuleComplex(rc, session, showStatus).get(0);
 	}
 
 	/**
 	 * Renders the referenced Diagnosis. If "showStatus" is true, the current
 	 * status of the diagnosis will be regarded.
 	 */
-	public static StringBuffer renderReference(Solution diag, Session theCase, boolean showStatus) {
+	public static StringBuffer renderReference(Solution diag, Session session, boolean showStatus) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<Reference>");
 		sb.append(renderDiagnosisObject(diag));
 		if (showStatus) {// renderDiagnosisStateObject
-			Rating state = theCase.getBlackboard().getRating(diag);
+			Rating state = session.getBlackboard().getRating(diag);
 			if (state != null) {
 				sb.append("<DiagnosisState state=\"" + state.getName() + "\"/>");
 			}
@@ -394,14 +394,14 @@ public class XMLRenderer {
 		return (sb);
 	}
 
-	public static StringBuffer renderQASetReasons(QASet qaSet, Session theCase, Class<? extends PSMethod> context, boolean showStatus) {
+	public static StringBuffer renderQASetReasons(QASet qaSet, Session session, Class<? extends PSMethod> context, boolean showStatus) {
 		StringBuffer sb = new StringBuffer();
 		KnowledgeSlice c = qaSet.getKnowledge(context, MethodKind.BACKWARD);
 		if (c != null) {
 			RuleSet rs = (RuleSet) c;
 			List<?> sortedList = new LinkedList<Object>();
 			for (Rule rc : rs.getRules()) {
-				insertIntoSortedList(sortedList, renderRuleComplex(rc, theCase,
+				insertIntoSortedList(sortedList, renderRuleComplex(rc, session,
 						showStatus));
 			}
 			// merge the strings in reverse order
@@ -436,19 +436,19 @@ public class XMLRenderer {
 			}
 		}
 		// else if (context == PSMethodUserSelected.class) {
-		// if (qaSet.getProReasons(theCase).contains(
+		// if (qaSet.getProReasons(session).contains(
 		// new QASet.Reason(null, PSMethodUserSelected.class))) {
 		// sb.append(renderUserSelectedReason());
 		// }
 		// }
 		// else if (context == PSMethodParentQASet.class) {
-		// if (qaSet.getProReasons(theCase).contains(
+		// if (qaSet.getProReasons(session).contains(
 		// new QASet.Reason(null, PSMethodParentQASet.class))) {
-		// sb.append(renderParentQASetProReason(qaSet, showStatus, theCase));
+		// sb.append(renderParentQASetProReason(qaSet, showStatus, session));
 		// }
-		// if (qaSet.getContraReasons(theCase).contains(
+		// if (qaSet.getContraReasons(session).contains(
 		// new QASet.Reason(null, PSMethodParentQASet.class))) {
-		// sb.append(renderParentQASetContraReason(qaSet, showStatus, theCase));
+		// sb.append(renderParentQASetContraReason(qaSet, showStatus, session));
 		// }
 		// }
 		return (sb);
@@ -457,15 +457,15 @@ public class XMLRenderer {
 	/**
 	 * 
 	 * @param rc
-	 * @param theCase
+	 * @param session
 	 * @param showStatus
 	 * @return List (List of (StringBuffer) or List of (StringBuffer,Double)
 	 */
-	private static List<?> renderRuleComplex(Rule rc, Session theCase, boolean showStatus) {
+	private static List<?> renderRuleComplex(Rule rc, Session session, boolean showStatus) {
 		List<Object> returnList = new LinkedList<Object>();
 		StringBuffer sb = new StringBuffer();
 		sb.append("<KnowledgeSlice ID=\"" + rc.getId() + "\"");
-		if (rc.isUsed(theCase)) sb.append(" status=\"fired\"");
+		if (rc.isUsed(session)) sb.append(" status=\"fired\"");
 		sb.append(">");
 
 		List<?> actionList = renderAction(rc);
@@ -473,18 +473,18 @@ public class XMLRenderer {
 		if (actionList.size() > 1) returnList.add(actionList.get(1));
 
 		// Condition
-		sb.append(renderCondition(rc.getCondition(), theCase, showStatus, true));
+		sb.append(renderCondition(rc.getCondition(), session, showStatus, true));
 
 		// Exception
 		if (rc.getException() != null) {
 			sb.append("<Exception");
 			try {
-				if (rc.getException().eval(theCase)) sb.append(" status=\"fired\"");
+				if (rc.getException().eval(session)) sb.append(" status=\"fired\"");
 			}
 			catch (Exception ex) {
 			}
 			sb.append(">");
-			sb.append(renderConditionAsException(rc.getException(), theCase, showStatus,
+			sb.append(renderConditionAsException(rc.getException(), session, showStatus,
 					true));
 			sb.append("</Exception>");
 		}
@@ -493,12 +493,12 @@ public class XMLRenderer {
 		if (rc.getContext() != null) {
 			sb.append("<Context");
 			try {
-				if (rc.getContext().eval(theCase)) sb.append(" status=\"fired\"");
+				if (rc.getContext().eval(session)) sb.append(" status=\"fired\"");
 			}
 			catch (Exception ex) {
 			}
 			sb.append(">");
-			sb.append(renderCondition(rc.getContext(), theCase, showStatus, true));
+			sb.append(renderCondition(rc.getContext(), session, showStatus, true));
 			sb.append("</Context>");
 		}
 
@@ -661,7 +661,7 @@ public class XMLRenderer {
 		return sb;
 	}
 
-	private static StringBuffer renderParentQASetProReason(QASet qaSet, boolean showStatus, Session theCase) {
+	private static StringBuffer renderParentQASetProReason(QASet qaSet, boolean showStatus, Session session) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<KnowledgeSlice");
 		if (showStatus) {
@@ -672,7 +672,7 @@ public class XMLRenderer {
 		sb.append("<ParentQASetPro>");
 		// for (TerminologyObject to : qaSet.getParents()) {
 		// QContainer parent = (QContainer) to;
-		// if (!parent.getProReasons(theCase).isEmpty()) {
+		// if (!parent.getProReasons(session).isEmpty()) {
 		// sb.append(renderQASetObject(parent));
 		// }
 		// }
@@ -682,7 +682,7 @@ public class XMLRenderer {
 		return (sb);
 	}
 
-	private static StringBuffer renderParentQASetContraReason(QASet qaSet, boolean showStatus, Session theCase) {
+	private static StringBuffer renderParentQASetContraReason(QASet qaSet, boolean showStatus, Session session) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<KnowledgeSlice");
 		if (showStatus) {
@@ -693,7 +693,7 @@ public class XMLRenderer {
 		sb.append("<ParentQASetContra>");
 		// for (TerminologyObject to : qaSet.getParents()) {
 		// QContainer parent = (QContainer) to;
-		// if (!parent.getContraReasons(theCase).isEmpty()) {
+		// if (!parent.getContraReasons(session).isEmpty()) {
 		// sb.append(renderQASetObject(parent));
 		// }
 		// }
@@ -713,31 +713,31 @@ public class XMLRenderer {
 		return (sb);
 	}
 
-	public static StringBuffer renderCondition(Condition cond, Session theCase,
+	public static StringBuffer renderCondition(Condition cond, Session session,
 			boolean showStatus, boolean parentFired) {
 		StringBuffer sb = new StringBuffer();
 		if (cond instanceof TerminalCondition) sb.append(renderTCondition(
-				(TerminalCondition) cond, theCase, showStatus, false, parentFired));
-		else sb.append(renderNonTCondition((NonTerminalCondition) cond, theCase,
+				(TerminalCondition) cond, session, showStatus, false, parentFired));
+		else sb.append(renderNonTCondition((NonTerminalCondition) cond, session,
 				showStatus, false, parentFired));
 		return (sb);
 	}
 
-	private static StringBuffer renderConditionAsException(Condition cond, Session theCase,
+	private static StringBuffer renderConditionAsException(Condition cond, Session session,
 			boolean showStatus, boolean parentFired) {
 		StringBuffer sb = new StringBuffer();
 		if (cond instanceof TerminalCondition) sb.append(renderTCondition(
-				(TerminalCondition) cond, theCase, showStatus, true, parentFired));
-		else sb.append(renderNonTCondition((NonTerminalCondition) cond, theCase,
+				(TerminalCondition) cond, session, showStatus, true, parentFired));
+		else sb.append(renderNonTCondition((NonTerminalCondition) cond, session,
 				showStatus, true, parentFired));
 		return (sb);
 	}
 
-	public static StringBuffer renderTCondition(TerminalCondition cond, Session theCase,
+	public static StringBuffer renderTCondition(TerminalCondition cond, Session session,
 			boolean showStatus, boolean asException, boolean parentFired) {
 		StringBuffer sb = new StringBuffer();
 		List<?> statusValues = null;
-		if (showStatus) statusValues = getStatusFor(cond, theCase, asException, parentFired);
+		if (showStatus) statusValues = getStatusFor(cond, session, asException, parentFired);
 		sb.append("<TCondition");
 		if (cond instanceof CondEqual) {
 			CondEqual ce = (CondEqual) cond;
@@ -857,11 +857,11 @@ public class XMLRenderer {
 		return (sb);
 	}
 
-	private static StringBuffer renderNonTCondition(NonTerminalCondition cond, Session theCase,
+	private static StringBuffer renderNonTCondition(NonTerminalCondition cond, Session session,
 			boolean showStatus, boolean asException, boolean parentFired) {
 		StringBuffer sb = new StringBuffer();
 		List<?> statusValues = null;
-		if (showStatus) statusValues = getStatusFor(cond, theCase, asException, parentFired);
+		if (showStatus) statusValues = getStatusFor(cond, session, asException, parentFired);
 		sb.append("<Condition");
 		if (cond instanceof CondAnd) {
 			sb.append(" type=\"and\"");
@@ -887,11 +887,11 @@ public class XMLRenderer {
 		while (iter.hasNext()) {
 			// "parentFired" ist nur solange auf "true", wie alle Parents
 			// gefeuert haben
-			if (asException) sb.append(renderConditionAsException(iter.next(), theCase,
+			if (asException) sb.append(renderConditionAsException(iter.next(), session,
 					showStatus,
 					parentFired && (statusValues != null)
 							&& ((Boolean) statusValues.get(0)).booleanValue()));
-			else sb.append(renderCondition(iter.next(), theCase, showStatus,
+			else sb.append(renderCondition(iter.next(), session, showStatus,
 					parentFired && (statusValues != null)
 							&& ((Boolean) statusValues.get(0)).booleanValue()));
 		}
@@ -949,11 +949,11 @@ public class XMLRenderer {
 	 * @return List : List of (Boolean, String) Boolean: condition is active
 	 *         String: kind of condition-status
 	 */
-	private static List<Object> getStatusFor(Condition cond, Session theCase,
+	private static List<Object> getStatusFor(Condition cond, Session session,
 			boolean asException, boolean parentFired) {
 		LinkedList<Object> returnList = new LinkedList<Object>();
 		try {
-			if (cond.eval(theCase)) {
+			if (cond.eval(session)) {
 				returnList.add(new Boolean(true));
 				if (asException) {
 					if (parentFired) returnList.add("exFired");

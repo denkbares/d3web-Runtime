@@ -74,7 +74,7 @@ public class DefaultInferenceTrace implements InferenceTrace {
 	 * Recalculates the inference trace relations for this model and the given
 	 * case.
 	 * 
-	 * @param theCase the current case
+	 * @param session the current case
 	 */
 	public void refreshRelations(XCLModel xclModel, Session session) {
 		evalRelations(session, xclModel.getRelations(), posRelations, negRelations);

@@ -35,10 +35,10 @@ public class IterativeDeepeningSearchAlgorithm implements SearchAlgorithm {
 	private AbortStrategy abortStrategy;
 	
 	@Override
-	public void search(Session theCase, SearchModel model) {
+	public void search(Session session, SearchModel model) {
 		IterativeDeepeningSearch iterativeDeepeningSearch = new IterativeDeepeningSearch(model);
 		if (abortStrategy!=null) iterativeDeepeningSearch.setAbortStrategy(abortStrategy);
-		iterativeDeepeningSearch.search(theCase);
+		iterativeDeepeningSearch.search(session);
 	}
 
 	public AbortStrategy getAbortStrategy() {

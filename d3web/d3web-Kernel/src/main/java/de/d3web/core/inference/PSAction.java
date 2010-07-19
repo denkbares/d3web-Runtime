@@ -34,11 +34,11 @@ public abstract class PSAction implements Cloneable {
 	
 	/**
 	 * Executes the included action.
-	 * @param theCase the Case
+	 * @param session the Case
 	 * @param source the object executing the action 
 	 * @param psmethod the psmethod of the source
 	 */
-	public abstract void doIt(Session theCase, Object source, PSMethod psmethod);
+	public abstract void doIt(Session session, Object source, PSMethod psmethod);
 
 	/**
 	 * @return all objects participating on the action.<BR>
@@ -56,7 +56,7 @@ public abstract class PSAction implements Cloneable {
 	 * 
 	 * @see RuleComplex
 	 */
-	public boolean hasChangedValue(Session theCase) {
+	public boolean hasChangedValue(Session session) {
 		return false;
 	}
 	
@@ -64,7 +64,7 @@ public abstract class PSAction implements Cloneable {
 	 * Tries to undo the included action.
 	 * @param psmethod psmethod the psmethod of the source
 	 */
-	public abstract void undo(Session theCase, Object source, PSMethod psmethod);
+	public abstract void undo(Session session, Object source, PSMethod psmethod);
 	
 	/**
 	 * Returns a clone of this RuleAction.<p>

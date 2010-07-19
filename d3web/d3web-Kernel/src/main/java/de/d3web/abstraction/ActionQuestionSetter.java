@@ -108,7 +108,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	/**
 	 * does nothing here in this abstract Action
 	 */
-	public void undo(Session theCase) {
+	public void undo(Session session) {
 	}
 
 	@Override
@@ -119,7 +119,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 			Enumeration<Question> keys = questionToValuesHash.keys();
 			while (keys.hasMoreElements()) {
 				Question q = keys.nextElement();
-				// theCase.trace("key: " + q.getId());
+				// session.trace("key: " + q.getId());
 				Object oldValue = questionToValuesHash.get(q); // can be Double
 				// or Date
 				assert (oldValue instanceof Double || oldValue instanceof Date) : "Unknown oldValue-Type: "
@@ -147,7 +147,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 					// Date
 					assert (updatedVal instanceof Double || updatedVal instanceof Date) : "Unknown newValue-Type: "
 							+ updatedVal;
-					// theCase.trace("old:" + oldValue + ", new:" + newValue +
+					// session.trace("old:" + oldValue + ", new:" + newValue +
 					// ": equals? "
 					// + oldValue.equals(newValue));
 					if (!oldValue.equals(updatedVal)) {
@@ -165,9 +165,9 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	/**
 	 * stores the current state of terminal objects of the given action values
 	 */
-	protected void storeActionValues(Session theCase, Object valuesArg) {
+	protected void storeActionValues(Session session, Object valuesArg) {
 		Hashtable<Question, Object> questionToValuesHash = new Hashtable<Question, Object>();
-		// theCase.trace("attempting to store action values (elementary formulaExpression values)");
+		// session.trace("attempting to store action values (elementary formulaExpression values)");
 		if (valuesArg == null) {
 			return; // should only be one value!
 		}
@@ -201,7 +201,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 				Question q = (Question) iter.next();
 				if (q instanceof QuestionNum) {
 					QuestionNum qNum = (QuestionNum) q;
-					Value value = theCase.getBlackboard().getValue(qNum);
+					Value value = session.getBlackboard().getValue(qNum);
 					if (value != null) {
 						Object val = value.getValue();
 						questionToValuesHash.put(q, val);
@@ -210,7 +210,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 				else if (q instanceof QuestionMC) {
 					QuestionMC qMC = (QuestionMC) q;
 					Double val = null;
-					Value value = theCase.getBlackboard().getValue(qMC);
+					Value value = session.getBlackboard().getValue(qMC);
 					if (value instanceof MultipleChoiceValue) {
 						List<ChoiceValue> l = (List<ChoiceValue>) (value.getValue());
 						val = new Double(l.size());
@@ -222,7 +222,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 				}
 				else if (q instanceof QuestionDate) {
 					QuestionDate qDate = (QuestionDate) q;
-					Value value = theCase.getBlackboard().getValue(qDate);
+					Value value = session.getBlackboard().getValue(qDate);
 					if (value != null && value instanceof DateValue) {
 						Object val = value.getValue();
 						questionToValuesHash.put(q, val);
@@ -232,11 +232,11 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 		}
 		else if (obj instanceof NumValue || obj instanceof DateValue) {
 			questionToValuesHash.put(question, obj);
-			// theCase.trace("put to hash: " + question.getId() + "; " +
+			// session.trace("put to hash: " + question.getId() + "; " +
 			// val);
 		}
 
-		setActionValues(theCase, questionToValuesHash);
+		setActionValues(session, questionToValuesHash);
 
 	}
 
@@ -244,10 +244,10 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	 * this method is needed for protection from cycles in rule firing
 	 */
 	// protected boolean lastFiredRuleEqualsCurrentRuleAndNotFired(Session
-	// theCase) {
-	// Rule lastFiredRule = getLastFiredRule(theCase);
+	// session) {
+	// Rule lastFiredRule = getLastFiredRule(session);
 	// if (lastFiredRule != null) {
-	// return !lastFiredRule.hasFired(theCase)
+	// return !lastFiredRule.hasFired(session)
 	// && lastFiredRule.getAction().equals(this);
 	// }
 	// else return false;
@@ -256,8 +256,8 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	// /**
 	// * this method is needed for protection from cycles in rule firing
 	// */
-	// protected Rule getLastFiredRule(Session theCase) {
-	// CaseQuestion q = (CaseQuestion) theCase.getCaseObject(getQuestion());
+	// protected Rule getLastFiredRule(Session session) {
+	// CaseQuestion q = (CaseQuestion) session.getCaseObject(getQuestion());
 	// Object o = q.getValueHistory();
 	// if ((o != null) && (o instanceof List<?>)) {
 	// if (!((List<?>) o).isEmpty()) {
@@ -276,14 +276,14 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	// * answer is the severest.)
 	// */
 	// protected Choice getSeverestAnswer(QuestionOC siQuestionOC, Session
-	// theCase) {
+	// session) {
 	// Choice severestAnswer = null;
 	// // use an array to accelerate
 	// Object[] allAnswers = siQuestionOC.getAllAlternatives().toArray();
 	//
 	// // go through all proreasons (only QASet.Reasons)
 	// Iterator<Reason> proIter =
-	// getQuestion().getProReasons(theCase).iterator();
+	// getQuestion().getProReasons(session).iterator();
 	// while (proIter.hasNext()) {
 	// Reason reason = proIter.next();
 	// Rule rule = reason.getRule();
@@ -330,29 +330,29 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	/**
 	 * @return Hashtable
 	 */
-	public Hashtable<Question, Object> getActionValues(Session theCase) {
-		return ((CaseActionQuestionSetter) theCase.getCaseObject(this)).getActionValues();
+	public Hashtable<Question, Object> getActionValues(Session session) {
+		return ((CaseActionQuestionSetter) session.getCaseObject(this)).getActionValues();
 	}
 
 	/**
 	 * @param hashtable
 	 */
-	public void setActionValues(Session theCase, Hashtable<Question, Object> hashtable) {
-		((CaseActionQuestionSetter) theCase.getCaseObject(this)).setActionValues(hashtable);
+	public void setActionValues(Session session, Hashtable<Question, Object> hashtable) {
+		((CaseActionQuestionSetter) session.getCaseObject(this)).setActionValues(hashtable);
 	}
 
 	/**
 	 * @return Double
 	 */
-	public Double getLastSetValue(Session theCase) {
-		return ((CaseActionQuestionSetter) theCase.getCaseObject(this)).getLastSetValue();
+	public Double getLastSetValue(Session session) {
+		return ((CaseActionQuestionSetter) session.getCaseObject(this)).getLastSetValue();
 	}
 
 	/**
-	 * @param theCase
+	 * @param session
 	 * @param newValue
 	 */
-	public void setLastSetValue(Session theCase, Double newValue) {
-		((CaseActionQuestionSetter) theCase.getCaseObject(this)).setLastSetValue(newValue);
+	public void setLastSetValue(Session session, Double newValue) {
+		((CaseActionQuestionSetter) session.getCaseObject(this)).setLastSetValue(newValue);
 	}
 }

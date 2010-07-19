@@ -59,7 +59,7 @@ public class XCLContributedModelSet implements KnowledgeSlice {
 	}
 
 	@Override
-	public boolean isUsed(Session theCase) {
+	public boolean isUsed(Session session) {
 		return true;
 	}
 

@@ -128,11 +128,11 @@ public class TestKfz extends TestCase {
 			file.mkdir();
 		}
 		PersistenceManager.getInstance().save(kb, new File("target/kbs/test2.jar"));
-		Session theCase = SessionFactory.createSession(kb);
+		Session session = SessionFactory.createSession(kb);
 
 		QuestionNum Mf5 = (QuestionNum) kb.searchQuestion("Mf5");
 		QuestionMC Mf7 = (QuestionMC) kb.searchQuestion("Mf7");
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(theCase.getKnowledgeBase());
+		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase());
 		
 
 		Choice Mf7a1 = (Choice) kbm.findChoice(Mf7,  "Mf7a1");
@@ -144,10 +144,10 @@ public class TestKfz extends TestCase {
 			values.add(new ChoiceValue(choice));
 		}
 		MultipleChoiceValue mcv = new MultipleChoiceValue(values);
-		theCase.getBlackboard().addValueFact(
+		session.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf7, mcv,
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
-		Value value = theCase.getBlackboard().getValue(Mf5);
+		Value value = session.getBlackboard().getValue(Mf5);
 		if (value == null) {
 			System.out.println("(1) --> NULL!!!!");
 		}
@@ -163,7 +163,7 @@ public class TestKfz extends TestCase {
 	 * date: (08.09.2000 16:11:48)
 	 */
 	public void testFormulaSchema() {
-		Session theCase = SessionFactory.createSession(kb);
+		Session session = SessionFactory.createSession(kb);
 
 		/*---------------------------------------------- */
 
@@ -172,50 +172,50 @@ public class TestKfz extends TestCase {
 		QuestionOC Msi4 = (QuestionOC) kb.searchQuestion("Msi4");
 
 		NumValue Mf5Value = new NumValue(new Double(10));
-		theCase.getBlackboard().addValueFact(
+		session.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf5, Mf5Value,
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		NumValue Mf6Value = new NumValue(new Double(10));
-		theCase.getBlackboard().addValueFact(
+		session.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf6, Mf6Value,
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(theCase.getKnowledgeBase());
+		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase());
 		Choice ratingNormal = (Choice) kbm.findChoice(Msi4, "Msi4a1");
 		ChoiceValue ratingNormalValue = new ChoiceValue(ratingNormal);
 
-		System.out.println("(1) --> Msi4: " + theCase.getBlackboard().getValue(Msi4));
+		System.out.println("(1) --> Msi4: " + session.getBlackboard().getValue(Msi4));
 
-		assertEquals("Error with formula (1)", ratingNormalValue, theCase.getBlackboard().getValue(
+		assertEquals("Error with formula (1)", ratingNormalValue, session.getBlackboard().getValue(
 				Msi4));
 
 		// This is exactly the border ((Mf6-Mf5)/Mf5)*100 = 10
-		theCase.getBlackboard().addValueFact(
+		session.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf6, new NumValue(new Double(11)),
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		Choice ratingHigh = (Choice) kbm.findChoice(Msi4, "Msi4a2");
 		ChoiceValue ratingHighValue = new ChoiceValue(ratingHigh);
-		System.out.println("(2) --> Msi4: " + theCase.getBlackboard().getValue(Msi4));
-		assertEquals("Error with formula (2)", ratingHighValue, theCase.getBlackboard().getValue(
+		System.out.println("(2) --> Msi4: " + session.getBlackboard().getValue(Msi4));
+		assertEquals("Error with formula (2)", ratingHighValue, session.getBlackboard().getValue(
 				Msi4));
 
-		theCase.getBlackboard().addValueFact(
+		session.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf6, new NumValue(new Double(15)),
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
-		System.out.println("(4) --> Msi4: " + theCase.getBlackboard().getValue(Msi4));
+		System.out.println("(4) --> Msi4: " + session.getBlackboard().getValue(Msi4));
 		Choice ratingVeryHigh = (Choice) kbm.findChoice(Msi4, "Msi4a3");
 		ChoiceValue ratingVeryHighValue = new ChoiceValue(ratingVeryHigh);
 
 		assertEquals("Error with formula (4)", ratingVeryHighValue,
-				theCase.getBlackboard().getValue(Msi4));
+				session.getBlackboard().getValue(Msi4));
 
 		// user sets the value to 19.5 (user overrides all other values)
-		theCase.getBlackboard().addValueFact(
+		session.getBlackboard().addValueFact(
 				FactFactory.createFact(Msi4, new NumValue(new Double(19.5)),
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
-		System.out.println("(3) --> Msi4: " + theCase.getBlackboard().getValue(Msi4));
-		assertEquals("Error with formula (3)", ratingHighValue, theCase.getBlackboard().getValue(
+		System.out.println("(3) --> Msi4: " + session.getBlackboard().getValue(Msi4));
+		assertEquals("Error with formula (3)", ratingHighValue, session.getBlackboard().getValue(
 				Msi4));
 	}
 
@@ -224,7 +224,7 @@ public class TestKfz extends TestCase {
 	 * date: (08.09.2000 16:11:48)
 	 */
 	public void testNumericExpression() {
-		Session theCase = SessionFactory.createSession(kb);
+		Session session = SessionFactory.createSession(kb);
 
 		/*----------------------------------------------
 		 */
@@ -232,16 +232,16 @@ public class TestKfz extends TestCase {
 		QuestionNum Mf58 = (QuestionNum) kb.searchQuestion("Mf58");
 		QuestionNum Mf6 = (QuestionNum) kb.searchQuestion("Mf6");
 		QuestionOC Mf4 = (QuestionOC) kb.searchQuestion("Mf4");
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(theCase.getKnowledgeBase());
+		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase());
 		Choice Mf4a1 = (Choice) kbm.findChoice(Mf4, "Mf4a1");
-		theCase.getBlackboard().addValueFact(
+		session.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf4, new ChoiceValue(Mf4a1),
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		//
-		theCase.getBlackboard().addValueFact(
+		session.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf6, new NumValue(new Double(10)),
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
-		Value Mf58Value = theCase.getBlackboard().getValue(Mf58);
+		Value Mf58Value = session.getBlackboard().getValue(Mf58);
 		if (Mf58Value == null) {
 			System.out.println("(1) --> NULL!!!!");
 		}
@@ -249,7 +249,7 @@ public class TestKfz extends TestCase {
 			System.out.println("(1) --> Mf58: " + Mf58Value.getValue());
 		}
 		// assertTrue("Error with formula (1)",
-		// ratingNormal == Msi4.getValue(theCase).get(0));
+		// ratingNormal == Msi4.getValue(session).get(0));
 
 		System.out.println("---");
 	}
@@ -259,34 +259,34 @@ public class TestKfz extends TestCase {
 	 * date: (08.09.2000 16:11:48)
 	 */
 	public void testSetValue() {
-		Session theCase = SessionFactory.createSession(kb);
+		Session session = SessionFactory.createSession(kb);
 
 		QuestionOC questionOC = (QuestionOC) kb.searchQuestion("Mf2");
 
 		assertTrue(
 				"Error: isDone should be false (1)",
-				UndefinedValue.getInstance().equals(theCase.getBlackboard().getValue(questionOC)));
+				UndefinedValue.getInstance().equals(session.getBlackboard().getValue(questionOC)));
 				
 		
 		Choice answerChoice = KnowledgeBaseManagement.createInstance(kb).findChoice(questionOC, "Mf2a1");
-		theCase.getBlackboard().addValueFact(
+		session.getBlackboard().addValueFact(
 				FactFactory.createFact(questionOC, new ChoiceValue(answerChoice),
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		assertEquals(
 				"Error while setting/getting known OC-Value (2)",
-				new ChoiceValue(answerChoice), theCase.getBlackboard().getValue(questionOC));
-		theCase.getBlackboard().addValueFact(
+				new ChoiceValue(answerChoice), session.getBlackboard().getValue(questionOC));
+		session.getBlackboard().addValueFact(
 				FactFactory.createFact(questionOC, Unknown.getInstance(),
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		assertEquals(
 				"Error while setting/getting unknown OC-Value (3)",
-				Unknown.getInstance(), theCase.getBlackboard().getValue(questionOC));
+				Unknown.getInstance(), session.getBlackboard().getValue(questionOC));
 
 		assertTrue(
 				"Error: should have value (4)",
-				!theCase.getBlackboard().getValue(questionOC).equals(UndefinedValue.getInstance()));
+				!session.getBlackboard().getValue(questionOC).equals(UndefinedValue.getInstance()));
 				
 		/*----------------------------------------------
 		 */
@@ -295,30 +295,30 @@ public class TestKfz extends TestCase {
 		 * QuestionNum questionNum = (QuestionNum) kb.searchQuestions("Mf58");
 		 * 
 		 * assertTrue("Error: isDone should be false (5)", false ==
-		 * questionNum.isDone(theCase));
+		 * questionNum.isDone(session));
 		 * 
 		 * AnswerNum answerNum = (AnswerNum) questionNum.getAnswer(new
 		 * Double(1973)); values = new Object[]{answerNum};
 		 * 
-		 * theCase.setValue(questionNum, values, context);
+		 * session.setValue(questionNum, values, context);
 		 * 
 		 * 
 		 * assertTrue("Error while setting/getting known Num-Value (6)",
-		 * answerNum == questionNum.getValue(theCase).get(0));
+		 * answerNum == questionNum.getValue(session).get(0));
 		 * 
 		 * 
 		 * 
 		 * AnswerUnknown answerNumUnknown = questionNum.getUnknownAlternative();
 		 * values = new Object[]{answerNumUnknown};
 		 * 
-		 * theCase.setValue(questionNum, values, context);
+		 * session.setValue(questionNum, values, context);
 		 * 
 		 * 
 		 * assertTrue("Error while setting/getting unknown Num-Value (7)",
-		 * answerNumUnknown == questionNum.getValue(theCase).get(0));
+		 * answerNumUnknown == questionNum.getValue(session).get(0));
 		 * 
 		 * assertTrue("Error: isDone should be true (8)", true ==
-		 * questionNum.isDone(theCase));
+		 * questionNum.isDone(session));
 		 */
 
 	}
@@ -330,13 +330,13 @@ public class TestKfz extends TestCase {
 	 * @throws InvalidQASetRequestException
 	 */
 	public void testCase() throws InvalidQASetRequestException {
-		Session theCase = SessionFactory.createSession(kb);
+		Session session = SessionFactory.createSession(kb);
 
-		while (((DialogController) theCase.getQASetManager()).hasNewestQASet()) {
+		while (((DialogController) session.getQASetManager()).hasNewestQASet()) {
 
-			((DialogController) theCase.getQASetManager()).moveToNewestQASet();
+			((DialogController) session.getQASetManager()).moveToNewestQASet();
 			QASet qaSet = null;
-			qaSet = ((DialogController) theCase.getQASetManager()).getCurrentQASet();
+			qaSet = ((DialogController) session.getQASetManager()).getCurrentQASet();
 			assertNotNull(qaSet);
 			assertTrue(
 					"Keine Frage, sondern ein " + qaSet.getClass() + "-Objekt",
@@ -351,7 +351,7 @@ public class TestKfz extends TestCase {
 				System.out.println("Antworten: "
 						+ ((QuestionChoice) q1).getAllAlternatives());
 			}
-			theCase.getBlackboard().addValueFact(
+			session.getBlackboard().addValueFact(
 					FactFactory.createFact(q1, Unknown.getInstance(),
 					PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		}

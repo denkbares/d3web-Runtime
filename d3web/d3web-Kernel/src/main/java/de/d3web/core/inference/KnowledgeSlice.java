@@ -48,7 +48,7 @@ public interface KnowledgeSlice {
 	 * Has this knowledge already been used? (e.g. did a rule fire?)
 	 */
 	//TODO: vb: delete this method. It cannot is not useful and only used by unused methods or test methods. Does any one know the aimed goal to be reach by having this method??? 
-	public boolean isUsed(Session theCase);
+	public boolean isUsed(Session session);
 
 	
 	/**

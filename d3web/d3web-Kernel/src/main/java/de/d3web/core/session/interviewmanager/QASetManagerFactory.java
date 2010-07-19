@@ -32,5 +32,5 @@ import de.d3web.core.session.Session;
  *
  */
 public interface QASetManagerFactory {
-	public QASetManager createQASetManager(Session theCase);
+	public QASetManager createQASetManager(Session session);
 }

@@ -121,13 +121,13 @@ class IterativeDeepeningSearch {
 	/**
 	 * Starts the search with depth 1
 	 * 
-	 * @param theCase
+	 * @param session
 	 */
-	public void search(Session theCase) {
+	public void search(Session session) {
 		// Abort if there are no targets in the model
 		if (!model.hasTargets()) return;
 		abortStrategy.init(model);
-		Session testcase = Util.copyCase(theCase);
+		Session testcase = Util.copyCase(session);
 		try {
 			search(testcase, 1);
 		}
@@ -184,7 +184,7 @@ class IterativeDeepeningSearch {
 		}
 	}
 
-	private void findCheapestPath(Path actual, int depth, Session theCase)
+	private void findCheapestPath(Path actual, int depth, Session session)
 			throws AbortException {
 
 		if (actual.getCosts() / model.getBestBenefit() > model
@@ -193,15 +193,15 @@ class IterativeDeepeningSearch {
 		}
 		else if (depth == 1) {
 			for (Node n : finalNodes) {
-				if (!isValidSuccessor(actual, n, theCase)) continue;
-				actual.add(n, theCase);
+				if (!isValidSuccessor(actual, n, session)) continue;
+				actual.add(n, session);
 				abortStrategy.nextStep(actual);
 				model.minimizePath(actual);
 				actual.pop();
 			}
 			for (Node n : successorNodes) {
-				if (!isValidSuccessor(actual, n, theCase)) continue;
-				actual.add(n, theCase);
+				if (!isValidSuccessor(actual, n, session)) continue;
+				actual.add(n, session);
 				abortStrategy.nextStep(actual);
 				if (minSearchedPath == null
 						|| actual.getCosts() < minSearchedPath.getCosts()) {
@@ -211,25 +211,25 @@ class IterativeDeepeningSearch {
 			}
 		}
 		else {
-			// Session testcase = Util.copyCase(theCase);
+			// Session testcase = Util.copyCase(session);
 			for (Node successor : successorNodes) {
-				if (!isValidSuccessor(actual, successor, theCase)) continue;
+				if (!isValidSuccessor(actual, successor, session)) continue;
 				List<Fact> undo = new LinkedList<Fact>();
-				actual.add(successor, theCase);
+				actual.add(successor, session);
 				abortStrategy.nextStep(actual);
-				undo.addAll(successor.setNormalValues(theCase));
-				undo.addAll(successor.getStateTransition().fire(theCase));
-				findCheapestPath(actual, depth - 1, theCase);
+				undo.addAll(successor.setNormalValues(session));
+				undo.addAll(successor.getStateTransition().fire(session));
+				findCheapestPath(actual, depth - 1, session);
 				count += undo.size();
 				actual.pop();
-				Util.undo(theCase, undo);
+				Util.undo(session, undo);
 			}
 		}
 	}
 
-	private boolean isValidSuccessor(Path actual, Node n, Session theCase) {
+	private boolean isValidSuccessor(Path actual, Node n, Session session) {
 		// skip not applicable successors
-		if (!n.isApplicable(theCase)) return false;
+		if (!n.isApplicable(session)) return false;
 		if (actual.isEmpty()) return true;
 		return true;
 	}

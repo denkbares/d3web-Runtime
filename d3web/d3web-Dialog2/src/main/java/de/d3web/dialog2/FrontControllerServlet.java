@@ -125,18 +125,18 @@ public class FrontControllerServlet extends HttpServlet {
 		Map<String, Session> sessionToCaseMap = (Map) servletContext
 				.getAttribute("sessionToCaseMap");
 
-		Session theCase = sessionToCaseMap.get(id);
+		Session session = sessionToCaseMap.get(id);
 
 		WebDialog dia = new WebDialog();
 		DialogUtils.setExpression(dia, "#{webDialog}");
 		Map sessionMap = jsfContext.getExternalContext().getSessionMap();
 		sessionMap.put("webDialog", dia);
 
-		dia.setSession(theCase);
+		dia.setSession(session);
 
 		DialogUtils.getQuestionPageBean().init();
 		KBLoadController kbLoadBean = DialogUtils.getKBLoadBean();
-		kbLoadBean.setKbID(theCase.getKnowledgeBase().getId());
+		kbLoadBean.setKbID(session.getKnowledgeBase().getId());
 		kbLoadBean.checkMultimediaFiles();
 
 		if (req.getParameter("knowwe") != null) {

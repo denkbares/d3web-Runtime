@@ -162,42 +162,42 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		return relationMap;
 	}
 
-	public Rating getState(Session theCase) {
+	public Rating getState(Session session) {
 		SCMCBRInferenceTrace trace = new SCMCBRInferenceTrace();
-		explanation.put(theCase, trace);
-		evalRelations(trace, theCase);
+		explanation.put(session, trace);
+		evalRelations(trace, session);
 
-		if (rh.atLeastOneRelationTrue(contradictingRelations, theCase)) {
+		if (rh.atLeastOneRelationTrue(contradictingRelations, session)) {
 			Rating excluded = new Rating(State.EXCLUDED);
 			trace.setState(excluded);
 			return excluded;
 		}
 		else {
 			Rating established = new Rating(State.ESTABLISHED);
-			if (rh.atLeastOneRelationTrue(sufficientRelations, theCase)) {
+			if (rh.atLeastOneRelationTrue(sufficientRelations, session)) {
 				trace.setState(established);
 				return established;
 			}
 			else {
-				double currentXCLScore = computeXCLScore(theCase);
-				double currentSupport = computeSupport(theCase);
+				double currentXCLScore = computeXCLScore(session);
+				double currentSupport = computeSupport(session);
 				trace.setScore(currentXCLScore);
 				trace.setSupport(currentSupport);
 				if (minSupport <= currentSupport) {
 					if (currentXCLScore >= establishedThreshold
-							&& rh.allRelationsTrue(necessaryRelations, theCase)) {
+							&& rh.allRelationsTrue(necessaryRelations, session)) {
 						trace.setState(established);
 						return established;
 					}
 					else {
 						Rating suggested = new Rating(State.SUGGESTED);
 						if (currentXCLScore >= establishedThreshold
-								&& !rh.allRelationsTrue(necessaryRelations, theCase)) {
+								&& !rh.allRelationsTrue(necessaryRelations, session)) {
 							trace.setState(suggested);
 							return suggested;
 						}
 						else if (currentXCLScore >= suggestedThreshold
-								&& rh.allRelationsTrue(necessaryRelations, theCase)) {
+								&& rh.allRelationsTrue(necessaryRelations, session)) {
 							trace.setState(suggested);
 							return suggested;
 						}
@@ -282,11 +282,11 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 
 	}
 
-	public double computeSupport(Session theCase) {
+	public double computeSupport(Session session) {
 		double positiveRelationsWeightedSum = weightedSumOf(computeRelations(
-				theCase, true));
+				session, true));
 		double negativeRelationsWeightedSum = weightedSumOf(computeRelations(
-				theCase, false));
+				session, false));
 
 		double allRelationsWeightedSum = weightedSumOf(computeAllWeightedRelations());
 
@@ -303,11 +303,11 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		return all;
 	}
 
-	public double computeXCLScore(Session theCase) {
+	public double computeXCLScore(Session session) {
 		double positiveRelationsWeightedSum = weightedSumOf(computeRelations(
-				theCase, true));
+				session, true));
 		double negativeRelationsWeightedSum = weightedSumOf(computeRelations(
-				theCase, false));
+				session, false));
 		double result = positiveRelationsWeightedSum * 1.0
 				/ (negativeRelationsWeightedSum + positiveRelationsWeightedSum);
 		return result;
@@ -321,7 +321,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		return sum;
 	}
 
-	private Collection<SCMCBRRelation> computeRelations(Session theCase,
+	private Collection<SCMCBRRelation> computeRelations(Session session,
 			boolean direction) {
 		Collection<SCMCBRRelation> r = new ArrayList<SCMCBRRelation>();
 		Collection<SCMCBRRelation> toTest = new ArrayList<SCMCBRRelation>();
@@ -329,7 +329,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		toTest.addAll(this.necessaryRelations);
 		for (SCMCBRRelation relation : toTest) {
 			try {
-				if (relation.eval(theCase) == direction) r.add(relation);
+				if (relation.eval(session) == direction) r.add(relation);
 			}
 			catch (NoAnswerException e) {
 				// Do not count relation
@@ -472,7 +472,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		return PSMethodSCMCBR.class;
 	}
 
-	public boolean isUsed(Session theCase) {
+	public boolean isUsed(Session session) {
 		return true;
 	}
 

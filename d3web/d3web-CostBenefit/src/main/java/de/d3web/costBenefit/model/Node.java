@@ -80,18 +80,18 @@ public class Node {
 	}
 
 	/**
-	 * Checks if the Node is applicable in theCase. A node is applicable if the
-	 * preconditions of the associated QContainer are matching theCase.
+	 * Checks if the Node is applicable in session. A node is applicable if the
+	 * preconditions of the associated QContainer are matching session.
 	 * 
-	 * @param theCase
+	 * @param session
 	 * @return
 	 */
-	public boolean isApplicable(Session theCase) {
+	public boolean isApplicable(Session session) {
 		if (st == null) return false;
 		Condition activationCondition = st.getActivationCondition();
 		if (activationCondition == null) return true;
 		try {
-			return activationCondition.eval(theCase);
+			return activationCondition.eval(session);
 		}
 		catch (NoAnswerException e) {
 		}

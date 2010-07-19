@@ -123,13 +123,13 @@ public class InterviewBot {
 	 */
 	public List<SequentialTestCase> generate() throws UnsupportedDataTypeException {
 		init();
-		Session theCase = createCase(initFindings);
+		Session session = createCase(initFindings);
 
 		SequentialTestCase stc = new SequentialTestCase();
 		stc.setName(sqtcasePraefix);
-		addInitalCase(theCase, stc);
+		addInitalCase(session, stc);
 
-		traverse(stc, getNextQuestion(theCase, stc), knowledge);
+		traverse(stc, getNextQuestion(session, stc), knowledge);
 
 		return cases;
 	}
@@ -165,13 +165,13 @@ public class InterviewBot {
 		// Iterate over all possible answers of the next question
 		for (int i = 0; i < numberOfCombinations; i++) {
 			Value nextValue = possibleAnswers.get(i);
-			Session theCase = createCase(sqCase);
-			setCaseValue(theCase, currentQuestion, nextValue);
+			Session session = createCase(sqCase);
+			setCaseValue(session, currentQuestion, nextValue);
 			SequentialTestCase newSequentialCase = packNewSequence(sqCase,
-					currentQuestion, nextValue, theCase);
+					currentQuestion, nextValue, session);
 
 			// step down in recursion with the next suitable question to ask
-			Question nextQuestion = getNextQuestion(theCase, newSequentialCase);
+			Question nextQuestion = getNextQuestion(session, newSequentialCase);
 			traverse(newSequentialCase, nextQuestion, knowledge);
 		}
 	}
@@ -205,19 +205,19 @@ public class InterviewBot {
 
 	}
 
-	private SequentialTestCase packNewSequence(SequentialTestCase sqCase, Question currentQuestion, Value nextValue, Session theCase) {
+	private SequentialTestCase packNewSequence(SequentialTestCase sqCase, Question currentQuestion, Value nextValue, Session session) {
 		SequentialTestCase newSequentialCase = sqCase.flatClone();
 		newSequentialCase.setName(sqtcasePraefix + dateToString());
-		newSequentialCase.add(createRatedTestCase(currentQuestion, nextValue, theCase,
+		newSequentialCase.add(createRatedTestCase(currentQuestion, nextValue, session,
 				sqCase));
 		return newSequentialCase;
 	}
 
-	private RatedTestCase createRatedTestCase(Question currentQuestion, Value nextValue, Session theCase, SequentialTestCase sqCase) {
+	private RatedTestCase createRatedTestCase(Question currentQuestion, Value nextValue, Session session, SequentialTestCase sqCase) {
 
 		RatedTestCase ratedCase = new RatedTestCase();
 		ratedCase.add(new Finding(currentQuestion, nextValue));
-		ratedCase.addExpected(toRatedSolutions(theCase));
+		ratedCase.addExpected(toRatedSolutions(session));
 		ratedCase.inverseSortSolutions();
 
 		String namePraefix = sqCase.getName() + "_";
@@ -226,12 +226,12 @@ public class InterviewBot {
 		return ratedCase;
 	}
 
-	private void addInitalCase(Session theCase, SequentialTestCase stc) {
+	private void addInitalCase(Session session, SequentialTestCase stc) {
 		if (initFindings.isEmpty()) return;
 		else {
 			RatedTestCase ratedTestCase = new RatedTestCase();
 			ratedTestCase.addFindings(initFindings);
-			ratedTestCase.addExpected(toRatedSolutions(theCase));
+			ratedTestCase.addExpected(toRatedSolutions(session));
 			ratedTestCase.inverseSortSolutions();
 			ratedTestCase.setName(rtcasePraefix + "0");
 			stc.add(ratedTestCase);
@@ -251,19 +251,19 @@ public class InterviewBot {
 		casesCounter++;
 	}
 
-	private Question getNextQuestion(Session theCase, SequentialTestCase sqCase) {
-		Question question = nextQuestionFromAgenda(theCase);
+	private Question getNextQuestion(Session session, SequentialTestCase sqCase) {
+		Question question = nextQuestionFromAgenda(session);
 		while (knownAnswers.get(question) != null) {
 			Value value = knownAnswers.get(question);
-			setCaseValue(theCase, question, value);
-			sqCase.add(createRatedTestCase(question, value, theCase, sqCase));
-			question = nextQuestionFromAgenda(theCase);
+			setCaseValue(session, question, value);
+			sqCase.add(createRatedTestCase(question, value, session, sqCase));
+			question = nextQuestionFromAgenda(session);
 		}
 		return question;
 	}
 
-	private Question nextQuestionFromAgenda(Session theCase) {
-		MQDialogController controller = (MQDialogController) theCase.getQASetManager();
+	private Question nextQuestionFromAgenda(Session session) {
+		MQDialogController controller = (MQDialogController) session.getQASetManager();
 		QASet next = controller.moveToNextRemainingQASet();
 		if (next != null && next instanceof Question) {
 			return (Question) next;
@@ -277,10 +277,10 @@ public class InterviewBot {
 		}
 	}
 
-	private List<RatedSolution> toRatedSolutions(Session theCase) {
+	private List<RatedSolution> toRatedSolutions(Session session) {
 		List<RatedSolution> ratedSolutions = new LinkedList<RatedSolution>();
-		for (Solution solution : theCase.getKnowledgeBase().getSolutions()) {
-			Rating rating = ratingStrategy.getRatingFor(solution, theCase);
+		for (Solution solution : session.getKnowledgeBase().getSolutions()) {
+			Rating rating = ratingStrategy.getRatingFor(solution, session);
 			if (rating.isProblemSolvingRelevant()) {
 				RatedSolution ratedSolution = new RatedSolution(solution, rating);
 				ratedSolutions.add(ratedSolution);
@@ -290,25 +290,25 @@ public class InterviewBot {
 	}
 
 	private Session createCase(SequentialTestCase sqCase) {
-		Session theCase = SessionFactory.createSession(knowledge);
+		Session session = SessionFactory.createSession(knowledge);
 		for (RatedTestCase c : sqCase.getCases()) {
 			for (Finding finding : c.getFindings()) {
-				setCaseValue(theCase, finding.getQuestion(), finding.getValue());
+				setCaseValue(session, finding.getQuestion(), finding.getValue());
 			}
 		}
-		return theCase;
+		return session;
 	}
 
 	private Session createCase(List<Finding> findings) {
-		Session theCase = SessionFactory.createSession(knowledge);
+		Session session = SessionFactory.createSession(knowledge);
 		for (Finding finding : findings) {
-			setCaseValue(theCase, finding.getQuestion(), finding.getValue());
+			setCaseValue(session, finding.getQuestion(), finding.getValue());
 		}
-		return theCase;
+		return session;
 	}
 
-	private void setCaseValue(Session theCase, Question q, Value v) {
-		theCase.getBlackboard().addValueFact(
+	private void setCaseValue(Session session, Question q, Value v) {
+		session.getBlackboard().addValueFact(
 				FactFactory.createFact(q, v, PSMethodUserSelected.getInstance(),
 				PSMethodUserSelected.getInstance()));
 	}

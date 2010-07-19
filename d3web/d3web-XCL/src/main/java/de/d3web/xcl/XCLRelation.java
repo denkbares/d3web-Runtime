@@ -96,8 +96,8 @@ public class XCLRelation {
 		r.setId(id);
 		return r;
 	}
-	public boolean eval(Session theCase) throws NoAnswerException,UnknownAnswerException{
-			return conditionedFinding.eval(theCase);
+	public boolean eval(Session session) throws NoAnswerException,UnknownAnswerException{
+			return conditionedFinding.eval(session);
 		
 	}
 
@@ -149,8 +149,8 @@ public class XCLRelation {
 		return toString().hashCode();
 	}
 
-	public double getDegreeOfTruth(Session theCase) throws NoAnswerException, UnknownAnswerException {
-		if(conditionedFinding.eval(theCase)) {
+	public double getDegreeOfTruth(Session session) throws NoAnswerException, UnknownAnswerException {
+		if(conditionedFinding.eval(session)) {
 			return 1;
 		}
 		return 0;

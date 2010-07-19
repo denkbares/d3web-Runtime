@@ -54,11 +54,11 @@ public class Today implements FormulaDateElement {
 		setArg(argument);
 	}
 
-	public Date eval(Session theCase) {
+	public Date eval(Session session) {
 		if (getArg() == null) {
 			return null;
 		}
-		evaluatedArg = (getArg().eval(theCase));
+		evaluatedArg = (getArg().eval(session));
 
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.add(Calendar.DAY_OF_YEAR, (int) evaluatedArg.doubleValue());

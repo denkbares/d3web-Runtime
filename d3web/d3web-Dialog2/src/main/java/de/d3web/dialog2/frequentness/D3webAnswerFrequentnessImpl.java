@@ -48,9 +48,9 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 
 	private List<Session> savedCases;
 
-	private int getAbsoluteFreq(QuestionChoice q, String ansID, Session theCase) {
+	private int getAbsoluteFreq(QuestionChoice q, String ansID, Session session) {
 		if (savedCases == null) {
-			setUpSavedCases(theCase);
+			setUpSavedCases(session);
 		}
 		// absolute frequency of this answer: how often is this answer set in
 		// all cases...
@@ -70,15 +70,15 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 		// add stuff!!!
 		if (selectedData != null) {
 			for (String qID : selectedData) {
-				Session theCase = DialogUtils.getDialog().getSession();
-				Question q = theCase.getKnowledgeBase().searchQuestion(qID);
+				Session session = DialogUtils.getDialog().getSession();
+				Question q = session.getKnowledgeBase().searchQuestion(qID);
 				if (q != null && q instanceof QuestionChoice) {
 					QuestionChoice qCh = (QuestionChoice) q;
 					DataGroup group = new DataGroup(qCh.getName());
 					List<Choice> answers = qCh.getAllAlternatives();
 					for (Choice a : answers) {
 						int absoluteFreq = getAbsoluteFreq(qCh, a.getId(),
-								theCase);
+								session);
 						double relFreq = getRelFreq(absoluteFreq);
 						DataWithFrequentness data = new DataWithFrequentness(a
 								.getName(), absoluteFreq, relFreq);
@@ -124,13 +124,13 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 
 	@Override
 	public boolean isDataAvailable() {
-		Session theCase = DialogUtils.getDialog().getSession();
-		if (theCase == null) {
+		Session session = DialogUtils.getDialog().getSession();
+		if (session == null) {
 			return false;
 		}
 		Collection<CaseObjectDescriptor> casesForKB = CaseManager.getInstance()
 				.getCaseObjectDescriptorsForKb(
-				theCase.getKnowledgeBase().getId());
+				session.getKnowledgeBase().getId());
 		if (casesForKB.size() > 0) {
 			return true;
 		}
@@ -149,15 +149,15 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 		this.selectedData = selectedData;
 	}
 
-	private void setUpSavedCases(Session theCase) {
+	private void setUpSavedCases(Session session) {
 		savedCases = new ArrayList<Session>();
 		Collection<CaseObjectDescriptor> codForKB = CaseManager.getInstance()
 				.getCaseObjectDescriptorsForKb(
-				theCase.getKnowledgeBase().getId());
+				session.getKnowledgeBase().getId());
 		for (CaseObjectDescriptor cod : codForKB) {
 			CaseObject o = CaseRepository.getInstance().getCaseById(
-					theCase.getKnowledgeBase().getId(), cod.getCaseId());
-			Session newCase = DialogUtils.createNewAnsweredCase(o, theCase
+					session.getKnowledgeBase().getId(), cod.getCaseId());
+			Session newCase = DialogUtils.createNewAnsweredCase(o, session
 					.getKnowledgeBase());
 			savedCases.add(newCase);
 		}

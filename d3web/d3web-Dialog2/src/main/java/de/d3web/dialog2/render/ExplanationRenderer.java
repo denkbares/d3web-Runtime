@@ -47,17 +47,17 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
 public class ExplanationRenderer extends Renderer {
 
 	public static void renderDiagStatusAndScore(FacesContext context,
-			Session theCase, Solution diag) throws IOException {
+			Session session, Solution diag) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		String score = "";
-		Rating state = theCase.getBlackboard().getRating(diag);
+		Rating state = session.getBlackboard().getRating(diag);
 		if (state instanceof HeuristicRating) {
 			HeuristicRating hr = (HeuristicRating) state;
 			score = "" + hr.getScore();
 		}
 		writer.writeText(
 				" (= "
-						+ ExplanationRendererUtils.getStateTranslation(theCase.getBlackboard().getRating(
+						+ ExplanationRendererUtils.getStateTranslation(session.getBlackboard().getRating(
 								diag)) + "; "
 						+ score + " "
 						+ DialogUtils.getMessageFor("explain.diag_scoreunit") + "):",
@@ -72,7 +72,7 @@ public class ExplanationRenderer extends Renderer {
 		String expl = (String) ((UIOutput) component).getValue();
 		String toExplain = ((UIExplanation) component).getDiag();
 
-		Session theCase = DialogUtils.getDialog().getSession();
+		Session session = DialogUtils.getDialog().getSession();
 
 		boolean explainReason = false;
 		boolean explainDerivation = false;
@@ -91,7 +91,7 @@ public class ExplanationRenderer extends Renderer {
 		// diagnosis ...
 		if (explainReason || explainDerivation || explainConcreteDerivation) {
 
-			Solution diag = theCase.getKnowledgeBase().searchSolution(
+			Solution diag = session.getKnowledgeBase().searchSolution(
 					toExplain);
 
 			writer.startElement("h3", component);
@@ -119,7 +119,7 @@ public class ExplanationRenderer extends Renderer {
 			// if explainReason or explainConcreteDerivation -> render status
 			// and score
 			if (explainReason || explainConcreteDerivation) {
-				renderDiagStatusAndScore(context, theCase, diag);
+				renderDiagStatusAndScore(context, session, diag);
 			}
 
 			writer.endElement("h3");
@@ -127,7 +127,7 @@ public class ExplanationRenderer extends Renderer {
 			// if ConcreteDerivation
 			if (explainConcreteDerivation) {
 				ExplanationRendererUtils.explainConcreteDerivation(writer,
-						component, diag, theCase);
+						component, diag, session);
 			}
 			// if explainReason or explainDerivation ...
 			else {
@@ -187,7 +187,7 @@ public class ExplanationRenderer extends Renderer {
 					}
 
 					// if fired, then change background (only if explainReason)
-					if (explainReason && rc.isUsed(theCase)) {
+					if (explainReason && rc.isUsed(session)) {
 						writer.writeAttribute("class", "fired", "class");
 					}
 
@@ -211,7 +211,7 @@ public class ExplanationRenderer extends Renderer {
 					// if explainReason then with status
 					if (explainReason) {
 						ExplanationRendererUtils.renderCondition(writer,
-								component, rc.getCondition(), theCase, true,
+								component, rc.getCondition(), session, true,
 								true, DialogUtils
 								.getMessageFor("explain.if_verb"),
 								false, rc.getId());
@@ -219,7 +219,7 @@ public class ExplanationRenderer extends Renderer {
 					// if explainDerivation then without status
 					else {
 						ExplanationRendererUtils.renderCondition(writer,
-								component, rc.getCondition(), theCase, false,
+								component, rc.getCondition(), session, false,
 								true, DialogUtils
 								.getMessageFor("explain.if_verb"),
 								false, rc.getId());

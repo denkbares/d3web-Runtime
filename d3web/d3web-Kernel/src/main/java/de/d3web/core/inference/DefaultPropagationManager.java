@@ -113,11 +113,11 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * 
 	 * <pre>
 	 * try {
-	 * 	theCase.getPropagationManager().openPropagation();
+	 * 	session.getPropagationManager().openPropagation();
 	 * 	// ... do your code here ...
 	 * }
 	 * finally {
-	 * 	theCase.getPropagationManager().commitPropagation();
+	 * 	session.getPropagationManager().commitPropagation();
 	 * }
 	 * </pre>
 	 * 
@@ -158,11 +158,11 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * 
 	 * <pre>
 	 * try {
-	 * 	theCase.getPropagationManager().openPropagation();
+	 * 	session.getPropagationManager().openPropagation();
 	 * 	// ... do your code here ...
 	 * }
 	 * finally {
-	 * 	theCase.getPropagationManager().commitPropagation();
+	 * 	session.getPropagationManager().commitPropagation();
 	 * }
 	 * </pre>
 	 * 

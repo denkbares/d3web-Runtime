@@ -448,14 +448,14 @@ public class ComparisonResultRepository {
 	/**
 	 * Creation date: (22.08.01 00:27:16)
 	 * 
-	 * @param theCase de.d3web.kernel.Session
+	 * @param session de.d3web.kernel.Session
 	 */
-	public void setCurrentCase(Session theCase) {
+	public void setCurrentCase(Session session) {
 		KnowledgeBase kb = CompareObjectsHashContainer.getInstance().getKnowledgeBase();
-		if ((kb == null) || !kb.equals(theCase.getKnowledgeBase())) {
-			CompareObjectsHashContainer.getInstance().initialize(theCase.getKnowledgeBase());
+		if ((kb == null) || !kb.equals(session.getKnowledgeBase())) {
+			CompareObjectsHashContainer.getInstance().initialize(session.getKnowledgeBase());
 		}
-		currentCase = SessionConverter.getInstance().session2CaseObject(theCase);
+		currentCase = SessionConverter.getInstance().session2CaseObject(session);
 	}
 
 	/**

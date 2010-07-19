@@ -48,11 +48,11 @@ public class Path {
 	 * Adds a new Node to the Path and updates the costs
 	 * 
 	 * @param node
-	 * @param theCase
+	 * @param session
 	 */
-	public void add(Node node, Session theCase) {
+	public void add(Node node, Session session) {
 		stack.push(node);
-		double nodeCosts = node.getCosts(theCase);
+		double nodeCosts = node.getCosts(session);
 		costs += nodeCosts;
 		coststack.push(nodeCosts);
 	}

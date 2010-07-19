@@ -91,12 +91,12 @@ public class DialogProxy {
 	/**
 	 * puts the given Session to the Client that has the given Priority
 	 * @return false if no such client exists, otherwise true.
-	 * @see DialogClient#putCase(Session theCase)
+	 * @see DialogClient#putCase(Session session)
 	 */
-	public boolean putCase(int prio, Session theCase) {
+	public boolean putCase(int prio, Session session) {
 		try {
 			DialogClient client = (DialogClient) clients.get(new Integer(prio));
-			client.putCase(theCase);
+			client.putCase(session);
 			return true;
 		} catch (ClassCastException x) {
 			return false;

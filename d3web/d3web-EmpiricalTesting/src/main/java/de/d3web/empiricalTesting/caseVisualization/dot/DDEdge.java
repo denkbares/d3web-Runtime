@@ -27,13 +27,13 @@ public class DDEdge {
 	DDNode begin;
 	DDNode end;
 	Finding label;
-	caseType theCasetype;
+	caseType sessiontype;
 
-	public DDEdge(DDNode begin, DDNode end, Finding label, caseType theCasetype) {
+	public DDEdge(DDNode begin, DDNode end, Finding label, caseType sessiontype) {
 		setLabel(label);
 		setBegin(begin);
 		setEnd(end);
-		setTheCasetype(theCasetype);
+		setTheCasetype(sessiontype);
 	}
 
 	public DDEdge(DDNode begin, DDNode end, Finding label) {
@@ -44,8 +44,8 @@ public class DDEdge {
 		this(begin, end, null, caseType.new_case);
 	}
 
-	public DDEdge(DDNode begin, DDNode end, caseType theCasetype) {
-		this(begin, end, null, theCasetype);
+	public DDEdge(DDNode begin, DDNode end, caseType sessiontype) {
+		this(begin, end, null, sessiontype);
 	}
 
 	@Override
@@ -110,10 +110,10 @@ public class DDEdge {
 	}
 
 	public caseType getTheCasetype() {
-		return theCasetype;
+		return sessiontype;
 	}
 
-	public void setTheCasetype(caseType theCasetype) {
-		this.theCasetype = theCasetype;
+	public void setTheCasetype(caseType sessiontype) {
+		this.sessiontype = sessiontype;
 	}
 }

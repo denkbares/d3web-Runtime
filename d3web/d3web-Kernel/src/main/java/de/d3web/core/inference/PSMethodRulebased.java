@@ -39,23 +39,23 @@ public abstract class PSMethodRulebased extends PSMethodAdapter {
 	 * Check if NamedObject has rules connected with this problem-solver and
 	 * check them, if available
 	 */
-	protected final void propagate(Session theCase, TerminologyObject nob) {
+	protected final void propagate(Session session, TerminologyObject nob) {
 		if (nob != null) {
 			KnowledgeSlice slices = ((NamedObject) nob).getKnowledge(this
 					.getClass(), MethodKind.FORWARD);
 			if (slices != null && slices instanceof RuleSet) {
 				RuleSet rs = (RuleSet) slices;
 				for (Rule rule : rs.getRules()) {
-					rule.check(theCase);
+					rule.check(session);
 				}
 			}
 		}
 	}
 
-	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		// for rules we check all rules sequentally
 		for (PropagationEntry change : changes) {
-			this.propagate(theCase, change.getObject());
+			this.propagate(session, change.getObject());
 		}
 	}
 }

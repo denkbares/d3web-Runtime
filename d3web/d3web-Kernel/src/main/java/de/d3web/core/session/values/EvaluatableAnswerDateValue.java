@@ -42,5 +42,5 @@ public interface EvaluatableAnswerDateValue extends EvaluatableDateValue{
 	 * Evaluates its value considering the given Session.
 	 * @return evaluated AnswerDateValue (Date)
 	 */
-	public Date eval(Session theCase);
+	public Date eval(Session session);
 }

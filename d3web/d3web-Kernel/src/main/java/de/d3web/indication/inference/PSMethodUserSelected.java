@@ -53,7 +53,7 @@ public class PSMethodUserSelected extends PSMethodRulebased {
 	 * @see de.d3web.core.inference.PSMethod
 	 */
 	@Override
-	public void init(de.d3web.core.session.Session theCase) {
+	public void init(de.d3web.core.session.Session session) {
 	}
 
 	@Override

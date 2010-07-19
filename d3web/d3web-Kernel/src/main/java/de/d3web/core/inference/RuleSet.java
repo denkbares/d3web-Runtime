@@ -53,9 +53,9 @@ public class RuleSet implements KnowledgeSlice {
 	}
 
 	@Override
-	public boolean isUsed(Session theCase) {
+	public boolean isUsed(Session session) {
 		for (Rule r: rules) {
-			if (r.isUsed(theCase)) {
+			if (r.isUsed(session)) {
 				return true;
 			}
 		}

@@ -87,15 +87,15 @@ public class ExplanationRendererUtils {
 	private static boolean hasActiveRules = false;
 
 	public static void explainConcreteDerivation(ResponseWriter writer,
-			UIComponent component, Solution diag, Session theCase)
+			UIComponent component, Solution diag, Session session)
 			throws IOException {
 		Collection<Class<?>> explainContext = new LinkedList<Class<?>>();
 		explainContext.add(PSMethodHeuristic.class);
 		explainContext.add(PSMethodUserSelected.class);
 
-		ExplanationFactory eFac = new ExplanationFactory(theCase);
+		ExplanationFactory eFac = new ExplanationFactory(session);
 		ENode expl = eFac.explain(diag, explainContext);
-		renderENode(writer, component, expl, theCase);
+		renderENode(writer, component, expl, session);
 	}
 
 	public static String getStateTranslation(Rating state) {
@@ -120,10 +120,10 @@ public class ExplanationRendererUtils {
 	 *         String: kind of condition-status
 	 */
 	private static List<Object> getStatusFor(Condition cond,
-			Session theCase, boolean asException, boolean parentFired) {
+			Session session, boolean asException, boolean parentFired) {
 		LinkedList<Object> returnList = new LinkedList<Object>();
 		try {
-			if (cond.eval(theCase)) {
+			if (cond.eval(session)) {
 				returnList.add(new Boolean(true));
 				if (asException) {
 					if (parentFired) returnList.add("exFired");
@@ -147,17 +147,17 @@ public class ExplanationRendererUtils {
 	}
 
 	public static void renderCondition(ResponseWriter writer,
-			UIComponent component, Condition cond, Session theCase,
+			UIComponent component, Condition cond, Session session,
 			boolean showStatus, boolean parentFired, String when,
 			boolean parentIsNot, String rcID) throws IOException {
 		if (cond instanceof TerminalCondition) {
 			renderTCondition(writer, component, (TerminalCondition) cond,
-					theCase, showStatus, false, parentFired, when, parentIsNot,
+					session, showStatus, false, parentFired, when, parentIsNot,
 					rcID);
 		}
 		else {
 			renderNonTCondition(writer, component, (NonTerminalCondition) cond,
-					theCase, showStatus, false, parentFired, when, rcID);
+					session, showStatus, false, parentFired, when, rcID);
 		}
 	}
 
@@ -167,27 +167,27 @@ public class ExplanationRendererUtils {
 	}
 
 	private static void renderECondition(ResponseWriter writer,
-			UIComponent component, ECondition eCond, Session theCase,
+			UIComponent component, ECondition eCond, Session session,
 			boolean asException, String rcID) throws IOException {
 		if (eCond.getCondition() instanceof TerminalCondition) {
 			renderTCondition(writer, component, (TerminalCondition) eCond
-					.getCondition(), theCase, false, asException, true,
+					.getCondition(), session, false, asException, true,
 					DialogUtils.getMessageFor("explain.if_verb"), false, rcID);
 		}
 		else if (eCond.getCondition() instanceof CondNot) {
-			renderCondition(writer, component, eCond.getCondition(), theCase,
+			renderCondition(writer, component, eCond.getCondition(), session,
 					false, false, DialogUtils.getMessageFor("explain.if_verb"),
 					false, rcID);
 		}
 		else {
-			renderCondition(writer, component, eCond.getCondition(), theCase,
+			renderCondition(writer, component, eCond.getCondition(), session,
 					false, false, DialogUtils.getMessageFor("explain.if_verb"),
 					false, rcID);
 		}
 	}
 
 	private static void renderENode(ResponseWriter writer,
-			UIComponent component, ENode eNode, Session theCase)
+			UIComponent component, ENode eNode, Session session)
 			throws IOException {
 
 		DialogRenderUtils.renderTableWithClass(writer, component,
@@ -197,13 +197,13 @@ public class ExplanationRendererUtils {
 		Iterator<EReason> iter = eNode.getProReasons().iterator();
 		while (iter.hasNext()) {
 			EReason eReason = iter.next();
-			renderEReason(writer, component, eReason, theCase, eNode);
+			renderEReason(writer, component, eReason, session, eNode);
 		}
 		// ContraReasons
 		iter = eNode.getContraReasons().iterator();
 		while (iter.hasNext()) {
 			EReason eReason = iter.next();
-			renderEReason(writer, component, eReason, theCase, eNode);
+			renderEReason(writer, component, eReason, session, eNode);
 		}
 		if (!hasActiveRules) {
 			writer.startElement("tr", component);
@@ -218,7 +218,7 @@ public class ExplanationRendererUtils {
 	}
 
 	private static void renderEReason(ResponseWriter writer,
-			UIComponent component, EReason eReason, Session theCase, ENode eNode)
+			UIComponent component, EReason eReason, Session session, ENode eNode)
 			throws IOException {
 		writer.startElement("tr", component);
 
@@ -243,17 +243,17 @@ public class ExplanationRendererUtils {
 
 				// column Condition
 				renderECondition(writer, component, ruleReason
-						.getActiveCondition(), theCase, false, ruleReason
+						.getActiveCondition(), session, false, ruleReason
 						.getRule().getId());
 
 				if (ruleReason.getActiveException() != null) {
 					renderECondition(writer, component, ruleReason
-							.getActiveException(), theCase, true, ruleReason
+							.getActiveException(), session, true, ruleReason
 							.getRule().getId());
 				}
 				if (ruleReason.getActiveContext() != null) {
 					renderECondition(writer, component, ruleReason
-							.getActiveContext(), theCase, true, ruleReason
+							.getActiveContext(), session, true, ruleReason
 							.getRule().getId());
 				}
 			}
@@ -276,13 +276,13 @@ public class ExplanationRendererUtils {
 	}
 
 	private static void renderNonTCondition(ResponseWriter writer,
-			UIComponent component, NonTerminalCondition cond, Session theCase,
+			UIComponent component, NonTerminalCondition cond, Session session,
 			boolean showStatus, boolean asException, boolean parentFired,
 			String when, String rcID) throws IOException {
 
 		List<Object> statusValues = null;
 		if (showStatus) {
-			statusValues = getStatusFor(cond, theCase, asException, parentFired);
+			statusValues = getStatusFor(cond, session, asException, parentFired);
 		}
 
 		writer.startElement("td", component);
@@ -316,7 +316,7 @@ public class ExplanationRendererUtils {
 			for (Iterator<Condition> iter = terms.iterator(); iter
 					.hasNext();) {
 				writer.startElement("tr", component);
-				renderCondition(writer, component, iter.next(), theCase,
+				renderCondition(writer, component, iter.next(), session,
 						showStatus, parentFired
 								&& (statusValues != null)
 								&& ((Boolean) statusValues.get(0))
@@ -332,14 +332,14 @@ public class ExplanationRendererUtils {
 			for (int i = 0; i < terms.size(); i++) {
 				writer.startElement("tr", component);
 				if (i == 0) {
-					renderCondition(writer, component, terms.get(i), theCase,
+					renderCondition(writer, component, terms.get(i), session,
 							showStatus, parentFired
 									&& (statusValues != null)
 									&& ((Boolean) statusValues.get(0))
 											.booleanValue(), null, false, rcID);
 				}
 				else {
-					renderCondition(writer, component, terms.get(i), theCase,
+					renderCondition(writer, component, terms.get(i), session,
 							showStatus, parentFired
 									&& (statusValues != null)
 									&& ((Boolean) statusValues.get(0))
@@ -358,14 +358,14 @@ public class ExplanationRendererUtils {
 			for (int i = 0; i < terms.size(); i++) {
 				writer.startElement("tr", component);
 				if (i == 0) {
-					renderCondition(writer, component, terms.get(i), theCase,
+					renderCondition(writer, component, terms.get(i), session,
 							showStatus, parentFired
 									&& (statusValues != null)
 									&& ((Boolean) statusValues.get(0))
 											.booleanValue(), null, false, rcID);
 				}
 				else {
-					renderCondition(writer, component, terms.get(i), theCase,
+					renderCondition(writer, component, terms.get(i), session,
 							showStatus, parentFired
 									&& (statusValues != null)
 									&& ((Boolean) statusValues.get(0))
@@ -434,7 +434,7 @@ public class ExplanationRendererUtils {
 
 				writer.startElement("tr", component);
 				if (i == 0) {
-					renderCondition(writer, component, terms.get(i), theCase,
+					renderCondition(writer, component, terms.get(i), session,
 							showStatus, parentFired
 									&& (statusValues != null)
 									&& ((Boolean) statusValues.get(0))
@@ -445,7 +445,7 @@ public class ExplanationRendererUtils {
 							writer,
 							component,
 							terms.get(i),
-							theCase,
+							session,
 							showStatus,
 							parentFired
 									&& (statusValues != null)
@@ -498,12 +498,12 @@ public class ExplanationRendererUtils {
 	}
 
 	public static void renderTCondition(ResponseWriter writer,
-			UIComponent component, TerminalCondition cond, Session theCase,
+			UIComponent component, TerminalCondition cond, Session session,
 			boolean showStatus, boolean asException, boolean parentFired,
 			String when, boolean parentIsNot, String rcID) throws IOException {
 		List<Object> statusValues = null;
 		if (showStatus) {
-			statusValues = getStatusFor(cond, theCase, asException, parentFired);
+			statusValues = getStatusFor(cond, session, asException, parentFired);
 		}
 
 		if (!parentIsNot) {

@@ -53,7 +53,7 @@ public class PSMethodParentQASet extends PSMethodAdapter {
 		return instance;
 	}
 
-	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session session, Collection<PropagationEntry> changes) {
 	}
 
 	@Override

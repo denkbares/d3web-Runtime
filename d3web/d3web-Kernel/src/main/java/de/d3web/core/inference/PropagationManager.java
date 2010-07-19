@@ -31,11 +31,11 @@ public interface PropagationManager {
 	 * 
 	 * <pre>
 	 * try {
-	 * 	theCase.getPropagationController().openPropagation();
+	 * 	session.getPropagationController().openPropagation();
 	 * 	// ... do your code here ...
 	 * }
 	 * finally {
-	 * 	theCase.getPropagationController().commitPropagation();
+	 * 	session.getPropagationController().commitPropagation();
 	 * }
 	 * </pre>
 	 * 
@@ -58,11 +58,11 @@ public interface PropagationManager {
 	 * 
 	 * <pre>
 	 * try {
-	 * 	theCase.getPropagationController().openPropagation();
+	 * 	session.getPropagationController().openPropagation();
 	 * 	// ... do your code here ...
 	 * }
 	 * finally {
-	 * 	theCase.getPropagationController().commitPropagation();
+	 * 	session.getPropagationController().commitPropagation();
 	 * }
 	 * </pre>
 	 * 

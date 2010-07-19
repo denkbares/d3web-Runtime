@@ -215,12 +215,12 @@ public class SessionFactory {
 //			this.qaSetManagerClass = qaSetManagerClass;
 //		}
 //
-//		public QASetManager createQASetManager(Session theCase) {
+//		public QASetManager createQASetManager(Session session) {
 //			try {
 //				Constructor<? extends QASetManager> constructor =
 //						qaSetManagerClass.getConstructor(new Class[] { Session.class });
 //				return constructor.newInstance(
-//						new Object[] { theCase });
+//						new Object[] { session });
 //			}
 //			catch (IllegalArgumentException e) {
 //				throw new RuntimeException(e);

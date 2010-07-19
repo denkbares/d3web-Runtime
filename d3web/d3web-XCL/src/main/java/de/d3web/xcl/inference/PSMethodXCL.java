@@ -98,9 +98,9 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		this.scoreAlgorithm.refreshStates(modelsToUpdate.keySet(), session);
 	}
 
-	private void updateAnsweredWeight(Session theCase,
+	private void updateAnsweredWeight(Session session,
 			Collection<PropagationEntry> changes) {
-		XCLCaseObject caseObject = (XCLCaseObject) theCase.getCaseObject(this);
+		XCLCaseObject caseObject = (XCLCaseObject) session.getCaseObject(this);
 		for (PropagationEntry entry : changes) {
 			if (entry.getObject() instanceof Question) {
 				Question question = (Question) entry.getObject();
@@ -119,13 +119,13 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		}
 
 		// TODO: remove this assert calculation
-		List<? extends Question> answeredQuestions = theCase.getBlackboard()
+		List<? extends Question> answeredQuestions = session.getBlackboard()
 				.getAnsweredQuestions();
 		double restWeight = caseObject.totalAnsweredAbnormality;
 		for (Question question : answeredQuestions) {
 			AbstractAbnormality abnormality = getAbnormalitySlice(question);
 			restWeight -= getAbnormality(abnormality,
-					theCase.getBlackboard().getValue(question));
+					session.getBlackboard().getValue(question));
 		}
 
 		if (Math.abs(restWeight) > 1e-6) {
@@ -182,7 +182,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 	}
 
 	public double getEntropy(Collection<? extends QASet> qasets,
-			Collection<Solution> solutions, Session theCase) {
+			Collection<Solution> solutions, Session session) {
 		Map<Set<Condition>, Float> map = new HashMap<Set<Condition>, Float>();
 		float totalweight = 0;
 		for (Solution solution : solutions) {
@@ -238,20 +238,20 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 
 	}
 
-	public Collection<Solution> getPossibleSolutions(Session theCase) {
-		List<Solution> solutions = theCase.getBlackboard().getSolutions(State.ESTABLISHED);
+	public Collection<Solution> getPossibleSolutions(Session session) {
+		List<Solution> solutions = session.getBlackboard().getSolutions(State.ESTABLISHED);
 		if (solutions.size() > 0) {
 			return solutions;
 		}
-		solutions = theCase.getBlackboard().getSolutions(State.SUGGESTED);
+		solutions = session.getBlackboard().getSolutions(State.SUGGESTED);
 		if (solutions.size() > 0) {
 			return solutions;
 		}
-		return theCase.getBlackboard().getSolutions(State.UNCLEAR);
+		return session.getBlackboard().getSolutions(State.UNCLEAR);
 	}
 
 	public Collection<Question> getDiscriminatingQuestions(
-			Collection<Solution> solutions, Session theCase) {
+			Collection<Solution> solutions, Session session) {
 		Set<Question> coveredSymptoms = new HashSet<Question>();
 		for (Solution solution : solutions) {
 			KnowledgeSlice ks = solution.getKnowledge(
@@ -267,7 +267,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		return coveredSymptoms;
 	}
 
-	public void init(Session theCase) {
+	public void init(Session session) {
 	}
 
 	public boolean isContributingToResult() {
@@ -288,13 +288,13 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		return new XCLCaseObject(this);
 	}
 
-	public int getAnsweredQuestionsCount(Session theCase) {
-		XCLCaseObject caseObject = (XCLCaseObject) theCase.getCaseObject(this);
+	public int getAnsweredQuestionsCount(Session session) {
+		XCLCaseObject caseObject = (XCLCaseObject) session.getCaseObject(this);
 		return caseObject.totalAnsweredCount;
 	}
 
-	public double getAnsweredQuestionsAbnormality(Session theCase) {
-		XCLCaseObject caseObject = (XCLCaseObject) theCase.getCaseObject(this);
+	public double getAnsweredQuestionsAbnormality(Session session) {
+		XCLCaseObject caseObject = (XCLCaseObject) session.getCaseObject(this);
 		return caseObject.totalAnsweredAbnormality;
 	}
 

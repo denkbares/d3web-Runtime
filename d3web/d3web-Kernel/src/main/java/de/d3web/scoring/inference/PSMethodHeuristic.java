@@ -82,23 +82,23 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 	/**
 	 * Check if NamedObject has nextQASet rules and check them, if available
 	 */
-	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		for (PropagationEntry change : changes) {
-			checkRulesFor(theCase, change.getObject());
+			checkRulesFor(session, change.getObject());
 		}
 	}
 
 	/**
-	 * @param theCase
+	 * @param session
 	 * @param nob
 	 */
-	private void checkRulesFor(Session theCase, TerminologyObject nob) {
+	private void checkRulesFor(Session session, TerminologyObject nob) {
 		KnowledgeSlice knowledgeSlices = ((NamedObject) nob).getKnowledge(this.getClass(),
 				MethodKind.FORWARD);
 		if (knowledgeSlices != null) {
 			RuleSet rs = (RuleSet) knowledgeSlices;
 			for (Rule rule : rs.getRules()) {
-				rule.check(theCase);
+				rule.check(session);
 			}
 		}
 	}
@@ -115,16 +115,16 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 	 * 
 	 * @return Returns the sFA.
 	 */
-	public boolean isSFA(Session theCase) {
-		return getProperty(theCase, Property.SINGLE_FAULT_ASSUMPTION);
+	public boolean isSFA(Session session) {
+		return getProperty(session, Property.SINGLE_FAULT_ASSUMPTION);
 	}
 
-	public boolean isBestSolutionOnly(Session theCase) {
-		return getProperty(theCase, Property.BEST_SOLUTION_ONLY);
+	public boolean isBestSolutionOnly(Session session) {
+		return getProperty(session, Property.BEST_SOLUTION_ONLY);
 	}
 
-	private boolean getProperty(Session theCase, Property property) {
-		Boolean b = (Boolean) theCase.getKnowledgeBase().getProperties().getProperty(
+	private boolean getProperty(Session session, Property property) {
+		Boolean b = (Boolean) session.getKnowledgeBase().getProperties().getProperty(
 				property);
 		if (b == null) return false;
 		else return b.booleanValue();

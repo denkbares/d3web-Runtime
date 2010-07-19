@@ -172,7 +172,7 @@ public class QuestionPageRenderer extends Renderer {
 		return null;
 	}
 
-	private void answerQuestion(UIComponent component, Object[] answerids, Session theCase, Question q) {
+	private void answerQuestion(UIComponent component, Object[] answerids, Session session, Question q) {
 		if (q == null || answerids == null || answerids.length == 0) {
 			return;
 		}
@@ -197,7 +197,7 @@ public class QuestionPageRenderer extends Renderer {
 								"error.badmccombination",
 								new Object[] { getAnswerNameListFromIDList(
 								badanswersList, q,
-								theCase) }));
+								session) }));
 						return;
 					}
 				}
@@ -206,7 +206,7 @@ public class QuestionPageRenderer extends Renderer {
 			List<ChoiceValue> choices = new ArrayList<ChoiceValue>(answeridList.size());
 			Iterator<Object> iter = answeridList.iterator();
 			while (iter.hasNext()) {
-				ChoiceValue v = (ChoiceValue) (getAnswer(component, theCase, q,
+				ChoiceValue v = (ChoiceValue) (getAnswer(component, session, q,
 						iter.next().toString()));
 				choices.add(v);
 			}
@@ -214,10 +214,10 @@ public class QuestionPageRenderer extends Renderer {
 		}
 		// OC and num and date and text
 		else {
-			value = getAnswer(component, theCase, q, answeridList.get(0).toString());
+			value = getAnswer(component, session, q, answeridList.get(0).toString());
 		}
 		if ((value != null)) {
-			setValueInCase(theCase, q, value);
+			setValueInCase(session, q, value);
 		}
 	}
 
@@ -237,7 +237,7 @@ public class QuestionPageRenderer extends Renderer {
 		// get the Question that was answered last
 		// Question lastAnsweredQuestion = null;
 		// String answerId = LastClickedAnswer.getInstance()
-		// .getLastClickedAnswerID(theCase.getId());
+		// .getLastClickedAnswerID(session.getId());
 		// for (Question aQuestion : qList) {
 		// if (aQuestion instanceof QuestionChoice) {
 		// for (Answer anAnswer : ((QuestionChoice) aQuestion)
@@ -264,7 +264,7 @@ public class QuestionPageRenderer extends Renderer {
 					// which are valid and not yet answered are set to "unknown"
 					if (unknownString.equals("true")
 							&& UndefinedValue.isUndefinedValue(session.getBlackboard().getValue(q))
-							&& DialogUtils.isValidQASet(q, session)) { //q.isValid(theCase)) {
+							&& DialogUtils.isValidQASet(q, session)) { //q.isValid(session)) {
 						setValueInCase(session, q, Unknown.getInstance());
 					}
 					else {
@@ -304,20 +304,20 @@ public class QuestionPageRenderer extends Renderer {
 		List<Question> qList = DialogUtils.getQuestionPageBean().getQuestionListToRender();
 		QuestionPageLayout layoutDef = getLayout();
 
-		Session theCase = DialogUtils.getDialog().getSession();
+		Session session = DialogUtils.getDialog().getSession();
 		ResponseWriter writer = context.getResponseWriter();
 		if (DialogUtils.getImageMapBean().hasImagesForQContainer(qList)) {
 			QuestionImageMapRendererUtils.renderQuestionsImageMap(writer, component,
-					theCase, qList,
+					session, qList,
 					layoutDef);
 		}
 		else if (layoutDef instanceof QContainerLayout) {
-			new QContainerRendererForDefinedLayout(writer, component, theCase, qList,
+			new QContainerRendererForDefinedLayout(writer, component, session, qList,
 					(QContainerLayout) layoutDef).render();
 			// (QContainerLayout) layoutDef);
 		}
 		else {
-			new QContainerRendererForUndefinedLayout(writer, component, theCase, qList,
+			new QContainerRendererForUndefinedLayout(writer, component, session, qList,
 					layoutDef).render();
 		}
 	}
@@ -335,10 +335,10 @@ public class QuestionPageRenderer extends Renderer {
 		}
 	}
 
-	private Object getAnswerNameListFromIDList(List<String> answerIDs, Question q, Session theCase) {
+	private Object getAnswerNameListFromIDList(List<String> answerIDs, Question q, Session session) {
 		List<String> answerNameList = new ArrayList<String>();
 		for (String answerID : answerIDs) {
-			Choice a = KnowledgeBaseManagement.createInstance(theCase.getKnowledgeBase()).findChoice((QuestionChoice) q, answerID);
+			Choice a = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase()).findChoice((QuestionChoice) q, answerID);
 			answerNameList.add(a.getName());
 		}
 		return answerNameList;
@@ -361,8 +361,8 @@ public class QuestionPageRenderer extends Renderer {
 		return false;
 	}
 
-	private void setValueInCase(Session theCase, Question q, Value answers) {
-		theCase.getBlackboard().addValueFact(
+	private void setValueInCase(Session session, Question q, Value answers) {
+		session.getBlackboard().addValueFact(
 				new DefaultFact(q, answers, PSMethodUserSelected.getInstance(),
 				PSMethodUserSelected.getInstance()));
 	}

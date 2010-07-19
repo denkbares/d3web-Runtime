@@ -155,8 +155,8 @@ public class SessionConverter {
 	 * 
 	 * @return CaseObjectImpl
 	 */
-	public CaseObjectImpl session2CaseObject(Session theCase) {
-		return session2CaseObject(theCase, true, true);
+	public CaseObjectImpl session2CaseObject(Session session) {
+		return session2CaseObject(session, true, true);
 	}
 
 	/**
@@ -170,16 +170,16 @@ public class SessionConverter {
 	 *        and added to the caseObject
 	 * @return CaseObjectImpl
 	 */
-	public CaseObjectImpl session2CaseObject(Session theCase, boolean copyDCMarkup,
+	public CaseObjectImpl session2CaseObject(Session session, boolean copyDCMarkup,
 			boolean copyProperties) {
-		CaseObjectImpl ret = new CaseObjectImpl(theCase.getKnowledgeBase());
+		CaseObjectImpl ret = new CaseObjectImpl(session.getKnowledgeBase());
 
 		// Questions
 
-		Iterator<Question> qiter = theCase.getKnowledgeBase().getQuestions().iterator();
+		Iterator<Question> qiter = session.getKnowledgeBase().getQuestions().iterator();
 		while (qiter.hasNext()) {
 			Question q = qiter.next();
-			Value value = theCase.getBlackboard().getValue(q);
+			Value value = session.getBlackboard().getValue(q);
 			ret.addQuestionAndAnswers(q, value);
 		}
 
@@ -191,27 +191,27 @@ public class SessionConverter {
 		// // then add the containers from which the qaSetManager has taken
 		// // protocol of
 		// Iterator<?> citer =
-		// theCase.getQASetManager().getProcessedContainers().iterator();
+		// session.getQASetManager().getProcessedContainers().iterator();
 		// while (citer.hasNext()) {
 		// ret.getAppliedQSets().setApplied((QContainer) citer.next());
 		// }
 
 		// Diagnoses
-		addSolutionsToCaseObject(ret, theCase, State.ESTABLISHED);
-		addSolutionsToCaseObject(ret, theCase, State.SUGGESTED);
-		addSolutionsToCaseObject(ret, theCase, State.EXCLUDED);
+		addSolutionsToCaseObject(ret, session, State.ESTABLISHED);
+		addSolutionsToCaseObject(ret, session, State.SUGGESTED);
+		addSolutionsToCaseObject(ret, session, State.EXCLUDED);
 
 		if (copyDCMarkup) {
-			ret.setDCMarkup((DCMarkup) theCase.getDCMarkup().clone());
+			ret.setDCMarkup((DCMarkup) session.getDCMarkup().clone());
 		}
 		if (copyProperties) {
 			ret.setProperties(PropertiesCloner.getInstance().cloneProperties(
-					theCase.getProperties()));
+					session.getProperties()));
 		}
 		Iterator<AdditionalCaseConverter> iter = additionalCaseConverters.iterator();
 		while (iter.hasNext()) {
 			AdditionalCaseConverter conv = iter.next();
-			conv.session2CaseObject(theCase, ret);
+			conv.session2CaseObject(session, ret);
 		}
 		return ret;
 	}
@@ -220,9 +220,9 @@ public class SessionConverter {
 	 * Adds all solutions of the given Session with the given DiagnosisState to
 	 * "co".
 	 */
-	private void addSolutionsToCaseObject(CaseObjectImpl co, Session theCase, Rating.State state) {
+	private void addSolutionsToCaseObject(CaseObjectImpl co, Session session, Rating.State state) {
 		List<PSMethod> usedPsm = new LinkedList<PSMethod>();
-		Iterator<? extends PSMethod> usedPsmIter = theCase.getPSMethods().iterator();
+		Iterator<? extends PSMethod> usedPsmIter = session.getPSMethods().iterator();
 		while (usedPsmIter.hasNext()) {
 			PSMethod psm = usedPsmIter.next();
 			if (psm.isContributingToResult()) {
@@ -230,7 +230,7 @@ public class SessionConverter {
 			}
 		}
 
-		List<de.d3web.core.knowledge.terminology.Solution> diags = theCase.getBlackboard().getSolutions(
+		List<de.d3web.core.knowledge.terminology.Solution> diags = session.getBlackboard().getSolutions(
 				state);
 		if (diags != null) {
 			Iterator<de.d3web.core.knowledge.terminology.Solution> diter = diags.iterator();
@@ -240,7 +240,7 @@ public class SessionConverter {
 				Iterator<PSMethod> psMethodIter = usedPsm.iterator();
 				while (psMethodIter.hasNext()) {
 					PSMethod psm = psMethodIter.next();
-					Rating ds = theCase.getBlackboard().getRating(d, psm);
+					Rating ds = session.getBlackboard().getRating(d, psm);
 					if (ds.hasState(state)) {
 						CaseObject.Solution s = new CaseObject.Solution();
 						s.setSolution(d);

@@ -47,8 +47,8 @@ public abstract class ActionNextQASet extends PSAction {
 	/**
 	 * Indicates all QASets specified by "setQASets"-Method
 	 */
-	public void doIt(Session theCase, Object source, PSMethod psmethod) {
-		doItWithContext(theCase, source);
+	public void doIt(Session session, Object source, PSMethod psmethod) {
+		doItWithContext(session, source);
 	}
 
 	protected void doItWithContext(Session session, Object source) {

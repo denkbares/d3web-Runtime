@@ -159,7 +159,7 @@ public class DialogRenderUtils {
 				startpos) + 1);
 	}
 
-	public static String getUnknownAnswerString(Question q, Session theCase) {
+	public static String getUnknownAnswerString(Question q, Session session) {
 		String answer = Unknown.getInstance().toString();
 		if (answer.equals(Unknown.UNKNOWN_VALUE)) {
 			answer = DialogUtils.getMessageFor("dialog.unknown");
@@ -315,13 +315,13 @@ public class DialogRenderUtils {
 	}
 
 	public static void renderDiagnosesLink(ResponseWriter writer,
-			UIComponent component, Solution diag, Session theCase,
+			UIComponent component, Solution diag, Session session,
 			String styleClass, String score, boolean showScore)
 			throws IOException {
 
 		if (DialogUtils.getDialogSettings().isShowDiagExplanation()) {
 			writer.startElement("a", component);
-			Rating diagState = theCase.getBlackboard().getRating(diag);
+			Rating diagState = session.getBlackboard().getRating(diag);
 			writer.writeAttribute("id", component.getId() + "_heur_"
 					+ diagState.getName() + "_" + diag.getId(), "id");
 			writer.writeAttribute("class", styleClass, "class");
@@ -588,13 +588,13 @@ public class DialogRenderUtils {
 	}
 
 	public static void sortDiagnosisList(List<Solution> diagList,
-			final Session theCase) {
+			final Session session) {
 		Comparator<Solution> diagCompAsc = new Comparator<Solution>() {
 
 			// TODO: check order, reverse?
 			public int compare(Solution a, Solution b) {
-				return theCase.getBlackboard().getRating(a).compareTo(
-						theCase.getBlackboard().getRating(b));
+				return session.getBlackboard().getRating(a).compareTo(
+						session.getBlackboard().getRating(b));
 			}
 		};
 		Collections.sort(diagList, diagCompAsc);

@@ -198,7 +198,7 @@ public class DDBuilder implements CaseVisualizer {
 			for (int i = 0; i < ratedCases.size(); i++) {
 				RatedTestCase ratedTestCase = ratedCases.get(i);
 
-				caseType theCaseType;
+				caseType sessionType;
 
 				String name = ratedTestCase.getName()
 						+ ratedTestCase.getFindings().get(0).toString();
@@ -207,16 +207,16 @@ public class DDBuilder implements CaseVisualizer {
 
 				DDNode node = nodes.get(name);
 
-				theCaseType = caseType.new_case;
+				sessionType = caseType.new_case;
 
-				if (ratedTestCase.wasTestedBefore()) theCaseType = caseType.old_case;
+				if (ratedTestCase.wasTestedBefore()) sessionType = caseType.old_case;
 
-				if (!ratedTestCase.isCorrect()) theCaseType = caseType.incorrect;
+				if (!ratedTestCase.isCorrect()) sessionType = caseType.incorrect;
 
-				node.setTheCaseType(theCaseType);
+				node.setTheCaseType(sessionType);
 
 				if (prec != null && node.getFindings().size() > 0) prec.addChild(node,
-						node.getFindings().get(0), theCaseType);
+						node.getFindings().get(0), sessionType);
 
 				prec = node;
 			}

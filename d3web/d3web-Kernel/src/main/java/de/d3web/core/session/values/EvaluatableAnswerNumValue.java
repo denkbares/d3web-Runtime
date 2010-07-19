@@ -34,5 +34,5 @@ public interface EvaluatableAnswerNumValue extends EvaluatableNumValue{
 	 * Evaluates its value considering the given Session.
 	 * @return evaluated AnswerNumValue (Double)
 	 */
-	public Double eval(Session theCase);
+	public Double eval(Session session);
 }

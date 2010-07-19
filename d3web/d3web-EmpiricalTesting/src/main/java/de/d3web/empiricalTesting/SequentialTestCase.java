@@ -174,25 +174,25 @@ public class SequentialTestCase {
 		}
 	}
 
-	private void deriveSolutionsForPSMethod(Session thecase, RatedTestCase rtc,
+	private void deriveSolutionsForPSMethod(Session session, RatedTestCase rtc,
 			Class<? extends PSMethod> psMethodContext, RatingStrategy ratingStrategy) {
 
-		for (Solution solution : thecase.getKnowledgeBase().getSolutions()) {
-			Rating rating = ratingStrategy.getRatingFor(solution, thecase);
+		for (Solution solution : session.getKnowledgeBase().getSolutions()) {
+			Rating rating = ratingStrategy.getRatingFor(solution, session);
 			if (rating.isProblemSolvingRelevant()) {
 				RatedSolution ratedSolution = new RatedSolution(solution, rating);
 				rtc.addDerived(ratedSolution);
 			}
 		}
 
-		// for (Diagnosis dia : thecase.getDiagnoses()) {
+		// for (Diagnosis dia : session.getDiagnoses()) {
 		//
-		// DiagnosisState state = dia.getState(thecase, psMethodContext);
+		// DiagnosisState state = dia.getState(session, psMethodContext);
 		// // Only suggested and established diagnoses are taken into account
 		// if (!state.equals(DiagnosisState.UNCLEAR)
 		// && !state.equals(DiagnosisState.EXCLUDED)) {
 		// if (!useStateRatings) { // use ScoreRating
-		// DiagnosisScore sco = dia.getScore(thecase, psMethodContext);
+		// DiagnosisScore sco = dia.getScore(session, psMethodContext);
 		// RatedSolution rs = new RatedSolution(dia, new ScoreRating(
 		// sco.getScore()));
 		// rtc.addDerived(rs);
@@ -205,11 +205,11 @@ public class SequentialTestCase {
 
 	}
 
-	private void deriveXCLSolutions(Session thecase, RatedTestCase rtc, Collection<KnowledgeSlice> slices) {
+	private void deriveXCLSolutions(Session session, RatedTestCase rtc, Collection<KnowledgeSlice> slices) {
 		for (KnowledgeSlice slice : slices) {
 			if (slice instanceof XCLModel) {
 				Solution solution = ((XCLModel) slice).getSolution();
-				de.d3web.core.knowledge.terminology.Rating s = ((XCLModel) slice).getState(thecase);
+				de.d3web.core.knowledge.terminology.Rating s = ((XCLModel) slice).getState(session);
 				if (!s.hasState(State.UNCLEAR)
 						&& !s.hasState(State.EXCLUDED)) {
 					RatedSolution rs = new RatedSolution(solution, new StateRating(s));
@@ -222,7 +222,7 @@ public class SequentialTestCase {
 
 	// public List<Answer> getAnswerForQuestionNum(KnowledgeBase kb, String
 	// questionname) {
-	// Session thecase = CaseFactory.createSession(kb);
+	// Session session = CaseFactory.createSession(kb);
 	//
 	// for (RatedTestCase rtc : ratedTestCases) {
 	// // Answer and Question setting in Case
@@ -232,19 +232,19 @@ public class SequentialTestCase {
 	//
 	// // Necessary for QuestionMC, otherwise only one answer can be given
 	// if (q instanceof QuestionMC) {
-	// answers.addAll(((QuestionMC) q).getValue(thecase));
+	// answers.addAll(((QuestionMC) q).getValue(session));
 	// }
 	//
 	// answers.add(f.getAnswer());
-	// thecase.setValue((Question) q, answers.toArray());
+	// session.setValue((Question) q, answers.toArray());
 	// }
 	// }
 	//
 	// List<? extends Question> answeredQuestions =
-	// thecase.getAnsweredQuestions();
+	// session.getAnsweredQuestions();
 	// for (Question question : answeredQuestions) {
 	// if (question.getText().equals(questionname))
-	// return question.getValue(thecase);
+	// return question.getValue(session);
 	// }
 	//
 	// return null;

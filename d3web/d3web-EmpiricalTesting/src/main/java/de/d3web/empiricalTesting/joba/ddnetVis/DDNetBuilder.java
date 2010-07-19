@@ -71,7 +71,7 @@ public class DDNetBuilder {
 	}
 
 	private void generateDDNet(List<SequentialTestCase> cases,
-			caseType theCaseType, HashMap<String, DDNode> nodes) {
+			caseType sessionType, HashMap<String, DDNode> nodes) {
 
 		for (SequentialTestCase sequentialTestCase : cases) {
 			List<RatedTestCase> ratedCases = sequentialTestCase.getCases();
@@ -85,10 +85,10 @@ public class DDNetBuilder {
 				if (nodes.get(name) == null)
 					nodes.put(name, new DDNode(ratedTestCase));
 				DDNode node = nodes.get(name);
-				node.setTheCaseType(theCaseType);
+				node.setTheCaseType(sessionType);
 
 				if (prec != null) {
-					prec.addChild(node, node.getFindings().get(0), theCaseType);
+					prec.addChild(node, node.getFindings().get(0), sessionType);
 				}
 
 				if (cutQuationnaireSibling

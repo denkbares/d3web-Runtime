@@ -71,7 +71,7 @@ public class Num2ChoiceSchema implements KnowledgeSlice {
 	 * @return true by default, not used in this context.
 	 * @see de.d3web.core.inference.KnowledgeSlice#isUsed(de.d3web.core.session.Session)
 	 */
-	public boolean isUsed(Session theCase) {
+	public boolean isUsed(Session session) {
 		return true;
 	}
 
@@ -79,7 +79,7 @@ public class Num2ChoiceSchema implements KnowledgeSlice {
 	 * @return the answer selected from the given answer collection according to
 	 *         the given numeric value
 	 */
-	public Value getValueForNum(Double num, Collection<Choice> answers, Session theCase) {
+	public Value getValueForNum(Double num, Collection<Choice> answers, Session session) {
 		boolean ascending = isAscending();
 		for (int i = 0; i < schemaArray.length; i++) {
 			if ((ascending && num.doubleValue() < schemaArray[i].doubleValue())

@@ -15,8 +15,8 @@ public class IdentityMeasurer implements ISimilarityMeasurer {
 	}
 
 	@Override
-	public double computeSimilarity(Session theCase) {
-		Value value = theCase.getBlackboard().getValue(question);
+	public double computeSimilarity(Session session) {
+		Value value = session.getBlackboard().getValue(question);
 		if (value.equals(expectedValue)) // TODO Fix
 		return 1;
 		else return 0;
