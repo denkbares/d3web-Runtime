@@ -18,7 +18,7 @@
  * site: http://www.fsf.org.
  */
 
-package de.d3web.kernel.psMethods.comparecase2.facade;
+package de.d3web.kernel.psmethods2.comparecase.facade;
 
 import java.util.Collection;
 import java.util.Collections;
