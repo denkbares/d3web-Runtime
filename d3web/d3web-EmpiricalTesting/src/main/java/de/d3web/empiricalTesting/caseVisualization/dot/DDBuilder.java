@@ -33,11 +33,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.Rating.State;
-import de.d3web.core.session.values.Choice;
 import de.d3web.empiricalTesting.ConfigLoader;
 import de.d3web.empiricalTesting.Finding;
 import de.d3web.empiricalTesting.RatedSolution;

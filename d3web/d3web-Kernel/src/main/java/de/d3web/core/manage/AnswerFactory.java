@@ -20,9 +20,9 @@
 
 package de.d3web.core.manage;
 
-import de.d3web.core.session.values.AnswerNo;
-import de.d3web.core.session.values.AnswerYes;
-import de.d3web.core.session.values.Choice;
+import de.d3web.core.knowledge.terminology.AnswerNo;
+import de.d3web.core.knowledge.terminology.AnswerYes;
+import de.d3web.core.knowledge.terminology.Choice;
 
 /**
  * This is a factory class for Answer objects It contains several static methods

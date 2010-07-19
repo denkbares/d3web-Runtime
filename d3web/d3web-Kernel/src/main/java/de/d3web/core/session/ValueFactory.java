@@ -1,6 +1,6 @@
 package de.d3web.core.session;
 
-import de.d3web.core.session.values.Choice;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;

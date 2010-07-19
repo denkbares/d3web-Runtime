@@ -26,10 +26,10 @@ import java.util.List;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.Choice;
 import de.d3web.core.utilities.Utils;
 import de.d3web.indication.inference.PSMethodSuppressAnswer;
 /**

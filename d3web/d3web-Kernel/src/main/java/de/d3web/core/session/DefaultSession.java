@@ -29,11 +29,11 @@ import java.util.Map;
 import java.util.UUID;
 
 import de.d3web.abstraction.inference.PSMethodAbstraction;
-import de.d3web.core.inference.DefaultPropagationController;
+import de.d3web.core.inference.DefaultPropagationManager;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodInit;
-import de.d3web.core.inference.PropagationContoller;
+import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Question;
@@ -69,7 +69,7 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
 /**
  * The {@link D3WebSession} is the default implementation of {@link Session}.
  * Here, the {@link Blackboard}, {@link Interview}, and
- * {@link PropagationContoller} are managed, that together represent the
+ * {@link PropagationManager} are managed, that together represent the
  * behavior of a {@link Session}.
  * 
  * @author joba
@@ -79,7 +79,7 @@ public class DefaultSession implements Session {
 
 	// TODO knowledge base, interview and propagation controller should be final
 	private KnowledgeBase kb;
-	private DefaultPropagationController propagationController;
+	private DefaultPropagationManager propagationController;
 	private Interview interview;
 
 	private Map<CaseObjectSource, SessionObject> dynamicStore;
@@ -176,7 +176,7 @@ public class DefaultSession implements Session {
 
 	private void initSession(KnowledgeBase kb) {
 		this.kb = kb;
-		this.propagationController = new DefaultPropagationController(this);
+		this.propagationController = new DefaultPropagationManager(this);
 		this.interview = new DefaultInterview(this, this.getKnowledgeBase());
 		this.interview.setFormStrategy(new NextUnansweredQuestionFormStrategy());
 		this.protocol = new DefaultProtocol();
@@ -245,7 +245,7 @@ public class DefaultSession implements Session {
 		this.usedPSMethods.add(psmethod);
 		psmethod.init(this);
 
-		PropagationContoller propagationContoller = getPropagationContoller();
+		PropagationManager propagationContoller = getPropagationManager();
 		propagationContoller.openPropagation();
 		try {
 			for (Question question : blackboard.getAnsweredQuestions()) {
@@ -390,7 +390,7 @@ public class DefaultSession implements Session {
 	}
 
 	@Override
-	public PropagationContoller getPropagationContoller() {
+	public PropagationManager getPropagationManager() {
 		return propagationController;
 	}
 

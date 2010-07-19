@@ -3,17 +3,17 @@ package de.d3web.core.inference;
 import de.d3web.core.knowledge.TerminologyObject;
 
 /**
- * A PropagationController is responsible for propagate all changes of a Session
+ * A PropagationManager is responsible for propagate all changes of a Session
  * through the registered PSMethods of the case.
  * 
- * For each case a single instance of a PropagationContoller implementation is
+ * For each case a single instance of a PropagationManager implementation is
  * created/used. Even if the method propagate should not be called from outside
  * the case, the methods openPropagation and commitPropagation may be used to
  * enable optimized propagation if more than one fact is updated into the case.
  * 
  * @author Volker Belli
  */
-public interface PropagationContoller {
+public interface PropagationManager {
 
 	/**
 	 * Commits a propagation frame.

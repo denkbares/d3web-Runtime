@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.PropagationContoller;
+import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.InterviewObject;
@@ -79,7 +79,7 @@ public class DefaultBlackboard implements Blackboard {
 			Value oldValue) {
 		Value newValue = getActualValue(terminologyObject);
 		if (newValue != oldValue) {
-			PropagationContoller propagationContoller = session.getPropagationContoller();
+			PropagationManager propagationContoller = session.getPropagationManager();
 			propagationContoller.openPropagation();
 			propagationContoller.propagate(terminologyObject,
 					oldValue, newValue);

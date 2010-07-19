@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.Property;
@@ -32,7 +33,6 @@ import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
-import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 
 /**
@@ -62,7 +62,7 @@ public class PSMethodInit implements PSMethod {
 	 * date: (21.02.2002 16:51:10)
 	 */
 	public void init(Session theCase) {
-		theCase.getPropagationContoller().openPropagation();
+		theCase.getPropagationManager().openPropagation();
 		try {
 			// initialise all questions
 			KnowledgeBase kb = theCase.getKnowledgeBase();
@@ -92,7 +92,7 @@ public class PSMethodInit implements PSMethod {
 			}
 		}
 		finally {
-			theCase.getPropagationContoller().commitPropagation();
+			theCase.getPropagationManager().commitPropagation();
 		}
 	}
 

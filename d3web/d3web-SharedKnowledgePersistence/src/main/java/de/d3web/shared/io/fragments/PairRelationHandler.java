@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
 
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.session.values.Choice;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.shared.comparators.PairRelation;
 /**
  * Handles PairRelations

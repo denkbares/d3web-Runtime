@@ -21,7 +21,6 @@
 package de.d3web.core.knowledge.terminology;
 
 import de.d3web.core.manage.AnswerFactory;
-import de.d3web.core.session.values.Choice;
 import de.d3web.core.utilities.Utils;
 
 /**

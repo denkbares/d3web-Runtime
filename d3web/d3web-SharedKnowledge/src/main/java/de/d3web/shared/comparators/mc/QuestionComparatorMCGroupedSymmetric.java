@@ -23,8 +23,8 @@ package de.d3web.shared.comparators.mc;
 import java.util.Iterator;
 import java.util.List;
 
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.shared.comparators.GroupedComparatorSymmetric;

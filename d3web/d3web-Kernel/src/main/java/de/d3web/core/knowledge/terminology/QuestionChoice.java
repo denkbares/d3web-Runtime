@@ -28,7 +28,6 @@ import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 import de.d3web.core.manage.KnowledgeBaseManagement;
-import de.d3web.core.session.values.Choice;
 
 /**
  * Storage for Questions with predefined answers (alternatives). Abstract

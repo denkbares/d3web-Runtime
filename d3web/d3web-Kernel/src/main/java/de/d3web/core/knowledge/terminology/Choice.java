@@ -18,13 +18,10 @@
  * site: http://www.fsf.org.
  */
 
-package de.d3web.core.session.values;
+package de.d3web.core.knowledge.terminology;
 
 import java.util.List;
 
-import de.d3web.core.knowledge.terminology.IDObject;
-import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 

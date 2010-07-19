@@ -32,13 +32,13 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.ValueFactory;
-import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.dialog2.basics.layout.QContainerLayout;
 import de.d3web.dialog2.basics.layout.QuestionPageLayout;

@@ -23,7 +23,6 @@ package de.d3web.core.knowledge.terminology;
 import java.util.List;
 import java.util.Vector;
 
-import de.d3web.core.session.values.Choice;
 
 /**
  * Storage for Questions with predefined multiple answers (alternatives). <BR>

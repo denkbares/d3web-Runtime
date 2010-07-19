@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
-import de.d3web.core.session.values.Choice;
 
 /**
  * A FindingMC encapsulates a QuestionMC and an AnswerChoice[]. Each answer has

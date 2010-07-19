@@ -26,9 +26,9 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-import de.d3web.core.session.values.AnswerNo;
-import de.d3web.core.session.values.AnswerYes;
-import de.d3web.core.session.values.Choice;
+import de.d3web.core.knowledge.terminology.AnswerNo;
+import de.d3web.core.knowledge.terminology.AnswerYes;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.kernel.verbalizer.VerbalizationManager.RenderingFormat;
 
 public class AnswerVerbalizer implements Verbalizer {

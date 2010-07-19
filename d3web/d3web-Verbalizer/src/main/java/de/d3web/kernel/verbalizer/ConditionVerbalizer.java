@@ -45,11 +45,11 @@ import de.d3web.core.inference.condition.CondTextEqual;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.inference.condition.TerminalCondition;
+import de.d3web.core.knowledge.terminology.AnswerNo;
+import de.d3web.core.knowledge.terminology.AnswerYes;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QuestionMC;
-import de.d3web.core.session.values.AnswerNo;
-import de.d3web.core.session.values.AnswerYes;
 import de.d3web.kernel.verbalizer.VerbalizationManager.RenderingFormat;
 
 /**

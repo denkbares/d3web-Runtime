@@ -31,6 +31,7 @@ import de.d3web.core.io.fragments.SolutionsHandler;
 import de.d3web.core.io.fragments.QContainerHandler;
 import de.d3web.core.io.fragments.QuestionHandler;
 import de.d3web.core.io.utilities.Util;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -38,7 +39,6 @@ import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
-import de.d3web.core.session.values.Choice;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.plugin.test.InitPluginManager;
 

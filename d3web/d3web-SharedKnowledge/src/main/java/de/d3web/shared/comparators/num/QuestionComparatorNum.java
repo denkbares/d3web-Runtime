@@ -22,8 +22,8 @@ package de.d3web.shared.comparators.num;
 
 import java.util.List;
 
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
-import de.d3web.core.session.values.Choice;
 import de.d3web.shared.comparators.QuestionComparator;
 
 /**

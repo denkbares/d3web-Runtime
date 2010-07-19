@@ -29,11 +29,11 @@ import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.Choice;
 import de.d3web.costBenefit.inference.CostFunction;
 import de.d3web.costBenefit.inference.DefaultCostFunction;
 import de.d3web.costBenefit.inference.PSMethodCostBenefit;

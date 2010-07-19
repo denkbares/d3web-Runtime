@@ -25,9 +25,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.MultipleChoiceValue;
 
 /**

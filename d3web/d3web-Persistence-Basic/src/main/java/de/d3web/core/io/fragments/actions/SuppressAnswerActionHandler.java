@@ -32,9 +32,9 @@ import org.w3c.dom.NodeList;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
-import de.d3web.core.session.values.Choice;
 import de.d3web.indication.ActionSuppressAnswer;
 /**
  * Handels actions supressing answers

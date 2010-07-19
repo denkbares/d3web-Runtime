@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 
-public class DefaultPropagationController implements PropagationContoller {
+public class DefaultPropagationManager implements PropagationManager {
 
 	private class PSMethodHandler {
 
@@ -66,7 +66,7 @@ public class DefaultPropagationController implements PropagationContoller {
 			propagationEntries = new HashMap<TerminologyObject, PropagationEntry>();
 			try {
 				// propagate the changes, using the new interface
-				getPSMethod().propagate(DefaultPropagationController.this.session, entries);
+				getPSMethod().propagate(DefaultPropagationManager.this.session, entries);
 			}
 			catch (Throwable e) {
 				Logger.getLogger("Kernel").log(
@@ -83,7 +83,7 @@ public class DefaultPropagationController implements PropagationContoller {
 	private int recursiveCounter = 0;
 	private long propagationTime = 0;
 
-	public DefaultPropagationController(Session session) {
+	public DefaultPropagationManager(Session session) {
 		this.session = session;
 	}
 

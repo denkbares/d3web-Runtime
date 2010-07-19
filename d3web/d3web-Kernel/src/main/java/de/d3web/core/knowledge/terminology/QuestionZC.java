@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import de.d3web.core.session.values.Choice;
 
 /**
  * @author Jochen

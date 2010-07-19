@@ -20,7 +20,7 @@
 
 package de.d3web.shared.comparators;
 
-import de.d3web.core.session.values.Choice;
+import de.d3web.core.knowledge.terminology.Choice;
 
 /**
  * Helper Class for managing a pair of answers and the depending value (for

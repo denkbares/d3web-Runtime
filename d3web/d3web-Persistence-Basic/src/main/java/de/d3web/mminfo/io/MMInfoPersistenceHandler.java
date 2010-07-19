@@ -44,6 +44,7 @@ import de.d3web.core.io.utilities.IDObjectComparator;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -54,7 +55,6 @@ import de.d3web.core.knowledge.terminology.info.MMInfoObject;
 import de.d3web.core.knowledge.terminology.info.MMInfoStorage;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.session.values.Choice;
 
 /**
  * PersistanceHandler for MMInfos Creation date: (25.01.2002 14:18:47)

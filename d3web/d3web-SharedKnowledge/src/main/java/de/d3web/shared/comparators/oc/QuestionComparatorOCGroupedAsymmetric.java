@@ -22,8 +22,8 @@ package de.d3web.shared.comparators.oc;
 
 import java.util.Iterator;
 
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.Choice;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.shared.comparators.GroupedComparatorAsymmetric;
 import de.d3web.shared.comparators.PairRelation;

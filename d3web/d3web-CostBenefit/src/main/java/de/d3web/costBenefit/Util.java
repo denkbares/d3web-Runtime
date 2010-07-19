@@ -76,12 +76,12 @@ public class Util {
 
 	public static void setQuestion(Session theCase, String question, String answer) {
 		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(theCase.getKnowledgeBase());
-		theCase.getPropagationContoller().openPropagation();
+		theCase.getPropagationManager().openPropagation();
 		QuestionOC question1 = (QuestionOC) kbm.findQuestion(question);
 		theCase.getBlackboard().addValueFact(
 				FactFactory.createFact(question1, kbm.findValue(question1, answer),
 				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
-		theCase.getPropagationContoller().commitPropagation();
+		theCase.getPropagationManager().commitPropagation();
 	}
 
 	public static StateTransition extractStateTransition(QContainer qcon) {

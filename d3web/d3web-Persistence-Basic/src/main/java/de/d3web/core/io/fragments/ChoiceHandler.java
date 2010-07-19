@@ -28,10 +28,10 @@ import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.AnswerNo;
+import de.d3web.core.knowledge.terminology.AnswerYes;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.info.Properties;
-import de.d3web.core.session.values.Choice;
-import de.d3web.core.session.values.AnswerNo;
-import de.d3web.core.session.values.AnswerYes;
 /**
  * Handels Choice Answers
  *

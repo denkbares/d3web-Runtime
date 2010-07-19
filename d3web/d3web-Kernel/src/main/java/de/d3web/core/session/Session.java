@@ -23,7 +23,7 @@ package de.d3web.core.session;
 import java.util.List;
 
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.PropagationContoller;
+import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -76,12 +76,12 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	Blackboard getBlackboard();
 
 	/**
-	 * Returns the {@link PropagationContoller} instance, responsible for all
+	 * Returns the {@link PropagationManager} instance, responsible for all
 	 * propagation actions of this session.
 	 * 
-	 * @return the propagation controller of this session
+	 * @return the propagation manager of this session
 	 */
-	PropagationContoller getPropagationContoller();
+	PropagationManager getPropagationManager();
 
 	// --- access header information ---
 	/**

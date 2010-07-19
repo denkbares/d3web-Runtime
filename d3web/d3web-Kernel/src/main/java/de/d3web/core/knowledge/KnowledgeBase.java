@@ -38,6 +38,7 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -50,7 +51,6 @@ import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 import de.d3web.core.manage.KnowledgeBaseManagement;
-import de.d3web.core.session.values.Choice;
 
 /**
  * The KnowledgeBase stores all terminology objects (Question, Solution, etc.)

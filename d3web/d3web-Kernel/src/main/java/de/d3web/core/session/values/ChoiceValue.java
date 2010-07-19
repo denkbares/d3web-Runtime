@@ -19,6 +19,7 @@
  */
 package de.d3web.core.session.values;
 
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Value;
 

@@ -23,7 +23,6 @@ package de.d3web.core.knowledge.terminology;
 import java.util.Collections;
 import java.util.List;
 
-import de.d3web.core.session.values.Choice;
 
 /**
  * Storage for Questions with predefined single answers (alternatives). <BR>

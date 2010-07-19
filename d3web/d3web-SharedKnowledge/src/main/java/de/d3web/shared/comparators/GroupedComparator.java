@@ -25,7 +25,7 @@ package de.d3web.shared.comparators;
 
 import java.util.List;
 
-import de.d3web.core.session.values.Choice;
+import de.d3web.core.knowledge.terminology.Choice;
 
 /**
  * Marks a question-comparator as grouped.

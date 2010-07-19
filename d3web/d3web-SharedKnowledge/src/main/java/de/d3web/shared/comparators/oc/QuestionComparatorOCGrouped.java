@@ -22,7 +22,7 @@ package de.d3web.shared.comparators.oc;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.session.values.Choice;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.shared.comparators.GroupedComparator;
 import de.d3web.shared.comparators.PairRelation;
 /**

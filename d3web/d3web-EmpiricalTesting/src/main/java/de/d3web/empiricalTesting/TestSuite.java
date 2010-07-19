@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.session.values.Choice;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
 public class TestSuite {
