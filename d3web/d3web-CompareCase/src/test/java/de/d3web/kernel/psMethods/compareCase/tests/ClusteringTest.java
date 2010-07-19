@@ -26,10 +26,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import de.d3web.kernel.psMethods.compareCase.comparators.CompareMode;
-import de.d3web.kernel.psMethods.compareCase.comparators.clustering.CaseCluster;
-import de.d3web.kernel.psMethods.compareCase.comparators.clustering.ClusterRepository;
 import de.d3web.kernel.psMethods.compareCase.tests.utils.CaseObjectTestDummy;
+import de.d3web.kernel.psmethods2.comparecase.comparators.CompareMode;
+import de.d3web.kernel.psmethods2.comparecase.comparators.clustering.CaseCluster;
+import de.d3web.kernel.psmethods2.comparecase.comparators.clustering.ClusterRepository;
 import de.d3web.utilities.caseLoaders.CaseRepository;
 
 import junit.framework.TestCase;

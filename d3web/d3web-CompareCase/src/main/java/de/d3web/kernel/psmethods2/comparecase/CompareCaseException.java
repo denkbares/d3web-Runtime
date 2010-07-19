@@ -18,7 +18,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.kernel.psMethods.compareCase;
+package de.d3web.kernel.psmethods2.comparecase;
 /**
  * Insert the type's description here.
  * Creation date: (22.08.01 00:32:35)

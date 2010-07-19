@@ -18,7 +18,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.kernel.psMethods.compareCase.comparators.clustering;
+package de.d3web.kernel.psmethods2.comparecase.comparators.clustering;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.d3web.caserepository.CaseObject;
-import de.d3web.kernel.psMethods.compareCase.comparators.CompareMode;
+import de.d3web.kernel.psmethods2.comparecase.comparators.CompareMode;
 import de.d3web.utilities.caseLoaders.CaseRepository;
 
 /**

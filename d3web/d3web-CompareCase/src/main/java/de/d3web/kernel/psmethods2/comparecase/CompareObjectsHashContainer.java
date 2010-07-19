@@ -18,14 +18,14 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package de.d3web.kernel.psMethods.compareCase;
+package de.d3web.kernel.psmethods2.comparecase;
 
 import java.util.Hashtable;
 import java.util.Iterator;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.kernel.psMethods.compareCase.comparators.ComparatorResult;
+import de.d3web.kernel.psmethods2.comparecase.comparators.ComparatorResult;
 
 /**
  * @author bates
