@@ -43,7 +43,7 @@ import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.explain.ExplanationFactory;
-import de.d3web.explain.eNodes.ENode;
+import de.d3web.explain.enodes2.ENode;
 import de.d3web.indication.inference.PSMethodContraIndication;
 import de.d3web.indication.inference.PSMethodNextQASet;
 import de.d3web.indication.inference.PSMethodSuppressAnswer;

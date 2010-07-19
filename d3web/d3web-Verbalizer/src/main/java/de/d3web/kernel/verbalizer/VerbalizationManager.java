@@ -27,7 +27,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.d3web.kernel.psMethods.verbalizer.XclVerbalizer;
+import de.d3web.kernel.psmethods2.verbalizer.XclVerbalizer;
 
 /**
  * This is the key class of the d3web-verbalizer. It handles the verbalization

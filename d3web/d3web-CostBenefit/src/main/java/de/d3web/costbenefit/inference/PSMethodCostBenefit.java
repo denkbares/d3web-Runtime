@@ -55,7 +55,7 @@ import de.d3web.costbenefit.model.Node;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
-import de.d3web.costbenefit.session.interviewManager.CostBenefitAgendaSortingStrategy;
+import de.d3web.costbenefit.session.interviewmanager2.CostBenefitAgendaSortingStrategy;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
