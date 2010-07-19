@@ -24,7 +24,7 @@ import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
-import de.d3web.kernel.psMethods.compareCase.comparators.CompareMode;
+import de.d3web.kernel.psmethods.comparecase.comparators.CompareMode;
 
 public class CompareCaseController implements Serializable {
 

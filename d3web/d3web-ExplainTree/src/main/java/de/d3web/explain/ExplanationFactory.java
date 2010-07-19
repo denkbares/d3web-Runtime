@@ -31,9 +31,9 @@ import java.util.Collection;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.Session;
-import de.d3web.explain.enodes2.ENode;
-import de.d3web.explain.enodes2.values.DiagnosticValue;
-import de.d3web.explain.enodes2.values.QState;
+import de.d3web.explain.enodes.ENode;
+import de.d3web.explain.enodes.values.DiagnosticValue;
+import de.d3web.explain.enodes.values.QState;
 
 /**
  *

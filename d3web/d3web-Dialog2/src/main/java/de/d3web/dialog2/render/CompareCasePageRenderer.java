@@ -47,11 +47,11 @@ import de.d3web.dialog2.basics.knowledge.CaseManager;
 import de.d3web.dialog2.component.html.UICompareCasePage;
 import de.d3web.dialog2.controller.CompareCaseController;
 import de.d3web.dialog2.util.DialogUtils;
-import de.d3web.kernel.psMethods.compareCase.CompareCaseException;
-import de.d3web.kernel.psMethods.compareCase.comparators.ComparatorResult;
-import de.d3web.kernel.psMethods.compareCase.facade.ComparisonResultRepository;
-import de.d3web.kernel.psMethods.compareCase.facade.DetailledResult;
-import de.d3web.kernel.psMethods.compareCase.facade.SimpleResult;
+import de.d3web.kernel.psmethods.comparecase.CompareCaseException;
+import de.d3web.kernel.psmethods.comparecase.comparators.ComparatorResult;
+import de.d3web.kernel.psmethods.comparecase.facade.ComparisonResultRepository;
+import de.d3web.kernel.psmethods.comparecase.facade.DetailledResult;
+import de.d3web.kernel.psmethods.comparecase.facade.SimpleResult;
 
 public class CompareCasePageRenderer extends Renderer {
 

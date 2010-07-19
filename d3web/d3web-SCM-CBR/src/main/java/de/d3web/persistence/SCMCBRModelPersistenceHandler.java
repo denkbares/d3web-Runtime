@@ -20,9 +20,9 @@ import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.manage.KnowledgeBaseManagement;
-import de.d3web.kernel.psmethods2.scmcbr.PSMethodSCMCBR;
-import de.d3web.kernel.psmethods2.scmcbr.SCMCBRModel;
-import de.d3web.kernel.psmethods2.scmcbr.SCMCBRRelation;
+import de.d3web.kernel.psmethods.scmcbr.PSMethodSCMCBR;
+import de.d3web.kernel.psmethods.scmcbr.SCMCBRModel;
+import de.d3web.kernel.psmethods.scmcbr.SCMCBRRelation;
 
 /**
  * 
