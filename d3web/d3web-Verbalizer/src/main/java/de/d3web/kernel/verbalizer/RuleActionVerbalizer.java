@@ -85,6 +85,7 @@ public class RuleActionVerbalizer implements Verbalizer {
 	@Override
 	public String verbalize(Object o, RenderingFormat targetFormat, Map<String, Object> parameter) {
 		// test, if targetformat is legal for this verbalizer
+
 		if (targetFormat != RenderingFormat.HTML) {
 			Logger.getLogger("Verbalizer").warning(
 					"RenderingTarget" + targetFormat + " is not supported by RuleActionVerbalizer!");
@@ -239,7 +240,12 @@ public class RuleActionVerbalizer implements Verbalizer {
 			else if (item instanceof FormulaNumber) {
 				s += ((FormulaNumber) item).toString();
 			}
-			else if (item instanceof IDObject) s += getIDObjectVerbalistion((IDObject) item);
+			else if (item instanceof IDObject) {
+				s += getIDObjectVerbalistion((IDObject) item);
+			}
+			else {
+				s += DefaultVerbalizer.verbalizeUnexpectedObject(item);
+			}
 
 			// do, if its not the last ListElement
 			if (iter.hasNext()) s += "; ";

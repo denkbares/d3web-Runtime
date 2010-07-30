@@ -20,6 +20,7 @@
 
 package de.d3web.kernel.verbalizer;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import de.d3web.kernel.verbalizer.VerbalizationManager.RenderingFormat;
@@ -71,6 +72,56 @@ public class DefaultVerbalizer implements Verbalizer {
 		// as this is the defaultVerbalizer (that should render everything) this
 		// shall never happen!
 		return null;
+	}
+
+	public static String verbalizeUnexpectedObject(Object o) {
+		if (o == null) {
+			return "null";
+		}
+		else if (o instanceof long[]) {
+			return "(long[]) " + Arrays.toString((long[]) o);
+		}
+		else if (o instanceof int[]) {
+			return "(int[]) " + Arrays.toString((int[]) o);
+		}
+		else if (o instanceof short[]) {
+			return "(short[]) " + Arrays.toString((short[]) o);
+		}
+		else if (o instanceof char[]) {
+			return "(char[]) " + Arrays.toString((char[]) o);
+		}
+		else if (o instanceof byte[]) {
+			return "(byte[]) " + Arrays.toString((byte[]) o);
+		}
+		else if (o instanceof boolean[]) {
+			return "(boolean[]) " + Arrays.toString((boolean[]) o);
+		}
+		else if (o instanceof float[]) {
+			return "(float[]) " + Arrays.toString((float[]) o);
+		}
+		else if (o instanceof double[]) {
+			return "(double[]) " + Arrays.toString((double[]) o);
+		}
+		else if (o instanceof Object[]) {
+			return "(Object[]) " + verbalizerObjectArray((Object[]) o);
+		}
+		else {
+			return "(" + o.getClass().getName() + ") " + o.toString();
+		}
+	}
+
+	public static String verbalizerObjectArray(Object[] a) {
+
+		int iMax = a.length - 1;
+		if (iMax == -1) return "[]";
+
+		StringBuilder b = new StringBuilder();
+		b.append('[');
+		for (int i = 0;; i++) {
+			b.append("(" + a[i].getClass().getSimpleName() + ") " + String.valueOf(a[i]));
+			if (i == iMax) return b.append(']').toString();
+			b.append(", ");
+		}
 	}
 
 	/**
