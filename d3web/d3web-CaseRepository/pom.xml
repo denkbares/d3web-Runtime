@@ -1,10 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.uniwue.d3web</groupId>
 	<artifactId>d3web-CaseRepository</artifactId>
 	<name>d3web-CaseRepository</name>
 	<version>0.2-SNAPSHOT</version>
-
+	
 	<parent>
 		<artifactId>d3web</artifactId>
 		<groupId>de.uniwue.d3web</groupId>
@@ -12,41 +13,41 @@
 	</parent>
 	
 	<build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <argLine>-Xmx1024M</argLine>
-          <includes>
-            <include>**/CaseRepositoryPersistenceTest.java</include>
-          </includes>
-        </configuration>
-      </plugin>
-      <plugin>
-  			<groupId>org.apache.maven.plugins</groupId>
-	        <artifactId>maven-dependency-plugin</artifactId>
-        	<executions>
-    	      <execution>
-	            <id>copy-dependencies</id>
-            	<phase>test-compile</phase>
-        	    <goals>
-    	          <goal>build-classpath</goal>
-	            </goals>
-            	<configuration>
-        	      <outputDirectory>target/dependencies</outputDirectory>
-    	          <overWriteReleases>false</overWriteReleases>
-	              <overWriteSnapshots>false</overWriteSnapshots>
-            	  <overWriteIfNewer>true</overWriteIfNewer>
-            	  <pathSeparator>;</pathSeparator>
-            	  <outputFile>target/dependencies/output.txt</outputFile>
-        	    </configuration>
-    	      </execution>
-	        </executions>
-  		</plugin>
-    </plugins>
-  </build>
-
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<argLine>-Xmx1024M</argLine>
+					<includes>
+						<include>**/CaseRepositoryPersistenceTest.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>test-compile</phase>
+						<goals>
+							<goal>build-classpath</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>target/dependencies</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>false</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
+							<pathSeparator>;</pathSeparator>
+							<outputFile>target/dependencies/output.txt</outputFile>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	
 	<dependencies>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
@@ -57,25 +58,26 @@
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Config</artifactId>
-                        <version>${project.version}</version>
+			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Persistence</artifactId>
-                        <version>${project.version}</version>
+			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-	  		<groupId>de.uniwue.d3web</groupId>
-	  		<artifactId>d3web-PluginManager</artifactId>
-                        <version>${project.version}</version>
-	  	</dependency>
-	  	<dependency>
-	  		<groupId>de.uniwue.d3web</groupId>
-	  		<artifactId>d3web-Persistence-Basic-jpf-plugin</artifactId>
-                        <version>${project.version}</version>
-	  		<scope>runtime</scope>
-	  	</dependency>	  	
+			<groupId>de.uniwue.d3web</groupId>
+			<artifactId>d3web-PluginManager</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>de.uniwue.d3web</groupId>
+			<artifactId>d3web-Persistence-Basic-jpf-plugin</artifactId>
+			<version>${project.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+			
 	</dependencies>
 </project>
