@@ -191,5 +191,6 @@
 		<module>d3web-XCL</module>
 		<module>d3web-GlobalTests</module>
 		<module>d3web-Scoring</module>
+		<module>d3web-DiaFlux-jpf-plugin</module>
 	</modules>
 </project>
