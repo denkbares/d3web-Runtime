@@ -13,12 +13,12 @@ import de.d3web.core.session.interviewmanager.InterviewAgenda.AgendaEntry;
 
 public class DFSTreeAgendaSortingStrategy implements AgendaSortingStrategy {
 	
-	private KnowledgeBase knowledgeBase;
-	private Map<TerminologyObject, Integer> qasetIndex;
+	private final KnowledgeBase knowledgeBase;
+	private final Map<TerminologyObject, Integer> qasetIndex;
 	private int maxOrderingNumber;
 	
 	private class DFSTreeSortingComparator implements Comparator<AgendaEntry> {
-		private Map<TerminologyObject, Integer> index;
+		private final Map<TerminologyObject, Integer> index;
 		public DFSTreeSortingComparator(
 				Map<TerminologyObject, Integer> qasetIndex) {
 			this.index = qasetIndex;

@@ -49,8 +49,8 @@ public class FactFactory {
 	 */
 	public static Fact createUserEnteredFact(
 			TerminologyObject terminologyObject, Value value) {
-		return new DefaultFact(terminologyObject, value, PSMethodUserSelected
-				.getInstance(), PSMethodUserSelected.getInstance());
+		return new DefaultFact(terminologyObject, value, PSMethodUserSelected.class,
+				PSMethodUserSelected.getInstance());
 	}
 
 	/**
@@ -68,6 +68,10 @@ public class FactFactory {
 	 */
 	public static Fact createUserEnteredFact(KnowledgeBase kb, String questionID, String answerID) {
 		Question question = kb.searchQuestion(questionID);
+		if (question == null) {
+			// if not found, then try to find a question with this name
+			question = (Question) kb.searchObjectForName(questionID);
+		}
 		if (question != null && question instanceof QuestionChoice) {
 			QuestionChoice qc = (QuestionChoice) question;
 			KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(kb);
@@ -94,6 +98,10 @@ public class FactFactory {
 	 */
 	public static Fact createUserEnteredFact(KnowledgeBase kb, String questionID, Double value) {
 		Question question = kb.searchQuestion(questionID);
+		if (question == null) {
+			// if not found, then try to find a question with this name
+			question = (Question) kb.searchObjectForName(questionID);
+		}
 		if (question != null && question instanceof QuestionNum) {
 			QuestionNum qn = (QuestionNum) question;
 			return createUserEnteredFact(qn, new NumValue(value));
