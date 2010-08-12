@@ -28,7 +28,9 @@ import java.util.Map;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.diaFlux.inference.IPath;
 import de.d3web.diaFlux.inference.Path;
+import de.d3web.diaFlux.inference.PathReference;
 
 /**
  *
@@ -36,42 +38,42 @@ import de.d3web.diaFlux.inference.Path;
  * Created on: 04.11.2009
  */
 public class DiaFluxCaseObject extends SessionObject {
-	
+
 	private final Map<Flow, FlowData> map;
-	private final List<Path> pathes;
-	
-	
+	private final List<IPath> pathes;
+
+
 	public DiaFluxCaseObject(CaseObjectSource theSourceObject, Map<Flow, FlowData> flowdatas) {
 		super(theSourceObject);
 		this.map = Collections.unmodifiableMap(flowdatas);
-		this.pathes = new ArrayList<Path>(5);
+		this.pathes = new ArrayList<IPath>(5);
 	}
-	
-	
 
-	
+
+
+
 	public FlowData getFlowData(Flow flow) {
 		return map.get(flow);
 	}
-	
-	
+
+
 	/**
 	 * Returns an unmodifiable Collection of the current pathes
-	 *  
+	 *
 	 */
-	public Collection<Path> getPathes() {
+	public Collection<IPath> getPathes() {
 		return Collections.unmodifiableCollection(pathes);
 	}
-	
-	
+
+
 	/**
 	 * Adds the provided path to the currently active pathes of the session.
 	 * If a path starting at the StartNode of the path is already contained,
-	 * the provided path is NOT added as an active Path. 
-	 * @param session 
-	 * @param support 
+	 * the provided path is NOT added as an active Path.
+	 * @param session
+	 * @param support
 	 * @param path to be add as active Path
-	 * 
+	 *
 	 * @return true if the path is a new active path (i.e. no path starting at the start
 	 * node of the provided path is already active), false otherwise
 	 */
@@ -79,36 +81,41 @@ public class DiaFluxCaseObject extends SessionObject {
 
 		if (!getNodeData(startNode).isActive())
 			throw new IllegalStateException("StartNode '" + startNode + "' does not have support and can not be added.");
-		
+
 		Path path = new Path(startNode, support);
-		
+
 		pathes.add(path);
 		return true;
-		
+
 	}
-	
-	
+
+
+	public void addPathRef(PathReference reference) {
+		pathes.add(reference);
+
+	}
+
 	/**
-	 * 
+	 *
 	 * @param path the path to remove
 	 * @return
 	 */
-	public boolean removePath(Path path) {
-		
+	public boolean removePath(IPath path) {
+
 		if (path.isEmpty()) {
 			pathes.remove(path);
 			return true;
 		} else {
-			
+
 			INode firstNode = path.getFirstNode();
 			INodeData nodeData = getNodeData(firstNode);
-			
+
 			if (nodeData.isActive())
 				throw new IllegalStateException("Path '" + path + "' is can not be removed as its first node '" + firstNode + "' is still active.");
-			
+
 			pathes.remove(path);
 			return true;
-			
+
 		}
 	}
 
@@ -123,6 +130,6 @@ public class DiaFluxCaseObject extends SessionObject {
 		Flow flow = node.getFlow();
 		return getFlowData(flow).getNodeData(node);
 	}
-	
+
 
 }

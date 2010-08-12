@@ -29,8 +29,6 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.Session;
-import de.d3web.diaFlux.flow.Flow;
-import de.d3web.diaFlux.flow.FlowSet;
 import de.d3web.diaFlux.flow.ISupport;
 import de.d3web.diaFlux.flow.RuleSupport;
 import de.d3web.diaFlux.flow.StartNode;
@@ -43,7 +41,7 @@ import de.d3web.diaFlux.inference.FluxSolver;
  * Created on: 03.11.2009
  */
 public class IndicateFlowAction extends PSAction {
-	
+
 	private final String flowName;
 	private final String startNodeName;
 	protected ISupport support;
@@ -60,55 +58,23 @@ public class IndicateFlowAction extends PSAction {
 
 	@Override
 	public void doIt(Session theCase, Object source, PSMethod psmethod) {
-		
-		
-		log("Indicating Startnode '"  + startNodeName +"' of flow '" + flowName + "'.", Level.FINE);
-		
-		StartNode startNode = findStartNode(theCase);
-		
+
+
+		Logger.getLogger(getClass().getName()).log(Level.FINE,
+				("Indicating Startnode '" + startNodeName + "' of flow '" + flowName + "'."));
+
+		StartNode startNode = DiaFluxUtils.findStartNode(theCase, flowName, startNodeName);
+
 		if (startNode == null) //start node could not be found. May happen during wiki startup
 			return;
-		
+
 		support = new RuleSupport((Rule) source);
-		
+
 		FluxSolver.indicateFlowFromAction(theCase, startNode, support);
 
 	}
-	
-	/**
-	 * returns the StartNode that is called by the supplied action
-	 */
-	protected StartNode findStartNode(Session theCase) {
-		
-		FlowSet flowSet = DiaFluxUtils.getFlowSet(theCase);
-		
-		Flow subflow = flowSet.getByName(flowName);
-		
-		if (subflow == null) {
-			log("Flowchart '" + flowName +"' not found.", Level.SEVERE);
-			return null;
-		}
-		
-		
-		List<StartNode> startNodes = subflow.getStartNodes();
-		
-		for (StartNode iNode : startNodes) {
-			if (iNode.getName().equalsIgnoreCase(startNodeName)) {
-				return iNode;
-				
-			}
-		}
-		
-		log("Startnode '" + startNodeName + "' of flow '" + flowName +"' not found.", Level.SEVERE);
-		return null;
-		
-	}
-	
-	protected void log(String message, Level level) {
-		Logger.getLogger(getClass().getName()).log(level, message);
-	}
 
-	@Override 
+	@Override
 	public List<? extends NamedObject> getTerminalObjects() {
 		return new ArrayList<NamedObject>(0);
 	}
@@ -117,16 +83,16 @@ public class IndicateFlowAction extends PSAction {
 	public void undo(Session theCase, Object source, PSMethod psmethod) {
 		//TODO remove indication of Flow
 		System.out.println("+++TODO inIndicateFlowAction.undo()");
-		StartNode startNode = findStartNode(theCase);
-		
+		StartNode startNode = DiaFluxUtils.findStartNode(theCase, flowName, startNodeName);
+
 		FluxSolver.removeSupport(theCase, startNode, support);
-		
+
 	}
-	
+
 	public String getFlowName() {
 		return flowName;
 	}
-	
+
 	public String getStartNodeName() {
 		return startNodeName;
 	}

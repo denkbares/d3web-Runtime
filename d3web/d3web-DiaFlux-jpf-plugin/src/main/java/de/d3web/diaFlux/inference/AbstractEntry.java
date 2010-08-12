@@ -1,8 +1,5 @@
 package de.d3web.diaFlux.inference;
 
-import java.util.Collection;
-
-import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.INode;
 import de.d3web.diaFlux.flow.INodeData;
@@ -18,7 +15,7 @@ public abstract class AbstractEntry implements Entry {
 		this.support = support;
 	}
 
-	
+
 	@Override
 	public INode getNode() {
 		return node;
@@ -37,15 +34,28 @@ public abstract class AbstractEntry implements Entry {
 				+ Integer.toHexString(hashCode());
 	}
 
-
-	public boolean checkSupport(Session session) {
+	/**
+	 * Checks if this entry's support is still valid. If the support is no
+	 * longer valid, it is removed from the according NodeData. If it is valid,
+	 * nothing is done. Returns if the node is still active, i.e. if this entry
+	 * support is no longer valid, if this node has other support.
+	 *
+	 * @param session
+	 * @return if the node is still active
+	 */
+	protected boolean checkSupport(Session session) {
 		INodeData nodeData = DiaFluxUtils.getNodeData(getNode(), session);
-		
+
 		if (!support.isValid(session)) {
-			nodeData.removeSupport(support);
+			FluxSolver.removeSupport(session, getNode(), getSupport());
 		}
-		
+
 		return nodeData.isActive();
+	}
+
+	@Override
+	public boolean removeSupport(Session session) {
+		return FluxSolver.removeSupport(session, getNode(), getSupport());
 	}
 
 }

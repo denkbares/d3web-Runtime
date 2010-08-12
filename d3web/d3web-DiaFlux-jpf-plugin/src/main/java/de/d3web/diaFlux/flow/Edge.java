@@ -24,8 +24,6 @@
 package de.d3web.diaFlux.flow;
 
 import de.d3web.core.inference.condition.Condition;
-import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.SessionObject;
 
 
 /**
@@ -38,8 +36,6 @@ class Edge implements IEdge {
 	private final INode endNode;
 	private final Condition condition;
 	private final String id;
-	
-	private String name;
 	
 	public Edge(String id, INode startNode, INode endNode, Condition condition) {
 		

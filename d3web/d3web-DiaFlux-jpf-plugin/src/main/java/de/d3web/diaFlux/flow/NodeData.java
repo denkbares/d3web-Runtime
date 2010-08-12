@@ -23,6 +23,8 @@ package de.d3web.diaFlux.flow;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
@@ -30,10 +32,10 @@ import de.d3web.core.session.blackboard.SessionObject;
 public class NodeData extends SessionObject implements INodeData {
 
 	private final List<ISupport> supports;
-	
+
 	public NodeData(INode node) {
 		super(node);
-		
+
 		supports = new ArrayList<ISupport>(2);
 	}
 
@@ -46,26 +48,38 @@ public class NodeData extends SessionObject implements INodeData {
 	public boolean isActive() {
 		return !supports.isEmpty();
 	}
-	
-	
+
+
 	@Override
 	public boolean addSupport(Session session, ISupport support) {
 		if (!support.isValid(session))
 			throw new IllegalStateException("Can not add invalid support '" + support + "'.");
-		
+
+		if (supports.contains(support)) {
+			String msg = "Support '" + support + "' is already contained in Node '" + getNode()
+					+ "'.";
+			Logger.getLogger(getClass().getName()).log(Level.WARNING, msg);
+			return false;
+		}
+
 		return supports.add(support);
 	}
-	
+
 	@Override
-	public boolean removeSupport(ISupport entry) {
-		return supports.remove(entry);
+	public boolean removeSupport(ISupport support) {
+		if (!supports.contains(support)) {
+			return false;
+		}
+
+		boolean remove = supports.remove(support);
+		return remove;
 	}
-	
+
 	@Override
 	public List<ISupport> getSupports() {
 		return Collections.unmodifiableList(supports);
 	}
-	
+
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + "[" + getNode() + ", active=" + isActive() + ", support=" + supports.size() + "]" + Integer.toHexString(hashCode());

@@ -10,10 +10,10 @@ public class ActionNode extends Node {
 
 	public ActionNode(String id, String name, PSAction action) {
 		super(id, name);
-		
+
 		if (action == null)
 			throw new IllegalArgumentException("'action' must not be null.");
-		
+
 		this.action = action;
 	}
 
@@ -22,17 +22,17 @@ public class ActionNode extends Node {
 	public PSAction getAction() {
 		return action;
 	}
-	
+
 	@Override
 	public void doAction(Session session) {
-		getAction().doIt(session, this, FluxSolver.getInstance());		
+		getAction().doIt(session, this, session.getPSMethodInstance(FluxSolver.class));
 	}
-	
+
 	@Override
 	public void undoAction(Session session) {
-		getAction().undo(session, this, FluxSolver.getInstance());
+		getAction().undo(session, this, session.getPSMethodInstance(FluxSolver.class));
 	}
-	
-	
+
+
 
 }

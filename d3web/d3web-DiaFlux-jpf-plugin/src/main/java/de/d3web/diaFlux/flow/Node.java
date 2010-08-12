@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.d3web.core.inference.PSAction;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
@@ -32,42 +31,43 @@ import de.d3web.diaFlux.inference.Entry;
 import de.d3web.diaFlux.inference.NodeEntry;
 
 /**
- * 
- * @author hatko
  *
+ *
+ * @author Reinhard Hatko
+ * @created 08.08.2009
  */
 public abstract class Node implements INode, CaseObjectSource {
 
-	
+
 	protected final List<IEdge> outgoing;
 	protected final String id;
 	protected Flow flow;
 	protected String name;
-	
+
 	public Node(String id, String name) {
-		
+
 		this.id = id;
 		this.outgoing = new ArrayList<IEdge>();
 		this.name = name;
 	}
-	
+
 	@Override
 	public Entry createEntry(Session session, ISupport support) {
 		return new NodeEntry(this, support);
 	}
-	
-	
+
+
 	protected boolean addOutgoingEdge(IEdge edge) {
 		if (edge == null)
 			throw new IllegalArgumentException("edge must not be null");
-		
+
 		if (edge.getStartNode() != this)
 			throw new IllegalArgumentException("edge '" + edge + "' does not start at: " + this.toString());
-		
+
 		return outgoing.add(edge);
-		
+
 	}
-	
+
 	@Override
 	public final List<IEdge> getOutgoingEdges() {
 		return Collections.unmodifiableList(outgoing);
@@ -77,7 +77,7 @@ public abstract class Node implements INode, CaseObjectSource {
 	public Flow getFlow() {
 		return flow;
 	}
-	
+
 	@Override
 	public void setFlow(Flow flow) {
 		this.flow = flow;
@@ -87,12 +87,12 @@ public abstract class Node implements INode, CaseObjectSource {
 	public String getName() {
 		return name;
 	}
-	
+
 	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -110,10 +110,10 @@ public abstract class Node implements INode, CaseObjectSource {
 			return true;
 		if (obj == null)
 			return false;
-		
+
 		if (getClass() != obj.getClass())
 			return false;
-		
+
 		Node other = (Node) obj;
 		if (flow == null) {
 			if (other.flow != null)
@@ -127,7 +127,7 @@ public abstract class Node implements INode, CaseObjectSource {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + "[" + getID() +", " + getName() + "]";
@@ -144,6 +144,6 @@ public abstract class Node implements INode, CaseObjectSource {
 	public String getID() {
 		return id;
 	}
-	
-	
+
+
 }

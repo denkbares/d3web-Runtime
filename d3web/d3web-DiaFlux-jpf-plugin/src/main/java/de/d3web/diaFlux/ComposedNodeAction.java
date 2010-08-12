@@ -1,34 +1,33 @@
 package de.d3web.diaFlux;
 
-import java.util.logging.Level;
-
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.session.Session;
-import de.d3web.diaFlux.flow.INode;
-import de.d3web.diaFlux.flow.NodeSupport;
-import de.d3web.diaFlux.flow.StartNode;
-import de.d3web.diaFlux.inference.FluxSolver;
 
+/**
+ *
+ * @author Reinhard Hatko
+ * @created 12.08.2010
+ */
 public class ComposedNodeAction extends IndicateFlowAction {
 
-	
-		
 	public ComposedNodeAction(String flow, String node) {
 		super(flow, node);
 	}
-	
+
 	@Override
 	public void doIt(Session session, Object source, PSMethod psmethod) {
-		
-		log("Indicating Startnode '"  + getStartNodeName() + "' of flow '" + getFlowName() + "'.", Level.FINE);
-		
-		StartNode startNode = findStartNode(session);
-		INode composedNode = (INode) source;
-		support = new NodeSupport(composedNode);
-		
-		FluxSolver.indicateFlowFromNode(session, composedNode, startNode, support);
+
+		// Logger.getLogger(getClass().getName()).log(Level.FINE,
+		// ("Indicating Startnode '" + getStartNodeName() + "' of flow '" +
+		// getFlowName() + "'."));
+		//
+		// StartNode startNode = DiaFluxUtils.findStartNode(session,
+		// getFlowName(), getStartNodeName());
+		// INode composedNode = (INode) source;
+		// support = new NodeSupport(composedNode);
+		//
+		// FluxSolver.indicateFlowFromNode(session, composedNode, startNode,
+		// support);
 	}
-	
-	
 
 }

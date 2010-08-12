@@ -14,26 +14,37 @@ import de.d3web.diaFlux.flow.ISupport;
  */
 public interface Entry {
 
-
+	/**
+	 *
+	 * @return the node which was reached with this entry
+	 */
 	INode getNode();
-	
 
+	/**
+	 * @return the support of this entry. The node this entry represents can
+	 *         though have other supports
+	 */
 	ISupport getSupport();
 
-	boolean propagate(Session session, Collection<PropagationEntry> changes);
-	
-	
 	/**
-	 * Checks if this entry's support is still valid. 
-	 * If the support is no longer valid, it is removed from the according
-	 * NodeData. If it is valid, nothing is done.
-	 * Returns if the node is still active, i.e. if this entry support is no longer valid,
-	 * if this node has other support.
-	 * 
-	 * @param session
-	 * @return if the node is still active
+	 *
+	 *
+	 * @param session the current session
+	 * @param changes the changes of the current propagation
+	 * @return
 	 */
-	boolean checkSupport(Session session);
-	
-	
+	boolean propagate(Session session, Collection<PropagationEntry> changes);
+
+
+	// boolean checkSupport(Session session);
+
+	/**
+	 *
+	 *
+	 * @param session
+	 * @return true, if the support was successfully removed, false otherwise
+	 */
+	boolean removeSupport(Session session);
+
+
 }
