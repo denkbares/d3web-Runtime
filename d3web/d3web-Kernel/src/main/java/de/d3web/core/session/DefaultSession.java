@@ -94,7 +94,7 @@ public class DefaultSession implements Session {
 
 	// remove qaSetManager and qamFactory after Interview Refactoring
 	private QASetManager qaSetManager;
-	private QASetManagerFactory qamFactory = new DefaultQASetManagerFactory();
+	private final QASetManagerFactory qamFactory = new DefaultQASetManagerFactory();
 
 	private static LinkedList<PSMethod> commonPSMethods = new LinkedList<PSMethod>(
 			Arrays.asList(
@@ -176,16 +176,18 @@ public class DefaultSession implements Session {
 
 	private void initSession(KnowledgeBase kb) {
 		this.kb = kb;
-		this.propagationController = new DefaultPropagationManager(this);
-		this.interview = new DefaultInterview(this, this.getKnowledgeBase());
-		this.interview.setFormStrategy(new NextUnansweredQuestionFormStrategy());
-		this.protocol = new DefaultProtocol();
 		this.blackboard = new DefaultBlackboard(this);
 		this.properties = new Properties();
 		this.dcMarkup = new DCMarkup();
 		this.dynamicStore = new HashMap<CaseObjectSource, SessionObject>();
 		// add problem-solving methods used for this case
 		this.usedPSMethods = new LinkedList<PSMethod>();
+		this.propagationController = new DefaultPropagationManager(this);
+
+		// Interview should be defined very late, since it uses blackboard
+		this.interview = new DefaultInterview(this);
+		this.interview.setFormStrategy(new NextUnansweredQuestionFormStrategy());
+		this.protocol = new DefaultProtocol();
 	}
 
 	private void checkStateAndInsertPSM(KnowledgeBase kb, PSConfig psConfig) {
@@ -316,6 +318,7 @@ public class DefaultSession implements Session {
 	 * @return the QASetManager (e.g. DialogController) defined for this Session
 	 * @deprecated will be replaced by {@link Interview}
 	 */
+	@Deprecated
 	@Override
 	public QASetManager getQASetManager() {
 		if (qaSetManager == null) {

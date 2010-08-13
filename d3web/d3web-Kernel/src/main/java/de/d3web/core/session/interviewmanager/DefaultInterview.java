@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
- * Computer Science VI, University of Wuerzburg
+ * Copyright (C) 2010 denkbares GmbH, Würzburg, Germany
  * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
@@ -25,10 +24,9 @@ import java.util.List;
 
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.Indication;
-import de.d3web.core.knowledge.InterviewObject;
-import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.Indication.State;
+import de.d3web.core.knowledge.InterviewObject;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -54,8 +52,7 @@ import de.d3web.core.session.values.UndefinedValue;
 public class DefaultInterview implements Interview {
 
 	private final InterviewAgenda agenda;
-	private KnowledgeBase knowledgeBase;
-	private Session session;
+	private final Session session;
 
 	// Strategy: how to generate the forms for the dialog?
 	// E.g.: One question vs. multiple questions presented by the dialog
@@ -70,10 +67,9 @@ public class DefaultInterview implements Interview {
 	 * @param knowledgeBase
 	 *            the specified knowledge base
 	 */
-	public DefaultInterview(Session session, KnowledgeBase knowledgeBase) {
+	public DefaultInterview(Session session) {
 		this.session = session;
-		this.knowledgeBase = knowledgeBase;
-		this.agenda = new InterviewAgenda(this.knowledgeBase);
+		this.agenda = new InterviewAgenda(this.session);
 		this.formStrategy = new NextUnansweredQuestionFormStrategy();
 	}
 

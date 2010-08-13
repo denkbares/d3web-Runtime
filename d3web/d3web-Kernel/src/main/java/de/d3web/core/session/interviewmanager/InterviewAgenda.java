@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2010 denkbares GmbH, Würzburg, Germany
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
+ */
 package de.d3web.core.session.interviewmanager;
 
 import java.util.ArrayList;
@@ -7,6 +25,7 @@ import java.util.List;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.session.Session;
 
 /**
  * The InterviewAgenda represents the Interview Objects, which should appear
@@ -21,7 +40,7 @@ public class InterviewAgenda {
 	}
 
 	private List<AgendaEntry> agenda;
-	private KnowledgeBase knowledgeBase;
+	private final Session session;
 	// Strategy: how to sort the entries on the agenda?
 	private AgendaSortingStrategy agendaSortingStrategy;
 
@@ -99,14 +118,14 @@ public class InterviewAgenda {
 	 * 
 	 * @param knowledgeBase the specified {@link KnowledgeBase}.
 	 */
-	public InterviewAgenda(KnowledgeBase knowledgeBase) {
+	public InterviewAgenda(Session session) {
 		agenda = new ArrayList<AgendaEntry>();
-		this.knowledgeBase = knowledgeBase;
-		this.agendaSortingStrategy = new DFSTreeAgendaSortingStrategy(this.knowledgeBase);
+		this.session = session;
+		this.agendaSortingStrategy = new DFSTreeAgendaSortingStrategy(this.session);
 
 		// Put the init questions to the agenda first:
 		// TODO: move to PSMethodInit.init() by adding indication to blackboard
-		List<? extends QASet> initQuestions = this.knowledgeBase.getInitQuestions();
+		List<? extends QASet> initQuestions = this.session.getKnowledgeBase().getInitQuestions();
 		for (QASet initQuestion : initQuestions) {
 			append(initQuestion);
 		}
@@ -163,7 +182,7 @@ public class InterviewAgenda {
 	 * Sorts the agenda with respect to the newly added items.
 	 */
 	private void organizeAgenda() {
-		agendaSortingStrategy.sort(this.agenda);
+		this.agenda = agendaSortingStrategy.sort(this.agenda);
 	}
 
 	private void trace(String string) {
