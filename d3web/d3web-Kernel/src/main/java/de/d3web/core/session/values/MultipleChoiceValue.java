@@ -20,8 +20,9 @@
 package de.d3web.core.session.values;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.knowledge.terminology.Choice;
@@ -38,12 +39,23 @@ import de.d3web.core.session.Value;
  */
 public class MultipleChoiceValue implements QuestionValue {
 
-	private List<ChoiceValue> values = new LinkedList<ChoiceValue>();
-	private String id = "";
+	private final Collection<ChoiceValue> values;
 	public static String ID_SEPARATOR = "#####";
 
 	public MultipleChoiceValue(List<ChoiceValue> values) {
-		this.values = values;
+		this.values = new HashSet<ChoiceValue>(values);
+	}
+
+	public static MultipleChoiceValue fromChoices(List<Choice> choices) {
+		ArrayList<ChoiceValue> values = new ArrayList<ChoiceValue>(choices.size());
+		for (Choice choice : choices) {
+			values.add(new ChoiceValue(choice));
+		}
+		return new MultipleChoiceValue(values);
+	}
+
+	public String getAnswerChoicesID() {
+		String id = "";
 		if (this.values != null) {
 			for (ChoiceValue choiceValue : this.values) {
 				id += choiceValue.getAnswerChoiceID() + ID_SEPARATOR;
@@ -52,9 +64,6 @@ public class MultipleChoiceValue implements QuestionValue {
 				id = id.substring(0, id.length() - ID_SEPARATOR.length());
 			}
 		}
-	}
-
-	public String getAnswerChoicesID() {
 		return id;
 	}
 
@@ -97,10 +106,9 @@ public class MultipleChoiceValue implements QuestionValue {
 		if (this == obj) return true;
 		if (getClass() != obj.getClass()) return false;
 		MultipleChoiceValue other = (MultipleChoiceValue) obj;
-		if (values == null) {
-			if (other.values != null) return false;
-		}
-		else if (!values.equals(other.values)) return false;
+		if (this.values == other.values) return true;
+		if (this.values == null) return false;
+		if (!values.equals(other.values)) return false;
 		return true;
 	}
 

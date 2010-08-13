@@ -98,7 +98,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	/**
 	 * Hashes the objects for names (unique name assumption required)
 	 */
-	private final Map<String, IDObject> objectNameMap = new HashMap<String, IDObject>();
+	private final Map<String, TerminologyObject> objectNameMap = new HashMap<String, TerminologyObject>();
 
 	/**
 	 * Map with key="ps-method type" value="list of e.g. rules provided by this
@@ -699,7 +699,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	 * @author joba
 	 * @date 15.04.2010
 	 */
-	public IDObject searchObjectForName(String name) {
+	public TerminologyObject searchObjectForName(String name) {
 		return this.objectNameMap.get(name);
 	}
 
