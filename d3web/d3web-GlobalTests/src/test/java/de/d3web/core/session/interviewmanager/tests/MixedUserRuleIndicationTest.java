@@ -69,11 +69,13 @@ public class MixedUserRuleIndicationTest {
 		init = kbm.createQContainer("init");
 		qc = kbm.createQContainer("qc");
 
-		// ++ root {container} ++
-		// heightWeightQuestions {container}
+		// THE QUESTION TREE
+		// init {container}
 		// - weight [num]
 		// -- abnormalWeight [num]
 		// - height [num]
+		// qc {container}
+		// - importantQuestions
 
 		weight = kbm.createQuestionNum("weight", init);
 		abnormalWeight = kbm.createQuestionNum("abnormalWeight", weight);
@@ -137,8 +139,6 @@ public class MixedUserRuleIndicationTest {
 		session.getBlackboard().addInterviewFact(
 				FactFactory.createFact(height, new Indication(State.INSTANT_INDICATED),
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
-
-		InterviewAgenda agenda = session.getInterview().getInterviewAgenda();
 
 		assertEquals(height, session.getInterview().nextForm().getInterviewObject());
 	}
