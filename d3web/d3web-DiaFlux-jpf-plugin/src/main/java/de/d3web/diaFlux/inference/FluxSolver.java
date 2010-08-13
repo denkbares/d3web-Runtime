@@ -89,14 +89,6 @@ public class FluxSolver implements PSMethod {
 
 	}
 
-	public static void indicateFlowFromNode(Session session, INode composedNode, StartNode startNode, ISupport support) {
-		FluxSolver.addSupport(session, startNode, support);
-
-		DiaFluxUtils.getFlowData(session).addPath(session, startNode, support);
-
-
-	}
-
 
 	public static boolean removeSupport(Session session, INode node, ISupport support) {
 		INodeData nodeData = DiaFluxUtils.getNodeData(node, session);
@@ -127,25 +119,29 @@ public class FluxSolver implements PSMethod {
 
 
 	@Override
-	public void propagate(Session theCase, Collection<PropagationEntry> changes) {
+	public void propagate(Session session, Collection<PropagationEntry> changes) {
 
-		if (!DiaFluxUtils.isFlowCase(theCase)) return;
+		if (!DiaFluxUtils.isFlowCase(session)) return;
+
+		DiaFluxCaseObject caseObject = DiaFluxUtils.getFlowData(session);
+
+		if (caseObject.checkPropagationTime(session)) {
+
+		}
 
 		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO, ("Start propagating: " + changes));
 
 		// checkFCIndications(changes, theCase);
 
-		DiaFluxCaseObject caseObject = DiaFluxUtils.getFlowData(theCase);
-
+		int i = 0;
 		boolean continueFlowing = true;
-
 		while (continueFlowing) {
-
+			i++;
 			continueFlowing = false;
 
 			for (IPath path : new ArrayList<IPath>(caseObject.getPathes())) {
 
-				continueFlowing |= path.propagate(theCase, changes);
+				continueFlowing |= path.propagate(session, changes);
 
 				// if path collapsed completely, remove it.
 				if (path.isEmpty())
@@ -153,7 +149,8 @@ public class FluxSolver implements PSMethod {
 			}
 
 		}
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO, "Finished propagating.");
+		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+				"Finished propagating after " + i + " iterations.");
 
 	}
 

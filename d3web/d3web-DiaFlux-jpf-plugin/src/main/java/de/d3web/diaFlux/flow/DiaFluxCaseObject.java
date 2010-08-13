@@ -41,6 +41,7 @@ public class DiaFluxCaseObject extends SessionObject {
 
 	private final Map<Flow, FlowData> map;
 	private final List<IPath> pathes;
+	private long lastPropagationTime = Long.MIN_VALUE;
 
 
 	public DiaFluxCaseObject(CaseObjectSource theSourceObject, Map<Flow, FlowData> flowdatas) {
@@ -48,9 +49,6 @@ public class DiaFluxCaseObject extends SessionObject {
 		this.map = Collections.unmodifiableMap(flowdatas);
 		this.pathes = new ArrayList<IPath>(5);
 	}
-
-
-
 
 	public FlowData getFlowData(Flow flow) {
 		return map.get(flow);
@@ -131,5 +129,27 @@ public class DiaFluxCaseObject extends SessionObject {
 		return getFlowData(flow).getNodeData(node);
 	}
 
+	/**
+	 * Checks if a new propagation has started by comparing the current
+	 * propagation time with the last one. Returns, if a new propagation has
+	 * started.
+	 * 
+	 * @param session the current session
+	 */
+	public boolean checkPropagationTime(Session session) {
+		long propagationTime = session.getPropagationManager().getPropagationTime();
+
+		boolean newPropagation;
+		if (propagationTime > lastPropagationTime) {
+			newPropagation = true;
+		}
+		else {
+			newPropagation = false;
+		}
+
+		lastPropagationTime = propagationTime;
+
+		return newPropagation;
+	}
 
 }

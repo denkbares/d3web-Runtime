@@ -46,9 +46,9 @@ public class IndicateFlowAction extends PSAction {
 	private final String startNodeName;
 	protected ISupport support;
 
-	public IndicateFlowAction(String flow, String node) {
-		this.flowName = flow;
-		this.startNodeName = node;
+	public IndicateFlowAction(String flowName, String startNodeName) {
+		this.flowName = flowName;
+		this.startNodeName = startNodeName;
 	}
 
 	@Override
