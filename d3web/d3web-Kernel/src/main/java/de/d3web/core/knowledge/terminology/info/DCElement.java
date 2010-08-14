@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.core.knowledge.terminology.info;
@@ -66,8 +66,9 @@ public class DCElement {
 	}
 
 	/**
-	 * Searches DCElement in the list of all created DCElements
-	 * If none is found, one will be created.
+	 * Searches DCElement in the list of all created DCElements If none is
+	 * found, one will be created.
+	 * 
 	 * @param label of the DCElement
 	 * @return DCElement with the given label
 	 */
@@ -75,8 +76,7 @@ public class DCElement {
 		Iterator<DCElement> iter = getIterator();
 		while (iter.hasNext()) {
 			DCElement dce = iter.next();
-			if (dce.getLabel().equalsIgnoreCase(label))
-				return dce;
+			if (dce.getLabel().equalsIgnoreCase(label)) return dce;
 		}
 		return new DCElement(label);
 	}
@@ -88,8 +88,7 @@ public class DCElement {
 	 * 
 	 * a Date is encoded as "YYYY-M-D h:m"
 	 * 
-	 * @param dateString
-	 *            String
+	 * @param dateString String
 	 * @return Date
 	 */
 	public static Date string2date(String dateString) {
@@ -107,15 +106,17 @@ public class DCElement {
 			c.set(Calendar.HOUR_OF_DAY, h);
 			c.set(Calendar.MINUTE, mi);
 			return c.getTime();
-		} catch (NumberFormatException e) {
-//			Logger.getLogger("de.d3web").log(Level.WARNING,
-//					e.getLocalizedMessage(), e);
-		    Logger.getLogger("de.d3web").log(Level.WARNING, "can't parse date '" + dateString + "'");
+		}
+		catch (NumberFormatException e) {
+			// Logger.getLogger("de.d3web").log(Level.WARNING,
+			// e.getLocalizedMessage(), e);
+			Logger.getLogger("de.d3web").log(Level.WARNING, "can't parse date '" + dateString + "'");
 			return new Date();
-		} catch (NoSuchElementException e2) {
-//			Logger.getLogger("de.d3web").log(Level.WARNING,
-//					e2.getLocalizedMessage(), e2);
-            Logger.getLogger("de.d3web").log(Level.WARNING, "can't parse date '" + dateString + "'");
+		}
+		catch (NoSuchElementException e2) {
+			// Logger.getLogger("de.d3web").log(Level.WARNING,
+			// e2.getLocalizedMessage(), e2);
+			Logger.getLogger("de.d3web").log(Level.WARNING, "can't parse date '" + dateString + "'");
 			return new Date();
 		}
 	}
@@ -126,14 +127,13 @@ public class DCElement {
 	 * 
 	 * a Date is encoded as "YYYY-M-D h:m"
 	 * 
-	 * @param date
-	 *            Date
+	 * @param date Date
 	 * @return String
 	 */
 	public static String date2string(Date date) {
-        Calendar c = Calendar.getInstance();
+		Calendar c = Calendar.getInstance();
 		c.setTime(date);
-        // YYYY-MM-DD hh:mm
+		// YYYY-MM-DD hh:mm
 		return "" + c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1)
 				+ "-" + c.get(Calendar.DAY_OF_MONTH) + " "
 				+ c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE);

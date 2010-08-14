@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.basics.usermanaging;
@@ -50,8 +50,7 @@ public class UserLoader {
 	}
 
 	/**
-	 * @param doc
-	 *            org.w3c.dom.Document
+	 * @param doc org.w3c.dom.Document
 	 */
 	private void buildUserLists(Document doc) {
 		try {
@@ -77,11 +76,13 @@ public class UserLoader {
 
 				if (admin.equalsIgnoreCase("TRUE")) {
 					u.setAdmin(true);
-				} else {
+				}
+				else {
 					users.add(u);
 				}
 			}
-		} catch (Exception x) {
+		}
+		catch (Exception x) {
 			logger.error(x);
 		}
 	}
@@ -111,28 +112,28 @@ public class UserLoader {
 
 			buildUserLists(doc);
 
-		} catch (Exception x) {
+		}
+		catch (Exception x) {
 			logger.error("no user-xml-file found.");
 		}
 
 	}
 
 	/**
-	 * @param newFileURL
-	 *            java.net.URL
+	 * @param newFileURL java.net.URL
 	 */
 	public void setFileURL(java.net.URL newFileURL) {
 		fileURL = newFileURL;
 	}
 
 	/**
-	 * @param newFileURL
-	 *            java.net.URL
+	 * @param newFileURL java.net.URL
 	 */
 	public void setFileURL(String urlstg) {
 		try {
 			fileURL = new URL(urlstg);
-		} catch (Exception x) {
+		}
+		catch (Exception x) {
 			logger.error("URL: " + urlstg + " not valid!");
 		}
 	}

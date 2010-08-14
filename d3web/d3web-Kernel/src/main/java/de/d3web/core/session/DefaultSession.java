@@ -69,8 +69,8 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
 /**
  * The {@link D3WebSession} is the default implementation of {@link Session}.
  * Here, the {@link Blackboard}, {@link Interview}, and
- * {@link PropagationManager} are managed, that together represent the
- * behavior of a {@link Session}.
+ * {@link PropagationManager} are managed, that together represent the behavior
+ * of a {@link Session}.
  * 
  * @author joba
  * @see SessionObject
@@ -98,17 +98,17 @@ public class DefaultSession implements Session {
 
 	private static LinkedList<PSMethod> commonPSMethods = new LinkedList<PSMethod>(
 			Arrays.asList(
-			PSMethodUserSelected.getInstance(),
-			new PSMethodDialogControlling(),
-			PSMethodContraIndication.getInstance(),
-			PSMethodNextQASet.getInstance(),
-			PSMethodAbstraction.getInstance(),
-			PSMethodSuppressAnswer.getInstance(),
-			PSMethodHeuristic.getInstance(),
-			PSMethodInit.getInstance(),
-			PSMethodParentQASet.getInstance(),
-			PSMethodInterview.getInstance()
-			));
+					PSMethodUserSelected.getInstance(),
+					new PSMethodDialogControlling(),
+					PSMethodContraIndication.getInstance(),
+					PSMethodNextQASet.getInstance(),
+					PSMethodAbstraction.getInstance(),
+					PSMethodSuppressAnswer.getInstance(),
+					PSMethodHeuristic.getInstance(),
+					PSMethodInit.getInstance(),
+					PSMethodParentQASet.getInstance(),
+					PSMethodInterview.getInstance()
+					));
 
 	/**
 	 * Creates a new user case with the specified knowledge base. <br>

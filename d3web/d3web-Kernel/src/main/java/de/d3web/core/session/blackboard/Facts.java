@@ -26,11 +26,10 @@ public class Facts {
 	 * If the list of facts must contain only facts with diagnosis states as
 	 * values, otherwise an IllegalArgumentException is thrown.
 	 * 
-	 * @param facts
-	 *            the facts to be merged
+	 * @param facts the facts to be merged
 	 * @return the fact with the highest priority
-	 * @throws IllegalArgumentException
-	 *             if a non-solution-state fact is specified
+	 * @throws IllegalArgumentException if a non-solution-state fact is
+	 *         specified
 	 */
 	public static Fact mergeSolutionFacts(Fact[] facts) throws IllegalArgumentException {
 		Fact maxFact = null;
@@ -57,11 +56,10 @@ public class Facts {
 	 * If the list of facts must contain only facts with diagnosis states as
 	 * values, otherwise an IllegalArgumentException is thrown.
 	 * 
-	 * @param facts
-	 *            the facts to be merged
+	 * @param facts the facts to be merged
 	 * @return the fact with the highest priority
-	 * @throws IllegalArgumentException
-	 *             if a non-solution-state fact is specified
+	 * @throws IllegalArgumentException if a non-solution-state fact is
+	 *         specified
 	 */
 	public static Fact mergeSolutionFacts(List<Fact> facts) throws IllegalArgumentException {
 		return mergeSolutionFacts(facts.toArray(new Fact[facts.size()]));
@@ -76,11 +74,10 @@ public class Facts {
 	 * values, otherwise an IllegalArgumentException is thrown.
 	 * 
 	 * 
-	 * @param facts
-	 *            the facts to be merged
+	 * @param facts the facts to be merged
 	 * @return the fact with the highest priority
-	 * @throws IllegalArgumentException
-	 *             if a non-indication-state fact is specified
+	 * @throws IllegalArgumentException if a non-indication-state fact is
+	 *         specified
 	 */
 	public static Fact mergeIndicationFacts(Fact[] facts) throws IllegalArgumentException {
 		Fact maxFact = null;
@@ -108,11 +105,10 @@ public class Facts {
 	 * values, otherwise an IllegalArgumentException is thrown.
 	 * 
 	 * 
-	 * @param facts
-	 *            the facts to be merged
+	 * @param facts the facts to be merged
 	 * @return the fact with the highest priority
-	 * @throws IllegalArgumentException
-	 *             if a non-indication-state fact is specified
+	 * @throws IllegalArgumentException if a non-indication-state fact is
+	 *         specified
 	 */
 	public static Fact mergeIndicationFacts(List<Fact> facts) throws IllegalArgumentException {
 		return mergeIndicationFacts(facts.toArray(new Fact[facts.size()]));
@@ -123,8 +119,7 @@ public class Facts {
 	 * This method handles to print a warning if (unexpected) multiple facts are
 	 * provided and returns the most current fact.
 	 * 
-	 * @param facts
-	 *            the facts to be merged
+	 * @param facts the facts to be merged
 	 * @return the unique or most recent fact
 	 */
 	public static Fact mergeUniqueFact(Fact[] facts) {
@@ -135,9 +130,9 @@ public class Facts {
 			String className = facts[0].getPSMethod().getClass().getName();
 			Logger.getLogger(className).warning(
 					"Method "
-					+ className
-					+ ".mergeFacts(Fact[]) is called with multiple facts. "
-					+ "This usually should not happen.");
+							+ className
+							+ ".mergeFacts(Fact[]) is called with multiple facts. "
+							+ "This usually should not happen.");
 		}
 		return facts[facts.length - 1];
 	}
@@ -162,8 +157,7 @@ public class Facts {
 	 * <li>AnswerDate: the earliest of the dates
 	 * </ul>
 	 * 
-	 * @param facts
-	 *            the facts to be merged
+	 * @param facts the facts to be merged
 	 * @return the unique or most recent fact
 	 */
 	public static Fact mergeAnswerFacts(Fact[] facts) {
@@ -194,12 +188,13 @@ public class Facts {
 				Number d1 = (Number) num1.getValue();
 				Number d2 = (Number) num2.getValue();
 				double sum = d1.doubleValue() + d2.doubleValue();
-				resultValue = new NumValue(sum); // deleteme: AnswerFactory.createAnswerNum(sum);
+				resultValue = new NumValue(sum); // deleteme:
+													// AnswerFactory.createAnswerNum(sum);
 			}
 			else if (question instanceof QuestionNum) {
 				// for mc questions, combine the choices
-//				AnswerChoice mc1 = (AnswerChoice) resultAnswer;
-//				AnswerChoice mc2 = (AnswerChoice) answer;
+				// AnswerChoice mc1 = (AnswerChoice) resultAnswer;
+				// AnswerChoice mc2 = (AnswerChoice) answer;
 				// TODO: will not work until mc answers are introduced!
 				throw new IllegalStateException("not implemented yet");
 			}
@@ -222,8 +217,7 @@ public class Facts {
 	 * other facts will be ignored in that case. Otherwise all facts are
 	 * returned.
 	 * 
-	 * @param facts
-	 *            the facts to be filtered
+	 * @param facts the facts to be filtered
 	 * @return the facts to be considered when merging
 	 */
 	private static Fact[] filterFactsForSourceSolvers(Fact[] facts) {
@@ -267,8 +261,7 @@ public class Facts {
 	 * happens, because the {@link PSMethod#mergeFacts(Fact[])} is never called
 	 * with an empty set of facts).
 	 * 
-	 * @param facts
-	 *            the facts that are not expected by the PSMethod
+	 * @param facts the facts that are not expected by the PSMethod
 	 * @return an {@link IllegalStateException} if there are any facts, null
 	 *         otherwise
 	 */
@@ -276,6 +269,6 @@ public class Facts {
 		if (facts == null || facts.length == 0) return null;
 		throw new IllegalStateException(
 				"Invalid facts created for PSMethod "
-				+ facts[0].getPSMethod());
+						+ facts[0].getPSMethod());
 	}
 }

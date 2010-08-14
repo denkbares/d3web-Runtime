@@ -28,7 +28,7 @@ import de.d3web.diaFlux.flow.INode;
 /**
  * 
  * @author Reinhard Hatko
- * @created 12.08.2010 
+ * @created 12.08.2010
  */
 public interface IPath {
 

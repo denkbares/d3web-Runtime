@@ -25,5 +25,6 @@ import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.session.Session;
 
 public interface FormStrategy {
+
 	Form nextForm(List<InterviewObject> agendaEnties, Session session);
 }

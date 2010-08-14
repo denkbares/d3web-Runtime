@@ -310,7 +310,7 @@ public class InterviewBot {
 	private void setCaseValue(Session session, Question q, Value v) {
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(q, v, PSMethodUserSelected.getInstance(),
-				PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance()));
 	}
 
 	/**
@@ -397,7 +397,7 @@ public class InterviewBot {
 		public Builder forbiddenAnswerCombination(FindingMC f) throws Exception {
 			if (allowedAnswerCombinations.containsKey(f.getQuestion())) throw new Exception(
 					"There are already forbidden answer combinations defined for question \""
-					+ f.getQuestion().getName() + "\".");
+							+ f.getQuestion().getName() + "\".");
 
 			Collection<Choice[]> answers = forbiddenAnswerCombinations.get(f.getQuestion());
 			if (answers == null) {
@@ -411,7 +411,7 @@ public class InterviewBot {
 		public Builder allowedAnswerCombination(FindingMC f) {
 			if (forbiddenAnswerCombinations.containsKey(f.getQuestion())) throw new IllegalArgumentException(
 					"There are already allowed answer combinations defined for question \""
-					+ f.getQuestion().getName() + "\".");
+							+ f.getQuestion().getName() + "\".");
 
 			Collection<Choice[]> answers = allowedAnswerCombinations.get(f.getQuestion());
 			if (answers == null) {

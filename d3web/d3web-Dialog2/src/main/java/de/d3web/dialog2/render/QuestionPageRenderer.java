@@ -81,7 +81,8 @@ public class QuestionPageRenderer extends Renderer {
 			return Unknown.getInstance();
 		}
 		else if (q instanceof QuestionChoice) {
-			Choice choice = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase()).findChoice((QuestionChoice) q, idOrValue);
+			Choice choice = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase()).findChoice(
+					(QuestionChoice) q, idOrValue);
 			return new ChoiceValue(choice);
 		}
 		else if (q instanceof QuestionText) {
@@ -99,10 +100,10 @@ public class QuestionPageRenderer extends Renderer {
 						if (!interval.contains(ans)) {
 							addValidationFailedMessage(component, q.getId(), idOrValue,
 									DialogUtils
-									.getMessageWithParamsFor("error.wrongrange",
-									new Object[] {
-									idOrValue,
-									interval.toString() }));
+											.getMessageWithParamsFor("error.wrongrange",
+													new Object[] {
+															idOrValue,
+															interval.toString() }));
 						}
 						else {
 							return new NumValue(ans);
@@ -116,8 +117,8 @@ public class QuestionPageRenderer extends Renderer {
 					logger.info(idOrValue + " is not a number.");
 					addValidationFailedMessage(component, q.getId(), idOrValue,
 							DialogUtils
-							.getMessageWithParamsFor("error.no_number",
-							new Object[] { idOrValue }));
+									.getMessageWithParamsFor("error.no_number",
+											new Object[] { idOrValue }));
 				}
 			}
 		}
@@ -135,11 +136,11 @@ public class QuestionPageRenderer extends Renderer {
 							q.getId(),
 							idOrValue,
 							DialogUtils
-							.getMessageWithParamsFor(
-							"error.invalid_dateformat_date",
-							new Object[] {
-							idOrValue,
-							DialogUtils.getMessageFor("questiondate.date_format") }));
+									.getMessageWithParamsFor(
+											"error.invalid_dateformat_date",
+											new Object[] {
+													idOrValue,
+													DialogUtils.getMessageFor("questiondate.date_format") }));
 				}
 				else if (error.getErrorType().equals(
 						InvalidAnswerError.INVALID_DATEFORMAT_TIME)) {
@@ -148,11 +149,11 @@ public class QuestionPageRenderer extends Renderer {
 							q.getId(),
 							idOrValue,
 							DialogUtils
-							.getMessageWithParamsFor(
-							"error.invalid_dateformat_time",
-							new Object[] {
-							idOrValue,
-							DialogUtils.getMessageFor("questiondate.time_format") }));
+									.getMessageWithParamsFor(
+											"error.invalid_dateformat_time",
+											new Object[] {
+													idOrValue,
+													DialogUtils.getMessageFor("questiondate.time_format") }));
 				}
 				else if (error.getErrorType().equals(
 						InvalidAnswerError.INVALID_DATEFORMAT_FULL)) {
@@ -161,11 +162,11 @@ public class QuestionPageRenderer extends Renderer {
 							q.getId(),
 							idOrValue,
 							DialogUtils
-							.getMessageWithParamsFor(
-							"error.invalid_dateformat_full",
-							new Object[] {
-							idOrValue,
-							DialogUtils.getMessageFor("questiondate.full_format") }));
+									.getMessageWithParamsFor(
+											"error.invalid_dateformat_full",
+											new Object[] {
+													idOrValue,
+													DialogUtils.getMessageFor("questiondate.full_format") }));
 				}
 			}
 		}
@@ -193,11 +194,11 @@ public class QuestionPageRenderer extends Renderer {
 							badanswersList)) {
 						addValidationFailedMessage(component, q.getId(), null,
 								DialogUtils
-								.getMessageWithParamsFor(
-								"error.badmccombination",
-								new Object[] { getAnswerNameListFromIDList(
-								badanswersList, q,
-								session) }));
+										.getMessageWithParamsFor(
+												"error.badmccombination",
+												new Object[] { getAnswerNameListFromIDList(
+														badanswersList, q,
+														session) }));
 						return;
 					}
 				}
@@ -264,7 +265,8 @@ public class QuestionPageRenderer extends Renderer {
 					// which are valid and not yet answered are set to "unknown"
 					if (unknownString.equals("true")
 							&& UndefinedValue.isUndefinedValue(session.getBlackboard().getValue(q))
-							&& DialogUtils.isValidQASet(q, session)) { //q.isValid(session)) {
+							&& DialogUtils.isValidQASet(q, session)) { // q.isValid(session))
+																		// {
 						setValueInCase(session, q, Unknown.getInstance());
 					}
 					else {
@@ -338,7 +340,8 @@ public class QuestionPageRenderer extends Renderer {
 	private Object getAnswerNameListFromIDList(List<String> answerIDs, Question q, Session session) {
 		List<String> answerNameList = new ArrayList<String>();
 		for (String answerID : answerIDs) {
-			Choice a = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase()).findChoice((QuestionChoice) q, answerID);
+			Choice a = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase()).findChoice(
+					(QuestionChoice) q, answerID);
 			answerNameList.add(a.getName());
 		}
 		return answerNameList;
@@ -364,7 +367,7 @@ public class QuestionPageRenderer extends Renderer {
 	private void setValueInCase(Session session, Question q, Value answers) {
 		session.getBlackboard().addValueFact(
 				new DefaultFact(q, answers, PSMethodUserSelected.getInstance(),
-				PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance()));
 	}
 
 }

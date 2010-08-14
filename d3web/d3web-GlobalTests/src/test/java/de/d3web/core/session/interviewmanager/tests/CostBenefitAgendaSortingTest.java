@@ -1,6 +1,5 @@
 package de.d3web.core.session.interviewmanager.tests;
 
-
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
@@ -30,6 +29,7 @@ import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.plugin.test.InitPluginManager;
 
 public class CostBenefitAgendaSortingTest {
+
 	KnowledgeBaseManagement kbm;
 	Session session;
 	InterviewAgenda agenda;
@@ -45,12 +45,12 @@ public class CostBenefitAgendaSortingTest {
 	public void setUp() throws Exception {
 		InitPluginManager.init();
 		kbm = KnowledgeBaseManagement.createInstance();
-		
+
 		QASet root = kbm.getKnowledgeBase().getRootQASet();
 
 		// root {container}
 		// - pregnancyQuestions {container}
-		// - sex  [oc]
+		// - sex [oc]
 		// - name [text]
 		//
 		// - heightWeightQuestions {container}
@@ -63,7 +63,7 @@ public class CostBenefitAgendaSortingTest {
 		female = new ChoiceValue(kbm.findChoice(sex, "female"));
 		male = new ChoiceValue(kbm.findChoice(sex, "male"));
 		name = kbm.createQuestionText("name", pregnancyQuestions);
-		
+
 		// Container: heightWeightQuestions = { weight, height } 
 		heightWeightQuestions = kbm.createQContainer("heightWeightQuestions", root);
 		weight = kbm.createQuestionNum("weight", "weight", heightWeightQuestions);
@@ -72,18 +72,20 @@ public class CostBenefitAgendaSortingTest {
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
 		costBenefit = new PSMethodCostBenefit();
 		costBenefit.init(session);
-		
+
 		session.getInterview().setFormStrategy(new NextUnansweredQuestionFormStrategy());
 		agenda = session.getInterview().getInterviewAgenda();
 	}
-	
+
 	@Test
 	public void simpleIndicationTest() {
 		// initially the agenda is empty
 		assertTrue(agenda.isEmpty());
 
-		// PUT the containers onto the agenda by indication, order must not change
-		Fact factHeig = FactFactory.createFact(heightWeightQuestions, new Indication(State.INDICATED),
+		// PUT the containers onto the agenda by indication, order must not
+		// change
+		Fact factHeig = FactFactory.createFact(heightWeightQuestions, new Indication(
+				State.INDICATED),
 				costBenefit, costBenefit);
 		session.getBlackboard().addInterviewFact(factHeig);
 		Fact factPreg = FactFactory.createFact(pregnancyQuestions, new Indication(State.INDICATED),
@@ -91,37 +93,41 @@ public class CostBenefitAgendaSortingTest {
 		session.getBlackboard().addInterviewFact(factPreg);
 		assertFalse(agenda.isEmpty());
 
-		
 		// EXPECT: weight is the next question
 		assertEquals(weight, session.getInterview().nextForm().getInterviewObject());
-		// SET:    weight = 80
-		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(weight, new NumValue(80)));		
-		
+		// SET: weight = 80
+		session.getBlackboard().addValueFact(
+				FactFactory.createUserEnteredFact(weight, new NumValue(80)));
+
 		// EXPECT: height is the next question
 		assertEquals(height, session.getInterview().nextForm().getInterviewObject());
-		// SET:    height = 180
-		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(height, new NumValue(180)));
+		// SET: height = 180
+		session.getBlackboard().addValueFact(
+				FactFactory.createUserEnteredFact(height, new NumValue(180)));
 
-		// EXPECT: all question have been answered, so the QContainer heightWeightQuestion should be removed
+		// EXPECT: all question have been answered, so the QContainer
+		// heightWeightQuestion should be removed
 		assertFalse(session.getInterview().getInterviewAgenda().onAgenda(heightWeightQuestions));
 		// EXPECT: QContainer pregnancyQuestions is still on agenda
 		assertTrue(session.getInterview().getInterviewAgenda().onAgenda(pregnancyQuestions));
-		
+
 		// EXPECT: sex is the next question
 		assertEquals(sex, session.getInterview().nextForm().getInterviewObject());
-		// SET:    sex = male
+		// SET: sex = male
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(sex, male));
 
 		// EXPECT: name is the next question
 		assertEquals(name, session.getInterview().nextForm().getInterviewObject());
-		// SET:    name = "joba"
-		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(name, new TextValue("joba")));
+		// SET: name = "joba"
+		session.getBlackboard().addValueFact(
+				FactFactory.createUserEnteredFact(name, new TextValue("joba")));
 
-		// EXPECT: all question have been answered, so the QContainer pregnancyQuestions should be removed
+		// EXPECT: all question have been answered, so the QContainer
+		// pregnancyQuestions should be removed
 		assertFalse(session.getInterview().getInterviewAgenda().onAgenda(pregnancyQuestions));
-		
+
 		// EXPECT: the agenda is empty now
 		assertEquals(session.getInterview().nextForm(), EmptyForm.getInstance());
 	}
-	
+
 }

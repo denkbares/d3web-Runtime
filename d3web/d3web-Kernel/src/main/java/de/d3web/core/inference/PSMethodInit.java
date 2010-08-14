@@ -81,7 +81,8 @@ public class PSMethodInit implements PSMethod {
 					ids.add(s.substring(posstart));
 					if (q instanceof QuestionOC) {
 						QuestionOC qc = (QuestionOC) q;
-						Choice choice = KnowledgeBaseManagement.createInstance(kb).findChoice(qc, ids.get(0));
+						Choice choice = KnowledgeBaseManagement.createInstance(kb).findChoice(qc,
+								ids.get(0));
 						session.getBlackboard().addValueFact(
 								new DefaultFact(qc, new ChoiceValue(choice), new Object(), this));
 					}

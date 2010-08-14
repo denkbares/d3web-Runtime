@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.persistence.xml.loader;
@@ -25,10 +25,11 @@ import org.w3c.dom.Node;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 
 /**
- * some utilities for XML-en- & decoding of NumericalIntervals
- * yes, they could offer some more funtionality like getXMLCodeFor(List of NumericalIntervals)
- * but there is the AbnormalityNum.AbnormalityInterval (extension of NumericalInterval)
- * which also has to be encoded ...
+ * some utilities for XML-en- & decoding of NumericalIntervals yes, they could
+ * offer some more funtionality like getXMLCodeFor(List of NumericalIntervals)
+ * but there is the AbnormalityNum.AbnormalityInterval (extension of
+ * NumericalInterval) which also has to be encoded ...
+ * 
  * @author hoernlein
  */
 public abstract class NumericalIntervalsUtils {
@@ -54,7 +55,9 @@ public abstract class NumericalIntervalsUtils {
 	}
 
 	/**
-	 * returns the double value for the lower boundary of the interval encoded in node
+	 * returns the double value for the lower boundary of the interval encoded
+	 * in node
+	 * 
 	 * @param node Node
 	 * @return double
 	 * @throws NumericalIntervalException
@@ -62,13 +65,16 @@ public abstract class NumericalIntervalsUtils {
 	public static double node2lower(Node node) throws NumericalIntervalException {
 		try {
 			return string2double(node.getAttributes().getNamedItem(LOWER_TAG).getNodeValue());
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			throw new NumericalIntervalException();
 		}
 	}
 
 	/**
-	 * returns the double value for the upper boundary of the interval encoded in node
+	 * returns the double value for the upper boundary of the interval encoded
+	 * in node
+	 * 
 	 * @param node Node
 	 * @return double
 	 * @throws NumericalIntervalException
@@ -76,28 +82,29 @@ public abstract class NumericalIntervalsUtils {
 	public static double node2upper(Node node) throws NumericalIntervalException {
 		try {
 			return string2double(node.getAttributes().getNamedItem(UPPER_TAG).getNodeValue());
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			throw new NumericalIntervalException();
 		}
 	}
 
 	private static double string2double(String value) throws NumericalIntervalException {
-		if (NEGATIVE_INFINITY.equals(value))
-			return Double.NEGATIVE_INFINITY;
-		if (POSITIVE_INFINITY.equals(value))
-			return Double.POSITIVE_INFINITY;
+		if (NEGATIVE_INFINITY.equals(value)) return Double.NEGATIVE_INFINITY;
+		if (POSITIVE_INFINITY.equals(value)) return Double.POSITIVE_INFINITY;
 		else {
 			try {
 				return Double.parseDouble(value);
-			} catch (NumberFormatException ex) {
+			}
+			catch (NumberFormatException ex) {
 				throw new NumericalIntervalException();
 			}
 		}
 	}
 
 	/**
-	 * returns the types of the boundaries of the interval encoded in node
-	 * in the form boolean[] { is lower boundary closed, is upper boundary closed }
+	 * returns the types of the boundaries of the interval encoded in node in
+	 * the form boolean[] { is lower boundary closed, is upper boundary closed }
+	 * 
 	 * @param node Node
 	 * @return double
 	 * @throws NumericalIntervalException
@@ -105,26 +112,28 @@ public abstract class NumericalIntervalsUtils {
 	public static boolean[] node2booleanTypes(Node node) throws NumericalIntervalException {
 		try {
 			return string2booleanTypes(node.getAttributes().getNamedItem(TYPE_TAG).getNodeValue());
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			throw new NumericalIntervalException();
 		}
 	}
 
 	private static boolean[] string2booleanTypes(String value) throws NumericalIntervalException {
-		if ("LeftOpenRightOpenInterval".equals(value))
-			return new boolean[] { true, true };
-		if ("LeftOpenRightClosedInterval".equals(value))
-			return new boolean[] { true, false };
-		if ("LeftClosedRightOpenInterval".equals(value))
-			return new boolean[] { false, true };
-		if ("LeftClosedRightClosedInterval".equals(value))
-			return new boolean[] { false, false };
-		else
-			throw new NumericalIntervalException();
+		if ("LeftOpenRightOpenInterval".equals(value)) return new boolean[] {
+				true, true };
+		if ("LeftOpenRightClosedInterval".equals(value)) return new boolean[] {
+				true, false };
+		if ("LeftClosedRightOpenInterval".equals(value)) return new boolean[] {
+				false, true };
+		if ("LeftClosedRightClosedInterval".equals(value)) return new boolean[] {
+				false, false };
+		else throw new NumericalIntervalException();
 	}
 
 	/**
-	 * returns the lower boundary of the NumericalInterval encoded as an attribute-String
+	 * returns the lower boundary of the NumericalInterval encoded as an
+	 * attribute-String
+	 * 
 	 * @param i NumericalInterval
 	 * @return String
 	 */
@@ -133,7 +142,9 @@ public abstract class NumericalIntervalsUtils {
 	}
 
 	/**
-	 * returns the upper boundary of the NumericalInterval encoded as an attribute-String
+	 * returns the upper boundary of the NumericalInterval encoded as an
+	 * attribute-String
+	 * 
 	 * @param i NumericalInterval
 	 * @return String
 	 */
@@ -150,16 +161,15 @@ public abstract class NumericalIntervalsUtils {
 	}
 
 	private static String double2string(double d) {
-		if (d == Double.NEGATIVE_INFINITY)
-			return NEGATIVE_INFINITY;
-		if (d == Double.POSITIVE_INFINITY)
-			return POSITIVE_INFINITY;
-		else
-			return Double.toString(d);
+		if (d == Double.NEGATIVE_INFINITY) return NEGATIVE_INFINITY;
+		if (d == Double.POSITIVE_INFINITY) return POSITIVE_INFINITY;
+		else return Double.toString(d);
 	}
 
 	/**
-	 * returns the type(s) of the NumericalInterval encoded as an attribute-String
+	 * returns the type(s) of the NumericalInterval encoded as an
+	 * attribute-String
+	 * 
 	 * @param i NumericalInterval
 	 * @return String
 	 */
@@ -172,7 +182,8 @@ public abstract class NumericalIntervalsUtils {
 	}
 
 	private static String booleanTypes2string(boolean isLeftOpen, boolean isRightOpen) {
-		return "Left" + (isLeftOpen ? "Open" : "Closed") + "Right" + (isRightOpen ? "Open" : "Closed") + "Interval";
+		return "Left" + (isLeftOpen ? "Open" : "Closed") + "Right"
+				+ (isRightOpen ? "Open" : "Closed") + "Interval";
 	}
 
 }

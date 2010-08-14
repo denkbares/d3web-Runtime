@@ -85,10 +85,9 @@ public class FactFactory {
 
 	/**
 	 * A new fact is created assigning a {@link NumValue} to a
-	 * {@link QuestionNum}. The {@link QuestionNum} is searched by its id
-	 * in the given {@link KnowledgeBase}. The source
-	 * and psMethod context of this fact is the user (i.e.,
-	 * {@link PSMethodUserSelected}).
+	 * {@link QuestionNum}. The {@link QuestionNum} is searched by its id in the
+	 * given {@link KnowledgeBase}. The source and psMethod context of this fact
+	 * is the user (i.e., {@link PSMethodUserSelected}).
 	 * 
 	 * @param kb {@link KnowledgeBase}
 	 * @param questionID ID of the {@link QuestionNum}

@@ -9,12 +9,12 @@ import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
 
 /**
- * This PSMethod is used to notify the {@link Interview} of new
- * facts added to the {@link Session}, i.e., new (contra-)indications 
- * and values added to the {@link Blackboard}.
+ * This PSMethod is used to notify the {@link Interview} of new facts added to
+ * the {@link Session}, i.e., new (contra-)indications and values added to the
+ * {@link Blackboard}.
  * 
  * @author joba
- *
+ * 
  */
 public class PSMethodInterview extends PSMethodAdapter {
 
@@ -23,7 +23,7 @@ public class PSMethodInterview extends PSMethodAdapter {
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		for (PropagationEntry change : changes) {
-			session.getInterview().notifyFactChange(change);	
+			session.getInterview().notifyFactChange(change);
 		}
 	}
 

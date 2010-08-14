@@ -95,7 +95,7 @@ class IterativeDeepeningSearch {
 			if (node.getStateTransition() != null
 					&& node.getStateTransition().getPostTransitions() != null
 					&& !node.getStateTransition().getPostTransitions()
-					.isEmpty()) {
+							.isEmpty()) {
 				relevantNodes.add(node);
 			}
 		}
@@ -166,7 +166,7 @@ class IterativeDeepeningSearch {
 		}
 		if (model.allTargetsReached()
 				|| (model.getBestCostBenefit() < mincosts
-				/ model.getBestUnreachedBenefit())) {
+						/ model.getBestUnreachedBenefit())) {
 			// stop iterative deep search if each target node has been reached
 			// or if the minimal costs are to high for even for the most
 			// beneficial

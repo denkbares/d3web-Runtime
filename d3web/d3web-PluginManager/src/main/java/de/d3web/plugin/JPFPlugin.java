@@ -21,6 +21,7 @@ import org.java.plugin.registry.PluginDescriptor;
 public class JPFPlugin implements Plugin {
 
 	private final class ResourceFilter {
+
 		private boolean isPublic;
 		private final Set<String> entries;
 
@@ -117,13 +118,14 @@ public class JPFPlugin implements Plugin {
 			}
 			fileString = fileString.replace(".jar!", ".jar");
 			File pluginFile = new File(fileString).getParentFile();
-			File pluginFileLinux=new File("/"+fileString).getParentFile();
+			File pluginFileLinux = new File("/" + fileString).getParentFile();
 			if (!pluginFile.exists()) {
-				if (!pluginFileLinux.exists()){
-				throw new IllegalStateException(
-						"Invalid plugin access due to internal error. Cannot find plugin location");
-				} else {
-					pluginFile=pluginFileLinux;
+				if (!pluginFileLinux.exists()) {
+					throw new IllegalStateException(
+							"Invalid plugin access due to internal error. Cannot find plugin location");
+				}
+				else {
+					pluginFile = pluginFileLinux;
 				}
 			}
 
@@ -171,8 +173,7 @@ public class JPFPlugin implements Plugin {
 	 * resource path has been exported. The method initialized the resource
 	 * filters lazy on demand.
 	 * 
-	 * @param relativePath
-	 *            the resource path to be checked
+	 * @param relativePath the resource path to be checked
 	 * @return if the resource has been exported
 	 */
 	private boolean matchesExports(String relativePath) {
@@ -202,10 +203,8 @@ public class JPFPlugin implements Plugin {
 	 * adds them to the given collection. Please not that directories are not
 	 * added.
 	 * 
-	 * @param directory
-	 *            the directory to collect the files from
-	 * @param result
-	 *            the container to add the collected files into
+	 * @param directory the directory to collect the files from
+	 * @param result the container to add the collected files into
 	 */
 	private void collectFiles(File directory, Collection<File> result) {
 		File[] files = directory.listFiles();
@@ -225,32 +224,35 @@ public class JPFPlugin implements Plugin {
 	public PluginDescriptor getDescriptor() {
 		return descriptor;
 	}
-	
+
 	public String getBuild() {
 		PluginAttribute attribute = descriptor.getAttribute("build");
-		if (attribute!=null) {
+		if (attribute != null) {
 			return attribute.getValue();
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
-	
+
 	public String getReversion() {
 		PluginAttribute attribute = descriptor.getAttribute("revision");
-		if (attribute!=null) {
+		if (attribute != null) {
 			return attribute.getValue();
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
 
 	public String getBuildDate() {
 		PluginAttribute attribute = descriptor.getAttribute("builddate");
-		if (attribute!=null) {
+		if (attribute != null) {
 			return attribute.getValue();
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
-	
+
 }

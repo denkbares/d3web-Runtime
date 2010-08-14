@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.basics.layout;
@@ -101,7 +101,8 @@ public class DialogLayoutLoader {
 					+ "de" + File.separator + "d3web" + File.separator
 					+ "dialog2";
 			layoutFile = new File(destPath, DialogLayout.LAYOUTFILE_STRING);
-		} else {
+		}
+		else {
 			String destPath = ResourceRepository.getInstance()
 					.getBasicSettingValue(ResourceRepository.MULTIMEDIAPATH)
 					.replaceAll("\\$kbid\\$", kbid);
@@ -129,12 +130,14 @@ public class DialogLayoutLoader {
 
 			readDefaultLayout(root, qPageLayout, null, null);
 			qContainerList = readQContainers(root, qPageLayout);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			logger
 					.error("Error while loading dialoglayout. Using global layout... \n"
 							+ e);
 			return;
-		} finally {
+		}
+		finally {
 			// set as layout
 			dialogLayout.setQuestionPageLayout(qPageLayout);
 			dialogLayout.setQContainerList(qContainerList);
@@ -173,7 +176,8 @@ public class DialogLayoutLoader {
 		if (qContDef == null && qDef == null) {
 			// Attributes of DefaultLayout
 			setDefaultAttributes(defaultLayoutElement, qPageDef, qPageDef);
-		} else if (qDef == null) {
+		}
+		else if (qDef == null) {
 			// attributes of QContainer
 			setDefaultAttributes(defaultLayoutElement, qContDef, qPageDef);
 		}
@@ -209,7 +213,8 @@ public class DialogLayoutLoader {
 		if (qContDef == null && qDef == null) {
 			// Child of Root
 			setImageMapAttributes(imageMap, qPageDef, qPageDef);
-		} else if (qDef == null) {
+		}
+		else if (qDef == null) {
 			// Child of QContainer
 			setImageMapAttributes(imageMap, qContDef, qPageDef);
 		}
@@ -226,11 +231,13 @@ public class DialogLayoutLoader {
 			// Child of Root
 			setMMInfoAttributes(mmInfoElement, mmInfo, qPageDef.getMmInfo());
 			qPageDef.setMmInfo(mmInfo);
-		} else if (qDef == null) {
+		}
+		else if (qDef == null) {
 			// Child of QContainer
 			setMMInfoAttributes(mmInfoElement, mmInfo, qPageDef.getMmInfo());
 			qContDef.setMmInfo(mmInfo);
-		} else {
+		}
+		else {
 			// Child of Question
 			setMMInfoAttributes(mmInfoElement, mmInfo, qContDef.getMmInfo());
 			qDef.setMmInfo(mmInfo);
@@ -248,7 +255,8 @@ public class DialogLayoutLoader {
 		if (qContDef == null && qDef == null) {
 			// Child of Root
 			setQContainerHeadlineAttributes(qContHeadline, qPageDef, qPageDef);
-		} else if (qDef == null) {
+		}
+		else if (qDef == null) {
 			// Child of QContainer
 			setQContainerHeadlineAttributes(qContHeadline, qContDef, qPageDef);
 		}
@@ -406,11 +414,13 @@ public class DialogLayoutLoader {
 			// Child of Root
 			setQuestionAnswersAttributes(questionAnswers, qPageDef, qPageDef,
 					qPageDef);
-		} else if (qDef == null) {
+		}
+		else if (qDef == null) {
 			// Child of QContainer
 			setQuestionAnswersAttributes(questionAnswers, qContDef, qPageDef,
 					qPageDef);
-		} else {
+		}
+		else {
 			// Child of Question
 			setQuestionAnswersAttributes(questionAnswers, qDef, qContDef,
 					qPageDef);
@@ -429,11 +439,13 @@ public class DialogLayoutLoader {
 			// Child of Root
 			setQuestionHeadlineAttributes(questionHeadline, qPageDef, qPageDef,
 					qPageDef);
-		} else if (qDef == null) {
+		}
+		else if (qDef == null) {
 			// Child of QContainer
 			setQuestionHeadlineAttributes(questionHeadline, qContDef, qPageDef,
 					qPageDef);
-		} else {
+		}
+		else {
 			// Child of Question
 			setQuestionHeadlineAttributes(questionHeadline, qDef, qContDef,
 					qPageDef);

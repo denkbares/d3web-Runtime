@@ -8,17 +8,15 @@ import de.d3web.core.session.Session;
 
 /**
  * 
- * @author Reinhard Hatko
- * Created: 25.09.2009
- *
+ * @author Reinhard Hatko Created: 25.09.2009
+ * 
  */
 public class NumericalSimilarity implements ISimilarityMeasurer {
-	
+
 	private final QuestionNum question;
 	private final List<NumericalInterval> intervals;
 	private final List<Double> similarities;
-	
-	
+
 	/**
 	 * @param question
 	 * @param intervals
@@ -29,21 +27,16 @@ public class NumericalSimilarity implements ISimilarityMeasurer {
 		this.question = question;
 		this.intervals = intervals;
 		this.similarities = similarities;
-		
-		if (intervals.size() != similarities.size())
-			throw new IllegalArgumentException();
-		
-		
+
+		if (intervals.size() != similarities.size()) throw new IllegalArgumentException();
+
 	}
-
-
-
 
 	@Override
 	public double computeSimilarity(Session session) {
-		
-		//TODO
-		
+
+		// TODO
+
 		return 0;
 	}
 

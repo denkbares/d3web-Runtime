@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.shared.io.fragments;
 
@@ -30,9 +30,10 @@ import org.w3c.dom.NodeList;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.shared.comparators.QuestionComparator;
 import de.d3web.shared.comparators.oc.QuestionComparatorOCScaled;
+
 /**
  * Handles QuestionComparatorOCScaled
- *
+ * 
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class QuestionComparatorOCScaledHandler extends QuestionComparatorHandler {
@@ -51,24 +52,24 @@ public class QuestionComparatorOCScaledHandler extends QuestionComparatorHandler
 	public boolean canWrite(Object object) {
 		return object instanceof QuestionComparatorOCScaled;
 	}
-	
+
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
 		Element element = super.write(object, doc);
 		QuestionComparatorOCScaled qcocs = (QuestionComparatorOCScaled) object;
 		Element scalaElement = doc.createElement("scala");
-		for (Double d: qcocs.getValues()) {
+		for (Double d : qcocs.getValues()) {
 			Element scalavalueElement = doc.createElement("scalavalue");
-			scalavalueElement.setAttribute("value", ""+d);
+			scalavalueElement.setAttribute("value", "" + d);
 			scalaElement.appendChild(scalavalueElement);
 		}
 		element.appendChild(scalaElement);
 		Element constantElement = doc.createElement("constant");
-		constantElement.setAttribute("value", ""+qcocs.getConstant());
+		constantElement.setAttribute("value", "" + qcocs.getConstant());
 		element.appendChild(constantElement);
 		return element;
 	}
-	
+
 	@Override
 	protected void addAdditionalInformation(QuestionComparator qcin, Element qnode, KnowledgeBase kb) {
 		QuestionComparatorOCScaled qc = (QuestionComparatorOCScaled) qcin;
@@ -84,7 +85,8 @@ public class QuestionComparatorOCScaledHandler extends QuestionComparatorHandler
 				}
 			}
 			qc.setValues(values);
-		} else if (qnode.getNodeName().equalsIgnoreCase("constant")) {
+		}
+		else if (qnode.getNodeName().equalsIgnoreCase("constant")) {
 			Double val = new Double(qnode.getAttributes()
 					.getNamedItem("value").getNodeValue());
 			qc.setConstant(val);

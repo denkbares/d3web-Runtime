@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.shared.comparators.oc;
@@ -78,8 +78,7 @@ public class QuestionComparatorOCScaled extends QuestionComparatorOC {
 	 * Insert the method's description here. Creation date: (06.08.2001
 	 * 17:19:46)
 	 * 
-	 * @param newConstant
-	 *            int
+	 * @param newConstant int
 	 */
 	public void setConstant(double newConstant) {
 		constant = newConstant;
@@ -97,8 +96,7 @@ public class QuestionComparatorOCScaled extends QuestionComparatorOC {
 	 * Insert the method's description here. Creation date: (06.08.2001
 	 * 17:01:47)
 	 * 
-	 * @param newValues
-	 *            java.util.List
+	 * @param newValues java.util.List
 	 */
 	public void setValues(double[] newValues) {
 		values = new LinkedList<Double>();
@@ -111,8 +109,7 @@ public class QuestionComparatorOCScaled extends QuestionComparatorOC {
 	 * Insert the method's description here. Creation date: (06.08.2001
 	 * 17:01:47)
 	 * 
-	 * @param newValues
-	 *            java.util.List
+	 * @param newValues java.util.List
 	 */
 	public void setValues(List<Double> newValues) {
 		values = newValues;
@@ -143,10 +140,8 @@ public class QuestionComparatorOCScaled extends QuestionComparatorOC {
 			Iterator<Double> iter = values.iterator();
 			while (iter.hasNext()) {
 				double val = iter.next().doubleValue();
-				if (max < val)
-					max = val;
-				if (min > val)
-					min = val;
+				if (max < val) max = val;
+				if (min > val) min = val;
 			}
 
 			constant = max - min;

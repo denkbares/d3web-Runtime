@@ -63,7 +63,7 @@ public class BotHelper {
 	public void setCaseValue(Session session, QuestionChoice q, ChoiceValue a) {
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(q, a, PSMethodUserSelected.getInstance(),
-				PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance()));
 	}
 
 	public Choice findAnswer(QuestionChoice q, String answerId)

@@ -12,16 +12,16 @@ import de.d3web.core.utilities.Triple;
 
 public class DefaultInfoStore implements InfoStore {
 
-	private final Map<Pair<String, Locale>, Object> entries = 
-		new HashMap<Pair<String,Locale>, Object>();
-	
+	private final Map<Pair<String, Locale>, Object> entries =
+			new HashMap<Pair<String, Locale>, Object>();
+
 	@Override
 	public Collection<Triple<String, Locale, Object>> entries() {
-		Collection<Triple<String, Locale, Object>> result = 
-			new LinkedList<Triple<String,Locale,Object>>();
-		for (Entry<Pair<String,Locale>, Object> entry : this.entries.entrySet()) {
+		Collection<Triple<String, Locale, Object>> result =
+				new LinkedList<Triple<String, Locale, Object>>();
+		for (Entry<Pair<String, Locale>, Object> entry : this.entries.entrySet()) {
 			result.add(new Triple<String, Locale, Object>(
-					entry.getKey().getA(), 
+					entry.getKey().getA(),
 					entry.getKey().getB(),
 					entry.getValue()));
 		}
@@ -39,7 +39,7 @@ public class DefaultInfoStore implements InfoStore {
 		if (value != null) return value;
 		return getEntry(key, DEFAULT_LANGUAGE);
 	}
-	
+
 	private Object getEntry(String key, Locale language) {
 		return this.entries.get(new Pair<String, Locale>(key, language));
 	}

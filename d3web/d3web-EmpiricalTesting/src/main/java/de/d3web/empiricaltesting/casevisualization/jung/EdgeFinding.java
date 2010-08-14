@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.empiricaltesting.casevisualization.jung;
@@ -24,20 +24,20 @@ import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.RatedTestCase;
 
 /**
- * This class serves as wrapper for Findings
- * to ensure their uniqueness.
+ * This class serves as wrapper for Findings to ensure their uniqueness.
  * 
  * @author Sebastian Furth
- *
+ * 
  */
 public class EdgeFinding {
-	
+
 	RatedTestCase source;
 	RatedTestCase destination;
 	Finding finding;
-	
+
 	/**
 	 * Default Constructor
+	 * 
 	 * @param source RatedTestCase the source of the edge
 	 * @param dest RatedTestCase the destination of the edge
 	 * @param f Finding representing the edge
@@ -47,9 +47,10 @@ public class EdgeFinding {
 		this.destination = dest;
 		this.finding = f;
 	}
-	
+
 	/**
 	 * Returns the source of the edge.
+	 * 
 	 * @return RatedTestCase
 	 */
 	public RatedTestCase getSource() {
@@ -58,6 +59,7 @@ public class EdgeFinding {
 
 	/**
 	 * Returns the destination of the edge.
+	 * 
 	 * @return RatedTestCase
 	 */
 	public RatedTestCase getDestination() {
@@ -65,8 +67,8 @@ public class EdgeFinding {
 	}
 
 	/**
-	 * Returns the Finding which actually
-	 * is the edge.
+	 * Returns the Finding which actually is the edge.
+	 * 
 	 * @return Finding
 	 */
 	public Finding getFinding() {
@@ -100,26 +102,29 @@ public class EdgeFinding {
 			if (other.destination != null) {
 				return false;
 			}
-		} else if (!destination.equals(other.destination)) {
+		}
+		else if (!destination.equals(other.destination)) {
 			return false;
 		}
 		if (finding == null) {
 			if (other.finding != null) {
 				return false;
 			}
-		} else if (!finding.equals(other.finding)) {
+		}
+		else if (!finding.equals(other.finding)) {
 			return false;
 		}
 		if (source == null) {
 			if (other.source != null) {
 				return false;
 			}
-		} else if (!source.equals(other.source)) {
+		}
+		else if (!source.equals(other.source)) {
 			return false;
 		}
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
@@ -128,7 +133,5 @@ public class EdgeFinding {
 		result.append("DESTINATION: " + destination.getName() + "\n");
 		return result.toString();
 	}
-
-	
 
 }

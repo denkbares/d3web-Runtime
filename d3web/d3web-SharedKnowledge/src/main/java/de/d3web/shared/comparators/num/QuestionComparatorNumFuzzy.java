@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.shared.comparators.num;
@@ -62,7 +62,7 @@ import de.d3web.core.session.values.Unknown;
  * @author gbuscher
  */
 public class QuestionComparatorNumFuzzy extends QuestionComparatorNum {
-	
+
 	public final static String POSITIVE_INFINITY_STR = "+INFINITY";
 	public final static String NEGATIVE_INFINITY_STR = "-INFINITY";
 
@@ -131,7 +131,8 @@ public class QuestionComparatorNumFuzzy extends QuestionComparatorNum {
 		if (interpretationMethod.equals(INTERPRETATION_METHOD_ABSOLUTE)) {
 			constLeftPoint = new Double(reference + constLeft);
 			constRightPoint = new Double(reference + constRight);
-		} else if (interpretationMethod
+		}
+		else if (interpretationMethod
 				.equals(INTERPRETATION_METHOD_PRECENTAGE)) {
 			constLeftPoint = new Double(reference + (reference * constLeft));
 			constRightPoint = new Double(reference + (reference * constRight));
@@ -149,7 +150,8 @@ public class QuestionComparatorNumFuzzy extends QuestionComparatorNum {
 			if (interpretationMethod.equals(INTERPRETATION_METHOD_ABSOLUTE)) {
 				increasingLeftPoint = new Double(constLeftPoint
 						+ increasingLeft);
-			} else if (interpretationMethod
+			}
+			else if (interpretationMethod
 					.equals(INTERPRETATION_METHOD_PRECENTAGE)) {
 				increasingLeftPoint = new Double(constLeftPoint
 						+ (reference * increasingLeft));
@@ -161,13 +163,15 @@ public class QuestionComparatorNumFuzzy extends QuestionComparatorNum {
 						constLeftPoint, toCompare);
 			}
 
-		} else {
+		}
+		else {
 			// toCompare lies right of constant similarity range
 			Double decreasingRightPoint = constRightPoint;
 			if (interpretationMethod.equals(INTERPRETATION_METHOD_ABSOLUTE)) {
 				decreasingRightPoint = new Double(constRightPoint
 						+ decreasingRight);
-			} else if (interpretationMethod
+			}
+			else if (interpretationMethod
 					.equals(INTERPRETATION_METHOD_PRECENTAGE)) {
 				decreasingRightPoint = new Double(constRightPoint
 						+ (reference * decreasingRight));
@@ -271,11 +275,12 @@ public class QuestionComparatorNumFuzzy extends QuestionComparatorNum {
 	public String getInterpretationMethod() {
 		return interpretationMethod;
 	}
-	
+
 	public static Double stringToDouble(String s) {
 		if (s.equalsIgnoreCase(NEGATIVE_INFINITY_STR)) {
 			return Double.NEGATIVE_INFINITY;
-		} else if (s.equalsIgnoreCase(POSITIVE_INFINITY_STR)) {
+		}
+		else if (s.equalsIgnoreCase(POSITIVE_INFINITY_STR)) {
 			return Double.POSITIVE_INFINITY;
 		}
 		return Double.parseDouble(s);

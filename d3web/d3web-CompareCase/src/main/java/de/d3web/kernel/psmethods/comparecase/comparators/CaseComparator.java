@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.kernel.psmethods.comparecase.comparators;
@@ -103,7 +103,7 @@ public class CaseComparator {
 			double abnormality = 1;
 			KnowledgeSlice abnorm = queryQuestion.getKnowledge(
 					PSContextFinder.getInstance()
-					.findPSContext(Abnormality.class),
+							.findPSContext(Abnormality.class),
 					PSMethodShared.SHARED_ABNORMALITY);
 			if (abnorm != null) {
 				abnormality = calcAbnormality((Abnormality) abnorm, storedValue);
@@ -116,8 +116,8 @@ public class CaseComparator {
 						// normal comparison
 						reachedPoints += compareQuestionForClustering(cmode, queryCase,
 								new Object[] {
-								queryQuestion, queryValue }, new Object[] {
-								queryQuestion, storedValue });
+										queryQuestion, queryValue }, new Object[] {
+										queryQuestion, storedValue });
 						maxPoints += weight * abnormality;
 					}
 					else {
@@ -320,7 +320,7 @@ public class CaseComparator {
 		double weightedSimilarity = 0;
 		KnowledgeSlice abnorm = question.getKnowledge(
 				PSContextFinder.getInstance().findPSContext(
-				Abnormality.class), PSMethodShared.SHARED_ABNORMALITY);
+						Abnormality.class), PSMethodShared.SHARED_ABNORMALITY);
 		if (abnorm != null) {
 			abnormality = calcAbnormality((Abnormality) abnorm, storedAnswers);
 		}
@@ -343,7 +343,7 @@ public class CaseComparator {
 		double abnormality = 1;
 		KnowledgeSlice abnorm = question.getKnowledge(
 				PSContextFinder.getInstance().findPSContext(
-				Abnormality.class), PSMethodShared.SHARED_ABNORMALITY);
+						Abnormality.class), PSMethodShared.SHARED_ABNORMALITY);
 		if (abnorm != null) {
 			abnormality = calcAbnormality((Abnormality) abnorm, storedValue);
 		}

@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.controller;
@@ -50,7 +50,8 @@ public class KBLoadController {
 				kbID, DialogLayout.LAYOUTFILE_STRING)) {
 			logger.info("layoutfile available for kb");
 			DialogUtils.getDialogLayout().init(kbID);
-		} else {
+		}
+		else {
 			DialogUtils.getDialogLayout().init(null);
 			logger.info("layoutfile NOT available for kb");
 		}
@@ -60,7 +61,8 @@ public class KBLoadController {
 				kbID, DialogSettings.SETTINGS_FILENAME)) {
 			logger.info("settingsfile available for kb");
 			DialogUtils.getDialogSettings().init(kbID);
-		} else {
+		}
+		else {
 			DialogUtils.getDialogSettings().init(null);
 			logger.info("settingsfile NOT available for kb");
 		}
@@ -70,7 +72,8 @@ public class KBLoadController {
 				kbID, ImageMapBean.IMAGEMAP_FILE_STRING)) {
 			DialogUtils.getImageMapBean().init();
 			logger.info("imagemap file available for kb");
-		} else {
+		}
+		else {
 			DialogUtils.getImageMapBean().reset();
 			logger.info("imagemap file NOT available for kb");
 		}
@@ -83,7 +86,8 @@ public class KBLoadController {
 							+ DialogSettings.STYLESHEET_FILENAME);
 			DialogUtils.getDialogSettings().setKbHasCSSFile(true);
 			logger.info("css file available for kb");
-		} else {
+		}
+		else {
 			DialogUtils.getDialogSettings().setStyleSheetPath(
 					DialogSettings.STYLESHEET_PATH
 							+ DialogSettings.STYLESHEET_FILENAME);

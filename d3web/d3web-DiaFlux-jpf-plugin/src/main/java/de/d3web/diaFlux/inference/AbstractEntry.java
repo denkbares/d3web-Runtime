@@ -15,7 +15,6 @@ public abstract class AbstractEntry implements Entry {
 		this.support = support;
 	}
 
-
 	@Override
 	public INode getNode() {
 		return node;
@@ -25,8 +24,6 @@ public abstract class AbstractEntry implements Entry {
 	public ISupport getSupport() {
 		return support;
 	}
-
-
 
 	@Override
 	public String toString() {
@@ -39,7 +36,7 @@ public abstract class AbstractEntry implements Entry {
 	 * longer valid, it is removed from the according NodeData. If it is valid,
 	 * nothing is done. Returns if the node is still active, i.e. if this entry
 	 * support is no longer valid, if this node has other support.
-	 *
+	 * 
 	 * @param session
 	 * @return if the node is still active
 	 */

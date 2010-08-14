@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.basics.layout;
@@ -53,8 +53,7 @@ public class QuestionLayout extends QuestionPageLayout {
 	 * Returns the id of the first popup Question for the given id of an answer
 	 * saved in this layout
 	 * 
-	 * @param answerId
-	 *            the id of the answer, that triggers a popup question
+	 * @param answerId the id of the answer, that triggers a popup question
 	 * @return the id of the first popup Question for the given id of an answer
 	 *         saved in this layout
 	 */
@@ -98,14 +97,16 @@ public class QuestionLayout extends QuestionPageLayout {
 		if (posY.indexOf("-") == -1) {
 			posYStart = Integer.parseInt(posY);
 			rowspan = 0;
-		} else {
+		}
+		else {
 			String[] positions = posY.split("-");
 			try {
 				int yStart = Integer.parseInt(positions[0]);
 				int yEnd = Integer.parseInt(positions[1]);
 				posYStart = yStart;
 				rowspan = yEnd - yStart + 1;
-			} catch (NumberFormatException e) {
+			}
+			catch (NumberFormatException e) {
 				posYStart = -1;
 				rowspan = 0;
 			}
@@ -125,7 +126,8 @@ public class QuestionLayout extends QuestionPageLayout {
 		if (posX.indexOf("-") == -1) {
 			posXStart = Integer.parseInt(posX);
 			colspan = 1;
-		} else {
+		}
+		else {
 			String[] positions = posX.split("-");
 			int xStart = Integer.parseInt(positions[0]);
 			int xEnd = Integer.parseInt(positions[1]);

@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.webapp;
@@ -28,39 +28,39 @@ import de.d3web.dialog2.component.html.UIExplanation;
 
 public class ExplanationTag extends UIComponentELTag {
 
-    private ValueExpression value;
+	private ValueExpression value;
 
-    private ValueExpression diag;
+	private ValueExpression diag;
 
-    @Override
-    public String getComponentType() {
-	return UIExplanation.COMPONENT_TYPE;
-    }
+	@Override
+	public String getComponentType() {
+		return UIExplanation.COMPONENT_TYPE;
+	}
 
-    @Override
-    public String getRendererType() {
-	return UIExplanation.COMPONENT_TYPE;
-    }
+	@Override
+	public String getRendererType() {
+		return UIExplanation.COMPONENT_TYPE;
+	}
 
-    @Override
-    public void release() {
-	super.release();
-	value = null;
-	diag = null;
-    }
+	@Override
+	public void release() {
+		super.release();
+		value = null;
+		diag = null;
+	}
 
-    public void setDiag(ValueExpression diag) {
-	this.diag = diag;
-    }
+	public void setDiag(ValueExpression diag) {
+		this.diag = diag;
+	}
 
-    @Override
-    public void setProperties(UIComponent component) {
-	super.setProperties(component);
-	component.setValueExpression("value", value);
-	component.setValueExpression("diag", diag);
-    }
+	@Override
+	public void setProperties(UIComponent component) {
+		super.setProperties(component);
+		component.setValueExpression("value", value);
+		component.setValueExpression("diag", diag);
+	}
 
-    public void setValue(ValueExpression newVal) {
-	value = newVal;
-    }
+	public void setValue(ValueExpression newVal) {
+		value = newVal;
+	}
 }

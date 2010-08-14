@@ -264,6 +264,6 @@ public class ChoiceFactBlackboardTest {
 		colors = kbm.createQuestionMC("Colors",
 				kbm.getKnowledgeBase().getRootQASet(),
 				new String[] {
-				"red", "green", "blue" });
+						"red", "green", "blue" });
 	}
 }

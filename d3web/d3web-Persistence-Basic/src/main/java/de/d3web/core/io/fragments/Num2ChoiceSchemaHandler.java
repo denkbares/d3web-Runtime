@@ -1,22 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *                    denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg denkbares GmbH
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.io.fragments;
 
@@ -34,6 +33,7 @@ import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
+
 /**
  * Handler for Num2ChoiceSchemas
  * 
@@ -64,20 +64,20 @@ public class Num2ChoiceSchemaHandler implements FragmentHandler {
 				String q_id = condNode.getAttributes().getNamedItem("ID")
 						.getNodeValue();
 				q = kb.searchQuestion(q_id);
-				if (q == null)
-					throw new IOException("Could not create Num2ChoiceSchema - unknown question "+ q_id);
-			} else if (condNode.getNodeName().equalsIgnoreCase(
+				if (q == null) throw new IOException(
+						"Could not create Num2ChoiceSchema - unknown question " + q_id);
+			}
+			else if (condNode.getNodeName().equalsIgnoreCase(
 					"LeftClosedInterval")) {
 				// [FIXME]:?:set intervall
 				String nArray = condNode.getAttributes().getNamedItem("value")
 						.getNodeValue();
 				numArray = toDoubleArray(nArray);
-				if (numArray == null)
-					throw new IOException("Could not create Num2ChoiceSchema - unparseable value "+ nArray);
+				if (numArray == null) throw new IOException(
+						"Could not create Num2ChoiceSchema - unparseable value " + nArray);
 			}
 		}
-		if ((q == null) || (numArray == null))
-			return null;
+		if ((q == null) || (numArray == null)) return null;
 		else {
 			Num2ChoiceSchema schema = new Num2ChoiceSchema(id);
 			schema.setQuestion(q);
@@ -101,18 +101,16 @@ public class Num2ChoiceSchemaHandler implements FragmentHandler {
 		element.appendChild(schemaNode);
 		return element;
 	}
-	
+
 	private static String arrayToString(Double[] array) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < array.length; i++) {
-			if (i == 0)
-				sb.append(array[i]);
-			else
-				sb.append(" " + array[i]);
+			if (i == 0) sb.append(array[i]);
+			else sb.append(" " + array[i]);
 		}
 		return sb.toString();
 	}
-	
+
 	private Double[] toDoubleArray(String str) {
 		StringTokenizer s = new StringTokenizer(str);
 		if (s.hasMoreTokens()) {
@@ -123,7 +121,8 @@ public class Num2ChoiceSchemaHandler implements FragmentHandler {
 				i++;
 			}
 			return result;
-		} else {
+		}
+		else {
 			return null;
 		}
 	}

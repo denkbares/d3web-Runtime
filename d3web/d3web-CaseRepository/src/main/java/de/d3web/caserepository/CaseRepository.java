@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2010 denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.caserepository;
 
@@ -44,8 +44,8 @@ public interface CaseRepository {
 	 * If you try to add null, an {@link IllegalArgumentException} will be
 	 * thrown.
 	 * 
-	 * @param caseObject
-	 *            the CaseObject which will be added (null is not allowed)
+	 * @param caseObject the CaseObject which will be added (null is not
+	 *        allowed)
 	 * @return true, if the CaseObject was added to the CaseRepository; false
 	 *         otherwise
 	 */
@@ -61,8 +61,7 @@ public interface CaseRepository {
 	 * If you try to remove null, then an {@link IllegalArgumentException} will
 	 * be thrown.
 	 * 
-	 * @param caseObject
-	 *            the CaseObject to be removed (null is not allowed).
+	 * @param caseObject the CaseObject to be removed (null is not allowed).
 	 * @return true, if the CaseObject was removed from the CaseRepository,
 	 *         false otherwise.
 	 */
@@ -81,8 +80,7 @@ public interface CaseRepository {
 	 * unique identifier. If a CaseObject with this identifier was found, the it
 	 * will be returned. Otherwise the returned value will be null.
 	 * 
-	 * @param id
-	 *            the specified identifier of the desired CaseObject
+	 * @param id the specified identifier of the desired CaseObject
 	 * @return the CaseObject with the specified ID if it exists, otherwise
 	 *         null.
 	 */

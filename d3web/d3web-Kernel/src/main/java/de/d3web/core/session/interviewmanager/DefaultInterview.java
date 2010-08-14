@@ -62,10 +62,8 @@ public class DefaultInterview implements Interview {
 	 * Initializes an interview for a specified session based on a specified
 	 * knowledge base.
 	 * 
-	 * @param session
-	 *            the specified session
-	 * @param knowledgeBase
-	 *            the specified knowledge base
+	 * @param session the specified session
+	 * @param knowledgeBase the specified knowledge base
 	 */
 	public DefaultInterview(Session session) {
 		this.session = session;
@@ -116,21 +114,26 @@ public class DefaultInterview implements Interview {
 			else if (oldIndication.hasState(State.CONTRA_INDICATED)
 					&& newIndication.hasState(State.INDICATED)) {
 				this.agenda.activate(indicatedObject);
-			} else if (oldIndication.hasState(State.INDICATED)
+			}
+			else if (oldIndication.hasState(State.INDICATED)
 					&& newIndication.hasState(State.INDICATED)) {
 				// INDICATED => INDICATED : noop
-			} else if (oldIndication.hasState(State.CONTRA_INDICATED)
+			}
+			else if (oldIndication.hasState(State.CONTRA_INDICATED)
 					&& newIndication.hasState(State.NEUTRAL)) {
 				// CONTRA_INDICATED => NEUTRAL : noop
-			} else if (oldIndication.hasState(State.NEUTRAL)
+			}
+			else if (oldIndication.hasState(State.NEUTRAL)
 					&& newIndication.hasState(State.CONTRA_INDICATED)) {
 				// NEUTRAL => CONTRA_INDICATED : noop
-			} else {
+			}
+			else {
 				// TODO: use a logger here
 				System.out.println("UNKNOWN INDICATION STATE: old=("
 						+ oldIndication + ") new=(" + newIndication + ")");
 			}
-		} else if (newValue instanceof QuestionValue) {
+		}
+		else if (newValue instanceof QuestionValue) {
 			// need to check, whether the agenda needs an update due to an
 			// answered question
 			InterviewObject indicatedObject = (InterviewObject) changedFact
@@ -156,7 +159,8 @@ public class DefaultInterview implements Interview {
 						&& !(oldValue instanceof UndefinedValue)) {
 					this.agenda.deactivate(indicatedObject);
 					checkParentalQContainer(indicatedObject);
-				} else {
+				}
+				else {
 					// TODO: use a logger here
 					System.out.println("UNKNOWN VALUE CHANGE: old=(" + oldValue
 							+ ") new=(" + newValue + ")");
@@ -256,8 +260,7 @@ public class DefaultInterview implements Interview {
 	 * Checks, whether the specified objects are all instances of
 	 * {@link QContainer}.
 	 * 
-	 * @param objects
-	 *            the specified objects
+	 * @param objects the specified objects
 	 * @return true, when the specified objects are all instances of
 	 *         {@link QContainer}.
 	 */
@@ -274,8 +277,7 @@ public class DefaultInterview implements Interview {
 	 * Checks, whether the specified objects are all instances of
 	 * {@link Question}.
 	 * 
-	 * @param objects
-	 *            the specified objects
+	 * @param objects the specified objects
 	 * @return true, when the specified objects are all instances of
 	 *         {@link Question}.
 	 */
@@ -292,8 +294,7 @@ public class DefaultInterview implements Interview {
 	 * For a specified {@link InterviewObject} instance all parental QContainers
 	 * are computed, that are included in the current {@link InterviewAgenda}.
 	 * 
-	 * @param interviewObject
-	 *            the specified {@link InterviewObject} instance
+	 * @param interviewObject the specified {@link InterviewObject} instance
 	 * @return all (recursively) parental {@link QContainer} instances that are
 	 *         on the agenda
 	 */
@@ -309,14 +310,15 @@ public class DefaultInterview implements Interview {
 			InterviewObject interviewObject, List<QContainer> parentsOnAgenda, List<InterviewObject> visitedContainers) {
 		for (TerminologyObject parent : interviewObject.getParents()) {
 			if (!visitedContainers.contains(parent)) {
-				visitedContainers.add((InterviewObject)parent);
+				visitedContainers.add((InterviewObject) parent);
 				if (parent instanceof QContainer
 						&& getInterviewAgenda().onAgenda(
 								(InterviewObject) parent)) {
 					parentsOnAgenda.add((QContainer) parent);
 				}
 				if (parent.getParents().length > 0) {
-					computeParentalContainersOnAgenda((InterviewObject) parent, parentsOnAgenda, visitedContainers);
+					computeParentalContainersOnAgenda((InterviewObject) parent, parentsOnAgenda,
+							visitedContainers);
 				}
 			}
 		}

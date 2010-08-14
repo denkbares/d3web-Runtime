@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.basics.knowledge;
@@ -95,8 +95,7 @@ public class KnowledgeBaseRepository {
 
 	/**
 	 * @return de.d3web.kernel.domainModel.KnowledgeBase
-	 * @param id
-	 *            java.lang.String
+	 * @param id java.lang.String
 	 */
 	public KnowledgeBase getKnowledgeBase(String id) {
 		if (id == null) {
@@ -112,8 +111,7 @@ public class KnowledgeBaseRepository {
 
 	/**
 	 * @return de.d3web.kernel.domainModel.KnowledgeBase
-	 * @param id
-	 *            java.lang.String
+	 * @param id java.lang.String
 	 */
 	public String getKnowledgeBaseName(String id) {
 		KnowledgeBaseDescriptor desc = knowledgeBaseDescriptorById.get(id);
@@ -140,7 +138,8 @@ public class KnowledgeBaseRepository {
 					.getInstance().getKnowledgeBaseDescriptors();
 			refreshKbDescriptorList(kbDescriptors);
 
-		} catch (Exception x) {
+		}
+		catch (Exception x) {
 			logger.error(x + " -> exception while initializing KBrepository!");
 		}
 
@@ -164,7 +163,8 @@ public class KnowledgeBaseRepository {
 
 				Class<?> kbClass = Class.forName(desc.getLocation());
 				ret = (KnowledgeBase) kbClass.newInstance();
-			} else if (locationType.equalsIgnoreCase("jar")) {
+			}
+			else if (locationType.equalsIgnoreCase("jar")) {
 				ret = persistenceManager.load(new File(new URL(desc
 						.getLocation()).getFile()));
 			}
@@ -173,7 +173,8 @@ public class KnowledgeBaseRepository {
 				knowledgeBasesById.put(desc.getId(), ret);
 				ret.setId(desc.getId());
 			}
-		} catch (Exception x) {
+		}
+		catch (Exception x) {
 			logger.error(x);
 		}
 
@@ -203,8 +204,7 @@ public class KnowledgeBaseRepository {
 	}
 
 	/**
-	 * @param newDescriptors
-	 *            java.util.List
+	 * @param newDescriptors java.util.List
 	 */
 	public void refreshKbDescriptorList(
 			List<KnowledgeBaseDescriptor> newDescriptors) {

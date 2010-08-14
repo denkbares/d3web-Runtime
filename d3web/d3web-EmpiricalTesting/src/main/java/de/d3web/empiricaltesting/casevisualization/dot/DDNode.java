@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.empiricaltesting.casevisualization.dot;
@@ -28,37 +28,36 @@ import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.casevisualization.dot.DDBuilder.caseType;
 
-
 public class DDNode {
+
 	private RatedTestCase testCase;
 	private List<DDEdge> outgoing;
 	private List<DDEdge> incoming;
-	
+
 	private boolean isCuttedNode;
 	private caseType sessionType;
 	private QASet cuttedQContainer;
-	
+
 	public DDNode(RatedTestCase testCase, caseType sessiontype) {
 		this.testCase = testCase;
-		this.outgoing= new ArrayList<DDEdge>();
+		this.outgoing = new ArrayList<DDEdge>();
 		this.setIncoming(new ArrayList<DDEdge>());
 		isCuttedNode = false;
 		setTheCaseType(sessiontype);
 	}
-	
+
 	public DDNode(RatedTestCase testCase) {
 		this(testCase, caseType.new_case);
 	}
-		
-		
+
 	public boolean hasPredecessors() {
-		return (getIncoming() != null && !getIncoming().isEmpty()); 
+		return (getIncoming() != null && !getIncoming().isEmpty());
 	}
-	
+
 	public List<Finding> getFindings() {
 		return testCase.getFindings();
 	}
-	
+
 	public boolean addChild(DDEdge edge, boolean oldEdge) {
 		edge.end.getIncoming().add(edge);
 		return outgoing.add(edge);
@@ -70,8 +69,8 @@ public class DDNode {
 
 	public boolean addChild(DDNode targetNode, Finding label, caseType sessiontype) {
 		return addChild(new DDEdge(this, targetNode, label, sessiontype));
-	}	
-	
+	}
+
 	public boolean addChild(DDNode targetNode, Finding label) {
 		return addChild(new DDEdge(this, targetNode, label), false);
 	}
@@ -105,23 +104,18 @@ public class DDNode {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof DDNode))
-			return false;
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (!(obj instanceof DDNode)) return false;
 		DDNode other = (DDNode) obj;
 		if (outgoing == null) {
-			if (other.outgoing != null)
-				return false;
-		} else if (!outgoing.equals(other.outgoing))
-			return false;
+			if (other.outgoing != null) return false;
+		}
+		else if (!outgoing.equals(other.outgoing)) return false;
 		if (testCase == null) {
-			if (other.testCase != null)
-				return false;
-		} else if (!testCase.equals(other.testCase))
-			return false;
+			if (other.testCase != null) return false;
+		}
+		else if (!testCase.equals(other.testCase)) return false;
 		return true;
 	}
 
@@ -157,6 +151,4 @@ public class DDNode {
 		return incoming;
 	}
 
-
-	
 }

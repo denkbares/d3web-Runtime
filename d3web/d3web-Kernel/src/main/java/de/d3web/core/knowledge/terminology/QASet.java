@@ -37,5 +37,4 @@ public abstract class QASet extends NamedObject implements InterviewObject {
 		super(id);
 	}
 
-
 }

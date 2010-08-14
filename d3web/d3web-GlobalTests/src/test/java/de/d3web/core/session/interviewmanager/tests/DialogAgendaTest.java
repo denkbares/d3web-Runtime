@@ -68,7 +68,7 @@ public class DialogAgendaTest {
 				"yes", "no" });
 		ask_for_pregnancy = kbm.createQuestionOC("ask for pregnancy", pregnancyQuestions,
 				new String[] {
-				"yes", "no" });
+						"yes", "no" });
 
 		// Container: heightWeightQuestions = { weight, height } 
 		heightWeightQuestions = kbm.createQContainer("heightWeightQuestions", root);
@@ -77,7 +77,7 @@ public class DialogAgendaTest {
 
 		initQuestion = kbm.createQuestionOC("initQuestion", root,
 				new String[] {
-				"all", "pregnacyQuestions", "height+weight" });
+						"all", "pregnacyQuestions", "height+weight" });
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
 		agenda = session.getInterview().getInterviewAgenda();
 	}
@@ -168,14 +168,14 @@ public class DialogAgendaTest {
 
 	@Test
 	public void testIndicationOfOneQContainer() {
-		// We need this rule for the later indication of the follow-up question "pregnant"
-		// Rule: sex = female => INDICATE ( pregnant ) 
+		// We need this rule for the later indication of the follow-up question
+		// "pregnant"
+		// Rule: sex = female => INDICATE ( pregnant )
 		RuleFactory.createIndicationRule("r1", pregnant, new CondEqual(sex, female));
 
-		
 		// initially the agenda is empty
 		assertTrue(agenda.isEmpty());
-		
+
 		// put one qcontainer on the agenda, it should be active
 		agenda.append(pregnancyQuestions);
 		assertFalse(agenda.isEmpty());
@@ -184,28 +184,31 @@ public class DialogAgendaTest {
 		// Answer the first question in the qcontainer, should be still active
 		setValue(sex, male);
 		assertTrue(agenda.hasState(pregnancyQuestions, InterviewState.ACTIVE));
-		
-		// Answer the second & last question in the qcontainer, so the qcontainer should be INACTIVE
+
+		// Answer the second & last question in the qcontainer, so the
+		// qcontainer should be INACTIVE
 		setValue(ask_for_pregnancy, new ChoiceValue(kbm.findChoice(ask_for_pregnancy, "no")));
 		assertTrue(agenda.hasState(pregnancyQuestions, InterviewState.INACTIVE));
 
-		// Set the first answer to undefined, so the qcontainer should be ACTIVE again
+		// Set the first answer to undefined, so the qcontainer should be ACTIVE
+		// again
 		setValue(sex, UndefinedValue.getInstance());
 		assertTrue(agenda.hasState(pregnancyQuestions, InterviewState.ACTIVE));
 
 		// Set the Question SEX=female
-		// EXPECT 1) the qcontainer should be still ACTIVE due to indication of follow-up question 'pregnant'
-		//        2) the follow-up question "pregnant" should be put onto the agenda
+		// EXPECT 1) the qcontainer should be still ACTIVE due to indication of
+		// follow-up question 'pregnant'
+		// 2) the follow-up question "pregnant" should be put onto the agenda
 		setValue(sex, female);
 		assertTrue(agenda.hasState(pregnancyQuestions, InterviewState.ACTIVE));
 		assertTrue(agenda.onAgenda(pregnant));
 		assertTrue(agenda.hasState(pregnant, InterviewState.ACTIVE));
-	}	
-	
+	}
+
 	private void setValue(Question question, Value value) {
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(question, value,
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 	}
 
 }

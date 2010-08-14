@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2010 denkbares GmbH, Würzburg, Germany
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.session.blackboard.tests;
 
@@ -72,7 +72,7 @@ public class AbstractionsOnBlackboardTest {
 		bmi = kbm.createQuestionNum("BMI", kbm.getKnowledgeBase().getRootQASet());
 		weight = kbm.createQuestionNum("weight", kbm.getKnowledgeBase().getRootQASet());
 		height = kbm.createQuestionNum("height", kbm.getKnowledgeBase().getRootQASet());
-		
+
 		// Rule: IF height=2 AND weight=200 THEN bmi=50
 		RuleFactory.createSetValueRule("r1", bmi, new NumValue(50),
 				new CondAnd(Arrays.asList(new Condition[] {

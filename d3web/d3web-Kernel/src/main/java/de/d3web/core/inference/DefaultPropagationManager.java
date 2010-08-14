@@ -72,7 +72,7 @@ public class DefaultPropagationManager implements PropagationManager {
 				Logger.getLogger("Kernel").log(
 						Level.SEVERE,
 						"internal error in pluggable problem solver #" +
-						getPSMethod().getClass(),
+								getPSMethod().getClass(),
 						e);
 			}
 		}

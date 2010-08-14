@@ -5,14 +5,14 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Value;
 
 public class DefaultFact implements Fact {
-	
+
 	private final TerminologyObject terminologyObject;
 	private final Value value;
 	private final Object source;
 	private final PSMethod psMethod;
-	
-	public DefaultFact(TerminologyObject terminologyObject, 
-			           Value value, Object source, PSMethod psMethod) {
+
+	public DefaultFact(TerminologyObject terminologyObject,
+						Value value, Object source, PSMethod psMethod) {
 		super();
 		this.terminologyObject = terminologyObject;
 		this.value = value;
@@ -39,10 +39,11 @@ public class DefaultFact implements Fact {
 	public Value getValue() {
 		return value;
 	}
-	
+
 	@Override
 	public String toString() {
-		return getTerminologyObject() + " = " + getValue() + " ["+getSource()+" / "+getPSMethod()+"]";
+		return getTerminologyObject() + " = " + getValue() + " [" + getSource() + " / "
+				+ getPSMethod() + "]";
 	}
 
 	@Override
@@ -62,33 +63,26 @@ public class DefaultFact implements Fact {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
 		DefaultFact other = (DefaultFact) obj;
 		if (psMethod == null) {
-			if (other.psMethod != null)
-				return false;
-		} else if (!psMethod.equals(other.psMethod))
-			return false;
+			if (other.psMethod != null) return false;
+		}
+		else if (!psMethod.equals(other.psMethod)) return false;
 		if (source == null) {
-			if (other.source != null)
-				return false;
-		} else if (!source.equals(other.source))
-			return false;
+			if (other.source != null) return false;
+		}
+		else if (!source.equals(other.source)) return false;
 		if (terminologyObject == null) {
-			if (other.terminologyObject != null)
-				return false;
-		} else if (!terminologyObject.equals(other.terminologyObject))
-			return false;
+			if (other.terminologyObject != null) return false;
+		}
+		else if (!terminologyObject.equals(other.terminologyObject)) return false;
 		if (value == null) {
-			if (other.value != null)
-				return false;
-		} else if (!value.equals(other.value))
-			return false;
+			if (other.value != null) return false;
+		}
+		else if (!value.equals(other.value)) return false;
 		return true;
 	}
 }

@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 /*
@@ -38,71 +38,100 @@ import de.d3web.core.io.utilities.XMLTools;
 
 /**
  * 24.11.2003 11:40:22
+ * 
  * @author hoernlein
  */
 public class ConfigReader extends AbstractTagReader {
 
-	protected ConfigReader(String id) { super(id); }
+	protected ConfigReader(String id) {
+		super(id);
+	}
+
 	private static ConfigReader instance;
-	private ConfigReader() { this("ConfigReader"); }
+
+	private ConfigReader() {
+		this("ConfigReader");
+	}
+
 	public static AbstractTagReader getInstance() {
-		if (instance == null)
-			instance = new ConfigReader();
+		if (instance == null) instance = new ConfigReader();
 		return instance;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.d3web.caserepository.sax.AbstractTagReader#getTagNames()
 	 */
 	public List getTagNames() {
 		return Arrays.asList(new String[] {
-			"ConfigItems",
-			"Name",
-			"ConfigItem",
-			"Value",
-			"MapEntry",
-			"MapValue"
+				"ConfigItems",
+				"Name",
+				"ConfigItem",
+				"Value",
+				"MapEntry",
+				"MapValue"
 		});
 	}
 
-	/* (non-Javadoc)
-	 * @see de.d3web.caserepository.sax.AbstractTagReader#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.d3web.caserepository.sax.AbstractTagReader#startElement(java.lang.
+	 * String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
 	protected void startElement(String uri, String localName, String qName, Attributes attributes) {
 		if (qName.equals("ConfigItems")) {
 			startConfigItems(attributes);
-		} else if (qName.equals("Name")) {
-		    // 
-		} else if (qName.equals("ConfigItem")) {
-		    startConfigItem(attributes);
-		} else if (qName.equals("Value")) {
+		}
+		else if (qName.equals("Name")) {
 			// 
-		} else if (qName.equals("Comment")) {
+		}
+		else if (qName.equals("ConfigItem")) {
+			startConfigItem(attributes);
+		}
+		else if (qName.equals("Value")) {
+			// 
+		}
+		else if (qName.equals("Comment")) {
 			startComment(attributes);
-		} else if (qName.equals("MapEntry")) {
+		}
+		else if (qName.equals("MapEntry")) {
 			startMapEntry(attributes);
-		} else if (qName.equals("MapValue")) {
+		}
+		else if (qName.equals("MapValue")) {
 			startMapValue(attributes);
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see de.d3web.caserepository.sax.AbstractTagReader#endElement(java.lang.String, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.d3web.caserepository.sax.AbstractTagReader#endElement(java.lang.String
+	 * , java.lang.String, java.lang.String)
 	 */
 	protected void endElement(String uri, String localName, String qName) {
 		if (qName.equals("ConfigItems")) {
 			endConfigItems();
-		} else if (qName.equals("Name")) {
-		    endName();
-		} else if (qName.equals("ConfigItem")) {
-		    endConfigItem();
-		} else if (qName.equals("Value")) {
+		}
+		else if (qName.equals("Name")) {
+			endName();
+		}
+		else if (qName.equals("ConfigItem")) {
+			endConfigItem();
+		}
+		else if (qName.equals("Value")) {
 			endValue();
-		} else if (qName.equals("Comment")) {
+		}
+		else if (qName.equals("Comment")) {
 			endComment();
-		} else if (qName.equals("MapEntry")) {
+		}
+		else if (qName.equals("MapEntry")) {
 			endMapEntry();
-		} else if (qName.equals("MapValue")) {
+		}
+		else if (qName.equals("MapValue")) {
 			//
 		}
 	}
@@ -117,32 +146,31 @@ public class ConfigReader extends AbstractTagReader {
 		getCaseObject().setConfig(currentConfig);
 		currentConfig = null;
 	}
-	
+
 	private void endName() {
-	    if (currentConfig != null) {
-		    String name = getTextBetweenCurrentTag();
-		    name = XMLTools.prepareFromCDATA(name);
-		    currentConfig.setName(name);
-	    }
+		if (currentConfig != null) {
+			String name = getTextBetweenCurrentTag();
+			name = XMLTools.prepareFromCDATA(name);
+			currentConfig.setName(name);
+		}
 	}
-	
+
 	private String currentKey = null;
 	private String currentClass = null;
 	private Object currentValue = null;
 	private String currentConverter = null;
-	
+
 	private void startConfigItem(Attributes attributes) {
 
 		currentKey = attributes.getValue("name");
 
 		currentClass = attributes.getValue("class");
-		if (currentClass == null)
-		currentClass = Config.baseConfig.getClass(currentKey);
+		if (currentClass == null) currentClass = Config.baseConfig.getClass(currentKey);
 
 		currentValue = attributes.getValue("value");
 
 		currentConverter = attributes.getValue("converter");
-		
+
 	}
 
 	private void endConfigItem() {
@@ -161,19 +189,25 @@ public class ConfigReader extends AbstractTagReader {
 	 */
 	public static Object createValue(String currentClass, Object currentValue) {
 		Object value = null;
-		if (currentClass.equals(Config.BOOLEAN)){
+		if (currentClass.equals(Config.BOOLEAN)) {
 			value = Boolean.valueOf((String) currentValue);
-		} else if (currentClass.equals(Config.STRING)){
+		}
+		else if (currentClass.equals(Config.STRING)) {
 			value = currentValue;
-		} else if (currentClass.equals(Config.BOOLEANHASHMAP)) {
+		}
+		else if (currentClass.equals(Config.BOOLEANHASHMAP)) {
 			value = currentValue; // this is handled with MapEntry and MapValue
-		} else if (currentClass.equals(Config.STRINGHASHMAP)) {
+		}
+		else if (currentClass.equals(Config.STRINGHASHMAP)) {
 			value = currentValue; // this is handled with MapEntry and MapValue
-		} else if (currentClass.equals(Config.INTEGER)) {
+		}
+		else if (currentClass.equals(Config.INTEGER)) {
 			value = Integer.valueOf((String) currentValue);
-		} else if (currentClass.equals(Config.DOUBLE)) {
+		}
+		else if (currentClass.equals(Config.DOUBLE)) {
 			value = Double.valueOf((String) currentValue);
-		} else if (currentClass.equals(Config.STRINGLIST)) {
+		}
+		else if (currentClass.equals(Config.STRINGLIST)) {
 			StringTokenizer st = new StringTokenizer((String) currentValue, ",", false);
 			value = new LinkedList();
 			while (st.hasMoreTokens())
@@ -181,7 +215,7 @@ public class ConfigReader extends AbstractTagReader {
 		}
 		return value;
 	}
-	
+
 	private void endValue() {
 		currentValue = getTextBetweenCurrentTag();
 	}
@@ -202,12 +236,10 @@ public class ConfigReader extends AbstractTagReader {
 	private boolean currentMapValueBlock = false;
 
 	private void startMapEntry(Attributes attributes) {
-		if (currentValue == null)
-			currentValue = new HashMap();
+		if (currentValue == null) currentValue = new HashMap();
 		currentMapKey = attributes.getValue("key");
 		currentMapValue = attributes.getValue("value");
-		if (currentMapValue != null)
-			currentMapValueBlock = true;
+		if (currentMapValue != null) currentMapValueBlock = true;
 	}
 
 	private void endMapEntry() {
@@ -216,13 +248,12 @@ public class ConfigReader extends AbstractTagReader {
 		currentMapValue = null;
 		currentMapValueBlock = false;
 	}
-	
+
 	private void startMapValue(Attributes attributes) {
 		if (!currentMapValueBlock) {
-			if (currentMapValue == null)
-				currentMapValue = new LinkedList();
+			if (currentMapValue == null) currentMapValue = new LinkedList();
 			((List) currentMapValue).add(attributes.getValue("value"));
 		}
 	}
-	
+
 }

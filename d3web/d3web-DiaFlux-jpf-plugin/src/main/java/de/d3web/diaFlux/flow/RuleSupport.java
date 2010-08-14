@@ -6,14 +6,13 @@ import de.d3web.core.session.Session;
 
 /**
  * @author Reinhard Hatko
- *
- * Created: 20.12.2009
+ * 
+ *         Created: 20.12.2009
  */
 public class RuleSupport implements ISupport {
 
 	private final Rule rule;
-	
-	
+
 	/**
 	 * @param condition
 	 */
@@ -21,27 +20,25 @@ public class RuleSupport implements ISupport {
 		this.rule = rule;
 	}
 
-
 	@Override
 	public boolean isValid(Session session) {
 		try {
-			
+
 			rule.check(session);
-			
+
 			return rule.canFire(session);
-		} catch (UnknownAnswerException e) {
+		}
+		catch (UnknownAnswerException e) {
 			return false;
 		}
 	}
-	
-	
+
 	/**
 	 * @return the rule
 	 */
 	public Rule getRule() {
 		return rule;
 	}
-
 
 	@Override
 	public int hashCode() {
@@ -51,26 +48,17 @@ public class RuleSupport implements ISupport {
 		return result;
 	}
 
-
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
 		RuleSupport other = (RuleSupport) obj;
 		if (rule == null) {
-			if (other.rule != null)
-				return false;
-		} else if (!rule.equals(other.rule))
-			return false;
+			if (other.rule != null) return false;
+		}
+		else if (!rule.equals(other.rule)) return false;
 		return true;
 	}
-	
-	
-	
-	
 
 }

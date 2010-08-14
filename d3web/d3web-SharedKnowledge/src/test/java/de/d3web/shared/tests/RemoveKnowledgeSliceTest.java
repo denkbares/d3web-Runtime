@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.shared.tests;
@@ -90,7 +90,7 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		d2.setName("d2");
 		d2.setKnowledgeBase(base);
 
-				Abnormality sl1 = new Abnormality();
+		Abnormality sl1 = new Abnormality();
 		sl1.setQuestion(qyn1);
 		qyn1.addKnowledge(PSMethodShared.class, sl1,
 				PSMethodShared.SHARED_ABNORMALITY);
@@ -116,7 +116,7 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		sl6.setQuestion(qyn2);
 		qyn2.addKnowledge(PSMethodShared.class, sl6,
 				PSMethodShared.SHARED_LOCAL_WEIGHT);
-		
+
 		QuestionComparatorYN sl7 = new QuestionComparatorYN();
 		sl7.setQuestion(qyn1);
 		qyn1.addKnowledge(PSMethodShared.class, sl7,
@@ -125,7 +125,7 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		sl8.setQuestion(qyn2);
 		qyn2.addKnowledge(PSMethodShared.class, sl8,
 				PSMethodShared.SHARED_SIMILARITY);
-		
+
 		Weight sl9 = new Weight();
 		QuestionWeightValue v1 = new QuestionWeightValue();
 		v1.setQuestion(qyn1);
@@ -149,17 +149,17 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		NamedObject no = slice.getQuestion();
 		assertTrue("Tried to remove existing slice, true expected : ", base
 				.remove(slice));
-	
+
 		assertFalse("Deleted slice still mapped in '" + no.getName()
 				+ "', expected false : ", (no.getKnowledge(
-				PSMethodShared.class, PSMethodShared.SHARED_ABNORMALITY))==slice);
+				PSMethodShared.class, PSMethodShared.SHARED_ABNORMALITY)) == slice);
 
 		List<?> all = (List<?>) qyn2.getAllKnowledge();
 		try {
 			base.remove(qyn2);
 		}
 		catch (IllegalAccessException e) {
-			fail(qyn2.getName()+" should have had no children!");
+			fail(qyn2.getName() + " should have had no children!");
 		}
 		Collection<KnowledgeSlice> slices = base
 				.getAllKnowledgeSlicesFor(PSMethodShared.class);
@@ -180,7 +180,7 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		KnowledgeBase no = slice.getKnowledgeBase();
 		assertTrue("Tried to remove existing slice, true expected : ", base
 				.remove(slice));
-		
+
 		assertFalse("Deleted slice still mapped in '" + no
 				+ "', expected false : ", ((List<?>) no.getKnowledge(
 				PSMethodShared.class, PSMethodShared.SHARED_SIMILARITY))
@@ -191,7 +191,7 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 			base.remove(qyn2);
 		}
 		catch (IllegalAccessException e) {
-			fail(qyn2.getName()+" should have had no children!");
+			fail(qyn2.getName() + " should have had no children!");
 		}
 		Collection<KnowledgeSlice> slices = base
 				.getAllKnowledgeSlicesFor(PSMethodShared.class);
@@ -211,17 +211,17 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		NamedObject no = slice.getQuestion();
 		assertTrue("Tried to remove existing slice, true expected : ", base
 				.remove(slice));
-		
+
 		assertFalse("Deleted slice still mapped in '" + no.getName()
 				+ "', expected false : ", (no.getKnowledge(
-				PSMethodShared.class, PSMethodShared.SHARED_LOCAL_WEIGHT))==slice);
+				PSMethodShared.class, PSMethodShared.SHARED_LOCAL_WEIGHT)) == slice);
 
 		Collection<KnowledgeSlice> all = qyn2.getAllKnowledge();
 		try {
 			base.remove(qyn2);
 		}
 		catch (IllegalAccessException e) {
-			fail(qyn2.getName()+" should have had no children!");
+			fail(qyn2.getName() + " should have had no children!");
 		}
 		Collection<KnowledgeSlice> slices = base
 				.getAllKnowledgeSlicesFor(PSMethodShared.class);
@@ -232,7 +232,6 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		}
 	}
 
-	
 	public void testRemoveQuestionComparator() {
 		List<?> list;
 		QuestionComparatorYN slice;
@@ -245,14 +244,14 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 
 		assertFalse("Deleted slice still mapped in '" + no.getName()
 				+ "', expected false : ", (no.getKnowledge(
-				PSMethodShared.class, PSMethodShared.SHARED_SIMILARITY))==slice);
+				PSMethodShared.class, PSMethodShared.SHARED_SIMILARITY)) == slice);
 
 		Collection<KnowledgeSlice> all = qyn2.getAllKnowledge();
 		try {
 			base.remove(qyn2);
 		}
 		catch (IllegalAccessException e) {
-			fail(qyn2.getName()+" should have had no children!");
+			fail(qyn2.getName() + " should have had no children!");
 		}
 		Collection<KnowledgeSlice> slices = base
 				.getAllKnowledgeSlicesFor(PSMethodShared.class);
@@ -262,7 +261,6 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 					slices.contains(object));
 		}
 	}
-	
 
 	public void testRemoveWeight() {
 		List<?> list;
@@ -273,17 +271,17 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		NamedObject no = slice.getQuestionWeightValue().getQuestion();
 		assertTrue("Tried to remove existing slice, true expected : ", base
 				.remove(slice));
-		
+
 		assertFalse("Deleted slice still mapped in '" + no.getName()
 				+ "', expected false : ", (no.getKnowledge(
-				PSMethodShared.class, PSMethodShared.SHARED_WEIGHT))==slice);
+				PSMethodShared.class, PSMethodShared.SHARED_WEIGHT)) == slice);
 
 		Collection<KnowledgeSlice> all = qyn2.getAllKnowledge();
 		try {
 			base.remove(qyn2);
 		}
 		catch (IllegalAccessException e) {
-			fail(qyn2.getName()+" should have had no children!");
+			fail(qyn2.getName() + " should have had no children!");
 		}
 		Collection<KnowledgeSlice> slices = base
 				.getAllKnowledgeSlicesFor(PSMethodShared.class);
@@ -293,5 +291,5 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 					slices.contains(object));
 		}
 	}
-	 
+
 }

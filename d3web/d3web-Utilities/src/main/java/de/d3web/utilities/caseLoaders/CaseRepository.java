@@ -1,24 +1,25 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.utilities.caseLoaders;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,8 +28,9 @@ import java.util.Set;
 import de.d3web.caserepository.CaseObject;
 
 /**
- * Holds cases that has been loaded by a CaseLoader (e.g. filtered)
- * Creation date: (16.08.2001 20:18:27)
+ * Holds cases that has been loaded by a CaseLoader (e.g. filtered) Creation
+ * date: (16.08.2001 20:18:27)
+ * 
  * @author: Norman Brümmer
  */
 public class CaseRepository {
@@ -82,13 +84,15 @@ public class CaseRepository {
 
 	/**
 	 * Creation date: (16.08.2001 20:21:48)
+	 * 
 	 * @return boolean
 	 */
 	public boolean removeCase(String kbid, CaseObject co) {
 		Map cases = getCasesFor(kbid);
 		if (!cases.containsValue(co)) {
 			return false;
-		} else {
+		}
+		else {
 			String caseId = co.getId();
 			cases.remove(caseId);
 			return true;

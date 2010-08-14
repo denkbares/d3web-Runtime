@@ -143,8 +143,8 @@ public class SequentialTestCase {
 			for (Finding f : rtc.getFindings()) {
 				session.getBlackboard().addValueFact(
 						FactFactory.createFact(f.getQuestion(), f.getValue(),
-						PSMethodUserSelected.getInstance(),
-						PSMethodUserSelected.getInstance()));
+								PSMethodUserSelected.getInstance(),
+								PSMethodUserSelected.getInstance()));
 			}
 
 			// Check used Rating (StateRating or ScoreRating) in

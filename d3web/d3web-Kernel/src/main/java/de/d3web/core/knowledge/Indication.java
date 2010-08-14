@@ -1,26 +1,25 @@
 /*
  * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.knowledge;
 
 import de.d3web.core.session.Value;
-
 
 public class Indication implements Value {
 
@@ -37,8 +36,7 @@ public class Indication implements Value {
 	 * Creates a new indication value based on the string representation. The
 	 * string representation is case insensitive for backward compatibility.
 	 * 
-	 * @param name
-	 *            the name of the indication state
+	 * @param name the name of the indication state
 	 */
 	public Indication(String name) {
 		this(State.valueOf(name.toUpperCase()));
@@ -47,8 +45,7 @@ public class Indication implements Value {
 	/**
 	 * Creates a new indication value based on the indication state.
 	 * 
-	 * @param state
-	 *            the state of the new indication value
+	 * @param state the state of the new indication value
 	 */
 	public Indication(State state) {
 		if (state == null) throw new NullPointerException();
@@ -77,12 +74,12 @@ public class Indication implements Value {
 	public Object getValue() {
 		return getState();
 	}
-	
+
 	/**
-	 * Returns whether the state of this indication equals to the specified state.
+	 * Returns whether the state of this indication equals to the specified
+	 * state.
 	 * 
-	 * @param state
-	 *            the state to be checked
+	 * @param state the state to be checked
 	 * @return whether the state is equal to the specified one
 	 */
 	public boolean hasState(State state) {
@@ -126,12 +123,13 @@ public class Indication implements Value {
 	public int compareTo(Value other) {
 		if (other == null) throw new NullPointerException();
 		if (other instanceof Indication) {
-			return this.state.ordinal() - ((Indication)other).state.ordinal();
-		} else {
+			return this.state.ordinal() - ((Indication) other).state.ordinal();
+		}
+		else {
 			return -1;
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		return getName();
@@ -140,5 +138,5 @@ public class Indication implements Value {
 	public static Indication getDefaultIndication() {
 		return DEFAULT_INDICATION;
 	}
-	
+
 }

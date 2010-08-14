@@ -193,14 +193,15 @@ public class JUNGCaseVisualizer implements CaseVisualizer {
 		catch (FileNotFoundException e) {
 			Logger.getLogger(this.getClass().getName())
 					.warning("Can not access the specified file (" + filepath +
-					"), probably because it is opened. " +
-					"Close the file and try again.");
+							"), probably because it is opened. " +
+							"Close the file and try again.");
 
 		}
 		catch (IOException e) {
 			Logger.getLogger(this.getClass().getName())
 					.warning(
-					"Error while writing to file. The file was not created. " + e.getMessage());
+							"Error while writing to file. The file was not created. "
+									+ e.getMessage());
 		}
 	}
 
@@ -244,7 +245,8 @@ public class JUNGCaseVisualizer implements CaseVisualizer {
 		catch (DocumentException e) {
 			Logger.getLogger(this.getClass().getName())
 					.warning(
-					"Error while writing to file. The file was not created. " + e.getMessage());
+							"Error while writing to file. The file was not created. "
+									+ e.getMessage());
 		}
 
 		return bstream;
@@ -320,7 +322,7 @@ public class JUNGCaseVisualizer implements CaseVisualizer {
 
 		final VisualizationModel<RatedTestCase, EdgeFinding> visualizationModel =
 				new DefaultVisualizationModel<RatedTestCase, EdgeFinding>(treeLayout,
-				preferredSize);
+						preferredSize);
 
 		return new VisualizationViewer<RatedTestCase, EdgeFinding>(visualizationModel,
 				preferredSize);

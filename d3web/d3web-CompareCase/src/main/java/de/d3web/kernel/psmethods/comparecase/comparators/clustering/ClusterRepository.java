@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.kernel.psmethods.comparecase.comparators.clustering;
@@ -31,7 +31,9 @@ import de.d3web.kernel.psmethods.comparecase.comparators.CompareMode;
 import de.d3web.utilities.caseLoaders.CaseRepository;
 
 /**
- * Repository for all clusters. Can be used for retrieval, update, clustering and deletion.
+ * Repository for all clusters. Can be used for retrieval, update, clustering
+ * and deletion.
+ * 
  * @author bruemmer
  */
 public class ClusterRepository {
@@ -88,6 +90,7 @@ public class ClusterRepository {
 
 	/**
 	 * Retrieves the clusters that match for the given case
+	 * 
 	 * @param queryCase query to search for similar clusters
 	 * @return matching clusters
 	 */
@@ -142,6 +145,7 @@ public class ClusterRepository {
 
 	/**
 	 * Adds a new case to cluster repository
+	 * 
 	 * @param cobj
 	 */
 	public void update(String caseId) {
@@ -189,6 +193,7 @@ public class ClusterRepository {
 
 	/**
 	 * Starts the clustering algorithm with the new minimal similarity
+	 * 
 	 * @param startMinSim
 	 */
 	public void reCluster(Set caseIds, double startMinSim) {
@@ -199,12 +204,14 @@ public class ClusterRepository {
 			String cId = (String) iter.next();
 			System.out.print("updating: " + cId + " ...");
 			update(cId);
-			System.out.println(" (" + __CASE_PROCESS + ") done. Comparisons yet: " + CaseCluster.___COMPARE_SUM);
+			System.out.println(" (" + __CASE_PROCESS + ") done. Comparisons yet: "
+					+ CaseCluster.___COMPARE_SUM);
 		}
 	}
 
 	/**
 	 * Removes the given case from cluster repository
+	 * 
 	 * @param cobj
 	 */
 	public void delete(String caseId) {
@@ -223,7 +230,7 @@ public class ClusterRepository {
 				if (centerId.equals(caseId)) {
 					toUpdate.addAll(cluster.getCaseIds());
 					clusters.remove(cluster);
-					// remove all entries for toUpdate-cases and current cluster 
+					// remove all entries for toUpdate-cases and current cluster
 					removeClusterEntriesInHash(toUpdate, cluster);
 
 					// update the elements of deleted cluster
@@ -257,7 +264,8 @@ public class ClusterRepository {
 			if (clusters == null) {
 				clusters = new HashSet();
 				clustersByCaseId.put(caseId, clusters);
-			} else {
+			}
+			else {
 				clusters.remove(cluster);
 			}
 		}

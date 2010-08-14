@@ -4,7 +4,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.session.Session;
 
 /**
- *
+ * 
  * @author Reinhard Hatko
  * @created 12.08.2010
  */

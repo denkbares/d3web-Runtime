@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.kernel.tests;
@@ -36,51 +36,38 @@ import de.d3web.core.session.Value;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
-  * This test is designed to control the indication mechanisms (calculation/
- * provision of next questions by Session.getInterviewManager.nextForm()) 
+ * This test is designed to control the indication mechanisms (calculation/
+ * provision of next questions by Session.getInterviewManager.nextForm())
  * 
- * Test Framework Conditions:  One-Question (OQ) Form Strategy, Questionnaires
- * i.e., the provided next form contains QASets/QContainers?! ...
- * in its list of indicated questions, and tested is only a knowledge base 
- * consisting of some questions and follow-up questions (no questionnaires)
+ * Test Framework Conditions: One-Question (OQ) Form Strategy, Questionnaires
+ * i.e., the provided next form contains QASets/QContainers?! ... in its list of
+ * indicated questions, and tested is only a knowledge base consisting of some
+ * questions and follow-up questions (no questionnaires)
  * 
  * The tested knowledge base contains the following terminology:
  * 
- * <b>Questions</b>
- * Start Questions 		{QContainer}
- * - Sex [oc]
- * -- Male
- * -- Female
- * --- Pregnant [y/n]
- * ---- Yes
- * ----- Pregnancy Questions 
- * ---- No
- * ----- Common Questions
- * Pregnancy Questions 	{QContainer}
- * - Nausea [y/n]
- * - Month [Num]
- * Common Questions 	{QContainer}
- * - Headache [y/n]
- * Male Specific
- * - Prostatitis [y/n]
+ * <b>Questions</b> Start Questions {QContainer} - Sex [oc] -- Male -- Female
+ * --- Pregnant [y/n] ---- Yes ----- Pregnancy Questions ---- No ----- Common
+ * Questions Pregnancy Questions {QContainer} - Nausea [y/n] - Month [Num]
+ * Common Questions {QContainer} - Headache [y/n] Male Specific - Prostatitis
+ * [y/n]
  * 
  * The problem solving is based on the following <b>Rules</b>:
  * 
- * Sex == Female 	=> INDICATE Pregnant					(ask Pregnant)
- * Sex == Male 		=> CONTRA_INDICATE Pregnancy Questions
- * 					=> INSTANT_INDICATE Male Specific		(ask Prostatitis)
- * Pregnant == Yes 	=> INDICATE Pregnancy Questions 		(ask Nausea)
- * Pregnant == No 	=> CONTRA_INDICATE Pregnancy Questions
- * 					=> INDICATE Common Questions 			(ask Headache)
- *  
+ * Sex == Female => INDICATE Pregnant (ask Pregnant) Sex == Male =>
+ * CONTRA_INDICATE Pregnancy Questions => INSTANT_INDICATE Male Specific (ask
+ * Prostatitis) Pregnant == Yes => INDICATE Pregnancy Questions (ask Nausea)
+ * Pregnant == No => CONTRA_INDICATE Pregnancy Questions => INDICATE Common
+ * Questions (ask Headache)
+ * 
  * @author Martina Freiberg
- *
+ * 
  */
 public class IndicationOQQuestionnairesNextFormTest {
 
 	private static KnowledgeBaseManagement kbm;
 	private static Session session;
-	
+
 	@BeforeClass
 	public static void setUp() throws Exception {
 		InitPluginManager.init();
@@ -89,60 +76,61 @@ public class IndicationOQQuestionnairesNextFormTest {
 		addRules();
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
 	}
-	
+
 	// TODO rework
 	// add the knowledge base objects, i.e., questions and answers
 	private static void addTerminologyObjects() {
-		
+
 		// QContainer Start Questions
-		
+
 		// Question Sex
 		String sex = "Sex";
-		String[] sexAlternatives = new String[] {"Female", "Male"};
+		String[] sexAlternatives = new String[] {
+				"Female", "Male" };
 		kbm.createQuestionOC(sex, kbm.getKnowledgeBase().getRootQASet(), sexAlternatives);
-				
+
 		// Question Pregnant
 		String pregnant = "Pregnant";
 		kbm.createQuestionYN(pregnant, kbm.getKnowledgeBase().getRootQASet());
-	
+
 		// QContainer Pregnancy Problems
 		String pregProb = "Pregnancy Problems";
 		QASet pregProbQASet = kbm.createQContainer(pregProb);
-		
+
 		// Question Nausea
 		String nausea = "Nausea";
 		kbm.createQuestionYN(nausea, pregProbQASet);
-		
+
 		// Question Month
-		
+
 		// QContainer Common Questions
 		String otherProb = "Common Questions";
 		QASet commonQASet = kbm.createQContainer(otherProb);
-		
+
 		// Question 'Headache'
 		String headache = "Headache";
 		kbm.createQuestionYN(headache, commonQASet);
 
 		// QContainer Male Specific
-		
+
 		// Question Prostatitis
 
 	}
 
 	// TODO: rework, new KB
 	private static void addRules() {
-		
+
 		Question sex = kbm.findQuestion("Sex");
 		Value male = kbm.findValue(sex, "Male");
 		Value female = kbm.findValue(sex, "Female");
-		 
+
 		Question pregnant = kbm.findQuestion("Pregnant");
 		Value yes = kbm.findValue(pregnant, "Yes");
 		Value no = kbm.findValue(pregnant, "No");
-		 
+
 		QContainer pregProbs = kbm.findQContainer("Pregnancy Problems");
 		QContainer otherProbs = kbm.findQContainer("Other Problems");
-		
+
 		// Create indication rule: Sex == Female => Pregnant
 		Condition condition = new CondEqual(sex, female);
 		RuleFactory.createIndicationRule(kbm.createRuleID(), pregnant, condition);
@@ -150,24 +138,26 @@ public class IndicationOQQuestionnairesNextFormTest {
 		// Create indication rule: Pregnant == Yes => Pregnancy Problems
 		condition = new CondEqual(pregnant, yes);
 		RuleFactory.createIndicationRule(kbm.createRuleID(), pregProbs, condition);
-		
+
 		// Create indication rule: Pregnant == No => Other Problems
 		condition = new CondEqual(pregnant, no);
 		RuleFactory.createIndicationRule(kbm.createRuleID(), otherProbs, condition);
-		
+
 		// Create indication rule: Sex == Male => Other Problems
 		condition = new CondEqual(sex, male);
 		RuleFactory.createIndicationRule(kbm.createRuleID(), otherProbs, condition);
-		
-		// Create the contra-indication rule for question "Pregnant", i.e. the 
+
+		// Create the contra-indication rule for question "Pregnant", i.e. the
 		// rule that fires, if question "Sex" is answered otherwise by the user
 		// Sex = Male => Pregnant = contra-indicated
-		/*condition = new CondEqual(sex, male);
-		List<QASet> contraindicated = new ArrayList<QASet>();
-		contraindicated.add(pregnant);
-		RuleFactory.createContraIndicationRule(kbm.createRuleID(), contraindicated, condition);*/
+		/*
+		 * condition = new CondEqual(sex, male); List<QASet> contraindicated =
+		 * new ArrayList<QASet>(); contraindicated.add(pregnant);
+		 * RuleFactory.createContraIndicationRule(kbm.createRuleID(),
+		 * contraindicated, condition);
+		 */
 	}
-	
+
 	// TODO rework
 	// tests, whether all kb-terminology objects are contained as hard coded
 	/*
@@ -241,22 +231,18 @@ public class IndicationOQQuestionnairesNextFormTest {
 	 * "contained in the knowledge base", no); }
 	 */
 
-	
 	@Test
 	public void testIndication() {
-		
+
 		// TODO
 	}
-	
 
 	@Test
 	public void testContraIndication() {
-		
+
 		// TODO
 	}
-	
-	
-	
+
 	@Test
 	public void testInstantIndication() {
 

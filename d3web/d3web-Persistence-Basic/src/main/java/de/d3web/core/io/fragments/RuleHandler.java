@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.io.fragments;
 
@@ -34,9 +34,10 @@ import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.manage.RuleFactory;
+
 /**
  * FragmentHandler for Rules
- *
+ * 
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class RuleHandler implements FragmentHandler {
@@ -45,11 +46,11 @@ public class RuleHandler implements FragmentHandler {
 	public boolean canRead(Element node) {
 		String nodeName = node.getNodeName();
 		NamedNodeMap attributes = node.getAttributes();
-		if (nodeName != null && nodeName.equalsIgnoreCase("knowledgeslice") && attributes!=null) {
+		if (nodeName != null && nodeName.equalsIgnoreCase("knowledgeslice") && attributes != null) {
 			Node namedItem = attributes.getNamedItem("type");
-			if (namedItem!=null) {
+			if (namedItem != null) {
 				String nodeValue = namedItem.getNodeValue();
-				if (nodeValue!=null && nodeValue.equals("RuleComplex")) {
+				if (nodeValue != null && nodeValue.equals("RuleComplex")) {
 					return true;
 				}
 			}
@@ -73,41 +74,48 @@ public class RuleHandler implements FragmentHandler {
 		Condition context = null;
 		List<Element> children = XMLUtil.getElementList(node.getChildNodes());
 		PersistenceManager pm = PersistenceManager.getInstance();
-		for (Element child: children) {
+		for (Element child : children) {
 			if (child.getNodeName().equals("Exception")) {
 				Object object = getGrandChildObject(kb, pm, child);
-				if (object != null && exception instanceof Condition && exception== null) {
+				if (object != null && exception instanceof Condition && exception == null) {
 					exception = (Condition) object;
-				} else {
+				}
+				else {
 					throw new IOException();
 				}
-			} else if (child.getNodeName().equals("Context")) {
+			}
+			else if (child.getNodeName().equals("Context")) {
 				Object object = getGrandChildObject(kb, pm, child);
-				if (object != null && context instanceof Condition && context== null) {
+				if (object != null && context instanceof Condition && context == null) {
 					context = (Condition) object;
-				} else {
+				}
+				else {
 					throw new IOException();
 				}
-			} else {
+			}
+			else {
 				Object object = pm.readFragment(child, kb);
 				if (object != null) {
 					if (object instanceof PSAction && action == null) {
 						action = (PSAction) object;
-					} else if (object instanceof Condition && condition == null) {
+					}
+					else if (object instanceof Condition && condition == null) {
 						condition = (Condition) object;
-					} else {
+					}
+					else {
 						throw new IOException();
 					}
-				} else {
+				}
+				else {
 					throw new IOException();
 				}
 			}
 		}
 		Rule rule = RuleFactory.createRule(id, action, condition, exception, context);
-		if (active != null && active.length()>0) {
+		if (active != null && active.length() > 0) {
 			rule.setActive(Boolean.parseBoolean(active));
 		}
-		if (comment != null && comment.length()>0) {
+		if (comment != null && comment.length() > 0) {
 			rule.setComment(comment);
 		}
 		return rule;
@@ -116,7 +124,7 @@ public class RuleHandler implements FragmentHandler {
 	private Object getGrandChildObject(KnowledgeBase kb, PersistenceManager pm,
 			Element child) throws IOException {
 		List<Element> grandchildren = XMLUtil.getElementList(child.getChildNodes());
-		if (grandchildren.size()==1) {
+		if (grandchildren.size() == 1) {
 			Element grandchild = grandchildren.get(0);
 			return pm.readFragment(grandchild, kb);
 		}
@@ -132,10 +140,10 @@ public class RuleHandler implements FragmentHandler {
 		Element node = doc.createElement("KnowledgeSlice");
 		node.setAttribute("ID", rule.getId());
 		node.setAttribute("type", "RuleComplex");
-		if(!rule.isActive()) {
-			node.setAttribute("active", ""+rule.isActive());
+		if (!rule.isActive()) {
+			node.setAttribute("active", "" + rule.isActive());
 		}
-		if(rule.getComment() != null) {
+		if (rule.getComment() != null) {
 			node.setAttribute("comment", rule.getComment());
 		}
 		PersistenceManager pm = PersistenceManager.getInstance();
@@ -145,7 +153,7 @@ public class RuleHandler implements FragmentHandler {
 			Element actionNode = pm.writeFragment(action, doc);
 			node.appendChild(actionNode);
 		}
-		// creating condition and exception node 	
+		// creating condition and exception node
 		Condition condition = rule.getCondition();
 		if (condition != null) {
 			Element conditionNode = pm.writeFragment(condition, doc);
@@ -158,7 +166,7 @@ public class RuleHandler implements FragmentHandler {
 			Element exceptionNode = pm.writeFragment(exception, doc);
 			exceptionRoot.appendChild(exceptionNode);
 		}
-		//create context node
+		// create context node
 		Condition context = rule.getContext();
 		if (context != null) {
 			Element contextRoot = doc.createElement("Context");

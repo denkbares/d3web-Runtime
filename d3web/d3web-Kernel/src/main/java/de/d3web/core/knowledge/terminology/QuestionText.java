@@ -20,7 +20,6 @@
 
 package de.d3web.core.knowledge.terminology;
 
-
 /**
  * A question which asks for a string text.
  * 

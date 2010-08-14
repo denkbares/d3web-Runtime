@@ -39,14 +39,15 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.Property;
 
 /**
- * PersistenceHandler for PictureQuestion used in the {@link ImageQuestionHandler}.
+ * PersistenceHandler for PictureQuestion used in the
+ * {@link ImageQuestionHandler}.
  * 
  * TODO: Get the writer Component working.
  * 
  * @author Johannes Dienst
- *
+ * 
  */
-public class ImageQuestionPersistenceHandler implements KnowledgeReader, KnowledgeWriter{
+public class ImageQuestionPersistenceHandler implements KnowledgeReader, KnowledgeWriter {
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -57,11 +58,11 @@ public class ImageQuestionPersistenceHandler implements KnowledgeReader, Knowled
 
 		Document doc = Util.streamToDocument(stream);
 		List<Element> childNodes = XMLUtil.getElementList(doc.getChildNodes());
-		
+
 		// Check for right DocumentStructure
-		if (!(childNodes.size() == 0) && !(childNodes.size() > 1)) {		
-		    if (childNodes.get(0).getNodeName().equals("Questions")) {
-		    	
+		if (!(childNodes.size() == 0) && !(childNodes.size() > 1)) {
+			if (childNodes.get(0).getNodeName().equals("Questions")) {
+
 				List<Element> questions = XMLUtil.getElementList(childNodes
 						.get(0).getChildNodes());
 
@@ -85,10 +86,10 @@ public class ImageQuestionPersistenceHandler implements KnowledgeReader, Knowled
 					q.getProperties().setProperty(Property.IMAGE_QUESTION_INFO,
 							questionInfo);
 				}
-		    }
+			}
 		}
 		listener.updateProgress(1, "Loading Picture Questions finished");
-		
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -97,8 +98,7 @@ public class ImageQuestionPersistenceHandler implements KnowledgeReader, Knowled
 		int count = 0;
 		for (Question q : knowledgeBase.getQuestions()) {
 			List props = (List) q.getProperties().getProperty(Property.IMAGE_QUESTION_INFO);
-			if (props != null)
-				count++;
+			if (props != null) count++;
 		}
 		return count;
 	}
@@ -110,21 +110,21 @@ public class ImageQuestionPersistenceHandler implements KnowledgeReader, Knowled
 		listener.updateProgress(0, "Starting to save Image Questions");
 		int maxvalue = getEstimatedSize(knowledgeBase);
 		float aktvalue = 0;
-		
+
 		Document doc = Util.createEmptyDocument();
 		Element root = doc.createElement("Questions");
 		List<Question> questions = knowledgeBase.getQuestions();
-		
+
 		for (Question q : questions) {
 			List props = (List) q.getProperties().getProperty(Property.IMAGE_QUESTION_INFO);
 			if (props != null) {
 				Element question = doc.createElement("Question");
 				question.setAttribute("ID", q.getId());
 				Element questionImage = doc.createElement("QuestionImage");
-				questionImage.setAttribute("file", (String)props.get(0));
-				
+				questionImage.setAttribute("file", (String) props.get(0));
+
 				// Answer Region
-				List answerRegions = (List)props.get(1);
+				List answerRegions = (List) props.get(1);
 				for (Object ar : answerRegions) {
 					List<String> attributes = (List<String>) ar;
 					String answerID = attributes.get(0);
@@ -147,24 +147,24 @@ public class ImageQuestionPersistenceHandler implements KnowledgeReader, Knowled
 			}
 		}
 		doc.appendChild(root);
-		
+
 		listener.updateProgress(1, "Image Question saved");
 		Util.writeDocumentToOutputStream(doc, stream);
-		
+
 	}
 
 	@SuppressWarnings("unchecked")
 	private static List readAnswerRegions(Element element) {
 		ArrayList ret = new ArrayList();
-		List<Element> list = XMLUtil.getElementList(element.getChildNodes());	
-		for(int i = 0; i < list.size();i++) {
+		List<Element> list = XMLUtil.getElementList(element.getChildNodes());
+		for (int i = 0; i < list.size(); i++) {
 			Element aR = list.get(i);
 			ArrayList regionsInfo = new ArrayList();
 			regionsInfo.add(aR.getAttribute("answerID"));
 			regionsInfo.add(aR.getAttribute("xStart"));
 			regionsInfo.add(aR.getAttribute("xEnd"));
 			regionsInfo.add(aR.getAttribute("yStart"));
-			regionsInfo.add(aR.getAttribute("yEnd"));			
+			regionsInfo.add(aR.getAttribute("yEnd"));
 			ret.add(regionsInfo);
 		}
 		return ret;

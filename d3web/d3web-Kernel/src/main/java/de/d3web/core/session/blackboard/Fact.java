@@ -5,6 +5,7 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Value;
 
 public interface Fact {
+
 	/**
 	 * Returns the terminology object the fact is created for.
 	 * 

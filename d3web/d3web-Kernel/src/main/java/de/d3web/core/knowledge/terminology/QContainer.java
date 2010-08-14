@@ -46,7 +46,6 @@ public class QContainer extends QASet {
 		setChildren(new LinkedList<NamedObject>());
 	}
 
-
 	/**
 	 * Compares the priority with the priority of another {@link QContainer}
 	 * instance.
@@ -83,7 +82,6 @@ public class QContainer extends QASet {
 		return getPriority().compareTo(acPriority);
 	}
 
-
 	/**
 	 * <b>Deprecated:</b> not used anymore. <br>
 	 * Returns the {@link QContainer}s priority. This is a non-negative
@@ -97,7 +95,6 @@ public class QContainer extends QASet {
 	public Integer getPriority() {
 		return priority;
 	}
-
 
 	/**
 	 * Defines the relation to the specified {@link KnowledgeBase} instance, to

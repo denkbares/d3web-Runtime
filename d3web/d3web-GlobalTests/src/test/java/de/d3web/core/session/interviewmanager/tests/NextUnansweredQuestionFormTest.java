@@ -67,7 +67,7 @@ public class NextUnansweredQuestionFormTest {
 				"yes", "no" });
 		ask_for_pregnancy = kbm.createQuestionOC("ask for pregnancy", pregnancyQuestions,
 				new String[] {
-				"yes", "no" });
+						"yes", "no" });
 
 		// Container: heightWeightQuestions = { weight, height } 
 		heightWeightQuestions = kbm.createQContainer("heightWeightQuestions", root);
@@ -76,7 +76,7 @@ public class NextUnansweredQuestionFormTest {
 
 		initQuestion = kbm.createQuestionOC("initQuestion", root,
 				new String[] {
-				"all", "pregnacyQuestions", "height+weight" });
+						"all", "pregnacyQuestions", "height+weight" });
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
 		session.getInterview().setFormStrategy(new NextUnansweredQuestionFormStrategy());
 		agenda = session.getInterview().getInterviewAgenda();
@@ -166,6 +166,6 @@ public class NextUnansweredQuestionFormTest {
 	private void setValue(Question question, Value value) {
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(question, value,
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 	}
 }

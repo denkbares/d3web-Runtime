@@ -25,8 +25,7 @@ public interface Resource {
 	 * from it.
 	 * 
 	 * @return the stream to read the data from
-	 * @throws IOException
-	 *             the stream could not been created
+	 * @throws IOException the stream could not been created
 	 */
 	public InputStream getInputStream() throws IOException;
 

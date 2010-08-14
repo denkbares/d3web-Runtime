@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.plugin;
@@ -70,7 +70,7 @@ public class JPFPluginManager extends PluginManager {
 				else {
 					Logger.getLogger("PluginManager").warning(
 							"File '" + pluginFile
-							+ "' is not a plugin. It will be ignored.");
+									+ "' is not a plugin. It will be ignored.");
 				}
 			}
 			catch (MalformedURLException e) {
@@ -96,10 +96,9 @@ public class JPFPluginManager extends PluginManager {
 	 * If the manager could not be initialized with the specified directory (for
 	 * any reason), an IllegalArgumentException is thrown.
 	 * 
-	 * @param directory
-	 *            directory of the plugins
-	 * @throws IllegalArgumentException
-	 *             the directory could not be used for initialization
+	 * @param directory directory of the plugins
+	 * @throws IllegalArgumentException the directory could not be used for
+	 *         initialization
 	 */
 	public static void init(String directory) {
 		if (instance != null) {
@@ -120,10 +119,9 @@ public class JPFPluginManager extends PluginManager {
 	 * If the manager could not be initialized with the specified directory (for
 	 * any reason), an IllegalArgumentException is thrown.
 	 * 
-	 * @param pluginFiles
-	 *            list of plugin files
-	 * @throws IllegalArgumentException
-	 *             the files could not be used for initialization
+	 * @param pluginFiles list of plugin files
+	 * @throws IllegalArgumentException the files could not be used for
+	 *         initialization
 	 */
 	public static void init(File[] pluginFiles) {
 		if (pluginFiles == null) {
@@ -187,8 +185,7 @@ public class JPFPluginManager extends PluginManager {
 			String extendetPointID, String pluginID, String extensionID) {
 		Extension[] extensions = getExtensions(extendetPluginID, extendetPointID);
 		for (Extension e : extensions) {
-			if (e.getID().equals(extensionID) && e.getPluginID().equals(pluginID))
-				return e;
+			if (e.getID().equals(extensionID) && e.getPluginID().equals(pluginID)) return e;
 		}
 		return null;
 	}

@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.persistence.tests.utils;
@@ -33,9 +33,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * @author bates
- * This Class represents an XMLTag generated from a DOM-Node.
- * You can access its name, content, attributes and children. 
+ * @author bates This Class represents an XMLTag generated from a DOM-Node. You
+ *         can access its name, content, attributes and children.
  */
 public class XMLTag {
 
@@ -46,6 +45,7 @@ public class XMLTag {
 
 	/**
 	 * Creates a new XMLTag-representation with the given name
+	 * 
 	 * @param name the Name of the new Tag
 	 */
 	public XMLTag(String name) {
@@ -56,7 +56,8 @@ public class XMLTag {
 	}
 
 	/**
-	 * Creates a new XMLTag-representation from the given DOM-Node 
+	 * Creates a new XMLTag-representation from the given DOM-Node
+	 * 
 	 * @param node DOM-Node to create the XMLTag-Object from
 	 */
 	public XMLTag(Node node) {
@@ -69,7 +70,7 @@ public class XMLTag {
 		// name
 		name = node.getNodeName();
 
-		//attributes
+		// attributes
 		NamedNodeMap attr = node.getAttributes();
 
 		if (attr != null) {
@@ -81,7 +82,7 @@ public class XMLTag {
 			}
 		}
 
-		//children and content
+		// children and content
 		NodeList cList = node.getChildNodes();
 		for (int i = 0; i < cList.getLength(); ++i) {
 			Node child = cList.item(i);
@@ -89,9 +90,12 @@ public class XMLTag {
 
 			if (child.getNodeType() == Node.ELEMENT_NODE) {
 				addChild(new XMLTag(child));
-			} else if ((child.getNodeType() == Node.TEXT_NODE) && (child.getNodeValue() != null)) {
+			}
+			else if ((child.getNodeType() == Node.TEXT_NODE) && (child.getNodeValue() != null)) {
 				content = child.getNodeValue();
-			} else if ((child.getNodeType() == Node.CDATA_SECTION_NODE) && (child.getNodeValue() != null)) {
+			}
+			else if ((child.getNodeType() == Node.CDATA_SECTION_NODE)
+					&& (child.getNodeValue() != null)) {
 				content = child.getNodeValue();
 			}
 		}
@@ -107,6 +111,7 @@ public class XMLTag {
 
 	/**
 	 * Adds a new attribute to this XMLTag
+	 * 
 	 * @param name the name of the new attribute
 	 * @param value the attribute´s value
 	 */
@@ -116,6 +121,7 @@ public class XMLTag {
 
 	/**
 	 * Returns the children of this Tag
+	 * 
 	 * @return List of all children of this XMLTag
 	 */
 	public List<XMLTag> getChildren() {
@@ -124,6 +130,7 @@ public class XMLTag {
 
 	/**
 	 * Adds a new child to this Tag
+	 * 
 	 * @param child to add
 	 */
 	public void addChild(XMLTag child) {
@@ -132,6 +139,7 @@ public class XMLTag {
 
 	/**
 	 * Returns the tag-content.
+	 * 
 	 * @return the tag´s content
 	 */
 	public String getContent() {
@@ -140,6 +148,7 @@ public class XMLTag {
 
 	/**
 	 * Returns the name.
+	 * 
 	 * @return the tag´s name
 	 */
 	public String getName() {
@@ -148,6 +157,7 @@ public class XMLTag {
 
 	/**
 	 * Sets the tag´s children.
+	 * 
 	 * @param children the children to set
 	 */
 	public void setChildren(List<XMLTag> children) {
@@ -156,6 +166,7 @@ public class XMLTag {
 
 	/**
 	 * Sets the content of this tag.
+	 * 
 	 * @param content the content to set
 	 */
 	public void setContent(String content) {
@@ -163,12 +174,15 @@ public class XMLTag {
 	}
 
 	/**
-	 * Returns a Hashtable containing attribute-names as key and their value as value.
+	 * Returns a Hashtable containing attribute-names as key and their value as
+	 * value.
+	 * 
 	 * @return the attributes of this tag in a Hashtable
 	 */
 	public Hashtable<String, String> getAttributes() {
 		return attributes;
 	}
+
 	/**
 	 * @return a String-representation of this XMLTag
 	 */
@@ -180,7 +194,7 @@ public class XMLTag {
 
 		Enumeration<String> enumeration = attributes.keys();
 		while (enumeration.hasMoreElements()) {
-			String key =  enumeration.nextElement();
+			String key = enumeration.nextElement();
 			String value = attributes.get(key);
 
 			ret.append(" " + key + "='" + value + "'");
@@ -201,6 +215,7 @@ public class XMLTag {
 
 	/**
 	 * Checks for equality by comparing name, attributes, content and children
+	 * 
 	 * @return true, if equal as described above
 	 */
 	public boolean equals(Object o) {
@@ -209,23 +224,24 @@ public class XMLTag {
 			XMLTag other = (XMLTag) o;
 
 			boolean nameok = name.equals(other.getName());
-			//			System.out.println(name + " = " + other.getName());
+			// System.out.println(name + " = " + other.getName());
 
 			Set<Entry<String, String>> attrSet = attributes.entrySet();
 			Set<Entry<String, String>> otherAttrSet = other.getAttributes().entrySet();
 
 			boolean attrok = attrSet.containsAll(otherAttrSet) && otherAttrSet.containsAll(attrSet);
-			//			System.out.println("Attributes ok? " + attrok);
+			// System.out.println("Attributes ok? " + attrok);
 
 			List<XMLTag> otherChildren = other.getChildren();
 
-			boolean childrenok = children.containsAll(otherChildren) && otherChildren.containsAll(children);
-			//			System.out.println("children: " + children);
-			//			System.out.println("other children: " + other.getChildren());
-			//			System.out.println("childrenok? " + childrenok);
+			boolean childrenok = children.containsAll(otherChildren)
+					&& otherChildren.containsAll(children);
+			// System.out.println("children: " + children);
+			// System.out.println("other children: " + other.getChildren());
+			// System.out.println("childrenok? " + childrenok);
 
 			boolean contentok = content.equals(other.getContent());
-			//			System.out.println(content + " = " + other.getContent());
+			// System.out.println(content + " = " + other.getContent());
 
 			return nameok && attrok && childrenok && contentok;
 

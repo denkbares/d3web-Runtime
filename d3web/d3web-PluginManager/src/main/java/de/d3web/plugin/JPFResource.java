@@ -10,7 +10,7 @@ public class JPFResource implements Resource {
 
 	private final URL url;
 	private final String relativePath;
-	
+
 	public JPFResource(URL url, String relativePath) {
 		this.url = url;
 		this.relativePath = relativePath;
@@ -28,13 +28,14 @@ public class JPFResource implements Resource {
 
 	@Override
 	public long getSize() {
-		int size  = -1;
+		int size = -1;
 		try {
 			URLConnection connection = url.openConnection();
 			size = connection.getContentLength();
 		}
 		catch (IOException e) {
-			Logger.getLogger(getClass().getName()).warning("cannot open resource to determine content size: " + e);
+			Logger.getLogger(getClass().getName()).warning(
+					"cannot open resource to determine content size: " + e);
 		}
 		return size;
 	}

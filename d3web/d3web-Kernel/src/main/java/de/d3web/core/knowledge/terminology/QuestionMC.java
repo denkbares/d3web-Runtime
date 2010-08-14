@@ -23,7 +23,6 @@ package de.d3web.core.knowledge.terminology;
 import java.util.List;
 import java.util.Vector;
 
-
 /**
  * Storage for Questions with predefined multiple answers (alternatives). <BR>
  * Part of the Composite design pattern (see QASet for further description)

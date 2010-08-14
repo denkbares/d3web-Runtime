@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.kernel.verbalizer;
@@ -26,19 +26,22 @@ import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.kernel.verbalizer.VerbalizationManager.RenderingFormat;
+
 /**
- * This class verbalizes (renders to String representation) a Question.
- * It integrates the old VerbalizationFactory/RuleToHTML classes into the verbalizer framework.
+ * This class verbalizes (renders to String representation) a Question. It
+ * integrates the old VerbalizationFactory/RuleToHTML classes into the
+ * verbalizer framework.
  * 
  * @author lemmerich
  * @date june 2008
  */
-public class QuestionVerbalizer implements Verbalizer{
+public class QuestionVerbalizer implements Verbalizer {
+
 	/**
 	 * Returns the classes RuleVerbalizer can render
 	 */
 	public Class[] getSupportedClassesForVerbalization() {
-		Class[] supportedClasses = {Question.class };
+		Class[] supportedClasses = { Question.class };
 		return supportedClasses;
 	}
 
@@ -70,7 +73,7 @@ public class QuestionVerbalizer implements Verbalizer{
 	public String verbalize(Object o, RenderingFormat targetFormat, Map<String, Object> parameter) {
 
 		// These two ifs are for safety only and should not be needed
-		if (! Arrays.asList(getSupportedRenderingTargets()).contains(targetFormat)) {
+		if (!Arrays.asList(getSupportedRenderingTargets()).contains(targetFormat)) {
 			// this should not happen, cause VerbalizationManager should not
 			// delegate here in this case!
 			Logger.getLogger("Verbalizer").warning(
@@ -80,29 +83,28 @@ public class QuestionVerbalizer implements Verbalizer{
 		if (!(o instanceof Question)) {
 			// this should not happen, cause VerbalizationManager should not
 			// delegate here in this case!
-			Logger.getLogger("Verbalizer").warning("Object " + o + " couldnt be rendered by DiagnosisVerbalizer!");
+			Logger.getLogger("Verbalizer").warning(
+					"Object " + o + " couldnt be rendered by DiagnosisVerbalizer!");
 			return null;
 		}
-		
-		
+
 		Question q = (Question) o;
-		//set the default parameter for idVisible
+		// set the default parameter for idVisible
 		boolean idVisible = false;
-		
-		//read the parameter for idVisible from the parameter Hash, if possible
+
+		// read the parameter for idVisible from the parameter Hash, if possible
 		if ((!(parameter == null)) && parameter.containsKey(Verbalizer.ID_VISIBLE)) {
 			Object paraIDVisible = parameter.get(Verbalizer.ID_VISIBLE);
-			//catch illegal object saved in parameter Hash
+			// catch illegal object saved in parameter Hash
 			if (paraIDVisible instanceof Boolean) idVisible = (Boolean) paraIDVisible;
 		}
-		
+
 		String s = q.getName();
 		if (idVisible) {
 			s += " (" + q.getId() + ")";
-		} 
-		
+		}
+
 		return s;
 	}
-	
-	
+
 }

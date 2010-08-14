@@ -24,11 +24,11 @@ public class Property {
 	 */
 	public static final Property MY_NEW_PROPERTY = new Property(
 			"my_new_property");
-	
+
 	/**
 	 * used for: Storing infos about a QuestionImage and their AnswerRegions
-	 * doc: Used to store a List of Image and Answer Regions 
-	 * handled by: d3web-Persistence-Basic
+	 * doc: Used to store a List of Image and Answer Regions handled by:
+	 * d3web-Persistence-Basic
 	 * 
 	 * @return java.util.list with QuestionImage and AnswerRegions
 	 */

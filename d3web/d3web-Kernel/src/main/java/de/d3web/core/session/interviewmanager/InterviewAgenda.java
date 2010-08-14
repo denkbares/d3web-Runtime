@@ -75,7 +75,7 @@ public class InterviewAgenda {
 			result = prime
 					* result
 					+ ((interviewObject == null) ? 0 : interviewObject
-					.hashCode());
+							.hashCode());
 			result = prime * result + ((state == null) ? 0 : state.hashCode());
 			return result;
 		}

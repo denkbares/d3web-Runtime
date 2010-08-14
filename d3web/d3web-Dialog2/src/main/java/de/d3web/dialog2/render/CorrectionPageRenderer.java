@@ -72,8 +72,8 @@ public class CorrectionPageRenderer extends Renderer {
 				// set as user selected
 				session.getBlackboard().addValueFact(
 						new DefaultFact(diag, new Rating(
-						Rating.State.ESTABLISHED), this,
-						PSMethodUserSelected.getInstance()));
+								Rating.State.ESTABLISHED), this,
+								PSMethodUserSelected.getInstance()));
 			}
 			else {
 				// delete user selected diagnosis
@@ -220,7 +220,7 @@ public class CorrectionPageRenderer extends Renderer {
 			Solution actual = diagList.get(i);
 			if (!actual.equals(root)
 					&& !(diagListEstablished.contains(actual) || diagListSuggested
-					.contains(actual))) {
+							.contains(actual))) {
 				retList.add(actual);
 			}
 		}
@@ -304,17 +304,17 @@ public class CorrectionPageRenderer extends Renderer {
 			writer.writeAttribute("id", "markallheur", "id");
 			writer
 					.writeAttribute(
-					"onclick",
-					"toggleUserSelectedDiags('userseldiagsheuristic'); return false;",
-					"onclick");
+							"onclick",
+							"toggleUserSelectedDiags('userseldiagsheuristic'); return false;",
+							"onclick");
 		}
 		else {
 			writer.writeAttribute("id", "markallother", "id");
 			writer
 					.writeAttribute(
-					"onclick",
-					"toggleUserSelectedDiags('userseldiagsother'); return false;",
-					"onclick");
+							"onclick",
+							"toggleUserSelectedDiags('userseldiagsother'); return false;",
+							"onclick");
 		}
 
 		writer.writeText(DialogUtils.getMessageFor("correctcase.markall"),

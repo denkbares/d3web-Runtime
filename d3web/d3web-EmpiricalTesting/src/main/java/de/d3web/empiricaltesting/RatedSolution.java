@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.empiricaltesting;
@@ -30,21 +30,24 @@ public class RatedSolution implements Comparable<RatedSolution> {
 	Rating rating;
 
 	static class InverseRatingComparator implements Comparator<RatedSolution> {
+
 		@Override
 		public int compare(RatedSolution o1, RatedSolution o2) {
 			return (o1.compareTo(o2)) * (-1);
 		}
 	}
-	
+
 	public static class RatingComparatorByName implements Comparator<RatedSolution> {
+
 		@Override
 		public int compare(RatedSolution o1, RatedSolution o2) {
 			return o1.getSolution().getName().compareTo(o2.getSolution().getName());
 		}
-	}	
+	}
 
 	/**
 	 * Creates new RatedSolution with committed Diagnosis and Rating
+	 * 
 	 * @param solution Diagnosis
 	 * @param rating Rating
 	 */
@@ -54,8 +57,8 @@ public class RatedSolution implements Comparable<RatedSolution> {
 	}
 
 	/**
-	 * String representation of this RatedSolution
-	 * solution (rating)
+	 * String representation of this RatedSolution solution (rating)
+	 * 
 	 * @return String representation of this RatedSolution.
 	 */
 	@Override
@@ -75,42 +78,35 @@ public class RatedSolution implements Comparable<RatedSolution> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof RatedSolution))
-			return false;
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (!(obj instanceof RatedSolution)) return false;
 		RatedSolution other = (RatedSolution) obj;
 		if (rating == null) {
-			if (other.rating != null)
-				return false;
-		} else if (!rating.equals(other.rating))
-			return false;
+			if (other.rating != null) return false;
+		}
+		else if (!rating.equals(other.rating)) return false;
 		if (solution == null) {
-			if (other.solution != null)
-				return false;
-		} else if (!solution.equals(other.solution))
-			return false;
+			if (other.solution != null) return false;
+		}
+		else if (!solution.equals(other.solution)) return false;
 		return true;
 	}
 
 	/**
-	 * Compares two RatedSolutions by first comparing the ratings 
-	 * and then comparing the String names of the solutions (if
-	 * ratings are equal).
+	 * Compares two RatedSolutions by first comparing the ratings and then
+	 * comparing the String names of the solutions (if ratings are equal).
 	 */
 	@Override
 	public int compareTo(RatedSolution o) {
 		int comp = rating.compareTo(o.rating);
-		if (comp != 0)
-			return comp;
-		else
-			return solution.getName().compareTo(o.solution.getName());
+		if (comp != 0) return comp;
+		else return solution.getName().compareTo(o.solution.getName());
 	}
 
 	/**
 	 * Sets Rating of this RatedSolution to rating
+	 * 
 	 * @param rating new Rating
 	 */
 	public void update(Rating rating) {
@@ -119,6 +115,7 @@ public class RatedSolution implements Comparable<RatedSolution> {
 
 	/**
 	 * Returns Solution of this RatedSolution
+	 * 
 	 * @return solution
 	 */
 	public synchronized Solution getSolution() {
@@ -127,6 +124,7 @@ public class RatedSolution implements Comparable<RatedSolution> {
 
 	/**
 	 * Returns Rating of this RatedSolution
+	 * 
 	 * @return rating
 	 */
 	public synchronized Rating getRating() {

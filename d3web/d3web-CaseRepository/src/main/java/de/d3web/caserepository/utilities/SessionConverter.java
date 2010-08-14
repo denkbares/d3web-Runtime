@@ -127,7 +127,7 @@ public class SessionConverter {
 			CaseObject.Solution sol = solIter.next();
 			ret.getBlackboard().addValueFact(
 					new DefaultFact(sol.getSolution(), sol.getState(), new Object(),
-					PSMethodUserSelected.getInstance()));
+							PSMethodUserSelected.getInstance()));
 		}
 
 		if (copyDCMarkup) {

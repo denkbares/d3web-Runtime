@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.render;
@@ -61,7 +61,8 @@ public abstract class QContainerRenderer {
 	public void render() throws IOException {
 
 		// start the table
-		DialogRenderUtils.renderTableWithClass(writer, component, "qWrapTable", layoutDef.getGridgap(), 0);
+		DialogRenderUtils.renderTableWithClass(writer, component, "qWrapTable",
+				layoutDef.getGridgap(), 0);
 		writer.writeAttribute("id", component.getId(), "id");
 		// render border
 		writer.writeAttribute("style", "border:" + layoutDef.getQContainerBorder() + ";", "style");
@@ -98,7 +99,8 @@ public abstract class QContainerRenderer {
 				if (questionLayout != null && questionLayout.getFollowingPopupQuestions() != null) {
 					for (QuestionPopup questionPopup : questionLayout.getFollowingPopupQuestions()) {
 						if (questionPopup.getFiringAnswerID().equals(
-								LastClickedAnswer.getInstance().getLastClickedAnswerID(session.getId()))) {
+								LastClickedAnswer.getInstance().getLastClickedAnswerID(
+										session.getId()))) {
 
 							writer.startElement("div", component);
 							// String divID = "popup" +
@@ -115,7 +117,8 @@ public abstract class QContainerRenderer {
 							writer.writeAttribute("style", "width: 100%; height: 100%;", "style");
 							writer.startElement("tr", component);
 							QuestionsRendererUtils.renderValidQuestion(writer, component, session,
-									popupQuestion, DialogUtils.getDialogLayout().getQuestionPageLayout(), 1,
+									popupQuestion,
+									DialogUtils.getDialogLayout().getQuestionPageLayout(), 1,
 									0);
 							writer.endElement("tr");
 							writer.endElement("table");
@@ -140,7 +143,8 @@ public abstract class QContainerRenderer {
 			if (layoutDef instanceof QContainerLayout) {
 				QContainerLayout qContLayout = (QContainerLayout) layoutDef;
 				writer.writeAttribute("colspan", qContLayout.getCols(), "colspan");
-			} else {
+			}
+			else {
 				writer.writeAttribute("colspan", layoutDef.getQuestionColumns(), "colspan");
 			}
 
@@ -157,8 +161,10 @@ public abstract class QContainerRenderer {
 
 			if (layoutDef.getQContainerHeadlineAltText() != null) {
 				writer.writeText(layoutDef.getQContainerHeadlineAltText(), "value");
-			} else {
-				writer.writeText(DialogUtils.getQuestionPageBean().getActualQContainer().getName(), "value");
+			}
+			else {
+				writer.writeText(DialogUtils.getQuestionPageBean().getActualQContainer().getName(),
+						"value");
 			}
 
 			writer.endElement("th");
@@ -170,7 +176,9 @@ public abstract class QContainerRenderer {
 		List<Question> validQuestions = new ArrayList<Question>();
 		for (Iterator<Question> iter = qList.iterator(); iter.hasNext();) {
 			Question q = iter.next();
-			if (DialogUtils.isValidQASet(q, session)) {// && QuestionsRendererUtils.showAbstract(q)) {
+			if (DialogUtils.isValidQASet(q, session)) {// &&
+														// QuestionsRendererUtils.showAbstract(q))
+														// {
 				validQuestions.add(q);
 			}
 		}

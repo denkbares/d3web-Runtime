@@ -1,24 +1,25 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.core.session.interviewmanager;
+
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -30,9 +31,11 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.values.UndefinedValue;
 
 /**
- * This is a by Proxy that you can get a list of Answers by giving the Question-ID
- * It asks all registered clients considering their priority and returns the first not-null-answer
- * Per priority there is only one client possible
+ * This is a by Proxy that you can get a list of Answers by giving the
+ * Question-ID It asks all registered clients considering their priority and
+ * returns the first not-null-answer Per priority there is only one client
+ * possible
+ * 
  * @author Norman Brümmer
  */
 public class DialogProxy {
@@ -54,6 +57,7 @@ public class DialogProxy {
 
 	/**
 	 * asks all (sorted) clients for answer
+	 * 
 	 * @return first not-null-answer
 	 */
 	public Value getAnswers(String questionID) {
@@ -78,7 +82,7 @@ public class DialogProxy {
 	public Iterator<?> getClientsIterator() {
 		return clients.values().iterator();
 	}
-	
+
 	/**
 	 * @return a Collections over all clients sorted by their priority
 	 */
@@ -86,10 +90,9 @@ public class DialogProxy {
 		return clients.values();
 	}
 
-	
-	
 	/**
 	 * puts the given Session to the Client that has the given Priority
+	 * 
 	 * @return false if no such client exists, otherwise true.
 	 * @see DialogClient#putCase(Session session)
 	 */
@@ -98,7 +101,8 @@ public class DialogProxy {
 			DialogClient client = (DialogClient) clients.get(new Integer(prio));
 			client.putCase(session);
 			return true;
-		} catch (ClassCastException x) {
+		}
+		catch (ClassCastException x) {
 			return false;
 		}
 		catch (NullPointerException x) {

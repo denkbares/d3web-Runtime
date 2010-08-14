@@ -72,6 +72,7 @@ public class DefaultBlackboard implements Blackboard {
 
 	/**
 	 * Propergates if the value of the terminology object has changed
+	 * 
 	 * @param terminologyObject
 	 * @param oldValue
 	 */
@@ -89,7 +90,9 @@ public class DefaultBlackboard implements Blackboard {
 	}
 
 	/**
-	 * Returns the acutal value of a terminology object. Prevents getting null for Solutions and Questions
+	 * Returns the acutal value of a terminology object. Prevents getting null
+	 * for Solutions and Questions
+	 * 
 	 * @param terminologyObject
 	 * @return actual Value
 	 */

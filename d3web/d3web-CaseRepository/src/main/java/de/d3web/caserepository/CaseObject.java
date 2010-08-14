@@ -1,24 +1,25 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.caserepository;
+
 import java.util.Set;
 
 import de.d3web.caserepository.addons.IAdditionalTrainData;
@@ -75,12 +76,13 @@ public interface CaseObject
 		public final static SourceSystem KNOWME = new SourceSystem("d3web.KnowME");
 		public final static SourceSystem EFFECTS = new SourceSystem("effects");
 		public final static SourceSystem TEMPLATES = new SourceSystem("templates");
-        public final static SourceSystem CASEIMPORTER = new SourceSystem("d3web.CaseImporter");
+		public final static SourceSystem CASEIMPORTER = new SourceSystem("d3web.CaseImporter");
 
 		private String name;
 
 		private SourceSystem() { /* hide empty constructor */
 		}
+
 		private SourceSystem(String name) {
 			this.name = name;
 		}
@@ -90,14 +92,10 @@ public interface CaseObject
 		}
 
 		public static SourceSystem getForName(String name) {
-			if (D3.getName().equals(name))
-				return D3;
-			else if (DIALOG.getName().equals(name))
-				return DIALOG;
-			else if (KNOWME.getName().equals(name))
-				return KNOWME;
-			else
-				return null;
+			if (D3.getName().equals(name)) return D3;
+			else if (DIALOG.getName().equals(name)) return DIALOG;
+			else if (KNOWME.getName().equals(name)) return KNOWME;
+			else return null;
 		}
 	}
 
@@ -119,6 +117,7 @@ public interface CaseObject
 		public de.d3web.core.knowledge.terminology.Solution getSolution() {
 			return diagnosis;
 		}
+
 		public void setSolution(de.d3web.core.knowledge.terminology.Solution newDiag) {
 			diagnosis = newDiag;
 			calculateHash();
@@ -127,6 +126,7 @@ public interface CaseObject
 		public double getWeight() {
 			return weight;
 		}
+
 		public void setWeight(double newWeight) {
 			weight = newWeight;
 			calculateHash();
@@ -135,6 +135,7 @@ public interface CaseObject
 		public Class<? extends PSMethod> getPSMethodClass() {
 			return psMethodClass;
 		}
+
 		public void setPSMethodClass(Class<? extends PSMethod> psMethodClass) {
 			this.psMethodClass = psMethodClass;
 			calculateHash();
@@ -143,6 +144,7 @@ public interface CaseObject
 		public Rating getState() {
 			return state;
 		}
+
 		public void setState(Rating state) {
 			this.state = state;
 			calculateHash();
@@ -150,33 +152,28 @@ public interface CaseObject
 
 		@Override
 		public boolean equals(Object o) {
-			if (o == null || !(o instanceof CaseObject.Solution))
-				return false;
-			if (o == this)
-				return true;
+			if (o == null || !(o instanceof CaseObject.Solution)) return false;
+			if (o == this) return true;
 			else {
 				CaseObject.Solution sol = (CaseObject.Solution) o;
 
 				boolean stateEq = (getState() == null && sol.getState() == null)
 						|| (getState() != null && getState().equals(sol.getState()));
-				if (!stateEq)
-					return false;
+				if (!stateEq) return false;
 
 				boolean methodEq = (getPSMethodClass() == null && sol.getPSMethodClass() == null)
 						|| (getPSMethodClass() != null && getPSMethodClass().equals(
 								sol.getPSMethodClass()));
-				if (!methodEq)
-					return false;
+				if (!methodEq) return false;
 
 				boolean diagEq = (getSolution() == null) && (sol.getSolution() == null)
 						|| (getSolution() != null && getSolution().equals(sol.getSolution()));
-				if (!diagEq)
-					return false;
+				if (!diagEq) return false;
 
 				return /* weightEq = */sol.getWeight() == getWeight();
 			}
 		}
-        
+
 		@Override
 		public int hashCode() {
 			return hashCode;
@@ -200,17 +197,20 @@ public interface CaseObject
 	}
 
 	/**
-	 * @deprecated do not add additional data until it is clear which representation
-	 *  will be chosen (or re-designed)
+	 * @deprecated do not add additional data until it is clear which
+	 *             representation will be chosen (or re-designed)
 	 */
 	@Deprecated
 	public static class AdditionalDataKey {
+
 		public static AdditionalDataKey TEMPORAL_VALUE_HISTORIES = new AdditionalDataKey(
 				"temporal_value_histories");
 		private String name = null;
+
 		private AdditionalDataKey(String name) {
 			this.name = name;
 		}
+
 		public String getName() {
 			return name;
 		}
@@ -241,8 +241,7 @@ public interface CaseObject
 	 * Returns whether the specified {@link QASet} instance is visible in the
 	 * case.
 	 * 
-	 * @param item
-	 *            the specified {@link QASet} instance
+	 * @param item the specified {@link QASet} instance
 	 * @return true, if the {@link QASet} is visible in this case
 	 */
 	public Boolean visibility(QASet item);
@@ -251,8 +250,7 @@ public interface CaseObject
 	 * Returns the {@link Value} of the specified {@link Question} instance,
 	 * that was stored in this case.
 	 * 
-	 * @param question
-	 *            the specified {@link Question} instance
+	 * @param question the specified {@link Question} instance
 	 * 
 	 * @return the value of the specified question; <code>null</code> if no
 	 *         value is stored
@@ -263,10 +261,8 @@ public interface CaseObject
 	 * Inserts the specified {@link Value} instance that was assigned to the
 	 * specified {@link Question} instance into the case.
 	 * 
-	 * @param question
-	 *            the specified question
-	 * @param value
-	 *            the specified value
+	 * @param question the specified question
+	 * @param value the specified value
 	 */
 	public void addQuestionAndAnswers(Question question, Value value);
 
@@ -292,7 +288,6 @@ public interface CaseObject
 	 * Returns the meta-information concerning this {@link CaseObject}.
 	 */
 	public DCMarkup getDCMarkup();
-
 
 	public IAdditionalTrainData getAdditionalTrainData();
 

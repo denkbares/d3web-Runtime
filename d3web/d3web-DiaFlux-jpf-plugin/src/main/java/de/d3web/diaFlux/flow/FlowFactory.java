@@ -75,15 +75,14 @@ public class FlowFactory {
 	}
 
 	public INode createComposedNode(String id, String flowName, String startNodeName) {
-		
+
 		return new ComposedNode(id, flowName, startNodeName);
 	}
-	
+
 	public INode createCommentNode(String id, String name) {
-		
+
 		return new CommentNode(id, name);
 	}
-	
 
 	public INode createSnapshotNode(String id, String name) {
 		return new SnapshotNode(id, name);

@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.diaFlux.flow;
 
@@ -32,12 +32,11 @@ import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.diaFlux.inference.FluxSolver;
 
 /**
- *
- * @author Reinhard Hatko
- * Created on: 04.11.2009
+ * 
+ * @author Reinhard Hatko Created on: 04.11.2009
  */
 public class FlowSet implements KnowledgeSlice, CaseObjectSource {
-	
+
 	private final String setID;
 	private final Map<String, Flow> map;
 
@@ -45,50 +44,38 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource {
 		this.setID = id;
 		this.map = new HashMap<String, Flow>();
 	}
-	
-	
-
-
 
 	@Override
 	public SessionObject createCaseObject(Session session) {
-		
+
 		Map<Flow, FlowData> flowdatas = new HashMap<Flow, FlowData>();
-		
+
 		for (Flow flow : map.values()) {
 			FlowData flowdata = (FlowData) flow.createCaseObject(session);
 			flowdatas.put(flow, flowdata);
 		}
-		
+
 		return new DiaFluxCaseObject(this, flowdatas);
 	}
-	
-	 
-	
 
 	public boolean contains(String id) {
 		return map.containsKey(id);
 	}
-	
-
 
 	public boolean containsValue(Flow flow) {
 		return map.containsValue(flow);
 	}
 
-
 	public Flow get(String id) {
 		return map.get(id);
 	}
 
-	
 	public Flow getByName(String name) {
-		
+
 		for (Flow flow : getFlows()) {
-			if (flow.getName().equals(name))
-				return flow;
+			if (flow.getName().equals(name)) return flow;
 		}
-		
+
 		return null;
 	}
 
@@ -96,26 +83,21 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource {
 		return map.keySet();
 	}
 
-
 	public Flow put(Flow flow) {
 		return map.put(flow.getId(), flow);
 	}
-
 
 	public Flow remove(String id) {
 		return map.remove(id);
 	}
 
-
 	public int size() {
 		return map.size();
 	}
 
-
 	public Collection<Flow> getFlows() {
 		return map.values();
 	}
-
 
 	@Override
 	public String getId() {
@@ -129,15 +111,14 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource {
 
 	@Override
 	public boolean isUsed(Session theCase) {
-		//TODO
+		// TODO
 		return true;
 	}
 
 	@Override
 	public void remove() {
-		//TODO
+		// TODO
 	}
-
 
 	@Override
 	public int hashCode() {
@@ -148,30 +129,21 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource {
 		return result;
 	}
 
-
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
 		FlowSet other = (FlowSet) obj;
 		if (setID == null) {
-			if (other.setID != null)
-				return false;
-		} else if (!setID.equals(other.setID))
-			return false;
+			if (other.setID != null) return false;
+		}
+		else if (!setID.equals(other.setID)) return false;
 		if (map == null) {
-			if (other.map != null)
-				return false;
-		} else if (!map.equals(other.map))
-			return false;
+			if (other.map != null) return false;
+		}
+		else if (!map.equals(other.map)) return false;
 		return true;
 	}
-
-
-
 
 }

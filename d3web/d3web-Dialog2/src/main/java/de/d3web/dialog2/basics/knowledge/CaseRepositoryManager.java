@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.basics.knowledge;
@@ -73,9 +73,8 @@ public class CaseRepositoryManager extends AbstractCaseRepositoryManager {
 	 * repositories with the location-type
 	 * "CaseRepositoryDescriptor.LOCATIONTYPE_XML_CASEREPOSITORY".
 	 * 
-	 * @param crdList
-	 *            List of CaseRepositoryDescriptors (can have different
-	 *            location-types)
+	 * @param crdList List of CaseRepositoryDescriptors (can have different
+	 *        location-types)
 	 */
 	private CaseRepositoryManager() {
 		caseIdsByCrd = new HashMap<CaseRepositoryDescriptor, Set<String>>();
@@ -110,7 +109,8 @@ public class CaseRepositoryManager extends AbstractCaseRepositoryManager {
 			if (numId > getMaxCaseIdForKb(crd.getKbId())) {
 				maxCaseIds.put(crd.getKbId(), new Long(numId));
 			}
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			logger.warn(ex);
 		}
 	}
@@ -184,10 +184,9 @@ public class CaseRepositoryManager extends AbstractCaseRepositoryManager {
 	public de.d3web.caserepository.CaseRepository getCasesForKb(String kbid) {
 		de.d3web.caserepository.CaseRepository repository = new CaseRepositoryImpl();
 		for (Object co : CaseRepository.getInstance().getCasesForKnowledgeBase(kbid)) {
-			if (co instanceof CaseObject) 
-				repository.add((CaseObject) co);
-			else 
-				throw new ClassCastException("Cannot cast from " + co.getClass() + " to CaseObject");
+			if (co instanceof CaseObject) repository.add((CaseObject) co);
+			else throw new ClassCastException("Cannot cast from " + co.getClass()
+					+ " to CaseObject");
 		}
 		return repository;
 	}
@@ -199,7 +198,8 @@ public class CaseRepositoryManager extends AbstractCaseRepositoryManager {
 	public long getMaxCaseIdForKb(String kbid) {
 		if (maxCaseIds.get(kbid) != null) {
 			return (maxCaseIds.get(kbid)).longValue();
-		} else {
+		}
+		else {
 			long max = 0;
 
 			Iterator<CaseObject> coIter = getCasesForKb(kbid).iterator();
@@ -210,7 +210,8 @@ public class CaseRepositoryManager extends AbstractCaseRepositoryManager {
 					if (id > max) {
 						max = id;
 					}
-				} catch (Exception ex) {
+				}
+				catch (Exception ex) {
 					logger.warn(ex);
 				}
 			}
@@ -259,7 +260,8 @@ public class CaseRepositoryManager extends AbstractCaseRepositoryManager {
 					// updating caseidsByCrd
 					caseIdsByCrd.put(crd, caseids);
 				}
-			} catch (Exception x) {
+			}
+			catch (Exception x) {
 				caseIdsByCrd.put(crd, new HashSet<String>());
 				logger.error("No valid case repository found!");
 			}
@@ -323,10 +325,12 @@ public class CaseRepositoryManager extends AbstractCaseRepositoryManager {
 				CaseRepositoryWriter writer = createCaseObjectListWriter();
 
 				writer.saveToFile(file, cases);
-			} catch (Exception x) {
+			}
+			catch (Exception x) {
 				logger.error(x);
 			}
-		} else {
+		}
+		else {
 			logger
 					.error("could not save cases, url not found for caserepository: "
 							+ fileName);

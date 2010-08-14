@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.utilities;
@@ -57,16 +57,15 @@ public class FileIO {
 			os.write(b);
 		}
 		is.close();
-		if (close)
-			os.close();
+		if (close) os.close();
 	}
 
 	/**
 	 * Copy a file from an opened InputStream to opened OutputStream public
 	 * static void copyFile(InputStream is, OutputStream os, boolean close)
 	 * throws IOException { int b; // the byte read from the file while ((b =
-	 * is.read( )) != -1) { os.write(b); } is.close( ); if (close) os.close( ); }
-	 * /** Copy a file from an opened Reader to opened Writer
+	 * is.read( )) != -1) { os.write(b); } is.close( ); if (close) os.close( );
+	 * } /** Copy a file from an opened Reader to opened Writer
 	 */
 	public static void copyFile(Reader is, Writer os, boolean close)
 			throws IOException {
@@ -75,8 +74,7 @@ public class FileIO {
 			os.write(b);
 		}
 		is.close();
-		if (close)
-			os.close();
+		if (close) os.close();
 	}
 
 	/** Copy a file from a filename to a PrintWriter. */
@@ -134,49 +132,52 @@ public class FileIO {
 	public static String inputStreamToString(InputStream is) throws IOException {
 		return readerToString(new InputStreamReader(is));
 	}
-	
+
 	public static void copy(java.io.File destination, java.io.File source) throws RuntimeException {
 		if (source.isDirectory()) {
 			if (!destination.isDirectory()) {
-				throw new RuntimeException("Destination '"+destination.getName()+"' is not directory.");
+				throw new RuntimeException("Destination '" + destination.getName()
+						+ "' is not directory.");
 			}
-			copyDirectory(destination,source);
-		} else {
+			copyDirectory(destination, source);
+		}
+		else {
 			if (destination.isDirectory()) {
-				destination=new java.io.File(destination,source.getName());
+				destination = new java.io.File(destination, source.getName());
 			}
-			copyFile(destination,source);
+			copyFile(destination, source);
 		}
 	}
-	
+
 	protected static void copyDirectory(java.io.File destination, java.io.File source) throws RuntimeException {
-		java.io.File[] list=source.listFiles();
-		for (int i=0;i<list.length;i++) {
-			java.io.File dest=new java.io.File(destination,list[i].getName());
+		java.io.File[] list = source.listFiles();
+		for (int i = 0; i < list.length; i++) {
+			java.io.File dest = new java.io.File(destination, list[i].getName());
 			if (list[i].isDirectory()) {
 				dest.mkdir();
-				copyDirectory(dest,list[i]);
-			} else {
-				copyFile(dest,list[i]);
+				copyDirectory(dest, list[i]);
+			}
+			else {
+				copyFile(dest, list[i]);
 			}
 		}
 	}
-	
+
 	protected static void copyFile(java.io.File destination, java.io.File source) throws RuntimeException {
 		try {
-			java.io.FileInputStream inStream=new java.io.FileInputStream(source);
-			java.io.FileOutputStream outStream=new java.io.FileOutputStream(destination);
+			java.io.FileInputStream inStream = new java.io.FileInputStream(source);
+			java.io.FileOutputStream outStream = new java.io.FileOutputStream(destination);
 
 			int len;
-			byte[] buf=new byte[2048];
-			 
-			while ((len=inStream.read(buf))!=-1) {
-				outStream.write(buf,0,len);
+			byte[] buf = new byte[2048];
+
+			while ((len = inStream.read(buf)) != -1) {
+				outStream.write(buf, 0, len);
 			}
-		} catch (Exception e) {
-			throw new RuntimeException("Can't copy file "+source+" -> "+destination+".",e);
+		}
+		catch (Exception e) {
+			throw new RuntimeException("Can't copy file " + source + " -> " + destination + ".", e);
 		}
 	}
-	
-	
+
 }

@@ -220,8 +220,8 @@ public class FUSConfigurationReader extends AbstractTagReader {
 		CLeaf.Type t = CLeaf.EXCLUDED.getName().equals(type)
 				? CLeaf.EXCLUDED
 				: CLeaf.INCLUDED.getName().equals(type)
-				? CLeaf.INCLUDED
-				: null;
+						? CLeaf.INCLUDED
+						: null;
 		if (t == null) {
 			Logger.getLogger(this.getClass().getName()).warning(
 					"no way to handle CLeafs of type '" + type + "'");

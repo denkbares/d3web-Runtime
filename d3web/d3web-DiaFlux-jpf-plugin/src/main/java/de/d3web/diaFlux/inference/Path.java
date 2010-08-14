@@ -20,8 +20,8 @@ import de.d3web.diaFlux.flow.StartNode;
 
 /**
  * @author Reinhard Hatko
- *
- * Created: 07.08.2010
+ * 
+ *         Created: 07.08.2010
  */
 public class Path implements IPath {
 
@@ -46,7 +46,8 @@ public class Path implements IPath {
 	public INode getFirstNode() {
 		if (isEmpty()) {
 			return null;
-		} else {
+		}
+		else {
 			return entries.getFirst().getNode();
 		}
 	}
@@ -69,13 +70,12 @@ public class Path implements IPath {
 
 	}
 
-
-
 	private boolean flow(Session session) {
 
 		if (isEmpty()) return false;
 
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO, ("Start flowing from node: " + entries.getLast().getNode()));
+		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+				("Start flowing from node: " + entries.getLast().getNode()));
 
 		boolean continueFlowing = true;
 		boolean change = false;
@@ -85,11 +85,13 @@ public class Path implements IPath {
 			IEdge edge = selectNextEdge(session);
 
 			if (edge == null) { // no edge to take
-				Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO, ("Staying in Node: " + this.entries.getLast().getNode()));
+				Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+						("Staying in Node: " + this.entries.getLast().getNode()));
 				return change;
 			}
 
-			Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO, ("Following edge '" + edge + "'."));
+			Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+					("Following edge '" + edge + "'."));
 
 			continueFlowing = followEdge(session, edge);
 			change |= continueFlowing;
@@ -102,9 +104,9 @@ public class Path implements IPath {
 	/**
 	 * Selects appropriate successor of {@code node} according to the current
 	 * state of the case.
-	 *
+	 * 
 	 * @param session
-	 *
+	 * 
 	 * @return
 	 */
 	private IEdge selectNextEdge(Session session) {
@@ -122,11 +124,14 @@ public class Path implements IPath {
 					return edge;
 				}
 			}
-			catch (NoAnswerException e) {}
-			catch (UnknownAnswerException e) {}
+			catch (NoAnswerException e) {
+			}
+			catch (UnknownAnswerException e) {
+			}
 		}
 
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO, ("No edge to take from node:" + node));
+		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+				("No edge to take from node:" + node));
 		return null;
 
 	}
@@ -135,7 +140,7 @@ public class Path implements IPath {
 	 * Activates the given node coming from the given {@link NodeEntry}. Steps:
 	 * 1. Sets the node to active. 2. Conducts its action 3. Add
 	 * {@link NodeEntry} for node.
-	 *
+	 * 
 	 * @param session
 	 * @param currentNode
 	 * @param entry the pathentry from where to activate the node
@@ -146,8 +151,8 @@ public class Path implements IPath {
 
 		INode currentNode = this.entries.getLast().getNode();
 
-		if (currentNode != edge.getStartNode())
-			throw new IllegalStateException("Not in the expected Node");
+		if (currentNode != edge.getStartNode()) throw new IllegalStateException(
+				"Not in the expected Node");
 
 		INode nextNode = edge.getEndNode();
 		INodeData nextNodeData = DiaFluxUtils.getNodeData(nextNode, session);
@@ -155,14 +160,14 @@ public class Path implements IPath {
 		EdgeSupport support = new EdgeSupport(edge);
 
 		if (nextNodeData.isActive()) {
-			Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO, ("Node is already active: " + nextNode));
+			Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+					("Node is already active: " + nextNode));
 			FluxSolver.addSupport(session, nextNode, support);
 
 			// nextNodeData.addSupport(session, support); //add support from
 			// current path
 			return false; // TODO correct?
 		}
-
 
 		addPathEntryForNode(session, nextNode, support);
 
@@ -174,7 +179,7 @@ public class Path implements IPath {
 	/**
 	 * Adds a path entry for the current node. Predecessor's entry is removed by
 	 * this method.
-	 *
+	 * 
 	 * @param session
 	 * @param currentEntry
 	 * @param nextNode
@@ -182,7 +187,6 @@ public class Path implements IPath {
 	 * @return the new {@link NodeEntry} for node
 	 */
 	private Entry addPathEntryForNode(Session session, INode nextNode, ISupport support) {
-
 
 		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
 				"Adding PathEntry for Node' " + nextNode + "' as successor of '"
@@ -200,8 +204,7 @@ public class Path implements IPath {
 
 	}
 
-
-	//TMS
+	// TMS
 
 	private boolean maintainTruth(Session session, Collection<PropagationEntry> changes) {
 
@@ -217,10 +220,13 @@ public class Path implements IPath {
 
 			if (!support) {
 				INode node = entry.getNode();
-				Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO, ("Node is no longer supported: " + node));
+				Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+						("Node is no longer supported: " + node));
 
 				int lastIndex = findWrongSubpath(session, i);
-				wrongSubPathes.add(0, new int[] {i, lastIndex}); //insert first, to iterate in reverse order later
+				wrongSubPathes.add(0, new int[] {
+						i, lastIndex }); // insert first, to iterate in reverse
+											// order later
 				i = lastIndex; // TODO oder lastIndex + 1??
 
 			}
@@ -230,16 +236,17 @@ public class Path implements IPath {
 		if (wrongSubPathes.isEmpty()) {
 			Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO, "No TMS necessary");
 			return false;
-		} else {
+		}
+		else {
 
 			for (int[] is : wrongSubPathes) {
 				collapseSubpath(is[0], is[1], session);
 
 			}
-			Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO, "Finished maintaining truth.");
+			Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+					"Finished maintaining truth.");
 			return true;
 		}
-
 
 	}
 
@@ -247,15 +254,15 @@ public class Path implements IPath {
 	 * Collapses an unsupported subpath, starting from {@code from}, until
 	 * {@code to}. Every Node on this subpath must not be active, otherwise a
 	 * {@link IllegalStateException} is thrown.
-	 *
+	 * 
 	 * @param from the index to start collapsing
 	 * @param to the index to stop collapsing
 	 * @param session the current session
 	 */
 	private void collapseSubpath(int from, int to, Session session) {
 
-		if (to < from)
-			throw new IllegalArgumentException("Can not collapse path from " + from + " to " + to);
+		if (to < from) throw new IllegalArgumentException("Can not collapse path from " + from
+				+ " to " + to);
 
 		INode fromNode = entries.get(from).getNode();
 		INode toNode = entries.get(to).getNode();
@@ -265,8 +272,9 @@ public class Path implements IPath {
 		Logger.getLogger(getClass().getName()).log(Level.INFO, msg);
 		System.out.println(msg);
 
-		for (int i = to; i >= from; i--){
-			Entry entry = entries.get(i); //TODO can the entry also be removed before calling undo??
+		for (int i = to; i >= from; i--) {
+			Entry entry = entries.get(i); // TODO can the entry also be removed
+											// before calling undo??
 			INode node = entry.getNode();
 
 			INodeData data = DiaFluxUtils.getNodeData(entry.getNode(), session);
@@ -281,19 +289,17 @@ public class Path implements IPath {
 
 		}
 
-
-
 	}
 
 	/**
-	 * Searches for the longest unsupported subpath starting from index
-	 * {@code firstindex} on. The longest unsupported subpath is that subpath
-	 * that consists of entrys that have no other support than their own.
-	 * Starting from {@code firstindex + 1} every Entry removes its support. If
-	 * its node is still active (i.e. has other support than just by this entry)
-	 * the search ends. Otherwise the search continues, until the path ends, or
-	 * an entry is reached which has support.
-	 *
+	 * Searches for the longest unsupported subpath starting from index {@code
+	 * firstindex} on. The longest unsupported subpath is that subpath that
+	 * consists of entrys that have no other support than their own. Starting
+	 * from {@code firstindex + 1} every Entry removes its support. If its node
+	 * is still active (i.e. has other support than just by this entry) the
+	 * search ends. Otherwise the search continues, until the path ends, or an
+	 * entry is reached which has support.
+	 * 
 	 * @param session the current session
 	 * @param firstIndex the index of the entry at which the search along the
 	 *        current path starts to find the unsupported subpath
@@ -306,8 +312,8 @@ public class Path implements IPath {
 		INode startingNode = startEntry.getNode();
 		boolean active = DiaFluxUtils.getNodeData(startingNode, session).isActive();
 
-		if (active)
-			throw new IllegalStateException("Can not collapse Path of active Node: " + startingNode);
+		if (active) throw new IllegalStateException("Can not collapse Path of active Node: "
+				+ startingNode);
 		//
 
 		int lastIndex;
@@ -323,38 +329,33 @@ public class Path implements IPath {
 			boolean supported = DiaFluxUtils.getNodeData(entry.getNode(), session).isActive();
 
 			if (supported) { // stop, if node is still supported
-				Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO, ("Found node with support during TMS: " + entry));
+				Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+						("Found node with support during TMS: " + entry));
 				return lastIndex;
 
 			}
 
 		}
-		return lastIndex - 1; //reached end -> lastIndex is one off
+		return lastIndex - 1; // reached end -> lastIndex is one off
 
 	}
 
-
-
-
 	private void doAction(Session session, INode node) {
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO, ("Doing action of node: " + node));
+		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+				("Doing action of node: " + node));
 		node.doAction(session);
 	}
 
-
-
 	private void undoAction(Session session, INode node) {
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO, ("Undoing action of node: " + node));
+		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+				("Undoing action of node: " + node));
 		node.undoAction(session);
 	}
-
-
 
 	@Override
 	public boolean isEmpty() {
 		return entries.isEmpty();
 	}
-
 
 	@Override
 	public Iterator<? extends Entry> iterator() {
@@ -365,7 +366,8 @@ public class Path implements IPath {
 	public String toString() {
 		if (isEmpty()) {
 			return "empty path";
-		} else {
+		}
+		else {
 			INode firstNode = getFirstNode();
 			String name = firstNode.getFlow().getName();
 			return "Path in flow '" + name + "' starting at '" + firstNode.getName() + "'";

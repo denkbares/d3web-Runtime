@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.core.io.utilities;
@@ -72,6 +72,7 @@ public class URLUtils {
 		}
 
 	}
+
 	/**
 	 * Returns an InputStream for the given URL without using any cache.
 	 */
@@ -89,18 +90,21 @@ public class URLUtils {
 		try {
 			// absolute paths only!
 			return new File(url.toURI());
-		} catch (URISyntaxException e) {
+		}
+		catch (URISyntaxException e) {
 			return new File(url.getPath());
-			//throw new FilenameConversionException(e);
-		} catch (IllegalArgumentException x) {
+			// throw new FilenameConversionException(e);
+		}
+		catch (IllegalArgumentException x) {
 			// relative paths...
 			return new File(getJarFileLocation(url));
 		}
 	}
-	
+
 	/**
-	 * If the given location is a "jar:"-location, a cleaned file-location will be returned.
-	 * Example: "jar:file://xyz.jar!/" is going to be "file://xyz.jar".
+	 * If the given location is a "jar:"-location, a cleaned file-location will
+	 * be returned. Example: "jar:file://xyz.jar!/" is going to be
+	 * "file://xyz.jar".
 	 */
 	private static String getJarFileLocation(URL url) {
 		String PRAEFIX = "jar:";
@@ -114,7 +118,8 @@ public class URLUtils {
 				location = location.substring(0, location.indexOf('!'));
 				return new URL(location).getPath();
 			}
-		} catch (MalformedURLException ex) {
+		}
+		catch (MalformedURLException ex) {
 		}
 		return url.getPath();
 	}

@@ -1,22 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *                    denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg denkbares GmbH
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.io.fragments;
 
@@ -35,8 +34,9 @@ import de.d3web.shared.AbnormalityInterval;
 import de.d3web.shared.AbstractAbnormality;
 
 /**
- * FragmentHandler for NumericalIntervals and AbnormalityIntervals
- * Other handlers for successors of NumericalInterval must have a higher priority
+ * FragmentHandler for NumericalIntervals and AbnormalityIntervals Other
+ * handlers for successors of NumericalInterval must have a higher priority
+ * 
  * @author hoernlein, Markus Friedrich (denkbares GmbH)
  */
 public class NumericalIntervalHandler implements FragmentHandler {
@@ -64,43 +64,39 @@ public class NumericalIntervalHandler implements FragmentHandler {
 	}
 
 	private static double string2double(String value) throws NumericalIntervalException {
-		if (NEGATIVE_INFINITY.equals(value))
-			return Double.NEGATIVE_INFINITY;
-		if (POSITIVE_INFINITY.equals(value))
-			return Double.POSITIVE_INFINITY;
+		if (NEGATIVE_INFINITY.equals(value)) return Double.NEGATIVE_INFINITY;
+		if (POSITIVE_INFINITY.equals(value)) return Double.POSITIVE_INFINITY;
 		else {
 			try {
 				return Double.parseDouble(value);
-			} catch (NumberFormatException ex) {
+			}
+			catch (NumberFormatException ex) {
 				throw new NumericalIntervalException();
 			}
 		}
 	}
 
 	private static boolean[] string2booleanTypes(String value) throws NumericalIntervalException {
-		if ("LeftOpenRightOpenInterval".equals(value))
-			return new boolean[] { true, true };
-		if ("LeftOpenRightClosedInterval".equals(value))
-			return new boolean[] { true, false };
-		if ("LeftClosedRightOpenInterval".equals(value))
-			return new boolean[] { false, true };
-		if ("LeftClosedRightClosedInterval".equals(value))
-			return new boolean[] { false, false };
-		else
-			throw new NumericalIntervalException();
+		if ("LeftOpenRightOpenInterval".equals(value)) return new boolean[] {
+				true, true };
+		if ("LeftOpenRightClosedInterval".equals(value)) return new boolean[] {
+				true, false };
+		if ("LeftClosedRightOpenInterval".equals(value)) return new boolean[] {
+				false, true };
+		if ("LeftClosedRightClosedInterval".equals(value)) return new boolean[] {
+				false, false };
+		else throw new NumericalIntervalException();
 	}
 
 	private static String double2string(double d) {
-		if (d == Double.NEGATIVE_INFINITY)
-			return NEGATIVE_INFINITY;
-		if (d == Double.POSITIVE_INFINITY)
-			return POSITIVE_INFINITY;
-		else
-			return Double.toString(d);
+		if (d == Double.NEGATIVE_INFINITY) return NEGATIVE_INFINITY;
+		if (d == Double.POSITIVE_INFINITY) return POSITIVE_INFINITY;
+		else return Double.toString(d);
 	}
 
 	private static String booleanTypes2string(boolean isLeftOpen, boolean isRightOpen) {
-		return "Left" + (isLeftOpen ? "Open" : "Closed") + "Right" + (isRightOpen ? "Open" : "Closed") + "Interval";
+		return "Left" + (isLeftOpen ? "Open" : "Closed") + "Right"
+				+ (isRightOpen ? "Open" : "Closed") + "Interval";
 	}
 
 	private static NumericalInterval getIntervall(Element element) throws IOException {
@@ -111,54 +107,62 @@ public class NumericalIntervalHandler implements FragmentHandler {
 		if (element.getNodeName().equals(TAG) && lower != null && upper != null && type != null) {
 			try {
 				boolean[] borders = string2booleanTypes(type);
-				if (value==null||value.length()==0) {
-					return new NumericalInterval(string2double(lower), string2double(upper), borders[0], borders[1]);
-				} else {
-					return new AbnormalityInterval(string2double(lower), string2double(upper), AbstractAbnormality
-							.convertConstantStringToValue(value),  borders[0], borders[1]);
+				if (value == null || value.length() == 0) {
+					return new NumericalInterval(string2double(lower), string2double(upper),
+							borders[0], borders[1]);
 				}
-			} catch (NumericalIntervalException e) {
+				else {
+					return new AbnormalityInterval(string2double(lower), string2double(upper),
+							AbstractAbnormality
+									.convertConstantStringToValue(value), borders[0], borders[1]);
+				}
+			}
+			catch (NumericalIntervalException e) {
 				throw new IOException(e);
 			}
 		}
 		return null;
 	}
-	
+
 	private static Element getIntervalElemenent(Document doc, NumericalInterval interval) {
 		Element element = doc.createElement(TAG);
 		element.setAttribute(LOWER_TAG, double2string(interval.getLeft()));
 		element.setAttribute(UPPER_TAG, double2string(interval.getRight()));
-		element.setAttribute(TYPE_TAG, booleanTypes2string(interval.isLeftOpen(), interval.isRightOpen()));
+		element.setAttribute(TYPE_TAG, booleanTypes2string(interval.isLeftOpen(),
+				interval.isRightOpen()));
 		if (interval instanceof AbnormalityInterval) {
 			AbnormalityInterval ai = (AbnormalityInterval) interval;
-			element.setAttribute("value", AbstractAbnormality.convertValueToConstantString(ai.getValue()));
+			element.setAttribute("value",
+					AbstractAbnormality.convertValueToConstantString(ai.getValue()));
 		}
 		return element;
 	}
-	
+
 	@Override
 	public boolean canRead(Element element) {
-		return element.getNodeName().equals(TAG)|| element.getNodeName().equals(GROUPTAG);
+		return element.getNodeName().equals(TAG) || element.getNodeName().equals(GROUPTAG);
 	}
 
 	@Override
 	public boolean canWrite(Object object) {
 		if (object instanceof NumericalInterval) {
 			return true;
-		} else if (object instanceof List<?>) {
+		}
+		else if (object instanceof List<?>) {
 			List<?> list = (List<?>) object;
-			if (list.size()==0) {
+			if (list.size() == 0) {
 				return false;
 			}
 			boolean checker = true;
-			for (Object o: list) {
+			for (Object o : list) {
 				if (!(o instanceof NumericalInterval)) {
 					checker = false;
 					break;
 				}
 			}
 			return checker;
-		} else {
+		}
+		else {
 			return false;
 		}
 	}
@@ -167,14 +171,16 @@ public class NumericalIntervalHandler implements FragmentHandler {
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		if (element.getNodeName().equals(TAG)) {
 			return getIntervall(element);
-		} else if (element.getNodeName().equals(GROUPTAG)) {
+		}
+		else if (element.getNodeName().equals(GROUPTAG)) {
 			List<NumericalInterval> list = new ArrayList<NumericalInterval>();
 			List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
-			for (Element child: childNodes) {
+			for (Element child : childNodes) {
 				list.add((NumericalInterval) read(kb, child));
 			}
 			return list;
-		} else {
+		}
+		else {
 			throw new IOException("Object cannot be read with NumericalIntervalHandler.");
 		}
 	}
@@ -183,17 +189,18 @@ public class NumericalIntervalHandler implements FragmentHandler {
 	public Element write(Object object, Document doc) throws IOException {
 		if (object instanceof NumericalInterval) {
 			return getIntervalElemenent(doc, (NumericalInterval) object);
-		} else if (object instanceof List<?>) {
+		}
+		else if (object instanceof List<?>) {
 			List<?> list = (List<?>) object;
 			Element root = doc.createElement(GROUPTAG);
-			for (Object o: list) {
-				root.appendChild(write(o,doc));
+			for (Object o : list) {
+				root.appendChild(write(o, doc));
 			}
 			return root;
-		} else {
+		}
+		else {
 			throw new IOException("Object cannot be written with NumericalIntervalHandler.");
 		}
 	}
-	
 
 }

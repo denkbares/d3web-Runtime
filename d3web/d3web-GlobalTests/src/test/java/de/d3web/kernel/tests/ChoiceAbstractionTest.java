@@ -193,7 +193,7 @@ public class ChoiceAbstractionTest {
 		Value monday = kbm.findValue(weekday, "Monday");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(weekday, monday, PSMethodUserSelected.getInstance(),
-				PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Weekday' == 'Monday'
 		Value weekdayValue = session.getBlackboard().getValue(weekday);
@@ -208,7 +208,7 @@ public class ChoiceAbstractionTest {
 		Value saturday = kbm.findValue(weekday, "Saturday");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(weekday, saturday, PSMethodUserSelected.getInstance(),
-				PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Weekday' == 'Saturday'
 		weekdayValue = session.getBlackboard().getValue(weekday);
@@ -229,7 +229,7 @@ public class ChoiceAbstractionTest {
 		// SET 'Weekday' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(weekday, UndefinedValue.getInstance(),
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Weekday' == 'UNDEFINED'
 		Value weekdayValue = session.getBlackboard().getValue(weekday);

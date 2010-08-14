@@ -239,7 +239,7 @@ public class IndicationOQQuestionsNextFormTest {
 		Value male = kbm.findValue(sex, "Male");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(sex, male,
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		Value sexValue = session.getBlackboard().getValue(sex);
 		assertEquals("Question Sex has wrong value ", male, sexValue);
 		// OQ Strategy should return exactly one element here.
@@ -263,7 +263,7 @@ public class IndicationOQQuestionsNextFormTest {
 		Value female = kbm.findValue(sex, "Female");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(sex, female,
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		sexValue = session.getBlackboard().getValue(sex);
 		assertEquals("Question Sex has wrong value ", female, sexValue);
 
@@ -285,7 +285,7 @@ public class IndicationOQQuestionsNextFormTest {
 		male = kbm.findValue(sex, "Male");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(sex, male,
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		sexValue = session.getBlackboard().getValue(sex);
 		assertEquals("Question Sex has wrong value ", male, sexValue);
 
@@ -330,7 +330,7 @@ public class IndicationOQQuestionsNextFormTest {
 		Value yes = kbm.findValue(askHead, "Yes");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(askHead, yes,
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		Value askHValue = session.getBlackboard().getValue(askHead);
 		assertEquals("Question Ask_Headache has wrong value ", yes, askHValue);
 
@@ -354,7 +354,7 @@ public class IndicationOQQuestionsNextFormTest {
 		Value no = kbm.findValue(askHead, "No");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(askHead, no,
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		askHValue = session.getBlackboard().getValue(askHead);
 		assertEquals("Question Ask_Headache has wrong value ", no, askHValue);
 

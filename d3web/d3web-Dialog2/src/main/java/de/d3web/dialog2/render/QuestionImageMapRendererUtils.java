@@ -245,7 +245,7 @@ public class QuestionImageMapRendererUtils {
 			if (region.isRotate()) {
 				QuestionChoice qc = (QuestionChoice) DialogUtils.getQuestionFromQList(
 						qList, region
-						.getQuestionID());
+								.getQuestionID());
 
 				String answerID = ValueFactory.getID_or_Value(answer);
 				boolean useNext = false;
@@ -284,8 +284,8 @@ public class QuestionImageMapRendererUtils {
 							+ nextAnswerID + "'); return false", "onclick");
 					writer
 							.writeAttribute("onmouseover", getToolTipString(q, session,
-							answer),
-							"onmouseover");
+									answer),
+									"onmouseover");
 					renderImageMapAnswerIcon(writer, component, q, answer, imageSrc);
 				}
 				else {
@@ -315,7 +315,7 @@ public class QuestionImageMapRendererUtils {
 						"title");
 				writer.writeAttribute("style",
 						"position: absolute; cursor: pointer; left: " + textCoords[0]
-						+ "px; top: " + textCoords[1] + "px;", "style");
+								+ "px; top: " + textCoords[1] + "px;", "style");
 				writer.writeAttribute("onclick", "openQuestion(event,'"
 						+ region.getQuestionID()
 						+ "'); return false;", "onclick");
@@ -435,8 +435,8 @@ public class QuestionImageMapRendererUtils {
 
 		writer.writeAttribute("style",
 				QuestionsRendererUtils.getStyleStringForMainTableCell(layoutDef,
-				getImageMapBackgroundColorString(image, session, layoutDef),
-				null, cols, cols, 0, false),
+						getImageMapBackgroundColorString(image, session, layoutDef),
+						null, cols, cols, 0, false),
 				"style");
 
 		// check out colspan...

@@ -67,7 +67,7 @@ public class DialogRenderUtils {
 		if (DialogUtils.getDialogSettings().isShowDiagConcreteDerivation()) {
 			onclickString.append(", '"
 					+ DialogUtils
-					.getMessageFor("explain.popup.concrete_derivation")
+							.getMessageFor("explain.popup.concrete_derivation")
 					+ "'");
 		}
 		else {
@@ -337,7 +337,7 @@ public class DialogRenderUtils {
 			else {
 				writer
 						.writeText(diag.getName() + " (" + score.toString()
-						+ ")", "value");
+								+ ")", "value");
 			}
 			writer.endElement("a");
 		}
@@ -348,7 +348,7 @@ public class DialogRenderUtils {
 			else {
 				writer
 						.writeText(diag.getName() + " (" + score.toString()
-						+ ")", "value");
+								+ ")", "value");
 			}
 		}
 	}
@@ -403,7 +403,7 @@ public class DialogRenderUtils {
 					.getMessageFor("mminfo.multimedialink.title"), "title");
 			writer
 					.writeText(DialogUtils
-					.getMessageFor("mminfo.multimedialink"), "value");
+							.getMessageFor("mminfo.multimedialink"), "value");
 			writer.endElement("a");
 			writer.endElement("li");
 		}
@@ -523,13 +523,13 @@ public class DialogRenderUtils {
 				}
 				renderHtmlForMMInfo(component, writer, mmInfoTextList,
 						diagOrQuestion, DialogUtils.getDialogSettings()
-						.getMaxCharLengthInMMInfoPopup(), explicitWidth);
+								.getMaxCharLengthInMMInfoPopup(), explicitWidth);
 				renderHtmlForMMURL(component, writer, mmInfoURLList,
 						DialogUtils.getDialogSettings()
-						.getMaxCharLengthInMMInfoPopup(), explicitWidth);
+								.getMaxCharLengthInMMInfoPopup(), explicitWidth);
 				renderHtmlForMMMultimedia(component, writer,
 						mmInfoMultimediaList, DialogUtils.getDialog()
-						.getSession().getKnowledgeBase().getId());
+								.getSession().getKnowledgeBase().getId());
 				writer.endElement("ul");
 				writer.endElement("div");
 

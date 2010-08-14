@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.io.fragments;
 
@@ -31,10 +31,11 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.scoring.Score;
+
 /**
- * FragmentHanler for Diagnosis
- * Children are ignored, hierarchies are read/written by the knowledge readers/writers.
- *
+ * FragmentHanler for Diagnosis Children are ignored, hierarchies are
+ * read/written by the knowledge readers/writers.
+ * 
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class SolutionsHandler implements FragmentHandler {
@@ -58,15 +59,17 @@ public class SolutionsHandler implements FragmentHandler {
 			diag.setAprioriProbability(Util.getScore(apriori));
 		}
 		Properties properties = null;
-		for (Element child: XMLUtil.getElementList(element.getChildNodes())) {
+		for (Element child : XMLUtil.getElementList(element.getChildNodes())) {
 			if (child.getNodeName().equals("Text")) {
 				diag.setName(child.getTextContent());
 			}
-			//If the child is none of the types above and it doesn't contain the children or the costs,
-			//it contains the properties.
-			//Costs are no longer stored in IDObjects, so they are ignored.
-			else if (!child.getNodeName().equals("Children")&&!child.getNodeName().equals("Costs")) {
-				properties=(Properties) PersistenceManager.getInstance().readFragment(child, kb);
+			// If the child is none of the types above and it doesn't contain
+			// the children or the costs,
+			// it contains the properties.
+			// Costs are no longer stored in IDObjects, so they are ignored.
+			else if (!child.getNodeName().equals("Children")
+					&& !child.getNodeName().equals("Costs")) {
+				properties = (Properties) PersistenceManager.getInstance().readFragment(child, kb);
 			}
 		}
 		if (properties != null) {
@@ -87,7 +90,7 @@ public class SolutionsHandler implements FragmentHandler {
 			element.setAttribute("aPriProb", apriori.getSymbol());
 		}
 		Properties properties = diag.getProperties();
-		if (properties!=null && !properties.isEmpty()) {
+		if (properties != null && !properties.isEmpty()) {
 			element.appendChild(PersistenceManager.getInstance().writeFragment(properties, doc));
 		}
 		return element;

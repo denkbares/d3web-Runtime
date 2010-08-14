@@ -80,7 +80,7 @@ public class Util {
 		QuestionOC question1 = (QuestionOC) kbm.findQuestion(question);
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(question1, kbm.findValue(question1, answer),
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		session.getPropagationManager().commitPropagation();
 	}
 

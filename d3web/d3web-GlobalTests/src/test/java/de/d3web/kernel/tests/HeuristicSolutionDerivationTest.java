@@ -168,7 +168,7 @@ public class HeuristicSolutionDerivationTest {
 		Value black = kbm.findValue(exhaustFumes, "black");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(exhaustFumes, black,
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Exhaust fumes' == 'black'
 		Value exhaustFumesValue = session.getBlackboard().getValue(exhaustFumes);
@@ -183,7 +183,7 @@ public class HeuristicSolutionDerivationTest {
 		Value unleadedGasoline = kbm.findValue(fuel, "unleaded gasoline");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(fuel, unleadedGasoline,
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Fuel' == 'unleaded gasoline'
 		Value fuelValue = session.getBlackboard().getValue(fuel);
@@ -207,7 +207,7 @@ public class HeuristicSolutionDerivationTest {
 		Value diesel = kbm.findValue(fuel, "diesel");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(fuel, diesel,
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Fuel' == 'diesel'
 		Value fuelValue = session.getBlackboard().getValue(fuel);
@@ -223,7 +223,7 @@ public class HeuristicSolutionDerivationTest {
 		Value blue = kbm.findValue(exhaustFumes, "blue");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(exhaustFumes, blue,
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Exhaust fumes' == 'blue'
 		Value exhaustFumesValue = session.getBlackboard().getValue(exhaustFumes);
@@ -245,7 +245,7 @@ public class HeuristicSolutionDerivationTest {
 		Value black = kbm.findValue(exhaustFumes, "black");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(exhaustFumes, black,
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Exhaust fumes' == 'black'
 		Value exhaustFumesValue = session.getBlackboard().getValue(exhaustFumes);
@@ -260,7 +260,7 @@ public class HeuristicSolutionDerivationTest {
 		// SET 'Exhaust fumes' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(exhaustFumes, UndefinedValue.getInstance(),
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Exhaust fumes' == 'UNDEFINED'
 		exhaustFumesValue = session.getBlackboard().getValue(exhaustFumes);

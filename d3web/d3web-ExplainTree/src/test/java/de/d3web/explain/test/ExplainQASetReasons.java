@@ -148,12 +148,12 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 		Solution P8 = findD("P8", testKb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(P8, new HeuristicRating(Score.P7),
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		assertEquals(new Rating(Rating.State.ESTABLISHED),
 				session.getBlackboard().getRating(P8));
 
-		//assertTrue(findQ("Q17", testKb).isValid(session));
+		// assertTrue(findQ("Q17", testKb).isValid(session));
 
 		// explain a followup-question not active
 		ENode expl = eFac.explainActive(findQ("Q17", testKb), explainContext);
@@ -189,12 +189,12 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 		Solution P8 = findD("P8", testKb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(P8, new HeuristicRating(Score.P4),
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		assertEquals(new Rating(Rating.State.SUGGESTED),
 				session.getBlackboard().getRating(P8));
 
-		//assertTrue(findQ("Q17", testKb).isValid(session));
+		// assertTrue(findQ("Q17", testKb).isValid(session));
 
 		// explain a followup-question not active
 		ENode expl = eFac.explainActive(findQ("Q17", testKb), explainContext);
@@ -230,13 +230,14 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 
 		// set MF8a2 since it will activate Mf10 (and give P8 the score P5
 		QuestionChoice Mf8 = (QuestionChoice) findQ("Mf8", testKb);
-		Choice choice = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase()).findChoice((QuestionChoice)Mf8, "Mf8a2");
+		Choice choice = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase()).findChoice(
+				(QuestionChoice) Mf8, "Mf8a2");
 
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(Mf8, new ChoiceValue(choice)));
-//				Fact(Mf8, new ChoiceValue((Choice) Mf8.getAnswer(session,
-//						"Mf8a2")), PSMethodUserSelected.getInstance(),
-//						PSMethodUserSelected.getInstance()));
+		// Fact(Mf8, new ChoiceValue((Choice) Mf8.getAnswer(session,
+		// "Mf8a2")), PSMethodUserSelected.getInstance(),
+		// PSMethodUserSelected.getInstance()));
 
 		// explain a followup-question not active
 		ENode expl = eFac.explainActive(findQ("Mf10", testKb), explainContext);

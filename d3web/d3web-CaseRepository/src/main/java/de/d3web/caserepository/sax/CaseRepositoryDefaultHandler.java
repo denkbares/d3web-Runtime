@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.caserepository.sax;
@@ -37,13 +37,14 @@ import de.d3web.caserepository.CaseObjectImpl;
 import de.d3web.caserepository.CaseRepository;
 import de.d3web.caserepository.CaseRepositoryImpl;
 import de.d3web.core.knowledge.KnowledgeBase;
+
 /**
  * @author bates
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * 
+ *         To change this generated comment edit the template variable
+ *         "typecomment": Window>Preferences>Java>Templates. To enable and
+ *         disable the creation of type comments go to
+ *         Window>Preferences>Java>Code Generation.
  */
 public class CaseRepositoryDefaultHandler extends DefaultHandler {
 
@@ -66,29 +67,32 @@ public class CaseRepositoryDefaultHandler extends DefaultHandler {
 	public CaseRepository getCaseRepository() {
 		return repository;
 	}
-		
+
 	public void registerReader(AbstractTagReader reader) {
-	    ID2CaseMapper me = new ID2CaseMapper() {
-            public CaseObject getCaseObject(String id) {
-                return (CaseObject) caseObjectsIDMap.get(id);
-            }
-	    };
+		ID2CaseMapper me = new ID2CaseMapper() {
+
+			public CaseObject getCaseObject(String id) {
+				return (CaseObject) caseObjectsIDMap.get(id);
+			}
+		};
 		registeredReaders.add(reader);
 		reader.setID2CaseMapper(me);
-		
+
 		Iterator iter = reader.getTagNames().iterator();
 		while (iter.hasNext()) {
 			String tag = iter.next().toString();
 			Object o = tagsToRegisteredReadersHash.get(tag);
-			if (o == null)
-				o = new HashSet();
+			if (o == null) o = new HashSet();
 			((Set) o).add(reader);
 			tagsToRegisteredReadersHash.put(tag, o);
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.xml.sax.ContentHandler#startElement(java.lang.String,
+	 * java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
 		try {
@@ -98,21 +102,26 @@ public class CaseRepositoryDefaultHandler extends DefaultHandler {
 					// [MISC]:marty:old case base format: "Problem", new "Case"
 					startCaseObject(attributes);
 				}
-			} else {
+			}
+			else {
 				Iterator iter = readers.iterator();
 				while (iter.hasNext()) {
 					AbstractTagReader reader = (AbstractTagReader) iter.next();
 					reader.activateAndStartElement(uri, localName, qName, attributes);
 				}
 			}
-		} catch (Exception x) {
+		}
+		catch (Exception x) {
 			Logger.getLogger(this.getClass().getName()).throwing(
-				this.getClass().getName(), "startElement", x);
+					this.getClass().getName(), "startElement", x);
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.xml.sax.ContentHandler#endElement(java.lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
 	public void endElement(String uri, String localName, String qName) {
 		try {
@@ -122,21 +131,25 @@ public class CaseRepositoryDefaultHandler extends DefaultHandler {
 					// [MISC]:marty:old case base format: "Problem", new "Case"
 					endCaseObject();
 				}
-			} else {
+			}
+			else {
 				Iterator iter = readers.iterator();
 				while (iter.hasNext()) {
 					AbstractTagReader reader = (AbstractTagReader) iter.next();
 					reader.deactivateAndEndElement(uri, localName, qName);
 				}
 			}
-		} catch (Exception x) {
+		}
+		catch (Exception x) {
 			Logger.getLogger(this.getClass().getName()).throwing(
-				this.getClass().getName(), "endElement", x);
+					this.getClass().getName(), "endElement", x);
 		}
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.xml.sax.ContentHandler#characters(char[], int, int)
 	 */
 	public void characters(char[] chars, int start, int length) {
@@ -149,11 +162,10 @@ public class CaseRepositoryDefaultHandler extends DefaultHandler {
 		String id = attributes.getValue("id");
 		if (id != null) {
 			CaseObjectImpl existingCase = (CaseObjectImpl) caseObjectsIDMap.get(id);
-			if (existingCase != null)
-				currentCaseObject = existingCase;
-			else
-				currentCaseObject = new CaseObjectImpl(knowledgeBase);
-		} else {
+			if (existingCase != null) currentCaseObject = existingCase;
+			else currentCaseObject = new CaseObjectImpl(knowledgeBase);
+		}
+		else {
 			currentCaseObject = new CaseObjectImpl(knowledgeBase);
 		}
 
@@ -166,16 +178,17 @@ public class CaseRepositoryDefaultHandler extends DefaultHandler {
 	}
 
 	private void endCaseObject() {
-		
+
 		String id = currentCaseObject.getId();
-		
+
 		if (caseObjectsIDMap.containsKey(id)) {
 			// do nothing, because we don't want double cases
-		} else {
+		}
+		else {
 			repository.add(currentCaseObject);
 			caseObjectsIDMap.put(id, currentCaseObject);
 		}
-		
+
 		currentCaseObject = null;
 	}
 

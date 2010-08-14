@@ -31,6 +31,7 @@ import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.scoring.Score;
 
 public class RunningACase {
+
 	private QContainer demoQuestions;
 	private QuestionOC pregnant;
 	private QuestionNum weight;
@@ -44,7 +45,7 @@ public class RunningACase {
 
 	public void runDemoCase() throws IOException {
 		KnowledgeBase knowledgeBase = buildKnowledgeBase();
-		
+
 		PrintStream out = System.out;
 		// Create a case (problem-solving session and set all specified
 		// question/answers
@@ -57,18 +58,18 @@ public class RunningACase {
 		session.getBlackboard().addValueFact(fact1);
 		out.println(fact1);
 		// set: weight = 80
-		Fact fact2 = FactFactory.createFact(weight, new NumValue(80), 
-				PSMethodUserSelected.getInstance(), 
+		Fact fact2 = FactFactory.createFact(weight, new NumValue(80),
+				PSMethodUserSelected.getInstance(),
 				PSMethodUserSelected.getInstance());
 		session.getBlackboard().addValueFact(fact2);
 		out.println(fact2);
-		
+
 		// Print all solutions with a state != UNCLEAR
 		out.println("+++ Solutions +++");
 		for (Solution solution : knowledgeBase.getSolutions()) {
 			Rating state = session.getBlackboard().getRating(solution);
-			if (!state.hasState(Rating.State.UNCLEAR))
-				out.println("  " + solution + " (" + state + ")");
+			if (!state.hasState(Rating.State.UNCLEAR)) out.println("  " + solution + " (" + state
+					+ ")");
 		}
 
 		// Show all entered findings
@@ -77,7 +78,6 @@ public class RunningACase {
 			out.println("  " + entry);
 		}
 	}
-
 
 	private KnowledgeBase buildKnowledgeBase() throws IOException {
 		// root {container}
@@ -91,22 +91,24 @@ public class RunningACase {
 		QASet root = kbm.getKnowledgeBase().getRootQASet();
 
 		demoQuestions = kbm.createQContainer("demoQuestions", root);
-		pregnant = kbm.createQuestionOC("pregnant", demoQuestions, new String[] { "yes",
+		pregnant = kbm.createQuestionOC("pregnant", demoQuestions, new String[] {
+				"yes",
 				"no" });
 		yes = new ChoiceValue(kbm.findChoice(pregnant, "yes"));
 		weight = kbm.createQuestionNum("weight", "weight", demoQuestions);
 
 		dangerousMood = kbm.createSolution("dangerousMood");
-		
+
 		// Define the init questionnaire
 		kbm.getKnowledgeBase().setInitQuestions(Arrays.asList(demoQuestions));
-		
-		// Define the magic rule: preganant=yes AND weight > 70 => dangerousMood (P7)
+
+		// Define the magic rule: preganant=yes AND weight > 70 => dangerousMood
+		// (P7)
 		List<Condition> terms = new ArrayList<Condition>();
 		terms.add(new CondEqual(pregnant, yes));
 		terms.add(new CondNumGreater(weight, Double.valueOf(70)));
 		RuleFactory.createHeuristicPSRule("r1", dangerousMood, Score.P7, new CondAnd(terms));
-		
+
 		return kbm.getKnowledgeBase();
 	}
 

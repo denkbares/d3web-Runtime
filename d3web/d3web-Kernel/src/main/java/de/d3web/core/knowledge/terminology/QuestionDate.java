@@ -23,8 +23,6 @@
  */
 package de.d3web.core.knowledge.terminology;
 
-
-
 /**
  * A Question which asks for a date.
  * 
@@ -43,6 +41,5 @@ public class QuestionDate extends Question {
 	public QuestionDate(String id) {
 		super(id);
 	}
-
 
 }

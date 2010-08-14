@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.basics.knowledge;
@@ -56,8 +56,7 @@ public class CaseRepositoryDescriptor {
 	/**
 	 * 
 	 * @return boolean
-	 * @param o
-	 *            java.lang.Object
+	 * @param o java.lang.Object
 	 */
 	@Override
 	public boolean equals(Object o) {
@@ -66,7 +65,8 @@ public class CaseRepositoryDescriptor {
 			try {
 				return kbId.equals(other.getKbId())
 						&& (location.equals(other.getLocation()));
-			} catch (Exception x) {
+			}
+			catch (Exception x) {
 				logger.warn(x);
 				return false;
 			}
@@ -112,32 +112,28 @@ public class CaseRepositoryDescriptor {
 	}
 
 	/**
-	 * @param newKbId
-	 *            java.lang.String
+	 * @param newKbId java.lang.String
 	 */
 	public void setKbId(String newKbId) {
 		kbId = newKbId;
 	}
 
 	/**
-	 * @param newLocation
-	 *            java.lang.String
+	 * @param newLocation java.lang.String
 	 */
 	public void setLocation(String newLocation) {
 		location = newLocation;
 	}
 
 	/**
-	 * @param newLocationType
-	 *            java.lang.String
+	 * @param newLocationType java.lang.String
 	 */
 	public void setLocationType(String newLocationType) {
 		locationType = newLocationType;
 	}
 
 	/**
-	 * @param newUserEmails
-	 *            java.util.List
+	 * @param newUserEmails java.util.List
 	 */
 	public void setUserEmails(List<String> newUserEmails) {
 		userEmails = newUserEmails;

@@ -81,11 +81,11 @@ public class InterviewCalculator extends PrecisionRecallCalculator {
 	 * @return Total similarity of expected and actually asked questions
 	 */
 	private double similarity(RatedTestCase rtc) {
-		
+
 		TestSuite.pleaseRemoveMe.append("-----------------------------------------\n");
 		TestSuite.pleaseRemoveMe.append(rtc.getName() + "\n");
 		TestSuite.pleaseRemoveMe.append("-----------------------------------------\n");
-		
+
 		double sum = 0;
 
 		for (Finding f : rtc.getFindings()) {
@@ -96,8 +96,10 @@ public class InterviewCalculator extends PrecisionRecallCalculator {
 			// Compare expected question with asked question
 			if (expected.equals(asked)) {
 				sum += 1;
-			} else {
-				TestSuite.pleaseRemoveMe.append("!\tExpected: " + expected + "\t|\t Asked: " + asked + "\n");
+			}
+			else {
+				TestSuite.pleaseRemoveMe.append("!\tExpected: " + expected + "\t|\t Asked: "
+						+ asked + "\n");
 			}
 
 			// Set answer of current question in XPS-Case
@@ -126,50 +128,51 @@ public class InterviewCalculator extends PrecisionRecallCalculator {
 	 * @return Question which will be asked next.
 	 */
 	private Question getNextQuestion() {
-		return (Question)session.getInterview().nextForm().getInterviewObject();
+		return (Question) session.getInterview().nextForm().getInterviewObject();
 
-		//      // THIS IS NOT NECESSARY ANY MORE DUE TO NEW INTERVIEW IMPLEMENTATION		
-//		// Get DialogController
-//		MQDialogController controller = (MQDialogController) session.getQASetManager();
-//		// Get correct QASet
-//		QASet currentQASet = getCorrectQASet(controller);
-//
-//		// if currentQASet is a Question simply return the Question
-//		if (currentQASet != null && currentQASet instanceof Question) {
-//			currentQC = null;
-//			nextQuestion = (Question) currentQASet;
-//
-//			// if currentQASet is a QContainer return the first remaining
-//			// Question
-//		}
-//		else if (currentQASet != null) {
-//			List<Question> validQuestions =
-//					controller.getAllValidQuestionsOf((QContainer) currentQASet);
-//			currentQC = (QContainer) currentQASet;
-//			nextQuestion = validQuestions.get(0);
-//
-//		}
-//
-//		return nextQuestion;
+		// // THIS IS NOT NECESSARY ANY MORE DUE TO NEW INTERVIEW IMPLEMENTATION
+		// // Get DialogController
+		// MQDialogController controller = (MQDialogController)
+		// session.getQASetManager();
+		// // Get correct QASet
+		// QASet currentQASet = getCorrectQASet(controller);
+		//
+		// // if currentQASet is a Question simply return the Question
+		// if (currentQASet != null && currentQASet instanceof Question) {
+		// currentQC = null;
+		// nextQuestion = (Question) currentQASet;
+		//
+		// // if currentQASet is a QContainer return the first remaining
+		// // Question
+		// }
+		// else if (currentQASet != null) {
+		// List<Question> validQuestions =
+		// controller.getAllValidQuestionsOf((QContainer) currentQASet);
+		// currentQC = (QContainer) currentQASet;
+		// nextQuestion = validQuestions.get(0);
+		//
+		// }
+		//
+		// return nextQuestion;
 
 	}
 
-//	/**
-//	 * Checks if it is necessary to move to the next QASet It is necessary if
-//	 * the current QContainer has no valid (to ask) questions left.
-//	 * 
-//	 * @param controller DialogController
-//	 * @return The next correct QASet
-//	 */
-//	private QASet getCorrectQASet(MQDialogController controller) {
-//
-//		QASet correctQASet = currentQC;
-//
-//		if (controller.getAllValidQuestionsOf(currentQC).size() == 0) {
-//			correctQASet = controller.moveToNextRemainingQASet();
-//		}
-//
-//		return correctQASet;
-//	}
+	// /**
+	// * Checks if it is necessary to move to the next QASet It is necessary if
+	// * the current QContainer has no valid (to ask) questions left.
+	// *
+	// * @param controller DialogController
+	// * @return The next correct QASet
+	// */
+	// private QASet getCorrectQASet(MQDialogController controller) {
+	//
+	// QASet correctQASet = currentQC;
+	//
+	// if (controller.getAllValidQuestionsOf(currentQC).size() == 0) {
+	// correctQASet = controller.moveToNextRemainingQASet();
+	// }
+	//
+	// return correctQASet;
+	// }
 
 }

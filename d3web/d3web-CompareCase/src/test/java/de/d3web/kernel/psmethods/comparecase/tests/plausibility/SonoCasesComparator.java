@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.kernel.psmethods.comparecase.tests.plausibility;
@@ -41,7 +41,8 @@ public class SonoCasesComparator {
 	public static void main(String[] args) {
 		try {
 			PersistenceManager pm = PersistenceManager.getInstance();
-			KnowledgeBase kb = pm.load(new File(new URL(args[0]).getFile()), new ConsoleProgressListener());
+			KnowledgeBase kb = pm.load(new File(new URL(args[0]).getFile()),
+					new ConsoleProgressListener());
 
 			CaseRepositoryReader colc = new CaseRepositoryReader();
 
@@ -64,10 +65,10 @@ public class SonoCasesComparator {
 					cMode.setIsIgnoreMutualUnknowns(true);
 
 					double sim =
-						CaseComparator.calculateSimilarityBetweenCases(
-							cMode,
-							case0,
-							cobj);
+							CaseComparator.calculateSimilarityBetweenCases(
+									cMode,
+									case0,
+									cobj);
 
 					if (!case0.getId().equals(cobj.getId())) {
 
@@ -77,30 +78,33 @@ public class SonoCasesComparator {
 						if (sim < minSim) {
 							minSim = sim;
 						}
-					} else if(sim != 1) {
+					}
+					else if (sim != 1) {
 						System.err.println("sim != 1");
-					} else {
+					}
+					else {
 						System.out.println("sim = 1. OK.");
 					}
 				}
 
 				System.out.println(
-					case0.getId()
-						+ ": maxSim="
-						+ ((int) (maxSim * 100))
-						+ "%\t minSim="
-						+ ((int) (minSim * 100))
-						+ "%");
+						case0.getId()
+								+ ": maxSim="
+								+ ((int) (maxSim * 100))
+								+ "%\t minSim="
+								+ ((int) (minSim * 100))
+								+ "%");
 			}
 
 			System.out.println(
-				"Whole comparison took "
-					+ (System.currentTimeMillis() - start) / 1000
-					+ " seconds");
+					"Whole comparison took "
+							+ (System.currentTimeMillis() - start) / 1000
+							+ " seconds");
 
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			System.err.println(
-				"usage: java SonoCasesComparator <kb-jar> <cases.xml>");
+					"usage: java SonoCasesComparator <kb-jar> <cases.xml>");
 		}
 	}
 

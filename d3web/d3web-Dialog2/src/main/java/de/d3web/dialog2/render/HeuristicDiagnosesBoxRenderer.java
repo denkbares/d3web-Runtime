@@ -63,7 +63,7 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 
 				DialogRenderUtils.renderDiagnosesLink(writer, component, diag, session,
 						"underline", score
-						.toString(), showScore);
+								.toString(), showScore);
 				writer.endElement("td");
 
 				DialogRenderUtils.renderMMInfoPopupLink(writer, component, diag, true,
@@ -112,7 +112,7 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 				DialogRenderUtils.sortDiagnosisList(diagListEstablished, session);
 				renderDiagnoses(writer, component, diagListEstablished, session,
 						DialogUtils
-						.getMessageFor("solution.established"), false);
+								.getMessageFor("solution.established"), false);
 			}
 
 			// render SUGGESTED...
@@ -122,7 +122,7 @@ public class HeuristicDiagnosesBoxRenderer extends Renderer {
 				DialogRenderUtils.sortDiagnosisList(diagListSuggested, session);
 				renderDiagnoses(writer, component, diagListSuggested, session,
 						DialogUtils
-						.getMessageFor("solution.suggested"), false);
+								.getMessageFor("solution.suggested"), false);
 			}
 
 			// render EXCLUDED...

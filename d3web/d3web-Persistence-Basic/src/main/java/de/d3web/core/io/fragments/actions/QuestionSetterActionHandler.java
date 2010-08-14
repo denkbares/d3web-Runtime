@@ -1,22 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *                    denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg denkbares GmbH
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.io.fragments.actions;
 
@@ -41,17 +40,20 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
+
 /**
- * Handels the two default successors ActionAddValue and ActionSetValue of ActionQuestionSetter.
- * Other successors must have their own FragementHandler with a higher priority
+ * Handels the two default successors ActionAddValue and ActionSetValue of
+ * ActionQuestionSetter. Other successors must have their own FragementHandler
+ * with a higher priority
+ * 
  * @author Norman Brümmer, Markus Friedrich (denkbares GmbH)
  */
-public class QuestionSetterActionHandler implements FragmentHandler{
+public class QuestionSetterActionHandler implements FragmentHandler {
 
 	@Override
 	public boolean canRead(Element element) {
 		return XMLUtil.checkNameAndType(element, "Action", "ActionAddValue")
-			||XMLUtil.checkNameAndType(element, "Action", "ActionSetValue");
+				|| XMLUtil.checkNameAndType(element, "Action", "ActionSetValue");
 	}
 
 	@Override
@@ -71,7 +73,8 @@ public class QuestionSetterActionHandler implements FragmentHandler{
 			if (child.getNodeName().equalsIgnoreCase("question")) {
 				String id = child.getAttributes().getNamedItem("ID").getNodeValue();
 				question = kb.searchQuestion(id);
-			} else if (child.getNodeName().equalsIgnoreCase("values")) {
+			}
+			else if (child.getNodeName().equalsIgnoreCase("values")) {
 				NodeList values = child.getChildNodes();
 
 				List<Object> parsedValues = new LinkedList<Object>();
@@ -105,7 +108,8 @@ public class QuestionSetterActionHandler implements FragmentHandler{
 		ActionQuestionSetter action = null;
 		if (roottype.equals("ActionAddValue")) {
 			action = new ActionAddValue();
-		} else if (roottype.equals("ActionSetValue")) {
+		}
+		else if (roottype.equals("ActionSetValue")) {
 			action = new ActionSetValue();
 		}
 		action.setQuestion(question);
@@ -120,12 +124,13 @@ public class QuestionSetterActionHandler implements FragmentHandler{
 		Element element = doc.createElement("Action");
 		if (action instanceof ActionAddValue) {
 			element.setAttribute("type", "ActionAddValue");
-		} else if (action instanceof ActionSetValue) {
+		}
+		else if (action instanceof ActionSetValue) {
 			element.setAttribute("type", "ActionSetValue");
 		}
 		Element questionNode = doc.createElement("Question");
 		String questionId = "";
-		if(question != null) {
+		if (question != null) {
 			questionId = question.getId();
 		}
 		questionNode.setAttribute("ID", questionId);
@@ -150,24 +155,26 @@ public class QuestionSetterActionHandler implements FragmentHandler{
 		else if (action != null) {
 			if (action.getValue() instanceof Object[]) {
 				Object[] list = (Object[]) action.getValue();
-				for (Object o: list) {
+				for (Object o : list) {
 					if (o != null && o instanceof Choice) {
 						Choice a = (Choice) o;
-						if (a.getId()==null) {
-							throw new IOException("Answer "+a.getName()+" has no ID");
+						if (a.getId() == null) {
+							throw new IOException("Answer " + a.getName() + " has no ID");
 						}
 						Element valueNode = doc.createElement("Value");
 						valueNode.setAttribute("type", "answer");
 						valueNode.setAttribute("ID", a.getId());
 						valuesNode.appendChild(valueNode);
-					} else if (o != null) {
+					}
+					else if (o != null) {
 						Element valueNode = doc.createElement("Value");
 						valueNode.appendChild(pm.writeFragment(o, doc));
 						valueNode.setAttribute("type", "evaluatable");
 						valuesNode.appendChild(valueNode);
 					}
 				}
-			} else {
+			}
+			else {
 				Element valueNode = doc.createElement("Value");
 				valueNode.appendChild(pm.writeFragment(action.getValue(), doc));
 				valueNode.setAttribute("type", "evaluatable");
@@ -177,7 +184,7 @@ public class QuestionSetterActionHandler implements FragmentHandler{
 		else {
 			throw new IOException("Tried to write an Action that is null.");
 		}
-		
+
 		element.appendChild(valuesNode);
 		return element;
 	}

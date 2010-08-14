@@ -239,10 +239,14 @@ public class ConditionVerbalizer implements Verbalizer {
 
 		if (condVerb instanceof TerminalCondVerbalization) {
 			TerminalCondVerbalization tCond = (TerminalCondVerbalization) condVerb;
-			s.append(VerbalizationManager.quoteIfNecessary(tCond.getQuestion()) + " "
-					+ tCond.getOperator() + " "
-					+ (tCond.getOriginalClass().equals(CondNumIn.class.getSimpleName()) ?
-					tCond.getAnswer() : VerbalizationManager.quoteIfNecessary(tCond.getAnswer())));
+			s.append(VerbalizationManager.quoteIfNecessary(tCond.getQuestion())
+					+ " "
+					+ tCond.getOperator()
+					+ " "
+					+ (tCond.getOriginalClass().equals(CondNumIn.class.getSimpleName())
+							?
+							tCond.getAnswer()
+							: VerbalizationManager.quoteIfNecessary(tCond.getAnswer())));
 		}
 		else {
 			NonTerminalCondVerbalization ntCond = (NonTerminalCondVerbalization) condVerb;
@@ -258,9 +262,9 @@ public class ConditionVerbalizer implements Verbalizer {
 					CondVerbalization cond = ntCond.getCondVerbalizations().get(i);
 					s.append(cond instanceof TerminalCondVerbalization ?
 							renderCondVerbalizationPlainText(cond, quote) + " "
-							+ ntCond.getOperator() + " " :
+									+ ntCond.getOperator() + " " :
 							("(" + renderCondVerbalizationPlainText(cond, quote) + ")")
-							+ " " + ntCond.getOperator() + " ");
+									+ " " + ntCond.getOperator() + " ");
 				}
 
 				if (ntCond.getCondVerbalizations().size() > 0) // Avoid AIOOBE

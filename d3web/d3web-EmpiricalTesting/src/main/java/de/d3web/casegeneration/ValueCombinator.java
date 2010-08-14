@@ -167,7 +167,7 @@ public class ValueCombinator {
 		for (Question q : combinations.keySet()) {
 			if (allowedAnswerCombinations.containsKey(q)) throw new IllegalArgumentException(
 					"There are already allowed answer combinations defined for question \""
-					+ q.getName() + "\".");
+							+ q.getName() + "\".");
 		}
 		this.forbiddenAnswerCombinations = combinations;
 	}
@@ -182,7 +182,7 @@ public class ValueCombinator {
 		for (Question q : combinations.keySet()) {
 			if (forbiddenAnswerCombinations.containsKey(q)) throw new IllegalArgumentException(
 					"There are already forbidden answer combinations defined for question \""
-					+ q.getName() + "\".");
+							+ q.getName() + "\".");
 		}
 		this.allowedAnswerCombinations = combinations;
 	}

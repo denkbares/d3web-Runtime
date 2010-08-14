@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.io.rules;
 
@@ -47,13 +47,13 @@ import de.d3web.core.knowledge.KnowledgeBase;
 
 /**
  * This abstract class provides basic functions for rule handlers
- *
+ * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter, KnowledgeReader{
+public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter, KnowledgeReader {
 
 	protected String ruletype;
-	
+
 	@Override
 	public void write(KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
 		Document doc = Util.createEmptyDocument();
@@ -62,47 +62,47 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 		root.setAttribute("type", ruletype);
 		doc.appendChild(root);
 		List<Rule> rules = new ArrayList<Rule>(getRules(kb));
-		//sort the rules
+		// sort the rules
 		Collections.sort(rules, new Comparator<Rule>() {
+
 			@Override
 			public int compare(Rule o1, Rule o2) {
-				return(o1.getId().compareTo(o2.getId()));
+				return (o1.getId().compareTo(o2.getId()));
 			}
 		});
 		PersistenceManager pm = PersistenceManager.getInstance();
 		float count = 0;
-		for (Rule r: rules) {
+		for (Rule r : rules) {
 			Element element = pm.writeFragment(r, doc);
 			root.appendChild(element);
-			listener.updateProgress(count++/rules.size(), "Writing "+ruletype);
+			listener.updateProgress(count++ / rules.size(), "Writing " + ruletype);
 		}
 		Util.writeDocumentToOutputStream(doc, stream);
 	}
 
 	private Set<Rule> getRules(KnowledgeBase kb) {
 		Set<Rule> rules = new HashSet<Rule>();
-		for (Class<? extends PSMethod> clazz: getProblemSolverContent()) {
-			for (KnowledgeSlice slice: kb.getAllKnowledgeSlicesFor(clazz)) {
+		for (Class<? extends PSMethod> clazz : getProblemSolverContent()) {
+			for (KnowledgeSlice slice : kb.getAllKnowledgeSlicesFor(clazz)) {
 				if (slice instanceof RuleSet) {
 					RuleSet rs = (RuleSet) slice;
 					rules.addAll(rs.getRules());
 				}
 			}
 		}
-		
+
 		rules.remove(null);
-		
+
 		return rules;
 	}
 
 	protected abstract List<Class<? extends PSMethod>> getProblemSolverContent();
 
-
 	@Override
 	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
 		Document doc = Util.streamToDocument(stream);
 		NodeList kbnodes = doc.getElementsByTagName("KnowledgeBase");
-		if (kbnodes.getLength()!=1) {
+		if (kbnodes.getLength() != 1) {
 			throw new IOException();
 		}
 		Node root = kbnodes.item(0);
@@ -115,12 +115,12 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 		List<Element> children = XMLUtil.getElementList(root.getChildNodes());
 		PersistenceManager pm = PersistenceManager.getInstance();
 		float count = 0;
-		for (Element child: children) {
+		for (Element child : children) {
 			pm.readFragment(child, kb);
-			listener.updateProgress(count++/children.size(), "Reading "+ruletype);
+			listener.updateProgress(count++ / children.size(), "Reading " + ruletype);
 		}
 	}
-	
+
 	@Override
 	public int getEstimatedSize(KnowledgeBase kb) {
 		return getRules(kb).size();

@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.render;
@@ -53,9 +53,8 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 		// necessary to get the remaining questions which are not listed in
 		// dialoglayout
 
-		
 		List<Question> questionWithoutDefinition = getQuestionWithoutLayoutInfo(layoutDefinition);
-		System.out.println("QUESTIONS TO RENDER: " + qList + "\n" + 
+		System.out.println("QUESTIONS TO RENDER: " + qList + "\n" +
 				"With layout info: " + questionWithoutDefinition + "\n");
 
 		Map<String, Question> renderedQuestionMap = new LinkedHashMap<String, Question>();
@@ -85,10 +84,12 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 					}
 					// check if a HtmlTextDefinition can be found on this
 					// position...
-				} else if (htmlTextDef != null) {
+				}
+				else if (htmlTextDef != null) {
 					renderHtmlTextBox(writer, component, session,
 							layoutDefinition, htmlTextDef);
-				} else {
+				}
+				else {
 					if (!anyQuestionExtendsToCoordinate(layoutDefinition, x, y)) {
 						// dynamically create LayoutDefinition for first
 						// question
@@ -155,8 +156,9 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 			List<Question> questionWithoutDefinition) {
 		while (!questionWithoutDefinition.isEmpty()) {
 			Question q = questionWithoutDefinition.remove(0);
-			if (DialogUtils.isValidQASet(q, session)) { 
-			//if (q.isValid(session) && QuestionsRendererUtils.showAbstract(q)) {
+			if (DialogUtils.isValidQASet(q, session)) {
+				// if (q.isValid(session) &&
+				// QuestionsRendererUtils.showAbstract(q)) {
 				return q;
 			}
 		}
@@ -189,7 +191,8 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 				Question q = DialogUtils.getQuestionFromQList(qList, qDef
 						.getQID());
 				if (q != null && DialogUtils.isValidQASet(q, session)) {
-					//q.isValid(session) && QuestionsRendererUtils.showAbstract(q)) {
+					// q.isValid(session) &&
+					// QuestionsRendererUtils.showAbstract(q)) {
 					return true;
 				}
 			}
@@ -199,10 +202,12 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 				if (htmlTextDef.getQuestionBinding() != null) {
 					Question q = session.getKnowledgeBase().searchQuestion(
 							htmlTextDef.getQuestionBinding());
-					if (q != null && DialogUtils.isValidQASet(q, session)) { //q.isValid(session)) {
+					if (q != null && DialogUtils.isValidQASet(q, session)) { // q.isValid(session))
+																				// {
 						return true;
 					}
-				} else {
+				}
+				else {
 					return true;
 				}
 			}
@@ -237,14 +242,16 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 
 			if (qLayout.getAdditionalCSSClass() != null) {
 				additionalClass = qLayout.getAdditionalCSSClass();
-			} else if (layoutDefinition.getAdditionalCSSClass() != null) {
+			}
+			else if (layoutDefinition.getAdditionalCSSClass() != null) {
 				additionalClass = layoutDefinition.getAdditionalCSSClass();
 			}
 			if (additionalClass != null) {
 				writer.writeAttribute("class", "htmlbox "
 						+ QuestionsRendererUtils.getBackgroundClass(session, q)
 						+ " " + additionalClass, "class");
-			} else {
+			}
+			else {
 				writer.writeAttribute("class",
 						"htmlbox "
 								+ QuestionsRendererUtils.getBackgroundClass(
@@ -257,7 +264,8 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 									.getAdditionalCSSStyle(), layoutDefinition
 									.getCols(), htmlTextDef.getColspan(), 0,
 							false), "style");
-		} else {
+		}
+		else {
 			additionalClass = htmlTextDef.getAdditionalCSSClass();
 			if (additionalClass == null) {
 				additionalClass = layoutDefinition.getAdditionalCSSClass();
@@ -265,7 +273,8 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 			if (additionalClass != null) {
 				writer.writeAttribute("class", "htmlbox " + additionalClass,
 						"class");
-			} else {
+			}
+			else {
 				writer.writeAttribute("class", "htmlbox", "class");
 			}
 			writer.writeAttribute("style", QuestionsRendererUtils
@@ -330,10 +339,12 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 		if (starttag.startsWith("<QPrompt")) {
 			writer.writeText(DialogUtils.getQPrompt(session.getKnowledgeBase()
 					.searchQuestion(content)), "value");
-		} else if (starttag.startsWith("<QText")) {
+		}
+		else if (starttag.startsWith("<QText")) {
 			writer.writeText(session.getKnowledgeBase().searchQuestion(content)
 					.getName(), "value");
-		} else if (starttag.startsWith("<MMInfo")) {
+		}
+		else if (starttag.startsWith("<MMInfo")) {
 			QuestionLayout qLayout = layoutDefinition
 					.getQuestionLayoutForQuestionID(content);
 			MMInfo info = qLayout.getMmInfo();
@@ -341,12 +352,14 @@ public class QContainerRendererForDefinedLayout extends QContainerRenderer {
 				DialogRenderUtils.renderMMInfoPopupLink(writer, component,
 						session.getKnowledgeBase().searchQuestion(content),
 						false, info);
-			} else {
+			}
+			else {
 				QuestionsRendererUtils.renderMMInfoWithoutPopup(writer,
 						component, session.getKnowledgeBase().searchQuestion(
 								content), layoutDefinition, null);
 			}
-		} else if (starttag.startsWith("<Image")) {
+		}
+		else if (starttag.startsWith("<Image")) {
 			// get width attribute (if available)
 			String width = null;
 			int startpos = starttag.indexOf("width=\"");

@@ -97,7 +97,7 @@ public class LocalWeightHandler implements FragmentHandler {
 		else {
 			throw new IOException(
 					"no abnormality handling for questions of type "
-					+ q.getClass());
+							+ q.getClass());
 		}
 	}
 

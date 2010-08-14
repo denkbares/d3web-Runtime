@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.basics.knowledge;
@@ -75,7 +75,8 @@ public class CaseManager {
 			cRDescriptorUrl = new URL(ResourceRepository.getInstance()
 					.getPropertyPathValue(ResourceRepository.CRDESCRIPTORS_URL));
 			CRDescriptorLoader.getInstance().setDescriptorUrl(cRDescriptorUrl);
-		} catch (MalformedURLException e) {
+		}
+		catch (MalformedURLException e) {
 			logger.error(e);
 		}
 	}
@@ -105,7 +106,8 @@ public class CaseManager {
 			if (manager.managesCrd(crd)) {
 				try {
 					manager.addCase(co, crd);
-				} catch (Exception ex) {
+				}
+				catch (Exception ex) {
 					logger.error(ex);
 					addedSuccessfully = false;
 				}
@@ -131,7 +133,8 @@ public class CaseManager {
 		if (crd.getLocationType().equals(
 				CaseRepositoryDescriptor.LOCATIONTYPE_XML_CASEREPOSITORY)) {
 			CaseRepositoryManager.getInstance().addManagedCrd(crd);
-		} else if (crd.getLocationType().equals(
+		}
+		else if (crd.getLocationType().equals(
 				CaseRepositoryDescriptor.LOCATIONTYPE_XML_CASEFILEREPOSITORY)) {
 			CaseFileRepositoryManager.getInstance().addManagedCrd(crd);
 		}
@@ -195,14 +198,11 @@ public class CaseManager {
 
 	/**
 	 * 
-	 * @param kbid
-	 *            Id of the knowledge base
-	 * @param account
-	 *            of the user (e.g. email)
-	 * @param repositoryLocationType
-	 *            location type for the case repository, in case that a new
-	 *            descriptor has to be generated (see
-	 *            CaseRepositoryDescriptor.LOCATIONTYPE...)
+	 * @param kbid Id of the knowledge base
+	 * @param account of the user (e.g. email)
+	 * @param repositoryLocationType location type for the case repository, in
+	 *        case that a new descriptor has to be generated (see
+	 *        CaseRepositoryDescriptor.LOCATIONTYPE...)
 	 * @return
 	 */
 	public CaseRepositoryDescriptor getCRDforUser(String kbid, String account,
@@ -233,7 +233,8 @@ public class CaseManager {
 						+ account);
 				crd
 						.setLocationType(CaseRepositoryDescriptor.LOCATIONTYPE_XML_CASEFILEREPOSITORY);
-			} else {
+			}
+			else {
 				crd.setLocation(caserepositoryPath + "cases_" + kbid + "_"
 						+ account + ".xml");
 				crd

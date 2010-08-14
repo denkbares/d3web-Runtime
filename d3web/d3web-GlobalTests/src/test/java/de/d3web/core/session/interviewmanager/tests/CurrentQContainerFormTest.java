@@ -29,8 +29,8 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.plugin.test.InitPluginManager;
 
-
 public class CurrentQContainerFormTest {
+
 	KnowledgeBaseManagement kbm;
 	Session session;
 	InterviewAgenda agenda;
@@ -68,7 +68,7 @@ public class CurrentQContainerFormTest {
 				"yes", "no" });
 		ask_for_pregnancy = kbm.createQuestionOC("ask for pregnancy", pregnancyQuestions,
 				new String[] {
-				"yes", "no" });
+						"yes", "no" });
 
 		// Container: heightWeightQuestions = { weight, height } 
 		heightWeightQuestions = kbm.createQContainer("heightWeightQuestions", root);
@@ -77,18 +77,19 @@ public class CurrentQContainerFormTest {
 
 		initQuestion = kbm.createQuestionOC("initQuestion", root,
 				new String[] {
-				"all", "pregnacyQuestions", "height+weight" });
+						"all", "pregnacyQuestions", "height+weight" });
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
 		session.getInterview().setFormStrategy(new CurrentQContainerFormStrategy());
 		agenda = session.getInterview().getInterviewAgenda();
 	}
-	
+
 	@Test
 	public void testWithTwoQContainers() {
 		// initially the agenda is empty
 		assertTrue(agenda.isEmpty());
 
-		// PUT the containers 'pregnancyQuestions' and 'heightWeightQuestions' onto the agenda
+		// PUT the containers 'pregnancyQuestions' and 'heightWeightQuestions'
+		// onto the agenda
 		agenda.append(pregnancyQuestions);
 		agenda.append(heightWeightQuestions);
 		assertFalse(agenda.isEmpty());
@@ -96,39 +97,40 @@ public class CurrentQContainerFormTest {
 		// EXPECT: 'pregnancyQuestions' to be the first interview object
 		InterviewObject formObject = session.getInterview().nextForm().getInterviewObject();
 		assertEquals(pregnancyQuestions, formObject);
-		
-		// SET   : first question of pregnancyQuestions (no follow-up question indicated)
-		// EXPECT: pregnancyQuestions should be still active 
+
+		// SET : first question of pregnancyQuestions (no follow-up question
+		// indicated)
+		// EXPECT: pregnancyQuestions should be still active
 		setValue(sex, male);
 		formObject = session.getInterview().nextForm().getInterviewObject();
 		assertEquals(pregnancyQuestions, formObject);
 
-		// SET   : second question of pregnancyQuestions
-		// EXPECT: now 'heightWeightQuestions' should be active 
+		// SET : second question of pregnancyQuestions
+		// EXPECT: now 'heightWeightQuestions' should be active
 		setValue(ask_for_pregnancy, new ChoiceValue(kbm.findChoice(ask_for_pregnancy, "no")));
 		formObject = session.getInterview().nextForm().getInterviewObject();
 		assertEquals(heightWeightQuestions, formObject);
-		
-		// SET   : first question of 'heightWeightQuestions' 
-		// EXPECT: now 'heightWeightQuestions' should be still active 
+
+		// SET : first question of 'heightWeightQuestions'
+		// EXPECT: now 'heightWeightQuestions' should be still active
 		setValue(height, new NumValue(100));
 		formObject = session.getInterview().nextForm().getInterviewObject();
 		assertEquals(heightWeightQuestions, formObject);
 
-		// SET   : second question of 'heightWeightQuestions' 
-		// EXPECT: now we expect an EMPTY_FORM since the agenda should be empty now 
+		// SET : second question of 'heightWeightQuestions'
+		// EXPECT: now we expect an EMPTY_FORM since the agenda should be empty
+		// now
 		setValue(weight, new NumValue(100));
 		assertEquals(EmptyForm.getInstance(), session.getInterview().nextForm());
 	}
 
 	@Test
 	public void testContainersWithFollowUpQuestion() {
-		// We need this rule for the later indication of the 
+		// We need this rule for the later indication of the
 		// follow-up question 'pregnant'
 		// Rule: sex = female => INDICATE ( pregnant )
 		RuleFactory.createIndicationRule("r1", pregnant, new CondEqual(sex, female));
 
-		
 		// initially the agenda is empty
 		assertTrue(agenda.isEmpty());
 
@@ -140,53 +142,34 @@ public class CurrentQContainerFormTest {
 		// EXPECT: 'pregnancyQuestions' to be the first interview object
 		InterviewObject formObject = session.getInterview().nextForm().getInterviewObject();
 		assertEquals(pregnancyQuestions, formObject);
-		
-		// SET   : ask_for_pregnancy = no
-		//         sex=female => follow-up question is indicated
-		// EXPECT: pregnancyQuestions should be still active, because of follow-up-questions 
-		setValue(ask_for_pregnancy,new ChoiceValue(kbm.findChoice(ask_for_pregnancy, "no")));
+
+		// SET : ask_for_pregnancy = no
+		// sex=female => follow-up question is indicated
+		// EXPECT: pregnancyQuestions should be still active, because of
+		// follow-up-questions
+		setValue(ask_for_pregnancy, new ChoiceValue(kbm.findChoice(ask_for_pregnancy, "no")));
 		setValue(sex, female);
 		Form form = session.getInterview().nextForm();
 		assertEquals(pregnancyQuestions, form.getInterviewObject());
-		
-		// SET   : answer follow-up question 'pregnant=no'
-		// EXPECT: no the next qcontainer 'heightWeightQuestions' should be active, 
-		//         since all questions (including follow-ups) have been answered
+
+		// SET : answer follow-up question 'pregnant=no'
+		// EXPECT: no the next qcontainer 'heightWeightQuestions' should be
+		// active,
+		// since all questions (including follow-ups) have been answered
 		setValue(pregnant, new ChoiceValue(kbm.findChoice(pregnant, "no")));
 		assertEquals(heightWeightQuestions, session.getInterview().nextForm().getInterviewObject());
-		
-		
-		// SET   : answer the questions 'height' and 'weight'
-		// EXPECT: all questions on the agenda are answered, so next form should be empty
+
+		// SET : answer the questions 'height' and 'weight'
+		// EXPECT: all questions on the agenda are answered, so next form should
+		// be empty
 		setValue(height, new NumValue(100));
 		setValue(weight, new NumValue(100));
 		assertEquals(EmptyForm.getInstance(), session.getInterview().nextForm());
 	}
-	
-	
+
 	private void setValue(Question question, Value value) {
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(question, value,
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

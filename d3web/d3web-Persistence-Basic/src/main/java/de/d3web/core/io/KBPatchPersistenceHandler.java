@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.core.io;
@@ -43,12 +43,12 @@ import de.d3web.core.knowledge.KnowledgeBase;
 
 /**
  * KnowledgeReader for reading kb-patches (e.g. redefined RuleComplex).
+ * 
  * @author gbuscher
  */
 public class KBPatchPersistenceHandler implements KnowledgeReader {
-	
-	public static final String PATCH_PERSISTENCE_HANDLER = "kb-patch";
 
+	public static final String PATCH_PERSISTENCE_HANDLER = "kb-patch";
 
 	public String getId() {
 		return PATCH_PERSISTENCE_HANDLER;
@@ -62,19 +62,19 @@ public class KBPatchPersistenceHandler implements KnowledgeReader {
 		for (int i = 0; i < doc.getChildNodes().getLength(); i++) {
 			node = doc.getChildNodes().item(i);
 			if (node.getNodeName().equalsIgnoreCase("KnowledgeBasePatch")) break;
-			
+
 		}
 		if (node == null) {
 			throw new IOException("Node KnowledgeBasePatch not found.");
 		}
-		
+
 		// first, remove the old KnowledgeSlices
 		removeKnowledgeSlices(node, kb, listener);
-		
+
 		// then add the new ones
 		getKnowledgeSlices(node, kb, listener);
 	}
-	
+
 	private void getKnowledgeSlices(Node node, KnowledgeBase kb,
 			ProgressListener listener) throws IOException {
 		NodeList kbchildren = node.getChildNodes();
@@ -86,15 +86,18 @@ public class KBPatchPersistenceHandler implements KnowledgeReader {
 			}
 		}
 		float time = 0;
-		for (Element child: slices) {
+		for (Element child : slices) {
 			PersistenceManager.getInstance().readFragment(child, kb);
-			listener.updateProgress(0.5f+((++time/slices.size()/2)), "Patching knowledge base: adding new knowledge slices");
+			listener.updateProgress(0.5f + ((++time / slices.size() / 2)),
+					"Patching knowledge base: adding new knowledge slices");
 		}
-		
+
 	}
 
 	/**
-	 * Removes all KnowledgeSlices which are specified within node.getChildNodes().
+	 * Removes all KnowledgeSlices which are specified within
+	 * node.getChildNodes().
+	 * 
 	 * @param node parent-node of the KnowledgeSlices to remove
 	 * @param kb KnowledgeBase
 	 */
@@ -116,14 +119,17 @@ public class KBPatchPersistenceHandler implements KnowledgeReader {
 					id = attr.getNamedItem("ID").getNodeValue();
 					removeKnowledgeSlice(id, kb);
 				}
-				listener.updateProgress(((float) i+1/slices.getLength())/2, "Patching knowledge base: removing old slices");
+				listener.updateProgress(((float) i + 1 / slices.getLength()) / 2,
+						"Patching knowledge base: removing old slices");
 			}
 		}
 	}
-	
+
 	/**
-	 * Removes the KnowledgeSlice with the specified id from the knowledgebase, if it is a RuleComplex!
-	 * (for other KnowledgeSlices, KnowledgeBase do not provide remove-methods).
+	 * Removes the KnowledgeSlice with the specified id from the knowledgebase,
+	 * if it is a RuleComplex! (for other KnowledgeSlices, KnowledgeBase do not
+	 * provide remove-methods).
+	 * 
 	 * @param id (String) of the RuleComplex to remove
 	 * @param kb (KnowledgeBase)
 	 * @return boolean; true, if the RuleComplex could be removed
@@ -134,12 +140,13 @@ public class KBPatchPersistenceHandler implements KnowledgeReader {
 			KnowledgeSlice slice = iter.next();
 			if (slice instanceof RuleSet) {
 				RuleSet rs = (RuleSet) slice;
-				for (Rule r: rs.getRules()) {
+				for (Rule r : rs.getRules()) {
 					if (r.getId().equalsIgnoreCase(id)) {
 						rs.removeRule(r);
 						if (rs.isEmpty()) {
 							return kb.remove(rs);
-						} else {
+						}
+						else {
 							return true;
 						}
 					}

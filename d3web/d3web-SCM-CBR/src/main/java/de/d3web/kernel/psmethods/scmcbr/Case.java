@@ -10,8 +10,5 @@ public class Case extends SCMCBRModel {
 	public Case(Solution solution) {
 		super(solution);
 	}
-	
-	
-	
 
 }

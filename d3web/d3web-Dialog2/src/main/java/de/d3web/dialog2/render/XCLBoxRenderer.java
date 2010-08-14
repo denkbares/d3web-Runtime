@@ -113,12 +113,12 @@ public class XCLBoxRenderer extends Renderer {
 							"id");
 					writer
 							.writeAttribute("onclick", "openXCL('"
-							+ origDiag.getId() + "'); return false;",
-							"onclick");
+									+ origDiag.getId() + "'); return false;",
+									"onclick");
 					writer.writeAttribute("href", "#", "href");
 					writer.writeAttribute("title", DialogUtils
 							.getMessageWithParamsFor("xcl.tooltip",
-							new Object[] { origDiag.getName() }),
+									new Object[] { origDiag.getName() }),
 							"title");
 					writer.writeText(origDiag.getName() + " (" + percent + " % "
 							+ "(" + state.getName().substring(0, 4) + ".))",

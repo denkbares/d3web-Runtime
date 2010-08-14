@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2010 denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.session.values;
 
@@ -30,7 +30,7 @@ import de.d3web.core.session.Value;
  * @created 07.04.2010
  */
 public class UndefinedValue implements Value, QuestionValue {
-	
+
 	public static final String UNDEFINED_ID = "Ma_Undefined";
 
 	private static final UndefinedValue instance = new UndefinedValue();
@@ -57,7 +57,8 @@ public class UndefinedValue implements Value, QuestionValue {
 	public int compareTo(Value o) {
 		if (o == null || o instanceof UndefinedValue) {
 			return 0;
-		} else {
+		}
+		else {
 			return -1;
 		}
 	}
@@ -70,8 +71,7 @@ public class UndefinedValue implements Value, QuestionValue {
 	/**
 	 * Returns true, if the specified value is an {@link UndefinedValue}.
 	 * 
-	 * @param value
-	 *            the specified {@link Value} instance
+	 * @param value the specified {@link Value} instance
 	 * @return true if the specified value is an {@link UndefinedValue}
 	 * @author joba
 	 * @date 15.04.2010
@@ -83,8 +83,7 @@ public class UndefinedValue implements Value, QuestionValue {
 	/**
 	 * Returns true, if the specified value is not an {@link UndefinedValue}.
 	 * 
-	 * @param value
-	 *            the specified {@link Value} instance
+	 * @param value the specified {@link Value} instance
 	 * @return true if the specified value is not an {@link UndefinedValue};
 	 *         false otherwise
 	 * @author joba

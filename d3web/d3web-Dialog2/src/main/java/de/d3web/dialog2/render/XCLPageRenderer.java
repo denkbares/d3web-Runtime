@@ -282,8 +282,8 @@ public class XCLPageRenderer extends Renderer {
 			writer.startElement("td", component);
 			writer.writeText(
 					VerbalizationManager.getInstance().verbalize(cond,
-					RenderingFormat.HTML, parameterMap).replaceAll("<b>", "").replaceAll(
-					"</b>", ""), "value");
+							RenderingFormat.HTML, parameterMap).replaceAll("<b>", "").replaceAll(
+							"</b>", ""), "value");
 			writer.endElement("td");
 			writer.endElement("tr");
 		}
@@ -367,8 +367,8 @@ public class XCLPageRenderer extends Renderer {
 			writer.writeAttribute("class", "emphasized", "class");
 			writer.writeText(
 					VerbalizationManager.getInstance().verbalize(cond,
-					RenderingFormat.HTML, parameterMap).replaceAll("<b>", "").replaceAll(
-					"</b>", ""), "value");
+							RenderingFormat.HTML, parameterMap).replaceAll("<b>", "").replaceAll(
+							"</b>", ""), "value");
 			writer.endElement("td");
 			writer.endElement("tr");
 		}

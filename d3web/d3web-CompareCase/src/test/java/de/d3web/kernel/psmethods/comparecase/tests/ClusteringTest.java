@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.kernel.psmethods.comparecase.tests;
@@ -36,6 +36,7 @@ import junit.framework.TestCase;
 
 /**
  * This is a TestCase for the clustering method
+ * 
  * @author bruemmer
  */
 public class ClusteringTest extends TestCase {
@@ -70,8 +71,10 @@ public class ClusteringTest extends TestCase {
 		repos.initialize(new HashSet(), CompareMode.JUNIT_TEST, 0.8);
 
 		List sortedCaseIds =
-			Arrays.asList(
-				new Object[] { "0.3", "0.6", "0.7", "1.0", "0.8", "0.9", "1.26", "1.3", "1.5", "1.6", "2.7", "2.8" });
+				Arrays.asList(
+						new Object[] {
+								"0.3", "0.6", "0.7", "1.0", "0.8", "0.9", "1.26", "1.3", "1.5",
+								"1.6", "2.7", "2.8" });
 		Iterator iter = sortedCaseIds.iterator();
 		while (iter.hasNext()) {
 			String caseId = (String) iter.next();
@@ -91,33 +94,33 @@ public class ClusteringTest extends TestCase {
 
 		CaseCluster cluster0 = repos.retrieveClusterByRepresentative("1.0");
 		boolean cluster0ok =
-			(cluster0.getCaseIds().size() == 2)
-				&& cluster0.getCaseIds().contains("0.9")
-				&& cluster0.getCaseIds().contains("0.8");
+				(cluster0.getCaseIds().size() == 2)
+						&& cluster0.getCaseIds().contains("0.9")
+						&& cluster0.getCaseIds().contains("0.8");
 		assertTrue("clustering error(0)", cluster0ok);
 
 		CaseCluster cluster1 = repos.retrieveClusterByRepresentative("0.7");
 		boolean cluster1ok =
-			(cluster1.getCaseIds().size() == 2)
-				&& cluster1.getCaseIds().contains("1.26")
-				&& cluster1.getCaseIds().contains("1.3");
+				(cluster1.getCaseIds().size() == 2)
+						&& cluster1.getCaseIds().contains("1.26")
+						&& cluster1.getCaseIds().contains("1.3");
 		assertTrue("clustering error(1)", cluster1ok);
 
 		CaseCluster cluster2 = repos.retrieveClusterByRepresentative("0.6");
 		boolean cluster2ok =
-			(cluster2.getCaseIds().size() == 2)
-				&& cluster2.getCaseIds().contains("1.5")
-				&& cluster2.getCaseIds().contains("1.6");
+				(cluster2.getCaseIds().size() == 2)
+						&& cluster2.getCaseIds().contains("1.5")
+						&& cluster2.getCaseIds().contains("1.6");
 		assertTrue("clustering error(2)", cluster2ok);
 
 		CaseCluster cluster3 = repos.retrieveClusterByRepresentative("0.3");
 		boolean cluster3ok =
-			(cluster3.getCaseIds().size() == 2)
-				&& cluster3.getCaseIds().contains("2.7")
-				&& cluster3.getCaseIds().contains("2.8");
+				(cluster3.getCaseIds().size() == 2)
+						&& cluster3.getCaseIds().contains("2.7")
+						&& cluster3.getCaseIds().contains("2.8");
 		assertTrue("clustering error(3)", cluster3ok);
 
-		//------------------------------------------------------------------------------------
+		// ------------------------------------------------------------------------------------
 
 		CaseObjectTestDummy dummy14 = createDummy(1.4);
 		CaseRepository.getInstance().addCase("kbid", dummy14);
@@ -127,9 +130,9 @@ public class ClusteringTest extends TestCase {
 
 		CaseCluster cluster4 = repos.retrieveClusterByRepresentative(dummy14.getId());
 		boolean cluster4ok =
-			(cluster4.getCaseIds().size() == 2)
-				&& cluster4.getCaseIds().contains("0.7")
-				&& cluster4.getCaseIds().contains("0.6");
+				(cluster4.getCaseIds().size() == 2)
+						&& cluster4.getCaseIds().contains("0.7")
+						&& cluster4.getCaseIds().contains("0.6");
 		assertTrue("clustering error(4)", cluster4ok);
 
 	}
@@ -150,7 +153,8 @@ public class ClusteringTest extends TestCase {
 
 		Set clusters = repos.retrieveAllClustersContaining("0.7");
 
-		boolean retrievalOK = (clusters.size() == 2) && clusters.contains(cluster07) && clusters.contains(cluster14);
+		boolean retrievalOK = (clusters.size() == 2) && clusters.contains(cluster07)
+				&& clusters.contains(cluster14);
 
 		assertTrue("retrieval error(0)", retrievalOK);
 

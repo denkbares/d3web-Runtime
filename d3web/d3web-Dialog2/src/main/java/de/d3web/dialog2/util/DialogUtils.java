@@ -257,7 +257,7 @@ public class DialogUtils {
 			ResourceBundle bundle = ResourceBundle.getBundle(FacesContext.getCurrentInstance()
 					.getApplication().getMessageBundle(),
 					FacesContext.getCurrentInstance().getViewRoot()
-					.getLocale());
+							.getLocale());
 			return bundle.getString(messageString);
 		}
 	}
@@ -272,12 +272,12 @@ public class DialogUtils {
 			ResourceBundle bundle = ResourceBundle.getBundle(FacesContext.getCurrentInstance()
 					.getApplication().getMessageBundle(),
 					FacesContext.getCurrentInstance().getViewRoot()
-					.getLocale());
+							.getLocale());
 			message = bundle.getString(messageString);
 		}
 		MessageFormat format = new MessageFormat(message,
 				FacesContext.getCurrentInstance().getViewRoot()
-				.getLocale());
+						.getLocale());
 		return format.format(params);
 	}
 
@@ -513,15 +513,15 @@ public class DialogUtils {
 		}
 		return true;
 	}
-	
+
 	public static boolean isDone(Session session, QASet object) {
 		if (object instanceof Question) {
-			return UndefinedValue.isNotUndefinedValue(session.getBlackboard().getValue((Question)object)); 
+			return UndefinedValue.isNotUndefinedValue(session.getBlackboard().getValue(
+					(Question) object));
 		}
 		else if (object instanceof QContainer) {
-			return session.getInterview().isActive((QContainer)object);
+			return session.getInterview().isActive((QContainer) object);
 		}
-		else
-			return false;
+		else return false;
 	}
 }

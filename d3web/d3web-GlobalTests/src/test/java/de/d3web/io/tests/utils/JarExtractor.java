@@ -21,12 +21,10 @@ public class JarExtractor {
 	/**
 	 * extracts the file of a given url to the given directory
 	 * 
-	 * @param url
-	 *            file
-	 * @param dir
-	 *            destination
-	 * @throws IOException 
-	 * @throws  
+	 * @param url file
+	 * @param dir destination
+	 * @throws IOException
+	 * @throws
 	 */
 	public static void extract(File zipFile, File dir) throws IOException {
 		/** For a given Zip file, process each entry. */
@@ -37,7 +35,7 @@ public class JarExtractor {
 		ZipFile zippy = new ZipFile(zipFile);
 		Enumeration<? extends ZipEntry> all = zippy.entries();
 		while (all.hasMoreElements()) {
-			extractSingleFile(zippy, uri,  (all.nextElement()));
+			extractSingleFile(zippy, uri, (all.nextElement()));
 		}
 
 	}

@@ -130,7 +130,7 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 		}
 		Collection<CaseObjectDescriptor> casesForKB = CaseManager.getInstance()
 				.getCaseObjectDescriptorsForKb(
-				session.getKnowledgeBase().getId());
+						session.getKnowledgeBase().getId());
 		if (casesForKB.size() > 0) {
 			return true;
 		}
@@ -153,7 +153,7 @@ public class D3webAnswerFrequentnessImpl implements FrequentnessInterface {
 		savedCases = new ArrayList<Session>();
 		Collection<CaseObjectDescriptor> codForKB = CaseManager.getInstance()
 				.getCaseObjectDescriptorsForKb(
-				session.getKnowledgeBase().getId());
+						session.getKnowledgeBase().getId());
 		for (CaseObjectDescriptor cod : codForKB) {
 			CaseObject o = CaseRepository.getInstance().getCaseById(
 					session.getKnowledgeBase().getId(), cod.getCaseId());

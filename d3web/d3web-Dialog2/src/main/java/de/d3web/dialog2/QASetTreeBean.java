@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2;
@@ -81,14 +81,18 @@ public class QASetTreeBean {
 				qaSetHtmlTree.expandPath(qaSetTreeModel
 						.getPathInformation(path));
 			}
-		} else if (!DialogUtils.isValidQASet(actual, session)) { //  actual.isDone(session)) {
+		}
+		else if (!DialogUtils.isValidQASet(actual, session)) { // actual.isDone(session))
+																// {
 			node.setType(QASetTreeBean.DONE_TYPE);
-		} else if (isIndicatedOrHasIndicatedChild((QContainer) actual,true, session)) {
+		}
+		else if (isIndicatedOrHasIndicatedChild((QContainer) actual, true, session)) {
 			if (DialogUtils.isValidQASet(actual, session)
 					|| isAnyChildContainerActive((QContainer) actual, session)) {
 				node.setType(QASetTreeBean.TO_BE_ASKED_TYPE);
 			}
-		} else {
+		}
+		else {
 			node.setType(QASetTreeBean.STANDARD_TYPE);
 		}
 
@@ -106,7 +110,7 @@ public class QASetTreeBean {
 			if (child instanceof QContainer) {
 				QContainer childC = (QContainer) child;
 				if (DialogUtils.isValidQASet(childC, session)
-					|| isAnyChildContainerActive(childC, session)) {
+						|| isAnyChildContainerActive(childC, session)) {
 					return true;
 				}
 			}
@@ -118,7 +122,8 @@ public class QASetTreeBean {
 		if (qaset.getChildren().length == 0) {
 			parentNode.setLeaf(true);
 			return;
-		} else {
+		}
+		else {
 			TerminologyObject[] childrenList = qaset.getChildren();
 			for (int i = 0; i < childrenList.length; i++) {
 				QASet qaSetchild = (QASet) childrenList[i];
@@ -176,18 +181,18 @@ public class QASetTreeBean {
 	public void setQaSetTreeModel(TreeModel qaSetTreeModel) {
 		this.qaSetTreeModel = qaSetTreeModel;
 	}
-	
-	
+
 	/**
 	 * Returns true, if the given container or any child of it is indicated.
 	 * 
 	 * @param considerQuestionsAsChildren determines, if the quesiton-children
 	 *        of a container shall also be considered (if false, only
 	 *        children-containers will be considered).
-	 * @param session 
+	 * @param session
 	 */
 	private boolean isIndicatedOrHasIndicatedChild(QContainer container, boolean considerQuestionsAsChildren, Session session) {
-		return isIndicatedOrHasIndicatedChild(container, new LinkedList<QASet>(), considerQuestionsAsChildren, session);
+		return isIndicatedOrHasIndicatedChild(container, new LinkedList<QASet>(),
+				considerQuestionsAsChildren, session);
 	}
 
 	/**
@@ -198,7 +203,7 @@ public class QASetTreeBean {
 	 * @param considerQuestionsAsChildren determines, if the quesiton-children
 	 *        of a container shall also be considered (if false, only
 	 *        children-containers will be considered).
-	 * @param session 
+	 * @param session
 	 * @return boolean
 	 */
 	private boolean isIndicatedOrHasIndicatedChild(QContainer c, List<QASet> processedQASets, boolean considerQuestionsAsChildren, Session session) {
@@ -220,14 +225,14 @@ public class QASetTreeBean {
 				for (TerminologyObject to : c.getChildren()) {
 					if (to instanceof QContainer) {
 						if (isIndicatedOrHasIndicatedChild((QContainer) to,
-								processedQASets, considerQuestionsAsChildren,session)) {
+								processedQASets, considerQuestionsAsChildren, session)) {
 							return true;
 						}
 					}
 					else {
 						if (to instanceof Question) {
 							if (considerQuestionsAsChildren
-									&& somethingIsDoneInContainer(c,session)) {
+									&& somethingIsDoneInContainer(c, session)) {
 								return true;
 							}
 						}
@@ -237,7 +242,7 @@ public class QASetTreeBean {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Returns true, if at least one of the children-questions is done.
 	 */

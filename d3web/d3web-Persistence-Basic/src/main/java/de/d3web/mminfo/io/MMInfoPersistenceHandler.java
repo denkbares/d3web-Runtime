@@ -135,7 +135,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 						MMInfoObject mmio = new MMInfoObject(dcmarkup, iter.next());
 						if (mmio.getDCMarkup() == null) throw new IOException(
 								"content will be forgotten: "
-								+ mmio.getContent());
+										+ mmio.getContent());
 						else mminfoStorage.addMMInfo(mmio);
 					}
 
@@ -143,7 +143,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 			}
 			listener.updateProgress(((float) aktslicecount++) / slicecount,
 					"Loading multimedia: object " + aktslicecount + " of "
-					+ slicecount);
+							+ slicecount);
 		}
 		listener.updateProgress(1, "Loading multimedia finished");
 	}

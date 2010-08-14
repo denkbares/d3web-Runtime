@@ -210,34 +210,34 @@ public class CaseObjectImpl implements CaseObject {
 		((getAppliedQSets() == null && other.getAppliedQSets() == null)
 				|| getAppliedQSets().equals(other.getAppliedQSets()))
 
-		&&
+				&&
 
-		((getExaminationBlocks() == null && other.getExaminationBlocks() == null)
+				((getExaminationBlocks() == null && other.getExaminationBlocks() == null)
 				|| getExaminationBlocks().equals(other.getExaminationBlocks()))
 
-		&&
+				&&
 
-		((getContents() == null && other.getContents() == null)
+				((getContents() == null && other.getContents() == null)
 				|| getContents().equals(other.getContents()))
 
-		&&
+				&&
 
-		((getAdditionalTrainData() == null && other.getAdditionalTrainData() == null)
+				((getAdditionalTrainData() == null && other.getAdditionalTrainData() == null)
 				|| getAdditionalTrainData().equals(other.getAdditionalTrainData()))
 
-		&&
+				&&
 
-		((getMultimedia() == null && other.getMultimedia() == null)
+				((getMultimedia() == null && other.getMultimedia() == null)
 				|| getMultimedia().equals(other.getMultimedia()))
 
-		&&
+				&&
 
-		((getFUSConfiguration() == null && other.getFUSConfiguration() == null)
+				((getFUSConfiguration() == null && other.getFUSConfiguration() == null)
 				|| getFUSConfiguration().equals(other.getFUSConfiguration()))
 
-		&&
+				&&
 
-		((getTherapyConfiguration() == null && other.getTherapyConfiguration() == null)
+				((getTherapyConfiguration() == null && other.getTherapyConfiguration() == null)
 				|| getTherapyConfiguration().equals(other.getTherapyConfiguration()));
 
 	}

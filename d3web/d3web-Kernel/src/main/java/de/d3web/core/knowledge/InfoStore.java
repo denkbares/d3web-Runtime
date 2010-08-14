@@ -7,7 +7,7 @@ import java.util.Locale;
 import de.d3web.core.utilities.Triple;
 
 public interface InfoStore {
-	
+
 	/**
 	 * Default key to store the title text of a terminology object. The type of
 	 * the info item stored should be {@link String}.
@@ -36,14 +36,13 @@ public interface InfoStore {
 	public static final String RESOURCE = "resource";
 
 	public static final Locale DEFAULT_LANGUAGE = null;
-	
+
 	/**
 	 * Returns the value stored for the specified key with language
-	 * "LANGUAGE_DEFAULT". If there is no such key for
-	 * the "LANGUAGE_DEFAULT", null is returned.
+	 * "LANGUAGE_DEFAULT". If there is no such key for the "LANGUAGE_DEFAULT",
+	 * null is returned.
 	 * 
-	 * @param key
-	 *            the key to be accessed
+	 * @param key the key to be accessed
 	 * @return the value for that key
 	 */
 	Object getValue(String key);
@@ -54,10 +53,8 @@ public interface InfoStore {
 	 * with language "LANGUAGE_DEFAULT". If there is no such item, null is
 	 * returned.
 	 * 
-	 * @param key
-	 *            the key to be accessed
-	 * @param language
-	 *            the language to be accessed
+	 * @param key the key to be accessed
+	 * @param language the language to be accessed
 	 * @return the value stored for that key and language
 	 */
 	Object getValue(String key, Locale language);
@@ -66,18 +63,15 @@ public interface InfoStore {
 	 * Removes the stored item for the specified key and the default language
 	 * "LANGUAGE_DEFAULT".
 	 * 
-	 * @param key
-	 *            the key to be removed
+	 * @param key the key to be removed
 	 */
 	void remove(String key);
 
 	/**
 	 * Removes the stored item for the specified key and the specified language.
 	 * 
-	 * @param key
-	 *            the key to be removed
-	 * @param language
-	 *            the language to be removed
+	 * @param key the key to be removed
+	 * @param language the language to be removed
 	 */
 	void remove(String key, Locale language);
 

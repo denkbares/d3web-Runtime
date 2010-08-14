@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.explain.enodes.reasons;
@@ -28,35 +28,41 @@ import de.d3web.explain.enodes.EReason;
 
 public class ERuleReason extends EReason {
 
-	private Object context = null;	// Erklärungskontext
-	private Rule rule = null;				// the "original" rule object
-	private ECondition activeCondition = null;	
-	private ECondition activeContext = null;	// Fragekontext (muss immer beantwortet sein, damit die Regel feuert)
+	private Object context = null; // Erklärungskontext
+	private Rule rule = null; // the "original" rule object
+	private ECondition activeCondition = null;
+	private ECondition activeContext = null; // Fragekontext (muss immer
+												// beantwortet sein, damit die
+												// Regel feuert)
 	private ECondition activeException = null;
 	private boolean initialized = false;
 
-
 	/**
 	 * Constructor for ERuleReason.
+	 * 
 	 * @param qaSetReason
 	 */
 	public ERuleReason(ExplanationFactory factory, Object qaSetReason) {
 		super(factory);
 		setContext(qaSetReason);
-//		setRule(qaSetReason);
+		// setRule(qaSetReason);
 	}
-		/**
+
+	/**
 	 * Constructor for ERuleReason.
+	 * 
 	 * @param qaSetReason
 	 */
 	public ERuleReason(ExplanationFactory factory, KnowledgeSlice reason) {
 		super(factory);
-		Rule rule = (Rule)reason;
+		Rule rule = (Rule) reason;
 		setContext(rule.getProblemsolverContext());
 		setRule(rule);
 	}
 
-	/** Getter for property activeCondition.
+	/**
+	 * Getter for property activeCondition.
+	 * 
 	 * @return Value of property activeCondition.
 	 */
 	public ECondition getActiveCondition() {
@@ -66,14 +72,18 @@ public class ERuleReason extends EReason {
 		return activeCondition;
 	}
 
-	/** Setter for property activeCondition.
+	/**
+	 * Setter for property activeCondition.
+	 * 
 	 * @param activeCondition New value of property activeCondition.
 	 */
 	private void setActiveCondition(ECondition activeCondition) {
 		this.activeCondition = activeCondition;
 	}
 
-	/** Getter for property activeContext.
+	/**
+	 * Getter for property activeContext.
+	 * 
 	 * @return Value of property activeContext.
 	 */
 	public ECondition getActiveContext() {
@@ -83,14 +93,18 @@ public class ERuleReason extends EReason {
 		return activeContext;
 	}
 
-	/** Setter for property activeContext.
+	/**
+	 * Setter for property activeContext.
+	 * 
 	 * @param activeContext New value of property activeContext.
 	 */
 	private void setActiveContext(ECondition activeContext) {
 		this.activeContext = activeContext;
 	}
 
-	/** Getter for property activeException.
+	/**
+	 * Getter for property activeException.
+	 * 
 	 * @return Value of property activeException.
 	 */
 	public ECondition getActiveException() {
@@ -100,35 +114,45 @@ public class ERuleReason extends EReason {
 		return activeException;
 	}
 
-	/** Setter for property activeException.
+	/**
+	 * Setter for property activeException.
+	 * 
 	 * @param activeException New value of property activeException.
 	 */
 	private void setActiveException(ECondition activeException) {
 		this.activeException = activeException;
 	}
 
-	/** Getter for property context.
+	/**
+	 * Getter for property context.
+	 * 
 	 * @return Value of property context.
 	 */
 	public Object getContext() {
 		return context;
 	}
 
-	/** Setter for property context.
+	/**
+	 * Setter for property context.
+	 * 
 	 * @param context New value of property context.
 	 */
 	private void setContext(Object context) {
 		this.context = context;
 	}
 
-	/** Getter for property rule.
+	/**
+	 * Getter for property rule.
+	 * 
 	 * @return Value of property rule.
 	 */
 	public Rule getRule() {
 		return rule;
 	}
 
-	/** Setter for property rule.
+	/**
+	 * Setter for property rule.
+	 * 
 	 * @param rule New value of property rule.
 	 */
 	private void setRule(Rule rule) {
@@ -154,10 +178,10 @@ public class ERuleReason extends EReason {
 			setActiveException(condition);
 		}
 
-		
-		//FF: activeContext nur für Diagnosen gültig? (==> getDiagnosisContext())
+		// FF: activeContext nur für Diagnosen gültig? (==>
+		// getDiagnosisContext())
 		condition = ECondition.createECondition(getFactory(), getRule().getContext());
-		if (condition!=null) {
+		if (condition != null) {
 			setActiveContext(condition);
 		}
 

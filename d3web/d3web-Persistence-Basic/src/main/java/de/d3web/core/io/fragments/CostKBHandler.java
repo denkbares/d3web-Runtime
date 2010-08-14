@@ -1,22 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *                    denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg denkbares GmbH
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.io.fragments;
 
@@ -32,8 +31,10 @@ import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.CostObject;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
+
 /**
- * Handels costs for the knowledge base 
+ * Handels costs for the knowledge base
+ * 
  * @author Norman Brümmer, Markus Friedrich (denkbares GmbH)
  */
 public class CostKBHandler implements FragmentHandler {
@@ -63,14 +64,12 @@ public class CostKBHandler implements FragmentHandler {
 				String unit = null;
 				for (int j = 0; j < cc.getLength(); j++) {
 					Node child = cc.item(j);
-					if (child.getNodeName().equals("Verbalization"))
-						verbalization = XMLUtil.getText(child);
+					if (child.getNodeName().equals("Verbalization")) verbalization = XMLUtil.getText(child);
 					else if (child.getNodeName().equals("Unit")) {
 						unit = XMLUtil.getText(child);
 					}
 				}
-				if (verbalization != null)
-					co = new CostObject(id, verbalization,
+				if (verbalization != null) co = new CostObject(id, verbalization,
 							unit == null ? null : unit);
 			}
 
@@ -87,12 +86,11 @@ public class CostKBHandler implements FragmentHandler {
 				}
 			}
 
-			if (co == null)
-				throw new IOException("cost could not be set");
-			else
-				return co;
+			if (co == null) throw new IOException("cost could not be set");
+			else return co;
 
-		} else {
+		}
+		else {
 			Double value = new Double(valueNode.getNodeValue());
 			return new CostObject(id, value);
 		}

@@ -96,7 +96,7 @@ public class MultipleChoiceAbstractionTest {
 				"Friday", "Saturday", "Sunday" };
 		Question weekdayQuestion =
 				kbm.createQuestionMC(weekday, kbm.getKnowledgeBase().getRootQASet(),
-				weekdayAlternatives);
+						weekdayAlternatives);
 		weekdayQuestion.getProperties().setProperty(Property.ABSTRACTION_QUESTION, Boolean.TRUE);
 	}
 
@@ -203,7 +203,7 @@ public class MultipleChoiceAbstractionTest {
 		Value workday = kbm.findValue(day, "Workday");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(day, workday,
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Day' == 'Workday'
 		Value dayValue = session.getBlackboard().getValue(day);
@@ -219,7 +219,7 @@ public class MultipleChoiceAbstractionTest {
 		Value weekend = kbm.findValue(day, "Weekend");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(day, weekend,
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Day' == 'Weekend'
 		dayValue = session.getBlackboard().getValue(day);
@@ -241,7 +241,7 @@ public class MultipleChoiceAbstractionTest {
 		// SET 'Day' = 'Weekend, Workday'
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(day, getWeekdayMCValue(Arrays.asList("")),
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Day' == 'Weekend, Workday'
 		Value dayValue = session.getBlackboard().getValue(day);
@@ -265,7 +265,7 @@ public class MultipleChoiceAbstractionTest {
 		// SET 'Day' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(day, UndefinedValue.getInstance(),
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Day' == 'UNDEFINED'
 		Value dayValue = session.getBlackboard().getValue(day);

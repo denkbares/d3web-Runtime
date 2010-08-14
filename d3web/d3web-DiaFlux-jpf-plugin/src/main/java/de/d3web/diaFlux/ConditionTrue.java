@@ -7,15 +7,13 @@ import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.session.Session;
 
 /**
- *
- * @author hatko
- * Created on: 09.10.2009
+ * 
+ * @author hatko Created on: 09.10.2009
  */
 public class ConditionTrue extends TerminalCondition {
-	
+
 	public static final Condition INSTANCE = new ConditionTrue();
-	
-	
+
 	private ConditionTrue() {
 		super(null);
 	}

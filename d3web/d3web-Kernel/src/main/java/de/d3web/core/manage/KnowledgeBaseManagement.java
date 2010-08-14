@@ -71,7 +71,7 @@ public class KnowledgeBaseManagement {
 
 	KnowledgeBase knowledgeBase;
 	private int internalCounter = 0;
-	
+
 	private KnowledgeBaseManagement(KnowledgeBase k) {
 		knowledgeBase = k;
 	}
@@ -658,49 +658,51 @@ public class KnowledgeBaseManagement {
 	public KnowledgeBase getKnowledgeBase() {
 		return knowledgeBase;
 	}
-	
-	
+
 	/**
-	 * Sorts a given list of QContainer according to DFS 
+	 * Sorts a given list of QContainer according to DFS
 	 * 
 	 * @param unsorted the unsorted list
 	 */
-	public void sortQContainers(List<QContainer> unsorted){
+	public void sortQContainers(List<QContainer> unsorted) {
 		HashMap<TerminologyObject, Integer> qcontainerIndex = new HashMap<TerminologyObject, Integer>();
 		reindex(knowledgeBase.getRootQASet(), qcontainerIndex, Integer.valueOf(0));
 		Collections.sort(unsorted, new DFSTreeSortingComparator(qcontainerIndex));
 	}
-	
+
 	/**
-	 * Traverses the QASet hierarchy using a depth-first search and
-	 * attaches an ordering number to each visited {@link QASet}.
+	 * Traverses the QASet hierarchy using a depth-first search and attaches an
+	 * ordering number to each visited {@link QASet}.
 	 */
-	private void reindex(TerminologyObject qaset, HashMap<TerminologyObject,Integer> qcontainerIndex, Integer maxOrderingNumber) {
+	private void reindex(TerminologyObject qaset, HashMap<TerminologyObject, Integer> qcontainerIndex, Integer maxOrderingNumber) {
 		qcontainerIndex.put(qaset, maxOrderingNumber);
-		
+
 		for (TerminologyObject child : qaset.getChildren()) {
 			maxOrderingNumber++;
 			if (!qcontainerIndex.containsKey(child)) {
 				reindex(child, qcontainerIndex, maxOrderingNumber);
-			} else { 
+			}
+			else {
 				continue;// terminate recursion in case of cyclic hierarchies
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * Private Comparator class that sorts a given QContaier map, where the
 	 * QContainers have previously been traversed DFS and given the according
 	 * index number
 	 */
-	
+
 	private class DFSTreeSortingComparator implements Comparator<QContainer> {
+
 		private final Map<TerminologyObject, Integer> index;
+
 		public DFSTreeSortingComparator(
 				Map<TerminologyObject, Integer> qasetIndex) {
 			this.index = qasetIndex;
 		}
+
 		@Override
 		public int compare(QContainer entry1, QContainer entry2) {
 			int order1 = this.index.get(entry1);
@@ -708,5 +710,5 @@ public class KnowledgeBaseManagement {
 			return order1 - order2;
 		}
 	}
-	
+
 }

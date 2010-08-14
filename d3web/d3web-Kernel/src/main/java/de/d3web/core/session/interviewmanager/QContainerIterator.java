@@ -1,24 +1,25 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.core.session.interviewmanager;
+
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -63,6 +64,7 @@ public class QContainerIterator {
 	 * indentation for displaying in HTML/XML
 	 */
 	public class QuestionModel {
+
 		private Session session = null;
 		private Question question = null;
 		private int indentation = 0;
@@ -78,9 +80,11 @@ public class QContainerIterator {
 		public Session getSession() {
 			return session;
 		}
+
 		public Question getQuestion() {
 			return question;
 		}
+
 		public int getIndentation() {
 			return indentation;
 		}
@@ -88,6 +92,7 @@ public class QContainerIterator {
 		public String getNextAnchor() {
 			return nextAnchor;
 		}
+
 		public String getNextAnchorHref() {
 			return nextAnchorHref;
 		}
@@ -109,10 +114,8 @@ public class QContainerIterator {
 	/**
 	 * creates a new QContainerIterator
 	 * 
-	 * @param container
-	 *            the Root-Container
-	 * @param session
-	 *            current Session
+	 * @param container the Root-Container
+	 * @param session current Session
 	 */
 	public QContainerIterator(Session session, QContainer container) {
 		this.session = session;
@@ -188,7 +191,7 @@ public class QContainerIterator {
 
 		// try to keep the order of q.getChildren-list
 		// (as measured by the first element of the rule-follow-lists)
-		for (TerminologyObject to: q.getChildren()) {
+		for (TerminologyObject to : q.getChildren()) {
 			QASet child = (QASet) to;
 
 			// iterate through rule-follow-lists, until a list is found which
@@ -243,11 +246,13 @@ public class QContainerIterator {
 		}
 
 		if (hasNextFollow()) {
-			Iterator<TerminologyObject> follows = new LinkedList<TerminologyObject>(createFollowList(session, q)).iterator();
+			Iterator<TerminologyObject> follows = new LinkedList<TerminologyObject>(
+					createFollowList(session, q)).iterator();
 			// must be a Question here, has been checked earlier...
 			Question newQ = (Question) follows.next();
 			flatten(depth + 1, newQ, follows);
-		} else {
+		}
+		else {
 			// System.out.println(q.getId() + " has no more follow");
 		}
 
@@ -276,11 +281,13 @@ public class QContainerIterator {
 			QASet qaSet = (QASet) childIter.next();
 			if (qaSet instanceof Question) {
 				currentQuestion = (Question) qaSet;
-			} else {
+			}
+			else {
 				/**
-				 * [HOTFIX]: georg: This is only, to avoid an exception, if a container
-				 * has questions _and_ containers as children.
-				 * Now, this method may return null even after "hasNextChild" returned true.
+				 * [HOTFIX]: georg: This is only, to avoid an exception, if a
+				 * container has questions _and_ containers as children. Now,
+				 * this method may return null even after "hasNextChild"
+				 * returned true.
 				 */
 				return getNextChild();
 			}
@@ -298,7 +305,8 @@ public class QContainerIterator {
 	 */
 	public Question getNextFollow() {
 		if (hasNextFollow()) {
-			List<TerminologyObject> followList = new LinkedList<TerminologyObject>(createFollowList(session, currentQuestion));
+			List<TerminologyObject> followList = new LinkedList<TerminologyObject>(
+					createFollowList(session, currentQuestion));
 			childIter = followList.iterator();
 			currentQuestion = (Question) childIter.next();
 			return currentQuestion;
@@ -324,7 +332,7 @@ public class QContainerIterator {
 
 			Question topQuestion = (Question) childIter.next();
 			flatten(0, topQuestion, childIter);
-			
+
 			childIter = childIterSave;
 			currentQuestion = currentQuestionSave;
 		}
@@ -342,7 +350,8 @@ public class QContainerIterator {
 				if (i == 0) {
 					model.setNextAnchor("next");
 					i++;
-				} else {
+				}
+				else {
 					model.setNextAnchor("next" + i++);
 				}
 				model.setNextAnchorHref("#next" + i);
@@ -372,21 +381,18 @@ public class QContainerIterator {
 	 * @return true, if the current Question has any following question
 	 */
 	public boolean hasNextFollow() {
-		if (currentQuestion == null)
-			return false;
-		else
-			return !createFollowList(session, currentQuestion).isEmpty();
+		if (currentQuestion == null) return false;
+		else return !createFollowList(session, currentQuestion).isEmpty();
 	}
-	
 
 	private boolean isDone(Session session, QASet object) {
 		if (object instanceof Question) {
-			return UndefinedValue.isNotUndefinedValue(session.getBlackboard().getValue((Question)object)); 
+			return UndefinedValue.isNotUndefinedValue(session.getBlackboard().getValue(
+					(Question) object));
 		}
 		else if (object instanceof QContainer) {
-			return session.getInterview().isActive((QContainer)object);
+			return session.getInterview().isActive((QContainer) object);
 		}
-		else
-			return false;
+		else return false;
 	}
 }

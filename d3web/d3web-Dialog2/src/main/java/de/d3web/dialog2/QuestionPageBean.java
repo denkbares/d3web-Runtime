@@ -271,10 +271,10 @@ public class QuestionPageBean {
 			// TODO: here we would need an instance indication
 			session.getBlackboard()
 					.addInterviewFact(
-					FactFactory.createFact(qaSet, new Indication(
-					State.INSTANT_INDICATED),
-					PSMethodUserSelected.getInstance(),
-					PSMethodUserSelected.getInstance()));
+							FactFactory.createFact(qaSet, new Indication(
+									State.INSTANT_INDICATED),
+									PSMethodUserSelected.getInstance(),
+									PSMethodUserSelected.getInstance()));
 		}
 		// DialogUtils.getMQDialogController(DialogUtils.getDialog().getSession())
 		// .moveToQASet(qaSet);
@@ -446,8 +446,8 @@ public class QuestionPageBean {
 		if (fractionOfAnsweredQuestionsPercentage < 51) {
 			colorString = "rgb(255, "
 					+ (int) (Math
-					.floor((double) fractionOfAnsweredQuestionsPercentage
-					/ (double) 50 * 255)) + ", 0)";
+							.floor((double) fractionOfAnsweredQuestionsPercentage
+									/ (double) 50 * 255)) + ", 0)";
 		}
 		else {
 			colorString = "rgb("

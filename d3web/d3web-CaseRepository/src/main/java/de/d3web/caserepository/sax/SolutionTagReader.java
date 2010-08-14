@@ -167,9 +167,9 @@ public class SolutionTagReader extends AbstractTagReader {
 			else {
 				Logger.getLogger(this.getClass().getName()).warning(
 						"no Class found for "
-						+ psmethodAttr
-						+ ", set to "
-						+ DEFAULT_PSMETHOD_CLASS);
+								+ psmethodAttr
+								+ ", set to "
+								+ DEFAULT_PSMETHOD_CLASS);
 				currentSolutionCopy.setPSMethodClass(DEFAULT_PSMETHOD_CLASS);
 			}
 		}
@@ -180,8 +180,8 @@ public class SolutionTagReader extends AbstractTagReader {
 			currentSolutionCopy
 					.setState(
 					Utilities
-					.string2stateBroad(
-					getTextBetweenCurrentTag()));
+							.string2stateBroad(
+							getTextBetweenCurrentTag()));
 			addSolution(currentSolutionCopy);
 		}
 	}

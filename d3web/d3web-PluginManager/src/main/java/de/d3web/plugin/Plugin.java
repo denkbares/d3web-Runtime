@@ -7,6 +7,7 @@ package de.d3web.plugin;
  * 
  */
 public interface Plugin {
+
 	/**
 	 * Returns the unique id of this plugin.
 	 * 

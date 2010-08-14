@@ -101,7 +101,8 @@ public class ExplainDiagnosisReasons extends AbstractExplainTest {
 
 		// set MF8a2 since it will give P8 the score P5 (and activate Mf10)
 		QuestionChoice Mf8 = (QuestionChoice) findQ("Mf8", testKb);
-		Choice choice = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase()).findChoice((QuestionChoice)Mf8, "Mf8a2");
+		Choice choice = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase()).findChoice(
+				(QuestionChoice) Mf8, "Mf8a2");
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(Mf8, new ChoiceValue(choice)));
 
@@ -124,21 +125,23 @@ public class ExplainDiagnosisReasons extends AbstractExplainTest {
 
 		// set MF8a2 since it will give P8 the score P5 (and activate Mf10)
 		QuestionChoice Mf13 = (QuestionChoice) findQ("Mf13", testKb);
-		Choice choice = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase()).findChoice((QuestionChoice)Mf13, "Mf13a1");
+		Choice choice = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase()).findChoice(
+				(QuestionChoice) Mf13, "Mf13a1");
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(Mf13, new ChoiceValue(choice))); 
-//						new ChoiceValue((Choice) Mf13.getAnswer(session,
-//						"Mf13a1")), 
-//						PSMethodUserSelected.getInstance(),
-//						PSMethodUserSelected.getInstance()));
+				FactFactory.createUserEnteredFact(Mf13, new ChoiceValue(choice)));
+		// new ChoiceValue((Choice) Mf13.getAnswer(session,
+		// "Mf13a1")),
+		// PSMethodUserSelected.getInstance(),
+		// PSMethodUserSelected.getInstance()));
 
 		QuestionChoice Mf8 = (QuestionChoice) findQ("Mf8", testKb);
-		Choice choiceMf8a2 = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase()).findChoice((QuestionChoice)Mf8, "Mf8a2");
+		Choice choiceMf8a2 = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase()).findChoice(
+				(QuestionChoice) Mf8, "Mf8a2");
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(Mf8, new ChoiceValue(choiceMf8a2)));
-//						new ChoiceValue((Choice) Mf8.getAnswer(session,
-//						"Mf8a2")), PSMethodUserSelected.getInstance(),
-//						PSMethodUserSelected.getInstance()));
+		// new ChoiceValue((Choice) Mf8.getAnswer(session,
+		// "Mf8a2")), PSMethodUserSelected.getInstance(),
+		// PSMethodUserSelected.getInstance()));
 
 		// explain a diagnosis
 		ENode expl = eFac.explain(findD("P8", testKb), explainContext);

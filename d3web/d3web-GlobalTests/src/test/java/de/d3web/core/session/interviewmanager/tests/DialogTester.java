@@ -74,13 +74,13 @@ public class DialogTester {
 		// pregnancyQuestions )
 		RuleFactory.createIndicationRule("r3", pregnancyQuestions,
 				new CondEqual(initQuestion,
-				new ChoiceValue(kbm.findChoice(initQuestion, "pregnacyQuestions"))));
+						new ChoiceValue(kbm.findChoice(initQuestion, "pregnacyQuestions"))));
 
 		// Rule: initQuestion = height+weight => INDICATE CONTAINER (
 		// heightWeightQuestions )
 		RuleFactory.createIndicationRule("r4", heightWeightQuestions,
 				new CondEqual(initQuestion,
-				new ChoiceValue(kbm.findChoice(initQuestion, "height+weight"))));
+						new ChoiceValue(kbm.findChoice(initQuestion, "height+weight"))));
 
 		// Rule: initQuestion = all => INDICATE CONTAINER ( pregnancyQuestions,
 		// heightWeightQuestions )
@@ -92,7 +92,7 @@ public class DialogTester {
 		// pregnancyQuestions )
 		RuleFactory.createIndicationRule("r6", pregnancyQuestions,
 				new CondEqual(pregnancyContainerIndication,
-				new ChoiceValue(kbm.findChoice(pregnancyContainerIndication, "yes"))));
+						new ChoiceValue(kbm.findChoice(pregnancyContainerIndication, "yes"))));
 
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
 	}
@@ -201,6 +201,6 @@ public class DialogTester {
 	private void setValue(Question question, Value value) {
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(question, value,
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 	}
 }

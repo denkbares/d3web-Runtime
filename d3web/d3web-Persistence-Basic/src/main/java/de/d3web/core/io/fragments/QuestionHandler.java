@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.io.fragments;
 
@@ -40,10 +40,11 @@ import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.knowledge.terminology.QuestionZC;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.knowledge.terminology.info.Properties;
+
 /**
- * FragmentHandler for Questions
- * Children are ignored, hierarchies are read/written by the knowledge readers/writers.
- *
+ * FragmentHandler for Questions Children are ignored, hierarchies are
+ * read/written by the knowledge readers/writers.
+ * 
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class QuestionHandler implements FragmentHandler {
@@ -64,66 +65,78 @@ public class QuestionHandler implements FragmentHandler {
 		String id = element.getAttribute("ID");
 		Question q = null;
 		List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
-		Element text =  null;
+		Element text = null;
 		ArrayList<NumericalInterval> intervalls = null;
 		Properties properties = null;
 		Element answersElement = null;
-		for (Element child: childNodes) {
+		for (Element child : childNodes) {
 			if (child.getNodeName().equals("Text")) {
 				text = (Element) child;
 			}
 			else if (child.getNodeName().equals("Answers")) {
 				answersElement = (Element) child;
 			}
-			//If the child is none of the types above and it doesn't contain the children or the costs,
-			//it contains the properties or the Intervalls.
-			//Costs are no longer stored in IDObjects, so they are ignored
-			else if (!child.getNodeName().equals("Children")&&!child.getNodeName().equals("Costs")) {
+			// If the child is none of the types above and it doesn't contain
+			// the children or the costs,
+			// it contains the properties or the Intervalls.
+			// Costs are no longer stored in IDObjects, so they are ignored
+			else if (!child.getNodeName().equals("Children")
+					&& !child.getNodeName().equals("Costs")) {
 				Object readFragment = PersistenceManager.getInstance().readFragment(child, kb);
 				if (readFragment instanceof Properties) {
 					properties = (Properties) readFragment;
-				} else if (readFragment instanceof List<?>) {
+				}
+				else if (readFragment instanceof List<?>) {
 					intervalls = new ArrayList<NumericalInterval>();
 					List<?> list = (List<?>) readFragment;
-					for (Object o: list) {
+					for (Object o : list) {
 						if (o instanceof NumericalInterval) {
 							intervalls.add((NumericalInterval) o);
 						}
 					}
-				} else {
-					throw new IOException("Object "+readFragment+" is not a valid child of a question.");
+				}
+				else {
+					throw new IOException("Object " + readFragment
+							+ " is not a valid child of a question.");
 				}
 			}
 		}
 		if (type.equals("YN")) {
 			q = new QuestionYN(id);
-		} else if (type.equals(QuestionZC.XML_IDENTIFIER)) {
+		}
+		else if (type.equals(QuestionZC.XML_IDENTIFIER)) {
 			q = new QuestionZC(id);
-		} else if (type.equals("OC")) {
+		}
+		else if (type.equals("OC")) {
 			q = new QuestionOC(id);
-		} else if (type.equals("MC")) {
+		}
+		else if (type.equals("MC")) {
 			q = new QuestionMC(id);
-		} else if (type.equals("Num")) {
+		}
+		else if (type.equals("Num")) {
 			QuestionNum questionNum = new QuestionNum(id);
 			q = questionNum;
 			if (intervalls != null) {
 				questionNum.setValuePartitions(intervalls);
 			}
-		} else if (type.equals("Text")) {
+		}
+		else if (type.equals("Text")) {
 			q = new QuestionText(id);
-		} else if (type.equals("Date")) {
+		}
+		else if (type.equals("Date")) {
 			q = new QuestionDate(id);
 		}
 		q.setName(text.getTextContent());
 		if (properties != null) {
 			q.setProperties(properties);
 		}
-		if (answersElement!= null && q instanceof QuestionChoice) {
+		if (answersElement != null && q instanceof QuestionChoice) {
 			QuestionChoice qc = (QuestionChoice) q;
 			List<Element> answerNodes = XMLUtil.getElementList(answersElement.getChildNodes());
 			List<Choice> answers = new ArrayList<Choice>();
-			for (Element answerElement: answerNodes) {
-				answers.add((Choice) PersistenceManager.getInstance().readFragment(answerElement, kb));
+			for (Element answerElement : answerNodes) {
+				answers.add((Choice) PersistenceManager.getInstance().readFragment(answerElement,
+						kb));
 			}
 			qc.setAlternatives(answers);
 		}
@@ -139,38 +152,45 @@ public class QuestionHandler implements FragmentHandler {
 		e.setAttribute("ID", q.getId());
 		if (q instanceof QuestionYN) {
 			e.setAttribute("type", "YN");
-		} else if (q instanceof QuestionZC) {
+		}
+		else if (q instanceof QuestionZC) {
 			e.setAttribute("type", QuestionZC.XML_IDENTIFIER);
-		} else if (q instanceof QuestionOC) {
+		}
+		else if (q instanceof QuestionOC) {
 			e.setAttribute("type", "OC");
-		} else if (q instanceof QuestionMC) {
+		}
+		else if (q instanceof QuestionMC) {
 			e.setAttribute("type", "MC");
-		} else if (q instanceof QuestionNum) {
+		}
+		else if (q instanceof QuestionNum) {
 			e.setAttribute("type", "Num");
-			//adding intervalls
+			// adding intervalls
 			List<?> valuePartitions = ((QuestionNum) q).getValuePartitions();
-			if (valuePartitions!=null) {
+			if (valuePartitions != null) {
 				e.appendChild(PersistenceManager.getInstance().writeFragment(valuePartitions, doc));
 			}
-		} else if (q instanceof QuestionText) {
+		}
+		else if (q instanceof QuestionText) {
 			e.setAttribute("type", "Text");
-		} else if (q instanceof QuestionDate) {
+		}
+		else if (q instanceof QuestionDate) {
 			e.setAttribute("type", "Date");
 		}
-		
+
 		if (q instanceof QuestionChoice) {
 			QuestionChoice qc = (QuestionChoice) q;
 			List<Choice> children = qc.getAllAlternatives();
 			if (children != null) {
 				Element answerNodes = doc.createElement("Answers");
-				for (Choice child: children) {
-					answerNodes.appendChild(PersistenceManager.getInstance().writeFragment(child, doc));
+				for (Choice child : children) {
+					answerNodes.appendChild(PersistenceManager.getInstance().writeFragment(child,
+							doc));
 				}
 				e.appendChild(answerNodes);
 			}
 		}
 		Properties properties = q.getProperties();
-		if (properties!=null && !properties.isEmpty()) {
+		if (properties != null && !properties.isEmpty()) {
 			e.appendChild(PersistenceManager.getInstance().writeFragment(properties, doc));
 		}
 		return e;

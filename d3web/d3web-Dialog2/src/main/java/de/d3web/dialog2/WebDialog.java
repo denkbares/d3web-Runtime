@@ -35,6 +35,7 @@ import de.d3web.dialog2.util.CaseFinalizationNotifier;
 import de.d3web.dialog2.util.DialogUtils;
 
 public class WebDialog {
+
 	// http://localhost:8080/KnowWE/dialog.jsf
 
 	private Session session;

@@ -1,22 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *                    denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg denkbares GmbH
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.io;
 
@@ -65,16 +64,16 @@ import de.d3web.plugin.PluginManager;
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class PersistenceManager {
-	
+
 	public static final String MULTIMEDIA_PATH_PREFIX = "multimedia/";
-	
+
 	public static final String EXTENDED_PLUGIN_ID = "KnowledgePersistenceExtensionPoints";
 	public static final String EXTENDED_POINT_READER = "KnowledgeReader";
 	public static final String EXTENDED_POINT_WRITER = "KnowledgeWriter";
 	public static final String EXTENDED_POINT_FRAGMENT = "FragmentHandler";
-	
+
 	private static PersistenceManager instance;
-	
+
 	private Extension[] readerPlugins;
 	private Extension[] writerPlugins;
 	private Extension[] fragmentPlugins;
@@ -100,7 +99,7 @@ public class PersistenceManager {
 	 * @return the instance of this {@link PersistenceManager}
 	 */
 	public static PersistenceManager getInstance() {
-		if (instance==null) {
+		if (instance == null) {
 			instance = new PersistenceManager();
 		}
 		return instance;
@@ -110,15 +109,13 @@ public class PersistenceManager {
 	 * Loads a knowledge base from a specified ZIP file and notifies the
 	 * specified listener about the working progress.
 	 * 
-	 * @param file
-	 *            the specified ZIP {@link File} (usually a jar file)
-	 * @param listener
-	 *            the specified listener which should be notified about the load
-	 *            progress
+	 * @param file the specified ZIP {@link File} (usually a jar file)
+	 * @param listener the specified listener which should be notified about the
+	 *        load progress
 	 * @return a {@link KnowledgeBase} instance with the knowledge contained in
 	 *         the specified ZIP file
-	 * @throws IOException
-	 *             if an error occurs during opening and reading the file
+	 * @throws IOException if an error occurs during opening and reading the
+	 *         file
 	 */
 	public KnowledgeBase load(File file, ProgressListener listener) throws IOException {
 		updatePlugins();
@@ -130,7 +127,7 @@ public class PersistenceManager {
 			while (entries.hasMoreElements()) {
 				ZipEntry entry = entries.nextElement();
 				if (!entry.isDirectory()) {
-					size+=entry.getSize();
+					size += entry.getSize();
 				}
 			}
 			CombinedProgressListener cpl = new CombinedProgressListener(size, listener);
@@ -142,10 +139,10 @@ public class PersistenceManager {
 					files.add(entry);
 				}
 			}
-			for (Extension plugin: readerPlugins) {
-				for (ZipEntry entry: new LinkedList<ZipEntry>(files)) {
+			for (Extension plugin : readerPlugins) {
+				for (ZipEntry entry : new LinkedList<ZipEntry>(files)) {
 					String name = entry.getName();
-					//checks if this entry can be parsed with this plugin
+					// checks if this entry can be parsed with this plugin
 					boolean canparse = false;
 					String filepattern = plugin.getParameter("filepattern");
 					String filename = plugin.getParameter("filename");
@@ -153,7 +150,8 @@ public class PersistenceManager {
 						if (name.matches(filepattern)) {
 							canparse = true;
 						}
-					} else if (filename != null) {
+					}
+					else if (filename != null) {
 						if (name.equals(filename)) {
 							canparse = true;
 						}
@@ -165,20 +163,24 @@ public class PersistenceManager {
 					}
 				}
 			}
-			for (ZipEntry entry: files) {
+			for (ZipEntry entry : files) {
 				String name = entry.getName();
 				if (name.toLowerCase().startsWith(MULTIMEDIA_PATH_PREFIX)) {
 					JarBinaryRessource jarBinaryRessource = new JarBinaryRessource(entry, file);
 					kb.addResouce(jarBinaryRessource);
-				} else if (notNeeded(entry)) {
-					//nothing to to, files were necessary for previous versions of persistence
-				} else {
-					Logger.getLogger("Persistence").warning("No parser for entry "+name+
-					" available. This file will be lost when saving the KnowledgeBase.");
+				}
+				else if (notNeeded(entry)) {
+					// nothing to to, files were necessary for previous versions
+					// of persistence
+				}
+				else {
+					Logger.getLogger("Persistence").warning("No parser for entry " + name +
+							" available. This file will be lost when saving the KnowledgeBase.");
 				}
 			}
 			return kb;
-		} finally {
+		}
+		finally {
 			zipfile.close();
 		}
 	}
@@ -186,19 +188,18 @@ public class PersistenceManager {
 	private boolean notNeeded(ZipEntry entry) {
 		String name = entry.getName();
 		return name.equalsIgnoreCase("KB-INF/Index.xml")
-				||name.equalsIgnoreCase("CRS-INF/Index.xml")
-				||name.equals("META-INF/MANIFEST.MF");
+				|| name.equalsIgnoreCase("CRS-INF/Index.xml")
+				|| name.equals("META-INF/MANIFEST.MF");
 	}
 
 	/**
 	 * Loads a knowledge base from the specified ZIP file.
 	 * 
-	 * @param file
-	 *            the specified ZIP {@link File} (usually a jar file)
+	 * @param file the specified ZIP {@link File} (usually a jar file)
 	 * @return a {@link KnowledgeBase} instance with the knowledge contained in
 	 *         the specified ZIP file
-	 * @throws IOException
-	 *             if an error occurs during opening and reading the file
+	 * @throws IOException if an error occurs during opening and reading the
+	 *         file
 	 */
 	public KnowledgeBase load(File file) throws IOException {
 		return load(file, new DummyProgressListener());
@@ -209,31 +210,27 @@ public class PersistenceManager {
 	 * compressed ZIP containing different XML files and resources comprising
 	 * the knowledge base.
 	 * 
-	 * @param knowledgeBase
-	 *            the specified knowledge base to be saved
-	 * @param file
-	 *            the specified file to which the knowledge base should be
-	 *            stored
-	 * @param listener
-	 *            listener which should be informed about the progress of the
-	 *            save operation
-	 * @throws IOException
-	 *             if an error occurs during saving the files
+	 * @param knowledgeBase the specified knowledge base to be saved
+	 * @param file the specified file to which the knowledge base should be
+	 *        stored
+	 * @param listener listener which should be informed about the progress of
+	 *        the save operation
+	 * @throws IOException if an error occurs during saving the files
 	 */
 	public void save(KnowledgeBase knowledgeBase, File file, ProgressListener listener) throws IOException {
 		updatePlugins();
 		Manifest manifest = new Manifest();
 		Attributes mainAttributes = manifest.getMainAttributes();
 		mainAttributes.put(Attributes.Name.MANIFEST_VERSION, "2.0");
-		mainAttributes.put(new Attributes.Name("Date"),new Date().toString());
+		mainAttributes.put(new Attributes.Name("Date"), new Date().toString());
 		mainAttributes.put(new Attributes.Name("Name"),
 				knowledgeBase.getDCMarkup().getContent(DCElement.TITLE));
 		mainAttributes.put(new Attributes.Name("ID"), knowledgeBase.getId());
 		mainAttributes.put(new Attributes.Name("Author"),
 				knowledgeBase.getDCMarkup().getContent(DCElement.CREATOR));
-		mainAttributes.put(new Attributes.Name("User"), System.getProperty ("user.name"));
-		File tempfile = new File(file.getCanonicalPath()+".temp");
-		
+		mainAttributes.put(new Attributes.Name("User"), System.getProperty("user.name"));
+		File tempfile = new File(file.getCanonicalPath() + ".temp");
+
 		JarOutputStream jarOutputStream = new JarOutputStream(
 				new FileOutputStream(tempfile), manifest);
 		int size = 0;
@@ -243,29 +240,31 @@ public class PersistenceManager {
 		}
 		size += knowledgeBase.getResources().size();
 		CombinedProgressListener cpl = new CombinedProgressListener(size, listener);
-		//update plugin configuration
+		// update plugin configuration
 		PluginConfig pc = PluginConfig.getPluginConfig(knowledgeBase);
-		for (Plugin plugin: PluginManager.getInstance().getPlugins()) {
+		for (Plugin plugin : PluginManager.getInstance().getPlugins()) {
 			PluginEntry pluginEntry = pc.getPluginEntry(plugin.getPluginID());
 			// when there is no entry, create one with auto-detect = true
-			if (pluginEntry==null) {
+			if (pluginEntry == null) {
 				pluginEntry = new PluginEntry(plugin, false, true);
 				pc.addEntry(pluginEntry);
 			}
-			//when autodetect is true, refresh the necessary state
+			// when autodetect is true, refresh the necessary state
 			if (pluginEntry.isAutodetect()) {
 				Autodetect auto = pluginEntry.getAutodetect();
-				if (auto==null) {
+				if (auto == null) {
 					pluginEntry.setNecessary(true);
-				} else {
+				}
+				else {
 					pluginEntry.setNecessary(auto.check(knowledgeBase));
 				}
 			}
 		}
 		try {
-			
+
 			for (Extension plugin : writerPlugins) {
-				//if autodetect is available, the file is only written when the autodetect check is positive
+				// if autodetect is available, the file is only written when the
+				// autodetect check is positive
 				Autodetect autodetect = pc.getPluginEntry(plugin.getPluginID()).getAutodetect();
 				if (autodetect != null && !autodetect.check(knowledgeBase)) {
 					continue;
@@ -283,7 +282,7 @@ public class PersistenceManager {
 			cpl.next(knowledgeBase.getResources().size());
 			int i = 0;
 			for (Resource ressource : knowledgeBase.getResources()) {
-				ZipEntry entry = new ZipEntry(MULTIMEDIA_PATH_PREFIX+ressource.getPathName());
+				ZipEntry entry = new ZipEntry(MULTIMEDIA_PATH_PREFIX + ressource.getPathName());
 				jarOutputStream.putNextEntry(entry);
 				InputStream inputStream = ressource.getInputStream();
 				try {
@@ -300,19 +299,20 @@ public class PersistenceManager {
 		finally {
 			jarOutputStream.close();
 		}
-		File bakfile = new File(URLDecoder.decode(file.getCanonicalPath()+".bak", "UTF-8"));
-		//delete old backup file
+		File bakfile = new File(URLDecoder.decode(file.getCanonicalPath() + ".bak", "UTF-8"));
+		// delete old backup file
 		bakfile.delete();
-		//backup original file, if it exists
-		if (file.exists()&&!file.renameTo(bakfile)) throw new IOException("Cannot override existing knowledge base file");
-		//override original file
+		// backup original file, if it exists
+		if (file.exists() && !file.renameTo(bakfile)) throw new IOException(
+				"Cannot override existing knowledge base file");
+		// override original file
 		if (!tempfile.renameTo(file)) {
-			//if not successful, restore backup and delete created output file
+			// if not successful, restore backup and delete created output file
 			if (bakfile.exists()) bakfile.renameTo(file);
 			tempfile.delete();
 			throw new IOException("Cannot rename temporary file");
 		}
-		//if successful backup is not needed any more
+		// if successful backup is not needed any more
 		bakfile.delete();
 	}
 
@@ -321,27 +321,23 @@ public class PersistenceManager {
 	 * specified object using the {@link FragmentHandler} with the highest
 	 * priority who can create the element.
 	 * 
-	 * @param object
-	 *            the specified object
-	 * @param doc
-	 *            the specified XML element, in which the element should be
-	 *            created
+	 * @param object the specified object
+	 * @param doc the specified XML element, in which the element should be
+	 *        created
 	 * @return the {@link Element} representing the input object
-	 * @throws NoSuchFragmentHandlerException
-	 *             if no appropriate {@link FragmentHandler} is available for
-	 *             the specified object
-	 * @throws IOException
-	 *             if an error occurs during saving the specified object
+	 * @throws NoSuchFragmentHandlerException if no appropriate
+	 *         {@link FragmentHandler} is available for the specified object
+	 * @throws IOException if an error occurs during saving the specified object
 	 */
 	public Element writeFragment(Object object, Document doc) throws NoSuchFragmentHandlerException, IOException {
-		for (Extension plugin: fragmentPlugins) {
+		for (Extension plugin : fragmentPlugins) {
 			FragmentHandler handler = (FragmentHandler) plugin.getSingleton();
 			if (handler.canWrite(object)) {
 				Element element = handler.write(object, doc);
 				return element;
 			}
 		}
-		throw new NoSuchFragmentHandlerException("No fragment handler found for: "+object);
+		throw new NoSuchFragmentHandlerException("No fragment handler found for: " + object);
 	}
 
 	/**
@@ -351,24 +347,21 @@ public class PersistenceManager {
 	 * {@link KnowledgeBase} instance is used to retrieve the appropriate object
 	 * instances.
 	 * 
-	 * @param child
-	 *            the specified XML Element
-	 * @param knowledgeBase
-	 *            the specified knowledge base
+	 * @param child the specified XML Element
+	 * @param knowledgeBase the specified knowledge base
 	 * @return the created object
-	 * @throws NoSuchFragmentHandlerException
-	 *             if no appropriate {@link FragmentHandler} is available
-	 * @throws IOException
-	 *             if an IO error occurs during the read operation
+	 * @throws NoSuchFragmentHandlerException if no appropriate
+	 *         {@link FragmentHandler} is available
+	 * @throws IOException if an IO error occurs during the read operation
 	 */
 	public Object readFragment(Element child, KnowledgeBase knowledgeBase) throws NoSuchFragmentHandlerException, IOException {
-		for (Extension plugin: fragmentPlugins) {
+		for (Extension plugin : fragmentPlugins) {
 			FragmentHandler handler = (FragmentHandler) plugin.getSingleton();
 			if (handler.canRead(child)) {
 				return handler.read(knowledgeBase, child);
 			}
 		}
-		throw new NoSuchFragmentHandlerException("No fragment handler found for: "+child);
+		throw new NoSuchFragmentHandlerException("No fragment handler found for: " + child);
 	}
 
 	/**
@@ -376,14 +369,11 @@ public class PersistenceManager {
 	 * {@link File}. During this process, a temporary file is created. If the
 	 * process is successful, the temporary file replaces the input file.
 	 * 
-	 * @param knowledgeBase
-	 *            the specified {@link KnowledgeBase} instance to be saved to
-	 *            the file
-	 * @param file
-	 *            the specified {@link File} in which the knowledge base is
-	 *            written
-	 * @throws IOException
-	 *             if an error occurs, an IO Exception is thrown
+	 * @param knowledgeBase the specified {@link KnowledgeBase} instance to be
+	 *        saved to the file
+	 * @param file the specified {@link File} in which the knowledge base is
+	 *        written
+	 * @throws IOException if an error occurs, an IO Exception is thrown
 	 */
 	public void save(KnowledgeBase knowledgeBase, File file) throws IOException {
 		save(knowledgeBase, file, new DummyProgressListener());

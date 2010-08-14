@@ -10,8 +10,7 @@ public class HeuristicRating extends Rating {
 	/**
 	 * Creates a neutral (unclear) heuristic rating.
 	 * 
-	 * @param score
-	 *            the score of this rating
+	 * @param score the score of this rating
 	 */
 	public HeuristicRating() {
 		super(State.UNCLEAR);
@@ -21,8 +20,7 @@ public class HeuristicRating extends Rating {
 	/**
 	 * Creates a heuristic rating representing the specified score.
 	 * 
-	 * @param score
-	 *            the score of this rating
+	 * @param score the score of this rating
 	 */
 	public HeuristicRating(Score score) {
 		this(score.getScore());
@@ -31,8 +29,7 @@ public class HeuristicRating extends Rating {
 	/**
 	 * Creates a heuristic rating representing the specified score.
 	 * 
-	 * @param score
-	 *            the score of this rating
+	 * @param score the score of this rating
 	 */
 	public HeuristicRating(double score) {
 		super(scoreToState(score));
@@ -76,8 +73,7 @@ public class HeuristicRating extends Rating {
 	 * Sums up a number of HeuristicRatings, creating a new one that represents
 	 * the combined score.
 	 * 
-	 * @param ratings
-	 *            the ratings to be summed
+	 * @param ratings the ratings to be summed
 	 */
 	public static HeuristicRating add(Score aprioriScore, HeuristicRating... ratings) {
 		double score = 0.0;

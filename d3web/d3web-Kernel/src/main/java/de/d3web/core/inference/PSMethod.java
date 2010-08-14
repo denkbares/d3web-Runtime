@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.core.inference;
@@ -57,10 +57,9 @@ public interface PSMethod {
 	 * Propagates the specified changes of the specified {@link Session} to this
 	 * problem-solver instance.
 	 * 
-	 * @param session
-	 *            the specified {@link Session} instance
-	 * @param changes
-	 *            the changes that should be propagated to this problem-solver
+	 * @param session the specified {@link Session} instance
+	 * @param changes the changes that should be propagated to this
+	 *        problem-solver
 	 */
 	void propagate(Session session, Collection<PropagationEntry> changes);
 
@@ -72,8 +71,7 @@ public interface PSMethod {
 	 * facts are created by their own. Therefore it may cast the facts to the
 	 * implementation class it uses for creating facts.
 	 * 
-	 * @param facts
-	 *            the facts to be merged
+	 * @param facts the facts to be merged
 	 * 
 	 * @return the merged fact
 	 */

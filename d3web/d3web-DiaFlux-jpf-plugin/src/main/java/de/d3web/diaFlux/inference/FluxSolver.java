@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- *
+ * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- *
+ * 
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- *
+ * 
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -46,10 +46,10 @@ import de.d3web.diaFlux.flow.ISupport;
 import de.d3web.diaFlux.flow.StartNode;
 
 /**
- *
+ * 
  * @author Reinhard Hatko
  * @created: 10.09.2009
- *
+ * 
  */
 public class FluxSolver implements PSMethod {
 
@@ -58,13 +58,13 @@ public class FluxSolver implements PSMethod {
 	public FluxSolver() {
 	}
 
-
 	@Override
 	public void init(Session theCase) {
 
 		if (!DiaFluxUtils.isFlowCase(theCase)) return;
 
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO, ("Initing FluxSolver with case: " + theCase));
+		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+				("Initing FluxSolver with case: " + theCase));
 
 		Rule rule = new Rule("FCIndication_", FluxSolver.class);
 
@@ -81,14 +81,14 @@ public class FluxSolver implements PSMethod {
 
 		FluxSolver.addSupport(session, startNode, support);
 
-		if (!active) { // if node was not active before adding support, start new path
+		if (!active) { // if node was not active before adding support, start
+						// new path
 			DiaFluxCaseObject flowData = DiaFluxUtils.getFlowData(session);
 			flowData.addPath(session, startNode, support);
 
 		}
 
 	}
-
 
 	public static boolean removeSupport(Session session, INode node, ISupport support) {
 		INodeData nodeData = DiaFluxUtils.getNodeData(node, session);
@@ -116,8 +116,6 @@ public class FluxSolver implements PSMethod {
 		return added;
 	}
 
-
-
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 
@@ -129,7 +127,8 @@ public class FluxSolver implements PSMethod {
 
 		}
 
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO, ("Start propagating: " + changes));
+		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+				("Start propagating: " + changes));
 
 		// checkFCIndications(changes, theCase);
 
@@ -144,8 +143,7 @@ public class FluxSolver implements PSMethod {
 				continueFlowing |= path.propagate(session, changes);
 
 				// if path collapsed completely, remove it.
-				if (path.isEmpty())
-					caseObject.removePath(path);
+				if (path.isEmpty()) caseObject.removePath(path);
 			}
 
 		}
@@ -169,7 +167,6 @@ public class FluxSolver implements PSMethod {
 			}
 		}
 	}
-
 
 	@Override
 	public boolean isContributingToResult() {

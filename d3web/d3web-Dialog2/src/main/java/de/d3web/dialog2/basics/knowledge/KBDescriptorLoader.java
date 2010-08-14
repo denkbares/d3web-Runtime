@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.basics.knowledge;
@@ -67,8 +67,7 @@ public class KBDescriptorLoader {
 	/**
 	 * 
 	 * @return boolean
-	 * @param desc
-	 *            de.d3web.gui.html.knowledge.KnowledgeBaseDescriptor
+	 * @param desc de.d3web.gui.html.knowledge.KnowledgeBaseDescriptor
 	 */
 	public boolean addDescriptor(KnowledgeBaseDescriptor desc) {
 		if (!kbdescriptors.contains(desc)) {
@@ -125,15 +124,15 @@ public class KBDescriptorLoader {
 			descLocation = new URL(ResourceRepository.getInstance()
 					.getPropertyPathValue(ResourceRepository.KBDESCRIPTORS_URL));
 			load();
-		} catch (Exception x) {
+		}
+		catch (Exception x) {
 			logger.error(x);
 		}
 	}
 
 	/**
 	 * @return java.util.List
-	 * @param location
-	 *            java.net.URL
+	 * @param location java.net.URL
 	 */
 	private void load() {
 		kbdescriptors = new LinkedList<KnowledgeBaseDescriptor>();
@@ -179,7 +178,8 @@ public class KBDescriptorLoader {
 				kbdescriptors.add(desc);
 			}
 
-		} catch (Exception x) {
+		}
+		catch (Exception x) {
 			logger.error("Exception while loading kbDescriptors");
 		}
 
@@ -244,7 +244,8 @@ public class KBDescriptorLoader {
 
 			pw.close();
 
-		} catch (Exception x) {
+		}
+		catch (Exception x) {
 			logger.error("kb-descriptors could not be saved");
 		}
 
@@ -252,8 +253,7 @@ public class KBDescriptorLoader {
 
 	/**
 	 * 
-	 * @param loc
-	 *            java.net.URL
+	 * @param loc java.net.URL
 	 */
 	public void setLocationURL(URL loc) {
 		descLocation = loc;

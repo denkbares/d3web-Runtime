@@ -200,45 +200,46 @@ public class ActionAddValue extends ActionQuestionSetter {
 	 * the specified values to those of the specified Question
 	 * 
 	 * Creation date: (15.08.2000 11:21:21)
+	 * 
 	 * @param session current case
 	 */
 	@Override
 	public void doIt(Session session, Object source, PSMethod psmethod) {
-			// getQuestion().addProReason(new QASet.Reason(rule), session);
-			Value resultValue;
-			if ((getQuestion() instanceof QuestionOC)
+		// getQuestion().addProReason(new QASet.Reason(rule), session);
+		Value resultValue;
+		if ((getQuestion() instanceof QuestionOC)
 					&& (((QuestionOC) getQuestion()).getSchemaForQuestion() != null)
 					&& (!(getValue() instanceof ChoiceValue))) {
-				resultValue = addSchemaValue((QuestionChoice) getQuestion(), session);
-			}
-			else {
-				resultValue = addValues(session.getBlackboard().getValue(getQuestion()), session);
-			}
-			storeActionValues(session, getValue());
+			resultValue = addSchemaValue((QuestionChoice) getQuestion(), session);
+		}
+		else {
+			resultValue = addValues(session.getBlackboard().getValue(getQuestion()), session);
+		}
+		storeActionValues(session, getValue());
 
-			// if the question is an oc-si-question without schema, the severest
-			// answer has to be set (of all answers, which shall be set)
-			if ((getQuestion() instanceof QuestionOC)
+		// if the question is an oc-si-question without schema, the severest
+		// answer has to be set (of all answers, which shall be set)
+		if ((getQuestion() instanceof QuestionOC)
 					&& (((QuestionOC) getQuestion()).getSchemaForQuestion() == null)
 					&& (getQuestion().getKnowledge(PSMethodAbstraction.class,
-					MethodKind.BACKWARD) != null)) {
-				Value severestAnswer = (Value)getValue();
-					
-				if ((severestAnswer != null)
+							MethodKind.BACKWARD) != null)) {
+			Value severestAnswer = (Value) getValue();
+
+			if ((severestAnswer != null)
 						&& (UndefinedValue.isUndefinedValue(session.getBlackboard().getValue(
 								getQuestion())))) {
-					Fact fact = FactFactory.createFact(getQuestion(),
+				Fact fact = FactFactory.createFact(getQuestion(),
 							severestAnswer,
 							source, psmethod);
-					session.getBlackboard().addValueFact(fact);
-				}
+				session.getBlackboard().addValueFact(fact);
 			}
-			else {
-				// else, set the resultList-values
-				session.getBlackboard().addValueFact(
+		}
+		else {
+			// else, set the resultList-values
+			session.getBlackboard().addValueFact(
 						FactFactory.createFact(getQuestion(), resultValue, source,
-						psmethod));
-			}
+								psmethod));
+		}
 
 	}
 

@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.kernel.verbalizer;
@@ -42,35 +42,37 @@ import de.d3web.kernel.psmethods.verbalizer.XclVerbalizer;
  */
 public class VerbalizationManager {
 
-	//the standard priorities to choose, if several verbalizers could perform the same rendering
+	// the standard priorities to choose, if several verbalizers could perform
+	// the same rendering
 	public static final int PRIORITY_HIGH = 1000;
 	public static final int PRIORITY_MEDIUM = 500;
 	public static final int PRIORITY_LOW = 100;
 	private static final int PRIORITY_MIN = 0;
-	
-	private static String[] specialStrings =  {"\n", "\r",
-		".", ",", ";", "!", "@", "|", "#", "~",
-		"{", "}", "[", "]", "(", ")", 
-		"<", ">", "=", 
-		"-", "+", "*", "/",
-		"WENN", "IF",
-		"DANN", "THEN",
-		"UND", "AND",
-		"ODER", "OR",
-		"NICHT", "NOT",
-		"VERBERGE", "HIDE",
-		"AUSSER", "EXCEPT",
-		"UNBEKANNT", "UNKNOWN",
-		"SOFORT", "INSTANT", 
-		"MINMAX",
-		"KONTEXT", "CONTEXT",
-		"SOWIE",
-		"ENTFERNEN", "DELETE",
-		"IN",
-		"ALLE", "ALL",
-		"SET",
-		"&REF"};
-	
+
+	private static String[] specialStrings = {
+			"\n", "\r",
+			".", ",", ";", "!", "@", "|", "#", "~",
+			"{", "}", "[", "]", "(", ")",
+			"<", ">", "=",
+			"-", "+", "*", "/",
+			"WENN", "IF",
+			"DANN", "THEN",
+			"UND", "AND",
+			"ODER", "OR",
+			"NICHT", "NOT",
+			"VERBERGE", "HIDE",
+			"AUSSER", "EXCEPT",
+			"UNBEKANNT", "UNKNOWN",
+			"SOFORT", "INSTANT",
+			"MINMAX",
+			"KONTEXT", "CONTEXT",
+			"SOWIE",
+			"ENTFERNEN", "DELETE",
+			"IN",
+			"ALLE", "ALL",
+			"SET",
+			"&REF" };
+
 	/**
 	 * possible types of targets, to which can be rendered by a verbalizer
 	 */
@@ -126,8 +128,7 @@ public class VerbalizationManager {
 	/**
 	 * registers a verbalizer in the Manager with medium Priority
 	 * 
-	 * @param verbalizer
-	 *            the verbalizer to be registered
+	 * @param verbalizer the verbalizer to be registered
 	 */
 	public void register(Verbalizer verbalizer) {
 		register(verbalizer, PRIORITY_MEDIUM);
@@ -136,8 +137,7 @@ public class VerbalizationManager {
 	/**
 	 * registers a verbalizer in the Manager with given priority
 	 * 
-	 * @param verbalizer
-	 *            the verbalizer to be registered
+	 * @param verbalizer the verbalizer to be registered
 	 */
 	public void register(Verbalizer verbalizer, int priority) {
 		registeredVerbalizers.add(verbalizer);
@@ -148,8 +148,7 @@ public class VerbalizationManager {
 	/**
 	 * removes a verbalizer from the Manager
 	 * 
-	 * @param verbalizer
-	 *            the verbalizer to be deregistered
+	 * @param verbalizer the verbalizer to be deregistered
 	 */
 	public void deregister(Verbalizer verbalizer) {
 		registeredVerbalizers.remove(verbalizer);
@@ -183,23 +182,23 @@ public class VerbalizationManager {
 		}
 		return false;
 	}
-	
+
 	public static String quoteIfNecessary(String s) {
 		if (containsSpecialStrings(s)) {
 			return "\"" + s + "\"";
 		}
 		return s;
 	}
-	
+
 	/**
 	 * Returns a verbalization (String representation) of the given object in
-	 * the target format without using additional parameters by calling an appropriate Verbalizer
+	 * the target format without using additional parameters by calling an
+	 * appropriate Verbalizer
 	 * 
 	 * 
-	 * @param o
-	 *            the Object to be verbalized
-	 * @param targetFormat
-	 *            The output format of the verbalization (HTML/XML/PlainText...)
+	 * @param o the Object to be verbalized
+	 * @param targetFormat The output format of the verbalization
+	 *        (HTML/XML/PlainText...)
 	 * @return A String representation of given object o in the target format
 	 */
 	public String verbalize(Object o, RenderingFormat renderingTargetFormat) {
@@ -208,16 +207,15 @@ public class VerbalizationManager {
 
 	/**
 	 * Returns a verbalization (String representation) of the given object in
-	 * the target format using additional parameters by calling an appropriate Verbalizer. 
+	 * the target format using additional parameters by calling an appropriate
+	 * Verbalizer.
 	 * 
 	 * 
-	 * @param o
-	 *            the Object to be verbalized
-	 * @param targetFormat
-	 *            The output format of the verbalization (HTML/XML/PlainText...)
-	 * @param parameter
-	 *            additional parameters used to adapt the verbalization (e.g.,
-	 *            singleLine, etc...)
+	 * @param o the Object to be verbalized
+	 * @param targetFormat The output format of the verbalization
+	 *        (HTML/XML/PlainText...)
+	 * @param parameter additional parameters used to adapt the verbalization
+	 *        (e.g., singleLine, etc...)
 	 * @return A String representation of given object o in the target format
 	 */
 	public String verbalize(Object o, RenderingFormat renderingTargetFormat, Map<String, Object> parameter) {
@@ -227,12 +225,10 @@ public class VerbalizationManager {
 			// can handle v the class of this object?
 			boolean classCanBeHandled = false;
 			for (Class c : v.getSupportedClassesForVerbalization()) {
-				if (c.isInstance(o))
-					classCanBeHandled = true;
+				if (c.isInstance(o)) classCanBeHandled = true;
 			}
 			// if the class cant be handled try next verbalizer
-			if (!classCanBeHandled)
-				continue;
+			if (!classCanBeHandled) continue;
 
 			// class can be handled, now check, if the renderingType is
 			// supported by this verbalizer

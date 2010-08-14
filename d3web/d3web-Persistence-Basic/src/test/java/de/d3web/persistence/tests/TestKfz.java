@@ -133,10 +133,9 @@ public class TestKfz extends TestCase {
 		QuestionNum Mf5 = (QuestionNum) kb.searchQuestion("Mf5");
 		QuestionMC Mf7 = (QuestionMC) kb.searchQuestion("Mf7");
 		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase());
-		
 
-		Choice Mf7a1 = (Choice) kbm.findChoice(Mf7,  "Mf7a1");
-		Choice Mf7a2 = (Choice) kbm.findChoice(Mf7,  "Mf7a2");
+		Choice Mf7a1 = (Choice) kbm.findChoice(Mf7, "Mf7a1");
+		Choice Mf7a2 = (Choice) kbm.findChoice(Mf7, "Mf7a2");
 		Choice[] choices = new Choice[] {
 				Mf7a1, Mf7a2 };
 		List<ChoiceValue> values = new ArrayList<ChoiceValue>(choices.length);
@@ -146,7 +145,7 @@ public class TestKfz extends TestCase {
 		MultipleChoiceValue mcv = new MultipleChoiceValue(values);
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf7, mcv,
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		Value value = session.getBlackboard().getValue(Mf5);
 		if (value == null) {
 			System.out.println("(1) --> NULL!!!!");
@@ -174,12 +173,12 @@ public class TestKfz extends TestCase {
 		NumValue Mf5Value = new NumValue(new Double(10));
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf5, Mf5Value,
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		NumValue Mf6Value = new NumValue(new Double(10));
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf6, Mf6Value,
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase());
 		Choice ratingNormal = (Choice) kbm.findChoice(Msi4, "Msi4a1");
@@ -193,7 +192,7 @@ public class TestKfz extends TestCase {
 		// This is exactly the border ((Mf6-Mf5)/Mf5)*100 = 10
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf6, new NumValue(new Double(11)),
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		Choice ratingHigh = (Choice) kbm.findChoice(Msi4, "Msi4a2");
 		ChoiceValue ratingHighValue = new ChoiceValue(ratingHigh);
 		System.out.println("(2) --> Msi4: " + session.getBlackboard().getValue(Msi4));
@@ -202,7 +201,7 @@ public class TestKfz extends TestCase {
 
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf6, new NumValue(new Double(15)),
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		System.out.println("(4) --> Msi4: " + session.getBlackboard().getValue(Msi4));
 		Choice ratingVeryHigh = (Choice) kbm.findChoice(Msi4, "Msi4a3");
 		ChoiceValue ratingVeryHighValue = new ChoiceValue(ratingVeryHigh);
@@ -213,7 +212,7 @@ public class TestKfz extends TestCase {
 		// user sets the value to 19.5 (user overrides all other values)
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(Msi4, new NumValue(new Double(19.5)),
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		System.out.println("(3) --> Msi4: " + session.getBlackboard().getValue(Msi4));
 		assertEquals("Error with formula (3)", ratingHighValue, session.getBlackboard().getValue(
 				Msi4));
@@ -236,11 +235,11 @@ public class TestKfz extends TestCase {
 		Choice Mf4a1 = (Choice) kbm.findChoice(Mf4, "Mf4a1");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf4, new ChoiceValue(Mf4a1),
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		//
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf6, new NumValue(new Double(10)),
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		Value Mf58Value = session.getBlackboard().getValue(Mf58);
 		if (Mf58Value == null) {
 			System.out.println("(1) --> NULL!!!!");
@@ -266,19 +265,19 @@ public class TestKfz extends TestCase {
 		assertTrue(
 				"Error: isDone should be false (1)",
 				UndefinedValue.getInstance().equals(session.getBlackboard().getValue(questionOC)));
-				
-		
-		Choice answerChoice = KnowledgeBaseManagement.createInstance(kb).findChoice(questionOC, "Mf2a1");
+
+		Choice answerChoice = KnowledgeBaseManagement.createInstance(kb).findChoice(questionOC,
+				"Mf2a1");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(questionOC, new ChoiceValue(answerChoice),
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		assertEquals(
 				"Error while setting/getting known OC-Value (2)",
 				new ChoiceValue(answerChoice), session.getBlackboard().getValue(questionOC));
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(questionOC, Unknown.getInstance(),
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		assertEquals(
 				"Error while setting/getting unknown OC-Value (3)",
@@ -287,7 +286,7 @@ public class TestKfz extends TestCase {
 		assertTrue(
 				"Error: should have value (4)",
 				!session.getBlackboard().getValue(questionOC).equals(UndefinedValue.getInstance()));
-				
+
 		/*----------------------------------------------
 		 */
 
@@ -353,7 +352,7 @@ public class TestKfz extends TestCase {
 			}
 			session.getBlackboard().addValueFact(
 					FactFactory.createFact(q1, Unknown.getInstance(),
-					PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+							PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		}
 
 	}

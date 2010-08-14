@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.basics.usermanaging;
@@ -53,13 +53,11 @@ public class User {
 
 	/**
 	 * @return boolean
-	 * @param o
-	 *            java.lang.Object
+	 * @param o java.lang.Object
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (o == null)
-			return false;
+		if (o == null) return false;
 		if (o instanceof User) {
 			User u = (User) o;
 
@@ -117,40 +115,35 @@ public class User {
 	}
 
 	/**
-	 * @param newAdmin
-	 *            boolean
+	 * @param newAdmin boolean
 	 */
 	public void setAdmin(boolean newAdmin) {
 		admin = newAdmin;
 	}
 
 	/**
-	 * @param newEmail
-	 *            String
+	 * @param newEmail String
 	 */
 	public void setEmail(String newEmail) {
 		email = newEmail;
 	}
 
 	/**
-	 * @param newForename
-	 *            String
+	 * @param newForename String
 	 */
 	public void setForename(String newForename) {
 		forename = newForename;
 	}
 
 	/**
-	 * @param newName
-	 *            String
+	 * @param newName String
 	 */
 	public void setName(String newName) {
 		name = newName;
 	}
 
 	/**
-	 * @param newPassword
-	 *            String
+	 * @param newPassword String
 	 */
 	public void setPassword(String newPassword) {
 		password = newPassword;

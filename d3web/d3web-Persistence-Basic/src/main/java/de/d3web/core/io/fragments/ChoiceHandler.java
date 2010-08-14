@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.io.fragments;
 
@@ -32,9 +32,10 @@ import de.d3web.core.knowledge.terminology.AnswerNo;
 import de.d3web.core.knowledge.terminology.AnswerYes;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.info.Properties;
+
 /**
  * Handels Choice Answers
- *
+ * 
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class ChoiceHandler implements FragmentHandler {
@@ -56,17 +57,20 @@ public class ChoiceHandler implements FragmentHandler {
 		Choice ac = null;
 		if (type.equals("AnswerNo")) {
 			ac = new AnswerNo(id);
-		} else if (type.equals("AnswerYes")) {
+		}
+		else if (type.equals("AnswerYes")) {
 			ac = new AnswerYes(id);
-		} else if (type.equals("AnswerChoice")) {
+		}
+		else if (type.equals("AnswerChoice")) {
 			ac = new Choice(id);
 		}
-		if (ac !=  null) {
+		if (ac != null) {
 			List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
-			for (Element node: childNodes) {
+			for (Element node : childNodes) {
 				if (node.getNodeName().equals("Text")) {
 					ac.setText(node.getTextContent());
-				} else {
+				}
+				else {
 					Object properties = PersistenceManager.getInstance().readFragment(node, kb);
 					if (properties instanceof Properties) {
 						ac.setProperties((Properties) properties);
@@ -85,14 +89,16 @@ public class ChoiceHandler implements FragmentHandler {
 		element.setAttribute("type", "answer");
 		if (a instanceof AnswerNo) {
 			element.setAttribute("type", "AnswerNo");
-		} else if (a instanceof AnswerYes) {
+		}
+		else if (a instanceof AnswerYes) {
 			element.setAttribute("type", "AnswerYes");
-		} else {
+		}
+		else {
 			element.setAttribute("type", "AnswerChoice");
 		}
 		XMLUtil.appendTextNode(a.getName(), element);
 		Properties properties = a.getProperties();
-		if (properties!=null && !properties.isEmpty()) {
+		if (properties != null && !properties.isEmpty()) {
 			element.appendChild(PersistenceManager.getInstance().writeFragment(properties, doc));
 		}
 		return element;

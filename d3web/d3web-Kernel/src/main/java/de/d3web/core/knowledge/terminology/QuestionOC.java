@@ -23,7 +23,6 @@ package de.d3web.core.knowledge.terminology;
 import java.util.Collections;
 import java.util.List;
 
-
 /**
  * Storage for Questions with predefined single answers (alternatives). <BR>
  * Part of the Composite design pattern (see QASet for further description)

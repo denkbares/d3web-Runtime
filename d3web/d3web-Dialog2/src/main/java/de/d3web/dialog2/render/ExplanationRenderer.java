@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.render;
@@ -133,7 +133,7 @@ public class ExplanationRenderer extends Renderer {
 			else {
 				KnowledgeSlice ks = diag
 						.getKnowledge(PSMethodHeuristic.class,
-						MethodKind.BACKWARD);
+								MethodKind.BACKWARD);
 
 				if (ks == null) {
 					writer.startElement("p", component);
@@ -148,6 +148,7 @@ public class ExplanationRenderer extends Renderer {
 
 				// sort by score
 				Comparator<Rule> explComp = new Comparator<Rule>() {
+
 					public int compare(Rule ra, Rule rb) {
 						if (ra.getAction() instanceof ActionHeuristicPS
 								&& rb.getAction() instanceof ActionHeuristicPS) {
@@ -213,7 +214,7 @@ public class ExplanationRenderer extends Renderer {
 						ExplanationRendererUtils.renderCondition(writer,
 								component, rc.getCondition(), session, true,
 								true, DialogUtils
-								.getMessageFor("explain.if_verb"),
+										.getMessageFor("explain.if_verb"),
 								false, rc.getId());
 					}
 					// if explainDerivation then without status
@@ -221,7 +222,7 @@ public class ExplanationRenderer extends Renderer {
 						ExplanationRendererUtils.renderCondition(writer,
 								component, rc.getCondition(), session, false,
 								true, DialogUtils
-								.getMessageFor("explain.if_verb"),
+										.getMessageFor("explain.if_verb"),
 								false, rc.getId());
 					}
 					writer.endElement("tr");

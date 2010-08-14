@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.io.utilities;
 
@@ -40,58 +40,64 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import de.d3web.scoring.Score;
+
 /**
- * This class provides some static methods which are usefull for reading
- * and writing knowledge
- *
+ * This class provides some static methods which are usefull for reading and
+ * writing knowledge
+ * 
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class Util {
 
 	/**
 	 * Creates an Document from the given InputStream
+	 * 
 	 * @param stream input stream
 	 * @return Document
 	 * @throws IOException when an error occurs
 	 */
 	public static Document streamToDocument(InputStream stream) throws IOException {
-    	DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
 		DocumentBuilder parser = null;
 		try {
 			parser = fac.newDocumentBuilder();
 			return parser.parse(new InputSource(stream));
-		} catch (ParserConfigurationException e) {
-			throw new IOException(e);
-		} catch (SAXException e) {
+		}
+		catch (ParserConfigurationException e) {
 			throw new IOException(e);
 		}
-    }
-    
+		catch (SAXException e) {
+			throw new IOException(e);
+		}
+	}
+
 	/**
 	 * Creates an empty Document
+	 * 
 	 * @return newly created document
 	 * @throws IOException when an error occurs
 	 */
-    public static Document createEmptyDocument() throws IOException {
-    	DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
+	public static Document createEmptyDocument() throws IOException {
+		DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder;
 		try {
 			builder = fac.newDocumentBuilder();
-		} 
+		}
 		catch (ParserConfigurationException e) {
 			throw new IOException(e.getMessage());
 		}
 		return builder.newDocument();
-    }
-    
-    /**
-     * Writes the Document to the given OutputStream
-     * @param doc input document
-     * @param stream outout stream
-     * @throws IOException when an error occurs
-     */
-    public static void writeDocumentToOutputStream(Document doc, OutputStream stream) throws IOException {
-    	Source source = new DOMSource(doc);
+	}
+
+	/**
+	 * Writes the Document to the given OutputStream
+	 * 
+	 * @param doc input document
+	 * @param stream outout stream
+	 * @throws IOException when an error occurs
+	 */
+	public static void writeDocumentToOutputStream(Document doc, OutputStream stream) throws IOException {
+		Source source = new DOMSource(doc);
 		Result result = new StreamResult(stream);
 		Transformer xformer;
 		try {
@@ -101,15 +107,18 @@ public class Util {
 			xformer.setOutputProperty("omit-xml-declaration", "no");
 			xformer.setOutputProperty("indent", "yes");
 			xformer.transform(source, result);
-		} catch (TransformerConfigurationException e) {
-			new IOException(e.getMessage());
-		} catch (TransformerFactoryConfigurationError e) {
-			new IOException(e.getMessage());
-		} catch (TransformerException e) {
+		}
+		catch (TransformerConfigurationException e) {
 			new IOException(e.getMessage());
 		}
-		
-    }
+		catch (TransformerFactoryConfigurationError e) {
+			new IOException(e.getMessage());
+		}
+		catch (TransformerException e) {
+			new IOException(e.getMessage());
+		}
+
+	}
 
 	/**
 	 * @return the Score matching the given String (e.g. "n7" to Score.N7)
@@ -119,44 +128,62 @@ public class Util {
 		Score score = null;
 		if (value.equalsIgnoreCase("n7")) {
 			score = Score.N7;
-		} else if (value.equalsIgnoreCase("n6")) {
+		}
+		else if (value.equalsIgnoreCase("n6")) {
 			score = Score.N6;
-		} else if (value.equalsIgnoreCase("n5")) {
+		}
+		else if (value.equalsIgnoreCase("n5")) {
 			score = Score.N5;
-		} else if (value.equalsIgnoreCase("n5x")) {
+		}
+		else if (value.equalsIgnoreCase("n5x")) {
 			score = Score.N5x;
-		} else if (value.equalsIgnoreCase("n4")) {
+		}
+		else if (value.equalsIgnoreCase("n4")) {
 			score = Score.N4;
-		} else if (value.equalsIgnoreCase("n3")) {
+		}
+		else if (value.equalsIgnoreCase("n3")) {
 			score = Score.N3;
-		} else if (value.equalsIgnoreCase("n2")) {
+		}
+		else if (value.equalsIgnoreCase("n2")) {
 			score = Score.N2;
-		} else if (value.equalsIgnoreCase("n1")) {
+		}
+		else if (value.equalsIgnoreCase("n1")) {
 			score = Score.N1;
-		} else if (value.equalsIgnoreCase("p1")) {
+		}
+		else if (value.equalsIgnoreCase("p1")) {
 			score = Score.P1;
-		} else if (value.equalsIgnoreCase("p2")) {
+		}
+		else if (value.equalsIgnoreCase("p2")) {
 			score = Score.P2;
-		} else if (value.equalsIgnoreCase("p3")) {
+		}
+		else if (value.equalsIgnoreCase("p3")) {
 			score = Score.P3;
-		} else if (value.equalsIgnoreCase("p4")) {
+		}
+		else if (value.equalsIgnoreCase("p4")) {
 			score = Score.P4;
-		} else if (value.equalsIgnoreCase("p5")) {
+		}
+		else if (value.equalsIgnoreCase("p5")) {
 			score = Score.P5;
-		} else if (value.equalsIgnoreCase("p5x")) {
+		}
+		else if (value.equalsIgnoreCase("p5x")) {
 			score = Score.P5x;
-		} else if (value.equalsIgnoreCase("p6")) {
+		}
+		else if (value.equalsIgnoreCase("p6")) {
 			score = Score.P6;
-		} else if (value.equalsIgnoreCase("p7")) {
+		}
+		else if (value.equalsIgnoreCase("p7")) {
 			score = Score.P7;
-		} else if (value.equalsIgnoreCase("pp")) {
-			throw new IOException("knowledgebase uses pp-rules! - this will cause NullPointerException in rule firing");
+		}
+		else if (value.equalsIgnoreCase("pp")) {
+			throw new IOException(
+					"knowledgebase uses pp-rules! - this will cause NullPointerException in rule firing");
 		}
 		return score;
 	}
 
 	/**
 	 * Writes the InputStream to the OutputStream
+	 * 
 	 * @param in InputStream
 	 * @param out OutputStream
 	 * @throws IOException

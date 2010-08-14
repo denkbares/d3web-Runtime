@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.io.fragments.conditions;
 
@@ -31,9 +31,10 @@ import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
+
 /**
  * FragmentHandler for CondNots
- *
+ * 
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class NotConditionHandler implements FragmentHandler {
@@ -53,12 +54,13 @@ public class NotConditionHandler implements FragmentHandler {
 		List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
 		PersistenceManager pm = PersistenceManager.getInstance();
 		List<Condition> conds = new ArrayList<Condition>();
-		for (Element child: childNodes) {
+		for (Element child : childNodes) {
 			conds.add((Condition) pm.readFragment(child, kb));
 		}
-		if (conds.size()==1) {
+		if (conds.size() == 1) {
 			return new CondNot(conds.get(0));
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
@@ -68,7 +70,7 @@ public class NotConditionHandler implements FragmentHandler {
 		CondNot cond = (CondNot) object;
 		Element element = XMLUtil.writeCondition(doc, "not");
 		PersistenceManager pm = PersistenceManager.getInstance();
-		for (Condition ac: cond.getTerms()) {
+		for (Condition ac : cond.getTerms()) {
 			element.appendChild(pm.writeFragment(ac, doc));
 		}
 		return element;

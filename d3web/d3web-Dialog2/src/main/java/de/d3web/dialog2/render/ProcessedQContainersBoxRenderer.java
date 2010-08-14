@@ -277,7 +277,7 @@ public class ProcessedQContainersBoxRenderer extends Renderer {
 		if (facet != null) {
 			facet.setTitle(DialogUtils.getMessageWithParamsFor("processed.moveToQuestion",
 					new Object[] { q
-					.getName() }));
+							.getName() }));
 			facet.setOnclick("cursor_wait();setClickedQASet('" + q.getId() + "')");
 
 			HtmlOutputText comp = (HtmlOutputText) FacesContext.getCurrentInstance().getApplication()

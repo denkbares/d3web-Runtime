@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 
 package de.d3web.dialog2.basics.knowledge;
@@ -56,6 +56,7 @@ public class CaseFileRepository {
 	 * caserepository-directory.
 	 */
 	private class CaseFilenameFilter implements FilenameFilter {
+
 		public boolean accept(File dir, String name) {
 			if (name.endsWith(FILE_EXTENSION)) {
 				return true;
@@ -86,14 +87,11 @@ public class CaseFileRepository {
 	 * Creates a new CaseFileRepository, where all cases are stored in the
 	 * directory given by "repositoryDir".
 	 * 
-	 * @param repositoryDir
-	 *            File-object of the directory, where all cases shall be stored
-	 * @param kbid
-	 *            ID of the knowledgebase that refers to the cases
-	 * @param coWriter
-	 *            CaseObjectListWriter
-	 * @param coCreator
-	 *            CaseObjectListCreator
+	 * @param repositoryDir File-object of the directory, where all cases shall
+	 *        be stored
+	 * @param kbid ID of the knowledgebase that refers to the cases
+	 * @param coWriter CaseObjectListWriter
+	 * @param coCreator CaseObjectListCreator
 	 */
 	public CaseFileRepository(File repositoryDir, String kbid,
 			CaseRepositoryWriter coWriter, CaseRepositoryReader coCreator) {
@@ -107,14 +105,11 @@ public class CaseFileRepository {
 	 * Creates a new CaseFileRepository, where all cases are stored in the
 	 * directory given by "repositoryURL".
 	 * 
-	 * @param repositoryURL
-	 *            URL of the directory, where all cases shall be stored
-	 * @param kbid
-	 *            ID of the knowledgebase that refers to the cases
-	 * @param coWriter
-	 *            CaseObjectListWriter
-	 * @param coCreator
-	 *            CaseObjectListCreator
+	 * @param repositoryURL URL of the directory, where all cases shall be
+	 *        stored
+	 * @param kbid ID of the knowledgebase that refers to the cases
+	 * @param coWriter CaseObjectListWriter
+	 * @param coCreator CaseObjectListCreator
 	 */
 	public CaseFileRepository(URL repositoryURL, String kbid,
 			CaseRepositoryWriter coWriter, CaseRepositoryReader coCreator) {
@@ -129,8 +124,7 @@ public class CaseFileRepository {
 	 * Adds a case to the repository by creating a new file where the case is
 	 * stored. If the case-file already exists, it will be overwritten.
 	 * 
-	 * @param co
-	 *            CaseObject to add
+	 * @param co CaseObject to add
 	 */
 	public void addCase(CaseObject co) {
 		if ((co == null) || (coWriter == null)) {
@@ -147,7 +141,7 @@ public class CaseFileRepository {
 		if (!caseFile.getParentFile().exists()) {
 			caseFile.getParentFile().mkdirs();
 		}
-		
+
 		CaseRepository repository = new CaseRepositoryImpl();
 		repository.add(co);
 		coWriter.saveToFile(caseFile, repository);
@@ -157,7 +151,8 @@ public class CaseFileRepository {
 			if (numId > getMaxCaseId()) {
 				maxCaseId = new Long(numId);
 			}
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			logger.warn(ex);
 		}
 	}
@@ -183,8 +178,7 @@ public class CaseFileRepository {
 	 * Searches for the case with the given id and returns it, if it could be
 	 * found; null otherwise.
 	 * 
-	 * @param caseId
-	 *            String
+	 * @param caseId String
 	 * @return CaseObject
 	 */
 	public CaseObject getCaseById(String caseId) {
@@ -211,8 +205,7 @@ public class CaseFileRepository {
 	/**
 	 * Returns the File, in which the case with the specified id is stored.
 	 * 
-	 * @param id
-	 *            String
+	 * @param id String
 	 * @return File
 	 */
 	private File getCaseFileById(String id) {
@@ -273,7 +266,8 @@ public class CaseFileRepository {
 	public long getMaxCaseId() {
 		if (maxCaseId != null) {
 			return maxCaseId.longValue();
-		} else {
+		}
+		else {
 			Set<String> caseIds = getCaseIds();
 			long max = 0;
 			Iterator<String> iter = caseIds.iterator();
@@ -284,7 +278,8 @@ public class CaseFileRepository {
 					if (numId > max) {
 						max = numId;
 					}
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					logger.warn(e);
 				}
 			}
@@ -334,8 +329,7 @@ public class CaseFileRepository {
 	 * Removes the case with the specified Id by removing the associated
 	 * case-file.
 	 * 
-	 * @param caseId
-	 *            String
+	 * @param caseId String
 	 * @return boolean (true, if successful)
 	 */
 	public boolean removeCaseById(String caseId) {

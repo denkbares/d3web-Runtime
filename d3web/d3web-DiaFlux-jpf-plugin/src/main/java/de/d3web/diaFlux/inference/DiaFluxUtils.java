@@ -15,11 +15,10 @@ import de.d3web.diaFlux.flow.StartNode;
 
 /**
  * @author Reinhard Hatko
- *
- * Created: 07.08.2010
+ * 
+ *         Created: 07.08.2010
  */
 public class DiaFluxUtils {
-
 
 	private DiaFluxUtils() {
 	}
@@ -48,8 +47,7 @@ public class DiaFluxUtils {
 
 	public static boolean isFlowCase(Session theCase) {
 
-		if (theCase == null)
-			return false;
+		if (theCase == null) return false;
 
 		FlowSet flowSet = getFlowSet(theCase);
 
@@ -96,7 +94,6 @@ public class DiaFluxUtils {
 			return null;
 		}
 
-
 		List<StartNode> startNodes = subflow.getStartNodes();
 
 		for (StartNode iNode : startNodes) {
@@ -111,9 +108,5 @@ public class DiaFluxUtils {
 		return null;
 
 	}
-
-
-
-
 
 }

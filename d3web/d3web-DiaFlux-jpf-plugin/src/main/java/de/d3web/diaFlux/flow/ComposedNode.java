@@ -9,9 +9,8 @@ import de.d3web.diaFlux.inference.Path;
 import de.d3web.diaFlux.inference.PathEntry;
 import de.d3web.diaFlux.inference.PathReference;
 
-
 /**
- *
+ * 
  * @author Reinhard Hatko
  * @created 10.08.10
  */
@@ -50,10 +49,7 @@ public class ComposedNode extends Node {
 
 		DiaFluxUtils.getFlowData(session).addPathRef(new PathReference(path));
 
-
 		return new PathEntry(path, this, support);
 	}
-
-
 
 }

@@ -338,7 +338,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		if ((object.getChildren() != null) && (object.getChildren().length > 0)) {
 			throw new IllegalAccessException(
 					object
-					+ " has some children, that should be removed/relinked before deletion.");
+							+ " has some children, that should be removed/relinked before deletion.");
 		}
 		else {
 			// removes object from list of children of all parents
@@ -527,7 +527,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 					d.addParent(root);
 					Logger.getLogger(this.getClass().getName()).warning(
 							"fixed: node " + d.getId() + " is now child of "
-							+ root.getId());
+									+ root.getId());
 				}
 			}
 			return root;
@@ -581,7 +581,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 					q.addParent(root);
 					Logger.getLogger(this.getClass().getName()).warning(
 							"fixed: node " + q.getId() + " is now child of "
-							+ root.getId());
+									+ root.getId());
 				}
 			}
 			return root;

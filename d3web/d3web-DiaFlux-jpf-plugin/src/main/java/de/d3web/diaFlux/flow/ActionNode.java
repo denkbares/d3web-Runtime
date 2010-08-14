@@ -11,13 +11,10 @@ public class ActionNode extends Node {
 	public ActionNode(String id, String name, PSAction action) {
 		super(id, name);
 
-		if (action == null)
-			throw new IllegalArgumentException("'action' must not be null.");
+		if (action == null) throw new IllegalArgumentException("'action' must not be null.");
 
 		this.action = action;
 	}
-
-
 
 	public PSAction getAction() {
 		return action;
@@ -32,7 +29,5 @@ public class ActionNode extends Node {
 	public void undoAction(Session session) {
 		getAction().undo(session, this, session.getPSMethodInstance(FluxSolver.class));
 	}
-
-
 
 }

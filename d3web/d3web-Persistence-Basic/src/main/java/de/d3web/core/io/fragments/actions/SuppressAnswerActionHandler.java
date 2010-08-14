@@ -1,22 +1,21 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- *                    Computer Science VI, University of Wuerzburg
- *                    denkbares GmbH
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Computer Science VI, University of Wuerzburg denkbares GmbH
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.io.fragments.actions;
 
@@ -36,9 +35,10 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.indication.ActionSuppressAnswer;
+
 /**
  * Handels actions supressing answers
- *
+ * 
  * @author Norman Brümmer, Markus Friedrich (denkbares GmbH)
  */
 public class SuppressAnswerActionHandler implements FragmentHandler {
@@ -63,7 +63,8 @@ public class SuppressAnswerActionHandler implements FragmentHandler {
 			if (n.getNodeName().equalsIgnoreCase("Question")) {
 				String id = n.getAttributes().getNamedItem("ID").getNodeValue();
 				q = kb.searchQuestion(id);
-			} else if (n.getNodeName().equalsIgnoreCase("Suppress")) {
+			}
+			else if (n.getNodeName().equalsIgnoreCase("Suppress")) {
 				NodeList sanslist = n.getChildNodes();
 				for (int k = 0; k < sanslist.getLength(); ++k) {
 					Node answer = sanslist.item(k);
@@ -88,7 +89,7 @@ public class SuppressAnswerActionHandler implements FragmentHandler {
 		element.setAttribute("type", "ActionSuppressAnswer");
 		XMLUtil.appendQuestionLinkElement(element, action.getQuestion());
 		Element suppressNode = doc.createElement("Suppress");
-		for (Choice a: action.getSuppress()) {
+		for (Choice a : action.getSuppress()) {
 			Element answerNode = doc.createElement("Answer");
 			answerNode.setAttribute("ID", a.getId());
 			suppressNode.appendChild(answerNode);

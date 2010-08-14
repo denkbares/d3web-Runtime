@@ -41,8 +41,7 @@ class FactStorage {
 	 * terminology object and with the same source has already been added, that
 	 * fact will be replaced by the specified one.
 	 * 
-	 * @param fact
-	 *            the fact to be added
+	 * @param fact the fact to be added
 	 */
 	public void add(Fact fact) {
 		TerminologyObject terminologyObject = fact.getTerminologyObject();
@@ -55,14 +54,14 @@ class FactStorage {
 	 * Removes a fact from this storage. If the fact does not exists in the
 	 * storage, this method has no effect.
 	 * 
-	 * @param fact
-	 *            the fact to be removed
+	 * @param fact the fact to be removed
 	 */
 	public void remove(Fact fact) {
 		TerminologyObject terminologyObject = fact.getTerminologyObject();
 		FactAggregator mediator = getAggregator(terminologyObject);
 		mediator.removeFact(fact);
-		// check if the mediator has become empty, then remember the terminology object
+		// check if the mediator has become empty, then remember the terminology
+		// object
 		if (mediator.isEmpty()) {
 			this.noFactObjects.add(terminologyObject);
 		}
@@ -73,29 +72,25 @@ class FactStorage {
 	 * specified terminology object. If no such fact exists in the storage, this
 	 * method has no effect.
 	 * 
-	 * @param termObject
-	 *            the terminology object to remove the facts from
-	 * @param source
-	 *            the fact source to be removed
+	 * @param termObject the terminology object to remove the facts from
+	 * @param source the fact source to be removed
 	 */
 	public void remove(TerminologyObject termObject, Object source) {
 		FactAggregator aggreagator = getAggregator(termObject);
 		aggreagator.removeFactsBySource(source);
-		// check if the aggreagator has become empty, then remember the terminology object
+		// check if the aggreagator has become empty, then remember the
+		// terminology object
 		if (aggreagator.isEmpty()) {
 			this.noFactObjects.add(termObject);
 		}
 	}
 
 	/**
-	 * Removes all facts from this storage for the
-	 * specified terminology object. If no such fact exists in the storage, this
-	 * method has no effect.
+	 * Removes all facts from this storage for the specified terminology object.
+	 * If no such fact exists in the storage, this method has no effect.
 	 * 
-	 * @param termObject
-	 *            the terminology object to remove the facts from
-	 * @param source
-	 *            the fact source to be removed
+	 * @param termObject the terminology object to remove the facts from
+	 * @param source the fact source to be removed
 	 */
 	public void remove(TerminologyObject termObject) {
 		FactAggregator aggreagator = getAggregator(termObject);

@@ -196,7 +196,7 @@ public class QuestionsRendererUtils {
 		if (colspan > 1) {
 			styleString.append("width: "
 					+ (colspan != 0 ? (getWidthOfColumn(cols) * colspan)
-					: getWidthOfColumn(cols)) + "%;");
+							: getWidthOfColumn(cols)) + "%;");
 		}
 		else {
 			styleString.append("width: " + getWidthOfColumn(cols)
@@ -284,7 +284,7 @@ public class QuestionsRendererUtils {
 			// casts must work, else the answer would be null
 			QuestionChoice followingPopupQuestion = (QuestionChoice) ((QuestionLayout) layoutDef)
 					.getFollowingPopupQuestion(answerRegion.getAnswerID(),
-					session.getKnowledgeBase());
+							session.getKnowledgeBase());
 			if (followingPopupQuestionAnswer.equals(followingPopupQuestion
 					.getAllAlternatives().get(0))) {
 				buf.append(" popupQuestionAnswered1");
@@ -407,7 +407,7 @@ public class QuestionsRendererUtils {
 			UIComponent component, Session session, Question q,
 			QuestionPageLayout layoutDef, int cols, int colDiff)
 			throws IOException {
-		if (DialogUtils.isValidQASet(q,session)) {  
+		if (DialogUtils.isValidQASet(q, session)) {
 			renderValidQuestion(writer, component, session, q, layoutDef, cols,
 					colDiff);
 		}
@@ -876,7 +876,7 @@ public class QuestionsRendererUtils {
 					// would result in a restricted combination
 					List<List<String>> badanswersLists = (List<List<String>>) qChoice
 							.getProperties().getProperty(
-							Property.MC_CONSTRAINTS);
+									Property.MC_CONSTRAINTS);
 
 					Value mcans = session.getBlackboard().getValue(qChoice);
 					List<Choice> alreadySetAnsList = new ArrayList<Choice>();
@@ -919,8 +919,8 @@ public class QuestionsRendererUtils {
 					writeJsDeselectUnknownAnd(writer, qChoice, specAns,
 							session, getAnsNoId(ans),
 							layoutDef.getFastAnswer(), DialogUtils
-							.getDialogSettings()
-							.isMCConstraintsAutoGrayOut());
+									.getDialogSettings()
+									.isMCConstraintsAutoGrayOut());
 				}
 
 			}
@@ -1459,7 +1459,7 @@ public class QuestionsRendererUtils {
 				if (jsString.length() > 0) {
 					jsBuf
 							.append("checkMCConstraints(this, document.dialogForm."
-							+ q.getId() + ", '" + jsString + "'); ");
+									+ q.getId() + ", '" + jsString + "'); ");
 				}
 			}
 		}
