@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>de.uniwue.d3web</groupId>
-	<artifactId>d3web-Dialog2</artifactId>
-	<packaging>war</packaging>
-	<name>d3web-Dialog2</name>
-	<version>0.2-SNAPSHOT</version>
 	
 	<parent>
 		<artifactId>d3web</artifactId>
 		<groupId>de.uniwue.d3web</groupId>
 		<version>0.2-SNAPSHOT</version>
 	</parent>
+	
+	<groupId>de.uniwue.d3web</groupId>
+	<artifactId>d3web-Dialog2</artifactId>
+	<packaging>war</packaging>
+	<name>d3web-Dialog2</name>
+	<version>0.2-SNAPSHOT</version>
 	
 	<dependencies>
 		<dependency>
@@ -263,14 +264,5 @@
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
-		<!--
-		Testing offline building... -Alex
-		<dependency>
-			<groupId>org.apache.myfaces.tomahawk</groupId>
-			<artifactId>tomahawk</artifactId>
-			<version>1.1.9-uniwue</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>-->		
 	</dependencies>
 </project>
