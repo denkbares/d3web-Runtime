@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2010 denkbares GmbH, Würzburg, Germany
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
+ */
 package de.d3web.core.session.blackboard;
 
 import de.d3web.core.inference.PSMethod;
@@ -93,18 +111,34 @@ public class FactFactory {
 	 * @param questionID ID of the {@link QuestionNum}
 	 * @param value the Double value of the question
 	 * @return a newly created {@link Fact} instance or null, if the
-	 *         {@link QuestionChoice} could not be found
+	 *         {@link QuestionNum} could not be found
 	 */
 	public static Fact createUserEnteredFact(KnowledgeBase kb, String questionID, Double value) {
+		return createUserEnteredFact(kb, questionID, new NumValue(value));
+	}
+
+	/**
+	 * A new fact is created assigning a {@link Value} to a {@link Question}.
+	 * The {@link Question} is searched by its id in the given
+	 * {@link KnowledgeBase}. The source and psMethod context of this fact is
+	 * the user (i.e., {@link PSMethodUserSelected}).
+	 * 
+	 * @param kb {@link KnowledgeBase}
+	 * @param questionID ID of the {@link Question}
+	 * @param value the {@link Value} of the question
+	 * @return a newly created {@link Fact} instance or null, if the
+	 *         {@link Question} could not be found
+	 */
+	public static Fact createUserEnteredFact(KnowledgeBase kb, String questionID, Value value) {
 		Question question = kb.searchQuestion(questionID);
 		if (question == null) {
 			// if not found, then try to find a question with this name
 			question = (Question) kb.searchObjectForName(questionID);
 		}
-		if (question != null && question instanceof QuestionNum) {
-			QuestionNum qn = (QuestionNum) question;
-			return createUserEnteredFact(qn, new NumValue(value));
+		if (question != null) {
+			return createUserEnteredFact(question, value);
 		}
 		return null;
 	}
+
 }
