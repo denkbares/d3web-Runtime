@@ -31,7 +31,7 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.DefaultFact;
 
 /**
- * Action to add scores to diagnoses (heuristic problemsolver) <br>
+ * Action to add scores to solutions (heuristic problem-solver) <br>
  * Creation date: (19.06.2001 17:18:31)
  * 
  * @author Joachim Baumeister

@@ -24,7 +24,6 @@ import java.util.List;
 
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -47,6 +46,7 @@ public abstract class ActionNextQASet extends PSAction {
 	/**
 	 * Indicates all QASets specified by "setQASets"-Method
 	 */
+	@Override
 	public void doIt(Session session, Object source, PSMethod psmethod) {
 		doItWithContext(session, source);
 	}
@@ -83,6 +83,7 @@ public abstract class ActionNextQASet extends PSAction {
 	 * @return all objects participating on the action.<BR>
 	 *         same as getQASets()
 	 */
+	@Override
 	public List<QASet> getTerminalObjects() {
 		return getQASets();
 	}

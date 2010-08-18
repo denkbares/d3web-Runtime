@@ -23,16 +23,16 @@ package de.d3web.indication;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.PSAction;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.indication.inference.PSMethodTherapyIndication;
 
 /**
- * Action to add scores to diagnoses (heuristic problemsolver) Creation date:
- * (19.06.2001 17:18:31)
+ * Action to add scores to solutions (heuristic problem solver)
+ * 
+ * Creation date: (19.06.2001 17:18:31)
  * 
  * @author Joachim Baumeister
  */
@@ -40,6 +40,7 @@ public class ActionIndicateTherapies extends PSAction {
 
 	private List<Solution> therapies;
 
+	@Override
 	public String toString() {
 		return "<RuleAction type=\"IndicateTherapies\">\n"
 				+ "  ["
@@ -52,6 +53,7 @@ public class ActionIndicateTherapies extends PSAction {
 	/**
 	 * @return all objects participating on the action. <BR>
 	 */
+	@Override
 	public List<Solution> getTerminalObjects() {
 		// This relies on a plain list of therapies.
 		return getTherapies();
@@ -144,17 +146,20 @@ public class ActionIndicateTherapies extends PSAction {
 		therapies = newTherapies;
 	}
 
+	@Override
 	public PSAction copy() {
 		ActionIndicateTherapies a = new ActionIndicateTherapies();
 		a.setTherapies(new LinkedList<Solution>(getTherapies()));
 		return a;
 	}
 
+	@Override
 	public int hashCode() {
 		if (getTherapies() != null) return (getTherapies().hashCode());
 		else return 0;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (o == this) return true;
 		if (o instanceof ActionIndicateTherapies) {

@@ -31,15 +31,17 @@ public class IntegerList extends AbstractNumberList {
 		super();
 	}
 
-	public IntegerList(Collection c) {
+	public IntegerList(Collection<Number> c) {
 		super(c);
 
 	}
 
+	@Override
 	public Integer get(int i) {
 		return (Integer) values.get(i);
 	}
 
+	@Override
 	public void add(Number o) {
 		if (o instanceof Integer) {
 			values.add(o);
@@ -53,9 +55,10 @@ public class IntegerList extends AbstractNumberList {
 
 	}
 
+	@Override
 	public String toString() {
 		String s = "{ ";
-		for (Iterator iter = values.iterator(); iter.hasNext();) {
+		for (Iterator<Number> iter = values.iterator(); iter.hasNext();) {
 			Integer element = (Integer) iter.next();
 			s += element.toString();
 			s += " ";

@@ -26,7 +26,6 @@ import java.util.List;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
-import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -37,8 +36,8 @@ import de.d3web.core.session.blackboard.Fact;
 import de.d3web.indication.inference.PSMethodContraIndication;
 
 /**
- * RuleAction that contra indicates a QASet, when the corresponding rule fires
- * Creation date: (19.06.2001 18:32:09)
+ * RuleAction that contra-indicates a {@link QASet}, when the corresponding rule
+ * fires Creation date: (19.06.2001 18:32:09)
  * 
  * @author Joachim Baumeister
  */
@@ -68,30 +67,21 @@ public class ActionContraIndication extends PSAction {
 		return PSMethodContraIndication.getInstance();
 	}
 
-	/**
-	 * @return PSMethodContraIndication.class
-	 */
 	public Class<? extends PSMethod> getProblemsolverContext() {
 		return PSMethodContraIndication.class;
 	}
 
-	/**
-	 * @return List of QASets this action can contraindicate
-	 */
 	public java.util.List<QASet> getQASets() {
 		return qasets;
 	}
 
-	/**
-	 * @return all objects participating on the action.<BR>
-	 *         -> getQASets()
-	 */
+	@Override
 	public List<QASet> getTerminalObjects() {
 		return getQASets();
 	}
 
 	/**
-	 * sets the QASets for contraindication
+	 * Sets the specified QASets for contra-indication.
 	 */
 	public void setQASets(List<QASet> theQasets) {
 		qasets = theQasets;
@@ -99,8 +89,6 @@ public class ActionContraIndication extends PSAction {
 
 	/**
 	 * Invoked, if rule is undone (undoing action)
-	 * 
-	 * @param session current case
 	 */
 	@Override
 	public void undo(Session session, Object source, PSMethod psmethod) {
@@ -118,11 +106,13 @@ public class ActionContraIndication extends PSAction {
 				oldValue, newValue));
 	}
 
+	@Override
 	public int hashCode() {
 		if (getQASets() != null) return (getQASets().hashCode());
 		else return 0;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (o == this) return true;
 		if (o instanceof ActionContraIndication) {
@@ -140,6 +130,7 @@ public class ActionContraIndication extends PSAction {
 		else return false;
 	}
 
+	@Override
 	public PSAction copy() {
 		ActionContraIndication newAction = new ActionContraIndication();
 		newAction.setQASets(new LinkedList<QASet>(getQASets()));

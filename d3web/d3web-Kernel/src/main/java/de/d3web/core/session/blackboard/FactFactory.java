@@ -19,6 +19,7 @@
 package de.d3web.core.session.blackboard;
 
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
@@ -139,6 +140,26 @@ public class FactFactory {
 			return createUserEnteredFact(question, value);
 		}
 		return null;
+	}
+
+	/**
+	 * A new fact is created, that represents the specified indication of a
+	 * specified terminology object. The indication is performed in the context
+	 * of the specified source and problem-solving action.
+	 * 
+	 * @created 18.08.2010
+	 * @param terminologyObject the specified terminologyObject to be indicated
+	 * @param indication the specified indication type
+	 * @param source the object (e.g., rule or user) actually indicating the
+	 *        {@link TerminologyObject}
+	 * @param psMethodContext the context problem-solving method indicating the
+	 *        {@link TerminologyObject}
+	 * @return a fact representing the specified indication
+	 */
+	public static Fact createIndicationFact(TerminologyObject terminologyObject,
+			Indication indication, Object source, PSMethod psMethodContext) {
+
+		return new DefaultFact(terminologyObject, indication, source, psMethodContext);
 	}
 
 }

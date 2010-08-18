@@ -26,8 +26,9 @@ import de.d3web.core.knowledge.terminology.Choice;
 
 /**
  * This is a factory class for Answer objects It contains several static methods
- * which create the most popular answer types Creation date: (26.06.2001
- * 12:41:20)
+ * which create the most popular answer types
+ * 
+ * Creation date: (26.06.2001 12:41:20)
  * 
  * @author Joachim Baumeister
  */

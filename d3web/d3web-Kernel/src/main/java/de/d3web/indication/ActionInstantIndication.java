@@ -22,9 +22,8 @@ package de.d3web.indication;
 
 import java.util.ArrayList;
 
-import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.PSAction;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.Session;
 
@@ -42,12 +41,14 @@ public class ActionInstantIndication extends ActionIndication {
 		super();
 	}
 
+	@Override
 	public PSAction copy() {
 		ActionInstantIndication a = new ActionInstantIndication();
 		a.setQASets(new ArrayList<QASet>(getQASets()));
 		return a;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (o == this) return true;
 		if (o instanceof ActionInstantIndication) {

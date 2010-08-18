@@ -23,12 +23,14 @@ package de.d3web.indication;
 import java.util.LinkedList;
 
 import de.d3web.core.inference.PSAction;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.Solution;
 
 /**
  * ActionRefine represents the indication of a QASet in order to refine an
- * esteblished diagnosis. Creation date: (21.02.2002 13:14:06)
+ * established solution.
+ * 
+ * Creation date: (21.02.2002 13:14:06)
  * 
  * @author Christian Betz
  */
@@ -57,6 +59,7 @@ public class ActionRefine extends ActionNextQASet {
 		target = newTarget;
 	}
 
+	@Override
 	public PSAction copy() {
 		ActionRefine a = new ActionRefine();
 		a.setQASets(new LinkedList<QASet>(getQASets()));
@@ -64,6 +67,7 @@ public class ActionRefine extends ActionNextQASet {
 		return a;
 	}
 
+	@Override
 	public int hashCode() {
 		int hash = 0;
 		if (getQASets() != null) hash += getQASets().hashCode();
@@ -71,6 +75,7 @@ public class ActionRefine extends ActionNextQASet {
 		return hash;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (o == this) return true;
 		if (o instanceof ActionRefine) {

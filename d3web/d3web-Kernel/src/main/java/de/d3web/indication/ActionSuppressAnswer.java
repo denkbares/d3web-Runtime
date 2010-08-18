@@ -26,7 +26,6 @@ import java.util.List;
 
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -35,8 +34,9 @@ import de.d3web.core.utilities.Utils;
 import de.d3web.indication.inference.PSMethodSuppressAnswer;
 
 /**
- * RuleAction to suppress alternatives of a specified Question Creation date:
- * (19.06.2001 18:36:54)
+ * RuleAction to suppress alternatives of a specified Question
+ * 
+ * Creation date: (19.06.2001 18:36:54)
  * 
  * @author Joachim Baumeister
  */
@@ -62,14 +62,8 @@ public class ActionSuppressAnswer extends PSAction {
 	@Override
 	public void doIt(Session session, Object source, PSMethod psmethod) {
 		// TODO: suppress actions are not working currently
-		// ((CaseQuestion)
-		// session.getCaseObject(getQuestion())).addRuleSuppress(
-		// rule);
 	}
 
-	/**
-	 * @return PSMethodSuppressAnswer.class
-	 */
 	public Class<? extends PSMethod> getProblemsolverContext() {
 		return PSMethodSuppressAnswer.class;
 	}
@@ -77,7 +71,7 @@ public class ActionSuppressAnswer extends PSAction {
 	/**
 	 * Creation date: (26.10.00 14:40:27)
 	 * 
-	 * @return the QuestionChoice whose alternatives shall be suppressed if the
+	 * @return the QuestionChoice whose alternatives should be suppressed if the
 	 *         corresponding rule fires
 	 */
 	public QuestionChoice getQuestion() {
@@ -87,6 +81,7 @@ public class ActionSuppressAnswer extends PSAction {
 	/**
 	 * @return all objects participating on the action.
 	 */
+	@Override
 	public List<? extends NamedObject> getTerminalObjects() {
 		List<NamedObject> terminals = new ArrayList<NamedObject>(1);
 		if (getQuestion() != null) {
@@ -104,7 +99,7 @@ public class ActionSuppressAnswer extends PSAction {
 	}
 
 	/**
-	 * sets the Question whose alternatives shall be suppressed in case of
+	 * Sets the Question whose alternatives should be suppressed in case of
 	 * firing.
 	 */
 	public void setQuestion(QuestionChoice theQuestion) {
@@ -131,6 +126,7 @@ public class ActionSuppressAnswer extends PSAction {
 	 * 
 	 * @return String-representation of this suppress-rule
 	 */
+	@Override
 	public String toString() {
 		return "<RuleAction type=\"SupressAnswer\">\n"
 				+ "  ["
@@ -142,18 +138,18 @@ public class ActionSuppressAnswer extends PSAction {
 	}
 
 	/**
-	 * method invoked in case of undoing (the action) of this rule Creation
-	 * date: (21.08.2000 07:25:41)
+	 * Method invoked in case of undoing (the action) of this rule
+	 * 
+	 * Creation date: (21.08.2000 07:25:41)
 	 * 
 	 * @param session current case
 	 */
 	@Override
 	public void undo(Session session, Object source, PSMethod psmethod) {
-		// (
-		// (CaseQuestion) session.getCaseObject(
-		// getQuestion())).removeRuleSuppress(rule);
+		// TODO: integration of suppress action!
 	}
 
+	@Override
 	public PSAction copy() {
 		ActionSuppressAnswer a = new ActionSuppressAnswer();
 		a.setQuestion(getQuestion());
@@ -161,6 +157,7 @@ public class ActionSuppressAnswer extends PSAction {
 		return a;
 	}
 
+	@Override
 	public int hashCode() {
 		int hash = 0;
 		if (getQuestion() != null) {
@@ -172,6 +169,7 @@ public class ActionSuppressAnswer extends PSAction {
 		return hash;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (o == this) return true;
 		if (o instanceof ActionSuppressAnswer) {

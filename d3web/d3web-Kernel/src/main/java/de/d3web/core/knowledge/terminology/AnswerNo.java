@@ -35,23 +35,9 @@ public class AnswerNo extends Choice {
 	/**
 	 * @return true
 	 */
+	@Override
 	public boolean isAnswerNo() {
 		return true;
 	}
 
-	// 20030923 marty: delegate to AnswerChoice.equals(...)
-	// /**
-	// * compares for equal reference first, then for equal class instance.
-	// * <BR>
-	// * 2002-05-29 joba: added for better comparisons
-	// */
-	// public boolean equals(Object other) {
-	// if (this == other) {
-	// return true;
-	// } else if (other instanceof AnswerNo) {
-	// return true;
-	// } else {
-	// return false;
-	// }
-	// }
 }

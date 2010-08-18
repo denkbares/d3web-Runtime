@@ -35,9 +35,9 @@ public abstract class AbstractNumberList {
 		values = new LinkedList<Number>();
 	}
 
-	public AbstractNumberList(Collection c) {
-		values = new LinkedList();
-		for (Iterator iter = c.iterator(); iter.hasNext();) {
+	public AbstractNumberList(Collection<Number> c) {
+		values = new LinkedList<Number>();
+		for (Iterator<Number> iter = c.iterator(); iter.hasNext();) {
 			Object element = iter.next();
 			if (element instanceof Number) {
 				add((Number) element);
