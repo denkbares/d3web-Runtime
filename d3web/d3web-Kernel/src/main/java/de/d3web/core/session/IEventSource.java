@@ -23,6 +23,8 @@ package de.d3web.core.session;
 import java.util.Collection;
 
 /**
+ * Represents the source (e.g. TerminologyObject) of an event. Those events are
+ * fired, for instance, if a rule is executed.
  * 
  * @author gbuscher
  */
@@ -34,6 +36,6 @@ public interface IEventSource {
 
 	public void notifyListeners(Session session, IEventSource source);
 
-	public Collection getListeners();
+	public Collection<KBOEventListener> getListeners();
 
 }

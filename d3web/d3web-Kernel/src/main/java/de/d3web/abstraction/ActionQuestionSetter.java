@@ -212,6 +212,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 					Double val = null;
 					Value value = session.getBlackboard().getValue(qMC);
 					if (value instanceof MultipleChoiceValue) {
+						@SuppressWarnings("unchecked")
 						List<ChoiceValue> l = (List<ChoiceValue>) (value.getValue());
 						val = new Double(l.size());
 					}
@@ -323,6 +324,7 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 	/**
 	 * @see de.d3web.core.session.CaseObjectSource#createCaseObject(Session)
 	 */
+	@Override
 	public SessionObject createCaseObject(Session session) {
 		return new CaseActionQuestionSetter(this);
 	}

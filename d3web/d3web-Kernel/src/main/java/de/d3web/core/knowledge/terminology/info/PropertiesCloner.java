@@ -46,7 +46,7 @@ public class PropertiesCloner {
 
 	private static PropertiesCloner instance = null;
 
-	private Map propertyClonerMap = new HashMap();
+	private final Map<Class<?>, PropertyCloner> propertyClonerMap = new HashMap<Class<?>, PropertyCloner>();
 
 	public static PropertiesCloner getInstance() {
 		if (instance == null) {
@@ -65,7 +65,7 @@ public class PropertiesCloner {
 		propertyClonerMap.put(LinkedList.class, new LinkedListPropertyCloner());
 	}
 
-	public void addProperyCloner(Class forClass, PropertyCloner p) {
+	public void addProperyCloner(Class<?> forClass, PropertyCloner p) {
 		propertyClonerMap.put(forClass, p);
 	}
 
@@ -90,13 +90,13 @@ public class PropertiesCloner {
 	 */
 	public Properties cloneProperties(Properties properties, boolean verbose) {
 		Properties clonedProperties = new Properties();
-		Iterator iter = properties.getKeys().iterator();
+		Iterator<Property> iter = properties.getKeys().iterator();
 		while (iter.hasNext()) {
-			Property key = (Property) iter.next();
+			Property key = iter.next();
 			Object value = properties.getProperty(key);
 
 			if (value != null) {
-				PropertyCloner cloner = (PropertyCloner) propertyClonerMap
+				PropertyCloner cloner = propertyClonerMap
 						.get(value.getClass());
 				if (cloner != null) {
 					clonedProperties.setProperty(key, cloner

@@ -31,9 +31,12 @@ import java.util.List;
  */
 public class LinkedListPropertyCloner extends PropertyCloner {
 
+	@SuppressWarnings({
+			"unchecked", "rawtypes" })
+	@Override
 	public Object cloneProperty(Object o) {
 		if (o instanceof List) {
-			return new LinkedList((List) o);
+			return new LinkedList<Object>((List) o);
 		}
 		return null;
 	}

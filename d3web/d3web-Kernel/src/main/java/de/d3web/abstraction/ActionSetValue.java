@@ -24,7 +24,6 @@ import de.d3web.abstraction.formula.FormulaDateExpression;
 import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
