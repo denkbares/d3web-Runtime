@@ -31,7 +31,7 @@ public class IntegerList extends AbstractNumberList {
 		super();
 	}
 
-	public IntegerList(Collection<Number> c) {
+	public IntegerList(Collection<? extends Number> c) {
 		super(c);
 
 	}
