@@ -34,15 +34,6 @@ import junit.framework.TestSuite;
 public class TestAll {
 
 	/**
-	 * Starts all registered tests. Creation date: (05.09.2000 16:00:30)
-	 * 
-	 * @param args java.lang.String[]
-	 */
-	public static void main(String[] args) {
-		junit.swingui.TestRunner.main(new String[] { "de.d3web.persistence.tests.TestAll" });
-	}
-
-	/**
 	 * @return a test suite containing all registered tests Creation date:
 	 *         (05.09.2000 16:01:23)
 	 */
