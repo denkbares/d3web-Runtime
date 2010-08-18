@@ -78,6 +78,7 @@ public class DFSTreeAgendaSortingStrategy implements AgendaSortingStrategy {
 	 */
 	private void reindex() {
 		this.maxOrderingNumber = 0;
+		this.qasetIndex.clear();
 		reindex(session.getKnowledgeBase().getRootQASet());
 	}
 

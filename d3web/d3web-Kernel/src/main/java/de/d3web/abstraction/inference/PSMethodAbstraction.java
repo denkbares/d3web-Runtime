@@ -20,8 +20,12 @@
 
 package de.d3web.abstraction.inference;
 
+import java.util.Collection;
+
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethodRulebased;
+import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 

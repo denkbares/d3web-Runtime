@@ -81,10 +81,8 @@ public class DefaultBlackboard implements Blackboard {
 		Value newValue = getActualValue(terminologyObject);
 		if (newValue != oldValue) {
 			PropagationManager propagationContoller = session.getPropagationManager();
-			propagationContoller.openPropagation();
 			propagationContoller.propagate(terminologyObject,
 					oldValue, newValue);
-			propagationContoller.commitPropagation();
 			session.notifyListeners(terminologyObject);
 		}
 	}
