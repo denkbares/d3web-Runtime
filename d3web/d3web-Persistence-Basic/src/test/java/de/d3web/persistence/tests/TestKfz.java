@@ -45,8 +45,7 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.DialogController;
-import de.d3web.core.session.interviewmanager.InvalidQASetRequestException;
+import de.d3web.core.session.interviewmanager.EmptyForm;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
@@ -134,8 +133,8 @@ public class TestKfz extends TestCase {
 		QuestionMC Mf7 = (QuestionMC) kb.searchQuestion("Mf7");
 		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase());
 
-		Choice Mf7a1 = (Choice) kbm.findChoice(Mf7, "Mf7a1");
-		Choice Mf7a2 = (Choice) kbm.findChoice(Mf7, "Mf7a2");
+		Choice Mf7a1 = kbm.findChoice(Mf7, "Mf7a1");
+		Choice Mf7a2 = kbm.findChoice(Mf7, "Mf7a2");
 		Choice[] choices = new Choice[] {
 				Mf7a1, Mf7a2 };
 		List<ChoiceValue> values = new ArrayList<ChoiceValue>(choices.length);
@@ -181,7 +180,7 @@ public class TestKfz extends TestCase {
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase());
-		Choice ratingNormal = (Choice) kbm.findChoice(Msi4, "Msi4a1");
+		Choice ratingNormal = kbm.findChoice(Msi4, "Msi4a1");
 		ChoiceValue ratingNormalValue = new ChoiceValue(ratingNormal);
 
 		System.out.println("(1) --> Msi4: " + session.getBlackboard().getValue(Msi4));
@@ -193,7 +192,7 @@ public class TestKfz extends TestCase {
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf6, new NumValue(new Double(11)),
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
-		Choice ratingHigh = (Choice) kbm.findChoice(Msi4, "Msi4a2");
+		Choice ratingHigh = kbm.findChoice(Msi4, "Msi4a2");
 		ChoiceValue ratingHighValue = new ChoiceValue(ratingHigh);
 		System.out.println("(2) --> Msi4: " + session.getBlackboard().getValue(Msi4));
 		assertEquals("Error with formula (2)", ratingHighValue, session.getBlackboard().getValue(
@@ -203,7 +202,7 @@ public class TestKfz extends TestCase {
 				FactFactory.createFact(Mf6, new NumValue(new Double(15)),
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		System.out.println("(4) --> Msi4: " + session.getBlackboard().getValue(Msi4));
-		Choice ratingVeryHigh = (Choice) kbm.findChoice(Msi4, "Msi4a3");
+		Choice ratingVeryHigh = kbm.findChoice(Msi4, "Msi4a3");
 		ChoiceValue ratingVeryHighValue = new ChoiceValue(ratingVeryHigh);
 
 		assertEquals("Error with formula (4)", ratingVeryHighValue,
@@ -232,7 +231,7 @@ public class TestKfz extends TestCase {
 		QuestionNum Mf6 = (QuestionNum) kb.searchQuestion("Mf6");
 		QuestionOC Mf4 = (QuestionOC) kb.searchQuestion("Mf4");
 		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase());
-		Choice Mf4a1 = (Choice) kbm.findChoice(Mf4, "Mf4a1");
+		Choice Mf4a1 = kbm.findChoice(Mf4, "Mf4a1");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf4, new ChoiceValue(Mf4a1),
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
@@ -326,16 +325,13 @@ public class TestKfz extends TestCase {
 	 * Assures that every type of question can be set and retrieved. Creation
 	 * date: (08.09.2000 16:11:48)
 	 * 
-	 * @throws InvalidQASetRequestException
 	 */
-	public void testCase() throws InvalidQASetRequestException {
+	public void testCase() {
 		Session session = SessionFactory.createSession(kb);
 
-		while (((DialogController) session.getQASetManager()).hasNewestQASet()) {
+		while (session.getInterview().nextForm() != EmptyForm.getInstance()) {
 
-			((DialogController) session.getQASetManager()).moveToNewestQASet();
-			QASet qaSet = null;
-			qaSet = ((DialogController) session.getQASetManager()).getCurrentQASet();
+			QASet qaSet = (QASet) session.getInterview().nextForm().getInterviewObject();
 			assertNotNull(qaSet);
 			assertTrue(
 					"Keine Frage, sondern ein " + qaSet.getClass() + "-Objekt",

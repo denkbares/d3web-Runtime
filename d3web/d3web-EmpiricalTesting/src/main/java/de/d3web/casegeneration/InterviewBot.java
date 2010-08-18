@@ -32,8 +32,6 @@ import javax.activation.UnsupportedDataTypeException;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.QASet;
-import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.Solution;
@@ -41,7 +39,8 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.MQDialogController;
+import de.d3web.core.session.interviewmanager.Form;
+import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
 import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;
@@ -263,18 +262,28 @@ public class InterviewBot {
 	}
 
 	private Question nextQuestionFromAgenda(Session session) {
-		MQDialogController controller = (MQDialogController) session.getQASetManager();
-		QASet next = controller.moveToNextRemainingQASet();
-		if (next != null && next instanceof Question) {
-			return (Question) next;
-		}
-		else if (next != null) {
-			List<?> validQuestions = controller.getAllValidQuestionsOf((QContainer) next);
-			return (Question) validQuestions.get(0);
+		Form form = session.getInterview().nextForm();
+		if (form.getInterviewObject() instanceof Question) {
+			return (Question) form.getInterviewObject();
 		}
 		else {
 			return null;
 		}
+
+		// MQDialogController controller = (MQDialogController)
+		// session.getQASetManager();
+		// QASet next = controller.moveToNextRemainingQASet();
+		// if (next != null && next instanceof Question) {
+		// return (Question) next;
+		// }
+		// else if (next != null) {
+		// List<?> validQuestions =
+		// controller.getAllValidQuestionsOf((QContainer) next);
+		// return (Question) validQuestions.get(0);
+		// }
+		// else {
+		// return null;
+		// }
 	}
 
 	private List<RatedSolution> toRatedSolutions(Session session) {
@@ -301,6 +310,7 @@ public class InterviewBot {
 
 	private Session createCase(List<Finding> findings) {
 		Session session = SessionFactory.createSession(knowledge);
+		session.getInterview().setFormStrategy(new NextUnansweredQuestionFormStrategy());
 		for (Finding finding : findings) {
 			setCaseValue(session, finding.getQuestion(), finding.getValue());
 		}

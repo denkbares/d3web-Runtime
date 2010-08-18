@@ -32,9 +32,7 @@ import de.d3web.core.knowledge.terminology.info.DCMarkedUp;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.core.session.interviewmanager.DialogController;
 import de.d3web.core.session.interviewmanager.Interview;
-import de.d3web.core.session.interviewmanager.QASetManager;
 import de.d3web.core.session.protocol.Protocol;
 
 /**
@@ -127,29 +125,5 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 * @return the corresponding {@link SessionObject} of the specified object
 	 */
 	SessionObject getCaseObject(CaseObjectSource item);
-
-	// -----------------------from here on old stuff, TODO: remove?
-
-	/**
-	 * Returns the {@link QASetManager} used in this case, that is responsible
-	 * for the dialog management.
-	 * 
-	 * @deprecated replaced by {@link Interview}
-	 * @return the {@link QASetManager} defined for this case, for example a
-	 *         {@link DialogController}
-	 * 
-	 */
-	@Deprecated
-	QASetManager getQASetManager();
-
-	/**
-	 * Sets a {@link QASetManager}, that will be used to control the interview
-	 * behavior of this case.
-	 * 
-	 * @deprecated replaced by {@link Interview}
-	 * @param cd the {@link QASetManager} of this case
-	 */
-	@Deprecated
-	void setQASetManager(QASetManager cd);
 
 }

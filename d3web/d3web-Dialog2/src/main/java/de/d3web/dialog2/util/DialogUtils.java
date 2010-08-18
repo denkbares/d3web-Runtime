@@ -52,7 +52,6 @@ import org.apache.log4j.Logger;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
 
 import de.d3web.caserepository.CaseObject;
-import de.d3web.caserepository.utilities.SessionConverter;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -159,8 +158,7 @@ public class DialogUtils {
 	}
 
 	public static Session createNewAnsweredCase(CaseObject co, KnowledgeBase kb) {
-		Session newCase = SessionConverter.getInstance().caseObject2Session(co, kb,
-				getUsedPSMethods());
+		Session newCase = SessionConverter.getInstance().caseObject2Session(co, kb);
 		return newCase;
 	}
 
@@ -520,7 +518,7 @@ public class DialogUtils {
 					(Question) object));
 		}
 		else if (object instanceof QContainer) {
-			return session.getInterview().isActive((QContainer) object);
+			return session.getInterview().isActive(object);
 		}
 		else return false;
 	}

@@ -43,13 +43,10 @@ import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.DefaultBlackboard;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.interviewmanager.DefaultInterview;
-import de.d3web.core.session.interviewmanager.DefaultQASetManagerFactory;
 import de.d3web.core.session.interviewmanager.FormStrategy;
 import de.d3web.core.session.interviewmanager.Interview;
 import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
 import de.d3web.core.session.interviewmanager.PSMethodInterview;
-import de.d3web.core.session.interviewmanager.QASetManager;
-import de.d3web.core.session.interviewmanager.QASetManagerFactory;
 import de.d3web.core.session.protocol.DefaultProtocol;
 import de.d3web.core.session.protocol.Protocol;
 import de.d3web.indication.inference.PSMethodContraIndication;
@@ -91,10 +88,6 @@ public class DefaultSession implements Session {
 	private List<PSMethod> usedPSMethods;
 	private DCMarkup dcMarkup;
 	private Properties properties;
-
-	// remove qaSetManager and qamFactory after Interview Refactoring
-	private QASetManager qaSetManager;
-	private final QASetManagerFactory qamFactory = new DefaultQASetManagerFactory();
 
 	private static LinkedList<PSMethod> commonPSMethods = new LinkedList<PSMethod>(
 			Arrays.asList(
@@ -212,6 +205,7 @@ public class DefaultSession implements Session {
 	/*
 	 * @see de.d3web.kernel.domainModel.IDReference#getId()
 	 */
+	@Override
 	public String getId() {
 		if (id == null) {
 			id = createNewCaseId();
@@ -286,10 +280,6 @@ public class DefaultSession implements Session {
 		return co;
 	}
 
-	private QASetManagerFactory getQASetManagerFactory() {
-		return qamFactory;
-	}
-
 	/**
 	 * @return knowledge base used in the case.
 	 */
@@ -314,27 +304,9 @@ public class DefaultSession implements Session {
 		return null;
 	}
 
-	/**
-	 * @return the QASetManager (e.g. DialogController) defined for this Session
-	 * @deprecated will be replaced by {@link Interview}
-	 */
-	@Deprecated
-	@Override
-	public QASetManager getQASetManager() {
-		if (qaSetManager == null) {
-			qaSetManager = getQASetManagerFactory().createQASetManager(this);
-		}
-		return qaSetManager;
-	}
-
 	@Override
 	public List<PSMethod> getPSMethods() {
 		return usedPSMethods;
-	}
-
-	@Override
-	public void setQASetManager(QASetManager newQASetManager) {
-		qaSetManager = newQASetManager;
 	}
 
 	@Override
@@ -347,11 +319,7 @@ public class DefaultSession implements Session {
 		super.finalize();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.d3web.kernel.supportknowledge.DCMarkedUp#getDCMarkup()
-	 */
+	@Override
 	public DCMarkup getDCMarkup() {
 		return dcMarkup;
 	}

@@ -31,7 +31,8 @@ import java.util.List;
 import java.util.Set;
 
 import de.d3web.caserepository.CaseObject;
-import de.d3web.caserepository.utilities.SessionConverter;
+import de.d3web.caserepository.CaseObjectImpl;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
@@ -455,7 +456,76 @@ public class ComparisonResultRepository {
 		if ((kb == null) || !kb.equals(session.getKnowledgeBase())) {
 			CompareObjectsHashContainer.getInstance().initialize(session.getKnowledgeBase());
 		}
-		currentCase = SessionConverter.getInstance().session2CaseObject(session);
+		currentCase = session2CaseObject(session);
+	}
+
+	/**
+	 * Converts Session to CaseObject. The returned CaseObject has empty
+	 * IMetaData. The established system's diagnoses are stored within the
+	 * CaseObject.
+	 * 
+	 * @param copyDCMarkup if true, DCMarkup of the session will be cloned and
+	 *        added to the caseObject
+	 * @param copyProperties if true, Properties of the session will be cloned
+	 *        and added to the caseObject
+	 * @return CaseObjectImpl
+	 */
+	private CaseObjectImpl session2CaseObject(Session session) {
+		CaseObjectImpl ret = new CaseObjectImpl(session.getKnowledgeBase());
+
+		// Questions
+
+		Iterator<Question> qiter = session.getKnowledgeBase().getQuestions().iterator();
+		while (qiter.hasNext()) {
+			Question q = qiter.next();
+			Value value = session.getBlackboard().getValue(q);
+			ret.addQuestionAndAnswers(q, value);
+		}
+
+		// processed QContainers
+
+		// first, empty the whole collection
+		ret.getAppliedQSets().clearAllApplied();
+
+		// Diagnoses
+		addSolutionsToCaseObject(ret, session, State.ESTABLISHED);
+		addSolutionsToCaseObject(ret, session, State.SUGGESTED);
+		addSolutionsToCaseObject(ret, session, State.EXCLUDED);
+
+		return ret;
+	}
+
+	private void addSolutionsToCaseObject(CaseObjectImpl co, Session session, Rating.State state) {
+		List<PSMethod> usedPsm = new LinkedList<PSMethod>();
+		Iterator<? extends PSMethod> usedPsmIter = session.getPSMethods().iterator();
+		while (usedPsmIter.hasNext()) {
+			PSMethod psm = usedPsmIter.next();
+			if (psm.isContributingToResult()) {
+				usedPsm.add(psm);
+			}
+		}
+
+		List<de.d3web.core.knowledge.terminology.Solution> diags = session.getBlackboard().getSolutions(
+				state);
+		if (diags != null) {
+			Iterator<de.d3web.core.knowledge.terminology.Solution> diter = diags.iterator();
+			while (diter.hasNext()) {
+				de.d3web.core.knowledge.terminology.Solution d = diter.next();
+
+				Iterator<PSMethod> psMethodIter = usedPsm.iterator();
+				while (psMethodIter.hasNext()) {
+					PSMethod psm = psMethodIter.next();
+					Rating ds = session.getBlackboard().getRating(d, psm);
+					if (ds.hasState(state)) {
+						CaseObject.Solution s = new CaseObject.Solution();
+						s.setSolution(d);
+						s.setState(new Rating(state));
+						s.setPSMethodClass(psm.getClass());
+						co.addSolution(s);
+					}
+				}
+			}
+		}
 	}
 
 	/**

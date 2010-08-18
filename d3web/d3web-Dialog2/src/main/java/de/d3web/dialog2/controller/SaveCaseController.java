@@ -35,7 +35,6 @@ import org.apache.log4j.Logger;
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.CaseObjectImpl;
 import de.d3web.caserepository.MetaDataImpl;
-import de.d3web.caserepository.utilities.SessionConverter;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
@@ -48,6 +47,7 @@ import de.d3web.dialog2.basics.knowledge.CaseRepositoryDescriptor;
 import de.d3web.dialog2.basics.settings.ResourceRepository;
 import de.d3web.dialog2.basics.usermanaging.User;
 import de.d3web.dialog2.util.DialogUtils;
+import de.d3web.dialog2.util.SessionConverter;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 public class SaveCaseController {

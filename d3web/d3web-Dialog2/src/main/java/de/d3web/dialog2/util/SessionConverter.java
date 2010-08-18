@@ -18,7 +18,7 @@
  * site: http://www.fsf.org.
  */
 
-package de.d3web.caserepository.utilities;
+package de.d3web.dialog2.util;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -26,9 +26,9 @@ import java.util.List;
 
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.CaseObjectImpl;
+import de.d3web.caserepository.utilities.AdditionalCaseConverter;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Rating.State;
@@ -38,8 +38,7 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
-import de.d3web.core.session.interviewmanager.DialogProxy;
-import de.d3web.core.session.interviewmanager.ShadowMemory;
+import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
@@ -78,73 +77,54 @@ public class SessionConverter {
 	 * @param dialogControllerClass the dialog-controller to use
 	 * @return CaseObject
 	 */
-	public Session caseObject2Session(CaseObject cobj, KnowledgeBase kb,
-			List<PSMethod> usedPSMethods) {
-		return caseObject2Session(cobj, kb, usedPSMethods, true,
-				true);
+	public Session caseObject2Session(CaseObject cobj, KnowledgeBase kb) {
+		return caseObject2Session(cobj, kb, true, true);
 	}
 
 	/**
 	 * Converts CaseObject to Session using the given dialog-controller-class.
 	 * The registered (user-selected) containers are considered.
 	 * 
-	 * @param dialogControllerClass the dialog-controller to use
 	 * @param copyDCMarkup if true, DCMarkup of the caseObject will be cloned
 	 *        and added to the session
 	 * @param copyProperties if true, Properties of the caseObject will be
 	 *        cloned and added to the session
 	 * @return CaseObject
 	 */
-	public Session caseObject2Session(CaseObject cobj, KnowledgeBase kb,
-			List<PSMethod> usedPSMethods, boolean copyDCMarkup,
+	public Session caseObject2Session(CaseObject cobj, KnowledgeBase kb, boolean copyDCMarkup,
 			boolean copyProperties) {
-		DialogProxy proxy = new DialogProxy();
-		ShadowMemory shmem = new ShadowMemory();
-		shmem.setPriority(1);
-		proxy.addClient(shmem);
 
-		Iterator<Question> qiter = cobj.getQuestions().iterator();
-		while (qiter.hasNext()) {
-			Question q = qiter.next();
-			shmem.addAnswers(q.getId(), cobj.getValue(q));
+		Session session = SessionFactory.createSession(kb);
+		for (Question question : cobj.getQuestions()) {
+			Value value = cobj.getValue(question);
+			session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(question, value));
 		}
-
-		List<QContainer> registeredContainers = new LinkedList<QContainer>();
-		Iterator<?> contIter = cobj.getAppliedQSets().getAllApplied().iterator();
-		while (contIter.hasNext()) {
-			QContainer qcontainer = (QContainer) contIter.next();
-			registeredContainers.add(qcontainer);
-		}
-
-		Session ret = SessionFactory.createAnsweredSession(kb,
-				proxy,
-				registeredContainers, usedPSMethods);
 
 		// user-selected diagnoses
 		Iterator<CaseObject.Solution> solIter = cobj.getSolutions(
 				PSMethodUserSelected.class).iterator();
 		while (solIter.hasNext()) {
 			CaseObject.Solution sol = solIter.next();
-			ret.getBlackboard().addValueFact(
+			session.getBlackboard().addValueFact(
 					new DefaultFact(sol.getSolution(), sol.getState(), new Object(),
 							PSMethodUserSelected.getInstance()));
 		}
 
 		if (copyDCMarkup) {
-			ret.setDCMarkup((DCMarkup) cobj.getDCMarkup().clone());
+			session.setDCMarkup((DCMarkup) cobj.getDCMarkup().clone());
 		}
 		if (copyProperties) {
-			ret.setProperties(PropertiesCloner.getInstance().cloneProperties(
+			session.setProperties(PropertiesCloner.getInstance().cloneProperties(
 					cobj.getProperties()));
 		}
 
 		Iterator<AdditionalCaseConverter> iter = additionalCaseConverters.iterator();
 		while (iter.hasNext()) {
 			AdditionalCaseConverter conv = iter.next();
-			conv.caseObject2Session(cobj, ret);
+			conv.caseObject2Session(cobj, session);
 		}
 
-		return ret;
+		return session;
 	}
 
 	/**
