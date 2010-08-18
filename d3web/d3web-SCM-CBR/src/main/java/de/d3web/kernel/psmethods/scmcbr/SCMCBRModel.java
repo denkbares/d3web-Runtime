@@ -1,3 +1,23 @@
+/*
+ * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
+ * Computer Science VI, University of Wuerzburg
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
+ */
+
 package de.d3web.kernel.psmethods.scmcbr;
 
 import java.util.ArrayList;
@@ -45,15 +65,15 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 	private double completenessSuggestedThreshold = .5;
 	private double completenessEstablishedThreshold = .8;
 
-	private RelationHelper rh = RelationHelper.getInstance();
+	private final RelationHelper rh = RelationHelper.getInstance();
 	private String id = null;
-	private Collection<SCMCBRRelation> relations;
-	private Collection<SCMCBRRelation> necessaryRelations;
-	private Collection<SCMCBRRelation> sufficientRelations;
-	private Collection<SCMCBRRelation> contradictingRelations;
+	private final Collection<SCMCBRRelation> relations;
+	private final Collection<SCMCBRRelation> necessaryRelations;
+	private final Collection<SCMCBRRelation> sufficientRelations;
+	private final Collection<SCMCBRRelation> contradictingRelations;
 	public static String DEFAULT_SOLUTION = "default_solution";
 
-	private Map<Session, SCMCBRInferenceTrace> explanation = new HashMap<Session, SCMCBRInferenceTrace>();
+	private final Map<Session, SCMCBRInferenceTrace> explanation = new HashMap<Session, SCMCBRInferenceTrace>();
 
 	private Solution solution;
 

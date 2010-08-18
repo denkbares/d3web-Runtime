@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 denkbares GmbH
+ * Copyright (C) 2010 denkbares GmbH, Würzburg, Germany
  * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
@@ -16,6 +16,7 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
+
 package de.d3web.core.inference;
 
 import java.util.ArrayList;
