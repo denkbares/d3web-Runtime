@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <KnowledgeBase system="d3web" type="abstraction-rules">
 <KnowledgeSlice ID="R1" type="RuleComplex">
-<Action type="ActionAddValue">
+<Action type="ActionSetValue">
 <Question ID="Q3"/>
 <Values>
 <Value ID="Q3a1" type="answer"/>
@@ -13,7 +13,7 @@
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R2" type="RuleComplex">
-<Action type="ActionAddValue">
+<Action type="ActionSetValue">
 <Question ID="Q3"/>
 <Values>
 <Value ID="Q3a2" type="answer"/>
@@ -25,7 +25,7 @@
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R3" type="RuleComplex">
-<Action type="ActionAddValue">
+<Action type="ActionSetValue">
 <Question ID="Q3"/>
 <Values>
 <Value ID="Q3a2" type="answer"/>

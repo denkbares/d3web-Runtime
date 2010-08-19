@@ -21,40 +21,20 @@
 package de.d3web.abstraction;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 
-import de.d3web.abstraction.formula.FormulaDateElement;
-import de.d3web.abstraction.formula.FormulaDateExpression;
-import de.d3web.abstraction.formula.FormulaExpression;
-import de.d3web.abstraction.formula.FormulaNumberElement;
 import de.d3web.core.inference.PSAction;
-import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.QuestionDate;
-import de.d3web.core.knowledge.terminology.QuestionMC;
-import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.knowledge.terminology.QuestionOC;
-import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
-import de.d3web.core.session.blackboard.CaseActionQuestionSetter;
-import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.core.session.values.ChoiceValue;
-import de.d3web.core.session.values.DateValue;
-import de.d3web.core.session.values.EvaluatableAnswerNumValue;
-import de.d3web.core.session.values.MultipleChoiceValue;
-import de.d3web.core.session.values.NumValue;
 
 /**
+ * An abstract class for representing an {@link PSAction} that is
+ * able to set value for a specified question.
+ * 
  * @author baumeister, bates
  */
-public abstract class ActionQuestionSetter extends PSAction implements CaseObjectSource {
+public abstract class ActionQuestionSetter extends PSAction {
 
 	private Question question;
 	private Object value;
@@ -105,256 +85,10 @@ public abstract class ActionQuestionSetter extends PSAction implements CaseObjec
 		return question;
 	}
 
-	/**
-	 * does nothing here in this abstract Action
-	 */
-	public void undo(Session session) {
-	}
-
 	@Override
 	public boolean hasChangedValue(Session session) {
+		// always return true, the change management will be handled by doIt()
+		return true;
 
-		Hashtable<Question, Object> questionToValuesHash = getActionValues(session);
-		if ((questionToValuesHash != null) && (!questionToValuesHash.isEmpty())) {
-			Enumeration<Question> keys = questionToValuesHash.keys();
-			while (keys.hasMoreElements()) {
-				Question q = keys.nextElement();
-				// session.trace("key: " + q.getId());
-				Object oldValue = questionToValuesHash.get(q); // can be Double
-				// or Date
-				assert (oldValue instanceof Double || oldValue instanceof Date) : "Unknown oldValue-Type: "
-						+ oldValue;
-
-				Value newValue = null;
-				if (q instanceof QuestionNum || q instanceof QuestionDate) {
-					newValue = session.getBlackboard().getValue(q);
-				}
-				else if (q instanceof QuestionOC) {
-					if (this.value != null) {
-						EvaluatableAnswerNumValue evalAnsnumVal = (EvaluatableAnswerNumValue) this.value;
-						Double value = evalAnsnumVal.eval(session);
-						newValue = new NumValue(value);
-					}
-				}
-
-				if (this.value != null) {
-					if (oldValue == null) return true;
-					Value val = newValue; // can be AnswerDate
-					// or AnswerDouble
-					assert (val instanceof DateValue || val instanceof NumValue) : "Unknown newValue-Answer-Type: "
-							+ val;
-					Object updatedVal = val.getValue(); // can be Double or
-					// Date
-					assert (updatedVal instanceof Double || updatedVal instanceof Date) : "Unknown newValue-Type: "
-							+ updatedVal;
-					// session.trace("old:" + oldValue + ", new:" + newValue +
-					// ": equals? "
-					// + oldValue.equals(newValue));
-					if (!oldValue.equals(updatedVal)) {
-						return true;
-					}
-				}
-				else {
-					if (oldValue != null) return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * stores the current state of terminal objects of the given action values
-	 */
-	protected void storeActionValues(Session session, Object valuesArg) {
-		Hashtable<Question, Object> questionToValuesHash = new Hashtable<Question, Object>();
-		// session.trace("attempting to store action values (elementary formulaExpression values)");
-		if (valuesArg == null) {
-			return; // should only be one value!
-		}
-
-		Object obj = valuesArg;
-
-		if ((obj instanceof FormulaExpression) || (obj instanceof FormulaNumberElement)
-				|| (obj instanceof FormulaDateElement)
-				|| (obj instanceof FormulaDateExpression)) {
-			Collection<? extends TerminologyObject> terminalObjects;
-			if (obj instanceof FormulaExpression) {
-				terminalObjects = ((FormulaExpression) obj).getFormulaElement()
-						.getTerminalObjects();
-			}
-			else if (obj instanceof FormulaNumberElement) {
-				terminalObjects = ((FormulaNumberElement) obj).getTerminalObjects();
-			}
-			else if (obj instanceof FormulaDateExpression) {
-				terminalObjects = ((FormulaDateExpression) obj).getFormulaDateElement()
-						.getTerminalObjects();
-			}
-			else if (obj instanceof FormulaDateElement) {
-				terminalObjects = ((FormulaDateElement) obj).getTerminalObjects();
-			}
-			else {
-				throw new Error("Programmerror. Bad Type: " + obj);
-			}
-
-			Iterator<? extends TerminologyObject> iter = terminalObjects.iterator();
-			while (iter.hasNext()) {
-				Question q = (Question) iter.next();
-				if (q instanceof QuestionNum) {
-					QuestionNum qNum = (QuestionNum) q;
-					Value value = session.getBlackboard().getValue(qNum);
-					if (value != null) {
-						Object val = value.getValue();
-						questionToValuesHash.put(q, val);
-					}
-				}
-				else if (q instanceof QuestionMC) {
-					QuestionMC qMC = (QuestionMC) q;
-					Double val = null;
-					Value value = session.getBlackboard().getValue(qMC);
-					if (value instanceof MultipleChoiceValue) {
-						@SuppressWarnings("unchecked")
-						List<ChoiceValue> l = (List<ChoiceValue>) (value.getValue());
-						val = new Double(l.size());
-					}
-					else {
-						val = new Double(0);
-					}
-					questionToValuesHash.put(q, val);
-				}
-				else if (q instanceof QuestionDate) {
-					QuestionDate qDate = (QuestionDate) q;
-					Value value = session.getBlackboard().getValue(qDate);
-					if (value != null && value instanceof DateValue) {
-						Object val = value.getValue();
-						questionToValuesHash.put(q, val);
-					}
-				}
-			}
-		}
-		else if (obj instanceof NumValue || obj instanceof DateValue) {
-			questionToValuesHash.put(question, obj);
-			// session.trace("put to hash: " + question.getId() + "; " +
-			// val);
-		}
-
-		setActionValues(session, questionToValuesHash);
-
-	}
-
-	/**
-	 * this method is needed for protection from cycles in rule firing
-	 */
-	// protected boolean lastFiredRuleEqualsCurrentRuleAndNotFired(Session
-	// session) {
-	// Rule lastFiredRule = getLastFiredRule(session);
-	// if (lastFiredRule != null) {
-	// return !lastFiredRule.hasFired(session)
-	// && lastFiredRule.getAction().equals(this);
-	// }
-	// else return false;
-	// }
-
-	// /**
-	// * this method is needed for protection from cycles in rule firing
-	// */
-	// protected Rule getLastFiredRule(Session session) {
-	// CaseQuestion q = (CaseQuestion) session.getCaseObject(getQuestion());
-	// Object o = q.getValueHistory();
-	// if ((o != null) && (o instanceof List<?>)) {
-	// if (!((List<?>) o).isEmpty()) {
-	// SymptomValue v = (SymptomValue) ((List<?>) o).get(0);
-	// return v.getRule();
-	// }
-	// else return null;
-	// }
-	// else return null;
-	// }
-
-	// /**
-	// * @return the AnswerOC, that shall be set by an active Rule and that is
-	// * more severe than all other answers, that shall be set. (The
-	// * severeness is defined by the order of the alternatives; the first
-	// * answer is the severest.)
-	// */
-	// protected Choice getSeverestAnswer(QuestionOC siQuestionOC, Session
-	// session) {
-	// Choice severestAnswer = null;
-	// // use an array to accelerate
-	// Object[] allAnswers = siQuestionOC.getAllAlternatives().toArray();
-	//
-	// // go through all proreasons (only QASet.Reasons)
-	// Iterator<Reason> proIter =
-	// getQuestion().getProReasons(session).iterator();
-	// while (proIter.hasNext()) {
-	// Reason reason = proIter.next();
-	// Rule rule = reason.getRule();
-	// PSAction action = rule.getAction();
-	// if (action instanceof ActionQuestionSetter) {
-	// Object actionValue = ((ActionQuestionSetter) action).getValue();
-	// if (actionValue instanceof ChoiceValue) {
-	// // determine the more severe answer between the
-	// // newAnswer and the
-	// // up-to-now severest answer
-	// Choice choice = (Choice) ((ChoiceValue) actionValue).getValue();
-	//
-	// if ((severestAnswer != null) && (!severestAnswer.equals(choice))) {
-	// int i = 0;
-	// boolean found = false;
-	// while ((i < allAnswers.length) && (!found)) {
-	// if (severestAnswer.equals(allAnswers[i])) {
-	// found = true;
-	// }
-	// else if (choice.equals(allAnswers[i])) {
-	// found = true;
-	// severestAnswer = choice;
-	// }
-	// i++;
-	// }
-	// }
-	// else {
-	// severestAnswer = choice;
-	// // severestAnswer = (Answer) actionValues[0];
-	// }
-	// }
-	// }
-	// }
-	// return severestAnswer;
-	// }
-
-	/**
-	 * @see de.d3web.core.session.CaseObjectSource#createCaseObject(Session)
-	 */
-	@Override
-	public SessionObject createCaseObject(Session session) {
-		return new CaseActionQuestionSetter(this);
-	}
-
-	/**
-	 * @return Hashtable
-	 */
-	public Hashtable<Question, Object> getActionValues(Session session) {
-		return ((CaseActionQuestionSetter) session.getCaseObject(this)).getActionValues();
-	}
-
-	/**
-	 * @param hashtable
-	 */
-	public void setActionValues(Session session, Hashtable<Question, Object> hashtable) {
-		((CaseActionQuestionSetter) session.getCaseObject(this)).setActionValues(hashtable);
-	}
-
-	/**
-	 * @return Double
-	 */
-	public Double getLastSetValue(Session session) {
-		return ((CaseActionQuestionSetter) session.getCaseObject(this)).getLastSetValue();
-	}
-
-	/**
-	 * @param session
-	 * @param newValue
-	 */
-	public void setLastSetValue(Session session, Double newValue) {
-		((CaseActionQuestionSetter) session.getCaseObject(this)).setLastSetValue(newValue);
 	}
 }

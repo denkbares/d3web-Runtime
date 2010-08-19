@@ -25,7 +25,6 @@ import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
@@ -37,21 +36,14 @@ import de.d3web.core.session.values.NumValue;
 
 /**
  * Sets a specified value for a specified question.
+ * The value can be a {@link FormulaExpression} or a specified {@link Choice} of
+ * a question.
  * 
  * Creation date: (20.06.2001 18:19:13)
  * 
  * @author Joachim Baumeister
  */
-public class ActionSetValue extends ActionQuestionSetter implements
-		CaseObjectSource {
-
-	// private Map schemaValueHash = null;
-	@Override
-	public String toString() {
-		return "<RuleAction type=\"SetValue\">\n" + "  ["
-				+ getQuestion().getId() + ": " + getValue() + "]"
-				+ "\n</RuleAction>";
-	}
+public class ActionSetValue extends ActionQuestionSetter {
 
 	/**
 	 * creates a new ActionSetValue for the given corresponding rule
@@ -65,37 +57,23 @@ public class ActionSetValue extends ActionQuestionSetter implements
 	 */
 	@Override
 	public void doIt(Session session, Object source, PSMethod psmethod) {
+		Value oldValue = session.getBlackboard().getValue(getQuestion());
 		if (getValue() != null) {
-			storeActionValues(session, getValue());
 			Value tempVal;
 
-			// for (int i = 0; i < getValues().length; i++) {
 			if (getValue() instanceof FormulaExpression) {
 				tempVal = ((FormulaExpression) getValue()).eval(session);
-				setLastSetValue(session, (Double) ((NumValue) tempVal)
-						.getValue());
 			}
 			else if (getValue() instanceof EvaluatableAnswerNumValue) {
 				EvaluatableAnswerNumValue evaluatableValue = (EvaluatableAnswerNumValue) getValue();
-
-				// put the evaluated value to hashtable for undo
-				Double newValue = evaluatableValue.eval(session);
-				setLastSetValue(session, newValue);
-				tempVal = new NumValue(newValue);
+				tempVal = new NumValue(evaluatableValue.eval(session));
 			}
 			else if (getValue() instanceof FormulaDateExpression) {
 				tempVal = ((FormulaDateExpression) getValue()).eval(session);
 			}
 			else if (getValue() instanceof EvaluatableAnswerDateValue) {
-				// AnswerDate ans = new AnswerDate();
-				// ans.setQuestion(getQuestion());
 				EvaluatableAnswerDateValue evaluatableValue = (EvaluatableAnswerDateValue) getValue();
-				// we don't need to store the value in the hashtable,
-				// because this is only used for QuestionOC, which
-				// can not take a AnswerDate
-				//
-				// ans.setValue(evaluatableValue);
-				tempVal = new DateValue(evaluatableValue.eval(session)); // ans;
+				tempVal = new DateValue(evaluatableValue.eval(session));
 			}
 			else if (getValue() instanceof Choice) {
 				tempVal = new ChoiceValue((Choice) getValue());
@@ -103,18 +81,15 @@ public class ActionSetValue extends ActionQuestionSetter implements
 			else {
 				tempVal = (Value) getValue();
 			}
-
-			// }
-			session.getBlackboard().addValueFact(
-					new DefaultFact(getQuestion(), tempVal, source, psmethod));
-
+			// Only set the computed value, if it differs from the old value in
+			// the Blackboard
+			if (!oldValue.equals(tempVal)) {
+				session.getBlackboard().addValueFact(
+						new DefaultFact(getQuestion(), tempVal, source, psmethod));
+			}
 		}
-
 	}
 
-	/**
-	 * Tries to undo the included action.
-	 */
 	@Override
 	public void undo(Session session, Object source, PSMethod psmethod) {
 		session.getBlackboard().removeValueFact(getQuestion(), source);
@@ -151,6 +126,13 @@ public class ActionSetValue extends ActionQuestionSetter implements
 		if (getQuestion() != null) hash += getQuestion().hashCode();
 		if (getValue() != null) hash += getValue().hashCode();
 		return hash;
+	}
+
+	@Override
+	public String toString() {
+		return "<RuleAction type=\"SetValue\">\n" + "  ["
+				+ getQuestion().getId() + ": " + getValue() + "]"
+				+ "\n</RuleAction>";
 	}
 
 }

@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-import de.d3web.abstraction.ActionAddValue;
 import de.d3web.abstraction.ActionSetValue;
 import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.abstraction.formula.FormulaNumber;
@@ -58,6 +57,7 @@ public class RuleActionVerbalizer implements Verbalizer {
 
 	private static ResourceBundle propertyRB = ResourceBundle.getBundle("properties.messages");
 
+	@Override
 	public Class[] getSupportedClassesForVerbalization() {
 		Class[] supportedClasses = { PSAction.class };
 		return supportedClasses;
@@ -191,16 +191,18 @@ public class RuleActionVerbalizer implements Verbalizer {
 			return s;
 
 		}
-		else if (ra instanceof ActionAddValue) {
-			ActionAddValue aav = (ActionAddValue) ra;
-			s += propertyRB.getString("rule.do.AddValue") + " ";
-			if (aav.getQuestion() != null) s += VerbalizationManager.getInstance().verbalize(
-					aav.getQuestion(), RenderingFormat.HTML);
-			s += ": ";
-			if (aav.getValue() != null) s += createActionList(Arrays.asList(aav.getValue()));
-			return s;
-
-		}
+		// else if (ra instanceof ActionAddValue) {
+		// ActionAddValue aav = (ActionAddValue) ra;
+		// s += propertyRB.getString("rule.do.AddValue") + " ";
+		// if (aav.getQuestion() != null) s +=
+		// VerbalizationManager.getInstance().verbalize(
+		// aav.getQuestion(), RenderingFormat.HTML);
+		// s += ": ";
+		// if (aav.getValue() != null) s +=
+		// createActionList(Arrays.asList(aav.getValue()));
+		// return s;
+		//
+		// }
 		else if (ra instanceof ActionSetValue) {
 			ActionSetValue asv = (ActionSetValue) ra;
 			s += propertyRB.getString("rule.do.SetValue") + " ";

@@ -30,7 +30,6 @@ import junit.framework.TestSuite;
 
 import org.w3c.dom.Document;
 
-import de.d3web.abstraction.ActionAddValue;
 import de.d3web.abstraction.ActionSetValue;
 import de.d3web.abstraction.formula.FormulaDateElement;
 import de.d3web.abstraction.formula.FormulaDateExpression;
@@ -308,7 +307,7 @@ public class ActionTest extends TestCase {
 		assertEquals("(5)", shouldTag, isTag);
 	}
 
-	public void testActionSetValueAndActionAddValue() throws Exception {
+	public void testActionSetValueValue() throws Exception {
 		FormulaNumber fn = new FormulaNumber(new Double(13));
 		FormulaExpression fe = new FormulaExpression(qnum1, fn);
 
@@ -317,7 +316,7 @@ public class ActionTest extends TestCase {
 		setValueList.add(fe);
 		setValueList.add(ac2);
 
-		ActionAddValue aav = new ActionAddValue();
+		ActionSetValue aav = new ActionSetValue();
 		rcomp.setAction(aav);
 		aav.setQuestion(quest1);
 		aav.setValue(setValueList.toArray());
@@ -328,7 +327,7 @@ public class ActionTest extends TestCase {
 		asv.setValue(setValueList.toArray());
 
 		shouldTagAdd = new XMLTag("Action");
-		shouldTagAdd.addAttribute("type", "ActionAddValue");
+		shouldTagAdd.addAttribute("type", "ActionSetValue");
 
 		shouldTagSet = new XMLTag("Action");
 		shouldTagSet.addAttribute("type", "ActionSetValue");
@@ -397,7 +396,7 @@ public class ActionTest extends TestCase {
 		FormulaDateElement fn = new Today(new FormulaNumber(new Double(13)));
 		FormulaDateExpression fe = new FormulaDateExpression(qdate1, fn);
 
-		ActionAddValue aav = new ActionAddValue();
+		ActionSetValue aav = new ActionSetValue();
 		rcomp.setAction(aav);
 		aav.setQuestion(qdate1);
 		aav.setValue(fe);
@@ -408,7 +407,7 @@ public class ActionTest extends TestCase {
 		asv.setValue(fe);
 
 		shouldTagAdd = new XMLTag("Action");
-		shouldTagAdd.addAttribute("type", "ActionAddValue");
+		shouldTagAdd.addAttribute("type", "ActionSetValue");
 
 		shouldTagSet = new XMLTag("Action");
 		shouldTagSet.addAttribute("type", "ActionSetValue");

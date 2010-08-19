@@ -28,7 +28,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.d3web.abstraction.ActionAddValue;
 import de.d3web.abstraction.ActionQuestionSetter;
 import de.d3web.abstraction.ActionSetValue;
 import de.d3web.core.io.PersistenceManager;
@@ -107,7 +106,7 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 
 		ActionQuestionSetter action = null;
 		if (roottype.equals("ActionAddValue")) {
-			action = new ActionAddValue();
+			action = new ActionSetValue();
 		}
 		else if (roottype.equals("ActionSetValue")) {
 			action = new ActionSetValue();
@@ -122,10 +121,11 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 		ActionQuestionSetter action = (ActionQuestionSetter) object;
 		Question question = action.getQuestion();
 		Element element = doc.createElement("Action");
-		if (action instanceof ActionAddValue) {
-			element.setAttribute("type", "ActionAddValue");
-		}
-		else if (action instanceof ActionSetValue) {
+		// if (action instanceof ActionAddValue) {
+		// element.setAttribute("type", "ActionAddValue");
+		// }
+		// else
+		if (action instanceof ActionSetValue) {
 			element.setAttribute("type", "ActionSetValue");
 		}
 		Element questionNode = doc.createElement("Question");

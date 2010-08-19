@@ -138,7 +138,7 @@ public class PersistenceTest extends XMLTestCase {
 		message = new StringBuffer("Differences found (Without Properties):\n\r");
 		for (File[] p : pairs) {
 			message = new StringBuffer("Differences found in " +
-					p[0].getName() +
+					p[0].getName() + "::" + p[0].getAbsolutePath() +
 					" (Without Properties):\n\r");
 			org = new BufferedReader(new InputStreamReader(new FileInputStream(p[0])));
 			rel = new BufferedReader(new InputStreamReader(new FileInputStream(p[1])));

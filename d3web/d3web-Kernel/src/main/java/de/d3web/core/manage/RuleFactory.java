@@ -25,7 +25,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.abstraction.ActionAddValue;
 import de.d3web.abstraction.ActionQuestionSetter;
 import de.d3web.abstraction.ActionSetValue;
 import de.d3web.abstraction.formula.FormulaDateExpression;
@@ -63,45 +62,45 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  */
 public class RuleFactory {
 
-	/**
-	 * Creates a rule to set values for a given question with the specified
-	 * parameters.
-	 */
-	public static Rule createAddValueRule(
-			String theId,
-			Question theQuestion,
-			Object theValue,
-			Condition theCondition) {
+	// /**
+	// * Creates a rule to set values for a given question with the specified
+	// * parameters.
+	// */
+	// public static Rule createAddValueRule(
+	// String theId,
+	// Question theQuestion,
+	// Object theValue,
+	// Condition theCondition) {
+	//
+	// return createAddValueRule(
+	// theId,
+	// theQuestion,
+	// theValue,
+	// theCondition,
+	// null);
+	// }
 
-		return createAddValueRule(
-				theId,
-				theQuestion,
-				theValue,
-				theCondition,
-				null);
-	}
-
-	/**
-	 * Creates a rule to add values to a given question with the specified
-	 * parameters.
-	 */
-	public static Rule createAddValueRule(
-			String theId,
-			Question theQuestion,
-			Object theValue,
-			Condition theCondition,
-			Condition theRuleException) {
-
-		Rule rule = new Rule(theId, PSMethodAbstraction.class);
-
-		ActionAddValue theAction = new ActionAddValue();
-		theAction.setQuestion(theQuestion);
-		theAction.setValue(theValue);
-
-		setRuleParams(rule, theAction, theCondition, theRuleException);
-
-		return rule;
-	}
+	// /**
+	// * Creates a rule to add values to a given question with the specified
+	// * parameters.
+	// */
+	// public static Rule createAddValueRule(
+	// String theId,
+	// Question theQuestion,
+	// Object theValue,
+	// Condition theCondition,
+	// Condition theRuleException) {
+	//
+	// Rule rule = new Rule(theId, PSMethodAbstraction.class);
+	//
+	// ActionAddValue theAction = new ActionAddValue();
+	// theAction.setQuestion(theQuestion);
+	// theAction.setValue(theValue);
+	//
+	// setRuleParams(rule, theAction, theCondition, theRuleException);
+	//
+	// return rule;
+	// }
 
 	/**
 	 * Creates a clarification-rule with the specified parameters.

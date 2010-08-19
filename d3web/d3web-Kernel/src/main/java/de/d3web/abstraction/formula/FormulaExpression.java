@@ -21,15 +21,12 @@
 package de.d3web.abstraction.formula;
 
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.NumValue;
 
 /**
- * Encapsulates a FormulaElement and ensures the return of an answer num
- * <p>
- * Looks like a delegate-pattern to me
- * </p>
+ * Encapsulates a FormulaElement and ensures the return of a {@link NumValue}.
  * Creation date: (15.11.2000 16:24:01)
  * 
  * @author Christian Betz, joba
