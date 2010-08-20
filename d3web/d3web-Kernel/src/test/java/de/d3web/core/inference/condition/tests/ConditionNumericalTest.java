@@ -349,6 +349,11 @@ public class ConditionNumericalTest {
 		assertThat(string, notNullValue());
 		assertThat(string.isEmpty(), is(false));
 
+		// Test the getValue Method
+		string = ((CondNumIn) conditionRangeIn).getValue();
+		assertThat(string, notNullValue());
+		assertThat(string.isEmpty(), is(false));
+
 		// copy the first condition and check if the copied condition is equal
 		// to the first condition
 		Condition conditionCopied = conditionRangeIn.copy();
