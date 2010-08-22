@@ -143,6 +143,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * 
 	 * </p>
 	 */
+	@Override
 	public void openPropagation() {
 		this.openPropagation(System.currentTimeMillis());
 	}
@@ -154,6 +155,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * 
 	 * @see PropagationController.openProgagation()
 	 */
+	@Override
 	public void openPropagation(long time) {
 		this.recursiveCounter++;
 		if (this.recursiveCounter == 1) {
@@ -188,6 +190,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * 
 	 * </p>
 	 */
+	@Override
 	public void commitPropagation() {
 		if (this.recursiveCounter == 1) {
 			distribute();
@@ -239,6 +242,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * @param oldValue the old value of the object within the case
 	 * @param newValue the new value of the object within the case
 	 */
+	@Override
 	public void propagate(TerminologyObject object, Object oldValue, Object newValue) {
 		propagate(object, oldValue, newValue, null);
 	}
@@ -260,6 +264,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * @param newValue the new value of the object within the case
 	 * @param psMethod the PSMethod the fact will be propagated to
 	 */
+	@Override
 	public void propagate(TerminologyObject object, Object oldValue, Object newValue, PSMethod psMethod) {
 		try {
 			// open propagation frame
@@ -287,9 +292,21 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * @return the propagation time of that propagation frame
 	 * @throws IllegalStateException if no propagation frame has been opened
 	 */
+	@Override
 	public long getPropagationTime() throws IllegalStateException {
-		if (recursiveCounter == 0) throw new IllegalStateException("no propagation fram opened");
+		if (recursiveCounter == 0) throw new IllegalStateException("no propagation frame opened");
 		return propagationTime;
+	}
+
+	/**
+	 * Returns if there is an open propagation frame (and therefore the kernel is
+	 * in propagation mode).
+	 * 
+	 * @return if the kernel is in propagation
+	 */
+	@Override
+	public boolean isInPropagation() {
+		return (recursiveCounter > 0);
 	}
 
 }

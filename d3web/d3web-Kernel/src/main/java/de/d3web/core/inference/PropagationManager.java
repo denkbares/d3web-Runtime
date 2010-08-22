@@ -100,6 +100,14 @@ public interface PropagationManager {
 	void openPropagation(long time);
 
 	/**
+	 * Returns if there is an open propagation frame (and therefore the kernel is
+	 * in propagation mode).
+	 * 
+	 * @return if the kernel is in propagation
+	 */
+	public boolean isInPropagation();
+	
+	/**
 	 * Returns the propagation time of the current propagation. If no
 	 * propagation frame has been opened, an {@link IllegalStateException} is
 	 * thrown.
