@@ -192,7 +192,6 @@
 		<module>d3web-CompareCase-Facade</module>
 		<module>d3web-ExplainTree</module>
 		<module>d3web-Verbalizer</module>
-		<module>d3web-Dialog2</module>
 		<module>d3web-EmpiricalTesting</module>
 		<module>d3web-SCM-CBR</module>
 		<module>d3web-Persistence-ExtensionPoints</module>
