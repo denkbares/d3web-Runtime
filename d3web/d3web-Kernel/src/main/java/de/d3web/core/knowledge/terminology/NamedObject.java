@@ -135,6 +135,7 @@ public abstract class NamedObject implements TerminologyObject,
 	 * 
 	 * @return the properties of this instance
 	 */
+	@Override
 	public Properties getProperties() {
 		return properties;
 	}
@@ -145,6 +146,7 @@ public abstract class NamedObject implements TerminologyObject,
 	 * 
 	 * @param properties the properties of this instance
 	 */
+	@Override
 	public void setProperties(Properties properties) {
 		this.properties = properties;
 	}
@@ -205,31 +207,6 @@ public abstract class NamedObject implements TerminologyObject,
 	}
 
 	/**
-	 * Adds the specified {@link NamedObject} as a linked child to the list of
-	 * children. The position of the insertion is specified by the
-	 * {@link NamedObject} childToMarkPosition: For position=1 the new child is
-	 * added right before this instance; for position=2 the new child is added
-	 * right after the instance. This object is also linked as a linked parent
-	 * to the specified child.
-	 * 
-	 * @see #addParent(NamedObject parent)
-	 * @param childToAdd the new linked child instance
-	 * @param childToMarkPosition an already existing child, where the new child
-	 *        should be added before or after
-	 * @param position with values 1 (before childToMarkPosition) and 2 (after
-	 *        childToMarkPosition)
-	 */
-	public void addLinkedChild(NamedObject childToAdd,
-			NamedObject childToMarkPosition, int position) {
-		if (!hasChild(childToAdd)) {
-			addChild(childToAdd);
-		}
-		if (!getLinkedChildren().contains(childToAdd)) {
-			linkedChildren.add(childToAdd);
-		}
-	}
-
-	/**
 	 * Adds a new {@link KnowledgeSlice} instance to the knowledge storage of
 	 * this {@link NamedObject} instance. The knowledge is added to the given
 	 * {@link PSMethod} context with the specified {@link MethodKind} as key.
@@ -238,6 +215,7 @@ public abstract class NamedObject implements TerminologyObject,
 	 * @param knowlegeSlice the piece of knowledge to be added
 	 * @param knowledgeContext The context, in which the knowledge acts
 	 */
+	@Override
 	public synchronized void addKnowledge(Class<? extends PSMethod> problemsolver,
 			KnowledgeSlice knowledgeSlice, MethodKind knowledgeContext) {
 		/* make sure, that a storage for the problem-solver is available */
@@ -330,6 +308,7 @@ public abstract class NamedObject implements TerminologyObject,
 	 * @param kind the context of the knowledge (e.g. MethodKind.FORWARD or
 	 *        MethodKind.BACKWARD)
 	 */
+	@Override
 	public KnowledgeSlice getKnowledge(Class<? extends PSMethod> problemsolver,
 			MethodKind kind) {
 		Map<MethodKind, KnowledgeSlice> o = knowledgeMap.get(problemsolver);
@@ -375,6 +354,7 @@ public abstract class NamedObject implements TerminologyObject,
 	 * 
 	 * @return the name of this object
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -382,6 +362,7 @@ public abstract class NamedObject implements TerminologyObject,
 	private static void removeParentChildLink(NamedObject parent,
 			NamedObject child) {
 		parent.children.remove(child);
+		parent.linkedChildren.remove(child);
 		child.parents.remove(parent);
 	}
 
@@ -455,17 +436,21 @@ public abstract class NamedObject implements TerminologyObject,
 	 * @return all {@link KnowledgeSlice} instances of this instance with the
 	 *         specified {@link MethodKind} key
 	 */
-	public Collection<KnowledgeSlice> getAllKnowledge(MethodKind methodKind) {
-		Collection<KnowledgeSlice> result = new ArrayList<KnowledgeSlice>();
-		for (Class<? extends PSMethod> problemsolverKeyClass : knowledgeMap.keySet()) {
-			KnowledgeSlice knowledgeSlice = knowledgeMap.get(problemsolverKeyClass).get(
-					methodKind);
-			if (knowledgeSlice != null) {
-				result.add(knowledgeSlice);
-			}
-		}
-		return result;
-	}
+	//Ochlast: Not used! Remove?
+	// public Collection<KnowledgeSlice> getAllKnowledge(MethodKind methodKind)
+	// {
+	// Collection<KnowledgeSlice> result = new ArrayList<KnowledgeSlice>();
+	// for (Class<? extends PSMethod> problemsolverKeyClass :
+	// knowledgeMap.keySet()) {
+	// KnowledgeSlice knowledgeSlice =
+	// knowledgeMap.get(problemsolverKeyClass).get(
+	// methodKind);
+	// if (knowledgeSlice != null) {
+	// result.add(knowledgeSlice);
+	// }
+	// }
+	// return result;
+	// }
 
 	/**
 	 * Erase them all: Removes all {@link KnowledgeSlice} instances contained

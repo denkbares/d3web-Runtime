@@ -43,6 +43,8 @@ public class QContainer extends QASet {
 	 */
 	public QContainer(String id) {
 		super(id);
+		// ochlast: this call is obsolete due to init() method
+		// of NamedObject!
 		setChildren(new LinkedList<NamedObject>());
 	}
 
