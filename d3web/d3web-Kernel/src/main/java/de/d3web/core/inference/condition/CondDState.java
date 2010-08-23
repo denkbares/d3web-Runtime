@@ -33,8 +33,8 @@ import de.d3web.core.session.Session;
  */
 public class CondDState extends TerminalCondition {
 
-	private Solution solution;
-	private Rating solutionState;
+	private final Solution solution;
+	private final Rating solutionState;
 
 	/**
 	 * Creates a new CondDState Expression:
@@ -58,6 +58,7 @@ public class CondDState extends TerminalCondition {
 	 * NoAnswerException, if no rule has ever changed the state of the
 	 * diagnosis.
 	 */
+	@Override
 	public boolean eval(Session session) throws NoAnswerException {
 		return solutionState.equals(session.getBlackboard().getRating(solution));
 	}
@@ -68,14 +69,6 @@ public class CondDState extends TerminalCondition {
 
 	public Rating getStatus() {
 		return solutionState;
-	}
-
-	public void setSolution(Solution newDiagnosis) {
-		solution = newDiagnosis;
-	}
-
-	public void setStatus(Rating newStatus) {
-		solutionState = newStatus;
 	}
 
 	@Override

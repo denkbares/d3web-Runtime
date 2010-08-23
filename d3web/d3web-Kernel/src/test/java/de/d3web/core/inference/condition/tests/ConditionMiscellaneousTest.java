@@ -42,8 +42,8 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Rating;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.Rating.State;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
@@ -307,24 +307,21 @@ public class ConditionMiscellaneousTest {
 		// THEN solutionDiagnosis (P7)
 		RuleFactory.createHeuristicPSRule(ruleID, solution, Score.P7, conditionQ1Yes);
 
+		Rating ratingEstablished = new Rating(State.ESTABLISHED);
 		// Create new DiagnosisState-Condition and test all getter and setter:
-		CondDState conditionDState = new CondDState(null, null);
-		conditionDState.setSolution(solution);
-		assertThat(conditionDState.getSolution(), is(equalTo(solution)));
+		CondDState conditionDState = new CondDState(solution, ratingEstablished);
 
-		Rating rationEstablished = new Rating(State.ESTABLISHED);
-		conditionDState.setStatus(rationEstablished);
-		assertThat(conditionDState.getStatus(), is(equalTo(rationEstablished)));
+		assertThat(conditionDState.getSolution(), is(equalTo(solution)));
+		assertThat(conditionDState.getStatus(), is(equalTo(ratingEstablished)));
 
 		// Test the toString() method
 		String string = conditionDState.toString();
 		assertThat(string, notNullValue());
 		assertThat(string.isEmpty(), is(false));
 		
-		/* .equals() Method of CondDState is possibly buggy!!
+		// .equals() Method of CondDState is possibly buggy!!
 		Condition copiedCondition = conditionDState.copy();
-		assertThat(conditionDState.equals(copiedCondition), is(true));
-		*/
+		assertThat(conditionDState, is(equalTo(copiedCondition)));
 		
 		assertThat(conditionDState.hashCode(), is(not(0)));
 
