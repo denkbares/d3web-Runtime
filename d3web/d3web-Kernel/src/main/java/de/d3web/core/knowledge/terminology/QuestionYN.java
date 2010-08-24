@@ -46,13 +46,8 @@ public class QuestionYN extends QuestionOC {
 	 * @see Question
 	 * @see NamedObject
 	 */
-
 	public QuestionYN(String id) {
-		super(id);
-		yes = AnswerFactory.createAnswerYes(id + "YES", YES_STRING);
-		no = AnswerFactory.createAnswerNo(id + "NO", NO_STRING);
-		setAlternatives(Utils.createList(new Choice[] {
-				yes, no }));
+		this(id, YES_STRING, NO_STRING);
 	}
 
 	public QuestionYN(String id, String yesText, String noText) {

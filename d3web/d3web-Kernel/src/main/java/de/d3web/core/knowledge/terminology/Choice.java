@@ -34,7 +34,7 @@ import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 public class Choice implements IDObject, PropertiesContainer, Comparable<Choice> {
 
 	private String text;
-	private String id;
+	private final String id;
 	private Properties properties = new Properties();
 
 	public Choice(String theId) {
@@ -101,6 +101,7 @@ public class Choice implements IDObject, PropertiesContainer, Comparable<Choice>
 		return getId().hashCode() + getName().hashCode();
 	}
 
+	@Override
 	public int compareTo(Choice other) {
 		List<Choice> range = ((QuestionChoice) this.getQuestion()).getAllAlternatives();
 		int i1 = range.indexOf(this);

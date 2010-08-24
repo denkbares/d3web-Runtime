@@ -203,7 +203,7 @@ public class ConditionMiscellaneousTest {
 		// Test the toString() method
 		String string = conditionKnown.toString();
 		assertThat(string, notNullValue());
-		assertThat(string.isEmpty(), is(false));
+		assertThat(string.length(), is(not(0)));
 
 		// test the copy method:
 		Condition copiedCondition = conditionKnown.copy();

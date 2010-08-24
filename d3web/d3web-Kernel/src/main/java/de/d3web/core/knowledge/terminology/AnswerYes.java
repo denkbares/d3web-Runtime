@@ -31,11 +31,6 @@ public class AnswerYes extends Choice {
 	/**
 	 * creates a new AnswerYes.
 	 */
-	public AnswerYes() {
-		super("YES");
-		setText("YES");
-	}
-
 	public AnswerYes(String id) {
 		super(id);
 	}
@@ -43,24 +38,8 @@ public class AnswerYes extends Choice {
 	/**
 	 * @return true
 	 */
+	@Override
 	public boolean isAnswerYes() {
 		return true;
 	}
-
-	// 20030923 marty: delegate to AnswerChoice.equals(...)
-	// /**
-	// * compares for equal reference first and then for equal
-	// * class instance.
-	// * <BR>
-	// * 2002-05-29 joba: added for better comparisons
-	// * */
-	// public boolean equals(Object other) {
-	// if (this == other) {
-	// return true;
-	// } else if (other instanceof AnswerYes) {
-	// return true;
-	// } else {
-	// return false;
-	// }
-	// }
 }

@@ -128,7 +128,7 @@ public class ConditionNumericalTest {
 		// Test the toString() method
 		String string = conditionEqual.toString();
 		assertThat(string, notNullValue());
-		assertThat(string.isEmpty(), is(false));
+		assertThat(string.length(), is(not(0)));
 
 		// copy the first condition and check if the copied condition is equal
 		// to the first condition
@@ -169,7 +169,7 @@ public class ConditionNumericalTest {
 		// Test the toString() method
 		String string = conditionSmallerThanValue.toString();
 		assertThat(string, notNullValue());
-		assertThat(string.isEmpty(), is(false));
+		assertThat(string.length(), is(not(0)));
 
 		// copy the first condition and check if the copied condition is equal
 		// to the first condition
@@ -213,7 +213,7 @@ public class ConditionNumericalTest {
 		// Test the toString() method
 		String string = conditionSmallerThanValue.toString();
 		assertThat(string, notNullValue());
-		assertThat(string.isEmpty(), is(false));
+		assertThat(string.length(), is(not(0)));
 
 		// copy the first condition and check if the copied condition is equal
 		// to the first condition
@@ -256,7 +256,7 @@ public class ConditionNumericalTest {
 		// Test the toString() method
 		String string = conditionSmallerThanValue.toString();
 		assertThat(string, notNullValue());
-		assertThat(string.isEmpty(), is(false));
+		assertThat(string.length(), is(not(0)));
 
 		// copy the first condition and check if the copied condition is equal
 		// to the first condition
@@ -299,7 +299,7 @@ public class ConditionNumericalTest {
 		// Test the toString() method
 		String string = conditionSmallerThanValue.toString();
 		assertThat(string, notNullValue());
-		assertThat(string.isEmpty(), is(false));
+		assertThat(string.length(), is(not(0)));
 
 		// copy the first condition and check if the copied condition is equal
 		// to the first condition
@@ -347,12 +347,12 @@ public class ConditionNumericalTest {
 		// Test the toString() method
 		String string = conditionRangeIn.toString();
 		assertThat(string, notNullValue());
-		assertThat(string.isEmpty(), is(false));
+		assertThat(string.length(), is(not(0)));
 
 		// Test the getValue Method
 		string = ((CondNumIn) conditionRangeIn).getValue();
 		assertThat(string, notNullValue());
-		assertThat(string.isEmpty(), is(false));
+		assertThat(string.length(), is(not(0)));
 
 		// copy the first condition and check if the copied condition is equal
 		// to the first condition

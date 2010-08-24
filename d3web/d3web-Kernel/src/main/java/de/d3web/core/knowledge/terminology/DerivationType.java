@@ -20,8 +20,6 @@
 
 package de.d3web.core.knowledge.terminology;
 
-import java.util.Arrays;
-import java.util.Iterator;
 
 /**
  * Contains e.g. the information if a symptom is abstract knowledge or if it can
@@ -76,30 +74,8 @@ public class DerivationType {
 	/**
 	 * @return the name of the DerivationType
 	 */
+	@Override
 	public String toString() {
 		return getName();
-	}
-
-	/**
-	 * This method is called immediately after an object of this class is
-	 * deserialized. To avoid that several instances of a unique object are
-	 * created, this method returns the current unique instance that is equal to
-	 * the object that was deserialized.
-	 * 
-	 * @author georg
-	 */
-	private Object readResolve() {
-		Iterator<DerivationType> iter = Arrays.asList(new DerivationType[] {
-				DerivationType.BASIC,
-				DerivationType.DERIVED,
-				DerivationType.MIXED,
-		}).iterator();
-		while (iter.hasNext()) {
-			DerivationType d = (DerivationType) iter.next();
-			if (d.equals(this)) {
-				return d;
-			}
-		}
-		return this;
 	}
 }
