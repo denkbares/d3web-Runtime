@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -221,28 +221,22 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 			}
 			set.addModel(this);
 		}
-		if (type.equals(XCLRelationType.explains)) return addRelationTo(relation, relations);
-
-		if (type.equals(XCLRelationType.contradicted)) return addContradictingRelation(relation);
-
-		if (type.equals(XCLRelationType.requires)) return addNecessaryRelation(relation);
-
-		if (type.equals(XCLRelationType.sufficiently)) return addSufficientRelation(relation);
-
-		return false;
+		if (type.equals(XCLRelationType.explains)) {
+			return addRelationTo(relation, relations);
+		}
+		else if (type.equals(XCLRelationType.contradicted)) {
+			return addRelationTo(relation, contradictingRelations);
+		}
+		else if (type.equals(XCLRelationType.requires)) {
+			return addRelationTo(relation, necessaryRelations);
+		}
+		else if (type.equals(XCLRelationType.sufficiently)) {
+			return addRelationTo(relation, sufficientRelations);
+		}
+		else return false;
 	}
 
-	public boolean addNecessaryRelation(XCLRelation relation) {
-		return addRelationTo(relation, necessaryRelations);
-	}
 
-	public boolean addSufficientRelation(XCLRelation relation) {
-		return addRelationTo(relation, sufficientRelations);
-	}
-
-	public boolean addContradictingRelation(XCLRelation relation) {
-		return addRelationTo(relation, contradictingRelations);
-	}
 
 	public void removeRelation(XCLRelation rel) {
 		for (NamedObject nob : rel.getConditionedFinding().getTerminalObjects()) {
@@ -306,7 +300,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	 * Returns the established threshold of a Model, if it is not the default.
 	 * To get the threshold of the current session, use the instance of XCL:
 	 * instance.getScoreAlgorithm().getEstablishedThreshold(model)
-	 * 
+	 *
 	 * @created 29.06.2010
 	 * @return the established threshold, if it is not the default, null
 	 *         otherwise
@@ -318,7 +312,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	/**
 	 * Sets the EstablishedThreshold, if the value is smaller than 0, it is set
 	 * to the default value
-	 * 
+	 *
 	 * @created 25.06.2010
 	 * @param establishedThreshold value of EstablishedThreshold
 	 */
@@ -335,7 +329,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	 * Returns the suggested threshold of a Model, if it is not the default. To
 	 * get the threshold of the current session, use the instance of XCL:
 	 * instance.getScoreAlgorithm().getSuggestedThreshold(model)
-	 * 
+	 *
 	 * @created 29.06.2010
 	 * @return the suggested threshold, if it is not the default, null otherwise
 	 */
@@ -346,7 +340,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	/**
 	 * Sets the SuggestedThreshold, if the value is smaller than 0, it is set to
 	 * the default value
-	 * 
+	 *
 	 * @created 25.06.2010
 	 * @param suggestedThreshold value of SuggestedThreshold
 	 */
@@ -363,7 +357,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	 * Returns the minimal support this Model must have, if it is not the
 	 * default. To get the minimal support of the current session, use the
 	 * instance of XCL: instance.getScoreAlgorithm().getMinSupport(model)
-	 * 
+	 *
 	 * @created 29.06.2010
 	 * @return the minimal support, if it is not the default, null otherwise
 	 */
@@ -374,7 +368,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	/**
 	 * Sets the MinSupport, if the value is smaller than 0, it is set to the
 	 * default value
-	 * 
+	 *
 	 * @created 25.06.2010
 	 * @param minSupport value of MinSupport
 	 */
@@ -411,7 +405,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.d3web.kernel.domainModel.KnowledgeSlice#remove()
 	 */
 	public void remove() {

@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -46,13 +46,14 @@ import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
+import de.d3web.xcl.XCLRelationType;
 import de.d3web.xcl.inference.PSMethodXCL;
 
 /**
  * PersistenceHandler for XCLModels
- * 
+ *
  * @author kazamatzuri, Markus Friedrich (denkbares GmbH)
- * 
+ *
  */
 public class XCLModelPersistenceHandler implements KnowledgeReader,
 		KnowledgeWriter {
@@ -207,9 +208,9 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 
 	private void addRelations(KnowledgeBaseManagement kbm, XCLModel model,
 			NodeList relationsOfAType) throws IOException {
-		Node aRelation;
+
 		for (int i = 0; i < relationsOfAType.getLength(); i++) {
-			aRelation = relationsOfAType.item(i);
+			Node aRelation = relationsOfAType.item(i);
 			String type = aRelation.getParentNode().getNodeName();
 			String id = getAttribute("ID", aRelation);
 			NodeList children = aRelation.getChildNodes();
@@ -231,16 +232,16 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 			if (ac != null) {
 				XCLRelation rel = XCLRelation.createXCLRelation(ac, weight, id);
 				if (type.equals("Relations")) {
-					model.addRelation(rel);
+					model.addRelation(rel, XCLRelationType.explains);
 				}
 				else if (type.equals("necessaryRelations")) {
-					model.addNecessaryRelation(rel);
+					model.addRelation(rel, XCLRelationType.requires);
 				}
 				else if (type.equals("contradictingRelations")) {
-					model.addContradictingRelation(rel);
+					model.addRelation(rel, XCLRelationType.contradicted);
 				}
 				else if (type.equals("sufficientRelations")) {
-					model.addSufficientRelation(rel);
+					model.addRelation(rel, XCLRelationType.sufficiently);
 				}
 			}
 
