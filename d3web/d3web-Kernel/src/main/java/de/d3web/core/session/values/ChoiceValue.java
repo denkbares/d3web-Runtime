@@ -31,23 +31,20 @@ import de.d3web.core.session.Value;
  */
 public class ChoiceValue implements QuestionValue {
 
-	Choice value;
+	private final Choice value;
 
 	public ChoiceValue(Choice value) {
+		if (value == null) throw new IllegalArgumentException();
 		this.value = value;
 	}
 
+	@Override
 	public Object getValue() {
 		return value;
 	}
 
 	public String getAnswerChoiceID() {
-		if (value != null) {
-			return value.getId();
-		}
-		else {
-			return "";
-		}
+		return value.getId();
 	}
 
 	@Override
@@ -59,7 +56,7 @@ public class ChoiceValue implements QuestionValue {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		result = prime * result + value.hashCode();
 		return result;
 	}
 
@@ -69,10 +66,7 @@ public class ChoiceValue implements QuestionValue {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		ChoiceValue other = (ChoiceValue) obj;
-		if (value == null) {
-			if (other.value != null) return false;
-		}
-		else if (!value.equals(other.value)) return false;
+		if (!value.equals(other.value)) return false;
 		return true;
 	}
 

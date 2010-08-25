@@ -33,10 +33,11 @@ public class NumValue implements QuestionValue {
 	private final Double value;
 
 	public NumValue(double value) {
-		this.value = Double.valueOf(value);
+		this(Double.valueOf(value));
 	}
 
 	public NumValue(Double value) {
+		if (value == null) throw new IllegalArgumentException();
 		this.value = value;
 	}
 

@@ -111,6 +111,10 @@ public class MultipleChoiceValueTest {
 				+ mcValueOneChoiceB.getId() + MultipleChoiceValue.ID_SEPARATOR
 				+ mcValueOneChoiceC.getId();
 		assertThat(derived.length(), is(equalTo(manual.length())));
+
+		// test empty list answerChoicesID
+		MultipleChoiceValue emptyMCValue = MultipleChoiceValue.fromChoices(new ArrayList<Choice>());
+		assertThat(emptyMCValue.getAnswerChoicesID(), is(""));
 	}
 
 	/**
