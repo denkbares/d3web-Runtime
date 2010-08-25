@@ -34,6 +34,7 @@ public class TextValue implements QuestionValue {
 	private final String value;
 
 	public TextValue(String value) {
+		if (value == null) throw new IllegalArgumentException();
 		this.value = value;
 	}
 
@@ -54,7 +55,7 @@ public class TextValue implements QuestionValue {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		result = prime * result + value.hashCode();
 		return result;
 	}
 
@@ -64,10 +65,7 @@ public class TextValue implements QuestionValue {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		TextValue other = (TextValue) obj;
-		if (value == null) {
-			if (other.value != null) return false;
-		}
-		else if (!value.equals(other.value)) return false;
+		if (!value.equals(other.value)) return false;
 		return true;
 	}
 

@@ -55,6 +55,7 @@ public class RatingTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testIllegalRating() {
+		@SuppressWarnings("unused")
 		Rating illegalRating = new Rating("illegalRating");
 	}
 
@@ -66,6 +67,7 @@ public class RatingTest {
 	@Test(expected = NullPointerException.class)
 	public void testNullRating() {
 		State nullState = null;
+		@SuppressWarnings("unused")
 		Rating nullRating = new Rating(nullState);
 	}
 

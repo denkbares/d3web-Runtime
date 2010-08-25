@@ -45,6 +45,7 @@ public class DateValue implements QuestionValue {
 	private final Date value;
 
 	public DateValue(Date value) {
+		if (value == null) throw new IllegalArgumentException();
 		this.value = value;
 	}
 
@@ -58,7 +59,7 @@ public class DateValue implements QuestionValue {
 	 * setDate(String)
 	 */
 	public String getDateString() {
-		return value == null ? "" : format.format(value);
+		return format.format(value);
 	}
 
 	@Override
@@ -70,7 +71,7 @@ public class DateValue implements QuestionValue {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		result = prime * result + value.hashCode();
 		return result;
 	}
 
@@ -80,9 +81,6 @@ public class DateValue implements QuestionValue {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		DateValue other = (DateValue) obj;
-		if (value == null) {
-			if (other.value != null) return false;
-		}
 		Calendar thisCalendar = Calendar.getInstance();
 		thisCalendar.setTime(value);
 		Calendar otherCalendar = Calendar.getInstance();

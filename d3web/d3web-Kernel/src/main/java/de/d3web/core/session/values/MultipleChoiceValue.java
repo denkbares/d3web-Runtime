@@ -43,6 +43,7 @@ public class MultipleChoiceValue implements QuestionValue {
 	public static String ID_SEPARATOR = "#####";
 
 	public MultipleChoiceValue(List<ChoiceValue> values) {
+		if (values == null) throw new IllegalArgumentException();
 		this.values = new HashSet<ChoiceValue>(values);
 	}
 
@@ -56,22 +57,13 @@ public class MultipleChoiceValue implements QuestionValue {
 
 	public String getAnswerChoicesID() {
 		String id = "";
-		if (this.values != null) {
-			for (ChoiceValue choiceValue : this.values) {
-				id += choiceValue.getAnswerChoiceID() + ID_SEPARATOR;
-			}
-			if (id.length() > ID_SEPARATOR.length()) {
-				id = id.substring(0, id.length() - ID_SEPARATOR.length());
-			}
+		for (ChoiceValue choiceValue : this.values) {
+			id += choiceValue.getAnswerChoiceID() + ID_SEPARATOR;
+		}
+		if (id.length() > ID_SEPARATOR.length()) {
+			id = id.substring(0, id.length() - ID_SEPARATOR.length());
 		}
 		return id;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = prime + ((values == null) ? 0 : values.hashCode());
-		return result;
 	}
 
 	/**
@@ -99,17 +91,6 @@ public class MultipleChoiceValue implements QuestionValue {
 	 */
 	public boolean contains(Value value) {
 		return this.values.contains(value);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (getClass() != obj.getClass()) return false;
-		MultipleChoiceValue other = (MultipleChoiceValue) obj;
-		if (this.values == other.values) return true;
-		if (this.values == null) return false;
-		if (!values.equals(other.values)) return false;
-		return true;
 	}
 
 	@Override
@@ -151,4 +132,27 @@ public class MultipleChoiceValue implements QuestionValue {
 		return choices;
 	}
 
+	/**
+	 * Standard Eclipse equals() method. Removed values == null check due to the
+	 * null-check in the constructor.
+	 * 
+	 * @author Marc-Oliver Ochlast (denkbares GmbH)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		MultipleChoiceValue other = (MultipleChoiceValue) obj;
+		if (!values.equals(other.values)) return false;
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + values.hashCode();
+		return result;
+	}
 }
