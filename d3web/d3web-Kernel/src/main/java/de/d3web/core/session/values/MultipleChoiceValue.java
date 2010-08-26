@@ -21,8 +21,8 @@ package de.d3web.core.session.values;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import de.d3web.core.knowledge.terminology.Choice;
@@ -51,7 +51,7 @@ public class MultipleChoiceValue implements QuestionValue {
 	 */
 	public MultipleChoiceValue(List<ChoiceValue> values) {
 		if (values == null) throw new NullPointerException();
-		this.values = new HashSet<ChoiceValue>(values);
+		this.values = new LinkedHashSet<ChoiceValue>(values);
 	}
 
 	public static MultipleChoiceValue fromChoices(List<Choice> choices) {
