@@ -144,7 +144,7 @@ public class MultipleChoiceValueTest {
 		// now assure that mcValueNew contains all the Values mcValueTwo
 		// contains
 		assertThat(mcValueNew.containsAll(mcValueTwo), is(true));
-		// containsAll() is (in this case) not reflexive
+		// containsAll() is (in this case) not symetric
 		assertThat(mcValueTwo.containsAll(mcValueNew), is(false));
 	}
 

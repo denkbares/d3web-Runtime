@@ -30,9 +30,20 @@ public class DefaultFact implements Fact {
 	private final Object source;
 	private final PSMethod psMethod;
 
+	/**
+	 * 
+	 * @param terminologyObject
+	 * @param value
+	 * @param source
+	 * @param psMethod
+	 * @throws NullPointerException if a null object reference is passed in at
+	 *         any parameter
+	 */
 	public DefaultFact(TerminologyObject terminologyObject,
 						Value value, Object source, PSMethod psMethod) {
-		super();
+		if (terminologyObject == null || value == null || source == null || psMethod == null) {
+			throw new NullPointerException();
+		}
 		this.terminologyObject = terminologyObject;
 		this.value = value;
 		this.source = source;
@@ -69,14 +80,10 @@ public class DefaultFact implements Fact {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((psMethod == null) ? 0 : psMethod.hashCode());
-		result = prime * result + ((source == null) ? 0 : source.hashCode());
-		result = prime
-				* result
-				+ ((terminologyObject == null) ? 0 : terminologyObject
-						.hashCode());
-		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		result = prime * result + psMethod.hashCode();
+		result = prime * result + source.hashCode();
+		result = prime * result + terminologyObject.hashCode();
+		result = prime * result + value.hashCode();
 		return result;
 	}
 
@@ -86,22 +93,10 @@ public class DefaultFact implements Fact {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		DefaultFact other = (DefaultFact) obj;
-		if (psMethod == null) {
-			if (other.psMethod != null) return false;
-		}
-		else if (!psMethod.equals(other.psMethod)) return false;
-		if (source == null) {
-			if (other.source != null) return false;
-		}
-		else if (!source.equals(other.source)) return false;
-		if (terminologyObject == null) {
-			if (other.terminologyObject != null) return false;
-		}
-		else if (!terminologyObject.equals(other.terminologyObject)) return false;
-		if (value == null) {
-			if (other.value != null) return false;
-		}
-		else if (!value.equals(other.value)) return false;
+		if (!psMethod.equals(other.psMethod)) return false;
+		if (!source.equals(other.source)) return false;
+		if (!terminologyObject.equals(other.terminologyObject)) return false;
+		if (!value.equals(other.value)) return false;
 		return true;
 	}
 }
