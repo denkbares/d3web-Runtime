@@ -64,8 +64,8 @@ public class DateValueTest {
 	/**
 	 * Test method for {@link de.d3web.core.session.values.DateValue#DateValue(java.util.Date)}.
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testDateValue() {
+	@Test(expected = NullPointerException.class)
+	public void testDateValueThrowsNullPointerException() {
 		new DateValue(null);
 	}
 

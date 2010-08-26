@@ -36,8 +36,14 @@ public class NumValue implements QuestionValue {
 		this(Double.valueOf(value));
 	}
 
+	/**
+	 * Constructs a new NumValue
+	 * 
+	 * @param value the Double for which a new NumValue should be instantiated
+	 * @throws NullPointerException if a null object was passed in
+	 */
 	public NumValue(Double value) {
-		if (value == null) throw new IllegalArgumentException();
+		if (value == null) throw new NullPointerException();
 		this.value = value;
 	}
 

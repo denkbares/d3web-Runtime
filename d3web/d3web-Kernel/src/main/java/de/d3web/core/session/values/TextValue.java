@@ -33,8 +33,14 @@ public class TextValue implements QuestionValue {
 
 	private final String value;
 
+	/**
+	 * Constructs a new TextValue
+	 * 
+	 * @param value the String for which a new TextValue should be instantiated
+	 * @throws NullPointerException if a null object was passed in
+	 */
 	public TextValue(String value) {
-		if (value == null) throw new IllegalArgumentException();
+		if (value == null) throw new NullPointerException();
 		this.value = value;
 	}
 

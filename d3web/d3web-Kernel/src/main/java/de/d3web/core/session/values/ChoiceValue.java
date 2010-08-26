@@ -33,8 +33,15 @@ public class ChoiceValue implements QuestionValue {
 
 	private final Choice value;
 
+	/**
+	 * Constructs a new ChoiceValue
+	 * 
+	 * @param value the Choice for which a new ChoiceValue should be
+	 *        instantiated
+	 * @throws NullPointerException if a null object was passed in
+	 */
 	public ChoiceValue(Choice value) {
-		if (value == null) throw new IllegalArgumentException();
+		if (value == null) throw new NullPointerException();
 		this.value = value;
 	}
 

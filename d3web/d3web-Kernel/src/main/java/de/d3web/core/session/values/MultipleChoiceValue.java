@@ -42,8 +42,15 @@ public class MultipleChoiceValue implements QuestionValue {
 	private final Collection<ChoiceValue> values;
 	public static String ID_SEPARATOR = "#####";
 
+	/**
+	 * Constructs a new MultipleChoiceValue
+	 * 
+	 * @param values the List of Choices for which a new MultipleChoiceValue
+	 *        should be instantiated
+	 * @throws NullPointerException if a null object was passed in
+	 */
 	public MultipleChoiceValue(List<ChoiceValue> values) {
-		if (values == null) throw new IllegalArgumentException();
+		if (values == null) throw new NullPointerException();
 		this.values = new HashSet<ChoiceValue>(values);
 	}
 

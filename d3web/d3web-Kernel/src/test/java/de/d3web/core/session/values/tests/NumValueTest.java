@@ -52,8 +52,8 @@ public class NumValueTest {
 	/**
 	 * Test method for {@link de.d3web.core.session.values.NumValue#NumValue(java.lang.Double)}.
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testNumValueDoubleThrowsIllegalArgumentException() {
+	@Test(expected = NullPointerException.class)
+	public void testNumValueDoubleThrowsNullPointerException() {
 		new NumValue(null);
 	}
 

@@ -60,8 +60,8 @@ public class TextValueTest {
 	/**
 	 * Summary: Test method for {@link TextValue#TextValue(java.lang.String)}.
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testTextValue() {
+	@Test(expected = NullPointerException.class)
+	public void testTextValueThrowsNullPointerException() {
 		new TextValue(null);
 	}
 

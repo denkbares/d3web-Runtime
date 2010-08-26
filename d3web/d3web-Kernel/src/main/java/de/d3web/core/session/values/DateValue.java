@@ -44,8 +44,14 @@ public class DateValue implements QuestionValue {
 
 	private final Date value;
 
+	/**
+	 * Constructs a new DateValue
+	 * 
+	 * @param value the Date for which a new DateValue should be instantiated
+	 * @throws NullPointerException if a null object was passed in
+	 */
 	public DateValue(Date value) {
-		if (value == null) throw new IllegalArgumentException();
+		if (value == null) throw new NullPointerException();
 		this.value = value;
 	}
 

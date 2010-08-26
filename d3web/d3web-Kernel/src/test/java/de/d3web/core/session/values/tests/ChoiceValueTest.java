@@ -57,8 +57,8 @@ public class ChoiceValueTest {
 	 * Test method for
 	 * {@link de.d3web.core.session.values.ChoiceValue#ChoiceValue(Choice)}.
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testChoiceValueChoiceThrowsIllegalArgumentException() {
+	@Test(expected = NullPointerException.class)
+	public void testChoiceValueChoiceThrowsNullPointerException() {
 		new ChoiceValue(null);
 	}
 

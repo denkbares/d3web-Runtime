@@ -40,6 +40,7 @@ import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 
 /**
+ * Unit tests for {@link MultipleChoiceValue}
  * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 25.08.2010
@@ -83,10 +84,9 @@ public class MultipleChoiceValueTest {
 		mcValueTwo = MultipleChoiceValue.fromChoices(choicesList);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testConstructorGivenNullAsArgument() {
-		@SuppressWarnings("unused")
-		MultipleChoiceValue illegalMCValue = new MultipleChoiceValue(null);
+	@Test(expected = NullPointerException.class)
+	public void testMultipleChoiceValueThrowsNullPointerException() {
+		new MultipleChoiceValue(null);
 	}
 
 	/**
