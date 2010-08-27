@@ -44,7 +44,7 @@ import de.d3web.core.session.values.NumValue;
  */
 public class AbnormalityNum extends AbstractAbnormality {
 
-	private List<AbnormalityInterval> intervals = new LinkedList<AbnormalityInterval>();
+	private final List<AbnormalityInterval> intervals = new LinkedList<AbnormalityInterval>();
 
 	public AbnormalityNum() {
 	}
@@ -139,15 +139,19 @@ public class AbnormalityNum extends AbstractAbnormality {
 	 * 
 	 * @param newIntervals
 	 */
-	public void setIntervals(List<AbnormalityInterval> newIntervals) throws NumericalInterval.IntervalException {
-		intervals = new LinkedList<AbnormalityInterval>();
-		for (Iterator<AbnormalityInterval> iter = newIntervals.iterator(); iter.hasNext();) {
-			AbnormalityInterval ai = iter.next();
-			if (checkIntervals(ai)) intervals.add(ai);
-			else throw new NumericalInterval.IntervalException(
-					"new AbnormalityInterval overlaps one of the existing AbnormalityIntervals");
-		}
-	}
+	// Ochlast: Method not used
+	//
+	// public void setIntervals(List<AbnormalityInterval> newIntervals) throws
+	// NumericalInterval.IntervalException {
+	// intervals = new LinkedList<AbnormalityInterval>();
+	// for (Iterator<AbnormalityInterval> iter = newIntervals.iterator();
+	// iter.hasNext();) {
+	// AbnormalityInterval ai = iter.next();
+	// if (checkIntervals(ai)) intervals.add(ai);
+	// else throw new NumericalInterval.IntervalException(
+	// "new AbnormalityInterval overlaps one of the existing AbnormalityIntervals");
+	// }
+	// }
 
 	/**
 	 * Sets the AbnormalityInterval for the {@link QuestionNum}
