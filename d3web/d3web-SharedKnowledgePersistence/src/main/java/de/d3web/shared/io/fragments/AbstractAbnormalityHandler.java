@@ -20,8 +20,8 @@
 package de.d3web.shared.io.fragments;
 
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.List;
+import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -143,9 +143,10 @@ public class AbstractAbnormalityHandler implements FragmentHandler {
 		if (abstractAbnormality instanceof Abnormality) {
 			Abnormality abnormality = (Abnormality) abstractAbnormality;
 			Element valuesNode = doc.createElement("values");
-			Enumeration<Value> answers = abnormality.getAnswerEnumeration();
-			while (answers.hasMoreElements()) {
-				Value answer = answers.nextElement();
+			Set<Value> answers = abnormality.getAnswerSet();
+			// while (answers.hasMoreElements()) {
+			for (Value answer : answers) {
+				// Value answer = answers.nextElement();
 				Element abnormalityElement = doc.createElement("abnormality");
 				abnormalityElement.setAttribute("ID", ValueFactory.getID_or_Value(answer));
 				abnormalityElement.setAttribute(
