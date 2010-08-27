@@ -66,12 +66,30 @@ public class NumValue implements QuestionValue {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (o instanceof NumValue) {
-			NumValue nv = (NumValue) o;
-			return nv.value.equals(value);
-		}
-		return super.equals(o);
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + value.hashCode();
+		return result;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		NumValue other = (NumValue) obj;
+		if (!value.equals(other.value)) return false;
+		return true;
+	}
+
+	// @Override
+	// public boolean equals(Object o) {
+	// if (o instanceof NumValue) {
+	// NumValue nv = (NumValue) o;
+	// return nv.value.equals(value);
+	// }
+	// return super.equals(o);
+	// }
 
 }
