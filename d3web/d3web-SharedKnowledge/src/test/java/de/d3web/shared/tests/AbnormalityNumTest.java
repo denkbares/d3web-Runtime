@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- * Computer Science VI, University of Wuerzburg
+ * Copyright (C) 2010 denkbares GmbH, Würzburg, Germany
  * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
@@ -20,106 +19,129 @@
 
 package de.d3web.shared.tests;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import de.d3web.core.knowledge.terminology.info.NumericalInterval;
-import de.d3web.shared.Abnormality;
-import de.d3web.shared.AbnormalityNum;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-public class AbnormalityNumTest extends TestCase {
+import java.io.IOException;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.knowledge.terminology.info.NumericalInterval.IntervalException;
+import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.TextValue;
+import de.d3web.shared.AbnormalityInterval;
+import de.d3web.shared.AbnormalityNum;
+import de.d3web.shared.AbstractAbnormality;
+
+/**
+ * Unit tests for {@link AbnormalityInterval}
+ * 
+ * @author Marc-Oliver Ochlast (denkbares GmbH)
+ * @created 27.08.2010
+ */
+public class AbnormalityNumTest {
+
+	AbnormalityNum abnormalityNumUnderTest;
+
+	@Before
+	public void setUp() throws Exception {
+		// AbnormalityIntervals for this test:
+		//
+		// [-1.7 .. 3.4) [4.1 .. 5.7] (5.7 .. 8.1]
+		// ______A3_____ _____A1_____ _____A5_____
+		//
+		abnormalityNumUnderTest = new AbnormalityNum();
+		abnormalityNumUnderTest.addValue(-1.7, 3.4,
+				AbstractAbnormality.A3, false, true);
+		abnormalityNumUnderTest.addValue(4.1, 5.7,
+				AbstractAbnormality.A1, false, false);
+		abnormalityNumUnderTest.addValue(5.7, 8.1,
+				AbstractAbnormality.A5, true, false);
+	}
 
 	/**
-	 * Constructor for AbnormalityNumTest.
-	 * 
-	 * @param arg0
+	 * Add an overlapping interval: should throw an IntervalException!
 	 */
-	public AbnormalityNumTest(String arg0) {
-		super(arg0);
+	@Test(expected = IntervalException.class)
+	public void addOverlappingInterval() {
+		// [-1.7 .. 3.4) [4.1 .. 5.7] (5.7 .. 8.1]
+		// _______[3.4 .. 4.1] <-- overlaps because two closed intervals at 4.1
+		abnormalityNumUnderTest.addValue(3.4, 4.1, AbstractAbnormality.A2, false, false);
 	}
 
-	public static Test suite() {
-		return new TestSuite(AbnormalityNumTest.class);
+	/**
+	 * Test method for
+	 * {@link de.d3web.shared.AbnormalityNum#getValue(de.d3web.core.session.Value)}
+	 * .
+	 */
+	@Test
+	public void testGetValueValue() {
+		// Summary: Get some values out of the intervals:
+		// [-1.7 .. 3.4) [4.1 .. 5.7] (5.7 .. 8.1]
+		// ______A3_____ _____A1_____ _____A5_____
+		//
+		// ______|--> @2.0: should return A3
+		assertThat(abnormalityNumUnderTest.getValue(2.0),
+				is(equalTo(AbstractAbnormality.A3)));
+		// [-1.7 .. 3.4) [4.1 .. 5.7] (5.7 .. 8.1]
+		// ______A3_____ _____A1_____ _____A5_____
+		//
+		// _____________|--> @3.71: out of intervals, should return A0
+		assertThat(abnormalityNumUnderTest.getValue(3.71),
+				is(equalTo(AbstractAbnormality.A0)));
+		// [-1.7 .. 3.4) [4.1 .. 5.7] (5.7 .. 8.1]
+		// ______A3_____ _____A1_____ _____A5_____
+		//
+		// __________________________|--> @5.7: should return A1
+		assertThat(abnormalityNumUnderTest.getValue(new NumValue(5.7)),
+				is(equalTo(AbstractAbnormality.A1)));
+		// [-1.7 .. 3.4) [4.1 .. 5.7] (5.7 .. 8.1]
+		// ______A3_____ _____A1_____ _____A5_____
+		//
+		// ________________________________________|--> @9.0: out of intervals
+		assertThat(abnormalityNumUnderTest.getValue(new NumValue(9.0)),
+				is(equalTo(AbstractAbnormality.A0)));
+		// try to get the abnormalityValue for a Value != NumValue, e.g.
+		// TextValue:
+		assertThat(abnormalityNumUnderTest.getValue(new TextValue("123")),
+				is(equalTo(AbstractAbnormality.A0)));
 	}
 
-	public void testConstruction() {
-		AbnormalityNum an = new AbnormalityNum();
-
-		try {
-			an.addValue(1, 0, 0.5, true, true);
-			assertTrue("missing: exception", false);
-		}
-		catch (NumericalInterval.IntervalException e) {
-			System.out.println("" + e);
-		}
-
-		try {
-			an.addValue(1, 1, 0.5, true, true);
-			assertTrue("missing: exception", false);
-		}
-		catch (NumericalInterval.IntervalException e) {
-			System.out.println("" + e);
-		}
-
-		try {
-			an.addValue(0, 0, 0.5, true, true);
-			assertTrue("missing: exception", false);
-		}
-		catch (NumericalInterval.IntervalException e) {
-			System.out.println("" + e);
-		}
-
-		try {
-			an.addValue(0, 1, 0.5, true, false);
-		}
-		catch (NumericalInterval.IntervalException e) {
-			assertTrue("exception", false);
-		}
-
+	/**
+	 * Test method for {@link de.d3web.shared.AbnormalityNum#getIntervals()}.
+	 */
+	@Test
+	public void testGetIntervals() {
+		List<AbnormalityInterval> intervals = abnormalityNumUnderTest.getIntervals();
+		assertThat(intervals.contains(new AbnormalityInterval(4.1, 5.7,
+				AbstractAbnormality.A1, false, false)), is(true));
 	}
 
-	public void testValues() {
-		AbnormalityNum an = new AbnormalityNum();
-
-		try {
-			an.addValue(0, 1, 0.1, true, false);
-		}
-		catch (NumericalInterval.IntervalException e) {
-			assertTrue("exception", false);
-		}
-
-		try {
-			an.addValue(1, 2, 0.5, false, true);
-			assertTrue("missing exception", false);
-		}
-		catch (NumericalInterval.IntervalException e) {
-			System.out.println("" + e);
-		}
-
-		try {
-			an.addValue(-1, 0, 0.5, false, false);
-		}
-		catch (NumericalInterval.IntervalException e) {
-			assertTrue("exception", false);
-		}
-
-		try {
-			an.addValue(-Double.MAX_VALUE, -2, Double.MAX_VALUE, false, false);
-		}
-		catch (NumericalInterval.IntervalException e) {
-			assertTrue("exception " + e, false);
-		}
-		catch (Exception ex) {
-			assertTrue("exception " + ex, false);
-		}
-
-		assertTrue("" + an.getValue(0.5) + "should be 0.1", an.getValue(0.5) == 0.1);
-		assertTrue("" + an.getValue(-0.5) + "should be 0.5", an.getValue(-0.5) == 0.5);
-		assertTrue("" + an.getValue(0) + "should be 0.5", an.getValue(0) == 0.5);
-		assertTrue("" + an.getValue(1) + "should be 0.1", an.getValue(1) == 0.1);
-		assertTrue("" + an.getValue(1.1) + "should be A0", an.getValue(1.1) == Abnormality.A0);
-		assertTrue("" + an.getValue(-10) + "should be >= A5", an.getValue(-10) >= Abnormality.A5);
-
+	/**
+	 * Test method for
+	 * {@link de.d3web.shared.AbnormalityNum#setAbnormality(de.d3web.core.knowledge.terminology.QuestionNum, double, double, double, boolean, boolean)}
+	 * .
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void testSetAbnormality() {
+		QuestionNum qNum = new QuestionNum("qNum");
+		// set the AbnormalityInterval (A4): (4.1, 6.9] for the question:
+		AbnormalityNum.setAbnormality(qNum, 4.1, 6.9,
+				AbstractAbnormality.A4, true, false);
+		// NumValues out of the interval should return A0-abnormalities:
+		assertThat(AbstractAbnormality.getAbnormality(qNum, new NumValue(4.1)),
+				is(equalTo(AbstractAbnormality.A0)));
+		assertThat(AbstractAbnormality.getAbnormality(qNum, new NumValue(7.0)),
+				is(equalTo(AbstractAbnormality.A0)));
+		// a value from within the interval should return the A4 abnormality
+		assertThat(AbstractAbnormality.getAbnormality(qNum, new NumValue(5.1)),
+				is(equalTo(AbstractAbnormality.A4)));
 	}
 
 }
