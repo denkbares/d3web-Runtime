@@ -20,8 +20,8 @@
 
 package de.d3web.shared;
 
-import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Set;
 
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Value;
@@ -72,8 +72,8 @@ public class Abnormality extends AbstractAbnormality {
 		}
 	}
 
-	public Enumeration<Value> getAnswerEnumeration() {
-		return values.keys();
+	public Set<Value> getAnswerSet() {
+		return values.keySet();
 	}
 
 	/**

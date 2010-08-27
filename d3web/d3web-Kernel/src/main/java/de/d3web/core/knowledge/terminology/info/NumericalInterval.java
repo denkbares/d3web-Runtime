@@ -37,12 +37,6 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 		private static final long serialVersionUID = -6464032113971663071L;
 
 		/**
-		* 
-		*/
-		public IntervalException() {
-		}
-
-		/**
 		 * @param s
 		 */
 		public IntervalException(String s) {
@@ -79,11 +73,7 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 	 * @param right
 	 */
 	public NumericalInterval(double left, double right) {
-		this.left = left;
-		this.right = right;
-		leftOpen = false;
-		rightOpen = false;
-		checkValidity();
+		this(left, right, false, false);
 	}
 
 	public void checkValidity() throws IntervalException {
@@ -190,6 +180,7 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 	 * @param o other interval
 	 * @return boolean
 	 */
+	@Override
 	public boolean equals(Object other) {
 
 		if (this == other) return true;
@@ -232,6 +223,7 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 
 	}
 
+	@Override
 	public String toString() {
 		String str = "";
 		if (leftOpen) str += "(";
@@ -250,6 +242,7 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode() {
 
 		return toString().hashCode();
@@ -260,6 +253,7 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 	 * 
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
+	@Override
 	public int compareTo(NumericalInterval ni) {
 		if (left < ni.left) {
 			return -1;
