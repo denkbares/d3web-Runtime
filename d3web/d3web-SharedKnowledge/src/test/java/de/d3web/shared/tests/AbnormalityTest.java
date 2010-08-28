@@ -36,6 +36,7 @@ import de.d3web.shared.Abnormality;
 import de.d3web.shared.AbstractAbnormality;
 
 /**
+ * Unit test for {@link Abnormality}
  * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 26.08.2010
