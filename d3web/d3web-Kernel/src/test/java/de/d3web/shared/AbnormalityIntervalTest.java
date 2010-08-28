@@ -48,6 +48,9 @@ public class AbnormalityIntervalTest {
 	@Test
 	public void testToString() {
 		assertThat(abnormalityInterval.toString(), is("AbnormalityInterval (A2): [3.0, 7.0]"));
+		AbnormalityInterval openIntervals = new AbnormalityInterval(8.9, 11.3,
+				AbstractAbnormality.A4, true, true);
+		assertThat(openIntervals.toString(), is("AbnormalityInterval (A4): (8.9, 11.3)"));
 	}
 
 	/**

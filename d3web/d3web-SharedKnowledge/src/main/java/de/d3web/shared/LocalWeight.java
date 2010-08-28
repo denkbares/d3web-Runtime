@@ -26,8 +26,8 @@
  */
 package de.d3web.shared;
 
-import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Set;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
@@ -108,7 +108,7 @@ public class LocalWeight implements KnowledgeSlice {
 		}
 		s = solution;
 		if (solution != null) {
-			q.addKnowledge(
+			s.addKnowledge(
 					getProblemsolverContext(),
 					this,
 					METHOD_KIND);
@@ -124,6 +124,7 @@ public class LocalWeight implements KnowledgeSlice {
 	 * 
 	 * @see de.d3web.kernel.domainModel.KnowledgeSlice#getId()
 	 */
+	@Override
 	public java.lang.String getId() {
 		return "W" + getQuestion().getId();
 	}
@@ -134,6 +135,7 @@ public class LocalWeight implements KnowledgeSlice {
 	 * 
 	 * @return java.lang.Class PSMethod class
 	 */
+	@Override
 	public Class<? extends PSMethod> getProblemsolverContext() {
 		return PROBLEMSOLVER;
 	}
@@ -145,6 +147,7 @@ public class LocalWeight implements KnowledgeSlice {
 	 * de.d3web.kernel.domainModel.KnowledgeSlice#isUsed(de.d3web.kernel.Session
 	 * )
 	 */
+	@Override
 	public boolean isUsed(Session session) {
 		return true;
 	}
@@ -205,13 +208,14 @@ public class LocalWeight implements KnowledgeSlice {
 		return "G7";
 	}
 
+	@Override
 	public void remove() {
 		setQuestion(null);
 		setSolution(null);
 	}
 
-	public Enumeration<Value> getAnswerEnumeration() {
-		return values.keys();
+	public Set<Value> getAnswerSet() {
+		return values.keySet();
 	}
 
 	/**
