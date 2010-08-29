@@ -83,6 +83,11 @@
 				<artifactId>maven-site-plugin</artifactId>
 				<version>2.1.1</version>
 			</plugin>
+			<plugin>
+				<groupId>com.atlassian.maven.plugins</groupId>
+				<artifactId>maven-clover2-plugin</artifactId>
+				<version>3.0.2</version>
+			</plugin>
 		</plugins>
 	</build>
 	
@@ -117,6 +122,7 @@
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.clover.encoding>UTF-8</maven.clover.encoding>
 		<versionatorVersion>1.4</versionatorVersion>
 	</properties>
 	
