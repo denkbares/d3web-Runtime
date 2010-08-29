@@ -20,7 +20,7 @@
 package de.d3web.shared.io.fragments;
 
 import java.io.IOException;
-import java.util.Enumeration;
+import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -110,9 +110,8 @@ public class LocalWeightHandler implements FragmentHandler {
 		element.setAttribute("questionID", localWeight.getQuestion().getId());
 		element.setAttribute("diagnosisID", localWeight.getSolution().getId());
 		Element valuesNode = doc.createElement("values");
-		Enumeration<Value> answers = localWeight.getAnswerEnumeration();
-		while (answers.hasMoreElements()) {
-			Value answer = answers.nextElement();
+		Set<Value> answers = localWeight.getAnswerSet();
+		for (Value answer : answers) {
 			Element localweightNode = doc.createElement("localweight");
 			localweightNode.setAttribute("ID", ValueFactory.getID_or_Value(answer));
 			localweightNode.setAttribute("value",
