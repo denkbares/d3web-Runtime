@@ -123,6 +123,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.clover.encoding>UTF-8</maven.clover.encoding>
+		<sonar.clover.reportPath>target/site/clover/clover.xml</sonar.clover.reportPath>
 		<versionatorVersion>1.4</versionatorVersion>
 	</properties>
 	
