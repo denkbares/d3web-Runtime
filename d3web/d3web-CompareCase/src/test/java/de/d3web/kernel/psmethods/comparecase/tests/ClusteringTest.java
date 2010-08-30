@@ -48,7 +48,7 @@ public class ClusteringTest {
 	private ClusterRepository repos = null;
 
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		CaseRepository.getInstance().purgeAllCases("kbid");
 
 		CaseRepository.getInstance().addCase("kbid", createDummy(0.3));
