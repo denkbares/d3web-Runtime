@@ -20,11 +20,17 @@
 
 package de.d3web.kernel.psmethods.comparecase.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import de.d3web.kernel.psmethods.comparecase.comparators.CompareMode;
 import de.d3web.kernel.psmethods.comparecase.comparators.clustering.CaseCluster;
@@ -32,25 +38,16 @@ import de.d3web.kernel.psmethods.comparecase.comparators.clustering.ClusterRepos
 import de.d3web.kernel.psmethods.comparecase.tests.utils.CaseObjectTestDummy;
 import de.d3web.utilities.caseLoaders.CaseRepository;
 
-import junit.framework.TestCase;
-
 /**
  * This is a TestCase for the clustering method
  * 
  * @author bruemmer
  */
-public class ClusteringTest extends TestCase {
+public class ClusteringTest {
 
 	private ClusterRepository repos = null;
 
-	public ClusteringTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(ClusteringTest.class);
-	}
-
+	@Before
 	protected void setUp() throws Exception {
 		CaseRepository.getInstance().purgeAllCases("kbid");
 
@@ -88,6 +85,7 @@ public class ClusteringTest extends TestCase {
 		return ret;
 	}
 
+	@Test
 	public void testClustering() {
 
 		assertEquals("Cluster count wrong(0)", 4, repos.getClusterCount());
@@ -137,6 +135,7 @@ public class ClusteringTest extends TestCase {
 
 	}
 
+	@Test
 	public void testRetrieval() {
 		CaseObjectTestDummy dummy14 = createDummy(1.4);
 		CaseRepository.getInstance().addCase("kbid", dummy14);

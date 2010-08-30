@@ -63,6 +63,7 @@ public class PersistenceTest extends XMLTestCase {
 		_excludedFolders.add("KB-INF");
 		_excludedFileTypes = new ArrayList<String>();
 		_excludedFileTypes.add(".MF");
+		_excludedFileTypes.add(".DS_Store");
 	}
 
 	@Override

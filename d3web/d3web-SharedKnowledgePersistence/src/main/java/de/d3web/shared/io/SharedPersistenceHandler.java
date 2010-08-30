@@ -41,20 +41,9 @@ import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.QuestionMC;
-import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.knowledge.terminology.QuestionOC;
-import de.d3web.core.knowledge.terminology.QuestionText;
-import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.shared.PSMethodShared;
 import de.d3web.shared.QuestionWeightValue;
 import de.d3web.shared.Weight;
-import de.d3web.shared.comparators.QuestionComparator;
-import de.d3web.shared.comparators.mc.QuestionComparatorMCIndividual;
-import de.d3web.shared.comparators.num.QuestionComparatorNumDivision;
-import de.d3web.shared.comparators.oc.QuestionComparatorOCIndividual;
-import de.d3web.shared.comparators.oc.QuestionComparatorYN;
-import de.d3web.shared.comparators.text.QuestionComparatorTextIndividual;
 
 /**
  * Loads and saves shared knowledge from/to XML Creation date: (14.08.2001
@@ -112,39 +101,6 @@ public class SharedPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 	@Override
 	public int getEstimatedSize(KnowledgeBase kb) {
 		return kb.getAllKnowledgeSlicesFor(PSMethodShared.class).size();
-	}
-
-	/**
-	 * Insert the method's description here. Creation date: (25.02.2002
-	 * 14:48:32)
-	 * 
-	 * @return de.d3web.kernel.domainModel.KnowledgeBase
-	 * @param kb de.d3web.kernel.domainModel.KnowledgeBase
-	 */
-	public static QuestionComparator addDefaultKnowledge(Question q) {
-
-		QuestionComparator qc = null;
-
-		if (q instanceof QuestionYN) {
-			qc = new QuestionComparatorYN();
-		}
-		else if (q instanceof QuestionOC) {
-			qc = new QuestionComparatorOCIndividual();
-		}
-		else if (q instanceof QuestionMC) {
-			qc = new QuestionComparatorMCIndividual();
-		}
-		else if (q instanceof QuestionNum) {
-			qc = new QuestionComparatorNumDivision();
-		}
-		else if (q instanceof QuestionText) {
-			qc = new QuestionComparatorTextIndividual();
-		}
-
-		if (qc != null) {
-			qc.setQuestion(q);
-		}
-		return qc;
 	}
 
 	/**

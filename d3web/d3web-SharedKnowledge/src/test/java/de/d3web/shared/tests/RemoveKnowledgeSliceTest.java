@@ -37,8 +37,6 @@ import de.d3web.shared.LocalWeight;
 import de.d3web.shared.PSMethodShared;
 import de.d3web.shared.QuestionWeightValue;
 import de.d3web.shared.Weight;
-import de.d3web.shared.comparators.KnowledgeBaseUnknownSimilarity;
-import de.d3web.shared.comparators.oc.QuestionComparatorYN;
 
 public class RemoveKnowledgeSliceTest extends TestCase {
 
@@ -99,15 +97,6 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		qyn2.addKnowledge(PSMethodShared.class, sl2,
 				PSMethodShared.SHARED_ABNORMALITY);
 
-		KnowledgeBaseUnknownSimilarity sl3 = new KnowledgeBaseUnknownSimilarity();
-		sl3.setKnowledgeBase(base);
-		base.addKnowledge(PSMethodShared.class, sl3,
-				PSMethodShared.SHARED_SIMILARITY);
-		KnowledgeBaseUnknownSimilarity sl4 = new KnowledgeBaseUnknownSimilarity();
-		sl4.setKnowledgeBase(base);
-		base.addKnowledge(PSMethodShared.class, sl4,
-				PSMethodShared.SHARED_SIMILARITY);
-
 		LocalWeight sl5 = new LocalWeight();
 		sl5.setQuestion(qyn1);
 		qyn1.addKnowledge(PSMethodShared.class, sl5,
@@ -116,15 +105,6 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		sl6.setQuestion(qyn2);
 		qyn2.addKnowledge(PSMethodShared.class, sl6,
 				PSMethodShared.SHARED_LOCAL_WEIGHT);
-
-		QuestionComparatorYN sl7 = new QuestionComparatorYN();
-		sl7.setQuestion(qyn1);
-		qyn1.addKnowledge(PSMethodShared.class, sl7,
-				PSMethodShared.SHARED_SIMILARITY);
-		QuestionComparatorYN sl8 = new QuestionComparatorYN();
-		sl8.setQuestion(qyn2);
-		qyn2.addKnowledge(PSMethodShared.class, sl8,
-				PSMethodShared.SHARED_SIMILARITY);
 
 		Weight sl9 = new Weight();
 		QuestionWeightValue v1 = new QuestionWeightValue();
@@ -171,37 +151,6 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 
 	}
 
-	public void testRemoveKnowledgeBaseUnknownSimilarity() {
-		List<?> list;
-		KnowledgeBaseUnknownSimilarity slice;
-		list = (List<?>) base.getKnowledge(PSMethodShared.class,
-				PSMethodShared.SHARED_SIMILARITY);
-		slice = (KnowledgeBaseUnknownSimilarity) list.get(0);
-		KnowledgeBase no = slice.getKnowledgeBase();
-		assertTrue("Tried to remove existing slice, true expected : ", base
-				.remove(slice));
-
-		assertFalse("Deleted slice still mapped in '" + no
-				+ "', expected false : ", ((List<?>) no.getKnowledge(
-				PSMethodShared.class, PSMethodShared.SHARED_SIMILARITY))
-				.contains(slice));
-
-		Collection<KnowledgeSlice> all = qyn2.getAllKnowledge();
-		try {
-			base.remove(qyn2);
-		}
-		catch (IllegalAccessException e) {
-			fail(qyn2.getName() + " should have had no children!");
-		}
-		Collection<KnowledgeSlice> slices = base
-				.getAllKnowledgeSlicesFor(PSMethodShared.class);
-
-		for (Object object : all) {
-			assertFalse("Deleted slice still mapped in Knowledgebase : ",
-					slices.contains(object));
-		}
-	}
-
 	public void testRemoveLocalWeight() {
 		List<?> list;
 		LocalWeight slice;
@@ -215,36 +164,6 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		assertFalse("Deleted slice still mapped in '" + no.getName()
 				+ "', expected false : ", (no.getKnowledge(
 				PSMethodShared.class, PSMethodShared.SHARED_LOCAL_WEIGHT)) == slice);
-
-		Collection<KnowledgeSlice> all = qyn2.getAllKnowledge();
-		try {
-			base.remove(qyn2);
-		}
-		catch (IllegalAccessException e) {
-			fail(qyn2.getName() + " should have had no children!");
-		}
-		Collection<KnowledgeSlice> slices = base
-				.getAllKnowledgeSlicesFor(PSMethodShared.class);
-
-		for (Object object : all) {
-			assertFalse("Deleted slice still mapped in Knowledgebase : ",
-					slices.contains(object));
-		}
-	}
-
-	public void testRemoveQuestionComparator() {
-		List<?> list;
-		QuestionComparatorYN slice;
-		list = (List<?>) base.getKnowledge(PSMethodShared.class,
-				PSMethodShared.SHARED_SIMILARITY);
-		slice = (QuestionComparatorYN) list.get(4);
-		NamedObject no = slice.getQuestion();
-		assertTrue("Tried to remove existing slice, true expected : ", base
-				.remove(slice));
-
-		assertFalse("Deleted slice still mapped in '" + no.getName()
-				+ "', expected false : ", (no.getKnowledge(
-				PSMethodShared.class, PSMethodShared.SHARED_SIMILARITY)) == slice);
 
 		Collection<KnowledgeSlice> all = qyn2.getAllKnowledge();
 		try {
