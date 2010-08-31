@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
@@ -151,9 +152,10 @@ public class Node {
 	public List<Fact> setNormalValues(Session testCase) {
 		Map<Question, Value> valuesToSet = answerGetterAndSetter(testCase, true);
 		List<Fact> facts = new LinkedList<Fact>();
+		PSMethod psmCostBenefit = testCase.getPSMethodInstance(PSMethodCostBenefit.class);
 		for (Question q : valuesToSet.keySet()) {
 			Fact fact = new DefaultFact(q, valuesToSet.get(q), this,
-					testCase.getPSMethodInstance(PSMethodCostBenefit.class));
+					(psmCostBenefit == null) ? new PSMethodCostBenefit() : psmCostBenefit);
 			testCase.getBlackboard().addValueFact(fact);
 			facts.add(fact);
 		}
