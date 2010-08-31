@@ -20,38 +20,34 @@
 
 package de.d3web.persistence.tests;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.LinkedList;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.Before;
+import org.junit.Test;
+
 import de.d3web.core.io.BasicPersistenceHandler;
 import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.persistence.tests.utils.XMLTagUtils;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
  * @author merz
- * 
- *         To change this generated comment edit the template variable
- *         "typecomment": Window>Preferences>Java>Templates. To enable and
- *         disable the creation of type comments go to
- *         Window>Preferences>Java>Code Generation.
  */
-public class BasicPersistenceHandlerTest extends TestCase {
+public class BasicPersistenceHandlerTest {
 
 	private KnowledgeBase kb;
-	private BasicPersistenceHandler bph;
+	private BasicPersistenceHandler basicPersistenceHandler;
 	private String xmlcode;
 
 	private Question q1, q2;
@@ -60,30 +56,10 @@ public class BasicPersistenceHandlerTest extends TestCase {
 	private XMLTag isTag;
 	private XMLTag shouldTag;
 
-	/**
-	 * Constructor for RuleComplexTest.
-	 * 
-	 * @param arg0
-	 */
-	public BasicPersistenceHandlerTest(String arg0) {
-		super(arg0);
-	}
+	@Before
+	public void setUp() throws IOException {
+		InitPluginManager.init();
 
-	public static void main(String[] args) {
-		TestRunner.run(BasicPersistenceHandlerTest.suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(BasicPersistenceHandlerTest.class);
-	}
-
-	protected void setUp() {
-		try {
-			InitPluginManager.init();
-		}
-		catch (IOException e1) {
-			assertTrue("Error initialising plugin framework", false);
-		}
 		kb = new KnowledgeBase();
 
 		q1 = new QuestionNum("q1");
@@ -98,6 +74,7 @@ public class BasicPersistenceHandlerTest extends TestCase {
 		diag1.setName("d1-text");
 	}
 
+	@Test
 	public void testBasicPersistenceHandler() throws Exception {
 		shouldTag = new XMLTag("KnowledgeBase");
 		shouldTag.addAttribute("type", "basic");
@@ -115,7 +92,7 @@ public class BasicPersistenceHandlerTest extends TestCase {
 		XMLTag knowledgeSlicesTag = new XMLTag("KnowledgeSlices");
 		shouldTag.addChild(knowledgeSlicesTag);
 
-		bph = new BasicPersistenceHandler();
+		basicPersistenceHandler = new BasicPersistenceHandler();
 		OutputStream stream = new OutputStream() {
 
 			StringBuffer sb = new StringBuffer();
@@ -130,7 +107,7 @@ public class BasicPersistenceHandlerTest extends TestCase {
 				return sb.toString();
 			}
 		};
-		bph.write(kb, stream, new DummyProgressListener());
+		basicPersistenceHandler.write(kb, stream, new DummyProgressListener());
 		xmlcode = stream.toString();
 		isTag = new XMLTag(XMLTagUtils.generateNodeFromXMLCode(xmlcode, "KnowledgeBase", 0));
 

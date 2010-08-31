@@ -20,11 +20,13 @@
 
 package de.d3web.persistence.tests;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Before;
+import org.junit.Test;
+
 import de.d3web.core.io.fragments.SolutionsHandler;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.terminology.Solution;
@@ -36,40 +38,19 @@ import de.d3web.scoring.Score;
 /**
  * @author merz
  * 
- *         !!! tests for checking prperties missing
+ *         !!! tests for checking properties missing
  */
-public class SolutionTest extends TestCase {
+public class SolutionTest {
 
 	private Solution diag;
 	private SolutionsHandler dh;
 	private XMLTag isTag;
 	private XMLTag shouldTag;
 
-	/**
-	 * Constructor for DiagnosisOutputTest.
-	 * 
-	 * @param arg0
-	 */
-	public SolutionTest(String arg0) {
-		super(arg0);
-	}
+	@Before
+	protected void setUp() throws IOException {
+		InitPluginManager.init();
 
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(SolutionTest.suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(SolutionTest.class);
-	}
-
-	@Override
-	protected void setUp() {
-		try {
-			InitPluginManager.init();
-		}
-		catch (IOException e1) {
-			assertTrue("Error initialising plugin framework", false);
-		}
 		// create the diagnosis
 		diag = new Solution("d1");
 		diag.setName("d1-text");
@@ -84,15 +65,16 @@ public class SolutionTest extends TestCase {
 		XMLTag shouldTextTag = new XMLTag("Text");
 		shouldTextTag.setContent("d1-text");
 		shouldTag.addChild(shouldTextTag);
-
 	}
 
+	@Test
 	public void testSolutionSimpleState() throws Exception {
 		isTag = new XMLTag(dh.write(diag, Util.createEmptyDocument()));
 
 		assertEquals("(0)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testSolutionWithApriori() throws Exception {
 		diag.setAprioriProbability(Score.N2);
 
@@ -103,6 +85,7 @@ public class SolutionTest extends TestCase {
 		assertEquals("(1)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testSolutionWithProperties() throws Exception {
 		diag.getProperties().setProperty(Property.HIDE_IN_DIALOG, new Boolean(true));
 		diag.getProperties().setProperty(Property.COST, new Double(20));

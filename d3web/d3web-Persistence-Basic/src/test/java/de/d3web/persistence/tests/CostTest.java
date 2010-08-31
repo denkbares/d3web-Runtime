@@ -20,11 +20,12 @@
 
 package de.d3web.persistence.tests;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.dom.Document;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import de.d3web.core.io.fragments.CostKBHandler;
 import de.d3web.core.io.utilities.CostObject;
 import de.d3web.core.io.utilities.Util;
@@ -33,8 +34,7 @@ import de.d3web.persistence.tests.utils.XMLTag;
 /**
  * @author merz
  */
-
-public class CostTest extends TestCase {
+public class CostTest {
 
 	private CostObject mco1;
 	private CostKBHandler ch;
@@ -42,25 +42,14 @@ public class CostTest extends TestCase {
 	private XMLTag isTag;
 	private XMLTag shouldTag;
 
-	public CostTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(CostTest.suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(CostTest.class);
-	}
-
-	protected void setUp() {
+	@Before
+	public void setUp() {
 
 		mco1 = new CostObject("timeexpenditure", "Minuten", "Arztzeit");
-
 		ch = new CostKBHandler();
 	}
 
+	@Test
 	public void testOneCost() throws Exception {
 
 		shouldTag = new XMLTag("Cost");

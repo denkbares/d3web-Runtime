@@ -20,9 +20,11 @@
 
 package de.d3web.persistence.tests;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import de.d3web.core.io.fragments.PropertiesHandler;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.terminology.Solution;
@@ -32,13 +34,8 @@ import de.d3web.persistence.tests.utils.XMLTag;
 
 /**
  * @author merz
- * 
- *         To change this generated comment edit the template variable
- *         "typecomment": Window>Preferences>Java>Templates. To enable and
- *         disable the creation of type comments go to
- *         Window>Preferences>Java>Code Generation.
  */
-public class PropertyTest extends TestCase {
+public class PropertyTest {
 
 	private PropertiesHandler pdh;
 
@@ -46,21 +43,9 @@ public class PropertyTest extends TestCase {
 
 	private XMLTag isTag;
 
-	public PropertyTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(PropertyTest.suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(PropertyTest.class);
-	}
-
-	protected void setUp() {
+	@Before
+	public void setUp() {
 		diag = new Solution("D1");
-
 		pdh = new PropertiesHandler();
 	}
 
@@ -71,6 +56,7 @@ public class PropertyTest extends TestCase {
 	// therefore, a test is better in diagnosis (for example) because there is
 	// also checked whether
 	// several properties are read out properly.
+	@Test
 	public void testSolutionSimpleState() throws Exception {
 		diag.getProperties().setProperty(Property.HIDE_IN_DIALOG, new Boolean(true));
 

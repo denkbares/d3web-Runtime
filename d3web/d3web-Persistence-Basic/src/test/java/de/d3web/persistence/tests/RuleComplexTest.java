@@ -20,11 +20,13 @@
 
 package de.d3web.persistence.tests;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Before;
+import org.junit.Test;
+
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.inference.condition.CondNumEqual;
@@ -42,7 +44,7 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
 /**
  * @author merz
  */
-public class RuleComplexTest extends TestCase {
+public class RuleComplexTest {
 
 	private Rule rcomp;
 	private RuleHandler rcw;
@@ -56,31 +58,10 @@ public class RuleComplexTest extends TestCase {
 	private XMLTag isTag;
 	private XMLTag shouldTag;
 
-	/**
-	 * Constructor for RuleComplexTest.
-	 * 
-	 * @param arg0
-	 */
-	public RuleComplexTest(String arg0) {
-		super(arg0);
-	}
+	@Before
+	protected void setUp() throws IOException {
+		InitPluginManager.init();
 
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(RuleComplexTest.suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(RuleComplexTest.class);
-	}
-
-	@Override
-	protected void setUp() {
-		try {
-			InitPluginManager.init();
-		}
-		catch (IOException e1) {
-			assertTrue("Error initialising plugin framework", false);
-		}
 		qnum1 = new QuestionNum("qnum1-id");
 		diag1 = new Solution("diag1-id");
 		diag1.setName("diag1-text");
@@ -98,6 +79,7 @@ public class RuleComplexTest extends TestCase {
 		rcw = new RuleHandler();
 	}
 
+	@Test
 	public void testRuleComplexSimple() throws Exception {
 
 		rcomp = new Rule("rc-id1", PSMethodHeuristic.class);
@@ -138,6 +120,7 @@ public class RuleComplexTest extends TestCase {
 		assertEquals("(0)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testRuleComplexWithoutAction() throws Exception {
 
 		rcomp = new Rule("rc-id1", null);
@@ -168,6 +151,7 @@ public class RuleComplexTest extends TestCase {
 		assertEquals("(1)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testRuleComplexWithoutCondition() throws Exception {
 
 		rcomp = new Rule("rc-id1", PSMethodHeuristic.class);
@@ -202,6 +186,7 @@ public class RuleComplexTest extends TestCase {
 		assertEquals("(2)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testRuleComplexWithoutException() throws Exception {
 
 		rcomp = new Rule("rc-id1", PSMethodHeuristic.class);

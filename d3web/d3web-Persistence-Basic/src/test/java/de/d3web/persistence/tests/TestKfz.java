@@ -20,15 +20,19 @@
 
 package de.d3web.persistence.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Before;
+import org.junit.Test;
+
 import de.d3web.core.io.BasicPersistenceHandler;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.DummyProgressListener;
@@ -60,67 +64,34 @@ import de.d3web.plugin.test.InitPluginManager;
  * 
  * @author bates
  */
-public class TestKfz extends TestCase {
+public class TestKfz {
 
 	private static KnowledgeBase kb = null;
 	private static URL kbURL = TestKfz.class.getClassLoader().getResource("Kfz2K.xml");
 
 	/**
-	 * Creates a new test-object with name ´name´
-	 * 
-	 * @param name Name of the test
-	 */
-	public TestKfz(String name) {
-		super(name);
-	}
-
-	/**
-	 * use it, if you only want to run TestKfz (console) Creation date:
-	 * (08.09.2000 16:06:00)
-	 * 
-	 * @param args java.lang.String[]
-	 */
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(TestKfz.suite());
-	}
-
-	/**
 	 * Method for instantiating necessary objects Creation date: (08.09.2000
 	 * 16:15:09)
+	 * 
+	 * @throws IOException
 	 */
-	@Override
-	protected void setUp() {
-		try {
-			InitPluginManager.init();
-		}
-		catch (IOException e1) {
-			assertTrue("Error initialising plugin framework", false);
-		}
+	@Before
+	public void setUp() throws IOException {
+		InitPluginManager.init();
 		BasicPersistenceHandler ph = new BasicPersistenceHandler();
 		kb = new KnowledgeBase();
-		try {
-			ph.read(kb, kbURL.openStream(), new DummyProgressListener());
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Creation date: (05.09.2000 15:57:24)
-	 * 
-	 * @return a test suite created with this test class
-	 */
-	public static Test suite() {
-		return new TestSuite(TestKfz.class);
+		ph.read(kb, kbURL.openStream(), new DummyProgressListener());
 	}
 
 	/**
 	 * Assures that every type of question can be set and retrieved. Creation
 	 * date: (08.09.2000 16:11:48)
 	 * 
+	 * TODO Ochlast: No assert(), should be refactored
+	 * 
 	 * @throws IOException
 	 */
+	@Test
 	public void testCount() throws IOException {
 		File file = new File("target/kbs");
 		if (!file.isDirectory()) {
@@ -160,6 +131,7 @@ public class TestKfz extends TestCase {
 	 * Assures that every type of question can be set and retrieved. Creation
 	 * date: (08.09.2000 16:11:48)
 	 */
+	@Test
 	public void testFormulaSchema() {
 		Session session = SessionFactory.createSession(kb);
 
@@ -221,6 +193,7 @@ public class TestKfz extends TestCase {
 	 * Assures that every type of question can be set and retrieved. Creation
 	 * date: (08.09.2000 16:11:48)
 	 */
+	@Test
 	public void testNumericExpression() {
 		Session session = SessionFactory.createSession(kb);
 
@@ -256,6 +229,7 @@ public class TestKfz extends TestCase {
 	 * Assures that every type of question can be set and retrieved. Creation
 	 * date: (08.09.2000 16:11:48)
 	 */
+	@Test
 	public void testSetValue() {
 		Session session = SessionFactory.createSession(kb);
 
@@ -326,6 +300,7 @@ public class TestKfz extends TestCase {
 	 * date: (08.09.2000 16:11:48)
 	 * 
 	 */
+	@Test
 	public void testCase() {
 		Session session = SessionFactory.createSession(kb);
 

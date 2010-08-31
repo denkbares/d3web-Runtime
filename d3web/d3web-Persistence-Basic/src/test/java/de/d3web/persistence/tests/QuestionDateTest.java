@@ -26,9 +26,11 @@
  */
 package de.d3web.persistence.tests;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import de.d3web.core.io.fragments.QuestionHandler;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.terminology.QuestionDate;
@@ -36,35 +38,16 @@ import de.d3web.persistence.tests.utils.XMLTag;
 
 /**
  * @author vogele
- * 
- *         To change this generated comment go to Window>Preferences>Java>Code
- *         Generation>Code and Comments
  */
-public class QuestionDateTest extends TestCase {
+public class QuestionDateTest {
 
 	private QuestionDate q1;
 	private QuestionHandler qw;
 	private XMLTag isTag;
 	private XMLTag shouldTag;
 
-	/**
-	 * Constructor for QuestionTextTest.
-	 * 
-	 * @param arg0
-	 */
-	public QuestionDateTest(String args) {
-		super(args);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(QuestionDateTest.suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(QuestionDateTest.class);
-	}
-
-	protected void setUp() {
+	@Before
+	public void setUp() {
 		q1 = new QuestionDate("q1");
 		q1.setName("q1-text");
 
@@ -78,6 +61,7 @@ public class QuestionDateTest extends TestCase {
 		shouldTag.addChild(child);
 	}
 
+	@Test
 	public void testQuestionDate() throws Exception {
 		isTag = new XMLTag(qw.write(q1, Util.createEmptyDocument()));
 		assertEquals("(0)", shouldTag, isTag);

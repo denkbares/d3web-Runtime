@@ -20,13 +20,15 @@
 
 package de.d3web.persistence.tests;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Vector;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Before;
+import org.junit.Test;
+
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.inference.condition.CondKnown;
@@ -58,7 +60,7 @@ import de.d3web.plugin.test.InitPluginManager;
 /**
  * @author merz
  */
-public class ConditionTest extends TestCase {
+public class ConditionTest {
 
 	private Condition ac1, ac21, ac22, ac3;
 
@@ -74,26 +76,9 @@ public class ConditionTest extends TestCase {
 	private XMLTag isTag;
 	private XMLTag shouldTag;
 
-	public ConditionTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(ConditionTest.suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(ConditionTest.class);
-	}
-
-	@Override
-	protected void setUp() {
-		try {
-			InitPluginManager.init();
-		}
-		catch (IOException e1) {
-			assertTrue("Error initialising plugin framework", false);
-		}
+	@Before
+	public void setUp() throws IOException {
+		InitPluginManager.init();
 
 		d1 = new Solution("d1-id");
 
@@ -173,6 +158,7 @@ public class ConditionTest extends TestCase {
 		assertEquals("(0)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testAllNonTerminalConditions() throws Exception {
 
 		ac3 = new CondNot(cDState1);
@@ -245,6 +231,7 @@ public class ConditionTest extends TestCase {
 		assertEquals("(1)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testAllCondText() throws Exception {
 
 		LinkedList<Condition> l1 = new LinkedList<Condition>();
@@ -282,6 +269,7 @@ public class ConditionTest extends TestCase {
 		assertEquals("(2)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testCondKnownAndUnknown() throws Exception {
 
 		LinkedList<Condition> l1 = new LinkedList<Condition>();

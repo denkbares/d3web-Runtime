@@ -20,9 +20,11 @@
 
 package de.d3web.persistence.tests;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import de.d3web.core.io.fragments.DCMarkupHandler;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.terminology.info.DCElement;
@@ -31,13 +33,8 @@ import de.d3web.persistence.tests.utils.XMLTag;
 
 /**
  * @author merz
- * 
- *         To change this generated comment edit the template variable
- *         "typecomment": Window>Preferences>Java>Templates. To enable and
- *         disable the creation of type comments go to
- *         Window>Preferences>Java>Code Generation.
  */
-public class DCMarkupTest extends TestCase {
+public class DCMarkupTest {
 
 	private DCMarkup markup;
 	private DCMarkupHandler dh;
@@ -45,24 +42,14 @@ public class DCMarkupTest extends TestCase {
 	private XMLTag isTag;
 	private XMLTag shouldTag;
 
-	public DCMarkupTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(DCMarkupTest.suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(DCMarkupTest.class);
-	}
-
-	protected void setUp() {
+	@Before
+	public void setUp() {
 		markup = new DCMarkup();
 		markup.setContent(DCElement.SOURCE, "value1");
 		dh = new DCMarkupHandler();
 	}
 
+	@Test
 	public void testSimpleDescriptor() throws Exception {
 
 		shouldTag = new XMLTag("meta");

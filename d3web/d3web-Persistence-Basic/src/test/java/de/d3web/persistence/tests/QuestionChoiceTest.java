@@ -20,13 +20,15 @@
 
 package de.d3web.persistence.tests;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Before;
+import org.junit.Test;
+
 import de.d3web.core.io.fragments.QuestionHandler;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.terminology.Choice;
@@ -37,13 +39,8 @@ import de.d3web.plugin.test.InitPluginManager;
 
 /**
  * @author merz
- * 
- *         To change this generated comment edit the template variable
- *         "typecomment": Window>Preferences>Java>Templates. To enable and
- *         disable the creation of type comments go to
- *         Window>Preferences>Java>Code Generation.
  */
-public class QuestionChoiceTest extends TestCase {
+public class QuestionChoiceTest {
 
 	private QuestionOC q1;
 	private QuestionHandler qw;
@@ -52,30 +49,10 @@ public class QuestionChoiceTest extends TestCase {
 	private XMLTag isTag;
 	private XMLTag shouldTag;
 
-	/**
-	 * Constructor for QuestionOCTest.
-	 * 
-	 * @param arg0
-	 */
-	public QuestionChoiceTest(String arg0) {
-		super(arg0);
-	}
+	@Before
+	protected void setUp() throws IOException {
+		InitPluginManager.init();
 
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(QuestionChoiceTest.suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(QuestionChoiceTest.class);
-	}
-
-	protected void setUp() {
-		try {
-			InitPluginManager.init();
-		}
-		catch (IOException e1) {
-			assertTrue("Error initialising plugin framework", false);
-		}
 		q1 = new QuestionOC("q1");
 		q1.setName("q1-text");
 
@@ -89,6 +66,7 @@ public class QuestionChoiceTest extends TestCase {
 		shouldTag.addChild(child);
 	}
 
+	@Test
 	public void testQuestionOCSimple() throws Exception {
 		answersTag = new XMLTag("Answers");
 		shouldTag.addChild(answersTag);
@@ -96,6 +74,7 @@ public class QuestionChoiceTest extends TestCase {
 		assertEquals("(0)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testQuestionOCWithAnswers() throws Exception {
 		answersTag = new XMLTag("Answers");
 		shouldTag.addChild(answersTag);
@@ -140,6 +119,7 @@ public class QuestionChoiceTest extends TestCase {
 		// answerText = answerText.replaceAll(">", "&gt;");
 	}
 
+	@Test
 	public void testQuestionWithProperties() throws Exception {
 		q1.getProperties().setProperty(Property.HIDE_IN_DIALOG, new Boolean(true));
 		q1.getProperties().setProperty(Property.COST, new Double(20));
@@ -175,6 +155,7 @@ public class QuestionChoiceTest extends TestCase {
 		assertEquals("(3)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testQuestionWithCosts() throws Exception {
 		q1.getProperties().setProperty(Property.TIME, new Double(20));
 		q1.getProperties().setProperty(Property.RISK, new Double(50.5));

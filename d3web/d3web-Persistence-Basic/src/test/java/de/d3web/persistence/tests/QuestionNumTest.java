@@ -20,13 +20,15 @@
 
 package de.d3web.persistence.tests;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Before;
+import org.junit.Test;
+
 import de.d3web.core.io.fragments.NumericalIntervalHandler;
 import de.d3web.core.io.fragments.QuestionHandler;
 import de.d3web.core.io.utilities.Util;
@@ -39,43 +41,18 @@ import de.d3web.plugin.test.InitPluginManager;
 
 /**
  * @author merz
- * 
- *         To change this generated comment edit the template variable
- *         "typecomment": Window>Preferences>Java>Templates. To enable and
- *         disable the creation of type comments go to
- *         Window>Preferences>Java>Code Generation.
  */
-public class QuestionNumTest extends TestCase {
+public class QuestionNumTest {
 
 	private Question q1;
 	private QuestionHandler qw;
 	private XMLTag isTag;
 	private XMLTag shouldTag;
 
-	/**
-	 * Constructor for QuestionNumOutput.
-	 * 
-	 * @param arg0
-	 */
-	public QuestionNumTest(String arg0) {
-		super(arg0);
-	}
+	@Before
+	public void setUp() throws IOException {
+		InitPluginManager.init();
 
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(QuestionNumTest.suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(QuestionNumTest.class);
-	}
-
-	protected void setUp() {
-		try {
-			InitPluginManager.init();
-		}
-		catch (IOException e1) {
-			assertTrue("Error initialising plugin framework", false);
-		}
 		q1 = new QuestionNum("q1");
 		q1.setName("q1-text");
 
@@ -89,6 +66,7 @@ public class QuestionNumTest extends TestCase {
 		shouldTag.addChild(child);
 	}
 
+	@Test
 	public void testQuestionWithProperties() throws Exception {
 		q1.getProperties().setProperty(Property.HIDE_IN_DIALOG, new Boolean(true));
 		q1.getProperties().setProperty(Property.COST, new Double(20));
@@ -121,12 +99,14 @@ public class QuestionNumTest extends TestCase {
 		assertEquals("(2)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testQuestionNumTestSimple() throws Exception {
 		isTag = new XMLTag(qw.write(q1, Util.createEmptyDocument()));
 
 		assertEquals("(0)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testQuestionWithIntervals() throws Exception {
 
 		List<NumericalInterval> intervals = new LinkedList<NumericalInterval>();
@@ -162,6 +142,7 @@ public class QuestionNumTest extends TestCase {
 		assertEquals("(intervals)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testQContainerWithCosts() throws Exception {
 		q1.getProperties().setProperty(Property.TIME, new Double(20));
 		q1.getProperties().setProperty(Property.RISK, new Double(50.5));

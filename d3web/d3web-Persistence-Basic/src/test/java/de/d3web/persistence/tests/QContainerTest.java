@@ -20,11 +20,13 @@
 
 package de.d3web.persistence.tests;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Before;
+import org.junit.Test;
+
 import de.d3web.core.io.fragments.QContainerHandler;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -39,37 +41,17 @@ import de.d3web.plugin.test.InitPluginManager;
  * 
  *         !!! property-test missing !!!
  */
-public class QContainerTest extends TestCase {
+public class QContainerTest {
 
 	private QContainer qc1;
 	private QContainerHandler qcw;
 	private XMLTag isTag;
 	private XMLTag shouldTag;
 
-	/**
-	 * Constructor for QContainerOutputTest.
-	 * 
-	 * @param arg0
-	 */
-	public QContainerTest(String arg0) {
-		super(arg0);
-	}
+	@Before
+	public void setUp() throws IOException {
+		InitPluginManager.init();
 
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(QContainerTest.suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(QContainerTest.class);
-	}
-
-	protected void setUp() {
-		try {
-			InitPluginManager.init();
-		}
-		catch (IOException e1) {
-			assertTrue("Error initialising plugin framework", false);
-		}
 		qc1 = new QContainer("c1");
 		qc1.setName("c1-text");
 
@@ -81,15 +63,16 @@ public class QContainerTest extends TestCase {
 		shouldTag.addChild(shouldTextTag);
 
 		qcw = new QContainerHandler();
-
 	}
 
+	@Test
 	public void testQContainerSimple() throws Exception {
 		isTag = new XMLTag(qcw.write(qc1, Util.createEmptyDocument()));
 
 		assertEquals("(0)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testQContainerWithPriority() throws Exception {
 		qc1.setPriority(new Integer(1));
 		shouldTag.addAttribute("priority", "1");
@@ -99,6 +82,7 @@ public class QContainerTest extends TestCase {
 		assertEquals("(1)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testQContainerWithChildren() throws Exception {
 		Question q1 = new QuestionText("q1");
 		q1.setName("q1-text");
@@ -113,6 +97,7 @@ public class QContainerTest extends TestCase {
 		assertEquals("(2)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testQContainerWithCosts() throws Exception {
 		qc1.getProperties().setProperty(Property.TIME, new Double(20));
 		qc1.getProperties().setProperty(Property.RISK, new Double(50.5));
@@ -138,6 +123,7 @@ public class QContainerTest extends TestCase {
 		assertEquals("(3)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testQContainerWithProperties() throws Exception {
 		qc1.getProperties().setProperty(Property.HIDE_IN_DIALOG, new Boolean(true));
 		qc1.getProperties().setProperty(Property.COST, new Double(20));

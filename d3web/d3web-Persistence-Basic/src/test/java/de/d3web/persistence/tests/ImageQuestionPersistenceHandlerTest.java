@@ -20,12 +20,17 @@
 
 package de.d3web.persistence.tests;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -36,10 +41,6 @@ import de.d3web.multimedia.io.ImageQuestionPersistenceHandler;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.persistence.tests.utils.XMLTagUtils;
 import de.d3web.plugin.test.InitPluginManager;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
 /**
  * Functionality test for ImageQuestionPersistenceHandler.
@@ -47,69 +48,44 @@ import junit.textui.TestRunner;
  * @author Johannes Dienst
  * 
  */
-public class ImageQuestionPersistenceHandlerTest extends TestCase {
+public class ImageQuestionPersistenceHandlerTest {
 
 	private KnowledgeBase kb;
 	private Question q1, q2;
 	private XMLTag shouldTag;
 
-	/**
-	 * Constructor for RuleComplexTest.
-	 * 
-	 * @param arg0
-	 */
-	public ImageQuestionPersistenceHandlerTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		TestRunner.run(ImageQuestionPersistenceHandlerTest.suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(ImageQuestionPersistenceHandlerTest.class);
-	}
-
-	protected void setUp() {
-		try {
-			InitPluginManager.init();
-		}
-		catch (IOException e1) {
-			assertTrue("Error initialising plugin framework", false);
-		}
+	@Before
+	public void setUp() throws Exception {
+		InitPluginManager.init();
 
 		ImageQuestionPersistenceHandler ph = new ImageQuestionPersistenceHandler();
 		kb = new KnowledgeBase();
-		try {
-			q1 = new QuestionNum("QGelenkstatus");
-			q1.setName("QGelenkstatus");
-			q1.setKnowledgeBase(kb);
-			q2 = new QuestionNum("QGelenkstatus2");
-			q2.setName("QGelenkstatus2");
-			q2.setKnowledgeBase(kb);
-			File file = new File("src/test/resources/picturequestions.xml");
-			BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
-			ph.read(kb, in, new DummyProgressListener());
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+
+		q1 = new QuestionNum("QGelenkstatus");
+		q1.setName("QGelenkstatus");
+		q1.setKnowledgeBase(kb);
+		q2 = new QuestionNum("QGelenkstatus2");
+		q2.setName("QGelenkstatus2");
+		q2.setKnowledgeBase(kb);
+		File file = new File("src/test/resources/picturequestions.xml");
+		BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+		ph.read(kb, in, new DummyProgressListener());
 	}
 
-	@SuppressWarnings("unchecked")
+	@Test
 	public void testPropertiesLoading() {
 
 		// Question 1
 		Question q1 = kb.searchQuestion("QGelenkstatus");
-		List props = (List) q1.getProperties().getProperty(Property.IMAGE_QUESTION_INFO);
+		List<?> props = (List<?>) q1.getProperties().getProperty(Property.IMAGE_QUESTION_INFO);
 		String imageName = (String) props.get(0);
 
 		// Image Name right?
 		assertEquals("StrichBe.png", imageName);
-		List answerRegions = (List) props.get(1);
+		List<?> answerRegions = (List<?>) props.get(1);
 
 		// The assertions: AnswerRegion 1
-		List attributes = (List) answerRegions.get(0);
+		List<?> attributes = (List<?>) answerRegions.get(0);
 		String answerID = (String) attributes.get(0);
 		int xStart = Integer.parseInt((String) attributes.get(1));
 		int xEnd = Integer.parseInt((String) attributes.get(2));
@@ -123,7 +99,7 @@ public class ImageQuestionPersistenceHandlerTest extends TestCase {
 
 		// Question 1
 		// The assertions: AnswerRegion 2
-		attributes = (List) answerRegions.get(1);
+		attributes = (List<?>) answerRegions.get(1);
 		answerID = (String) attributes.get(0);
 		xStart = Integer.parseInt((String) attributes.get(1));
 		xEnd = Integer.parseInt((String) attributes.get(2));
@@ -136,16 +112,16 @@ public class ImageQuestionPersistenceHandlerTest extends TestCase {
 		assertEquals(8, yEnd);
 
 		Question q2 = kb.searchQuestion("QGelenkstatus2");
-		props = (List) q2.getProperties().getProperty(Property.IMAGE_QUESTION_INFO);
+		props = (List<?>) q2.getProperties().getProperty(Property.IMAGE_QUESTION_INFO);
 		imageName = (String) props.get(0);
 
 		// Question 2
 		// Image Name right?
 		assertEquals("StrichBe2.png", imageName);
-		answerRegions = (List) props.get(1);
+		answerRegions = (List<?>) props.get(1);
 
 		// The assertions: AnswerRegion 1
-		attributes = (List) answerRegions.get(0);
+		attributes = (List<?>) answerRegions.get(0);
 		answerID = (String) attributes.get(0);
 		xStart = Integer.parseInt((String) attributes.get(1));
 		xEnd = Integer.parseInt((String) attributes.get(2));
@@ -159,7 +135,7 @@ public class ImageQuestionPersistenceHandlerTest extends TestCase {
 
 		// Question 1
 		// The assertions: AnswerRegion 2
-		attributes = (List) answerRegions.get(1);
+		attributes = (List<?>) answerRegions.get(1);
 		answerID = (String) attributes.get(0);
 		xStart = Integer.parseInt((String) attributes.get(1));
 		xEnd = Integer.parseInt((String) attributes.get(2));
@@ -172,6 +148,7 @@ public class ImageQuestionPersistenceHandlerTest extends TestCase {
 		assertEquals(8, yEnd);
 	}
 
+	@Test
 	public void testWrite() throws Exception {
 		shouldTag = new XMLTag("Questions");
 

@@ -20,55 +20,41 @@
 
 package de.d3web.persistence.tests;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import de.d3web.core.io.fragments.SolutionsHandler;
+import org.junit.Before;
+import org.junit.Test;
+
 import de.d3web.core.io.fragments.QContainerHandler;
 import de.d3web.core.io.fragments.QuestionHandler;
+import de.d3web.core.io.fragments.SolutionsHandler;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
  * @author bates
- * 
  */
-public class KnowledgeBaseExportTest extends TestCase {
+public class KnowledgeBaseExportTest {
 
-	public KnowledgeBaseExportTest(String name) throws Exception {
-		super(name);
+	@Before
+	public void setUp() throws IOException {
+		InitPluginManager.init();
 	}
 
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(KnowledgeBaseExportTest.suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(KnowledgeBaseExportTest.class);
-	}
-
-	protected void setUp() {
-		try {
-			InitPluginManager.init();
-		}
-		catch (IOException e1) {
-			assertTrue("Error initialising plugin framework", false);
-		}
-	}
-
+	@Test
 	public void testQuestionTextOutput() throws Exception {
 
 		Question q1 = new QuestionText("q1");
@@ -88,6 +74,7 @@ public class KnowledgeBaseExportTest extends TestCase {
 		assertEquals("QuestionText-output not correct (0)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testQuestionNumOutput() throws Exception {
 
 		Question q1 = new QuestionNum("q1");
@@ -107,6 +94,7 @@ public class KnowledgeBaseExportTest extends TestCase {
 		assertEquals("QuestionNum-output not correct (0)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testQuestionDateOutput() throws Exception {
 
 		Question q1 = new QuestionDate("q1");
@@ -126,6 +114,7 @@ public class KnowledgeBaseExportTest extends TestCase {
 		assertEquals("QuestionNum-output not correct (0)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testQuestionOCOutput() throws Exception {
 
 		QuestionOC q1 = new QuestionOC("q1");
@@ -160,6 +149,7 @@ public class KnowledgeBaseExportTest extends TestCase {
 		assertEquals("QuestionOC-output not correct (0)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testQContainerOutput() throws Exception {
 		QContainer c1 = new QContainer("c1");
 		c1.setName("c1-text");
@@ -184,6 +174,7 @@ public class KnowledgeBaseExportTest extends TestCase {
 
 	}
 
+	@Test
 	public void testSolutionOutput() throws Exception {
 		Solution diag = new Solution("d1");
 		diag.setName("d1-text");

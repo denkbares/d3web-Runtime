@@ -20,14 +20,14 @@
 
 package de.d3web.persistence.tests;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.dom.Document;
 
 import de.d3web.abstraction.ActionSetValue;
@@ -67,19 +67,19 @@ import de.d3web.scoring.Score;
  * @author merz
  */
 
-public class ActionTest extends TestCase {
+public class ActionTest {
 
-	private Rule rcomp;
+	private Rule rule;
 
-	private Choice ac1;
-	private Choice ac2;
+	private Choice answerNo;
+	private Choice answerYes;
 
-	private QuestionChoice quest1;
-	private QuestionNum qnum1;
-	private QuestionDate qdate1;
+	private QuestionChoice questionMC;
+	private QuestionNum questionNum;
+	private QuestionDate questionDate;
 
-	private Solution diag1;
-	private QContainer qcon1;
+	private Solution solution;
+	private QContainer qContainer;
 
 	private XMLTag isTag;
 	private XMLTag shouldTag;
@@ -88,62 +88,44 @@ public class ActionTest extends TestCase {
 
 	Document doc;
 
-	public ActionTest(String arg0) {
-		super(arg0);
+	@Before
+	public void setUp() throws Exception {
+
+		InitPluginManager.init();
+
+		doc = Util.createEmptyDocument();
+
+		answerNo = new AnswerNo("ac1-id");
+		answerNo.setText("a1-text");
+
+		answerYes = new AnswerYes("ac2-id");
+		answerYes.setText("a2-text");
+
+		questionMC = new QuestionMC("q1-id");
+
+		questionNum = new QuestionNum("qnum1-id");
+
+		questionDate = new QuestionDate("qdate1-id");
+
+		solution = new Solution("diag1-id");
+		solution.setName("diag1-text");
+
+		qContainer = new QContainer("qcon1-id");
+
+		rule = new Rule(null, null);
 	}
 
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(ActionTest.suite());
-	}
-
-	public static Test suite() {
-		return new TestSuite(ActionTest.class);
-	}
-
-	@Override
-	protected void setUp() {
-		try {
-			InitPluginManager.init();
-		}
-		catch (IOException e1) {
-			assertTrue("Error initialising plugin framework", false);
-		}
-		try {
-			doc = Util.createEmptyDocument();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		ac1 = new AnswerNo("ac1-id");
-		ac1.setText("a1-text");
-
-		ac2 = new AnswerYes("ac2-id");
-		ac2.setText("a2-text");
-
-		quest1 = new QuestionMC("q1-id");
-
-		qnum1 = new QuestionNum("qnum1-id");
-
-		qdate1 = new QuestionDate("qdate1-id");
-
-		diag1 = new Solution("diag1-id");
-		diag1.setName("diag1-text");
-
-		qcon1 = new QContainer("qcon1-id");
-
-		rcomp = new Rule(null, null);
-	}
-
-	public void testActionSuppressAnswer() throws Exception {
+	@Test
+	public void testActionSuppressAnswer() throws IOException {
 
 		List<Choice> suppressList = new LinkedList<Choice>();
-		suppressList.add(ac1);
-		suppressList.add(ac2);
+		suppressList.add(answerNo);
+		suppressList.add(answerYes);
 
-		ActionSuppressAnswer asa = new ActionSuppressAnswer();
-		rcomp.setAction(asa);
-		asa.setQuestion(quest1);
-		asa.setSuppress(suppressList);
+		ActionSuppressAnswer actionSuppressAnswer = new ActionSuppressAnswer();
+		rule.setAction(actionSuppressAnswer);
+		actionSuppressAnswer.setQuestion(questionMC);
+		actionSuppressAnswer.setSuppress(suppressList);
 
 		shouldTag = new XMLTag("Action");
 		shouldTag.addAttribute("type", "ActionSuppressAnswer");
@@ -162,19 +144,20 @@ public class ActionTest extends TestCase {
 		shouldTag.addChild(question);
 		shouldTag.addChild(suppress);
 
-		SuppressAnswerActionHandler asaw = new SuppressAnswerActionHandler();
-		isTag = new XMLTag(asaw.write(asa, doc));
+		SuppressAnswerActionHandler handler = new SuppressAnswerActionHandler();
+		isTag = new XMLTag(handler.write(actionSuppressAnswer, doc));
 		assertEquals("(0)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testActionClarification() throws Exception {
 		List<QASet> clarifyList = new LinkedList<QASet>();
-		clarifyList.add(quest1);
-		clarifyList.add(qcon1);
+		clarifyList.add(questionMC);
+		clarifyList.add(qContainer);
 
 		ActionClarify acl = new ActionClarify();
-		rcomp.setAction(acl);
-		acl.setTarget(diag1);
+		rule.setAction(acl);
+		acl.setTarget(solution);
 		acl.setQASets(clarifyList);
 
 		shouldTag = new XMLTag("Action");
@@ -199,14 +182,15 @@ public class ActionTest extends TestCase {
 		assertEquals("(1)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testActionRefine() throws Exception {
 		List<QASet> refineList = new LinkedList<QASet>();
-		refineList.add(qcon1);
-		refineList.add(quest1);
+		refineList.add(qContainer);
+		refineList.add(questionMC);
 
 		ActionRefine are = new ActionRefine();
-		rcomp.setAction(are);
-		are.setTarget(diag1);
+		rule.setAction(are);
+		are.setTarget(solution);
 		are.setQASets(refineList);
 
 		shouldTag = new XMLTag("Action");
@@ -231,13 +215,14 @@ public class ActionTest extends TestCase {
 		assertEquals("(2)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testActionIndication() throws Exception {
 		List<QASet> indicationList = new LinkedList<QASet>();
-		indicationList.add(qcon1);
-		indicationList.add(quest1);
+		indicationList.add(qContainer);
+		indicationList.add(questionMC);
 
 		ActionIndication ai = new ActionIndication();
-		rcomp.setAction(ai);
+		rule.setAction(ai);
 		ai.setQASets(indicationList);
 
 		shouldTag = new XMLTag("Action");
@@ -258,10 +243,11 @@ public class ActionTest extends TestCase {
 		assertEquals("(3)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testActionContraIndication() throws Exception {
 		List<QASet> contraindicationList = new LinkedList<QASet>();
-		contraindicationList.add(quest1);
-		contraindicationList.add(qcon1);
+		contraindicationList.add(questionMC);
+		contraindicationList.add(qContainer);
 
 		ActionContraIndication aci = new ActionContraIndication();
 		aci.setQASets(contraindicationList);
@@ -284,10 +270,11 @@ public class ActionTest extends TestCase {
 		assertEquals("(4)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testActionHeuristicPS() throws Exception {
 		ActionHeuristicPS ah = new ActionHeuristicPS();
-		rcomp.setAction(ah);
-		ah.setSolution(diag1);
+		rule.setAction(ah);
+		ah.setSolution(solution);
 		ah.setScore(Score.P1);
 
 		shouldTag = new XMLTag("Action");
@@ -307,23 +294,24 @@ public class ActionTest extends TestCase {
 		assertEquals("(5)", shouldTag, isTag);
 	}
 
+	@Test
 	public void testActionSetValueValue() throws Exception {
 		FormulaNumber fn = new FormulaNumber(new Double(13));
-		FormulaExpression fe = new FormulaExpression(qnum1, fn);
+		FormulaExpression fe = new FormulaExpression(questionNum, fn);
 
 		List<Object> setValueList = new LinkedList<Object>();
-		setValueList.add(ac1);
+		setValueList.add(answerNo);
 		setValueList.add(fe);
-		setValueList.add(ac2);
+		setValueList.add(answerYes);
 
 		ActionSetValue aav = new ActionSetValue();
-		rcomp.setAction(aav);
-		aav.setQuestion(quest1);
+		rule.setAction(aav);
+		aav.setQuestion(questionMC);
 		aav.setValue(setValueList.toArray());
 
 		ActionSetValue asv = new ActionSetValue();
-		rcomp.setAction(asv);
-		asv.setQuestion(quest1);
+		rule.setAction(asv);
+		asv.setQuestion(questionMC);
 		asv.setValue(setValueList.toArray());
 
 		shouldTagAdd = new XMLTag("Action");
@@ -392,18 +380,19 @@ public class ActionTest extends TestCase {
 		assertEquals("(7)", shouldTagSet, isTag);
 	}
 
+	@Test
 	public void testActionSetValueAndActionAddValueDate() throws Exception {
 		FormulaDateElement fn = new Today(new FormulaNumber(new Double(13)));
-		FormulaDateExpression fe = new FormulaDateExpression(qdate1, fn);
+		FormulaDateExpression fe = new FormulaDateExpression(questionDate, fn);
 
 		ActionSetValue aav = new ActionSetValue();
-		rcomp.setAction(aav);
-		aav.setQuestion(qdate1);
+		rule.setAction(aav);
+		aav.setQuestion(questionDate);
 		aav.setValue(fe);
 
 		ActionSetValue asv = new ActionSetValue();
-		rcomp.setAction(asv);
-		asv.setQuestion(qdate1);
+		rule.setAction(asv);
+		asv.setQuestion(questionDate);
 		asv.setValue(fe);
 
 		shouldTagAdd = new XMLTag("Action");
