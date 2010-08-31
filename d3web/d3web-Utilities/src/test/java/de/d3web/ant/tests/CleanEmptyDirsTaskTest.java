@@ -23,7 +23,8 @@
  */
 package de.d3web.ant.tests;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
 import de.d3web.ant.tasks.CleanEmptyDirsTask;
 
 /**
@@ -32,8 +33,9 @@ import de.d3web.ant.tasks.CleanEmptyDirsTask;
  * @author hoernlein
  * @date 17.05.2004
  */
-public class CleanEmptyDirsTaskTest extends TestCase {
+public class CleanEmptyDirsTaskTest {
 
+	@Test
 	public void test() {
 
 		CleanEmptyDirsTask cedt = new CleanEmptyDirsTask();

@@ -26,11 +26,16 @@
 
 package de.d3web.explain.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Collection;
 import java.util.LinkedList;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.Before;
+import org.junit.Test;
+
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodInit;
@@ -72,22 +77,8 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 	Session session = null;
 	private ExplanationFactory eFac = null;
 
-	/** Creates a new instance of ExplainQASetReasons */
-	public ExplainQASetReasons(String name) {
-		super(name);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.main(
-				new String[] { "de.d3web.explain.test.ExplainQASetReasonsTest" });
-	}
-
-	public static Test suite() {
-		return new TestSuite(ExplainQASetReasons.class);
-	}
-
-	@Override
-	protected void setUp() {
+	@Before
+	public void setUp() {
 		session = SessionFactory.createSession(testKb);
 		/*
 		 * Let me have some explanations of this test first: We do have the
@@ -101,6 +92,7 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 		eFac = new ExplanationFactory(session);
 	}
 
+	@Test
 	public void testInitQASets() {
 		Collection<Class<? extends PSMethod>> explainContext = new LinkedList<Class<? extends PSMethod>>();
 		explainContext.add(PSMethodInit.class);
@@ -133,6 +125,7 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 
 	}
 
+	@Test
 	public void testRefinement() {
 
 		Collection<Class<? extends PSMethod>> explainContext = new LinkedList<Class<? extends PSMethod>>();
@@ -174,6 +167,7 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 
 	}
 
+	@Test
 	public void testClarification() {
 
 		Collection<Class<? extends PSMethod>> explainContext = new LinkedList<Class<? extends PSMethod>>();
@@ -215,9 +209,7 @@ public class ExplainQASetReasons extends AbstractExplainTest {
 
 	}
 
-	public void _testInactive() {
-	}
-
+	@Test
 	public void testIndication() {
 		Collection<Class<? extends PSMethod>> explainContext = new LinkedList<Class<? extends PSMethod>>();
 		explainContext.add(PSMethodInit.class);

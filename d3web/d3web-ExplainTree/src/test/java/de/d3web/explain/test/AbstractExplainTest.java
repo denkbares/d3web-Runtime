@@ -26,7 +26,6 @@
 
 package de.d3web.explain.test;
 
-import junit.framework.TestCase;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Solution;
@@ -35,12 +34,7 @@ import de.d3web.core.knowledge.terminology.Solution;
  * 
  * @author betz
  */
-public abstract class AbstractExplainTest extends TestCase {
-
-	/** Creates a new instance of AbstractExplainTest */
-	public AbstractExplainTest(String name) {
-		super(name);
-	}
+public abstract class AbstractExplainTest {
 
 	protected void log(String log) {
 		System.out.println(log);

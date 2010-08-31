@@ -23,7 +23,8 @@
  */
 package de.d3web.ant.tests;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
 import de.d3web.ant.tasks.FileListToPropertyTask;
 
 /**
@@ -32,8 +33,9 @@ import de.d3web.ant.tasks.FileListToPropertyTask;
  * @author hoernlein
  * @date 17.05.2004
  */
-public class FileListToPropertyTaskTest extends TestCase {
+public class FileListToPropertyTaskTest {
 
+	@Test
 	public void test() {
 
 		FileListToPropertyTask fl2pt = new FileListToPropertyTask();

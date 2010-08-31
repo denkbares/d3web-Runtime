@@ -29,8 +29,9 @@ package de.d3web.explain.test;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.Before;
+import org.junit.Test;
+
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodInit;
@@ -51,31 +52,19 @@ import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
+ * TODO Ochlast: Automate tests, add asserts()
  * 
  * @author betz
  */
+
 public class ExplainDiagnosisReasons extends AbstractExplainTest {
 
 	KnowledgeBase testKb = new KfzWb();
 	Session session = null;
 	private ExplanationFactory eFac = null;
 
-	/** Creates a new instance of ExplainQASetReasons */
-	public ExplainDiagnosisReasons(String name) {
-		super(name);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.main(
-				new String[] { "de.d3web.explain.test.ExplainDiagnosisReasons" });
-	}
-
-	public static Test suite() {
-		return new TestSuite(ExplainDiagnosisReasons.class);
-	}
-
-	@Override
-	protected void setUp() {
+	@Before
+	public void setUp() {
 		session = SessionFactory.createSession(testKb);
 		/*
 		 * Let me have some explanations of this test first: We do have the
@@ -89,6 +78,7 @@ public class ExplainDiagnosisReasons extends AbstractExplainTest {
 		eFac = new ExplanationFactory(session);
 	}
 
+	@Test
 	public void testSimple() {
 		Collection<Class<? extends PSMethod>> explainContext = new LinkedList<Class<? extends PSMethod>>();
 		explainContext.add(PSMethodInit.class);
@@ -113,6 +103,7 @@ public class ExplainDiagnosisReasons extends AbstractExplainTest {
 		System.err.println("-- <testSimple --");
 	}
 
+	@Test
 	public void testTwoRules() {
 		Collection<Class<? extends PSMethod>> explainContext = new LinkedList<Class<? extends PSMethod>>();
 		explainContext.add(PSMethodInit.class);
