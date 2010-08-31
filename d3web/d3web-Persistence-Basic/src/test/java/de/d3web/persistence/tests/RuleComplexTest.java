@@ -59,7 +59,7 @@ public class RuleComplexTest {
 	private XMLTag shouldTag;
 
 	@Before
-	protected void setUp() throws IOException {
+	public void setUp() throws IOException {
 		InitPluginManager.init();
 
 		qnum1 = new QuestionNum("qnum1-id");

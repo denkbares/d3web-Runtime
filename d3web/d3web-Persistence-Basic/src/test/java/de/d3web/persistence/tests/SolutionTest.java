@@ -48,7 +48,7 @@ public class SolutionTest {
 	private XMLTag shouldTag;
 
 	@Before
-	protected void setUp() throws IOException {
+	public void setUp() throws IOException {
 		InitPluginManager.init();
 
 		// create the diagnosis

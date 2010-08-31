@@ -50,7 +50,7 @@ public class QuestionChoiceTest {
 	private XMLTag shouldTag;
 
 	@Before
-	protected void setUp() throws IOException {
+	public void setUp() throws IOException {
 		InitPluginManager.init();
 
 		q1 = new QuestionOC("q1");
