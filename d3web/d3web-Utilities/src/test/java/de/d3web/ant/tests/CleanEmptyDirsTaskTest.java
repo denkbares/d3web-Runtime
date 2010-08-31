@@ -23,6 +23,8 @@
  */
 package de.d3web.ant.tests;
 
+import org.junit.Test;
+
 
 /**
  * CleanEmptyDirsTaskTest (in ) de.d3web.ant.tests d3web-Utilities
@@ -34,12 +36,12 @@ package de.d3web.ant.tests;
  */
 public class CleanEmptyDirsTaskTest {
 
-	// @Test
-	// public void test() {
-	//
-	// CleanEmptyDirsTask cedt = new CleanEmptyDirsTask();
-	// cedt.setDir("D:\\_eclipseexport\\d3webTrain_build_20040517_1354_fullserver\\tomcat\\webapps\\d3webTrain\\WEB-INF\\classes");
-	// cedt.execute();
-	//
-	// }
+	@Test
+	public void test() {
+
+		// CleanEmptyDirsTask cedt = new CleanEmptyDirsTask();
+		// cedt.setDir("D:\\_eclipseexport\\d3webTrain_build_20040517_1354_fullserver\\tomcat\\webapps\\d3webTrain\\WEB-INF\\classes");
+		// cedt.execute();
+
+	}
 }
