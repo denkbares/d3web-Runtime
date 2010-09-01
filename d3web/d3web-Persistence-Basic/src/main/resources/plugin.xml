@@ -547,7 +547,7 @@
 		<parameter id="description" value="KnowledgeReader for Picture Questions." />
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
-		<parameter id="filename" value="imagequestion/picturequestions.xml" />
+		<parameter id="filename" value="kb/imagequestions.xml" />
 	</extension>
 	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeWriter"
@@ -558,7 +558,7 @@
 		<parameter id="description" value="KnowledgeWriter for Picture Questions" />
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
-		<parameter id="filename" value="imagequestion/picturequestions.xml" />
+		<parameter id="filename" value="kb/imagequestions.xml" />
 	</extension>
 	
 </plugin>
