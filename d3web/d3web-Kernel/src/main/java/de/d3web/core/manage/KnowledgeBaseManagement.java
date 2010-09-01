@@ -489,11 +489,27 @@ public class KnowledgeBaseManagement {
 		// HOTFIX (20100411) workaround for setting a _single_ Answer to a
 		// MC-Question
 		// needs jobas healing hands...:-)
+		// maybe martinas healing hands are enough?! ;-)
 		if (question instanceof QuestionMC) {
-			Choice choice = findChoice((QuestionChoice) question, valueString);
+
 			List<ChoiceValue> values = new LinkedList<ChoiceValue>();
-			values.add(new ChoiceValue(choice));
-			return new MultipleChoiceValue(values);
+
+			// if mc val is a "real" mc val, i.e. more than one answervals
+			if (valueString.contains(MultipleChoiceValue.ID_SEPARATOR)) {
+				String[] mcvals = valueString.split(MultipleChoiceValue.ID_SEPARATOR);
+				for (String val : mcvals) {
+					Choice choice = findChoice((QuestionChoice) question, val);
+					values.add(new ChoiceValue(choice));
+				}
+				return new MultipleChoiceValue(values);
+			}
+
+			// else, if a single answer val should be set for a mc question
+			else {
+				Choice choice = findChoice((QuestionChoice) question, valueString);
+				values.add(new ChoiceValue(choice));
+				return new MultipleChoiceValue(values);
+			}
 		}
 		//
 		if (question instanceof QuestionChoice) {
