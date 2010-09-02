@@ -195,7 +195,6 @@
 		<module>d3web-CaseRepository</module>
 		<module>d3web-Utilities</module>
 		<module>d3web-SharedKnowledge</module>
-		<module>d3web-ExplainTree</module>
 		<module>d3web-Verbalizer</module>
 		<module>d3web-EmpiricalTesting</module>
 		<module>d3web-SCM-CBR</module>
