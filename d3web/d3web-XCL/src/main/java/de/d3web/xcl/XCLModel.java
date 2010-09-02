@@ -288,6 +288,12 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		return null;
 	}
 
+	@Override
+	public String toString() {
+		return "XCLModel[" + getSolution().getName() + "; " + getSuggestedThreshold() + "; "
+				+ getEstablishedThreshold() + "]@" + Integer.toHexString(hashCode());
+	}
+
 	public Solution getSolution() {
 		return solution;
 	}
