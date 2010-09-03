@@ -20,12 +20,12 @@
 
 package de.d3web.scoring;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.utilities.Utils;
 
 /**
  * Stores the score of a diagnosis in context to a problem-solving method. The
@@ -53,9 +53,9 @@ public class Score implements Comparable<Object> {
 	public static final Score N3 = new Score(-10, -10, "N3");
 	public static final Score N2 = new Score(-5, -5, "N2");
 	public static final Score N1 = new Score(-2, 0, "N1");
-	public static final List<Score> APRIORI = Utils.createList(new Score[] {
+	public static final List<Score> APRIORI = Arrays.asList(new Score[] {
 			P5, P4, P3, P2, N2, N3, N4, N5 });
-	private static final List<Score> allScores = Utils.createList(new Score[] {
+	private static final List<Score> allScores = Arrays.asList(new Score[] {
 			P7, P6, P5x, P5, P4, P3, P2, P1, N1, N2, N3, N4, N5, N5x, N6, N7 });
 
 	private String symbol;
@@ -88,6 +88,7 @@ public class Score implements Comparable<Object> {
 	 * negative integer, zero, or a positive integer as this object is less
 	 * than, equal to, or greater than the specified object.
 	 */
+	@Override
 	public int compareTo(Object o) {
 		if (o instanceof Score) {
 			double ret = getScore() - ((Score) o).getScore();

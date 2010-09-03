@@ -20,8 +20,9 @@
 
 package de.d3web.core.knowledge.terminology;
 
+import java.util.Arrays;
+
 import de.d3web.core.manage.AnswerFactory;
-import de.d3web.core.utilities.Utils;
 
 /**
  * This is a simple extension of the QuestionChoice with only has two possible
@@ -54,7 +55,7 @@ public class QuestionYN extends QuestionOC {
 		super(id);
 		yes = AnswerFactory.createAnswerYes(id + "YES", yesText);
 		no = AnswerFactory.createAnswerNo(id + "NO", noText);
-		setAlternatives(Utils.createList(new Choice[] {
+		setAlternatives(Arrays.asList(new Choice[] {
 				yes, no }));
 	}
 

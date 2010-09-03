@@ -21,6 +21,7 @@
 package de.d3web.indication;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,7 +31,6 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.Session;
-import de.d3web.core.utilities.Utils;
 import de.d3web.indication.inference.PSMethodSuppressAnswer;
 
 /**
@@ -110,7 +110,7 @@ public class ActionSuppressAnswer extends PSAction {
 	 * Sets the answers to be suppressed. Creation date: (26.10.00 14:57:55)
 	 */
 	public void setSuppress(Choice[] theSuppressArray) {
-		setSuppress(Utils.createList(theSuppressArray));
+		setSuppress(Arrays.asList(theSuppressArray));
 	}
 
 	/**

@@ -20,6 +20,7 @@
 
 package de.d3web.core.inference.condition;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -36,7 +37,7 @@ public class CondNot extends NonTerminalCondition {
 	/**
 	 * The enclosed condition the be negated.
 	 */
-	private Condition condition;
+	private final Condition condition;
 
 	/**
 	 * Creates a new condition, where the specified condition must not be true
@@ -45,9 +46,7 @@ public class CondNot extends NonTerminalCondition {
 	 * @param condition the enclosed condition to be negated
 	 */
 	public CondNot(Condition condition) {
-		super(
-				de.d3web.core.utilities.Utils.createVector(
-						new Condition[] { condition }));
+		super(Arrays.asList(new Condition[] { condition }));
 		this.condition = condition;
 	}
 
