@@ -41,7 +41,7 @@ import org.w3c.dom.NodeList;
 import de.d3web.core.io.utilities.XMLTools;
 import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.indication.inference.PropertyCloner;
+import de.d3web.persistence.xml.loader.PropertiesUtilities.PropertyCodec;
 import de.d3web.xml.domtools.DOMAccess;
 
 /**
@@ -72,6 +72,7 @@ public class PropertiesUtilities {
 		 * 
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString() {
 			return string;
 		}
@@ -81,28 +82,13 @@ public class PropertiesUtilities {
 		 * 
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
+		@Override
 		public boolean equals(Object obj) {
 			if (obj == null || !(obj instanceof CDataString)) return false;
 			if (this == obj) return true;
 			return toString().equals(obj.toString());
 		}
 
-	}
-
-	/**
-	 * PropertyCloner for
-	 * de.d3web.persistence.xml.loader.PropertiesUtilities$CDataString.
-	 * 
-	 * @see de.d3web.indication.inference.PropertyCloner
-	 */
-	public static class CDataStringPropertyCloner extends PropertyCloner {
-
-		public Object cloneProperty(Object o) {
-			if (o instanceof CDataString) {
-				return new CDataString(new String(((CDataString) o).toString()));
-			}
-			return null;
-		}
 	}
 
 	/**
@@ -158,7 +144,7 @@ public class PropertiesUtilities {
 		public abstract Object decode(Node n);
 	}
 
-	private Map codecs = new HashMap();
+	private final Map codecs = new HashMap();
 
 	public void addCodec(PropertyCodec pc) {
 		codecs.put(pc.getClazz(), pc);
@@ -168,10 +154,12 @@ public class PropertiesUtilities {
 
 		addCodec(new PropertyCodec(CDataString.class) {
 
+			@Override
 			public String encode(Object o) {
 				return "<![CDATA[" + XMLTools.prepareForCDATA(((CDataString) o).toString()) + "]]>";
 			}
 
+			@Override
 			public Object decode(Node n) {
 				NodeList ns = n.getChildNodes();
 				for (int i = 0; i < ns.getLength(); i++) {
@@ -186,10 +174,12 @@ public class PropertiesUtilities {
 
 		addCodec(new PropertyCodec(String.class) {
 
+			@Override
 			public String encode(Object o) {
 				return "<![CDATA[" + XMLTools.prepareForCDATA(o.toString()) + "]]>";
 			}
 
+			@Override
 			public Object decode(Node n) {
 				NodeList ns = n.getChildNodes();
 				for (int i = 0; i < ns.getLength(); i++) {
@@ -204,10 +194,12 @@ public class PropertiesUtilities {
 
 		addCodec(new PropertyCodec(Integer.class) {
 
+			@Override
 			public String encode(Object o) {
 				return o.toString();
 			}
 
+			@Override
 			public Object decode(Node n) {
 				return Integer.valueOf(DOMAccess.getText(n));
 			}
@@ -215,10 +207,12 @@ public class PropertiesUtilities {
 
 		addCodec(new PropertyCodec(Double.class) {
 
+			@Override
 			public String encode(Object o) {
 				return o.toString();
 			}
 
+			@Override
 			public Object decode(Node n) {
 				return Double.valueOf(DOMAccess.getText(n));
 			}
@@ -226,10 +220,12 @@ public class PropertiesUtilities {
 
 		addCodec(new PropertyCodec(Boolean.class) {
 
+			@Override
 			public String encode(Object o) {
 				return o.toString();
 			}
 
+			@Override
 			public Object decode(Node n) {
 				return Boolean.valueOf(DOMAccess.getText(n));
 			}
@@ -237,10 +233,12 @@ public class PropertiesUtilities {
 
 		addCodec(new PropertyCodec(URL.class) {
 
+			@Override
 			public String encode(Object o) {
 				return "<![CDATA[" + XMLTools.prepareForCDATA(o.toString()) + "]]>";
 			}
 
+			@Override
 			public Object decode(Node n) {
 				String urlS = null;
 				NodeList ns = n.getChildNodes();
