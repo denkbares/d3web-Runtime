@@ -65,13 +65,14 @@ public class BasicPersistenceHandlerTest {
 		q1 = new QuestionNum("q1");
 		q1.setName("q1-text");
 		q1.setKnowledgeBase(kb);
-
+		kb.setRootQASet(q1);
 		q2 = new QuestionOC("q2");
 		q2.setName("q2-text");
 		q2.setKnowledgeBase(kb);
 
 		diag1 = new Solution("d1");
 		diag1.setName("d1-text");
+		kb.setRootSolution(diag1);
 	}
 
 	@Test
@@ -84,6 +85,14 @@ public class BasicPersistenceHandlerTest {
 		this.addInitQuestions();
 
 		this.addCosts();
+
+		XMLTag rootQASetTag = new XMLTag("rootQASet");
+		rootQASetTag.setContent("q1");
+		shouldTag.addChild(rootQASetTag);
+
+		XMLTag rootSolutionTag = new XMLTag("rootSolution");
+		rootSolutionTag.setContent("d1");
+		shouldTag.addChild(rootSolutionTag);
 
 		this.addQASets();
 
