@@ -36,8 +36,8 @@ import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.plugin.test.InitPluginManager;
 
-
 /**
+ * Unit test for {@link DefaultFact}
  * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 26.08.2010

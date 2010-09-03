@@ -28,6 +28,7 @@ import org.junit.Test;
 import de.d3web.core.knowledge.terminology.QuestionText;
 
 /**
+ * Unit test for {@link QuestionText}
  * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 24.08.2010

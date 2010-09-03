@@ -29,8 +29,8 @@ import org.junit.Test;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval.IntervalException;
 
-
 /**
+ * Unit test for {@link NumericalInterval}
  * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 27.08.2010

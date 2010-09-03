@@ -33,6 +33,7 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 
 /**
+ * Unit test for {@link NamedObject}
  * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 23.08.2010

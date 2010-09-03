@@ -39,6 +39,7 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionZC;
 
 /**
+ * Unit test for {@link QuestionZC}
  * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 24.08.2010

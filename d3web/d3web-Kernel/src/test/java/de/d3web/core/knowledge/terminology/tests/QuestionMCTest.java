@@ -31,6 +31,7 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 
 /**
+ * Unit test for {@link QuestionMC}
  * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 24.08.2010

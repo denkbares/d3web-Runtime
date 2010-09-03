@@ -32,6 +32,7 @@ import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.session.values.UndefinedValue;
 
 /**
+ * Unit test for {@link Rating}
  * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 24.08.2010

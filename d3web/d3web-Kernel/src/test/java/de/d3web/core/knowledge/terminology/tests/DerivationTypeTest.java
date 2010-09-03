@@ -29,6 +29,7 @@ import org.junit.Test;
 import de.d3web.core.knowledge.terminology.DerivationType;
 
 /**
+ * Unit test for {@link DerivationType}
  * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 24.08.2010
