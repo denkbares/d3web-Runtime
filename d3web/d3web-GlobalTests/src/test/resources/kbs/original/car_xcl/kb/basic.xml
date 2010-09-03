@@ -10,6 +10,8 @@
 <Question ID="QC3"/>
 </InitQuestions>
 <Costs/>
+<rootQASet>Q000</rootQASet>
+<rootSolution>P000</rootSolution>
 <QASets>
 <QContainer ID="Q000">
 <Text>Q000</Text>

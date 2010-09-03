@@ -31,6 +31,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
+import java.util.logging.Logger;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -151,6 +153,8 @@ public class BasicPersistenceHandler implements
 		List<Element> initquestionnodes = null;
 		List<Element> costNodes = null;
 		PersistenceManager pm = PersistenceManager.getInstance();
+		String rootQASetID = null;
+		String rootSolutionID = null;
 		for (Element child : kbchildren) {
 			String name = child.getNodeName();
 			if (name.equalsIgnoreCase("knowledgeslices")) {
@@ -183,6 +187,12 @@ public class BasicPersistenceHandler implements
 			}
 			else if (name.equals("PriorityGroups")) {
 				// do nothing, PriorityGroups not supported any more
+			}
+			else if (name.equals("rootQASet")) {
+				rootQASetID = child.getTextContent();
+			}
+			else if (name.equals("rootSolution")) {
+				rootSolutionID = child.getTextContent();
 			}
 			else {
 				// DCMarkup and kb properties are directly read
@@ -223,6 +233,20 @@ public class BasicPersistenceHandler implements
 				Solution diag = (Solution) pm.readFragment(child, kb);
 				hierarchiemap.put(child, diag);
 			}
+		}
+
+		// defining roots:
+		if (rootQASetID != null) {
+			kb.setRootQASet(kb.searchQASet(rootQASetID));
+		}
+		else {
+			kb.setRootQASet(getRootQASet(kb));
+		}
+		if (rootSolutionID != null) {
+			kb.setRootSolution(kb.searchSolution(rootSolutionID));
+		}
+		else {
+			kb.setRootSolution(getRootSolution(kb));
 		}
 
 		// appending children
@@ -287,6 +311,14 @@ public class BasicPersistenceHandler implements
 
 		listener.updateProgress(time++ / abstime, "Saving knowledge base: costs");
 		saveCosts(father, kb);
+
+		Element rootQASetElement = doc.createElement("rootQASet");
+		rootQASetElement.setTextContent(kb.getRootQASet().getId());
+		father.appendChild(rootQASetElement);
+
+		Element rootSolutionElement = doc.createElement("rootSolution");
+		rootSolutionElement.setTextContent(kb.getRootSolution().getId());
+		father.appendChild(rootSolutionElement);
 
 		Element qContainersElement = doc.createElement("QASets");
 		Map<NamedObject, Element> possibleParents = new HashMap<NamedObject, Element>();
@@ -353,5 +385,66 @@ public class BasicPersistenceHandler implements
 			}
 		}
 		return time;
+	}
+
+	private static QASet getRootQASet(KnowledgeBase kb) {
+		List<QASet> noParents = new ArrayList<QASet>();
+		Iterator<QASet> iter = kb.getQASets().iterator();
+		while (iter.hasNext()) {
+			QASet fk = iter.next();
+			if (fk.getParents() == null || fk.getParents().length == 0) {
+				noParents.add(fk);
+			}
+		}
+		if (noParents.size() > 1) {
+			Logger.getLogger(kb.getClass().getName()).warning(
+					"more than one root node in qaset tree!");
+			// [HOTFIX]:aha:multiple root / orphan handling
+			QASet root = null;
+			iter = noParents.iterator();
+			while (iter.hasNext()) {
+				QASet q = iter.next();
+				if (q.getId().equals("Q000")) root = q;
+			}
+			return root;
+
+		}
+		else if (noParents.size() < 1) {
+			Logger.getLogger(kb.getClass().getName()).severe(
+					"no root node in qaset tree!");
+			return null;
+		}
+		return noParents.get(0);
+	}
+
+	private static Solution getRootSolution(KnowledgeBase kb) {
+		Vector<Solution> retVec = new Vector<Solution>();
+		Iterator<Solution> iter = kb.getSolutions().iterator();
+		while (iter.hasNext()) {
+			Solution d = iter.next();
+			if (d.getParents() == null || d.getParents().length == 0) {
+				retVec.add(d);
+			}
+		}
+		if (retVec.size() > 1) {
+			Logger.getLogger(kb.getClass().getName()).warning(
+					"more than one diagnosis root node!");
+
+			// [HOTFIX]:aha:multiple root / orphan handling
+			Solution root = null;
+			iter = retVec.iterator();
+			while (iter.hasNext()) {
+				Solution d = iter.next();
+				if (d.getId().equals("P000")) root = d;
+			}
+			return root;
+
+		}
+		else if (retVec.size() < 1) {
+			Logger.getLogger(kb.getClass().getName()).severe(
+					"no root node in diagnosis tree!");
+			return null;
+		}
+		return retVec.get(0);
 	}
 }

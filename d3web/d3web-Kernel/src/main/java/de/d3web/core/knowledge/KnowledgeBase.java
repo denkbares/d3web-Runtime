@@ -31,8 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.Vector;
-import java.util.logging.Logger;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
@@ -90,6 +88,10 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 
 	private final List<PSConfig> psConfigs = new ArrayList<PSConfig>();
 
+	private QASet rootQASet = null;
+
+	private Solution rootSolution = null;
+
 	/**
 	 * Hashes the objects for ID
 	 */
@@ -109,6 +111,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	/**
 	 * @return the unique identifier of this KnowledgeBase instance.
 	 */
+	@Override
 	public String getId() {
 		return kbID;
 	}
@@ -133,6 +136,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	 * @param problemsolver the specified problem-solver
 	 * @param kind the access key for the type of knowledge to be retrieved
 	 */
+	@Override
 	public Object getKnowledge(Class<? extends PSMethod> problemsolver, MethodKind kind) {
 		Map<MethodKind, List<KnowledgeSlice>> o = knowledgeMap.get(problemsolver);
 		if (o != null) return o.get(kind);
@@ -242,6 +246,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	 * @param knowledgeContext the access key for the indexing with the
 	 *        problem-solver
 	 */
+	@Override
 	public synchronized void addKnowledge(Class<? extends PSMethod> problemsolver,
 			KnowledgeSlice knowledgeSlice, MethodKind knowledgeContext) {
 		/* make sure, that a storage for the problemsolver is available */
@@ -497,102 +502,17 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	 * @date 15.04.2010
 	 */
 	public Solution getRootSolution() {
-		Vector<Solution> retVec = new Vector<Solution>();
-		Iterator<Solution> iter = getSolutions().iterator();
-		while (iter.hasNext()) {
-			Solution d = iter.next();
-			if (d.getParents() == null || d.getParents().length == 0) {
-				retVec.add(d);
-			}
-		}
-		if (retVec.size() > 1) {
-			Logger.getLogger(this.getClass().getName()).warning(
-					"more than one diagnosis root node!");
-
-			// [HOTFIX]:aha:multiple root / orphan handling
-			Collection<Solution> orphans = new Vector<Solution>();
-			Solution root = null;
-			iter = retVec.iterator();
-			while (iter.hasNext()) {
-				Solution d = iter.next();
-				if (d.getId().equals("P000")) root = d;
-				else orphans.add(d);
-			}
-			if (root != null) {
-				Logger.getLogger(this.getClass().getName()).warning(
-						"fixed: single root is now " + root.getId());
-				iter = orphans.iterator();
-				while (iter.hasNext()) {
-					Solution d = iter.next();
-					d.addParent(root);
-					Logger.getLogger(this.getClass().getName()).warning(
-							"fixed: node " + d.getId() + " is now child of "
-									+ root.getId());
-				}
-			}
-			return root;
-
-		}
-		else if (retVec.size() < 1) {
-			Logger.getLogger(this.getClass().getName()).severe(
-					"no root node in diagnosis tree!");
-			return null;
-		}
-		return retVec.get(0);
+		return rootSolution;
 	}
 
 	/**
 	 * The questionnaires and contained questions are organized in a hierarchy.
 	 * This method returns the root object (usually a {@link QContainer}).
-	 * Actually, the method collects all {@link QASet} instances, that have
-	 * parent relation. Then, the first instance is returned (it's assumed that
-	 * further instances are only temporarily have not parent).
 	 * 
 	 * @return the root {@link QASet} instance of this {@link KnowledgeBase}
 	 */
 	public QASet getRootQASet() {
-		List<QASet> noParents = new ArrayList<QASet>();
-		Iterator<QASet> iter = getQASets().iterator();
-		while (iter.hasNext()) {
-			QASet fk = iter.next();
-			if (fk.getParents() == null || fk.getParents().length == 0) {
-				noParents.add(fk);
-			}
-		}
-		if (noParents.size() > 1) {
-			Logger.getLogger(this.getClass().getName()).warning(
-					"more than one root node in qaset tree!");
-
-			// [HOTFIX]:aha:multiple root / orphan handling
-			Collection<QASet> orphans = new Vector<QASet>();
-			QASet root = null;
-			iter = noParents.iterator();
-			while (iter.hasNext()) {
-				QASet q = iter.next();
-				if (q.getId().equals("Q000")) root = q;
-				else orphans.add(q);
-			}
-			if (root != null) {
-				Logger.getLogger(this.getClass().getName()).warning(
-						"fixed: single root is now " + root.getId());
-				iter = orphans.iterator();
-				while (iter.hasNext()) {
-					QASet q = iter.next();
-					q.addParent(root);
-					Logger.getLogger(this.getClass().getName()).warning(
-							"fixed: node " + q.getId() + " is now child of "
-									+ root.getId());
-				}
-			}
-			return root;
-
-		}
-		else if (noParents.size() < 1) {
-			Logger.getLogger(this.getClass().getName()).severe(
-					"no root node in qaset tree!");
-			return null;
-		}
-		return noParents.get(0);
+		return rootQASet;
 	}
 
 	/**
@@ -749,6 +669,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	 * 
 	 * @return the meta-description of this {@link KnowledgeBase} instance.
 	 */
+	@Override
 	public DCMarkup getDCMarkup() {
 		return dcMarkup;
 	}
@@ -759,6 +680,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	 * @param dcMarkup the meta-description of this {@link KnowledgeBase}
 	 *        instance.
 	 */
+	@Override
 	public void setDCMarkup(DCMarkup dcMarkup) {
 		this.dcMarkup = dcMarkup;
 	}
@@ -768,6 +690,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	 * 
 	 * @return additional properties defined for this knowledge base
 	 */
+	@Override
 	public Properties getProperties() {
 		return properties;
 	}
@@ -777,6 +700,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	 * 
 	 * @param properties the properties of this knowledge base
 	 */
+	@Override
 	public void setProperties(Properties properties) {
 		this.properties = properties;
 	}
@@ -944,4 +868,19 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	public String getCostVerbalization(String id) {
 		return costVerbalization.get(id);
 	}
+
+	public void setRootQASet(QASet rootQASet) {
+		this.rootQASet = rootQASet;
+		if (!getQASets().contains(rootQASet)) {
+			addQASet(rootQASet);
+		}
+	}
+
+	public void setRootSolution(Solution rootSolution) {
+		this.rootSolution = rootSolution;
+		if (!solutions.contains(rootSolution)) {
+			solutions.add(rootSolution);
+		}
+	}
+
 }

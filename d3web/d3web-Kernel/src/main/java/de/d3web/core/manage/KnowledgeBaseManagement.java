@@ -101,10 +101,12 @@ public class KnowledgeBaseManagement {
 		Solution p000 = new Solution("P000");
 		p000.setName("P000");
 		theK.add(p000);
+		theK.setRootSolution(p000);
 
 		QContainer q000 = new QContainer("Q000");
 		q000.setName("Q000");
 		theK.add(q000);
+		theK.setRootQASet(q000);
 
 		return theK;
 	}

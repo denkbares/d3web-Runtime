@@ -16,6 +16,8 @@
 <Question ID="QC1"/>
 </InitQuestions>
 <Costs/>
+<rootQASet>Q000</rootQASet>
+<rootSolution>P000</rootSolution>
 <QASets>
 <Question ID="KinderIntoxikation" type="OC">
 <Text>Question: KinderIntoxikation</Text>

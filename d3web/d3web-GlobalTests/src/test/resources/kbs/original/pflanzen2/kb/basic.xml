@@ -23,6 +23,8 @@
 <Unit/>
 </Cost>
 </Costs>
+<rootQASet>Q000</rootQASet>
+<rootSolution>P000</rootSolution>
 <QASets>
 <Question ID="M1419" type="OC">
 <Text>Blütenblätter gespalten</Text>
