@@ -18,13 +18,8 @@
  */
 package de.d3web.core.io.rules;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.d3web.core.inference.PSMethod;
-import de.d3web.indication.inference.PSMethodContraIndication;
-import de.d3web.indication.inference.PSMethodNextQASet;
-import de.d3web.indication.inference.PSMethodSuppressAnswer;
+import de.d3web.indication.inference.PSMethodStrategic;
 
 /**
  * PersistanceHandler for strategic-rules
@@ -39,12 +34,8 @@ public class StrategicRulesPersistenceHandler extends
 	}
 
 	@Override
-	protected List<Class<? extends PSMethod>> getProblemSolverContent() {
-		List<Class<? extends PSMethod>> list = new ArrayList<Class<? extends PSMethod>>();
-		list.add(PSMethodContraIndication.class);
-		list.add(PSMethodNextQASet.class);
-		list.add(PSMethodSuppressAnswer.class);
-		return list;
+	protected Class<? extends PSMethod> getProblemSolverContent() {
+		return PSMethodStrategic.class;
 	}
 
 }

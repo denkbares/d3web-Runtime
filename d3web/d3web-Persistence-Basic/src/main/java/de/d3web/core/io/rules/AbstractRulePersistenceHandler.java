@@ -82,12 +82,10 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 
 	private Set<Rule> getRules(KnowledgeBase kb) {
 		Set<Rule> rules = new HashSet<Rule>();
-		for (Class<? extends PSMethod> clazz : getProblemSolverContent()) {
-			for (KnowledgeSlice slice : kb.getAllKnowledgeSlicesFor(clazz)) {
-				if (slice instanceof RuleSet) {
-					RuleSet rs = (RuleSet) slice;
-					rules.addAll(rs.getRules());
-				}
+		for (KnowledgeSlice slice : kb.getAllKnowledgeSlicesFor(getProblemSolverContent())) {
+			if (slice instanceof RuleSet) {
+				RuleSet rs = (RuleSet) slice;
+				rules.addAll(rs.getRules());
 			}
 		}
 
@@ -96,7 +94,7 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 		return rules;
 	}
 
-	protected abstract List<Class<? extends PSMethod>> getProblemSolverContent();
+	protected abstract Class<? extends PSMethod> getProblemSolverContent();
 
 	@Override
 	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
@@ -115,9 +113,13 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 		List<Element> children = XMLUtil.getElementList(root.getChildNodes());
 		PersistenceManager pm = PersistenceManager.getInstance();
 		float count = 0;
+		List<Rule> rules = new ArrayList<Rule>();
 		for (Element child : children) {
-			pm.readFragment(child, kb);
+			rules.add((Rule) pm.readFragment(child, kb));
 			listener.updateProgress(count++ / children.size(), "Reading " + ruletype);
+		}
+		for (Rule r : rules) {
+			r.setProblemsolverContext(getProblemSolverContent());
 		}
 	}
 

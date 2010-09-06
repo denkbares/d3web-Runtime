@@ -33,7 +33,6 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
-import de.d3web.indication.inference.PSMethodContraIndication;
 
 /**
  * RuleAction that contra-indicates a {@link QASet}, when the corresponding rule
@@ -58,17 +57,9 @@ public class ActionContraIndication extends PSAction {
 		// the blackboard do all the work
 		for (QASet qaset : getQASets()) {
 			Fact fact = new DefaultFact(qaset, new Indication(State.CONTRA_INDICATED), source,
-					getProblemsolver());
+					session.getPSMethodInstance(psmethod.getClass()));
 			session.getBlackboard().addInterviewFact(fact);
 		}
-	}
-
-	private PSMethod getProblemsolver() {
-		return PSMethodContraIndication.getInstance();
-	}
-
-	public Class<? extends PSMethod> getProblemsolverContext() {
-		return PSMethodContraIndication.class;
 	}
 
 	public java.util.List<QASet> getQASets() {

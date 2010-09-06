@@ -49,11 +49,9 @@ import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy
 import de.d3web.core.session.interviewmanager.PSMethodInterview;
 import de.d3web.core.session.protocol.DefaultProtocol;
 import de.d3web.core.session.protocol.Protocol;
-import de.d3web.indication.inference.PSMethodContraIndication;
 import de.d3web.indication.inference.PSMethodDialogControlling;
-import de.d3web.indication.inference.PSMethodNextQASet;
 import de.d3web.indication.inference.PSMethodParentQASet;
-import de.d3web.indication.inference.PSMethodSuppressAnswer;
+import de.d3web.indication.inference.PSMethodStrategic;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.plugin.Autodetect;
 import de.d3web.plugin.Extension;
@@ -93,10 +91,8 @@ public class DefaultSession implements Session {
 			Arrays.asList(
 					PSMethodUserSelected.getInstance(),
 					new PSMethodDialogControlling(),
-					PSMethodContraIndication.getInstance(),
-					PSMethodNextQASet.getInstance(),
+					PSMethodStrategic.getInstance(),
 					PSMethodAbstraction.getInstance(),
-					PSMethodSuppressAnswer.getInstance(),
 					PSMethodHeuristic.getInstance(),
 					PSMethodInit.getInstance(),
 					PSMethodParentQASet.getInstance(),

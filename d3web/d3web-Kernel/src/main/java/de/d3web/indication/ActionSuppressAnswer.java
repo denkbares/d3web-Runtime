@@ -31,7 +31,6 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.Session;
-import de.d3web.indication.inference.PSMethodSuppressAnswer;
 
 /**
  * RuleAction to suppress alternatives of a specified Question
@@ -62,10 +61,6 @@ public class ActionSuppressAnswer extends PSAction {
 	@Override
 	public void doIt(Session session, Object source, PSMethod psmethod) {
 		// TODO: suppress actions are not working currently
-	}
-
-	public Class<? extends PSMethod> getProblemsolverContext() {
-		return PSMethodSuppressAnswer.class;
 	}
 
 	/**

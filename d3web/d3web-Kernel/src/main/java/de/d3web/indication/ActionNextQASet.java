@@ -30,7 +30,7 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
-import de.d3web.indication.inference.PSMethodNextQASet;
+import de.d3web.indication.inference.PSMethodStrategic;
 
 /**
  * This abstract class is representing the Action of an indication rule.
@@ -65,11 +65,11 @@ public abstract class ActionNextQASet extends PSAction {
 	 * @return PSMethodNextQASet.class
 	 */
 	public Class<? extends PSMethod> getProblemsolverContext() {
-		return PSMethodNextQASet.class;
+		return PSMethodStrategic.class;
 	}
 
 	public PSMethod getProblemsolver() {
-		return PSMethodNextQASet.getInstance();
+		return PSMethodStrategic.getInstance();
 	}
 
 	/**

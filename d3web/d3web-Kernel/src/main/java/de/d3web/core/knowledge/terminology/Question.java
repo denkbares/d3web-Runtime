@@ -26,7 +26,7 @@ import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.indication.inference.PSMethodNextQASet;
+import de.d3web.indication.inference.PSMethodStrategic;
 
 /**
  * This is an abstract class, that stores the static parts of a question
@@ -61,7 +61,7 @@ public abstract class Question extends QASet {
 	 */
 	public DerivationType getDerivationType() {
 		final Class<? extends PSMethod> QUESTION_SETTER = PSMethodAbstraction.class;
-		final Class<? extends PSMethod> FOLLOW_QUESTION = PSMethodNextQASet.class;
+		final Class<? extends PSMethod> FOLLOW_QUESTION = PSMethodStrategic.class;
 		final MethodKind KIND = MethodKind.BACKWARD;
 		if (hasElements(getKnowledge(QUESTION_SETTER, KIND))
 				&& hasElements(getKnowledge(FOLLOW_QUESTION, KIND))) return DerivationType.MIXED;

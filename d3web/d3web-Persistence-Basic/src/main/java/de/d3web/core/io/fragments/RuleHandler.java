@@ -26,11 +26,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.PSAction;
+import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.PersistenceManager;
-import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.manage.RuleFactory;
@@ -77,7 +76,7 @@ public class RuleHandler implements FragmentHandler {
 		for (Element child : children) {
 			if (child.getNodeName().equals("Exception")) {
 				Object object = getGrandChildObject(kb, pm, child);
-				if (object != null && exception instanceof Condition && exception == null) {
+				if (object != null && exception == null) {
 					exception = (Condition) object;
 				}
 				else {
@@ -86,7 +85,7 @@ public class RuleHandler implements FragmentHandler {
 			}
 			else if (child.getNodeName().equals("Context")) {
 				Object object = getGrandChildObject(kb, pm, child);
-				if (object != null && context instanceof Condition && context == null) {
+				if (object != null && context == null) {
 					context = (Condition) object;
 				}
 				else {

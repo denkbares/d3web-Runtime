@@ -18,9 +18,6 @@
  */
 package de.d3web.core.io.rules;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.d3web.core.inference.PSMethod;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
@@ -37,10 +34,8 @@ public class HeuristicRulesPersitenceHandler extends
 	}
 
 	@Override
-	protected List<Class<? extends PSMethod>> getProblemSolverContent() {
-		List<Class<? extends PSMethod>> list = new ArrayList<Class<? extends PSMethod>>();
-		list.add(PSMethodHeuristic.class);
-		return list;
+	protected Class<? extends PSMethod> getProblemSolverContent() {
+		return PSMethodHeuristic.class;
 	}
 
 }

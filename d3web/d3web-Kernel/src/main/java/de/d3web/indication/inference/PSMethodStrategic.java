@@ -30,17 +30,17 @@ import de.d3web.core.session.blackboard.Facts;
  * 
  * @author joba
  */
-public class PSMethodNextQASet extends PSMethodRulebased {
+public class PSMethodStrategic extends PSMethodRulebased {
 
-	private static PSMethodNextQASet instance = null;
+	private static PSMethodStrategic instance = null;
 
 	/**
 	 * @return the one and only instance of this PSMethodContraIndication
 	 *         (Singleton)
 	 */
-	public static PSMethodNextQASet getInstance() {
+	public static PSMethodStrategic getInstance() {
 		if (instance == null) {
-			instance = new PSMethodNextQASet();
+			instance = new PSMethodStrategic();
 		}
 		return instance;
 	}

@@ -30,7 +30,6 @@ import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseRuleComplex;
 import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
  * Abstract super class for all rules. <BR>
@@ -318,7 +317,6 @@ public class Rule implements CaseObjectSource {
 					newAction.getTerminalObjects(),
 					getProblemsolverContext(),
 					MethodKind.BACKWARD);
-
 		}
 		updateConditionTerminals(oldAction, newAction, getCondition());
 		updateConditionTerminals(oldAction, newAction, getException());
@@ -445,15 +443,14 @@ public class Rule implements CaseObjectSource {
 			de.d3web.core.inference.condition.Condition newCondition) {
 
 		/* check, if there are already some conditions */
-		if ((getCondition() != null) && (getAction() != null)) removeFrom(
+		if (getCondition() != null) removeFrom(
 				this,
 				getCondition().getTerminalObjects(),
 				getProblemsolverContext(),
 				MethodKind.FORWARD);
 		// removeRuleFromObjects(getCondition().getTerminalObjects());
-
 		condition = newCondition;
-		if ((getCondition() != null) && (getAction() != null)) insertInto(
+		if (getCondition() != null) insertInto(
 				this,
 				getCondition().getTerminalObjects(),
 				getProblemsolverContext(),
@@ -472,31 +469,14 @@ public class Rule implements CaseObjectSource {
 	public void setContext(Condition newDiagnosisContext) {
 
 		/* check, if there are already some conditions */
-		if (getContext() != null) removeRuleFromObjects(
+		if (getContext() != null) removeFrom(this,
 				getContext().getTerminalObjects(),
-				PSMethodHeuristic.class);
-
+				getProblemsolverContext(), MethodKind.FORWARD);
 		diagnosisContext = newDiagnosisContext;
-		if (getContext() != null) insertRuleIntoObjects(
+		if (getContext() != null) insertInto(this,
 				getContext().getTerminalObjects(),
-				PSMethodHeuristic.class);
+				getProblemsolverContext(), MethodKind.FORWARD);
 
-	}
-
-	private void insertRuleIntoObjects(List<? extends NamedObject> objects, Class<? extends PSMethod> context) {
-		insertInto(this, objects, context, MethodKind.FORWARD);
-	}
-
-	private void insertRuleIntoObjects(List<? extends NamedObject> objects) {
-		insertRuleIntoObjects(objects, getProblemsolverContext());
-	}
-
-	private void removeRuleFromObjects(List<? extends NamedObject> objects, Class<? extends PSMethod> context) {
-		removeFrom(this, objects, context, MethodKind.FORWARD);
-	}
-
-	private void removeRuleFromObjects(List<? extends NamedObject> objects) {
-		removeRuleFromObjects(objects, getProblemsolverContext());
 	}
 
 	/**
@@ -505,10 +485,13 @@ public class Rule implements CaseObjectSource {
 	public void setException(
 			de.d3web.core.inference.condition.Condition newException) {
 		/* check, if there are already some conditions */
-		if (getException() != null) removeRuleFromObjects(getException().getTerminalObjects());
-
+		if (getException() != null) removeFrom(this, getException().getTerminalObjects(),
+				getProblemsolverContext(),
+				MethodKind.FORWARD);
 		exception = newException;
-		if (getException() != null) insertRuleIntoObjects(getException().getTerminalObjects());
+		if (getException() != null) insertInto(this, getException().getTerminalObjects(),
+				getProblemsolverContext(),
+				MethodKind.FORWARD);
 	}
 
 	/**
@@ -520,7 +503,51 @@ public class Rule implements CaseObjectSource {
 	}
 
 	public void setProblemsolverContext(Class<? extends PSMethod> problemsolverContext) {
-		this.problemsolverContext = problemsolverContext;
+		if (this.problemsolverContext != problemsolverContext) {
+			// remove old indexes
+			if (this.problemsolverContext != null) {
+				if (getCondition() != null) removeFrom(
+						this,
+						getCondition().getTerminalObjects(),
+						getProblemsolverContext(),
+						MethodKind.FORWARD);
+				if (getContext() != null) removeFrom(this,
+						getContext().getTerminalObjects(),
+						getProblemsolverContext(), MethodKind.FORWARD);
+				if (getException() != null) removeFrom(this, getException().getTerminalObjects(),
+						getProblemsolverContext(),
+						MethodKind.FORWARD);
+				if (getAction() != null && (getAction().getTerminalObjects() != null)) {
+					removeFrom(
+							this,
+							getAction().getTerminalObjects(),
+							getProblemsolverContext(),
+							MethodKind.BACKWARD);
+				}
+
+			}
+			// insert new indexes
+			this.problemsolverContext = problemsolverContext;
+			if (getCondition() != null) insertInto(
+					this,
+					getCondition().getTerminalObjects(),
+					getProblemsolverContext(),
+					MethodKind.FORWARD);
+			if (getContext() != null) insertInto(this,
+					getContext().getTerminalObjects(),
+					getProblemsolverContext(), MethodKind.FORWARD);
+			if (getException() != null) insertInto(this, getException().getTerminalObjects(),
+					getProblemsolverContext(),
+					MethodKind.FORWARD);
+			if ((getAction() != null)
+					&& (getAction().getTerminalObjects() != null)) {
+				insertInto(
+						this,
+						getAction().getTerminalObjects(),
+						getProblemsolverContext(),
+						MethodKind.BACKWARD);
+			}
+		}
 	}
 
 	/**
