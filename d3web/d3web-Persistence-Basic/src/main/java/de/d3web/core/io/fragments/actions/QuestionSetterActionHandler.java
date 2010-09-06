@@ -41,7 +41,7 @@ import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 
 /**
- * Handels the two default successors ActionAddValue and ActionSetValue of
+ * Handles the two default successors ActionAddValue and ActionSetValue of
  * ActionQuestionSetter. Other successors must have their own FragementHandler
  * with a higher priority
  * 
