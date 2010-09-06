@@ -14,7 +14,6 @@
 	<version>0.2-SNAPSHOT</version>
 	
 	<build>
-		<finalName>d3web-Persistence-ExtensionPoints-Plugin</finalName>
 		<plugins>
 			<plugin>
 				<groupId>de.uniwue.maven.plugins</groupId>

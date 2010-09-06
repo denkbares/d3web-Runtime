@@ -14,7 +14,6 @@
 	<version>0.2-SNAPSHOT</version>
 	
 	<build>
-		<finalName>d3web-Persistence-Basic-Plugin</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
