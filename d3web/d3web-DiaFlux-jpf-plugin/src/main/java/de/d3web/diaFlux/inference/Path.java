@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -36,11 +36,12 @@ import de.d3web.diaFlux.flow.IEdge;
 import de.d3web.diaFlux.flow.INode;
 import de.d3web.diaFlux.flow.INodeData;
 import de.d3web.diaFlux.flow.ISupport;
+import de.d3web.diaFlux.flow.SnapshotNode;
 import de.d3web.diaFlux.flow.StartNode;
 
 /**
  * @author Reinhard Hatko
- * 
+ *
  *         Created: 07.08.2010
  */
 public class Path implements IPath {
@@ -59,7 +60,7 @@ public class Path implements IPath {
 	/**
 	 * Returns the first Node of this path. This has to be either a StartNode or
 	 * a SnapshotNode. Null if the path is empty.
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
@@ -88,6 +89,17 @@ public class Path implements IPath {
 
 		return change;
 
+	}
+
+	@Override
+	public boolean takeSnapshot(Session session, SnapshotNode node) {
+
+		for (Entry entry : this.entries) {
+			entry.takeSnapshot(session, node);
+
+		}
+
+		return false;
 	}
 
 	private boolean flow(Session session) {
@@ -124,9 +136,9 @@ public class Path implements IPath {
 	/**
 	 * Selects appropriate successor of {@code node} according to the current
 	 * state of the case.
-	 * 
+	 *
 	 * @param session
-	 * 
+	 *
 	 * @return
 	 */
 	private IEdge selectNextEdge(Session session) {
@@ -160,7 +172,7 @@ public class Path implements IPath {
 	 * Activates the given node coming from the given {@link NodeEntry}. Steps:
 	 * 1. Sets the node to active. 2. Conducts its action 3. Add
 	 * {@link NodeEntry} for node.
-	 * 
+	 *
 	 * @param session
 	 * @param currentNode
 	 * @param entry the pathentry from where to activate the node
@@ -199,7 +211,7 @@ public class Path implements IPath {
 	/**
 	 * Adds a path entry for the current node. Predecessor's entry is removed by
 	 * this method.
-	 * 
+	 *
 	 * @param session
 	 * @param currentEntry
 	 * @param nextNode
@@ -274,7 +286,7 @@ public class Path implements IPath {
 	 * Collapses an unsupported subpath, starting from {@code from}, until
 	 * {@code to}. Every Node on this subpath must not be active, otherwise a
 	 * {@link IllegalStateException} is thrown.
-	 * 
+	 *
 	 * @param from the index to start collapsing
 	 * @param to the index to stop collapsing
 	 * @param session the current session
@@ -319,7 +331,7 @@ public class Path implements IPath {
 	 * is still active (i.e. has other support than just by this entry) the
 	 * search ends. Otherwise the search continues, until the path ends, or an
 	 * entry is reached which has support.
-	 * 
+	 *
 	 * @param session the current session
 	 * @param firstIndex the index of the entry at which the search along the
 	 *        current path starts to find the unsupported subpath

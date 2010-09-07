@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -54,9 +54,9 @@ public abstract class AbstractEntry implements Entry {
 	/**
 	 * Checks if this entry's support is still valid. If the support is no
 	 * longer valid, it is removed from the according NodeData. If it is valid,
-	 * nothing is done. Returns if the node is still active, i.e. if this entry
-	 * support is no longer valid, if this node has other support.
-	 * 
+	 * nothing is done. Returns if the node is still active, i.e. if this entrys
+	 * support is no longer valid,it returns if this node has other support.
+	 *
 	 * @param session
 	 * @return if the node is still active
 	 */

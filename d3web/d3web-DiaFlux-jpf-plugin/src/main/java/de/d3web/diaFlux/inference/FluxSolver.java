@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -22,6 +22,7 @@ package de.d3web.diaFlux.inference;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,13 +44,14 @@ import de.d3web.diaFlux.flow.DiaFluxCaseObject;
 import de.d3web.diaFlux.flow.INode;
 import de.d3web.diaFlux.flow.INodeData;
 import de.d3web.diaFlux.flow.ISupport;
+import de.d3web.diaFlux.flow.SnapshotNode;
 import de.d3web.diaFlux.flow.StartNode;
 
 /**
- * 
+ *
  * @author Reinhard Hatko
  * @created: 10.09.2009
- * 
+ *
  */
 public class FluxSolver implements PSMethod {
 
@@ -59,18 +61,23 @@ public class FluxSolver implements PSMethod {
 	}
 
 	@Override
-	public void init(Session theCase) {
+	public void init(Session session) {
 
-		if (!DiaFluxUtils.isFlowCase(theCase)) return;
+		if (!DiaFluxUtils.isFlowCase(session)) return;
 
 		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
-				("Initing FluxSolver with case: " + theCase));
+				("Initing FluxSolver with case: " + session));
 
+		// For indicating the main start node
+		// TODO remove
 		Rule rule = new Rule("FCIndication_", FluxSolver.class);
-
 		rule.setAction(new IndicateFlowAction("Car Diagnosis", "Car Diagnosis"));
 		rule.setCondition(new CondAnd(new ArrayList<Condition>()));
-		rule.check(theCase);
+		rule.check(session);
+		//
+
+		//
+		propagate(session, Collections.EMPTY_LIST);
 
 	}
 
@@ -81,8 +88,8 @@ public class FluxSolver implements PSMethod {
 
 		FluxSolver.addSupport(session, startNode, support);
 
-		if (!active) { // if node was not active before adding support, start
-						// new path
+		// if node was not active before adding support, start new path
+		if (!active) {
 			DiaFluxCaseObject flowData = DiaFluxUtils.getFlowData(session);
 			flowData.addPath(session, startNode, support);
 
@@ -139,16 +146,33 @@ public class FluxSolver implements PSMethod {
 			continueFlowing = false;
 
 			for (IPath path : new ArrayList<IPath>(caseObject.getPathes())) {
-
+				caseObject.setActivePath(path);
 				continueFlowing |= path.propagate(session, changes);
 
 				// if path collapsed completely, remove it.
-				if (path.isEmpty()) caseObject.removePath(path);
+				if (path.isEmpty()) {
+					caseObject.removePath(path);
+				}
+
+				caseObject.setActivePath(null);
 			}
 
 		}
 		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
 				"Finished propagating after " + i + " iterations.");
+
+		System.out.println("*** Blackboard ***");
+
+		Collection<TerminologyObject> objects = session.getBlackboard().getValuedObjects();
+		System.out.println("Valued objects: " + objects.size());
+		for (TerminologyObject terminologyObject : objects) {
+
+			System.out.print(terminologyObject.getName() + "\t\t\t* ");
+			System.out.println(session.getBlackboard().getValueFact(terminologyObject) + "\t\t\t*");
+
+		}
+
+		System.out.println("******");
 
 	}
 
@@ -177,6 +201,13 @@ public class FluxSolver implements PSMethod {
 	public Fact mergeFacts(Fact[] facts) {
 		// diaflux does not derive own facts
 		return Facts.mergeError(facts);
+	}
+
+
+	public static void takeSnapshot(Session session, IPath path, SnapshotNode node) {
+
+		path.takeSnapshot(session, node);
+
 	}
 
 }

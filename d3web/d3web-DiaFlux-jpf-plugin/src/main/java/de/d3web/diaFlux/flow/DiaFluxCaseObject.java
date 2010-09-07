@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -33,7 +33,7 @@ import de.d3web.diaFlux.inference.Path;
 import de.d3web.diaFlux.inference.PathReference;
 
 /**
- * 
+ *
  * @author Reinhard Hatko Created on: 04.11.2009
  */
 public class DiaFluxCaseObject extends SessionObject {
@@ -41,6 +41,7 @@ public class DiaFluxCaseObject extends SessionObject {
 	private final Map<Flow, FlowData> map;
 	private final List<IPath> pathes;
 	private long lastPropagationTime = Long.MIN_VALUE;
+	private IPath activePath;
 
 	public DiaFluxCaseObject(CaseObjectSource theSourceObject, Map<Flow, FlowData> flowdatas) {
 		super(theSourceObject);
@@ -54,29 +55,39 @@ public class DiaFluxCaseObject extends SessionObject {
 
 	/**
 	 * Returns an unmodifiable Collection of the current pathes
-	 * 
+	 *
 	 */
 	public Collection<IPath> getPathes() {
 		return Collections.unmodifiableCollection(pathes);
+	}
+
+	public void setActivePath(IPath activePath) {
+		this.activePath = activePath;
+	}
+
+	public IPath getActivePath() {
+		return activePath;
 	}
 
 	/**
 	 * Adds the provided path to the currently active pathes of the session. If
 	 * a path starting at the StartNode of the path is already contained, the
 	 * provided path is NOT added as an active Path.
-	 * 
+	 *
 	 * @param session
 	 * @param support
 	 * @param path to be add as active Path
-	 * 
+	 *
 	 * @return true if the path is a new active path (i.e. no path starting at
 	 *         the start node of the provided path is already active), false
 	 *         otherwise
 	 */
 	public boolean addPath(Session session, StartNode startNode, ISupport support) {
 
-		if (!getNodeData(startNode).isActive()) throw new IllegalStateException("StartNode '"
-				+ startNode + "' does not have support and can not be added.");
+		if (!getNodeData(startNode).isActive()) {
+			throw new IllegalStateException("StartNode '"
+					+ startNode + "' does not have support and can not be added.");
+		}
 
 		Path path = new Path(startNode, support);
 
@@ -91,7 +102,7 @@ public class DiaFluxCaseObject extends SessionObject {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param path the path to remove
 	 * @return
 	 */
@@ -129,10 +140,15 @@ public class DiaFluxCaseObject extends SessionObject {
 	 * Checks if a new propagation has started by comparing the current
 	 * propagation time with the last one. Returns, if a new propagation has
 	 * started.
-	 * 
+	 *
 	 * @param session the current session
 	 */
 	public boolean checkPropagationTime(Session session) {
+
+		// first call to propagate from 'init' is not within a propagation
+
+		if (!session.getPropagationManager().isInPropagation()) return false;
+
 		long propagationTime = session.getPropagationManager().getPropagationTime();
 
 		boolean newPropagation;
