@@ -11,7 +11,7 @@
 	
 	<issueManagement>
 		<system>Trac</system>
-		<url>http://knowwetrac.informatik.uni-wuerzburg.de/</url>
+		<url>https://isci.informatik.uni-wuerzburg.de/trac/</url>
 	</issueManagement>
 	
 	<ciManagement>
