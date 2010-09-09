@@ -22,6 +22,7 @@ package de.d3web.core.manage;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -488,10 +489,8 @@ public class KnowledgeBaseManagement {
 		if (valueString.equals(Unknown.UNKNOWN_ID)) {
 			return Unknown.getInstance();
 		}
-		// HOTFIX (20100411) workaround for setting a _single_ Answer to a
-		// MC-Question
-		// needs jobas healing hands...:-)
-		// maybe martinas healing hands are enough?! ;-)
+
+		// multiple choice question given
 		if (question instanceof QuestionMC) {
 
 			List<ChoiceValue> values = new LinkedList<ChoiceValue>();
@@ -501,7 +500,12 @@ public class KnowledgeBaseManagement {
 				String[] mcvals = valueString.split(MultipleChoiceValue.ID_SEPARATOR);
 				for (String val : mcvals) {
 					Choice choice = findChoice((QuestionChoice) question, val);
-					values.add(new ChoiceValue(choice));
+					if (choice == null) {
+						return null;
+					}
+					else {
+						values.add(new ChoiceValue(choice));
+					}
 				}
 				return new MultipleChoiceValue(values);
 			}
@@ -509,12 +513,18 @@ public class KnowledgeBaseManagement {
 			// else, if a single answer val should be set for a mc question
 			else {
 				Choice choice = findChoice((QuestionChoice) question, valueString);
-				values.add(new ChoiceValue(choice));
-				return new MultipleChoiceValue(values);
+				if (choice == null) {
+					return null;
+				}
+				else {
+					values.add(new ChoiceValue(choice));
+					return new MultipleChoiceValue(values);
+				}
 			}
 		}
-		//
-		if (question instanceof QuestionChoice) {
+
+		// choice question given (e.g., question yn, questionoc)
+		else if (question instanceof QuestionChoice) {
 			Choice choice = findChoice((QuestionChoice) question, valueString);
 			if (choice == null) {
 				return null;
@@ -523,19 +533,31 @@ public class KnowledgeBaseManagement {
 				return new ChoiceValue(choice);
 			}
 		}
+
+		// num questions
 		else if (question instanceof QuestionNum) {
 			return new NumValue(Double.parseDouble(valueString));
 		}
+
+		// text questions
 		else if (question instanceof QuestionText) {
 			return new TextValue(valueString);
 		}
+
+		// date questions
+		// HOTFIX 2010-09-09 Date questions currently only work with the
+		// dateformat below.
+		// TODO Need a better overall solution for date questions!
 		else if (question instanceof QuestionDate) {
 			try {
-				return new DateValue(DateFormat.getInstance().parse(valueString));
+				final DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+				return new DateValue(format.parse(valueString));
 			}
 			catch (ParseException e) {
-				throw new IllegalArgumentException(
-						"The committed String is not a correctly formatted date: " + e.getMessage());
+				return null;
+				// throw new IllegalArgumentException(
+				// "The committed String is not a correctly formatted date: " +
+				// e.getMessage());
 			}
 		}
 		else {
