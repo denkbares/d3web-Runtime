@@ -29,8 +29,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import de.d3web.caserepository.CaseObject.Solution;
-
 /**
  * 30.09.2003 12:09:05
  * 
@@ -38,12 +36,12 @@ import de.d3web.caserepository.CaseObject.Solution;
  */
 public class SolutionContainerImpl implements ISolutionContainer {
 
-	public static String getXMLCode(Collection solutions) {
+	public static String getXMLCode(Collection<CaseObject.Solution> solutions) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<Solutions>\n");
-		Iterator iter = solutions.iterator();
+		Iterator<CaseObject.Solution> iter = solutions.iterator();
 		while (iter.hasNext()) {
-			CaseObject.Solution s = (CaseObject.Solution) iter.next();
+			CaseObject.Solution s = iter.next();
 			sb.append("<Solution" +
 					" id=\"" + s.getSolution().getId() + "\"" +
 					" weight=\"" + s.getWeight() + "\"" +
@@ -55,7 +53,7 @@ public class SolutionContainerImpl implements ISolutionContainer {
 		return sb.toString();
 	}
 
-	private Set solutions = new HashSet();
+	private Set<CaseObject.Solution> solutions = new HashSet<CaseObject.Solution>();
 
 	/*
 	 * (non-Javadoc)
@@ -63,6 +61,7 @@ public class SolutionContainerImpl implements ISolutionContainer {
 	 * @seede.d3web.caserepository.ISolutionContainer#addSolution(de.d3web.
 	 * caserepository.CaseObject.Solution)
 	 */
+	@Override
 	public void addSolution(CaseObject.Solution solution) {
 		solutions.add(solution);
 	}
@@ -70,51 +69,11 @@ public class SolutionContainerImpl implements ISolutionContainer {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @seede.d3web.caserepository.ISolutionContainer#removeSolution(de.d3web.
-	 * caserepository.CaseObject.Solution)
-	 */
-	public void removeSolution(CaseObject.Solution solution) {
-		solutions.remove(solution);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see de.d3web.caserepository.CaseObject#getSolutions()
 	 */
-	public Set getSolutions() {
+	@Override
+	public Set<CaseObject.Solution> getSolutions() {
 		return Collections.unmodifiableSet(solutions);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.d3web.caserepository.CaseObject#getSolution(de.d3web.kernel.domainModel
-	 * .Diagnosis, java.lang.Class)
-	 */
-	public Solution getSolution(de.d3web.core.knowledge.terminology.Solution d, Class psMethodClass) {
-		Iterator iter = solutions.iterator();
-		while (iter.hasNext()) {
-			CaseObject.Solution s = (CaseObject.Solution) iter.next();
-			if (s.getSolution().equals(d) && s.getPSMethodClass().equals(psMethodClass)) return s;
-		}
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.d3web.caserepository.CaseObject#getSolutions(java.lang.Class)
-	 */
-	public Set getSolutions(Class psMethodClass) {
-		Set result = new HashSet();
-		Iterator iter = solutions.iterator();
-		while (iter.hasNext()) {
-			CaseObject.Solution s = (CaseObject.Solution) iter.next();
-			if (s.getPSMethodClass() != null && s.getPSMethodClass().equals(psMethodClass)) result.add(s);
-		}
-		return result;
 	}
 
 	/*
@@ -122,6 +81,7 @@ public class SolutionContainerImpl implements ISolutionContainer {
 	 * 
 	 * @see de.d3web.caserepository.ISolutionContainer#getXMLCode()
 	 */
+	@Override
 	public String getXMLCode() {
 		return getXMLCode(solutions);
 	}

@@ -33,8 +33,8 @@ public class MetaDataImpl implements IMetaData {
 
 	public final static class Codec extends PropertiesUtilities.PropertyCodec {
 
-		public Codec(Class clazz) {
-			super(clazz);
+		public Codec() {
+			super(MetaDataImpl.class);
 		}
 
 		/*
@@ -44,6 +44,7 @@ public class MetaDataImpl implements IMetaData {
 		 * de.d3web.persistence.xml.loader.PropertiesUtilities.PropertyCodec
 		 * #encode(java.lang.Object)
 		 */
+		@Override
 		public String encode(Object o) {
 			return ((IMetaData) o).getXMLCode();
 		}
@@ -55,6 +56,7 @@ public class MetaDataImpl implements IMetaData {
 		 * de.d3web.persistence.xml.loader.PropertiesUtilities.PropertyCodec
 		 * #decode(org.w3c.dom.Node)
 		 */
+		@Override
 		public Object decode(Node n) {
 			throw new UnsupportedOperationException(
 					"the MetaData.Codec should not be used for decoding.");
@@ -68,6 +70,7 @@ public class MetaDataImpl implements IMetaData {
 	/**
 	 * @return processing time for the case in seconds
 	 */
+	@Override
 	public long getProcessingTime() {
 		return processingTime == null
 				? -1
@@ -86,6 +89,7 @@ public class MetaDataImpl implements IMetaData {
 	 * 
 	 * @return String
 	 */
+	@Override
 	public String getAccount() {
 		return account;
 	}
@@ -99,6 +103,7 @@ public class MetaDataImpl implements IMetaData {
 		this.account = account;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (o == null || !(o instanceof MetaDataImpl)) return false;
 		if (o == this) return true;
@@ -108,6 +113,7 @@ public class MetaDataImpl implements IMetaData {
 				&& getProcessingTime() == other.getProcessingTime();
 	}
 
+	@Override
 	public String getXMLCode() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<Metadata>\n");
@@ -121,6 +127,7 @@ public class MetaDataImpl implements IMetaData {
 		return sb.toString();
 	}
 
+	@Override
 	public Object clone() {
 		MetaDataImpl md = new MetaDataImpl();
 		md.setAccount(new String(getAccount()));

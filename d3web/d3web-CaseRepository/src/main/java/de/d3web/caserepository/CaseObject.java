@@ -22,23 +22,12 @@ package de.d3web.caserepository;
 
 import java.util.Set;
 
-import de.d3web.caserepository.addons.IAdditionalTrainData;
-import de.d3web.caserepository.addons.IAppliedQSets;
-import de.d3web.caserepository.addons.IContents;
-import de.d3web.caserepository.addons.IExaminationBlocks;
-import de.d3web.caserepository.addons.IFUSConfiguration;
-import de.d3web.caserepository.addons.IMultimedia;
-import de.d3web.caserepository.addons.ISimpleQuestions;
-import de.d3web.caserepository.addons.ISimpleTextFUSs;
-import de.d3web.caserepository.addons.ITemplateSession;
-import de.d3web.caserepository.addons.ITherapyConfiguration;
 import de.d3web.config.ConfigContainer;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.IDReference;
-import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.info.DCMarkedUp;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
@@ -238,15 +227,6 @@ public interface CaseObject
 	public Set<Question> getQuestions();
 
 	/**
-	 * Returns whether the specified {@link QASet} instance is visible in the
-	 * case.
-	 * 
-	 * @param item the specified {@link QASet} instance
-	 * @return true, if the {@link QASet} is visible in this case
-	 */
-	public Boolean visibility(QASet item);
-
-	/**
 	 * Returns the {@link Value} of the specified {@link Question} instance,
 	 * that was stored in this case.
 	 * 
@@ -267,193 +247,9 @@ public interface CaseObject
 	public void addQuestionAndAnswers(Question question, Value value);
 
 	/**
-	 * Returns a {@link Set} of {@link Solution} instances, that were
-	 * established in this {@link CaseObject} instance.
-	 * 
-	 * @return a set of established solutions
-	 */
-	public Set getCorrectSystemSolutions();
-
-	/**
-	 * Return a {@link Set} of {@link Solution} instances, that were both
-	 * established and are not tagged as neither 'userSelected' nor 'author
-	 * selected'. That way, we collect all solutions, that are originally
-	 * <i>derived</i> by the system.
-	 * 
-	 * @return a set of solutions, that are originally derived by the system
-	 */
-	public Set getSystemSolutions();
-
-	/**
 	 * Returns the meta-information concerning this {@link CaseObject}.
 	 */
+	@Override
 	public DCMarkup getDCMarkup();
 
-	public IAdditionalTrainData getAdditionalTrainData();
-
-	/**
-	 * Do not use this anymore (Trainer related method).
-	 * 
-	 * @deprecated Do not use this anymore.
-	 */
-	@Deprecated
-	public void setAdditionalTrainData(IAdditionalTrainData atd);
-
-	/**
-	 * Do not use this anymore (Trainer related method).
-	 * 
-	 * @deprecated Do not use this anymore.
-	 */
-	@Deprecated
-	public IFUSConfiguration getFUSConfiguration();
-
-	/**
-	 * Do not use this anymore (Trainer related method).
-	 * 
-	 * @deprecated Do not use this anymore.
-	 */
-	@Deprecated
-	public void setFUSConfiguration(IFUSConfiguration fusc);
-
-	/**
-	 * Do not use this anymore (Trainer related method).
-	 * 
-	 * @deprecated Do not use this anymore.
-	 */
-	@Deprecated
-	public ITemplateSession getTemplateSession();
-
-	/**
-	 * Do not use this anymore (Trainer related method).
-	 * 
-	 * @deprecated Do not use this anymore.
-	 */
-	@Deprecated
-	public void setTemplateSession(ITemplateSession ts);
-
-	/**
-	 * Do not use this anymore (Trainer related method).
-	 * 
-	 * @deprecated Do not use this anymore.
-	 */
-	@Deprecated
-	public ISimpleQuestions getMultimediaSimpleQuestions();
-
-	/**
-	 * Do not use this anymore (Trainer related method).
-	 * 
-	 * @deprecated Do not use this anymore.
-	 */
-	@Deprecated
-	public void setMultimediaSimpleQuestions(ISimpleQuestions mmsq);
-
-	/**
-	 * Do not use this anymore (Trainer related method).
-	 * 
-	 * @deprecated Do not use this anymore.
-	 */
-	@Deprecated
-	public ISimpleTextFUSs getSimpleTextFUSs();
-
-	/**
-	 * Do not use this anymore (Trainer related method).
-	 * 
-	 * @deprecated Do not use this anymore.
-	 */
-	@Deprecated
-	public void setSimpleTextFUSs(ISimpleTextFUSs stf);
-
-	/**
-	 * @deprecated do not add additional data until it is clear which
-	 *             representation will be chosen (or re-designed)
-	 */
-	@Deprecated
-	public void addAdditionalData(AdditionalDataKey key, Object data);
-
-	/**
-	 * @deprecated do not add additional data until it is clear which
-	 *             representation will be chosen (or re-designed)
-	 */
-	@Deprecated
-	public Object getAdditionalData(AdditionalDataKey key);
-
-	/**
-	 * Do not use this anymore (Trainer related method).
-	 * 
-	 * @deprecated Do not use this anymore.
-	 */
-	@Deprecated
-	public ITherapyConfiguration getTherapyConfiguration();
-
-	/**
-	 * Do not use this anymore (Trainer related method).
-	 * 
-	 * @deprecated Do not use this anymore.
-	 */
-	@Deprecated
-	public void setTherapyConfiguration(ITherapyConfiguration tc);
-
-	/**
-	 * Do not use this anymore (Trainer related method).
-	 * 
-	 * @deprecated Do not use this anymore.
-	 */
-	@Deprecated
-	public IExaminationBlocks getExaminationBlocks();
-
-	/**
-	 * Do not use this anymore (Trainer related method).
-	 * 
-	 * @deprecated Do not use this anymore.
-	 */
-	@Deprecated
-	public void setExaminationBlocks(IExaminationBlocks eb);
-
-	/**
-	 * Do not use this anymore (Trainer related method).
-	 * 
-	 * @deprecated Do not use this anymore.
-	 */
-	@Deprecated
-	public IMultimedia getMultimedia();
-
-	/**
-	 * Do not use this anymore (Trainer related method).
-	 * 
-	 * @deprecated Do not use this anymore.
-	 */
-	@Deprecated
-	public void setMultimedia(IMultimedia newMM);
-
-	/**
-	 * Do not use this anymore (Trainer related method).
-	 * 
-	 * @deprecated Do not use this anymore.
-	 */
-	@Deprecated
-	public IAppliedQSets getAppliedQSets();
-
-	/**
-	 * Do not use this anymore (Trainer related method).
-	 * 
-	 * @deprecated Do not use this anymore.
-	 */
-	@Deprecated
-	public void setAppliedQSets(IAppliedQSets aq);
-
-	/**
-	 * Do not use this anymore (Trainer related method).
-	 * 
-	 * @deprecated Do not use this anymore.
-	 */
-	@Deprecated
-	public IContents getContents();
-
-	/**
-	 * Do not use this anymore (Trainer related method).
-	 * 
-	 * @deprecated Do not use this anymore.
-	 */
-	@Deprecated
-	public void setContents(IContents c);
 }

@@ -31,9 +31,6 @@ import java.util.logging.Logger;
 
 import org.w3c.dom.Node;
 
-import de.d3web.caserepository.addons.IExaminationBlock;
-import de.d3web.core.knowledge.terminology.QASet;
-import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.Properties;
@@ -57,9 +54,6 @@ import de.d3web.persistence.xml.loader.PropertiesUtilities;
 public class CaseObjectWriter implements XMLCodeGenerator {
 
 	private CaseObject caseObject;
-
-	private CaseObjectWriter() { /* hide empty constructor */
-	}
 
 	public CaseObjectWriter(CaseObject caseObject) {
 		this.caseObject = caseObject;
@@ -103,9 +97,8 @@ public class CaseObjectWriter implements XMLCodeGenerator {
 	 * 
 	 * @see de.d3web.caserepository.XMLCodeGenerator#getXMLCode()
 	 */
+	@Override
 	public String getXMLCode() {
-		preprocess();
-
 		StringBuffer sb = new StringBuffer();
 
 		sb.append("<Problem>\n");
@@ -115,14 +108,14 @@ public class CaseObjectWriter implements XMLCodeGenerator {
 		sb.append(toXML(caseObject.getProperties()));
 
 		sb.append("<Questions>\n");
-		Iterator questionsIter = caseObject.getQuestions().iterator();
+		Iterator<Question> questionsIter = caseObject.getQuestions().iterator();
 		while (questionsIter.hasNext()) {
-			Question quest = (Question) questionsIter.next();
+			Question quest = questionsIter.next();
 			// nur um weitermachen zu können!
 			Value answerColl = caseObject.getValue(quest);
 			if (UndefinedValue.isNotUndefinedValue(answerColl)) {
 				sb.append("<Question id='" + quest.getId() + "'>\n");
-				Value ans = (Value) answerColl;
+				Value ans = answerColl;
 				if (ans instanceof Unknown) {
 					sb.append("<UnknownAnswer />\n");
 				}
@@ -169,7 +162,7 @@ public class CaseObjectWriter implements XMLCodeGenerator {
 	 * @return
 	 */
 	private Object toXML(Properties properties) {
-		Collection c = Arrays.asList(new Property[] {
+		Collection<Property> c = Arrays.asList(new Property[] {
 				Property.CASE_COMMENT,
 				Property.CASE_METADATA,
 				Property.CASE_SOURCE_SYSTEM,
@@ -177,7 +170,7 @@ public class CaseObjectWriter implements XMLCodeGenerator {
 				Property.CASE_CRITIQUE_TEXT,
 		});
 		PropertiesUtilities pu = new PropertiesUtilities();
-		pu.addCodec(new MetaDataImpl.Codec(MetaDataImpl.class));
+		pu.addCodec(new MetaDataImpl.Codec());
 		pu.addCodec(new SourceSystemCodec(CaseObject.SourceSystem.class));
 		return pu.propertiesToString(properties, c);
 	}
@@ -189,35 +182,4 @@ public class CaseObjectWriter implements XMLCodeGenerator {
 	private Object toXML(DCMarkup markup) {
 		return DCMarkupUtilities.dcmarkupToString(markup);
 	}
-
-	private void preprocess() {
-
-		// add all examinination blocks to qcontainers
-		if (caseObject.getExaminationBlocks() != null) {
-			Iterator iter = caseObject.getExaminationBlocks().getAllBlocks().iterator();
-			while (iter.hasNext()) {
-				IExaminationBlock exBlk = (IExaminationBlock) iter.next();
-				Iterator citer = exBlk.getContents().iterator();
-				while (citer.hasNext())
-					caseObject.getAppliedQSets().setApplied((QContainer) citer.next());
-			}
-		}
-
-		if (caseObject.getContents() != null) {
-			// add all qcontainers with content to qcontainers
-			Iterator iter = caseObject.getContents().getAllWithContent().iterator();
-			while (iter.hasNext()) {
-				QASet qaset = (QASet) iter.next();
-				if (qaset instanceof QContainer) {
-					caseObject.getAppliedQSets().setApplied((QContainer) qaset);
-				}
-				else if (qaset instanceof Question) {
-					Logger.getLogger(this.getClass().getName()).warning(
-							"Question with Content -/-> Parent QContainer is set as applied");
-				}
-			}
-		}
-
-	}
-
 }
