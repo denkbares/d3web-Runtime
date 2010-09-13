@@ -77,7 +77,6 @@
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Persistence-Basic-jpf-plugin</artifactId>
 			<version>${project.version}</version>
-			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 </project>
