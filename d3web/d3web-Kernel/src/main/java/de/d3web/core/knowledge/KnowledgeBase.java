@@ -525,8 +525,8 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	 * @author joba
 	 * @date 15.04.2010
 	 */
-	public IDObject search(String id) {
-		IDObject o = searchQuestion(id);
+	public TerminologyObject search(String id) {
+		TerminologyObject o = searchQuestion(id);
 		if (o != null) return o;
 		o = searchQContainers(id);
 		if (o != null) return o;

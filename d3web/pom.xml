@@ -208,6 +208,6 @@
 		<module>d3web-GlobalTests</module>
 		<module>d3web-Scoring</module>
 		<module>d3web-DiaFlux-jpf-plugin</module>
-		<module>d3web-CasePersistence</module>
+		<module>d3web-SessionPersistence</module>
 	</modules>
 </project>
