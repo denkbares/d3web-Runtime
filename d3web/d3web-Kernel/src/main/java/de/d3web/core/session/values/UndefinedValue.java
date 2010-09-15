@@ -29,7 +29,7 @@ import de.d3web.core.session.Value;
  * @author joba (denkbares GmbH)
  * @created 07.04.2010
  */
-public class UndefinedValue implements Value, QuestionValue {
+public class UndefinedValue implements QuestionValue {
 
 	public static final String UNDEFINED_ID = "Ma_Undefined";
 

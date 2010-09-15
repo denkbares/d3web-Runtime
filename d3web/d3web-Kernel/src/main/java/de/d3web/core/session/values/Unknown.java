@@ -29,7 +29,7 @@ import de.d3web.core.session.Value;
  * @author joba (denkbares GmbH)
  * @created 07.04.2010
  */
-public class Unknown implements Value, IDObject, QuestionValue {
+public class Unknown implements IDObject, QuestionValue {
 
 	public final static String UNKNOWN_ID = "MaU";
 	public final static String UNKNOWN_VALUE = "-?-";
@@ -79,6 +79,7 @@ public class Unknown implements Value, IDObject, QuestionValue {
 		else return -1;
 	}
 
+	@Override
 	public String getId() {
 		return UNKNOWN_ID;
 	}
