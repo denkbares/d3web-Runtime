@@ -34,9 +34,9 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import de.d3web.caserepository.CaseObject;
 import de.d3web.caserepository.CaseObjectImpl;
-import de.d3web.caserepository.CaseRepository;
-import de.d3web.caserepository.CaseRepositoryImpl;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.records.CaseRepository;
+import de.d3web.core.records.CaseRepositoryImpl;
 
 /**
  * @author bates

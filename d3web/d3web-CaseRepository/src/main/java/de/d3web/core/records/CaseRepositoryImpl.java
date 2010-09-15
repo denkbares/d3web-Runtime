@@ -16,12 +16,14 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.caserepository;
+package de.d3web.core.records;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
+
+import de.d3web.caserepository.CaseObject;
 
 /**
  * Default Implementation of the CaseRepository Interface (@link

@@ -22,9 +22,9 @@ import java.io.File;
 import java.util.Iterator;
 
 import de.d3web.caserepository.CaseObject;
-import de.d3web.caserepository.CaseRepository;
-import de.d3web.caserepository.CaseRepositoryImpl;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.records.CaseRepository;
+import de.d3web.core.records.CaseRepositoryImpl;
 
 /**
  * This implementation of the CaseRepositoryPersistenceHandler interface can

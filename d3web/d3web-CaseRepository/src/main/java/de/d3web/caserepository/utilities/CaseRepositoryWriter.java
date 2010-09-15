@@ -38,7 +38,7 @@ import java.util.Vector;
 import java.util.logging.Logger;
 
 import de.d3web.caserepository.CaseObject;
-import de.d3web.caserepository.CaseRepository;
+import de.d3web.core.records.CaseRepository;
 import de.d3web.persistence.progress.ProgressEvent;
 import de.d3web.persistence.progress.ProgressListener;
 import de.d3web.persistence.progress.ProgressNotifier;

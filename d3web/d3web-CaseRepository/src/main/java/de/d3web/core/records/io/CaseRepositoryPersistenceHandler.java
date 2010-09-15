@@ -20,8 +20,8 @@ package de.d3web.core.records.io;
 
 import java.io.File;
 
-import de.d3web.caserepository.CaseRepository;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.records.CaseRepository;
 
 /**
  * This interface specifies the methods which are necessary for loading and
