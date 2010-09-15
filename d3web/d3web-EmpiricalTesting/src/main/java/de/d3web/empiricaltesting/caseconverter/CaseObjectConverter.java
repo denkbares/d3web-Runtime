@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import de.d3web.caserepository.CaseObject;
-import de.d3web.caserepository.CaseRepository;
 import de.d3web.caserepository.CaseObject.Solution;
 import de.d3web.caserepository.sax.CaseRepositoryReader;
 import de.d3web.core.io.PersistenceManager;
@@ -37,6 +36,7 @@ import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
+import de.d3web.core.records.CaseRepository;
 import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;
