@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2010 denkbares GmbH
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
+ */
 package de.d3web.core.records.io;
 
 import java.io.IOException;
@@ -20,20 +38,20 @@ import de.d3web.core.records.SessionRecord;
 public class HeadHandler implements SessionPersistenceHandler {
 
 	@Override
-	public void read(Element sessionElement, SessionRecord sessionObject,
+	public void read(Element sessionElement, SessionRecord sessionRecord,
 			ProgressListener listener) throws IOException {
 		List<Element> elementList = XMLUtil.getElementList(sessionElement.getChildNodes());
 		DCMarkupHandler dcMarkupHandler = new DCMarkupHandler();
 		DCMarkup dcMarkup = null;
 		for (Element e : elementList) {
 			if (dcMarkupHandler.canRead(e)) {
-				Object read = dcMarkupHandler.read(sessionObject.getKb(), e);
+				Object read = dcMarkupHandler.read(sessionRecord.getKb(), e);
 				dcMarkup = (DCMarkup) read;
 				break;
 			}
 		}
 		if (dcMarkup != null) {
-			sessionObject.setDCMarkup(dcMarkup);
+			sessionRecord.setDCMarkup(dcMarkup);
 		}// else error?
 	}
 

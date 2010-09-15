@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2010 denkbares GmbH
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
+ */
 package de.d3web.core.records.io;
 
 import java.io.File;
@@ -23,6 +41,12 @@ import de.d3web.core.records.SessionRecord;
 import de.d3web.plugin.Extension;
 import de.d3web.plugin.PluginManager;
 
+/**
+ * PersistenceManager to write/read SessionRecords to/from an xml file
+ * 
+ * @author Markus Friedrich (denkbares GmbH)
+ * @created 15.09.2010
+ */
 public class SessionPersistenceManager {
 
 	private SessionPersistenceManager manager;
@@ -31,7 +55,8 @@ public class SessionPersistenceManager {
 	private static final String REPOSITORY_TAG = "repository";
 	private static final String SESSION_TAG = "session";
 
-	private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
+	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
+			"yyyy-MM-dd HH:mm:ss.SS");
 
 	private SessionPersistenceManager() {
 		updateHandler();
@@ -57,8 +82,8 @@ public class SessionPersistenceManager {
 		for (SessionRecord co : sessionRecord) {
 			Element sessionElement = doc.createElement(SESSION_TAG);
 			sessionElement.setAttribute("id", co.getId());
-			sessionElement.setAttribute("created", format.format(co.getCreationDate()));
-			sessionElement.setAttribute("changed", format.format(co.getLastEditDate()));
+			sessionElement.setAttribute("created", DATE_FORMAT.format(co.getCreationDate()));
+			sessionElement.setAttribute("changed", DATE_FORMAT.format(co.getLastEditDate()));
 			for (Extension extension : handler) {
 				SessionPersistenceHandler handler = (SessionPersistenceHandler) extension.getSingleton();
 				handler.write(sessionElement, co, listener);
@@ -92,8 +117,8 @@ public class SessionPersistenceManager {
 					String created = e.getAttribute("created");
 					String changed = e.getAttribute("changed");
 					try {
-						Date creationDate = format.parse(created);
-						Date dateOfLastEdit = format.parse(changed);
+						Date creationDate = DATE_FORMAT.parse(created);
+						Date dateOfLastEdit = DATE_FORMAT.parse(changed);
 						SessionRecord sr = new SessionRecord(id, kb, creationDate, dateOfLastEdit);
 						for (Extension extension : handler) {
 							SessionPersistenceHandler handler = (SessionPersistenceHandler) extension.getSingleton();

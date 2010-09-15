@@ -165,7 +165,7 @@ public interface Blackboard {
 	/**
 	 * Returns a collection of all terminology objects that have been rated for
 	 * the usage in the interview. This means the method delivers all
-	 * terminology objects that currently have at lead one interview fact added
+	 * terminology objects that currently have at least one interview fact added
 	 * for it to this blackboard.
 	 * 
 	 * @return the collection of interview rated terminology objects

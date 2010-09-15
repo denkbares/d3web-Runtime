@@ -16,40 +16,45 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.core.records;
+package de.d3web.core.records.io.fragments;
 
-import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.session.Value;
+import java.io.IOException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import de.d3web.core.io.fragments.FragmentHandler;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.session.values.UndefinedValue;
 
 /**
- * This is a persistent version of a fact.
+ * Handler for UndefinedValue
  * 
  * @author Markus Friedrich (denkbares GmbH)
  * @created 15.09.2010
  */
-public class FactRecord {
+public class UndefinedHandler implements FragmentHandler {
 
-	private TerminologyObject object;
-	private String psm;
-	private Value value;
+	private static final String elementName = "undefinedValue";
 
-	public TerminologyObject getObject() {
-		return object;
+	@Override
+	public Object read(KnowledgeBase kb, Element element) throws IOException {
+		return UndefinedValue.getInstance();
 	}
 
-	public String getPsm() {
-		return psm;
+	@Override
+	public Element write(Object object, Document doc) throws IOException {
+		return doc.createElement(elementName);
 	}
 
-	public Value getValue() {
-		return value;
+	@Override
+	public boolean canRead(Element element) {
+		return element.getNodeName().equals(elementName);
 	}
 
-	public FactRecord(TerminologyObject object, String psm, Value value) {
-		super();
-		this.object = object;
-		this.psm = psm;
-		this.value = value;
+	@Override
+	public boolean canWrite(Object object) {
+		return object instanceof UndefinedValue;
 	}
 
 }
