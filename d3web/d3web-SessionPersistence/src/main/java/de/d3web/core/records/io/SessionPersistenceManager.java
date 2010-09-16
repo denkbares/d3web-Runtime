@@ -49,7 +49,7 @@ import de.d3web.plugin.PluginManager;
  */
 public class SessionPersistenceManager {
 
-	private SessionPersistenceManager manager;
+	private static SessionPersistenceManager manager;
 	private Extension[] handler;
 
 	private static final String REPOSITORY_TAG = "repository";
@@ -62,7 +62,7 @@ public class SessionPersistenceManager {
 		updateHandler();
 	}
 
-	public SessionPersistenceManager getInstance() {
+	public static SessionPersistenceManager getInstance() {
 		if (manager == null) {
 			manager = new SessionPersistenceManager();
 		}

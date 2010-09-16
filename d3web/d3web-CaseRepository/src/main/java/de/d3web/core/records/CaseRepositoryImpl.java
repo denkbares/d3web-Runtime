@@ -62,7 +62,7 @@ public class CaseRepositoryImpl implements CaseRepository {
 		if (!caseObjects.contains(caseObject)) throw new IllegalArgumentException("CaseObject "
 				+ caseObject.getId() + " is not in the CaseRepository");
 
-		return caseObjects.add(caseObject);
+		return caseObjects.remove(caseObject);
 	}
 
 	@Override
