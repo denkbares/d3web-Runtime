@@ -16,20 +16,17 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.core.records.io;
+package de.d3web.file.records.io;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.records.DefaultSessionRepository;
 import de.d3web.core.records.SessionRecord;
-import de.d3web.core.records.SessionRepository;
-import de.d3web.core.records.SessionRepositoryImpl;
+import de.d3web.core.records.io.SessionPersistenceManager;
 
 /**
  * This implementation of the SessionRepositoryPersistenceHandler interface can
@@ -39,7 +36,7 @@ import de.d3web.core.records.SessionRepositoryImpl;
  * @author Sebastian Furth (denkbares GmbH)
  * 
  */
-public class SingleXMLSessionRepositoryHandler implements SessionRepositoryPersistenceHandler {
+public class SingleXMLSessionRepositoryHandler extends DefaultSessionRepository {
 
 	/*
 	 * Singleton instance
@@ -58,36 +55,22 @@ public class SingleXMLSessionRepositoryHandler implements SessionRepositoryPersi
 		return instance;
 	}
 
-	@Override
-	public SessionRepository load(KnowledgeBase kb, File file) throws IOException {
+	public void load(KnowledgeBase kb, File file) throws IOException {
 		if (kb == null) throw new IllegalArgumentException(
 				"KnowledgeBase is null. Unable to load SessionRepository.");
 		if (file == null) throw new IllegalArgumentException(
 				"File is null. Unable to load SessionRepository.");
 		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
-		Collection<SessionRecord> sessionRecords = spm.loadSessions(file,
-				new DummyProgressListener(), kb);
-		SessionRepository sessionRepository = new SessionRepositoryImpl();
-		for (SessionRecord sr : sessionRecords) {
-			sessionRepository.add(sr);
-		}
-		return sessionRepository;
+		sessionRecords = new LinkedList<SessionRecord>(spm.loadSessions(file,
+				new DummyProgressListener(), kb));
 	}
 
-	@Override
-	public void save(SessionRepository sessionRepository, File file) throws IOException {
-		if (sessionRepository == null) throw new IllegalArgumentException(
-				"SessionRepository is null. Unable to save SessionRepository.");
+	public void save(File file) throws IOException {
 		if (file == null) throw new IllegalArgumentException(
 				"File is null. Unable to save SessionRepository.");
-		List<SessionRecord> records = new LinkedList<SessionRecord>();
-		Iterator<SessionRecord> iterator = sessionRepository.iterator();
-		while (iterator.hasNext()) {
-			records.add(iterator.next());
-		}
 		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
-		spm.saveSessions(file, records, new DummyProgressListener(),
-				sessionRepository.getKnowledgeBase());
+		spm.saveSessions(file, sessionRecords, new DummyProgressListener(),
+				this.getKnowledgeBase());
 	}
 
 }

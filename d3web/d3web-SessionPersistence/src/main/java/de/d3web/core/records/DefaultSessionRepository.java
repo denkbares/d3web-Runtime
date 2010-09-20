@@ -27,14 +27,14 @@ import de.d3web.core.knowledge.KnowledgeBase;
 
 /**
  * Default Implementation of the SessionRepository Interface (@link
- * SessionRepository).
+ * SessionRepository). This implementation cannot persist the SessionRecords
  * 
  * @author Sebastian Furth (denkbares GmbH)‚
  * 
  */
-public class SessionRepositoryImpl implements SessionRepository {
+public class DefaultSessionRepository implements SessionRepository {
 
-	private List<SessionRecord> sessionRecords = new ArrayList<SessionRecord>();
+	protected List<SessionRecord> sessionRecords = new ArrayList<SessionRecord>();
 
 	@Override
 	public boolean add(SessionRecord sessionRecord) {

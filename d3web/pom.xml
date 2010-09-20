@@ -209,5 +209,7 @@
 		<module>d3web-Scoring</module>
 		<module>d3web-DiaFlux-jpf-plugin</module>
 		<module>d3web-SessionPersistence</module>
+		<module>d3web-SessionPersistence-ExtensionPoints-jpf-plugin</module>
+		<module>d3web-SessionPersistence-Basic-jpf-plugin</module>
 	</modules>
 </project>

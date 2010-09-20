@@ -26,10 +26,10 @@ import de.d3web.core.knowledge.KnowledgeBase;
  * This interface specifies the methods required for all SessionRepository
  * implementations.
  * 
- * A SessionRepository stores multiple {@link SessionRecord} instances.
+ * A SessionRepository stores multiple {@link DefaultSessionRecord} instances.
  * SessionRecords can be added and removed directly.
  * 
- * The stored {@link SessionRecord} instances are accessible via an
+ * The stored {@link DefaultSessionRecord} instances are accessible via an
  * {@link Iterator}.
  * 
  * @author Sebastian Furth (denkbares GmbH)
@@ -38,7 +38,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 public interface SessionRepository {
 
 	/**
-	 * Tries to add the specified {@link SessionRecord} to this
+	 * Tries to add the specified {@link DefaultSessionRecord} to this
 	 * SessionRepository.
 	 * 
 	 * If the SessionRecord was successfully added, the true is returned.
@@ -47,15 +47,15 @@ public interface SessionRepository {
 	 * If you try to add null, an {@link IllegalArgumentException} will be
 	 * thrown.
 	 * 
-	 * @param SessionRecord the SessionRecord which will be added (null is not
-	 *        allowed)
+	 * @param DefaultSessionRecord the SessionRecord which will be added (null
+	 *        is not allowed)
 	 * @return true, if the SessionRecord was added to the SessionRepository;
 	 *         false otherwise
 	 */
 	public boolean add(SessionRecord sessionRecord);
 
 	/**
-	 * Tries to remove the specified {@link SessionRecord} from this
+	 * Tries to remove the specified {@link DefaultSessionRecord} from this
 	 * SessionRepository.
 	 * 
 	 * If the SessionRecord was successfully removed, then true will be
@@ -64,7 +64,7 @@ public interface SessionRepository {
 	 * If you try to remove null, then an {@link IllegalArgumentException} will
 	 * be thrown.
 	 * 
-	 * @param SessionRecord the SessionRecord to be removed (null is not
+	 * @param DefaultSessionRecord the SessionRecord to be removed (null is not
 	 *        allowed).
 	 * @return true, if the SessionRecord was removed from the
 	 *         SessionRepository, false otherwise.
@@ -73,16 +73,16 @@ public interface SessionRepository {
 
 	/**
 	 * Returns an {@link Iterator} instance, that offers access to the
-	 * {@link SessionRecord} instances stored in this SessionRepository.
+	 * {@link DefaultSessionRecord} instances stored in this SessionRepository.
 	 * 
 	 * @return the Iterator which offers access to the stored SessionRecords.
 	 */
 	public Iterator<SessionRecord> iterator();
 
 	/**
-	 * Traverses the SessionRepository for a {@link SessionRecord} with the
-	 * specified unique identifier. If a SessionRecord with this identifier was
-	 * found, the it will be returned. Otherwise the returned value will be
+	 * Traverses the SessionRepository for a {@link DefaultSessionRecord} with
+	 * the specified unique identifier. If a SessionRecord with this identifier
+	 * was found, the it will be returned. Otherwise the returned value will be
 	 * null.
 	 * 
 	 * @param id the specified identifier of the desired SessionRecord

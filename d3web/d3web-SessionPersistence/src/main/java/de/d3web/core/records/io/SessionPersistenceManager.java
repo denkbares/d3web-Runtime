@@ -37,6 +37,7 @@ import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.records.DefaultSessionRecord;
 import de.d3web.core.records.SessionRecord;
 import de.d3web.plugin.Extension;
 import de.d3web.plugin.PluginManager;
@@ -119,7 +120,8 @@ public class SessionPersistenceManager {
 					try {
 						Date creationDate = DATE_FORMAT.parse(created);
 						Date dateOfLastEdit = DATE_FORMAT.parse(changed);
-						SessionRecord sr = new SessionRecord(id, kb, creationDate, dateOfLastEdit);
+						DefaultSessionRecord sr = new DefaultSessionRecord(id, kb, creationDate,
+								dateOfLastEdit);
 						for (Extension extension : handler) {
 							SessionPersistenceHandler handler = (SessionPersistenceHandler) extension.getSingleton();
 							handler.read(e, sr, listener);
