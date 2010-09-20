@@ -37,6 +37,7 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
+import de.d3web.core.io.FragmentManager;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.PersistenceManager;
@@ -70,7 +71,7 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 				return (o1.getId().compareTo(o2.getId()));
 			}
 		});
-		PersistenceManager pm = PersistenceManager.getInstance();
+		FragmentManager pm = PersistenceManager.getInstance();
 		float count = 0;
 		for (Rule r : rules) {
 			Element element = pm.writeFragment(r, doc);
@@ -111,7 +112,7 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 			throw new IOException();
 		}
 		List<Element> children = XMLUtil.getElementList(root.getChildNodes());
-		PersistenceManager pm = PersistenceManager.getInstance();
+		FragmentManager pm = PersistenceManager.getInstance();
 		float count = 0;
 		List<Rule> rules = new ArrayList<Rule>();
 		for (Element child : children) {

@@ -30,6 +30,7 @@ import org.w3c.dom.NodeList;
 
 import de.d3web.abstraction.ActionQuestionSetter;
 import de.d3web.abstraction.ActionSetValue;
+import de.d3web.core.io.FragmentManager;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
@@ -136,7 +137,7 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 		questionNode.setAttribute("ID", questionId);
 		element.appendChild(questionNode);
 		Element valuesNode = doc.createElement("Values");
-		PersistenceManager pm = PersistenceManager.getInstance();
+		FragmentManager pm = PersistenceManager.getInstance();
 		if (action != null && action.getValue() instanceof Value) {
 			String id = "";
 			if (action.getValue() instanceof ChoiceValue) {

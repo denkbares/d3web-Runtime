@@ -33,6 +33,7 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.FragmentManager;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
@@ -48,7 +49,11 @@ import de.d3web.plugin.PluginManager;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 15.09.2010
  */
-public class SessionPersistenceManager {
+public class SessionPersistenceManager extends FragmentManager {
+
+	private static final String EXTENDED_POINT_FRAGMENTHANDLER = "FragmentHandler";
+	private static final String EXTENDED_POINT_PERSISTENCEHANDLER = "SessionPersistenceHandler";
+	private static final String EXTENDED_POINT_ID = "de.d3web.sessionpersistence";
 
 	private static SessionPersistenceManager manager;
 	private Extension[] handler;
@@ -60,7 +65,7 @@ public class SessionPersistenceManager {
 			"yyyy-MM-dd HH:mm:ss.SS");
 
 	private SessionPersistenceManager() {
-		updateHandler();
+
 	}
 
 	public static SessionPersistenceManager getInstance() {
@@ -72,10 +77,12 @@ public class SessionPersistenceManager {
 
 	private void updateHandler() {
 		PluginManager manager = PluginManager.getInstance();
-		handler = manager.getExtensions("de.d3web.sessionpersistence", "SessionPersistenceHandler");
+		handler = manager.getExtensions(EXTENDED_POINT_ID, EXTENDED_POINT_PERSISTENCEHANDLER);
+		fragmentPlugins = manager.getExtensions(EXTENDED_POINT_ID, EXTENDED_POINT_FRAGMENTHANDLER);
 	}
 
 	public void saveSessions(File file, Collection<SessionRecord> sessionRecord, ProgressListener listener, KnowledgeBase kb) throws IOException {
+		updateHandler();
 		Document doc = Util.createEmptyDocument();
 		Element repElement = doc.createElement(REPOSITORY_TAG);
 		doc.appendChild(repElement);
@@ -100,6 +107,7 @@ public class SessionPersistenceManager {
 	}
 
 	public Collection<SessionRecord> loadSessions(File file, ProgressListener listener, KnowledgeBase kb) throws IOException {
+		updateHandler();
 		FileInputStream stream = new FileInputStream(file);
 		Collection<SessionRecord> sessionRecords = new ArrayList<SessionRecord>();
 		try {

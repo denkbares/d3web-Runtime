@@ -35,10 +35,6 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.progress.CombinedProgressListener;
 import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.io.progress.ProgressListener;
@@ -63,7 +59,7 @@ import de.d3web.plugin.PluginManager;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class PersistenceManager {
+public class PersistenceManager extends FragmentManager {
 
 	public static final String MULTIMEDIA_PATH_PREFIX = "multimedia/";
 
@@ -76,7 +72,6 @@ public class PersistenceManager {
 
 	private Extension[] readerPlugins;
 	private Extension[] writerPlugins;
-	private Extension[] fragmentPlugins;
 
 	/**
 	 * Private constructor: For public access getInstance() should be used
@@ -314,54 +309,6 @@ public class PersistenceManager {
 		}
 		// if successful backup is not needed any more
 		bakfile.delete();
-	}
-
-	/**
-	 * This method is used to create an XML element ({@link Document})for the
-	 * specified object using the {@link FragmentHandler} with the highest
-	 * priority who can create the element.
-	 * 
-	 * @param object the specified object
-	 * @param doc the specified XML element, in which the element should be
-	 *        created
-	 * @return the {@link Element} representing the input object
-	 * @throws NoSuchFragmentHandlerException if no appropriate
-	 *         {@link FragmentHandler} is available for the specified object
-	 * @throws IOException if an error occurs during saving the specified object
-	 */
-	public Element writeFragment(Object object, Document doc) throws NoSuchFragmentHandlerException, IOException {
-		for (Extension plugin : fragmentPlugins) {
-			FragmentHandler handler = (FragmentHandler) plugin.getSingleton();
-			if (handler.canWrite(object)) {
-				Element element = handler.write(object, doc);
-				return element;
-			}
-		}
-		throw new NoSuchFragmentHandlerException("No fragment handler found for: " + object);
-	}
-
-	/**
-	 * Reads the specified XML {@link Element} and creates its corresponding
-	 * object. For this operation, the {@link FragmentHandler} with the highest
-	 * priority and ability to handle the element is used. The specified
-	 * {@link KnowledgeBase} instance is used to retrieve the appropriate object
-	 * instances.
-	 * 
-	 * @param child the specified XML Element
-	 * @param knowledgeBase the specified knowledge base
-	 * @return the created object
-	 * @throws NoSuchFragmentHandlerException if no appropriate
-	 *         {@link FragmentHandler} is available
-	 * @throws IOException if an IO error occurs during the read operation
-	 */
-	public Object readFragment(Element child, KnowledgeBase knowledgeBase) throws NoSuchFragmentHandlerException, IOException {
-		for (Extension plugin : fragmentPlugins) {
-			FragmentHandler handler = (FragmentHandler) plugin.getSingleton();
-			if (handler.canRead(child)) {
-				return handler.read(knowledgeBase, child);
-			}
-		}
-		throw new NoSuchFragmentHandlerException("No fragment handler found for: " + child);
 	}
 
 	/**

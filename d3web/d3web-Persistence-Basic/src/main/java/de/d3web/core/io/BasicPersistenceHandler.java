@@ -152,7 +152,7 @@ public class BasicPersistenceHandler implements
 		List<Element> diagnosisNodes = null;
 		List<Element> initquestionnodes = null;
 		List<Element> costNodes = null;
-		PersistenceManager pm = PersistenceManager.getInstance();
+		FragmentManager pm = PersistenceManager.getInstance();
 		String rootQASetID = null;
 		String rootSolutionID = null;
 		for (Element child : kbchildren) {
@@ -296,7 +296,7 @@ public class BasicPersistenceHandler implements
 
 		listener.updateProgress(time++ / abstime, "Saving knowledge base: DCMarkups");
 		DCMarkup markup = kb.getDCMarkup();
-		PersistenceManager pm = PersistenceManager.getInstance();
+		FragmentManager pm = PersistenceManager.getInstance();
 		if (markup != null && !markup.isEmpty()) {
 			father.appendChild(pm.writeFragment(markup, doc));
 		}

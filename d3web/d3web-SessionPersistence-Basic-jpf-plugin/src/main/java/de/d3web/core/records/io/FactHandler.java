@@ -24,7 +24,6 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -51,7 +50,7 @@ public class FactHandler implements SessionPersistenceHandler {
 					TerminologyObject idObject = sessionRecord.getKb().searchObjectForName(oName);
 					String psmName = factElement.getAttribute("psm");
 					List<Element> valueNodes = XMLUtil.getElementList(factElement.getChildNodes());
-					Object readFragment = PersistenceManager.getInstance().readFragment(
+					Object readFragment = SessionPersistenceManager.getInstance().readFragment(
 							valueNodes.get(0),
 							sessionRecord.getKb());
 					FactRecord fact = new FactRecord(idObject, psmName, (Value) readFragment);
@@ -71,8 +70,8 @@ public class FactHandler implements SessionPersistenceHandler {
 			factsElement.appendChild(factElement);
 			factElement.setAttribute("objectName", fact.getObject().getId());
 			factElement.setAttribute("psm", fact.getPsm());
-			factElement.appendChild(PersistenceManager.getInstance().writeFragment(fact.getValue(),
-					doc));
+			factElement.appendChild(SessionPersistenceManager.getInstance().writeFragment(
+					fact.getValue(), doc));
 		}
 	}
 }

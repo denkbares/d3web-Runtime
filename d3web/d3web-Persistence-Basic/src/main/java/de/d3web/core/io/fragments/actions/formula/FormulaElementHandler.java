@@ -43,6 +43,7 @@ import de.d3web.abstraction.formula.QNumWrapper;
 import de.d3web.abstraction.formula.Today;
 import de.d3web.abstraction.formula.YearDiff;
 import de.d3web.abstraction.formula.Operator.Operation;
+import de.d3web.core.io.FragmentManager;
 import de.d3web.core.io.NoSuchFragmentHandlerException;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.FragmentHandler;
@@ -107,7 +108,7 @@ public class FormulaElementHandler implements FragmentHandler {
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
 		Element element = null;
-		PersistenceManager pm = PersistenceManager.getInstance();
+		FragmentManager pm = PersistenceManager.getInstance();
 		if (object instanceof YearDiff) {
 			YearDiff fa = (YearDiff) object;
 			element = createFormulaTerm(doc, fa.getSymbol(), fa.getArg1(), fa.getArg2());
@@ -155,7 +156,7 @@ public class FormulaElementHandler implements FragmentHandler {
 	}
 
 	private Element createFormulaTerm(Document doc, String symbol, Object arg_1, Object arg_2) throws DOMException, NoSuchFragmentHandlerException, IOException {
-		PersistenceManager pm = PersistenceManager.getInstance();
+		FragmentManager pm = PersistenceManager.getInstance();
 		Element element = doc.createElement("FormulaTerm");
 		element.setAttribute("type", symbol);
 		Element arg1 = doc.createElement("arg1");

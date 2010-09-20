@@ -29,6 +29,7 @@ import org.w3c.dom.Node;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.io.FragmentManager;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -72,7 +73,7 @@ public class RuleHandler implements FragmentHandler {
 		Condition exception = null;
 		Condition context = null;
 		List<Element> children = XMLUtil.getElementList(node.getChildNodes());
-		PersistenceManager pm = PersistenceManager.getInstance();
+		FragmentManager pm = PersistenceManager.getInstance();
 		for (Element child : children) {
 			if (child.getNodeName().equals("Exception")) {
 				Object object = getGrandChildObject(kb, pm, child);
@@ -120,7 +121,7 @@ public class RuleHandler implements FragmentHandler {
 		return rule;
 	}
 
-	private Object getGrandChildObject(KnowledgeBase kb, PersistenceManager pm,
+	private Object getGrandChildObject(KnowledgeBase kb, FragmentManager pm,
 			Element child) throws IOException {
 		List<Element> grandchildren = XMLUtil.getElementList(child.getChildNodes());
 		if (grandchildren.size() == 1) {
@@ -145,7 +146,7 @@ public class RuleHandler implements FragmentHandler {
 		if (rule.getComment() != null) {
 			node.setAttribute("comment", rule.getComment());
 		}
-		PersistenceManager pm = PersistenceManager.getInstance();
+		FragmentManager pm = PersistenceManager.getInstance();
 		// creating action node
 		PSAction action = rule.getAction();
 		if (action != null) {
