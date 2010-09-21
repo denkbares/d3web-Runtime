@@ -46,24 +46,7 @@ import de.d3web.core.session.protocol.Protocol;
  * @author Sebastian Furth & Markus Friedrich (both denkbares GmbH)
  * 
  */
-public class MultipleXMLSessionRepositoryHandler extends DefaultSessionRepository {
-
-	/*
-	 * Singleton instance
-	 */
-	private static MultipleXMLSessionRepositoryHandler instance = new MultipleXMLSessionRepositoryHandler();
-
-	private MultipleXMLSessionRepositoryHandler() {
-	}
-
-	/**
-	 * Returns an instance of MultipleXMLSessionRepositoryHandler.
-	 * 
-	 * @return instance of MultipleXMLSessionRepositoryHandler
-	 */
-	public static MultipleXMLSessionRepositoryHandler getInstance() {
-		return instance;
-	}
+public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 
 	/**
 	 * Loads the Session Records from a folder. The files are not parsed

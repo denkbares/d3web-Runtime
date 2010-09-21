@@ -68,7 +68,7 @@ public class FactHandler implements SessionPersistenceHandler {
 		for (FactRecord fact : sessionRecord.getFacts()) {
 			Element factElement = doc.createElement("fact");
 			factsElement.appendChild(factElement);
-			factElement.setAttribute("objectName", fact.getObject().getId());
+			factElement.setAttribute("objectName", fact.getObject().getName());
 			factElement.setAttribute("psm", fact.getPsm());
 			factElement.appendChild(SessionPersistenceManager.getInstance().writeFragment(
 					fact.getValue(), doc));

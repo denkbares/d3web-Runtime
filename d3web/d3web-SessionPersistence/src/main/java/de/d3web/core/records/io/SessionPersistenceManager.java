@@ -53,7 +53,7 @@ public class SessionPersistenceManager extends FragmentManager {
 
 	private static final String EXTENDED_POINT_FRAGMENTHANDLER = "FragmentHandler";
 	private static final String EXTENDED_POINT_PERSISTENCEHANDLER = "SessionPersistenceHandler";
-	private static final String EXTENDED_POINT_ID = "de.d3web.sessionpersistence";
+	private static final String EXTENDED_PLUGIN_ID = "d3web-SessionPersistence-ExtensionPoints";
 
 	private static SessionPersistenceManager manager;
 	private Extension[] handler;
@@ -77,8 +77,8 @@ public class SessionPersistenceManager extends FragmentManager {
 
 	private void updateHandler() {
 		PluginManager manager = PluginManager.getInstance();
-		handler = manager.getExtensions(EXTENDED_POINT_ID, EXTENDED_POINT_PERSISTENCEHANDLER);
-		fragmentPlugins = manager.getExtensions(EXTENDED_POINT_ID, EXTENDED_POINT_FRAGMENTHANDLER);
+		handler = manager.getExtensions(EXTENDED_PLUGIN_ID, EXTENDED_POINT_PERSISTENCEHANDLER);
+		fragmentPlugins = manager.getExtensions(EXTENDED_PLUGIN_ID, EXTENDED_POINT_FRAGMENTHANDLER);
 	}
 
 	public void saveSessions(File file, Collection<SessionRecord> sessionRecord, ProgressListener listener, KnowledgeBase kb) throws IOException {
@@ -96,6 +96,7 @@ public class SessionPersistenceManager extends FragmentManager {
 				SessionPersistenceHandler handler = (SessionPersistenceHandler) extension.getSingleton();
 				handler.write(sessionElement, co, listener);
 			}
+			repElement.appendChild(sessionElement);
 		}
 		OutputStream stream = new FileOutputStream(file);
 		try {

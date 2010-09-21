@@ -15,7 +15,7 @@
 	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
 		id="ChoiceValueHandler">
 		<parameter id="class"
-			value="de.d3web.core.records.io.fragements.ChoiceValueHandler" />
+			value="de.d3web.core.records.io.fragments.ChoiceValueHandler" />
 		<parameter id="name" value="ChoiceValueHandler" />
 		<parameter id="description" value="Handler for ChoiceValues" />
 		<parameter id="version" value="1.0" />
@@ -25,7 +25,7 @@
 	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
 		id="DateValueHandler">
 		<parameter id="class"
-			value="de.d3web.core.records.io.fragements.DateValueHandler" />
+			value="de.d3web.core.records.io.fragments.DateValueHandler" />
 		<parameter id="name" value="DateValueHandler" />
 		<parameter id="description" value="Handler for DateValues" />
 		<parameter id="version" value="1.0" />
@@ -35,7 +35,7 @@
 	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
 		id="HeuristicRatingHandler">
 		<parameter id="class"
-			value="de.d3web.core.records.io.fragements.HeuristicRatingHandler" />
+			value="de.d3web.core.records.io.fragments.HeuristicRatingHandler" />
 		<parameter id="name" value="HeuristicRatingHandler" />
 		<parameter id="description" value="Handler for HeuristicRating" />
 		<parameter id="version" value="1.0" />
@@ -45,7 +45,7 @@
 	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
 		id="IndicationHandler">
 		<parameter id="class"
-			value="de.d3web.core.records.io.fragements.IndicationHandler" />
+			value="de.d3web.core.records.io.fragments.IndicationHandler" />
 		<parameter id="name" value="IndicationHandler" />
 		<parameter id="description" value="Handler for Indications" />
 		<parameter id="version" value="1.0" />
@@ -55,7 +55,7 @@
 	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
 		id="MultipleChoiceValueHandler">
 		<parameter id="class"
-			value="de.d3web.core.records.io.fragements.MultipleChoiceValueHandler" />
+			value="de.d3web.core.records.io.fragments.MultipleChoiceValueHandler" />
 		<parameter id="name" value="MultipleChoiceValueHandler" />
 		<parameter id="description" value="Handler for MultipleChoiceValues" />
 		<parameter id="version" value="1.0" />
@@ -65,7 +65,7 @@
 	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
 		id="NumValueHandler">
 		<parameter id="class"
-			value="de.d3web.core.records.io.fragements.NumValueHandler" />
+			value="de.d3web.core.records.io.fragments.NumValueHandler" />
 		<parameter id="name" value="NumValueHandler" />
 		<parameter id="description" value="Handler for NumValues" />
 		<parameter id="version" value="1.0" />
@@ -75,7 +75,7 @@
 	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
 		id="RatingHandler">
 		<parameter id="class"
-			value="de.d3web.core.records.io.fragements.RatingHandler" />
+			value="de.d3web.core.records.io.fragments.RatingHandler" />
 		<parameter id="name" value="RatingHandler" />
 		<parameter id="description" value="Handler for Ratings" />
 		<parameter id="version" value="1.0" />
@@ -85,7 +85,7 @@
 	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
 		id="TextValueHandler">
 		<parameter id="class"
-			value="de.d3web.core.records.io.fragements.TextValueHandler" />
+			value="de.d3web.core.records.io.fragments.TextValueHandler" />
 		<parameter id="name" value="TextValueHandler" />
 		<parameter id="description" value="Handler for TextValues" />
 		<parameter id="version" value="1.0" />
@@ -95,7 +95,7 @@
 	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
 		id="UndefinedHandler">
 		<parameter id="class"
-			value="de.d3web.core.records.io.fragements.UndefinedHandler" />
+			value="de.d3web.core.records.io.fragments.UndefinedHandler" />
 		<parameter id="name" value="UndefinedHandler" />
 		<parameter id="description" value="Handler for Undefined" />
 		<parameter id="version" value="1.0" />

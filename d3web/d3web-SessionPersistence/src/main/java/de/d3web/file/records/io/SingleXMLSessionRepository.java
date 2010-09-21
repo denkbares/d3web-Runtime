@@ -36,24 +36,7 @@ import de.d3web.core.records.io.SessionPersistenceManager;
  * @author Sebastian Furth (denkbares GmbH)
  * 
  */
-public class SingleXMLSessionRepositoryHandler extends DefaultSessionRepository {
-
-	/*
-	 * Singleton instance
-	 */
-	private static SingleXMLSessionRepositoryHandler instance = new SingleXMLSessionRepositoryHandler();
-
-	private SingleXMLSessionRepositoryHandler() {
-	}
-
-	/**
-	 * Returns an instance of SingleXMLSessionRepositoryHandler.
-	 * 
-	 * @return instance of SingleXMLSessionRepositoryHandler
-	 */
-	public static SingleXMLSessionRepositoryHandler getInstance() {
-		return instance;
-	}
+public class SingleXMLSessionRepository extends DefaultSessionRepository {
 
 	public void load(KnowledgeBase kb, File file) throws IOException {
 		if (kb == null) throw new IllegalArgumentException(

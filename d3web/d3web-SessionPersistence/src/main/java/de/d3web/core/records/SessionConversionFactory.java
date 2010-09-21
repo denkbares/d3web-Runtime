@@ -19,6 +19,7 @@
 package de.d3web.core.records;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,6 +40,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.protocol.Protocol;
 import de.d3web.core.session.protocol.ProtocolEntry;
 import de.d3web.core.session.values.UndefinedValue;
 
@@ -53,8 +55,11 @@ public class SessionConversionFactory {
 	public static Session copyToSession(SessionRecord source) throws IOException {
 		Session target = SessionFactory.createSession(source.getKb());
 		target.setDCMarkup(source.getDCMarkup());
-		for (ProtocolEntry entry : source.getProtocol().getProtocolHistory()) {
-			target.getProtocol().addEntry(entry.getFact());
+		Protocol protocol = source.getProtocol();
+		if (protocol != null) {
+			for (ProtocolEntry entry : protocol.getProtocolHistory()) {
+				target.getProtocol().addEntry(entry.getFact());
+			}
 		}
 
 		// Search psmethods of session (improves performance)
@@ -87,18 +92,19 @@ public class SessionConversionFactory {
 	}
 
 	public static SessionRecord copyToSessionRecord(Session source) {
+		// TODO: Set correct dates
 		SessionRecord target = new DefaultSessionRecord(source.getId(), source.getKnowledgeBase(),
-				null, null);
+				new Date(), new Date());
 		target.setDCMarkup(source.getDCMarkup());
 		target.setProtocol(source.getProtocol());
 		Blackboard blackboard = source.getBlackboard();
 		List<PSMethod> problemsolvingpsmethods = new LinkedList<PSMethod>();
 		List<PSMethod> strategicpsmethods = new LinkedList<PSMethod>();
 		for (PSMethod psm : source.getPSMethods()) {
-			if (psm.hasType(Type.problem) && psm.hasType(Type.source)) {
+			if (psm.hasType(Type.problem) || psm.hasType(Type.source)) {
 				problemsolvingpsmethods.add(psm);
 			}
-			if (psm.hasType(Type.strategic) && psm.hasType(Type.source)) {
+			if (psm.hasType(Type.strategic) || psm.hasType(Type.source)) {
 				strategicpsmethods.add(psm);
 			}
 		}
