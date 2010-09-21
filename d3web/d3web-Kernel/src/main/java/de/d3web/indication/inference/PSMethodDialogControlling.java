@@ -29,8 +29,8 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
-import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
@@ -75,6 +75,7 @@ public class PSMethodDialogControlling extends PSMethodCombined {
 	/**
 	 * @see PSMethod
 	 */
+	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		for (PropagationEntry change : changes) {
 			KnowledgeSlice knowledgeSlices = ((NamedObject) change.getObject()).getKnowledge(
@@ -95,5 +96,10 @@ public class PSMethodDialogControlling extends PSMethodCombined {
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
 		return Facts.mergeIndicationFacts(facts);
+	}
+
+	@Override
+	public boolean hasType(Type type) {
+		return type == Type.strategic;
 	}
 }

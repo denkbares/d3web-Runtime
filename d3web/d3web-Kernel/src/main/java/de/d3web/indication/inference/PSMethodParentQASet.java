@@ -40,7 +40,6 @@ public class PSMethodParentQASet extends PSMethodAdapter {
 
 	private PSMethodParentQASet() {
 		super();
-		setContributingToResult(false);
 	}
 
 	/**
@@ -53,12 +52,18 @@ public class PSMethodParentQASet extends PSMethodAdapter {
 		return instance;
 	}
 
+	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 	}
 
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
 		return Facts.mergeIndicationFacts(facts);
+	}
+
+	@Override
+	public boolean hasType(Type type) {
+		return type == Type.strategic;
 	}
 
 }

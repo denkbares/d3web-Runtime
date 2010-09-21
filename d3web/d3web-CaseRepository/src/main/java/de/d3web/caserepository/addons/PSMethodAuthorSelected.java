@@ -61,4 +61,10 @@ public class PSMethodAuthorSelected extends PSMethodAdapter {
 		return Facts.mergeUniqueFact(facts);
 	}
 
+	@Override
+	public boolean hasType(Type type) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

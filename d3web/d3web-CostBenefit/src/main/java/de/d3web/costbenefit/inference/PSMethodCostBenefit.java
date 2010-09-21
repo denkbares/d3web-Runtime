@@ -340,4 +340,9 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 	public SessionObject createCaseObject(Session session) {
 		return new CostBenefitCaseObject(this, session);
 	}
+
+	@Override
+	public boolean hasType(Type type) {
+		return type == Type.strategic;
+	}
 }

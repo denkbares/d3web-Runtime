@@ -49,4 +49,9 @@ public class PSMethodShared extends PSMethodAdapter {
 		throw new IllegalStateException("must not add facts of PSMethodShared");
 	}
 
+	@Override
+	public boolean hasType(Type type) {
+		return false;
+	}
+
 }

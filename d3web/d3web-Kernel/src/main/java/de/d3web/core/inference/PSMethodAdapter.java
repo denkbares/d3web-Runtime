@@ -31,8 +31,6 @@ import de.d3web.core.session.Session;
  */
 public abstract class PSMethodAdapter implements PSMethod {
 
-	private boolean contributingToResult = false;
-
 	protected PSMethodAdapter() {
 		super();
 	}
@@ -40,20 +38,8 @@ public abstract class PSMethodAdapter implements PSMethod {
 	/**
 	 * Does nothing.
 	 */
+	@Override
 	public void init(Session session) {
 	}
 
-	/**
-	 * @see PSMethod
-	 */
-	public boolean isContributingToResult() {
-		return contributingToResult;
-	}
-
-	/**
-	 * @see PSMethod
-	 */
-	public void setContributingToResult(boolean newContributingToResult) {
-		contributingToResult = newContributingToResult;
-	}
 }

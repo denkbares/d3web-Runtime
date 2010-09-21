@@ -37,8 +37,8 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.Rating.State;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
@@ -64,6 +64,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		super();
 	}
 
+	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 
 		// update total weight
@@ -181,6 +182,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		}
 	}
 
+	@Override
 	public double getEntropy(Collection<? extends QASet> qasets,
 			Collection<Solution> solutions, Session session) {
 		Map<Set<Condition>, Float> map = new HashMap<Set<Condition>, Float>();
@@ -238,6 +240,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 
 	}
 
+	@Override
 	public Collection<Solution> getPossibleSolutions(Session session) {
 		List<Solution> solutions = session.getBlackboard().getSolutions(State.ESTABLISHED);
 		if (solutions.size() > 0) {
@@ -250,6 +253,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		return session.getBlackboard().getSolutions(State.UNCLEAR);
 	}
 
+	@Override
 	public Collection<Question> getDiscriminatingQuestions(
 			Collection<Solution> solutions, Session session) {
 		Set<Question> coveredSymptoms = new HashSet<Question>();
@@ -267,6 +271,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		return coveredSymptoms;
 	}
 
+	@Override
 	public void init(Session session) {
 	}
 
@@ -284,6 +289,7 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		}
 	}
 
+	@Override
 	public SessionObject createCaseObject(Session session) {
 		return new XCLCaseObject(this);
 	}
@@ -315,5 +321,10 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
 		return Facts.mergeSolutionFacts(facts);
+	}
+
+	@Override
+	public boolean hasType(Type type) {
+		return type == Type.problem;
 	}
 }

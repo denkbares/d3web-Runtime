@@ -22,7 +22,6 @@ package de.d3web.core.inference;
 
 import java.util.Collection;
 
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 
@@ -36,6 +35,13 @@ import de.d3web.core.session.blackboard.Fact;
  */
 public interface PSMethod {
 
+	public enum Type {
+		source,
+		strategic,
+		problem,
+		consumer
+	}
+
 	public final static String EXTENSIONPOINT_ID = "PSMethod";
 
 	/**
@@ -43,15 +49,6 @@ public interface PSMethod {
 	 * {@link Session} instance is created.
 	 */
 	void init(Session session);
-
-	/**
-	 * Indicates whether the problem-solver contributes to
-	 * Session.getDiagnoses(DiangosisState)
-	 * 
-	 * @return true if the problem-solver contributes to the derivation of
-	 *         {@link Solution} instances
-	 */
-	boolean isContributingToResult();
 
 	/**
 	 * Propagates the specified changes of the specified {@link Session} to this
@@ -76,4 +73,6 @@ public interface PSMethod {
 	 * @return the merged fact
 	 */
 	Fact mergeFacts(Fact[] facts);
+
+	boolean hasType(Type type);
 }

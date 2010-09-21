@@ -46,6 +46,7 @@ public class PSMethodSCMCBR extends PSMethodAdapter {
 		return instance;
 	}
 
+	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		// TODO: implement well, as defined below
 		// Set<XCLModel> modelsToUpdate = new HashSet<XCLModel>();
@@ -98,6 +99,11 @@ public class PSMethodSCMCBR extends PSMethodAdapter {
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
 		return Facts.mergeUniqueFact(facts);
+	}
+
+	@Override
+	public boolean hasType(Type type) {
+		return type == Type.problem;
 	}
 
 }

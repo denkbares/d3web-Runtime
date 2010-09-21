@@ -62,4 +62,9 @@ public class PSMethodInterview extends PSMethodAdapter {
 		return instance;
 	}
 
+	@Override
+	public boolean hasType(Type type) {
+		return type == Type.consumer;
+	}
+
 }

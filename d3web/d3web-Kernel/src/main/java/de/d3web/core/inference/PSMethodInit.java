@@ -58,9 +58,10 @@ public class PSMethodInit implements PSMethod {
 	}
 
 	/**
-	 * Some space for initial methods of a PSMethod. Does nothing. Creation
-	 * date: (21.02.2002 16:51:10)
+	 * Some space for initial methods of a PSMethod. Creation date: (21.02.2002
+	 * 16:51:10)
 	 */
+	@Override
 	public void init(Session session) {
 		session.getPropagationManager().openPropagation();
 		try {
@@ -98,18 +99,9 @@ public class PSMethodInit implements PSMethod {
 	}
 
 	/**
-	 * Indicates whether the problemsolver contributes to
-	 * Session.getDiagnoses(DiangosisState) Creation date: (21.02.2002 16:51:10)
-	 * 
-	 * @return false
-	 */
-	public boolean isContributingToResult() {
-		return false;
-	}
-
-	/**
 	 * @see PSMethod
 	 */
+	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 	}
 
@@ -118,5 +110,10 @@ public class PSMethodInit implements PSMethod {
 		// because there should be only one init value for an object
 		// we simply deliver the first fact as the result
 		return facts[0];
+	}
+
+	@Override
+	public boolean hasType(Type type) {
+		return type == Type.problem;
 	}
 }

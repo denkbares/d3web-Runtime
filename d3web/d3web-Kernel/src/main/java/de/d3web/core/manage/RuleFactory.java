@@ -41,14 +41,12 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.indication.ActionClarify;
 import de.d3web.indication.ActionContraIndication;
-import de.d3web.indication.ActionIndicateTherapies;
 import de.d3web.indication.ActionIndication;
 import de.d3web.indication.ActionInstantIndication;
 import de.d3web.indication.ActionNextQASet;
 import de.d3web.indication.ActionRefine;
 import de.d3web.indication.ActionSuppressAnswer;
 import de.d3web.indication.inference.PSMethodStrategic;
-import de.d3web.indication.inference.PSMethodTherapyIndication;
 import de.d3web.scoring.ActionHeuristicPS;
 import de.d3web.scoring.Score;
 import de.d3web.scoring.inference.PSMethodHeuristic;
@@ -541,9 +539,6 @@ public class RuleFactory {
 		}
 		else if (action instanceof ActionHeuristicPS) {
 			return PSMethodHeuristic.class;
-		}
-		else if (action instanceof ActionIndicateTherapies) {
-			return PSMethodTherapyIndication.class;
 		}
 		else if (action instanceof ActionNextQASet) {
 			return PSMethodStrategic.class;

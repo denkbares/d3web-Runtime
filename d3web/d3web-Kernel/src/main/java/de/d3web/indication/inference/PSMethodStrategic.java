@@ -50,4 +50,9 @@ public class PSMethodStrategic extends PSMethodRulebased {
 		return Facts.mergeIndicationFacts(facts);
 	}
 
+	@Override
+	public boolean hasType(Type type) {
+		return type == Type.strategic;
+	}
+
 }

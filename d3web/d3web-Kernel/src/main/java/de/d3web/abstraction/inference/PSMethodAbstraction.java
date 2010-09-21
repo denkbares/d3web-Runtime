@@ -58,4 +58,9 @@ public class PSMethodAbstraction extends PSMethodRulebased {
 		return Facts.mergeAnswerFacts(facts);
 	}
 
+	@Override
+	public boolean hasType(Type type) {
+		return type == Type.problem;
+	}
+
 }

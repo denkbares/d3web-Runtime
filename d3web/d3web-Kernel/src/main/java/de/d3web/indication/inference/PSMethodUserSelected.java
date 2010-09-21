@@ -36,7 +36,6 @@ public class PSMethodUserSelected extends PSMethodRulebased {
 
 	protected PSMethodUserSelected() {
 		super();
-		setContributingToResult(true);
 	}
 
 	/**
@@ -64,5 +63,10 @@ public class PSMethodUserSelected extends PSMethodRulebased {
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
 		return Facts.mergeUniqueFact(facts);
+	}
+
+	@Override
+	public boolean hasType(Type type) {
+		return type == Type.source;
 	}
 }

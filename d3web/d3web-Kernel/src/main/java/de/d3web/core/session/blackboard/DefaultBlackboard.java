@@ -33,8 +33,8 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Rating;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.Rating.State;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 import de.d3web.core.session.DefaultSession;
 import de.d3web.core.session.Session;
@@ -142,6 +142,7 @@ public class DefaultBlackboard implements Blackboard {
 	 * @param termObject the terminology object to remove the value facts from
 	 * @param source the fact source to be removed
 	 */
+	@Override
 	public void removeValueFact(TerminologyObject terminologyObject, Object source) {
 		Value oldValue = getActualValue(terminologyObject);
 		this.valueStorage.remove(terminologyObject, source);
@@ -261,6 +262,11 @@ public class DefaultBlackboard implements Blackboard {
 	}
 
 	@Override
+	public Fact getInterviewFact(TerminologyObject terminologyObject, PSMethod psmethod) {
+		return this.interviewStorage.getAggregator(terminologyObject).getMergedFact(psmethod);
+	}
+
+	@Override
 	public Collection<TerminologyObject> getInterviewObjects() {
 		return Collections.unmodifiableCollection(
 				this.interviewStorage.getValuedObjects());
@@ -312,6 +318,17 @@ public class DefaultBlackboard implements Blackboard {
 	@Override
 	public Indication getIndication(InterviewObject interviewElement) {
 		Fact fact = getInterviewFact(interviewElement);
+		if (fact == null) {
+			return Indication.getDefaultIndication();
+		}
+		else {
+			return (Indication) getInterviewFact(interviewElement).getValue();
+		}
+	}
+
+	@Override
+	public Indication getIndication(InterviewObject interviewElement, PSMethod psMethod) {
+		Fact fact = getInterviewFact(interviewElement, psMethod);
 		if (fact == null) {
 			return Indication.getDefaultIndication();
 		}

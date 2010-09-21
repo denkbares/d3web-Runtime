@@ -62,7 +62,7 @@ import de.d3web.plugin.PluginManager;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
- * The {@link D3WebSession} is the default implementation of {@link Session}.
+ * The {@link DefaultSession} is the default implementation of {@link Session}.
  * Here, the {@link Blackboard}, {@link Interview}, and
  * {@link PropagationManager} are managed, that together represent the behavior
  * of a {@link Session}.

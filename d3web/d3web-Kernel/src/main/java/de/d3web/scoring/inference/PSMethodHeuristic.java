@@ -64,7 +64,6 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 
 	private PSMethodHeuristic() {
 		super();
-		setContributingToResult(true);
 	}
 
 	/**
@@ -82,6 +81,7 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 	/**
 	 * Check if NamedObject has nextQASet rules and check them, if available
 	 */
+	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		for (PropagationEntry change : changes) {
 			checkRulesFor(session, change.getObject());
@@ -140,5 +140,10 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 		Score aprioriProbability = terminologyObject.getAprioriProbability();
 		Value value = HeuristicRating.add(aprioriProbability, ratings);
 		return new DefaultFact(terminologyObject, value, this, this);
+	}
+
+	@Override
+	public boolean hasType(Type type) {
+		return type == Type.problem;
 	}
 }

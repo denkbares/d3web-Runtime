@@ -35,7 +35,6 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.indication.ActionClarify;
 import de.d3web.indication.ActionContraIndication;
-import de.d3web.indication.ActionIndicateTherapies;
 import de.d3web.indication.ActionInstantIndication;
 import de.d3web.indication.ActionNextQASet;
 import de.d3web.indication.ActionRefine;
@@ -212,12 +211,6 @@ public class RuleActionVerbalizer implements Verbalizer {
 			if (asv.getValue() != null) s += createActionList(Arrays.asList(asv.getValue()));
 			return s;
 
-		}
-		else if (ra instanceof ActionIndicateTherapies) {
-			ActionIndicateTherapies ait = (ActionIndicateTherapies) ra;
-			s += propertyRB.getString("rule.NextQASet") + " ";
-			if (ait.getTherapies() != null) s += createActionList(ait.getTherapies());
-			return s;
 		}
 
 		// no appropriate type found:
