@@ -28,14 +28,14 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.session.values.UndefinedValue;
 
 /**
- * Handler for UndefinedValue
+ * Handler for Undefined
  * 
  * @author Markus Friedrich (denkbares GmbH)
  * @created 15.09.2010
  */
 public class UndefinedHandler implements FragmentHandler {
 
-	private static final String elementName = "undefinedValue";
+	public static final String elementName = "undefined";
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {

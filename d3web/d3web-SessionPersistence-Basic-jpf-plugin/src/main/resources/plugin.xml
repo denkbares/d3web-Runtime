@@ -39,7 +39,7 @@
 		<parameter id="name" value="HeuristicRatingHandler" />
 		<parameter id="description" value="Handler for HeuristicRating" />
 		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
+		<parameter id="priority" value="4" />
 	</extension>
 	
 	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
@@ -98,6 +98,16 @@
 			value="de.d3web.core.records.io.fragments.UndefinedHandler" />
 		<parameter id="name" value="UndefinedHandler" />
 		<parameter id="description" value="Handler for Undefined" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="UnknownHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.fragments.UnknownHandler" />
+		<parameter id="name" value="UnknownHandler" />
+		<parameter id="description" value="Handler for Unknown" />
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>

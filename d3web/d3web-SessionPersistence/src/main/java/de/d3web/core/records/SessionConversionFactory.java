@@ -73,10 +73,18 @@ public class SessionConversionFactory {
 				PSMethod psMethod = psMethods.get(factRecord.getPsm());
 				if (psMethod != null) {
 					if (psMethod.hasType(Type.source)) {
-						target.getBlackboard().addValueFact(
-								new DefaultFact(factRecord.getObject(), factRecord.getValue(),
-										psMethod,
-										psMethod));
+						Value value = factRecord.getValue();
+						if (value instanceof Indication) {
+							target.getBlackboard().addInterviewFact(
+									new DefaultFact(factRecord.getObject(), value, psMethod,
+											psMethod));
+						}
+						else {
+							target.getBlackboard().addValueFact(
+									new DefaultFact(factRecord.getObject(), value,
+											psMethod,
+											psMethod));
+						}
 					}
 				}
 				else {
@@ -129,7 +137,7 @@ public class SessionConversionFactory {
 			int countpsm = 0;
 			for (PSMethod psm : problemsolvingpsmethods) {
 				Rating rating = blackboard.getRating(s, psm);
-				if (rating.hasState(State.UNCLEAR)) {
+				if (!rating.hasState(State.UNCLEAR)) {
 					target.addFact(new FactRecord(s, psm.getClass().toString(), rating));
 					countpsm++;
 				}
@@ -145,7 +153,7 @@ public class SessionConversionFactory {
 			int countpsm = 0;
 			for (PSMethod psm : strategicpsmethods) {
 				Indication indication = blackboard.getIndication((InterviewObject) object, psm);
-				if (indication.hasState(Indication.State.NEUTRAL)) {
+				if (!indication.hasState(Indication.State.NEUTRAL)) {
 					target.addFact(new FactRecord(object, psm.getClass().toString(), indication));
 					countpsm++;
 				}

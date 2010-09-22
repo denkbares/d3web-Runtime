@@ -39,18 +39,27 @@ import de.d3web.core.records.io.SessionPersistenceManager;
 public class SingleXMLSessionRepository extends DefaultSessionRepository {
 
 	public void load(KnowledgeBase kb, File file) throws IOException {
-		if (kb == null) throw new IllegalArgumentException(
+		if (kb == null) throw new NullPointerException(
 				"KnowledgeBase is null. Unable to load SessionRepository.");
-		if (file == null) throw new IllegalArgumentException(
-				"File is null. Unable to load SessionRepository.");
+		if (file == null) {
+			throw new NullPointerException("File is null. Unable to load SessionRepository.");
+		}
+		if (!file.exists() || file.isDirectory()) {
+			throw new IllegalArgumentException(
+					"File doesn't exist or is a directory. Unable to load SessionRepository.");
+		}
 		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
 		sessionRecords = new LinkedList<SessionRecord>(spm.loadSessions(file,
 				new DummyProgressListener(), kb));
 	}
 
 	public void save(File file) throws IOException {
-		if (file == null) throw new IllegalArgumentException(
+		if (file == null) throw new NullPointerException(
 				"File is null. Unable to save SessionRepository.");
+		if (file.isDirectory()) {
+			throw new IllegalArgumentException(
+					"File is a directory. Unable to save SessionRepository.");
+		}
 		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
 		spm.saveSessions(file, sessionRecords, new DummyProgressListener(),
 				this.getKnowledgeBase());

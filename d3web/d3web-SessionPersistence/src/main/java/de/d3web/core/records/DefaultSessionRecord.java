@@ -50,7 +50,7 @@ public class DefaultSessionRecord implements SessionRecord {
 
 	public DefaultSessionRecord(KnowledgeBase kb) {
 		this.kb = kb;
-		id = "Case " + System.currentTimeMillis();
+		id = "Session " + System.currentTimeMillis();
 		creationDate = new Date();
 		lastEditDate = new Date();
 	}

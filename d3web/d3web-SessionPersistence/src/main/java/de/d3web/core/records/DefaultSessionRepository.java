@@ -38,7 +38,7 @@ public class DefaultSessionRepository implements SessionRepository {
 
 	@Override
 	public boolean add(SessionRecord sessionRecord) {
-		if (sessionRecord == null) throw new IllegalArgumentException(
+		if (sessionRecord == null) throw new NullPointerException(
 				"null can't be added to the SessionRepository.");
 		if (sessionRecords.contains(sessionRecord)) {
 			Logger.getLogger(this.getClass().getSimpleName())
@@ -57,7 +57,7 @@ public class DefaultSessionRepository implements SessionRepository {
 
 	@Override
 	public boolean remove(SessionRecord sessionRecord) {
-		if (sessionRecord == null) throw new IllegalArgumentException(
+		if (sessionRecord == null) throw new NullPointerException(
 				"null can't be removed from the SessionRepository.");
 		if (!sessionRecords.contains(sessionRecord)) throw new IllegalArgumentException(
 				"SessionRecord "
@@ -67,7 +67,10 @@ public class DefaultSessionRepository implements SessionRepository {
 
 	@Override
 	public SessionRecord getSessionRecordById(String id) {
-		if (id == null || id.matches("\\s+")) throw new IllegalArgumentException(id
+		if (id == null) {
+			throw new NullPointerException("id is null.");
+		}
+		if (id.matches("\\s+")) throw new IllegalArgumentException(id
 				+ " is not a valid ID.");
 		for (SessionRecord co : sessionRecords) {
 			if (co.getId().equals(id)) return co;
