@@ -59,9 +59,9 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 	 * @throws IOException
 	 */
 	public void load(KnowledgeBase kb, File folder) throws IOException {
-		if (kb == null) throw new IllegalArgumentException(
+		if (kb == null) throw new NullPointerException(
 				"KnowledgeBase is null. Unable to load SessionRepository.");
-		if (folder == null) throw new IllegalArgumentException(
+		if (folder == null) throw new NullPointerException(
 				"File is null. Unable to load SessionRepository.");
 		if (!folder.isDirectory()) throw new IllegalArgumentException(
 				"This implementation of the SessionRepositoryPersistenceHandler requires a directory.");
@@ -82,7 +82,7 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 	 * @throws IOException
 	 */
 	public void save(File folder) throws IOException {
-		if (folder == null) throw new IllegalArgumentException(
+		if (folder == null) throw new NullPointerException(
 				"File is null. Unable to save SessionRepository.");
 		if (!folder.isDirectory()) throw new IllegalArgumentException(
 				"This implementation of the SessionRepositoryPersistenceHandler requires a directory.");
@@ -158,12 +158,12 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 				loadedSessions = SessionPersistenceManager.getInstance().loadSessions(
 						file, new DummyProgressListener(), kb);
 				if (loadedSessions.size() > 1) {
-					new IOException("The file " + file.getCanonicalPath()
-							+ " contains more than one sessionrecord");
+					throw new IOException("The file " + file.getCanonicalPath()
+							+ " contains more than one sessionrecord.");
 				}
 				else if (loadedSessions.size() == 0) {
-					new IOException("The file " + file.getCanonicalPath()
-							+ " contains more no sessionrecord");
+					throw new IOException("The file " + file.getCanonicalPath()
+							+ " contains more no sessionrecord.");
 				}
 				else {
 					realRecord = loadedSessions.iterator().next();

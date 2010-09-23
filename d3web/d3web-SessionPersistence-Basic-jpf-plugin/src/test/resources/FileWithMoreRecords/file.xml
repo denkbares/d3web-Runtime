@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<repository kbID="TestKB">
+<session changed="2010-09-23 11:32:56.580" created="2010-09-23 11:32:56.580" id="4cff69ae-de4e-4734-8036-04dd61ddde77">
+<facts>
+<fact objectName="QuestionText" psm="class de.d3web.indication.inference.PSMethodUserSelected">
+<textValue>Text &lt;mit&gt; fiesen\bösen &lt;/Sachen&gt;</textValue>
+</fact>
+<fact objectName="Question2" psm="class de.d3web.indication.inference.PSMethodUserSelected">
+<multipleChoiceValue>
+<choice>Answer1</choice>
+<choice>Answer2</choice>
+</multipleChoiceValue>
+</fact>
+<fact objectName="Question" psm="class de.d3web.indication.inference.PSMethodUserSelected">
+<choiceValue>Answer1</choiceValue>
+</fact>
+<fact objectName="QuestionNum" psm="class de.d3web.indication.inference.PSMethodUserSelected">
+<numValue>-29.2</numValue>
+</fact>
+<fact objectName="QuestionDate" psm="class de.d3web.indication.inference.PSMethodUserSelected">
+<dateValue>2010-09-23 11:32:56.205</dateValue>
+</fact>
+<fact objectName="Solution" psm="class de.d3web.indication.inference.PSMethodUserSelected">
+<rating>ESTABLISHED</rating>
+</fact>
+<fact objectName="Solution2" psm="class de.d3web.scoring.inference.PSMethodHeuristic">
+<heuristicRating>999.0</heuristicRating>
+</fact>
+</facts>
+<head profile="http://dublincore.org/documents/dcq-html/"/>
+</session>
+<session changed="2010-09-23 11:32:56.591" created="2010-09-23 11:32:56.591" id="3cfcdd41-0501-438d-9206-7215d8815e0f">
+<facts>
+<fact objectName="Question" psm="class de.d3web.indication.inference.PSMethodUserSelected">
+<unknown/>
+</fact>
+<fact objectName="QuestionNum" psm="class de.d3web.indication.inference.PSMethodUserSelected">
+<numValue>-29.2</numValue>
+</fact>
+<fact objectName="Solution2" psm="class de.d3web.scoring.inference.PSMethodHeuristic">
+<heuristicRating>999.0</heuristicRating>
+</fact>
+<fact objectName="Question2" psm="class de.d3web.indication.inference.PSMethodUserSelected">
+<indication>INDICATED</indication>
+</fact>
+</facts>
+<head profile="http://dublincore.org/documents/dcq-html/"/>
+</session>
+</repository>

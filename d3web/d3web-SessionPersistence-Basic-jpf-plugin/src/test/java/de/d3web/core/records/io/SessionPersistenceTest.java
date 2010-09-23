@@ -246,25 +246,116 @@ public class SessionPersistenceTest {
 	}
 
 	@Test
-	public void testMultiXMLPersistence() throws IOException {
+	public void testMultiXMLPersistence() throws IOException, InterruptedException {
 		MultipleXMLSessionRepository sessionRepository = new MultipleXMLSessionRepository();
 		sessionRepository.add(sessionRecord);
 		sessionRepository.add(sessionRecord2);
+		clearDirectory(directory);
+		sessionRepository.save(directory);
+		Assert.assertEquals(2, directory.listFiles().length);
+		MultipleXMLSessionRepository reloadedRepository = new MultipleXMLSessionRepository();
+		reloadedRepository.load(kb, directory);
+		// Test copying - nothing has changed, the files should be simply copied
+		File directory2 = new File("target/temp/copiedFiles");
+		directory2.mkdirs();
+		clearDirectory(directory2);
+		reloadedRepository.save(directory2);
+		MultipleXMLSessionRepository rereloadedRepository = new MultipleXMLSessionRepository();
+		rereloadedRepository.load(kb, directory2);
+		File[] files = directory2.listFiles();
+		Assert.assertEquals(2, files.length);
+		// Test saving to the same location without modifing something (the
+		// files should stay equal)
+		Long date1 = files[0].lastModified();
+		Long date2 = files[0].lastModified();
+		Thread.sleep(1000);
+		rereloadedRepository.save(directory2);
+		Assert.assertEquals(date1, new Long(files[0].lastModified()));
+		Assert.assertEquals(date2, new Long(files[1].lastModified()));
+		// When adding facts, the files should change
+		SessionRecord rereloadedSessionRecord = rereloadedRepository.getSessionRecordById(sessionID);
+		SessionRecord rereloadedSessionRecord2 = rereloadedRepository.getSessionRecordById(session2ID);
+		int factCountBeforeAdding = rereloadedSessionRecord.getFacts().size();
+		FactRecord dummyFact = new FactRecord(questionNum, "psm", NUMVALUE);
+		rereloadedSessionRecord.addFact(dummyFact);
+		rereloadedSessionRecord2.addFact(dummyFact);
+		Assert.assertEquals(1, rereloadedSessionRecord.getFacts().size() - factCountBeforeAdding);
+		// Fact already contained, should be ignored
+		rereloadedSessionRecord.addFact(dummyFact);
+		Assert.assertEquals(1, rereloadedSessionRecord.getFacts().size() - factCountBeforeAdding);
+		// now the saved files should be different
+		Thread.sleep(1000);
+		rereloadedRepository.save(directory2);
+		Assert.assertFalse(date1.equals(new Long(files[0].lastModified())));
+		Assert.assertFalse(date2.equals(new Long(files[1].lastModified())));
+
+		// Test getting Records by Session id, getting them with iterator has a
+		// random order (depending on the alphabetical order of the Session ids)
+		Session session = SessionConversionFactory.copyToSession(reloadedRepository.getSessionRecordById(sessionID));
+		Session session2 = SessionConversionFactory.copyToSession(reloadedRepository.getSessionRecordById(session2ID));
+		checkValuesAfterReload(session, session2);
+
+		// Test error behaviour
+		MultipleXMLSessionRepository errorTestingRepository = new MultipleXMLSessionRepository();
+		// tests if the repository stops loading when the kb is null
+		boolean error = false;
+		try {
+			errorTestingRepository.load(null, directory);
+		}
+		catch (NullPointerException e) {
+			error = true;
+		}
+		Assert.assertTrue(error);
+		error = false;
+		// testing folder = null
+		try {
+			errorTestingRepository.load(kb, null);
+		}
+		catch (NullPointerException e) {
+			error = true;
+		}
+		Assert.assertTrue(error);
+		error = false;
+		try {
+			errorTestingRepository.save(null);
+		}
+		catch (NullPointerException e) {
+			error = true;
+		}
+		Assert.assertTrue(error);
+		error = false;
+		// testing file instead of a folder
+		File file = new File("target/temp/aFile.error");
+		file.createNewFile();
+		try {
+			errorTestingRepository.load(kb, file);
+		}
+		catch (IllegalArgumentException e) {
+			error = true;
+		}
+		Assert.assertTrue(error);
+		error = false;
+		try {
+			errorTestingRepository.save(file);
+		}
+		catch (IllegalArgumentException e) {
+			error = true;
+		}
+		Assert.assertTrue(error);
+		error = false;
+	}
+
+	/**
+	 * 
+	 * @created 23.09.2010
+	 */
+	private void clearDirectory(File directory) {
 		for (File f : directory.listFiles()) {
 			Assert.assertFalse(
 					"Something has corrupted this test by putting a folder in target/temp/directory",
 					f.isDirectory());
 			f.delete();
 		}
-		sessionRepository.save(directory);
-		Assert.assertEquals(2, directory.listFiles().length);
-		MultipleXMLSessionRepository reloadedRepository = new MultipleXMLSessionRepository();
-		reloadedRepository.load(kb, directory);
-		// Test getting Records by Session id, getting them with iterator has a
-		// random order (depending on the alphabetical order of the Session ids)
-		Session session = SessionConversionFactory.copyToSession(reloadedRepository.getSessionRecordById(sessionID));
-		Session session2 = SessionConversionFactory.copyToSession(reloadedRepository.getSessionRecordById(session2ID));
-		checkValuesAfterReload(session, session2);
 	}
 
 	private void checkValuesAfterReload(Session session, Session session2) throws IOException {
@@ -450,5 +541,29 @@ public class SessionPersistenceTest {
 						- sessionRecord2.getFacts().size());
 		// just to gain 100% coverage:
 		new SessionConversionFactory();
+	}
+
+	@Test
+	public void noRecordsFolder() throws IOException {
+		File directory = new File("src/test/resources/noRecordsFolder");
+		MultipleXMLSessionRepository repository = new MultipleXMLSessionRepository();
+		repository.load(kb, directory);
+		Assert.assertFalse(repository.iterator().hasNext());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void fileWithMoreRecords() throws IOException {
+		File directory = new File("src/test/resources/FileWithMoreRecords");
+		MultipleXMLSessionRepository repository = new MultipleXMLSessionRepository();
+		repository.load(kb, directory);
+		SessionConversionFactory.copyToSession(repository.iterator().next());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void fileWithNoRecords() throws IOException {
+		File directory = new File("src/test/resources/FileWithNoRecords");
+		MultipleXMLSessionRepository repository = new MultipleXMLSessionRepository();
+		repository.load(kb, directory);
+		SessionConversionFactory.copyToSession(repository.iterator().next());
 	}
 }
