@@ -73,8 +73,7 @@ public class PropertiesHandler implements FragmentHandler {
 						property = Property.IS_THERAPY;
 					}
 					else {
-						throw new IOException("Property " + name
-								+ " is not a valid property.");
+						property = new Property(name);
 					}
 				}
 				String textContent = prop.getTextContent();

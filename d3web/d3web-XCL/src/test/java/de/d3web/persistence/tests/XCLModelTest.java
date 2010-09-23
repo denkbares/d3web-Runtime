@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- *
+ * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- *
+ * 
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- *
+ * 
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -37,7 +37,6 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Properties;
-import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.manage.AnswerFactory;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.plugin.test.InitPluginManager;
@@ -49,9 +48,9 @@ import de.d3web.xcl.io.XCLModelPersistenceHandler;
 
 /**
  * Test to check persistence implementation of XCLModel
- *
+ * 
  * @author kazamatzuri
- *
+ * 
  */
 public class XCLModelTest extends TestCase {
 
@@ -75,7 +74,7 @@ public class XCLModelTest extends TestCase {
 	/**
 	 * rein funktionaler test, -> keine exceptions, passt keinerlei semantische
 	 * korrektur
-	 *
+	 * 
 	 * @throws IOException
 	 */
 	public void testXMLWriter() throws IOException {
@@ -94,7 +93,7 @@ public class XCLModelTest extends TestCase {
 	/**
 	 * we're testing for the correct readin of an knowledgebase with an xclmodel
 	 * via the xclmodelproperties
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	public void testPersistence() throws Exception {
@@ -139,7 +138,6 @@ public class XCLModelTest extends TestCase {
 		kbm.createSolution("Terminator", rootdia);
 		terminator = kbm.findSolution("Terminator");
 		Properties p = new Properties();
-		p.setProperty(Property.DIAGNOSIS_TYPE, new String("xclpattern"));
 		k.setProperties(p);
 
 		QContainer container = rootContainer;
