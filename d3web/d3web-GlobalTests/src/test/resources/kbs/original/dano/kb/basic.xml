@@ -5,12 +5,7 @@
 <meta content="Wolfgang Lotz (KE: Joachim Baumeister)" name="DC.creator"/>
 </head>
 <Properties>
-<Property class="java.net.URL" name="base_url">file:/tmp/_d3web__791b4564_11f5b4e4e63__8000/</Property>
 <Property class="java.lang.String" name="unknown_verbalisation">unknown</Property>
-<Property class="java.lang.String" name="yes_verbalisation">ja</Property>
-<Property class="java.lang.String" name="no_verbalisation">nein</Property>
-<Property class="java.lang.Boolean" name="rulebased_exclusion">true</Property>
-<Property class="java.lang.Boolean" name="simple_sc_problem_solver">true</Property>
 </Properties>
 <InitQuestions>
 <Question ID="QC1"/>

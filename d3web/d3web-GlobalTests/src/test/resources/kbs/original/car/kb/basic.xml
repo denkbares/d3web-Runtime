@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <KnowledgeBase id="Car-Diagnosis..Car-Diagnosis_KB" system="d3web" type="basic">
 <Properties>
-<Property class="java.net.URL" name="base_url">file:/C:/Users/ManiaC/AppData/Local/Temp/_d3web_79ebc7da_1239ec1b687__8000/</Property>
 <Property class="java.lang.Boolean" name="abstractionQuestion">true</Property>
 </Properties>
 <InitQuestions>

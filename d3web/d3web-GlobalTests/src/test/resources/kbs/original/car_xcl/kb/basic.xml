@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <KnowledgeBase id="CarXCL..CarXCL_KB" system="d3web" type="basic">
 <Properties>
-<Property class="java.net.URL" name="base_url">file:/C:/Users/ManiaC/AppData/Local/Temp/_d3web_15d441db_1239ec71b3f__7ffe/</Property>
 <Property class="java.lang.Boolean" name="abstractionQuestion">true</Property>
 </Properties>
 <InitQuestions>
