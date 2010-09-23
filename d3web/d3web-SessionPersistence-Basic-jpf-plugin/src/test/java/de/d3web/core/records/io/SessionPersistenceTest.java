@@ -18,8 +18,10 @@
  */
 package de.d3web.core.records.io;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Arrays;
@@ -31,8 +33,10 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.condition.CondNumLess;
@@ -256,22 +260,30 @@ public class SessionPersistenceTest {
 		MultipleXMLSessionRepository reloadedRepository = new MultipleXMLSessionRepository();
 		reloadedRepository.load(kb, directory);
 		// Test copying - nothing has changed, the files should be simply copied
+		for (File f : directory.listFiles()) {
+			markXMLFile(f);
+		}
 		File directory2 = new File("target/temp/copiedFiles");
 		directory2.mkdirs();
 		clearDirectory(directory2);
 		reloadedRepository.save(directory2);
+		boolean allMarked = true;
+		for (File f : directory2.listFiles()) {
+			allMarked &= testMark(f);
+		}
+		Assert.assertTrue(allMarked);
 		MultipleXMLSessionRepository rereloadedRepository = new MultipleXMLSessionRepository();
 		rereloadedRepository.load(kb, directory2);
 		File[] files = directory2.listFiles();
 		Assert.assertEquals(2, files.length);
 		// Test saving to the same location without modifing something (the
 		// files should stay equal)
-		Long date1 = files[0].lastModified();
-		Long date2 = files[0].lastModified();
-		Thread.sleep(1000);
 		rereloadedRepository.save(directory2);
-		Assert.assertEquals(date1, new Long(files[0].lastModified()));
-		Assert.assertEquals(date2, new Long(files[1].lastModified()));
+		allMarked = true;
+		for (File f : directory2.listFiles()) {
+			allMarked &= testMark(f);
+		}
+		Assert.assertTrue(allMarked);
 		// When adding facts, the files should change
 		SessionRecord rereloadedSessionRecord = rereloadedRepository.getSessionRecordById(sessionID);
 		SessionRecord rereloadedSessionRecord2 = rereloadedRepository.getSessionRecordById(session2ID);
@@ -283,11 +295,13 @@ public class SessionPersistenceTest {
 		// Fact already contained, should be ignored
 		rereloadedSessionRecord.addFact(dummyFact);
 		Assert.assertEquals(1, rereloadedSessionRecord.getFacts().size() - factCountBeforeAdding);
-		// now the saved files should be different
-		Thread.sleep(1000);
+		// now the saved files should be newly created
 		rereloadedRepository.save(directory2);
-		Assert.assertFalse(date1.equals(new Long(files[0].lastModified())));
-		Assert.assertFalse(date2.equals(new Long(files[1].lastModified())));
+		boolean nomarked = false;
+		for (File f : directory2.listFiles()) {
+			nomarked |= testMark(f);
+		}
+		Assert.assertFalse(nomarked);
 
 		// Test getting Records by Session id, getting them with iterator has a
 		// random order (depending on the alphabetical order of the Session ids)
@@ -346,9 +360,57 @@ public class SessionPersistenceTest {
 	}
 
 	/**
+	 * Marks a file by setting a comment "original"
 	 * 
 	 * @created 23.09.2010
+	 * @throws IOException
+	 * @throws FileNotFoundException
 	 */
+	private void markXMLFile(File f) throws IOException, FileNotFoundException {
+		FileInputStream istream = new FileInputStream(f);
+		try {
+			Document doc = Util.streamToDocument(istream);
+			doc.appendChild(doc.createComment("original"));
+			FileOutputStream ostream = new FileOutputStream(f);
+			try {
+				Util.writeDocumentToOutputStream(doc, ostream);
+			}
+			finally {
+				ostream.close();
+			}
+		}
+		finally {
+			istream.close();
+		}
+	}
+
+	/**
+	 * Checks if a file was marked with method markXMLFile
+	 * 
+	 * @created 23.09.2010
+	 * @param f File
+	 * @return true if marked, false otherwise
+	 * @throws IOException
+	 */
+	private boolean testMark(File f) throws IOException {
+		FileInputStream istream = new FileInputStream(f);
+		boolean marked = false;
+		try {
+			Document doc = Util.streamToDocument(istream);
+			for (int i = 0; i < doc.getChildNodes().getLength(); i++) {
+				Node child = doc.getChildNodes().item(i);
+				if (child instanceof Comment && child.getTextContent().equals("original")) {
+					marked = true;
+				}
+			}
+
+		}
+		finally {
+			istream.close();
+		}
+		return marked;
+	}
+
 	private void clearDirectory(File directory) {
 		for (File f : directory.listFiles()) {
 			Assert.assertFalse(
@@ -390,12 +452,14 @@ public class SessionPersistenceTest {
 	public void errorHandlingTests() throws IOException {
 		// Testing the behavior when someone edited the xml file and the Date
 		// hasn't the correct format any more
-		ByteArrayInputStream stream = new ByteArrayInputStream("<blub>no Date</blub>".getBytes());
-		Document doc = Util.streamToDocument(stream);
+		Document doc = Util.createEmptyDocument();
+		Element element = doc.createElement("element");
+		element.setTextContent("no Date");
+		doc.appendChild(element);
 		DateValueHandler handler = new DateValueHandler();
 		Throwable expected = null;
 		try {
-			handler.read(null, (Element) doc.getElementsByTagName("blub").item(0));
+			handler.read(null, element);
 		}
 		catch (IOException e) {
 			expected = e.getCause();
@@ -424,12 +488,10 @@ public class SessionPersistenceTest {
 	 */
 	@Test
 	public void undefinedHandlerTest() throws IOException {
-		String originalString = "<" + UndefinedHandler.elementName
-				+ "/>";
-		ByteArrayInputStream stream = new ByteArrayInputStream(originalString.getBytes());
-		Document doc = Util.streamToDocument(stream);
+		Document doc = Util.createEmptyDocument();
+		Element element = doc.createElement(UndefinedHandler.elementName);
+		doc.appendChild(element);
 		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
-		Element element = (Element) doc.getChildNodes().item(0);
 		Object readFragment = spm.readFragment(
 				element, null);
 		Assert.assertTrue(readFragment instanceof UndefinedValue);
