@@ -50,14 +50,14 @@ public class DefaultInfoStore implements InfoStore {
 
 	@Override
 	public Object getValue(String key) {
-		return getEntry(key, DEFAULT_LANGUAGE);
+		return getEntry(key, NO_LANGUAGE);
 	}
 
 	@Override
 	public Object getValue(String key, Locale language) {
 		Object value = getEntry(key, language);
 		if (value != null) return value;
-		return getEntry(key, DEFAULT_LANGUAGE);
+		return getEntry(key, NO_LANGUAGE);
 	}
 
 	private Object getEntry(String key, Locale language) {
@@ -66,7 +66,7 @@ public class DefaultInfoStore implements InfoStore {
 
 	@Override
 	public void remove(String key) {
-		remove(key, DEFAULT_LANGUAGE);
+		remove(key, NO_LANGUAGE);
 	}
 
 	@Override

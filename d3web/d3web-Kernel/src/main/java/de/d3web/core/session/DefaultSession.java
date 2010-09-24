@@ -22,6 +22,7 @@ package de.d3web.core.session;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -87,6 +88,9 @@ public class DefaultSession implements Session {
 	private DCMarkup dcMarkup;
 	private Properties properties;
 
+	private final Date created;
+	private Date edited;
+
 	private static LinkedList<PSMethod> commonPSMethods = new LinkedList<PSMethod>(
 			Arrays.asList(
 					PSMethodUserSelected.getInstance(),
@@ -104,13 +108,25 @@ public class DefaultSession implements Session {
 	 * The default problem-solvers for each case are listed in static array
 	 * <code>commonPSMethods</code>. See class comment for further details.
 	 */
-	DefaultSession(KnowledgeBase knowledgebase) {
+	protected DefaultSession(KnowledgeBase knowledgebase, Date creationDate) {
+		created = creationDate;
+		edited = new Date();
 		initSession(knowledgebase);
 		// register some common problem solving methods
 		// first add the methods
 		for (PSMethod method : commonPSMethods) {
 			addUsedPSMethod(method);
 		}
+		addPlugedPSMethods(knowledgebase);
+	}
+
+	/**
+	 * Adds the PSMethods from Plugins
+	 * 
+	 * @created 24.09.2010
+	 * @param knowledgebase {@link KnowledgeBase}
+	 */
+	protected void addPlugedPSMethods(KnowledgeBase knowledgebase) {
 		// get PluginConfiguration
 		PluginConfig pc = PluginConfig.getPluginConfig(knowledgebase);
 		// add plugged PS with default config, only if none instance of this
@@ -151,15 +167,8 @@ public class DefaultSession implements Session {
 		}
 	}
 
-	DefaultSession(KnowledgeBase kb, List<PSMethod> psmethods) {
-		initSession(kb);
-		for (PSMethod method : psmethods) {
-			addUsedPSMethod(method);
-		}
-	}
-
-	DefaultSession(KnowledgeBase knowledgebase, FormStrategy formStrategy) {
-		this(knowledgebase);
+	DefaultSession(KnowledgeBase knowledgebase, FormStrategy formStrategy, Date creationDate) {
+		this(knowledgebase, creationDate);
 		getInterview().setFormStrategy(formStrategy);
 	}
 
@@ -228,7 +237,8 @@ public class DefaultSession implements Session {
 	 * (28.08.00 17:33:43)
 	 * 
 	 * @param newUsedPSMethods java.util.List
-	 * @Deprecated use pluginmechnasim to add psmethods
+	 * @Deprecated use pluginmechnasim to add psmethods, make this method
+	 *             protected
 	 */
 	@Deprecated
 	public void addUsedPSMethod(PSMethod psmethod) {
@@ -368,5 +378,26 @@ public class DefaultSession implements Session {
 	}
 
 	// ******************** /event notification ********************
+
+	@Override
+	public void edited() {
+		edited = new Date();
+
+	}
+
+	@Override
+	public void edited(Date date) {
+		edited = date;
+	}
+
+	@Override
+	public Date getCreationDate() {
+		return created;
+	}
+
+	@Override
+	public Date getLastChangeDate() {
+		return edited;
+	}
 
 }

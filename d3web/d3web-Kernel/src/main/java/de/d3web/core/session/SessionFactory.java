@@ -20,9 +20,8 @@
 
 package de.d3web.core.session;
 
-import java.util.List;
+import java.util.Date;
 
-import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.session.interviewmanager.FormStrategy;
 import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
@@ -41,7 +40,11 @@ public class SessionFactory {
 	 * @return new Session instance based on the specified knowledge base
 	 */
 	public static synchronized Session createSession(KnowledgeBase knowledgeBase) {
-		return createSession(knowledgeBase, new NextUnansweredQuestionFormStrategy());
+		return createSession(knowledgeBase, new NextUnansweredQuestionFormStrategy(), new Date());
+	}
+
+	public static synchronized Session createSession(KnowledgeBase kb, Date creationDate) {
+		return createSession(kb, new NextUnansweredQuestionFormStrategy(), creationDate);
 	}
 
 	/**
@@ -52,22 +55,9 @@ public class SessionFactory {
 	 * @return new Session instance based on the specified knowledge base and
 	 *         form strategy
 	 */
-	public static Session createSession(
+	public static synchronized Session createSession(
 			KnowledgeBase knowledgeBase,
-			FormStrategy formStrategy) {
-		return new DefaultSession(knowledgeBase, formStrategy);
+			FormStrategy formStrategy, Date creationDate) {
+		return new DefaultSession(knowledgeBase, formStrategy, creationDate);
 	}
-
-	/**
-	 * Factory-method that creates instances of Session.
-	 * 
-	 * @param knowledgeBase the knowledge base used in the case.
-	 * @param psms used problem-solvers for this session
-	 * @return new Session instance based on the specified knowledge base and
-	 *         problem-solvers
-	 */
-	public static synchronized Session createSession(KnowledgeBase knowledgeBase, List<PSMethod> psms) {
-		return new DefaultSession(knowledgeBase, psms);
-	}
-
 }

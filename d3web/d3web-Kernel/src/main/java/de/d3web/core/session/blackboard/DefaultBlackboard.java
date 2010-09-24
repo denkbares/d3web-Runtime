@@ -370,4 +370,26 @@ public class DefaultBlackboard implements Blackboard {
 			return (Rating) mergedFact.getValue();
 		}
 	}
+
+	@Override
+	public List<PSMethod> getContributingPSMethods(TerminologyObject object) {
+		List<PSMethod> list = new LinkedList<PSMethod>();
+		for (PSMethod psm : session.getPSMethods()) {
+			if (valueStorage.getAggregator(object).getMergedFact(psm) != null) {
+				list.add(psm);
+			}
+		}
+		return list;
+	}
+
+	@Override
+	public List<PSMethod> getIndicatingPSMethods(TerminologyObject object) {
+		List<PSMethod> list = new LinkedList<PSMethod>();
+		for (PSMethod psm : session.getPSMethods()) {
+			if (interviewStorage.getAggregator(object).getMergedFact(psm) != null) {
+				list.add(psm);
+			}
+		}
+		return list;
+	}
 }

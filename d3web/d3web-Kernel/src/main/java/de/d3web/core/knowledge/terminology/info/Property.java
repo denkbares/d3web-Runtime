@@ -228,58 +228,6 @@ public class Property {
 	 */
 
 	/**
-	 * used for: CaseObject doc: this is the metadata blob handled by:
-	 * d3web-CaseRepository
-	 * 
-	 * @return de.d3web.caserepository.MetaData
-	 */
-	public static final Property CASE_METADATA = new Property("case_metadata");
-
-	/**
-	 * used for: CaseObject doc: this is the DCMarkup of the knowledgebase
-	 * suited for the caserepository handled by: d3web-CaseRepository
-	 * 
-	 * @return DCMarkup
-	 */
-	public static final Property CASE_KNOWLEDGEBASE_DESCRIPTOR = new Property(
-			"case_knowledgebase_descriptor");
-
-	/**
-	 * used for: CaseObject doc: this is a comment for a case handled by:
-	 * d3web-CaseRepository
-	 * 
-	 * @deprecated use DCElement.DESCRIPTION instead
-	 * @return PropertiesUtilities$CDataString
-	 */
-	@Deprecated
-	public static final Property CASE_COMMENT = new Property("case_comment");
-
-	/**
-	 * used for: CaseObject doc: this specifies the system which created the
-	 * case handled by: d3web-CaseRepository
-	 * 
-	 * @return String
-	 */
-	public static final Property CASE_SOURCE_SYSTEM = new Property(
-			"case_source_system");
-
-	/**
-	 * used for: CaseObject <br>
-	 * doc: critiquing reports from NLP (natural language processing) which
-	 * compares the user's diagnoses with the system's using text analysis.<br>
-	 * handled by: d3web-Dialog-MedicalKbPlugin
-	 * 
-	 * @return LinkedList of PropertiesUtilities$CDataString
-	 */
-	public static final Property CASE_CRITIQUE_TEXT = new Property(
-			"case_critique_text");
-
-	/*
-	 * ##########################################################################
-	 * ##
-	 */
-
-	/**
 	 * used for: heuristic problem solver. If one diagnosis is established, then
 	 * finish case Only the best diagnosis is returned as solution
 	 */

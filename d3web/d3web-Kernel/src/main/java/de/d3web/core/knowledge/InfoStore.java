@@ -55,7 +55,7 @@ public interface InfoStore {
 	 */
 	public static final String RESOURCE = "resource";
 
-	public static final Locale DEFAULT_LANGUAGE = null;
+	public static final Locale NO_LANGUAGE = null;
 
 	/**
 	 * Returns the value stored for the specified key with language

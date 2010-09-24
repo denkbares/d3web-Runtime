@@ -18,6 +18,7 @@
  */
 package de.d3web.costbenefit;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,12 +26,13 @@ import org.w3c.dom.Node;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.session.DefaultSession;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
@@ -46,8 +48,7 @@ import de.d3web.indication.inference.PSMethodUserSelected;
 public class Util {
 
 	public static Session copyCase(Session session) {
-		Session testCase = SessionFactory
-				.createSession(session.getKnowledgeBase(), new LinkedList<PSMethod>());
+		Session testCase = new CopiedSession(session.getKnowledgeBase());
 		Blackboard blackboard = session.getBlackboard();
 		List<? extends Question> answeredQuestions = new LinkedList<Question>(
 				blackboard.getAnsweredQuestions());
@@ -93,5 +94,22 @@ public class Util {
 			}
 		}
 		return null;
+	}
+
+	private static class CopiedSession extends DefaultSession {
+
+		public CopiedSession(KnowledgeBase kb) {
+			super(kb, new Date());
+		}
+
+		@Override
+		protected void addPlugedPSMethods(KnowledgeBase knowledgebase) {
+			// do nothing
+		}
+
+		@Override
+		public void addUsedPSMethod(PSMethod psmethod) {
+			// do nothing
+		}
 	}
 }

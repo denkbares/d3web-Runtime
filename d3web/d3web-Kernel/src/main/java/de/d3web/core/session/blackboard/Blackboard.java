@@ -266,4 +266,24 @@ public interface Blackboard {
 	 * @return {@link Indication}
 	 */
 	Indication getIndication(InterviewObject interviewElement, PSMethod psMethod);
+
+	/**
+	 * Returns a list of all problemsolvers, which added at least one value fact
+	 * for the {@link TerminologyObject}
+	 * 
+	 * @created 24.09.2010
+	 * @param object {@link TerminologyObject}
+	 * @return List of {@link PSMethod}
+	 */
+	List<PSMethod> getContributingPSMethods(TerminologyObject object);
+
+	/**
+	 * Returns a list of all problemsolvers, which added at least one interview
+	 * fact for the {@link TerminologyObject}
+	 * 
+	 * @created 24.09.2010
+	 * @param object {@link TerminologyObject}
+	 * @return List of {@link PSMethod}
+	 */
+	List<PSMethod> getIndicatingPSMethods(TerminologyObject object);
 }
