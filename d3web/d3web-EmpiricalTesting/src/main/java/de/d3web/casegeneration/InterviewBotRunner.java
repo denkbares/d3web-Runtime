@@ -29,8 +29,8 @@ import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.empiricaltesting.SequentialTestCase;
-import de.d3web.empiricaltesting.caseconverter.CaseObjectToKnOffice;
-import de.d3web.empiricaltesting.caseconverter.CaseObjectToTestSuiteXML;
+import de.d3web.empiricaltesting.writer.TestSuiteKnOfficeWriter;
+import de.d3web.empiricaltesting.writer.TestSuiteXMLWriter;
 
 public class InterviewBotRunner {
 
@@ -117,14 +117,14 @@ public class InterviewBotRunner {
 	}
 
 	private static void writeCasesXML(String filename, List<SequentialTestCase> cases) throws FileNotFoundException {
-		CaseObjectToTestSuiteXML conv = new CaseObjectToTestSuiteXML();
+		TestSuiteXMLWriter conv = new TestSuiteXMLWriter();
 		long casesK = cases.size() / 1000;
 		conv.write(cases, workspace + filename + "_cases_" + casesK + ".xml");
 	}
 
 	@SuppressWarnings("unused")
 	private static void writeCasesTXT(String filename, List<SequentialTestCase> cases) throws FileNotFoundException {
-		CaseObjectToKnOffice conv = new CaseObjectToKnOffice();
+		TestSuiteKnOfficeWriter conv = new TestSuiteKnOfficeWriter();
 		long casesK = cases.size() / 1000;
 		conv.write(cases, workspace + filename + "_cases_" + casesK + ".txt");
 	}

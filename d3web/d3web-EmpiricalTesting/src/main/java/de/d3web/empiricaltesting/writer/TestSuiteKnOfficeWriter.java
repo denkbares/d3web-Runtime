@@ -18,7 +18,7 @@
  * site: http://www.fsf.org.
  */
 
-package de.d3web.empiricaltesting.caseconverter;
+package de.d3web.empiricaltesting.writer;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -42,27 +42,13 @@ import de.d3web.empiricaltesting.TestSuite;
  * @author Sebastian Furth
  * 
  */
-public class CaseObjectToKnOffice extends CaseObjectConverter {
+public class TestSuiteKnOfficeWriter extends AbstractTestSuiteWriter {
 
 	// quote the verbalized text, if at least on character of
 	// these is contained in the verbalization text
 	private final String BAD_CHARS = "()=-,:;?/";
 	// the default indent for each line within a case
 	private final String INDENT = "   ";
-
-	public static void main(String[] args) throws IOException {
-		String workspace = "d:/eigene projekte/temp/";
-		String knowledgePath = "pflanzen.jar";
-		String caseBase = "pflanzen_cases_small.xml";
-		String converted = "pflanzen_cases_small_converted.txt";
-
-		CaseObjectConverter converter = new CaseObjectToKnOffice();
-		TestSuite t = converter.convert(workspace + knowledgePath, workspace + caseBase);
-
-		converter.write(t, workspace + converted);
-
-		System.out.println("Case successfully converted to KnOffice-format!");
-	}
 
 	/**
 	 * Writes a TestSuite to the specified file using the

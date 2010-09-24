@@ -31,10 +31,10 @@ import de.d3web.casegeneration.StateRatingStrategy;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ConsoleProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.empiricaltesting.caseconverter.CaseObjectToKnOffice;
-import de.d3web.empiricaltesting.caseconverter.CaseObjectToTestSuiteXML;
 import de.d3web.empiricaltesting.casevisualization.dot.DDBuilder;
 import de.d3web.empiricaltesting.casevisualization.jung.JUNGCaseVisualizer;
+import de.d3web.empiricaltesting.writer.TestSuiteKnOfficeWriter;
+import de.d3web.empiricaltesting.writer.TestSuiteXMLWriter;
 import de.d3web.plugin.test.InitPluginManager;
 
 public class EmpiricalTester {
@@ -212,7 +212,7 @@ public class EmpiricalTester {
 	 * @throws FileNotFoundException
 	 */
 	private static void writeCasesXML(String filename, List<SequentialTestCase> cases) throws FileNotFoundException {
-		CaseObjectToTestSuiteXML conv = new CaseObjectToTestSuiteXML();
+		TestSuiteXMLWriter conv = new TestSuiteXMLWriter();
 		long casesK = cases.size();
 		conv.write(cases, workspace + filename + "_" + casesK + "_cases.xml");
 	}
@@ -226,7 +226,7 @@ public class EmpiricalTester {
 	 * @throws FileNotFoundException
 	 */
 	private static void writeCasesTXT(String filename, List<SequentialTestCase> cases) throws FileNotFoundException {
-		CaseObjectToKnOffice conv = new CaseObjectToKnOffice();
+		TestSuiteKnOfficeWriter conv = new TestSuiteKnOfficeWriter();
 		long casesK = cases.size();
 		conv.write(cases, workspace + filename + "_" + casesK + "_cases.txt");
 	}

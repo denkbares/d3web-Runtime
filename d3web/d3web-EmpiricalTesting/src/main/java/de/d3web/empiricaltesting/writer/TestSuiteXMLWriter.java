@@ -18,7 +18,7 @@
  * site: http://www.fsf.org.
  */
 
-package de.d3web.empiricaltesting.caseconverter;
+package de.d3web.empiricaltesting.writer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -38,21 +38,7 @@ import de.d3web.empiricaltesting.TestSuite;
  * @author Sebastian Furth
  * 
  */
-public class CaseObjectToTestSuiteXML extends CaseObjectConverter {
-
-	public static void main(String[] args) throws IOException {
-		String workspace = "d:/eigene projekte/temp/";
-		String knowledgePath = "pflanzen.jar";
-		String caseBase = "pflanzen_cases_big_rerun.xml";
-		String converted = "pflanzen_cases_big_converted.xml";
-
-		CaseObjectConverter converter = new CaseObjectToTestSuiteXML();
-		TestSuite t = converter.convert(workspace + knowledgePath, workspace + caseBase);
-
-		converter.write(t, workspace + converted);
-
-		System.out.println("Case successfully converted to TestSuiteXML!");
-	}
+public class TestSuiteXMLWriter extends AbstractTestSuiteWriter {
 
 	/**
 	 * Writes a TestSuite to the specified file using the TestSuite-XML-Format
