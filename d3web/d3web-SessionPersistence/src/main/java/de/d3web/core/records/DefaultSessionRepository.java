@@ -81,7 +81,7 @@ public class DefaultSessionRepository implements SessionRepository {
 	@Override
 	public KnowledgeBase getKnowledgeBase() {
 		if (sessionRecords.size() > 0) {
-			return sessionRecords.get(0).getKb();
+			return sessionRecords.get(0).getKnowledgeBase();
 		}
 		return null;
 	}

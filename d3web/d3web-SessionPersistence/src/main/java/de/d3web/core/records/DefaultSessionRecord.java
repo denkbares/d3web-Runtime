@@ -40,7 +40,8 @@ public class DefaultSessionRecord implements SessionRecord {
 	private final Date creationDate;
 	private Date lastEditDate;
 
-	private List<FactRecord> facts = new LinkedList<FactRecord>();
+	private List<FactRecord> valueFacts = new LinkedList<FactRecord>();
+	private List<FactRecord> interviewFacts = new LinkedList<FactRecord>();
 
 	private Protocol protocol;
 
@@ -63,8 +64,8 @@ public class DefaultSessionRecord implements SessionRecord {
 	}
 
 	@Override
-	public void addFact(FactRecord fact) {
-		facts.add(fact);
+	public void addValueFact(FactRecord fact) {
+		valueFacts.add(fact);
 	}
 
 	@Override
@@ -73,12 +74,12 @@ public class DefaultSessionRecord implements SessionRecord {
 	}
 
 	@Override
-	public Date getLastEditDate() {
+	public Date getLastChangeDate() {
 		return lastEditDate;
 	}
 
 	@Override
-	public void setLastEditDate(Date lastEditDate) {
+	public void touch(Date lastEditDate) {
 		this.lastEditDate = lastEditDate;
 	}
 
@@ -87,7 +88,6 @@ public class DefaultSessionRecord implements SessionRecord {
 		return protocol;
 	}
 
-	@Override
 	public void setProtocol(Protocol protocol) {
 		this.protocol = protocol;
 	}
@@ -98,12 +98,12 @@ public class DefaultSessionRecord implements SessionRecord {
 	}
 
 	@Override
-	public List<FactRecord> getFacts() {
-		return Collections.unmodifiableList(facts);
+	public List<FactRecord> getValueFacts() {
+		return Collections.unmodifiableList(valueFacts);
 	}
 
 	@Override
-	public KnowledgeBase getKb() {
+	public KnowledgeBase getKnowledgeBase() {
 		return kb;
 	}
 
@@ -115,5 +115,20 @@ public class DefaultSessionRecord implements SessionRecord {
 	@Override
 	public DCMarkup getDCMarkup() {
 		return dcMarkup;
+	}
+
+	@Override
+	public void touch() {
+		touch(new Date());
+	}
+
+	@Override
+	public void addInterviewFact(FactRecord fact) {
+		interviewFacts.add(fact);
+	}
+
+	@Override
+	public List<FactRecord> getInterviewFacts() {
+		return Collections.unmodifiableList(interviewFacts);
 	}
 }

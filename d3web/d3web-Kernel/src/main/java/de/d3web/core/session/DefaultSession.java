@@ -108,7 +108,8 @@ public class DefaultSession implements Session {
 	 * The default problem-solvers for each case are listed in static array
 	 * <code>commonPSMethods</code>. See class comment for further details.
 	 */
-	protected DefaultSession(KnowledgeBase knowledgebase, Date creationDate) {
+	protected DefaultSession(String id, KnowledgeBase knowledgebase, Date creationDate) {
+		this.id = id;
 		created = creationDate;
 		edited = new Date();
 		initSession(knowledgebase);
@@ -167,8 +168,8 @@ public class DefaultSession implements Session {
 		}
 	}
 
-	DefaultSession(KnowledgeBase knowledgebase, FormStrategy formStrategy, Date creationDate) {
-		this(knowledgebase, creationDate);
+	DefaultSession(String id, KnowledgeBase knowledgebase, FormStrategy formStrategy, Date creationDate) {
+		this(id, knowledgebase, creationDate);
 		getInterview().setFormStrategy(formStrategy);
 	}
 
@@ -242,6 +243,7 @@ public class DefaultSession implements Session {
 	 */
 	@Deprecated
 	public void addUsedPSMethod(PSMethod psmethod) {
+		touch();
 		if (getPSMethods().contains(psmethod)) return;
 
 		this.usedPSMethods.add(psmethod);
@@ -332,6 +334,7 @@ public class DefaultSession implements Session {
 
 	@Override
 	public void setDCMarkup(DCMarkup dcMarkup) {
+		touch();
 		this.dcMarkup = dcMarkup;
 	}
 
@@ -342,6 +345,7 @@ public class DefaultSession implements Session {
 
 	@Override
 	public void setProperties(Properties properties) {
+		touch();
 		this.properties = properties;
 	}
 
@@ -354,6 +358,7 @@ public class DefaultSession implements Session {
 	 */
 	@Override
 	public void addListener(SessionEventListener listener) {
+		touch();
 		if (!listeners.contains(listener)) {
 			listeners.add(listener);
 		}
@@ -361,6 +366,7 @@ public class DefaultSession implements Session {
 
 	@Override
 	public void removeListener(SessionEventListener listener) {
+		touch();
 		if (listeners.contains(listener)) {
 			listeners.remove(listener);
 		}
@@ -380,13 +386,13 @@ public class DefaultSession implements Session {
 	// ******************** /event notification ********************
 
 	@Override
-	public void edited() {
+	public void touch() {
 		edited = new Date();
 
 	}
 
 	@Override
-	public void edited(Date date) {
+	public void touch(Date date) {
 		edited = date;
 	}
 

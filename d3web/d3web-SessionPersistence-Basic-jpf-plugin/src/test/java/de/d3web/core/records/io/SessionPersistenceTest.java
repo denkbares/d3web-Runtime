@@ -108,6 +108,8 @@ public class SessionPersistenceTest {
 	private Solution solution;
 	private Solution solution2;
 	private File directory;
+	private Date creationDate;
+	private Date lastChangeDate;
 
 	@Before
 	public void setUp() throws IOException {
@@ -132,6 +134,8 @@ public class SessionPersistenceTest {
 		solution2 = kbm.createSolution("Solution2");
 		RuleFactory.createHeuristicPSRule("R1", solution2, Score.P7, new CondNumLess(questionNum,
 				0.0));
+		RuleFactory.createHeuristicPSRule("R2", solution, Score.P7, new CondNumLess(questionNum,
+				0.0));
 		Session session = SessionFactory.createSession(kb);
 		sessionID = session.getId();
 		Blackboard blackboard = session.getBlackboard();
@@ -145,6 +149,8 @@ public class SessionPersistenceTest {
 		blackboard.addValueFact(FactFactory.createUserEnteredFact(questionNum, NUMVALUE));
 		blackboard.addValueFact(FactFactory.createUserEnteredFact(solution, new Rating(
 				Rating.State.ESTABLISHED)));
+		creationDate = session.getCreationDate();
+		lastChangeDate = session.getLastChangeDate();
 		sessionRecord = SessionConversionFactory.copyToSessionRecord(session);
 		Session session2 = SessionFactory.createSession(kb);
 		session2ID = session2.getId();
@@ -250,7 +256,7 @@ public class SessionPersistenceTest {
 	}
 
 	@Test
-	public void testMultiXMLPersistence() throws IOException, InterruptedException {
+	public void testMultiXMLPersistence() throws IOException, InterruptedException, ParseException {
 		MultipleXMLSessionRepository sessionRepository = new MultipleXMLSessionRepository();
 		sessionRepository.add(sessionRecord);
 		sessionRepository.add(sessionRecord2);
@@ -287,14 +293,16 @@ public class SessionPersistenceTest {
 		// When adding facts, the files should change
 		SessionRecord rereloadedSessionRecord = rereloadedRepository.getSessionRecordById(sessionID);
 		SessionRecord rereloadedSessionRecord2 = rereloadedRepository.getSessionRecordById(session2ID);
-		int factCountBeforeAdding = rereloadedSessionRecord.getFacts().size();
+		int factCountBeforeAdding = rereloadedSessionRecord.getValueFacts().size();
 		FactRecord dummyFact = new FactRecord(questionNum, "psm", NUMVALUE);
-		rereloadedSessionRecord.addFact(dummyFact);
-		rereloadedSessionRecord2.addFact(dummyFact);
-		Assert.assertEquals(1, rereloadedSessionRecord.getFacts().size() - factCountBeforeAdding);
+		rereloadedSessionRecord.addValueFact(dummyFact);
+		rereloadedSessionRecord2.addValueFact(dummyFact);
+		Assert.assertEquals(1, rereloadedSessionRecord.getValueFacts().size()
+				- factCountBeforeAdding);
 		// Fact already contained, should be ignored
-		rereloadedSessionRecord.addFact(dummyFact);
-		Assert.assertEquals(1, rereloadedSessionRecord.getFacts().size() - factCountBeforeAdding);
+		rereloadedSessionRecord.addValueFact(dummyFact);
+		Assert.assertEquals(1, rereloadedSessionRecord.getValueFacts().size()
+				- factCountBeforeAdding);
 		// now the saved files should be newly created
 		rereloadedRepository.save(directory2);
 		boolean nomarked = false;
@@ -421,6 +429,10 @@ public class SessionPersistenceTest {
 	}
 
 	private void checkValuesAfterReload(Session session, Session session2) throws IOException {
+		Assert.assertEquals(sessionID, session.getId());
+		Assert.assertEquals(session2ID, session2.getId());
+		Assert.assertEquals(creationDate, session.getCreationDate());
+		Assert.assertEquals(lastChangeDate, session.getLastChangeDate());
 		Blackboard blackboard = session.getBlackboard();
 		ChoiceValue value = (ChoiceValue) blackboard.getValue(questionOC);
 		Assert.assertEquals(choices[0], value.getValue());
@@ -559,14 +571,14 @@ public class SessionPersistenceTest {
 		SessionRecord record = new DefaultSessionRecord(kb);
 		Thread.sleep(1);
 		Date later = new Date();
-		Assert.assertFalse(later.equals(record.getLastEditDate()));
-		record.setLastEditDate(later);
-		Assert.assertEquals(later, record.getLastEditDate());
+		Assert.assertFalse(later.equals(record.getLastChangeDate()));
+		record.touch(later);
+		Assert.assertEquals(later, record.getLastChangeDate());
 	}
 
 	@Test(expected = IOException.class)
 	public void missingProblemSolver() throws IOException {
-		sessionRecord.addFact(new FactRecord(questionNum, "fantasyPSM", new NumValue(5)));
+		sessionRecord.addValueFact(new FactRecord(questionNum, "fantasyPSM", new NumValue(5)));
 		SessionConversionFactory.copyToSession(sessionRecord);
 	}
 
@@ -587,26 +599,26 @@ public class SessionPersistenceTest {
 		// Number of Facts should have increased by 2
 		SessionRecord sessionRecord2extended = SessionConversionFactory.copyToSessionRecord(session);
 		Assert.assertEquals(2,
-				sessionRecord2extended.getFacts().size()
-						- sessionRecord2.getFacts().size());
+				sessionRecord2extended.getValueFacts().size()
+						- sessionRecord2.getValueFacts().size());
 		blackboard.addInterviewFact(FactFactory.createFact(questionMC, new Indication(
 				State.CONTRA_INDICATED), this, session.getPSMethodInstance(PSMethodStrategic.class)));
 		sessionRecord2extended = SessionConversionFactory.copyToSessionRecord(session);
-		Assert.assertEquals(4,
-				sessionRecord2extended.getFacts().size()
-						- sessionRecord2.getFacts().size());
+		Assert.assertEquals(2,
+				sessionRecord2extended.getValueFacts().size()
+						- sessionRecord2.getValueFacts().size());
 		blackboard.addValueFact(FactFactory.createUserEnteredFact(solution2, new Rating(
 				Rating.State.EXCLUDED)));
 		sessionRecord2extended = SessionConversionFactory.copyToSessionRecord(session);
-		Assert.assertEquals(6,
-				sessionRecord2extended.getFacts().size()
-						- sessionRecord2.getFacts().size());
+		Assert.assertEquals(4,
+				sessionRecord2extended.getValueFacts().size()
+						- sessionRecord2.getValueFacts().size());
 		// just to gain 100% coverage:
 		new SessionConversionFactory();
 	}
 
 	@Test
-	public void noRecordsFolder() throws IOException {
+	public void noRecordsFolder() throws IOException, ParseException {
 		File directory = new File("src/test/resources/noRecordsFolder");
 		MultipleXMLSessionRepository repository = new MultipleXMLSessionRepository();
 		repository.load(kb, directory);
@@ -614,7 +626,7 @@ public class SessionPersistenceTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void fileWithMoreRecords() throws IOException {
+	public void fileWithMoreRecords() throws IOException, ParseException {
 		File directory = new File("src/test/resources/FileWithMoreRecords");
 		MultipleXMLSessionRepository repository = new MultipleXMLSessionRepository();
 		repository.load(kb, directory);
@@ -622,7 +634,7 @@ public class SessionPersistenceTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void fileWithNoRecords() throws IOException {
+	public void fileWithNoRecords() throws IOException, ParseException {
 		File directory = new File("src/test/resources/FileWithNoRecords");
 		MultipleXMLSessionRepository repository = new MultipleXMLSessionRepository();
 		repository.load(kb, directory);

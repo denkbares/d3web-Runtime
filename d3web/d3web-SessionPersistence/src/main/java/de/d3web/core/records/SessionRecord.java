@@ -18,12 +18,9 @@
  */
 package de.d3web.core.records;
 
-import java.util.Date;
 import java.util.List;
 
-import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.info.DCMarkup;
-import de.d3web.core.session.protocol.Protocol;
+import de.d3web.core.session.SessionHeader;
 
 /**
  * Represents a persistent session
@@ -31,28 +28,14 @@ import de.d3web.core.session.protocol.Protocol;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 20.09.2010
  */
-public interface SessionRecord {
+public interface SessionRecord extends SessionHeader {
 
-	public void addFact(FactRecord fact);
+	public void addValueFact(FactRecord fact);
 
-	public String getId();
+	public void addInterviewFact(FactRecord fact);
 
-	public Date getLastEditDate();
+	public List<FactRecord> getValueFacts();
 
-	public void setLastEditDate(Date lastEditDate);
-
-	public Protocol getProtocol();
-
-	public void setProtocol(Protocol protocol);
-
-	public Date getCreationDate();
-
-	public List<FactRecord> getFacts();
-
-	public KnowledgeBase getKb();
-
-	public void setDCMarkup(DCMarkup dcMarkup);
-
-	public DCMarkup getDCMarkup();
+	public List<FactRecord> getInterviewFacts();
 
 }

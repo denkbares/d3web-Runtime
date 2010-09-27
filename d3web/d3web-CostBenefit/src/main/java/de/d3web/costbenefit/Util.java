@@ -99,7 +99,7 @@ public class Util {
 	private static class CopiedSession extends DefaultSession {
 
 		public CopiedSession(KnowledgeBase kb) {
-			super(kb, new Date());
+			super(null, kb, new Date());
 		}
 
 		@Override

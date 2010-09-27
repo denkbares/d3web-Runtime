@@ -91,7 +91,7 @@ public class SessionPersistenceManager extends FragmentManager {
 			Element sessionElement = doc.createElement(SESSION_TAG);
 			sessionElement.setAttribute("id", co.getId());
 			sessionElement.setAttribute("created", DATE_FORMAT.format(co.getCreationDate()));
-			sessionElement.setAttribute("changed", DATE_FORMAT.format(co.getLastEditDate()));
+			sessionElement.setAttribute("changed", DATE_FORMAT.format(co.getLastChangeDate()));
 			for (Extension extension : handler) {
 				SessionPersistenceHandler handler = (SessionPersistenceHandler) extension.getSingleton();
 				handler.write(sessionElement, co, listener);

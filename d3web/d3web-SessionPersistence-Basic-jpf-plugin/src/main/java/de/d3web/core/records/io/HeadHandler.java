@@ -45,7 +45,7 @@ public class HeadHandler implements SessionPersistenceHandler {
 		DCMarkup dcMarkup = null;
 		for (Element e : elementList) {
 			if (dcMarkupHandler.canRead(e)) {
-				Object read = dcMarkupHandler.read(sessionRecord.getKb(), e);
+				Object read = dcMarkupHandler.read(sessionRecord.getKnowledgeBase(), e);
 				dcMarkup = (DCMarkup) read;
 				break;
 			}

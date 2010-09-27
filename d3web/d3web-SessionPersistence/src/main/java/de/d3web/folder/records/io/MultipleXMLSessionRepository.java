@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -57,8 +58,9 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 	 * @param kb KnowledgeBase
 	 * @param folder Folder which represents the SessionRepository
 	 * @throws IOException
+	 * @throws ParseException
 	 */
-	public void load(KnowledgeBase kb, File folder) throws IOException {
+	public void load(KnowledgeBase kb, File folder) throws IOException, ParseException {
 		if (kb == null) throw new NullPointerException(
 				"KnowledgeBase is null. Unable to load SessionRepository.");
 		if (folder == null) throw new NullPointerException(
@@ -68,7 +70,10 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 		for (File f : folder.listFiles()) {
 			String name = f.getName();
 			if (!f.isFile() || !name.endsWith(".xml")) continue;
-			sessionRecords.add(new FileRecord(name.substring(0, name.length() - 4), kb, f));
+			int underscore = name.indexOf("_");
+			Date date = SessionPersistenceManager.DATE_FORMAT.parse(name.substring(0, underscore));
+			String id = name.substring(underscore + 1, name.length() - 4);
+			sessionRecords.add(new FileRecord(id, kb, date, f));
 		}
 	}
 
@@ -89,7 +94,8 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 
 		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
 		for (SessionRecord sr : sessionRecords) {
-			File file = new File(folder.getAbsolutePath() + "/" + sr.getId()
+			String date = SessionPersistenceManager.DATE_FORMAT.format(sr.getCreationDate());
+			File file = new File(folder.getAbsolutePath() + "/" + date + "_" + sr.getId()
 					+ ".xml");
 			if (sr instanceof FileRecord && !((FileRecord) sr).modified) {
 				FileRecord fr = (FileRecord) sr;
@@ -105,7 +111,7 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 			else {
 				List<SessionRecord> templist = new LinkedList<SessionRecord>();
 				templist.add(sr);
-				spm.saveSessions(file, templist, new DummyProgressListener(), sr.getKb());
+				spm.saveSessions(file, templist, new DummyProgressListener(), sr.getKnowledgeBase());
 			}
 		}
 	}
@@ -124,24 +130,24 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 		private File file;
 		private boolean modified = false;
 		private String id;
+		private Date created;
 
 		private KnowledgeBase kb;
 
 		private SessionRecord realRecord = null;
 
-		public FileRecord(String id, KnowledgeBase kb, File f) {
+		public FileRecord(String id, KnowledgeBase kb, Date date, File f) {
 			this.id = id;
 			this.kb = kb;
+			this.created = date;
 			this.file = f;
 		}
 
 		@Override
-		public void addFact(FactRecord fact) {
-			if (realRecord == null) {
-				parseSessionRecord();
-			}
-			if (!realRecord.getFacts().contains(fact)) {
-				realRecord.addFact(fact);
+		public void addValueFact(FactRecord fact) {
+			parseIfNecessary();
+			if (!realRecord.getValueFacts().contains(fact)) {
+				realRecord.addValueFact(fact);
 				modified = true;
 			}
 		}
@@ -181,20 +187,16 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 		}
 
 		@Override
-		public Date getLastEditDate() {
-			if (realRecord == null) {
-				parseSessionRecord();
-			}
-			return realRecord.getLastEditDate();
+		public Date getLastChangeDate() {
+			parseIfNecessary();
+			return realRecord.getLastChangeDate();
 		}
 
 		@Override
-		public void setLastEditDate(Date lastEditDate) {
+		public void touch(Date lastEditDate) {
 			modified = true;
-			if (realRecord == null) {
-				parseSessionRecord();
-			}
-			realRecord.setLastEditDate(lastEditDate);
+			parseIfNecessary();
+			realRecord.touch(lastEditDate);
 		}
 
 		@Override
@@ -202,48 +204,36 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 			// if something gets a reference to the Protocol, something could be
 			// changed
 			modified = true;
-			if (realRecord == null) {
-				parseSessionRecord();
-			}
+			parseIfNecessary();
 			return realRecord.getProtocol();
 		}
 
 		@Override
-		public void setProtocol(Protocol protocol) {
-			modified = true;
-			if (realRecord == null) {
-				parseSessionRecord();
-			}
-			realRecord.setProtocol(protocol);
-		}
-
-		@Override
 		public Date getCreationDate() {
-			if (realRecord == null) {
-				parseSessionRecord();
-			}
-			return realRecord.getCreationDate();
+			return created;
 		}
 
 		@Override
-		public List<FactRecord> getFacts() {
+		public List<FactRecord> getValueFacts() {
+			parseIfNecessary();
+			return Collections.unmodifiableList(realRecord.getValueFacts());
+		}
+
+		private void parseIfNecessary() {
 			if (realRecord == null) {
 				parseSessionRecord();
 			}
-			return Collections.unmodifiableList(realRecord.getFacts());
 		}
 
 		@Override
-		public KnowledgeBase getKb() {
+		public KnowledgeBase getKnowledgeBase() {
 			return kb;
 		}
 
 		@Override
 		public void setDCMarkup(DCMarkup dcMarkup) {
 			modified = true;
-			if (realRecord == null) {
-				parseSessionRecord();
-			}
+			parseIfNecessary();
 			realRecord.setDCMarkup(dcMarkup);
 		}
 
@@ -252,10 +242,28 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 			// if something gets a reference to the DCMarkup, something could be
 			// changed
 			modified = true;
-			if (realRecord == null) {
-				parseSessionRecord();
-			}
+			parseIfNecessary();
 			return realRecord.getDCMarkup();
+		}
+
+		@Override
+		public void touch() {
+			touch(new Date());
+		}
+
+		@Override
+		public void addInterviewFact(FactRecord fact) {
+			parseIfNecessary();
+			if (!realRecord.getInterviewFacts().contains(fact)) {
+				realRecord.addInterviewFact(fact);
+				modified = true;
+			}
+		}
+
+		@Override
+		public List<FactRecord> getInterviewFacts() {
+			parseIfNecessary();
+			return Collections.unmodifiableList(realRecord.getInterviewFacts());
 		}
 
 	}

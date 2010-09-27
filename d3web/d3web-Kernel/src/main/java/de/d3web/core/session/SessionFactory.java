@@ -40,24 +40,35 @@ public class SessionFactory {
 	 * @return new Session instance based on the specified knowledge base
 	 */
 	public static synchronized Session createSession(KnowledgeBase knowledgeBase) {
-		return createSession(knowledgeBase, new NextUnansweredQuestionFormStrategy(), new Date());
+		return createSession(null, knowledgeBase, new NextUnansweredQuestionFormStrategy(),
+				new Date());
 	}
 
-	public static synchronized Session createSession(KnowledgeBase kb, Date creationDate) {
-		return createSession(kb, new NextUnansweredQuestionFormStrategy(), creationDate);
+	/**
+	 * Factory-method that creates instances of Session
+	 * 
+	 * @created 27.09.2010
+	 * @param id the ID
+	 * @param kb {@link KnowledgeBase}
+	 * @param creationDate Date of creation
+	 * @return {@link Session}
+	 */
+	public static synchronized Session createSession(String id, KnowledgeBase kb, Date creationDate) {
+		return createSession(id, kb, new NextUnansweredQuestionFormStrategy(), creationDate);
 	}
 
 	/**
 	 * Factory-method that creates instances of Session.
 	 * 
+	 * @param id the ID
 	 * @param knowledgeBase the knowledge base used in the case.
 	 * @param formStrategy the specified {@link FormStrategy}
-	 * @return new Session instance based on the specified knowledge base and
-	 *         form strategy
+	 * @return new Session instance based on the specified id, knowledge base
+	 *         and form strategy
 	 */
-	public static synchronized Session createSession(
+	public static synchronized Session createSession(String id,
 			KnowledgeBase knowledgeBase,
 			FormStrategy formStrategy, Date creationDate) {
-		return new DefaultSession(knowledgeBase, formStrategy, creationDate);
+		return new DefaultSession(id, knowledgeBase, formStrategy, creationDate);
 	}
 }

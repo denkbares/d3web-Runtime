@@ -20,21 +20,17 @@
 
 package de.d3web.core.session;
 
-import java.util.Date;
 import java.util.List;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationManager;
-import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.info.DCMarkedUp;
 import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.interviewmanager.Interview;
-import de.d3web.core.session.protocol.Protocol;
 
 /**
  * The Session interface represents an active problem-solving session. Here,
@@ -44,7 +40,7 @@ import de.d3web.core.session.protocol.Protocol;
  * 
  * @author Norman Bruemmer, joba, Volker Belli (denkbares GmbH)
  */
-public interface Session extends DCMarkedUp, PropertiesContainer {
+public interface Session extends PropertiesContainer, SessionHeader {
 
 	// --- manage problem solvers ---
 	/**
@@ -82,22 +78,6 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 */
 	PropagationManager getPropagationManager();
 
-	// --- access header information ---
-	/**
-	 * Returns the {@link KnowledgeBase} instance that is used in this session
-	 * for the problem-solving task.
-	 * 
-	 * @return the knowledge base used in this session
-	 */
-	KnowledgeBase getKnowledgeBase();
-
-	// InfoStore getInfoStore(); // some information will be created/updated
-	// automatically (id, change-date, create-date), increment2
-
-	// --- full implementation is reserved for later implementation ---
-	// (inkrement 2)
-	Protocol getProtocol();
-
 	/**
 	 * Registers a new listener to this session. If something in this session
 	 * changes, then all registered listeners will be notified.
@@ -126,37 +106,4 @@ public interface Session extends DCMarkedUp, PropertiesContainer {
 	 * @return the corresponding {@link SessionObject} of the specified object
 	 */
 	SessionObject getCaseObject(CaseObjectSource item);
-
-	/**
-	 * This method should be called, when the session is edited manually
-	 * 
-	 * @created 24.09.2010
-	 */
-	void edited();
-
-	/**
-	 * This method should be called, when the session was edited at the given
-	 * date
-	 * 
-	 * @created 24.09.2010
-	 * @param date the Date when the Session was edited
-	 */
-	void edited(Date date);
-
-	/**
-	 * Returns the creation date of the Session
-	 * 
-	 * @created 24.09.2010
-	 * @return the creation date
-	 */
-	Date getCreationDate();
-
-	/**
-	 * Returns the Date of the last change on this Session
-	 * 
-	 * @created 24.09.2010
-	 * @return the date of the last edit
-	 */
-	Date getLastChangeDate();
-
 }

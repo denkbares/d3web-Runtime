@@ -78,6 +78,7 @@ public class DefaultBlackboard implements Blackboard {
 	public void addValueFact(Fact fact) {
 		// First: add the arriving fact to the protocol,
 		// if it was entered by the user
+		session.touch();
 		PSMethod psMethod = fact.getPSMethod();
 		if (psMethod != null && psMethod.equals(PSMethodUserSelected.getInstance())) {
 			getSession().getProtocol().addEntry(fact);
@@ -129,6 +130,7 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public void removeValueFact(Fact fact) {
+		session.touch();
 		Value oldValue = getActualValue(fact.getTerminologyObject());
 		this.valueStorage.remove(fact);
 		propergateIfNecessary(fact.getTerminologyObject(), oldValue);
@@ -144,6 +146,7 @@ public class DefaultBlackboard implements Blackboard {
 	 */
 	@Override
 	public void removeValueFact(TerminologyObject terminologyObject, Object source) {
+		session.touch();
 		Value oldValue = getActualValue(terminologyObject);
 		this.valueStorage.remove(terminologyObject, source);
 		propergateIfNecessary(terminologyObject, oldValue);
@@ -184,6 +187,7 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public void addInterviewFact(Fact fact) {
+		session.touch();
 		// Besides adding the new fact to the interview management, we also do
 		// the notification
 		// of this new indication fact: this notification may be removed due to
@@ -202,6 +206,7 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public void removeInterviewFact(Fact fact) {
+		session.touch();
 		// Besides removing the fact to the interview management, we also do the
 		// notification
 		// of this deletion: this notification may be removed due to
@@ -218,6 +223,7 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public void removeInterviewFact(TerminologyObject terminologyObject, Object source) {
+		session.touch();
 		// Besides removing the fact to the interview management, we also do the
 		// notification
 		// of this deletion: this notification may be removed due to
@@ -253,6 +259,7 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public void removeInterviewFacts(TerminologyObject terminologyObject) {
+		session.touch();
 		this.interviewStorage.remove(terminologyObject);
 	}
 
