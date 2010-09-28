@@ -87,6 +87,13 @@
 				<groupId>com.atlassian.maven.plugins</groupId>
 				<artifactId>maven-clover2-plugin</artifactId>
 				<version>3.0.2</version>
+                <configuration>
+					<license><![CDATA[PQmPVbLLUJCxelqoMBXGvkcOmPxVdrkpXjFvwoqoiIceVM
+									mi2KGx3V0bg<2maWqqOu9WMQ2KgiaUzOG0tUr4MgnFQX2w
+									oRNPtUQOPqOPnRmPonoWsnQopOmnqQqmMOtVvNSTWvtOpP
+									OqnmqmUUnourqopommmmmUUnourqopommmmmUUaptbYUUn
+									mmmm]]></license>
+                </configuration>				
 			</plugin>
 		</plugins>
 	</build>
