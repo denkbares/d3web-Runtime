@@ -116,15 +116,15 @@ public class DefaultInterview implements Interview {
 				this.agenda.activate(indicatedObject);
 			}
 			else if (oldIndication.hasState(State.INDICATED)
-					&& newIndication.hasState(State.INDICATED)) {
+					&& newIndication.hasState(State.INDICATED)) { // NOSONAR
 				// INDICATED => INDICATED : noop
 			}
 			else if (oldIndication.hasState(State.CONTRA_INDICATED)
-					&& newIndication.hasState(State.NEUTRAL)) {
+					&& newIndication.hasState(State.NEUTRAL)) { // NOSONAR
 				// CONTRA_INDICATED => NEUTRAL : noop
 			}
 			else if (oldIndication.hasState(State.NEUTRAL)
-					&& newIndication.hasState(State.CONTRA_INDICATED)) {
+					&& newIndication.hasState(State.CONTRA_INDICATED)) { // NOSONAR
 				// NEUTRAL => CONTRA_INDICATED : noop
 			}
 			else {

@@ -32,11 +32,12 @@ import java.util.Set;
  */
 public class Properties {
 
+	@Override
 	public String toString() {
 		return properties.toString();
 	}
 
-	private Map<Property, Object> properties = new HashMap<Property, Object>();
+	private final Map<Property, Object> properties = new HashMap<Property, Object>();
 
 	public Object getProperty(Property pd) {
 		return properties.get(pd);
@@ -46,23 +47,43 @@ public class Properties {
 		properties.put(pd, o);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof Properties)) return false;
-		if (!properties.keySet().equals(((Properties) obj).properties.keySet())) return false;
-		return properties.entrySet().equals(((Properties) obj).properties.entrySet());
-	}
-
 	public Set<Property> getKeys() {
 		return properties.keySet();
 	}
 
 	public boolean isEmpty() {
 		return properties.isEmpty();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((properties == null) ? 0 : properties.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Properties other = (Properties) obj;
+		if (properties == null) {
+			if (other.properties != null) {
+				return false;
+			}
+		}
+		else if (!properties.equals(other.properties)) {
+			return false;
+		}
+		return true;
 	}
 
 }

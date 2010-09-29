@@ -43,38 +43,41 @@ public class MethodKind {
 	}
 
 	/**
-	 * @return true if the String-value of these Objects are equal.
-	 */
-	public boolean equals(Object obj) {
-		return kind.equals(obj.toString());
-	}
-
-	/**
 	 * @return a string representation of this Object
 	 */
+	@Override
 	public String toString() {
 		return kind;
 	}
 
-	/**
-	 * This method is called immediately after an object of this class is
-	 * deserialized. To avoid that several instances of a unique object are
-	 * created, this method returns the current unique instance that is equal to
-	 * the object that was deserialized.
-	 * 
-	 * @author georg
-	 */
-	private Object readResolve() {
-		MethodKind[] methodKinds = new MethodKind[] {
-				MethodKind.FORWARD,
-				MethodKind.BACKWARD,
-		};
-		for (MethodKind m : methodKinds) {
-			if (m.kind.equals(this.kind)) {
-				return m;
-			}
-		}
-		return this;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((kind == null) ? 0 : kind.hashCode());
+		return result;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		MethodKind other = (MethodKind) obj;
+		if (kind == null) {
+			if (other.kind != null) {
+				return false;
+			}
+		}
+		else if (!kind.equals(other.kind)) {
+			return false;
+		}
+		return true;
+	}
 }

@@ -20,6 +20,7 @@
 
 package de.d3web.core.knowledge.terminology.info;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -52,7 +53,8 @@ public class Num2ChoiceSchema implements KnowledgeSlice {
 	}
 
 	public void setSchemaArray(Double[] newArray) {
-		schemaArray = newArray;
+		// real copy of newArray, to avoid memory leaks
+		schemaArray = Arrays.copyOf(newArray, newArray.length);
 	}
 
 	public Double[] getSchemaArray() {
@@ -63,6 +65,7 @@ public class Num2ChoiceSchema implements KnowledgeSlice {
 	 * @return PSMethodQuestionSetter.class
 	 * @see de.d3web.core.inference.KnowledgeSlice#getProblemsolverContext()
 	 */
+	@Override
 	public Class<? extends PSMethod> getProblemsolverContext() {
 		return PSMethodAbstraction.class;
 	}
@@ -71,6 +74,7 @@ public class Num2ChoiceSchema implements KnowledgeSlice {
 	 * @return true by default, not used in this context.
 	 * @see de.d3web.core.inference.KnowledgeSlice#isUsed(de.d3web.core.session.Session)
 	 */
+	@Override
 	public boolean isUsed(Session session) {
 		return true;
 	}
@@ -120,6 +124,7 @@ public class Num2ChoiceSchema implements KnowledgeSlice {
 		this.question = question;
 	}
 
+	@Override
 	public void remove() {
 		question.removeKnowledge(getProblemsolverContext(), this,
 				PSMethodAbstraction.NUM2CHOICE_SCHEMA);

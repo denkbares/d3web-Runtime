@@ -40,7 +40,7 @@ public class CondTextContains extends CondTextQuestion {
 	 */
 	public CondTextContains(QuestionText question, String value) {
 		super(question);
-		this.value = value;
+		this.setValue(value);
 	}
 
 	@Override
@@ -54,15 +54,6 @@ public class CondTextContains extends CondTextQuestion {
 				+ question.getId()
 				+ " value: "
 				+ value;
-	}
-
-	@Override
-	public boolean equals(Object other) {
-		if (!super.equals(other)) return false;
-
-		if (this.getValue() != null && ((CondTextContains) other).getValue() != null) return this.getValue().equals(
-				((CondTextContains) other).getValue());
-		else return this.getValue() == ((CondTextContains) other).getValue();
 	}
 
 	@Override

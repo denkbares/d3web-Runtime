@@ -100,6 +100,14 @@ public class CondNumIn extends CondNum {
 		else return (((CondNumIn) other).getInterval() == null);
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((_interval == null) ? 0 : _interval.hashCode());
+		return result;
+	}
+
 	/**
 	 * Returns the numerical interval of allowed values for this condition.
 	 * 

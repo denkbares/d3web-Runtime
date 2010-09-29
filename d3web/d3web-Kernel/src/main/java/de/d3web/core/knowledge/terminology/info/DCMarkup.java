@@ -62,22 +62,6 @@ public class DCMarkup {
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof DCMarkup)) return false;
-		Iterator<DCElement> iter = DCElement.getIterator();
-		while (iter.hasNext()) {
-			DCElement dc = iter.next();
-			if (!((DCMarkup) obj).getContent(dc).equalsIgnoreCase(this.getContent(dc))) return false;
-		}
-		return true;
-	}
-
 	/**
 	 * Returns a new instance of DCMarkup which with the same values as this
 	 * instance.
@@ -97,4 +81,27 @@ public class DCMarkup {
 		return data.isEmpty();
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((data == null) ? 0 : data.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof DCMarkup)) return false;
+		Iterator<DCElement> iter = DCElement.getIterator();
+		while (iter.hasNext()) {
+			DCElement dc = iter.next();
+			if (!((DCMarkup) obj).getContent(dc).equalsIgnoreCase(this.getContent(dc))) return false;
+		}
+		return true;
+	}
 }

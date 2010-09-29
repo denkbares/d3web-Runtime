@@ -100,16 +100,40 @@ public class Score implements Comparable<Object> {
 	}
 
 	/**
+	 * hashCode() method taking "symbol" and "score" into account.
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(score);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((symbol == null) ? 0 : symbol.hashCode());
+		return result;
+	}
+
+	/**
 	 * Compares the internal scores of the two instances of DiagnosisScore. If
 	 * the symbol is available for both, then these are checked as well.
 	 * 
 	 * @return boolean the equality of the two int-values
 	 */
-	public boolean equals(Score score) {
-		if ((score.getSymbol() != null) && (this.getSymbol() != null)
-				&& (score.getSymbol() != this.getSymbol())) return false;
-		return (score.getScore() == getScore());
-
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Score other = (Score) obj;
+		if ((other.getSymbol() != null) && (this.getSymbol() != null)
+				&& (other.getSymbol() != this.getSymbol())) return false;
+		return (other.getScore() == getScore());
 	}
 
 	public double getAPriori() {

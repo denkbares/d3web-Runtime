@@ -69,6 +69,14 @@ public class UndefinedValue implements QuestionValue {
 	}
 
 	/**
+	 * Returns just a static hashCode based on the ID.
+	 */
+	@Override
+	public int hashCode() {
+		return UNDEFINED_ID.hashCode();
+	}
+
+	/**
 	 * Returns true, if the specified value is an {@link UndefinedValue}.
 	 * 
 	 * @param value the specified {@link Value} instance

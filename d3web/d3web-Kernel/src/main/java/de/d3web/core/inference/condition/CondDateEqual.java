@@ -41,7 +41,7 @@ public class CondDateEqual extends CondDate {
 	 */
 	public CondDateEqual(QuestionDate question, DateValue value) {
 		super(question);
-		this.value = value;
+		this.setValue(value);
 	}
 
 	@Override
@@ -50,15 +50,6 @@ public class CondDateEqual extends CondDate {
 				+ question.getId()
 				+ " value: "
 				+ value;
-	}
-
-	@Override
-	public boolean equals(Object other) {
-		if (!super.equals(other)) return false;
-
-		if (this.getValue() != null && ((CondDateEqual) other).getValue() != null) return this.getValue().equals(
-				((CondDateEqual) other).getValue());
-		else return this.getValue() == ((CondDateEqual) other).getValue();
 	}
 
 	@Override

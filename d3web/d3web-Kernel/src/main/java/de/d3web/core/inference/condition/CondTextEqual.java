@@ -40,7 +40,7 @@ public class CondTextEqual extends CondTextQuestion {
 	 */
 	public CondTextEqual(QuestionText question, String value) {
 		super(question);
-		this.value = value;
+		this.setValue(value);
 	}
 
 	@Override
@@ -54,15 +54,6 @@ public class CondTextEqual extends CondTextQuestion {
 				+ question.getId()
 				+ " value: "
 				+ value;
-	}
-
-	@Override
-	public boolean equals(Object other) {
-		if (!super.equals(other)) return false;
-
-		if (this.getValue() != null && ((CondTextEqual) other).getValue() != null) return this.getValue().equals(
-				((CondTextEqual) other).getValue());
-		else return this.getValue() == ((CondTextEqual) other).getValue();
 	}
 
 	@Override

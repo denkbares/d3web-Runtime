@@ -384,7 +384,7 @@ public class Property {
 		basicPropertys.add(Property.malAnsweringPropability);
 	}
 
-	private String name;
+	private final String name;
 
 	public Property(String name) {
 		this.name = name;
@@ -437,27 +437,34 @@ public class Property {
 		return allPropertys;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof Property)) return false;
-		return ((Property) obj).getName().equals(this.getName());
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Property other = (Property) obj;
+		if (name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		}
+		else if (!name.equals(other.name)) {
+			return false;
+		}
+		return true;
 	}
-
-	/**
-	 * This method is called immediately after an object of this class is
-	 * deserialized. To avoid that several instances of a unique object are
-	 * created, this method returns the current unique instance that is equal to
-	 * the object that was deserialized.
-	 * 
-	 * @author georg
-	 */
-	private Object readResolve() {
-		return getProperty(getName());
-	}
-
 }
