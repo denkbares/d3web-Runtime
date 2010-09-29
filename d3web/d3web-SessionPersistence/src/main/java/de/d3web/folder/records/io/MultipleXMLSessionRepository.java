@@ -152,7 +152,7 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 			parseIfNecessary();
 			if (!realRecord.getValueFacts().contains(fact)) {
 				realRecord.addValueFact(fact);
-				modified = true;
+				touch();
 			}
 		}
 
@@ -207,7 +207,6 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 		public Protocol getProtocol() {
 			// if something gets a reference to the Protocol, something could be
 			// changed
-			modified = true;
 			parseIfNecessary();
 			return realRecord.getProtocol();
 		}
@@ -236,7 +235,7 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 
 		@Override
 		public void setDCMarkup(DCMarkup dcMarkup) {
-			modified = true;
+			touch();
 			parseIfNecessary();
 			realRecord.setDCMarkup(dcMarkup);
 		}
@@ -245,7 +244,6 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 		public DCMarkup getDCMarkup() {
 			// if something gets a reference to the DCMarkup, something could be
 			// changed
-			modified = true;
 			parseIfNecessary();
 			return realRecord.getDCMarkup();
 		}
@@ -260,7 +258,7 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 			parseIfNecessary();
 			if (!realRecord.getInterviewFacts().contains(fact)) {
 				realRecord.addInterviewFact(fact);
-				modified = true;
+				touch();
 			}
 		}
 

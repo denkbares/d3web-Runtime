@@ -295,8 +295,10 @@ public class SessionPersistenceTest {
 		SessionRecord rereloadedSessionRecord2 = rereloadedRepository.getSessionRecordById(session2ID);
 		int factCountBeforeAdding = rereloadedSessionRecord.getValueFacts().size();
 		FactRecord dummyFact = new FactRecord(questionNum, "psm", NUMVALUE);
+		FactRecord dummyFact2 = new FactRecord(questionNum, "psm", new Indication(State.INDICATED));
 		rereloadedSessionRecord.addValueFact(dummyFact);
 		rereloadedSessionRecord2.addValueFact(dummyFact);
+		rereloadedSessionRecord2.addInterviewFact(dummyFact2);
 		Assert.assertEquals(1, rereloadedSessionRecord.getValueFacts().size()
 				- factCountBeforeAdding);
 		// Fact already contained, should be ignored
