@@ -534,7 +534,11 @@ public class SessionPersistenceTest {
 				sessionRecord.getCreationDate(), sessionRecord.getLastChangeDate());
 		repository.add(newSessionRecordWithSameID);
 		countRecords(1, repository);
+		// is not contained any more, nothing will be removed
 		repository.remove(sessionRecord);
+		countRecords(1, repository);
+		// when removing this record, the repository is empty
+		repository.remove(newSessionRecordWithSameID);
 		countRecords(0, repository);
 		Assert.assertNull(repository.getSessionRecordById(sessionID));
 	}

@@ -70,6 +70,10 @@ public class DefaultSessionRepository implements SessionRepository {
 	public boolean remove(SessionRecord sessionRecord) {
 		if (sessionRecord == null) throw new NullPointerException(
 				"null can't be removed from the SessionRepository.");
+		SessionRecord storedRecord = sessionRecords.get(sessionRecord.getId());
+		if (storedRecord == null || !storedRecord.equals(sessionRecord)) {
+			return false;
+		}
 		return (sessionRecords.remove(sessionRecord.getId()) != null);
 	}
 
