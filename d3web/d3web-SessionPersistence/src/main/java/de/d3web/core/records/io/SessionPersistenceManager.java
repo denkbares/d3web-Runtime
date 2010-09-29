@@ -87,7 +87,11 @@ public class SessionPersistenceManager extends FragmentManager {
 		Element repElement = doc.createElement(REPOSITORY_TAG);
 		doc.appendChild(repElement);
 		repElement.setAttribute("kbID", kb.getId());
+		Date latestChange = new Date(0);
 		for (SessionRecord co : sessionRecord) {
+			if (co.getLastChangeDate().after(latestChange)) {
+				latestChange = co.getLastChangeDate();
+			}
 			Element sessionElement = doc.createElement(SESSION_TAG);
 			sessionElement.setAttribute("id", co.getId());
 			sessionElement.setAttribute("created", DATE_FORMAT.format(co.getCreationDate()));
@@ -98,6 +102,7 @@ public class SessionPersistenceManager extends FragmentManager {
 			}
 			repElement.appendChild(sessionElement);
 		}
+		file.setLastModified(latestChange.getTime());
 		OutputStream stream = new FileOutputStream(file);
 		try {
 			Util.writeDocumentToOutputStream(doc, stream);

@@ -180,7 +180,13 @@ public class SessionPersistenceTest {
 		Iterator<SessionRecord> iterator = reloadedRepository.iterator();
 		Session session = SessionConversionFactory.copyToSession(iterator.next());
 		Session session2 = SessionConversionFactory.copyToSession(iterator.next());
-		checkValuesAfterReload(session, session2);
+		// the sorting in the hashmap isn't stable, so we sort manually
+		if (session.getLastChangeDate().before(session2.getLastChangeDate())) {
+			checkValuesAfterReload(session, session2);
+		}
+		else {
+			checkValuesAfterReload(session2, session);
+		}
 
 		// testing error behaviour
 		SingleXMLSessionRepository errorTestingRepository = new SingleXMLSessionRepository();
@@ -421,10 +427,11 @@ public class SessionPersistenceTest {
 		return marked;
 	}
 
-	private void clearDirectory(File directory) {
+	private void clearDirectory(File directory) throws IOException {
 		for (File f : directory.listFiles()) {
 			Assert.assertFalse(
-					"Something has corrupted this test by putting a folder in target/temp/directory",
+					"Something has corrupted this test by putting a folder in "
+							+ directory.getCanonicalPath().toString(),
 					f.isDirectory());
 			f.delete();
 		}
@@ -522,6 +529,11 @@ public class SessionPersistenceTest {
 		countRecords(1, repository);
 		Assert.assertNotNull(repository.getSessionRecordById(sessionID));
 		Assert.assertNotNull(repository.getKnowledgeBase());
+		DefaultSessionRecord newSessionRecordWithSameID = new DefaultSessionRecord(
+				sessionRecord.getId(), sessionRecord.getKnowledgeBase(),
+				sessionRecord.getCreationDate(), sessionRecord.getLastChangeDate());
+		repository.add(newSessionRecordWithSameID);
+		countRecords(1, repository);
 		repository.remove(sessionRecord);
 		countRecords(0, repository);
 		Assert.assertNull(repository.getSessionRecordById(sessionID));
@@ -549,10 +561,10 @@ public class SessionPersistenceTest {
 		repository.remove(null);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void removingANotConatainedRecord() {
 		SessionRepository repository = new DefaultSessionRepository();
-		repository.remove(sessionRecord);
+		Assert.assertFalse(repository.remove(sessionRecord));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -641,5 +653,31 @@ public class SessionPersistenceTest {
 		MultipleXMLSessionRepository repository = new MultipleXMLSessionRepository();
 		repository.load(kb, directory);
 		SessionConversionFactory.copyToSession(repository.iterator().next());
+	}
+
+	@Test
+	public void testSingleXMLPersistenceFolderCreation() throws IOException {
+		SingleXMLSessionRepository sessionRepository = new SingleXMLSessionRepository();
+		sessionRepository.add(sessionRecord);
+		File file = new File("temp/folder3/file.xml");
+		file.getParentFile().mkdirs();
+		clearDirectory(file.getParentFile());
+		Assert.assertTrue(file.getParentFile().delete());
+		sessionRepository.save(file);
+		Assert.assertTrue(file.exists());
+	}
+
+	@Test
+	public void testMultipleXMLPersistenceFolderCreation() throws IOException {
+		MultipleXMLSessionRepository sessionRepository = new MultipleXMLSessionRepository();
+		sessionRepository.add(sessionRecord);
+		File folder = new File("temp/folder2/folder");
+		folder.mkdirs();
+		clearDirectory(folder);
+		Assert.assertTrue(folder.delete());
+		clearDirectory(folder.getParentFile());
+		Assert.assertTrue(folder.getParentFile().delete());
+		sessionRepository.save(folder);
+		Assert.assertTrue(folder.exists());
 	}
 }

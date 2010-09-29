@@ -20,7 +20,7 @@ package de.d3web.file.records.io;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.Collection;
 
 import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -49,8 +49,11 @@ public class SingleXMLSessionRepository extends DefaultSessionRepository {
 					"File doesn't exist or is a directory. Unable to load SessionRepository.");
 		}
 		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
-		sessionRecords = new LinkedList<SessionRecord>(spm.loadSessions(file,
-				new DummyProgressListener(), kb));
+		Collection<SessionRecord> records = spm.loadSessions(file,
+				new DummyProgressListener(), kb);
+		for (SessionRecord sr : records) {
+			add(sr);
+		}
 	}
 
 	public void save(File file) throws IOException {
@@ -60,8 +63,12 @@ public class SingleXMLSessionRepository extends DefaultSessionRepository {
 			throw new IllegalArgumentException(
 					"File is a directory. Unable to save SessionRepository.");
 		}
+		File parentFile = file.getParentFile();
+		if (!parentFile.exists()) {
+			parentFile.mkdirs();
+		}
 		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
-		spm.saveSessions(file, sessionRecords, new DummyProgressListener(),
+		spm.saveSessions(file, sessionRecords.values(), new DummyProgressListener(),
 				this.getKnowledgeBase());
 	}
 

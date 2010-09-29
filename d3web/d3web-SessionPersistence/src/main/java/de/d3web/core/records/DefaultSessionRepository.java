@@ -18,9 +18,9 @@
  */
 package de.d3web.core.records;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -34,35 +34,43 @@ import de.d3web.core.knowledge.KnowledgeBase;
  */
 public class DefaultSessionRepository implements SessionRepository {
 
-	protected List<SessionRecord> sessionRecords = new ArrayList<SessionRecord>();
+	protected Map<String, SessionRecord> sessionRecords = new HashMap<String, SessionRecord>();
 
 	@Override
 	public boolean add(SessionRecord sessionRecord) {
 		if (sessionRecord == null) throw new NullPointerException(
 				"null can't be added to the SessionRepository.");
-		if (sessionRecords.contains(sessionRecord)) {
-			Logger.getLogger(this.getClass().getSimpleName())
-					.warning(
-							"SessionRecord " + sessionRecord.getId()
-									+ " is already in the SessionRepository.");
-			return false;
+		SessionRecord oldRecord = sessionRecords.get(sessionRecord.getId());
+		if (oldRecord == null) {
+			sessionRecords.put(sessionRecord.getId(), sessionRecord);
+			return true;
 		}
-		return sessionRecords.add(sessionRecord);
+		else {
+			if (oldRecord == sessionRecord) {
+				Logger.getLogger(this.getClass().getSimpleName()).warning(
+						"SessionRecord " + sessionRecord.getId()
+								+ " is already in the SessionRepository.");
+				return false;
+
+			}
+			else {
+				// replace record with new one
+				sessionRecords.put(sessionRecord.getId(), sessionRecord);
+				return true;
+			}
+		}
 	}
 
 	@Override
 	public Iterator<SessionRecord> iterator() {
-		return sessionRecords.iterator();
+		return sessionRecords.values().iterator();
 	}
 
 	@Override
 	public boolean remove(SessionRecord sessionRecord) {
 		if (sessionRecord == null) throw new NullPointerException(
 				"null can't be removed from the SessionRepository.");
-		if (!sessionRecords.contains(sessionRecord)) throw new IllegalArgumentException(
-				"SessionRecord "
-						+ sessionRecord.getId() + " is not in the SessionRepository");
-		return sessionRecords.remove(sessionRecord);
+		return (sessionRecords.remove(sessionRecord.getId()) != null);
 	}
 
 	@Override
@@ -72,16 +80,13 @@ public class DefaultSessionRepository implements SessionRepository {
 		}
 		if (id.matches("\\s+")) throw new IllegalArgumentException(id
 				+ " is not a valid ID.");
-		for (SessionRecord co : sessionRecords) {
-			if (co.getId().equals(id)) return co;
-		}
-		return null;
+		return sessionRecords.get(id);
 	}
 
 	@Override
 	public KnowledgeBase getKnowledgeBase() {
-		if (sessionRecords.size() > 0) {
-			return sessionRecords.get(0).getKnowledgeBase();
+		if (sessionRecords.values().size() > 0) {
+			return iterator().next().getKnowledgeBase();
 		}
 		return null;
 	}

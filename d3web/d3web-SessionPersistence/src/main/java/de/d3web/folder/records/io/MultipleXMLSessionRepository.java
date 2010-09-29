@@ -77,7 +77,7 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 			int underscore = name.indexOf("_");
 			Date date = FILE_DATE_FORMAT.parse(name.substring(0, underscore));
 			String id = name.substring(underscore + 1, name.length() - 4);
-			sessionRecords.add(new FileRecord(id, kb, date, f));
+			add(new FileRecord(id, kb, date, f));
 		}
 	}
 
@@ -93,11 +93,11 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 	public void save(File folder) throws IOException {
 		if (folder == null) throw new NullPointerException(
 				"File is null. Unable to save SessionRepository.");
-		if (!folder.isDirectory()) throw new IllegalArgumentException(
+		if (folder.exists() && !folder.isDirectory()) throw new IllegalArgumentException(
 				"This implementation of the SessionRepositoryPersistenceHandler requires a directory.");
-
+		folder.mkdirs();
 		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
-		for (SessionRecord sr : sessionRecords) {
+		for (SessionRecord sr : sessionRecords.values()) {
 			String date = FILE_DATE_FORMAT.format(sr.getCreationDate());
 			File file = new File(folder.getAbsolutePath() + "/" + date + "_" + sr.getId()
 					+ ".xml");
