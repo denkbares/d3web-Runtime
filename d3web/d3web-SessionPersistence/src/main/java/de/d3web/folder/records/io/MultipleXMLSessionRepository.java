@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -49,6 +50,9 @@ import de.d3web.core.session.protocol.Protocol;
  */
 public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 
+	public static final SimpleDateFormat FILE_DATE_FORMAT = new SimpleDateFormat(
+			"yyyy-MM-dd HH.mm.ss.SS");
+
 	/**
 	 * Loads the Session Records from a folder. The files are not parsed
 	 * immediately, they will be parsed when someone accesses them. Files not
@@ -71,7 +75,7 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 			String name = f.getName();
 			if (!f.isFile() || !name.endsWith(".xml")) continue;
 			int underscore = name.indexOf("_");
-			Date date = SessionPersistenceManager.DATE_FORMAT.parse(name.substring(0, underscore));
+			Date date = FILE_DATE_FORMAT.parse(name.substring(0, underscore));
 			String id = name.substring(underscore + 1, name.length() - 4);
 			sessionRecords.add(new FileRecord(id, kb, date, f));
 		}
@@ -94,7 +98,7 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 
 		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
 		for (SessionRecord sr : sessionRecords) {
-			String date = SessionPersistenceManager.DATE_FORMAT.format(sr.getCreationDate());
+			String date = FILE_DATE_FORMAT.format(sr.getCreationDate());
 			File file = new File(folder.getAbsolutePath() + "/" + date + "_" + sr.getId()
 					+ ".xml");
 			if (sr instanceof FileRecord && !((FileRecord) sr).modified) {
