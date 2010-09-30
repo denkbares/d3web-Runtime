@@ -19,7 +19,8 @@
 package de.d3web.core.session.interviewmanager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import de.d3web.core.inference.PropagationEntry;
@@ -244,10 +245,22 @@ public class DefaultInterview implements Interview {
 
 	private List<TerminologyObject> getAllFollowUpChildrenOf(
 			TerminologyObject[] objects) {
+		Collection<TerminologyObject> followers = new HashSet<TerminologyObject>();
+		return getAllFollowUpChildrenOf(objects, followers);
+	}
+
+	private List<TerminologyObject> getAllFollowUpChildrenOf(
+			TerminologyObject[] objects, Collection<TerminologyObject> followers) {
 		List<TerminologyObject> children = new ArrayList<TerminologyObject>();
 		for (TerminologyObject object : objects) {
-			children.addAll(Arrays.asList(object.getChildren()));
-			children.addAll(getAllFollowUpChildrenOf(object.getChildren()));
+			for (TerminologyObject child : object.getChildren()) {
+				if (!followers.contains(child)) {
+					followers.add(child);
+					children.add(child);
+					children.addAll(getAllFollowUpChildrenOf(new TerminologyObject[] { child },
+							followers));
+				}
+			}
 		}
 		return children;
 	}

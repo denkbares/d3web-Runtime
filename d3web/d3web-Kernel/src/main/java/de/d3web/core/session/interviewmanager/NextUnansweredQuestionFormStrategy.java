@@ -19,6 +19,8 @@
  */
 package de.d3web.core.session.interviewmanager;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import de.d3web.core.knowledge.InterviewObject;
@@ -51,7 +53,9 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 				return new DefaultForm(((Question) object).getName(), object);
 			}
 			else if (object instanceof QASet) {
-				Question nextQuestion = retrieveNextQuestionToBeAnswered((QASet) object, session);
+				Collection<TerminologyObject> traversedQuestions = new HashSet<TerminologyObject>();
+				Question nextQuestion = retrieveNextQuestionToBeAnswered((QASet) object, session,
+						traversedQuestions);
 				if (nextQuestion == null) {
 					return EmptyForm.getInstance();
 				}
@@ -69,10 +73,21 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 	 * 
 	 * @param qaset the specified {@link QASet}
 	 * @param session the specified session
+	 * @param traversedObjects
 	 * @return the first {@link Question} instance, that is a child of the
 	 *         specified {@link QASet} and is not answered; null otherwise
 	 */
-	private Question retrieveNextQuestionToBeAnswered(QASet qaset, Session session) {
+	private Question retrieveNextQuestionToBeAnswered(QASet qaset, Session session, Collection<TerminologyObject> traversedObjects) {
+		// Termination of recursive traversal: Required for possibly cyclic
+		// question hierarchies
+		if (traversedObjects.contains(qaset)) {
+			return null;
+		}
+		else {
+			// add the current qaset to the already traversed object
+			traversedObjects.add(qaset);
+		}
+
 		if (qaset instanceof Question) {
 			Question question = (Question) qaset;
 			// Return question, when it is directly located in a questionnaire
@@ -92,7 +107,8 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 			// these, whether they are active on agenda
 			else {
 				for (TerminologyObject child : question.getChildren()) {
-					Question nextqaset = retrieveNextQuestionToBeAnswered((QASet) child, session);
+					Question nextqaset = retrieveNextQuestionToBeAnswered((QASet) child, session,
+							traversedObjects);
 					if (nextqaset != null) {
 						return nextqaset;
 					}
@@ -106,7 +122,7 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 			TerminologyObject[] children = qaset.getChildren();
 			for (TerminologyObject terminologyObject : children) {
 				Question nextqaset = retrieveNextQuestionToBeAnswered((QASet) terminologyObject,
-						session);
+						session, traversedObjects);
 				if (nextqaset != null) {
 					return nextqaset;
 				}
@@ -116,18 +132,23 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 	}
 
 	/**
-	 * A direct-qcontainer question must qcontainers as its parents.
+	 * A direct-qcontainer question is a question, that contains at least one
+	 * parent, that is a qcontainer. Please note, that it is - in principle - to
+	 * define knowledge bases, where a question has 1) a question and 2) a
+	 * qcontainer as a parent. In this case, we also vote for a direct
+	 * qcontainer question, BUT this circumstance may indicate bad knowledge
+	 * base design. (joba)
 	 * 
 	 * @param question the specified question
 	 * @return true, when the parents are only instances of {@link QContainer}.
 	 */
 	private boolean isDirectQContainerQuestion(Question question) {
 		for (TerminologyObject parent : question.getParents()) {
-			if ((parent instanceof QContainer) == false) {
-				return false;
+			if ((parent instanceof QContainer)) {
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 
 	/**
