@@ -99,7 +99,7 @@ public class DefaultBlackboard implements Blackboard {
 	private void propergate(TerminologyObject terminologyObject,
 			Value oldValue) {
 		PropagationManager propagationContoller = session.getPropagationManager();
-		propagationContoller.propagate(terminologyObject,
+		propagationContoller.propagate((ValueObject) terminologyObject,
 				oldValue);
 		session.notifyListeners(terminologyObject);
 	}
@@ -162,7 +162,6 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public void addInterviewFact(Fact fact) {
-		session.touch();
 		// Besides adding the new fact to the interview management, we also do
 		// the notification
 		// of this new indication fact: this notification may be removed due to
@@ -181,7 +180,6 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public void removeInterviewFact(Fact fact) {
-		session.touch();
 		// Besides removing the fact to the interview management, we also do the
 		// notification
 		// of this deletion: this notification may be removed due to
@@ -198,7 +196,6 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public void removeInterviewFact(TerminologyObject terminologyObject, Object source) {
-		session.touch();
 		// Besides removing the fact to the interview management, we also do the
 		// notification
 		// of this deletion: this notification may be removed due to
@@ -216,6 +213,7 @@ public class DefaultBlackboard implements Blackboard {
 
 	private void propagateIndicationChange(TerminologyObject interviewObject, Value oldValue,
 			Value newValue) {
+		session.touch();
 		// TODO MF: Move this somewhere else
 		if (interviewObject instanceof Question && newValue instanceof Indication) {
 			Question q = (Question) interviewObject;
@@ -234,8 +232,10 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public void removeInterviewFacts(TerminologyObject terminologyObject) {
-		session.touch();
+		Value oldValue = getInterviewFact(terminologyObject).getValue();
 		this.interviewStorage.remove(terminologyObject);
+		Value newValue = getInterviewFact(terminologyObject).getValue();
+		propagateIndicationChange(terminologyObject, oldValue, newValue);
 	}
 
 	@Override

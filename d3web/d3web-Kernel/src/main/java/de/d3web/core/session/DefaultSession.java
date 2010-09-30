@@ -257,7 +257,7 @@ public class DefaultSession implements Session {
 		propagationContoller.openPropagation();
 		try {
 			for (Question question : blackboard.getAnsweredQuestions()) {
-				Object oldValue = null;
+				Value oldValue = null;
 				propagationContoller.propagate(question, oldValue, psmethod);
 			}
 			// TODO: das ist so viel zu aufwendig, wenn viele Lösungen sind. Man

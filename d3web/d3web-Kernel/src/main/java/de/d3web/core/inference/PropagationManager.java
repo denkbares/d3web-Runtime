@@ -20,7 +20,9 @@
 
 package de.d3web.core.inference;
 
-import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.InterviewObject;
+import de.d3web.core.knowledge.ValueObject;
+import de.d3web.core.session.Value;
 
 /**
  * A PropagationManager is responsible for propagate all changes of a Session
@@ -118,7 +120,8 @@ public interface PropagationManager {
 	long getPropagationTime() throws IllegalStateException;
 
 	/**
-	 * Propagates a change value of an object through the different PSMethods.
+	 * Propagates a change value of an {@link ValueObject} through the different
+	 * PSMethods.
 	 * <p>
 	 * This method may cause other value propagations and therefore may be
 	 * called recursevely. It is called after the value has been updated in the
@@ -130,7 +133,24 @@ public interface PropagationManager {
 	 * @param object the object that has been updated
 	 * @param oldValue the old value of the object within the case
 	 */
-	void propagate(TerminologyObject object, Object oldValue);
+	void propagate(ValueObject object, Value oldValue);
+
+	/**
+	 * Propagates a change value of an {@link InterviewObject} through the
+	 * different PSMethods.
+	 * <p>
+	 * This method may cause other value propagations and therefore may be
+	 * called recursevely. It is called after the value has been updated in the
+	 * case. Thus the case already contains the new value.
+	 * <p>
+	 * <b>Do not call this method directly! It will be called by the case to
+	 * propagate facts updated into the case.</b>
+	 * 
+	 * @created 30.09.2010
+	 * @param object the object that has been updated
+	 * @param oldValue the old value of the object within the case
+	 */
+	void propagate(InterviewObject object, Value oldValue);
 
 	/**
 	 * Propagates a change value of an object through one selected PSMethod. All
@@ -148,5 +168,5 @@ public interface PropagationManager {
 	 * @param oldValue the old value of the object within the case
 	 * @param psMethod the PSMethod the fact will be propagated to
 	 */
-	void propagate(TerminologyObject object, Object oldValue, PSMethod psMethod);
+	void propagate(ValueObject object, Value oldValue, PSMethod psMethod);
 }

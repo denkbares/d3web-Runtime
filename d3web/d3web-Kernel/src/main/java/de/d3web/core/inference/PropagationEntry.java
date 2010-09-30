@@ -26,10 +26,10 @@ import de.d3web.core.session.values.UndefinedValue;
 public class PropagationEntry {
 
 	private final TerminologyObject object;
-	private final Object oldValue;
-	private final Object newValue;
+	private final Value oldValue;
+	private final Value newValue;
 
-	public PropagationEntry(TerminologyObject object, Object oldValue, Object newValue) {
+	public PropagationEntry(TerminologyObject object, Value oldValue, Value newValue) {
 		this.object = object;
 		this.oldValue = oldValue;
 		this.newValue = newValue;
@@ -39,20 +39,20 @@ public class PropagationEntry {
 		return object;
 	}
 
-	public Object getOldValue() {
+	public Value getOldValue() {
 		return oldValue;
 	}
 
 	public boolean hasOldValue() {
-		return oldValue != null && !UndefinedValue.isUndefinedValue((Value) oldValue);
+		return oldValue != null && !UndefinedValue.isUndefinedValue(oldValue);
 	}
 
-	public Object getNewValue() {
+	public Value getNewValue() {
 		return newValue;
 	}
 
 	public boolean hasNewValue() {
-		return newValue != null && !UndefinedValue.isUndefinedValue((Value) newValue);
+		return newValue != null && !UndefinedValue.isUndefinedValue(newValue);
 	}
 
 	@Override

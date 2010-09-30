@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
@@ -39,19 +39,26 @@ public class DefaultPropagationManager implements PropagationManager {
 	private class PSMethodHandler {
 
 		private final PSMethod psMethod;
-		private Map<TerminologyObject, Value> propagationEntries = new HashMap<TerminologyObject, Value>();
+		private Map<ValueObject, Value> propagationEntries = new HashMap<ValueObject, Value>();
+		private Map<InterviewObject, Value> interviewPropagationEntries = new HashMap<InterviewObject, Value>();
 
 		public PSMethodHandler(PSMethod psMethod) {
 			this.psMethod = psMethod;
 		}
 
-		public void addPropagationEntry(TerminologyObject key, Value oldValue) {
+		public void addPropagationEntry(ValueObject key, Value oldValue) {
 			// if we already have an entry,
 			// combine the two entries to one or annihilate them
 			if (!propagationEntries.containsKey(key)) {
 				// we do not have a change for that object,
 				// so simply remember this change
 				propagationEntries.put(key, oldValue);
+			}
+		}
+
+		public void addInterviewPropagationEntry(InterviewObject key, Value oldValue) {
+			if (!interviewPropagationEntries.containsKey(key)) {
+				interviewPropagationEntries.put(key, oldValue);
 			}
 		}
 
@@ -67,10 +74,17 @@ public class DefaultPropagationManager implements PropagationManager {
 			try {
 				Collection<PropagationEntry> entries = new ArrayList<PropagationEntry>(
 						propagationEntries.size());
-				for (Map.Entry<TerminologyObject, Value> change : propagationEntries.entrySet()) {
-					TerminologyObject object = change.getKey();
+				for (Map.Entry<ValueObject, Value> change : propagationEntries.entrySet()) {
+					ValueObject object = change.getKey();
 					Value oldValue = change.getValue();
-					Value value = session.getBlackboard().getValue((ValueObject) object);
+					Value value = session.getBlackboard().getValue(object);
+					PropagationEntry entry = new PropagationEntry(object, oldValue, value);
+					entries.add(entry);
+				}
+				for (Map.Entry<InterviewObject, Value> change : interviewPropagationEntries.entrySet()) {
+					InterviewObject object = change.getKey();
+					Value oldValue = change.getValue();
+					Value value = session.getBlackboard().getIndication(object);
 					PropagationEntry entry = new PropagationEntry(object, oldValue, value);
 					entries.add(entry);
 				}
@@ -234,7 +248,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * @param newValue the new value of the object within the case
 	 */
 	@Override
-	public void propagate(TerminologyObject object, Object oldValue) {
+	public void propagate(ValueObject object, Value oldValue) {
 		propagate(object, oldValue, null);
 	}
 
@@ -256,7 +270,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * @param psMethod the PSMethod the fact will be propagated to
 	 */
 	@Override
-	public void propagate(TerminologyObject object, Object oldValue, PSMethod psMethod) {
+	public void propagate(ValueObject object, Value oldValue, PSMethod psMethod) {
 		try {
 			// open propagation frame
 			openPropagation();
@@ -264,7 +278,7 @@ public class DefaultPropagationManager implements PropagationManager {
 			// add the value change to each handler
 			for (PSMethodHandler handler : this.psHandlers) {
 				if (psMethod == null || handler.getPSMethod().equals(psMethod)) {
-					handler.addPropagationEntry(object, (Value) oldValue);
+					handler.addPropagationEntry(object, oldValue);
 				}
 			}
 		}
@@ -299,6 +313,23 @@ public class DefaultPropagationManager implements PropagationManager {
 	@Override
 	public boolean isInPropagation() {
 		return (recursiveCounter > 0);
+	}
+
+	@Override
+	public void propagate(InterviewObject object, Value oldValue) {
+		try {
+			// open propagation frame
+			openPropagation();
+
+			// add the value change to each handler
+			for (PSMethodHandler handler : this.psHandlers) {
+				handler.addInterviewPropagationEntry(object, oldValue);
+			}
+		}
+		finally {
+			// and commit the propagation frame
+			commitPropagation();
+		}
 	}
 
 }
