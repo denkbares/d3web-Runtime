@@ -258,8 +258,7 @@ public class DefaultSession implements Session {
 		try {
 			for (Question question : blackboard.getAnsweredQuestions()) {
 				Object oldValue = null;
-				Object newValue = getBlackboard().getValue(question);
-				propagationContoller.propagate(question, oldValue, newValue, psmethod);
+				propagationContoller.propagate(question, oldValue, psmethod);
 			}
 			// TODO: das ist so viel zu aufwendig, wenn viele Lösungen sind. Man
 			// bräuchte eine Liste der bewerteten Lösungen im Fall (analog

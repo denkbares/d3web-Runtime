@@ -26,6 +26,9 @@ import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.ValueObject;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.indication.inference.PSMethodStrategic;
 
 /**
@@ -38,7 +41,7 @@ import de.d3web.indication.inference.PSMethodStrategic;
  * @see QASet
  * @see DerivationType
  */
-public abstract class Question extends QASet {
+public abstract class Question extends QASet implements ValueObject {
 
 	/**
 	 * Creates a new {@link Question} instance with the specified unique
@@ -104,5 +107,10 @@ public abstract class Question extends QASet {
 	@Override
 	public String toString() {
 		return super.toString();
+	}
+
+	@Override
+	public Value getDefaultValue() {
+		return UndefinedValue.getInstance();
 	}
 }

@@ -127,8 +127,8 @@ public class SessionConversionFactory {
 			// if more than one psm has set a value, add the globally merged
 			// fact
 			if (contributingPSMethods.size() > 1) {
-				Fact valueFact = blackboard.getValueFact(q);
-				target.addValueFact(new FactRecord(q, null, valueFact.getValue()));
+				Value valueFact = blackboard.getValue(q);
+				target.addValueFact(new FactRecord(q, null, valueFact));
 			}
 		}
 		for (Solution s : blackboard.getValuedSolutions()) {
@@ -140,8 +140,7 @@ public class SessionConversionFactory {
 				}
 			}
 			if (contributingPSMethods.size() > 1) {
-				Fact valueFact = blackboard.getValueFact(s);
-				Value value = valueFact.getValue();
+				Value value = blackboard.getValue(s);
 				target.addValueFact(new FactRecord(s, null, value));
 			}
 		}

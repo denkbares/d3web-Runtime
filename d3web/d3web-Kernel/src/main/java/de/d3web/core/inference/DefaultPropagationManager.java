@@ -20,8 +20,8 @@
 
 package de.d3web.core.inference;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,47 +30,28 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 
 public class DefaultPropagationManager implements PropagationManager {
 
 	private class PSMethodHandler {
 
 		private final PSMethod psMethod;
-		private Map<TerminologyObject, PropagationEntry> propagationEntries = new HashMap<TerminologyObject, PropagationEntry>();
+		private Map<TerminologyObject, Value> propagationEntries = new HashMap<TerminologyObject, Value>();
 
 		public PSMethodHandler(PSMethod psMethod) {
 			this.psMethod = psMethod;
 		}
 
-		public void addPropagationEntry(PropagationEntry newChange) {
-			TerminologyObject key = newChange.getObject();
-			PropagationEntry oldChange = propagationEntries.get(key);
+		public void addPropagationEntry(TerminologyObject key, Value oldValue) {
 			// if we already have an entry,
 			// combine the two entries to one or annihilate them
-			if (oldChange != null) {
-				// assert to be sure to handle only valid propagation changes
-				// TODO: use assert after D3WebCase.getValue() has been
-				// corrected
-				// assert Arrays.equals(oldChange.getNewValue(),
-				// newChange.getOldValue());
-				// check if they annihilate: a-->b && b-->a ==> no change
-				if (oldChange.getOldValue().equals(newChange.getNewValue())) {
-					propagationEntries.remove(key);
-				}
-				// otherwise we have a chain: a-->b && b-->c ==> a-->c
-				else {
-					PropagationEntry replaceChange = new PropagationEntry(
-							key,
-							oldChange.getOldValue(),
-							newChange.getNewValue());
-					propagationEntries.put(key, replaceChange);
-				}
-			}
-			else {
+			if (!propagationEntries.containsKey(key)) {
 				// we do not have a change for that object,
 				// so simply remember this change
-				propagationEntries.put(key, newChange);
+				propagationEntries.put(key, oldValue);
 			}
 		}
 
@@ -83,9 +64,17 @@ public class DefaultPropagationManager implements PropagationManager {
 		}
 
 		public void propagate() {
-			Collection<PropagationEntry> entries = propagationEntries.values();
-			propagationEntries = new HashMap<TerminologyObject, PropagationEntry>();
 			try {
+				Collection<PropagationEntry> entries = new ArrayList<PropagationEntry>(
+						propagationEntries.size());
+				for (Map.Entry<TerminologyObject, Value> change : propagationEntries.entrySet()) {
+					TerminologyObject object = change.getKey();
+					Value oldValue = change.getValue();
+					Value value = session.getBlackboard().getValue((ValueObject) object);
+					PropagationEntry entry = new PropagationEntry(object, oldValue, value);
+					entries.add(entry);
+				}
+				propagationEntries.clear();
 				// propagate the changes, using the new interface
 				getPSMethod().propagate(DefaultPropagationManager.this.session, entries);
 			}
@@ -162,7 +151,6 @@ public class DefaultPropagationManager implements PropagationManager {
 		this.recursiveCounter++;
 		if (this.recursiveCounter == 1) {
 			this.propagationTime = time;
-			session.touch(new Date(time));
 			initHandlers();
 		}
 	}
@@ -246,8 +234,8 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * @param newValue the new value of the object within the case
 	 */
 	@Override
-	public void propagate(TerminologyObject object, Object oldValue, Object newValue) {
-		propagate(object, oldValue, newValue, null);
+	public void propagate(TerminologyObject object, Object oldValue) {
+		propagate(object, oldValue, null);
 	}
 
 	/**
@@ -268,16 +256,15 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * @param psMethod the PSMethod the fact will be propagated to
 	 */
 	@Override
-	public void propagate(TerminologyObject object, Object oldValue, Object newValue, PSMethod psMethod) {
+	public void propagate(TerminologyObject object, Object oldValue, PSMethod psMethod) {
 		try {
 			// open propagation frame
 			openPropagation();
 
 			// add the value change to each handler
-			PropagationEntry change = new PropagationEntry(object, oldValue, newValue);
 			for (PSMethodHandler handler : this.psHandlers) {
 				if (psMethod == null || handler.getPSMethod().equals(psMethod)) {
-					handler.addPropagationEntry(change);
+					handler.addPropagationEntry(object, (Value) oldValue);
 				}
 			}
 		}

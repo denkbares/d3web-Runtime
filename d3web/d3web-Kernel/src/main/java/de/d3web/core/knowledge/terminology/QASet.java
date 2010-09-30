@@ -20,6 +20,8 @@
 
 package de.d3web.core.knowledge.terminology;
 
+import de.d3web.core.knowledge.Indication;
+import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.InterviewObject;
 
 /**
@@ -37,4 +39,8 @@ public abstract class QASet extends NamedObject implements InterviewObject {
 		super(id);
 	}
 
+	@Override
+	public Indication getDefaultInterviewValue() {
+		return new Indication(State.NEUTRAL);
+	}
 }

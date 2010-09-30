@@ -26,6 +26,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Rating;
@@ -77,6 +78,15 @@ public interface Blackboard {
 	public void removeValueFact(TerminologyObject terminologyObject, Object source);
 
 	/**
+	 * Returns the value of an ValueObject
+	 * 
+	 * @created 30.09.2010
+	 * @param terminologyObject
+	 * @return Value
+	 */
+	public Value getValue(ValueObject valueObject);
+
+	/**
 	 * Returns the merged fact for all value facts of the specified terminology
 	 * object.
 	 * 
@@ -84,7 +94,7 @@ public interface Blackboard {
 	 *        for
 	 * @return the merged fact
 	 */
-	public Fact getValueFact(TerminologyObject terminologyObject);
+	public Fact getValueFact(ValueObject valueObject);
 
 	/**
 	 * Returns a collection of all terminology objects that have a value. This
@@ -184,28 +194,14 @@ public interface Blackboard {
 	public Rating getRating(Solution solution);
 
 	/**
-	 * Returns the current answer of the question. The returned answer is the
-	 * merged answer over all problem solvers available. This is a typed
-	 * shortcut for accessing the value {@link Fact} of the {@link Question} and
-	 * read out its current value.
+	 * Returns the Value of a {@link ValueObject}, calculated by the specified
+	 * psmethod
 	 * 
-	 * @param question the question to take the rating from
-	 * @return the answer of the question
-	 */
-	// public Answer getAnswer(Question question) {
-	// return (Answer) getValueFact(question).getValue();
-	// }
-
-	public Value getValue(Question question);
-
-	/**
-	 * Returns the Value of a Question, calculated by the specified psmethod
-	 * 
-	 * @param object TerminologyObject
+	 * @param object {@link ValueObject}
 	 * @param psmethod PSMethod
 	 * @return Value
 	 */
-	public Value getValue(Question object, PSMethod psmethod);
+	public Value getValue(ValueObject object, PSMethod psmethod);
 
 	/**
 	 * Returns the Value of a Solution, calculated by the specified psmethod

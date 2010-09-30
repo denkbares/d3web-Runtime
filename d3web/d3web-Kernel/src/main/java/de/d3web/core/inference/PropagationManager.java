@@ -100,13 +100,13 @@ public interface PropagationManager {
 	void openPropagation(long time);
 
 	/**
-	 * Returns if there is an open propagation frame (and therefore the kernel is
-	 * in propagation mode).
+	 * Returns if there is an open propagation frame (and therefore the kernel
+	 * is in propagation mode).
 	 * 
 	 * @return if the kernel is in propagation
 	 */
 	public boolean isInPropagation();
-	
+
 	/**
 	 * Returns the propagation time of the current propagation. If no
 	 * propagation frame has been opened, an {@link IllegalStateException} is
@@ -129,9 +129,8 @@ public interface PropagationManager {
 	 * 
 	 * @param object the object that has been updated
 	 * @param oldValue the old value of the object within the case
-	 * @param newValue the new value of the object within the case
 	 */
-	void propagate(TerminologyObject object, Object oldValue, Object newValue);
+	void propagate(TerminologyObject object, Object oldValue);
 
 	/**
 	 * Propagates a change value of an object through one selected PSMethod. All
@@ -147,8 +146,7 @@ public interface PropagationManager {
 	 * 
 	 * @param object the object that has been updated
 	 * @param oldValue the old value of the object within the case
-	 * @param newValue the new value of the object within the case
 	 * @param psMethod the PSMethod the fact will be propagated to
 	 */
-	void propagate(TerminologyObject object, Object oldValue, Object newValue, PSMethod psMethod);
+	void propagate(TerminologyObject object, Object oldValue, PSMethod psMethod);
 }

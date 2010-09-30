@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
- * Computer Science VI, University of Wuerzburg
+ * Copyright (C) 2010 denkbares GmbH
  * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
@@ -17,17 +16,23 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-
 package de.d3web.core.knowledge;
 
+import de.d3web.core.session.Value;
 
-public interface InterviewObject extends TerminologyObject {
+/**
+ * Interface for Objects, which can have value facts
+ * 
+ * @author Markus Friedrich (denkbares GmbH)
+ * @created 30.09.2010
+ */
+public interface ValueObject extends TerminologyObject {
 
 	/**
-	 * Returns the default interview value
+	 * Returns the default value of this object
 	 * 
 	 * @created 30.09.2010
-	 * @return default interview value
+	 * @return DefaultValue
 	 */
-	public Indication getDefaultInterviewValue();
+	public Value getDefaultValue();
 }

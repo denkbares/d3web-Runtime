@@ -663,7 +663,7 @@ public class SessionPersistenceTest {
 	public void testSingleXMLPersistenceFolderCreation() throws IOException {
 		SingleXMLSessionRepository sessionRepository = new SingleXMLSessionRepository();
 		sessionRepository.add(sessionRecord);
-		File file = new File("temp/folder3/file.xml");
+		File file = new File("target/temp/folder3/file.xml");
 		file.getParentFile().mkdirs();
 		clearDirectory(file.getParentFile());
 		Assert.assertTrue(file.getParentFile().delete());
@@ -675,7 +675,7 @@ public class SessionPersistenceTest {
 	public void testMultipleXMLPersistenceFolderCreation() throws IOException {
 		MultipleXMLSessionRepository sessionRepository = new MultipleXMLSessionRepository();
 		sessionRepository.add(sessionRecord);
-		File folder = new File("temp/folder2/folder");
+		File folder = new File("target/temp/folder2/folder");
 		folder.mkdirs();
 		clearDirectory(folder);
 		Assert.assertTrue(folder.delete());

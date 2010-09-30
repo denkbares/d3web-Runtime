@@ -22,8 +22,10 @@ package de.d3web.core.knowledge.terminology;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.ValueObject;
+import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.session.Value;
 import de.d3web.scoring.Score;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
@@ -39,7 +41,7 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  * @see ScoreRating
  * @see Rating
  */
-public class Solution extends NamedObject implements TerminologyObject {
+public class Solution extends NamedObject implements ValueObject {
 
 	/**
 	 * A solution can have a prior probability, that is taken into account by
@@ -113,6 +115,11 @@ public class Solution extends NamedObject implements TerminologyObject {
 	@Override
 	public String toString() {
 		return super.toString();
+	}
+
+	@Override
+	public Value getDefaultValue() {
+		return new Rating(State.UNCLEAR);
 	}
 
 }

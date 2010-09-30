@@ -30,6 +30,7 @@ import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Rating;
@@ -78,16 +79,15 @@ public class DefaultBlackboard implements Blackboard {
 	public void addValueFact(Fact fact) {
 		// First: add the arriving fact to the protocol,
 		// if it was entered by the user
-		session.touch();
 		PSMethod psMethod = fact.getPSMethod();
 		if (psMethod != null && psMethod.equals(PSMethodUserSelected.getInstance())) {
 			getSession().getProtocol().addEntry(fact);
 		}
 
 		TerminologyObject terminologyObject = fact.getTerminologyObject();
-		Value oldValue = getActualValue(terminologyObject);
+		Value oldValue = getValue((ValueObject) terminologyObject);
 		this.valueStorage.add(fact);
-		propergateIfNecessary(terminologyObject, oldValue);
+		propergate(terminologyObject, oldValue);
 	}
 
 	/**
@@ -96,44 +96,19 @@ public class DefaultBlackboard implements Blackboard {
 	 * @param terminologyObject
 	 * @param oldValue
 	 */
-	private void propergateIfNecessary(TerminologyObject terminologyObject,
+	private void propergate(TerminologyObject terminologyObject,
 			Value oldValue) {
-		Value newValue = getActualValue(terminologyObject);
-		if (newValue != oldValue) {
-			PropagationManager propagationContoller = session.getPropagationManager();
-			propagationContoller.propagate(terminologyObject,
-					oldValue, newValue);
-			session.notifyListeners(terminologyObject);
-		}
-	}
-
-	/**
-	 * Returns the acutal value of a terminology object. Prevents getting null
-	 * for Solutions and Questions
-	 * 
-	 * @param terminologyObject
-	 * @return actual Value
-	 */
-	private Value getActualValue(TerminologyObject terminologyObject) {
-		Value oldValue;
-		if (terminologyObject instanceof Solution) {
-			oldValue = getRating((Solution) terminologyObject);
-		}
-		else if (terminologyObject instanceof Question) {
-			oldValue = getValue((Question) terminologyObject);
-		}
-		else {
-			oldValue = getValueFact(terminologyObject).getValue();
-		}
-		return oldValue;
+		PropagationManager propagationContoller = session.getPropagationManager();
+		propagationContoller.propagate(terminologyObject,
+				oldValue);
+		session.notifyListeners(terminologyObject);
 	}
 
 	@Override
 	public void removeValueFact(Fact fact) {
-		session.touch();
-		Value oldValue = getActualValue(fact.getTerminologyObject());
+		Value oldValue = getValue((ValueObject) fact.getTerminologyObject());
 		this.valueStorage.remove(fact);
-		propergateIfNecessary(fact.getTerminologyObject(), oldValue);
+		propergate(fact.getTerminologyObject(), oldValue);
 	}
 
 	/**
@@ -146,15 +121,15 @@ public class DefaultBlackboard implements Blackboard {
 	 */
 	@Override
 	public void removeValueFact(TerminologyObject terminologyObject, Object source) {
-		session.touch();
-		Value oldValue = getActualValue(terminologyObject);
+		Value oldValue = getValue((ValueObject) terminologyObject);
 		this.valueStorage.remove(terminologyObject, source);
-		propergateIfNecessary(terminologyObject, oldValue);
+		propergate(terminologyObject, oldValue);
 	}
 
 	@Override
-	public Fact getValueFact(TerminologyObject terminologyObject) {
-		return this.valueStorage.getAggregator(terminologyObject).getMergedFact();
+	public Value getValue(ValueObject valueObject) {
+		return getValueFromFact(valueObject,
+				this.valueStorage.getAggregator(valueObject).getMergedFact());
 	}
 
 	@Override
@@ -281,52 +256,23 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public Rating getRating(Solution solution) {
-		Fact valueFact = getValueFact(solution);
-		if (valueFact != null) {
-			return (Rating) valueFact.getValue();
-		}
-		else {
-			return new Rating(Rating.State.UNCLEAR);
-		}
+		return (Rating) getValue(solution);
 	}
 
 	@Override
-	public Value getValue(Question question) {
-		Fact fact = getValueFact(question);
-		if (fact == null) {
-			return UndefinedValue.getInstance();
-		}
-		else {
-			Value value = fact.getValue();
-			if (question instanceof QuestionOC && value instanceof NumValue) {
-				QuestionOC qoc = (QuestionOC) question;
-				Num2ChoiceSchema schema = qoc.getSchemaForQuestion();
-				NumValue numValue = (NumValue) value;
-				if (schema != null) {
-					return schema.getValueForNum((Double) numValue.getValue(),
-							qoc.getAllAlternatives(), session);
-				}
-			}
-			return value;
-		}
-	}
-
-	@Override
-	public Value getValue(Question object, PSMethod psmethod) {
-		Fact mergedFact = valueStorage.getAggregator(object).getMergedFact(psmethod);
-		if (mergedFact == null) {
-			return UndefinedValue.getInstance();
-		}
-		else {
-			return mergedFact.getValue();
-		}
+	public Value getValue(ValueObject object, PSMethod psmethod) {
+		return getValueFromFact(object, valueStorage.getAggregator(object).getMergedFact(psmethod));
 	}
 
 	@Override
 	public Indication getIndication(InterviewObject interviewElement) {
 		Fact fact = getInterviewFact(interviewElement);
+		return getValueFromFact(interviewElement, fact);
+	}
+
+	private Indication getValueFromFact(InterviewObject interviewElement, Fact fact) {
 		if (fact == null) {
-			return Indication.getDefaultIndication();
+			return interviewElement.getDefaultInterviewValue();
 		}
 		else {
 			return (Indication) getInterviewFact(interviewElement).getValue();
@@ -336,12 +282,7 @@ public class DefaultBlackboard implements Blackboard {
 	@Override
 	public Indication getIndication(InterviewObject interviewElement, PSMethod psMethod) {
 		Fact fact = getInterviewFact(interviewElement, psMethod);
-		if (fact == null) {
-			return Indication.getDefaultIndication();
-		}
-		else {
-			return (Indication) getInterviewFact(interviewElement).getValue();
-		}
+		return getValueFromFact(interviewElement, fact);
 	}
 
 	@Override
@@ -398,5 +339,27 @@ public class DefaultBlackboard implements Blackboard {
 			}
 		}
 		return list;
+	}
+
+	@Override
+	public Fact getValueFact(ValueObject valueObject) {
+		return this.valueStorage.getAggregator(valueObject).getMergedFact();
+	}
+
+	private Value getValueFromFact(ValueObject object, Fact fact) {
+		if (fact == null) {
+			return object.getDefaultValue();
+		}
+		Value value = fact.getValue();
+		if (object instanceof QuestionOC && value instanceof NumValue) {
+			QuestionOC qoc = (QuestionOC) object;
+			Num2ChoiceSchema schema = qoc.getSchemaForQuestion();
+			NumValue numValue = (NumValue) value;
+			if (schema != null) {
+				return schema.getValueForNum((Double) numValue.getValue(),
+						qoc.getAllAlternatives(), session);
+			}
+		}
+		return value;
 	}
 }
