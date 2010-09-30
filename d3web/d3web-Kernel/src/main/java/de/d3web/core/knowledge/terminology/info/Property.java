@@ -183,20 +183,6 @@ public class Property {
 	 */
 
 	/**
-	 * used for: KnowledgeBase doc: Config file for d3web.Train and d3web.dialog
-	 * configuration handled by: d3web-Config-Persistence
-	 * 
-	 * @see d3web-Config project
-	 * @return Config
-	 */
-	public static final Property CONFIG = new Property("config");
-
-	/*
-	 * ##########################################################################
-	 * ##
-	 */
-
-	/**
 	 * used for Question doc: if the question is an inactive follow-question and
 	 * this property is set (true), it will be displayed inactivated on the
 	 * screen (independent of the appropriate Config). handled by: d3web-dialog

@@ -198,7 +198,6 @@
 	<modules>
 		<module>d3web-Kernel</module>
 		<module>d3web-Persistence</module>
-		<module>d3web-Config</module>
 		<module>d3web-Utilities</module>
 		<module>d3web-SharedKnowledge</module>
 		<module>d3web-Verbalizer</module>

@@ -70,12 +70,6 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>de.uniwue.d3web</groupId>
-			<artifactId>d3web-Config</artifactId>
-			<version>${project.version}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.7</version>
