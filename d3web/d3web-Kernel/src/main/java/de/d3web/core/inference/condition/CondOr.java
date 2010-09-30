@@ -48,7 +48,9 @@ public class CondOr extends NonTerminalCondition {
 
 		for (Condition condition : terms) {
 			try {
-				if (condition.eval(session)) return true;
+				if (condition.eval(session)) {
+					return true;
+				}
 			}
 			catch (NoAnswerException nae) {
 				wasNoAnswer = true;
@@ -72,7 +74,9 @@ public class CondOr extends NonTerminalCondition {
 	public String toString() {
 		String ret = "\u2190 CondOr {";
 		for (Condition condition : terms) {
-			if (condition != null) ret += condition.toString();
+			if (condition != null) {
+				ret += condition.toString();
+			}
 		}
 		ret += "}";
 		return ret;

@@ -81,18 +81,27 @@ public class CondDState extends TerminalCondition {
 
 	@Override
 	public boolean equals(Object other) {
-		if (!super.equals(other)) return false;
+		if (!super.equals(other)) {
+			return false;
+		}
 		CondDState otherCDS = (CondDState) other;
 		boolean test = true;
-		if (this.getSolution() != null) test = this.getSolution().equals(
-				otherCDS.getSolution())
-				&& test;
-		else // == null
-		test = (otherCDS.getSolution() == null) && test;
+		if (this.getSolution() != null) {
+			test = this.getSolution().equals(
+					otherCDS.getSolution())
+					&& test;
+		}
+		else {
+			test = (otherCDS.getSolution() == null) && test;
+		}
 
-		if (this.getStatus() != null) test = this.getStatus().equals(otherCDS.getStatus())
-				&& test;
-		else test = (otherCDS.getStatus() == null) && test;
+		if (this.getStatus() != null) {
+			test = this.getStatus().equals(otherCDS.getStatus())
+					&& test;
+		}
+		else {
+			test = (otherCDS.getStatus() == null) && test;
+		}
 		return test;
 	}
 
@@ -101,11 +110,17 @@ public class CondDState extends TerminalCondition {
 
 		String str = getClass().toString();
 
-		if (getSolution() != null) str += getSolution().toString();
+		if (getSolution() != null) {
+			str += getSolution().toString();
+		}
 
-		if (getStatus() != null) str += getStatus().toString();
+		if (getStatus() != null) {
+			str += getStatus().toString();
+		}
 
-		if (getTerminalObjects() != null) str += getTerminalObjects().toString();
+		if (getTerminalObjects() != null) {
+			str += getTerminalObjects().toString();
+		}
 
 		return str.hashCode();
 	}

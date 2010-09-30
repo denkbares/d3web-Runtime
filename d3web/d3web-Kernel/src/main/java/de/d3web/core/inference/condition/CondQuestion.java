@@ -90,17 +90,27 @@ public abstract class CondQuestion extends TerminalCondition {
 
 	@Override
 	public boolean equals(Object other) {
-		if (!super.equals(other)) return false;
+		if (!super.equals(other)) {
+			return false;
+		}
 
-		if (this.getQuestion() != null) return this.getQuestion().equals(
-				((CondQuestion) other).getQuestion());
-		else return this.getQuestion() == ((CondQuestion) other).getQuestion();
+		if (this.getQuestion() != null) {
+			return this.getQuestion().equals(
+					((CondQuestion) other).getQuestion());
+		}
+		else {
+			return this.getQuestion() == ((CondQuestion) other).getQuestion();
+		}
 	}
 
 	@Override
 	public int hashCode() {
 		// use the ID for the hashCode
-		if (getQuestion() != null && getQuestion().getId() != null) return (getQuestion().getId()).hashCode();
-		else return toString().hashCode();
+		if (getQuestion() != null && getQuestion().getId() != null) {
+			return (getQuestion().getId()).hashCode();
+		}
+		else {
+			return toString().hashCode();
+		}
 	}
 }

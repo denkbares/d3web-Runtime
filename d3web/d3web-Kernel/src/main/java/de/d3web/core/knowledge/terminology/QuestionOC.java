@@ -44,7 +44,9 @@ public class QuestionOC extends QuestionChoice {
 		if (alternatives == null) {
 			return Collections.emptyList();
 		}
-		else return alternatives;
+		else {
+			return alternatives;
+		}
 	}
 
 	@Override

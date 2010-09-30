@@ -74,7 +74,9 @@ public class FormulaExpression {
 		if (answer != null) {
 			return new NumValue(answer);
 		}
-		else return null;
+		else {
+			return null;
+		}
 	}
 
 	public FormulaNumberElement getFormulaElement() {

@@ -77,7 +77,9 @@ public interface Fact {
 	 */
 	PSMethod getPSMethod();
 
+	@Override
 	int hashCode();
 
+	@Override
 	boolean equals(Object o);
 }

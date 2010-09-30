@@ -120,7 +120,9 @@ class FactAggregator {
 
 	private void mergeFacts() {
 		// do nothing if we do not have any facts
-		if (facts.size() == 0) return;
+		if (facts.size() == 0) {
+			return;
+		}
 
 		// use the one fact if there is only one
 		if (facts.size() == 1) {

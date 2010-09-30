@@ -99,13 +99,19 @@ public class ActionContraIndication extends PSAction {
 
 	@Override
 	public int hashCode() {
-		if (getQASets() != null) return (getQASets().hashCode());
-		else return 0;
+		if (getQASets() != null) {
+			return (getQASets().hashCode());
+		}
+		else {
+			return 0;
+		}
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == this) return true;
+		if (o == this) {
+			return true;
+		}
 		if (o instanceof ActionContraIndication) {
 			ActionContraIndication a = (ActionContraIndication) o;
 			if (getQASets() != null && a.getQASets() != null) {
@@ -118,7 +124,9 @@ public class ActionContraIndication extends PSAction {
 				return false;
 			}
 		}
-		else return false;
+		else {
+			return false;
+		}
 	}
 
 	@Override

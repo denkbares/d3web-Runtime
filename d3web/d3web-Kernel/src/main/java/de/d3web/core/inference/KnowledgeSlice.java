@@ -74,5 +74,6 @@ public interface KnowledgeSlice {
 	 */
 	// TODO: vb: definitely remove this. toString should NOT be specified with a
 	// new sematics (here: xml!)
+	@Override
 	public String toString();
 }

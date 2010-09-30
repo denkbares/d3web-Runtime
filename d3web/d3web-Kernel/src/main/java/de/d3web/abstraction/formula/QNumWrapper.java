@@ -59,6 +59,7 @@ public class QNumWrapper implements FormulaNumberElement {
 	 * @param session current case
 	 * @return the Double value of the wrapped QuestionNum
 	 */
+	@Override
 	public Double eval(Session session) {
 		Value val = session.getBlackboard().getValue(getQuestion());
 		if (val == null
@@ -90,6 +91,7 @@ public class QNumWrapper implements FormulaNumberElement {
 	/**
 	 * @see FormulaElement
 	 */
+	@Override
 	public Collection<? extends TerminologyObject> getTerminalObjects() {
 		Collection<QuestionNum> ret = new LinkedList<QuestionNum>();
 		ret.add(value);

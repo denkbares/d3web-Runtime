@@ -89,7 +89,8 @@ public class DefaultPropagationManager implements PropagationManager {
 				// propagate the changes, using the new interface
 				getPSMethod().propagate(DefaultPropagationManager.this.session, entries);
 			}
-			catch (Throwable e) {
+			catch (Throwable e) { // NOSONAR because execution has to continue
+									// after catch
 				Logger.getLogger("Kernel").log(
 						Level.SEVERE,
 						"internal error in pluggable problem solver #" +
@@ -296,7 +297,9 @@ public class DefaultPropagationManager implements PropagationManager {
 	 */
 	@Override
 	public long getPropagationTime() throws IllegalStateException {
-		if (recursiveCounter == 0) throw new IllegalStateException("no propagation frame opened");
+		if (recursiveCounter == 0) {
+			throw new IllegalStateException("no propagation frame opened");
+		}
 		return propagationTime;
 	}
 

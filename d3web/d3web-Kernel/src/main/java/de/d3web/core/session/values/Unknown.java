@@ -75,8 +75,12 @@ public class Unknown implements IDObject, QuestionValue {
 
 	@Override
 	public int compareTo(Value o) {
-		if (o instanceof Unknown) return 0;
-		else return -1;
+		if (o instanceof Unknown) {
+			return 0;
+		}
+		else {
+			return -1;
+		}
 	}
 
 	@Override

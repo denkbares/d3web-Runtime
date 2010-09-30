@@ -44,8 +44,12 @@ public class DCMarkup {
 	 * @throws NullPointerException if dc == null
 	 */
 	public void setContent(DCElement dc, String content) {
-		if (dc == null) throw new NullPointerException();
-		if (content == null) content = "";
+		if (dc == null) {
+			throw new NullPointerException();
+		}
+		if (content == null) {
+			content = "";
+		}
 		data.put(dc, content);
 	}
 
@@ -56,9 +60,13 @@ public class DCMarkup {
 	 * @throws NullPointerException if dc == null
 	 */
 	public String getContent(DCElement dc) {
-		if (dc == null) throw new NullPointerException();
-		String result = (String) data.get(dc);
-		if (result == null) result = "";
+		if (dc == null) {
+			throw new NullPointerException();
+		}
+		String result = data.get(dc);
+		if (result == null) {
+			result = "";
+		}
 		return result;
 	}
 
@@ -96,11 +104,15 @@ public class DCMarkup {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof DCMarkup)) return false;
+		if (obj == null || !(obj instanceof DCMarkup)) {
+			return false;
+		}
 		Iterator<DCElement> iter = DCElement.getIterator();
 		while (iter.hasNext()) {
 			DCElement dc = iter.next();
-			if (!((DCMarkup) obj).getContent(dc).equalsIgnoreCase(this.getContent(dc))) return false;
+			if (!((DCMarkup) obj).getContent(dc).equalsIgnoreCase(this.getContent(dc))) {
+				return false;
+			}
 		}
 		return true;
 	}

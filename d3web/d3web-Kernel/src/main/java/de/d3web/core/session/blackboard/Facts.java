@@ -187,7 +187,7 @@ public class Facts {
 		if (facts.length == 1) return facts[0];
 		for (Fact fact : facts) {
 			Value value = (Value) fact.getValue();
-			if (value instanceof Unknown) {
+			if (value instanceof Unknown) { // NOSONAR
 				// handle unknown as first one!
 				// unknown is never taken into the merge operation
 				// only if no other value is available at the end,

@@ -86,7 +86,9 @@ public abstract class CondNum extends CondQuestion {
 
 	@Override
 	public boolean equals(Object other) {
-		if (this == other) return true;
+		if (this == other) {
+			return true;
+		}
 		else if ((other == null) || (getClass() != other.getClass())) {
 			return false;
 		}
@@ -95,27 +97,40 @@ public abstract class CondNum extends CondQuestion {
 
 			boolean test = true;
 
-			if (this.getQuestion() != null) test = this.getQuestion().equals(
-					otherCN.getQuestion())
-					&& test;
-			else test = (otherCN.getQuestion() == null) && test;
+			if (this.getQuestion() != null) {
+				test = this.getQuestion().equals(
+						otherCN.getQuestion())
+						&& test;
+			}
+			else {
+				test = (otherCN.getQuestion() == null) && test;
+			}
 
-			if (this.getConditionValue() != null) test = this.getConditionValue().equals(
-					otherCN.getConditionValue())
-					&& test;
-			else test = (otherCN.getConditionValue() == null) && test;
+			if (this.getConditionValue() != null) {
+				test = this.getConditionValue().equals(
+						otherCN.getConditionValue())
+						&& test;
+			}
+			else {
+				test = (otherCN.getConditionValue() == null) && test;
+			}
 
-			if (this.getTerminalObjects() != null && otherCN != null) test = this.getTerminalObjects().containsAll(
-					otherCN.getTerminalObjects())
-					&& otherCN.getTerminalObjects().containsAll(this.getTerminalObjects())
-					&& test;
-			else test = test && (this.getTerminalObjects() == null)
-					&& (otherCN.getTerminalObjects() == null);
+			if (this.getTerminalObjects() != null && otherCN != null) {
+				test = this.getTerminalObjects().containsAll(
+						otherCN.getTerminalObjects())
+						&& otherCN.getTerminalObjects().containsAll(this.getTerminalObjects())
+						&& test;
+			}
+			else {
+				test = test && (this.getTerminalObjects() == null)
+						&& (otherCN.getTerminalObjects() == null);
+			}
 
 			return test;
 		}
 	}
 
+	@Override
 	public boolean eval(Session session)
 			throws NoAnswerException, UnknownAnswerException {
 		checkAnswer(session);
@@ -133,8 +148,12 @@ public abstract class CondNum extends CondQuestion {
 
 	@Override
 	public int hashCode() {
-		if (getQuestion() != null && getQuestion().getId() != null) return (getQuestion().getId()).hashCode();
-		else return (getClass().toString() + toString()).hashCode();
+		if (getQuestion() != null && getQuestion().getId() != null) {
+			return (getQuestion().getId()).hashCode();
+		}
+		else {
+			return (getClass().toString() + toString()).hashCode();
+		}
 	}
 
 	static double doubleValue(NumValue value) {

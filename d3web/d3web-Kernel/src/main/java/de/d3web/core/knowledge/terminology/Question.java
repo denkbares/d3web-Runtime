@@ -64,15 +64,27 @@ public abstract class Question extends QASet {
 		final Class<? extends PSMethod> FOLLOW_QUESTION = PSMethodStrategic.class;
 		final MethodKind KIND = MethodKind.BACKWARD;
 		if (hasElements(getKnowledge(QUESTION_SETTER, KIND))
-				&& hasElements(getKnowledge(FOLLOW_QUESTION, KIND))) return DerivationType.MIXED;
-		else if (hasElements(getKnowledge(QUESTION_SETTER, KIND))) return DerivationType.DERIVED;
-		else return DerivationType.BASIC;
+				&& hasElements(getKnowledge(FOLLOW_QUESTION, KIND))) {
+			return DerivationType.MIXED;
+		}
+		else if (hasElements(getKnowledge(QUESTION_SETTER, KIND))) {
+			return DerivationType.DERIVED;
+		}
+		else {
+			return DerivationType.BASIC;
+		}
 	}
 
 	private boolean hasElements(Object list) {
-		if (list == null) return false;
-		else if ((list instanceof Collection<?>) && ((Collection<?>) list).isEmpty()) return false;
-		else return true;
+		if (list == null) {
+			return false;
+		}
+		else if ((list instanceof Collection<?>) && ((Collection<?>) list).isEmpty()) {
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 
 	/**

@@ -89,7 +89,9 @@ public class Solution extends NamedObject implements TerminologyObject {
 			throw new IllegalArgumentException(newAprioriProbability
 					+ " not a valid apriori probability.");
 		}
-		else aprioriProbability = newAprioriProbability;
+		else {
+			aprioriProbability = newAprioriProbability;
+		}
 	}
 
 	/**

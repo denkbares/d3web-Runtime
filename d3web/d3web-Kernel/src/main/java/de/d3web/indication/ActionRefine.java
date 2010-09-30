@@ -70,24 +70,36 @@ public class ActionRefine extends ActionNextQASet {
 	@Override
 	public int hashCode() {
 		int hash = 0;
-		if (getQASets() != null) hash += getQASets().hashCode();
-		if (getTarget() != null) hash += getTarget().hashCode();
+		if (getQASets() != null) {
+			hash += getQASets().hashCode();
+		}
+		if (getTarget() != null) {
+			hash += getTarget().hashCode();
+		}
 		return hash;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == this) return true;
+		if (o == this) {
+			return true;
+		}
 		if (o instanceof ActionRefine) {
 			ActionRefine a = (ActionRefine) o;
 			return (isSame(a.getQASets(), getQASets()) && isSame(a.getTarget(), getTarget()));
 		}
-		else return false;
+		else {
+			return false;
+		}
 	}
 
 	private boolean isSame(Object obj1, Object obj2) {
-		if (obj1 == null && obj2 == null) return true;
-		if (obj1 != null && obj2 != null) return obj1.equals(obj2);
+		if (obj1 == null && obj2 == null) {
+			return true;
+		}
+		if (obj1 != null && obj2 != null) {
+			return obj1.equals(obj2);
+		}
 		return false;
 	}
 }

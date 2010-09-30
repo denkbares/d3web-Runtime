@@ -72,6 +72,7 @@ public class FormulaDate implements FormulaDateElement {
 	 * 
 	 * @return Double-value of this FormulaElement
 	 */
+	@Override
 	public Date eval(Session session) {
 		return value;
 	}
@@ -81,13 +82,18 @@ public class FormulaDate implements FormulaDateElement {
 	 **/
 	@Override
 	public String toString() {
-		if (value == null) return "null";
-		else return "<" + format.format(value) + ">";
+		if (value == null) {
+			return "null";
+		}
+		else {
+			return "<" + format.format(value) + ">";
+		}
 	}
 
 	/**
 	 * @see FormulaElement
 	 */
+	@Override
 	public Collection<? extends TerminologyObject> getTerminalObjects() {
 		return new LinkedList<TerminologyObject>();
 	}

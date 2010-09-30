@@ -69,7 +69,9 @@ public class MMInfoObject implements DCMarkedUp {
 			DCElement dc = iter.next();
 			String content = dcData.getContent(dc);
 			if (content != null && !content.equals("") && this.getDCMarkup() != null &&
-					!content.equalsIgnoreCase(this.getDCMarkup().getContent(dc))) return false;
+					!content.equalsIgnoreCase(this.getDCMarkup().getContent(dc))) {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -79,6 +81,7 @@ public class MMInfoObject implements DCMarkedUp {
 	 * 
 	 * @see de.d3web.kernel.misc.DCDataAdapter#getDCData()
 	 */
+	@Override
 	public DCMarkup getDCMarkup() {
 		return dcData;
 	}
@@ -89,19 +92,25 @@ public class MMInfoObject implements DCMarkedUp {
 	 * @see
 	 * de.d3web.kernel.misc.DCDataAdapter#setDCData(de.d3web.kernel.misc.DCData)
 	 */
+	@Override
 	public void setDCMarkup(DCMarkup dcData) {
 		String subject = dcData.getContent(DCElement.SUBJECT);
 
 		// [MISC]:aha:legacy code
-		if ("therapy".equalsIgnoreCase(subject)) subject = MMInfoSubject.THERAPY.getName();
-		else if ("info.suggestion".equalsIgnoreCase(subject)) subject = MMInfoSubject.THERAPY.getName();
+		if ("therapy".equalsIgnoreCase(subject)) {
+			subject = MMInfoSubject.THERAPY.getName();
+		}
+		else if ("info.suggestion".equalsIgnoreCase(subject)) {
+			subject = MMInfoSubject.THERAPY.getName();
+		}
 
 		Iterator<MMInfoSubject> iter = MMInfoSubject.getIterator();
-		while (iter.hasNext())
+		while (iter.hasNext()) {
 			if (subject.equalsIgnoreCase((iter.next()).getName())) {
 				this.dcData = dcData;
 				return;
 			}
+		}
 
 		Logger.getLogger(this.getClass().getName()).warning(
 				subject + " is not valid as DCElement.SUBJECT!");

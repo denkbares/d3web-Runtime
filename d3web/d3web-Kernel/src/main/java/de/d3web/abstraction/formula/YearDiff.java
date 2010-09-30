@@ -84,6 +84,7 @@ public class YearDiff implements FormulaNumberElement {
 	 * @see
 	 * de.d3web.kernel.domainModel.formula.FormulaElement#getTerminalObjects()
 	 */
+	@Override
 	public Collection<? extends TerminologyObject> getTerminalObjects() {
 		Collection<? extends TerminologyObject> c1 = getArg1().getTerminalObjects();
 		Collection<? extends TerminologyObject> c2 = getArg2().getTerminalObjects();
@@ -130,12 +131,13 @@ public class YearDiff implements FormulaNumberElement {
 			buffy.append(getArg1());
 		}
 		buffy.append(" ").append(getSymbol()).append(" ");
-		if (getArg2() != null) {
-		}
+		// if (getArg2() != null) { //Commented out to satisfy SONAR
+		// }
 		buffy.append(")");
 		return buffy.toString();
 	}
 
+	@Override
 	public Double eval(Session session) {
 		evaluateArguments(session);
 		GregorianCalendar cal1 = new GregorianCalendar();

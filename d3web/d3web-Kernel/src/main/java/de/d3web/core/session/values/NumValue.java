@@ -43,7 +43,9 @@ public class NumValue implements QuestionValue {
 	 * @throws NullPointerException if a null object was passed in
 	 */
 	public NumValue(Double value) {
-		if (value == null) throw new NullPointerException();
+		if (value == null) {
+			throw new NullPointerException();
+		}
 		this.value = value;
 	}
 
@@ -75,11 +77,19 @@ public class NumValue implements QuestionValue {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
 		NumValue other = (NumValue) obj;
-		if (!value.equals(other.value)) return false;
+		if (!value.equals(other.value)) {
+			return false;
+		}
 		return true;
 	}
 

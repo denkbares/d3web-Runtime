@@ -147,18 +147,26 @@ public class ActionHeuristicPS extends PSAction {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == this) return true;
+		if (o == this) {
+			return true;
+		}
 		if (o instanceof ActionHeuristicPS) {
 			ActionHeuristicPS a = (ActionHeuristicPS) o;
 			return isSame(a.getSolution(), getSolution())
 					&& isSame(a.getScore(), getScore());
 		}
-		else return false;
+		else {
+			return false;
+		}
 	}
 
 	private boolean isSame(Object obj1, Object obj2) {
-		if (obj1 == null && obj2 == null) return true;
-		if (obj1 != null && obj2 != null) return obj1.equals(obj2);
+		if (obj1 == null && obj2 == null) {
+			return true;
+		}
+		if (obj1 != null && obj2 != null) {
+			return obj1.equals(obj2);
+		}
 		return false;
 	}
 }

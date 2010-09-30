@@ -92,11 +92,17 @@ public class Score implements Comparable<Object> {
 	public int compareTo(Object o) {
 		if (o instanceof Score) {
 			double ret = getScore() - ((Score) o).getScore();
-			if (ret > 0) return 1;
-			if (ret < 0) return -1;
+			if (ret > 0) {
+				return 1;
+			}
+			if (ret < 0) {
+				return -1;
+			}
 			return 0;
 		}
-		else throw new ClassCastException(); // nicht vergleichbar
+		else {
+			throw new ClassCastException(); // nicht vergleichbar
+		}
 	}
 
 	/**
@@ -132,7 +138,9 @@ public class Score implements Comparable<Object> {
 		}
 		Score other = (Score) obj;
 		if ((other.getSymbol() != null) && (this.getSymbol() != null)
-				&& (other.getSymbol() != this.getSymbol())) return false;
+				&& (other.getSymbol() != this.getSymbol())) {
+			return false;
+		}
 		return (other.getScore() == getScore());
 	}
 
@@ -166,8 +174,12 @@ public class Score implements Comparable<Object> {
 	 */
 	@Override
 	public String toString() {
-		if ((getSymbol() == null) || (getSymbol() == "")) return "" + getScore();
-		else return getSymbol();
+		if ((getSymbol() == null) || (getSymbol() == "")) {
+			return "" + getScore();
+		}
+		else {
+			return getSymbol();
+		}
 	}
 
 	/**

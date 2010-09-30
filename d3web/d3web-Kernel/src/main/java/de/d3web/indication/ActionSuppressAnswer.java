@@ -166,17 +166,25 @@ public class ActionSuppressAnswer extends PSAction {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == this) return true;
+		if (o == this) {
+			return true;
+		}
 		if (o instanceof ActionSuppressAnswer) {
 			ActionSuppressAnswer a = (ActionSuppressAnswer) o;
 			return (isSame(a.getQuestion(), getQuestion()) && isSame(a.getSuppress(), getSuppress()));
 		}
-		else return false;
+		else {
+			return false;
+		}
 	}
 
 	private boolean isSame(Object obj1, Object obj2) {
-		if (obj1 == null && obj2 == null) return true;
-		if (obj1 != null && obj2 != null) return obj1.equals(obj2);
+		if (obj1 == null && obj2 == null) {
+			return true;
+		}
+		if (obj1 != null && obj2 != null) {
+			return obj1.equals(obj2);
+		}
 		return false;
 	}
 

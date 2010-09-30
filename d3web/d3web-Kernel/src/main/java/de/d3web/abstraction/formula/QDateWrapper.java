@@ -63,6 +63,7 @@ public class QDateWrapper implements FormulaDateElement {
 	 * @param session current case
 	 * @return evaluated AnswerNumValue (Double) of the wrapped QuestionNum
 	 */
+	@Override
 	public Date eval(Session session) {
 		if (session.getBlackboard().getValue(getQuestion()) == null) {
 			return null;
@@ -93,6 +94,7 @@ public class QDateWrapper implements FormulaDateElement {
 	/**
 	 * @see FormulaElement
 	 */
+	@Override
 	public Collection<? extends TerminologyObject> getTerminalObjects() {
 		return Collections.singletonList(value);
 	}

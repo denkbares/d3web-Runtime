@@ -41,8 +41,12 @@ public class Tuple {
 
 	@Override
 	public boolean equals(Object other) {
-		if (this == other) return true;
-		if (!(other instanceof Tuple)) return false;
+		if (this == other) {
+			return true;
+		}
+		if (!(other instanceof Tuple)) {
+			return false;
+		}
 		Tuple o = (Tuple) other;
 		return Arrays.equals(this.items, o.items);
 	}

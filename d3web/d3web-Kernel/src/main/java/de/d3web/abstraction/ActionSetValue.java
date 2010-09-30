@@ -105,26 +105,38 @@ public class ActionSetValue extends ActionQuestionSetter {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == this) return true;
+		if (o == this) {
+			return true;
+		}
 		if (o instanceof ActionSetValue) {
 			ActionSetValue a = (ActionSetValue) o;
 			return (isSame(a.getQuestion(), getQuestion()) && a.getValue()
 					.equals(getValue()));
 		}
-		else return false;
+		else {
+			return false;
+		}
 	}
 
 	private boolean isSame(Object obj1, Object obj2) {
-		if (obj1 == null && obj2 == null) return true;
-		if (obj1 != null && obj2 != null) return obj1.equals(obj2);
+		if (obj1 == null && obj2 == null) {
+			return true;
+		}
+		if (obj1 != null && obj2 != null) {
+			return obj1.equals(obj2);
+		}
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
 		int hash = 0;
-		if (getQuestion() != null) hash += getQuestion().hashCode();
-		if (getValue() != null) hash += getValue().hashCode();
+		if (getQuestion() != null) {
+			hash += getQuestion().hashCode();
+		}
+		if (getValue() != null) {
+			hash += getValue().hashCode();
+		}
 		return hash;
 	}
 

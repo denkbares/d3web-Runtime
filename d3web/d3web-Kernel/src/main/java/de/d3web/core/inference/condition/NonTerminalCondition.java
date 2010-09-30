@@ -88,20 +88,29 @@ public abstract class NonTerminalCondition implements Condition {
 
 	@Override
 	public boolean equals(Object other) {
-		if (this == other) return true;
+		if (this == other) {
+			return true;
+		}
 		else if ((other == null) || (getClass() != other.getClass())) {
 			return false;
 		}
 		else {
 			NonTerminalCondition otherNTC = (NonTerminalCondition) other;
 
-			if ((this.getTerms()) != null && (otherNTC.getTerms() != null)) if (this.getTerms().containsAll(
-					otherNTC.getTerms())
-					&&
-					otherNTC.getTerms().containsAll(this.getTerms())) return true;
-			else return false;
-			// both == null?
-			else return ((this.getTerms()) == null && (otherNTC.getTerms() == null));
+			if ((this.getTerms()) != null && (otherNTC.getTerms() != null)) {
+				if (this.getTerms().containsAll(
+						otherNTC.getTerms())
+						&&
+						otherNTC.getTerms().containsAll(this.getTerms())) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+			else {
+				return ((this.getTerms()) == null && (otherNTC.getTerms() == null));
+			}
 
 		}
 	}

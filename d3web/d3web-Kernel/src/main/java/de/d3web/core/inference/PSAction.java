@@ -72,6 +72,7 @@ public abstract class PSAction implements Cloneable {
 	 * Returns a clone of this RuleAction.
 	 * <p>
 	 */
+	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}

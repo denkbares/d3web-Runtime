@@ -188,7 +188,9 @@ public class KnowledgeBaseManagement {
 
 	public QuestionOC createQuestionOC(String id, String name, QASet parent,
 			Choice[] answers) {
-		if (id == null) id = findNewIDFor(Question.class);
+		if (id == null) {
+			id = findNewIDFor(Question.class);
+		}
 		QuestionOC q = new QuestionOC(id);
 		setChoiceProperties(q, name, parent, answers);
 		return q;
@@ -211,7 +213,9 @@ public class KnowledgeBaseManagement {
 	}
 
 	public QuestionZC createQuestionZC(String id, String name, QASet parent) {
-		if (id == null) id = findNewIDFor(Question.class);
+		if (id == null) {
+			id = findNewIDFor(Question.class);
+		}
 		QuestionZC q = new QuestionZC(id);
 		setChoiceProperties(q, name, parent, new Choice[] {});
 		return q;
@@ -232,7 +236,9 @@ public class KnowledgeBaseManagement {
 
 	public QuestionMC createQuestionMC(String id, String name, QASet parent,
 			Choice[] answers) {
-		if (id == null) id = findNewIDFor(Question.class);
+		if (id == null) {
+			id = findNewIDFor(Question.class);
+		}
 		QuestionMC q = new QuestionMC(id);
 		setChoiceProperties(q, name, parent, answers);
 		return q;
@@ -255,7 +261,9 @@ public class KnowledgeBaseManagement {
 	}
 
 	public QuestionNum createQuestionNum(String id, String name, QASet parent) {
-		if (id == null) id = findNewIDFor(Question.class);
+		if (id == null) {
+			id = findNewIDFor(Question.class);
+		}
 		QuestionNum q = new QuestionNum(id);
 		q.setName(name);
 		addToParent(q, parent);
@@ -278,7 +286,9 @@ public class KnowledgeBaseManagement {
 
 	public QuestionYN createQuestionYN(String id, String name, String yesAlternativeText,
 			String noAlternativeText, QASet parent) {
-		if (id == null) id = findNewIDFor(Question.class);
+		if (id == null) {
+			id = findNewIDFor(Question.class);
+		}
 		QuestionYN q = null;
 		if (yesAlternativeText != null && noAlternativeText != null) {
 			q = new QuestionYN(id, yesAlternativeText, noAlternativeText);
@@ -297,7 +307,9 @@ public class KnowledgeBaseManagement {
 	}
 
 	public QuestionDate createQuestionDate(String id, String name, QASet parent) {
-		if (id == null) id = findNewIDFor(Question.class);
+		if (id == null) {
+			id = findNewIDFor(Question.class);
+		}
 		QuestionDate q = new QuestionDate(id);
 		q.setName(name);
 		addToParent(q, parent);
@@ -310,7 +322,9 @@ public class KnowledgeBaseManagement {
 	}
 
 	public QuestionText createQuestionText(String id, String name, QASet parent) {
-		if (id == null) id = findNewIDFor(Question.class);
+		if (id == null) {
+			id = findNewIDFor(Question.class);
+		}
 		QuestionText q = new QuestionText(id);
 		q.setName(name);
 		addToParent(q, parent);
@@ -394,9 +408,13 @@ public class KnowledgeBaseManagement {
 	public Solution findSolution(String name) {
 		// Uses hash for name in KB
 		IDObject ob = knowledgeBase.searchObjectForName(name);
-		if (ob != null && ob instanceof Solution) return (Solution) ob;
+		if (ob != null && ob instanceof Solution) {
+			return (Solution) ob;
+		}
 		NamedObject o = findNamedObject(name, knowledgeBase.getSolutions());
-		if (o instanceof Solution) return (Solution) o;
+		if (o instanceof Solution) {
+			return (Solution) o;
+		}
 		return null;
 	}
 
@@ -410,9 +428,13 @@ public class KnowledgeBaseManagement {
 	public Question findQuestion(String name) {
 		// Uses hash for name in KB
 		IDObject ob = knowledgeBase.searchObjectForName(name);
-		if (ob != null && ob instanceof Question) return (Question) ob;
+		if (ob != null && ob instanceof Question) {
+			return (Question) ob;
+		}
 		NamedObject o = findNamedObject(name, knowledgeBase.getQuestions());
-		if (o instanceof Question) return (Question) o;
+		if (o instanceof Question) {
+			return (Question) o;
+		}
 		return null;
 	}
 
@@ -426,10 +448,14 @@ public class KnowledgeBaseManagement {
 	public QContainer findQContainer(String name) {
 		// Uses hash for name in KB
 		IDObject ob = knowledgeBase.searchObjectForName(name);
-		if (ob != null && ob instanceof QContainer) return (QContainer) ob;
+		if (ob != null && ob instanceof QContainer) {
+			return (QContainer) ob;
+		}
 		NamedObject o = findNamedObject(name, knowledgeBase
 				.getQContainers());
-		if (o instanceof QContainer) return (QContainer) o;
+		if (o instanceof QContainer) {
+			return (QContainer) o;
+		}
 		return null;
 	}
 
@@ -633,12 +659,16 @@ public class KnowledgeBaseManagement {
 			if (obj instanceof IDObject) {
 				String id = ((IDObject) obj).getId();
 				int suffix = getSuffix(id);
-				if ((suffix != -1) && (suffix > maxCount)) maxCount = suffix;
+				if ((suffix != -1) && (suffix > maxCount)) {
+					maxCount = suffix;
+				}
 			}
 			if (obj instanceof Rule) {
 				String id = ((Rule) obj).getId();
 				int suffix = getSuffix(id);
-				if ((suffix != -1) && (suffix > maxCount)) maxCount = suffix;
+				if ((suffix != -1) && (suffix > maxCount)) {
+					maxCount = suffix;
+				}
 			}
 		}
 		return maxCount;
@@ -647,9 +677,13 @@ public class KnowledgeBaseManagement {
 	private int getSuffix(String id) {
 		String number = "";
 		for (int i = id.length() - 1; i > -1; i--) {
-			if (isNumber(id.charAt(i))) number = id.charAt(i) + number;
+			if (isNumber(id.charAt(i))) {
+				number = id.charAt(i) + number;
+			}
 		}
-		if (number.length() > 0) return Integer.parseInt(number);
+		if (number.length() > 0) {
+			return Integer.parseInt(number);
+		}
 		return -1;
 	}
 

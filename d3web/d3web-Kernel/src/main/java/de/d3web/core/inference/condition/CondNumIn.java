@@ -94,10 +94,16 @@ public class CondNumIn extends CondNum {
 
 	@Override
 	public boolean equals(Object other) {
-		if (!super.equals(other)) return false;
-		if (this.getInterval() != null) return this.getInterval().equals(
-				((CondNumIn) other).getInterval());
-		else return (((CondNumIn) other).getInterval() == null);
+		if (!super.equals(other)) {
+			return false;
+		}
+		if (this.getInterval() != null) {
+			return this.getInterval().equals(
+					((CondNumIn) other).getInterval());
+		}
+		else {
+			return (((CondNumIn) other).getInterval() == null);
+		}
 	}
 
 	@Override

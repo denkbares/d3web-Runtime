@@ -59,8 +59,12 @@ public class PropagationEntry {
 	public String toString() {
 		String newValueS = "";
 		String oldValueS = "";
-		if (newValue != null) newValueS = newValue.toString();
-		if (oldValue != null) oldValueS = oldValue.toString();
+		if (newValue != null) {
+			newValueS = newValue.toString();
+		}
+		if (oldValue != null) {
+			oldValueS = oldValue.toString();
+		}
 		return getClass().getSimpleName() + "[" + object + ":" + oldValueS + " -> " + newValueS
 				+ "]" + Integer.toHexString(hashCode());
 	}

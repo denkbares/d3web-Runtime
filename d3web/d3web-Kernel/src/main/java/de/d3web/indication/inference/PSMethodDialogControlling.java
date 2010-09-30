@@ -80,7 +80,9 @@ public class PSMethodDialogControlling extends PSMethodCombined {
 		for (PropagationEntry change : changes) {
 			KnowledgeSlice knowledgeSlices = ((NamedObject) change.getObject()).getKnowledge(
 					this.getClass(), MethodKind.FORWARD);
-			if (knowledgeSlices == null) return;
+			if (knowledgeSlices == null) {
+				return;
+			}
 			RuleSet rs = (RuleSet) knowledgeSlices;
 			for (Rule rule : rs.getRules()) {
 				rule.check(session);

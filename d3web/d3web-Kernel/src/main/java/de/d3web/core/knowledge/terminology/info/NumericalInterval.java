@@ -96,9 +96,15 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 	 * @return boolean
 	 */
 	public boolean contains(double value) {
-		if (left < value && value < right) return true;
-		if (value == left && !isLeftOpen()) return true;
-		if (value == right && !isRightOpen()) return true;
+		if (left < value && value < right) {
+			return true;
+		}
+		if (value == left && !isLeftOpen()) {
+			return true;
+		}
+		if (value == right && !isRightOpen()) {
+			return true;
+		}
 		return false;
 	}
 
@@ -183,7 +189,9 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 	@Override
 	public boolean equals(Object other) {
 
-		if (this == other) return true;
+		if (this == other) {
+			return true;
+		}
 		else if ((other == null) || (getClass() != other.getClass())) {
 			return false;
 		}
@@ -193,10 +201,12 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 			if (leftOpen == o.isLeftOpen()
 					&& rightOpen == o.isRightOpen()
 					&& left == o.getLeft()
-					&& right == o.getRight()) return true;
-			// [TODO]:?:Gleichheit evtl. mit nem Epsilon-Wert prüfen 0.99999...
-			// == 1!
-			else return false;
+					&& right == o.getRight()) {
+				return true;
+			}
+			else {
+				return false;
+			}
 
 		}
 	}
@@ -209,14 +219,24 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 	 */
 	public boolean intersects(NumericalInterval other) {
 
-		if (other.getRight() < this.getLeft()) return false;
-		if (other.getRight() == this.getLeft()) {
-			if (this.isLeftOpen() || other.isRightOpen()) return false;
-			else return true;
+		if (other.getRight() < this.getLeft()) {
+			return false;
 		}
-		if (other.getLeft() > this.getRight()) return false;
+		if (other.getRight() == this.getLeft()) {
+			if (this.isLeftOpen() || other.isRightOpen()) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+		if (other.getLeft() > this.getRight()) {
+			return false;
+		}
 		if (other.getLeft() == this.getRight()) {
-			if (this.isRightOpen() || other.isLeftOpen()) return false;
+			if (this.isRightOpen() || other.isLeftOpen()) {
+				return false;
+			}
 			return true;
 		}
 		return true;
@@ -226,13 +246,21 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 	@Override
 	public String toString() {
 		String str = "";
-		if (leftOpen) str += "(";
-		else str += "[";
+		if (leftOpen) {
+			str += "(";
+		}
+		else {
+			str += "[";
+		}
 
 		str += left + ", " + right;
 
-		if (rightOpen) str += ")";
-		else str += "]";
+		if (rightOpen) {
+			str += ")";
+		}
+		else {
+			str += "]";
+		}
 
 		return str;
 	}

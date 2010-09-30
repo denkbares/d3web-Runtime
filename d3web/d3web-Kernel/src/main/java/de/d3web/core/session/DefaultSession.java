@@ -147,7 +147,9 @@ public class DefaultSession implements Session {
 					break;
 				}
 			}
-			if (found) continue;
+			if (found) {
+				continue;
+			}
 			// get PluginEntry, if none is found, one will be created
 			PluginEntry pluginEntry = pc.getPluginEntry(e.getPluginID());
 			if (pluginEntry == null) {
@@ -244,7 +246,9 @@ public class DefaultSession implements Session {
 	@Deprecated
 	public void addUsedPSMethod(PSMethod psmethod) {
 		touch();
-		if (getPSMethods().contains(psmethod)) return;
+		if (getPSMethods().contains(psmethod)) {
+			return;
+		}
 
 		this.usedPSMethods.add(psmethod);
 		psmethod.init(this);

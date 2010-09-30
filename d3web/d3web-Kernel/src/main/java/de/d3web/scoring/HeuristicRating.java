@@ -65,9 +65,15 @@ public class HeuristicRating extends Rating {
 	}
 
 	private static State scoreToState(double score) {
-		if (score >= 42) return State.ESTABLISHED;
-		if (score >= 10) return State.SUGGESTED;
-		if (score >= -41) return State.UNCLEAR;
+		if (score >= 42) {
+			return State.ESTABLISHED;
+		}
+		if (score >= 10) {
+			return State.SUGGESTED;
+		}
+		if (score >= -41) {
+			return State.UNCLEAR;
+		}
 		return State.EXCLUDED;
 	}
 

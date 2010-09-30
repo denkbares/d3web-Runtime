@@ -40,29 +40,42 @@ public class ActionIndication extends ActionNextQASet {
 		super();
 	}
 
+	@Override
 	public PSAction copy() {
 		ActionIndication a = new ActionIndication();
 		a.setQASets(new ArrayList<QASet>(getQASets()));
 		return a;
 	}
 
+	@Override
 	public int hashCode() {
-		if (getQASets() != null) return (getQASets().hashCode());
+		if (getQASets() != null) {
+			return (getQASets().hashCode());
+		}
 		return 0;
 	}
 
+	@Override
 	public boolean equals(Object o) {
-		if (o == this) return true;
+		if (o == this) {
+			return true;
+		}
 		if (o instanceof ActionIndication) {
 			ActionIndication a = (ActionIndication) o;
 			return isSame(a.getQASets(), getQASets());
 		}
-		else return false;
+		else {
+			return false;
+		}
 	}
 
 	protected boolean isSame(Object obj1, Object obj2) {
-		if (obj1 == null && obj2 == null) return true;
-		if (obj1 != null && obj2 != null) return obj1.equals(obj2);
+		if (obj1 == null && obj2 == null) {
+			return true;
+		}
+		if (obj1 != null && obj2 != null) {
+			return obj1.equals(obj2);
+		}
 		return false;
 	}
 

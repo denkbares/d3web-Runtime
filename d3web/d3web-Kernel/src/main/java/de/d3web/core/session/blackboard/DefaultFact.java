@@ -89,14 +89,28 @@ public class DefaultFact implements Fact {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
 		DefaultFact other = (DefaultFact) obj;
-		if (!psMethod.equals(other.psMethod)) return false;
-		if (!source.equals(other.source)) return false;
-		if (!terminologyObject.equals(other.terminologyObject)) return false;
-		if (!value.equals(other.value)) return false;
+		if (!psMethod.equals(other.psMethod)) {
+			return false;
+		}
+		if (!source.equals(other.source)) {
+			return false;
+		}
+		if (!terminologyObject.equals(other.terminologyObject)) {
+			return false;
+		}
+		if (!value.equals(other.value)) {
+			return false;
+		}
 		return true;
 	}
 }

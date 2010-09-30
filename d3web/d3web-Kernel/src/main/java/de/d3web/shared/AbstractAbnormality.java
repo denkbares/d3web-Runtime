@@ -56,7 +56,9 @@ public abstract class AbstractAbnormality implements KnowledgeSlice {
 		else if (c.equalsIgnoreCase("A5")) {
 			return A5;
 		}
-		else return A0;
+		else {
+			return A0;
+		}
 	}
 
 	public static String convertValueToConstantString(double value) {
@@ -75,7 +77,9 @@ public abstract class AbstractAbnormality implements KnowledgeSlice {
 		else if (value < A5) {
 			return "A4";
 		}
-		else return "A5";
+		else {
+			return "A5";
+		}
 	}
 
 	private Question question = null;
@@ -125,16 +129,20 @@ public abstract class AbstractAbnormality implements KnowledgeSlice {
 	/**
 	 * @see de.d3web.core.inference.KnowledgeSlice#getId()
 	 */
+	@Override
 	public java.lang.String getId() {
 		if (question != null) {
 			return "A_" + question.getId();
 		}
-		else return null;
+		else {
+			return null;
+		}
 	}
 
 	/**
 	 * @see de.d3web.core.inference.KnowledgeSlice#getProblemsolverContext()
 	 */
+	@Override
 	public java.lang.Class<? extends PSMethod> getProblemsolverContext() {
 		return PROBLEMSOLVER;
 	}
@@ -142,10 +150,12 @@ public abstract class AbstractAbnormality implements KnowledgeSlice {
 	/**
 	 * @see de.d3web.core.inference.KnowledgeSlice#isUsed(de.d3web.core.session.Session)
 	 */
+	@Override
 	public boolean isUsed(de.d3web.core.session.Session session) {
 		return true;
 	}
 
+	@Override
 	public void remove() {
 		setQuestion(null);
 	}

@@ -126,8 +126,12 @@ public class PSMethodHeuristic extends PSMethodAdapter {
 	private boolean getProperty(Session session, Property property) {
 		Boolean b = (Boolean) session.getKnowledgeBase().getProperties().getProperty(
 				property);
-		if (b == null) return false;
-		else return b.booleanValue();
+		if (b == null) {
+			return false;
+		}
+		else {
+			return b.booleanValue();
+		}
 	}
 
 	@Override

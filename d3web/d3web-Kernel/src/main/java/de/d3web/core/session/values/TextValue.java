@@ -40,7 +40,9 @@ public class TextValue implements QuestionValue {
 	 * @throws NullPointerException if a null object was passed in
 	 */
 	public TextValue(String value) {
-		if (value == null) throw new NullPointerException();
+		if (value == null) {
+			throw new NullPointerException();
+		}
 		this.value = value;
 	}
 
@@ -54,7 +56,9 @@ public class TextValue implements QuestionValue {
 		if (o instanceof TextValue) {
 			return value.compareTo(((TextValue) o).value);
 		}
-		else return -1;
+		else {
+			return -1;
+		}
 	}
 
 	@Override
@@ -67,11 +71,19 @@ public class TextValue implements QuestionValue {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
 		TextValue other = (TextValue) obj;
-		if (!value.equals(other.value)) return false;
+		if (!value.equals(other.value)) {
+			return false;
+		}
 		return true;
 	}
 

@@ -54,6 +54,7 @@ public class Today implements FormulaDateElement {
 		setArg(argument);
 	}
 
+	@Override
 	public Date eval(Session session) {
 		if (getArg() == null) {
 			return null;
@@ -66,6 +67,7 @@ public class Today implements FormulaDateElement {
 		return new Date(cal.getTimeInMillis());
 	}
 
+	@Override
 	public Collection<? extends TerminologyObject> getTerminalObjects() {
 		return new ArrayList<TerminologyObject>(getArg().getTerminalObjects());
 	}

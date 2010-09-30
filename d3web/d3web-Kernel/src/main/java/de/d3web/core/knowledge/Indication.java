@@ -48,7 +48,9 @@ public class Indication implements Value {
 	 * @param state the state of the new indication value
 	 */
 	public Indication(State state) {
-		if (state == null) throw new NullPointerException();
+		if (state == null) {
+			throw new NullPointerException();
+		}
 		this.state = state;
 	}
 
@@ -109,8 +111,12 @@ public class Indication implements Value {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other == null) return false;
-		if (!(other instanceof Indication)) return false;
+		if (other == null) {
+			return false;
+		}
+		if (!(other instanceof Indication)) {
+			return false;
+		}
 		return this.state.equals(((Indication) other).state);
 	}
 
@@ -121,7 +127,9 @@ public class Indication implements Value {
 
 	@Override
 	public int compareTo(Value other) {
-		if (other == null) throw new NullPointerException();
+		if (other == null) {
+			throw new NullPointerException();
+		}
 		if (other instanceof Indication) {
 			return this.state.ordinal() - ((Indication) other).state.ordinal();
 		}

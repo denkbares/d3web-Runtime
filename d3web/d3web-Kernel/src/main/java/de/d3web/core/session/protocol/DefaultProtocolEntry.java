@@ -36,14 +36,24 @@ public class DefaultProtocolEntry implements ProtocolEntry {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
 		DefaultProtocolEntry other = (DefaultProtocolEntry) obj;
 		if (fact == null) {
-			if (other.fact != null) return false;
+			if (other.fact != null) {
+				return false;
+			}
 		}
-		else if (!fact.equals(other.fact)) return false;
+		else if (!fact.equals(other.fact)) {
+			return false;
+		}
 		return true;
 	}
 

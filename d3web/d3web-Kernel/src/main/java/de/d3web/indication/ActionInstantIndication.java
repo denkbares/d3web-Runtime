@@ -50,12 +50,16 @@ public class ActionInstantIndication extends ActionIndication {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == this) return true;
+		if (o == this) {
+			return true;
+		}
 		if (o instanceof ActionInstantIndication) {
 			ActionInstantIndication a = (ActionInstantIndication) o;
 			return isSame(a.getQASets(), getQASets());
 		}
-		else return false;
+		else {
+			return false;
+		}
 	}
 
 	@Override

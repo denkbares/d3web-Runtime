@@ -78,7 +78,9 @@ public abstract class QuestionChoice extends Question {
 				iter.next().setQuestion(this);
 			}
 		}
-		else setAlternatives(new LinkedList<Choice>());
+		else {
+			setAlternatives(new LinkedList<Choice>());
+		}
 
 	}
 

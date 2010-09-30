@@ -62,6 +62,7 @@ public class Operator implements FormulaNumberElement {
 	 * 
 	 * @return null, if one argument is "null", a "0"-Double else.
 	 */
+	@Override
 	public Double eval(Session session) {
 		if (getArg1() == null || getArg2() == null) {
 			return null;
@@ -96,8 +97,12 @@ public class Operator implements FormulaNumberElement {
 	 * @return first argument of the term
 	 */
 	public FormulaNumberElement getArg1() {
-		if (arg1 == null) return new FormulaNumber(null);
-		else return arg1;
+		if (arg1 == null) {
+			return new FormulaNumber(null);
+		}
+		else {
+			return arg1;
+		}
 	}
 
 	/**
@@ -106,8 +111,12 @@ public class Operator implements FormulaNumberElement {
 	 * @return second argument of the term
 	 */
 	public FormulaNumberElement getArg2() {
-		if (arg2 == null) return new FormulaNumber(null);
-		else return arg2;
+		if (arg2 == null) {
+			return new FormulaNumber(null);
+		}
+		else {
+			return arg2;
+		}
 	}
 
 	public String getSymbol() {
@@ -140,6 +149,7 @@ public class Operator implements FormulaNumberElement {
 	/**
 	 * @see FormulaElement
 	 */
+	@Override
 	public Collection<? extends TerminologyObject> getTerminalObjects() {
 		Collection<TerminologyObject> ret = new LinkedList<TerminologyObject>(
 				getArg1().getTerminalObjects());

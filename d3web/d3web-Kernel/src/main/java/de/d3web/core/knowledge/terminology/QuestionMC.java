@@ -40,7 +40,9 @@ public class QuestionMC extends QuestionChoice {
 		if (alternatives == null) {
 			return new Vector<Choice>();
 		}
-		else return alternatives;
+		else {
+			return alternatives;
+		}
 	}
 
 	@Override

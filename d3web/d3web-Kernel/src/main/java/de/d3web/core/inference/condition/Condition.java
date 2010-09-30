@@ -72,6 +72,7 @@ public interface Condition {
 	 * @return true when a condition with the same content is given
 	 * @param obj another condition to compare
 	 */
+	@Override
 	public boolean equals(Object obj);
 
 	/**
@@ -79,6 +80,7 @@ public interface Condition {
 	 * 
 	 * @param the hash code of this condition
 	 */
+	@Override
 	public int hashCode();
 
 	/**

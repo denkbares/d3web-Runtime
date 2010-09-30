@@ -329,26 +329,38 @@ public class Property {
 	static {
 		allPropertys = new LinkedList<Property>();
 		for (Field f : Property.class.getFields()) {
-			if (isOKField(f)) try {
-				allPropertys.add((Property) f.get(null));
-			}
-			catch (IllegalArgumentException e) {
-				Logger.getLogger(Property.class.getName()).throwing(
-						Property.class.getName(), "static {...}", e);
-			}
-			catch (IllegalAccessException e) {
-				Logger.getLogger(Property.class.getName()).throwing(
-						Property.class.getName(), "static {...}", e);
+			if (isOKField(f)) {
+				try {
+					allPropertys.add((Property) f.get(null));
+				}
+				catch (IllegalArgumentException e) {
+					Logger.getLogger(Property.class.getName()).throwing(
+							Property.class.getName(), "static {...}", e);
+				}
+				catch (IllegalAccessException e) {
+					Logger.getLogger(Property.class.getName()).throwing(
+							Property.class.getName(), "static {...}", e);
+				}
 			}
 		}
 	}
 
 	private static boolean isOKField(Field f) {
-		if (!f.getType().equals(Property.class)) return false;
-		if (!f.getName().matches("[0-9A-Z_]+")) return false;
-		if (!Modifier.isFinal(f.getModifiers())) return false;
-		if (!Modifier.isPublic(f.getModifiers())) return false;
-		if (!Modifier.isStatic(f.getModifiers())) return false;
+		if (!f.getType().equals(Property.class)) {
+			return false;
+		}
+		if (!f.getName().matches("[0-9A-Z_]+")) {
+			return false;
+		}
+		if (!Modifier.isFinal(f.getModifiers())) {
+			return false;
+		}
+		if (!Modifier.isPublic(f.getModifiers())) {
+			return false;
+		}
+		if (!Modifier.isStatic(f.getModifiers())) {
+			return false;
+		}
 		return true;
 	}
 

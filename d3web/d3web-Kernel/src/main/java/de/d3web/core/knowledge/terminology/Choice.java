@@ -85,10 +85,16 @@ public class Choice implements IDObject, PropertiesContainer, Comparable<Choice>
 	 * */
 	@Override
 	public boolean equals(Object other) {
-		if (this == other) return true;
-		else if (other instanceof Choice) return ((Choice) other).getId().equals(
-				this.getId());
-		else return false;
+		if (this == other) {
+			return true;
+		}
+		else if (other instanceof Choice) {
+			return ((Choice) other).getId().equals(
+					this.getId());
+		}
+		else {
+			return false;
+		}
 	}
 
 	@Override

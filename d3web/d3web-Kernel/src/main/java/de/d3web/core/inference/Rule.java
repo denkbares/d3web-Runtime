@@ -184,9 +184,13 @@ public class Rule implements CaseObjectSource {
 				return;
 			}
 
-			if (!hasFired && canFire) EXECUTE_ACTION = true;
+			if (!hasFired && canFire) {
+				EXECUTE_ACTION = true;
+			}
 
-			if (hasFired && !canFire) UNDO_ACTION = true;
+			if (hasFired && !canFire) {
+				UNDO_ACTION = true;
+			}
 
 			// if the action is a question setter action, changes in depending
 			// values (e.g. elements of a formula)
@@ -210,7 +214,9 @@ public class Rule implements CaseObjectSource {
 
 		}
 		catch (UnknownAnswerException ex) {
-			if (hasFired(session)) UNDO_ACTION = true;
+			if (hasFired(session)) {
+				UNDO_ACTION = true;
+			}
 		}
 
 		if (UNDO_ACTION) {
@@ -443,19 +449,24 @@ public class Rule implements CaseObjectSource {
 			de.d3web.core.inference.condition.Condition newCondition) {
 
 		/* check, if there are already some conditions */
-		if (getCondition() != null) removeFrom(
-				this,
-				getCondition().getTerminalObjects(),
-				getProblemsolverContext(),
-				MethodKind.FORWARD);
+		if (getCondition() != null) {
+			removeFrom(
+					this,
+					getCondition().getTerminalObjects(),
+					getProblemsolverContext(),
+					MethodKind.FORWARD);
+		}
 		// removeRuleFromObjects(getCondition().getTerminalObjects());
 		condition = newCondition;
-		if (getCondition() != null) insertInto(
-				this,
-				getCondition().getTerminalObjects(),
-				getProblemsolverContext(),
-				MethodKind.FORWARD);
-		// insertRuleIntoObjects(getCondition().getTerminalObjects());
+		if (getCondition() != null)
+		 {
+			insertInto(
+					this,
+					getCondition().getTerminalObjects(),
+					getProblemsolverContext(),
+					MethodKind.FORWARD);
+			// insertRuleIntoObjects(getCondition().getTerminalObjects());
+		}
 	}
 
 	/**
@@ -469,13 +480,17 @@ public class Rule implements CaseObjectSource {
 	public void setContext(Condition newDiagnosisContext) {
 
 		/* check, if there are already some conditions */
-		if (getContext() != null) removeFrom(this,
-				getContext().getTerminalObjects(),
-				getProblemsolverContext(), MethodKind.FORWARD);
+		if (getContext() != null) {
+			removeFrom(this,
+					getContext().getTerminalObjects(),
+					getProblemsolverContext(), MethodKind.FORWARD);
+		}
 		diagnosisContext = newDiagnosisContext;
-		if (getContext() != null) insertInto(this,
-				getContext().getTerminalObjects(),
-				getProblemsolverContext(), MethodKind.FORWARD);
+		if (getContext() != null) {
+			insertInto(this,
+					getContext().getTerminalObjects(),
+					getProblemsolverContext(), MethodKind.FORWARD);
+		}
 
 	}
 
@@ -485,13 +500,17 @@ public class Rule implements CaseObjectSource {
 	public void setException(
 			de.d3web.core.inference.condition.Condition newException) {
 		/* check, if there are already some conditions */
-		if (getException() != null) removeFrom(this, getException().getTerminalObjects(),
-				getProblemsolverContext(),
-				MethodKind.FORWARD);
+		if (getException() != null) {
+			removeFrom(this, getException().getTerminalObjects(),
+					getProblemsolverContext(),
+					MethodKind.FORWARD);
+		}
 		exception = newException;
-		if (getException() != null) insertInto(this, getException().getTerminalObjects(),
-				getProblemsolverContext(),
-				MethodKind.FORWARD);
+		if (getException() != null) {
+			insertInto(this, getException().getTerminalObjects(),
+					getProblemsolverContext(),
+					MethodKind.FORWARD);
+		}
 	}
 
 	/**
@@ -506,17 +525,23 @@ public class Rule implements CaseObjectSource {
 		if (this.problemsolverContext != problemsolverContext) {
 			// remove old indexes
 			if (this.problemsolverContext != null) {
-				if (getCondition() != null) removeFrom(
-						this,
-						getCondition().getTerminalObjects(),
-						getProblemsolverContext(),
-						MethodKind.FORWARD);
-				if (getContext() != null) removeFrom(this,
-						getContext().getTerminalObjects(),
-						getProblemsolverContext(), MethodKind.FORWARD);
-				if (getException() != null) removeFrom(this, getException().getTerminalObjects(),
-						getProblemsolverContext(),
-						MethodKind.FORWARD);
+				if (getCondition() != null) {
+					removeFrom(
+							this,
+							getCondition().getTerminalObjects(),
+							getProblemsolverContext(),
+							MethodKind.FORWARD);
+				}
+				if (getContext() != null) {
+					removeFrom(this,
+							getContext().getTerminalObjects(),
+							getProblemsolverContext(), MethodKind.FORWARD);
+				}
+				if (getException() != null) {
+					removeFrom(this, getException().getTerminalObjects(),
+							getProblemsolverContext(),
+							MethodKind.FORWARD);
+				}
 				if (getAction() != null && (getAction().getTerminalObjects() != null)) {
 					removeFrom(
 							this,
@@ -528,17 +553,23 @@ public class Rule implements CaseObjectSource {
 			}
 			// insert new indexes
 			this.problemsolverContext = problemsolverContext;
-			if (getCondition() != null) insertInto(
-					this,
-					getCondition().getTerminalObjects(),
-					getProblemsolverContext(),
-					MethodKind.FORWARD);
-			if (getContext() != null) insertInto(this,
-					getContext().getTerminalObjects(),
-					getProblemsolverContext(), MethodKind.FORWARD);
-			if (getException() != null) insertInto(this, getException().getTerminalObjects(),
-					getProblemsolverContext(),
-					MethodKind.FORWARD);
+			if (getCondition() != null) {
+				insertInto(
+						this,
+						getCondition().getTerminalObjects(),
+						getProblemsolverContext(),
+						MethodKind.FORWARD);
+			}
+			if (getContext() != null) {
+				insertInto(this,
+						getContext().getTerminalObjects(),
+						getProblemsolverContext(), MethodKind.FORWARD);
+			}
+			if (getException() != null) {
+				insertInto(this, getException().getTerminalObjects(),
+						getProblemsolverContext(),
+						MethodKind.FORWARD);
+			}
 			if ((getAction() != null)
 					&& (getAction().getTerminalObjects() != null)) {
 				insertInto(
@@ -571,12 +602,18 @@ public class Rule implements CaseObjectSource {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == null) return false;
-		else if (this == o) return true;
+		if (o == null) {
+			return false;
+		}
+		else if (this == o) {
+			return true;
+		}
 		if (o instanceof Rule) {
 			Rule r = (Rule) o;
 			boolean eq = super.equals(r);
-			if (eq == false) return false;
+			if (eq == false) {
+				return false;
+			}
 			eq = eq && equalConditions(getCondition(), r.getCondition());
 			eq = eq && equalConditions(getException(), r.getException());
 			eq = eq && equalConditions(getContext(), r.getContext());
@@ -590,23 +627,43 @@ public class Rule implements CaseObjectSource {
 	@Override
 	public int hashCode() {
 		int hash = super.hashCode();
-		if (getAction() != null) hash += getAction().hashCode();
-		if (getCondition() != null) hash += getCondition().hashCode();
-		if (getException() != null) hash += getException().hashCode();
-		if (getContext() != null) hash += getContext().hashCode();
+		if (getAction() != null) {
+			hash += getAction().hashCode();
+		}
+		if (getCondition() != null) {
+			hash += getCondition().hashCode();
+		}
+		if (getException() != null) {
+			hash += getException().hashCode();
+		}
+		if (getContext() != null) {
+			hash += getContext().hashCode();
+		}
 		return hash;
 	}
 
 	private static boolean equalActions(PSAction a1, PSAction a2) {
-		if (a1 != null && a2 != null) return a1.equals(a2);
-		else if (a1 == null && a2 == null) return true;
-		else return false;
+		if (a1 != null && a2 != null) {
+			return a1.equals(a2);
+		}
+		else if (a1 == null && a2 == null) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	private static boolean equalConditions(Condition c1, Condition c2) {
-		if (c1 != null && c2 != null) return c1.equals(c2);
-		else if (c1 == null && c2 == null) return true;
-		else return false;
+		if (c1 != null && c2 != null) {
+			return c1.equals(c2);
+		}
+		else if (c1 == null && c2 == null) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	public void remove() {

@@ -63,7 +63,9 @@ public class CondNot extends NonTerminalCondition {
 
 	@Override
 	protected Condition createInstance(List<Condition> theTerms, Condition o) {
-		if (theTerms.size() == 1) return new CondNot((Condition) (theTerms.get(0)));
+		if (theTerms.size() == 1) {
+			return new CondNot((theTerms.get(0)));
+		}
 		else {
 			Logger.getLogger(CondNot.class.getName()).severe("Tried to" +
 					"create a CondNont instance with more/less than 1 argument.");

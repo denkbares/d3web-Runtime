@@ -312,8 +312,12 @@ public abstract class NamedObject implements TerminologyObject,
 	public KnowledgeSlice getKnowledge(Class<? extends PSMethod> problemsolver,
 			MethodKind kind) {
 		Map<MethodKind, KnowledgeSlice> o = knowledgeMap.get(problemsolver);
-		if (o != null) return o.get(kind);
-		else return null;
+		if (o != null) {
+			return o.get(kind);
+		}
+		else {
+			return null;
+		}
 	}
 
 	/**
@@ -333,7 +337,9 @@ public abstract class NamedObject implements TerminologyObject,
 	 * @return true, if namedObject is a parent of this instance
 	 */
 	public boolean hasParent(NamedObject namedObject) {
-		if (getParents() == null) return false;
+		if (getParents() == null) {
+			return false;
+		}
 		return Arrays.asList(getParents()).contains(namedObject);
 	}
 
@@ -649,7 +655,9 @@ public abstract class NamedObject implements TerminologyObject,
 	 */
 	@Override
 	public boolean equals(Object other) {
-		if (this == other) return true;
+		if (this == other) {
+			return true;
+		}
 		else if ((other == null) || (getClass() != other.getClass())) {
 			return false;
 		}

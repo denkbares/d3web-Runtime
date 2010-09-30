@@ -54,6 +54,7 @@ public class Count implements FormulaNumberElement {
 		this.questionMC = questionMC;
 	}
 
+	@Override
 	public Collection<? extends TerminologyObject> getTerminalObjects() {
 		Collection<QuestionMC> ret = new LinkedList<QuestionMC>();
 		ret.add(questionMC);
@@ -65,6 +66,7 @@ public class Count implements FormulaNumberElement {
 	 * @return the number of active alternatives for a multiple-choice answer,
 	 *         0, if the active answer is "No" or "unknown".
 	 */
+	@Override
 	public Double eval(Session session) {
 		MultipleChoiceValue value = (MultipleChoiceValue) session.getBlackboard().getValue(
 				getQuestionMC());
@@ -72,7 +74,9 @@ public class Count implements FormulaNumberElement {
 
 		// check, if AnswerNo oder AnswerUnknown is included
 		for (Choice answerChoice : choices) {
-			if (answerChoice.isAnswerNo()) return new Double(0);
+			if (answerChoice.isAnswerNo()) {
+				return new Double(0);
+			}
 		}
 		return new Double(choices.size());
 	}

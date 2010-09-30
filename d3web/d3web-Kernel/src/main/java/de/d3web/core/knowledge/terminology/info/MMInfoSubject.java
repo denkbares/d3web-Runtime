@@ -155,7 +155,7 @@ public class MMInfoSubject {
 	private Object readResolve() {
 		Iterator<MMInfoSubject> iter = getIterator();
 		while (iter.hasNext()) {
-			MMInfoSubject s = (MMInfoSubject) iter.next();
+			MMInfoSubject s = iter.next();
 			if (s.getName().equals(this.getName())) {
 				return s;
 			}

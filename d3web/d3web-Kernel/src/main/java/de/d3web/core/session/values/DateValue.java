@@ -51,7 +51,9 @@ public class DateValue implements QuestionValue {
 	 * @throws NullPointerException if a null object was passed in
 	 */
 	public DateValue(Date value) {
-		if (value == null) throw new NullPointerException();
+		if (value == null) {
+			throw new NullPointerException();
+		}
 		this.value = value;
 	}
 
@@ -83,26 +85,46 @@ public class DateValue implements QuestionValue {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
 		DateValue other = (DateValue) obj;
 		Calendar thisCalendar = Calendar.getInstance();
 		thisCalendar.setTime(value);
 		Calendar otherCalendar = Calendar.getInstance();
 		otherCalendar.setTime(other.value);
-		if (!(thisCalendar.get(Calendar.YEAR) == otherCalendar.get(Calendar.YEAR))) return false;
-		if (!(thisCalendar.get(Calendar.MONTH) == otherCalendar.get(Calendar.MONTH))) return false;
-		if (!(thisCalendar.get(Calendar.DAY_OF_MONTH) == otherCalendar.get(Calendar.DAY_OF_MONTH))) return false;
-		if (!(thisCalendar.get(Calendar.HOUR_OF_DAY) == otherCalendar.get(Calendar.HOUR_OF_DAY))) return false;
-		if (!(thisCalendar.get(Calendar.MINUTE) == otherCalendar.get(Calendar.MINUTE))) return false;
-		if (!(thisCalendar.get(Calendar.SECOND) == otherCalendar.get(Calendar.SECOND))) return false;
+		if (!(thisCalendar.get(Calendar.YEAR) == otherCalendar.get(Calendar.YEAR))) {
+			return false;
+		}
+		if (!(thisCalendar.get(Calendar.MONTH) == otherCalendar.get(Calendar.MONTH))) {
+			return false;
+		}
+		if (!(thisCalendar.get(Calendar.DAY_OF_MONTH) == otherCalendar.get(Calendar.DAY_OF_MONTH))) {
+			return false;
+		}
+		if (!(thisCalendar.get(Calendar.HOUR_OF_DAY) == otherCalendar.get(Calendar.HOUR_OF_DAY))) {
+			return false;
+		}
+		if (!(thisCalendar.get(Calendar.MINUTE) == otherCalendar.get(Calendar.MINUTE))) {
+			return false;
+		}
+		if (!(thisCalendar.get(Calendar.SECOND) == otherCalendar.get(Calendar.SECOND))) {
+			return false;
+		}
 		return true;
 	}
 
 	@Override
 	public int compareTo(Value o) {
-		if (!(o instanceof DateValue)) throw new IllegalArgumentException();
+		if (!(o instanceof DateValue)) {
+			throw new IllegalArgumentException();
+		}
 		return value.compareTo(((DateValue) o).value);
 	}
 

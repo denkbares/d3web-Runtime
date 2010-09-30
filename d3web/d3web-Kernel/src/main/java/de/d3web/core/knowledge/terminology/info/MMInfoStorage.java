@@ -53,7 +53,9 @@ public class MMInfoStorage {
 		Iterator<MMInfoObject> iter = mmios.iterator();
 		while (iter.hasNext()) {
 			MMInfoObject mmio = iter.next();
-			if (mmio.matches(dcMarkup)) result.add(mmio);
+			if (mmio.matches(dcMarkup)) {
+				result.add(mmio);
+			}
 		}
 		return result;
 	}

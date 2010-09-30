@@ -34,7 +34,7 @@ import de.d3web.core.knowledge.terminology.NamedObject;
  */
 public abstract class TerminalCondition implements Condition {
 
-	private List<NamedObject> terminal = new ArrayList<NamedObject>(1);
+	private final List<NamedObject> terminal = new ArrayList<NamedObject>(1);
 
 	/**
 	 * Creates a new terminal condition with the specified proposition.
@@ -51,21 +51,30 @@ public abstract class TerminalCondition implements Condition {
 	 * 
 	 * @return the terminal object of this condition
 	 */
+	@Override
 	public List<? extends NamedObject> getTerminalObjects() {
 		return terminal;
 	}
 
 	@Override
 	public boolean equals(Object other) {
-		if (this == other) return true;
-		else if ((other == null) || (getClass() != other.getClass())) return false;
+		if (this == other) {
+			return true;
+		}
+		else if ((other == null) || (getClass() != other.getClass())) {
+			return false;
+		}
 		else if (this.getTerminalObjects() != null &&
-				((TerminalCondition) other).getTerminalObjects() != null) return this.getTerminalObjects().containsAll(
-				((TerminalCondition) other).getTerminalObjects())
-								&& ((TerminalCondition) other).getTerminalObjects().containsAll(
-										this.getTerminalObjects());
-		else return (this.getTerminalObjects() == null)
-				&& (((TerminalCondition) other).getTerminalObjects() == null);
+				((TerminalCondition) other).getTerminalObjects() != null) {
+			return this.getTerminalObjects().containsAll(
+					((TerminalCondition) other).getTerminalObjects())
+							&& ((TerminalCondition) other).getTerminalObjects().containsAll(
+									this.getTerminalObjects());
+		}
+		else {
+			return (this.getTerminalObjects() == null)
+					&& (((TerminalCondition) other).getTerminalObjects() == null);
+		}
 
 	}
 

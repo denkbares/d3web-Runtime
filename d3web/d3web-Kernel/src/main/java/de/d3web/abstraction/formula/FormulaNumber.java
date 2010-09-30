@@ -57,6 +57,7 @@ public class FormulaNumber implements FormulaNumberElement {
 	 * 
 	 * @return Double-value of this FormulaElement
 	 */
+	@Override
 	public Double eval(Session session) {
 		return value;
 	}
@@ -66,8 +67,12 @@ public class FormulaNumber implements FormulaNumberElement {
 	 **/
 	@Override
 	public String toString() {
-		if (value == null) return "null";
-		else return trim(value);
+		if (value == null) {
+			return "null";
+		}
+		else {
+			return trim(value);
+		}
 	}
 
 	/**
@@ -91,6 +96,7 @@ public class FormulaNumber implements FormulaNumberElement {
 	/**
 	 * @see FormulaElement
 	 */
+	@Override
 	public Collection<? extends TerminologyObject> getTerminalObjects() {
 		return new LinkedList<TerminologyObject>();
 	}

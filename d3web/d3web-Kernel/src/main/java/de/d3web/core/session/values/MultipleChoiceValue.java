@@ -50,7 +50,9 @@ public class MultipleChoiceValue implements QuestionValue {
 	 * @throws NullPointerException if a null object was passed in
 	 */
 	public MultipleChoiceValue(List<ChoiceValue> values) {
-		if (values == null) throw new NullPointerException();
+		if (values == null) {
+			throw new NullPointerException();
+		}
 		this.values = new LinkedHashSet<ChoiceValue>(values);
 	}
 
@@ -107,7 +109,9 @@ public class MultipleChoiceValue implements QuestionValue {
 
 	@Override
 	public int compareTo(Value o) {
-		if (o == null) throw new NullPointerException();
+		if (o == null) {
+			throw new NullPointerException();
+		}
 		if (o instanceof MultipleChoiceValue) {
 			return values.size() - ((MultipleChoiceValue) o).values.size();
 		}
@@ -121,7 +125,9 @@ public class MultipleChoiceValue implements QuestionValue {
 		for (Iterator<ChoiceValue> iterator = values.iterator(); iterator.hasNext();) {
 			ChoiceValue answer = iterator.next();
 			b.append(((Choice) answer.getValue()).getName());
-			if (iterator.hasNext()) b.append(", ");
+			if (iterator.hasNext()) {
+				b.append(", ");
+			}
 		}
 		return b.toString();
 	}
@@ -147,11 +153,19 @@ public class MultipleChoiceValue implements QuestionValue {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
 		MultipleChoiceValue other = (MultipleChoiceValue) obj;
-		if (!values.equals(other.values)) return false;
+		if (!values.equals(other.values)) {
+			return false;
+		}
 		return true;
 	}
 

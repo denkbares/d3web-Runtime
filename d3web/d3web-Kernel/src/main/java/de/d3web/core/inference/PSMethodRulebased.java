@@ -52,6 +52,7 @@ public abstract class PSMethodRulebased extends PSMethodAdapter {
 		}
 	}
 
+	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		// for rules we check all rules sequentally
 		for (PropagationEntry change : changes) {

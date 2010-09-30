@@ -139,8 +139,12 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	@Override
 	public Object getKnowledge(Class<? extends PSMethod> problemsolver, MethodKind kind) {
 		Map<MethodKind, List<KnowledgeSlice>> o = knowledgeMap.get(problemsolver);
-		if (o != null) return o.get(kind);
-		else return null;
+		if (o != null) {
+			return o.get(kind);
+		}
+		else {
+			return null;
+		}
 	}
 
 	/**
@@ -175,7 +179,9 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 			objectNameMap.put(solution.getName(), solution);
 
 			solutions.add(solution);
-			if (solution.getKnowledgeBase() == null) solution.setKnowledgeBase(this);
+			if (solution.getKnowledgeBase() == null) {
+				solution.setKnowledgeBase(this);
+			}
 
 		}
 	}
@@ -320,8 +326,9 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		if (knowledge != null) {
 			List<KnowledgeSlice> slices = knowledge.get(accessKey);
 			if (slices != null) {
-				while (slices.remove(knowledgeSlice)) {
+				while (slices.remove(knowledgeSlice)) { // NOSONAR
 					// remove all occurring slices
+					// this is ok, because work is done in the condition
 				}
 				return true;
 			}
@@ -389,8 +396,9 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	public Collection<KnowledgeSlice> getAllKnowledgeSlices() {
 		Set<KnowledgeSlice> allKnowledgeSlices = new HashSet<KnowledgeSlice>();
 		Iterator<Class<? extends PSMethod>> psmIter = knowledgeMap.keySet().iterator();
-		while (psmIter.hasNext())
+		while (psmIter.hasNext()) {
 			allKnowledgeSlices.addAll(getAllKnowledgeSlicesFor(psmIter.next()));
+		}
 		return allKnowledgeSlices;
 	}
 
@@ -408,8 +416,9 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 				.get(problemSolverContext);
 		if (knowledge != null) {
 			Iterator<MethodKind> kindIter = knowledge.keySet().iterator();
-			while (kindIter.hasNext())
+			while (kindIter.hasNext()) {
 				slices.addAll(knowledge.get(kindIter.next()));
+			}
 		}
 		return slices;
 	}
@@ -527,11 +536,17 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	 */
 	public TerminologyObject search(String id) {
 		TerminologyObject o = searchQuestion(id);
-		if (o != null) return o;
+		if (o != null) {
+			return o;
+		}
 		o = searchQContainers(id);
-		if (o != null) return o;
+		if (o != null) {
+			return o;
+		}
 		o = searchSolution(id);
-		if (o != null) return o;
+		if (o != null) {
+			return o;
+		}
 		return null;
 	}
 
@@ -568,7 +583,9 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	public Solution searchSolution(String id) {
 		if (objectIDMap.containsKey(id)) {
 			IDObject o = objectIDMap.get(id);
-			if (o instanceof Solution) return (Solution) o;
+			if (o instanceof Solution) {
+				return (Solution) o;
+			}
 		}
 		return null;
 	}
@@ -583,7 +600,9 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	public QASet searchQASet(String id) {
 		if (objectIDMap.containsKey(id)) {
 			IDObject o = objectIDMap.get(id);
-			if (o instanceof QASet) return (QASet) o;
+			if (o instanceof QASet) {
+				return (QASet) o;
+			}
 		}
 
 		// deprecated: should be removed when objectMap hashing is stable
@@ -605,7 +624,9 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	public QContainer searchQContainers(String id) {
 		if (objectIDMap.containsKey(id)) {
 			IDObject o = objectIDMap.get(id);
-			if (o instanceof QContainer) return (QContainer) o;
+			if (o instanceof QContainer) {
+				return (QContainer) o;
+			}
 		}
 		return null;
 	}
@@ -635,7 +656,9 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	public Question searchQuestion(String id) {
 		if (objectIDMap.containsKey(id)) {
 			IDObject o = objectIDMap.get(id);
-			if (o instanceof Question) return (Question) o;
+			if (o instanceof Question) {
+				return (Question) o;
+			}
 		}
 		return null;
 	}
@@ -761,7 +784,9 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		if (!objectIDMap.containsKey(qaSet.getId())) {
 			objectIDMap.put(qaSet.getId(), qaSet);
 			objectNameMap.put(qaSet.getName(), qaSet);
-			if (qaSet.getKnowledgeBase() == null) qaSet.setKnowledgeBase(this);
+			if (qaSet.getKnowledgeBase() == null) {
+				qaSet.setKnowledgeBase(this);
+			}
 		}
 
 	}

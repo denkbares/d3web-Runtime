@@ -87,9 +87,7 @@ public class PSMethodInit implements PSMethod {
 						session.getBlackboard().addValueFact(
 								new DefaultFact(qc, new ChoiceValue(choice), new Object(), this));
 					}
-					else {
-						// TODO QuestionNum, QuestionDate
-					}
+					// TODO QuestionNum, QuestionDate
 				}
 			}
 		}

@@ -75,7 +75,9 @@ public class FormulaDateExpression {
 		if (answer != null) {
 			return new DateValue(answer);
 		}
-		else return null;
+		else {
+			return null;
+		}
 	}
 
 	public FormulaDateElement getFormulaDateElement() {

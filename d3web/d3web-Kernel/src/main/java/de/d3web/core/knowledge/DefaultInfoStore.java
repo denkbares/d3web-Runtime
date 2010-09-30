@@ -56,7 +56,9 @@ public class DefaultInfoStore implements InfoStore {
 	@Override
 	public Object getValue(String key, Locale language) {
 		Object value = getEntry(key, language);
-		if (value != null) return value;
+		if (value != null) {
+			return value;
+		}
 		return getEntry(key, NO_LANGUAGE);
 	}
 

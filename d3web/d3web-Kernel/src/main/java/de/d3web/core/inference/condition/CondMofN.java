@@ -61,7 +61,9 @@ public class CondMofN extends NonTerminalCondition {
 			try {
 				if (condition.eval(session)) {
 					trueTillNow++;
-					if (trueTillNow > getMax()) return false;
+					if (trueTillNow > getMax()) {
+						return false;
+					}
 				}
 			}
 			catch (NoAnswerException nax) {
@@ -72,11 +74,16 @@ public class CondMofN extends NonTerminalCondition {
 				// appropriate
 			}
 		}
-		if (trueTillNow >= getMin()) return true;
-		else if (wasNoAnswer) throw NoAnswerException.getInstance();
-		else
-		// if all answers were Unknown, then also false is appropriate
-		return false;
+		if (trueTillNow >= getMin()) {
+			return true;
+		}
+		else if (wasNoAnswer) {
+			throw NoAnswerException.getInstance();
+		}
+		else {
+			// if all answers were Unknown, then also false is appropriate
+			return false;
+		}
 
 	}
 
@@ -113,7 +120,9 @@ public class CondMofN extends NonTerminalCondition {
 	 * @param min the minimum number of required true sub-conditions
 	 */
 	public void setMin(int min) {
-		if (min < 0) min = 0;
+		if (min < 0) {
+			min = 0;
+		}
 		this.min = min;
 	}
 
@@ -126,7 +135,9 @@ public class CondMofN extends NonTerminalCondition {
 				+ " size="
 				+ terms.size() + " {";
 		for (Condition condition : terms) {
-			if (condition != null) ret += condition.toString();
+			if (condition != null) {
+				ret += condition.toString();
+			}
 		}
 		ret += "}";
 		return ret;
@@ -140,7 +151,9 @@ public class CondMofN extends NonTerminalCondition {
 					(this.getMax() == ((CondMofN) other).getMax());
 
 		}
-		else return false;
+		else {
+			return false;
+		}
 	}
 
 	@Override

@@ -55,7 +55,9 @@ public class QuestionText extends Question {
 	 * @param newHeight int the specified height
 	 */
 	public void setHeight(int height) {
-		if (height > 0) this.height = height;
+		if (height > 0) {
+			this.height = height;
+		}
 	}
 
 	/**
@@ -65,6 +67,8 @@ public class QuestionText extends Question {
 	 * @param newHeight int the specified width
 	 */
 	public void setWidth(int newWidth) {
-		if (newWidth > 0) width = newWidth;
+		if (newWidth > 0) {
+			width = newWidth;
+		}
 	}
 }

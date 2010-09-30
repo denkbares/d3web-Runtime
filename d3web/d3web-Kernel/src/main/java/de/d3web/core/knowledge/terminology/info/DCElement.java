@@ -52,6 +52,7 @@ public class DCElement {
 		return label;
 	}
 
+	@Override
 	public String toString() {
 		return label;
 	}
@@ -61,6 +62,7 @@ public class DCElement {
 	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode() {
 		return label.hashCode();
 	}
@@ -76,7 +78,9 @@ public class DCElement {
 		Iterator<DCElement> iter = getIterator();
 		while (iter.hasNext()) {
 			DCElement dce = iter.next();
-			if (dce.getLabel().equalsIgnoreCase(label)) return dce;
+			if (dce.getLabel().equalsIgnoreCase(label)) {
+				return dce;
+			}
 		}
 		return new DCElement(label);
 	}

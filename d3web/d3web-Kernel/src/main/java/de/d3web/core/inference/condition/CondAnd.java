@@ -81,7 +81,9 @@ public class CondAnd extends NonTerminalCondition {
 	public String toString() {
 		String ret = "\u2190 CondAnd {";
 		for (Condition condition : terms) {
-			if (condition != null) ret += condition.toString();
+			if (condition != null) {
+				ret += condition.toString();
+			}
 		}
 		ret += "}";
 		return ret;
@@ -92,6 +94,7 @@ public class CondAnd extends NonTerminalCondition {
 	 * {@link NonTerminalCondition}. Do not use in the wild.
 	 * 
 	 */
+	@Override
 	protected Condition createInstance(List<Condition> theTerms, Condition o) {
 		return new CondAnd(theTerms);
 	}

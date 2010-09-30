@@ -82,19 +82,35 @@ public class InterviewAgenda {
 
 		@Override
 		public boolean equals(Object obj) {
-			if (this == obj) return true;
-			if (obj == null) return false;
-			if (getClass() != obj.getClass()) return false;
+			if (this == obj) {
+				return true;
+			}
+			if (obj == null) {
+				return false;
+			}
+			if (getClass() != obj.getClass()) {
+				return false;
+			}
 			AgendaEntry other = (AgendaEntry) obj;
-			if (!getOuterType().equals(other.getOuterType())) return false;
+			if (!getOuterType().equals(other.getOuterType())) {
+				return false;
+			}
 			if (interviewObject == null) {
-				if (other.interviewObject != null) return false;
+				if (other.interviewObject != null) {
+					return false;
+				}
 			}
-			else if (!interviewObject.equals(other.interviewObject)) return false;
+			else if (!interviewObject.equals(other.interviewObject)) {
+				return false;
+			}
 			if (state == null) {
-				if (other.state != null) return false;
+				if (other.state != null) {
+					return false;
+				}
 			}
-			else if (!state.equals(other.state)) return false;
+			else if (!state.equals(other.state)) {
+				return false;
+			}
 			return true;
 		}
 

@@ -70,7 +70,9 @@ public class Rating implements Value {
 	 * @param state the specified state instance
 	 */
 	public Rating(State state) {
-		if (state == null) throw new NullPointerException();
+		if (state == null) {
+			throw new NullPointerException();
+		}
 		this.state = state;
 	}
 
@@ -131,8 +133,12 @@ public class Rating implements Value {
 	 */
 	@Override
 	public boolean equals(Object other) {
-		if (other == null) return false;
-		if (!(other instanceof Rating)) return false;
+		if (other == null) {
+			return false;
+		}
+		if (!(other instanceof Rating)) {
+			return false;
+		}
 		return this.state.equals(((Rating) other).state);
 	}
 
