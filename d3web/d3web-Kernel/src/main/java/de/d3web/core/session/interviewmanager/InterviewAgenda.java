@@ -46,12 +46,27 @@ public class InterviewAgenda {
 
 	public class AgendaEntry implements Comparable<AgendaEntry> {
 
-		InterviewObject interviewObject;
-		InterviewState state;
+		private final InterviewObject interviewObject;
+		private InterviewState interviewState;
 
 		private AgendaEntry(InterviewObject interviewObject, InterviewState state) {
 			this.interviewObject = interviewObject;
-			this.state = state;
+			this.interviewState = state;
+		}
+
+		/**
+		 * Getter for InterviewObject.
+		 */
+		public InterviewObject getInterviewObject() {
+			return interviewObject;
+		}
+
+		public void setInterviewState(InterviewState state) {
+			this.interviewState = state;
+		}
+
+		public InterviewState getInterviewState() {
+			return interviewState;
 		}
 
 		private boolean equalsInterviewObject(InterviewObject interviewObject) {
@@ -59,12 +74,12 @@ public class InterviewAgenda {
 		}
 
 		public boolean hasState(InterviewState state) {
-			return this.state.equals(state);
+			return this.interviewState.equals(state);
 		}
 
 		@Override
 		public String toString() {
-			return this.interviewObject + " [" + this.state + "]";
+			return this.interviewObject + " [" + this.interviewState + "]";
 		}
 
 		@Override
@@ -76,7 +91,7 @@ public class InterviewAgenda {
 					* result
 					+ ((interviewObject == null) ? 0 : interviewObject
 							.hashCode());
-			result = prime * result + ((state == null) ? 0 : state.hashCode());
+			result = prime * result + ((interviewState == null) ? 0 : interviewState.hashCode());
 			return result;
 		}
 
@@ -103,12 +118,12 @@ public class InterviewAgenda {
 			else if (!interviewObject.equals(other.interviewObject)) {
 				return false;
 			}
-			if (state == null) {
-				if (other.state != null) {
+			if (interviewState == null) {
+				if (other.interviewState != null) {
 					return false;
 				}
 			}
-			else if (!state.equals(other.state)) {
+			else if (!interviewState.equals(other.interviewState)) {
 				return false;
 			}
 			return true;
@@ -172,7 +187,7 @@ public class InterviewAgenda {
 		trace("De-activate: " + interviewObject);
 		AgendaEntry entry = findAgendaEntry(interviewObject);
 		if (entry != null) {
-			entry.state = InterviewState.INACTIVE;
+			entry.setInterviewState(InterviewState.INACTIVE);
 		}
 		organizeAgenda();
 	}
@@ -189,7 +204,7 @@ public class InterviewAgenda {
 			append(interviewObject);
 		}
 		else {
-			entry.state = InterviewState.ACTIVE;
+			entry.setInterviewState(InterviewState.ACTIVE);
 		}
 		organizeAgenda();
 	}
@@ -265,7 +280,7 @@ public class InterviewAgenda {
 		List<InterviewObject> objects = new ArrayList<InterviewObject>();
 		for (AgendaEntry entry : this.agenda) {
 			if (entry.hasState(InterviewState.ACTIVE)) {
-				objects.add(entry.interviewObject);
+				objects.add(entry.getInterviewObject());
 			}
 		}
 		return Collections.unmodifiableList(objects);

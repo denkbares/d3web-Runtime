@@ -59,8 +59,8 @@ public class DFSTreeAgendaSortingStrategy implements AgendaSortingStrategy {
 
 		@Override
 		public int compare(AgendaEntry entry1, AgendaEntry entry2) {
-			int order1 = this.index.get(entry1.interviewObject);
-			int order2 = this.index.get(entry2.interviewObject);
+			int order1 = this.index.get(entry1.getInterviewObject());
+			int order2 = this.index.get(entry2.getInterviewObject());
 			return order1 - order2;
 		}
 	}
@@ -125,7 +125,7 @@ public class DFSTreeAgendaSortingStrategy implements AgendaSortingStrategy {
 		List<AgendaEntry> instantEntries = new ArrayList<InterviewAgenda.AgendaEntry>();
 		for (AgendaEntry agendaEntry : entries) {
 			Indication indication = this.session.getBlackboard().getIndication(
-					agendaEntry.interviewObject);
+					agendaEntry.getInterviewObject());
 			if (indication.hasState(State.INSTANT_INDICATED)) {
 				instantEntries.add(agendaEntry);
 			}

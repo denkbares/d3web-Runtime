@@ -46,7 +46,7 @@ public class CondUnknown extends CondQuestion {
 
 	@Override
 	public boolean eval(Session session) throws NoAnswerException {
-		return (session.getBlackboard().getValue(question) instanceof Unknown);
+		return (session.getBlackboard().getValue(getQuestion()) instanceof Unknown);
 		// try {
 		// checkAnswer(session);
 		// return false;
@@ -57,7 +57,7 @@ public class CondUnknown extends CondQuestion {
 
 	@Override
 	public String toString() {
-		return "\u2190 CondTextContains question: " + question.getId();
+		return "\u2190 CondTextContains question: " + getQuestion().getId();
 	}
 
 	@Override

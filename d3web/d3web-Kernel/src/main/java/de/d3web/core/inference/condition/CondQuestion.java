@@ -37,7 +37,7 @@ import de.d3web.core.session.values.Unknown;
  */
 public abstract class CondQuestion extends TerminalCondition {
 
-	protected Question question = null;
+	private Question question = null;
 
 	/**
 	 * Creates a new CondQuestion instance with the specified {@link IDObject}.

@@ -57,7 +57,7 @@ public class CondMofN extends NonTerminalCondition {
 		int trueTillNow = 0;
 		boolean wasNoAnswer = false;
 
-		for (Condition condition : terms) {
+		for (Condition condition : getTerms()) {
 			try {
 				if (condition.eval(session)) {
 					trueTillNow++;
@@ -133,8 +133,8 @@ public class CondMofN extends NonTerminalCondition {
 				+ " max="
 				+ getMax()
 				+ " size="
-				+ terms.size() + " {";
-		for (Condition condition : terms) {
+				+ getTerms().size() + " {";
+		for (Condition condition : getTerms()) {
 			if (condition != null) {
 				ret += condition.toString();
 			}

@@ -75,15 +75,6 @@ public abstract class CondNum extends CondQuestion {
 		this.conditionValue = answerValue;
 	}
 
-	/**
-	 * Sets the question that is constrained by this condition.
-	 * 
-	 * @param question the constrained question
-	 */
-	private void setQuestion(QuestionNum question) {
-		this.question = question;
-	}
-
 	@Override
 	public boolean equals(Object other) {
 		if (this == other) {

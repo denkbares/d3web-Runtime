@@ -40,7 +40,7 @@ import de.d3web.core.session.Value;
 public class MultipleChoiceValue implements QuestionValue {
 
 	private final Collection<ChoiceValue> values;
-	public static String ID_SEPARATOR = "#####";
+	public static final String ID_SEPARATOR = "#####";
 
 	/**
 	 * Constructs a new MultipleChoiceValue

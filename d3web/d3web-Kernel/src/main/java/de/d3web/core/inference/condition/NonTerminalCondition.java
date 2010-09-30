@@ -40,7 +40,7 @@ public abstract class NonTerminalCondition implements Condition {
 	/**
 	 * The list of conditions enclosed in this {@link NonTerminalCondition}.
 	 */
-	protected List<Condition> terms;
+	private List<Condition> terms;
 
 	/**
 	 * Creates a new non-terminal condition with the specified sub-conditions.

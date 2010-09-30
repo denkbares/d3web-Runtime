@@ -40,7 +40,7 @@ public class PluginConfig implements KnowledgeSlice {
 	private final KnowledgeBase kb;
 	private final HashMap<String, PluginEntry> entries = new HashMap<String, PluginEntry>();
 
-	public static MethodKind PLUGINCONFIG = new MethodKind("ExtensionConfig");
+	public static final MethodKind PLUGINCONFIG = new MethodKind("ExtensionConfig");
 
 	public PluginConfig(KnowledgeBase kb) {
 		super();

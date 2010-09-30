@@ -45,15 +45,15 @@ public class CondTextEqual extends CondTextQuestion {
 
 	@Override
 	protected boolean compare(String caseValue) {
-		return caseValue.equals(this.value);
+		return caseValue.equals(getValue());
 	}
 
 	@Override
 	public String toString() {
 		return "\u2190 CondTextEqual question: "
-				+ question.getId()
+				+ getQuestion().getId()
 				+ " value: "
-				+ value;
+				+ getValue();
 	}
 
 	@Override

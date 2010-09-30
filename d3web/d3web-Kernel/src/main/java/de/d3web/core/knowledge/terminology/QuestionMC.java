@@ -37,11 +37,11 @@ public class QuestionMC extends QuestionChoice {
 	}
 
 	public List<Choice> getAlternatives() {
-		if (alternatives == null) {
+		if (getAllAlternatives() == null) {
 			return new Vector<Choice>();
 		}
 		else {
-			return alternatives;
+			return getAllAlternatives();
 		}
 	}
 

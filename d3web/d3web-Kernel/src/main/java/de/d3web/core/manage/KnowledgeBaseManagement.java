@@ -70,7 +70,7 @@ import de.d3web.core.session.values.Unknown;
  */
 public class KnowledgeBaseManagement {
 
-	KnowledgeBase knowledgeBase;
+	private KnowledgeBase knowledgeBase;
 	private int internalCounter = 0;
 
 	private KnowledgeBaseManagement(KnowledgeBase k) {

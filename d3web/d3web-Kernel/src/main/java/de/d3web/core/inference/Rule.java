@@ -56,13 +56,13 @@ public class Rule implements CaseObjectSource {
 	/**
 	 * A condition which must be true, if rule should fire (obligatory).
 	 */
-	protected Condition condition;
+	private Condition condition;
 
 	/**
 	 * A condition that must be false or undefined, if rule should fire
 	 * (optional).
 	 */
-	protected Condition exception;
+	private Condition exception;
 
 	/**
 	 * A condition which contains CondDState(diagnosis, ESTABLISHED) to
@@ -70,7 +70,7 @@ public class Rule implements CaseObjectSource {
 	 * fire. If specified diagnoses are not established, then rule must not
 	 * fire.
 	 */
-	protected Condition diagnosisContext;
+	private Condition diagnosisContext;
 
 	private Class<? extends PSMethod> problemsolverContext;
 

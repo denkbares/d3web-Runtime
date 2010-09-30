@@ -35,7 +35,7 @@ import de.d3web.core.session.values.DateValue;
  */
 public abstract class CondDate extends CondQuestion {
 
-	protected DateValue value;
+	private DateValue value;
 
 	protected CondDate(Question idobject) {
 		super(idobject);

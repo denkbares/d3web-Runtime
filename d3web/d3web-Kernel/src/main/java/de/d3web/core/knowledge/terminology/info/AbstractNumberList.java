@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 
 public abstract class AbstractNumberList {
 
-	protected List<Number> values;
+	private final List<Number> values;
 
 	public AbstractNumberList() {
 		values = new LinkedList<Number>();
@@ -51,6 +51,10 @@ public abstract class AbstractNumberList {
 						AbstractNumberList.class.getName(), s);
 			}
 		}
+	}
+
+	protected List<Number> getValues() {
+		return values;
 	}
 
 	public void clear() {

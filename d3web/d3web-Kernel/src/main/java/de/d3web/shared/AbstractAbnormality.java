@@ -30,12 +30,12 @@ public abstract class AbstractAbnormality implements KnowledgeSlice {
 
 	protected static final MethodKind METHOD_KIND = PSMethodShared.SHARED_ABNORMALITY;
 	protected static final Class<PSMethodShared> PROBLEMSOLVER = PSMethodShared.class;
-	public static double A0 = 0;
-	public static double A1 = 0.0625;
-	public static double A2 = 0.125;
-	public static double A3 = 0.25;
-	public static double A4 = 0.5;
-	public static double A5 = 1;
+	public static final double A0 = 0;
+	public static final double A1 = 0.0625;
+	public static final double A2 = 0.125;
+	public static final double A3 = 0.25;
+	public static final double A4 = 0.5;
+	public static final double A5 = 1;
 
 	public static double convertConstantStringToValue(String c) {
 		if (c.equalsIgnoreCase("A0")) {

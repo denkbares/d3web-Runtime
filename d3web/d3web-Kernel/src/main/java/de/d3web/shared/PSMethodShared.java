@@ -35,10 +35,10 @@ import de.d3web.core.session.blackboard.Fact;
  */
 public class PSMethodShared extends PSMethodAdapter {
 
-	public static MethodKind SHARED_SIMILARITY = new MethodKind("SHARED_SIMILARITY");
-	public static MethodKind SHARED_WEIGHT = new MethodKind("SHARED_WEIGHT");
-	public static MethodKind SHARED_LOCAL_WEIGHT = new MethodKind("SHARED_LOCAL_WEIGHT");
-	public static MethodKind SHARED_ABNORMALITY = new MethodKind("SHARED_ABNORMALITY");
+	public static final MethodKind SHARED_SIMILARITY = new MethodKind("SHARED_SIMILARITY");
+	public static final MethodKind SHARED_WEIGHT = new MethodKind("SHARED_WEIGHT");
+	public static final MethodKind SHARED_LOCAL_WEIGHT = new MethodKind("SHARED_LOCAL_WEIGHT");
+	public static final MethodKind SHARED_ABNORMALITY = new MethodKind("SHARED_ABNORMALITY");
 
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {

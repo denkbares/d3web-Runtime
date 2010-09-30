@@ -38,13 +38,13 @@ public class IntegerList extends AbstractNumberList {
 
 	@Override
 	public Integer get(int i) {
-		return (Integer) values.get(i);
+		return (Integer) getValues().get(i);
 	}
 
 	@Override
 	public void add(Number o) {
 		if (o instanceof Integer) {
-			values.add(o);
+			getValues().add(o);
 		}
 		else {
 			String s = "Object passed to IntegerList.add()" +
@@ -58,7 +58,7 @@ public class IntegerList extends AbstractNumberList {
 	@Override
 	public String toString() {
 		String s = "{ ";
-		for (Iterator<Number> iter = values.iterator(); iter.hasNext();) {
+		for (Iterator<Number> iter = getValues().iterator(); iter.hasNext();) {
 			Integer element = (Integer) iter.next();
 			s += element.toString();
 			s += " ";

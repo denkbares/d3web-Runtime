@@ -41,11 +41,11 @@ public class QuestionOC extends QuestionChoice {
 	}
 
 	public List<Choice> getAlternatives() {
-		if (alternatives == null) {
+		if (getAllAlternatives() == null) {
 			return Collections.emptyList();
 		}
 		else {
-			return alternatives;
+			return getAllAlternatives();
 		}
 	}
 

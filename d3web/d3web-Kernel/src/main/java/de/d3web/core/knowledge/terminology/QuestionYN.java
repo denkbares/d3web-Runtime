@@ -27,7 +27,8 @@ import de.d3web.core.manage.AnswerFactory;
 /**
  * This is a simple extension of the QuestionChoice with only has two possible
  * values, that are restricted to a YES and NO answer. <Br>
- * Creation date: (28.09.00 16:51:21)
+ * This class is now immutable (only get() access) Creation date: (28.09.00
+ * 16:51:21)
  * 
  * @author Joachim Baumeister
  */
@@ -36,8 +37,8 @@ public class QuestionYN extends QuestionOC {
 	protected final static String YES_STRING = "Yes";
 	protected final static String NO_STRING = "No";
 
-	public Choice yes;
-	public Choice no;
+	private final Choice answerChoiceYes;
+	private final Choice answerChoiceNo;
 
 	/**
 	 * Creates a new Yes-No Question, which is a simple QuestionChoice with only
@@ -53,10 +54,24 @@ public class QuestionYN extends QuestionOC {
 
 	public QuestionYN(String id, String yesText, String noText) {
 		super(id);
-		yes = AnswerFactory.createAnswerYes(id + "YES", yesText);
-		no = AnswerFactory.createAnswerNo(id + "NO", noText);
+		answerChoiceYes = AnswerFactory.createAnswerYes(id + "YES", yesText);
+		answerChoiceNo = AnswerFactory.createAnswerNo(id + "NO", noText);
 		setAlternatives(Arrays.asList(new Choice[] {
-				yes, no }));
+				answerChoiceYes, answerChoiceNo }));
+	}
+
+	/**
+	 * Get the YES answer choice of this QuestionYN
+	 */
+	public Choice getAnswerChoiceYes() {
+		return answerChoiceYes;
+	}
+
+	/**
+	 * Get the NO answer choice of this QuestionYN
+	 */
+	public Choice getAnswerChoiceNo() {
+		return answerChoiceNo;
 	}
 
 }

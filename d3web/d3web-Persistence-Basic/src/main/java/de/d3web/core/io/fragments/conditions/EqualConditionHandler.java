@@ -106,10 +106,10 @@ public class EqualConditionHandler implements FragmentHandler {
 				else if (q instanceof QuestionYN) {
 					QuestionYN qyn = (QuestionYN) q;
 					if (type.equals("choiceYes")) {
-						return new CondEqual(q, new ChoiceValue(qyn.yes));
+						return new CondEqual(q, new ChoiceValue(qyn.getAnswerChoiceYes()));
 					}
 					else {
-						return new CondEqual(q, new ChoiceValue(qyn.no));
+						return new CondEqual(q, new ChoiceValue(qyn.getAnswerChoiceNo()));
 					}
 				}
 			}

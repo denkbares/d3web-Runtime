@@ -50,7 +50,7 @@ public class CondNumGreater extends CondNum {
 	@Override
 	public String toString() {
 		return "\u2190 CondNumGreater question: "
-				+ question.getId()
+				+ getQuestion().getId()
 				+ " value: "
 				+ getConditionValue();
 	}

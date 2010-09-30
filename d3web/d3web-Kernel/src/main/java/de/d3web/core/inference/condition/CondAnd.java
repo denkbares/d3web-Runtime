@@ -53,7 +53,7 @@ public class CondAnd extends NonTerminalCondition {
 		boolean wasNoAnswer = false;
 		boolean wasUnknownAnswer = false;
 
-		for (Condition condition : terms) {
+		for (Condition condition : getTerms()) {
 			try {
 				if (!condition.eval(session)) {
 					return false;
@@ -80,7 +80,7 @@ public class CondAnd extends NonTerminalCondition {
 	@Override
 	public String toString() {
 		String ret = "\u2190 CondAnd {";
-		for (Condition condition : terms) {
+		for (Condition condition : getTerms()) {
 			if (condition != null) {
 				ret += condition.toString();
 			}

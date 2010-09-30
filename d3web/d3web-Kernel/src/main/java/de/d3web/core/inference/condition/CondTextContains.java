@@ -45,15 +45,15 @@ public class CondTextContains extends CondTextQuestion {
 
 	@Override
 	protected boolean compare(String caseValue) {
-		return (caseValue.indexOf(this.value) > -1);
+		return (caseValue.indexOf(getValue()) > -1);
 	}
 
 	@Override
 	public String toString() {
 		return "\u2190 CondTextContains question: "
-				+ question.getId()
+				+ getQuestion().getId()
 				+ " value: "
-				+ value;
+				+ getValue();
 	}
 
 	@Override

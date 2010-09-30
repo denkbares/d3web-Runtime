@@ -30,13 +30,13 @@ public abstract class CondTextQuestion extends CondQuestion {
 		super(idobject);
 	}
 
-	protected String value;
+	private String value;
 
 	@Override
 	public boolean eval(Session session)
 			throws NoAnswerException, UnknownAnswerException {
 		checkAnswer(session);
-		TextValue value = (TextValue) session.getBlackboard().getValue(question);
+		TextValue value = (TextValue) session.getBlackboard().getValue(getQuestion());
 		String textvalue = value.getValue().toString();
 		if (textvalue != null) {
 			return compare(textvalue);

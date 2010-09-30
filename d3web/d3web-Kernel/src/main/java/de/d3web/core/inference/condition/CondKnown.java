@@ -54,7 +54,7 @@ public class CondKnown extends CondQuestion {
 
 	@Override
 	public String toString() {
-		return "\u2190 CondKnown question: " + question.getId();
+		return "\u2190 CondKnown question: " + getQuestion().getId();
 	}
 
 	@Override

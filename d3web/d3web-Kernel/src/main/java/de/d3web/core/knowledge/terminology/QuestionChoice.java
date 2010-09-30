@@ -39,7 +39,7 @@ import de.d3web.core.manage.KnowledgeBaseManagement;
  */
 public abstract class QuestionChoice extends Question {
 
-	protected List<Choice> alternatives;
+	private List<Choice> alternatives;
 
 	public QuestionChoice(String id) {
 		super(id);

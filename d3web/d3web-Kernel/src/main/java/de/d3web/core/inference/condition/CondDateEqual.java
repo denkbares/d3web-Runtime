@@ -47,9 +47,9 @@ public class CondDateEqual extends CondDate {
 	@Override
 	public String toString() {
 		return "\u2190 CondDateEqual question: "
-				+ question.getId()
+				+ getQuestion().getId()
 				+ " value: "
-				+ value;
+				+ getValue();
 	}
 
 	@Override
@@ -59,6 +59,6 @@ public class CondDateEqual extends CondDate {
 
 	@Override
 	protected boolean compare(DateValue caseValue) {
-		return caseValue.equals(value);
+		return caseValue.equals(getValue());
 	}
 }

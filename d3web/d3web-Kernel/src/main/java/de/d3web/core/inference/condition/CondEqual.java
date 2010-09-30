@@ -54,12 +54,12 @@ public class CondEqual extends CondQuestion {
 	public boolean eval(Session session)
 			throws NoAnswerException, UnknownAnswerException {
 		checkAnswer(session);
-		Value value = session.getBlackboard().getValue(question);
+		Value value = session.getBlackboard().getValue(getQuestion());
 
 		if (this.value instanceof UndefinedValue) {
 			return (value instanceof UndefinedValue);
 		}
-		else if (question instanceof QuestionMC) {
+		else if (getQuestion() instanceof QuestionMC) {
 			if (value instanceof MultipleChoiceValue) {
 				MultipleChoiceValue currentValue = (MultipleChoiceValue) value;
 				if (this.value instanceof MultipleChoiceValue) {
@@ -102,7 +102,7 @@ public class CondEqual extends CondQuestion {
 	@Override
 	public String toString() {
 		String ret = "\u2190 CondEqual question: "
-				+ question.getId()
+				+ getQuestion().getId()
 				+ " value: " + this.value;
 		return ret;
 	}
