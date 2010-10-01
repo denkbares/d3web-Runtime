@@ -43,6 +43,10 @@ import de.d3web.indication.inference.PSMethodStrategic;
  */
 public abstract class Question extends QASet implements ValueObject {
 
+	private static final Class<? extends PSMethod> QUESTION_SETTER = PSMethodAbstraction.class;
+	private static final Class<? extends PSMethod> FOLLOW_QUESTION = PSMethodStrategic.class;
+	private static final MethodKind KIND = MethodKind.BACKWARD;
+
 	/**
 	 * Creates a new {@link Question} instance with the specified unique
 	 * identifier.
@@ -63,9 +67,6 @@ public abstract class Question extends QASet implements ValueObject {
 	 *         DerivationType
 	 */
 	public DerivationType getDerivationType() {
-		final Class<? extends PSMethod> QUESTION_SETTER = PSMethodAbstraction.class;
-		final Class<? extends PSMethod> FOLLOW_QUESTION = PSMethodStrategic.class;
-		final MethodKind KIND = MethodKind.BACKWARD;
 		if (hasElements(getKnowledge(QUESTION_SETTER, KIND))
 				&& hasElements(getKnowledge(FOLLOW_QUESTION, KIND))) {
 			return DerivationType.MIXED;
@@ -78,16 +79,16 @@ public abstract class Question extends QASet implements ValueObject {
 		}
 	}
 
+	/**
+	 * Checks, if the given Object is a not-empty Collection.
+	 * 
+	 * @created 01.10.2010
+	 */
 	private boolean hasElements(Object list) {
-		if (list == null) {
-			return false;
-		}
-		else if ((list instanceof Collection<?>) && ((Collection<?>) list).isEmpty()) {
-			return false;
-		}
-		else {
-			return true;
-		}
+		// Left side of short-circuit operator "||" returns true if list is NOT
+		// a Collection. If list is a collection, the right side of "||" checks
+		// if this list is NOT empty.
+		return !(list instanceof Collection<?>) || !((Collection<?>) list).isEmpty();
 	}
 
 	/**
@@ -102,11 +103,6 @@ public abstract class Question extends QASet implements ValueObject {
 		// maybe somebody should remove this object from the old
 		// knowledge base if available
 		getKnowledgeBase().add(this);
-	}
-
-	@Override
-	public String toString() {
-		return super.toString();
 	}
 
 	@Override

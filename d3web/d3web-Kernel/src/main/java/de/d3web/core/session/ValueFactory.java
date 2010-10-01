@@ -25,9 +25,13 @@ import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 
-public class ValueFactory {
+public final class ValueFactory {
 
-	public static String getID_or_Value(Value value) {
+	private ValueFactory() { // enforce noninstantiability
+	}
+
+	public static String getID_or_Value(Value value) { // NOSONAR this method
+														// name is ok
 		if (value instanceof ChoiceValue) {
 			return ((Choice) (value.getValue())).getId();
 		}

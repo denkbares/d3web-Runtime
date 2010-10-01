@@ -58,7 +58,7 @@ import de.d3web.scoring.Score;
  * 
  * @author joba
  */
-public class PSMethodHeuristic extends PSMethodAdapter {
+public final class PSMethodHeuristic extends PSMethodAdapter {
 
 	private static PSMethodHeuristic instance = null;
 

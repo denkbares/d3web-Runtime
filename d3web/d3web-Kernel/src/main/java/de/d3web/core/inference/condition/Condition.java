@@ -37,7 +37,7 @@ import de.d3web.core.session.Session;
  * 
  * @author Joachim Baumeister, Christian Betz
  */
-public interface Condition {
+public interface Condition extends Cloneable {
 
 	/**
 	 * Evaluates this condition with respect to the findings given in the
@@ -88,6 +88,7 @@ public interface Condition {
 	 * 
 	 * @return a deep copy of this condition
 	 */
+	// TODO: Couldn't this be enforced via Cloneable´s clone() method?
 	public Condition copy();
 
 }

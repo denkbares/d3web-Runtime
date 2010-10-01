@@ -22,6 +22,7 @@ package de.d3web.indication;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
@@ -86,8 +87,9 @@ public class ActionContraIndication extends PSAction {
 		// New handling of indications: Notify blackboard of indication and let
 		// the blackboard do all the work
 		if (getQASets().size() > 1) {
-			// todo: how to create facts with more than one QASet?!
-			System.err.println("Not implemented yet.");
+			// TODO: how to create facts with more than one QASet?!
+			Logger.getLogger(this.getClass().getName()).warning(
+					"QASets().size() > 1: Not implemented yet.");
 		}
 		Value oldValue = session.getBlackboard().getIndication(getQASets().get(0));
 		;
@@ -117,11 +119,8 @@ public class ActionContraIndication extends PSAction {
 			if (getQASets() != null && a.getQASets() != null) {
 				return a.getQASets().equals(getQASets());
 			}
-			else if (getQASets() == null && a.getQASets() == null) {
-				return true;
-			}
 			else {
-				return false;
+				return (getQASets() == null && a.getQASets() == null);
 			}
 		}
 		else {

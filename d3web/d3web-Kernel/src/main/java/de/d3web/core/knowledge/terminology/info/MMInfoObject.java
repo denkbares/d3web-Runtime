@@ -67,9 +67,9 @@ public class MMInfoObject implements DCMarkedUp {
 		Iterator<DCElement> iter = DCElement.getIterator();
 		while (iter.hasNext()) {
 			DCElement dc = iter.next();
-			String content = dcData.getContent(dc);
-			if (content != null && !content.equals("") && this.getDCMarkup() != null &&
-					!content.equalsIgnoreCase(this.getDCMarkup().getContent(dc))) {
+			String elementContent = dcData.getContent(dc);
+			if (elementContent != null && !elementContent.equals("") && this.getDCMarkup() != null &&
+					!elementContent.equalsIgnoreCase(this.getDCMarkup().getContent(dc))) {
 				return false;
 			}
 		}

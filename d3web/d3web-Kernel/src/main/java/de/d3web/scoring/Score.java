@@ -35,7 +35,7 @@ import de.d3web.core.knowledge.terminology.Solution;
  * @see Solution
  * @see Rating
  */
-public class Score implements Comparable<Object> {
+public final class Score implements Comparable<Object> {
 
 	public static final Score P7 = new Score(999, 1, "P7");
 	public static final Score P6 = new Score(80, 1, "P6");
@@ -174,7 +174,7 @@ public class Score implements Comparable<Object> {
 	 */
 	@Override
 	public String toString() {
-		if ((getSymbol() == null) || (getSymbol() == "")) {
+		if ((getSymbol() == null) || (getSymbol().equals(""))) {
 			return "" + getScore();
 		}
 		else {

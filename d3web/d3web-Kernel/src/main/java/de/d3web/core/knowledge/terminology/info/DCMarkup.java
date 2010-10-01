@@ -32,7 +32,7 @@ import java.util.Map;
  * @see de.d3web.core.knowledge.terminology.info.DCMarkedUp
  * @author hoernlein
  */
-public class DCMarkup {
+public class DCMarkup implements Cloneable {
 
 	private final Map<DCElement, String> data = new HashMap<DCElement, String>(15);
 
@@ -47,10 +47,8 @@ public class DCMarkup {
 		if (dc == null) {
 			throw new NullPointerException();
 		}
-		if (content == null) {
-			content = "";
-		}
-		data.put(dc, content);
+		String newContent = (content == null ? "" : content);
+		data.put(dc, newContent);
 	}
 
 	/**
@@ -104,7 +102,7 @@ public class DCMarkup {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof DCMarkup)) {
+		if (!(obj instanceof DCMarkup)) {
 			return false;
 		}
 		Iterator<DCElement> iter = DCElement.getIterator();

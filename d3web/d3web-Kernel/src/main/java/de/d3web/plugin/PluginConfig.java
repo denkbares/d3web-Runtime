@@ -20,6 +20,7 @@ package de.d3web.plugin;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
@@ -38,7 +39,7 @@ public class PluginConfig implements KnowledgeSlice {
 	// TODO change
 	private static final Class<PSMethod> PROBLEMSOLVER = PSMethod.class;
 	private final KnowledgeBase kb;
-	private final HashMap<String, PluginEntry> entries = new HashMap<String, PluginEntry>();
+	private final Map<String, PluginEntry> entries = new HashMap<String, PluginEntry>();
 
 	public static final MethodKind PLUGINCONFIG = new MethodKind("ExtensionConfig");
 

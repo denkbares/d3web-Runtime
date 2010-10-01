@@ -726,10 +726,10 @@ public class Rule implements CaseObjectSource {
 		b.append("IF   " + this.getCondition() + " \n");
 		b.append("THEN " + this.getAction() + "\n");
 		if (this.getException() != null) {
-			b.append("EXCEPT  " + this.getException());
+			b.append("EXCEPT  " + this.getException().toString());
 		}
 		if (this.getContext() != null) {
-			b.append("CONTEXT " + this.getCondition());
+			b.append("CONTEXT " + this.getContext().toString());
 		}
 
 		return b.toString();

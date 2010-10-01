@@ -91,8 +91,7 @@ public class DefaultSession implements Session {
 	private final Date created;
 	private Date edited;
 
-	private static LinkedList<PSMethod> commonPSMethods = new LinkedList<PSMethod>(
-			Arrays.asList(
+	private static List<PSMethod> commonPSMethods = Arrays.asList(
 					PSMethodUserSelected.getInstance(),
 					new PSMethodDialogControlling(),
 					PSMethodStrategic.getInstance(),
@@ -101,7 +100,7 @@ public class DefaultSession implements Session {
 					PSMethodInit.getInstance(),
 					PSMethodParentQASet.getInstance(),
 					PSMethodInterview.getInstance()
-					));
+					);
 
 	/**
 	 * Creates a new user case with the specified knowledge base. <br>

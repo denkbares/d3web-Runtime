@@ -27,7 +27,7 @@ package de.d3web.core.knowledge.terminology;
  * 
  * @author Joachim Baumeister
  */
-public class DerivationType {
+public final class DerivationType {
 
 	/**
 	 * used for SIs (derived knowledge)

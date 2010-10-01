@@ -21,6 +21,7 @@ package de.d3web.core.session.interviewmanager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -118,9 +119,9 @@ public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
 					return true;
 				}
 				else {
-					List<Question> follow_up_questions = collectFollowUpQuestions(question);
-					for (Question follow_up : follow_up_questions) {
-						if (isActiveOnAgenda(follow_up, session)) {
+					List<Question> followUpQuestions = collectFollowUpQuestions(question);
+					for (Question followUp : followUpQuestions) {
+						if (isActiveOnAgenda(followUp, session)) {
 							return true;
 						}
 					}
@@ -139,8 +140,8 @@ public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
 				children.addAll(collectFollowUpQuestions(child));
 			}
 			else {
-				System.err.println("UNHANDLED QASET TYPE");
-				// TODO: throw a bad logger message here.
+				Logger.getLogger(this.getClass().getName())
+						.warning("UNHANDLED QASET TYPE");
 			}
 		}
 		return children;
@@ -148,7 +149,7 @@ public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
 
 	private boolean isTerminalQContainer(QContainer container) {
 		for (TerminologyObject terminologyObject : container.getChildren()) {
-			if ((terminologyObject instanceof Question) == false) {
+			if (!(terminologyObject instanceof Question)) {
 				return false;
 			}
 		}

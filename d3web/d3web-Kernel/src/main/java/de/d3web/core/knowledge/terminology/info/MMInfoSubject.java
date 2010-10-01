@@ -34,7 +34,7 @@ import java.util.List;
  * @author hoernlein
  * 
  */
-public class MMInfoSubject {
+public final class MMInfoSubject {
 
 	private String name;
 

@@ -34,7 +34,7 @@ import de.d3web.core.session.blackboard.Facts;
  * 
  * @author Georg
  */
-public class PSMethodParentQASet extends PSMethodAdapter {
+public final class PSMethodParentQASet extends PSMethodAdapter {
 
 	private static PSMethodParentQASet instance = null;
 

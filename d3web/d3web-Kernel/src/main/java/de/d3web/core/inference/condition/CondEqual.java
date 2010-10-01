@@ -22,8 +22,8 @@ package de.d3web.core.inference.condition;
 
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
@@ -111,10 +111,13 @@ public class CondEqual extends CondQuestion {
 	public boolean equals(Object other) {
 		if (!super.equals(other)) return false;
 
-		if (this.getValue() != null && ((CondEqual) other).getValue() != null) return this.getValue().equals(
-				((CondEqual) other).getValue())
-				&& ((CondEqual) other).getValue().equals((this).getValue());
-		else return this.getValue() == ((CondEqual) other).getValue();
+		if (this.getValue() != null && ((CondEqual) other).getValue() != null) {
+			return this.getValue().equals(((CondEqual) other).getValue())
+					&& ((CondEqual) other).getValue().equals((this).getValue());
+		}
+		else {
+			return this.getValue() == ((CondEqual) other).getValue();
+		}
 	}
 
 	@Override

@@ -35,7 +35,10 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
-public class Facts {
+public final class Facts {
+	
+	private Facts() { // suppress default constructor for noninstantiability
+	}
 
 	/**
 	 * Merges the facts of solution ratings by the priority of the ratings. In
@@ -142,18 +145,18 @@ public class Facts {
 	 * @return the unique or most recent fact
 	 */
 	public static Fact mergeUniqueFact(Fact[] facts) {
-		facts = filterFactsForSourceSolvers(facts);
+		Fact[] filteredFacts = filterFactsForSourceSolvers(facts);
 		// should usually not happen,
 		// so warn and use last fact (most recent one)
-		if (facts.length > 1) {
-			String className = facts[0].getPSMethod().getClass().getName();
+		if (filteredFacts.length > 1) {
+			String className = filteredFacts[0].getPSMethod().getClass().getName();
 			Logger.getLogger(className).warning(
 					"Method "
 							+ className
 							+ ".mergeFacts(Fact[]) is called with multiple facts. "
 							+ "This usually should not happen.");
 		}
-		return facts[facts.length - 1];
+		return filteredFacts[filteredFacts.length - 1];
 	}
 
 	/**
@@ -183,9 +186,9 @@ public class Facts {
 		Value resultValue = null;
 		Question question = (Question) facts[0].getTerminologyObject();
 		PSMethod psMethod = facts[0].getPSMethod();
-		facts = filterFactsForSourceSolvers(facts);
-		if (facts.length == 1) return facts[0];
-		for (Fact fact : facts) {
+		Fact[] filteredFacts = filterFactsForSourceSolvers(facts);
+		if (filteredFacts.length == 1) return filteredFacts[0];
+		for (Fact fact : filteredFacts) {
 			Value value = (Value) fact.getValue();
 			if (value instanceof Unknown) { // NOSONAR
 				// handle unknown as first one!

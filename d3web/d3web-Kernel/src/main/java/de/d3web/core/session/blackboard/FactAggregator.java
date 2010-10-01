@@ -118,7 +118,8 @@ class FactAggregator {
 		this.mergedFact = null;
 	}
 
-	private void mergeFacts() {
+	private void mergeFacts() { // NOSONAR ignore Cyclomatic Complexity warning,
+								// because this method seems well-crafted
 		// do nothing if we do not have any facts
 		if (facts.size() == 0) {
 			return;
@@ -162,11 +163,11 @@ class FactAggregator {
 		// and collect them to single facts
 		List<Fact> mergedFacts = new ArrayList<Fact>();
 		for (Collection<Fact> box : factBoxes.values()) {
-			Fact[] facts = box.toArray(new Fact[box.size()]);
-			Fact mergedFact = (facts.length == 1)
-					? facts[0] // if we only have one, no merge is required
-					: facts[0].getPSMethod().mergeFacts(facts);
-			mergedFacts.add(mergedFact);
+			Fact[] factArray = box.toArray(new Fact[box.size()]);
+			Fact newMergedFact = (factArray.length == 1)
+					? factArray[0] // if we only have one, no merge is required
+					: factArray[0].getPSMethod().mergeFacts(factArray);
+			mergedFacts.add(newMergedFact);
 		}
 		// and find best of them, depending on the value type
 		Object exampleValue = this.facts.get(0).getValue();

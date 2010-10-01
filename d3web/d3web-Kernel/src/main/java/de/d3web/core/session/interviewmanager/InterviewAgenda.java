@@ -33,7 +33,7 @@ import de.d3web.core.session.Session;
  * 
  * @author Joachim Baumeister (denkbares GmbH)
  */
-public class InterviewAgenda {
+public final class InterviewAgenda {
 
 	public enum InterviewState {
 		ACTIVE, INACTIVE;
@@ -44,7 +44,7 @@ public class InterviewAgenda {
 	// Strategy: how to sort the entries on the agenda?
 	private AgendaSortingStrategy agendaSortingStrategy;
 
-	public class AgendaEntry implements Comparable<AgendaEntry> {
+	public final class AgendaEntry implements Comparable<AgendaEntry> {
 
 		private final InterviewObject interviewObject;
 		private InterviewState interviewState;
@@ -96,7 +96,8 @@ public class InterviewAgenda {
 		}
 
 		@Override
-		public boolean equals(Object obj) {
+		public boolean equals(Object obj) { // NOSONAR ignore Cyclomatic
+											// Complexity warning
 			if (this == obj) {
 				return true;
 			}
@@ -168,7 +169,7 @@ public class InterviewAgenda {
 	 * @param interviewObject {@link InterviewObject}
 	 */
 	public void append(InterviewObject interviewObject) {
-		trace("Append: " + interviewObject);
+		// trace("Append: " + interviewObject);
 		if (onAgenda(interviewObject)) {
 			activate(interviewObject);
 		}
@@ -184,7 +185,7 @@ public class InterviewAgenda {
 	 * @param interviewObject {@link InterviewObject}
 	 */
 	public void deactivate(InterviewObject interviewObject) {
-		trace("De-activate: " + interviewObject);
+		// trace("De-activate: " + interviewObject);
 		AgendaEntry entry = findAgendaEntry(interviewObject);
 		if (entry != null) {
 			entry.setInterviewState(InterviewState.INACTIVE);
@@ -198,7 +199,7 @@ public class InterviewAgenda {
 	 * @param interviewObject {@link InterviewObject}
 	 */
 	public void activate(InterviewObject interviewObject) {
-		trace("Activate: " + interviewObject);
+		// trace("Activate: " + interviewObject);
 		AgendaEntry entry = findAgendaEntry(interviewObject);
 		if (entry == null) {
 			append(interviewObject);
@@ -216,9 +217,9 @@ public class InterviewAgenda {
 		this.agenda = agendaSortingStrategy.sort(this.agenda);
 	}
 
-	private void trace(String string) {
-		// System.out.println(string);
-	}
+	// private void trace(String string) {
+	// System.out.println(string);
+	// }
 
 	private AgendaEntry findAgendaEntry(InterviewObject interviewObject) {
 		for (AgendaEntry entry : this.agenda) {

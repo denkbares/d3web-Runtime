@@ -27,14 +27,14 @@ package de.d3web.core.inference.condition;
  * @see java.lang.Exception
  * @author Christian Betz
  */
-public class NoAnswerException extends Exception {
+public final class NoAnswerException extends Exception {
 
 	private static final long serialVersionUID = -6470604092308987319L;
 	private static NoAnswerException instance = new NoAnswerException();
 
 	@Override
 	public void printStackTrace() {
-		System.err.println("No answer in Condition");
+		System.err.println("No answer in Condition"); // NOSONAR
 	}
 
 	public static NoAnswerException getInstance() {

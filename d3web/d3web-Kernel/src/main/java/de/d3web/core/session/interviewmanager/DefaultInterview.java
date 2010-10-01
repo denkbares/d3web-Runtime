@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Logger;
 
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.Indication;
@@ -129,9 +130,9 @@ public class DefaultInterview implements Interview {
 				// NEUTRAL => CONTRA_INDICATED : noop
 			}
 			else {
-				// TODO: use a logger here
-				System.out.println("UNKNOWN INDICATION STATE: old=("
-						+ oldIndication + ") new=(" + newIndication + ")");
+				Logger.getLogger(this.getClass().getName()).warning(
+						"UNKNOWN INDICATION STATE: old=(" + oldIndication + ") new=("
+								+ newIndication + ")");
 			}
 		}
 		else if (newValue instanceof QuestionValue) {
@@ -162,9 +163,8 @@ public class DefaultInterview implements Interview {
 					checkParentalQContainer(indicatedObject);
 				}
 				else {
-					// TODO: use a logger here
-					System.out.println("UNKNOWN VALUE CHANGE: old=(" + oldValue
-							+ ") new=(" + newValue + ")");
+					Logger.getLogger(this.getClass().getName()).warning(
+							"UNKNOWN VALUE CHANGE: old=(" + oldValue + ") new=(" + newValue + ")");
 				}
 			}
 			// Need to update indicated QContainers:
@@ -218,8 +218,8 @@ public class DefaultInterview implements Interview {
 				}
 			}
 			// ACTIVE, when at least one follow-up question is ACTIVE
-			for (TerminologyObject followup_question : getAllFollowUpChildrenOf(children)) {
-				if (isActive((InterviewObject) followup_question)) {
+			for (TerminologyObject followUpQuestion : getAllFollowUpChildrenOf(children)) {
+				if (isActive((InterviewObject) followUpQuestion)) {
 					return InterviewState.ACTIVE;
 				}
 			}
@@ -279,7 +279,7 @@ public class DefaultInterview implements Interview {
 	 */
 	private boolean allQContainers(TerminologyObject[] objects) {
 		for (TerminologyObject object : objects) {
-			if ((object instanceof QContainer) == false) {
+			if (!(object instanceof QContainer)) {
 				return false;
 			}
 		}
@@ -296,7 +296,7 @@ public class DefaultInterview implements Interview {
 	 */
 	private boolean allQuestions(TerminologyObject[] objects) {
 		for (TerminologyObject object : objects) {
-			if ((object instanceof Question) == false) {
+			if (!(object instanceof Question)) {
 				return false;
 			}
 		}
