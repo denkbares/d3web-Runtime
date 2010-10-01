@@ -23,7 +23,6 @@
  */
 package de.d3web.abstraction.formula;
 
-import de.d3web.core.session.values.EvaluatableAnswerNumValue;
 
 /**
  * This interface describes a formula-element which can be evaluated to a
@@ -32,6 +31,6 @@ import de.d3web.core.session.values.EvaluatableAnswerNumValue;
  * 
  * @author vogele
  */
-public interface FormulaNumberElement extends FormulaElement, EvaluatableAnswerNumValue {
+public interface FormulaNumberElement extends FormulaElement {
 
 }

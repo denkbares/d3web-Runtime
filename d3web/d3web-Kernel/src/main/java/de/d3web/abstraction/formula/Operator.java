@@ -25,6 +25,8 @@ import java.util.LinkedList;
 
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.NumValue;
 
 /**
  * Complex FormulaElement. Creation date: (14.08.2000 15:41:43)
@@ -63,29 +65,35 @@ public class Operator implements FormulaNumberElement {
 	 * @return null, if one argument is "null", a "0"-Double else.
 	 */
 	@Override
-	public Double eval(Session session) {
+	public Value eval(Session session) {
 		if (getArg1() == null || getArg2() == null) {
 			return null;
 		}
 
-		Double evaluatedArg1 = (getArg1().eval(session));
-		Double evaluatedArg2 = (getArg2().eval(session));
+		Number evaluatedArg1 = (Number) (getArg1().eval(session)).getValue();
+		Number evaluatedArg2 = (Number) (getArg2().eval(session)).getValue();
 		if ((evaluatedArg1 == null) || (evaluatedArg2 == null)) {
 			return null;
 		}
 		switch (operator) {
 		case Add:
-			return new Double(evaluatedArg1.doubleValue() + evaluatedArg2.doubleValue());
+			return new NumValue(new Double(evaluatedArg1.doubleValue()
+					+ evaluatedArg2.doubleValue()));
 		case Div:
-			return new Double(evaluatedArg1.doubleValue() / evaluatedArg2.doubleValue());
+			return new NumValue(new Double(evaluatedArg1.doubleValue()
+					/ evaluatedArg2.doubleValue()));
 		case Max:
-			return new Double(Math.max(evaluatedArg1.doubleValue(), evaluatedArg2.doubleValue()));
+			return new NumValue(new Double(Math.max(evaluatedArg1.doubleValue(),
+					evaluatedArg2.doubleValue())));
 		case Min:
-			return new Double(Math.min(evaluatedArg1.doubleValue(), evaluatedArg2.doubleValue()));
+			return new NumValue(new Double(Math.min(evaluatedArg1.doubleValue(),
+					evaluatedArg2.doubleValue())));
 		case Mult:
-			return new Double(evaluatedArg1.doubleValue() * evaluatedArg2.doubleValue());
+			return new NumValue(new Double(evaluatedArg1.doubleValue()
+					* evaluatedArg2.doubleValue()));
 		case Sub:
-			return new Double(evaluatedArg1.doubleValue() - evaluatedArg2.doubleValue());
+			return new NumValue(new Double(evaluatedArg1.doubleValue()
+					- evaluatedArg2.doubleValue()));
 		default:
 			return null;
 		}

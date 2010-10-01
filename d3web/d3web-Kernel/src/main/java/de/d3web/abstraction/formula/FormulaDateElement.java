@@ -23,13 +23,12 @@
  */
 package de.d3web.abstraction.formula;
 
-import de.d3web.core.session.values.EvaluatableAnswerDateValue;
 
 /**
  * This interface describes a formula-element which can be evalutated to a Date.
  * 
  * @author vogele
  */
-public interface FormulaDateElement extends FormulaElement, EvaluatableAnswerDateValue {
+public interface FormulaDateElement extends FormulaElement {
 
 }

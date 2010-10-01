@@ -27,6 +27,7 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 
@@ -60,7 +61,7 @@ public class QNumWrapper implements FormulaNumberElement {
 	 * @return the Double value of the wrapped QuestionNum
 	 */
 	@Override
-	public Double eval(Session session) {
+	public Value eval(Session session) {
 		Value val = session.getBlackboard().getValue(getQuestion());
 		if (val == null
 				|| val instanceof UndefinedValue
@@ -68,7 +69,7 @@ public class QNumWrapper implements FormulaNumberElement {
 			return null;
 		}
 		else {
-			return (Double) val.getValue();
+			return new NumValue((Double) val.getValue());
 		}
 	}
 

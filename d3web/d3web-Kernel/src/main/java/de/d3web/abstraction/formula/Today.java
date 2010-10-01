@@ -34,6 +34,8 @@ import java.util.GregorianCalendar;
 
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.DateValue;
 
 /**
  * @author vogele
@@ -44,7 +46,7 @@ import de.d3web.core.session.Session;
 public class Today implements FormulaDateElement {
 
 	private FormulaNumberElement arg;
-	private Double evaluatedArg;
+	private Value evaluatedArg;
 
 	public Today() {
 		this(new FormulaNumber(new Double(0)));
@@ -55,16 +57,16 @@ public class Today implements FormulaDateElement {
 	}
 
 	@Override
-	public Date eval(Session session) {
+	public Value eval(Session session) {
 		if (getArg() == null) {
 			return null;
 		}
 		evaluatedArg = (getArg().eval(session));
 
 		GregorianCalendar cal = new GregorianCalendar();
-		cal.add(Calendar.DAY_OF_YEAR, (int) evaluatedArg.doubleValue());
+		cal.add(Calendar.DAY_OF_YEAR, (Integer) evaluatedArg.getValue());
 
-		return new Date(cal.getTimeInMillis());
+		return new DateValue(new Date(cal.getTimeInMillis()));
 	}
 
 	@Override
@@ -83,10 +85,6 @@ public class Today implements FormulaDateElement {
 
 	public void setArg(FormulaNumberElement arg) {
 		this.arg = arg;
-	}
-
-	public Double getEvaluatedArg() {
-		return evaluatedArg;
 	}
 
 	@Override

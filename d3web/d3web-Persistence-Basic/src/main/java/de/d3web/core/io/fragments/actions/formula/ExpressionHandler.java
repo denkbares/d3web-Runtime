@@ -21,6 +21,7 @@ package de.d3web.core.io.fragments.actions.formula;
 import java.io.IOException;
 import java.util.List;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.abstraction.formula.FormulaElement;
@@ -28,37 +29,30 @@ import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Question;
 
 /**
- * Provides basic functionalities for ExpressionHandlers
+ * Handels Expressions in old KBs. In new KBs the FormulaElements are directly
+ * stored
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public abstract class AbstractExpressionHandler implements FragmentHandler {
+public class ExpressionHandler implements FragmentHandler {
 
 	@Override
 	public boolean canRead(Element element) {
-		return element.getNodeName().equals(getNodeName());
+		return element.getNodeName().equals("FormulaDateExpression")
+				|| element.getNodeName().equals("FormulaExpression");
 	}
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
-		Question q = null;
 		FormulaElement fe = null;
 		for (Element child : childNodes) {
-			// in previous versions of the persistence, some Questions are saved
-			// with their type, e.g. QuestionNum
+			// in previous versions of the persistence, there were links to the
+			// question, questionnum etc.
 			if (child.getNodeName().startsWith("Question")) {
-				String qid = child.getAttribute("ID");
-				Question question = kb.searchQuestion(qid);
-				if (q == null) {
-					q = question;
-				}
-				else {
-					throw new IOException("Only one question allowed.");
-				}
+				// Nothing todo, link to question not needed
 			}
 			else {
 				Object object = PersistenceManager.getInstance().readFragment(child, kb);
@@ -70,10 +64,17 @@ public abstract class AbstractExpressionHandler implements FragmentHandler {
 				}
 			}
 		}
-		return createObject(q, fe);
+		return fe;
 	}
 
-	protected abstract Object createObject(Question q, FormulaElement fe) throws IOException;
+	@Override
+	public boolean canWrite(Object object) {
+		// FormulaDateExpression doesn't exist any more
+		return false;
+	}
 
-	protected abstract String getNodeName();
+	@Override
+	public Element write(Object object, Document doc) throws IOException {
+		throw new IOException("This Fragment handler only exists to read old kbs.");
+	}
 }

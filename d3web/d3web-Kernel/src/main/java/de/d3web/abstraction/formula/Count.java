@@ -28,7 +28,9 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.NumValue;
 
 /**
  * FormulaElement term that can count the answers of a QuestionMC Creation date:
@@ -67,7 +69,7 @@ public class Count implements FormulaNumberElement {
 	 *         0, if the active answer is "No" or "unknown".
 	 */
 	@Override
-	public Double eval(Session session) {
+	public Value eval(Session session) {
 		MultipleChoiceValue value = (MultipleChoiceValue) session.getBlackboard().getValue(
 				getQuestionMC());
 		List<Choice> choices = value.asChoiceList();
@@ -75,10 +77,10 @@ public class Count implements FormulaNumberElement {
 		// check, if AnswerNo oder AnswerUnknown is included
 		for (Choice answerChoice : choices) {
 			if (answerChoice.isAnswerNo()) {
-				return new Double(0);
+				return new NumValue(new Double(0));
 			}
 		}
-		return new Double(choices.size());
+		return new NumValue(choices.size());
 	}
 
 	public QuestionMC getQuestionMC() {

@@ -25,7 +25,6 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.abstraction.formula.FormulaNumberElement;
 import de.d3web.abstraction.formula.Operator;
 import de.d3web.abstraction.formula.Operator.Operation;
@@ -88,10 +87,9 @@ public class NumericAbstractionsOnBlackboardTest {
 				new Operator(new QNumWrapper(height), new QNumWrapper(height), Operation.Mult),
 				Operation.Div);
 		// Assignment: bmi = (weight / (height * height))
-		FormulaExpression formula = new FormulaExpression(bmi, fElement);
 
 		// Rule: IF height>0 AND weight>0 THEN bmi= (weight / (height * height))
-		RuleFactory.createSetValueRule("r1", bmi, formula,
+		RuleFactory.createSetValueRule("r1", bmi, fElement,
 				new CondAnd(Arrays.asList(new Condition[] {
 						new CondNumGreater(height, 0.0),
 						new CondNumGreater(weight, 0.0) })));

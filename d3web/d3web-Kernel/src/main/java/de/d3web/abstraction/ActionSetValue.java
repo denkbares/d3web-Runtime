@@ -20,24 +20,23 @@
 
 package de.d3web.abstraction;
 
-import de.d3web.abstraction.formula.FormulaDateExpression;
-import de.d3web.abstraction.formula.FormulaExpression;
+import java.util.LinkedList;
+import java.util.List;
+
+import de.d3web.abstraction.formula.Count;
+import de.d3web.abstraction.formula.FormulaElement;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.values.ChoiceValue;
-import de.d3web.core.session.values.DateValue;
-import de.d3web.core.session.values.EvaluatableAnswerDateValue;
-import de.d3web.core.session.values.EvaluatableAnswerNumValue;
-import de.d3web.core.session.values.NumValue;
 
 /**
- * Sets a specified value for a specified question.
- * The value can be a {@link FormulaExpression} or a specified {@link Choice} of
- * a question.
+ * Sets a specified value for a specified question. The value can be a
+ * {@link FormulaExpression} or a specified {@link Choice} of a question.
  * 
  * Creation date: (20.06.2001 18:19:13)
  * 
@@ -52,6 +51,18 @@ public class ActionSetValue extends ActionQuestionSetter {
 		super();
 	}
 
+	@Override
+	public List<? extends TerminologyObject> getForwardObjects() {
+		List<TerminologyObject> list = new LinkedList<TerminologyObject>();
+		if (getValue() instanceof FormulaElement) {
+			if (getValue() instanceof Count) {
+				Count count = (Count) getValue();
+				list.addAll(count.getTerminalObjects());
+			}
+		}
+		return list;
+	}
+
 	/**
 	 * Sets the specified value for the specified question.
 	 */
@@ -60,20 +71,9 @@ public class ActionSetValue extends ActionQuestionSetter {
 		Value oldValue = session.getBlackboard().getValue(getQuestion());
 		if (getValue() != null) {
 			Value tempVal;
-
-			if (getValue() instanceof FormulaExpression) {
-				tempVal = ((FormulaExpression) getValue()).eval(session);
-			}
-			else if (getValue() instanceof EvaluatableAnswerNumValue) {
-				EvaluatableAnswerNumValue evaluatableValue = (EvaluatableAnswerNumValue) getValue();
-				tempVal = new NumValue(evaluatableValue.eval(session));
-			}
-			else if (getValue() instanceof FormulaDateExpression) {
-				tempVal = ((FormulaDateExpression) getValue()).eval(session);
-			}
-			else if (getValue() instanceof EvaluatableAnswerDateValue) {
-				EvaluatableAnswerDateValue evaluatableValue = (EvaluatableAnswerDateValue) getValue();
-				tempVal = new DateValue(evaluatableValue.eval(session));
+			if (getValue() instanceof FormulaElement) {
+				FormulaElement evaluatableValue = (FormulaElement) getValue();
+				tempVal = evaluatableValue.eval(session);
 			}
 			else if (getValue() instanceof Choice) {
 				tempVal = new ChoiceValue((Choice) getValue());

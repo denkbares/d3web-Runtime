@@ -29,6 +29,8 @@ import java.util.GregorianCalendar;
 
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.NumValue;
 
 /**
  * A Term which has 2 Dates as Arguments.
@@ -44,12 +46,12 @@ public class YearDiff implements FormulaNumberElement {
 	 * Here the evaluation value will be stored while trying to evaluate the
 	 * term. It warrents, that the evaluation will be done only once.
 	 */
-	private Date evaluatedArg1 = null;
+	private Value evaluatedArg1 = null;
 
 	/**
 	 * Look above.
 	 */
-	private Date evaluatedArg2 = null;
+	private Value evaluatedArg2 = null;
 
 	/**
 	 * Creates a new term with its two arguments
@@ -138,12 +140,12 @@ public class YearDiff implements FormulaNumberElement {
 	}
 
 	@Override
-	public Double eval(Session session) {
+	public Value eval(Session session) {
 		evaluateArguments(session);
 		GregorianCalendar cal1 = new GregorianCalendar();
-		cal1.setTime(evaluatedArg1);
+		cal1.setTime((Date) evaluatedArg1.getValue());
 		GregorianCalendar cal2 = new GregorianCalendar();
-		cal2.setTime(evaluatedArg2);
+		cal2.setTime((Date) evaluatedArg2.getValue());
 
 		double yearDiff = cal1.get(Calendar.YEAR) - cal2.get(Calendar.YEAR);
 
@@ -155,6 +157,6 @@ public class YearDiff implements FormulaNumberElement {
 			yearDiff--;
 		}
 
-		return new Double(yearDiff);
+		return new NumValue(new Double(yearDiff));
 	}
 }

@@ -25,6 +25,8 @@ import java.util.LinkedList;
 
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.NumValue;
 
 /**
  * Primitive formula element in number format Creation date: (14.08.2000
@@ -58,8 +60,8 @@ public class FormulaNumber implements FormulaNumberElement {
 	 * @return Double-value of this FormulaElement
 	 */
 	@Override
-	public Double eval(Session session) {
-		return value;
+	public Value eval(Session session) {
+		return new NumValue(value);
 	}
 
 	/**

@@ -32,8 +32,6 @@ import org.w3c.dom.Document;
 
 import de.d3web.abstraction.ActionSetValue;
 import de.d3web.abstraction.formula.FormulaDateElement;
-import de.d3web.abstraction.formula.FormulaDateExpression;
-import de.d3web.abstraction.formula.FormulaExpression;
 import de.d3web.abstraction.formula.FormulaNumber;
 import de.d3web.abstraction.formula.Today;
 import de.d3web.core.inference.Rule;
@@ -51,7 +49,6 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionMC;
-import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.indication.ActionClarify;
 import de.d3web.indication.ActionContraIndication;
@@ -75,7 +72,6 @@ public class ActionTest {
 	private Choice answerYes;
 
 	private QuestionChoice questionMC;
-	private QuestionNum questionNum;
 	private QuestionDate questionDate;
 
 	private Solution solution;
@@ -102,8 +98,6 @@ public class ActionTest {
 		answerYes.setText("a2-text");
 
 		questionMC = new QuestionMC("q1-id");
-
-		questionNum = new QuestionNum("qnum1-id");
 
 		questionDate = new QuestionDate("qdate1-id");
 
@@ -297,11 +291,10 @@ public class ActionTest {
 	@Test
 	public void testActionSetValueValue() throws Exception {
 		FormulaNumber fn = new FormulaNumber(new Double(13));
-		FormulaExpression fe = new FormulaExpression(questionNum, fn);
 
 		List<Object> setValueList = new LinkedList<Object>();
 		setValueList.add(answerNo);
-		setValueList.add(fe);
+		setValueList.add(fn);
 		setValueList.add(answerYes);
 
 		ActionSetValue aav = new ActionSetValue();
@@ -334,21 +327,13 @@ public class ActionTest {
 		XMLTag fe1Tag = new XMLTag("Value");
 		fe1Tag.addAttribute("type", "evaluatable");
 
-		XMLTag formulaExp = new XMLTag("FormulaExpression");
-
-		XMLTag questNumTag = new XMLTag("Question");
-		questNumTag.addAttribute("ID", "qnum1-id");
-
 		XMLTag formulaNum = new XMLTag("FormulaPrimitive");
 		formulaNum.addAttribute("type", "FormulaNumber");
 		XMLTag value = new XMLTag("Value");
 		value.setContent("13.0");
 		formulaNum.addChild(value);
 
-		formulaExp.addChild(questNumTag);
-		formulaExp.addChild(formulaNum);
-
-		fe1Tag.addChild(formulaExp);
+		fe1Tag.addChild(formulaNum);
 
 		// answer-choice2
 		XMLTag ac2Tag = new XMLTag("Value");
@@ -383,17 +368,16 @@ public class ActionTest {
 	@Test
 	public void testActionSetValueAndActionAddValueDate() throws Exception {
 		FormulaDateElement fn = new Today(new FormulaNumber(new Double(13)));
-		FormulaDateExpression fe = new FormulaDateExpression(questionDate, fn);
 
 		ActionSetValue aav = new ActionSetValue();
 		rule.setAction(aav);
 		aav.setQuestion(questionDate);
-		aav.setValue(fe);
+		aav.setValue(fn);
 
 		ActionSetValue asv = new ActionSetValue();
 		rule.setAction(asv);
 		asv.setQuestion(questionDate);
-		asv.setValue(fe);
+		asv.setValue(fn);
 
 		shouldTagAdd = new XMLTag("Action");
 		shouldTagAdd.addAttribute("type", "ActionSetValue");
@@ -410,11 +394,6 @@ public class ActionTest {
 		XMLTag fe1Tag = new XMLTag("Value");
 		fe1Tag.addAttribute("type", "evaluatable");
 
-		XMLTag formulaExp = new XMLTag("FormulaDateExpression");
-
-		XMLTag questDateTag = new XMLTag("Question");
-		questDateTag.addAttribute("ID", "qdate1-id");
-
 		XMLTag today = new XMLTag("Today");
 		XMLTag number = new XMLTag("FormulaPrimitive");
 		number.addAttribute("type", "FormulaNumber");
@@ -423,10 +402,7 @@ public class ActionTest {
 		number.addChild(value);
 		today.addChild(number);
 
-		formulaExp.addChild(questDateTag);
-		formulaExp.addChild(today);
-
-		fe1Tag.addChild(formulaExp);
+		fe1Tag.addChild(today);
 
 		valuesTag.addChild(fe1Tag);
 

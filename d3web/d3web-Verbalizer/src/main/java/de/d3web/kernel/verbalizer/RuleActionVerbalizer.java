@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import de.d3web.abstraction.ActionSetValue;
-import de.d3web.abstraction.formula.FormulaExpression;
+import de.d3web.abstraction.formula.FormulaElement;
 import de.d3web.abstraction.formula.FormulaNumber;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.Choice;
@@ -229,8 +229,8 @@ public class RuleActionVerbalizer implements Verbalizer {
 			if (item instanceof Choice) {
 				s += VerbalizationManager.getInstance().verbalize(item, RenderingFormat.HTML);
 			}
-			else if (item instanceof FormulaExpression) {
-				s += ((FormulaExpression) item).getFormulaElement().toString();
+			else if (item instanceof FormulaElement) {
+				s += item.toString();
 			}
 			else if (item instanceof FormulaNumber) {
 				s += ((FormulaNumber) item).toString();

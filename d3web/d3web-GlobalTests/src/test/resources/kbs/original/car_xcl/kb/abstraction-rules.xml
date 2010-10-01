@@ -44,8 +44,6 @@
 <Question ID="Q6"/>
 <Values>
 <Value type="evaluatable">
-<FormulaExpression>
-<Question ID="Q6"/>
 <FormulaTerm type="*">
 <arg1>
 <FormulaTerm type="/">
@@ -67,7 +65,6 @@
 </FormulaPrimitive>
 </arg2>
 </FormulaTerm>
-</FormulaExpression>
 </Value>
 </Values>
 </Action>

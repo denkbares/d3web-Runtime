@@ -34,6 +34,8 @@ import java.util.LinkedList;
 
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.DateValue;
 
 /**
  * Primitive formula date element in date format Creation date: (14.08.2000
@@ -73,8 +75,8 @@ public class FormulaDate implements FormulaDateElement {
 	 * @return Double-value of this FormulaElement
 	 */
 	@Override
-	public Date eval(Session session) {
-		return value;
+	public Value eval(Session session) {
+		return new DateValue(value);
 	}
 
 	/**

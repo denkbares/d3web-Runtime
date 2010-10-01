@@ -205,13 +205,13 @@
 	</extension>
 	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="FormulaDateExpressionHandler">
+		id="ExpressionHandler">
 		<parameter id="class"
-			value="de.d3web.core.io.fragments.actions.formula.FormulaDateExpressionHandler" />
-		<parameter id="name" value="FormulaDateExpressionHandler" />
-		<parameter id="description" value="Handles date formulas" />
+			value="de.d3web.core.io.fragments.actions.formula.ExpressionHandler" />
+		<parameter id="name" value="ExpressionHandler" />
+		<parameter id="description" value="Handles expressions in old KBs." />
 		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
+		<parameter id="priority" value="5.1" />
 	</extension>
 	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
@@ -220,16 +220,6 @@
 			value="de.d3web.core.io.fragments.actions.formula.FormulaElementHandler" />
 		<parameter id="name" value="FormulaElementHandler" />
 		<parameter id="description" value="Handles basic formula elements." />
-		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
-	</extension>
-	
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="FormulaExpressionHandler">
-		<parameter id="class"
-			value="de.d3web.core.io.fragments.actions.formula.FormulaExpressionHandler" />
-		<parameter id="name" value="FormulaExpressionHandler" />
-		<parameter id="description" value="Handles formula expressions." />
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>

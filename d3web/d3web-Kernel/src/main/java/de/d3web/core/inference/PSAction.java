@@ -20,8 +20,10 @@
 
 package de.d3web.core.inference;
 
+import java.util.LinkedList;
 import java.util.List;
 
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.Session;
 
@@ -48,6 +50,16 @@ public abstract class PSAction implements Cloneable {
 	 *         maps.
 	 */
 	public abstract List<? extends NamedObject> getTerminalObjects();
+
+	/**
+	 * Returns Terminology objects, which are part of the forward Knowledge
+	 * 
+	 * @created 30.09.2010
+	 * @return List of {@link TerminologyObject}
+	 */
+	public List<? extends TerminologyObject> getForwardObjects() {
+		return new LinkedList<TerminologyObject>();
+	}
 
 	// public abstract Class<? extends PSMethod> getProblemsolverContext();
 

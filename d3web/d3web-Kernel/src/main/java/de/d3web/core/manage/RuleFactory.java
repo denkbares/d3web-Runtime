@@ -27,8 +27,7 @@ import java.util.List;
 
 import de.d3web.abstraction.ActionQuestionSetter;
 import de.d3web.abstraction.ActionSetValue;
-import de.d3web.abstraction.formula.FormulaDateExpression;
-import de.d3web.abstraction.formula.FormulaExpression;
+import de.d3web.abstraction.formula.FormulaElement;
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
@@ -398,7 +397,7 @@ public class RuleFactory {
 	public static Rule createSetValueRule(
 			String theId,
 			Question theQuestion,
-			FormulaExpression theAnswer,
+			FormulaElement theAnswer,
 			Condition theCondition) {
 		return createSetValueRule(
 				theId,
@@ -415,46 +414,7 @@ public class RuleFactory {
 	public static Rule createSetValueRule(
 			String theId,
 			Question theQuestion,
-			FormulaDateExpression theAnswer,
-			Condition theCondition) {
-		return createSetValueRule(
-				theId,
-				theQuestion,
-				theAnswer,
-				theCondition,
-				null);
-	}
-
-	/**
-	 * Creates a rule to set values for a given question with the specified
-	 * parameters.
-	 */
-	public static Rule createSetValueRule(
-			String theId,
-			Question theQuestion,
-			FormulaExpression theValue,
-			Condition theCondition,
-			Condition theRuleException) {
-
-		Rule rule = new Rule(theId, PSMethodAbstraction.class);
-
-		ActionSetValue theAction = new ActionSetValue();
-		theAction.setQuestion(theQuestion);
-		theAction.setValue(theValue);
-
-		setRuleParams(rule, theAction, theCondition, theRuleException);
-
-		return rule;
-	}
-
-	/**
-	 * Creates a rule to set values for a given question with the specified
-	 * parameters.
-	 */
-	public static Rule createSetValueRule(
-			String theId,
-			Question theQuestion,
-			FormulaDateExpression theValue,
+			FormulaElement theValue,
 			Condition theCondition,
 			Condition theRuleException) {
 

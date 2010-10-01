@@ -23,6 +23,8 @@ package de.d3web.abstraction.formula;
 import java.util.Collection;
 
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 
 /**
  * This interface discribes a general FormulaElement Used Pattern: Composite
@@ -40,4 +42,13 @@ public interface FormulaElement {
 	 *         e.g. a Double
 	 */
 	public Collection<? extends TerminologyObject> getTerminalObjects();
+
+	/**
+	 * Evaluates the {@link Value} of the {@link FormulaElement}
+	 * 
+	 * @created 01.10.2010
+	 * @param session {@link Session}
+	 * @return {@link Value}
+	 */
+	public Value eval(Session session);
 }

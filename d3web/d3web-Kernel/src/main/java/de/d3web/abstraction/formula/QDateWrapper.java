@@ -33,6 +33,7 @@ import java.util.Date;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.DateValue;
 
 /**
@@ -64,14 +65,14 @@ public class QDateWrapper implements FormulaDateElement {
 	 * @return evaluated AnswerNumValue (Double) of the wrapped QuestionNum
 	 */
 	@Override
-	public Date eval(Session session) {
+	public Value eval(Session session) {
 		if (session.getBlackboard().getValue(getQuestion()) == null) {
 			return null;
 		}
 		DateValue value = (DateValue) session.getBlackboard().getValue(getQuestion());
 		// EvaluatableAnswerDateValue ret
 		// =(EvaluatableAnswerDateValue)ans.getValue(session);
-		return (Date) value.getValue();
+		return new DateValue((Date) value.getValue());
 
 	}
 
