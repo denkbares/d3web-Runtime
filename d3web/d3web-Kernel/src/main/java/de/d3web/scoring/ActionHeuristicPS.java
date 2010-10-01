@@ -60,7 +60,7 @@ public class ActionHeuristicPS extends PSAction {
 	 * @return all objects participating on the action.<BR>
 	 */
 	@Override
-	public List<? extends NamedObject> getTerminalObjects() {
+	public List<? extends NamedObject> getBackwardObjects() {
 		List<Solution> terminals = new ArrayList<Solution>(1);
 		if (getSolution() != null) {
 			terminals.add(getSolution());

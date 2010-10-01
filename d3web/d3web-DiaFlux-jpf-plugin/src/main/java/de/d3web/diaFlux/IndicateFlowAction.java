@@ -74,7 +74,7 @@ public class IndicateFlowAction extends PSAction {
 	}
 
 	@Override
-	public List<? extends NamedObject> getTerminalObjects() {
+	public List<? extends NamedObject> getBackwardObjects() {
 		return new ArrayList<NamedObject>(0);
 	}
 

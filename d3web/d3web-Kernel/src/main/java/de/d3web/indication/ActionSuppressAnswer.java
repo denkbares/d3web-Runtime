@@ -77,7 +77,7 @@ public class ActionSuppressAnswer extends PSAction {
 	 * @return all objects participating on the action.
 	 */
 	@Override
-	public List<? extends NamedObject> getTerminalObjects() {
+	public List<? extends NamedObject> getBackwardObjects() {
 		List<NamedObject> terminals = new ArrayList<NamedObject>(1);
 		if (getQuestion() != null) {
 			terminals.add(getQuestion());

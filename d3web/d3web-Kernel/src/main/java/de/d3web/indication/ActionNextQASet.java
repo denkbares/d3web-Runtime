@@ -84,7 +84,7 @@ public abstract class ActionNextQASet extends PSAction {
 	 *         same as getQASets()
 	 */
 	@Override
-	public List<QASet> getTerminalObjects() {
+	public List<QASet> getBackwardObjects() {
 		return getQASets();
 	}
 

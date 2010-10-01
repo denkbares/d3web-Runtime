@@ -25,7 +25,7 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.d3web.abstraction.formula.FormulaNumberElement;
+import de.d3web.abstraction.formula.FormulaElement;
 import de.d3web.abstraction.formula.Operator;
 import de.d3web.abstraction.formula.Operator.Operation;
 import de.d3web.abstraction.formula.QNumWrapper;
@@ -83,7 +83,7 @@ public class NumericAbstractionsOnBlackboardTest {
 
 		// Now create the formula expression:
 		// Formula: (weight / (height * height))
-		FormulaNumberElement fElement = new Operator(new QNumWrapper(weight),
+		FormulaElement fElement = new Operator(new QNumWrapper(weight),
 				new Operator(new QNumWrapper(height), new QNumWrapper(height), Operation.Mult),
 				Operation.Div);
 		// Assignment: bmi = (weight / (height * height))

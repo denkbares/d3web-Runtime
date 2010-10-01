@@ -66,7 +66,7 @@ public class QNumWrapper implements FormulaNumberElement {
 		if (val == null
 				|| val instanceof UndefinedValue
 				|| val instanceof Unknown) {
-			return null;
+			return value.getDefaultValue();
 		}
 		else {
 			return new NumValue((Double) val.getValue());

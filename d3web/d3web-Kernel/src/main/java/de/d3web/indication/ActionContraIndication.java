@@ -67,7 +67,7 @@ public class ActionContraIndication extends PSAction {
 	}
 
 	@Override
-	public List<QASet> getTerminalObjects() {
+	public List<QASet> getBackwardObjects() {
 		return getQASets();
 	}
 

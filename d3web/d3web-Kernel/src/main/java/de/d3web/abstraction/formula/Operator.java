@@ -27,6 +27,7 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.UndefinedValue;
 
 /**
  * Complex FormulaElement. Creation date: (14.08.2000 15:41:43)
@@ -40,10 +41,10 @@ public class Operator implements FormulaNumberElement {
 	}
 
 	/** first argument of the term */
-	private FormulaNumberElement arg1 = null;
+	private final FormulaNumberElement arg1;
 
 	/** second argument of the term */
-	private FormulaNumberElement arg2 = null;
+	private final FormulaNumberElement arg2;
 
 	private final Operation operator;
 
@@ -54,27 +55,24 @@ public class Operator implements FormulaNumberElement {
 	 * @param arg2 second argument
 	 */
 	public Operator(FormulaNumberElement arg1, FormulaNumberElement arg2, Operation operator) {
+		if (arg1 == null || arg2 == null) throw new NullPointerException(
+				"The arguments must not be null.");
 		this.operator = operator;
-		setArg1(arg1);
-		setArg2(arg2);
+		this.arg1 = arg1;
+		this.arg2 = arg2;
 	}
 
-	/**
-	 * Checks if term contains null (rek.) Creation date: (14.08.2000 17:05:38)
-	 * 
-	 * @return null, if one argument is "null", a "0"-Double else.
-	 */
 	@Override
 	public Value eval(Session session) {
-		if (getArg1() == null || getArg2() == null) {
-			return null;
+		Object value = (getArg1().eval(session)).getValue();
+		Object value2 = (getArg2().eval(session)).getValue();
+		if ((value == null) || !(value instanceof Number) || (value2 == null)
+				|| !(value2 instanceof Number)) {
+			return UndefinedValue.getInstance();
 		}
 
-		Number evaluatedArg1 = (Number) (getArg1().eval(session)).getValue();
-		Number evaluatedArg2 = (Number) (getArg2().eval(session)).getValue();
-		if ((evaluatedArg1 == null) || (evaluatedArg2 == null)) {
-			return null;
-		}
+		Number evaluatedArg1 = (Number) value;
+		Number evaluatedArg2 = (Number) value2;
 		switch (operator) {
 		case Add:
 			return new NumValue(new Double(evaluatedArg1.doubleValue()
@@ -144,14 +142,6 @@ public class Operator implements FormulaNumberElement {
 		default:
 			return null;
 		}
-	}
-
-	public void setArg1(FormulaNumberElement arg1) {
-		this.arg1 = arg1;
-	}
-
-	public void setArg2(FormulaNumberElement arg2) {
-		this.arg2 = arg2;
 	}
 
 	/**

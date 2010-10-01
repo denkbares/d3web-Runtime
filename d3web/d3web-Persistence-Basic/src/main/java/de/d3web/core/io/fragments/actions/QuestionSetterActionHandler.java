@@ -28,7 +28,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.d3web.abstraction.ActionQuestionSetter;
 import de.d3web.abstraction.ActionSetValue;
 import de.d3web.core.io.FragmentManager;
 import de.d3web.core.io.PersistenceManager;
@@ -58,12 +57,11 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 
 	@Override
 	public boolean canWrite(Object object) {
-		return (object instanceof ActionQuestionSetter);
+		return (object instanceof ActionSetValue);
 	}
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		String roottype = element.getAttribute("type");
 		Question question = null;
 		// value will be later determined, now set to undefined for safety
 		Object value = UndefinedValue.getInstance();
@@ -105,13 +103,7 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 			}
 		}
 
-		ActionQuestionSetter action = null;
-		if (roottype.equals("ActionAddValue")) {
-			action = new ActionSetValue();
-		}
-		else if (roottype.equals("ActionSetValue")) {
-			action = new ActionSetValue();
-		}
+		ActionSetValue action = new ActionSetValue();
 		action.setQuestion(question);
 		action.setValue(value);
 		return action;
@@ -119,7 +111,7 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
-		ActionQuestionSetter action = (ActionQuestionSetter) object;
+		ActionSetValue action = (ActionSetValue) object;
 		Question question = action.getQuestion();
 		Element element = doc.createElement("Action");
 		// if (action instanceof ActionAddValue) {
@@ -153,7 +145,7 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 			valueNode.setAttribute("ID", id);
 			valuesNode.appendChild(valueNode);
 		}
-		else if (action != null) {
+		else {
 			if (action.getValue() instanceof Object[]) {
 				Object[] list = (Object[]) action.getValue();
 				for (Object o : list) {
@@ -181,9 +173,6 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 				valueNode.setAttribute("type", "evaluatable");
 				valuesNode.appendChild(valueNode);
 			}
-		}
-		else {
-			throw new IOException("Tried to write an Action that is null.");
 		}
 
 		element.appendChild(valuesNode);

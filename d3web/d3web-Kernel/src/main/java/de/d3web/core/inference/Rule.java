@@ -25,6 +25,7 @@ import java.util.List;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
@@ -309,20 +310,36 @@ public class Rule implements CaseObjectSource {
 			PSAction oldAction,
 			PSAction newAction) {
 		if ((oldAction != null)
-				&& (oldAction.getTerminalObjects() != null)) {
+				&& (oldAction.getBackwardObjects() != null)) {
 			removeFrom(
 					this,
-					oldAction.getTerminalObjects(),
+					oldAction.getBackwardObjects(),
+					getProblemsolverContext(),
+					MethodKind.BACKWARD);
+		}
+		if ((oldAction != null)
+				&& (oldAction.getForwardObjects() != null)) {
+			removeFrom(
+					this,
+					oldAction.getForwardObjects(),
+					getProblemsolverContext(),
+					MethodKind.FORWARD);
+		}
+		if ((newAction != null)
+				&& (newAction.getBackwardObjects() != null)) {
+			insertInto(
+					this,
+					newAction.getBackwardObjects(),
 					getProblemsolverContext(),
 					MethodKind.BACKWARD);
 		}
 		if ((newAction != null)
-				&& (newAction.getTerminalObjects() != null)) {
+				&& (newAction.getForwardObjects() != null)) {
 			insertInto(
 					this,
-					newAction.getTerminalObjects(),
+					newAction.getForwardObjects(),
 					getProblemsolverContext(),
-					MethodKind.BACKWARD);
+					MethodKind.FORWARD);
 		}
 		updateConditionTerminals(oldAction, newAction, getCondition());
 		updateConditionTerminals(oldAction, newAction, getException());
@@ -366,11 +383,11 @@ public class Rule implements CaseObjectSource {
 	 * */
 	public static void removeFrom(
 			Rule r,
-			List<? extends NamedObject> namedObjects,
+			List<? extends TerminologyObject> namedObjects,
 			Class<? extends PSMethod> psContext,
 			MethodKind kind) {
 		if (namedObjects != null) {
-			for (NamedObject nob : namedObjects) {
+			for (TerminologyObject nob : namedObjects) {
 				removeFrom(r, psContext, kind, nob);
 			}
 		}
@@ -384,14 +401,14 @@ public class Rule implements CaseObjectSource {
 	 * @param kind Methodkind
 	 * @param nob specified Object
 	 */
-	public static void removeFrom(Rule r, Class<? extends PSMethod> psContext, MethodKind kind, NamedObject nob) {
+	public static void removeFrom(Rule r, Class<? extends PSMethod> psContext, MethodKind kind, TerminologyObject nob) {
 		if (nob != null) {
-			KnowledgeSlice knowledge = nob.getKnowledge(psContext, kind);
+			KnowledgeSlice knowledge = ((NamedObject) nob).getKnowledge(psContext, kind);
 			if (knowledge != null) {
 				RuleSet rs = (RuleSet) knowledge;
 				rs.removeRule(r);
 				if (rs.isEmpty()) {
-					nob.removeKnowledge(psContext, rs, kind);
+					((NamedObject) nob).removeKnowledge(psContext, rs, kind);
 				}
 			}
 		}
@@ -407,11 +424,11 @@ public class Rule implements CaseObjectSource {
 	 * */
 	public static void insertInto(
 			Rule r,
-			List<? extends NamedObject> namedObjects,
+			List<? extends TerminologyObject> namedObjects,
 			Class<? extends PSMethod> psContext,
 			MethodKind kind) {
 		if (namedObjects != null) {
-			for (NamedObject nob : namedObjects) {
+			for (TerminologyObject nob : namedObjects) {
 				insertInto(r, psContext, kind, nob);
 			}
 		}
@@ -425,9 +442,9 @@ public class Rule implements CaseObjectSource {
 	 * @param kind Methodkind
 	 * @param nob specified Object
 	 */
-	public static void insertInto(Rule r, Class<? extends PSMethod> psContext, MethodKind kind, NamedObject nob) {
+	public static void insertInto(Rule r, Class<? extends PSMethod> psContext, MethodKind kind, TerminologyObject nob) {
 		if (nob != null) {
-			KnowledgeSlice knowledge = nob.getKnowledge(psContext, kind);
+			KnowledgeSlice knowledge = ((NamedObject) nob).getKnowledge(psContext, kind);
 			if (knowledge != null) {
 				RuleSet rs = (RuleSet) knowledge;
 				rs.addRule(r);
@@ -435,7 +452,7 @@ public class Rule implements CaseObjectSource {
 			else {
 				RuleSet rs = new RuleSet(psContext);
 				rs.addRule(r);
-				nob.addKnowledge(psContext, rs, kind);
+				((NamedObject) nob).addKnowledge(psContext, rs, kind);
 			}
 		}
 	}
@@ -458,8 +475,7 @@ public class Rule implements CaseObjectSource {
 		}
 		// removeRuleFromObjects(getCondition().getTerminalObjects());
 		condition = newCondition;
-		if (getCondition() != null)
-		 {
+		if (getCondition() != null) {
 			insertInto(
 					this,
 					getCondition().getTerminalObjects(),
@@ -542,12 +558,19 @@ public class Rule implements CaseObjectSource {
 							getProblemsolverContext(),
 							MethodKind.FORWARD);
 				}
-				if (getAction() != null && (getAction().getTerminalObjects() != null)) {
+				if (getAction() != null && (getAction().getBackwardObjects() != null)) {
 					removeFrom(
 							this,
-							getAction().getTerminalObjects(),
+							getAction().getBackwardObjects(),
 							getProblemsolverContext(),
 							MethodKind.BACKWARD);
+				}
+				if (getAction() != null && (getAction().getForwardObjects() != null)) {
+					removeFrom(
+							this,
+							getAction().getForwardObjects(),
+							getProblemsolverContext(),
+							MethodKind.FORWARD);
 				}
 
 			}
@@ -571,12 +594,20 @@ public class Rule implements CaseObjectSource {
 						MethodKind.FORWARD);
 			}
 			if ((getAction() != null)
-					&& (getAction().getTerminalObjects() != null)) {
+					&& (getAction().getBackwardObjects() != null)) {
 				insertInto(
 						this,
-						getAction().getTerminalObjects(),
+						getAction().getBackwardObjects(),
 						getProblemsolverContext(),
 						MethodKind.BACKWARD);
+			}
+			if ((getAction() != null)
+					&& (getAction().getForwardObjects() != null)) {
+				insertInto(
+						this,
+						getAction().getForwardObjects(),
+						getProblemsolverContext(),
+						MethodKind.FORWARD);
 			}
 		}
 	}

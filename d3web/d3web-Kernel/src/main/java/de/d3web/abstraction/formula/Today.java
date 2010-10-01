@@ -58,9 +58,6 @@ public class Today implements FormulaDateElement {
 
 	@Override
 	public Value eval(Session session) {
-		if (getArg() == null) {
-			return null;
-		}
 		evaluatedArg = (getArg().eval(session));
 
 		GregorianCalendar cal = new GregorianCalendar();

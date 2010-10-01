@@ -54,7 +54,7 @@ public class NoopAction extends PSAction {
 	}
 
 	@Override
-	public List<NamedObject> getTerminalObjects() {
+	public List<NamedObject> getBackwardObjects() {
 		return new ArrayList<NamedObject>(0);
 	}
 

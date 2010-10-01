@@ -25,7 +25,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.abstraction.ActionQuestionSetter;
 import de.d3web.abstraction.ActionSetValue;
 import de.d3web.abstraction.formula.FormulaElement;
 import de.d3web.abstraction.inference.PSMethodAbstraction;
@@ -56,46 +55,6 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  * @author Joachim Baumeister
  */
 public class RuleFactory {
-
-	// /**
-	// * Creates a rule to set values for a given question with the specified
-	// * parameters.
-	// */
-	// public static Rule createAddValueRule(
-	// String theId,
-	// Question theQuestion,
-	// Object theValue,
-	// Condition theCondition) {
-	//
-	// return createAddValueRule(
-	// theId,
-	// theQuestion,
-	// theValue,
-	// theCondition,
-	// null);
-	// }
-
-	// /**
-	// * Creates a rule to add values to a given question with the specified
-	// * parameters.
-	// */
-	// public static Rule createAddValueRule(
-	// String theId,
-	// Question theQuestion,
-	// Object theValue,
-	// Condition theCondition,
-	// Condition theRuleException) {
-	//
-	// Rule rule = new Rule(theId, PSMethodAbstraction.class);
-	//
-	// ActionAddValue theAction = new ActionAddValue();
-	// theAction.setQuestion(theQuestion);
-	// theAction.setValue(theValue);
-	//
-	// setRuleParams(rule, theAction, theCondition, theRuleException);
-	//
-	// return rule;
-	// }
 
 	/**
 	 * Creates a clarification-rule with the specified parameters.
@@ -503,7 +462,7 @@ public class RuleFactory {
 		else if (action instanceof ActionNextQASet) {
 			return PSMethodStrategic.class;
 		}
-		else if (action instanceof ActionQuestionSetter) {
+		else if (action instanceof ActionSetValue) {
 			return PSMethodAbstraction.class;
 		}
 		else if (action instanceof ActionSuppressAnswer) {

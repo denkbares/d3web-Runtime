@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.Session;
 
 /**
@@ -49,7 +48,7 @@ public abstract class PSAction implements Cloneable {
 	 *         Needed from RuleComplex to manage dynamic references of knowledge
 	 *         maps.
 	 */
-	public abstract List<? extends NamedObject> getTerminalObjects();
+	public abstract List<? extends TerminologyObject> getBackwardObjects();
 
 	/**
 	 * Returns Terminology objects, which are part of the forward Knowledge
