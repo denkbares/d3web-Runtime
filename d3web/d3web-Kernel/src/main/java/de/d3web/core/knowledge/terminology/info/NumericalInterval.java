@@ -80,7 +80,7 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 		this(left, right, false, false);
 	}
 
-	public void checkValidity() throws IntervalException {
+	private void checkValidity() throws IntervalException {
 		if (getLeft() == getRight() && isLeftOpen() && isRightOpen()) {
 			throw new IntervalException(
 					"an interval containing only one value must not be open on any side");

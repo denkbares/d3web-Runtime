@@ -60,8 +60,8 @@ public class YearDiff implements FormulaNumberElement {
 	 * @param arg2 second argument
 	 */
 	public YearDiff(FormulaDateElement arg1, FormulaDateElement arg2) {
-		setArg1(arg1);
-		setArg2(arg2);
+		this.arg1 = arg1;
+		this.arg2 = arg2;
 	}
 
 	/**
@@ -103,22 +103,8 @@ public class YearDiff implements FormulaNumberElement {
 		return arg1;
 	}
 
-	/**
-	 * @param arg1
-	 */
-	public void setArg1(FormulaDateElement arg1) {
-		this.arg1 = arg1;
-	}
-
 	public FormulaDateElement getArg2() {
 		return arg2;
-	}
-
-	/**
-	 * @param arg2
-	 */
-	public void setArg2(FormulaDateElement arg2) {
-		this.arg2 = arg2;
 	}
 
 	public String getSymbol() {

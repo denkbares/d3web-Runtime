@@ -25,7 +25,6 @@ import java.util.List;
 import org.w3c.dom.Node;
 
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -99,17 +98,7 @@ public class Util {
 	private static class CopiedSession extends DefaultSession {
 
 		public CopiedSession(KnowledgeBase kb) {
-			super(null, kb, new Date());
-		}
-
-		@Override
-		protected void addPlugedPSMethods(KnowledgeBase knowledgebase) {
-			// do nothing
-		}
-
-		@Override
-		public void addUsedPSMethod(PSMethod psmethod) {
-			// do nothing
+			super(null, kb, new Date(), false);
 		}
 	}
 }

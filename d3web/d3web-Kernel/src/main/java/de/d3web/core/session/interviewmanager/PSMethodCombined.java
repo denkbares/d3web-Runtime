@@ -35,14 +35,10 @@ import de.d3web.core.inference.PSMethodAdapter;
  */
 public abstract class PSMethodCombined extends PSMethodAdapter {
 
-	private Collection<PSMethod> psmethods;
+	private Collection<PSMethod> psmethods = new LinkedList<PSMethod>();
 
 	public void addPSMethod(PSMethod newPSMethod) {
 		psmethods.add(newPSMethod);
-	}
-
-	public PSMethodCombined() {
-		setPSMethods(new LinkedList<PSMethod>());
 	}
 
 	/**

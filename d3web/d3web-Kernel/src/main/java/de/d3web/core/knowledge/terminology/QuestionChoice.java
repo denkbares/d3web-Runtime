@@ -39,11 +39,10 @@ import de.d3web.core.manage.KnowledgeBaseManagement;
  */
 public abstract class QuestionChoice extends Question {
 
-	private List<Choice> alternatives;
+	private List<Choice> alternatives = new LinkedList<Choice>();
 
 	public QuestionChoice(String id) {
 		super(id);
-		this.setAlternatives(new LinkedList<Choice>());
 	}
 
 	/**

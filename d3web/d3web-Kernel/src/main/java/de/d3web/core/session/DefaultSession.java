@@ -102,22 +102,24 @@ public class DefaultSession implements Session {
 					PSMethodInterview.getInstance()
 					);
 
-	/**
-	 * Creates a new user case with the specified knowledge base. <br>
-	 * The default problem-solvers for each case are listed in static array
-	 * <code>commonPSMethods</code>. See class comment for further details.
-	 */
 	protected DefaultSession(String id, KnowledgeBase knowledgebase, Date creationDate) {
+		this(id, knowledgebase, creationDate, true);
+	}
+
+	protected DefaultSession(String id, KnowledgeBase knowledgebase, Date creationDate, boolean psm) {
 		this.id = id;
 		created = creationDate;
 		edited = new Date();
 		initSession(knowledgebase);
-		// register some common problem solving methods
-		// first add the methods
-		for (PSMethod method : commonPSMethods) {
-			addUsedPSMethod(method);
+		if (psm) {
+			// register some common problem solving methods
+			// first add the methods
+			for (PSMethod method : commonPSMethods) {
+				addUsedPSMethod(method); // NOSONAR TODO Make this method
+											// private and remove this comment
+			}
+			addPlugedPSMethods(knowledgebase);
 		}
-		addPlugedPSMethods(knowledgebase);
 	}
 
 	/**
@@ -126,7 +128,7 @@ public class DefaultSession implements Session {
 	 * @created 24.09.2010
 	 * @param knowledgebase {@link KnowledgeBase}
 	 */
-	protected void addPlugedPSMethods(KnowledgeBase knowledgebase) {
+	private void addPlugedPSMethods(KnowledgeBase knowledgebase) {
 		// get PluginConfiguration
 		PluginConfig pc = PluginConfig.getPluginConfig(knowledgebase);
 		// add plugged PS with default config, only if none instance of this
@@ -240,7 +242,7 @@ public class DefaultSession implements Session {
 	 * 
 	 * @param newUsedPSMethods java.util.List
 	 * @Deprecated use pluginmechnasim to add psmethods, make this method
-	 *             protected
+	 *             private
 	 */
 	@Deprecated
 	public void addUsedPSMethod(PSMethod psmethod) {

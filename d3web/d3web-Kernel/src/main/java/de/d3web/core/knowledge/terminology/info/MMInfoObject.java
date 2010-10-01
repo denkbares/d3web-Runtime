@@ -34,16 +34,12 @@ public class MMInfoObject implements DCMarkedUp {
 	private String content;
 
 	public MMInfoObject(DCMarkup dcData, String content) {
-		setDCMarkup(dcData);
-		setContent(content);
+		initDCMarkup(dcData);
+		this.content = content;
 	}
 
 	public String getContent() {
 		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
 	}
 
 	/**
@@ -94,6 +90,10 @@ public class MMInfoObject implements DCMarkedUp {
 	 */
 	@Override
 	public void setDCMarkup(DCMarkup dcData) {
+		initDCMarkup(dcData);
+	}
+
+	private void initDCMarkup(DCMarkup dcData) {
 		String subject = dcData.getContent(DCElement.SUBJECT);
 
 		// [MISC]:aha:legacy code
@@ -111,10 +111,7 @@ public class MMInfoObject implements DCMarkedUp {
 				return;
 			}
 		}
-
 		Logger.getLogger(this.getClass().getName()).warning(
 				subject + " is not valid as DCElement.SUBJECT!");
-		return;
-		// throw new NullPointerException();
 	}
 }

@@ -48,7 +48,7 @@ public class AbnormalityInterval extends NumericalInterval {
 			boolean rightOpen)
 			throws NumericalInterval.IntervalException {
 		super(lowerBoundary, upperBoundary, leftOpen, rightOpen);
-		setValue(value);
+		this.value = value;
 	}
 
 	@Override

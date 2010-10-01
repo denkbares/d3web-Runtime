@@ -53,7 +53,7 @@ public class Today implements FormulaDateElement {
 	}
 
 	public Today(FormulaNumberElement argument) {
-		setArg(argument);
+		this.arg = argument;
 	}
 
 	@Override
@@ -78,10 +78,6 @@ public class Today implements FormulaDateElement {
 		else {
 			return arg;
 		}
-	}
-
-	public void setArg(FormulaNumberElement arg) {
-		this.arg = arg;
 	}
 
 	@Override

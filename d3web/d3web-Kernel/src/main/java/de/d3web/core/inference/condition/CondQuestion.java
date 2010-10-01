@@ -84,7 +84,7 @@ public abstract class CondQuestion extends TerminalCondition {
 	 * 
 	 * @param question the constrained question of this condition
 	 */
-	protected void setQuestion(Question question) {
+	protected final void setQuestion(Question question) {
 		this.question = question;
 	}
 

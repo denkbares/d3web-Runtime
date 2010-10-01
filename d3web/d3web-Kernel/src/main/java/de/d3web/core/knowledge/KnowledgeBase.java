@@ -253,7 +253,7 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	 *        problem-solver
 	 */
 	@Override
-	public synchronized void addKnowledge(Class<? extends PSMethod> problemsolver,
+	public final synchronized void addKnowledge(Class<? extends PSMethod> problemsolver,
 			KnowledgeSlice knowledgeSlice, MethodKind knowledgeContext) {
 		/* make sure, that a storage for the problemsolver is available */
 		if (knowledgeMap.get(problemsolver) == null) {

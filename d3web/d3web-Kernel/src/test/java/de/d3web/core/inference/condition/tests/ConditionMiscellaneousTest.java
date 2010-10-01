@@ -54,7 +54,6 @@ import de.d3web.core.session.values.Unknown;
 import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.scoring.Score;
 
-
 /**
  * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
@@ -131,7 +130,7 @@ public class ConditionMiscellaneousTest {
 		assertThat(conditionMofN.getMin(), is(0));
 
 		// now set the min-border to 1:
-		conditionMofN.setMin(1);
+		conditionMofN = new CondMofN(Arrays.asList(conditions), 1, 2);
 		assertThat(conditionMofN.getMin(), is(1));
 
 		// Test the toString() method
@@ -194,7 +193,7 @@ public class ConditionMiscellaneousTest {
 			fail("Unexpected exception thrown: UnknownAnswerException");
 		}
 	}
-	
+
 	@Test
 	public void testConditionKnown() {
 		// Summary: Test for a KnownCondition
@@ -300,7 +299,7 @@ public class ConditionMiscellaneousTest {
 	public void testConditionDiagnosisState() {
 		Solution solution = kbm.createSolution("solutionDiagnosis");
 		String ruleID = kbm.createRuleID();
-		
+
 		// Create the following rule:
 		//
 		// IF choiceQuestion1 = "yes"
@@ -318,11 +317,11 @@ public class ConditionMiscellaneousTest {
 		String string = conditionDState.toString();
 		assertThat(string, notNullValue());
 		assertThat(string.isEmpty(), is(false));
-		
+
 		// .equals() Method of CondDState is possibly buggy!!
 		Condition copiedCondition = conditionDState.copy();
 		assertThat(conditionDState, is(equalTo(copiedCondition)));
-		
+
 		assertThat(conditionDState.hashCode(), is(not(0)));
 
 		// open up a new session:

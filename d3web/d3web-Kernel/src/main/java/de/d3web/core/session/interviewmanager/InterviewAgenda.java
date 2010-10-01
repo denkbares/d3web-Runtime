@@ -168,7 +168,7 @@ public final class InterviewAgenda {
 	 * 
 	 * @param interviewObject {@link InterviewObject}
 	 */
-	public void append(InterviewObject interviewObject) {
+	public final void append(InterviewObject interviewObject) {
 		// trace("Append: " + interviewObject);
 		if (onAgenda(interviewObject)) {
 			activate(interviewObject);

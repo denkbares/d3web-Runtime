@@ -47,8 +47,11 @@ public class CondMofN extends NonTerminalCondition {
 	 */
 	public CondMofN(List<Condition> terms, int min, int max) {
 		super(terms);
-		setMin(min);
-		setMax(max);
+		if (min < 0) {
+			min = 0;
+		}
+		this.min = min;
+		this.max = max;
 	}
 
 	@Override
@@ -103,27 +106,6 @@ public class CondMofN extends NonTerminalCondition {
 	 */
 	public int getMin() {
 		return min;
-	}
-
-	/**
-	 * Sets the maximum number of allowed sub-conditions to be true.
-	 * 
-	 * @param max the maximum number of allowed true sub-conditions
-	 */
-	public void setMax(int max) {
-		this.max = max;
-	}
-
-	/**
-	 * Sets the minimum number of required sub-conditions to be true.
-	 * 
-	 * @param min the minimum number of required true sub-conditions
-	 */
-	public void setMin(int min) {
-		if (min < 0) {
-			min = 0;
-		}
-		this.min = min;
 	}
 
 	@Override
