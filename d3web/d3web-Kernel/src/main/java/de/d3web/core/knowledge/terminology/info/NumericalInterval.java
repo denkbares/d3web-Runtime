@@ -117,7 +117,7 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 	 * 
 	 * @return double
 	 */
-	public double getLeft() {
+	public final double getLeft() {
 		return left;
 	}
 
@@ -126,7 +126,7 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 	 * 
 	 * @return boolean
 	 */
-	public boolean isLeftOpen() {
+	public final boolean isLeftOpen() {
 		return leftOpen;
 	}
 
@@ -135,7 +135,7 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 	 * 
 	 * @return double
 	 */
-	public double getRight() {
+	public final double getRight() {
 		return right;
 	}
 
@@ -144,7 +144,7 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 	 * 
 	 * @return boolean
 	 */
-	public boolean isRightOpen() {
+	public final boolean isRightOpen() {
 		return rightOpen;
 	}
 
@@ -153,7 +153,7 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 	 * 
 	 * @param left The left to set
 	 */
-	public void setLeft(double left) {
+	public final void setLeft(double left) {
 		this.left = left;
 	}
 
@@ -162,7 +162,7 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 	 * 
 	 * @param leftopen The leftopen to set
 	 */
-	public void setLeftOpen(boolean leftOpen) {
+	public final void setLeftOpen(boolean leftOpen) {
 		this.leftOpen = leftOpen;
 	}
 
@@ -171,7 +171,7 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 	 * 
 	 * @param right The right to set
 	 */
-	public void setRight(double right) {
+	public final void setRight(double right) {
 		this.right = right;
 	}
 
@@ -180,7 +180,7 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 	 * 
 	 * @param rightopen The rightopen to set
 	 */
-	public void setRightOpen(boolean rightOpen) {
+	public final void setRightOpen(boolean rightOpen) {
 		this.rightOpen = rightOpen;
 	}
 

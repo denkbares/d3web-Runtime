@@ -118,7 +118,9 @@ public class DefaultSession implements Session {
 				addUsedPSMethod(method); // NOSONAR TODO Make this method
 											// private and remove this comment
 			}
-			addPlugedPSMethods(knowledgebase);
+			addPlugedPSMethods(knowledgebase); // NOSONAR, indirect call of
+												// addUsedPSMethod, TODO remove
+												// this comment when private
 		}
 	}
 

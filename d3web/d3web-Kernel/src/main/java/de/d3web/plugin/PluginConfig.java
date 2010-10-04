@@ -55,7 +55,7 @@ public class PluginConfig implements KnowledgeSlice {
 	}
 
 	@Override
-	public Class<? extends PSMethod> getProblemsolverContext() {
+	public final Class<? extends PSMethod> getProblemsolverContext() {
 		return PROBLEMSOLVER;
 	}
 

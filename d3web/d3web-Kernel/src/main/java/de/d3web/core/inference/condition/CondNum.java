@@ -54,7 +54,7 @@ public abstract class CondNum extends CondQuestion {
 	protected CondNum(QuestionNum question, Double value) {
 		super(question);
 		setQuestion(question);
-		setAnswerValue(value);
+		this.conditionValue = value;
 	}
 
 	/**
@@ -64,15 +64,6 @@ public abstract class CondNum extends CondQuestion {
 	 */
 	public Double getConditionValue() {
 		return conditionValue;
-	}
-
-	/**
-	 * Sets the numerical value that constrains this condition
-	 * 
-	 * @param answerValue the numerical value of this condition
-	 */
-	public void setAnswerValue(Double answerValue) {
-		this.conditionValue = answerValue;
 	}
 
 	@Override
