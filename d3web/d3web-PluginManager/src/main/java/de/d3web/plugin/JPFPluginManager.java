@@ -49,7 +49,7 @@ public class JPFPluginManager extends PluginManager {
 
 	private final org.java.plugin.PluginManager manager;
 
-	private HashMap<org.java.plugin.registry.Extension, Extension> cachedExtension = new HashMap<org.java.plugin.registry.Extension, Extension>();
+	private final HashMap<org.java.plugin.registry.Extension, Extension> cachedExtension = new HashMap<org.java.plugin.registry.Extension, Extension>();
 
 	/**
 	 * Contains the registered Plugins. The field will be initialized lazy by
@@ -123,7 +123,8 @@ public class JPFPluginManager extends PluginManager {
 	 * @throws IllegalArgumentException the files could not be used for
 	 *         initialization
 	 */
-	public static void init(File[] pluginFiles) {
+	public static void init(File[] pluginFiles) { // NOSONAR false-positive
+													// warning
 		if (pluginFiles == null) {
 			// throw new IllegalArgumentException("invalid plugin files");
 			Logger.getLogger("PluginManager").severe(

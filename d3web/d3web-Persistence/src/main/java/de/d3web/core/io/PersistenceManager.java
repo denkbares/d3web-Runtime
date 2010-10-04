@@ -164,7 +164,7 @@ public class PersistenceManager extends FragmentManager {
 					JarBinaryRessource jarBinaryRessource = new JarBinaryRessource(entry, file);
 					kb.addResouce(jarBinaryRessource);
 				}
-				else if (notNeeded(entry)) {
+				else if (notNeeded(entry)) { // NOSONAR
 					// nothing to to, files were necessary for previous versions
 					// of persistence
 				}

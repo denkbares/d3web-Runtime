@@ -188,7 +188,7 @@ class IterativeDeepeningSearch {
 			throws AbortException {
 
 		if (actual.getCosts() / model.getBestBenefit() > model
-				.getBestCostBenefit()) {
+				.getBestCostBenefit()) { // NOSONAR
 			// nothing to do
 		}
 		else if (depth == 1) {

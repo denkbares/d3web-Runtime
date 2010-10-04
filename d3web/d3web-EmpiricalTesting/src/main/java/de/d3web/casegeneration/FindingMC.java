@@ -21,6 +21,7 @@
 package de.d3web.casegeneration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -37,8 +38,8 @@ import de.d3web.core.knowledge.terminology.QuestionMC;
  */
 public class FindingMC {
 
-	private Question question;
-	private Choice[] answers;
+	private final Question question;
+	private final Choice[] answers;
 
 	/**
 	 * Creates a new FindingMC with the committed question and answers
@@ -48,7 +49,7 @@ public class FindingMC {
 	 */
 	public FindingMC(Question question, Choice[] answers) {
 		this.question = question;
-		this.answers = answers;
+		this.answers = Arrays.copyOf(answers, answers.length);
 	}
 
 	/**

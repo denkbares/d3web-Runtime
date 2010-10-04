@@ -51,7 +51,7 @@ public class ExpressionHandler implements FragmentHandler {
 		for (Element child : childNodes) {
 			// in previous versions of the persistence, there were links to the
 			// question, questionnum etc.
-			if (child.getNodeName().startsWith("Question")) {
+			if (child.getNodeName().startsWith("Question")) { // NOSONAR
 				// Nothing todo, link to question not needed
 			}
 			else {

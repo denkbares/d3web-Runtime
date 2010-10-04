@@ -18,6 +18,7 @@
  */
 package de.d3web.costbenefit.blackboard;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -43,7 +44,7 @@ public class CostBenefitCaseObject extends SessionObject {
 	private int currentPathIndex = -1;
 	private boolean hasBegun = false;
 	private Set<Solution> diags = new HashSet<Solution>();
-	private Session session;
+	private final Session session;
 
 	public CostBenefitCaseObject(CaseObjectSource theSourceObject, Session session) {
 		super(theSourceObject);
@@ -59,7 +60,7 @@ public class CostBenefitCaseObject extends SessionObject {
 	}
 
 	public void setCurrentSequence(QContainer[] currentSequence) {
-		this.currentSequence = currentSequence;
+		this.currentSequence = Arrays.copyOf(currentSequence, currentSequence.length);
 	}
 
 	public SearchModel getCbm() {

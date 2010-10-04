@@ -185,7 +185,7 @@ public class BasicPersistenceHandler implements
 			else if (name.equals("Costs")) {
 				costNodes = XMLUtil.getElementList(child.getChildNodes());
 			}
-			else if (name.equals("PriorityGroups")) {
+			else if (name.equals("PriorityGroups")) { // NOSONAR
 				// do nothing, PriorityGroups not supported any more
 			}
 			else if (name.equals("rootQASet")) {
