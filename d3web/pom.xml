@@ -87,7 +87,10 @@
 				<groupId>com.atlassian.maven.plugins</groupId>
 				<artifactId>maven-clover2-plugin</artifactId>
 				<version>3.0.2</version>
-                <configuration>
+                <configuration>		    
+					<generatePdf>true</generatePdf>
+					<generateHtml>true</generateHtml>
+					<generateXml>true</generateXml>
 					<license><![CDATA[PQmPVbLLUJCxelqoMBXGvkcOmPxVdrkpXjFvwoqoiIceVM
 									mi2KGx3V0bg<2maWqqOu9WMQ2KgiaUzOG0tUr4MgnFQX2w
 									oRNPtUQOPqOPnRmPonoWsnQopOmnqQqmMOtVvNSTWvtOpP
@@ -130,6 +133,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.clover.encoding>UTF-8</maven.clover.encoding>
+		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+		<sonar.surefire.reportsPath>target/surefire-reports</sonar.surefire.reportsPath>
 		<sonar.clover.reportPath>target/site/clover/clover.xml</sonar.clover.reportPath>
 		<versionatorVersion>1.4</versionatorVersion>
 	</properties>
