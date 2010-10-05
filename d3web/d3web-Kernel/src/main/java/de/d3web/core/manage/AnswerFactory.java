@@ -32,7 +32,10 @@ import de.d3web.core.knowledge.terminology.Choice;
  * 
  * @author Joachim Baumeister
  */
-public class AnswerFactory {
+public final class AnswerFactory {
+
+	private AnswerFactory() { // enforce noninstantiability
+	}
 
 	public static Choice createAnswerChoice(
 			String theId,

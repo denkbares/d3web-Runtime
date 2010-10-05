@@ -31,7 +31,10 @@ import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy
  * 
  * @author joba, Norman Brümmer, Georg
  */
-public class SessionFactory {
+public final class SessionFactory {
+
+	private SessionFactory() { // enforce noninstantiability
+	}
 
 	/**
 	 * Factory-method that creates instances of Session.

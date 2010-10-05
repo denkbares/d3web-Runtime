@@ -69,10 +69,10 @@ public class QDateWrapper implements FormulaDateElement {
 		if (session.getBlackboard().getValue(getQuestion()) == null) {
 			return value.getDefaultValue();
 		}
-		DateValue value = (DateValue) session.getBlackboard().getValue(getQuestion());
+		DateValue dateValue = (DateValue) session.getBlackboard().getValue(getQuestion());
 		// EvaluatableAnswerDateValue ret
 		// =(EvaluatableAnswerDateValue)ans.getValue(session);
-		return new DateValue((Date) value.getValue());
+		return new DateValue((Date) dateValue.getValue());
 
 	}
 

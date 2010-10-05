@@ -103,8 +103,7 @@ public class Rule implements CaseObjectSource {
 	public boolean canFire(Session session) throws UnknownAnswerException {
 		try {
 			/* if an exception is available and it is true, then do not fire! */
-			if ((getException() != null)
-					&& (getException().eval(session) == true)) {
+			if ((getException() != null) && getException().eval(session)) {
 				return false;
 			}
 
@@ -128,8 +127,7 @@ public class Rule implements CaseObjectSource {
 			 * if a diagnosis context is available and it is false, then do not
 			 * fire!
 			 */
-			if ((getContext() != null)
-					&& (getContext().eval(session) == false)) {
+			if ((getContext() != null) && !getContext().eval(session)) {
 				return false;
 			}
 		}
@@ -167,11 +165,12 @@ public class Rule implements CaseObjectSource {
 	 * in a formula) it will be undone and fired again, so that the e.g.
 	 * depending formula will be recalculated.
 	 */
-	public void check(Session session) {
+	public void check(Session session) { // NOSONAR ignore cyclomatic complexity
+											// warning
 		// should we execute the rule action ???
-		boolean EXECUTE_ACTION = false;
+		boolean executeRuleAction = false;
 		// should we undo the rule action ???
-		boolean UNDO_ACTION = false;
+		boolean undoRuleAction = false;
 
 		try {
 			boolean hasFired = hasFired(session);
@@ -186,11 +185,11 @@ public class Rule implements CaseObjectSource {
 			}
 
 			if (!hasFired && canFire) {
-				EXECUTE_ACTION = true;
+				executeRuleAction = true;
 			}
 
 			if (hasFired && !canFire) {
-				UNDO_ACTION = true;
+				undoRuleAction = true;
 			}
 
 			// if the action is a question setter action, changes in depending
@@ -209,21 +208,21 @@ public class Rule implements CaseObjectSource {
 			if (hasFired
 					&& canFire
 					&& isQuestionSetterActionWithChangedValues) {
-				UNDO_ACTION = true;
-				EXECUTE_ACTION = true;
+				undoRuleAction = true;
+				executeRuleAction = true;
 			}
 
 		}
 		catch (UnknownAnswerException ex) {
 			if (hasFired(session)) {
-				UNDO_ACTION = true;
+				undoRuleAction = true;
 			}
 		}
 
-		if (UNDO_ACTION) {
+		if (undoRuleAction) {
 			undo(session);
 		}
-		if (EXECUTE_ACTION) {
+		if (executeRuleAction) {
 			doIt(session);
 		}
 	}
@@ -537,7 +536,7 @@ public class Rule implements CaseObjectSource {
 		((CaseRuleComplex) session.getCaseObject(this)).setFired(newFired);
 	}
 
-	public void setProblemsolverContext(Class<? extends PSMethod> problemsolverContext) {
+	public void setProblemsolverContext(Class<? extends PSMethod> problemsolverContext) { // NOSONAR
 		if (this.problemsolverContext != problemsolverContext) {
 			// remove old indexes
 			if (this.problemsolverContext != null) {
@@ -642,7 +641,7 @@ public class Rule implements CaseObjectSource {
 		if (o instanceof Rule) {
 			Rule r = (Rule) o;
 			boolean eq = super.equals(r);
-			if (eq == false) {
+			if (!eq) {
 				return false;
 			}
 			eq = eq && equalConditions(getCondition(), r.getCondition());
@@ -677,12 +676,7 @@ public class Rule implements CaseObjectSource {
 		if (a1 != null && a2 != null) {
 			return a1.equals(a2);
 		}
-		else if (a1 == null && a2 == null) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		else return (a1 == null && a2 == null);
 	}
 
 	private static boolean equalConditions(Condition c1, Condition c2) {
@@ -726,10 +720,12 @@ public class Rule implements CaseObjectSource {
 		b.append("IF   " + this.getCondition() + " \n");
 		b.append("THEN " + this.getAction() + "\n");
 		if (this.getException() != null) {
-			b.append("EXCEPT  " + this.getException().toString());
+			b.append("EXCEPT  ");
+			b.append(this.getException());
 		}
 		if (this.getContext() != null) {
-			b.append("CONTEXT " + this.getContext().toString());
+			b.append("CONTEXT ");
+			b.append(this.getContext());
 		}
 
 		return b.toString();

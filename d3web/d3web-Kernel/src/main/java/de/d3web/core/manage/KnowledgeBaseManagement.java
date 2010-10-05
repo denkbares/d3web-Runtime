@@ -494,7 +494,9 @@ public final class KnowledgeBaseManagement {
 		return new MultipleChoiceValue(choiceValues);
 	}
 
-	public Value findValue(Question question, String valueString) {
+	public Value findValue(Question question,
+			String valueString) { // NOSONAR ignore cyclomatic complexity
+									// warning
 		if (valueString.equals(UndefinedValue.UNDEFINED_ID)) {
 			return UndefinedValue.getInstance();
 		}

@@ -42,7 +42,7 @@ public abstract class CondNum extends CondQuestion {
 	 */
 	public final static double EPSILON = 0.000001;
 
-	private Double conditionValue;
+	private final Double conditionValue;
 
 	/**
 	 * Creates a new numerical condition having the specified value constraining
@@ -67,7 +67,8 @@ public abstract class CondNum extends CondQuestion {
 	}
 
 	@Override
-	public boolean equals(Object other) {
+	public boolean equals(Object other) { // NOSONAR ignore cyclomatic
+											// complexity warning
 		if (this == other) {
 			return true;
 		}

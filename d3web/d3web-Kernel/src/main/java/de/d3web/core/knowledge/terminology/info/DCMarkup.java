@@ -73,7 +73,7 @@ public class DCMarkup implements Cloneable {
 	 * instance.
 	 */
 	@Override
-	public Object clone() {
+	public Object clone() throws CloneNotSupportedException {
 		DCMarkup clonedDC = new DCMarkup();
 		Iterator<DCElement> iter = data.keySet().iterator();
 		while (iter.hasNext()) {

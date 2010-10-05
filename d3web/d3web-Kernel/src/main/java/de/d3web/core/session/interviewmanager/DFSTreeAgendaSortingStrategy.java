@@ -108,9 +108,12 @@ public class DFSTreeAgendaSortingStrategy implements AgendaSortingStrategy {
 		Collections.sort(instantIndicatedEntries, new DFSTreeSortingComparator(this.qasetIndex));
 		Collections.sort(remainingEntries, new DFSTreeSortingComparator(this.qasetIndex));
 
-		entries = instantIndicatedEntries;
-		entries.addAll(remainingEntries);
-		return entries;
+		// entries = instantIndicatedEntries;
+		// entries.addAll(remainingEntries);
+		// return entries;
+
+		instantIndicatedEntries.addAll(remainingEntries);
+		return instantIndicatedEntries;
 	}
 
 	/**

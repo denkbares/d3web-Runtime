@@ -48,10 +48,4 @@ public class QuestionOC extends QuestionChoice {
 			return getAllAlternatives();
 		}
 	}
-
-	@Override
-	public String toString() {
-		return super.toString();
-	}
-
 }

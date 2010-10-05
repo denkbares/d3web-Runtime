@@ -34,8 +34,8 @@ import de.d3web.core.session.Session;
  */
 public class CondMofN extends NonTerminalCondition {
 
-	private int min;
-	private int max;
+	private final int min;
+	private final int max;
 
 	/**
 	 * Creates a new min/max condition with a list of sub-conditions with the
@@ -47,10 +47,7 @@ public class CondMofN extends NonTerminalCondition {
 	 */
 	public CondMofN(List<Condition> terms, int min, int max) {
 		super(terms);
-		if (min < 0) {
-			min = 0;
-		}
-		this.min = min;
+		this.min = (min < 0 ? 0 : min);
 		this.max = max;
 	}
 
@@ -140,8 +137,7 @@ public class CondMofN extends NonTerminalCondition {
 
 	@Override
 	protected Condition createInstance(List<Condition> theTerms, Condition o) {
-		int min = ((CondMofN) o).getMin();
-		int max = ((CondMofN) o).getMax();
-		return new CondMofN(theTerms, min, max);
+		CondMofN cond = (CondMofN) o;
+		return new CondMofN(theTerms, cond.getMin(), cond.getMax());
 	}
 }

@@ -36,10 +36,10 @@ public abstract class CondTextQuestion extends CondQuestion {
 	public boolean eval(Session session)
 			throws NoAnswerException, UnknownAnswerException {
 		checkAnswer(session);
-		TextValue value = (TextValue) session.getBlackboard().getValue(getQuestion());
-		String textvalue = value.getValue().toString();
-		if (textvalue != null) {
-			return compare(textvalue);
+		TextValue textValue = (TextValue) session.getBlackboard().getValue(getQuestion());
+		String textString = textValue.getValue().toString();
+		if (textString != null) {
+			return compare(textString);
 		}
 		else {
 			return false;

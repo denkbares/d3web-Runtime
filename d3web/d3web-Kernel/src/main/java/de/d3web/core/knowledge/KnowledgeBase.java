@@ -235,7 +235,6 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		boolean removed = removeKnowledge(slice.getProblemsolverContext(),
 				slice);
 		slice.remove();
-		slice = null;
 		return removed;
 	}
 

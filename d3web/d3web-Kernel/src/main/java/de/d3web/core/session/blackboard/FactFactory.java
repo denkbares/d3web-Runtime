@@ -38,7 +38,10 @@ import de.d3web.indication.inference.PSMethodUserSelected;
  * 
  * @author joba
  */
-public class FactFactory {
+public final class FactFactory {
+
+	private FactFactory() { // enforce noninstantiability
+	}
 
 	/**
 	 * Creates a new fact assigning the specified {@link Value} to the specified
@@ -92,7 +95,7 @@ public class FactFactory {
 			// if not found, then try to find a question with this name
 			question = (Question) kb.searchObjectForName(questionID);
 		}
-		if (question != null && question instanceof QuestionChoice) {
+		if (question instanceof QuestionChoice) {
 			QuestionChoice qc = (QuestionChoice) question;
 			KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(kb);
 			Choice choice = kbm.findChoice(qc, answerID);

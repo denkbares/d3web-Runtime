@@ -32,7 +32,7 @@ import de.d3web.core.knowledge.terminology.info.NumericalInterval;
  */
 public class CondNumIn extends CondNum {
 
-	private NumericalInterval _interval;
+	private NumericalInterval numericalInterval;
 
 	/**
 	 * Creates a new condition, where the value of a specified numerical
@@ -56,12 +56,12 @@ public class CondNumIn extends CondNum {
 	 */
 	public CondNumIn(QuestionNum question, NumericalInterval theInterval) {
 		super(question, null);
-		_interval = theInterval;
+		numericalInterval = theInterval;
 	}
 
 	@Override
 	protected boolean compare(Double caseValue, Double conditionedValue) {
-		return _interval.contains(caseValue.doubleValue());
+		return numericalInterval.contains(caseValue.doubleValue());
 	}
 
 	/**
@@ -70,16 +70,18 @@ public class CondNumIn extends CondNum {
 	 * @return the maximum value of the condition
 	 */
 	public Double getMaxValue() {
-		return new Double(_interval.getRight());
+		return new Double(numericalInterval.getRight());
 	}
 
 	/**
 	 * Returns the minimum value required by this condition
 	 * 
+	 * @return
+	 * 
 	 * @return the minimum value of this condition
 	 */
-	public java.lang.Double getMinValue() {
-		return new Double(_interval.getLeft());
+	public Double getMinValue() {
+		return new Double(numericalInterval.getLeft());
 	}
 
 	@Override
@@ -110,7 +112,7 @@ public class CondNumIn extends CondNum {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((_interval == null) ? 0 : _interval.hashCode());
+		result = prime * result + ((numericalInterval == null) ? 0 : numericalInterval.hashCode());
 		return result;
 	}
 
@@ -120,7 +122,7 @@ public class CondNumIn extends CondNum {
 	 * @return the interval of allowed numerical values
 	 */
 	public NumericalInterval getInterval() {
-		return _interval;
+		return numericalInterval;
 	}
 
 	/**
@@ -129,7 +131,7 @@ public class CondNumIn extends CondNum {
 	 * @param inter the interval of allowed numerical values
 	 */
 	public void setInterval(NumericalInterval inter) {
-		_interval = inter;
+		numericalInterval = inter;
 	}
 
 	/**
@@ -140,7 +142,9 @@ public class CondNumIn extends CondNum {
 	public String getValue() {
 		StringBuffer out = new StringBuffer();
 		out.append(getInterval().isLeftOpen() ? "(" : "[");
-		out.append(getInterval().getLeft() + ", " + getInterval().getRight());
+		out.append(getInterval().getLeft());
+		out.append(", ");
+		out.append(getInterval().getRight());
 		out.append(getInterval().isRightOpen() ? ")" : "]");
 		return out.toString();
 	}

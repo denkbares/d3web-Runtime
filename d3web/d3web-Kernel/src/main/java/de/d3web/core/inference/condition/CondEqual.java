@@ -36,7 +36,7 @@ import de.d3web.core.session.values.UndefinedValue;
  */
 public class CondEqual extends CondQuestion {
 
-	private Value value;
+	private Value conditionValue;
 
 	/**
 	 * Creates a new equal-condition constraining a specified question to a
@@ -47,7 +47,7 @@ public class CondEqual extends CondQuestion {
 	 */
 	public CondEqual(Question question, Value value) {
 		super(question);
-		this.value = value;
+		this.conditionValue = value;
 	}
 
 	@Override
@@ -56,26 +56,26 @@ public class CondEqual extends CondQuestion {
 		checkAnswer(session);
 		Value value = session.getBlackboard().getValue(getQuestion());
 
-		if (this.value instanceof UndefinedValue) {
+		if (this.conditionValue instanceof UndefinedValue) {
 			return (value instanceof UndefinedValue);
 		}
 		else if (getQuestion() instanceof QuestionMC) {
 			if (value instanceof MultipleChoiceValue) {
 				MultipleChoiceValue currentValue = (MultipleChoiceValue) value;
-				if (this.value instanceof MultipleChoiceValue) {
-					return currentValue.containsAll((MultipleChoiceValue) this.value);
+				if (this.conditionValue instanceof MultipleChoiceValue) {
+					return currentValue.containsAll((MultipleChoiceValue) this.conditionValue);
 				}
 				else {
-					return currentValue.contains((ChoiceValue) this.value);
+					return currentValue.contains((ChoiceValue) this.conditionValue);
 				}
 			}
 			else {
 				// workaround if there is a AnswerChoice set
-				return this.value.equals(value);
+				return this.conditionValue.equals(value);
 			}
 		}
 		else {
-			return this.value.equals(value);
+			return this.conditionValue.equals(value);
 		}
 	}
 
@@ -86,7 +86,7 @@ public class CondEqual extends CondQuestion {
 	 * @return the constrained values of this condition
 	 */
 	public Value getValue() {
-		return value;
+		return conditionValue;
 	}
 
 	/**
@@ -96,14 +96,14 @@ public class CondEqual extends CondQuestion {
 	 * @param newValues the constrained values of this condition
 	 */
 	public void setValue(Value newValue) {
-		value = newValue;
+		conditionValue = newValue;
 	}
 
 	@Override
 	public String toString() {
 		String ret = "\u2190 CondEqual question: "
 				+ getQuestion().getId()
-				+ " value: " + this.value;
+				+ " value: " + this.conditionValue;
 		return ret;
 	}
 

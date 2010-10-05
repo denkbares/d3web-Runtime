@@ -102,12 +102,6 @@ public abstract class QuestionChoice extends Question {
 		return alternatives.remove(answer);
 	}
 
-	@Override
-	public String toString() {
-		String res = super.toString();
-		return res;
-	}
-
 	/**
 	 * @return the Num2ChoiceSchema that has been set to this question, null, if
 	 *         no such schema exists.

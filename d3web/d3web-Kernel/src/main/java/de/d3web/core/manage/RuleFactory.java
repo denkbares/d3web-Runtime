@@ -54,7 +54,10 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  * 
  * @author Joachim Baumeister
  */
-public class RuleFactory {
+public final class RuleFactory {
+
+	private RuleFactory() { // enforce noninstantiability
+	}
 
 	/**
 	 * Creates a clarification-rule with the specified parameters.

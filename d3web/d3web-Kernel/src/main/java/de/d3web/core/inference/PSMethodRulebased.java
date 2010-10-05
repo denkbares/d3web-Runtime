@@ -43,7 +43,7 @@ public abstract class PSMethodRulebased extends PSMethodAdapter {
 		if (nob != null) {
 			KnowledgeSlice slices = ((NamedObject) nob).getKnowledge(this
 					.getClass(), MethodKind.FORWARD);
-			if (slices != null && slices instanceof RuleSet) {
+			if (slices instanceof RuleSet) {
 				RuleSet rs = (RuleSet) slices;
 				for (Rule rule : rs.getRules()) {
 					rule.check(session);

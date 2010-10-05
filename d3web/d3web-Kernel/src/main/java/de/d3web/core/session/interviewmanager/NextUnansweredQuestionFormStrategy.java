@@ -77,7 +77,8 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 	 * @return the first {@link Question} instance, that is a child of the
 	 *         specified {@link QASet} and is not answered; null otherwise
 	 */
-	private Question retrieveNextQuestionToBeAnswered(QASet qaset, Session session, Collection<TerminologyObject> traversedObjects) {
+	private Question retrieveNextQuestionToBeAnswered(QASet qaset,
+			Session session, Collection<TerminologyObject> traversedObjects) { // NOSONAR
 		// Termination of recursive traversal: Required for possibly cyclic
 		// question hierarchies
 		if (traversedObjects.contains(qaset)) {
@@ -152,7 +153,7 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 	}
 
 	/**
-	 * @see 
+	 * @see
 	 *      NextUnansweredQuestionFormStrategy.isDirectQContainerQuestion(question
 	 *      )
 	 */

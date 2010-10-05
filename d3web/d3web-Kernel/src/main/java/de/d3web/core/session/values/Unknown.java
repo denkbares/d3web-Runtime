@@ -64,13 +64,7 @@ public class Unknown implements IDObject, QuestionValue {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Unknown) {
-			return true;
-		}
-		else {
-			return false;
-		}
-
+		return (other instanceof Unknown);
 	}
 
 	@Override

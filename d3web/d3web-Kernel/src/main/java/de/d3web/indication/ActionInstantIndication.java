@@ -63,11 +63,6 @@ public class ActionInstantIndication extends ActionIndication {
 	}
 
 	@Override
-	public int hashCode() {
-		return super.hashCode();
-	}
-
-	@Override
 	public void doIt(Session session, Object source, PSMethod psmethod) {
 		doItWithContext(session, source);
 	}

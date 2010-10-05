@@ -113,11 +113,6 @@ public class Solution extends NamedObject implements ValueObject {
 	}
 
 	@Override
-	public String toString() {
-		return super.toString();
-	}
-
-	@Override
 	public Value getDefaultValue() {
 		return new Rating(State.UNCLEAR);
 	}

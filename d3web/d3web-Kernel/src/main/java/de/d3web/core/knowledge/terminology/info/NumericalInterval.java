@@ -200,18 +200,9 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 			return false;
 		}
 		else {
-
 			NumericalInterval o = ((NumericalInterval) other);
-			if (leftOpen == o.isLeftOpen()
-					&& rightOpen == o.isRightOpen()
-					&& left == o.getLeft()
-					&& right == o.getRight()) {
-				return true;
-			}
-			else {
-				return false;
-			}
-
+			return (leftOpen == o.isLeftOpen() && rightOpen == o.isRightOpen()
+					&& left == o.getLeft() && right == o.getRight());
 		}
 	}
 
@@ -227,12 +218,7 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 			return false;
 		}
 		if (other.getRight() == this.getLeft()) {
-			if (this.isLeftOpen() || other.isRightOpen()) {
-				return false;
-			}
-			else {
-				return true;
-			}
+			return (!this.isLeftOpen() && !other.isRightOpen());
 		}
 		if (other.getLeft() > this.getRight()) {
 			return false;

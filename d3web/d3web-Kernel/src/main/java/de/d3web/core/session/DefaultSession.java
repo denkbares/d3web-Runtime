@@ -329,11 +329,6 @@ public class DefaultSession implements Session {
 	}
 
 	@Override
-	protected void finalize() throws Throwable {
-		super.finalize();
-	}
-
-	@Override
 	public DCMarkup getDCMarkup() {
 		return dcMarkup;
 	}

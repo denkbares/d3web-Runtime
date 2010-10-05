@@ -73,11 +73,11 @@ public class PSMethodInit implements PSMethod {
 					String s = (String) property;
 					List<String> ids = new LinkedList<String>();
 					int posstart = 0;
-					int posend = s.indexOf(";");
+					int posend = s.indexOf(';');
 					while (posend != -1) {
 						ids.add(s.substring(posstart, posend));
 						posstart = posend + 1;
-						posend = s.indexOf(";", posstart);
+						posend = s.indexOf(';', posstart);
 					}
 					ids.add(s.substring(posstart));
 					if (q instanceof QuestionOC) {

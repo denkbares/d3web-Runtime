@@ -79,6 +79,8 @@ public class DefaultInterview implements Interview {
 				session);
 	}
 
+	// TODO: This method has a cyclomatic complexity of 25 (whereas 10 is
+	// allowed). Please refactor this!
 	@Override
 	public void notifyFactChange(PropagationEntry changedFact) {
 		Value oldValue = (Value) changedFact.getOldValue();

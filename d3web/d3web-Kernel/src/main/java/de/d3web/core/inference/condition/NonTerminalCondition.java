@@ -98,15 +98,8 @@ public abstract class NonTerminalCondition implements Condition {
 			NonTerminalCondition otherNTC = (NonTerminalCondition) other;
 
 			if ((this.getTerms()) != null && (otherNTC.getTerms() != null)) {
-				if (this.getTerms().containsAll(
-						otherNTC.getTerms())
-						&&
-						otherNTC.getTerms().containsAll(this.getTerms())) {
-					return true;
-				}
-				else {
-					return false;
-				}
+				return (this.getTerms().containsAll(otherNTC.getTerms()) && otherNTC.getTerms().containsAll(
+						this.getTerms()));
 			}
 			else {
 				return ((this.getTerms()) == null && (otherNTC.getTerms() == null));

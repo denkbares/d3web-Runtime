@@ -48,9 +48,9 @@ public class PSMethodInterview extends PSMethodAdapter {
 
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
-		for (Fact fact : facts) {
-			System.out.println(fact);
-		}
+		// for (Fact fact : facts) {
+		// System.out.println(fact);
+		// }
 		// TODO Auto-generated method stub
 		return facts[0];
 	}

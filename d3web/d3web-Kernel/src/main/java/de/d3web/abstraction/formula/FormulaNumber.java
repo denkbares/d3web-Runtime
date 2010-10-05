@@ -88,7 +88,7 @@ public class FormulaNumber implements FormulaNumberElement {
 	private String trim(Object trimValue) {
 		final int digits = 3;
 		String text = trimValue.toString();
-		int dot = text.indexOf(".");
+		int dot = text.indexOf('.');
 		if (dot != -1) {
 			text = text.substring(0, Math.min(text.length(), dot + 1 + digits));
 		}
