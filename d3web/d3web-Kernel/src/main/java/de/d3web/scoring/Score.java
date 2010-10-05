@@ -21,7 +21,6 @@
 package de.d3web.scoring;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import de.d3web.core.knowledge.terminology.Rating;
@@ -188,24 +187,4 @@ public final class Score implements Comparable<Object> {
 	public static List<Score> getAllScores() {
 		return allScores;
 	}
-
-	/**
-	 * This method is called immediately after an object of this class is
-	 * deserialized. To avoid that several instances of a unique object are
-	 * created, this method returns the current unique instance that is equal to
-	 * the object that was deserialized.
-	 * 
-	 * @author georg
-	 */
-	private Object readResolve() {
-		Iterator<Score> iter = getAllScores().iterator();
-		while (iter.hasNext()) {
-			Score s = iter.next();
-			if ((s.getScore() == getScore()) && (s.getSymbol().equals(getSymbol()))) {
-				return s;
-			}
-		}
-		return this;
-	}
-
 }

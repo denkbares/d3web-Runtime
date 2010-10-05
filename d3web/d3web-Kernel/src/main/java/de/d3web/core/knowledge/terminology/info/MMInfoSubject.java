@@ -143,24 +143,4 @@ public final class MMInfoSubject {
 	public static Iterator<MMInfoSubject> getIterator() {
 		return getSubjects().iterator();
 	}
-
-	/**
-	 * This method is called immediately after an object of this class is
-	 * deserialized. To avoid that several instances of a unique object are
-	 * created, this method returns the current unique instance that is equal to
-	 * the object that was deserialized.
-	 * 
-	 * @author georg
-	 */
-	private Object readResolve() {
-		Iterator<MMInfoSubject> iter = getIterator();
-		while (iter.hasNext()) {
-			MMInfoSubject s = iter.next();
-			if (s.getName().equals(this.getName())) {
-				return s;
-			}
-		}
-		return this;
-	}
-
 }

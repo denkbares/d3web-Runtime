@@ -40,7 +40,7 @@ public class DCElement {
 
 	private static List<DCElement> dcElements = new ArrayList<DCElement>();
 
-	private String label;
+	private final String label;
 
 	protected DCElement(String label) {
 		super();
@@ -149,18 +149,6 @@ public class DCElement {
 	 */
 	public static Iterator<DCElement> getIterator() {
 		return dcElements.iterator();
-	}
-
-	/**
-	 * This method is called immediately after an object of this class is
-	 * deserialized. To avoid that several instances of a unique object are
-	 * created, this method returns the current unique instance that is equal to
-	 * the object that was deserialized.
-	 * 
-	 * @author georg
-	 */
-	private Object readResolve() {
-		return getDCElementFor(label);
 	}
 
 	/**
