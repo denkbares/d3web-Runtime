@@ -96,8 +96,7 @@ public final class InterviewAgenda {
 		}
 
 		@Override
-		public boolean equals(Object obj) { // NOSONAR ignore Cyclomatic
-											// Complexity warning
+		public boolean equals(Object obj) {
 			if (this == obj) {
 				return true;
 			}

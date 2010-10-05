@@ -165,8 +165,7 @@ public class Rule implements CaseObjectSource {
 	 * in a formula) it will be undone and fired again, so that the e.g.
 	 * depending formula will be recalculated.
 	 */
-	public void check(Session session) { // NOSONAR ignore cyclomatic complexity
-											// warning
+	public void check(Session session) {
 		// should we execute the rule action ???
 		boolean executeRuleAction = false;
 		// should we undo the rule action ???
@@ -676,18 +675,17 @@ public class Rule implements CaseObjectSource {
 		if (a1 != null && a2 != null) {
 			return a1.equals(a2);
 		}
-		else return (a1 == null && a2 == null);
+		else {
+			return (a1 == null && a2 == null);
+		}
 	}
 
 	private static boolean equalConditions(Condition c1, Condition c2) {
 		if (c1 != null && c2 != null) {
 			return c1.equals(c2);
 		}
-		else if (c1 == null && c2 == null) {
-			return true;
-		}
 		else {
-			return false;
+			return (c1 == null && c2 == null);
 		}
 	}
 

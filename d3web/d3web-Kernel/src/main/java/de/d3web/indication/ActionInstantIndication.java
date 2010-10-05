@@ -49,20 +49,6 @@ public class ActionInstantIndication extends ActionIndication {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (o == this) {
-			return true;
-		}
-		if (o instanceof ActionInstantIndication) {
-			ActionInstantIndication a = (ActionInstantIndication) o;
-			return isSame(a.getQASets(), getQASets());
-		}
-		else {
-			return false;
-		}
-	}
-
-	@Override
 	public void doIt(Session session, Object source, PSMethod psmethod) {
 		doItWithContext(session, source);
 	}

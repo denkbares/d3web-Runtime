@@ -69,7 +69,7 @@ public class ActionIndication extends ActionNextQASet {
 		}
 	}
 
-	protected boolean isSame(Object obj1, Object obj2) {
+	private boolean isSame(Object obj1, Object obj2) {
 		if (obj1 == null && obj2 == null) {
 			return true;
 		}

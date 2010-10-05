@@ -63,7 +63,6 @@ public class Operator implements FormulaNumberElement {
 	}
 
 	@Override
-	// NOSONAR ignore Cyclomatic Complexity warning
 	public Value eval(Session session) {
 		Object value = (getArg1().eval(session)).getValue();
 		Object value2 = (getArg2().eval(session)).getValue();

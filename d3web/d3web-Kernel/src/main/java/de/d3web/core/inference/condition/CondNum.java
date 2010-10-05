@@ -67,8 +67,7 @@ public abstract class CondNum extends CondQuestion {
 	}
 
 	@Override
-	public boolean equals(Object other) { // NOSONAR ignore cyclomatic
-											// complexity warning
+	public boolean equals(Object other) {
 		if (this == other) {
 			return true;
 		}

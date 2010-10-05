@@ -118,8 +118,7 @@ class FactAggregator {
 		this.mergedFact = null;
 	}
 
-	private void mergeFacts() { // NOSONAR ignore Cyclomatic Complexity warning,
-								// because this method seems well-crafted
+	private void mergeFacts() {
 		// do nothing if we do not have any facts
 		if (facts.size() == 0) {
 			return;
