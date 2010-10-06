@@ -71,7 +71,7 @@ public class PSMethodSCMCBR extends PSMethodAdapter {
 		// only update if there is at least one question
 		boolean hasQuestion = false;
 		for (PropagationEntry change : changes) {
-			if (change.getObject() instanceof Question) hasQuestion = true;
+			if (!change.isStrategic() && change.getObject() instanceof Question) hasQuestion = true;
 		}
 		if (!hasQuestion) return;
 		Collection<KnowledgeSlice> models = session.getKnowledgeBase().getAllKnowledgeSlicesFor(

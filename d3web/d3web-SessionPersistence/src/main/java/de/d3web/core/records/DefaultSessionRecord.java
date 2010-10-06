@@ -49,6 +49,8 @@ public class DefaultSessionRecord implements SessionRecord {
 
 	private DCMarkup dcMarkup;
 
+	private String name;
+
 	public DefaultSessionRecord(KnowledgeBase kb) {
 		this.kb = kb;
 		id = "Session " + System.currentTimeMillis();
@@ -130,5 +132,14 @@ public class DefaultSessionRecord implements SessionRecord {
 	@Override
 	public List<FactRecord> getInterviewFacts() {
 		return Collections.unmodifiableList(interviewFacts);
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

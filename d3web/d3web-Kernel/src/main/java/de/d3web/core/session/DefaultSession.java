@@ -51,7 +51,6 @@ import de.d3web.core.session.interviewmanager.PSMethodInterview;
 import de.d3web.core.session.protocol.DefaultProtocol;
 import de.d3web.core.session.protocol.Protocol;
 import de.d3web.indication.inference.PSMethodDialogControlling;
-import de.d3web.indication.inference.PSMethodParentQASet;
 import de.d3web.indication.inference.PSMethodStrategic;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.plugin.Autodetect;
@@ -98,7 +97,6 @@ public class DefaultSession implements Session {
 					PSMethodAbstraction.getInstance(),
 					PSMethodHeuristic.getInstance(),
 					PSMethodInit.getInstance(),
-					PSMethodParentQASet.getInstance(),
 					PSMethodInterview.getInstance()
 					);
 
@@ -353,13 +351,13 @@ public class DefaultSession implements Session {
 	// ******************** event notification *********************
 
 	private final Collection<SessionEventListener> listeners = new LinkedList<SessionEventListener>();
+	private String name;
 
 	/**
 	 * this listener will be notified, if some value has been set in this case
 	 */
 	@Override
 	public void addListener(SessionEventListener listener) {
-		touch();
 		if (!listeners.contains(listener)) {
 			listeners.add(listener);
 		}
@@ -367,7 +365,6 @@ public class DefaultSession implements Session {
 
 	@Override
 	public void removeListener(SessionEventListener listener) {
-		touch();
 		if (listeners.contains(listener)) {
 			listeners.remove(listener);
 		}
@@ -405,6 +402,15 @@ public class DefaultSession implements Session {
 	@Override
 	public Date getLastChangeDate() {
 		return edited;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

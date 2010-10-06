@@ -25,7 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.inference.PSMethod.Type;
 import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.InterviewObject;
@@ -42,7 +42,6 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.UndefinedValue;
-import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
  * The Blackboard manages all dynamic values created within the case and
@@ -56,8 +55,17 @@ public class DefaultBlackboard implements Blackboard {
 	private final DefaultSession session;
 	private final FactStorage valueStorage;
 	private final FactStorage interviewStorage;
+	private boolean autosaveSource = false;
 
 	// TODO: also manage the SessionObjects here
+
+	public boolean isAutosaveSource() {
+		return autosaveSource;
+	}
+
+	public void setAutosaveSource(boolean autosaveSource) {
+		this.autosaveSource = autosaveSource;
+	}
 
 	/**
 	 * Creates a new Blackboard for the specified xps session.
@@ -80,7 +88,7 @@ public class DefaultBlackboard implements Blackboard {
 		// First: add the arriving fact to the protocol,
 		// if it was entered by the user
 		PSMethod psMethod = fact.getPSMethod();
-		if (psMethod != null && psMethod.equals(PSMethodUserSelected.getInstance())) {
+		if (isAutosaveSource() || psMethod != null && psMethod.hasType(Type.source)) {
 			getSession().getProtocol().addEntry(fact);
 		}
 
@@ -213,7 +221,6 @@ public class DefaultBlackboard implements Blackboard {
 
 	private void propagateIndicationChange(TerminologyObject interviewObject, Value oldValue,
 			Value newValue) {
-		session.touch();
 		// TODO MF: Move this somewhere else
 		if (interviewObject instanceof Question && newValue instanceof Indication) {
 			Question q = (Question) interviewObject;
@@ -225,9 +232,7 @@ public class DefaultBlackboard implements Blackboard {
 				return;
 			}
 		}
-		PropagationEntry entry = new PropagationEntry(interviewObject, oldValue,
-				newValue);
-		session.getInterview().notifyFactChange(entry);
+		session.getPropagationManager().propagate((InterviewObject) interviewObject, oldValue);
 	}
 
 	@Override

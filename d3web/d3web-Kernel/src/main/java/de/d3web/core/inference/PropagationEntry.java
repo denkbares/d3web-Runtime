@@ -28,6 +28,15 @@ public class PropagationEntry {
 	private final TerminologyObject object;
 	private final Value oldValue;
 	private final Value newValue;
+	private boolean strategic = false;
+
+	public boolean isStrategic() {
+		return strategic;
+	}
+
+	public void setStrategic(boolean strategic) {
+		this.strategic = strategic;
+	}
 
 	public PropagationEntry(TerminologyObject object, Value oldValue, Value newValue) {
 		this.object = object;

@@ -126,6 +126,7 @@ public class FluxSolver implements PSMethod {
 
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
+		// TODO Reinhard: special handling of strategic entries?
 
 		if (!DiaFluxUtils.isFlowCase(session)) return;
 

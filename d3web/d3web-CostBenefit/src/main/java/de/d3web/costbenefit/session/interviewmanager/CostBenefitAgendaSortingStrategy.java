@@ -19,11 +19,18 @@
 package de.d3web.costbenefit.session.interviewmanager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
+import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.interviewmanager.AgendaSortingStrategy;
 import de.d3web.core.session.interviewmanager.InterviewAgenda.AgendaEntry;
 import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
+import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 
 /**
  * The {@link CostBenefitAgendaSortingStrategy} does not do a specific sorting
@@ -35,17 +42,57 @@ import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
  */
 public class CostBenefitAgendaSortingStrategy implements AgendaSortingStrategy {
 
+	private CostBenefitCaseObject co;
+
+	public CostBenefitAgendaSortingStrategy(CostBenefitCaseObject co) {
+		this.co = co;
+	}
+
 	@Override
 	public List<AgendaEntry> sort(List<AgendaEntry> entries) {
 		// we keep the order of the entries, but we delete the "inactive"
-		// entries
-		List<AgendaEntry> originalEntries = new ArrayList<AgendaEntry>(entries);
-		for (AgendaEntry agendaEntry : originalEntries) {
-			if (agendaEntry.hasState(InterviewState.INACTIVE)) {
-				entries.remove(agendaEntry);
+		// entries and put indicated questions to the beginning of the list
+		Map<Question, AgendaEntry> questions = new HashMap<Question, AgendaEntry>();
+		List<AgendaEntry> other = new LinkedList<AgendaEntry>();
+		for (AgendaEntry agendaEntry : entries) {
+			if (agendaEntry.hasState(InterviewState.ACTIVE)) {
+				if (agendaEntry.getInterviewObject() instanceof Question) {
+					questions.put((Question) agendaEntry.getInterviewObject(), agendaEntry);
+				}
+				else {
+					other.add(agendaEntry);
+				}
+			}
+			else {
+				for (Fact fact : co.getIndicatedFacts()) {
+					if (fact.getTerminologyObject() == agendaEntry.getInterviewObject()) {
+						co.getSession().getBlackboard().removeInterviewFact(fact);
+						co.removeIndicatedFact(fact);
+						break;
+					}
+				}
 			}
 		}
-		return entries;
+		// Sorting the questions in the order they appear in their parents
+		List<Question> questionsSorted = new LinkedList<Question>();
+		for (Question q : questions.keySet()) {
+			if (!questionsSorted.contains(q)) {
+				for (TerminologyObject object : q.getParents()) {
+					for (TerminologyObject child : object.getChildren()) {
+						if (!questionsSorted.contains(child) && questions.keySet().contains(child)) {
+							questionsSorted.add((Question) child);
+						}
+					}
+				}
+			}
+		}
+		List<AgendaEntry> returnList = new ArrayList<AgendaEntry>(entries.size());
+		for (Question q : questionsSorted) {
+			returnList.add(questions.get(q));
+		}
+		// add other QASets in original order
+		returnList.addAll(other);
+		return returnList;
 	}
 
 }

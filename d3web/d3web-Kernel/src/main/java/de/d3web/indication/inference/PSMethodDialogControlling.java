@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
@@ -35,7 +36,6 @@ import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
-import de.d3web.core.session.interviewmanager.PSMethodCombined;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
@@ -43,7 +43,7 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  * 
  * @author Christian Betz
  */
-public class PSMethodDialogControlling extends PSMethodCombined {
+public class PSMethodDialogControlling extends PSMethodAdapter {
 
 	public PSMethodDialogControlling() {
 		super();
@@ -69,7 +69,6 @@ public class PSMethodDialogControlling extends PSMethodCombined {
 		LinkedList<PSMethod> dialogControllingPSMethods = new LinkedList<PSMethod>();
 		dialogControllingPSMethods.add(psmUser);
 		dialogControllingPSMethods.add(PSMethodHeuristic.getInstance());
-		setPSMethods(new LinkedList<PSMethod>(dialogControllingPSMethods));
 	}
 
 	/**
@@ -78,6 +77,8 @@ public class PSMethodDialogControlling extends PSMethodCombined {
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		for (PropagationEntry change : changes) {
+			// do not handle strategic changes
+			if (change.isStrategic()) continue;
 			KnowledgeSlice knowledgeSlices = ((NamedObject) change.getObject()).getKnowledge(
 					this.getClass(), MethodKind.FORWARD);
 			if (knowledgeSlices == null) {

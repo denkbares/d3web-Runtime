@@ -84,7 +84,8 @@ public final class PSMethodHeuristic extends PSMethodAdapter {
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		for (PropagationEntry change : changes) {
-			checkRulesFor(session, change.getObject());
+			// do not handle strategic changes
+			if (!change.isStrategic()) checkRulesFor(session, change.getObject());
 		}
 	}
 

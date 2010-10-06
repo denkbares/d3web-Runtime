@@ -41,6 +41,7 @@ public class DefaultPropagationManager implements PropagationManager {
 		private final PSMethod psMethod;
 		private Map<ValueObject, Value> propagationEntries = new HashMap<ValueObject, Value>();
 		private Map<InterviewObject, Value> interviewPropagationEntries = new HashMap<InterviewObject, Value>();
+		private List<InterviewObject> interviewOrder = new LinkedList<InterviewObject>();
 
 		public PSMethodHandler(PSMethod psMethod) {
 			this.psMethod = psMethod;
@@ -59,6 +60,7 @@ public class DefaultPropagationManager implements PropagationManager {
 		public void addInterviewPropagationEntry(InterviewObject key, Value oldValue) {
 			if (!interviewPropagationEntries.containsKey(key)) {
 				interviewPropagationEntries.put(key, oldValue);
+				interviewOrder.add(key);
 			}
 		}
 
@@ -67,7 +69,7 @@ public class DefaultPropagationManager implements PropagationManager {
 		}
 
 		public boolean hasPropagationEntries() {
-			return propagationEntries.size() > 0;
+			return interviewPropagationEntries.size() > 0 || propagationEntries.size() > 0;
 		}
 
 		public void propagate() {
@@ -81,14 +83,16 @@ public class DefaultPropagationManager implements PropagationManager {
 					PropagationEntry entry = new PropagationEntry(object, oldValue, value);
 					entries.add(entry);
 				}
-				for (Map.Entry<InterviewObject, Value> change : interviewPropagationEntries.entrySet()) {
-					InterviewObject object = change.getKey();
-					Value oldValue = change.getValue();
+				for (InterviewObject object : interviewOrder) {
+					Value oldValue = interviewPropagationEntries.get(object);
 					Value value = session.getBlackboard().getIndication(object);
 					PropagationEntry entry = new PropagationEntry(object, oldValue, value);
+					entry.setStrategic(true);
 					entries.add(entry);
 				}
 				propagationEntries.clear();
+				interviewPropagationEntries.clear();
+				interviewOrder.clear();
 				// propagate the changes, using the new interface
 				getPSMethod().propagate(DefaultPropagationManager.this.session, entries);
 			}

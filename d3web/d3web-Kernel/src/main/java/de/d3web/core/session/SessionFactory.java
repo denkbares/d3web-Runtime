@@ -56,7 +56,7 @@ public final class SessionFactory {
 	 * @param creationDate Date of creation
 	 * @return {@link Session}
 	 */
-	public static synchronized Session createSession(String id, KnowledgeBase kb, Date creationDate) {
+	public static synchronized DefaultSession createSession(String id, KnowledgeBase kb, Date creationDate) {
 		return createSession(id, kb, new NextUnansweredQuestionFormStrategy(), creationDate);
 	}
 
@@ -69,7 +69,7 @@ public final class SessionFactory {
 	 * @return new Session instance based on the specified id, knowledge base
 	 *         and form strategy
 	 */
-	public static synchronized Session createSession(String id,
+	public static synchronized DefaultSession createSession(String id,
 			KnowledgeBase knowledgeBase,
 			FormStrategy formStrategy, Date creationDate) {
 		return new DefaultSession(id, knowledgeBase, formStrategy, creationDate);

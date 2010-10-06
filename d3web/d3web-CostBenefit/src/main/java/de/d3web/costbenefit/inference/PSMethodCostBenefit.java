@@ -86,13 +86,19 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 
 	@Override
 	public void init(Session session) {
-		session.getInterview().getInterviewAgenda().setAgendaSortingStrategy(
-				new CostBenefitAgendaSortingStrategy());
 		CostBenefitCaseObject caseObject = (CostBenefitCaseObject) session.getCaseObject(this);
+		session.getInterview().getInterviewAgenda().setAgendaSortingStrategy(
+				new CostBenefitAgendaSortingStrategy(caseObject));
 		calculateNewPath(caseObject);
 		activateNextQContainer(caseObject);
 	}
 
+	/**
+	 * This method is just for refreshing the path of the CaseObject, the Facts
+	 * get pushed into the blackboard by calculateNewPath
+	 * 
+	 * @param caseObject {@link CaseObjectSource}
+	 */
 	private void activateNextQContainer(CostBenefitCaseObject caseObject) {
 		QContainer[] currentSequence = caseObject.getCurrentSequence();
 		Session session = caseObject.getSession();
@@ -117,15 +123,9 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 
 	private void calculateNewPath(CostBenefitCaseObject caseObject) {
 		Session session = caseObject.getSession();
-		// remove old indications
 		Blackboard blackboard = session.getBlackboard();
-		List<Fact> indicatedFacts = caseObject.getIndicatedFacts();
-		if (indicatedFacts != null) {
-			for (Fact fact : indicatedFacts) {
-				blackboard.removeInterviewFact(fact);
-			}
-		}
 		caseObject.resetPath();
+		if (!session.getInterview().getInterviewAgenda().isEmpty()) return;
 		List<StrategicSupport> stratgicSupports = getStrategicSupports(session);
 		HashSet<Solution> diags = new HashSet<Solution>();
 		caseObject.setDiags(diags);
@@ -209,7 +209,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		Set<QContainer> qcons = new HashSet<QContainer>();
 		for (PropagationEntry entry : changes) {
 			TerminologyObject object = entry.getObject();
-			if (object instanceof Question) {
+			if (!entry.isStrategic() && object instanceof Question) {
 				addParentContainers(qcons, object);
 			}
 		}
@@ -226,7 +226,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		}
 		// determines if the user has begun our current qContainer
 		final QContainer[] currentSequence = caseObject.getCurrentSequence();
-		if (!caseObject.isHasBegun() && currentSequence != null) {
+		if (caseObject.getCurrentPathIndex() != -1 && !caseObject.isHasBegun()
+				&& currentSequence != null) {
 			caseObject.setHasBegun(qcons.contains(currentSequence[caseObject.getCurrentPathIndex()]));
 		}
 		// returns if the actual QContainer is not done and has begun yet

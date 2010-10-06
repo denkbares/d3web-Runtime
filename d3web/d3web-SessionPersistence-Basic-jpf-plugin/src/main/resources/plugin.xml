@@ -132,4 +132,13 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="SessionPersistenceHandler"
+		id="NameHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.NameHandler" />
+		<parameter id="name" value="NameHandler" />
+		<parameter id="description" value="Handler for the NameSection" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
 </plugin>

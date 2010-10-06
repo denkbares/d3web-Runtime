@@ -63,6 +63,7 @@ import de.d3web.core.records.SessionRecord;
 import de.d3web.core.records.SessionRepository;
 import de.d3web.core.records.io.fragments.DateValueHandler;
 import de.d3web.core.records.io.fragments.UndefinedHandler;
+import de.d3web.core.session.DefaultSession;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.Blackboard;
@@ -90,6 +91,7 @@ import de.d3web.scoring.Score;
  */
 public class SessionPersistenceTest {
 
+	private static final String TESTNAME = "testname äöß";
 	private static final NumValue NUMVALUE = new NumValue(-29.2);
 	private static final TextValue TEXTVALUE = new TextValue("Text <mit> fiesen\\bösen </Sachen>");
 	private SessionRecord sessionRecord;
@@ -136,7 +138,8 @@ public class SessionPersistenceTest {
 				0.0));
 		RuleFactory.createHeuristicPSRule("R2", solution, Score.P7, new CondNumLess(questionNum,
 				0.0));
-		Session session = SessionFactory.createSession(kb);
+		DefaultSession session = (DefaultSession) SessionFactory.createSession(kb);
+		session.setName(TESTNAME);
 		sessionID = session.getId();
 		Blackboard blackboard = session.getBlackboard();
 		blackboard.addValueFact(FactFactory.createUserEnteredFact(questionOC, new ChoiceValue(
@@ -439,6 +442,7 @@ public class SessionPersistenceTest {
 
 	private void checkValuesAfterReload(Session session, Session session2) throws IOException {
 		Assert.assertEquals(sessionID, session.getId());
+		Assert.assertEquals(TESTNAME, session.getName());
 		Assert.assertEquals(session2ID, session2.getId());
 		Assert.assertEquals(creationDate, session.getCreationDate());
 		Assert.assertEquals(lastChangeDate, session.getLastChangeDate());

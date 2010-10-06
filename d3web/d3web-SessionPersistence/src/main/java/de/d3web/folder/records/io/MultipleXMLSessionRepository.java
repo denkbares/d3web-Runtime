@@ -268,6 +268,18 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 			return Collections.unmodifiableList(realRecord.getInterviewFacts());
 		}
 
+		@Override
+		public String getName() {
+			parseIfNecessary();
+			return realRecord.getName();
+		}
+
+		@Override
+		public void setName(String name) {
+			parseIfNecessary();
+			realRecord.setName(name);
+		}
+
 	}
 
 	private static void copyFile(File in, File out) throws IOException {

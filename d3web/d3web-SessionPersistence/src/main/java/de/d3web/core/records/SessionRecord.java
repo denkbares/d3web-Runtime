@@ -38,4 +38,6 @@ public interface SessionRecord extends SessionHeader {
 
 	public List<FactRecord> getInterviewFacts();
 
+	public void setName(String name);
+
 }

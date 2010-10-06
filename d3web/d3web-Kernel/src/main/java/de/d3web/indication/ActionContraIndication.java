@@ -26,12 +26,10 @@ import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
 
@@ -91,12 +89,7 @@ public class ActionContraIndication extends PSAction {
 			Logger.getLogger(this.getClass().getName()).warning(
 					"QASets().size() > 1: Not implemented yet.");
 		}
-		Value oldValue = session.getBlackboard().getIndication(getQASets().get(0));
-		;
 		session.getBlackboard().removeInterviewFact(getQASets().get(0), source);
-		Value newValue = session.getBlackboard().getIndication(getQASets().get(0));
-		session.getInterview().notifyFactChange(new PropagationEntry(getQASets().get(0),
-				oldValue, newValue));
 	}
 
 	@Override

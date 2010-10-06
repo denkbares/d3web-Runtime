@@ -73,6 +73,8 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 		// find xcl models to be updated (and remember affecting changes)
 		Map<XCLModel, List<PropagationEntry>> modelsToUpdate = new HashMap<XCLModel, List<PropagationEntry>>();
 		for (PropagationEntry change : changes) {
+			// do not handle strategic changes
+			if (change.isStrategic()) continue;
 			NamedObject nob = (NamedObject) change.getObject();
 			KnowledgeSlice ks = nob.getKnowledge(
 					PSMethodXCL.class, XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);

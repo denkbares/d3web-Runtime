@@ -33,6 +33,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.session.DefaultSession;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
@@ -52,8 +53,10 @@ import de.d3web.core.session.values.UndefinedValue;
 public class SessionConversionFactory {
 
 	public static Session copyToSession(SessionRecord source) throws IOException {
-		Session target = SessionFactory.createSession(source.getId(), source.getKnowledgeBase(),
+		DefaultSession target = SessionFactory.createSession(source.getId(),
+				source.getKnowledgeBase(),
 				source.getCreationDate());
+		target.setName(source.getName());
 		target.setDCMarkup(source.getDCMarkup());
 		Protocol protocol = source.getProtocol();
 		if (protocol != null) {
@@ -113,6 +116,7 @@ public class SessionConversionFactory {
 		DefaultSessionRecord target = new DefaultSessionRecord(source.getId(),
 				source.getKnowledgeBase(),
 				source.getCreationDate(), source.getLastChangeDate());
+		target.setName(source.getName());
 		target.setDCMarkup(source.getDCMarkup());
 		target.setProtocol(source.getProtocol());
 		Blackboard blackboard = source.getBlackboard();

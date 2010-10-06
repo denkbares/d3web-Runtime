@@ -83,8 +83,8 @@ public class DefaultInterview implements Interview {
 	// allowed). Please refactor this!
 	@Override
 	public void notifyFactChange(PropagationEntry changedFact) {
-		Value oldValue = (Value) changedFact.getOldValue();
-		Value newValue = (Value) changedFact.getNewValue();
+		Value oldValue = changedFact.getOldValue();
+		Value newValue = changedFact.getNewValue();
 		if (newValue instanceof Indication) {
 			InterviewObject indicatedObject = (InterviewObject) changedFact
 					.getObject();
@@ -95,6 +95,7 @@ public class DefaultInterview implements Interview {
 			if (oldIndication.hasState(State.NEUTRAL)
 					&& newIndication.hasState(State.INDICATED)) {
 				this.agenda.append(indicatedObject);
+				checkParentalQContainer(indicatedObject);
 			}
 			// ANY => INSTANT_INDICATED : 1) append to agenda 2) activate
 			// TODO: finish the work on instance indication, currently
@@ -102,22 +103,26 @@ public class DefaultInterview implements Interview {
 			// standard indication
 			else if (newIndication.hasState(State.INSTANT_INDICATED)) {
 				this.agenda.append(indicatedObject);
+				checkParentalQContainer(indicatedObject);
 			}
 			// INDICATED => NEUTRAL : deactivate
 			else if (oldIndication.hasState(State.INDICATED)
 					&& newIndication.hasState(State.NEUTRAL)) {
 				this.agenda.deactivate(indicatedObject);
+				checkParentalQContainer(indicatedObject);
 			}
 			// INDICATED => CONTRA_INDICATED : deactivate
 			else if (oldIndication.hasState(State.INDICATED)
 					&& newIndication.hasState(State.CONTRA_INDICATED)) {
 				this.agenda.deactivate(indicatedObject);
+				checkParentalQContainer(indicatedObject);
 			}
 			// CONTRA_INDICATED => INDICATED : 1) append to agenda if not
 			// included 2) activate
 			else if (oldIndication.hasState(State.CONTRA_INDICATED)
 					&& newIndication.hasState(State.INDICATED)) {
 				this.agenda.activate(indicatedObject);
+				checkParentalQContainer(indicatedObject);
 			}
 			else if (oldIndication.hasState(State.INDICATED)
 					&& newIndication.hasState(State.INDICATED)) { // NOSONAR
@@ -126,10 +131,12 @@ public class DefaultInterview implements Interview {
 			else if (oldIndication.hasState(State.CONTRA_INDICATED)
 					&& newIndication.hasState(State.NEUTRAL)) { // NOSONAR
 				// CONTRA_INDICATED => NEUTRAL : noop
+				checkParentalQContainer(indicatedObject);
 			}
 			else if (oldIndication.hasState(State.NEUTRAL)
 					&& newIndication.hasState(State.CONTRA_INDICATED)) { // NOSONAR
 				// NEUTRAL => CONTRA_INDICATED : noop
+				checkParentalQContainer(indicatedObject);
 			}
 			else {
 				Logger.getLogger(this.getClass().getName()).warning(

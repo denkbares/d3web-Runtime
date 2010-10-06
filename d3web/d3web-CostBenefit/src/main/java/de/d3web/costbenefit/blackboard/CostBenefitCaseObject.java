@@ -19,7 +19,9 @@
 package de.d3web.costbenefit.blackboard;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -40,7 +42,7 @@ public class CostBenefitCaseObject extends SessionObject {
 
 	private QContainer[] currentSequence;
 	private SearchModel cbm;
-	private List<Fact> indicatedFacts;
+	private List<Fact> indicatedFacts = new LinkedList<Fact>();
 	private int currentPathIndex = -1;
 	private boolean hasBegun = false;
 	private Set<Solution> diags = new HashSet<Solution>();
@@ -92,7 +94,10 @@ public class CostBenefitCaseObject extends SessionObject {
 	 */
 	public void resetPath() {
 		currentSequence = null;
-		indicatedFacts = null;
+		for (Fact fact : indicatedFacts) {
+			session.getBlackboard().removeInterviewFact(fact);
+		}
+		indicatedFacts = new LinkedList<Fact>();
 		this.currentPathIndex = -1;
 		hasBegun = false;
 	}
@@ -106,7 +111,11 @@ public class CostBenefitCaseObject extends SessionObject {
 	}
 
 	public List<Fact> getIndicatedFacts() {
-		return indicatedFacts;
+		return Collections.unmodifiableList(indicatedFacts);
+	}
+
+	public boolean removeIndicatedFact(Fact fact) {
+		return indicatedFacts.remove(fact);
 	}
 
 	public Set<Solution> getDiags() {
