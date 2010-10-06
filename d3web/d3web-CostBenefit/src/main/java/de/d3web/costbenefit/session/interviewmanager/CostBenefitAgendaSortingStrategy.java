@@ -30,6 +30,7 @@ import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.interviewmanager.AgendaSortingStrategy;
 import de.d3web.core.session.interviewmanager.InterviewAgenda.AgendaEntry;
 import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 
 /**
@@ -77,10 +78,14 @@ public class CostBenefitAgendaSortingStrategy implements AgendaSortingStrategy {
 		List<Question> questionsSorted = new LinkedList<Question>();
 		for (Question q : questions.keySet()) {
 			if (!questionsSorted.contains(q)) {
-				for (TerminologyObject object : q.getParents()) {
-					for (TerminologyObject child : object.getChildren()) {
-						if (!questionsSorted.contains(child) && questions.keySet().contains(child)) {
-							questionsSorted.add((Question) child);
+				// do not add questions having a value other than Undefined
+				if (UndefinedValue.isUndefinedValue(co.getSession().getBlackboard().getValue(q))) {
+					for (TerminologyObject object : q.getParents()) {
+						for (TerminologyObject child : object.getChildren()) {
+							if (!questionsSorted.contains(child)
+									&& questions.keySet().contains(child)) {
+								questionsSorted.add((Question) child);
+							}
 						}
 					}
 				}
@@ -94,5 +99,4 @@ public class CostBenefitAgendaSortingStrategy implements AgendaSortingStrategy {
 		returnList.addAll(other);
 		return returnList;
 	}
-
 }

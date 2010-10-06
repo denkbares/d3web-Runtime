@@ -182,8 +182,7 @@ public class DefaultBlackboard implements Blackboard {
 
 		this.interviewStorage.add(fact);
 
-		Value newValue = getIndication(factObject);
-		propagateIndicationChange(fact.getTerminologyObject(), oldValue, newValue);
+		propagateIndicationChange(fact.getTerminologyObject(), oldValue);
 	}
 
 	@Override
@@ -198,8 +197,7 @@ public class DefaultBlackboard implements Blackboard {
 
 		this.interviewStorage.remove(fact);
 
-		Value newValue = getIndication(factObject);
-		propagateIndicationChange(factObject, oldValue, newValue);
+		propagateIndicationChange(factObject, oldValue);
 	}
 
 	@Override
@@ -215,23 +213,10 @@ public class DefaultBlackboard implements Blackboard {
 
 		this.interviewStorage.remove(terminologyObject, source);
 
-		Value newValue = getIndication(factObject);
-		propagateIndicationChange(terminologyObject, oldValue, newValue);
+		propagateIndicationChange(terminologyObject, oldValue);
 	}
 
-	private void propagateIndicationChange(TerminologyObject interviewObject, Value oldValue,
-			Value newValue) {
-		// TODO MF: Move this somewhere else
-		if (interviewObject instanceof Question && newValue instanceof Indication) {
-			Question q = (Question) interviewObject;
-			Indication indication = (Indication) newValue;
-			if (UndefinedValue.isNotUndefinedValue(getValue(q))
-					&& (indication.hasState(Indication.State.INDICATED) || indication.hasState(Indication.State.INSTANT_INDICATED))) {
-				// do not put questions on the agenda, which have already been
-				// answered
-				return;
-			}
-		}
+	private void propagateIndicationChange(TerminologyObject interviewObject, Value oldValue) {
 		session.getPropagationManager().propagate((InterviewObject) interviewObject, oldValue);
 	}
 
@@ -239,8 +224,7 @@ public class DefaultBlackboard implements Blackboard {
 	public void removeInterviewFacts(TerminologyObject terminologyObject) {
 		Value oldValue = getInterviewFact(terminologyObject).getValue();
 		this.interviewStorage.remove(terminologyObject);
-		Value newValue = getInterviewFact(terminologyObject).getValue();
-		propagateIndicationChange(terminologyObject, oldValue, newValue);
+		propagateIndicationChange(terminologyObject, oldValue);
 	}
 
 	@Override
