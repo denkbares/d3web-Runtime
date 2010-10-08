@@ -35,7 +35,6 @@ import de.d3web.core.inference.RuleSet;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
@@ -163,19 +162,21 @@ public class FluxSolver implements PSMethod {
 		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
 				"Finished propagating after " + i + " iterations.");
 
-		System.out.println("*** Blackboard ***");
-
-		Collection<TerminologyObject> objects = session.getBlackboard().getValuedObjects();
-		System.out.println("Valued objects: " + objects.size());
-		for (TerminologyObject terminologyObject : objects) {
-
-			System.out.print(terminologyObject.getName() + "\t\t\t* ");
-			System.out.println(session.getBlackboard().getValue((ValueObject) terminologyObject)
-					+ "\t\t\t*");
-
-		}
-
-		System.out.println("******");
+		// System.out.println("*** Blackboard ***");
+		//
+		// Collection<TerminologyObject> objects =
+		// session.getBlackboard().getValuedObjects();
+		// System.out.println("Valued objects: " + objects.size());
+		// for (TerminologyObject terminologyObject : objects) {
+		//
+		// System.out.print(terminologyObject.getName() + "\t\t\t* ");
+		// System.out.println(session.getBlackboard().getValue((ValueObject)
+		// terminologyObject)
+		// + "\t\t\t*");
+		//
+		// }
+		//
+		// System.out.println("******");
 
 	}
 
