@@ -20,7 +20,6 @@
 
 package de.d3web.core.knowledge.terminology.info;
 
-import java.util.logging.Logger;
 
 /**
  * A Numerical Interval <BR>
@@ -42,8 +41,7 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 		 * @param s
 		 */
 		public IntervalException(String s) {
-			Logger.getLogger(this.getClass().getName()).warning(
-					"IntervalException thrown! Reason: " + s);
+			super(s);
 		}
 
 	}
