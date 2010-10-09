@@ -635,8 +635,6 @@ public class SessionPersistenceTest {
 		Assert.assertEquals(4,
 				sessionRecord2extended.getValueFacts().size()
 						- sessionRecord2.getValueFacts().size());
-		// just to gain 100% coverage:
-		new SessionConversionFactory();
 	}
 
 	@Test
