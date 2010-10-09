@@ -31,7 +31,7 @@ import de.d3web.core.session.values.ChoiceValue;
 
 public class XCLRelation {
 
-	public static double DEFAULT_WEIGHT = 1;
+	public final static double DEFAULT_WEIGHT = 1;
 	private Condition conditionedFinding;
 	private double weight = DEFAULT_WEIGHT;
 	private String id;

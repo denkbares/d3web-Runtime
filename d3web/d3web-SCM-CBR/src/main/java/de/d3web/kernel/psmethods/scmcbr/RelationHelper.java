@@ -26,7 +26,7 @@ import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.session.Session;
 
-public class RelationHelper {
+public final class RelationHelper {
 
 	private static RelationHelper instance;
 

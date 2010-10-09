@@ -101,9 +101,9 @@ public class ConditionVerbalizer implements Verbalizer {
 	/**
 	 * Returns the classes RuleVerbalizer can render
 	 */
+	@Override
 	public Class<?>[] getSupportedClassesForVerbalization() {
-		Class<?>[] supportedClasses = { Condition.class };
-		return supportedClasses;
+		return new Class<?>[] { Condition.class };
 	}
 
 	@Override
@@ -112,9 +112,8 @@ public class ConditionVerbalizer implements Verbalizer {
 	 * RuleVerbalizer can render
 	 */
 	public RenderingFormat[] getSupportedRenderingTargets() {
-		RenderingFormat[] r = {
+		return new RenderingFormat[] {
 				RenderingFormat.HTML, RenderingFormat.PLAIN_TEXT };
-		return r;
 	}
 
 	@Override

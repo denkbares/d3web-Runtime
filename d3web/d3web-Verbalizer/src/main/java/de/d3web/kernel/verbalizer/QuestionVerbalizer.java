@@ -40,9 +40,9 @@ public class QuestionVerbalizer implements Verbalizer {
 	/**
 	 * Returns the classes RuleVerbalizer can render
 	 */
+	@Override
 	public Class[] getSupportedClassesForVerbalization() {
-		Class[] supportedClasses = { Question.class };
-		return supportedClasses;
+		return new Class[] { Question.class };
 	}
 
 	@Override
@@ -51,8 +51,7 @@ public class QuestionVerbalizer implements Verbalizer {
 	 * RuleVerbalizer can render
 	 */
 	public RenderingFormat[] getSupportedRenderingTargets() {
-		RenderingFormat[] r = { RenderingFormat.HTML };
-		return r;
+		return new RenderingFormat[] { RenderingFormat.HTML };
 	}
 
 	@Override

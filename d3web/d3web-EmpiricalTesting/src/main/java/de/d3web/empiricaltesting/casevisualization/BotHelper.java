@@ -35,7 +35,7 @@ import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
-public class BotHelper {
+public final class BotHelper {
 
 	private static BotHelper instance;
 

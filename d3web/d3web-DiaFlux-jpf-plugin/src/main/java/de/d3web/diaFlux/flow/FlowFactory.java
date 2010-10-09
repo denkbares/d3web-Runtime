@@ -35,7 +35,7 @@ import de.d3web.diaFlux.inference.FluxSolver;
  * @author Reinhard Hatko
  * 
  */
-public class FlowFactory {
+public final class FlowFactory {
 
 	private static final FlowFactory instance;
 

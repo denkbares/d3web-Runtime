@@ -55,7 +55,7 @@ import de.d3web.xcl.XCLContributedModelSet;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
 
-public class PSMethodXCL implements PSMethod, StrategicSupport,
+public final class PSMethodXCL implements PSMethod, StrategicSupport,
 		CaseObjectSource {
 
 	private ScoreAlgorithm scoreAlgorithm = new DefaultScoreAlgorithm();
@@ -297,13 +297,11 @@ public class PSMethodXCL implements PSMethod, StrategicSupport,
 	}
 
 	public int getAnsweredQuestionsCount(Session session) {
-		XCLCaseObject caseObject = (XCLCaseObject) session.getCaseObject(this);
-		return caseObject.totalAnsweredCount;
+		return ((XCLCaseObject) session.getCaseObject(this)).totalAnsweredCount;
 	}
 
 	public double getAnsweredQuestionsAbnormality(Session session) {
-		XCLCaseObject caseObject = (XCLCaseObject) session.getCaseObject(this);
-		return caseObject.totalAnsweredAbnormality;
+		return ((XCLCaseObject) session.getCaseObject(this)).totalAnsweredAbnormality;
 	}
 
 	/**

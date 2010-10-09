@@ -41,14 +41,14 @@ public class Weight implements KnowledgeSlice {
 
 	private static final Class<PSMethodShared> PROBLEMSOLVER = PSMethodShared.class;
 	private static final MethodKind METHOD_KIND = PSMethodShared.SHARED_WEIGHT;
-	public static int G0 = 0;
-	public static int G1 = 1;
-	public static int G2 = 2;
-	public static int G3 = 4;
-	public static int G4 = 8;
-	public static int G5 = 16;
-	public static int G6 = 32;
-	public static int G7 = 64;
+	public final static int G0 = 0;
+	public final static int G1 = 1;
+	public final static int G2 = 2;
+	public final static int G3 = 4;
+	public final static int G4 = 8;
+	public final static int G5 = 16;
+	public final static int G6 = 32;
+	public final static int G7 = 64;
 
 	private QuestionWeightValue questionWeightValue = null;
 

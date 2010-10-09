@@ -25,7 +25,7 @@ import java.util.List;
 
 import de.d3web.core.knowledge.terminology.Solution;
 
-public class DerivedSolutionsCalculator extends PrecisionRecallCalculator {
+public final class DerivedSolutionsCalculator extends PrecisionRecallCalculator {
 
 	private static DerivedSolutionsCalculator instance = new DerivedSolutionsCalculator();
 

@@ -26,7 +26,7 @@ import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
-public class PSMethodStateTransition extends PSMethodUserSelected {
+public final class PSMethodStateTransition extends PSMethodUserSelected {
 
 	private static PSMethodStateTransition instance;
 

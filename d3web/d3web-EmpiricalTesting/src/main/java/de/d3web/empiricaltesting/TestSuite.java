@@ -30,7 +30,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
-public class TestSuite {
+public final class TestSuite {
 
 	@SuppressWarnings("unchecked")
 	private static Class psMethodContext = PSMethodHeuristic.class;

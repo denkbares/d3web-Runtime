@@ -86,9 +86,9 @@ public class Target extends LinkedList<QContainer> {
 	 * @return
 	 */
 	public double getCostBenefit() {
-		double benefit = getBenefit();
-		Path minPath = getMinPath();
-		if (minPath == null || benefit <= 0f) return Float.MAX_VALUE;
-		return minPath.getCosts() / benefit;
+		double theBenefit = getBenefit();
+		Path theMinPath = getMinPath();
+		if (theMinPath == null || theBenefit <= 0f) return Float.MAX_VALUE;
+		return theMinPath.getCosts() / theBenefit;
 	}
 }

@@ -28,7 +28,7 @@ import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.casevisualization.dot.DDBuilder.caseType;
 
-public class DDNode {
+public final class DDNode {
 
 	private RatedTestCase testCase;
 	private List<DDEdge> outgoing;

@@ -47,7 +47,7 @@ import de.d3web.scoring.Score;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class Util {
+public final class Util {
 
 	/**
 	 * Make the class not create-able.

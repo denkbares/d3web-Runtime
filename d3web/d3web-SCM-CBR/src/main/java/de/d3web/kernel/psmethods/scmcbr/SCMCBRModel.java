@@ -35,8 +35,8 @@ import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Rating;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.Rating.State;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.IEventSource;
 import de.d3web.core.session.KBOEventListener;
 import de.d3web.core.session.Session;
@@ -71,7 +71,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 	private final Collection<SCMCBRRelation> necessaryRelations;
 	private final Collection<SCMCBRRelation> sufficientRelations;
 	private final Collection<SCMCBRRelation> contradictingRelations;
-	public static String DEFAULT_SOLUTION = "default_solution";
+	public final static String DEFAULT_SOLUTION = "default_solution";
 
 	private final Map<Session, SCMCBRInferenceTrace> explanation = new HashMap<Session, SCMCBRInferenceTrace>();
 
@@ -166,8 +166,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 
 		Map<XCLRelationType, Collection<SCMCBRRelation>> relationMap = new HashMap<XCLRelationType, Collection<SCMCBRRelation>>();
 
-		Collection<SCMCBRRelation> relations = this.getRelations();
-		relationMap.put(XCLRelationType.explains, relations);
+		relationMap.put(XCLRelationType.explains, this.getRelations());
 
 		Collection<SCMCBRRelation> contraRelations = this
 				.getContradictingRelations();
@@ -444,6 +443,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		this.id = id;
 	}
 
+	@Override
 	public String getId() {
 		if (id == null) {
 			if (solution == null) {
@@ -488,10 +488,12 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		this.completenessEstablishedThreshold = completenessEstablishedThreshold;
 	}
 
+	@Override
 	public Class<? extends PSMethod> getProblemsolverContext() {
 		return PSMethodSCMCBR.class;
 	}
 
+	@Override
 	public boolean isUsed(Session session) {
 		return true;
 	}
@@ -501,6 +503,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 	 * 
 	 * @see de.d3web.kernel.domainModel.KnowledgeSlice#remove()
 	 */
+	@Override
 	public void remove() {
 		solution.removeKnowledge(getProblemsolverContext(), this, SCMCBR);
 	}
@@ -523,6 +526,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 
 	Collection<KBOEventListener> listeners;
 
+	@Override
 	public void addListener(KBOEventListener listener) {
 		if (listeners == null) listeners = new LinkedList<KBOEventListener>();
 		if (!listeners.contains(listener)) {
@@ -530,6 +534,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		}
 	}
 
+	@Override
 	public void removeListener(KBOEventListener listener) {
 		if (listeners != null) {
 
@@ -542,6 +547,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		}
 	}
 
+	@Override
 	public void notifyListeners(Session session, IEventSource source) {
 		if (listeners != null && session != null && source != null) {
 			for (KBOEventListener cl : new ArrayList<KBOEventListener>(listeners)) {
@@ -550,6 +556,7 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 		}
 	}
 
+	@Override
 	public Collection<KBOEventListener> getListeners() {
 		return listeners;
 	}

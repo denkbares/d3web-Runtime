@@ -40,7 +40,7 @@ import de.d3web.kernel.psmethods.verbalizer.XclVerbalizer;
  * @date june 2008
  * 
  */
-public class VerbalizationManager {
+public final class VerbalizationManager {
 
 	// the standard priorities to choose, if several verbalizers could perform
 	// the same rendering

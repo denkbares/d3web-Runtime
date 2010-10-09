@@ -69,9 +69,7 @@ public class NodeData extends SessionObject implements INodeData {
 		if (!supports.contains(support)) {
 			return false;
 		}
-
-		boolean remove = supports.remove(support);
-		return remove;
+		return supports.remove(support);
 	}
 
 	@Override

@@ -46,8 +46,7 @@ public class XclVerbalizer implements Verbalizer {
 
 	@Override
 	public Class[] getSupportedClassesForVerbalization() {
-		Class[] supportedClasses = { XCLModel.class };
-		return supportedClasses;
+		return new Class[] { XCLModel.class };
 	}
 
 	/*
@@ -57,9 +56,8 @@ public class XclVerbalizer implements Verbalizer {
 	 */
 	@Override
 	public RenderingFormat[] getSupportedRenderingTargets() {
-		RenderingFormat[] r = {
+		return new RenderingFormat[] {
 				RenderingFormat.HTML, RenderingFormat.PLAIN_TEXT };
-		return r;
 	}
 
 	@Override

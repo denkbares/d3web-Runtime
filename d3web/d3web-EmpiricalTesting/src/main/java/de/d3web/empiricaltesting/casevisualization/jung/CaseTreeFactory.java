@@ -39,7 +39,7 @@ import de.d3web.empiricaltesting.TestSuite;
  * @author Sebastian Furth
  * 
  */
-public class CaseTreeFactory {
+public final class CaseTreeFactory {
 
 	/**
 	 * Instance for Singleton Pattern!

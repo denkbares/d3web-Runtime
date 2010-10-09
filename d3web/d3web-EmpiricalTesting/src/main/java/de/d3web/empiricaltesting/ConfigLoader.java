@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
 
-public class ConfigLoader {
+public final class ConfigLoader {
 
 	private static ConfigLoader instance;
 	private Properties config;

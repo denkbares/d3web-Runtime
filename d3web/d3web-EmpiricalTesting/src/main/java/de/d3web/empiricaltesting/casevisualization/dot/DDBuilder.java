@@ -51,7 +51,7 @@ import de.d3web.empiricaltesting.casevisualization.BotHelper;
 import de.d3web.empiricaltesting.casevisualization.CaseVisualizer;
 import de.d3web.scoring.HeuristicRating;
 
-public class DDBuilder implements CaseVisualizer {
+public final class DDBuilder implements CaseVisualizer {
 
 	private final static String HEADER = "digraph g { \ngraph [ \n  rankdir = \"TD\" \n"
 			+ "]; \n" + "node [\n" + " fontname=Helvetica\n"
@@ -124,7 +124,8 @@ public class DDBuilder implements CaseVisualizer {
 	 * Saves the graph visualization to a <b>DOT file</b> which will be created
 	 * at the committed filepath.
 	 * 
-	 * @param testSuite TestSuite which's cases will be visualized by this class.
+	 * @param testSuite TestSuite which's cases will be visualized by this
+	 *        class.
 	 * @param filepath String which specifies where the created <b>DOT file</b>
 	 *        will be stored.
 	 */

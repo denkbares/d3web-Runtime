@@ -23,7 +23,7 @@ package de.d3web.empiricaltesting.casevisualization.dot;
 import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.casevisualization.dot.DDBuilder.caseType;
 
-public class DDEdge {
+public final class DDEdge {
 
 	private DDNode begin;
 	private DDNode end;

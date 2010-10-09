@@ -32,7 +32,7 @@ import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.writer.TestSuiteKnOfficeWriter;
 import de.d3web.empiricaltesting.writer.TestSuiteXMLWriter;
 
-public class InterviewBotRunner {
+public final class InterviewBotRunner {
 
 	static String workspace = "D:/Projekte/Temp/EmpiricalTesting/";
 	static String filename = "";
@@ -115,8 +115,7 @@ public class InterviewBotRunner {
 	}
 
 	private static KnowledgeBase loadKnowledgebase(String filename) throws IOException {
-		KnowledgeBase k = PersistenceManager.getInstance().load(new File(workspace + filename));
-		return k;
+		return PersistenceManager.getInstance().load(new File(workspace + filename));
 	}
 
 	private static void writeCasesXML(String filename, List<SequentialTestCase> cases) throws FileNotFoundException {

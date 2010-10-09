@@ -41,8 +41,7 @@ public class DiagnosisVerbalizer implements Verbalizer {
 	 */
 	@Override
 	public Class[] getSupportedClassesForVerbalization() {
-		Class[] supportedClasses = { Solution.class };
-		return supportedClasses;
+		return new Class[] { Solution.class };
 	}
 
 	@Override
@@ -51,9 +50,8 @@ public class DiagnosisVerbalizer implements Verbalizer {
 	 * RuleVerbalizer can render
 	 */
 	public RenderingFormat[] getSupportedRenderingTargets() {
-		RenderingFormat[] r = {
+		return new RenderingFormat[] {
 				RenderingFormat.HTML, RenderingFormat.PLAIN_TEXT };
-		return r;
 	}
 
 	@Override

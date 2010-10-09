@@ -24,8 +24,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSMethod;
@@ -107,14 +107,14 @@ public class SearchModel {
 	}
 
 	/**
-	 * Minimalizes if necessary the path in all targets which are reached
+	 * Minimizes if necessary the path in all targets which are reached
 	 * 
 	 * @param path
 	 */
 	public void minimizePath(Path path) {
 		Node node = path.getLastNode();
-		List<Target> targets = this.referencingTargets.get(node);
-		for (Target t : targets) {
+		List<Target> theTargets = this.referencingTargets.get(node);
+		for (Target t : theTargets) {
 			if (t.isReached(path)) {
 				if (t.getMinPath() == null) countMinPaths++;
 				if (t.getMinPath() == null || t.getMinPath().getCosts() > path.getCosts()) {

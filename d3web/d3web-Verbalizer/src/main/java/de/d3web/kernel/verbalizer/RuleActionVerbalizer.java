@@ -58,14 +58,12 @@ public class RuleActionVerbalizer implements Verbalizer {
 
 	@Override
 	public Class[] getSupportedClassesForVerbalization() {
-		Class[] supportedClasses = { PSAction.class };
-		return supportedClasses;
+		return new Class[] { PSAction.class };
 	}
 
 	@Override
 	public RenderingFormat[] getSupportedRenderingTargets() {
-		RenderingFormat[] r = { RenderingFormat.HTML };
-		return r;
+		return new RenderingFormat[] { RenderingFormat.HTML };
 	}
 
 	/**

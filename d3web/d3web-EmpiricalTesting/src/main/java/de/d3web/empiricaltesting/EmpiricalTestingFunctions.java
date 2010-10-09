@@ -20,7 +20,7 @@
 
 package de.d3web.empiricaltesting;
 
-public class EmpiricalTestingFunctions {
+public final class EmpiricalTestingFunctions {
 
 	private static EmpiricalTestingFunctions instance;
 

@@ -37,7 +37,7 @@ import de.d3web.empiricaltesting.writer.TestSuiteKnOfficeWriter;
 import de.d3web.empiricaltesting.writer.TestSuiteXMLWriter;
 import de.d3web.plugin.test.InitPluginManager;
 
-public class EmpiricalTester {
+public final class EmpiricalTester {
 
 	// Input variables
 	static String workspace = "D:/Projekte/Temp/EmpiricalTesting/";
@@ -202,9 +202,8 @@ public class EmpiricalTester {
 	 */
 	private static KnowledgeBase loadKnowledgeBase(String kbPath)
 			throws IOException {
-		PersistenceManager pm = PersistenceManager.getInstance();
-		KnowledgeBase kb = pm.load(new File(kbPath), new ConsoleProgressListener());
-		return kb;
+		return PersistenceManager.getInstance().load(new File(kbPath),
+				new ConsoleProgressListener());
 	}
 
 	/**

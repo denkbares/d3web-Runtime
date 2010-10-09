@@ -38,7 +38,7 @@ import de.d3web.diaFlux.flow.StartNode;
  * 
  *         Created: 07.08.2010
  */
-public class DiaFluxUtils {
+public final class DiaFluxUtils {
 
 	private DiaFluxUtils() {
 	}

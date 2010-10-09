@@ -52,7 +52,7 @@ import de.d3web.kernel.psmethods.scmcbr.SCMCBRRelation;
 public class SCMCBRModelPersistenceHandler implements KnowledgeReader,
 		KnowledgeWriter {
 
-	public static String ID = "scmcbrpattern";
+	public final static String ID = "scmcbrpattern";
 
 	// TODO: Move to XML
 	@Deprecated

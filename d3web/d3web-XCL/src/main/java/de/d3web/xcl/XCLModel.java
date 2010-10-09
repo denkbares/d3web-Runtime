@@ -43,7 +43,7 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.xcl.inference.PSMethodXCL;
 
-public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLModel>, CaseObjectSource {
+public final class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLModel>, CaseObjectSource {
 
 	public final static MethodKind XCLMODEL = new MethodKind("XCLMODEL");
 
@@ -58,7 +58,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	private final Collection<XCLRelation> necessaryRelations;
 	private final Collection<XCLRelation> sufficientRelations;
 	private final Collection<XCLRelation> contradictingRelations;
-	public static String DEFAULT_SOLUTION = "default_solution";
+	public final static String DEFAULT_SOLUTION = "default_solution";
 
 	private boolean considerOnlyRelevantRelations = true;
 	// TODO: store these information in the NamedObjects, also required for
@@ -168,18 +168,10 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 
 		Map<XCLRelationType, Collection<XCLRelation>> relationMap = new HashMap<XCLRelationType, Collection<XCLRelation>>();
 
-		Collection<XCLRelation> relations = this.getRelations();
-		relationMap.put(XCLRelationType.explains, relations);
-
-		Collection<XCLRelation> contraRelations = this
-				.getContradictingRelations();
-		relationMap.put(XCLRelationType.contradicted, contraRelations);
-
-		Collection<XCLRelation> suffRelations = this.getSufficientRelations();
-		relationMap.put(XCLRelationType.sufficiently, suffRelations);
-
-		Collection<XCLRelation> requRelations = this.getNecessaryRelations();
-		relationMap.put(XCLRelationType.requires, requRelations);
+		relationMap.put(XCLRelationType.explains, this.getRelations());
+		relationMap.put(XCLRelationType.contradicted, this.getContradictingRelations());
+		relationMap.put(XCLRelationType.sufficiently, this.getSufficientRelations());
+		relationMap.put(XCLRelationType.requires, this.getNecessaryRelations());
 
 		return relationMap;
 	}

@@ -78,7 +78,7 @@ import de.d3web.indication.inference.PSMethodUserSelected;
  */
 @SuppressWarnings("PMD.MissingStaticMethodInNonInstantiatableClass")
 // the class is instantiated by the included Builder
-public class InterviewBot {
+public final class InterviewBot {
 
 	// default 0 means no restriction in the number of cases to be generated
 	private long maxCases;

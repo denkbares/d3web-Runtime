@@ -55,8 +55,7 @@ public class AnswerVerbalizer implements Verbalizer {
 	 */
 	@Override
 	public Class[] getSupportedClassesForVerbalization() {
-		Class[] supportedClasses = { Choice.class };
-		return supportedClasses;
+		return new Class[] { Choice.class };
 	}
 
 	/**
@@ -65,8 +64,7 @@ public class AnswerVerbalizer implements Verbalizer {
 	 */
 	@Override
 	public RenderingFormat[] getSupportedRenderingTargets() {
-		RenderingFormat[] r = { RenderingFormat.HTML };
-		return r;
+		return new RenderingFormat[] { RenderingFormat.HTML };
 	}
 
 	@Override

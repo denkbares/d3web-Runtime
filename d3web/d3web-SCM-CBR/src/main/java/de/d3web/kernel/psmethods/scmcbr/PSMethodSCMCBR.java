@@ -32,7 +32,7 @@ import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.Facts;
 
-public class PSMethodSCMCBR extends PSMethodAdapter {
+public final class PSMethodSCMCBR extends PSMethodAdapter {
 
 	private static PSMethodSCMCBR instance = null;
 

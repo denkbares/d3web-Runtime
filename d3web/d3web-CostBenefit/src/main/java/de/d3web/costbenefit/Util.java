@@ -44,7 +44,7 @@ import de.d3web.indication.inference.PSMethodUserSelected;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class Util {
+public final class Util {
 
 	/**
 	 * Avoids the creation of an instance for this class.

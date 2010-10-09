@@ -41,7 +41,7 @@ import de.d3web.core.session.values.MultipleChoiceValue;
  * 
  * @author Sebastian Furth
  */
-public class ValueCombinator {
+public final class ValueCombinator {
 
 	// Singleton instance
 	private static ValueCombinator instance = new ValueCombinator();

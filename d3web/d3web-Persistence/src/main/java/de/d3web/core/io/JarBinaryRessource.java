@@ -72,8 +72,7 @@ public class JarBinaryRessource implements Resource {
 
 	@Override
 	public String getPathName() {
-		String s = entryPath.substring(PersistenceManager.MULTIMEDIA_PATH_PREFIX.length());
-		return s;
+		return entryPath.substring(PersistenceManager.MULTIMEDIA_PATH_PREFIX.length());
 	}
 
 	@Override

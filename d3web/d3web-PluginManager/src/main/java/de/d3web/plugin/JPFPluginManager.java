@@ -45,7 +45,7 @@ import de.d3web.plugin.util.PluginCollectionComparatorByPriority;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class JPFPluginManager extends PluginManager {
+public final class JPFPluginManager extends PluginManager {
 
 	private final org.java.plugin.PluginManager manager;
 

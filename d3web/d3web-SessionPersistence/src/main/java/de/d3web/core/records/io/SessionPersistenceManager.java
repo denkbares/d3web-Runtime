@@ -49,7 +49,7 @@ import de.d3web.plugin.PluginManager;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 15.09.2010
  */
-public class SessionPersistenceManager extends FragmentManager {
+public final class SessionPersistenceManager extends FragmentManager {
 
 	private static final String EXTENDED_POINT_FRAGMENTHANDLER = "FragmentHandler";
 	private static final String EXTENDED_POINT_PERSISTENCEHANDLER = "SessionPersistenceHandler";
@@ -76,9 +76,10 @@ public class SessionPersistenceManager extends FragmentManager {
 	}
 
 	private void updateHandler() {
-		PluginManager manager = PluginManager.getInstance();
-		handler = manager.getExtensions(EXTENDED_PLUGIN_ID, EXTENDED_POINT_PERSISTENCEHANDLER);
-		fragmentPlugins = manager.getExtensions(EXTENDED_PLUGIN_ID, EXTENDED_POINT_FRAGMENTHANDLER);
+		PluginManager theManager = PluginManager.getInstance();
+		handler = theManager.getExtensions(EXTENDED_PLUGIN_ID, EXTENDED_POINT_PERSISTENCEHANDLER);
+		fragmentPlugins = theManager.getExtensions(EXTENDED_PLUGIN_ID,
+				EXTENDED_POINT_FRAGMENTHANDLER);
 	}
 
 	public void saveSessions(File file, Collection<SessionRecord> sessionRecord, ProgressListener listener, KnowledgeBase kb) throws IOException {
@@ -97,8 +98,8 @@ public class SessionPersistenceManager extends FragmentManager {
 			sessionElement.setAttribute("created", DATE_FORMAT.format(co.getCreationDate()));
 			sessionElement.setAttribute("changed", DATE_FORMAT.format(co.getLastChangeDate()));
 			for (Extension extension : handler) {
-				SessionPersistenceHandler handler = (SessionPersistenceHandler) extension.getSingleton();
-				handler.write(sessionElement, co, listener);
+				SessionPersistenceHandler theHandler = (SessionPersistenceHandler) extension.getSingleton();
+				theHandler.write(sessionElement, co, listener);
 			}
 			repElement.appendChild(sessionElement);
 		}
@@ -137,8 +138,8 @@ public class SessionPersistenceManager extends FragmentManager {
 						DefaultSessionRecord sr = new DefaultSessionRecord(id, kb, creationDate,
 								dateOfLastEdit);
 						for (Extension extension : handler) {
-							SessionPersistenceHandler handler = (SessionPersistenceHandler) extension.getSingleton();
-							handler.read(e, sr, listener);
+							SessionPersistenceHandler theHandler = (SessionPersistenceHandler) extension.getSingleton();
+							theHandler.read(e, sr, listener);
 						}
 						sessionRecords.add(sr);
 					}

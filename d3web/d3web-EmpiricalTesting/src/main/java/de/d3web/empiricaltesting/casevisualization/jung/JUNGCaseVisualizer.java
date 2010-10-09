@@ -63,7 +63,7 @@ import edu.uci.ics.jung.visualization.renderers.VertexLabelAsShapeRenderer;
  * @author Sebastian Furth
  * 
  */
-public class JUNGCaseVisualizer implements CaseVisualizer {
+public final class JUNGCaseVisualizer implements CaseVisualizer {
 
 	/**
 	 * The graph which is visualized.

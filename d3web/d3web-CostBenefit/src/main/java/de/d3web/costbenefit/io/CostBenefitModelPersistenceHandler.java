@@ -61,7 +61,7 @@ import de.d3web.costbenefit.inference.ValueTransition;
  */
 public class CostBenefitModelPersistenceHandler implements KnowledgeReader, KnowledgeWriter {
 
-	public static String ID = "costbenefit";
+	public final static String ID = "costbenefit";
 
 	@Override
 	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {

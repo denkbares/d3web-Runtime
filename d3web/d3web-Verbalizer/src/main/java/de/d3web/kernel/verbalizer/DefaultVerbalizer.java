@@ -40,9 +40,9 @@ public class DefaultVerbalizer implements Verbalizer {
 	/**
 	 * As this is the Default Verbalizer, all objects can be rendered
 	 */
+	@Override
 	public Class[] getSupportedClassesForVerbalization() {
-		Class[] supportedClasses = { Object.class };
-		return supportedClasses;
+		return new Class[] { Object.class };
 	}
 
 	@Override

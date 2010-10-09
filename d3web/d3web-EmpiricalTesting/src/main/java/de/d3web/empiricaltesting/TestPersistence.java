@@ -59,7 +59,7 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.empiricaltesting.casevisualization.BotHelper;
 
-public class TestPersistence {
+public final class TestPersistence {
 
 	private static final String S_TEST_CASES = "SeqTestCaseRepository";
 	private static final String S_TEST_CASE = "STestCase";
@@ -109,7 +109,7 @@ public class TestPersistence {
 		List<SequentialTestCase> ret = null;
 
 		try {
-			ret = _loadCases(casesUrl, kb);
+			ret = loadTheCases(casesUrl, kb);
 		}
 		catch (FileNotFoundException e) {
 			System.err.println("Error in casesUrl: Path not correct!");
@@ -136,7 +136,7 @@ public class TestPersistence {
 	 * @throws XMLStreamException
 	 * @throws URISyntaxException
 	 */
-	private List<SequentialTestCase> _loadCases(URL casesUrl,
+	private List<SequentialTestCase> loadTheCases(URL casesUrl,
 			KnowledgeBase kb) throws FileNotFoundException, XMLStreamException, URISyntaxException {
 
 		int etype;
@@ -184,7 +184,7 @@ public class TestPersistence {
 
 	public void writeCases(OutputStream out, List<SequentialTestCase> cases, boolean bWriteDerivedSolutions) {
 		try {
-			_writeCases(out, cases, bWriteDerivedSolutions);
+			writeTheCases(out, cases, bWriteDerivedSolutions);
 		}
 		catch (XMLStreamException e) {
 			System.err.println("Error while writing XML!");
@@ -208,7 +208,7 @@ public class TestPersistence {
 		writeCases(casesUrl, testSuite.getRepository(), bWriteDerivedSolutions);
 	}
 
-	private void _writeCases(OutputStream out, List<SequentialTestCase> cases, boolean bWriteDerivedSolutions)
+	private void writeTheCases(OutputStream out, List<SequentialTestCase> cases, boolean bWriteDerivedSolutions)
 			throws FileNotFoundException, XMLStreamException, URISyntaxException {
 
 		this.bWriteDerivedSolutions = bWriteDerivedSolutions;
@@ -229,8 +229,8 @@ public class TestPersistence {
 		xmlsw.writeAttribute(USEDFINDINGS, ""
 				+ computeUsedFindings(cases).size() + "");
 
-		for (SequentialTestCase stc : cases) {
-			write(stc, xmlsw);
+		for (SequentialTestCase stcases : cases) {
+			write(stcases, xmlsw);
 		}
 
 		xmlsw.writeCharacters("\n");
@@ -247,8 +247,8 @@ public class TestPersistence {
 
 		xmlsw.writeStartElement(S_TEST_CASE);
 		xmlsw.writeAttribute(NAME, stc.getName());
-		for (RatedTestCase rtc : stc.getCases()) {
-			write(rtc, xmlsw);
+		for (RatedTestCase rtcases : stc.getCases()) {
+			write(rtcases, xmlsw);
 		}
 
 		xmlsw.writeCharacters("\n\t");
@@ -263,7 +263,7 @@ public class TestPersistence {
 		xmlsw.writeAttribute(NAME, rtc.getName());
 
 		String lastTested = rtc.getLastTested();
-		if (lastTested != "") {
+		if (!lastTested.isEmpty()) {
 			xmlsw.writeAttribute(LASTTESTED, lastTested);
 		}
 

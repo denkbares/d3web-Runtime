@@ -34,11 +34,11 @@ import de.d3web.core.session.values.ChoiceValue;
  * @author Reinhard Hatko Created: 17.09.2009
  * 
  */
-public class SCMCBRRelation {
+public final class SCMCBRRelation {
 
 	private static final String PREFIX = "SCMCBRRelation_";
 
-	public static double DEFAULT_WEIGHT = 1;
+	public static final double DEFAULT_WEIGHT = 1;
 	private Condition conditionedFinding;
 	private double weight = DEFAULT_WEIGHT;
 	private String id;

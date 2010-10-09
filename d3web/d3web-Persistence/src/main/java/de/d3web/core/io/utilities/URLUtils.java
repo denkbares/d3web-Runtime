@@ -31,7 +31,7 @@ import java.net.URLConnection;
 /**
  * @author gbuscher
  */
-public class URLUtils {
+public final class URLUtils {
 
 	/**
 	 * Avoids the creation of an instance of this class.
@@ -113,11 +113,11 @@ public class URLUtils {
 	 * "file://xyz.jar".
 	 */
 	private static String getJarFileLocation(URL url) {
-		final String PRAEFIX = "jar:";
+		final String praefix = "jar:";
 		String location = url.getProtocol() + ":" + url.getPath();
 		try {
-			if (location.startsWith(PRAEFIX)) {
-				location = location.substring(PRAEFIX.length());
+			if (location.startsWith(praefix)) {
+				location = location.substring(praefix.length());
 				while ((location.startsWith("/")) || (location.startsWith("\\"))) {
 					location = location.substring(1);
 				}

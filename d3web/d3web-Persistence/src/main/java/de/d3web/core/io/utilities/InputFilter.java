@@ -36,7 +36,7 @@ import org.xml.sax.InputSource;
  * 
  * @author Christian Betz
  */
-public class InputFilter {
+public final class InputFilter {
 
 	private InputFilter() {
 	}

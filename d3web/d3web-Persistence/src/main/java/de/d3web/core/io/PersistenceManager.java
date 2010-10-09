@@ -59,7 +59,7 @@ import de.d3web.plugin.PluginManager;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class PersistenceManager extends FragmentManager {
+public final class PersistenceManager extends FragmentManager {
 
 	public static final String MULTIMEDIA_PATH_PREFIX = "multimedia/";
 

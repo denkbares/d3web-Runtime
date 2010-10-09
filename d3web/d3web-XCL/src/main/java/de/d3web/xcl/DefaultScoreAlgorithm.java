@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2010 denkbares GmbH, Würzburg, Germany
- *
+ * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- *
+ * 
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- *
+ * 
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -57,10 +57,12 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 		return defaultMinSupport;
 	}
 
+	@Override
 	public InferenceTrace createInferenceTrace(XCLModel xclModel) {
 		return new DefaultInferenceTrace();
 	}
 
+	@Override
 	public void refreshStates(Collection<XCLModel> updatedModels, Session session) {
 		for (XCLModel model : updatedModels) {
 			DefaultInferenceTrace trace = (DefaultInferenceTrace) model.getInferenceTrace(session);
@@ -112,6 +114,7 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 		return new Rating(Rating.State.UNCLEAR);
 	}
 
+	@Override
 	public void update(XCLModel xclModel, Collection<PropagationEntry> entries, Session session) {
 		InferenceTrace trace = xclModel.getInferenceTrace(session);
 		trace.refreshRelations(xclModel, session);
@@ -123,12 +126,13 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 		// relations
 		double posSum = weightedSumOf(trace.getPosRelations())
 				+ weightedSumOf(trace.getReqPosRelations());
-		if (posSum <= 0) return 0;
+		if (posSum <= 0) {
+			return 0;
+		}
 		double negSum = weightedSumOf(trace.getNegRelations())
 				+ weightedSumOf(trace.getReqNegRelations());
 
-		double result = posSum / (negSum + posSum);
-		return result;
+		return posSum / (negSum + posSum);
 	}
 
 	private double computeSupport(XCLModel model, InferenceTrace trace, Session session) {

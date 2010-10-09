@@ -56,7 +56,7 @@ import de.d3web.core.session.values.Unknown;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class XMLUtil {
+public final class XMLUtil {
 
 	/**
 	 * Avoids creating this class.

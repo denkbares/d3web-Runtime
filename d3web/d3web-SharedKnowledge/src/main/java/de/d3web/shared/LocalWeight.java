@@ -47,14 +47,14 @@ public class LocalWeight implements KnowledgeSlice {
 
 	private static final MethodKind METHOD_KIND = PSMethodShared.SHARED_LOCAL_WEIGHT;
 	private static final Class<PSMethodShared> PROBLEMSOLVER = PSMethodShared.class;
-	public static double G0 = 0;
-	public static double G1 = 1;
-	public static double G2 = 2;
-	public static double G3 = 4;
-	public static double G4 = 8;
-	public static double G5 = 16;
-	public static double G6 = 32;
-	public static double G7 = 64;
+	public final static double G0 = 0;
+	public final static double G1 = 1;
+	public final static double G2 = 2;
+	public final static double G3 = 4;
+	public final static double G4 = 8;
+	public final static double G5 = 16;
+	public final static double G6 = 32;
+	public final static double G7 = 64;
 
 	private Question q;
 	private Solution s;

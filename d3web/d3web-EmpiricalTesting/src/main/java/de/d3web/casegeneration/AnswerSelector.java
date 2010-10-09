@@ -54,7 +54,7 @@ import de.d3web.core.session.values.TextValue;
  * 
  * @author joba
  */
-public class AnswerSelector {
+public final class AnswerSelector {
 
 	/**
 	 * Number of numerical answers generated in case of a {@link QuestionNum}.<BR>
@@ -64,8 +64,8 @@ public class AnswerSelector {
 
 	private Map<Question, List<Value>> forbiddenAnswers = new HashMap<Question, List<Value>>();
 
-	public static NumericalInterval DEFAULT_INTERVAL = new NumericalInterval(0, 10);
-	private static final List<Value> EMPTY_FORBIDDEN_LIST = Collections.emptyList();
+	public final static NumericalInterval DEFAULT_INTERVAL = new NumericalInterval(0, 10);
+	private final static List<Value> EMPTY_FORBIDDEN_LIST = Collections.emptyList();
 
 	private static AnswerSelector instance = new AnswerSelector();
 

@@ -23,19 +23,17 @@ package de.d3web.diaFlux;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.PSAction;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.Session;
-import de.d3web.diaFlux.inference.FluxSolver;
 
 /**
  * 
  * @author Reinhard Hatko Created: 14.09.2009
  * 
  */
-public class NoopAction extends PSAction {
+public final class NoopAction extends PSAction {
 
 	public static final NoopAction INSTANCE = new NoopAction();
 
@@ -44,6 +42,7 @@ public class NoopAction extends PSAction {
 
 	}
 
+	@Override
 	public PSAction copy() {
 		return this;
 	}

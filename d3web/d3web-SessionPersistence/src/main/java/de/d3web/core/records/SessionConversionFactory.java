@@ -50,7 +50,7 @@ import de.d3web.core.session.values.UndefinedValue;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 15.09.2010
  */
-public class SessionConversionFactory {
+public final class SessionConversionFactory {
 
 	/**
 	 * Avoids the creation of an instance for this class.

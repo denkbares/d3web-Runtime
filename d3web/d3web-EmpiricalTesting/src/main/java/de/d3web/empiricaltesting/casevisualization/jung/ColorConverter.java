@@ -28,7 +28,7 @@ import java.awt.Color;
  * @author Sebastian Furth
  * 
  */
-public class ColorConverter {
+public final class ColorConverter {
 
 	/**
 	 * Singleton instance.
@@ -64,8 +64,7 @@ public class ColorConverter {
 	public Color convert(String h) {
 
 		try {
-			Color c = new Color(hexToR(h), hexToG(h), hexToB(h));
-			return c;
+			return new Color(hexToR(h), hexToG(h), hexToB(h));
 		}
 		catch (Exception e) {
 			return Color.BLACK;

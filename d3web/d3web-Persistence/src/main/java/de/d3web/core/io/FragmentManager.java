@@ -55,8 +55,7 @@ public class FragmentManager {
 		for (Extension plugin : fragmentPlugins) {
 			FragmentHandler handler = (FragmentHandler) plugin.getSingleton();
 			if (handler.canWrite(object)) {
-				Element element = handler.write(object, doc);
-				return element;
+				return handler.write(object, doc);
 			}
 		}
 		throw new NoSuchFragmentHandlerException("No fragment handler found for: " + object);
