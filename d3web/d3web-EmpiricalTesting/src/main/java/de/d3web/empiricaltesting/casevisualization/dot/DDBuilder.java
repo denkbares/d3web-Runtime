@@ -36,8 +36,8 @@ import java.util.Set;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.Rating.State;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.empiricaltesting.ConfigLoader;
 import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.RatedSolution;
@@ -53,11 +53,11 @@ import de.d3web.scoring.HeuristicRating;
 
 public class DDBuilder implements CaseVisualizer {
 
-	final String HEADER = "digraph g { \ngraph [ \n  rankdir = \"TD\" \n"
+	private final static String HEADER = "digraph g { \ngraph [ \n  rankdir = \"TD\" \n"
 			+ "]; \n" + "node [\n" + " fontname=Helvetica\n"
 			+ " fontsize = \"16\"\n" + "  shape = none\n" + "];\n"
 			+ "edge [ \n" + "];\n";
-	final String FOOTER = "\n}\n";
+	private final static String FOOTER = "\n}\n";
 
 	private static NumberFormat formater = new DecimalFormat("#########");
 
@@ -124,24 +124,24 @@ public class DDBuilder implements CaseVisualizer {
 	 * Saves the graph visualization to a <b>DOT file</b> which will be created
 	 * at the committed filepath.
 	 * 
-	 * @param TS TestSuite which's cases will be visualized by this class.
+	 * @param testSuite TestSuite which's cases will be visualized by this class.
 	 * @param filepath String which specifies where the created <b>DOT file</b>
 	 *        will be stored.
 	 */
 	@Override
-	public void writeToFile(TestSuite TS, String dotFile) {
+	public void writeToFile(TestSuite testSuite, String dotFile) {
 
 		String partitionTree = config.getProperty("partitionTree");
 		if (partitionTree.equals("true")) {
 
 			// Die erste Frage ermitteln
-			QuestionChoice firstQuestion = (QuestionChoice) TS.getRepository().get(0).
+			QuestionChoice firstQuestion = (QuestionChoice) testSuite.getRepository().get(0).
 					getCases().get(0).getFindings().get(0).getQuestion();
 			// Die Antwortalternativen
 			List<Choice> firstAnswers = firstQuestion.getAllAlternatives();
 			for (Choice answerOfFirstQuestion : firstAnswers) {
 				TestSuite partitioned =
-						TS.getPartiallyAnsweredSuite(answerOfFirstQuestion);
+						testSuite.getPartiallyAnsweredSuite(answerOfFirstQuestion);
 				if (partitioned.getRepository().size() > 0) {
 					generateDDNet(partitioned.getRepository());
 					String printFilePath =
@@ -157,7 +157,7 @@ public class DDBuilder implements CaseVisualizer {
 			}
 		}
 		else {
-			generateDDNet(TS.getRepository());
+			generateDDNet(testSuite.getRepository());
 			dotFile = checkDotFilePath(dotFile, "");
 			try {
 				write(new FileOutputStream(dotFile));

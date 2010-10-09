@@ -76,6 +76,8 @@ import de.d3web.indication.inference.PSMethodUserSelected;
  * @author joba
  * 
  */
+@SuppressWarnings("PMD.MissingStaticMethodInNonInstantiatableClass")
+// the class is instantiated by the included Builder
 public class InterviewBot {
 
 	// default 0 means no restriction in the number of cases to be generated
@@ -400,7 +402,7 @@ public class InterviewBot {
 		}
 
 		public Builder maxAnswerCombinations(Question q, int val) {
-			maxAnswerCombinationsForQuestion.put(q, new Integer(val));
+			maxAnswerCombinationsForQuestion.put(q, Integer.valueOf(val));
 			return this;
 		}
 

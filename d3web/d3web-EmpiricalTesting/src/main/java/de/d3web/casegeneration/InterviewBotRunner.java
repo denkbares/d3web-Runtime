@@ -38,6 +38,9 @@ public class InterviewBotRunner {
 	static String filename = "";
 	static Stopwatch watch = new Stopwatch();
 
+	private InterviewBotRunner() {
+	}
+
 	public static void main(String[] args) {
 		try {
 			demoForCarSolution();
@@ -68,7 +71,7 @@ public class InterviewBotRunner {
 	}
 
 	@SuppressWarnings("unused")
-	private static void demoForGenerated1K_KB()
+	private static void demoForGenerated1KofKB()
 			throws Exception {
 		filename = "testKnowledgebase1KRules.jar";
 		KnowledgeBase k = loadKnowledgebase(filename);

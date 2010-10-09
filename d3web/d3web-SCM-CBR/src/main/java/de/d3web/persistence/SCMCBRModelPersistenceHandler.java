@@ -121,7 +121,7 @@ public class SCMCBRModelPersistenceHandler implements KnowledgeReader,
 
 	private void addKnowledge(KnowledgeBaseManagement kbm, Node current) throws IOException {
 		String solutionID = getAttribute("SID", current);
-		String ID = getAttribute("ID", current);
+		String id = getAttribute("ID", current);
 		String minSupportS = getAttribute("minSupport", current);
 		String suggestedThresholdS = getAttribute("suggestedThreshold", current);
 		String establishedThresholdS = getAttribute("establishedThreshold",
@@ -140,7 +140,7 @@ public class SCMCBRModelPersistenceHandler implements KnowledgeReader,
 			addRelations(kbm, model, relations.item(i).getChildNodes());
 		}
 
-		model.setId(ID);
+		model.setId(id);
 		model.setMinSupport(Double.parseDouble(minSupportS));
 		model.setSuggestedThreshold(Double.parseDouble(suggestedThresholdS));
 		model.setEstablishedThreshold(Double.parseDouble(establishedThresholdS));

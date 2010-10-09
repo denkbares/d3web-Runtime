@@ -20,7 +20,8 @@
 
 package de.d3web.shared;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import de.d3web.core.knowledge.terminology.Question;
@@ -33,7 +34,7 @@ import de.d3web.core.session.Value;
  */
 public class Abnormality extends AbstractAbnormality {
 
-	private final Hashtable<Value, Double> values = new Hashtable<Value, Double>();
+	private final Map<Value, Double> values = new HashMap<Value, Double>();
 
 	/**
 	 * with this method you can add an answer-abnorm.Value pair Creation date:
@@ -64,12 +65,7 @@ public class Abnormality extends AbstractAbnormality {
 	}
 
 	public boolean isSet(Value ans) {
-		if (values.get(ans) == null) {
-			return false;
-		}
-		else {
-			return true;
-		}
+		return (values.get(ans) != null);
 	}
 
 	public Set<Value> getAnswerSet() {

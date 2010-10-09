@@ -65,6 +65,7 @@ public class DerivedSolutionsCalculator extends PrecisionRecallCalculator {
 	 * @param rtc The RatedTestCase necessary for the calcuation
 	 * @return Recall of RatedTestCase
 	 */
+	@Override
 	public double rec(RatedTestCase rtc) {
 		double numerator = similarity(rtc);
 		numerator /= rtc.getExpectedSolutions().size();
@@ -97,32 +98,36 @@ public class DerivedSolutionsCalculator extends PrecisionRecallCalculator {
 	}
 
 	/**
-	 * Creates a list of equal diagnosises from two different lists of
+	 * Creates a list of equal solutions from two different lists of
 	 * RatedSolutions.
 	 * 
-	 * @param RS1 First list of RatedSolutions
-	 * @param RS2 Second List of RatedSolutions
-	 * @return List of intersecting diagnosises
+	 * @param rs1List First list of RatedSolutions
+	 * @param rs2List Second List of RatedSolutions
+	 * @return List of intersecting solutions
 	 */
-	private List<Solution> intersect(List<RatedSolution> RS1,
-			List<RatedSolution> RS2) {
+	private List<Solution> intersect(List<RatedSolution> rs1List,
+			List<RatedSolution> rs2List) {
 		ArrayList<Solution> ret = new ArrayList<Solution>();
-		for (RatedSolution rs1 : RS1)
-			for (RatedSolution rs2 : RS2)
+		for (RatedSolution rs1 : rs1List) {
+			for (RatedSolution rs2 : rs2List) {
 				if (rs1.getSolution().equals(rs2.getSolution())) ret.add(rs1.getSolution());
+			}
+		}
 		return ret;
 	}
 
 	/**
-	 * Returns the rating of a Diagnosis if it is in the list of RatedSolutions.
+	 * Returns the rating of a {@link Solution} if it is in the list of
+	 * RatedSolutions.
 	 * 
-	 * @param s The diagnosis of which the rating shall be returned
-	 * @param RS List of RatedSolutions
-	 * @return The rating of the diagnosis.
+	 * @param s The solution of which the rating shall be returned
+	 * @param ratedSolutions List of RatedSolutions
+	 * @return The rating of the solution.
 	 */
-	private Rating r(Solution s, List<RatedSolution> RS) {
-		for (RatedSolution rs : RS)
+	private Rating r(Solution s, List<RatedSolution> ratedSolutions) {
+		for (RatedSolution rs : ratedSolutions) {
 			if (rs.getSolution().equals(s)) return rs.getRating();
+		}
 		return new ScoreRating(0);
 	}
 

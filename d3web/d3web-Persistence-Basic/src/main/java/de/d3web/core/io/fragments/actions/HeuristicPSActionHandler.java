@@ -84,8 +84,9 @@ public class HeuristicPSActionHandler implements FragmentHandler {
 		String diagId = "";
 		if (theScore != null) {
 			scoreSymbol = theScore.getSymbol();
-			if ((scoreSymbol == null) || (scoreSymbol == "")) scoreSymbol = theScore.getScore()
-					+ "";
+			if ((scoreSymbol == null) || (scoreSymbol.equals(""))) {
+				scoreSymbol = theScore.getScore() + "";
+			}
 		}
 		if (theDiag != null) {
 			diagId = theDiag.getId();

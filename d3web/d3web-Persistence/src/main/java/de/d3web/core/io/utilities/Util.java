@@ -50,6 +50,12 @@ import de.d3web.scoring.Score;
 public class Util {
 
 	/**
+	 * Make the class not create-able.
+	 */
+	private Util() {
+	}
+
+	/**
 	 * Creates an Document from the given InputStream
 	 * 
 	 * @param stream input stream

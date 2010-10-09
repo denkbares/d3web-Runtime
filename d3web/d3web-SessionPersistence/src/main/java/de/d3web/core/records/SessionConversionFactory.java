@@ -52,6 +52,12 @@ import de.d3web.core.session.values.UndefinedValue;
  */
 public class SessionConversionFactory {
 
+	/**
+	 * Avoids the creation of an instance for this class.
+	 */
+	private SessionConversionFactory() {
+	}
+
 	public static Session copyToSession(SessionRecord source) throws IOException {
 		DefaultSession target = SessionFactory.createSession(source.getId(),
 				source.getKnowledgeBase(),

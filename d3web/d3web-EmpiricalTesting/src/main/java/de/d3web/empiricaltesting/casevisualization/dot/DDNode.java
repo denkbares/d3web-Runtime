@@ -59,7 +59,7 @@ public class DDNode {
 	}
 
 	public boolean addChild(DDEdge edge, boolean oldEdge) {
-		edge.end.getIncoming().add(edge);
+		edge.getEnd().getIncoming().add(edge);
 		return outgoing.add(edge);
 	}
 

@@ -155,14 +155,14 @@ public class FormulaElementHandler implements FragmentHandler {
 		return element;
 	}
 
-	private Element createFormulaTerm(Document doc, String symbol, Object arg_1, Object arg_2) throws DOMException, NoSuchFragmentHandlerException, IOException {
+	private Element createFormulaTerm(Document doc, String symbol, Object argument1, Object argument2) throws DOMException, NoSuchFragmentHandlerException, IOException {
 		FragmentManager pm = PersistenceManager.getInstance();
 		Element element = doc.createElement("FormulaTerm");
 		element.setAttribute("type", symbol);
 		Element arg1 = doc.createElement("arg1");
-		arg1.appendChild(pm.writeFragment(arg_1, doc));
+		arg1.appendChild(pm.writeFragment(argument1, doc));
 		Element arg2 = doc.createElement("arg2");
-		arg2.appendChild(pm.writeFragment(arg_2, doc));
+		arg2.appendChild(pm.writeFragment(argument2, doc));
 		element.appendChild(arg1);
 		element.appendChild(arg2);
 		return element;

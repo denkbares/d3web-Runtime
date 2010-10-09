@@ -21,10 +21,11 @@
 package de.d3web.shared;
 
 import java.util.Collection;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
@@ -53,7 +54,7 @@ public class Weight implements KnowledgeSlice {
 
 	private List<SolutionWeightValue> solutionWeightValues = null;
 
-	private Hashtable<Solution, SolutionWeightValue> diagnoseDiagnosisWeightValueHash = null;
+	private Map<Solution, SolutionWeightValue> diagnoseDiagnosisWeightValueHash;
 
 	/**
 	 * Weight constructor comment.
@@ -61,7 +62,7 @@ public class Weight implements KnowledgeSlice {
 	public Weight() {
 		super();
 		solutionWeightValues = new LinkedList<SolutionWeightValue>();
-		diagnoseDiagnosisWeightValueHash = new Hashtable<Solution, SolutionWeightValue>();
+		diagnoseDiagnosisWeightValueHash = new HashMap<Solution, SolutionWeightValue>();
 	}
 
 	/**
@@ -70,6 +71,7 @@ public class Weight implements KnowledgeSlice {
 	 * 
 	 * @return java.lang.Class PSMethod class
 	 */
+	@Override
 	public Class<? extends PSMethod> getProblemsolverContext() {
 		return PROBLEMSOLVER;
 	}
@@ -77,6 +79,7 @@ public class Weight implements KnowledgeSlice {
 	/**
 	 * Has this knowledge already been used? (e.g. did a rule fire?)
 	 */
+	@Override
 	public boolean isUsed(de.d3web.core.session.Session session) {
 		return true;
 	}
@@ -178,6 +181,7 @@ public class Weight implements KnowledgeSlice {
 	 * 
 	 * @return java.lang.String
 	 */
+	@Override
 	public java.lang.String getId() {
 		return "W" + questionWeightValue.getQuestion().getId();
 	}
@@ -226,6 +230,7 @@ public class Weight implements KnowledgeSlice {
 		questionWeightValue.getQuestion().addKnowledge(getProblemsolverContext(), this, METHOD_KIND);
 	}
 
+	@Override
 	public void remove() {
 		getQuestionWeightValue().getQuestion().removeKnowledge(getProblemsolverContext(), this,
 				METHOD_KIND);

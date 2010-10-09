@@ -46,9 +46,9 @@ public class TestSuiteKnOfficeWriter extends AbstractTestSuiteWriter {
 
 	// quote the verbalized text, if at least on character of
 	// these is contained in the verbalization text
-	private final String BAD_CHARS = "()=-,:;?/";
+	private final static String BAD_CHARS = "()=-,:;?/";
 	// the default indent for each line within a case
-	private final String INDENT = "   ";
+	private final static String INDENT = "   ";
 
 	/**
 	 * Writes a TestSuite to the specified file using the

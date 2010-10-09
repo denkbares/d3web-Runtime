@@ -64,7 +64,7 @@ public class ColorConverter {
 	public Color convert(String h) {
 
 		try {
-			Color c = new Color(HexToR(h), HexToG(h), HexToB(h));
+			Color c = new Color(hexToR(h), hexToG(h), hexToB(h));
 			return c;
 		}
 		catch (Exception e) {
@@ -73,15 +73,15 @@ public class ColorConverter {
 
 	}
 
-	private int HexToR(String htmlcolor) {
+	private int hexToR(String htmlcolor) {
 		return Integer.parseInt((cutHex(htmlcolor)).substring(0, 2), 16);
 	}
 
-	private int HexToG(String htmlcolor) {
+	private int hexToG(String htmlcolor) {
 		return Integer.parseInt((cutHex(htmlcolor)).substring(2, 4), 16);
 	}
 
-	private int HexToB(String htmlcolor) {
+	private int hexToB(String htmlcolor) {
 		return Integer.parseInt((cutHex(htmlcolor)).substring(4, 6), 16);
 	}
 

@@ -149,7 +149,7 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 			if (action.getValue() instanceof Object[]) {
 				Object[] list = (Object[]) action.getValue();
 				for (Object o : list) {
-					if (o != null && o instanceof Choice) {
+					if (o instanceof Choice) {
 						Choice a = (Choice) o;
 						if (a.getId() == null) {
 							throw new IOException("Answer " + a.getName() + " has no ID");

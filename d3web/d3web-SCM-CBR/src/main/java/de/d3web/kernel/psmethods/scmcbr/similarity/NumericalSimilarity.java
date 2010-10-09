@@ -33,9 +33,9 @@ import de.d3web.core.session.Session;
  */
 public class NumericalSimilarity implements ISimilarityMeasurer {
 
-	private final QuestionNum question;
-	private final List<NumericalInterval> intervals;
-	private final List<Double> similarities;
+	// private final QuestionNum question;
+	// private final List<NumericalInterval> intervals;
+	// private final List<Double> similarities;
 
 	/**
 	 * @param question
@@ -44,11 +44,12 @@ public class NumericalSimilarity implements ISimilarityMeasurer {
 	 */
 	public NumericalSimilarity(QuestionNum question,
 			List<NumericalInterval> intervals, List<Double> similarities) {
-		this.question = question;
-		this.intervals = intervals;
-		this.similarities = similarities;
-
-		if (intervals.size() != similarities.size()) throw new IllegalArgumentException();
+		// this.question = question;
+		// this.intervals = intervals;
+		// this.similarities = similarities;
+		//
+		// if (intervals.size() != similarities.size()) throw new
+		// IllegalArgumentException();
 
 	}
 

@@ -59,6 +59,12 @@ import de.d3web.core.session.values.Unknown;
 public class XMLUtil {
 
 	/**
+	 * Avoids creating this class.
+	 */
+	private XMLUtil() {
+	}
+
+	/**
 	 * Appends a question element to a parent element. Appends no element, if
 	 * the question is null.
 	 * 

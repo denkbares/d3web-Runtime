@@ -29,6 +29,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -76,7 +77,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 
 		listener.updateProgress(0, "Starting to load multimedia");
 
-		Hashtable<String, PropertiesContainer> ansIdAnswerHash = buildAnswerIdAnswerHash(kb
+		Map<String, PropertiesContainer> ansIdAnswerHash = buildAnswerIdAnswerHash(kb
 				.getQuestions());
 
 		Document doc = Util.streamToDocument(stream);
@@ -278,10 +279,10 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		return count;
 	}
 
-	private static Hashtable<String, PropertiesContainer> buildAnswerIdAnswerHash(
+	private static Map<String, PropertiesContainer> buildAnswerIdAnswerHash(
 			List<Question> questions) {
 
-		Hashtable<String, PropertiesContainer> ansIdAnswerHash = new Hashtable<String, PropertiesContainer>();
+		Map<String, PropertiesContainer> ansIdAnswerHash = new Hashtable<String, PropertiesContainer>();
 
 		Iterator<Question> iter = questions.iterator();
 		while (iter.hasNext()) {

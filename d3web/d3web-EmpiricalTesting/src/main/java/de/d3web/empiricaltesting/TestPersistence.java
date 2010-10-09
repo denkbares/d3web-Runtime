@@ -200,12 +200,12 @@ public class TestPersistence {
 		}
 	}
 
-	public void writeCases(OutputStream out, TestSuite TS, boolean bWriteDerivedSolutions) {
-		writeCases(out, TS.getRepository(), bWriteDerivedSolutions);
+	public void writeCases(OutputStream out, TestSuite testSuite, boolean bWriteDerivedSolutions) {
+		writeCases(out, testSuite.getRepository(), bWriteDerivedSolutions);
 	}
 
-	public void writeCases(URL casesUrl, TestSuite TS, boolean bWriteDerivedSolutions) {
-		writeCases(casesUrl, TS.getRepository(), bWriteDerivedSolutions);
+	public void writeCases(URL casesUrl, TestSuite testSuite, boolean bWriteDerivedSolutions) {
+		writeCases(casesUrl, testSuite.getRepository(), bWriteDerivedSolutions);
 	}
 
 	private void _writeCases(OutputStream out, List<SequentialTestCase> cases, boolean bWriteDerivedSolutions)
@@ -262,8 +262,10 @@ public class TestPersistence {
 		xmlsw.writeStartElement(RATED_TEST_CASE);
 		xmlsw.writeAttribute(NAME, rtc.getName());
 
-		String lastTested;
-		if ((lastTested = rtc.getLastTested()) != "") xmlsw.writeAttribute(LASTTESTED, lastTested);
+		String lastTested = rtc.getLastTested();
+		if (lastTested != "") {
+			xmlsw.writeAttribute(LASTTESTED, lastTested);
+		}
 
 		// write Findings
 		xmlsw.writeCharacters("\n\t\t\t");

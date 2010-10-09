@@ -26,7 +26,8 @@
  */
 package de.d3web.shared;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import de.d3web.core.inference.KnowledgeSlice;
@@ -57,14 +58,14 @@ public class LocalWeight implements KnowledgeSlice {
 
 	private Question q;
 	private Solution s;
-	private Hashtable<Value, Double> values = null;
+	private Map<Value, Double> values;
 
 	/**
 	 * Weight constructor comment.
 	 */
 	public LocalWeight() {
 		super();
-		values = new Hashtable<Value, Double>();
+		values = new HashMap<Value, Double>();
 	}
 
 	public void setValue(Value ans, double value) {

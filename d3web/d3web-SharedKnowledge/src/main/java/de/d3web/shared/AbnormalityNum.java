@@ -59,8 +59,11 @@ public class AbnormalityNum extends AbstractAbnormality {
 	 */
 	private boolean checkIntervals(AbnormalityInterval ai) {
 		Iterator<AbnormalityInterval> iter = intervals.iterator();
-		while (iter.hasNext())
-			if ((iter.next()).intersects(ai)) return false;
+		while (iter.hasNext()) {
+			if ((iter.next()).intersects(ai)) {
+				return false;
+			}
+		}
 		return true;
 	}
 

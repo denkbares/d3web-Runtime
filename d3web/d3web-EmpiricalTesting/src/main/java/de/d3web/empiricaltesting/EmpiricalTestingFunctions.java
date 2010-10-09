@@ -146,8 +146,9 @@ public class EmpiricalTestingFunctions {
 	 */
 	public double fMeasure(double beta, SequentialTestCase stc, PrecisionRecallCalculator state) {
 		double numerator = 0;
-		for (RatedTestCase rtc : stc.getCases())
+		for (RatedTestCase rtc : stc.getCases()) {
 			numerator += state.fMeasure(beta, rtc);
+		}
 		double denominator = stc.getCases().size();
 		return numerator / denominator;
 	}

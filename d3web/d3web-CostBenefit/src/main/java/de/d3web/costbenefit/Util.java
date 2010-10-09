@@ -46,6 +46,12 @@ import de.d3web.indication.inference.PSMethodUserSelected;
  */
 public class Util {
 
+	/**
+	 * Avoids the creation of an instance for this class.
+	 */
+	private Util() {
+	}
+
 	public static Session copyCase(Session session) {
 		Session testCase = new CopiedSession(session.getKnowledgeBase());
 		Blackboard blackboard = session.getBlackboard();

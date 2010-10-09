@@ -52,6 +52,9 @@ public class EmpiricalTester {
 	static String xmlFile = "dano";
 	static String txtFile = "dano";
 
+	private EmpiricalTester() {
+	}
+
 	/**
 	 * Driver for the Empirical Testing project
 	 * 
@@ -60,15 +63,15 @@ public class EmpiricalTester {
 	 */
 	public static void main(String[] args) throws Exception {
 		InitPluginManager.init();
-		try {
-			// demoComputePrecisionAndRecall();
-			// demoBotTestCases();
-			// demoCaseVisualization();
-			// demoBuildDDTree();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+		// try {
+		// demoComputePrecisionAndRecall();
+		// demoBotTestCases();
+		// demoCaseVisualization();
+		// demoBuildDDTree();
+		// }
+		// catch (Exception e) {
+		// e.printStackTrace();
+		// }
 	}
 
 	/**
@@ -80,19 +83,19 @@ public class EmpiricalTester {
 	public static void demoComputePrecisionAndRecall() throws Exception {
 
 		KnowledgeBase kb = loadKnowledgeBase(workspace + kbFile);
-		TestSuite TS = new TestSuite();
-		TS.setKb(kb);
-		TS.loadRepository(workspace + caseFile);
+		TestSuite testSuite = new TestSuite();
+		testSuite.setKb(kb);
+		testSuite.loadRepository(workspace + caseFile);
 
 		System.out.println("DerivedSolutions-Precision (Non-Sequential): "
-				+ TS.totalNonSequentialPrecision());
+				+ testSuite.totalNonSequentialPrecision());
 		System.out.println("DerivedSolutions-Recall (Non-Sequential): "
-				+ TS.totalNonSequentialRecall());
-		System.out.println("DerivedSolutions-Precision: " + TS.totalPrecision());
-		System.out.println("DerivedSolutions-Recall: " + TS.totalRecall());
-		System.out.println("Interview-Precision: " + TS.totalPrecisionInterview());
-		System.out.println("Interview-Recall: " + TS.totalRecallInterview());
-		showDifferences(TS);
+				+ testSuite.totalNonSequentialRecall());
+		System.out.println("DerivedSolutions-Precision: " + testSuite.totalPrecision());
+		System.out.println("DerivedSolutions-Recall: " + testSuite.totalRecall());
+		System.out.println("Interview-Precision: " + testSuite.totalPrecisionInterview());
+		System.out.println("Interview-Recall: " + testSuite.totalRecallInterview());
+		showDifferences(testSuite);
 	}
 
 	private static void showDifferences(TestSuite t) {
@@ -162,12 +165,12 @@ public class EmpiricalTester {
 	public static void demoCaseVisualization() throws IOException {
 
 		KnowledgeBase kb = loadKnowledgeBase(workspace + kbFile);
-		TestSuite TS = new TestSuite();
-		TS.setKb(kb);
-		TS.loadRepository(workspace + caseFile);
-		TS.deriveAllSolutions();
+		TestSuite testSuite = new TestSuite();
+		testSuite.setKb(kb);
+		testSuite.loadRepository(workspace + caseFile);
+		testSuite.deriveAllSolutions();
 
-		JUNGCaseVisualizer.getInstance().writeToFile(TS, workspace + pdfFile);
+		JUNGCaseVisualizer.getInstance().writeToFile(testSuite, workspace + pdfFile);
 
 	}
 
@@ -181,12 +184,12 @@ public class EmpiricalTester {
 	public static void demoBuildDDTree() throws IOException {
 
 		KnowledgeBase kb = loadKnowledgeBase(workspace + kbFile);
-		TestSuite TS = new TestSuite();
-		TS.setKb(kb);
-		TS.loadRepository(workspace + caseFile);
-		TS.deriveAllSolutions();
+		TestSuite testSuite = new TestSuite();
+		testSuite.setKb(kb);
+		testSuite.loadRepository(workspace + caseFile);
+		testSuite.deriveAllSolutions();
 
-		DDBuilder.getInstance().writeToFile(TS, workspace + dotFile);
+		DDBuilder.getInstance().writeToFile(testSuite, workspace + dotFile);
 	}
 
 	/**
@@ -236,16 +239,16 @@ public class EmpiricalTester {
 	// KnowledgeBase k = loadKnowledgeBase(kbPath);
 	// DDBot2Runner botRunner = new DDBot2Runner(k);
 	// botRunner.setCaseNamePraefix("STC");
-	//	
+	//
 	// // Example: run ALL cases and store it to a file
 	// List<SequentialTestCase> cases =
 	// botRunner.generateSequentialTestCases(1,1);
 	// botRunner.storeCases(cases, casesPath, true);
-	//	
+	//
 	// // Example: compare two nets and print differences in a dot
 	// botRunner.testDriveDDNetComparison(workspace, "some_bigger_exp.xml",
 	// "some_bigger_exp2.xml", "some_bigger_exp.dot");
-	//	 
+	//
 	// }
 
 }

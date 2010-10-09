@@ -34,17 +34,24 @@ import de.d3web.plugin.JPFPluginManager;
 
 /**
  * Provides a static method to initialize the JPF-Pluginmanager by using a
- * clathpath file generated from the maven dependency plugin
+ * classpath file generated from the Maven dependency plugin
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
 public abstract class InitPluginManager {
 
 	/**
-	 * Initialises the JPF-Pluginmanager with the information stored in
+	 * Avoids the creation of an instance for this class.
+	 */
+	private InitPluginManager() {
+	}
+
+	/**
+	 * Initializes the JPF-Pluginmanager with the information stored in
 	 * "target/dependencies/output.txt" This file can be generated with the
-	 * maven dependency plugin Important: Tests using this function must run
-	 * maven install after each dependency update
+	 * maven dependency plugin <BR>
+	 * Important: Tests using this function must run maven install after each
+	 * dependency update
 	 * 
 	 * @throws IOException
 	 */

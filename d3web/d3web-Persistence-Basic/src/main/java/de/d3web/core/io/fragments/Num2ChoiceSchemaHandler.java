@@ -61,11 +61,11 @@ public class Num2ChoiceSchemaHandler implements FragmentHandler {
 		for (int i = 0; i < nl.getLength(); ++i) {
 			condNode = nl.item(i);
 			if (condNode.getNodeName().equalsIgnoreCase("Question")) {
-				String q_id = condNode.getAttributes().getNamedItem("ID")
+				String qID = condNode.getAttributes().getNamedItem("ID")
 						.getNodeValue();
-				q = kb.searchQuestion(q_id);
+				q = kb.searchQuestion(qID);
 				if (q == null) throw new IOException(
-						"Could not create Num2ChoiceSchema - unknown question " + q_id);
+						"Could not create Num2ChoiceSchema - unknown question " + qID);
 			}
 			else if (condNode.getNodeName().equalsIgnoreCase(
 					"LeftClosedInterval")) {

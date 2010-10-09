@@ -85,7 +85,9 @@ public class BotHelper {
 
 	public String veryPretty(String text) {
 		String t = pretty(text);
-		if (t.indexOf("?") > -1) t = t.replaceAll("\\?", "");
+		if (t.indexOf('?') > -1) {
+			t = t.replaceAll("\\?", "");
+		}
 		return t;
 	}
 

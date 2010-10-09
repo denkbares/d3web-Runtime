@@ -174,7 +174,7 @@ public class TestSuite {
 	 * 
 	 * @param casesUrl URL-formatted String representing the output file
 	 */
-	public void saveRepository_expectedSolutions(String casesUrl) {
+	public void saveRepositoryOnlyexpectedSolutions(String casesUrl) {
 		saveRepository(casesUrl, false);
 	}
 
@@ -183,7 +183,7 @@ public class TestSuite {
 	 * 
 	 * @param casesUrl URL-formatted String representing the output file
 	 */
-	public void saveRepository_derivedSolutions(String casesUrl) {
+	public void saveRepositoryWithDerivedSolutions(String casesUrl) {
 		saveRepository(casesUrl, true);
 	}
 
@@ -196,8 +196,8 @@ public class TestSuite {
 	 * @return true if this TestSuite is Consistent. Else false.
 	 */
 	public boolean isConsistent() {
-		for (SequentialTestCase stc1 : repository)
-			for (SequentialTestCase stc2 : repository)
+		for (SequentialTestCase stc1 : repository) {
+			for (SequentialTestCase stc2 : repository) {
 				for (int i = 0; i < stc1.getCases().size() && i < stc2.getCases().size(); i++) {
 					RatedTestCase rtc1 = stc1.getCases().get(i);
 					RatedTestCase rtc2 = stc2.getCases().get(i);
@@ -216,6 +216,8 @@ public class TestSuite {
 					}
 					else break;
 				}
+			}
+		}
 		return true;
 	}
 
@@ -354,9 +356,10 @@ public class TestSuite {
 	// Antworten auf mehrere (erste) Fragen möglich
 	public TestSuite getPartiallyAnsweredSuite(Choice answer) {
 		TestSuite ret = new TestSuite();
-		for (SequentialTestCase stc : getRepository())
+		for (SequentialTestCase stc : getRepository()) {
 			if (stc.getCases().get(0).getFindings().get(0).getValue().equals(answer)) ret.getRepository().add(
 					stc);
+		}
 		return ret;
 	}
 }

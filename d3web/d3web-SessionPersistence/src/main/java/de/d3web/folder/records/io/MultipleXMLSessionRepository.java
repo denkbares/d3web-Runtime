@@ -74,7 +74,7 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 		for (File f : folder.listFiles()) {
 			String name = f.getName();
 			if (!f.isFile() || !name.endsWith(".xml")) continue;
-			int underscore = name.indexOf("_");
+			int underscore = name.indexOf('_');
 			Date date = FILE_DATE_FORMAT.parse(name.substring(0, underscore));
 			String id = name.substring(underscore + 1, name.length() - 4);
 			add(new FileRecord(id, kb, date, f));

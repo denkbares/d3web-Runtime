@@ -25,10 +25,10 @@ import de.d3web.empiricaltesting.casevisualization.dot.DDBuilder.caseType;
 
 public class DDEdge {
 
-	DDNode begin;
-	DDNode end;
-	Finding label;
-	caseType sessiontype;
+	private DDNode begin;
+	private DDNode end;
+	private Finding label;
+	private caseType sessiontype;
 
 	public DDEdge(DDNode begin, DDNode end, Finding label, caseType sessiontype) {
 		setLabel(label);

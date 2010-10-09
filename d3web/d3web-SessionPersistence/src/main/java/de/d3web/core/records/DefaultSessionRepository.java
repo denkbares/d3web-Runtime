@@ -46,6 +46,7 @@ public class DefaultSessionRepository implements SessionRepository {
 			return true;
 		}
 		else {
+			// joba: I would recommend to keep the "==" comparison here
 			if (oldRecord == sessionRecord) {
 				Logger.getLogger(this.getClass().getSimpleName()).warning(
 						"SessionRecord " + sessionRecord.getId()

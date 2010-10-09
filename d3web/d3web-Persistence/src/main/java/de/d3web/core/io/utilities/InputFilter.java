@@ -38,11 +38,7 @@ import org.xml.sax.InputSource;
  */
 public class InputFilter {
 
-	/**
-	 * Creates a new InputFilter
-	 */
-	public InputFilter() {
-		super();
+	private InputFilter() {
 	}
 
 	/**

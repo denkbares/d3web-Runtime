@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- *
+ * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- *
+ * 
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- *
+ * 
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -236,13 +236,11 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		else return false;
 	}
 
-
-
 	public void removeRelation(XCLRelation rel) {
 		for (NamedObject nob : rel.getConditionedFinding().getTerminalObjects()) {
 			KnowledgeSlice knowledge = nob.getKnowledge(PSMethodXCL.class,
 					XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
-			if (knowledge != null && knowledge instanceof XCLContributedModelSet) {
+			if (knowledge instanceof XCLContributedModelSet) {
 				XCLContributedModelSet set = (XCLContributedModelSet) knowledge;
 				set.removeModel(this);
 				if (set.isEmpty()) {
@@ -306,7 +304,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	 * Returns the established threshold of a Model, if it is not the default.
 	 * To get the threshold of the current session, use the instance of XCL:
 	 * instance.getScoreAlgorithm().getEstablishedThreshold(model)
-	 *
+	 * 
 	 * @created 29.06.2010
 	 * @return the established threshold, if it is not the default, null
 	 *         otherwise
@@ -318,7 +316,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	/**
 	 * Sets the EstablishedThreshold, if the value is smaller than 0, it is set
 	 * to the default value
-	 *
+	 * 
 	 * @created 25.06.2010
 	 * @param establishedThreshold value of EstablishedThreshold
 	 */
@@ -335,7 +333,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	 * Returns the suggested threshold of a Model, if it is not the default. To
 	 * get the threshold of the current session, use the instance of XCL:
 	 * instance.getScoreAlgorithm().getSuggestedThreshold(model)
-	 *
+	 * 
 	 * @created 29.06.2010
 	 * @return the suggested threshold, if it is not the default, null otherwise
 	 */
@@ -346,7 +344,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	/**
 	 * Sets the SuggestedThreshold, if the value is smaller than 0, it is set to
 	 * the default value
-	 *
+	 * 
 	 * @created 25.06.2010
 	 * @param suggestedThreshold value of SuggestedThreshold
 	 */
@@ -363,7 +361,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	 * Returns the minimal support this Model must have, if it is not the
 	 * default. To get the minimal support of the current session, use the
 	 * instance of XCL: instance.getScoreAlgorithm().getMinSupport(model)
-	 *
+	 * 
 	 * @created 29.06.2010
 	 * @return the minimal support, if it is not the default, null otherwise
 	 */
@@ -374,7 +372,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 	/**
 	 * Sets the MinSupport, if the value is smaller than 0, it is set to the
 	 * default value
-	 *
+	 * 
 	 * @created 25.06.2010
 	 * @param minSupport value of MinSupport
 	 */
@@ -391,6 +389,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		this.id = id;
 	}
 
+	@Override
 	public String getId() {
 		if (id == null) {
 			if (solution == null) {
@@ -401,19 +400,22 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		return id;
 	}
 
+	@Override
 	public Class<PSMethodXCL> getProblemsolverContext() {
 		return PSMethodXCL.class;
 	}
 
+	@Override
 	public boolean isUsed(Session session) {
 		return true;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.d3web.kernel.domainModel.KnowledgeSlice#remove()
 	 */
+	@Override
 	public void remove() {
 		solution.getKnowledgeBase().removeKnowledge(PSMethodXCL.class, this,
 				XCLModel.XCLMODEL);
@@ -450,6 +452,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 
 	Collection<KBOEventListener> listeners;
 
+	@Override
 	public void addListener(KBOEventListener listener) {
 		if (listeners == null) listeners = new LinkedList<KBOEventListener>();
 		if (!listeners.contains(listener)) {
@@ -457,6 +460,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		}
 	}
 
+	@Override
 	public void removeListener(KBOEventListener listener) {
 		if (listeners != null) {
 
@@ -469,6 +473,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		}
 	}
 
+	@Override
 	public void notifyListeners(Session session, IEventSource source) {
 		if (listeners != null && session != null && source != null) {
 			for (KBOEventListener cl : new ArrayList<KBOEventListener>(listeners)) {
@@ -477,6 +482,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		}
 	}
 
+	@Override
 	public Collection<KBOEventListener> getListeners() {
 		return listeners;
 	}
@@ -497,6 +503,7 @@ public class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLMod
 		}
 	}
 
+	@Override
 	public SessionObject createCaseObject(Session session) {
 		return new XCLCaseModel(this, session);
 	}

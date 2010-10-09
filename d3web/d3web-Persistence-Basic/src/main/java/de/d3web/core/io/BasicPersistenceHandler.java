@@ -31,7 +31,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 import java.util.logging.Logger;
 
 import org.w3c.dom.Document;
@@ -71,9 +70,9 @@ public class BasicPersistenceHandler implements
 	private void saveCosts(Element father, KnowledgeBase kb) throws IOException {
 		Document doc = father.getOwnerDocument();
 		Element costsElement = doc.createElement("Costs");
-		Set<String> IDSet = kb.getCostIDs();
-		if (IDSet != null) {
-			Iterator<String> iter = IDSet.iterator();
+		Set<String> idSet = kb.getCostIDs();
+		if (idSet != null) {
+			Iterator<String> iter = idSet.iterator();
 			while (iter.hasNext()) {
 				String costID = iter.next();
 				CostObject cost = new CostObject(costID, kb.getCostVerbalization(costID),
@@ -418,21 +417,21 @@ public class BasicPersistenceHandler implements
 	}
 
 	private static Solution getRootSolution(KnowledgeBase kb) {
-		Vector<Solution> retVec = new Vector<Solution>();
+		List<Solution> result = new ArrayList<Solution>();
 		Iterator<Solution> iter = kb.getSolutions().iterator();
 		while (iter.hasNext()) {
 			Solution d = iter.next();
 			if (d.getParents() == null || d.getParents().length == 0) {
-				retVec.add(d);
+				result.add(d);
 			}
 		}
-		if (retVec.size() > 1) {
+		if (result.size() > 1) {
 			Logger.getLogger(kb.getClass().getName()).warning(
 					"more than one diagnosis root node!");
 
 			// [HOTFIX]:aha:multiple root / orphan handling
 			Solution root = null;
-			iter = retVec.iterator();
+			iter = result.iterator();
 			while (iter.hasNext()) {
 				Solution d = iter.next();
 				if (d.getId().equals("P000")) root = d;
@@ -440,11 +439,11 @@ public class BasicPersistenceHandler implements
 			return root;
 
 		}
-		else if (retVec.size() < 1) {
+		else if (result.size() < 1) {
 			Logger.getLogger(kb.getClass().getName()).severe(
 					"no root node in diagnosis tree!");
 			return null;
 		}
-		return retVec.get(0);
+		return result.get(0);
 	}
 }

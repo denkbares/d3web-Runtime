@@ -30,8 +30,8 @@ import java.util.logging.Logger;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.kernel.verbalizer.ConditionVerbalizer;
 import de.d3web.kernel.verbalizer.VerbalizationManager;
-import de.d3web.kernel.verbalizer.Verbalizer;
 import de.d3web.kernel.verbalizer.VerbalizationManager.RenderingFormat;
+import de.d3web.kernel.verbalizer.Verbalizer;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
 import de.d3web.xcl.XCLRelationType;
@@ -159,9 +159,8 @@ public class XclVerbalizer implements Verbalizer {
 	 * @return produces an textual representation of this model
 	 */
 	public String verbalizeHTML(XCLModel model) {
-		String cont = new String();
 		String nl = "<br />";
-		cont = model.getSolution().toString() + nl;
+		String cont = model.getSolution().toString() + nl;
 		if (model.getNecessaryRelations().size() > 0) {
 			cont += "necessary relations:" + nl;
 			for (XCLRelation current : model.getNecessaryRelations()) {
@@ -207,6 +206,7 @@ public class XclVerbalizer implements Verbalizer {
 
 	private class XCLRelationComparator implements Comparator<XCLRelation> {
 
+		@Override
 		public int compare(XCLRelation r1, XCLRelation r2) {
 			return -Double.compare(r1.getWeight(), r2.getWeight());
 		}

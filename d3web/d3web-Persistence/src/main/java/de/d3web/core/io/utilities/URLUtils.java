@@ -34,6 +34,12 @@ import java.net.URLConnection;
 public class URLUtils {
 
 	/**
+	 * Avoids the creation of an instance of this class.
+	 */
+	private URLUtils() {
+	}
+
+	/**
 	 * FilenameConversionException
 	 * 
 	 * @author Chris 06.04.2005
@@ -107,7 +113,7 @@ public class URLUtils {
 	 * "file://xyz.jar".
 	 */
 	private static String getJarFileLocation(URL url) {
-		String PRAEFIX = "jar:";
+		final String PRAEFIX = "jar:";
 		String location = url.getProtocol() + ":" + url.getPath();
 		try {
 			if (location.startsWith(PRAEFIX)) {
