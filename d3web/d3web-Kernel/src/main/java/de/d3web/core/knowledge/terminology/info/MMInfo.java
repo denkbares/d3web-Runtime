@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- * Computer Science VI, University of Wuerzburg
+ * Copyright (C) 2010 denkbares GmbH
  * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
@@ -17,146 +16,21 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-
 package de.d3web.core.knowledge.terminology.info;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
- * only DC objects are keys for DCMarkup
  * 
- * @see de.d3web.core.knowledge.terminology.info.DCMarkup
- * @author hoernlein
+ * @author hoernlein, Markus Friedrich (denkbares GmbH)
+ * @created 08.10.2010
  */
-public class DCElement {
-
-	private static List<DCElement> dcElements = new ArrayList<DCElement>();
-
-	private final String label;
-
-	protected DCElement(String label) {
-		super();
-		this.label = label;
-		dcElements.add(this);
-	}
-
-	public String getLabel() {
-		return label;
-	}
-
-	@Override
-	public String toString() {
-		return label;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		return label.hashCode();
-	}
-
-	/**
-	 * Searches DCElement in the list of all created DCElements If none is
-	 * found, one will be created.
-	 * 
-	 * @param label of the DCElement
-	 * @return DCElement with the given label
-	 */
-	public static DCElement getDCElementFor(String label) {
-		Iterator<DCElement> iter = getIterator();
-		while (iter.hasNext()) {
-			DCElement dce = iter.next();
-			if (dce.getLabel().equalsIgnoreCase(label)) {
-				return dce;
-			}
-		}
-		return new DCElement(label);
-	}
-
-	/**
-	 * use this method to get the Date encoded to the String-value of
-	 * DCElement.DATE usage
-	 * DCElement.string2date(DCMarkup.getContent(DCElement.DATA))
-	 * 
-	 * a Date is encoded as "YYYY-M-D h:m"
-	 * 
-	 * @param dateString String
-	 * @return Date
-	 */
-	public static Date string2date(String dateString) {
-		try {
-			StringTokenizer st = new StringTokenizer(dateString, " -:", false);
-			int y = Integer.parseInt(st.nextToken());
-			int m = Integer.parseInt(st.nextToken());
-			int d = Integer.parseInt(st.nextToken());
-			int h = Integer.parseInt(st.nextToken());
-			int mi = Integer.parseInt(st.nextToken());
-			Calendar c = Calendar.getInstance();
-			c.set(Calendar.YEAR, y);
-			c.set(Calendar.MONTH, m - 1);
-			c.set(Calendar.DAY_OF_MONTH, d);
-			c.set(Calendar.HOUR_OF_DAY, h);
-			c.set(Calendar.MINUTE, mi);
-			return c.getTime();
-		}
-		catch (NumberFormatException e) {
-			// Logger.getLogger("de.d3web").log(Level.WARNING,
-			// e.getLocalizedMessage(), e);
-			Logger.getLogger("de.d3web").log(Level.WARNING, "can't parse date '" + dateString + "'");
-			return new Date();
-		}
-		catch (NoSuchElementException e2) {
-			// Logger.getLogger("de.d3web").log(Level.WARNING,
-			// e2.getLocalizedMessage(), e2);
-			Logger.getLogger("de.d3web").log(Level.WARNING, "can't parse date '" + dateString + "'");
-			return new Date();
-		}
-	}
-
-	/**
-	 * use this method to set the String-value of DCElement.DATA usage
-	 * DCMarkup.setContent(DCElement.DATA, DCElement.date2string(yourDate))
-	 * 
-	 * a Date is encoded as "YYYY-M-D h:m"
-	 * 
-	 * @param date Date
-	 * @return String
-	 */
-	public static String date2string(Date date) {
-		Calendar c = Calendar.getInstance();
-		c.setTime(date);
-		// YYYY-MM-DD hh:mm
-		return "" + c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1)
-				+ "-" + c.get(Calendar.DAY_OF_MONTH) + " "
-				+ c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE);
-	}
-
-	/**
-	 * 
-	 * @return Iterator over all possible DC objects
-	 */
-	public static Iterator<DCElement> getIterator() {
-		return dcElements.iterator();
-	}
+public class MMInfo {
 
 	/**
 	 * Element Name: Title Label: Title Definition: A name given to the
 	 * resource. Comment: Typically, Title will be a name by which the resource
 	 * is formally known.
 	 */
-	public static final DCElement TITLE = new DCElement("DC.title");
+	public static final Property TITLE = Property.getProperty("DC.title");
 
 	/**
 	 * Element Name: Creator Label: Creator Definition: An entity primarily
@@ -164,7 +38,7 @@ public class DCElement {
 	 * Creator include a person, an organization, or a service. Typically, the
 	 * name of a Creator should be used to indicate the entity.
 	 */
-	public static final DCElement CREATOR = new DCElement("DC.creator");
+	public static final Property CREATOR = Property.getProperty("DC.creator");
 
 	/**
 	 * Element Name: Subject Label: Subject and Keywords Definition: A topic of
@@ -178,7 +52,7 @@ public class DCElement {
 	 * 
 	 * @see MMInfoSubject public final static constants
 	 */
-	public static final DCElement SUBJECT = new DCElement("DC.subject");
+	public static final Property SUBJECT = Property.getProperty("DC.subject");
 
 	/**
 	 * Element Name: Description Label: Description Definition: An account of
@@ -187,7 +61,7 @@ public class DCElement {
 	 * graphical representation of content or a free-text account of the
 	 * content.
 	 */
-	public static final DCElement DESCRIPTION = new DCElement("DC.description");
+	public static final Property DESCRIPTION = Property.getProperty("DC.description");
 
 	/**
 	 * Element Name: Publisher Label: Publisher Definition: An entity
@@ -195,7 +69,7 @@ public class DCElement {
 	 * Publisher include a person, an organization, or a service. Typically, the
 	 * name of a Publisher should be used to indicate the entity.
 	 */
-	public static final DCElement PUBLISHER = new DCElement("DC.publisher");
+	public static final Property PUBLISHER = Property.getProperty("DC.publisher");
 
 	/**
 	 * Element Name: Contributor Label: Contributor Definition: An entity
@@ -204,7 +78,7 @@ public class DCElement {
 	 * service. Typically, the name of a Contributor should be used to indicate
 	 * the entity.
 	 */
-	public static final DCElement CONTRIBUTOR = new DCElement("DC.contributor");
+	public static final Property CONTRIBUTOR = Property.getProperty("DC.contributor");
 
 	/**
 	 * Element Name: Date Label: Date Definition: A date of an event in the
@@ -215,7 +89,7 @@ public class DCElement {
 	 * 
 	 * @see DCElement.date2string(Date) & DCElement.string2date(String)
 	 */
-	public static final DCElement DATE = new DCElement("DC.date");
+	public static final Property DATE = Property.getProperty("DC.date");
 
 	/**
 	 * Element Name: Type Label: Resource Type Definition: The nature or genre
@@ -226,7 +100,19 @@ public class DCElement {
 	 * the physical or digital manifestation of the resource, use the FORMAT
 	 * element.
 	 */
-	public static final DCElement TYPE = new DCElement("DC.resource_type");
+	public static final Property TYPE = Property.getProperty("DC.resource_type");
+
+	/**
+	 * Element Name: Format Label: Format Definition: The physical or digital
+	 * manifestation of the resource. Comment: Typically, Format may include the
+	 * media-type or dimensions of the resource. Format may be used to identify
+	 * the software, hardware, or other equipment needed to display or operate
+	 * the resource. Examples of dimensions include size and duration.
+	 * Recommended best practice is to select a value from a controlled
+	 * vocabulary (for example, the list of Internet Media Types [MIME] defining
+	 * computer media formats).
+	 */
+	public static final Property FORMAT = Property.getProperty("DC.format");
 
 	/**
 	 * Element Name: Identifier Label: Resource Identifier Definition: An
@@ -238,7 +124,7 @@ public class DCElement {
 	 * the Digital Object Identifier (DOI) and the International Standard Book
 	 * Number (ISBN).
 	 */
-	public static final DCElement IDENTIFIER = new DCElement(
+	public static final Property IDENTIFIER = Property.getProperty(
 			"DC.resource_identifier");
 
 	/**
@@ -248,7 +134,7 @@ public class DCElement {
 	 * best practice is to identify the referenced resource by means of a string
 	 * or number conforming to a formal identification system.
 	 */
-	public static final DCElement SOURCE = new DCElement("DC.source");
+	public static final Property SOURCE = Property.getProperty("DC.source");
 
 	/**
 	 * Element Name: Language Label: Language Definition: A language of the
@@ -258,7 +144,7 @@ public class DCElement {
 	 * Examples include "en" or "eng" for English, "akk" for Akkadian", and
 	 * "en-GB" for English used in the United Kingdom.
 	 */
-	public static final DCElement LANGUAGE = new DCElement("DC.language");
+	public static final Property LANGUAGE = Property.getProperty("DC.language");
 
 	/**
 	 * Element Name: Relation Label: Relation Definition: A reference to a
@@ -266,7 +152,7 @@ public class DCElement {
 	 * referenced resource by means of a string or number conforming to a formal
 	 * identification system.
 	 */
-	public static final DCElement RELATION = new DCElement("DC.relation");
+	public static final Property RELATION = Property.getProperty("DC.relation");
 
 	/**
 	 * Element Name: Coverage Label: Coverage Definition: The extent or scope of
@@ -279,7 +165,7 @@ public class DCElement {
 	 * time periods in preference to numeric identifiers such as sets of
 	 * coordinates or date ranges.
 	 */
-	public static final DCElement COVERAGE = new DCElement("DC.coverage");
+	public static final Property COVERAGE = Property.getProperty("DC.coverage");
 
 	/**
 	 * Element Name: Rights Label: Rights Management Definition: Information
@@ -290,5 +176,6 @@ public class DCElement {
 	 * Property Rights. If the Rights element is absent, no assumptions may be
 	 * made about any rights held in or over the resource.
 	 */
-	public static final DCElement RIGHTS = new DCElement("DC.rights_management");
+	public static final Property RIGHTS = Property.getProperty("DC.rights_management");
+
 }

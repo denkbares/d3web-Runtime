@@ -23,8 +23,10 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
+import de.d3web.core.session.SessionInfoStore;
 import de.d3web.core.session.protocol.Protocol;
 
 /**
@@ -50,6 +52,8 @@ public class DefaultSessionRecord implements SessionRecord {
 	private DCMarkup dcMarkup;
 
 	private String name;
+
+	private final InfoStore infoStore = new SessionInfoStore(this);
 
 	public DefaultSessionRecord(KnowledgeBase kb) {
 		this.kb = kb;
@@ -139,7 +143,13 @@ public class DefaultSessionRecord implements SessionRecord {
 		return name;
 	}
 
+	@Override
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public InfoStore getInfoStore() {
+		return infoStore;
 	}
 }

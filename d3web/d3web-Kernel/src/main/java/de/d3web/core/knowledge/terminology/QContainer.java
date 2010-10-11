@@ -34,8 +34,6 @@ import de.d3web.core.knowledge.KnowledgeBase;
  */
 public class QContainer extends QASet {
 
-	private Integer priority;
-
 	/**
 	 * Creates a new instance with the specified unique identifier.
 	 * 
@@ -46,56 +44,6 @@ public class QContainer extends QASet {
 		// ochlast: this call is obsolete due to init() method
 		// of NamedObject!
 		setChildren(new LinkedList<NamedObject>());
-	}
-
-	/**
-	 * Compares the priority with the priority of another {@link QContainer}
-	 * instance.
-	 * <table>
-	 * <tr>
-	 * <td>Returns</td>
-	 * <td align=right>1</td>
-	 * <td>, if <code>this</code> has higher priority,</td>
-	 * </tr>
-	 * <tr>
-	 * <td></td>
-	 * <td align=right>0</td>
-	 * <td>, if <code>this</code> and <code>anotherQContainer</code> have the
-	 * same (or none) priority</td>
-	 * <tr>
-	 * <td></td>
-	 * <td align=right>- 1</td>
-	 * <td>, if <code>this</code> has lower priority</td>
-	 * </table>
-	 * 
-	 * @param QContainer anotherQContainer
-	 * @return int the result of the comparison
-	 */
-	public int comparePriority(QContainer anotherQContainer) {
-		Integer acPriority = anotherQContainer.getPriority();
-		if (acPriority == null) {
-			return ((getPriority() == null) ? 0 : 1);
-		}
-		// acPriority != null
-		if (getPriority() == null) {
-			return -1;
-		}
-		// both priorities are non-null Integer objects
-		return getPriority().compareTo(acPriority);
-	}
-
-	/**
-	 * <b>Deprecated:</b> not used anymore. <br>
-	 * Returns the {@link QContainer}s priority. This is a non-negative
-	 * {@link Integer} value specifying the order of the QContainers to be
-	 * brought-up by a dialog component. Thus, priority is not an absolute
-	 * number, but relative to all the other QContainers priorities.
-	 * 
-	 * @return java.lang.Integer
-	 */
-	@Deprecated
-	public Integer getPriority() {
-		return priority;
 	}
 
 	/**
@@ -111,25 +59,4 @@ public class QContainer extends QASet {
 		// knowledge base if available
 		getKnowledgeBase().add(this);
 	}
-
-	/**
-	 * <b>Deprecated:</b> not used anymore. <br>
-	 * Sets the priority of this instance to the specified non-negative
-	 * {@link Integer} value. Specifying the order of the QContainers (in
-	 * special dialog situations) with this property is optional. Any
-	 * {@link QContainer} without a defined priority value receives a positive
-	 * infinite default value and will thus be asked latest by those dialog
-	 * components respecting the priority value.
-	 * 
-	 * @param priority the priority value of this instance
-	 */
-	@Deprecated
-	public void setPriority(Integer priority) {
-		/*
-		 * if (priority.intValue() < 0) { throw new
-		 * ValueNotAcceptedException("Negative Priority"); }
-		 */
-		this.priority = priority;
-	}
-
 }

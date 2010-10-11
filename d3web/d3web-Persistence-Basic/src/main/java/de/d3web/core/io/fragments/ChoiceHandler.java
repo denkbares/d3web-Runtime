@@ -25,13 +25,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.io.PersistenceManager;
-import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
+import de.d3web.core.knowledge.InfoStore;
+import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.AnswerNo;
 import de.d3web.core.knowledge.terminology.AnswerYes;
 import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.info.Properties;
 
 /**
  * Handels Choice Answers
@@ -71,10 +71,9 @@ public class ChoiceHandler implements FragmentHandler {
 					ac.setText(node.getTextContent());
 				}
 				else {
-					Object properties = PersistenceManager.getInstance().readFragment(node, kb);
-					if (properties instanceof Properties) {
-						ac.setProperties((Properties) properties);
-					}
+					InfoStore source = (InfoStore) PersistenceManager.getInstance().readFragment(
+							node, kb);
+					InfoStoreUtil.copyEntries(source, ac.getInfoStore());
 				}
 			}
 		}
@@ -97,9 +96,9 @@ public class ChoiceHandler implements FragmentHandler {
 			element.setAttribute("type", "AnswerChoice");
 		}
 		XMLUtil.appendTextNode(a.getName(), element);
-		Properties properties = a.getProperties();
-		if (properties != null && !properties.isEmpty()) {
-			element.appendChild(PersistenceManager.getInstance().writeFragment(properties, doc));
+		InfoStore infoStore = a.getInfoStore();
+		if (infoStore != null && !infoStore.isEmpty()) {
+			element.appendChild(PersistenceManager.getInstance().writeFragment(infoStore, doc));
 		}
 		return element;
 	}

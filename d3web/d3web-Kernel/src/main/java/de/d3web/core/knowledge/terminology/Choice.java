@@ -22,8 +22,8 @@ package de.d3web.core.knowledge.terminology;
 
 import java.util.List;
 
-import de.d3web.core.knowledge.terminology.info.Properties;
-import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
+import de.d3web.core.knowledge.DefaultInfoStore;
+import de.d3web.core.knowledge.InfoStore;
 
 /**
  * Answer (alternative) class for choice questions Creation date: (13.09.2000
@@ -31,11 +31,11 @@ import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
  * 
  * @author norman
  */
-public class Choice implements IDObject, PropertiesContainer, Comparable<Choice> {
+public class Choice implements IDObject, Comparable<Choice> {
 
 	private String text;
 	private final String id;
-	private Properties properties = new Properties();
+	private InfoStore infoStore = new DefaultInfoStore();
 
 	public Choice(String theId) {
 		this.id = theId;
@@ -116,7 +116,6 @@ public class Choice implements IDObject, PropertiesContainer, Comparable<Choice>
 	// return getId().hashCode() + getName().hashCode();
 	// }
 
-
 	@Override
 	public int compareTo(Choice other) {
 		List<Choice> range = ((QuestionChoice) this.getQuestion()).getAllAlternatives();
@@ -128,16 +127,6 @@ public class Choice implements IDObject, PropertiesContainer, Comparable<Choice>
 	@Override
 	public String getId() {
 		return id;
-	}
-
-	@Override
-	public Properties getProperties() {
-		return properties;
-	}
-
-	@Override
-	public void setProperties(Properties properties) {
-		this.properties = properties;
 	}
 
 	/**
@@ -163,5 +152,10 @@ public class Choice implements IDObject, PropertiesContainer, Comparable<Choice>
 	 */
 	public void setQuestion(Question question) {
 		this.question = question;
+	}
+
+	@Override
+	public InfoStore getInfoStore() {
+		return infoStore;
 	}
 }

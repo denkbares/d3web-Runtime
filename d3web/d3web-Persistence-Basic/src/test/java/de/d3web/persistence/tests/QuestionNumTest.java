@@ -34,8 +34,8 @@ import de.d3web.core.io.fragments.QuestionHandler;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
-import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.plugin.test.InitPluginManager;
 
@@ -68,8 +68,7 @@ public class QuestionNumTest {
 
 	@Test
 	public void testQuestionWithProperties() throws Exception {
-		q1.getProperties().setProperty(Property.HIDE_IN_DIALOG, new Boolean(true));
-		q1.getProperties().setProperty(Property.COST, new Double(20));
+		q1.getInfoStore().addValue(BasicProperties.COST, new Double(20));
 
 		// Set propertyKeys = q1.getPropertyKeys();
 		// MockPropertyDescriptor mpd = new
@@ -77,19 +76,12 @@ public class QuestionNumTest {
 
 		XMLTag propertiesTag = new XMLTag("Properties");
 
-		XMLTag propertyTag1 = new XMLTag("Property");
-		propertyTag1.addAttribute("name", "hide_in_dialog");
-		// old: propertyTag1.addAttribute("descriptor", "hide_in_dialog");
-		propertyTag1.addAttribute("class", "java.lang.Boolean");
-		propertyTag1.setContent("true");
-
 		XMLTag propertyTag2 = new XMLTag("Property");
 		propertyTag2.addAttribute("name", "cost");
 		// old: propertyTag2.addAttribute("descriptor", "cost");
 		propertyTag2.addAttribute("class", "java.lang.Double");
 		propertyTag2.setContent("20.0");
 
-		propertiesTag.addChild(propertyTag1);
 		propertiesTag.addChild(propertyTag2);
 
 		shouldTag.addChild(propertiesTag);
@@ -141,31 +133,4 @@ public class QuestionNumTest {
 		isTag = new XMLTag(qw.write(q1, Util.createEmptyDocument()));
 		assertEquals("(intervals)", shouldTag, isTag);
 	}
-
-	@Test
-	public void testQContainerWithCosts() throws Exception {
-		q1.getProperties().setProperty(Property.TIME, new Double(20));
-		q1.getProperties().setProperty(Property.RISK, new Double(50.5));
-
-		XMLTag shouldCostsTag = new XMLTag("Properties");
-
-		XMLTag costTag1 = new XMLTag("Property");
-		costTag1.addAttribute("name", "timeexpenditure");
-		costTag1.addAttribute("class", Double.class.getName());
-		costTag1.setContent(Double.toString(20));
-		shouldCostsTag.addChild(costTag1);
-
-		XMLTag costTag2 = new XMLTag("Property");
-		costTag2.addAttribute("name", "risk");
-		costTag2.addAttribute("class", Double.class.getName());
-		costTag2.setContent(Double.toString(50.5));
-		shouldCostsTag.addChild(costTag2);
-
-		shouldTag.addChild(shouldCostsTag);
-
-		isTag = new XMLTag(qw.write(q1, Util.createEmptyDocument()));
-
-		assertEquals("(3)", shouldTag, isTag);
-	}
-
 }

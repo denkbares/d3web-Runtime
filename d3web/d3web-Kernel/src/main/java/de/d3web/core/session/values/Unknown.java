@@ -19,6 +19,7 @@
  */
 package de.d3web.core.session.values;
 
+import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Value;
@@ -85,6 +86,12 @@ public class Unknown implements IDObject, QuestionValue {
 	@Override
 	public String getName() {
 		return "unknown";
+	}
+
+	@Override
+	public InfoStore getInfoStore() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

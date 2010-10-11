@@ -31,11 +31,11 @@ import java.util.Map;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.knowledge.DefaultInfoStore;
+import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.KnowledgeContainer;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.info.Properties;
-import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 
 /**
  * NamedObject is parent of knowledge-base objects such as QASet, Question,
@@ -54,9 +54,7 @@ import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
  * @see de.d3web.kernel.misc.PropertiesAdapter
  */
 public abstract class NamedObject implements TerminologyObject,
-		KnowledgeContainer, PropertiesContainer {
-
-	private Properties properties;
+		KnowledgeContainer {
 
 	/**
 	 * Representing a short name of the object.
@@ -97,11 +95,9 @@ public abstract class NamedObject implements TerminologyObject,
 	 */
 	private transient Map<Class<? extends PSMethod>, Map<MethodKind, KnowledgeSlice>> knowledgeMap;
 
+	private final InfoStore infoStore = new DefaultInfoStore();
+
 	private final String id;
-
-	public static final int BEFORE = 1;
-
-	public static final int AFTER = 2;
 
 	private void init() {
 		// unsynchronized version, allows null values
@@ -111,7 +107,6 @@ public abstract class NamedObject implements TerminologyObject,
 		parents = new LinkedList<NamedObject>();
 		linkedChildren = new LinkedList<NamedObject>();
 		linkedParents = new LinkedList<NamedObject>();
-		properties = new Properties();
 	}
 
 	/**
@@ -127,28 +122,6 @@ public abstract class NamedObject implements TerminologyObject,
 	@Override
 	public String getId() {
 		return id;
-	}
-
-	/**
-	 * Returns the {@link Properties} instance of this {@link NamedObject}. The
-	 * properties are stored in a map, dynamically storing arbitrary data.
-	 * 
-	 * @return the properties of this instance
-	 */
-	@Override
-	public Properties getProperties() {
-		return properties;
-	}
-
-	/**
-	 * Sets the {@link Properties} instance of this {@link NamedObject}. The
-	 * properties are stored in a map, dynamically storing arbitrary data.
-	 * 
-	 * @param properties the properties of this instance
-	 */
-	@Override
-	public void setProperties(Properties properties) {
-		this.properties = properties;
 	}
 
 	/**
@@ -179,30 +152,6 @@ public abstract class NamedObject implements TerminologyObject,
 		if (!getLinkedChildren().contains(child)) {
 			linkedChildren.add(child);
 			child.addLinkedParent(this);
-		}
-	}
-
-	/**
-	 * Adds the specified {@link NamedObject} as a child to the list of
-	 * children. The position of the insertion is specified by the
-	 * {@link NamedObject} childToMarkPosition: For position=1 the new child is
-	 * added right before this instance; for position=2 the new child is added
-	 * right after the instance. This object is also linked as a parent to the
-	 * specified child.
-	 * 
-	 * @see #addParent(NamedObject parent)
-	 * @param childToAdd the new child instance
-	 * @param childToMarkPosition an already existing child, where the new child
-	 *        should be added before or after
-	 * @param position with values 1 (before childToMarkPosition) and 2 (after
-	 *        childToMarkPosition)
-	 */
-	public void addChild(NamedObject childToAdd,
-			NamedObject childToMarkPosition, int position) {
-		if (!hasChild(childToAdd)) {
-			children.add(children.indexOf(childToMarkPosition) + position - 1,
-					childToAdd);
-			childToAdd.parents.add(this);
 		}
 	}
 
@@ -434,29 +383,6 @@ public abstract class NamedObject implements TerminologyObject,
 		}
 		return result;
 	}
-
-	/**
-	 * Returns all {@link KnowledgeSlice} instances in all {@link PSMethod}
-	 * contexts, that have the specified {@link MethodKind} as key.
-	 * 
-	 * @return all {@link KnowledgeSlice} instances of this instance with the
-	 *         specified {@link MethodKind} key
-	 */
-	//Ochlast: Not used! Remove?
-	// public Collection<KnowledgeSlice> getAllKnowledge(MethodKind methodKind)
-	// {
-	// Collection<KnowledgeSlice> result = new ArrayList<KnowledgeSlice>();
-	// for (Class<? extends PSMethod> problemsolverKeyClass :
-	// knowledgeMap.keySet()) {
-	// KnowledgeSlice knowledgeSlice =
-	// knowledgeMap.get(problemsolverKeyClass).get(
-	// methodKind);
-	// if (knowledgeSlice != null) {
-	// result.add(knowledgeSlice);
-	// }
-	// }
-	// return result;
-	// }
 
 	/**
 	 * Erase them all: Removes all {@link KnowledgeSlice} instances contained
@@ -698,5 +624,10 @@ public abstract class NamedObject implements TerminologyObject,
 		if (children.remove(child)) {
 			children.add(pos > children.size() ? children.size() : pos, child);
 		}
+	}
+
+	@Override
+	public InfoStore getInfoStore() {
+		return infoStore;
 	}
 }

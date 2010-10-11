@@ -34,9 +34,10 @@ import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
+import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 
 /**
  * PersistenceHandler for PictureQuestion used in the
@@ -50,7 +51,6 @@ import de.d3web.core.knowledge.terminology.info.Property;
  */
 public class ImageQuestionPersistenceHandler implements KnowledgeReader, KnowledgeWriter {
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void read(KnowledgeBase knowledgeBase, InputStream stream,
 			ProgressListener listener) throws IOException {
@@ -78,10 +78,9 @@ public class ImageQuestionPersistenceHandler implements KnowledgeReader, Knowled
 							.getChildNodes());
 					String file = atts.get(0).getAttribute("file");
 
-					List answerRegions = readAnswerRegions(atts.get(0));
-					List questionInfo = (List) q.getProperties().getProperty(
-							Property.IMAGE_QUESTION_INFO);
-					questionInfo = new ArrayList();
+					List<List<String>> answerRegions = readAnswerRegions(atts.get(0));
+					InfoStore infoStore = q.getInfoStore();
+					List<Object> questionInfo = new ArrayList<Object>();
 
 					// Filename
 					questionInfo.add(file);
@@ -94,8 +93,7 @@ public class ImageQuestionPersistenceHandler implements KnowledgeReader, Knowled
 
 					// answerRegions
 					questionInfo.add(answerRegions);
-					q.getProperties().setProperty(Property.IMAGE_QUESTION_INFO,
-							questionInfo);
+					infoStore.addValue(BasicProperties.IMAGE_QUESTION_INFO, questionInfo);
 				}
 			}
 		}
@@ -103,13 +101,11 @@ public class ImageQuestionPersistenceHandler implements KnowledgeReader, Knowled
 
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public int getEstimatedSize(KnowledgeBase knowledgeBase) {
 		int count = 0;
 		for (Question q : knowledgeBase.getQuestions()) {
-			List props = (List) q.getProperties().getProperty(Property.IMAGE_QUESTION_INFO);
-			if (props != null) count++;
+			if (q.getInfoStore().getValue(BasicProperties.IMAGE_QUESTION_INFO) != null) count++;
 		}
 		return count;
 	}
@@ -127,7 +123,7 @@ public class ImageQuestionPersistenceHandler implements KnowledgeReader, Knowled
 		List<Question> questions = knowledgeBase.getQuestions();
 
 		for (Question q : questions) {
-			List props = (List) q.getProperties().getProperty(Property.IMAGE_QUESTION_INFO);
+			List<?> props = (List<?>) q.getInfoStore().getValue(BasicProperties.IMAGE_QUESTION_INFO);
 			if (props != null) {
 				Element question = doc.createElement("Question");
 				question.setAttribute("ID", q.getId());
@@ -137,14 +133,10 @@ public class ImageQuestionPersistenceHandler implements KnowledgeReader, Knowled
 				questionImage.setAttribute("height", (String) props.get(2));
 
 				// Answer Region
-				List answerRegions = (List) props.get(3);
+				List<?> answerRegions = (List<?>) props.get(3);
 				for (Object ar : answerRegions) {
 					List<String> attributes = (List<String>) ar;
 					String answerID = attributes.get(0);
-					int xStart = Integer.parseInt(attributes.get(1));
-					int xEnd = Integer.parseInt(attributes.get(2));
-					int yStart = Integer.parseInt(attributes.get(3));
-					int yEnd = Integer.parseInt(attributes.get(4));
 					Element answerEl = doc.createElement("AnswerRegion");
 					answerEl.setAttribute("answerID", answerID);
 					answerEl.setAttribute("xStart", attributes.get(1));
@@ -166,13 +158,12 @@ public class ImageQuestionPersistenceHandler implements KnowledgeReader, Knowled
 
 	}
 
-	@SuppressWarnings("unchecked")
-	private static List readAnswerRegions(Element element) {
-		ArrayList ret = new ArrayList();
+	private static List<List<String>> readAnswerRegions(Element element) {
+		ArrayList<List<String>> ret = new ArrayList<List<String>>();
 		List<Element> list = XMLUtil.getElementList(element.getChildNodes());
 		for (int i = 0; i < list.size(); i++) {
 			Element aR = list.get(i);
-			ArrayList regionsInfo = new ArrayList();
+			ArrayList<String> regionsInfo = new ArrayList<String>();
 			regionsInfo.add(aR.getAttribute("answerID"));
 			regionsInfo.add(aR.getAttribute("xStart"));
 			regionsInfo.add(aR.getAttribute("xEnd"));

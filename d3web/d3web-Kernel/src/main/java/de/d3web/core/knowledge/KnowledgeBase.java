@@ -46,8 +46,6 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCMarkedUp;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
-import de.d3web.core.knowledge.terminology.info.Properties;
-import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 
 /**
@@ -67,10 +65,9 @@ import de.d3web.core.manage.KnowledgeBaseManagement;
  * @see RuleComplex
  * @see QASet
  */
-public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
-		PropertiesContainer {
+public class KnowledgeBase implements IDObject, KnowledgeContainer, DCMarkedUp {
 
-	private Properties properties;
+	private final InfoStore infoStore = new DefaultInfoStore();
 
 	private DCMarkup dcMarkup;
 
@@ -157,7 +154,6 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		initQuestions = new ArrayList<QASet>();
 		costVerbalization = new TreeMap<String, String>();
 		costUnit = new TreeMap<String, String>();
-		properties = new Properties();
 		dcMarkup = new DCMarkup();
 
 		// unsynchronized version, allows null values
@@ -708,26 +704,6 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 	}
 
 	/**
-	 * Returns properties defined for this {@link KnowledgeBase} instance.
-	 * 
-	 * @return additional properties defined for this knowledge base
-	 */
-	@Override
-	public Properties getProperties() {
-		return properties;
-	}
-
-	/**
-	 * Sets the properties defined for this {@link KnowledgeBase} instance.
-	 * 
-	 * @param properties the properties of this knowledge base
-	 */
-	@Override
-	public void setProperties(Properties properties) {
-		this.properties = properties;
-	}
-
-	/**
 	 * Inserts a new resource for this {@link KnowledgeBase} instance. For
 	 * example, a resource is a multi-media file attached to the
 	 * {@link KnowledgeBase}.
@@ -905,6 +881,17 @@ public class KnowledgeBase implements KnowledgeContainer, DCMarkedUp,
 		if (!solutions.contains(rootSolution)) {
 			solutions.add(rootSolution);
 		}
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public InfoStore getInfoStore() {
+		return infoStore;
 	}
 
 }

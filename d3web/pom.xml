@@ -223,5 +223,6 @@
 		<module>d3web-SessionPersistence</module>
 		<module>d3web-SessionPersistence-ExtensionPoints-jpf-plugin</module>
 		<module>d3web-SessionPersistence-Basic-jpf-plugin</module>
+		<module>d3web-BasicProperties</module>
 	</modules>
 </project>

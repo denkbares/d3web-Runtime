@@ -36,8 +36,8 @@ import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
-import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
@@ -153,8 +153,8 @@ public final class AnswerSelector {
 
 	private List<? extends Value> determineNumValues(QuestionNum question) {
 		List<Value> answers = new LinkedList<Value>();
-		NumericalInterval range = (NumericalInterval) question.getProperties().getProperty(
-				Property.QUESTION_NUM_RANGE);
+		NumericalInterval range = (NumericalInterval) question.getInfoStore().getValue(
+				BasicProperties.QUESTION_NUM_RANGE);
 		if (range == null) {
 			range = DEFAULT_INTERVAL;
 		}

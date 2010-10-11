@@ -39,7 +39,7 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
@@ -198,8 +198,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 			addRelationConditions(pot, qasets, model);
 
 			Float count = map.get(pot);
-			Number apriori = (Number) solution.getProperties().getProperty(
-					Property.APRIORI);
+			Number apriori = (Number) solution.getInfoStore().getValue(BasicProperties.APRIORI);
 			float weight = (apriori == null) ? 1f : apriori.floatValue();
 			totalweight += weight;
 			if (count == null) {

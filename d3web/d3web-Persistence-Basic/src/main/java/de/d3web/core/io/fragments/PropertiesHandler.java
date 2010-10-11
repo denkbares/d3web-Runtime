@@ -23,15 +23,21 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.utilities.XMLUtil;
+import de.d3web.core.knowledge.DefaultInfoStore;
+import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.knowledge.terminology.info.Property.Autosave;
+import de.d3web.core.utilities.Triple;
 
 /**
  * Handler for properties
@@ -47,12 +53,12 @@ public class PropertiesHandler implements FragmentHandler {
 
 	@Override
 	public boolean canWrite(Object object) {
-		return (object instanceof Properties);
+		return (object instanceof InfoStore);
 	}
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		Properties ret = new Properties();
+		InfoStore infoStore = new DefaultInfoStore();
 		List<Element> proplist = XMLUtil.getElementList(element.getChildNodes());
 		for (Element prop : proplist) {
 			if (prop.getNodeName().equals("Property")) {
@@ -65,33 +71,30 @@ public class PropertiesHandler implements FragmentHandler {
 				else {
 					name = prop.getAttributes().getNamedItem("descriptor").getNodeValue();
 				}
-				Property property = Property.getProperty(name);
-				if (property == null) {
-					// [MISC]:aha:obsolete after supportknowledge refactoring is
-					// propagated
-					if (name.equals("isTherapy")) {
-						property = Property.IS_THERAPY;
-					}
-					else {
-						property = new Property(name);
-					}
+				Property property = null;
+				try {
+					property = Property.getProperty(name);
+				}
+				catch (IllegalArgumentException e) {
+					Logger.getLogger("Persistence").log(Level.WARNING,
+							"Property " + name + " is not in use any more.");
+					continue;
 				}
 				String textContent = prop.getTextContent();
 				List<Element> elementList = XMLUtil.getElementList(prop.getChildNodes());
 				if (elementList.size() == 0 && !textContent.trim().equals("")) {
 					Object o = XMLUtil.getPrimitiveValue(textContent,
 							prop.getAttribute("class"));
-					ret.setProperty(property, o);
+					infoStore.addValue(property, o);
 				}
 				else {
 					List<Element> childNodes = elementList;
 					if (childNodes.size() == 0) {
-						ret.setProperty(property, "");
+						infoStore.addValue(property, "");
 					}
 					else if (childNodes.size() == 1) {
-						ret.setProperty(property,
-								PersistenceManager.getInstance().readFragment(
-										childNodes.get(0), kb));
+						infoStore.addValue(property, PersistenceManager.getInstance().readFragment(
+								childNodes.get(0), kb));
 					}
 					else {
 						throw new IOException("Property must have exactly one child.");
@@ -99,31 +102,33 @@ public class PropertiesHandler implements FragmentHandler {
 				}
 			}
 		}
-		return ret;
+		return infoStore;
 	}
 
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
 		Element element = doc.createElement("Properties");
-		Properties properties = (Properties) object;
-		Collection<Property> basicPropertys = Property.getBasicPropertys();
-		if (basicPropertys.size() > 0) {
-			for (Property p : basicPropertys) {
-				Object value = properties.getProperty(p);
-				if (value != null) {
-					Element propertyElement = doc.createElement("Property");
-					propertyElement.setAttribute("name", p.getName());
-					propertyElement.setAttribute("class", value.getClass().getName());
-					if (value instanceof String || value instanceof Integer
-							|| value instanceof Double || value instanceof Float
-							|| value instanceof Boolean || value instanceof URL) {
-						propertyElement.setTextContent(value.toString());
+		InfoStore infoStore = (InfoStore) object;
+		Collection<Triple<Property, Locale, Object>> entries = infoStore.entries();
+		if (entries.size() > 0) {
+			for (Triple<Property, Locale, Object> p : entries) {
+				if (p.getA().hasState(Autosave.basic)) {
+					Object value = p.getC();
+					if (value != null) {
+						Element propertyElement = doc.createElement("Property");
+						propertyElement.setAttribute("name", p.getA().getName());
+						propertyElement.setAttribute("class", value.getClass().getName());
+						if (value instanceof String || value instanceof Integer
+								|| value instanceof Double || value instanceof Float
+								|| value instanceof Boolean || value instanceof URL) {
+							propertyElement.setTextContent(value.toString());
+						}
+						else {
+							propertyElement.appendChild(PersistenceManager.getInstance().writeFragment(
+									value, doc));
+						}
+						element.appendChild(propertyElement);
 					}
-					else {
-						propertyElement.appendChild(PersistenceManager.getInstance().writeFragment(
-								value, doc));
-					}
-					element.appendChild(propertyElement);
 				}
 			}
 		}

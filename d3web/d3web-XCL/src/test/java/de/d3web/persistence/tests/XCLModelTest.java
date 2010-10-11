@@ -36,7 +36,6 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.manage.AnswerFactory;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.plugin.test.InitPluginManager;
@@ -137,8 +136,6 @@ public class XCLModelTest extends TestCase {
 		// init diagnosis "Terminator"
 		kbm.createSolution("Terminator", rootdia);
 		terminator = kbm.findSolution("Terminator");
-		Properties p = new Properties();
-		k.setProperties(p);
 
 		QContainer container = rootContainer;
 

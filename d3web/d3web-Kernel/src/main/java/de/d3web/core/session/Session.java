@@ -27,7 +27,6 @@ import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.interviewmanager.Interview;
@@ -40,7 +39,7 @@ import de.d3web.core.session.interviewmanager.Interview;
  * 
  * @author Norman Bruemmer, joba, Volker Belli (denkbares GmbH)
  */
-public interface Session extends PropertiesContainer, SessionHeader {
+public interface Session extends SessionHeader {
 
 	// --- manage problem solvers ---
 	/**

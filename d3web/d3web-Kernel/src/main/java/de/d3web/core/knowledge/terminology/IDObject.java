@@ -20,6 +20,8 @@
 
 package de.d3web.core.knowledge.terminology;
 
+import de.d3web.core.knowledge.InfoStore;
+
 /**
  * Interface for knowledge base objects, which provide an ID for retrieval.
  * Nearly all knowledge base objects should extend this class.
@@ -44,6 +46,12 @@ public interface IDObject {
 	 */
 	String getName();
 
-	// InfoStore getInfoStore(); // formerly known as PropertyContainer
+	/**
+	 * Returns the InfoStore of the {@link IDObject}
+	 * 
+	 * @created 07.10.2010
+	 * @return {@link InfoStore}
+	 */
+	InfoStore getInfoStore(); // formerly known as PropertyContainer
 
 }

@@ -38,7 +38,7 @@ import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionDate;
-import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
@@ -93,13 +93,13 @@ public class DateAbstractionTest {
 		Question separation =
 				kbm.createQuestionOC("Is Germany separated?",
 						kbm.getKnowledgeBase().getRootQASet(), separationAlternatives);
-		separation.getProperties().setProperty(Property.ABSTRACTION_QUESTION, Boolean.TRUE);
+		separation.getInfoStore().addValue(BasicProperties.ABSTRACTION_QUESTION, Boolean.TRUE);
 
 		String[] eventAlternatives = {
 				"Fall of the Berlin Wall", "German unity" };
 		Question event = kbm.createQuestionOC("Event", kbm.getKnowledgeBase().getRootQASet(),
 				eventAlternatives);
-		event.getProperties().setProperty(Property.ABSTRACTION_QUESTION, Boolean.TRUE);
+		event.getInfoStore().addValue(BasicProperties.ABSTRACTION_QUESTION, Boolean.TRUE);
 	}
 
 	private static void addRules() {
@@ -185,15 +185,15 @@ public class DateAbstractionTest {
 
 		// 'Is Germany separated?' <abstract> ?
 		Question separation = kbm.findQuestion("Is Germany separated?");
-		Boolean separationAbstractionProperty = (Boolean) separation.getProperties().getProperty(
-				Property.ABSTRACTION_QUESTION);
+		Boolean separationAbstractionProperty = (Boolean) separation.getInfoStore().getValue(
+				BasicProperties.ABSTRACTION_QUESTION);
 		assertEquals("Question 'Is Germany separated?' isn't abstract.", Boolean.TRUE,
 				separationAbstractionProperty);
 
 		// Event <abstract> ?
 		Question event = kbm.findQuestion("Event");
-		Boolean eventAbstractionProperty = (Boolean) event.getProperties().getProperty(
-				Property.ABSTRACTION_QUESTION);
+		Boolean eventAbstractionProperty = (Boolean) event.getInfoStore().getValue(
+				BasicProperties.ABSTRACTION_QUESTION);
 		assertEquals("Question 'BMI' isn't abstract.", Boolean.TRUE, eventAbstractionProperty);
 	}
 

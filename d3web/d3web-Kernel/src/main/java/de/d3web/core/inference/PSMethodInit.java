@@ -28,7 +28,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
-import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.DefaultFact;
@@ -68,7 +68,7 @@ public class PSMethodInit implements PSMethod {
 			// initialise all questions
 			KnowledgeBase kb = session.getKnowledgeBase();
 			for (Question q : kb.getQuestions()) {
-				Object property = q.getProperties().getProperty(Property.INIT);
+				Object property = q.getInfoStore().getValue(BasicProperties.INIT);
 				if (property != null) {
 					String s = (String) property;
 					List<String> ids = new LinkedList<String>();

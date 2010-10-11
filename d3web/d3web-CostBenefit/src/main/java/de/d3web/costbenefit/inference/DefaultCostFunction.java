@@ -19,7 +19,7 @@
 package de.d3web.costbenefit.inference;
 
 import de.d3web.core.knowledge.terminology.QContainer;
-import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Session;
 
 /**
@@ -35,7 +35,7 @@ public class DefaultCostFunction implements CostFunction {
 
 	@Override
 	public double getCosts(QContainer qcon, Session session) {
-		Object property = qcon.getProperties().getProperty(Property.COST);
+		Object property = qcon.getInfoStore().getValue(BasicProperties.COST);
 		if (property != null) {
 			return (Double) property;
 		}

@@ -19,10 +19,8 @@
 
 package de.d3web.core.knowledge.terminology.tests;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
@@ -35,8 +33,6 @@ import de.d3web.core.knowledge.terminology.AnswerNo;
 import de.d3web.core.knowledge.terminology.AnswerYes;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionOC;
-import de.d3web.core.knowledge.terminology.info.Properties;
-import de.d3web.core.knowledge.terminology.info.Property;
 
 /**
  * This class tests the "Choices" which utilize the answer alternatives for
@@ -123,41 +119,6 @@ public class ChoiceTest {
 	}
 
 	/**
-	 * Summary: Tests the get and setProperties methods of the class Choice.
-	 * While handling Property and Properties, some methods of these classes are
-	 * tested also.
-	 * 
-	 * @see Choice#setProperties(Properties)
-	 * @see Choice#getProperties()
-	 * @see Properties#isEmpty()
-	 * @see Properties#getKeys()
-	 * 
-	 * @created 24.08.2010
-	 */
-	@Test
-	public void testPropertiesGetterSetter() {
-		// create a new Property value
-		String propString = new String("propString");
-		// create new Properties
-		Properties props = new Properties();
-		assertThat(props.isEmpty(), is(true));
-		// set the new property into the properties set
-		props.setProperty(Property.MY_NEW_PROPERTY, propString);
-		// assure that the properties map is correctly initialized
-		assertThat(props.getKeys().size(), is(1));
-		assertThat(props.isEmpty(), is(false));
-
-		// Test the toString() method of Properties
-		String string = props.toString();
-		assertThat(string, notNullValue());
-		assertThat(string.length(), is(not(0)));
-
-		// set the new properties and retrieve them. check equalsTo()
-		choice.setProperties(props);
-		assertThat(choice.getProperties(), is(equalTo(props)));
-	}
-
-	/**
 	 * Summary: Tests the hashCode method of the class Choice by simply checking
 	 * if its value is not 0.
 	 * 
@@ -168,7 +129,7 @@ public class ChoiceTest {
 		int hashCode = choice.hashCode();
 		assertThat(hashCode, is(not(0)));
 	}
-	
+
 	/**
 	 * Summary: Tests the subclass of Choice: AnswerNo
 	 * 
@@ -197,4 +158,3 @@ public class ChoiceTest {
 		assertThat(answerYes.isAnswerYes(), is(true));
 	}
 }
-

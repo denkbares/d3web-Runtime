@@ -52,29 +52,29 @@ public class NamedObjectTest {
 	}
 
 	NamedObjectMock parent;
-	
+
 	NamedObjectMock childOne;
 	NamedObjectMock childTwo;
 	NamedObjectMock childThree;
-	
+
 	NamedObjectMock linkedChildOne;
 	NamedObjectMock linkedChildTwo;
 	NamedObjectMock linkedChildThree;
 
 	@Before
 	public void setUp() {
-		//initialize parent namedObject
+		// initialize parent namedObject
 		parent = new NamedObjectMock("parent");
-		
-		//initialize the children
+
+		// initialize the children
 		childOne = new NamedObjectMock("childOne");
 		parent.addChild(childOne);
 		childTwo = new NamedObjectMock("childTwo");
 		parent.addChild(childTwo);
 		childThree = new NamedObjectMock("childThree");
 		parent.addChild(childThree);
-		
-		//initialize the linked children
+
+		// initialize the linked children
 		linkedChildOne = new NamedObjectMock("linkedChildOne");
 		parent.addLinkedChild(linkedChildOne);
 		linkedChildTwo = new NamedObjectMock("linkedChildTwo");
@@ -124,36 +124,6 @@ public class NamedObjectTest {
 			assertThat(parents.length, is(1));
 			assertThat(parents[0], is(equalTo((TerminologyObject) parent)));
 		}
-	}
-
-	/**
-	 * Summary: Tests the addChild(NamedObject, NamedObject, int) Method of a
-	 * NamedObject, where a new Child can be inserted in front or behind an
-	 * existing child
-	 * 
-	 * @see NamedObject#addChild(NamedObject, NamedObject, int)
-	 * 
-	 * @created 23.08.2010
-	 */
-	@Test
-	public void testAddChildAtPosition() {
-		// the new child...
-		NamedObjectMock newChild = new NamedObjectMock("newChild");
-
-		// the new child should be inserted AFTER the "childTwo" => At Index 2
-		// currently, this index is taken by childTwo
-		assertThat(parent.getChildren()[2], is(equalTo((TerminologyObject) childThree)));
-		// now insert the new child (behind childTwo)
-		parent.addChild(newChild, childTwo, NamedObject.AFTER);
-		// verify that a new child has been added
-		assertThat(parent.getNumberOfChildren(), is(7));
-		// verify that the new child has been added at the correct position
-		assertThat(parent.getChildren()[2], is(equalTo((TerminologyObject) newChild)));
-
-		// now try to add the newChild again, this should fail!
-		parent.addChild(newChild, childTwo, NamedObject.AFTER);
-		// the number of children should still be 7
-		assertThat(parent.getNumberOfChildren(), is(7));
 	}
 
 	/**
@@ -270,8 +240,8 @@ public class NamedObjectTest {
 		// the child can't be removed twice, therefore this method should fail
 		assertThat(parent.removeChild(childThree), is(false));
 
-		 // now try to remove the linked child "linkedChildOne"
-		 parent.removeLinkedChild(linkedChildOne);
+		// now try to remove the linked child "linkedChildOne"
+		parent.removeLinkedChild(linkedChildOne);
 		// this operation should remove the "linkedChild" completely from the
 		// parents children and linkedChildren
 		assertThat(parent.getLinkedChildren().size(), is(2));// dropped from 3

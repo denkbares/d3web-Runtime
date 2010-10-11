@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Locale;
 
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.utilities.Triple;
 
 public interface InfoStore {
@@ -65,7 +66,7 @@ public interface InfoStore {
 	 * @param key the key to be accessed
 	 * @return the value for that key
 	 */
-	Object getValue(String key);
+	Object getValue(Property key);
 
 	/**
 	 * Returns the value stored for the specified key with the specified
@@ -77,7 +78,7 @@ public interface InfoStore {
 	 * @param language the language to be accessed
 	 * @return the value stored for that key and language
 	 */
-	Object getValue(String key, Locale language);
+	Object getValue(Property key, Locale language);
 
 	/**
 	 * Removes the stored item for the specified key and the default language
@@ -85,7 +86,7 @@ public interface InfoStore {
 	 * 
 	 * @param key the key to be removed
 	 */
-	void remove(String key);
+	boolean remove(Property key);
 
 	/**
 	 * Removes the stored item for the specified key and the specified language.
@@ -93,14 +94,26 @@ public interface InfoStore {
 	 * @param key the key to be removed
 	 * @param language the language to be removed
 	 */
-	void remove(String key, Locale language);
+	boolean remove(Property key, Locale language);
+
+	void addValue(Property key, Object value);
+
+	void addValue(Property key, Locale language, Object value);
 
 	/**
-	 * Returns a unmodifiable collection of all entries contained. Each entry is
-	 * represented by a triple of key, language and stored item.
+	 * Returns all entries of this store
 	 * 
-	 * @return the collection of stored items
+	 * @created 11.10.2010
+	 * @return All entries
 	 */
-	Collection<Triple<String, Locale, Object>> entries();
+	Collection<Triple<Property, Locale, Object>> entries();
+
+	/**
+	 * Returns true, if the collection is empty, false otherwise
+	 * 
+	 * @created 11.10.2010
+	 * @return boolean
+	 */
+	boolean isEmpty();
 
 }

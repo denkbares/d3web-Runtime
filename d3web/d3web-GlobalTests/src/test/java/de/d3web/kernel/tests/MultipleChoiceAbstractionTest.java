@@ -35,7 +35,7 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
-import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
@@ -97,7 +97,7 @@ public class MultipleChoiceAbstractionTest {
 		Question weekdayQuestion =
 				kbm.createQuestionMC(weekday, kbm.getKnowledgeBase().getRootQASet(),
 						weekdayAlternatives);
-		weekdayQuestion.getProperties().setProperty(Property.ABSTRACTION_QUESTION, Boolean.TRUE);
+		weekdayQuestion.getInfoStore().addValue(BasicProperties.ABSTRACTION_QUESTION, Boolean.TRUE);
 	}
 
 	private static void addRules() {
@@ -188,8 +188,8 @@ public class MultipleChoiceAbstractionTest {
 
 		// TEST Weekday <abstract> ?
 		Question weekday = kbm.findQuestion("Weekday");
-		Boolean abstractionProperty = (Boolean) weekday.getProperties().getProperty(
-				Property.ABSTRACTION_QUESTION);
+		Boolean abstractionProperty = (Boolean) weekday.getInfoStore().getValue(
+				BasicProperties.ABSTRACTION_QUESTION);
 		assertEquals("Question 'Day' isn't abstract.", Boolean.TRUE, abstractionProperty);
 	}
 

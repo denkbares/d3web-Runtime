@@ -35,11 +35,11 @@ import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.PropagationManager;
+import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
-import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.DefaultBlackboard;
 import de.d3web.core.session.blackboard.SessionObject;
@@ -85,10 +85,12 @@ public class DefaultSession implements Session {
 
 	private List<PSMethod> usedPSMethods;
 	private DCMarkup dcMarkup;
-	private Properties properties;
 
 	private final Date created;
 	private Date edited;
+
+	private String name;
+	private final InfoStore infoStore = new SessionInfoStore(this);
 
 	private static List<PSMethod> commonPSMethods = Arrays.asList(
 					PSMethodUserSelected.getInstance(),
@@ -179,7 +181,6 @@ public class DefaultSession implements Session {
 	private void initSession(KnowledgeBase kb) {
 		this.kb = kb;
 		this.blackboard = new DefaultBlackboard(this);
-		this.properties = new Properties();
 		this.dcMarkup = new DCMarkup();
 		this.dynamicStore = new HashMap<CaseObjectSource, SessionObject>();
 		// add problem-solving methods used for this case
@@ -337,21 +338,9 @@ public class DefaultSession implements Session {
 		this.dcMarkup = dcMarkup;
 	}
 
-	@Override
-	public Properties getProperties() {
-		return properties;
-	}
-
-	@Override
-	public void setProperties(Properties properties) {
-		touch();
-		this.properties = properties;
-	}
-
 	// ******************** event notification *********************
 
 	private final Collection<SessionEventListener> listeners = new LinkedList<SessionEventListener>();
-	private String name;
 
 	/**
 	 * this listener will be notified, if some value has been set in this case
@@ -411,6 +400,11 @@ public class DefaultSession implements Session {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public InfoStore getInfoStore() {
+		return infoStore;
 	}
 
 }

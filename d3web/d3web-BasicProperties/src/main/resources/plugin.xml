@@ -1,0 +1,123 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin id="d3web-BasicProperties" version="0.0.1">
+	
+	<requires>
+		<import plugin-id="d3web-Kernel-ExtensionPoints" />
+	</requires>
+	
+	<runtime>
+		<library id="de.d3web" path="." type="code">
+			<export prefix="*" />
+		</library>
+	</runtime>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="image_question_info">
+		<parameter id="name" value="image_question_info" />
+		<parameter id="description" value="Storing infos about a QuestionImage and their AnswerRegions doc: Used to store a List of Image and Answer Regions" />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="none" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="cost">
+		<parameter id="name" value="cost" />
+		<parameter id="description" value="specifies what amount of costs is needed to perform the qaset" />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="unit">
+		<parameter id="name" value="unit" />
+		<parameter id="description" value="the unit of numerical questions" />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="abstractionQuestion">
+		<parameter id="name" value="abstractionQuestion" />
+		<parameter id="description" value="Marks a Question as abstraction question (derived) or not." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="explanation">
+		<parameter id="name" value="explanation" />
+		<parameter id="description" value="An explanation of the IDObject" />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="apriori">
+		<parameter id="name" value="apriori" />
+		<parameter id="description" value="Saves the apriori probability of a diagnosis" />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="range">
+		<parameter id="name" value="range" />
+		<parameter id="description" value="valid range of numerical answers of QuestionNum" />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="INIT">
+		<parameter id="name" value="INIT" />
+		<parameter id="description" value="the ids of the answers(seperated by ;), which is  set in PSMethodInit" />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="DEFAULT">
+		<parameter id="name" value="DEFAULT" />
+		<parameter id="description" value="the ids of the answers(seperated by ;), which is in dialogs" />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="unknownVisible">
+		<parameter id="name" value="unknownVisible" />
+		<parameter id="description" value="should UNKNOWN be invisible in questions" />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="unknown_verbalisation">
+		<parameter id="name" value="unknown_verbalisation" />
+		<parameter id="description" value="verbalisation of Unknown" />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="mminfo">
+		<parameter id="name" value="mminfo" />
+		<parameter id="description" value="contains former MMInfo" />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="mminfo" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+</plugin>

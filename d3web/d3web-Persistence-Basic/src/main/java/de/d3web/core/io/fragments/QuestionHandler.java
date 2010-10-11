@@ -27,6 +27,8 @@ import org.w3c.dom.Element;
 
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.utilities.XMLUtil;
+import de.d3web.core.knowledge.InfoStore;
+import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
@@ -39,7 +41,6 @@ import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.knowledge.terminology.QuestionZC;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
-import de.d3web.core.knowledge.terminology.info.Properties;
 
 /**
  * FragmentHandler for Questions Children are ignored, hierarchies are
@@ -67,14 +68,14 @@ public class QuestionHandler implements FragmentHandler {
 		List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
 		Element text = null;
 		ArrayList<NumericalInterval> intervalls = null;
-		Properties properties = null;
+		InfoStore infoStore = null;
 		Element answersElement = null;
 		for (Element child : childNodes) {
 			if (child.getNodeName().equals("Text")) {
-				text = (Element) child;
+				text = child;
 			}
 			else if (child.getNodeName().equals("Answers")) {
-				answersElement = (Element) child;
+				answersElement = child;
 			}
 			// If the child is none of the types above and it doesn't contain
 			// the children or the costs,
@@ -83,8 +84,8 @@ public class QuestionHandler implements FragmentHandler {
 			else if (!child.getNodeName().equals("Children")
 					&& !child.getNodeName().equals("Costs")) {
 				Object readFragment = PersistenceManager.getInstance().readFragment(child, kb);
-				if (readFragment instanceof Properties) {
-					properties = (Properties) readFragment;
+				if (readFragment instanceof InfoStore) {
+					infoStore = (InfoStore) readFragment;
 				}
 				else if (readFragment instanceof List<?>) {
 					intervalls = new ArrayList<NumericalInterval>();
@@ -127,8 +128,8 @@ public class QuestionHandler implements FragmentHandler {
 			q = new QuestionDate(id);
 		}
 		q.setName(text.getTextContent());
-		if (properties != null) {
-			q.setProperties(properties);
+		if (infoStore != null) {
+			InfoStoreUtil.copyEntries(infoStore, q.getInfoStore());
 		}
 		if (answersElement != null && q instanceof QuestionChoice) {
 			QuestionChoice qc = (QuestionChoice) q;
@@ -189,9 +190,9 @@ public class QuestionHandler implements FragmentHandler {
 				e.appendChild(answerNodes);
 			}
 		}
-		Properties properties = q.getProperties();
-		if (properties != null && !properties.isEmpty()) {
-			e.appendChild(PersistenceManager.getInstance().writeFragment(properties, doc));
+		InfoStore infoStore = q.getInfoStore();
+		if (infoStore != null && !infoStore.isEmpty()) {
+			e.appendChild(PersistenceManager.getInstance().writeFragment(infoStore, doc));
 		}
 		return e;
 	}

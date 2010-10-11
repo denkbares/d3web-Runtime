@@ -37,7 +37,7 @@ import de.d3web.core.inference.condition.CondNumLess;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
@@ -92,14 +92,14 @@ public class FormulaExpressionAbstractionTest {
 
 		// Question 'BMI'
 		Question bmi = kbm.createQuestionNum("BMI", kbm.getKnowledgeBase().getRootQASet());
-		bmi.getProperties().setProperty(Property.ABSTRACTION_QUESTION, Boolean.TRUE);
+		bmi.getInfoStore().addValue(BasicProperties.ABSTRACTION_QUESTION, Boolean.TRUE);
 
 		// Question 'Category'
 		String[] categoryAlternatives = {
 				"Underweight", "Normal", "Overweight" };
 		Question category = kbm.createQuestionOC("Category", kbm.getKnowledgeBase().getRootQASet(),
 				categoryAlternatives);
-		category.getProperties().setProperty(Property.ABSTRACTION_QUESTION, Boolean.TRUE);
+		category.getInfoStore().addValue(BasicProperties.ABSTRACTION_QUESTION, Boolean.TRUE);
 	}
 
 	private static void addRules() {
@@ -175,14 +175,14 @@ public class FormulaExpressionAbstractionTest {
 
 		// TEST BMI <abstract> ?
 		Question bmi = kbm.findQuestion("BMI");
-		Boolean bmiAbstractionProperty = (Boolean) bmi.getProperties().getProperty(
-				Property.ABSTRACTION_QUESTION);
+		Boolean bmiAbstractionProperty = (Boolean) bmi.getInfoStore().getValue(
+				BasicProperties.ABSTRACTION_QUESTION);
 		assertEquals("Question 'BMI' isn't abstract.", Boolean.TRUE, bmiAbstractionProperty);
 
 		// TEST Category <abstract> ?
 		Question category = kbm.findQuestion("Category");
-		Boolean categoryAbstractionProperty = (Boolean) category.getProperties().getProperty(
-				Property.ABSTRACTION_QUESTION);
+		Boolean categoryAbstractionProperty = (Boolean) category.getInfoStore().getValue(
+				BasicProperties.ABSTRACTION_QUESTION);
 		assertEquals("Question 'Category' isn't abstract.", Boolean.TRUE,
 				categoryAbstractionProperty);
 	}

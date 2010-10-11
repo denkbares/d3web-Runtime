@@ -46,6 +46,8 @@ import de.d3web.core.io.utilities.CostObject;
 import de.d3web.core.io.utilities.IDObjectComparator;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
+import de.d3web.core.knowledge.InfoStore;
+import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -53,7 +55,6 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
-import de.d3web.core.knowledge.terminology.info.Properties;
 
 /**
  * PersistenceHandler for reading and writing basic knowledge Creation date:
@@ -199,8 +200,8 @@ public class BasicPersistenceHandler implements
 				if (readFragment instanceof DCMarkup) {
 					kb.setDCMarkup((DCMarkup) readFragment);
 				}
-				else if (readFragment instanceof Properties) {
-					kb.setProperties((Properties) readFragment);
+				else if (readFragment instanceof InfoStore) {
+					InfoStoreUtil.copyEntries((InfoStore) readFragment, kb.getInfoStore());
 				}
 			}
 		}
@@ -301,9 +302,9 @@ public class BasicPersistenceHandler implements
 		}
 
 		listener.updateProgress(time++ / abstime, "Saving knowledge base: properties");
-		Properties properties = kb.getProperties();
-		if (properties != null && !properties.isEmpty()) {
-			father.appendChild(pm.writeFragment(properties, doc));
+		InfoStore infoStore = kb.getInfoStore();
+		if (infoStore != null && !infoStore.isEmpty()) {
+			father.appendChild(pm.writeFragment(infoStore, doc));
 		}
 
 		time = saveInitQuestions(father, kb, listener, time, abstime);

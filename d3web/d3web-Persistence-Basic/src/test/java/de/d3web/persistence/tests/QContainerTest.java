@@ -32,7 +32,7 @@ import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionText;
-import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.plugin.test.InitPluginManager;
 
@@ -73,16 +73,6 @@ public class QContainerTest {
 	}
 
 	@Test
-	public void testQContainerWithPriority() throws Exception {
-		qc1.setPriority(new Integer(1));
-		shouldTag.addAttribute("priority", "1");
-
-		isTag = new XMLTag(qcw.write(qc1, Util.createEmptyDocument()));
-
-		assertEquals("(1)", shouldTag, isTag);
-	}
-
-	@Test
 	public void testQContainerWithChildren() throws Exception {
 		Question q1 = new QuestionText("q1");
 		q1.setName("q1-text");
@@ -98,35 +88,8 @@ public class QContainerTest {
 	}
 
 	@Test
-	public void testQContainerWithCosts() throws Exception {
-		qc1.getProperties().setProperty(Property.TIME, new Double(20));
-		qc1.getProperties().setProperty(Property.RISK, new Double(50.5));
-
-		XMLTag shouldCostsTag = new XMLTag("Properties");
-
-		XMLTag costTag1 = new XMLTag("Property");
-		costTag1.addAttribute("name", "timeexpenditure");
-		costTag1.addAttribute("class", Double.class.getName());
-		costTag1.setContent(Double.toString(20));
-		shouldCostsTag.addChild(costTag1);
-
-		XMLTag costTag2 = new XMLTag("Property");
-		costTag2.addAttribute("name", "risk");
-		costTag2.addAttribute("class", Double.class.getName());
-		costTag2.setContent(Double.toString(50.5));
-		shouldCostsTag.addChild(costTag2);
-
-		shouldTag.addChild(shouldCostsTag);
-
-		isTag = new XMLTag(qcw.write(qc1, Util.createEmptyDocument()));
-
-		assertEquals("(3)", shouldTag, isTag);
-	}
-
-	@Test
 	public void testQContainerWithProperties() throws Exception {
-		qc1.getProperties().setProperty(Property.HIDE_IN_DIALOG, new Boolean(true));
-		qc1.getProperties().setProperty(Property.COST, new Double(20));
+		qc1.getInfoStore().addValue(BasicProperties.COST, new Double(20));
 
 		// Set propertyKeys = qc1.getPropertyKeys();
 		// MockPropertyDescriptor mpd = new
@@ -134,19 +97,12 @@ public class QContainerTest {
 
 		XMLTag propertiesTag = new XMLTag("Properties");
 
-		XMLTag propertyTag1 = new XMLTag("Property");
-		propertyTag1.addAttribute("name", "hide_in_dialog");
-		// old: propertyTag1.addAttribute("descriptor", "hide_in_dialog");
-		propertyTag1.addAttribute("class", "java.lang.Boolean");
-		propertyTag1.setContent("true");
-
 		XMLTag propertyTag2 = new XMLTag("Property");
 		propertyTag2.addAttribute("name", "cost");
 		// old: propertyTag2.addAttribute("descriptor", "cost");
 		propertyTag2.addAttribute("class", "java.lang.Double");
 		propertyTag2.setContent("20.0");
 
-		propertiesTag.addChild(propertyTag1);
 		propertiesTag.addChild(propertyTag2);
 
 		shouldTag.addChild(propertiesTag);

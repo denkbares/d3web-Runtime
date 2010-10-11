@@ -32,6 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.io.progress.DummyProgressListener;
+import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.records.DefaultSessionRepository;
@@ -278,6 +279,12 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 		public void setName(String name) {
 			parseIfNecessary();
 			realRecord.setName(name);
+		}
+
+		@Override
+		public InfoStore getInfoStore() {
+			parseIfNecessary();
+			return realRecord.getInfoStore();
 		}
 
 	}

@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- * Computer Science VI, University of Wuerzburg
+ * Copyright (C) 2010 denkbares GmbH
  * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
@@ -17,20 +16,23 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
+package de.d3web.core.knowledge;
 
-package de.d3web.core.knowledge.terminology.info;
+import java.util.Locale;
 
-import de.d3web.core.knowledge.terminology.IDReference;
+import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.utilities.Triple;
 
 /**
- * Any implementor has DCData
  * 
- * @see de.d3web.core.knowledge.terminology.info.Properties
- * @author hoernlein
+ * @author Markus Friedrich (denkbares GmbH)
+ * @created 11.10.2010
  */
-public interface PropertiesContainer extends IDReference {
+public class InfoStoreUtil {
 
-	public Properties getProperties();
-
-	public void setProperties(Properties properties);
+	public static void copyEntries(InfoStore source, InfoStore target) {
+		for (Triple<Property, Locale, Object> entry : source.entries()) {
+			target.addValue(entry.getA(), entry.getB(), entry.getC());
+		}
+	}
 }

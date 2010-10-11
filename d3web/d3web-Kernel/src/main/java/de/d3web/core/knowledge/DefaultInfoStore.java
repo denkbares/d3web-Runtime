@@ -27,20 +27,21 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.utilities.Pair;
 import de.d3web.core.utilities.Triple;
 
 public class DefaultInfoStore implements InfoStore {
 
-	private final Map<Pair<String, Locale>, Object> entries =
-			new HashMap<Pair<String, Locale>, Object>();
+	private final Map<Pair<Property, Locale>, Object> entries =
+			new HashMap<Pair<Property, Locale>, Object>();
 
 	@Override
-	public Collection<Triple<String, Locale, Object>> entries() {
-		Collection<Triple<String, Locale, Object>> result =
-				new LinkedList<Triple<String, Locale, Object>>();
-		for (Entry<Pair<String, Locale>, Object> entry : this.entries.entrySet()) {
-			result.add(new Triple<String, Locale, Object>(
+	public Collection<Triple<Property, Locale, Object>> entries() {
+		Collection<Triple<Property, Locale, Object>> result =
+				new LinkedList<Triple<Property, Locale, Object>>();
+		for (Entry<Pair<Property, Locale>, Object> entry : this.entries.entrySet()) {
+			result.add(new Triple<Property, Locale, Object>(
 					entry.getKey().getA(),
 					entry.getKey().getB(),
 					entry.getValue()));
@@ -49,12 +50,12 @@ public class DefaultInfoStore implements InfoStore {
 	}
 
 	@Override
-	public Object getValue(String key) {
+	public Object getValue(Property key) {
 		return getEntry(key, NO_LANGUAGE);
 	}
 
 	@Override
-	public Object getValue(String key, Locale language) {
+	public Object getValue(Property key, Locale language) {
 		Object value = getEntry(key, language);
 		if (value != null) {
 			return value;
@@ -62,18 +63,35 @@ public class DefaultInfoStore implements InfoStore {
 		return getEntry(key, NO_LANGUAGE);
 	}
 
-	private Object getEntry(String key, Locale language) {
-		return this.entries.get(new Pair<String, Locale>(key, language));
+	private Object getEntry(Property key, Locale language) {
+		return this.entries.get(new Pair<Property, Locale>(key, language));
 	}
 
 	@Override
-	public void remove(String key) {
-		remove(key, NO_LANGUAGE);
+	public boolean remove(Property key) {
+		return remove(key, NO_LANGUAGE);
 	}
 
 	@Override
-	public void remove(String key, Locale language) {
-		this.entries.remove(new Pair<String, Locale>(key, language));
+	public boolean remove(Property key, Locale language) {
+		return (this.entries.remove(new Pair<Property, Locale>(key, language)) != null);
+	}
+
+	@Override
+	public void addValue(Property key, Object value) {
+		addValue(key, NO_LANGUAGE, value);
+	}
+
+	@Override
+	public void addValue(Property key, Locale language, Object value) {
+		if (value == null) throw new NullPointerException("The value must not be null.");
+		if (key == null) throw new NullPointerException("The key must not be null.");
+		entries.put(new Pair<Property, Locale>(key, language), value);
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return entries.isEmpty();
 	}
 
 }

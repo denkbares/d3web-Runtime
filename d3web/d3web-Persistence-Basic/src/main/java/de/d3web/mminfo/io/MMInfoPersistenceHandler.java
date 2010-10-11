@@ -46,16 +46,16 @@ import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.DCElement;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.MMInfoObject;
 import de.d3web.core.knowledge.terminology.info.MMInfoStorage;
-import de.d3web.core.knowledge.terminology.info.PropertiesContainer;
-import de.d3web.core.knowledge.terminology.info.Property;
 
 /**
  * PersistanceHandler for MMInfos Creation date: (25.01.2002 14:18:47)
@@ -77,7 +77,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 
 		listener.updateProgress(0, "Starting to load multimedia");
 
-		Map<String, PropertiesContainer> ansIdAnswerHash = buildAnswerIdAnswerHash(kb
+		Map<String, IDObject> ansIdAnswerHash = buildAnswerIdAnswerHash(kb
 				.getQuestions());
 
 		Document doc = Util.streamToDocument(stream);
@@ -113,18 +113,17 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 
 			if (objId != null) {
 
-				PropertiesContainer source = kb.searchQASet(objId);
+				IDObject source = kb.searchQASet(objId);
 				if (source == null) source = kb.searchSolution(objId);
 				if (source == null) source = ansIdAnswerHash.get(objId);
 
 				// and add the MMInfo
 				if (source != null) {
-					MMInfoStorage mminfoStorage = (MMInfoStorage) source
-							.getProperties().getProperty(Property.MMINFO);
+					MMInfoStorage mminfoStorage = (MMInfoStorage) source.getInfoStore().getValue(
+							BasicProperties.MMINFO);
 					if (mminfoStorage == null) {
 						mminfoStorage = new MMInfoStorage();
-						source.getProperties().setProperty(Property.MMINFO,
-								mminfoStorage);
+						source.getInfoStore().addValue(BasicProperties.MMINFO, mminfoStorage);
 					}
 					Iterator<String> iter = content.iterator();
 					/*
@@ -178,7 +177,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		Iterator<Solution> diter = solutions.iterator();
 		while (diter.hasNext()) {
 			Solution d = diter.next();
-			MMInfoStorage mms = (MMInfoStorage) d.getProperties().getProperty(Property.MMINFO);
+			MMInfoStorage mms = (MMInfoStorage) d.getInfoStore().getValue(BasicProperties.MMINFO);
 			if (mms != null) {
 				listener.updateProgress(aktvalue++ / maxvalue, "Saving multimedia "
 						+ Math.round(aktvalue) + " of " + maxvalue);
@@ -190,7 +189,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		Iterator<QContainer> qconiter = qContainers.iterator();
 		while (qconiter.hasNext()) {
 			QContainer q = qconiter.next();
-			MMInfoStorage mms = (MMInfoStorage) q.getProperties().getProperty(Property.MMINFO);
+			MMInfoStorage mms = (MMInfoStorage) q.getInfoStore().getValue(BasicProperties.MMINFO);
 			if (mms != null) {
 				listener.updateProgress(aktvalue++ / maxvalue, "Saving multimedia "
 						+ Math.round(aktvalue) + " of " + maxvalue);
@@ -202,7 +201,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		Iterator<Question> qiter = questions.iterator();
 		while (qiter.hasNext()) {
 			Question q = qiter.next();
-			MMInfoStorage mms = (MMInfoStorage) q.getProperties().getProperty(Property.MMINFO);
+			MMInfoStorage mms = (MMInfoStorage) q.getInfoStore().getValue(BasicProperties.MMINFO);
 			if (mms != null) {
 				listener.updateProgress(aktvalue++ / maxvalue, "Saving multimedia "
 						+ Math.round(aktvalue) + " of " + maxvalue);
@@ -214,7 +213,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		Iterator<Choice> aiter = answers.iterator();
 		while (aiter.hasNext()) {
 			Choice a = aiter.next();
-			MMInfoStorage mms = (MMInfoStorage) a.getProperties().getProperty(Property.MMINFO);
+			MMInfoStorage mms = (MMInfoStorage) a.getInfoStore().getValue(BasicProperties.MMINFO);
 			if (mms != null) {
 				listener.updateProgress(aktvalue++ / maxvalue, "Saving multimedia "
 						+ Math.round(aktvalue) + " of " + maxvalue);
@@ -239,7 +238,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		Iterator<Solution> diter = diagnoses.iterator();
 		while (diter.hasNext()) {
 			Solution d = diter.next();
-			MMInfoStorage mms = (MMInfoStorage) d.getProperties().getProperty(Property.MMINFO);
+			MMInfoStorage mms = (MMInfoStorage) d.getInfoStore().getValue(BasicProperties.MMINFO);
 			if (mms != null) {
 				count++;
 			}
@@ -249,7 +248,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		Iterator<QContainer> qconiter = qcontainers.iterator();
 		while (qconiter.hasNext()) {
 			QContainer q = qconiter.next();
-			MMInfoStorage mms = (MMInfoStorage) q.getProperties().getProperty(Property.MMINFO);
+			MMInfoStorage mms = (MMInfoStorage) q.getInfoStore().getValue(BasicProperties.MMINFO);
 			if (mms != null) {
 				count++;
 			}
@@ -259,7 +258,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		Iterator<Question> qiter = questions.iterator();
 		while (qiter.hasNext()) {
 			Question q = qiter.next();
-			MMInfoStorage mms = (MMInfoStorage) q.getProperties().getProperty(Property.MMINFO);
+			MMInfoStorage mms = (MMInfoStorage) q.getInfoStore().getValue(BasicProperties.MMINFO);
 			if (mms != null) {
 				count++;
 			}
@@ -270,7 +269,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		Iterator<Choice> aiter = answers.iterator();
 		while (aiter.hasNext()) {
 			Choice a = aiter.next();
-			MMInfoStorage mms = (MMInfoStorage) a.getProperties().getProperty(Property.MMINFO);
+			MMInfoStorage mms = (MMInfoStorage) a.getInfoStore().getValue(BasicProperties.MMINFO);
 			if (mms != null) {
 				count++;
 			}
@@ -279,10 +278,10 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		return count;
 	}
 
-	private static Map<String, PropertiesContainer> buildAnswerIdAnswerHash(
+	private static Map<String, IDObject> buildAnswerIdAnswerHash(
 			List<Question> questions) {
 
-		Map<String, PropertiesContainer> ansIdAnswerHash = new Hashtable<String, PropertiesContainer>();
+		Map<String, IDObject> ansIdAnswerHash = new Hashtable<String, IDObject>();
 
 		Iterator<Question> iter = questions.iterator();
 		while (iter.hasNext()) {

@@ -36,7 +36,7 @@ import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.multimedia.io.ImageQuestionPersistenceHandler;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.persistence.tests.utils.XMLTagUtils;
@@ -77,7 +77,7 @@ public class ImageQuestionPersistenceHandlerTest {
 
 		// Question 1
 		Question q1 = kb.searchQuestion("QGelenkstatus");
-		List<?> props = (List<?>) q1.getProperties().getProperty(Property.IMAGE_QUESTION_INFO);
+		List<?> props = (List<?>) q1.getInfoStore().getValue(BasicProperties.IMAGE_QUESTION_INFO);
 		String imageName = (String) props.get(0);
 
 		// Image Name right?
@@ -112,7 +112,7 @@ public class ImageQuestionPersistenceHandlerTest {
 		assertEquals(8, yEnd);
 
 		Question q2 = kb.searchQuestion("QGelenkstatus2");
-		props = (List<?>) q2.getProperties().getProperty(Property.IMAGE_QUESTION_INFO);
+		props = (List<?>) q2.getInfoStore().getValue(BasicProperties.IMAGE_QUESTION_INFO);
 		imageName = (String) props.get(0);
 
 		// Question 2

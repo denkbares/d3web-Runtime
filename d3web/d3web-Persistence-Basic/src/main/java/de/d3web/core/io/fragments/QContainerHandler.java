@@ -25,11 +25,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.io.PersistenceManager;
-import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
+import de.d3web.core.knowledge.InfoStore;
+import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
-import de.d3web.core.knowledge.terminology.info.Properties;
 
 /**
  * Handler for QContainers Children are ignored, hierarchies are read/written by
@@ -52,10 +52,9 @@ public class QContainerHandler implements FragmentHandler {
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		String id = element.getAttribute("ID");
-		String priority = element.getAttribute("priority");
 		List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
 		String text = "";
-		Properties properties = null;
+		InfoStore infoStore = null;
 		for (Element child : childNodes) {
 			if (child.getNodeName().equals("Text")) {
 				text = child.getTextContent();
@@ -66,14 +65,13 @@ public class QContainerHandler implements FragmentHandler {
 			// Costs are no longer stored in IDObjects, so they are ignored
 			else if (!child.getNodeName().equals("Children")
 					&& !child.getNodeName().equals("Costs")) {
-				properties = (Properties) PersistenceManager.getInstance().readFragment(child, kb);
+				infoStore = (InfoStore) PersistenceManager.getInstance().readFragment(child, kb);
 			}
 		}
 		QContainer qcon = new QContainer(id);
-		qcon.setPriority(Integer.getInteger(priority));
 		qcon.setName(text);
-		if (properties != null) {
-			qcon.setProperties(properties);
+		if (infoStore != null) {
+			InfoStoreUtil.copyEntries(infoStore, qcon.getInfoStore());
 		}
 		qcon.setKnowledgeBase(kb);
 		return qcon;
@@ -84,14 +82,10 @@ public class QContainerHandler implements FragmentHandler {
 		Element element = doc.createElement("QContainer");
 		QContainer qContainer = (QContainer) object;
 		element.setAttribute("ID", qContainer.getId());
-		Integer priority = qContainer.getPriority();
-		if (priority != null) {
-			element.setAttribute("priority", priority.toString());
-		}
 		XMLUtil.appendTextNode(qContainer.getName(), element);
-		Properties properties = qContainer.getProperties();
-		if (properties != null && !properties.isEmpty()) {
-			element.appendChild(PersistenceManager.getInstance().writeFragment(properties, doc));
+		InfoStore infoStore = qContainer.getInfoStore();
+		if (infoStore != null && !infoStore.isEmpty()) {
+			element.appendChild(PersistenceManager.getInstance().writeFragment(infoStore, doc));
 		}
 		return element;
 	}

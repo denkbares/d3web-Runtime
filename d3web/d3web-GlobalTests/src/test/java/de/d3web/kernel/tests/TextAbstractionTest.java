@@ -30,7 +30,7 @@ import de.d3web.core.inference.condition.CondTextEqual;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionText;
-import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
@@ -81,7 +81,7 @@ public class TextAbstractionTest {
 				"Happiness", "Sadness" };
 		Question event = kbm.createQuestionOC("Feeling", kbm.getKnowledgeBase().getRootQASet(),
 				eventAlternatives);
-		event.getProperties().setProperty(Property.ABSTRACTION_QUESTION, Boolean.TRUE);
+		event.getInfoStore().addValue(BasicProperties.ABSTRACTION_QUESTION, Boolean.TRUE);
 	}
 
 	private static void addRules() {
@@ -124,8 +124,8 @@ public class TextAbstractionTest {
 
 		// Feeling <abstract> ?
 		Question feeling = kbm.findQuestion("Feeling");
-		Boolean feelingAbstractionProperty = (Boolean) feeling.getProperties().getProperty(
-				Property.ABSTRACTION_QUESTION);
+		Boolean feelingAbstractionProperty = (Boolean) feeling.getInfoStore().getValue(
+				BasicProperties.ABSTRACTION_QUESTION);
 		assertEquals("Question 'BMI' isn't abstract.", Boolean.TRUE, feelingAbstractionProperty);
 	}
 

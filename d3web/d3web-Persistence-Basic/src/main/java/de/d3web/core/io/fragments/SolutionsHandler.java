@@ -24,12 +24,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.io.PersistenceManager;
-import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
+import de.d3web.core.knowledge.InfoStore;
+import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.info.Properties;
 import de.d3web.scoring.Score;
 
 /**
@@ -58,7 +58,7 @@ public class SolutionsHandler implements FragmentHandler {
 		if (apriori != null) {
 			diag.setAprioriProbability(Util.getScore(apriori));
 		}
-		Properties properties = null;
+		InfoStore infoStore = null;
 		for (Element child : XMLUtil.getElementList(element.getChildNodes())) {
 			if (child.getNodeName().equals("Text")) {
 				diag.setName(child.getTextContent());
@@ -69,11 +69,11 @@ public class SolutionsHandler implements FragmentHandler {
 			// Costs are no longer stored in IDObjects, so they are ignored.
 			else if (!child.getNodeName().equals("Children")
 					&& !child.getNodeName().equals("Costs")) {
-				properties = (Properties) PersistenceManager.getInstance().readFragment(child, kb);
+				infoStore = (InfoStore) PersistenceManager.getInstance().readFragment(child, kb);
 			}
 		}
-		if (properties != null) {
-			diag.setProperties(properties);
+		if (infoStore != null) {
+			InfoStoreUtil.copyEntries(infoStore, diag.getInfoStore());
 		}
 		diag.setKnowledgeBase(kb);
 		return diag;
@@ -89,9 +89,9 @@ public class SolutionsHandler implements FragmentHandler {
 		if (apriori != null) {
 			element.setAttribute("aPriProb", apriori.getSymbol());
 		}
-		Properties properties = diag.getProperties();
-		if (properties != null && !properties.isEmpty()) {
-			element.appendChild(PersistenceManager.getInstance().writeFragment(properties, doc));
+		InfoStore infoStore = diag.getInfoStore();
+		if (infoStore != null && !infoStore.isEmpty()) {
+			element.appendChild(PersistenceManager.getInstance().writeFragment(infoStore, doc));
 		}
 		return element;
 	}

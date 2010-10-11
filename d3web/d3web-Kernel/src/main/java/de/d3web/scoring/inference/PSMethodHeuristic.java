@@ -31,7 +31,6 @@ import de.d3web.core.inference.RuleSet;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
@@ -107,32 +106,6 @@ public final class PSMethodHeuristic extends PSMethodAdapter {
 	@Override
 	public String toString() {
 		return "heuristic problem-solver";
-	}
-
-	/**
-	 * Single Fault Assumption: Once a diagnosis is established the case is
-	 * finished. Only the best diagnosis (if some were established in parallel)
-	 * is returned as "established" solution.
-	 * 
-	 * @return Returns the sFA.
-	 */
-	public boolean isSFA(Session session) {
-		return getProperty(session, Property.SINGLE_FAULT_ASSUMPTION);
-	}
-
-	public boolean isBestSolutionOnly(Session session) {
-		return getProperty(session, Property.BEST_SOLUTION_ONLY);
-	}
-
-	private boolean getProperty(Session session, Property property) {
-		Boolean b = (Boolean) session.getKnowledgeBase().getProperties().getProperty(
-				property);
-		if (b == null) {
-			return false;
-		}
-		else {
-			return b.booleanValue();
-		}
 	}
 
 	@Override

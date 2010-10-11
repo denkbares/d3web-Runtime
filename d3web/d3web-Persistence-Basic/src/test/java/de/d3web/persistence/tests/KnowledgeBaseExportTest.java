@@ -153,7 +153,6 @@ public class KnowledgeBaseExportTest {
 	public void testQContainerOutput() throws Exception {
 		QContainer c1 = new QContainer("c1");
 		c1.setName("c1-text");
-		c1.setPriority(new Integer(1));
 
 		Question q1 = new QuestionText("q1");
 		q1.setName("q1-text");
@@ -165,7 +164,6 @@ public class KnowledgeBaseExportTest {
 
 		XMLTag shouldTag = new XMLTag("QContainer");
 		shouldTag.addAttribute("ID", "c1");
-		shouldTag.addAttribute("priority", "1");
 		XMLTag shouldTextTag = new XMLTag("Text");
 		shouldTextTag.setContent("c1-text");
 		shouldTag.addChild(shouldTextTag);
