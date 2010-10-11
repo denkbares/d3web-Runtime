@@ -42,7 +42,8 @@ import de.d3web.core.knowledge.terminology.info.Property;
  * PersistenceHandler for PictureQuestion used in the
  * {@link ImageQuestionHandler}.
  * 
- * TODO: Get the writer Component working.
+ * TODO: Check if read/write are ok with changes.
+ * TODO: expand tests!
  * 
  * @author Johannes Dienst
  * 
@@ -81,7 +82,17 @@ public class ImageQuestionPersistenceHandler implements KnowledgeReader, Knowled
 					List questionInfo = (List) q.getProperties().getProperty(
 							Property.IMAGE_QUESTION_INFO);
 					questionInfo = new ArrayList();
+
+					// Filename
 					questionInfo.add(file);
+
+					// width and height of image
+					String width = atts.get(0).getAttribute("width");
+					String height = atts.get(0).getAttribute("height");
+					questionInfo.add(width);
+					questionInfo.add(height);
+
+					// answerRegions
 					questionInfo.add(answerRegions);
 					q.getProperties().setProperty(Property.IMAGE_QUESTION_INFO,
 							questionInfo);
@@ -122,9 +133,11 @@ public class ImageQuestionPersistenceHandler implements KnowledgeReader, Knowled
 				question.setAttribute("ID", q.getId());
 				Element questionImage = doc.createElement("QuestionImage");
 				questionImage.setAttribute("file", (String) props.get(0));
+				questionImage.setAttribute("width", (String) props.get(1));
+				questionImage.setAttribute("height", (String) props.get(2));
 
 				// Answer Region
-				List answerRegions = (List) props.get(1);
+				List answerRegions = (List) props.get(3);
 				for (Object ar : answerRegions) {
 					List<String> attributes = (List<String>) ar;
 					String answerID = attributes.get(0);
