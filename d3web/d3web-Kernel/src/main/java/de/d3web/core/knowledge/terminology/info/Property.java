@@ -73,19 +73,13 @@ public class Property {
 	 * 
 	 * @created 07.10.2010
 	 * @param name specified name of the {@link Property}
-	 * @return {@link Property}
-	 * @throws IllegalArgumentException when no property with the desired name
-	 *         is defined
+	 * @return {@link Property} if a property with this name is defined, null
+	 *         otherwise
 	 */
-	public static Property getProperty(String name) throws IllegalArgumentException {
+	public static Property getProperty(String name) {
 		parseProperties();
 		Property property = properties.get(name);
-		if (property != null) {
-			return property;
-		}
-		else {
-			throw new IllegalArgumentException("Property " + name + " not defined.");
-		}
+		return property;
 	}
 
 	private static void parseProperties() {

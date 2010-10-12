@@ -51,11 +51,13 @@ public class DefaultInfoStore implements InfoStore {
 
 	@Override
 	public Object getValue(Property key) {
+		if (key == null) throw new NullPointerException("The key must not be null.");
 		return getEntry(key, NO_LANGUAGE);
 	}
 
 	@Override
 	public Object getValue(Property key, Locale language) {
+		if (key == null) throw new NullPointerException("The key must not be null.");
 		Object value = getEntry(key, language);
 		if (value != null) {
 			return value;
@@ -69,11 +71,13 @@ public class DefaultInfoStore implements InfoStore {
 
 	@Override
 	public boolean remove(Property key) {
+		if (key == null) throw new NullPointerException("The key must not be null.");
 		return remove(key, NO_LANGUAGE);
 	}
 
 	@Override
 	public boolean remove(Property key, Locale language) {
+		if (key == null) throw new NullPointerException("The key must not be null.");
 		return (this.entries.remove(new Pair<Property, Locale>(key, language)) != null);
 	}
 

@@ -71,11 +71,8 @@ public class PropertiesHandler implements FragmentHandler {
 				else {
 					name = prop.getAttributes().getNamedItem("descriptor").getNodeValue();
 				}
-				Property property = null;
-				try {
-					property = Property.getProperty(name);
-				}
-				catch (IllegalArgumentException e) {
+				Property property = Property.getProperty(name);
+				if (property == null) {
 					Logger.getLogger("Persistence").log(Level.WARNING,
 							"Property " + name + " is not in use any more.");
 					continue;
