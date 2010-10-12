@@ -43,8 +43,6 @@ import de.d3web.core.knowledge.terminology.info.BasicProperties;
  * PersistenceHandler for PictureQuestion used in the
  * {@link ImageQuestionHandler}.
  * 
- * TODO: Check if read/write are ok with changes.
- * TODO: expand tests!
  * 
  * @author Johannes Dienst
  * 
@@ -74,26 +72,24 @@ public class ImageQuestionPersistenceHandler implements KnowledgeReader, Knowled
 					String id = questionElement.getAttribute("ID");
 					Question q = knowledgeBase.searchQuestion(id);
 
+					InfoStore infoStore = q.getInfoStore();
+					ImageQuestionStore store = new ImageQuestionStore();
+
 					List<Element> atts = XMLUtil.getElementList(questionElement
 							.getChildNodes());
-					String file = atts.get(0).getAttribute("file");
-
-					List<List<String>> answerRegions = readAnswerRegions(atts.get(0));
-					InfoStore infoStore = q.getInfoStore();
-					List<Object> questionInfo = new ArrayList<Object>();
 
 					// Filename
-					questionInfo.add(file);
+					String file = atts.get(0).getAttribute("file");
+					store.setFile(file);
 
 					// width and height of image
-					String width = atts.get(0).getAttribute("width");
-					String height = atts.get(0).getAttribute("height");
-					questionInfo.add(width);
-					questionInfo.add(height);
+					store.setWidth(atts.get(0).getAttribute("width"));
+					store.setHeight(atts.get(0).getAttribute("height"));
 
 					// answerRegions
-					questionInfo.add(answerRegions);
-					infoStore.addValue(BasicProperties.IMAGE_QUESTION_INFO, questionInfo);
+					store.setAnswerRegions(readAnswerRegions(atts.get(0)));
+
+					infoStore.addValue(BasicProperties.IMAGE_QUESTION_INFO, store);
 				}
 			}
 		}
@@ -110,7 +106,6 @@ public class ImageQuestionPersistenceHandler implements KnowledgeReader, Knowled
 		return count;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void write(KnowledgeBase knowledgeBase, OutputStream stream,
 			ProgressListener listener) throws IOException {
@@ -123,28 +118,20 @@ public class ImageQuestionPersistenceHandler implements KnowledgeReader, Knowled
 		List<Question> questions = knowledgeBase.getQuestions();
 
 		for (Question q : questions) {
-			List<?> props = (List<?>) q.getInfoStore().getValue(BasicProperties.IMAGE_QUESTION_INFO);
-			if (props != null) {
+			ImageQuestionStore store = (ImageQuestionStore) q.getInfoStore().getValue(
+					BasicProperties.IMAGE_QUESTION_INFO);
+
+			if (store != null) {
 				Element question = doc.createElement("Question");
 				question.setAttribute("ID", q.getId());
 				Element questionImage = doc.createElement("QuestionImage");
-				questionImage.setAttribute("file", (String) props.get(0));
-				questionImage.setAttribute("width", (String) props.get(1));
-				questionImage.setAttribute("height", (String) props.get(2));
+				questionImage.setAttribute("file", store.getFile());
+				questionImage.setAttribute("width", store.getWidth());
+				questionImage.setAttribute("height", store.getHeight());
 
-				// Answer Region
-				List<?> answerRegions = (List<?>) props.get(3);
-				for (Object ar : answerRegions) {
-					List<String> attributes = (List<String>) ar;
-					String answerID = attributes.get(0);
-					Element answerEl = doc.createElement("AnswerRegion");
-					answerEl.setAttribute("answerID", answerID);
-					answerEl.setAttribute("xStart", attributes.get(1));
-					answerEl.setAttribute("xEnd", attributes.get(2));
-					answerEl.setAttribute("yStart", attributes.get(3));
-					answerEl.setAttribute("yEnd", attributes.get(4));
-					questionImage.appendChild(answerEl);
-				}
+				// Answer Regions
+				writeAnswerRegions(doc, questionImage, store.getAnswerRegions());
+
 				listener.updateProgress(aktvalue++ / maxvalue, "Saving Image Question "
 						+ Math.round(aktvalue) + " of " + maxvalue);
 				question.appendChild(questionImage);
@@ -158,6 +145,34 @@ public class ImageQuestionPersistenceHandler implements KnowledgeReader, Knowled
 
 	}
 
+	/**
+	 * Writes the Answer Regions to a Document.
+	 * 
+	 * @created 12.10.2010
+	 * @param doc
+	 * @param questionImage
+	 * @param answerRegions
+	 */
+	private static void writeAnswerRegions(Document doc, Element questionImage, List<List<String>> answerRegions) {
+		for (List<String> ar : answerRegions) {
+			String answerID = ar.get(0);
+			Element answerEl = doc.createElement("AnswerRegion");
+			answerEl.setAttribute("answerID", answerID);
+			answerEl.setAttribute("xStart", ar.get(1));
+			answerEl.setAttribute("xEnd", ar.get(2));
+			answerEl.setAttribute("yStart", ar.get(3));
+			answerEl.setAttribute("yEnd", ar.get(4));
+			questionImage.appendChild(answerEl);
+		}
+	}
+
+	/**
+	 * Reads out the Answer Regions from a given Element.
+	 * 
+	 * @created 12.10.2010
+	 * @param element
+	 * @return
+	 */
 	private static List<List<String>> readAnswerRegions(Element element) {
 		ArrayList<List<String>> ret = new ArrayList<List<String>>();
 		List<Element> list = XMLUtil.getElementList(element.getChildNodes());

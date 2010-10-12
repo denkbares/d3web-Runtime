@@ -38,6 +38,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.multimedia.io.ImageQuestionPersistenceHandler;
+import de.d3web.multimedia.io.ImageQuestionStore;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.persistence.tests.utils.XMLTagUtils;
 import de.d3web.plugin.test.InitPluginManager;
@@ -77,20 +78,27 @@ public class ImageQuestionPersistenceHandlerTest {
 
 		// Question 1
 		Question q1 = kb.searchQuestion("QGelenkstatus");
-		List<?> props = (List<?>) q1.getInfoStore().getValue(BasicProperties.IMAGE_QUESTION_INFO);
-		String imageName = (String) props.get(0);
+		ImageQuestionStore util= (ImageQuestionStore) q1.getInfoStore().getValue(BasicProperties.IMAGE_QUESTION_INFO);
+		String imageName = util.getFile();
+		String height = util.getHeight();
+		String width = util.getWidth();
 
 		// Image Name right?
 		assertEquals("StrichBe.png", imageName);
-		List<?> answerRegions = (List<?>) props.get(3);
+
+		// Width + height
+		assertEquals("1px", height);
+		assertEquals("1px", width);
+
+		List<List<String>> answerRegions = util.getAnswerRegions();
 
 		// The assertions: AnswerRegion 1
-		List<?> attributes = (List<?>) answerRegions.get(0);
-		String answerID = (String) attributes.get(0);
-		int xStart = Integer.parseInt((String) attributes.get(1));
-		int xEnd = Integer.parseInt((String) attributes.get(2));
-		int yStart = Integer.parseInt((String) attributes.get(3));
-		int yEnd = Integer.parseInt((String) attributes.get(4));
+		List<String> attributes = (List<String>) answerRegions.get(0);
+		String answerID = attributes.get(0);
+		int xStart = Integer.parseInt(attributes.get(1));
+		int xEnd = Integer.parseInt(attributes.get(2));
+		int yStart = Integer.parseInt(attributes.get(3));
+		int yEnd = Integer.parseInt(attributes.get(4));
 		assertEquals("QGelenkstatusA15", answerID);
 		assertEquals(1, xStart);
 		assertEquals(2, xEnd);
@@ -99,12 +107,12 @@ public class ImageQuestionPersistenceHandlerTest {
 
 		// Question 1
 		// The assertions: AnswerRegion 2
-		attributes = (List<?>) answerRegions.get(1);
-		answerID = (String) attributes.get(0);
-		xStart = Integer.parseInt((String) attributes.get(1));
-		xEnd = Integer.parseInt((String) attributes.get(2));
-		yStart = Integer.parseInt((String) attributes.get(3));
-		yEnd = Integer.parseInt((String) attributes.get(4));
+		attributes = answerRegions.get(1);
+		answerID = attributes.get(0);
+		xStart = Integer.parseInt( attributes.get(1) );
+		xEnd = Integer.parseInt( attributes.get(2) );
+		yStart = Integer.parseInt( attributes.get(3) );
+		yEnd = Integer.parseInt( attributes.get(4) );
 		assertEquals("QGelenkstatusA16", answerID);
 		assertEquals(5, xStart);
 		assertEquals(6, xEnd);
@@ -112,21 +120,28 @@ public class ImageQuestionPersistenceHandlerTest {
 		assertEquals(8, yEnd);
 
 		Question q2 = kb.searchQuestion("QGelenkstatus2");
-		props = (List<?>) q2.getInfoStore().getValue(BasicProperties.IMAGE_QUESTION_INFO);
-		imageName = (String) props.get(0);
+		util = (ImageQuestionStore) q2.getInfoStore().getValue(BasicProperties.IMAGE_QUESTION_INFO);
+		imageName = util.getFile();
+		height = util.getHeight();
+		width = util.getWidth();
 
 		// Question 2
 		// Image Name right?
 		assertEquals("StrichBe2.png", imageName);
-		answerRegions = (List<?>) props.get(3);
+
+		// Width + Height
+		assertEquals("1px", height);
+		assertEquals("1px", width);
+
+		answerRegions = util.getAnswerRegions();
 
 		// The assertions: AnswerRegion 1
-		attributes = (List<?>) answerRegions.get(0);
-		answerID = (String) attributes.get(0);
-		xStart = Integer.parseInt((String) attributes.get(1));
-		xEnd = Integer.parseInt((String) attributes.get(2));
-		yStart = Integer.parseInt((String) attributes.get(3));
-		yEnd = Integer.parseInt((String) attributes.get(4));
+		attributes = (List<String>) answerRegions.get(0);
+		answerID = attributes.get(0);
+		xStart = Integer.parseInt( attributes.get(1) );
+		xEnd = Integer.parseInt( attributes.get(2) );
+		yStart = Integer.parseInt( attributes.get(3) );
+		yEnd = Integer.parseInt( attributes.get(4) );
 		assertEquals("QGelenkstatusA17", answerID);
 		assertEquals(1, xStart);
 		assertEquals(2, xEnd);
@@ -135,12 +150,12 @@ public class ImageQuestionPersistenceHandlerTest {
 
 		// Question 1
 		// The assertions: AnswerRegion 2
-		attributes = (List<?>) answerRegions.get(1);
+		attributes = (List<String>) answerRegions.get(1);
 		answerID = (String) attributes.get(0);
-		xStart = Integer.parseInt((String) attributes.get(1));
-		xEnd = Integer.parseInt((String) attributes.get(2));
-		yStart = Integer.parseInt((String) attributes.get(3));
-		yEnd = Integer.parseInt((String) attributes.get(4));
+		xStart = Integer.parseInt( attributes.get(1) );
+		xEnd = Integer.parseInt( attributes.get(2) );
+		yStart = Integer.parseInt( attributes.get(3) );
+		yEnd = Integer.parseInt( attributes.get(4) );
 		assertEquals("QGelenkstatusA18", answerID);
 		assertEquals(5, xStart);
 		assertEquals(6, xEnd);
@@ -148,7 +163,7 @@ public class ImageQuestionPersistenceHandlerTest {
 		assertEquals(8, yEnd);
 	}
 
-	// TODO: Fix test and then readd @Test
+	@Test
 	public void testWrite() throws Exception {
 		shouldTag = new XMLTag("Questions");
 
@@ -185,6 +200,8 @@ public class ImageQuestionPersistenceHandlerTest {
 		question2.addAttribute("ID", "QGelenkstatus2");
 		XMLTag questionImage2 = new XMLTag("QuestionImage");
 		questionImage2.addAttribute("file", "StrichBe2.png");
+		questionImage2.addAttribute("height", "1px");
+		questionImage2.addAttribute("width", "1px");
 		XMLTag answerRegion21 = new XMLTag("AnswerRegion");
 		answerRegion21.addAttribute("answerID", "QGelenkstatusA17");
 		answerRegion21.addAttribute("xStart", "1");
@@ -206,6 +223,8 @@ public class ImageQuestionPersistenceHandlerTest {
 		question1.addAttribute("ID", "QGelenkstatus");
 		XMLTag questionImage1 = new XMLTag("QuestionImage");
 		questionImage1.addAttribute("file", "StrichBe.png");
+		questionImage1.addAttribute("height", "1px");
+		questionImage1.addAttribute("width", "1px");
 		XMLTag answerRegion1 = new XMLTag("AnswerRegion");
 		answerRegion1.addAttribute("answerID", "QGelenkstatusA15");
 		answerRegion1.addAttribute("xStart", "1");
