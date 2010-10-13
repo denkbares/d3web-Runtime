@@ -20,81 +20,16 @@
 
 package de.d3web.indication.inference;
 
-import java.util.Collection;
-import java.util.LinkedList;
-
-import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.MethodKind;
-import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.PSMethodAdapter;
-import de.d3web.core.inference.PropagationEntry;
-import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.RuleSet;
-import de.d3web.core.knowledge.terminology.NamedObject;
-import de.d3web.core.knowledge.terminology.Rating;
-import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.Session;
+import de.d3web.core.inference.PSMethodRulebased;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
-import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
  * This is a combined PSMethod used for dialog controlling
  * 
  * @author Christian Betz
  */
-public class PSMethodDialogControlling extends PSMethodAdapter {
-
-	public PSMethodDialogControlling() {
-		super();
-	}
-
-	/**
-	 * @return the maximum of scores as DiagnosisState. Creation date:
-	 *         (03.01.2002 16:17:28)
-	 */
-	public Rating getState(Session session, Solution theDiagnosis) {
-		return null;
-	}
-
-	/**
-	 * Retrieves all dialog controlling PSMethods from the given Session
-	 * Creation date: (03.01.2002 16:17:28)
-	 */
-	@Override
-	public void init(Session session) {
-		// List moved from d3webCase (because it wasn't modfied anyway
-		// TODO: getAll PSMethods and screen them for the correct ones
-		PSMethodUserSelected psmUser = PSMethodUserSelected.getInstance();
-		LinkedList<PSMethod> dialogControllingPSMethods = new LinkedList<PSMethod>();
-		dialogControllingPSMethods.add(psmUser);
-		dialogControllingPSMethods.add(PSMethodHeuristic.getInstance());
-	}
-
-	/**
-	 * @see PSMethod
-	 */
-	@Override
-	public void propagate(Session session, Collection<PropagationEntry> changes) {
-		for (PropagationEntry change : changes) {
-			// do not handle strategic changes
-			if (change.isStrategic()) continue;
-			KnowledgeSlice knowledgeSlices = ((NamedObject) change.getObject()).getKnowledge(
-					this.getClass(), MethodKind.FORWARD);
-			if (knowledgeSlices == null) {
-				return;
-			}
-			RuleSet rs = (RuleSet) knowledgeSlices;
-			for (Rule rule : rs.getRules()) {
-				rule.check(session);
-			}
-		}
-	}
-
-	@Override
-	public String toString() {
-		return "PSMethodDialogControlling";
-	}
+public class PSMethodDialogControlling extends PSMethodRulebased {
 
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
