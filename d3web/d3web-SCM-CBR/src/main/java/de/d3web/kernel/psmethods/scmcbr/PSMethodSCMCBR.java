@@ -91,7 +91,6 @@ public final class PSMethodSCMCBR extends PSMethodAdapter {
 					session.getBlackboard().addValueFact(
 							FactFactory.createFact(model.getSolution(), newState, model, this));
 				}
-				model.notifyListeners(session, model);
 			}
 		}
 	}

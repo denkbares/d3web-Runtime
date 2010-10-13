@@ -81,7 +81,6 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 						FactFactory.createFact(model.getSolution(), currentState, model,
 								session.getPSMethodInstance(PSMethodXCL.class)));
 			}
-			model.notifyListeners(session, model);
 		}
 	}
 

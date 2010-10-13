@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Map;
 
 import de.d3web.core.inference.KnowledgeSlice;
@@ -37,8 +36,6 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.IEventSource;
-import de.d3web.core.session.KBOEventListener;
 import de.d3web.core.session.Session;
 import de.d3web.xcl.XCLRelationType;
 
@@ -47,7 +44,7 @@ import de.d3web.xcl.XCLRelationType;
  * @author Reinhard Hatko Created: 17.09.2009
  * 
  */
-public class SCMCBRModel implements KnowledgeSlice, IEventSource {
+public class SCMCBRModel implements KnowledgeSlice {
 
 	public final static MethodKind SCMCBR = new MethodKind("SCMCBR");
 
@@ -523,42 +520,4 @@ public class SCMCBRModel implements KnowledgeSlice, IEventSource {
 	public Collection<SCMCBRRelation> getContradictingRelations() {
 		return contradictingRelations;
 	}
-
-	Collection<KBOEventListener> listeners;
-
-	@Override
-	public void addListener(KBOEventListener listener) {
-		if (listeners == null) listeners = new LinkedList<KBOEventListener>();
-		if (!listeners.contains(listener)) {
-			listeners.add(listener);
-		}
-	}
-
-	@Override
-	public void removeListener(KBOEventListener listener) {
-		if (listeners != null) {
-
-			if (listeners.contains(listener)) {
-				listeners.remove(listener);
-			}
-			if (listeners.size() == 0) {
-				listeners = null;
-			}
-		}
-	}
-
-	@Override
-	public void notifyListeners(Session session, IEventSource source) {
-		if (listeners != null && session != null && source != null) {
-			for (KBOEventListener cl : new ArrayList<KBOEventListener>(listeners)) {
-				cl.notify(source, session);
-			}
-		}
-	}
-
-	@Override
-	public Collection<KBOEventListener> getListeners() {
-		return listeners;
-	}
-
 }

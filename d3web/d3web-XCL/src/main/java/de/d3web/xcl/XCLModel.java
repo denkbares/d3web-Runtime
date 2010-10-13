@@ -37,13 +37,11 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.CaseObjectSource;
-import de.d3web.core.session.IEventSource;
-import de.d3web.core.session.KBOEventListener;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.xcl.inference.PSMethodXCL;
 
-public final class XCLModel implements KnowledgeSlice, IEventSource, Comparable<XCLModel>, CaseObjectSource {
+public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, CaseObjectSource {
 
 	public final static MethodKind XCLMODEL = new MethodKind("XCLMODEL");
 
@@ -440,43 +438,6 @@ public final class XCLModel implements KnowledgeSlice, IEventSource, Comparable<
 
 	public Collection<XCLRelation> getContradictingRelations() {
 		return contradictingRelations;
-	}
-
-	Collection<KBOEventListener> listeners;
-
-	@Override
-	public void addListener(KBOEventListener listener) {
-		if (listeners == null) listeners = new LinkedList<KBOEventListener>();
-		if (!listeners.contains(listener)) {
-			listeners.add(listener);
-		}
-	}
-
-	@Override
-	public void removeListener(KBOEventListener listener) {
-		if (listeners != null) {
-
-			if (listeners.contains(listener)) {
-				listeners.remove(listener);
-			}
-			if (listeners.size() == 0) {
-				listeners = null;
-			}
-		}
-	}
-
-	@Override
-	public void notifyListeners(Session session, IEventSource source) {
-		if (listeners != null && session != null && source != null) {
-			for (KBOEventListener cl : new ArrayList<KBOEventListener>(listeners)) {
-				cl.notify(source, session);
-			}
-		}
-	}
-
-	@Override
-	public Collection<KBOEventListener> getListeners() {
-		return listeners;
 	}
 
 	@Override
