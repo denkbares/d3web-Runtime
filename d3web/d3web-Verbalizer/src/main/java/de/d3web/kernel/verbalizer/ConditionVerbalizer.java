@@ -204,7 +204,7 @@ public class ConditionVerbalizer implements Verbalizer {
 			TerminalCondVerbalization tCond = (TerminalCondVerbalization) condVerb;
 			s.append(tCond.getQuestion() + " " + tCond.getOperator() + " " + tCond.getAnswer());
 		}
-		else {
+		else if (condVerb instanceof NonTerminalCondVerbalization) {
 			NonTerminalCondVerbalization ntCond = (NonTerminalCondVerbalization) condVerb;
 			if (ntCond.getOriginalClass().equals(CondNot.class.getSimpleName())) {
 				s.append(getIndents(indent, isSingleLine));
@@ -229,6 +229,9 @@ public class ConditionVerbalizer implements Verbalizer {
 				s.append(getBlockEnd(isSingleLine));
 			}
 		}
+		else {
+			s.append(condVerb.getOperator());
+		}
 
 		return s.toString();
 	}
@@ -247,7 +250,7 @@ public class ConditionVerbalizer implements Verbalizer {
 							tCond.getAnswer()
 							: VerbalizationManager.quoteIfNecessary(tCond.getAnswer())));
 		}
-		else {
+		else if (condVerb instanceof NonTerminalCondVerbalization) {
 			NonTerminalCondVerbalization ntCond = (NonTerminalCondVerbalization) condVerb;
 			if (ntCond.getOriginalClass().equals(CondNot.class.getSimpleName())) {
 				s.append(getResourceBundle().getString("rule.CondNot") + " (");
@@ -273,6 +276,9 @@ public class ConditionVerbalizer implements Verbalizer {
 						.get(ntCond.getCondVerbalizations().size() - 1), quote));
 			}
 		}
+		else {
+			s.append(VerbalizationManager.quoteIfNecessary(condVerb.getOperator()));
+		}
 
 		return s.toString();
 	}
@@ -282,17 +288,20 @@ public class ConditionVerbalizer implements Verbalizer {
 		if (absCondition instanceof NonTerminalCondition) {
 			return createNonTerminalConditionVerbalization((NonTerminalCondition) absCondition);
 		}
-		else {
+		else if (absCondition instanceof TerminalCondition) {
 			return createTerminalConditionVerbalization((TerminalCondition) absCondition);
+		}
+		else if (absCondition != null) {
+			return new CondVerbalization(
+					absCondition.toString(),
+					absCondition.getClass().getSimpleName());
+		}
+		else {
+			return new TerminalCondVerbalization("Condition", "=", "null", "");
 		}
 	}
 
 	private CondVerbalization createTerminalConditionVerbalization(TerminalCondition tCondition) {
-
-		if (tCondition == null) {
-			// Fail-safe, shouldn't happen!
-			return new TerminalCondVerbalization("Condition", "=", "null", "");
-		}
 
 		List<? extends NamedObject> terminalObjects = tCondition.getTerminalObjects();
 		if (terminalObjects == null) {

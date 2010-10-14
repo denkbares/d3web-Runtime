@@ -210,9 +210,10 @@ public class RuleActionVerbalizer implements Verbalizer {
 			return s;
 
 		}
-
-		// no appropriate type found:
-		return "Undefined Action Type";
+		else {
+			// no appropriate type found:
+			return String.valueOf(ra);
+		}
 	}
 
 	public static String createActionList(List<?> tempList) {
