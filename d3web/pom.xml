@@ -209,7 +209,6 @@
 		<module>d3web-SharedKnowledge</module>
 		<module>d3web-Verbalizer</module>
 		<module>d3web-EmpiricalTesting</module>
-		<module>d3web-SCM-CBR</module>
 		<module>d3web-Persistence-ExtensionPoints</module>
 		<module>d3web-Persistence-Basic</module>
 		<module>d3web-PluginManager</module>
