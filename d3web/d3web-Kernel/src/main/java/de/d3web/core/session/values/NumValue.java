@@ -54,6 +54,10 @@ public class NumValue implements QuestionValue {
 		return value;
 	}
 
+	public Double getDouble() {
+		return value;
+	}
+
 	@Override
 	public int compareTo(Value o) {
 		if (o instanceof NumValue) {

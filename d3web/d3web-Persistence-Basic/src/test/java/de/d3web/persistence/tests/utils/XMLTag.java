@@ -25,8 +25,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -186,6 +186,7 @@ public class XMLTag {
 	/**
 	 * @return a String-representation of this XMLTag
 	 */
+	@Override
 	public String toString() {
 		StringBuffer ret = new StringBuffer();
 
@@ -218,6 +219,7 @@ public class XMLTag {
 	 * 
 	 * @return true, if equal as described above
 	 */
+	@Override
 	public boolean equals(Object o) {
 
 		if (o instanceof XMLTag) {

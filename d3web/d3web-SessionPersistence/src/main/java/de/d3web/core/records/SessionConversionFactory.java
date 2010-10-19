@@ -67,7 +67,7 @@ public final class SessionConversionFactory {
 		Protocol protocol = source.getProtocol();
 		if (protocol != null) {
 			for (ProtocolEntry entry : protocol.getProtocolHistory()) {
-				target.getProtocol().addEntry(entry.getFact());
+				target.getProtocol().addEntry(entry);
 			}
 		}
 

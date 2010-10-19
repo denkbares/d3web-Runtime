@@ -20,8 +20,6 @@
 
 package de.d3web.core.knowledge.terminology;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Storage for Questions with predefined multiple answers (alternatives). <BR>
@@ -36,12 +34,4 @@ public class QuestionMC extends QuestionChoice {
 		super(id);
 	}
 
-	public List<Choice> getAlternatives() {
-		if (getAllAlternatives() == null) {
-			return new ArrayList<Choice>();
-		}
-		else {
-			return getAllAlternatives();
-		}
-	}
 }

@@ -52,6 +52,10 @@ public class ChoiceValue implements QuestionValue {
 		return value;
 	}
 
+	public Choice getChoice() {
+		return value;
+	}
+
 	public String getAnswerChoiceID() {
 		return value.getId();
 	}

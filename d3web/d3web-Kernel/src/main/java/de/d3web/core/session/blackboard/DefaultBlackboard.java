@@ -21,6 +21,7 @@ package de.d3web.core.session.blackboard;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,6 +41,7 @@ import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 import de.d3web.core.session.DefaultSession;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.protocol.FactProtocolEntry;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.UndefinedValue;
 
@@ -89,7 +91,7 @@ public class DefaultBlackboard implements Blackboard {
 		// if it was entered by the user
 		PSMethod psMethod = fact.getPSMethod();
 		if (isAutosaveSource() || psMethod != null && psMethod.hasType(Type.source)) {
-			getSession().getProtocol().addEntry(fact);
+			getSession().getProtocol().addEntry(new FactProtocolEntry(new Date(), fact));
 		}
 
 		TerminologyObject terminologyObject = fact.getTerminologyObject();

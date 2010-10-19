@@ -49,19 +49,19 @@ public class QuestionMCTest {
 	/**
 	 * Tests the getAlternatives() method of QuestionMC
 	 * 
-	 * @see QuestionMC#getAlternatives()
+	 * @see QuestionMC#getAllAlternatives()
 	 * 
 	 * @created 24.08.2010
 	 */
 	@Test
 	public void testGetAlternatives() {
 		// alternatives is null ==> empty list is returned:
-		assertThat(questionMC.getAlternatives().size(), is(0));
+		assertThat(questionMC.getAllAlternatives().size(), is(0));
 		// now add a new answer alternative
 		Choice choice = new Choice("choice");
 		questionMC.addAlternative(choice);
 		// and assure that getAlternatives() is 1
-		assertThat(questionMC.getAlternatives().size(), is(1));
+		assertThat(questionMC.getAllAlternatives().size(), is(1));
 	}
 
 	@Test

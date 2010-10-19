@@ -22,16 +22,14 @@ package de.d3web.core.session.protocol;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
-
-import de.d3web.core.session.blackboard.Fact;
 
 public class DefaultProtocol implements Protocol {
 
-	private final List<ProtocolEntry> entries;
+	private final ArrayList<ProtocolEntry> entries = new ArrayList<ProtocolEntry>();
 
 	public DefaultProtocol() {
-		this.entries = new ArrayList<ProtocolEntry>();
 	}
 
 	@Override
@@ -40,8 +38,25 @@ public class DefaultProtocol implements Protocol {
 	}
 
 	@Override
-	public void addEntry(Fact fact) {
-		this.entries.add(new DefaultProtocolEntry(fact));
+	public void addEntry(ProtocolEntry entry) {
+		int index = this.entries.size();
+		// if the stored entry is later, we reduce the index to store at
+		for (; index > 0; index--) {
+			// so break if stored one is not after that the one to be insert
+			if (!entries.get(index - 1).getDate().after(entry.getDate())) break;
+		}
+		this.entries.add(index, entry);
+	}
+
+	@Override
+	public <T extends ProtocolEntry> List<T> getProtocolHistory(Class<T> filterClass) {
+		List<T> result = new LinkedList<T>();
+		for (ProtocolEntry entry : this.entries) {
+			if (filterClass.isInstance(entry)) {
+				result.add(filterClass.cast(entry));
+			}
+		}
+		return Collections.unmodifiableList(result);
 	}
 
 }

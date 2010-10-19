@@ -20,11 +20,22 @@
 
 package de.d3web.core.session;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
+import de.d3web.abstraction.inference.PSMethodAbstraction;
+import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.session.interviewmanager.FormStrategy;
 import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
+import de.d3web.core.session.interviewmanager.PSMethodInterview;
+import de.d3web.indication.inference.PSMethodDialogControlling;
+import de.d3web.indication.inference.PSMethodStrategic;
+import de.d3web.indication.inference.PSMethodUserSelected;
+import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
  * Factory for Session objects.
@@ -33,7 +44,28 @@ import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy
  */
 public final class SessionFactory {
 
+	private static final List<PSMethod> commonPSMethods = Arrays.asList(
+			PSMethodUserSelected.getInstance(),
+			new PSMethodDialogControlling(),
+			PSMethodStrategic.getInstance(),
+			PSMethodAbstraction.getInstance(),
+			PSMethodHeuristic.getInstance(),
+			PSMethodInit.getInstance(),
+			PSMethodInterview.getInstance()
+			);
+
 	private SessionFactory() { // enforce noninstantiability
+	}
+
+	/**
+	 * Returns a list of all default {@link PSMethod}s that will be used at
+	 * least when creating a knowledge base.
+	 * 
+	 * @created 19.10.2010
+	 * @return the default solvers
+	 */
+	public static final List<PSMethod> getDefaultPSMethods() {
+		return Collections.unmodifiableList(commonPSMethods);
 	}
 
 	/**

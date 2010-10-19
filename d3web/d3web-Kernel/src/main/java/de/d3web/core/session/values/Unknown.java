@@ -19,8 +19,6 @@
  */
 package de.d3web.core.session.values;
 
-import de.d3web.core.knowledge.InfoStore;
-import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Value;
 
@@ -30,7 +28,7 @@ import de.d3web.core.session.Value;
  * @author joba (denkbares GmbH)
  * @created 07.04.2010
  */
-public class Unknown implements IDObject, QuestionValue {
+public class Unknown implements QuestionValue {
 
 	public final static String UNKNOWN_ID = "MaU";
 	public final static String UNKNOWN_VALUE = "-?-";
@@ -63,6 +61,10 @@ public class Unknown implements IDObject, QuestionValue {
 		return UNKNOWN_ID.hashCode();
 	}
 
+	public String getId() {
+		return UNKNOWN_ID;
+	}
+
 	@Override
 	public boolean equals(Object other) {
 		return (other instanceof Unknown);
@@ -76,22 +78,6 @@ public class Unknown implements IDObject, QuestionValue {
 		else {
 			return -1;
 		}
-	}
-
-	@Override
-	public String getId() {
-		return UNKNOWN_ID;
-	}
-
-	@Override
-	public String getName() {
-		return "unknown";
-	}
-
-	@Override
-	public InfoStore getInfoStore() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

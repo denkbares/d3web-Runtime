@@ -51,6 +51,10 @@ public class TextValue implements QuestionValue {
 		return value;
 	}
 
+	public String getText() {
+		return value;
+	}
+
 	@Override
 	public int compareTo(Value o) {
 		if (o instanceof TextValue) {

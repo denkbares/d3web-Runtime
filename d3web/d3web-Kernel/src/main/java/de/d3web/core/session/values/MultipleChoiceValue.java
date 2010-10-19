@@ -20,6 +20,7 @@
 package de.d3web.core.session.values;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -62,6 +63,10 @@ public class MultipleChoiceValue implements QuestionValue {
 			values.add(new ChoiceValue(choice));
 		}
 		return new MultipleChoiceValue(values);
+	}
+
+	public static MultipleChoiceValue fromChoices(Choice... choices) {
+		return fromChoices(Arrays.asList(choices));
 	}
 
 	public String getAnswerChoicesID() {

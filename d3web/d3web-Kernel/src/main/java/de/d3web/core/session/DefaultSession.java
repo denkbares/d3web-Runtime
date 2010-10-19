@@ -20,7 +20,6 @@
 
 package de.d3web.core.session;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,11 +28,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.DefaultPropagationManager;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -47,19 +44,14 @@ import de.d3web.core.session.interviewmanager.DefaultInterview;
 import de.d3web.core.session.interviewmanager.FormStrategy;
 import de.d3web.core.session.interviewmanager.Interview;
 import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
-import de.d3web.core.session.interviewmanager.PSMethodInterview;
 import de.d3web.core.session.protocol.DefaultProtocol;
 import de.d3web.core.session.protocol.Protocol;
-import de.d3web.indication.inference.PSMethodDialogControlling;
-import de.d3web.indication.inference.PSMethodStrategic;
-import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.plugin.Autodetect;
 import de.d3web.plugin.Extension;
 import de.d3web.plugin.Plugin;
 import de.d3web.plugin.PluginConfig;
 import de.d3web.plugin.PluginEntry;
 import de.d3web.plugin.PluginManager;
-import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
  * The {@link DefaultSession} is the default implementation of {@link Session}.
@@ -92,16 +84,6 @@ public class DefaultSession implements Session {
 	private String name;
 	private final InfoStore infoStore = new SessionInfoStore(this);
 
-	private static List<PSMethod> commonPSMethods = Arrays.asList(
-					PSMethodUserSelected.getInstance(),
-					new PSMethodDialogControlling(),
-					PSMethodStrategic.getInstance(),
-					PSMethodAbstraction.getInstance(),
-					PSMethodHeuristic.getInstance(),
-					PSMethodInit.getInstance(),
-					PSMethodInterview.getInstance()
-					);
-
 	protected DefaultSession(String id, KnowledgeBase knowledgebase, Date creationDate) {
 		this(id, knowledgebase, creationDate, true);
 	}
@@ -114,7 +96,7 @@ public class DefaultSession implements Session {
 		if (psm) {
 			// register some common problem solving methods
 			// first add the methods
-			for (PSMethod method : commonPSMethods) {
+			for (PSMethod method : SessionFactory.getDefaultPSMethods()) {
 				addUsedPSMethod(method); // NOSONAR TODO Make this method
 											// private and remove this comment
 			}

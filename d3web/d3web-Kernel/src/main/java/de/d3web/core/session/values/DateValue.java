@@ -62,6 +62,10 @@ public class DateValue implements QuestionValue {
 		return value;
 	}
 
+	public Date getDate() {
+		return value;
+	}
+
 	/**
 	 * Returns the date as String in the format in which it can be parsed at
 	 * setDate(String)

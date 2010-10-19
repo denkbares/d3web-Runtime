@@ -25,17 +25,22 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
+import java.util.Date;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.protocol.DefaultProtocolEntry;
+import de.d3web.core.session.protocol.FactProtocolEntry;
+import de.d3web.core.session.protocol.ProtocolConversion;
 import de.d3web.core.session.values.NumValue;
 
 /**
- * Unit test for {@link DefaultProtocolEntry}
+ * Unit test for {@link FactProtocolEntry}
  * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 03.09.2010
@@ -44,30 +49,36 @@ public class DefaultProtocolEntryTest {
 
 	// underlying Fact-instance
 	Fact protocolFact;
+	KnowledgeBase knowledgeBase;
 	// the DefaultProtocolEntry under testt
-	DefaultProtocolEntry defaultProtocolEntryUnderTest;
+	FactProtocolEntry defaultProtocolEntryUnderTest;
 
 	@Before
 	public void setUp() throws Exception {
-		QuestionNum questionNum = new QuestionNum("questionNum");
+		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance();
+		knowledgeBase = kbm.getKnowledgeBase();
+		QuestionNum questionNum = kbm.createQuestionNum("questionNum", null);
 		NumValue numValue = new NumValue(1.9);
 		protocolFact = FactFactory.createUserEnteredFact(questionNum, numValue);
 
-		defaultProtocolEntryUnderTest = new DefaultProtocolEntry(protocolFact);
+		defaultProtocolEntryUnderTest = new FactProtocolEntry(new Date(), protocolFact);
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.protocol.DefaultProtocolEntry#hashCode()}.
+	 * Test method for
+	 * {@link de.d3web.core.session.protocol.FactProtocolEntry#hashCode()}.
 	 */
 	@Test
 	public void testHashCode() {
 		assertThat(defaultProtocolEntryUnderTest.hashCode(), is(not(0)));
 		// assert that the hashCode() of a nulled-object is 31 (standard prime)
-		assertThat((new DefaultProtocolEntry(null)).hashCode(), is(31));
+		assertThat((new FactProtocolEntry(null, null, null, null)).hashCode(), is(43105703));
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.protocol.DefaultProtocolEntry#equals(java.lang.Object)}.
+	 * Test method for
+	 * {@link de.d3web.core.session.protocol.FactProtocolEntry#equals(java.lang.Object)}
+	 * .
 	 */
 	@Test
 	public void testEqualsObject() {
@@ -79,26 +90,32 @@ public class DefaultProtocolEntryTest {
 		// DefaultProtocolEntry(protocolFact) vs. protocolFact
 		assertThat(defaultProtocolEntryUnderTest.equals(protocolFact), is(false));
 		// DefaultProtocolEntry(protocolFact) vs. DefaultProtocolEntry(null)
-		assertThat(defaultProtocolEntryUnderTest.equals(new DefaultProtocolEntry(null)), is(false));
-		// DefaultProtocolEntry(null) vs. DefaultProtocolEntry(protocolFact)
-		assertThat((new DefaultProtocolEntry(null)).equals(new DefaultProtocolEntry(protocolFact)),
+		assertThat(
+				defaultProtocolEntryUnderTest.equals(new FactProtocolEntry(null, null, null, null)),
 				is(false));
+		// DefaultProtocolEntry(null) vs. DefaultProtocolEntry(protocolFact)
+		assertThat((new FactProtocolEntry(null, null, null, null)).equals(
+				new FactProtocolEntry(new Date(), protocolFact)), is(false));
 		// DefaultProtocolEntry(null) vs. DefaultProtocolEntry(null)
-		assertThat((new DefaultProtocolEntry(null)).equals(new DefaultProtocolEntry(null)),
-				is(true));
+		assertThat((new FactProtocolEntry(null, null, null, null)).equals(
+				new FactProtocolEntry(null, null, null, null)), is(true));
 
 	}
 
 	/**
-	 * Test method for {@link DefaultProtocolEntry#getFact()}
+	 * Test method for {@link FactProtocolEntry#getFact()}
 	 */
 	@Test
 	public void testGetFact() {
-		assertThat(defaultProtocolEntryUnderTest.getFact(), is(equalTo(protocolFact)));
+		Fact fact = ProtocolConversion.createFact(knowledgeBase, defaultProtocolEntryUnderTest);
+		assertThat(fact.getTerminologyObject(), is(equalTo(protocolFact.getTerminologyObject())));
+		assertThat(fact.getPSMethod(), is(equalTo(protocolFact.getPSMethod())));
+		assertThat(fact.getValue(), is(equalTo(protocolFact.getValue())));
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.protocol.DefaultProtocolEntry#toString()}.
+	 * Test method for
+	 * {@link de.d3web.core.session.protocol.FactProtocolEntry#toString()}.
 	 */
 	@Test
 	public void testToString() {

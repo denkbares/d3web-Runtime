@@ -22,6 +22,7 @@ package de.d3web.core.session.protocol.tests;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -32,7 +33,7 @@ import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.protocol.DefaultProtocol;
-import de.d3web.core.session.protocol.DefaultProtocolEntry;
+import de.d3web.core.session.protocol.FactProtocolEntry;
 import de.d3web.core.session.protocol.ProtocolEntry;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
@@ -49,29 +50,33 @@ public class DefaultProtocolTest {
 	Fact textFact;
 
 	DefaultProtocol defaultProtocolUnderTest;
+	Date now;
 
 	@Before
 	public void setUp() throws Exception {
 		QuestionNum questionNum = new QuestionNum("questionNum");
 		NumValue numValue = new NumValue(13.8);
 		numFact = FactFactory.createUserEnteredFact(questionNum, numValue);
+		now = new Date();
 
 		QuestionText questionText = new QuestionText("questionText");
 		TextValue textValue = new TextValue("textValue");
 		textFact = FactFactory.createUserEnteredFact(questionText, textValue);
 
 		defaultProtocolUnderTest = new DefaultProtocol();
-		defaultProtocolUnderTest.addEntry(numFact);
-		defaultProtocolUnderTest.addEntry(textFact);
+		defaultProtocolUnderTest.addEntry(new FactProtocolEntry(now, numFact));
+		defaultProtocolUnderTest.addEntry(new FactProtocolEntry(now, textFact));
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.protocol.DefaultProtocol#getProtocolHistory()}.
+	 * Test method for
+	 * {@link de.d3web.core.session.protocol.DefaultProtocol#getProtocolHistory()}
+	 * .
 	 */
 	@Test
 	public void testGetProtocolHistory() {
 		List<ProtocolEntry> history = defaultProtocolUnderTest.getProtocolHistory();
-		assertThat(history.contains(new DefaultProtocolEntry(numFact)), is(true));
-		assertThat(history.contains(new DefaultProtocolEntry(textFact)), is(true));
+		assertThat(history.contains(new FactProtocolEntry(now, numFact)), is(true));
+		assertThat(history.contains(new FactProtocolEntry(now, textFact)), is(true));
 	}
 }

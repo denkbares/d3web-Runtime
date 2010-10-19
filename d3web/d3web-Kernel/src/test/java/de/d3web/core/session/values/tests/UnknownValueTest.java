@@ -22,7 +22,6 @@ package de.d3web.core.session.values.tests;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -63,7 +62,9 @@ public class UnknownValueTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.Unknown#assignedTo(de.d3web.core.session.Value)}.
+	 * Test method for
+	 * {@link de.d3web.core.session.values.Unknown#assignedTo(de.d3web.core.session.Value)}
+	 * .
 	 */
 	@Test
 	public void testAssignedTo() {
@@ -83,7 +84,8 @@ public class UnknownValueTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.Unknown#equals(java.lang.Object)}.
+	 * Test method for
+	 * {@link de.d3web.core.session.values.Unknown#equals(java.lang.Object)}.
 	 */
 	@Test
 	public void testEqualsObject() {
@@ -92,7 +94,9 @@ public class UnknownValueTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.Unknown#compareTo(de.d3web.core.session.Value)}.
+	 * Test method for
+	 * {@link de.d3web.core.session.values.Unknown#compareTo(de.d3web.core.session.Value)}
+	 * .
 	 */
 	@Test
 	public void testCompareTo() {
@@ -106,16 +110,6 @@ public class UnknownValueTest {
 	@Test
 	public void testGetId() {
 		assertThat(unknownValue.getId(), is(equalTo(Unknown.UNKNOWN_ID)));
-	}
-
-	/**
-	 * Test method for {@link de.d3web.core.session.values.Unknown#getName()}.
-	 */
-	@Test
-	public void testGetName() {
-		String name = unknownValue.getName();
-		assertThat(name, notNullValue());
-		assertThat(name.length(), is(not(0)));
 	}
 
 }

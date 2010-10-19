@@ -21,9 +21,7 @@ package de.d3web.core.session.protocol;
 
 import java.util.List;
 
-import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 
 /**
@@ -39,12 +37,21 @@ import de.d3web.core.session.blackboard.Fact;
 public interface Protocol {
 
 	/**
-	 * Return the list of entered findings ({@link Value} instances assigned to
-	 * {@link Question} instances) in a chronological order.
+	 * Return the list of all protocol entries in a chronological order.
 	 * 
-	 * @return the entered findings in a chronological order
+	 * @return all protocol entries in a chronological order
 	 */
 	public List<ProtocolEntry> getProtocolHistory();
+
+	/**
+	 * Return the list of all protocol entries of a certain class in a
+	 * chronological order. The returned list is always a subset of the total
+	 * protocol history. It contains all protocol entries that are of the
+	 * specified filterClass or of any of its subclasses.
+	 * 
+	 * @return the matching protocol entries in a chronological order
+	 */
+	public <T extends ProtocolEntry> List<T> getProtocolHistory(Class<T> filterClass);
 
 	/**
 	 * Append a new protocol entry to the {@link Protocol}. The entry is defined
@@ -52,6 +59,6 @@ public interface Protocol {
 	 * 
 	 * @param fact the specified {@link Fact} instance
 	 */
-	public void addEntry(Fact fact);
+	public void addEntry(ProtocolEntry entry);
 
 }

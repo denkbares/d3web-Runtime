@@ -20,7 +20,6 @@
 
 package de.d3web.core.knowledge.terminology;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,7 +38,7 @@ import de.d3web.core.manage.KnowledgeBaseManagement;
  */
 public abstract class QuestionChoice extends Question {
 
-	private List<Choice> alternatives = new LinkedList<Choice>();
+	private final List<Choice> alternatives = new LinkedList<Choice>();
 
 	public QuestionChoice(String id) {
 		super(id);
@@ -49,7 +48,6 @@ public abstract class QuestionChoice extends Question {
 	 * Gives you all the answers (alternatives) and does not care about any
 	 * rules which could possibly suppress an answer.
 	 * 
-	 * @param session currentCase
 	 * @return a List of all alternatives that are not suppressed by any
 	 *         RuleSuppress
 	 **/
@@ -69,16 +67,13 @@ public abstract class QuestionChoice extends Question {
 	 * sets the answer alternatives from which a user or rule can choose one or
 	 * more to answer this question.
 	 */
-	public void setAlternatives(List<Choice> alternatives) {
-		if (alternatives != null) {
-			this.alternatives = alternatives;
-			Iterator<Choice> iter = this.alternatives.iterator();
-			while (iter.hasNext()) {
-				iter.next().setQuestion(this);
+	public void setAlternatives(List<Choice> newChoices) {
+		this.alternatives.clear();
+		if (newChoices != null) {
+			for (Choice choice : newChoices) {
+				choice.setQuestion(this);
+				this.alternatives.add(choice);
 			}
-		}
-		else {
-			setAlternatives(new LinkedList<Choice>());
 		}
 
 	}
@@ -98,7 +93,6 @@ public abstract class QuestionChoice extends Question {
 	}
 
 	public boolean removeAlternative(Choice answer) {
-		answer.setQuestion(null);
 		return alternatives.remove(answer);
 	}
 
