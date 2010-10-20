@@ -33,6 +33,11 @@ import de.d3web.core.knowledge.InfoStore;
  */
 public class Choice implements IDObject, Comparable<Choice> {
 
+	/**
+	 * The {@link Question} instance this {@link Answer} belongs to
+	 */
+	private Question question;
+
 	private String text;
 	private final String id;
 	private InfoStore infoStore = new DefaultInfoStore();
@@ -128,11 +133,6 @@ public class Choice implements IDObject, Comparable<Choice> {
 	public String getId() {
 		return id;
 	}
-
-	/**
-	 * The {@link Question} instance this {@link Answer} belongs to
-	 */
-	private Question question;
 
 	/**
 	 * Returns the {@link Question} instance corresponding to this

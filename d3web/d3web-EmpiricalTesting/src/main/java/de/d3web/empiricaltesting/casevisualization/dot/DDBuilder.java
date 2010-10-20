@@ -173,16 +173,27 @@ public final class DDBuilder implements CaseVisualizer {
 	private static String checkDotFilePath(String dotFile, String addOn) {
 		String ret = "";
 
-		if (dotFile.equals("")) // empty
-		ret = "dotFile" + addOn + ".dot";
-		else if (dotFile.endsWith("/")) // just a path
-		ret = dotFile + addOn + ".dot";
-		else if (dotFile.endsWith(".dot")) // full filepath specified
-		if (addOn.equals("")) ret = dotFile.substring(0, dotFile.length() - 4) + ".dot";
-		else ret = dotFile.substring(0, dotFile.length() - 4) + "_" + addOn + ".dot";
-		else // we suppose, its a Path without trailing "/"
-		ret = dotFile + "/" + addOn + ".dot";
-
+		if (dotFile.equals("")) {
+			// empty
+			ret = "dotFile" + addOn + ".dot";
+		}
+		else if (dotFile.endsWith("/")) {
+			// just a path
+			ret = dotFile + addOn + ".dot";
+		}
+		else if (dotFile.endsWith(".dot")) {
+			// full filepath specified
+			if (addOn.equals("")) {
+				ret = dotFile.substring(0, dotFile.length() - 4) + ".dot";
+			}
+			else {
+				ret = dotFile.substring(0, dotFile.length() - 4) + "_" + addOn + ".dot";
+			}
+		}
+		else {
+			// we suppose, its a Path without trailing "/"
+			ret = dotFile + "/" + addOn + ".dot";
+		}
 		return ret;
 	}
 
