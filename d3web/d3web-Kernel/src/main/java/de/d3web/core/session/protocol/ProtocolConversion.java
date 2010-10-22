@@ -73,13 +73,14 @@ public class ProtocolConversion {
 	 */
 	public static Object valueToRaw(TerminologyObject terminologyObject, Value value) {
 		if (value instanceof Rating) {
-			return ((Rating) value).getState().toString();
+			return ((Rating) value)/* .getState() */;
 		}
 		if (value instanceof Indication) {
-			return ((Indication) value).getState().toString();
+			return ((Indication) value).getState();
 		}
 		if (value instanceof ChoiceValue) {
-			return ((ChoiceValue) value).getChoice().getName();
+			Choice choice = ((ChoiceValue) value).getChoice();
+			return choiceToString(choice);
 		}
 		if (value instanceof MultipleChoiceValue) {
 			List<Choice> choices = ((MultipleChoiceValue) value).asChoiceList();
@@ -87,13 +88,13 @@ public class ProtocolConversion {
 				return new String[0];
 			}
 			else if (choices.size() == 1) {
-				return choices.get(0).getName();
+				return choiceToString(choices.get(0));
 			}
 			else {
 				String[] result = new String[choices.size()];
 				int index = 0;
 				for (Choice choice : choices) {
-					result[index++] = choice.getName();
+					result[index++] = choiceToString(choice);
 				}
 				return result;
 			}
@@ -108,12 +109,17 @@ public class ProtocolConversion {
 			return ((DateValue) value).getDate();
 		}
 		if (value instanceof Unknown) {
-			return ((Unknown) value).getValue();
+			return Unknown.getInstance();
 		}
 		if (value instanceof UndefinedValue) {
-			return ((UndefinedValue) value).getValue();
+			return UndefinedValue.getInstance();
 		}
 		return null;
+	}
+
+	protected static String choiceToString(Choice choice) {
+		String name = choice.getName();
+		return name == null ? "#" + choice.getId() : name;
 	}
 
 	/**
@@ -129,9 +135,12 @@ public class ProtocolConversion {
 	 * @return the converted value
 	 */
 	public static Value rawToValue(TerminologyObject terminologyObject, Object raw) {
-		if (raw instanceof Rating.State) {
-			return new Rating((Rating.State) raw);
+		if (raw instanceof Rating) {
+			return (Rating) raw;
 		}
+		// if (raw instanceof Rating.State) {
+		// return new Rating((Rating.State) raw);
+		// }
 		if (raw instanceof Indication.State) {
 			return new Indication((Indication.State) raw);
 		}
@@ -170,6 +179,12 @@ public class ProtocolConversion {
 						findChoice((QuestionChoice) terminologyObject, text));
 			}
 		}
+		if (raw instanceof Unknown) {
+			return (Unknown) raw;
+		}
+		if (raw instanceof UndefinedValue) {
+			return (UndefinedValue) raw;
+		}
 		return null;
 	}
 
@@ -185,7 +200,12 @@ public class ProtocolConversion {
 	private static Choice findChoice(QuestionChoice terminologyObject, String string) {
 		if (string == null) return null;
 		for (Choice choice : terminologyObject.getAllAlternatives()) {
+			// search name of choice
 			if (string.equalsIgnoreCase(choice.getName())) {
+				return choice;
+			}
+			// or id alternatively
+			if (string.startsWith("#") && string.substring(1).equalsIgnoreCase(choice.getId())) {
 				return choice;
 			}
 		}

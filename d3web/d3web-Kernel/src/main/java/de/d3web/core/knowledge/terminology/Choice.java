@@ -80,7 +80,7 @@ public class Choice implements IDObject, Comparable<Choice> {
 	 */
 	@Override
 	public String toString() {
-		return getName();
+		return text == null ? "#" + id : text;
 	}
 
 	/**

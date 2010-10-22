@@ -21,6 +21,8 @@
 package de.d3web.core.session.protocol;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,6 +59,18 @@ public class DefaultProtocol implements Protocol {
 			}
 		}
 		return Collections.unmodifiableList(result);
+	}
+
+	@Override
+	public void addEntries(Collection<? extends ProtocolEntry> entries) {
+		for (ProtocolEntry entry : entries) {
+			addEntry(entry);
+		}
+	}
+
+	@Override
+	public void addEntries(ProtocolEntry... entries) {
+		addEntries(Arrays.asList(entries));
 	}
 
 }

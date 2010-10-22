@@ -27,6 +27,7 @@ import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.session.SessionInfoStore;
+import de.d3web.core.session.protocol.DefaultProtocol;
 import de.d3web.core.session.protocol.Protocol;
 
 /**
@@ -45,7 +46,7 @@ public class DefaultSessionRecord implements SessionRecord {
 	private List<FactRecord> valueFacts = new LinkedList<FactRecord>();
 	private List<FactRecord> interviewFacts = new LinkedList<FactRecord>();
 
-	private Protocol protocol;
+	private final Protocol protocol = new DefaultProtocol();
 
 	private KnowledgeBase kb;
 
@@ -92,10 +93,6 @@ public class DefaultSessionRecord implements SessionRecord {
 	@Override
 	public Protocol getProtocol() {
 		return protocol;
-	}
-
-	public void setProtocol(Protocol protocol) {
-		this.protocol = protocol;
 	}
 
 	@Override

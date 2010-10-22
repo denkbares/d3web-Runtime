@@ -124,7 +124,7 @@ public final class SessionConversionFactory {
 				source.getCreationDate(), source.getLastChangeDate());
 		target.setName(source.getName());
 		target.setDCMarkup(source.getDCMarkup());
-		target.setProtocol(source.getProtocol());
+		target.getProtocol().addEntries(source.getProtocol().getProtocolHistory());
 		Blackboard blackboard = source.getBlackboard();
 		for (Question q : blackboard.getValuedQuestions()) {
 			List<PSMethod> contributingPSMethods = blackboard.getContributingPSMethods(q);

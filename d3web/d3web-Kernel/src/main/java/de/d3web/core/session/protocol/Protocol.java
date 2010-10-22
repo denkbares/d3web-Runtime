@@ -19,10 +19,10 @@
  */
 package de.d3web.core.session.protocol;
 
+import java.util.Collection;
 import java.util.List;
 
 import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.Fact;
 
 /**
  * The {@link Protocol} stores all findings entered during a {@link Session} in
@@ -54,11 +54,26 @@ public interface Protocol {
 	public <T extends ProtocolEntry> List<T> getProtocolHistory(Class<T> filterClass);
 
 	/**
-	 * Append a new protocol entry to the {@link Protocol}. The entry is defined
-	 * by the specified {@link Fact}.
+	 * Append a new protocol entry to the {@link Protocol}. The protocol takes
+	 * care that the entries are kept in a chronological order.
 	 * 
-	 * @param fact the specified {@link Fact} instance
+	 * @param entry the entry to be added to the protocol
 	 */
 	public void addEntry(ProtocolEntry entry);
 
+	/**
+	 * Append a new protocol entries to the {@link Protocol}. The protocol takes
+	 * care that the entries are kept in a chronological order.
+	 * 
+	 * @param entries the entries to be added to the protocol
+	 */
+	public void addEntries(Collection<? extends ProtocolEntry> entries);
+
+	/**
+	 * Append a new protocol entries to the {@link Protocol}. The protocol takes
+	 * care that the entries are kept in a chronological order.
+	 * 
+	 * @param entries the entries to be added to the protocol
+	 */
+	public void addEntries(ProtocolEntry... entries);
 }

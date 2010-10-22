@@ -35,6 +35,8 @@ import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.core.session.values.Unknown;
 import de.d3web.core.utilities.EqualsUtils;
 import de.d3web.core.utilities.HashCodeUtils;
 
@@ -55,13 +57,17 @@ import de.d3web.core.utilities.HashCodeUtils;
  * indication level of that interview object, if this facts entry is an
  * interview fact and not a value fact. Otherwise the value is one of the
  * following ones.
- * <li> {@link QuestionYN}: {@link String} representing the text of the choice or
- * the unknown text
- * <li> {@link QuestionOC}: {@link String} representing the text of the choice or
- * the unknown text
- * <li> {@link QuestionMC}: {@link String} representing the text of the choice or
- * the unknown text; if more than one choice selected, a {@link String}[] is
- * returned
+ * <li> {@link Unknown}: if the value is unknown, {@link Unknown#getInstance()}
+ * is returned
+ * <li> {@link Unknown}: if the value is undefined,
+ * {@link UndefinedValue#getInstance()} is returned
+ * <li> {@link QuestionYN}: {@link String} representing the text (or
+ * "#&lt;id&gt;" if the text is null) of the choice
+ * <li> {@link QuestionOC}: {@link String} representing the text (or
+ * "#&lt;id&gt;" if the text is null) of the choice
+ * <li> {@link QuestionMC}: {@link String} representing the text (or
+ * "#&lt;id&gt;" if the text is null) of the choice; if more than one choice
+ * selected, a {@link String}[] is returned
  * <li> {@link QuestionNum}: {@link Number} representing the value of the
  * question
  * <li> {@link QuestionText}: {@link String} representing the entered text or the
@@ -90,6 +96,7 @@ public class FactProtocolEntry implements ProtocolEntry {
 	 * 
 	 * @param date the date of the entry
 	 * @param fact the fact to take the entry's information from
+	 * @throws NullPointerException if any of the specified arguments are null
 	 */
 	public FactProtocolEntry(Date date, Fact fact) {
 		this(date,
@@ -105,25 +112,40 @@ public class FactProtocolEntry implements ProtocolEntry {
 	 * 
 	 * @param timeMillis the date of the entry
 	 * @param fact the fact to take the entry's information from
+	 * @throws NullPointerException if the specified fact is null
 	 */
 	public FactProtocolEntry(long timeMillis, Fact fact) {
 		this(new Date(timeMillis), fact);
 	}
 
 	/**
-	 * Creates a new protocol entry with the specified values.
+	 * Creates a new protocol entry with the specified values. The raw value
+	 * must be as described in {@link FactProtocolEntry}.
 	 * 
 	 * @param date the date of the entry
 	 * @param terminologyObjectName the name of the valued object
 	 * @param solvingMethodClassName the problem solver class name (fully
 	 *        qualified)
 	 * @param rawValue the value of the object
+	 * @throws NullPointerException if any of the specified arguments are null
 	 */
 	public FactProtocolEntry(Date date, String terminologyObjectName, String solvingMethodClassName, Object rawValue) {
 		this.date = date;
 		this.terminologyObjectName = terminologyObjectName;
 		this.solvingMethodClassName = solvingMethodClassName;
 		this.rawValue = rawValue;
+		if (date == null) {
+			throw new NullPointerException("specified date of protocol entry is null");
+		}
+		if (terminologyObjectName == null) {
+			throw new NullPointerException("specified object name of protocol entry is null");
+		}
+		if (solvingMethodClassName == null) {
+			throw new NullPointerException("specified solver of protocol entry is null");
+		}
+		if (rawValue == null) {
+			throw new NullPointerException("specified value of protocol entry is null");
+		}
 	}
 
 	@Override
