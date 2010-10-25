@@ -35,6 +35,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
@@ -74,7 +75,7 @@ public class MultipleChoiceValueTest {
 		choicesList.add(mcValueOneChoiceB);
 		choicesList.add(mcValueOneChoiceC);
 		mcValueOne = MultipleChoiceValue.fromChoices(choicesList);
-		
+
 		// Initialize mcValueTwo and its Choices
 		mcValueTwoChoiceX = new Choice("mcValueTwoChoiceX");
 		mcValueTwoChoiceY = new Choice("mcValueTwoChoiceY");
@@ -86,7 +87,7 @@ public class MultipleChoiceValueTest {
 
 	@Test(expected = NullPointerException.class)
 	public void testMultipleChoiceValueThrowsNullPointerException() {
-		new MultipleChoiceValue(null);
+		new MultipleChoiceValue((Collection<ChoiceID>) null);
 	}
 
 	/**
@@ -102,19 +103,19 @@ public class MultipleChoiceValueTest {
 	 */
 	@Test
 	public void testGetAnswerChoicesID() {
-		String derived = mcValueOne.getAnswerChoicesID();
+		String derived = ChoiceID.encodeChoiceIDs(mcValueOne.getChoiceIDs());
 		assertThat(derived.contains(mcValueOneChoiceA.getId()), is(true));
 		assertThat(derived.contains(mcValueOneChoiceB.getId()), is(true));
 		assertThat(derived.contains(mcValueOneChoiceC.getId()), is(true));
 
-		String manual = mcValueOneChoiceA.getId() + MultipleChoiceValue.ID_SEPARATOR
-				+ mcValueOneChoiceB.getId() + MultipleChoiceValue.ID_SEPARATOR
+		String manual = mcValueOneChoiceA.getId() + ChoiceID.ID_SEPARATOR
+				+ mcValueOneChoiceB.getId() + ChoiceID.ID_SEPARATOR
 				+ mcValueOneChoiceC.getId();
 		assertThat(derived.length(), is(equalTo(manual.length())));
 
 		// test empty list answerChoicesID
 		MultipleChoiceValue emptyMCValue = MultipleChoiceValue.fromChoices(new ArrayList<Choice>());
-		assertThat(emptyMCValue.getAnswerChoicesID(), is(""));
+		assertThat(ChoiceID.encodeChoiceIDs(emptyMCValue.getChoiceIDs()), is(""));
 	}
 
 	/**
@@ -161,7 +162,7 @@ public class MultipleChoiceValueTest {
 		assertThat(mcValueOne.hashCode(), is(not(0)));
 		assertThat(mcValueTwo.hashCode(), is(not(0)));
 
-		MultipleChoiceValue mcValueEmpty = new MultipleChoiceValue(new ArrayList<ChoiceValue>());
+		MultipleChoiceValue mcValueEmpty = new MultipleChoiceValue(new ArrayList<ChoiceID>());
 		assertThat(mcValueEmpty.hashCode(), is(31));// Eclipse´s standard
 													// hashCode() prime
 	}
@@ -192,14 +193,14 @@ public class MultipleChoiceValueTest {
 	 */
 	@Test
 	public void testAsChoiceList() {
-		Choice newChoiceOne = new Choice("newChoiceOne");
-		Choice newChoiceTwo = new Choice("newChoiceTwo");
-		List<Choice> choicesList = new LinkedList<Choice>();
+		ChoiceID newChoiceOne = new ChoiceID("newChoiceOne");
+		ChoiceID newChoiceTwo = new ChoiceID("newChoiceTwo");
+		List<ChoiceID> choicesList = new LinkedList<ChoiceID>();
 		choicesList.add(newChoiceOne);
 		choicesList.add(newChoiceTwo);
-		MultipleChoiceValue newMCValue = MultipleChoiceValue.fromChoices(choicesList);
-		assertThat(newMCValue.asChoiceList().containsAll(choicesList), is(true));
-		assertThat(choicesList.containsAll(newMCValue.asChoiceList()), is(true));
+		MultipleChoiceValue newMCValue = new MultipleChoiceValue(choicesList);
+		assertThat(newMCValue.getChoiceIDs().containsAll(choicesList), is(true));
+		assertThat(choicesList.containsAll(newMCValue.getChoiceIDs()), is(true));
 	}
 
 	/**

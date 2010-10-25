@@ -20,6 +20,7 @@
 package de.d3web.core.session.values;
 
 import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Value;
 
@@ -31,45 +32,71 @@ import de.d3web.core.session.Value;
  */
 public class ChoiceValue implements QuestionValue {
 
-	private final Choice value;
+	private final ChoiceID choiceID;
 
 	/**
-	 * Constructs a new ChoiceValue
+	 * Constructs a new ChoiceValue from a specified choice
 	 * 
 	 * @param value the Choice for which a new ChoiceValue should be
 	 *        instantiated
 	 * @throws NullPointerException if a null object was passed in
 	 */
-	public ChoiceValue(Choice value) {
-		if (value == null) {
+	public ChoiceValue(Choice choice) {
+		this(new ChoiceID(choice));
+	}
+
+	/**
+	 * Constructs a new ChoiceValue from a specified choice text
+	 * 
+	 * @param value the choice text for which a new ChoiceValue should be
+	 *        instantiated
+	 * @throws NullPointerException if a null object was passed in
+	 */
+	public ChoiceValue(String text) {
+		this(new ChoiceID(text));
+	}
+
+	/**
+	 * Constructs a new ChoiceValue from a specified {@link ChoiceID}
+	 * 
+	 * @param value the {@link ChoiceID} for which a new ChoiceValue should be
+	 *        instantiated
+	 * @throws NullPointerException if a null object was passed in
+	 */
+	public ChoiceValue(ChoiceID choiceID) {
+		if (choiceID == null) {
 			throw new NullPointerException();
 		}
-		this.value = value;
+		this.choiceID = choiceID;
 	}
 
 	@Override
 	public Object getValue() {
-		return value;
+		return choiceID;
 	}
 
-	public Choice getChoice() {
-		return value;
+	public ChoiceID getChoiceID() {
+		return choiceID;
+	}
+
+	public Choice getChoice(QuestionChoice question) {
+		return choiceID.getChoice(question);
 	}
 
 	public String getAnswerChoiceID() {
-		return value.getId();
+		return choiceID.getText();
 	}
 
 	@Override
 	public String toString() {
-		return value.toString();
+		return choiceID.toString();
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + value.hashCode();
+		result = prime * result + choiceID.hashCode();
 		return result;
 	}
 
@@ -85,7 +112,7 @@ public class ChoiceValue implements QuestionValue {
 			return false;
 		}
 		ChoiceValue other = (ChoiceValue) obj;
-		if (!value.equals(other.value)) {
+		if (!choiceID.equals(other.choiceID)) {
 			return false;
 		}
 		return true;
@@ -93,6 +120,9 @@ public class ChoiceValue implements QuestionValue {
 
 	@Override
 	public int compareTo(Value o) {
+		if (o instanceof ChoiceValue) {
+			return this.choiceID.compareTo(((ChoiceValue) o).choiceID);
+		}
 		// there is no possibility to compare ChoiceValue since
 		// we do not know the other ChoiceValue instances
 		return 0;

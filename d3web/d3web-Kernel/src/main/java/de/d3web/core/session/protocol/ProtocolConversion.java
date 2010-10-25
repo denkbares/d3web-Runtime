@@ -79,24 +79,28 @@ public class ProtocolConversion {
 			return ((Indication) value).getState();
 		}
 		if (value instanceof ChoiceValue) {
-			Choice choice = ((ChoiceValue) value).getChoice();
-			return choiceToString(choice);
+			if (terminologyObject instanceof QuestionChoice) {
+				Choice choice = ((ChoiceValue) value).getChoice((QuestionChoice) terminologyObject);
+				return choiceToString(choice);
+			}
 		}
 		if (value instanceof MultipleChoiceValue) {
-			List<Choice> choices = ((MultipleChoiceValue) value).asChoiceList();
-			if (choices.size() == 0) {
-				return new String[0];
-			}
-			else if (choices.size() == 1) {
-				return choiceToString(choices.get(0));
-			}
-			else {
-				String[] result = new String[choices.size()];
-				int index = 0;
-				for (Choice choice : choices) {
-					result[index++] = choiceToString(choice);
+			if (terminologyObject instanceof QuestionChoice) {
+				List<Choice> choices = ((MultipleChoiceValue) value).asChoiceList((QuestionChoice) terminologyObject);
+				if (choices.size() == 0) {
+					return new String[0];
 				}
-				return result;
+				else if (choices.size() == 1) {
+					return choiceToString(choices.get(0));
+				}
+				else {
+					String[] result = new String[choices.size()];
+					int index = 0;
+					for (Choice choice : choices) {
+						result[index++] = choiceToString(choice);
+					}
+					return result;
+				}
 			}
 		}
 		if (value instanceof NumValue) {

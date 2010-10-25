@@ -72,7 +72,7 @@ public class Count implements FormulaNumberElement {
 	public Value eval(Session session) {
 		MultipleChoiceValue value = (MultipleChoiceValue) session.getBlackboard().getValue(
 				getQuestionMC());
-		List<Choice> choices = value.asChoiceList();
+		List<Choice> choices = value.asChoiceList(getQuestionMC());
 
 		// check, if AnswerNo oder AnswerUnknown is included
 		for (Choice answerChoice : choices) {

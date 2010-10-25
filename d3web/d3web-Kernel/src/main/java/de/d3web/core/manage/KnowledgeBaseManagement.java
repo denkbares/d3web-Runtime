@@ -54,6 +54,7 @@ import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.knowledge.terminology.QuestionZC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
@@ -484,14 +485,14 @@ public final class KnowledgeBaseManagement {
 	}
 
 	public MultipleChoiceValue findMultipleChoiceValue(QuestionMC quesiton, List<String> valueNames) {
-		List<ChoiceValue> choiceValues = new ArrayList<ChoiceValue>(valueNames.size());
+		List<Choice> choices = new ArrayList<Choice>(valueNames.size());
 		for (String name : valueNames) {
 			Choice choice = findChoice(quesiton, name);
 			if (choice != null) {
-				choiceValues.add(new ChoiceValue(choice));
+				choices.add(choice);
 			}
 		}
-		return new MultipleChoiceValue(choiceValues);
+		return MultipleChoiceValue.fromChoices(choices);
 	}
 
 	public Value findValue(Question question, String valueString) {
@@ -505,21 +506,21 @@ public final class KnowledgeBaseManagement {
 		// multiple choice question given
 		if (question instanceof QuestionMC) {
 
-			List<ChoiceValue> values = new LinkedList<ChoiceValue>();
+			List<Choice> values = new LinkedList<Choice>();
 
 			// if mc val is a "real" mc val, i.e. more than one answervals
-			if (valueString.contains(MultipleChoiceValue.ID_SEPARATOR)) {
-				String[] mcvals = valueString.split(MultipleChoiceValue.ID_SEPARATOR);
-				for (String val : mcvals) {
-					Choice choice = findChoice((QuestionChoice) question, val);
+			if (ChoiceID.isEncodedChoiceIDs(valueString)) {
+				ChoiceID[] mcvals = ChoiceID.decodeChoiceIDs(valueString);
+				for (ChoiceID val : mcvals) {
+					Choice choice = val.getChoice((QuestionChoice) question);
 					if (choice == null) {
 						return null;
 					}
 					else {
-						values.add(new ChoiceValue(choice));
+						values.add(choice);
 					}
 				}
-				return new MultipleChoiceValue(values);
+				return MultipleChoiceValue.fromChoices(values);
 			}
 
 			// else, if a single answer val should be set for a mc question
@@ -529,8 +530,8 @@ public final class KnowledgeBaseManagement {
 					return null;
 				}
 				else {
-					values.add(new ChoiceValue(choice));
-					return new MultipleChoiceValue(values);
+					values.add(choice);
+					return MultipleChoiceValue.fromChoices(values);
 				}
 			}
 		}

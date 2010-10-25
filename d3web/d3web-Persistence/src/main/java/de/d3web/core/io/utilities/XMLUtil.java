@@ -43,6 +43,7 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
@@ -208,22 +209,23 @@ public final class XMLUtil {
 			Value value) throws IOException {
 		Element element = writeCondition(doc, nob, type);
 		if (value != null) {
-			String s = getId(value);
+			String s = getId(nob, value);
 			element.setAttribute("value", s);
 		}
 		return element;
 	}
 
-	private static String getId(Object answer) throws IOException {
+	private static String getId(NamedObject nob, Object answer) throws IOException {
 		if (answer instanceof ChoiceValue) {
 			ChoiceValue v = (ChoiceValue) answer;
-			return v.getAnswerChoiceID();
+			Choice choice = v.getChoice((QuestionChoice) nob);
+			return choice.getId();
 		}
 		else if (answer instanceof Unknown) {
 			return Unknown.UNKNOWN_ID;
 		}
 		else if (answer instanceof MultipleChoiceValue) {
-			return ((MultipleChoiceValue) answer).getAnswerChoicesID();
+			return ChoiceID.encodeChoiceIDs(((MultipleChoiceValue) answer).getChoiceIDs());
 		}
 		// for num answers, not the ID, but their actual value is returned
 		else if (answer instanceof NumValue) {

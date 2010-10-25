@@ -28,8 +28,7 @@ import org.w3c.dom.Element;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.MultipleChoiceValue;
 
 /**
@@ -45,21 +44,21 @@ public class MultipleChoiceValueHandler implements FragmentHandler {
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		List<ChoiceValue> choices = new LinkedList<ChoiceValue>();
+		List<ChoiceID> choiceIDs = new LinkedList<ChoiceID>();
 		for (Element e : XMLUtil.getElementList(element.getChildNodes())) {
-			Choice answer = kb.searchAnswerChoice(e.getTextContent());
-			choices.add(new ChoiceValue(answer));
+			ChoiceID answer = new ChoiceID(e.getTextContent());
+			choiceIDs.add(answer);
 		}
-		return new MultipleChoiceValue(choices);
+		return new MultipleChoiceValue(choiceIDs);
 	}
 
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
 		MultipleChoiceValue mcv = (MultipleChoiceValue) object;
 		Element element = doc.createElement(elementName);
-		for (Choice choice : mcv.asChoiceList()) {
+		for (ChoiceID choice : mcv.getChoiceIDs()) {
 			Element choiceElement = doc.createElement(choiceElementName);
-			choiceElement.setTextContent(choice.getId());
+			choiceElement.setTextContent(choice.getText());
 			element.appendChild(choiceElement);
 		}
 		return element;

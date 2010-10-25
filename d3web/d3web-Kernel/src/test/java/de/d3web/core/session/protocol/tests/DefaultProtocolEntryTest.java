@@ -72,7 +72,7 @@ public class DefaultProtocolEntryTest {
 	public void testHashCode() {
 		assertThat(defaultProtocolEntryUnderTest.hashCode(), is(not(0)));
 		// assert that the hashCode() of a nulled-object is 31 (standard prime)
-		assertThat((new FactProtocolEntry(null, null, null, null)).hashCode(), is(43105703));
+		assertThat((new FactProtocolEntry(new Date(0), "", "", "")).hashCode(), is(43105703));
 	}
 
 	/**
@@ -91,14 +91,15 @@ public class DefaultProtocolEntryTest {
 		assertThat(defaultProtocolEntryUnderTest.equals(protocolFact), is(false));
 		// DefaultProtocolEntry(protocolFact) vs. DefaultProtocolEntry(null)
 		assertThat(
-				defaultProtocolEntryUnderTest.equals(new FactProtocolEntry(null, null, null, null)),
+				defaultProtocolEntryUnderTest.equals(new FactProtocolEntry(new Date(0), "", "",
+						"")),
 				is(false));
 		// DefaultProtocolEntry(null) vs. DefaultProtocolEntry(protocolFact)
-		assertThat((new FactProtocolEntry(null, null, null, null)).equals(
+		assertThat((new FactProtocolEntry(new Date(0), "", "", "")).equals(
 				new FactProtocolEntry(new Date(), protocolFact)), is(false));
 		// DefaultProtocolEntry(null) vs. DefaultProtocolEntry(null)
-		assertThat((new FactProtocolEntry(null, null, null, null)).equals(
-				new FactProtocolEntry(null, null, null, null)), is(true));
+		assertThat((new FactProtocolEntry(new Date(0), "", "", "")).equals(
+				new FactProtocolEntry(new Date(0), "", "", "")), is(true));
 
 	}
 

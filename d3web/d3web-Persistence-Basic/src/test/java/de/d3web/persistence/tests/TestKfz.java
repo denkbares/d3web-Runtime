@@ -108,11 +108,11 @@ public class TestKfz {
 		Choice Mf7a2 = kbm.findChoice(Mf7, "Mf7a2");
 		Choice[] choices = new Choice[] {
 				Mf7a1, Mf7a2 };
-		List<ChoiceValue> values = new ArrayList<ChoiceValue>(choices.length);
+		List<Choice> values = new ArrayList<Choice>(choices.length);
 		for (Choice choice : choices) {
-			values.add(new ChoiceValue(choice));
+			values.add(choice);
 		}
-		MultipleChoiceValue mcv = new MultipleChoiceValue(values);
+		MultipleChoiceValue mcv = MultipleChoiceValue.fromChoices(values);
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf7, mcv,
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));

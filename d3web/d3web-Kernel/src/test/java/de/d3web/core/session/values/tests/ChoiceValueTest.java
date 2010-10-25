@@ -28,6 +28,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.Unknown;
 
@@ -59,11 +60,12 @@ public class ChoiceValueTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testChoiceValueChoiceThrowsNullPointerException() {
-		new ChoiceValue(null);
+		new ChoiceValue((Choice) null);
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.ChoiceValue#hashCode()}.
+	 * Test method for
+	 * {@link de.d3web.core.session.values.ChoiceValue#hashCode()}.
 	 */
 	@Test
 	public void testHashCode() {
@@ -71,27 +73,30 @@ public class ChoiceValueTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.ChoiceValue#getValue()}.
+	 * Test method for
+	 * {@link de.d3web.core.session.values.ChoiceValue#getValue()}.
 	 */
 	@Test
 	public void testGetValue() {
 		Object o = choiceValue.getValue();
-		if (!(o instanceof Choice)) {
+		if (!(o instanceof ChoiceID)) {
 			fail("Return type of getValue() is not an instance of type Choice!");
 		}
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.ChoiceValue#getAnswerChoiceID()}.
+	 * Test method for
+	 * {@link de.d3web.core.session.values.ChoiceValue#getAnswerChoiceID()}.
 	 */
 	@Test
 	public void testGetAnswerChoiceID() {
 		String answerChoiceID = choiceValue.getAnswerChoiceID();
-		assertThat(answerChoiceID, is("choiceID"));
+		assertThat(answerChoiceID, is("choiceText"));
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.ChoiceValue#toString()}.
+	 * Test method for
+	 * {@link de.d3web.core.session.values.ChoiceValue#toString()}.
 	 */
 	@Test
 	public void testToString() {
@@ -100,7 +105,9 @@ public class ChoiceValueTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.ChoiceValue#equals(java.lang.Object)}.
+	 * Test method for
+	 * {@link de.d3web.core.session.values.ChoiceValue#equals(java.lang.Object)}
+	 * .
 	 */
 	@Test
 	public void testEqualsObject() {
@@ -112,7 +119,9 @@ public class ChoiceValueTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.ChoiceValue#compareTo(de.d3web.core.session.Value)}.
+	 * Test method for
+	 * {@link de.d3web.core.session.values.ChoiceValue#compareTo(de.d3web.core.session.Value)}
+	 * .
 	 */
 	@Test
 	public void testCompareTo() {

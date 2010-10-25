@@ -60,7 +60,6 @@ public final class HashCodeUtils {
 	 * Appends a boolean value onto the specified seed.
 	 */
 	public static int hash(int aSeed, boolean aBoolean) {
-		System.out.println("boolean...");
 		return firstTerm(aSeed) + (aBoolean ? 1 : 0);
 	}
 
@@ -68,7 +67,6 @@ public final class HashCodeUtils {
 	 * Appends a character value onto the specified seed.
 	 */
 	public static int hash(int aSeed, char aChar) {
-		System.out.println("char...");
 		return firstTerm(aSeed) + (int) aChar;
 	}
 
@@ -76,11 +74,6 @@ public final class HashCodeUtils {
 	 * Appends an integer value onto the specified seed.
 	 */
 	public static int hash(int aSeed, int aInt) {
-		/*
-		 * Implementation Note Note that byte and short are handled by this
-		 * method, through implicit conversion.
-		 */
-		System.out.println("int...");
 		return firstTerm(aSeed) + aInt;
 	}
 
@@ -88,7 +81,6 @@ public final class HashCodeUtils {
 	 * Appends a long value onto the specified seed.
 	 */
 	public static int hash(int aSeed, long aLong) {
-		System.out.println("long...");
 		return firstTerm(aSeed) + (int) (aLong ^ (aLong >>> 32));
 	}
 

@@ -53,6 +53,7 @@ import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
@@ -307,8 +308,8 @@ public final class TestPersistence {
 		xmlsw.writeAttribute(QUESTIONNAIRE, findQuestionnaire(f.getQuestion()).getName());
 		Value v = f.getValue();
 		if (v instanceof ChoiceValue) {
-			Choice choice = (Choice) ((ChoiceValue) v).getValue();
-			xmlsw.writeAttribute(ANSWER, choice.getName());
+			ChoiceID choice = ((ChoiceValue) v).getChoiceID();
+			xmlsw.writeAttribute(ANSWER, choice.getText());
 		}
 		if (v instanceof NumValue) {
 			xmlsw.writeAttribute(ANSWER, ((NumValue) v).getValue().toString());
@@ -374,11 +375,7 @@ public final class TestPersistence {
 				else if (q instanceof QuestionMC) {
 					// '#####' separates two MCAnswers for a MCQuestion
 					Choice[] choices = toChoices(q, answerText.split(MC_ANSWER_SEPARATOR));
-					List<ChoiceValue> values = new ArrayList<ChoiceValue>(choices.length);
-					for (Choice choice : choices) {
-						values.add(new ChoiceValue(choice));
-					}
-					f = new Finding(q, new MultipleChoiceValue(values));
+					f = new Finding(q, MultipleChoiceValue.fromChoices(choices));
 				}
 				else if (q instanceof QuestionChoice) {
 					f = new Finding((QuestionChoice) q, answerText);

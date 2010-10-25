@@ -705,8 +705,12 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer, DCMarkedUp {
 
 	/**
 	 * Inserts a new resource for this {@link KnowledgeBase} instance. For
-	 * example, a resource is a multi-media file attached to the
+	 * example, a resource is a multimedia file attached to the
 	 * {@link KnowledgeBase}.
+	 * <p>
+	 * The path is represented from its root path without any trailing "/". The
+	 * path folder separator used is always "/", independent from the underlying
+	 * file system.
 	 * 
 	 * @param resource a new resource
 	 * @author joba

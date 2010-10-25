@@ -22,8 +22,6 @@ package de.d3web.core.session.blackboard.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.Arrays;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,6 +36,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
@@ -184,7 +183,7 @@ public class ChoiceFactBlackboardTest {
 		// Assign 'red' to the question 'colors'
 		Choice redChoice = kbm.findChoice(colors, "red");
 		assertNotNull("Choice 'red' not found in knowledge base.", redChoice);
-		Value red = new MultipleChoiceValue(Arrays.asList(new ChoiceValue(redChoice)));
+		Value red = new MultipleChoiceValue(new ChoiceID(redChoice));
 		blackboard.addValueFact(createFact(colors, red));
 		assertEquals(red, blackboard.getValue(colors));
 
@@ -192,7 +191,8 @@ public class ChoiceFactBlackboardTest {
 		Choice greenChoice = kbm.findChoice(colors, "green");
 		assertNotNull("Choice 'red' not found in knowledge base.", redChoice);
 		Value red_and_green = new MultipleChoiceValue(
-				Arrays.asList(new ChoiceValue(redChoice), new ChoiceValue(greenChoice)));
+				new ChoiceID(redChoice),
+				new ChoiceID(greenChoice));
 		Fact color_is_red_and_green = createFact(colors, red_and_green);
 		blackboard.addValueFact(color_is_red_and_green);
 		assertEquals(red_and_green, blackboard.getValue(colors));
@@ -223,7 +223,7 @@ public class ChoiceFactBlackboardTest {
 		// Assign 'red' to the question 'colors'
 		Choice redChoice = kbm.findChoice(colors, "red");
 		assertNotNull("Choice 'red' not found in knowledge base.", redChoice);
-		Value red = new MultipleChoiceValue(Arrays.asList(new ChoiceValue(redChoice)));
+		Value red = new MultipleChoiceValue(new ChoiceID(redChoice));
 		Fact color_is_red = createFact(colors, red);
 		blackboard.addValueFact(color_is_red);
 		assertEquals(red, blackboard.getValue(colors));
@@ -232,7 +232,8 @@ public class ChoiceFactBlackboardTest {
 		Choice greenChoice = kbm.findChoice(colors, "green");
 		assertNotNull("Choice 'red' not found in knowledge base.", redChoice);
 		Value red_and_green = new MultipleChoiceValue(
-				Arrays.asList(new ChoiceValue(redChoice), new ChoiceValue(greenChoice)));
+				new ChoiceID(redChoice),
+				new ChoiceID(greenChoice));
 		Fact color_is_red_and_green = createFact(colors, red_and_green, alternativeSource);
 		blackboard.addValueFact(color_is_red_and_green);
 		assertEquals(red_and_green, blackboard.getValue(colors));

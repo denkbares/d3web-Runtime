@@ -42,7 +42,6 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.indication.inference.PSMethodUserSelected;
@@ -122,7 +121,7 @@ public class MultipleChoiceAbstractionTest {
 
 		// Day = Workday, Weekend => Weekday = Monday, Tuesday, Wednesday,
 		// Thursday, Friday, Saturday, Sunday
-		MultipleChoiceValue weekendAndWorkday = getWeekdayMCValue(Arrays.asList(""));
+		MultipleChoiceValue weekendAndWorkday = getDayMCValue(Arrays.asList(""));
 		condition = new CondEqual(day, weekendAndWorkday);
 		RuleFactory.createSetValueRule(kbm.createRuleID(), weekday, getWeekdayMCValue(null),
 				condition);
@@ -136,14 +135,22 @@ public class MultipleChoiceAbstractionTest {
 	 *        MultipleChoiceValue
 	 * @return a MultipleChoiceValue containing the desired weekdays
 	 */
+	private static MultipleChoiceValue getDayMCValue(List<String> ignoredValues) {
+		QuestionChoice day = (QuestionChoice) kbm.findQuestion("Day");
+		return getAllMCValue(day, ignoredValues);
+	}
+
 	private static MultipleChoiceValue getWeekdayMCValue(List<String> ignoredValues) {
 		QuestionChoice weekday = (QuestionChoice) kbm.findQuestion("Weekday");
-		List<ChoiceValue> weekdayValues = new ArrayList<ChoiceValue>();
-		for (Choice c : weekday.getAllAlternatives()) {
-			if (ignoredValues == null || !ignoredValues.contains(c.getName())) weekdayValues.add(new ChoiceValue(
-					c));
+		return getAllMCValue(weekday, ignoredValues);
+	}
+
+	private static MultipleChoiceValue getAllMCValue(QuestionChoice question, List<String> ignoredValues) {
+		List<Choice> weekdayValues = new ArrayList<Choice>();
+		for (Choice c : question.getAllAlternatives()) {
+			if (ignoredValues == null || !ignoredValues.contains(c.getName())) weekdayValues.add(c);
 		}
-		return new MultipleChoiceValue(weekdayValues);
+		return MultipleChoiceValue.fromChoices(weekdayValues);
 	}
 
 	@Test
@@ -240,12 +247,12 @@ public class MultipleChoiceAbstractionTest {
 
 		// SET 'Day' = 'Weekend, Workday'
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(day, getWeekdayMCValue(Arrays.asList("")),
+				FactFactory.createFact(day, getDayMCValue(Arrays.asList("")),
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Day' == 'Weekend, Workday'
 		Value dayValue = session.getBlackboard().getValue(day);
-		assertEquals("Question 'Day' has wrong value", getWeekdayMCValue(Arrays.asList("")),
+		assertEquals("Question 'Day' has wrong value", getDayMCValue(Arrays.asList("")),
 				dayValue);
 
 		// TEST 'Weekday' == 'Monday, Tuesday, Wednesday, Thursday, Friday,

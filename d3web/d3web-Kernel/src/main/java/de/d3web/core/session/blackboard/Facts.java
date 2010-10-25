@@ -21,22 +21,26 @@ package de.d3web.core.session.blackboard;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.values.ChoiceID;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 public final class Facts {
-	
+
 	private Facts() { // suppress default constructor for noninstantiability
 	}
 
@@ -213,12 +217,16 @@ public final class Facts {
 				resultValue = new NumValue(sum); // deleteme:
 													// AnswerFactory.createAnswerNum(sum);
 			}
-			else if (question instanceof QuestionNum) {
-				// for mc questions, combine the choices
-				// AnswerChoice mc1 = (AnswerChoice) resultAnswer;
-				// AnswerChoice mc2 = (AnswerChoice) answer;
-				// TODO: will not work until mc answers are introduced!
-				throw new IllegalStateException("not implemented yet");
+			else if (question instanceof QuestionMC) {
+				Collection<ChoiceID> choices = new HashSet<ChoiceID>();
+				// add current choices
+				if (resultValue instanceof ChoiceValue) choices.add(((ChoiceValue) resultValue).getChoiceID());
+				if (resultValue instanceof MultipleChoiceValue) choices.addAll(((MultipleChoiceValue) resultValue).getChoiceIDs());
+				// add new choices
+				if (value instanceof ChoiceValue) choices.add(((ChoiceValue) value).getChoiceID());
+				if (value instanceof MultipleChoiceValue) choices.addAll(((MultipleChoiceValue) value).getChoiceIDs());
+				// and create combined one
+				resultValue = new MultipleChoiceValue(choices);
 			}
 			else {
 				// otherwise use the lowest value

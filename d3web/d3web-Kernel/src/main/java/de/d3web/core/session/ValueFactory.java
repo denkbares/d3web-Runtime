@@ -20,7 +20,6 @@
 
 package de.d3web.core.session;
 
-import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
@@ -33,7 +32,7 @@ public final class ValueFactory {
 	public static String getID_or_Value(Value value) { // NOSONAR this method
 														// name is ok
 		if (value instanceof ChoiceValue) {
-			return ((Choice) (value.getValue())).getId();
+			return ((ChoiceValue) value).getChoiceID().getText();
 		}
 		else if (value instanceof Unknown) {
 			return Unknown.UNKNOWN_ID;

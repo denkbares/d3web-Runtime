@@ -123,9 +123,13 @@ public class SessionPersistenceTest {
 		choices = new Choice[2];
 		choices[0] = new Choice("Answer1");
 		choices[1] = new Choice("Answer2");
+		choices[0].setText(choices[0].getName());
+		choices[1].setText(choices[1].getName());
 		choices2 = new Choice[2];
 		choices2[0] = new Choice("Answer1");
 		choices2[1] = new Choice("Answer2");
+		choices2[0].setText(choices[0].getName());
+		choices2[1].setText(choices[1].getName());
 		questionOC = kbm.createQuestionOC("Question",
 				kb.getRootQASet(), choices);
 		questionMC = kbm.createQuestionMC("Question2", kb.getRootQASet(), choices);
@@ -448,11 +452,11 @@ public class SessionPersistenceTest {
 		Assert.assertEquals(lastChangeDate, session.getLastChangeDate());
 		Blackboard blackboard = session.getBlackboard();
 		ChoiceValue value = (ChoiceValue) blackboard.getValue(questionOC);
-		Assert.assertEquals(choices[0], value.getValue());
+		Assert.assertEquals(choices[0], value.getChoice(questionOC));
 		MultipleChoiceValue value2 = (MultipleChoiceValue) blackboard.getValue(questionMC);
 		Collection<?> values = (Collection<?>) value2.getValue();
-		Assert.assertTrue(values.size() == 2 && values.contains(new ChoiceValue(choices2[0]))
-				&& values.contains(new ChoiceValue(choices2[1])));
+		Assert.assertTrue(values.size() == 2 && value2.contains(new ChoiceValue(choices2[0]))
+				&& value2.contains(new ChoiceValue(choices2[1])));
 		Assert.assertEquals(startDate, blackboard.getValue(questionDate).getValue());
 		Assert.assertEquals(TEXTVALUE, blackboard.getValue(questionText));
 		Assert.assertEquals(NUMVALUE, blackboard.getValue(questionNum));

@@ -32,7 +32,6 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 
 /**
@@ -123,11 +122,11 @@ public final class ValueCombinator {
 
 			// add the new set to the power set
 			if (innerSet.size() > 0 && allowedCombination(question, innerSet)) {
-				List<ChoiceValue> values = new ArrayList<ChoiceValue>(innerSet.size());
+				List<Choice> values = new ArrayList<Choice>(innerSet.size());
 				for (Choice choices : innerSet) {
-					values.add(new ChoiceValue(choices));
+					values.add(choices);
 				}
-				Value value = new MultipleChoiceValue(values);
+				Value value = MultipleChoiceValue.fromChoices(values);
 				combinations.add(value);
 			}
 

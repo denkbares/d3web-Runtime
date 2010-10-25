@@ -55,11 +55,13 @@ public class DefaultProtocolTest {
 	@Before
 	public void setUp() throws Exception {
 		QuestionNum questionNum = new QuestionNum("questionNum");
+		questionNum.setName(questionNum.getId());
 		NumValue numValue = new NumValue(13.8);
 		numFact = FactFactory.createUserEnteredFact(questionNum, numValue);
 		now = new Date();
 
 		QuestionText questionText = new QuestionText("questionText");
+		questionText.setName(questionText.getId());
 		TextValue textValue = new TextValue("textValue");
 		textFact = FactFactory.createUserEnteredFact(questionText, textValue);
 

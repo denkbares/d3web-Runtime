@@ -34,6 +34,7 @@ import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.Unknown;
@@ -69,23 +70,20 @@ public class EqualConditionHandler implements FragmentHandler {
 				QuestionChoice q = (QuestionChoice) idObject;
 				Value a = null;
 				if (value != null && value.length() > 0) {
-					String[] values = value.split(",");
+					ChoiceID[] choices = ChoiceID.decodeChoiceIDs(value);
 					List<ChoiceValue> conds = new ArrayList<ChoiceValue>();
-					for (String s : values) {
-						if (s.equals(Unknown.UNKNOWN_ID)) {
+					for (ChoiceID s : choices) {
+						if (s.getText().equals(Unknown.UNKNOWN_ID)) {
 							a = Unknown.getInstance();
 						}
 						else {
 							boolean answerfound = false;
-							for (Choice ac : q.getAllAlternatives()) {
-								if (ac.getId().equals(s)) {
-									conds.add(new ChoiceValue(ac));
-									answerfound = true;
-									break;
-								}
+							Choice choice = s.getChoice(q);
+							if (choice == null) {
+								throw new IOException("Answer " + s
+										+ " does not belong to question " + q.getId());
 							}
-							if (!answerfound) throw new IOException("Answer " + s
-									+ " does not belong to question " + q.getId());
+							conds.add(new ChoiceValue(choice));
 						}
 					}
 					if (a != null && conds.isEmpty()) {
@@ -95,7 +93,7 @@ public class EqualConditionHandler implements FragmentHandler {
 						return new CondEqual(q, conds.get(0));
 					}
 					else if (conds.size() > 1) {
-						return new CondEqual(q, new MultipleChoiceValue(conds));
+						return new CondEqual(q, MultipleChoiceValue.fromChoicesValues(conds));
 					}
 					else {
 						throw new IOException("Action could not be parsed.");

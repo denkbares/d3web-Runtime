@@ -53,8 +53,11 @@ public class RuleUpdateTest {
 		InitPluginManager.init();
 		KnowledgeBase kb = KnowledgeBaseManagement.createInstance().getKnowledgeBase();
 		QuestionNum bmi = new QuestionNum("bmi");
+		bmi.setName(bmi.getId());
 		QuestionNum weight = new QuestionNum("weight");
+		weight.setName(weight.getId());
 		QuestionNum height = new QuestionNum("height");
+		height.setName(height.getId());
 		kb.add(bmi);
 		kb.add(weight);
 		kb.add(height);
