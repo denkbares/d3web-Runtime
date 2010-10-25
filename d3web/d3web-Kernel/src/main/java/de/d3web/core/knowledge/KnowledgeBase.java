@@ -23,12 +23,15 @@ package de.d3web.core.knowledge;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -77,7 +80,9 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer, DCMarkedUp {
 
 	private final Map<String, String> costUnit;
 
-	private List<? extends QASet> initQuestions = new LinkedList<QASet>();
+	// stores all qasets contained in the init questionnaires together with
+	// their respective priority
+	private Map<QASet, Integer> initQuestions = new HashMap<QASet, Integer>();
 
 	private final List<Solution> solutions;
 
@@ -151,7 +156,7 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer, DCMarkedUp {
 	 */
 	public KnowledgeBase() {
 		solutions = new ArrayList<Solution>();
-		initQuestions = new ArrayList<QASet>();
+		initQuestions = new HashMap<QASet, Integer>();
 		costVerbalization = new TreeMap<String, String>();
 		costUnit = new TreeMap<String, String>();
 		dcMarkup = new DCMarkup();
@@ -460,8 +465,29 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer, DCMarkedUp {
 	 * 
 	 * @return a list of the initial questions/questionnaires
 	 */
-	public List<? extends QASet> getInitQuestions() {
-		return initQuestions;
+	public List<QASet> getInitQuestions() {
+		Map<QASet, Integer> sortedInit = sortByValue(this.initQuestions);
+		return new ArrayList<QASet>(sortedInit.keySet());
+	}
+
+	private static Map<QASet, Integer> sortByValue(Map<QASet, Integer> map) {
+		List<Map.Entry<QASet, Integer>> list = new LinkedList<Map.Entry<QASet, Integer>>(
+				map.entrySet());
+
+		Collections.sort(list, new Comparator<Map.Entry<QASet, Integer>>() {
+
+			@Override
+			public int compare(Entry<QASet, Integer> o1, Entry<QASet, Integer> o2) {
+				return o1.getValue().compareTo(o2.getValue());
+				// ((Comparable) ((Map.Entry) (o1)).getValue())
+				// .compareTo(((Map.Entry) (o2)).getValue());
+			}
+		});
+		Map<QASet, Integer> result = new LinkedHashMap<QASet, Integer>();
+		for (Map.Entry<QASet, Integer> entry : list) {
+			result.put(entry.getKey(), entry.getValue());
+		}
+		return result;
 	}
 
 	/**
@@ -611,16 +637,23 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer, DCMarkedUp {
 
 	/**
 	 * Tries to find a {@link QContainer} instance with the specified unique
-	 * identifier.
+	 * identifier or name.
 	 * 
 	 * @return a {@link QContainer} instance with the specified unique
-	 *         identifier; <code>null</code> if none found
+	 *         identifier or name; <code>null</code> if none found
 	 */
 	public QContainer searchQContainers(String id) {
 		if (objectIDMap.containsKey(id)) {
 			IDObject o = objectIDMap.get(id);
 			if (o instanceof QContainer) {
 				return (QContainer) o;
+			}
+		}
+		else {
+			for (QContainer qcontainer : getQContainers()) {
+				if (qcontainer.getName().equals(id)) {
+					return qcontainer;
+				}
 			}
 		}
 		return null;
@@ -668,7 +701,51 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer, DCMarkedUp {
 	 * @date 15.04.2010
 	 */
 	public void setInitQuestions(List<? extends QASet> initQuestions) {
-		this.initQuestions = initQuestions;
+		this.initQuestions.clear();
+		Integer priority = 1;
+		for (QASet qaSet : initQuestions) {
+			this.initQuestions.put(qaSet, priority);
+			priority++;
+		}
+	}
+
+	/**
+	 * Adds the specified {@link Question} or {@link QContainer} to the list of
+	 * init questions. This {@link List} of {@link QASet}s is prompted at the
+	 * beginning of every new problem-solving session. Priority: A lower number
+	 * means a higher priority, i.e., qasets with the lowest numbers are asked
+	 * first.
+	 * 
+	 * @created 25.10.2010
+	 * @param qaset the specified init question to be added
+	 * @param priority a priority used to sort the specified question into the
+	 *        list of already existing init questionnaires
+	 * @return false, when the specified priority was already used
+	 */
+	public boolean addInitQuestion(QASet qaset, Integer priority) {
+		boolean unusedPriority = false;
+		if (this.initQuestions.values().contains(priority)) {
+			unusedPriority = true;
+		}
+		this.initQuestions.put(qaset, priority);
+		return unusedPriority;
+	}
+
+	/**
+	 * Removes the specified {@link Question} or {@link QContainer} from the
+	 * list of init questions.
+	 * 
+	 * @created 25.10.2010
+	 * @param qaset the specified init question to be removed
+	 * @return true, when the specified qaset was successfully removed; false
+	 *         otherwise
+	 */
+	public boolean removeInitQuestion(QASet qaset) {
+		if (this.initQuestions.keySet().contains(qaset)) {
+			this.initQuestions.remove(qaset);
+			return true;
+		}
+		return false;
 	}
 
 	/**
