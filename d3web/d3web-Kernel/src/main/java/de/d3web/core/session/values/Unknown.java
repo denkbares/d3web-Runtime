@@ -66,6 +66,11 @@ public class Unknown implements QuestionValue {
 	}
 
 	@Override
+	public String toString() {
+		return UNKNOWN_VALUE;
+	}
+
+	@Override
 	public boolean equals(Object other) {
 		return (other instanceof Unknown);
 	}

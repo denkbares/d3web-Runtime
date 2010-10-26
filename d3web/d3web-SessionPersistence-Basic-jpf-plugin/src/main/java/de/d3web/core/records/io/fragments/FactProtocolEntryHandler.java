@@ -30,6 +30,7 @@ import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.records.io.SessionPersistenceManager;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.protocol.FactProtocolEntry;
 
 /**
@@ -50,30 +51,22 @@ public class FactProtocolEntryHandler implements FragmentHandler {
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		try {
+			// prepare fact entry header information
 			String dateString = element.getAttribute(ATTR_DATE);
 			Date date = SessionPersistenceManager.DATE_FORMAT.parse(dateString);
 			String name = element.getAttribute(ATTR_OBJECT_NAME);
 			String solver = element.getAttribute(ATTR_SOLVER);
 
-			// check for single or multiple child instances
-			// preparing an array or a single object
-			Object rawValue = null;
+			// load fact value by delegate it to the fragments
 			SessionPersistenceManager sm = SessionPersistenceManager.getInstance();
 			List<Element> children = XMLUtil.getElementList(element.getChildNodes());
-			if (children.size() > 1) {
-				String[] values = new String[children.size()];
-				rawValue = values;
-				int index = 0;
-				for (Element child : children) {
-					values[index++] = (String) sm.readFragment(child, kb);
-				}
+			if (children.size() != 1) {
+				throw new IOException("multiple values are not allowed for a fact entry");
 			}
-			else if (children.size() == 1) {
-				rawValue = sm.readFragment(children.get(0), kb);
-			}
+			Value value = (Value) sm.readFragment(children.get(0), kb);
 
 			// and return the fact
-			return new FactProtocolEntry(date, name, solver, rawValue);
+			return new FactProtocolEntry(date, name, solver, value);
 		}
 		catch (ParseException e) {
 			throw new IOException(e);
@@ -94,21 +87,8 @@ public class FactProtocolEntryHandler implements FragmentHandler {
 		element.setAttribute(ATTR_SOLVER, entry.getSolvingMethodClassName());
 
 		// append value child/children
-		// (depending of if the value is an array or not, we create
-		// one child or multiple child per array entry. We do that
-		// to avoid a required parent node for the value entries.)
 		SessionPersistenceManager sm = SessionPersistenceManager.getInstance();
-		Object rawValue = entry.getRawValue();
-		if (rawValue instanceof String[]) {
-			// one child node per array entry
-			for (String item : (String[]) rawValue) {
-				element.appendChild(sm.writeFragment(item, doc));
-			}
-		}
-		else {
-			// one child node for the whole thing
-			element.appendChild(sm.writeFragment(rawValue, doc));
-		}
+		element.appendChild(sm.writeFragment(entry.getValue(), doc));
 		return element;
 	}
 

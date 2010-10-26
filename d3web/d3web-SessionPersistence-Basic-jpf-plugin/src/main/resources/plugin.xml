@@ -123,6 +123,17 @@
 	</extension>
 	
 	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="TextProtocolEntryHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.fragments.TextProtocolEntryHandler" />
+		<parameter id="name" value="TextProtocolEntryHandler" />
+		<parameter id="description" value="Handler to read/write TextProtocolEntry" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<!-- 
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
 		id="NumberHandler">
 		<parameter id="class"
 			value="de.d3web.core.records.io.fragments.NumberHandler" />
@@ -171,6 +182,7 @@
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>
+	-->
 	
 	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="SessionPersistenceHandler"
 		id="FactHandler">

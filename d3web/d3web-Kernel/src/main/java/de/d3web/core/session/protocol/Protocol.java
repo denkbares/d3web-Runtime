@@ -76,4 +76,12 @@ public interface Protocol {
 	 * @param entries the entries to be added to the protocol
 	 */
 	public void addEntries(ProtocolEntry... entries);
+
+	/**
+	 * Removes all protocol entries from that protocol. The protocol will be
+	 * empty after that call.
+	 * 
+	 * @created 26.10.2010
+	 */
+	public void clear();
 }

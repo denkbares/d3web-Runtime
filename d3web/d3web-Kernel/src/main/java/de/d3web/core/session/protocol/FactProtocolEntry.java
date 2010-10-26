@@ -89,7 +89,7 @@ public class FactProtocolEntry implements ProtocolEntry {
 	private final Date date;
 	private final String terminologyObjectName;
 	private final String solvingMethodClassName;
-	private final Object rawValue;
+	private final Value value;
 
 	/**
 	 * Creates a new protocol entry for a specified fact to the specified date.
@@ -102,7 +102,7 @@ public class FactProtocolEntry implements ProtocolEntry {
 		this(date,
 				fact.getTerminologyObject().getName(),
 				fact.getPSMethod().getClass().getName(),
-				ProtocolConversion.valueToRaw(fact.getTerminologyObject(), fact.getValue()));
+				fact.getValue());
 	}
 
 	/**
@@ -129,11 +129,11 @@ public class FactProtocolEntry implements ProtocolEntry {
 	 * @param rawValue the value of the object
 	 * @throws NullPointerException if any of the specified arguments are null
 	 */
-	public FactProtocolEntry(Date date, String terminologyObjectName, String solvingMethodClassName, Object rawValue) {
+	public FactProtocolEntry(Date date, String terminologyObjectName, String solvingMethodClassName, Value value) {
 		this.date = date;
 		this.terminologyObjectName = terminologyObjectName;
 		this.solvingMethodClassName = solvingMethodClassName;
-		this.rawValue = rawValue;
+		this.value = value;
 		if (date == null) {
 			throw new NullPointerException("specified date of protocol entry is null");
 		}
@@ -143,7 +143,7 @@ public class FactProtocolEntry implements ProtocolEntry {
 		if (solvingMethodClassName == null) {
 			throw new NullPointerException("specified solver of protocol entry is null");
 		}
-		if (rawValue == null) {
+		if (value == null) {
 			throw new NullPointerException("specified value of protocol entry is null");
 		}
 	}
@@ -183,8 +183,8 @@ public class FactProtocolEntry implements ProtocolEntry {
 	 * @created 19.10.2010
 	 * @return the raw/primitive value
 	 */
-	public Object getRawValue() {
-		return rawValue;
+	public Value getValue() {
+		return value;
 	}
 
 	@Override
@@ -193,7 +193,7 @@ public class FactProtocolEntry implements ProtocolEntry {
 		result = HashCodeUtils.hash(result, getDate());
 		result = HashCodeUtils.hash(result, getTerminologyObjectName());
 		result = HashCodeUtils.hash(result, getSolvingMethodClassName());
-		result = HashCodeUtils.hash(result, getRawValue());
+		result = HashCodeUtils.hash(result, getValue());
 		return result;
 	}
 
@@ -214,7 +214,7 @@ public class FactProtocolEntry implements ProtocolEntry {
 						other.getTerminologyObjectName())
 				&& EqualsUtils.equals(this.getSolvingMethodClassName(),
 						other.getSolvingMethodClassName())
-				&& EqualsUtils.equals(this.getRawValue(), other.getRawValue());
+				&& EqualsUtils.equals(this.getValue(), other.getValue());
 	}
 
 	@Override
@@ -226,7 +226,7 @@ public class FactProtocolEntry implements ProtocolEntry {
 				": " +
 				this.getTerminologyObjectName() +
 				" = " +
-				this.getRawValue();
+				this.getValue();
 	}
 
 }

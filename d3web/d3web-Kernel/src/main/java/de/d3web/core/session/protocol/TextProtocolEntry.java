@@ -44,26 +44,46 @@ public class TextProtocolEntry implements ProtocolEntry {
 	 * 
 	 * @param timeMillis the date of the entry
 	 * @param message the message to be stored
+	 * @throws NullPointerException if null has been specified as message
 	 */
 	public TextProtocolEntry(long timeMillis, String message) {
 		this(new Date(timeMillis), message);
 	}
 
+	/**
+	 * Creates a new protocol entry for a specified message to the specified
+	 * date.
+	 * 
+	 * @param date the date of the entry
+	 * @param message the message to be stored
+	 * @throws NullPointerException if null has been specified as date or
+	 *         message
+	 */
 	public TextProtocolEntry(Date date, String message) {
 		this.date = date;
 		this.message = message;
+		if (date == null) {
+			throw new NullPointerException("specified date of protocol entry is null");
+		}
+		if (message == null) {
+			throw new NullPointerException("specified message of protocol entry is null");
+		}
 	}
 
 	@Override
 	public Date getDate() {
-		return null;
+		return this.date;
+	}
+
+	public String getMessage() {
+		return this.message;
 	}
 
 	@Override
 	public int hashCode() {
 		int result = HashCodeUtils.SEED;
 		result = HashCodeUtils.hash(result, date);
-		result = HashCodeUtils.hash(result, message);
+		result = HashCodeUtils.hash(result, getMessage());
 		return result;
 	}
 
@@ -80,7 +100,7 @@ public class TextProtocolEntry implements ProtocolEntry {
 		}
 		TextProtocolEntry other = (TextProtocolEntry) obj;
 		return EqualsUtils.equals(this.date, other.date)
-				&& EqualsUtils.equals(this.message, other.message);
+				&& EqualsUtils.equals(this.getMessage(), other.getMessage());
 	}
 
 	@Override
@@ -88,7 +108,7 @@ public class TextProtocolEntry implements ProtocolEntry {
 		return "[" +
 				DateFormat.getInstance().format(date) +
 				"] " +
-				this.message;
+				this.getMessage();
 	}
 
 }

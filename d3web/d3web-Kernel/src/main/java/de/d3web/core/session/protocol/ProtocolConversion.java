@@ -18,32 +18,15 @@
  */
 package de.d3web.core.session.protocol;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.QuestionChoice;
-import de.d3web.core.knowledge.terminology.QuestionMC;
-import de.d3web.core.knowledge.terminology.QuestionText;
-import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
-import de.d3web.core.session.values.ChoiceValue;
-import de.d3web.core.session.values.DateValue;
-import de.d3web.core.session.values.MultipleChoiceValue;
-import de.d3web.core.session.values.NumValue;
-import de.d3web.core.session.values.TextValue;
-import de.d3web.core.session.values.UndefinedValue;
-import de.d3web.core.session.values.Unknown;
 
 /**
  * This class is a helper to convert the protocol from/to the specific
@@ -71,60 +54,31 @@ public class ProtocolConversion {
 	 * @param value the value to be converted
 	 * @return the raw value
 	 */
-	public static Object valueToRaw(TerminologyObject terminologyObject, Value value) {
-		if (value instanceof Rating) {
-			return ((Rating) value)/* .getState() */;
-		}
-		if (value instanceof Indication) {
-			return ((Indication) value).getState();
-		}
-		if (value instanceof ChoiceValue) {
-			if (terminologyObject instanceof QuestionChoice) {
-				Choice choice = ((ChoiceValue) value).getChoice((QuestionChoice) terminologyObject);
-				return choiceToString(choice);
-			}
-		}
-		if (value instanceof MultipleChoiceValue) {
-			if (terminologyObject instanceof QuestionChoice) {
-				List<Choice> choices = ((MultipleChoiceValue) value).asChoiceList((QuestionChoice) terminologyObject);
-				if (choices.size() == 0) {
-					return new String[0];
-				}
-				else if (choices.size() == 1) {
-					return choiceToString(choices.get(0));
-				}
-				else {
-					String[] result = new String[choices.size()];
-					int index = 0;
-					for (Choice choice : choices) {
-						result[index++] = choiceToString(choice);
-					}
-					return result;
-				}
-			}
-		}
-		if (value instanceof NumValue) {
-			return ((NumValue) value).getDouble();
-		}
-		if (value instanceof TextValue) {
-			return ((TextValue) value).getText();
-		}
-		if (value instanceof DateValue) {
-			return ((DateValue) value).getDate();
-		}
-		if (value instanceof Unknown) {
-			return Unknown.getInstance();
-		}
-		if (value instanceof UndefinedValue) {
-			return UndefinedValue.getInstance();
-		}
-		return null;
-	}
-
-	protected static String choiceToString(Choice choice) {
-		String name = choice.getName();
-		return name == null ? "#" + choice.getId() : name;
-	}
+	/*
+	 * public static Object valueToRaw(TerminologyObject terminologyObject,
+	 * Value value) { if (value instanceof Rating) { return ((Rating) value); }
+	 * if (value instanceof Indication) { return ((Indication)
+	 * value).getState(); } if (value instanceof ChoiceValue) { if
+	 * (terminologyObject instanceof QuestionChoice) { Choice choice =
+	 * ((ChoiceValue) value).getChoice((QuestionChoice) terminologyObject);
+	 * return choiceToString(choice); } } if (value instanceof
+	 * MultipleChoiceValue) { if (terminologyObject instanceof QuestionChoice) {
+	 * List<Choice> choices = ((MultipleChoiceValue)
+	 * value).asChoiceList((QuestionChoice) terminologyObject); if
+	 * (choices.size() == 0) { return new String[0]; } else if (choices.size()
+	 * == 1) { return choiceToString(choices.get(0)); } else { String[] result =
+	 * new String[choices.size()]; int index = 0; for (Choice choice : choices)
+	 * { result[index++] = choiceToString(choice); } return result; } } } if
+	 * (value instanceof NumValue) { return ((NumValue) value).getDouble(); } if
+	 * (value instanceof TextValue) { return ((TextValue) value).getText(); } if
+	 * (value instanceof DateValue) { return ((DateValue) value).getDate(); } if
+	 * (value instanceof Unknown) { return Unknown.getInstance(); } if (value
+	 * instanceof UndefinedValue) { return UndefinedValue.getInstance(); }
+	 * return null; }
+	 * 
+	 * protected static String choiceToString(Choice choice) { String name =
+	 * choice.getName(); return name == null ? "#" + choice.getId() : name; }
+	 */
 
 	/**
 	 * Converts a raw value from a case record or protocol into a {@link Value}
@@ -138,59 +92,29 @@ public class ProtocolConversion {
 	 * @param raw the raw value to be converted
 	 * @return the converted value
 	 */
-	public static Value rawToValue(TerminologyObject terminologyObject, Object raw) {
-		if (raw instanceof Rating) {
-			return (Rating) raw;
-		}
-		// if (raw instanceof Rating.State) {
-		// return new Rating((Rating.State) raw);
-		// }
-		if (raw instanceof Indication.State) {
-			return new Indication((Indication.State) raw);
-		}
-		if (raw instanceof String[]) {
-			if (terminologyObject instanceof QuestionMC) {
-				List<Choice> choices = new ArrayList<Choice>();
-				for (String string : (String[]) raw) {
-					Choice choice = findChoice((QuestionChoice) terminologyObject, string);
-					if (choice != null) {
-						choices.add(choice);
-					}
-				}
-				return MultipleChoiceValue.fromChoices(choices);
-			}
-			else {
-				return null;
-			}
-		}
-		if (raw instanceof Number) {
-			return new NumValue(((Number) raw).doubleValue());
-		}
-		if (raw instanceof Date) {
-			return new DateValue((Date) raw);
-		}
-		if (raw instanceof String) {
-			String text = (String) raw;
-			if (terminologyObject instanceof QuestionText) {
-				return new TextValue(text);
-			}
-			else if (terminologyObject instanceof QuestionMC) {
-				return MultipleChoiceValue.fromChoices(
-						findChoice((QuestionChoice) terminologyObject, text));
-			}
-			else if (terminologyObject instanceof QuestionChoice) {
-				return new ChoiceValue(
-						findChoice((QuestionChoice) terminologyObject, text));
-			}
-		}
-		if (raw instanceof Unknown) {
-			return (Unknown) raw;
-		}
-		if (raw instanceof UndefinedValue) {
-			return (UndefinedValue) raw;
-		}
-		return null;
-	}
+	/*
+	 * public static Value rawToValue(TerminologyObject terminologyObject,
+	 * Object raw) { if (raw instanceof Rating) { return (Rating) raw; } // if
+	 * (raw instanceof Rating.State) { // return new Rating((Rating.State) raw);
+	 * // } if (raw instanceof Indication.State) { return new
+	 * Indication((Indication.State) raw); } if (raw instanceof String[]) { if
+	 * (terminologyObject instanceof QuestionMC) { List<Choice> choices = new
+	 * ArrayList<Choice>(); for (String string : (String[]) raw) { Choice choice
+	 * = findChoice((QuestionChoice) terminologyObject, string); if (choice !=
+	 * null) { choices.add(choice); } } return
+	 * MultipleChoiceValue.fromChoices(choices); } else { return null; } } if
+	 * (raw instanceof Number) { return new NumValue(((Number)
+	 * raw).doubleValue()); } if (raw instanceof Date) { return new
+	 * DateValue((Date) raw); } if (raw instanceof String) { String text =
+	 * (String) raw; if (terminologyObject instanceof QuestionText) { return new
+	 * TextValue(text); } else if (terminologyObject instanceof QuestionMC) {
+	 * return MultipleChoiceValue.fromChoices( findChoice((QuestionChoice)
+	 * terminologyObject, text)); } else if (terminologyObject instanceof
+	 * QuestionChoice) { return new ChoiceValue( findChoice((QuestionChoice)
+	 * terminologyObject, text)); } } if (raw instanceof Unknown) { return
+	 * (Unknown) raw; } if (raw instanceof UndefinedValue) { return
+	 * (UndefinedValue) raw; } return null; }
+	 */
 
 	/**
 	 * Searches a choice by its name in the alternatives of a question. Returns
@@ -201,20 +125,15 @@ public class ProtocolConversion {
 	 * @param string the text of the choice
 	 * @return the found choice or null if there is no match
 	 */
-	private static Choice findChoice(QuestionChoice terminologyObject, String string) {
-		if (string == null) return null;
-		for (Choice choice : terminologyObject.getAllAlternatives()) {
-			// search name of choice
-			if (string.equalsIgnoreCase(choice.getName())) {
-				return choice;
-			}
-			// or id alternatively
-			if (string.startsWith("#") && string.substring(1).equalsIgnoreCase(choice.getId())) {
-				return choice;
-			}
-		}
-		return null;
-	}
+	/*
+	 * private static Choice findChoice(QuestionChoice terminologyObject, String
+	 * string) { if (string == null) return null; for (Choice choice :
+	 * terminologyObject.getAllAlternatives()) { // search name of choice if
+	 * (string.equalsIgnoreCase(choice.getName())) { return choice; } // or id
+	 * alternatively if (string.startsWith("#") &&
+	 * string.substring(1).equalsIgnoreCase(choice.getId())) { return choice; }
+	 * } return null; }
+	 */
 
 	/**
 	 * Creates a new fact defined by the protocol entry, matching the specified
@@ -282,7 +201,7 @@ public class ProtocolConversion {
 		if (terminologyObject == null) return null;
 
 		// try to create a value
-		Value value = rawToValue(terminologyObject, entry.getRawValue());
+		Value value = entry.getValue();
 		if (value == null) return null;
 
 		// and return the fact if everything worked fine

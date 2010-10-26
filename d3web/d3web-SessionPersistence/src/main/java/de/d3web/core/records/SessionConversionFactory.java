@@ -40,7 +40,6 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
-import de.d3web.core.session.protocol.Protocol;
 import de.d3web.core.session.protocol.ProtocolEntry;
 import de.d3web.core.session.values.UndefinedValue;
 
@@ -64,12 +63,6 @@ public final class SessionConversionFactory {
 				source.getCreationDate());
 		target.setName(source.getName());
 		target.setDCMarkup(source.getDCMarkup());
-		Protocol protocol = source.getProtocol();
-		if (protocol != null) {
-			for (ProtocolEntry entry : protocol.getProtocolHistory()) {
-				target.getProtocol().addEntry(entry);
-			}
-		}
 
 		// Search psmethods of session (improves performance)
 		Map<String, PSMethod> psMethods = new HashMap<String, PSMethod>();
@@ -92,6 +85,13 @@ public final class SessionConversionFactory {
 		finally {
 			target.getPropagationManager().commitPropagation();
 		}
+
+		// restore protocol from source
+		target.getProtocol().clear();
+		for (ProtocolEntry entry : source.getProtocol().getProtocolHistory()) {
+			target.getProtocol().addEntry(entry);
+		}
+
 		// this must be the last operation to overwrite all touches within
 		// propagation
 		target.touch(source.getLastChangeDate());

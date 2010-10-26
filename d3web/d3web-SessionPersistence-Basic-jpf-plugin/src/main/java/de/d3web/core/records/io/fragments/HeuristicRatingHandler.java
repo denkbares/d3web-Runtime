@@ -24,6 +24,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.io.fragments.FragmentHandler;
+import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.scoring.HeuristicRating;
 
@@ -35,24 +36,35 @@ import de.d3web.scoring.HeuristicRating;
  */
 public class HeuristicRatingHandler implements FragmentHandler {
 
-	private static final String elementName = "heuristicRating";
+	private static final String elementName = "rating";
+	private static final String elementType = "heuristic";
+	private static final String attributeType = "type";
+	private static final String attributeScore = "score";
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		return new HeuristicRating(Double.parseDouble(element.getTextContent()));
+		try {
+			double score = Double.parseDouble(element.getAttribute(attributeScore));
+			return new HeuristicRating(score);
+		}
+		catch (NumberFormatException e) {
+			throw new IOException("heuristic score has invalid format", e);
+		}
 	}
 
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
 		HeuristicRating hr = (HeuristicRating) object;
 		Element element = doc.createElement(elementName);
-		element.setTextContent("" + hr.getScore());
+		element.setAttribute(attributeType, elementType);
+		element.setAttribute(attributeScore, String.valueOf(hr.getScore()));
+		element.setTextContent(hr.getName());
 		return element;
 	}
 
 	@Override
 	public boolean canRead(Element element) {
-		return element.getNodeName().equals(elementName);
+		return XMLUtil.checkNameAndType(element, elementName, elementType);
 	}
 
 	@Override

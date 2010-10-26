@@ -73,4 +73,9 @@ public class DefaultProtocol implements Protocol {
 		addEntries(Arrays.asList(entries));
 	}
 
+	@Override
+	public void clear() {
+		this.entries.clear();
+	}
+
 }

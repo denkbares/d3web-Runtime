@@ -68,6 +68,9 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.FactFactory;
+import de.d3web.core.session.protocol.FactProtocolEntry;
+import de.d3web.core.session.protocol.Protocol;
+import de.d3web.core.session.protocol.TextProtocolEntry;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
@@ -156,6 +159,10 @@ public class SessionPersistenceTest {
 		blackboard.addValueFact(FactFactory.createUserEnteredFact(questionNum, NUMVALUE));
 		blackboard.addValueFact(FactFactory.createUserEnteredFact(solution, new Rating(
 				Rating.State.ESTABLISHED)));
+		session.getProtocol().addEntries(
+				new TextProtocolEntry(new Date(System.currentTimeMillis() + 10), "future entry"),
+				new TextProtocolEntry(new Date(startDate.getTime() - 10), "ancient entry")
+				);
 		creationDate = session.getCreationDate();
 		lastChangeDate = session.getLastChangeDate();
 		sessionRecord = SessionConversionFactory.copyToSessionRecord(session);
@@ -185,14 +192,16 @@ public class SessionPersistenceTest {
 		reloadedRepository.load(kb, file);
 		// Test iterator
 		Iterator<SessionRecord> iterator = reloadedRepository.iterator();
-		Session session = SessionConversionFactory.copyToSession(iterator.next());
-		Session session2 = SessionConversionFactory.copyToSession(iterator.next());
+		SessionRecord record1 = iterator.next();
+		SessionRecord record2 = iterator.next();
+		Session session1 = SessionConversionFactory.copyToSession(record1);
+		Session session2 = SessionConversionFactory.copyToSession(record2);
 		// the sorting in the hashmap isn't stable, so we sort manually
-		if (session.getLastChangeDate().before(session2.getLastChangeDate())) {
-			checkValuesAfterReload(session, session2);
+		if (session1.getLastChangeDate().before(session2.getLastChangeDate())) {
+			checkValuesAfterReload(session1, session2);
 		}
 		else {
-			checkValuesAfterReload(session2, session);
+			checkValuesAfterReload(session2, session1);
 		}
 
 		// testing error behaviour
@@ -469,6 +478,14 @@ public class SessionPersistenceTest {
 		Rating rating = blackboard.getRating(solution2);
 		Assert.assertTrue(rating instanceof HeuristicRating);
 		Assert.assertTrue(rating.hasState(Rating.State.ESTABLISHED));
+		Protocol protocol = session.getProtocol();
+		Protocol protocol2 = session2.getProtocol();
+		Assert.assertEquals(protocol.getProtocolHistory().size(), 8);
+		Assert.assertEquals(protocol2.getProtocolHistory().size(), 2);
+		Assert.assertEquals(protocol.getProtocolHistory(FactProtocolEntry.class).size(), 6);
+		Assert.assertEquals(protocol2.getProtocolHistory(FactProtocolEntry.class).size(), 2);
+		Assert.assertEquals(protocol.getProtocolHistory(TextProtocolEntry.class).size(), 2);
+		Assert.assertEquals(protocol2.getProtocolHistory(TextProtocolEntry.class).size(), 0);
 	}
 
 	/**
