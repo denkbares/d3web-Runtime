@@ -60,7 +60,6 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 	 * ending on .xml will be ignored.
 	 * 
 	 * @created 20.09.2010
-	 * @param kb KnowledgeBase
 	 * @param folder Folder which represents the SessionRepository
 	 * @throws IOException
 	 * @throws ParseException
@@ -75,7 +74,6 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 	 * ending on .xml will be ignored.
 	 * 
 	 * @created 20.09.2010
-	 * @param kb KnowledgeBase
 	 * @param folder Folder which represents the SessionRepository
 	 * @param listener the progress listener to observe the progress of reading
 	 * @throws IOException
