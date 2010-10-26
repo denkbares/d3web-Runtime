@@ -22,9 +22,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import de.d3web.core.knowledge.InfoStore;
-import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.session.SessionInfoStore;
 import de.d3web.core.session.protocol.DefaultProtocol;
@@ -38,17 +38,14 @@ import de.d3web.core.session.protocol.Protocol;
  */
 public class DefaultSessionRecord implements SessionRecord {
 
-	private String id;
-
+	private final String id;
 	private final Date creationDate;
 	private Date lastEditDate;
 
-	private List<FactRecord> valueFacts = new LinkedList<FactRecord>();
-	private List<FactRecord> interviewFacts = new LinkedList<FactRecord>();
+	private final List<FactRecord> valueFacts = new LinkedList<FactRecord>();
+	private final List<FactRecord> interviewFacts = new LinkedList<FactRecord>();
 
 	private final Protocol protocol = new DefaultProtocol();
-
-	private KnowledgeBase kb;
 
 	private DCMarkup dcMarkup;
 
@@ -56,16 +53,20 @@ public class DefaultSessionRecord implements SessionRecord {
 
 	private final InfoStore infoStore = new SessionInfoStore(this);
 
-	public DefaultSessionRecord(KnowledgeBase kb) {
-		this.kb = kb;
-		id = "Session " + System.currentTimeMillis();
-		creationDate = new Date();
-		lastEditDate = new Date();
+	public DefaultSessionRecord() {
+		this(UUID.randomUUID().toString());
 	}
 
-	public DefaultSessionRecord(String id, KnowledgeBase kb, Date creationDate, Date lastEditDate) {
+	public DefaultSessionRecord(String id) {
+		this(id, new Date());
+	}
+
+	public DefaultSessionRecord(String id, Date date) {
+		this(id, date, date);
+	}
+
+	public DefaultSessionRecord(String id, Date creationDate, Date lastEditDate) {
 		this.id = id;
-		this.kb = kb;
 		this.creationDate = creationDate;
 		this.lastEditDate = lastEditDate;
 	}
@@ -103,11 +104,6 @@ public class DefaultSessionRecord implements SessionRecord {
 	@Override
 	public List<FactRecord> getValueFacts() {
 		return Collections.unmodifiableList(valueFacts);
-	}
-
-	@Override
-	public KnowledgeBase getKnowledgeBase() {
-		return kb;
 	}
 
 	@Override

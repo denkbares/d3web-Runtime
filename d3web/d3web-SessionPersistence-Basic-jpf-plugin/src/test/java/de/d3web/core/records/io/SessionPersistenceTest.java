@@ -189,13 +189,13 @@ public class SessionPersistenceTest {
 		File file = new File("target/temp/file.xml");
 		sessionRepository.save(file);
 		SingleXMLSessionRepository reloadedRepository = new SingleXMLSessionRepository();
-		reloadedRepository.load(kb, file);
+		reloadedRepository.load(file);
 		// Test iterator
 		Iterator<SessionRecord> iterator = reloadedRepository.iterator();
 		SessionRecord record1 = iterator.next();
 		SessionRecord record2 = iterator.next();
-		Session session1 = SessionConversionFactory.copyToSession(record1);
-		Session session2 = SessionConversionFactory.copyToSession(record2);
+		Session session1 = SessionConversionFactory.copyToSession(kb, record1);
+		Session session2 = SessionConversionFactory.copyToSession(kb, record2);
 		// the sorting in the hashmap isn't stable, so we sort manually
 		if (session1.getLastChangeDate().before(session2.getLastChangeDate())) {
 			checkValuesAfterReload(session1, session2);
@@ -206,19 +206,10 @@ public class SessionPersistenceTest {
 
 		// testing error behaviour
 		SingleXMLSessionRepository errorTestingRepository = new SingleXMLSessionRepository();
-		// tests if the repository stops loading when the kb is null
+		// tests if the repository stops loading if the file is null
 		boolean error = false;
 		try {
-			errorTestingRepository.load(null, file);
-		}
-		catch (NullPointerException e) {
-			error = true;
-		}
-		Assert.assertTrue(error);
-		error = false;
-		// test if file is null
-		try {
-			errorTestingRepository.load(kb, null);
+			errorTestingRepository.load(null);
 		}
 		catch (NullPointerException e) {
 			error = true;
@@ -235,7 +226,7 @@ public class SessionPersistenceTest {
 		error = false;
 		// Tests if file is a directory
 		try {
-			errorTestingRepository.load(kb, directory);
+			errorTestingRepository.load(directory);
 		}
 		catch (IllegalArgumentException e) {
 			error = true;
@@ -257,20 +248,9 @@ public class SessionPersistenceTest {
 				"Something manipulated test by creating a folder nofile.file in target/temp",
 				noFile.isDirectory());
 		try {
-			errorTestingRepository.load(kb, directory);
+			errorTestingRepository.load(directory);
 		}
 		catch (IllegalArgumentException e) {
-			error = true;
-		}
-		Assert.assertTrue(error);
-		error = false;
-		// Test if an error occurs when the IDs of the KB are different
-		KnowledgeBase kb2 = new KnowledgeBase();
-		kb2.setId("Test2");
-		try {
-			errorTestingRepository.load(kb2, file);
-		}
-		catch (IOException e) {
 			error = true;
 		}
 		Assert.assertTrue(error);
@@ -286,7 +266,7 @@ public class SessionPersistenceTest {
 		sessionRepository.save(directory);
 		Assert.assertEquals(2, directory.listFiles().length);
 		MultipleXMLSessionRepository reloadedRepository = new MultipleXMLSessionRepository();
-		reloadedRepository.load(kb, directory);
+		reloadedRepository.load(directory);
 		// Test copying - nothing has changed, the files should be simply copied
 		for (File f : directory.listFiles()) {
 			markXMLFile(f);
@@ -301,7 +281,7 @@ public class SessionPersistenceTest {
 		}
 		Assert.assertTrue(allMarked);
 		MultipleXMLSessionRepository rereloadedRepository = new MultipleXMLSessionRepository();
-		rereloadedRepository.load(kb, directory2);
+		rereloadedRepository.load(directory2);
 		File[] files = directory2.listFiles();
 		Assert.assertEquals(2, files.length);
 		// Test saving to the same location without modifing something (the
@@ -337,25 +317,18 @@ public class SessionPersistenceTest {
 
 		// Test getting Records by Session id, getting them with iterator has a
 		// random order (depending on the alphabetical order of the Session ids)
-		Session session = SessionConversionFactory.copyToSession(reloadedRepository.getSessionRecordById(sessionID));
-		Session session2 = SessionConversionFactory.copyToSession(reloadedRepository.getSessionRecordById(session2ID));
+		Session session = SessionConversionFactory.copyToSession(kb,
+				reloadedRepository.getSessionRecordById(sessionID));
+		Session session2 = SessionConversionFactory.copyToSession(kb,
+				reloadedRepository.getSessionRecordById(session2ID));
 		checkValuesAfterReload(session, session2);
 
 		// Test error behaviour
 		MultipleXMLSessionRepository errorTestingRepository = new MultipleXMLSessionRepository();
-		// tests if the repository stops loading when the kb is null
+		// tests if the repository stops loading if the folder is null
 		boolean error = false;
 		try {
-			errorTestingRepository.load(null, directory);
-		}
-		catch (NullPointerException e) {
-			error = true;
-		}
-		Assert.assertTrue(error);
-		error = false;
-		// testing folder = null
-		try {
-			errorTestingRepository.load(kb, null);
+			errorTestingRepository.load(null);
 		}
 		catch (NullPointerException e) {
 			error = true;
@@ -374,7 +347,7 @@ public class SessionPersistenceTest {
 		File file = new File("target/temp/aFile.error");
 		file.createNewFile();
 		try {
-			errorTestingRepository.load(kb, file);
+			errorTestingRepository.load(file);
 		}
 		catch (IllegalArgumentException e) {
 			error = true;
@@ -514,8 +487,7 @@ public class SessionPersistenceTest {
 		File file = new File("src/test/resources/parseException.xml");
 		expected = null;
 		try {
-			SessionPersistenceManager.getInstance().loadSessions(file, new DummyProgressListener(),
-					kb);
+			SessionPersistenceManager.getInstance().loadSessions(file, new DummyProgressListener());
 		}
 		catch (IOException e) {
 			expected = e.getCause();
@@ -538,8 +510,7 @@ public class SessionPersistenceTest {
 		Element element = doc.createElement(UndefinedHandler.elementName);
 		doc.appendChild(element);
 		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
-		Object readFragment = spm.readFragment(
-				element, null);
+		Object readFragment = spm.readFragment(element, null);
 		Assert.assertTrue(readFragment instanceof UndefinedValue);
 		Element writeFragment = spm.writeFragment(UndefinedValue.getInstance(), doc);
 		Assert.assertTrue(element.isEqualNode(writeFragment));
@@ -548,14 +519,12 @@ public class SessionPersistenceTest {
 	@Test
 	public void testDefaultSessionRepository() {
 		SessionRepository repository = new DefaultSessionRepository();
-		Assert.assertNull(repository.getKnowledgeBase());
 		repository.add(sessionRecord);
 		repository.add(sessionRecord);
 		countRecords(1, repository);
 		Assert.assertNotNull(repository.getSessionRecordById(sessionID));
-		Assert.assertNotNull(repository.getKnowledgeBase());
 		DefaultSessionRecord newSessionRecordWithSameID = new DefaultSessionRecord(
-				sessionRecord.getId(), sessionRecord.getKnowledgeBase(),
+				sessionRecord.getId(),
 				sessionRecord.getCreationDate(), sessionRecord.getLastChangeDate());
 		repository.add(newSessionRecordWithSameID);
 		countRecords(1, repository);
@@ -609,11 +578,10 @@ public class SessionPersistenceTest {
 	}
 
 	@Test
-	public void testDefaultSessionRecord() throws InterruptedException {
+	public void testDefaultSessionRecord() {
 		// Testing methods not used in other Tests yet
-		SessionRecord record = new DefaultSessionRecord(kb);
-		Thread.sleep(1);
-		Date later = new Date();
+		SessionRecord record = new DefaultSessionRecord();
+		Date later = new Date(System.currentTimeMillis() + 1);
 		Assert.assertFalse(later.equals(record.getLastChangeDate()));
 		record.touch(later);
 		Assert.assertEquals(later, record.getLastChangeDate());
@@ -622,7 +590,7 @@ public class SessionPersistenceTest {
 	@Test(expected = IOException.class)
 	public void missingProblemSolver() throws IOException {
 		sessionRecord.addValueFact(new FactRecord(questionNum, "fantasyPSM", new NumValue(5)));
-		SessionConversionFactory.copyToSession(sessionRecord);
+		SessionConversionFactory.copyToSession(kb, sessionRecord);
 	}
 
 	/**
@@ -635,7 +603,7 @@ public class SessionPersistenceTest {
 	 */
 	@Test
 	public void globalFacts() throws IOException {
-		Session session = SessionConversionFactory.copyToSession(sessionRecord2);
+		Session session = SessionConversionFactory.copyToSession(kb, sessionRecord2);
 		Blackboard blackboard = session.getBlackboard();
 		blackboard.addValueFact(FactFactory.createFact(questionOC, Unknown.getInstance(),
 				this, session.getPSMethodInstance(PSMethodAbstraction.class)));
@@ -662,24 +630,24 @@ public class SessionPersistenceTest {
 	public void noRecordsFolder() throws IOException, ParseException {
 		File directory = new File("src/test/resources/noRecordsFolder");
 		MultipleXMLSessionRepository repository = new MultipleXMLSessionRepository();
-		repository.load(kb, directory);
+		repository.load(directory);
 		Assert.assertFalse(repository.iterator().hasNext());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalStateException.class)
 	public void fileWithMoreRecords() throws IOException, ParseException {
 		File directory = new File("src/test/resources/FileWithMoreRecords");
 		MultipleXMLSessionRepository repository = new MultipleXMLSessionRepository();
-		repository.load(kb, directory);
-		SessionConversionFactory.copyToSession(repository.iterator().next());
+		repository.load(directory);
+		SessionConversionFactory.copyToSession(kb, repository.iterator().next());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalStateException.class)
 	public void fileWithNoRecords() throws IOException, ParseException {
 		File directory = new File("src/test/resources/FileWithNoRecords");
 		MultipleXMLSessionRepository repository = new MultipleXMLSessionRepository();
-		repository.load(kb, directory);
-		SessionConversionFactory.copyToSession(repository.iterator().next());
+		repository.load(directory);
+		SessionConversionFactory.copyToSession(kb, repository.iterator().next());
 	}
 
 	@Test

@@ -20,8 +20,6 @@ package de.d3web.core.records;
 
 import java.util.Iterator;
 
-import de.d3web.core.knowledge.KnowledgeBase;
-
 /**
  * This interface specifies the methods required for all SessionRepository
  * implementations.
@@ -90,13 +88,5 @@ public interface SessionRepository {
 	 *         null.
 	 */
 	public SessionRecord getSessionRecordById(String id);
-
-	/**
-	 * Returns the KnowledgeBase of the SessionRepository
-	 * 
-	 * @created 16.09.2010
-	 * @return KnowledgeBase
-	 */
-	public KnowledgeBase getKnowledgeBase();
 
 }

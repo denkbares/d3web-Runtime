@@ -75,11 +75,11 @@ public class FragmentManager {
 	 *         {@link FragmentHandler} is available
 	 * @throws IOException if an IO error occurs during the read operation
 	 */
-	public Object readFragment(Element child, KnowledgeBase knowledgeBase) throws NoSuchFragmentHandlerException, IOException {
+	public Object readFragment(Element child, KnowledgeBase kb) throws NoSuchFragmentHandlerException, IOException {
 		for (Extension plugin : fragmentPlugins) {
 			FragmentHandler handler = (FragmentHandler) plugin.getSingleton();
 			if (handler.canRead(child)) {
-				return handler.read(knowledgeBase, child);
+				return handler.read(kb, child);
 			}
 		}
 		throw new NoSuchFragmentHandlerException("No fragment handler found for: " + child);

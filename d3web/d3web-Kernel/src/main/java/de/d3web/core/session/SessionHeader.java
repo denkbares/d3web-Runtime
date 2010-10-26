@@ -20,7 +20,6 @@ package de.d3web.core.session;
 
 import java.util.Date;
 
-import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.info.DCMarkedUp;
 import de.d3web.core.session.protocol.Protocol;
@@ -32,14 +31,6 @@ import de.d3web.core.session.protocol.Protocol;
  * @created 27.09.2010
  */
 public interface SessionHeader extends IDObject, DCMarkedUp {
-
-	/**
-	 * Returns the {@link KnowledgeBase} instance that is used in this session
-	 * for the problem-solving task.
-	 * 
-	 * @return the knowledge base used in this session
-	 */
-	public KnowledgeBase getKnowledgeBase();
 
 	// --- full implementation is reserved for later implementation ---
 	// (inkrement 2)
@@ -76,4 +67,5 @@ public interface SessionHeader extends IDObject, DCMarkedUp {
 	 * @return the creation date
 	 */
 	public Date getCreationDate();
+
 }

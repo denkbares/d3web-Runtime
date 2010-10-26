@@ -29,12 +29,22 @@ import de.d3web.core.session.Value;
  */
 public class FactRecord {
 
-	private TerminologyObject object;
-	private String psm;
-	private Value value;
+	private final String objectName;
+	private final String psm;
+	private final Value value;
 
-	public TerminologyObject getObject() {
-		return object;
+	public FactRecord(String objectName, String psm, Value value) {
+		this.objectName = objectName;
+		this.psm = psm;
+		this.value = value;
+	}
+
+	public FactRecord(TerminologyObject object, String psm, Value value) {
+		this(object.getName(), psm, value);
+	}
+
+	public String getObjectName() {
+		return objectName;
 	}
 
 	public String getPsm() {
@@ -43,13 +53,6 @@ public class FactRecord {
 
 	public Value getValue() {
 		return value;
-	}
-
-	public FactRecord(TerminologyObject object, String psm, Value value) {
-		super();
-		this.object = object;
-		this.psm = psm;
-		this.value = value;
 	}
 
 }

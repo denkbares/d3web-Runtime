@@ -23,8 +23,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import de.d3web.core.knowledge.KnowledgeBase;
-
 /**
  * Default Implementation of the SessionRepository Interface (@link
  * SessionRepository). This implementation cannot persist the SessionRecords
@@ -86,14 +84,6 @@ public class DefaultSessionRepository implements SessionRepository {
 		if (id.matches("\\s+")) throw new IllegalArgumentException(id
 				+ " is not a valid ID.");
 		return sessionRecords.get(id);
-	}
-
-	@Override
-	public KnowledgeBase getKnowledgeBase() {
-		if (sessionRecords.values().size() > 0) {
-			return iterator().next().getKnowledgeBase();
-		}
-		return null;
 	}
 
 }

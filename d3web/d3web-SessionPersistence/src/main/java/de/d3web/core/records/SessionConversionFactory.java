@@ -28,6 +28,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethod.Type;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.InterviewObject;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Rating;
@@ -57,10 +58,9 @@ public final class SessionConversionFactory {
 	private SessionConversionFactory() {
 	}
 
-	public static Session copyToSession(SessionRecord source) throws IOException {
+	public static Session copyToSession(KnowledgeBase knowledgeBase, SessionRecord source) throws IOException {
 		DefaultSession target = SessionFactory.createSession(source.getId(),
-				source.getKnowledgeBase(),
-				source.getCreationDate());
+				knowledgeBase, source.getCreationDate());
 		target.setName(source.getName());
 		target.setDCMarkup(source.getDCMarkup());
 
@@ -73,8 +73,8 @@ public final class SessionConversionFactory {
 		try {
 			List<Fact> valueFacts = new LinkedList<Fact>();
 			List<Fact> interviewFacts = new LinkedList<Fact>();
-			getFacts(source.getValueFacts(), psMethods, valueFacts);
-			getFacts(source.getInterviewFacts(), psMethods, interviewFacts);
+			getFacts(knowledgeBase, source.getValueFacts(), psMethods, valueFacts);
+			getFacts(knowledgeBase, source.getInterviewFacts(), psMethods, interviewFacts);
 			for (Fact fact : valueFacts) {
 				target.getBlackboard().addValueFact(fact);
 			}
@@ -98,7 +98,7 @@ public final class SessionConversionFactory {
 		return target;
 	}
 
-	private static void getFacts(List<FactRecord> factRecords, Map<String, PSMethod> psMethods, List<Fact> valueFacts) throws IOException {
+	private static void getFacts(KnowledgeBase kb, List<FactRecord> factRecords, Map<String, PSMethod> psMethods, List<Fact> valueFacts) throws IOException {
 		for (FactRecord factRecord : factRecords) {
 			String psm = factRecord.getPsm();
 			if (psm != null) {
@@ -106,8 +106,13 @@ public final class SessionConversionFactory {
 				if (psMethod != null) {
 					if (psMethod.hasType(Type.source)) {
 						Value value = factRecord.getValue();
-						valueFacts.add(new DefaultFact(factRecord.getObject(), value, psMethod,
-								psMethod));
+						TerminologyObject object = kb.searchObjectForName(factRecord.getObjectName());
+						if (object == null) {
+							throw new IOException(
+									"Object " + factRecord.getObjectName() +
+											" not found in knowledge base");
+						}
+						valueFacts.add(new DefaultFact(object, value, psMethod, psMethod));
 					}
 				}
 				else {
@@ -119,8 +124,8 @@ public final class SessionConversionFactory {
 	}
 
 	public static SessionRecord copyToSessionRecord(Session source) {
-		DefaultSessionRecord target = new DefaultSessionRecord(source.getId(),
-				source.getKnowledgeBase(),
+		DefaultSessionRecord target = new DefaultSessionRecord(
+				source.getId(),
 				source.getCreationDate(), source.getLastChangeDate());
 		target.setName(source.getName());
 		target.setDCMarkup(source.getDCMarkup());

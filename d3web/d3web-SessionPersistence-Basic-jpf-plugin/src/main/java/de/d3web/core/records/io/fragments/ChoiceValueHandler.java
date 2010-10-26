@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
 
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 
 /**
@@ -40,15 +40,14 @@ public class ChoiceValueHandler implements FragmentHandler {
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		Choice answer = kb.searchAnswerChoice(element.getTextContent());
-		return new ChoiceValue(answer);
+		return new ChoiceValue(new ChoiceID(element.getTextContent()));
 	}
 
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
 		ChoiceValue value = (ChoiceValue) object;
 		Element element = doc.createElement(elementName);
-		element.setTextContent(value.getAnswerChoiceID());
+		element.setTextContent(value.getChoiceID().getText());
 		return element;
 	}
 

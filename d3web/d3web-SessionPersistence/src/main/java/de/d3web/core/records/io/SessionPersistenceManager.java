@@ -37,7 +37,6 @@ import de.d3web.core.io.FragmentManager;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.records.DefaultSessionRecord;
 import de.d3web.core.records.SessionRecord;
 import de.d3web.plugin.Extension;
@@ -82,14 +81,20 @@ public final class SessionPersistenceManager extends FragmentManager {
 				EXTENDED_POINT_FRAGMENTHANDLER);
 	}
 
-	public void saveSessions(File file, Collection<SessionRecord> sessionRecord, ProgressListener listener, KnowledgeBase kb) throws IOException {
+	public void saveSessions(File file, Collection<SessionRecord> sessionRecord, ProgressListener listener) throws IOException {
 		updateHandler();
 		Document doc = Util.createEmptyDocument();
 		Element repElement = doc.createElement(REPOSITORY_TAG);
 		doc.appendChild(repElement);
-		repElement.setAttribute("kbID", kb.getId());
 		Date latestChange = new Date(0);
+		int counter = 0;
 		for (SessionRecord co : sessionRecord) {
+			// update progress
+			float percent = sessionRecord.size() / (float) counter++;
+			listener.updateProgress(
+					percent * 0.7f,
+					"writing record " + counter + " of " + sessionRecord.size());
+
 			if (co.getLastChangeDate().after(latestChange)) {
 				latestChange = co.getLastChangeDate();
 			}
@@ -104,39 +109,46 @@ public final class SessionPersistenceManager extends FragmentManager {
 			repElement.appendChild(sessionElement);
 		}
 		file.setLastModified(latestChange.getTime());
+
+		listener.updateProgress(0.7f, "writing records to disc");
 		OutputStream stream = new FileOutputStream(file);
 		try {
 			Util.writeDocumentToOutputStream(doc, stream);
+			listener.updateProgress(1f, "writing records done");
 		}
 		finally {
 			stream.close();
 		}
 	}
 
-	public Collection<SessionRecord> loadSessions(File file, ProgressListener listener, KnowledgeBase kb) throws IOException {
+	public Collection<SessionRecord> loadSessions(File file, ProgressListener listener) throws IOException {
 		updateHandler();
 		FileInputStream stream = new FileInputStream(file);
 		Collection<SessionRecord> sessionRecords = new ArrayList<SessionRecord>();
 		try {
+			listener.updateProgress(0.0f, "reading file from disc");
 			Document doc = Util.streamToDocument(stream);
 			List<Element> childNodes = XMLUtil.getElementList(doc.getChildNodes());
 			if (childNodes.size() == 1
 					&& childNodes.get(0).getNodeName().equalsIgnoreCase(REPOSITORY_TAG)) {
 				Element repositoryElement = childNodes.get(0);
-				if (!repositoryElement.getAttribute("kbID").equals(kb.getId())) {
-					throw new IOException(
-							"KnowledgeBase ID does not aggree with the Repository");
-				}
 				List<Element> sessionElements = XMLUtil.getElementList(repositoryElement.getChildNodes());
+				int max = sessionElements.size();
+				int counter = 0;
 				for (Element e : sessionElements) {
+					// update progress
+					listener.updateProgress(
+							0.3f + max / (float) counter,
+							"parsing session " + counter + " of " + max);
+
 					String id = e.getAttribute("id");
 					String created = e.getAttribute("created");
 					String changed = e.getAttribute("changed");
 					try {
 						Date creationDate = DATE_FORMAT.parse(created);
 						Date dateOfLastEdit = DATE_FORMAT.parse(changed);
-						DefaultSessionRecord sr = new DefaultSessionRecord(id, kb, creationDate,
-								dateOfLastEdit);
+						DefaultSessionRecord sr =
+								new DefaultSessionRecord(id, creationDate, dateOfLastEdit);
 						for (Extension extension : handler) {
 							SessionPersistenceHandler theHandler = (SessionPersistenceHandler) extension.getSingleton();
 							theHandler.read(e, sr, listener);
@@ -148,6 +160,7 @@ public final class SessionPersistenceManager extends FragmentManager {
 					}
 				}
 			}
+			listener.updateProgress(1f, "parsing done");
 			return sessionRecords;
 		}
 		finally {

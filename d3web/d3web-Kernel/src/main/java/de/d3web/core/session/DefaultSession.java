@@ -64,10 +64,9 @@ import de.d3web.plugin.PluginManager;
  */
 public class DefaultSession implements Session {
 
-	// TODO knowledge base, interview and propagation controller should be final
-	private KnowledgeBase kb;
-	private DefaultPropagationManager propagationController;
-	private Interview interview;
+	private final KnowledgeBase kb;
+	private final DefaultPropagationManager propagationController;
+	private final Interview interview;
 
 	private Map<CaseObjectSource, SessionObject> dynamicStore;
 
@@ -90,9 +89,20 @@ public class DefaultSession implements Session {
 
 	protected DefaultSession(String id, KnowledgeBase knowledgebase, Date creationDate, boolean psm) {
 		this.id = id;
-		created = creationDate;
-		edited = new Date();
-		initSession(knowledgebase);
+		this.created = creationDate;
+		this.edited = new Date();
+		this.kb = knowledgebase;
+		this.blackboard = new DefaultBlackboard(this);
+		this.dcMarkup = new DCMarkup();
+		this.dynamicStore = new HashMap<CaseObjectSource, SessionObject>();
+		// add problem-solving methods used for this case
+		this.usedPSMethods = new LinkedList<PSMethod>();
+		this.propagationController = new DefaultPropagationManager(this);
+
+		// Interview should be defined very late, since it uses blackboard
+		this.interview = new DefaultInterview(this);
+		this.interview.setFormStrategy(new NextUnansweredQuestionFormStrategy());
+		this.protocol = new DefaultProtocol();
 		if (psm) {
 			// register some common problem solving methods
 			// first add the methods
@@ -104,6 +114,8 @@ public class DefaultSession implements Session {
 												// addUsedPSMethod, TODO remove
 												// this comment when private
 		}
+		// TODO: add knowlegde base id, name, version
+		// into the case header (dc markup?, properties?)
 	}
 
 	/**
@@ -158,21 +170,6 @@ public class DefaultSession implements Session {
 	DefaultSession(String id, KnowledgeBase knowledgebase, FormStrategy formStrategy, Date creationDate) {
 		this(id, knowledgebase, creationDate);
 		getInterview().setFormStrategy(formStrategy);
-	}
-
-	private void initSession(KnowledgeBase kb) {
-		this.kb = kb;
-		this.blackboard = new DefaultBlackboard(this);
-		this.dcMarkup = new DCMarkup();
-		this.dynamicStore = new HashMap<CaseObjectSource, SessionObject>();
-		// add problem-solving methods used for this case
-		this.usedPSMethods = new LinkedList<PSMethod>();
-		this.propagationController = new DefaultPropagationManager(this);
-
-		// Interview should be defined very late, since it uses blackboard
-		this.interview = new DefaultInterview(this);
-		this.interview.setFormStrategy(new NextUnansweredQuestionFormStrategy());
-		this.protocol = new DefaultProtocol();
 	}
 
 	private void checkStateAndInsertPSM(KnowledgeBase kb, PSConfig psConfig) {

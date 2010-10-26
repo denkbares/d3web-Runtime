@@ -28,8 +28,6 @@ import org.w3c.dom.Element;
 import de.d3web.core.io.NoSuchFragmentHandlerException;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.records.FactRecord;
 import de.d3web.core.records.SessionRecord;
 import de.d3web.core.session.Value;
@@ -52,11 +50,10 @@ public class FactHandler implements SessionPersistenceHandler {
 				List<FactRecord> interviewFacts = new LinkedList<FactRecord>();
 				for (Element factCategorieElement : factCategorieList) {
 					if (factCategorieElement.getNodeName().equals("valueFacts")) {
-						getFacts(sessionRecord.getKnowledgeBase(), factCategorieElement, valueFacts);
+						getFacts(factCategorieElement, valueFacts);
 					}
 					else if (factCategorieElement.getNodeName().equals("interviewFacts")) {
-						getFacts(sessionRecord.getKnowledgeBase(), factCategorieElement,
-								interviewFacts);
+						getFacts(factCategorieElement, interviewFacts);
 					}
 				}
 				for (FactRecord fact : valueFacts) {
@@ -69,18 +66,16 @@ public class FactHandler implements SessionPersistenceHandler {
 		}
 	}
 
-	private void getFacts(KnowledgeBase kb, Element factCategorieElement, List<FactRecord> facts) throws NoSuchFragmentHandlerException, IOException {
+	private void getFacts(Element factCategorieElement, List<FactRecord> facts) throws NoSuchFragmentHandlerException, IOException {
 		for (Element factElement : XMLUtil.getElementList(factCategorieElement.getChildNodes())) {
-			String oName = factElement.getAttribute("objectName");
-			TerminologyObject idObject = kb.searchObjectForName(
-					oName);
+			String idObjectName = factElement.getAttribute("objectName");
 			String psmName = factElement.getAttribute("psm");
 			if (psmName.length() == 0) psmName = null;
 			List<Element> valueNodes = XMLUtil.getElementList(factElement.getChildNodes());
-			Object readFragment = SessionPersistenceManager.getInstance().readFragment(
-					valueNodes.get(0), kb);
-			FactRecord fact = new FactRecord(idObject, psmName,
-					(Value) readFragment);
+			SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
+			Object readFragment = spm.readFragment(valueNodes.get(0), null);
+			FactRecord fact = new FactRecord(
+					idObjectName, psmName, (Value) readFragment);
 			facts.add(fact);
 		}
 	}
@@ -102,7 +97,7 @@ public class FactHandler implements SessionPersistenceHandler {
 		for (FactRecord fact : facts) {
 			Element factElement = doc.createElement("fact");
 			factsElement.appendChild(factElement);
-			factElement.setAttribute("objectName", fact.getObject().getName());
+			factElement.setAttribute("objectName", fact.getObjectName());
 			String psm = fact.getPsm();
 			if (psm != null) factElement.setAttribute("psm", psm);
 			factElement.appendChild(SessionPersistenceManager.getInstance().writeFragment(

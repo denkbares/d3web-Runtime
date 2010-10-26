@@ -24,6 +24,7 @@ import java.util.List;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationManager;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
@@ -40,6 +41,14 @@ import de.d3web.core.session.interviewmanager.Interview;
  * @author Norman Bruemmer, joba, Volker Belli (denkbares GmbH)
  */
 public interface Session extends SessionHeader {
+
+	/**
+	 * Returns the {@link KnowledgeBase} instance that is used in this session
+	 * for the problem-solving task.
+	 * 
+	 * @return the knowledge base used in this session
+	 */
+	public KnowledgeBase getKnowledgeBase();
 
 	// --- manage problem solvers ---
 	/**

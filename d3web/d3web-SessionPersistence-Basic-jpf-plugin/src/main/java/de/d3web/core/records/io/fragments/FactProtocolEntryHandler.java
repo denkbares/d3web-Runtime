@@ -63,7 +63,7 @@ public class FactProtocolEntryHandler implements FragmentHandler {
 			if (children.size() != 1) {
 				throw new IOException("multiple values are not allowed for a fact entry");
 			}
-			Value value = (Value) sm.readFragment(children.get(0), kb);
+			Value value = (Value) sm.readFragment(children.get(0), null);
 
 			// and return the fact
 			return new FactProtocolEntry(date, name, solver, value);

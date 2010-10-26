@@ -974,5 +974,4 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer, DCMarkedUp {
 	public InfoStore getInfoStore() {
 		return infoStore;
 	}
-
 }

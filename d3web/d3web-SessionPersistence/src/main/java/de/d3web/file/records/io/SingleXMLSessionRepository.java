@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 import de.d3web.core.io.progress.DummyProgressListener;
-import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.records.DefaultSessionRepository;
 import de.d3web.core.records.SessionRecord;
 import de.d3web.core.records.io.SessionPersistenceManager;
@@ -38,9 +38,11 @@ import de.d3web.core.records.io.SessionPersistenceManager;
  */
 public class SingleXMLSessionRepository extends DefaultSessionRepository {
 
-	public void load(KnowledgeBase kb, File file) throws IOException {
-		if (kb == null) throw new NullPointerException(
-				"KnowledgeBase is null. Unable to load SessionRepository.");
+	public void load(File file) throws IOException {
+		this.load(file, new DummyProgressListener());
+	}
+
+	public void load(File file, ProgressListener listener) throws IOException {
 		if (file == null) {
 			throw new NullPointerException("File is null. Unable to load SessionRepository.");
 		}
@@ -49,14 +51,17 @@ public class SingleXMLSessionRepository extends DefaultSessionRepository {
 					"File doesn't exist or is a directory. Unable to load SessionRepository.");
 		}
 		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
-		Collection<SessionRecord> records = spm.loadSessions(file,
-				new DummyProgressListener(), kb);
+		Collection<SessionRecord> records = spm.loadSessions(file, listener);
 		for (SessionRecord sr : records) {
 			add(sr);
 		}
 	}
 
 	public void save(File file) throws IOException {
+		this.save(file, new DummyProgressListener());
+	}
+
+	public void save(File file, ProgressListener listener) throws IOException {
 		if (file == null) throw new NullPointerException(
 				"File is null. Unable to save SessionRepository.");
 		if (file.isDirectory()) {
@@ -68,8 +73,7 @@ public class SingleXMLSessionRepository extends DefaultSessionRepository {
 			parentFile.mkdirs();
 		}
 		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
-		spm.saveSessions(file, sessionRecords.values(), new DummyProgressListener(),
-				this.getKnowledgeBase());
+		spm.saveSessions(file, sessionRecords.values(), listener);
 	}
 
 }

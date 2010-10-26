@@ -32,8 +32,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.io.progress.DummyProgressListener;
+import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.knowledge.InfoStore;
-import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.records.DefaultSessionRepository;
 import de.d3web.core.records.FactRecord;
@@ -65,21 +65,40 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	public void load(KnowledgeBase kb, File folder) throws IOException, ParseException {
-		if (kb == null) throw new NullPointerException(
-				"KnowledgeBase is null. Unable to load SessionRepository.");
+	public void load(File folder) throws IOException, ParseException {
+		this.load(folder, new DummyProgressListener());
+	}
+
+	/**
+	 * Loads the Session Records from a folder. The files are not parsed
+	 * immediately, they will be parsed when someone accesses them. Files not
+	 * ending on .xml will be ignored.
+	 * 
+	 * @created 20.09.2010
+	 * @param kb KnowledgeBase
+	 * @param folder Folder which represents the SessionRepository
+	 * @param listener the progress listener to observe the progress of reading
+	 * @throws IOException
+	 * @throws ParseException
+	 */
+	public void load(File folder, ProgressListener listener) throws IOException, ParseException {
 		if (folder == null) throw new NullPointerException(
 				"File is null. Unable to load SessionRepository.");
 		if (!folder.isDirectory()) throw new IllegalArgumentException(
 				"This implementation of the SessionRepositoryPersistenceHandler requires a directory.");
-		for (File f : folder.listFiles()) {
+		File[] listFiles = folder.listFiles();
+		int counter = 0;
+		for (File f : listFiles) {
 			String name = f.getName();
+			float percent = listFiles.length / (float) counter++;
+			listener.updateProgress(percent, name);
 			if (!f.isFile() || !name.endsWith(".xml")) continue;
 			int underscore = name.indexOf('_');
 			Date date = FILE_DATE_FORMAT.parse(name.substring(0, underscore));
 			String id = name.substring(underscore + 1, name.length() - 4);
-			add(new FileRecord(id, kb, date, f));
+			add(new FileRecord(id, date, f));
 		}
+		listener.updateProgress(1f, "loading done");
 	}
 
 	/**
@@ -92,13 +111,31 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 	 * @throws IOException
 	 */
 	public void save(File folder) throws IOException {
+		this.save(folder, new DummyProgressListener());
+	}
+
+	/**
+	 * Saves the SessionRepository to a Folder. For each session, an xml File
+	 * will be created (Filename: id.xml). If there is a file with the same
+	 * name, it will be overwritten.
+	 * 
+	 * @created 20.09.2010
+	 * @param folder Folder where this Repository should be saved to
+	 * @param listener the progress listener to observe the progress of writing
+	 * @throws IOException
+	 */
+	public void save(File folder, ProgressListener listener) throws IOException {
 		if (folder == null) throw new NullPointerException(
 				"File is null. Unable to save SessionRepository.");
 		if (folder.exists() && !folder.isDirectory()) throw new IllegalArgumentException(
 				"This implementation of the SessionRepositoryPersistenceHandler requires a directory.");
 		folder.mkdirs();
 		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
-		for (SessionRecord sr : sessionRecords.values()) {
+		Collection<SessionRecord> records = sessionRecords.values();
+		int counter = 0;
+		for (SessionRecord sr : records) {
+			float percent = records.size() / (float) counter++;
+			listener.updateProgress(percent, sr.getName());
 			String date = FILE_DATE_FORMAT.format(sr.getCreationDate());
 			File file = new File(folder.getAbsolutePath() + "/" + date + "_" + sr.getId()
 					+ ".xml");
@@ -116,9 +153,10 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 			else {
 				List<SessionRecord> templist = new LinkedList<SessionRecord>();
 				templist.add(sr);
-				spm.saveSessions(file, templist, new DummyProgressListener(), sr.getKnowledgeBase());
+				spm.saveSessions(file, templist, new DummyProgressListener());
 			}
 		}
+		listener.updateProgress(1f, "writing session records to disc done");
 	}
 
 	/**
@@ -136,14 +174,10 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 		private boolean modified = false;
 		private String id;
 		private Date created;
-
-		private KnowledgeBase kb;
-
 		private SessionRecord realRecord = null;
 
-		public FileRecord(String id, KnowledgeBase kb, Date date, File f) {
+		public FileRecord(String id, Date date, File f) {
 			this.id = id;
-			this.kb = kb;
 			this.created = date;
 			this.file = f;
 		}
@@ -167,7 +201,7 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 			Collection<SessionRecord> loadedSessions;
 			try {
 				loadedSessions = SessionPersistenceManager.getInstance().loadSessions(
-						file, new DummyProgressListener(), kb);
+						file, new DummyProgressListener());
 				if (loadedSessions.size() > 1) {
 					throw new IOException("The file " + file.getCanonicalPath()
 							+ " contains more than one sessionrecord.");
@@ -181,8 +215,7 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 				}
 			}
 			catch (IOException e) {
-				// TODO: throw something more fitting
-				throw new IllegalArgumentException(e);
+				throw new IllegalStateException("cannot parse record xml file", e);
 			}
 		}
 
@@ -227,11 +260,6 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 			if (realRecord == null) {
 				parseSessionRecord();
 			}
-		}
-
-		@Override
-		public KnowledgeBase getKnowledgeBase() {
-			return kb;
 		}
 
 		@Override

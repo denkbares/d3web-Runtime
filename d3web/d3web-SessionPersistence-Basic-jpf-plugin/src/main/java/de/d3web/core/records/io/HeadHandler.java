@@ -41,24 +41,18 @@ public class HeadHandler implements SessionPersistenceHandler {
 	public void read(Element sessionElement, SessionRecord sessionRecord,
 			ProgressListener listener) throws IOException {
 		List<Element> elementList = XMLUtil.getElementList(sessionElement.getChildNodes());
-		DCMarkupHandler dcMarkupHandler = new DCMarkupHandler();
-		DCMarkup dcMarkup = null;
-		for (Element e : elementList) {
-			if (dcMarkupHandler.canRead(e)) {
-				Object read = dcMarkupHandler.read(sessionRecord.getKnowledgeBase(), e);
-				dcMarkup = (DCMarkup) read;
-				break;
-			}
-		}
-		if (dcMarkup != null) {
+		if (elementList.size() > 0) {
+			SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
+			DCMarkup dcMarkup = (DCMarkup) new DCMarkupHandler().read(null, elementList.get(0));
 			sessionRecord.setDCMarkup(dcMarkup);
-		}// else error?
+		}
 	}
 
 	@Override
 	public void write(Element sessionElement, SessionRecord sessionObject,
 			ProgressListener listener) throws IOException {
-		Element e = new DCMarkupHandler().write(sessionObject.getDCMarkup(),
+		DCMarkup dcMarkup = sessionObject.getDCMarkup();
+		Element e = new DCMarkupHandler().write(dcMarkup,
 				sessionElement.getOwnerDocument());
 		sessionElement.appendChild(e);
 	}

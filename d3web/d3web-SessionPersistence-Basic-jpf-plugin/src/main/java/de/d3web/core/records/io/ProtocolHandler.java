@@ -44,13 +44,12 @@ public class ProtocolHandler implements SessionPersistenceHandler {
 	public void read(Element sessionElement, SessionRecord sessionRecord, ProgressListener listener) throws IOException {
 		List<Element> handlerNodes = XMLUtil.getElementList(sessionElement.getChildNodes());
 		Protocol protocol = sessionRecord.getProtocol();
+		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
 		for (Element handlerNode : handlerNodes) {
 			if (handlerNode.getNodeName().equalsIgnoreCase(HANDLER_ELEMENT_NAME)) {
 				List<Element> entryNodes = XMLUtil.getElementList(handlerNode.getChildNodes());
 				for (Element entryNode : entryNodes) {
-					ProtocolEntry entry =
-							(ProtocolEntry) SessionPersistenceManager.getInstance().readFragment(
-									entryNode, sessionRecord.getKnowledgeBase());
+					ProtocolEntry entry = (ProtocolEntry) spm.readFragment(entryNode, null);
 					protocol.addEntry(entry);
 				}
 			}
