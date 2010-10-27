@@ -32,7 +32,7 @@ public class ScoreRating implements Rating {
 	private static NumberFormat formater = new DecimalFormat("#######.##");
 	private double rating;
 
-	private ConfigLoader config = ConfigLoader.getInstance();
+	private final ConfigLoader config = ConfigLoader.getInstance();
 
 	/**
 	 * Creates new Rating with committed score
@@ -94,8 +94,6 @@ public class ScoreRating implements Rating {
 			de.d3web.core.knowledge.terminology.Rating thisState = new HeuristicRating(this.rating);
 			de.d3web.core.knowledge.terminology.Rating otherState = new HeuristicRating(
 					otherRating.rating);
-			// System.out.println(this.rating+"-"+otherRating.rating+" <--> "+thisState
-			// + "-" + otherState);
 			return thisState.equals(otherState);
 		}
 		else {
@@ -114,8 +112,6 @@ public class ScoreRating implements Rating {
 						this.rating);
 				de.d3web.core.knowledge.terminology.Rating otherState = new HeuristicRating(
 						otherRating.rating);
-				// System.out.println(this.rating+"-"+otherRating.rating+" <--> "+thisState
-				// + "-" + otherState);
 				return thisState.compareTo(otherState);
 			}
 			else {

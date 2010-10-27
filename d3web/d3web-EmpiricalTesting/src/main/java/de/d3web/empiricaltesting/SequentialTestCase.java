@@ -23,25 +23,19 @@ package de.d3web.empiricaltesting;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import de.d3web.casegeneration.HeuristicScoreRatingStrategy;
 import de.d3web.casegeneration.RatingStrategy;
 import de.d3web.casegeneration.StateRatingStrategy;
-import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
 import de.d3web.indication.inference.PSMethodUserSelected;
-import de.d3web.xcl.XCLModel;
-import de.d3web.xcl.inference.PSMethodXCL;
 
 public class SequentialTestCase {
 
@@ -129,11 +123,8 @@ public class SequentialTestCase {
 	 * Finds the derived solutions for this SequentialTestCase.
 	 * 
 	 * @param kb the underlying KnowledgeBase
-	 * @param psMethodContext the problem solver which is used to get the
-	 *        derived solutions
 	 */
-	@SuppressWarnings("unchecked")
-	public void deriveSolutions(KnowledgeBase kb, Class psMethodContext) {
+	public void deriveSolutions(KnowledgeBase kb) {
 		RatingStrategy ratingStrategy = new StateRatingStrategy();
 		Session session = SessionFactory.createSession(kb);
 		session.getInterview().setFormStrategy(new NextUnansweredQuestionFormStrategy());
@@ -147,8 +138,7 @@ public class SequentialTestCase {
 								PSMethodUserSelected.getInstance()));
 			}
 
-			// Check used Rating (StateRating or ScoreRating) in
-			// ExpectedSolutions
+			// Check used Rating in ExpectedSolutions
 			for (RatedSolution rs : rtc.getExpectedSolutions()) {
 				Rating r = rs.getRating();
 				if (!(r instanceof StateRating)) {
@@ -158,13 +148,12 @@ public class SequentialTestCase {
 			}
 
 			// Derive Solutions
-			Collection<KnowledgeSlice> slices = session.getKnowledgeBase().getAllKnowledgeSlicesFor(
-					PSMethodXCL.class);
-			if (slices.size() != 0) {
-				deriveXCLSolutions(session, rtc, slices);
-			}
-			else {
-				deriveSolutionsForPSMethod(session, rtc, psMethodContext, ratingStrategy);
+			for (Solution solution : session.getKnowledgeBase().getSolutions()) {
+				Rating rating = ratingStrategy.getRatingFor(solution, session);
+				if (rating.isProblemSolvingRelevant()) {
+					RatedSolution ratedSolution = new RatedSolution(solution, rating);
+					rtc.addDerived(ratedSolution);
+				}
 			}
 
 			// Mark this RatedTestCase as successfully derived
@@ -173,82 +162,6 @@ public class SequentialTestCase {
 			rtc.setTestingDate(df.format(new Date()));
 		}
 	}
-
-	private void deriveSolutionsForPSMethod(Session session, RatedTestCase rtc,
-			Class<? extends PSMethod> psMethodContext, RatingStrategy ratingStrategy) {
-
-		for (Solution solution : session.getKnowledgeBase().getSolutions()) {
-			Rating rating = ratingStrategy.getRatingFor(solution, session);
-			if (rating.isProblemSolvingRelevant()) {
-				RatedSolution ratedSolution = new RatedSolution(solution, rating);
-				rtc.addDerived(ratedSolution);
-			}
-		}
-
-		// for (Diagnosis dia : session.getDiagnoses()) {
-		//
-		// DiagnosisState state = dia.getState(session, psMethodContext);
-		// // Only suggested and established diagnoses are taken into account
-		// if (!state.equals(DiagnosisState.UNCLEAR)
-		// && !state.equals(DiagnosisState.EXCLUDED)) {
-		// if (!useStateRatings) { // use ScoreRating
-		// DiagnosisScore sco = dia.getScore(session, psMethodContext);
-		// RatedSolution rs = new RatedSolution(dia, new ScoreRating(
-		// sco.getScore()));
-		// rtc.addDerived(rs);
-		// } else { // use StateRating
-		// RatedSolution rs = new RatedSolution(dia, new StateRating(state));
-		// rtc.addDerived(rs);
-		// }
-		// }
-		// }
-
-	}
-
-	private void deriveXCLSolutions(Session session, RatedTestCase rtc, Collection<KnowledgeSlice> slices) {
-		for (KnowledgeSlice slice : slices) {
-			if (slice instanceof XCLModel) {
-				Solution solution = ((XCLModel) slice).getSolution();
-				de.d3web.core.knowledge.terminology.Rating s = ((XCLModel) slice).getState(session);
-				if (!s.hasState(State.UNCLEAR)
-						&& !s.hasState(State.EXCLUDED)) {
-					RatedSolution rs = new RatedSolution(solution, new StateRating(s));
-					rtc.addDerived(rs);
-				}
-			}
-		}
-
-	}
-
-	// public List<Answer> getAnswerForQuestionNum(KnowledgeBase kb, String
-	// questionname) {
-	// Session session = CaseFactory.createSession(kb);
-	//
-	// for (RatedTestCase rtc : ratedTestCases) {
-	// // Answer and Question setting in Case
-	// for (Finding f : rtc.getFindings()) {
-	// Object q = f.getQuestion();
-	// List answers = new ArrayList();
-	//
-	// // Necessary for QuestionMC, otherwise only one answer can be given
-	// if (q instanceof QuestionMC) {
-	// answers.addAll(((QuestionMC) q).getValue(session));
-	// }
-	//
-	// answers.add(f.getAnswer());
-	// session.setValue((Question) q, answers.toArray());
-	// }
-	// }
-	//
-	// List<? extends Question> answeredQuestions =
-	// session.getAnsweredQuestions();
-	// for (Question question : answeredQuestions) {
-	// if (question.getText().equals(questionname))
-	// return question.getValue(session);
-	// }
-	//
-	// return null;
-	// }
 
 	@Override
 	public int hashCode() {

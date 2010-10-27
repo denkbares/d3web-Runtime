@@ -28,12 +28,8 @@ import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.scoring.inference.PSMethodHeuristic;
 
 public final class TestSuite {
-
-	@SuppressWarnings("unchecked")
-	private static Class psMethodContext = PSMethodHeuristic.class;
 
 	private final TestPersistence persistence = TestPersistence.getInstance();
 	private final EmpiricalTestingFunctions functions = EmpiricalTestingFunctions.getInstance();
@@ -44,8 +40,6 @@ public final class TestSuite {
 	private String name;
 	private boolean useInterviewCalculator;
 	private boolean derived;
-
-	public static StringBuffer pleaseRemoveMe = new StringBuffer();
 
 	/**
 	 * Default Constructor
@@ -227,7 +221,7 @@ public final class TestSuite {
 	public void deriveAllSolutions() {
 		if (!derived) {
 			for (SequentialTestCase stc : repository) {
-				stc.deriveSolutions(kb, psMethodContext);
+				stc.deriveSolutions(kb);
 			}
 			derived = true;
 		}
@@ -286,9 +280,6 @@ public final class TestSuite {
 		deriveAllSolutions();
 		for (SequentialTestCase stc : repository) {
 			prec += functions.precision(stc, new InterviewCalculator(kb), false);
-			pleaseRemoveMe.append("===============================================\n");
-			pleaseRemoveMe.append(stc.getName() + "\n");
-			pleaseRemoveMe.append("===============================================\n");
 		}
 		prec /= repository.size();
 		return prec;
