@@ -88,7 +88,17 @@ public class HeuristicRating extends Rating {
 
 	@Override
 	public int hashCode() {
-		return super.hashCode() + 47 * (int) score;
+		return (int) (super.hashCode() + 47 * Math.round(getScore()));
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (!super.equals(obj)) return false;
+		if (getClass() != obj.getClass()) return false;
+		HeuristicRating other = (HeuristicRating) obj;
+		if (Double.doubleToLongBits(score) != Double.doubleToLongBits(other.score)) return false;
+		return true;
 	}
 
 	@Override

@@ -115,10 +115,6 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 		ActionSetValue action = (ActionSetValue) object;
 		Question question = action.getQuestion();
 		Element element = doc.createElement("Action");
-		// if (action instanceof ActionAddValue) {
-		// element.setAttribute("type", "ActionAddValue");
-		// }
-		// else
 		if (action instanceof ActionSetValue) {
 			element.setAttribute("type", "ActionSetValue");
 		}
