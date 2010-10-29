@@ -19,6 +19,7 @@
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="none" />
 		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="de.d3web.multimedia.io.ImageQuestionStore" />
 	</extension>
 	
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
@@ -28,6 +29,7 @@
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.Double" />
 	</extension>
 	
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
@@ -37,6 +39,7 @@
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
 	
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
@@ -46,6 +49,7 @@
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.Boolean" />
 	</extension>
 	
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
@@ -55,6 +59,7 @@
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
 	
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
@@ -64,6 +69,7 @@
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.Float" />
 	</extension>
 	
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
@@ -73,6 +79,7 @@
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.NumericalInterval" />
 	</extension>
 	
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
@@ -82,6 +89,7 @@
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
 	
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
@@ -91,6 +99,7 @@
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
 	
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
@@ -100,6 +109,7 @@
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.Boolean" />
 	</extension>
 	
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
@@ -109,6 +119,7 @@
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
 	
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
@@ -118,6 +129,7 @@
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="mminfo" />
 		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.MMInfoStorage" />
 	</extension>
 	
 </plugin>

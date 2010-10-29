@@ -66,7 +66,7 @@ public interface InfoStore {
 	 * @param key the key to be accessed
 	 * @return the value for that key
 	 */
-	Object getValue(Property key);
+	<StoredType> StoredType getValue(Property<StoredType> key);
 
 	/**
 	 * Returns the value stored for the specified key with the specified
@@ -78,7 +78,7 @@ public interface InfoStore {
 	 * @param language the language to be accessed
 	 * @return the value stored for that key and language
 	 */
-	Object getValue(Property key, Locale language);
+	<StoredType> StoredType getValue(Property<StoredType> key, Locale language);
 
 	/**
 	 * Removes the stored item for the specified key and the default language
@@ -86,7 +86,7 @@ public interface InfoStore {
 	 * 
 	 * @param key the key to be removed
 	 */
-	boolean remove(Property key);
+	boolean remove(Property<?> key);
 
 	/**
 	 * Removes the stored item for the specified key and the specified language.
@@ -94,11 +94,38 @@ public interface InfoStore {
 	 * @param key the key to be removed
 	 * @param language the language to be removed
 	 */
-	boolean remove(Property key, Locale language);
+	boolean remove(Property<?> key, Locale language);
 
-	void addValue(Property key, Object value);
+	/**
+	 * Adds a value to this InfoStore for the specified property. If the value
+	 * is not compatible to the properties storage class, an ClassCastException
+	 * is thrown. If there is already a value for that property (and no
+	 * language) is defined, it will be overwritten.
+	 * 
+	 * @created 28.10.2010
+	 * @param key the property to store the value for
+	 * @param value the value to store
+	 * @throws ClassCastException if the value is not compatible with the
+	 *                            property
+	 * @throws NullPointerException if the key or value is null
+	 */
+	void addValue(Property<?> key, Object value) throws ClassCastException;
 
-	void addValue(Property key, Locale language, Object value);
+	/**
+	 * Adds a value to this InfoStore for the specified property. If the value
+	 * is not compatible to the properties storage class, an ClassCastException
+	 * is thrown. If there is already a value for that property and the
+	 * specified language is defined, it will be overwritten.
+	 * 
+	 * @created 28.10.2010
+	 * @param key the property to store the value for
+	 * @param language the language to store the property for
+	 * @param value the value to store
+	 * @throws ClassCastException if the value is not compatible with the
+	 *                            property
+	 * @throws NullPointerException if the key or value is null
+	 */
+	void addValue(Property<?> key, Locale language, Object value) throws ClassCastException;
 
 	/**
 	 * Returns all entries of this store
@@ -106,7 +133,7 @@ public interface InfoStore {
 	 * @created 11.10.2010
 	 * @return All entries
 	 */
-	Collection<Triple<Property, Locale, Object>> entries();
+	Collection<Triple<Property<?>, Locale, Object>> entries();
 
 	/**
 	 * Returns true, if the collection is empty, false otherwise

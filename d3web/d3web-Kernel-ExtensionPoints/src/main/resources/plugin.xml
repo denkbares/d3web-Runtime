@@ -25,6 +25,8 @@
 		<parameter-def id="multilingual" />
 		<parameter-def id="autosave" />
 		<parameter-def id="priority" type="number" />
+		<!-- defines the class of stores instances -->
+		<parameter-def id="instanceof" /> 
 	</extension-point>
 	
 </plugin>

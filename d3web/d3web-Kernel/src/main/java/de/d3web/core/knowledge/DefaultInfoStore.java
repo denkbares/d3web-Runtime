@@ -33,15 +33,15 @@ import de.d3web.core.utilities.Triple;
 
 public class DefaultInfoStore implements InfoStore {
 
-	private final Map<Pair<Property, Locale>, Object> entries =
-			new HashMap<Pair<Property, Locale>, Object>();
+	private final Map<Pair<Property<?>, Locale>, Object> entries =
+			new HashMap<Pair<Property<?>, Locale>, Object>();
 
 	@Override
-	public Collection<Triple<Property, Locale, Object>> entries() {
-		Collection<Triple<Property, Locale, Object>> result =
-				new LinkedList<Triple<Property, Locale, Object>>();
-		for (Entry<Pair<Property, Locale>, Object> entry : this.entries.entrySet()) {
-			result.add(new Triple<Property, Locale, Object>(
+	public Collection<Triple<Property<?>, Locale, Object>> entries() {
+		Collection<Triple<Property<?>, Locale, Object>> result =
+				new LinkedList<Triple<Property<?>, Locale, Object>>();
+		for (Entry<Pair<Property<?>, Locale>, Object> entry : this.entries.entrySet()) {
+			result.add(new Triple<Property<?>, Locale, Object>(
 					entry.getKey().getA(),
 					entry.getKey().getB(),
 					entry.getValue()));
@@ -50,47 +50,53 @@ public class DefaultInfoStore implements InfoStore {
 	}
 
 	@Override
-	public Object getValue(Property key) {
+	public <StoredType> StoredType getValue(Property<StoredType> key) {
 		if (key == null) throw new NullPointerException("The key must not be null.");
 		return getEntry(key, NO_LANGUAGE);
 	}
 
 	@Override
-	public Object getValue(Property key, Locale language) {
+	public <StoredType> StoredType getValue(Property<StoredType> key, Locale language) {
 		if (key == null) throw new NullPointerException("The key must not be null.");
-		Object value = getEntry(key, language);
+		StoredType value = getEntry(key, language);
 		if (value != null) {
 			return value;
 		}
 		return getEntry(key, NO_LANGUAGE);
 	}
 
-	private Object getEntry(Property key, Locale language) {
-		return this.entries.get(new Pair<Property, Locale>(key, language));
+	private <StoredType> StoredType getEntry(Property<StoredType> key, Locale language) {
+		Object object = this.entries.get(new Pair<Property<?>, Locale>(key, language));
+		return key.getStoredClass().cast(object);
 	}
 
 	@Override
-	public boolean remove(Property key) {
+	public boolean remove(Property<?> key) {
 		if (key == null) throw new NullPointerException("The key must not be null.");
 		return remove(key, NO_LANGUAGE);
 	}
 
 	@Override
-	public boolean remove(Property key, Locale language) {
+	public boolean remove(Property<?> key, Locale language) {
 		if (key == null) throw new NullPointerException("The key must not be null.");
-		return (this.entries.remove(new Pair<Property, Locale>(key, language)) != null);
+		return (this.entries.remove(new Pair<Property<?>, Locale>(key, language)) != null);
 	}
 
 	@Override
-	public void addValue(Property key, Object value) {
+	public void addValue(Property<?> key, Object value) {
 		addValue(key, NO_LANGUAGE, value);
 	}
 
 	@Override
-	public void addValue(Property key, Locale language, Object value) {
+	public void addValue(Property<?> key, Locale language, Object value) {
 		if (value == null) throw new NullPointerException("The value must not be null.");
 		if (key == null) throw new NullPointerException("The key must not be null.");
-		entries.put(new Pair<Property, Locale>(key, language), value);
+		if (!key.getStoredClass().isInstance(value)) {
+			throw new ClassCastException("value '" + value +
+							"' is not compatible with defined storage class "
+							+ key.getStoredClass());
+		}
+		entries.put(new Pair<Property<?>, Locale>(key, language), value);
 	}
 
 	@Override

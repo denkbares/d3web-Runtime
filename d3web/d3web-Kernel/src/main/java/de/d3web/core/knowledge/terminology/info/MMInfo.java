@@ -18,6 +18,8 @@
  */
 package de.d3web.core.knowledge.terminology.info;
 
+import java.util.Date;
+
 /**
  * 
  * @author hoernlein, Markus Friedrich (denkbares GmbH)
@@ -30,7 +32,8 @@ public class MMInfo {
 	 * resource. Comment: Typically, Title will be a name by which the resource
 	 * is formally known.
 	 */
-	public static final Property TITLE = Property.getProperty("DC.title");
+	public static final Property<String> TITLE =
+			Property.getProperty("DC.title", String.class);
 
 	/**
 	 * Element Name: Creator Label: Creator Definition: An entity primarily
@@ -38,7 +41,8 @@ public class MMInfo {
 	 * Creator include a person, an organization, or a service. Typically, the
 	 * name of a Creator should be used to indicate the entity.
 	 */
-	public static final Property CREATOR = Property.getProperty("DC.creator");
+	public static final Property<String> CREATOR =
+			Property.getProperty("DC.creator", String.class);
 
 	/**
 	 * Element Name: Subject Label: Subject and Keywords Definition: A topic of
@@ -52,7 +56,8 @@ public class MMInfo {
 	 * 
 	 * @see MMInfoSubject public final static constants
 	 */
-	public static final Property SUBJECT = Property.getProperty("DC.subject");
+	public static final Property<String> SUBJECT =
+			Property.getProperty("DC.subject", String.class);
 
 	/**
 	 * Element Name: Description Label: Description Definition: An account of
@@ -61,7 +66,8 @@ public class MMInfo {
 	 * graphical representation of content or a free-text account of the
 	 * content.
 	 */
-	public static final Property DESCRIPTION = Property.getProperty("DC.description");
+	public static final Property<String> DESCRIPTION =
+			Property.getProperty("DC.description", String.class);
 
 	/**
 	 * Element Name: Publisher Label: Publisher Definition: An entity
@@ -69,7 +75,8 @@ public class MMInfo {
 	 * Publisher include a person, an organization, or a service. Typically, the
 	 * name of a Publisher should be used to indicate the entity.
 	 */
-	public static final Property PUBLISHER = Property.getProperty("DC.publisher");
+	public static final Property<String> PUBLISHER =
+			Property.getProperty("DC.publisher", String.class);
 
 	/**
 	 * Element Name: Contributor Label: Contributor Definition: An entity
@@ -78,7 +85,8 @@ public class MMInfo {
 	 * service. Typically, the name of a Contributor should be used to indicate
 	 * the entity.
 	 */
-	public static final Property CONTRIBUTOR = Property.getProperty("DC.contributor");
+	public static final Property<String> CONTRIBUTOR =
+			Property.getProperty("DC.contributor", String.class);
 
 	/**
 	 * Element Name: Date Label: Date Definition: A date of an event in the
@@ -89,7 +97,8 @@ public class MMInfo {
 	 * 
 	 * @see DCElement.date2string(Date) & DCElement.string2date(String)
 	 */
-	public static final Property DATE = Property.getProperty("DC.date");
+	public static final Property<Date> DATE =
+			Property.getProperty("DC.date", Date.class);
 
 	/**
 	 * Element Name: Type Label: Resource Type Definition: The nature or genre
@@ -100,7 +109,8 @@ public class MMInfo {
 	 * the physical or digital manifestation of the resource, use the FORMAT
 	 * element.
 	 */
-	public static final Property TYPE = Property.getProperty("DC.resource_type");
+	public static final Property<String> TYPE =
+			Property.getProperty("DC.resource_type", String.class);
 
 	/**
 	 * Element Name: Format Label: Format Definition: The physical or digital
@@ -112,7 +122,8 @@ public class MMInfo {
 	 * vocabulary (for example, the list of Internet Media Types [MIME] defining
 	 * computer media formats).
 	 */
-	public static final Property FORMAT = Property.getProperty("DC.format");
+	public static final Property<String> FORMAT =
+			Property.getProperty("DC.format", String.class);
 
 	/**
 	 * Element Name: Identifier Label: Resource Identifier Definition: An
@@ -124,8 +135,8 @@ public class MMInfo {
 	 * the Digital Object Identifier (DOI) and the International Standard Book
 	 * Number (ISBN).
 	 */
-	public static final Property IDENTIFIER = Property.getProperty(
-			"DC.resource_identifier");
+	public static final Property<String> IDENTIFIER = Property.getProperty(
+			"DC.resource_identifier", String.class);
 
 	/**
 	 * Element Name: Source Label: Source Definition: A Reference to a resource
@@ -134,7 +145,8 @@ public class MMInfo {
 	 * best practice is to identify the referenced resource by means of a string
 	 * or number conforming to a formal identification system.
 	 */
-	public static final Property SOURCE = Property.getProperty("DC.source");
+	public static final Property<String> SOURCE =
+			Property.getProperty("DC.source", String.class);
 
 	/**
 	 * Element Name: Language Label: Language Definition: A language of the
@@ -144,7 +156,8 @@ public class MMInfo {
 	 * Examples include "en" or "eng" for English, "akk" for Akkadian", and
 	 * "en-GB" for English used in the United Kingdom.
 	 */
-	public static final Property LANGUAGE = Property.getProperty("DC.language");
+	public static final Property<String> LANGUAGE =
+			Property.getProperty("DC.language", String.class);
 
 	/**
 	 * Element Name: Relation Label: Relation Definition: A reference to a
@@ -152,7 +165,8 @@ public class MMInfo {
 	 * referenced resource by means of a string or number conforming to a formal
 	 * identification system.
 	 */
-	public static final Property RELATION = Property.getProperty("DC.relation");
+	public static final Property<String> RELATION =
+			Property.getProperty("DC.relation", String.class);
 
 	/**
 	 * Element Name: Coverage Label: Coverage Definition: The extent or scope of
@@ -165,7 +179,8 @@ public class MMInfo {
 	 * time periods in preference to numeric identifiers such as sets of
 	 * coordinates or date ranges.
 	 */
-	public static final Property COVERAGE = Property.getProperty("DC.coverage");
+	public static final Property<String> COVERAGE =
+			Property.getProperty("DC.coverage", String.class);
 
 	/**
 	 * Element Name: Rights Label: Rights Management Definition: Information
@@ -176,6 +191,7 @@ public class MMInfo {
 	 * Property Rights. If the Rights element is absent, no assumptions may be
 	 * made about any rights held in or over the resource.
 	 */
-	public static final Property RIGHTS = Property.getProperty("DC.rights_management");
+	public static final Property<String> RIGHTS =
+			Property.getProperty("DC.rights_management", String.class);
 
 }

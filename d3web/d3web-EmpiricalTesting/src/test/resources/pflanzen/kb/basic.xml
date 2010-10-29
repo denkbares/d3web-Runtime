@@ -348,9 +348,7 @@
 <Costs />
 <Properties>
 <Property descriptor="range" class="de.d3web.kernel.domainModel.NumericalInterval">
-<NumIntervals>
 <NumInterval lower="1" upper="20" type="LeftClosedRightClosedInterval" />
-</NumIntervals>
 </Property>
 </Properties>
 </Question>
@@ -628,9 +626,7 @@
 <Costs />
 <Properties>
 <Property descriptor="range" class="de.d3web.kernel.domainModel.NumericalInterval">
-<NumIntervals>
 <NumInterval lower="2" upper="100" type="LeftClosedRightClosedInterval" />
-</NumIntervals>
 </Property>
 </Properties>
 </Question>
@@ -748,9 +744,7 @@
 <Costs />
 <Properties>
 <Property descriptor="range" class="de.d3web.kernel.domainModel.NumericalInterval">
-<NumIntervals>
 <NumInterval lower="2" upper="100" type="LeftClosedRightClosedInterval" />
-</NumIntervals>
 </Property>
 </Properties>
 </Question>
@@ -759,9 +753,7 @@
 <Costs />
 <Properties>
 <Property descriptor="range" class="de.d3web.kernel.domainModel.NumericalInterval">
-<NumIntervals>
 <NumInterval lower="1" upper="100" type="LeftClosedRightClosedInterval" />
-</NumIntervals>
 </Property>
 </Properties>
 </Question>

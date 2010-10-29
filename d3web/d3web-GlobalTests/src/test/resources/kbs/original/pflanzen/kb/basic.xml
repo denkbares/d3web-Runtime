@@ -228,10 +228,8 @@
 <Question ID="M1531" type="Num">
 <Text>Blütenblätteranzahl</Text>
 <Properties>
-<Property class="java.util.ArrayList" name="range">
-<NumIntervals>
+<Property class="de.d3web.core.knowledge.terminology.info.NumericalInterval" name="range">
 <NumInterval lower="1.0" type="LeftClosedRightClosedInterval" upper="20.0"/>
-</NumIntervals>
 </Property>
 </Properties>
 </Question>
@@ -461,10 +459,8 @@
 <Question ID="M1921" type="Num">
 <Text>Döldchenanzahl</Text>
 <Properties>
-<Property class="java.util.ArrayList" name="range">
-<NumIntervals>
+<Property class="de.d3web.core.knowledge.terminology.info.NumericalInterval" name="range">
 <NumInterval lower="2.0" type="LeftClosedRightClosedInterval" upper="100.0"/>
-</NumIntervals>
 </Property>
 </Properties>
 </Question>
@@ -558,10 +554,8 @@
 <Question ID="M202" type="Num">
 <Text>Blattfiederpaare</Text>
 <Properties>
-<Property class="java.util.ArrayList" name="range">
-<NumIntervals>
+<Property class="de.d3web.core.knowledge.terminology.info.NumericalInterval" name="range">
 <NumInterval lower="1.0" type="LeftClosedRightClosedInterval" upper="100.0"/>
-</NumIntervals>
 </Property>
 </Properties>
 </Question>
@@ -616,10 +610,8 @@
 <Question ID="M204" type="Num">
 <Text>Blattfingeranzahl</Text>
 <Properties>
-<Property class="java.util.ArrayList" name="range">
-<NumIntervals>
+<Property class="de.d3web.core.knowledge.terminology.info.NumericalInterval" name="range">
 <NumInterval lower="2.0" type="LeftClosedRightClosedInterval" upper="100.0"/>
-</NumIntervals>
 </Property>
 </Properties>
 </Question>

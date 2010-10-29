@@ -31,7 +31,7 @@ import de.d3web.core.utilities.Triple;
 public class InfoStoreUtil {
 
 	public static void copyEntries(InfoStore source, InfoStore target) {
-		for (Triple<Property, Locale, Object> entry : source.entries()) {
+		for (Triple<Property<?>, Locale, ?> entry : source.entries()) {
 			target.addValue(entry.getA(), entry.getB(), entry.getC());
 		}
 	}

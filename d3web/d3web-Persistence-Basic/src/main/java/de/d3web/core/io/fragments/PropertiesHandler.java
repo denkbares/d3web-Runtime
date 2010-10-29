@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -71,8 +72,12 @@ public class PropertiesHandler implements FragmentHandler {
 				else {
 					name = prop.getAttributes().getNamedItem("descriptor").getNodeValue();
 				}
-				Property property = Property.getProperty(name);
-				if (property == null) {
+
+				Property<?> property = null;
+				try {
+					property = Property.getUntypedProperty(name);
+				}
+				catch (NoSuchElementException e) {
 					Logger.getLogger("Persistence").log(Level.WARNING,
 							"Property " + name + " is not in use any more.");
 					continue;
@@ -82,7 +87,7 @@ public class PropertiesHandler implements FragmentHandler {
 				if (elementList.size() == 0 && !textContent.trim().equals("")) {
 					Object o = XMLUtil.getPrimitiveValue(textContent,
 							prop.getAttribute("class"));
-					infoStore.addValue(property, o);
+					infoStore.addValue(property, property.castToStoredValue(o));
 				}
 				else {
 					List<Element> childNodes = elementList;
@@ -106,9 +111,9 @@ public class PropertiesHandler implements FragmentHandler {
 	public Element write(Object object, Document doc) throws IOException {
 		Element element = doc.createElement("Properties");
 		InfoStore infoStore = (InfoStore) object;
-		Collection<Triple<Property, Locale, Object>> entries = infoStore.entries();
+		Collection<Triple<Property<?>, Locale, Object>> entries = infoStore.entries();
 		if (entries.size() > 0) {
-			for (Triple<Property, Locale, Object> p : entries) {
+			for (Triple<Property<?>, Locale, Object> p : entries) {
 				if (p.getA().hasState(Autosave.basic)) {
 					Object value = p.getC();
 					if (value != null) {

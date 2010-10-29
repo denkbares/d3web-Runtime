@@ -29,51 +29,45 @@ import de.d3web.core.knowledge.terminology.IDObject;
 public class BasicProperties {
 
 	/**
-	 * used for: Storing infos about a QuestionImage and their AnswerRegions
-	 * doc: Used to store a List of Image and Answer Regions
-	 * 
-	 * @return java.util.list with QuestionImage and AnswerRegions
-	 */
-	public static final Property IMAGE_QUESTION_INFO = Property.getProperty("image_question_info");
-
-	/**
 	 * used for: QASet doc: specifies what amount of costs is needed to
 	 * 'perform' the qaset
 	 * 
-	 * @return double
+	 * @return Double
 	 */
-	public static final Property COST = Property.getProperty("cost");
+	public static final Property<Double> COST = Property.getProperty("cost", Double.class);
 
 	/**
 	 * used for: Question the unit of numerical questions
 	 * 
 	 * @return String
 	 */
-	public static final Property UNIT = Property.getProperty("unit");
+	public static final Property<String> UNIT = Property.getProperty("unit", String.class);
 
 	/**
 	 * Used for: Questions doc: Marks a Question as abstraction question
 	 * (derived) or not. Boolean.TRUE means, it is a abstraction question, all
 	 * other values means, it is not.
 	 * 
-	 * @return boolean
+	 * @return Boolean
 	 */
-	public static final Property ABSTRACTION_QUESTION = Property.getProperty(
-			"abstractionQuestion");
+	public static final Property<Boolean> ABSTRACTION_QUESTION = Property.getProperty(
+			"abstractionQuestion", Boolean.class);
 
 	/**
 	 * used for: {@link IDObject} An explanation of the {@link IDObject}
 	 * 
 	 * @return String
 	 */
-	public static final Property EXPLANATION = Property.getProperty("explanation");
+	public static final Property<String> EXPLANATION = Property.getProperty(
+			"explanation", String.class);
 
 	/**
 	 * used for Diagnosis Saves the apriori probability of a diagnosis
 	 * 
-	 * @return float
+	 * @return Float
 	 */
-	public static final Property APRIORI = Property.getProperty("apriori");
+	public static final Property<Float> APRIORI = Property.getProperty(
+			"apriori", Float.class);
 
 	/**
 	 * used for: QuestionNum doc: valid range of numerical answers of
@@ -81,7 +75,9 @@ public class BasicProperties {
 	 * 
 	 * @return NumericalInterval
 	 */
-	public static final Property QUESTION_NUM_RANGE = Property.getProperty("range");
+	public static final Property<NumericalInterval> QUESTION_NUM_RANGE =
+			Property.getProperty(
+					"range", NumericalInterval.class);
 
 	/**
 	 * used for question doc: the ids of the answers(seperated by ";"), which is
@@ -89,7 +85,7 @@ public class BasicProperties {
 	 * 
 	 * @return String
 	 */
-	public static final Property INIT = Property.getProperty("INIT");
+	public static final Property<String> INIT = Property.getProperty("INIT", String.class);
 
 	/**
 	 * used for question doc: the ids of the answers(seperated by ";"), which is
@@ -97,7 +93,8 @@ public class BasicProperties {
 	 * 
 	 * @return String
 	 */
-	public static final Property DEFAULT = Property.getProperty("DEFAULT");
+	public static final Property<String> DEFAULT = Property.getProperty(
+			"DEFAULT", String.class);
 
 	/**
 	 * TODO: Remove when UnknownChoice is implemented
@@ -106,7 +103,8 @@ public class BasicProperties {
 	 * 
 	 * @return Boolean
 	 */
-	public static final Property UNKNOWN_VISIBLE = Property.getProperty("unknownVisible");
+	public static final Property<Boolean> UNKNOWN_VISIBLE = Property.getProperty(
+			"unknownVisible", Boolean.class);
 
 	/**
 	 * TODO: Remove when UnknownChoice is implemented
@@ -115,7 +113,8 @@ public class BasicProperties {
 	 * 
 	 * @return String
 	 */
-	public static final Property UNKNOWN_VERBALISATION = Property.getProperty("unknown_verbalisation");
+	public static final Property<String> UNKNOWN_VERBALISATION = Property.getProperty(
+			"unknown_verbalisation", String.class);
 
 	/**
 	 * TODO: Remove and make each MMINFO to a Property
@@ -124,5 +123,6 @@ public class BasicProperties {
 	 * 
 	 * @return MMInfoStorage
 	 */
-	public static final Property MMINFO = Property.getProperty("mminfo");
+	public static final Property<MMInfoStorage> MMINFO = Property.getProperty(
+			"mminfo", MMInfoStorage.class);
 }
