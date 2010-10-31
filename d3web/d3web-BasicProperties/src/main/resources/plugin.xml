@@ -50,6 +50,7 @@
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.Boolean" />
+		<parameter id="default" value="false" />
 	</extension>
 	
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
@@ -110,6 +111,7 @@
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.Boolean" />
+		<parameter id="default" value="false" />
 	</extension>
 	
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"

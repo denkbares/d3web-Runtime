@@ -52,22 +52,34 @@ public class DefaultInfoStore implements InfoStore {
 	@Override
 	public <StoredType> StoredType getValue(Property<StoredType> key) {
 		if (key == null) throw new NullPointerException("The key must not be null.");
-		return getEntry(key, NO_LANGUAGE);
+		// if not available check for entry with no language
+		StoredType value = getEntry(key, NO_LANGUAGE);
+		if (value != null) {
+			return value;
+		}
+		// if not available use default value or null
+		return key.getDefaultValue();
 	}
 
 	@Override
 	public <StoredType> StoredType getValue(Property<StoredType> key, Locale language) {
 		if (key == null) throw new NullPointerException("The key must not be null.");
+		// check for entry
 		StoredType value = getEntry(key, language);
 		if (value != null) {
 			return value;
 		}
-		return getEntry(key, NO_LANGUAGE);
+		// if not available use no-language method
+		return getValue(key);
 	}
 
 	private <StoredType> StoredType getEntry(Property<StoredType> key, Locale language) {
-		Object object = this.entries.get(new Pair<Property<?>, Locale>(key, language));
+		Object object = this.entries.get(createEntryKey(key, language));
 		return key.getStoredClass().cast(object);
+	}
+
+	private <StoredType> Pair<Property<?>, Locale> createEntryKey(Property<StoredType> key, Locale language) {
+		return new Pair<Property<?>, Locale>(key, language);
 	}
 
 	@Override
@@ -79,7 +91,17 @@ public class DefaultInfoStore implements InfoStore {
 	@Override
 	public boolean remove(Property<?> key, Locale language) {
 		if (key == null) throw new NullPointerException("The key must not be null.");
-		return (this.entries.remove(new Pair<Property<?>, Locale>(key, language)) != null);
+		return (this.entries.remove(createEntryKey(key, language)) != null);
+	}
+
+	@Override
+	public boolean contains(Property<?> key) {
+		return contains(key, NO_LANGUAGE);
+	}
+
+	@Override
+	public boolean contains(Property<?> key, Locale language) {
+		return this.entries.containsKey(createEntryKey(key, language));
 	}
 
 	@Override
@@ -96,7 +118,7 @@ public class DefaultInfoStore implements InfoStore {
 							"' is not compatible with defined storage class "
 							+ key.getStoredClass());
 		}
-		entries.put(new Pair<Property<?>, Locale>(key, language), value);
+		entries.put(createEntryKey(key, language), value);
 	}
 
 	@Override

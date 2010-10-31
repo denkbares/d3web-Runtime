@@ -18,11 +18,14 @@
  */
 package de.d3web.core.knowledge.terminology.info;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import de.d3web.core.knowledge.InfoStore;
 import de.d3web.plugin.Extension;
 import de.d3web.plugin.PluginManager;
 
@@ -49,13 +52,18 @@ public class Property<T> {
 	private final String name;
 	private final boolean multilingual;
 	private final String storedClassName;
+	private final String defaultValueString;
+	// and some transient fields for later on-demand initialization
+	// (to prevent loading class T, see getProperty for details and reason why)
 	private Class<T> storedClass = null;
+	private T defaultValue = null;
 
-	private Property(Autosave autosave, String name, boolean multilingual, String className) {
+	private Property(Autosave autosave, String name, boolean multilingual, String className, String defaultValueString) {
 		this.autosave = autosave;
 		this.name = name;
 		this.multilingual = multilingual;
 		this.storedClassName = className;
+		this.defaultValueString = defaultValueString;
 	}
 
 	public boolean hasState(Autosave autosave) {
@@ -85,7 +93,11 @@ public class Property<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	private void initStoredClass() {
+
+		// initialize only once
 		if (this.storedClass != null) return;
+
+		// first initialize the class provided by the plugins class name
 		try {
 			this.storedClass = (Class<T>) Class.forName(this.storedClassName);
 		}
@@ -93,6 +105,58 @@ public class Property<T> {
 			throw new NoClassDefFoundError(
 					this.storedClassName + " not found for property " + this.name);
 		}
+
+		// check for having a default value in place to be initialized
+		if (this.defaultValueString != null && this.defaultValue == null) {
+			// on runtime exceptions we do not catch them, cause we
+			// have a wrong plugin definition then!
+			try {
+				this.defaultValue = parseValue(this.defaultValueString);
+			}
+			catch (NoSuchMethodException e) {
+				// do noting here, leave defaultValue on null
+			}
+		}
+	}
+
+	/**
+	 * Returns the DefaultValue of this property. The default value will be
+	 * returned by the {@link InfoStore#getValue(Property)} and
+	 * {@link InfoStore#getValue(Property, java.util.Locale)} methods when no
+	 * explicit value has been specified.
+	 * <p>
+	 * The default value may be specified by either the plugin.xml using the
+	 * "default" attribute when extending the "property" extension point. In
+	 * addition a default value can also be set using the
+	 * {@link Property#setDefaultValue(T)} method.
+	 * <p>
+	 * When specifying the default value in the plugin.xml, the stored class
+	 * must define the prerequisites defined in {@link #parseValue(String)}.
+	 * 
+	 * @created 31.10.2010
+	 * @return the default value of this property
+	 * @see #setDefaultValue(T)
+	 * @see #parseValue(String)
+	 */
+	public T getDefaultValue() {
+		return this.defaultValue;
+	}
+
+	/**
+	 * Sets the default value of this property. The default value will be
+	 * returned by the {@link InfoStore#getValue(Property)} and
+	 * {@link InfoStore#getValue(Property, java.util.Locale)} methods when no
+	 * explicit value has been specified.
+	 * <p>
+	 * Instead of using this method, the default value may also be specified in
+	 * the plugin.xml using the "default" attribute when extending the
+	 * "property" extension point.
+	 * 
+	 * @created 31.10.2010
+	 * @param defaultValue
+	 */
+	public void setDefaultValue(T defaultValue) {
+		this.defaultValue = defaultValue;
 	}
 
 	/**
@@ -136,7 +200,6 @@ public class Property<T> {
 		// this cast is save due to the test before
 		// thus we can accept the @SuppressWarnings("unchecked")
 		Property<StoreageType> typedProperty = (Property<StoreageType>) property;
-		typedProperty.initStoredClass();
 		return typedProperty;
 	}
 
@@ -167,7 +230,6 @@ public class Property<T> {
 	/**
 	 * Dynamically casts the specified value to the type of the stored value.
 	 * 
-	 * 
 	 * @created 28.10.2010
 	 * @param o
 	 * @return
@@ -175,6 +237,58 @@ public class Property<T> {
 	 */
 	public T castToStoredValue(Object o) throws ClassCastException {
 		return getStoredClass().cast(o);
+	}
+
+	/**
+	 * Parses a property from a string representation.
+	 * <p>
+	 * For parsing this method uses the static "valueOf"-method of the stored
+	 * class T. Therefore class T must have a method with the exact signature
+	 * <code>public static T valueOf(String)<code>. (Only the return value may also be a more
+	 * specific subclass of T). Please note that the java basic types support that method, as well as all 
+	 * java enumerations.
+	 * <p>
+	 * If there is no public method suitable for parsing a {@link NoSuchMethodException} 
+	 * is thrown. If there is
+	 * any unchecked exception during parsing, the exception is also thrown 
+	 * by this method. If there is
+	 * any checked exception during parsing, an IllegalArgumentException is thrown, containing the
+	 * original exception as its cause.
+	 * 
+	 * 
+	 * @created 31.10.2010
+	 * @param string
+	 * @return
+	 */
+	public T parseValue(String string) throws NoSuchMethodException {
+		// use string directly if T == String
+		// because String only supports valueOf(Object)
+		// instead of valueOf(String)
+		Class<T> clazz = getStoredClass();
+		if (String.class.isAssignableFrom(clazz)) return castToStoredValue(string);
+
+		// find method
+		try {
+			Method method = clazz.getMethod("valueOf", String.class);
+			return castToStoredValue(method.invoke(null, string));
+		}
+		catch (SecurityException e) {
+			throw new NoSuchMethodException("method 'valueOf' seems to be non-public");
+		}
+		catch (InvocationTargetException e) {
+			Throwable cause = e.getCause();
+			// re-throw runtime exceptions,
+			// such as NumberFormatException from Double.valueOf(..)
+			if (cause instanceof RuntimeException) {
+				throw (RuntimeException) cause;
+			}
+			throw new IllegalArgumentException(
+					"parameter '" + string + "' causes an exception", cause);
+		}
+		catch (IllegalAccessException e) {
+			// must not happen, cause we do not use a constructor method
+			throw new IllegalStateException();
+		}
 	}
 
 	private static void parseProperties() {
@@ -185,8 +299,10 @@ public class Property<T> {
 			Autosave pautosave = Autosave.valueOf(e.getParameter("autosave"));
 			boolean pmultilingual = Boolean.parseBoolean(e.getParameter("multilingual"));
 			String storedClassName = e.getParameter("instanceof");
+			String defaultValueString = e.getParameter("default");
 			Property<?> p = new Property<Object>(
-					pautosave, pname, pmultilingual, storedClassName);
+					pautosave, pname, pmultilingual,
+					storedClassName, defaultValueString);
 			properties.put(pname, p);
 		}
 	}

@@ -60,31 +60,36 @@ public interface InfoStore {
 
 	/**
 	 * Returns the value stored for the specified key with language
-	 * "LANGUAGE_DEFAULT". If there is no such key for the "LANGUAGE_DEFAULT",
-	 * null is returned.
+	 * {@link #NO_LANGUAGE}. If there is no such key for the
+	 * {@link #NO_LANGUAGE}, the key's default value is returned. If there is no
+	 * such default value defined, null is returned.
 	 * 
-	 * @param key the key to be accessed
+	 * @param key the property to be accessed
 	 * @return the value for that key
+	 * @see Property#getDefaultValue()
 	 */
 	<StoredType> StoredType getValue(Property<StoredType> key);
 
 	/**
 	 * Returns the value stored for the specified key with the specified
 	 * language. If there is no such language, it is tried to access the key
-	 * with language "LANGUAGE_DEFAULT". If there is no such item, null is
-	 * returned.
+	 * with language {@link #NO_LANGUAGE}. If there is no such item, the key's
+	 * default value is returned. If there is no such default value defined,
+	 * null is returned.
 	 * 
-	 * @param key the key to be accessed
+	 * @param key the property to be accessed
 	 * @param language the language to be accessed
 	 * @return the value stored for that key and language
+	 * @see Property#getDefaultValue()
 	 */
 	<StoredType> StoredType getValue(Property<StoredType> key, Locale language);
 
 	/**
 	 * Removes the stored item for the specified key and the default language
-	 * "LANGUAGE_DEFAULT".
+	 * {@link #NO_LANGUAGE}.
 	 * 
 	 * @param key the key to be removed
+	 * @return if there was such a property
 	 */
 	boolean remove(Property<?> key);
 
@@ -93,8 +98,28 @@ public interface InfoStore {
 	 * 
 	 * @param key the key to be removed
 	 * @param language the language to be removed
+	 * @return if there was such a property
 	 */
 	boolean remove(Property<?> key, Locale language);
+
+	/**
+	 * Check if there is a stored item for the specified key and the default
+	 * language {@link #NO_LANGUAGE}.
+	 * 
+	 * @param key the key to be removed
+	 * @return if there is such a property
+	 */
+	boolean contains(Property<?> key);
+
+	/**
+	 * Check if there is a stored item for the specified key and the specified
+	 * language.
+	 * 
+	 * @param key the key to be removed
+	 * @param language the language to be removed
+	 * @return if there is such a property
+	 */
+	boolean contains(Property<?> key, Locale language);
 
 	/**
 	 * Adds a value to this InfoStore for the specified property. If the value
