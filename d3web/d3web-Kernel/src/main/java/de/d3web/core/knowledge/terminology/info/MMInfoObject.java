@@ -64,7 +64,8 @@ public class MMInfoObject implements DCMarkedUp {
 		while (iter.hasNext()) {
 			DCElement dc = iter.next();
 			String elementContent = dcData.getContent(dc);
-			if (elementContent != null && !elementContent.equals("") && this.getDCMarkup() != null &&
+			if (elementContent != null && !elementContent.equals("") && this.getDCMarkup() != null
+					&&
 					!elementContent.equalsIgnoreCase(this.getDCMarkup().getContent(dc))) {
 				return false;
 			}
@@ -95,14 +96,6 @@ public class MMInfoObject implements DCMarkedUp {
 
 	private void initDCMarkup(DCMarkup dcData) {
 		String subject = dcData.getContent(DCElement.SUBJECT);
-
-		// [MISC]:aha:legacy code
-		if ("therapy".equalsIgnoreCase(subject)) {
-			subject = MMInfoSubject.THERAPY.getName();
-		}
-		else if ("info.suggestion".equalsIgnoreCase(subject)) {
-			subject = MMInfoSubject.THERAPY.getName();
-		}
 
 		Iterator<MMInfoSubject> iter = MMInfoSubject.getIterator();
 		while (iter.hasNext()) {

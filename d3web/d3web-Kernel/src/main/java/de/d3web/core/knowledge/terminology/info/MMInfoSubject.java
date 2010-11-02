@@ -45,28 +45,6 @@ public final class MMInfoSubject {
 		this.name = name;
 	}
 
-	/*
-	 * things that may be exported from ClassicD3
-	 * 
-	 * info.suggestion Diagnose: Vorschlag xprompt Symptom: Erklärung xrange
-	 * Antwortalternative: Erklärung zum Wertebereich Diagnose: Kurzinfo
-	 * 
-	 * Es gibt im alten D3 noch "Buchtexte" für Symptome und
-	 * Antwortalternativen. Ich (Verfasser unbekannt) weiss aber nicht, ob die
-	 * noch irgendwo benutzt werden und wofür die gut sind... Sollte so etwas
-	 * auftauchen, dann vielleicht als info
-	 */
-
-	/**
-	 * doc: Die Erklärung, die im Dialog zu dem Objekt gezeigt wird
-	 */
-	public final static MMInfoSubject INFO = new MMInfoSubject("info");
-
-	/**
-	 * doc: Synonyme zu einer Entity
-	 */
-	public final static MMInfoSubject SYNONYMS = new MMInfoSubject("synonyms");
-
 	/**
 	 * doc: Existiert für Diagnosis, Question, Answer (sollten wir auch für
 	 * QContainer einführen) Link könnte mit DCElement.FORMAT erweitert werden
@@ -75,26 +53,10 @@ public final class MMInfoSubject {
 	public final static MMInfoSubject LINK = new MMInfoSubject("link");
 
 	/**
-	 * doc: Diagnosen: Text zur Therapie
-	 */
-	public final static MMInfoSubject THERAPY = new MMInfoSubject("info.therapy");
-
-	/**
-	 * doc: Diagnosen: Prognose / Hinweis zum weiteren Verlauf
-	 */
-	public final static MMInfoSubject PREDICTION = new MMInfoSubject("info.prediction");
-
-	/**
 	 * doc: Question: ein Multimedia-Objekt, das im Dialog angezeigt werden soll
 	 * Symptom: Dialog-Bild
 	 */
 	public final static MMInfoSubject MEDIA = new MMInfoSubject("prompt.media");
-
-	/**
-	 * doc: Der Kommentar für den Entwickler, bei Diagnosis, QContainer,
-	 * Question
-	 */
-	public final static MMInfoSubject COMMENT = new MMInfoSubject("info.comment");
 
 	/**
 	 * doc: Nur bei Question: der Fragetext example: question.getText() ->
@@ -104,11 +66,6 @@ public final class MMInfoSubject {
 	 * -> "Wie ist das Befinden des Patienten nach dem Aufwachen?"
 	 */
 	public final static MMInfoSubject PROMPT = new MMInfoSubject("prompt");
-
-	/**
-	 * doc: Eine URL auf den Eintrag im iZone system
-	 */
-	public final static MMInfoSubject IZONE = new MMInfoSubject("izone");
 
 	/**
 	 * doc: Eine URL (beliebig)
@@ -126,17 +83,11 @@ public final class MMInfoSubject {
 
 	public static List<MMInfoSubject> getSubjects() {
 		return Arrays.asList(new MMInfoSubject[] {
-				MMInfoSubject.INFO,
-				MMInfoSubject.SYNONYMS,
 				MMInfoSubject.MEDIA,
 				MMInfoSubject.LINK,
 				MMInfoSubject.URL,
 				MMInfoSubject.MULTIMEDIA,
-				MMInfoSubject.THERAPY,
-				MMInfoSubject.PREDICTION,
 				MMInfoSubject.PROMPT,
-				MMInfoSubject.COMMENT,
-				MMInfoSubject.IZONE
 			});
 	}
 

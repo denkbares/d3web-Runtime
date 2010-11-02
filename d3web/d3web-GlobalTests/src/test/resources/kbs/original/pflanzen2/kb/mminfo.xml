@@ -543,16 +543,6 @@
 </MMInfo>
 <MMInfo>
 <head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="info.comment" name="DC.subject"/>
-<meta content="P3150" name="DC.source"/>
-<meta content="MMInfo49" name="DC.IDENTIFIER"/>
-</head>
-<Content>Abklären:
-  - Blütenkelch abstehend behaart oder anliegend behaart?
-  - Staubblätter in Blütenkronröhre eingeschlossen?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
 <meta content="link" name="DC.subject"/>
 <meta content="P7087" name="DC.source"/>
 <meta content="MMInfo50" name="DC.IDENTIFIER"/>
@@ -691,17 +681,6 @@ besitzt:</Content>
 </MMInfo>
 <MMInfo>
 <head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="info" name="DC.subject"/>
-<meta content="M1534" name="DC.source"/>
-<meta content="MMInfo19" name="DC.IDENTIFIER"/>
-</head>
-<Content>Bei vielen Pflanzen sind die Blätter je nach ihrer Position am Stengel (unten, Mitte, oben) verschieden gestaltet.
-Man spricht von Grundblättern (oft im Kreis am Boden um den Stengelgrund herum angeordnet), Stengelblättern,
-Hochblättern (Blätter im Bereich der Blüten und Blütenstände). Zur Beantwortung dieser Frage sind die Blätter
- im mittleren Bereich des Stengels maßgeblich.</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
 <meta content="prompt" name="DC.subject"/>
 <meta content="M1535" name="DC.source"/>
 <meta content="MMInfo12" name="DC.IDENTIFIER"/>
@@ -715,17 +694,6 @@ Hochblättern (Blätter im Bereich der Blüten und Blütenstände). Zur Beantwor
 <meta content="MMInfo20" name="DC.IDENTIFIER"/>
 </head>
 <Content>Wie sind die Blätter am Stengel oder den Seitentrieben am ehesten angeordnet?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="info" name="DC.subject"/>
-<meta content="M1536" name="DC.source"/>
-<meta content="MMInfo21" name="DC.IDENTIFIER"/>
-</head>
-<Content>Bei vielen Pflanzen sind die Blätter je nach Position am Stengel (unten, Mitte, oben) unterschiedlich angeordnet.
-Zur Beantwortung dieser Frage sind die Blätter im mittleren Bereich maßgeblich. Bei manchen Pflanzen sind 
-jedoch nur grundständige, in einer Rosette angeordnete Blätter vorhanden, bei einigen sind zur Blütezeit keine 
-Blätter sichtbar.</Content>
 </MMInfo>
 <MMInfo>
 <head profile="http://dublincore.org/documents/dcq-html/">
@@ -785,17 +753,6 @@ Blätter sichtbar.</Content>
 </MMInfo>
 <MMInfo>
 <head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="info" name="DC.subject"/>
-<meta content="M194" name="DC.source"/>
-<meta content="MMInfo23" name="DC.IDENTIFIER"/>
-</head>
-<Content>Ranken sind fadenförmige Organe mit denen sich einige Pflanzen an anderen Pflanzen, 
-an Zäunen oder ähnlichen Stützen verankern. Je nach ihrer Entstehung können Ranken 
-Stengelfortsätze sein, aus Blattachseln entspringen oder auch auf die Mittelrippe
-reduzierte Blätter sein.</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
 <meta content="prompt" name="DC.subject"/>
 <meta content="M195" name="DC.source"/>
 <meta content="MMInfo13" name="DC.IDENTIFIER"/>
@@ -809,17 +766,6 @@ reduzierte Blätter sein.</Content>
 <meta content="MMInfo16" name="DC.IDENTIFIER"/>
 </head>
 <Content>Welcher der folgenden Formen entsprechen die einzelnen Blätter der Pflanze am ehesten?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="info" name="DC.subject"/>
-<meta content="M196" name="DC.source"/>
-<meta content="MMInfo17" name="DC.IDENTIFIER"/>
-</head>
-<Content>Bei vielen Pflanzen sind die Blätter je nach ihrer Position am Stengel (unten, Mitte, oben) verschieden gestaltet.
-Man spricht von Grundblättern (oft im Kreis am Boden um den Stengelgrund herum angeordnet), Stengelblättern,
-Hochblättern (Blätter im Bereich der Blüten und Blütenstände). Zur Beantwortung dieser Frage sind die Blätter
- im mittleren Bereich des Stengels maßgeblich.</Content>
 </MMInfo>
 <MMInfo>
 <head profile="http://dublincore.org/documents/dcq-html/">
