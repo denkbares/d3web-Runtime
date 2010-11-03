@@ -20,6 +20,7 @@ package de.d3web.core.knowledge.terminology.info;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -288,6 +289,33 @@ public class Property<T> {
 		catch (IllegalAccessException e) {
 			// must not happen, cause we do not use a constructor method
 			throw new IllegalStateException();
+		}
+	}
+
+	/**
+	 * Returns if this property have the ability to parse String representations
+	 * into a value of this property.
+	 * 
+	 * @created 02.11.2010
+	 * @return if this property can be parsed from a String
+	 */
+	public boolean canParseValue() {
+		// use string directly if T == String
+		// because String only supports valueOf(Object)
+		// instead of valueOf(String)
+		Class<T> clazz = getStoredClass();
+		if (String.class.isAssignableFrom(clazz)) return true;
+
+		// find method and check for public access
+		try {
+			Method method = clazz.getMethod("valueOf", String.class);
+			return Modifier.isPublic(method.getModifiers());
+		}
+		catch (SecurityException e) {
+			return false;
+		}
+		catch (NoSuchMethodException e) {
+			return false;
 		}
 	}
 
