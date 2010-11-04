@@ -651,7 +651,8 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer, DCMarkedUp {
 		}
 		else {
 			for (QContainer qcontainer : getQContainers()) {
-				if (qcontainer.getName().equals(id)) {
+				String name = qcontainer.getName();
+				if (name != null && name.equals(id)) {
 					return qcontainer;
 				}
 			}
