@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -24,16 +24,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.d3web.abstraction.ActionSetValue;
+import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.diaFlux.ConditionTrue;
 import de.d3web.diaFlux.inference.FluxSolver;
 
 /**
- * 
+ *
  * @author Reinhard Hatko
- * 
+ *
  */
 public final class FlowFactory {
 
@@ -52,7 +55,32 @@ public final class FlowFactory {
 	}
 
 	public Flow createFlow(String id, String name, List<INode> nodes, List<IEdge> edges) {
-		return new Flow(id, name, nodes, edges);
+
+		Flow flow = new Flow(id, name, nodes, edges);
+
+		for (IEdge edge : edges) {
+
+			Condition condition = edge.getCondition();
+
+			if (condition != ConditionTrue.INSTANCE) {
+
+				for (NamedObject nobject : condition.getTerminalObjects()) {
+
+					EdgeMap slice = (EdgeMap) nobject.getKnowledge(FluxSolver.class,
+							FluxSolver.DIAFLUX);
+
+					if (slice == null) {
+						slice = new EdgeMap("EdgeMap" + nobject.getId());
+						nobject.addKnowledge(FluxSolver.class, slice, MethodKind.FORWARD);
+					}
+
+					slice.addEdge(edge);
+				}
+
+			}
+		}
+
+		return flow;
 
 	}
 

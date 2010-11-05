@@ -44,13 +44,20 @@ public class NodeEntry extends AbstractEntry {
 	public boolean propagate(Session session,
 			Collection<PropagationEntry> changes) {
 
-		return !checkSupport(session);
+		return false;
 	}
 
 	@Override
 	public boolean takeSnapshot(Session session, SnapshotNode node) {
+
+		boolean removeSupport = this.removeSupport(session);
+
+		if (!removeSupport) System.out.println("Could not remove support");
+
 		// the node has to know how to take the snapshot.
-		return getNode().takeSnapshot(session);
+		getNode().takeSnapshot(session);
+
+		return true;
 	}
 
 }

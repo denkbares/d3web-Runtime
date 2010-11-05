@@ -44,7 +44,6 @@ public class StartNode extends Node {
 	}
 
 	@Override
-	public boolean takeSnapshot(Session session) {
-		return false;
+	public void takeSnapshot(Session session) {
 	}
 }

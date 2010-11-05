@@ -20,44 +20,6 @@
 
 package de.d3web.diaFlux.inference;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.MethodKind;
-import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.PropagationEntry;
-import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.RuleSet;
-import de.d3web.core.inference.condition.CondAnd;
-import de.d3web.core.inference.condition.CondEqual;
-import de.d3web.core.inference.condition.Condition;
-import de.d3web.core.inference.condition.NoAnswerException;
-import de.d3web.core.inference.condition.UnknownAnswerException;
-import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.NamedObject;
-import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.Fact;
-import de.d3web.core.session.blackboard.Facts;
-import de.d3web.core.session.values.ChoiceValue;
-import de.d3web.diaFlux.ComposedNodeAction;
-import de.d3web.diaFlux.IndicateFlowAction;
-import de.d3web.diaFlux.flow.DiaFluxCaseObject;
-import de.d3web.diaFlux.flow.NodeSupport;
-import de.d3web.diaFlux.flow.Flow;
-import de.d3web.diaFlux.flow.FlowData;
-import de.d3web.diaFlux.flow.FlowSet;
-import de.d3web.diaFlux.flow.IEdge;
-import de.d3web.diaFlux.flow.INode;
-import de.d3web.diaFlux.flow.INodeData;
-import de.d3web.diaFlux.flow.ISupport;
-import de.d3web.diaFlux.flow.SnapshotNode;
-import de.d3web.diaFlux.flow.StartNode;
 
 /**
  * 

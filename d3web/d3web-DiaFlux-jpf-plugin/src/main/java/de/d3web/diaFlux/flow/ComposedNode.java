@@ -21,13 +21,10 @@
 package de.d3web.diaFlux.flow;
 
 import de.d3web.core.session.Session;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
-import de.d3web.diaFlux.inference.Entry;
 import de.d3web.diaFlux.inference.FluxSolver;
 import de.d3web.diaFlux.inference.IPath;
-import de.d3web.diaFlux.inference.Path;
-import de.d3web.diaFlux.inference.PathEntry;
-import de.d3web.diaFlux.inference.PathReference;
 
 /**
  *
@@ -51,8 +48,10 @@ public class ComposedNode extends Node {
 
 		StartNode startNode = DiaFluxUtils.findStartNode(session, flowName, startNodeName);
 
+		FluxSolver.indicateFlowFromAction(session, startNode, new NodeSupport(this));
+
 		// this node now supports the startnode
-		FluxSolver.addSupport(session, startNode, new NodeSupport(this));
+//		FluxSolver.addSupport(session, startNode, new NodeSupport(this));
 	}
 
 	@Override
@@ -63,20 +62,24 @@ public class ComposedNode extends Node {
 	}
 
 	@Override
-	public Entry createEntry(Session session, ISupport support) {
-
+	public SessionObject createCaseObject(Session session) {
 		StartNode startNode = DiaFluxUtils.findStartNode(session, flowName, startNodeName);
-		path = new Path(startNode, support);
 
-		DiaFluxUtils.getFlowData(session).addPathRef(new PathReference(path));
+		return new ComposedNodeData(this, startNode);
 
-		return new PathEntry(path, this, support);
+// StartNode startNode = DiaFluxUtils.findStartNode(session, flowName,
+		// startNodeName);
+		// path = new Path(startNode, support);
+		//
+		// DiaFluxUtils.getFlowData(session).addPathRef(new
+		// PathReference(path));
+		//
+		// return new PathEntry(path, this, support);
 	}
 
 	@Override
-	public boolean takeSnapshot(Session session) {
+	public void takeSnapshot(Session session) {
 
-		return false;
 	}
 
 }

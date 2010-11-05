@@ -34,7 +34,6 @@ public class CommentNode extends Node {
 	}
 
 	@Override
-	public boolean takeSnapshot(Session session) {
-		return true;
+	public void takeSnapshot(Session session) {
 	}
 }

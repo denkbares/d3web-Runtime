@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -23,11 +23,12 @@ package de.d3web.diaFlux.flow;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.session.Session;
+import de.d3web.diaFlux.inference.DiaFluxUtils;
 
 /**
- * 
+ *
  * @author Reinhard Hatko
- * 
+ *
  *         Created: 20.12.2009
  */
 public class EdgeSupport implements ISupport {
@@ -40,17 +41,27 @@ public class EdgeSupport implements ISupport {
 		this.edge = edge;
 	}
 
-	public boolean isValid(Session theCase) {
+	public boolean isValid(Session session) {
 
-		try {
-			return edge.getCondition().eval(theCase);
+		INode startNode = edge.getStartNode();
 
-		}
-		catch (NoAnswerException e) {
+		boolean active = DiaFluxUtils.getNodeData(startNode, session).isActive();
+
+		// if the starting node is not supported, this support is also not valid
+		if (!active) {
 			return false;
-		}
-		catch (UnknownAnswerException e) {
-			return false;
+		} // starting node is supported, now it depends on the condition
+		else {
+			try {
+				return edge.getCondition().eval(session);
+
+			}
+			catch (NoAnswerException e) {
+				return false;
+			}
+			catch (UnknownAnswerException e) {
+				return false;
+			}
 		}
 
 	}

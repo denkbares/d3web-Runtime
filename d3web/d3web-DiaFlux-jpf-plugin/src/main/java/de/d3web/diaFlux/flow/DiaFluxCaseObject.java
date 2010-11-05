@@ -29,36 +29,40 @@ import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.diaFlux.inference.IPath;
-import de.d3web.diaFlux.inference.Path;
-import de.d3web.diaFlux.inference.PathReference;
 
 /**
  *
- * @author Reinhard Hatko Created on: 04.11.2009
+ * @author Reinhard Hatko
+ *
+ *         Created on: 04.11.2009
  */
 public class DiaFluxCaseObject extends SessionObject {
 
-	private final Map<Flow, FlowData> map;
-	private final List<IPath> pathes;
+	private final Map<Flow, IPath> map;
 	private long lastPropagationTime = Long.MIN_VALUE;
 	private IPath activePath;
 
-	public DiaFluxCaseObject(CaseObjectSource theSourceObject, Map<Flow, FlowData> flowdatas) {
+	public DiaFluxCaseObject(CaseObjectSource theSourceObject, Map<Flow, IPath> flowdatas) {
 		super(theSourceObject);
 		this.map = Collections.unmodifiableMap(flowdatas);
-		this.pathes = new ArrayList<IPath>(5);
 	}
 
-	public FlowData getFlowData(Flow flow) {
+	public IPath getPath(Flow flow) {
 		return map.get(flow);
 	}
 
 	/**
-	 * Returns an unmodifiable Collection of the current pathes
-	 *
+	 * Returns an unmodifiable Collection of the currently active pathes
+	 * 
 	 */
-	public Collection<IPath> getPathes() {
-		return Collections.unmodifiableCollection(pathes);
+	public Collection<IPath> getActivePathes() {
+		List<IPath> result = new ArrayList<IPath>();
+
+		for (IPath path : map.values()) {
+			if (path.isActive()) result.add(path);
+		}
+
+		return result;
 	}
 
 	public void setActivePath(IPath activePath) {
@@ -70,9 +74,7 @@ public class DiaFluxCaseObject extends SessionObject {
 	}
 
 	/**
-	 * Adds the provided path to the currently active pathes of the session. If
-	 * a path starting at the StartNode of the path is already contained, the
-	 * provided path is NOT added as an active Path.
+	 * Adds the provided path to the currently active pathes of the session.
 	 *
 	 * @param session
 	 * @param support
@@ -82,50 +84,42 @@ public class DiaFluxCaseObject extends SessionObject {
 	 *         the start node of the provided path is already active), false
 	 *         otherwise
 	 */
-	public boolean addPath(Session session, StartNode startNode, ISupport support) {
+	// public boolean addPath(Session session, StartNode startNode, ISupport
+	// support) {
+	//
+	// if (!getNodeData(startNode).isActive()) {
+	// throw new IllegalStateException("StartNode '"
+	// + startNode + "' does not have support and can not be added.");
+	// }
+	//
+	// IPath path = DiaFluxUtils.getPath(startNode.getFlow(), session);
+	//
+	// path.activate(startNode, support, session);
+	//
+	// pathes.add(path);
+	// return true;
+	//
+	// }
 
-		if (!getNodeData(startNode).isActive()) {
-			throw new IllegalStateException("StartNode '"
-					+ startNode + "' does not have support and can not be added.");
-		}
-
-		Path path = new Path(startNode, support);
-
-		pathes.add(path);
-		return true;
-
-	}
-
-	public void addPathRef(PathReference reference) {
-		pathes.add(reference);
-
-	}
 
 	/**
 	 *
 	 * @param path the path to remove
 	 * @return
 	 */
-	public boolean removePath(IPath path) {
-
-		if (path.isEmpty()) {
-			pathes.remove(path);
-			return true;
-		}
-		else {
-
-			INode firstNode = path.getFirstNode();
-			INodeData nodeData = getNodeData(firstNode);
-
-			if (nodeData.isActive()) throw new IllegalStateException("Path '" + path
-					+ "' is can not be removed as its first node '" + firstNode
-					+ "' is still active.");
-
-			pathes.remove(path);
-			return true;
-
-		}
-	}
+	// public boolean removePath(IPath path) {
+	//
+	// if (path.isEmpty()) {
+	// pathes.remove(path);
+	// return true;
+	// }
+	// else {
+	//
+	// pathes.remove(path);
+	// return true;
+	//
+	// }
+	// }
 
 	/**
 	 * @param node
@@ -133,7 +127,7 @@ public class DiaFluxCaseObject extends SessionObject {
 	 */
 	public INodeData getNodeData(INode node) {
 		Flow flow = node.getFlow();
-		return getFlowData(flow).getNodeData(node);
+		return getPath(flow).getNodeData(node);
 	}
 
 	/**
@@ -162,6 +156,15 @@ public class DiaFluxCaseObject extends SessionObject {
 		lastPropagationTime = propagationTime;
 
 		return newPropagation;
+	}
+
+	/**
+	 *
+	 * @param edge
+	 * @return
+	 */
+	public EdgeData getEdgeData(IEdge edge) {
+		return null;
 	}
 
 }

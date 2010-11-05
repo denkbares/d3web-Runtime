@@ -40,7 +40,7 @@ public class SnapshotNode extends Node {
 	@Override
 	public void doAction(Session session) {
 
-		IPath path = DiaFluxUtils.getFlowData(session).getActivePath();
+		IPath path = DiaFluxUtils.getDiaFluxCaseObject(session).getActivePath();
 
 		FluxSolver.takeSnapshot(session, path, this);
 	}
@@ -51,8 +51,8 @@ public class SnapshotNode extends Node {
 	}
 
 	@Override
-	public boolean takeSnapshot(Session session) {
-		return false;
+	public void takeSnapshot(Session session) {
 	}
+
 
 }

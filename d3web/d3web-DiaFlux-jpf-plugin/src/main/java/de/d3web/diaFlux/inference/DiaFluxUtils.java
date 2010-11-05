@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -27,15 +27,17 @@ import java.util.logging.Logger;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
+import de.d3web.diaFlux.flow.EdgeData;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowSet;
+import de.d3web.diaFlux.flow.IEdge;
 import de.d3web.diaFlux.flow.INode;
 import de.d3web.diaFlux.flow.INodeData;
 import de.d3web.diaFlux.flow.StartNode;
 
 /**
  * @author Reinhard Hatko
- * 
+ *
  *         Created: 07.08.2010
  */
 public final class DiaFluxUtils {
@@ -55,14 +57,21 @@ public final class DiaFluxUtils {
 	}
 
 	public static INodeData getNodeData(INode node, Session session) {
-		DiaFluxCaseObject caseObject = getFlowData(session);
-		return caseObject.getNodeData(node);
+		return getDiaFluxCaseObject(session).getNodeData(node);
 	}
 
-	public static FlowSet getFlowSet(Session theCase) {
+	public static EdgeData getEdgeData(IEdge edge, Session session) {
+		return getDiaFluxCaseObject(session).getEdgeData(edge);
+	}
 
-		return getFlowSet(theCase.getKnowledgeBase());
+	public static FlowSet getFlowSet(Session session) {
 
+		return getFlowSet(session.getKnowledgeBase());
+
+	}
+
+	public static IPath getPath(Flow flow, Session session) {
+		return getDiaFluxCaseObject(session).getPath(flow);
 	}
 
 	public static boolean isFlowCase(Session theCase) {
@@ -74,7 +83,7 @@ public final class DiaFluxUtils {
 		return flowSet != null && !flowSet.getFlows().isEmpty();
 	}
 
-	public static DiaFluxCaseObject getFlowData(Session theCase) {
+	public static DiaFluxCaseObject getDiaFluxCaseObject(Session theCase) {
 
 		FlowSet flowSet = getFlowSet(theCase);
 

@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -28,6 +28,8 @@ import java.util.logging.Logger;
 
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.diaFlux.inference.DiaFluxUtils;
+import de.d3web.diaFlux.inference.FluxSolver;
 
 public class NodeData extends SessionObject implements INodeData {
 
@@ -50,9 +52,42 @@ public class NodeData extends SessionObject implements INodeData {
 	}
 
 	@Override
+	public void propagate(Session session) {
+
+		boolean support = checkSupport(session);
+
+		if (!support) {
+			FluxSolver.undoAction(session, getNode());
+		}
+	}
+
+
+	/**
+	 * Checks if this node's support is still valid. If the support is no longer
+	 * valid, it is removed. If it is valid, nothing is done. Returns if the
+	 * node has still support.
+	 *
+	 * @param session
+	 * @return if the node is still active
+	 */
+	protected boolean checkSupport(Session session) {
+
+		for (ISupport support : new ArrayList<ISupport>(supports)) {
+
+			if (!support.isValid(session)) {
+				FluxSolver.removeSupport(session, getNode(), support);
+			}
+		}
+
+		return isActive();
+	}
+
+	@Override
 	public boolean addSupport(Session session, ISupport support) {
-		if (!support.isValid(session)) throw new IllegalStateException(
-				"Can not add invalid support '" + support + "'.");
+		if (!support.isValid(session)) {
+			throw new IllegalStateException(
+					"Can not add invalid support '" + support + "'.");
+		}
 
 		if (supports.contains(support)) {
 			String msg = "Support '" + support + "' is already contained in Node '" + getNode()
@@ -61,7 +96,8 @@ public class NodeData extends SessionObject implements INodeData {
 			return false;
 		}
 
-		return supports.add(support);
+		supports.add(support);
+		return true;
 	}
 
 	@Override
@@ -81,6 +117,22 @@ public class NodeData extends SessionObject implements INodeData {
 	public String toString() {
 		return getClass().getSimpleName() + "[" + getNode() + ", active=" + isActive()
 				+ ", support=" + supports.size() + "]" + Integer.toHexString(hashCode());
+	}
+
+	@Override
+	public void takeSnapshot(Session session, SnapshotNode node) {
+		getNode().takeSnapshot(session);
+	}
+
+	protected void reset(Session session) {
+
+		supports.clear();
+
+		for (IEdge edge : getNode().getOutgoingEdges()) {
+
+			DiaFluxUtils.getEdgeData(edge, session).setHasFired(false);
+		}
+
 	}
 
 }

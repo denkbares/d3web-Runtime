@@ -19,12 +19,18 @@
 package de.d3web.diaFlux.inference;
 
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.List;
 
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.session.Session;
+import de.d3web.diaFlux.flow.EdgeData;
+import de.d3web.diaFlux.flow.Flow;
+import de.d3web.diaFlux.flow.IEdge;
 import de.d3web.diaFlux.flow.INode;
+import de.d3web.diaFlux.flow.INodeData;
+import de.d3web.diaFlux.flow.ISupport;
 import de.d3web.diaFlux.flow.SnapshotNode;
+import de.d3web.diaFlux.flow.StartNode;
 
 /**
  *
@@ -33,13 +39,6 @@ import de.d3web.diaFlux.flow.SnapshotNode;
  */
 public interface IPath {
 
-	/**
-	 * Returns the first Node of this path. This has to be either a StartNode or
-	 * a SnapshotNode. Null if the path is empty.
-	 *
-	 * @return
-	 */
-	INode getFirstNode();
 
 	boolean propagate(Session session, Collection<PropagationEntry> changes);
 
@@ -47,6 +46,30 @@ public interface IPath {
 
 	boolean isEmpty();
 
-	Iterator<? extends Entry> iterator();
+	Flow getFlow();
+
+	/**
+	 *
+	 * @created 05.11.2010
+	 * @return
+	 */
+	List<INode> getActiveNodes();
+
+	/**
+	 *
+	 * @created 05.11.2010
+	 * @return
+	 */
+	List<IEdge> getActiveEdges();
+
+
+	boolean isActive();
+
+
+	EdgeData getEdgeData(IEdge edge);
+
+	INodeData getNodeData(INode node);
+
+	void activate(StartNode startNode, ISupport support, Session session);
 
 }

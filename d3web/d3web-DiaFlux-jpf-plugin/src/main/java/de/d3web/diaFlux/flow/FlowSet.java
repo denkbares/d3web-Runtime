@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -30,9 +30,10 @@ import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.diaFlux.inference.FluxSolver;
+import de.d3web.diaFlux.inference.IPath;
 
 /**
- * 
+ *
  * @author Reinhard Hatko Created on: 04.11.2009
  */
 public class FlowSet implements KnowledgeSlice, CaseObjectSource {
@@ -48,10 +49,10 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource {
 	@Override
 	public SessionObject createCaseObject(Session session) {
 
-		Map<Flow, FlowData> flowdatas = new HashMap<Flow, FlowData>();
+		Map<Flow, IPath> flowdatas = new HashMap<Flow, IPath>();
 
 		for (Flow flow : map.values()) {
-			FlowData flowdata = (FlowData) flow.createCaseObject(session);
+			IPath flowdata = (IPath) flow.createCaseObject(session);
 			flowdatas.put(flow, flowdata);
 		}
 

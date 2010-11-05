@@ -27,8 +27,6 @@ import java.util.List;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.diaFlux.inference.Entry;
-import de.d3web.diaFlux.inference.NodeEntry;
 
 /**
  *
@@ -50,10 +48,6 @@ public abstract class Node implements INode, CaseObjectSource {
 		this.name = name;
 	}
 
-	@Override
-	public Entry createEntry(Session session, ISupport support) {
-		return new NodeEntry(this, support);
-	}
 
 	protected boolean addOutgoingEdge(IEdge edge) {
 		if (edge == null) throw new IllegalArgumentException("edge must not be null");
@@ -144,6 +138,6 @@ public abstract class Node implements INode, CaseObjectSource {
 	}
 
 	@Override
-	public abstract boolean takeSnapshot(Session session);
+	public abstract void takeSnapshot(Session session);
 
 }

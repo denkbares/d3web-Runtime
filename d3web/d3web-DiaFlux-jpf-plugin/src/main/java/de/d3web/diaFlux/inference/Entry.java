@@ -65,12 +65,11 @@ public interface Entry {
 	boolean removeSupport(Session session);
 
 	/**
-	 *
-	 *
-	 * @created 02.09.2010
+	 * 
+	 * 
 	 * @param session the current session
 	 * @param node the node, the snapshot starts at
-	 * @return ??
+	 * @return returns true
 	 */
 	boolean takeSnapshot(Session session, SnapshotNode node);
 

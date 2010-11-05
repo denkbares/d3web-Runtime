@@ -20,9 +20,18 @@
 
 package de.d3web.diaFlux.flow;
 
+import java.util.List;
+
 import de.d3web.core.inference.PSAction;
+import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.blackboard.Blackboard;
+import de.d3web.core.session.blackboard.DefaultFact;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.diaFlux.inference.FluxSolver;
+import de.d3web.indication.ActionIndication;
+import de.d3web.indication.inference.PSMethodUserSelected;
 
 public class ActionNode extends Node {
 
@@ -51,9 +60,38 @@ public class ActionNode extends Node {
 	}
 
 	@Override
-	public boolean takeSnapshot(Session session) {
-		// TODO ??
-		return true;
+	public void takeSnapshot(Session session) {
+		if (action instanceof ActionIndication) {
+			ActionIndication aind = (ActionIndication) action;
+			List<QASet> backwardObjects = aind.getBackwardObjects();
+			if (backwardObjects.size() != 1) {
+				System.out.println("Check");
+			}
+			else {
+
+				QASet set = backwardObjects.get(0);
+
+				if (set instanceof Question) {
+					Question question = (Question) set;
+					Blackboard blackboard = session.getBlackboard();
+					if (UndefinedValue.isNotUndefinedValue(blackboard.getValue(question))) {
+						blackboard.addValueFact(
+								new DefaultFact(question, UndefinedValue.getInstance(),
+										PSMethodUserSelected.getInstance(),
+										PSMethodUserSelected.getInstance()));
+					}
+
+					blackboard.removeInterviewFacts(question);
+
+				}
+				else {
+					System.out.println("check");
+				}
+
+			}
+
+		}
+
 	}
 
 }

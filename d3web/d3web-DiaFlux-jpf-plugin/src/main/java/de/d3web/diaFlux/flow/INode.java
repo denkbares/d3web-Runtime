@@ -27,7 +27,6 @@ import java.util.List;
 
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
-import de.d3web.diaFlux.inference.Entry;
 
 /**
  * @author Reinhard Hatko
@@ -56,16 +55,30 @@ public interface INode extends CaseObjectSource {
 	 */
 	void setFlow(Flow flow);
 
+	/**
+	 *
+	 *
+	 * @return s the name of the node
+	 */
 	String getName();
 
+	/**
+	 * Sets the name of the node
+	 *
+	 * @param name the new name
+	 */
 	void setName(String name);
 
-	Entry createEntry(Session session, ISupport support);
 
+	/**
+	 *
+	 *
+	 * @param session
+	 */
 	void doAction(Session session);
 
 	void undoAction(Session session);
 
-	boolean takeSnapshot(Session session);
+	void takeSnapshot(Session session);
 
 }
