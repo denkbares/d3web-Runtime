@@ -40,11 +40,12 @@ public class DiaFluxCaseObject extends SessionObject {
 
 	private final Map<Flow, IPath> map;
 	private long lastPropagationTime = Long.MIN_VALUE;
-	private IPath activePath;
+	private final List<SnapshotNode> snapshotNodes;
 
 	public DiaFluxCaseObject(CaseObjectSource theSourceObject, Map<Flow, IPath> flowdatas) {
 		super(theSourceObject);
 		this.map = Collections.unmodifiableMap(flowdatas);
+		this.snapshotNodes = new ArrayList<SnapshotNode>();
 	}
 
 	public IPath getPath(Flow flow) {
@@ -53,7 +54,7 @@ public class DiaFluxCaseObject extends SessionObject {
 
 	/**
 	 * Returns an unmodifiable Collection of the currently active pathes
-	 * 
+	 *
 	 */
 	public Collection<IPath> getActivePathes() {
 		List<IPath> result = new ArrayList<IPath>();
@@ -65,106 +66,62 @@ public class DiaFluxCaseObject extends SessionObject {
 		return result;
 	}
 
-	public void setActivePath(IPath activePath) {
-		this.activePath = activePath;
-	}
-
-	public IPath getActivePath() {
-		return activePath;
-	}
-
-	/**
-	 * Adds the provided path to the currently active pathes of the session.
-	 *
-	 * @param session
-	 * @param support
-	 * @param path to be add as active Path
-	 *
-	 * @return true if the path is a new active path (i.e. no path starting at
-	 *         the start node of the provided path is already active), false
-	 *         otherwise
-	 */
-	// public boolean addPath(Session session, StartNode startNode, ISupport
-	// support) {
-	//
-	// if (!getNodeData(startNode).isActive()) {
-	// throw new IllegalStateException("StartNode '"
-	// + startNode + "' does not have support and can not be added.");
-	// }
-	//
-	// IPath path = DiaFluxUtils.getPath(startNode.getFlow(), session);
-	//
-	// path.activate(startNode, support, session);
-	//
-	// pathes.add(path);
-	// return true;
-	//
-	// }
-
-
-	/**
-	 *
-	 * @param path the path to remove
-	 * @return
-	 */
-	// public boolean removePath(IPath path) {
-	//
-	// if (path.isEmpty()) {
-	// pathes.remove(path);
-	// return true;
-	// }
-	// else {
-	//
-	// pathes.remove(path);
-	// return true;
-	//
-	// }
-	// }
-
-	/**
-	 * @param node
-	 * @return
-	 */
-	public INodeData getNodeData(INode node) {
-		Flow flow = node.getFlow();
-		return getPath(flow).getNodeData(node);
-	}
-
 	/**
 	 * Checks if a new propagation has started by comparing the current
-	 * propagation time with the last one. Returns, if a new propagation has
-	 * started.
+	 * propagation time with the last one. If a new propagation has started the
+	 * (new) current propagation time is set.
+	 *
+	 * Returns, if a new propagation has started.
 	 *
 	 * @param session the current session
 	 */
 	public boolean checkPropagationTime(Session session) {
 
 		// first call to propagate from 'init' is not within a propagation
-
 		if (!session.getPropagationManager().isInPropagation()) return false;
 
 		long propagationTime = session.getPropagationManager().getPropagationTime();
 
-		boolean newPropagation;
 		if (propagationTime > lastPropagationTime) {
-			newPropagation = true;
+			lastPropagationTime = propagationTime;
+			return true;
 		}
 		else {
-			newPropagation = false;
+			return false;
 		}
 
-		lastPropagationTime = propagationTime;
 
-		return newPropagation;
 	}
 
 	/**
+	 * Registers the supplied snapshot node for taking a snapshot. The snapshot
+	 * is taking after the current propagation is finished, unless the snapshot
+	 * is unregistered before that.
 	 *
-	 * @param edge
-	 * @return
+	 * The snapshot can not be taken immediately at reaching the SnapshotNode,
+	 * because it could loose its support during the same propagation cycle.
+	 *
+	 *
+	 * @param node
+	 * @param session
 	 */
-	public EdgeData getEdgeData(IEdge edge) {
-		return null;
+	public void registerSnapshot(SnapshotNode node, Session session) {
+		this.snapshotNodes.add(node);
+
 	}
+
+	public void unregisterSnapshot(SnapshotNode node, Session session) {
+		this.snapshotNodes.remove(node);
+
+	}
+
+	public List<SnapshotNode> getRegisteredSnapshots(){
+		return Collections.unmodifiableList(snapshotNodes);
+	}
+
+	public void clearRegisteredSnapshots() {
+		snapshotNodes.clear();
+	}
+
 
 }

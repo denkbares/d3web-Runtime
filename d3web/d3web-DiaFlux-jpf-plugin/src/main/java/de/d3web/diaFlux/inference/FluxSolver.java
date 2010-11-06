@@ -23,26 +23,28 @@ package de.d3web.diaFlux.inference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
-import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.condition.CondAnd;
-import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
-import de.d3web.diaFlux.IndicateFlowAction;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
+import de.d3web.diaFlux.flow.EdgeMap;
 import de.d3web.diaFlux.flow.Flow;
+import de.d3web.diaFlux.flow.IEdge;
 import de.d3web.diaFlux.flow.INode;
 import de.d3web.diaFlux.flow.INodeData;
 import de.d3web.diaFlux.flow.ISupport;
 import de.d3web.diaFlux.flow.SnapshotNode;
 import de.d3web.diaFlux.flow.StartNode;
+import de.d3web.diaFlux.flow.ValidSupport;
 
 /**
  *
@@ -71,10 +73,7 @@ public class FluxSolver implements PSMethod {
 			for (StartNode startNode : flow.getStartNodes()) {
 
 				if (startNode.getName().equals("Start")) {
-					Rule rule = new Rule("FCIndication_", FluxSolver.class);
-					rule.setAction(new IndicateFlowAction("Main", "Start"));
-					rule.setCondition(new CondAnd(new ArrayList<Condition>()));
-					rule.check(session);
+					activate(session, startNode, new ValidSupport());
 				}
 			}
 
@@ -85,22 +84,13 @@ public class FluxSolver implements PSMethod {
 
 	}
 
-	public static void indicateFlowFromAction(Session session, StartNode startNode, ISupport support) {
-		INodeData nodeData = DiaFluxUtils.getNodeData(startNode, session);
+	public static void activate(Session session, StartNode startNode, ISupport support) {
 
-		boolean active = nodeData.isActive();
+		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+				"Activating startnode '" + startNode.getName() + "' of flow '"
+						+ startNode.getFlow().getName() + "'.");
 
-		if (active) {
-			FluxSolver.addSupport(session, startNode, support);
-
-		} // if node was not active before adding support, start new path
-		else {
-			IPath flowData = DiaFluxUtils.getPath(startNode.getFlow(), session);
-
-			flowData.activate(startNode, support, session);
-
-
-		}
+		DiaFluxUtils.getPath(startNode, session).activate(startNode, support, session);
 
 	}
 
@@ -144,6 +134,14 @@ public class FluxSolver implements PSMethod {
 
 		if (caseObject.checkPropagationTime(session)) {
 
+			List<SnapshotNode> snapshots = caseObject.getRegisteredSnapshots();
+
+			for (SnapshotNode node : snapshots) {
+				takeSnapshot(session, node);
+			}
+
+			caseObject.clearRegisteredSnapshots();
+
 		}
 
 		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
@@ -152,15 +150,33 @@ public class FluxSolver implements PSMethod {
 		try {
 			session.getPropagationManager().openPropagation();
 
-
 			for (IPath path : new ArrayList<IPath>(caseObject.getActivePathes())) {
 
 
-				caseObject.setActivePath(path);
+				for (PropagationEntry propagationEntry : changes) {
+					TerminologyObject object = propagationEntry.getObject();
+					EdgeMap slice = (EdgeMap) ((NamedObject) object).getKnowledge(FluxSolver.class,
+							MethodKind.FORWARD);
 
-				path.propagate(session, changes);
+					if (slice == null) continue; // TO does not occur in any
+													// edge
 
-				caseObject.setActivePath(null);
+					// iterate over all edges of the current path
+					for (IEdge edge : slice.getEdges(path.getFlow())) {
+
+						INode node = edge.getStartNode();
+
+						// if the node the edge starts at is active
+						if (path.getNodeData(node).isActive()) {
+
+							// ...propagate starting at this node
+							path.propagate(session, node);
+						}
+
+					}
+
+				}
+
 			}
 
 
@@ -178,32 +194,36 @@ public class FluxSolver implements PSMethod {
 	public static void undoAction(Session session, INode node) {
 		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
 				("Undoing action of node: " + node));
+
 		node.undoAction(session);
 	}
 
 	public static void doAction(Session session, INode node) {
 		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
 				("Doing action of node: " + node));
+
 		node.doAction(session);
 	}
 
 
+	public static void takeSnapshot(Session session, SnapshotNode node) {
+
+		IPath path = DiaFluxUtils.getPath(node, session);
+
+		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+				"Start taking snapshot on path: " + path);
+
+		path.takeSnapshot(session, node, node);
+
+		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+				"Finished taking snapshot on path: " + path);
+
+	}
 
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
 		// diaflux does not derive own facts
 		return Facts.mergeError(facts);
-	}
-
-	public static void takeSnapshot(Session session, IPath path, SnapshotNode node) {
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
-				"Start taking snapshot on path: " + path);
-
-		path.takeSnapshot(session, node);
-
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
-				"Finished taking snapshot on path: " + path);
-
 	}
 
 	@Override

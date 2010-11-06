@@ -21,64 +21,31 @@
 package de.d3web.diaFlux.flow;
 
 import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.diaFlux.CallFlowAction;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
-import de.d3web.diaFlux.inference.FluxSolver;
-import de.d3web.diaFlux.inference.IPath;
 
 /**
  *
  * @author Reinhard Hatko
  * @created 10.08.10
  */
-public class ComposedNode extends Node {
+public class ComposedNode extends ActionNode {
 
-	private final String flowName;
-	private final String startNodeName;
-	private IPath path;
-
-	public ComposedNode(String id, String flowName, String startNodeName) {
-		super(id, flowName);
-		this.flowName = flowName;
-		this.startNodeName = startNodeName;
+	public ComposedNode(String id, String name, CallFlowAction action) {
+		super(id, name, action);
 	}
 
-	@Override
-	public void doAction(Session session) {
-
-		StartNode startNode = DiaFluxUtils.findStartNode(session, flowName, startNodeName);
-
-		FluxSolver.indicateFlowFromAction(session, startNode, new NodeSupport(this));
-
-		// this node now supports the startnode
-//		FluxSolver.addSupport(session, startNode, new NodeSupport(this));
-	}
 
 	@Override
-	public void undoAction(Session session) {
-		StartNode startNode = DiaFluxUtils.findStartNode(session, flowName, startNodeName);
+	public void takeSnapshot(Session session, SnapshotNode snapshotNode) {
+		super.takeSnapshot(session, snapshotNode);
+		CallFlowAction action = (CallFlowAction) getAction();
+		StartNode startNode = DiaFluxUtils.findStartNode(session, action.getFlowName(),
+				action.getStartNodeName());
 
-		FluxSolver.removeSupport(session, startNode, new NodeSupport(this));
-	}
-
-	@Override
-	public SessionObject createCaseObject(Session session) {
-		StartNode startNode = DiaFluxUtils.findStartNode(session, flowName, startNodeName);
-
-		return new ComposedNodeData(this, startNode);
-
-// StartNode startNode = DiaFluxUtils.findStartNode(session, flowName,
-		// startNodeName);
-		// path = new Path(startNode, support);
-		//
-		// DiaFluxUtils.getFlowData(session).addPathRef(new
-		// PathReference(path));
-		//
-		// return new PathEntry(path, this, support);
-	}
-
-	@Override
-	public void takeSnapshot(Session session) {
+		// TODO this will need some special treatment
+		// as taking the snapshot usually does not start at the start node
+		startNode.takeSnapshot(session, snapshotNode);
 
 	}
 

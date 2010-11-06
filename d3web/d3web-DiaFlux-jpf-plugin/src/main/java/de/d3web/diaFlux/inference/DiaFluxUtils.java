@@ -57,11 +57,12 @@ public final class DiaFluxUtils {
 	}
 
 	public static INodeData getNodeData(INode node, Session session) {
-		return getDiaFluxCaseObject(session).getNodeData(node);
+		return getDiaFluxCaseObject(session).getPath(node.getFlow()).getNodeData(node);
+
 	}
 
 	public static EdgeData getEdgeData(IEdge edge, Session session) {
-		return getDiaFluxCaseObject(session).getEdgeData(edge);
+		return getPath(edge, session).getEdgeData(edge);
 	}
 
 	public static FlowSet getFlowSet(Session session) {
@@ -74,20 +75,29 @@ public final class DiaFluxUtils {
 		return getDiaFluxCaseObject(session).getPath(flow);
 	}
 
-	public static boolean isFlowCase(Session theCase) {
+	public static IPath getPath(INode node, Session session) {
+		return getPath(node.getFlow(), session);
+	}
 
-		if (theCase == null) return false;
+	public static IPath getPath(IEdge edge, Session session) {
+		return getPath(edge.getStartNode().getFlow(), session);
+	}
 
-		FlowSet flowSet = getFlowSet(theCase);
+
+	public static boolean isFlowCase(Session session) {
+
+		if (session == null) return false;
+
+		FlowSet flowSet = getFlowSet(session);
 
 		return flowSet != null && !flowSet.getFlows().isEmpty();
 	}
 
-	public static DiaFluxCaseObject getDiaFluxCaseObject(Session theCase) {
+	public static DiaFluxCaseObject getDiaFluxCaseObject(Session session) {
 
-		FlowSet flowSet = getFlowSet(theCase);
+		FlowSet flowSet = getFlowSet(session);
 
-		return (DiaFluxCaseObject) theCase.getCaseObject(flowSet);
+		return (DiaFluxCaseObject) session.getCaseObject(flowSet);
 	}
 
 	public static void addFlow(Flow flow, KnowledgeBase base, String title) {
@@ -111,9 +121,9 @@ public final class DiaFluxUtils {
 	/**
 	 * returns the StartNode that is called by the supplied action
 	 */
-	public static StartNode findStartNode(Session theCase, String flowName, String startNodeName) {
+	public static StartNode findStartNode(Session session, String flowName, String startNodeName) {
 
-		FlowSet flowSet = getFlowSet(theCase);
+		FlowSet flowSet = getFlowSet(session);
 
 		Flow subflow = flowSet.getByName(flowName);
 

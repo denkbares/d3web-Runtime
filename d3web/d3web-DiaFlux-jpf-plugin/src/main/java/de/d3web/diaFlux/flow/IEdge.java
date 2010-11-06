@@ -43,8 +43,8 @@ public interface IEdge extends CaseObjectSource {
 	INode getEndNode();
 
 	/**
-	 *
-	 * @return s the edges predicate
+	 * 
+	 * @return s the edges guard
 	 */
 	Condition getCondition();
 

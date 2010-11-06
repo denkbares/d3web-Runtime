@@ -34,16 +34,12 @@ public class StartNode extends Node {
 	}
 
 	@Override
-	public void doAction(Session session) {
-
+	protected boolean addIncomingEdge(IEdge edge) {
+		throw new UnsupportedOperationException("can not add incoming edge to start node");
 	}
 
 	@Override
-	public void undoAction(Session session) {
-
-	}
-
-	@Override
-	public void takeSnapshot(Session session) {
+	public void takeSnapshot(Session session, SnapshotNode snapshotNode) {
+		super.takeSnapshot(session, snapshotNode);
 	}
 }

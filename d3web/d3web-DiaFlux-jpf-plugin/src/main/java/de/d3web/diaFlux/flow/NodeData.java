@@ -21,19 +21,17 @@
 package de.d3web.diaFlux.flow;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.diaFlux.inference.DiaFluxUtils;
 import de.d3web.diaFlux.inference.FluxSolver;
 
 public class NodeData extends SessionObject implements INodeData {
 
-	private final List<ISupport> supports;
+	final List<ISupport> supports;
 
 	public NodeData(INode node) {
 		super(node);
@@ -102,15 +100,12 @@ public class NodeData extends SessionObject implements INodeData {
 
 	@Override
 	public boolean removeSupport(ISupport support) {
-		if (!supports.contains(support)) {
-			return false;
-		}
 		return supports.remove(support);
 	}
 
 	@Override
 	public List<ISupport> getSupports() {
-		return Collections.unmodifiableList(supports);
+		return new ArrayList<ISupport>(supports);
 	}
 
 	@Override
@@ -119,20 +114,6 @@ public class NodeData extends SessionObject implements INodeData {
 				+ ", support=" + supports.size() + "]" + Integer.toHexString(hashCode());
 	}
 
-	@Override
-	public void takeSnapshot(Session session, SnapshotNode node) {
-		getNode().takeSnapshot(session);
-	}
 
-	protected void reset(Session session) {
-
-		supports.clear();
-
-		for (IEdge edge : getNode().getOutgoingEdges()) {
-
-			DiaFluxUtils.getEdgeData(edge, session).setHasFired(false);
-		}
-
-	}
 
 }

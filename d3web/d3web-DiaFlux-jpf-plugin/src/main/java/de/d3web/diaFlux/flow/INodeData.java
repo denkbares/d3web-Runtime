@@ -31,10 +31,30 @@ import de.d3web.core.session.Session;
  */
 public interface INodeData {
 
+	/**
+	 * Returns the corresponding node of this NodeData instance.
+	 *
+	 * @return
+	 */
 	INode getNode();
 
+	/**
+	 * Returns if this node is active, ie if it has support.
+	 *
+	 * @created 06.11.2010
+	 * @return
+	 */
 	boolean isActive();
 
+	/**
+	 * Adds the suplied support to the this NodeData.
+	 *
+	 *
+	 * @param session
+	 * @param support
+	 * @return s true if the support could be added, ie if the support was not
+	 *         already contained
+	 */
 	boolean addSupport(Session session, ISupport support);
 
 	/**
@@ -49,11 +69,25 @@ public interface INodeData {
 	 */
 	void propagate(Session session);
 
+	/**
+	 * Removes the supplied support.
+	 *
+	 * @param support
+	 * @return true, if the support was contained before and removed
+	 */
 	boolean removeSupport(ISupport support);
 
+	// TODO remove
 	List<ISupport> getSupports();
 
-	void takeSnapshot(Session session, SnapshotNode node);
+	/**
+	 * This method is only to be called during taking a snapshot. It removes all
+	 * support from this node.
+	 *
+	 * @param session
+	 */
+	// public void reset(Session session);
+
 
 
 }

@@ -22,8 +22,6 @@ package de.d3web.diaFlux.flow;
 
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
-import de.d3web.diaFlux.inference.FluxSolver;
-import de.d3web.diaFlux.inference.IPath;
 
 /**
  *
@@ -40,18 +38,20 @@ public class SnapshotNode extends Node {
 	@Override
 	public void doAction(Session session) {
 
-		IPath path = DiaFluxUtils.getDiaFluxCaseObject(session).getActivePath();
-
-		FluxSolver.takeSnapshot(session, path, this);
+		DiaFluxUtils.getDiaFluxCaseObject(session).registerSnapshot(this, session);
 	}
 
 	@Override
 	public void undoAction(Session session) {
-		// nothing...
+		DiaFluxUtils.getDiaFluxCaseObject(session).unregisterSnapshot(this, session);
 	}
 
 	@Override
-	public void takeSnapshot(Session session) {
+	public void takeSnapshot(Session session, SnapshotNode snapshotNode) {
+		super.takeSnapshot(session, snapshotNode);
+
+		DiaFluxUtils.getNodeData(this, session).addSupport(session, new ValidSupport());
+
 	}
 
 

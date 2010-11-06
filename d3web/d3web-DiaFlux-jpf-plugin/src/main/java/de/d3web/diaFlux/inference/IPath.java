@@ -18,10 +18,8 @@
  */
 package de.d3web.diaFlux.inference;
 
-import java.util.Collection;
 import java.util.List;
 
-import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.EdgeData;
 import de.d3web.diaFlux.flow.Flow;
@@ -40,9 +38,9 @@ import de.d3web.diaFlux.flow.StartNode;
 public interface IPath {
 
 
-	boolean propagate(Session session, Collection<PropagationEntry> changes);
+	boolean propagate(Session session, INode node);
 
-	boolean takeSnapshot(Session session, SnapshotNode node);
+	boolean takeSnapshot(Session session, SnapshotNode snapshotNode, INode node);
 
 	boolean isEmpty();
 

@@ -21,7 +21,6 @@
 package de.d3web.diaFlux.inference;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -30,16 +29,11 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.d3web.core.inference.MethodKind;
-import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
-import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.diaFlux.flow.EdgeData;
-import de.d3web.diaFlux.flow.EdgeMap;
 import de.d3web.diaFlux.flow.EdgeSupport;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.IEdge;
@@ -94,32 +88,35 @@ public class Path extends SessionObject implements IPath {
 
 	@Override
 	public void activate(StartNode startNode, ISupport support, Session session) {
-		INodeData data = getNodeData(startNode);
-		data.addSupport(session, support);
-		flow(startNode, session);
+
+		INodeData nodeData = DiaFluxUtils.getNodeData(startNode, session);
+
+		boolean active = nodeData.isActive();
+
+		FluxSolver.addSupport(session, startNode, support);
+
+		// if node was not active before adding support, start flowing
+		if (!active) {
+			flow(startNode, session);
+		}
 
 	}
 
+
+	/**
+	 * Starts propagation beginning at the supplied node. At first
+	 *
+	 * @created 05.11.2010
+	 * @param session
+	 * @param node
+	 */
 	@Override
-	public boolean propagate(Session session, Collection<PropagationEntry> changes) {
+	public boolean propagate(Session session, INode node) {
 
-		for (PropagationEntry propagationEntry : changes) {
-			TerminologyObject object = propagationEntry.getObject();
-			EdgeMap slice = (EdgeMap) ((NamedObject) object).getKnowledge(FluxSolver.class,
-					MethodKind.FORWARD);
+		maintainTruth(node, session);
 
-			if (slice == null) continue;
-
-			for (IEdge edge : slice.getEdges(getFlow())) {
-
-				INode node = edge.getStartNode();
-
-				if (getNodeData(node).isActive()) {
-
-					propagate(session, node);
-				}
-
-			}
+		if (getNodeData(node).isActive()) {
+			flow(node, session);
 
 		}
 
@@ -127,21 +124,22 @@ public class Path extends SessionObject implements IPath {
 
 	}
 
-	/**
-	 *
-	 * @created 05.11.2010
-	 * @param session
-	 * @param node
-	 */
-	public void propagate(Session session, INode node) {
-		maintainTruth(node, session);
-
-		flow(node, session);
-	}
-
 	@Override
-	public boolean takeSnapshot(Session session, SnapshotNode node) {
+	public boolean takeSnapshot(Session session, SnapshotNode snapshotNode, INode node) {
 
+		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+				("**Taking Snapshot at node: " + node));
+
+		List<IEdge> activeEdges = selectActiveEdges(node.getIncomingEdges(), session);
+
+		node.takeSnapshot(session, null);
+
+
+		for (IEdge edge : activeEdges) {
+
+			takeSnapshot(session, snapshotNode, edge.getStartNode());
+
+		}
 
 		return true;
 	}
@@ -158,11 +156,6 @@ public class Path extends SessionObject implements IPath {
 
 		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
 				("Start flowing from node: " + node));
-
-		if (!DiaFluxUtils.getNodeData(node, session).isActive()) {
-			throw new IllegalStateException("Node '" + node + "' is not active.");
-		}
-
 
 		List<IEdge> edges = selectInactiveTrueEdges(node, session);
 
@@ -184,51 +177,67 @@ public class Path extends SessionObject implements IPath {
 
 		}
 
-
 	}
 
 	/**
-	 * Selects appropriate successor of {@code node} according to the current
-	 * state of the case.
+	 * Takes the given edge to reach its end node. Adds support to the reached
+	 * node. If the node was not yet active, its action is done, otherwise
+	 * nothing is done.
 	 *
-	 * @param node
-	 *
-	 * @param session
-	 *
-	 * @return the first edge of this path's current end node whose guard
-	 *         evaluates to true. Returns 'null' if no guard is true.
+	 * @param session the current session
+	 * @param edge the egde to take
+	 * @return the newly reached node, of it was not active before, null
+	 *         otherwise
 	 */
-	private List<IEdge> selectInactiveTrueEdges(INode node, Session session) {
+	private INode followEdge(Session session, IEdge edge) {
 
-		return selectEdges(true, node, session);
-	}
+		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+				("Following edge '" + edge + "'."));
 
-	private List<IEdge> selectActiveFalseEdges(INode node, Session session) {
+		getEdgeData(edge).setHasFired(true);
 
-		return selectEdges(false, node, session);
+		INode nextNode = edge.getEndNode();
+		INodeData nextNodeData = DiaFluxUtils.getNodeData(nextNode, session);
+
+		ISupport support = new EdgeSupport(edge);
+
+		if (nextNodeData.isActive()) {
+
+			Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+						"Node is already active: " + nextNode);
+			FluxSolver.addSupport(session, nextNode, support);
+
+			return null;
+
+		}
+
+		FluxSolver.addSupport(session, nextNode, support);
+
+		FluxSolver.doAction(session, nextNode);
+
+		return nextNode;
+
 	}
 
 	/**
+	 * Selects those edges that start at node that have not yeet fired, but
+	 * whose guards are true.
 	 *
-	 * @param state
 	 * @param node
 	 * @param session
 	 * @return
 	 */
-	private List<IEdge> selectEdges(boolean state, INode node, Session session) {
+	private List<IEdge> selectInactiveTrueEdges(INode node, Session session) {
+
 		List<IEdge> result = new LinkedList<IEdge>();
 
-		Iterator<IEdge> edges = node.getOutgoingEdges().iterator();
-
-		while (edges.hasNext()) {
-
-			IEdge edge = edges.next();
+		for (IEdge edge : node.getOutgoingEdges()) {
 
 			try {
 
-				if (getEdgeData(edge).hasFired() != state) {
+				if (!getEdgeData(edge).hasFired()) {
 
-					if (edge.getCondition().eval(session) == state) {
+					if (edge.getCondition().eval(session)) {
 						result.add(edge);
 					}
 
@@ -243,75 +252,45 @@ public class Path extends SessionObject implements IPath {
 		return result;
 	}
 
-
-
-
 	/**
-	 * Takes the given edge to reach its end node. If the node was already
-	 * active, new support for edge is added and false is returned.
+	 * Selects those edges starting at node that have fired, but whose guards
+	 * are no longer true.
 	 *
-	 * If the node was not yet active, its action is done, then a new Entry for
-	 * the reached node is added.
-	 *
-	 *
-	 * @param session the current session
-	 * @param edge the egde to take
-	 * @return true if the end node of edge was activated, ie it had no support
-	 *         before
+	 * @param node
+	 * @param session
+	 * @return
 	 */
-	private INode followEdge(Session session, IEdge edge) {
+	private List<IEdge> selectActiveFalseEdges(INode node, Session session) {
 
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
-				("Following edge '" + edge + "'."));
+		List<IEdge> result = new LinkedList<IEdge>();
 
+		Iterator<IEdge> edges = node.getOutgoingEdges().iterator();
 
-		getEdgeData(edge).setHasFired(true);
+		while (edges.hasNext()) {
 
-		INode nextNode = edge.getEndNode();
-		INodeData nextNodeData = DiaFluxUtils.getNodeData(nextNode, session);
+			IEdge edge = edges.next();
 
-		ISupport support;
+			try {
 
-		// if (nextNode instanceof SnapshotNode) {
-		//
-		// support = new ValidSupport();
-		//
-		// FluxSolver.addSupport(session, nextNode, support);
-		//
-		// FluxSolver.doAction(session, nextNode);
-		//
-		// return nextNode;
-		//
-		// }
+				if (getEdgeData(edge).hasFired()) {
 
-		support = new EdgeSupport(edge);
+					if (!edge.getCondition().eval(session)) {
+						result.add(edge);
+					}
 
-		if (nextNodeData.isActive()) {
-
-			Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
-						("Node is already active: " + nextNode));
-			FluxSolver.addSupport(session, nextNode, support);
-
-			return null;
-
+				}
+			}
+			catch (NoAnswerException e) {
+				// Edge is also not true, when no answer is given...
+				result.add(edge);
+			}
+			catch (UnknownAnswerException e) {
+				// or when the answer is unknown
+				result.add(edge);
+			}
 		}
 
-		// Which to perform first? Doing the action or adding the entry for the
-		// new node?
-		// Doing the action first: When ComposedNode is reached, then the
-		// NodeSupport for the called startnode is not yet valid, because the
-		// ComposedNode has not yet support by the taken edge
-		//
-		// Adding the path entry first: Could be easier to take snapshot, if
-		// entry for snapshot node is not yet added.
-		// Or at first, add support, then do action, then create entry??
-
-		FluxSolver.addSupport(session, nextNode, support);
-
-		FluxSolver.doAction(session, nextNode);
-
-		return nextNode;
-
+		return result;
 	}
 
 
@@ -323,20 +302,20 @@ public class Path extends SessionObject implements IPath {
 				"Maintaining truth at node '" + node.getName() + "'.");
 
 		INodeData data = getNodeData(node);
-		data.propagate(session);
 
-		boolean active = data.isActive();
+		// checks the nodes support
+		data.propagate(session);
 
 		List<IEdge> edges;
 
 		// if node is active...
-		if (active) {
+		if (data.isActive()) {
 			// ...only the edges that became false have to be undone
 			edges = selectActiveFalseEdges(node, session);
 		}
 		else {// ...otherwise (node is no longer supported):
-				// all edges have to be undone
-			edges = selectActiveEdges(node, session);
+			// all activeedges have to be undone
+			edges = selectActiveEdges(node.getOutgoingEdges(), session);
 
 		}
 
@@ -345,9 +324,6 @@ public class Path extends SessionObject implements IPath {
 			getEdgeData(edge).setHasFired(false);
 
 			INode endNode = edge.getEndNode();
-
-			// Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
-			// "Node is no longer supported: " + node);
 
 			maintainTruth(endNode, session);
 
@@ -359,16 +335,15 @@ public class Path extends SessionObject implements IPath {
 
 	/**
 	 *
-	 * @created 05.11.2010
 	 * @param node
 	 * @param session
 	 * @return
 	 */
-	private List<IEdge> selectActiveEdges(INode node, Session session) {
+	private List<IEdge> selectActiveEdges(List<IEdge> edges, Session session) {
 
 		List<IEdge> result = new LinkedList<IEdge>();
 
-		for (IEdge edge : node.getOutgoingEdges()) {
+		for (IEdge edge : edges) {
 			if (getEdgeData(edge).hasFired()) {
 				result.add(edge);
 
@@ -427,12 +402,7 @@ public class Path extends SessionObject implements IPath {
 
 	@Override
 	public String toString() {
-		if (isEmpty()) {
-			return "empty path";
-		}
-		else {
-			return "Path ";
-		}
+		return super.toString() + "[" + getFlow() + "]";
 	}
 
 }

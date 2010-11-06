@@ -60,7 +60,9 @@ public class ActionNode extends Node {
 	}
 
 	@Override
-	public void takeSnapshot(Session session) {
+	public void takeSnapshot(Session session, SnapshotNode snapshotNode) {
+		super.takeSnapshot(session, snapshotNode);
+
 		if (action instanceof ActionIndication) {
 			ActionIndication aind = (ActionIndication) action;
 			List<QASet> backwardObjects = aind.getBackwardObjects();

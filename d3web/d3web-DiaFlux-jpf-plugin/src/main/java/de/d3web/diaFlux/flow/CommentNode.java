@@ -20,7 +20,6 @@
 
 package de.d3web.diaFlux.flow;
 
-import de.d3web.core.session.Session;
 
 /**
  *
@@ -33,7 +32,4 @@ public class CommentNode extends Node {
 		super(id, name);
 	}
 
-	@Override
-	public void takeSnapshot(Session session) {
-	}
 }

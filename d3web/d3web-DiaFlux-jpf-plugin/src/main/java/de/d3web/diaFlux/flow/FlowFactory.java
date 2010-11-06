@@ -30,6 +30,7 @@ import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.diaFlux.CallFlowAction;
 import de.d3web.diaFlux.ConditionTrue;
 import de.d3web.diaFlux.inference.FluxSolver;
 
@@ -54,11 +55,30 @@ public final class FlowFactory {
 
 	}
 
+	/**
+	 * Creates a Flow instance with the supplied nodes and edges. Furthermore
+	 * creates the EdgeMap KnowledgeSlices and attaches them to the according
+	 * TerminologyObjects.
+	 *
+	 * @param id
+	 * @param name
+	 * @param nodes
+	 * @param edges
+	 * @return
+	 */
 	public Flow createFlow(String id, String name, List<INode> nodes, List<IEdge> edges) {
 
 		Flow flow = new Flow(id, name, nodes, edges);
 
-		for (IEdge edge : edges) {
+		createEdgeMaps(flow);
+
+		return flow;
+
+	}
+
+	private void createEdgeMaps(Flow flow) {
+
+		for (IEdge edge : flow.getEdges()) {
 
 			Condition condition = edge.getCondition();
 
@@ -79,9 +99,6 @@ public final class FlowFactory {
 
 			}
 		}
-
-		return flow;
-
 	}
 
 	public INode createActionNode(String id, PSAction action) {
@@ -90,7 +107,12 @@ public final class FlowFactory {
 	}
 
 	public IEdge createEdge(String id, INode startNode, INode endNode, Condition condition) {
-		return new Edge(id, startNode, endNode, condition);
+		Edge edge = new Edge(id, startNode, endNode, condition);
+
+		((Node) startNode).addOutgoingEdge(edge);
+		((Node) endNode).addIncomingEdge(edge);
+
+		return edge;
 	}
 
 	public INode createStartNode(String id, String name) {
@@ -104,7 +126,11 @@ public final class FlowFactory {
 
 	public INode createComposedNode(String id, String flowName, String startNodeName) {
 
-		return new ComposedNode(id, flowName, startNodeName);
+		CallFlowAction action = new CallFlowAction(flowName, startNodeName);
+
+		String name = "CALL[" + flowName + "(" + startNodeName + ")]";
+
+		return new ComposedNode(id, name, action);
 	}
 
 	public INode createCommentNode(String id, String name) {

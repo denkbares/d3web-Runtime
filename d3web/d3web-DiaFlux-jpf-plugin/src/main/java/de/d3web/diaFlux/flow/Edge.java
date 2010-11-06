@@ -52,8 +52,6 @@ class Edge implements IEdge, CaseObjectSource {
 		this.condition = condition;
 		this.id = id;
 
-		((Node) startNode).addOutgoingEdge(this);
-
 	}
 
 	@Override

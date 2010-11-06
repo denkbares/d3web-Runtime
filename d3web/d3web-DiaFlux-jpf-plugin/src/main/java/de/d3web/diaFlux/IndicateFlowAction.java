@@ -69,7 +69,7 @@ public class IndicateFlowAction extends PSAction {
 
 		support = new RuleSupport((Rule) source);
 
-		FluxSolver.indicateFlowFromAction(theCase, startNode, support);
+		FluxSolver.activate(theCase, startNode, support);
 
 	}
 

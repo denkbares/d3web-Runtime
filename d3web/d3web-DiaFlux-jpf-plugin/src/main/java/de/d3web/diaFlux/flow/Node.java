@@ -27,6 +27,7 @@ import java.util.List;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.diaFlux.inference.DiaFluxUtils;
 
 /**
  *
@@ -37,6 +38,7 @@ import de.d3web.core.session.blackboard.SessionObject;
 public abstract class Node implements INode, CaseObjectSource {
 
 	protected final List<IEdge> outgoing;
+	protected final List<IEdge> incoming;
 	protected final String id;
 	protected Flow flow;
 	protected String name;
@@ -45,6 +47,7 @@ public abstract class Node implements INode, CaseObjectSource {
 
 		this.id = id;
 		this.outgoing = new ArrayList<IEdge>();
+		this.incoming = new ArrayList<IEdge>();
 		this.name = name;
 	}
 
@@ -59,9 +62,24 @@ public abstract class Node implements INode, CaseObjectSource {
 
 	}
 
+	protected boolean addIncomingEdge(IEdge edge) {
+		if (edge == null) throw new IllegalArgumentException("edge must not be null");
+
+		if (edge.getEndNode() != this) throw new IllegalArgumentException("edge '" + edge
+				+ "' does not end at: " + this.toString());
+
+		return incoming.add(edge);
+
+	}
+
 	@Override
 	public final List<IEdge> getOutgoingEdges() {
 		return Collections.unmodifiableList(outgoing);
+	}
+
+	@Override
+	public List<IEdge> getIncomingEdges() {
+		return Collections.unmodifiableList(incoming);
 	}
 
 	@Override
@@ -79,9 +97,58 @@ public abstract class Node implements INode, CaseObjectSource {
 		return name;
 	}
 
+
+
 	@Override
-	public void setName(String name) {
-		this.name = name;
+	public SessionObject createCaseObject(Session session) {
+		return new NodeData(this);
+	}
+
+	@Override
+	public String getID() {
+		return id;
+	}
+
+	@Override
+	public void doAction(Session session) {
+
+	}
+
+	@Override
+	public void undoAction(Session session) {
+
+	}
+
+	@Override
+	public void takeSnapshot(Session session, SnapshotNode snapshotNode) {
+
+		resetNodeData(session);
+
+	}
+
+	/**
+	 * Deactivates this node. Removes all support and resets all incoming edges.
+	 *
+	 * @param session
+	 */
+	protected void resetNodeData(Session session) {
+
+		INodeData nodeData = DiaFluxUtils.getNodeData(this, session);
+
+		for (ISupport support : nodeData.getSupports()) {
+			nodeData.removeSupport(support);
+		}
+
+
+		for (IEdge edge : getIncomingEdges()) {
+
+			EdgeData edgeData = DiaFluxUtils.getEdgeData(edge, session);
+
+			if (edgeData.hasFired()) {
+				edgeData.setHasFired(false);
+			}
+		}
+
 	}
 
 	@Override
@@ -116,28 +183,5 @@ public abstract class Node implements INode, CaseObjectSource {
 	public String toString() {
 		return getClass().getSimpleName() + "[" + getID() + ", " + getName() + "]";
 	}
-
-	@Override
-	public SessionObject createCaseObject(Session session) {
-		return new NodeData(this);
-	}
-
-	@Override
-	public String getID() {
-		return id;
-	}
-
-	@Override
-	public void doAction(Session session) {
-
-	}
-
-	@Override
-	public void undoAction(Session session) {
-
-	}
-
-	@Override
-	public abstract void takeSnapshot(Session session);
 
 }

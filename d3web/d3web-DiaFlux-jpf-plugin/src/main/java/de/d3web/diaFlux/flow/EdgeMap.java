@@ -29,9 +29,10 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.inference.FluxSolver;
 
-
 /**
- *
+ * An EdgeMap is a KowledgeSlice to be added at a TerminologyObject. It saves
+ * all Egdes that contain the TerminologyObject in its guard.
+ * 
  * @author Reinhard Hatko
  * @created 04.11.2010
  */

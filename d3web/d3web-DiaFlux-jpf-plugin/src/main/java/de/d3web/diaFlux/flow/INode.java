@@ -41,6 +41,12 @@ public interface INode extends CaseObjectSource {
 	List<IEdge> getOutgoingEdges();
 
 	/**
+	 * 
+	 * @return s a list of this node's incoming edges.
+	 */
+	List<IEdge> getIncomingEdges();
+
+	/**
 	 * @return s the id of the node
 	 */
 	String getID();
@@ -62,23 +68,21 @@ public interface INode extends CaseObjectSource {
 	 */
 	String getName();
 
-	/**
-	 * Sets the name of the node
-	 *
-	 * @param name the new name
-	 */
-	void setName(String name);
-
 
 	/**
-	 *
+	 * Does the action that is associated with this node.
 	 *
 	 * @param session
 	 */
 	void doAction(Session session);
 
+	/**
+	 * Undoes the action that is associated with this node.
+	 *
+	 * @param session
+	 */
 	void undoAction(Session session);
 
-	void takeSnapshot(Session session);
+	void takeSnapshot(Session session, SnapshotNode snapshotNode);
 
 }
