@@ -20,15 +20,11 @@
 package de.d3web.core.io.fragments;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.io.PersistenceManager;
@@ -37,28 +33,19 @@ import de.d3web.core.knowledge.DefaultInfoStore;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.knowledge.terminology.info.Property.Autosave;
-import de.d3web.core.utilities.Triple;
 
 /**
  * Handler for properties
  * 
  * @author hoernlein, Markus Friedrich (denkbares GmbH)
  */
-public class PropertiesHandler implements FragmentHandler {
+public class PropertiesHandler {
 
-	@Override
 	public boolean canRead(Element element) {
 		return element.getNodeName().equals("Properties");
 	}
 
-	@Override
-	public boolean canWrite(Object object) {
-		return (object instanceof InfoStore);
-	}
-
-	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public InfoStore read(KnowledgeBase kb, Element element) throws IOException {
 		InfoStore infoStore = new DefaultInfoStore();
 		List<Element> proplist = XMLUtil.getElementList(element.getChildNodes());
 		for (Element prop : proplist) {
@@ -106,35 +93,4 @@ public class PropertiesHandler implements FragmentHandler {
 		}
 		return infoStore;
 	}
-
-	@Override
-	public Element write(Object object, Document doc) throws IOException {
-		Element element = doc.createElement("Properties");
-		InfoStore infoStore = (InfoStore) object;
-		Collection<Triple<Property<?>, Locale, Object>> entries = infoStore.entries();
-		if (entries.size() > 0) {
-			for (Triple<Property<?>, Locale, Object> p : entries) {
-				if (p.getA().hasState(Autosave.basic)) {
-					Object value = p.getC();
-					if (value != null) {
-						Element propertyElement = doc.createElement("Property");
-						propertyElement.setAttribute("name", p.getA().getName());
-						propertyElement.setAttribute("class", value.getClass().getName());
-						if (value instanceof String || value instanceof Integer
-								|| value instanceof Double || value instanceof Float
-								|| value instanceof Boolean || value instanceof URL) {
-							propertyElement.setTextContent(value.toString());
-						}
-						else {
-							propertyElement.appendChild(PersistenceManager.getInstance().writeFragment(
-									value, doc));
-						}
-						element.appendChild(propertyElement);
-					}
-				}
-			}
-		}
-		return element;
-	}
-
 }

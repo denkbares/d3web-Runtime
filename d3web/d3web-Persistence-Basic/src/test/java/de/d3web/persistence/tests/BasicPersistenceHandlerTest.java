@@ -84,8 +84,6 @@ public class BasicPersistenceHandlerTest {
 
 		this.addInitQuestions();
 
-		this.addCosts();
-
 		XMLTag rootQASetTag = new XMLTag("rootQASet");
 		rootQASetTag.setContent("q1");
 		shouldTag.addChild(rootQASetTag);
@@ -121,37 +119,6 @@ public class BasicPersistenceHandlerTest {
 		isTag = new XMLTag(XMLTagUtils.generateNodeFromXMLCode(xmlcode, "KnowledgeBase", 0));
 
 		assertEquals("(0)", shouldTag, isTag);
-	}
-
-	private void addCosts() {
-		kb.setCostUnit("timeexpenditure-id", "Minuten");
-		kb.setCostVerbalization("timeexpenditure-id", "Arztzeit");
-
-		kb.setCostUnit("risk-id", "Punkte");
-		kb.setCostVerbalization("risk-id", "Patientenbelastung");
-
-		XMLTag costsTag = new XMLTag("Costs");
-		shouldTag.addChild(costsTag);
-
-		XMLTag costTag1 = new XMLTag("Cost");
-		costTag1.addAttribute("ID", "risk-id");
-		XMLTag verb1 = new XMLTag("Verbalization");
-		verb1.setContent("Patientenbelastung");
-		XMLTag unit1 = new XMLTag("Unit");
-		unit1.setContent("Punkte");
-		costTag1.addChild(verb1);
-		costTag1.addChild(unit1);
-		costsTag.addChild(costTag1);
-
-		XMLTag costTag2 = new XMLTag("Cost");
-		costTag2.addAttribute("ID", "timeexpenditure-id");
-		XMLTag verb2 = new XMLTag("Verbalization");
-		verb2.setContent("Arztzeit");
-		XMLTag unit2 = new XMLTag("Unit");
-		unit2.setContent("Minuten");
-		costTag2.addChild(verb2);
-		costTag2.addChild(unit2);
-		costsTag.addChild(costTag2);
 	}
 
 	private void addQASets() {

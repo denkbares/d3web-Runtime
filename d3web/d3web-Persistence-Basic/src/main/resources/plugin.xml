@@ -54,16 +54,6 @@
 	</extension>
 	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="DCMarkupHandler">
-		<parameter id="class"
-			value="de.d3web.core.io.fragments.DCMarkupHandler" />
-		<parameter id="name" value="DCMarkupHandler" />
-		<parameter id="description" value="Handler for DCMarkups" />
-		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
-	</extension>
-	
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="SolutionsHandler">
 		<parameter id="class"
 			value="de.d3web.core.io.fragments.SolutionsHandler" />
@@ -114,15 +104,6 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="PropertiesHandler">
-		<parameter id="class"
-			value="de.d3web.core.io.fragments.PropertiesHandler" />
-		<parameter id="name" value="PropertiesHandler" />
-		<parameter id="description" value="Handler for properties" />
-		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
-	</extension>
 	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="QContainerHandler">

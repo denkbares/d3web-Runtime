@@ -127,12 +127,10 @@ public class QuestionChoiceTest {
 		// MockPropertyDescriptor mpd = new
 		// MockPropertyDescriptor(q1,propertyKeys);
 
-		XMLTag propertiesTag = new XMLTag("Properties");
+		XMLTag propertiesTag = new XMLTag("infoStore");
 
-		XMLTag propertyTag2 = new XMLTag("Property");
-		propertyTag2.addAttribute("name", "cost");
-		// old: propertyTag2.addAttribute("descriptor", "cost");
-		propertyTag2.addAttribute("class", "java.lang.Double");
+		XMLTag propertyTag2 = new XMLTag("entry");
+		propertyTag2.addAttribute("property", "cost");
 		propertyTag2.setContent("20.0");
 
 		propertiesTag.addChild(propertyTag2);

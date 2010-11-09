@@ -1,28 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <KnowledgeBase id="" system="d3web" type="basic">
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="Bestimmung krautiger Blütenpflanzen" name="DC.title"/>
-<meta content="isVersionOf WB_ID_29238145450" name="DC.relation"/>
-</head>
 <InitQuestions>
 <Question ID="Q1499"/>
 <Question ID="Q1500"/>
 <Question ID="Q1501"/>
 </InitQuestions>
-<Costs>
-<Cost ID="cost">
-<Verbalization/>
-<Unit/>
-</Cost>
-<Cost ID="risk">
-<Verbalization/>
-<Unit/>
-</Cost>
-<Cost ID="timeexpenditure">
-<Verbalization/>
-<Unit/>
-</Cost>
-</Costs>
 <rootQASet>Q000</rootQASet>
 <rootSolution>P000</rootSolution>
 <QASets>
@@ -45,7 +27,6 @@
 <Text>beinahe ganz gespalten</Text>
 </Answer>
 </Answers>
-<Properties/>
 <Children>
 <Child ID="M1422"/>
 <Child ID="M1434"/>
@@ -70,7 +51,6 @@
 <Text>mehr Spalten</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M1434" type="OC">
 <Text>Blütenblattrand gezackt</Text>
@@ -82,7 +62,6 @@
 <Text>ja, deutlich </Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M1508" type="OC">
 <Text>Blütentyp strahlig</Text>
@@ -106,7 +85,6 @@
 <Text>Typ Witwenblume</Text>
 </Answer>
 </Answers>
-<Properties/>
 <Children>
 <Child ID="M1531"/>
 <Child ID="M1419"/>
@@ -128,7 +106,6 @@
 <Text>Unter- und Oberlippe verkürzt,  röhrenförmig (incl. Rachenblüte)</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M1514" type="OC">
 <Text>Blütentyp gespornt</Text>
@@ -152,7 +129,6 @@
 <Text>Typ Veilchen</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M1515" type="OC">
 <Text>Blütentyp glocken-, trichter-, becherförmig</Text>
@@ -167,7 +143,6 @@
 <Text>kugelglockig, becherförmig</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M1518" type="OC">
 <Text>Blattnervatur</Text>
@@ -179,7 +154,6 @@
 <Text>streifennervig (parallelnervig)</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M1526" type="OC">
 <Text>Blütentyp grob</Text>
@@ -203,7 +177,6 @@
 <Text>andere Blüten</Text>
 </Answer>
 </Answers>
-<Properties/>
 <Children>
 <Child ID="M1508"/>
 <Child ID="M1528"/>
@@ -223,15 +196,14 @@
 <Text>eher rundlich, kompakt (wie bei Platterbse)</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M1531" type="Num">
 <Text>Blütenblätteranzahl</Text>
-<Properties>
-<Property class="de.d3web.core.knowledge.terminology.info.NumericalInterval" name="range">
+<infoStore>
+<entry property="range">
 <NumInterval lower="1.0" type="LeftClosedRightClosedInterval" upper="20.0"/>
-</Property>
-</Properties>
+</entry>
+</infoStore>
 </Question>
 <Question ID="M1532" type="OC">
 <Text>Blütenstand</Text>
@@ -264,7 +236,6 @@
 <Text>Rispe</Text>
 </Answer>
 </Answers>
-<Properties/>
 <Children>
 <Child ID="M4679"/>
 <Child ID="M1916"/>
@@ -292,7 +263,6 @@
 <Text>gefingert</Text>
 </Answer>
 </Answers>
-<Properties/>
 <Children>
 <Child ID="M195"/>
 <Child ID="M202"/>
@@ -319,7 +289,6 @@
 <Text>buchtig</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M1536" type="OC">
 <Text>Blattstellung</Text>
@@ -340,7 +309,6 @@
 <Text>alle grundständig oder rosettig</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M1537" type="OC">
 <Text>Blütenfarbe</Text>
@@ -388,7 +356,6 @@
 <Text>schwarz</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M180" type="OC">
 <Text>Blütentyp weitere</Text>
@@ -406,7 +373,6 @@
 <Text>Typ Wolfsmilch</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M1916" type="OC">
 <Text>Blütenstand Dolde</Text>
@@ -421,7 +387,6 @@
 <Text>Scheindolde</Text>
 </Answer>
 </Answers>
-<Properties/>
 <Children>
 <Child ID="M1921"/>
 </Children>
@@ -454,15 +419,14 @@
 <Text>mehr als 80mm</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M1921" type="Num">
 <Text>Döldchenanzahl</Text>
-<Properties>
-<Property class="de.d3web.core.knowledge.terminology.info.NumericalInterval" name="range">
+<infoStore>
+<entry property="range">
 <NumInterval lower="2.0" type="LeftClosedRightClosedInterval" upper="100.0"/>
-</Property>
-</Properties>
+</entry>
+</infoStore>
 </Question>
 <Question ID="M193" type="OC">
 <Text>Blütenkelch</Text>
@@ -480,7 +444,6 @@
 <Text>dachziegelartig schuppig angeordnete Kelchblätter</Text>
 </Answer>
 </Answers>
-<Properties/>
 <Children>
 <Child ID="M2034"/>
 </Children>
@@ -495,7 +458,6 @@
 <Text>nein</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M195" type="OC">
 <Text>Blattfiedersymmetrie</Text>
@@ -507,7 +469,6 @@
 <Text>unpaarig (ungerade Anzahl Fiederblätter)</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M196" type="OC">
 <Text>Blattform</Text>
@@ -549,15 +510,14 @@
 <Text>spatelig</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M202" type="Num">
 <Text>Blattfiederpaare</Text>
-<Properties>
-<Property class="de.d3web.core.knowledge.terminology.info.NumericalInterval" name="range">
+<infoStore>
+<entry property="range">
 <NumInterval lower="1.0" type="LeftClosedRightClosedInterval" upper="100.0"/>
-</Property>
-</Properties>
+</entry>
+</infoStore>
 </Question>
 <Question ID="M2034" type="OC">
 <Text>Kelchfarbe</Text>
@@ -605,15 +565,14 @@
 <Text>schwarz</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M204" type="Num">
 <Text>Blattfingeranzahl</Text>
-<Properties>
-<Property class="de.d3web.core.knowledge.terminology.info.NumericalInterval" name="range">
+<infoStore>
+<entry property="range">
 <NumInterval lower="2.0" type="LeftClosedRightClosedInterval" upper="100.0"/>
-</Property>
-</Properties>
+</entry>
+</infoStore>
 </Question>
 <Question ID="M214" type="OC">
 <Text>Blatthaare</Text>
@@ -628,7 +587,6 @@
 <Text>stark bis dicht behaart</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M215" type="OC">
 <Text>Blattbefestigung</Text>
@@ -649,7 +607,6 @@
 <Text>durchwachsen</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M219" type="OC">
 <Text>Wuchsart</Text>
@@ -664,7 +621,6 @@
 <Text>rankend oder kletternd</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M220" type="OC">
 <Text>Stengelverzweigung</Text>
@@ -676,7 +632,6 @@
 <Text>verzweigt</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M221" type="OC">
 <Text>Stengelhöhe</Text>
@@ -703,7 +658,6 @@
 <Text>mehr als 150cm</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M222" type="OC">
 <Text>Stengelmilchsaft</Text>
@@ -718,7 +672,6 @@
 <Text>ja, gelber Milchsaft</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M223" type="OC">
 <Text>Stengelumfang</Text>
@@ -739,7 +692,6 @@
 <Text>andersartig kantig</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M224" type="OC">
 <Text>Stengelinneres</Text>
@@ -754,7 +706,6 @@
 <Text>weitröhrig hohl</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M225" type="OC">
 <Text>Stengelhaare</Text>
@@ -769,7 +720,6 @@
 <Text>stark bis dicht behaart</Text>
 </Answer>
 </Answers>
-<Properties/>
 <Children>
 <Child ID="M4830"/>
 </Children>
@@ -784,7 +734,6 @@
 <Text>nein</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M4679" type="OC">
 <Text>Köpfchengröße</Text>
@@ -814,7 +763,6 @@
 <Text>mehr als 80mm</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M4830" type="OC">
 <Text>Stengelhaare Besonderheiten</Text>
@@ -829,7 +777,6 @@
 <Text>keine der oben genannten Besonderheiten</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <Question ID="M731" type="OC">
 <Text>Blütezeit</Text>
@@ -871,7 +818,6 @@
 <Text>Dez</Text>
 </Answer>
 </Answers>
-<Properties/>
 </Question>
 <QContainer ID="Q000">
 <Text>Fragebögen</Text>
@@ -920,7 +866,6 @@
 </QContainer>
 <QContainer ID="Q182">
 <Text>Habitus</Text>
-<Properties/>
 </QContainer>
 </QASets>
 <Diagnoses>
@@ -957,11 +902,9 @@
 </Diagnosis>
 <Diagnosis ID="P7361">
 <Text>Gelbstern (Gagea lutea)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P3543">
 <Text>Kleine Traubenhyazinthe (Muscari botryoides)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P10">
 <Text>Fam. Hahnenfußgewächse (Ranunculaceae)</Text>
@@ -974,19 +917,15 @@
 </Diagnosis>
 <Diagnosis ID="P776">
 <Text>Busch-Windröschen (Anemone Nemorosa)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P3152">
 <Text>Sumpf-Dotterblume (Caltha palustris)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P3153" aPriProb="P2">
 <Text>Scharfer Hahnenfuß (Ranunculus acris)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P777">
 <Text>Scharbockskraut (Ranunculus ficaria)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P9">
 <Text>Fam. Mohngewächse (Papaveraceae)</Text>
@@ -997,11 +936,9 @@
 </Diagnosis>
 <Diagnosis ID="P2398">
 <Text>Großes Schöllkraut  (Chelidonium majus)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P968">
 <Text>Klatschmohn (Papaver rhoeas)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P12">
 <Text>Fam. Erdrauchgewächse (Fumariaceae)</Text>
@@ -1011,7 +948,6 @@
 </Diagnosis>
 <Diagnosis ID="P3634">
 <Text>Hohler Lerchensporn (Corydalis cava)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P7">
 <Text>Fam. Rosengewächse (Rosaceae)</Text>
@@ -1023,15 +959,12 @@
 </Diagnosis>
 <Diagnosis ID="P4045" aPriProb="P2">
 <Text>Bach-Nelkenwurz (Geum rivale)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P4714" aPriProb="P2">
 <Text>Echte Nelkenwurz (Geum urbanum)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P7487" aPriProb="P2">
 <Text>Kriech. Fingerkraut (Potentilla reptans)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P4">
 <Text>Fam. Schmetterlingsblütler (Fabaceae)</Text>
@@ -1052,50 +985,39 @@
 </Diagnosis>
 <Diagnosis ID="P6354">
 <Text>Bunte Kronwicke (Coronilla varia)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P4157">
 <Text>Schopf-Hufeisenklee (Hippocrepis comosa)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P5436">
 <Text>Wiesen-Platterbse (Lathyrus pratensis)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P2811">
 <Text>Wiesen-Hornklee (Lotus corniculatus)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P2812">
 <Text>Hopfenklee (Medicago lupulina)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P5647" aPriProb="P2">
 <Text>Weißer Steinklee (Melilotus alba)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P5646" aPriProb="P2">
 <Text>Echter Steinklee (Melilotus officinalis)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P4576">
 <Text>Gelber Acker-Klee (Trifolium campestre)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P4156" aPriProb="P2">
 <Text>Wiesen-Klee (Trifolium pratense)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P6356">
 <Text>Weiß-Klee (Trifolium repens)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P4158">
 <Text>Schmalblättrige Wicke (Vicia angustifolia)</Text>
 </Diagnosis>
 <Diagnosis ID="P3008" aPriProb="P2">
 <Text>Zaun-Wicke (Vicia sepium)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P13">
 <Text>Fam. Primelgewächse (Primulaceae)</Text>
@@ -1105,7 +1027,6 @@
 </Diagnosis>
 <Diagnosis ID="P2127">
 <Text>Wiesen-Schlüsselblume (Primula veris)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P14">
 <Text>Fam. Nelkengewächse (Cariophyllaceae)</Text>
@@ -1119,23 +1040,18 @@
 </Diagnosis>
 <Diagnosis ID="P1688">
 <Text>Acker-Hornkraut (Cerastium arvense)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P2500">
 <Text>Weißes Leimkraut (Silene alba)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P3256">
 <Text>Rotes Leimkraut (Silene dioica)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P1687" aPriProb="P2">
 <Text>Große Sternmiere (Stellaria holostea)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P1329" aPriProb="P2">
 <Text>Vogelmiere (Stellaria media)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P8">
 <Text>Fam. Rachenblütler (Scrophulariaceae)</Text>
@@ -1146,11 +1062,9 @@
 </Diagnosis>
 <Diagnosis ID="P4829" aPriProb="P2">
 <Text>Gamander-Ehrenpreis (Veronica chamaedrys)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P6078" aPriProb="P3">
 <Text>Acker-Ehrenpreis (Veronica persica)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P3">
 <Text>Fam. Lippenblütler (Lamiaceae)</Text>
@@ -1169,43 +1083,33 @@
 </Diagnosis>
 <Diagnosis ID="P3366">
 <Text>Kriechender Günsel (Ajuga reptans)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P7088">
 <Text>Heide-Günsel (Ajuga genevensis)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P6632" aPriProb="P2">
 <Text>Schwarznessel (Ballota nigra)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P6708" aPriProb="P2">
 <Text>Wirbeldost (Calamintha clinopodium)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P1572" aPriProb="P3">
 <Text>Efeu-Gundermann (Glechoma hederacea)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P123" aPriProb="P3">
 <Text>Weiße Taubnessel (Lamium album)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P2288" aPriProb="P2">
 <Text>Stengelumfassende Taubnessel (Lamium amplexicaule)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P3367">
 <Text>Goldnessel (Lamium galeobdolon)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P18">
 <Text>Rote Taubnessel (Lamium purpureum)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P3774" aPriProb="P2">
 <Text>Wiesen-Salbei (Salvia pratensis)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P5">
 <Text>Fam. Korbblütler (Asteraceae)</Text>
@@ -1223,39 +1127,30 @@
 </Diagnosis>
 <Diagnosis ID="P6172" aPriProb="P3">
 <Text>Gem. Schafgarbe (Achillea millefolium)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P122" aPriProb="P3">
 <Text>Gänseblümchen (Bellis perennis)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P5209" aPriProb="P3">
 <Text>Margerite (Chrysanthemum leucanthemum)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P1942">
 <Text>Kornblume (Centaurea cyanus)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P6270" aPriProb="P3">
 <Text>Gem. Wegwarte (Cichorium intybus)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P6897">
 <Text>Wiesen-Pippau (Crepis biennis)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P6355" aPriProb="P3">
 <Text>Duftlose Kamille (Matricaria inodora)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P368" aPriProb="P3">
 <Text>Wiesen-Löwenzahn (Taraxacum officinalis)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P3926" aPriProb="P2">
 <Text>Wiesen-Bocksbart (Tragopogon pratensis)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P2">
 <Text>Fam. Kreuzblütler (Brassicaceae)</Text>
@@ -1269,23 +1164,18 @@
 </Diagnosis>
 <Diagnosis ID="P16" aPriProb="P2">
 <Text>Knoblauchsrauke (Alliaria petiolata)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P43">
 <Text>Kahle Gänsekresse (Arabis glabra)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P44" aPriProb="P3">
 <Text>Gem. Hirtentäschel (Capsella bursa-pastoris)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P1198" aPriProb="P2">
 <Text>Wiesen-Schaumkraut (Cardamine pratense)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P42" aPriProb="P2">
 <Text>Acker-Senf (Sinapis arvensis)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P6">
 <Text>Fam. Doldenblütler (Apiaceae)</Text>
@@ -1296,11 +1186,9 @@
 </Diagnosis>
 <Diagnosis ID="P1470">
 <Text>Wiesen-Kerbel (Anthriscus sylvestris)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P6898" aPriProb="P3">
 <Text>Wilde Möhre (Daucus carota)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P11">
 <Text>Fam. Storchschnabelgewächse (Geraniaceae)</Text>
@@ -1313,18 +1201,15 @@
 </Diagnosis>
 <Diagnosis ID="P2169">
 <Text>Schierlings-Reiherschnabel (Erodium cicutarium)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P1085" aPriProb="P2">
 <Text>Wiesen-Storchschnabel (Geranium pratense)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P5973" aPriProb="P2">
 <Text>Kleiner Storchenschnabel (Geranium pusillum)</Text>
 </Diagnosis>
 <Diagnosis ID="P5526" aPriProb="P3">
 <Text>Ruprechtskraut (Geranium robertianum)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P597">
 <Text>Fam. Veilchengewächse (Violaceae)</Text>
@@ -1335,11 +1220,9 @@
 </Diagnosis>
 <Diagnosis ID="P623">
 <Text>Wohlriech. Veilchen (Viola odorata)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P4962" aPriProb="P2">
 <Text>Gem. Stiefmütterchen (Viola tricolor)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P598">
 <Text>Fam. Kardengewächse (Dipsacaceae)</Text>
@@ -1349,7 +1232,6 @@
 </Diagnosis>
 <Diagnosis ID="P4961" aPriProb="P2">
 <Text>Acker-Witwenblume (Knautia arvensis)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P2682">
 <Text>Fam. Rötegewächse (Rubiaceae)</Text>
@@ -1362,19 +1244,15 @@
 </Diagnosis>
 <Diagnosis ID="P2683">
 <Text>Gem. Kreuzlabkraut (Crucita laevipes)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P5870" aPriProb="P3">
 <Text>Gem. Labkraut (Galium mollugo)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P7282" aPriProb="P2">
 <Text>Waldmeister (Galium odoratum)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P6803" aPriProb="P2">
 <Text>Echtes Labkraut (Galium verum)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P3149">
 <Text>Fam. Rauhblattgewächse (Boraginaceae)</Text>
@@ -1387,19 +1265,15 @@
 </Diagnosis>
 <Diagnosis ID="P4449" aPriProb="P2">
 <Text>Acker-Vergißmeinnicht (Myosotis arvensis)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P3150" aPriProb="P2">
 <Text>Wald-Vergißmeinnicht (Myosotis sylvatica)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P7087">
 <Text>Echtes Lungenkraut (Pulmonaria officinalis)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P21" aPriProb="P2">
 <Text>Gem. Beinwell (Symphytum officinale)</Text>
-<Properties/>
 </Diagnosis>
 <Diagnosis ID="P17">
 <Text>Fam. Wolfsmilchgewächse (Euphorbiaceae)</Text>
@@ -1409,7 +1283,6 @@
 </Diagnosis>
 <Diagnosis ID="P20" aPriProb="P2">
 <Text>Zypressen-Wolfsmilch (Euphorbia cyparissias)</Text>
-<Properties/>
 </Diagnosis>
 </Diagnoses>
 <KnowledgeSlices/>

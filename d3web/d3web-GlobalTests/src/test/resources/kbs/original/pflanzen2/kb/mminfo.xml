@@ -1,899 +1,339 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<KnowledgeBase system="d3web" type="mminfo">
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="Bestimmung krautiger Blütenpflanzen" name="DC.title"/>
-<meta content="isVersionOf WB_ID_29238145450" name="DC.relation"/>
-</head>
 <MMInfos>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P7361" name="DC.source"/>
-<meta content="MMInfo116" name="DC.IDENTIFIER"/>
-</head>
-<Content>Gagea lutea</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P3543" name="DC.source"/>
-<meta content="MMInfo117" name="DC.IDENTIFIER"/>
-</head>
-<Content>Muscari botryoides</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P776" name="DC.source"/>
-<meta content="MMInfo112" name="DC.IDENTIFIER"/>
-</head>
-<Content>Anemone nemorosa</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P3152" name="DC.source"/>
-<meta content="MMInfo113" name="DC.IDENTIFIER"/>
-</head>
-<Content>Caltha palustris</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P3153" name="DC.source"/>
-<meta content="MMInfo114" name="DC.IDENTIFIER"/>
-</head>
-<Content>Ranunculus acris</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P777" name="DC.source"/>
-<meta content="MMInfo115" name="DC.IDENTIFIER"/>
-</head>
-<Content>Ranunculus ficaria</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P2398" name="DC.source"/>
-<meta content="MMInfo110" name="DC.IDENTIFIER"/>
-</head>
-<Content>Chelidonium majus</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P968" name="DC.source"/>
-<meta content="MMInfo111" name="DC.IDENTIFIER"/>
-</head>
-<Content>Papaver rhoeas</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P3634" name="DC.source"/>
-<meta content="MMInfo109" name="DC.IDENTIFIER"/>
-</head>
-<Content>Corydalis cava</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P4045" name="DC.source"/>
-<meta content="MMInfo107" name="DC.IDENTIFIER"/>
-</head>
-<Content>Geum rivale</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P4714" name="DC.source"/>
-<meta content="MMInfo108" name="DC.IDENTIFIER"/>
-</head>
-<Content>Geum urbanum</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P7487" name="DC.source"/>
-<meta content="MMInfo45" name="DC.IDENTIFIER"/>
-</head>
-<Content>Potentilla reptans</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P6354" name="DC.source"/>
-<meta content="MMInfo96" name="DC.IDENTIFIER"/>
-</head>
-<Content>Coronilla varia</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P4157" name="DC.source"/>
-<meta content="MMInfo97" name="DC.IDENTIFIER"/>
-</head>
-<Content>Hippocrepis comosa</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P5436" name="DC.source"/>
-<meta content="MMInfo98" name="DC.IDENTIFIER"/>
-</head>
-<Content>Lathyrus pratensis</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P2811" name="DC.source"/>
-<meta content="MMInfo99" name="DC.IDENTIFIER"/>
-</head>
-<Content>Lotus corniculatus</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P2812" name="DC.source"/>
-<meta content="MMInfo100" name="DC.IDENTIFIER"/>
-</head>
-<Content>Medicago lupulina</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P5647" name="DC.source"/>
-<meta content="MMInfo101" name="DC.IDENTIFIER"/>
-</head>
-<Content>Melilotus alba</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P5646" name="DC.source"/>
-<meta content="MMInfo102" name="DC.IDENTIFIER"/>
-</head>
-<Content>Melilotus officinalis</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P4576" name="DC.source"/>
-<meta content="MMInfo103" name="DC.IDENTIFIER"/>
-</head>
-<Content>Trifolium campestre</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P4156" name="DC.source"/>
-<meta content="MMInfo104" name="DC.IDENTIFIER"/>
-</head>
-<Content>Trifolium pratense</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P6356" name="DC.source"/>
-<meta content="MMInfo105" name="DC.IDENTIFIER"/>
-</head>
-<Content>Trifolium repens</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P3008" name="DC.source"/>
-<meta content="MMInfo106" name="DC.IDENTIFIER"/>
-</head>
-<Content>Vicia sepium</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P2127" name="DC.source"/>
-<meta content="MMInfo95" name="DC.IDENTIFIER"/>
-</head>
-<Content>Primula veris</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P1688" name="DC.source"/>
-<meta content="MMInfo90" name="DC.IDENTIFIER"/>
-</head>
-<Content>Cerastium arvense</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P2500" name="DC.source"/>
-<meta content="MMInfo91" name="DC.IDENTIFIER"/>
-</head>
-<Content>Silene alba</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P3256" name="DC.source"/>
-<meta content="MMInfo92" name="DC.IDENTIFIER"/>
-</head>
-<Content>Silene dioica</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P1687" name="DC.source"/>
-<meta content="MMInfo93" name="DC.IDENTIFIER"/>
-</head>
-<Content>Stellaria holostea</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P1329" name="DC.source"/>
-<meta content="MMInfo94" name="DC.IDENTIFIER"/>
-</head>
-<Content>Stellaria media</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P4829" name="DC.source"/>
-<meta content="MMInfo88" name="DC.IDENTIFIER"/>
-</head>
-<Content>Veronica chamaedrys</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P6078" name="DC.source"/>
-<meta content="MMInfo89" name="DC.IDENTIFIER"/>
-</head>
-<Content>Veronica persica</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P3366" name="DC.source"/>
-<meta content="MMInfo78" name="DC.IDENTIFIER"/>
-</head>
-<Content>Ajuga reptans</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P7088" name="DC.source"/>
-<meta content="MMInfo79" name="DC.IDENTIFIER"/>
-</head>
-<Content>Ajuga genevensis</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P6632" name="DC.source"/>
-<meta content="MMInfo80" name="DC.IDENTIFIER"/>
-</head>
-<Content>Ballota nigra</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P6708" name="DC.source"/>
-<meta content="MMInfo81" name="DC.IDENTIFIER"/>
-</head>
-<Content>Calamintha clinopodium</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P1572" name="DC.source"/>
-<meta content="MMInfo82" name="DC.IDENTIFIER"/>
-</head>
-<Content>Glechoma hederacea</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P123" name="DC.source"/>
-<meta content="MMInfo83" name="DC.IDENTIFIER"/>
-</head>
-<Content>Lamium album</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P2288" name="DC.source"/>
-<meta content="MMInfo84" name="DC.IDENTIFIER"/>
-</head>
-<Content>Lamium amplexicaule</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P3367" name="DC.source"/>
-<meta content="MMInfo85" name="DC.IDENTIFIER"/>
-</head>
-<Content>Lamium galeobdolon</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P18" name="DC.source"/>
-<meta content="MMInfo86" name="DC.IDENTIFIER"/>
-</head>
-<Content>Lamium purpureum</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P3774" name="DC.source"/>
-<meta content="MMInfo87" name="DC.IDENTIFIER"/>
-</head>
-<Content>Salvia pratensis</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P6172" name="DC.source"/>
-<meta content="MMInfo69" name="DC.IDENTIFIER"/>
-</head>
-<Content>Achillea millefolium</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P122" name="DC.source"/>
-<meta content="MMInfo70" name="DC.IDENTIFIER"/>
-</head>
-<Content>Bellis perennis</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P5209" name="DC.source"/>
-<meta content="MMInfo71" name="DC.IDENTIFIER"/>
-</head>
-<Content>Chrysanthemum leucanthemum</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P1942" name="DC.source"/>
-<meta content="MMInfo72" name="DC.IDENTIFIER"/>
-</head>
-<Content>Centaurea cyanus</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P6270" name="DC.source"/>
-<meta content="MMInfo73" name="DC.IDENTIFIER"/>
-</head>
-<Content>Cichorium intybus&#127;&#127;</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P6897" name="DC.source"/>
-<meta content="MMInfo74" name="DC.IDENTIFIER"/>
-</head>
-<Content>Crepis biennis</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P3926" name="DC.source"/>
-<meta content="MMInfo77" name="DC.IDENTIFIER"/>
-</head>
-<Content>Tragopogon pratensis</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P16" name="DC.source"/>
-<meta content="MMInfo64" name="DC.IDENTIFIER"/>
-</head>
-<Content>Alliaria petiolata</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P43" name="DC.source"/>
-<meta content="MMInfo65" name="DC.IDENTIFIER"/>
-</head>
-<Content>Arabis glabra</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P44" name="DC.source"/>
-<meta content="MMInfo66" name="DC.IDENTIFIER"/>
-</head>
-<Content>Capsella bursa-pastoris</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P1198" name="DC.source"/>
-<meta content="MMInfo67" name="DC.IDENTIFIER"/>
-</head>
-<Content>Cardamine pratensis</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P42" name="DC.source"/>
-<meta content="MMInfo68" name="DC.IDENTIFIER"/>
-</head>
-<Content>Sinapis arvensis</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P1470" name="DC.source"/>
-<meta content="MMInfo62" name="DC.IDENTIFIER"/>
-</head>
-<Content>Anthriscus sylvestris</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P6898" name="DC.source"/>
-<meta content="MMInfo63" name="DC.IDENTIFIER"/>
-</head>
-<Content>Daucus carota</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P2169" name="DC.source"/>
-<meta content="MMInfo59" name="DC.IDENTIFIER"/>
-</head>
-<Content>Erodium cicutarium</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P1085" name="DC.source"/>
-<meta content="MMInfo60" name="DC.IDENTIFIER"/>
-</head>
-<Content>Geranium pratense</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P5526" name="DC.source"/>
-<meta content="MMInfo61" name="DC.IDENTIFIER"/>
-</head>
-<Content>Geranium robertianum</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P623" name="DC.source"/>
-<meta content="MMInfo57" name="DC.IDENTIFIER"/>
-</head>
-<Content>Viola odorata</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P4962" name="DC.source"/>
-<meta content="MMInfo58" name="DC.IDENTIFIER"/>
-</head>
-<Content>Viola tricolor</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P4961" name="DC.source"/>
-<meta content="MMInfo56" name="DC.IDENTIFIER"/>
-</head>
-<Content>Knautia arvensis</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P2683" name="DC.source"/>
-<meta content="MMInfo52" name="DC.IDENTIFIER"/>
-</head>
-<Content>Crucita laevipes</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P5870" name="DC.source"/>
-<meta content="MMInfo53" name="DC.IDENTIFIER"/>
-</head>
-<Content>Galium mollugo</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P7282" name="DC.source"/>
-<meta content="MMInfo54" name="DC.IDENTIFIER"/>
-</head>
-<Content>Galium odoratum</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P6803" name="DC.source"/>
-<meta content="MMInfo55" name="DC.IDENTIFIER"/>
-</head>
-<Content>Galium verum</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P4449" name="DC.source"/>
-<meta content="MMInfo47" name="DC.IDENTIFIER"/>
-</head>
-<Content>Myosotis arvensis</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P3150" name="DC.source"/>
-<meta content="MMInfo48" name="DC.IDENTIFIER"/>
-</head>
-<Content>Myosotis sylvatica</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P7087" name="DC.source"/>
-<meta content="MMInfo50" name="DC.IDENTIFIER"/>
-</head>
-<Content>Pulmonaria officinalis</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P21" name="DC.source"/>
-<meta content="MMInfo51" name="DC.IDENTIFIER"/>
-</head>
-<Content>Symphytum officinale</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="link" name="DC.subject"/>
-<meta content="P20" name="DC.source"/>
-<meta content="MMInfo46" name="DC.IDENTIFIER"/>
-</head>
-<Content>Euphorbia cyparissias</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="Q182" name="DC.source"/>
-<meta content="MMInfo44" name="DC.IDENTIFIER"/>
-</head>
-<Content>Ordnen Sie die Pflanze einer der folgenden Gruppen zu:</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M1419" name="DC.source"/>
-<meta content="MMInfo38" name="DC.IDENTIFIER"/>
-</head>
-<Content>Sind die Blütenblätter am freien Ende gespalten?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M1422" name="DC.source"/>
-<meta content="MMInfo36" name="DC.IDENTIFIER"/>
-</head>
-<Content>Wievielfach sind die Blütenblätter gespalten?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M1434" name="DC.source"/>
-<meta content="MMInfo37" name="DC.IDENTIFIER"/>
-</head>
-<Content>Sind die Blütenblätter am freien Ende gezackt oder gezähnt?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M1508" name="DC.source"/>
-<meta content="MMInfo39" name="DC.IDENTIFIER"/>
-</head>
-<Content>Ordnen Sie die Blüte(n) einem der folgenden strahlenförmigen Typen zu:</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M1513" name="DC.source"/>
-<meta content="MMInfo34" name="DC.IDENTIFIER"/>
-</head>
-<Content>Ordnen Sie die Blüte(n) einer der folgenden Typen zu:</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M1514" name="DC.source"/>
-<meta content="MMInfo32" name="DC.IDENTIFIER"/>
-</head>
-<Content>Ordnen Sie die Blüte(n) einer der folgenden Typen zu:</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M1515" name="DC.source"/>
-<meta content="MMInfo33" name="DC.IDENTIFIER"/>
-</head>
-<Content>Ordnen Sie die Blüte(n) einem der folgenden Typen zu:</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M1518" name="DC.source"/>
-<meta content="MMInfo9" name="DC.IDENTIFIER"/>
-</head>
-<Content>Wie verlaufen die Adern der Blätter am ehesten (Blattnerven)?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M1526" name="DC.source"/>
-<meta content="MMInfo41" name="DC.IDENTIFIER"/>
-</head>
-<Content>Bitte ordnen Sie die Blüten der Pflanze grob einer der folgenden Klassen zu, mit der sie am meisten &#128;hnlichkeit
-besitzt:</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M1528" name="DC.source"/>
-<meta content="MMInfo40" name="DC.IDENTIFIER"/>
-</head>
-<Content>Ordnen Sie die Blüte(n) einem der folgenden Typen zu:</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M1531" name="DC.source"/>
-<meta content="MMInfo35" name="DC.IDENTIFIER"/>
-</head>
-<Content>Wieviele Blütenblätter hat eine einzelne Blüte?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M1532" name="DC.source"/>
-<meta content="MMInfo27" name="DC.IDENTIFIER"/>
-</head>
-<Content>Wie sind die Blüten an der Pflanze am ehesten angeordnet?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M1534" name="DC.source"/>
-<meta content="MMInfo18" name="DC.IDENTIFIER"/>
-</head>
-<Content>Welcher der folgenden Gliederungsarten entsprechen die Blätter der Pflanze am ehesten?
-(Blattform nicht beachten)</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M1535" name="DC.source"/>
-<meta content="MMInfo12" name="DC.IDENTIFIER"/>
-</head>
-<Content>Wie sieht der Blattrand am ehesten aus?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M1536" name="DC.source"/>
-<meta content="MMInfo20" name="DC.IDENTIFIER"/>
-</head>
-<Content>Wie sind die Blätter am Stengel oder den Seitentrieben am ehesten angeordnet?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M1537" name="DC.source"/>
-<meta content="MMInfo42" name="DC.IDENTIFIER"/>
-</head>
-<Content>Welcher der folgenden Farben entspricht die Blütenfarbe am ehesten?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M180" name="DC.source"/>
-<meta content="MMInfo31" name="DC.IDENTIFIER"/>
-</head>
-<Content>Ordnen Sie die Blüte(n) der Pflanze einem der folgenden Typen zu:</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M1916" name="DC.source"/>
-<meta content="MMInfo25" name="DC.IDENTIFIER"/>
-</head>
-<Content>Welcher Art von Dolde entspricht der Blütenstand der Pflanze am ehesten?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M192" name="DC.source"/>
-<meta content="MMInfo30" name="DC.IDENTIFIER"/>
-</head>
-<Content>Welchen ungefähren Durchmesser haben die Blüten der Pflanze (bei langestreckten Blüten: welche Länge)?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M1921" name="DC.source"/>
-<meta content="MMInfo24" name="DC.IDENTIFIER"/>
-</head>
-<Content>Aus wievielen Teildöldchen ist die Doppeldolde zusammengesetzt?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M193" name="DC.source"/>
-<meta content="MMInfo29" name="DC.IDENTIFIER"/>
-</head>
-<Content>Wie sieht der Blütenkelch am ehesten aus?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M194" name="DC.source"/>
-<meta content="MMInfo22" name="DC.IDENTIFIER"/>
-</head>
-<Content>Besitzt die Pflanze Ranken?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M195" name="DC.source"/>
-<meta content="MMInfo13" name="DC.IDENTIFIER"/>
-</head>
-<Content>Wie ist die Symmetrie der Fiederblätter (Blattranken nicht miteinbeziehen)?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M196" name="DC.source"/>
-<meta content="MMInfo16" name="DC.IDENTIFIER"/>
-</head>
-<Content>Welcher der folgenden Formen entsprechen die einzelnen Blätter der Pflanze am ehesten?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M202" name="DC.source"/>
-<meta content="MMInfo14" name="DC.IDENTIFIER"/>
-</head>
-<Content>Wieviele Fiederblattpaare besitzt ein Blatt (Blattranken nicht mitzählen)?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M2034" name="DC.source"/>
-<meta content="MMInfo28" name="DC.IDENTIFIER"/>
-</head>
-<Content>Welche Farbe hat der Blütenkelch oder Teile davon, falls er nicht ganz grün ist?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M204" name="DC.source"/>
-<meta content="MMInfo15" name="DC.IDENTIFIER"/>
-</head>
-<Content>Aus wieviele Fingern oder Strahlen (bei handförmig) ist ein Blatt zusammengesetzt?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M214" name="DC.source"/>
-<meta content="MMInfo10" name="DC.IDENTIFIER"/>
-</head>
-<Content>Wie sind die Blätter behaart?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M215" name="DC.source"/>
-<meta content="MMInfo11" name="DC.IDENTIFIER"/>
-</head>
-<Content>Wie sind die Blätter am Stengel befestigt?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M219" name="DC.source"/>
-<meta content="MMInfo8" name="DC.IDENTIFIER"/>
-</head>
-<Content>Wie wächst die Pflanze?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M220" name="DC.source"/>
-<meta content="MMInfo7" name="DC.IDENTIFIER"/>
-</head>
-<Content>Wie ist die Pflanze verzweigt?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M221" name="DC.source"/>
-<meta content="MMInfo6" name="DC.IDENTIFIER"/>
-</head>
-<Content>Wie groß oder wie lang ist die Pflanze?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M222" name="DC.source"/>
-<meta content="MMInfo5" name="DC.IDENTIFIER"/>
-</head>
-<Content>Tritt beim Aufschneiden oder Abbrechen des Stengels ein gefärbter Milchsaft aus?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M223" name="DC.source"/>
-<meta content="MMInfo2" name="DC.IDENTIFIER"/>
-</head>
-<Content>Wie sieht der Stengel am Umfang am ehesten aus?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M224" name="DC.source"/>
-<meta content="MMInfo1" name="DC.IDENTIFIER"/>
-</head>
-<Content>Wie sieht der Stengel innen am ehesten aus?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M225" name="DC.source"/>
-<meta content="MMInfo4" name="DC.IDENTIFIER"/>
-</head>
-<Content>Wie ist der Stengel behaart?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M226" name="DC.source"/>
-<meta content="MMInfo0" name="DC.IDENTIFIER"/>
-</head>
-<Content>Ist der Stengel stachelig?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M4679" name="DC.source"/>
-<meta content="MMInfo26" name="DC.IDENTIFIER"/>
-</head>
-<Content>Wie groß ist ein Köpfchen?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M4830" name="DC.source"/>
-<meta content="MMInfo3" name="DC.IDENTIFIER"/>
-</head>
-<Content>Welche der folgenden Besonderheiten weist die Behaarung des stengels auf?</Content>
-</MMInfo>
-<MMInfo>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<meta content="prompt" name="DC.subject"/>
-<meta content="M731" name="DC.source"/>
-<meta content="MMInfo43" name="DC.IDENTIFIER"/>
-</head>
-<Content>In welchem Monat wurde die Pflanze im Freien blühend vorgefunden?</Content>
-</MMInfo>
+<KnowledgeBase/>
+<idObject id="M1419">
+<entry property="prompt">Sind die Blütenblätter am freien Ende gespalten?</entry>
+</idObject>
+<idObject id="M1422">
+<entry property="prompt">Wievielfach sind die Blütenblätter gespalten?</entry>
+</idObject>
+<idObject id="M1434">
+<entry property="prompt">Sind die Blütenblätter am freien Ende gezackt oder gezähnt?</entry>
+</idObject>
+<idObject id="M1508">
+<entry property="prompt">Ordnen Sie die Blüte(n) einem der folgenden strahlenförmigen Typen zu:</entry>
+</idObject>
+<idObject id="M1513">
+<entry property="prompt">Ordnen Sie die Blüte(n) einer der folgenden Typen zu:</entry>
+</idObject>
+<idObject id="M1514">
+<entry property="prompt">Ordnen Sie die Blüte(n) einer der folgenden Typen zu:</entry>
+</idObject>
+<idObject id="M1515">
+<entry property="prompt">Ordnen Sie die Blüte(n) einem der folgenden Typen zu:</entry>
+</idObject>
+<idObject id="M1518">
+<entry property="prompt">Wie verlaufen die Adern der Blätter am ehesten (Blattnerven)?</entry>
+</idObject>
+<idObject id="M1526">
+<entry property="prompt">Bitte ordnen Sie die Blüten der Pflanze grob einer der folgenden Klassen zu, mit der sie am meisten &#128;hnlichkeit
+besitzt:</entry>
+</idObject>
+<idObject id="M1528">
+<entry property="prompt">Ordnen Sie die Blüte(n) einem der folgenden Typen zu:</entry>
+</idObject>
+<idObject id="M1531">
+<entry property="prompt">Wieviele Blütenblätter hat eine einzelne Blüte?</entry>
+</idObject>
+<idObject id="M1532">
+<entry property="prompt">Wie sind die Blüten an der Pflanze am ehesten angeordnet?</entry>
+</idObject>
+<idObject id="M1534">
+<entry property="prompt">Welcher der folgenden Gliederungsarten entsprechen die Blätter der Pflanze am ehesten?
+(Blattform nicht beachten)</entry>
+</idObject>
+<idObject id="M1535">
+<entry property="prompt">Wie sieht der Blattrand am ehesten aus?</entry>
+</idObject>
+<idObject id="M1536">
+<entry property="prompt">Wie sind die Blätter am Stengel oder den Seitentrieben am ehesten angeordnet?</entry>
+</idObject>
+<idObject id="M1537">
+<entry property="prompt">Welcher der folgenden Farben entspricht die Blütenfarbe am ehesten?</entry>
+</idObject>
+<idObject id="M180">
+<entry property="prompt">Ordnen Sie die Blüte(n) der Pflanze einem der folgenden Typen zu:</entry>
+</idObject>
+<idObject id="M1916">
+<entry property="prompt">Welcher Art von Dolde entspricht der Blütenstand der Pflanze am ehesten?</entry>
+</idObject>
+<idObject id="M192">
+<entry property="prompt">Welchen ungefähren Durchmesser haben die Blüten der Pflanze (bei langestreckten Blüten: welche Länge)?</entry>
+</idObject>
+<idObject id="M1921">
+<entry property="prompt">Aus wievielen Teildöldchen ist die Doppeldolde zusammengesetzt?</entry>
+</idObject>
+<idObject id="M193">
+<entry property="prompt">Wie sieht der Blütenkelch am ehesten aus?</entry>
+</idObject>
+<idObject id="M194">
+<entry property="prompt">Besitzt die Pflanze Ranken?</entry>
+</idObject>
+<idObject id="M195">
+<entry property="prompt">Wie ist die Symmetrie der Fiederblätter (Blattranken nicht miteinbeziehen)?</entry>
+</idObject>
+<idObject id="M196">
+<entry property="prompt">Welcher der folgenden Formen entsprechen die einzelnen Blätter der Pflanze am ehesten?</entry>
+</idObject>
+<idObject id="M202">
+<entry property="prompt">Wieviele Fiederblattpaare besitzt ein Blatt (Blattranken nicht mitzählen)?</entry>
+</idObject>
+<idObject id="M2034">
+<entry property="prompt">Welche Farbe hat der Blütenkelch oder Teile davon, falls er nicht ganz grün ist?</entry>
+</idObject>
+<idObject id="M204">
+<entry property="prompt">Aus wieviele Fingern oder Strahlen (bei handförmig) ist ein Blatt zusammengesetzt?</entry>
+</idObject>
+<idObject id="M214">
+<entry property="prompt">Wie sind die Blätter behaart?</entry>
+</idObject>
+<idObject id="M215">
+<entry property="prompt">Wie sind die Blätter am Stengel befestigt?</entry>
+</idObject>
+<idObject id="M219">
+<entry property="prompt">Wie wächst die Pflanze?</entry>
+</idObject>
+<idObject id="M220">
+<entry property="prompt">Wie ist die Pflanze verzweigt?</entry>
+</idObject>
+<idObject id="M221">
+<entry property="prompt">Wie groß oder wie lang ist die Pflanze?</entry>
+</idObject>
+<idObject id="M222">
+<entry property="prompt">Tritt beim Aufschneiden oder Abbrechen des Stengels ein gefärbter Milchsaft aus?</entry>
+</idObject>
+<idObject id="M223">
+<entry property="prompt">Wie sieht der Stengel am Umfang am ehesten aus?</entry>
+</idObject>
+<idObject id="M224">
+<entry property="prompt">Wie sieht der Stengel innen am ehesten aus?</entry>
+</idObject>
+<idObject id="M225">
+<entry property="prompt">Wie ist der Stengel behaart?</entry>
+</idObject>
+<idObject id="M226">
+<entry property="prompt">Ist der Stengel stachelig?</entry>
+</idObject>
+<idObject id="M4679">
+<entry property="prompt">Wie groß ist ein Köpfchen?</entry>
+</idObject>
+<idObject id="M4830">
+<entry property="prompt">Welche der folgenden Besonderheiten weist die Behaarung des stengels auf?</entry>
+</idObject>
+<idObject id="M731">
+<entry property="prompt">In welchem Monat wurde die Pflanze im Freien blühend vorgefunden?</entry>
+</idObject>
+<idObject id="P1085">
+<entry property="link">Geranium pratense</entry>
+</idObject>
+<idObject id="P1198">
+<entry property="link">Cardamine pratensis</entry>
+</idObject>
+<idObject id="P122">
+<entry property="link">Bellis perennis</entry>
+</idObject>
+<idObject id="P123">
+<entry property="link">Lamium album</entry>
+</idObject>
+<idObject id="P1329">
+<entry property="link">Stellaria media</entry>
+</idObject>
+<idObject id="P1470">
+<entry property="link">Anthriscus sylvestris</entry>
+</idObject>
+<idObject id="P1572">
+<entry property="link">Glechoma hederacea</entry>
+</idObject>
+<idObject id="P16">
+<entry property="link">Alliaria petiolata</entry>
+</idObject>
+<idObject id="P1687">
+<entry property="link">Stellaria holostea</entry>
+</idObject>
+<idObject id="P1688">
+<entry property="link">Cerastium arvense</entry>
+</idObject>
+<idObject id="P18">
+<entry property="link">Lamium purpureum</entry>
+</idObject>
+<idObject id="P1942">
+<entry property="link">Centaurea cyanus</entry>
+</idObject>
+<idObject id="P20">
+<entry property="link">Euphorbia cyparissias</entry>
+</idObject>
+<idObject id="P21">
+<entry property="link">Symphytum officinale</entry>
+</idObject>
+<idObject id="P2127">
+<entry property="link">Primula veris</entry>
+</idObject>
+<idObject id="P2169">
+<entry property="link">Erodium cicutarium</entry>
+</idObject>
+<idObject id="P2288">
+<entry property="link">Lamium amplexicaule</entry>
+</idObject>
+<idObject id="P2398">
+<entry property="link">Chelidonium majus</entry>
+</idObject>
+<idObject id="P2500">
+<entry property="link">Silene alba</entry>
+</idObject>
+<idObject id="P2683">
+<entry property="link">Crucita laevipes</entry>
+</idObject>
+<idObject id="P2811">
+<entry property="link">Lotus corniculatus</entry>
+</idObject>
+<idObject id="P2812">
+<entry property="link">Medicago lupulina</entry>
+</idObject>
+<idObject id="P3008">
+<entry property="link">Vicia sepium</entry>
+</idObject>
+<idObject id="P3150">
+<entry property="link">Myosotis sylvatica</entry>
+</idObject>
+<idObject id="P3152">
+<entry property="link">Caltha palustris</entry>
+</idObject>
+<idObject id="P3153">
+<entry property="link">Ranunculus acris</entry>
+</idObject>
+<idObject id="P3256">
+<entry property="link">Silene dioica</entry>
+</idObject>
+<idObject id="P3366">
+<entry property="link">Ajuga reptans</entry>
+</idObject>
+<idObject id="P3367">
+<entry property="link">Lamium galeobdolon</entry>
+</idObject>
+<idObject id="P3543">
+<entry property="link">Muscari botryoides</entry>
+</idObject>
+<idObject id="P3634">
+<entry property="link">Corydalis cava</entry>
+</idObject>
+<idObject id="P3774">
+<entry property="link">Salvia pratensis</entry>
+</idObject>
+<idObject id="P3926">
+<entry property="link">Tragopogon pratensis</entry>
+</idObject>
+<idObject id="P4045">
+<entry property="link">Geum rivale</entry>
+</idObject>
+<idObject id="P4156">
+<entry property="link">Trifolium pratense</entry>
+</idObject>
+<idObject id="P4157">
+<entry property="link">Hippocrepis comosa</entry>
+</idObject>
+<idObject id="P42">
+<entry property="link">Sinapis arvensis</entry>
+</idObject>
+<idObject id="P43">
+<entry property="link">Arabis glabra</entry>
+</idObject>
+<idObject id="P44">
+<entry property="link">Capsella bursa-pastoris</entry>
+</idObject>
+<idObject id="P4449">
+<entry property="link">Myosotis arvensis</entry>
+</idObject>
+<idObject id="P4576">
+<entry property="link">Trifolium campestre</entry>
+</idObject>
+<idObject id="P4714">
+<entry property="link">Geum urbanum</entry>
+</idObject>
+<idObject id="P4829">
+<entry property="link">Veronica chamaedrys</entry>
+</idObject>
+<idObject id="P4961">
+<entry property="link">Knautia arvensis</entry>
+</idObject>
+<idObject id="P4962">
+<entry property="link">Viola tricolor</entry>
+</idObject>
+<idObject id="P5209">
+<entry property="link">Chrysanthemum leucanthemum</entry>
+</idObject>
+<idObject id="P5436">
+<entry property="link">Lathyrus pratensis</entry>
+</idObject>
+<idObject id="P5526">
+<entry property="link">Geranium robertianum</entry>
+</idObject>
+<idObject id="P5646">
+<entry property="link">Melilotus officinalis</entry>
+</idObject>
+<idObject id="P5647">
+<entry property="link">Melilotus alba</entry>
+</idObject>
+<idObject id="P5870">
+<entry property="link">Galium mollugo</entry>
+</idObject>
+<idObject id="P6078">
+<entry property="link">Veronica persica</entry>
+</idObject>
+<idObject id="P6172">
+<entry property="link">Achillea millefolium</entry>
+</idObject>
+<idObject id="P623">
+<entry property="link">Viola odorata</entry>
+</idObject>
+<idObject id="P6270">
+<entry property="link">Cichorium intybus&#127;&#127;</entry>
+</idObject>
+<idObject id="P6354">
+<entry property="link">Coronilla varia</entry>
+</idObject>
+<idObject id="P6356">
+<entry property="link">Trifolium repens</entry>
+</idObject>
+<idObject id="P6632">
+<entry property="link">Ballota nigra</entry>
+</idObject>
+<idObject id="P6708">
+<entry property="link">Calamintha clinopodium</entry>
+</idObject>
+<idObject id="P6803">
+<entry property="link">Galium verum</entry>
+</idObject>
+<idObject id="P6897">
+<entry property="link">Crepis biennis</entry>
+</idObject>
+<idObject id="P6898">
+<entry property="link">Daucus carota</entry>
+</idObject>
+<idObject id="P7087">
+<entry property="link">Pulmonaria officinalis</entry>
+</idObject>
+<idObject id="P7088">
+<entry property="link">Ajuga genevensis</entry>
+</idObject>
+<idObject id="P7282">
+<entry property="link">Galium odoratum</entry>
+</idObject>
+<idObject id="P7361">
+<entry property="link">Gagea lutea</entry>
+</idObject>
+<idObject id="P7487">
+<entry property="link">Potentilla reptans</entry>
+</idObject>
+<idObject id="P776">
+<entry property="link">Anemone nemorosa</entry>
+</idObject>
+<idObject id="P777">
+<entry property="link">Ranunculus ficaria</entry>
+</idObject>
+<idObject id="P968">
+<entry property="link">Papaver rhoeas</entry>
+</idObject>
+<idObject id="Q182">
+<entry property="prompt">Ordnen Sie die Pflanze einer der folgenden Gruppen zu:</entry>
+</idObject>
 </MMInfos>
-</KnowledgeBase>

@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import org.w3c.dom.Document;
@@ -41,20 +40,19 @@ import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.io.fragments.PropertiesHandler;
 import de.d3web.core.io.progress.ProgressListener;
-import de.d3web.core.io.utilities.CostObject;
 import de.d3web.core.io.utilities.IDObjectComparator;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
+import de.d3web.core.knowledge.terminology.info.Property.Autosave;
 
 /**
  * PersistenceHandler for reading and writing basic knowledge Creation date:
@@ -67,23 +65,6 @@ public class BasicPersistenceHandler implements
 		KnowledgeWriter {
 
 	public static final String BASIC_PERSISTENCE_HANDLER = "basic";
-
-	private void saveCosts(Element father, KnowledgeBase kb) throws IOException {
-		Document doc = father.getOwnerDocument();
-		Element costsElement = doc.createElement("Costs");
-		Set<String> idSet = kb.getCostIDs();
-		if (idSet != null) {
-			Iterator<String> iter = idSet.iterator();
-			while (iter.hasNext()) {
-				String costID = iter.next();
-				CostObject cost = new CostObject(costID, kb.getCostVerbalization(costID),
-						kb.getCostUnit(costID));
-				costsElement.appendChild(PersistenceManager.getInstance().writeFragment(cost, doc));
-			}
-			iter = null;
-		}
-		father.appendChild(costsElement);
-	}
 
 	private float saveSchemas(Element father, KnowledgeBase kb, ProgressListener listener, float time, int abstime) throws IOException {
 
@@ -151,10 +132,10 @@ public class BasicPersistenceHandler implements
 		List<Element> qASetNodes = new ArrayList<Element>();
 		List<Element> diagnosisNodes = null;
 		List<Element> initquestionnodes = null;
-		List<Element> costNodes = null;
 		FragmentManager pm = PersistenceManager.getInstance();
 		String rootQASetID = null;
 		String rootSolutionID = null;
+		PropertiesHandler ph = new PropertiesHandler();
 		for (Element child : kbchildren) {
 			String name = child.getNodeName();
 			if (name.equalsIgnoreCase("knowledgeslices")) {
@@ -182,43 +163,23 @@ public class BasicPersistenceHandler implements
 				initquestionnodes = XMLUtil.getElementList(child.getChildNodes());
 				abstime += initquestionnodes.size();
 			}
-			else if (name.equals("Costs")) {
-				costNodes = XMLUtil.getElementList(child.getChildNodes());
-			}
-			else if (name.equals("PriorityGroups")) { // NOSONAR
-				// do nothing, PriorityGroups not supported any more
-			}
 			else if (name.equals("rootQASet")) {
 				rootQASetID = child.getTextContent();
 			}
 			else if (name.equals("rootSolution")) {
 				rootSolutionID = child.getTextContent();
 			}
-			else {
-				// DCMarkup and kb properties are directly read
-				Object readFragment = pm.readFragment(child, kb);
-				if (readFragment instanceof DCMarkup) {
-					kb.setDCMarkup((DCMarkup) readFragment);
-				}
-				else if (readFragment instanceof InfoStore) {
-					InfoStoreUtil.copyEntries((InfoStore) readFragment, kb.getInfoStore());
-				}
+			else if (name.equals(XMLUtil.INFO_STORE)) {
+				XMLUtil.fillInfoStore(kb.getInfoStore(), child, kb);
+			}
+			// read old persistence format
+			else if (ph.canRead(child)) {
+				InfoStoreUtil.copyEntries(ph.read(kb, child), kb.getInfoStore());
 			}
 		}
 		abstime += qASetNodes.size();
 		float time = 0;
 
-		if (costNodes != null) {
-			listener.updateProgress(time / abstime, "Loading knowledge base: costs");
-			List<CostObject> coList = new ArrayList<CostObject>();
-			for (Element child : costNodes) {
-				coList.add((CostObject) pm.readFragment(child, kb));
-			}
-			for (CostObject co : coList) {
-				kb.setCostVerbalization(co.getId(), co.getVerbalization());
-				kb.setCostUnit(co.getId(), co.getUnit());
-			}
-		}
 		Map<Element, NamedObject> hierarchiemap = new HashMap<Element, NamedObject>();
 
 		for (Element child : qASetNodes) {
@@ -271,7 +232,7 @@ public class BasicPersistenceHandler implements
 		kb.setInitQuestions(qaSets);
 
 		// creating rules and schemas (rules are written into basic.xml in
-		// former persistance versions
+		// former persistence versions
 		for (Element child : knowledgeslicesNodes) {
 			listener.updateProgress(time++ / abstime, "Loading knowledge base: knowledge slices");
 			pm.readFragment(child, kb);
@@ -294,23 +255,12 @@ public class BasicPersistenceHandler implements
 		father.setAttribute("type", "basic");
 		father.setAttribute("system", "d3web");
 
-		listener.updateProgress(time++ / abstime, "Saving knowledge base: DCMarkups");
-		DCMarkup markup = kb.getDCMarkup();
-		FragmentManager pm = PersistenceManager.getInstance();
-		if (markup != null && !markup.isEmpty()) {
-			father.appendChild(pm.writeFragment(markup, doc));
-		}
-
 		listener.updateProgress(time++ / abstime, "Saving knowledge base: properties");
-		InfoStore infoStore = kb.getInfoStore();
-		if (infoStore != null && !infoStore.isEmpty()) {
-			father.appendChild(pm.writeFragment(infoStore, doc));
-		}
+		XMLUtil.appendInfoStore(father, kb, Autosave.basic);
 
 		time = saveInitQuestions(father, kb, listener, time, abstime);
 
 		listener.updateProgress(time++ / abstime, "Saving knowledge base: costs");
-		saveCosts(father, kb);
 
 		Element rootQASetElement = doc.createElement("rootQASet");
 		rootQASetElement.setTextContent(kb.getRootQASet().getId());
@@ -324,6 +274,7 @@ public class BasicPersistenceHandler implements
 		Map<NamedObject, Element> possibleParents = new HashMap<NamedObject, Element>();
 		List<QASet> qASets = kb.getQASets();
 		Collections.sort(qASets, new IDObjectComparator());
+		PersistenceManager pm = PersistenceManager.getInstance();
 		for (QASet qASet : qASets) {
 			listener.updateProgress(time++ / abstime, "Saving knowledge base: QASets");
 			Element qContainerElement = pm.writeFragment(qASet, doc);

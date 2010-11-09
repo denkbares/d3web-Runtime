@@ -24,12 +24,11 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.info.Property.Autosave;
 
 /**
  * Handler for QContainers Children are ignored, hierarchies are read/written by
@@ -53,27 +52,21 @@ public class QContainerHandler implements FragmentHandler {
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		String id = element.getAttribute("ID");
 		List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
-		String text = "";
-		InfoStore infoStore = null;
+		QContainer qcon = new QContainer(id);
+		PropertiesHandler ph = new PropertiesHandler();
+		qcon.setKnowledgeBase(kb);
 		for (Element child : childNodes) {
 			if (child.getNodeName().equals("Text")) {
-				text = child.getTextContent();
+				qcon.setName(child.getTextContent());
 			}
-			// if the child is none of the types above and it doesn't contain
-			// the children or the costs,
-			// it contains the properties.
-			// Costs are no longer stored in IDObjects, so they are ignored
-			else if (!child.getNodeName().equals("Children")
-					&& !child.getNodeName().equals("Costs")) {
-				infoStore = (InfoStore) PersistenceManager.getInstance().readFragment(child, kb);
+			else if (child.getNodeName().equals(XMLUtil.INFO_STORE)) {
+				XMLUtil.fillInfoStore(qcon.getInfoStore(), child, kb);
+			}
+			// Read old Properties Format
+			else if (ph.canRead(child)) {
+				InfoStoreUtil.copyEntries(ph.read(kb, child), qcon.getInfoStore());
 			}
 		}
-		QContainer qcon = new QContainer(id);
-		qcon.setName(text);
-		if (infoStore != null) {
-			InfoStoreUtil.copyEntries(infoStore, qcon.getInfoStore());
-		}
-		qcon.setKnowledgeBase(kb);
 		return qcon;
 	}
 
@@ -83,10 +76,7 @@ public class QContainerHandler implements FragmentHandler {
 		QContainer qContainer = (QContainer) object;
 		element.setAttribute("ID", qContainer.getId());
 		XMLUtil.appendTextNode(qContainer.getName(), element);
-		InfoStore infoStore = qContainer.getInfoStore();
-		if (infoStore != null && !infoStore.isEmpty()) {
-			element.appendChild(PersistenceManager.getInstance().writeFragment(infoStore, doc));
-		}
+		XMLUtil.appendInfoStore(element, qContainer, Autosave.basic);
 		return element;
 	}
 }

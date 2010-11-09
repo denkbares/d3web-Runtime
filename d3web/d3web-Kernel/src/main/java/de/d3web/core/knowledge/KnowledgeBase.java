@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
@@ -47,8 +46,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.info.DCMarkedUp;
-import de.d3web.core.knowledge.terminology.info.DCMarkup;
+import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 
 /**
@@ -68,17 +66,11 @@ import de.d3web.core.manage.KnowledgeBaseManagement;
  * @see RuleComplex
  * @see QASet
  */
-public class KnowledgeBase implements IDObject, KnowledgeContainer, DCMarkedUp {
+public class KnowledgeBase implements IDObject, KnowledgeContainer {
 
 	private final InfoStore infoStore = new DefaultInfoStore();
 
-	private DCMarkup dcMarkup;
-
 	private String kbID;
-
-	private final Map<String, String> costVerbalization;
-
-	private final Map<String, String> costUnit;
 
 	// stores all qasets contained in the init questionnaires together with
 	// their respective priority
@@ -157,10 +149,6 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer, DCMarkedUp {
 	public KnowledgeBase() {
 		solutions = new ArrayList<Solution>();
 		initQuestions = new HashMap<QASet, Integer>();
-		costVerbalization = new TreeMap<String, String>();
-		costUnit = new TreeMap<String, String>();
-		dcMarkup = new DCMarkup();
-
 		// unsynchronized version, allows null values
 		knowledgeMap = new HashMap<Class<? extends PSMethod>, Map<MethodKind, List<KnowledgeSlice>>>();
 
@@ -761,27 +749,6 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer, DCMarkedUp {
 	}
 
 	/**
-	 * Returning the meta-description of this {@link KnowledgeBase} instance.
-	 * 
-	 * @return the meta-description of this {@link KnowledgeBase} instance.
-	 */
-	@Override
-	public DCMarkup getDCMarkup() {
-		return dcMarkup;
-	}
-
-	/**
-	 * Sets the meta-description of this {@link KnowledgeBase} instance.
-	 * 
-	 * @param dcMarkup the meta-description of this {@link KnowledgeBase}
-	 *        instance.
-	 */
-	@Override
-	public void setDCMarkup(DCMarkup dcMarkup) {
-		this.dcMarkup = dcMarkup;
-	}
-
-	/**
 	 * Inserts a new resource for this {@link KnowledgeBase} instance. For
 	 * example, a resource is a multimedia file attached to the
 	 * {@link KnowledgeBase}.
@@ -811,7 +778,8 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer, DCMarkedUp {
 	}
 
 	/**
-	 * Returns a stored resource for a specified pathname accessor.
+	 * Returns a stored resource for a specified pathname accessor (a relative
+	 * path that must not start with "/").
 	 * 
 	 * @param pathname the specified pathname accessor.
 	 * @return a resource stored by the specified accessor
@@ -899,58 +867,6 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer, DCMarkedUp {
 		psConfigs.remove(psConfig);
 	}
 
-	// +++++++++++++++++ Deprecated Methods ++++++++++++++++++
-
-	/**
-	 * Not used anymore.
-	 * 
-	 * @deprecated Not used anymore.
-	 */
-	@Deprecated
-	public void setCostUnit(String id, String name) {
-		costUnit.put(id, name);
-	}
-
-	/**
-	 * Not used anymore.
-	 * 
-	 * @deprecated Not used anymore.
-	 */
-	@Deprecated
-	public void setCostVerbalization(String id, String name) {
-		costVerbalization.put(id, name);
-	}
-
-	/**
-	 * Not used anymore.
-	 * 
-	 * @deprecated Not used anymore.
-	 */
-	@Deprecated
-	public Set<String> getCostIDs() {
-		return costVerbalization.keySet();
-	}
-
-	/**
-	 * Not used anymore.
-	 * 
-	 * @deprecated Not used anymore.
-	 */
-	@Deprecated
-	public String getCostUnit(String id) {
-		return costUnit.get(id);
-	}
-
-	/**
-	 * Not used anymore.
-	 * 
-	 * @deprecated Not used anymore.
-	 */
-	@Deprecated
-	public String getCostVerbalization(String id) {
-		return costVerbalization.get(id);
-	}
-
 	public void setRootQASet(QASet rootQASet) {
 		this.rootQASet = rootQASet;
 		if (!getQASets().contains(rootQASet)) {
@@ -967,12 +883,34 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer, DCMarkedUp {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return getInfoStore().getValue(MMInfo.PROMPT);
 	}
 
 	@Override
 	public InfoStore getInfoStore() {
 		return infoStore;
+	}
+
+	public List<IDObject> getAllIDObjects() {
+		List<IDObject> objects = new LinkedList<IDObject>();
+		objects.addAll(getQContainers());
+		objects.addAll(getSolutions());
+		objects.addAll(getQuestions());
+		objects.addAll(catchAnswersFromQuestions(getQuestions()));
+		return objects;
+	}
+
+	private static List<Choice> catchAnswersFromQuestions(List<Question> questions) {
+		List<Choice> ret = new LinkedList<Choice>();
+
+		Iterator<Question> iter = questions.iterator();
+		while (iter.hasNext()) {
+			Object o = iter.next();
+			if (o instanceof QuestionChoice) {
+				QuestionChoice qc = (QuestionChoice) o;
+				ret.addAll(qc.getAllAlternatives());
+			}
+		}
+		return ret;
 	}
 }

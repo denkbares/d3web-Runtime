@@ -211,7 +211,7 @@ public class Property<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public static Property<Object> getUntypedProperty(String name) {
-		Property<?> property = properties.get(name);
+		Property<?> property = properties.get(name.toLowerCase());
 		if (property == null) {
 			throw new NoSuchElementException("unknown property " + name);
 		}
@@ -322,7 +322,7 @@ public class Property<T> {
 			Property<?> p = new Property<Object>(
 					pautosave, pname, pmultilingual,
 					storedClassName, defaultValueString);
-			properties.put(pname, p);
+			properties.put(pname.toLowerCase(), p);
 		}
 	}
 

@@ -47,7 +47,7 @@ public interface Resource {
 	 * file systems or operating system. The path is considered to be case
 	 * insensitive.
 	 * 
-	 * @return the path of the resource
+	 * @return the relative path of the resource (no leading "/")
 	 */
 	public String getPathName();
 

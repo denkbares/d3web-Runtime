@@ -41,7 +41,7 @@ import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.Resource;
-import de.d3web.core.knowledge.terminology.info.DCElement;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.plugin.Autodetect;
 import de.d3web.plugin.Extension;
 import de.d3web.plugin.Plugin;
@@ -219,10 +219,10 @@ public final class PersistenceManager extends FragmentManager {
 		mainAttributes.put(Attributes.Name.MANIFEST_VERSION, "2.0");
 		mainAttributes.put(new Attributes.Name("Date"), new Date().toString());
 		mainAttributes.put(new Attributes.Name("Name"),
-				knowledgeBase.getDCMarkup().getContent(DCElement.TITLE));
+				knowledgeBase.getName());
 		mainAttributes.put(new Attributes.Name("ID"), knowledgeBase.getId());
 		mainAttributes.put(new Attributes.Name("Author"),
-				knowledgeBase.getDCMarkup().getContent(DCElement.CREATOR));
+				knowledgeBase.getInfoStore().getValue(BasicProperties.AUTHOR));
 		mainAttributes.put(new Attributes.Name("User"), System.getProperty("user.name"));
 		File tempfile = new File(file.getCanonicalPath() + ".temp");
 

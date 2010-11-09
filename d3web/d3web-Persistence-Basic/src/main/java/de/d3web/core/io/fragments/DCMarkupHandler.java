@@ -20,30 +20,31 @@
 package de.d3web.core.io.fragments;
 
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.info.DCElement;
-import de.d3web.core.knowledge.terminology.info.DCMarkup;
+import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.utilities.Triple;
 
 /**
- * Handler for DCMarkups
+ * Handler for DCMarkups DCMarkups are no longer used, this handler is used to
+ * parse old files. It won't write anything
  * 
  * @author hoernlein, Markus Friedrich (denkbares GmbH)
  */
-public class DCMarkupHandler implements FragmentHandler {
+public class DCMarkupHandler {
 
 	public static final String MARKUPTAG = "head";
 	public static final String PROFILE = "http://dublincore.org/documents/dcq-html/";
 	public static final String TAG = "meta";
 
-	@Override
 	public boolean canRead(Element element) {
 		String profile = element.getAttribute("profile");
 		return element.getNodeName().equals("DCMarkup")
@@ -53,14 +54,8 @@ public class DCMarkupHandler implements FragmentHandler {
 				|| (element.getNodeName().equals(MARKUPTAG) && profile.equals(PROFILE));
 	}
 
-	@Override
-	public boolean canWrite(Object object) {
-		return (object instanceof DCMarkup);
-	}
-
-	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		DCMarkup ret = new DCMarkup();
+	public Triple<String, Property<?>, Locale> read(KnowledgeBase kb, Element element) throws IOException {
+		Map<String, String> parsedValues = new HashMap<String, String>();
 		NodeList dcMList = element.getChildNodes();
 		for (int i = 0; i < dcMList.getLength(); ++i) {
 			Node dcelem = dcMList.item(i);
@@ -68,8 +63,7 @@ public class DCMarkupHandler implements FragmentHandler {
 				Element dceElement = (Element) dcelem;
 				String name = dceElement.getAttribute("name");
 				String content = dceElement.getAttribute("content");
-				DCElement dce = DCElement.getDCElementFor(name);
-				ret.setContent(dce, content);
+				parsedValues.put(name.toLowerCase(), content);
 			}
 			// persistence version till 2009
 			else if (checkOldNodeName(dcelem)) {
@@ -101,23 +95,21 @@ public class DCMarkupHandler implements FragmentHandler {
 				else {
 					label = dcelem.getAttributes().getNamedItem("name").getNodeValue();
 				}
-				DCElement dc = DCElement.getDCElementFor(label);
-
-				if (dc == null) {
-					// [MISC]:aha:obsolete after supportknowledge refactoring is
-					// propagated
-					if (label.equals("DC.IDENTIFIER")) dc = DCElement.IDENTIFIER;
-					// else if ...
-				}
-				if (dc == null) {
-					throw new IOException("getDCMarkup: no DCElement for label " + label);
-				}
-				ret.setContent(dc, value);
+				parsedValues.put(label.toLowerCase(), value);
 
 			}
 		}
-
-		return ret;
+		try {
+			Property<Object> property = Property.getUntypedProperty(parsedValues.get("dc.subject"));
+			String language = parsedValues.get("dc.language");
+			Locale locale = null;
+			if (language != null) locale = new Locale(language);
+			return new Triple<String, Property<?>, Locale>(parsedValues.get("dc.source"),
+					property, locale);
+		}
+		catch (NoSuchElementException e) {
+			return null;
+		}
 	}
 
 	/**
@@ -131,24 +123,5 @@ public class DCMarkupHandler implements FragmentHandler {
 				// in former versions of persistence, the DCElments were named
 				// Descriptor
 				|| dcelem.getNodeName().equalsIgnoreCase("Descriptor");
-	}
-
-	@Override
-	public Element write(Object object, Document doc) throws IOException {
-		Element element = doc.createElement(MARKUPTAG);
-		element.setAttribute("profile", PROFILE);
-		DCMarkup dcMarkup = (DCMarkup) object;
-		Iterator<DCElement> iter = DCElement.getIterator();
-		while (iter.hasNext()) {
-			DCElement dcelement = iter.next();
-			String value = dcMarkup.getContent(dcelement);
-			if (!"".equals(value)) {
-				Element dcElementNode = doc.createElement(TAG);
-				dcElementNode.setAttribute("name", dcelement.getLabel());
-				dcElementNode.setAttribute("content", value);
-				element.appendChild(dcElementNode);
-			}
-		}
-		return element;
 	}
 }

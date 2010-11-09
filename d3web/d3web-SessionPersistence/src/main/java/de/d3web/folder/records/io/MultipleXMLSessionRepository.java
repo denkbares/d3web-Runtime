@@ -25,7 +25,6 @@ import java.util.List;
 import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.knowledge.InfoStore;
-import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.records.DefaultSessionRepository;
 import de.d3web.core.records.FactRecord;
 import de.d3web.core.records.SessionRecord;
@@ -249,21 +248,6 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 			if (realRecord == null) {
 				parseSessionRecord();
 			}
-		}
-
-		@Override
-		public void setDCMarkup(DCMarkup dcMarkup) {
-			touch();
-			parseIfNecessary();
-			realRecord.setDCMarkup(dcMarkup);
-		}
-
-		@Override
-		public DCMarkup getDCMarkup() {
-			// if something gets a reference to the DCMarkup, something could be
-			// changed
-			parseIfNecessary();
-			return realRecord.getDCMarkup();
 		}
 
 		@Override

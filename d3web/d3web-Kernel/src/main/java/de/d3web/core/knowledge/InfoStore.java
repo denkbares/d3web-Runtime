@@ -139,6 +139,8 @@ public interface InfoStore {
 	 * @throws ClassCastException if the value is not compatible with the
 	 *                            property
 	 * @throws NullPointerException if the key or value is null
+	 * @throws IllegalArgumentException if a language other than NO_LANGUAGE is
+	 *         specified for a non multilingual property
 	 */
 	void addValue(Property<?> key, Locale language, Object value) throws ClassCastException;
 

@@ -13,16 +13,6 @@
 	</runtime>
 	
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
-		id="image_question_info">
-		<parameter id="name" value="image_question_info" />
-		<parameter id="description" value="Storing infos about a QuestionImage and their AnswerRegions doc: Used to store a List of Image and Answer Regions" />
-		<parameter id="multilingual" value="false" />
-		<parameter id="autosave" value="none" />
-		<parameter id="priority" value="5" />
-		<parameter id="instanceof" value="de.d3web.multimedia.io.ImageQuestionStore" />
-	</extension>
-	
-	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="cost">
 		<parameter id="name" value="cost" />
 		<parameter id="description" value="specifies what amount of costs is needed to perform the qaset" />
@@ -51,16 +41,6 @@
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.Boolean" />
 		<parameter id="default" value="false" />
-	</extension>
-	
-	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
-		id="explanation">
-		<parameter id="name" value="explanation" />
-		<parameter id="description" value="An explanation of the IDObject" />
-		<parameter id="multilingual" value="false" />
-		<parameter id="autosave" value="basic" />
-		<parameter id="priority" value="5" />
-		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
 	
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
@@ -94,16 +74,6 @@
 	</extension>
 	
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
-		id="DEFAULT">
-		<parameter id="name" value="DEFAULT" />
-		<parameter id="description" value="the ids of the answers(seperated by ;), which is in dialogs" />
-		<parameter id="multilingual" value="false" />
-		<parameter id="autosave" value="basic" />
-		<parameter id="priority" value="5" />
-		<parameter id="instanceof" value="java.lang.String" />
-	</extension>
-	
-	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="unknownVisible">
 		<parameter id="name" value="unknownVisible" />
 		<parameter id="description" value="should UNKNOWN be invisible in questions" />
@@ -118,6 +88,16 @@
 		id="unknown_verbalisation">
 		<parameter id="name" value="unknown_verbalisation" />
 		<parameter id="description" value="verbalisation of Unknown" />
+		<parameter id="multilingual" value="true" />
+		<parameter id="autosave" value="mminfo" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="version">
+		<parameter id="name" value="version" />
+		<parameter id="description" value="contains a version, for example of a knowledge base" />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -125,13 +105,43 @@
 	</extension>
 	
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
-		id="mminfo">
-		<parameter id="name" value="mminfo" />
-		<parameter id="description" value="contains former MMInfo" />
+		id="author">
+		<parameter id="name" value="author" />
+		<parameter id="description" value="contains a version, for example of a knowledge base" />
 		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="description">
+		<parameter id="name" value="description" />
+		<parameter id="description" value="contains a description" />
+		<parameter id="multilingual" value="true" />
 		<parameter id="autosave" value="mminfo" />
 		<parameter id="priority" value="5" />
-		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.MMInfoStorage" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="prompt">
+		<parameter id="name" value="prompt" />
+		<parameter id="description" value="contains the full text wich should be prompted" />
+		<parameter id="multilingual" value="true" />
+		<parameter id="autosave" value="mminfo" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="link">
+		<parameter id="name" value="link" />
+		<parameter id="description" value="A String representing an external description. A link may contain an URL or a relative path to a resource of the KnowledgeBase." />
+		<parameter id="multilingual" value="true" />
+		<parameter id="autosave" value="mminfo" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
 	
 </plugin>

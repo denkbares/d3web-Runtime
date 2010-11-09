@@ -24,14 +24,13 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.AnswerNo;
 import de.d3web.core.knowledge.terminology.AnswerYes;
 import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.info.Property.Autosave;
 
 /**
  * Handels Choice Answers
@@ -66,14 +65,16 @@ public class ChoiceHandler implements FragmentHandler {
 		}
 		if (ac != null) {
 			List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
+			PropertiesHandler ph = new PropertiesHandler();
 			for (Element node : childNodes) {
 				if (node.getNodeName().equals("Text")) {
 					ac.setText(node.getTextContent());
 				}
-				else {
-					InfoStore source = (InfoStore) PersistenceManager.getInstance().readFragment(
-							node, kb);
-					InfoStoreUtil.copyEntries(source, ac.getInfoStore());
+				else if (node.getNodeName().equals(XMLUtil.INFO_STORE)) {
+					XMLUtil.fillInfoStore(ac.getInfoStore(), node, kb);
+				}
+				else if (ph.canRead(node)) {
+					InfoStoreUtil.copyEntries(ph.read(kb, node), ac.getInfoStore());
 				}
 			}
 		}
@@ -96,10 +97,7 @@ public class ChoiceHandler implements FragmentHandler {
 			element.setAttribute("type", "AnswerChoice");
 		}
 		XMLUtil.appendTextNode(a.getName(), element);
-		InfoStore infoStore = a.getInfoStore();
-		if (infoStore != null && !infoStore.isEmpty()) {
-			element.appendChild(PersistenceManager.getInstance().writeFragment(infoStore, doc));
-		}
+		XMLUtil.appendInfoStore(element, a, Autosave.basic);
 		return element;
 	}
 

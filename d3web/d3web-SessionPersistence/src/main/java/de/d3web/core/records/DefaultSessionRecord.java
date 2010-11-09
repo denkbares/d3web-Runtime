@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.UUID;
 
 import de.d3web.core.knowledge.InfoStore;
-import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.session.SessionInfoStore;
 import de.d3web.core.session.protocol.DefaultProtocol;
 import de.d3web.core.session.protocol.Protocol;
@@ -37,8 +36,6 @@ public class DefaultSessionRecord implements SessionRecord {
 	private final List<FactRecord> interviewFacts = new LinkedList<FactRecord>();
 
 	private final Protocol protocol = new DefaultProtocol();
-
-	private DCMarkup dcMarkup;
 
 	private String name;
 
@@ -95,16 +92,6 @@ public class DefaultSessionRecord implements SessionRecord {
 	@Override
 	public List<FactRecord> getValueFacts() {
 		return Collections.unmodifiableList(valueFacts);
-	}
-
-	@Override
-	public void setDCMarkup(DCMarkup dcMarkup) {
-		this.dcMarkup = dcMarkup;
-	}
-
-	@Override
-	public DCMarkup getDCMarkup() {
-		return dcMarkup;
 	}
 
 	@Override

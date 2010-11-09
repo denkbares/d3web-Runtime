@@ -21,7 +21,6 @@ package de.d3web.core.session;
 import java.util.Date;
 
 import de.d3web.core.knowledge.terminology.IDObject;
-import de.d3web.core.knowledge.terminology.info.DCMarkedUp;
 import de.d3web.core.session.protocol.Protocol;
 
 /**
@@ -30,7 +29,7 @@ import de.d3web.core.session.protocol.Protocol;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 27.09.2010
  */
-public interface SessionHeader extends IDObject, DCMarkedUp {
+public interface SessionHeader extends IDObject {
 
 	// --- full implementation is reserved for later implementation ---
 	// (inkrement 2)

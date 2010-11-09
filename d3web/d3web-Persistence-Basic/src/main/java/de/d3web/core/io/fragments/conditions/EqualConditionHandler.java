@@ -77,7 +77,6 @@ public class EqualConditionHandler implements FragmentHandler {
 							a = Unknown.getInstance();
 						}
 						else {
-							boolean answerfound = false;
 							Choice choice = s.getChoice(q);
 							if (choice == null) {
 								throw new IOException("Answer " + s

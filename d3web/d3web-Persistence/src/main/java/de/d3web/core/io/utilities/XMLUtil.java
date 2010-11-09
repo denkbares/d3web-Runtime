@@ -25,15 +25,20 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import de.d3web.core.io.NoSuchFragmentHandlerException;
+import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
@@ -41,6 +46,8 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
+import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.core.knowledge.terminology.info.Property.Autosave;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceID;
@@ -51,6 +58,7 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
+import de.d3web.core.utilities.Triple;
 
 /**
  * Provides useful static functions for xml persistence handlers
@@ -58,6 +66,8 @@ import de.d3web.core.session.values.Unknown;
  * @author Markus Friedrich (denkbares GmbH)
  */
 public final class XMLUtil {
+
+	public static final String INFO_STORE = "infoStore";
 
 	/**
 	 * Avoids creating this class.
@@ -440,7 +450,7 @@ public final class XMLUtil {
 			return new NumValue(new Double(idOrValue));
 		}
 		else if (q instanceof QuestionDate) {
-			return new DateValue(new Date(idOrValue));
+			return new DateValue(new Date(Long.parseLong(idOrValue)));
 		}
 		else {
 			return UndefinedValue.getInstance();
@@ -468,5 +478,93 @@ public final class XMLUtil {
 			if (child.getNodeType() == Node.TEXT_NODE) sb.append(child.getNodeValue());
 		}
 		return sb.toString().trim();
+	}
+
+	/**
+	 * Appends all entries with the given autosave of the {@link InfoStore} to
+	 * the specified father. If autosave is null, all entries will be appended
+	 * 
+	 * @created 08.11.2010
+	 * @param father {@link Element}
+	 * @param infoStore {@link InfoStore}
+	 * @param autosave {@link Autosave}
+	 * @throws IOException
+	 */
+	public static void appendInfoStoreEntries(Element father, InfoStore infoStore, Autosave autosave) throws IOException {
+		Document doc = father.getOwnerDocument();
+		for (Triple<Property<?>, Locale, Object> entry : infoStore.entries()) {
+			if (autosave == null || (autosave != null && entry.getA().hasState(autosave))) {
+				Element entryElement = doc.createElement("entry");
+				father.appendChild(entryElement);
+				entryElement.setAttribute("property", entry.getA().getName());
+				Locale language = entry.getB();
+				if (language != InfoStore.NO_LANGUAGE) {
+					entryElement.setAttribute("lang", language.getLanguage());
+				}
+				try {
+					entryElement.appendChild(PersistenceManager.getInstance().writeFragment(
+							entry.getC(), doc));
+				}
+				catch (NoSuchFragmentHandlerException e) {
+					if (entry.getA().canParseValue()) {
+						entryElement.setTextContent(entry.getC().toString());
+					}
+					else {
+						throw e;
+					}
+				}
+			}
+		}
+	}
+
+	public static void appendInfoStore(Element idObjectElement, IDObject idObject, Autosave autosave) throws IOException {
+		InfoStore infoStore = idObject.getInfoStore();
+		if (infoStore != null && !infoStore.isEmpty()) {
+			Element infoStoreElement = idObjectElement.getOwnerDocument().createElement(INFO_STORE);
+			appendInfoStoreEntries(infoStoreElement, infoStore, autosave);
+			if (infoStoreElement.getChildNodes().getLength() > 0) {
+				idObjectElement.appendChild(infoStoreElement);
+			}
+		}
+	}
+
+	/**
+	 * Reads all children of the {@link Element} father and adds the created
+	 * entries to the infostore
+	 * 
+	 * @created 08.11.2010
+	 * @param infoStore {@link InfoStore}
+	 * @param father {@link Element}
+	 * @param kb {@link KnowledgeBase}
+	 * @throws IOException
+	 */
+	public static void fillInfoStore(InfoStore infoStore, Element father, KnowledgeBase kb) throws IOException {
+		for (Element child : getElementList(father.getChildNodes())) {
+			Property<Object> property = Property.getUntypedProperty(child.getAttribute("property"));
+			String s = child.getTextContent();
+			Object value;
+			if (s.trim().length() > 0) {
+				try {
+					value = property.parseValue(s);
+				}
+				catch (NoSuchMethodException e) {
+					// Should not happen because only properties which can parse
+					// their value write text content
+					throw new IOException(e);
+				}
+			}
+			else {
+				value = PersistenceManager.getInstance().readFragment(
+						getElementList(child.getChildNodes()).get(0), kb);
+			}
+			String language = child.getAttribute("lang");
+			if (language.length() > 0) {
+				Locale locale = new Locale(language);
+				infoStore.addValue(property, locale, value);
+			}
+			else {
+				infoStore.addValue(property, value);
+			}
+		}
 	}
 }

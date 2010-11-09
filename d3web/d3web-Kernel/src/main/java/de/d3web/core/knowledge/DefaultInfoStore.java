@@ -103,6 +103,10 @@ public class DefaultInfoStore implements InfoStore {
 	public void addValue(Property<?> key, Locale language, Object value) {
 		if (value == null) throw new NullPointerException("The value must not be null.");
 		if (key == null) throw new NullPointerException("The key must not be null.");
+		if (language != NO_LANGUAGE && !key.isMultilingual()) {
+			throw new IllegalArgumentException("The property " + key
+					+ " does not support a language");
+		}
 		if (!key.getStoredClass().isInstance(value)) {
 			throw new ClassCastException("value '" + value +
 							"' is not compatible with defined storage class "

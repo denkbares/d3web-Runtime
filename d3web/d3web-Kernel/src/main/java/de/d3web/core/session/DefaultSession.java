@@ -36,7 +36,6 @@ import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.DefaultBlackboard;
 import de.d3web.core.session.blackboard.SessionObject;
@@ -75,7 +74,6 @@ public class DefaultSession implements Session {
 	private Protocol protocol = new DefaultProtocol();
 
 	private List<PSMethod> usedPSMethods;
-	private DCMarkup dcMarkup;
 
 	private final Date created;
 	private Date edited;
@@ -93,7 +91,6 @@ public class DefaultSession implements Session {
 		this.edited = new Date();
 		this.kb = knowledgebase;
 		this.blackboard = new DefaultBlackboard(this);
-		this.dcMarkup = new DCMarkup();
 		this.dynamicStore = new HashMap<CaseObjectSource, SessionObject>();
 		// add problem-solving methods used for this case
 		this.usedPSMethods = new LinkedList<PSMethod>();
@@ -304,17 +301,6 @@ public class DefaultSession implements Session {
 	@Override
 	public Blackboard getBlackboard() {
 		return blackboard;
-	}
-
-	@Override
-	public DCMarkup getDCMarkup() {
-		return dcMarkup;
-	}
-
-	@Override
-	public void setDCMarkup(DCMarkup dcMarkup) {
-		touch();
-		this.dcMarkup = dcMarkup;
 	}
 
 	// ******************** event notification *********************

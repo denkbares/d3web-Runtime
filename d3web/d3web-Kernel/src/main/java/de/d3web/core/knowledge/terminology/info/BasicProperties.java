@@ -9,8 +9,6 @@
  */
 package de.d3web.core.knowledge.terminology.info;
 
-import de.d3web.core.knowledge.terminology.IDObject;
-
 /**
  * A collection of basic Properties for d3web
  * 
@@ -45,14 +43,6 @@ public class BasicProperties {
 			"abstractionQuestion", Boolean.class);
 
 	/**
-	 * used for: {@link IDObject} An explanation of the {@link IDObject}
-	 * 
-	 * @return String
-	 */
-	public static final Property<String> EXPLANATION = Property.getProperty(
-			"explanation", String.class);
-
-	/**
 	 * used for Diagnosis Saves the apriori probability of a diagnosis
 	 * 
 	 * @return Float
@@ -76,16 +66,7 @@ public class BasicProperties {
 	 * 
 	 * @return String
 	 */
-	public static final Property<String> INIT = Property.getProperty("INIT", String.class);
-
-	/**
-	 * used for question doc: the ids of the answers(seperated by ";"), which is
-	 * preselected in dialogs
-	 * 
-	 * @return String
-	 */
-	public static final Property<String> DEFAULT = Property.getProperty(
-			"DEFAULT", String.class);
+	public static final Property<String> INIT = Property.getProperty("init", String.class);
 
 	/**
 	 * TODO: Remove when UnknownChoice is implemented
@@ -98,22 +79,20 @@ public class BasicProperties {
 			"unknownVisible", Boolean.class);
 
 	/**
-	 * TODO: Remove when UnknownChoice is implemented
-	 * 
-	 * used for: Question doc: return of getValue of Unknown
-	 * 
-	 * @return String
+	 * Element Name: Date Label: Date Definition: A date of an event in the
+	 * lifecycle of the resource. Comment: Typically, Date will be associated
+	 * with the creation or availability of the resource. Recommended best
+	 * practice for encoding the date value is defined in a profile of ISO 8601
+	 * [W3CDTF] and includes (among others) dates of the form YYYY-MM-DD.
 	 */
-	public static final Property<String> UNKNOWN_VERBALISATION = Property.getProperty(
-			"unknown_verbalisation", String.class);
+	public static final Property<String> VERSION =
+			Property.getProperty("version", String.class);
 
 	/**
-	 * TODO: Remove and make each MMINFO to a Property
-	 * 
-	 * used for: QASet, Answer, Diagnosis doc: contains former MMInfo
-	 * 
-	 * @return MMInfoStorage
+	 * Element Name: Creator Label: Creator Definition: An entity primarily
+	 * responsible for making the content of the resource. Comment: Examples of
+	 * Creator include a person, an organization, or a service. Typically, the
+	 * name of a Creator should be used to indicate the entity.
 	 */
-	public static final Property<MMInfoStorage> MMINFO = Property.getProperty(
-			"mminfo", MMInfoStorage.class);
+	public static final Property<String> AUTHOR = Property.getProperty("author", String.class);
 }

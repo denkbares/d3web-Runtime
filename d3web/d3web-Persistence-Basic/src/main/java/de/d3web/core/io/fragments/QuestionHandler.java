@@ -27,7 +27,6 @@ import org.w3c.dom.Element;
 
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
@@ -41,6 +40,7 @@ import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.knowledge.terminology.QuestionZC;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
+import de.d3web.core.knowledge.terminology.info.Property.Autosave;
 
 /**
  * FragmentHandler for Questions Children are ignored, hierarchies are
@@ -66,16 +66,42 @@ public class QuestionHandler implements FragmentHandler {
 		String id = element.getAttribute("ID");
 		Question q = null;
 		List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
-		Element text = null;
 		ArrayList<NumericalInterval> intervalls = null;
-		InfoStore infoStore = null;
 		Element answersElement = null;
+		if (type.equals("YN")) {
+			q = new QuestionYN(id);
+		}
+		else if (type.equals(QuestionZC.XML_IDENTIFIER)) {
+			q = new QuestionZC(id);
+		}
+		else if (type.equals("OC")) {
+			q = new QuestionOC(id);
+		}
+		else if (type.equals("MC")) {
+			q = new QuestionMC(id);
+		}
+		else if (type.equals("Num")) {
+			q = new QuestionNum(id);
+		}
+		else if (type.equals("Text")) {
+			q = new QuestionText(id);
+		}
+		else if (type.equals("Date")) {
+			q = new QuestionDate(id);
+		}
+		PropertiesHandler ph = new PropertiesHandler();
 		for (Element child : childNodes) {
 			if (child.getNodeName().equals("Text")) {
-				text = child;
+				q.setName(child.getTextContent());
 			}
 			else if (child.getNodeName().equals("Answers")) {
 				answersElement = child;
+			}
+			else if (child.getNodeName().equals(XMLUtil.INFO_STORE)) {
+				XMLUtil.fillInfoStore(q.getInfoStore(), child, kb);
+			}
+			else if (ph.canRead(child)) {
+				InfoStoreUtil.copyEntries(ph.read(kb, child), q.getInfoStore());
 			}
 			// If the child is none of the types above and it doesn't contain
 			// the children or the costs,
@@ -84,10 +110,7 @@ public class QuestionHandler implements FragmentHandler {
 			else if (!child.getNodeName().equals("Children")
 					&& !child.getNodeName().equals("Costs")) {
 				Object readFragment = PersistenceManager.getInstance().readFragment(child, kb);
-				if (readFragment instanceof InfoStore) {
-					infoStore = (InfoStore) readFragment;
-				}
-				else if (readFragment instanceof List<?>) {
+				if (readFragment instanceof List<?>) {
 					intervalls = new ArrayList<NumericalInterval>();
 					List<?> list = (List<?>) readFragment;
 					for (Object o : list) {
@@ -102,34 +125,8 @@ public class QuestionHandler implements FragmentHandler {
 				}
 			}
 		}
-		if (type.equals("YN")) {
-			q = new QuestionYN(id);
-		}
-		else if (type.equals(QuestionZC.XML_IDENTIFIER)) {
-			q = new QuestionZC(id);
-		}
-		else if (type.equals("OC")) {
-			q = new QuestionOC(id);
-		}
-		else if (type.equals("MC")) {
-			q = new QuestionMC(id);
-		}
-		else if (type.equals("Num")) {
-			QuestionNum questionNum = new QuestionNum(id);
-			q = questionNum;
-			if (intervalls != null) {
-				questionNum.setValuePartitions(intervalls);
-			}
-		}
-		else if (type.equals("Text")) {
-			q = new QuestionText(id);
-		}
-		else if (type.equals("Date")) {
-			q = new QuestionDate(id);
-		}
-		q.setName(text.getTextContent());
-		if (infoStore != null) {
-			InfoStoreUtil.copyEntries(infoStore, q.getInfoStore());
+		if (intervalls != null) {
+			((QuestionNum) q).setValuePartitions(intervalls);
 		}
 		if (answersElement != null && q instanceof QuestionChoice) {
 			QuestionChoice qc = (QuestionChoice) q;
@@ -190,10 +187,7 @@ public class QuestionHandler implements FragmentHandler {
 				e.appendChild(answerNodes);
 			}
 		}
-		InfoStore infoStore = q.getInfoStore();
-		if (infoStore != null && !infoStore.isEmpty()) {
-			e.appendChild(PersistenceManager.getInstance().writeFragment(infoStore, doc));
-		}
+		XMLUtil.appendInfoStore(e, q, Autosave.basic);
 		return e;
 	}
 

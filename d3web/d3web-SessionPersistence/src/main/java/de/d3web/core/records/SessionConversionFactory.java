@@ -18,6 +18,7 @@ import java.util.Map;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethod.Type;
 import de.d3web.core.knowledge.Indication;
+import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -53,7 +54,7 @@ public final class SessionConversionFactory {
 		DefaultSession target = SessionFactory.createSession(source.getId(),
 				knowledgeBase, source.getCreationDate());
 		target.setName(source.getName());
-		target.setDCMarkup(source.getDCMarkup());
+		InfoStoreUtil.copyEntries(source.getInfoStore(), target.getInfoStore());
 
 		// Search psmethods of session (improves performance)
 		Map<String, PSMethod> psMethods = new HashMap<String, PSMethod>();
@@ -119,7 +120,7 @@ public final class SessionConversionFactory {
 				source.getId(),
 				source.getCreationDate(), source.getLastChangeDate());
 		target.setName(source.getName());
-		target.setDCMarkup(source.getDCMarkup());
+		InfoStoreUtil.copyEntries(source.getInfoStore(), target.getInfoStore());
 		target.getProtocol().addEntries(source.getProtocol().getProtocolHistory());
 		Blackboard blackboard = source.getBlackboard();
 		for (Question q : blackboard.getValuedQuestions()) {

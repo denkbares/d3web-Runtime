@@ -23,10 +23,8 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import de.d3web.core.io.fragments.DCMarkupHandler;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.core.knowledge.terminology.info.DCMarkup;
 import de.d3web.core.records.SessionRecord;
 
 /**
@@ -40,21 +38,19 @@ public class HeadHandler implements SessionPersistenceHandler {
 	@Override
 	public void read(Element sessionElement, SessionRecord sessionRecord,
 			ProgressListener listener) throws IOException {
-		List<Element> elementList = XMLUtil.getElementList(sessionElement.getChildNodes());
-		if (elementList.size() > 0) {
-			SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
-			DCMarkup dcMarkup = (DCMarkup) new DCMarkupHandler().read(null, elementList.get(0));
-			sessionRecord.setDCMarkup(dcMarkup);
+		List<Element> elementList = XMLUtil.getElementList(sessionElement.getElementsByTagName(XMLUtil.INFO_STORE));
+		if (elementList.size() == 1) {
+			XMLUtil.fillInfoStore(sessionRecord.getInfoStore(), elementList.get(0), null);
+		}
+		else if (elementList.size() > 1) {
+			throw new IOException("Each SessionElement must only contain one InfoStore");
 		}
 	}
 
 	@Override
 	public void write(Element sessionElement, SessionRecord sessionObject,
 			ProgressListener listener) throws IOException {
-		DCMarkup dcMarkup = sessionObject.getDCMarkup();
-		Element e = new DCMarkupHandler().write(dcMarkup,
-				sessionElement.getOwnerDocument());
-		sessionElement.appendChild(e);
+		XMLUtil.appendInfoStore(sessionElement, sessionObject, null);
 	}
 
 }

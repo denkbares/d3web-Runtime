@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <KnowledgeBase id="Car-Diagnosis..Car-Diagnosis_KB" system="d3web" type="basic">
-<Properties>
-<Property class="java.lang.Boolean" name="abstractionQuestion">true</Property>
-</Properties>
+<infoStore>
+<entry property="abstractionQuestion">true</entry>
+</infoStore>
 <InitQuestions>
 <Question ID="QC1"/>
 <Question ID="QC2"/>
 <Question ID="QC3"/>
 </InitQuestions>
-<Costs/>
 <rootQASet>Q000</rootQASet>
 <rootSolution>P000</rootSolution>
 <QASets>
@@ -205,9 +204,9 @@
 <Text>normal</Text>
 </Answer>
 </Answers>
-<Properties>
-<Property class="java.lang.Boolean" name="abstractionQuestion">true</Property>
-</Properties>
+<infoStore>
+<entry property="abstractionQuestion">true</entry>
+</infoStore>
 </Question>
 <Question ID="Q4" type="OC">
 <Text>Fuel</Text>
@@ -228,9 +227,9 @@
 </Question>
 <Question ID="Q6" type="Num">
 <Text>Num. Mileage evaluation</Text>
-<Properties>
-<Property class="java.lang.Boolean" name="abstractionQuestion">true</Property>
-</Properties>
+<infoStore>
+<entry property="abstractionQuestion">true</entry>
+</infoStore>
 <Children>
 <Child ID="Q7"/>
 </Children>
@@ -248,9 +247,9 @@
 <Text>increased</Text>
 </Answer>
 </Answers>
-<Properties>
-<Property class="java.lang.Boolean" name="abstractionQuestion">true</Property>
-</Properties>
+<infoStore>
+<entry property="abstractionQuestion">true</entry>
+</infoStore>
 </Question>
 <Question ID="Q8" type="Num">
 <Text>Real mileage  /100km</Text>
