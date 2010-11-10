@@ -224,9 +224,12 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public void removeInterviewFacts(TerminologyObject terminologyObject) {
-		Value oldValue = getInterviewFact(terminologyObject).getValue();
-		this.interviewStorage.remove(terminologyObject);
-		propagateIndicationChange(terminologyObject, oldValue);
+		Fact oldFact = getInterviewFact(terminologyObject);
+		if (oldFact != null) {
+			Value oldValue = oldFact.getValue();
+			this.interviewStorage.remove(terminologyObject);
+			propagateIndicationChange(terminologyObject, oldValue);
+		}
 	}
 
 	@Override
