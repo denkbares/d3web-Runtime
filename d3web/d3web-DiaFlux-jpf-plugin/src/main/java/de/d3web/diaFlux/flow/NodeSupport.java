@@ -20,6 +20,8 @@
 
 package de.d3web.diaFlux.flow;
 
+import java.util.logging.Logger;
+
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
 
@@ -41,6 +43,21 @@ public class NodeSupport implements ISupport {
 
 	public boolean isValid(Session theCase) {
 		return DiaFluxUtils.getNodeData(node, theCase).isActive();
+	}
+
+	@Override
+	public void remove(Session session, NodeData nodeData) {
+		if (!(nodeData instanceof StartNodeData)) {
+			Logger.getLogger(getClass().getName()).warning("*******Unexpected NodeData.");
+			return;
+		}
+
+		StartNodeData data = (StartNodeData) nodeData;
+
+		// if the startnode is no longer supported by this support,
+		// it can no longer be called by this.node
+		data.removeCallingNode(DiaFluxUtils.getNodeData(getNode(), session));
+
 	}
 
 	public INode getNode() {

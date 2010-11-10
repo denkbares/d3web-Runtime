@@ -99,7 +99,8 @@ public class NodeData extends SessionObject implements INodeData {
 	}
 
 	@Override
-	public boolean removeSupport(ISupport support) {
+	public boolean removeSupport(Session session, ISupport support) {
+		support.remove(session, this);
 		return supports.remove(support);
 	}
 

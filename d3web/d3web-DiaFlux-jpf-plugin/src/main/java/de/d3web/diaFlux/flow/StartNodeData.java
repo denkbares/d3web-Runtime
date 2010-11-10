@@ -18,24 +18,35 @@
  */
 package de.d3web.diaFlux.flow;
 
-import de.d3web.core.session.Session;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
  *
  * @author Reinhard Hatko
- * @created 20.10.2010
+ * @created 07.11.2010
  */
-public class ValidSupport implements ISupport {
+public class StartNodeData extends NodeData {
 
-	@Override
-	public boolean isValid(Session session) {
-		return true;
+	private final List<INodeData> callingNodes;
+
+	public StartNodeData(StartNode startNode) {
+		super(startNode);
+		this.callingNodes = new ArrayList<INodeData>(3);
 	}
 
-	@Override
-	public void remove(Session session, NodeData nodeData) {
-		// nothing
+	public void addCallingNode(INodeData data) {
+		callingNodes.add(data);
+
+	}
+
+	public List<INodeData> getCallingNodes() {
+		return new ArrayList<INodeData>(callingNodes);
+	}
+
+	public void removeCallingNode(INodeData data) {
+		callingNodes.remove(data);
 	}
 
 }

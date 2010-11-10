@@ -40,4 +40,12 @@ public interface ISupport {
 	 */
 	boolean isValid(Session session);
 
+	/**
+	 * This method is called, when the support is removed from the node. Can
+	 * perform some cleanup.
+	 *
+	 * @param nodeData the NodeData where this support is being removed from
+	 */
+	void remove(Session session, NodeData nodeData);
+
 }

@@ -40,7 +40,7 @@ public interface IPath {
 
 	boolean propagate(Session session, INode node);
 
-	boolean takeSnapshot(Session session, SnapshotNode snapshotNode, INode node);
+	boolean takeSnapshot(Session session, SnapshotNode snapshotNode, INode node, List<INode> nodes);
 
 	boolean isEmpty();
 

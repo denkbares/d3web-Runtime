@@ -20,8 +20,11 @@
 
 package de.d3web.diaFlux.flow;
 
+import java.util.List;
+
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
+import de.d3web.diaFlux.inference.FluxSolver;
 
 /**
  *
@@ -47,10 +50,10 @@ public class SnapshotNode extends Node {
 	}
 
 	@Override
-	public void takeSnapshot(Session session, SnapshotNode snapshotNode) {
-		super.takeSnapshot(session, snapshotNode);
+	public void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes) {
+		super.takeSnapshot(session, snapshotNode, nodes);
 
-		DiaFluxUtils.getNodeData(this, session).addSupport(session, new ValidSupport());
+		FluxSolver.addSupport(session, this, new ValidSupport());
 
 	}
 

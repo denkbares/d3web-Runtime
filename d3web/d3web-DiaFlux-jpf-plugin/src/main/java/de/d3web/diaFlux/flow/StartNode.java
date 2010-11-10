@@ -20,7 +20,13 @@
 
 package de.d3web.diaFlux.flow;
 
+import java.util.List;
+
 import de.d3web.core.session.Session;
+import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.diaFlux.inference.DiaFluxUtils;
+import de.d3web.diaFlux.inference.FluxSolver;
+import de.d3web.diaFlux.inference.IPath;
 
 /**
  *
@@ -39,7 +45,37 @@ public class StartNode extends Node {
 	}
 
 	@Override
-	public void takeSnapshot(Session session, SnapshotNode snapshotNode) {
-		super.takeSnapshot(session, snapshotNode);
+	public void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes) {
+		// remeber which nodes called this one, before removing the support,
+		// what also empties the calling nodes
+		StartNodeData data = (StartNodeData) DiaFluxUtils.getNodeData(this, session);
+		List<INodeData> callingNodes = data.getCallingNodes();
+
+		super.takeSnapshot(session, snapshotNode, nodes);
+
+
+		for (INodeData nodeData : callingNodes) {
+
+			INode composedNode = nodeData.getNode();
+
+			// the calling node has already been snapshotted
+			// so do not start snapshot there
+			if (nodes.contains(composedNode)) continue;
+
+
+			IPath path = DiaFluxUtils.getPath(composedNode, session);
+			path.takeSnapshot(session, snapshotNode, composedNode, nodes);
+
+			// maintain support of calling composedNode
+			// TODO or use NodeSupport by the SapshotNode?
+			FluxSolver.addSupport(session, composedNode, new ValidSupport());
+
+		}
+
+	}
+
+	@Override
+	public SessionObject createCaseObject(Session session) {
+		return new StartNodeData(this);
 	}
 }

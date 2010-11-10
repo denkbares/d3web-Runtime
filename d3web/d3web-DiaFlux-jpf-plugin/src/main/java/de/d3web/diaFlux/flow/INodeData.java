@@ -71,11 +71,13 @@ public interface INodeData {
 
 	/**
 	 * Removes the supplied support.
-	 *
+	 * 
+	 * @param session
+	 * 
 	 * @param support
 	 * @return true, if the support was contained before and removed
 	 */
-	boolean removeSupport(ISupport support);
+	boolean removeSupport(Session session, ISupport support);
 
 	// TODO remove
 	List<ISupport> getSupports();

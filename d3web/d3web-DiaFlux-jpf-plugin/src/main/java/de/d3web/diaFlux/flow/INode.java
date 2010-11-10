@@ -41,7 +41,7 @@ public interface INode extends CaseObjectSource {
 	List<IEdge> getOutgoingEdges();
 
 	/**
-	 * 
+	 *
 	 * @return s a list of this node's incoming edges.
 	 */
 	List<IEdge> getIncomingEdges();
@@ -83,6 +83,7 @@ public interface INode extends CaseObjectSource {
 	 */
 	void undoAction(Session session);
 
-	void takeSnapshot(Session session, SnapshotNode snapshotNode);
+
+	void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes);
 
 }

@@ -21,6 +21,7 @@ package de.d3web.diaFlux;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
@@ -46,8 +47,6 @@ public class CallFlowAction extends PSAction {
 	private ISupport support;
 
 	public CallFlowAction(String flow, String node) {
-		super();
-
 		this.flowName = flow;
 		this.startNodeName = node;
 	}
@@ -71,6 +70,13 @@ public class CallFlowAction extends PSAction {
 		}
 		else {
 			throw new UnsupportedOperationException("Unknown source type " + source);
+		}
+
+		if (startNode == null) {
+			Logger.getLogger(CallFlowAction.class.getName()).severe(
+							"Could not find startnode '" + startNodeName + "' in flow '" + flowName
+									+ "'.");
+			return;
 		}
 
 		FluxSolver.activate(session, startNode, support);

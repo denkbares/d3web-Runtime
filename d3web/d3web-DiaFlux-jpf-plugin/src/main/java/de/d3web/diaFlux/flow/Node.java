@@ -28,6 +28,8 @@ import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
+import de.d3web.diaFlux.inference.FluxSolver;
+import de.d3web.diaFlux.inference.Path;
 
 /**
  *
@@ -120,7 +122,7 @@ public abstract class Node implements INode, CaseObjectSource {
 	}
 
 	@Override
-	public void takeSnapshot(Session session, SnapshotNode snapshotNode) {
+	public void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes) {
 
 		resetNodeData(session);
 
@@ -136,11 +138,23 @@ public abstract class Node implements INode, CaseObjectSource {
 		INodeData nodeData = DiaFluxUtils.getNodeData(this, session);
 
 		for (ISupport support : nodeData.getSupports()) {
-			nodeData.removeSupport(support);
+			FluxSolver.removeSupport(session, this, support);
 		}
 
+		Path path = (Path) DiaFluxUtils.getPath(this, session);
 
-		for (IEdge edge : getIncomingEdges()) {
+
+		for (IEdge edge : path.selectActiveEdges(getOutgoingEdges(), session)) {
+
+			// TODO add support to all active outgoing edges.
+			// These have not been on the path FROM the snapshot node,
+			// otherwise these edges would no longer be active
+
+		}
+
+		// TODO could be moved to EdgeSupport#remove
+// for (IEdge edge : getIncomingEdges()) { // TODO which one is right?
+		for (IEdge edge : getOutgoingEdges()) {
 
 			EdgeData edgeData = DiaFluxUtils.getEdgeData(edge, session);
 
@@ -181,7 +195,8 @@ public abstract class Node implements INode, CaseObjectSource {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "[" + getID() + ", " + getName() + "]";
+		return getClass().getSimpleName() + "[" + getID() + ", " + getName() + "] in "
+				+ flow.getName();
 	}
 
 }

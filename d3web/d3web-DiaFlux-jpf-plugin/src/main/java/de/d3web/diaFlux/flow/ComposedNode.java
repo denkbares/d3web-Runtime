@@ -20,8 +20,19 @@
 
 package de.d3web.diaFlux.flow;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.values.ChoiceID;
+import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.diaFlux.CallFlowAction;
+import de.d3web.diaFlux.ConditionTrue;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
 
 /**
@@ -37,15 +48,69 @@ public class ComposedNode extends ActionNode {
 
 
 	@Override
-	public void takeSnapshot(Session session, SnapshotNode snapshotNode) {
-		super.takeSnapshot(session, snapshotNode);
-		CallFlowAction action = (CallFlowAction) getAction();
-		StartNode startNode = DiaFluxUtils.findStartNode(session, action.getFlowName(),
-				action.getStartNodeName());
+	public void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes) {
 
-		// TODO this will need some special treatment
-		// as taking the snapshot usually does not start at the start node
-		startNode.takeSnapshot(session, snapshotNode);
+		super.takeSnapshot(session, snapshotNode, nodes);
+
+		CallFlowAction action = (CallFlowAction) getAction();
+		StartNode startNode = DiaFluxUtils.findStartNode(session,
+				action.getFlowName(), action.getStartNodeName());
+
+		// StartNodeData nodeData = (StartNodeData)
+		// DiaFluxUtils.getNodeData(startNode, session);
+
+		if (nodes.contains(startNode)) return;
+
+		Collection<INode> exitNodes = findExitNodes(session);
+
+		for (INode exitNode : exitNodes) {
+			DiaFluxUtils.getPath(exitNode, session).takeSnapshot(session, snapshotNode, exitNode, nodes);
+
+		}
+
+	}
+
+	private Collection<INode> findExitNodes(Session session) {
+		CallFlowAction action = (CallFlowAction) getAction();
+		StartNode startNode = DiaFluxUtils.findStartNode(session,
+				action.getFlowName(), action.getStartNodeName());
+		Flow flow = startNode.getFlow();
+
+		List<INode> result = new ArrayList<INode>();
+
+		for (IEdge edge : getOutgoingEdges()) {
+
+			EdgeData edgeData = DiaFluxUtils.getEdgeData(edge, session);
+
+			if (edgeData.hasFired()) {
+				Condition condition = edge.getCondition();
+
+				//
+				if (condition != ConditionTrue.INSTANCE) {
+					List<? extends NamedObject> objects = condition.getTerminalObjects();
+					QuestionChoice question = (QuestionChoice) objects.get(0);
+					MultipleChoiceValue value = (MultipleChoiceValue) session.getBlackboard().getValue(
+							question);
+
+					if (value != null) {
+						for (ChoiceID id : value.getChoiceIDs()) {
+							Choice choice = id.getChoice(question);
+
+							for (EndNode endnode : flow.getExitNodes()) {
+								if (endnode.getName().equalsIgnoreCase(choice.getName())) result.add(endnode);
+
+							}
+
+						}
+					}
+
+				}
+
+			}
+
+		}
+
+		return result;
 
 	}
 

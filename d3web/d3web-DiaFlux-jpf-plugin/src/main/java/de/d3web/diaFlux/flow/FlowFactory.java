@@ -87,7 +87,7 @@ public final class FlowFactory {
 				for (NamedObject nobject : condition.getTerminalObjects()) {
 
 					EdgeMap slice = (EdgeMap) nobject.getKnowledge(FluxSolver.class,
-							FluxSolver.DIAFLUX);
+							MethodKind.FORWARD);
 
 					if (slice == null) {
 						slice = new EdgeMap("EdgeMap" + nobject.getId());

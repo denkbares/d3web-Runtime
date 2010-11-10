@@ -19,10 +19,7 @@
 package de.d3web.diaFlux.flow;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
@@ -32,13 +29,13 @@ import de.d3web.diaFlux.inference.FluxSolver;
 /**
  * An EdgeMap is a KowledgeSlice to be added at a TerminologyObject. It saves
  * all Egdes that contain the TerminologyObject in its guard.
- * 
+ *
  * @author Reinhard Hatko
  * @created 04.11.2010
  */
 public class EdgeMap implements KnowledgeSlice {
 
-	private final Map<Flow, List<IEdge>> edges;
+	private final List<IEdge> edges;
 	private final String id;
 
 	/**
@@ -46,7 +43,7 @@ public class EdgeMap implements KnowledgeSlice {
 	 */
 	public EdgeMap(String id) {
 		this.id = id;
-		this.edges = new HashMap<Flow, List<IEdge>>();
+		this.edges = new ArrayList<IEdge>();
 	}
 
 	@Override
@@ -70,25 +67,27 @@ public class EdgeMap implements KnowledgeSlice {
 	}
 
 	public void addEdge(IEdge edge) {
-		Flow flow = edge.getStartNode().getFlow();
+		// Flow flow = edge.getStartNode().getFlow();
+		//
+		// if (!edges.containsKey(flow)) {
+		// edges.put(flow, new ArrayList<IEdge>(3));
+		// }
+		//
+		// List<IEdge> list = edges.get(flow);
 
-		if (!edges.containsKey(flow)) {
-			edges.put(flow, new ArrayList<IEdge>(3));
-		}
-
-		List<IEdge> list = edges.get(flow);
-
-		list.add(edge);
+		edges.add(edge);
 
 	}
 
-	public List<IEdge> getEdges(Flow flow) {
-		if (!edges.containsKey(flow)) {
-			return Collections.EMPTY_LIST;
-		}
-		else {
-			return edges.get(flow);
-		}
+	public List<IEdge> getEdges() {
+		// if (!edges.containsKey(flow)) {
+		// return Collections.EMPTY_LIST;
+		// }
+		// else {
+		// return edges.get(flow);
+		// }
+
+		return edges;
 	}
 
 }

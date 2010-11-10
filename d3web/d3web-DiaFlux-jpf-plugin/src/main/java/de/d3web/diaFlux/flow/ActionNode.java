@@ -60,8 +60,8 @@ public class ActionNode extends Node {
 	}
 
 	@Override
-	public void takeSnapshot(Session session, SnapshotNode snapshotNode) {
-		super.takeSnapshot(session, snapshotNode);
+	public void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes) {
+		super.takeSnapshot(session, snapshotNode, nodes);
 
 		if (action instanceof ActionIndication) {
 			ActionIndication aind = (ActionIndication) action;
@@ -77,6 +77,13 @@ public class ActionNode extends Node {
 					Question question = (Question) set;
 					Blackboard blackboard = session.getBlackboard();
 					if (UndefinedValue.isNotUndefinedValue(blackboard.getValue(question))) {
+						// blackboard.addValueFact(
+						// new DefaultFact(question,
+						// UndefinedValue.getInstance(),
+						// snapshotNode,
+						// session.getPSMethodInstance(FluxSolver.class))); //
+						// TODO PSM
+
 						blackboard.addValueFact(
 								new DefaultFact(question, UndefinedValue.getInstance(),
 										PSMethodUserSelected.getInstance(),

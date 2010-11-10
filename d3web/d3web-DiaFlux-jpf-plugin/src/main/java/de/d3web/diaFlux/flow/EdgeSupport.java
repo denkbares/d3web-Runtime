@@ -66,6 +66,11 @@ public class EdgeSupport implements ISupport {
 
 	}
 
+	@Override
+	public void remove(Session session, NodeData nodeData) {
+		// nothing to be done here
+	}
+
 	/**
 	 * @return the edge
 	 */
@@ -98,5 +103,6 @@ public class EdgeSupport implements ISupport {
 		else if (!edge.equals(other.edge)) return false;
 		return true;
 	}
+
 
 }

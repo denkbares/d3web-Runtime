@@ -100,7 +100,9 @@ public class FluxSolver implements PSMethod {
 		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
 				"Removing support '" + support + "' from node '" + node + "'.");
 
-		boolean removed = nodeData.removeSupport(support);
+		boolean removed = nodeData.removeSupport(session, support);
+
+
 
 		if (!removed) {
 			Logger.getLogger(FluxSolver.class.getName()).log(Level.SEVERE,
@@ -112,6 +114,9 @@ public class FluxSolver implements PSMethod {
 	}
 
 	public static boolean addSupport(Session session, INode node, ISupport support) {
+		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+				"Adding support '" + support + "' to node '" + node + "'.");
+
 		INodeData nodeData = DiaFluxUtils.getNodeData(node, session);
 		boolean added = nodeData.addSupport(session, support);
 
@@ -137,7 +142,12 @@ public class FluxSolver implements PSMethod {
 			List<SnapshotNode> snapshots = caseObject.getRegisteredSnapshots();
 
 			for (SnapshotNode node : snapshots) {
+				// take the snapshot
 				takeSnapshot(session, node);
+
+				// and then continue flowing from the SSN, as it has been
+				// cancelled at this point Sin the previous propagation
+				DiaFluxUtils.getPath(node, session).propagate(session, node);
 			}
 
 			caseObject.clearRegisteredSnapshots();
@@ -150,29 +160,27 @@ public class FluxSolver implements PSMethod {
 		try {
 			session.getPropagationManager().openPropagation();
 
-			for (IPath path : new ArrayList<IPath>(caseObject.getActivePathes())) {
 
 
-				for (PropagationEntry propagationEntry : changes) {
-					TerminologyObject object = propagationEntry.getObject();
-					EdgeMap slice = (EdgeMap) ((NamedObject) object).getKnowledge(FluxSolver.class,
-							MethodKind.FORWARD);
+			for (PropagationEntry propagationEntry : changes) {
+				TerminologyObject object = propagationEntry.getObject();
+				EdgeMap slice = (EdgeMap) ((NamedObject) object).getKnowledge(FluxSolver.class,
+						MethodKind.FORWARD);
 
-					if (slice == null) continue; // TO does not occur in any
-													// edge
+				if (slice == null) continue; // TO does not occur in any
+				// edge
 
-					// iterate over all edges of the current path
-					for (IEdge edge : slice.getEdges(path.getFlow())) {
+				// iterate over all edges of the current path
+				for (IEdge edge : slice.getEdges()) {
 
-						INode node = edge.getStartNode();
+					INode node = edge.getStartNode();
+					IPath path = DiaFluxUtils.getPath(node, session);
 
-						// if the node the edge starts at is active
-						if (path.getNodeData(node).isActive()) {
+					// if the node the edge starts at is active
+					if (path.getNodeData(node).isActive()) {
 
-							// ...propagate starting at this node
-							path.propagate(session, node);
-						}
-
+						// ...propagate starting at this node
+						path.propagate(session, node);
 					}
 
 				}
@@ -213,10 +221,11 @@ public class FluxSolver implements PSMethod {
 		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
 				"Start taking snapshot on path: " + path);
 
-		path.takeSnapshot(session, node, node);
+		ArrayList<INode> nodes = new ArrayList<INode>();
+		path.takeSnapshot(session, node, node, nodes);
 
 		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
-				"Finished taking snapshot on path: " + path);
+				"Finished taking snapshot on over " + nodes.size() + " nodes.");
 
 	}
 

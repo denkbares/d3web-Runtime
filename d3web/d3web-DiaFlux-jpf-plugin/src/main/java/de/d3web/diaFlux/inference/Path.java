@@ -40,8 +40,10 @@ import de.d3web.diaFlux.flow.IEdge;
 import de.d3web.diaFlux.flow.INode;
 import de.d3web.diaFlux.flow.INodeData;
 import de.d3web.diaFlux.flow.ISupport;
+import de.d3web.diaFlux.flow.NodeSupport;
 import de.d3web.diaFlux.flow.SnapshotNode;
 import de.d3web.diaFlux.flow.StartNode;
+import de.d3web.diaFlux.flow.StartNodeData;
 
 /**
  * @author Reinhard Hatko
@@ -89,7 +91,14 @@ public class Path extends SessionObject implements IPath {
 	@Override
 	public void activate(StartNode startNode, ISupport support, Session session) {
 
-		INodeData nodeData = DiaFluxUtils.getNodeData(startNode, session);
+		StartNodeData nodeData = (StartNodeData) DiaFluxUtils.getNodeData(startNode, session);
+
+		if (support instanceof NodeSupport) {
+			INode node = ((NodeSupport) support).getNode();
+
+			nodeData.addCallingNode(DiaFluxUtils.getNodeData(node, session));
+
+		}
 
 		boolean active = nodeData.isActive();
 
@@ -102,9 +111,8 @@ public class Path extends SessionObject implements IPath {
 
 	}
 
-
 	/**
-	 * Starts propagation beginning at the supplied node. At first
+	 * Starts propagation beginning at the supplied node.
 	 *
 	 * @created 05.11.2010
 	 * @param session
@@ -125,21 +133,29 @@ public class Path extends SessionObject implements IPath {
 	}
 
 	@Override
-	public boolean takeSnapshot(Session session, SnapshotNode snapshotNode, INode node) {
+	public boolean takeSnapshot(Session session, SnapshotNode snapshotNode, INode node, List<INode> nodes) {
+
+		if (!getFlow().getNodes().contains(node)) {
+			throw new IllegalArgumentException("Node '" + node.getName()
+					+ "' is not contained in Flow '" + getFlow().getName() + "'.");
+		}
 
 		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
 				("**Taking Snapshot at node: " + node));
 
+
 		List<IEdge> activeEdges = selectActiveEdges(node.getIncomingEdges(), session);
 
-		node.takeSnapshot(session, null);
+		nodes.add(node);
+		node.takeSnapshot(session, snapshotNode, nodes);
 
 
 		for (IEdge edge : activeEdges) {
 
-			takeSnapshot(session, snapshotNode, edge.getStartNode());
+			takeSnapshot(session, snapshotNode, edge.getStartNode(), nodes);
 
 		}
+
 
 		return true;
 	}
@@ -201,21 +217,42 @@ public class Path extends SessionObject implements IPath {
 
 		ISupport support = new EdgeSupport(edge);
 
-		if (nextNodeData.isActive()) {
+		boolean active = nextNodeData.isActive();
 
-			Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
-						"Node is already active: " + nextNode);
-			FluxSolver.addSupport(session, nextNode, support);
+		FluxSolver.addSupport(session, nextNode, support);
 
+		// if the next node is a SSN, then it does not matter, if it is active
+		// or not
+		// its action must be done anyway:
+		// In a cycle with just one SSN it has to be activated anyway
+		if (nextNode instanceof SnapshotNode) {
+			// registers the snapshot
+			FluxSolver.doAction(session, nextNode);
+
+			// but do not continue flowing beyond the SSN
 			return null;
 
 		}
 
-		FluxSolver.addSupport(session, nextNode, support);
+		// node was already active before adding the new support
 
-		FluxSolver.doAction(session, nextNode);
+		if (active && !(nextNode instanceof SnapshotNode)) {
 
-		return nextNode;
+			// so do nothing
+			Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+						"Node is already active: " + nextNode);
+
+			return null;
+
+		}// node was not active or is an active SSN, so do its action
+		else {
+
+			FluxSolver.doAction(session, nextNode);
+
+			return nextNode;
+		}
+
+
 
 	}
 
@@ -227,7 +264,7 @@ public class Path extends SessionObject implements IPath {
 	 * @param session
 	 * @return
 	 */
-	private List<IEdge> selectInactiveTrueEdges(INode node, Session session) {
+	public List<IEdge> selectInactiveTrueEdges(INode node, Session session) {
 
 		List<IEdge> result = new LinkedList<IEdge>();
 
@@ -260,7 +297,7 @@ public class Path extends SessionObject implements IPath {
 	 * @param session
 	 * @return
 	 */
-	private List<IEdge> selectActiveFalseEdges(INode node, Session session) {
+	public List<IEdge> selectActiveFalseEdges(INode node, Session session) {
 
 		List<IEdge> result = new LinkedList<IEdge>();
 
@@ -339,7 +376,7 @@ public class Path extends SessionObject implements IPath {
 	 * @param session
 	 * @return
 	 */
-	private List<IEdge> selectActiveEdges(List<IEdge> edges, Session session) {
+	public List<IEdge> selectActiveEdges(List<IEdge> edges, Session session) {
 
 		List<IEdge> result = new LinkedList<IEdge>();
 
