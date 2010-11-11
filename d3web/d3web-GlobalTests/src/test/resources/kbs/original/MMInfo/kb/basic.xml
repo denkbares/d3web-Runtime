@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<KnowledgeBase id="Properties..Properties_KB" system="d3web" type="basic">
+<InitQuestions/>
+<rootQASet>Q000</rootQASet>
+<rootSolution>P000</rootSolution>
+<QASets>
+<QContainer ID="Q000">
+<Text>Q000</Text>
+</QContainer>
+</QASets>
+<Diagnoses>
+<Diagnosis ID="P000">
+<Text>P000</Text>
+<Children>
+<Child ID="P1"/>
+</Children>
+</Diagnosis>
+<Diagnosis ID="P1">
+<Text>Loesung 0</Text>
+</Diagnosis>
+</Diagnoses>
+<KnowledgeSlices/>
+</KnowledgeBase>

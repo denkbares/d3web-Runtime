@@ -79,6 +79,12 @@ public class PSConfig implements Comparable<PSConfig> {
 
 	@Override
 	public int compareTo(PSConfig o) {
-		return Double.compare(priority, o.getPriority());
+		int comparePrioritiy = Double.compare(priority, o.getPriority());
+		if (comparePrioritiy != 0) {
+			return comparePrioritiy;
+		}
+		else {
+			return psMethod.getClass().toString().compareTo(o.getPsMethod().getClass().toString());
+		}
 	}
 }

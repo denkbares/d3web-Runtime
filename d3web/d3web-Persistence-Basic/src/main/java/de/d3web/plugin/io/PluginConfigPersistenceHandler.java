@@ -121,7 +121,9 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 		}
 		Element psmethods = doc.createElement("psmethods");
 		root.appendChild(psmethods);
-		for (PSConfig ps : kb.getPsConfigs()) {
+		LinkedList<PSConfig> psconfigs = new LinkedList<PSConfig>(kb.getPsConfigs());
+		Collections.sort(psconfigs);
+		for (PSConfig ps : psconfigs) {
 			psmethods.appendChild(PersistenceManager.getInstance().writeFragment(ps, doc));
 		}
 		Util.writeDocumentToOutputStream(doc, stream);

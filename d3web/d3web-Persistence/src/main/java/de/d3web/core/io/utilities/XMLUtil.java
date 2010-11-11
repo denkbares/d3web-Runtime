@@ -21,6 +21,9 @@ package de.d3web.core.io.utilities;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -492,14 +495,14 @@ public final class XMLUtil {
 	 */
 	public static void appendInfoStoreEntries(Element father, InfoStore infoStore, Autosave autosave) throws IOException {
 		Document doc = father.getOwnerDocument();
-		for (Triple<Property<?>, Locale, Object> entry : infoStore.entries()) {
+		for (Triple<Property<?>, Locale, Object> entry : sortEntries(infoStore.entries())) {
 			if (autosave == null || (autosave != null && entry.getA().hasState(autosave))) {
 				Element entryElement = doc.createElement("entry");
 				father.appendChild(entryElement);
 				entryElement.setAttribute("property", entry.getA().getName());
 				Locale language = entry.getB();
 				if (language != InfoStore.NO_LANGUAGE) {
-					entryElement.setAttribute("lang", language.getLanguage());
+					entryElement.setAttribute("lang", language.toString());
 				}
 				try {
 					entryElement.appendChild(PersistenceManager.getInstance().writeFragment(
@@ -515,6 +518,56 @@ public final class XMLUtil {
 				}
 			}
 		}
+	}
+
+	/**
+	 * 
+	 * @created 11.11.2010
+	 * @param entries
+	 * @return
+	 */
+	private static List<Triple<Property<?>, Locale, Object>> sortEntries(Collection<Triple<Property<?>, Locale, Object>> entries) {
+		LinkedList<Triple<Property<?>, Locale, Object>> ret = new LinkedList<Triple<Property<?>, Locale, Object>>(
+				entries);
+		Collections.sort(ret, new Comparator<Triple<Property<?>, Locale, Object>>() {
+
+			@Override
+			public int compare(Triple<Property<?>, Locale, Object> arg0, Triple<Property<?>, Locale, Object> arg1) {
+				if (arg0 == arg1) return 0;
+				// if the property is different, compare the names
+				if (arg0.getA().getName() != arg1.getA().getName()) {
+					return arg0.getA().getName().compareTo(arg1.getA().getName());
+				}
+				// the next criteria is the locale
+				else if (arg0.getB() != arg1.getB()) {
+					if (arg0.getB() == InfoStore.NO_LANGUAGE) {
+						return 1;
+					}
+					else if (arg1.getB() == InfoStore.NO_LANGUAGE) {
+						return -1;
+					}
+					else {
+						return arg0.getB().toString().compareTo(arg1.getB().toString());
+					}
+				}
+				// finally compare the content using its toString()
+				else {
+					if (arg0.getC() == arg0.getC()) {
+						return 0;
+					}
+					if (arg0.getC() == null) {
+						return 1;
+					}
+					else if (arg1.getC() == null) {
+						return -1;
+					}
+					else {
+						return arg0.getC().toString().compareTo(arg1.getC().toString());
+					}
+				}
+			}
+		});
+		return ret;
 	}
 
 	public static void appendInfoStore(Element idObjectElement, IDObject idObject, Autosave autosave) throws IOException {
@@ -559,7 +612,17 @@ public final class XMLUtil {
 			}
 			String language = child.getAttribute("lang");
 			if (language.length() > 0) {
-				Locale locale = new Locale(language);
+				String[] split = language.split("_", 3);
+				Locale locale;
+				if (split.length < 2) {
+					locale = new Locale(language);
+				}
+				else if (split.length == 2) {
+					locale = new Locale(split[0], split[1]);
+				}
+				else {
+					locale = new Locale(split[0], split[1], split[2]);
+				}
 				infoStore.addValue(property, locale, value);
 			}
 			else {

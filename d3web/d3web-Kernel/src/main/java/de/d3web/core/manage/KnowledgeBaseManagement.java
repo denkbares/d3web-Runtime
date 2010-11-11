@@ -773,4 +773,21 @@ public final class KnowledgeBaseManagement {
 		}
 	}
 
+	/**
+	 * Finds the {@link IDObject} with the specified name. This method is case
+	 * insensitive
+	 * 
+	 * @created 10.11.2010
+	 * @param name Name of the {@link IDObject}
+	 * @return {@link IDObject} with the specified name
+	 */
+	public IDObject findIDObjectByName(String name) {
+		for (IDObject object : knowledgeBase.getAllIDObjects()) {
+			if (object.getName().equalsIgnoreCase(name)) {
+				return object;
+			}
+		}
+		return null;
+	}
+
 }

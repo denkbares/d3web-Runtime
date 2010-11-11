@@ -24,8 +24,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.inference.PSConfig;
-import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSConfig.PSState;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.plugin.Autodetect;
@@ -102,7 +102,7 @@ public class DefaultPSConfigHandler implements FragmentHandler {
 	public Element write(Object object, Document doc) throws IOException {
 		if (object instanceof DummyPSConfig) {
 			DummyPSConfig dummy = (DummyPSConfig) object;
-			return dummy.getElement();
+			return (Element) doc.importNode(dummy.getElement(), true);
 		}
 		PSConfig psConfig = (PSConfig) object;
 		Element element = doc.createElement(PS_ENTRY);
