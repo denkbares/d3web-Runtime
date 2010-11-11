@@ -52,13 +52,13 @@ import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.scoring.ActionHeuristicPS;
 import de.d3web.scoring.Score;
 
-
 /**
- *
+ * First (small) test of FluxProblemSolver
+ * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 10.11.2010
  */
-public class FluxSolverTest {
+public class UseFluxProblemSolverTest {
 
 	private static KnowledgeBaseManagement kbm;
 	private static Session session;
@@ -70,11 +70,18 @@ public class FluxSolverTest {
 		InitPluginManager.init();
 		kbm = KnowledgeBaseManagement.createInstance();
 		setUpFlux();
-		// addTerminologyObjects();
-		// addRules();
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
 	}
 
+	/**
+	 * This method sets up the following trivial FlowChart
+	 * 
+	 *        (true)                 YesNoQuestion = "Yes"                 (true)
+     * Start -------> YesNoQuestion -----------------------> solutionFoo ---------> Ende
+     *                    [yn]                                   = P7
+     *
+	 * @created 11.11.2010
+	 */
 	private void setUpFlux() {
 
 		Question questionYN = kbm.createQuestionYN("YesNoQuestion",
@@ -82,7 +89,7 @@ public class FluxSolverTest {
 		Solution solutionFoo = kbm.createSolution("SolutionFoo");
 
 		INode startNode = FF.createStartNode("Start_ID", "Start");
-		INode endNode = FF.createEndNode("end_ID", "end_NAME", NoopAction.INSTANCE);
+		INode endNode = FF.createEndNode("End_ID", "Ende", NoopAction.INSTANCE);
 
 		List<QASet> qasets = new ArrayList<QASet>();
 		qasets.add(questionYN);
@@ -114,7 +121,9 @@ public class FluxSolverTest {
 
 		// ----------------------------------
 
+		// Create the flowchart...
 		Flow testFlow = FF.createFlow("testFlow_ID", "Main", nodesList, edgesList);
+		// ...and add its knowledge to the knowledgebase.
 		DiaFluxUtils.addFlow(testFlow, kbm.getKnowledgeBase(), "Test Flowchart");
 	}
 
@@ -134,8 +143,10 @@ public class FluxSolverTest {
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		solutionState = session.getBlackboard().getRating(solution);
 		assertTrue("Solution has wrong state. Expected 'ESTABLISHED'",
-				solutionState.hasState(Rating.State.ESTABLISHED));//this failes! solutionState is still UNCLEAR...
+				solutionState.hasState(Rating.State.ESTABLISHED));
 
+		// When Answer "No" is set, the establishment of the solution
+		// should be retracted:
 		Value no = kbm.findValue(question, "No");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(question, no,
