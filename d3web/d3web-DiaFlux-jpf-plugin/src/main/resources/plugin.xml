@@ -3,6 +3,7 @@
 <plugin id="d3web-DiaFlux" version="0.0.1">
 	
 	<requires>
+		<import plugin-id="KnowledgePersistenceExtensionPoints" />
 		<import plugin-id="d3web-Kernel-ExtensionPoints" />
 	</requires>
 	
@@ -24,5 +25,34 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeReader"
+		id="DiaFluxReader">
+		<parameter id="class" value="de.d3web.diaFlux.io.DiaFluxPersistenceHandler" />
+		<parameter id="name" value="ImageQuestionPersistenceHandler" />
+		<parameter id="description" value="KnowledgeReader for DiaFlux." />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+		<parameter id="filename" value="kb/diaflux.xml" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeWriter"
+		id="DiaFluxWriter">
+		<parameter id="class" value="de.d3web.diaFlux.io.DiaFluxPersistenceHandler" />
+		<parameter id="name" value="ImageQuestionPersistenceHandler" />
+		<parameter id="description" value="KnowledgeWriter for DiaFlux." />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+		<parameter id="filename" value="kb/diaflux.xml" />
+	</extension>
+	
+		<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="CallFlowActionHandler">
+		<parameter id="class"
+			value="de.d3web.diaFlux.io.CallFlowActionFragmentHandler" />
+		<parameter id="name" value="CallFlowActionHandler" />
+		<parameter id="description" value="Handles the indication of DiaFlux models" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
 	
 </plugin>

@@ -50,7 +50,7 @@ public final class DiaFluxUtils {
 		List knowledge = (List) knowledgeBase.getKnowledge(FluxSolver.class,
 				FluxSolver.DIAFLUX);
 
-		if (knowledge == null) return null;
+		if (knowledge == null || knowledge.isEmpty()) return null;
 
 		return (FlowSet) knowledge.get(0);
 

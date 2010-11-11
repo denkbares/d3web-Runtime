@@ -20,6 +20,9 @@
 
 package de.d3web.diaFlux;
 
+import java.util.ArrayList;
+
+import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.TerminalCondition;
@@ -32,7 +35,7 @@ import de.d3web.core.session.Session;
  */
 public final class ConditionTrue extends TerminalCondition {
 
-	public static final Condition INSTANCE = new ConditionTrue();
+	public static final Condition INSTANCE = new CondAnd(new ArrayList<Condition>());
 
 	private ConditionTrue() {
 		super(null);
