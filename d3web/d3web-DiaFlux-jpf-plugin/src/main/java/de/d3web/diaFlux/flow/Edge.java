@@ -32,7 +32,7 @@ import de.d3web.core.session.blackboard.SessionObject;
  * @author Reinhard Hatko
  *
  */
-class Edge implements IEdge, CaseObjectSource {
+public class Edge implements IEdge, CaseObjectSource {
 
 	private final INode startNode;
 	private final INode endNode;
