@@ -63,6 +63,9 @@ public class StartNode extends Node {
 			if (nodes.contains(composedNode)) continue;
 
 
+			// otherwise take snapshot at the path
+			// in this case the composedNode did not start the snapshot at this
+			// node, but it was triggered from within the startnodes flowchart
 			IPath path = DiaFluxUtils.getPath(composedNode, session);
 			path.takeSnapshot(session, snapshotNode, composedNode, nodes);
 

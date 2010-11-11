@@ -54,7 +54,7 @@ public class RuleSupport implements ISupport {
 	}
 
 	@Override
-	public void remove(Session session, NodeData nodeData) {
+	public void remove(Session session, INodeData nodeData) {
 		// nothing
 	}
 

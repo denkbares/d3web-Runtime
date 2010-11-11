@@ -46,7 +46,7 @@ public class NodeSupport implements ISupport {
 	}
 
 	@Override
-	public void remove(Session session, NodeData nodeData) {
+	public void remove(Session session, INodeData nodeData) {
 		if (!(nodeData instanceof StartNodeData)) {
 			Logger.getLogger(getClass().getName()).warning("*******Unexpected NodeData.");
 			return;

@@ -67,7 +67,7 @@ public class EdgeSupport implements ISupport {
 	}
 
 	@Override
-	public void remove(Session session, NodeData nodeData) {
+	public void remove(Session session, INodeData nodeData) {
 		// nothing to be done here
 	}
 

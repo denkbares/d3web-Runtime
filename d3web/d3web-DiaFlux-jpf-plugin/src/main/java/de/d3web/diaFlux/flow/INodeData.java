@@ -25,9 +25,10 @@ import java.util.List;
 import de.d3web.core.session.Session;
 
 /**
- *
- * @author Reinhard Hatko Created: 10.09.2009
- *
+ * 
+ * @author Reinhard Hatko
+ * @created: 10.09.2009
+ * 
  */
 public interface INodeData {
 

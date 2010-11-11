@@ -46,6 +46,6 @@ public interface ISupport {
 	 *
 	 * @param nodeData the NodeData where this support is being removed from
 	 */
-	void remove(Session session, NodeData nodeData);
+	void remove(Session session, INodeData nodeData);
 
 }

@@ -29,8 +29,10 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.diaFlux.CallFlowAction;
 import de.d3web.diaFlux.ConditionTrue;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
@@ -50,27 +52,33 @@ public class ComposedNode extends ActionNode {
 	@Override
 	public void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes) {
 
-		super.takeSnapshot(session, snapshotNode, nodes);
-
 		CallFlowAction action = (CallFlowAction) getAction();
 		StartNode startNode = DiaFluxUtils.findStartNode(session,
 				action.getFlowName(), action.getStartNodeName());
 
-		// StartNodeData nodeData = (StartNodeData)
-		// DiaFluxUtils.getNodeData(startNode, session);
+		// collects all exit nodes in the called flow that are that match an
+		// active outgoing egde's condition
+		// need to do this before the super call -> reseting of edges
+		Collection<INode> exitNodes = findActiveExitNodes(session);
 
-		if (nodes.contains(startNode)) return;
+		super.takeSnapshot(session, snapshotNode, nodes);
 
-		Collection<INode> exitNodes = findExitNodes(session);
+		// if the start this CN calls is already snapshotted
+		// then do nothing
+		if (nodes.contains(startNode)) {
+			return;
+		}
 
 		for (INode exitNode : exitNodes) {
 			DiaFluxUtils.getPath(exitNode, session).takeSnapshot(session, snapshotNode, exitNode, nodes);
 
 		}
 
+
 	}
 
-	private Collection<INode> findExitNodes(Session session) {
+
+	private Collection<INode> findActiveExitNodes(Session session) {
 		CallFlowAction action = (CallFlowAction) getAction();
 		StartNode startNode = DiaFluxUtils.findStartNode(session,
 				action.getFlowName(), action.getStartNodeName());
@@ -82,29 +90,38 @@ public class ComposedNode extends ActionNode {
 
 			EdgeData edgeData = DiaFluxUtils.getEdgeData(edge, session);
 
-			if (edgeData.hasFired()) {
-				Condition condition = edge.getCondition();
+			// if the edge has not fired, the exit node is not active
+			if (!edgeData.hasFired()) continue;
 
-				//
-				if (condition != ConditionTrue.INSTANCE) {
-					List<? extends NamedObject> objects = condition.getTerminalObjects();
-					QuestionChoice question = (QuestionChoice) objects.get(0);
-					MultipleChoiceValue value = (MultipleChoiceValue) session.getBlackboard().getValue(
-							question);
+			Condition condition = edge.getCondition();
 
-					if (value != null) {
-						for (ChoiceID id : value.getChoiceIDs()) {
-							Choice choice = id.getChoice(question);
+			// TODO ConditionTrue is set for still unknown conditions like
+			// "processed"
+			// need to add this here
+			if (condition != ConditionTrue.INSTANCE) {
+				List<? extends NamedObject> objects = condition.getTerminalObjects();
+				QuestionChoice question = (QuestionChoice) objects.get(0);
+				Value value = session.getBlackboard().getValue(question);
 
-							for (EndNode endnode : flow.getExitNodes()) {
-								if (endnode.getName().equalsIgnoreCase(choice.getName())) result.add(endnode);
+				// TODO this can be simplified by taking a closer look at the
+				// condition
+				// get the name of the value there
+				if (UndefinedValue.isUndefinedValue(value)) continue;
 
-							}
+				MultipleChoiceValue mcValue = (MultipleChoiceValue) value;
+
+				if (mcValue != null) {
+					for (ChoiceID id : mcValue.getChoiceIDs()) {
+						Choice choice = id.getChoice(question);
+
+						for (EndNode endnode : flow.getExitNodes()) {
+							if (endnode.getName().equalsIgnoreCase(choice.getName())) result.add(endnode);
 
 						}
-					}
 
+					}
 				}
+
 
 			}
 

@@ -93,6 +93,8 @@ public class Path extends SessionObject implements IPath {
 
 		StartNodeData nodeData = (StartNodeData) DiaFluxUtils.getNodeData(startNode, session);
 
+		// TODO not so nice
+		// But necessary to continue snapshots at the calling node
 		if (support instanceof NodeSupport) {
 			INode node = ((NodeSupport) support).getNode();
 
@@ -120,6 +122,7 @@ public class Path extends SessionObject implements IPath {
 	 */
 	@Override
 	public boolean propagate(Session session, INode node) {
+
 
 		maintainTruth(node, session);
 
@@ -217,39 +220,43 @@ public class Path extends SessionObject implements IPath {
 
 		ISupport support = new EdgeSupport(edge);
 
+		// is the node active before adding the support of the taken edge
+		// (afterwards it will be anyway)
 		boolean active = nextNodeData.isActive();
 
 		FluxSolver.addSupport(session, nextNode, support);
 
+		// Special case:
 		// if the next node is a SSN, then it does not matter, if it is active
-		// or not
-		// its action must be done anyway:
-		// In a cycle with just one SSN it has to be activated anyway
+		// or not, its action must be done anyway:
+		// and in a cycle with just one SSN it also has to be activated
 		if (nextNode instanceof SnapshotNode) {
-			// registers the snapshot
+			// register the snapshot
 			FluxSolver.doAction(session, nextNode);
 
 			// but do not continue flowing beyond the SSN
+			// this could create a connection to the path that
+			// is being snapshotted, so also nodes AFTER the SSN
+			// get snapshotted
+			// flowing from the SSN is continued after taking the snapshot
+			// during the next propagation
 			return null;
 
-		}
-
-		// node was already active before adding the new support
-
-		if (active && !(nextNode instanceof SnapshotNode)) {
-
-			// so do nothing
-			Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
-						"Node is already active: " + nextNode);
-
-			return null;
-
-		}// node was not active or is an active SSN, so do its action
-		else {
+		} // node was not active, so do its action
+		else if (!active) {
 
 			FluxSolver.doAction(session, nextNode);
 
 			return nextNode;
+
+		}// node was already active before adding the new support
+		else {
+			// ...so do nothing
+			Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+					"Node is already active: " + nextNode);
+			// and do not continue flowing
+			return null;
+
 		}
 
 
@@ -347,17 +354,21 @@ public class Path extends SessionObject implements IPath {
 
 		// if node is active...
 		if (data.isActive()) {
-			// ...only the edges that became false have to be undone
+			// only the active incoming paths that became false have to be
+			// TMS'ed
 			edges = selectActiveFalseEdges(node, session);
 		}
 		else {// ...otherwise (node is no longer supported):
-			// all activeedges have to be undone
+				// all active incoming paths have to be undone
 			edges = selectActiveEdges(node.getOutgoingEdges(), session);
 
 		}
 
 		for (IEdge edge : edges) {
 
+			// TODO move to EdgeSupport#remove?
+			// Problem: Nodedata#propagate would reset 'hasfired' but this is
+			// needed afterwards when selecting the edges to follow
 			getEdgeData(edge).setHasFired(false);
 
 			INode endNode = edge.getEndNode();

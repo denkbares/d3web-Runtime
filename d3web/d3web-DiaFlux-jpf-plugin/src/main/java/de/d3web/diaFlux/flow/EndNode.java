@@ -20,7 +20,10 @@
 
 package de.d3web.diaFlux.flow;
 
+import java.util.List;
+
 import de.d3web.core.inference.PSAction;
+import de.d3web.core.session.Session;
 
 /**
  * 
@@ -36,8 +39,18 @@ public class EndNode extends ActionNode {
 
 	@Override
 	protected boolean addOutgoingEdge(IEdge edge) {
-		// return true;
 		throw new UnsupportedOperationException("can not add outgoing edge to end node");
+	}
+
+	@Override
+	public void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes) {
+		// TODO hopefully temporary until FCTerminology is removed
+		// this removes the fact, that this endnode has been reached.
+		// otherwise this outgoing edge would be taken as soon as the composed
+		// node is activated again after as snapshot
+		undoAction(session);
+
+		super.takeSnapshot(session, snapshotNode, nodes);
 	}
 
 }

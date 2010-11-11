@@ -61,6 +61,12 @@ public class CallFlowAction extends PSAction {
 
 		StartNode startNode = DiaFluxUtils.findStartNode(session, flowName, startNodeName);
 
+		if (startNode == null) {
+			Logger.getLogger(CallFlowAction.class.getName()).severe(
+					"Could not find start node '" + startNodeName + "' in flow '" +
+					flowName + "'.");
+		}
+
 		// TODO not very nice
 		if (source instanceof Rule) {
 			support = new RuleSupport((Rule) source);
@@ -72,13 +78,6 @@ public class CallFlowAction extends PSAction {
 			throw new UnsupportedOperationException("Unknown source type " + source);
 		}
 
-		if (startNode == null) {
-			Logger.getLogger(CallFlowAction.class.getName()).severe(
-							"Could not find startnode '" + startNodeName + "' in flow '" + flowName
-									+ "'.");
-			return;
-		}
-
 		FluxSolver.activate(session, startNode, support);
 
 	}
@@ -87,6 +86,13 @@ public class CallFlowAction extends PSAction {
 	public void undo(Session session, Object source, PSMethod psmethod) {
 
 		StartNode startNode = DiaFluxUtils.findStartNode(session, flowName, startNodeName);
+
+		if (startNode == null) {
+			Logger.getLogger(CallFlowAction.class.getName()).severe(
+					"Could not find start node '" + startNodeName + "' in flow '" +
+					flowName + "'.");
+		}
+
 
 		// TODO this is most likely unnecessary, because this node has no
 		// support any more
