@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -108,6 +110,8 @@ public class DCMarkupHandler {
 					property, locale);
 		}
 		catch (NoSuchElementException e) {
+			Logger.getLogger("Persistence").log(Level.WARNING,
+					"Property " + parsedValues.get("dc.subject") + " is not in use any more.");
 			return null;
 		}
 	}
