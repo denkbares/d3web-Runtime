@@ -70,7 +70,6 @@ public class StartNode extends Node {
 			path.takeSnapshot(session, snapshotNode, composedNode, nodes);
 
 			// maintain support of calling composedNode
-			// TODO or use NodeSupport by the SapshotNode?
 			FluxSolver.addSupport(session, composedNode, new ValidSupport());
 
 		}

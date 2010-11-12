@@ -176,8 +176,8 @@ public class FluxSolver implements PSMethod {
 					INode node = edge.getStartNode();
 					IPath path = DiaFluxUtils.getPath(node, session);
 
-					// if the node the edge starts at is active
-					if (path.getNodeData(node).isActive()) {
+					// if the node the edge starts at is supported
+					if (path.getNodeData(node).isSupported()) {
 
 						// ...propagate starting at this node
 						path.propagate(session, node);

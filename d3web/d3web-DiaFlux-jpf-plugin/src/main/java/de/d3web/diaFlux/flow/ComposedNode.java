@@ -65,6 +65,9 @@ public class ComposedNode extends ActionNode {
 
 		// if the start this CN calls is already snapshotted
 		// then do nothing
+		// TODO need some more sophisticated test here
+		// could be a problem with some weird unconnected flows
+		// or even with subflows that contain an SSN
 		if (nodes.contains(startNode)) {
 			return;
 		}
@@ -75,6 +78,19 @@ public class ComposedNode extends ActionNode {
 		}
 
 
+	}
+
+	@Override
+	public boolean couldActivate(Session session) {
+
+		CallFlowAction action = (CallFlowAction) this.action;
+
+		// get the called startnode
+		StartNode startNode = DiaFluxUtils.findStartNode(session, action.getFlowName(),
+				action.getStartNodeName());
+
+		// this node can be activated, if the called StartNode can be activated
+		return startNode.couldActivate(session);
 	}
 
 

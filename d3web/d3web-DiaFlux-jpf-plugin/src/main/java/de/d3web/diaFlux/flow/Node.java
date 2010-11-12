@@ -123,6 +123,15 @@ public abstract class Node implements INode, CaseObjectSource {
 
 	}
 
+	/**
+	 * This method implements the default behavior for a node: to be only
+	 * activated when it is not supported
+	 */
+	@Override
+	public boolean couldActivate(Session session) {
+		return !DiaFluxUtils.getNodeData(this, session).isSupported();
+	}
+
 	@Override
 	public void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes) {
 

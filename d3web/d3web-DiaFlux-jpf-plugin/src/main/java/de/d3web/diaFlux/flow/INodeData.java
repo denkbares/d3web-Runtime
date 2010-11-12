@@ -40,15 +40,24 @@ public interface INodeData {
 	INode getNode();
 
 	/**
-	 * Returns if this node is active, ie if it has support.
+	 * Returns if this node is supported.
 	 *
 	 * @created 06.11.2010
 	 * @return
 	 */
-	boolean isActive();
+	boolean isSupported();
 
 	/**
-	 * Adds the suplied support to the this NodeData.
+	 * Returns the current supports of this node
+	 * 
+	 * @created 12.11.2010
+	 * @return
+	 */
+	List<ISupport> getSupports();
+
+	
+	/**
+	 * Adds the supplied support to the this NodeData.
 	 *
 	 *
 	 * @param session
@@ -58,6 +67,16 @@ public interface INodeData {
 	 */
 	boolean addSupport(Session session, ISupport support);
 
+	/**
+	 * Removes the supplied support.
+	 * 
+	 * @param session
+	 * 
+	 * @param support
+	 * @return true, if the support was contained before and removed
+	 */
+	boolean removeSupport(Session session, ISupport support);
+	
 	/**
 	 * 1. Check Support
 	 *
@@ -69,28 +88,6 @@ public interface INodeData {
 	 * @param session
 	 */
 	void propagate(Session session);
-
-	/**
-	 * Removes the supplied support.
-	 * 
-	 * @param session
-	 * 
-	 * @param support
-	 * @return true, if the support was contained before and removed
-	 */
-	boolean removeSupport(Session session, ISupport support);
-
-	// TODO remove
-	List<ISupport> getSupports();
-
-	/**
-	 * This method is only to be called during taking a snapshot. It removes all
-	 * support from this node.
-	 *
-	 * @param session
-	 */
-	// public void reset(Session session);
-
 
 
 }

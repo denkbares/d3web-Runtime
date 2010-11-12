@@ -42,7 +42,7 @@ public class NodeSupport implements ISupport {
 	}
 
 	public boolean isValid(Session theCase) {
-		return DiaFluxUtils.getNodeData(node, theCase).isActive();
+		return DiaFluxUtils.getNodeData(node, theCase).isSupported();
 	}
 
 	@Override

@@ -57,5 +57,13 @@ public class SnapshotNode extends Node {
 
 	}
 
+	/**
+	 * Returns true, as SnapshotNodes can always be activated
+	 */
+	@Override
+	public boolean couldActivate(Session session) {
+		return true;
+	}
+
 
 }

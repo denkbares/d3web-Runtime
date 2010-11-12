@@ -53,4 +53,16 @@ public class EndNode extends ActionNode {
 		super.takeSnapshot(session, snapshotNode, nodes);
 	}
 
+	@Override
+	public void doAction(Session session) {
+
+
+
+	}
+
+	@Override
+	public boolean couldActivate(Session session) {
+		return true;
+	}
+
 }

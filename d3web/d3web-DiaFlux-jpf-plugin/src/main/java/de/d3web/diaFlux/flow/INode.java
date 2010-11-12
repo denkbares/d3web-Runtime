@@ -83,7 +83,29 @@ public interface INode extends CaseObjectSource {
 	 */
 	void undoAction(Session session);
 
+	/**
+	 * This method returns if this node should be activated. Usually a node
+	 * should only be activated each time its status changes from unsupported to
+	 * supported. But there are exceptions, e.g. SnapshotNodes.
+	 * 
+	 * As the result of this methods usually depends on the support of a node,
+	 * it must be called before changing a nodes support.
+	 * 
+	 * @created 12.11.2010
+	 * @param session
+	 * @return true if the node should be activated, false otherwise
+	 */
+	boolean couldActivate(Session session);
 
+	/**
+	 * This method is called during a snapshot. It has to reset this node (TODO
+	 * xplain) and can carry out node specific actions.
+	 * 
+	 * @created 12.11.2010
+	 * @param session the current session
+	 * @param snapshotNode the snapshot node that started this snapshot
+	 * @param nodes the list of nodes snapshotted so far
+	 */
 	void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes);
 
 }

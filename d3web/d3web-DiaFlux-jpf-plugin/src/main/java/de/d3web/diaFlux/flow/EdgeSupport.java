@@ -45,10 +45,10 @@ public class EdgeSupport implements ISupport {
 
 		INode startNode = edge.getStartNode();
 
-		boolean active = DiaFluxUtils.getNodeData(startNode, session).isActive();
+		boolean supported = DiaFluxUtils.getNodeData(startNode, session).isSupported();
 
 		// if the starting node is not supported, this support is also not valid
-		if (!active) {
+		if (!supported) {
 			return false;
 		} // starting node is supported, now it depends on the condition
 		else {

@@ -93,8 +93,9 @@ public class Path extends SessionObject implements IPath {
 
 		StartNodeData nodeData = (StartNodeData) DiaFluxUtils.getNodeData(startNode, session);
 
-		// TODO not so nice
-		// But necessary to continue snapshots at the calling node
+		// TODO not so nice, could be removed when using different methods for
+		// calls from ComposedNodes and CallFlowActions
+		// Necessary to continue snapshots at the calling node
 		if (support instanceof NodeSupport) {
 			INode node = ((NodeSupport) support).getNode();
 
@@ -102,12 +103,12 @@ public class Path extends SessionObject implements IPath {
 
 		}
 
-		boolean active = nodeData.isActive();
+		boolean activate = startNode.couldActivate(session);
 
 		FluxSolver.addSupport(session, startNode, support);
 
-		// if node was not active before adding support, start flowing
-		if (!active) {
+		// if node was not supported before adding support, start flowing
+		if (activate) {
 			flow(startNode, session);
 		}
 
@@ -126,7 +127,7 @@ public class Path extends SessionObject implements IPath {
 
 		maintainTruth(node, session);
 
-		if (getNodeData(node).isActive()) {
+		if (getNodeData(node).isSupported()) {
 			flow(node, session);
 
 		}
@@ -216,40 +217,37 @@ public class Path extends SessionObject implements IPath {
 		getEdgeData(edge).setHasFired(true);
 
 		INode nextNode = edge.getEndNode();
-		INodeData nextNodeData = DiaFluxUtils.getNodeData(nextNode, session);
 
 		ISupport support = new EdgeSupport(edge);
 
-		// is the node active before adding the support of the taken edge
-		// (afterwards it will be anyway)
-		boolean active = nextNodeData.isActive();
+		// can the node be activated?
+		boolean activate = nextNode.couldActivate(session);
 
 		FluxSolver.addSupport(session, nextNode, support);
 
-		// Special case:
-		// if the next node is a SSN, then it does not matter, if it is active
-		// or not, its action must be done anyway:
-		// and in a cycle with just one SSN it also has to be activated
-		if (nextNode instanceof SnapshotNode) {
-			// register the snapshot
+		// node can be activated...
+		if (activate) {
+
+			// so do its action
 			FluxSolver.doAction(session, nextNode);
 
-			// but do not continue flowing beyond the SSN
-			// this could create a connection to the path that
-			// is being snapshotted, so also nodes AFTER the SSN
-			// get snapshotted
-			// flowing from the SSN is continued after taking the snapshot
-			// during the next propagation
-			return null;
-
-		} // node was not active, so do its action
-		else if (!active) {
-
-			FluxSolver.doAction(session, nextNode);
-
+			// Special case: SnapshotNode
+			if (nextNode instanceof SnapshotNode) {
+				// do not continue flowing beyond the SSN:
+				// 1. this could create a connection to the path that
+				// is being snapshotted, so also nodes AFTER the SSN
+				// get snapshotted. flowing from the SSN is continued after
+				// taking the snapshot during the next propagation
+				// 2. this could trigger actions that are on pathes that loose
+				// their support during this propagation -> then the snapshot is
+				// deregistered
+				return null;
+			}
+			
+			// for every other type of node, continue at the next node
 			return nextNode;
 
-		}// node was already active before adding the new support
+		}// node should not be activated
 		else {
 			// ...so do nothing
 			Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
@@ -353,13 +351,13 @@ public class Path extends SessionObject implements IPath {
 		List<IEdge> edges;
 
 		// if node is active...
-		if (data.isActive()) {
-			// only the active incoming paths that became false have to be
+		if (data.isSupported()) {
+			// ...only the active outgoing edges that became false have to be
 			// TMS'ed
 			edges = selectActiveFalseEdges(node, session);
 		}
 		else {// ...otherwise (node is no longer supported):
-				// all active incoming paths have to be undone
+				// all active outgoing edges have to be undone
 			edges = selectActiveEdges(node.getOutgoingEdges(), session);
 
 		}
@@ -411,7 +409,7 @@ public class Path extends SessionObject implements IPath {
 	public boolean isActive() {
 
 		for (INode node : getFlow().getNodes()) {
-			if (getNodeData(node).isActive()) {
+			if (getNodeData(node).isSupported()) {
 				return true;
 			}
 		}
@@ -425,7 +423,7 @@ public class Path extends SessionObject implements IPath {
 		List<INode> result = new ArrayList<INode>();
 
 		for (INode node : getFlow().getNodes()) {
-			if (getNodeData(node).isActive()) {
+			if (getNodeData(node).isSupported()) {
 				result.add(node);
 			}
 		}

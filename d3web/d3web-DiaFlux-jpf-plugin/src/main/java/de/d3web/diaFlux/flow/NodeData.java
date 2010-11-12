@@ -45,7 +45,7 @@ public class NodeData extends SessionObject implements INodeData {
 	}
 
 	@Override
-	public boolean isActive() {
+	public boolean isSupported() {
 		return !supports.isEmpty();
 	}
 
@@ -77,7 +77,7 @@ public class NodeData extends SessionObject implements INodeData {
 			}
 		}
 
-		return isActive();
+		return isSupported();
 	}
 
 	@Override
@@ -111,7 +111,7 @@ public class NodeData extends SessionObject implements INodeData {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "[" + getNode() + ", active=" + isActive()
+		return getClass().getSimpleName() + "[" + getNode() + ", active=" + isSupported()
 				+ ", support=" + supports.size() + "]" + Integer.toHexString(hashCode());
 	}
 
