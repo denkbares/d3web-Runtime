@@ -55,6 +55,11 @@ public class Edge implements IEdge, CaseObjectSource {
 	}
 
 	@Override
+	public SessionObject createCaseObject(Session session) {
+		return new EdgeData(this);
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -112,9 +117,5 @@ public class Edge implements IEdge, CaseObjectSource {
 		return id;
 	}
 
-	@Override
-	public SessionObject createCaseObject(Session session) {
-		return new EdgeData(this);
-	}
 
 }

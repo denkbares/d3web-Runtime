@@ -29,6 +29,7 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
 import de.d3web.diaFlux.inference.FluxSolver;
+import de.d3web.diaFlux.inference.Path;
 
 /**
  *
@@ -90,6 +91,8 @@ public abstract class Node implements INode, CaseObjectSource {
 
 	@Override
 	public void setFlow(Flow flow) {
+		if (flow == null) throw new NullPointerException("Flow must not be null");
+
 		this.flow = flow;
 	}
 
@@ -140,19 +143,19 @@ public abstract class Node implements INode, CaseObjectSource {
 			FluxSolver.removeSupport(session, this, support);
 		}
 
-		// Path path = (Path) DiaFluxUtils.getPath(this, session);
+		Path path = (Path) DiaFluxUtils.getPath(this, session);
 
-		// for (IEdge edge : path.selectActiveEdges(getOutgoingEdges(),
-		// session)) {
+
+		for (IEdge edge : path.selectActiveEdges(getOutgoingEdges(), session)) {
 
 			// TODO add support to all active outgoing edges.
 			// These have not been on the path FROM the snapshot node,
 			// otherwise these edges would no longer be active
 
-		// }
+		}
 
 		// TODO could be moved to EdgeSupport#remove
-		// for (IEdge edge : getIncomingEdges()) { // TODO which one is right?
+// for (IEdge edge : getIncomingEdges()) { // TODO which one is right?
 		for (IEdge edge : getOutgoingEdges()) {
 
 			EdgeData edgeData = DiaFluxUtils.getEdgeData(edge, session);
@@ -194,11 +197,13 @@ public abstract class Node implements INode, CaseObjectSource {
 
 	@Override
 	public String toString() {
-		String out = getClass().getSimpleName() + "[" + getID() + ", " + getName() + "]";
-		if(this.flow != null) {
-			out = out + " in " + flow.getName();
+		String name = getClass().getSimpleName() + "[" + getID() + ", " + getName() + "]";
+		if (flow != null) {
+			name += " in " + flow.getName();
+
 		}
-		return out;
+
+		return name;
 	}
 
 }

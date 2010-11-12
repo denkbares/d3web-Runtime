@@ -28,7 +28,6 @@ import java.util.Map;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
@@ -45,8 +44,6 @@ public class Flow implements CaseObjectSource, KnowledgeSlice {
 	private final List<INode> nodes;
 	private final String name;
 	private final String id;
-
-	private QContainer flowQC;
 
 	public Flow(String id, String name, List<INode> nodes, List<IEdge> edges) {
 
@@ -145,13 +142,6 @@ public class Flow implements CaseObjectSource, KnowledgeSlice {
 		return result;
 	}
 
-	public void setTerminology(QContainer flowQC) {
-		this.flowQC = flowQC;
-	}
-
-	public QContainer getTerminology() {
-		return flowQC;
-	}
 
 	@Override
 	public String toString() {
@@ -171,14 +161,11 @@ public class Flow implements CaseObjectSource, KnowledgeSlice {
 
 	@Override
 	public boolean isUsed(Session theCase) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public void remove() {
-		// TODO Auto-generated method stub
-
 	}
 
 }

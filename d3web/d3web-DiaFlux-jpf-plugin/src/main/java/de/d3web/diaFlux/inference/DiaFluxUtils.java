@@ -100,13 +100,13 @@ public final class DiaFluxUtils {
 		return (DiaFluxCaseObject) session.getCaseObject(flowSet);
 	}
 
-	public static void addFlow(Flow flow, KnowledgeBase base, String title) {
+	public static void addFlow(Flow flow, KnowledgeBase base) {
 
 		List ks = (List) base.getKnowledge(FluxSolver.class, FluxSolver.DIAFLUX);
 
 		FlowSet flowSet;
 		if (ks == null) {
-			flowSet = new FlowSet(title);
+			flowSet = new FlowSet();
 			base.addKnowledge(FluxSolver.class, flowSet, FluxSolver.DIAFLUX);
 
 		}

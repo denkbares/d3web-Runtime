@@ -41,8 +41,8 @@ public class CallFlowActionFragmentHandler implements FragmentHandler {
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		String flowName = element.getChildNodes().item(0).getFirstChild().getTextContent();
-		String startNodeName = element.getChildNodes().item(1).getFirstChild().getTextContent();
+		String flowName = element.getElementsByTagName("FlowName").item(0).getTextContent();
+		String startNodeName = element.getElementsByTagName("StartNodeName").item(0).getTextContent();
 
 		return new CallFlowAction(flowName, startNodeName);
 	}
@@ -54,14 +54,16 @@ public class CallFlowActionFragmentHandler implements FragmentHandler {
 		Element actionElem = doc.createElement("Action");
 		actionElem.setAttribute("type", CALL_FLOW);
 
-		Text flowNameNode = doc.createTextNode(action.getFlowName());
 
 		Element flowElem = doc.createElement("FlowName");
-		flowElem.appendChild(flowNameNode);
 		actionElem.appendChild(flowElem);
+
+		Text flowNameNode = doc.createTextNode(action.getFlowName());
+		flowElem.appendChild(flowNameNode);
 
 		Element startNodeElem = doc.createElement("StartNodeName");
 		actionElem.appendChild(startNodeElem);
+
 		Text startNameNode = doc.createTextNode(action.getStartNodeName());
 		startNodeElem.appendChild(startNameNode);
 

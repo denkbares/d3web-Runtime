@@ -219,7 +219,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 			Element flowElem = (Element) flows.item(i);
 
 			Flow flow = readFlow(knowledgeBase, flowElem);
-			DiaFluxUtils.addFlow(flow, knowledgeBase, "TODO"); // TODO
+			DiaFluxUtils.addFlow(flow, knowledgeBase); // TODO
 		}
 
 

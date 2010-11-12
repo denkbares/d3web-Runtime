@@ -38,11 +38,11 @@ import de.d3web.diaFlux.inference.IPath;
  */
 public class FlowSet implements KnowledgeSlice, CaseObjectSource {
 
-	private final String setID;
+	// hardcoded it ATM due to comment in Interface
+	private final String id = "Flowset";
 	private final Map<String, Flow> map;
 
-	public FlowSet(String id) {
-		this.setID = id;
+	public FlowSet() {
 		this.map = new HashMap<String, Flow>();
 	}
 
@@ -100,9 +100,10 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource {
 		return map.values();
 	}
 
+
 	@Override
 	public String getId() {
-		return setID;
+		return id;
 	}
 
 	@Override
@@ -125,7 +126,7 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((setID == null) ? 0 : setID.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((map == null) ? 0 : map.hashCode());
 		return result;
 	}
@@ -136,15 +137,20 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		FlowSet other = (FlowSet) obj;
-		if (setID == null) {
-			if (other.setID != null) return false;
+		if (id == null) {
+			if (other.id != null) return false;
 		}
-		else if (!setID.equals(other.setID)) return false;
+		else if (!id.equals(other.id)) return false;
 		if (map == null) {
 			if (other.map != null) return false;
 		}
 		else if (!map.equals(other.map)) return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "FlowSet [id=" + id + ", map=" + map + "]";
 	}
 
 }

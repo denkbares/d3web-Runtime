@@ -38,12 +38,17 @@ public class EdgeMap implements KnowledgeSlice {
 	private final List<IEdge> edges;
 	private final String id;
 
-	/**
-	 * @param id
-	 */
 	public EdgeMap(String id) {
 		this.id = id;
 		this.edges = new ArrayList<IEdge>();
+	}
+
+	public void addEdge(IEdge edge) {
+		edges.add(edge);
+	}
+
+	public List<IEdge> getEdges() {
+		return edges;
 	}
 
 	@Override
@@ -66,28 +71,35 @@ public class EdgeMap implements KnowledgeSlice {
 
 	}
 
-	public void addEdge(IEdge edge) {
-		// Flow flow = edge.getStartNode().getFlow();
-		//
-		// if (!edges.containsKey(flow)) {
-		// edges.put(flow, new ArrayList<IEdge>(3));
-		// }
-		//
-		// List<IEdge> list = edges.get(flow);
-
-		edges.add(edge);
-
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((edges == null) ? 0 : edges.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
 	}
 
-	public List<IEdge> getEdges() {
-		// if (!edges.containsKey(flow)) {
-		// return Collections.EMPTY_LIST;
-		// }
-		// else {
-		// return edges.get(flow);
-		// }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		EdgeMap other = (EdgeMap) obj;
+		if (edges == null) {
+			if (other.edges != null) return false;
+		}
+		else if (!edges.equals(other.edges)) return false;
+		if (id == null) {
+			if (other.id != null) return false;
+		}
+		else if (!id.equals(other.id)) return false;
+		return true;
+	}
 
-		return edges;
+	@Override
+	public String toString() {
+		return "EdgeMap [id=" + id + ", edges=" + edges + "]";
 	}
 
 }

@@ -124,7 +124,7 @@ public class UseFluxProblemSolverTest {
 		// Create the flowchart...
 		Flow testFlow = FF.createFlow("testFlow_ID", "Main", nodesList, edgesList);
 		// ...and add its knowledge to the knowledgebase.
-		DiaFluxUtils.addFlow(testFlow, kbm.getKnowledgeBase(), "Test Flowchart");
+		DiaFluxUtils.addFlow(testFlow, kbm.getKnowledgeBase());
 	}
 
 	@Test

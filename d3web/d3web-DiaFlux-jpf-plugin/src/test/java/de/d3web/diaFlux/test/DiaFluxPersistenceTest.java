@@ -45,6 +45,7 @@ import de.d3web.diaFlux.ConditionTrue;
 import de.d3web.diaFlux.NoopAction;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowFactory;
+import de.d3web.diaFlux.flow.FlowSet;
 import de.d3web.diaFlux.flow.IEdge;
 import de.d3web.diaFlux.flow.INode;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
@@ -80,29 +81,19 @@ public class DiaFluxPersistenceTest {
 
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
 
-// System.out.println(createdKB.equals(loadedKB));
-		//
-		// FlowSet loadedFlowSet = DiaFluxUtils.getFlowSet(loadedKB);
-		//
-		// FlowSet createdFlowSet = DiaFluxUtils.getFlowSet(createdKB);
-		//
-		// System.out.println(loadedFlowSet.equals(createdFlowSet));
-		//
-		// System.out.println("**Loaded");
-		// System.out.println(loadedFlowSet);
-		// for (Flow flow : loadedFlowSet.getFlows()) {
-		// System.out.println(flow);
-		// }
-		//
-		// System.out.println();
-		// System.out.println();
-		// System.out.println();
-		//
-		// System.out.println("**Created");
-		// System.out.println(createdFlowSet);
-		// for (Flow flow : createdFlowSet.getFlows()) {
-		// System.out.println(flow);
-		// }
+		System.out.println(createdKB.equals(loadedKB));
+
+		FlowSet loadedFlowSet = DiaFluxUtils.getFlowSet(loadedKB);
+
+		FlowSet createdFlowSet = DiaFluxUtils.getFlowSet(createdKB);
+
+		System.out.println(loadedFlowSet.equals(createdFlowSet));
+
+		System.out.println("Created: " + createdFlowSet);
+		System.out.println();
+		System.out.println("Loaded: " + loadedFlowSet);
+
+
 
 	}
 
@@ -179,10 +170,30 @@ public class DiaFluxPersistenceTest {
 		// Create the flowchart...
 		Flow testFlow = FF.createFlow("testFlow_ID", "Main", nodesList, edgesList);
 
-		DiaFluxUtils.addFlow(testFlow, kbm.getKnowledgeBase(), "Test");
+		DiaFluxUtils.addFlow(testFlow, kbm.getKnowledgeBase());
 
 		return kbm.getKnowledgeBase();
 
 	}
+
+//	/**
+//	 * 
+//	 * @throws Exception
+//	 * @created 12.11.2010
+//	 */
+//	@Test
+//	public void testCase3() throws Exception {
+//
+//
+//		for (String file : new File(".").list()) {
+//			System.out.println(file);
+//		}
+//		KnowledgeBase base = PersistenceManager.getInstance().load(
+//				new File("src/test/resources/Test3_kopic.jar"));
+//		FlowSet flowSet = DiaFluxUtils.getFlowSet(base);
+//
+//		System.out.println(flowSet);
+//
+//	}
 
 }

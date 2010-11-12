@@ -52,12 +52,11 @@ public class ActionNodeFragmentHandler extends
 				(Element) actionElem, kb);
 
 		if (action instanceof CallFlowAction) {
-
+			// Have to do this, as Composednode is its own type of node
+			// even though it uses the CFAction internally
 			CallFlowAction callFlowAction = (CallFlowAction) action;
-
 			return FlowFactory.getInstance().createComposedNode(id,
-					callFlowAction.getStartNodeName(), callFlowAction.getStartNodeName());
-
+					callFlowAction.getFlowName(), callFlowAction.getStartNodeName());
 		}
 		else {
 
