@@ -9,8 +9,8 @@
 	</parent>
 	
 	<groupId>de.uniwue.d3web</groupId>
-	<artifactId>d3web-DiaFlux-jpf-plugin</artifactId>
-	<name>d3web-DiaFlux</name>
+	<artifactId>d3web-Plugin-DiaFlux</artifactId>
+	<name>d3web Plugin: DiaFlux</name>
 	<version>0.2-SNAPSHOT</version>
 
 	<build>
