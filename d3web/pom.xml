@@ -209,16 +209,17 @@
 		<module>d3web-SharedKnowledge</module>
 		<module>d3web-Verbalizer</module>
 		<module>d3web-EmpiricalTesting</module>
-		<module>d3web-Persistence-ExtensionPoints</module>
-		<module>d3web-Persistence-Basic</module>
 		<module>d3web-PluginManager</module>
-		<module>d3web-SharedKnowledgePersistence</module>
-		<module>d3web-CostBenefit</module>
-		<module>d3web-Kernel-ExtensionPoints</module>
-		<module>d3web-XCL</module>
 		<module>d3web-GlobalTests</module>
 		<module>d3web-Scoring</module>
-		<module>d3web-DiaFlux-jpf-plugin</module>
-		<module>d3web-BasicProperties</module>
+
+		<module>d3web-Plugin-BasicProperties</module>
+		<module>d3web-Plugin-CostBenefit</module>
+		<module>d3web-Plugin-DiaFlux</module>
+		<module>d3web-Plugin-Kernel-ExtensionPoints</module>
+		<module>d3web-Plugin-Persistence-Basic</module>
+		<module>d3web-Plugin-Persistence-ExtensionPoints</module>
+		<module>d3web-Plugin-SharedKnowledgePersistence</module>
+		<module>d3web-Plugin-XCL</module>
 	</modules>
 </project>

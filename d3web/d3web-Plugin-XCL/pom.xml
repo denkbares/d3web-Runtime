@@ -62,7 +62,7 @@
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
-			<artifactId>d3web-Kernel-ExtensionPoints-jpf-plugin</artifactId>
+			<artifactId>d3web-Plugin-Kernel-ExtensionPoints</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
@@ -74,7 +74,7 @@
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
-			<artifactId>d3web-Persistence-Basic-jpf-plugin</artifactId>
+			<artifactId>d3web-Plugin-Persistence-Basic</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
