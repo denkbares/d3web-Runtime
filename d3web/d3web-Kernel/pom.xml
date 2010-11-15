@@ -48,7 +48,7 @@
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
-			<artifactId>d3web-Kernel-ExtensionPoints-jpf-plugin</artifactId>
+			<artifactId>d3web-Plugin-Kernel-ExtensionPoints</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
@@ -61,7 +61,7 @@
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
-			<artifactId>d3web-BasicProperties-jpf-plugin</artifactId>
+			<artifactId>d3web-Plugin-BasicProperties</artifactId>
 			<version>${project.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>

@@ -104,13 +104,13 @@
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
-			<artifactId>d3web-Persistence-Basic-jpf-plugin</artifactId>
+			<artifactId>d3web-Plugin-Persistence-Basic</artifactId>
 			<version>${project.version}</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
-			<artifactId>d3web-XCL-jpf-plugin</artifactId>
+			<artifactId>d3web-Plugin-XCL</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>

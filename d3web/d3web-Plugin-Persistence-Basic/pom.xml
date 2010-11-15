@@ -9,8 +9,8 @@
 	</parent>
 	
 	<groupId>de.uniwue.d3web</groupId>
-	<artifactId>d3web-Persistence-Basic-jpf-plugin</artifactId>
-	<name>d3web-Persistence-Basic</name>
+	<artifactId>d3web-Plugin-Persistence-Basic</artifactId>
+	<name>d3web Plugin: Persistence-Basic</name>
 	<version>0.2-SNAPSHOT</version>
 	
 	<build>
