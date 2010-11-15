@@ -9,8 +9,8 @@
 	</parent>
 	
 	<groupId>de.uniwue.d3web</groupId>
-	<artifactId>d3web-XCL-jpf-plugin</artifactId>
-	<name>d3web-XCL</name>
+	<artifactId>d3web-Plugin-XCL</artifactId>
+	<name>d3web Plugin: XCL</name>
 	<version>0.2-SNAPSHOT</version>
 	
 	<build>
