@@ -20,22 +20,15 @@
 
 package de.d3web.diaFlux.flow;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import de.d3web.core.inference.condition.Condition;
-import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.NamedObject;
-import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
-import de.d3web.core.session.values.ChoiceID;
-import de.d3web.core.session.values.MultipleChoiceValue;
-import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.diaFlux.CallFlowAction;
-import de.d3web.diaFlux.ConditionTrue;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
+import de.d3web.diaFlux.inference.NodeActiveCondition;
 
 /**
  *
@@ -43,6 +36,7 @@ import de.d3web.diaFlux.inference.DiaFluxUtils;
  * @created 10.08.10
  */
 public class ComposedNode extends ActionNode {
+
 
 	public ComposedNode(String id, String name, CallFlowAction action) {
 		super(id, name, action);
@@ -52,13 +46,10 @@ public class ComposedNode extends ActionNode {
 	@Override
 	public void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes) {
 
-		CallFlowAction action = (CallFlowAction) getAction();
-		StartNode startNode = DiaFluxUtils.findStartNode(session,
-				action.getFlowName(), action.getStartNodeName());
 
-		// collects all exit nodes in the called flow that are that match an
+		// collects all exit nodes in the called flow that match an
 		// active outgoing egde's condition
-		// need to do this before the super call -> reseting of edges
+		// need to do this before the super call -> this resets the edges
 		Collection<INode> exitNodes = findActiveExitNodes(session);
 
 		super.takeSnapshot(session, snapshotNode, nodes);
@@ -68,9 +59,14 @@ public class ComposedNode extends ActionNode {
 		// TODO need some more sophisticated test here
 		// could be a problem with some weird unconnected flows
 		// or even with subflows that contain an SSN
-		if (nodes.contains(startNode)) {
-			return;
-		}
+		// Think doing this check is wrong!!!
+
+		// CallFlowAction action = (CallFlowAction) getAction();
+		// StartNode startNode = DiaFluxUtils.findStartNode(session,
+		// action.getFlowName(), action.getStartNodeName());
+		// if (nodes.contains(startNode)) {
+		// return;
+		// }
 
 		for (INode exitNode : exitNodes) {
 			DiaFluxUtils.getPath(exitNode, session).takeSnapshot(session, snapshotNode, exitNode, nodes);
@@ -93,58 +89,56 @@ public class ComposedNode extends ActionNode {
 		return startNode.couldActivate(session);
 	}
 
+	public String getFlowName() {
+		return ((CallFlowAction) getAction()).getFlowName();
+	}
+
+	public String getStartNodeName() {
+		return ((CallFlowAction) getAction()).getStartNodeName();
+	}
+
 
 	private Collection<INode> findActiveExitNodes(Session session) {
-		CallFlowAction action = (CallFlowAction) getAction();
-		StartNode startNode = DiaFluxUtils.findStartNode(session,
-				action.getFlowName(), action.getStartNodeName());
-		Flow flow = startNode.getFlow();
 
-		List<INode> result = new ArrayList<INode>();
+		// A combination of IS_ACTIVE and PROCESSED Conditions could lead to
+		// duplicated entries, so use set
+		Collection<INode> result = new HashSet<INode>();
 
 		for (IEdge edge : getOutgoingEdges()) {
 
-			EdgeData edgeData = DiaFluxUtils.getEdgeData(edge, session);
 
 			// if the edge has not fired, the exit node is not active
-			if (!edgeData.hasFired()) continue;
+			// But: the edge could also be resetted already, so do not do this
+			// check
+			// EdgeData edgeData = DiaFluxUtils.getEdgeData(edge, session);
+			// if (!edgeData.hasFired()) continue;
 
 			Condition condition = edge.getCondition();
 
-			// TODO ConditionTrue is set for still unknown conditions like
-			// "processed"
-			// need to add this here
-			if (condition != ConditionTrue.INSTANCE) {
-				List<? extends NamedObject> objects = condition.getTerminalObjects();
-				QuestionChoice question = (QuestionChoice) objects.get(0);
-				Value value = session.getBlackboard().getValue(question);
+			if (condition instanceof NodeActiveCondition) {
+				NodeActiveCondition nodeActiveCondition = (NodeActiveCondition) condition;
+				String flowName = nodeActiveCondition.getFlowName();
+				String nodeName = nodeActiveCondition.getNodeName();
 
-				// TODO this can be simplified by taking a closer look at the
-				// condition
-				// get the name of the value there
-				if (UndefinedValue.isUndefinedValue(value)) continue;
+				EndNode node = DiaFluxUtils.findExitNode(session, flowName, nodeName);
 
-				MultipleChoiceValue mcValue = (MultipleChoiceValue) value;
-
-				if (mcValue != null) {
-					for (ChoiceID id : mcValue.getChoiceIDs()) {
-						Choice choice = id.getChoice(question);
-
-						for (EndNode endnode : flow.getExitNodes()) {
-							if (endnode.getName().equalsIgnoreCase(choice.getName())) result.add(endnode);
-
-						}
-
-					}
+				if (DiaFluxUtils.getNodeData(node, session).isSupported()) {
+					result.add(node);
 				}
 
-
 			}
+			// TODO add all active exit nodes and return when such a condition
+			// is used!
+			// else if (condition instanceof FlowchartProcessedCondition)
+
+
 
 		}
 
 		return result;
 
 	}
+
+
 
 }

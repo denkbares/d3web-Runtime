@@ -39,7 +39,6 @@ import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.diaFlux.ConditionTrue;
-import de.d3web.diaFlux.NoopAction;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowFactory;
 import de.d3web.diaFlux.flow.IEdge;
@@ -54,7 +53,7 @@ import de.d3web.scoring.Score;
 
 /**
  * First (small) test of FluxProblemSolver
- * 
+ *
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 10.11.2010
  */
@@ -75,7 +74,7 @@ public class UseFluxProblemSolverTest {
 
 	/**
 	 * This method sets up the following trivial FlowChart
-	 * 
+	 *
 	 *        (true)                 YesNoQuestion = "Yes"                 (true)
      * Start -------> YesNoQuestion -----------------------> solutionFoo ---------> Ende
      *                    [yn]                                   = P7
@@ -89,7 +88,7 @@ public class UseFluxProblemSolverTest {
 		Solution solutionFoo = kbm.createSolution("SolutionFoo");
 
 		INode startNode = FF.createStartNode("Start_ID", "Start");
-		INode endNode = FF.createEndNode("End_ID", "Ende", NoopAction.INSTANCE);
+		INode endNode = FF.createEndNode("End_ID", "Ende");
 
 		List<QASet> qasets = new ArrayList<QASet>();
 		qasets.add(questionYN);

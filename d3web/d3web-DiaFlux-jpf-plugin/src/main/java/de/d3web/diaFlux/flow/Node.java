@@ -29,7 +29,6 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
 import de.d3web.diaFlux.inference.FluxSolver;
-import de.d3web.diaFlux.inference.Path;
 
 /**
  *
@@ -135,12 +134,13 @@ public abstract class Node implements INode, CaseObjectSource {
 	@Override
 	public void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes) {
 
+		// TODO this could now move to nodedata
 		resetNodeData(session);
 
 	}
 
 	/**
-	 * Deactivates this node. Removes all support and resets all incoming edges.
+	 * Deactivates this node. Removes all support.
 	 *
 	 * @param session
 	 */
@@ -150,28 +150,6 @@ public abstract class Node implements INode, CaseObjectSource {
 
 		for (ISupport support : nodeData.getSupports()) {
 			FluxSolver.removeSupport(session, this, support);
-		}
-
-		Path path = (Path) DiaFluxUtils.getPath(this, session);
-
-
-		for (IEdge edge : path.selectActiveEdges(getOutgoingEdges(), session)) {
-
-			// TODO add support to all active outgoing edges.
-			// These have not been on the path FROM the snapshot node,
-			// otherwise these edges would no longer be active
-
-		}
-
-		// TODO could be moved to EdgeSupport#remove
-// for (IEdge edge : getIncomingEdges()) { // TODO which one is right?
-		for (IEdge edge : getOutgoingEdges()) {
-
-			EdgeData edgeData = DiaFluxUtils.getEdgeData(edge, session);
-
-			if (edgeData.hasFired()) {
-				edgeData.setHasFired(false);
-			}
 		}
 
 	}

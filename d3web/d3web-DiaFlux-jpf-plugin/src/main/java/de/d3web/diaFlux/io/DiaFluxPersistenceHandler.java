@@ -45,7 +45,7 @@ import de.d3web.diaFlux.inference.DiaFluxUtils;
 
 
 /**
- * 
+ *
  * @author Reinhard Hatko
  * @created 11.11.2010
  */
@@ -78,22 +78,22 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 		FlowSet flowSet = DiaFluxUtils.getFlowSet(knowledgeBase);
 
 		float cur = 0;
-		
+
 		int max = getEstimatedSize(knowledgeBase);
-		
+
 		for (Flow flow : flowSet.getFlows()) {
 			ksNode.appendChild(writeFlow(flow, doc));
 			listener.updateProgress(++cur / max, "Saving knowledge base: DiaFlux");
 		}
-		
-		
+
+
 		Util.writeDocumentToOutputStream(doc, stream);
-		
+
 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param flow
 	 * @param doc
 	 * @param ksNode
@@ -114,7 +114,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 		for (INode node : flow.getNodes()) {
 			nodesElem.appendChild(writeNode(node, doc));
 		}
-		
+
 		for (IEdge edge : flow.getEdges()) {
 			nodesElem.appendChild(writeEdge(edge, edgesElem, doc));
 
@@ -125,7 +125,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	}
 
 	/**
-	 * 
+	 *
 	 * @param edge
 	 * @param parent
 	 * @param doc
@@ -148,7 +148,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @param parent
 	 * @param doc
@@ -165,12 +165,12 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 		nodeElem.setAttribute("name", node.getName());
 
 
-		
+
 		return nodeElem;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @throws NoSuchFragmentHandlerException
 	 */
@@ -184,7 +184,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @throws NoSuchFragmentHandlerException
 	 */
@@ -210,23 +210,20 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 
 		Document doc = Util.streamToDocument(stream);
 
-		// Element flowsElem = (Element)
-		// doc.getElementsByTagName("KnowledgeBase").item(0).gE;
-
 		NodeList flows = doc.getElementsByTagName("Flow");
 
 		for (int i = 0; i < flows.getLength(); i++) {
 			Element flowElem = (Element) flows.item(i);
 
 			Flow flow = readFlow(knowledgeBase, flowElem);
-			DiaFluxUtils.addFlow(flow, knowledgeBase); // TODO
+			DiaFluxUtils.addFlow(flow, knowledgeBase);
 		}
 
 
 	}
 
 	/**
-	 * 
+	 *
 	 * @created 11.11.2010
 	 * @param knowledgeBase
 	 * @param flowElem
@@ -255,7 +252,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	}
 
 	/**
-	 * 
+	 *
 	 * @param knowledgeBase
 	 * @param nodes
 	 * @param item
@@ -278,7 +275,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	}
 
 	/**
-	 * 
+	 *
 	 * @param knowledgeBase
 	 * @param node
 	 * @return

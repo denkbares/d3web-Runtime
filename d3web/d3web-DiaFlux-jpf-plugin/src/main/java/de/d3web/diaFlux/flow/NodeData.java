@@ -54,6 +54,7 @@ public class NodeData extends SessionObject implements INodeData {
 
 		boolean support = checkSupport(session);
 
+		// TODO could be moved to Path#maintaintruth. that may be cleaner
 		if (!support) {
 			FluxSolver.undoAction(session, getNode());
 		}

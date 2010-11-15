@@ -20,13 +20,15 @@ package de.d3web.diaFlux.inference;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.Session;
-import de.d3web.diaFlux.flow.EndNode;
+import de.d3web.diaFlux.flow.Flow;
+import de.d3web.diaFlux.flow.INode;
 
 
 /**
@@ -34,28 +36,38 @@ import de.d3web.diaFlux.flow.EndNode;
  * @author Reinhard Hatko
  * @created 21.10.2010
  */
-public class NodeActiveCondition implements Condition {
+public class FlowchartProcessedCondition implements Condition {
 
 	private final String flowName;
-	private final String nodeName;
 
 	/**
 	 * @param flowName
-	 * @param nodeName
 	 */
-	public NodeActiveCondition(String flowName, String nodeName) {
+	public FlowchartProcessedCondition(String flowName) {
 		this.flowName = flowName;
-		this.nodeName = nodeName;
 	}
 
 	@Override
 	public boolean eval(Session session) throws NoAnswerException, UnknownAnswerException {
 
-		// TODO ATM this is only necessary for exit nodes
-		// But this type of condition per se allows to check for every node
-		EndNode exitNode = DiaFluxUtils.findExitNode(session, flowName, nodeName);
+		Flow flow = DiaFluxUtils.getFlowSet(session).getByName(flowName);
 
-		return DiaFluxUtils.getNodeData(exitNode, session).isSupported();
+		if (flow == null) {
+			Logger.getLogger(getClass().getName()).warning(
+					"Flowchart '" + flowName + "' not found.");
+			return false;
+		}
+
+		// if one of the exit nodes is supported, then the flowchart has been
+		// processed
+		for (INode node : flow.getExitNodes()) {
+			if (DiaFluxUtils.getNodeData(node, session).isSupported()) {
+				return true;
+			}
+
+		}
+
+		return false;
 	}
 
 	@Override
@@ -66,15 +78,12 @@ public class NodeActiveCondition implements Condition {
 
 	@Override
 	public Condition copy() {
-		return new NodeActiveCondition(flowName, nodeName);
+		return new FlowchartProcessedCondition(flowName);
 	}
 
 	public String getFlowName() {
 		return flowName;
 	}
 
-	public String getNodeName() {
-		return nodeName;
-	}
 
 }

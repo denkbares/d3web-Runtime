@@ -55,6 +55,7 @@ import de.d3web.diaFlux.flow.ValidSupport;
 public class FluxSolver implements PSMethod {
 
 	public static final MethodKind DIAFLUX = new MethodKind("DIAFLUX");
+	public static final MethodKind NODE_REGISTRY = new MethodKind("NodeRegistry");
 
 	public FluxSolver() {
 	}
@@ -141,14 +142,25 @@ public class FluxSolver implements PSMethod {
 
 			List<SnapshotNode> snapshots = caseObject.getRegisteredSnapshots();
 
+			// At first:
 			for (SnapshotNode node : snapshots) {
-				// take the snapshot
+				// take the snapshot at eacht registered SSN
 				takeSnapshot(session, node);
 
-				// and then continue flowing from the SSN, as it has been
-				// cancelled at this point Sin the previous propagation
+			}
+
+			// Then:
+			for (SnapshotNode node : snapshots) {
+				// continue flowing from the SSN, as it has been
+				// cancelled at this point in the previous propagation
 				DiaFluxUtils.getPath(node, session).propagate(session, node);
 			}
+
+			// It's important to separate these steps, when taking more than 1
+			// SS:
+			// avoid to connect paths that are already snapshotted and are then
+			// continued to those that have still to be snapshotted. This would
+			// severely impact the snapshotting...
 
 			caseObject.clearRegisteredSnapshots();
 
@@ -167,10 +179,10 @@ public class FluxSolver implements PSMethod {
 				EdgeMap slice = (EdgeMap) ((NamedObject) object).getKnowledge(FluxSolver.class,
 						MethodKind.FORWARD);
 
-				if (slice == null) continue; // TO does not occur in any
-				// edge
+				// TO does not occur in any edge
+				if (slice == null) continue;
 
-				// iterate over all edges of the current path
+				// iterate over all edges that contain the changed TO
 				for (IEdge edge : slice.getEdges()) {
 
 					INode node = edge.getStartNode();
@@ -226,6 +238,8 @@ public class FluxSolver implements PSMethod {
 
 		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
 				"Finished taking snapshot on over " + nodes.size() + " nodes.");
+
+		System.out.println(nodes);
 
 	}
 

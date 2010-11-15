@@ -24,10 +24,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.session.Session;
+import de.d3web.diaFlux.flow.ComposedNode;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
 import de.d3web.diaFlux.flow.EdgeData;
+import de.d3web.diaFlux.flow.EndNode;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowSet;
 import de.d3web.diaFlux.flow.IEdge;
@@ -100,6 +103,13 @@ public final class DiaFluxUtils {
 		return (DiaFluxCaseObject) session.getCaseObject(flowSet);
 	}
 
+
+	/**
+	 * Adds the supplied flow to the knowledge base.
+	 *
+	 * @param flow
+	 * @param base
+	 */
 	public static void addFlow(Flow flow, KnowledgeBase base) {
 
 		List ks = (List) base.getKnowledge(FluxSolver.class, FluxSolver.DIAFLUX);
@@ -116,14 +126,114 @@ public final class DiaFluxUtils {
 
 		flowSet.put(flow);
 
+		registerComposedNodes(flow, base);
+
+	}
+
+	/**
+	 *
+	 * @param flow
+	 * @param base
+	 */
+	private static void registerComposedNodes(Flow flow, KnowledgeBase base) {
+		NodeRegistry registry = getNodeRegistry(base);
+
+		for (INode node : flow.getNodes()) {
+
+			if (node instanceof ComposedNode) {
+
+				String flowName = ((ComposedNode) node).getFlowName();
+
+				for (IEdge edge : node.getOutgoingEdges()) {
+
+					Condition condition = edge.getCondition();
+
+					// TODO create registration for PROCESSED-Condition
+					if (condition instanceof NodeActiveCondition) {
+						String exitNodeName = ((NodeActiveCondition) condition).getNodeName();
+
+						registry.registerNode(flowName, exitNodeName, node);
+
+					}
+
+				}
+
+
+			}
+
+
+		}
+
+	}
+
+	/**
+	 *
+	 * @param base
+	 * @return s the NodeRegistry to look up nodes by Name
+	 */
+	public static NodeRegistry getNodeRegistry(KnowledgeBase base) {
+		List ks = (List) base.getKnowledge(FluxSolver.class, FluxSolver.NODE_REGISTRY);
+
+		NodeRegistry registry;
+		if (ks == null) {
+			registry = new NodeRegistry();
+			base.addKnowledge(FluxSolver.class, registry, FluxSolver.NODE_REGISTRY);
+
+		}
+		else {
+			registry = (NodeRegistry) ks.get(0);
+		}
+		return registry;
+	}
+
+	public static NodeRegistry getNodeRegistry(Session session) {
+		return getNodeRegistry(session.getKnowledgeBase());
+	}
+
+
+	public static INode findNode(Session session, String flowName, String nodeName) {
+		FlowSet flowSet = getFlowSet(session);
+
+		if (flowSet == null) {
+			Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,
+					("No Flowcharts found in kb."));
+		}
+
+		Flow subflow = flowSet.getByName(flowName);
+
+		if (subflow == null) {
+			Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,
+					("Flowchart '" + flowName + "' not found."));
+			return null;
+		}
+
+		List<INode> startNodes = subflow.getNodes();
+
+		for (INode node : startNodes) {
+			if (node.getName().equalsIgnoreCase(nodeName)) {
+				return node;
+
+			}
+		}
+
+		Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,
+					("Node '" + nodeName + "' of flow '" + flowName + "' not found."));
+		return null;
+
 	}
 
 	/**
 	 * returns the StartNode that is called by the supplied action
 	 */
+	// TODO Cleanup
 	public static StartNode findStartNode(Session session, String flowName, String startNodeName) {
 
 		FlowSet flowSet = getFlowSet(session);
+
+		if (flowSet == null) {
+			Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,
+					("No Flowcharts found in kb."));
+		}
 
 		Flow subflow = flowSet.getByName(flowName);
 
@@ -135,17 +245,68 @@ public final class DiaFluxUtils {
 
 		List<StartNode> startNodes = subflow.getStartNodes();
 
-		for (StartNode iNode : startNodes) {
-			if (iNode.getName().equalsIgnoreCase(startNodeName)) {
-				return iNode;
+		for (StartNode node : startNodes) {
+			if (node.getName().equalsIgnoreCase(startNodeName)) {
+				return node;
 
 			}
 		}
 
 		Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,
-				("Startnode '" + startNodeName + "' of flow '" + flowName + "' not found."));
+					("Startnode '" + startNodeName + "' of flow '" + flowName + "' not found."));
+		return null;
+
+
+	}
+
+	/**
+	 * returns the StartNode that is called by the supplied action
+	 */
+	// TODO Cleanup
+	public static EndNode findExitNode(Session session, String flowName, String startNodeName) {
+
+		FlowSet flowSet = getFlowSet(session);
+
+		if (flowSet == null) {
+			Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,
+					("No Flowcharts found in kb."));
+		}
+
+		Flow subflow = flowSet.getByName(flowName);
+
+		if (subflow == null) {
+			Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,
+					("Flowchart '" + flowName + "' not found."));
+			return null;
+		}
+
+		List<EndNode> exitNodes = subflow.getExitNodes();
+
+		for (EndNode node : exitNodes) {
+			if (node.getName().equalsIgnoreCase(startNodeName)) {
+				return node;
+
+			}
+		}
+
+		Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,
+					("Exitnode '" + startNodeName + "' of flow '" + flowName + "' not found."));
 		return null;
 
 	}
+
+	/**
+	 *
+	 * @created 12.11.2010
+	 * @param startNodeName
+	 * @param startNodes
+	 * @return
+	 */
+	private static INode findNodeByName(String startNodeName, List<INode> startNodes) {
+
+
+		return null;
+	}
+
 
 }

@@ -42,7 +42,6 @@ import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.diaFlux.ConditionTrue;
-import de.d3web.diaFlux.NoopAction;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowFactory;
 import de.d3web.diaFlux.flow.FlowSet;
@@ -57,7 +56,7 @@ import de.d3web.scoring.ActionHeuristicPS;
 import de.d3web.scoring.Score;
 
 /**
- * 
+ *
  * @author Reinhard Hatko
  * @created 11.11.2010
  */
@@ -135,7 +134,7 @@ public class DiaFluxPersistenceTest {
 		Solution solutionFoo = kbm.createSolution("SolutionFoo");
 
 		INode startNode = FF.createStartNode("Start_ID", "Start");
-		INode endNode = FF.createEndNode("End_ID", "Ende", NoopAction.INSTANCE);
+		INode endNode = FF.createEndNode("End_ID", "Ende");
 
 		List<QASet> qasets = new ArrayList<QASet>();
 		qasets.add(questionYN);
@@ -177,7 +176,7 @@ public class DiaFluxPersistenceTest {
 	}
 
 //	/**
-//	 * 
+//	 *
 //	 * @throws Exception
 //	 * @created 12.11.2010
 //	 */

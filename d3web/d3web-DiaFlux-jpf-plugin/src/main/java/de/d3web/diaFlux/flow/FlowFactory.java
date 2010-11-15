@@ -20,14 +20,10 @@
 
 package de.d3web.diaFlux.flow;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import de.d3web.abstraction.ActionSetValue;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSAction;
-import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.diaFlux.CallFlowAction;
@@ -76,28 +72,32 @@ public final class FlowFactory {
 
 	}
 
+
 	private void createEdgeMaps(Flow flow) {
 
 		for (IEdge edge : flow.getEdges()) {
 
 			Condition condition = edge.getCondition();
 
-			if (condition != ConditionTrue.INSTANCE) {
+			// no need to put edges with ConditionTrue in edgemap. flowing will
+			// continue there when they are reached
+			if (condition == ConditionTrue.INSTANCE) continue;
 
-				for (NamedObject nobject : condition.getTerminalObjects()) {
+			// For all other edges:
+			// index them at the NamedObjects their condition contains
+			for (NamedObject nobject : condition.getTerminalObjects()) {
 
-					EdgeMap slice = (EdgeMap) nobject.getKnowledge(FluxSolver.class,
-							MethodKind.FORWARD);
+				EdgeMap slice = (EdgeMap) nobject.getKnowledge(FluxSolver.class,
+						MethodKind.FORWARD);
 
-					if (slice == null) {
-						slice = new EdgeMap("EdgeMap" + nobject.getId());
-						nobject.addKnowledge(FluxSolver.class, slice, MethodKind.FORWARD);
-					}
-
-					slice.addEdge(edge);
+				if (slice == null) {
+					slice = new EdgeMap("EdgeMap" + nobject.getId());
+					nobject.addKnowledge(FluxSolver.class, slice, MethodKind.FORWARD);
 				}
 
+				slice.addEdge(edge);
 			}
+
 		}
 	}
 
@@ -119,9 +119,9 @@ public final class FlowFactory {
 		return new StartNode(id, name);
 	}
 
-	public INode createEndNode(String id, String name, PSAction action) {
+	public INode createEndNode(String id, String name) {
 
-		return new EndNode(id, name, action);
+		return new EndNode(id, name);
 	}
 
 	public INode createComposedNode(String id, String flowName, String startNodeName) {
@@ -142,14 +142,5 @@ public final class FlowFactory {
 		return new SnapshotNode(id, name);
 	}
 
-	// Fix after Refactoring
-	public ActionSetValue createSetValueAction() {
-		Rule rule = new Rule("FlowchartRule" + System.currentTimeMillis(), FluxSolver.class);
-
-		ActionSetValue action = new ActionSetValue();
-		rule.setAction(action);
-		rule.setCondition(new CondAnd(new ArrayList()));
-		return action;
-	}
 
 }

@@ -1,0 +1,50 @@
+PSMethod in ActionNextQASet??
+
+Richtiger PSM in ActionNode#takeSnapshot??
+
+Nach Snapshot: gefeuerte Regeln zurücksetzen, die ein Flowchart indizieren. Könnte in RuleSupport#remove() gemacht werden.
+ 
+
+
+Propagierung kann mehr als 1 mal an einem Knoten starten, wenn mehrere Kanten, von diesem 
+Knoten ausgehen. Dies verursacht keine Störungen, kostet aber Zeit.
+Keine Lösung: Knoten statt Kanten bei den TermObjects indizieren. Problem bei Formeln...
+Lösung: Liste von bereits behandelten Knoten in der aktuellen Propagierung?
+
+
+
+Eindeutige IDS für Flowcharts
+
+Parser für Conditions und Actions?
+
+Persistenz für CommentNodes testen
+
+
+
+****
+Nicht mehr aktuell:
+
+Bei Snapshot innerhalb eines subFC: Bleibt der aufrufende ComposedNode aktiv? 
+Wenn ja, dann würde beim nächsten erreichen des ComposedNode nicht feuern, 
+d.h. der inaktive Startknoten des aufgerufenen Subflusses würde nicht aktiviert werden.
+Wenn nicht, dann wird ausführung nach erreichen eines Endknotens im Subfluss nicht fortgesetzt am ComposedNode.
+Lösung: zusätzliche Methode shouldActivate? Und eigene implementierung dafür im ComposedNode? 
+
+
+Propagierung nach ComposedNodes:
+Nach Entfernung der FCTerminologie fehlt die Verbindung zu Kanten, die von CNs ausgehen und geprüft werden müssen, nachdem 
+ein Endknoten im aufgerufenen FC erreicht wurde. 
+Workaround: Endknoten startet Propagierung für alle CNs, die das FC aufrufen, das den Endknoten enthält.
+Implementiert mit NodeRegistry. Nicht sonderlich schön, aber funktioniert.
+
+
+
+
+
+
+	
+
+
+
+	
+	

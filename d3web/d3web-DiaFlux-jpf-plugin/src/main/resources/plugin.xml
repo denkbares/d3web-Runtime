@@ -45,12 +45,32 @@
 		<parameter id="filename" value="kb/diaflux.xml" />
 	</extension>
 	
-		<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="CallFlowActionHandler">
 		<parameter id="class"
 			value="de.d3web.diaFlux.io.CallFlowActionFragmentHandler" />
 		<parameter id="name" value="CallFlowActionHandler" />
 		<parameter id="description" value="Handles the indication of DiaFlux models" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="NodeActiveConditionHandler">
+		<parameter id="class"
+			value="de.d3web.diaFlux.io.NodeActiveConditionHandler" />
+		<parameter id="name" value="NodeActiveHandler" />
+		<parameter id="description" value="Checks if a node is supported" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="FlowchartProcessedContitionHandler">
+		<parameter id="class"
+			value="de.d3web.diaFlux.io.FlowchartProcessedContitionHandler" />
+		<parameter id="name" value="FlowchartProcessedContitionHandler" />
+		<parameter id="description" value="Checks if a flowchart is processed" />
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>

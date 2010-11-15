@@ -41,18 +41,19 @@ public class StartNode extends Node {
 
 	@Override
 	protected boolean addIncomingEdge(IEdge edge) {
-		throw new UnsupportedOperationException("can not add incoming edge to start node");
+		throw new UnsupportedOperationException("Can not add incoming edge to start node");
 	}
 
 	@Override
 	public void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes) {
-		// remeber which nodes called this one, before removing the support,
+		// remember which nodes called this one, before removing the support,
 		// what also empties the calling nodes
 		StartNodeData data = (StartNodeData) DiaFluxUtils.getNodeData(this, session);
 		List<INodeData> callingNodes = data.getCallingNodes();
 
 		super.takeSnapshot(session, snapshotNode, nodes);
 
+		boolean ownPathActive = DiaFluxUtils.getPath(this, session).isActive();
 
 		for (INodeData nodeData : callingNodes) {
 
@@ -66,11 +67,21 @@ public class StartNode extends Node {
 			// otherwise take snapshot at the path
 			// in this case the composedNode did not start the snapshot at this
 			// node, but it was triggered from within the startnodes flowchart
-			IPath path = DiaFluxUtils.getPath(composedNode, session);
-			path.takeSnapshot(session, snapshotNode, composedNode, nodes);
+			IPath callingPath = DiaFluxUtils.getPath(composedNode, session);
+			callingPath.takeSnapshot(session, snapshotNode, composedNode, nodes);
 
-			// maintain support of calling composedNode
-			FluxSolver.addSupport(session, composedNode, new ValidSupport());
+			// maintain support of calling composedNode in case that the path
+			// this startnode is in, is still active.
+			// BUT: This is a problem when the flowchart of this node is
+			// unconnected.
+			// Then, it could contain an unconnected active path, that was not
+			// called by the composed
+			// node and that is still active. Then, the calling CN would get
+			// ValidSupport, though it shouldn't
+
+			if (ownPathActive) {
+				FluxSolver.addSupport(session, composedNode, new ValidSupport());
+			}
 
 		}
 
@@ -78,6 +89,7 @@ public class StartNode extends Node {
 
 	@Override
 	public SessionObject createCaseObject(Session session) {
+		// Start node needs special NodeData to keep track of calling CNs
 		return new StartNodeData(this);
 	}
 }

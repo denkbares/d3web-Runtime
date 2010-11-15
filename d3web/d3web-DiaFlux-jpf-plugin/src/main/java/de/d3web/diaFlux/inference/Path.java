@@ -44,6 +44,7 @@ import de.d3web.diaFlux.flow.NodeSupport;
 import de.d3web.diaFlux.flow.SnapshotNode;
 import de.d3web.diaFlux.flow.StartNode;
 import de.d3web.diaFlux.flow.StartNodeData;
+import de.d3web.diaFlux.flow.ValidSupport;
 
 /**
  * @author Reinhard Hatko
@@ -144,21 +145,69 @@ public class Path extends SessionObject implements IPath {
 					+ "' is not contained in Flow '" + getFlow().getName() + "'.");
 		}
 
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
-				("**Taking Snapshot at node: " + node));
+		if (nodes.contains(node)) {
 
+			Logger.getLogger(FluxSolver.class.getName()).info("*** Arrived again at: " + node);
 
-		List<IEdge> activeEdges = selectActiveEdges(node.getIncomingEdges(), session);
+			return true;
+		}
 
+		Logger.getLogger(FluxSolver.class.getName()).info("*** Taking Snapshot at node: " + node);
+
+		// get the active edges before calling takeSnapshot at the node
+		// as these will change as a result
+		List<IEdge> activeIncoming = selectActiveEdges(node.getIncomingEdges(), session);
+
+		List<IEdge> activeOutgoing = selectActiveEdges(node.getOutgoingEdges(), session);
+
+		// add this node to the list of snapshotted nodes
 		nodes.add(node);
-		node.takeSnapshot(session, snapshotNode, nodes);
 
+		// reset all active incoming edges
+		for (IEdge edge : activeIncoming) {
 
-		for (IEdge edge : activeEdges) {
-
-			takeSnapshot(session, snapshotNode, edge.getStartNode(), nodes);
+			// at first unfire the incoming edge, so the next snapshotted node
+			// can determine the active outgoing edges that need to get
+			// ValidSupport (ie all that are still active)
+			EdgeData edgeData = DiaFluxUtils.getEdgeData(edge, session);
+			edgeData.setHasFired(false);
 
 		}
+
+		// do node specific action
+		node.takeSnapshot(session, snapshotNode, nodes);
+
+		// continue snapshotting on all active incoming edges
+		for (IEdge edge : activeIncoming) {
+
+			takeSnapshot(session, snapshotNode, edge.getStartNode(), nodes);
+		}
+
+
+		// add support to all active outgoing edges.
+		// These paths either:
+		// are not been on the path back FROM the snapshot node,
+		// otherwise these edges would no longer be active
+		// (they would have been unfired when snapshotting the
+		// node before)
+		// or:
+		// Are "parallel" active pathes to the snapshot node, that have
+		// not yet been snapshotted and will be snapshotted later. Then they
+		// will loose this (wrongly added) support again.
+		// PROBLEM: Start Taking snapshot at a CN start by a startNode -> CN
+		// still has activeoutgoing edges that get validsupport, but they
+		// shouldn't
+		for (IEdge edge : activeOutgoing) {
+
+			FluxSolver.addSupport(session, edge.getEndNode(), new ValidSupport());
+			EdgeData edgeData = DiaFluxUtils.getEdgeData(edge, session);
+
+			// TODO could may be moved to EdgeSupport#remove.
+			// Problem: see maintaintruth
+			edgeData.setHasFired(false);
+		}
+
+
 
 
 		return true;
@@ -243,7 +292,7 @@ public class Path extends SessionObject implements IPath {
 				// deregistered
 				return null;
 			}
-			
+
 			// for every other type of node, continue at the next node
 			return nextNode;
 

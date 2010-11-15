@@ -53,6 +53,8 @@ public class SnapshotNode extends Node {
 	public void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes) {
 		super.takeSnapshot(session, snapshotNode, nodes);
 
+		// this node is the new starting point of the flow
+		// so give it support
 		FluxSolver.addSupport(session, this, new ValidSupport());
 
 	}

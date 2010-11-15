@@ -22,11 +22,12 @@ import java.io.IOException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Text;
 
+import de.d3web.core.io.fragments.FragmentHandler;
+import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.diaFlux.flow.EndNode;
-import de.d3web.diaFlux.flow.FlowFactory;
-import de.d3web.diaFlux.flow.INode;
+import de.d3web.diaFlux.inference.FlowchartProcessedCondition;
 
 
 /**
@@ -34,40 +35,43 @@ import de.d3web.diaFlux.flow.INode;
  * @author Reinhard Hatko
  * @created 11.11.2010
  */
-public class ExitNodeFragmentHandler extends
-		AbstractNodeFragmentHandler {
+public class FlowchartProcessedConditionHandler implements FragmentHandler {
 
-	private static final String EXIT = "Exit";
+	private static final String FLOWCHART_PROCESSED = "FlowchartProcessed";
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		String id = element.getAttribute("id");
-		String name = element.getAttribute("name");
+		String flowName = element.getElementsByTagName("FlowName").item(0).getTextContent();
 
-		return FlowFactory.getInstance().createEndNode(id, name);
+		return new FlowchartProcessedCondition(flowName);
 	}
 
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
-		INode node = (INode) object;
-		Element nodeElement = createNodeElement(node, doc);
+		FlowchartProcessedCondition condition = (FlowchartProcessedCondition) object;
 
-		Element exitElement = doc.createElement(EXIT);
-		nodeElement.appendChild(exitElement);
+		Element actionElem = doc.createElement("Condition");
+		actionElem.setAttribute("type", FLOWCHART_PROCESSED);
 
-		exitElement.appendChild(doc.createTextNode(node.getName()));
 
-		return nodeElement;
+		Element flowElem = doc.createElement("FlowName");
+		actionElem.appendChild(flowElem);
+
+		Text flowNameNode = doc.createTextNode(condition.getFlowName());
+		flowElem.appendChild(flowNameNode);
+
+
+		return actionElem;
 	}
 
 	@Override
 	public boolean canRead(Element element) {
-		return element.getElementsByTagName(EXIT).getLength() == 1;
+		return XMLUtil.checkCondition(element, FLOWCHART_PROCESSED);
 	}
 
 	@Override
 	public boolean canWrite(Object object) {
-		return object instanceof EndNode;
+		return object instanceof FlowchartProcessedCondition;
 	}
 
 }
