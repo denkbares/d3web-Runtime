@@ -9,8 +9,8 @@
 	</parent>
 	
 	<groupId>de.uniwue.d3web</groupId>
-	<artifactId>d3web-SharedKnowledgePersistence-jpf-plugin</artifactId>
-	<name>d3web-SharedKnowledgePersistence</name>
+	<artifactId>d3web-Plugin-SharedKnowledgePersistence</artifactId>
+	<name>d3web Plugin: SharedKnowledgePersistence</name>
 	<version>0.2-SNAPSHOT</version>
 	
 	<build>
