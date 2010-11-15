@@ -224,7 +224,7 @@ public final class VerbalizationManager {
 
 			// can handle v the class of this object?
 			boolean classCanBeHandled = false;
-			for (Class c : v.getSupportedClassesForVerbalization()) {
+			for (Class<?> c : v.getSupportedClassesForVerbalization()) {
 				if (c.isInstance(o)) classCanBeHandled = true;
 			}
 			// if the class cant be handled try next verbalizer
