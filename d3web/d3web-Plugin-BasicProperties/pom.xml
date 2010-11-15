@@ -6,7 +6,7 @@
     <version>0.2-SNAPSHOT</version>
   </parent>
   <groupId>de.uniwue.d3web</groupId>
-  <artifactId>d3web-BasicProperties-jpf-plugin</artifactId>
-  <name>d3web-BasicProperties</name>
+  <artifactId>d3web-Plugin-BasicProperties</artifactId>
+  <name>d3web Plugin: BasicProperties</name>
   <version>0.2-SNAPSHOT</version>
 </project>
