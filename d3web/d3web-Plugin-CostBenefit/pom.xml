@@ -9,8 +9,8 @@
 	</parent>
 	
 	<groupId>de.uniwue.d3web</groupId>
-	<artifactId>d3web-CostBenefit-jpf-plugin</artifactId>
-	<name>d3web-CostBenefit</name>
+	<artifactId>d3web-Plugin-CostBenefit</artifactId>
+	<name>d3web Plugin: CostBenefit</name>
 	<version>0.2-SNAPSHOT</version>
 	
 	<build>
