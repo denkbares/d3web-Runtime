@@ -9,8 +9,8 @@
 	</parent>
 	
 	<groupId>de.uniwue.d3web</groupId>
-	<artifactId>d3web-Kernel-ExtensionPoints-jpf-plugin</artifactId>
-	<name>d3web-Kernel-ExtensionPoints</name>
+	<artifactId>d3web-Plugin-Kernel-ExtensionPoints</artifactId>
+	<name>d3web Plugin: Kernel-ExtensionPoints</name>
 	<version>0.2-SNAPSHOT</version>
 	
 	<build>
