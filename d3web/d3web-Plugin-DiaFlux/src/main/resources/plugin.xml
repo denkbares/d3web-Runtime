@@ -68,8 +68,8 @@
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="FlowchartProcessedConditionHandler">
 		<parameter id="class"
-			value="de.d3web.diaFlux.io.FlowchartProcessedContitionHandler" />
-		<parameter id="name" value="FlowchartProcessedContitionHandler" />
+			value="de.d3web.diaFlux.io.FlowchartProcessedConditionHandler" />
+		<parameter id="name" value="FlowchartProcessedConditionHandler" />
 		<parameter id="description" value="Checks if a flowchart is processed" />
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
