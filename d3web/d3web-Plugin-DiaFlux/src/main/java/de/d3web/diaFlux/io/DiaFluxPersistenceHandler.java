@@ -77,15 +77,18 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 
 		FlowSet flowSet = DiaFluxUtils.getFlowSet(knowledgeBase);
 
-		float cur = 0;
+		if (flowSet != null) {
 
-		int max = getEstimatedSize(knowledgeBase);
+			float cur = 0;
 
-		for (Flow flow : flowSet.getFlows()) {
-			ksNode.appendChild(writeFlow(flow, doc));
-			listener.updateProgress(++cur / max, "Saving knowledge base: DiaFlux");
+			int max = getEstimatedSize(knowledgeBase);
+
+			for (Flow flow : flowSet.getFlows()) {
+				ksNode.appendChild(writeFlow(flow, doc));
+				listener.updateProgress(++cur / max, "Saving knowledge base: DiaFlux");
+			}
+
 		}
-
 
 		Util.writeDocumentToOutputStream(doc, stream);
 
