@@ -194,21 +194,26 @@ public class Path extends SessionObject implements IPath {
 		// Are "parallel" active pathes to the snapshot node, that have
 		// not yet been snapshotted and will be snapshotted later. Then they
 		// will loose this (wrongly added) support again.
-		// PROBLEM: Start Taking snapshot at a CN start by a startNode -> CN
-		// still has activeoutgoing edges that get validsupport, but they
-		// shouldn't
+		// PROBLEM1: Start Taking snapshot at a CN started by a called startNode
+		// -> CN still has activeoutgoing edges that get validsupport, but they
+		// shouldn't (Precondition of SS-Algo does not hold)
+		// PROBLEM2: Cycle with just 1 SSN: all active outgoing edges of SSN
+		// will get ValidSupport, though they have already been snapshotted
+		// So either, skip this step for SSNs, or check if the endnode of the
+		// SSN has alredy been snapshotted TODO does the 2nd solution have ohter
+		// unwanted influence
 		for (IEdge edge : activeOutgoing) {
 
-			FluxSolver.addSupport(session, edge.getEndNode(), new ValidSupport());
-			EdgeData edgeData = DiaFluxUtils.getEdgeData(edge, session);
+			INode endNode = edge.getEndNode();
+
+			if (!nodes.contains(endNode)) {
+				FluxSolver.addSupport(session, endNode, new ValidSupport());
+			}
 
 			// TODO could may be moved to EdgeSupport#remove.
 			// Problem: see maintaintruth
-			edgeData.setHasFired(false);
+			DiaFluxUtils.getEdgeData(edge, session).setHasFired(false);
 		}
-
-
-
 
 		return true;
 	}
