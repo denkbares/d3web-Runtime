@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2010 denkbares GmbH, Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.diaFlux.test;
 
@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Before;
@@ -29,6 +30,7 @@ import org.junit.Test;
 
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Rating;
@@ -53,7 +55,7 @@ import de.d3web.scoring.Score;
 
 /**
  * First (small) test of FluxProblemSolver
- *
+ * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 10.11.2010
  */
@@ -61,31 +63,41 @@ public class UseFluxProblemSolverTest {
 
 	private static KnowledgeBaseManagement kbm;
 	private static Session session;
+	private static INode questionNode;
+	private static Question questionYN;
+	private static Solution solutionFoo;
+	private static Solution solutionFoo2;
+	private static Solution solutionFoo3;
+	private static Solution solutionFoo4;
 
 	private static final FlowFactory FF = FlowFactory.getInstance();
+	private List<IEdge> edgesList;
+	private List<INode> nodesList;
 
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
 		kbm = KnowledgeBaseManagement.createInstance();
 		setUpFlux();
-		session = SessionFactory.createSession(kbm.getKnowledgeBase());
+
 	}
 
 	/**
 	 * This method sets up the following trivial FlowChart
-	 *
-	 *        (true)                 YesNoQuestion = "Yes"                 (true)
-     * Start -------> YesNoQuestion -----------------------> solutionFoo ---------> Ende
-     *                    [yn]                                   = P7
-     *
+	 * 
+	 * (true) YesNoQuestion = "Yes" (true) Start -------> YesNoQuestion
+	 * -----------------------> solutionFoo ---------> Ende [yn] = P7
+	 * 
 	 * @created 11.11.2010
 	 */
 	private void setUpFlux() {
 
-		Question questionYN = kbm.createQuestionYN("YesNoQuestion",
+		questionYN = kbm.createQuestionYN("YesNoQuestion",
 				kbm.getKnowledgeBase().getRootQASet());
-		Solution solutionFoo = kbm.createSolution("SolutionFoo");
+		solutionFoo = kbm.createSolution("SolutionFoo");
+		solutionFoo2 = kbm.createSolution("SolutionFoo2");
+		solutionFoo3 = kbm.createSolution("SolutionFoo3");
+		solutionFoo4 = kbm.createSolution("SolutionFoo4");
 
 		INode startNode = FF.createStartNode("Start_ID", "Start");
 		INode endNode = FF.createEndNode("End_ID", "Ende");
@@ -94,14 +106,15 @@ public class UseFluxProblemSolverTest {
 		qasets.add(questionYN);
 		ActionIndication instantIndication = new ActionInstantIndication();
 		instantIndication.setQASets(qasets);
-		INode questionNode = FF.createActionNode("questionNode_ID", instantIndication);
+		questionNode = FF.createActionNode("questionNode_ID", instantIndication);
 
 		ActionHeuristicPS heuristicAction = new ActionHeuristicPS();
 		heuristicAction.setScore(Score.P7);
 		heuristicAction.setSolution(solutionFoo);
 		INode solutionNode = FF.createActionNode("solutionNode_ID", heuristicAction);
 
-		List<INode> nodesList = Arrays.asList(startNode, endNode, questionNode, solutionNode);
+		nodesList = new LinkedList<INode>(Arrays.asList(startNode, endNode, questionNode,
+				solutionNode));
 
 		// ---------------------------------
 
@@ -116,42 +129,126 @@ public class UseFluxProblemSolverTest {
 
 		IEdge solutionToEnd = FF.createEdge("solutionToEnd_ID", solutionNode, endNode,
 				ConditionTrue.INSTANCE);
-		List<IEdge> edgesList = Arrays.asList(startToQuestion, questionToSolution, solutionToEnd);
+		edgesList = new LinkedList<IEdge>(Arrays.asList(startToQuestion, questionToSolution,
+				solutionToEnd));
 
 		// ----------------------------------
 
-		// Create the flowchart...
-		Flow testFlow = FF.createFlow("testFlow_ID", "Main", nodesList, edgesList);
-		// ...and add its knowledge to the knowledgebase.
-		DiaFluxUtils.addFlow(testFlow, kbm.getKnowledgeBase());
 	}
 
 	@Test
 	public void testFluxSolver() {
-		Question question = kbm.findQuestion("YesNoQuestion");
-		Solution solution = kbm.findSolution("SolutionFoo");
+		// Create the flowchart...
+		Flow testFlow = FF.createFlow("testFlow_ID", "Main", nodesList, edgesList);
+		DiaFluxUtils.addFlow(testFlow, kbm.getKnowledgeBase());
+		session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		testBasicFlow();
+	}
 
-		Rating solutionState = session.getBlackboard().getRating(solution);
+	private void testBasicFlow() {
+		Rating solutionState = session.getBlackboard().getRating(solutionFoo);
 		assertTrue("Solution has wrong state. Expected 'UNCLEAR'",
-				solutionState.hasState(Rating.State.UNCLEAR));//this is true
-
+				solutionState.hasState(Rating.State.UNCLEAR));// this is true
+		List<InterviewObject> currentlyActiveObjects = session.getInterview().getInterviewAgenda().getCurrentlyActiveObjects();
+		assertTrue("YesNoQuestion should be on Agenda", currentlyActiveObjects.contains(questionYN));
+		assertTrue("YesNoQuestion should be the next form",
+				session.getInterview().nextForm().getInterviewObject() == questionYN);
 		// Answer question with "Yes", this should execute the flow
-		Value yes = kbm.findValue(question, "Yes");
+		Value yes = kbm.findValue(questionYN, "Yes");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(question, yes,
+				FactFactory.createFact(questionYN, yes,
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
-		solutionState = session.getBlackboard().getRating(solution);
+		solutionState = session.getBlackboard().getRating(solutionFoo);
 		assertTrue("Solution has wrong state. Expected 'ESTABLISHED'",
 				solutionState.hasState(Rating.State.ESTABLISHED));
 
 		// When Answer "No" is set, the establishment of the solution
 		// should be retracted:
-		Value no = kbm.findValue(question, "No");
+		Value no = kbm.findValue(questionYN, "No");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(question, no,
+				FactFactory.createFact(questionYN, no,
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
-		solutionState = session.getBlackboard().getRating(solution);
+		solutionState = session.getBlackboard().getRating(solutionFoo);
 		assertTrue("Solution has wrong state. Expected 'UNCLEAR'",
 				solutionState.hasState(Rating.State.UNCLEAR));
+	}
+
+	@Test
+	public void testSubFlows() {
+		// create inner flowchart
+		Flow innerFlow = FF.createFlow("Flow1", "innerFlow", nodesList, edgesList);
+		DiaFluxUtils.addFlow(innerFlow, kbm.getKnowledgeBase());
+		// create surrounding flowchart
+		INode startNode = FF.createStartNode("Start_ID2", "Start");
+		INode innerFlowNode = FF.createComposedNode("Flow1", "innerFlow", "Start");
+		IEdge e1 = FF.createEdge("e1", startNode, innerFlowNode, ConditionTrue.INSTANCE);
+		ActionHeuristicPS heuristicAction = new ActionHeuristicPS();
+		heuristicAction.setScore(Score.P7);
+		heuristicAction.setSolution(solutionFoo2);
+		INode setterNode = FF.createActionNode("foo2setter", heuristicAction);
+		IEdge e2 = FF.createEdge("e2", innerFlowNode, setterNode, ConditionTrue.INSTANCE);
+		List<INode> nodesList = Arrays.asList(startNode, innerFlowNode, setterNode);
+		List<IEdge> edgeList = Arrays.asList(e1, e2);
+		Flow outerFlow = FF.createFlow("Flow2", "Main", nodesList, edgeList);
+		DiaFluxUtils.addFlow(outerFlow, kbm.getKnowledgeBase());
+		session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		testBasicFlow();
+		assertTrue(session.getBlackboard().getRating(solutionFoo2).hasState(
+				Rating.State.ESTABLISHED));
+	}
+
+	@Test
+	public void testSnapshot() {
+		// create nodes for the other solutions
+		ActionHeuristicPS heuristicAction2 = new ActionHeuristicPS();
+		heuristicAction2.setScore(Score.P7);
+		heuristicAction2.setSolution(solutionFoo2);
+		INode solutionNode2 = FF.createActionNode("solutionNode_ID", heuristicAction2);
+		nodesList.add(solutionNode2);
+
+		ActionHeuristicPS heuristicAction3 = new ActionHeuristicPS();
+		heuristicAction3.setScore(Score.P7);
+		heuristicAction3.setSolution(solutionFoo3);
+		INode solutionNode3 = FF.createActionNode("solutionNode_ID", heuristicAction3);
+		nodesList.add(solutionNode3);
+
+		ActionHeuristicPS heuristicAction4 = new ActionHeuristicPS();
+		heuristicAction4.setScore(Score.P7);
+		heuristicAction4.setSolution(solutionFoo4);
+		INode solutionNode4 = FF.createActionNode("solutionNode_ID", heuristicAction4);
+		nodesList.add(solutionNode4);
+
+		// create Snapshot Node
+		INode snapshotNode = FF.createSnapshotNode("Snapshot1", "Snapshot");
+		nodesList.add(snapshotNode);
+
+		// create edge to Snapshot Node
+		IEdge questionToSnapshot = FF.createEdge("e2", questionNode, snapshotNode,
+				ConditionTrue.INSTANCE);
+		edgesList.add(questionToSnapshot);
+
+		// create edges to Solutions
+		Value no = kbm.findValue(questionYN, "No");
+		Condition noCondition = new CondEqual(questionYN, no);
+
+		IEdge questionToSolution2 = FF.createEdge("questionToSolution_ID2", questionNode,
+				solutionNode2, noCondition);
+		edgesList.add(questionToSolution2);
+
+		IEdge snapshotToSolution2 = FF.createEdge("questionToSolution_ID2", snapshotNode,
+				solutionNode4, noCondition);
+		edgesList.add(snapshotToSolution2);
+
+		Value yes = kbm.findValue(questionYN, "Yes");
+		Condition yesCondition = new CondEqual(questionYN, yes);
+
+		IEdge snapshotToSolution = FF.createEdge("questionToSolution_ID", snapshotNode,
+				solutionNode3, yesCondition);
+		edgesList.add(snapshotToSolution);
+
+		Flow testFlow = FF.createFlow("testFlow_Snapshot", "Main", nodesList, edgesList);
+		DiaFluxUtils.addFlow(testFlow, kbm.getKnowledgeBase());
+		session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		// testBasicFlow();
 	}
 }
