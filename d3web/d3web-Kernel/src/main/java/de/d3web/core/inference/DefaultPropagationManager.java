@@ -220,21 +220,37 @@ public class DefaultPropagationManager implements PropagationManager {
 			PSMethodHandler firstHandler = null;
 
 			// find first handler that requires propagation
-			for (PSMethodHandler handler : this.psHandlers) {
-				if (handler.hasPropagationEntries()) {
-					firstHandler = handler;
-					break;
-				}
-			}
+			firstHandler = findNextHandler();
 
-			// if no such handler exists, propagation if finished
+			// if no such handler exists, start post propagation
 			if (firstHandler == null) {
-				break;
+				for (PSMethodHandler handler : this.psHandlers) {
+					if (handler.getPSMethod() instanceof PostHookablePSMethod) {
+						((PostHookablePSMethod) handler.getPSMethod()).postPropagate();
+					}
+				}
+				firstHandler = findNextHandler();
+				if (firstHandler == null) break;
 			}
 
 			// otherwise continue with this handler
 			firstHandler.propagate();
 		}
+	}
+
+	/**
+	 * find first handler that requires propagation
+	 * 
+	 * @created 17.11.2010
+	 * @return next handler requiring propagation
+	 */
+	private PSMethodHandler findNextHandler() {
+		for (PSMethodHandler handler : this.psHandlers) {
+			if (handler.hasPropagationEntries()) {
+				return handler;
+			}
+		}
+		return null;
 	}
 
 	/**
