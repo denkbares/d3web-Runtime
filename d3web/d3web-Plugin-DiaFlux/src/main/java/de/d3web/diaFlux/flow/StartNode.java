@@ -61,9 +61,21 @@ public class StartNode extends Node {
 
 			// the calling node has already been snapshotted
 			// so do not start snapshot there
-			if (nodes.contains(composedNode)) continue;
+			// this is the case if the SS started behind the CN 
+			if (nodes.contains(composedNode)) {
+				continue;
+			}
 
-
+			// if this path is completely snapshotted,
+			// then do not start snapshots on calling flows:
+			// in this case it does not contain a SSN. The path on which 
+			// the SSN was will continue snapshotting on its own.
+			// the other callers should not be 
+			if (!ownPathActive) {
+				continue;
+				
+			}
+				
 			// otherwise take snapshot at the path
 			// in this case the composedNode did not start the snapshot at this
 			// node, but it was triggered from within the startnodes flowchart
@@ -71,14 +83,15 @@ public class StartNode extends Node {
 			callingPath.takeSnapshot(session, snapshotNode, composedNode, nodes);
 
 			// maintain support of calling composedNode in case that the path
-			// this startnode is in, is still active.
+			// this startnode is in, is still active. After a SS this should only
+			// be the case if an active SSN is contained in this Flowchart.
 			// BUT: This is a problem when the flowchart of this node is
 			// unconnected.
 			// Then, it could contain an unconnected active path, that was not
 			// called by the composed
 			// node and that is still active. Then, the calling CN would get
 			// ValidSupport, though it shouldn't
-
+			
 			if (ownPathActive) {
 				FluxSolver.addSupport(session, composedNode, new ValidSupport());
 			}

@@ -268,14 +268,15 @@ public class Path extends SessionObject implements IPath {
 		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
 				("Following edge '" + edge + "'."));
 
-		getEdgeData(edge).setHasFired(true);
 
 		INode nextNode = edge.getEndNode();
 
-		ISupport support = new EdgeSupport(edge);
-
 		// can the node be activated?
 		boolean activate = nextNode.couldActivate(session);
+		
+		getEdgeData(edge).setHasFired(true);
+
+		ISupport support = new EdgeSupport(edge);
 
 		FluxSolver.addSupport(session, nextNode, support);
 

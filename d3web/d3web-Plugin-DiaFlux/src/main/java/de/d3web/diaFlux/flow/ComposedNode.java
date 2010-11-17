@@ -59,14 +59,14 @@ public class ComposedNode extends ActionNode {
 		// TODO need some more sophisticated test here
 		// could be a problem with some weird unconnected flows
 		// or even with subflows that contain an SSN
-		// Think doing this check is wrong!!!
 
-		// CallFlowAction action = (CallFlowAction) getAction();
-		// StartNode startNode = DiaFluxUtils.findStartNode(session,
-		// action.getFlowName(), action.getStartNodeName());
-		// if (nodes.contains(startNode)) {
-		// return;
-		// }
+		 CallFlowAction action = (CallFlowAction) getAction();
+		 StartNode startNode = DiaFluxUtils.findStartNode(session,
+		 action.getFlowName(), action.getStartNodeName());
+		
+		 if (nodes.contains(startNode)) {
+			 return;
+		 }
 
 		for (INode exitNode : exitNodes) {
 			DiaFluxUtils.getPath(exitNode, session).takeSnapshot(session, snapshotNode, exitNode, nodes);
@@ -79,6 +79,17 @@ public class ComposedNode extends ActionNode {
 	@Override
 	public boolean couldActivate(Session session) {
 
+		//TODO better check would be nice
+		for (IEdge edge : getIncomingEdges()) {
+			if (DiaFluxUtils.getEdgeData(edge, session).hasFired()) {
+				
+				// if one of the incoming edges has fired
+				// then the calling start node must be active
+				return false;
+			}
+			
+		}
+		
 		CallFlowAction action = (CallFlowAction) this.action;
 
 		// get the called startnode
