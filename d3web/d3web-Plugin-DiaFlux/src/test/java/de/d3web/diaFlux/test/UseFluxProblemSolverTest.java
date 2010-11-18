@@ -25,6 +25,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,6 +36,7 @@ import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Rating;
+import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Session;
@@ -64,6 +67,7 @@ public class UseFluxProblemSolverTest {
 	private static KnowledgeBaseManagement kbm;
 	private static Session session;
 	private static INode questionNode;
+	private static INode solutionNode;
 	private static Question questionYN;
 	private static Solution solutionFoo;
 	private static Solution solutionFoo2;
@@ -111,7 +115,7 @@ public class UseFluxProblemSolverTest {
 		ActionHeuristicPS heuristicAction = new ActionHeuristicPS();
 		heuristicAction.setScore(Score.P7);
 		heuristicAction.setSolution(solutionFoo);
-		INode solutionNode = FF.createActionNode("solutionNode_ID", heuristicAction);
+		solutionNode = FF.createActionNode("solutionNode_ID", heuristicAction);
 
 		nodesList = new LinkedList<INode>(Arrays.asList(startNode, endNode, questionNode,
 				solutionNode));
@@ -143,6 +147,7 @@ public class UseFluxProblemSolverTest {
 		DiaFluxUtils.addFlow(testFlow, kbm.getKnowledgeBase());
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
 		testBasicFlow();
+		testDeactivation();
 	}
 
 	private void testBasicFlow() {
@@ -160,13 +165,15 @@ public class UseFluxProblemSolverTest {
 		solutionState = session.getBlackboard().getRating(solutionFoo);
 		assertTrue("Solution has wrong state. Expected 'ESTABLISHED'",
 				solutionState.hasState(Rating.State.ESTABLISHED));
+	}
 
+	private void testDeactivation() {
 		// When Answer "No" is set, the establishment of the solution
 		// should be retracted:
 		Value no = kbm.findValue(questionYN, "No");
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(questionYN, no));
-		solutionState = session.getBlackboard().getRating(solutionFoo);
+		Rating solutionState = session.getBlackboard().getRating(solutionFoo);
 		assertTrue("Solution has wrong state. Expected 'UNCLEAR'",
 				solutionState.hasState(Rating.State.UNCLEAR));
 	}
@@ -193,6 +200,9 @@ public class UseFluxProblemSolverTest {
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
 		testBasicFlow();
 		assertTrue(session.getBlackboard().getRating(solutionFoo2).hasState(
+				Rating.State.ESTABLISHED));
+		testDeactivation();
+		assertTrue(session.getBlackboard().getRating(solutionFoo2).hasState(
 				Rating.State.UNCLEAR));
 	}
 
@@ -202,29 +212,20 @@ public class UseFluxProblemSolverTest {
 		ActionHeuristicPS heuristicAction2 = new ActionHeuristicPS();
 		heuristicAction2.setScore(Score.P7);
 		heuristicAction2.setSolution(solutionFoo2);
-		INode solutionNode2 = FF.createActionNode("solutionNode_ID", heuristicAction2);
+		INode solutionNode2 = FF.createActionNode("solutionNode_ID2", heuristicAction2);
 		nodesList.add(solutionNode2);
 
 		ActionHeuristicPS heuristicAction3 = new ActionHeuristicPS();
 		heuristicAction3.setScore(Score.P7);
 		heuristicAction3.setSolution(solutionFoo3);
-		INode solutionNode3 = FF.createActionNode("solutionNode_ID", heuristicAction3);
+		INode solutionNode3 = FF.createActionNode("solutionNode_ID3", heuristicAction3);
 		nodesList.add(solutionNode3);
 
 		ActionHeuristicPS heuristicAction4 = new ActionHeuristicPS();
 		heuristicAction4.setScore(Score.P7);
 		heuristicAction4.setSolution(solutionFoo4);
-		INode solutionNode4 = FF.createActionNode("solutionNode_ID", heuristicAction4);
+		INode solutionNode4 = FF.createActionNode("solutionNode_ID4", heuristicAction4);
 		nodesList.add(solutionNode4);
-
-		// create Snapshot Node
-		INode snapshotNode = FF.createSnapshotNode("Snapshot1", "Snapshot");
-		nodesList.add(snapshotNode);
-
-		// create edge to Snapshot Node
-		IEdge questionToSnapshot = FF.createEdge("e2", questionNode, snapshotNode,
-				ConditionTrue.INSTANCE);
-		edgesList.add(questionToSnapshot);
 
 		// create edges to Solutions
 		Value no = kbm.findValue(questionYN, "No");
@@ -234,20 +235,43 @@ public class UseFluxProblemSolverTest {
 				solutionNode2, noCondition);
 		edgesList.add(questionToSolution2);
 
-		IEdge snapshotToSolution2 = FF.createEdge("questionToSolution_ID2", snapshotNode,
-				solutionNode4, noCondition);
-		edgesList.add(snapshotToSolution2);
+		IEdge questionToSolution3 = FF.createEdge("questionToSolution_ID3", questionNode,
+				solutionNode3, noCondition);
+		edgesList.add(questionToSolution3);
 
-		Value yes = kbm.findValue(questionYN, "Yes");
-		Condition yesCondition = new CondEqual(questionYN, yes);
+		IEdge solutionToSolution4 = FF.createEdge("solutionToSolution4_ID", solutionNode,
+				solutionNode4, ConditionTrue.INSTANCE);
+		edgesList.add(solutionToSolution4);
 
-		IEdge snapshotToSolution = FF.createEdge("questionToSolution_ID", snapshotNode,
-				solutionNode3, yesCondition);
-		edgesList.add(snapshotToSolution);
+		// create Snapshot Node
+		INode snapshotNode = FF.createSnapshotNode("Snapshot1", "Snapshot");
+		nodesList.add(snapshotNode);
+
+		// create edge to Snapshot Node
+		IEdge solution3ToSnapshot = FF.createEdge("e2", solutionNode3, snapshotNode,
+				ConditionTrue.INSTANCE);
+		edgesList.add(solution3ToSnapshot);
 
 		Flow testFlow = FF.createFlow("testFlow_Snapshot", "Main", nodesList, edgesList);
 		DiaFluxUtils.addFlow(testFlow, kbm.getKnowledgeBase());
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
-		// testBasicFlow();
+		testBasicFlow();
+		// Solution 1 and 4 should be established (solution 1 is tested in
+		// testBasicFlow)
+		List<Solution> solutions = session.getBlackboard().getSolutions(State.ESTABLISHED);
+		Assert.assertEquals(2, solutions.size());
+		assertTrue(solutions.contains(solutionFoo4));
+		testDeactivation();
+		solutions = session.getBlackboard().getSolutions(State.ESTABLISHED);
+		// Solution 2 and 3 should be established
+		Assert.assertEquals(2, solutions.size());
+		assertTrue(solutions.contains(solutionFoo2));
+		assertTrue(solutions.contains(solutionFoo3));
+		Value yes = kbm.findValue(questionYN, "Yes");
+		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(questionYN, yes));
+		// Solution 1 and 4 should be established
+		Assert.assertEquals(2, solutions.size());
+		assertTrue(solutions.contains(solutionFoo2));
+		assertTrue(solutions.contains(solutionFoo3));
 	}
 }
