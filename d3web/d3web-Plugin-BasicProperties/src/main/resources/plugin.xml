@@ -26,8 +26,8 @@
 		id="unit">
 		<parameter id="name" value="unit" />
 		<parameter id="description" value="the unit of numerical questions" />
-		<parameter id="multilingual" value="false" />
-		<parameter id="autosave" value="basic" />
+		<parameter id="multilingual" value="true" />
+		<parameter id="autosave" value="mminfo" />
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.String" />
 	</extension>

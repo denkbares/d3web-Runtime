@@ -26,13 +26,6 @@ public class BasicProperties {
 	public static final Property<Double> COST = Property.getProperty("cost", Double.class);
 
 	/**
-	 * used for: Question the unit of numerical questions
-	 * 
-	 * @return String
-	 */
-	public static final Property<String> UNIT = Property.getProperty("unit", String.class);
-
-	/**
 	 * Used for: Questions doc: Marks a Question as abstraction question
 	 * (derived) or not. Boolean.TRUE means, it is a abstraction question, all
 	 * other values means, it is not.

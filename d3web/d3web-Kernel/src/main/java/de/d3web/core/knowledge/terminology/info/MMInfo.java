@@ -64,4 +64,11 @@ public class MMInfo {
 		if (link == null) return false;
 		return !link.contains(":");
 	}
+
+	/**
+	 * used for: Question the unit of numerical questions
+	 * 
+	 * @return String
+	 */
+	public static final Property<String> UNIT = Property.getProperty("unit", String.class);
 }
