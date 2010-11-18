@@ -193,7 +193,7 @@ public class UseFluxProblemSolverTest {
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
 		testBasicFlow();
 		assertTrue(session.getBlackboard().getRating(solutionFoo2).hasState(
-				Rating.State.ESTABLISHED));
+				Rating.State.UNCLEAR));
 	}
 
 	@Test

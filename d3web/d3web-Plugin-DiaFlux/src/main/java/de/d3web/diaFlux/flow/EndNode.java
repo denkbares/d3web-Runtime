@@ -51,6 +51,15 @@ public class EndNode extends Node {
 		}
 
 	}
+	
+	@Override
+	public void undoAction(Session session) {
+		List<INode> registrations = DiaFluxUtils.getNodeRegistry(session).getRegistrations(this);
+		
+		for (INode node : registrations) {
+			DiaFluxUtils.getPath(node, session).propagate(session, node);
+		}
+	}
 
 
 

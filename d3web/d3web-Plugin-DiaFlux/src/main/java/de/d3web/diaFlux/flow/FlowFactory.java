@@ -63,7 +63,16 @@ public final class FlowFactory {
 	 * @return
 	 */
 	public Flow createFlow(String id, String name, List<INode> nodes, List<IEdge> edges) {
-
+		
+		for (IEdge edge : edges) {
+			if (!nodes.contains(edge.getStartNode())) {
+				throw new IllegalArgumentException("Start node '" + edge.getStartNode() + "' of edge '" + edge + " 'is not contained in list of nodes.");
+			}
+			if (!nodes.contains(edge.getEndNode())) {
+				throw new IllegalArgumentException("End node '" + edge.getEndNode() + "' of edge '" + edge + " 'is not contained in list of nodes.");
+			}
+		}
+		
 		Flow flow = new Flow(id, name, nodes, edges);
 
 		createEdgeMaps(flow);
