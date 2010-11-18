@@ -29,13 +29,14 @@ import de.d3web.core.inference.PSAction;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.indication.ActionClarify;
 import de.d3web.indication.ActionIndication;
 import de.d3web.indication.ActionInstantIndication;
 import de.d3web.indication.ActionNextQASet;
 import de.d3web.indication.ActionRefine;
+import de.d3web.indication.ActionRepeatedIndication;
 
 /**
  * Handles ActionNextQASet and its default successors
@@ -50,7 +51,8 @@ public class NextQASetActionHandler implements FragmentHandler {
 				|| XMLUtil.checkNameAndType(element, "Action", "ActionClarify")
 				|| XMLUtil.checkNameAndType(element, "Action", "ActionIndication")
 				|| XMLUtil.checkNameAndType(element, "Action", "ActionInstantIndication")
-				|| XMLUtil.checkNameAndType(element, "Action", "ActionRefine");
+				|| XMLUtil.checkNameAndType(element, "Action", "ActionRefine")
+				|| XMLUtil.checkNameAndType(element, "Action", "RepeatedIndication");
 	}
 
 	@Override
@@ -66,7 +68,7 @@ public class NextQASetActionHandler implements FragmentHandler {
 		Solution diag = null;
 		for (Element child : childNodes) {
 			if (child.getNodeName().equalsIgnoreCase("targetQASets")) {
-				qaSets = XMLUtil.getTargetQASets((Element) child, kb);
+				qaSets = XMLUtil.getTargetQASets(child, kb);
 			}
 			else if (child.getNodeName().equalsIgnoreCase("targetDiagnosis")) {
 				String id = child.getAttributes().getNamedItem("ID").getNodeValue();
@@ -100,6 +102,11 @@ public class NextQASetActionHandler implements FragmentHandler {
 			actionRefine.setTarget(diag);
 			action = actionRefine;
 		}
+		else if (type.equals("RepeatedIndication")) {
+			ActionRepeatedIndication ari = new ActionRepeatedIndication();
+			ari.setQASets(qaSets);
+			action = ari;
+		}
 		return action;
 	}
 
@@ -113,6 +120,9 @@ public class NextQASetActionHandler implements FragmentHandler {
 		}
 		else if (object instanceof ActionIndication) {
 			type = "ActionIndication";
+		}
+		else if (object instanceof ActionIndication) {
+			type = "RepeatedIndication";
 		}
 		else if (object instanceof ActionClarify) {
 			type = "ActionClarify";
