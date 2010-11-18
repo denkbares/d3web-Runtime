@@ -46,9 +46,9 @@ import de.d3web.diaFlux.flow.FlowFactory;
 import de.d3web.diaFlux.flow.IEdge;
 import de.d3web.diaFlux.flow.INode;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
+import de.d3web.diaFlux.inference.NodeActiveCondition;
 import de.d3web.indication.ActionIndication;
 import de.d3web.indication.ActionInstantIndication;
-import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.scoring.ActionHeuristicPS;
 import de.d3web.scoring.Score;
@@ -156,8 +156,7 @@ public class UseFluxProblemSolverTest {
 		// Answer question with "Yes", this should execute the flow
 		Value yes = kbm.findValue(questionYN, "Yes");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(questionYN, yes,
-						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+				FactFactory.createUserEnteredFact(questionYN, yes));
 		solutionState = session.getBlackboard().getRating(solutionFoo);
 		assertTrue("Solution has wrong state. Expected 'ESTABLISHED'",
 				solutionState.hasState(Rating.State.ESTABLISHED));
@@ -166,8 +165,7 @@ public class UseFluxProblemSolverTest {
 		// should be retracted:
 		Value no = kbm.findValue(questionYN, "No");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(questionYN, no,
-						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+				FactFactory.createUserEnteredFact(questionYN, no));
 		solutionState = session.getBlackboard().getRating(solutionFoo);
 		assertTrue("Solution has wrong state. Expected 'UNCLEAR'",
 				solutionState.hasState(Rating.State.UNCLEAR));
@@ -186,7 +184,8 @@ public class UseFluxProblemSolverTest {
 		heuristicAction.setScore(Score.P7);
 		heuristicAction.setSolution(solutionFoo2);
 		INode setterNode = FF.createActionNode("foo2setter", heuristicAction);
-		IEdge e2 = FF.createEdge("e2", innerFlowNode, setterNode, ConditionTrue.INSTANCE);
+		IEdge e2 = FF.createEdge("e2", innerFlowNode, setterNode, new NodeActiveCondition(
+				"innerFlow", "Ende"));
 		List<INode> nodesList = Arrays.asList(startNode, innerFlowNode, setterNode);
 		List<IEdge> edgeList = Arrays.asList(e1, e2);
 		Flow outerFlow = FF.createFlow("Flow2", "Main", nodesList, edgeList);
