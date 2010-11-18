@@ -110,7 +110,17 @@ public class Path extends SessionObject implements IPath {
 
 		// if node was not supported before adding support, start flowing
 		if (activate) {
-			flow(startNode, session);
+
+			try { // have to open propagation: e.g. when activating the main
+					// node no propagation is open -> can result in undefined
+					// state eg when reaching a SSN during init
+				session.getPropagationManager().openPropagation();
+				flow(startNode, session);
+			}
+			finally {
+				session.getPropagationManager().commitPropagation();
+			}
+
 		}
 
 	}

@@ -28,7 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.MethodKind;
-import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.PostHookablePSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
@@ -52,7 +52,7 @@ import de.d3web.diaFlux.flow.ValidSupport;
  * @created: 10.09.2009
  *
  */
-public class FluxSolver implements PSMethod {
+public class FluxSolver implements PostHookablePSMethod {
 
 	public static final MethodKind DIAFLUX = new MethodKind("DIAFLUX");
 	public static final MethodKind NODE_REGISTRY = new MethodKind("NodeRegistry");
@@ -68,13 +68,16 @@ public class FluxSolver implements PSMethod {
 		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
 				("Initing FluxSolver with case: " + session));
 
+		// if present, activate Startnode "Start" in Flow "Main"
 		Flow flow = DiaFluxUtils.getFlowSet(session).getByName("Main");
 		if (flow != null) {
 
 			for (StartNode startNode : flow.getStartNodes()) {
 
 				if (startNode.getName().equals("Start")) {
+
 					activate(session, startNode, new ValidSupport());
+
 				}
 			}
 
@@ -134,44 +137,11 @@ public class FluxSolver implements PSMethod {
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		// TODO Reinhard: special handling of strategic entries?
 
-		if (!DiaFluxUtils.isFlowCase(session)) return;
-
-		DiaFluxCaseObject caseObject = DiaFluxUtils.getDiaFluxCaseObject(session);
-
-		if (caseObject.checkPropagationTime(session)) {
-
-			List<SnapshotNode> snapshots = caseObject.getRegisteredSnapshots();
-
-			// At first:
-			for (SnapshotNode node : snapshots) {
-				// take the snapshot at eacht registered SSN
-				takeSnapshot(session, node);
-
-			}
-
-			// Then:
-			for (SnapshotNode node : snapshots) {
-				// continue flowing from the SSN, as it has been
-				// cancelled at this point in the previous propagation
-				DiaFluxUtils.getPath(node, session).propagate(session, node);
-			}
-
-			// It's important to separate these steps, when taking more than 1
-			// SS:
-			// avoid to connect paths that are already snapshotted and are then
-			// continued to those that have still to be snapshotted. This would
-			// severely impact the snapshotting...
-
-			caseObject.clearRegisteredSnapshots();
-
-		}
-
 		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
 				"Start propagating: " + changes);
 
 		try {
 			session.getPropagationManager().openPropagation();
-
 
 
 			for (PropagationEntry propagationEntry : changes) {
@@ -208,6 +178,39 @@ public class FluxSolver implements PSMethod {
 			session.getPropagationManager().commitPropagation();
 		}
 
+
+	}
+
+	@Override
+	public void postPropagate(Session session) {
+
+		if (!DiaFluxUtils.isFlowCase(session)) return;
+
+		DiaFluxCaseObject caseObject = DiaFluxUtils.getDiaFluxCaseObject(session);
+
+		List<SnapshotNode> snapshots = caseObject.getRegisteredSnapshots();
+
+		// At first:
+		for (SnapshotNode node : snapshots) {
+			// take the snapshot at each registered SSN
+			takeSnapshot(session, node);
+
+		}
+
+		// Then:
+		for (SnapshotNode node : snapshots) {
+			// continue flowing from the SSN, as it has been
+			// cancelled at this point in the previous propagation
+			DiaFluxUtils.getPath(node, session).propagate(session, node);
+		}
+
+		// It's important to separate these steps, when taking more than 1
+		// SS:
+		// avoid to connect paths that are already snapshotted and are then
+		// continued to those that have still to be snapshotted. This would
+		// severely impact the snapshotting...
+
+		caseObject.clearRegisteredSnapshots();
 
 	}
 
@@ -254,5 +257,6 @@ public class FluxSolver implements PSMethod {
 		// TODO Reinhard: Check if correct
 		return type == Type.strategic;
 	}
+
 
 }

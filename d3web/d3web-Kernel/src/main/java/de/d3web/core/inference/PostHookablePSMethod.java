@@ -18,6 +18,8 @@
  */
 package de.d3web.core.inference;
 
+import de.d3web.core.session.Session;
+
 /**
  * PSMethods can implement this interface, if they want do be notified after
  * propagation (for example for cleanup purposes)
@@ -32,5 +34,5 @@ public interface PostHookablePSMethod extends PSMethod {
 	 * 
 	 * @created 17.11.2010
 	 */
-	void postPropagate();
+	void postPropagate(Session session);
 }

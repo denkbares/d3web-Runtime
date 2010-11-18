@@ -39,9 +39,9 @@ public class DefaultPropagationManager implements PropagationManager {
 	private class PSMethodHandler {
 
 		private final PSMethod psMethod;
-		private Map<ValueObject, Value> propagationEntries = new HashMap<ValueObject, Value>();
-		private Map<InterviewObject, Value> interviewPropagationEntries = new HashMap<InterviewObject, Value>();
-		private List<InterviewObject> interviewOrder = new LinkedList<InterviewObject>();
+		private final Map<ValueObject, Value> propagationEntries = new HashMap<ValueObject, Value>();
+		private final Map<InterviewObject, Value> interviewPropagationEntries = new HashMap<InterviewObject, Value>();
+		private final List<InterviewObject> interviewOrder = new LinkedList<InterviewObject>();
 
 		public PSMethodHandler(PSMethod psMethod) {
 			this.psMethod = psMethod;
@@ -226,7 +226,7 @@ public class DefaultPropagationManager implements PropagationManager {
 			if (firstHandler == null) {
 				for (PSMethodHandler handler : this.psHandlers) {
 					if (handler.getPSMethod() instanceof PostHookablePSMethod) {
-						((PostHookablePSMethod) handler.getPSMethod()).postPropagate();
+						((PostHookablePSMethod) handler.getPSMethod()).postPropagate(session);
 					}
 				}
 				firstHandler = findNextHandler();

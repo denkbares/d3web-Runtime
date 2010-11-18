@@ -39,7 +39,6 @@ import de.d3web.diaFlux.inference.IPath;
 public class DiaFluxCaseObject extends SessionObject {
 
 	private final Map<Flow, IPath> map;
-	private long lastPropagationTime = Long.MIN_VALUE;
 	private final List<SnapshotNode> snapshotNodes;
 
 	public DiaFluxCaseObject(CaseObjectSource theSourceObject, Map<Flow, IPath> flowdatas) {
@@ -66,32 +65,6 @@ public class DiaFluxCaseObject extends SessionObject {
 		return result;
 	}
 
-	/**
-	 * Checks if a new propagation has started by comparing the current
-	 * propagation time with the last one. If a new propagation has started the
-	 * (new) current propagation time is set.
-	 *
-	 * Returns, if a new propagation has started.
-	 *
-	 * @param session the current session
-	 */
-	public boolean checkPropagationTime(Session session) {
-
-		// first call to propagate from 'init' is not within a propagation
-		if (!session.getPropagationManager().isInPropagation()) return false;
-
-		long propagationTime = session.getPropagationManager().getPropagationTime();
-
-		if (propagationTime > lastPropagationTime) {
-			lastPropagationTime = propagationTime;
-			return true;
-		}
-		else {
-			return false;
-		}
-
-
-	}
 
 	/**
 	 * Registers the supplied snapshot node for taking a snapshot. The snapshot
