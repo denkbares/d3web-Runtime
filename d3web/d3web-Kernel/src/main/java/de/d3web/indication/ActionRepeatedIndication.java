@@ -23,14 +23,10 @@ package de.d3web.indication;
 import java.util.ArrayList;
 
 import de.d3web.core.inference.PSAction;
-import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.terminology.QASet;
-import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.DefaultFact;
-import de.d3web.core.session.blackboard.Fact;
 
 /**
  * This action type indicates a list of {@link QASet} instances no matter,
@@ -41,23 +37,13 @@ import de.d3web.core.session.blackboard.Fact;
  */
 public class ActionRepeatedIndication extends ActionNextQASet {
 
-	@Override
-	protected void doItWithContext(Session session, Object source) {
-		for (QASet qaset : getQASets()) {
-			Fact fact = new DefaultFact(qaset, new Indication(State.REPEATED_INDICATED), this,
-					getProblemsolver());
-			session.getBlackboard().addInterviewFact(fact);
-		}
-	}
+	private static final Indication INDICATION = new Indication(State.REPEATED_INDICATED);
 
 	@Override
-	public void undo(Session session, Object source, PSMethod psmethod) {
-		// New handling of indications: Notify blackboard of indication and let
-		// the blackboard do all the work
-		for (QASet qaset : getQASets()) {
-			session.getBlackboard().removeInterviewFact(qaset, this);
-		}
+	protected Indication getIndication() {
+		return INDICATION;
 	}
+
 
 	@Override
 	public PSAction copy() {

@@ -50,7 +50,6 @@ import de.d3web.diaFlux.flow.IEdge;
 import de.d3web.diaFlux.flow.INode;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
 import de.d3web.diaFlux.inference.NodeActiveCondition;
-import de.d3web.indication.ActionIndication;
 import de.d3web.indication.ActionInstantIndication;
 import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.scoring.ActionHeuristicPS;
@@ -108,7 +107,7 @@ public class UseFluxProblemSolverTest {
 
 		List<QASet> qasets = new ArrayList<QASet>();
 		qasets.add(questionYN);
-		ActionIndication instantIndication = new ActionInstantIndication();
+		ActionInstantIndication instantIndication = new ActionInstantIndication();
 		instantIndication.setQASets(qasets);
 		questionNode = FF.createActionNode("questionNode_ID", instantIndication);
 

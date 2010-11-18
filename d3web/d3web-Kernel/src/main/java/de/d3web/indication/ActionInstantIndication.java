@@ -23,6 +23,8 @@ package de.d3web.indication;
 import java.util.ArrayList;
 
 import de.d3web.core.inference.PSAction;
+import de.d3web.core.knowledge.Indication;
+import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.terminology.QASet;
 
 /**
@@ -33,11 +35,10 @@ import de.d3web.core.knowledge.terminology.QASet;
  * @author baumeister
  * @see ActionIndication
  */
-public class ActionInstantIndication extends ActionIndication {
+public class ActionInstantIndication extends ActionNextQASet {
 
-	public ActionInstantIndication() {
-		super();
-	}
+
+	private static final Indication INDICATION = new Indication(State.INSTANT_INDICATED);
 
 	@Override
 	public PSAction copy() {
@@ -46,5 +47,9 @@ public class ActionInstantIndication extends ActionIndication {
 		return a;
 	}
 
+	@Override
+	protected Indication getIndication() {
+		return INDICATION;
+	}
 
 }

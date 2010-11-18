@@ -23,8 +23,11 @@ package de.d3web.indication;
 import java.util.LinkedList;
 
 import de.d3web.core.inference.PSAction;
+import de.d3web.core.knowledge.Indication;
+import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.utilities.HashCodeUtils;
 
 /**
  * ActionRefine represents the indication of a QASet in order to refine an
@@ -36,14 +39,9 @@ import de.d3web.core.knowledge.terminology.Solution;
  */
 public class ActionRefine extends ActionNextQASet {
 
+	private static final Indication INDICATION = new Indication(State.INDICATED);
 	private Solution target = null;
 
-	/**
-	 * Creates a new ActionRefine for the given corresponding rule
-	 */
-	public ActionRefine() {
-		super();
-	}
 
 	/**
 	 * @return the Diagnosis to refine
@@ -67,39 +65,26 @@ public class ActionRefine extends ActionNextQASet {
 		return a;
 	}
 
+
 	@Override
 	public int hashCode() {
-		int hash = 0;
-		if (getQASets() != null) {
-			hash += getQASets().hashCode();
-		}
-		if (getTarget() != null) {
-			hash += getTarget().hashCode();
-		}
-		return hash;
+		int result = super.hashCode();
+
+		result = HashCodeUtils.hash(result, getTarget());
+
+		return result;
+	}
+
+	@Override
+	protected Indication getIndication() {
+		return INDICATION;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == this) {
-			return true;
-		}
-		if (o instanceof ActionRefine) {
-			ActionRefine a = (ActionRefine) o;
-			return (isSame(a.getQASets(), getQASets()) && isSame(a.getTarget(), getTarget()));
-		}
-		else {
-			return false;
-		}
+
+		return super.equals(o) && isSame(((ActionClarify) o).getTarget(), getTarget());
 	}
 
-	private boolean isSame(Object obj1, Object obj2) {
-		if (obj1 == null && obj2 == null) {
-			return true;
-		}
-		if (obj1 != null && obj2 != null) {
-			return obj1.equals(obj2);
-		}
-		return false;
-	}
+
 }

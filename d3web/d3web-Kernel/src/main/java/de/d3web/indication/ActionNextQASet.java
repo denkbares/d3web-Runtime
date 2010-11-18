@@ -25,11 +25,11 @@ import java.util.List;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.Indication;
-import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
+import de.d3web.core.utilities.HashCodeUtils;
 
 /**
  * This abstract class is representing the Action of an indication rule.
@@ -47,20 +47,22 @@ public abstract class ActionNextQASet extends PSAction {
 	 */
 	@Override
 	public void doIt(Session session, Object source, PSMethod psmethod) {
-		// New handling of indications: Notify blackboard of indication and let
-		// the blackboard do all the work
-		for (QASet qaset : getQASets()) {
-			// Fact fact = new DefaultFact(qaset, new
-			// Indication(State.INDICATED), this,
-			// psmethod);
 
-			Fact fact = FactFactory.createIndicationFact(session, qaset, new Indication(
-					State.INDICATED),
-					this, psmethod);
+		for (QASet qaset : getQASets()) {
+			Fact fact = FactFactory.createFact(session, qaset, getIndication(),
+					source, psmethod);
 
 			session.getBlackboard().addInterviewFact(fact);
 		}
 	}
+
+
+	/**
+	 * 
+	 * @created 18.11.2010
+	 * @return 
+	 */
+	protected abstract Indication getIndication();
 
 	/**
 	 * @return List of QASets this Action can indicate
@@ -101,6 +103,44 @@ public abstract class ActionNextQASet extends PSAction {
 	public String toString() {
 		return getClass().getSimpleName() + "@"
 				+ Integer.toHexString(hashCode()) + getQASets();
+	}
+
+	@Override
+	public int hashCode() {
+
+		int result = HashCodeUtils.SEED;
+		result = HashCodeUtils.hash(result, getQASets());
+		result = HashCodeUtils.hash(result, getIndication());
+
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) {
+			return true;
+		}
+
+		if (o == null) {
+			return false;
+		}
+
+		if (getClass() != o.getClass()) {
+			return false;
+		}
+
+		ActionNextQASet a = (ActionNextQASet) o;
+		return isSame(a.getQASets(), getQASets()) && isSame(a.getIndication(), getIndication());
+	}
+
+	protected boolean isSame(Object obj1, Object obj2) {
+		if (obj1 == null && obj2 == null) {
+			return true;
+		}
+		if (obj1 != null && obj2 != null) {
+			return obj1.equals(obj2);
+		}
+		return false;
 	}
 
 }
