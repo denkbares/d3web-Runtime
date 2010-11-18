@@ -125,7 +125,7 @@ public class DefaultInterview implements Interview {
 			}
 		}
 		// Need to update indicated QContainers:
-		// 1)x When all contained questions have been answered
+		// 1) When all contained questions have been answered
 		// (and no follow-up questions are active), then deactivate
 		// 2) When all contained qcontainers are deactivated, then also
 		// deactivate
@@ -180,9 +180,20 @@ public class DefaultInterview implements Interview {
 			// CONTRA_INDICATED => NEUTRAL : noop
 			checkParentalQContainer(indicatedObject);
 		}
+		else if (oldIndication.hasState(State.REPEATED_INDICATED)
+				&& newIndication.hasState(State.NEUTRAL)) {
+			// old=(REPEATED_INDICATED) => new=(NEUTRAL): deactivate
+			this.agenda.deactivate(indicatedObject);
+			checkParentalQContainer(indicatedObject);
+		}
 		else if (oldIndication.hasState(State.NEUTRAL)
 				&& newIndication.hasState(State.CONTRA_INDICATED)) { // NOSONAR
 			// NEUTRAL => CONTRA_INDICATED : noop
+			checkParentalQContainer(indicatedObject);
+		}
+		else if (newIndication.hasState(State.REPEATED_INDICATED)) {
+			// ANY => REPEATED_INDICATION : put it as active on the agenda
+			this.agenda.activate(indicatedObject);
 			checkParentalQContainer(indicatedObject);
 		}
 		else {

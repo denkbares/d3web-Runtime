@@ -29,7 +29,7 @@ import de.d3web.core.session.Session;
 
 /**
  * The InterviewAgenda represents the Interview Objects, which should appear
- * next in the Interview
+ * next in the interview.
  * 
  * @author Joachim Baumeister (denkbares GmbH)
  */
