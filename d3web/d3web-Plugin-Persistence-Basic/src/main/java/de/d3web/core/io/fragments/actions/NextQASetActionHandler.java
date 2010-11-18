@@ -121,7 +121,7 @@ public class NextQASetActionHandler implements FragmentHandler {
 		else if (object instanceof ActionIndication) {
 			type = "ActionIndication";
 		}
-		else if (object instanceof ActionIndication) {
+		else if (object instanceof ActionRepeatedIndication) {
 			type = "RepeatedIndication";
 		}
 		else if (object instanceof ActionClarify) {
