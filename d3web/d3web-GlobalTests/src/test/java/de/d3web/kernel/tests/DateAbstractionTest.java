@@ -207,8 +207,8 @@ public class DateAbstractionTest {
 		calendar.set(1960, Calendar.JANUARY, 1, 0, 0, 0);
 		DateValue duringSeparationDate = new DateValue(calendar.getTime());
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(date, duringSeparationDate,
-						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, date,
+						duringSeparationDate, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Date' == 1960-01-01
 		Value currentDateValue = session.getBlackboard().getValue(date);
@@ -231,8 +231,8 @@ public class DateAbstractionTest {
 		calendar.set(1900, Calendar.JANUARY, 1, 0, 0, 0);
 		DateValue preSeparationDate = new DateValue(calendar.getTime());
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(date, preSeparationDate,
-						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, date,
+						preSeparationDate, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Date' == 1900-01-01
 		Value currentDateValue = session.getBlackboard().getValue(date);
@@ -255,8 +255,8 @@ public class DateAbstractionTest {
 		calendar.set(1989, Calendar.NOVEMBER, 9, 0, 0, 0);
 		DateValue fallOfTheWallDate = new DateValue(calendar.getTime());
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(date, fallOfTheWallDate,
-						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, date,
+						fallOfTheWallDate, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Date' == 1989-11-09
 		Value currentDateValue = session.getBlackboard().getValue(date);
@@ -271,8 +271,8 @@ public class DateAbstractionTest {
 		calendar.set(1990, Calendar.OCTOBER, 3, 0, 0, 0);
 		DateValue germanUnityDate = new DateValue(calendar.getTime());
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(date, germanUnityDate,
-						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, date,
+						germanUnityDate, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Date' == 1990-10-03
 		currentDateValue = session.getBlackboard().getValue(date);
@@ -292,8 +292,8 @@ public class DateAbstractionTest {
 
 		// SET 'Date' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(date, UndefinedValue.getInstance(),
-						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, date,
+						UndefinedValue.getInstance(), PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Date' == 'UNDEFINED'
 		Value currentDateValue = session.getBlackboard().getValue(date);

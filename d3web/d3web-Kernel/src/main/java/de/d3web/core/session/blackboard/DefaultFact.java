@@ -29,6 +29,7 @@ public class DefaultFact implements Fact {
 	private final Value value;
 	private final Object source;
 	private final PSMethod psMethod;
+	private final long time;
 
 	/**
 	 * 
@@ -40,7 +41,7 @@ public class DefaultFact implements Fact {
 	 *         any parameter
 	 */
 	public DefaultFact(TerminologyObject terminologyObject,
-						Value value, Object source, PSMethod psMethod) {
+						Value value, long time, Object source, PSMethod psMethod) {
 		if (terminologyObject == null || value == null || source == null || psMethod == null) {
 			throw new NullPointerException();
 		}
@@ -48,6 +49,7 @@ public class DefaultFact implements Fact {
 		this.value = value;
 		this.source = source;
 		this.psMethod = psMethod;
+		this.time = time;
 	}
 
 	@Override
@@ -68,6 +70,11 @@ public class DefaultFact implements Fact {
 	@Override
 	public Value getValue() {
 		return value;
+	}
+
+	@Override
+	public long getTime() {
+		return time;
 	}
 
 	@Override

@@ -31,8 +31,8 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
 
 /**
@@ -84,8 +84,11 @@ public class PSMethodInit implements PSMethod {
 						QuestionOC qc = (QuestionOC) q;
 						Choice choice = KnowledgeBaseManagement.createInstance(kb).findChoice(qc,
 								ids.get(0));
-						session.getBlackboard().addValueFact(
-								new DefaultFact(qc, new ChoiceValue(choice), new Object(), this));
+
+						Fact fact = FactFactory.createFact(session, qc, new ChoiceValue(choice),
+								new Object(), this);
+
+						session.getBlackboard().addValueFact(fact);
 					}
 					// TODO QuestionNum, QuestionDate
 				}

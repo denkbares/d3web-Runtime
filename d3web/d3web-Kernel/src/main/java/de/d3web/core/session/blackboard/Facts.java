@@ -188,12 +188,17 @@ public final class Facts {
 	 */
 	public static Fact mergeAnswerFacts(Fact[] facts) {
 		Value resultValue = null;
+		long resultTime = Long.MIN_VALUE;
 		Question question = (Question) facts[0].getTerminologyObject();
 		PSMethod psMethod = facts[0].getPSMethod();
 		Fact[] filteredFacts = filterFactsForSourceSolvers(facts);
 		if (filteredFacts.length == 1) return filteredFacts[0];
 		for (Fact fact : filteredFacts) {
 			Value value = (Value) fact.getValue();
+			long time = fact.getTime();
+
+			resultTime = Math.max(time, resultTime);
+
 			if (value instanceof Unknown) { // NOSONAR
 				// handle unknown as first one!
 				// unknown is never taken into the merge operation
@@ -238,7 +243,8 @@ public final class Facts {
 		if (resultValue == null) {
 			resultValue = Unknown.getInstance();
 		}
-		return new DefaultFact(question, resultValue, psMethod, psMethod);
+
+		return new DefaultFact(question, resultValue, resultTime, psMethod, psMethod);
 	}
 
 	/**

@@ -32,6 +32,8 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
+import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.plugin.test.InitPluginManager;
@@ -48,7 +50,7 @@ public class DefaultFactTest {
 
 	QuestionOC materialQuestion;
 	ChoiceValue wood;
-	DefaultFact material_is_wood;
+	Fact material_is_wood;
 
 	/**
 	 * 
@@ -65,8 +67,7 @@ public class DefaultFactTest {
 				new String[] { "Steel", "Wood", "Plastic" });
 		wood = new ChoiceValue(kbm.findChoice(materialQuestion, "Wood"));
 				
-		material_is_wood = new DefaultFact(materialQuestion, wood,
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance());
+		material_is_wood = FactFactory.createUserEnteredFact(materialQuestion, wood);
 	}
 
 	/**
@@ -85,7 +86,7 @@ public class DefaultFactTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testDefaultFactThrowsNullPointerException() {
-		new DefaultFact(null, null, null, null);
+		new DefaultFact(null, null, 0, null, null);
 	}
 
 	/**

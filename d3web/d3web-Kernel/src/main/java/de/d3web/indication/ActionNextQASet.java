@@ -28,9 +28,8 @@ import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
-import de.d3web.indication.inference.PSMethodStrategic;
+import de.d3web.core.session.blackboard.FactFactory;
 
 /**
  * This abstract class is representing the Action of an indication rule.
@@ -48,28 +47,19 @@ public abstract class ActionNextQASet extends PSAction {
 	 */
 	@Override
 	public void doIt(Session session, Object source, PSMethod psmethod) {
-		doItWithContext(session, source);
-	}
-
-	protected void doItWithContext(Session session, Object source) {
 		// New handling of indications: Notify blackboard of indication and let
 		// the blackboard do all the work
 		for (QASet qaset : getQASets()) {
-			Fact fact = new DefaultFact(qaset, new Indication(State.INDICATED), this,
-					getProblemsolver());
+			// Fact fact = new DefaultFact(qaset, new
+			// Indication(State.INDICATED), this,
+			// psmethod);
+
+			Fact fact = FactFactory.createIndicationFact(session, qaset, new Indication(
+					State.INDICATED),
+					this, psmethod);
+
 			session.getBlackboard().addInterviewFact(fact);
 		}
-	}
-
-	/**
-	 * @return PSMethodNextQASet.class
-	 */
-	public Class<? extends PSMethod> getProblemsolverContext() {
-		return PSMethodStrategic.class;
-	}
-
-	public PSMethod getProblemsolver() {
-		return PSMethodStrategic.getInstance();
 	}
 
 	/**

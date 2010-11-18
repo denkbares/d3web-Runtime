@@ -33,6 +33,7 @@ import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
@@ -248,14 +249,18 @@ public class FluxSolver implements PostHookablePSMethod {
 
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
-		// diaflux does not derive own facts
-		return Facts.mergeError(facts);
+		
+		TerminologyObject object = facts[0].getTerminologyObject();
+		Value value = facts[0].getValue();
+
+		Facts.mergeError(facts);
+
+		return facts[0];
 	}
 
 	@Override
 	public boolean hasType(Type type) {
-		// TODO Reinhard: Check if correct
-		return type == Type.strategic;
+		return type == Type.strategic || type == Type.problem;
 	}
 
 

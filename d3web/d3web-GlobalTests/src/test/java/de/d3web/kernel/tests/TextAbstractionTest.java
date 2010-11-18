@@ -138,8 +138,8 @@ public class TextAbstractionTest {
 		// SET 'Emoticon' = ':-)'
 		TextValue happinessIcon = new TextValue(":-)");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(emoticon, happinessIcon,
-						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, emoticon,
+						happinessIcon, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Emoticon' == ':-)'
 		Value currentEmoticonValue = session.getBlackboard().getValue(emoticon);
@@ -153,8 +153,8 @@ public class TextAbstractionTest {
 		// SET 'Emoticon' = ':-('
 		TextValue sadnessIcon = new TextValue(":-(");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(emoticon, sadnessIcon,
-						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, emoticon,
+						sadnessIcon, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Emoticon' == ':-('
 		currentEmoticonValue = session.getBlackboard().getValue(emoticon);
@@ -174,8 +174,8 @@ public class TextAbstractionTest {
 
 		// SET 'Emoticon' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(emoticon, UndefinedValue.getInstance(),
-						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, emoticon,
+						UndefinedValue.getInstance(), PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Emoticon' == 'UNDEFINED'
 		Value currentEmoticonValue = session.getBlackboard().getValue(emoticon);

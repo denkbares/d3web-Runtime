@@ -110,14 +110,19 @@ public final class PSMethodHeuristic extends PSMethodAdapter {
 
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
+
+		long resultTime = Long.MIN_VALUE;
+
 		HeuristicRating[] ratings = new HeuristicRating[facts.length];
 		for (int i = 0; i < facts.length; i++) {
 			ratings[i] = (HeuristicRating) facts[i].getValue();
+			resultTime = Math.max(resultTime, facts[i].getTime());
 		}
 		Solution terminologyObject = (Solution) facts[0].getTerminologyObject();
 		Score aprioriProbability = terminologyObject.getAprioriProbability();
 		Value value = HeuristicRating.add(aprioriProbability, ratings);
-		return new DefaultFact(terminologyObject, value, this, this);
+
+		return new DefaultFact(terminologyObject, value, resultTime, this, this);
 	}
 
 	@Override

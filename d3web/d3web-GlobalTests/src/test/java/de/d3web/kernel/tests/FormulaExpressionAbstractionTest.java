@@ -198,8 +198,8 @@ public class FormulaExpressionAbstractionTest {
 		// SET 'Height' = 1.7
 		Value heightValue = new NumValue(1.7);
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(height, heightValue, PSMethodUserSelected.getInstance(),
-						PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, height, heightValue,
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Height' == 1.7
 		Value currentHeightValue = session.getBlackboard().getValue(height);
@@ -208,8 +208,8 @@ public class FormulaExpressionAbstractionTest {
 		// SET 'Weight' = 56.0
 		Value weightValue = new NumValue(56.0);
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(weight, weightValue, PSMethodUserSelected.getInstance(),
-						PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, weight, weightValue,
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Weight' == 56.0
 		Value currentWeightValue = session.getBlackboard().getValue(weight);
@@ -238,8 +238,8 @@ public class FormulaExpressionAbstractionTest {
 		// SET 'Weight' = 80.0
 		Value weightValue = new NumValue(80.0);
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(weight, weightValue, PSMethodUserSelected.getInstance(),
-						PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, weight, weightValue,
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Weight' == 80.0
 		Value currentWeightValue = session.getBlackboard().getValue(weight);
@@ -263,8 +263,8 @@ public class FormulaExpressionAbstractionTest {
 		// SET 'Height' = 2.1
 		Value heightValue = new NumValue(2.1);
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(height, heightValue, PSMethodUserSelected.getInstance(),
-						PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, height, heightValue,
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Height' == 2.1
 		Value currentHeightValue = session.getBlackboard().getValue(height);
@@ -296,9 +296,9 @@ public class FormulaExpressionAbstractionTest {
 
 		// SET 'Weight' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(weight, UndefinedValue.getInstance(),
-						PSMethodUserSelected.getInstance(),
-						PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, weight,
+						UndefinedValue.getInstance(),
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Weight' == 'UNDEFINED'
 		Value weightValue = session.getBlackboard().getValue(weight);
@@ -306,9 +306,9 @@ public class FormulaExpressionAbstractionTest {
 
 		// SET 'Height' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(height, UndefinedValue.getInstance(),
-						PSMethodUserSelected.getInstance(),
-						PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, height,
+						UndefinedValue.getInstance(),
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Height' == 'UNDEFINED'
 		Value heightValue = session.getBlackboard().getValue(height);

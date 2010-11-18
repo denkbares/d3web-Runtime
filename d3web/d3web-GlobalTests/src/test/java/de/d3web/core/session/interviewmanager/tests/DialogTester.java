@@ -220,7 +220,7 @@ public class DialogTester {
 
 	private void setValue(Question question, Value value) {
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(question, value,
-						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, question,
+						value, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 	}
 }

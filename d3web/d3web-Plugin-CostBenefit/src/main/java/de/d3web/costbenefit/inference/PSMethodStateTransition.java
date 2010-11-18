@@ -59,7 +59,7 @@ public final class PSMethodStateTransition extends PSMethodUserSelected {
 		private final int number;
 
 		public StateTransitionFact(TerminologyObject terminologyObject, Value value) {
-			super(terminologyObject, value, new Object(), PSMethodStateTransition.getInstance());
+			super(terminologyObject, value, 0, new Object(), PSMethodStateTransition.getInstance());
 			number = counter++;
 		}
 

@@ -237,9 +237,9 @@ public class XCLSolutionDerivationTest {
 
 		// SET 'Health problems' = 'No'
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(healthProblems, healthProblemsNo,
-						PSMethodUserSelected.getInstance(),
-						PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, healthProblems,
+						healthProblemsNo,
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Health problems' == 'No'
 		Value healthProblemsValue = session.getBlackboard().getValue(healthProblems);
@@ -253,9 +253,9 @@ public class XCLSolutionDerivationTest {
 
 		// SET 'Importance of fun' = 'not important'
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(fun, funNotImportant,
-						PSMethodUserSelected.getInstance(),
-						PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, fun,
+						funNotImportant,
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Importance of fun' == 'not important'
 		Value funValue = session.getBlackboard().getValue(fun);
@@ -274,8 +274,8 @@ public class XCLSolutionDerivationTest {
 
 		// SET 'Team sport' = 'Yes'
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(teamSport, teamSportYes, PSMethodUserSelected.getInstance(),
-						PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, teamSport, teamSportYes,
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Team sport' == 'Yes'
 		Value teamSportValue = session.getBlackboard().getValue(teamSport);
@@ -310,9 +310,9 @@ public class XCLSolutionDerivationTest {
 
 		// SET 'Health problems' = 'Yes'
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(healthProblems, healthProblemsYes,
-						PSMethodUserSelected.getInstance(),
-						PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, healthProblems,
+						healthProblemsYes,
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Health problems' == 'Yes'
 		Value healthProblemsValue = session.getBlackboard().getValue(healthProblems);
@@ -331,8 +331,8 @@ public class XCLSolutionDerivationTest {
 
 		// SET 'Team sport' = 'No'
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(teamSport, teamSportNo, PSMethodUserSelected.getInstance(),
-						PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, teamSport, teamSportNo,
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Team sport' == 'No'
 		Value teamSportValue = session.getBlackboard().getValue(teamSport);
@@ -368,9 +368,9 @@ public class XCLSolutionDerivationTest {
 
 		// SET 'Health problems' = 'Undefined'
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(healthProblems, UndefinedValue.getInstance(),
-						PSMethodUserSelected.getInstance(),
-						PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, healthProblems,
+						UndefinedValue.getInstance(),
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Health problems' == 'Undefined'
 		Value healthProblemsValue = session.getBlackboard().getValue(healthProblems);
@@ -379,9 +379,9 @@ public class XCLSolutionDerivationTest {
 
 		// SET 'Importance of fun' = 'Undefined'
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(fun, UndefinedValue.getInstance(),
-						PSMethodUserSelected.getInstance(),
-						PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, fun,
+						UndefinedValue.getInstance(),
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Importance of fun' == 'Undefined'
 		Value funValue = session.getBlackboard().getValue(fun);
@@ -390,9 +390,9 @@ public class XCLSolutionDerivationTest {
 
 		// SET 'Team sport' = 'Undefined'
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(teamSport, UndefinedValue.getInstance(),
-						PSMethodUserSelected.getInstance(),
-						PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, teamSport,
+						UndefinedValue.getInstance(),
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Team sport' == 'Undefined'
 		Value teamSportValue = session.getBlackboard().getValue(teamSport);

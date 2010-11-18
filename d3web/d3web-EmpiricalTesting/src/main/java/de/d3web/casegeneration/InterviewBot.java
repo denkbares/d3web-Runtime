@@ -38,6 +38,7 @@ import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.interviewmanager.Form;
 import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
@@ -46,7 +47,6 @@ import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.Rating;
 import de.d3web.empiricaltesting.SequentialTestCase;
-import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
  * This class generates sequential test cases simulating an interview with the
@@ -320,9 +320,10 @@ public final class InterviewBot {
 	}
 
 	private void setCaseValue(Session session, Question q, Value v) {
-		session.getBlackboard().addValueFact(
-				FactFactory.createFact(q, v, PSMethodUserSelected.getInstance(),
-						PSMethodUserSelected.getInstance()));
+
+		Fact fact = FactFactory.createUserEnteredFact(q, v);
+
+		session.getBlackboard().addValueFact(fact);
 	}
 
 	/**

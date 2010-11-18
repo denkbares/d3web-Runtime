@@ -78,8 +78,8 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 			trace.setState(currentState);
 			if (!oldState.equals(currentState)) {
 				session.getBlackboard().addValueFact(
-						FactFactory.createFact(model.getSolution(), currentState, model,
-								session.getPSMethodInstance(PSMethodXCL.class)));
+						FactFactory.createFact(session, model.getSolution(), currentState,
+								model, session.getPSMethodInstance(PSMethodXCL.class)));
 			}
 		}
 	}

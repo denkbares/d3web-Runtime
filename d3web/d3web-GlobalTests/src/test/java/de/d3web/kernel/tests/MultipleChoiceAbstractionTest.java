@@ -209,8 +209,8 @@ public class MultipleChoiceAbstractionTest {
 		// SET 'Day' = 'Workday'
 		Value workday = kbm.findValue(day, "Workday");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(day, workday,
-						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, day,
+						workday, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Day' == 'Workday'
 		Value dayValue = session.getBlackboard().getValue(day);
@@ -225,8 +225,8 @@ public class MultipleChoiceAbstractionTest {
 		// SET 'Day' = 'Weekend'
 		Value weekend = kbm.findValue(day, "Weekend");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(day, weekend,
-						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, day,
+						weekend, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Day' == 'Weekend'
 		dayValue = session.getBlackboard().getValue(day);
@@ -247,8 +247,8 @@ public class MultipleChoiceAbstractionTest {
 
 		// SET 'Day' = 'Weekend, Workday'
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(day, getDayMCValue(Arrays.asList("")),
-						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, day,
+						getDayMCValue(Arrays.asList("")), PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Day' == 'Weekend, Workday'
 		Value dayValue = session.getBlackboard().getValue(day);
@@ -271,8 +271,8 @@ public class MultipleChoiceAbstractionTest {
 
 		// SET 'Day' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(day, UndefinedValue.getInstance(),
-						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+				FactFactory.createFact(session, day,
+						UndefinedValue.getInstance(), PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Day' == 'UNDEFINED'
 		Value dayValue = session.getBlackboard().getValue(day);

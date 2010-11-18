@@ -43,7 +43,6 @@ import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Blackboard;
-import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.Facts;
@@ -56,7 +55,6 @@ import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.session.interviewmanager.CostBenefitAgendaSortingStrategy;
-import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
  * The PSMethodCostBenefit indicates QContainer to establish a diagnosis as
@@ -160,8 +158,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 					currentSequence[i] = qContainer;
 					makeOKQuestionsUndone(currentSequence[i], session);
 					i++;
-					Fact fact = FactFactory.createFact(qContainer, new Indication(State.INDICATED),
-							this, this);
+					Fact fact = FactFactory.createFact(session, qContainer,
+							new Indication(State.INDICATED), this, this);
 					facts.add(fact);
 					blackboard.addInterviewFact(fact);
 				}
@@ -192,10 +190,11 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 						&& "OK".equals(choices.get(0).getName())) {
 					Blackboard blackboard = session.getBlackboard();
 					if (UndefinedValue.isNotUndefinedValue(blackboard.getValue(qoc))) {
-						blackboard.addValueFact(
-								new DefaultFact(qoc, UndefinedValue.getInstance(),
-										PSMethodUserSelected.getInstance(),
-										PSMethodUserSelected.getInstance()));
+
+						Fact fact = FactFactory.createUserEnteredFact(qoc,
+								UndefinedValue.getInstance());
+
+						blackboard.addValueFact(fact);
 					}
 				}
 			}

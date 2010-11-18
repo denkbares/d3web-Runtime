@@ -23,9 +23,7 @@ package de.d3web.indication;
 import java.util.ArrayList;
 
 import de.d3web.core.inference.PSAction;
-import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.QASet;
-import de.d3web.core.session.Session;
 
 /**
  * Indicates a QASet like ActionIndication, but for QContainers: Then, the
@@ -48,9 +46,5 @@ public class ActionInstantIndication extends ActionIndication {
 		return a;
 	}
 
-	@Override
-	public void doIt(Session session, Object source, PSMethod psmethod) {
-		doItWithContext(session, source);
-	}
 
 }

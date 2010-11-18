@@ -20,6 +20,7 @@
 package de.d3web.core.session.blackboard;
 
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -28,6 +29,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
@@ -48,17 +50,20 @@ public final class FactFactory {
 	 * {@link TerminologyObject}. The specified source is responsible for the
 	 * setting the value, which acts in the context of the specified
 	 * {@link PSMethod}.
-	 * 
+	 * @param session TODO
 	 * @param terminologyObject the specified {@link TerminologyObject} instance
 	 * @param value the specified {@link Value} instance
 	 * @param source the responsible source
 	 * @param psMethod the fact is created in the context of the specified
 	 *        {@link PSMethod}
+	 * 
 	 * @return a newly created {@link Fact} instance
 	 */
-	public static Fact createFact(TerminologyObject terminologyObject,
-			Value value, Object source, PSMethod psMethod) {
-		return new DefaultFact(terminologyObject, value, source, psMethod);
+	public static Fact createFact(Session session,
+			TerminologyObject terminologyObject, Value value, Object source, PSMethod psMethod) {
+		long time = System.currentTimeMillis();
+		
+		return new DefaultFact(terminologyObject, value, time, source, psMethod);
 	}
 
 	/**
@@ -72,7 +77,11 @@ public final class FactFactory {
 	 */
 	public static Fact createUserEnteredFact(
 			TerminologyObject terminologyObject, Value value) {
-		return new DefaultFact(terminologyObject, value, PSMethodUserSelected.class,
+		
+		long time = System.currentTimeMillis();
+		
+		
+		return new DefaultFact(terminologyObject, value, time, PSMethodUserSelected.getInstance(),
 				PSMethodUserSelected.getInstance());
 	}
 
@@ -160,10 +169,34 @@ public final class FactFactory {
 	 *        {@link TerminologyObject}
 	 * @return a fact representing the specified indication
 	 */
-	public static Fact createIndicationFact(TerminologyObject terminologyObject,
+	public static Fact createIndicationFact(Session session, TerminologyObject terminologyObject,
 			Indication indication, Object source, PSMethod psMethodContext) {
 
-		return new DefaultFact(terminologyObject, indication, source, psMethodContext);
+		long time = getCurrentTime(session);
+
+		return new DefaultFact(terminologyObject, indication, time, source, psMethodContext);
+	}
+
+	/**
+	 * This method returns the current time of the session, ie the time of the
+	 * current propagation if a propagation is opened, and the current system
+	 * time otherwise.
+	 * 
+	 * @created 18.11.2010
+	 * @param session
+	 * @return the current time of the session
+	 */
+	public static long getCurrentTime(Session session) {
+
+		PropagationManager propagationManager = session.getPropagationManager();
+
+		if (!propagationManager.isInPropagation()) {
+			return System.currentTimeMillis();
+		}
+		else {
+			return propagationManager.getPropagationTime();
+		}
+
 	}
 
 }

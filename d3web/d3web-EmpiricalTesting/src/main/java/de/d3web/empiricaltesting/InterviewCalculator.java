@@ -25,9 +25,9 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
-import de.d3web.indication.inference.PSMethodUserSelected;
 
 public class InterviewCalculator extends PrecisionRecallCalculator {
 
@@ -106,9 +106,10 @@ public class InterviewCalculator extends PrecisionRecallCalculator {
 	 * @param a Answer which will be set.
 	 */
 	private void setCaseValue(Question q, Value v) {
-		session.getBlackboard().addValueFact(
-				FactFactory.createFact(q, v, PSMethodUserSelected.getInstance(),
-						PSMethodUserSelected.getInstance()));
+
+		Fact fact = FactFactory.createUserEnteredFact(q, v);
+
+		session.getBlackboard().addValueFact(fact);
 	}
 
 	/**

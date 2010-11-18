@@ -30,8 +30,8 @@ import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.FactFactory;
 
 /**
  * RuleAction that contra-indicates a {@link QASet}, when the corresponding rule
@@ -55,8 +55,13 @@ public class ActionContraIndication extends PSAction {
 		// New handling of indications: Notify blackboard of indication and let
 		// the blackboard do all the work
 		for (QASet qaset : getQASets()) {
-			Fact fact = new DefaultFact(qaset, new Indication(State.CONTRA_INDICATED), source,
-					session.getPSMethodInstance(psmethod.getClass()));
+			// Fact fact = new DefaultFact(qaset, new
+			// Indication(State.CONTRA_INDICATED), source,
+			// session.getPSMethodInstance(psmethod.getClass()));
+
+			Fact fact = FactFactory.createIndicationFact(session, qaset, new Indication(
+					State.CONTRA_INDICATED), source, psmethod);
+
 			session.getBlackboard().addInterviewFact(fact);
 		}
 	}

@@ -73,14 +73,14 @@ public class RunningACase {
 		Session session = SessionFactory.createSession(knowledgeBase);
 
 		// set: pregnant = yes
-		Fact fact1 = FactFactory.createFact(pregnant, yes, PSMethodUserSelected
-					.getInstance(), PSMethodUserSelected.getInstance());
+		Fact fact1 = FactFactory.createFact(session, pregnant, yes, PSMethodUserSelected
+								.getInstance(), PSMethodUserSelected.getInstance());
 		session.getBlackboard().addValueFact(fact1);
 		out.println(fact1);
 		// set: weight = 80
-		Fact fact2 = FactFactory.createFact(weight, new NumValue(80),
-				PSMethodUserSelected.getInstance(),
-				PSMethodUserSelected.getInstance());
+		Fact fact2 = FactFactory.createFact(session, weight,
+				new NumValue(80),
+				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance());
 		session.getBlackboard().addValueFact(fact2);
 		out.println(fact2);
 

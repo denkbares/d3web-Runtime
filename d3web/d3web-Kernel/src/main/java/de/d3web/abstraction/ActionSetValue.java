@@ -33,7 +33,8 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.blackboard.DefaultFact;
+import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
 
 /**
@@ -136,8 +137,14 @@ public class ActionSetValue extends PSAction {
 			// Only set the computed value, if it differs from the old value in
 			// the Blackboard
 			if (!oldValue.equals(tempVal)) {
-				session.getBlackboard().addValueFact(
-						new DefaultFact(getQuestion(), tempVal, source, psmethod));
+
+				// Fact fact = new DefaultFact(getQuestion(), tempVal, source,
+				// psmethod);
+
+				Fact fact = FactFactory.createFact(session, getQuestion(), tempVal, source,
+						psmethod);
+
+				session.getBlackboard().addValueFact(fact);
 			}
 		}
 	}

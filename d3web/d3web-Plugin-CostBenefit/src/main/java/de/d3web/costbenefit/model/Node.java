@@ -38,8 +38,8 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
@@ -146,17 +146,24 @@ public class Node {
 	 * unanswered questions and their previous values (which is in this case
 	 * always an empty list)
 	 * 
-	 * @param testCase
+	 * @param session
 	 * @return
 	 */
-	public List<Fact> setNormalValues(Session testCase) {
-		Map<Question, Value> valuesToSet = answerGetterAndSetter(testCase, true);
+	public List<Fact> setNormalValues(Session session) {
+		Map<Question, Value> valuesToSet = answerGetterAndSetter(session, true);
 		List<Fact> facts = new LinkedList<Fact>();
-		PSMethod psmCostBenefit = testCase.getPSMethodInstance(PSMethodCostBenefit.class);
+		PSMethod psmCostBenefit = session.getPSMethodInstance(PSMethodCostBenefit.class);
 		for (Question q : valuesToSet.keySet()) {
-			Fact fact = new DefaultFact(q, valuesToSet.get(q), this,
-					(psmCostBenefit == null) ? new PSMethodCostBenefit() : psmCostBenefit);
-			testCase.getBlackboard().addValueFact(fact);
+//			Fact fact = new DefaultFact(q, valuesToSet.get(q), this,
+//					(psmCostBenefit == null) ? new PSMethodCostBenefit() : psmCostBenefit);
+			
+			PSMethod psMethod = (psmCostBenefit == null)
+					? new PSMethodCostBenefit()
+					: psmCostBenefit;
+
+			Fact fact = FactFactory.createFact(session, q, valuesToSet.get(q), this, psMethod);
+			
+			session.getBlackboard().addValueFact(fact);
 			facts.add(fact);
 		}
 		return facts;

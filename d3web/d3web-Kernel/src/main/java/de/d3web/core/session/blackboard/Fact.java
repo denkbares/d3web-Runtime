@@ -82,4 +82,6 @@ public interface Fact {
 
 	@Override
 	boolean equals(Object o);
+
+	public abstract long getTime();
 }

@@ -31,9 +31,9 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
-import de.d3web.indication.inference.PSMethodUserSelected;
 
 public final class BotHelper {
 
@@ -61,9 +61,9 @@ public final class BotHelper {
 	}
 
 	public void setCaseValue(Session session, QuestionChoice q, ChoiceValue a) {
-		session.getBlackboard().addValueFact(
-				FactFactory.createFact(q, a, PSMethodUserSelected.getInstance(),
-						PSMethodUserSelected.getInstance()));
+		Fact fact = FactFactory.createUserEnteredFact(q, a);
+
+		session.getBlackboard().addValueFact(fact);
 	}
 
 	public Choice findAnswer(QuestionChoice q, String answerId)

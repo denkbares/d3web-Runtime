@@ -28,7 +28,8 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.DefaultFact;
+import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.FactFactory;
 
 /**
  * Action to add scores to solutions (heuristic problem-solver) <br>
@@ -81,8 +82,12 @@ public class ActionHeuristicPS extends PSAction {
 	 */
 	@Override
 	public void doIt(Session session, Object source, PSMethod psmethod) {
-		session.getBlackboard().addValueFact(
-				new DefaultFact(solution, new HeuristicRating(getScore()), source, psmethod));
+
+		Fact fact = FactFactory.createFact(session, getSolution(), new HeuristicRating(getScore()),
+				source, psmethod);
+
+		session.getBlackboard().addValueFact(fact);
+
 	}
 
 	/**

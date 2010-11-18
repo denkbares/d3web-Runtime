@@ -27,15 +27,15 @@ import org.junit.Test;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.Rating.State;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.Blackboard;
-import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.scoring.HeuristicRating;
 import de.d3web.scoring.Score;
@@ -65,12 +65,13 @@ public class SolutionStateBlackboardTest {
 	private static Rule rule1, rule2, rule3;
 
 	private Solution happy;
+	private Session session;
 
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
 		kbm = KnowledgeBaseManagement.createInstance();
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		session = SessionFactory.createSession(kbm.getKnowledgeBase());
 		blackboard = session.getBlackboard();
 
 		happy = kbm.createSolution("happy");
@@ -88,12 +89,15 @@ public class SolutionStateBlackboardTest {
 		assertTrue(blackboard.getRating(happy).hasState(State.UNCLEAR));
 
 		// put P4 => P4 = suggested
-		Fact p4Fact = new DefaultFact(happy, new HeuristicRating(Score.P4), rule1, heuristicSource);
+
+		Fact p4Fact = FactFactory.createFact(session, happy, new HeuristicRating(Score.P4), rule1,
+				heuristicSource);
 		blackboard.addValueFact(p4Fact);
 		assertTrue(blackboard.getRating(happy).hasState(State.SUGGESTED));
 
 		// put another P5 => P4+P5 = established
-		Fact p5Fact = new DefaultFact(happy, new HeuristicRating(Score.P5), rule2, heuristicSource);
+		Fact p5Fact = FactFactory.createFact(session, happy, new HeuristicRating(Score.P5), rule2,
+				heuristicSource);
 		blackboard.addValueFact(p5Fact);
 		assertTrue(blackboard.getRating(happy).hasState(State.ESTABLISHED));
 
@@ -102,7 +106,7 @@ public class SolutionStateBlackboardTest {
 		assertTrue(blackboard.getRating(happy).hasState(State.SUGGESTED));
 
 		// categorically exclude by rule3 => P4+N7 = excluded
-		Fact n7Fact = new DefaultFact(happy, new HeuristicRating(Score.N7), rule3, heuristicSource);
+		Fact n7Fact = FactFactory.createFact(session, happy, new HeuristicRating(Score.N7), rule3, heuristicSource);
 		blackboard.addValueFact(n7Fact);
 		assertTrue(blackboard.getRating(happy).hasState(State.EXCLUDED));
 
