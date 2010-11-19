@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.diaFlux.ConditionTrue;
+import de.d3web.diaFlux.inference.ConditionTrue;
 
 
 /**

@@ -146,7 +146,12 @@ enthält. Dann würden alle Pfade (auch der k.) _berechtigterweise_ ValidSupport
 	
 
 SnapshotNode:
-fügt sich selbst ValidSupport hinzu (nach resetten der NodeData), um Supported zu bleiben.
+
+Früher: fügt sich selbst ValidSupport hinzu (nach resetten der NodeData), um Supported zu bleiben.
+Problem: Zyklus mit 1 SSN. SSN gibt sich nach Snapshot ValidSupport. 
+Wird der SSN später wiederholt aktiviert, so wird ein neuer SS registriert. 
+Diese Aktion kann aber nicht mehr rückgängig gemacht werden, da der SSN ValidSupport hat. 
+Workaround: SSN gibt seinen folgenden Knoten ValidSupport? er selbst wird deaktiviert.
 
 
 

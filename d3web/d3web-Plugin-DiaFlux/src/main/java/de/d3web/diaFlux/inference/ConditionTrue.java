@@ -18,7 +18,7 @@
  * site: http://www.fsf.org.
  */
 
-package de.d3web.diaFlux;
+package de.d3web.diaFlux.inference;
 
 import java.util.ArrayList;
 

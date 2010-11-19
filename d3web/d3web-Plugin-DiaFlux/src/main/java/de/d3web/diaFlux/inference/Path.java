@@ -112,8 +112,8 @@ public class Path extends SessionObject implements IPath {
 		if (activate) {
 
 			try { // have to open propagation: e.g. when activating the main
-					// node no propagation is open -> can result in undefined
-					// state eg when reaching a SSN during init
+					// node during init no propagation is open -> can result in
+					// undefined state eg when reaching a SSN (during init)
 				session.getPropagationManager().openPropagation();
 				flow(startNode, session);
 			}
@@ -133,22 +133,18 @@ public class Path extends SessionObject implements IPath {
 	 * @param node
 	 */
 	@Override
-	public boolean propagate(Session session, INode node) {
-
+	public void propagate(Session session, INode node) {
 
 		maintainTruth(node, session);
 
 		if (getNodeData(node).isSupported()) {
 			flow(node, session);
-
 		}
-
-		return true;
 
 	}
 
 	@Override
-	public boolean takeSnapshot(Session session, SnapshotNode snapshotNode, INode node, List<INode> nodes) {
+	public void takeSnapshot(Session session, SnapshotNode snapshotNode, INode node, List<INode> nodes) {
 
 		if (!getFlow().getNodes().contains(node)) {
 			throw new IllegalArgumentException("Node '" + node.getName()
@@ -159,7 +155,7 @@ public class Path extends SessionObject implements IPath {
 
 			Logger.getLogger(FluxSolver.class.getName()).info("*** Arrived again at: " + node);
 
-			return true;
+			return;
 		}
 
 		Logger.getLogger(FluxSolver.class.getName()).info("*** Taking Snapshot at node: " + node);
@@ -225,7 +221,6 @@ public class Path extends SessionObject implements IPath {
 			DiaFluxUtils.getEdgeData(edge, session).setHasFired(false);
 		}
 
-		return true;
 	}
 
 	/**
@@ -464,11 +459,6 @@ public class Path extends SessionObject implements IPath {
 		return result;
 	}
 
-
-	@Override
-	public boolean isEmpty() {
-		return false;
-	}
 
 	@Override
 	public boolean isActive() {

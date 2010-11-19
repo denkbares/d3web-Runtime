@@ -17,7 +17,7 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.diaFlux;
+package de.d3web.diaFlux.inference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +33,6 @@ import de.d3web.diaFlux.flow.ISupport;
 import de.d3web.diaFlux.flow.NodeSupport;
 import de.d3web.diaFlux.flow.RuleSupport;
 import de.d3web.diaFlux.flow.StartNode;
-import de.d3web.diaFlux.inference.DiaFluxUtils;
-import de.d3web.diaFlux.inference.FluxSolver;
 
 /**
  *

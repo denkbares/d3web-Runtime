@@ -38,11 +38,9 @@ import de.d3web.diaFlux.flow.StartNode;
 public interface IPath {
 
 
-	boolean propagate(Session session, INode node);
+	void propagate(Session session, INode node);
 
-	boolean takeSnapshot(Session session, SnapshotNode snapshotNode, INode node, List<INode> nodes);
-
-	boolean isEmpty();
+	void takeSnapshot(Session session, SnapshotNode snapshotNode, INode node, List<INode> nodes);
 
 	Flow getFlow();
 

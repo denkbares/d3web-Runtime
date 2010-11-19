@@ -33,7 +33,6 @@ import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
@@ -136,7 +135,6 @@ public class FluxSolver implements PostHookablePSMethod {
 
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
-		// TODO Reinhard: special handling of strategic entries?
 
 		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
 				"Start propagating: " + changes);
@@ -146,6 +144,10 @@ public class FluxSolver implements PostHookablePSMethod {
 
 
 			for (PropagationEntry propagationEntry : changes) {
+
+				// strategic entries do not matter so far...
+				if (propagationEntry.isStrategic()) continue;
+
 				TerminologyObject object = propagationEntry.getObject();
 				EdgeMap slice = (EdgeMap) ((NamedObject) object).getKnowledge(FluxSolver.class,
 						MethodKind.FORWARD);
@@ -189,29 +191,69 @@ public class FluxSolver implements PostHookablePSMethod {
 
 		DiaFluxCaseObject caseObject = DiaFluxUtils.getDiaFluxCaseObject(session);
 
-		List<SnapshotNode> snapshots = caseObject.getRegisteredSnapshots();
+		// the list for all taken snapshots in this postpropagation
+		List<SnapshotNode> takenSnapshots = new ArrayList<SnapshotNode>();
 
-		// At first:
-		for (SnapshotNode node : snapshots) {
-			// take the snapshot at each registered SSN
-			takeSnapshot(session, node);
+		// the list of current snapshots to take
+		List<SnapshotNode> currentSnapshots = new ArrayList<SnapshotNode>();
 
-		}
+		do {
 
-		// Then:
-		for (SnapshotNode node : snapshots) {
-			// continue flowing from the SSN, as it has been
-			// cancelled at this point in the previous propagation
-			DiaFluxUtils.getPath(node, session).propagate(session, node);
-		}
+			// do not iterate over returned list, as new nodes can be inserted
+			// while flowing
+			currentSnapshots.addAll(caseObject.getRegisteredSnapshots());
+			currentSnapshots.removeAll(takenSnapshots);
 
-		// It's important to separate these steps, when taking more than 1
-		// SS:
-		// avoid to connect paths that are already snapshotted and are then
-		// continued to those that have still to be snapshotted. This would
-		// severely impact the snapshotting...
+			// At first:
+			for (SnapshotNode node : currentSnapshots) {
+				// take the snapshot at each registered SSN
+				takeSnapshot(session, node);
 
-		caseObject.clearRegisteredSnapshots();
+			}
+			
+			
+			// clear the current Snapshots
+			// new ones can be reached during the propagation
+			// starting from the SSNs
+			caseObject.clearRegisteredSnapshots();
+
+			// List<SnapshotNode> nodesToFlowFrom = new
+			// ArrayList<SnapshotNode>(currentSnapshots);
+
+			// do not flow from the nodes that have already been reached once in
+			// this
+			// postpropagation
+			// nodesToFlowFrom.removeAll(takenSnapshots);
+
+			// Then:
+			for (SnapshotNode node : currentSnapshots) {
+				// continue flowing from the SSN, as it has been
+				// cancelled at this point in the previous propagation
+
+				for (IEdge edge : node.getOutgoingEdges()) {
+					INode nodeAfterSnapshot = edge.getEndNode();
+
+					FluxSolver.addSupport(session, nodeAfterSnapshot, new ValidSupport());
+
+					DiaFluxUtils.getPath(nodeAfterSnapshot, session).propagate(session,
+							nodeAfterSnapshot);
+				}
+
+
+			}
+
+			// remember the SS that have been taken
+			takenSnapshots.addAll(currentSnapshots);
+			currentSnapshots.clear();
+
+			// It's important to separate the snapshot taking and the flowing,
+			// when taking more than 1 SS:
+			// avoid to connect paths that are already snapshotted and are then
+			// continued to those that have still to be snapshotted. This would
+			// severely impact the snapshotting...
+
+
+		} while (!takenSnapshots.containsAll(currentSnapshots));
 
 	}
 
@@ -249,13 +291,8 @@ public class FluxSolver implements PostHookablePSMethod {
 
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
-		
-		TerminologyObject object = facts[0].getTerminologyObject();
-		Value value = facts[0].getValue();
 
-		Facts.mergeError(facts);
-
-		return facts[0];
+		return Facts.getLatestFact(facts);
 	}
 
 	@Override

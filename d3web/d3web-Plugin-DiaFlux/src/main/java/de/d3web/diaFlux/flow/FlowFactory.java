@@ -26,8 +26,8 @@ import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.terminology.NamedObject;
-import de.d3web.diaFlux.CallFlowAction;
-import de.d3web.diaFlux.ConditionTrue;
+import de.d3web.diaFlux.inference.CallFlowAction;
+import de.d3web.diaFlux.inference.ConditionTrue;
 import de.d3web.diaFlux.inference.FluxSolver;
 
 /**

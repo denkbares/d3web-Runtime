@@ -24,7 +24,6 @@ import java.util.List;
 
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
-import de.d3web.diaFlux.inference.FluxSolver;
 
 /**
  *
@@ -55,7 +54,11 @@ public class SnapshotNode extends Node {
 
 		// this node is the new starting point of the flow
 		// so give it support
-		FluxSolver.addSupport(session, this, new ValidSupport());
+
+		// BUT: this is a problem, in cycles with just 1 SSN.
+		// if it gets activated once, it won't deactivate later, because it
+		// still holds is ValidSupport
+		// FluxSolver.addSupport(session, this, new ValidSupport());
 
 	}
 

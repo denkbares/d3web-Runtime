@@ -27,9 +27,9 @@ import org.w3c.dom.Node;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.diaFlux.CallFlowAction;
 import de.d3web.diaFlux.flow.ActionNode;
 import de.d3web.diaFlux.flow.FlowFactory;
+import de.d3web.diaFlux.inference.CallFlowAction;
 
 
 /**
