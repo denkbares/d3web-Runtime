@@ -27,6 +27,7 @@ import java.util.List;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.manage.KnowledgeBaseManagement;
@@ -34,6 +35,7 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.NumValue;
 
 /**
  * This is a 'marker' psmethod to represent all the initial values. Especially
@@ -68,9 +70,9 @@ public class PSMethodInit implements PSMethod {
 			// initialise all questions
 			KnowledgeBase kb = session.getKnowledgeBase();
 			for (Question q : kb.getQuestions()) {
-				Object property = q.getInfoStore().getValue(BasicProperties.INIT);
+				String property = q.getInfoStore().getValue(BasicProperties.INIT);
 				if (property != null) {
-					String s = (String) property;
+					String s = property;
 					List<String> ids = new LinkedList<String>();
 					int posstart = 0;
 					int posend = s.indexOf(';');
@@ -90,7 +92,20 @@ public class PSMethodInit implements PSMethod {
 
 						session.getBlackboard().addValueFact(fact);
 					}
-					// TODO QuestionNum, QuestionDate
+					else if (q instanceof QuestionNum) {
+						QuestionNum qn = (QuestionNum) q;
+						NumValue value;
+						try {
+							value = new NumValue(Double.parseDouble(property));
+							Fact fact = FactFactory.createFact(session, qn,
+									value, this, this);
+							session.getBlackboard().addValueFact(fact);
+						}
+						catch (NumberFormatException e) {
+							// TODO: parse formulas for QuestionNum
+						}
+					}
+					// handle QuestionDate
 				}
 			}
 		}

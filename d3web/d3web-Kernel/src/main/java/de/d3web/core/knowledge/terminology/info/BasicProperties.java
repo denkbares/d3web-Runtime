@@ -54,8 +54,8 @@ public class BasicProperties {
 					"range", NumericalInterval.class);
 
 	/**
-	 * used for question doc: the ids of the answers(seperated by ";"), which is
-	 * set in PSMethodInit
+	 * used for question doc: the ids or names of the answers(seperated by ";"),
+	 * which is set in PSMethodInit
 	 * 
 	 * @return String
 	 */

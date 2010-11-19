@@ -42,13 +42,6 @@ public class QNumWrapper implements FormulaNumberElement {
 	private QuestionNum value;
 
 	/**
-	 * Creates a new FormulaTerm with null-arguments.
-	 */
-	public QNumWrapper() {
-		this(null);
-	}
-
-	/**
 	 * QNumWrapper constructor comment.
 	 */
 	public QNumWrapper(QuestionNum q) {
