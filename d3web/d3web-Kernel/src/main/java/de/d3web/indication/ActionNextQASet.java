@@ -32,40 +32,39 @@ import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.utilities.HashCodeUtils;
 
 /**
- * This abstract class is representing the Action of an indication rule.
- * Specialize this in order to implement a new indication type. Creation date:
- * (19.06.2001 18:21:07)
+ * This abstract class is representing the Action of an indication. Specialize
+ * this in order to implement a new indication type. <br>
+ * Creation date: (19.06.2001 18:21:07)
  * 
- * @author Christian Betz
+ * @author joba, Christian Betz
  */
 public abstract class ActionNextQASet extends PSAction {
 
 	private List<QASet> qasets;
 
 	/**
-	 * Indicates all QASets specified by "setQASets"-Method
+	 * Indicates interview objects to be presented by the dialog as specified by
+	 * the action.
 	 */
 	@Override
 	public void doIt(Session session, Object source, PSMethod psmethod) {
-
 		for (QASet qaset : getQASets()) {
 			Fact fact = FactFactory.createFact(session, qaset, getIndication(),
 					source, psmethod);
-
 			session.getBlackboard().addInterviewFact(fact);
 		}
 	}
 
-
 	/**
+	 * Return the indication state of the corresponding action.
 	 * 
 	 * @created 18.11.2010
-	 * @return 
+	 * @return the indication state of the action
 	 */
 	protected abstract Indication getIndication();
 
 	/**
-	 * @return List of QASets this Action can indicate
+	 * @return List of QASets this action can indicate
 	 */
 	public List<QASet> getQASets() {
 		return qasets;
@@ -95,7 +94,7 @@ public abstract class ActionNextQASet extends PSAction {
 		// New handling of indications: Notify blackboard of indication and let
 		// the blackboard do all the work
 		for (QASet qaset : getQASets()) {
-			session.getBlackboard().removeInterviewFact(qaset, this);
+			session.getBlackboard().removeInterviewFact(qaset, source);
 		}
 	}
 

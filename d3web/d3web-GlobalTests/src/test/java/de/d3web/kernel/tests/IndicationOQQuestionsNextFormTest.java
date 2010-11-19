@@ -30,8 +30,8 @@ import org.junit.Test;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.Indication;
-import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.Indication.State;
+import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.manage.KnowledgeBaseManagement;
@@ -63,10 +63,14 @@ import de.d3web.plugin.test.InitPluginManager;
  * The control flow is defined by the following (contra) indication
  * <b>Rules</b>:
  * 
- * Sex == Female => Pregnant INDICATED (ask Pregnant) Sex == Male => (ask
- * Ask_Headache) Pregnant == Yes => Nausea INSTANT_INDICATED (ask Nausea)
- * Pregnant == No => (ask Ask_Headache) Ask_Headache == No => Headache
- * CONTRA_INDICATED (ask Nausea) Ask_Headache == Yes => (ask Headache)
+ * <ul>
+ * <li>Sex == Female => Pregnant INDICATED (ask Pregnant)
+ * <li>Sex == Male => (ask Ask_Headache)
+ * <li>Pregnant == Yes => Nausea INSTANT_INDICATED (ask Nausea)
+ * <li>Pregnant == No => (ask Ask_Headache)
+ * <li>Ask_Headache == No => Headache CONTRA_INDICATED (ask Nausea)
+ * <li>Ask_Headache == Yes => (ask Headache)
+ * </ul>
  * 
  * @author Martina Freiberg
  * 
@@ -239,7 +243,8 @@ public class IndicationOQQuestionsNextFormTest {
 		Value male = kbm.findValue(sex, "Male");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, sex,
-						male, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						male, PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 		Value sexValue = session.getBlackboard().getValue(sex);
 		assertEquals("Question Sex has wrong value ", male, sexValue);
 		// OQ Strategy should return exactly one element here.
@@ -263,7 +268,8 @@ public class IndicationOQQuestionsNextFormTest {
 		Value female = kbm.findValue(sex, "Female");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, sex,
-						female, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						female, PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 		sexValue = session.getBlackboard().getValue(sex);
 		assertEquals("Question Sex has wrong value ", female, sexValue);
 
@@ -285,7 +291,8 @@ public class IndicationOQQuestionsNextFormTest {
 		male = kbm.findValue(sex, "Male");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, sex,
-						male, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						male, PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 		sexValue = session.getBlackboard().getValue(sex);
 		assertEquals("Question Sex has wrong value ", male, sexValue);
 
