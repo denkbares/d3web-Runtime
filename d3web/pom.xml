@@ -1,31 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<groupId>de.uniwue.d3web</groupId>
 	<artifactId>d3web</artifactId>
 	<packaging>pom</packaging>
 	<name>d3web</name>
 	<version>0.2-SNAPSHOT</version>
 	<url>http://www.d3web.de/</url>
-	
+
 	<issueManagement>
 		<system>Trac</system>
 		<url>https://isci.informatik.uni-wuerzburg.de/trac/</url>
 	</issueManagement>
-	
+
 	<ciManagement>
 		<system>Hudson</system>
 		<url>https://isci.informatik.uni-wuerzburg.de/hudson/</url>
 	</ciManagement>
-	
+
 	<licenses>
 		<license>
 			<name>GNU Lesser General Public License, version 3</name>
 			<url>http://www.gnu.org/licenses/lgpl.txt</url>
 		</license>
 	</licenses>
-	
+
 	<build>
 		<defaultGoal>package</defaultGoal>
 		<plugins>
@@ -87,7 +88,7 @@
 				<groupId>com.atlassian.maven.plugins</groupId>
 				<artifactId>maven-clover2-plugin</artifactId>
 				<version>3.0.2</version>
-                <configuration>		    
+				<configuration>
 					<generatePdf>true</generatePdf>
 					<generateHtml>true</generateHtml>
 					<generateXml>true</generateXml>
@@ -96,11 +97,11 @@
 									oRNPtUQOPqOPnRmPonoWsnQopOmnqQqmMOtVvNSTWvtOpP
 									OqnmqmUUnourqopommmmmUUnourqopommmmmUUaptbYUUn
 									mmmm]]></license>
-                </configuration>				
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<reporting>
 		<plugins>
 			<plugin>
@@ -129,7 +130,7 @@
 			</plugin>
 		</plugins>
 	</reporting>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.clover.encoding>UTF-8</maven.clover.encoding>
@@ -140,7 +141,7 @@
 		<sonar.clover.reportPath>target/site/clover/clover.xml</sonar.clover.reportPath>
 		<versionatorVersion>1.5</versionatorVersion>
 	</properties>
-	
+
 	<repositories>
 		<repository>
 			<id>infovi-artifactory</id>
@@ -158,14 +159,14 @@
 			</snapshots>
 		</repository>
 	</repositories>
-	
+
 	<pluginRepositories>
 		<pluginRepository>
 			<id>contrib</id>
 			<url>http://isci.informatik.uni-wuerzburg.de:8080/artifactory/infovi-contrib/</url>
 		</pluginRepository>
 	</pluginRepositories>
-	
+
 	<distributionManagement>
 		<repository>
 			<id>knowwe</id>
@@ -178,30 +179,48 @@
 			<url>http://isci.informatik.uni-wuerzburg.de:8080/artifactory/knowwe-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
-	
-	<developers>
-		<developer>
-			<id>joba</id>
-			<name>Joachim Baumeister</name>
-			<email>joba@uni-wuerzburg.de</email>
-			<timezone>CET</timezone>
-			<roles>
-				<role>Mentor</role>
-			</roles>
-		</developer>
-	</developers>
-	
+
+	<profiles>
+		<profile>
+			<id>m2e</id>
+			<activation>
+				<property>
+					<name>m2e.version</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.maven.ide.eclipse</groupId>
+						<artifactId>lifecycle-mapping</artifactId>
+						<version>0.10.0</version>
+						<configuration>
+							<mappingId>customizable</mappingId>
+							<configurators>
+								<!-- remove javaConfigurator in EAR pom.xml -->
+								<configurator id='org.maven.ide.eclipse.jdt.javaConfigurator' />
+							</configurators>
+							<mojoExecutions>
+								<mojoExecution>org.apache.maven.plugins:maven-resources-plugin::resources,testResources</mojoExecution>
+							</mojoExecutions>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 	<scm>
 		<connection>scm:svn:https://isci.informatik.uni-wuerzburg.de/svn/d3web-core/trunk/d3web</connection>
 		<developerConnection>scm:svn:https://isci.informatik.uni-wuerzburg.de/svn/d3web-core/trunk/d3web</developerConnection>
 		<url>scm:svn:https://isci.informatik.uni-wuerzburg.de/svn/d3web-core/trunk/d3web</url>
 	</scm>
-	
+
 	<organization>
 		<name>Universität Würzburg</name>
 		<url>http://uni-wuerzburg.de/</url>
 	</organization>
-	
+
 	<modules>
 		<module>d3web-Kernel</module>
 		<module>d3web-Persistence</module>
