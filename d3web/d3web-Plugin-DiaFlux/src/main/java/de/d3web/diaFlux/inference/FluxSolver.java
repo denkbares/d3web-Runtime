@@ -136,6 +136,8 @@ public class FluxSolver implements PostHookablePSMethod {
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 
+		if (!DiaFluxUtils.isFlowCase(session)) return;
+
 		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
 				"Start propagating: " + changes);
 
