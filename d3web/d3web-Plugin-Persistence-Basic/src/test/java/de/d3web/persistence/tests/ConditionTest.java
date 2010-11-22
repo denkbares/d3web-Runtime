@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Vector;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,11 +41,15 @@ import de.d3web.core.inference.condition.CondNumGreater;
 import de.d3web.core.inference.condition.CondNumIn;
 import de.d3web.core.inference.condition.CondNumLess;
 import de.d3web.core.inference.condition.CondOr;
+import de.d3web.core.inference.condition.CondSolutionConfirmed;
+import de.d3web.core.inference.condition.CondSolutionRejected;
 import de.d3web.core.inference.condition.CondTextContains;
 import de.d3web.core.inference.condition.CondTextEqual;
 import de.d3web.core.inference.condition.CondUnknown;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.fragments.conditions.AndConditionHandler;
+import de.d3web.core.io.fragments.conditions.ConditionSolutionConfirmedHandler;
+import de.d3web.core.io.fragments.conditions.ConditionSolutionRejectedHandler;
 import de.d3web.core.io.fragments.conditions.OrConditionHandler;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.terminology.Choice;
@@ -294,4 +299,48 @@ public class ConditionTest {
 
 		assertEquals("(3)", shouldTag, isTag);
 	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 * @created 23.11.2010
+	 */
+	@Test
+	public void testCondSolutionConfirmed() throws Exception {
+		
+		CondSolutionConfirmed cond = new CondSolutionConfirmed(d1);
+		
+		shouldTag = new XMLTag("Condition");
+		shouldTag.addAttribute("type", ConditionSolutionConfirmedHandler.TYPE);
+		shouldTag.addAttribute("ID", "d1-id");
+
+		isTag = new XMLTag(new ConditionSolutionConfirmedHandler().write(cond,
+				Util.createEmptyDocument()));
+
+		Assert.assertEquals(isTag, shouldTag);
+		
+
+	}
+	
+	/**
+	 * 
+	 * @throws Exception
+	 * @created 23.11.2010
+	 */
+	@Test
+	public void testCondSolutionRejected() throws Exception {
+
+		CondSolutionRejected cond = new CondSolutionRejected(d1);
+
+		shouldTag = new XMLTag("Condition");
+		shouldTag.addAttribute("type", ConditionSolutionRejectedHandler.TYPE);
+		shouldTag.addAttribute("ID", "d1-id");
+
+		isTag = new XMLTag(new ConditionSolutionRejectedHandler().write(cond,
+				Util.createEmptyDocument()));
+
+		Assert.assertEquals(isTag, shouldTag);
+
+	}
+	
 }

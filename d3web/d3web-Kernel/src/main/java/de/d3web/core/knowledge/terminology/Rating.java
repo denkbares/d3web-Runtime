@@ -131,6 +131,7 @@ public class Rating implements Value {
 	 * @param other the other {@link Rating} to be compared
 	 * @return true, when both states are equal; false otherwise
 	 */
+	// TODO joba: The comment is obviously not right about using compareTo
 	@Override
 	public boolean equals(Object other) {
 		if (other == null) {
