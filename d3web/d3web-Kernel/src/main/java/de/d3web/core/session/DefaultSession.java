@@ -31,6 +31,7 @@ import java.util.UUID;
 import de.d3web.core.inference.DefaultPropagationManager;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -111,6 +112,9 @@ public class DefaultSession implements Session {
 												// addUsedPSMethod, TODO remove
 												// this comment when private
 		}
+		// Dirty hack to move the PSMethodInit to the end of the list
+		usedPSMethods.remove(PSMethodInit.getInstance());
+		usedPSMethods.add(PSMethodInit.getInstance());
 		// TODO: add knowlegde base id, name, version
 		// into the case header (dc markup?, properties?)
 	}
