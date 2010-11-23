@@ -148,11 +148,17 @@ public final class DiaFluxUtils {
 
 					Condition condition = edge.getCondition();
 
-					// TODO create registration for PROCESSED-Condition
 					if (condition instanceof NodeActiveCondition) {
 						String exitNodeName = ((NodeActiveCondition) condition).getNodeName();
 
 						registry.registerNode(flowName, exitNodeName, node);
+
+					}
+					else if (condition instanceof FlowchartProcessedCondition) {
+
+						// TODO !!!! create registration for PROCESSED-Condition
+						throw new UnsupportedOperationException("Not implemented yet!!");
+						// registry.registerNode(flowName, exitNodeName, node);
 
 					}
 

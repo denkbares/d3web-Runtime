@@ -108,13 +108,11 @@ public class NodeRegistry implements KnowledgeSlice {
 
 	@Override
 	public boolean isUsed(Session session) {
-		// TODO
 		return true;
 	}
 
 	@Override
 	public void remove() {
-		// TODO
 
 	}
 
