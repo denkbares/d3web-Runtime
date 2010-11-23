@@ -66,4 +66,10 @@ public class CondSolutionConfirmed extends TerminalCondition {
 		return new CondSolutionConfirmed((Solution) getTerminalObjects().get(0));
 	}
 
+	@Override
+	public String toString() {
+		return getClass().getName() + "(" + getSolution().getName() + ")";
+	}
+
+
 }

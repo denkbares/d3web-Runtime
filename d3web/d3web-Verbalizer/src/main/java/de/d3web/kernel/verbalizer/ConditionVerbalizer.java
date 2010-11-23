@@ -40,6 +40,8 @@ import de.d3web.core.inference.condition.CondNumIn;
 import de.d3web.core.inference.condition.CondNumLess;
 import de.d3web.core.inference.condition.CondNumLessEqual;
 import de.d3web.core.inference.condition.CondQuestion;
+import de.d3web.core.inference.condition.CondSolutionConfirmed;
+import de.d3web.core.inference.condition.CondSolutionRejected;
 import de.d3web.core.inference.condition.CondTextContains;
 import de.d3web.core.inference.condition.CondTextEqual;
 import de.d3web.core.inference.condition.Condition;
@@ -345,6 +347,14 @@ public class ConditionVerbalizer implements Verbalizer {
 			else if (tCondition instanceof CondTextContains) {
 				values.add(((CondTextContains) tCondition).getValue());
 			}
+		}
+		else if (tCondition instanceof CondSolutionRejected) {
+			values.add(getResourceBundle().getString("rule.CondRejected"));
+
+		}
+		else if (tCondition instanceof CondSolutionConfirmed) {
+			values.add(getResourceBundle().getString("rule.CondConfirmed"));
+
 		}
 		return getTerminalCondVerbalization((IDObject) object, operator, values,
 				tCondition.getClass().getSimpleName());

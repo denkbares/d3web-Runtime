@@ -66,4 +66,10 @@ public class CondSolutionRejected extends TerminalCondition {
 		return new CondSolutionRejected((Solution) getTerminalObjects().get(0));
 	}
 
+	@Override
+	public String toString() {
+		return getClass().getName() + "(" + getSolution().getName() + ")";
+	}
+
+
 }

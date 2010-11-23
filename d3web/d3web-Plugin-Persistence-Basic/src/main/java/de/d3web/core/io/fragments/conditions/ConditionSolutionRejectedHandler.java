@@ -31,7 +31,7 @@ import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.Solution;
 
 /**
- * FragmentHandler for CondSolutionConfirmed
+ * FragmentHandler for CondSolutionRejected
  * 
  * @author Reinhard Hatko
  * @created 22.11.2010
