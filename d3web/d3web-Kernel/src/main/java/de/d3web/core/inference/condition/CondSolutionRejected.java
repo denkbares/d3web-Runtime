@@ -18,11 +18,10 @@
  */
 package de.d3web.core.inference.condition;
 
+import de.d3web.core.knowledge.terminology.Rating;
+import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.UserRating;
-import de.d3web.core.knowledge.terminology.UserRating.Evaluation;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
@@ -47,18 +46,14 @@ public class CondSolutionRejected extends TerminalCondition {
 
 		Solution solution = (Solution) getTerminalObjects().get(0);
 
-		Value value = session.getBlackboard().getValue(solution,
+		Rating rating = (Rating) session.getBlackboard().getValue(solution,
 				session.getPSMethodInstance(PSMethodUserSelected.class));
 
-		// If no UserRating is set, a rating with state.unclear is returned
-		if (!(value instanceof UserRating)) {
-			throw NoAnswerException.getInstance();
-		}
-		else {
-			UserRating rating = (UserRating) value;
+		// If no Rating is given by the user, a Rating with state.unclear is
+		// returned
+		if (rating.hasState(State.UNCLEAR)) throw NoAnswerException.getInstance();
 
-			return rating.getEvaluation() == Evaluation.REJECTED;
-		}
+		return rating.hasState(State.EXCLUDED);
 
 	}
 

@@ -31,8 +31,6 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.UserRating;
-import de.d3web.core.knowledge.terminology.UserRating.Evaluation;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
@@ -83,15 +81,13 @@ public class ConditionSolutionUserRatingTest {
 
 		assertThat(value1.getState(), is(State.UNCLEAR));
 
-		blackboard.addValueFact(new DefaultFact(solution1, new UserRating(State.ESTABLISHED,
-				Evaluation.CONFIRMED), 0, psMethod, psMethod));
+		blackboard.addValueFact(new DefaultFact(solution1, new Rating(State.ESTABLISHED), 0,
+				psMethod, psMethod));
 
 		Rating value2 = (Rating) blackboard.getValue(solution1, psMethod);
 
-		assertThat(value2, is(UserRating.class));
 
 		assertThat(value2.getState(), is(State.ESTABLISHED));
-		assertThat(((UserRating) value2).getEvaluation(), is(Evaluation.CONFIRMED));
 		
 		
 	}
@@ -108,15 +104,13 @@ public class ConditionSolutionUserRatingTest {
 
 		assertThat(value1.getState(), is(State.UNCLEAR));
 
-		blackboard.addValueFact(new DefaultFact(solution2, new UserRating(State.EXCLUDED,
-				Evaluation.REJECTED), 0, psMethod, psMethod));
+		blackboard.addValueFact(new DefaultFact(solution2, new Rating(State.EXCLUDED), 0, psMethod,
+				psMethod));
 
 		Rating value2 = (Rating) blackboard.getValue(solution2, psMethod);
 
-		assertThat(value2, is(UserRating.class));
 
 		assertThat(value2.getState(), is(State.EXCLUDED));
-		assertThat(((UserRating) value2).getEvaluation(), is(Evaluation.REJECTED));
 
 	}
 
