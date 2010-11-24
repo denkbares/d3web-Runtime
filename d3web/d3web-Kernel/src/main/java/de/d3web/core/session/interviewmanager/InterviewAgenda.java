@@ -173,6 +173,16 @@ public final class InterviewAgenda {
 			activate(interviewObject);
 		}
 		else {
+			// if the interviewObject is a QASet:
+			if (interviewObject instanceof QASet) {
+				// check, if this QASet is either a question
+				// or a non-empty QContainer
+				QASet interviewQuestion = (QASet) interviewObject;
+				if (!interviewQuestion.isQuestionOrHasQuestions()) {
+					// if the QContainer is empty: Don't add it to the agenda!
+					return;
+				}
+			}
 			agenda.add(new AgendaEntry(interviewObject, InterviewState.ACTIVE));
 			organizeAgenda();
 		}

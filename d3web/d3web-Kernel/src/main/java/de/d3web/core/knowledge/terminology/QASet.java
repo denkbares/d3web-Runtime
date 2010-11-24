@@ -23,6 +23,7 @@ package de.d3web.core.knowledge.terminology;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.InterviewObject;
+import de.d3web.core.knowledge.TerminologyObject;
 
 /**
  * This is a container to store Questions or Sets of Questions. <BR>
@@ -42,5 +43,28 @@ public abstract class QASet extends NamedObject implements InterviewObject {
 	@Override
 	public Indication getDefaultInterviewValue() {
 		return new Indication(State.NEUTRAL);
+	}
+
+	/**
+	 * Checks, if this QASet is a question or a non-empty QContainer (non-empty
+	 * means that the QContainer has to have at least one question as a direct
+	 * or recursive child).
+	 * 
+	 * @created 24.11.2010
+	 * @return true, if this QASet is a question or a non-empty QContainer.
+	 *         false, otherwise.
+	 */
+	public boolean isQuestionOrHasQuestions() {
+		if (this instanceof Question) {
+			return true;
+		}
+		else if (this instanceof QContainer) {
+			for (TerminologyObject child : this.getChildren()) {
+				if (child instanceof QASet) {
+					return ((QASet) child).isQuestionOrHasQuestions();
+				}
+			}
+		}
+		return false;
 	}
 }
