@@ -61,7 +61,7 @@ public abstract class ActionNextQASet extends PSAction {
 	 * @created 18.11.2010
 	 * @return the indication state of the action
 	 */
-	protected abstract Indication getIndication();
+	public abstract Indication getIndication();
 
 	/**
 	 * @return List of QASets this action can indicate

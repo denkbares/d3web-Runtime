@@ -39,7 +39,7 @@ public class ActionIndication extends ActionNextQASet {
 	private static final Indication INDICATION = new Indication(State.INDICATED);
 
 	@Override
-	protected Indication getIndication() {
+	public Indication getIndication() {
 		return INDICATION;
 	}
 

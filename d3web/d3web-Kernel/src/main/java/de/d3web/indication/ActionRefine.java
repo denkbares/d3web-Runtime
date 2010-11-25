@@ -76,7 +76,7 @@ public class ActionRefine extends ActionNextQASet {
 	}
 
 	@Override
-	protected Indication getIndication() {
+	public Indication getIndication() {
 		return INDICATION;
 	}
 

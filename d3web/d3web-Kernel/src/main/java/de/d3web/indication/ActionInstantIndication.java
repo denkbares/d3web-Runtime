@@ -48,7 +48,7 @@ public class ActionInstantIndication extends ActionNextQASet {
 	}
 
 	@Override
-	protected Indication getIndication() {
+	public Indication getIndication() {
 		return INDICATION;
 	}
 

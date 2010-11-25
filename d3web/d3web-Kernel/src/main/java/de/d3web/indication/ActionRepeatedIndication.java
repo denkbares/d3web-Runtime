@@ -40,7 +40,7 @@ public class ActionRepeatedIndication extends ActionNextQASet {
 	private static final Indication INDICATION = new Indication(State.REPEATED_INDICATED);
 
 	@Override
-	protected Indication getIndication() {
+	public Indication getIndication() {
 		return INDICATION;
 	}
 

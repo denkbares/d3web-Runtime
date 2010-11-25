@@ -73,7 +73,7 @@ public class ActionClarify extends ActionNextQASet {
 	}
 
 	@Override
-	protected Indication getIndication() {
+	public Indication getIndication() {
 		return INDICATION;
 	}
 
