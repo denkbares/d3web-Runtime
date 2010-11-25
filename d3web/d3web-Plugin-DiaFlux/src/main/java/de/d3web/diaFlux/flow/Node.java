@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
@@ -120,6 +121,11 @@ public abstract class Node implements INode, CaseObjectSource {
 	@Override
 	public void undoAction(Session session) {
 
+	}
+
+	@Override
+	public List<? extends TerminologyObject> getForwardKnowledge() {
+		return Collections.EMPTY_LIST;
 	}
 
 	/**

@@ -25,6 +25,9 @@ package de.d3web.diaFlux.flow;
 
 import java.util.List;
 
+import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 
@@ -67,6 +70,19 @@ public interface INode extends CaseObjectSource {
 	 * @return s the name of the node
 	 */
 	String getName();
+
+	/**
+	 * Returns the collection of {@link Question} and {@link Solution}
+	 * instances, that the node is interested in receiving notifications of.
+	 * This list can usually be empty, as the conditions on outgoing edges are
+	 * checked against all changes. Certain types (like formula nodes) but have
+	 * to receive state changes of their own.
+	 * 
+	 * 
+	 * @return s the list of questions and diagnosis, this node wants to be
+	 *         notified of.
+	 */
+	List<? extends TerminologyObject> getForwardKnowledge();
 
 
 	/**

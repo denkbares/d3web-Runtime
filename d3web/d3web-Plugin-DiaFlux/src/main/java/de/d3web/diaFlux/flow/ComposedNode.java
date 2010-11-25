@@ -96,6 +96,13 @@ public class ComposedNode extends ActionNode {
 		StartNode startNode = DiaFluxUtils.findStartNode(session, action.getFlowName(),
 				action.getStartNodeName());
 
+		if (startNode == null) {
+			return false;
+			// throw new NullPointerException("Startnode '" +
+			// action.getStartNodeName()
+			// + "' in flow '" + action.getFlowName() + "' not found.");
+		}
+
 		// this node can be activated, if the called StartNode can be activated
 		return startNode.couldActivate(session);
 	}

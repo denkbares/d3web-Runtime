@@ -26,6 +26,7 @@ import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
@@ -58,6 +59,12 @@ public class ActionNode extends Node {
 	@Override
 	public void doAction(Session session) {
 		getAction().doIt(session, this, session.getPSMethodInstance(FluxSolver.class));
+
+	}
+
+	@Override
+	public List<? extends TerminologyObject> getForwardKnowledge() {
+		return action.getForwardObjects();
 	}
 
 	@Override
@@ -73,7 +80,7 @@ public class ActionNode extends Node {
 		super.takeSnapshot(session, snapshotNode, nodes);
 
 		// TODO do this for all types of nodes?
-		undoAction(session);
+		// undoAction(session);
 
 	}
 

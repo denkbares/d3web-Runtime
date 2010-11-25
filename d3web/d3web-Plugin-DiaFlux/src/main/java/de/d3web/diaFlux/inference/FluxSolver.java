@@ -24,10 +24,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.MethodKind;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PostHookablePSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -35,6 +35,7 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
+import de.d3web.diaFlux.flow.ActionNode;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
 import de.d3web.diaFlux.flow.EdgeMap;
 import de.d3web.diaFlux.flow.Flow;
@@ -42,6 +43,7 @@ import de.d3web.diaFlux.flow.IEdge;
 import de.d3web.diaFlux.flow.INode;
 import de.d3web.diaFlux.flow.INodeData;
 import de.d3web.diaFlux.flow.ISupport;
+import de.d3web.diaFlux.flow.NodeList;
 import de.d3web.diaFlux.flow.SnapshotNode;
 import de.d3web.diaFlux.flow.StartNode;
 import de.d3web.diaFlux.flow.ValidSupport;
@@ -65,8 +67,8 @@ public class FluxSolver implements PostHookablePSMethod {
 
 		if (!DiaFluxUtils.isFlowCase(session)) return;
 
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
-				("Initing FluxSolver with case: " + session));
+		Logger.getLogger(FluxSolver.class.getName()).info(
+				"Initing FluxSolver with case: " + session);
 
 		// if present, activate Startnode "Start" in Flow "Main"
 		Flow flow = DiaFluxUtils.getFlowSet(session).getByName("Main");
@@ -90,7 +92,7 @@ public class FluxSolver implements PostHookablePSMethod {
 
 	public static void activate(Session session, StartNode startNode, ISupport support) {
 
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+		Logger.getLogger(FluxSolver.class.getName()).info(
 				"Activating startnode '" + startNode.getName() + "' of flow '"
 						+ startNode.getFlow().getName() + "'.");
 
@@ -101,7 +103,7 @@ public class FluxSolver implements PostHookablePSMethod {
 	public static boolean removeSupport(Session session, INode node, ISupport support) {
 		INodeData nodeData = DiaFluxUtils.getNodeData(node, session);
 
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+		Logger.getLogger(FluxSolver.class.getName()).info(
 				"Removing support '" + support + "' from node '" + node + "'.");
 
 		boolean removed = nodeData.removeSupport(session, support);
@@ -109,7 +111,7 @@ public class FluxSolver implements PostHookablePSMethod {
 
 
 		if (!removed) {
-			Logger.getLogger(FluxSolver.class.getName()).log(Level.SEVERE,
+			Logger.getLogger(FluxSolver.class.getName()).severe(
 					"Could not remove support '" + support + "' from node '" + node + "'.");
 
 		}
@@ -118,14 +120,14 @@ public class FluxSolver implements PostHookablePSMethod {
 	}
 
 	public static boolean addSupport(Session session, INode node, ISupport support) {
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+		Logger.getLogger(FluxSolver.class.getName()).info(
 				"Adding support '" + support + "' to node '" + node + "'.");
 
 		INodeData nodeData = DiaFluxUtils.getNodeData(node, session);
 		boolean added = nodeData.addSupport(session, support);
 
 		if (!added) {
-			Logger.getLogger(FluxSolver.class.getName()).log(Level.SEVERE,
+			Logger.getLogger(FluxSolver.class.getName()).severe(
 					"Could not add support '" + support + "' to node '" + node + "'.");
 
 		}
@@ -138,7 +140,7 @@ public class FluxSolver implements PostHookablePSMethod {
 
 		if (!DiaFluxUtils.isFlowCase(session)) return;
 
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+		Logger.getLogger(FluxSolver.class.getName()).info(
 				"Start propagating: " + changes);
 
 		try {
@@ -172,10 +174,45 @@ public class FluxSolver implements PostHookablePSMethod {
 
 				}
 
+
 			}
 
+			for (PropagationEntry propagationEntry : changes) {
 
-			Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+				TerminologyObject object = propagationEntry.getObject();
+				NodeList knowledge = (NodeList) ((NamedObject) object).getKnowledge(
+						FluxSolver.class,
+						MethodKind.BACKWARD);
+
+				if (knowledge == null) continue;
+
+				for (INode node : knowledge) {
+
+					IPath path = DiaFluxUtils.getPath(node, session);
+
+					if (path.getNodeData(node).isSupported()) {
+
+						if (node instanceof ActionNode) {
+
+							PSAction action = ((ActionNode) node).getAction();
+
+							// TODO quick and dirty hack to reevaluate Formulas
+							if (action.getClass().getName().equals(
+									"cc.d3web.expression.eval.ExpressionAction")) {
+								node.doAction(session);
+							}
+
+						}
+
+						// ...propagate starting at this node
+						path.propagate(session, node);
+					}
+
+				}
+
+			}
+
+			Logger.getLogger(FluxSolver.class.getName()).info(
 					"Finished propagating.");
 
 		}
@@ -232,15 +269,20 @@ public class FluxSolver implements PostHookablePSMethod {
 				// continue flowing from the SSN, as it has been
 				// cancelled at this point in the previous propagation
 
-				for (IEdge edge : node.getOutgoingEdges()) {
-					INode nodeAfterSnapshot = edge.getEndNode();
+				// for (IEdge edge : node.getOutgoingEdges()) {
+				// INode nodeAfterSnapshot = edge.getEndNode();
+				//
+				// FluxSolver.addSupport(session, nodeAfterSnapshot, new
+				// ValidSupport());
+				//
+				// DiaFluxUtils.getPath(nodeAfterSnapshot,
+				// session).propagate(session,
+				// nodeAfterSnapshot);
+				// }
 
-					FluxSolver.addSupport(session, nodeAfterSnapshot, new ValidSupport());
+				FluxSolver.addSupport(session, node, new ValidSupport());
 
-					DiaFluxUtils.getPath(nodeAfterSnapshot, session).propagate(session,
-							nodeAfterSnapshot);
-				}
-
+				DiaFluxUtils.getPath(node, session).propagate(session, node);
 
 			}
 
@@ -260,15 +302,13 @@ public class FluxSolver implements PostHookablePSMethod {
 	}
 
 	public static void undoAction(Session session, INode node) {
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
-				("Undoing action of node: " + node));
+		Logger.getLogger(FluxSolver.class.getName()).info("Undoing action of node: " + node);
 
 		node.undoAction(session);
 	}
 
 	public static void doAction(Session session, INode node) {
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
-				("Doing action of node: " + node));
+		Logger.getLogger(FluxSolver.class.getName()).info("Doing action of node: " + node);
 
 		node.doAction(session);
 	}
@@ -278,13 +318,12 @@ public class FluxSolver implements PostHookablePSMethod {
 
 		IPath path = DiaFluxUtils.getPath(node, session);
 
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
-				"Start taking snapshot on path: " + path);
+		Logger.getLogger(FluxSolver.class.getName()).info("Start taking snapshot on path: " + path);
 
 		ArrayList<INode> nodes = new ArrayList<INode>();
 		path.takeSnapshot(session, node, node, nodes);
 
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+		Logger.getLogger(FluxSolver.class.getName()).info(
 				"Finished taking snapshot on over " + nodes.size() + " nodes.");
 
 		System.out.println(nodes);
