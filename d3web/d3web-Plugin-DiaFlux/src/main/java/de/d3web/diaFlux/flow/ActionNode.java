@@ -106,9 +106,10 @@ public class ActionNode extends Node {
 
 	@Override
 	public boolean couldActivate(Session session) {
-		if (action instanceof ActionNextQASet) {
-			boolean hasState = ((ActionNextQASet) action).getIndication().hasState(State.REPEATED_INDICATED);
-			return hasState;
+		// TODO repeated indication of Questions also without snapshots
+		// not sure yet if this works
+		if (action instanceof ActionRepeatedIndication) {
+			return true;
 		}
 		else {
 			return super.couldActivate(session);
