@@ -114,6 +114,15 @@ public interface INode extends CaseObjectSource {
 	boolean couldActivate(Session session);
 
 	/**
+	 * This method returns if the outgoing edges of this node can be fired.
+	 * 
+	 * @created 25.11.2010
+	 * @param session
+	 * @return
+	 */
+	boolean canFireEdges(Session session);
+
+	/**
 	 * This method is called during a snapshot. It has to reset this node (TODO
 	 * xplain) and can carry out node specific actions.
 	 * 

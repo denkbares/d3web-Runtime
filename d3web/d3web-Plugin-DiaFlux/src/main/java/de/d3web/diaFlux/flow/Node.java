@@ -124,6 +124,11 @@ public abstract class Node implements INode, CaseObjectSource {
 	}
 
 	@Override
+	public boolean canFireEdges(Session session) {
+		return true;
+	}
+
+	@Override
 	public List<? extends TerminologyObject> getForwardKnowledge() {
 		return Collections.EMPTY_LIST;
 	}

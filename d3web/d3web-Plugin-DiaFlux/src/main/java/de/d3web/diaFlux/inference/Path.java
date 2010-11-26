@@ -236,6 +236,8 @@ public class Path extends SessionObject implements IPath {
 		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
 				("Start flowing from node: " + node));
 
+		if (!node.canFireEdges(session)) return;
+
 		List<IEdge> edges = selectInactiveTrueEdges(node, session);
 
 		if (edges.isEmpty()) { // no edge to take

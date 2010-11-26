@@ -21,21 +21,27 @@
 package de.d3web.diaFlux.flow;
 
 import java.util.List;
+import java.util.logging.Logger;
 
+import de.d3web.abstraction.ActionSetValue;
+import de.d3web.abstraction.formula.FormulaElement;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Blackboard;
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
+import de.d3web.diaFlux.inference.CallFlowAction;
 import de.d3web.diaFlux.inference.FluxSolver;
-import de.d3web.indication.ActionIndication;
 import de.d3web.indication.ActionNextQASet;
+import de.d3web.indication.ActionRepeatedIndication;
 import de.d3web.scoring.ActionHeuristicPS;
 import de.d3web.scoring.HeuristicRating;
 import de.d3web.scoring.Score;
@@ -63,13 +69,50 @@ public class ActionNode extends Node {
 	}
 
 	@Override
+	public boolean canFireEdges(Session session) {
+		if (action instanceof ActionRepeatedIndication) {
+
+			// TODO check for IOBE, only works for Questions
+			Question question = (Question) ((ActionRepeatedIndication) action).getQASets().get(0);
+			PSMethod psMethod = session.getPSMethodInstance(FluxSolver.class);
+			Fact interviewFact = session.getBlackboard().getInterviewFact(question, psMethod);
+			Fact valueFact = session.getBlackboard().getValueFact(question);
+
+			if (valueFact == null) {
+				return true;
+			}
+
+			long indicationTime = interviewFact.getTime();
+			long valueTime = valueFact.getTime();
+			return valueTime > indicationTime;
+		}
+		else {
+			return super.canFireEdges(session);
+		}
+	}
+
+	@Override
 	public List<? extends TerminologyObject> getForwardKnowledge() {
-		return action.getForwardObjects();
+		List<? extends TerminologyObject> objects = action.getForwardObjects();
+		objects.removeAll(action.getBackwardObjects());
+
+		return objects;
 	}
 
 	@Override
 	public void undoAction(Session session) {
 		getAction().undo(session, this, session.getPSMethodInstance(FluxSolver.class));
+	}
+
+	@Override
+	public boolean couldActivate(Session session) {
+		if (action instanceof ActionNextQASet) {
+			boolean hasState = ((ActionNextQASet) action).getIndication().hasState(State.REPEATED_INDICATED);
+			return hasState;
+		}
+		else {
+			return super.couldActivate(session);
+		}
 	}
 
 	@Override
@@ -80,13 +123,12 @@ public class ActionNode extends Node {
 		super.takeSnapshot(session, snapshotNode, nodes);
 
 		// TODO do this for all types of nodes?
-		// undoAction(session);
+		undoAction(session);
 
 	}
 
 	/**
 	 * 
-	 * @created 18.11.2010
 	 * @param session
 	 * @param snapshotNode
 	 */
@@ -96,14 +138,13 @@ public class ActionNode extends Node {
 		
 		PSMethod psMethod = session.getPSMethodInstance(FluxSolver.class);
 		
-
+		// TODO can these be made more general?
 		if (action instanceof ActionNextQASet) {
 
-			QASet qaSet = ((ActionNextQASet) action).getQASets().get(0);
+			ActionNextQASet nextQASetaction = (ActionNextQASet) action;
+			QASet qaSet = nextQASetaction.getQASets().get(0);
 
-			State state = action instanceof ActionIndication
-					? State.INDICATED
-					: State.INSTANT_INDICATED;
+			State state = nextQASetaction.getIndication().getState();
 
 			blackboard.addInterviewFact(FactFactory.createIndicationFact(session, qaSet,
 					new Indication(state), snapshotNode, psMethod));
@@ -118,41 +159,35 @@ public class ActionNode extends Node {
 
 			blackboard.addValueFact(FactFactory.createFact(session, solution, value, snapshotNode, psMethod));
 			
+		} else if (action instanceof ActionSetValue) {
+			
+			Question question = ((ActionSetValue) action).getQuestion();
+			Object valueObj = ((ActionSetValue) action).getValue();
+			Value value;
+
+			if (valueObj instanceof FormulaElement) {
+
+				value = ((FormulaElement) valueObj).eval(session);
+
+			}
+			else {
+				value = (Value) valueObj;
+			}
+
+			blackboard.addValueFact(FactFactory.createFact(session, question, value, snapshotNode,
+					psMethod));
+
+		}
+		else if (action == NOOPAction.INSTANCE || action instanceof CallFlowAction) {
+			// nothing to do here...
+		}
+		else {
+			Logger.getLogger(getClass().getName()).severe(
+					"Could not create SnapshotFact for action: " + action.toString());
 		}
 
 
 	}
 
-	// if (action instanceof ActionIndication) {
-	// ActionIndication aind = (ActionIndication) action;
-	// List<QASet> backwardObjects = aind.getBackwardObjects();
-	// if (backwardObjects.size() != 1) {
-	// System.out.println("Check");
-	// }
-	// else {
-	//
-	// QASet set = backwardObjects.get(0);
-	//
-	// if (set instanceof Question) {
-	// Question question = (Question) set;
-	// Blackboard blackboard = session.getBlackboard();
-	// if (UndefinedValue.isNotUndefinedValue(blackboard.getValue(question))) {
-	//
-	// blackboard.addValueFact(
-	// new DefaultFact(question, UndefinedValue.getInstance(),
-	// PSMethodUserSelected.getInstance(),
-	// PSMethodUserSelected.getInstance()));
-	// }
-	//
-	// blackboard.removeInterviewFacts(question);
-	//
-	// }
-	// else {
-	// System.out.println("check");
-	// }
-	//
-	// }
-	//
-	// }
 
 }

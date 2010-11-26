@@ -199,7 +199,7 @@ public class FluxSolver implements PostHookablePSMethod {
 							// TODO quick and dirty hack to reevaluate Formulas
 							if (action.getClass().getName().equals(
 									"cc.d3web.expression.eval.ExpressionAction")) {
-								node.doAction(session);
+								doAction(session, node);
 							}
 
 						}
