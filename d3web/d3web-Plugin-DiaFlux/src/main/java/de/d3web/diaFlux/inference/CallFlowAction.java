@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- *
+ * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- *
+ * 
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- *
+ * 
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -35,8 +35,9 @@ import de.d3web.diaFlux.flow.RuleSupport;
 import de.d3web.diaFlux.flow.StartNode;
 
 /**
- *
- * @author Reinhard Hatko Created on: 03.11.2009
+ * 
+ * @author Reinhard Hatko
+ * @created 03.11.2009
  */
 public class CallFlowAction extends PSAction {
 
@@ -62,7 +63,7 @@ public class CallFlowAction extends PSAction {
 		if (startNode == null) {
 			Logger.getLogger(CallFlowAction.class.getName()).severe(
 					"Could not find start node '" + startNodeName + "' in flow '" +
-					flowName + "'.");
+							flowName + "'.");
 		}
 
 		// TODO not very nice
@@ -88,9 +89,8 @@ public class CallFlowAction extends PSAction {
 		if (startNode == null) {
 			Logger.getLogger(CallFlowAction.class.getName()).severe(
 					"Could not find start node '" + startNodeName + "' in flow '" +
-					flowName + "'.");
+							flowName + "'.");
 		}
-
 
 		// TODO this is most likely unnecessary, because this node has no
 		// support any more
@@ -100,7 +100,6 @@ public class CallFlowAction extends PSAction {
 
 		DiaFluxUtils.getPath(startNode, session).propagate(session, startNode);
 	}
-
 
 	@Override
 	public List<NamedObject> getBackwardObjects() {

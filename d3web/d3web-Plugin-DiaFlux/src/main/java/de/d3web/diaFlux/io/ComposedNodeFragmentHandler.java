@@ -22,57 +22,64 @@ import java.io.IOException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import org.w3c.dom.Text;
 
-import de.d3web.core.inference.PSAction;
-import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.diaFlux.flow.ActionNode;
+import de.d3web.diaFlux.flow.ComposedNode;
 import de.d3web.diaFlux.flow.FlowFactory;
 
 /**
  * 
+ * 
  * @author Reinhard Hatko
- * @created 11.11.2010
+ * @created 28.11.2010
  */
-public class ActionNodeFragmentHandler extends
+public class ComposedNodeFragmentHandler extends
 		AbstractNodeFragmentHandler {
 
-	private static final String ACTION = "Action";
+	private static final String COMPOSED = "Composed";
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		String id = element.getAttribute("id");
+		// String name = element.getAttribute("name");
+		String flowName = element.getElementsByTagName("FlowName").item(0).getTextContent();
+		String startNodeName = element.getElementsByTagName("StartNodeName").item(0).getTextContent();
 
-		Node actionElem = element.getElementsByTagName(ACTION).item(0);
-
-		PSAction action = (PSAction) PersistenceManager.getInstance().readFragment(
-				(Element) actionElem, kb);
-
-		return FlowFactory.getInstance().createActionNode(id, action);
-
+		return FlowFactory.getInstance().createComposedNode(id, flowName, startNodeName);
 	}
 
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
-		ActionNode node = (ActionNode) object;
+		ComposedNode node = (ComposedNode) object;
 		Element nodeElement = createNodeElement(node, doc);
 
-		Element actionElem = PersistenceManager.getInstance().writeFragment(node.getAction(), doc);
+		Element composedElem = doc.createElement(COMPOSED);
+		nodeElement.appendChild(composedElem);
 
-		nodeElement.appendChild(actionElem);
+		Element flowElem = doc.createElement("FlowName");
+		composedElem.appendChild(flowElem);
+
+		Text flowNameNode = doc.createTextNode(node.getFlowName());
+		flowElem.appendChild(flowNameNode);
+
+		Element startNodeElem = doc.createElement("StartNodeName");
+		composedElem.appendChild(startNodeElem);
+
+		Text startNameNode = doc.createTextNode(node.getStartNodeName());
+		startNodeElem.appendChild(startNameNode);
 
 		return nodeElement;
 	}
 
 	@Override
 	public boolean canRead(Element element) {
-		return element.getElementsByTagName(ACTION).getLength() == 1;
+		return element.getElementsByTagName(COMPOSED).getLength() == 1;
 	}
 
 	@Override
 	public boolean canWrite(Object object) {
-		return object instanceof ActionNode;
+		return object instanceof ComposedNode;
 	}
 
 }

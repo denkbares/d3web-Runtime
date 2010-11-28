@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- *
+ * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- *
+ * 
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- *
+ * 
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -119,12 +119,14 @@ public class ActionNode extends Node {
 	@Override
 	public void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes) {
 
-		createSnapshotFact(session, snapshotNode);
+		// createSnapshotFact(session, snapshotNode);
 
 		super.takeSnapshot(session, snapshotNode, nodes);
 
 		// TODO do this for all types of nodes?
 		undoAction(session);
+
+		getAction().doIt(session, snapshotNode, session.getPSMethodInstance(FluxSolver.class));
 
 	}
 
@@ -136,9 +138,9 @@ public class ActionNode extends Node {
 	private void createSnapshotFact(Session session, SnapshotNode snapshotNode) {
 
 		Blackboard blackboard = session.getBlackboard();
-		
+
 		PSMethod psMethod = session.getPSMethodInstance(FluxSolver.class);
-		
+
 		// TODO can these be made more general?
 		if (action instanceof ActionNextQASet) {
 
@@ -150,18 +152,21 @@ public class ActionNode extends Node {
 			blackboard.addInterviewFact(FactFactory.createIndicationFact(session, qaSet,
 					new Indication(state), snapshotNode, psMethod));
 
-		} else if (action instanceof ActionHeuristicPS) {
-			
+		}
+		else if (action instanceof ActionHeuristicPS) {
+
 			ActionHeuristicPS heuristicAction = (ActionHeuristicPS) action;
 			Solution solution = heuristicAction.getSolution();
 			Score score = heuristicAction.getScore();
-			
+
 			Value value = new HeuristicRating(score);
 
-			blackboard.addValueFact(FactFactory.createFact(session, solution, value, snapshotNode, psMethod));
-			
-		} else if (action instanceof ActionSetValue) {
-			
+			blackboard.addValueFact(FactFactory.createFact(session, solution, value, snapshotNode,
+					psMethod));
+
+		}
+		else if (action instanceof ActionSetValue) {
+
 			Question question = ((ActionSetValue) action).getQuestion();
 			Object valueObj = ((ActionSetValue) action).getValue();
 			Value value;
@@ -187,8 +192,6 @@ public class ActionNode extends Node {
 					"Could not create SnapshotFact for action: " + action.toString());
 		}
 
-
 	}
-
 
 }

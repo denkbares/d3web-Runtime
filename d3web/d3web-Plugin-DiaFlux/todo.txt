@@ -1,4 +1,10 @@
-PSMethod in ActionNextQASet??
+
+
++++NPE, wenn Frage umbenannt wird, die in einem FC benutzt wird
+
++++Können AlwaysAsk und Snapshot einander stören?. Wenn Snapshot nach Indizierung, dann ist die Indizierung neuer als ursprünglich.
+
+
 
 Richtiger PSM in ActionNode#takeSnapshot??
 
@@ -13,9 +19,7 @@ Lösung: Liste von bereits behandelten Knoten in der aktuellen Propagierung?
 
 
 
-Eindeutige IDS für Flowcharts
 
-Parser für Conditions und Actions?
 
 Persistenz für CommentNodes testen
 
@@ -40,11 +44,13 @@ Implementiert mit NodeRegistry. Nicht sonderlich schön, aber funktioniert.
 
 
 
+Done:
+PSMethod in ActionNextQASet??
 
-
+Eindeutige IDS für Flowcharts
 	
+Parser für Conditions und Actions?
 
-
-
+Knoten bestimmt aktivierung der Kanten (für RepeatedIndication)
 	
 	

@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- *
+ * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- *
+ * 
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- *
+ * 
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -28,24 +28,25 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.inference.CallFlowAction;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
+import de.d3web.diaFlux.inference.FluxSolver;
 import de.d3web.diaFlux.inference.NodeActiveCondition;
 
 /**
- *
+ * 
  * @author Reinhard Hatko
  * @created 10.08.10
  */
-public class ComposedNode extends ActionNode {
+public class ComposedNode extends Node {
 
+	private final CallFlowAction action;
 
 	public ComposedNode(String id, String name, CallFlowAction action) {
-		super(id, name, action);
+		super(id, name);
+		this.action = action;
 	}
-
 
 	@Override
 	public void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes) {
-
 
 		// collects all exit nodes in the called flow that match an
 		// active outgoing egde's condition
@@ -60,37 +61,45 @@ public class ComposedNode extends ActionNode {
 		// could be a problem with some weird unconnected flows
 		// or even with subflows that contain an SSN
 
-		 CallFlowAction action = (CallFlowAction) getAction();
-		 StartNode startNode = DiaFluxUtils.findStartNode(session,
-		 action.getFlowName(), action.getStartNodeName());
-		
-		 if (nodes.contains(startNode)) {
-			 return;
-		 }
+		StartNode startNode = DiaFluxUtils.findStartNode(session,
+				action.getFlowName(), action.getStartNodeName());
+
+		if (nodes.contains(startNode)) {
+			return;
+		}
 
 		for (INode exitNode : exitNodes) {
-			DiaFluxUtils.getPath(exitNode, session).takeSnapshot(session, snapshotNode, exitNode, nodes);
+			DiaFluxUtils.getPath(exitNode, session).takeSnapshot(session, snapshotNode, exitNode,
+					nodes);
 
 		}
 
+	}
 
+	@Override
+	public void doAction(Session session) {
+		action.doIt(session, this, session.getPSMethodInstance(FluxSolver.class));
+
+	}
+
+	@Override
+	public void undoAction(Session session) {
+		action.undo(session, this, session.getPSMethodInstance(FluxSolver.class));
 	}
 
 	@Override
 	public boolean couldActivate(Session session) {
 
-		//TODO better check would be nice
+		// TODO better check would be nice
 		for (IEdge edge : getIncomingEdges()) {
 			if (DiaFluxUtils.getEdgeData(edge, session).hasFired()) {
-				
+
 				// if one of the incoming edges has fired
 				// then the calling start node must be active
 				return false;
 			}
-			
+
 		}
-		
-		CallFlowAction action = (CallFlowAction) this.action;
 
 		// get the called startnode
 		StartNode startNode = DiaFluxUtils.findStartNode(session, action.getFlowName(),
@@ -108,13 +117,12 @@ public class ComposedNode extends ActionNode {
 	}
 
 	public String getFlowName() {
-		return ((CallFlowAction) getAction()).getFlowName();
+		return action.getFlowName();
 	}
 
 	public String getStartNodeName() {
-		return ((CallFlowAction) getAction()).getStartNodeName();
+		return action.getStartNodeName();
 	}
-
 
 	private Collection<INode> findActiveExitNodes(Session session) {
 
@@ -123,7 +131,6 @@ public class ComposedNode extends ActionNode {
 		Collection<INode> result = new HashSet<INode>();
 
 		for (IEdge edge : getOutgoingEdges()) {
-
 
 			// if the edge has not fired, the exit node is not active
 			// But: the edge could also be resetted already, so do not do this
@@ -149,14 +156,10 @@ public class ComposedNode extends ActionNode {
 			// is used!
 			// else if (condition instanceof FlowchartProcessedCondition)
 
-
-
 		}
 
 		return result;
 
 	}
-
-
 
 }
