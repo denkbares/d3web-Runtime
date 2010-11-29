@@ -36,10 +36,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import de.d3web.abstraction.ActionSetValue;
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.Rule;
 import de.d3web.core.io.fragments.PropertiesHandler;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.IDObjectComparator;
@@ -53,6 +56,12 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 import de.d3web.core.knowledge.terminology.info.Property.Autosave;
+import de.d3web.indication.ActionContraIndication;
+import de.d3web.indication.ActionNextQASet;
+import de.d3web.indication.ActionSuppressAnswer;
+import de.d3web.indication.inference.PSMethodStrategic;
+import de.d3web.scoring.ActionHeuristicPS;
+import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
  * PersistenceHandler for reading and writing basic knowledge Creation date:
@@ -230,12 +239,21 @@ public class BasicPersistenceHandler implements
 			}
 		}
 		kb.setInitQuestions(qaSets);
-
+		List<Object> readFragments = new LinkedList<Object>();
 		// creating rules and schemas (rules are written into basic.xml in
 		// former persistence versions
 		for (Element child : knowledgeslicesNodes) {
 			listener.updateProgress(time++ / abstime, "Loading knowledge base: knowledge slices");
-			pm.readFragment(child, kb);
+			readFragments.add(pm.readFragment(child, kb));
+		}
+		// set the context, if it doesn't exist
+		for (Object o : readFragments) {
+			if (o instanceof Rule) {
+				Rule r = (Rule) o;
+				if (r.getProblemsolverContext() == null) {
+					r.setProblemsolverContext(getContext(r.getAction()));
+				}
+			}
 		}
 		listener.updateProgress(1, "Loading knowledge base");
 	}
@@ -397,5 +415,37 @@ public class BasicPersistenceHandler implements
 			return null;
 		}
 		return result.get(0);
+	}
+
+	/**
+	 * Returns the Context used for creating a rule based on the action. This
+	 * only works for actions in the Kernel. This method should only be used
+	 * when it's absolutely necessary.
+	 * 
+	 * @created 29.06.2010
+	 * @param action PSAction
+	 * @return ProblemsolverContext
+	 */
+	private static Class<? extends PSMethod> getContext(PSAction action) {
+		if (action instanceof ActionContraIndication) {
+			return PSMethodStrategic.class;
+		}
+		else if (action instanceof ActionHeuristicPS) {
+			return PSMethodHeuristic.class;
+		}
+		else if (action instanceof ActionNextQASet) {
+			return PSMethodStrategic.class;
+		}
+		else if (action instanceof ActionSetValue) {
+			return PSMethodAbstraction.class;
+		}
+		else if (action instanceof ActionSuppressAnswer) {
+			return PSMethodStrategic.class;
+		}
+		else {
+			return null;
+			// throw new IllegalArgumentException("Action " + action +
+			// " is not known to rule factory");
+		}
 	}
 }

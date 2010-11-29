@@ -157,8 +157,8 @@ public final class RuleFactory {
 				null);
 	}
 
-	public static Rule createRule(String theId, PSAction theAction, Condition theCondition, Condition theException, Condition theContext) {
-		Rule rule = new Rule(theId, getContext(theAction));
+	public static Rule createRule(String theId, PSAction theAction, Condition theCondition, Condition theException, Condition theContext, Class<? extends PSMethod> psMethodContext) {
+		Rule rule = new Rule(theId, psMethodContext);
 		setRuleParams(rule, theAction, theCondition, theException);
 		rule.setContext(theContext);
 		return rule;
@@ -498,38 +498,6 @@ public final class RuleFactory {
 		rule.setCondition(theCondition);
 		rule.setException(theRuleException);
 
-	}
-
-	/**
-	 * Returns the Context used for creating a rule based on the action. This
-	 * only works for actions in the Kernel. This method should only be used
-	 * when it's absolutely necessary.
-	 * 
-	 * @created 29.06.2010
-	 * @param action PSAction
-	 * @return ProblemsolverContext
-	 */
-	public static Class<? extends PSMethod> getContext(PSAction action) {
-		if (action instanceof ActionContraIndication) {
-			return PSMethodStrategic.class;
-		}
-		else if (action instanceof ActionHeuristicPS) {
-			return PSMethodHeuristic.class;
-		}
-		else if (action instanceof ActionNextQASet) {
-			return PSMethodStrategic.class;
-		}
-		else if (action instanceof ActionSetValue) {
-			return PSMethodAbstraction.class;
-		}
-		else if (action instanceof ActionSuppressAnswer) {
-			return PSMethodStrategic.class;
-		}
-		else {
-			return null;
-			// throw new IllegalArgumentException("Action " + action +
-			// " is not known to rule factory");
-		}
 	}
 
 }

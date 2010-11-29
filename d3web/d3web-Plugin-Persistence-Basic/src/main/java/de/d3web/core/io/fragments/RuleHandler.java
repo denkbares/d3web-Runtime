@@ -111,7 +111,9 @@ public class RuleHandler implements FragmentHandler {
 				}
 			}
 		}
-		Rule rule = RuleFactory.createRule(id, action, condition, exception, context);
+		// PSMethodContext must be set by the method, which calls the fragment
+		// handler
+		Rule rule = RuleFactory.createRule(id, action, condition, exception, context, null);
 		if (active != null && active.length() > 0) {
 			rule.setActive(Boolean.parseBoolean(active));
 		}
