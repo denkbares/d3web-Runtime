@@ -28,6 +28,7 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.inference.CallFlowAction;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
+import de.d3web.diaFlux.inference.FlowchartProcessedCondition;
 import de.d3web.diaFlux.inference.FluxSolver;
 import de.d3web.diaFlux.inference.NodeActiveCondition;
 
@@ -61,12 +62,13 @@ public class ComposedNode extends Node {
 		// could be a problem with some weird unconnected flows
 		// or even with subflows that contain an SSN
 
-		StartNode startNode = DiaFluxUtils.findStartNode(session,
-				action.getFlowName(), action.getStartNodeName());
-
-		if (nodes.contains(startNode)) {
-			return;
-		}
+		// This is not right -> subflow containing SSN, cycle through only that one
+		// StartNode startNode = DiaFluxUtils.findStartNode(session,
+		// action.getFlowName(), action.getStartNodeName());
+		//
+		// if (nodes.contains(startNode)) {
+		// return;
+		// }
 
 		for (INode exitNode : exitNodes) {
 			DiaFluxUtils.getPath(exitNode, session).takeSnapshot(session, snapshotNode, exitNode,
@@ -152,9 +154,20 @@ public class ComposedNode extends Node {
 				}
 
 			}
-			// TODO add all active exit nodes and return when such a condition
-			// is used!
-			// else if (condition instanceof FlowchartProcessedCondition)
+			else if (condition instanceof FlowchartProcessedCondition) {
+
+				FlowchartProcessedCondition processedCondition = (FlowchartProcessedCondition) condition;
+				String flowName = processedCondition.getFlowName();
+
+				Flow flow = DiaFluxUtils.getFlowSet(session).getByName(flowName);
+				for (EndNode node : flow.getExitNodes()) {
+					if (DiaFluxUtils.getNodeData(node, session).isSupported()) {
+						result.add(node);
+					}
+
+				}
+
+			}
 
 		}
 

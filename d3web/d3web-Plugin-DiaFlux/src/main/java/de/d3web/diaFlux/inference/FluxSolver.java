@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- *
+ * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- *
+ * 
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- *
+ * 
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -49,10 +49,10 @@ import de.d3web.diaFlux.flow.StartNode;
 import de.d3web.diaFlux.flow.ValidSupport;
 
 /**
- *
+ * 
  * @author Reinhard Hatko
  * @created: 10.09.2009
- *
+ * 
  */
 public class FluxSolver implements PostHookablePSMethod {
 
@@ -108,8 +108,6 @@ public class FluxSolver implements PostHookablePSMethod {
 
 		boolean removed = nodeData.removeSupport(session, support);
 
-
-
 		if (!removed) {
 			Logger.getLogger(FluxSolver.class.getName()).severe(
 					"Could not remove support '" + support + "' from node '" + node + "'.");
@@ -146,7 +144,6 @@ public class FluxSolver implements PostHookablePSMethod {
 		try {
 			session.getPropagationManager().openPropagation();
 
-
 			for (PropagationEntry propagationEntry : changes) {
 
 				// strategic entries do not matter so far...
@@ -173,7 +170,6 @@ public class FluxSolver implements PostHookablePSMethod {
 					}
 
 				}
-
 
 			}
 
@@ -220,7 +216,6 @@ public class FluxSolver implements PostHookablePSMethod {
 			session.getPropagationManager().commitPropagation();
 		}
 
-
 	}
 
 	@Override
@@ -249,8 +244,7 @@ public class FluxSolver implements PostHookablePSMethod {
 				takeSnapshot(session, node);
 
 			}
-			
-			
+
 			// clear the current Snapshots
 			// new ones can be reached during the propagation
 			// starting from the SSNs
@@ -268,6 +262,9 @@ public class FluxSolver implements PostHookablePSMethod {
 			for (SnapshotNode node : currentSnapshots) {
 				// continue flowing from the SSN, as it has been
 				// cancelled at this point in the previous propagation
+
+				// TODO alternative: flow from nodes after SSN
+				// but then, only conditionless edges can start at SSNs
 
 				// for (IEdge edge : node.getOutgoingEdges()) {
 				// INode nodeAfterSnapshot = edge.getEndNode();
@@ -296,7 +293,6 @@ public class FluxSolver implements PostHookablePSMethod {
 			// continued to those that have still to be snapshotted. This would
 			// severely impact the snapshotting...
 
-
 		} while (!takenSnapshots.containsAll(currentSnapshots));
 
 	}
@@ -312,7 +308,6 @@ public class FluxSolver implements PostHookablePSMethod {
 
 		node.doAction(session);
 	}
-
 
 	public static void takeSnapshot(Session session, SnapshotNode node) {
 
@@ -340,6 +335,5 @@ public class FluxSolver implements PostHookablePSMethod {
 	public boolean hasType(Type type) {
 		return type == Type.strategic || type == Type.problem;
 	}
-
 
 }
