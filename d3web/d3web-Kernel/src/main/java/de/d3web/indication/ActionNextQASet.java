@@ -49,6 +49,11 @@ public abstract class ActionNextQASet extends PSAction {
 	@Override
 	public void doIt(Session session, Object source, PSMethod psmethod) {
 		for (QASet qaset : getQASets()) {
+
+			// FIXME: This is just a hotfix to prevent NPEs later... we need to
+			// find the reason for these null entries!
+			if (qaset == null) continue;
+
 			Fact fact = FactFactory.createFact(session, qaset, getIndication(),
 					source, psmethod);
 			session.getBlackboard().addInterviewFact(fact);
