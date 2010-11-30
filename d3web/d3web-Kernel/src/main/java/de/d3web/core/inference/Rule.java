@@ -538,40 +538,38 @@ public class Rule implements CaseObjectSource {
 	public void setProblemsolverContext(Class<? extends PSMethod> problemsolverContext) { // NOSONAR
 		if (this.problemsolverContext != problemsolverContext) {
 			// remove old indexes
-			if (this.problemsolverContext != null) {
-				if (getCondition() != null) {
-					removeFrom(
+			if (getCondition() != null) {
+				removeFrom(
 							this,
 							getCondition().getTerminalObjects(),
 							getProblemsolverContext(),
 							MethodKind.FORWARD);
-				}
-				if (getContext() != null) {
-					removeFrom(this,
+			}
+			if (getContext() != null) {
+				removeFrom(this,
 							getContext().getTerminalObjects(),
 							getProblemsolverContext(), MethodKind.FORWARD);
-				}
-				if (getException() != null) {
-					removeFrom(this, getException().getTerminalObjects(),
+			}
+			if (getException() != null) {
+				removeFrom(this, getException().getTerminalObjects(),
 							getProblemsolverContext(),
 							MethodKind.FORWARD);
-				}
-				if (getAction() != null && (getAction().getBackwardObjects() != null)) {
-					removeFrom(
+			}
+			if (getAction() != null && (getAction().getBackwardObjects() != null)) {
+				removeFrom(
 							this,
 							getAction().getBackwardObjects(),
 							getProblemsolverContext(),
 							MethodKind.BACKWARD);
-				}
-				if (getAction() != null && (getAction().getForwardObjects() != null)) {
-					removeFrom(
+			}
+			if (getAction() != null && (getAction().getForwardObjects() != null)) {
+				removeFrom(
 							this,
 							getAction().getForwardObjects(),
 							getProblemsolverContext(),
 							MethodKind.FORWARD);
-				}
-
 			}
+
 			// insert new indexes
 			this.problemsolverContext = problemsolverContext;
 			if (getCondition() != null) {
