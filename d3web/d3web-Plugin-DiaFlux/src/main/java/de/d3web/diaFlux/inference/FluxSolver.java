@@ -277,7 +277,7 @@ public class FluxSolver implements PostHookablePSMethod {
 				// nodeAfterSnapshot);
 				// }
 
-				FluxSolver.addSupport(session, node, new ValidSupport());
+				// FluxSolver.addSupport(session, node, new ValidSupport());
 
 				DiaFluxUtils.getPath(node, session).propagate(session, node);
 

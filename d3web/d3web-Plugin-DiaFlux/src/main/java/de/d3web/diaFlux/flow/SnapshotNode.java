@@ -55,13 +55,17 @@ public class SnapshotNode extends Node {
 
 		// this node is the new starting point of the flow
 		// so give it support
+		// ^^ not true if there are 2 SSN and this one is the END of the current
+		// flow.
 
 		// BUT: this is a problem, in cycles with just 1 SSN.
 		// if it gets activated once, it won't deactivate later, because it
 		// still holds is ValidSupport
 		// BUT: it should be active if it is the node that started the SS
 
-		if (this == snapshotNode) FluxSolver.addSupport(session, this, new ValidSupport());
+		if (this == snapshotNode) {
+			FluxSolver.addSupport(session, this, new ValidSupport());
+		}
 
 	}
 

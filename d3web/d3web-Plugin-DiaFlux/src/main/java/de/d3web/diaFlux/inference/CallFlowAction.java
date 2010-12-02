@@ -92,11 +92,20 @@ public class CallFlowAction extends PSAction {
 							flowName + "'.");
 		}
 
-		// TODO this is most likely unnecessary, because this node has no
-		// support any more
-		// then, calling propagate on the startnode, should remove the invalid
-		// support by this node
-		FluxSolver.removeSupport(session, startNode, support);
+		// This action can have already been undone when this composed node
+		// starts propagating after the exit node has been reached by ...
+		if (support != null) {
+
+			// TODO this is most likely unnecessary, because this node has no
+			// support any more
+			// then, calling propagate on the startnode, should remove the
+			// invalid
+			// support by this node
+			FluxSolver.removeSupport(session, startNode, support);
+			
+			
+			support = null;
+		}
 
 		DiaFluxUtils.getPath(startNode, session).propagate(session, startNode);
 	}

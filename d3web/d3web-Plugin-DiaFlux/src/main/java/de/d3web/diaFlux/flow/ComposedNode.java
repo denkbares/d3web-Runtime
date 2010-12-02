@@ -26,6 +26,7 @@ import java.util.List;
 
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.diaFlux.inference.CallFlowAction;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
 import de.d3web.diaFlux.inference.FlowchartProcessedCondition;
@@ -62,7 +63,8 @@ public class ComposedNode extends Node {
 		// could be a problem with some weird unconnected flows
 		// or even with subflows that contain an SSN
 
-		// This is not right -> subflow containing SSN, cycle through only that one
+		// This is not right -> subflow containing SSN, cycle through only that
+		// one
 		// StartNode startNode = DiaFluxUtils.findStartNode(session,
 		// action.getFlowName(), action.getStartNodeName());
 		//
@@ -124,6 +126,11 @@ public class ComposedNode extends Node {
 
 	public String getStartNodeName() {
 		return action.getStartNodeName();
+	}
+
+	@Override
+	public SessionObject createCaseObject(Session session) {
+		return new ComposedNodeData(this);
 	}
 
 	private Collection<INode> findActiveExitNodes(Session session) {
