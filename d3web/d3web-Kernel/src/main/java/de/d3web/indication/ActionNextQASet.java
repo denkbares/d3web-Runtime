@@ -99,6 +99,11 @@ public abstract class ActionNextQASet extends PSAction {
 		// New handling of indications: Notify blackboard of indication and let
 		// the blackboard do all the work
 		for (QASet qaset : getQASets()) {
+
+			// FIXME: This is just a hotfix to prevent NPEs later... we need to
+			// find the reason for these null entries!
+			if (qaset == null) continue;
+
 			session.getBlackboard().removeInterviewFact(qaset, source);
 		}
 	}
