@@ -595,7 +595,7 @@ public final class XMLUtil {
 		for (Element child : getElementList(father.getChildNodes())) {
 			Property<Object> property = Property.getUntypedProperty(child.getAttribute("property"));
 			String s = child.getTextContent();
-			Object value;
+			Object value = "";
 			if (s.trim().length() > 0) {
 				try {
 					value = property.parseValue(s);
@@ -606,7 +606,7 @@ public final class XMLUtil {
 					throw new IOException(e);
 				}
 			}
-			else {
+			else if (child.getChildNodes().getLength() > 0) {
 				value = PersistenceManager.getInstance().readFragment(
 						getElementList(child.getChildNodes()).get(0), kb);
 			}

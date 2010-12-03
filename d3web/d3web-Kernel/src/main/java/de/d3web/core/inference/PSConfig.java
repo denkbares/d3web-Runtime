@@ -84,7 +84,19 @@ public class PSConfig implements Comparable<PSConfig> {
 			return comparePrioritiy;
 		}
 		else {
-			return psMethod.getClass().toString().compareTo(o.getPsMethod().getClass().toString());
+			if (psMethod != null && o.getPsMethod() != null) {
+				return psMethod.getClass().toString().compareTo(
+						o.getPsMethod().getClass().toString());
+			}
+			else if (psMethod != null) {
+				return 1;
+			}
+			else if (o.getPsMethod() != null) {
+				return -1;
+			}
+			else {
+				return pluginID.compareTo(o.getPluginID());
+			}
 		}
 	}
 }
