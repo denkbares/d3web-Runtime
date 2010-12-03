@@ -774,15 +774,19 @@ public final class KnowledgeBaseManagement {
 	}
 
 	/**
-	 * Finds the {@link IDObject} with the specified name. This method is case
-	 * insensitive
+	 * Finds the {@link TerminologyObject} with the specified name. This method
+	 * is case insensitive
 	 * 
 	 * @created 10.11.2010
-	 * @param name Name of the {@link IDObject}
-	 * @return {@link IDObject} with the specified name
+	 * @param name Name of the {@link TerminologyObject}
+	 * @return {@link TerminologyObject} with the specified name
 	 */
-	public IDObject findIDObjectByName(String name) {
-		for (IDObject object : knowledgeBase.getAllIDObjects()) {
+	public TerminologyObject findTerminologyObjectByName(String name) {
+		List<TerminologyObject> objects = new LinkedList<TerminologyObject>();
+		objects.addAll(knowledgeBase.getQContainers());
+		objects.addAll(knowledgeBase.getSolutions());
+		objects.addAll(knowledgeBase.getQuestions());
+		for (TerminologyObject object : objects) {
 			if (object.getName().equalsIgnoreCase(name)) {
 				return object;
 			}
