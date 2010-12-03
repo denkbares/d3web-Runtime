@@ -230,7 +230,6 @@
 		<module>d3web-EmpiricalTesting</module>
 		<module>d3web-PluginManager</module>
 		<module>d3web-GlobalTests</module>
-		<module>d3web-Scoring</module>
 
 		<module>d3web-Plugin-BasicProperties</module>
 		<module>d3web-Plugin-CostBenefit</module>
