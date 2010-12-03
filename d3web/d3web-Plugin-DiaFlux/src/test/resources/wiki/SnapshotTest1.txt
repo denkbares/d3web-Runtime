@@ -1,0 +1,126 @@
+!!Test2
+
+Erwartetes Verhalten:\\
+* Zyklus muß mehrfach durchlaufen werden können. \\
+
+
+vvv Altes Verhalten: 
+Problem: Snapshotknoten ist beim 2. Erreichen schon aktiv.\\
+2 Möglichkeiten für Aktivierung bei Snapshot-Knoten:\\
+# "Eingehend aktiv", d.h. Knoten wurde in aktueller Propagierung bereits aktiviert. Snapshot wurde noch nicht ausgeführt
+# "Ausgehend aktiv", d.h. Knoten wurde in vorhergehender Propagierung aktiviert, Snapshot wurde bereits ausgeführt. (Möglich, wenn  ein Zykel nur 1 SSK enthält.)
+
+Workaround: Snapshot-Knoten auch aktivieren, wenn er schon aktiv ist. \\
+Aber: auch ausgehende Kanten (und Knoten) sind schon aktiv, solange der Snapshot nicht genommen wurde. Diese werden erst vor der nächsten Propagierung beim Erstellen des Snapshots deaktiviert.\\
+Nach dem Erstellen des Snapshots muss der flowchart ab dem Snapshotknoten abgearbeitet werden.
+
+
+
+[{KnowWEPlugin quickinterview}]
+
+
+
+
+%%KnowWEPlugin 
+@taghandlername: diaflux
+%
+
+
+%%KnowledgeBase 
+  
+  
+  @uses: this
+%
+
+%%DiaFlux
+
+<flowchart fcid="sh001" name="Main" icon="sanduhr.gif" width="750" height="250" idCounter="31">
+
+	<!-- nodes of the flowchart -->
+	<node fcid="Start_ID">
+		<position left="41" top="43"></position>
+		<start>Start</start>
+	</node>
+
+	<node fcid="Frage21_ID">
+		<position left="180" top="32"></position>
+		<action markup="KnOffice">ALWAYS[Frage21]</action>
+	</node>
+
+	<node fcid="Frage22_ID">
+		<position left="372" top="32"></position>
+		<action markup="KnOffice">ALWAYS[Frage22]</action>
+	</node>
+
+	<node fcid="Snapshot_ID">
+		<position left="382" top="133"></position>
+		<snapshot>Snapshot</snapshot>
+	</node>
+
+	<node fcid="Frage23_ID">
+		<position left="180" top="122"></position>
+		<action markup="KnOffice">Frage23</action>
+	</node>
+
+
+	<!-- rules of the flowchart -->
+	<edge fcid="#rule_24">
+		<origin>Start_ID</origin>
+		<target>Frage21_ID</target>
+	</edge>
+
+	<edge fcid="#rule_26">
+		<origin>Frage21_ID</origin>
+		<target>Frage22_ID</target>
+		<guard markup="KnOffice">"Frage21" = "Antw11"</guard>
+	</edge>
+
+	<edge fcid="#rule_28">
+		<origin>Frage22_ID</origin>
+		<target>Snapshot_ID</target>
+		<guard markup="KnOffice">"Frage22" = "Antw21"</guard>
+	</edge>
+
+	<edge fcid="#rule_30">
+		<origin>Snapshot_ID</origin>
+		<target>Frage23_ID</target>
+	</edge>
+
+	<edge fcid="#rule_31">
+		<origin>Frage23_ID</origin>
+		<target>Frage21_ID</target>
+		<guard markup="KnOffice">"Frage23" = "Antw31"</guard>
+	</edge>
+
+	<preview mimetype="text/html">
+		<![CDATA[
+<DIV class="Flowchart" style=" width: 751px; height: 251px;"><DIV class="Node" id="Start_ID" style="left: 41px;top: 43px; width: 72px; height: 20px;"><DIV class="start" style=" width: 62px; height: 20px;"><DIV class="decorator" style=" width: 25px; height: 25px;"></DIV><DIV class="title" style=" width: 60px; height: 16px;">Start</DIV></DIV></DIV><DIV class="Node" id="Frage21_ID" style="left: 180px;top: 32px; width: 96px; height: 42px;"><DIV class="question" style=" width: 82px; height: 42px;"><DIV class="decorator" style=" width: 15px; height: 18px;"></DIV><DIV class="ActionPane" style=" width: 80px; height: 39px;"><DIV class="object" style=" width: 80px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/single.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>Frage21</DIV><DIV class="value" style=" width: 80px; height: 20px;">always ask</DIV></DIV></DIV></DIV><DIV class="Node" id="Frage22_ID" style="left: 372px;top: 32px; width: 96px; height: 42px;"><DIV class="question" style=" width: 82px; height: 42px;"><DIV class="decorator" style=" width: 15px; height: 18px;"></DIV><DIV class="ActionPane" style=" width: 80px; height: 39px;"><DIV class="object" style=" width: 80px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/single.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>Frage22</DIV><DIV class="value" style=" width: 80px; height: 20px;">always ask</DIV></DIV></DIV></DIV><DIV class="Node" id="Snapshot_ID" style="left: 382px;top: 133px; width: 86px; height: 20px;"><DIV class="snapshot" style=" width: 74px; height: 20px;"><DIV class="decorator" style=" width: 25px; height: 25px;"></DIV><DIV class="title" style=" width: 72px; height: 16px;">Snapshot</DIV></DIV></DIV><DIV class="Node" id="Frage23_ID" style="left: 180px;top: 122px; width: 96px; height: 42px;"><DIV class="question" style=" width: 82px; height: 42px;"><DIV class="decorator" style=" width: 15px; height: 18px;"></DIV><DIV class="ActionPane" style=" width: 80px; height: 39px;"><DIV class="object" style=" width: 80px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/single.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>Frage23</DIV><DIV class="value" style=" width: 80px; height: 20px;">ask</DIV></DIV></DIV></DIV><DIV class="Rule" id="#rule_24" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="h_line" style="position: absolute;left: 113px;top: 53px;overflow: visible; width: 67px; height: 1px;"><DIV class="arrow_right" style=" width: 6px; height: 5px;"></DIV></DIV><DIV style="position: absolute;left: 113px;top: 53px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 3px; width: 0px; height: 0px;"><DIV class="GuardPane" style=" width: 0px; height: 0px;"><DIV style=" width: 0px; height: 0px;">  </DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 110px;top: 50px;overflow: hidden; width: 73px; height: 7px;"></DIV></DIV></DIV><DIV class="Rule" id="#rule_26" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="h_line" style="position: absolute;left: 276px;top: 53px;overflow: visible; width: 96px; height: 1px;"><DIV class="arrow_right" style=" width: 6px; height: 5px;"></DIV></DIV><DIV style="position: absolute;left: 276px;top: 53px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 3px; width: 39px; height: 14px;"><DIV class="GuardPane" style=" width: 39px; height: 14px;"><DIV style=" width: 39px; height: 14px;">Antw11 </DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 273px;top: 50px;overflow: hidden; width: 102px; height: 7px;"></DIV></DIV></DIV><DIV class="Rule" id="#rule_28" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="v_line" style="position: absolute;left: 420px;top: 74px;overflow: visible; width: 1px; height: 59px;"><DIV class="arrow_down" style=" width: 5px; height: 6px;"></DIV></DIV><DIV style="position: absolute;left: 420px;top: 74px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 2px;top: 3px; width: 39px; height: 14px;"><DIV class="GuardPane" style=" width: 39px; height: 14px;"><DIV style=" width: 39px; height: 14px;">Antw21 </DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 417px;top: 71px;overflow: hidden; width: 7px; height: 65px;"></DIV></DIV></DIV><DIV class="Rule" id="#rule_30" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="h_line" style="position: absolute;left: 276px;top: 143px;overflow: visible; width: 106px; height: 1px;"><DIV class="arrow_left" style=" width: 6px; height: 5px;"></DIV></DIV><DIV style="position: absolute;left: 381px;top: 143px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;right: 3px; width: 0px; height: 0px;"><DIV class="GuardPane" style=" width: 0px; height: 0px;"><DIV style=" width: 0px; height: 0px;">  </DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 273px;top: 140px;overflow: hidden; width: 112px; height: 7px;"></DIV></DIV></DIV><DIV class="Rule" id="#rule_31" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="v_line" style="position: absolute;left: 228px;top: 74px;overflow: visible; width: 1px; height: 48px;"><DIV class="arrow_up" style=" width: 5px; height: 6px;"></DIV></DIV><DIV style="position: absolute;left: 228px;top: 121px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 2px;bottom: 3px; width: 39px; height: 14px;"><DIV class="GuardPane" style=" width: 39px; height: 14px;"><DIV style=" width: 39px; height: 14px;">Antw31 </DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 225px;top: 71px;overflow: hidden; width: 7px; height: 54px;"></DIV></DIV></DIV></DIV>
+		]]>
+	</preview>
+</flowchart>	
+
+
+%
+
+%%Question
+Fragebogen #1
+- Frage21 [oc]
+-- Antw11
+-- Antw12
+- Frage22 [oc]
+-- Antw21
+-- Antw22
+- Frage23 [oc]
+-- Antw31
+-- Antw32
+- Frage24 [oc]
+-- Antw41
+-- Antw42
+- Frage25 [oc]
+-- Antw51
+-- Antw52
+
+%
+
+
+

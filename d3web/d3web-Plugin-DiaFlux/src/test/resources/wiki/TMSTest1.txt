@@ -1,0 +1,137 @@
+Just a small test for TMS. After the first cycle, the snapshot must never be reached again.
+
+
+%%Knowledgebase
+@uses: this
+%
+
+[{KnowWEPlugin quickinterview}]
+
+
+%%KnowWEPlugin
+@TagHandlerName: diaflux
+%
+
+%%DiaFlux
+
+<flowchart fcid="sh001" name="Main" icon="sanduhr.gif" width="750" height="200" idCounter="34">
+
+	<!-- nodes of the flowchart -->
+	<node fcid="Start_ID">
+		<position left="65" top="36"></position>
+		<start>Start</start>
+	</node>
+
+	<node fcid="Frage1_ID">
+		<position left="223" top="25"></position>
+		<action markup="KnOffice">Frage1</action>
+	</node>
+
+	<node fcid="Frage3_1_ID">
+		<position left="420" top="25"></position>
+		<action markup="KnOffice">ALWAYS[Frage3]</action>
+	</node>
+
+	<node fcid="snapshot_ID">
+		<position left="425" top="128"></position>
+		<snapshot>Snapshot</snapshot>
+	</node>
+
+	<node fcid="Exit_ID">
+		<position left="596" top="36"></position>
+		<exit>Exit1</exit>
+	</node>
+
+	<node fcid="Frage3_2_ID">
+		<position left="223" top="117"></position>
+		<action markup="KnOffice">ALWAYS[Frage3]</action>
+	</node>
+
+
+	<!-- rules of the flowchart -->
+	<edge fcid="#rule_24">
+		<origin>Start_ID</origin>
+		<target>Frage1_ID</target>
+	</edge>
+
+	<edge fcid="#rule_26">
+		<origin>Frage1_ID</origin>
+		<target>Frage3_1_ID</target>
+		<guard markup="KnOffice">"Frage1" = "Antw11"</guard>
+	</edge>
+
+	<edge fcid="#rule_29">
+		<origin>Frage3_1_ID</origin>
+		<target>snapshot_ID</target>
+		<guard markup="KnOffice">"Frage3" = "Antw31"</guard>
+	</edge>
+
+	<edge fcid="#rule_31">
+		<origin>Frage3_1_ID</origin>
+		<target>Exit_ID</target>
+		<guard markup="KnOffice">"Frage3" = "Antw32"</guard>
+	</edge>
+
+	<edge fcid="#rule_33">
+		<origin>Frage3_2_ID</origin>
+		<target>Frage1_ID</target>
+		<guard markup="KnOffice">"Frage3" = "Antw33"</guard>
+	</edge>
+
+	<edge fcid="#rule_34">
+		<origin>snapshot_ID</origin>
+		<target>Frage3_2_ID</target>
+	</edge>
+
+	<preview mimetype="text/html">
+		<![CDATA[
+<DIV class="Flowchart" style=" width: 751px; height: 201px;"><DIV class="Node" id="Start_ID" style="left: 65px;top: 36px; width: 72px; height: 20px;"><DIV class="start" style=" width: 62px; height: 20px;"><DIV class="decorator" style=" width: 25px; height: 25px;"></DIV><DIV class="title" style=" width: 60px; height: 16px;">Start</DIV></DIV></DIV><DIV class="Node" id="Frage1_ID" style="left: 223px;top: 25px; width: 96px; height: 42px;"><DIV class="question" style=" width: 82px; height: 42px;"><DIV class="decorator" style=" width: 15px; height: 18px;"></DIV><DIV class="ActionPane" style=" width: 80px; height: 39px;"><DIV class="object" style=" width: 80px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/single.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>Frage1</DIV><DIV class="value" style=" width: 80px; height: 20px;">ask</DIV></DIV></DIV></DIV><DIV class="Node" id="Frage3_1_ID" style="left: 420px;top: 25px; width: 96px; height: 42px;"><DIV class="question" style=" width: 82px; height: 42px;"><DIV class="decorator" style=" width: 15px; height: 18px;"></DIV><DIV class="ActionPane" style=" width: 80px; height: 39px;"><DIV class="object" style=" width: 80px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/single.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>Frage3</DIV><DIV class="value" style=" width: 80px; height: 20px;">always ask</DIV></DIV></DIV></DIV><DIV class="Node" id="snapshot_ID" style="left: 425px;top: 128px; width: 86px; height: 20px;"><DIV class="snapshot" style=" width: 74px; height: 20px;"><DIV class="decorator" style=" width: 25px; height: 25px;"></DIV><DIV class="title" style=" width: 72px; height: 16px;">Snapshot</DIV></DIV></DIV><DIV class="Node" id="Exit_ID" style="left: 596px;top: 36px; width: 74px; height: 20px;"><DIV class="exit" style=" width: 62px; height: 20px;"><DIV class="decorator" style=" width: 25px; height: 25px;"></DIV><DIV class="title" style=" width: 60px; height: 16px;">Exit1</DIV></DIV></DIV><DIV class="Rule" id="#rule_24" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="h_line" style="position: absolute;left: 137px;top: 46px;overflow: visible; width: 86px; height: 1px;"><DIV class="arrow_right" style=" width: 6px; height: 5px;"></DIV></DIV><DIV style="position: absolute;left: 137px;top: 46px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 3px; width: 0px; height: 0px;"><DIV class="GuardPane" style=" width: 0px; height: 0px;"><DIV style=" width: 0px; height: 0px;"> </DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 134px;top: 43px;overflow: hidden; width: 92px; height: 7px;"></DIV></DIV></DIV><DIV class="Rule" id="#rule_34" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="h_line" style="position: absolute;left: 319px;top: 138px;overflow: visible; width: 106px; height: 1px;"><DIV class="arrow_left" style=" width: 6px; height: 5px;"></DIV></DIV><DIV style="position: absolute;left: 424px;top: 138px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;right: 3px; width: 0px; height: 0px;"><DIV class="GuardPane" style=" width: 0px; height: 0px;"><DIV style=" width: 0px; height: 0px;"> </DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 316px;top: 135px;overflow: hidden; width: 112px; height: 7px;"></DIV></DIV></DIV><DIV class="Rule" id="#rule_26" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="h_line" style="position: absolute;left: 319px;top: 46px;overflow: visible; width: 101px; height: 1px;"><DIV class="arrow_right" style=" width: 6px; height: 5px;"></DIV></DIV><DIV style="position: absolute;left: 319px;top: 46px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 3px; width: 39px; height: 14px;"><DIV class="GuardPane" style=" width: 39px; height: 14px;"><DIV style=" width: 39px; height: 14px;">Antw11</DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 316px;top: 43px;overflow: hidden; width: 107px; height: 7px;"></DIV></DIV></DIV><DIV class="Rule" id="#rule_29" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="v_line" style="position: absolute;left: 468px;top: 67px;overflow: visible; width: 1px; height: 61px;"><DIV class="arrow_down" style=" width: 5px; height: 6px;"></DIV></DIV><DIV style="position: absolute;left: 468px;top: 67px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 2px;top: 3px; width: 39px; height: 14px;"><DIV class="GuardPane" style=" width: 39px; height: 14px;"><DIV style=" width: 39px; height: 14px;">Antw31</DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 465px;top: 64px;overflow: hidden; width: 7px; height: 67px;"></DIV></DIV></DIV><DIV class="Rule" id="#rule_31" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="h_line" style="position: absolute;left: 516px;top: 46px;overflow: visible; width: 80px; height: 1px;"><DIV class="arrow_right" style=" width: 6px; height: 5px;"></DIV></DIV><DIV style="position: absolute;left: 516px;top: 46px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 3px; width: 39px; height: 14px;"><DIV class="GuardPane" style=" width: 39px; height: 14px;"><DIV style=" width: 39px; height: 14px;">Antw32</DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 513px;top: 43px;overflow: hidden; width: 86px; height: 7px;"></DIV></DIV></DIV><DIV class="Node" id="Frage3_2_ID" style="left: 223px;top: 117px; width: 96px; height: 42px;"><DIV class="question" style=" width: 82px; height: 42px;"><DIV class="decorator" style=" width: 15px; height: 18px;"></DIV><DIV class="ActionPane" style=" width: 80px; height: 39px;"><DIV class="object" style=" width: 80px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/single.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>Frage3</DIV><DIV class="value" style=" width: 80px; height: 20px;">always ask</DIV></DIV></DIV></DIV><DIV class="Rule" id="#rule_33" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="v_line" style="position: absolute;left: 271px;top: 67px;overflow: visible; width: 1px; height: 50px;"><DIV class="arrow_up" style=" width: 5px; height: 6px;"></DIV></DIV><DIV style="position: absolute;left: 271px;top: 116px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 2px;bottom: 3px; width: 39px; height: 14px;"><DIV class="GuardPane" style=" width: 39px; height: 14px;"><DIV style=" width: 39px; height: 14px;">Antw33</DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 268px;top: 64px;overflow: hidden; width: 7px; height: 56px;"></DIV></DIV></DIV></DIV>
+		]]>
+	</preview>
+</flowchart>	
+
+
+
+%
+
+
+%%Question
+
+Bogen #1
+- Frage1 [oc]
+-- Antw11
+-- Antw12
+- Frage2 [num] {s}
+- Frage3 [oc]
+-- Antw31
+-- Antw32
+-- Antw33
+- Frage4 [num] {m}
+%
+
+
+! vvv Altes Verhalten, nicht mehr aktuell, nur für die Geschichtsbücher
+
+
+Erwartetes Verhalten:
+* Zyklus durchlaufbar
+* Frage3 wird nach erreichen des SnapShot nochmal gestellt
+
+Tatsächliches Verhalten:
+* Bei Antwortfolge: Antw11 -> Antw31 -> (Frage2 unknown) -> Antw33 wird Snapshot erstellt und Frage1 wieder erreicht
+* Bei Antwortfolge: Antw11 -> Antw31 -> Antw33 wird Snapshot erstellt, aber die Antw33 wird beim erstellen des Snapshots im Knoten vor dem SSN auf undefined gesetzt. => Daher ist die ausgehende Kante mit Bedingung (Frage3 = Antw33) falsch (NoAnswerException).
+
+Muss erneutes Stellen einer Frage anders implementiert werden??
+
+
+Tatsächliches Verhalten:
+* Snapshot wird erst im nächsten Propagierungszyklus erstellt, daher wird der nächste Knoten ("Frage3") sofort erreicht und aktiviert.
+* Beim nächsten Propagierungszyklus wird der Snapshot erstellt, der Wert der Frage und die Indizierung werden zurückgezogen. Die Frage wird aber nicht erneut indiziert, da der Knoten ja schon aktiv ist.
+
+Lösung:
+* Propagierung bei erreichen eines Snapshots abbrechen? P
+* Muss die ganze Propagierung abgebrochen werden, oder nur die Ausführung des Flowcharts ab dem Snapshot-Knoten?
+* Problem: Aktionen, die nach dem Snapshot kommen und ausgeführt werden könnten, kommen erst im nächsten Zyklus dran. 
+
+
+
