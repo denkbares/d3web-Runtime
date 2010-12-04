@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2010 University Wuerzburg, Computer Science VI
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.diaFlux.io;
 
@@ -43,9 +43,8 @@ import de.d3web.diaFlux.flow.IEdge;
 import de.d3web.diaFlux.flow.INode;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
 
-
 /**
- *
+ * 
  * @author Reinhard Hatko
  * @created 11.11.2010
  */
@@ -61,6 +60,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 		HANDLERS.add(new ActionNodeFragmentHandler());
 		HANDLERS.add(new CommentNodeFragmentHandler());
 		HANDLERS.add(new SnapshotNodeFragmentHandler());
+		HANDLERS.add(new ComposedNodeFragmentHandler());
 
 	}
 
@@ -92,11 +92,10 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 
 		Util.writeDocumentToOutputStream(doc, stream);
 
-
 	}
 
 	/**
-	 *
+	 * 
 	 * @param flow
 	 * @param doc
 	 * @param ksNode
@@ -128,7 +127,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	}
 
 	/**
-	 *
+	 * 
 	 * @param edge
 	 * @param parent
 	 * @param doc
@@ -151,7 +150,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	}
 
 	/**
-	 *
+	 * 
 	 * @param node
 	 * @param parent
 	 * @param doc
@@ -167,13 +166,11 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 		nodeElem.setAttribute("id", node.getID());
 		nodeElem.setAttribute("name", node.getName());
 
-
-
 		return nodeElem;
 	}
 
 	/**
-	 *
+	 * 
 	 * @param node
 	 * @throws NoSuchFragmentHandlerException
 	 */
@@ -187,7 +184,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	}
 
 	/**
-	 *
+	 * 
 	 * @param node
 	 * @throws NoSuchFragmentHandlerException
 	 */
@@ -222,11 +219,10 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 			DiaFluxUtils.addFlow(flow, knowledgeBase);
 		}
 
-
 	}
 
 	/**
-	 *
+	 * 
 	 * @created 11.11.2010
 	 * @param knowledgeBase
 	 * @param flowElem
@@ -255,7 +251,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	}
 
 	/**
-	 *
+	 * 
 	 * @param knowledgeBase
 	 * @param nodes
 	 * @param item
@@ -278,7 +274,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	}
 
 	/**
-	 *
+	 * 
 	 * @param knowledgeBase
 	 * @param node
 	 * @return
