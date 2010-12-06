@@ -22,7 +22,6 @@ package de.d3web.diaFlux.inference;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -70,23 +69,16 @@ public class FluxSolver implements PostHookablePSMethod {
 		Logger.getLogger(FluxSolver.class.getName()).info(
 				"Initing FluxSolver with case: " + session);
 
-		// if present, activate Startnode "Start" in Flow "Main"
-		Flow flow = DiaFluxUtils.getFlowSet(session).getByName("Main");
-		if (flow != null) {
-
-			for (StartNode startNode : flow.getStartNodes()) {
-
-				if (startNode.getName().equals("Start")) {
+		for (Flow flow : DiaFluxUtils.getFlowSet(session)) {
+			if (flow.isAutostart()) {
+				for (StartNode startNode : flow.getStartNodes()) {
 
 					activate(session, startNode, new ValidSupport());
-
 				}
+
 			}
 
 		}
-
-		// Calling propagate to start flowing from start nodes
-		propagate(session, Collections.EMPTY_LIST);
 
 	}
 

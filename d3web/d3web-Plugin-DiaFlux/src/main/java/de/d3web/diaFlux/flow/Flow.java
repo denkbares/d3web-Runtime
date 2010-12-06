@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- *
+ * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- *
+ * 
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- *
+ * 
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -36,7 +36,7 @@ import de.d3web.diaFlux.inference.Path;
 
 /**
  * @author Reinhard Hatko
- *
+ * 
  */
 public class Flow implements CaseObjectSource, KnowledgeSlice {
 
@@ -44,6 +44,7 @@ public class Flow implements CaseObjectSource, KnowledgeSlice {
 	private final List<INode> nodes;
 	private final String name;
 	private final String id;
+	private boolean autostart;
 
 	public Flow(String id, String name, List<INode> nodes, List<IEdge> edges) {
 
@@ -57,6 +58,7 @@ public class Flow implements CaseObjectSource, KnowledgeSlice {
 		this.edges = Collections.unmodifiableList(edges);
 		this.name = name;
 		this.id = id;
+		this.autostart = false;
 
 		checkFlow();
 	}
@@ -86,7 +88,6 @@ public class Flow implements CaseObjectSource, KnowledgeSlice {
 		for (IEdge edge : getEdges()) {
 			edgeData.put(edge, (EdgeData) edge.createCaseObject(session));
 		}
-
 
 		return new Path(this, nodedata, edgeData);
 	}
@@ -124,6 +125,14 @@ public class Flow implements CaseObjectSource, KnowledgeSlice {
 		return nodes;
 	}
 
+	public boolean isAutostart() {
+		return autostart;
+	}
+
+	public void setAutostart(boolean autostart) {
+		this.autostart = autostart;
+	}
+
 	public List<StartNode> getStartNodes() {
 		return getNodesOfType(StartNode.class);
 	}
@@ -141,7 +150,6 @@ public class Flow implements CaseObjectSource, KnowledgeSlice {
 
 		return result;
 	}
-
 
 	@Override
 	public String toString() {
