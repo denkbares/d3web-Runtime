@@ -87,7 +87,7 @@ public abstract class QuestionChoice extends Question {
 
 	public void addAlternative(Choice answer, int pos) {
 		if ((answer != null) && (!getAllAlternatives().contains(answer))) {
-			alternatives.add(pos, answer);
+			alternatives.add(pos > alternatives.size() ? alternatives.size() : pos, answer);
 			answer.setQuestion(this);
 		}
 	}
