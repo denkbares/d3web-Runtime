@@ -21,30 +21,15 @@
 package de.d3web.diaFlux.flow;
 
 import java.util.List;
-import java.util.logging.Logger;
 
-import de.d3web.abstraction.ActionSetValue;
-import de.d3web.abstraction.formula.FormulaElement;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.knowledge.Indication;
-import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
-import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
-import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.diaFlux.inference.CallFlowAction;
 import de.d3web.diaFlux.inference.FluxSolver;
-import de.d3web.indication.ActionNextQASet;
 import de.d3web.indication.ActionRepeatedIndication;
-import de.d3web.scoring.ActionHeuristicPS;
-import de.d3web.scoring.HeuristicRating;
-import de.d3web.scoring.Score;
 
 public class ActionNode extends Node {
 
@@ -84,7 +69,7 @@ public class ActionNode extends Node {
 
 			long indicationTime = interviewFact.getTime();
 			long valueTime = valueFact.getTime();
-			return valueTime > indicationTime;
+			return valueTime >= indicationTime;
 		}
 		else {
 			return super.canFireEdges(session);
@@ -119,78 +104,12 @@ public class ActionNode extends Node {
 	@Override
 	public void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes) {
 
-		// createSnapshotFact(session, snapshotNode);
-
 		super.takeSnapshot(session, snapshotNode, nodes);
 
-		// TODO do this for all types of nodes?
+		//redo action with SSN as source
 		undoAction(session);
 
 		getAction().doIt(session, snapshotNode, session.getPSMethodInstance(FluxSolver.class));
-
-	}
-
-	/**
-	 * 
-	 * @param session
-	 * @param snapshotNode
-	 */
-	private void createSnapshotFact(Session session, SnapshotNode snapshotNode) {
-
-		Blackboard blackboard = session.getBlackboard();
-
-		PSMethod psMethod = session.getPSMethodInstance(FluxSolver.class);
-
-		// TODO can these be made more general?
-		if (action instanceof ActionNextQASet) {
-
-			ActionNextQASet nextQASetaction = (ActionNextQASet) action;
-			QASet qaSet = nextQASetaction.getQASets().get(0);
-
-			State state = nextQASetaction.getIndication().getState();
-
-			blackboard.addInterviewFact(FactFactory.createIndicationFact(session, qaSet,
-					new Indication(state), snapshotNode, psMethod));
-
-		}
-		else if (action instanceof ActionHeuristicPS) {
-
-			ActionHeuristicPS heuristicAction = (ActionHeuristicPS) action;
-			Solution solution = heuristicAction.getSolution();
-			Score score = heuristicAction.getScore();
-
-			Value value = new HeuristicRating(score);
-
-			blackboard.addValueFact(FactFactory.createFact(session, solution, value, snapshotNode,
-					psMethod));
-
-		}
-		else if (action instanceof ActionSetValue) {
-
-			Question question = ((ActionSetValue) action).getQuestion();
-			Object valueObj = ((ActionSetValue) action).getValue();
-			Value value;
-
-			if (valueObj instanceof FormulaElement) {
-
-				value = ((FormulaElement) valueObj).eval(session);
-
-			}
-			else {
-				value = (Value) valueObj;
-			}
-
-			blackboard.addValueFact(FactFactory.createFact(session, question, value, snapshotNode,
-					psMethod));
-
-		}
-		else if (action == NOOPAction.INSTANCE || action instanceof CallFlowAction) {
-			// nothing to do here...
-		}
-		else {
-			Logger.getLogger(getClass().getName()).severe(
-					"Could not create SnapshotFact for action: " + action.toString());
-		}
 
 	}
 
