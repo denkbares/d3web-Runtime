@@ -28,7 +28,6 @@ import org.junit.Test;
 public class CircularSnapshotTest1 extends AbstractDiaFluxTest {
 
 	private static final String FILE = "CircularSnapshotTest1.d3web";
-	private static final int TORTURE_LIMIT = 50;
 
 	public CircularSnapshotTest1() {
 		super(FILE);
@@ -45,12 +44,12 @@ public class CircularSnapshotTest1 extends AbstractDiaFluxTest {
 
 	public void doSecondCycle() {
 		// Set Quest3 to Answ1
-		setAnswer(quest3, answer1);
+		setChoiceValue(quest3, answer1);
 
 		assertNodeStates(Flow1, snapshot1, nodeQ3, nodeQ1, nodeQ2);
 
 		// Set Quest2 to Answ1
-		setAnswer(quest2, answer1);
+		setChoiceValue(quest2, answer1);
 
 		assertNodeStates(Flow1, snapshot1, nodeQ3);
 	}
@@ -59,12 +58,12 @@ public class CircularSnapshotTest1 extends AbstractDiaFluxTest {
 		assertNodeStates(Flow1, start1, nodeQ1);
 
 		// Set Quest1 to answ1
-		setAnswer(quest1, answer1);
+		setChoiceValue(quest1, answer1);
 
 		assertNodeStates(Flow1, start1, nodeQ1, nodeQ2);
 
 		// Set Quest2 to Answ1
-		setAnswer(quest2, answer1);
+		setChoiceValue(quest2, answer1);
 
 		assertNodeStates(Flow1, snapshot1, nodeQ3);
 	}

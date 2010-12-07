@@ -7,7 +7,7 @@ __Snapshot__\\
 [SnapshotTMSTest1]\\
 [SnapshotAfterSubflowTest1]\\
 [SnapshotInSubflowTest1]\\
-
+[MultipleSnapshotsTest1]\\
 
 __General__\\
 [AutostartTest]\\

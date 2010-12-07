@@ -45,32 +45,32 @@ public class SnapshotTMSTest1 extends AbstractDiaFluxTest {
 		assertNodeStates(Flow1, start1, nodeQ1);
 
 		// Set QuestOC1 to Answ1
-		setAnswer(quest1, answer1);
+		setChoiceValue(quest1, answer1);
 
 		assertNodeStates(Flow1, start1, nodeQ1, nodeQ2);
 
 		// Set QuestOC2 to Answ2 -> reaches Exit
-		setAnswer(quest2, answer2);
+		setChoiceValue(quest2, answer2);
 
 		assertNodeStates(Flow1, start1, nodeQ1, nodeQ2, exit1);
 
 		// Re-Set QuestOC2 to Answ1 ->reaches snapshot
-		setAnswer(quest2, answer1);
+		setChoiceValue(quest2, answer1);
 
 		assertNodeStates(Flow1, snapshot1, nodeQ3);
 
 		// Set QuestOC3 to Answ1
-		setAnswer(quest3, answer1);
+		setChoiceValue(quest3, answer1);
 
 		assertNodeStates(Flow1, snapshot1, nodeQ3, nodeQ2_2);
 
 		// Set QuestOC2 to Answ3
-		setAnswer(quest2, answer3);
+		setChoiceValue(quest2, answer3);
 
 		assertNodeStates(Flow1, snapshot1, nodeQ3, nodeQ2_2, nodeQ1, nodeQ2);
 
 		// Set QuestOC2 to back to answ1 -> path retracted to nodeQ2_2
-		setAnswer(quest2, answer1);
+		setChoiceValue(quest2, answer1);
 
 		assertNodeStates(Flow1, snapshot1, nodeQ3, nodeQ2_2);
 

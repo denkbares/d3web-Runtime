@@ -23,81 +23,58 @@ import org.junit.Test;
 /**
  * 
  * @author Reinhard Hatko
- * @created 04.12.2010
+ * @created 07.12.2010
  */
-public class SnapshotInSubflowTest1 extends AbstractDiaFluxTest {
+public class MultipleSnapshotsTest1 extends AbstractDiaFluxTest {
 
-	private static final String FILE = "SnapshotInSubflowTest1.d3web";
+	private static final String FILE = "MultipleSnapshotsTest1.d3web";
 
-	public SnapshotInSubflowTest1() {
+	public MultipleSnapshotsTest1() {
 		super(FILE);
 	}
 
 	@Test
-	public void testSnapshotReachedFirstTime() throws Exception {
+	public void testFirstCycle() throws Exception {
 
 		doFirstCycle();
 
 	}
 
 	public void doFirstCycle() {
-
 		assertNodeStates(Flow1, start1, nodeQ1);
-		assertNodeStates(Flow2);
 
-		// Quest1 -> Answ1
+		// Quest1 -> Answ1 => 2 Snapshots
 		setChoiceValue(quest1, answer1);
 
-		assertNodeStates(Flow1, start1, nodeQ1, composed1);
-		assertNodeStates(Flow2, start1, nodeQ2);
+		assertNodeStates(Flow1, snapshot1, nodeQ2, snapshot2, nodeQ3);
 
-		// Quest2 -> Answ1 => Snapshot
+		// Quest2 -> Answ1
 		setChoiceValue(quest2, answer1);
 
-		assertNodeStates(Flow1, composed1);
-		assertNodeStates(Flow2, snapshot1, nodeQ3);
+		assertNodeStates(Flow1, snapshot1, nodeQ2, nodeQ4, snapshot2, nodeQ3);
 
 		// Quest3 -> Answ1
 		setChoiceValue(quest3, answer1);
 
-		assertNodeStates(Flow1, composed1, nodeQ4);
-		assertNodeStates(Flow2, snapshot1, nodeQ3, exit1);
+		assertNodeStates(Flow1, snapshot1, nodeQ2, nodeQ4, snapshot2, nodeQ3);
 
-		// Quest4 -> Answ1
+		// Quest4 -> Answ2
+		setChoiceValue(quest4, answer2);
+
+		assertNodeStates(Flow1, snapshot1, nodeQ2, nodeQ4, snapshot2, nodeQ3, exit1);
+
+		// Quest4 -> Answ1 => Snapshot after TMS
 		setChoiceValue(quest4, answer1);
 
-		assertNodeStates(Flow1, composed1, nodeQ4, nodeQ1);
-		assertNodeStates(Flow2, snapshot1, nodeQ3, exit1);
-
-		// Quest1 -> Answ1 => Snapshot
-		setChoiceValue(quest1, answer1);
-
-		assertNodeStates(Flow1, composed1);
-		assertNodeStates(Flow2, snapshot1, nodeQ3);
+		assertNodeStates(Flow1, snapshot3, nodeQ1);
 	}
 
 	@Test
-	public void testSnapshotReachedSecondTime() throws Exception {
+	public void testSecondCycle() throws Exception {
 
 		doFirstCycle();
 
 		doSecondCycle();
-
-	}
-
-	public void doSecondCycle() {
-
-		// Quest3 -> Answ1
-		setChoiceValue(quest3, answer1);
-
-		assertNodeStates(Flow1, composed1, nodeQ4, nodeQ1);
-		assertNodeStates(Flow2, snapshot1, nodeQ3, exit1);
-
-		// Quest1 -> Answ1 => Snapshot
-		setChoiceValue(quest1, answer1);
-
-		assertNodeStates(Flow1, composed1);
-		assertNodeStates(Flow2, snapshot1, nodeQ3);
 
 	}
 
@@ -109,6 +86,18 @@ public class SnapshotInSubflowTest1 extends AbstractDiaFluxTest {
 			doSecondCycle();
 		}
 
+	}
+
+	public void doSecondCycle() {
+		// Quest1 -> Answ1 => 2 Snapshots
+		setChoiceValue(quest1, answer1);
+
+		assertNodeStates(Flow1, snapshot1, nodeQ2, snapshot2, nodeQ3, nodeQ4);
+
+		// Quest4 -> Answ1 => Snapshot
+		setChoiceValue(quest4, answer1);
+
+		assertNodeStates(Flow1, snapshot3, nodeQ1);
 	}
 
 }

@@ -16,39 +16,119 @@ Description goes here...
 %
 
 %%DiaFlux
-<flowchart fcid="mainID" name="Flow1" icon="sanduhr.gif" width="750" height="300" autostart="true" idCounter="6">
+<flowchart fcid="mainID" name="Flow1" icon="sanduhr.gif" width="750" height="500" autostart="true" idCounter="24">
 
 	<!-- nodes of the flowchart -->
-	<node fcid="#node_22">
+	<node fcid="start1">
 		<position left="41" top="88"></position>
 		<start>start1</start>
 	</node>
 
-	<node fcid="#node_2">
-		<position left="193" top="81"></position>
+	<node fcid="nodeQ1">
+		<position left="48" top="317"></position>
 		<action markup="KnOffice">QuestOC1</action>
 	</node>
 
-	<node fcid="#node_4">
-		<position left="540" top="86"></position>
-		<exit>Exit1</exit>
+	<node fcid="exit1">
+		<position left="596" top="88"></position>
+		<exit>exit1</exit>
 	</node>
 
 	<node fcid="#node_6">
-		<position left="204" top="47"></position>
-		<comment>NodeQ1</comment>
+		<position left="66" top="283"></position>
+		<comment>nodeQ1</comment>
+	</node>
+
+	<node fcid="nodeQ2">
+		<position left="193" top="317"></position>
+		<action markup="KnOffice">QuestOC2</action>
+	</node>
+
+	<node fcid="#node_8">
+		<position left="204" top="290"></position>
+		<comment>nodeQ2</comment>
+	</node>
+
+	<node fcid="nodeQ3">
+		<position left="333" top="317"></position>
+		<action markup="KnOffice">QuestOC3</action>
+	</node>
+
+	<node fcid="snapshot1">
+		<position left="588" top="185"></position>
+		<snapshot>snapshot1</snapshot>
+	</node>
+
+	<node fcid="snapshot2">
+		<position left="588" top="133"></position>
+		<snapshot>snapshot2</snapshot>
+	</node>
+
+	<node fcid="#node_12">
+		<position left="344" top="290"></position>
+		<comment>nodeQ3</comment>
+	</node>
+
+	<node fcid="nodeQ4">
+		<position left="460" top="317"></position>
+		<action markup="KnOffice">QuestOC4</action>
+	</node>
+
+	<node fcid="#node_14">
+		<position left="479" top="290"></position>
+		<comment>nodeQ4</comment>
+	</node>
+
+	<node fcid="exit2">
+		<position left="596" top="35"></position>
+		<exit>exit2</exit>
+	</node>
+
+	<node fcid="snapshot3">
+		<position left="588" top="230"></position>
+		<snapshot>snapshot3</snapshot>
+	</node>
+
+	<node fcid="nodeQ5">
+		<position left="578" top="317"></position>
+		<action markup="KnOffice">QuestOC5</action>
+	</node>
+
+	<node fcid="#node_18">
+		<position left="589" top="290"></position>
+		<comment>nodeQ5</comment>
+	</node>
+
+	<node fcid="nodeQ6">
+		<position left="57" top="404"></position>
+		<action markup="KnOffice">QuestNum6</action>
+	</node>
+
+	<node fcid="nodeQ7">
+		<position left="189" top="404"></position>
+		<action markup="KnOffice">QuestNum7</action>
+	</node>
+
+	<node fcid="nodeQ8">
+		<position left="329" top="404"></position>
+		<action markup="KnOffice">QuestNum8</action>
+	</node>
+
+	<node fcid="nodeQ9">
+		<position left="464" top="404"></position>
+		<action markup="KnOffice">QuestNum9</action>
+	</node>
+
+	<node fcid="nodeQ10">
+		<position left="584" top="404"></position>
+		<action markup="KnOffice">QuestNum10</action>
 	</node>
 
 
 	<!-- rules of the flowchart -->
-	<edge fcid="#rule_3">
-		<origin>#node_22</origin>
-		<target>#node_2</target>
-	</edge>
-
 	<preview mimetype="text/html">
 		<![CDATA[
-<DIV class="Flowchart" style=" width: 751px; height: 301px;"><DIV class="Node" id="#node_2" style="left: 193px;top: 81px; width: 96px; height: 42px;"><DIV class="question" style=" width: 82px; height: 42px;"><DIV class="decorator" style=" width: 15px; height: 18px;"></DIV><DIV class="ActionPane" style=" width: 80px; height: 39px;"><DIV class="object" style=" width: 80px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/single.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>QuestOC1</DIV><DIV class="value" style=" width: 80px; height: 20px;">ask</DIV></DIV></DIV></DIV><DIV class="Node" id="#node_4" style="left: 540px;top: 86px; width: 74px; height: 20px;"><DIV class="exit" style=" width: 62px; height: 20px;"><DIV class="decorator" style=" width: 25px; height: 25px;"></DIV><DIV class="title" style=" width: 60px; height: 16px;">Exit1</DIV></DIV></DIV><DIV class="Node" id="#node_6" style="left: 204px;top: 47px; width: 75px; height: 20px;"><DIV class="comment" style=" width: 65px; height: 20px;"><DIV class="decorator" style=" width: 24px; height: 24px;"></DIV><DIV class="title" style=" width: 63px; height: 16px;">NodeQ1</DIV></DIV></DIV><DIV class="Node" id="#node_22" style="left: 41px;top: 88px; width: 72px; height: 20px;"><DIV class="start" style=" width: 62px; height: 20px;"><DIV class="decorator" style=" width: 25px; height: 25px;"></DIV><DIV class="title" style=" width: 60px; height: 16px;">start1</DIV></DIV></DIV><DIV class="Rule" id="#rule_3" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="h_line" style="position: absolute;left: 113px;top: 98px;overflow: visible; width: 80px; height: 1px;"><DIV class="arrow_right" style=" width: 6px; height: 5px;"></DIV></DIV><DIV style="position: absolute;left: 113px;top: 98px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 3px; width: 0px; height: 0px;"><DIV class="GuardPane" style=" width: 0px; height: 0px;"><DIV style=" width: 0px; height: 0px;">  </DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 110px;top: 95px;overflow: hidden; width: 86px; height: 7px;"></DIV></DIV></DIV></DIV>
+<DIV class="Flowchart" style=" width: 751px; height: 501px;"><DIV class="Node" id="start1" style="left: 41px;top: 88px; width: 72px; height: 20px;"><DIV class="start" style=" width: 62px; height: 20px;"><DIV class="decorator" style=" width: 25px; height: 25px;"></DIV><DIV class="title" style=" width: 60px; height: 16px;">start1</DIV></DIV></DIV><DIV class="Node" id="nodeQ1" style="left: 48px;top: 317px; width: 96px; height: 42px;"><DIV class="question" style=" width: 82px; height: 42px;"><DIV class="decorator" style=" width: 15px; height: 18px;"></DIV><DIV class="ActionPane" style=" width: 80px; height: 39px;"><DIV class="object" style=" width: 80px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/single.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>QuestOC1</DIV><DIV class="value" style=" width: 80px; height: 20px;">ask</DIV></DIV></DIV></DIV><DIV class="Node" id="exit1" style="left: 596px;top: 88px; width: 74px; height: 20px;"><DIV class="exit" style=" width: 62px; height: 20px;"><DIV class="decorator" style=" width: 25px; height: 25px;"></DIV><DIV class="title" style=" width: 60px; height: 16px;">exit1</DIV></DIV></DIV><DIV class="Node" id="#node_6" style="left: 66px;top: 283px; width: 74px; height: 20px;"><DIV class="comment" style=" width: 64px; height: 20px;"><DIV class="decorator" style=" width: 24px; height: 24px;"></DIV><DIV class="title" style=" width: 62px; height: 16px;">nodeQ1</DIV></DIV></DIV><DIV class="Node" id="nodeQ2" style="left: 193px;top: 317px; width: 96px; height: 42px;"><DIV class="question" style=" width: 82px; height: 42px;"><DIV class="decorator" style=" width: 15px; height: 18px;"></DIV><DIV class="ActionPane" style=" width: 80px; height: 39px;"><DIV class="object" style=" width: 80px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/single.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>QuestOC2</DIV><DIV class="value" style=" width: 80px; height: 20px;">ask</DIV></DIV></DIV></DIV><DIV class="Node" id="#node_8" style="left: 204px;top: 290px; width: 74px; height: 20px;"><DIV class="comment" style=" width: 64px; height: 20px;"><DIV class="decorator" style=" width: 24px; height: 24px;"></DIV><DIV class="title" style=" width: 62px; height: 16px;">nodeQ2</DIV></DIV></DIV><DIV class="Node" id="nodeQ3" style="left: 333px;top: 317px; width: 96px; height: 42px;"><DIV class="question" style=" width: 82px; height: 42px;"><DIV class="decorator" style=" width: 15px; height: 18px;"></DIV><DIV class="ActionPane" style=" width: 80px; height: 39px;"><DIV class="object" style=" width: 80px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/single.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>QuestOC3</DIV><DIV class="value" style=" width: 80px; height: 20px;">ask</DIV></DIV></DIV></DIV><DIV class="Node" id="snapshot1" style="left: 588px;top: 185px; width: 90px; height: 20px;"><DIV class="snapshot" style=" width: 78px; height: 20px;"><DIV class="decorator" style=" width: 25px; height: 25px;"></DIV><DIV class="title" style=" width: 76px; height: 16px;">snapshot1</DIV></DIV></DIV><DIV class="Node" id="snapshot2" style="left: 588px;top: 133px; width: 90px; height: 20px;"><DIV class="snapshot" style=" width: 78px; height: 20px;"><DIV class="decorator" style=" width: 25px; height: 25px;"></DIV><DIV class="title" style=" width: 76px; height: 16px;">snapshot2</DIV></DIV></DIV><DIV class="Node" id="#node_12" style="left: 344px;top: 290px; width: 74px; height: 20px;"><DIV class="comment" style=" width: 64px; height: 20px;"><DIV class="decorator" style=" width: 24px; height: 24px;"></DIV><DIV class="title" style=" width: 62px; height: 16px;">nodeQ3</DIV></DIV></DIV><DIV class="Node" id="nodeQ4" style="left: 460px;top: 317px; width: 96px; height: 42px;"><DIV class="question" style=" width: 82px; height: 42px;"><DIV class="decorator" style=" width: 15px; height: 18px;"></DIV><DIV class="ActionPane" style=" width: 80px; height: 39px;"><DIV class="object" style=" width: 80px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/single.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>QuestOC4</DIV><DIV class="value" style=" width: 80px; height: 20px;">ask</DIV></DIV></DIV></DIV><DIV class="Node" id="#node_14" style="left: 479px;top: 290px; width: 74px; height: 20px;"><DIV class="comment" style=" width: 64px; height: 20px;"><DIV class="decorator" style=" width: 24px; height: 24px;"></DIV><DIV class="title" style=" width: 62px; height: 16px;">nodeQ4</DIV></DIV></DIV><DIV class="Node" id="exit2" style="left: 596px;top: 35px; width: 74px; height: 20px;"><DIV class="exit" style=" width: 62px; height: 20px;"><DIV class="decorator" style=" width: 25px; height: 25px;"></DIV><DIV class="title" style=" width: 60px; height: 16px;">exit2</DIV></DIV></DIV><DIV class="Node" id="snapshot3" style="left: 588px;top: 230px; width: 90px; height: 20px;"><DIV class="snapshot" style=" width: 78px; height: 20px;"><DIV class="decorator" style=" width: 25px; height: 25px;"></DIV><DIV class="title" style=" width: 76px; height: 16px;">snapshot3</DIV></DIV></DIV><DIV class="Node" id="nodeQ5" style="left: 578px;top: 317px; width: 96px; height: 42px;"><DIV class="question" style=" width: 82px; height: 42px;"><DIV class="decorator" style=" width: 15px; height: 18px;"></DIV><DIV class="ActionPane" style=" width: 80px; height: 39px;"><DIV class="object" style=" width: 80px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/single.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>QuestOC5</DIV><DIV class="value" style=" width: 80px; height: 20px;">ask</DIV></DIV></DIV></DIV><DIV class="Node" id="#node_18" style="left: 589px;top: 290px; width: 74px; height: 20px;"><DIV class="comment" style=" width: 64px; height: 20px;"><DIV class="decorator" style=" width: 24px; height: 24px;"></DIV><DIV class="title" style=" width: 62px; height: 16px;">nodeQ5</DIV></DIV></DIV><DIV class="Node" id="nodeQ6" style="left: 57px;top: 404px; width: 104px; height: 42px;"><DIV class="question" style=" width: 90px; height: 42px;"><DIV class="decorator" style=" width: 15px; height: 18px;"></DIV><DIV class="ActionPane" style=" width: 88px; height: 39px;"><DIV class="object" style=" width: 88px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/num.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>QuestNum6</DIV><DIV class="value" style=" width: 88px; height: 20px;">ask</DIV></DIV></DIV></DIV><DIV class="Node" id="nodeQ7" style="left: 189px;top: 404px; width: 104px; height: 42px;"><DIV class="question" style=" width: 90px; height: 42px;"><DIV class="decorator" style=" width: 15px; height: 18px;"></DIV><DIV class="ActionPane" style=" width: 88px; height: 39px;"><DIV class="object" style=" width: 88px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/num.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>QuestNum7</DIV><DIV class="value" style=" width: 88px; height: 20px;">ask</DIV></DIV></DIV></DIV><DIV class="Node" id="nodeQ8" style="left: 329px;top: 404px; width: 104px; height: 42px;"><DIV class="question" style=" width: 90px; height: 42px;"><DIV class="decorator" style=" width: 15px; height: 18px;"></DIV><DIV class="ActionPane" style=" width: 88px; height: 39px;"><DIV class="object" style=" width: 88px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/num.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>QuestNum8</DIV><DIV class="value" style=" width: 88px; height: 20px;">ask</DIV></DIV></DIV></DIV><DIV class="Node" id="nodeQ9" style="left: 464px;top: 404px; width: 104px; height: 42px;"><DIV class="question" style=" width: 90px; height: 42px;"><DIV class="decorator" style=" width: 15px; height: 18px;"></DIV><DIV class="ActionPane" style=" width: 88px; height: 39px;"><DIV class="object" style=" width: 88px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/num.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>QuestNum9</DIV><DIV class="value" style=" width: 88px; height: 20px;">ask</DIV></DIV></DIV></DIV><DIV class="Node" id="nodeQ10" style="left: 584px;top: 404px; width: 111px; height: 42px;"><DIV class="question" style=" width: 97px; height: 42px;"><DIV class="decorator" style=" width: 15px; height: 18px;"></DIV><DIV class="ActionPane" style=" width: 95px; height: 39px;"><DIV class="object" style=" width: 95px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/num.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>QuestNum10</DIV><DIV class="value" style=" width: 95px; height: 20px;">ask</DIV></DIV></DIV></DIV></DIV>
 		]]>
 	</preview>
 </flowchart>
@@ -86,11 +166,11 @@ QuestionnaireOC #1
 -- Answ2
 -- Answ3
 QuestionaireNum #2
-- QuestNum1 [num]
-- QuestNum2 [num]
-- QuestNum3 [num]
-- QuestNum4 [num]
-- QuestNum5 [num]
+- QuestNum6 [num]
+- QuestNum7 [num]
+- QuestNum8 [num]
+- QuestNum9 [num]
+- QuestNum10 [num]
 
 %
 

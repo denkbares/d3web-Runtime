@@ -23,6 +23,7 @@ package de.d3web.diaFlux.inference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.MethodKind;
@@ -58,7 +59,10 @@ public class FluxSolver implements PostHookablePSMethod {
 	public static final MethodKind DIAFLUX = new MethodKind("DIAFLUX");
 	public static final MethodKind NODE_REGISTRY = new MethodKind("NodeRegistry");
 
+	public static final Level LEVEL = Level.OFF;
+
 	public FluxSolver() {
+		Logger.getLogger(getClass().getName()).setLevel(LEVEL);
 	}
 
 	@Override
@@ -312,8 +316,6 @@ public class FluxSolver implements PostHookablePSMethod {
 
 		Logger.getLogger(FluxSolver.class.getName()).info(
 				"Finished taking snapshot on over " + nodes.size() + " nodes.");
-
-		System.out.println(nodes);
 
 	}
 

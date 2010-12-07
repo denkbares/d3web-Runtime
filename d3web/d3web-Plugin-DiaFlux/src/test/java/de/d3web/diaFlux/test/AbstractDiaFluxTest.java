@@ -49,7 +49,9 @@ import de.d3web.plugin.test.InitPluginManager;
  */
 public abstract class AbstractDiaFluxTest {
 
-	private static final String PATH = "src/test/resources/";
+	protected static final String PATH = "src/test/resources/";
+	protected static final int TORTURE_LIMIT = 10000;
+
 	protected final String fileName;
 	protected KnowledgeBaseManagement kbm;
 	protected Session session;
@@ -142,11 +144,11 @@ public abstract class AbstractDiaFluxTest {
 		quest3 = (QuestionOC) kbm.findQuestion("QuestOC3");
 		quest4 = (QuestionOC) kbm.findQuestion("QuestOC4");
 		quest5 = (QuestionOC) kbm.findQuestion("QuestOC5");
-		quest6 = (QuestionNum) kbm.findQuestion("QuestNum1");
-		quest7 = (QuestionNum) kbm.findQuestion("QuestNum2");
-		quest8 = (QuestionNum) kbm.findQuestion("QuestNum3");
-		quest9 = (QuestionNum) kbm.findQuestion("QuestNum4");
-		quest10 = (QuestionNum) kbm.findQuestion("QuestNum5");
+		quest6 = (QuestionNum) kbm.findQuestion("QuestNum6");
+		quest7 = (QuestionNum) kbm.findQuestion("QuestNum7");
+		quest8 = (QuestionNum) kbm.findQuestion("QuestNum8");
+		quest9 = (QuestionNum) kbm.findQuestion("QuestNum9");
+		quest10 = (QuestionNum) kbm.findQuestion("QuestNum10");
 
 	}
 
@@ -189,12 +191,32 @@ public abstract class AbstractDiaFluxTest {
 			for (String id : activeIDs) {
 				if (node.getID().equalsIgnoreCase(id)) {
 
-					Assert.assertTrue("Node '" + id + "' must be active.", supported);
+					if (!supported) {
+						failWithUnsupportedNode(flowName, id);
+
+					}
 					continue nextNode;
 				}
 			}
 
 		}
+
+	}
+
+	private void failWithUnsupportedNode(String flowName, String id) {
+		FlowSet flowSet = DiaFluxUtils.getFlowSet(session);
+
+		Flow flow = flowSet.getByName(flowName);
+		System.out.print("Supported Nodes in '" + flowName + "': ");
+		for (INode node : flow.getNodes()) {
+			boolean supported = DiaFluxUtils.getNodeData(node, session).isSupported();
+
+			if (supported) System.out.print(node.getID() + ", ");
+
+		}
+		System.out.println();
+
+		Assert.fail("Node '" + id + "' must be active.");
 
 	}
 
@@ -219,15 +241,21 @@ public abstract class AbstractDiaFluxTest {
 
 	}
 
-	protected void setAnswer(QuestionOC question, String answerName) {
-		System.out.println("Setting value for '" + question.getName() + "' to '" + answerName
-				+ "'.");
+	protected void setChoiceValue(QuestionOC question, String answerName) {
+		System.out.println("Setting '" + question.getName() + "' to '" + answerName + "'.");
 
 		Choice choice = kbm.findChoice(question, answerName);
 
 		Fact fact = FactFactory.createUserEnteredFact(question, new ChoiceValue(choice));
 
 		session.getBlackboard().addValueFact(fact);
+
+		try {
+			Thread.sleep(10);
+		}
+		catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
 	}
 

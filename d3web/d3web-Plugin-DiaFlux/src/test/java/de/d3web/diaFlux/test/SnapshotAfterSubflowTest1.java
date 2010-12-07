@@ -28,7 +28,6 @@ import org.junit.Test;
 public class SnapshotAfterSubflowTest1 extends AbstractDiaFluxTest {
 
 	private static final String FILE = "SnapshotAfterSubflowTest1.d3web";
-	private static final int TORTURE_LIMIT = 50;
 
 	public SnapshotAfterSubflowTest1() {
 		super(FILE);
@@ -46,19 +45,19 @@ public class SnapshotAfterSubflowTest1 extends AbstractDiaFluxTest {
 		assertNodeStates(Flow2);
 
 		// Quest1 -> Answ1
-		setAnswer(quest1, answer1);
+		setChoiceValue(quest1, answer1);
 
 		assertNodeStates(Flow1, start1, nodeQ1, nodeQ2);
 		assertNodeStates(Flow2);
 
 		// Quest2 -> Answ1
-		setAnswer(quest2, answer1);
+		setChoiceValue(quest2, answer1);
 
 		assertNodeStates(Flow1, start1, nodeQ1, nodeQ2, composed1);
 		assertNodeStates(Flow2, start1, nodeQ3);
 
 		// Quest3 -> Answ1 => Snapshot
-		setAnswer(quest3, answer1);
+		setChoiceValue(quest3, answer1);
 
 		assertNodeStates(Flow1, snapshot1, nodeQ4);
 		assertNodeStates(Flow2);
@@ -75,25 +74,25 @@ public class SnapshotAfterSubflowTest1 extends AbstractDiaFluxTest {
 
 	public void doSecondCycle() {
 		// Quest4 -> Answ1
-		setAnswer(quest4, answer1);
+		setChoiceValue(quest4, answer1);
 
 		assertNodeStates(Flow1, snapshot1, nodeQ4, nodeQ1);
 		assertNodeStates(Flow2);
 
 		// Quest1 -> Answ1
-		setAnswer(quest1, answer1);
+		setChoiceValue(quest1, answer1);
 
 		assertNodeStates(Flow1, snapshot1, nodeQ4, nodeQ1, nodeQ2);
 		assertNodeStates(Flow2);
 
 		// Quest2 -> Answ1
-		setAnswer(quest2, answer1);
+		setChoiceValue(quest2, answer1);
 
 		assertNodeStates(Flow1, snapshot1, nodeQ4, nodeQ1, nodeQ2, composed1);
 		assertNodeStates(Flow2, start1, nodeQ3);
 
 		// Quest3 -> Answ1 => Snapshot
-		setAnswer(quest3, answer1);
+		setChoiceValue(quest3, answer1);
 
 		assertNodeStates(Flow1, snapshot1, nodeQ4, nodeQ1);
 		assertNodeStates(Flow2);
