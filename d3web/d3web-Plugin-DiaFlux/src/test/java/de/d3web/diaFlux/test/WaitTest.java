@@ -132,6 +132,7 @@ public class WaitTest {
 		IEdge e14 = FF.createEdge("e14", start, loop, ConditionTrue.INSTANCE);
 		Flow global = FF.createFlow("Main", "Main", Arrays.asList(start, primary, loop),
 				Arrays.asList(e13, e14));
+		global.setAutostart(true);
 		DiaFluxUtils.addFlow(global, kbm.getKnowledgeBase());
 	}
 
