@@ -1,0 +1,44 @@
+!!DiaFlux Test Wiki
+
+This Wiki contains test cases for the DiaFlux PSM. 
+
+
+!Overview 
+
+* Copy the contents of the [template article|TestTemplate] to a new article with a meaningful name. Every article is suppose to be one test case.
+* Create the DiaFlux models necessary for the tests.
+* Download the KB, rename it according to the article name. Copy it to src/test/resources/ in d3web-Plugin-DiaFlux.
+* Create a Unit test which has the same name as the article and the downloaded KB. Code for loading the KB and creating a session is readily implemented in the class AbstractDiaFluxTest. This class also provides some methods like for testing the activation status of nodes which is one of the most common tests.
+
+
+!Creating the test case in KnowWE
+
+* Describe what you intend to test in a few sentences. If it is not obvious, also provide information about the sequence of findings to enter and the expected final state.
+* The test template contains a few questions and solutions. If you need more (or other) questions, do not create new objects that have the same name but different type or answers than those defined in the template. Otherwise there can be a conflict when loading the flowchart in the editor. 
+* Remove the objects you do not need for your test. (But do not modify answers of OC-Questions)
+* If you want to see the solutions, set the master for the solutionpanel.
+* Create the flowcharts necessary for the tests. Name the flows "Flow1", "Flow2",... . Name start end exit nodes "start1", "start2", ...
+* In case you want to test the activation status of nodes: After finishing your flowcharts, it is recommended to replace the generated IDs by IDs that are easier to remember. This makes errors during creating the unit test less likely. Apply the following rules when generating ids:
+** Question nodes: The ID of the node is derived from the question it uses, eg "nodeQ1", "nodeQ2". If you use a question in different nodes in the __same flowchart__ just add a "_<x>" with x starting from 2, eg "nodeQ1", "nodeQ1_2", "nodeQ1_3",...
+** Start nodes: "start1", "start2",...
+** Exit nodes: "exit1", "exit2",...
+** Snapshot nodes: "snapshot1", "snapshot2",...
+** Composed nodes: "composed1", "composed2",...
+__Attention__: When replacing IDs, take care not to rename IDs across different flowcharts. Best practice is to copy eachs flowchart's XML and find/replace the (I know this step is not very convenient, but it eases creating the unit test and it only has to be done once after finishing your test case.) 
+* General hints:
+** Use questions with lower numbers first, ie use "Quest1" before "Quest2". 
+** As every flowchart is its own namespace for IDs, you can reuse IDs across different flowcharts. E.g. if you use "Quest1" in "Flow1" and "Flow2" both nodes should be ID'ed "NodeQ1".
+* Use QuickI and the DiaFlux TagHandler to try your scenario. If you observe some behavior that you did not expect, please include a description of expected vs. actual behavior.
+
+!Creating the Unit test
+
+* The class AbstractDiaFluxTest offers some basic functionality like loading the kb, creating the session, answering questions, testing node activation,etc. Simply create a subclass and call the super constructor with the name of the kb you want to load.
+* Create a test method containing your test scenario.
+* If you followed the advice concerning the IDs of nodes, you can also use the defined string constants when testing node activation. That way you can use autocomplete and avoid typing errors. :-) Thats your gain for the damn ID replacement.
+* See below for the helper methods AbstractDiaFluxTest provides (__TODO__). 
+
+Please remember to add the articel containing your test case in src/test/resources/wiki in d3web-Plugin-DiaFlux. 
+
+Happy testing...
+
+

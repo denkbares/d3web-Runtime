@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2010 denkbares GmbH, Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.diaFlux.test;
 
@@ -188,6 +188,7 @@ public class NodeTest {
 		List<IEdge> edgeList = Arrays.asList((IEdge) incomingEdge1, (IEdge) incomingEdge2,
 				(IEdge) outgoingEdge1, (IEdge) outgoingEdge2);
 		Flow testFlow = FF.createFlow("testFlow_ID", "Main", nodeList, edgeList);
+		testFlow.setAutostart(true);
 
 		assertThat(testSubject.getFlow(), is(nullValue()));
 		testSubject.setFlow(testFlow);
@@ -203,7 +204,9 @@ public class NodeTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.diaFlux.flow.Node#createCaseObject(de.d3web.core.session.Session)}.
+	 * Test method for
+	 * {@link de.d3web.diaFlux.flow.Node#createCaseObject(de.d3web.core.session.Session)}
+	 * .
 	 */
 	@Test
 	public void testCreateCaseObject() {
@@ -219,7 +222,9 @@ public class NodeTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.diaFlux.flow.Node#takeSnapshot(de.d3web.core.session.Session, de.d3web.diaFlux.flow.SnapshotNode, java.util.List)}.
+	 * Test method for
+	 * {@link de.d3web.diaFlux.flow.Node#takeSnapshot(de.d3web.core.session.Session, de.d3web.diaFlux.flow.SnapshotNode, java.util.List)}
+	 * .
 	 */
 	@Test
 	public void testTakeSnapshot() {
@@ -227,7 +232,9 @@ public class NodeTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.diaFlux.flow.Node#resetNodeData(de.d3web.core.session.Session)}.
+	 * Test method for
+	 * {@link de.d3web.diaFlux.flow.Node#resetNodeData(de.d3web.core.session.Session)}
+	 * .
 	 */
 	@Test
 	public void testResetNodeData() {
@@ -235,7 +242,8 @@ public class NodeTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.diaFlux.flow.Node#equals(java.lang.Object)}.
+	 * Test method for
+	 * {@link de.d3web.diaFlux.flow.Node#equals(java.lang.Object)}.
 	 */
 	@Test
 	public void testEqualsObject() {

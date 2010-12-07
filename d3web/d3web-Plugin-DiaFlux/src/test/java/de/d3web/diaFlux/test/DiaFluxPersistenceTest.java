@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2010 denkbares GmbH, Wuerzburg
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.diaFlux.test;
 
@@ -55,7 +55,7 @@ import de.d3web.scoring.ActionHeuristicPS;
 import de.d3web.scoring.Score;
 
 /**
- *
+ * 
  * @author Reinhard Hatko
  * @created 11.11.2010
  */
@@ -91,8 +91,6 @@ public class DiaFluxPersistenceTest {
 		System.out.println();
 		System.out.println("Loaded: " + loadedFlowSet);
 
-
-
 	}
 
 	@Test
@@ -123,7 +121,6 @@ public class DiaFluxPersistenceTest {
 		assertTrue("Solution has wrong state. Expected 'UNCLEAR'",
 				solutionState.hasState(Rating.State.UNCLEAR));
 	}
-
 
 	public static KnowledgeBase createTestKB() {
 		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance();
@@ -167,31 +164,12 @@ public class DiaFluxPersistenceTest {
 
 		// Create the flowchart...
 		Flow testFlow = FF.createFlow("testFlow_ID", "Main", nodesList, edgesList);
+		testFlow.setAutostart(true);
 
 		DiaFluxUtils.addFlow(testFlow, kbm.getKnowledgeBase());
 
 		return kbm.getKnowledgeBase();
 
 	}
-
-//	/**
-//	 *
-//	 * @throws Exception
-//	 * @created 12.11.2010
-//	 */
-//	@Test
-//	public void testCase3() throws Exception {
-//
-//
-//		for (String file : new File(".").list()) {
-//			System.out.println(file);
-//		}
-//		KnowledgeBase base = PersistenceManager.getInstance().load(
-//				new File("src/test/resources/Test3_kopic.jar"));
-//		FlowSet flowSet = DiaFluxUtils.getFlowSet(base);
-//
-//		System.out.println(flowSet);
-//
-//	}
 
 }

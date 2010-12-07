@@ -143,6 +143,7 @@ public class UseFluxProblemSolverTest {
 	public void testFluxSolver() {
 		// Create the flowchart...
 		Flow testFlow = FF.createFlow("testFlow_ID", "Main", nodesList, edgesList);
+		testFlow.setAutostart(true);
 		DiaFluxUtils.addFlow(testFlow, kbm.getKnowledgeBase());
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
 		testBasicFlow();
@@ -195,6 +196,7 @@ public class UseFluxProblemSolverTest {
 		List<INode> nodesList = Arrays.asList(startNode, innerFlowNode, setterNode);
 		List<IEdge> edgeList = Arrays.asList(e1, e2);
 		Flow outerFlow = FF.createFlow("Flow2", "Main", nodesList, edgeList);
+		outerFlow.setAutostart(true);
 		DiaFluxUtils.addFlow(outerFlow, kbm.getKnowledgeBase());
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
 		testBasicFlow();
@@ -252,6 +254,7 @@ public class UseFluxProblemSolverTest {
 		edgesList.add(solution3ToSnapshot);
 
 		Flow testFlow = FF.createFlow("testFlow_Snapshot", "Main", nodesList, edgesList);
+		testFlow.setAutostart(true);
 		DiaFluxUtils.addFlow(testFlow, kbm.getKnowledgeBase());
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
 		testBasicFlow();

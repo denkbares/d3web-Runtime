@@ -1,0 +1,102 @@
+!!TestTemplate
+
+Description goes here...
+
+----
+
+%%ShowSolutions
+@master: this
+%
+
+[{KnowWEPlugin quickinterview}]
+
+
+%%KnowWEPlugin
+@TagHandlerName: diaflux
+%
+
+%%DiaFlux
+<flowchart fcid="mainID" name="Flow1" icon="sanduhr.gif" width="750" height="300" autostart="true" idCounter="6">
+
+	<!-- nodes of the flowchart -->
+	<node fcid="#node_22">
+		<position left="41" top="88"></position>
+		<start>start1</start>
+	</node>
+
+	<node fcid="#node_2">
+		<position left="193" top="81"></position>
+		<action markup="KnOffice">QuestOC1</action>
+	</node>
+
+	<node fcid="#node_4">
+		<position left="540" top="86"></position>
+		<exit>Exit1</exit>
+	</node>
+
+	<node fcid="#node_6">
+		<position left="204" top="47"></position>
+		<comment>NodeQ1</comment>
+	</node>
+
+
+	<!-- rules of the flowchart -->
+	<edge fcid="#rule_3">
+		<origin>#node_22</origin>
+		<target>#node_2</target>
+	</edge>
+
+	<preview mimetype="text/html">
+		<![CDATA[
+<DIV class="Flowchart" style=" width: 751px; height: 301px;"><DIV class="Node" id="#node_2" style="left: 193px;top: 81px; width: 96px; height: 42px;"><DIV class="question" style=" width: 82px; height: 42px;"><DIV class="decorator" style=" width: 15px; height: 18px;"></DIV><DIV class="ActionPane" style=" width: 80px; height: 39px;"><DIV class="object" style=" width: 80px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/single.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>QuestOC1</DIV><DIV class="value" style=" width: 80px; height: 20px;">ask</DIV></DIV></DIV></DIV><DIV class="Node" id="#node_4" style="left: 540px;top: 86px; width: 74px; height: 20px;"><DIV class="exit" style=" width: 62px; height: 20px;"><DIV class="decorator" style=" width: 25px; height: 25px;"></DIV><DIV class="title" style=" width: 60px; height: 16px;">Exit1</DIV></DIV></DIV><DIV class="Node" id="#node_6" style="left: 204px;top: 47px; width: 75px; height: 20px;"><DIV class="comment" style=" width: 65px; height: 20px;"><DIV class="decorator" style=" width: 24px; height: 24px;"></DIV><DIV class="title" style=" width: 63px; height: 16px;">NodeQ1</DIV></DIV></DIV><DIV class="Node" id="#node_22" style="left: 41px;top: 88px; width: 72px; height: 20px;"><DIV class="start" style=" width: 62px; height: 20px;"><DIV class="decorator" style=" width: 25px; height: 25px;"></DIV><DIV class="title" style=" width: 60px; height: 16px;">start1</DIV></DIV></DIV><DIV class="Rule" id="#rule_3" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="h_line" style="position: absolute;left: 113px;top: 98px;overflow: visible; width: 80px; height: 1px;"><DIV class="arrow_right" style=" width: 6px; height: 5px;"></DIV></DIV><DIV style="position: absolute;left: 113px;top: 98px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 3px; width: 0px; height: 0px;"><DIV class="GuardPane" style=" width: 0px; height: 0px;"><DIV style=" width: 0px; height: 0px;">  </DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 110px;top: 95px;overflow: hidden; width: 86px; height: 7px;"></DIV></DIV></DIV></DIV>
+		]]>
+	</preview>
+</flowchart>
+	
+
+%
+
+
+%%KnowledgeBase 
+  @uses: this
+%
+
+
+
+%%Question
+QuestionnaireOC #1
+- QuestOC1 [oc]
+-- Answ1
+-- Answ2
+-- Answ3
+- QuestOC2 [oc]
+-- Answ1
+-- Answ2
+-- Answ3
+- QuestOC3 [oc]
+-- Answ1
+-- Answ2
+-- Answ3
+- QuestOC4 [oc]
+-- Answ1
+-- Answ2
+-- Answ3
+- QuestOC5 [oc]
+-- Answ1
+-- Answ2
+-- Answ3
+QuestionaireNum #2
+- QuestNum1 [num]
+- QuestNum2 [num]
+- QuestNum3 [num]
+- QuestNum4 [num]
+- QuestNum5 [num]
+
+%
+
+%%Solution
+Solution1
+Solution2
+Solution3
+Solution4
+%
