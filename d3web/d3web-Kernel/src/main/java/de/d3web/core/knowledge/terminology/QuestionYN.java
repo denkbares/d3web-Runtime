@@ -74,4 +74,14 @@ public class QuestionYN extends QuestionOC {
 		return answerChoiceNo;
 	}
 
+	@Override
+	public void addAlternative(Choice answer) {
+		throw new UnsupportedOperationException("Adding choices to a QuestionYN is not allowed");
+	}
+
+	@Override
+	public void addAlternative(Choice answer, int pos) {
+		throw new UnsupportedOperationException("Adding choices to a QuestionYN is not allowed");
+	}
+
 }
