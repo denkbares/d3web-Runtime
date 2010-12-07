@@ -29,6 +29,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -593,7 +596,18 @@ public final class XMLUtil {
 	 */
 	public static void fillInfoStore(InfoStore infoStore, Element father, KnowledgeBase kb) throws IOException {
 		for (Element child : getElementList(father.getChildNodes())) {
-			Property<Object> property = Property.getUntypedProperty(child.getAttribute("property"));
+			Property<Object> property;
+			try {
+				property = Property.getUntypedProperty(child.getAttribute("property"));
+			}
+			catch (NoSuchElementException e) {
+				Logger.getLogger("Persistence").log(
+						Level.WARNING,
+						"Property "
+								+ child.getAttribute("property")
+								+ " is not supported. Propably the corresponding plugin is missing. This property will be lost when saving the Knowledgebase.");
+				continue;
+			}
 			String s = child.getTextContent();
 			Object value = "";
 			if (s.trim().length() > 0) {
