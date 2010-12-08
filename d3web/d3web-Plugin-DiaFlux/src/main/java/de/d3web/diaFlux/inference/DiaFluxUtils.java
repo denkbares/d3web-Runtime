@@ -48,14 +48,15 @@ public final class DiaFluxUtils {
 	private DiaFluxUtils() {
 	}
 
+	@SuppressWarnings("unchecked")
 	public static FlowSet getFlowSet(KnowledgeBase knowledgeBase) {
 
-		List knowledge = (List) knowledgeBase.getKnowledge(FluxSolver.class,
+		List<FlowSet> knowledge = (List<FlowSet>) knowledgeBase.getKnowledge(FluxSolver.class,
 				FluxSolver.DIAFLUX);
 
 		if (knowledge == null || knowledge.isEmpty()) return null;
 
-		return (FlowSet) knowledge.get(0);
+		return knowledge.get(0);
 
 	}
 
@@ -108,9 +109,10 @@ public final class DiaFluxUtils {
 	 * @param flow
 	 * @param base
 	 */
+	@SuppressWarnings("unchecked")
 	public static void addFlow(Flow flow, KnowledgeBase base) {
 
-		List ks = (List) base.getKnowledge(FluxSolver.class, FluxSolver.DIAFLUX);
+		List<FlowSet> ks = (List<FlowSet>) base.getKnowledge(FluxSolver.class, FluxSolver.DIAFLUX);
 
 		FlowSet flowSet;
 		if (ks == null) {
@@ -119,7 +121,7 @@ public final class DiaFluxUtils {
 
 		}
 		else {
-			flowSet = (FlowSet) ks.get(0);
+			flowSet = ks.get(0);
 		}
 
 		flowSet.put(flow);
@@ -169,8 +171,10 @@ public final class DiaFluxUtils {
 	 * @param base
 	 * @return s the NodeRegistry to look up nodes by Name
 	 */
+	@SuppressWarnings("unchecked")
 	public static NodeRegistry getNodeRegistry(KnowledgeBase base) {
-		List ks = (List) base.getKnowledge(FluxSolver.class, FluxSolver.NODE_REGISTRY);
+		List<NodeRegistry> ks = (List<NodeRegistry>) base.getKnowledge(FluxSolver.class,
+				FluxSolver.NODE_REGISTRY);
 
 		NodeRegistry registry;
 		if (ks == null) {
@@ -289,18 +293,6 @@ public final class DiaFluxUtils {
 					("Exitnode '" + startNodeName + "' of flow '" + flowName + "' not found."));
 		return null;
 
-	}
-
-	/**
-	 * 
-	 * @created 12.11.2010
-	 * @param startNodeName
-	 * @param startNodes
-	 * @return
-	 */
-	private static INode findNodeByName(String startNodeName, List<INode> startNodes) {
-
-		return null;
 	}
 
 }

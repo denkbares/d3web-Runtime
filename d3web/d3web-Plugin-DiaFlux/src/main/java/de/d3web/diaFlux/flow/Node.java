@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- *
+ * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- *
+ * 
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- *
+ * 
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -32,18 +32,18 @@ import de.d3web.diaFlux.inference.DiaFluxUtils;
 import de.d3web.diaFlux.inference.FluxSolver;
 
 /**
- *
- *
+ * 
+ * 
  * @author Reinhard Hatko
  * @created 08.08.2009
  */
 public abstract class Node implements INode, CaseObjectSource {
 
-	protected final List<IEdge> outgoing;
-	protected final List<IEdge> incoming;
-	protected final String id;
-	protected Flow flow;
-	protected String name;
+	private final List<IEdge> outgoing;
+	private final List<IEdge> incoming;
+	private final String id;
+	private Flow flow;
+	private final String name;
 
 	public Node(String id, String name) {
 
@@ -53,22 +53,29 @@ public abstract class Node implements INode, CaseObjectSource {
 		this.name = name;
 	}
 
-
 	protected boolean addOutgoingEdge(IEdge edge) {
-		if (edge == null) throw new IllegalArgumentException("edge must not be null");
+		if (edge == null) {
+			throw new IllegalArgumentException("edge must not be null");
+		}
 
-		if (edge.getStartNode() != this) throw new IllegalArgumentException("edge '" + edge
-				+ "' does not start at: " + this.toString());
+		if (edge.getStartNode() != this) {
+			throw new IllegalArgumentException("edge '" + edge + "' does not start at: "
+					+ this.toString());
+		}
 
 		return outgoing.add(edge);
 
 	}
 
 	protected boolean addIncomingEdge(IEdge edge) {
-		if (edge == null) throw new IllegalArgumentException("edge must not be null");
+		if (edge == null) {
+			throw new IllegalArgumentException("edge must not be null");
+		}
 
-		if (edge.getEndNode() != this) throw new IllegalArgumentException("edge '" + edge
-				+ "' does not end at: " + this.toString());
+		if (edge.getEndNode() != this) {
+			throw new IllegalArgumentException("edge '" + edge + "' does not end at: "
+					+ this.toString());
+		}
 
 		return incoming.add(edge);
 
@@ -91,7 +98,9 @@ public abstract class Node implements INode, CaseObjectSource {
 
 	@Override
 	public void setFlow(Flow flow) {
-		if (flow == null) throw new NullPointerException("Flow must not be null");
+		if (flow == null) {
+			throw new IllegalArgumentException("Flow must not be null");
+		}
 
 		this.flow = flow;
 	}
@@ -100,8 +109,6 @@ public abstract class Node implements INode, CaseObjectSource {
 	public String getName() {
 		return name;
 	}
-
-
 
 	@Override
 	public SessionObject createCaseObject(Session session) {
@@ -114,12 +121,12 @@ public abstract class Node implements INode, CaseObjectSource {
 	}
 
 	@Override
-	public void doAction(Session session) {
+	public void activate(Session session) {
 
 	}
 
 	@Override
-	public void undoAction(Session session) {
+	public void deactivate(Session session) {
 
 	}
 
@@ -130,7 +137,7 @@ public abstract class Node implements INode, CaseObjectSource {
 
 	@Override
 	public List<? extends TerminologyObject> getForwardKnowledge() {
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 	}
 
 	/**
@@ -152,7 +159,7 @@ public abstract class Node implements INode, CaseObjectSource {
 
 	/**
 	 * Deactivates this node. Removes all support.
-	 *
+	 * 
 	 * @param session
 	 */
 	protected void resetNodeData(Session session) {
@@ -161,6 +168,20 @@ public abstract class Node implements INode, CaseObjectSource {
 
 		for (ISupport support : nodeData.getSupports()) {
 			FluxSolver.removeSupport(session, this, support);
+		}
+
+	}
+
+	@Override
+	public void propagate(Session session) {
+
+		INodeData data = DiaFluxUtils.getNodeData(this, session);
+
+		boolean support = data.checkSupport(session);
+
+		if (!support) {
+			FluxSolver.deactivate(session, this);
+
 		}
 
 	}

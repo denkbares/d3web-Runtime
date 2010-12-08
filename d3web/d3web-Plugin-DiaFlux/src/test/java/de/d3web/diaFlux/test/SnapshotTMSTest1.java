@@ -23,7 +23,6 @@ import java.util.List;
 import org.junit.Test;
 
 import de.d3web.diaFlux.flow.INode;
-import de.d3web.diaFlux.flow.ISupport;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
 
 /**
@@ -79,9 +78,10 @@ public class SnapshotTMSTest1 extends AbstractDiaFluxTest {
 		// TODO could be easier to get the node, having the id
 		for (INode node : nodes) {
 			if (node.getID().equalsIgnoreCase(nodeQ3)) {
-				List<ISupport> supports = DiaFluxUtils.getNodeData(node, session).getSupports();
 				// node should not have gained ValidSupport from a Snapshot
 				// TODO fix undoing of snapshots and activate
+				// List<ISupport> supports = DiaFluxUtils.getNodeData(node,
+				// session).getSupports();
 				// Assert.assertEquals(1, supports.size());
 				break;
 			}

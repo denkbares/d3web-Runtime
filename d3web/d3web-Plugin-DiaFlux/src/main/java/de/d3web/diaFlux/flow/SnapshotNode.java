@@ -39,13 +39,13 @@ public class SnapshotNode extends Node {
 	}
 
 	@Override
-	public void doAction(Session session) {
+	public void activate(Session session) {
 
 		DiaFluxUtils.getDiaFluxCaseObject(session).registerSnapshot(this, session);
 	}
 
 	@Override
-	public void undoAction(Session session) {
+	public void deactivate(Session session) {
 		DiaFluxUtils.getDiaFluxCaseObject(session).unregisterSnapshot(this, session);
 	}
 
@@ -61,12 +61,30 @@ public class SnapshotNode extends Node {
 		// BUT: this is a problem, in cycles with just 1 SSN.
 		// if it gets activated once, it won't deactivate later, because it
 		// still holds is ValidSupport
-		// BUT: it should be active if it is the node that started the SS
+		// BUT: it should must active if it is the node that started the SS
 
 		if (this == snapshotNode) {
 			FluxSolver.addSupport(session, this, new ValidSupport());
 		}
 
+	}
+
+	@Override
+	public void propagate(Session session) {
+		super.propagate(session);
+
+		for (IEdge edge : getIncomingEdges()) {
+			if (DiaFluxUtils.getEdgeData(edge, session).hasFired()) {
+
+				// if one of the incoming edges has fired
+				// then the calling start node should be active
+				return;
+			}
+
+		}
+
+		// no incoming edge has fired -> undoAction
+		FluxSolver.deactivate(session, this);
 	}
 
 	/**

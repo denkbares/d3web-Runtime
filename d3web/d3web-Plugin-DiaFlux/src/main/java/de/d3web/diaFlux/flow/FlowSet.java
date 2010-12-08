@@ -40,7 +40,7 @@ import de.d3web.diaFlux.inference.IPath;
 public class FlowSet implements KnowledgeSlice, CaseObjectSource, Iterable<Flow> {
 
 	// hardcoded it ATM due to comment in Interface
-	private final String id = "Flowset";
+	private static final String ID = "Flowset";
 	private final Map<String, Flow> map;
 
 	public FlowSet() {
@@ -108,7 +108,7 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource, Iterable<Flow>
 
 	@Override
 	public String getId() {
-		return id;
+		return ID;
 	}
 
 	@Override
@@ -131,7 +131,7 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource, Iterable<Flow>
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
 		result = prime * result + ((map == null) ? 0 : map.hashCode());
 		return result;
 	}
@@ -142,10 +142,10 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource, Iterable<Flow>
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		FlowSet other = (FlowSet) obj;
-		if (id == null) {
-			if (other.id != null) return false;
+		if (ID == null) {
+			if (other.ID != null) return false;
 		}
-		else if (!id.equals(other.id)) return false;
+		else if (!ID.equals(other.ID)) return false;
 		if (map == null) {
 			if (other.map != null) return false;
 		}
@@ -155,7 +155,7 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource, Iterable<Flow>
 
 	@Override
 	public String toString() {
-		return "FlowSet [id=" + id + ", map=" + map + "]";
+		return "FlowSet [id=" + ID + ", map=" + map + "]";
 	}
 
 }

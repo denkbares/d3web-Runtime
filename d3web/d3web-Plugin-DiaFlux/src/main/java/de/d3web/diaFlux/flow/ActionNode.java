@@ -33,7 +33,7 @@ import de.d3web.indication.ActionRepeatedIndication;
 
 public class ActionNode extends Node {
 
-	protected final PSAction action;
+	private final PSAction action;
 
 	public ActionNode(String id, String name, PSAction action) {
 		super(id, name);
@@ -48,7 +48,7 @@ public class ActionNode extends Node {
 	}
 
 	@Override
-	public void doAction(Session session) {
+	public void activate(Session session) {
 		getAction().doIt(session, this, session.getPSMethodInstance(FluxSolver.class));
 
 	}
@@ -85,7 +85,7 @@ public class ActionNode extends Node {
 	}
 
 	@Override
-	public void undoAction(Session session) {
+	public void deactivate(Session session) {
 		getAction().undo(session, this, session.getPSMethodInstance(FluxSolver.class));
 	}
 
@@ -106,8 +106,8 @@ public class ActionNode extends Node {
 
 		super.takeSnapshot(session, snapshotNode, nodes);
 
-		//redo action with SSN as source
-		undoAction(session);
+		// redo action with SSN as source
+		deactivate(session);
 
 		getAction().doIt(session, snapshotNode, session.getPSMethodInstance(FluxSolver.class));
 

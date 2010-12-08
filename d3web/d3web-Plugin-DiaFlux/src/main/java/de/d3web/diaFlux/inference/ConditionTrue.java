@@ -31,7 +31,8 @@ import de.d3web.core.session.Session;
 
 /**
  * 
- * @author hatko Created on: 09.10.2009
+ * @author Reinhard Hatko
+ * @created on: 09.10.2009
  */
 public final class ConditionTrue extends TerminalCondition {
 

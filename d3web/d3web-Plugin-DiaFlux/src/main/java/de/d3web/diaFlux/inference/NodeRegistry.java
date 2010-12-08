@@ -82,7 +82,9 @@ public class NodeRegistry implements KnowledgeSlice {
 
 		List<INode> list = nodeMap.get(pair);
 
-		if (list == null) return;
+		if (list == null) {
+			return;
+		}
 
 		list.remove(node);
 
@@ -92,7 +94,9 @@ public class NodeRegistry implements KnowledgeSlice {
 
 		List<INode> list = flowMap.get(flowName);
 
-		if (list == null) return;
+		if (list == null) {
+			return;
+		}
 
 		list.remove(node);
 
@@ -111,15 +115,23 @@ public class NodeRegistry implements KnowledgeSlice {
 
 		List<INode> registrations = nodeMap.get(pair);
 
-		if (registrations == null) return Collections.EMPTY_LIST;
-		else return registrations;
+		if (registrations == null) {
+			return Collections.emptyList();
+		}
+		else {
+			return registrations;
+		}
 	}
 
 	protected List<INode> getFlowRegistrations(String flowName) {
 		List<INode> registrations = flowMap.get(flowName);
 
-		if (registrations == null) return Collections.EMPTY_LIST;
-		else return registrations;
+		if (registrations == null) {
+			return Collections.emptyList();
+		}
+		else {
+			return registrations;
+		}
 
 	}
 

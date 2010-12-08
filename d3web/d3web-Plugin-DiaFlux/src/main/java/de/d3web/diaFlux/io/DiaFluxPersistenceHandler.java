@@ -134,9 +134,8 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	 * @param doc
 	 * @return
 	 * @throws IOException
-	 * @throws NoSuchFragmentHandlerException
 	 */
-	private Element writeEdge(IEdge edge, Element parent, Document doc) throws NoSuchFragmentHandlerException, IOException {
+	private Element writeEdge(IEdge edge, Element parent, Document doc) throws IOException {
 		Element edgeElem = doc.createElement("Edge");
 
 		edgeElem.setAttribute("fromID", edge.getStartNode().getID());
@@ -228,9 +227,8 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	 * @param knowledgeBase
 	 * @param flowElem
 	 * @throws IOException
-	 * @throws NoSuchFragmentHandlerException
 	 */
-	private Flow readFlow(KnowledgeBase knowledgeBase, Element flowElem) throws NoSuchFragmentHandlerException, IOException {
+	private Flow readFlow(KnowledgeBase knowledgeBase, Element flowElem) throws IOException {
 		NodeList nodeList = flowElem.getElementsByTagName("Node");
 		List<INode> nodes = new ArrayList<INode>();
 
@@ -261,9 +259,8 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	 * @param item
 	 * @return
 	 * @throws IOException
-	 * @throws NoSuchFragmentHandlerException
 	 */
-	private IEdge readEdge(KnowledgeBase knowledgeBase, Element edgeElem, List<INode> nodes) throws NoSuchFragmentHandlerException, IOException {
+	private IEdge readEdge(KnowledgeBase knowledgeBase, Element edgeElem, List<INode> nodes) throws IOException {
 
 		String fromID = edgeElem.getAttribute("fromID");
 		String toID = edgeElem.getAttribute("toID");
@@ -277,15 +274,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 		return FlowFactory.getInstance().createEdge(id, startNode, endNode, condition);
 	}
 
-	/**
-	 * 
-	 * @param knowledgeBase
-	 * @param node
-	 * @return
-	 * @throws IOException
-	 * @throws NoSuchFragmentHandlerException
-	 */
-	private INode readNode(KnowledgeBase knowledgeBase, Element node) throws NoSuchFragmentHandlerException, IOException {
+	private INode readNode(KnowledgeBase knowledgeBase, Element node) throws IOException {
 
 		return (INode) getFragmentHandler(node).read(knowledgeBase, node);
 	}

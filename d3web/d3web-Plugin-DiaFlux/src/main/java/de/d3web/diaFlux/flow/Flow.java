@@ -20,9 +20,9 @@
 
 package de.d3web.diaFlux.flow;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -141,8 +141,9 @@ public class Flow implements CaseObjectSource, KnowledgeSlice {
 		return getNodesOfType(EndNode.class);
 	}
 
+	@SuppressWarnings("unchecked")
 	private <T> List<T> getNodesOfType(Class<T> clazz) {
-		List<T> result = new ArrayList<T>(3);
+		List<T> result = new LinkedList<T>();
 
 		for (INode node : nodes) {
 			if (clazz.isAssignableFrom(node.getClass())) result.add((T) node);

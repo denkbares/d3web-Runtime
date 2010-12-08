@@ -38,14 +38,14 @@ import de.d3web.diaFlux.inference.FluxSolver;
  */
 public final class FlowFactory {
 
-	private static final FlowFactory instance;
+	private static final FlowFactory INSTANCE;
 
 	static {
-		instance = new FlowFactory();
+		INSTANCE = new FlowFactory();
 	}
 
 	public static FlowFactory getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	private FlowFactory() {

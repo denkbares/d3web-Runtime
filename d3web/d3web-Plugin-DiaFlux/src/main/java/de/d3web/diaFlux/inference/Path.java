@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- *
+ * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- *
+ * 
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- *
+ * 
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -48,7 +48,7 @@ import de.d3web.diaFlux.flow.ValidSupport;
 
 /**
  * @author Reinhard Hatko
- *
+ * 
  *         Created: 07.08.2010
  */
 public class Path extends SessionObject implements IPath {
@@ -88,7 +88,6 @@ public class Path extends SessionObject implements IPath {
 		return (Flow) getSourceObject();
 	}
 
-
 	@Override
 	public void activate(StartNode startNode, ISupport support, Session session) {
 
@@ -127,7 +126,7 @@ public class Path extends SessionObject implements IPath {
 
 	/**
 	 * Starts propagation beginning at the supplied node.
-	 *
+	 * 
 	 * @created 05.11.2010
 	 * @param session
 	 * @param node
@@ -189,7 +188,6 @@ public class Path extends SessionObject implements IPath {
 			takeSnapshot(session, snapshotNode, edge.getStartNode(), nodes);
 		}
 
-
 		// add support to all active outgoing edges.
 		// These paths either:
 		// are not been on the path back FROM the snapshot node,
@@ -225,8 +223,8 @@ public class Path extends SessionObject implements IPath {
 
 	/**
 	 * Continues to flow from the current end node of this path.
-	 *
-	 *
+	 * 
+	 * 
 	 * @param session
 	 * @return s true, if there are changes to this path (ie. at least one new
 	 *         node could be reached), false otherwise.
@@ -264,7 +262,7 @@ public class Path extends SessionObject implements IPath {
 	 * Takes the given edge to reach its end node. Adds support to the reached
 	 * node. If the node was not yet active, its action is done, otherwise
 	 * nothing is done.
-	 *
+	 * 
 	 * @param session the current session
 	 * @param edge the egde to take
 	 * @return the newly reached node, of it was not active before, null
@@ -275,12 +273,11 @@ public class Path extends SessionObject implements IPath {
 		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
 				("Following edge '" + edge + "'."));
 
-
 		INode nextNode = edge.getEndNode();
 
 		// can the node be activated?
 		boolean activate = nextNode.couldActivate(session);
-		
+
 		getEdgeData(edge).setHasFired(true);
 
 		ISupport support = new EdgeSupport(edge);
@@ -291,7 +288,7 @@ public class Path extends SessionObject implements IPath {
 		if (activate) {
 
 			// so do its action
-			FluxSolver.doAction(session, nextNode);
+			FluxSolver.activate(session, nextNode);
 
 			// Special case: SnapshotNode
 			if (nextNode instanceof SnapshotNode) {
@@ -319,14 +316,12 @@ public class Path extends SessionObject implements IPath {
 
 		}
 
-
-
 	}
 
 	/**
 	 * Selects those edges that start at node that have not yeet fired, but
 	 * whose guards are true.
-	 *
+	 * 
 	 * @param node
 	 * @param session
 	 * @return
@@ -359,7 +354,7 @@ public class Path extends SessionObject implements IPath {
 	/**
 	 * Selects those edges starting at node that have fired, but whose guards
 	 * are no longer true.
-	 *
+	 * 
 	 * @param node
 	 * @param session
 	 * @return
@@ -397,18 +392,19 @@ public class Path extends SessionObject implements IPath {
 		return result;
 	}
 
-
-
 	// TMS
 	private void maintainTruth(INode node, Session session) {
 
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
+		Logger.getLogger(FluxSolver.class.getName()).info(
 				"Maintaining truth at node '" + node.getName() + "'.");
 
 		INodeData data = getNodeData(node);
 
 		// checks the nodes support
-		data.propagate(session);
+		// data.checkSupport(session);
+
+		// propagate changes to the node
+		node.propagate(session);
 
 		List<IEdge> edges;
 
@@ -439,10 +435,8 @@ public class Path extends SessionObject implements IPath {
 
 	}
 
-
-
 	/**
-	 *
+	 * 
 	 * @param node
 	 * @param session
 	 * @return
@@ -460,7 +454,6 @@ public class Path extends SessionObject implements IPath {
 
 		return result;
 	}
-
 
 	@Override
 	public boolean isActive() {

@@ -42,7 +42,7 @@ public class EndNode extends Node {
 	}
 
 	@Override
-	public void doAction(Session session) {
+	public void activate(Session session) {
 
 		List<INode> registrations = DiaFluxUtils.getNodeRegistry(session).getRegisteredNodes(this);
 
@@ -53,7 +53,7 @@ public class EndNode extends Node {
 	}
 
 	@Override
-	public void undoAction(Session session) {
+	public void deactivate(Session session) {
 		List<INode> registrations = DiaFluxUtils.getNodeRegistry(session).getRegisteredNodes(this);
 
 		for (INode node : registrations) {

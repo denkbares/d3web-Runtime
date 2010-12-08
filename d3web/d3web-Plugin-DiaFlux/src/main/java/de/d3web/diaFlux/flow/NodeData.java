@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- *
+ * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- *
+ * 
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- *
+ * 
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -31,7 +31,7 @@ import de.d3web.diaFlux.inference.FluxSolver;
 
 public class NodeData extends SessionObject implements INodeData {
 
-	final List<ISupport> supports;
+	private final List<ISupport> supports;
 
 	public NodeData(INode node) {
 		super(node);
@@ -49,27 +49,16 @@ public class NodeData extends SessionObject implements INodeData {
 		return !supports.isEmpty();
 	}
 
-	@Override
-	public void propagate(Session session) {
-
-		boolean support = checkSupport(session);
-
-		// TODO could be moved to Path#maintaintruth. that may be cleaner
-		if (!support) {
-			FluxSolver.undoAction(session, getNode());
-		}
-	}
-
-
 	/**
-	 * Checks if this node's support is still valid. If the support is no longer
-	 * valid, it is removed. If it is valid, nothing is done. Returns if the
-	 * node has still support.
-	 *
+	 * This method is called during TMS. It checks if this node's support is
+	 * still valid. If the support is no longer valid, it is removed. If it is
+	 * valid, nothing is done. Returns if the node has still support.
+	 * 
 	 * @param session
 	 * @return if the node is still active
 	 */
-	protected boolean checkSupport(Session session) {
+	@Override
+	public boolean checkSupport(Session session) {
 
 		for (ISupport support : new ArrayList<ISupport>(supports)) {
 
@@ -79,6 +68,7 @@ public class NodeData extends SessionObject implements INodeData {
 		}
 
 		return isSupported();
+
 	}
 
 	@Override
@@ -115,7 +105,5 @@ public class NodeData extends SessionObject implements INodeData {
 		return getClass().getSimpleName() + "[" + getNode() + ", active=" + isSupported()
 				+ ", support=" + supports.size() + "]" + Integer.toHexString(hashCode());
 	}
-
-
 
 }

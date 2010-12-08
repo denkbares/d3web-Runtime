@@ -26,7 +26,6 @@ import java.util.List;
 
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.diaFlux.inference.CallFlowAction;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
 import de.d3web.diaFlux.inference.FlowchartProcessedCondition;
@@ -81,13 +80,13 @@ public class ComposedNode extends Node {
 	}
 
 	@Override
-	public void doAction(Session session) {
+	public void activate(Session session) {
 		action.doIt(session, this, session.getPSMethodInstance(FluxSolver.class));
 
 	}
 
 	@Override
-	public void undoAction(Session session) {
+	public void deactivate(Session session) {
 		action.undo(session, this, session.getPSMethodInstance(FluxSolver.class));
 	}
 
@@ -105,19 +104,51 @@ public class ComposedNode extends Node {
 
 		}
 
-		// get the called startnode
+		// get the called start node
 		StartNode startNode = DiaFluxUtils.findStartNode(session, action.getFlowName(),
 				action.getStartNodeName());
 
 		if (startNode == null) {
 			return false;
-			// throw new NullPointerException("Startnode '" +
+			// throw new NullPointerException("Start node '" +
 			// action.getStartNodeName()
 			// + "' in flow '" + action.getFlowName() + "' not found.");
 		}
 
-		// this node can be activated, if the called StartNode can be activated
+		// this node can be activated, if the called start node can be activated
 		return startNode.couldActivate(session);
+	}
+
+	@Override
+	public void propagate(Session session) {
+		super.propagate(session);
+
+		// check for supported is not enough
+		// SSN inside the called flow can maintain support for the CN
+		// but the repeated call to the start node must be retracted, if no edge
+		// supports the re-calling the start node
+		for (IEdge edge : getIncomingEdges()) {
+			if (DiaFluxUtils.getEdgeData(edge, session).hasFired()) {
+
+				// if one of the incoming edges has fired
+				// then the calling start node should be active
+				return;
+			}
+
+		}
+
+		// no incoming edge has fired -> undoAction
+		FluxSolver.deactivate(session, this);
+
+		// TODO can this trigger a NPE, because the CFA has not been done
+		// before? or already been undone?
+		// then the support the CFA wants to retract is null
+
+		// this also tries to undo the action after propagating to the exit node
+		// of the called flow after taking a snapshot.
+		// but then the support can of course not be removed because this has
+		// been done while taking the snapshot
+
 	}
 
 	public String getFlowName() {
@@ -126,11 +157,6 @@ public class ComposedNode extends Node {
 
 	public String getStartNodeName() {
 		return action.getStartNodeName();
-	}
-
-	@Override
-	public SessionObject createCaseObject(Session session) {
-		return new ComposedNodeData(this);
 	}
 
 	private Collection<INode> findActiveExitNodes(Session session) {

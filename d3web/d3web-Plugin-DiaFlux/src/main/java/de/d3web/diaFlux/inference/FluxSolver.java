@@ -191,7 +191,7 @@ public class FluxSolver implements PostHookablePSMethod {
 							// TODO quick and dirty hack to reevaluate Formulas
 							if (action.getClass().getName().equals(
 									"cc.d3web.expression.eval.ExpressionAction")) {
-								doAction(session, node);
+								activate(session, node);
 							}
 
 						}
@@ -293,16 +293,16 @@ public class FluxSolver implements PostHookablePSMethod {
 
 	}
 
-	public static void undoAction(Session session, INode node) {
-		Logger.getLogger(FluxSolver.class.getName()).info("Undoing action of node: " + node);
+	public static void deactivate(Session session, INode node) {
+		Logger.getLogger(FluxSolver.class.getName()).info("Deactivating node: " + node);
 
-		node.undoAction(session);
+		node.deactivate(session);
 	}
 
-	public static void doAction(Session session, INode node) {
-		Logger.getLogger(FluxSolver.class.getName()).info("Doing action of node: " + node);
+	public static void activate(Session session, INode node) {
+		Logger.getLogger(FluxSolver.class.getName()).info("Activating node: " + node);
 
-		node.doAction(session);
+		node.activate(session);
 	}
 
 	public static void takeSnapshot(Session session, SnapshotNode node) {

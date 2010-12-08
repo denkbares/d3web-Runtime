@@ -50,7 +50,7 @@ import de.d3web.plugin.test.InitPluginManager;
 public abstract class AbstractDiaFluxTest {
 
 	protected static final String PATH = "src/test/resources/";
-	protected static final int TORTURE_LIMIT = 10000;
+	protected static final int TORTURE_LIMIT = 10;
 
 	protected final String fileName;
 	protected KnowledgeBaseManagement kbm;
