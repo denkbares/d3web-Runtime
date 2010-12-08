@@ -152,23 +152,7 @@ public abstract class Node implements INode, CaseObjectSource {
 	@Override
 	public void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes) {
 
-		// TODO this could now move to nodedata
-		resetNodeData(session);
-
-	}
-
-	/**
-	 * Deactivates this node. Removes all support.
-	 * 
-	 * @param session
-	 */
-	protected void resetNodeData(Session session) {
-
-		INodeData nodeData = DiaFluxUtils.getNodeData(this, session);
-
-		for (ISupport support : nodeData.getSupports()) {
-			FluxSolver.removeSupport(session, this, support);
-		}
+		DiaFluxUtils.getNodeData(this, session).reset(session);
 
 	}
 

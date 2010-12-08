@@ -96,6 +96,15 @@ public class NodeData extends SessionObject implements INodeData {
 	}
 
 	@Override
+	public void reset(Session session) {
+
+		for (ISupport support : getSupports()) {
+			FluxSolver.removeSupport(session, getNode(), support);
+		}
+
+	}
+
+	@Override
 	public List<ISupport> getSupports() {
 		return new ArrayList<ISupport>(supports);
 	}

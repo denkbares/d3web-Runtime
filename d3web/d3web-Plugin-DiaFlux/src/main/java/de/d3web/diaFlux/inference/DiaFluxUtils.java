@@ -20,6 +20,7 @@
 
 package de.d3web.diaFlux.inference;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -89,7 +90,9 @@ public final class DiaFluxUtils {
 
 	public static boolean isFlowCase(Session session) {
 
-		if (session == null) return false;
+		if (session == null) {
+			return false;
+		}
 
 		FlowSet flowSet = getFlowSet(session);
 
@@ -190,6 +193,22 @@ public final class DiaFluxUtils {
 
 	public static NodeRegistry getNodeRegistry(Session session) {
 		return getNodeRegistry(session.getKnowledgeBase());
+	}
+
+	public static List<StartNode> getAutostartNodes(KnowledgeBase base) {
+		List<StartNode> result = new LinkedList<StartNode>();
+
+		for (Flow flow : getFlowSet(base)) {
+			if (flow.isAutostart()) {
+
+				result.addAll(flow.getStartNodes());
+
+			}
+
+		}
+
+		return result;
+
 	}
 
 	public static INode findNode(Session session, String flowName, String nodeName) {

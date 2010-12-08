@@ -6,8 +6,6 @@
 
 
 
-Richtiger PSM in ActionNode#takeSnapshot??
-
 Nach Snapshot: gefeuerte Regeln zurücksetzen, die ein Flowchart indizieren. Könnte in RuleSupport#remove() gemacht werden.
  
 

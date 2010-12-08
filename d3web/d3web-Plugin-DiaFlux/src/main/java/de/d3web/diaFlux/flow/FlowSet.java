@@ -142,10 +142,7 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource, Iterable<Flow>
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		FlowSet other = (FlowSet) obj;
-		if (ID == null) {
-			if (other.ID != null) return false;
-		}
-		else if (!ID.equals(other.ID)) return false;
+
 		if (map == null) {
 			if (other.map != null) return false;
 		}

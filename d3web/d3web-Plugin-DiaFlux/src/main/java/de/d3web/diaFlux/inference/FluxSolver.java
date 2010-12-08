@@ -38,7 +38,6 @@ import de.d3web.core.session.blackboard.Facts;
 import de.d3web.diaFlux.flow.ActionNode;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
 import de.d3web.diaFlux.flow.EdgeMap;
-import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.IEdge;
 import de.d3web.diaFlux.flow.INode;
 import de.d3web.diaFlux.flow.INodeData;
@@ -68,20 +67,25 @@ public class FluxSolver implements PostHookablePSMethod {
 	@Override
 	public void init(Session session) {
 
-		if (!DiaFluxUtils.isFlowCase(session)) return;
+		if (!DiaFluxUtils.isFlowCase(session)) {
+			return;
+		}
 
 		Logger.getLogger(FluxSolver.class.getName()).info(
 				"Initing FluxSolver with case: " + session);
 
-		for (Flow flow : DiaFluxUtils.getFlowSet(session)) {
-			if (flow.isAutostart()) {
-				for (StartNode startNode : flow.getStartNodes()) {
+		try {
+			session.getPropagationManager().openPropagation();
 
-					activate(session, startNode, new ValidSupport());
-				}
+			List<StartNode> list = DiaFluxUtils.getAutostartNodes(session.getKnowledgeBase());
 
+			for (StartNode startNode : list) {
+				activate(session, startNode, new ValidSupport());
 			}
 
+		}
+		finally {
+			session.getPropagationManager().commitPropagation();
 		}
 
 	}
@@ -132,7 +136,9 @@ public class FluxSolver implements PostHookablePSMethod {
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 
-		if (!DiaFluxUtils.isFlowCase(session)) return;
+		if (!DiaFluxUtils.isFlowCase(session)) {
+			return;
+		}
 
 		Logger.getLogger(FluxSolver.class.getName()).info(
 				"Start propagating: " + changes);
@@ -143,14 +149,18 @@ public class FluxSolver implements PostHookablePSMethod {
 			for (PropagationEntry propagationEntry : changes) {
 
 				// strategic entries do not matter so far...
-				if (propagationEntry.isStrategic()) continue;
+				if (propagationEntry.isStrategic()) {
+					continue;
+				}
 
 				TerminologyObject object = propagationEntry.getObject();
 				EdgeMap slice = (EdgeMap) ((NamedObject) object).getKnowledge(FluxSolver.class,
 						MethodKind.FORWARD);
 
 				// TO does not occur in any edge
-				if (slice == null) continue;
+				if (slice == null) {
+					continue;
+				}
 
 				// iterate over all edges that contain the changed TO
 				for (IEdge edge : slice.getEdges()) {
@@ -204,8 +214,7 @@ public class FluxSolver implements PostHookablePSMethod {
 
 			}
 
-			Logger.getLogger(FluxSolver.class.getName()).info(
-					"Finished propagating.");
+			Logger.getLogger(FluxSolver.class.getName()).info("Finished propagating.");
 
 		}
 		finally {
@@ -217,7 +226,9 @@ public class FluxSolver implements PostHookablePSMethod {
 	@Override
 	public void postPropagate(Session session) {
 
-		if (!DiaFluxUtils.isFlowCase(session)) return;
+		if (!DiaFluxUtils.isFlowCase(session)) {
+			return;
+		}
 
 		DiaFluxCaseObject caseObject = DiaFluxUtils.getDiaFluxCaseObject(session);
 

@@ -91,14 +91,13 @@ public class Path extends SessionObject implements IPath {
 	@Override
 	public void activate(StartNode startNode, ISupport support, Session session) {
 
-		StartNodeData nodeData = (StartNodeData) DiaFluxUtils.getNodeData(startNode, session);
-
 		// TODO not so nice, could be removed when using different methods for
 		// calls from ComposedNodes and CallFlowActions
 		// Necessary to continue snapshots at the calling node
 		if (support instanceof NodeSupport) {
 			INode node = ((NodeSupport) support).getNode();
 
+			StartNodeData nodeData = (StartNodeData) DiaFluxUtils.getNodeData(startNode, session);
 			nodeData.addCallingNode(DiaFluxUtils.getNodeData(node, session));
 
 		}
@@ -109,16 +108,7 @@ public class Path extends SessionObject implements IPath {
 
 		// if node was not supported before adding support, start flowing
 		if (activate) {
-
-			try { // have to open propagation: e.g. when activating the main
-					// node during init no propagation is open -> can result in
-					// undefined state eg when reaching a SSN (during init)
-				session.getPropagationManager().openPropagation();
-				flow(startNode, session);
-			}
-			finally {
-				session.getPropagationManager().commitPropagation();
-			}
+			flow(startNode, session);
 
 		}
 

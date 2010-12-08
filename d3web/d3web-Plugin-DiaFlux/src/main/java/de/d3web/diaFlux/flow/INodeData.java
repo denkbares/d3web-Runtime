@@ -83,4 +83,12 @@ public interface INodeData {
 	 */
 	boolean checkSupport(Session session);
 
+	/**
+	 * This method is called during taking a snapshot. It removes all support.
+	 * 
+	 * @created 08.12.2010
+	 * @param session the session
+	 */
+	void reset(Session session);
+
 }
