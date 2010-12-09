@@ -127,11 +127,11 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 		flowElem.appendChild(edgesElem);
 
 		for (INode node : flow.getNodes()) {
-			nodesElem.appendChild(writeNode(node, doc));
+			nodesElem.appendChild(createNodeElement(node, doc));
 		}
 
 		for (IEdge edge : flow.getEdges()) {
-			nodesElem.appendChild(writeEdge(edge, edgesElem, doc));
+			nodesElem.appendChild(createEdgeElement(edge, doc));
 
 		}
 
@@ -142,12 +142,11 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	/**
 	 * 
 	 * @param edge
-	 * @param parent
 	 * @param doc
 	 * @return
 	 * @throws IOException
 	 */
-	private Element writeEdge(IEdge edge, Element parent, Document doc) throws IOException {
+	private Element createEdgeElement(IEdge edge, Document doc) throws IOException {
 		Element edgeElem = doc.createElement(EDGE_ELEM);
 
 		edgeElem.setAttribute(FROM_ID, edge.getStartNode().getID());
@@ -169,7 +168,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	 * @return
 	 * @throws IOException
 	 */
-	private Element writeNode(INode node, Document doc) throws IOException {
+	private Element createNodeElement(INode node, Document doc) throws IOException {
 
 		NodeFragmentHandler handler = getFragmentHandler(node);
 

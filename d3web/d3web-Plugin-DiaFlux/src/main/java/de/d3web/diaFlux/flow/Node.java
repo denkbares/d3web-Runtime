@@ -200,13 +200,13 @@ public abstract class Node implements INode, CaseObjectSource {
 
 	@Override
 	public String toString() {
-		String name = getClass().getSimpleName() + "[" + getID() + ", " + getName() + "]";
+		String nameString = getClass().getSimpleName() + "[" + getID() + ", " + getName() + "]";
 		if (flow != null) {
-			name += " in " + flow.getName();
+			nameString += " in " + flow.getName();
 
 		}
 
-		return name;
+		return nameString;
 	}
 
 }

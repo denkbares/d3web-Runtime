@@ -48,39 +48,38 @@ import de.d3web.diaFlux.flow.ValidSupport;
 
 /**
  * @author Reinhard Hatko
- * 
- *         Created: 07.08.2010
+ * @created: 07.08.2010
  */
 public class Path extends SessionObject implements IPath {
 
-	private final Map<INode, INodeData> nodeData;
-	private final Map<IEdge, EdgeData> edgeData;
+	private final Map<INode, INodeData> nodesData;
+	private final Map<IEdge, EdgeData> edgesData;
 
 	public Path(Flow flow, Map<INode, INodeData> nodeData, Map<IEdge, EdgeData> edgeData) {
 		super(flow);
-		this.nodeData = Collections.unmodifiableMap(nodeData);
-		this.edgeData = Collections.unmodifiableMap(edgeData);
+		this.nodesData = Collections.unmodifiableMap(nodeData);
+		this.edgesData = Collections.unmodifiableMap(edgeData);
 
 	}
 
 	@Override
 	public INodeData getNodeData(INode node) {
-		if (!nodeData.containsKey(node)) {
+		if (!nodesData.containsKey(node)) {
 			throw new IllegalArgumentException("Node '" + node
 					+ "' not found in flow '" + getSourceObject() + "'.");
 		}
 
-		return nodeData.get(node);
+		return nodesData.get(node);
 
 	}
 
 	@Override
 	public EdgeData getEdgeData(IEdge edge) {
-		if (!edgeData.containsKey(edge)) {
+		if (!edgesData.containsKey(edge)) {
 			throw new IllegalArgumentException("Edge '" + edge + "' not found in flow '"
 					+ getSourceObject() + "'.");
 		}
-		return edgeData.get(edge);
+		return edgesData.get(edge);
 	}
 
 	@Override
