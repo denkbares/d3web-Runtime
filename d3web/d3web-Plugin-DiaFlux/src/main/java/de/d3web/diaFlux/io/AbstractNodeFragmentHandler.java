@@ -30,16 +30,11 @@ import de.d3web.diaFlux.flow.INode;
  */
 public abstract class AbstractNodeFragmentHandler implements NodeFragmentHandler {
 
-
-	/**
-	 * 
-	 * @param doc
-	 */
 	protected Element createNodeElement(INode node, Document doc) {
-		Element nodeElem = doc.createElement("Node");
-		nodeElem.setAttribute("id", node.getID());
-		nodeElem.setAttribute("name", node.getName());
-	
+		Element nodeElem = doc.createElement(DiaFluxPersistenceHandler.NODE_ELEM);
+		nodeElem.setAttribute(DiaFluxPersistenceHandler.ID, node.getID());
+		nodeElem.setAttribute(DiaFluxPersistenceHandler.NAME, node.getName());
+
 		return nodeElem;
 	}
 

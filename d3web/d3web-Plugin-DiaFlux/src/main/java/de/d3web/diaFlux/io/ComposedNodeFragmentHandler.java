@@ -41,10 +41,11 @@ public class ComposedNodeFragmentHandler extends
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		String id = element.getAttribute("id");
-		// String name = element.getAttribute("name");
-		String flowName = element.getElementsByTagName("FlowName").item(0).getTextContent();
-		String startNodeName = element.getElementsByTagName("StartNodeName").item(0).getTextContent();
+		String id = element.getAttribute(DiaFluxPersistenceHandler.ID);
+		String flowName = element.getElementsByTagName(CallFlowActionFragmentHandler.FLOW_NAME).item(
+				0).getTextContent();
+		String startNodeName = element.getElementsByTagName(
+				CallFlowActionFragmentHandler.START_NODE_NAME).item(0).getTextContent();
 
 		return FlowFactory.getInstance().createComposedNode(id, flowName, startNodeName);
 	}
@@ -57,13 +58,13 @@ public class ComposedNodeFragmentHandler extends
 		Element composedElem = doc.createElement(COMPOSED);
 		nodeElement.appendChild(composedElem);
 
-		Element flowElem = doc.createElement("FlowName");
+		Element flowElem = doc.createElement(CallFlowActionFragmentHandler.FLOW_NAME);
 		composedElem.appendChild(flowElem);
 
 		Text flowNameNode = doc.createTextNode(node.getFlowName());
 		flowElem.appendChild(flowNameNode);
 
-		Element startNodeElem = doc.createElement("StartNodeName");
+		Element startNodeElem = doc.createElement(CallFlowActionFragmentHandler.START_NODE_NAME);
 		composedElem.appendChild(startNodeElem);
 
 		Text startNameNode = doc.createTextNode(node.getStartNodeName());

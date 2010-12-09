@@ -38,11 +38,11 @@ import de.d3web.diaFlux.flow.FlowFactory;
 public class ActionNodeFragmentHandler extends
 		AbstractNodeFragmentHandler {
 
-	private static final String ACTION = "Action";
+	public static final String ACTION = "Action";
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		String id = element.getAttribute("id");
+		String id = element.getAttribute(DiaFluxPersistenceHandler.ID);
 
 		Node actionElem = element.getElementsByTagName(ACTION).item(0);
 
