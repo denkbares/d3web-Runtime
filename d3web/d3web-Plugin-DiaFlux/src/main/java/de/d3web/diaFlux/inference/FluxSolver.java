@@ -27,7 +27,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.MethodKind;
-import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PostHookablePSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -35,7 +34,6 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
-import de.d3web.diaFlux.flow.ActionNode;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
 import de.d3web.diaFlux.flow.EdgeMap;
 import de.d3web.diaFlux.flow.IEdge;
@@ -194,20 +192,13 @@ public class FluxSolver implements PostHookablePSMethod {
 
 					if (path.getNodeData(node).isSupported()) {
 
-						if (node instanceof ActionNode) {
+						if (node.isReevaluate()) {
 
-							PSAction action = ((ActionNode) node).getAction();
-
-							// TODO quick and dirty hack to reevaluate Formulas
-							if (action.getClass().getName().equals(
-									"cc.d3web.expression.eval.ExpressionAction")) {
-								activate(session, node);
-							}
+							activate(session, node);
+							path.propagate(session, node);
 
 						}
 
-						// ...propagate starting at this node
-						path.propagate(session, node);
 					}
 
 				}

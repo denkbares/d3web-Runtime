@@ -140,4 +140,13 @@ public interface INode extends CaseObjectSource {
 	 */
 	void propagate(Session session);
 
+	/**
+	 * Returns if the node should be re-evaluated on changes in its forward
+	 * knowledge. Nodes containing e.g. calculations have to return true
+	 * 
+	 * @created 10.12.2010
+	 * @return true if the node should be reevaluated
+	 */
+	boolean isReevaluate();
+
 }

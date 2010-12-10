@@ -389,9 +389,6 @@ public class Path extends SessionObject implements IPath {
 
 		INodeData data = getNodeData(node);
 
-		// checks the nodes support
-		// data.checkSupport(session);
-
 		// propagate changes to the node
 		node.propagate(session);
 

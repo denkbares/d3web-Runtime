@@ -157,6 +157,11 @@ public abstract class Node implements INode, CaseObjectSource {
 	}
 
 	@Override
+	public boolean isReevaluate() {
+		return false;
+	}
+
+	@Override
 	public void propagate(Session session) {
 
 		INodeData data = DiaFluxUtils.getNodeData(this, session);
