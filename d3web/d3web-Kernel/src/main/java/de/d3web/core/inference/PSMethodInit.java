@@ -23,6 +23,7 @@ package de.d3web.core.inference;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
@@ -84,13 +85,21 @@ public class PSMethodInit implements PSMethod {
 					ids.add(s.substring(posstart));
 					if (q instanceof QuestionOC) {
 						QuestionOC qc = (QuestionOC) q;
-						Choice choice = KnowledgeBaseManagement.createInstance(kb).findChoice(qc,
-								ids.get(0));
-
-						Fact fact = FactFactory.createFact(session, qc, new ChoiceValue(choice),
-								new Object(), this);
-
-						session.getBlackboard().addValueFact(fact);
+						String choiceID = ids.get(0);
+						Choice choice =
+								KnowledgeBaseManagement.createInstance(kb).findChoice(qc, choiceID);
+						if (choice != null) {
+							Fact fact = FactFactory.createFact(session, qc,
+									new ChoiceValue(choice),
+									new Object(), this);
+							session.getBlackboard().addValueFact(fact);
+						}
+						else {
+							Logger.getLogger(getClass().getName()).warning(
+									"Cannot set initial value '" + property +
+											"' for question '" + q.getName()
+											+ "'. Choice not found.");
+						}
 					}
 					else if (q instanceof QuestionNum) {
 						QuestionNum qn = (QuestionNum) q;
@@ -102,10 +111,13 @@ public class PSMethodInit implements PSMethod {
 							session.getBlackboard().addValueFact(fact);
 						}
 						catch (NumberFormatException e) {
-							// TODO: parse formulas for QuestionNum
+							Logger.getLogger(getClass().getName()).warning(
+									"Cannot set initial value '" + property +
+											"' for question '" + q.getName()
+											+ "', because it is not valid number.");
 						}
 					}
-					// handle QuestionDate
+					// TODO: handle QuestionDate, QuestionText, QuestionMC
 				}
 			}
 		}
