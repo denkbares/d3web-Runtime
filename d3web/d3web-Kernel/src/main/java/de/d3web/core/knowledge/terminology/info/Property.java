@@ -42,6 +42,7 @@ public class Property<T> {
 
 	private final Autosave autosave;
 	private final String name;
+	private final String description;
 	private final boolean multilingual;
 	private final String storedClassName;
 	private final String defaultValueString;
@@ -50,9 +51,10 @@ public class Property<T> {
 	private Class<T> storedClass = null;
 	private T defaultValue = null;
 
-	private Property(Autosave autosave, String name, boolean multilingual, String className, String defaultValueString) {
+	private Property(Autosave autosave, String name, String description, boolean multilingual, String className, String defaultValueString) {
 		this.autosave = autosave;
 		this.name = name;
+		this.description = description;
 		this.multilingual = multilingual;
 		this.storedClassName = className;
 		this.defaultValueString = defaultValueString;
@@ -319,11 +321,16 @@ public class Property<T> {
 			boolean pmultilingual = Boolean.parseBoolean(e.getParameter("multilingual"));
 			String storedClassName = e.getParameter("instanceof");
 			String defaultValueString = e.getParameter("default");
+			String description = e.getParameter("description");
 			Property<?> p = new Property<Object>(
-					pautosave, pname, pmultilingual,
+					pautosave, pname, description, pmultilingual,
 					storedClassName, defaultValueString);
 			properties.put(pname.toLowerCase(), p);
 		}
+	}
+
+	public String getDescription() {
+		return this.description;
 	}
 
 	/**
