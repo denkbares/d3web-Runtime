@@ -37,12 +37,10 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.indication.ActionClarify;
 import de.d3web.indication.ActionContraIndication;
 import de.d3web.indication.ActionIndication;
 import de.d3web.indication.ActionInstantIndication;
 import de.d3web.indication.ActionNextQASet;
-import de.d3web.indication.ActionRefine;
 import de.d3web.indication.ActionRepeatedIndication;
 import de.d3web.indication.ActionSuppressAnswer;
 import de.d3web.indication.inference.PSMethodStrategic;
@@ -58,43 +56,6 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
 public final class RuleFactory {
 
 	private RuleFactory() { // enforce noninstantiability
-	}
-
-	/**
-	 * Creates a clarification-rule with the specified parameters.
-	 */
-	public static Rule createClarificationRule(
-			String theId,
-			List<QASet> theAction,
-			Solution target,
-			Condition theCondition) {
-
-		return createClarificationRule(
-				theId,
-				theAction,
-				target,
-				theCondition,
-				null);
-	}
-
-	/**
-	 * Creates a Clarification-rule with the specified parameters.
-	 */
-	public static Rule createClarificationRule(
-			String theId,
-			List<QASet> theAction,
-			Solution target,
-			Condition theCondition,
-			Condition theRuleException) {
-
-		Rule rule = new Rule(theId, PSMethodStrategic.class);
-
-		ActionClarify ruleAction = new ActionClarify();
-		ruleAction.setQASets(theAction);
-		ruleAction.setTarget(target);
-
-		setRuleParams(rule, ruleAction, theCondition, theRuleException);
-		return rule;
 	}
 
 	/**
@@ -322,43 +283,6 @@ public final class RuleFactory {
 		List<QASet> ind = new ArrayList<QASet>();
 		ind.add(singleIndication);
 		return createInstantIndicationRule(theId, ind, theCondition, null);
-	}
-
-	/**
-	 * Creates a Refinement-rule with the specified parameters.
-	 */
-	public static Rule createRefinementRule(
-			String theId,
-			List<QASet> theAction,
-			Solution target,
-			Condition theCondition) {
-
-		return createRefinementRule(
-				theId,
-				theAction,
-				target,
-				theCondition,
-				null);
-	}
-
-	/**
-	 * Creates a Refinement-rule with the specified parameters.
-	 */
-	public static Rule createRefinementRule(
-			String theId,
-			List<QASet> theAction,
-			Solution target,
-			Condition theCondition,
-			Condition theRuleException) {
-
-		Rule rule = new Rule(theId, PSMethodStrategic.class);
-
-		ActionRefine ruleAction = new ActionRefine();
-		ruleAction.setQASets(theAction);
-		ruleAction.setTarget(target);
-
-		setRuleParams(rule, ruleAction, theCondition, theRuleException);
-		return rule;
 	}
 
 	/**

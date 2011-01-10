@@ -50,10 +50,8 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.indication.ActionClarify;
 import de.d3web.indication.ActionContraIndication;
 import de.d3web.indication.ActionIndication;
-import de.d3web.indication.ActionRefine;
 import de.d3web.indication.ActionSuppressAnswer;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.plugin.test.InitPluginManager;
@@ -141,72 +139,6 @@ public class ActionTest {
 		SuppressAnswerActionHandler handler = new SuppressAnswerActionHandler();
 		isTag = new XMLTag(handler.write(actionSuppressAnswer, doc));
 		assertEquals("(0)", shouldTag, isTag);
-	}
-
-	@Test
-	public void testActionClarification() throws Exception {
-		List<QASet> clarifyList = new LinkedList<QASet>();
-		clarifyList.add(questionMC);
-		clarifyList.add(qContainer);
-
-		ActionClarify acl = new ActionClarify();
-		rule.setAction(acl);
-		acl.setTarget(solution);
-		acl.setQASets(clarifyList);
-
-		shouldTag = new XMLTag("Action");
-		shouldTag.addAttribute("type", "ActionClarify");
-
-		XMLTag target = new XMLTag("targetDiagnosis");
-		target.addAttribute("ID", "diag1-id");
-
-		XMLTag targets = new XMLTag("TargetQASets");
-		XMLTag qa1 = new XMLTag("QASet");
-		qa1.addAttribute("ID", "q1-id");
-		XMLTag qa2 = new XMLTag("QASet");
-		qa2.addAttribute("ID", "qcon1-id");
-		targets.addChild(qa1);
-		targets.addChild(qa2);
-
-		shouldTag.addChild(target);
-		shouldTag.addChild(targets);
-
-		NextQASetActionHandler acw = new NextQASetActionHandler();
-		isTag = new XMLTag(acw.write(acl, doc));
-		assertEquals("(1)", shouldTag, isTag);
-	}
-
-	@Test
-	public void testActionRefine() throws Exception {
-		List<QASet> refineList = new LinkedList<QASet>();
-		refineList.add(qContainer);
-		refineList.add(questionMC);
-
-		ActionRefine are = new ActionRefine();
-		rule.setAction(are);
-		are.setTarget(solution);
-		are.setQASets(refineList);
-
-		shouldTag = new XMLTag("Action");
-		shouldTag.addAttribute("type", "ActionRefine");
-
-		XMLTag target = new XMLTag("targetDiagnosis");
-		target.addAttribute("ID", "diag1-id");
-
-		XMLTag targets = new XMLTag("TargetQASets");
-		XMLTag qa1 = new XMLTag("QASet");
-		qa1.addAttribute("ID", "qcon1-id");
-		XMLTag qa2 = new XMLTag("QASet");
-		qa2.addAttribute("ID", "q1-id");
-		targets.addChild(qa1);
-		targets.addChild(qa2);
-
-		shouldTag.addChild(target);
-		shouldTag.addChild(targets);
-
-		NextQASetActionHandler arw = new NextQASetActionHandler();
-		isTag = new XMLTag(arw.write(are, doc));
-		assertEquals("(2)", shouldTag, isTag);
 	}
 
 	@Test
