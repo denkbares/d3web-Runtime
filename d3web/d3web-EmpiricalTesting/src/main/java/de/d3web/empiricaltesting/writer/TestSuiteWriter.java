@@ -21,7 +21,7 @@ package de.d3web.empiricaltesting.writer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import de.d3web.empiricaltesting.TestSuite;
+import de.d3web.empiricaltesting.TestCase;
 
 /**
  * Interface for TestSuite Writers.
@@ -38,7 +38,7 @@ public interface TestSuiteWriter {
 	 * @param t the test suite
 	 * @param filepath the path to the output file
 	 */
-	public void write(TestSuite t, String filepath);
+	public void write(TestCase t, String filepath);
 
 	/**
 	 * Returns an ByteArrayOutputStream for a test suite. This is necessary for
@@ -49,6 +49,6 @@ public interface TestSuiteWriter {
 	 * @return
 	 * @throws IOException
 	 */
-	public ByteArrayOutputStream getByteArrayOutputStream(TestSuite t) throws IOException;
+	public ByteArrayOutputStream getByteArrayOutputStream(TestCase t) throws IOException;
 
 }

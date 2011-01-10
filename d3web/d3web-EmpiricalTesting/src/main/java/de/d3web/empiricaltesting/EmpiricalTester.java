@@ -83,7 +83,7 @@ public final class EmpiricalTester {
 	public static void demoComputePrecisionAndRecall() throws Exception {
 
 		KnowledgeBase kb = loadKnowledgeBase(workspace + kbFile);
-		TestSuite testSuite = new TestSuite();
+		TestCase testSuite = new TestCase();
 		testSuite.setKb(kb);
 		testSuite.loadRepository(workspace + caseFile);
 
@@ -98,7 +98,7 @@ public final class EmpiricalTester {
 		showDifferences(testSuite);
 	}
 
-	private static void showDifferences(TestSuite t) {
+	private static void showDifferences(TestCase t) {
 
 		for (SequentialTestCase stc : t.getRepository()) {
 
@@ -165,7 +165,7 @@ public final class EmpiricalTester {
 	public static void demoCaseVisualization() throws IOException {
 
 		KnowledgeBase kb = loadKnowledgeBase(workspace + kbFile);
-		TestSuite testSuite = new TestSuite();
+		TestCase testSuite = new TestCase();
 		testSuite.setKb(kb);
 		testSuite.loadRepository(workspace + caseFile);
 		testSuite.deriveAllSolutions();
@@ -184,7 +184,7 @@ public final class EmpiricalTester {
 	public static void demoBuildDDTree() throws IOException {
 
 		KnowledgeBase kb = loadKnowledgeBase(workspace + kbFile);
-		TestSuite testSuite = new TestSuite();
+		TestCase testSuite = new TestCase();
 		testSuite.setKb(kb);
 		testSuite.loadRepository(workspace + caseFile);
 		testSuite.deriveAllSolutions();

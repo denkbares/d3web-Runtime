@@ -36,7 +36,7 @@ import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.SequentialTestCase;
-import de.d3web.empiricaltesting.TestSuite;
+import de.d3web.empiricaltesting.TestCase;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
@@ -51,7 +51,7 @@ import de.d3web.plugin.test.InitPluginManager;
  */
 public class KBTester {
 
-	private List<TestSuite> testsuites;
+	private List<TestCase> testsuites;
 
 	/**
 	 * Runs all loaded TestSuites. In each TestSuite the derived solutions are
@@ -61,7 +61,7 @@ public class KBTester {
 	 */
 	@Test
 	public void testKB() {
-		for (TestSuite t : testsuites) {
+		for (TestCase t : testsuites) {
 			t.deriveAllSolutions();
 			testCorrectnessAndActuallity(t);
 			testPrecisionAndRecall(t);
@@ -74,7 +74,7 @@ public class KBTester {
 	 * 
 	 * @param t the underlying TestSuite
 	 */
-	private void testPrecisionAndRecallInterview(TestSuite t) {
+	private void testPrecisionAndRecallInterview(TestCase t) {
 		StringBuilder precisionFailureMsg = new StringBuilder();
 		precisionFailureMsg.append("\nInterview-Precision differ in test suite ");
 		precisionFailureMsg.append(t.getName() + " should be 1.0 but is ");
@@ -94,7 +94,7 @@ public class KBTester {
 	 * 
 	 * @param t the underlying TestSuite
 	 */
-	private void testPrecisionAndRecall(TestSuite t) {
+	private void testPrecisionAndRecall(TestCase t) {
 
 		StringBuilder precisionFailureMsg = new StringBuilder();
 		precisionFailureMsg.append("\nPrecision differ in test suite ");
@@ -115,7 +115,7 @@ public class KBTester {
 	 * 
 	 * @param t the underlying TestSuite
 	 */
-	private void testCorrectnessAndActuallity(TestSuite t) {
+	private void testCorrectnessAndActuallity(TestCase t) {
 
 		for (SequentialTestCase stc : t.getRepository()) {
 			for (RatedTestCase rtc : stc.getCases()) {
@@ -148,7 +148,7 @@ public class KBTester {
 	 */
 	@Before
 	public void initialize() throws IOException {
-		testsuites = new ArrayList<TestSuite>();
+		testsuites = new ArrayList<TestCase>();
 		String userdir = System.getProperty("user.dir") + "/src/test/resources/";
 		FileReader f;
 		f = new FileReader(userdir + "cases.properties");
@@ -164,7 +164,7 @@ public class KBTester {
 				String casespath = userdir + config[1];
 
 				KnowledgeBase kb = loadKnowledgeBase(kbpath);
-				TestSuite t = new TestSuite();
+				TestCase t = new TestCase();
 				t.setName(config[1]);
 				t.setKb(kb);
 				t.loadRepository(casespath);

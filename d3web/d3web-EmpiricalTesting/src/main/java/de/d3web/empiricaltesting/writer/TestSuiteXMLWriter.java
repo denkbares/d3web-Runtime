@@ -29,7 +29,7 @@ import java.util.List;
 
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.TestPersistence;
-import de.d3web.empiricaltesting.TestSuite;
+import de.d3web.empiricaltesting.TestCase;
 
 /**
  * This Class converts CaseObject XML-Files to a TestSuite and writes the
@@ -47,7 +47,7 @@ public class TestSuiteXMLWriter extends AbstractTestSuiteWriter {
 	 * @param the path of the output file
 	 */
 	@Override
-	public void write(TestSuite t, String filepath) {
+	public void write(TestCase t, String filepath) {
 		write(t.getRepository(), filepath);
 	}
 

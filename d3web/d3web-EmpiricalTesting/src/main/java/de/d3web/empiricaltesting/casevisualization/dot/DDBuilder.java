@@ -46,7 +46,7 @@ import de.d3web.empiricaltesting.Rating;
 import de.d3web.empiricaltesting.ScoreRating;
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.StateRating;
-import de.d3web.empiricaltesting.TestSuite;
+import de.d3web.empiricaltesting.TestCase;
 import de.d3web.empiricaltesting.casevisualization.BotHelper;
 import de.d3web.empiricaltesting.casevisualization.CaseVisualizer;
 import de.d3web.scoring.HeuristicRating;
@@ -130,7 +130,7 @@ public final class DDBuilder implements CaseVisualizer {
 	 *        will be stored.
 	 */
 	@Override
-	public void writeToFile(TestSuite testSuite, String dotFile) {
+	public void writeToFile(TestCase testSuite, String dotFile) {
 
 		String partitionTree = config.getProperty("partitionTree");
 		if (partitionTree.equals("true")) {
@@ -141,7 +141,7 @@ public final class DDBuilder implements CaseVisualizer {
 			// Die Antwortalternativen
 			List<Choice> firstAnswers = firstQuestion.getAllAlternatives();
 			for (Choice answerOfFirstQuestion : firstAnswers) {
-				TestSuite partitioned =
+				TestCase partitioned =
 						testSuite.getPartiallyAnsweredSuite(answerOfFirstQuestion);
 				if (partitioned.getRepository().size() > 0) {
 					generateDDNet(partitioned.getRepository());

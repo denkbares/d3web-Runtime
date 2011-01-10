@@ -29,7 +29,7 @@ import java.util.List;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 
-public final class TestSuite {
+public final class TestCase {
 
 	private final TestPersistence persistence = TestPersistence.getInstance();
 	private final EmpiricalTestingFunctions functions = EmpiricalTestingFunctions.getInstance();
@@ -44,7 +44,7 @@ public final class TestSuite {
 	/**
 	 * Default Constructor
 	 */
-	public TestSuite() {
+	public TestCase() {
 		repository = new ArrayList<SequentialTestCase>();
 	}
 
@@ -53,7 +53,7 @@ public final class TestSuite {
 	 * 
 	 * @param kb the KnowledgeBase to be set
 	 */
-	public TestSuite(KnowledgeBase kb) {
+	public TestCase(KnowledgeBase kb) {
 		setKb(kb);
 	}
 
@@ -345,8 +345,8 @@ public final class TestSuite {
 
 	// TODO: Nicht nur eine Antwort (auf eine Frage) sondern mehrere
 	// Antworten auf mehrere (erste) Fragen möglich
-	public TestSuite getPartiallyAnsweredSuite(Choice answer) {
-		TestSuite ret = new TestSuite();
+	public TestCase getPartiallyAnsweredSuite(Choice answer) {
+		TestCase ret = new TestCase();
 		for (SequentialTestCase stc : getRepository()) {
 			if (stc.getCases().get(0).getFindings().get(0).getValue().equals(answer)) ret.getRepository().add(
 					stc);

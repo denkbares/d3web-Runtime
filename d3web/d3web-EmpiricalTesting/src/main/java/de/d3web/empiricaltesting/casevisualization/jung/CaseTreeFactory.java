@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.SequentialTestCase;
-import de.d3web.empiricaltesting.TestSuite;
+import de.d3web.empiricaltesting.TestCase;
 
 /**
  * This singleton class serves as factory for CaseTree graphs. It converts
@@ -113,7 +113,7 @@ public final class CaseTreeFactory {
 	 *         List<SequentialTestCase>
 	 */
 	public CaseTree<RatedTestCase, EdgeFinding> generateGraph(
-			TestSuite testsuite) {
+			TestCase testsuite) {
 		return generateGraph(testsuite.getRepository());
 	}
 

@@ -201,11 +201,11 @@ public final class TestPersistence {
 		}
 	}
 
-	public void writeCases(OutputStream out, TestSuite testSuite, boolean bWriteDerivedSolutions) {
+	public void writeCases(OutputStream out, TestCase testSuite, boolean bWriteDerivedSolutions) {
 		writeCases(out, testSuite.getRepository(), bWriteDerivedSolutions);
 	}
 
-	public void writeCases(URL casesUrl, TestSuite testSuite, boolean bWriteDerivedSolutions) {
+	public void writeCases(URL casesUrl, TestCase testSuite, boolean bWriteDerivedSolutions) {
 		writeCases(casesUrl, testSuite.getRepository(), bWriteDerivedSolutions);
 	}
 

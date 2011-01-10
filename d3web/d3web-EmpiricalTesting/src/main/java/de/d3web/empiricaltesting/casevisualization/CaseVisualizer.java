@@ -24,11 +24,11 @@ import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import de.d3web.empiricaltesting.SequentialTestCase;
-import de.d3web.empiricaltesting.TestSuite;
+import de.d3web.empiricaltesting.TestCase;
 
 public interface CaseVisualizer {
 
-	public void writeToFile(TestSuite testsuite, String filepath);
+	public void writeToFile(TestCase testsuite, String filepath);
 
 	public void writeToFile(List<SequentialTestCase> cases, String filepath);
 

@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.List;
 
 import de.d3web.empiricaltesting.SequentialTestCase;
-import de.d3web.empiricaltesting.TestSuite;
+import de.d3web.empiricaltesting.TestCase;
 
 /**
  * 
@@ -33,7 +33,7 @@ import de.d3web.empiricaltesting.TestSuite;
 public abstract class AbstractTestSuiteWriter implements TestSuiteWriter {
 
 	@Override
-	public void write(TestSuite t, String filepath) {
+	public void write(TestCase t, String filepath) {
 		write(t.getRepository(), filepath);
 	}
 
@@ -47,7 +47,7 @@ public abstract class AbstractTestSuiteWriter implements TestSuiteWriter {
 	public abstract void write(List<SequentialTestCase> cases, String filepath);
 
 	@Override
-	public ByteArrayOutputStream getByteArrayOutputStream(TestSuite t) throws IOException {
+	public ByteArrayOutputStream getByteArrayOutputStream(TestCase t) throws IOException {
 		return getByteArrayOutputStream(t.getRepository());
 	}
 

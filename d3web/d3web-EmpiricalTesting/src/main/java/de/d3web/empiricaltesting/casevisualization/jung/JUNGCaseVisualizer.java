@@ -45,7 +45,7 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.empiricaltesting.ConfigLoader;
 import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.SequentialTestCase;
-import de.d3web.empiricaltesting.TestSuite;
+import de.d3web.empiricaltesting.TestCase;
 import de.d3web.empiricaltesting.casevisualization.BotHelper;
 import de.d3web.empiricaltesting.casevisualization.CaseVisualizer;
 import edu.uci.ics.jung.algorithms.layout.TreeLayout;
@@ -107,7 +107,7 @@ public final class JUNGCaseVisualizer implements CaseVisualizer {
 	 * 
 	 * @param testsuite TestSuite which will be visualized.
 	 */
-	public void showInJFrame(TestSuite testsuite) {
+	public void showInJFrame(TestCase testsuite) {
 		showInJFrame(testsuite.getRepository());
 	}
 
@@ -141,7 +141,7 @@ public final class JUNGCaseVisualizer implements CaseVisualizer {
 	 *        will be stored.
 	 */
 	@Override
-	public void writeToFile(TestSuite t, String filepath) {
+	public void writeToFile(TestCase t, String filepath) {
 
 		String partitionTree = ConfigLoader.getInstance().getProperty("partitionTree");
 
@@ -153,7 +153,7 @@ public final class JUNGCaseVisualizer implements CaseVisualizer {
 
 			for (Choice answerOfFirstQuestion : firstAnswers) {
 
-				TestSuite partitioned =
+				TestCase partitioned =
 						t.getPartiallyAnsweredSuite(answerOfFirstQuestion);
 
 				if (partitioned.getRepository().size() > 0) {
