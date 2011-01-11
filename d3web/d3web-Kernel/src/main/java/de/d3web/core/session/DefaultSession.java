@@ -110,12 +110,9 @@ public class DefaultSession implements Session {
 			// register some common problem solving methods
 			// first add the methods
 			for (PSMethod method : SessionFactory.getDefaultPSMethods()) {
-				addUsedPSMethod(method); // NOSONAR TODO Make this method
-											// private and remove this comment
+				addUsedPSMethod(method);
 			}
-			addPlugedPSMethods(knowledgebase); // NOSONAR, indirect call of
-												// addUsedPSMethod, TODO remove
-												// this comment when private
+			addPlugedPSMethods(knowledgebase);
 		}
 		// Dirty hack to move the PSMethodInit to the end of the list
 		usedPSMethods.remove(PSMethodInit.getInstance());
@@ -227,10 +224,7 @@ public class DefaultSession implements Session {
 	 * (28.08.00 17:33:43)
 	 * 
 	 * @param newUsedPSMethods java.util.List
-	 * @Deprecated use pluginmechnasim to add psmethods, make this method
-	 *             private
 	 */
-	@Deprecated
 	private void addUsedPSMethod(PSMethod psmethod) {
 		touch();
 		if (getPSMethods().contains(psmethod)) {
