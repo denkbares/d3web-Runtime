@@ -87,9 +87,14 @@ public class DefaultSession implements Session {
 	}
 
 	protected DefaultSession(String id, KnowledgeBase knowledgebase, Date creationDate, boolean psm) {
+		// check that we have a valid date
+		if (creationDate == null) {
+			creationDate = new Date();
+		}
+
 		this.id = id;
 		this.created = creationDate;
-		this.edited = new Date();
+		this.edited = creationDate;
 		this.kb = knowledgebase;
 		this.blackboard = new DefaultBlackboard(this);
 		this.dynamicStore = new HashMap<CaseObjectSource, SessionObject>();
@@ -226,7 +231,7 @@ public class DefaultSession implements Session {
 	 *             private
 	 */
 	@Deprecated
-	public void addUsedPSMethod(PSMethod psmethod) {
+	private void addUsedPSMethod(PSMethod psmethod) {
 		touch();
 		if (getPSMethods().contains(psmethod)) {
 			return;
@@ -236,7 +241,7 @@ public class DefaultSession implements Session {
 		psmethod.init(this);
 
 		PropagationManager propagationContoller = getPropagationManager();
-		propagationContoller.openPropagation();
+		propagationContoller.openPropagation(this.created.getTime());
 		try {
 			for (Question question : blackboard.getAnsweredQuestions()) {
 				Value oldValue = null;
