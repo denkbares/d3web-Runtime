@@ -24,8 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -52,7 +52,7 @@ public final class BotHelper {
 
 	public void setCaseValue(Session session, String questionID, String answerID)
 			throws Exception {
-		QuestionChoice q = (QuestionChoice) session.getKnowledgeBase()
+		QuestionChoice q = (QuestionChoice) session.getKnowledgeBase().getManager()
 				.searchQuestion(questionID);
 		if (answerID != null) {
 			Choice a = findAnswer(q, answerID);
@@ -105,7 +105,7 @@ public final class BotHelper {
 	}
 
 	public void buildAnswerHashFor(KnowledgeBase k) {
-		for (Question q : k.getQuestions()) {
+		for (Question q : k.getManager().getQuestions()) {
 			if (q instanceof QuestionChoice) {
 				for (Choice a : ((QuestionChoice) q).getAllAlternatives()) {
 					answerHash.put(a.getId(), a);
@@ -137,13 +137,13 @@ public final class BotHelper {
 		Question foundQuestion = null;
 
 		if (questionnaireText == null || questionnaireText.equals("")) {
-			for (NamedObject q : kb.getQuestions()) {
+			for (TerminologyObject q : kb.getManager().getQuestions()) {
 				if (questionIDorText.equals(q.getId())
 						|| questionIDorText.equals(q.getName())) foundQuestion = (Question) q;
 			}
 		}
 		else {
-			for (NamedObject q : kb.getQuestions()) {
+			for (TerminologyObject q : kb.getManager().getQuestions()) {
 				if ((questionIDorText.equals(q.getId())
 						|| questionIDorText.equals(q.getName()))
 						&& checkQuestionnaire(q, questionnaireText)) foundQuestion = (Question) q;
@@ -158,7 +158,7 @@ public final class BotHelper {
 	public Solution getSolutionByIDorText(String diagnosisIDorText,
 			KnowledgeBase kb) throws Exception {
 		Solution foundDiagnosis = null;
-		for (Solution d : kb.getSolutions()) {
+		for (Solution d : kb.getManager().getSolutions()) {
 			if (diagnosisIDorText.equals(d.getId())
 					|| diagnosisIDorText.equals(d.getName())) foundDiagnosis = d;
 		}
@@ -167,10 +167,10 @@ public final class BotHelper {
 		else return foundDiagnosis;
 	}
 
-	private boolean checkQuestionnaire(NamedObject q, String questionnaireText) {
-		NamedObject question = q;
+	private boolean checkQuestionnaire(TerminologyObject q, String questionnaireText) {
+		TerminologyObject question = q;
 		while (!(question.getParents()[0] instanceof QContainer)) {
-			if (question.getParents()[0] instanceof Question) question = (Question) question.getParents()[0];
+			if (question.getParents()[0] instanceof Question) question = question.getParents()[0];
 			else return false;
 		}
 

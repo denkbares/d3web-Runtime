@@ -70,7 +70,7 @@ public class FindingMC {
 		if (k == null || questionName == null || answerNames == null) throw new IllegalArgumentException(
 				"Null delivered as argument.");
 
-		for (Question q : k.getQuestions()) {
+		for (Question q : k.getManager().getQuestions()) {
 			if (q.getName().equals(questionName)) {
 				if (q instanceof QuestionMC) {
 					List<Choice> answers = new ArrayList<Choice>();

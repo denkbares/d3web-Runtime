@@ -65,8 +65,8 @@ public class LocalWeightHandler implements FragmentHandler {
 		diagnosisID = n.getAttributes().getNamedItem("diagnosisID")
 				.getNodeValue();
 
-		q = kb.searchQuestion(questionID);
-		d = kb.searchSolution(diagnosisID);
+		q = kb.getManager().searchQuestion(questionID);
+		d = kb.getManager().searchSolution(diagnosisID);
 
 		if (q instanceof QuestionChoice) {
 			LocalWeight lw = new LocalWeight();

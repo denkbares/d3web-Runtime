@@ -54,7 +54,7 @@ public class ConditionSolutionRejectedHandler implements FragmentHandler {
 	public Object read(KnowledgeBase kb, Element node) throws IOException {
 		String solutionID = node.getAttribute("ID");
 		if (solutionID != null) {
-			IDObject idObject = kb.search(solutionID);
+			IDObject idObject = kb.getManager().search(solutionID);
 			if (idObject instanceof Solution) {
 				Solution s = (Solution) idObject;
 				return new CondSolutionRejected(s);

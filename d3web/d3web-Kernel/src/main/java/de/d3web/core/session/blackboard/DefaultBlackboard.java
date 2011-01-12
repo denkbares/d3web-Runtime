@@ -282,7 +282,7 @@ public class DefaultBlackboard implements Blackboard {
 	@Override
 	public List<Question> getAnsweredQuestions() {
 		List<Question> questions = new LinkedList<Question>();
-		for (Question q : session.getKnowledgeBase().getQuestions()) {
+		for (Question q : session.getKnowledgeBase().getManager().getQuestions()) {
 			Fact mergedFact = valueStorage.getAggregator(q).getMergedFact();
 			if (mergedFact != null && UndefinedValue.isNotUndefinedValue(mergedFact.getValue())) {
 				questions.add(q);
@@ -294,7 +294,7 @@ public class DefaultBlackboard implements Blackboard {
 	@Override
 	public List<Solution> getSolutions(Rating.State state) {
 		List<Solution> result = new LinkedList<Solution>();
-		for (Solution diag : getSession().getKnowledgeBase().getSolutions()) {
+		for (Solution diag : getSession().getKnowledgeBase().getManager().getSolutions()) {
 			if (getRating(diag).getState().equals(state)) {
 				result.add(diag);
 			}

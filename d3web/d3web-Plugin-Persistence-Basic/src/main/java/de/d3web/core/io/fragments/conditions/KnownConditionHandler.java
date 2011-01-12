@@ -51,7 +51,7 @@ public class KnownConditionHandler implements FragmentHandler {
 	public Object read(KnowledgeBase kb, Element node) throws IOException {
 		String questionID = node.getAttribute("ID");
 		if (questionID != null) {
-			IDObject idObject = kb.search(questionID);
+			IDObject idObject = kb.getManager().search(questionID);
 			if (idObject instanceof Question) {
 				Question q = (Question) idObject;
 				return new CondKnown(q);

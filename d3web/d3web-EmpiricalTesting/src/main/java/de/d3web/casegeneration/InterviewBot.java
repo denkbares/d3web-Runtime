@@ -290,7 +290,7 @@ public final class InterviewBot {
 
 	private List<RatedSolution> toRatedSolutions(Session session) {
 		List<RatedSolution> ratedSolutions = new LinkedList<RatedSolution>();
-		for (Solution solution : session.getKnowledgeBase().getSolutions()) {
+		for (Solution solution : session.getKnowledgeBase().getManager().getSolutions()) {
 			Rating rating = ratingStrategy.getRatingFor(solution, session);
 			if (rating.isProblemSolvingRelevant()) {
 				RatedSolution ratedSolution = new RatedSolution(solution, rating);

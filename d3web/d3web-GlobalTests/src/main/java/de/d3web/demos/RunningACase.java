@@ -86,7 +86,7 @@ public class RunningACase {
 
 		// Print all solutions with a state != UNCLEAR
 		out.println("+++ Solutions +++");
-		for (Solution solution : knowledgeBase.getSolutions()) {
+		for (Solution solution : knowledgeBase.getManager().getSolutions()) {
 			Rating state = session.getBlackboard().getRating(solution);
 			if (!state.hasState(Rating.State.UNCLEAR)) out.println("  " + solution + " (" + state
 					+ ")");

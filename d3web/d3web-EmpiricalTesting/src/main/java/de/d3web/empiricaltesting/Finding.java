@@ -99,7 +99,7 @@ public class Finding implements Comparable<Finding> {
 	public static Finding createFinding(KnowledgeBase k, String questionName, String answerName) throws Exception {
 		if (k == null || questionName == null || answerName == null) throw new Exception(
 				"Null delivered as argument.");
-		for (Question question : k.getQuestions()) {
+		for (Question question : k.getManager().getQuestions()) {
 			if (questionName.equals(question.getName())) {
 				if (question instanceof QuestionChoice) {
 					return new Finding((QuestionChoice) question, answerName);

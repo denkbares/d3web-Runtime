@@ -78,7 +78,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 			parseOldMMInfoFile(kb, listener, doc);
 		}
 		else if (rootNodeName.equals("MMInfos")) {
-			Map<String, IDObject> ansIdAnswerHash = buildAnswerIdAnswerHash(kb
+			Map<String, IDObject> ansIdAnswerHash = buildAnswerIdAnswerHash(kb.getManager()
 					.getQuestions());
 			List<Element> children = XMLUtil.getElementList(rootElement.getChildNodes());
 			int slicecount = children.size();
@@ -91,7 +91,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 					String id = child.getAttribute("id");
 					IDObject idObject = ansIdAnswerHash.get(id);
 					if (idObject == null) {
-						idObject = kb.search(id);
+						idObject = kb.getManager().search(id);
 					}
 					XMLUtil.fillInfoStore(idObject.getInfoStore(), child, kb);
 				}
@@ -112,7 +112,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		listener.updateProgress(0, "Starting to save multimedia");
 		int maxvalue = getEstimatedSize(kb);
 		float aktvalue = 0;
-		List<IDObject> objects = kb.getAllIDObjects();
+		List<IDObject> objects = kb.getManager().getAllIDObjects();
 		Collections.sort(objects, new IDObjectComparator());
 
 		Document doc = Util.createEmptyDocument();
@@ -139,7 +139,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 
 	@Override
 	public int getEstimatedSize(KnowledgeBase kb) {
-		return kb.getAllIDObjects().size() + 1;
+		return kb.getManager().getAllIDObjects().size() + 1;
 	}
 
 	private static Map<String, IDObject> buildAnswerIdAnswerHash(
@@ -164,7 +164,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 	}
 
 	private void parseOldMMInfoFile(KnowledgeBase kb, ProgressListener listener, Document doc) throws NoSuchFragmentHandlerException, IOException {
-		Map<String, IDObject> ansIdAnswerHash = buildAnswerIdAnswerHash(kb
+		Map<String, IDObject> ansIdAnswerHash = buildAnswerIdAnswerHash(kb.getManager()
 				.getQuestions());
 		NodeList mminfos = doc.getElementsByTagName("MMInfo");
 		int slicecount = mminfos.getLength();
@@ -199,8 +199,8 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 
 			if (objId != null) {
 
-				IDObject source = kb.searchQASet(objId);
-				if (source == null) source = kb.searchSolution(objId);
+				IDObject source = kb.getManager().searchQASet(objId);
+				if (source == null) source = kb.getManager().searchSolution(objId);
 				if (source == null) source = ansIdAnswerHash.get(objId);
 
 				// and add the MMInfo

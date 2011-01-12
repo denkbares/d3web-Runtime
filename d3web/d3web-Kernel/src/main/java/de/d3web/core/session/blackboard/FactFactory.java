@@ -50,6 +50,7 @@ public final class FactFactory {
 	 * {@link TerminologyObject}. The specified source is responsible for the
 	 * setting the value, which acts in the context of the specified
 	 * {@link PSMethod}.
+	 * 
 	 * @param session TODO
 	 * @param terminologyObject the specified {@link TerminologyObject} instance
 	 * @param value the specified {@link Value} instance
@@ -62,7 +63,7 @@ public final class FactFactory {
 	public static Fact createFact(Session session,
 			TerminologyObject terminologyObject, Value value, Object source, PSMethod psMethod) {
 		long time = System.currentTimeMillis();
-		
+
 		return new DefaultFact(terminologyObject, value, time, source, psMethod);
 	}
 
@@ -77,10 +78,9 @@ public final class FactFactory {
 	 */
 	public static Fact createUserEnteredFact(
 			TerminologyObject terminologyObject, Value value) {
-		
+
 		long time = System.currentTimeMillis();
-		
-		
+
 		return new DefaultFact(terminologyObject, value, time, PSMethodUserSelected.getInstance(),
 				PSMethodUserSelected.getInstance());
 	}
@@ -99,10 +99,10 @@ public final class FactFactory {
 	 *         {@link QuestionChoice} or {@link Choice} could not be found
 	 */
 	public static Fact createUserEnteredFact(KnowledgeBase kb, String questionID, String answerID) {
-		Question question = kb.searchQuestion(questionID);
+		Question question = kb.getManager().searchQuestion(questionID);
 		if (question == null) {
 			// if not found, then try to find a question with this name
-			question = (Question) kb.searchObjectForName(questionID);
+			question = (Question) kb.getManager().searchObjectForName(questionID);
 		}
 		if (question instanceof QuestionChoice) {
 			QuestionChoice qc = (QuestionChoice) question;
@@ -144,10 +144,10 @@ public final class FactFactory {
 	 *         {@link Question} could not be found
 	 */
 	public static Fact createUserEnteredFact(KnowledgeBase kb, String questionID, Value value) {
-		Question question = kb.searchQuestion(questionID);
+		Question question = kb.getManager().searchQuestion(questionID);
 		if (question == null) {
 			// if not found, then try to find a question with this name
-			question = (Question) kb.searchObjectForName(questionID);
+			question = (Question) kb.getManager().searchObjectForName(questionID);
 		}
 		if (question != null) {
 			return createUserEnteredFact(question, value);

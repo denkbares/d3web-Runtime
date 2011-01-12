@@ -53,7 +53,7 @@ public class NumLessConditionHandler implements FragmentHandler {
 		String questionID = element.getAttribute("ID");
 		String value = element.getAttribute("value");
 		if (questionID != null && value != null) {
-			IDObject idObject = kb.search(questionID);
+			IDObject idObject = kb.getManager().search(questionID);
 			if (idObject instanceof QuestionNum) {
 				QuestionNum q = (QuestionNum) idObject;
 				return new CondNumLess(q, Double.parseDouble(value));

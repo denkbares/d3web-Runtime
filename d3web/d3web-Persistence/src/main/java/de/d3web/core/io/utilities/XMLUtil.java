@@ -146,7 +146,7 @@ public final class XMLUtil {
 	 * @param type type of the condition
 	 * @return condition element
 	 */
-	public static Element writeCondition(Document doc, NamedObject nob, String type) {
+	public static Element writeCondition(Document doc, TerminologyObject nob, String type) {
 		Element element = doc.createElement("Condition");
 		element.setAttribute("type", type);
 		if (nob != null) {
@@ -168,7 +168,7 @@ public final class XMLUtil {
 	 * @param value value of the condition
 	 * @return condition element
 	 */
-	public static Element writeCondition(Document doc, NamedObject nob, String type, String value) {
+	public static Element writeCondition(Document doc, TerminologyObject nob, String type, String value) {
 		Element element = writeCondition(doc, nob, type);
 		if (value != null) {
 			element.setAttribute("value", value);
@@ -186,7 +186,7 @@ public final class XMLUtil {
 	 * @param value value of the condition
 	 * @return condition element
 	 */
-	public static Element writeConditionWithValueNode(Document doc, NamedObject nob, String type, String value) throws IOException {
+	public static Element writeConditionWithValueNode(Document doc, TerminologyObject nob, String type, String value) throws IOException {
 		Element valueElement = doc.createElement("Value");
 		valueElement.setTextContent(value);
 		return writeConditionWithValueNode(doc, nob, type, valueElement);
@@ -203,7 +203,7 @@ public final class XMLUtil {
 	 * @param value value of the condition
 	 * @return condition element
 	 */
-	public static Element writeConditionWithValueNode(Document doc, NamedObject nob, String type, Element value) {
+	public static Element writeConditionWithValueNode(Document doc, TerminologyObject nob, String type, Element value) {
 		Element element = writeCondition(doc, nob, type);
 		element.appendChild(value);
 		return element;
@@ -221,7 +221,7 @@ public final class XMLUtil {
 	 * @throws IOException if one of the elements in values is neither a Choice
 	 *         nor a Unknown Answer
 	 */
-	public static Element writeCondition(Document doc, NamedObject nob, String type,
+	public static Element writeCondition(Document doc, TerminologyObject nob, String type,
 			Value value) throws IOException {
 		Element element = writeCondition(doc, nob, type);
 		if (value != null) {
@@ -231,7 +231,7 @@ public final class XMLUtil {
 		return element;
 	}
 
-	private static String getId(NamedObject nob, Object answer) throws IOException {
+	private static String getId(TerminologyObject nob, Object answer) throws IOException {
 		if (answer instanceof ChoiceValue) {
 			ChoiceValue v = (ChoiceValue) answer;
 			Choice choice = v.getChoice((QuestionChoice) nob);
@@ -300,7 +300,7 @@ public final class XMLUtil {
 				Node q = qasets.item(k);
 				if (q.getNodeName().equalsIgnoreCase("QASet")) {
 					String id = q.getAttributes().getNamedItem("ID").getNodeValue();
-					QASet qset = (QASet) kb.search(id);
+					QASet qset = (QASet) kb.getManager().search(id);
 					ret.add(qset);
 				}
 			}
@@ -358,7 +358,7 @@ public final class XMLUtil {
 			for (Element child : children) {
 				String id = child.getAttribute("ID");
 				String link = child.getAttribute("link");
-				NamedObject no = (NamedObject) kb.search(id);
+				NamedObject no = (NamedObject) kb.getManager().search(id);
 				if (link != null && link.equals("true")) {
 					namedObject.addLinkedChild(no);
 				}

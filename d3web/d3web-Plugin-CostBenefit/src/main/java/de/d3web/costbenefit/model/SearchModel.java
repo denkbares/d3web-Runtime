@@ -68,7 +68,7 @@ public class SearchModel {
 					"Kein Costbenefit-Problemlöser im Fall. Es wird die Standartkostenfunktion verwendet.",
 					null);
 		}
-		for (QContainer qcon : session.getKnowledgeBase().getQContainers()) {
+		for (QContainer qcon : session.getKnowledgeBase().getManager().getQContainers()) {
 			Node containerNode = new Node(qcon, this);
 			map.put(qcon, containerNode);
 			Map<Question, Value> expected = containerNode.getExpectedValues(session);

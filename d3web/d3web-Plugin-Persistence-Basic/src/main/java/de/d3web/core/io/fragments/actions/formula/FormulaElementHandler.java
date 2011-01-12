@@ -38,11 +38,11 @@ import de.d3web.abstraction.formula.FormulaElement;
 import de.d3web.abstraction.formula.FormulaNumber;
 import de.d3web.abstraction.formula.FormulaNumberElement;
 import de.d3web.abstraction.formula.Operator;
+import de.d3web.abstraction.formula.Operator.Operation;
 import de.d3web.abstraction.formula.QDateWrapper;
 import de.d3web.abstraction.formula.QNumWrapper;
 import de.d3web.abstraction.formula.Today;
 import de.d3web.abstraction.formula.YearDiff;
-import de.d3web.abstraction.formula.Operator.Operation;
 import de.d3web.core.io.FragmentManager;
 import de.d3web.core.io.NoSuchFragmentHandlerException;
 import de.d3web.core.io.PersistenceManager;
@@ -100,7 +100,7 @@ public class FormulaElementHandler implements FragmentHandler {
 			String id = "";
 			id = element.getChildNodes().item(0).getNodeValue();
 			if (id == null) id = element.getChildNodes().item(1).getNodeValue();
-			expr = (FormulaNumberElement) kb.searchQuestion(id);
+			expr = (FormulaNumberElement) kb.getManager().searchQuestion(id);
 		}
 		return expr;
 	}
@@ -193,7 +193,7 @@ public class FormulaElementHandler implements FragmentHandler {
 						ret = new FormulaNumber(new Double(val));
 					}
 					else if (type.equalsIgnoreCase("QNumWrapper")) {
-						QuestionNum qnum = (QuestionNum) kb.searchQuestion(val);
+						QuestionNum qnum = (QuestionNum) kb.getManager().searchQuestion(val);
 						ret = new QNumWrapper(qnum);
 					}
 				}
@@ -271,7 +271,7 @@ public class FormulaElementHandler implements FragmentHandler {
 				NodeList qnl = n.getChildNodes();
 				String id = qnl.item(0).getNodeValue();
 				if (id == null) id = qnl.item(1).getNodeValue();
-				QuestionMC countQuestion = (QuestionMC) kb.searchQuestion(id);
+				QuestionMC countQuestion = (QuestionMC) kb.getManager().searchQuestion(id);
 				if (countQuestion != null) ret = new Count(countQuestion);
 			}
 		}
@@ -302,7 +302,7 @@ public class FormulaElementHandler implements FragmentHandler {
 						ret = new FormulaDate(date);
 					}
 					else if (type.equalsIgnoreCase("QDateWrapper")) {
-						QuestionDate qdate = (QuestionDate) kb.searchQuestion(val);
+						QuestionDate qdate = (QuestionDate) kb.getManager().searchQuestion(val);
 						ret = new QDateWrapper(qdate);
 					}
 				}

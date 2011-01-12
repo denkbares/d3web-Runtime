@@ -102,7 +102,7 @@ public abstract class Question extends QASet implements ValueObject {
 		super.setKnowledgeBase(knowledgeBase);
 		// maybe somebody should remove this object from the old
 		// knowledge base if available
-		getKnowledgeBase().add(this);
+		getKnowledgeBase().getManager().putTerminologyObject(this);
 	}
 
 	@Override

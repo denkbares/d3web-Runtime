@@ -33,6 +33,7 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
@@ -76,7 +77,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 		return coverage.keySet();
 	}
 
-	public Set<XCLRelation> getCoveringRelations(NamedObject no) {
+	public Set<XCLRelation> getCoveringRelations(TerminologyObject no) {
 		return coverage.get(no);
 	}
 

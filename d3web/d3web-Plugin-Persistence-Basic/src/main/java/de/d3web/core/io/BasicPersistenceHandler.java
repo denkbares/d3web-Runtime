@@ -80,7 +80,7 @@ public class BasicPersistenceHandler implements
 		final MethodKind methodKind = PSMethodAbstraction.NUM2CHOICE_SCHEMA;
 		final Class<? extends PSMethod> context = PSMethodAbstraction.class;
 
-		Iterator<Question> questionsIter = kb.getQuestions().iterator();
+		Iterator<Question> questionsIter = kb.getManager().getQuestions().iterator();
 		while (questionsIter.hasNext()) {
 			Question question = questionsIter.next();
 			KnowledgeSlice o = question.getKnowledge(context, methodKind);
@@ -207,13 +207,13 @@ public class BasicPersistenceHandler implements
 
 		// defining roots:
 		if (rootQASetID != null) {
-			kb.setRootQASet(kb.searchQASet(rootQASetID));
+			kb.setRootQASet(kb.getManager().searchQASet(rootQASetID));
 		}
 		else {
 			kb.setRootQASet(getRootQASet(kb));
 		}
 		if (rootSolutionID != null) {
-			kb.setRootSolution(kb.searchSolution(rootSolutionID));
+			kb.setRootSolution(kb.getManager().searchSolution(rootSolutionID));
 		}
 		else {
 			kb.setRootSolution(getRootSolution(kb));
@@ -232,7 +232,7 @@ public class BasicPersistenceHandler implements
 					|| child.getNodeName().equalsIgnoreCase("QASet")) {
 				String id = child.getAttributes().getNamedItem("ID")
 						.getNodeValue();
-				QASet item = (QASet) kb.search(id);
+				QASet item = (QASet) kb.getManager().search(id);
 				if (item != null) {
 					qaSets.add(item);
 				}
@@ -290,7 +290,7 @@ public class BasicPersistenceHandler implements
 
 		Element qContainersElement = doc.createElement("QASets");
 		Map<NamedObject, Element> possibleParents = new HashMap<NamedObject, Element>();
-		List<QASet> qASets = kb.getQASets();
+		List<QASet> qASets = kb.getManager().getQASets();
 		Collections.sort(qASets, new IDObjectComparator());
 		PersistenceManager pm = PersistenceManager.getInstance();
 		for (QASet qASet : qASets) {
@@ -312,7 +312,9 @@ public class BasicPersistenceHandler implements
 		// father.appendChild(questionsElement);
 
 		Element diagnosisElement = doc.createElement("Diagnoses");
-		for (Solution diag : kb.getSolutions()) {
+		List<Solution> solutions = kb.getManager().getSolutions();
+		Collections.sort(solutions, new IDObjectComparator());
+		for (Solution diag : solutions) {
 			listener.updateProgress(time++ / abstime, "Saving knowledge base: diagnosis");
 			Element singleDiagnosisElement = pm.writeFragment(diag, doc);
 			diagnosisElement.appendChild(singleDiagnosisElement);
@@ -337,15 +339,15 @@ public class BasicPersistenceHandler implements
 	public int getEstimatedSize(KnowledgeBase kb) {
 		// DCMarkups are count as 1
 		int time = 1;
-		time += kb.getQuestions().size();
-		time += kb.getQContainers().size();
-		time += kb.getSolutions().size();
+		time += kb.getManager().getQuestions().size();
+		time += kb.getManager().getQContainers().size();
+		time += kb.getManager().getSolutions().size();
 		time += kb.getInitQuestions().size();
 		// Schemas
 		final MethodKind methodKind = PSMethodAbstraction.NUM2CHOICE_SCHEMA;
 		final Class<? extends PSMethod> context = PSMethodAbstraction.class;
 
-		Iterator<Question> questionsIter = kb.getQuestions().iterator();
+		Iterator<Question> questionsIter = kb.getManager().getQuestions().iterator();
 		while (questionsIter.hasNext()) {
 			Question question = questionsIter.next();
 			KnowledgeSlice o = question.getKnowledge(context, methodKind);
@@ -358,7 +360,7 @@ public class BasicPersistenceHandler implements
 
 	private static QASet getRootQASet(KnowledgeBase kb) {
 		List<QASet> noParents = new ArrayList<QASet>();
-		Iterator<QASet> iter = kb.getQASets().iterator();
+		Iterator<QASet> iter = kb.getManager().getQASets().iterator();
 		while (iter.hasNext()) {
 			QASet fk = iter.next();
 			if (fk.getParents() == null || fk.getParents().length == 0) {
@@ -388,7 +390,7 @@ public class BasicPersistenceHandler implements
 
 	private static Solution getRootSolution(KnowledgeBase kb) {
 		List<Solution> result = new ArrayList<Solution>();
-		Iterator<Solution> iter = kb.getSolutions().iterator();
+		Iterator<Solution> iter = kb.getManager().getSolutions().iterator();
 		while (iter.hasNext()) {
 			Solution d = iter.next();
 			if (d.getParents() == null || d.getParents().length == 0) {

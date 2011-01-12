@@ -64,7 +64,7 @@ public class HeuristicPSActionHandler implements FragmentHandler {
 			}
 			else if (child.getNodeName().equalsIgnoreCase("Diagnosis")) {
 				String id = child.getAttributes().getNamedItem("ID").getNodeValue();
-				diag = kb.searchSolution(id);
+				diag = kb.getManager().searchSolution(id);
 			}
 		}
 		ActionHeuristicPS actionHeuristicPS = new ActionHeuristicPS();

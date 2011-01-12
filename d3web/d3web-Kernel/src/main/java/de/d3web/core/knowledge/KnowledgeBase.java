@@ -38,13 +38,10 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.IDObject;
-import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.manage.KnowledgeBaseManagement;
@@ -76,8 +73,6 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer {
 	// their respective priority
 	private Map<QASet, Integer> initQuestions = new HashMap<QASet, Integer>();
 
-	private final List<Solution> solutions;
-
 	private final List<Resource> resouces = new ArrayList<Resource>();
 
 	private final List<PSConfig> psConfigs = new ArrayList<PSConfig>();
@@ -86,15 +81,7 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer {
 
 	private Solution rootSolution = null;
 
-	/**
-	 * Hashes the objects for ID
-	 */
-	private final Map<String, IDObject> objectIDMap = new HashMap<String, IDObject>();
-
-	/**
-	 * Hashes the objects for names (unique name assumption required)
-	 */
-	private final Map<String, TerminologyObject> objectNameMap = new HashMap<String, TerminologyObject>();
+	private TerminologyManager manager = new TerminologyManager(this);
 
 	/**
 	 * Map with key="ps-method type" value="list of e.g. rules provided by this
@@ -147,62 +134,10 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer {
 	 * {@link KnowledgeBaseManagement} class.
 	 */
 	public KnowledgeBase() {
-		solutions = new ArrayList<Solution>();
 		initQuestions = new HashMap<QASet, Integer>();
 		// unsynchronized version, allows null values
 		knowledgeMap = new HashMap<Class<? extends PSMethod>, Map<MethodKind, List<KnowledgeSlice>>>();
 
-	}
-
-	/**
-	 * Adds a new solution to the knowledge base. The new object is only added,
-	 * if it is not already contained in the knowledge base.
-	 * 
-	 * @param solution the new solution to be added to the knowledge base
-	 */
-	public void add(Solution solution) {
-		checkID(solution);
-
-		if (!objectIDMap.containsKey(solution.getId())) {
-			objectIDMap.put(solution.getId(), solution);
-			objectNameMap.put(solution.getName(), solution);
-
-			solutions.add(solution);
-			if (solution.getKnowledgeBase() == null) {
-				solution.setKnowledgeBase(this);
-			}
-
-		}
-	}
-
-	private void checkID(IDObject ido) {
-		if (ido.getId() == null) {
-			throw new IllegalStateException("IDObject " + ido
-					+ " has no assigned ID.");
-		}
-
-	}
-
-	/**
-	 * Inserts a new questionnaire (QContainer) to the knowledge base. The new
-	 * object is only inserted, if it is not already contained in the knowledge
-	 * base.
-	 * 
-	 * @param questionnaire the new questionnaire to be added
-	 */
-	public void add(QContainer questionnaire) {
-		addQASet(questionnaire);
-	}
-
-	/**
-	 * Inserts a new {@link Question} instance to the knowledge base. The new
-	 * object is only inserted, if it is not already contained in the knowledge
-	 * base.
-	 * 
-	 * @param question the new question to be added
-	 */
-	public void add(Question question) {
-		addQASet(question);
 	}
 
 	/**
@@ -324,36 +259,6 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer {
 		return false;
 	}
 
-	/**
-	 * Deletes a terminology object from the knowledge base. Before the deletion
-	 * the corresponding knowledge instances (KnowledgeSlices) are also removed.
-	 * Exception thrown: An object cannot be removed, if it has children
-	 * relations.
-	 * 
-	 * @param object the object to be removed
-	 * @throws IllegalAccessException if the knowledge could not be removed from
-	 *         the {@link KnowledgeBase}
-	 */
-	public void remove(NamedObject object) throws IllegalAccessException {
-		if ((object.getChildren() != null) && (object.getChildren().length > 0)) {
-			throw new IllegalAccessException(
-					object
-							+ " has some children, that should be removed/relinked before deletion.");
-		}
-		else {
-			// removes object from list of children of all parents
-			object.setParents(new ArrayList<NamedObject>(0));
-			object.removeAllKnowledge();
-			objectIDMap.remove(object.getId());
-			objectNameMap.remove(object.getName());
-
-			// remove object from list of contained objects
-			if (object instanceof Solution) {
-				solutions.remove(object);
-			}
-		}
-	}
-
 	// /**
 	// * Are query and item case insensitive equal or is item a substring of
 	// * query?
@@ -436,17 +341,6 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer {
 	}
 
 	/**
-	 * Returns all {@link Solution} instances stored in this knowledge base. The
-	 * returned list is unmodifiable.
-	 * 
-	 * @return list of all {@link Solution} instances contained in this
-	 *         {@link KnowledgeBase}
-	 */
-	public List<Solution> getSolutions() {
-		return Collections.unmodifiableList(solutions);
-	}
-
-	/**
 	 * Returns the ordered {@link List} of all initial questions (
 	 * {@link Question})/questionnaires ({@link QContainer}) . These
 	 * questions/questionnaires are prompted first when starting a new dialog.
@@ -479,39 +373,6 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer {
 	}
 
 	/**
-	 * Returns all questionnaires contained in this {@link KnowledgeBase}.
-	 * 
-	 * @return an unmodifiable {@link List} of all {@link QContainer} instances
-	 *         contained in this {@link KnowledgeBase}
-	 */
-	public List<QContainer> getQContainers() {
-		List<QContainer> qcontainers = new ArrayList<QContainer>();
-		for (IDObject o : objectIDMap.values()) {
-			if (o instanceof QContainer) {
-				qcontainers.add((QContainer) o);
-			}
-		}
-		return qcontainers;
-	}
-
-	/**
-	 * Returns the (flattened) {@link List} of all {@link Question} instances
-	 * represented in this knowledge base. The returned list may be
-	 * unmodifiable.
-	 * 
-	 * @return list of all questions contained in this KnowledgeBase
-	 */
-	public List<Question> getQuestions() {
-		List<Question> questions = new ArrayList<Question>();
-		for (IDObject o : objectIDMap.values()) {
-			if (o instanceof Question) {
-				questions.add((Question) o);
-			}
-		}
-		return Collections.unmodifiableList(questions);
-	}
-
-	/**
 	 * The solutions contained in this {@link KnowledgeBase} are organized in a
 	 * hierarchy. This method returns the root solution.
 	 * 
@@ -531,153 +392,6 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer {
 	 */
 	public QASet getRootQASet() {
 		return rootQASet;
-	}
-
-	/**
-	 * Tries to retrieve an terminology object with the specified identifier,
-	 * that is contained in this knowledge base.
-	 * 
-	 * @param id the specified identifier
-	 * @return the terminology object with the specified identifier;
-	 *         <code>null</code> if none found
-	 * @author joba
-	 * @date 15.04.2010
-	 */
-	public TerminologyObject search(String id) {
-		TerminologyObject o = searchQuestion(id);
-		if (o != null) {
-			return o;
-		}
-		o = searchQContainers(id);
-		if (o != null) {
-			return o;
-		}
-		o = searchSolution(id);
-		if (o != null) {
-			return o;
-		}
-		return null;
-	}
-
-	/**
-	 * Tries to find a {@link Choice} with the specified identifier. Choices are
-	 * only contained in {@link QuestionChoice} instances.
-	 * 
-	 * @param choiceID the unique identifier of the
-	 * @return a {@link Choice} instance having the specified unique identifier,
-	 *         <code>null</code> if no {@link Choice} was found.
-	 */
-	public Choice searchAnswerChoice(String choiceID) {
-		for (Question q : getQuestions()) {
-			if (q instanceof QuestionChoice) {
-				QuestionChoice qc = (QuestionChoice) q;
-				List<Choice> allAlternatives = qc.getAllAlternatives();
-				for (Choice a : allAlternatives) {
-					if (a.getId().equals(choiceID)) {
-						return a;
-					}
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Tries to find a {@link Solution} instance with the specified unique
-	 * identifier.
-	 * 
-	 * @return a {@link Solution} instance with the specified unique identifier;
-	 *         <code>null</code> if none found
-	 */
-	public Solution searchSolution(String id) {
-		if (objectIDMap.containsKey(id)) {
-			IDObject o = objectIDMap.get(id);
-			if (o instanceof Solution) {
-				return (Solution) o;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Tries to find a {@link QASet} instance (questions, questionnaires) with
-	 * the specified unique identifier.
-	 * 
-	 * @return a {@link QASet} instance with the specified unique identifier;
-	 *         <code>null</code> if none found
-	 */
-	public QASet searchQASet(String id) {
-		if (objectIDMap.containsKey(id)) {
-			IDObject o = objectIDMap.get(id);
-			if (o instanceof QASet) {
-				return (QASet) o;
-			}
-		}
-
-		// deprecated: should be removed when objectMap hashing is stable
-		QASet ret = searchQuestion(id);
-		if (ret == null) {
-			ret = searchQContainers(id);
-		}
-		return ret;
-
-	}
-
-	/**
-	 * Tries to find a {@link QContainer} instance with the specified unique
-	 * identifier or name.
-	 * 
-	 * @return a {@link QContainer} instance with the specified unique
-	 *         identifier or name; <code>null</code> if none found
-	 */
-	public QContainer searchQContainers(String id) {
-		if (objectIDMap.containsKey(id)) {
-			IDObject o = objectIDMap.get(id);
-			if (o instanceof QContainer) {
-				return (QContainer) o;
-			}
-		}
-		else {
-			for (QContainer qcontainer : getQContainers()) {
-				String name = qcontainer.getName();
-				if (name != null && name.equals(id)) {
-					return qcontainer;
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Tries to find a terminology object (solutions, questions, questionnaires)
-	 * with the specified name.
-	 * 
-	 * @param name the specified name of the searched terminology object
-	 * @return the search terminology object; <code>null</code> if none found
-	 * @author joba
-	 * @date 15.04.2010
-	 */
-	public TerminologyObject searchObjectForName(String name) {
-		return this.objectNameMap.get(name);
-	}
-
-	/**
-	 * Tries to find a {@link Question} instance with the specified unique
-	 * identifier.
-	 * 
-	 * @param id the unique identifier of the search {@link Question}
-	 * @return the searched question; <code>null</code> if none found
-	 * @author joba
-	 * @date 15.04.2010
-	 */
-	public Question searchQuestion(String id) {
-		if (objectIDMap.containsKey(id)) {
-			IDObject o = objectIDMap.get(id);
-			if (o instanceof Question) {
-				return (Question) o;
-			}
-		}
-		return null;
 	}
 
 	/**
@@ -796,45 +510,6 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer {
 	}
 
 	/**
-	 * Inserts a new question/questionnaire to this {@link KnowledgeBase}
-	 * instance
-	 * 
-	 * @param qaSet the question/questionnaire to be added to this knowledge
-	 *        base
-	 * @author joba
-	 * @date 15.04.2010
-	 */
-	public void addQASet(QASet qaSet) {
-		checkID(qaSet);
-		if (!objectIDMap.containsKey(qaSet.getId())) {
-			objectIDMap.put(qaSet.getId(), qaSet);
-			objectNameMap.put(qaSet.getName(), qaSet);
-			if (qaSet.getKnowledgeBase() == null) {
-				qaSet.setKnowledgeBase(this);
-			}
-		}
-
-	}
-
-	/**
-	 * Returns all question/questionnaires stored in this {@link KnowledgeBase}
-	 * instance.
-	 * 
-	 * @return all question/questionnaires contained in this knowledge base
-	 * @author joba
-	 * @date 15.04.2010
-	 */
-	public List<QASet> getQASets() {
-		List<QASet> qASets = new ArrayList<QASet>();
-		for (IDObject o : objectIDMap.values()) {
-			if (o instanceof QASet) {
-				qASets.add((QASet) o);
-			}
-		}
-		return qASets;
-	}
-
-	/**
 	 * Returns the configurations of all registered problem-solvers.
 	 * 
 	 * @return the list of problem-solver configurations sorted by priority
@@ -869,16 +544,12 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer {
 
 	public void setRootQASet(QASet rootQASet) {
 		this.rootQASet = rootQASet;
-		if (!getQASets().contains(rootQASet)) {
-			addQASet(rootQASet);
-		}
+		manager.putTerminologyObject(rootQASet);
 	}
 
 	public void setRootSolution(Solution rootSolution) {
 		this.rootSolution = rootSolution;
-		if (!solutions.contains(rootSolution)) {
-			solutions.add(rootSolution);
-		}
+		manager.putTerminologyObject(rootSolution);
 	}
 
 	@Override
@@ -891,26 +562,8 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer {
 		return infoStore;
 	}
 
-	public List<IDObject> getAllIDObjects() {
-		List<IDObject> objects = new LinkedList<IDObject>();
-		objects.addAll(getQContainers());
-		objects.addAll(getSolutions());
-		objects.addAll(getQuestions());
-		objects.addAll(catchAnswersFromQuestions(getQuestions()));
-		return objects;
+	public TerminologyManager getManager() {
+		return manager;
 	}
 
-	private static List<Choice> catchAnswersFromQuestions(List<Question> questions) {
-		List<Choice> ret = new LinkedList<Choice>();
-
-		Iterator<Question> iter = questions.iterator();
-		while (iter.hasNext()) {
-			Object o = iter.next();
-			if (o instanceof QuestionChoice) {
-				QuestionChoice qc = (QuestionChoice) o;
-				ret.addAll(qc.getAllAlternatives());
-			}
-		}
-		return ret;
-	}
 }

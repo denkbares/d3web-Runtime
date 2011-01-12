@@ -274,6 +274,7 @@ public abstract class NamedObject implements TerminologyObject,
 	 * 
 	 * @return the knowledge base this object belongs to
 	 */
+	@Override
 	public KnowledgeBase getKnowledgeBase() {
 		return knowledgeBase;
 	}
@@ -285,7 +286,7 @@ public abstract class NamedObject implements TerminologyObject,
 	 * @param namedObject the specified object that is possibly a parent
 	 * @return true, if namedObject is a parent of this instance
 	 */
-	public boolean hasParent(NamedObject namedObject) {
+	public boolean hasParent(TerminologyObject namedObject) {
 		if (getParents() == null) {
 			return false;
 		}
@@ -509,6 +510,7 @@ public abstract class NamedObject implements TerminologyObject,
 	 * @throws KnowledgeBaseObjectModificationException if a
 	 *         {@link KnowledgeBase} has been already defined previously
 	 */
+	@Override
 	public void setKnowledgeBase(KnowledgeBase knowledgeBase) {
 		if (this.knowledgeBase == null) {
 			this.knowledgeBase = knowledgeBase;

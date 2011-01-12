@@ -70,7 +70,7 @@ public class PSMethodInit implements PSMethod {
 		try {
 			// initialise all questions
 			KnowledgeBase kb = session.getKnowledgeBase();
-			for (Question q : kb.getQuestions()) {
+			for (Question q : kb.getManager().getQuestions()) {
 				String property = q.getInfoStore().getValue(BasicProperties.INIT);
 				if (property != null) {
 					String s = property;

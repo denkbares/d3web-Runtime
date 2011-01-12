@@ -28,7 +28,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import de.d3web.abstraction.inference.PSMethodAbstraction;
-import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
@@ -63,7 +62,7 @@ public class Num2ChoiceSchemaHandler implements FragmentHandler {
 			if (condNode.getNodeName().equalsIgnoreCase("Question")) {
 				String qID = condNode.getAttributes().getNamedItem("ID")
 						.getNodeValue();
-				q = kb.searchQuestion(qID);
+				q = kb.getManager().searchQuestion(qID);
 				if (q == null) throw new IOException(
 						"Could not create Num2ChoiceSchema - unknown question " + qID);
 			}

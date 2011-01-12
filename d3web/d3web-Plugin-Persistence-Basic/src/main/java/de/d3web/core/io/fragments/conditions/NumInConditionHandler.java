@@ -54,7 +54,7 @@ public class NumInConditionHandler implements FragmentHandler {
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		String questionID = element.getAttribute("ID");
 		if (questionID != null) {
-			IDObject idObject = kb.search(questionID);
+			IDObject idObject = kb.getManager().search(questionID);
 			if (idObject instanceof QuestionNum) {
 				QuestionNum q = (QuestionNum) idObject;
 				List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());

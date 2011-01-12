@@ -71,7 +71,7 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 			Node child = nl.item(i);
 			if (child.getNodeName().equalsIgnoreCase("question")) {
 				String id = child.getAttributes().getNamedItem("ID").getNodeValue();
-				question = kb.searchQuestion(id);
+				question = kb.getManager().searchQuestion(id);
 			}
 			else if (child.getNodeName().equalsIgnoreCase("values")) {
 				NodeList values = child.getChildNodes();
@@ -84,7 +84,7 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 						if (type.equalsIgnoreCase("answer")
 								|| type.equalsIgnoreCase("answerChoice")) {
 							String id = valNode.getAttributes().getNamedItem("ID").getNodeValue();
-							parsedValues.add(new ChoiceValue(kb.searchAnswerChoice(id)));
+							parsedValues.add(new ChoiceValue(kb.getManager().searchAnswerChoice(id)));
 						}
 						else if (type.equalsIgnoreCase("evaluatable")) {
 							List<Element> childNodes = XMLUtil.getElementList(valNode.getChildNodes());

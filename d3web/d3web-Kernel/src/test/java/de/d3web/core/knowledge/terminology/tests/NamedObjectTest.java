@@ -119,7 +119,7 @@ public class NamedObjectTest {
 		assertThat(linkedChildren.contains(linkedChildThree), is(true));
 
 		// verify that every linked child has only one (to correct!) parent
-		for (NamedObject namedObjectLinkedChild : linkedChildren) {
+		for (TerminologyObject namedObjectLinkedChild : linkedChildren) {
 			TerminologyObject[] parents = namedObjectLinkedChild.getParents();
 			assertThat(parents.length, is(1));
 			assertThat(parents[0], is(equalTo((TerminologyObject) parent)));

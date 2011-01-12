@@ -128,8 +128,8 @@ public class BasicPersistenceHandlerTest {
 		QContainer qc2 = new QContainer("qc2");
 		qc2.setName("qc2-text");
 
-		kb.add(qc1);
-		kb.add(qc2);
+		kb.getManager().putTerminologyObject(qc1);
+		kb.getManager().putTerminologyObject(qc2);
 
 		XMLTag qASetTag = new XMLTag("QASets");
 		shouldTag.addChild(qASetTag);
@@ -168,11 +168,11 @@ public class BasicPersistenceHandlerTest {
 	}
 
 	public void addSolutions() {
-		kb.add(diag1);
+		kb.getManager().putTerminologyObject(diag1);
 
 		Solution diag2 = new Solution("d2");
 		diag2.setName("d2-text");
-		kb.add(diag2);
+		kb.getManager().putTerminologyObject(diag2);
 
 		XMLTag diagnosesTag = new XMLTag("Diagnoses");
 		shouldTag.addChild(diagnosesTag);

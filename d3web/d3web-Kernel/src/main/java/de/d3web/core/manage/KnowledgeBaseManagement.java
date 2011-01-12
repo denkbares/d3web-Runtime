@@ -102,12 +102,12 @@ public final class KnowledgeBaseManagement {
 		// the ID/Name/noParent manually.
 		Solution p000 = new Solution("P000");
 		p000.setName("P000");
-		theK.add(p000);
+		theK.getManager().putTerminologyObject(p000);
 		theK.setRootSolution(p000);
 
 		QContainer q000 = new QContainer("Q000");
 		q000.setName("Q000");
-		theK.add(q000);
+		theK.getManager().putTerminologyObject(q000);
 		theK.setRootQASet(q000);
 
 		return theK;
@@ -123,7 +123,7 @@ public final class KnowledgeBaseManagement {
 		}
 		d.setName(name);
 		addToParent(d, parent);
-		knowledgeBase.add(d);
+		knowledgeBase.getManager().putTerminologyObject(d);
 		return d;
 	}
 
@@ -178,7 +178,7 @@ public final class KnowledgeBaseManagement {
 		}
 		q.setName(name);
 		addToParent(q, parent);
-		knowledgeBase.add(q);
+		knowledgeBase.getManager().putTerminologyObject(q);
 		return q;
 	}
 
@@ -223,7 +223,7 @@ public final class KnowledgeBaseManagement {
 		q.setName(name);
 		addToParent(q, parent);
 		q.setAlternatives(toList(answers));
-		knowledgeBase.add(q);
+		knowledgeBase.getManager().putTerminologyObject(q);
 	}
 
 	public QuestionMC createQuestionMC(String name, QASet parent,
@@ -260,7 +260,7 @@ public final class KnowledgeBaseManagement {
 		QuestionNum q = new QuestionNum(questionID);
 		q.setName(name);
 		addToParent(q, parent);
-		knowledgeBase.add(q);
+		knowledgeBase.getManager().putTerminologyObject(q);
 		return q;
 	}
 
@@ -289,7 +289,7 @@ public final class KnowledgeBaseManagement {
 		}
 		q.setName(name);
 		addToParent(q, parent);
-		knowledgeBase.add(q);
+		knowledgeBase.getManager().putTerminologyObject(q);
 		return q;
 	}
 
@@ -302,7 +302,7 @@ public final class KnowledgeBaseManagement {
 		QuestionDate q = new QuestionDate(questionID);
 		q.setName(name);
 		addToParent(q, parent);
-		knowledgeBase.add(q);
+		knowledgeBase.getManager().putTerminologyObject(q);
 		return q;
 	}
 
@@ -315,7 +315,7 @@ public final class KnowledgeBaseManagement {
 		QuestionText q = new QuestionText(questionID);
 		q.setName(name);
 		addToParent(q, parent);
-		knowledgeBase.add(q);
+		knowledgeBase.getManager().putTerminologyObject(q);
 		return q;
 	}
 
@@ -394,11 +394,11 @@ public final class KnowledgeBaseManagement {
 	 */
 	public Solution findSolution(String name) {
 		// Uses hash for name in KB
-		IDObject ob = knowledgeBase.searchObjectForName(name);
+		IDObject ob = knowledgeBase.getManager().searchObjectForName(name);
 		if (ob instanceof Solution) {
 			return (Solution) ob;
 		}
-		NamedObject o = findNamedObject(name, knowledgeBase.getSolutions());
+		TerminologyObject o = findNamedObject(name, knowledgeBase.getManager().getSolutions());
 		if (o instanceof Solution) {
 			return (Solution) o;
 		}
@@ -414,11 +414,11 @@ public final class KnowledgeBaseManagement {
 	 */
 	public Question findQuestion(String name) {
 		// Uses hash for name in KB
-		IDObject ob = knowledgeBase.searchObjectForName(name);
+		IDObject ob = knowledgeBase.getManager().searchObjectForName(name);
 		if (ob instanceof Question) {
 			return (Question) ob;
 		}
-		NamedObject o = findNamedObject(name, knowledgeBase.getQuestions());
+		TerminologyObject o = findNamedObject(name, knowledgeBase.getManager().getQuestions());
 		if (o instanceof Question) {
 			return (Question) o;
 		}
@@ -434,11 +434,11 @@ public final class KnowledgeBaseManagement {
 	 */
 	public QContainer findQContainer(String name) {
 		// Uses hash for name in KB
-		IDObject ob = knowledgeBase.searchObjectForName(name);
+		IDObject ob = knowledgeBase.getManager().searchObjectForName(name);
 		if (ob instanceof QContainer) {
 			return (QContainer) ob;
 		}
-		NamedObject o = findNamedObject(name, knowledgeBase
+		TerminologyObject o = findNamedObject(name, knowledgeBase.getManager()
 				.getQContainers());
 		if (o instanceof QContainer) {
 			return (QContainer) o;
@@ -446,10 +446,10 @@ public final class KnowledgeBaseManagement {
 		return null;
 	}
 
-	private NamedObject findNamedObject(String name,
+	private TerminologyObject findNamedObject(String name,
 			Collection<? extends NamedObject> namedObjects) {
 		// old iterating search method
-		for (NamedObject o : namedObjects) {
+		for (TerminologyObject o : namedObjects) {
 			if (o != null && name != null
 					&& (name.equals(o.getName()) || name.equals(o.getId()))) {
 				return o;
@@ -580,17 +580,17 @@ public final class KnowledgeBaseManagement {
 
 	public String findNewIDFor(Class<? extends IDObject> o) {
 		if (o == Solution.class) {
-			int idC = getMaxCountOf(knowledgeBase.getSolutions()) + 1;
+			int idC = getMaxCountOf(knowledgeBase.getManager().getSolutions()) + 1;
 			return "P" + idC;
 
 		}
 		else if (o == QContainer.class) {
-			int idC = getMaxCountOf(knowledgeBase.getQContainers()) + 1;
+			int idC = getMaxCountOf(knowledgeBase.getManager().getQContainers()) + 1;
 			return "QC" + idC;
 
 		}
 		else if (o == Question.class) {
-			int idC = getMaxCountOf(knowledgeBase.getQuestions()) + 1;
+			int idC = getMaxCountOf(knowledgeBase.getManager().getQuestions()) + 1;
 			return "Q" + idC;
 
 		}
@@ -783,9 +783,9 @@ public final class KnowledgeBaseManagement {
 	 */
 	public TerminologyObject findTerminologyObjectByName(String name) {
 		List<TerminologyObject> objects = new LinkedList<TerminologyObject>();
-		objects.addAll(knowledgeBase.getQContainers());
-		objects.addAll(knowledgeBase.getSolutions());
-		objects.addAll(knowledgeBase.getQuestions());
+		objects.addAll(knowledgeBase.getManager().getQContainers());
+		objects.addAll(knowledgeBase.getManager().getSolutions());
+		objects.addAll(knowledgeBase.getManager().getQuestions());
 		for (TerminologyObject object : objects) {
 			if (object.getName().equalsIgnoreCase(name)) {
 				return object;

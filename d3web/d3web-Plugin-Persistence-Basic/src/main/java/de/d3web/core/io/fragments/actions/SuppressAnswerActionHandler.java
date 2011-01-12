@@ -62,7 +62,7 @@ public class SuppressAnswerActionHandler implements FragmentHandler {
 			Node n = nl.item(i);
 			if (n.getNodeName().equalsIgnoreCase("Question")) {
 				String id = n.getAttributes().getNamedItem("ID").getNodeValue();
-				q = kb.searchQuestion(id);
+				q = kb.getManager().searchQuestion(id);
 			}
 			else if (n.getNodeName().equalsIgnoreCase("Suppress")) {
 				NodeList sanslist = n.getChildNodes();
@@ -70,7 +70,7 @@ public class SuppressAnswerActionHandler implements FragmentHandler {
 					Node answer = sanslist.item(k);
 					if (answer.getNodeName().equalsIgnoreCase("Answer")) {
 						String id = answer.getAttributes().getNamedItem("ID").getNodeValue();
-						Choice ans = kb.searchAnswerChoice(id);
+						Choice ans = kb.getManager().searchAnswerChoice(id);
 						suppress.add(ans);
 					}
 				}

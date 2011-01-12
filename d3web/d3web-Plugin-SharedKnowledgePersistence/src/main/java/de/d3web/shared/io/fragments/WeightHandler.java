@@ -31,8 +31,8 @@ import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.shared.SolutionWeightValue;
 import de.d3web.shared.QuestionWeightValue;
+import de.d3web.shared.SolutionWeightValue;
 import de.d3web.shared.Weight;
 
 /**
@@ -62,7 +62,7 @@ public class WeightHandler implements FragmentHandler {
 		questionID = n.getAttributes().getNamedItem("questionID")
 				.getNodeValue();
 		valueQ = n.getAttributes().getNamedItem("value").getNodeValue();
-		q = kb.searchQuestion(questionID);
+		q = kb.getManager().searchQuestion(questionID);
 		Weight weight = new Weight();
 
 		QuestionWeightValue questionWV = new QuestionWeightValue();
@@ -78,7 +78,7 @@ public class WeightHandler implements FragmentHandler {
 				String valueD = diagNode.getAttributes().getNamedItem(
 						"value").getNodeValue();
 				SolutionWeightValue diagnosisWV = new SolutionWeightValue();
-				diagnosisWV.setSolution(kb.searchSolution(diagID));
+				diagnosisWV.setSolution(kb.getManager().searchSolution(diagID));
 				diagnosisWV.setValue(Weight
 						.convertConstantStringToValue(valueD));
 				weight.addDiagnosisWeightValue(diagnosisWV);

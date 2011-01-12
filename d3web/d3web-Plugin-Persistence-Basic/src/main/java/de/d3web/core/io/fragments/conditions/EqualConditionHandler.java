@@ -65,7 +65,7 @@ public class EqualConditionHandler implements FragmentHandler {
 		String questionID = element.getAttribute("ID");
 		String value = element.getAttribute("value");
 		if (questionID != null && value != null) {
-			IDObject idObject = kb.search(questionID);
+			IDObject idObject = kb.getManager().search(questionID);
 			if (idObject instanceof QuestionChoice) {
 				QuestionChoice q = (QuestionChoice) idObject;
 				Value a = null;

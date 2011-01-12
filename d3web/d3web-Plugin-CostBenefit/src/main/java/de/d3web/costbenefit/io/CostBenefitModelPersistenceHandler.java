@@ -163,7 +163,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 
 	private void addSTKnowledge(KnowledgeBaseManagement kbm, Node current) throws IOException {
 		String qcontainerID = current.getAttributes().getNamedItem("QID").getTextContent();
-		QContainer qcontainer = kbm.getKnowledgeBase().searchQContainers(qcontainerID);
+		QContainer qcontainer = kbm.getKnowledgeBase().getManager().searchQContainers(qcontainerID);
 		NodeList children = current.getChildNodes();
 		Condition activationCondition = null;
 		List<ValueTransition> postTransitions = new ArrayList<ValueTransition>();

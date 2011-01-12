@@ -67,7 +67,7 @@ public class AbstractAbnormalityHandler implements FragmentHandler {
 		for (int k = 0; k < abChildren.getLength(); ++k) {
 			Node abChild = abChildren.item(k);
 			if (abChild.getNodeName().equalsIgnoreCase("question")) {
-				question = (Question) kb.search(abChild.getAttributes()
+				question = (Question) kb.getManager().search(abChild.getAttributes()
 						.getNamedItem("ID").getNodeValue());
 				break;
 			}

@@ -136,7 +136,7 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 
 		List<?> all = (List<?>) qyn2.getAllKnowledge();
 		try {
-			base.remove(qyn2);
+			base.getManager().remove(qyn2);
 		}
 		catch (IllegalAccessException e) {
 			fail(qyn2.getName() + " should have had no children!");
@@ -167,7 +167,7 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 
 		Collection<KnowledgeSlice> all = qyn2.getAllKnowledge();
 		try {
-			base.remove(qyn2);
+			base.getManager().remove(qyn2);
 		}
 		catch (IllegalAccessException e) {
 			fail(qyn2.getName() + " should have had no children!");
@@ -197,7 +197,7 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 
 		Collection<KnowledgeSlice> all = qyn2.getAllKnowledge();
 		try {
-			base.remove(qyn2);
+			base.getManager().remove(qyn2);
 		}
 		catch (IllegalAccessException e) {
 			fail(qyn2.getName() + " should have had no children!");

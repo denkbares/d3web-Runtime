@@ -893,19 +893,6 @@
 <Child ID="P17"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P15">
-<Text>Fam. Liliengewächse (Liliaceae)</Text>
-<Children>
-<Child ID="P7361"/>
-<Child ID="P3543"/>
-</Children>
-</Diagnosis>
-<Diagnosis ID="P7361">
-<Text>Gelbstern (Gagea lutea)</Text>
-</Diagnosis>
-<Diagnosis ID="P3543">
-<Text>Kleine Traubenhyazinthe (Muscari botryoides)</Text>
-</Diagnosis>
 <Diagnosis ID="P10">
 <Text>Fam. Hahnenfußgewächse (Ranunculaceae)</Text>
 <Children>
@@ -915,30 +902,20 @@
 <Child ID="P777"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P776">
-<Text>Busch-Windröschen (Anemone Nemorosa)</Text>
+<Diagnosis ID="P1085" aPriProb="P2">
+<Text>Wiesen-Storchschnabel (Geranium pratense)</Text>
 </Diagnosis>
-<Diagnosis ID="P3152">
-<Text>Sumpf-Dotterblume (Caltha palustris)</Text>
-</Diagnosis>
-<Diagnosis ID="P3153" aPriProb="P2">
-<Text>Scharfer Hahnenfuß (Ranunculus acris)</Text>
-</Diagnosis>
-<Diagnosis ID="P777">
-<Text>Scharbockskraut (Ranunculus ficaria)</Text>
-</Diagnosis>
-<Diagnosis ID="P9">
-<Text>Fam. Mohngewächse (Papaveraceae)</Text>
+<Diagnosis ID="P11">
+<Text>Fam. Storchschnabelgewächse (Geraniaceae)</Text>
 <Children>
-<Child ID="P2398"/>
-<Child ID="P968"/>
+<Child ID="P2169"/>
+<Child ID="P1085"/>
+<Child ID="P5973"/>
+<Child ID="P5526"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P2398">
-<Text>Großes Schöllkraut  (Chelidonium majus)</Text>
-</Diagnosis>
-<Diagnosis ID="P968">
-<Text>Klatschmohn (Papaver rhoeas)</Text>
+<Diagnosis ID="P1198" aPriProb="P2">
+<Text>Wiesen-Schaumkraut (Cardamine pratense)</Text>
 </Diagnosis>
 <Diagnosis ID="P12">
 <Text>Fam. Erdrauchgewächse (Fumariaceae)</Text>
@@ -946,25 +923,173 @@
 <Child ID="P3634"/>
 </Children>
 </Diagnosis>
+<Diagnosis ID="P122" aPriProb="P3">
+<Text>Gänseblümchen (Bellis perennis)</Text>
+</Diagnosis>
+<Diagnosis ID="P123" aPriProb="P3">
+<Text>Weiße Taubnessel (Lamium album)</Text>
+</Diagnosis>
+<Diagnosis ID="P13">
+<Text>Fam. Primelgewächse (Primulaceae)</Text>
+<Children>
+<Child ID="P2127"/>
+</Children>
+</Diagnosis>
+<Diagnosis ID="P1329" aPriProb="P2">
+<Text>Vogelmiere (Stellaria media)</Text>
+</Diagnosis>
+<Diagnosis ID="P14">
+<Text>Fam. Nelkengewächse (Cariophyllaceae)</Text>
+<Children>
+<Child ID="P1688"/>
+<Child ID="P2500"/>
+<Child ID="P3256"/>
+<Child ID="P1687"/>
+<Child ID="P1329"/>
+</Children>
+</Diagnosis>
+<Diagnosis ID="P1470">
+<Text>Wiesen-Kerbel (Anthriscus sylvestris)</Text>
+</Diagnosis>
+<Diagnosis ID="P15">
+<Text>Fam. Liliengewächse (Liliaceae)</Text>
+<Children>
+<Child ID="P7361"/>
+<Child ID="P3543"/>
+</Children>
+</Diagnosis>
+<Diagnosis ID="P1572" aPriProb="P3">
+<Text>Efeu-Gundermann (Glechoma hederacea)</Text>
+</Diagnosis>
+<Diagnosis ID="P16" aPriProb="P2">
+<Text>Knoblauchsrauke (Alliaria petiolata)</Text>
+</Diagnosis>
+<Diagnosis ID="P1687" aPriProb="P2">
+<Text>Große Sternmiere (Stellaria holostea)</Text>
+</Diagnosis>
+<Diagnosis ID="P1688">
+<Text>Acker-Hornkraut (Cerastium arvense)</Text>
+</Diagnosis>
+<Diagnosis ID="P17">
+<Text>Fam. Wolfsmilchgewächse (Euphorbiaceae)</Text>
+<Children>
+<Child ID="P20"/>
+</Children>
+</Diagnosis>
+<Diagnosis ID="P18">
+<Text>Rote Taubnessel (Lamium purpureum)</Text>
+</Diagnosis>
+<Diagnosis ID="P1942">
+<Text>Kornblume (Centaurea cyanus)</Text>
+</Diagnosis>
+<Diagnosis ID="P2">
+<Text>Fam. Kreuzblütler (Brassicaceae)</Text>
+<Children>
+<Child ID="P16"/>
+<Child ID="P43"/>
+<Child ID="P44"/>
+<Child ID="P1198"/>
+<Child ID="P42"/>
+</Children>
+</Diagnosis>
+<Diagnosis ID="P20" aPriProb="P2">
+<Text>Zypressen-Wolfsmilch (Euphorbia cyparissias)</Text>
+</Diagnosis>
+<Diagnosis ID="P21" aPriProb="P2">
+<Text>Gem. Beinwell (Symphytum officinale)</Text>
+</Diagnosis>
+<Diagnosis ID="P2127">
+<Text>Wiesen-Schlüsselblume (Primula veris)</Text>
+</Diagnosis>
+<Diagnosis ID="P2169">
+<Text>Schierlings-Reiherschnabel (Erodium cicutarium)</Text>
+</Diagnosis>
+<Diagnosis ID="P2288" aPriProb="P2">
+<Text>Stengelumfassende Taubnessel (Lamium amplexicaule)</Text>
+</Diagnosis>
+<Diagnosis ID="P2398">
+<Text>Großes Schöllkraut  (Chelidonium majus)</Text>
+</Diagnosis>
+<Diagnosis ID="P2500">
+<Text>Weißes Leimkraut (Silene alba)</Text>
+</Diagnosis>
+<Diagnosis ID="P2682">
+<Text>Fam. Rötegewächse (Rubiaceae)</Text>
+<Children>
+<Child ID="P2683"/>
+<Child ID="P5870"/>
+<Child ID="P7282"/>
+<Child ID="P6803"/>
+</Children>
+</Diagnosis>
+<Diagnosis ID="P2683">
+<Text>Gem. Kreuzlabkraut (Crucita laevipes)</Text>
+</Diagnosis>
+<Diagnosis ID="P2811">
+<Text>Wiesen-Hornklee (Lotus corniculatus)</Text>
+</Diagnosis>
+<Diagnosis ID="P2812">
+<Text>Hopfenklee (Medicago lupulina)</Text>
+</Diagnosis>
+<Diagnosis ID="P3">
+<Text>Fam. Lippenblütler (Lamiaceae)</Text>
+<Children>
+<Child ID="P3366"/>
+<Child ID="P7088"/>
+<Child ID="P6632"/>
+<Child ID="P6708"/>
+<Child ID="P1572"/>
+<Child ID="P123"/>
+<Child ID="P2288"/>
+<Child ID="P3367"/>
+<Child ID="P18"/>
+<Child ID="P3774"/>
+</Children>
+</Diagnosis>
+<Diagnosis ID="P3008" aPriProb="P2">
+<Text>Zaun-Wicke (Vicia sepium)</Text>
+</Diagnosis>
+<Diagnosis ID="P3149">
+<Text>Fam. Rauhblattgewächse (Boraginaceae)</Text>
+<Children>
+<Child ID="P4449"/>
+<Child ID="P3150"/>
+<Child ID="P7087"/>
+<Child ID="P21"/>
+</Children>
+</Diagnosis>
+<Diagnosis ID="P3150" aPriProb="P2">
+<Text>Wald-Vergißmeinnicht (Myosotis sylvatica)</Text>
+</Diagnosis>
+<Diagnosis ID="P3152">
+<Text>Sumpf-Dotterblume (Caltha palustris)</Text>
+</Diagnosis>
+<Diagnosis ID="P3153" aPriProb="P2">
+<Text>Scharfer Hahnenfuß (Ranunculus acris)</Text>
+</Diagnosis>
+<Diagnosis ID="P3256">
+<Text>Rotes Leimkraut (Silene dioica)</Text>
+</Diagnosis>
+<Diagnosis ID="P3366">
+<Text>Kriechender Günsel (Ajuga reptans)</Text>
+</Diagnosis>
+<Diagnosis ID="P3367">
+<Text>Goldnessel (Lamium galeobdolon)</Text>
+</Diagnosis>
+<Diagnosis ID="P3543">
+<Text>Kleine Traubenhyazinthe (Muscari botryoides)</Text>
+</Diagnosis>
 <Diagnosis ID="P3634">
 <Text>Hohler Lerchensporn (Corydalis cava)</Text>
 </Diagnosis>
-<Diagnosis ID="P7">
-<Text>Fam. Rosengewächse (Rosaceae)</Text>
-<Children>
-<Child ID="P4045"/>
-<Child ID="P4714"/>
-<Child ID="P7487"/>
-</Children>
+<Diagnosis ID="P368" aPriProb="P3">
+<Text>Wiesen-Löwenzahn (Taraxacum officinalis)</Text>
 </Diagnosis>
-<Diagnosis ID="P4045" aPriProb="P2">
-<Text>Bach-Nelkenwurz (Geum rivale)</Text>
+<Diagnosis ID="P3774" aPriProb="P2">
+<Text>Wiesen-Salbei (Salvia pratensis)</Text>
 </Diagnosis>
-<Diagnosis ID="P4714" aPriProb="P2">
-<Text>Echte Nelkenwurz (Geum urbanum)</Text>
-</Diagnosis>
-<Diagnosis ID="P7487" aPriProb="P2">
-<Text>Kriech. Fingerkraut (Potentilla reptans)</Text>
+<Diagnosis ID="P3926" aPriProb="P2">
+<Text>Wiesen-Bocksbart (Tragopogon pratensis)</Text>
 </Diagnosis>
 <Diagnosis ID="P4">
 <Text>Fam. Schmetterlingsblütler (Fabaceae)</Text>
@@ -983,133 +1108,44 @@
 <Child ID="P3008"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P6354">
-<Text>Bunte Kronwicke (Coronilla varia)</Text>
-</Diagnosis>
-<Diagnosis ID="P4157">
-<Text>Schopf-Hufeisenklee (Hippocrepis comosa)</Text>
-</Diagnosis>
-<Diagnosis ID="P5436">
-<Text>Wiesen-Platterbse (Lathyrus pratensis)</Text>
-</Diagnosis>
-<Diagnosis ID="P2811">
-<Text>Wiesen-Hornklee (Lotus corniculatus)</Text>
-</Diagnosis>
-<Diagnosis ID="P2812">
-<Text>Hopfenklee (Medicago lupulina)</Text>
-</Diagnosis>
-<Diagnosis ID="P5647" aPriProb="P2">
-<Text>Weißer Steinklee (Melilotus alba)</Text>
-</Diagnosis>
-<Diagnosis ID="P5646" aPriProb="P2">
-<Text>Echter Steinklee (Melilotus officinalis)</Text>
-</Diagnosis>
-<Diagnosis ID="P4576">
-<Text>Gelber Acker-Klee (Trifolium campestre)</Text>
+<Diagnosis ID="P4045" aPriProb="P2">
+<Text>Bach-Nelkenwurz (Geum rivale)</Text>
 </Diagnosis>
 <Diagnosis ID="P4156" aPriProb="P2">
 <Text>Wiesen-Klee (Trifolium pratense)</Text>
 </Diagnosis>
-<Diagnosis ID="P6356">
-<Text>Weiß-Klee (Trifolium repens)</Text>
+<Diagnosis ID="P4157">
+<Text>Schopf-Hufeisenklee (Hippocrepis comosa)</Text>
 </Diagnosis>
 <Diagnosis ID="P4158">
 <Text>Schmalblättrige Wicke (Vicia angustifolia)</Text>
 </Diagnosis>
-<Diagnosis ID="P3008" aPriProb="P2">
-<Text>Zaun-Wicke (Vicia sepium)</Text>
+<Diagnosis ID="P42" aPriProb="P2">
+<Text>Acker-Senf (Sinapis arvensis)</Text>
 </Diagnosis>
-<Diagnosis ID="P13">
-<Text>Fam. Primelgewächse (Primulaceae)</Text>
-<Children>
-<Child ID="P2127"/>
-</Children>
+<Diagnosis ID="P43">
+<Text>Kahle Gänsekresse (Arabis glabra)</Text>
 </Diagnosis>
-<Diagnosis ID="P2127">
-<Text>Wiesen-Schlüsselblume (Primula veris)</Text>
+<Diagnosis ID="P44" aPriProb="P3">
+<Text>Gem. Hirtentäschel (Capsella bursa-pastoris)</Text>
 </Diagnosis>
-<Diagnosis ID="P14">
-<Text>Fam. Nelkengewächse (Cariophyllaceae)</Text>
-<Children>
-<Child ID="P1688"/>
-<Child ID="P2500"/>
-<Child ID="P3256"/>
-<Child ID="P1687"/>
-<Child ID="P1329"/>
-</Children>
+<Diagnosis ID="P4449" aPriProb="P2">
+<Text>Acker-Vergißmeinnicht (Myosotis arvensis)</Text>
 </Diagnosis>
-<Diagnosis ID="P1688">
-<Text>Acker-Hornkraut (Cerastium arvense)</Text>
+<Diagnosis ID="P4576">
+<Text>Gelber Acker-Klee (Trifolium campestre)</Text>
 </Diagnosis>
-<Diagnosis ID="P2500">
-<Text>Weißes Leimkraut (Silene alba)</Text>
-</Diagnosis>
-<Diagnosis ID="P3256">
-<Text>Rotes Leimkraut (Silene dioica)</Text>
-</Diagnosis>
-<Diagnosis ID="P1687" aPriProb="P2">
-<Text>Große Sternmiere (Stellaria holostea)</Text>
-</Diagnosis>
-<Diagnosis ID="P1329" aPriProb="P2">
-<Text>Vogelmiere (Stellaria media)</Text>
-</Diagnosis>
-<Diagnosis ID="P8">
-<Text>Fam. Rachenblütler (Scrophulariaceae)</Text>
-<Children>
-<Child ID="P4829"/>
-<Child ID="P6078"/>
-</Children>
+<Diagnosis ID="P4714" aPriProb="P2">
+<Text>Echte Nelkenwurz (Geum urbanum)</Text>
 </Diagnosis>
 <Diagnosis ID="P4829" aPriProb="P2">
 <Text>Gamander-Ehrenpreis (Veronica chamaedrys)</Text>
 </Diagnosis>
-<Diagnosis ID="P6078" aPriProb="P3">
-<Text>Acker-Ehrenpreis (Veronica persica)</Text>
+<Diagnosis ID="P4961" aPriProb="P2">
+<Text>Acker-Witwenblume (Knautia arvensis)</Text>
 </Diagnosis>
-<Diagnosis ID="P3">
-<Text>Fam. Lippenblütler (Lamiaceae)</Text>
-<Children>
-<Child ID="P3366"/>
-<Child ID="P7088"/>
-<Child ID="P6632"/>
-<Child ID="P6708"/>
-<Child ID="P1572"/>
-<Child ID="P123"/>
-<Child ID="P2288"/>
-<Child ID="P3367"/>
-<Child ID="P18"/>
-<Child ID="P3774"/>
-</Children>
-</Diagnosis>
-<Diagnosis ID="P3366">
-<Text>Kriechender Günsel (Ajuga reptans)</Text>
-</Diagnosis>
-<Diagnosis ID="P7088">
-<Text>Heide-Günsel (Ajuga genevensis)</Text>
-</Diagnosis>
-<Diagnosis ID="P6632" aPriProb="P2">
-<Text>Schwarznessel (Ballota nigra)</Text>
-</Diagnosis>
-<Diagnosis ID="P6708" aPriProb="P2">
-<Text>Wirbeldost (Calamintha clinopodium)</Text>
-</Diagnosis>
-<Diagnosis ID="P1572" aPriProb="P3">
-<Text>Efeu-Gundermann (Glechoma hederacea)</Text>
-</Diagnosis>
-<Diagnosis ID="P123" aPriProb="P3">
-<Text>Weiße Taubnessel (Lamium album)</Text>
-</Diagnosis>
-<Diagnosis ID="P2288" aPriProb="P2">
-<Text>Stengelumfassende Taubnessel (Lamium amplexicaule)</Text>
-</Diagnosis>
-<Diagnosis ID="P3367">
-<Text>Goldnessel (Lamium galeobdolon)</Text>
-</Diagnosis>
-<Diagnosis ID="P18">
-<Text>Rote Taubnessel (Lamium purpureum)</Text>
-</Diagnosis>
-<Diagnosis ID="P3774" aPriProb="P2">
-<Text>Wiesen-Salbei (Salvia pratensis)</Text>
+<Diagnosis ID="P4962" aPriProb="P2">
+<Text>Gem. Stiefmütterchen (Viola tricolor)</Text>
 </Diagnosis>
 <Diagnosis ID="P5">
 <Text>Fam. Korbblütler (Asteraceae)</Text>
@@ -1125,91 +1161,23 @@
 <Child ID="P3926"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P6172" aPriProb="P3">
-<Text>Gem. Schafgarbe (Achillea millefolium)</Text>
-</Diagnosis>
-<Diagnosis ID="P122" aPriProb="P3">
-<Text>Gänseblümchen (Bellis perennis)</Text>
-</Diagnosis>
 <Diagnosis ID="P5209" aPriProb="P3">
 <Text>Margerite (Chrysanthemum leucanthemum)</Text>
 </Diagnosis>
-<Diagnosis ID="P1942">
-<Text>Kornblume (Centaurea cyanus)</Text>
-</Diagnosis>
-<Diagnosis ID="P6270" aPriProb="P3">
-<Text>Gem. Wegwarte (Cichorium intybus)</Text>
-</Diagnosis>
-<Diagnosis ID="P6897">
-<Text>Wiesen-Pippau (Crepis biennis)</Text>
-</Diagnosis>
-<Diagnosis ID="P6355" aPriProb="P3">
-<Text>Duftlose Kamille (Matricaria inodora)</Text>
-</Diagnosis>
-<Diagnosis ID="P368" aPriProb="P3">
-<Text>Wiesen-Löwenzahn (Taraxacum officinalis)</Text>
-</Diagnosis>
-<Diagnosis ID="P3926" aPriProb="P2">
-<Text>Wiesen-Bocksbart (Tragopogon pratensis)</Text>
-</Diagnosis>
-<Diagnosis ID="P2">
-<Text>Fam. Kreuzblütler (Brassicaceae)</Text>
-<Children>
-<Child ID="P16"/>
-<Child ID="P43"/>
-<Child ID="P44"/>
-<Child ID="P1198"/>
-<Child ID="P42"/>
-</Children>
-</Diagnosis>
-<Diagnosis ID="P16" aPriProb="P2">
-<Text>Knoblauchsrauke (Alliaria petiolata)</Text>
-</Diagnosis>
-<Diagnosis ID="P43">
-<Text>Kahle Gänsekresse (Arabis glabra)</Text>
-</Diagnosis>
-<Diagnosis ID="P44" aPriProb="P3">
-<Text>Gem. Hirtentäschel (Capsella bursa-pastoris)</Text>
-</Diagnosis>
-<Diagnosis ID="P1198" aPriProb="P2">
-<Text>Wiesen-Schaumkraut (Cardamine pratense)</Text>
-</Diagnosis>
-<Diagnosis ID="P42" aPriProb="P2">
-<Text>Acker-Senf (Sinapis arvensis)</Text>
-</Diagnosis>
-<Diagnosis ID="P6">
-<Text>Fam. Doldenblütler (Apiaceae)</Text>
-<Children>
-<Child ID="P1470"/>
-<Child ID="P6898"/>
-</Children>
-</Diagnosis>
-<Diagnosis ID="P1470">
-<Text>Wiesen-Kerbel (Anthriscus sylvestris)</Text>
-</Diagnosis>
-<Diagnosis ID="P6898" aPriProb="P3">
-<Text>Wilde Möhre (Daucus carota)</Text>
-</Diagnosis>
-<Diagnosis ID="P11">
-<Text>Fam. Storchschnabelgewächse (Geraniaceae)</Text>
-<Children>
-<Child ID="P2169"/>
-<Child ID="P1085"/>
-<Child ID="P5973"/>
-<Child ID="P5526"/>
-</Children>
-</Diagnosis>
-<Diagnosis ID="P2169">
-<Text>Schierlings-Reiherschnabel (Erodium cicutarium)</Text>
-</Diagnosis>
-<Diagnosis ID="P1085" aPriProb="P2">
-<Text>Wiesen-Storchschnabel (Geranium pratense)</Text>
-</Diagnosis>
-<Diagnosis ID="P5973" aPriProb="P2">
-<Text>Kleiner Storchenschnabel (Geranium pusillum)</Text>
+<Diagnosis ID="P5436">
+<Text>Wiesen-Platterbse (Lathyrus pratensis)</Text>
 </Diagnosis>
 <Diagnosis ID="P5526" aPriProb="P3">
 <Text>Ruprechtskraut (Geranium robertianum)</Text>
+</Diagnosis>
+<Diagnosis ID="P5646" aPriProb="P2">
+<Text>Echter Steinklee (Melilotus officinalis)</Text>
+</Diagnosis>
+<Diagnosis ID="P5647" aPriProb="P2">
+<Text>Weißer Steinklee (Melilotus alba)</Text>
+</Diagnosis>
+<Diagnosis ID="P5870" aPriProb="P3">
+<Text>Gem. Labkraut (Galium mollugo)</Text>
 </Diagnosis>
 <Diagnosis ID="P597">
 <Text>Fam. Veilchengewächse (Violaceae)</Text>
@@ -1218,11 +1186,8 @@
 <Child ID="P4962"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P623">
-<Text>Wohlriech. Veilchen (Viola odorata)</Text>
-</Diagnosis>
-<Diagnosis ID="P4962" aPriProb="P2">
-<Text>Gem. Stiefmütterchen (Viola tricolor)</Text>
+<Diagnosis ID="P5973" aPriProb="P2">
+<Text>Kleiner Storchenschnabel (Geranium pusillum)</Text>
 </Diagnosis>
 <Diagnosis ID="P598">
 <Text>Fam. Kardengewächse (Dipsacaceae)</Text>
@@ -1230,59 +1195,94 @@
 <Child ID="P4961"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P4961" aPriProb="P2">
-<Text>Acker-Witwenblume (Knautia arvensis)</Text>
-</Diagnosis>
-<Diagnosis ID="P2682">
-<Text>Fam. Rötegewächse (Rubiaceae)</Text>
+<Diagnosis ID="P6">
+<Text>Fam. Doldenblütler (Apiaceae)</Text>
 <Children>
-<Child ID="P2683"/>
-<Child ID="P5870"/>
-<Child ID="P7282"/>
-<Child ID="P6803"/>
+<Child ID="P1470"/>
+<Child ID="P6898"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P2683">
-<Text>Gem. Kreuzlabkraut (Crucita laevipes)</Text>
+<Diagnosis ID="P6078" aPriProb="P3">
+<Text>Acker-Ehrenpreis (Veronica persica)</Text>
 </Diagnosis>
-<Diagnosis ID="P5870" aPriProb="P3">
-<Text>Gem. Labkraut (Galium mollugo)</Text>
+<Diagnosis ID="P6172" aPriProb="P3">
+<Text>Gem. Schafgarbe (Achillea millefolium)</Text>
 </Diagnosis>
-<Diagnosis ID="P7282" aPriProb="P2">
-<Text>Waldmeister (Galium odoratum)</Text>
+<Diagnosis ID="P623">
+<Text>Wohlriech. Veilchen (Viola odorata)</Text>
+</Diagnosis>
+<Diagnosis ID="P6270" aPriProb="P3">
+<Text>Gem. Wegwarte (Cichorium intybus)</Text>
+</Diagnosis>
+<Diagnosis ID="P6354">
+<Text>Bunte Kronwicke (Coronilla varia)</Text>
+</Diagnosis>
+<Diagnosis ID="P6355" aPriProb="P3">
+<Text>Duftlose Kamille (Matricaria inodora)</Text>
+</Diagnosis>
+<Diagnosis ID="P6356">
+<Text>Weiß-Klee (Trifolium repens)</Text>
+</Diagnosis>
+<Diagnosis ID="P6632" aPriProb="P2">
+<Text>Schwarznessel (Ballota nigra)</Text>
+</Diagnosis>
+<Diagnosis ID="P6708" aPriProb="P2">
+<Text>Wirbeldost (Calamintha clinopodium)</Text>
 </Diagnosis>
 <Diagnosis ID="P6803" aPriProb="P2">
 <Text>Echtes Labkraut (Galium verum)</Text>
 </Diagnosis>
-<Diagnosis ID="P3149">
-<Text>Fam. Rauhblattgewächse (Boraginaceae)</Text>
+<Diagnosis ID="P6897">
+<Text>Wiesen-Pippau (Crepis biennis)</Text>
+</Diagnosis>
+<Diagnosis ID="P6898" aPriProb="P3">
+<Text>Wilde Möhre (Daucus carota)</Text>
+</Diagnosis>
+<Diagnosis ID="P7">
+<Text>Fam. Rosengewächse (Rosaceae)</Text>
 <Children>
-<Child ID="P4449"/>
-<Child ID="P3150"/>
-<Child ID="P7087"/>
-<Child ID="P21"/>
+<Child ID="P4045"/>
+<Child ID="P4714"/>
+<Child ID="P7487"/>
 </Children>
-</Diagnosis>
-<Diagnosis ID="P4449" aPriProb="P2">
-<Text>Acker-Vergißmeinnicht (Myosotis arvensis)</Text>
-</Diagnosis>
-<Diagnosis ID="P3150" aPriProb="P2">
-<Text>Wald-Vergißmeinnicht (Myosotis sylvatica)</Text>
 </Diagnosis>
 <Diagnosis ID="P7087">
 <Text>Echtes Lungenkraut (Pulmonaria officinalis)</Text>
 </Diagnosis>
-<Diagnosis ID="P21" aPriProb="P2">
-<Text>Gem. Beinwell (Symphytum officinale)</Text>
+<Diagnosis ID="P7088">
+<Text>Heide-Günsel (Ajuga genevensis)</Text>
 </Diagnosis>
-<Diagnosis ID="P17">
-<Text>Fam. Wolfsmilchgewächse (Euphorbiaceae)</Text>
+<Diagnosis ID="P7282" aPriProb="P2">
+<Text>Waldmeister (Galium odoratum)</Text>
+</Diagnosis>
+<Diagnosis ID="P7361">
+<Text>Gelbstern (Gagea lutea)</Text>
+</Diagnosis>
+<Diagnosis ID="P7487" aPriProb="P2">
+<Text>Kriech. Fingerkraut (Potentilla reptans)</Text>
+</Diagnosis>
+<Diagnosis ID="P776">
+<Text>Busch-Windröschen (Anemone Nemorosa)</Text>
+</Diagnosis>
+<Diagnosis ID="P777">
+<Text>Scharbockskraut (Ranunculus ficaria)</Text>
+</Diagnosis>
+<Diagnosis ID="P8">
+<Text>Fam. Rachenblütler (Scrophulariaceae)</Text>
 <Children>
-<Child ID="P20"/>
+<Child ID="P4829"/>
+<Child ID="P6078"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P20" aPriProb="P2">
-<Text>Zypressen-Wolfsmilch (Euphorbia cyparissias)</Text>
+<Diagnosis ID="P9">
+<Text>Fam. Mohngewächse (Papaveraceae)</Text>
+<Children>
+<Child ID="P2398"/>
+<Child ID="P968"/>
+</Children>
+</Diagnosis>
+<Diagnosis ID="P968">
+<Text>Klatschmohn (Papaver rhoeas)</Text>
 </Diagnosis>
 </Diagnoses>
 <KnowledgeSlices/>

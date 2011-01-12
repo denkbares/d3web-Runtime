@@ -219,7 +219,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 
 	private static void addRelationConditions(Set<Condition> pot,
 			Collection<? extends NamedObject> qaset, XCLModel model) {
-		for (NamedObject nob : qaset) {
+		for (TerminologyObject nob : qaset) {
 			addRelationConditions(pot, nob, model);
 		}
 	}
@@ -263,7 +263,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 					PSMethodXCL.class, XCLModel.XCLMODEL);
 			if (ks == null) continue;
 			XCLModel model = (XCLModel) ks;
-			for (NamedObject nob : model.getCoveredSymptoms()) {
+			for (TerminologyObject nob : model.getCoveredSymptoms()) {
 				if (nob instanceof Question) {
 					coveredSymptoms.add((Question) nob);
 				}
