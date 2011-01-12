@@ -59,7 +59,7 @@ public class TerminologyTextbundleHandler implements KnowledgeWriter {
 
 	@Override
 	public int getEstimatedSize(KnowledgeBase kb) {
-		return kb.getAllIDObjects().size() + 1;
+		return kb.getManager().getAllIDObjects().size() + 1;
 	}
 
 	/**
@@ -73,10 +73,10 @@ public class TerminologyTextbundleHandler implements KnowledgeWriter {
 	 * @throws IOException
 	 */
 	private void generatePropertyFile(Writer writer, KnowledgeBase knowledge) throws IOException {
-		for (Question question : knowledge.getQuestions()) {
+		for (Question question : knowledge.getManager().getQuestions()) {
 			print(writer, question);
 		}
-		for (Solution solution : knowledge.getSolutions()) {
+		for (Solution solution : knowledge.getManager().getSolutions()) {
 			append(writer, solution.getId(), ".title=" + solution.getName());
 		}
 	}
