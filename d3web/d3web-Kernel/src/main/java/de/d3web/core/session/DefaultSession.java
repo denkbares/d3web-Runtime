@@ -231,12 +231,15 @@ public class DefaultSession implements Session {
 			return;
 		}
 
-		this.usedPSMethods.add(psmethod);
-		psmethod.init(this);
-
 		PropagationManager propagationContoller = getPropagationManager();
 		propagationContoller.openPropagation(this.created.getTime());
 		try {
+			// add the ps method inside the propagation, because it may also
+			// add facts to the blackboard that require the start date of the
+			// case
+			this.usedPSMethods.add(psmethod);
+			psmethod.init(this);
+
 			for (Question question : blackboard.getAnsweredQuestions()) {
 				Value oldValue = null;
 				propagationContoller.propagate(question, oldValue, psmethod);
