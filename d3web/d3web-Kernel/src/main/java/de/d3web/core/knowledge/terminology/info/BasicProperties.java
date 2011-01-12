@@ -9,6 +9,8 @@
  */
 package de.d3web.core.knowledge.terminology.info;
 
+import de.d3web.core.knowledge.KnowledgeBase;
+
 /**
  * A collection of basic Properties for d3web
  * 
@@ -88,4 +90,18 @@ public class BasicProperties {
 	 * name of a Creator should be used to indicate the entity.
 	 */
 	public static final Property<String> AUTHOR = Property.getProperty("author", String.class);
+
+	/**
+	 * A property for a {@link KnowledgeBase} instance to store the desired
+	 * filename of this knowledge base, when it is downloaded as a d3web file
+	 * from the wiki.
+	 */
+	public static final Property<String> FILENAME = Property.getProperty("filename", String.class);
+
+	/**
+	 * Creation date of a knowledge base, will be created on saving the
+	 * knowledge base.
+	 */
+	public static final Property<String> CREATED = Property.getProperty("created", String.class);
+
 }
