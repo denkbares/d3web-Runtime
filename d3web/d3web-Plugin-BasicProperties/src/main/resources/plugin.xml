@@ -115,6 +115,26 @@
 	</extension>
 	
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="filename">
+		<parameter id="name" value="filename" />
+		<parameter id="description" value="contains the desired filename of a knowledge base to be downloaded" />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="created">
+		<parameter id="name" value="created" />
+		<parameter id="description" value="contains the download date of a knowledge base (is persistently created when downloaded)" />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="description">
 		<parameter id="name" value="description" />
 		<parameter id="description" value="contains a description" />
