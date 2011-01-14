@@ -544,12 +544,16 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer {
 
 	public void setRootQASet(QASet rootQASet) {
 		this.rootQASet = rootQASet;
-		manager.putTerminologyObject(rootQASet);
+		if (!manager.getQASets().contains(rootQASet)) {
+			manager.putTerminologyObject(rootQASet);
+		}
 	}
 
 	public void setRootSolution(Solution rootSolution) {
 		this.rootSolution = rootSolution;
-		manager.putTerminologyObject(rootSolution);
+		if (!manager.getSolutions().contains(rootSolution)) {
+			manager.putTerminologyObject(rootSolution);
+		}
 	}
 
 	@Override

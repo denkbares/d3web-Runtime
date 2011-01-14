@@ -25,6 +25,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.IDObject;
@@ -52,24 +54,62 @@ public class TerminologyManager {
 	 */
 	private final Map<String, TerminologyObject> objectNameMap = new HashMap<String, TerminologyObject>();
 
+	private final Map<String, Integer> idCounts = new HashMap<String, Integer>();
+
+	public static final Pattern ID = Pattern.compile("(.*\\D)+(\\d)*");
+
+	public static final Pattern IDPREFIX = Pattern.compile(".*\\D");
+
 	private KnowledgeBase kb;
 
 	public TerminologyManager(KnowledgeBase kb) {
 		this.kb = kb;
 	}
 
-	public boolean putTerminologyObject(TerminologyObject object) {
+	public void putTerminologyObject(TerminologyObject object) {
 		checkID(object);
-		if (!objectIDMap.containsKey(object.getId())) {
-			objectIDMap.put(object.getId(), object);
-			objectNameMap.put(object.getName(), object);
-			if (object.getKnowledgeBase() == null) {
-				object.setKnowledgeBase(kb);
+		increaseIDCounter(object);
+		objectIDMap.put(object.getId(), object);
+		if (objectNameMap.containsKey(object.getName())) {
+			Logger.getLogger("KnowledgeBase").warning(
+					"Two id objects with the same name are contained in the kb: "
+							+ object.getName());
+		}
+		objectNameMap.put(object.getName(), object);
+		if (object.getKnowledgeBase() == null) {
+			object.setKnowledgeBase(kb);
+		}
+	}
+
+	private void checkID(IDObject ido) {
+		if (ido.getId() == null) {
+			throw new IllegalStateException("IDObject " + ido
+					+ " has no assigned ID.");
+		}
+		else if (objectIDMap.containsKey(ido.getId())) {
+			throw new IllegalArgumentException(
+					"IDObject "
+							+ ido
+							+ " cannot be added, an Object with the same id is already contained in the knowledgebase.");
+		}
+	}
+
+	private void increaseIDCounter(TerminologyObject object) {
+
+	}
+
+	public String getIDforPrefix(String prefix) {
+		if (prefix.isEmpty() || IDPREFIX.matcher(prefix).matches()) {
+			if (idCounts.containsKey(prefix)) {
+				idCounts.put(prefix, idCounts.get(prefix) + 1);
 			}
-			return true;
+			else {
+				idCounts.put(prefix, 1);
+			}
+			return prefix + idCounts.get(prefix);
 		}
 		else {
-			return false;
+			throw new IllegalArgumentException("Prefix must be empty or end with a non digit.");
 		}
 	}
 
@@ -285,13 +325,6 @@ public class TerminologyManager {
 			}
 		}
 		return null;
-	}
-
-	private void checkID(IDObject ido) {
-		if (ido.getId() == null) {
-			throw new IllegalStateException("IDObject " + ido
-					+ " has no assigned ID.");
-		}
 	}
 
 	/**

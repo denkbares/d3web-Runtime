@@ -78,7 +78,7 @@ public final class TestPersistence {
 	// The Parameters
 	private static final String NAME = "Name";
 	private static final String TIMESTAMP = "time";
-	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
 			"yyyy-MM-dd HH:mm:ss.SS");
 	private static final String QUESTION = "Question";
 	private static final String QUESTIONNAIRE = "Questionnaire";
@@ -325,7 +325,7 @@ public final class TestPersistence {
 		if (expected) {
 			xmlsw.writeEmptyElement(EXPECTEDFINDING);
 		}
-		{
+		else {
 			xmlsw.writeEmptyElement(FINDING);
 		}
 		xmlsw.writeAttribute(QUESTION, f.getQuestion().getName());
