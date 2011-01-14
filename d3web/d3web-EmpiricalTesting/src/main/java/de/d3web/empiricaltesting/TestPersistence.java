@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -67,6 +68,7 @@ public final class TestPersistence {
 	private static final String RATED_TEST_CASE = "RatedTestCase";
 	private static final String FINDINGS = "Findings";
 	private static final String FINDING = "Finding";
+	private static final String EXPECTEDFINDING = "ExpectedFinding";
 
 	private static final String SOLUTIONS = "Solutions";
 	private static final String SOLUTION = "Solution";
@@ -75,6 +77,9 @@ public final class TestPersistence {
 
 	// The Parameters
 	private static final String NAME = "Name";
+	private static final String TIMESTAMP = "time";
+	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
+			"yyyy-MM-dd HH:mm:ss.SS");
 	private static final String QUESTION = "Question";
 	private static final String QUESTIONNAIRE = "Questionnaire";
 	private static final String ANSWER = "Answer";
@@ -85,6 +90,7 @@ public final class TestPersistence {
 	private static final String USEDSOLUTIONS = "UsedSolutions";
 	private static final String USEDFINDINGS = "UsedFindings";
 	private static final String LASTTESTED = "LastTested";
+	private static final String EXPECTEDFINDINGS = "ExpectedFindings";
 
 	private List<SequentialTestCase> imported = null;
 
@@ -263,6 +269,10 @@ public final class TestPersistence {
 		xmlsw.writeStartElement(RATED_TEST_CASE);
 		xmlsw.writeAttribute(NAME, rtc.getName());
 
+		if (rtc.getTimeStamp() != null) {
+			xmlsw.writeAttribute(TIMESTAMP, DATE_FORMAT.format(rtc.getTimeStamp()));
+		}
+
 		String lastTested = rtc.getLastTested();
 		if (!lastTested.isEmpty()) {
 			xmlsw.writeAttribute(LASTTESTED, lastTested);
@@ -272,7 +282,16 @@ public final class TestPersistence {
 		xmlsw.writeCharacters("\n\t\t\t");
 		xmlsw.writeStartElement(FINDINGS);
 		for (Finding f : rtc.getFindings()) {
-			write(f, xmlsw);
+			write(f, xmlsw, false);
+		}
+		xmlsw.writeCharacters("\n\t\t\t");
+		xmlsw.writeEndElement();
+
+		// write Findings
+		xmlsw.writeCharacters("\n\t\t\t");
+		xmlsw.writeStartElement(EXPECTEDFINDINGS);
+		for (Finding f : rtc.getExpectedFindings()) {
+			write(f, xmlsw, true);
 		}
 		xmlsw.writeCharacters("\n\t\t\t");
 		xmlsw.writeEndElement();
@@ -299,11 +318,16 @@ public final class TestPersistence {
 		xmlsw.writeEndElement();
 	}
 
-	private void write(Finding f, XMLStreamWriter xmlsw)
+	private void write(Finding f, XMLStreamWriter xmlsw, boolean expected)
 			throws XMLStreamException {
 
 		xmlsw.writeCharacters("\n\t\t\t\t");
-		xmlsw.writeEmptyElement(FINDING);
+		if (expected) {
+			xmlsw.writeEmptyElement(EXPECTEDFINDING);
+		}
+		{
+			xmlsw.writeEmptyElement(FINDING);
+		}
 		xmlsw.writeAttribute(QUESTION, f.getQuestion().getName());
 		xmlsw.writeAttribute(QUESTIONNAIRE, findQuestionnaire(f.getQuestion()).getName());
 		Value v = f.getValue();
@@ -354,7 +378,15 @@ public final class TestPersistence {
 		else if (elName.equals(RATED_TEST_CASE)) {
 			rtc = new RatedTestCase();
 			rtc.setName(sr.getAttributeValue(null, NAME));
-
+			String time = sr.getAttributeValue(null, TIMESTAMP);
+			if (time != null) {
+				try {
+					rtc.setTimeStamp(DATE_FORMAT.parse(time));
+				}
+				catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
 			String lastTestedDate = sr.getAttributeValue(null, LASTTESTED);
 			if (lastTestedDate != null) if (!lastTestedDate.equals("")) {
 				rtc.setTestingDate(lastTestedDate);
@@ -363,33 +395,12 @@ public final class TestPersistence {
 
 		}
 		else if (elName.equals(FINDING)) {
-			String questionText = sr.getAttributeValue(null, QUESTION);
-			String answerText = sr.getAttributeValue(null, ANSWER);
-			String questionnaireText = sr.getAttributeValue(null, QUESTIONNAIRE);
-			Finding f = null;
-			try {
-				Question q = bh.getQuestionByIDorText(questionText, questionnaireText, kb);
-				if (answerText.equals("unknown") || answerText.equals("-?-")) {
-					f = new Finding(q, Unknown.getInstance());
-				}
-				else if (q instanceof QuestionMC) {
-					// '#####' separates two MCAnswers for a MCQuestion
-					Choice[] choices = toChoices(q, answerText.split(MC_ANSWER_SEPARATOR));
-					f = new Finding(q, MultipleChoiceValue.fromChoices(choices));
-				}
-				else if (q instanceof QuestionChoice) {
-					f = new Finding((QuestionChoice) q, answerText);
-				}
-				else if (q instanceof QuestionNum) {
-					f = new Finding((QuestionNum) q, answerText);
-				}
-				// TODO: auf andere Question Arten überprüfen
-				rtc.add(f);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-
+			Finding f = getFinding(sr, kb);
+			if (f != null) rtc.add(f);
+		}
+		else if (elName.equals(EXPECTEDFINDING)) {
+			Finding f = getFinding(sr, kb);
+			if (f != null) rtc.addExpectedFinding(f);
 		}
 		else if (elName.equals(SOLUTION)) {
 			Solution d = null;
@@ -412,6 +423,35 @@ public final class TestPersistence {
 			RatedSolution rs = new RatedSolution(d, r);
 			rtc.addExpected(rs);
 		}
+	}
+
+	private Finding getFinding(XMLStreamReader sr, KnowledgeBase kb) {
+		String questionText = sr.getAttributeValue(null, QUESTION);
+		String answerText = sr.getAttributeValue(null, ANSWER);
+		String questionnaireText = sr.getAttributeValue(null, QUESTIONNAIRE);
+		Finding f = null;
+		try {
+			Question q = bh.getQuestionByIDorText(questionText, questionnaireText, kb);
+			if (answerText.equals("unknown") || answerText.equals("-?-")) {
+				f = new Finding(q, Unknown.getInstance());
+			}
+			else if (q instanceof QuestionMC) {
+				// '#####' separates two MCAnswers for a MCQuestion
+				Choice[] choices = toChoices(q, answerText.split(MC_ANSWER_SEPARATOR));
+				f = new Finding(q, MultipleChoiceValue.fromChoices(choices));
+			}
+			else if (q instanceof QuestionChoice) {
+				f = new Finding((QuestionChoice) q, answerText);
+			}
+			else if (q instanceof QuestionNum) {
+				f = new Finding((QuestionNum) q, answerText);
+			}
+			// TODO: auf andere Question Arten überprüfen
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return f;
 	}
 
 	private Choice[] toChoices(Question q, String[] strings) {

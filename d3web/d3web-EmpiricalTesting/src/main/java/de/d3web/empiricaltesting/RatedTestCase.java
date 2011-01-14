@@ -23,9 +23,10 @@ package de.d3web.empiricaltesting;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 import de.d3web.core.knowledge.terminology.Solution;
 
@@ -46,6 +47,11 @@ public class RatedTestCase {
 	 * TestCaseRepository)
 	 */
 	private List<RatedSolution> expectedSolutions;
+
+	/**
+	 * List of expected findings (derived by a psmethod)
+	 */
+	private List<Finding> expectedFindings;
 
 	/**
 	 * This Rated Testcase's List of derived Solutions (derived from the
@@ -71,6 +77,11 @@ public class RatedTestCase {
 	private boolean wasTestedBefore;
 
 	/**
+	 * Propagationtime
+	 */
+	private Date timeStamp;
+
+	/**
 	 * Default Constructor.
 	 */
 	public RatedTestCase() {
@@ -78,6 +89,7 @@ public class RatedTestCase {
 		findings = new ArrayList<Finding>(1); // often only one finding
 		// contained in the rtc
 		expectedSolutions = new ArrayList<RatedSolution>();
+		expectedFindings = new ArrayList<Finding>();
 		derivedSolutions = new ArrayList<RatedSolution>();
 		derivedSolutionsAreUpToDate = false;
 		lastTested = "";
@@ -137,6 +149,14 @@ public class RatedTestCase {
 			result = addExpected(ratedSolution) && result;
 		}
 		return result;
+	}
+
+	public boolean addExpectedFinding(Finding finding) {
+		return expectedFindings.add(finding);
+	}
+
+	public boolean addExpectedFindings(Collection<Finding> fingings) {
+		return expectedFindings.addAll(findings);
 	}
 
 	/**
@@ -382,5 +402,17 @@ public class RatedTestCase {
 	 */
 	public void setWasTestedBefore(boolean wasTestedBefore) {
 		this.wasTestedBefore = wasTestedBefore;
+	}
+
+	public Date getTimeStamp() {
+		return timeStamp;
+	}
+
+	public void setTimeStamp(Date timeStamp) {
+		this.timeStamp = timeStamp;
+	}
+
+	public Collection<Finding> getExpectedFindings() {
+		return Collections.unmodifiableCollection(expectedFindings);
 	}
 }
