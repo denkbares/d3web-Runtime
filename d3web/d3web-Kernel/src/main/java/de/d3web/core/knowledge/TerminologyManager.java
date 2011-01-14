@@ -67,7 +67,22 @@ public class TerminologyManager {
 	}
 
 	public void putTerminologyObject(TerminologyObject object) {
-		checkID(object);
+		if (object.getId() == null) {
+			throw new IllegalStateException("IDObject " + object
+					+ " has no assigned ID.");
+		}
+		else if (objectIDMap.containsKey(object.getId())) {
+			if (objectIDMap.get(object.getId()) != object) {
+				throw new IllegalArgumentException(
+						"IDObject "
+								+ object
+								+ " cannot be added, an Object with the same id is already contained in the knowledgebase.");
+			}
+			else {
+				// no need to insert the object twice
+				return;
+			}
+		}
 		increaseIDCounter(object);
 		objectIDMap.put(object.getId(), object);
 		if (objectNameMap.containsKey(object.getName())) {
@@ -81,21 +96,8 @@ public class TerminologyManager {
 		}
 	}
 
-	private void checkID(IDObject ido) {
-		if (ido.getId() == null) {
-			throw new IllegalStateException("IDObject " + ido
-					+ " has no assigned ID.");
-		}
-		else if (objectIDMap.containsKey(ido.getId())) {
-			throw new IllegalArgumentException(
-					"IDObject "
-							+ ido
-							+ " cannot be added, an Object with the same id is already contained in the knowledgebase.");
-		}
-	}
-
 	private void increaseIDCounter(TerminologyObject object) {
-
+		// TODO
 	}
 
 	public String getIDforPrefix(String prefix) {
