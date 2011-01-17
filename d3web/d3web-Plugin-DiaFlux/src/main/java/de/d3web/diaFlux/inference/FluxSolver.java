@@ -141,63 +141,59 @@ public class FluxSolver implements PostHookablePSMethod {
 		Logger.getLogger(FluxSolver.class.getName()).info(
 				"Start propagating: " + changes);
 
-		try {
-			session.getPropagationManager().openPropagation();
 
-			for (PropagationEntry propagationEntry : changes) {
+		for (PropagationEntry propagationEntry : changes) {
 
-				// strategic entries do not matter so far...
-				if (propagationEntry.isStrategic()) {
-					continue;
+			// strategic entries do not matter so far...
+			if (propagationEntry.isStrategic()) {
+				continue;
+			}
+
+			TerminologyObject object = propagationEntry.getObject();
+			EdgeMap slice = (EdgeMap) ((NamedObject) object).getKnowledge(FluxSolver.class,
+					MethodKind.FORWARD);
+
+			// TO does not occur in any edge
+			if (slice == null) {
+				continue;
+			}
+
+			// iterate over all edges that contain the changed TO
+			for (IEdge edge : slice.getEdges()) {
+
+				INode node = edge.getStartNode();
+				IPath path = DiaFluxUtils.getPath(node, session);
+
+				// if the node the edge starts at is supported
+				if (path.getNodeData(node).isSupported()) {
+
+					// ...propagate starting at this node
+					path.propagate(session, node);
 				}
 
-				TerminologyObject object = propagationEntry.getObject();
-				EdgeMap slice = (EdgeMap) ((NamedObject) object).getKnowledge(FluxSolver.class,
-						MethodKind.FORWARD);
+			}
 
-				// TO does not occur in any edge
-				if (slice == null) {
-					continue;
-				}
+		}
 
-				// iterate over all edges that contain the changed TO
-				for (IEdge edge : slice.getEdges()) {
+		for (PropagationEntry propagationEntry : changes) {
 
-					INode node = edge.getStartNode();
-					IPath path = DiaFluxUtils.getPath(node, session);
+			TerminologyObject object = propagationEntry.getObject();
+			NodeList knowledge = (NodeList) ((NamedObject) object).getKnowledge(
+					FluxSolver.class,
+					MethodKind.BACKWARD);
 
-					// if the node the edge starts at is supported
-					if (path.getNodeData(node).isSupported()) {
+			if (knowledge == null) continue;
 
-						// ...propagate starting at this node
+			for (INode node : knowledge) {
+
+				IPath path = DiaFluxUtils.getPath(node, session);
+
+				if (path.getNodeData(node).isSupported()) {
+
+					if (node.isReevaluate()) {
+
+						activate(session, node);
 						path.propagate(session, node);
-					}
-
-				}
-
-			}
-
-			for (PropagationEntry propagationEntry : changes) {
-
-				TerminologyObject object = propagationEntry.getObject();
-				NodeList knowledge = (NodeList) ((NamedObject) object).getKnowledge(
-						FluxSolver.class,
-						MethodKind.BACKWARD);
-
-				if (knowledge == null) continue;
-
-				for (INode node : knowledge) {
-
-					IPath path = DiaFluxUtils.getPath(node, session);
-
-					if (path.getNodeData(node).isSupported()) {
-
-						if (node.isReevaluate()) {
-
-							activate(session, node);
-							path.propagate(session, node);
-
-						}
 
 					}
 
@@ -205,12 +201,10 @@ public class FluxSolver implements PostHookablePSMethod {
 
 			}
 
-			Logger.getLogger(FluxSolver.class.getName()).info("Finished propagating.");
+		}
 
-		}
-		finally {
-			session.getPropagationManager().commitPropagation();
-		}
+		Logger.getLogger(FluxSolver.class.getName()).info("Finished propagating.");
+
 
 	}
 
