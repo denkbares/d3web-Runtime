@@ -68,13 +68,13 @@ public class DefaultSession implements Session {
 	private final DefaultPropagationManager propagationController;
 	private final Interview interview;
 
-	private Map<CaseObjectSource, SessionObject> dynamicStore;
+	private final Map<CaseObjectSource, SessionObject> dynamicStore;
 
 	private String id = null;
-	private Blackboard blackboard;
+	private final Blackboard blackboard;
 	private Protocol protocol = new DefaultProtocol();
 
-	private List<PSMethod> usedPSMethods;
+	private final List<PSMethod> usedPSMethods;
 
 	private final Date created;
 	private Date edited;
@@ -114,11 +114,15 @@ public class DefaultSession implements Session {
 			}
 			addPlugedPSMethods(knowledgebase);
 		}
+
+		propagateAddedPSMethods();
+
 		// Dirty hack to move the PSMethodInit to the end of the list
 		usedPSMethods.remove(PSMethodInit.getInstance());
 		usedPSMethods.add(PSMethodInit.getInstance());
 		// TODO: add knowlegde base id, name, version
 		// into the case header (dc markup?, properties?)
+
 	}
 
 	/**
@@ -220,10 +224,8 @@ public class DefaultSession implements Session {
 	}
 
 	/**
-	 * Adds a new PSMethod to the used PSMethods of this case. Creation date:
-	 * (28.08.00 17:33:43)
+	 * Adds a new PSMethod to the used PSMethods of this case and intiliazes it.
 	 * 
-	 * @param newUsedPSMethods java.util.List
 	 */
 	private void addUsedPSMethod(PSMethod psmethod) {
 		touch();
@@ -240,10 +242,34 @@ public class DefaultSession implements Session {
 			this.usedPSMethods.add(psmethod);
 			psmethod.init(this);
 
-			for (Question question : blackboard.getAnsweredQuestions()) {
-				Value oldValue = null;
-				propagationContoller.propagate(question, oldValue, psmethod);
+		}
+		finally {
+			propagationContoller.commitPropagation();
+
+		}
+
+	}
+
+	/**
+	 * This propagates all facts to the added PSMs at the end of case creation.
+	 * Before this, all PSMs have been added and initialized.
+	 * 
+	 * @created 18.01.2011
+	 * @param psmethod
+	 */
+	public void propagateAddedPSMethods() {
+		PropagationManager propagationContoller = getPropagationManager();
+		propagationContoller.openPropagation(this.created.getTime());
+		try {
+
+			for (PSMethod psmethod : this.usedPSMethods) {
+				for (Question question : blackboard.getAnsweredQuestions()) {
+					Value oldValue = null;
+					propagationContoller.propagate(question, oldValue, psmethod);
+				}
+
 			}
+
 			// TODO: das ist so viel zu aufwendig, wenn viele Lösungen sind. Man
 			// bräuchte eine Liste der bewerteten Lösungen im Fall (analog
 			// beantwortete Fragen)
