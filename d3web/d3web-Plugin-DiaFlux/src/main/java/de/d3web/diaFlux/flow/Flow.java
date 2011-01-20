@@ -44,6 +44,7 @@ public class Flow implements CaseObjectSource, KnowledgeSlice {
 	private final List<INode> nodes;
 	private final String name;
 	private final String id;
+	private String origin;
 	private boolean autostart;
 
 	public Flow(String id, String name, List<INode> nodes, List<IEdge> edges) {
@@ -135,6 +136,14 @@ public class Flow implements CaseObjectSource, KnowledgeSlice {
 
 	public List<StartNode> getStartNodes() {
 		return getNodesOfType(StartNode.class);
+	}
+
+	public String getOrigin() {
+		return origin;
+	}
+
+	public void setOrigin(String origin) {
+		this.origin = origin;
 	}
 
 	public List<EndNode> getExitNodes() {
