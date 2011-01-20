@@ -104,4 +104,11 @@ public class BasicProperties {
 	 */
 	public static final Property<String> CREATED = Property.getProperty("created", String.class);
 
+	/**
+	 * A property for a {@link KnowledgeBase} instance that enables setting
+	 * UNKNOWN answer option visible by default for all questions
+	 */
+	public static final Property<Boolean> UNKNOWNBYDEFAULT =
+			Property.getProperty("unknownByDefault", Boolean.class);
+
 }
