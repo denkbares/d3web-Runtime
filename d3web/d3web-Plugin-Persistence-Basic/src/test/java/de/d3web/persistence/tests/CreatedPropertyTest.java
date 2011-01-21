@@ -45,9 +45,8 @@ public class CreatedPropertyTest {
 		KnowledgeBase kb = new KnowledgeBase();
 		Date beforeSaving = new Date();
 		kb.getInfoStore().addValue(BasicProperties.CREATED, beforeSaving);
-		File file = new File("/target/test/CreatedPropertyTest.jar");
+		File file = new File("target/test/CreatedPropertyTest.d3web");
 		file.mkdirs();
-		file.createNewFile();
 		PersistenceManager pm = PersistenceManager.getInstance();
 		pm.save(kb, file);
 		KnowledgeBase reloadedKB = pm.load(file);
