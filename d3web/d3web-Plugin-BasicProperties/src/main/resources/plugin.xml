@@ -142,7 +142,7 @@
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
-		<parameter id="instanceof" value="java.lang.String" />
+		<parameter id="instanceof" value="java.util.Date" />
 	</extension>
 	
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"

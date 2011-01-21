@@ -9,6 +9,8 @@
  */
 package de.d3web.core.knowledge.terminology.info;
 
+import java.util.Date;
+
 import de.d3web.core.knowledge.KnowledgeBase;
 
 /**
@@ -102,7 +104,7 @@ public class BasicProperties {
 	 * Creation date of a knowledge base, will be created on saving the
 	 * knowledge base.
 	 */
-	public static final Property<String> CREATED = Property.getProperty("created", String.class);
+	public static final Property<Date> CREATED = Property.getProperty("created", Date.class);
 
 	/**
 	 * A property for a {@link KnowledgeBase} instance that enables setting

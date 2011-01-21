@@ -210,13 +210,19 @@ public class BasicPersistenceHandler implements
 			kb.setRootQASet(kb.getManager().searchQASet(rootQASetID));
 		}
 		else {
-			kb.setRootQASet(getRootQASet(kb));
+			QASet rootQASet = getRootQASet(kb);
+			if (rootQASet != null) {
+				kb.setRootQASet(rootQASet);
+			}
 		}
 		if (rootSolutionID != null) {
 			kb.setRootSolution(kb.getManager().searchSolution(rootSolutionID));
 		}
 		else {
-			kb.setRootSolution(getRootSolution(kb));
+			Solution rootSolution = getRootSolution(kb);
+			if (rootSolution != null) {
+				kb.setRootSolution(rootSolution);
+			}
 		}
 
 		// appending children
@@ -280,13 +286,17 @@ public class BasicPersistenceHandler implements
 
 		listener.updateProgress(time++ / abstime, "Saving knowledge base: costs");
 
-		Element rootQASetElement = doc.createElement("rootQASet");
-		rootQASetElement.setTextContent(kb.getRootQASet().getId());
-		father.appendChild(rootQASetElement);
+		if (kb.getRootQASet() != null) {
+			Element rootQASetElement = doc.createElement("rootQASet");
+			rootQASetElement.setTextContent(kb.getRootQASet().getId());
+			father.appendChild(rootQASetElement);
+		}
 
-		Element rootSolutionElement = doc.createElement("rootSolution");
-		rootSolutionElement.setTextContent(kb.getRootSolution().getId());
-		father.appendChild(rootSolutionElement);
+		if (kb.getRootSolution() != null) {
+			Element rootSolutionElement = doc.createElement("rootSolution");
+			rootSolutionElement.setTextContent(kb.getRootSolution().getId());
+			father.appendChild(rootSolutionElement);
+		}
 
 		Element qContainersElement = doc.createElement("QASets");
 		Map<NamedObject, Element> possibleParents = new HashMap<NamedObject, Element>();

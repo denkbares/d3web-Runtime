@@ -608,22 +608,22 @@ public final class XMLUtil {
 								+ " is not supported. Propably the corresponding plugin is missing. This property will be lost when saving the Knowledgebase.");
 				continue;
 			}
-			String s = child.getTextContent();
+			List<Element> childNodes = XMLUtil.getElementList(child.getChildNodes());
 			Object value = "";
-			if (s.trim().length() > 0) {
+			if (childNodes.size() > 0) {
+				value = PersistenceManager.getInstance().readFragment(
+						childNodes.get(0), kb);
+			}
+			else {
+				String s = child.getTextContent();
 				try {
 					value = property.parseValue(s);
 				}
 				catch (NoSuchMethodException e) {
-					// Should not happen because only properties which can parse
-					// their value write text content
 					throw new IOException(e);
 				}
 			}
-			else if (child.getChildNodes().getLength() > 0) {
-				value = PersistenceManager.getInstance().readFragment(
-						getElementList(child.getChildNodes()).get(0), kb);
-			}
+
 			String language = child.getAttribute("lang");
 			if (language.length() > 0) {
 				String[] split = language.split("_", 3);

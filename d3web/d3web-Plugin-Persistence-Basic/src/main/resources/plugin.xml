@@ -13,6 +13,16 @@
 	</runtime>
 	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="DateHandler">
+		<parameter id="class"
+			value="de.d3web.core.io.fragments.DateHandler" />
+		<parameter id="name" value="DateHandler" />
+		<parameter id="description" value="Handels Date (for example when used as a property)" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="DefaultPSConfigHandler">
 		<parameter id="class"
 			value="de.d3web.plugin.io.fragments.DefaultPSConfigHandler" />
