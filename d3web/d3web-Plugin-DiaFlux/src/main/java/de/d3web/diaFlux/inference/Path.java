@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.condition.NoAnswerException;
@@ -141,12 +140,12 @@ public class Path extends SessionObject implements IPath {
 
 		if (nodes.contains(node)) {
 
-			Logger.getLogger(FluxSolver.class.getName()).info("*** Arrived again at: " + node);
+			Logger.getLogger(FluxSolver.class.getName()).finer("*** Arrived again at: " + node);
 
 			return;
 		}
 
-		Logger.getLogger(FluxSolver.class.getName()).info("*** Taking Snapshot at node: " + node);
+		Logger.getLogger(FluxSolver.class.getName()).fine("*** Taking Snapshot at node: " + node);
 
 		// get the active edges before calling takeSnapshot at the node
 		// as these will change as a result
@@ -220,16 +219,14 @@ public class Path extends SessionObject implements IPath {
 	 */
 	private void flow(INode node, Session session) {
 
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
-				("Start flowing from node: " + node));
+		Logger.getLogger(FluxSolver.class.getName()).finer("Start flowing from node: " + node);
 
 		if (!node.canFireEdges(session)) return;
 
 		List<IEdge> edges = selectInactiveTrueEdges(node, session);
 
 		if (edges.isEmpty()) { // no edge to take
-			Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
-					("Staying in Node: " + node));
+			Logger.getLogger(FluxSolver.class.getName()).finer("Staying in Node: " + node);
 		}
 		else {
 
@@ -259,8 +256,7 @@ public class Path extends SessionObject implements IPath {
 	 */
 	private INode followEdge(Session session, IEdge edge) {
 
-		Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
-				("Following edge '" + edge + "'."));
+		Logger.getLogger(FluxSolver.class.getName()).finer("Following edge '" + edge + "'.");
 
 		INode nextNode = edge.getEndNode();
 
@@ -298,8 +294,7 @@ public class Path extends SessionObject implements IPath {
 		}// node should not be activated
 		else {
 			// ...so do nothing
-			Logger.getLogger(FluxSolver.class.getName()).log(Level.INFO,
-					"Node is already active: " + nextNode);
+			Logger.getLogger(FluxSolver.class.getName()).finer("Node is already active: " + nextNode);
 			// and do not continue flowing
 			return null;
 
@@ -384,7 +379,7 @@ public class Path extends SessionObject implements IPath {
 	// TMS
 	private void maintainTruth(INode node, Session session) {
 
-		Logger.getLogger(FluxSolver.class.getName()).info(
+		Logger.getLogger(FluxSolver.class.getName()).fine(
 				"Maintaining truth at node '" + node.getName() + "'.");
 
 		INodeData data = getNodeData(node);
