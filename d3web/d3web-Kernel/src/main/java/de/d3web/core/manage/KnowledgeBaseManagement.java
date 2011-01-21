@@ -634,23 +634,13 @@ public final class KnowledgeBaseManagement {
 	 * @param kbObjects IDObject instances
 	 * @return the maximum number used as suffix
 	 */
-	private int getMaxCountOf(Collection<?> kbObjects) {
+	private int getMaxCountOf(Collection<Rule> kbObjects) {
 		int maxCount = 0;
-		for (Iterator<?> iter = kbObjects.iterator(); iter.hasNext();) {
-			Object obj = iter.next();
-			if (obj instanceof IDObject) {
-				String id = ((IDObject) obj).getId();
-				int suffix = getSuffix(id);
-				if ((suffix != -1) && (suffix > maxCount)) {
-					maxCount = suffix;
-				}
-			}
-			if (obj instanceof Rule) {
-				String id = ((Rule) obj).getId();
-				int suffix = getSuffix(id);
-				if ((suffix != -1) && (suffix > maxCount)) {
-					maxCount = suffix;
-				}
+		for (Iterator<Rule> iter = kbObjects.iterator(); iter.hasNext();) {
+			String id = iter.next().getId();
+			int suffix = getSuffix(id);
+			if ((suffix != -1) && (suffix > maxCount)) {
+				maxCount = suffix;
 			}
 		}
 		return maxCount;
