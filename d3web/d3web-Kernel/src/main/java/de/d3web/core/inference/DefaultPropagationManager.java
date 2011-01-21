@@ -81,6 +81,8 @@ public class DefaultPropagationManager implements PropagationManager {
 					Value oldValue = change.getValue();
 					Value value = session.getBlackboard().getValue(object);
 					PropagationEntry entry = new PropagationEntry(object, oldValue, value);
+					// do not propagate changes changing nothing
+					if (oldValue != null && oldValue.equals(value)) continue;
 					entries.add(entry);
 				}
 				for (InterviewObject object : interviewOrder) {
@@ -88,6 +90,8 @@ public class DefaultPropagationManager implements PropagationManager {
 					Value value = session.getBlackboard().getIndication(object);
 					PropagationEntry entry = new PropagationEntry(object, oldValue, value);
 					entry.setStrategic(true);
+					// do not propagate changes changing nothing
+					if (oldValue != null && oldValue.equals(value)) continue;
 					entries.add(entry);
 				}
 				propagationEntries.clear();
