@@ -47,6 +47,7 @@ public class CreatedPropertyTest {
 		kb.getInfoStore().addValue(BasicProperties.CREATED, beforeSaving);
 		File file = new File("/target/test/CreatedPropertyTest.jar");
 		file.mkdirs();
+		file.createNewFile();
 		PersistenceManager pm = PersistenceManager.getInstance();
 		pm.save(kb, file);
 		KnowledgeBase reloadedKB = pm.load(file);
