@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.d3web.core.knowledge.terminology.Choice;
@@ -97,10 +98,46 @@ public class TerminologyManager {
 	}
 
 	private void increaseIDCounter(TerminologyObject object) {
-		// TODO
+		Matcher matcher = ID.matcher(object.getId());
+		String prefix = "";
+		int number;
+		if (matcher.matches()) {
+			prefix = matcher.group(1);
+			String numberString = matcher.group(2);
+			if (numberString == null) {
+				number = 0;
+			}
+			else {
+				number = Integer.parseInt(numberString);
+			}
+		}
+		// check if the id is a number without a prefix
+		else {
+			try {
+				number = Integer.parseInt(object.getId());
+			}
+			catch (NumberFormatException e) {
+				throw new IllegalArgumentException("TerminologyObject " + object.getName()
+						+ " has no valid id.");
+			}
+		}
+		Integer max = idCounts.get(prefix);
+		if (max == null || max < number) {
+			idCounts.put(prefix, number);
+		}
 	}
 
-	public String getIDforPrefix(String prefix) {
+	/**
+	 * Returns an ID witch was not used before starting with the given prefix.
+	 * The ID witch the method returns, will not be returned by this method at
+	 * any time, even if no object with the id will be inserted in the kb
+	 * (ensures functionality with more than one thread).
+	 * 
+	 * @created 17.01.2011
+	 * @param prefix
+	 * @return ID
+	 */
+	public synchronized String getIDforPrefix(String prefix) {
 		if (prefix.isEmpty() || IDPREFIX.matcher(prefix).matches()) {
 			if (idCounts.containsKey(prefix)) {
 				idCounts.put(prefix, idCounts.get(prefix) + 1);

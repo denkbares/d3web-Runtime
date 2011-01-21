@@ -72,7 +72,6 @@ import de.d3web.core.session.values.Unknown;
 public final class KnowledgeBaseManagement {
 
 	private KnowledgeBase knowledgeBase;
-	private int internalCounter = 0;
 
 	private KnowledgeBaseManagement(KnowledgeBase k) {
 		knowledgeBase = k;
@@ -580,23 +579,19 @@ public final class KnowledgeBaseManagement {
 
 	public String findNewIDFor(Class<? extends IDObject> o) {
 		if (o == Solution.class) {
-			int idC = getMaxCountOf(knowledgeBase.getManager().getSolutions()) + 1;
-			return "P" + idC;
+			return knowledgeBase.getManager().getIDforPrefix("P");
 
 		}
 		else if (o == QContainer.class) {
-			int idC = getMaxCountOf(knowledgeBase.getManager().getQContainers()) + 1;
-			return "QC" + idC;
+			return knowledgeBase.getManager().getIDforPrefix("QC");
 
 		}
 		else if (o == Question.class) {
-			int idC = getMaxCountOf(knowledgeBase.getManager().getQuestions()) + 1;
-			return "Q" + idC;
+			return knowledgeBase.getManager().getIDforPrefix("Q");
 
 		}
 		else {
-			internalCounter++;
-			return "O" + internalCounter;
+			return knowledgeBase.getManager().getIDforPrefix("O");
 		}
 	}
 
