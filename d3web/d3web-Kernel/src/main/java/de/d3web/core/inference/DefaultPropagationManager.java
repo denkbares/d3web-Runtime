@@ -38,6 +38,7 @@ public class DefaultPropagationManager implements PropagationManager {
 
 	private class PSMethodHandler {
 
+		private boolean hasPropagated;
 		private final PSMethod psMethod;
 		private final Map<ValueObject, Value> propagationEntries = new HashMap<ValueObject, Value>();
 		private final Map<InterviewObject, Value> interviewPropagationEntries = new HashMap<InterviewObject, Value>();
@@ -68,8 +69,46 @@ public class DefaultPropagationManager implements PropagationManager {
 			return psMethod;
 		}
 
+		public void setPropagated(boolean hasPropagated) {
+			this.hasPropagated = hasPropagated;
+		}
+
+		public boolean hasPropagated() {
+			return hasPropagated;
+		}
+
 		public boolean hasPropagationEntries() {
 			return interviewPropagationEntries.size() > 0 || propagationEntries.size() > 0;
+		}
+
+		/**
+		 * Removes all unnecessary entries (no value change) from the
+		 * propagation entries.
+		 * 
+		 * @created 27.01.2011
+		 */
+		public void removeUnnecessaryEntries() {
+			for (Map.Entry<ValueObject, Value> change : new ArrayList<Map.Entry<ValueObject, Value>>(
+					propagationEntries.entrySet())) {
+				ValueObject object = change.getKey();
+				Value oldValue = change.getValue();
+				Value value = session.getBlackboard().getValue(object);
+				// do not propagate changes changing nothing
+				if (oldValue != null && oldValue.equals(value)) {
+					propagationEntries.remove(object);
+				}
+			}
+			for (InterviewObject object : new ArrayList<InterviewObject>(interviewOrder)) {
+				Value oldValue = interviewPropagationEntries.get(object);
+				Value value = session.getBlackboard().getIndication(object);
+				PropagationEntry entry = new PropagationEntry(object, oldValue, value);
+				entry.setStrategic(true);
+				// do not propagate changes changing nothing
+				if (oldValue != null && oldValue.equals(value)) {
+					interviewPropagationEntries.remove(object);
+					interviewOrder.remove(object);
+				}
+			}
 		}
 
 		public void propagate() {
@@ -81,8 +120,6 @@ public class DefaultPropagationManager implements PropagationManager {
 					Value oldValue = change.getValue();
 					Value value = session.getBlackboard().getValue(object);
 					PropagationEntry entry = new PropagationEntry(object, oldValue, value);
-					// do not propagate changes changing nothing
-					if (oldValue != null && oldValue.equals(value)) continue;
 					entries.add(entry);
 				}
 				for (InterviewObject object : interviewOrder) {
@@ -90,15 +127,15 @@ public class DefaultPropagationManager implements PropagationManager {
 					Value value = session.getBlackboard().getIndication(object);
 					PropagationEntry entry = new PropagationEntry(object, oldValue, value);
 					entry.setStrategic(true);
-					// do not propagate changes changing nothing
-					if (oldValue != null && oldValue.equals(value)) continue;
 					entries.add(entry);
 				}
 				propagationEntries.clear();
 				interviewPropagationEntries.clear();
 				interviewOrder.clear();
+
 				// propagate the changes, using the new interface
 				getPSMethod().propagate(DefaultPropagationManager.this.session, entries);
+				setPropagated(true);
 			}
 			catch (Throwable e) { // NOSONAR because execution has to continue
 									// after catch
@@ -220,6 +257,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * all changes.
 	 */
 	private void distribute() {
+
 		while (true) {
 			PSMethodHandler firstHandler = null;
 
@@ -250,7 +288,8 @@ public class DefaultPropagationManager implements PropagationManager {
 	 */
 	private PSMethodHandler findNextHandler() {
 		for (PSMethodHandler handler : this.psHandlers) {
-			if (handler.hasPropagationEntries()) {
+			handler.removeUnnecessaryEntries();
+			if (handler.hasPropagationEntries() || !handler.hasPropagated()) {
 				return handler;
 			}
 		}
