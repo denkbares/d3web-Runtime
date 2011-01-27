@@ -36,7 +36,6 @@ import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.DefaultBlackboard;
 import de.d3web.core.session.blackboard.SessionObject;
@@ -113,9 +112,23 @@ public class DefaultSession implements Session {
 				addUsedPSMethod(method);
 			}
 			addPlugedPSMethods(knowledgebase);
-		}
 
-		propagateAddedPSMethods();
+			// after adding the ps methods, we init inside a propagation,
+			// because it may also
+			// add facts to the blackboard that require the start date of the
+			// case
+			PropagationManager propagationContoller = getPropagationManager();
+			propagationContoller.openPropagation(this.created.getTime());
+			try {
+				for (PSMethod method : this.usedPSMethods) {
+					method.init(this);
+				}
+			}
+			finally {
+				propagationContoller.commitPropagation();
+
+			}
+		}
 
 		// Dirty hack to move the PSMethodInit to the end of the list
 		usedPSMethods.remove(PSMethodInit.getInstance());
@@ -232,59 +245,7 @@ public class DefaultSession implements Session {
 		if (getPSMethods().contains(psmethod)) {
 			return;
 		}
-
-		PropagationManager propagationContoller = getPropagationManager();
-		propagationContoller.openPropagation(this.created.getTime());
-		try {
-			// add the ps method inside the propagation, because it may also
-			// add facts to the blackboard that require the start date of the
-			// case
-			this.usedPSMethods.add(psmethod);
-			psmethod.init(this);
-
-		}
-		finally {
-			propagationContoller.commitPropagation();
-
-		}
-
-	}
-
-	/**
-	 * This propagates all facts to the added PSMs at the end of case creation.
-	 * Before this, all PSMs have been added and initialized.
-	 * 
-	 * @created 18.01.2011
-	 * @param psmethod
-	 */
-	public void propagateAddedPSMethods() {
-		PropagationManager propagationContoller = getPropagationManager();
-		propagationContoller.openPropagation(this.created.getTime());
-		try {
-
-			for (PSMethod psmethod : this.usedPSMethods) {
-				for (Question question : blackboard.getAnsweredQuestions()) {
-					Value oldValue = null;
-					propagationContoller.propagate(question, oldValue, psmethod);
-				}
-
-			}
-
-			// TODO: das ist so viel zu aufwendig, wenn viele Lösungen sind. Man
-			// bräuchte eine Liste der bewerteten Lösungen im Fall (analog
-			// beantwortete Fragen)
-			/*
-			 * for (Diagnosis diagnosis : this.getDiagnoses()) { if
-			 * (DiagnosisState.UNCLEAR.equals(diagnosis.getState(this)))
-			 * continue; Object[] oldValue = new Object[] {
-			 * DiagnosisState.UNCLEAR }; Object[] newValue = getValue(diagnosis,
-			 * null); propagationContoller.propagate(diagnosis, oldValue,
-			 * newValue, psmethod); }
-			 */
-		}
-		finally {
-			propagationContoller.commitPropagation();
-		}
+		this.usedPSMethods.add(psmethod);
 	}
 
 	/**
