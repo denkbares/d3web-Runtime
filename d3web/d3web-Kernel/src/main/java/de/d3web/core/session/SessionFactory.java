@@ -82,6 +82,18 @@ public final class SessionFactory {
 	/**
 	 * Factory-method that creates instances of Session
 	 * 
+	 * @created 28.01.2011
+	 * @param kb {@link KnowledgeBase}
+	 * @param creationDate Date of creation
+	 * @return {@link Session}
+	 */
+	public static synchronized DefaultSession createSession(KnowledgeBase kb, Date creationDate) {
+		return createSession(null, kb, new NextUnansweredQuestionFormStrategy(), creationDate);
+	}
+
+	/**
+	 * Factory-method that creates instances of Session
+	 * 
 	 * @created 27.09.2010
 	 * @param id the ID
 	 * @param kb {@link KnowledgeBase}

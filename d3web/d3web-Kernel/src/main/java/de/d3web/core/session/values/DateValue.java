@@ -21,7 +21,6 @@ package de.d3web.core.session.values;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import de.d3web.core.knowledge.terminology.QuestionDate;
@@ -99,29 +98,7 @@ public class DateValue implements QuestionValue {
 			return false;
 		}
 		DateValue other = (DateValue) obj;
-		Calendar thisCalendar = Calendar.getInstance();
-		thisCalendar.setTime(value);
-		Calendar otherCalendar = Calendar.getInstance();
-		otherCalendar.setTime(other.value);
-		if (!(thisCalendar.get(Calendar.YEAR) == otherCalendar.get(Calendar.YEAR))) {
-			return false;
-		}
-		if (!(thisCalendar.get(Calendar.MONTH) == otherCalendar.get(Calendar.MONTH))) {
-			return false;
-		}
-		if (!(thisCalendar.get(Calendar.DAY_OF_MONTH) == otherCalendar.get(Calendar.DAY_OF_MONTH))) {
-			return false;
-		}
-		if (!(thisCalendar.get(Calendar.HOUR_OF_DAY) == otherCalendar.get(Calendar.HOUR_OF_DAY))) {
-			return false;
-		}
-		if (!(thisCalendar.get(Calendar.MINUTE) == otherCalendar.get(Calendar.MINUTE))) {
-			return false;
-		}
-		if (!(thisCalendar.get(Calendar.SECOND) == otherCalendar.get(Calendar.SECOND))) {
-			return false;
-		}
-		return true;
+		return value.getTime() == other.value.getTime();
 	}
 
 	@Override
