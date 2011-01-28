@@ -456,7 +456,7 @@ public class Rule implements CaseObjectSource {
 	}
 
 	/**
-	 * Sets the condtion which must be true, so that the rule can fire. This
+	 * Sets the condition which must be true, so that the rule can fire. This
 	 * Method also inserts this instance as knowledge (backward/forward) into
 	 * the involved objects contained in the condition.
 	 */

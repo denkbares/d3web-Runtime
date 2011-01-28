@@ -21,7 +21,6 @@ package de.d3web.core.inference;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,7 +35,7 @@ import de.d3web.core.session.Session;
 public class RuleSet implements KnowledgeSlice {
 
 	private static int count = 0;
-	private final HashSet<Rule> rules = new HashSet<Rule>();
+	private final List<Rule> rules = new LinkedList<Rule>();
 	private final Class<? extends PSMethod> psContext;
 	private final String id;
 
@@ -95,7 +94,9 @@ public class RuleSet implements KnowledgeSlice {
 	}
 
 	public void addRule(Rule r) {
-		rules.add(r);
+		if (!rules.contains(r)) {
+			rules.add(r);
+		}
 	}
 
 	@Override

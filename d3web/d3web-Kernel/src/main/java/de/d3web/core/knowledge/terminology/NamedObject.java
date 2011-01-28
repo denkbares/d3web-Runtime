@@ -367,7 +367,7 @@ public abstract class NamedObject implements TerminologyObject,
 			// FIXME: the slice must not be removed if it is used at any other
 			// NamedObject
 			getKnowledgeBase().removeKnowledge(problemsolver,
-					knowledgeSlice);
+					knowledgeSlice, knowledgeContext);
 		}
 	}
 
