@@ -110,6 +110,7 @@ public class DateAbstractionTest {
 		Question separation = kbm.findQuestion("Is Germany separated?");
 
 		// Date = 1989-11-09 => Event = Fall of the Berlin Wall
+		calendar.clear();
 		calendar.set(1989, Calendar.NOVEMBER, 9, 0, 0, 0);
 		DateValue fallOfTheWallDate = new DateValue(calendar.getTime());
 		Condition fallOfTheWallCondition = new CondDateEqual(date, fallOfTheWallDate);
@@ -118,6 +119,7 @@ public class DateAbstractionTest {
 				fallOfTheWallCondition);
 
 		// Date = 1990-10-03 => Event = German unity
+		calendar.clear();
 		calendar.set(1990, Calendar.OCTOBER, 3, 0, 0, 0);
 		DateValue germanUnityDate = new DateValue(calendar.getTime());
 		Condition germanUnityCondition = new CondDateEqual(date, germanUnityDate);
@@ -125,10 +127,12 @@ public class DateAbstractionTest {
 		RuleFactory.createSetValueRule(kbm.createRuleID(), event, germanUnity, germanUnityCondition);
 
 		// Date > 1949-10-07 AND Date < 1990-10-03 => Germany is separated = Yes
+		calendar.clear();
 		calendar.set(1949, Calendar.OCTOBER, 7, 0, 0, 0);
 		DateValue beginSeparationDate = new DateValue(calendar.getTime());
 		Condition beginSeparationCondition = new CondDateAfter(date, beginSeparationDate);
 
+		calendar.clear();
 		calendar.set(1990, Calendar.OCTOBER, 3, 0, 0, 0);
 		DateValue endSeparationDate = new DateValue(calendar.getTime());
 		Condition endSeparationCondition = new CondDateBefore(date, endSeparationDate);
@@ -185,14 +189,14 @@ public class DateAbstractionTest {
 
 		// 'Is Germany separated?' <abstract> ?
 		Question separation = kbm.findQuestion("Is Germany separated?");
-		Boolean separationAbstractionProperty = (Boolean) separation.getInfoStore().getValue(
+		Boolean separationAbstractionProperty = separation.getInfoStore().getValue(
 				BasicProperties.ABSTRACTION_QUESTION);
 		assertEquals("Question 'Is Germany separated?' isn't abstract.", Boolean.TRUE,
 				separationAbstractionProperty);
 
 		// Event <abstract> ?
 		Question event = kbm.findQuestion("Event");
-		Boolean eventAbstractionProperty = (Boolean) event.getInfoStore().getValue(
+		Boolean eventAbstractionProperty = event.getInfoStore().getValue(
 				BasicProperties.ABSTRACTION_QUESTION);
 		assertEquals("Question 'BMI' isn't abstract.", Boolean.TRUE, eventAbstractionProperty);
 	}
@@ -204,11 +208,13 @@ public class DateAbstractionTest {
 		Question separation = kbm.findQuestion("Is Germany separated?");
 
 		// SET 'Date' = 1960-01-01
+		calendar.clear();
 		calendar.set(1960, Calendar.JANUARY, 1, 0, 0, 0);
 		DateValue duringSeparationDate = new DateValue(calendar.getTime());
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, date,
-						duringSeparationDate, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						duringSeparationDate, PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Date' == 1960-01-01
 		Value currentDateValue = session.getBlackboard().getValue(date);
@@ -228,11 +234,13 @@ public class DateAbstractionTest {
 		Question separation = kbm.findQuestion("Is Germany separated?");
 
 		// SET 'Date' = 1900-01-01
+		calendar.clear();
 		calendar.set(1900, Calendar.JANUARY, 1, 0, 0, 0);
 		DateValue preSeparationDate = new DateValue(calendar.getTime());
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, date,
-						preSeparationDate, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						preSeparationDate, PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Date' == 1900-01-01
 		Value currentDateValue = session.getBlackboard().getValue(date);
@@ -252,11 +260,13 @@ public class DateAbstractionTest {
 		Question event = kbm.findQuestion("Event");
 
 		// SET 'Date' = 1989-11-09
+		calendar.clear();
 		calendar.set(1989, Calendar.NOVEMBER, 9, 0, 0, 0);
 		DateValue fallOfTheWallDate = new DateValue(calendar.getTime());
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, date,
-						fallOfTheWallDate, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						fallOfTheWallDate, PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Date' == 1989-11-09
 		Value currentDateValue = session.getBlackboard().getValue(date);
@@ -268,11 +278,13 @@ public class DateAbstractionTest {
 		assertEquals("Question 'Event' has wrong value", fallOfTheWallValue, currentEventValue);
 
 		// SET 'Date' = 1990-10-03
+		calendar.clear();
 		calendar.set(1990, Calendar.OCTOBER, 3, 0, 0, 0);
 		DateValue germanUnityDate = new DateValue(calendar.getTime());
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, date,
-						germanUnityDate, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						germanUnityDate, PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Date' == 1990-10-03
 		currentDateValue = session.getBlackboard().getValue(date);
@@ -293,7 +305,8 @@ public class DateAbstractionTest {
 		// SET 'Date' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, date,
-						UndefinedValue.getInstance(), PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						UndefinedValue.getInstance(), PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Date' == 'UNDEFINED'
 		Value currentDateValue = session.getBlackboard().getValue(date);
