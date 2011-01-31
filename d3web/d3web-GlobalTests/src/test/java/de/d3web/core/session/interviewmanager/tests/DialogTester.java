@@ -85,32 +85,32 @@ public class DialogTester {
 						"yes", "no" });
 
 		// Rule: sex = female => INDICATE ( pregnant )
-		RuleFactory.createIndicationRule("r1", pregnant, new CondEqual(sex, female));
+		RuleFactory.createIndicationRule(pregnant, new CondEqual(sex, female));
 		// Rule: ask for pregnancy = no => CONTRA_INDICATE ( pregnant )
-		RuleFactory.createContraIndicationRule("r2", pregnant, new CondEqual(ask_for_pregnancy,
+		RuleFactory.createContraIndicationRule(pregnant, new CondEqual(ask_for_pregnancy,
 				dont_ask));
 
 		// Rule: initQuestion = pregnacyQuestions => INDICATE CONTAINER (
 		// pregnancyQuestions )
-		RuleFactory.createIndicationRule("r3", pregnancyQuestions,
+		RuleFactory.createIndicationRule(pregnancyQuestions,
 				new CondEqual(initQuestion,
 						new ChoiceValue(kbm.findChoice(initQuestion, "pregnacyQuestions"))));
 
 		// Rule: initQuestion = height+weight => INDICATE CONTAINER (
 		// heightWeightQuestions )
-		RuleFactory.createIndicationRule("r4", heightWeightQuestions,
+		RuleFactory.createIndicationRule(heightWeightQuestions,
 				new CondEqual(initQuestion,
 						new ChoiceValue(kbm.findChoice(initQuestion, "height+weight"))));
 
 		// Rule: initQuestion = all => INDICATE CONTAINER ( pregnancyQuestions,
 		// heightWeightQuestions )
-		RuleFactory.createIndicationRule("r5", Arrays.asList(new QASet[] {
+		RuleFactory.createIndicationRule(Arrays.asList(new QASet[] {
 				pregnancyQuestions, heightWeightQuestions }),
 				new CondEqual(initQuestion, new ChoiceValue(kbm.findChoice(initQuestion, "all"))));
 
 		// Rule: pregnancyContainerIndication = yes => INDICATE CONTAINER (
 		// pregnancyQuestions )
-		RuleFactory.createIndicationRule("r6", pregnancyQuestions,
+		RuleFactory.createIndicationRule(pregnancyQuestions,
 				new CondEqual(pregnancyContainerIndication,
 						new ChoiceValue(kbm.findChoice(pregnancyContainerIndication, "yes"))));
 
@@ -221,6 +221,7 @@ public class DialogTester {
 	private void setValue(Question question, Value value) {
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, question,
-						value, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						value, PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 	}
 }

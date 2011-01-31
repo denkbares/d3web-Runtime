@@ -1,22 +1,275 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <KnowledgeBase system="d3web" type="heuristic-rules">
-<KnowledgeSlice ID="R10" type="RuleComplex">
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P4"/>
+<Score value="N3"/>
+</Action>
+<Condition type="not">
+<Condition type="or">
+<Condition ID="Q9" type="equal" value="Q9a1"/>
+<Condition ID="Q9" type="equal" value="Q9a2"/>
+</Condition>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P4"/>
+<Score value="P5"/>
+</Action>
+<Condition type="or">
+<Condition ID="Q9" type="equal" value="Q9a1"/>
+<Condition ID="Q9" type="equal" value="Q9a2"/>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P3"/>
+<Score value="P4"/>
+</Action>
+<Condition ID="Q7" type="equal" value="Q7a3"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P3"/>
+<Score value="N4"/>
+</Action>
+<Condition ID="Q7" type="equal" value="Q7a2"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P3"/>
+<Score value="P3"/>
+</Action>
+<Condition ID="Q7" type="equal" value="Q7a1"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P2"/>
+<Score value="P4"/>
+</Action>
+<Condition ID="Q7" type="equal" value="Q7a3"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P2"/>
+<Score value="N4"/>
+</Action>
+<Condition ID="Q7" type="equal" value="Q7a2"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P2"/>
+<Score value="P3"/>
+</Action>
+<Condition ID="Q7" type="equal" value="Q7a1"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P3"/>
+<Score value="P5"/>
+</Action>
+<Condition ID="Q3" type="equal" value="Q3a1"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P3"/>
+<Score value="N5"/>
+</Action>
+<Condition ID="Q3" type="equal" value="Q3a2"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P5"/>
+<Score value="P7"/>
+</Action>
+<Condition ID="Q19" type="equal" value="Q19a2"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P5"/>
+<Score value="N7"/>
+</Action>
+<Condition ID="Q19" type="equal" value="Q19a1"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P4"/>
+<Score value="P7"/>
+</Action>
+<Condition ID="Q18" type="equal" value="Q18a2"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P4"/>
+<Score value="N7"/>
+</Action>
+<Condition ID="Q18" type="equal" value="Q18a1"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P3"/>
+<Score value="P7"/>
+</Action>
+<Condition ID="Q17" type="equal" value="Q17a2"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P3"/>
+<Score value="N7"/>
+</Action>
+<Condition ID="Q17" type="equal" value="Q17a1"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P2"/>
+<Score value="P7"/>
+</Action>
+<Condition ID="Q16" type="equal" value="Q16a2"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P2"/>
+<Score value="N7"/>
+</Action>
+<Condition ID="Q16" type="equal" value="Q16a1"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
 <Diagnosis ID="P1"/>
+<Score value="P7"/>
+</Action>
+<Condition ID="Q15" type="equal" value="Q15a2"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P1"/>
+<Score value="N7"/>
+</Action>
+<Condition ID="Q15" type="equal" value="Q15a1"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P4"/>
+<Score value="P3"/>
+</Action>
+<Condition ID="Q12" type="equal" value="Q12a5"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P4"/>
+<Score value="P1"/>
+</Action>
+<Condition ID="Q12" type="equal" value="Q12a3"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P4"/>
+<Score value="P4"/>
+</Action>
+<Condition ID="Q12" type="equal" value="Q12a6"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P4"/>
+<Score value="N4"/>
+</Action>
+<Condition type="not">
+<Condition type="or">
+<Condition ID="Q12" type="equal" value="Q12a6"/>
+<Condition type="or">
+<Condition ID="Q12" type="equal" value="Q12a3"/>
+<Condition ID="Q12" type="equal" value="Q12a5"/>
+</Condition>
+</Condition>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P3"/>
+<Score value="P4"/>
+</Action>
+<Condition ID="Q12" type="equal" value="Q12a3"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P3"/>
+<Score value="P5"/>
+</Action>
+<Condition ID="Q12" type="equal" value="Q12a6"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P3"/>
 <Score value="N5"/>
 </Action>
 <Condition type="not">
-<Condition ID="Q10" type="equal" value="Q10a1"/>
+<Condition type="or">
+<Condition ID="Q12" type="equal" value="Q12a6"/>
+<Condition ID="Q12" type="equal" value="Q12a3"/>
+</Condition>
 </Condition>
 </KnowledgeSlice>
-<KnowledgeSlice ID="R11" type="RuleComplex">
+<KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P1"/>
+<Diagnosis ID="P2"/>
 <Score value="P5"/>
 </Action>
-<Condition ID="Q10" type="equal" value="Q10a1"/>
+<Condition ID="Q12" type="equal" value="Q12a2"/>
 </KnowledgeSlice>
-<KnowledgeSlice ID="R12" type="RuleComplex">
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P2"/>
+<Score value="P3"/>
+</Action>
+<Condition ID="Q12" type="equal" value="Q12a1"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P2"/>
+<Score value="P1"/>
+</Action>
+<Condition ID="Q12" type="equal" value="Q12a3"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P2"/>
+<Score value="N3"/>
+</Action>
+<Condition type="not">
+<Condition type="or">
+<Condition ID="Q12" type="equal" value="Q12a2"/>
+<Condition type="or">
+<Condition ID="Q12" type="equal" value="Q12a3"/>
+<Condition ID="Q12" type="equal" value="Q12a1"/>
+</Condition>
+</Condition>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P1"/>
+<Score value="P4"/>
+</Action>
+<Condition ID="Q12" type="equal" value="Q12a4"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P1"/>
+<Score value="P1"/>
+</Action>
+<Condition ID="Q12" type="equal" value="Q12a3"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P1"/>
+<Score value="N4"/>
+</Action>
+<Condition type="not">
+<Condition ID="Q12" type="equal" value="Q12a4"/>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
 <Diagnosis ID="P1"/>
 <Score value="N1"/>
@@ -25,141 +278,30 @@
 <Condition ID="Q12" type="equal" value="Q12a3"/>
 </Condition>
 </KnowledgeSlice>
-<KnowledgeSlice ID="R13" type="RuleComplex">
+<KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P1"/>
-<Score value="P1"/>
-</Action>
-<Condition ID="Q12" type="equal" value="Q12a3"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R14" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P1"/>
-<Score value="N4"/>
-</Action>
-<Condition type="not">
-<Condition ID="Q12" type="equal" value="Q12a4"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R15" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P1"/>
-<Score value="P4"/>
-</Action>
-<Condition ID="Q12" type="equal" value="Q12a4"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R16" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P2"/>
-<Score value="N3"/>
-</Action>
-<Condition type="not">
-<Condition type="or">
-<Condition ID="Q12" type="equal" value="Q12a2"/>
-<Condition type="or">
-<Condition ID="Q12" type="equal" value="Q12a3"/>
-<Condition ID="Q12" type="equal" value="Q12a1"/>
-</Condition>
-</Condition>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R17" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P2"/>
+<Diagnosis ID="P5"/>
 <Score value="P5"/>
 </Action>
-<Condition ID="Q12" type="equal" value="Q12a2"/>
+<Condition ID="Q11" type="equal" value="Q11a1"/>
 </KnowledgeSlice>
-<KnowledgeSlice ID="R18" type="RuleComplex">
+<KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P2"/>
-<Score value="P3"/>
-</Action>
-<Condition ID="Q12" type="equal" value="Q12a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R19" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P2"/>
-<Score value="P1"/>
-</Action>
-<Condition ID="Q12" type="equal" value="Q12a3"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R20" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P2"/>
-<Score value="P3"/>
-</Action>
-<Condition ID="Q7" type="equal" value="Q7a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R21" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P2"/>
+<Diagnosis ID="P5"/>
 <Score value="N4"/>
 </Action>
-<Condition ID="Q7" type="equal" value="Q7a2"/>
+<Condition ID="Q11" type="equal" value="Q11a2"/>
 </KnowledgeSlice>
-<KnowledgeSlice ID="R22" type="RuleComplex">
+<KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P2"/>
-<Score value="P4"/>
-</Action>
-<Condition ID="Q7" type="equal" value="Q7a3"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R23" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P2"/>
-<Score value="N7"/>
-</Action>
-<Condition ID="Q16" type="equal" value="Q16a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R24" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P2"/>
-<Score value="P7"/>
-</Action>
-<Condition ID="Q16" type="equal" value="Q16a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R25" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
-<Score value="N7"/>
-</Action>
-<Condition ID="Q17" type="equal" value="Q17a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R26" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
-<Score value="P7"/>
-</Action>
-<Condition ID="Q17" type="equal" value="Q17a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R27" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
-<Score value="N5"/>
+<Diagnosis ID="P4"/>
+<Score value="N6"/>
 </Action>
 <Condition type="not">
-<Condition type="or">
-<Condition ID="Q12" type="equal" value="Q12a6"/>
-<Condition ID="Q12" type="equal" value="Q12a3"/>
-</Condition>
+<Condition ID="Q11" type="equal" value="Q11a2"/>
 </Condition>
 </KnowledgeSlice>
-<KnowledgeSlice ID="R28" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
-<Score value="P4"/>
-</Action>
-<Condition ID="Q12" type="equal" value="Q12a3"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R29" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
-<Score value="P5"/>
-</Action>
-<Condition ID="Q12" type="equal" value="Q12a6"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R30" type="RuleComplex">
+<KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
 <Diagnosis ID="P3"/>
 <Score value="N6"/>
@@ -168,21 +310,99 @@
 <Condition ID="Q11" type="equal" value="Q11a2"/>
 </Condition>
 </KnowledgeSlice>
-<KnowledgeSlice ID="R31" type="RuleComplex">
+<KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
+<Diagnosis ID="P5"/>
+<Score value="N5"/>
+</Action>
+<Condition ID="Q10" type="equal" value="Q10a2"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P5"/>
 <Score value="P5"/>
 </Action>
-<Condition ID="Q3" type="equal" value="Q3a1"/>
+<Condition type="or">
+<Condition ID="Q10" type="equal" value="Q10a1"/>
+<Condition ID="Q10" type="equal" value="Q10a3"/>
+</Condition>
 </KnowledgeSlice>
-<KnowledgeSlice ID="R32" type="RuleComplex">
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P4"/>
+<Score value="N5"/>
+</Action>
+<Condition type="not">
+<Condition type="or">
+<Condition ID="Q10" type="equal" value="Q10a1"/>
+<Condition ID="Q10" type="equal" value="Q10a3"/>
+</Condition>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P3"/>
+<Score value="N4"/>
+</Action>
+<Condition type="not">
+<Condition type="or">
+<Condition ID="Q10" type="equal" value="Q10a1"/>
+<Condition ID="Q10" type="equal" value="Q10a3"/>
+</Condition>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P1"/>
+<Score value="P5"/>
+</Action>
+<Condition ID="Q10" type="equal" value="Q10a1"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P1"/>
+<Score value="N5"/>
+</Action>
+<Condition type="not">
+<Condition ID="Q10" type="equal" value="Q10a1"/>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P4"/>
+<Score value="P5"/>
+</Action>
+<Condition type="and">
+<Condition ID="Q11" type="equal" value="Q11a2"/>
+<Condition type="or">
+<Condition ID="Q10" type="equal" value="Q10a1"/>
+<Condition ID="Q10" type="equal" value="Q10a3"/>
+</Condition>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Diagnosis ID="P3"/>
+<Score value="P4"/>
+</Action>
+<Condition type="and">
+<Condition ID="Q11" type="equal" value="Q11a2"/>
+<Condition type="or">
+<Condition ID="Q10" type="equal" value="Q10a1"/>
+<Condition ID="Q10" type="equal" value="Q10a3"/>
+</Condition>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
 <Diagnosis ID="P3"/>
 <Score value="N5"/>
 </Action>
-<Condition ID="Q3" type="equal" value="Q3a2"/>
+<Condition type="not">
+<Condition ID="Q1" type="equal" value="Q1a1"/>
+</Condition>
 </KnowledgeSlice>
-<KnowledgeSlice ID="R33" type="RuleComplex">
+<KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
 <Diagnosis ID="P3"/>
 <Score value="P5"/>
@@ -191,225 +411,5 @@
 <Condition ID="Q4" type="equal" value="Q4a2"/>
 <Condition ID="Q1" type="equal" value="Q1a1"/>
 </Condition>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R34" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
-<Score value="N5"/>
-</Action>
-<Condition type="not">
-<Condition ID="Q1" type="equal" value="Q1a1"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R35" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
-<Score value="P3"/>
-</Action>
-<Condition ID="Q7" type="equal" value="Q7a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R36" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
-<Score value="N4"/>
-</Action>
-<Condition ID="Q7" type="equal" value="Q7a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R37" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
-<Score value="P4"/>
-</Action>
-<Condition ID="Q7" type="equal" value="Q7a3"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R38" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
-<Score value="N4"/>
-</Action>
-<Condition type="not">
-<Condition type="or">
-<Condition ID="Q10" type="equal" value="Q10a1"/>
-<Condition ID="Q10" type="equal" value="Q10a3"/>
-</Condition>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R39" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
-<Score value="P4"/>
-</Action>
-<Condition type="and">
-<Condition ID="Q11" type="equal" value="Q11a2"/>
-<Condition type="or">
-<Condition ID="Q10" type="equal" value="Q10a1"/>
-<Condition ID="Q10" type="equal" value="Q10a3"/>
-</Condition>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R40" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="N5"/>
-</Action>
-<Condition type="not">
-<Condition type="or">
-<Condition ID="Q10" type="equal" value="Q10a1"/>
-<Condition ID="Q10" type="equal" value="Q10a3"/>
-</Condition>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R41" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="P5"/>
-</Action>
-<Condition type="and">
-<Condition ID="Q11" type="equal" value="Q11a2"/>
-<Condition type="or">
-<Condition ID="Q10" type="equal" value="Q10a1"/>
-<Condition ID="Q10" type="equal" value="Q10a3"/>
-</Condition>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R42" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="N4"/>
-</Action>
-<Condition type="not">
-<Condition type="or">
-<Condition ID="Q12" type="equal" value="Q12a6"/>
-<Condition type="or">
-<Condition ID="Q12" type="equal" value="Q12a3"/>
-<Condition ID="Q12" type="equal" value="Q12a5"/>
-</Condition>
-</Condition>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R43" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="P1"/>
-</Action>
-<Condition ID="Q12" type="equal" value="Q12a3"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R44" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="P3"/>
-</Action>
-<Condition ID="Q12" type="equal" value="Q12a5"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R45" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="P4"/>
-</Action>
-<Condition ID="Q12" type="equal" value="Q12a6"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R46" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="N6"/>
-</Action>
-<Condition type="not">
-<Condition ID="Q11" type="equal" value="Q11a2"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R47" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="N7"/>
-</Action>
-<Condition ID="Q18" type="equal" value="Q18a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R48" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="P7"/>
-</Action>
-<Condition ID="Q18" type="equal" value="Q18a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R49" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="P5"/>
-</Action>
-<Condition type="or">
-<Condition ID="Q9" type="equal" value="Q9a1"/>
-<Condition ID="Q9" type="equal" value="Q9a2"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R50" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="N3"/>
-</Action>
-<Condition type="not">
-<Condition type="or">
-<Condition ID="Q9" type="equal" value="Q9a1"/>
-<Condition ID="Q9" type="equal" value="Q9a2"/>
-</Condition>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R51" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P5"/>
-<Score value="P7"/>
-</Action>
-<Condition ID="Q19" type="equal" value="Q19a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R52" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P5"/>
-<Score value="N7"/>
-</Action>
-<Condition ID="Q19" type="equal" value="Q19a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R53" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P5"/>
-<Score value="P5"/>
-</Action>
-<Condition ID="Q11" type="equal" value="Q11a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R54" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P5"/>
-<Score value="N4"/>
-</Action>
-<Condition ID="Q11" type="equal" value="Q11a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R55" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P5"/>
-<Score value="P5"/>
-</Action>
-<Condition type="or">
-<Condition ID="Q10" type="equal" value="Q10a1"/>
-<Condition ID="Q10" type="equal" value="Q10a3"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R56" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P5"/>
-<Score value="N5"/>
-</Action>
-<Condition ID="Q10" type="equal" value="Q10a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R8" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P1"/>
-<Score value="N7"/>
-</Action>
-<Condition ID="Q15" type="equal" value="Q15a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R9" type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P1"/>
-<Score value="P7"/>
-</Action>
-<Condition ID="Q15" type="equal" value="Q15a2"/>
 </KnowledgeSlice>
 </KnowledgeBase>

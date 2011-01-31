@@ -33,9 +33,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.Rule;
-import de.d3web.core.inference.RuleSet;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
@@ -595,18 +592,6 @@ public final class KnowledgeBaseManagement {
 		}
 	}
 
-	public String createRuleID() {
-		Collection<Rule> rules = new ArrayList<Rule>();
-		for (KnowledgeSlice ks : knowledgeBase.getAllKnowledgeSlices()) {
-			if (ks instanceof RuleSet) {
-				RuleSet rs = (RuleSet) ks;
-				rules.addAll(rs.getRules());
-			}
-		}
-		int idC = getMaxCountOf(rules) + 1;
-		return "R" + idC;
-	}
-
 	public String findNewIDForAnswerChoice(QuestionChoice qc) {
 		int returnIDnumber = 1;
 		String questionID = qc.getId();
@@ -624,49 +609,6 @@ public final class KnowledgeBaseManagement {
 			}
 		}
 		return questionID + "a" + returnIDnumber;
-	}
-
-	/**
-	 * Determines the max. number used as a suffix for the specified kbObjects
-	 * (IDObject). For security reasons the methods _always_ runs through the
-	 * given list of objects and checks their suffices.
-	 * 
-	 * @param kbObjects IDObject instances
-	 * @return the maximum number used as suffix
-	 */
-	private int getMaxCountOf(Collection<Rule> kbObjects) {
-		int maxCount = 0;
-		for (Iterator<Rule> iter = kbObjects.iterator(); iter.hasNext();) {
-			String id = iter.next().getId();
-			int suffix = getSuffix(id);
-			if ((suffix != -1) && (suffix > maxCount)) {
-				maxCount = suffix;
-			}
-		}
-		return maxCount;
-	}
-
-	private int getSuffix(String id) {
-		String number = "";
-		for (int i = id.length() - 1; i > -1; i--) {
-			if (isNumber(id.charAt(i))) {
-				number = id.charAt(i) + number;
-			}
-		}
-		if (number.length() > 0) {
-			return Integer.parseInt(number);
-		}
-		return -1;
-	}
-
-	private boolean isNumber(char c) {
-		try {
-			Integer.parseInt(c + "");
-			return true;
-		}
-		catch (NumberFormatException e) {
-			return false;
-		}
 	}
 
 	/**

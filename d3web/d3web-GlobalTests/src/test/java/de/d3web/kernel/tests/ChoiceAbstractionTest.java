@@ -103,37 +103,37 @@ public class ChoiceAbstractionTest {
 		// Weekday = Monday => Day = Workday
 		Value monday = kbm.findValue(weekday, "Monday");
 		Condition condition = new CondEqual(weekday, monday);
-		RuleFactory.createSetValueRule(kbm.createRuleID(), day, workday, condition);
+		RuleFactory.createSetValueRule(day, workday, condition);
 
 		// Weekday = Tuesday => Day = Workday
 		Value tuesday = kbm.findValue(weekday, "Tuesday");
 		condition = new CondEqual(weekday, tuesday);
-		RuleFactory.createSetValueRule(kbm.createRuleID(), day, workday, condition);
+		RuleFactory.createSetValueRule(day, workday, condition);
 
 		// Weekday = Wednesday => Day = Workday
 		Value wednesday = kbm.findValue(weekday, "Wednesday");
 		condition = new CondEqual(weekday, wednesday);
-		RuleFactory.createSetValueRule(kbm.createRuleID(), day, workday, condition);
+		RuleFactory.createSetValueRule(day, workday, condition);
 
 		// Weekday = Thursday => Day = Workday
 		Value thursday = kbm.findValue(weekday, "Thursday");
 		condition = new CondEqual(weekday, thursday);
-		RuleFactory.createSetValueRule(kbm.createRuleID(), day, workday, condition);
+		RuleFactory.createSetValueRule(day, workday, condition);
 
 		// Weekday = Friday => Day = Workday
 		Value friday = kbm.findValue(weekday, "Friday");
 		condition = new CondEqual(weekday, friday);
-		RuleFactory.createSetValueRule(kbm.createRuleID(), day, workday, condition);
+		RuleFactory.createSetValueRule(day, workday, condition);
 
 		// Weekday = Saturday => Day = Weekend
 		Value saturday = kbm.findValue(weekday, "Saturday");
 		condition = new CondEqual(weekday, saturday);
-		RuleFactory.createSetValueRule(kbm.createRuleID(), day, weekend, condition);
+		RuleFactory.createSetValueRule(day, weekend, condition);
 
 		// Weekday = Sunday => Day = Weekend
 		Value sunday = kbm.findValue(weekday, "Sunday");
 		condition = new CondEqual(weekday, sunday);
-		RuleFactory.createSetValueRule(kbm.createRuleID(), day, weekend, condition);
+		RuleFactory.createSetValueRule(day, weekend, condition);
 	}
 
 	@Test
@@ -178,7 +178,7 @@ public class ChoiceAbstractionTest {
 
 		// TEST 'Day' <abstract> ?
 		Question day = kbm.findQuestion("Day");
-		Boolean abstractionProperty = (Boolean) day.getInfoStore().getValue(
+		Boolean abstractionProperty = day.getInfoStore().getValue(
 				BasicProperties.ABSTRACTION_QUESTION);
 		assertEquals("Question 'Day' isn't abstract.", Boolean.TRUE, abstractionProperty);
 	}
@@ -229,7 +229,8 @@ public class ChoiceAbstractionTest {
 		// SET 'Weekday' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, weekday,
-						UndefinedValue.getInstance(), PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						UndefinedValue.getInstance(), PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Weekday' == 'UNDEFINED'
 		Value weekdayValue = session.getBlackboard().getValue(weekday);

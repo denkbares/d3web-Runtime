@@ -111,5 +111,4 @@ public interface IDObjectManagement {
 
 	String findNewIDFor(Class<? extends IDObject> object);
 
-	String createRuleID();
 }

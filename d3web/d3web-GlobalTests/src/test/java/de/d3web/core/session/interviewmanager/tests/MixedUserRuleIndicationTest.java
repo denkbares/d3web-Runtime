@@ -86,7 +86,7 @@ public class MixedUserRuleIndicationTest {
 
 		// Define rule for follow-up question
 		// r1: weight > 120 => indicate abnormalWeight
-		RuleFactory.createIndicationRule("r1", abnormalWeight, new CondNumGreater(weight, 120.0));
+		RuleFactory.createIndicationRule(abnormalWeight, new CondNumGreater(weight, 120.0));
 	}
 
 	@Test
@@ -138,7 +138,8 @@ public class MixedUserRuleIndicationTest {
 		// question "height" manually (which should be stronger)
 		session.getBlackboard().addInterviewFact(
 				FactFactory.createFact(session, height,
-						new Indication(State.INSTANT_INDICATED), PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						new Indication(State.INSTANT_INDICATED),
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		assertEquals(height, session.getInterview().nextForm().getInterviewObject());
 	}
@@ -158,7 +159,8 @@ public class MixedUserRuleIndicationTest {
 		// question "height" manually (which should be stronger)
 		session.getBlackboard().addInterviewFact(
 				FactFactory.createFact(session, importantQuestion,
-						new Indication(State.INSTANT_INDICATED), PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						new Indication(State.INSTANT_INDICATED),
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		assertEquals(importantQuestion, session.getInterview().nextForm().getInterviewObject());
 	}
@@ -179,7 +181,8 @@ public class MixedUserRuleIndicationTest {
 		// question there "importantQuestion" should be indicated)
 		session.getBlackboard().addInterviewFact(
 				FactFactory.createFact(session, qc,
-						new Indication(State.INSTANT_INDICATED), PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						new Indication(State.INSTANT_INDICATED),
+						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		assertEquals(importantQuestion, session.getInterview().nextForm().getInterviewObject());
 	}

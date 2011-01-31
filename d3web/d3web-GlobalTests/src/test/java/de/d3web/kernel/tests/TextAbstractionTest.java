@@ -92,12 +92,12 @@ public class TextAbstractionTest {
 		// Emoticon = ":-)" => Feeling = Happiness
 		Condition happinessCondition = new CondTextEqual(emoticon, ":-)");
 		Value happiness = kbm.findValue(feeling, "Happiness");
-		RuleFactory.createSetValueRule(kbm.createRuleID(), feeling, happiness, happinessCondition);
+		RuleFactory.createSetValueRule(feeling, happiness, happinessCondition);
 
 		// Emoticon = ":-(" => Feeling = Sadness
 		Condition sadnessCondition = new CondTextEqual(emoticon, ":-(");
 		Value sadness = kbm.findValue(feeling, "Sadness");
-		RuleFactory.createSetValueRule(kbm.createRuleID(), feeling, sadness, sadnessCondition);
+		RuleFactory.createSetValueRule(feeling, sadness, sadnessCondition);
 	}
 
 	@Test
@@ -124,7 +124,7 @@ public class TextAbstractionTest {
 
 		// Feeling <abstract> ?
 		Question feeling = kbm.findQuestion("Feeling");
-		Boolean feelingAbstractionProperty = (Boolean) feeling.getInfoStore().getValue(
+		Boolean feelingAbstractionProperty = feeling.getInfoStore().getValue(
 				BasicProperties.ABSTRACTION_QUESTION);
 		assertEquals("Question 'BMI' isn't abstract.", Boolean.TRUE, feelingAbstractionProperty);
 	}
@@ -139,7 +139,8 @@ public class TextAbstractionTest {
 		TextValue happinessIcon = new TextValue(":-)");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, emoticon,
-						happinessIcon, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						happinessIcon, PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Emoticon' == ':-)'
 		Value currentEmoticonValue = session.getBlackboard().getValue(emoticon);
@@ -154,7 +155,8 @@ public class TextAbstractionTest {
 		TextValue sadnessIcon = new TextValue(":-(");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, emoticon,
-						sadnessIcon, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						sadnessIcon, PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Emoticon' == ':-('
 		currentEmoticonValue = session.getBlackboard().getValue(emoticon);
@@ -175,7 +177,8 @@ public class TextAbstractionTest {
 		// SET 'Emoticon' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, emoticon,
-						UndefinedValue.getInstance(), PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						UndefinedValue.getInstance(), PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Emoticon' == 'UNDEFINED'
 		Value currentEmoticonValue = session.getBlackboard().getValue(emoticon);

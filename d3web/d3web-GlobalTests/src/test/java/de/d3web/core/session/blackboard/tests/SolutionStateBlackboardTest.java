@@ -78,9 +78,9 @@ public class SolutionStateBlackboardTest {
 
 		// rules are only needed for the source context of the blackboard
 		// management
-		rule1 = RuleFactory.createHeuristicPSRule("r1", happy, Score.P4, null);
-		rule2 = RuleFactory.createHeuristicPSRule("r2", happy, Score.P5, null);
-		rule3 = RuleFactory.createHeuristicPSRule("r3", happy, Score.N7, null);
+		rule1 = RuleFactory.createHeuristicPSRule(happy, Score.P4, null);
+		rule2 = RuleFactory.createHeuristicPSRule(happy, Score.P5, null);
+		rule3 = RuleFactory.createHeuristicPSRule(happy, Score.N7, null);
 	}
 
 	@Test
@@ -106,7 +106,8 @@ public class SolutionStateBlackboardTest {
 		assertTrue(blackboard.getRating(happy).hasState(State.SUGGESTED));
 
 		// categorically exclude by rule3 => P4+N7 = excluded
-		Fact n7Fact = FactFactory.createFact(session, happy, new HeuristicRating(Score.N7), rule3, heuristicSource);
+		Fact n7Fact = FactFactory.createFact(session, happy, new HeuristicRating(Score.N7), rule3,
+				heuristicSource);
 		blackboard.addValueFact(n7Fact);
 		assertTrue(blackboard.getRating(happy).hasState(State.EXCLUDED));
 

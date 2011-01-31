@@ -127,7 +127,7 @@ public class RunningACase {
 		List<Condition> terms = new ArrayList<Condition>();
 		terms.add(new CondEqual(pregnant, yes));
 		terms.add(new CondNumGreater(weight, Double.valueOf(70)));
-		RuleFactory.createHeuristicPSRule("r1", dangerousMood, Score.P7, new CondAnd(terms));
+		RuleFactory.createHeuristicPSRule(dangerousMood, Score.P7, new CondAnd(terms));
 
 		return kbm.getKnowledgeBase();
 	}

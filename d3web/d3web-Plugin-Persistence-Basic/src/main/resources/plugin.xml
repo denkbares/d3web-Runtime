@@ -485,17 +485,6 @@
 		<parameter id="filename" value="kb/basic.xml" />
 	</extension>
 	
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeReader"
-		id="KBPatchPersistenceHandler">
-		<parameter id="class"
-			value="de.d3web.core.io.KBPatchPersistenceHandler" />
-		<parameter id="name" value="KBPatchPersistenceHandler" />
-		<parameter id="description" value="KnowledgeReader for reading kb-patches" />
-		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
-		<parameter id="filename" value="kb/kb-patch.xml" />
-	</extension>
-	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeWriter"
 		id="MMInfoPersistenceHandler.Writer">
 		<parameter id="class"

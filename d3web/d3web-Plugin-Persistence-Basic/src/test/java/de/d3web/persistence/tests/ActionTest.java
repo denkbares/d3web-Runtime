@@ -104,7 +104,7 @@ public class ActionTest {
 
 		qContainer = new QContainer("qcon1-id");
 
-		rule = new Rule(null, null);
+		rule = new Rule(null);
 	}
 
 	@Test

@@ -118,25 +118,25 @@ public class FormulaExpressionAbstractionTest {
 		Operator bmiFormula = new Operator(weightWrapper, heightSquared, Operator.Operation.Div);
 
 		QuestionNum bmi = (QuestionNum) kbm.findQuestion("BMI");
-		RuleFactory.createSetValueRule(kbm.createRuleID(), bmi, bmiFormula, weightAndHeight);
+		RuleFactory.createSetValueRule(bmi, bmiFormula, weightAndHeight);
 
 		Question category = kbm.findQuestion("Category");
 
 		// BMI < 18.5 => Category = Underweight
 		Value underweight = kbm.findValue(category, "Underweight");
 		CondNumLess underweightCondition = new CondNumLess(bmi, 18.5);
-		RuleFactory.createSetValueRule(kbm.createRuleID(), category, underweight,
+		RuleFactory.createSetValueRule(category, underweight,
 				underweightCondition);
 
 		// BMI IN[18.5, 25.0] => Category = Normal
 		Value normal = kbm.findValue(category, "Normal");
 		CondNumIn normalCondition = new CondNumIn(bmi, 18.5, 25.0);
-		RuleFactory.createSetValueRule(kbm.createRuleID(), category, normal, normalCondition);
+		RuleFactory.createSetValueRule(category, normal, normalCondition);
 
 		// BMI > 25 => Category = Overweight
 		Value overweight = kbm.findValue(category, "Overweight");
 		CondNumGreater overweightCondition = new CondNumGreater(bmi, 25.0);
-		RuleFactory.createSetValueRule(kbm.createRuleID(), category, overweight,
+		RuleFactory.createSetValueRule(category, overweight,
 				overweightCondition);
 	}
 
@@ -175,13 +175,13 @@ public class FormulaExpressionAbstractionTest {
 
 		// TEST BMI <abstract> ?
 		Question bmi = kbm.findQuestion("BMI");
-		Boolean bmiAbstractionProperty = (Boolean) bmi.getInfoStore().getValue(
+		Boolean bmiAbstractionProperty = bmi.getInfoStore().getValue(
 				BasicProperties.ABSTRACTION_QUESTION);
 		assertEquals("Question 'BMI' isn't abstract.", Boolean.TRUE, bmiAbstractionProperty);
 
 		// TEST Category <abstract> ?
 		Question category = kbm.findQuestion("Category");
-		Boolean categoryAbstractionProperty = (Boolean) category.getInfoStore().getValue(
+		Boolean categoryAbstractionProperty = category.getInfoStore().getValue(
 				BasicProperties.ABSTRACTION_QUESTION);
 		assertEquals("Question 'Category' isn't abstract.", Boolean.TRUE,
 				categoryAbstractionProperty);

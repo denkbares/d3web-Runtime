@@ -92,7 +92,7 @@ public class RepeatedIndicationTest {
 		conditions.add(new CondEqual(sex, male));
 		conditions.add(new CondEqual(pregnant, yes));
 		Condition cond = new CondAnd(conditions);
-		RuleFactory.createRepeatedIndicationRule("r1", sex, cond);
+		RuleFactory.createRepeatedIndicationRule(sex, cond);
 
 		kbm.getKnowledgeBase().setInitQuestions(Arrays.asList(new QASet[] { pregnancyQuestions }));
 

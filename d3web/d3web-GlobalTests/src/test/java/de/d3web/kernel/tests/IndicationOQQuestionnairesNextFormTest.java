@@ -133,19 +133,19 @@ public class IndicationOQQuestionnairesNextFormTest {
 
 		// Create indication rule: Sex == Female => Pregnant
 		Condition condition = new CondEqual(sex, female);
-		RuleFactory.createIndicationRule(kbm.createRuleID(), pregnant, condition);
+		RuleFactory.createIndicationRule(pregnant, condition);
 
 		// Create indication rule: Pregnant == Yes => Pregnancy Problems
 		condition = new CondEqual(pregnant, yes);
-		RuleFactory.createIndicationRule(kbm.createRuleID(), pregProbs, condition);
+		RuleFactory.createIndicationRule(pregProbs, condition);
 
 		// Create indication rule: Pregnant == No => Other Problems
 		condition = new CondEqual(pregnant, no);
-		RuleFactory.createIndicationRule(kbm.createRuleID(), otherProbs, condition);
+		RuleFactory.createIndicationRule(otherProbs, condition);
 
 		// Create indication rule: Sex == Male => Other Problems
 		condition = new CondEqual(sex, male);
-		RuleFactory.createIndicationRule(kbm.createRuleID(), otherProbs, condition);
+		RuleFactory.createIndicationRule(otherProbs, condition);
 
 		// Create the contra-indication rule for question "Pregnant", i.e. the
 		// rule that fires, if question "Sex" is answered otherwise by the user

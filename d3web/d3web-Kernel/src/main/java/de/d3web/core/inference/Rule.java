@@ -42,8 +42,6 @@ import de.d3web.core.session.blackboard.SessionObject;
  */
 public class Rule implements CaseObjectSource {
 
-	private final String id;
-
 	/**
 	 * Flag indicates, if the rule is activated.
 	 */
@@ -82,13 +80,8 @@ public class Rule implements CaseObjectSource {
 	 */
 	private PSAction ruleAction;
 
-	public Rule(String id, Class<? extends PSMethod> context) {
-		this.id = id;
+	public Rule(Class<? extends PSMethod> context) {
 		this.problemsolverContext = context;
-	}
-
-	public String getId() {
-		return id;
 	}
 
 	/**

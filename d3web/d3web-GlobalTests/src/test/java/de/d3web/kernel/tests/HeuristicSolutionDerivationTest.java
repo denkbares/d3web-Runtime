@@ -29,8 +29,8 @@ import org.junit.Test;
 
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
-import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.manage.RuleFactory;
@@ -105,14 +105,14 @@ public class HeuristicSolutionDerivationTest {
 		Question exhaustFumes = kbm.findQuestion("Exhaust fumes");
 		Value black = kbm.findValue(exhaustFumes, "black");
 		Condition condition = new CondEqual(exhaustFumes, black);
-		RuleFactory.createHeuristicPSRule(kbm.createRuleID(), cloggedAirFilter, Score.P3,
+		RuleFactory.createHeuristicPSRule(cloggedAirFilter, Score.P3,
 				condition);
 
 		// Fuel = unleaded gasoline => Clogged air filter = P5
 		Question fuel = kbm.findQuestion("Fuel");
 		Value unleadedGasoline = kbm.findValue(fuel, "unleaded gasoline");
 		condition = new CondEqual(fuel, unleadedGasoline);
-		RuleFactory.createHeuristicPSRule(kbm.createRuleID(), cloggedAirFilter, Score.P5,
+		RuleFactory.createHeuristicPSRule(cloggedAirFilter, Score.P5,
 				condition);
 	}
 
@@ -168,7 +168,8 @@ public class HeuristicSolutionDerivationTest {
 		Value black = kbm.findValue(exhaustFumes, "black");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, exhaustFumes,
-						black, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						black, PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Exhaust fumes' == 'black'
 		Value exhaustFumesValue = session.getBlackboard().getValue(exhaustFumes);
@@ -183,7 +184,8 @@ public class HeuristicSolutionDerivationTest {
 		Value unleadedGasoline = kbm.findValue(fuel, "unleaded gasoline");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, fuel,
-						unleadedGasoline, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						unleadedGasoline, PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Fuel' == 'unleaded gasoline'
 		Value fuelValue = session.getBlackboard().getValue(fuel);
@@ -207,7 +209,8 @@ public class HeuristicSolutionDerivationTest {
 		Value diesel = kbm.findValue(fuel, "diesel");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, fuel,
-						diesel, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						diesel, PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Fuel' == 'diesel'
 		Value fuelValue = session.getBlackboard().getValue(fuel);
@@ -223,7 +226,8 @@ public class HeuristicSolutionDerivationTest {
 		Value blue = kbm.findValue(exhaustFumes, "blue");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, exhaustFumes,
-						blue, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						blue, PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Exhaust fumes' == 'blue'
 		Value exhaustFumesValue = session.getBlackboard().getValue(exhaustFumes);
@@ -245,7 +249,8 @@ public class HeuristicSolutionDerivationTest {
 		Value black = kbm.findValue(exhaustFumes, "black");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, exhaustFumes,
-						black, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						black, PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Exhaust fumes' == 'black'
 		Value exhaustFumesValue = session.getBlackboard().getValue(exhaustFumes);
@@ -260,7 +265,8 @@ public class HeuristicSolutionDerivationTest {
 		// SET 'Exhaust fumes' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, exhaustFumes,
-						UndefinedValue.getInstance(), PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						UndefinedValue.getInstance(), PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Exhaust fumes' == 'UNDEFINED'
 		exhaustFumesValue = session.getBlackboard().getValue(exhaustFumes);

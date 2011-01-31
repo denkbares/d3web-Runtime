@@ -62,23 +62,21 @@ public final class RuleFactory {
 	 * Creates a contra-indication-rule with the specified parameters.
 	 */
 	public static Rule createContraIndicationRule(
-			String theId,
 			List<QASet> theQASets,
 			Condition theCondition) {
 
-		return createContraIndicationRule(theId, theQASets, theCondition, null);
+		return createContraIndicationRule(theQASets, theCondition, null);
 	}
 
 	/**
 	 * Creates a contra-indication-rule with the specified parameters.
 	 */
 	public static Rule createContraIndicationRule(
-			String theId,
 			List<QASet> theQASets,
 			Condition theCondition,
 			Condition theRuleException) {
 
-		Rule rule = new Rule(theId, PSMethodStrategic.class);
+		Rule rule = new Rule(PSMethodStrategic.class);
 
 		ActionContraIndication theAction = new ActionContraIndication();
 		theAction.setQASets(theQASets);
@@ -88,10 +86,9 @@ public final class RuleFactory {
 		return rule;
 	}
 
-	public static void createContraIndicationRule(String theId,
-			Question question,
+	public static void createContraIndicationRule(Question question,
 			Condition theCondition) {
-		createContraIndicationRule(theId,
+		createContraIndicationRule(
 				Arrays.asList(new QASet[] { question }),
 				theCondition);
 	}
@@ -105,21 +102,19 @@ public final class RuleFactory {
 	 * @param Condition theCondition
 	 */
 	public static Rule createHeuristicPSRule(
-			String theId,
 			Solution theDiagnosisAction,
 			Score theDiagnosisScore,
 			Condition theCondition) {
 
 		return createHeuristicPSRule(
-				theId,
 				theDiagnosisAction,
 				theDiagnosisScore,
 				theCondition,
 				null);
 	}
 
-	public static Rule createRule(String theId, PSAction theAction, Condition theCondition, Condition theException, Condition theContext, Class<? extends PSMethod> psMethodContext) {
-		Rule rule = new Rule(theId, psMethodContext);
+	public static Rule createRule(PSAction theAction, Condition theCondition, Condition theException, Condition theContext, Class<? extends PSMethod> psMethodContext) {
+		Rule rule = new Rule(psMethodContext);
 		setRuleParams(rule, theAction, theCondition, theException);
 		rule.setContext(theContext);
 		return rule;
@@ -129,13 +124,12 @@ public final class RuleFactory {
 	 * Creates a heuristic-rule with the specified parameters.
 	 */
 	public static Rule createHeuristicPSRule(
-			String theId,
 			Solution theDiagnosisAction,
 			Score theDiagnosisScore,
 			Condition theCondition,
 			Condition theRuleException) {
 
-		Rule rule = new Rule(theId, PSMethodHeuristic.class);
+		Rule rule = new Rule(PSMethodHeuristic.class);
 
 		ActionHeuristicPS theAction = new ActionHeuristicPS();
 		theAction.setSolution(theDiagnosisAction);
@@ -153,11 +147,10 @@ public final class RuleFactory {
 	 * @param Condition theCondition
 	 */
 	public static Rule createIndicationRule(
-			String theId,
 			List<QASet> theAction,
 			Condition theCondition) {
 
-		return createIndicationRule(theId, theAction, theCondition, null);
+		return createIndicationRule(theAction, theCondition, null);
 	}
 
 	/**
@@ -168,24 +161,22 @@ public final class RuleFactory {
 	 * @param Condition theCondition
 	 */
 	public static Rule createIndicationRule(
-			String theId,
 			QASet singleIndication,
 			Condition theCondition) {
 		List<QASet> ind = new LinkedList<QASet>();
 		ind.add(singleIndication);
-		return createIndicationRule(theId, ind, theCondition, null);
+		return createIndicationRule(ind, theCondition, null);
 	}
 
 	/**
 	 * Creates a standard indication rule with the specified parameters.
 	 */
 	public static Rule createIndicationRule(
-			String theId,
 			List<QASet> theAction,
 			Condition theCondition,
 			Condition theRuleException) {
 
-		Rule rule = new Rule(theId, PSMethodStrategic.class);
+		Rule rule = new Rule(PSMethodStrategic.class);
 
 		ActionNextQASet ruleAction = new ActionIndication();
 		ruleAction.setQASets(theAction);
@@ -199,12 +190,11 @@ public final class RuleFactory {
 	 * 
 	 */
 	public static Rule createRepeatedIndicationRule(
-			String theId,
 			List<QASet> theAction,
 			Condition theCondition,
 			Condition theRuleException) {
 
-		Rule rule = new Rule(theId, PSMethodStrategic.class);
+		Rule rule = new Rule(PSMethodStrategic.class);
 
 		ActionRepeatedIndication ruleAction = new ActionRepeatedIndication();
 		ruleAction.setQASets(theAction);
@@ -223,11 +213,10 @@ public final class RuleFactory {
 	 * @return an indication rule
 	 */
 	public static Rule createRepeatedIndicationRule(
-			String id,
 			List<QASet> theAction,
 			Condition theCondition) {
 
-		return createRepeatedIndicationRule(id, theAction, theCondition, null);
+		return createRepeatedIndicationRule(theAction, theCondition, null);
 	}
 
 	/**
@@ -239,12 +228,11 @@ public final class RuleFactory {
 	 * @return an indication rule
 	 */
 	public static Rule createRepeatedIndicationRule(
-			String theId,
 			QASet singleIndication,
 			Condition theCondition) {
 		List<QASet> ind = new LinkedList<QASet>();
 		ind.add(singleIndication);
-		return createRepeatedIndicationRule(theId, ind, theCondition, null);
+		return createRepeatedIndicationRule(ind, theCondition, null);
 	}
 
 	/**
@@ -252,12 +240,11 @@ public final class RuleFactory {
 	 * the specified qasets.
 	 */
 	public static Rule createInstantIndicationRule(
-			String id,
 			List<QASet> theAction,
 			Condition theCondition,
 			Condition theRuleException) {
 
-		Rule rule = new Rule(id, PSMethodStrategic.class);
+		Rule rule = new Rule(PSMethodStrategic.class);
 		ActionNextQASet ruleAction = new ActionInstantIndication();
 		ruleAction.setQASets(theAction);
 		setRuleParams(rule, ruleAction, theCondition, theRuleException);
@@ -265,11 +252,10 @@ public final class RuleFactory {
 	}
 
 	public static Rule createInstantIndicationRule(
-			String id,
 			List<QASet> theAction,
 			Condition theCondition) {
 
-		return createInstantIndicationRule(id, theAction, theCondition, null);
+		return createInstantIndicationRule(theAction, theCondition, null);
 	}
 
 	/**
@@ -277,12 +263,11 @@ public final class RuleFactory {
 	 * the specified qasets.
 	 */
 	public static Rule createInstantIndicationRule(
-			String theId,
 			QASet singleIndication,
 			Condition theCondition) {
 		List<QASet> ind = new ArrayList<QASet>();
 		ind.add(singleIndication);
-		return createInstantIndicationRule(theId, ind, theCondition, null);
+		return createInstantIndicationRule(ind, theCondition, null);
 	}
 
 	/**
@@ -295,13 +280,11 @@ public final class RuleFactory {
 	 * @param Condition theCondition
 	 */
 	public static Rule createSetValueRule(
-			String theId,
 			Question theQuestion,
 			Object theValue,
 			Condition theCondition) {
 
 		return createSetValueRule(
-				theId,
 				theQuestion,
 				theValue,
 				theCondition,
@@ -313,13 +296,12 @@ public final class RuleFactory {
 	 * parameters.
 	 */
 	public static Rule createSetValueRule(
-			String theId,
 			Question theQuestion,
 			Object theValue,
 			Condition theCondition,
 			Condition theRuleException) {
 
-		Rule rule = new Rule(theId, PSMethodAbstraction.class);
+		Rule rule = new Rule(PSMethodAbstraction.class);
 
 		ActionSetValue theAction = new ActionSetValue();
 		theAction.setQuestion(theQuestion);
@@ -335,12 +317,10 @@ public final class RuleFactory {
 	 * parameters.
 	 */
 	public static Rule createSetValueRule(
-			String theId,
 			Question theQuestion,
 			FormulaElement theAnswer,
 			Condition theCondition) {
 		return createSetValueRule(
-				theId,
 				theQuestion,
 				theAnswer,
 				theCondition,
@@ -352,13 +332,12 @@ public final class RuleFactory {
 	 * parameters.
 	 */
 	public static Rule createSetValueRule(
-			String theId,
 			Question theQuestion,
 			FormulaElement theValue,
 			Condition theCondition,
 			Condition theRuleException) {
 
-		Rule rule = new Rule(theId, PSMethodAbstraction.class);
+		Rule rule = new Rule(PSMethodAbstraction.class);
 
 		ActionSetValue theAction = new ActionSetValue();
 		theAction.setQuestion(theQuestion);
@@ -374,13 +353,11 @@ public final class RuleFactory {
 	 * parameters.
 	 */
 	public static Rule createSuppressAnswerRule(
-			String theId,
 			QuestionChoice theQuestion,
 			Choice[] theAnswers,
 			Condition theCondition) {
 
 		return createSuppressAnswerRule(
-				theId,
 				theQuestion,
 				theAnswers,
 				theCondition,
@@ -392,13 +369,12 @@ public final class RuleFactory {
 	 * parameters.
 	 */
 	public static Rule createSuppressAnswerRule(
-			String theId,
 			QuestionChoice theQuestion,
 			Choice[] theAnswers,
 			Condition theCondition,
 			Condition theRuleException) {
 
-		Rule rule = new Rule(theId, PSMethodStrategic.class);
+		Rule rule = new Rule(PSMethodStrategic.class);
 
 		ActionSuppressAnswer theAction = new ActionSuppressAnswer();
 		theAction.setQuestion(theQuestion);

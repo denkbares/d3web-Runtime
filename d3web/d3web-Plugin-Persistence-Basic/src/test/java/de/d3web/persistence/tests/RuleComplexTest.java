@@ -70,7 +70,7 @@ public class RuleComplexTest {
 
 		cNumL1 = new CondNumEqual(qnum1, new Double(12.7));
 
-		rcomp = new Rule("d1", PSMethodHeuristic.class);
+		rcomp = new Rule(PSMethodHeuristic.class);
 		ah = new ActionHeuristicPS();
 		rcomp.setAction(ah);
 		ah.setSolution(diag1);
@@ -82,13 +82,12 @@ public class RuleComplexTest {
 	@Test
 	public void testRuleComplexSimple() throws Exception {
 
-		rcomp = new Rule("rc-id1", PSMethodHeuristic.class);
+		rcomp = new Rule(PSMethodHeuristic.class);
 		rcomp.setCondition(cDState1);
 		rcomp.setException(cNumL1);
 		rcomp.setAction(ah);
 
 		shouldTag = new XMLTag("KnowledgeSlice");
-		shouldTag.addAttribute("ID", "rc-id1");
 		shouldTag.addAttribute("type", "RuleComplex");
 
 		XMLTag actionTag1 = new XMLTag("Action");
@@ -123,13 +122,12 @@ public class RuleComplexTest {
 	@Test
 	public void testRuleComplexWithoutAction() throws Exception {
 
-		rcomp = new Rule("rc-id1", null);
+		rcomp = new Rule(null);
 		rcomp.setCondition(cDState1);
 		rcomp.setException(cNumL1);
 		rcomp.setAction(null);
 
 		shouldTag = new XMLTag("KnowledgeSlice");
-		shouldTag.addAttribute("ID", "rc-id1");
 		shouldTag.addAttribute("type", "RuleComplex");
 
 		XMLTag conditionTag1 = new XMLTag("Condition");
@@ -154,13 +152,12 @@ public class RuleComplexTest {
 	@Test
 	public void testRuleComplexWithoutCondition() throws Exception {
 
-		rcomp = new Rule("rc-id1", PSMethodHeuristic.class);
+		rcomp = new Rule(PSMethodHeuristic.class);
 		rcomp.setCondition(null);
 		rcomp.setException(cNumL1);
 		rcomp.setAction(ah);
 
 		shouldTag = new XMLTag("KnowledgeSlice");
-		shouldTag.addAttribute("ID", "rc-id1");
 		shouldTag.addAttribute("type", "RuleComplex");
 
 		XMLTag actionTag1 = new XMLTag("Action");
@@ -189,13 +186,12 @@ public class RuleComplexTest {
 	@Test
 	public void testRuleComplexWithoutException() throws Exception {
 
-		rcomp = new Rule("rc-id1", PSMethodHeuristic.class);
+		rcomp = new Rule(PSMethodHeuristic.class);
 		rcomp.setCondition(cDState1);
 		rcomp.setException(null);
 		rcomp.setAction(ah);
 
 		shouldTag = new XMLTag("KnowledgeSlice");
-		shouldTag.addAttribute("ID", "rc-id1");
 		shouldTag.addAttribute("type", "RuleComplex");
 
 		XMLTag actionTag1 = new XMLTag("Action");

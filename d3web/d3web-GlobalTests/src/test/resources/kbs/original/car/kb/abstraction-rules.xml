@@ -1,45 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <KnowledgeBase system="d3web" type="abstraction-rules">
-<KnowledgeSlice ID="R1" type="RuleComplex">
-<Action type="ActionSetValue">
-<Question ID="Q3"/>
-<Values>
-<Value ID="Q3a1" type="answer"/>
-</Values>
-</Action>
-<Condition type="and">
-<Condition ID="Q2" type="equal" value="Q2a4"/>
-<Condition ID="Q4" type="equal" value="Q4a2"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R2" type="RuleComplex">
-<Action type="ActionSetValue">
-<Question ID="Q3"/>
-<Values>
-<Value ID="Q3a2" type="answer"/>
-</Values>
-</Action>
-<Condition type="and">
-<Condition ID="Q2" type="equal" value="Q2a4"/>
-<Condition ID="Q4" type="equal" value="Q4a1"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R3" type="RuleComplex">
-<Action type="ActionSetValue">
-<Question ID="Q3"/>
-<Values>
-<Value ID="Q3a2" type="answer"/>
-</Values>
-</Action>
-<Condition type="or">
-<Condition ID="Q2" type="equal" value="Q2a3"/>
-<Condition type="or">
-<Condition ID="Q2" type="equal" value="Q2a2"/>
-<Condition ID="Q2" type="equal" value="Q2a1"/>
-</Condition>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice ID="R4" type="RuleComplex">
+<KnowledgeSlice type="RuleComplex">
 <Action type="ActionSetValue">
 <Question ID="Q7"/>
 <Values>
@@ -51,7 +12,7 @@
 <Condition ID="Q6" type="numGreaterEqual" value="110.0"/>
 </Condition>
 </KnowledgeSlice>
-<KnowledgeSlice ID="R5" type="RuleComplex">
+<KnowledgeSlice type="RuleComplex">
 <Action type="ActionSetValue">
 <Question ID="Q7"/>
 <Values>
@@ -60,7 +21,7 @@
 </Action>
 <Condition ID="Q6" type="numGreater" value="130.0"/>
 </KnowledgeSlice>
-<KnowledgeSlice ID="R6" type="RuleComplex">
+<KnowledgeSlice type="RuleComplex">
 <Action type="ActionSetValue">
 <Question ID="Q7"/>
 <Values>
@@ -69,7 +30,7 @@
 </Action>
 <Condition ID="Q6" type="numLess" value="110.0"/>
 </KnowledgeSlice>
-<KnowledgeSlice ID="R7" type="RuleComplex">
+<KnowledgeSlice type="RuleComplex">
 <Action type="ActionSetValue">
 <Question ID="Q6"/>
 <Values>
@@ -101,6 +62,45 @@
 <Condition type="and">
 <Condition ID="Q8" type="known"/>
 <Condition ID="Q5" type="numGreater" value="0.0"/>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionSetValue">
+<Question ID="Q3"/>
+<Values>
+<Value ID="Q3a2" type="answer"/>
+</Values>
+</Action>
+<Condition type="or">
+<Condition ID="Q2" type="equal" value="Q2a3"/>
+<Condition type="or">
+<Condition ID="Q2" type="equal" value="Q2a2"/>
+<Condition ID="Q2" type="equal" value="Q2a1"/>
+</Condition>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionSetValue">
+<Question ID="Q3"/>
+<Values>
+<Value ID="Q3a2" type="answer"/>
+</Values>
+</Action>
+<Condition type="and">
+<Condition ID="Q2" type="equal" value="Q2a4"/>
+<Condition ID="Q4" type="equal" value="Q4a1"/>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionSetValue">
+<Question ID="Q3"/>
+<Values>
+<Value ID="Q3a1" type="answer"/>
+</Values>
+</Action>
+<Condition type="and">
+<Condition ID="Q2" type="equal" value="Q2a4"/>
+<Condition ID="Q4" type="equal" value="Q4a2"/>
 </Condition>
 </KnowledgeSlice>
 </KnowledgeBase>

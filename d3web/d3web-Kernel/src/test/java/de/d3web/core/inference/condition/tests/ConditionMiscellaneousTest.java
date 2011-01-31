@@ -298,13 +298,12 @@ public class ConditionMiscellaneousTest {
 	@Test
 	public void testConditionDiagnosisState() {
 		Solution solution = kbm.createSolution("solutionDiagnosis");
-		String ruleID = kbm.createRuleID();
 
 		// Create the following rule:
 		//
 		// IF choiceQuestion1 = "yes"
 		// THEN solutionDiagnosis (P7)
-		RuleFactory.createHeuristicPSRule(ruleID, solution, Score.P7, conditionQ1Yes);
+		RuleFactory.createHeuristicPSRule(solution, Score.P7, conditionQ1Yes);
 
 		Rating ratingEstablished = new Rating(State.ESTABLISHED);
 		// Create new DiagnosisState-Condition and test all getter and setter:

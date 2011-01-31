@@ -138,15 +138,15 @@ public class IndicationOQQuestionsNextFormTest {
 
 		// Create indication rule: Sex == Female => Pregnant
 		Condition condition = new CondEqual(sex, female);
-		RuleFactory.createIndicationRule(kbm.createRuleID(), pregnant, condition);
+		RuleFactory.createIndicationRule(pregnant, condition);
 
 		// Create contra_indication rule: Ask_Headache == No => Headache c_i
 		condition = new CondEqual(askHead, no);
-		RuleFactory.createContraIndicationRule(kbm.createRuleID(), headache, condition);
+		RuleFactory.createContraIndicationRule(headache, condition);
 
 		// Create instant_indication rule: Pregnant == Yes => Nausea
 		condition = new CondEqual(pregnant, yes);
-		RuleFactory.createInstantIndicationRule(kbm.createRuleID(), nausea, condition);
+		RuleFactory.createInstantIndicationRule(nausea, condition);
 	}
 
 	// tests, whether all kb-terminology objects are contained as hard coded

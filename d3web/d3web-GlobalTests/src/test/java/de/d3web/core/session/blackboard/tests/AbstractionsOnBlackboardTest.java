@@ -74,7 +74,7 @@ public class AbstractionsOnBlackboardTest {
 		height = kbm.createQuestionNum("height", kbm.getKnowledgeBase().getRootQASet());
 
 		// Rule: IF height=2 AND weight=200 THEN bmi=50
-		RuleFactory.createSetValueRule("r1", bmi, new NumValue(50),
+		RuleFactory.createSetValueRule(bmi, new NumValue(50),
 				new CondAnd(Arrays.asList(new Condition[] {
 						new CondEqual(height, new NumValue(2)),
 						new CondEqual(weight, new NumValue(200)) })));

@@ -161,7 +161,7 @@ public class NextUnansweredQuestionFormTest {
 		// We need this rule for the later indication of the follow-up question
 		// "pregnant"
 		// Rule: sex = female => INDICATE ( pregnant )
-		RuleFactory.createIndicationRule("r1", pregnant, new CondEqual(sex, female));
+		RuleFactory.createIndicationRule(pregnant, new CondEqual(sex, female));
 
 		// initially the agenda is empty
 		assertTrue(agenda.isEmpty());
@@ -186,6 +186,7 @@ public class NextUnansweredQuestionFormTest {
 	private void setValue(Question question, Value value) {
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, question,
-						value, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						value, PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 	}
 }

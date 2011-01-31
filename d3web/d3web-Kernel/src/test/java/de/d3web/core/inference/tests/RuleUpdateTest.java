@@ -65,7 +65,7 @@ public class RuleUpdateTest {
 		QNumWrapper heightWrapper = new QNumWrapper(height);
 		Operator quad = new Operator(heightWrapper, heightWrapper, Operator.Operation.Mult);
 		Operator div = new Operator(weightWrapper, quad, Operator.Operation.Div);
-		RuleFactory.createSetValueRule("R1", bmi, div, new CondAnd(new LinkedList<Condition>()));
+		RuleFactory.createSetValueRule(bmi, div, new CondAnd(new LinkedList<Condition>()));
 		Session session = SessionFactory.createSession(kb);
 		Blackboard blackboard = session.getBlackboard();
 		blackboard.addValueFact(FactFactory.createUserEnteredFact(weight, new NumValue(75)));

@@ -109,21 +109,21 @@ public class MultipleChoiceAbstractionTest {
 		Value workday = kbm.findValue(day, "Workday");
 		Condition condition = new CondEqual(day, workday);
 		List<String> ignoredValues = Arrays.asList("Saturday", "Sunday");
-		RuleFactory.createSetValueRule(kbm.createRuleID(), weekday,
+		RuleFactory.createSetValueRule(weekday,
 				getWeekdayMCValue(ignoredValues), condition);
 
 		// Day = Weekend => Weekday = Saturday, Sunday
 		Value weekend = kbm.findValue(day, "Weekend");
 		condition = new CondEqual(day, weekend);
 		ignoredValues = Arrays.asList("Monday", "Tuesday", "Wednesday", "Thursday", "Friday");
-		RuleFactory.createSetValueRule(kbm.createRuleID(), weekday,
+		RuleFactory.createSetValueRule(weekday,
 				getWeekdayMCValue(ignoredValues), condition);
 
 		// Day = Workday, Weekend => Weekday = Monday, Tuesday, Wednesday,
 		// Thursday, Friday, Saturday, Sunday
 		MultipleChoiceValue weekendAndWorkday = getDayMCValue(Arrays.asList(""));
 		condition = new CondEqual(day, weekendAndWorkday);
-		RuleFactory.createSetValueRule(kbm.createRuleID(), weekday, getWeekdayMCValue(null),
+		RuleFactory.createSetValueRule(weekday, getWeekdayMCValue(null),
 				condition);
 	}
 
@@ -195,7 +195,7 @@ public class MultipleChoiceAbstractionTest {
 
 		// TEST Weekday <abstract> ?
 		Question weekday = kbm.findQuestion("Weekday");
-		Boolean abstractionProperty = (Boolean) weekday.getInfoStore().getValue(
+		Boolean abstractionProperty = weekday.getInfoStore().getValue(
 				BasicProperties.ABSTRACTION_QUESTION);
 		assertEquals("Question 'Day' isn't abstract.", Boolean.TRUE, abstractionProperty);
 	}
@@ -210,7 +210,8 @@ public class MultipleChoiceAbstractionTest {
 		Value workday = kbm.findValue(day, "Workday");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, day,
-						workday, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						workday, PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Day' == 'Workday'
 		Value dayValue = session.getBlackboard().getValue(day);
@@ -226,7 +227,8 @@ public class MultipleChoiceAbstractionTest {
 		Value weekend = kbm.findValue(day, "Weekend");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, day,
-						weekend, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						weekend, PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Day' == 'Weekend'
 		dayValue = session.getBlackboard().getValue(day);
@@ -248,7 +250,8 @@ public class MultipleChoiceAbstractionTest {
 		// SET 'Day' = 'Weekend, Workday'
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, day,
-						getDayMCValue(Arrays.asList("")), PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						getDayMCValue(Arrays.asList("")), PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Day' == 'Weekend, Workday'
 		Value dayValue = session.getBlackboard().getValue(day);
@@ -272,7 +275,8 @@ public class MultipleChoiceAbstractionTest {
 		// SET 'Day' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, day,
-						UndefinedValue.getInstance(), PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						UndefinedValue.getInstance(), PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Day' == 'UNDEFINED'
 		Value dayValue = session.getBlackboard().getValue(day);

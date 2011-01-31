@@ -89,7 +89,7 @@ public class NumericAbstractionsOnBlackboardTest {
 		// Assignment: bmi = (weight / (height * height))
 
 		// Rule: IF height>0 AND weight>0 THEN bmi= (weight / (height * height))
-		RuleFactory.createSetValueRule("r1", bmi, fElement,
+		RuleFactory.createSetValueRule(bmi, fElement,
 				new CondAnd(Arrays.asList(new Condition[] {
 						new CondNumGreater(height, 0.0),
 						new CondNumGreater(weight, 0.0) })));

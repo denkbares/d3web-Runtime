@@ -115,7 +115,7 @@ public class DateAbstractionTest {
 		DateValue fallOfTheWallDate = new DateValue(calendar.getTime());
 		Condition fallOfTheWallCondition = new CondDateEqual(date, fallOfTheWallDate);
 		Value fallOfTheWall = kbm.findValue(event, "Fall of the Berlin Wall");
-		RuleFactory.createSetValueRule(kbm.createRuleID(), event, fallOfTheWall,
+		RuleFactory.createSetValueRule(event, fallOfTheWall,
 				fallOfTheWallCondition);
 
 		// Date = 1990-10-03 => Event = German unity
@@ -124,7 +124,7 @@ public class DateAbstractionTest {
 		DateValue germanUnityDate = new DateValue(calendar.getTime());
 		Condition germanUnityCondition = new CondDateEqual(date, germanUnityDate);
 		Value germanUnity = kbm.findValue(event, "German unity");
-		RuleFactory.createSetValueRule(kbm.createRuleID(), event, germanUnity, germanUnityCondition);
+		RuleFactory.createSetValueRule(event, germanUnity, germanUnityCondition);
 
 		// Date > 1949-10-07 AND Date < 1990-10-03 => Germany is separated = Yes
 		calendar.clear();
@@ -140,7 +140,7 @@ public class DateAbstractionTest {
 		Condition separationAndCondition = new CondAnd(Arrays.asList(beginSeparationCondition,
 				endSeparationCondition));
 		Value yes = kbm.findValue(separation, "Yes");
-		RuleFactory.createSetValueRule(kbm.createRuleID(), separation, yes, separationAndCondition);
+		RuleFactory.createSetValueRule(separation, yes, separationAndCondition);
 
 		// Date < 1949-10-07 OR Date > 1990-10-03 => Germany is separated = No
 		Condition preSeparationCondition = new CondDateBefore(date, beginSeparationDate);
@@ -148,7 +148,7 @@ public class DateAbstractionTest {
 		Condition unityOrCondition = new CondOr(Arrays.asList(preSeparationCondition,
 				postSeparationCondition));
 		Value no = kbm.findValue(separation, "No");
-		RuleFactory.createSetValueRule(kbm.createRuleID(), separation, no, unityOrCondition);
+		RuleFactory.createSetValueRule(separation, no, unityOrCondition);
 	}
 
 	@Test

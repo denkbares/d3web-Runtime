@@ -86,9 +86,9 @@ public class IndicationInACyclicHierarchy {
 		dontKnow = new ChoiceValue(kbm.findChoice(pregnant, "dontKnow"));
 		yes = new ChoiceValue(kbm.findChoice(pregnancyTest, "yes"));
 
-		RuleFactory.createIndicationRule("r1", pregnancyQuestions, new CondEqual(pregnant,
+		RuleFactory.createIndicationRule(pregnancyQuestions, new CondEqual(pregnant,
 				dontKnow));
-		RuleFactory.createIndicationRule("r2", pregnancyTest,
+		RuleFactory.createIndicationRule(pregnancyTest,
 				new CondEqual(pregnant, dontKnow));
 
 		kbm.getKnowledgeBase().setInitQuestions(Arrays.asList(new QASet[] { pregnancyQuestions }));
