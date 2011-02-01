@@ -76,7 +76,6 @@ import de.d3web.empiricaltesting.SequentialTestCase;
  * @author joba
  * 
  */
-@SuppressWarnings("PMD.MissingStaticMethodInNonInstantiatableClass")
 // the class is instantiated by the included Builder
 public final class InterviewBot {
 
@@ -263,7 +262,7 @@ public final class InterviewBot {
 		return question;
 	}
 
-	private Question nextQuestionFromAgenda(Session session) {
+	public static Question nextQuestionFromAgenda(Session session) {
 		Form form = session.getInterview().nextForm();
 		if (form.getInterviewObject() instanceof Question) {
 			return (Question) form.getInterviewObject();
@@ -271,21 +270,6 @@ public final class InterviewBot {
 		else {
 			return null;
 		}
-
-		// MQDialogController controller = (MQDialogController)
-		// session.getQASetManager();
-		// QASet next = controller.moveToNextRemainingQASet();
-		// if (next != null && next instanceof Question) {
-		// return (Question) next;
-		// }
-		// else if (next != null) {
-		// List<?> validQuestions =
-		// controller.getAllValidQuestionsOf((QContainer) next);
-		// return (Question) validQuestions.get(0);
-		// }
-		// else {
-		// return null;
-		// }
 	}
 
 	private List<RatedSolution> toRatedSolutions(Session session) {
