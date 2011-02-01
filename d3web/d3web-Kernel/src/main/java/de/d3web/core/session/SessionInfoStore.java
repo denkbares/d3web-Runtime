@@ -39,7 +39,7 @@ public class SessionInfoStore extends DefaultInfoStore {
 	}
 
 	@Override
-	public boolean remove(Property key) {
+	public boolean remove(Property<?> key) {
 		if (super.remove(key)) {
 			session.touch();
 			return true;
@@ -50,7 +50,7 @@ public class SessionInfoStore extends DefaultInfoStore {
 	}
 
 	@Override
-	public boolean remove(Property key, Locale language) {
+	public boolean remove(Property<?> key, Locale language) {
 		if (super.remove(key, language)) {
 			session.touch();
 			return true;
@@ -61,13 +61,13 @@ public class SessionInfoStore extends DefaultInfoStore {
 	}
 
 	@Override
-	public void addValue(Property key, Object value) {
+	public void addValue(Property<?> key, Object value) {
 		super.addValue(key, value);
 		session.touch();
 	}
 
 	@Override
-	public void addValue(Property key, Locale language, Object value) {
+	public void addValue(Property<?> key, Locale language, Object value) {
 		super.addValue(key, language, value);
 		session.touch();
 	}
