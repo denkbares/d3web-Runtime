@@ -147,10 +147,10 @@ public class FluxSolver implements PostHookablePSMethod {
 
 		for (PropagationEntry propagationEntry : changes) {
 
-//			 if (EqualsUtils.equals(propagationEntry.getOldValue(),
-//			 propagationEntry.getNewValue())) {
-//			 continue;
-//			 }
+			// if (EqualsUtils.equals(propagationEntry.getOldValue(),
+			// propagationEntry.getNewValue())) {
+			// continue;
+			// }
 
 			// strategic entries do not matter so far...
 			if (propagationEntry.isStrategic()) {
@@ -331,6 +331,12 @@ public class FluxSolver implements PostHookablePSMethod {
 	@Override
 	public boolean hasType(Type type) {
 		return type == Type.strategic || type == Type.problem;
+	}
+
+	@Override
+	public double getPriority() {
+		// default priority
+		return 5;
 	}
 
 }

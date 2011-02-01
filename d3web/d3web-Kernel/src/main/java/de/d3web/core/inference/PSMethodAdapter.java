@@ -42,4 +42,12 @@ public abstract class PSMethodAdapter implements PSMethod {
 	public void init(Session session) {
 	}
 
+	/**
+	 * returns the default priority
+	 */
+	@Override
+	public double getPriority() {
+		return 5;
+	}
+
 }

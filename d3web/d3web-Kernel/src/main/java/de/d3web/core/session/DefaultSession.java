@@ -20,18 +20,21 @@
 
 package de.d3web.core.session;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import de.d3web.core.inference.DefaultPropagationManager;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.PSMethodInit;
+import de.d3web.core.inference.PSMethod.Type;
 import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -73,7 +76,7 @@ public class DefaultSession implements Session {
 	private final Blackboard blackboard;
 	private Protocol protocol = new DefaultProtocol();
 
-	private final List<PSMethod> usedPSMethods;
+	private final Collection<PSMethod> usedPSMethods;
 
 	private final Date created;
 	private Date edited;
@@ -98,7 +101,7 @@ public class DefaultSession implements Session {
 		this.blackboard = new DefaultBlackboard(this);
 		this.dynamicStore = new HashMap<CaseObjectSource, SessionObject>();
 		// add problem-solving methods used for this case
-		this.usedPSMethods = new LinkedList<PSMethod>();
+		this.usedPSMethods = new TreeSet<PSMethod>(new PSMethodComparator());
 		this.propagationController = new DefaultPropagationManager(this);
 
 		// Interview should be defined very late, since it uses blackboard
@@ -130,9 +133,6 @@ public class DefaultSession implements Session {
 			}
 		}
 
-		// Dirty hack to move the PSMethodInit to the end of the list
-		usedPSMethods.remove(PSMethodInit.getInstance());
-		usedPSMethods.add(PSMethodInit.getInstance());
 		// TODO: add knowlegde base id, name, version
 		// into the case header (dc markup?, properties?)
 
@@ -242,7 +242,7 @@ public class DefaultSession implements Session {
 	 */
 	private void addUsedPSMethod(PSMethod psmethod) {
 		touch();
-		if (getPSMethods().contains(psmethod)) {
+		if (usedPSMethods.contains(psmethod)) {
 			return;
 		}
 		this.usedPSMethods.add(psmethod);
@@ -278,7 +278,7 @@ public class DefaultSession implements Session {
 	 */
 	@Override
 	public PSMethod getPSMethodInstance(Class<? extends PSMethod> context) {
-		for (PSMethod psm : getPSMethods()) {
+		for (PSMethod psm : usedPSMethods) {
 			if (psm.getClass().equals(context)) {
 				return psm;
 			}
@@ -288,7 +288,7 @@ public class DefaultSession implements Session {
 
 	@Override
 	public List<PSMethod> getPSMethods() {
-		return usedPSMethods;
+		return new ArrayList<PSMethod>(usedPSMethods);
 	}
 
 	@Override
@@ -363,6 +363,46 @@ public class DefaultSession implements Session {
 	@Override
 	public InfoStore getInfoStore() {
 		return infoStore;
+	}
+
+	/**
+	 * Is used to sort PSMethods by priority Source psm have a lower priority
+	 * than nonsource psm, even if the getPriority of the nonsource psm is lower
+	 * 
+	 * @author Markus Friedrich (denkbares GmbH)
+	 * @created 01.02.2011
+	 */
+	private static class PSMethodComparator implements Comparator<PSMethod> {
+
+		@Override
+		public int compare(PSMethod o1, PSMethod o2) {
+			if (o1 == o2) {
+				return 0;
+			}
+			else if (o1.getClass().equals(o2.getClass())) {
+				throw new IllegalArgumentException(
+						"Adding two variants of one psmethod to one session is not forbidden.");
+			}
+			else if ((o1.hasType(Type.source) && o2.hasType(Type.source))
+					|| (!o1.hasType(Type.source) && !o2.hasType(Type.source))) {
+				if (o1.getPriority() < o2.getPriority()) {
+					return -1;
+				}
+				else if (o1.getPriority() > o2.getPriority()) {
+					return 1;
+				}
+				else {
+					return o1.getClass().toString().compareTo(o2.getClass().toString());
+				}
+			}
+			else if (o1.hasType(Type.source)) {
+				return -1;
+			}
+			else {
+				return 1;
+			}
+		}
+
 	}
 
 }

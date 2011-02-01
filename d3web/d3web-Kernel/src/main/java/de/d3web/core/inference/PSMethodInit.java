@@ -144,4 +144,10 @@ public class PSMethodInit implements PSMethod {
 	public boolean hasType(Type type) {
 		return type == Type.problem;
 	}
+
+	@Override
+	public double getPriority() {
+		// a very low priority because
+		return 10;
+	}
 }

@@ -30,7 +30,6 @@ import java.util.Map;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.terminology.Rating;
-import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
  * This class organizes the facts of one type for one terminology object. It is
@@ -194,13 +193,7 @@ class FactAggregator {
 		Fact bestFact = null;
 		int bestPSMIndex = Integer.MAX_VALUE;
 		for (Fact fact : mergedFacts) {
-			// user wins it all
-			// TODO: check for "source solvers" instead of user
-			// TODO: shall we consider to have multiple source solvers?
 			PSMethod psMethod = fact.getPSMethod();
-			if (psMethod instanceof PSMethodUserSelected) {
-				return fact;
-			}
 			int index = this.blackboard.getSession().getPSMethods().indexOf(psMethod);
 			if (index < bestPSMIndex) {
 				bestFact = fact;

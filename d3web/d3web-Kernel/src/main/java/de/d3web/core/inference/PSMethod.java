@@ -42,9 +42,9 @@ public interface PSMethod {
 	 * 
 	 * This is free software for non commercial use
 	 * 
-	 * This software is distributed in the hope that it will be useful, but WITHOUT
-	 * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-	 * FOR A PARTICULAR PURPOSE.
+	 * This software is distributed in the hope that it will be useful, but
+	 * WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 	 */
 	public enum Type {
 		source,
@@ -86,4 +86,12 @@ public interface PSMethod {
 	Fact mergeFacts(Fact[] facts);
 
 	boolean hasType(Type type);
+
+	/**
+	 * Returns the Priority of the PSMethod
+	 * 
+	 * @created 01.02.2011
+	 * @return
+	 */
+	double getPriority();
 }

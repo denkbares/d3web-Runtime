@@ -69,4 +69,10 @@ public class PSMethodUserSelected extends PSMethodRulebased {
 	public boolean hasType(Type type) {
 		return type == Type.source;
 	}
+
+	@Override
+	public double getPriority() {
+		// highest priority
+		return 0;
+	}
 }
