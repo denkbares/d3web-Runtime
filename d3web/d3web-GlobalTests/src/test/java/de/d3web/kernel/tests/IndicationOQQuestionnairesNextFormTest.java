@@ -30,8 +30,6 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.manage.RuleFactory;
-import de.d3web.core.session.Session;
-import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.plugin.test.InitPluginManager;
 
@@ -66,7 +64,6 @@ import de.d3web.plugin.test.InitPluginManager;
 public class IndicationOQQuestionnairesNextFormTest {
 
 	private static KnowledgeBaseManagement kbm;
-	private static Session session;
 
 	@BeforeClass
 	public static void setUp() throws Exception {
@@ -74,7 +71,6 @@ public class IndicationOQQuestionnairesNextFormTest {
 		kbm = KnowledgeBaseManagement.createInstance();
 		addTerminologyObjects();
 		addRules();
-		session = SessionFactory.createSession(kbm.getKnowledgeBase());
 	}
 
 	// TODO rework

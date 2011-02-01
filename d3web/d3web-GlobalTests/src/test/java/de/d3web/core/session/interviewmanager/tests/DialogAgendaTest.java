@@ -160,7 +160,8 @@ public class DialogAgendaTest {
 		assertTrue(agenda.onAgenda(ask_for_pregnancy));
 		// EXPECT 2: the order as in the tree: [sex, pregnant,
 		// ask_for_pregnancy, weight, height]
-		List expectedAgenda = Arrays.asList(sex, pregnant, ask_for_pregnancy, weight, height);
+		List<Question> expectedAgenda = Arrays.asList(sex, pregnant, ask_for_pregnancy, weight,
+				height);
 		assertEquals(expectedAgenda, agenda.getCurrentlyActiveObjects());
 	}
 
