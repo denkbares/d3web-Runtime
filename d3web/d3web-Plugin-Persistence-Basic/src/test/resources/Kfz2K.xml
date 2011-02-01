@@ -1,7 +1,7 @@
-ï»¿<?xml version="1.0" encoding="ISO-8859-1" ?>
+<?xml version="1.0" encoding="ISO-8859-1" ?>
 <KnowledgeBase system="D3" type="basic">
 <KnowledgeBaseDescriptor>
-<Descriptor name="DC.TITLE" value="KFZ Wissensbasis (Uni. WÃ¼rzburg, Informatik 6)" />
+<Descriptor name="DC.TITLE" value="KFZ Wissensbasis (Uni. Würzburg, Informatik 6)" />
 <Descriptor name="DC.RELATION" value="isVersionOf WB_ID_30437347122" />
 </KnowledgeBaseDescriptor>
 <PriorityGroups>
@@ -17,7 +17,7 @@
 </Costs>
 <QContainers>
 <QContainer ID="Q000">
-<Text>FragebÃ¶gen</Text>
+<Text>Fragebögen</Text>
 <Costs>
 <Cost ID="timeexpenditure" value="0.0" />
 <Cost ID="risk" value="0.0" />
@@ -96,7 +96,7 @@
 </Children>
 </QContainer>
 <QContainer ID="Q20">
-<Text>Untersuchung ZÃ¼ndeinstellung</Text>
+<Text>Untersuchung Zündeinstellung</Text>
 <Costs>
 <Cost ID="timeexpenditure" value="0.0" />
 <Cost ID="risk" value="0.0" />
@@ -139,7 +139,7 @@
 <Text>schwarz</Text>
 </Answer>
 <Answer ID="Mf2a2" type="AnswerChoice">
-<Text>blÃ¤ulich</Text>
+<Text>bläulich</Text>
 </Answer>
 <Answer ID="Mf2a3" type="AnswerChoice">
 <Text>farblos</Text>
@@ -163,7 +163,7 @@
 <Text>hellgrau</Text>
 </Answer>
 <Answer ID="Mf3a4" type="AnswerChoice">
-<Text>schwarzverruÃŸt</Text>
+<Text>schwarzverrußt</Text>
 </Answer>
 </Answers>
 </Question>
@@ -195,7 +195,7 @@
 </Answers>
 </Question>
 <Question ID="Mf5" type="Num">
-<Text>Ãœblicher Kraftstoffverbrauch/100km</Text>
+<Text>Üblicher Kraftstoffverbrauch/100km</Text>
 <Costs />
 <Children>
 <Child ID="Msi4" />
@@ -209,22 +209,22 @@
 <Text>normal</Text>
 </Answer>
 <Answer ID="Msi4a2" type="AnswerChoice">
-<Text>leicht erhÃ¶ht</Text>
+<Text>leicht erhöht</Text>
 </Answer>
 <Answer ID="Msi4a3" type="AnswerChoice">
-<Text>erhÃ¶ht</Text>
+<Text>erhöht</Text>
 </Answer>
 </Answers>
 </Question>
 <Question ID="Mf6" type="Num">
-<Text>TatsÃ¤chlicher Kraftstoffverbrauch/100km</Text>
+<Text>Tatsächlicher Kraftstoffverbrauch/100km</Text>
 <Costs />
 <Children>
 <Child ID="Msi4" />
 </Children>
 </Question>
 <Question ID="Mf7" type="MC">
-<Text>MotorgerÃ¤usche</Text>
+<Text>Motorgeräusche</Text>
 <Costs />
 <Answers>
 <Answer ID="Mf7a1" type="AnswerChoice">
@@ -252,7 +252,7 @@
 <Text>springt schlecht an</Text>
 </Answer>
 <Answer ID="Mf8a3" type="AnswerChoice">
-<Text>springt Ã¼berhaupt nicht an</Text>
+<Text>springt überhaupt nicht an</Text>
 </Answer>
 </Answers>
 </Question>
@@ -273,7 +273,7 @@
 <Costs />
 <Answers>
 <Answer ID="Mf9a1" type="AnswerChoice">
-<Text>verzÃ¶gertes Anfahren</Text>
+<Text>verzögertes Anfahren</Text>
 </Answer>
 <Answer ID="Mf9a2" type="AnswerChoice">
 <Text>schlechte Beschleunigung</Text>
@@ -282,7 +282,7 @@
 <Text>Leerlauf ist zu niedrig</Text>
 </Answer>
 <Answer ID="Mf9a4" type="AnswerChoice">
-<Text>Leerlauf ist unregelmÃ¤ÃŸig</Text>
+<Text>Leerlauf ist unregelmäßig</Text>
 </Answer>
 <Answer ID="Mf9a5" type="AnswerChoice">
 <Text>zu wenig Leistung bei Teillast</Text>
@@ -332,7 +332,7 @@
 </Answers>
 </Question>
 <Question ID="Mf19" type="YN">
-<Text>ZÃ¼ndeinstellung</Text>
+<Text>Zündeinstellung</Text>
 <Costs />
 <Answers>
 <Answer ID="Mf19a1" type="AnswerYes">
@@ -422,7 +422,7 @@
 </Properties>
 </Diagnosis>
 <Diagnosis ID="P15">
-<Text>ZÃ¼ndeinstellung falsch</Text>
+<Text>Zündeinstellung falsch</Text>
 <Properties>
 </Properties>
 </Diagnosis>
@@ -927,10 +927,6 @@
 </TargetQASets>
 </Action>
 <Condition ID="P16" type="DState" value="established" />
-</KnowledgeSlice>
-<KnowledgeSlice ID="S1" type="Schema">
-<Question ID="Msi4" />
-<LeftClosedInterval value="10.0 20.0" />
 </KnowledgeSlice>
 </KnowledgeSlices>
 </KnowledgeBase>

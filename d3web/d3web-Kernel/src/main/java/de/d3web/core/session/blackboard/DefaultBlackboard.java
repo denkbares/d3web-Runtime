@@ -33,16 +33,13 @@ import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 import de.d3web.core.session.DefaultSession;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.protocol.FactProtocolEntry;
-import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.UndefinedValue;
 
 /**
@@ -344,16 +341,6 @@ public class DefaultBlackboard implements Blackboard {
 		if (fact == null) {
 			return object.getDefaultValue();
 		}
-		Value value = fact.getValue();
-		if (object instanceof QuestionOC && value instanceof NumValue) {
-			QuestionOC qoc = (QuestionOC) object;
-			Num2ChoiceSchema schema = qoc.getSchemaForQuestion();
-			NumValue numValue = (NumValue) value;
-			if (schema != null) {
-				return schema.getValueForNum((Double) numValue.getValue(),
-						qoc.getAllAlternatives(), session);
-			}
-		}
-		return value;
+		return fact.getValue();
 	}
 }

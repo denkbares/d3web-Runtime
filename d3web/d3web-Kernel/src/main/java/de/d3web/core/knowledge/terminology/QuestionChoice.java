@@ -23,9 +23,6 @@ package de.d3web.core.knowledge.terminology;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.abstraction.inference.PSMethodAbstraction;
-import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 
 /**
@@ -94,20 +91,5 @@ public abstract class QuestionChoice extends Question {
 
 	public boolean removeAlternative(Choice answer) {
 		return alternatives.remove(answer);
-	}
-
-	/**
-	 * @return the Num2ChoiceSchema that has been set to this question, null, if
-	 *         no such schema exists.
-	 */
-	public Num2ChoiceSchema getSchemaForQuestion() {
-		KnowledgeSlice schemaCol =
-				getKnowledge(PSMethodAbstraction.class, PSMethodAbstraction.NUM2CHOICE_SCHEMA);
-		if (schemaCol != null) {
-			return (Num2ChoiceSchema) schemaCol;
-		}
-		else {
-			return null;
-		}
 	}
 }

@@ -54,7 +54,6 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema;
 import de.d3web.core.knowledge.terminology.info.Property.Autosave;
 import de.d3web.indication.ActionContraIndication;
 import de.d3web.indication.ActionNextQASet;
@@ -74,25 +73,6 @@ public class BasicPersistenceHandler implements
 		KnowledgeWriter {
 
 	public static final String BASIC_PERSISTENCE_HANDLER = "basic";
-
-	private float saveSchemas(Element father, KnowledgeBase kb, ProgressListener listener, float time, int abstime) throws IOException {
-
-		final MethodKind methodKind = PSMethodAbstraction.NUM2CHOICE_SCHEMA;
-		final Class<? extends PSMethod> context = PSMethodAbstraction.class;
-
-		Iterator<Question> questionsIter = kb.getManager().getQuestions().iterator();
-		while (questionsIter.hasNext()) {
-			Question question = questionsIter.next();
-			KnowledgeSlice o = question.getKnowledge(context, methodKind);
-			if (o != null) {
-				Num2ChoiceSchema schema = (Num2ChoiceSchema) o;
-				listener.updateProgress(time++ / abstime, "Saving knowledge base: Schemas");
-				father.appendChild(PersistenceManager.getInstance().writeFragment(schema,
-						father.getOwnerDocument()));
-			}
-		}
-		return time;
-	}
 
 	/**
 	 * @return the ID of this PersistenceHandler
@@ -339,8 +319,6 @@ public class BasicPersistenceHandler implements
 
 		Element knowledgeSlicesElement = doc.createElement("KnowledgeSlices");
 		father.appendChild(knowledgeSlicesElement);
-
-		time = saveSchemas(knowledgeSlicesElement, kb, listener, time, abstime);
 
 		Util.writeDocumentToOutputStream(doc, stream);
 	}
