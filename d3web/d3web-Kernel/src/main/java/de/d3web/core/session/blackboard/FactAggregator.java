@@ -192,9 +192,10 @@ class FactAggregator {
 	private Fact mergeFactsByPriority(List<Fact> mergedFacts) {
 		Fact bestFact = null;
 		int bestPSMIndex = Integer.MAX_VALUE;
+		List<? extends PSMethod> psMethods = this.blackboard.getSession().getPSMethods();
 		for (Fact fact : mergedFacts) {
 			PSMethod psMethod = fact.getPSMethod();
-			int index = this.blackboard.getSession().getPSMethods().indexOf(psMethod);
+			int index = psMethods.indexOf(psMethod);
 			if (index < bestPSMIndex) {
 				bestFact = fact;
 				bestPSMIndex = index;
