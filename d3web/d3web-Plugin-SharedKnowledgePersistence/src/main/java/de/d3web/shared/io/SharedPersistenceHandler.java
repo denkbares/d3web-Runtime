@@ -40,10 +40,7 @@ import de.d3web.core.io.utilities.KnowledgeSliceComparator;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.shared.PSMethodShared;
-import de.d3web.shared.QuestionWeightValue;
-import de.d3web.shared.Weight;
 
 /**
  * Loads and saves shared knowledge from/to XML Creation date: (14.08.2001
@@ -101,26 +98,6 @@ public class SharedPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 	@Override
 	public int getEstimatedSize(KnowledgeBase kb) {
 		return kb.getAllKnowledgeSlicesFor(PSMethodShared.class).size();
-	}
-
-	/**
-	 * Insert the method's description here. Creation date: (25.02.2002
-	 * 14:48:32)
-	 * 
-	 * @return de.d3web.kernel.domainModel.KnowledgeBase
-	 * @param kb de.d3web.kernel.domainModel.KnowledgeBase
-	 */
-	public static Weight addDefaultWeight(Question q) {
-
-		Weight w = new Weight();
-
-		QuestionWeightValue qww = new QuestionWeightValue();
-		qww.setQuestion(q);
-		qww.setValue(Weight.G4);
-
-		w.setQuestionWeightValue(qww);
-
-		return w;
 	}
 
 	private static void addKnowledgeSlices(KnowledgeBase kb, Document doc, ProgressListener listener) throws IOException {

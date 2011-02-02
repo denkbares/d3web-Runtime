@@ -33,10 +33,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.shared.Abnormality;
-import de.d3web.shared.LocalWeight;
 import de.d3web.shared.PSMethodShared;
-import de.d3web.shared.QuestionWeightValue;
-import de.d3web.shared.Weight;
 
 public class RemoveKnowledgeSliceTest extends TestCase {
 
@@ -96,28 +93,6 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 		sl2.setQuestion(qyn2);
 		qyn2.addKnowledge(PSMethodShared.class, sl2,
 				PSMethodShared.SHARED_ABNORMALITY);
-
-		LocalWeight sl5 = new LocalWeight();
-		sl5.setQuestion(qyn1);
-		qyn1.addKnowledge(PSMethodShared.class, sl5,
-				PSMethodShared.SHARED_LOCAL_WEIGHT);
-		LocalWeight sl6 = new LocalWeight();
-		sl6.setQuestion(qyn2);
-		qyn2.addKnowledge(PSMethodShared.class, sl6,
-				PSMethodShared.SHARED_LOCAL_WEIGHT);
-
-		Weight sl9 = new Weight();
-		QuestionWeightValue v1 = new QuestionWeightValue();
-		v1.setQuestion(qyn1);
-		sl9.setQuestionWeightValue(v1);
-		qyn1.addKnowledge(PSMethodShared.class, sl9,
-				PSMethodShared.SHARED_WEIGHT);
-		Weight sl10 = new Weight();
-		QuestionWeightValue v2 = new QuestionWeightValue();
-		v2.setQuestion(qyn2);
-		sl10.setQuestionWeightValue(v2);
-		qyn2.addKnowledge(PSMethodShared.class, sl10,
-				PSMethodShared.SHARED_WEIGHT);
 	}
 
 	public void testRemoveAbnormality() {
@@ -149,66 +124,6 @@ public class RemoveKnowledgeSliceTest extends TestCase {
 					slices.contains(object));
 		}
 
-	}
-
-	public void testRemoveLocalWeight() {
-		List<?> list;
-		LocalWeight slice;
-		list = (List<?>) base.getKnowledge(PSMethodShared.class,
-				PSMethodShared.SHARED_LOCAL_WEIGHT);
-		slice = (LocalWeight) list.get(0);
-		NamedObject no = slice.getQuestion();
-		assertTrue("Tried to remove existing slice, true expected : ", base
-				.remove(slice));
-
-		assertFalse("Deleted slice still mapped in '" + no.getName()
-				+ "', expected false : ", (no.getKnowledge(
-				PSMethodShared.class, PSMethodShared.SHARED_LOCAL_WEIGHT)) == slice);
-
-		Collection<KnowledgeSlice> all = qyn2.getAllKnowledge();
-		try {
-			base.getManager().remove(qyn2);
-		}
-		catch (IllegalAccessException e) {
-			fail(qyn2.getName() + " should have had no children!");
-		}
-		Collection<KnowledgeSlice> slices = base
-				.getAllKnowledgeSlicesFor(PSMethodShared.class);
-
-		for (Object object : all) {
-			assertFalse("Deleted slice still mapped in Knowledgebase : ",
-					slices.contains(object));
-		}
-	}
-
-	public void testRemoveWeight() {
-		List<?> list;
-		Weight slice;
-		list = (List<?>) base.getKnowledge(PSMethodShared.class,
-				PSMethodShared.SHARED_WEIGHT);
-		slice = (Weight) list.get(0);
-		NamedObject no = slice.getQuestionWeightValue().getQuestion();
-		assertTrue("Tried to remove existing slice, true expected : ", base
-				.remove(slice));
-
-		assertFalse("Deleted slice still mapped in '" + no.getName()
-				+ "', expected false : ", (no.getKnowledge(
-				PSMethodShared.class, PSMethodShared.SHARED_WEIGHT)) == slice);
-
-		Collection<KnowledgeSlice> all = qyn2.getAllKnowledge();
-		try {
-			base.getManager().remove(qyn2);
-		}
-		catch (IllegalAccessException e) {
-			fail(qyn2.getName() + " should have had no children!");
-		}
-		Collection<KnowledgeSlice> slices = base
-				.getAllKnowledgeSlicesFor(PSMethodShared.class);
-
-		for (Object object : all) {
-			assertFalse("Deleted slice still mapped in Knowledgebase : ",
-					slices.contains(object));
-		}
 	}
 
 }

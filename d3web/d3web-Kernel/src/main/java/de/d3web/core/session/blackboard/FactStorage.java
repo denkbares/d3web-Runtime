@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2010 denkbares GmbH, Würzburg, Germany
- *
+ * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- *
+ * 
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- *
+ * 
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -29,27 +29,23 @@ import de.d3web.core.knowledge.TerminologyObject;
 
 /**
  * This class handles a dynamic set of {@link FactAggregator}s.
- *
+ * 
  * @author volker_belli
- *
+ * 
  */
 class FactStorage {
 
-	private final Blackboard blackboard;
 	private final Map<TerminologyObject, FactAggregator> mediators = new HashMap<TerminologyObject, FactAggregator>();
 	private final Set<TerminologyObject> noFactObjects = new HashSet<TerminologyObject>();
-
-	public FactStorage(Blackboard blackboard) {
-		this.blackboard = blackboard;
-	}
 
 	public FactAggregator getAggregator(TerminologyObject termObject) {
 		FactAggregator aggregator = this.mediators.get(termObject);
 		if (aggregator == null) {
-			aggregator = new FactAggregator(this.blackboard);
+			aggregator = new FactAggregator();
 			this.mediators.put(termObject, aggregator);
-			//store TO in noFactObjects in case the aggregator is
-			//created just for querying values -> can be filtered in getValuedObjects()
+			// store TO in noFactObjects in case the aggregator is
+			// created just for querying values -> can be filtered in
+			// getValuedObjects()
 			this.noFactObjects.add(termObject);
 		}
 		return aggregator;
@@ -59,7 +55,7 @@ class FactStorage {
 	 * Adds a new fact to this storage. If an other fact for the same
 	 * terminology object and with the same source has already been added, that
 	 * fact will be replaced by the specified one.
-	 *
+	 * 
 	 * @param fact the fact to be added
 	 */
 	public void add(Fact fact) {
@@ -72,7 +68,7 @@ class FactStorage {
 	/**
 	 * Removes a fact from this storage. If the fact does not exists in the
 	 * storage, this method has no effect.
-	 *
+	 * 
 	 * @param fact the fact to be removed
 	 */
 	public void remove(Fact fact) {
@@ -90,7 +86,7 @@ class FactStorage {
 	 * Removes all facts with the specified source from this storage for the
 	 * specified terminology object. If no such fact exists in the storage, this
 	 * method has no effect.
-	 *
+	 * 
 	 * @param termObject the terminology object to remove the facts from
 	 * @param source the fact source to be removed
 	 */
@@ -107,7 +103,7 @@ class FactStorage {
 	/**
 	 * Removes all facts from this storage for the specified terminology object.
 	 * If no such fact exists in the storage, this method has no effect.
-	 *
+	 * 
 	 * @param termObject the terminology object to remove the facts from
 	 * @param source the fact source to be removed
 	 */
@@ -131,7 +127,7 @@ class FactStorage {
 	/**
 	 * Returns a list of all terminology objects that have been rated with
 	 * facts.
-	 *
+	 * 
 	 * @return the list of rated terminology objects
 	 */
 	public Collection<TerminologyObject> getValuedObjects() {

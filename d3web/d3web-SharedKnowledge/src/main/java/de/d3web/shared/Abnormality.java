@@ -84,6 +84,7 @@ public class Abnormality extends AbstractAbnormality {
 		Abnormality abnormalitySlice = (Abnormality) q.getKnowledge(PROBLEMSOLVER, METHOD_KIND);
 		if (abnormalitySlice == null) {
 			abnormalitySlice = new Abnormality();
+			abnormalitySlice.setQuestion(q);
 			q.addKnowledge(PROBLEMSOLVER, abnormalitySlice, METHOD_KIND);
 		}
 		abnormalitySlice.addValue(value, abnormality);

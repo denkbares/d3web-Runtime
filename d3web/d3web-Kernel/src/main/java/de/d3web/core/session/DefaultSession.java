@@ -34,7 +34,6 @@ import java.util.UUID;
 import de.d3web.core.inference.DefaultPropagationManager;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.PSMethod.Type;
 import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -366,8 +365,7 @@ public class DefaultSession implements Session {
 	}
 
 	/**
-	 * Is used to sort PSMethods by priority Source psm have a lower priority
-	 * than nonsource psm, even if the getPriority of the nonsource psm is lower
+	 * Is used to sort PSMethods by priority
 	 * 
 	 * @author Markus Friedrich (denkbares GmbH)
 	 * @created 01.02.2011
@@ -383,23 +381,14 @@ public class DefaultSession implements Session {
 				throw new IllegalArgumentException(
 						"Adding two variants of one psmethod to one session is not forbidden.");
 			}
-			else if ((o1.hasType(Type.source) && o2.hasType(Type.source))
-					|| (!o1.hasType(Type.source) && !o2.hasType(Type.source))) {
-				if (o1.getPriority() < o2.getPriority()) {
-					return -1;
-				}
-				else if (o1.getPriority() > o2.getPriority()) {
-					return 1;
-				}
-				else {
-					return o1.getClass().toString().compareTo(o2.getClass().toString());
-				}
-			}
-			else if (o1.hasType(Type.source)) {
+			else if (o1.getPriority() < o2.getPriority()) {
 				return -1;
 			}
-			else {
+			else if (o1.getPriority() > o2.getPriority()) {
 				return 1;
+			}
+			else {
+				return o1.getClass().toString().compareTo(o2.getClass().toString());
 			}
 		}
 

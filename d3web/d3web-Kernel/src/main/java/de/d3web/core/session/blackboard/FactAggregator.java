@@ -41,13 +41,8 @@ import de.d3web.core.knowledge.terminology.Rating;
  */
 class FactAggregator {
 
-	private final Blackboard blackboard;
 	private final List<Fact> facts = new ArrayList<Fact>();
 	private Fact mergedFact = null;
-
-	public FactAggregator(Blackboard blackboard) {
-		this.blackboard = blackboard;
-	}
 
 	/**
 	 * Adds a new fact to the aggregator. If a fact with the same source as the
@@ -191,14 +186,13 @@ class FactAggregator {
 	 */
 	private Fact mergeFactsByPriority(List<Fact> mergedFacts) {
 		Fact bestFact = null;
-		int bestPSMIndex = Integer.MAX_VALUE;
-		List<? extends PSMethod> psMethods = this.blackboard.getSession().getPSMethods();
+		double bestPSMPriority = Double.MAX_VALUE;
 		for (Fact fact : mergedFacts) {
 			PSMethod psMethod = fact.getPSMethod();
-			int index = psMethods.indexOf(psMethod);
-			if (index < bestPSMIndex) {
+			double priority = psMethod.getPriority();
+			if (priority < bestPSMPriority) {
 				bestFact = fact;
-				bestPSMIndex = index;
+				bestPSMPriority = priority;
 			}
 		}
 		return bestFact;

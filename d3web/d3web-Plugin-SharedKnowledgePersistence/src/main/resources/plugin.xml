@@ -44,23 +44,4 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="LocalWeightHandler">
-		<parameter id="class"
-			value="de.d3web.shared.io.fragments.LocalWeightHandler" />
-		<parameter id="name" value="LocalWeightHandler" />
-		<parameter id="description" value="Handels LocalWeights" />
-		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
-	</extension>
-	
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="WeightHandler">
-		<parameter id="class"
-			value="de.d3web.shared.io.fragments.WeightHandler" />
-		<parameter id="name" value="WeightHandler" />
-		<parameter id="description" value="Handels Weights" />
-		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
-	</extension>
 </plugin>

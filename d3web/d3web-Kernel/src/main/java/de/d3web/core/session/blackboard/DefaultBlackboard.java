@@ -73,8 +73,8 @@ public class DefaultBlackboard implements Blackboard {
 	 */
 	public DefaultBlackboard(DefaultSession session) {
 		this.session = session;
-		this.valueStorage = new FactStorage(this);
-		this.interviewStorage = new FactStorage(this);
+		this.valueStorage = new FactStorage();
+		this.interviewStorage = new FactStorage();
 	}
 
 	@Override
