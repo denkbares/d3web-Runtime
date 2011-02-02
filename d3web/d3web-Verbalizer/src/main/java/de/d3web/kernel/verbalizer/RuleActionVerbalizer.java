@@ -55,7 +55,7 @@ public class RuleActionVerbalizer implements Verbalizer {
 	private static ResourceBundle propertyRB = ResourceBundle.getBundle("properties.messages");
 
 	@Override
-	public Class[] getSupportedClassesForVerbalization() {
+	public Class<?>[] getSupportedClassesForVerbalization() {
 		return new Class[] { PSAction.class };
 	}
 

@@ -54,7 +54,7 @@ public class AnswerVerbalizer implements Verbalizer {
 	 * Returns the classes RuleVerbalizer can render
 	 */
 	@Override
-	public Class[] getSupportedClassesForVerbalization() {
+	public Class<?>[] getSupportedClassesForVerbalization() {
 		return new Class[] { Choice.class };
 	}
 

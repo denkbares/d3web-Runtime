@@ -45,7 +45,7 @@ import de.d3web.xcl.XCLRelationType;
 public class XclVerbalizer implements Verbalizer {
 
 	@Override
-	public Class[] getSupportedClassesForVerbalization() {
+	public Class<?>[] getSupportedClassesForVerbalization() {
 		return new Class[] { XCLModel.class };
 	}
 

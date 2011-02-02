@@ -67,7 +67,7 @@ public interface Verbalizer {
 	 * 
 	 * @return a array of all classes a verbalizer can render
 	 */
-	public Class[] getSupportedClassesForVerbalization();
+	public Class<?>[] getSupportedClassesForVerbalization();
 
 	/**
 	 * Returns all target formats a verbalizer can use.
