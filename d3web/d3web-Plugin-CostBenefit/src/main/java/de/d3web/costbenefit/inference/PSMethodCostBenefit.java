@@ -345,4 +345,9 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 	public boolean hasType(Type type) {
 		return type == Type.strategic;
 	}
+
+	@Override
+	public double getPriority() {
+		return 6;
+	}
 }
