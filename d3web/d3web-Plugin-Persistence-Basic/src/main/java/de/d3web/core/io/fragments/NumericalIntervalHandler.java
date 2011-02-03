@@ -30,8 +30,8 @@ import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
-import de.d3web.shared.AbnormalityInterval;
-import de.d3web.shared.AbstractAbnormality;
+import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityInterval;
+import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityUtils;
 
 /**
  * FragmentHandler for NumericalIntervals and AbnormalityIntervals Other
@@ -113,7 +113,7 @@ public class NumericalIntervalHandler implements FragmentHandler {
 				}
 				else {
 					return new AbnormalityInterval(string2double(lower), string2double(upper),
-							AbstractAbnormality
+							AbnormalityUtils
 									.convertConstantStringToValue(value), borders[0], borders[1]);
 				}
 			}
@@ -133,7 +133,7 @@ public class NumericalIntervalHandler implements FragmentHandler {
 		if (interval instanceof AbnormalityInterval) {
 			AbnormalityInterval ai = (AbnormalityInterval) interval;
 			element.setAttribute("value",
-					AbstractAbnormality.convertValueToConstantString(ai.getValue()));
+					AbnormalityUtils.convertValueToConstantString(ai.getValue()));
 		}
 		return element;
 	}

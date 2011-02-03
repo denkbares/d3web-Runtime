@@ -18,13 +18,15 @@
  * site: http://www.fsf.org.
  */
 
-package de.d3web.shared;
+package de.d3web.core.knowledge.terminology.info.abnormality;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Value;
 
 /**
@@ -32,7 +34,7 @@ import de.d3web.core.session.Value;
  * 
  * @author: Norman Brümmer
  */
-public class Abnormality extends AbstractAbnormality {
+public class DefaultAbnormality implements Abnormality {
 
 	private final Map<Value, Double> values = new HashMap<Value, Double>();
 
@@ -81,11 +83,11 @@ public class Abnormality extends AbstractAbnormality {
 	 * @param abnormality Abnormality
 	 */
 	public static void setAbnormality(Question q, Value value, double abnormality) {
-		Abnormality abnormalitySlice = (Abnormality) q.getKnowledge(PROBLEMSOLVER, METHOD_KIND);
+		InfoStore infoStore = q.getInfoStore();
+		DefaultAbnormality abnormalitySlice = infoStore.getValue(BasicProperties.DEFAULT_ABNORMALITIY);
 		if (abnormalitySlice == null) {
-			abnormalitySlice = new Abnormality();
-			abnormalitySlice.setQuestion(q);
-			q.addKnowledge(PROBLEMSOLVER, abnormalitySlice, METHOD_KIND);
+			abnormalitySlice = new DefaultAbnormality();
+			infoStore.addValue(BasicProperties.DEFAULT_ABNORMALITIY, abnormalitySlice);
 		}
 		abnormalitySlice.addValue(value, abnormality);
 	}

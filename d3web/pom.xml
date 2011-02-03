@@ -225,7 +225,6 @@
 		<module>d3web-Kernel</module>
 		<module>d3web-Persistence</module>
 		<module>d3web-Utilities</module>
-		<module>d3web-SharedKnowledge</module>
 		<module>d3web-Verbalizer</module>
 		<module>d3web-EmpiricalTesting</module>
 		<module>d3web-PluginManager</module>
@@ -237,7 +236,6 @@
 		<module>d3web-Plugin-Kernel-ExtensionPoints</module>
 		<module>d3web-Plugin-Persistence-Basic</module>
 		<module>d3web-Plugin-Persistence-ExtensionPoints</module>
-		<module>d3web-Plugin-SharedKnowledgePersistence</module>
 		<module>d3web-Plugin-XCL</module>
 	</modules>
 </project>

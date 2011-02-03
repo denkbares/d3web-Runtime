@@ -20,12 +20,13 @@
 package de.d3web.core.inference;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.session.Session;
+import de.d3web.core.utilities.IdentitySet;
 
 /**
  * Encapsulates rules of one PSMethod and one MethodKind to one KnowlegeSlice
@@ -35,7 +36,9 @@ import de.d3web.core.session.Session;
 public class RuleSet implements KnowledgeSlice {
 
 	private static int count = 0;
-	private final List<Rule> rules = new LinkedList<Rule>();
+	// rules that equal are entered into the set, but the same rule
+	// (reference-identity) will not be inserted twice
+	private final Collection<Rule> rules = new IdentitySet<Rule>();
 	private final Class<? extends PSMethod> psContext;
 	private final String id;
 
@@ -52,16 +55,6 @@ public class RuleSet implements KnowledgeSlice {
 	@Override
 	public Class<? extends PSMethod> getProblemsolverContext() {
 		return psContext;
-	}
-
-	@Override
-	public boolean isUsed(Session session) {
-		for (Rule r : rules) {
-			if (r.isUsed(session)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	@Override
@@ -94,9 +87,7 @@ public class RuleSet implements KnowledgeSlice {
 	}
 
 	public void addRule(Rule r) {
-		if (!rules.contains(r)) {
-			rules.add(r);
-		}
+		rules.add(r);
 	}
 
 	@Override

@@ -22,25 +22,17 @@ package de.d3web.shared.io;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.io.KnowledgeReader;
-import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
-import de.d3web.core.io.utilities.KnowledgeSliceComparator;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.shared.PSMethodShared;
 
 /**
  * Loads and saves shared knowledge from/to XML Creation date: (14.08.2001
@@ -48,7 +40,7 @@ import de.d3web.shared.PSMethodShared;
  * 
  * @author: Norman Brümmer, Markus Friedrich (denkbares GmbH)
  */
-public class SharedPersistenceHandler implements KnowledgeReader, KnowledgeWriter {
+public class SharedPersistenceHandler implements KnowledgeReader {
 
 	public final static String SHARED_PERSISTENCE_HANDLER = "shared";
 
@@ -67,37 +59,6 @@ public class SharedPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		// knowledgebase"!
 		addKnowledgeSlices(kb, doc, listener);
 		listener.updateProgress(1, "Loading shared knowlege");
-	}
-
-	@Override
-	public void write(KnowledgeBase kb, OutputStream stream,
-			ProgressListener listener) throws IOException {
-		listener.updateProgress(0, "Saving shared knowlege");
-		Document doc = Util.createEmptyDocument();
-		Element root = doc.createElement("KnowledgeBase");
-		doc.appendChild(root);
-		root.setAttribute("type", SharedPersistenceHandler.SHARED_PERSISTENCE_HANDLER);
-		root.setAttribute("system", "d3web");
-
-		Collection<KnowledgeSlice> kslices = kb.getAllKnowledgeSlicesFor(PSMethodShared.class);
-
-		Element ksElement = doc.createElement("KnowledgeSlices");
-		root.appendChild(ksElement);
-		float time = 0f;
-		int abs = kslices.size();
-		List<KnowledgeSlice> ksList = new ArrayList<KnowledgeSlice>(kslices);
-		Collections.sort(ksList, new KnowledgeSliceComparator());
-		for (KnowledgeSlice ks : ksList) {
-			listener.updateProgress(time++ / abs, "Saving shared knowlege");
-			ksElement.appendChild(PersistenceManager.getInstance().writeFragment(ks, doc));
-		}
-		Util.writeDocumentToOutputStream(doc, stream);
-		listener.updateProgress(1, "Saving shared knowlege");
-	}
-
-	@Override
-	public int getEstimatedSize(KnowledgeBase kb) {
-		return kb.getAllKnowledgeSlicesFor(PSMethodShared.class).size();
 	}
 
 	private static void addKnowledgeSlices(KnowledgeBase kb, Document doc, ProgressListener listener) throws IOException {

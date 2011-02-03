@@ -24,7 +24,6 @@ import java.util.List;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.session.Session;
 import de.d3web.diaFlux.inference.FluxSolver;
 
 /**
@@ -63,11 +62,6 @@ public class NodeList implements KnowledgeSlice, Iterable<INode> {
 	@Override
 	public Class<? extends PSMethod> getProblemsolverContext() {
 		return FluxSolver.class;
-	}
-
-	@Override
-	public boolean isUsed(Session session) {
-		return true;
 	}
 
 	@Override

@@ -117,12 +117,6 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource, Iterable<Flow>
 	}
 
 	@Override
-	public boolean isUsed(Session theCase) {
-		// TODO
-		return true;
-	}
-
-	@Override
 	public void remove() {
 		// TODO
 	}

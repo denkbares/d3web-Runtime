@@ -17,7 +17,7 @@
  * site: http://www.fsf.org.
  */
 
-package de.d3web.shared;
+package de.d3web.core.knowledge.terminology.info.abnormality;
 
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 
@@ -55,7 +55,7 @@ public class AbnormalityInterval extends NumericalInterval {
 	public String toString() {
 		return "AbnormalityInterval"
 				+ " ("
-				+ AbstractAbnormality.convertValueToConstantString(value)
+				+ AbnormalityUtils.convertValueToConstantString(value)
 				+ "): "
 				+ (isLeftOpen() ? "(" : "[")
 				+ getLeft()

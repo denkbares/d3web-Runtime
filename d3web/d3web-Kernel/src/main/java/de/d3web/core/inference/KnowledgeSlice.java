@@ -20,7 +20,6 @@
 
 package de.d3web.core.inference;
 
-import de.d3web.core.session.Session;
 
 /**
  * Specifies that implementing classes are used as explict knowledge. Each
@@ -49,14 +48,6 @@ public interface KnowledgeSlice {
 	// TODO: vb: Either (1) delete this method (only used for rules) or (2)
 	// change addKnowledge in a way that the context need not to be specified.
 	public Class<? extends PSMethod> getProblemsolverContext();
-
-	/**
-	 * Has this knowledge already been used? (e.g. did a rule fire?)
-	 */
-	// TODO: vb: delete this method. It cannot is not useful and only used by
-	// unused methods or test methods. Does any one know the aimed goal to be
-	// reach by having this method???
-	public boolean isUsed(Session session);
 
 	/**
 	 * Prompts the knowledgeslice to remove itsself from all objects

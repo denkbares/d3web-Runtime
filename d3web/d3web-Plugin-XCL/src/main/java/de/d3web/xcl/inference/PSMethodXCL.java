@@ -40,6 +40,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
+import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
@@ -47,8 +48,6 @@ import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.values.UndefinedValue;
-import de.d3web.shared.AbstractAbnormality;
-import de.d3web.shared.PSMethodShared;
 import de.d3web.xcl.DefaultScoreAlgorithm;
 import de.d3web.xcl.ScoreAlgorithm;
 import de.d3web.xcl.XCLContributedModelSet;
@@ -116,7 +115,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 				if (entry.hasNewValue()) caseObject.totalAnsweredCount++;
 
 				// update abnormalities
-				AbstractAbnormality abnormality = getAbnormalitySlice(question);
+				Abnormality abnormality = getAbnormalitySlice(question);
 				double oldAbnormality = getAbnormality(abnormality, entry.getOldValue());
 				double newAbnormality = getAbnormality(abnormality, entry.getNewValue());
 				caseObject.totalAnsweredAbnormality -= oldAbnormality;
@@ -129,7 +128,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 				.getAnsweredQuestions();
 		double restWeight = caseObject.totalAnsweredAbnormality;
 		for (Question question : answeredQuestions) {
-			AbstractAbnormality abnormality = getAbnormalitySlice(question);
+			Abnormality abnormality = getAbnormalitySlice(question);
 			restWeight -= getAbnormality(abnormality,
 					session.getBlackboard().getValue(question));
 		}
@@ -139,7 +138,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 		}
 	}
 
-	public double getAbnormality(AbstractAbnormality abnormality, Object answer) {
+	public double getAbnormality(Abnormality abnormality, Object answer) {
 		// no answer ==> not abnormal
 		if (answer == null || answer instanceof UndefinedValue) {
 			return 0.0;
@@ -170,12 +169,14 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 	// return max;
 	// }
 
-	public AbstractAbnormality getAbnormalitySlice(Question question) {
+	public Abnormality getAbnormalitySlice(Question question) {
 		try {
-			KnowledgeSlice knowledge = question.getKnowledge(PSMethodShared.class,
-					PSMethodShared.SHARED_ABNORMALITY);
-			if (knowledge == null) return null;
-			return (AbstractAbnormality) knowledge;
+			Abnormality knowledge = question.getInfoStore().getValue(
+					BasicProperties.DEFAULT_ABNORMALITIY);
+			if (knowledge == null) {
+				knowledge = question.getInfoStore().getValue(BasicProperties.ABNORMALITIY_NUM);
+			}
+			return knowledge;
 		}
 		catch (IllegalArgumentException e) {
 			throw new IllegalStateException(

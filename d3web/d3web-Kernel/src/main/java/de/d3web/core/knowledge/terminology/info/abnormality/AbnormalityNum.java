@@ -18,13 +18,15 @@
  * site: http://www.fsf.org.
  */
 
-package de.d3web.shared;
+package de.d3web.core.knowledge.terminology.info.abnormality;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.NumValue;
@@ -42,7 +44,7 @@ import de.d3web.core.session.values.NumValue;
  * and type) instead of an Answer (like Abnormalites addValue method) the
  * getValue method takes a double instead of an Answer
  */
-public class AbnormalityNum extends AbstractAbnormality {
+public class AbnormalityNum implements Abnormality {
 
 	private final List<AbnormalityInterval> intervals = new LinkedList<AbnormalityInterval>();
 
@@ -107,7 +109,7 @@ public class AbnormalityNum extends AbstractAbnormality {
 			AbnormalityInterval ai = iter.next();
 			if (ai.contains(answerValue)) return ai.getValue();
 		}
-		return A0;
+		return AbnormalityUtils.getDefault();
 	}
 
 	/**
@@ -125,7 +127,7 @@ public class AbnormalityNum extends AbstractAbnormality {
 			if (D != null) d = D.doubleValue();
 			return getValue(d);
 		}
-		return A0;
+		return AbnormalityUtils.getDefault();
 	}
 
 	/**
@@ -138,25 +140,6 @@ public class AbnormalityNum extends AbstractAbnormality {
 	}
 
 	/**
-	 * Sets the interval-list
-	 * 
-	 * @param newIntervals
-	 */
-	// Ochlast: Method not used
-	//
-	// public void setIntervals(List<AbnormalityInterval> newIntervals) throws
-	// NumericalInterval.IntervalException {
-	// intervals = new LinkedList<AbnormalityInterval>();
-	// for (Iterator<AbnormalityInterval> iter = newIntervals.iterator();
-	// iter.hasNext();) {
-	// AbnormalityInterval ai = iter.next();
-	// if (checkIntervals(ai)) intervals.add(ai);
-	// else throw new NumericalInterval.IntervalException(
-	// "new AbnormalityInterval overlaps one of the existing AbnormalityIntervals");
-	// }
-	// }
-
-	/**
 	 * Sets the AbnormalityInterval for the {@link QuestionNum}
 	 * 
 	 * @created 25.06.2010
@@ -164,13 +147,13 @@ public class AbnormalityNum extends AbstractAbnormality {
 	 * @param i AbnormalityInterval
 	 */
 	public static void setAbnormality(QuestionNum qnum, AbnormalityInterval i) {
-		AbnormalityNum abnormality = (AbnormalityNum) qnum.getKnowledge(
-				PROBLEMSOLVER, METHOD_KIND);
-		if (abnormality == null) {
-			abnormality = new AbnormalityNum();
-			qnum.addKnowledge(PROBLEMSOLVER, abnormality, METHOD_KIND);
+		InfoStore infoStore = qnum.getInfoStore();
+		AbnormalityNum abnormalitySlice = infoStore.getValue(BasicProperties.ABNORMALITIY_NUM);
+		if (abnormalitySlice == null) {
+			abnormalitySlice = new AbnormalityNum();
+			infoStore.addValue(BasicProperties.ABNORMALITIY_NUM, abnormalitySlice);
 		}
-		abnormality.addValue(i);
+		abnormalitySlice.addValue(i);
 	}
 
 	/**

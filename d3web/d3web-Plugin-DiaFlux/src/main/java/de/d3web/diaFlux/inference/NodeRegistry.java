@@ -26,7 +26,6 @@ import java.util.Map;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.session.Session;
 import de.d3web.core.utilities.Pair;
 import de.d3web.diaFlux.flow.INode;
 
@@ -147,11 +146,6 @@ public class NodeRegistry implements KnowledgeSlice {
 	@Override
 	public Class<? extends PSMethod> getProblemsolverContext() {
 		return FluxSolver.class;
-	}
-
-	@Override
-	public boolean isUsed(Session session) {
-		return true;
 	}
 
 	@Override

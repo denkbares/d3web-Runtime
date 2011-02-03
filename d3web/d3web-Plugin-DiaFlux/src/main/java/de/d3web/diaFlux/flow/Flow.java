@@ -178,11 +178,6 @@ public class Flow implements CaseObjectSource, KnowledgeSlice {
 	}
 
 	@Override
-	public boolean isUsed(Session theCase) {
-		return true;
-	}
-
-	@Override
 	public void remove() {
 	}
 

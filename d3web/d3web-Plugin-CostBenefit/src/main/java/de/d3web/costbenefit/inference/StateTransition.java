@@ -94,11 +94,6 @@ public class StateTransition implements KnowledgeSlice {
 	}
 
 	@Override
-	public boolean isUsed(Session session) {
-		return true;
-	}
-
-	@Override
 	public void remove() {
 		qcontainer.removeKnowledge(getProblemsolverContext(), this, STATE_TRANSITION);
 	}

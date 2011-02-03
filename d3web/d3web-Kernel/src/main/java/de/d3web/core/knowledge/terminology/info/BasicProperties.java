@@ -12,6 +12,8 @@ package de.d3web.core.knowledge.terminology.info;
 import java.util.Date;
 
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityNum;
+import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
 
 /**
  * A collection of basic Properties for d3web
@@ -112,5 +114,18 @@ public class BasicProperties {
 	 */
 	public static final Property<Boolean> UNKNOWNBYDEFAULT =
 			Property.getProperty("unknownByDefault", Boolean.class);
+
+	/**
+	 * @see DefaultAbnormality
+	 */
+	public static final Property<DefaultAbnormality> DEFAULT_ABNORMALITIY = Property.getProperty(
+			"abnormality",
+			DefaultAbnormality.class);
+
+	/**
+	 * @see AbnormalityNum
+	 */
+	public static final Property<AbnormalityNum> ABNORMALITIY_NUM = Property.getProperty(
+			"abnormalityNum", AbnormalityNum.class);
 
 }

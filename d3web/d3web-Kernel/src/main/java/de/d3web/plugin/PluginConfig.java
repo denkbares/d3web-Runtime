@@ -26,7 +26,6 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.session.Session;
 
 /**
  * This KnowledgeSlice is used to store the configuration of the extensions at
@@ -57,11 +56,6 @@ public class PluginConfig implements KnowledgeSlice {
 	@Override
 	public final Class<? extends PSMethod> getProblemsolverContext() {
 		return PROBLEMSOLVER;
-	}
-
-	@Override
-	public boolean isUsed(Session session) {
-		return false;
 	}
 
 	@Override

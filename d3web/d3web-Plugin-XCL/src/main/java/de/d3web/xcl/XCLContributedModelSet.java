@@ -25,7 +25,6 @@ import java.util.List;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.session.Session;
 import de.d3web.xcl.inference.PSMethodXCL;
 
 /**
@@ -56,11 +55,6 @@ public class XCLContributedModelSet implements KnowledgeSlice {
 	@Override
 	public Class<? extends PSMethod> getProblemsolverContext() {
 		return PSMethodXCL.class;
-	}
-
-	@Override
-	public boolean isUsed(Session session) {
-		return true;
 	}
 
 	@Override

@@ -396,11 +396,6 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 		return PSMethodXCL.class;
 	}
 
-	@Override
-	public boolean isUsed(Session session) {
-		return true;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -175,4 +175,24 @@
 		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
 	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="abnormality">
+		<parameter id="name" value="abnormality" />
+		<parameter id="description" value="Represents the abnormality of a symptom." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="abnormalityNum">
+		<parameter id="name" value="abnormalityNum" />
+		<parameter id="description" value="Represents the abnormality for num values." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityNum" />
+	</extension>
+	
 </plugin>

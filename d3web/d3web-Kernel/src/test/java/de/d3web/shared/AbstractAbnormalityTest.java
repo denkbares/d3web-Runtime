@@ -19,27 +19,24 @@
 
 package de.d3web.shared;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
-import de.d3web.core.knowledge.terminology.QuestionText;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
+import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
+import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityUtils;
+import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
 import de.d3web.core.manage.KnowledgeBaseManagement;
-import de.d3web.core.session.Session;
-import de.d3web.core.session.SessionFactory;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
- * Unit tests for {@link AbstractAbnormality}
+ * Unit tests for {@link AbnormalityUtils}
  * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 26.08.2010
@@ -49,7 +46,7 @@ public class AbstractAbnormalityTest {
 	KnowledgeBaseManagement kbm;
 	KnowledgeBase kb;
 
-	AbstractAbnormality abstractAbnormality;
+	DefaultAbnormality abstractAbnormality;
 
 	@Before
 	public void setUp() throws Exception {
@@ -57,118 +54,66 @@ public class AbstractAbnormalityTest {
 		kbm = KnowledgeBaseManagement.createInstance();
 		kb = kbm.getKnowledgeBase();
 		// the AbstractAbnormality instance Under Test
-		abstractAbnormality = new AbstractAbnormality() {
-
-			@Override
-			public double getValue(Value ans) {
-				return AbstractAbnormality.A2; // some hard-coded default value
-												// for this test
-			}
-		};
+		abstractAbnormality = new DefaultAbnormality();
 	}
 
 	/**
-	 * Test method for {@link de.d3web.shared.AbstractAbnormality#convertConstantStringToValue(java.lang.String)}.
-	 */
-	@Test
-	public void testConvertConstantStringToValue() {
-		assertThat(AbstractAbnormality.convertConstantStringToValue("A0"),
-				is(AbstractAbnormality.A0));
-		assertThat(AbstractAbnormality.convertConstantStringToValue("A1"),
-				is(AbstractAbnormality.A1));
-		assertThat(AbstractAbnormality.convertConstantStringToValue("A2"),
-				is(AbstractAbnormality.A2));
-		assertThat(AbstractAbnormality.convertConstantStringToValue("A3"),
-				is(AbstractAbnormality.A3));
-		assertThat(AbstractAbnormality.convertConstantStringToValue("A4"),
-				is(AbstractAbnormality.A4));
-		assertThat(AbstractAbnormality.convertConstantStringToValue("A5"),
-				is(AbstractAbnormality.A5));
-		assertThat(AbstractAbnormality.convertConstantStringToValue("XX"),
-				is(AbstractAbnormality.A0));
-	}
-
-	/**
-	 * Test method for {@link de.d3web.shared.AbstractAbnormality#convertValueToConstantString(double)}.
-	 */
-	@Test
-	public void testConvertValueToConstantString() {
-		assertThat(AbstractAbnormality.convertValueToConstantString(0.0425), is("A0"));
-		assertThat(AbstractAbnormality.convertValueToConstantString(0.111), is("A1"));
-		assertThat(AbstractAbnormality.convertValueToConstantString(0.187), is("A2"));
-		assertThat(AbstractAbnormality.convertValueToConstantString(0.399), is("A3"));
-		assertThat(AbstractAbnormality.convertValueToConstantString(0.874), is("A4"));
-		assertThat(AbstractAbnormality.convertValueToConstantString(1.311), is("A5"));
-	}
-
-	/**
-	 * Test method for {@link AbstractAbnormality#getQuestion()} and
-	 * {@link AbstractAbnormality#setQuestion(de.d3web.core.knowledge.terminology.Question)}
+	 * Test method for
+	 * {@link de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityUtils#convertConstantStringToValue(java.lang.String)}
 	 * .
 	 */
 	@Test
-	public void testGetSetRemoveQuestion() {
-		// If no question was set, getQuestion() should return null
-		assertThat(abstractAbnormality.getQuestion(), is(equalTo(null)));
-		// now create a new Question and set it on the abnormality
-		QuestionText questionText = new QuestionText("questionText");
-		abstractAbnormality.setQuestion(questionText);
-		// validate, that getQuestion() provides the question
-		assertThat(abstractAbnormality.getQuestion(), is(equalTo((Question) questionText)));
-		// after removing the question from the abnormality, getQuestion()
-		// should again return null
-		abstractAbnormality.remove();
-		assertThat(abstractAbnormality.getQuestion(), is(equalTo(null)));
+	public void testConvertConstantStringToValue() {
+		assertThat(AbnormalityUtils.convertConstantStringToValue("A0"),
+				is(Abnormality.A0));
+		assertThat(AbnormalityUtils.convertConstantStringToValue("A1"),
+				is(Abnormality.A1));
+		assertThat(AbnormalityUtils.convertConstantStringToValue("A2"),
+				is(Abnormality.A2));
+		assertThat(AbnormalityUtils.convertConstantStringToValue("A3"),
+				is(Abnormality.A3));
+		assertThat(AbnormalityUtils.convertConstantStringToValue("A4"),
+				is(Abnormality.A4));
+		assertThat(AbnormalityUtils.convertConstantStringToValue("A5"),
+				is(Abnormality.A5));
+		assertThat(AbnormalityUtils.convertConstantStringToValue("XX"),
+				is(Abnormality.A0));
 	}
 
 	/**
-	 * Test method for {@link de.d3web.shared.AbstractAbnormality#getId()}.
+	 * Test method for
+	 * {@link de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityUtils#convertValueToConstantString(double)}
+	 * .
 	 */
 	@Test
-	public void testGetId() {
-		// set the Question for an abnormality and assert that getId() returns
-		// the correct ID (prepended with "A_")
-		assertThat(abstractAbnormality.getId(), is(equalTo(null)));
-		QuestionText questionText = new QuestionText("questionText");
-		abstractAbnormality.setQuestion(questionText);
-		assertThat(abstractAbnormality.getId(), is(equalTo("A_questionText")));
+	public void testConvertValueToConstantString() {
+		assertThat(AbnormalityUtils.convertValueToConstantString(0.0425), is("A0"));
+		assertThat(AbnormalityUtils.convertValueToConstantString(0.111), is("A1"));
+		assertThat(AbnormalityUtils.convertValueToConstantString(0.187), is("A2"));
+		assertThat(AbnormalityUtils.convertValueToConstantString(0.399), is("A3"));
+		assertThat(AbnormalityUtils.convertValueToConstantString(0.874), is("A4"));
+		assertThat(AbnormalityUtils.convertValueToConstantString(1.311), is("A5"));
 	}
 
 	/**
-	 * Test method for {@link de.d3web.shared.AbstractAbnormality#getProblemsolverContext()}.
-	 */
-	@Test
-	public void testGetProblemsolverContext() {
-		// Assure that getProblemsolverContext() returns a class which is
-		// assignable from PSMethod
-		assertThat(PSMethod.class.isAssignableFrom(abstractAbnormality.getProblemsolverContext()),
-				is(true));
-	}
-
-	/**
-	 * Test method for {@link de.d3web.shared.AbstractAbnormality#isUsed(de.d3web.core.session.Session)}.
-	 */
-	@Test
-	public void testIsUsed() {
-		// isUsed(Session) returns true in every case
-		Session session = SessionFactory.createSession(kb);
-		assertThat(abstractAbnormality.isUsed(session), is(true));
-	}
-
-	/**
-	 * Test method for {@link de.d3web.shared.AbstractAbnormality#getAbnormality(de.d3web.core.knowledge.terminology.Question, de.d3web.core.session.Value)}.
+	 * Test method for
+	 * {@link de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityUtils#getAbnormality(de.d3web.core.knowledge.terminology.Question, de.d3web.core.session.Value)}
+	 * .
 	 */
 	@Test
 	public void testGetAbnormality() {
-		QuestionChoice questionOC = kbm.createQuestionOC("questionYN", kb.getRootQASet(), new String[]{"yes","no"});
+		QuestionChoice questionOC = kbm.createQuestionOC("questionYN", kb.getRootQASet(),
+				new String[] {
+						"yes", "no" });
 		ChoiceValue yes = new ChoiceValue(kbm.findChoice(questionOC, "yes"));
 		// before setting the abnormality for this question, the
 		// default-abnormality A5 should be returned:
-		assertThat(AbstractAbnormality.getAbnormality(questionOC, yes), is(AbstractAbnormality.A5));
+		assertThat(AbnormalityUtils.getAbnormality(questionOC, yes), is(Abnormality.A5));
 		// now set the question for the abnormality...
-		abstractAbnormality.setQuestion(questionOC);
+		questionOC.getInfoStore().addValue(BasicProperties.DEFAULT_ABNORMALITIY, abstractAbnormality);
+		abstractAbnormality.addValue(yes, Abnormality.A2);
 		// ...and retrieve the abnormality again:
 		// It should be A2 (set in constructor)
-		assertThat(AbstractAbnormality.getAbnormality(questionOC, yes), is(AbstractAbnormality.A2));
+		assertThat(AbnormalityUtils.getAbnormality(questionOC, yes), is(Abnormality.A2));
 	}
 }

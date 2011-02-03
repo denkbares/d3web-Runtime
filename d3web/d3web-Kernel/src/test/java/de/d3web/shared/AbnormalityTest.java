@@ -17,7 +17,7 @@
  * site: http://www.fsf.org.
  */
 
-package de.d3web.shared.tests;
+package de.d3web.shared;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -28,22 +28,22 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
+import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
-import de.d3web.shared.Abnormality;
-import de.d3web.shared.AbstractAbnormality;
 
 /**
- * Unit test for {@link Abnormality}
+ * Unit test for {@link DefaultAbnormality}
  * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 26.08.2010
  */
 public class AbnormalityTest {
 
-	Abnormality abnormality;
+	DefaultAbnormality abnormality;
 
 	Value valueOne;
 	Value valueTwo;
@@ -56,7 +56,7 @@ public class AbnormalityTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		abnormality = new Abnormality();
+		abnormality = new DefaultAbnormality();
 
 		valueOne = new TextValue("textValue");
 		valueTwo = new NumValue(0.49);
@@ -67,28 +67,32 @@ public class AbnormalityTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.shared.Abnormality#getValue(de.d3web.core.session.Value)}.
+	 * Test method for
+	 * {@link de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality#getValue(de.d3web.core.session.Value)}
+	 * .
 	 */
 	@Test
 	public void testAddGetValue() {
 		// before setting the values, A5 should be returned as abnormality
-		assertThat(abnormality.getValue(valueOne), is(AbstractAbnormality.A5));
-		assertThat(abnormality.getValue(valueTwo), is(AbstractAbnormality.A5));
-		assertThat(abnormality.getValue(valueThree), is(AbstractAbnormality.A5));
+		assertThat(abnormality.getValue(valueOne), is(Abnormality.A5));
+		assertThat(abnormality.getValue(valueTwo), is(Abnormality.A5));
+		assertThat(abnormality.getValue(valueThree), is(Abnormality.A5));
 		// now set the abnormality values, for safety in mixed order
-		abnormality.addValue(valueTwo, AbstractAbnormality.A2);
-		abnormality.addValue(valueOne, AbstractAbnormality.A1);
-		abnormality.addValue(valueThree, AbstractAbnormality.A3);
+		abnormality.addValue(valueTwo, Abnormality.A2);
+		abnormality.addValue(valueOne, Abnormality.A1);
+		abnormality.addValue(valueThree, Abnormality.A3);
 		// now retrieve the abnormality values
-		assertThat(abnormality.getValue(valueThree), is(AbstractAbnormality.A3));
-		assertThat(abnormality.getValue(valueOne), is(AbstractAbnormality.A1));
-		assertThat(abnormality.getValue(valueTwo), is(AbstractAbnormality.A2));
+		assertThat(abnormality.getValue(valueThree), is(Abnormality.A3));
+		assertThat(abnormality.getValue(valueOne), is(Abnormality.A1));
+		assertThat(abnormality.getValue(valueTwo), is(Abnormality.A2));
 	}
 
 	/**
 	 * Test method for
-	 * {@link de.d3web.shared.Abnormality#isSet(de.d3web.core.session.Value)}
-	 * and {@link de.d3web.shared.Abnormality#getAnswerSet()}.
+	 * {@link de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality#isSet(de.d3web.core.session.Value)}
+	 * and
+	 * {@link de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality#getAnswerSet()}
+	 * .
 	 */
 	@Test
 	public void testIsSetAndAnswerEnumeration() {
@@ -97,9 +101,9 @@ public class AbnormalityTest {
 		assertThat(abnormality.isSet(valueTwo), is(false));
 		assertThat(abnormality.isSet(valueThree), is(false));
 		// now set the abnormality values, for safety in mixed order
-		abnormality.addValue(valueTwo, AbstractAbnormality.A2);
-		abnormality.addValue(valueOne, AbstractAbnormality.A1);
-		abnormality.addValue(valueThree, AbstractAbnormality.A3);
+		abnormality.addValue(valueTwo, Abnormality.A2);
+		abnormality.addValue(valueOne, Abnormality.A1);
+		abnormality.addValue(valueThree, Abnormality.A3);
 		// now test again if the values are set
 		assertThat(abnormality.isSet(valueThree), is(true));
 		assertThat(abnormality.isSet(valueOne), is(true));
@@ -112,7 +116,9 @@ public class AbnormalityTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.shared.Abnormality#setAbnormality(de.d3web.core.knowledge.terminology.Question, de.d3web.core.session.Value, double)}.
+	 * Test method for
+	 * {@link de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality#setAbnormality(de.d3web.core.knowledge.terminology.Question, de.d3web.core.session.Value, double)}
+	 * .
 	 */
 	@Test
 	public void testSetAbnormality() {

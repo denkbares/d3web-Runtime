@@ -36,6 +36,8 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
+import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
+import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
@@ -43,9 +45,6 @@ import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
-import de.d3web.shared.Abnormality;
-import de.d3web.shared.AbstractAbnormality;
-import de.d3web.shared.PSMethodShared;
 
 /**
  * QContainer Node for the virtual graph. Provides easy access to cost-benefit
@@ -154,15 +153,16 @@ public class Node {
 		List<Fact> facts = new LinkedList<Fact>();
 		PSMethod psmCostBenefit = session.getPSMethodInstance(PSMethodCostBenefit.class);
 		for (Question q : valuesToSet.keySet()) {
-//			Fact fact = new DefaultFact(q, valuesToSet.get(q), this,
-//					(psmCostBenefit == null) ? new PSMethodCostBenefit() : psmCostBenefit);
-			
+			// Fact fact = new DefaultFact(q, valuesToSet.get(q), this,
+			// (psmCostBenefit == null) ? new PSMethodCostBenefit() :
+			// psmCostBenefit);
+
 			PSMethod psMethod = (psmCostBenefit == null)
 					? new PSMethodCostBenefit()
 					: psmCostBenefit;
 
 			Fact fact = FactFactory.createFact(session, q, valuesToSet.get(q), this, psMethod);
-			
+
 			session.getBlackboard().addValueFact(fact);
 			facts.add(fact);
 		}
@@ -175,29 +175,25 @@ public class Node {
 		Map<Question, Value> expectedmap = new HashMap<Question, Value>();
 		for (QuestionOC q : questions) {
 			if (!answeredQuestions.contains(q)) {
-				KnowledgeSlice ks = q.getKnowledge(
-						new Abnormality().getProblemsolverContext(),
-						PSMethodShared.SHARED_ABNORMALITY);
-				if (ks == null) {
+				DefaultAbnormality abnormality = q.getInfoStore().getValue(
+						BasicProperties.DEFAULT_ABNORMALITIY);
+				if (abnormality == null) {
 					if (set) Logger.getLogger(this.getClass().getName()).throwing(
 							this.getClass().getName(),
 							"Fehler, kein Normalwert gesetzt: " + q, null);
 					continue;
 				}
-				if (ks instanceof Abnormality) {
-					Abnormality abnormality = (Abnormality) ks;
-					List<Choice> alternatives = q.getAllAlternatives();
-					for (Choice a : alternatives) {
-						ChoiceValue avalue = new ChoiceValue(a);
-						if (abnormality.getValue(avalue) == AbstractAbnormality.A0) {
-							if (set) {
-								valuesToSet.put(q, avalue);
-							}
-							else {
-								expectedmap.put(q, avalue);
-							}
-							break;
+				List<Choice> alternatives = q.getAllAlternatives();
+				for (Choice a : alternatives) {
+					ChoiceValue avalue = new ChoiceValue(a);
+					if (abnormality.getValue(avalue) == Abnormality.A0) {
+						if (set) {
+							valuesToSet.put(q, avalue);
 						}
+						else {
+							expectedmap.put(q, avalue);
+						}
+						break;
 					}
 				}
 			}

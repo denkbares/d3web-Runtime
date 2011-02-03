@@ -520,7 +520,7 @@
 		<parameter id="filename" value="kb/settings.xml" />
 	</extension>
 	
-		<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeWriter"
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeWriter"
 		id="TerminologyTextbundleHandler.Writer">
 		<parameter id="class"
 			value="de.d3web.mminfo.io.TerminologyTextbundleHandler" />
@@ -529,6 +529,26 @@
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 		<parameter id="filename" value="mminfo/textbundle.properties" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="DefaultAbnormalityHandler">
+		<parameter id="class"
+			value="de.d3web.core.io.fragments.DefaultAbnormalityHandler" />
+		<parameter id="name" value="DefaultAbnormalityHandler" />
+		<parameter id="description" value="Handels DefaultAbnormality" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="AbnormalityNumHandler">
+		<parameter id="class"
+			value="de.d3web.core.io.fragments.AbnormalityNumHandler" />
+		<parameter id="name" value="AbnormalityNumHandler" />
+		<parameter id="description" value="Handels AbnormalityNum" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
 	</extension>
 	
 	

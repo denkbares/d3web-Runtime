@@ -12,17 +12,6 @@
 		</library>
 	</runtime>
 	
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeWriter"
-		id="SharedPersistenceHandler.Writer">
-		<parameter id="class"
-			value="de.d3web.shared.io.SharedPersistenceHandler" />
-		<parameter id="name" value="SharedPersistenceHandler" />
-		<parameter id="description" value="Saves shared knowledge to XML" />
-		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
-		<parameter id="filename" value="kb/shared.xml" />
-	</extension>
-	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeReader"
 		id="SharedPersistenceHandler">
 		<parameter id="class"
@@ -33,15 +22,4 @@
 		<parameter id="priority" value="5" />
 		<parameter id="filename" value="kb/shared.xml" />
 	</extension>
-	
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="AbstractAbnormalityHandler">
-		<parameter id="class"
-			value="de.d3web.shared.io.fragments.AbstractAbnormalityHandler" />
-		<parameter id="name" value="AbstractAbnormalityHandler" />
-		<parameter id="description" value="Handels the default implementations of AbstractAbnormality" />
-		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
-	</extension>
-	
 </plugin>
