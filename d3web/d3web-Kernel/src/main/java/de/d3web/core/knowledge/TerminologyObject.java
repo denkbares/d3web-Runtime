@@ -29,9 +29,9 @@ public interface TerminologyObject extends IDObject {
 
 	TerminologyObject[] getChildren();
 
-	public abstract void setKnowledgeBase(KnowledgeBase knowledgeBase);
+	void setKnowledgeBase(KnowledgeBase knowledgeBase);
 
-	public abstract KnowledgeBase getKnowledgeBase();
+	KnowledgeBase getKnowledgeBase();
 
 	// --- storing knowledge ---
 	// KnowledgeStore getKnowledgeStore();
