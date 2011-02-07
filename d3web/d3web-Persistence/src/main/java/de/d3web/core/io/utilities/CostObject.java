@@ -21,8 +21,8 @@
 package de.d3web.core.io.utilities;
 
 /**
- * Realizes a static representation of costs of an IDObject. This is needed
- * because the costs must be set after parsing the IDObject.<br>
+ * Realizes a static representation of costs of an NamedObject. This is needed
+ * because the costs must be set after parsing the NamedObject.<br>
  * Creation date: (03.07.2001 15:40:43)
  * 
  * @author Norman Brümmer

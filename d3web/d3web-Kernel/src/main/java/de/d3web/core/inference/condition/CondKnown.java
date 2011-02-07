@@ -24,7 +24,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 
 /**
- * This condition checks, if an IDObject (e.g. Question) has a value and was not
+ * This condition checks, if an NamedObject (e.g. Question) has a value and was not
  * answered with {@link AnswerUnknown}. The composite pattern is used for this.
  * This class is a "leaf". Creation date: (13.09.2000 14:07:14)
  * 

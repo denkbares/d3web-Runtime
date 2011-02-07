@@ -27,7 +27,7 @@ import de.d3web.core.inference.condition.CondSolutionConfirmed;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.IDObject;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Solution;
 
 /**
@@ -54,7 +54,7 @@ public class ConditionSolutionConfirmedHandler implements FragmentHandler {
 	public Object read(KnowledgeBase kb, Element node) throws IOException {
 		String solutionID = node.getAttribute("ID");
 		if (solutionID != null) {
-			IDObject idObject = kb.getManager().search(solutionID);
+			NamedObject idObject = kb.getManager().search(solutionID);
 			if (idObject instanceof Solution) {
 				Solution s = (Solution) idObject;
 				return new CondSolutionConfirmed(s);

@@ -32,7 +32,7 @@ import de.d3web.abstraction.formula.FormulaElement;
 import de.d3web.abstraction.formula.FormulaNumber;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.IDObject;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.indication.ActionContraIndication;
 import de.d3web.indication.ActionInstantIndication;
 import de.d3web.indication.ActionNextQASet;
@@ -211,8 +211,8 @@ public class RuleActionVerbalizer implements Verbalizer {
 			else if (item instanceof FormulaNumber) {
 				s += ((FormulaNumber) item).toString();
 			}
-			else if (item instanceof IDObject) {
-				s += getIDObjectVerbalistion((IDObject) item);
+			else if (item instanceof NamedObject) {
+				s += getIDObjectVerbalistion((NamedObject) item);
 			}
 			else {
 				s += DefaultVerbalizer.verbalizeUnexpectedObject(item);
@@ -228,7 +228,7 @@ public class RuleActionVerbalizer implements Verbalizer {
 	}
 
 	// import from the old VerbalizationFactory
-	private static String getIDObjectVerbalistion(IDObject ido) {
+	private static String getIDObjectVerbalistion(NamedObject ido) {
 		if (ido == null) return "";
 		StringBuffer sb = new StringBuffer();
 		sb.append(ido.toString());

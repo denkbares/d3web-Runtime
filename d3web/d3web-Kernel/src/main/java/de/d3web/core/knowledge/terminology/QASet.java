@@ -34,7 +34,7 @@ import de.d3web.core.knowledge.TerminologyObject;
  * @see QContainer
  * @see Question
  */
-public abstract class QASet extends NamedObject implements InterviewObject {
+public abstract class QASet extends AbstractTerminologyObject implements InterviewObject {
 
 	public QASet(String id) {
 		super(id);

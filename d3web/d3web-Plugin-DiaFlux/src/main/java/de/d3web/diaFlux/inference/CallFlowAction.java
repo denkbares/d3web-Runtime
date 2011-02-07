@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.INode;
 import de.d3web.diaFlux.flow.ISupport;
@@ -111,8 +111,8 @@ public class CallFlowAction extends PSAction {
 	}
 
 	@Override
-	public List<NamedObject> getBackwardObjects() {
-		return new ArrayList<NamedObject>(0);
+	public List<AbstractTerminologyObject> getBackwardObjects() {
+		return new ArrayList<AbstractTerminologyObject>(0);
 	}
 
 	public String getFlowName() {

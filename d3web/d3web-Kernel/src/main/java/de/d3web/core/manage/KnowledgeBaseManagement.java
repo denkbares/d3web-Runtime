@@ -36,8 +36,8 @@ import java.util.Map;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -390,7 +390,7 @@ public final class KnowledgeBaseManagement {
 	 */
 	public Solution findSolution(String name) {
 		// Uses hash for name in KB
-		IDObject ob = knowledgeBase.getManager().searchObjectForName(name);
+		NamedObject ob = knowledgeBase.getManager().searchObjectForName(name);
 		if (ob instanceof Solution) {
 			return (Solution) ob;
 		}
@@ -410,7 +410,7 @@ public final class KnowledgeBaseManagement {
 	 */
 	public Question findQuestion(String name) {
 		// Uses hash for name in KB
-		IDObject ob = knowledgeBase.getManager().searchObjectForName(name);
+		NamedObject ob = knowledgeBase.getManager().searchObjectForName(name);
 		if (ob instanceof Question) {
 			return (Question) ob;
 		}
@@ -430,7 +430,7 @@ public final class KnowledgeBaseManagement {
 	 */
 	public QContainer findQContainer(String name) {
 		// Uses hash for name in KB
-		IDObject ob = knowledgeBase.getManager().searchObjectForName(name);
+		NamedObject ob = knowledgeBase.getManager().searchObjectForName(name);
 		if (ob instanceof QContainer) {
 			return (QContainer) ob;
 		}
@@ -443,7 +443,7 @@ public final class KnowledgeBaseManagement {
 	}
 
 	private TerminologyObject findNamedObject(String name,
-			Collection<? extends NamedObject> namedObjects) {
+			Collection<? extends AbstractTerminologyObject> namedObjects) {
 		// old iterating search method
 		for (TerminologyObject o : namedObjects) {
 			if (o != null && name != null
@@ -574,7 +574,7 @@ public final class KnowledgeBaseManagement {
 		}
 	}
 
-	public String findNewIDFor(Class<? extends IDObject> o) {
+	public String findNewIDFor(Class<? extends NamedObject> o) {
 		if (o == Solution.class) {
 			return knowledgeBase.getManager().getIDforPrefix("P");
 
@@ -618,7 +618,7 @@ public final class KnowledgeBaseManagement {
 	 * @param name
 	 * @param parent
 	 */
-	// private void setBasicProperties(NamedObject theObject, String name) {
+	// private void setBasicProperties(AbstractTerminologyObject theObject, String name) {
 	// theObject.setText(name);
 	// }
 
@@ -629,7 +629,7 @@ public final class KnowledgeBaseManagement {
 	 * @param theObject
 	 * @param parent
 	 */
-	private void addToParent(NamedObject theObject, NamedObject parent) {
+	private void addToParent(AbstractTerminologyObject theObject, AbstractTerminologyObject parent) {
 		if (parent != null) {
 			parent.addChild(theObject);
 		}

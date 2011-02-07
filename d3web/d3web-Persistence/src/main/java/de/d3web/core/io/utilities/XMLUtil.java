@@ -44,8 +44,8 @@ import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -142,7 +142,7 @@ public final class XMLUtil {
 	 * type
 	 * 
 	 * @param doc Document, where the Element should be created
-	 * @param nob NamedObject, whose ID should be used
+	 * @param nob AbstractTerminologyObject, whose ID should be used
 	 * @param type type of the condition
 	 * @return condition element
 	 */
@@ -163,7 +163,7 @@ public final class XMLUtil {
 	 * type and value
 	 * 
 	 * @param doc Document, where the Element should be created
-	 * @param nob NamedObject, whose ID should be used
+	 * @param nob AbstractTerminologyObject, whose ID should be used
 	 * @param type type of the condition
 	 * @param value value of the condition
 	 * @return condition element
@@ -181,7 +181,7 @@ public final class XMLUtil {
 	 * type and value. The value is stored in a child element.
 	 * 
 	 * @param doc Document, where the Element should be created
-	 * @param nob NamedObject, whose ID should be used
+	 * @param nob AbstractTerminologyObject, whose ID should be used
 	 * @param type type of the condition
 	 * @param value value of the condition
 	 * @return condition element
@@ -198,7 +198,7 @@ public final class XMLUtil {
 	 * newly created node.
 	 * 
 	 * @param doc Document, where the Element should be created
-	 * @param nob NamedObject, whose ID should be used
+	 * @param nob AbstractTerminologyObject, whose ID should be used
 	 * @param type type of the condition
 	 * @param value value of the condition
 	 * @return condition element
@@ -214,7 +214,7 @@ public final class XMLUtil {
 	 * type and values
 	 * 
 	 * @param doc Document, where the Element should be created
-	 * @param nob NamedObject, whose ID should be used
+	 * @param nob AbstractTerminologyObject, whose ID should be used
 	 * @param type type of the condition
 	 * @param values List of answers, which are used as values
 	 * @return condition element
@@ -308,19 +308,19 @@ public final class XMLUtil {
 		return ret;
 	}
 
-	private static boolean isLinkedChild(NamedObject topQ, TerminologyObject theChild) {
+	private static boolean isLinkedChild(AbstractTerminologyObject topQ, TerminologyObject theChild) {
 		return topQ.getLinkedChildren().contains(theChild);
 	}
 
 	/**
-	 * Adds the children of the NamedObject to the specified element
+	 * Adds the children of the AbstractTerminologyObject to the specified element
 	 * 
-	 * @param namedObject NamedObject, whose children should be appended as
+	 * @param namedObject AbstractTerminologyObject, whose children should be appended as
 	 *        Elements
 	 * @param element Element representing the namedObject, where the children
 	 *        will be appended
 	 */
-	public static void appendChildren(NamedObject namedObject, Element element) {
+	public static void appendChildren(AbstractTerminologyObject namedObject, Element element) {
 		Document doc = element.getOwnerDocument();
 		TerminologyObject[] children = namedObject.getChildren();
 		if (children.length != 0) {
@@ -338,14 +338,14 @@ public final class XMLUtil {
 	}
 
 	/**
-	 * Adds the children given from the xml structure to the NamedObject
+	 * Adds the children given from the xml structure to the AbstractTerminologyObject
 	 * 
 	 * @param kb KnowledgeBase containing the children
 	 * @param namedObject where the children should be appended
 	 * @param element representing the namedObject and containing the children
 	 *        as childnodes
 	 */
-	public static void appendChildren(KnowledgeBase kb, NamedObject namedObject, Element element) {
+	public static void appendChildren(KnowledgeBase kb, AbstractTerminologyObject namedObject, Element element) {
 		List<Element> children = null;
 		NodeList childNodes = element.getChildNodes();
 		for (int i = 0; i < childNodes.getLength(); i++) {
@@ -358,7 +358,7 @@ public final class XMLUtil {
 			for (Element child : children) {
 				String id = child.getAttribute("ID");
 				String link = child.getAttribute("link");
-				NamedObject no = (NamedObject) kb.getManager().search(id);
+				AbstractTerminologyObject no = (AbstractTerminologyObject) kb.getManager().search(id);
 				if (link != null && link.equals("true")) {
 					namedObject.addLinkedChild(no);
 				}
@@ -573,7 +573,7 @@ public final class XMLUtil {
 		return ret;
 	}
 
-	public static void appendInfoStore(Element idObjectElement, IDObject idObject, Autosave autosave) throws IOException {
+	public static void appendInfoStore(Element idObjectElement, NamedObject idObject, Autosave autosave) throws IOException {
 		InfoStore infoStore = idObject.getInfoStore();
 		if (infoStore != null && !infoStore.isEmpty()) {
 			Element infoStoreElement = idObjectElement.getOwnerDocument().createElement(INFO_STORE);

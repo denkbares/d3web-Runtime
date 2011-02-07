@@ -31,7 +31,7 @@ import de.d3web.core.knowledge.InfoStore;
  * 
  * @author norman
  */
-public class Choice implements IDObject, Comparable<Choice> {
+public class Choice implements NamedObject, Comparable<Choice> {
 
 	/**
 	 * The {@link Question} instance this {@link Answer} belongs to

@@ -39,7 +39,7 @@ public abstract class SessionObject {
 	/**
 	 * Creation date: (23.05.2001 15:35:43)
 	 * 
-	 * @return the IDObject this dynamic SessionObject has been created for
+	 * @return the NamedObject this dynamic SessionObject has been created for
 	 */
 	protected CaseObjectSource getSourceObject() {
 		return sourceObject;

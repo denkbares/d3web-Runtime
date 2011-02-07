@@ -34,7 +34,7 @@ import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.CaseObjectSource;
@@ -62,7 +62,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 	private boolean considerOnlyRelevantRelations = true;
 	// TODO: store these information in the NamedObjects, also required for
 	// efficient propagation
-	private transient final Map<NamedObject, Set<XCLRelation>> coverage = new HashMap<NamedObject, Set<XCLRelation>>();
+	private transient final Map<AbstractTerminologyObject, Set<XCLRelation>> coverage = new HashMap<AbstractTerminologyObject, Set<XCLRelation>>();
 
 	public XCLModel(Solution solution) {
 		this.solution = solution;
@@ -73,7 +73,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 		contradictingRelations = new LinkedList<XCLRelation>();
 	}
 
-	public Set<NamedObject> getCoveredSymptoms() {
+	public Set<AbstractTerminologyObject> getCoveredSymptoms() {
 		return coverage.keySet();
 	}
 
@@ -198,7 +198,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 	}
 
 	public boolean addRelation(XCLRelation relation, XCLRelationType type) {
-		for (NamedObject nob : relation.getConditionedFinding().getTerminalObjects()) {
+		for (AbstractTerminologyObject nob : relation.getConditionedFinding().getTerminalObjects()) {
 			KnowledgeSlice knowledge = nob.getKnowledge(PSMethodXCL.class,
 					XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
 			XCLContributedModelSet set = null;
@@ -228,7 +228,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 	}
 
 	public void removeRelation(XCLRelation rel) {
-		for (NamedObject nob : rel.getConditionedFinding().getTerminalObjects()) {
+		for (AbstractTerminologyObject nob : rel.getConditionedFinding().getTerminalObjects()) {
 			KnowledgeSlice knowledge = nob.getKnowledge(PSMethodXCL.class,
 					XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
 			if (knowledge instanceof XCLContributedModelSet) {
@@ -251,8 +251,8 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 
 		if (theRelations.contains(relation)) return false;
 		theRelations.add(relation);
-		List<? extends NamedObject> terminalObjects = relation.getConditionedFinding().getTerminalObjects();
-		for (NamedObject no : terminalObjects) {
+		List<? extends AbstractTerminologyObject> terminalObjects = relation.getConditionedFinding().getTerminalObjects();
+		for (AbstractTerminologyObject no : terminalObjects) {
 			Set<XCLRelation> set = coverage.get(no);
 			if (set == null) {
 				set = new HashSet<XCLRelation>();

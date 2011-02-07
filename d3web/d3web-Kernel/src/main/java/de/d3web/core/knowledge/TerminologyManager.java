@@ -30,8 +30,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -69,13 +69,13 @@ public class TerminologyManager {
 
 	public void putTerminologyObject(TerminologyObject object) {
 		if (object.getId() == null) {
-			throw new IllegalStateException("IDObject " + object
+			throw new IllegalStateException("NamedObject " + object
 					+ " has no assigned ID.");
 		}
 		else if (objectIDMap.containsKey(object.getId())) {
 			if (objectIDMap.get(object.getId()) != object) {
 				throw new IllegalArgumentException(
-						"IDObject "
+						"NamedObject "
 								+ object
 								+ " cannot be added, an Object with the same id is already contained in the knowledgebase.");
 			}
@@ -162,7 +162,7 @@ public class TerminologyManager {
 	 * @throws IllegalAccessException if the knowledge could not be removed from
 	 *         the {@link KnowledgeBase}
 	 */
-	public void remove(NamedObject object) throws IllegalAccessException {
+	public void remove(AbstractTerminologyObject object) throws IllegalAccessException {
 		if ((object.getChildren() != null) && (object.getChildren().length > 0)) {
 			throw new IllegalAccessException(
 					object
@@ -170,7 +170,7 @@ public class TerminologyManager {
 		}
 		else {
 			// removes object from list of children of all parents
-			object.setParents(new ArrayList<NamedObject>(0));
+			object.setParents(new ArrayList<AbstractTerminologyObject>(0));
 			object.removeAllKnowledge();
 			objectIDMap.remove(object.getId());
 			objectNameMap.remove(object.getName());
@@ -185,7 +185,7 @@ public class TerminologyManager {
 	 */
 	public List<Solution> getSolutions() {
 		List<Solution> solutions = new ArrayList<Solution>();
-		for (IDObject o : objectIDMap.values()) {
+		for (NamedObject o : objectIDMap.values()) {
 			if (o instanceof Solution) {
 				solutions.add((Solution) o);
 			}
@@ -201,7 +201,7 @@ public class TerminologyManager {
 	 */
 	public List<QContainer> getQContainers() {
 		List<QContainer> qcontainers = new ArrayList<QContainer>();
-		for (IDObject o : objectIDMap.values()) {
+		for (NamedObject o : objectIDMap.values()) {
 			if (o instanceof QContainer) {
 				qcontainers.add((QContainer) o);
 			}
@@ -218,7 +218,7 @@ public class TerminologyManager {
 	 */
 	public List<Question> getQuestions() {
 		List<Question> questions = new ArrayList<Question>();
-		for (IDObject o : objectIDMap.values()) {
+		for (NamedObject o : objectIDMap.values()) {
 			if (o instanceof Question) {
 				questions.add((Question) o);
 			}
@@ -258,7 +258,7 @@ public class TerminologyManager {
 	 */
 	public Solution searchSolution(String id) {
 		if (objectIDMap.containsKey(id)) {
-			IDObject o = objectIDMap.get(id);
+			NamedObject o = objectIDMap.get(id);
 			if (o instanceof Solution) {
 				return (Solution) o;
 			}
@@ -275,7 +275,7 @@ public class TerminologyManager {
 	 */
 	public QASet searchQASet(String id) {
 		if (objectIDMap.containsKey(id)) {
-			IDObject o = objectIDMap.get(id);
+			NamedObject o = objectIDMap.get(id);
 			if (o instanceof QASet) {
 				return (QASet) o;
 			}
@@ -318,7 +318,7 @@ public class TerminologyManager {
 	 */
 	public QContainer searchQContainers(String id) {
 		if (objectIDMap.containsKey(id)) {
-			IDObject o = objectIDMap.get(id);
+			NamedObject o = objectIDMap.get(id);
 			if (o instanceof QContainer) {
 				return (QContainer) o;
 			}
@@ -358,7 +358,7 @@ public class TerminologyManager {
 	 */
 	public Question searchQuestion(String id) {
 		if (objectIDMap.containsKey(id)) {
-			IDObject o = objectIDMap.get(id);
+			NamedObject o = objectIDMap.get(id);
 			if (o instanceof Question) {
 				return (Question) o;
 			}
@@ -376,7 +376,7 @@ public class TerminologyManager {
 	 */
 	public List<QASet> getQASets() {
 		List<QASet> qASets = new ArrayList<QASet>();
-		for (IDObject o : objectIDMap.values()) {
+		for (NamedObject o : objectIDMap.values()) {
 			if (o instanceof QASet) {
 				qASets.add((QASet) o);
 			}
@@ -384,8 +384,8 @@ public class TerminologyManager {
 		return qASets;
 	}
 
-	public List<IDObject> getAllIDObjects() {
-		List<IDObject> objects = new LinkedList<IDObject>();
+	public List<NamedObject> getAllIDObjects() {
+		List<NamedObject> objects = new LinkedList<NamedObject>();
 		objects.addAll(getQContainers());
 		objects.addAll(getSolutions());
 		objects.addAll(getQuestions());

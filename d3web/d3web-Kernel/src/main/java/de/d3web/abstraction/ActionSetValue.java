@@ -29,7 +29,7 @@ import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
@@ -54,8 +54,8 @@ public class ActionSetValue extends PSAction {
 	 * @return all objects participating on the action.
 	 */
 	@Override
-	public List<? extends NamedObject> getBackwardObjects() {
-		List<NamedObject> terminals = new ArrayList<NamedObject>(1);
+	public List<? extends AbstractTerminologyObject> getBackwardObjects() {
+		List<AbstractTerminologyObject> terminals = new ArrayList<AbstractTerminologyObject>(1);
 		if (getQuestion() != null) {
 			terminals.add(getQuestion());
 		}

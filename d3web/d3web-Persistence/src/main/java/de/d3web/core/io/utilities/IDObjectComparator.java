@@ -20,12 +20,12 @@ package de.d3web.core.io.utilities;
 
 import java.util.Comparator;
 
-import de.d3web.core.knowledge.terminology.IDObject;
+import de.d3web.core.knowledge.terminology.NamedObject;
 
-public class IDObjectComparator implements Comparator<IDObject> {
+public class IDObjectComparator implements Comparator<NamedObject> {
 
 	@Override
-	public int compare(IDObject r1, IDObject r2) {
+	public int compare(NamedObject r1, NamedObject r2) {
 		return (r1.getId().compareTo(r2.getId()));
 	}
 

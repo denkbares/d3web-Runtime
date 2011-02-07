@@ -20,9 +20,9 @@
 
 package de.d3web.core.knowledge;
 
-import de.d3web.core.knowledge.terminology.IDObject;
+import de.d3web.core.knowledge.terminology.NamedObject;
 
-public interface TerminologyObject extends IDObject {
+public interface TerminologyObject extends NamedObject {
 
 	// --- structure of terminology ---
 	TerminologyObject[] getParents();

@@ -49,8 +49,8 @@ import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.inference.condition.TerminalCondition;
 import de.d3web.core.knowledge.terminology.AnswerNo;
 import de.d3web.core.knowledge.terminology.AnswerYes;
-import de.d3web.core.knowledge.terminology.IDObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.kernel.verbalizer.VerbalizationManager.RenderingFormat;
 
@@ -305,7 +305,7 @@ public class ConditionVerbalizer implements Verbalizer {
 
 	private CondVerbalization createTerminalConditionVerbalization(TerminalCondition tCondition) {
 
-		List<? extends NamedObject> terminalObjects = tCondition.getTerminalObjects();
+		List<? extends AbstractTerminologyObject> terminalObjects = tCondition.getTerminalObjects();
 		if (terminalObjects == null) {
 			// Fail-safe, shouldn't happen!
 			return new TerminalCondVerbalization("TerminalObject", "=", "null", "");
@@ -330,7 +330,7 @@ public class ConditionVerbalizer implements Verbalizer {
 					for (Object o : values) {
 						List<Object> value = new ArrayList<Object>();
 						value.add(o);
-						tCondVerbs.add(getTerminalCondVerbalization((IDObject) object, operator,
+						tCondVerbs.add(getTerminalCondVerbalization((NamedObject) object, operator,
 								value, tCondition.getClass().getSimpleName()));
 					}
 					return new NonTerminalCondVerbalization(tCondVerbs,
@@ -356,7 +356,7 @@ public class ConditionVerbalizer implements Verbalizer {
 			values.add(getResourceBundle().getString("rule.CondConfirmed"));
 
 		}
-		return getTerminalCondVerbalization((IDObject) object, operator, values,
+		return getTerminalCondVerbalization((NamedObject) object, operator, values,
 				tCondition.getClass().getSimpleName());
 	}
 
@@ -372,7 +372,7 @@ public class ConditionVerbalizer implements Verbalizer {
 				ntCondition.getClass().getSimpleName());
 	}
 
-	private TerminalCondVerbalization getTerminalCondVerbalization(IDObject io, String operator,
+	private TerminalCondVerbalization getTerminalCondVerbalization(NamedObject io, String operator,
 			List<Object> values, String conditionClass) {
 
 		StringBuffer answer = new StringBuffer();

@@ -25,7 +25,7 @@ import java.util.List;
 
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
@@ -61,7 +61,7 @@ public class ActionHeuristicPS extends PSAction {
 	 * @return all objects participating on the action.<BR>
 	 */
 	@Override
-	public List<? extends NamedObject> getBackwardObjects() {
+	public List<? extends AbstractTerminologyObject> getBackwardObjects() {
 		List<Solution> terminals = new ArrayList<Solution>(1);
 		if (getSolution() != null) {
 			terminals.add(getSolution());

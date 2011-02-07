@@ -38,7 +38,7 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.knowledge.terminology.IDObject;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -63,7 +63,7 @@ import de.d3web.core.manage.KnowledgeBaseManagement;
  * @see RuleComplex
  * @see QASet
  */
-public class KnowledgeBase implements IDObject, KnowledgeContainer {
+public class KnowledgeBase implements NamedObject, KnowledgeContainer {
 
 	private final InfoStore infoStore = new DefaultInfoStore();
 
@@ -112,7 +112,7 @@ public class KnowledgeBase implements IDObject, KnowledgeContainer {
 	 * An access method to retrieve the particular {@link KnowledgeSlice}
 	 * instance for a given problem-solver and the access key {@link MethodKind}
 	 * 
-	 * @return usually a List of knowledge slices relating to this NamedObject,
+	 * @return usually a List of knowledge slices relating to this AbstractTerminologyObject,
 	 *         the specified problem-solver class and it's kind.
 	 * @param problemsolver the specified problem-solver
 	 * @param kind the access key for the type of knowledge to be retrieved

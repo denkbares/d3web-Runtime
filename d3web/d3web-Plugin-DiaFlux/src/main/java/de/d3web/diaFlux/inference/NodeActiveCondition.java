@@ -24,7 +24,7 @@ import java.util.List;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
-import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.EndNode;
 
@@ -58,7 +58,7 @@ public class NodeActiveCondition implements Condition {
 	}
 
 	@Override
-	public List<? extends NamedObject> getTerminalObjects() {
+	public List<? extends AbstractTerminologyObject> getTerminalObjects() {
 		// TODO
 		return Collections.emptyList();
 	}

@@ -30,17 +30,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 
 /**
- * Unit test for {@link NamedObject}
+ * Unit test for {@link AbstractTerminologyObject}
  * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 23.08.2010
  */
 public class NamedObjectTest {
 
-	private class NamedObjectMock extends NamedObject {
+	private class NamedObjectMock extends AbstractTerminologyObject {
 
 		/**
 		 * @param id
@@ -111,7 +111,7 @@ public class NamedObjectTest {
 		}
 
 		// verify all linked children
-		Collection<NamedObject> linkedChildren = parent.getLinkedChildren();
+		Collection<AbstractTerminologyObject> linkedChildren = parent.getLinkedChildren();
 		assertThat(linkedChildren.size(), is(3));
 
 		assertThat(linkedChildren.contains(linkedChildOne), is(true));
@@ -127,11 +127,11 @@ public class NamedObjectTest {
 	}
 
 	/**
-	 * Summary: Tests the NamedObject#setChildren(java.util.List) method which
-	 * deletes all current children of the NamedObject Instance and inserts all
+	 * Summary: Tests the AbstractTerminologyObject#setChildren(java.util.List) method which
+	 * deletes all current children of the AbstractTerminologyObject Instance and inserts all
 	 * the NamedObjects from the given list as new children
 	 * 
-	 * @see NamedObject#setChildren(java.util.List)
+	 * @see AbstractTerminologyObject#setChildren(java.util.List)
 	 * 
 	 * @created 23.08.2010
 	 */
@@ -141,7 +141,7 @@ public class NamedObjectTest {
 		NamedObjectMock newChildOne = new NamedObjectMock("newChildOne");
 		NamedObjectMock newChildTwo = new NamedObjectMock("newChildTwo");
 		// create a list of the new two children
-		List<NamedObject> newChildren = new LinkedList<NamedObject>();
+		List<AbstractTerminologyObject> newChildren = new LinkedList<AbstractTerminologyObject>();
 		newChildren.add(newChildOne);
 		newChildren.add(newChildTwo);
 		// now set the list as new children of the parent
@@ -155,14 +155,14 @@ public class NamedObjectTest {
 	}
 
 	/**
-	 * Summary: Tests the NamedObject#setParents(java.util.List) method which
-	 * removes all the parents of the current NamedObject instance and inserts
+	 * Summary: Tests the AbstractTerminologyObject#setParents(java.util.List) method which
+	 * removes all the parents of the current AbstractTerminologyObject instance and inserts
 	 * all the NamedObjects from the given list as new parents.
 	 * <p>
 	 * Decouple the child "linkedChildOne" from its current parent "parent" and
 	 * give it two new parents: "newParentOne" and "newParentTwo"
 	 * 
-	 * @see NamedObject#setParents(java.util.List)
+	 * @see AbstractTerminologyObject#setParents(java.util.List)
 	 * 
 	 * @created 23.08.2010
 	 */
@@ -172,7 +172,7 @@ public class NamedObjectTest {
 		NamedObjectMock newParentOne = new NamedObjectMock("newParentOne");
 		NamedObjectMock newParentTwo = new NamedObjectMock("newParentTwo");
 		// create a list of the two new parents
-		List<NamedObject> newParents = new LinkedList<NamedObject>();
+		List<AbstractTerminologyObject> newParents = new LinkedList<AbstractTerminologyObject>();
 		newParents.add(newParentOne);
 		newParents.add(newParentTwo);
 		// now set the list as new parents of the child "linkedChildOne"
@@ -190,11 +190,11 @@ public class NamedObjectTest {
 	}
 
 	/**
-	 * Summary: Tests the NamedObject#moveChildToPosition(NamedObject, int)
+	 * Summary: Tests the AbstractTerminologyObject#moveChildToPosition(AbstractTerminologyObject, int)
 	 * method which moves a specified child to a new position in the
 	 * childrens-list
 	 * 
-	 * @see NamedObject#moveChildToPosition(NamedObject, int)
+	 * @see AbstractTerminologyObject#moveChildToPosition(AbstractTerminologyObject, int)
 	 * 
 	 * @created 23.08.2010
 	 */
@@ -226,8 +226,8 @@ public class NamedObjectTest {
 	/**
 	 * Tests the methods to remove children
 	 * 
-	 * @see NamedObject#removeChild(NamedObject)
-	 * @see NamedObject#removeLinkedChild(NamedObject)
+	 * @see AbstractTerminologyObject#removeChild(AbstractTerminologyObject)
+	 * @see AbstractTerminologyObject#removeLinkedChild(AbstractTerminologyObject)
 	 * 
 	 * @created 23.08.2010
 	 */

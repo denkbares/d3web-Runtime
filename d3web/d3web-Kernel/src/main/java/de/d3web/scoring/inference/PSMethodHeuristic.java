@@ -29,7 +29,7 @@ import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
@@ -78,7 +78,7 @@ public final class PSMethodHeuristic extends PSMethodAdapter {
 	}
 
 	/**
-	 * Check if NamedObject has nextQASet rules and check them, if available
+	 * Check if AbstractTerminologyObject has nextQASet rules and check them, if available
 	 */
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
@@ -93,7 +93,7 @@ public final class PSMethodHeuristic extends PSMethodAdapter {
 	 * @param nob
 	 */
 	private void checkRulesFor(Session session, TerminologyObject nob) {
-		KnowledgeSlice knowledgeSlices = ((NamedObject) nob).getKnowledge(this.getClass(),
+		KnowledgeSlice knowledgeSlices = ((AbstractTerminologyObject) nob).getKnowledge(this.getClass(),
 				MethodKind.FORWARD);
 		if (knowledgeSlices != null) {
 			RuleSet rs = (RuleSet) knowledgeSlices;

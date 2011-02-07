@@ -36,12 +36,12 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  * heuristic problem-solver is the default context.
  * 
  * @author joba, chris
- * @see IDObject
  * @see NamedObject
+ * @see AbstractTerminologyObject
  * @see ScoreRating
  * @see Rating
  */
-public class Solution extends NamedObject implements ValueObject {
+public class Solution extends AbstractTerminologyObject implements ValueObject {
 
 	/**
 	 * A solution can have a prior probability, that is taken into account by

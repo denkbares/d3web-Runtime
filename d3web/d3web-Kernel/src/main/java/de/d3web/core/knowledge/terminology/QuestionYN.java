@@ -46,7 +46,7 @@ public class QuestionYN extends QuestionOC {
 	 * 
 	 * @see QuestionOC
 	 * @see Question
-	 * @see NamedObject
+	 * @see AbstractTerminologyObject
 	 */
 	public QuestionYN(String id) {
 		this(id, YES_STRING, NO_STRING);

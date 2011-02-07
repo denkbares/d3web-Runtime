@@ -20,7 +20,7 @@
 
 package de.d3web.core.inference.condition;
 
-import de.d3web.core.knowledge.terminology.IDObject;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
@@ -40,9 +40,9 @@ public abstract class CondQuestion extends TerminalCondition {
 	private Question question = null;
 
 	/**
-	 * Creates a new CondQuestion instance with the specified {@link IDObject}.
+	 * Creates a new CondQuestion instance with the specified {@link NamedObject}.
 	 * 
-	 * @param idobject the specified {@link IDObject}
+	 * @param idobject the specified {@link NamedObject}
 	 */
 	protected CondQuestion(Question idobject) {
 		super(idobject);

@@ -27,7 +27,7 @@ import de.d3web.core.inference.condition.CondUnknown;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.IDObject;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
 
 /**
@@ -51,7 +51,7 @@ public class UnknownConditionHandler implements FragmentHandler {
 	public Object read(KnowledgeBase kb, Element node) throws IOException {
 		String questionID = node.getAttribute("ID");
 		if (questionID != null) {
-			IDObject idObject = kb.getManager().search(questionID);
+			NamedObject idObject = kb.getManager().search(questionID);
 			if (idObject instanceof Question) {
 				Question q = (Question) idObject;
 				return new CondUnknown(q);

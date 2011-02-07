@@ -26,11 +26,11 @@ import de.d3web.core.inference.PSMethod;
 
 /**
  * This interface describes a type that contains knowledge. Of course a
- * knowledge base does, but also a NamedObject is able to store knowledge slices
+ * knowledge base does, but also a AbstractTerminologyObject is able to store knowledge slices
  * (e.g. corresponding rules)
  * 
  * @see de.d3web.core.knowledge.KnowledgeBase
- * @see de.d3web.core.knowledge.terminology.NamedObject
+ * @see de.d3web.core.knowledge.terminology.AbstractTerminologyObject
  * @author Christian Betz
  */
 public interface KnowledgeContainer {

@@ -47,7 +47,7 @@ import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.IDObject;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.info.Property;
@@ -78,7 +78,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 			parseOldMMInfoFile(kb, listener, doc);
 		}
 		else if (rootNodeName.equals("MMInfos")) {
-			Map<String, IDObject> ansIdAnswerHash = buildAnswerIdAnswerHash(kb.getManager()
+			Map<String, NamedObject> ansIdAnswerHash = buildAnswerIdAnswerHash(kb.getManager()
 					.getQuestions());
 			List<Element> children = XMLUtil.getElementList(rootElement.getChildNodes());
 			int slicecount = children.size();
@@ -89,7 +89,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 				}
 				else if (child.getNodeName().equals("idObject")) {
 					String id = child.getAttribute("id");
-					IDObject idObject = ansIdAnswerHash.get(id);
+					NamedObject idObject = ansIdAnswerHash.get(id);
 					if (idObject == null) {
 						idObject = kb.getManager().search(id);
 					}
@@ -112,7 +112,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		listener.updateProgress(0, "Starting to save multimedia");
 		int maxvalue = getEstimatedSize(kb);
 		float aktvalue = 0;
-		List<IDObject> objects = kb.getManager().getAllIDObjects();
+		List<NamedObject> objects = kb.getManager().getAllIDObjects();
 		Collections.sort(objects, new IDObjectComparator());
 
 		Document doc = Util.createEmptyDocument();
@@ -123,7 +123,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		XMLUtil.appendInfoStoreEntries(kbElement, kb.getInfoStore(), Autosave.mminfo);
 		listener.updateProgress(aktvalue++ / maxvalue, "Saving multimedia "
 				+ Math.round(aktvalue) + " of " + maxvalue);
-		for (IDObject object : objects) {
+		for (NamedObject object : objects) {
 			Element idObjectElement = doc.createElement("idObject");
 			idObjectElement.setAttribute("id", object.getId());
 			XMLUtil.appendInfoStoreEntries(idObjectElement, object.getInfoStore(), Autosave.mminfo);
@@ -142,10 +142,10 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		return kb.getManager().getAllIDObjects().size() + 1;
 	}
 
-	private static Map<String, IDObject> buildAnswerIdAnswerHash(
+	private static Map<String, NamedObject> buildAnswerIdAnswerHash(
 			List<Question> questions) {
 
-		Map<String, IDObject> ansIdAnswerHash = new Hashtable<String, IDObject>();
+		Map<String, NamedObject> ansIdAnswerHash = new Hashtable<String, NamedObject>();
 
 		Iterator<Question> iter = questions.iterator();
 		while (iter.hasNext()) {
@@ -164,7 +164,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 	}
 
 	private void parseOldMMInfoFile(KnowledgeBase kb, ProgressListener listener, Document doc) throws NoSuchFragmentHandlerException, IOException {
-		Map<String, IDObject> ansIdAnswerHash = buildAnswerIdAnswerHash(kb.getManager()
+		Map<String, NamedObject> ansIdAnswerHash = buildAnswerIdAnswerHash(kb.getManager()
 				.getQuestions());
 		NodeList mminfos = doc.getElementsByTagName("MMInfo");
 		int slicecount = mminfos.getLength();
@@ -173,7 +173,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 
 			Node mminfo = mminfos.item(i);
 			// the former dcmarkup is repersented as a triple containing the id
-			// of the IDObject, the String of the Property and the language
+			// of the NamedObject, the String of the Property and the language
 			Triple<String, Property<?>, Locale> dcmarkup = null;
 			List<String> content = new LinkedList<String>();
 
@@ -199,7 +199,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 
 			if (objId != null) {
 
-				IDObject source = kb.getManager().searchQASet(objId);
+				NamedObject source = kb.getManager().searchQASet(objId);
 				if (source == null) source = kb.getManager().searchSolution(objId);
 				if (source == null) source = ansIdAnswerHash.get(objId);
 

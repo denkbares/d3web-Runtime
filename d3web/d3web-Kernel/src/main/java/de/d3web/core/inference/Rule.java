@@ -26,7 +26,7 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseRuleComplex;
@@ -394,12 +394,12 @@ public class Rule implements CaseObjectSource {
 	 */
 	public static void removeFrom(Rule r, Class<? extends PSMethod> psContext, MethodKind kind, TerminologyObject nob) {
 		if (nob != null) {
-			KnowledgeSlice knowledge = ((NamedObject) nob).getKnowledge(psContext, kind);
+			KnowledgeSlice knowledge = ((AbstractTerminologyObject) nob).getKnowledge(psContext, kind);
 			if (knowledge != null) {
 				RuleSet rs = (RuleSet) knowledge;
 				rs.removeRule(r);
 				if (rs.isEmpty()) {
-					((NamedObject) nob).removeKnowledge(psContext, rs, kind);
+					((AbstractTerminologyObject) nob).removeKnowledge(psContext, rs, kind);
 				}
 			}
 		}
@@ -435,7 +435,7 @@ public class Rule implements CaseObjectSource {
 	 */
 	public static void insertInto(Rule r, Class<? extends PSMethod> psContext, MethodKind kind, TerminologyObject nob) {
 		if (nob != null) {
-			KnowledgeSlice knowledge = ((NamedObject) nob).getKnowledge(psContext, kind);
+			KnowledgeSlice knowledge = ((AbstractTerminologyObject) nob).getKnowledge(psContext, kind);
 			if (knowledge != null) {
 				RuleSet rs = (RuleSet) knowledge;
 				rs.addRule(r);
@@ -443,7 +443,7 @@ public class Rule implements CaseObjectSource {
 			else {
 				RuleSet rs = new RuleSet(psContext);
 				rs.addRule(r);
-				((NamedObject) nob).addKnowledge(psContext, rs, kind);
+				((AbstractTerminologyObject) nob).addKnowledge(psContext, rs, kind);
 			}
 		}
 	}

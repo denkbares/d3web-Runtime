@@ -22,7 +22,7 @@ package de.d3web.core.manage;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.IDObject;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -109,6 +109,6 @@ public interface IDObjectManagement {
 
 	String findNewIDForAnswerChoice(QuestionChoice currentQuestion);
 
-	String findNewIDFor(Class<? extends IDObject> object);
+	String findNewIDFor(Class<? extends NamedObject> object);
 
 }
