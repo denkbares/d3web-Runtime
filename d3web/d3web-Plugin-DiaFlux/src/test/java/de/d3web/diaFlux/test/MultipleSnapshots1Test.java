@@ -25,11 +25,11 @@ import org.junit.Test;
  * @author Reinhard Hatko
  * @created 07.12.2010
  */
-public class MultipleSnapshotsTest1 extends AbstractDiaFluxTest {
+public class MultipleSnapshots1Test extends AbstractDiaFluxTest {
 
-	private static final String FILE = "MultipleSnapshotsTest1.d3web";
+	private static final String FILE = "MultipleSnapshots1Test.d3web";
 
-	public MultipleSnapshotsTest1() {
+	public MultipleSnapshots1Test() {
 		super(FILE);
 	}
 

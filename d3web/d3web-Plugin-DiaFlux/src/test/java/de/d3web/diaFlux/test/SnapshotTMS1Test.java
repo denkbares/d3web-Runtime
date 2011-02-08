@@ -30,11 +30,11 @@ import de.d3web.diaFlux.inference.DiaFluxUtils;
  * @author Reinhard Hatko
  * @created 03.12.2010
  */
-public class SnapshotTMSTest1 extends AbstractDiaFluxTest {
+public class SnapshotTMS1Test extends AbstractDiaFluxTest {
 
-	private static final String FILE = "SnapshotTMSTest1.d3web";
+	private static final String FILE = "SnapshotTMS1Test.d3web";
 
-	public SnapshotTMSTest1() {
+	public SnapshotTMS1Test() {
 		super(FILE);
 	}
 

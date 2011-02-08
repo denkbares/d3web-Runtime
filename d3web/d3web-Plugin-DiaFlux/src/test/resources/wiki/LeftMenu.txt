@@ -3,11 +3,11 @@
 __TMS__\\
 
 __Snapshot__\\
-[CircularSnapshotTest1]\\
-[SnapshotTMSTest1]\\
-[SnapshotAfterSubflowTest1]\\
-[SnapshotInSubflowTest1]\\
-[MultipleSnapshotsTest1]\\
+[CircularSnapshot1Test]\\
+[SnapshotTMS1Test]\\
+[SnapshotAfterSubflow1Test]\\
+[SnapshotInSubflow1Test]\\
+[MultipleSnapshots1Test]\\
 
 __General__\\
 [AutostartTest]\\

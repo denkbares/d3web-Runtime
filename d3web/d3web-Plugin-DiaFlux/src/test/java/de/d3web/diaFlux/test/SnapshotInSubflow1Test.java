@@ -25,11 +25,11 @@ import org.junit.Test;
  * @author Reinhard Hatko
  * @created 04.12.2010
  */
-public class SnapshotAfterSubflowTest1 extends AbstractDiaFluxTest {
+public class SnapshotInSubflow1Test extends AbstractDiaFluxTest {
 
-	private static final String FILE = "SnapshotAfterSubflowTest1.d3web";
+	private static final String FILE = "SnapshotInSubflow1Test.d3web";
 
-	public SnapshotAfterSubflowTest1() {
+	public SnapshotInSubflow1Test() {
 		super(FILE);
 	}
 
@@ -41,26 +41,41 @@ public class SnapshotAfterSubflowTest1 extends AbstractDiaFluxTest {
 	}
 
 	public void doFirstCycle() {
+
 		assertNodeStates(Flow1, start1, nodeQ1);
 		assertNodeStates(Flow2);
 
 		// Quest1 -> Answ1
 		setChoiceValue(quest1, answer1);
 
-		assertNodeStates(Flow1, start1, nodeQ1, nodeQ2);
-		assertNodeStates(Flow2);
+		assertNodeStates(Flow1, start1, nodeQ1, composed1);
+		assertNodeStates(Flow2, start1, nodeQ2);
 
-		// Quest2 -> Answ1
+		// Quest2 -> Answ1 => Snapshot
 		setChoiceValue(quest2, answer1);
 
-		assertNodeStates(Flow1, start1, nodeQ1, nodeQ2, composed1);
-		assertNodeStates(Flow2, start1, nodeQ3);
+		assertNodeStates(Flow1, composed1);
+		assertNodeStates(Flow2, snapshot1, nodeQ3);
 
-		// Quest3 -> Answ1 => Snapshot
+		// Quest3 -> Answ1
 		setChoiceValue(quest3, answer1);
 
-		assertNodeStates(Flow1, snapshot1, nodeQ4);
-		assertNodeStates(Flow2);
+		assertNodeStates(Flow1, composed1, nodeQ4);
+		assertNodeStates(Flow2, snapshot1, nodeQ3, exit1);
+
+		// Quest4 -> Answ1
+		setChoiceValue(quest4, answer1);
+
+		assertNodeStates(Flow1, composed1, nodeQ4, nodeQ1);
+		assertNodeStates(Flow2, snapshot1, nodeQ3, exit1);
+
+		// Quest1 -> Answ1 => Snapshot
+		setChoiceValue(quest1, answer1);
+		setChoiceValue(quest1, answer2);
+		setChoiceValue(quest1, answer1);
+
+		assertNodeStates(Flow1, composed1);
+		assertNodeStates(Flow2, snapshot1, nodeQ3);
 	}
 
 	@Test
@@ -73,29 +88,19 @@ public class SnapshotAfterSubflowTest1 extends AbstractDiaFluxTest {
 	}
 
 	public void doSecondCycle() {
-		// Quest4 -> Answ1
-		setChoiceValue(quest4, answer1);
 
-		assertNodeStates(Flow1, snapshot1, nodeQ4, nodeQ1);
-		assertNodeStates(Flow2);
-
-		// Quest1 -> Answ1
-		setChoiceValue(quest1, answer1);
-
-		assertNodeStates(Flow1, snapshot1, nodeQ4, nodeQ1, nodeQ2);
-		assertNodeStates(Flow2);
-
-		// Quest2 -> Answ1
-		setChoiceValue(quest2, answer1);
-
-		assertNodeStates(Flow1, snapshot1, nodeQ4, nodeQ1, nodeQ2, composed1);
-		assertNodeStates(Flow2, start1, nodeQ3);
-
-		// Quest3 -> Answ1 => Snapshot
+		// Quest3 -> Answ1
 		setChoiceValue(quest3, answer1);
 
-		assertNodeStates(Flow1, snapshot1, nodeQ4, nodeQ1);
-		assertNodeStates(Flow2);
+		assertNodeStates(Flow1, composed1, nodeQ4, nodeQ1);
+		assertNodeStates(Flow2, snapshot1, nodeQ3, exit1);
+
+		// Quest1 -> Answ1 => Snapshot
+		setChoiceValue(quest1, answer1);
+
+		assertNodeStates(Flow1, composed1);
+		assertNodeStates(Flow2, snapshot1, nodeQ3);
+
 	}
 
 	@Test

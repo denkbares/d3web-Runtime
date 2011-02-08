@@ -25,11 +25,11 @@ import org.junit.Test;
  * @author Reinhard Hatko
  * @created 03.12.2010
  */
-public class CircularSnapshotTest1 extends AbstractDiaFluxTest {
+public class CircularSnapshot1Test extends AbstractDiaFluxTest {
 
-	private static final String FILE = "CircularSnapshotTest1.d3web";
+	private static final String FILE = "CircularSnapshot1Test.d3web";
 
-	public CircularSnapshotTest1() {
+	public CircularSnapshot1Test() {
 		super(FILE);
 	}
 
