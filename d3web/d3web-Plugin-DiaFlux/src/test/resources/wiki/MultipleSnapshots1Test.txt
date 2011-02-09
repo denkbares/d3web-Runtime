@@ -1,9 +1,7 @@
 [{KnowWEPlugin quickinterview}]
 
 
-%%KnowWEPlugin
-@TagHandlerName: diaflux
-%
+%%DiaFluxState %
 
 %%DiaFlux
 

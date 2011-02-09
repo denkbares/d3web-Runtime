@@ -4,9 +4,7 @@ The cycle can be taken multiple times.
 [{KnowWEPlugin quickinterview}]
 
 
-%%KnowWEPlugin
-@TagHandlerName: diaflux
-%
+%%DiaFluxState %
 
 %%DiaFlux
 

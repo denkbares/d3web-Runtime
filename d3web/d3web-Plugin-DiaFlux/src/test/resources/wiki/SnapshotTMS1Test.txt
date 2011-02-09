@@ -11,9 +11,8 @@ ATM the second snapshot is taken, as the SSN is supported by its ValidSupport, a
 [{KnowWEPlugin quickinterview}]
 
 
-%%KnowWEPlugin
-@TagHandlerName: diaflux
-%
+%%DiaFluxState %
+
 %%DiaFlux
 
 <flowchart fcid="sh001" name="Flow1" icon="sanduhr.gif" width="750" height="200" autostart="true" idCounter="41">

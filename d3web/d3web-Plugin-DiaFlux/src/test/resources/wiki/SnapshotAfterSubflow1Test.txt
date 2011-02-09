@@ -6,9 +6,7 @@ After reaching the snapshot node, Flow1 must also be snapshotted. Multiple circu
 [{KnowWEPlugin quickinterview}]
 
 
-%%KnowWEPlugin
-@TagHandlerName: diaflux
-%
+%%DiaFluxState %
 
 %%DiaFlux
 
