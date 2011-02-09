@@ -38,14 +38,14 @@ import de.d3web.core.knowledge.KnowledgeContainer;
 import de.d3web.core.knowledge.TerminologyObject;
 
 /**
- * AbstractTerminologyObject is parent of knowledge-base objects such as QASet, Question,
- * Diagnosis or Answer. <BR>
+ * AbstractTerminologyObject is parent of knowledge-base objects such as QASet,
+ * Question, Diagnosis or Answer. <BR>
  * 
  * It provides a map, to store information relevant to the problem-solving
  * methods used in the knowledge base. Each problem-solver should use this map
  * to store the knowledge it needs for this single AbstractTerminologyObject. <BR>
- * A AbstractTerminologyObject contains a Map (name: properties) to store additional
- * properties dynamically. <BR>
+ * A AbstractTerminologyObject contains a Map (name: properties) to store
+ * additional properties dynamically. <BR>
  * Further there is a property "timeValued", which indicates if this Object is
  * able to change over time or not (default: not timeValued).
  * 
@@ -59,12 +59,12 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	/**
 	 * Representing a short name of the object.
 	 */
-	private String name;
+	private final String name;
 
 	/**
 	 * The knowledge base this object belongs to.
 	 */
-	private KnowledgeBase knowledgeBase;
+	private final KnowledgeBase knowledgeBase;
 
 	/**
 	 * The parents of this object (including the linked parents).
@@ -97,8 +97,6 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 
 	private final InfoStore infoStore = new DefaultInfoStore();
 
-	private final String id;
-
 	private void init() {
 		// unsynchronized version, allows null values
 		knowledgeMap = new HashMap<Class<? extends PSMethod>, Map<MethodKind, KnowledgeSlice>>();
@@ -110,23 +108,35 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	}
 
 	/**
-	 * Creates a new {@link AbstractTerminologyObject} instance with a given ID.
+	 * Creates a new {@link AbstractTerminologyObject} instance with a given
+	 * name and inserts the newly created object to the KnowledgeBase.
 	 * 
 	 * @param id The global identifier of the instance
+	 * @throws NullPointerException if kb or name is null
 	 */
-	public AbstractTerminologyObject(String id) {
-		this.id = id;
+	public AbstractTerminologyObject(KnowledgeBase kb, String name) {
+		if (kb == null) {
+			throw new NullPointerException("KnowledgeBase of an id object must not be null");
+		}
+		if (name == null) {
+			throw new NullPointerException("Name of an id object must not be null");
+		}
+		this.knowledgeBase = kb;
+		this.name = name;
+		kb.getManager().putTerminologyObject(this);
 		init();
 	}
 
 	@Override
+	@Deprecated
 	public String getId() {
-		return id;
+		return getName();
 	}
 
 	/**
-	 * Appends the specified {@link AbstractTerminologyObject} as a child to the list of
-	 * children. This object is also linked as a parent to the specified child.
+	 * Appends the specified {@link AbstractTerminologyObject} as a child to the
+	 * list of children. This object is also linked as a parent to the specified
+	 * child.
 	 * 
 	 * @param child a new child of this {@link AbstractTerminologyObject}
 	 * @see #addParent(AbstractTerminologyObject parent)
@@ -138,10 +148,11 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	}
 
 	/**
-	 * Appends the specified {@link AbstractTerminologyObject} as a 'linked child' to the list
-	 * of children. A linked child relation denotes, that the link is not
-	 * static, but the child is located at another position in the hierarchy.
-	 * This object is also linked as a linked parent to the specified child.
+	 * Appends the specified {@link AbstractTerminologyObject} as a 'linked
+	 * child' to the list of children. A linked child relation denotes, that the
+	 * link is not static, but the child is located at another position in the
+	 * hierarchy. This object is also linked as a linked parent to the specified
+	 * child.
 	 * 
 	 * @param child the new linked child
 	 */
@@ -157,8 +168,9 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 
 	/**
 	 * Adds a new {@link KnowledgeSlice} instance to the knowledge storage of
-	 * this {@link AbstractTerminologyObject} instance. The knowledge is added to the given
-	 * {@link PSMethod} context with the specified {@link MethodKind} as key.
+	 * this {@link AbstractTerminologyObject} instance. The knowledge is added
+	 * to the given {@link PSMethod} context with the specified
+	 * {@link MethodKind} as key.
 	 * 
 	 * @param poblemsolver the {@link PSMethod} context of the added knowledge
 	 * @param knowlegeSlice the piece of knowledge to be added
@@ -198,9 +210,9 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	}
 
 	/**
-	 * Adds the specified list of {@link AbstractTerminologyObject} instances as parents to
-	 * the list of parents. The objects are also linked as children to the
-	 * specified parent.
+	 * Adds the specified list of {@link AbstractTerminologyObject} instances as
+	 * parents to the list of parents. The objects are also linked as children
+	 * to the specified parent.
 	 * 
 	 * @param newParents the list parents to be added
 	 */
@@ -213,9 +225,9 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	}
 
 	/**
-	 * Adds this {@link AbstractTerminologyObject} as a child to the specified parent and the
-	 * specified parent is added to the 'parents' list of this instance. This
-	 * instance is appended to the parent's list of children.
+	 * Adds this {@link AbstractTerminologyObject} as a child to the specified
+	 * parent and the specified parent is added to the 'parents' list of this
+	 * instance. This instance is appended to the parent's list of children.
 	 * 
 	 * @param parent a new parent of this instance
 	 */
@@ -231,10 +243,10 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	}
 
 	/**
-	 * Adds this {@link AbstractTerminologyObject} as a linked child to the specified parent
-	 * and the specified parent is added to the 'linked parents' list of this
-	 * instance. This instance is appended to the linked parent's list of
-	 * children.
+	 * Adds this {@link AbstractTerminologyObject} as a linked child to the
+	 * specified parent and the specified parent is added to the 'linked
+	 * parents' list of this instance. This instance is appended to the linked
+	 * parent's list of children.
 	 * 
 	 * @param parent a new linked parent of this instance
 	 */
@@ -280,8 +292,8 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	}
 
 	/**
-	 * Checks, whether this instance has the specified {@link AbstractTerminologyObject} as
-	 * parent.
+	 * Checks, whether this instance has the specified
+	 * {@link AbstractTerminologyObject} as parent.
 	 * 
 	 * @param namedObject the specified object that is possibly a parent
 	 * @return true, if namedObject is a parent of this instance
@@ -304,9 +316,10 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	}
 
 	/**
-	 * The text of a {@link AbstractTerminologyObject} is the name or a short description of
-	 * the object. Please keep it brief and use other fields for longer content
-	 * (e.g., prompt for {@link Question}, and comments for {@link Solution}).
+	 * The text of a {@link AbstractTerminologyObject} is the name or a short
+	 * description of the object. Please keep it brief and use other fields for
+	 * longer content (e.g., prompt for {@link Question}, and comments for
+	 * {@link Solution}).
 	 * 
 	 * @return the name of this object
 	 */
@@ -351,9 +364,9 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 
 	/**
 	 * Removes the specified {@link KnowledgeSlice} instance from the knowledge
-	 * storage of this {@link AbstractTerminologyObject} instance. The knowledge is assumed to
-	 * be contained in the given {@link PSMethod} context with the specified
-	 * {@link MethodKind} as key.
+	 * storage of this {@link AbstractTerminologyObject} instance. The knowledge
+	 * is assumed to be contained in the given {@link PSMethod} context with the
+	 * specified {@link MethodKind} as key.
 	 * 
 	 * @param problemsolver the {@link PSMethod} context
 	 * @param knowledgeSlice the element to be removed
@@ -465,8 +478,8 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	}
 
 	/**
-	 * Removes the specified {@link AbstractTerminologyObject} instance from the list of
-	 * parents.
+	 * Removes the specified {@link AbstractTerminologyObject} instance from the
+	 * list of parents.
 	 * 
 	 * @param parent the instance to be removed from the list of parents
 	 */
@@ -478,8 +491,8 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	}
 
 	/**
-	 * Removes the specified {@link AbstractTerminologyObject} instance from the list of
-	 * linked parents.
+	 * Removes the specified {@link AbstractTerminologyObject} instance from the
+	 * list of linked parents.
 	 * 
 	 * @param parent the instance to be removed from the list of linked parents
 	 */
@@ -492,8 +505,8 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	}
 
 	/**
-	 * Sets the specified list of {@link AbstractTerminologyObject} instances as the complete
-	 * list of children of this object.
+	 * Sets the specified list of {@link AbstractTerminologyObject} instances as
+	 * the complete list of children of this object.
 	 * 
 	 * @param the new list of children of this instance
 	 */
@@ -504,26 +517,8 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	}
 
 	/**
-	 * Relates this instance to the specified {@link KnowledgeBase}.
-	 * 
-	 * @param knowledgeBase the new knowledge base this object is related to
-	 * @throws KnowledgeBaseObjectModificationException if a
-	 *         {@link KnowledgeBase} has been already defined previously
-	 */
-	@Override
-	public void setKnowledgeBase(KnowledgeBase knowledgeBase) {
-		if (this.knowledgeBase == null) {
-			this.knowledgeBase = knowledgeBase;
-		}
-		else if (!knowledgeBase.equals(getKnowledgeBase())) {
-			throw new IllegalStateException(
-					"KnowledgeBase already defined!");
-		}
-	}
-
-	/**
-	 * Sets the specified list of {@link AbstractTerminologyObject} instances as the complete
-	 * list of parents of this object.
+	 * Sets the specified list of {@link AbstractTerminologyObject} instances as
+	 * the complete list of parents of this object.
 	 * 
 	 * @param the new list of parents of this instance
 	 */
@@ -532,18 +527,6 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 		addToNewParents(parents); // to the new parents
 		this.parents = parents; // NB: set the parents here!
 		// due to the hasParent/hasChild check!!
-	}
-
-	/**
-	 * Sets the new text of this object. The text of a {@link AbstractTerminologyObject} is
-	 * the name or a short description of the object. Please keep it brief and
-	 * use other fields for longer content (e.g., prompt for {@link Question},
-	 * and comments for {@link Solution}).
-	 * 
-	 * @param text the new text of this instance
-	 */
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	@Override
@@ -591,8 +574,8 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 		}
 		else {
 			NamedObject otherIDO = (NamedObject) other;
-			if ((getId() != null) && (otherIDO.getId() != null)) {
-				return getId().equals(otherIDO.getId());
+			if ((getName() != null) && (otherIDO.getName() != null)) {
+				return getName().equals(otherIDO.getName());
 			}
 			else {
 				return super.equals(other);
@@ -604,7 +587,7 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
 

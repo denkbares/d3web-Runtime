@@ -112,8 +112,9 @@ public class KnowledgeBase implements NamedObject, KnowledgeContainer {
 	 * An access method to retrieve the particular {@link KnowledgeSlice}
 	 * instance for a given problem-solver and the access key {@link MethodKind}
 	 * 
-	 * @return usually a List of knowledge slices relating to this AbstractTerminologyObject,
-	 *         the specified problem-solver class and it's kind.
+	 * @return usually a List of knowledge slices relating to this
+	 *         AbstractTerminologyObject, the specified problem-solver class and
+	 *         it's kind.
 	 * @param problemsolver the specified problem-solver
 	 * @param kind the access key for the type of knowledge to be retrieved
 	 */

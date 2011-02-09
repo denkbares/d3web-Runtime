@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <KnowledgeBase system="d3web" type="xclpattern">
 <KnowledgeSlices>
-<XCLModel ID="XCLM_P1" SID="P1" considerOnlyRelevantRelations="true">
+<XCLModel ID="XCLM_P1" SID="Clogged air filter  " considerOnlyRelevantRelations="true">
 <necessaryRelations>
 <relation ID="XCLRelation_1132">
-<Condition ID="Q12" type="equal" value="Q12a6"/>
+<Condition name="Driving" type="equal" value="weak acceleration"/>
 </relation>
 </necessaryRelations>
 <sufficientRelations>
 <relation ID="XCLRelation_1130">
-<Condition ID="Q17" type="equal" value="Q17a2"/>
+<Condition name="Air filter o.k.?" type="equal" value="no"/>
 </relation>
 </sufficientRelations>
 <contradictingRelations>
 <relation ID="XCLRelation_1131">
-<Condition ID="Q17" type="equal" value="Q17a1"/>
+<Condition name="Air filter o.k.?" type="equal" value="yes"/>
 </relation>
 </contradictingRelations>
 <Relations>
 <relation ID="XCLRelation_1133">
-<Condition ID="Q3" type="equal" value="Q3a1"/>
+<Condition name="Exhaust pipe color evaluation" type="equal" value="abnormal"/>
 </relation>
 <relation ID="XCLRelation_1134">
-<Condition ID="Q7" type="equal" value="Q7a3"/>
+<Condition name="Mileage evaluation" type="equal" value="increased"/>
 <weight>3.0</weight>
 </relation>
 </Relations>
 </XCLModel>
-<XCLModel ID="XCLM_P2" SID="P2" considerOnlyRelevantRelations="true">
+<XCLModel ID="XCLM_P2" SID="Damaged idle speed system " considerOnlyRelevantRelations="true">
 <necessaryRelations>
 <relation ID="XCLRelation_1137">
-<Condition ID="Q10" type="equal" value="Q10a1"/>
+<Condition name="Engine start" type="equal" value="engine barely starts"/>
 </relation>
 </necessaryRelations>
 <sufficientRelations>
 <relation ID="XCLRelation_1135">
-<Condition ID="Q15" type="equal" value="Q15a2"/>
+<Condition name="Idle speed system o.k.?" type="equal" value="no"/>
 </relation>
 </sufficientRelations>
 <contradictingRelations>
 <relation ID="XCLRelation_1136">
-<Condition ID="Q15" type="equal" value="Q15a1"/>
+<Condition name="Idle speed system o.k.?" type="equal" value="yes"/>
 </relation>
 </contradictingRelations>
 <Relations>
 <relation ID="XCLRelation_1138">
-<Condition ID="Q12" type="equal" value="Q12a4"/>
+<Condition name="Driving" type="equal" value="low idle speed"/>
 </relation>
 </Relations>
 </XCLModel>

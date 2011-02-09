@@ -21,7 +21,7 @@
 <plugin ID="d3web-Kernel-ExtensionPoints" autodetect="true" necessary="true"/>
 <plugin ID="d3web-Persistence-ImageQuestion" autodetect="true" necessary="false"/>
 <plugin ID="d3web-XCL" autodetect="true" necessary="false"/>
-<plugin ID="knowledgePersistenceShared" autodetect="true" necessary="true"/>
+<plugin ID="knowledgePersistenceShared" autodetect="true" necessary="false"/>
 </plugins>
 <psmethods>
 <psEntry extensionID="PSMethodXCL" pluginID="d3web-XCL" priority="5.0" state="autodetect">

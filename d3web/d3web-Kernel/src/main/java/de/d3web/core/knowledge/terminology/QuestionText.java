@@ -20,6 +20,8 @@
 
 package de.d3web.core.knowledge.terminology;
 
+import de.d3web.core.knowledge.KnowledgeBase;
+
 /**
  * A question which asks for a string text.
  * 
@@ -30,8 +32,8 @@ public class QuestionText extends Question {
 	private int height;
 	private int width;
 
-	public QuestionText(String id) {
-		super(id);
+	public QuestionText(KnowledgeBase kb, String name) {
+		super(kb, name);
 	}
 
 	/**

@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import de.d3web.core.io.fragments.SolutionsHandler;
 import de.d3web.core.io.utilities.Util;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.persistence.tests.utils.XMLTag;
@@ -52,19 +53,14 @@ public class SolutionTest {
 		InitPluginManager.init();
 
 		// create the diagnosis
-		diag = new Solution("d1");
-		diag.setName("d1-text");
+		diag = new Solution(new KnowledgeBase(), "d1");
 
 		dh = new SolutionsHandler();
 
 		// first step in building shouldTag: id and text always added in
 		// shouldTag
 		shouldTag = new XMLTag("Diagnosis");
-		shouldTag.addAttribute("ID", "d1");
-
-		XMLTag shouldTextTag = new XMLTag("Text");
-		shouldTextTag.setContent("d1-text");
-		shouldTag.addChild(shouldTextTag);
+		shouldTag.addAttribute("name", "d1");
 	}
 
 	@Test

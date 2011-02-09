@@ -52,6 +52,7 @@ import de.d3web.core.io.fragments.conditions.ConditionSolutionConfirmedHandler;
 import de.d3web.core.io.fragments.conditions.ConditionSolutionRejectedHandler;
 import de.d3web.core.io.fragments.conditions.OrConditionHandler;
 import de.d3web.core.io.utilities.Util;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
@@ -84,24 +85,21 @@ public class ConditionTest {
 	@Before
 	public void setUp() throws IOException {
 		InitPluginManager.init();
+		KnowledgeBase kb = new KnowledgeBase();
+		d1 = new Solution(kb, "d1-id");
 
-		d1 = new Solution("d1-id");
-
-		Question qoc1 = new QuestionOC("qoc1-id");
-		QuestionNum qnum1 = new QuestionNum("qnum1-id");
-		QuestionNum qnum2 = new QuestionNum("qnum2-id");
-		QuestionText qt1 = new QuestionText("qt1-id");
-		qt1.setName("qt1-text");
+		Question qoc1 = new QuestionOC(kb, "qoc1-id");
+		QuestionNum qnum1 = new QuestionNum(kb, "qnum1-id");
+		QuestionNum qnum2 = new QuestionNum(kb, "qnum2-id");
+		QuestionText qt1 = new QuestionText(kb, "qt1-id");
 
 		Vector<Choice> val1 = new Vector<Choice>();
 		Vector<Choice> val2 = new Vector<Choice>();
 
 		Choice ach1 = new Choice("ach1-id");
-		ach1.setText("ach1-text");
 		val1.add(ach1);
 
 		Choice ach2 = new Choice("ach2-id");
-		ach2.setText("ach2-text");
 		val1.add(ach2);
 		val2.add(ach2);
 
@@ -133,23 +131,23 @@ public class ConditionTest {
 
 		XMLTag condNumE = new XMLTag("Condition");
 		condNumE.addAttribute("type", "numEqual");
-		condNumE.addAttribute("ID", "qnum1-id");
+		condNumE.addAttribute("name", "qnum1-id");
 		condNumE.addAttribute("value", "4.5");
 
 		XMLTag condNumIn = new XMLTag("Condition");
 		condNumIn.addAttribute("type", "numIn");
-		condNumIn.addAttribute("ID", "qnum2-id");
+		condNumIn.addAttribute("name", "qnum2-id");
 		condNumIn.addAttribute("minValue", "4.0");
 		condNumIn.addAttribute("maxValue", "12.0");
 
 		XMLTag condNumG = new XMLTag("Condition");
 		condNumG.addAttribute("type", "numGreater");
-		condNumG.addAttribute("ID", "qnum1-id");
+		condNumG.addAttribute("name", "qnum1-id");
 		condNumG.addAttribute("value", "10.0");
 
 		XMLTag condNumL = new XMLTag("Condition");
 		condNumL.addAttribute("type", "numLess");
-		condNumL.addAttribute("ID", "qnum2-id");
+		condNumL.addAttribute("name", "qnum2-id");
 		condNumL.addAttribute("value", "3.0");
 
 		shouldTag.addChild(condNumE);
@@ -197,7 +195,7 @@ public class ConditionTest {
 
 		XMLTag numGreaterTag1 = new XMLTag("Condition");
 		numGreaterTag1.addAttribute("type", "numGreater");
-		numGreaterTag1.addAttribute("ID", "qnum1-id");
+		numGreaterTag1.addAttribute("name", "qnum1-id");
 		numGreaterTag1.addAttribute("value", "10.0");
 		andTag1.addChild(numGreaterTag1);
 
@@ -206,7 +204,7 @@ public class ConditionTest {
 
 		XMLTag dStateTag1 = new XMLTag("Condition");
 		dStateTag1.addAttribute("type", "DState");
-		dStateTag1.addAttribute("ID", "d1-id");
+		dStateTag1.addAttribute("name", "d1-id");
 		dStateTag1.addAttribute("value", "SUGGESTED");
 		notTag1.addChild(dStateTag1);
 
@@ -222,7 +220,7 @@ public class ConditionTest {
 
 		XMLTag tContainsTag1 = new XMLTag("Condition");
 		tContainsTag1.addAttribute("type", "textContains");
-		tContainsTag1.addAttribute("ID", "qt1-id");
+		tContainsTag1.addAttribute("name", "qt1-id");
 		// tContainsTag1.addAttribute("value", "qt1-text");
 		XMLTag var1 = new XMLTag("Value");
 		var1.setContent("text");
@@ -249,7 +247,7 @@ public class ConditionTest {
 
 		XMLTag tContainsTag1 = new XMLTag("Condition");
 		tContainsTag1.addAttribute("type", "textContains");
-		tContainsTag1.addAttribute("ID", "qt1-id");
+		tContainsTag1.addAttribute("name", "qt1-id");
 
 		// tContainsTag1.addAttribute("value", "text");
 		XMLTag var1 = new XMLTag("Value");
@@ -260,7 +258,7 @@ public class ConditionTest {
 
 		XMLTag tEqualTag1 = new XMLTag("Condition");
 		tEqualTag1.addAttribute("type", "textEqual");
-		tEqualTag1.addAttribute("ID", "qt1-id");
+		tEqualTag1.addAttribute("name", "qt1-id");
 
 		// tEqualTag1.addAttribute("value", "");
 		XMLTag var2 = new XMLTag("Value");
@@ -287,12 +285,12 @@ public class ConditionTest {
 
 		XMLTag cKnownTag1 = new XMLTag("Condition");
 		cKnownTag1.addAttribute("type", "known");
-		cKnownTag1.addAttribute("ID", "qnum1-id");
+		cKnownTag1.addAttribute("name", "qnum1-id");
 		shouldTag.addChild(cKnownTag1);
 
 		XMLTag cUnKnownTag1 = new XMLTag("Condition");
 		cUnKnownTag1.addAttribute("type", "unknown");
-		cUnKnownTag1.addAttribute("ID", "qoc1-id");
+		cUnKnownTag1.addAttribute("name", "qoc1-id");
 		shouldTag.addChild(cUnKnownTag1);
 
 		isTag = new XMLTag(new OrConditionHandler().write(ac1, Util.createEmptyDocument()));
@@ -307,21 +305,20 @@ public class ConditionTest {
 	 */
 	@Test
 	public void testCondSolutionConfirmed() throws Exception {
-		
+
 		CondSolutionConfirmed cond = new CondSolutionConfirmed(d1);
-		
+
 		shouldTag = new XMLTag("Condition");
 		shouldTag.addAttribute("type", ConditionSolutionConfirmedHandler.TYPE);
-		shouldTag.addAttribute("ID", "d1-id");
+		shouldTag.addAttribute("name", "d1-id");
 
 		isTag = new XMLTag(new ConditionSolutionConfirmedHandler().write(cond,
 				Util.createEmptyDocument()));
 
 		Assert.assertEquals(isTag, shouldTag);
-		
 
 	}
-	
+
 	/**
 	 * 
 	 * @throws Exception
@@ -334,7 +331,7 @@ public class ConditionTest {
 
 		shouldTag = new XMLTag("Condition");
 		shouldTag.addAttribute("type", ConditionSolutionRejectedHandler.TYPE);
-		shouldTag.addAttribute("ID", "d1-id");
+		shouldTag.addAttribute("name", "d1-id");
 
 		isTag = new XMLTag(new ConditionSolutionRejectedHandler().write(cond,
 				Util.createEmptyDocument()));
@@ -342,5 +339,5 @@ public class ConditionTest {
 		Assert.assertEquals(isTag, shouldTag);
 
 	}
-	
+
 }

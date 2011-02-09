@@ -52,12 +52,9 @@ public class RuleUpdateTest {
 	public void testWithoutCondition() throws IOException {
 		InitPluginManager.init();
 		KnowledgeBase kb = KnowledgeBaseManagement.createInstance().getKnowledgeBase();
-		QuestionNum bmi = new QuestionNum("bmi");
-		bmi.setName(bmi.getId());
-		QuestionNum weight = new QuestionNum("weight");
-		weight.setName(weight.getId());
-		QuestionNum height = new QuestionNum("height");
-		height.setName(height.getId());
+		QuestionNum bmi = new QuestionNum(kb, "bmi");
+		QuestionNum weight = new QuestionNum(kb, "weight");
+		QuestionNum height = new QuestionNum(kb, "height");
 		kb.getManager().putTerminologyObject(bmi);
 		kb.getManager().putTerminologyObject(weight);
 		kb.getManager().putTerminologyObject(height);

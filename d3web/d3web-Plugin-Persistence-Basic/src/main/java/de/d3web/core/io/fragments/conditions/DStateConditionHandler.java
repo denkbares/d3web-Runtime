@@ -51,7 +51,7 @@ public class DStateConditionHandler implements FragmentHandler {
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		String solutionID = element.getAttribute("ID");
+		String solutionID = element.getAttribute("name");
 		String value = element.getAttribute("value");
 		if (solutionID != null && value != null) {
 			NamedObject idObject = kb.getManager().search(solutionID);

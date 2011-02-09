@@ -121,7 +121,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 	private Element getElement(StateTransition st, Document doc) throws IOException {
 		Element element = doc.createElement("StateTransition");
 		element.setAttribute("ID", st.getId());
-		element.setAttribute("QID", st.getQcontainer().getId());
+		element.setAttribute("QID", st.getQcontainer().getName());
 		Condition activationCondition = st.getActivationCondition();
 		if (activationCondition != null) {
 			Element aCElement = doc.createElement("activationCondition");
@@ -142,7 +142,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 		if (vt.getQuestion() == null) {
 			throw new IOException("ValueTransition has no question");
 		}
-		element.setAttribute("QID", vt.getQuestion().getId());
+		element.setAttribute("QID", vt.getQuestion().getName());
 		List<ConditionalValueSetter> setters = vt.getSetters();
 		for (ConditionalValueSetter cvs : setters) {
 			element.appendChild(getElement(cvs, doc));

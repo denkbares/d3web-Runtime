@@ -85,7 +85,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 		if (xclmodel.getEstablishedThreshold() != null) modelelement.setAttribute(
 				"establishedThreshold", "" + xclmodel.getEstablishedThreshold());
 		modelelement.setAttribute("ID", xclmodel.getId());
-		modelelement.setAttribute("SID", xclmodel.getSolution().getId());
+		modelelement.setAttribute("SID", xclmodel.getSolution().getName());
 		modelelement.setAttribute("considerOnlyRelevantRelations", ""
 				+ xclmodel.isConsiderOnlyRelevantRelations());
 		modelelement.appendChild(getRelationsElement(xclmodel.getNecessaryRelations(),
@@ -178,7 +178,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 	}
 
 	private void addKnowledge(KnowledgeBaseManagement kbm, Node current) throws IOException {
-		String solutionID = getAttribute("SID", current);
+		String solutionName = getAttribute("SID", current);
 		String id = getAttribute("ID", current);
 		String minSupportS = getAttribute("minSupport", current);
 		String suggestedThresholdS = getAttribute("suggestedThreshold", current);
@@ -186,7 +186,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 				current);
 		String considerOnlyRelevantRelations = getAttribute("considerOnlyRelevantRelations",
 				current);
-		Solution diag = kbm.findSolution(solutionID);
+		Solution diag = kbm.findSolution(solutionName);
 		XCLModel model = new XCLModel(diag);
 		NodeList relations = current.getChildNodes();
 		for (int i = 0; i < relations.getLength(); i++) {

@@ -115,7 +115,7 @@ public class RunningACase {
 				"yes",
 				"no" });
 		yes = new ChoiceValue(kbm.findChoice(pregnant, "yes"));
-		weight = kbm.createQuestionNum("weight", "weight", demoQuestions);
+		weight = kbm.createQuestionNum("weight", demoQuestions);
 
 		dangerousMood = kbm.createSolution("dangerousMood");
 

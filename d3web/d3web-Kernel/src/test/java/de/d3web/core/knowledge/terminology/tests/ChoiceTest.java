@@ -29,6 +29,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.AnswerNo;
 import de.d3web.core.knowledge.terminology.AnswerYes;
 import de.d3web.core.knowledge.terminology.Choice;
@@ -50,24 +51,7 @@ public class ChoiceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		choice = new Choice("choice");
-		choice.setText("text");
-	}
-
-	/**
-	 * Summary: Tests the getter and setter of text/name
-	 * 
-	 * @see Choice#setText(String)
-	 * @see Choice#getName()
-	 * @see Choice#toString()
-	 * 
-	 * @created 24.08.2010
-	 */
-	@Test
-	public void testTextGetterSetter() {
-		choice.setText("text to set");
-		assertThat(choice.getName(), is("text to set"));
-		assertThat(choice.toString(), is("text to set"));
+		choice = new Choice("text");
 	}
 
 	/**
@@ -103,7 +87,7 @@ public class ChoiceTest {
 		choicesList.add(choiceTwo);
 		choicesList.add(choiceThree);
 
-		QuestionOC question = new QuestionOC("id");
+		QuestionOC question = new QuestionOC(new KnowledgeBase(), "id");
 		question.setAlternatives(choicesList);
 
 		// choiceOne is two answer alternatives in front of choiceThree

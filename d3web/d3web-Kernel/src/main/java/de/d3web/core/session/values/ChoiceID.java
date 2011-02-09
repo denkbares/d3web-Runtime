@@ -56,7 +56,7 @@ public class ChoiceID implements Comparable<ChoiceID> {
 	 * @throws NullPointerException if a null object was passed in
 	 */
 	public ChoiceID(Choice choice) {
-		this(choice.getName() == null ? choice.getId() : choice.getName());
+		this(choice.getName());
 	}
 
 	public String getText() {
@@ -75,9 +75,6 @@ public class ChoiceID implements Comparable<ChoiceID> {
 	public Choice getChoice(QuestionChoice question) {
 		for (Choice choice : question.getAllAlternatives()) {
 			if (text.equals(choice.getName())) {
-				return choice;
-			}
-			if (text.equals(choice.getId())) {
 				return choice;
 			}
 		}

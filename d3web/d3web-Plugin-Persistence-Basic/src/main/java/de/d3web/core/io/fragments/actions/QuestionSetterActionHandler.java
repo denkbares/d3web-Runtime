@@ -70,7 +70,7 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 		for (int i = 0; i < nl.getLength(); ++i) {
 			Node child = nl.item(i);
 			if (child.getNodeName().equalsIgnoreCase("question")) {
-				String id = child.getAttributes().getNamedItem("ID").getNodeValue();
+				String id = child.getAttributes().getNamedItem("name").getNodeValue();
 				question = kb.getManager().searchQuestion(id);
 			}
 			else if (child.getNodeName().equalsIgnoreCase("values")) {
@@ -83,8 +83,8 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 						String type = valNode.getAttributes().getNamedItem("type").getNodeValue();
 						if (type.equalsIgnoreCase("answer")
 								|| type.equalsIgnoreCase("answerChoice")) {
-							String id = valNode.getAttributes().getNamedItem("ID").getNodeValue();
-							parsedValues.add(new ChoiceValue(kb.getManager().searchAnswerChoice(id)));
+							String name = valNode.getAttributes().getNamedItem("name").getNodeValue();
+							parsedValues.add(new ChoiceValue(name));
 						}
 						else if (type.equalsIgnoreCase("evaluatable")) {
 							List<Element> childNodes = XMLUtil.getElementList(valNode.getChildNodes());
@@ -121,25 +121,25 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 		Element questionNode = doc.createElement("Question");
 		String questionId = "";
 		if (question != null) {
-			questionId = question.getId();
+			questionId = question.getName();
 		}
-		questionNode.setAttribute("ID", questionId);
+		questionNode.setAttribute("name", questionId);
 		element.appendChild(questionNode);
 		Element valuesNode = doc.createElement("Values");
 		FragmentManager pm = PersistenceManager.getInstance();
 		if (action != null && action.getValue() instanceof Value) {
-			String id = "";
+			String name = "";
 			if (action.getValue() instanceof ChoiceValue) {
 				ChoiceValue cv = (ChoiceValue) (action.getValue());
 				Choice choice = cv.getChoice((QuestionChoice) question);
-				id = choice.getId();
+				name = choice.getName();
 			}
 			else {
-				id = ((Value) (action.getValue())).getValue().toString();
+				name = ((Value) (action.getValue())).getValue().toString();
 			}
 			Element valueNode = doc.createElement("Value");
 			valueNode.setAttribute("type", "answer");
-			valueNode.setAttribute("ID", id);
+			valueNode.setAttribute("name", name);
 			valuesNode.appendChild(valueNode);
 		}
 		else {
@@ -148,12 +148,12 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 				for (Object o : list) {
 					if (o instanceof Choice) {
 						Choice a = (Choice) o;
-						if (a.getId() == null) {
+						if (a.getName() == null) {
 							throw new IOException("Answer " + a.getName() + " has no ID");
 						}
 						Element valueNode = doc.createElement("Value");
 						valueNode.setAttribute("type", "answer");
-						valueNode.setAttribute("ID", a.getId());
+						valueNode.setAttribute("name", a.getName());
 						valuesNode.appendChild(valueNode);
 					}
 					else if (o != null) {

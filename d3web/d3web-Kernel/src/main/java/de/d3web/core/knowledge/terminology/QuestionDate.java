@@ -23,6 +23,8 @@
  */
 package de.d3web.core.knowledge.terminology;
 
+import de.d3web.core.knowledge.KnowledgeBase;
+
 /**
  * A Question which asks for a date.
  * 
@@ -38,8 +40,8 @@ public class QuestionDate extends Question {
 	public final static String TYPE_TIME = "time";
 	public final static String TYPE_DATE_TIME = "date_time";
 
-	public QuestionDate(String id) {
-		super(id);
+	public QuestionDate(KnowledgeBase kb, String name) {
+		super(kb, name);
 	}
 
 }

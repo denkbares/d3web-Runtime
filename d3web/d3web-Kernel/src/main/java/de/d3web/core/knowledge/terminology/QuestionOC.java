@@ -23,6 +23,8 @@ package de.d3web.core.knowledge.terminology;
 import java.util.Collections;
 import java.util.List;
 
+import de.d3web.core.knowledge.KnowledgeBase;
+
 /**
  * Storage for Questions with predefined single answers (alternatives). <BR>
  * Part of the Composite design pattern (see QASet for further description)
@@ -32,8 +34,8 @@ import java.util.List;
  */
 public class QuestionOC extends QuestionChoice {
 
-	public QuestionOC(String id) {
-		super(id);
+	public QuestionOC(KnowledgeBase kb, String name) {
+		super(kb, name);
 	}
 
 	public Choice getAlternative(int key) {

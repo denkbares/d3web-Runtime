@@ -62,7 +62,6 @@ public class AbnormalityTest {
 		valueTwo = new NumValue(0.49);
 
 		Choice choice = new Choice("choiceID");
-		choice.setText("choiceIDtext");
 		valueThree = new ChoiceValue(choice);
 	}
 

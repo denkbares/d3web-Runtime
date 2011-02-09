@@ -29,6 +29,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval.IntervalException;
 import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
@@ -135,7 +136,7 @@ public class AbnormalityNumTest {
 	 */
 	@Test
 	public void testSetAbnormality() {
-		QuestionNum qNum = new QuestionNum("qNum");
+		QuestionNum qNum = new QuestionNum(new KnowledgeBase(), "qNum");
 		// set the AbnormalityInterval (A4): (4.1, 6.9] for the question:
 		AbnormalityNum.setAbnormality(qNum, 4.1, 6.9,
 				Abnormality.A4, true, false);

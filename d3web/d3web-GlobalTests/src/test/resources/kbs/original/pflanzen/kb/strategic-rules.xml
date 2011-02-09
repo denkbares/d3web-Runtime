@@ -3,180 +3,180 @@
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionIndication">
 <TargetQASets>
-<QASet ID="M4830"/>
+<QASet name="Stengelhaare Besonderheiten"/>
 </TargetQASets>
 </Action>
 <Condition type="or">
-<Condition ID="M225" type="equal" value="M225a2"/>
-<Condition ID="M225" type="equal" value="M225a3"/>
+<Condition name="Stengelhaare" type="equal" value="deutlich behaart"/>
+<Condition name="Stengelhaare" type="equal" value="stark bis dicht behaart"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionIndication">
 <TargetQASets>
-<QASet ID="M2034"/>
+<QASet name="Blütenblätteranzahl"/>
+</TargetQASets>
+</Action>
+<Condition name="Blütentyp strahlig" type="equal" value="einzelne Blütenblätter gut abzählbar, nicht mehr als 15"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet name="Blütenblätter gespalten"/>
+</TargetQASets>
+</Action>
+<Condition name="Blütentyp strahlig" type="equal" value="einzelne Blütenblätter gut abzählbar, nicht mehr als 15"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet name="Blütentyp weitere"/>
+</TargetQASets>
+</Action>
+<Condition name="Blütentyp grob" type="equal" value="andere Blüten"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet name="Blütentyp strahlig"/>
+</TargetQASets>
+</Action>
+<Condition name="Blütentyp grob" type="equal" value="strahlig, sternförmig"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet name="Blütentyp glocken-, trichter-, becherförmig"/>
+</TargetQASets>
+</Action>
+<Condition name="Blütentyp grob" type="equal" value="glockenförmig, trichterförmig, becherförmig"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet name="Blütentyp gespornt"/>
+</TargetQASets>
+</Action>
+<Condition name="Blütentyp grob" type="equal" value="gespornt"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet name="Blütentyp Schmetterlingsblüte"/>
+</TargetQASets>
+</Action>
+<Condition type="not">
+<Condition type="or">
+<Condition name="Blütentyp grob" type="equal" value="strahlig, sternförmig"/>
+<Condition name="Blütentyp grob" type="equal" value="Schmetterlingsblüte"/>
+<Condition name="Blütentyp grob" type="equal" value="Lippenblüte, Rachenblüte"/>
+<Condition name="Blütentyp grob" type="equal" value="glockenförmig, trichterförmig, becherförmig"/>
+<Condition name="Blütentyp grob" type="equal" value="gespornt"/>
+<Condition name="Blütentyp grob" type="equal" value="andere Blüten"/>
+</Condition>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet name="Blütentyp Lippenblüte"/>
+</TargetQASets>
+</Action>
+<Condition name="Blütentyp grob" type="equal" value="Lippenblüte, Rachenblüte"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet name="Döldchenanzahl"/>
+</TargetQASets>
+</Action>
+<Condition name="Blütenstand Dolde" type="equal" value="echte doppelte Dolde"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet name="Köpfchengröße"/>
+</TargetQASets>
+</Action>
+<Condition name="Blütenstand" type="equal" value="Köpfchen"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet name="Blütenstand Dolde"/>
+</TargetQASets>
+</Action>
+<Condition name="Blütenstand" type="equal" value="Dolde oder Scheindolde"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet name="Kelchfarbe"/>
 </TargetQASets>
 </Action>
 <Condition type="and">
 <Condition type="not">
-<Condition ID="M193" type="equal" value="M193a1"/>
+<Condition name="Blütenkelch" type="equal" value="fehlend (nur angeben wenn ganz sicher)"/>
 </Condition>
-<Condition ID="M193" type="equal" value="M193a1"/>
+<Condition name="Blütenkelch" type="equal" value="fehlend (nur angeben wenn ganz sicher)"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionIndication">
 <TargetQASets>
-<QASet ID="M1921"/>
-</TargetQASets>
-</Action>
-<Condition ID="M1916" type="equal" value="M1916a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet ID="M204"/>
+<QASet name="Blütenblattspaltenanzahl"/>
 </TargetQASets>
 </Action>
 <Condition type="or">
-<Condition ID="M1534" type="equal" value="M1534a5"/>
-<Condition ID="M1534" type="equal" value="M1534a6"/>
+<Condition name="Blütenblätter gespalten" type="equal" value="etwa bis zu 1/4 gespalten"/>
+<Condition name="Blütenblätter gespalten" type="equal" value="etwa bis zu 1/2 gespalten"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionIndication">
 <TargetQASets>
-<QASet ID="M202"/>
+<QASet name="Blütenblattrand gezackt"/>
 </TargetQASets>
 </Action>
-<Condition ID="M1534" type="equal" value="M1534a3"/>
+<Condition name="Blütenblätter gespalten" type="equal" value="nicht oder kaum gespalten, höchstens gezähnt"/>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionIndication">
 <TargetQASets>
-<QASet ID="M196"/>
+<QASet name="Blattform"/>
 </TargetQASets>
 </Action>
 <Condition type="or">
-<Condition ID="M1534" type="equal" value="M1534a1"/>
-<Condition ID="M1534" type="equal" value="M1534a3"/>
-<Condition ID="M1534" type="equal" value="M1534a6"/>
+<Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+<Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
+<Condition name="Blattunterteilung" type="equal" value="gefingert"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionIndication">
 <TargetQASets>
-<QASet ID="M195"/>
-</TargetQASets>
-</Action>
-<Condition ID="M1534" type="equal" value="M1534a3"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet ID="M4679"/>
-</TargetQASets>
-</Action>
-<Condition ID="M1532" type="equal" value="M1532a5"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet ID="M1916"/>
-</TargetQASets>
-</Action>
-<Condition ID="M1532" type="equal" value="M1532a7"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet ID="M180"/>
-</TargetQASets>
-</Action>
-<Condition ID="M1526" type="equal" value="M1526a6"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet ID="M1528"/>
-</TargetQASets>
-</Action>
-<Condition type="not">
-<Condition type="or">
-<Condition ID="M1526" type="equal" value="M1526a1"/>
-<Condition ID="M1526" type="equal" value="M1526a2"/>
-<Condition ID="M1526" type="equal" value="M1526a3"/>
-<Condition ID="M1526" type="equal" value="M1526a4"/>
-<Condition ID="M1526" type="equal" value="M1526a5"/>
-<Condition ID="M1526" type="equal" value="M1526a6"/>
-</Condition>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet ID="M1515"/>
-</TargetQASets>
-</Action>
-<Condition ID="M1526" type="equal" value="M1526a4"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet ID="M1514"/>
-</TargetQASets>
-</Action>
-<Condition ID="M1526" type="equal" value="M1526a5"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet ID="M1513"/>
-</TargetQASets>
-</Action>
-<Condition ID="M1526" type="equal" value="M1526a3"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet ID="M1508"/>
-</TargetQASets>
-</Action>
-<Condition ID="M1526" type="equal" value="M1526a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet ID="M1531"/>
-</TargetQASets>
-</Action>
-<Condition ID="M1508" type="equal" value="M1508a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet ID="M1419"/>
-</TargetQASets>
-</Action>
-<Condition ID="M1508" type="equal" value="M1508a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet ID="M1434"/>
-</TargetQASets>
-</Action>
-<Condition ID="M1419" type="equal" value="M1419a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet ID="M1422"/>
+<QASet name="Blattfingeranzahl"/>
 </TargetQASets>
 </Action>
 <Condition type="or">
-<Condition ID="M1419" type="equal" value="M1419a2"/>
-<Condition ID="M1419" type="equal" value="M1419a3"/>
+<Condition name="Blattunterteilung" type="equal" value="handförmig eingeschnitten"/>
+<Condition name="Blattunterteilung" type="equal" value="gefingert"/>
 </Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet name="Blattfiedersymmetrie"/>
+</TargetQASets>
+</Action>
+<Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionIndication">
+<TargetQASets>
+<QASet name="Blattfiederpaare"/>
+</TargetQASets>
+</Action>
+<Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
 </KnowledgeSlice>
 </KnowledgeBase>

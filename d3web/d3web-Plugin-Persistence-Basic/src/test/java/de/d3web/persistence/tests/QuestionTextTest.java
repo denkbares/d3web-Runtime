@@ -27,6 +27,7 @@ import org.junit.Test;
 
 import de.d3web.core.io.fragments.QuestionHandler;
 import de.d3web.core.io.utilities.Util;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.persistence.tests.utils.XMLTag;
@@ -43,17 +44,13 @@ public class QuestionTextTest {
 
 	@Before
 	public void setUp() {
-		q1 = new QuestionText("q1");
-		q1.setName("q1-text");
+		q1 = new QuestionText(new KnowledgeBase(), "q1");
 
 		qw = new QuestionHandler();
 
 		shouldTag = new XMLTag("Question");
-		shouldTag.addAttribute("ID", "q1");
+		shouldTag.addAttribute("name", "q1");
 		shouldTag.addAttribute("type", "Text");
-		XMLTag child = new XMLTag("Text");
-		child.setContent("q1-text");
-		shouldTag.addChild(child);
 	}
 
 	@Test

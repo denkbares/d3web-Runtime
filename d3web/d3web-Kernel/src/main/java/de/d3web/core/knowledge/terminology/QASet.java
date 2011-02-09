@@ -23,6 +23,7 @@ package de.d3web.core.knowledge.terminology;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.InterviewObject;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 
 /**
@@ -36,8 +37,8 @@ import de.d3web.core.knowledge.TerminologyObject;
  */
 public abstract class QASet extends AbstractTerminologyObject implements InterviewObject {
 
-	public QASet(String id) {
-		super(id);
+	public QASet(KnowledgeBase kb, String name) {
+		super(kb, name);
 	}
 
 	@Override

@@ -138,14 +138,12 @@ public final class BotHelper {
 
 		if (questionnaireText == null || questionnaireText.equals("")) {
 			for (TerminologyObject q : kb.getManager().getQuestions()) {
-				if (questionIDorText.equals(q.getId())
-						|| questionIDorText.equals(q.getName())) foundQuestion = (Question) q;
+				if (questionIDorText.equals(q.getName())) foundQuestion = (Question) q;
 			}
 		}
 		else {
 			for (TerminologyObject q : kb.getManager().getQuestions()) {
-				if ((questionIDorText.equals(q.getId())
-						|| questionIDorText.equals(q.getName()))
+				if (questionIDorText.equals(q.getName())
 						&& checkQuestionnaire(q, questionnaireText)) foundQuestion = (Question) q;
 			}
 		}

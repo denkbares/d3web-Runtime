@@ -25,6 +25,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionText;
 
 /**
@@ -39,7 +40,7 @@ public class QuestionTextTest {
 
 	@Before
 	public void setUp() throws Exception {
-		questionText = new QuestionText("questionText");
+		questionText = new QuestionText(new KnowledgeBase(), "questionText");
 	}
 
 	@Test

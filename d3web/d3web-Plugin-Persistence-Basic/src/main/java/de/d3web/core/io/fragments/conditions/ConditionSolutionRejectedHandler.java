@@ -52,7 +52,7 @@ public class ConditionSolutionRejectedHandler implements FragmentHandler {
 
 	@Override
 	public Object read(KnowledgeBase kb, Element node) throws IOException {
-		String solutionID = node.getAttribute("ID");
+		String solutionID = node.getAttribute("name");
 		if (solutionID != null) {
 			NamedObject idObject = kb.getManager().search(solutionID);
 			if (idObject instanceof Solution) {

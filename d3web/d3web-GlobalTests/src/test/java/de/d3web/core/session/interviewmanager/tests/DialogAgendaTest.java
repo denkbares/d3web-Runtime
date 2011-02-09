@@ -92,8 +92,8 @@ public class DialogAgendaTest {
 
 		// Container: heightWeightQuestions = { weight, height } 
 		heightWeightQuestions = kbm.createQContainer("heightWeightQuestions", root);
-		weight = kbm.createQuestionNum("weight", "weight", heightWeightQuestions);
-		height = kbm.createQuestionNum("height", "height", heightWeightQuestions);
+		weight = kbm.createQuestionNum("weight", heightWeightQuestions);
+		height = kbm.createQuestionNum("height", heightWeightQuestions);
 
 		initQuestion = kbm.createQuestionOC("initQuestion", root,
 				new String[] {

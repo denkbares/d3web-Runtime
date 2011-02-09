@@ -41,6 +41,7 @@ import de.d3web.core.io.fragments.actions.NextQASetActionHandler;
 import de.d3web.core.io.fragments.actions.QuestionSetterActionHandler;
 import de.d3web.core.io.fragments.actions.SuppressAnswerActionHandler;
 import de.d3web.core.io.utilities.Util;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.AnswerNo;
 import de.d3web.core.knowledge.terminology.AnswerYes;
 import de.d3web.core.knowledge.terminology.Choice;
@@ -86,23 +87,20 @@ public class ActionTest {
 	public void setUp() throws Exception {
 
 		InitPluginManager.init();
-
+		KnowledgeBase kb = new KnowledgeBase();
 		doc = Util.createEmptyDocument();
 
-		answerNo = new AnswerNo("ac1-id");
-		answerNo.setText("a1-text");
+		answerNo = new AnswerNo("ac1-name");
 
-		answerYes = new AnswerYes("ac2-id");
-		answerYes.setText("a2-text");
+		answerYes = new AnswerYes("ac2-name");
 
-		questionMC = new QuestionMC("q1-id");
+		questionMC = new QuestionMC(kb, "q1-name");
 
-		questionDate = new QuestionDate("qdate1-id");
+		questionDate = new QuestionDate(kb, "qdate1-name");
 
-		solution = new Solution("diag1-id");
-		solution.setName("diag1-text");
+		solution = new Solution(kb, "diag1-name");
 
-		qContainer = new QContainer("qcon1-id");
+		qContainer = new QContainer(kb, "qcon1-name");
 
 		rule = new Rule(null);
 	}
@@ -123,13 +121,13 @@ public class ActionTest {
 		shouldTag.addAttribute("type", "ActionSuppressAnswer");
 
 		XMLTag question = new XMLTag("Question");
-		question.addAttribute("ID", "q1-id");
+		question.addAttribute("name", "q1-name");
 
 		XMLTag suppress = new XMLTag("Suppress");
 		XMLTag answer1 = new XMLTag("Answer");
-		answer1.addAttribute("ID", "ac1-id");
+		answer1.addAttribute("name", "ac1-name");
 		XMLTag answer2 = new XMLTag("Answer");
-		answer2.addAttribute("ID", "ac2-id");
+		answer2.addAttribute("name", "ac2-name");
 		suppress.addChild(answer1);
 		suppress.addChild(answer2);
 
@@ -156,9 +154,9 @@ public class ActionTest {
 
 		XMLTag targets = new XMLTag("TargetQASets");
 		XMLTag qa1 = new XMLTag("QASet");
-		qa1.addAttribute("ID", "qcon1-id");
+		qa1.addAttribute("name", "qcon1-name");
 		XMLTag qa2 = new XMLTag("QASet");
-		qa2.addAttribute("ID", "q1-id");
+		qa2.addAttribute("name", "q1-name");
 		targets.addChild(qa1);
 		targets.addChild(qa2);
 
@@ -183,9 +181,9 @@ public class ActionTest {
 
 		XMLTag targets = new XMLTag("TargetQASets");
 		XMLTag qa1 = new XMLTag("QASet");
-		qa1.addAttribute("ID", "q1-id");
+		qa1.addAttribute("name", "q1-name");
 		XMLTag qa2 = new XMLTag("QASet");
-		qa2.addAttribute("ID", "qcon1-id");
+		qa2.addAttribute("name", "qcon1-name");
 		targets.addChild(qa1);
 		targets.addChild(qa2);
 
@@ -210,7 +208,7 @@ public class ActionTest {
 		score.addAttribute("value", "P1");
 
 		XMLTag diagnosis = new XMLTag("Diagnosis");
-		diagnosis.addAttribute("ID", "diag1-id");
+		diagnosis.addAttribute("name", "diag1-name");
 
 		shouldTag.addChild(score);
 		shouldTag.addChild(diagnosis);
@@ -246,14 +244,14 @@ public class ActionTest {
 		shouldTagSet.addAttribute("type", "ActionSetValue");
 
 		XMLTag questTag = new XMLTag("Question");
-		questTag.addAttribute("ID", "q1-id");
+		questTag.addAttribute("name", "q1-name");
 
 		XMLTag valuesTag = new XMLTag("Values");
 
 		// answer-choice1
 		XMLTag ac1Tag = new XMLTag("Value");
 		ac1Tag.addAttribute("type", "answer");
-		ac1Tag.addAttribute("ID", "ac1-id");
+		ac1Tag.addAttribute("name", "ac1-name");
 
 		// formula-expression
 		XMLTag fe1Tag = new XMLTag("Value");
@@ -270,7 +268,7 @@ public class ActionTest {
 		// answer-choice2
 		XMLTag ac2Tag = new XMLTag("Value");
 		ac2Tag.addAttribute("type", "answer");
-		ac2Tag.addAttribute("ID", "ac2-id");
+		ac2Tag.addAttribute("name", "ac2-name");
 
 		valuesTag.addChild(ac1Tag);
 		valuesTag.addChild(fe1Tag);
@@ -318,7 +316,7 @@ public class ActionTest {
 		shouldTagSet.addAttribute("type", "ActionSetValue");
 
 		XMLTag questTag = new XMLTag("Question");
-		questTag.addAttribute("ID", "qdate1-id");
+		questTag.addAttribute("name", "qdate1-name");
 
 		XMLTag valuesTag = new XMLTag("Values");
 

@@ -77,7 +77,7 @@ public class StateTransition implements KnowledgeSlice {
 	@Override
 	public String getId() {
 		if (qcontainer != null) {
-			return "StateTransition_" + qcontainer.getId();
+			return "StateTransition_" + qcontainer.getName();
 		}
 		else {
 			return "StateTransition_withoutQcontainer";

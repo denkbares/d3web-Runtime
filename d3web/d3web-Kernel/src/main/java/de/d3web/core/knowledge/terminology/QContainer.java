@@ -20,8 +20,6 @@
 
 package de.d3web.core.knowledge.terminology;
 
-import java.util.LinkedList;
-
 import de.d3web.core.knowledge.KnowledgeBase;
 
 /**
@@ -39,24 +37,7 @@ public class QContainer extends QASet {
 	 * 
 	 * @param id the unique identifier
 	 */
-	public QContainer(String id) {
-		super(id);
-		// ochlast: this call is obsolete due to init() method
-		// of AbstractTerminologyObject!
-		setChildren(new LinkedList<AbstractTerminologyObject>());
-	}
-
-	/**
-	 * Defines the relation to the specified {@link KnowledgeBase} instance, to
-	 * which this objects belongs to.
-	 * 
-	 * @param knowledgeBase the specified {@link KnowledgeBase} instance.
-	 */
-	@Override
-	public void setKnowledgeBase(KnowledgeBase knowledgeBase) {
-		super.setKnowledgeBase(knowledgeBase);
-		// maybe somebody should remove this object from the old
-		// knowledge base if available
-		getKnowledgeBase().getManager().putTerminologyObject(this);
+	public QContainer(KnowledgeBase kb, String name) {
+		super(kb, name);
 	}
 }

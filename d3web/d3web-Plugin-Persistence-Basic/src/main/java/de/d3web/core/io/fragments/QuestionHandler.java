@@ -63,38 +63,35 @@ public class QuestionHandler implements FragmentHandler {
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		String type = element.getAttribute("type");
-		String id = element.getAttribute("ID");
+		String name = element.getAttribute("name");
 		Question q = null;
 		List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
 		ArrayList<NumericalInterval> intervalls = null;
 		Element answersElement = null;
 		if (type.equals("YN")) {
-			q = new QuestionYN(id);
+			q = new QuestionYN(kb, name);
 		}
 		else if (type.equals(QuestionZC.XML_IDENTIFIER)) {
-			q = new QuestionZC(id);
+			q = new QuestionZC(kb, name);
 		}
 		else if (type.equals("OC")) {
-			q = new QuestionOC(id);
+			q = new QuestionOC(kb, name);
 		}
 		else if (type.equals("MC")) {
-			q = new QuestionMC(id);
+			q = new QuestionMC(kb, name);
 		}
 		else if (type.equals("Num")) {
-			q = new QuestionNum(id);
+			q = new QuestionNum(kb, name);
 		}
 		else if (type.equals("Text")) {
-			q = new QuestionText(id);
+			q = new QuestionText(kb, name);
 		}
 		else if (type.equals("Date")) {
-			q = new QuestionDate(id);
+			q = new QuestionDate(kb, name);
 		}
 		PropertiesHandler ph = new PropertiesHandler();
 		for (Element child : childNodes) {
-			if (child.getNodeName().equals("Text")) {
-				q.setName(child.getTextContent());
-			}
-			else if (child.getNodeName().equals("Answers")) {
+			if (child.getNodeName().equals("Answers")) {
 				answersElement = child;
 			}
 			else if (child.getNodeName().equals(XMLUtil.INFO_STORE)) {
@@ -138,7 +135,6 @@ public class QuestionHandler implements FragmentHandler {
 			}
 			qc.setAlternatives(answers);
 		}
-		q.setKnowledgeBase(kb);
 		return q;
 	}
 
@@ -146,8 +142,7 @@ public class QuestionHandler implements FragmentHandler {
 	public Element write(Object object, Document doc) throws IOException {
 		Question q = (Question) object;
 		Element e = doc.createElement("Question");
-		XMLUtil.appendTextNode(q.getName(), e);
-		e.setAttribute("ID", q.getId());
+		e.setAttribute("name", q.getName());
 		if (q instanceof QuestionYN) {
 			e.setAttribute("type", "YN");
 		}

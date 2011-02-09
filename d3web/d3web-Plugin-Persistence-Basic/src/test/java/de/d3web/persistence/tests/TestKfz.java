@@ -100,12 +100,13 @@ public class TestKfz {
 		PersistenceManager.getInstance().save(kb, new File("target/kbs/test2.jar"));
 		Session session = SessionFactory.createSession(kb);
 
-		QuestionNum Mf5 = (QuestionNum) kb.getManager().searchQuestion("Mf5");
-		QuestionMC Mf7 = (QuestionMC) kb.getManager().searchQuestion("Mf7");
+		QuestionNum Mf5 = (QuestionNum) kb.getManager().searchQuestion(
+				"Üblicher Kraftstoffverbrauch/100km");
+		QuestionMC Mf7 = (QuestionMC) kb.getManager().searchQuestion("Motorgeräusche");
 		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase());
 
-		Choice Mf7a1 = kbm.findChoice(Mf7, "Mf7a1");
-		Choice Mf7a2 = kbm.findChoice(Mf7, "Mf7a2");
+		Choice Mf7a1 = kbm.findChoice(Mf7, "klopfen");
+		Choice Mf7a2 = kbm.findChoice(Mf7, "klingeln");
 		Choice[] choices = new Choice[] {
 				Mf7a1, Mf7a2 };
 		List<Choice> values = new ArrayList<Choice>(choices.length);
@@ -138,11 +139,13 @@ public class TestKfz {
 		/*----------------------------------------------
 		 */
 
-		QuestionNum Mf58 = (QuestionNum) kb.getManager().searchQuestion("Mf58");
-		QuestionNum Mf6 = (QuestionNum) kb.getManager().searchQuestion("Mf6");
-		QuestionOC Mf4 = (QuestionOC) kb.getManager().searchQuestion("Mf4");
+		QuestionNum Mf58 = (QuestionNum) kb.getManager().searchQuestion("Baujahr");
+		QuestionNum Mf6 = (QuestionNum) kb.getManager().searchQuestion(
+				"Tatsächlicher Kraftstoffverbrauch/100km");
+		QuestionOC Mf4 = (QuestionOC) kb.getManager().searchQuestion(
+				"Bewertung Kraftstoffverbrauch");
 		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase());
-		Choice Mf4a1 = kbm.findChoice(Mf4, "Mf4a1");
+		Choice Mf4a1 = kbm.findChoice(Mf4, "normal");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, Mf4,
 						new ChoiceValue(Mf4a1), PSMethodUserSelected.getInstance(),
@@ -173,14 +176,14 @@ public class TestKfz {
 	public void testSetValue() {
 		Session session = SessionFactory.createSession(kb);
 
-		QuestionOC questionOC = (QuestionOC) kb.getManager().searchQuestion("Mf2");
+		QuestionOC questionOC = (QuestionOC) kb.getManager().searchQuestion("Abgase");
 
 		assertTrue(
 				"Error: isDone should be false (1)",
 				UndefinedValue.getInstance().equals(session.getBlackboard().getValue(questionOC)));
 
 		Choice answerChoice = KnowledgeBaseManagement.createInstance(kb).findChoice(questionOC,
-				"Mf2a1");
+				"schwarz");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, questionOC,
 						new ChoiceValue(answerChoice), PSMethodUserSelected.getInstance(),
@@ -257,7 +260,6 @@ public class TestKfz {
 			Question q1 = (Question) qaSet;
 
 			System.out.println("    Frage: " + q1);
-			System.out.println("  FrageId: " + q1.getId());
 			System.out.println("FrageText: " + q1.getName());
 			if (q1 instanceof QuestionChoice) {
 				System.out.println("Antworten: "

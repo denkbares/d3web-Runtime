@@ -80,6 +80,18 @@ public final class SessionFactory {
 	}
 
 	/**
+	 * Factory-method that creates instances of Session.
+	 * 
+	 * @oaram name name of the session
+	 * @param knowledgeBase the knowledge base used in the case.
+	 * @return new Session instance based on the specified knowledge base
+	 */
+	public static synchronized Session createSession(String name, KnowledgeBase knowledgeBase) {
+		return createSession(name, knowledgeBase, new NextUnansweredQuestionFormStrategy(),
+				new Date());
+	}
+
+	/**
 	 * Factory-method that creates instances of Session
 	 * 
 	 * @created 28.01.2011
@@ -100,8 +112,8 @@ public final class SessionFactory {
 	 * @param creationDate Date of creation
 	 * @return {@link Session}
 	 */
-	public static synchronized DefaultSession createSession(String id, KnowledgeBase kb, Date creationDate) {
-		return createSession(id, kb, new NextUnansweredQuestionFormStrategy(), creationDate);
+	public static synchronized DefaultSession createSession(String name, KnowledgeBase kb, Date creationDate) {
+		return createSession(name, kb, new NextUnansweredQuestionFormStrategy(), creationDate);
 	}
 
 	/**
@@ -113,9 +125,9 @@ public final class SessionFactory {
 	 * @return new Session instance based on the specified id, knowledge base
 	 *         and form strategy
 	 */
-	public static synchronized DefaultSession createSession(String id,
+	public static synchronized DefaultSession createSession(String name,
 			KnowledgeBase knowledgeBase,
 			FormStrategy formStrategy, Date creationDate) {
-		return new DefaultSession(id, knowledgeBase, formStrategy, creationDate);
+		return new DefaultSession(name, knowledgeBase, formStrategy, creationDate);
 	}
 }

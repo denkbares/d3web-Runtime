@@ -2,37 +2,76 @@
 <KnowledgeBase system="d3web" type="abstraction-rules">
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionSetValue">
-<Question ID="Q7"/>
+<Question name="Mileage evaluation"/>
 <Values>
-<Value ID="Q7a1" type="answer"/>
+<Value name="slightly increased" type="answer"/>
 </Values>
 </Action>
 <Condition type="and">
-<Condition ID="Q6" type="numLessEqual" value="130.0"/>
-<Condition ID="Q6" type="numGreaterEqual" value="110.0"/>
+<Condition name="Num. Mileage evaluation" type="numLessEqual" value="130.0"/>
+<Condition name="Num. Mileage evaluation" type="numGreaterEqual" value="110.0"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionSetValue">
-<Question ID="Q7"/>
+<Question name="Mileage evaluation"/>
 <Values>
-<Value ID="Q7a3" type="answer"/>
+<Value name="increased" type="answer"/>
 </Values>
 </Action>
-<Condition ID="Q6" type="numGreater" value="130.0"/>
+<Condition name="Num. Mileage evaluation" type="numGreater" value="130.0"/>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionSetValue">
-<Question ID="Q7"/>
+<Question name="Mileage evaluation"/>
 <Values>
-<Value ID="Q7a2" type="answer"/>
+<Value name="normal" type="answer"/>
 </Values>
 </Action>
-<Condition ID="Q6" type="numLess" value="110.0"/>
+<Condition name="Num. Mileage evaluation" type="numLess" value="110.0"/>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionSetValue">
-<Question ID="Q6"/>
+<Question name="Exhaust pipe color evaluation"/>
+<Values>
+<Value name="normal" type="answer"/>
+</Values>
+</Action>
+<Condition type="or">
+<Condition name="Exhaust pipe color" type="equal" value="light grey"/>
+<Condition type="or">
+<Condition name="Exhaust pipe color" type="equal" value="grey"/>
+<Condition name="Exhaust pipe color" type="equal" value="brown"/>
+</Condition>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionSetValue">
+<Question name="Exhaust pipe color evaluation"/>
+<Values>
+<Value name="normal" type="answer"/>
+</Values>
+</Action>
+<Condition type="and">
+<Condition name="Exhaust pipe color" type="equal" value="sooty black"/>
+<Condition name="Fuel" type="equal" value="diesel"/>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionSetValue">
+<Question name="Exhaust pipe color evaluation"/>
+<Values>
+<Value name="abnormal" type="answer"/>
+</Values>
+</Action>
+<Condition type="and">
+<Condition name="Exhaust pipe color" type="equal" value="sooty black"/>
+<Condition name="Fuel" type="equal" value="unleaded gasoline"/>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionSetValue">
+<Question name="Num. Mileage evaluation"/>
 <Values>
 <Value type="evaluatable">
 <FormulaTerm type="*">
@@ -40,12 +79,12 @@
 <FormulaTerm type="/">
 <arg1>
 <FormulaPrimitive type="QNumWrapper">
-<Value>Q8</Value>
+<Value>Real mileage /100km</Value>
 </FormulaPrimitive>
 </arg1>
 <arg2>
 <FormulaPrimitive type="QNumWrapper">
-<Value>Q5</Value>
+<Value>Average mileage /100km</Value>
 </FormulaPrimitive>
 </arg2>
 </FormulaTerm>
@@ -60,47 +99,8 @@
 </Values>
 </Action>
 <Condition type="and">
-<Condition ID="Q20" type="known"/>
-<Condition ID="Q5" type="numGreater" value="0.0"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionSetValue">
-<Question ID="Q3"/>
-<Values>
-<Value ID="Q3a2" type="answer"/>
-</Values>
-</Action>
-<Condition type="or">
-<Condition ID="Q2" type="equal" value="Q2a3"/>
-<Condition type="or">
-<Condition ID="Q2" type="equal" value="Q2a2"/>
-<Condition ID="Q2" type="equal" value="Q2a1"/>
-</Condition>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionSetValue">
-<Question ID="Q3"/>
-<Values>
-<Value ID="Q3a2" type="answer"/>
-</Values>
-</Action>
-<Condition type="and">
-<Condition ID="Q2" type="equal" value="Q2a4"/>
-<Condition ID="Q4" type="equal" value="Q4a1"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionSetValue">
-<Question ID="Q3"/>
-<Values>
-<Value ID="Q3a1" type="answer"/>
-</Values>
-</Action>
-<Condition type="and">
-<Condition ID="Q2" type="equal" value="Q2a4"/>
-<Condition ID="Q4" type="equal" value="Q4a2"/>
+<Condition name="Real mileage  /100km" type="known"/>
+<Condition name="Average mileage /100km" type="numGreater" value="0.0"/>
 </Condition>
 </KnowledgeSlice>
 </KnowledgeBase>

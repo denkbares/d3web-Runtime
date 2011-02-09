@@ -38,12 +38,20 @@ public class Choice implements NamedObject, Comparable<Choice> {
 	 */
 	private Question question;
 
-	private String text;
-	private final String id;
+	private final String text;
 	private InfoStore infoStore = new DefaultInfoStore();
 
-	public Choice(String theId) {
-		this.id = theId;
+	/**
+	 * Creates a new choice with the given name
+	 * 
+	 * @param name
+	 * @throws NullPointerException when the name is null
+	 */
+	public Choice(String name) {
+		if (name == null) {
+			throw new NullPointerException("Name must not be null.");
+		}
+		this.text = name;
 	}
 
 	@Override
@@ -69,10 +77,6 @@ public class Choice implements NamedObject, Comparable<Choice> {
 		return false;
 	}
 
-	public void setText(String text) {
-		this.text = text;
-	}
-
 	/**
 	 * Creation date: (15.09.2000 12:07:31)
 	 * 
@@ -80,7 +84,7 @@ public class Choice implements NamedObject, Comparable<Choice> {
 	 */
 	@Override
 	public String toString() {
-		return text == null ? "#" + id : text;
+		return text == null ? "#" + text : text;
 	}
 
 	/**
@@ -106,7 +110,6 @@ public class Choice implements NamedObject, Comparable<Choice> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((text == null) ? 0 : text.hashCode());
 		return result;
 	}
@@ -130,8 +133,9 @@ public class Choice implements NamedObject, Comparable<Choice> {
 	}
 
 	@Override
+	@Deprecated
 	public String getId() {
-		return id;
+		return getName();
 	}
 
 	/**

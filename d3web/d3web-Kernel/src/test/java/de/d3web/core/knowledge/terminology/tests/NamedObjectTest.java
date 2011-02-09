@@ -29,6 +29,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 
@@ -45,8 +46,8 @@ public class NamedObjectTest {
 		/**
 		 * @param id
 		 */
-		public NamedObjectMock(String id) {
-			super(id);
+		public NamedObjectMock(KnowledgeBase kb, String name) {
+			super(kb, name);
 		}
 
 	}
@@ -61,25 +62,29 @@ public class NamedObjectTest {
 	NamedObjectMock linkedChildTwo;
 	NamedObjectMock linkedChildThree;
 
+	private KnowledgeBase kb;
+
 	@Before
 	public void setUp() {
+
+		kb = new KnowledgeBase();
 		// initialize parent namedObject
-		parent = new NamedObjectMock("parent");
+		parent = new NamedObjectMock(kb, "parent");
 
 		// initialize the children
-		childOne = new NamedObjectMock("childOne");
+		childOne = new NamedObjectMock(kb, "childOne");
 		parent.addChild(childOne);
-		childTwo = new NamedObjectMock("childTwo");
+		childTwo = new NamedObjectMock(kb, "childTwo");
 		parent.addChild(childTwo);
-		childThree = new NamedObjectMock("childThree");
+		childThree = new NamedObjectMock(kb, "childThree");
 		parent.addChild(childThree);
 
 		// initialize the linked children
-		linkedChildOne = new NamedObjectMock("linkedChildOne");
+		linkedChildOne = new NamedObjectMock(kb, "linkedChildOne");
 		parent.addLinkedChild(linkedChildOne);
-		linkedChildTwo = new NamedObjectMock("linkedChildTwo");
+		linkedChildTwo = new NamedObjectMock(kb, "linkedChildTwo");
 		parent.addLinkedChild(linkedChildTwo);
-		linkedChildThree = new NamedObjectMock("linkedChildThree");
+		linkedChildThree = new NamedObjectMock(kb, "linkedChildThree");
 		parent.addLinkedChild(linkedChildThree);
 	}
 
@@ -127,9 +132,10 @@ public class NamedObjectTest {
 	}
 
 	/**
-	 * Summary: Tests the AbstractTerminologyObject#setChildren(java.util.List) method which
-	 * deletes all current children of the AbstractTerminologyObject Instance and inserts all
-	 * the NamedObjects from the given list as new children
+	 * Summary: Tests the AbstractTerminologyObject#setChildren(java.util.List)
+	 * method which deletes all current children of the
+	 * AbstractTerminologyObject Instance and inserts all the NamedObjects from
+	 * the given list as new children
 	 * 
 	 * @see AbstractTerminologyObject#setChildren(java.util.List)
 	 * 
@@ -138,8 +144,8 @@ public class NamedObjectTest {
 	@Test
 	public void testSetChildrenByList() {
 		// create and instantiate the new children
-		NamedObjectMock newChildOne = new NamedObjectMock("newChildOne");
-		NamedObjectMock newChildTwo = new NamedObjectMock("newChildTwo");
+		NamedObjectMock newChildOne = new NamedObjectMock(kb, "newChildOne");
+		NamedObjectMock newChildTwo = new NamedObjectMock(kb, "newChildTwo");
 		// create a list of the new two children
 		List<AbstractTerminologyObject> newChildren = new LinkedList<AbstractTerminologyObject>();
 		newChildren.add(newChildOne);
@@ -155,9 +161,10 @@ public class NamedObjectTest {
 	}
 
 	/**
-	 * Summary: Tests the AbstractTerminologyObject#setParents(java.util.List) method which
-	 * removes all the parents of the current AbstractTerminologyObject instance and inserts
-	 * all the NamedObjects from the given list as new parents.
+	 * Summary: Tests the AbstractTerminologyObject#setParents(java.util.List)
+	 * method which removes all the parents of the current
+	 * AbstractTerminologyObject instance and inserts all the NamedObjects from
+	 * the given list as new parents.
 	 * <p>
 	 * Decouple the child "linkedChildOne" from its current parent "parent" and
 	 * give it two new parents: "newParentOne" and "newParentTwo"
@@ -169,8 +176,8 @@ public class NamedObjectTest {
 	@Test
 	public void testSetParentsByList() {
 		// create and instantiate the new parents
-		NamedObjectMock newParentOne = new NamedObjectMock("newParentOne");
-		NamedObjectMock newParentTwo = new NamedObjectMock("newParentTwo");
+		NamedObjectMock newParentOne = new NamedObjectMock(kb, "newParentOne");
+		NamedObjectMock newParentTwo = new NamedObjectMock(kb, "newParentTwo");
 		// create a list of the two new parents
 		List<AbstractTerminologyObject> newParents = new LinkedList<AbstractTerminologyObject>();
 		newParents.add(newParentOne);
@@ -190,11 +197,13 @@ public class NamedObjectTest {
 	}
 
 	/**
-	 * Summary: Tests the AbstractTerminologyObject#moveChildToPosition(AbstractTerminologyObject, int)
-	 * method which moves a specified child to a new position in the
+	 * Summary: Tests the
+	 * AbstractTerminologyObject#moveChildToPosition(AbstractTerminologyObject,
+	 * int) method which moves a specified child to a new position in the
 	 * childrens-list
 	 * 
-	 * @see AbstractTerminologyObject#moveChildToPosition(AbstractTerminologyObject, int)
+	 * @see AbstractTerminologyObject#moveChildToPosition(AbstractTerminologyObject,
+	 *      int)
 	 * 
 	 * @created 23.08.2010
 	 */

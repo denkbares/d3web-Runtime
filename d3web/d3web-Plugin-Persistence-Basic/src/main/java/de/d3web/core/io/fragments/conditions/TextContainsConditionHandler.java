@@ -51,7 +51,7 @@ public class TextContainsConditionHandler implements FragmentHandler {
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		String questionID = element.getAttribute("ID");
+		String questionID = element.getAttribute("name");
 		if (questionID != null) {
 			NamedObject idObject = kb.getManager().search(questionID);
 			if (idObject instanceof QuestionText) {

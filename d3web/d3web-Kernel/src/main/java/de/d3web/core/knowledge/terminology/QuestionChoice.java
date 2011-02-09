@@ -23,6 +23,7 @@ package de.d3web.core.knowledge.terminology;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 
 /**
@@ -35,11 +36,11 @@ import de.d3web.core.manage.KnowledgeBaseManagement;
  */
 public abstract class QuestionChoice extends Question {
 
-	private final List<Choice> alternatives = new LinkedList<Choice>();
-
-	public QuestionChoice(String id) {
-		super(id);
+	public QuestionChoice(KnowledgeBase kb, String name) {
+		super(kb, name);
 	}
+
+	private final List<Choice> alternatives = new LinkedList<Choice>();
 
 	/**
 	 * Gives you all the answers (alternatives) and does not care about any

@@ -43,9 +43,9 @@ import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.NamedObject;
-import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -94,12 +94,9 @@ public final class XMLUtil {
 		Document doc = parent.getOwnerDocument();
 		if (q != null) {
 			Element e = doc.createElement("Question");
-			if (q.getId() != null) {
-				e.setAttribute("ID", q.getId());
+			if (q.getName() != null) {
+				e.setAttribute("name", q.getName());
 				parent.appendChild(e);
-			}
-			else {
-				throw new IOException("Question " + q.getName() + " has no ID");
 			}
 		}
 	}
@@ -150,10 +147,10 @@ public final class XMLUtil {
 		Element element = doc.createElement("Condition");
 		element.setAttribute("type", type);
 		if (nob != null) {
-			element.setAttribute("ID", nob.getId());
+			element.setAttribute("name", nob.getName());
 		}
 		else {
-			element.setAttribute("ID", "");
+			element.setAttribute("name", "");
 		}
 		return element;
 	}
@@ -225,17 +222,17 @@ public final class XMLUtil {
 			Value value) throws IOException {
 		Element element = writeCondition(doc, nob, type);
 		if (value != null) {
-			String s = getId(nob, value);
+			String s = getValue(nob, value);
 			element.setAttribute("value", s);
 		}
 		return element;
 	}
 
-	private static String getId(TerminologyObject nob, Object answer) throws IOException {
+	private static String getValue(TerminologyObject nob, Object answer) throws IOException {
 		if (answer instanceof ChoiceValue) {
 			ChoiceValue v = (ChoiceValue) answer;
 			Choice choice = v.getChoice((QuestionChoice) nob);
-			return choice.getId();
+			return choice.getName();
 		}
 		else if (answer instanceof Unknown) {
 			return Unknown.UNKNOWN_ID;
@@ -278,7 +275,7 @@ public final class XMLUtil {
 			Element targetQASets = doc.createElement("TargetQASets");
 			for (QASet qaset : qaSets) {
 				Element qasetElement = doc.createElement("QASet");
-				qasetElement.setAttribute("ID", qaset.getId());
+				qasetElement.setAttribute("name", qaset.getName());
 				targetQASets.appendChild(qasetElement);
 			}
 			element.appendChild(targetQASets);
@@ -299,7 +296,7 @@ public final class XMLUtil {
 			for (int k = 0; k < qasets.getLength(); ++k) {
 				Node q = qasets.item(k);
 				if (q.getNodeName().equalsIgnoreCase("QASet")) {
-					String id = q.getAttributes().getNamedItem("ID").getNodeValue();
+					String id = q.getAttributes().getNamedItem("name").getNodeValue();
 					QASet qset = (QASet) kb.getManager().search(id);
 					ret.add(qset);
 				}
@@ -313,10 +310,11 @@ public final class XMLUtil {
 	}
 
 	/**
-	 * Adds the children of the AbstractTerminologyObject to the specified element
+	 * Adds the children of the AbstractTerminologyObject to the specified
+	 * element
 	 * 
-	 * @param namedObject AbstractTerminologyObject, whose children should be appended as
-	 *        Elements
+	 * @param namedObject AbstractTerminologyObject, whose children should be
+	 *        appended as Elements
 	 * @param element Element representing the namedObject, where the children
 	 *        will be appended
 	 */
@@ -327,7 +325,7 @@ public final class XMLUtil {
 			Element childrenElement = doc.createElement("Children");
 			for (TerminologyObject child : children) {
 				Element childElement = doc.createElement("Child");
-				childElement.setAttribute("ID", child.getId());
+				childElement.setAttribute("name", child.getName());
 				if (isLinkedChild(namedObject, child)) {
 					childElement.setAttribute("link", "true");
 				}
@@ -338,7 +336,8 @@ public final class XMLUtil {
 	}
 
 	/**
-	 * Adds the children given from the xml structure to the AbstractTerminologyObject
+	 * Adds the children given from the xml structure to the
+	 * AbstractTerminologyObject
 	 * 
 	 * @param kb KnowledgeBase containing the children
 	 * @param namedObject where the children should be appended
@@ -356,9 +355,10 @@ public final class XMLUtil {
 		}
 		if (children != null) {
 			for (Element child : children) {
-				String id = child.getAttribute("ID");
+				String id = child.getAttribute("name");
 				String link = child.getAttribute("link");
-				AbstractTerminologyObject no = (AbstractTerminologyObject) kb.getManager().search(id);
+				AbstractTerminologyObject no = (AbstractTerminologyObject) kb.getManager().search(
+						id);
 				if (link != null && link.equals("true")) {
 					namedObject.addLinkedChild(no);
 				}
@@ -367,18 +367,6 @@ public final class XMLUtil {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Appends an Element containing the text
-	 * 
-	 * @param text Text to be represented by the newly appended element
-	 * @param element, which should be appended
-	 */
-	public static void appendTextNode(String text, Element element) {
-		Element textElement = element.getOwnerDocument().createElement("Text");
-		textElement.setTextContent(text);
-		element.appendChild(textElement);
 	}
 
 	/**

@@ -49,8 +49,7 @@ public class ChoiceValueTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		Choice choice = new Choice("choiceID");
-		choice.setText("choiceText");
+		Choice choice = new Choice("choiceText");
 		choiceValue = new ChoiceValue(choice);
 	}
 

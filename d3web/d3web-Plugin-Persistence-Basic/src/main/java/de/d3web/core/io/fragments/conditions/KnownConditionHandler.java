@@ -49,13 +49,16 @@ public class KnownConditionHandler implements FragmentHandler {
 
 	@Override
 	public Object read(KnowledgeBase kb, Element node) throws IOException {
-		String questionID = node.getAttribute("ID");
+		String questionID = node.getAttribute("name");
 		if (questionID != null) {
 			NamedObject idObject = kb.getManager().search(questionID);
 			if (idObject instanceof Question) {
 				Question q = (Question) idObject;
 				return new CondKnown(q);
 			}
+		}
+		else {
+			throw new IOException("No name defined for condition known.");
 		}
 		return null;
 	}

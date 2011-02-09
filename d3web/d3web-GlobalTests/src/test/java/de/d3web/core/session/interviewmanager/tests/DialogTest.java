@@ -46,7 +46,7 @@ import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.plugin.test.InitPluginManager;
 
-public class DialogTester {
+public class DialogTest {
 
 	KnowledgeBaseManagement kbm;
 	QContainer pregnancyQuestions, heightWeightQuestions;
@@ -74,8 +74,8 @@ public class DialogTester {
 		dont_ask = new ChoiceValue(kbm.findChoice(ask_for_pregnancy, "no"));
 
 		heightWeightQuestions = kbm.createQContainer("heightWeightQuestions", root);
-		weight = kbm.createQuestionNum("weight", "weight", heightWeightQuestions);
-		height = kbm.createQuestionNum("height", "height", heightWeightQuestions);
+		weight = kbm.createQuestionNum("weight", heightWeightQuestions);
+		height = kbm.createQuestionNum("height", heightWeightQuestions);
 
 		initQuestion = kbm.createQuestionOC("initQuestion", root, new String[] {
 				"all", "pregnacyQuestions", "height+weight" });

@@ -22,6 +22,7 @@ package de.d3web.core.knowledge.terminology;
 
 import java.util.Arrays;
 
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.manage.AnswerFactory;
 
 /**
@@ -48,14 +49,14 @@ public class QuestionYN extends QuestionOC {
 	 * @see Question
 	 * @see AbstractTerminologyObject
 	 */
-	public QuestionYN(String id) {
-		this(id, YES_STRING, NO_STRING);
+	public QuestionYN(KnowledgeBase kb, String name) {
+		this(kb, name, YES_STRING, NO_STRING);
 	}
 
-	public QuestionYN(String id, String yesText, String noText) {
-		super(id);
-		answerChoiceYes = AnswerFactory.createAnswerYes(id + "YES", yesText);
-		answerChoiceNo = AnswerFactory.createAnswerNo(id + "NO", noText);
+	public QuestionYN(KnowledgeBase kb, String name, String yesText, String noText) {
+		super(kb, name);
+		answerChoiceYes = AnswerFactory.createAnswerYes(yesText);
+		answerChoiceNo = AnswerFactory.createAnswerNo(noText);
 		setAlternatives(Arrays.asList(new Choice[] {
 				answerChoiceYes, answerChoiceNo }));
 	}

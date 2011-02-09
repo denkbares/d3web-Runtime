@@ -53,8 +53,8 @@ public abstract class Question extends QASet implements ValueObject {
 	 * 
 	 * @param id the specified unique identifier
 	 */
-	public Question(String id) {
-		super(id);
+	public Question(KnowledgeBase kb, String name) {
+		super(kb, name);
 	}
 
 	/**
@@ -89,20 +89,6 @@ public abstract class Question extends QASet implements ValueObject {
 		// a Collection. If list is a collection, the right side of "||" checks
 		// if this list is NOT empty.
 		return !(list instanceof Collection<?>) || !((Collection<?>) list).isEmpty();
-	}
-
-	/**
-	 * Sets the knowledge base, to which this objects belongs to and adds this
-	 * object to the knowledge base (reverse link).
-	 * 
-	 * @param newKnowledgeBase de.d3web.kernel.domainModel.KnowledgeBase
-	 */
-	@Override
-	public void setKnowledgeBase(KnowledgeBase knowledgeBase) {
-		super.setKnowledgeBase(knowledgeBase);
-		// maybe somebody should remove this object from the old
-		// knowledge base if available
-		getKnowledgeBase().getManager().putTerminologyObject(this);
 	}
 
 	@Override

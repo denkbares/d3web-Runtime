@@ -29,8 +29,6 @@ public interface TerminologyObject extends NamedObject {
 
 	TerminologyObject[] getChildren();
 
-	void setKnowledgeBase(KnowledgeBase knowledgeBase);
-
 	KnowledgeBase getKnowledgeBase();
 
 	// --- storing knowledge ---

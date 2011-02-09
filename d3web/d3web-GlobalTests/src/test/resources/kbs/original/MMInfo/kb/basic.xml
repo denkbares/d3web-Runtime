@@ -4,19 +4,14 @@
 <rootQASet>Q000</rootQASet>
 <rootSolution>P000</rootSolution>
 <QASets>
-<QContainer ID="Q000">
-<Text>Q000</Text>
-</QContainer>
+<QContainer name="Q000"/>
 </QASets>
 <Diagnoses>
-<Diagnosis ID="P000">
-<Text>P000</Text>
+<Diagnosis name="Loesung 0"/>
+<Diagnosis name="P000">
 <Children>
-<Child ID="P1"/>
+<Child name="Loesung 0"/>
 </Children>
-</Diagnosis>
-<Diagnosis ID="P1">
-<Text>Loesung 0</Text>
 </Diagnosis>
 </Diagnoses>
 <KnowledgeSlices/>

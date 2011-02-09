@@ -216,7 +216,7 @@ public class BasicPersistenceHandler implements
 			if (child.getNodeName().equalsIgnoreCase("QContainer")
 					|| child.getNodeName().equalsIgnoreCase("Question")
 					|| child.getNodeName().equalsIgnoreCase("QASet")) {
-				String id = child.getAttributes().getNamedItem("ID")
+				String id = child.getAttributes().getNamedItem("name")
 						.getNodeValue();
 				QASet item = (QASet) kb.getManager().search(id);
 				if (item != null) {
@@ -268,13 +268,13 @@ public class BasicPersistenceHandler implements
 
 		if (kb.getRootQASet() != null) {
 			Element rootQASetElement = doc.createElement("rootQASet");
-			rootQASetElement.setTextContent(kb.getRootQASet().getId());
+			rootQASetElement.setTextContent(kb.getRootQASet().getName());
 			father.appendChild(rootQASetElement);
 		}
 
 		if (kb.getRootSolution() != null) {
 			Element rootSolutionElement = doc.createElement("rootSolution");
-			rootSolutionElement.setTextContent(kb.getRootSolution().getId());
+			rootSolutionElement.setTextContent(kb.getRootSolution().getName());
 			father.appendChild(rootSolutionElement);
 		}
 
@@ -363,7 +363,7 @@ public class BasicPersistenceHandler implements
 			iter = noParents.iterator();
 			while (iter.hasNext()) {
 				QASet q = iter.next();
-				if (q.getId().equals("Q000")) root = q;
+				if (q.getName().equals("Q000")) root = q;
 			}
 			return root;
 
@@ -394,7 +394,7 @@ public class BasicPersistenceHandler implements
 			iter = result.iterator();
 			while (iter.hasNext()) {
 				Solution d = iter.next();
-				if (d.getId().equals("P000")) root = d;
+				if (d.getName().equals("P000")) root = d;
 			}
 			return root;
 

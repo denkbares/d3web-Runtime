@@ -31,6 +31,7 @@ import org.junit.Test;
 
 import de.d3web.core.io.fragments.QuestionHandler;
 import de.d3web.core.io.utilities.Util;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
@@ -53,17 +54,13 @@ public class QuestionChoiceTest {
 	public void setUp() throws IOException {
 		InitPluginManager.init();
 
-		q1 = new QuestionOC("q1");
-		q1.setName("q1-text");
+		q1 = new QuestionOC(new KnowledgeBase(), "q1");
 
 		qw = new QuestionHandler();
 
 		shouldTag = new XMLTag("Question");
-		shouldTag.addAttribute("ID", "q1");
+		shouldTag.addAttribute("name", "q1");
 		shouldTag.addAttribute("type", "OC");
-		XMLTag child = new XMLTag("Text");
-		child.setContent("q1-text");
-		shouldTag.addChild(child);
 	}
 
 	@Test
@@ -82,31 +79,21 @@ public class QuestionChoiceTest {
 		List<Choice> alternatives = new LinkedList<Choice>();
 
 		Choice a1 = new Choice("q1a1");
-		a1.setText("q1a1-&text");
 		alternatives.add(a1);
 
 		Choice a2 = new Choice("q1a2");
-		a2.setText("q1a2-testtext");
 		alternatives.add(a2);
 
 		q1.setAlternatives(alternatives);
 
 		XMLTag answerTag1 = new XMLTag("Answer");
-		answerTag1.addAttribute("ID", "q1a1");
+		answerTag1.addAttribute("name", "q1a1");
 		answerTag1.addAttribute("type", "AnswerChoice");
-		XMLTag answerTextTag1 = new XMLTag("Text");
-		String answerText1 = "q1a1-&text";
-
-		answerTextTag1.setContent(answerText1);
-		answerTag1.addChild(answerTextTag1);
 		answersTag.addChild(answerTag1);
 
 		XMLTag answerTag2 = new XMLTag("Answer");
-		answerTag2.addAttribute("ID", "q1a2");
+		answerTag2.addAttribute("name", "q1a2");
 		answerTag2.addAttribute("type", "AnswerChoice");
-		XMLTag answerTextTag2 = new XMLTag("Text");
-		answerTextTag2.setContent("q1a2-testtext");
-		answerTag2.addChild(answerTextTag2);
 		answersTag.addChild(answerTag2);
 
 		isTag = new XMLTag(qw.write(q1, Util.createEmptyDocument()));

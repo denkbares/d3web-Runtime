@@ -109,7 +109,12 @@ public final class Util {
 		try {
 			xformer = TransformerFactory.newInstance().newTransformer();
 			xformer.setOutputProperty("method", "xml");
-			xformer.setOutputProperty("encoding", "UTF-8");
+			if (doc.getXmlEncoding() == null) {
+				xformer.setOutputProperty("encoding", "UTF-8");
+			}
+			else {
+				xformer.setOutputProperty("encoding", doc.getXmlEncoding());
+			}
 			xformer.setOutputProperty("omit-xml-declaration", "no");
 			xformer.setOutputProperty("indent", "yes");
 			xformer.transform(source, result);

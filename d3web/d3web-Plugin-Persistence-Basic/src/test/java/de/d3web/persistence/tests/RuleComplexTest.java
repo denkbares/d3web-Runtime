@@ -32,6 +32,7 @@ import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.inference.condition.CondNumEqual;
 import de.d3web.core.io.fragments.RuleHandler;
 import de.d3web.core.io.utilities.Util;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
@@ -61,10 +62,9 @@ public class RuleComplexTest {
 	@Before
 	public void setUp() throws IOException {
 		InitPluginManager.init();
-
-		qnum1 = new QuestionNum("qnum1-id");
-		diag1 = new Solution("diag1-id");
-		diag1.setName("diag1-text");
+		KnowledgeBase kb = new KnowledgeBase();
+		qnum1 = new QuestionNum(kb, "qnum1-id");
+		diag1 = new Solution(kb, "diag1-id");
 
 		cDState1 = new CondDState(diag1, new Rating(Rating.State.EXCLUDED));
 
@@ -93,7 +93,7 @@ public class RuleComplexTest {
 		XMLTag actionTag1 = new XMLTag("Action");
 		actionTag1.addAttribute("type", "ActionHeuristicPS");
 		XMLTag diagTag = new XMLTag("Diagnosis");
-		diagTag.addAttribute("ID", "diag1-id");
+		diagTag.addAttribute("name", "diag1-id");
 		XMLTag scoreTag = new XMLTag("Score");
 		scoreTag.addAttribute("value", "P1");
 		actionTag1.addChild(diagTag);
@@ -102,14 +102,14 @@ public class RuleComplexTest {
 
 		XMLTag conditionTag1 = new XMLTag("Condition");
 		conditionTag1.addAttribute("type", "DState");
-		conditionTag1.addAttribute("ID", "diag1-id");
+		conditionTag1.addAttribute("name", "diag1-id");
 		conditionTag1.addAttribute("value", "EXCLUDED");
 		shouldTag.addChild(conditionTag1);
 
 		XMLTag exceptionTag2 = new XMLTag("Exception");
 		XMLTag exceptionTag1 = new XMLTag("Condition");
 		exceptionTag1.addAttribute("type", "numEqual");
-		exceptionTag1.addAttribute("ID", "qnum1-id");
+		exceptionTag1.addAttribute("name", "qnum1-id");
 		exceptionTag1.addAttribute("value", "12.7");
 		exceptionTag2.addChild(exceptionTag1);
 		shouldTag.addChild(exceptionTag2);
@@ -132,14 +132,14 @@ public class RuleComplexTest {
 
 		XMLTag conditionTag1 = new XMLTag("Condition");
 		conditionTag1.addAttribute("type", "DState");
-		conditionTag1.addAttribute("ID", "diag1-id");
+		conditionTag1.addAttribute("name", "diag1-id");
 		conditionTag1.addAttribute("value", "EXCLUDED");
 		shouldTag.addChild(conditionTag1);
 
 		XMLTag exceptionTag2 = new XMLTag("Exception");
 		XMLTag exceptionTag1 = new XMLTag("Condition");
 		exceptionTag1.addAttribute("type", "numEqual");
-		exceptionTag1.addAttribute("ID", "qnum1-id");
+		exceptionTag1.addAttribute("name", "qnum1-id");
 		exceptionTag1.addAttribute("value", "12.7");
 		exceptionTag2.addChild(exceptionTag1);
 		shouldTag.addChild(exceptionTag2);
@@ -163,7 +163,7 @@ public class RuleComplexTest {
 		XMLTag actionTag1 = new XMLTag("Action");
 		actionTag1.addAttribute("type", "ActionHeuristicPS");
 		XMLTag diagTag = new XMLTag("Diagnosis");
-		diagTag.addAttribute("ID", "diag1-id");
+		diagTag.addAttribute("name", "diag1-id");
 		XMLTag scoreTag = new XMLTag("Score");
 		scoreTag.addAttribute("value", "P1");
 		actionTag1.addChild(diagTag);
@@ -173,7 +173,7 @@ public class RuleComplexTest {
 		XMLTag exceptionTag2 = new XMLTag("Exception");
 		XMLTag exceptionTag1 = new XMLTag("Condition");
 		exceptionTag1.addAttribute("type", "numEqual");
-		exceptionTag1.addAttribute("ID", "qnum1-id");
+		exceptionTag1.addAttribute("name", "qnum1-id");
 		exceptionTag1.addAttribute("value", "12.7");
 		exceptionTag2.addChild(exceptionTag1);
 		shouldTag.addChild(exceptionTag2);
@@ -197,7 +197,7 @@ public class RuleComplexTest {
 		XMLTag actionTag1 = new XMLTag("Action");
 		actionTag1.addAttribute("type", "ActionHeuristicPS");
 		XMLTag diagTag = new XMLTag("Diagnosis");
-		diagTag.addAttribute("ID", "diag1-id");
+		diagTag.addAttribute("name", "diag1-id");
 		XMLTag scoreTag = new XMLTag("Score");
 		scoreTag.addAttribute("value", "P1");
 		actionTag1.addChild(diagTag);
@@ -206,7 +206,7 @@ public class RuleComplexTest {
 
 		XMLTag conditionTag1 = new XMLTag("Condition");
 		conditionTag1.addAttribute("type", "DState");
-		conditionTag1.addAttribute("ID", "diag1-id");
+		conditionTag1.addAttribute("name", "diag1-id");
 		conditionTag1.addAttribute("value", "EXCLUDED");
 		shouldTag.addChild(conditionTag1);
 

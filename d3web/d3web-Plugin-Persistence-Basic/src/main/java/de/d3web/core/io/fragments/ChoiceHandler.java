@@ -52,7 +52,7 @@ public class ChoiceHandler implements FragmentHandler {
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		String type = element.getAttribute("type");
-		String id = element.getAttribute("ID");
+		String id = element.getAttribute("name");
 		Choice ac = null;
 		if (type.equals("AnswerNo")) {
 			ac = new AnswerNo(id);
@@ -67,10 +67,7 @@ public class ChoiceHandler implements FragmentHandler {
 			List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
 			PropertiesHandler ph = new PropertiesHandler();
 			for (Element node : childNodes) {
-				if (node.getNodeName().equals("Text")) {
-					ac.setText(node.getTextContent());
-				}
-				else if (node.getNodeName().equals(XMLUtil.INFO_STORE)) {
+				if (node.getNodeName().equals(XMLUtil.INFO_STORE)) {
 					XMLUtil.fillInfoStore(ac.getInfoStore(), node, kb);
 				}
 				else if (ph.canRead(node)) {
@@ -85,7 +82,7 @@ public class ChoiceHandler implements FragmentHandler {
 	public Element write(Object object, Document doc) throws IOException {
 		Element element = doc.createElement("Answer");
 		Choice a = (Choice) object;
-		element.setAttribute("ID", a.getId());
+		element.setAttribute("name", a.getName());
 		element.setAttribute("type", "answer");
 		if (a instanceof AnswerNo) {
 			element.setAttribute("type", "AnswerNo");
@@ -96,7 +93,6 @@ public class ChoiceHandler implements FragmentHandler {
 		else {
 			element.setAttribute("type", "AnswerChoice");
 		}
-		XMLUtil.appendTextNode(a.getName(), element);
 		XMLUtil.appendInfoStore(element, a, Autosave.basic);
 		return element;
 	}

@@ -62,16 +62,11 @@ public class BasicPersistenceHandlerTest {
 
 		kb = new KnowledgeBase();
 
-		q1 = new QuestionNum("q1");
-		q1.setName("q1-text");
-		q1.setKnowledgeBase(kb);
+		q1 = new QuestionNum(kb, "q1");
 		kb.setRootQASet(q1);
-		q2 = new QuestionOC("q2");
-		q2.setName("q2-text");
-		q2.setKnowledgeBase(kb);
+		q2 = new QuestionOC(kb, "q2");
 
-		diag1 = new Solution("d1");
-		diag1.setName("d1-text");
+		diag1 = new Solution(kb, "d1");
 		kb.setRootSolution(diag1);
 	}
 
@@ -122,11 +117,9 @@ public class BasicPersistenceHandlerTest {
 	}
 
 	private void addQASets() {
-		QContainer qc1 = new QContainer("qc1");
-		qc1.setName("qc1-text");
+		QContainer qc1 = new QContainer(kb, "qc1");
 
-		QContainer qc2 = new QContainer("qc2");
-		qc2.setName("qc2-text");
+		QContainer qc2 = new QContainer(kb, "qc2");
 
 		kb.getManager().putTerminologyObject(qc1);
 		kb.getManager().putTerminologyObject(qc2);
@@ -135,60 +128,41 @@ public class BasicPersistenceHandlerTest {
 		shouldTag.addChild(qASetTag);
 
 		XMLTag questionTag1 = new XMLTag("Question");
-		questionTag1.addAttribute("ID", "q1");
+		questionTag1.addAttribute("name", "q1");
 		questionTag1.addAttribute("type", "Num");
-		XMLTag questionTextTag1 = new XMLTag("Text");
-		questionTextTag1.setContent("q1-text");
-		questionTag1.addChild(questionTextTag1);
 		qASetTag.addChild(questionTag1);
 
 		XMLTag questionTag2 = new XMLTag("Question");
-		questionTag2.addAttribute("ID", "q2");
+		questionTag2.addAttribute("name", "q2");
 		questionTag2.addAttribute("type", "OC");
-		XMLTag questionTextTag2 = new XMLTag("Text");
-		questionTextTag2.setContent("q2-text");
-		questionTag2.addChild(questionTextTag2);
 		XMLTag questionAnswersTag2 = new XMLTag("Answers");
 		questionTag2.addChild(questionAnswersTag2);
 		qASetTag.addChild(questionTag2);
 
 		XMLTag qContainerTag1 = new XMLTag("QContainer");
-		qContainerTag1.addAttribute("ID", "qc1");
-		XMLTag qContainerTextTag1 = new XMLTag("Text");
-		qContainerTextTag1.setContent("qc1-text");
-		qContainerTag1.addChild(qContainerTextTag1);
+		qContainerTag1.addAttribute("name", "qc1");
 		qASetTag.addChild(qContainerTag1);
 
 		XMLTag qContainerTag2 = new XMLTag("QContainer");
-		qContainerTag2.addAttribute("ID", "qc2");
-		XMLTag qContainerTextTag2 = new XMLTag("Text");
-		qContainerTextTag2.setContent("qc2-text");
-		qContainerTag2.addChild(qContainerTextTag2);
+		qContainerTag2.addAttribute("name", "qc2");
 		qASetTag.addChild(qContainerTag2);
 	}
 
 	public void addSolutions() {
 		kb.getManager().putTerminologyObject(diag1);
 
-		Solution diag2 = new Solution("d2");
-		diag2.setName("d2-text");
+		Solution diag2 = new Solution(kb, "d2");
 		kb.getManager().putTerminologyObject(diag2);
 
 		XMLTag diagnosesTag = new XMLTag("Diagnoses");
 		shouldTag.addChild(diagnosesTag);
 
 		XMLTag diagnosisTag1 = new XMLTag("Diagnosis");
-		diagnosisTag1.addAttribute("ID", "d1");
-		XMLTag diagnosisTagTextTag1 = new XMLTag("Text");
-		diagnosisTagTextTag1.setContent("d1-text");
-		diagnosisTag1.addChild(diagnosisTagTextTag1);
+		diagnosisTag1.addAttribute("name", "d1");
 		diagnosesTag.addChild(diagnosisTag1);
 
 		XMLTag diagnosisTag2 = new XMLTag("Diagnosis");
-		diagnosisTag2.addAttribute("ID", "d2");
-		XMLTag diagnosisTagTextTag2 = new XMLTag("Text");
-		diagnosisTagTextTag2.setContent("d2-text");
-		diagnosisTag2.addChild(diagnosisTagTextTag2);
+		diagnosisTag2.addAttribute("name", "d2");
 		diagnosesTag.addChild(diagnosisTag2);
 	}
 
@@ -196,18 +170,18 @@ public class BasicPersistenceHandlerTest {
 		LinkedList<Question> initList = new LinkedList<Question>();
 		initList.add(q1);
 		initList.add(q2);
-
+		
 		kb.setInitQuestions(initList);
 
 		XMLTag initQuestionsTag = new XMLTag("InitQuestions");
 		shouldTag.addChild(initQuestionsTag);
 
 		XMLTag initQuestionTag1 = new XMLTag("Question");
-		initQuestionTag1.addAttribute("ID", "q1");
+		initQuestionTag1.addAttribute("name", "q1");
 		initQuestionsTag.addChild(initQuestionTag1);
 
 		XMLTag initQuestionTag2 = new XMLTag("Question");
-		initQuestionTag2.addAttribute("ID", "q2");
+		initQuestionTag2.addAttribute("name", "q2");
 		initQuestionsTag.addChild(initQuestionTag2);
 	}
 

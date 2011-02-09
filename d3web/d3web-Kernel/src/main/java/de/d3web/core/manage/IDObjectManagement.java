@@ -22,7 +22,6 @@ package de.d3web.core.manage;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -57,28 +56,6 @@ public interface IDObjectManagement {
 
 	QContainer createQContainer(String name, QASet parent);
 
-	QContainer createQContainer(String id, String name, QASet parent);
-
-	QuestionOC createQuestionOC(String id, String name, QASet parent, Choice[] answers);
-
-	QuestionZC createQuestionZC(String id, String name, QASet parent);
-
-	QuestionOC createQuestionOC(String id, String name, QASet parent, String[] answers);
-
-	QuestionMC createQuestionMC(String id, String name, QASet parent, Choice[] answers);
-
-	QuestionMC createQuestionMC(String id, String name, QASet parent, String[] answers);
-
-	QuestionNum createQuestionNum(String id, String name, QASet parent);
-
-	QuestionYN createQuestionYN(String id, String name, QASet parent);
-
-	QuestionYN createQuestionYN(String id, String name, String yesAlternativeText, String noAlternativeText, QASet parent);
-
-	QuestionDate createQuestionDate(String id, String name, QASet parent);
-
-	QuestionText createQuestionText(String id, String name, QASet parent);
-
 	QuestionOC createQuestionOC(String name, QASet parent, Choice[] answers);
 
 	QuestionZC createQuestionZC(String name, QASet parent);
@@ -99,16 +76,9 @@ public interface IDObjectManagement {
 
 	QuestionText createQuestionText(String name, QASet parent);
 
-	Solution createSolution(String id, String name, Solution parent);
-
 	Solution createSolution(String name, Solution parent);
 
 	Choice addChoiceAnswer(QuestionChoice qc, String value);
 
 	KnowledgeBase getKnowledgeBase();
-
-	String findNewIDForAnswerChoice(QuestionChoice currentQuestion);
-
-	String findNewIDFor(Class<? extends NamedObject> object);
-
 }

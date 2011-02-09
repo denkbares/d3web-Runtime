@@ -1,1289 +1,699 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <KnowledgeBase id="" system="d3web" type="basic">
 <InitQuestions>
-<Question ID="Q1499"/>
-<Question ID="Q1500"/>
-<Question ID="Q1501"/>
+<Question name="Blüte"/>
+<Question name="Blätter"/>
+<Question name="Stengel"/>
 </InitQuestions>
-<rootQASet>Q000</rootQASet>
-<rootSolution>P000</rootSolution>
+<rootQASet>Fragebögen</rootQASet>
+<rootSolution>Klassifikation</rootSolution>
 <QASets>
-<Question ID="M1419" type="OC">
-<Text>Blütenblätter gespalten</Text>
+<Question name="Blattbefestigung" type="OC">
 <Answers>
-<Answer ID="M1419a1" type="AnswerChoice">
-<Text>nicht oder kaum gespalten, höchstens gezähnt</Text>
-</Answer>
-<Answer ID="M1419a2" type="AnswerChoice">
-<Text>etwa bis zu 1/4 gespalten</Text>
-</Answer>
-<Answer ID="M1419a3" type="AnswerChoice">
-<Text>etwa bis zu 1/2 gespalten</Text>
-</Answer>
-<Answer ID="M1419a4" type="AnswerChoice">
-<Text>etwa bis zu 3/4 gespalten</Text>
-</Answer>
-<Answer ID="M1419a5" type="AnswerChoice">
-<Text>beinahe ganz gespalten</Text>
-</Answer>
-</Answers>
-<Children>
-<Child ID="M1422"/>
-<Child ID="M1434"/>
-</Children>
-</Question>
-<Question ID="M1422" type="OC">
-<Text>Blütenblattspaltenanzahl</Text>
-<Answers>
-<Answer ID="M1422a1" type="AnswerChoice">
-<Text>1 Spalte (zwei Lappen)</Text>
-</Answer>
-<Answer ID="M1422a2" type="AnswerChoice">
-<Text>2 Spalten (drei Lappen)</Text>
-</Answer>
-<Answer ID="M1422a3" type="AnswerChoice">
-<Text>3 Spalten (vier Lappen)</Text>
-</Answer>
-<Answer ID="M1422a4" type="AnswerChoice">
-<Text>4 Spalten (fünf Lappen)</Text>
-</Answer>
-<Answer ID="M1422a5" type="AnswerChoice">
-<Text>mehr Spalten</Text>
-</Answer>
+<Answer name="gestielt" type="AnswerChoice"/>
+<Answer name="sitzend" type="AnswerChoice"/>
+<Answer name="geöhrt " type="AnswerChoice"/>
+<Answer name="stengelumfassend" type="AnswerChoice"/>
+<Answer name="durchwachsen" type="AnswerChoice"/>
 </Answers>
 </Question>
-<Question ID="M1434" type="OC">
-<Text>Blütenblattrand gezackt</Text>
-<Answers>
-<Answer ID="M1434a1" type="AnswerChoice">
-<Text>nein, eher glatt</Text>
-</Answer>
-<Answer ID="M1434a2" type="AnswerChoice">
-<Text>ja, deutlich </Text>
-</Answer>
-</Answers>
-</Question>
-<Question ID="M1508" type="OC">
-<Text>Blütentyp strahlig</Text>
-<Answers>
-<Answer ID="M1508a1" type="AnswerChoice">
-<Text>einzelne Blütenblätter gut abzählbar, nicht mehr als 15</Text>
-</Answer>
-<Answer ID="M1508a2" type="AnswerChoice">
-<Text>Typ Löwenzahn (Korbblüte, nur Zungen)</Text>
-</Answer>
-<Answer ID="M1508a3" type="AnswerChoice">
-<Text>Typ Gänseblümchen (Korbblüte, Zungen u. Röhren)</Text>
-</Answer>
-<Answer ID="M1508a4" type="AnswerChoice">
-<Text>Typ Kornblume (Korbblüte, nur Röhren)</Text>
-</Answer>
-<Answer ID="M1508a5" type="AnswerChoice">
-<Text>Typ Stacheldistel (Korbblüte, nur Röhren)</Text>
-</Answer>
-<Answer ID="M1508a6" type="AnswerChoice">
-<Text>Typ Witwenblume</Text>
-</Answer>
-</Answers>
-<Children>
-<Child ID="M1531"/>
-<Child ID="M1419"/>
-</Children>
-</Question>
-<Question ID="M1513" type="OC">
-<Text>Blütentyp Lippenblüte</Text>
-<Answers>
-<Answer ID="M1513a1" type="AnswerChoice">
-<Text>Unterlippe deutlich, Oberlippe lang u. gewölbt</Text>
-</Answer>
-<Answer ID="M1513a2" type="AnswerChoice">
-<Text>Unterlippe deutlich, Oberlippe kürzer u. flach</Text>
-</Answer>
-<Answer ID="M1513a3" type="AnswerChoice">
-<Text>Unterlippe deutlich, Oberlippe fehlt</Text>
-</Answer>
-<Answer ID="M1513a4" type="AnswerChoice">
-<Text>Unter- und Oberlippe verkürzt,  röhrenförmig (incl. Rachenblüte)</Text>
-</Answer>
-</Answers>
-</Question>
-<Question ID="M1514" type="OC">
-<Text>Blütentyp gespornt</Text>
-<Answers>
-<Answer ID="M1514a1" type="AnswerChoice">
-<Text>Typ Lerchensporn</Text>
-</Answer>
-<Answer ID="M1514a2" type="AnswerChoice">
-<Text>Typ Rittersporn</Text>
-</Answer>
-<Answer ID="M1514a3" type="AnswerChoice">
-<Text>Typ gelber Eisenhut</Text>
-</Answer>
-<Answer ID="M1514a4" type="AnswerChoice">
-<Text>Typ Leinkraut</Text>
-</Answer>
-<Answer ID="M1514a5" type="AnswerChoice">
-<Text>Typ Akelei</Text>
-</Answer>
-<Answer ID="M1514a6" type="AnswerChoice">
-<Text>Typ Veilchen</Text>
-</Answer>
-</Answers>
-</Question>
-<Question ID="M1515" type="OC">
-<Text>Blütentyp glocken-, trichter-, becherförmig</Text>
-<Answers>
-<Answer ID="M1515a1" type="AnswerChoice">
-<Text>glockenförmig</Text>
-</Answer>
-<Answer ID="M1515a2" type="AnswerChoice">
-<Text>trichterförmig flach</Text>
-</Answer>
-<Answer ID="M1515a3" type="AnswerChoice">
-<Text>kugelglockig, becherförmig</Text>
-</Answer>
-</Answers>
-</Question>
-<Question ID="M1518" type="OC">
-<Text>Blattnervatur</Text>
-<Answers>
-<Answer ID="M1518a1" type="AnswerChoice">
-<Text>netznervig oder fiedernervig</Text>
-</Answer>
-<Answer ID="M1518a2" type="AnswerChoice">
-<Text>streifennervig (parallelnervig)</Text>
-</Answer>
-</Answers>
-</Question>
-<Question ID="M1526" type="OC">
-<Text>Blütentyp grob</Text>
-<Answers>
-<Answer ID="M1526a1" type="AnswerChoice">
-<Text>strahlig, sternförmig</Text>
-</Answer>
-<Answer ID="M1526a2" type="AnswerChoice">
-<Text>Schmetterlingsblüte</Text>
-</Answer>
-<Answer ID="M1526a3" type="AnswerChoice">
-<Text>Lippenblüte, Rachenblüte</Text>
-</Answer>
-<Answer ID="M1526a4" type="AnswerChoice">
-<Text>glockenförmig, trichterförmig, becherförmig</Text>
-</Answer>
-<Answer ID="M1526a5" type="AnswerChoice">
-<Text>gespornt</Text>
-</Answer>
-<Answer ID="M1526a6" type="AnswerChoice">
-<Text>andere Blüten</Text>
-</Answer>
-</Answers>
-<Children>
-<Child ID="M1508"/>
-<Child ID="M1528"/>
-<Child ID="M1513"/>
-<Child ID="M1515"/>
-<Child ID="M1514"/>
-<Child ID="M180"/>
-</Children>
-</Question>
-<Question ID="M1528" type="OC">
-<Text>Blütentyp Schmetterlingsblüte</Text>
-<Answers>
-<Answer ID="M1528a1" type="AnswerChoice">
-<Text>langgestreckt schlank (wie bei Klee)</Text>
-</Answer>
-<Answer ID="M1528a2" type="AnswerChoice">
-<Text>eher rundlich, kompakt (wie bei Platterbse)</Text>
-</Answer>
-</Answers>
-</Question>
-<Question ID="M1531" type="Num">
-<Text>Blütenblätteranzahl</Text>
-<infoStore>
-<entry property="range">
-<NumInterval lower="1.0" type="LeftClosedRightClosedInterval" upper="20.0"/>
-</entry>
-</infoStore>
-</Question>
-<Question ID="M1532" type="OC">
-<Text>Blütenstand</Text>
-<Answers>
-<Answer ID="M1532a1" type="AnswerChoice">
-<Text>einzeln (eine Blüte am Stengelende)</Text>
-</Answer>
-<Answer ID="M1532a2" type="AnswerChoice">
-<Text>allseitswendige Traube</Text>
-</Answer>
-<Answer ID="M1532a3" type="AnswerChoice">
-<Text>einseitswendige Traube</Text>
-</Answer>
-<Answer ID="M1532a4" type="AnswerChoice">
-<Text>Ähre (wie Traube, aber Blüten ungestielt)</Text>
-</Answer>
-<Answer ID="M1532a5" type="AnswerChoice">
-<Text>Köpfchen</Text>
-</Answer>
-<Answer ID="M1532a6" type="AnswerChoice">
-<Text>Quirl</Text>
-</Answer>
-<Answer ID="M1532a7" type="AnswerChoice">
-<Text>Dolde oder Scheindolde</Text>
-</Answer>
-<Answer ID="M1532a8" type="AnswerChoice">
-<Text>einzeln oder zu wenigen in den Blattachseln</Text>
-</Answer>
-<Answer ID="M1532a9" type="AnswerChoice">
-<Text>Rispe</Text>
-</Answer>
-</Answers>
-<Children>
-<Child ID="M4679"/>
-<Child ID="M1916"/>
-</Children>
-</Question>
-<Question ID="M1534" type="OC">
-<Text>Blattunterteilung</Text>
-<Answers>
-<Answer ID="M1534a1" type="AnswerChoice">
-<Text>einfache Form, ohne regelmässige Gliederung</Text>
-</Answer>
-<Answer ID="M1534a2" type="AnswerChoice">
-<Text>fiederspaltig (tief +/- regelmäßig eingeschnitten, aber nicht bis zur Blattmitte)</Text>
-</Answer>
-<Answer ID="M1534a3" type="AnswerChoice">
-<Text>einfach gefiedert</Text>
-</Answer>
-<Answer ID="M1534a4" type="AnswerChoice">
-<Text>mehrfach gefiedert</Text>
-</Answer>
-<Answer ID="M1534a5" type="AnswerChoice">
-<Text>handförmig eingeschnitten</Text>
-</Answer>
-<Answer ID="M1534a6" type="AnswerChoice">
-<Text>gefingert</Text>
-</Answer>
-</Answers>
-<Children>
-<Child ID="M195"/>
-<Child ID="M202"/>
-<Child ID="M204"/>
-<Child ID="M196"/>
-</Children>
-</Question>
-<Question ID="M1535" type="OC">
-<Text>Blattrand</Text>
-<Answers>
-<Answer ID="M1535a1" type="AnswerChoice">
-<Text>ganzrandig</Text>
-</Answer>
-<Answer ID="M1535a2" type="AnswerChoice">
-<Text>gesägt oder gekerbt</Text>
-</Answer>
-<Answer ID="M1535a3" type="AnswerChoice">
-<Text>geschrotet</Text>
-</Answer>
-<Answer ID="M1535a4" type="AnswerChoice">
-<Text>mit Stacheln oder Dornen</Text>
-</Answer>
-<Answer ID="M1535a5" type="AnswerChoice">
-<Text>buchtig</Text>
-</Answer>
-</Answers>
-</Question>
-<Question ID="M1536" type="OC">
-<Text>Blattstellung</Text>
-<Answers>
-<Answer ID="M1536a1" type="AnswerChoice">
-<Text>zweizeilig</Text>
-</Answer>
-<Answer ID="M1536a2" type="AnswerChoice">
-<Text>wechselständig (spiralig)</Text>
-</Answer>
-<Answer ID="M1536a3" type="AnswerChoice">
-<Text>gegenständig</Text>
-</Answer>
-<Answer ID="M1536a4" type="AnswerChoice">
-<Text>wirtelig</Text>
-</Answer>
-<Answer ID="M1536a5" type="AnswerChoice">
-<Text>alle grundständig oder rosettig</Text>
-</Answer>
-</Answers>
-</Question>
-<Question ID="M1537" type="OC">
-<Text>Blütenfarbe</Text>
-<Answers>
-<Answer ID="M1537a1" type="AnswerChoice">
-<Text>weiß</Text>
-</Answer>
-<Answer ID="M1537a2" type="AnswerChoice">
-<Text>gelb</Text>
-</Answer>
-<Answer ID="M1537a3" type="AnswerChoice">
-<Text>orange</Text>
-</Answer>
-<Answer ID="M1537a4" type="AnswerChoice">
-<Text>rot</Text>
-</Answer>
-<Answer ID="M1537a5" type="AnswerChoice">
-<Text>purpur</Text>
-</Answer>
-<Answer ID="M1537a6" type="AnswerChoice">
-<Text>rosarot</Text>
-</Answer>
-<Answer ID="M1537a7" type="AnswerChoice">
-<Text>violett (rotblau)</Text>
-</Answer>
-<Answer ID="M1537a8" type="AnswerChoice">
-<Text>lila (helles rotblau)</Text>
-</Answer>
-<Answer ID="M1537a9" type="AnswerChoice">
-<Text>blau</Text>
-</Answer>
-<Answer ID="M1537a10" type="AnswerChoice">
-<Text>hellblau</Text>
-</Answer>
-<Answer ID="M1537a11" type="AnswerChoice">
-<Text>grünlich</Text>
-</Answer>
-<Answer ID="M1537a12" type="AnswerChoice">
-<Text>braun</Text>
-</Answer>
-<Answer ID="M1537a13" type="AnswerChoice">
-<Text>grau</Text>
-</Answer>
-<Answer ID="M1537a14" type="AnswerChoice">
-<Text>schwarz</Text>
-</Answer>
-</Answers>
-</Question>
-<Question ID="M180" type="OC">
-<Text>Blütentyp weitere</Text>
-<Answers>
-<Answer ID="M180a1" type="AnswerChoice">
-<Text>Typ blauer Eisenhut</Text>
-</Answer>
-<Answer ID="M180a2" type="AnswerChoice">
-<Text>Typ Akelei</Text>
-</Answer>
-<Answer ID="M180a3" type="AnswerChoice">
-<Text>Typ Veilchen</Text>
-</Answer>
-<Answer ID="M180a4" type="AnswerChoice">
-<Text>Typ Wolfsmilch</Text>
-</Answer>
-</Answers>
-</Question>
-<Question ID="M1916" type="OC">
-<Text>Blütenstand Dolde</Text>
-<Answers>
-<Answer ID="M1916a1" type="AnswerChoice">
-<Text>echte einfache Dolde</Text>
-</Answer>
-<Answer ID="M1916a2" type="AnswerChoice">
-<Text>echte doppelte Dolde</Text>
-</Answer>
-<Answer ID="M1916a3" type="AnswerChoice">
-<Text>Scheindolde</Text>
-</Answer>
-</Answers>
-<Children>
-<Child ID="M1921"/>
-</Children>
-</Question>
-<Question ID="M192" type="OC">
-<Text>Blütengröße</Text>
-<Answers>
-<Answer ID="M192a1" type="AnswerChoice">
-<Text>bis 5mm (großer Stecknadelkopf)</Text>
-</Answer>
-<Answer ID="M192a2" type="AnswerChoice">
-<Text>5 bis 10mm (Reißnagel, Bleistift)</Text>
-</Answer>
-<Answer ID="M192a3" type="AnswerChoice">
-<Text>10 bis 15mm (Fingernagel, Hemdknopf) </Text>
-</Answer>
-<Answer ID="M192a4" type="AnswerChoice">
-<Text>15 bis 20mm (1Pfg, 2Pfg, 5Pfg, fingerbreit)</Text>
-</Answer>
-<Answer ID="M192a5" type="AnswerChoice">
-<Text>20 bis 30mm (10Pfg, 1DM, 2DM, 5DM)</Text>
-</Answer>
-<Answer ID="M192a6" type="AnswerChoice">
-<Text>30 bis 50mm (2 - 3 fingerbreit)</Text>
-</Answer>
-<Answer ID="M192a7" type="AnswerChoice">
-<Text>50 bis 80mm (4 Finger breit)</Text>
-</Answer>
-<Answer ID="M192a8" type="AnswerChoice">
-<Text>mehr als 80mm</Text>
-</Answer>
-</Answers>
-</Question>
-<Question ID="M1921" type="Num">
-<Text>Döldchenanzahl</Text>
-<infoStore>
-<entry property="range">
-<NumInterval lower="2.0" type="LeftClosedRightClosedInterval" upper="100.0"/>
-</entry>
-</infoStore>
-</Question>
-<Question ID="M193" type="OC">
-<Text>Blütenkelch</Text>
-<Answers>
-<Answer ID="M193a1" type="AnswerChoice">
-<Text>fehlend (nur angeben wenn ganz sicher)</Text>
-</Answer>
-<Answer ID="M193a2" type="AnswerChoice">
-<Text>getrenntblättrig</Text>
-</Answer>
-<Answer ID="M193a3" type="AnswerChoice">
-<Text>verwachsenblättrig bis becherförmig</Text>
-</Answer>
-<Answer ID="M193a4" type="AnswerChoice">
-<Text>dachziegelartig schuppig angeordnete Kelchblätter</Text>
-</Answer>
-</Answers>
-<Children>
-<Child ID="M2034"/>
-</Children>
-</Question>
-<Question ID="M194" type="YN">
-<Text>Blattranken</Text>
-<Answers>
-<Answer ID="M194a1" type="AnswerYes">
-<Text>ja</Text>
-</Answer>
-<Answer ID="M194a0" type="AnswerNo">
-<Text>nein</Text>
-</Answer>
-</Answers>
-</Question>
-<Question ID="M195" type="OC">
-<Text>Blattfiedersymmetrie</Text>
-<Answers>
-<Answer ID="M195a1" type="AnswerChoice">
-<Text>paarig (gerade Anzahl Fiederblätter)</Text>
-</Answer>
-<Answer ID="M195a2" type="AnswerChoice">
-<Text>unpaarig (ungerade Anzahl Fiederblätter)</Text>
-</Answer>
-</Answers>
-</Question>
-<Question ID="M196" type="OC">
-<Text>Blattform</Text>
-<Answers>
-<Answer ID="M196a1" type="AnswerChoice">
-<Text>rundlich</Text>
-</Answer>
-<Answer ID="M196a2" type="AnswerChoice">
-<Text>oval, eiförmig</Text>
-</Answer>
-<Answer ID="M196a3" type="AnswerChoice">
-<Text>oval, spitz zulaufend</Text>
-</Answer>
-<Answer ID="M196a4" type="AnswerChoice">
-<Text>länglich</Text>
-</Answer>
-<Answer ID="M196a5" type="AnswerChoice">
-<Text>linealisch (grasartig)</Text>
-</Answer>
-<Answer ID="M196a6" type="AnswerChoice">
-<Text>nadelartig</Text>
-</Answer>
-<Answer ID="M196a7" type="AnswerChoice">
-<Text>röhrig (innen hohl)</Text>
-</Answer>
-<Answer ID="M196a8" type="AnswerChoice">
-<Text>herzförmig</Text>
-</Answer>
-<Answer ID="M196a9" type="AnswerChoice">
-<Text>nierenförmig</Text>
-</Answer>
-<Answer ID="M196a10" type="AnswerChoice">
-<Text>pfeilförmig</Text>
-</Answer>
-<Answer ID="M196a11" type="AnswerChoice">
-<Text>gelappt</Text>
-</Answer>
-<Answer ID="M196a12" type="AnswerChoice">
-<Text>spatelig</Text>
-</Answer>
-</Answers>
-</Question>
-<Question ID="M202" type="Num">
-<Text>Blattfiederpaare</Text>
+<Question name="Blattfiederpaare" type="Num">
 <infoStore>
 <entry property="range">
 <NumInterval lower="1.0" type="LeftClosedRightClosedInterval" upper="100.0"/>
 </entry>
 </infoStore>
 </Question>
-<Question ID="M2034" type="OC">
-<Text>Kelchfarbe</Text>
+<Question name="Blattfiedersymmetrie" type="OC">
 <Answers>
-<Answer ID="M2034a1" type="AnswerChoice">
-<Text>weiß</Text>
-</Answer>
-<Answer ID="M2034a2" type="AnswerChoice">
-<Text>gelb</Text>
-</Answer>
-<Answer ID="M2034a3" type="AnswerChoice">
-<Text>orange</Text>
-</Answer>
-<Answer ID="M2034a4" type="AnswerChoice">
-<Text>rot</Text>
-</Answer>
-<Answer ID="M2034a5" type="AnswerChoice">
-<Text>purpur</Text>
-</Answer>
-<Answer ID="M2034a6" type="AnswerChoice">
-<Text>rosarot</Text>
-</Answer>
-<Answer ID="M2034a7" type="AnswerChoice">
-<Text>violett (rotblau)</Text>
-</Answer>
-<Answer ID="M2034a8" type="AnswerChoice">
-<Text>lila (helles rotblau)</Text>
-</Answer>
-<Answer ID="M2034a9" type="AnswerChoice">
-<Text>blau</Text>
-</Answer>
-<Answer ID="M2034a10" type="AnswerChoice">
-<Text>hellblau</Text>
-</Answer>
-<Answer ID="M2034a11" type="AnswerChoice">
-<Text>grün</Text>
-</Answer>
-<Answer ID="M2034a12" type="AnswerChoice">
-<Text>braun</Text>
-</Answer>
-<Answer ID="M2034a13" type="AnswerChoice">
-<Text>grau</Text>
-</Answer>
-<Answer ID="M2034a14" type="AnswerChoice">
-<Text>schwarz</Text>
-</Answer>
+<Answer name="paarig (gerade Anzahl Fiederblätter)" type="AnswerChoice"/>
+<Answer name="unpaarig (ungerade Anzahl Fiederblätter)" type="AnswerChoice"/>
 </Answers>
 </Question>
-<Question ID="M204" type="Num">
-<Text>Blattfingeranzahl</Text>
+<Question name="Blattfingeranzahl" type="Num">
 <infoStore>
 <entry property="range">
 <NumInterval lower="2.0" type="LeftClosedRightClosedInterval" upper="100.0"/>
 </entry>
 </infoStore>
 </Question>
-<Question ID="M214" type="OC">
-<Text>Blatthaare</Text>
+<Question name="Blattform" type="OC">
 <Answers>
-<Answer ID="M214a1" type="AnswerChoice">
-<Text>kahl oder kaum behaart</Text>
-</Answer>
-<Answer ID="M214a2" type="AnswerChoice">
-<Text>deutlich behaart</Text>
-</Answer>
-<Answer ID="M214a3" type="AnswerChoice">
-<Text>stark bis dicht behaart</Text>
-</Answer>
+<Answer name="rundlich" type="AnswerChoice"/>
+<Answer name="oval, eiförmig" type="AnswerChoice"/>
+<Answer name="oval, spitz zulaufend" type="AnswerChoice"/>
+<Answer name="länglich" type="AnswerChoice"/>
+<Answer name="linealisch (grasartig)" type="AnswerChoice"/>
+<Answer name="nadelartig" type="AnswerChoice"/>
+<Answer name="röhrig (innen hohl)" type="AnswerChoice"/>
+<Answer name="herzförmig" type="AnswerChoice"/>
+<Answer name="nierenförmig" type="AnswerChoice"/>
+<Answer name="pfeilförmig" type="AnswerChoice"/>
+<Answer name="gelappt" type="AnswerChoice"/>
+<Answer name="spatelig" type="AnswerChoice"/>
 </Answers>
 </Question>
-<Question ID="M215" type="OC">
-<Text>Blattbefestigung</Text>
+<Question name="Blatthaare" type="OC">
 <Answers>
-<Answer ID="M215a1" type="AnswerChoice">
-<Text>gestielt</Text>
-</Answer>
-<Answer ID="M215a2" type="AnswerChoice">
-<Text>sitzend</Text>
-</Answer>
-<Answer ID="M215a3" type="AnswerChoice">
-<Text>geöhrt </Text>
-</Answer>
-<Answer ID="M215a4" type="AnswerChoice">
-<Text>stengelumfassend</Text>
-</Answer>
-<Answer ID="M215a5" type="AnswerChoice">
-<Text>durchwachsen</Text>
-</Answer>
+<Answer name="kahl oder kaum behaart" type="AnswerChoice"/>
+<Answer name="deutlich behaart" type="AnswerChoice"/>
+<Answer name="stark bis dicht behaart" type="AnswerChoice"/>
 </Answers>
 </Question>
-<Question ID="M219" type="OC">
-<Text>Wuchsart</Text>
+<Question name="Blattnervatur" type="OC">
 <Answers>
-<Answer ID="M219a1" type="AnswerChoice">
-<Text>niederliegend, kriechend</Text>
-</Answer>
-<Answer ID="M219a2" type="AnswerChoice">
-<Text>aufsteigend bis aufrecht, freistehend</Text>
-</Answer>
-<Answer ID="M219a3" type="AnswerChoice">
-<Text>rankend oder kletternd</Text>
-</Answer>
+<Answer name="netznervig oder fiedernervig" type="AnswerChoice"/>
+<Answer name="streifennervig (parallelnervig)" type="AnswerChoice"/>
 </Answers>
 </Question>
-<Question ID="M220" type="OC">
-<Text>Stengelverzweigung</Text>
+<Question name="Blattrand" type="OC">
 <Answers>
-<Answer ID="M220a1" type="AnswerChoice">
-<Text>unverzweigt</Text>
-</Answer>
-<Answer ID="M220a2" type="AnswerChoice">
-<Text>verzweigt</Text>
-</Answer>
+<Answer name="ganzrandig" type="AnswerChoice"/>
+<Answer name="gesägt oder gekerbt" type="AnswerChoice"/>
+<Answer name="geschrotet" type="AnswerChoice"/>
+<Answer name="mit Stacheln oder Dornen" type="AnswerChoice"/>
+<Answer name="buchtig" type="AnswerChoice"/>
 </Answers>
 </Question>
-<Question ID="M221" type="OC">
-<Text>Stengelhöhe</Text>
+<Question name="Blattranken" type="YN">
 <Answers>
-<Answer ID="M221a1" type="AnswerChoice">
-<Text>bis 10cm (handbreit)</Text>
-</Answer>
-<Answer ID="M221a2" type="AnswerChoice">
-<Text>10 bis 20cm (handlang)</Text>
-</Answer>
-<Answer ID="M221a3" type="AnswerChoice">
-<Text>20 bis 40cm (ellenlang)</Text>
-</Answer>
-<Answer ID="M221a4" type="AnswerChoice">
-<Text>40 bis 60cm (kniehoch)</Text>
-</Answer>
-<Answer ID="M221a5" type="AnswerChoice">
-<Text>60 bis 100cm (beinlang)</Text>
-</Answer>
-<Answer ID="M221a6" type="AnswerChoice">
-<Text>100 bis 150cm (kindgross)</Text>
-</Answer>
-<Answer ID="M221a7" type="AnswerChoice">
-<Text>mehr als 150cm</Text>
-</Answer>
+<Answer name="ja" type="AnswerYes"/>
+<Answer name="nein" type="AnswerNo"/>
 </Answers>
 </Question>
-<Question ID="M222" type="OC">
-<Text>Stengelmilchsaft</Text>
+<Question name="Blattstellung" type="OC">
 <Answers>
-<Answer ID="M222a1" type="AnswerChoice">
-<Text>nein, kein gefärbter Milchsaft</Text>
-</Answer>
-<Answer ID="M222a2" type="AnswerChoice">
-<Text>ja, weißer Milchsaft</Text>
-</Answer>
-<Answer ID="M222a3" type="AnswerChoice">
-<Text>ja, gelber Milchsaft</Text>
-</Answer>
+<Answer name="zweizeilig" type="AnswerChoice"/>
+<Answer name="wechselständig (spiralig)" type="AnswerChoice"/>
+<Answer name="gegenständig" type="AnswerChoice"/>
+<Answer name="wirtelig" type="AnswerChoice"/>
+<Answer name="alle grundständig oder rosettig" type="AnswerChoice"/>
 </Answers>
 </Question>
-<Question ID="M223" type="OC">
-<Text>Stengelumfang</Text>
+<Question name="Blattunterteilung" type="OC">
 <Answers>
-<Answer ID="M223a1" type="AnswerChoice">
-<Text>rund und eher glatt</Text>
-</Answer>
-<Answer ID="M223a2" type="AnswerChoice">
-<Text>rund und gerippt</Text>
-</Answer>
-<Answer ID="M223a3" type="AnswerChoice">
-<Text>dreikantig</Text>
-</Answer>
-<Answer ID="M223a4" type="AnswerChoice">
-<Text>vierkantig, quadratisch</Text>
-</Answer>
-<Answer ID="M223a5" type="AnswerChoice">
-<Text>andersartig kantig</Text>
-</Answer>
-</Answers>
-</Question>
-<Question ID="M224" type="OC">
-<Text>Stengelinneres</Text>
-<Answers>
-<Answer ID="M224a1" type="AnswerChoice">
-<Text>gefüllt, nicht hohl</Text>
-</Answer>
-<Answer ID="M224a2" type="AnswerChoice">
-<Text>engröhrig hohl</Text>
-</Answer>
-<Answer ID="M224a3" type="AnswerChoice">
-<Text>weitröhrig hohl</Text>
-</Answer>
-</Answers>
-</Question>
-<Question ID="M225" type="OC">
-<Text>Stengelhaare</Text>
-<Answers>
-<Answer ID="M225a1" type="AnswerChoice">
-<Text>nicht oder kaum behaart</Text>
-</Answer>
-<Answer ID="M225a2" type="AnswerChoice">
-<Text>deutlich behaart</Text>
-</Answer>
-<Answer ID="M225a3" type="AnswerChoice">
-<Text>stark bis dicht behaart</Text>
-</Answer>
+<Answer name="einfache Form, ohne regelmässige Gliederung" type="AnswerChoice"/>
+<Answer name="fiederspaltig (tief +/- regelmäßig eingeschnitten, aber nicht bis zur Blattmitte)" type="AnswerChoice"/>
+<Answer name="einfach gefiedert" type="AnswerChoice"/>
+<Answer name="mehrfach gefiedert" type="AnswerChoice"/>
+<Answer name="handförmig eingeschnitten" type="AnswerChoice"/>
+<Answer name="gefingert" type="AnswerChoice"/>
 </Answers>
 <Children>
-<Child ID="M4830"/>
+<Child name="Blattfiedersymmetrie"/>
+<Child name="Blattfiederpaare"/>
+<Child name="Blattfingeranzahl"/>
+<Child name="Blattform"/>
 </Children>
 </Question>
-<Question ID="M226" type="YN">
-<Text>Stengelstacheln</Text>
+<QContainer name="Blätter">
+<Children>
+<Child name="Blattranken"/>
+<Child name="Blattstellung"/>
+<Child name="Blattunterteilung"/>
+<Child name="Blattrand"/>
+<Child name="Blattbefestigung"/>
+<Child name="Blatthaare"/>
+<Child name="Blattnervatur"/>
+</Children>
+</QContainer>
+<QContainer name="Blüte">
+<Children>
+<Child name="Blütezeit"/>
+<Child name="Blütenfarbe"/>
+<Child name="Blütentyp grob"/>
+<Child name="Blütengröße"/>
+<Child name="Blütenkelch"/>
+<Child name="Blütenstand"/>
+</Children>
+</QContainer>
+<Question name="Blütenblattrand gezackt" type="OC">
 <Answers>
-<Answer ID="M226a1" type="AnswerYes">
-<Text>ja</Text>
-</Answer>
-<Answer ID="M226a0" type="AnswerNo">
-<Text>nein</Text>
-</Answer>
+<Answer name="nein, eher glatt" type="AnswerChoice"/>
+<Answer name="ja, deutlich " type="AnswerChoice"/>
 </Answers>
 </Question>
-<Question ID="M4679" type="OC">
-<Text>Köpfchengröße</Text>
+<Question name="Blütenblattspaltenanzahl" type="OC">
 <Answers>
-<Answer ID="M4679a1" type="AnswerChoice">
-<Text>bis 5mm (großer Stecknadelkopf)</Text>
-</Answer>
-<Answer ID="M4679a2" type="AnswerChoice">
-<Text>5 bis 10mm (Reißnagel, Bleistift)</Text>
-</Answer>
-<Answer ID="M4679a3" type="AnswerChoice">
-<Text>10 bis 15mm (Fingernagel, Hemdknopf) </Text>
-</Answer>
-<Answer ID="M4679a4" type="AnswerChoice">
-<Text>15 bis 20 mm (1Pfg, 2Pfg, 5Pfg, fingerbreit)</Text>
-</Answer>
-<Answer ID="M4679a5" type="AnswerChoice">
-<Text>20 bis 30mm (10Pfg, 1DM, 2DM, 5DM)</Text>
-</Answer>
-<Answer ID="M4679a6" type="AnswerChoice">
-<Text>30 bis 50mm (2 - 3 fingerbreit)</Text>
-</Answer>
-<Answer ID="M4679a7" type="AnswerChoice">
-<Text>50 bis 80mm (4 Finger breit)</Text>
-</Answer>
-<Answer ID="M4679a8" type="AnswerChoice">
-<Text>mehr als 80mm</Text>
-</Answer>
+<Answer name="1 Spalte (zwei Lappen)" type="AnswerChoice"/>
+<Answer name="2 Spalten (drei Lappen)" type="AnswerChoice"/>
+<Answer name="3 Spalten (vier Lappen)" type="AnswerChoice"/>
+<Answer name="4 Spalten (fünf Lappen)" type="AnswerChoice"/>
+<Answer name="mehr Spalten" type="AnswerChoice"/>
 </Answers>
 </Question>
-<Question ID="M4830" type="OC">
-<Text>Stengelhaare Besonderheiten</Text>
+<Question name="Blütenblätter gespalten" type="OC">
 <Answers>
-<Answer ID="M4830a1" type="AnswerChoice">
-<Text>die Behaarung verläuft hauptsächlich in einer Zeile am Stengel entlang</Text>
-</Answer>
-<Answer ID="M4830a2" type="AnswerChoice">
-<Text>die Behaarung verläuft hauptsächlich in zwei Zeilen am Stengel entlang</Text>
-</Answer>
-<Answer ID="M4830a3" type="AnswerChoice">
-<Text>keine der oben genannten Besonderheiten</Text>
-</Answer>
+<Answer name="nicht oder kaum gespalten, höchstens gezähnt" type="AnswerChoice"/>
+<Answer name="etwa bis zu 1/4 gespalten" type="AnswerChoice"/>
+<Answer name="etwa bis zu 1/2 gespalten" type="AnswerChoice"/>
+<Answer name="etwa bis zu 3/4 gespalten" type="AnswerChoice"/>
+<Answer name="beinahe ganz gespalten" type="AnswerChoice"/>
+</Answers>
+<Children>
+<Child name="Blütenblattspaltenanzahl"/>
+<Child name="Blütenblattrand gezackt"/>
+</Children>
+</Question>
+<Question name="Blütenblätteranzahl" type="Num">
+<infoStore>
+<entry property="range">
+<NumInterval lower="1.0" type="LeftClosedRightClosedInterval" upper="20.0"/>
+</entry>
+</infoStore>
+</Question>
+<Question name="Blütenfarbe" type="OC">
+<Answers>
+<Answer name="weiß" type="AnswerChoice"/>
+<Answer name="gelb" type="AnswerChoice"/>
+<Answer name="orange" type="AnswerChoice"/>
+<Answer name="rot" type="AnswerChoice"/>
+<Answer name="purpur" type="AnswerChoice"/>
+<Answer name="rosarot" type="AnswerChoice"/>
+<Answer name="violett (rotblau)" type="AnswerChoice"/>
+<Answer name="lila (helles rotblau)" type="AnswerChoice"/>
+<Answer name="blau" type="AnswerChoice"/>
+<Answer name="hellblau" type="AnswerChoice"/>
+<Answer name="grünlich" type="AnswerChoice"/>
+<Answer name="braun" type="AnswerChoice"/>
+<Answer name="grau" type="AnswerChoice"/>
+<Answer name="schwarz" type="AnswerChoice"/>
 </Answers>
 </Question>
-<Question ID="M731" type="OC">
-<Text>Blütezeit</Text>
+<Question name="Blütengröße" type="OC">
 <Answers>
-<Answer ID="M731a1" type="AnswerChoice">
-<Text>Jan</Text>
-</Answer>
-<Answer ID="M731a2" type="AnswerChoice">
-<Text>Feb</Text>
-</Answer>
-<Answer ID="M731a3" type="AnswerChoice">
-<Text>Mär</Text>
-</Answer>
-<Answer ID="M731a4" type="AnswerChoice">
-<Text>Apr</Text>
-</Answer>
-<Answer ID="M731a5" type="AnswerChoice">
-<Text>Mai</Text>
-</Answer>
-<Answer ID="M731a6" type="AnswerChoice">
-<Text>Jun</Text>
-</Answer>
-<Answer ID="M731a7" type="AnswerChoice">
-<Text>Jul</Text>
-</Answer>
-<Answer ID="M731a8" type="AnswerChoice">
-<Text>Aug</Text>
-</Answer>
-<Answer ID="M731a9" type="AnswerChoice">
-<Text>Sep</Text>
-</Answer>
-<Answer ID="M731a10" type="AnswerChoice">
-<Text>Okt</Text>
-</Answer>
-<Answer ID="M731a11" type="AnswerChoice">
-<Text>Nov</Text>
-</Answer>
-<Answer ID="M731a12" type="AnswerChoice">
-<Text>Dez</Text>
-</Answer>
+<Answer name="bis 5mm (großer Stecknadelkopf)" type="AnswerChoice"/>
+<Answer name="5 bis 10mm (Reißnagel, Bleistift)" type="AnswerChoice"/>
+<Answer name="10 bis 15mm (Fingernagel, Hemdknopf) " type="AnswerChoice"/>
+<Answer name="15 bis 20mm (1Pfg, 2Pfg, 5Pfg, fingerbreit)" type="AnswerChoice"/>
+<Answer name="20 bis 30mm (10Pfg, 1DM, 2DM, 5DM)" type="AnswerChoice"/>
+<Answer name="30 bis 50mm (2 - 3 fingerbreit)" type="AnswerChoice"/>
+<Answer name="50 bis 80mm (4 Finger breit)" type="AnswerChoice"/>
+<Answer name="mehr als 80mm" type="AnswerChoice"/>
 </Answers>
 </Question>
-<QContainer ID="Q000">
-<Text>Fragebögen</Text>
+<Question name="Blütenkelch" type="OC">
+<Answers>
+<Answer name="fehlend (nur angeben wenn ganz sicher)" type="AnswerChoice"/>
+<Answer name="getrenntblättrig" type="AnswerChoice"/>
+<Answer name="verwachsenblättrig bis becherförmig" type="AnswerChoice"/>
+<Answer name="dachziegelartig schuppig angeordnete Kelchblätter" type="AnswerChoice"/>
+</Answers>
 <Children>
-<Child ID="Q182"/>
-<Child ID="Q1499"/>
-<Child ID="Q1500"/>
-<Child ID="Q1501"/>
+<Child name="Kelchfarbe"/>
+</Children>
+</Question>
+<Question name="Blütenstand" type="OC">
+<Answers>
+<Answer name="einzeln (eine Blüte am Stengelende)" type="AnswerChoice"/>
+<Answer name="allseitswendige Traube" type="AnswerChoice"/>
+<Answer name="einseitswendige Traube" type="AnswerChoice"/>
+<Answer name="Ähre (wie Traube, aber Blüten ungestielt)" type="AnswerChoice"/>
+<Answer name="Köpfchen" type="AnswerChoice"/>
+<Answer name="Quirl" type="AnswerChoice"/>
+<Answer name="Dolde oder Scheindolde" type="AnswerChoice"/>
+<Answer name="einzeln oder zu wenigen in den Blattachseln" type="AnswerChoice"/>
+<Answer name="Rispe" type="AnswerChoice"/>
+</Answers>
+<Children>
+<Child name="Köpfchengröße"/>
+<Child name="Blütenstand Dolde"/>
+</Children>
+</Question>
+<Question name="Blütenstand Dolde" type="OC">
+<Answers>
+<Answer name="echte einfache Dolde" type="AnswerChoice"/>
+<Answer name="echte doppelte Dolde" type="AnswerChoice"/>
+<Answer name="Scheindolde" type="AnswerChoice"/>
+</Answers>
+<Children>
+<Child name="Döldchenanzahl"/>
+</Children>
+</Question>
+<Question name="Blütentyp Lippenblüte" type="OC">
+<Answers>
+<Answer name="Unterlippe deutlich, Oberlippe lang u. gewölbt" type="AnswerChoice"/>
+<Answer name="Unterlippe deutlich, Oberlippe kürzer u. flach" type="AnswerChoice"/>
+<Answer name="Unterlippe deutlich, Oberlippe fehlt" type="AnswerChoice"/>
+<Answer name="Unter- und Oberlippe verkürzt,  röhrenförmig (incl. Rachenblüte)" type="AnswerChoice"/>
+</Answers>
+</Question>
+<Question name="Blütentyp Schmetterlingsblüte" type="OC">
+<Answers>
+<Answer name="langgestreckt schlank (wie bei Klee)" type="AnswerChoice"/>
+<Answer name="eher rundlich, kompakt (wie bei Platterbse)" type="AnswerChoice"/>
+</Answers>
+</Question>
+<Question name="Blütentyp gespornt" type="OC">
+<Answers>
+<Answer name="Typ Lerchensporn" type="AnswerChoice"/>
+<Answer name="Typ Rittersporn" type="AnswerChoice"/>
+<Answer name="Typ gelber Eisenhut" type="AnswerChoice"/>
+<Answer name="Typ Leinkraut" type="AnswerChoice"/>
+<Answer name="Typ Akelei" type="AnswerChoice"/>
+<Answer name="Typ Veilchen" type="AnswerChoice"/>
+</Answers>
+</Question>
+<Question name="Blütentyp glocken-, trichter-, becherförmig" type="OC">
+<Answers>
+<Answer name="glockenförmig" type="AnswerChoice"/>
+<Answer name="trichterförmig flach" type="AnswerChoice"/>
+<Answer name="kugelglockig, becherförmig" type="AnswerChoice"/>
+</Answers>
+</Question>
+<Question name="Blütentyp grob" type="OC">
+<Answers>
+<Answer name="strahlig, sternförmig" type="AnswerChoice"/>
+<Answer name="Schmetterlingsblüte" type="AnswerChoice"/>
+<Answer name="Lippenblüte, Rachenblüte" type="AnswerChoice"/>
+<Answer name="glockenförmig, trichterförmig, becherförmig" type="AnswerChoice"/>
+<Answer name="gespornt" type="AnswerChoice"/>
+<Answer name="andere Blüten" type="AnswerChoice"/>
+</Answers>
+<Children>
+<Child name="Blütentyp strahlig"/>
+<Child name="Blütentyp Schmetterlingsblüte"/>
+<Child name="Blütentyp Lippenblüte"/>
+<Child name="Blütentyp glocken-, trichter-, becherförmig"/>
+<Child name="Blütentyp gespornt"/>
+<Child name="Blütentyp weitere"/>
+</Children>
+</Question>
+<Question name="Blütentyp strahlig" type="OC">
+<Answers>
+<Answer name="einzelne Blütenblätter gut abzählbar, nicht mehr als 15" type="AnswerChoice"/>
+<Answer name="Typ Löwenzahn (Korbblüte, nur Zungen)" type="AnswerChoice"/>
+<Answer name="Typ Gänseblümchen (Korbblüte, Zungen u. Röhren)" type="AnswerChoice"/>
+<Answer name="Typ Kornblume (Korbblüte, nur Röhren)" type="AnswerChoice"/>
+<Answer name="Typ Stacheldistel (Korbblüte, nur Röhren)" type="AnswerChoice"/>
+<Answer name="Typ Witwenblume" type="AnswerChoice"/>
+</Answers>
+<Children>
+<Child name="Blütenblätteranzahl"/>
+<Child name="Blütenblätter gespalten"/>
+</Children>
+</Question>
+<Question name="Blütentyp weitere" type="OC">
+<Answers>
+<Answer name="Typ blauer Eisenhut" type="AnswerChoice"/>
+<Answer name="Typ Akelei" type="AnswerChoice"/>
+<Answer name="Typ Veilchen" type="AnswerChoice"/>
+<Answer name="Typ Wolfsmilch" type="AnswerChoice"/>
+</Answers>
+</Question>
+<Question name="Blütezeit" type="OC">
+<Answers>
+<Answer name="Jan" type="AnswerChoice"/>
+<Answer name="Feb" type="AnswerChoice"/>
+<Answer name="Mär" type="AnswerChoice"/>
+<Answer name="Apr" type="AnswerChoice"/>
+<Answer name="Mai" type="AnswerChoice"/>
+<Answer name="Jun" type="AnswerChoice"/>
+<Answer name="Jul" type="AnswerChoice"/>
+<Answer name="Aug" type="AnswerChoice"/>
+<Answer name="Sep" type="AnswerChoice"/>
+<Answer name="Okt" type="AnswerChoice"/>
+<Answer name="Nov" type="AnswerChoice"/>
+<Answer name="Dez" type="AnswerChoice"/>
+</Answers>
+</Question>
+<Question name="Döldchenanzahl" type="Num">
+<infoStore>
+<entry property="range">
+<NumInterval lower="2.0" type="LeftClosedRightClosedInterval" upper="100.0"/>
+</entry>
+</infoStore>
+</Question>
+<QContainer name="Fragebögen">
+<Children>
+<Child name="Habitus"/>
+<Child name="Blüte"/>
+<Child name="Blätter"/>
+<Child name="Stengel"/>
 </Children>
 </QContainer>
-<QContainer ID="Q1499">
-<Text>Blüte</Text>
+<QContainer name="Habitus"/>
+<Question name="Kelchfarbe" type="OC">
+<Answers>
+<Answer name="weiß" type="AnswerChoice"/>
+<Answer name="gelb" type="AnswerChoice"/>
+<Answer name="orange" type="AnswerChoice"/>
+<Answer name="rot" type="AnswerChoice"/>
+<Answer name="purpur" type="AnswerChoice"/>
+<Answer name="rosarot" type="AnswerChoice"/>
+<Answer name="violett (rotblau)" type="AnswerChoice"/>
+<Answer name="lila (helles rotblau)" type="AnswerChoice"/>
+<Answer name="blau" type="AnswerChoice"/>
+<Answer name="hellblau" type="AnswerChoice"/>
+<Answer name="grün" type="AnswerChoice"/>
+<Answer name="braun" type="AnswerChoice"/>
+<Answer name="grau" type="AnswerChoice"/>
+<Answer name="schwarz" type="AnswerChoice"/>
+</Answers>
+</Question>
+<Question name="Köpfchengröße" type="OC">
+<Answers>
+<Answer name="bis 5mm (großer Stecknadelkopf)" type="AnswerChoice"/>
+<Answer name="5 bis 10mm (Reißnagel, Bleistift)" type="AnswerChoice"/>
+<Answer name="10 bis 15mm (Fingernagel, Hemdknopf) " type="AnswerChoice"/>
+<Answer name="15 bis 20 mm (1Pfg, 2Pfg, 5Pfg, fingerbreit)" type="AnswerChoice"/>
+<Answer name="20 bis 30mm (10Pfg, 1DM, 2DM, 5DM)" type="AnswerChoice"/>
+<Answer name="30 bis 50mm (2 - 3 fingerbreit)" type="AnswerChoice"/>
+<Answer name="50 bis 80mm (4 Finger breit)" type="AnswerChoice"/>
+<Answer name="mehr als 80mm" type="AnswerChoice"/>
+</Answers>
+</Question>
+<QContainer name="Stengel">
 <Children>
-<Child ID="M731"/>
-<Child ID="M1537"/>
-<Child ID="M1526"/>
-<Child ID="M192"/>
-<Child ID="M193"/>
-<Child ID="M1532"/>
+<Child name="Wuchsart"/>
+<Child name="Stengelverzweigung"/>
+<Child name="Stengelhöhe"/>
+<Child name="Stengelmilchsaft"/>
+<Child name="Stengelhaare"/>
+<Child name="Stengelumfang"/>
+<Child name="Stengelinneres"/>
+<Child name="Stengelstacheln"/>
 </Children>
 </QContainer>
-<QContainer ID="Q1500">
-<Text>Blätter</Text>
+<Question name="Stengelhaare" type="OC">
+<Answers>
+<Answer name="nicht oder kaum behaart" type="AnswerChoice"/>
+<Answer name="deutlich behaart" type="AnswerChoice"/>
+<Answer name="stark bis dicht behaart" type="AnswerChoice"/>
+</Answers>
 <Children>
-<Child ID="M194"/>
-<Child ID="M1536"/>
-<Child ID="M1534"/>
-<Child ID="M1535"/>
-<Child ID="M215"/>
-<Child ID="M214"/>
-<Child ID="M1518"/>
+<Child name="Stengelhaare Besonderheiten"/>
 </Children>
-</QContainer>
-<QContainer ID="Q1501">
-<Text>Stengel</Text>
-<Children>
-<Child ID="M219"/>
-<Child ID="M220"/>
-<Child ID="M221"/>
-<Child ID="M222"/>
-<Child ID="M225"/>
-<Child ID="M223"/>
-<Child ID="M224"/>
-<Child ID="M226"/>
-</Children>
-</QContainer>
-<QContainer ID="Q182">
-<Text>Habitus</Text>
-</QContainer>
+</Question>
+<Question name="Stengelhaare Besonderheiten" type="OC">
+<Answers>
+<Answer name="die Behaarung verläuft hauptsächlich in einer Zeile am Stengel entlang" type="AnswerChoice"/>
+<Answer name="die Behaarung verläuft hauptsächlich in zwei Zeilen am Stengel entlang" type="AnswerChoice"/>
+<Answer name="keine der oben genannten Besonderheiten" type="AnswerChoice"/>
+</Answers>
+</Question>
+<Question name="Stengelhöhe" type="OC">
+<Answers>
+<Answer name="bis 10cm (handbreit)" type="AnswerChoice"/>
+<Answer name="10 bis 20cm (handlang)" type="AnswerChoice"/>
+<Answer name="20 bis 40cm (ellenlang)" type="AnswerChoice"/>
+<Answer name="40 bis 60cm (kniehoch)" type="AnswerChoice"/>
+<Answer name="60 bis 100cm (beinlang)" type="AnswerChoice"/>
+<Answer name="100 bis 150cm (kindgross)" type="AnswerChoice"/>
+<Answer name="mehr als 150cm" type="AnswerChoice"/>
+</Answers>
+</Question>
+<Question name="Stengelinneres" type="OC">
+<Answers>
+<Answer name="gefüllt, nicht hohl" type="AnswerChoice"/>
+<Answer name="engröhrig hohl" type="AnswerChoice"/>
+<Answer name="weitröhrig hohl" type="AnswerChoice"/>
+</Answers>
+</Question>
+<Question name="Stengelmilchsaft" type="OC">
+<Answers>
+<Answer name="nein, kein gefärbter Milchsaft" type="AnswerChoice"/>
+<Answer name="ja, weißer Milchsaft" type="AnswerChoice"/>
+<Answer name="ja, gelber Milchsaft" type="AnswerChoice"/>
+</Answers>
+</Question>
+<Question name="Stengelstacheln" type="YN">
+<Answers>
+<Answer name="ja" type="AnswerYes"/>
+<Answer name="nein" type="AnswerNo"/>
+</Answers>
+</Question>
+<Question name="Stengelumfang" type="OC">
+<Answers>
+<Answer name="rund und eher glatt" type="AnswerChoice"/>
+<Answer name="rund und gerippt" type="AnswerChoice"/>
+<Answer name="dreikantig" type="AnswerChoice"/>
+<Answer name="vierkantig, quadratisch" type="AnswerChoice"/>
+<Answer name="andersartig kantig" type="AnswerChoice"/>
+</Answers>
+</Question>
+<Question name="Stengelverzweigung" type="OC">
+<Answers>
+<Answer name="unverzweigt" type="AnswerChoice"/>
+<Answer name="verzweigt" type="AnswerChoice"/>
+</Answers>
+</Question>
+<Question name="Wuchsart" type="OC">
+<Answers>
+<Answer name="niederliegend, kriechend" type="AnswerChoice"/>
+<Answer name="aufsteigend bis aufrecht, freistehend" type="AnswerChoice"/>
+<Answer name="rankend oder kletternd" type="AnswerChoice"/>
+</Answers>
+</Question>
 </QASets>
 <Diagnoses>
-<Diagnosis ID="P000">
-<Text>Klassifikation</Text>
+<Diagnosis aPriProb="P3" name="Acker-Ehrenpreis (Veronica persica)"/>
+<Diagnosis name="Acker-Hornkraut (Cerastium arvense)"/>
+<Diagnosis aPriProb="P2" name="Acker-Senf (Sinapis arvensis)"/>
+<Diagnosis aPriProb="P2" name="Acker-Vergißmeinnicht (Myosotis arvensis)"/>
+<Diagnosis aPriProb="P2" name="Acker-Witwenblume (Knautia arvensis)"/>
+<Diagnosis aPriProb="P2" name="Bach-Nelkenwurz (Geum rivale)"/>
+<Diagnosis name="Bunte Kronwicke (Coronilla varia)"/>
+<Diagnosis name="Busch-Windröschen (Anemone Nemorosa)"/>
+<Diagnosis aPriProb="P3" name="Duftlose Kamille (Matricaria inodora)"/>
+<Diagnosis aPriProb="P2" name="Echte Nelkenwurz (Geum urbanum)"/>
+<Diagnosis aPriProb="P2" name="Echter Steinklee (Melilotus officinalis)"/>
+<Diagnosis aPriProb="P2" name="Echtes Labkraut (Galium verum)"/>
+<Diagnosis name="Echtes Lungenkraut (Pulmonaria officinalis)"/>
+<Diagnosis aPriProb="P3" name="Efeu-Gundermann (Glechoma hederacea)"/>
+<Diagnosis name="Fam. Doldenblütler (Apiaceae)">
 <Children>
-<Child ID="P15"/>
-<Child ID="P10"/>
-<Child ID="P9"/>
-<Child ID="P12"/>
-<Child ID="P7"/>
-<Child ID="P4"/>
-<Child ID="P13"/>
-<Child ID="P14"/>
-<Child ID="P8"/>
-<Child ID="P3"/>
-<Child ID="P5"/>
-<Child ID="P2"/>
-<Child ID="P6"/>
-<Child ID="P11"/>
-<Child ID="P597"/>
-<Child ID="P598"/>
-<Child ID="P2682"/>
-<Child ID="P3149"/>
-<Child ID="P17"/>
+<Child name="Wiesen-Kerbel (Anthriscus sylvestris)"/>
+<Child name="Wilde Möhre (Daucus carota)"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P10">
-<Text>Fam. Hahnenfußgewächse (Ranunculaceae)</Text>
+<Diagnosis name="Fam. Erdrauchgewächse (Fumariaceae)">
 <Children>
-<Child ID="P776"/>
-<Child ID="P3152"/>
-<Child ID="P3153"/>
-<Child ID="P777"/>
+<Child name="Hohler Lerchensporn (Corydalis cava)"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P1085" aPriProb="P2">
-<Text>Wiesen-Storchschnabel (Geranium pratense)</Text>
-</Diagnosis>
-<Diagnosis ID="P11">
-<Text>Fam. Storchschnabelgewächse (Geraniaceae)</Text>
+<Diagnosis name="Fam. Hahnenfußgewächse (Ranunculaceae)">
 <Children>
-<Child ID="P2169"/>
-<Child ID="P1085"/>
-<Child ID="P5973"/>
-<Child ID="P5526"/>
+<Child name="Busch-Windröschen (Anemone Nemorosa)"/>
+<Child name="Sumpf-Dotterblume (Caltha palustris)"/>
+<Child name="Scharfer Hahnenfuß (Ranunculus acris)"/>
+<Child name="Scharbockskraut (Ranunculus ficaria)"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P1198" aPriProb="P2">
-<Text>Wiesen-Schaumkraut (Cardamine pratense)</Text>
-</Diagnosis>
-<Diagnosis ID="P12">
-<Text>Fam. Erdrauchgewächse (Fumariaceae)</Text>
+<Diagnosis name="Fam. Kardengewächse (Dipsacaceae)">
 <Children>
-<Child ID="P3634"/>
+<Child name="Acker-Witwenblume (Knautia arvensis)"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P122" aPriProb="P3">
-<Text>Gänseblümchen (Bellis perennis)</Text>
-</Diagnosis>
-<Diagnosis ID="P123" aPriProb="P3">
-<Text>Weiße Taubnessel (Lamium album)</Text>
-</Diagnosis>
-<Diagnosis ID="P13">
-<Text>Fam. Primelgewächse (Primulaceae)</Text>
+<Diagnosis name="Fam. Korbblütler (Asteraceae)">
 <Children>
-<Child ID="P2127"/>
+<Child name="Gem. Schafgarbe (Achillea millefolium)"/>
+<Child name="Gänseblümchen (Bellis perennis)"/>
+<Child name="Margerite (Chrysanthemum leucanthemum)"/>
+<Child name="Kornblume (Centaurea cyanus)"/>
+<Child name="Gem. Wegwarte (Cichorium intybus)"/>
+<Child name="Wiesen-Pippau (Crepis biennis)"/>
+<Child name="Duftlose Kamille (Matricaria inodora)"/>
+<Child name="Wiesen-Löwenzahn (Taraxacum officinalis)"/>
+<Child name="Wiesen-Bocksbart (Tragopogon pratensis)"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P1329" aPriProb="P2">
-<Text>Vogelmiere (Stellaria media)</Text>
-</Diagnosis>
-<Diagnosis ID="P14">
-<Text>Fam. Nelkengewächse (Cariophyllaceae)</Text>
+<Diagnosis name="Fam. Kreuzblütler (Brassicaceae)">
 <Children>
-<Child ID="P1688"/>
-<Child ID="P2500"/>
-<Child ID="P3256"/>
-<Child ID="P1687"/>
-<Child ID="P1329"/>
+<Child name="Knoblauchsrauke (Alliaria petiolata)"/>
+<Child name="Kahle Gänsekresse (Arabis glabra)"/>
+<Child name="Gem. Hirtentäschel (Capsella bursa-pastoris)"/>
+<Child name="Wiesen-Schaumkraut (Cardamine pratense)"/>
+<Child name="Acker-Senf (Sinapis arvensis)"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P1470">
-<Text>Wiesen-Kerbel (Anthriscus sylvestris)</Text>
-</Diagnosis>
-<Diagnosis ID="P15">
-<Text>Fam. Liliengewächse (Liliaceae)</Text>
+<Diagnosis name="Fam. Liliengewächse (Liliaceae)">
 <Children>
-<Child ID="P7361"/>
-<Child ID="P3543"/>
+<Child name="Gelbstern (Gagea lutea)"/>
+<Child name="Kleine Traubenhyazinthe (Muscari botryoides)"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P1572" aPriProb="P3">
-<Text>Efeu-Gundermann (Glechoma hederacea)</Text>
-</Diagnosis>
-<Diagnosis ID="P16" aPriProb="P2">
-<Text>Knoblauchsrauke (Alliaria petiolata)</Text>
-</Diagnosis>
-<Diagnosis ID="P1687" aPriProb="P2">
-<Text>Große Sternmiere (Stellaria holostea)</Text>
-</Diagnosis>
-<Diagnosis ID="P1688">
-<Text>Acker-Hornkraut (Cerastium arvense)</Text>
-</Diagnosis>
-<Diagnosis ID="P17">
-<Text>Fam. Wolfsmilchgewächse (Euphorbiaceae)</Text>
+<Diagnosis name="Fam. Lippenblütler (Lamiaceae)">
 <Children>
-<Child ID="P20"/>
+<Child name="Kriechender Günsel (Ajuga reptans)"/>
+<Child name="Heide-Günsel (Ajuga genevensis)"/>
+<Child name="Schwarznessel (Ballota nigra)"/>
+<Child name="Wirbeldost (Calamintha clinopodium)"/>
+<Child name="Efeu-Gundermann (Glechoma hederacea)"/>
+<Child name="Weiße Taubnessel (Lamium album)"/>
+<Child name="Stengelumfassende Taubnessel (Lamium amplexicaule)"/>
+<Child name="Goldnessel (Lamium galeobdolon)"/>
+<Child name="Rote Taubnessel (Lamium purpureum)"/>
+<Child name="Wiesen-Salbei (Salvia pratensis)"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P18">
-<Text>Rote Taubnessel (Lamium purpureum)</Text>
-</Diagnosis>
-<Diagnosis ID="P1942">
-<Text>Kornblume (Centaurea cyanus)</Text>
-</Diagnosis>
-<Diagnosis ID="P2">
-<Text>Fam. Kreuzblütler (Brassicaceae)</Text>
+<Diagnosis name="Fam. Mohngewächse (Papaveraceae)">
 <Children>
-<Child ID="P16"/>
-<Child ID="P43"/>
-<Child ID="P44"/>
-<Child ID="P1198"/>
-<Child ID="P42"/>
+<Child name="Großes Schöllkraut  (Chelidonium majus)"/>
+<Child name="Klatschmohn (Papaver rhoeas)"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P20" aPriProb="P2">
-<Text>Zypressen-Wolfsmilch (Euphorbia cyparissias)</Text>
-</Diagnosis>
-<Diagnosis ID="P21" aPriProb="P2">
-<Text>Gem. Beinwell (Symphytum officinale)</Text>
-</Diagnosis>
-<Diagnosis ID="P2127">
-<Text>Wiesen-Schlüsselblume (Primula veris)</Text>
-</Diagnosis>
-<Diagnosis ID="P2169">
-<Text>Schierlings-Reiherschnabel (Erodium cicutarium)</Text>
-</Diagnosis>
-<Diagnosis ID="P2288" aPriProb="P2">
-<Text>Stengelumfassende Taubnessel (Lamium amplexicaule)</Text>
-</Diagnosis>
-<Diagnosis ID="P2398">
-<Text>Großes Schöllkraut  (Chelidonium majus)</Text>
-</Diagnosis>
-<Diagnosis ID="P2500">
-<Text>Weißes Leimkraut (Silene alba)</Text>
-</Diagnosis>
-<Diagnosis ID="P2682">
-<Text>Fam. Rötegewächse (Rubiaceae)</Text>
+<Diagnosis name="Fam. Nelkengewächse (Cariophyllaceae)">
 <Children>
-<Child ID="P2683"/>
-<Child ID="P5870"/>
-<Child ID="P7282"/>
-<Child ID="P6803"/>
+<Child name="Acker-Hornkraut (Cerastium arvense)"/>
+<Child name="Weißes Leimkraut (Silene alba)"/>
+<Child name="Rotes Leimkraut (Silene dioica)"/>
+<Child name="Große Sternmiere (Stellaria holostea)"/>
+<Child name="Vogelmiere (Stellaria media)"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P2683">
-<Text>Gem. Kreuzlabkraut (Crucita laevipes)</Text>
-</Diagnosis>
-<Diagnosis ID="P2811">
-<Text>Wiesen-Hornklee (Lotus corniculatus)</Text>
-</Diagnosis>
-<Diagnosis ID="P2812">
-<Text>Hopfenklee (Medicago lupulina)</Text>
-</Diagnosis>
-<Diagnosis ID="P3">
-<Text>Fam. Lippenblütler (Lamiaceae)</Text>
+<Diagnosis name="Fam. Primelgewächse (Primulaceae)">
 <Children>
-<Child ID="P3366"/>
-<Child ID="P7088"/>
-<Child ID="P6632"/>
-<Child ID="P6708"/>
-<Child ID="P1572"/>
-<Child ID="P123"/>
-<Child ID="P2288"/>
-<Child ID="P3367"/>
-<Child ID="P18"/>
-<Child ID="P3774"/>
+<Child name="Wiesen-Schlüsselblume (Primula veris)"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P3008" aPriProb="P2">
-<Text>Zaun-Wicke (Vicia sepium)</Text>
-</Diagnosis>
-<Diagnosis ID="P3149">
-<Text>Fam. Rauhblattgewächse (Boraginaceae)</Text>
+<Diagnosis name="Fam. Rachenblütler (Scrophulariaceae)">
 <Children>
-<Child ID="P4449"/>
-<Child ID="P3150"/>
-<Child ID="P7087"/>
-<Child ID="P21"/>
+<Child name="Gamander-Ehrenpreis (Veronica chamaedrys)"/>
+<Child name="Acker-Ehrenpreis (Veronica persica)"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P3150" aPriProb="P2">
-<Text>Wald-Vergißmeinnicht (Myosotis sylvatica)</Text>
-</Diagnosis>
-<Diagnosis ID="P3152">
-<Text>Sumpf-Dotterblume (Caltha palustris)</Text>
-</Diagnosis>
-<Diagnosis ID="P3153" aPriProb="P2">
-<Text>Scharfer Hahnenfuß (Ranunculus acris)</Text>
-</Diagnosis>
-<Diagnosis ID="P3256">
-<Text>Rotes Leimkraut (Silene dioica)</Text>
-</Diagnosis>
-<Diagnosis ID="P3366">
-<Text>Kriechender Günsel (Ajuga reptans)</Text>
-</Diagnosis>
-<Diagnosis ID="P3367">
-<Text>Goldnessel (Lamium galeobdolon)</Text>
-</Diagnosis>
-<Diagnosis ID="P3543">
-<Text>Kleine Traubenhyazinthe (Muscari botryoides)</Text>
-</Diagnosis>
-<Diagnosis ID="P3634">
-<Text>Hohler Lerchensporn (Corydalis cava)</Text>
-</Diagnosis>
-<Diagnosis ID="P368" aPriProb="P3">
-<Text>Wiesen-Löwenzahn (Taraxacum officinalis)</Text>
-</Diagnosis>
-<Diagnosis ID="P3774" aPriProb="P2">
-<Text>Wiesen-Salbei (Salvia pratensis)</Text>
-</Diagnosis>
-<Diagnosis ID="P3926" aPriProb="P2">
-<Text>Wiesen-Bocksbart (Tragopogon pratensis)</Text>
-</Diagnosis>
-<Diagnosis ID="P4">
-<Text>Fam. Schmetterlingsblütler (Fabaceae)</Text>
+<Diagnosis name="Fam. Rauhblattgewächse (Boraginaceae)">
 <Children>
-<Child ID="P6354"/>
-<Child ID="P4157"/>
-<Child ID="P5436"/>
-<Child ID="P2811"/>
-<Child ID="P2812"/>
-<Child ID="P5647"/>
-<Child ID="P5646"/>
-<Child ID="P4576"/>
-<Child ID="P4156"/>
-<Child ID="P6356"/>
-<Child ID="P4158"/>
-<Child ID="P3008"/>
+<Child name="Acker-Vergißmeinnicht (Myosotis arvensis)"/>
+<Child name="Wald-Vergißmeinnicht (Myosotis sylvatica)"/>
+<Child name="Echtes Lungenkraut (Pulmonaria officinalis)"/>
+<Child name="Gem. Beinwell (Symphytum officinale)"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P4045" aPriProb="P2">
-<Text>Bach-Nelkenwurz (Geum rivale)</Text>
-</Diagnosis>
-<Diagnosis ID="P4156" aPriProb="P2">
-<Text>Wiesen-Klee (Trifolium pratense)</Text>
-</Diagnosis>
-<Diagnosis ID="P4157">
-<Text>Schopf-Hufeisenklee (Hippocrepis comosa)</Text>
-</Diagnosis>
-<Diagnosis ID="P4158">
-<Text>Schmalblättrige Wicke (Vicia angustifolia)</Text>
-</Diagnosis>
-<Diagnosis ID="P42" aPriProb="P2">
-<Text>Acker-Senf (Sinapis arvensis)</Text>
-</Diagnosis>
-<Diagnosis ID="P43">
-<Text>Kahle Gänsekresse (Arabis glabra)</Text>
-</Diagnosis>
-<Diagnosis ID="P44" aPriProb="P3">
-<Text>Gem. Hirtentäschel (Capsella bursa-pastoris)</Text>
-</Diagnosis>
-<Diagnosis ID="P4449" aPriProb="P2">
-<Text>Acker-Vergißmeinnicht (Myosotis arvensis)</Text>
-</Diagnosis>
-<Diagnosis ID="P4576">
-<Text>Gelber Acker-Klee (Trifolium campestre)</Text>
-</Diagnosis>
-<Diagnosis ID="P4714" aPriProb="P2">
-<Text>Echte Nelkenwurz (Geum urbanum)</Text>
-</Diagnosis>
-<Diagnosis ID="P4829" aPriProb="P2">
-<Text>Gamander-Ehrenpreis (Veronica chamaedrys)</Text>
-</Diagnosis>
-<Diagnosis ID="P4961" aPriProb="P2">
-<Text>Acker-Witwenblume (Knautia arvensis)</Text>
-</Diagnosis>
-<Diagnosis ID="P4962" aPriProb="P2">
-<Text>Gem. Stiefmütterchen (Viola tricolor)</Text>
-</Diagnosis>
-<Diagnosis ID="P5">
-<Text>Fam. Korbblütler (Asteraceae)</Text>
+<Diagnosis name="Fam. Rosengewächse (Rosaceae)">
 <Children>
-<Child ID="P6172"/>
-<Child ID="P122"/>
-<Child ID="P5209"/>
-<Child ID="P1942"/>
-<Child ID="P6270"/>
-<Child ID="P6897"/>
-<Child ID="P6355"/>
-<Child ID="P368"/>
-<Child ID="P3926"/>
+<Child name="Bach-Nelkenwurz (Geum rivale)"/>
+<Child name="Echte Nelkenwurz (Geum urbanum)"/>
+<Child name="Kriech. Fingerkraut (Potentilla reptans)"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P5209" aPriProb="P3">
-<Text>Margerite (Chrysanthemum leucanthemum)</Text>
-</Diagnosis>
-<Diagnosis ID="P5436">
-<Text>Wiesen-Platterbse (Lathyrus pratensis)</Text>
-</Diagnosis>
-<Diagnosis ID="P5526" aPriProb="P3">
-<Text>Ruprechtskraut (Geranium robertianum)</Text>
-</Diagnosis>
-<Diagnosis ID="P5646" aPriProb="P2">
-<Text>Echter Steinklee (Melilotus officinalis)</Text>
-</Diagnosis>
-<Diagnosis ID="P5647" aPriProb="P2">
-<Text>Weißer Steinklee (Melilotus alba)</Text>
-</Diagnosis>
-<Diagnosis ID="P5870" aPriProb="P3">
-<Text>Gem. Labkraut (Galium mollugo)</Text>
-</Diagnosis>
-<Diagnosis ID="P597">
-<Text>Fam. Veilchengewächse (Violaceae)</Text>
+<Diagnosis name="Fam. Rötegewächse (Rubiaceae)">
 <Children>
-<Child ID="P623"/>
-<Child ID="P4962"/>
+<Child name="Gem. Kreuzlabkraut (Crucita laevipes)"/>
+<Child name="Gem. Labkraut (Galium mollugo)"/>
+<Child name="Waldmeister (Galium odoratum)"/>
+<Child name="Echtes Labkraut (Galium verum)"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P5973" aPriProb="P2">
-<Text>Kleiner Storchenschnabel (Geranium pusillum)</Text>
-</Diagnosis>
-<Diagnosis ID="P598">
-<Text>Fam. Kardengewächse (Dipsacaceae)</Text>
+<Diagnosis name="Fam. Schmetterlingsblütler (Fabaceae)">
 <Children>
-<Child ID="P4961"/>
+<Child name="Bunte Kronwicke (Coronilla varia)"/>
+<Child name="Schopf-Hufeisenklee (Hippocrepis comosa)"/>
+<Child name="Wiesen-Platterbse (Lathyrus pratensis)"/>
+<Child name="Wiesen-Hornklee (Lotus corniculatus)"/>
+<Child name="Hopfenklee (Medicago lupulina)"/>
+<Child name="Weißer Steinklee (Melilotus alba)"/>
+<Child name="Echter Steinklee (Melilotus officinalis)"/>
+<Child name="Gelber Acker-Klee (Trifolium campestre)"/>
+<Child name="Wiesen-Klee (Trifolium pratense)"/>
+<Child name="Weiß-Klee (Trifolium repens)"/>
+<Child name="Schmalblättrige Wicke (Vicia angustifolia)"/>
+<Child name="Zaun-Wicke (Vicia sepium)"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P6">
-<Text>Fam. Doldenblütler (Apiaceae)</Text>
+<Diagnosis name="Fam. Storchschnabelgewächse (Geraniaceae)">
 <Children>
-<Child ID="P1470"/>
-<Child ID="P6898"/>
+<Child name="Schierlings-Reiherschnabel (Erodium cicutarium)"/>
+<Child name="Wiesen-Storchschnabel (Geranium pratense)"/>
+<Child name="Kleiner Storchenschnabel (Geranium pusillum)"/>
+<Child name="Ruprechtskraut (Geranium robertianum)"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P6078" aPriProb="P3">
-<Text>Acker-Ehrenpreis (Veronica persica)</Text>
-</Diagnosis>
-<Diagnosis ID="P6172" aPriProb="P3">
-<Text>Gem. Schafgarbe (Achillea millefolium)</Text>
-</Diagnosis>
-<Diagnosis ID="P623">
-<Text>Wohlriech. Veilchen (Viola odorata)</Text>
-</Diagnosis>
-<Diagnosis ID="P6270" aPriProb="P3">
-<Text>Gem. Wegwarte (Cichorium intybus)</Text>
-</Diagnosis>
-<Diagnosis ID="P6354">
-<Text>Bunte Kronwicke (Coronilla varia)</Text>
-</Diagnosis>
-<Diagnosis ID="P6355" aPriProb="P3">
-<Text>Duftlose Kamille (Matricaria inodora)</Text>
-</Diagnosis>
-<Diagnosis ID="P6356">
-<Text>Weiß-Klee (Trifolium repens)</Text>
-</Diagnosis>
-<Diagnosis ID="P6632" aPriProb="P2">
-<Text>Schwarznessel (Ballota nigra)</Text>
-</Diagnosis>
-<Diagnosis ID="P6708" aPriProb="P2">
-<Text>Wirbeldost (Calamintha clinopodium)</Text>
-</Diagnosis>
-<Diagnosis ID="P6803" aPriProb="P2">
-<Text>Echtes Labkraut (Galium verum)</Text>
-</Diagnosis>
-<Diagnosis ID="P6897">
-<Text>Wiesen-Pippau (Crepis biennis)</Text>
-</Diagnosis>
-<Diagnosis ID="P6898" aPriProb="P3">
-<Text>Wilde Möhre (Daucus carota)</Text>
-</Diagnosis>
-<Diagnosis ID="P7">
-<Text>Fam. Rosengewächse (Rosaceae)</Text>
+<Diagnosis name="Fam. Veilchengewächse (Violaceae)">
 <Children>
-<Child ID="P4045"/>
-<Child ID="P4714"/>
-<Child ID="P7487"/>
+<Child name="Wohlriech. Veilchen (Viola odorata)"/>
+<Child name="Gem. Stiefmütterchen (Viola tricolor)"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P7087">
-<Text>Echtes Lungenkraut (Pulmonaria officinalis)</Text>
-</Diagnosis>
-<Diagnosis ID="P7088">
-<Text>Heide-Günsel (Ajuga genevensis)</Text>
-</Diagnosis>
-<Diagnosis ID="P7282" aPriProb="P2">
-<Text>Waldmeister (Galium odoratum)</Text>
-</Diagnosis>
-<Diagnosis ID="P7361">
-<Text>Gelbstern (Gagea lutea)</Text>
-</Diagnosis>
-<Diagnosis ID="P7487" aPriProb="P2">
-<Text>Kriech. Fingerkraut (Potentilla reptans)</Text>
-</Diagnosis>
-<Diagnosis ID="P776">
-<Text>Busch-Windröschen (Anemone Nemorosa)</Text>
-</Diagnosis>
-<Diagnosis ID="P777">
-<Text>Scharbockskraut (Ranunculus ficaria)</Text>
-</Diagnosis>
-<Diagnosis ID="P8">
-<Text>Fam. Rachenblütler (Scrophulariaceae)</Text>
+<Diagnosis name="Fam. Wolfsmilchgewächse (Euphorbiaceae)">
 <Children>
-<Child ID="P4829"/>
-<Child ID="P6078"/>
+<Child name="Zypressen-Wolfsmilch (Euphorbia cyparissias)"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P9">
-<Text>Fam. Mohngewächse (Papaveraceae)</Text>
+<Diagnosis aPriProb="P2" name="Gamander-Ehrenpreis (Veronica chamaedrys)"/>
+<Diagnosis name="Gelber Acker-Klee (Trifolium campestre)"/>
+<Diagnosis name="Gelbstern (Gagea lutea)"/>
+<Diagnosis aPriProb="P2" name="Gem. Beinwell (Symphytum officinale)"/>
+<Diagnosis aPriProb="P3" name="Gem. Hirtentäschel (Capsella bursa-pastoris)"/>
+<Diagnosis name="Gem. Kreuzlabkraut (Crucita laevipes)"/>
+<Diagnosis aPriProb="P3" name="Gem. Labkraut (Galium mollugo)"/>
+<Diagnosis aPriProb="P3" name="Gem. Schafgarbe (Achillea millefolium)"/>
+<Diagnosis aPriProb="P2" name="Gem. Stiefmütterchen (Viola tricolor)"/>
+<Diagnosis aPriProb="P3" name="Gem. Wegwarte (Cichorium intybus)"/>
+<Diagnosis name="Goldnessel (Lamium galeobdolon)"/>
+<Diagnosis aPriProb="P2" name="Große Sternmiere (Stellaria holostea)"/>
+<Diagnosis name="Großes Schöllkraut  (Chelidonium majus)"/>
+<Diagnosis aPriProb="P3" name="Gänseblümchen (Bellis perennis)"/>
+<Diagnosis name="Heide-Günsel (Ajuga genevensis)"/>
+<Diagnosis name="Hohler Lerchensporn (Corydalis cava)"/>
+<Diagnosis name="Hopfenklee (Medicago lupulina)"/>
+<Diagnosis name="Kahle Gänsekresse (Arabis glabra)"/>
+<Diagnosis name="Klassifikation">
 <Children>
-<Child ID="P2398"/>
-<Child ID="P968"/>
+<Child name="Fam. Liliengewächse (Liliaceae)"/>
+<Child name="Fam. Hahnenfußgewächse (Ranunculaceae)"/>
+<Child name="Fam. Mohngewächse (Papaveraceae)"/>
+<Child name="Fam. Erdrauchgewächse (Fumariaceae)"/>
+<Child name="Fam. Rosengewächse (Rosaceae)"/>
+<Child name="Fam. Schmetterlingsblütler (Fabaceae)"/>
+<Child name="Fam. Primelgewächse (Primulaceae)"/>
+<Child name="Fam. Nelkengewächse (Cariophyllaceae)"/>
+<Child name="Fam. Rachenblütler (Scrophulariaceae)"/>
+<Child name="Fam. Lippenblütler (Lamiaceae)"/>
+<Child name="Fam. Korbblütler (Asteraceae)"/>
+<Child name="Fam. Kreuzblütler (Brassicaceae)"/>
+<Child name="Fam. Doldenblütler (Apiaceae)"/>
+<Child name="Fam. Storchschnabelgewächse (Geraniaceae)"/>
+<Child name="Fam. Veilchengewächse (Violaceae)"/>
+<Child name="Fam. Kardengewächse (Dipsacaceae)"/>
+<Child name="Fam. Rötegewächse (Rubiaceae)"/>
+<Child name="Fam. Rauhblattgewächse (Boraginaceae)"/>
+<Child name="Fam. Wolfsmilchgewächse (Euphorbiaceae)"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P968">
-<Text>Klatschmohn (Papaver rhoeas)</Text>
-</Diagnosis>
+<Diagnosis name="Klatschmohn (Papaver rhoeas)"/>
+<Diagnosis name="Kleine Traubenhyazinthe (Muscari botryoides)"/>
+<Diagnosis aPriProb="P2" name="Kleiner Storchenschnabel (Geranium pusillum)"/>
+<Diagnosis aPriProb="P2" name="Knoblauchsrauke (Alliaria petiolata)"/>
+<Diagnosis name="Kornblume (Centaurea cyanus)"/>
+<Diagnosis aPriProb="P2" name="Kriech. Fingerkraut (Potentilla reptans)"/>
+<Diagnosis name="Kriechender Günsel (Ajuga reptans)"/>
+<Diagnosis aPriProb="P3" name="Margerite (Chrysanthemum leucanthemum)"/>
+<Diagnosis name="Rote Taubnessel (Lamium purpureum)"/>
+<Diagnosis name="Rotes Leimkraut (Silene dioica)"/>
+<Diagnosis aPriProb="P3" name="Ruprechtskraut (Geranium robertianum)"/>
+<Diagnosis name="Scharbockskraut (Ranunculus ficaria)"/>
+<Diagnosis aPriProb="P2" name="Scharfer Hahnenfuß (Ranunculus acris)"/>
+<Diagnosis name="Schierlings-Reiherschnabel (Erodium cicutarium)"/>
+<Diagnosis name="Schmalblättrige Wicke (Vicia angustifolia)"/>
+<Diagnosis name="Schopf-Hufeisenklee (Hippocrepis comosa)"/>
+<Diagnosis aPriProb="P2" name="Schwarznessel (Ballota nigra)"/>
+<Diagnosis aPriProb="P2" name="Stengelumfassende Taubnessel (Lamium amplexicaule)"/>
+<Diagnosis name="Sumpf-Dotterblume (Caltha palustris)"/>
+<Diagnosis aPriProb="P2" name="Vogelmiere (Stellaria media)"/>
+<Diagnosis aPriProb="P2" name="Wald-Vergißmeinnicht (Myosotis sylvatica)"/>
+<Diagnosis aPriProb="P2" name="Waldmeister (Galium odoratum)"/>
+<Diagnosis name="Weiß-Klee (Trifolium repens)"/>
+<Diagnosis aPriProb="P3" name="Weiße Taubnessel (Lamium album)"/>
+<Diagnosis aPriProb="P2" name="Weißer Steinklee (Melilotus alba)"/>
+<Diagnosis name="Weißes Leimkraut (Silene alba)"/>
+<Diagnosis aPriProb="P2" name="Wiesen-Bocksbart (Tragopogon pratensis)"/>
+<Diagnosis name="Wiesen-Hornklee (Lotus corniculatus)"/>
+<Diagnosis name="Wiesen-Kerbel (Anthriscus sylvestris)"/>
+<Diagnosis aPriProb="P2" name="Wiesen-Klee (Trifolium pratense)"/>
+<Diagnosis aPriProb="P3" name="Wiesen-Löwenzahn (Taraxacum officinalis)"/>
+<Diagnosis name="Wiesen-Pippau (Crepis biennis)"/>
+<Diagnosis name="Wiesen-Platterbse (Lathyrus pratensis)"/>
+<Diagnosis aPriProb="P2" name="Wiesen-Salbei (Salvia pratensis)"/>
+<Diagnosis aPriProb="P2" name="Wiesen-Schaumkraut (Cardamine pratense)"/>
+<Diagnosis name="Wiesen-Schlüsselblume (Primula veris)"/>
+<Diagnosis aPriProb="P2" name="Wiesen-Storchschnabel (Geranium pratense)"/>
+<Diagnosis aPriProb="P3" name="Wilde Möhre (Daucus carota)"/>
+<Diagnosis aPriProb="P2" name="Wirbeldost (Calamintha clinopodium)"/>
+<Diagnosis name="Wohlriech. Veilchen (Viola odorata)"/>
+<Diagnosis aPriProb="P2" name="Zaun-Wicke (Vicia sepium)"/>
+<Diagnosis aPriProb="P2" name="Zypressen-Wolfsmilch (Euphorbia cyparissias)"/>
 </Diagnoses>
 <KnowledgeSlices/>
 </KnowledgeBase>

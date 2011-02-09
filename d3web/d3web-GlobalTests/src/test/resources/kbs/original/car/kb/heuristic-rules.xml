@@ -2,414 +2,414 @@
 <KnowledgeBase system="d3web" type="heuristic-rules">
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="N3"/>
+<Score value="P5"/>
+<Diagnosis name="Empty battery"/>
+</Action>
+<Condition name="Starter" type="equal" value="does not turn over"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N4"/>
+<Diagnosis name="Empty battery"/>
+</Action>
+<Condition name="Starter" type="equal" value="turns over"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N6"/>
+<Diagnosis name="Clogged air filter"/>
 </Action>
 <Condition type="not">
-<Condition type="or">
-<Condition ID="Q9" type="equal" value="Q9a1"/>
-<Condition ID="Q9" type="equal" value="Q9a2"/>
-</Condition>
+<Condition name="Starter" type="equal" value="turns over"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="P5"/>
+<Score value="N6"/>
+<Diagnosis name="Bad ignition timing"/>
 </Action>
-<Condition type="or">
-<Condition ID="Q9" type="equal" value="Q9a1"/>
-<Condition ID="Q9" type="equal" value="Q9a2"/>
+<Condition type="not">
+<Condition name="Starter" type="equal" value="turns over"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
 <Score value="P4"/>
+<Diagnosis name="Leaking air intake system"/>
 </Action>
-<Condition ID="Q7" type="equal" value="Q7a3"/>
+<Condition name="Mileage evaluation" type="equal" value="increased"/>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
 <Score value="N4"/>
+<Diagnosis name="Leaking air intake system"/>
 </Action>
-<Condition ID="Q7" type="equal" value="Q7a2"/>
+<Condition name="Mileage evaluation" type="equal" value="normal"/>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
 <Score value="P3"/>
+<Diagnosis name="Leaking air intake system"/>
 </Action>
-<Condition ID="Q7" type="equal" value="Q7a1"/>
+<Condition name="Mileage evaluation" type="equal" value="slightly increased"/>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P2"/>
 <Score value="P4"/>
+<Diagnosis name="Clogged air filter"/>
 </Action>
-<Condition ID="Q7" type="equal" value="Q7a3"/>
+<Condition name="Mileage evaluation" type="equal" value="increased"/>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P2"/>
 <Score value="N4"/>
+<Diagnosis name="Clogged air filter"/>
 </Action>
-<Condition ID="Q7" type="equal" value="Q7a2"/>
+<Condition name="Mileage evaluation" type="equal" value="normal"/>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P2"/>
 <Score value="P3"/>
+<Diagnosis name="Clogged air filter"/>
 </Action>
-<Condition ID="Q7" type="equal" value="Q7a1"/>
+<Condition name="Mileage evaluation" type="equal" value="slightly increased"/>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
+<Score value="P7"/>
+<Diagnosis name="Bad ignition timing"/>
+</Action>
+<Condition name="Ignition timing o.k.?" type="equal" value="no"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N7"/>
+<Diagnosis name="Bad ignition timing"/>
+</Action>
+<Condition name="Ignition timing o.k.?" type="equal" value="yes"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P7"/>
+<Diagnosis name="Damaged idle speed system"/>
+</Action>
+<Condition name="Idle speed system o.k.?" type="equal" value="no"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N7"/>
+<Diagnosis name="Damaged idle speed system"/>
+</Action>
+<Condition name="Idle speed system o.k.?" type="equal" value="yes"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
 <Score value="P5"/>
+<Diagnosis name="Clogged air filter"/>
 </Action>
-<Condition ID="Q3" type="equal" value="Q3a1"/>
+<Condition name="Exhaust pipe color evaluation" type="equal" value="abnormal"/>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
 <Score value="N5"/>
+<Diagnosis name="Clogged air filter"/>
 </Action>
-<Condition ID="Q3" type="equal" value="Q3a2"/>
+<Condition name="Exhaust pipe color evaluation" type="equal" value="normal"/>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P5"/>
-<Score value="P7"/>
-</Action>
-<Condition ID="Q19" type="equal" value="Q19a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P5"/>
-<Score value="N7"/>
-</Action>
-<Condition ID="Q19" type="equal" value="Q19a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="P7"/>
-</Action>
-<Condition ID="Q18" type="equal" value="Q18a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="N7"/>
-</Action>
-<Condition ID="Q18" type="equal" value="Q18a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
-<Score value="P7"/>
-</Action>
-<Condition ID="Q17" type="equal" value="Q17a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
-<Score value="N7"/>
-</Action>
-<Condition ID="Q17" type="equal" value="Q17a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P2"/>
-<Score value="P7"/>
-</Action>
-<Condition ID="Q16" type="equal" value="Q16a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P2"/>
-<Score value="N7"/>
-</Action>
-<Condition ID="Q16" type="equal" value="Q16a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P1"/>
-<Score value="P7"/>
-</Action>
-<Condition ID="Q15" type="equal" value="Q15a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P1"/>
-<Score value="N7"/>
-</Action>
-<Condition ID="Q15" type="equal" value="Q15a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="P3"/>
-</Action>
-<Condition ID="Q12" type="equal" value="Q12a5"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="P1"/>
-</Action>
-<Condition ID="Q12" type="equal" value="Q12a3"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="P4"/>
-</Action>
-<Condition ID="Q12" type="equal" value="Q12a6"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="N4"/>
-</Action>
-<Condition type="not">
-<Condition type="or">
-<Condition ID="Q12" type="equal" value="Q12a6"/>
-<Condition type="or">
-<Condition ID="Q12" type="equal" value="Q12a3"/>
-<Condition ID="Q12" type="equal" value="Q12a5"/>
-</Condition>
-</Condition>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
-<Score value="P4"/>
-</Action>
-<Condition ID="Q12" type="equal" value="Q12a3"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
-<Score value="P5"/>
-</Action>
-<Condition ID="Q12" type="equal" value="Q12a6"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
 <Score value="N5"/>
+<Diagnosis name="Clogged air filter"/>
 </Action>
 <Condition type="not">
-<Condition type="or">
-<Condition ID="Q12" type="equal" value="Q12a6"/>
-<Condition ID="Q12" type="equal" value="Q12a3"/>
-</Condition>
+<Condition name="Exhaust fumes" type="equal" value="black"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P2"/>
 <Score value="P5"/>
+<Diagnosis name="Clogged air filter"/>
 </Action>
-<Condition ID="Q12" type="equal" value="Q12a2"/>
+<Condition type="and">
+<Condition name="Fuel" type="equal" value="unleaded gasoline"/>
+<Condition name="Exhaust fumes" type="equal" value="black"/>
+</Condition>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P2"/>
-<Score value="P3"/>
+<Score value="N5"/>
+<Diagnosis name="Empty battery"/>
 </Action>
-<Condition ID="Q12" type="equal" value="Q12a1"/>
+<Condition name="Engine start" type="equal" value="engine starts"/>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P2"/>
-<Score value="P1"/>
+<Score value="P5"/>
+<Diagnosis name="Empty battery"/>
 </Action>
-<Condition ID="Q12" type="equal" value="Q12a3"/>
+<Condition type="or">
+<Condition name="Engine start" type="equal" value="engine barely starts"/>
+<Condition name="Engine start" type="equal" value="does not start"/>
+</Condition>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P2"/>
-<Score value="N3"/>
+<Score value="P5"/>
+<Diagnosis name="Damaged idle speed system"/>
+</Action>
+<Condition name="Engine start" type="equal" value="engine barely starts"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N5"/>
+<Diagnosis name="Damaged idle speed system"/>
 </Action>
 <Condition type="not">
-<Condition type="or">
-<Condition ID="Q12" type="equal" value="Q12a2"/>
-<Condition type="or">
-<Condition ID="Q12" type="equal" value="Q12a3"/>
-<Condition ID="Q12" type="equal" value="Q12a1"/>
-</Condition>
-</Condition>
+<Condition name="Engine start" type="equal" value="engine barely starts"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P1"/>
-<Score value="P4"/>
-</Action>
-<Condition ID="Q12" type="equal" value="Q12a4"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P1"/>
-<Score value="P1"/>
-</Action>
-<Condition ID="Q12" type="equal" value="Q12a3"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P1"/>
 <Score value="N4"/>
+<Diagnosis name="Clogged air filter"/>
 </Action>
 <Condition type="not">
-<Condition ID="Q12" type="equal" value="Q12a4"/>
+<Condition type="or">
+<Condition name="Engine start" type="equal" value="engine barely starts"/>
+<Condition name="Engine start" type="equal" value="does not start"/>
+</Condition>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P1"/>
+<Score value="N5"/>
+<Diagnosis name="Bad ignition timing"/>
+</Action>
+<Condition type="not">
+<Condition type="or">
+<Condition name="Engine start" type="equal" value="engine barely starts"/>
+<Condition name="Engine start" type="equal" value="does not start"/>
+</Condition>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P4"/>
+<Diagnosis name="Clogged air filter"/>
+</Action>
+<Condition type="and">
+<Condition name="Starter" type="equal" value="turns over"/>
+<Condition type="or">
+<Condition name="Engine start" type="equal" value="engine barely starts"/>
+<Condition name="Engine start" type="equal" value="does not start"/>
+</Condition>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P5"/>
+<Diagnosis name="Bad ignition timing"/>
+</Action>
+<Condition type="and">
+<Condition name="Starter" type="equal" value="turns over"/>
+<Condition type="or">
+<Condition name="Engine start" type="equal" value="engine barely starts"/>
+<Condition name="Engine start" type="equal" value="does not start"/>
+</Condition>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N3"/>
+<Diagnosis name="Bad ignition timing"/>
+</Action>
+<Condition type="not">
+<Condition type="or">
+<Condition name="Engine noises" type="equal" value="knocking"/>
+<Condition name="Engine noises" type="equal" value="ringing"/>
+</Condition>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P5"/>
+<Diagnosis name="Bad ignition timing"/>
+</Action>
+<Condition type="or">
+<Condition name="Engine noises" type="equal" value="knocking"/>
+<Condition name="Engine noises" type="equal" value="ringing"/>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P5"/>
+<Diagnosis name="Leaking air intake system"/>
+</Action>
+<Condition name="Driving" type="equal" value="insufficient power on full load"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P3"/>
+<Diagnosis name="Leaking air intake system"/>
+</Action>
+<Condition name="Driving" type="equal" value="insufficient power on partial load"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P1"/>
+<Diagnosis name="Leaking air intake system"/>
+</Action>
+<Condition name="Driving" type="equal" value="unsteady idle speed"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N3"/>
+<Diagnosis name="Leaking air intake system"/>
+</Action>
+<Condition type="not">
+<Condition type="or">
+<Condition name="Driving" type="equal" value="insufficient power on full load"/>
+<Condition type="or">
+<Condition name="Driving" type="equal" value="unsteady idle speed"/>
+<Condition name="Driving" type="equal" value="insufficient power on partial load"/>
+</Condition>
+</Condition>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P4"/>
+<Diagnosis name="Damaged idle speed system"/>
+</Action>
+<Condition name="Driving" type="equal" value="low idle speed"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P1"/>
+<Diagnosis name="Damaged idle speed system"/>
+</Action>
+<Condition name="Driving" type="equal" value="unsteady idle speed"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N4"/>
+<Diagnosis name="Damaged idle speed system"/>
+</Action>
+<Condition type="not">
+<Condition name="Driving" type="equal" value="low idle speed"/>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
 <Score value="N1"/>
+<Diagnosis name="Damaged idle speed system"/>
 </Action>
 <Condition type="not">
-<Condition ID="Q12" type="equal" value="Q12a3"/>
+<Condition name="Driving" type="equal" value="unsteady idle speed"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P5"/>
-<Score value="P5"/>
-</Action>
-<Condition ID="Q11" type="equal" value="Q11a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P5"/>
-<Score value="N4"/>
-</Action>
-<Condition ID="Q11" type="equal" value="Q11a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="N6"/>
-</Action>
-<Condition type="not">
-<Condition ID="Q11" type="equal" value="Q11a2"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
-<Score value="N6"/>
-</Action>
-<Condition type="not">
-<Condition ID="Q11" type="equal" value="Q11a2"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P5"/>
-<Score value="N5"/>
-</Action>
-<Condition ID="Q10" type="equal" value="Q10a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P5"/>
-<Score value="P5"/>
-</Action>
-<Condition type="or">
-<Condition ID="Q10" type="equal" value="Q10a1"/>
-<Condition ID="Q10" type="equal" value="Q10a3"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="N5"/>
-</Action>
-<Condition type="not">
-<Condition type="or">
-<Condition ID="Q10" type="equal" value="Q10a1"/>
-<Condition ID="Q10" type="equal" value="Q10a3"/>
-</Condition>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
-<Score value="N4"/>
-</Action>
-<Condition type="not">
-<Condition type="or">
-<Condition ID="Q10" type="equal" value="Q10a1"/>
-<Condition ID="Q10" type="equal" value="Q10a3"/>
-</Condition>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P1"/>
-<Score value="P5"/>
-</Action>
-<Condition ID="Q10" type="equal" value="Q10a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P1"/>
-<Score value="N5"/>
-</Action>
-<Condition type="not">
-<Condition ID="Q10" type="equal" value="Q10a1"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P4"/>
-<Score value="P5"/>
-</Action>
-<Condition type="and">
-<Condition ID="Q11" type="equal" value="Q11a2"/>
-<Condition type="or">
-<Condition ID="Q10" type="equal" value="Q10a1"/>
-<Condition ID="Q10" type="equal" value="Q10a3"/>
-</Condition>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
 <Score value="P4"/>
+<Diagnosis name="Clogged air filter"/>
 </Action>
-<Condition type="and">
-<Condition ID="Q11" type="equal" value="Q11a2"/>
-<Condition type="or">
-<Condition ID="Q10" type="equal" value="Q10a1"/>
-<Condition ID="Q10" type="equal" value="Q10a3"/>
-</Condition>
-</Condition>
+<Condition name="Driving" type="equal" value="unsteady idle speed"/>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
+<Score value="P5"/>
+<Diagnosis name="Clogged air filter"/>
+</Action>
+<Condition name="Driving" type="equal" value="weak acceleration"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
 <Score value="N5"/>
+<Diagnosis name="Clogged air filter"/>
 </Action>
 <Condition type="not">
-<Condition ID="Q1" type="equal" value="Q1a1"/>
+<Condition type="or">
+<Condition name="Driving" type="equal" value="weak acceleration"/>
+<Condition name="Driving" type="equal" value="unsteady idle speed"/>
+</Condition>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Diagnosis ID="P3"/>
-<Score value="P5"/>
+<Score value="P3"/>
+<Diagnosis name="Bad ignition timing"/>
 </Action>
-<Condition type="and">
-<Condition ID="Q4" type="equal" value="Q4a2"/>
-<Condition ID="Q1" type="equal" value="Q1a1"/>
+<Condition name="Driving" type="equal" value="delayed take-off"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P1"/>
+<Diagnosis name="Bad ignition timing"/>
+</Action>
+<Condition name="Driving" type="equal" value="unsteady idle speed"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P4"/>
+<Diagnosis name="Bad ignition timing"/>
+</Action>
+<Condition name="Driving" type="equal" value="weak acceleration"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N4"/>
+<Diagnosis name="Bad ignition timing"/>
+</Action>
+<Condition type="not">
+<Condition type="or">
+<Condition name="Driving" type="equal" value="weak acceleration"/>
+<Condition type="or">
+<Condition name="Driving" type="equal" value="unsteady idle speed"/>
+<Condition name="Driving" type="equal" value="delayed take-off"/>
 </Condition>
+</Condition>
+</Condition>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P7"/>
+<Diagnosis name="Empty battery"/>
+</Action>
+<Condition name="Battery o.k.?" type="equal" value="no"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N7"/>
+<Diagnosis name="Empty battery"/>
+</Action>
+<Condition name="Battery o.k.?" type="equal" value="yes"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P7"/>
+<Diagnosis name="Leaking air intake system"/>
+</Action>
+<Condition name="Air intake system o.k.?" type="equal" value="no"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N7"/>
+<Diagnosis name="Leaking air intake system"/>
+</Action>
+<Condition name="Air intake system o.k.?" type="equal" value="yes"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="P7"/>
+<Diagnosis name="Clogged air filter"/>
+</Action>
+<Condition name="Air filter o.k.?" type="equal" value="no"/>
+</KnowledgeSlice>
+<KnowledgeSlice type="RuleComplex">
+<Action type="ActionHeuristicPS">
+<Score value="N7"/>
+<Diagnosis name="Clogged air filter"/>
+</Action>
+<Condition name="Air filter o.k.?" type="equal" value="yes"/>
 </KnowledgeSlice>
 </KnowledgeBase>

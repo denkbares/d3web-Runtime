@@ -38,22 +38,18 @@ public final class AnswerFactory {
 	}
 
 	public static Choice createAnswerChoice(
-			String theId,
 			String theValue) {
-		Choice theAnswer = new Choice(theId);
-		theAnswer.setText(theValue);
+		Choice theAnswer = new Choice(theValue);
 		return theAnswer;
 	}
 
-	public static AnswerNo createAnswerNo(String theId, String theValue) {
-		AnswerNo theAnswer = new AnswerNo(theId);
-		theAnswer.setText(theValue);
+	public static AnswerNo createAnswerNo(String theValue) {
+		AnswerNo theAnswer = new AnswerNo(theValue);
 		return theAnswer;
 	}
 
-	public static AnswerYes createAnswerYes(String theId, String theValue) {
-		AnswerYes theAnswer = new AnswerYes(theId);
-		theAnswer.setText(theValue);
+	public static AnswerYes createAnswerYes(String theValue) {
+		AnswerYes theAnswer = new AnswerYes(theValue);
 		return theAnswer;
 	}
 }

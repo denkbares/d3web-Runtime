@@ -35,6 +35,7 @@ import java.util.logging.StreamHandler;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionZC;
 
@@ -52,6 +53,7 @@ public class QuestionZCTest {
 	Formatter formatter;
 	ByteArrayOutputStream out;
 	Handler handler;
+
 	/**
 	 * 
 	 * @created 24.08.2010
@@ -67,7 +69,7 @@ public class QuestionZCTest {
 		handler = new StreamHandler(out, formatter);
 
 		logger.addHandler(handler);
-		questionZC = new QuestionZC("questionZC");
+		questionZC = new QuestionZC(new KnowledgeBase(), "questionZC");
 	}
 
 	/**
@@ -111,7 +113,7 @@ public class QuestionZCTest {
 		// flush the StreamHandler and retrieve the log Message
 		handler.flush();
 		logMsg = out.toString();
-		
+
 		assertThat(logMsg, is(notNullValue()));
 		assertThat(logMsg.contains("Tried to set AnswerAlternatives"), is(true));
 	}

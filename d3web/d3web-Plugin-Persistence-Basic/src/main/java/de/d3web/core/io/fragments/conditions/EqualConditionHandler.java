@@ -62,7 +62,7 @@ public class EqualConditionHandler implements FragmentHandler {
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		String type = element.getAttribute("type");
-		String questionID = element.getAttribute("ID");
+		String questionID = element.getAttribute("name");
 		String value = element.getAttribute("value");
 		if (questionID != null && value != null) {
 			NamedObject idObject = kb.getManager().search(questionID);
@@ -80,7 +80,7 @@ public class EqualConditionHandler implements FragmentHandler {
 							Choice choice = s.getChoice(q);
 							if (choice == null) {
 								throw new IOException("Answer " + s
-										+ " does not belong to question " + q.getId());
+										+ " does not belong to question " + q.getName());
 							}
 							conds.add(new ChoiceValue(choice));
 						}

@@ -63,7 +63,7 @@ public class HeuristicPSActionHandler implements FragmentHandler {
 				score = Util.getScore(value);
 			}
 			else if (child.getNodeName().equalsIgnoreCase("Diagnosis")) {
-				String id = child.getAttributes().getNamedItem("ID").getNodeValue();
+				String id = child.getAttributes().getNamedItem("name").getNodeValue();
 				diag = kb.getManager().searchSolution(id);
 			}
 		}
@@ -81,7 +81,7 @@ public class HeuristicPSActionHandler implements FragmentHandler {
 		Score theScore = action.getScore();
 		Solution theDiag = action.getSolution();
 		String scoreSymbol = "";
-		String diagId = "";
+		String diagName = "";
 		if (theScore != null) {
 			scoreSymbol = theScore.getSymbol();
 			if ((scoreSymbol == null) || (scoreSymbol.equals(""))) {
@@ -89,14 +89,14 @@ public class HeuristicPSActionHandler implements FragmentHandler {
 			}
 		}
 		if (theDiag != null) {
-			diagId = theDiag.getId();
+			diagName = theDiag.getName();
 		}
 		Element scoreElement = doc.createElement("Score");
 		scoreElement.setAttribute("value", scoreSymbol);
 		Element diagElement = doc.createElement("Diagnosis");
-		diagElement.setAttribute("ID", diagId);
-		element.appendChild(diagElement);
+		diagElement.setAttribute("name", diagName);
 		element.appendChild(scoreElement);
+		element.appendChild(diagElement);
 		return element;
 	}
 

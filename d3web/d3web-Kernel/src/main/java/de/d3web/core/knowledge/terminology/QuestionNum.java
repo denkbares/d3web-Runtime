@@ -22,6 +22,7 @@ package de.d3web.core.knowledge.terminology;
 
 import java.util.List;
 
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 
 /**
@@ -33,8 +34,8 @@ import de.d3web.core.knowledge.terminology.info.NumericalInterval;
  */
 public class QuestionNum extends Question {
 
-	public QuestionNum(String id) {
-		super(id);
+	public QuestionNum(KnowledgeBase kb, String name) {
+		super(kb, name);
 	}
 
 	/**

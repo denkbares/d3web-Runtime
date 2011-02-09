@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import de.d3web.core.knowledge.KnowledgeBase;
+
 /**
  * @author Jochen
  * 
@@ -39,8 +41,8 @@ public class QuestionZC extends QuestionOC {
 
 	public static final String XML_IDENTIFIER = "Info";
 
-	public QuestionZC(String id) {
-		super(id);
+	public QuestionZC(KnowledgeBase kb, String name) {
+		super(kb, name);
 	}
 
 	@Override

@@ -51,19 +51,15 @@ public class SolutionsHandler implements FragmentHandler {
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		String id = element.getAttribute("ID");
+		String id = element.getAttribute("name");
 		String apriori = element.getAttribute("aPriProb");
-		Solution diag = new Solution(id);
+		Solution diag = new Solution(kb, id);
 		if (apriori != null) {
 			diag.setAprioriProbability(Util.getScore(apriori));
 		}
-		diag.setKnowledgeBase(kb);
 		PropertiesHandler ph = new PropertiesHandler();
 		for (Element child : XMLUtil.getElementList(element.getChildNodes())) {
-			if (child.getNodeName().equals("Text")) {
-				diag.setName(child.getTextContent());
-			}
-			else if (child.getNodeName().equals(XMLUtil.INFO_STORE)) {
+			if (child.getNodeName().equals(XMLUtil.INFO_STORE)) {
 				XMLUtil.fillInfoStore(diag.getInfoStore(), child, kb);
 			}
 			else if (ph.canRead(child)) {
@@ -77,8 +73,7 @@ public class SolutionsHandler implements FragmentHandler {
 	public Element write(Object object, Document doc) throws IOException {
 		Solution diag = (Solution) object;
 		Element element = doc.createElement("Diagnosis");
-		element.setAttribute("ID", diag.getId());
-		XMLUtil.appendTextNode(diag.getName(), element);
+		element.setAttribute("name", diag.getName());
 		Score apriori = diag.getAprioriProbability();
 		if (apriori != null) {
 			element.setAttribute("aPriProb", apriori.getSymbol());

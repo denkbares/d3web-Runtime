@@ -33,6 +33,7 @@ import org.junit.Test;
 
 import de.d3web.core.io.fragments.QuestionHandler;
 import de.d3web.core.io.utilities.Util;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.persistence.tests.utils.XMLTag;
 
@@ -48,17 +49,13 @@ public class QuestionDateTest {
 
 	@Before
 	public void setUp() {
-		q1 = new QuestionDate("q1");
-		q1.setName("q1-text");
+		q1 = new QuestionDate(new KnowledgeBase(), "q1");
 
 		qw = new QuestionHandler();
 
 		shouldTag = new XMLTag("Question");
-		shouldTag.addAttribute("ID", "q1");
+		shouldTag.addAttribute("name", "q1");
 		shouldTag.addAttribute("type", "Date");
-		XMLTag child = new XMLTag("Text");
-		child.setContent("q1-text");
-		shouldTag.addChild(child);
 	}
 
 	@Test

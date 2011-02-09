@@ -1,433 +1,434 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <KnowledgeBase system="D3" type="basic">
 <KnowledgeBaseDescriptor>
-<Descriptor name="DC.TITLE" value="KFZ Wissensbasis (Uni. W�rzburg, Informatik 6)" />
-<Descriptor name="DC.RELATION" value="isVersionOf WB_ID_30437347122" />
+<Descriptor name="DC.TITLE" value="KFZ Wissensbasis (Uni. Würzburg, Informatik 6)"/>
+<Descriptor name="DC.RELATION" value="isVersionOf WB_ID_30437347122"/>
 </KnowledgeBaseDescriptor>
 <PriorityGroups>
 </PriorityGroups>
 <InitQASets>
-<QContainer ID="Q56" />
-<QContainer ID="Q16" />
+<QContainer name="Q56"/>
+<QContainer name="Q16"/>
 </InitQASets>
+<rootQASet>Fragebögen</rootQASet>
 <Costs>
-<Cost ID="timeexpenditure" unit=" " verbalization=" " />
-<Cost ID="risk" unit=" " verbalization=" " />
-<Cost ID="cost" unit=" " verbalization=" " />
+<Cost ID="timeexpenditure" unit=" " verbalization=" "/>
+<Cost ID="risk" unit=" " verbalization=" "/>
+<Cost ID="cost" unit=" " verbalization=" "/>
 </Costs>
 <QContainers>
-<QContainer ID="Q000">
-<Text>Frageb�gen</Text>
+<QContainer name="Fragebögen">
+
 <Costs>
-<Cost ID="timeexpenditure" value="0.0" />
-<Cost ID="risk" value="0.0" />
-<Cost ID="cost" value="0.0" />
+<Cost ID="timeexpenditure" value="0.0"/>
+<Cost ID="risk" value="0.0"/>
+<Cost ID="cost" value="0.0"/>
 </Costs>
 <Children>
-<Child ID="Q16" />
-<Child ID="Qcl16" />
-<Child ID="Q56" />
+<Child name="Beobachtungen"/>
+<Child name="Technische Untersuchungen"/>
+<Child name="Allgemeines"/>
 </Children>
 </QContainer>
-<QContainer ID="Q16">
-<Text>Beobachtungen</Text>
+<QContainer name="Beobachtungen">
+
 <Costs>
-<Cost ID="timeexpenditure" value="0.0" />
-<Cost ID="risk" value="0.0" />
-<Cost ID="cost" value="0.0" />
+<Cost ID="timeexpenditure" value="0.0"/>
+<Cost ID="risk" value="0.0"/>
+<Cost ID="cost" value="0.0"/>
 </Costs>
 <Children>
-<Child ID="Mf2" />
-<Child ID="Mf3" />
-<Child ID="Mf4" />
-<Child ID="Mf5" />
-<Child ID="Mf6" />
-<Child ID="Mf7" />
-<Child ID="Mf8" />
-<Child ID="Mf9" />
+<Child name="Abgase"/>
+<Child name="Auspuffrohrfarbe"/>
+<Child name="Benzinart"/>
+<Child name="Üblicher Kraftstoffverbrauch/100km"/>
+<Child name="Tatsächlicher Kraftstoffverbrauch/100km"/>
+<Child name="Motorgeräusche"/>
+<Child name="Verhalten bei Motorstart"/>
+<Child name="Fahrverhalten"/>
 </Children>
 </QContainer>
-<QContainer ID="Qcl16">
-<Text>Technische Untersuchungen</Text>
+<QContainer name="Technische Untersuchungen">
+
 <Costs>
-<Cost ID="timeexpenditure" value="0.0" />
-<Cost ID="risk" value="0.0" />
-<Cost ID="cost" value="0.0" />
+<Cost ID="timeexpenditure" value="0.0"/>
+<Cost ID="risk" value="0.0"/>
+<Cost ID="cost" value="0.0"/>
 </Costs>
 <Children>
-<Child ID="Q17" />
-<Child ID="Q18" />
-<Child ID="Q19" />
-<Child ID="Q20" />
-<Child ID="Q21" />
+<Child name="Untersuchung Leerlaufsystem"/>
+<Child name="Untersuchung Ansaugsystem"/>
+<Child name="Untersuchung Luftfiltereinsatz"/>
+<Child name="Untersuchung Zündeinstellung"/>
+<Child name="Untersuchung Batterie"/>
 </Children>
 </QContainer>
-<QContainer ID="Q17">
-<Text>Untersuchung Leerlaufsystem</Text>
+<QContainer name="Untersuchung Leerlaufsystem">
+
 <Costs>
-<Cost ID="timeexpenditure" value="0.0" />
-<Cost ID="risk" value="0.0" />
-<Cost ID="cost" value="0.0" />
+<Cost ID="timeexpenditure" value="0.0"/>
+<Cost ID="risk" value="0.0"/>
+<Cost ID="cost" value="0.0"/>
 </Costs>
 <Children>
-<Child ID="Mf13" />
+<Child name="Leerlaufsystem"/>
 </Children>
 </QContainer>
-<QContainer ID="Q18">
-<Text>Untersuchung Ansaugsystem</Text>
+<QContainer name="Untersuchung Ansaugsystem">
+
 <Costs>
-<Cost ID="timeexpenditure" value="0.0" />
-<Cost ID="risk" value="0.0" />
-<Cost ID="cost" value="0.0" />
+<Cost ID="timeexpenditure" value="0.0"/>
+<Cost ID="risk" value="0.0"/>
+<Cost ID="cost" value="0.0"/>
 </Costs>
 <Children>
-<Child ID="Mf15" />
+<Child name="Ansaugsystem"/>
 </Children>
 </QContainer>
-<QContainer ID="Q19">
-<Text>Untersuchung Luftfiltereinsatz</Text>
+<QContainer name="Untersuchung Luftfiltereinsatz">
+
 <Costs>
-<Cost ID="timeexpenditure" value="0.0" />
-<Cost ID="risk" value="0.0" />
-<Cost ID="cost" value="0.0" />
+<Cost ID="timeexpenditure" value="0.0"/>
+<Cost ID="risk" value="0.0"/>
+<Cost ID="cost" value="0.0"/>
 </Costs>
 <Children>
-<Child ID="Mf17" />
+<Child name="Luftfiltereinsatz"/>
 </Children>
 </QContainer>
-<QContainer ID="Q20">
-<Text>Untersuchung Z�ndeinstellung</Text>
+<QContainer name="Untersuchung Zündeinstellung">
+
 <Costs>
-<Cost ID="timeexpenditure" value="0.0" />
-<Cost ID="risk" value="0.0" />
-<Cost ID="cost" value="0.0" />
+<Cost ID="timeexpenditure" value="0.0"/>
+<Cost ID="risk" value="0.0"/>
+<Cost ID="cost" value="0.0"/>
 </Costs>
 <Children>
-<Child ID="Mf19" />
+<Child name="Zündeinstellung"/>
 </Children>
 </QContainer>
-<QContainer ID="Q21">
-<Text>Untersuchung Batterie</Text>
+<QContainer name="Untersuchung Batterie">
+
 <Costs>
-<Cost ID="timeexpenditure" value="0.0" />
-<Cost ID="risk" value="0.0" />
-<Cost ID="cost" value="0.0" />
+<Cost ID="timeexpenditure" value="0.0"/>
+<Cost ID="risk" value="0.0"/>
+<Cost ID="cost" value="0.0"/>
 </Costs>
 <Children>
-<Child ID="Mf11" />
+<Child name="Batterie"/>
 </Children>
 </QContainer>
-<QContainer ID="Q56">
-<Text>Allgemeines</Text>
+<QContainer name="Allgemeines">
+
 <Costs>
-<Cost ID="timeexpenditure" value="0.0" />
-<Cost ID="risk" value="0.0" />
-<Cost ID="cost" value="0.0" />
+<Cost ID="timeexpenditure" value="0.0"/>
+<Cost ID="risk" value="0.0"/>
+<Cost ID="cost" value="0.0"/>
 </Costs>
 <Children>
-<Child ID="Mf57" />
-<Child ID="Mf58" />
+<Child name="Automarke"/>
+<Child name="Baujahr"/>
 </Children>
 </QContainer>
 </QContainers>
 <Questions>
-<Question ID="Mf2" type="OC">
-<Text>Abgase</Text>
-<Costs />
+<Question name="Abgase" type="OC">
+
+<Costs/>
 <Answers>
-<Answer ID="Mf2a1" type="AnswerChoice">
-<Text>schwarz</Text>
+<Answer name="schwarz" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf2a2" type="AnswerChoice">
-<Text>bl�ulich</Text>
+<Answer name="bläulich" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf2a3" type="AnswerChoice">
-<Text>farblos</Text>
+<Answer name="farblos" type="AnswerChoice">
+
 </Answer>
 </Answers>
 </Question>
-<Question ID="Mf3" type="OC">
-<Text>Auspuffrohrfarbe</Text>
-<Costs />
+<Question name="Auspuffrohrfarbe" type="OC">
+
+<Costs/>
 <Children>
-<Child ID="Msi21" />
+<Child name="Bewertung Auspuffrohrfarbe"/>
 </Children>
 <Answers>
-<Answer ID="Mf3a1" type="AnswerChoice">
-<Text>braun</Text>
+<Answer name="braun" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf3a2" type="AnswerChoice">
-<Text>grau</Text>
+<Answer name="grau" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf3a3" type="AnswerChoice">
-<Text>hellgrau</Text>
+<Answer name="hellgrau" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf3a4" type="AnswerChoice">
-<Text>schwarzverru�t</Text>
+<Answer name="schwarzverrußt" type="AnswerChoice">
+
 </Answer>
 </Answers>
 </Question>
-<Question ID="Msi21" type="OC">
-<Text>Bewertung Auspuffrohrfarbe</Text>
-<Costs />
+<Question name="Bewertung Auspuffrohrfarbe" type="OC">
+
+<Costs/>
 <Answers>
-<Answer ID="Msi21a1" type="AnswerChoice">
-<Text>normal</Text>
+<Answer name="normal" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Msi21a2" type="AnswerChoice">
-<Text>abnorm</Text>
+<Answer name="abnorm" type="AnswerChoice">
+
 </Answer>
 </Answers>
 </Question>
-<Question ID="Mf4" type="OC">
-<Text>Benzinart</Text>
-<Costs />
+<Question name="Benzinart" type="OC">
+
+<Costs/>
 <Children>
-<Child ID="Msi21" />
+<Child name="Bewertung Auspuffrohrfarbe"/>
 </Children>
 <Answers>
-<Answer ID="Mf4a1" type="AnswerChoice">
-<Text>Diesel</Text>
+<Answer name="Diesel" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf4a3" type="AnswerChoice">
-<Text>Normal oder Super</Text>
+<Answer name="Normal oder Super" type="AnswerChoice">
+
 </Answer>
 </Answers>
 </Question>
-<Question ID="Mf5" type="Num">
-<Text>�blicher Kraftstoffverbrauch/100km</Text>
-<Costs />
+<Question name="Üblicher Kraftstoffverbrauch/100km" type="Num">
+
+<Costs/>
 <Children>
-<Child ID="Msi4" />
+<Child name="Bewertung Kraftstoffverbrauch"/>
 </Children>
 </Question>
-<Question ID="Msi4" type="OC">
-<Text>Bewertung Kraftstoffverbrauch</Text>
-<Costs />
+<Question name="Bewertung Kraftstoffverbrauch" type="OC">
+
+<Costs/>
 <Answers>
-<Answer ID="Msi4a1" type="AnswerChoice">
-<Text>normal</Text>
+<Answer name="normal" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Msi4a2" type="AnswerChoice">
-<Text>leicht erh�ht</Text>
+<Answer name="leicht erhöht" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Msi4a3" type="AnswerChoice">
-<Text>erh�ht</Text>
+<Answer name="erhöht" type="AnswerChoice">
+
 </Answer>
 </Answers>
 </Question>
-<Question ID="Mf6" type="Num">
-<Text>Tats�chlicher Kraftstoffverbrauch/100km</Text>
-<Costs />
+<Question name="Tatsächlicher Kraftstoffverbrauch/100km" type="Num">
+
+<Costs/>
 <Children>
-<Child ID="Msi4" />
+<Child name="Bewertung Kraftstoffverbrauch"/>
 </Children>
 </Question>
-<Question ID="Mf7" type="MC">
-<Text>Motorger�usche</Text>
-<Costs />
+<Question name="Motorgeräusche" type="MC">
+
+<Costs/>
 <Answers>
-<Answer ID="Mf7a1" type="AnswerChoice">
-<Text>klopfen</Text>
+<Answer name="klopfen" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf7a2" type="AnswerChoice">
-<Text>klingeln</Text>
+<Answer name="klingeln" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf7a0" type="AnswerNo">
-<Text>Nein/Sonstiges</Text>
+<Answer name="Nein/Sonstiges" type="AnswerNo">
+
 </Answer>
 </Answers>
 </Question>
-<Question ID="Mf8" type="OC">
-<Text>Verhalten bei Motorstart</Text>
-<Costs />
+<Question name="Verhalten bei Motorstart" type="OC">
+
+<Costs/>
 <Children>
-<Child ID="Mf10" />
+<Child name="Anlasser"/>
 </Children>
 <Answers>
-<Answer ID="Mf8a1" type="AnswerChoice">
-<Text>springt normal an</Text>
+<Answer name="springt normal an" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf8a2" type="AnswerChoice">
-<Text>springt schlecht an</Text>
+<Answer name="springt schlecht an" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf8a3" type="AnswerChoice">
-<Text>springt �berhaupt nicht an</Text>
+<Answer name="springt überhaupt nicht an" type="AnswerChoice">
+
 </Answer>
 </Answers>
 </Question>
-<Question ID="Mf10" type="OC">
-<Text>Anlasser</Text>
-<Costs />
+<Question name="Anlasser" type="OC">
+
+<Costs/>
 <Answers>
-<Answer ID="Mf10a1" type="AnswerChoice">
-<Text>dreht durch</Text>
+<Answer name="dreht durch" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf10a2" type="AnswerChoice">
-<Text>dreht nicht richtig durch</Text>
+<Answer name="dreht nicht richtig durch" type="AnswerChoice">
+
 </Answer>
 </Answers>
 </Question>
-<Question ID="Mf9" type="MC">
-<Text>Fahrverhalten</Text>
-<Costs />
+<Question name="Fahrverhalten" type="MC">
+
+<Costs/>
 <Answers>
-<Answer ID="Mf9a1" type="AnswerChoice">
-<Text>verz�gertes Anfahren</Text>
+<Answer name="verzögertes Anfahren" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf9a2" type="AnswerChoice">
-<Text>schlechte Beschleunigung</Text>
+<Answer name="schlechte Beschleunigung" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf9a3" type="AnswerChoice">
-<Text>Leerlauf ist zu niedrig</Text>
+<Answer name="Leerlauf ist zu niedrig" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf9a4" type="AnswerChoice">
-<Text>Leerlauf ist unregelm��ig</Text>
+<Answer name="Leerlauf ist unregelmäßig" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf9a5" type="AnswerChoice">
-<Text>zu wenig Leistung bei Teillast</Text>
+<Answer name="zu wenig Leistung bei Teillast" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf9a6" type="AnswerChoice">
-<Text>zu wenig Leistung bei Volllast</Text>
+<Answer name="zu wenig Leistung bei Volllast" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf9a0" type="AnswerNo">
-<Text>Nein/Sonstiges</Text>
+<Answer name="Nein/Sonstiges" type="AnswerNo">
+
 </Answer>
 </Answers>
 </Question>
-<Question ID="Mf13" type="YN">
-<Text>Leerlaufsystem</Text>
-<Costs />
+<Question name="Leerlaufsystem" type="YN">
+
+<Costs/>
 <Answers>
-<Answer ID="Mf13a1" type="AnswerYes">
-<Text>ja</Text>
+<Answer name="ja" type="AnswerYes">
+
 </Answer>
-<Answer ID="Mf13a0" type="AnswerNo">
-<Text>nein</Text>
+<Answer name="nein" type="AnswerNo">
+
 </Answer>
 </Answers>
 </Question>
-<Question ID="Mf15" type="YN">
-<Text>Ansaugsystem</Text>
-<Costs />
+<Question name="Ansaugsystem" type="YN">
+
+<Costs/>
 <Answers>
-<Answer ID="Mf15a1" type="AnswerYes">
-<Text>ja</Text>
+<Answer name="ja" type="AnswerYes">
+
 </Answer>
-<Answer ID="Mf15a0" type="AnswerNo">
-<Text>nein</Text>
+<Answer name="nein" type="AnswerNo">
+
 </Answer>
 </Answers>
 </Question>
-<Question ID="Mf17" type="YN">
-<Text>Luftfiltereinsatz</Text>
-<Costs />
+<Question name="Luftfiltereinsatz" type="YN">
+
+<Costs/>
 <Answers>
-<Answer ID="Mf17a1" type="AnswerYes">
-<Text>ja</Text>
+<Answer name="ja" type="AnswerYes">
+
 </Answer>
-<Answer ID="Mf17a0" type="AnswerNo">
-<Text>nein</Text>
+<Answer name="nein" type="AnswerNo">
+
 </Answer>
 </Answers>
 </Question>
-<Question ID="Mf19" type="YN">
-<Text>Z�ndeinstellung</Text>
-<Costs />
+<Question name="Zündeinstellung" type="YN">
+
+<Costs/>
 <Answers>
-<Answer ID="Mf19a1" type="AnswerYes">
-<Text>ja</Text>
+<Answer name="ja" type="AnswerYes">
+
 </Answer>
-<Answer ID="Mf19a0" type="AnswerNo">
-<Text>nein</Text>
+<Answer name="nein" type="AnswerNo">
+
 </Answer>
 </Answers>
 </Question>
-<Question ID="Mf11" type="YN">
-<Text>Batterie</Text>
-<Costs />
+<Question name="Batterie" type="YN">
+
+<Costs/>
 <Answers>
-<Answer ID="Mf11a1" type="AnswerYes">
-<Text>ja</Text>
+<Answer name="ja" type="AnswerYes">
+
 </Answer>
-<Answer ID="Mf11a0" type="AnswerNo">
-<Text>nein</Text>
+<Answer name="nein" type="AnswerNo">
+
 </Answer>
 </Answers>
 </Question>
-<Question ID="Mf57" type="OC">
-<Text>Automarke</Text>
-<Costs />
+<Question name="Automarke" type="OC">
+
+<Costs/>
 <Answers>
-<Answer ID="Mf57a1" type="AnswerChoice">
-<Text>VW</Text>
+<Answer name="VW" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf57a2" type="AnswerChoice">
-<Text>Opel</Text>
+<Answer name="Opel" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf57a3" type="AnswerChoice">
-<Text>Mercedes Benz</Text>
+<Answer name="Mercedes Benz" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf57a4" type="AnswerChoice">
-<Text>BMW</Text>
+<Answer name="BMW" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf57a5" type="AnswerChoice">
-<Text>Porsche</Text>
+<Answer name="Porsche" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf57a6" type="AnswerChoice">
-<Text>Fiat</Text>
+<Answer name="Fiat" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf57a7" type="AnswerChoice">
-<Text>Toyota</Text>
+<Answer name="Toyota" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf57a8" type="AnswerChoice">
-<Text>Mazda</Text>
+<Answer name="Mazda" type="AnswerChoice">
+
 </Answer>
-<Answer ID="Mf57a9" type="AnswerChoice">
-<Text>sonstige</Text>
+<Answer name="sonstige" type="AnswerChoice">
+
 </Answer>
 </Answers>
 </Question>
-<Question ID="Mf58" type="Num">
-<Text>Baujahr</Text>
-<Costs />
+<Question name="Baujahr" type="Num">
+
+<Costs/>
 </Question>
 </Questions>
 <Diagnoses>
-<Diagnosis ID="P000">
-<Text>Klassifikation</Text>
+<Diagnosis name="Klassifikation">
+
 <Properties>
 </Properties>
 <Children>
-<Child ID="P8" />
-<Child ID="P13" />
-<Child ID="P14" />
-<Child ID="P15" />
-<Child ID="P16" />
+<Child name="Leerlaufsystem defekt"/>
+<Child name="Ansaugsystem undicht"/>
+<Child name="Luftfiltereinsatz verschmutzt"/>
+<Child name="Zündeinstellung falsch"/>
+<Child name="Batterie leer"/>
 </Children>
 </Diagnosis>
-<Diagnosis ID="P8">
-<Text>Leerlaufsystem defekt</Text>
+<Diagnosis name="Leerlaufsystem defekt">
+
 <Properties>
 </Properties>
 </Diagnosis>
-<Diagnosis ID="P13">
-<Text>Ansaugsystem undicht</Text>
+<Diagnosis name="Ansaugsystem undicht">
+
 <Properties>
 </Properties>
 </Diagnosis>
-<Diagnosis ID="P14" aPriProb="P2">
-<Text>Luftfiltereinsatz verschmutzt</Text>
+<Diagnosis aPriProb="P2" name="Luftfiltereinsatz verschmutzt">
+
 <Properties>
 </Properties>
 </Diagnosis>
-<Diagnosis ID="P15">
-<Text>Z�ndeinstellung falsch</Text>
+<Diagnosis name="Zündeinstellung falsch">
+
 <Properties>
 </Properties>
 </Diagnosis>
-<Diagnosis ID="P16">
-<Text>Batterie leer</Text>
+<Diagnosis name="Batterie leer">
+
 <Properties>
 </Properties>
 </Diagnosis>
@@ -435,256 +436,256 @@
 <KnowledgeSlices>
 <KnowledgeSlice ID="R-Fb-57" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="N4" />
-<Diagnosis ID="P16" />
+<Score value="N4"/>
+<Diagnosis name="Batterie leer"/>
 </Action>
-<Condition type="equal" ID="Mf10" value="Mf10a1" />
+<Condition name="Anlasser" type="equal" value="dreht durch"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-56" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P5" />
-<Diagnosis ID="P16" />
+<Score value="P5"/>
+<Diagnosis name="Batterie leer"/>
 </Action>
 <Condition type="or">
-<Condition type="equal" ID="Mf8" value="Mf8a3" />
-<Condition type="equal" ID="Mf8" value="Mf8a2" />
+<Condition name="Verhalten bei Motorstart" type="equal" value="springt überhaupt nicht an"/>
+<Condition name="Verhalten bei Motorstart" type="equal" value="springt schlecht an"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice ID="RADD59" type="RuleComplex">
 <Action type="ActionAddValue">
-<Question ID="Msi21" />
+<Question name="Bewertung Auspuffrohrfarbe"/>
 <Values>
-<Value type="answerChoice" ID="Msi21a2" />
+<Value name="abnorm" type="answerChoice"/>
 </Values>
 </Action>
 <Condition type="and">
-<Condition type="equal" ID="Mf4" value="Mf4a3" />
-<Condition type="equal" ID="Mf3" value="Mf3a4" />
+<Condition name="Benzinart" type="equal" value="Normal oder Super"/>
+<Condition name="Auspuffrohrfarbe" type="equal" value="schwarzverrußt"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-29" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P4" />
-<Diagnosis ID="P14" />
+<Score value="P4"/>
+<Diagnosis name="Luftfiltereinsatz verschmutzt"/>
 </Action>
-<Condition type="equal" ID="Mf9" value="Mf9a4" />
+<Condition name="Fahrverhalten" type="equal" value="Leerlauf ist unregelmäßig"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-28" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="N4" />
-<Diagnosis ID="P13" />
+<Score value="N4"/>
+<Diagnosis name="Ansaugsystem undicht"/>
 </Action>
-<Condition type="equal" ID="Msi4" value="Msi4a1" />
+<Condition name="Bewertung Kraftstoffverbrauch" type="equal" value="normal"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-27" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P3" />
-<Diagnosis ID="P13" />
+<Score value="P3"/>
+<Diagnosis name="Ansaugsystem undicht"/>
 </Action>
-<Condition type="equal" ID="Mf9" value="Mf9a5" />
+<Condition name="Fahrverhalten" type="equal" value="zu wenig Leistung bei Teillast"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-26" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P4" />
-<Diagnosis ID="P13" />
+<Score value="P4"/>
+<Diagnosis name="Ansaugsystem undicht"/>
 </Action>
-<Condition type="equal" ID="Mf9" value="Mf9a4" />
+<Condition name="Fahrverhalten" type="equal" value="Leerlauf ist unregelmäßig"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-25" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P3" />
-<Diagnosis ID="P13" />
+<Score value="P3"/>
+<Diagnosis name="Ansaugsystem undicht"/>
 </Action>
-<Condition type="equal" ID="Msi4" value="Msi4a2" />
+<Condition name="Bewertung Kraftstoffverbrauch" type="equal" value="leicht erhöht"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-24" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P4" />
-<Diagnosis ID="P13" />
+<Score value="P4"/>
+<Diagnosis name="Ansaugsystem undicht"/>
 </Action>
-<Condition type="equal" ID="Msi4" value="Msi4a3" />
+<Condition name="Bewertung Kraftstoffverbrauch" type="equal" value="erhöht"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-22" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="N6" />
-<Diagnosis ID="P14" />
+<Score value="N6"/>
+<Diagnosis name="Luftfiltereinsatz verschmutzt"/>
 </Action>
 <Condition type="not">
-<Condition type="equal" ID="Mf10" value="Mf10a1" />
+<Condition name="Anlasser" type="equal" value="dreht durch"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-21" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="N4" />
-<Diagnosis ID="P14" />
+<Score value="N4"/>
+<Diagnosis name="Luftfiltereinsatz verschmutzt"/>
 </Action>
 <Condition type="not">
 <Condition type="or">
-<Condition type="equal" ID="Mf8" value="Mf8a3" />
-<Condition type="equal" ID="Mf8" value="Mf8a2" />
+<Condition name="Verhalten bei Motorstart" type="equal" value="springt überhaupt nicht an"/>
+<Condition name="Verhalten bei Motorstart" type="equal" value="springt schlecht an"/>
 </Condition>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-20" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P4" />
-<Diagnosis ID="P14" />
+<Score value="P4"/>
+<Diagnosis name="Luftfiltereinsatz verschmutzt"/>
 </Action>
 <Condition type="and">
 <Condition type="or">
-<Condition type="equal" ID="Mf8" value="Mf8a3" />
-<Condition type="equal" ID="Mf8" value="Mf8a2" />
+<Condition name="Verhalten bei Motorstart" type="equal" value="springt überhaupt nicht an"/>
+<Condition name="Verhalten bei Motorstart" type="equal" value="springt schlecht an"/>
 </Condition>
-<Condition type="equal" ID="Mf10" value="Mf10a1" />
+<Condition name="Anlasser" type="equal" value="dreht durch"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-18" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="N4" />
-<Diagnosis ID="P14" />
+<Score value="N4"/>
+<Diagnosis name="Luftfiltereinsatz verschmutzt"/>
 </Action>
-<Condition type="equal" ID="Msi4" value="Msi4a1" />
+<Condition name="Bewertung Kraftstoffverbrauch" type="equal" value="normal"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-17" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P3" />
-<Diagnosis ID="P14" />
+<Score value="P3"/>
+<Diagnosis name="Luftfiltereinsatz verschmutzt"/>
 </Action>
-<Condition type="equal" ID="Msi4" value="Msi4a2" />
+<Condition name="Bewertung Kraftstoffverbrauch" type="equal" value="leicht erhöht"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-16" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P4" />
-<Diagnosis ID="P14" />
+<Score value="P4"/>
+<Diagnosis name="Luftfiltereinsatz verschmutzt"/>
 </Action>
-<Condition type="equal" ID="Msi4" value="Msi4a3" />
+<Condition name="Bewertung Kraftstoffverbrauch" type="equal" value="erhöht"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-15" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P5" />
-<Diagnosis ID="P14" />
+<Score value="P5"/>
+<Diagnosis name="Luftfiltereinsatz verschmutzt"/>
 </Action>
-<Condition type="equal" ID="Msi21" value="Msi21a2" />
+<Condition name="Bewertung Auspuffrohrfarbe" type="equal" value="abnorm"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-14" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P5" />
-<Diagnosis ID="P14" />
+<Score value="P5"/>
+<Diagnosis name="Luftfiltereinsatz verschmutzt"/>
 </Action>
-<Condition type="equal" ID="Mf2" value="Mf2a1" />
+<Condition name="Abgase" type="equal" value="schwarz"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-13" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="N5" />
-<Diagnosis ID="P15" />
+<Score value="N5"/>
+<Diagnosis name="Zündeinstellung falsch"/>
 </Action>
 <Condition type="not">
 <Condition type="or">
-<Condition type="equal" ID="Mf8" value="Mf8a3" />
-<Condition type="equal" ID="Mf8" value="Mf8a2" />
+<Condition name="Verhalten bei Motorstart" type="equal" value="springt überhaupt nicht an"/>
+<Condition name="Verhalten bei Motorstart" type="equal" value="springt schlecht an"/>
 </Condition>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-12" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="N3" />
-<Diagnosis ID="P15" />
+<Score value="N3"/>
+<Diagnosis name="Zündeinstellung falsch"/>
 </Action>
 <Condition type="not">
 <Condition type="or">
-<Condition type="equal" ID="Mf7" value="Mf7a2" />
-<Condition type="equal" ID="Mf7" value="Mf7a1" />
+<Condition name="Motorgeräusche" type="equal" value="klingeln"/>
+<Condition name="Motorgeräusche" type="equal" value="klopfen"/>
 </Condition>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-11" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="N6" />
-<Diagnosis ID="P15" />
+<Score value="N6"/>
+<Diagnosis name="Zündeinstellung falsch"/>
 </Action>
 <Condition type="not">
-<Condition type="equal" ID="Mf10" value="Mf10a1" />
+<Condition name="Anlasser" type="equal" value="dreht durch"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-10" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P5" />
-<Diagnosis ID="P15" />
+<Score value="P5"/>
+<Diagnosis name="Zündeinstellung falsch"/>
 </Action>
 <Condition type="and">
 <Condition type="or">
-<Condition type="equal" ID="Mf8" value="Mf8a3" />
-<Condition type="equal" ID="Mf8" value="Mf8a2" />
+<Condition name="Verhalten bei Motorstart" type="equal" value="springt überhaupt nicht an"/>
+<Condition name="Verhalten bei Motorstart" type="equal" value="springt schlecht an"/>
 </Condition>
-<Condition type="equal" ID="Mf10" value="Mf10a1" />
+<Condition name="Anlasser" type="equal" value="dreht durch"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-9" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P5" />
-<Diagnosis ID="P15" />
+<Score value="P5"/>
+<Diagnosis name="Zündeinstellung falsch"/>
 </Action>
 <Condition type="or">
-<Condition type="equal" ID="Mf7" value="Mf7a2" />
-<Condition type="equal" ID="Mf7" value="Mf7a1" />
+<Condition name="Motorgeräusche" type="equal" value="klingeln"/>
+<Condition name="Motorgeräusche" type="equal" value="klopfen"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-8" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P3" />
-<Diagnosis ID="P15" />
+<Score value="P3"/>
+<Diagnosis name="Zündeinstellung falsch"/>
 </Action>
-<Condition type="equal" ID="Mf9" value="Mf9a4" />
+<Condition name="Fahrverhalten" type="equal" value="Leerlauf ist unregelmäßig"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-7" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P3" />
-<Diagnosis ID="P15" />
+<Score value="P3"/>
+<Diagnosis name="Zündeinstellung falsch"/>
 </Action>
-<Condition type="equal" ID="Mf9" value="Mf9a1" />
+<Condition name="Fahrverhalten" type="equal" value="verzögertes Anfahren"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-6" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="N3" />
-<Diagnosis ID="P8" />
+<Score value="N3"/>
+<Diagnosis name="Leerlaufsystem defekt"/>
 </Action>
 <Condition type="not">
-<Condition type="equal" ID="Mf9" value="Mf9a3" />
+<Condition name="Fahrverhalten" type="equal" value="Leerlauf ist zu niedrig"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-5" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="N4" />
-<Diagnosis ID="P8" />
+<Score value="N4"/>
+<Diagnosis name="Leerlaufsystem defekt"/>
 </Action>
 <Condition type="not">
-<Condition type="equal" ID="Mf9" value="Mf9a4" />
+<Condition name="Fahrverhalten" type="equal" value="Leerlauf ist unregelmäßig"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-4" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P5" />
-<Diagnosis ID="P8" />
+<Score value="P5"/>
+<Diagnosis name="Leerlaufsystem defekt"/>
 </Action>
-<Condition type="equal" ID="Mf8" value="Mf8a2" />
+<Condition name="Verhalten bei Motorstart" type="equal" value="springt schlecht an"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-3" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P4" />
-<Diagnosis ID="P8" />
+<Score value="P4"/>
+<Diagnosis name="Leerlaufsystem defekt"/>
 </Action>
-<Condition type="equal" ID="Mf9" value="Mf9a3" />
+<Condition name="Fahrverhalten" type="equal" value="Leerlauf ist zu niedrig"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="R-Fb-2" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P5" />
-<Diagnosis ID="P8" />
+<Score value="P5"/>
+<Diagnosis name="Leerlaufsystem defekt"/>
 </Action>
-<Condition type="equal" ID="Mf9" value="Mf9a4" />
+<Condition name="Fahrverhalten" type="equal" value="Leerlauf ist unregelmäßig"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="RDQ4" type="RuleComplex">
 <Action type="ActionAddValue">
-<Question ID="Msi4" />
+<Question name="Bewertung Kraftstoffverbrauch"/>
 <Values>
 <Value type="evaluatable">
 <FormulaTerm type="*">
@@ -694,19 +695,19 @@
 <FormulaTerm type="-">
 <arg1>
 <FormulaPrimitive type="QNumWrapper">
-<Value>Mf6</Value>
+<Value>Tatsächlicher Kraftstoffverbrauch/100km</Value>
 </FormulaPrimitive>
 </arg1>
 <arg2>
 <FormulaPrimitive type="QNumWrapper">
-<Value>Mf5</Value>
+<Value>Üblicher Kraftstoffverbrauch/100km</Value>
 </FormulaPrimitive>
 </arg2>
 </FormulaTerm>
 </arg1>
 <arg2>
 <FormulaPrimitive type="QNumWrapper">
-<Value>Mf5</Value>
+<Value>Üblicher Kraftstoffverbrauch/100km</Value>
 </FormulaPrimitive>
 </arg2>
 </FormulaTerm>
@@ -721,212 +722,212 @@
 </Values>
 </Action>
 <Condition type="and">
-<Condition type="numGreater" ID="Mf5" value="0" />
-<Condition type="known" ID="Mf6" value="any" />
+<Condition name="Üblicher Kraftstoffverbrauch/100km" type="numGreater" value="0"/>
+<Condition name="Tatsächlicher Kraftstoffverbrauch/100km" type="known" value="any"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice ID="RADD4" type="RuleComplex">
 <Action type="ActionAddValue">
-<Question ID="Msi21" />
+<Question name="Bewertung Auspuffrohrfarbe"/>
 <Values>
-<Value type="answerChoice" ID="Msi21a1" />
+<Value name="normal" type="answerChoice"/>
 </Values>
 </Action>
 <Condition type="or">
-<Condition type="equal" ID="Mf3" value="Mf3a1" />
-<Condition type="equal" ID="Mf3" value="Mf3a2" />
-<Condition type="equal" ID="Mf3" value="Mf3a3" />
+<Condition name="Auspuffrohrfarbe" type="equal" value="braun"/>
+<Condition name="Auspuffrohrfarbe" type="equal" value="grau"/>
+<Condition name="Auspuffrohrfarbe" type="equal" value="hellgrau"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice ID="RADD2" type="RuleComplex">
 <Action type="ActionAddValue">
-<Question ID="Msi21" />
+<Question name="Bewertung Auspuffrohrfarbe"/>
 <Values>
-<Value type="answerChoice" ID="Msi21a1" />
+<Value name="normal" type="answerChoice"/>
 </Values>
 </Action>
 <Condition type="and">
-<Condition type="equal" ID="Mf3" value="Mf3a4" />
-<Condition type="equal" ID="Mf4" value="Mf4a1" />
+<Condition name="Auspuffrohrfarbe" type="equal" value="schwarzverrußt"/>
+<Condition name="Benzinart" type="equal" value="Diesel"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice ID="Rfb21" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P7" />
-<Diagnosis ID="P15" />
+<Score value="P7"/>
+<Diagnosis name="Zündeinstellung falsch"/>
 </Action>
-<Condition type="equal" ID="Mf19" value="Mf19a1" />
+<Condition name="Zündeinstellung" type="equal" value="ja"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="Rfb20" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="N7" />
-<Diagnosis ID="P15" />
+<Score value="N7"/>
+<Diagnosis name="Zündeinstellung falsch"/>
 </Action>
-<Condition type="equal" ID="Mf19" value="Mf19a0" />
+<Condition name="Zündeinstellung" type="equal" value="nein"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="Rfb19" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P7" />
-<Diagnosis ID="P14" />
+<Score value="P7"/>
+<Diagnosis name="Luftfiltereinsatz verschmutzt"/>
 </Action>
-<Condition type="equal" ID="Mf17" value="Mf17a1" />
+<Condition name="Luftfiltereinsatz" type="equal" value="ja"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="Rfb18" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="N7" />
-<Diagnosis ID="P14" />
+<Score value="N7"/>
+<Diagnosis name="Luftfiltereinsatz verschmutzt"/>
 </Action>
-<Condition type="equal" ID="Mf17" value="Mf17a0" />
+<Condition name="Luftfiltereinsatz" type="equal" value="nein"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="Rfb17" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P7" />
-<Diagnosis ID="P13" />
+<Score value="P7"/>
+<Diagnosis name="Ansaugsystem undicht"/>
 </Action>
-<Condition type="equal" ID="Mf15" value="Mf15a1" />
+<Condition name="Ansaugsystem" type="equal" value="ja"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="Rfb16" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="N7" />
-<Diagnosis ID="P13" />
+<Score value="N7"/>
+<Diagnosis name="Ansaugsystem undicht"/>
 </Action>
-<Condition type="equal" ID="Mf15" value="Mf15a0" />
+<Condition name="Ansaugsystem" type="equal" value="nein"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="Rfb15" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P7" />
-<Diagnosis ID="P8" />
+<Score value="P7"/>
+<Diagnosis name="Leerlaufsystem defekt"/>
 </Action>
-<Condition type="equal" ID="Mf13" value="Mf13a1" />
+<Condition name="Leerlaufsystem" type="equal" value="ja"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="Rfb14" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="N7" />
-<Diagnosis ID="P8" />
+<Score value="N7"/>
+<Diagnosis name="Leerlaufsystem defekt"/>
 </Action>
-<Condition type="equal" ID="Mf13" value="Mf13a0" />
+<Condition name="Leerlaufsystem" type="equal" value="nein"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="Rfb13" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P7" />
-<Diagnosis ID="P16" />
+<Score value="P7"/>
+<Diagnosis name="Batterie leer"/>
 </Action>
-<Condition type="equal" ID="Mf11" value="Mf11a1" />
+<Condition name="Batterie" type="equal" value="ja"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="Rfb12" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="N7" />
-<Diagnosis ID="P16" />
+<Score value="N7"/>
+<Diagnosis name="Batterie leer"/>
 </Action>
-<Condition type="equal" ID="Mf11" value="Mf11a0" />
+<Condition name="Batterie" type="equal" value="nein"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="Rfb11" type="RuleComplex">
 <Action type="ActionHeuristicPS">
-<Score value="P5" />
-<Diagnosis ID="P16" />
+<Score value="P5"/>
+<Diagnosis name="Batterie leer"/>
 </Action>
-<Condition type="equal" ID="Mf10" value="Mf10a2" />
+<Condition name="Anlasser" type="equal" value="dreht nicht richtig durch"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="RASK10" type="RuleComplex">
 <Action type="ActionIndication">
 <TargetQASets>
-<QASet ID="Mf10" />
+<QASet name="Anlasser"/>
 </TargetQASets>
 </Action>
 <Condition type="or">
-<Condition type="equal" ID="Mf8" value="Mf8a2" />
-<Condition type="equal" ID="Mf8" value="Mf8a3" />
+<Condition name="Verhalten bei Motorstart" type="equal" value="springt schlecht an"/>
+<Condition name="Verhalten bei Motorstart" type="equal" value="springt überhaupt nicht an"/>
 </Condition>
 </KnowledgeSlice>
 <KnowledgeSlice ID="rqsug15347" type="RuleComplex">
 <Action type="ActionClarify">
-<targetDiagnosis ID="P8" />
+<targetDiagnosis name="Leerlaufsystem defekt"/>
 <TargetQASets>
-<QASet ID="Q17" />
+<QASet name="Untersuchung Leerlaufsystem"/>
 </TargetQASets>
 </Action>
-<Condition ID="P8" type="DState" value="suggested" />
+<Condition name="Leerlaufsystem defekt" type="DState" value="suggested"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="rqetab15348" type="RuleComplex">
 <Action type="ActionRefine">
-<targetDiagnosis ID="P8" />
+<targetDiagnosis name="Leerlaufsystem defekt"/>
 <TargetQASets>
-<QASet ID="Q17" />
+<QASet name="Untersuchung Leerlaufsystem"/>
 </TargetQASets>
 </Action>
-<Condition ID="P8" type="DState" value="established" />
+<Condition name="Leerlaufsystem defekt" type="DState" value="established"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="rqsug15350" type="RuleComplex">
 <Action type="ActionClarify">
-<targetDiagnosis ID="P13" />
+<targetDiagnosis name="Ansaugsystem undicht"/>
 <TargetQASets>
-<QASet ID="Q18" />
+<QASet name="Untersuchung Ansaugsystem"/>
 </TargetQASets>
 </Action>
-<Condition ID="P13" type="DState" value="suggested" />
+<Condition name="Ansaugsystem undicht" type="DState" value="suggested"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="rqetab15351" type="RuleComplex">
 <Action type="ActionRefine">
-<targetDiagnosis ID="P13" />
+<targetDiagnosis name="Ansaugsystem undicht"/>
 <TargetQASets>
-<QASet ID="Q18" />
+<QASet name="Untersuchung Ansaugsystem"/>
 </TargetQASets>
 </Action>
-<Condition ID="P13" type="DState" value="established" />
+<Condition name="Ansaugsystem undicht" type="DState" value="established"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="rqsug15353" type="RuleComplex">
 <Action type="ActionClarify">
-<targetDiagnosis ID="P14" />
+<targetDiagnosis name="Luftfiltereinsatz verschmutzt"/>
 <TargetQASets>
-<QASet ID="Q19" />
+<QASet name="Untersuchung Luftfiltereinsatz"/>
 </TargetQASets>
 </Action>
-<Condition ID="P14" type="DState" value="suggested" />
+<Condition name="Luftfiltereinsatz verschmutzt" type="DState" value="suggested"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="rqetab15354" type="RuleComplex">
 <Action type="ActionRefine">
-<targetDiagnosis ID="P14" />
+<targetDiagnosis name="Luftfiltereinsatz verschmutzt"/>
 <TargetQASets>
-<QASet ID="Q19" />
+<QASet name="Untersuchung Luftfiltereinsatz"/>
 </TargetQASets>
 </Action>
-<Condition ID="P14" type="DState" value="established" />
+<Condition name="Luftfiltereinsatz verschmutzt" type="DState" value="established"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="rqsug15356" type="RuleComplex">
 <Action type="ActionClarify">
-<targetDiagnosis ID="P15" />
+<targetDiagnosis name="Zündeinstellung falsch"/>
 <TargetQASets>
-<QASet ID="Q20" />
+<QASet name="Untersuchung Zündeinstellung"/>
 </TargetQASets>
 </Action>
-<Condition ID="P15" type="DState" value="suggested" />
+<Condition name="Zündeinstellung falsch" type="DState" value="suggested"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="rqetab15357" type="RuleComplex">
 <Action type="ActionRefine">
-<targetDiagnosis ID="P15" />
+<targetDiagnosis name="Zündeinstellung falsch"/>
 <TargetQASets>
-<QASet ID="Q20" />
+<QASet name="Untersuchung Zündeinstellung"/>
 </TargetQASets>
 </Action>
-<Condition ID="P15" type="DState" value="established" />
+<Condition name="Zündeinstellung falsch" type="DState" value="established"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="rqsug15359" type="RuleComplex">
 <Action type="ActionClarify">
-<targetDiagnosis ID="P16" />
+<targetDiagnosis name="Batterie leer"/>
 <TargetQASets>
-<QASet ID="Q21" />
+<QASet name="Untersuchung Batterie"/>
 </TargetQASets>
 </Action>
-<Condition ID="P16" type="DState" value="suggested" />
+<Condition name="Batterie leer" type="DState" value="suggested"/>
 </KnowledgeSlice>
 <KnowledgeSlice ID="rqetab15360" type="RuleComplex">
 <Action type="ActionRefine">
-<targetDiagnosis ID="P16" />
+<targetDiagnosis name="Batterie leer"/>
 <TargetQASets>
-<QASet ID="Q21" />
+<QASet name="Untersuchung Batterie"/>
 </TargetQASets>
 </Action>
-<Condition ID="P16" type="DState" value="established" />
+<Condition name="Batterie leer" type="DState" value="established"/>
 </KnowledgeSlice>
 </KnowledgeSlices>
 </KnowledgeBase>

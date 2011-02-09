@@ -59,8 +59,8 @@ public class Solution extends AbstractTerminologyObject implements ValueObject {
 	 * 
 	 * @param id the specified unique identifier for this instance
 	 */
-	public Solution(String id) {
-		super(id);
+	public Solution(KnowledgeBase kb, String name) {
+		super(kb, name);
 	}
 
 	/**
@@ -94,22 +94,6 @@ public class Solution extends AbstractTerminologyObject implements ValueObject {
 		else {
 			aprioriProbability = newAprioriProbability;
 		}
-	}
-
-	/**
-	 * Sets the knowledge base instance, to which this object belongs to. This
-	 * method also adds this object to the knowledge base (reverse link). <br>
-	 * <b>Note:</b> Currently, this object is not removed from a previously
-	 * registered knowledge base.
-	 * 
-	 * @param knowledgeBase the knowledge base, to which this object belongs to
-	 */
-	@Override
-	public void setKnowledgeBase(KnowledgeBase knowledgeBase) {
-		super.setKnowledgeBase(knowledgeBase);
-		// maybe somebody should remove this object from the old
-		// knowledge base if available
-		getKnowledgeBase().getManager().putTerminologyObject(this);
 	}
 
 	@Override

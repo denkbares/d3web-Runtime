@@ -50,16 +50,12 @@ public class QContainerHandler implements FragmentHandler {
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		String id = element.getAttribute("ID");
+		String id = element.getAttribute("name");
 		List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
-		QContainer qcon = new QContainer(id);
+		QContainer qcon = new QContainer(kb, id);
 		PropertiesHandler ph = new PropertiesHandler();
-		qcon.setKnowledgeBase(kb);
 		for (Element child : childNodes) {
-			if (child.getNodeName().equals("Text")) {
-				qcon.setName(child.getTextContent());
-			}
-			else if (child.getNodeName().equals(XMLUtil.INFO_STORE)) {
+			if (child.getNodeName().equals(XMLUtil.INFO_STORE)) {
 				XMLUtil.fillInfoStore(qcon.getInfoStore(), child, kb);
 			}
 			// Read old Properties Format
@@ -74,8 +70,7 @@ public class QContainerHandler implements FragmentHandler {
 	public Element write(Object object, Document doc) throws IOException {
 		Element element = doc.createElement("QContainer");
 		QContainer qContainer = (QContainer) object;
-		element.setAttribute("ID", qContainer.getId());
-		XMLUtil.appendTextNode(qContainer.getName(), element);
+		element.setAttribute("name", qContainer.getName());
 		XMLUtil.appendInfoStore(element, qContainer, Autosave.basic);
 		return element;
 	}

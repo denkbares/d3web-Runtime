@@ -28,6 +28,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.session.blackboard.Fact;
@@ -54,14 +55,13 @@ public class DefaultProtocolTest {
 
 	@Before
 	public void setUp() throws Exception {
-		QuestionNum questionNum = new QuestionNum("questionNum");
-		questionNum.setName(questionNum.getId());
+		KnowledgeBase kb = new KnowledgeBase();
+		QuestionNum questionNum = new QuestionNum(kb, "questionNum");
 		NumValue numValue = new NumValue(13.8);
 		numFact = FactFactory.createUserEnteredFact(questionNum, numValue);
 		now = new Date();
 
-		QuestionText questionText = new QuestionText("questionText");
-		questionText.setName(questionText.getId());
+		QuestionText questionText = new QuestionText(kb, "questionText");
 		TextValue textValue = new TextValue("textValue");
 		textFact = FactFactory.createUserEnteredFact(questionText, textValue);
 

@@ -49,7 +49,7 @@ public class UnknownConditionHandler implements FragmentHandler {
 
 	@Override
 	public Object read(KnowledgeBase kb, Element node) throws IOException {
-		String questionID = node.getAttribute("ID");
+		String questionID = node.getAttribute("name");
 		if (questionID != null) {
 			NamedObject idObject = kb.getManager().search(questionID);
 			if (idObject instanceof Question) {

@@ -88,7 +88,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 					XMLUtil.fillInfoStore(kb.getInfoStore(), child, kb);
 				}
 				else if (child.getNodeName().equals("idObject")) {
-					String id = child.getAttribute("id");
+					String id = child.getAttribute("name");
 					NamedObject idObject = ansIdAnswerHash.get(id);
 					if (idObject == null) {
 						idObject = kb.getManager().search(id);
@@ -125,7 +125,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 				+ Math.round(aktvalue) + " of " + maxvalue);
 		for (NamedObject object : objects) {
 			Element idObjectElement = doc.createElement("idObject");
-			idObjectElement.setAttribute("id", object.getId());
+			idObjectElement.setAttribute("name", object.getName());
 			XMLUtil.appendInfoStoreEntries(idObjectElement, object.getInfoStore(), Autosave.mminfo);
 			if (XMLUtil.getElementList(idObjectElement.getChildNodes()).size() > 0) {
 				mminfosElement.appendChild(idObjectElement);
@@ -156,7 +156,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 						.iterator();
 				while (ansiter.hasNext()) {
 					Choice ans = ansiter.next();
-					ansIdAnswerHash.put(ans.getId(), ans);
+					ansIdAnswerHash.put(ans.getName(), ans);
 				}
 			}
 		}

@@ -33,6 +33,7 @@ import de.d3web.core.io.fragments.QContainerHandler;
 import de.d3web.core.io.fragments.QuestionHandler;
 import de.d3web.core.io.fragments.SolutionsHandler;
 import de.d3web.core.io.utilities.Util;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -57,39 +58,30 @@ public class KnowledgeBaseExportTest {
 	@Test
 	public void testQuestionTextOutput() throws Exception {
 
-		Question q1 = new QuestionText("q1");
-		q1.setName("q1-text");
+		Question q1 = new QuestionText(new KnowledgeBase(), "q1");
 
 		QuestionHandler qw = new QuestionHandler();
 
 		XMLTag isTag = new XMLTag(qw.write(q1, Util.createEmptyDocument()));
 
 		XMLTag shouldTag = new XMLTag("Question");
-		shouldTag.addAttribute("ID", "q1");
+		shouldTag.addAttribute("name", "q1");
 		shouldTag.addAttribute("type", "Text");
-		XMLTag child = new XMLTag("Text");
-		child.setContent("q1-text");
-		shouldTag.addChild(child);
-
 		assertEquals("QuestionText-output not correct (0)", shouldTag, isTag);
 	}
 
 	@Test
 	public void testQuestionNumOutput() throws Exception {
 
-		Question q1 = new QuestionNum("q1");
-		q1.setName("q1-text");
+		Question q1 = new QuestionNum(new KnowledgeBase(), "q1");
 
 		QuestionHandler qw = new QuestionHandler();
 
 		XMLTag isTag = new XMLTag(qw.write(q1, Util.createEmptyDocument()));
 
 		XMLTag shouldTag = new XMLTag("Question");
-		shouldTag.addAttribute("ID", "q1");
+		shouldTag.addAttribute("name", "q1");
 		shouldTag.addAttribute("type", "Num");
-		XMLTag child = new XMLTag("Text");
-		child.setContent("q1-text");
-		shouldTag.addChild(child);
 
 		assertEquals("QuestionNum-output not correct (0)", shouldTag, isTag);
 	}
@@ -97,19 +89,15 @@ public class KnowledgeBaseExportTest {
 	@Test
 	public void testQuestionDateOutput() throws Exception {
 
-		Question q1 = new QuestionDate("q1");
-		q1.setName("q1-text");
+		Question q1 = new QuestionDate(new KnowledgeBase(), "q1");
 
 		QuestionHandler qw = new QuestionHandler();
 
 		XMLTag isTag = new XMLTag(qw.write(q1, Util.createEmptyDocument()));
 
 		XMLTag shouldTag = new XMLTag("Question");
-		shouldTag.addAttribute("ID", "q1");
+		shouldTag.addAttribute("name", "q1");
 		shouldTag.addAttribute("type", "Date");
-		XMLTag child = new XMLTag("Text");
-		child.setContent("q1-text");
-		shouldTag.addChild(child);
 
 		assertEquals("QuestionNum-output not correct (0)", shouldTag, isTag);
 	}
@@ -117,11 +105,9 @@ public class KnowledgeBaseExportTest {
 	@Test
 	public void testQuestionOCOutput() throws Exception {
 
-		QuestionOC q1 = new QuestionOC("q1");
-		q1.setName("q1-text");
+		QuestionOC q1 = new QuestionOC(new KnowledgeBase(), "q1");
 		List<Choice> alternatives = new LinkedList<Choice>();
 		Choice a1 = new Choice("q1a1");
-		a1.setText("q1a1-text");
 		alternatives.add(a1);
 		q1.setAlternatives(alternatives);
 
@@ -130,19 +116,13 @@ public class KnowledgeBaseExportTest {
 		XMLTag isTag = new XMLTag(qw.write(q1, Util.createEmptyDocument()));
 
 		XMLTag shouldTag = new XMLTag("Question");
-		shouldTag.addAttribute("ID", "q1");
+		shouldTag.addAttribute("name", "q1");
 		shouldTag.addAttribute("type", "OC");
-		XMLTag child = new XMLTag("Text");
-		child.setContent("q1-text");
-		shouldTag.addChild(child);
 
 		XMLTag answersTag = new XMLTag("Answers");
 		XMLTag answerTag = new XMLTag("Answer");
-		answerTag.addAttribute("ID", "q1a1");
+		answerTag.addAttribute("name", "q1a1");
 		answerTag.addAttribute("type", "AnswerChoice");
-		XMLTag answerTextTag = new XMLTag("Text");
-		answerTextTag.setContent("q1a1-text");
-		answerTag.addChild(answerTextTag);
 		answersTag.addChild(answerTag);
 		shouldTag.addChild(answersTag);
 
@@ -151,11 +131,10 @@ public class KnowledgeBaseExportTest {
 
 	@Test
 	public void testQContainerOutput() throws Exception {
-		QContainer c1 = new QContainer("c1");
-		c1.setName("c1-text");
+		KnowledgeBase kb = new KnowledgeBase();
+		QContainer c1 = new QContainer(kb, "c1");
 
-		Question q1 = new QuestionText("q1");
-		q1.setName("q1-text");
+		Question q1 = new QuestionText(kb, "q1");
 		q1.addParent(c1);
 
 		QContainerHandler qcw = new QContainerHandler();
@@ -163,10 +142,7 @@ public class KnowledgeBaseExportTest {
 		XMLTag isTag = new XMLTag(qcw.write(c1, Util.createEmptyDocument()));
 
 		XMLTag shouldTag = new XMLTag("QContainer");
-		shouldTag.addAttribute("ID", "c1");
-		XMLTag shouldTextTag = new XMLTag("Text");
-		shouldTextTag.setContent("c1-text");
-		shouldTag.addChild(shouldTextTag);
+		shouldTag.addAttribute("name", "c1");
 
 		assertEquals("Qcontainer-output not correct (0)", shouldTag, isTag);
 
@@ -174,11 +150,10 @@ public class KnowledgeBaseExportTest {
 
 	@Test
 	public void testSolutionOutput() throws Exception {
-		Solution diag = new Solution("d1");
-		diag.setName("d1-text");
+		KnowledgeBase kb = new KnowledgeBase();
+		Solution diag = new Solution(kb, "d1");
 
-		Solution diagChild = new Solution("d11");
-		diagChild.setName("d11-text");
+		Solution diagChild = new Solution(kb, "d11");
 		diagChild.addParent(diag);
 
 		SolutionsHandler dw = new SolutionsHandler();
@@ -186,10 +161,7 @@ public class KnowledgeBaseExportTest {
 		XMLTag isTag = new XMLTag(dw.write(diag, Util.createEmptyDocument()));
 
 		XMLTag shouldTag = new XMLTag("Diagnosis");
-		shouldTag.addAttribute("ID", "d1");
-		XMLTag shouldTextTag = new XMLTag("Text");
-		shouldTextTag.setContent("d1-text");
-		shouldTag.addChild(shouldTextTag);
+		shouldTag.addAttribute("name", "d1");
 
 		assertEquals("Diagnosis-output not correct (0)", shouldTag, isTag);
 

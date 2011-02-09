@@ -27,6 +27,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 
@@ -42,8 +43,7 @@ public class QuestionMCTest {
 
 	@Before
 	public void setUp() throws Exception {
-		questionMC = new QuestionMC("questionMC");
-		questionMC.setName("questionMCtext");
+		questionMC = new QuestionMC(new KnowledgeBase(), "questionMCtext");
 	}
 
 	/**

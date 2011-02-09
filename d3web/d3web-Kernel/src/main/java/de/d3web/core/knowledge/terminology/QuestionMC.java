@@ -20,6 +20,7 @@
 
 package de.d3web.core.knowledge.terminology;
 
+import de.d3web.core.knowledge.KnowledgeBase;
 
 /**
  * Storage for Questions with predefined multiple answers (alternatives). <BR>
@@ -30,8 +31,8 @@ package de.d3web.core.knowledge.terminology;
  */
 public class QuestionMC extends QuestionChoice {
 
-	public QuestionMC(String id) {
-		super(id);
+	public QuestionMC(KnowledgeBase kb, String name) {
+		super(kb, name);
 	}
 
 }

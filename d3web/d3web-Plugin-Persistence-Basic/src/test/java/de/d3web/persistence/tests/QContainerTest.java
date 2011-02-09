@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import de.d3web.core.io.fragments.QContainerHandler;
 import de.d3web.core.io.utilities.Util;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionText;
@@ -52,15 +53,10 @@ public class QContainerTest {
 	public void setUp() throws IOException {
 		InitPluginManager.init();
 
-		qc1 = new QContainer("c1");
-		qc1.setName("c1-text");
+		qc1 = new QContainer(new KnowledgeBase(), "c1");
 
 		shouldTag = new XMLTag("QContainer");
-		shouldTag.addAttribute("ID", "c1");
-
-		XMLTag shouldTextTag = new XMLTag("Text");
-		shouldTextTag.setContent("c1-text");
-		shouldTag.addChild(shouldTextTag);
+		shouldTag.addAttribute("name", "c1");
 
 		qcw = new QContainerHandler();
 	}
@@ -74,12 +70,11 @@ public class QContainerTest {
 
 	@Test
 	public void testQContainerWithChildren() throws Exception {
-		Question q1 = new QuestionText("q1");
-		q1.setName("q1-text");
+		KnowledgeBase kb = new KnowledgeBase();
+		Question q1 = new QuestionText(kb, "q1");
 		q1.addParent(qc1);
 
-		Question q2 = new QuestionText("q2");
-		q2.setName("q2-text");
+		Question q2 = new QuestionText(kb, "q2");
 		q2.addParent(qc1);
 
 		isTag = new XMLTag(qcw.write(qc1, Util.createEmptyDocument()));
