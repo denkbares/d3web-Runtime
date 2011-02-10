@@ -251,7 +251,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 
 		if (theRelations.contains(relation)) return false;
 		theRelations.add(relation);
-		List<? extends AbstractTerminologyObject> terminalObjects = relation.getConditionedFinding().getTerminalObjects();
+		Collection<? extends AbstractTerminologyObject> terminalObjects = relation.getConditionedFinding().getTerminalObjects();
 		for (AbstractTerminologyObject no : terminalObjects) {
 			Set<XCLRelation> set = coverage.get(no);
 			if (set == null) {

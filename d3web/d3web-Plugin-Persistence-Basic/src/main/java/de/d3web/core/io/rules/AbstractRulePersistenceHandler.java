@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -67,8 +68,8 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 		public int compare(Rule o1, Rule o2) {
 			// get all idobjects of the conditions and try to sort the rules by
 			// the ids of them
-			List<? extends TerminologyObject> terminalObjects = o1.getCondition().getTerminalObjects();
-			List<? extends TerminologyObject> terminalObjects2 = o2.getCondition().getTerminalObjects();
+			Collection<? extends TerminologyObject> terminalObjects = o1.getCondition().getTerminalObjects();
+			Collection<? extends TerminologyObject> terminalObjects2 = o2.getCondition().getTerminalObjects();
 			int comparator = compareIDObjectLists(terminalObjects, terminalObjects2);
 			if (comparator != 0) return comparator;
 			// conditions contain the same idobjects, try to compare actions
@@ -80,7 +81,7 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 			return o1.toString().compareTo(o2.toString());
 		}
 
-		public int compareIDObjectLists(List<? extends TerminologyObject> terminalObjects, List<? extends TerminologyObject> terminalObjects2) {
+		public int compareIDObjectLists(Collection<? extends TerminologyObject> terminalObjects, Collection<? extends TerminologyObject> terminalObjects2) {
 			List<TerminologyObject> allTerminalObjects = new LinkedList<TerminologyObject>();
 			allTerminalObjects.addAll(terminalObjects);
 			allTerminalObjects.addAll(terminalObjects2);

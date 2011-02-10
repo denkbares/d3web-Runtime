@@ -21,6 +21,7 @@
 package de.d3web.kernel.verbalizer;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -47,10 +48,10 @@ import de.d3web.core.inference.condition.CondTextEqual;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.inference.condition.TerminalCondition;
+import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.knowledge.terminology.AnswerNo;
 import de.d3web.core.knowledge.terminology.AnswerYes;
 import de.d3web.core.knowledge.terminology.NamedObject;
-import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.kernel.verbalizer.VerbalizationManager.RenderingFormat;
 
@@ -305,12 +306,12 @@ public class ConditionVerbalizer implements Verbalizer {
 
 	private CondVerbalization createTerminalConditionVerbalization(TerminalCondition tCondition) {
 
-		List<? extends AbstractTerminologyObject> terminalObjects = tCondition.getTerminalObjects();
+		Collection<? extends AbstractTerminologyObject> terminalObjects = tCondition.getTerminalObjects();
 		if (terminalObjects == null) {
 			// Fail-safe, shouldn't happen!
 			return new TerminalCondVerbalization("TerminalObject", "=", "null", "");
 		}
-		Object object = terminalObjects.get(0);
+		Object object = terminalObjects.iterator().next();
 		String operator = getClassVerbalisation(tCondition);
 
 		List<Object> values = new ArrayList<Object>();

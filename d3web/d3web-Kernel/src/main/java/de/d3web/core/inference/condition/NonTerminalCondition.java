@@ -21,9 +21,12 @@
 package de.d3web.core.inference.condition;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 
@@ -57,8 +60,8 @@ public abstract class NonTerminalCondition implements Condition {
 	}
 
 	@Override
-	public List<AbstractTerminologyObject> getTerminalObjects() {
-		List<AbstractTerminologyObject> v = new ArrayList<AbstractTerminologyObject>();
+	public Collection<AbstractTerminologyObject> getTerminalObjects() {
+		Set<AbstractTerminologyObject> v = new HashSet<AbstractTerminologyObject>();
 		for (Condition condition : terms) {
 			v.addAll(condition.getTerminalObjects());
 		}

@@ -20,7 +20,7 @@
 
 package de.d3web.core.inference;
 
-import java.util.List;
+import java.util.Collection;
 
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
@@ -374,7 +374,7 @@ public class Rule implements CaseObjectSource {
 	 * */
 	public static void removeFrom(
 			Rule r,
-			List<? extends TerminologyObject> namedObjects,
+			Collection<? extends TerminologyObject> namedObjects,
 			Class<? extends PSMethod> psContext,
 			MethodKind kind) {
 		if (namedObjects != null) {
@@ -394,7 +394,8 @@ public class Rule implements CaseObjectSource {
 	 */
 	public static void removeFrom(Rule r, Class<? extends PSMethod> psContext, MethodKind kind, TerminologyObject nob) {
 		if (nob != null) {
-			KnowledgeSlice knowledge = ((AbstractTerminologyObject) nob).getKnowledge(psContext, kind);
+			KnowledgeSlice knowledge = ((AbstractTerminologyObject) nob).getKnowledge(psContext,
+					kind);
 			if (knowledge != null) {
 				RuleSet rs = (RuleSet) knowledge;
 				rs.removeRule(r);
@@ -415,7 +416,7 @@ public class Rule implements CaseObjectSource {
 	 * */
 	public static void insertInto(
 			Rule r,
-			List<? extends TerminologyObject> namedObjects,
+			Collection<? extends TerminologyObject> namedObjects,
 			Class<? extends PSMethod> psContext,
 			MethodKind kind) {
 		if (namedObjects != null) {
@@ -435,7 +436,8 @@ public class Rule implements CaseObjectSource {
 	 */
 	public static void insertInto(Rule r, Class<? extends PSMethod> psContext, MethodKind kind, TerminologyObject nob) {
 		if (nob != null) {
-			KnowledgeSlice knowledge = ((AbstractTerminologyObject) nob).getKnowledge(psContext, kind);
+			KnowledgeSlice knowledge = ((AbstractTerminologyObject) nob).getKnowledge(psContext,
+					kind);
 			if (knowledge != null) {
 				RuleSet rs = (RuleSet) knowledge;
 				rs.addRule(r);
