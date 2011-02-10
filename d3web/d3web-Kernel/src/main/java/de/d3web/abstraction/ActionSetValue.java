@@ -28,8 +28,8 @@ import de.d3web.abstraction.formula.FormulaElement;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
@@ -202,7 +202,7 @@ public class ActionSetValue extends PSAction {
 	@Override
 	public String toString() {
 		return "<RuleAction type=\"SetValue\">\n" + "  ["
-				+ getQuestion().getId() + ": " + getValue() + "]"
+				+ getQuestion().getName() + ": " + getValue() + "]"
 				+ "\n</RuleAction>";
 	}
 
