@@ -36,6 +36,18 @@
 					</execution>
 				</executions>
 			</plugin>
+		<plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/CircularSnapshot1Test.java</exclude>
+            <exclude>**/MultipleSnapshots1Test.java</exclude>
+            <exclude>**/SnapshotAfterSubflow1Test.java</exclude>
+            <exclude>**/SnapshotInSubflow1Test.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
 		</plugins>
 	</build>
 	
