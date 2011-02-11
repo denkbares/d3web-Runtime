@@ -34,6 +34,14 @@ import de.d3web.core.knowledge.KnowledgeBase;
  */
 public class QuestionOC extends QuestionChoice {
 
+	/**
+	 * Creates a new QuestionOC and adds it to the knowledgebase, so no manual
+	 * adding of the created object to the kb is needed
+	 * 
+	 * @param kb {@link KnowledgeBase} in which the QuestionOC should be
+	 *        inserted
+	 * @param name the name of the new QuestionOC
+	 */
 	public QuestionOC(KnowledgeBase kb, String name) {
 		super(kb, name);
 	}

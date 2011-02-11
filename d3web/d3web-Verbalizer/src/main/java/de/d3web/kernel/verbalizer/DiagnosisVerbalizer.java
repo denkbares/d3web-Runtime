@@ -101,7 +101,7 @@ public class DiagnosisVerbalizer implements Verbalizer {
 
 		String s = diag.getName();
 		if (idVisible) {
-			s += " (" + diag.getId() + ")";
+			s += " (" + diag.getName() + ")";
 		}
 
 		return s;

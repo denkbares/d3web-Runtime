@@ -24,7 +24,6 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.knowledge.terminology.Rating.State;
-import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Value;
 import de.d3web.scoring.Score;
 import de.d3web.scoring.inference.PSMethodHeuristic;
@@ -52,12 +51,11 @@ public class Solution extends AbstractTerminologyObject implements ValueObject {
 	private Score aprioriProbability;
 
 	/**
-	 * Creates a new {@link Solution} instance with the specified unique
-	 * identifier. <br>
-	 * <b>Note:</b> Please use {@link KnowledgeBaseManagement} to create
-	 * Diagnosis instances.
+	 * Creates a new Solution and adds it to the knowledgebase, so no manual
+	 * adding of the created object to the kb is needed
 	 * 
-	 * @param id the specified unique identifier for this instance
+	 * @param kb {@link KnowledgeBase} in which the Solution should be inserted
+	 * @param name the name of the new QContainer
 	 */
 	public Solution(KnowledgeBase kb, String name) {
 		super(kb, name);

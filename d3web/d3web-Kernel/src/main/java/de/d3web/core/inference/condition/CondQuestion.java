@@ -40,7 +40,8 @@ public abstract class CondQuestion extends TerminalCondition {
 	private Question question = null;
 
 	/**
-	 * Creates a new CondQuestion instance with the specified {@link NamedObject}.
+	 * Creates a new CondQuestion instance with the specified
+	 * {@link NamedObject}.
 	 * 
 	 * @param idobject the specified {@link NamedObject}
 	 */
@@ -106,8 +107,8 @@ public abstract class CondQuestion extends TerminalCondition {
 	@Override
 	public int hashCode() {
 		// use the ID for the hashCode
-		if (getQuestion() != null && getQuestion().getId() != null) {
-			return (getQuestion().getId()).hashCode();
+		if (getQuestion() != null && getQuestion().getName() != null) {
+			return (getQuestion().getName()).hashCode();
 		}
 		else {
 			return toString().hashCode();

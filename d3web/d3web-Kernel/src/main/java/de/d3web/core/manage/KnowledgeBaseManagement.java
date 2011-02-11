@@ -96,11 +96,9 @@ public final class KnowledgeBaseManagement {
 		// we don't use internal methods, because we need to set
 		// the ID/Name/noParent manually.
 		Solution p000 = new Solution(theK, "P000");
-		theK.getManager().putTerminologyObject(p000);
 		theK.setRootSolution(p000);
 
 		QContainer q000 = new QContainer(theK, "Q000");
-		theK.getManager().putTerminologyObject(q000);
 		theK.setRootQASet(q000);
 
 		return theK;
@@ -206,7 +204,6 @@ public final class KnowledgeBaseManagement {
 			q = new QuestionYN(knowledgeBase, name);
 		}
 		addToParent(q, parent);
-		knowledgeBase.getManager().putTerminologyObject(q);
 		return q;
 	}
 

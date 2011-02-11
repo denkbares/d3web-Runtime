@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- *
+ * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- *
+ * 
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- *
+ * 
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -32,9 +32,9 @@ import de.d3web.diaFlux.inference.ConditionTrue;
 import de.d3web.diaFlux.inference.FluxSolver;
 
 /**
- *
+ * 
  * @author Reinhard Hatko
- *
+ * 
  */
 public final class FlowFactory {
 
@@ -56,7 +56,7 @@ public final class FlowFactory {
 	 * Creates a Flow instance with the supplied nodes and edges. Furthermore
 	 * creates the EdgeMap KnowledgeSlices and attaches them to the according
 	 * TerminologyObjects.
-	 *
+	 * 
 	 * @param id
 	 * @param name
 	 * @param nodes
@@ -64,16 +64,18 @@ public final class FlowFactory {
 	 * @return
 	 */
 	public Flow createFlow(String id, String name, List<INode> nodes, List<IEdge> edges) {
-		
+
 		for (IEdge edge : edges) {
 			if (!nodes.contains(edge.getStartNode())) {
-				throw new IllegalArgumentException("Start node '" + edge.getStartNode() + "' of edge '" + edge + " 'is not contained in list of nodes.");
+				throw new IllegalArgumentException("Start node '" + edge.getStartNode()
+						+ "' of edge '" + edge + " 'is not contained in list of nodes.");
 			}
 			if (!nodes.contains(edge.getEndNode())) {
-				throw new IllegalArgumentException("End node '" + edge.getEndNode() + "' of edge '" + edge + " 'is not contained in list of nodes.");
+				throw new IllegalArgumentException("End node '" + edge.getEndNode() + "' of edge '"
+						+ edge + " 'is not contained in list of nodes.");
 			}
 		}
-		
+
 		Flow flow = new Flow(id, name, nodes, edges);
 
 		createEdgeMaps(flow);
@@ -82,7 +84,6 @@ public final class FlowFactory {
 		return flow;
 
 	}
-
 
 	private void createEdgeMaps(Flow flow) {
 
@@ -102,7 +103,7 @@ public final class FlowFactory {
 						MethodKind.FORWARD);
 
 				if (slice == null) {
-					slice = new EdgeMap("EdgeMap" + nobject.getId());
+					slice = new EdgeMap("EdgeMap" + nobject.getName());
 					nobject.addKnowledge(FluxSolver.class, slice, MethodKind.FORWARD);
 				}
 
@@ -178,6 +179,5 @@ public final class FlowFactory {
 	public INode createSnapshotNode(String id, String name) {
 		return new SnapshotNode(id, name);
 	}
-
 
 }

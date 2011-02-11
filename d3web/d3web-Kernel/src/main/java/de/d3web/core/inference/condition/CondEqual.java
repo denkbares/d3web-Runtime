@@ -24,7 +24,6 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 
@@ -66,7 +65,7 @@ public class CondEqual extends CondQuestion {
 					return currentValue.containsAll((MultipleChoiceValue) this.conditionValue);
 				}
 				else {
-					return currentValue.contains((ChoiceValue) this.conditionValue);
+					return currentValue.contains(this.conditionValue);
 				}
 			}
 			else {
@@ -102,7 +101,7 @@ public class CondEqual extends CondQuestion {
 	@Override
 	public String toString() {
 		String ret = "\u2190 CondEqual question: "
-				+ getQuestion().getId()
+				+ getQuestion().getName()
 				+ " value: " + this.conditionValue;
 		return ret;
 	}

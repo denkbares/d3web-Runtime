@@ -22,11 +22,17 @@ import java.util.Comparator;
 
 import de.d3web.core.knowledge.terminology.NamedObject;
 
+/**
+ * Compares IDObjects by their names
+ * 
+ * @author Markus Friedrich (denkbares GmbH)
+ * @created 11.02.2011
+ */
 public class IDObjectComparator implements Comparator<NamedObject> {
 
 	@Override
 	public int compare(NamedObject r1, NamedObject r2) {
-		return (r1.getId().compareTo(r2.getId()));
+		return (r1.getName().compareTo(r2.getName()));
 	}
 
 }

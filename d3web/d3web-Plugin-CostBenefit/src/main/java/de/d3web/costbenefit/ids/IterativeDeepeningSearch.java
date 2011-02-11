@@ -55,7 +55,7 @@ class IterativeDeepeningSearch {
 				return comparator;
 			}
 			else {
-				return -1 * o1.getQContainer().getId().compareTo(o2.getQContainer().getId());
+				return -1 * o1.getQContainer().getName().compareTo(o2.getQContainer().getName());
 			}
 		}
 	}
@@ -76,7 +76,7 @@ class IterativeDeepeningSearch {
 
 			@Override
 			public int compare(Target o1, Target o2) {
-				return -1 * (o1.getFirst().getId().compareTo(o2.getFirst().getId()));
+				return -1 * (o1.getFirst().getName().compareTo(o2.getFirst().getName()));
 			}
 		});
 		List<Node> temp = new LinkedList<Node>();

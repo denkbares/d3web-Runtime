@@ -104,13 +104,13 @@ public class MultipleChoiceValueTest {
 	@Test
 	public void testGetAnswerChoicesID() {
 		String derived = ChoiceID.encodeChoiceIDs(mcValueOne.getChoiceIDs());
-		assertThat(derived.contains(mcValueOneChoiceA.getId()), is(true));
-		assertThat(derived.contains(mcValueOneChoiceB.getId()), is(true));
-		assertThat(derived.contains(mcValueOneChoiceC.getId()), is(true));
+		assertThat(derived.contains(mcValueOneChoiceA.getName()), is(true));
+		assertThat(derived.contains(mcValueOneChoiceB.getName()), is(true));
+		assertThat(derived.contains(mcValueOneChoiceC.getName()), is(true));
 
-		String manual = mcValueOneChoiceA.getId() + ChoiceID.ID_SEPARATOR
-				+ mcValueOneChoiceB.getId() + ChoiceID.ID_SEPARATOR
-				+ mcValueOneChoiceC.getId();
+		String manual = mcValueOneChoiceA.getName() + ChoiceID.ID_SEPARATOR
+				+ mcValueOneChoiceB.getName() + ChoiceID.ID_SEPARATOR
+				+ mcValueOneChoiceC.getName();
 		assertThat(derived.length(), is(equalTo(manual.length())));
 
 		// test empty list answerChoicesID

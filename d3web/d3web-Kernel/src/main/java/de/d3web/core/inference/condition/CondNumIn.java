@@ -87,7 +87,7 @@ public class CondNumIn extends CondNum {
 	@Override
 	public String toString() {
 		return "\u2190 CondNumIn question: "
-				+ getQuestion().getId()
+				+ getQuestion().getName()
 				+ " minValue: "
 				+ getMinValue()
 				+ " maxValue: "

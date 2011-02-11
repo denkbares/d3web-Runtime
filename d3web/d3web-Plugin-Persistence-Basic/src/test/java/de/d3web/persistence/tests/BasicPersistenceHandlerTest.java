@@ -117,12 +117,9 @@ public class BasicPersistenceHandlerTest {
 	}
 
 	private void addQASets() {
-		QContainer qc1 = new QContainer(kb, "qc1");
+		new QContainer(kb, "qc1");
 
-		QContainer qc2 = new QContainer(kb, "qc2");
-
-		kb.getManager().putTerminologyObject(qc1);
-		kb.getManager().putTerminologyObject(qc2);
+		new QContainer(kb, "qc2");
 
 		XMLTag qASetTag = new XMLTag("QASets");
 		shouldTag.addChild(qASetTag);
@@ -149,10 +146,7 @@ public class BasicPersistenceHandlerTest {
 	}
 
 	public void addSolutions() {
-		kb.getManager().putTerminologyObject(diag1);
-
-		Solution diag2 = new Solution(kb, "d2");
-		kb.getManager().putTerminologyObject(diag2);
+		new Solution(kb, "d2");
 
 		XMLTag diagnosesTag = new XMLTag("Diagnoses");
 		shouldTag.addChild(diagnosesTag);
@@ -170,7 +164,7 @@ public class BasicPersistenceHandlerTest {
 		LinkedList<Question> initList = new LinkedList<Question>();
 		initList.add(q1);
 		initList.add(q2);
-		
+
 		kb.setInitQuestions(initList);
 
 		XMLTag initQuestionsTag = new XMLTag("InitQuestions");

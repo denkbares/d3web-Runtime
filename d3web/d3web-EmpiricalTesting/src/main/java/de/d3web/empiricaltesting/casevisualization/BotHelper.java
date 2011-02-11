@@ -20,9 +20,6 @@
 
 package de.d3web.empiricaltesting.casevisualization;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
@@ -39,10 +36,7 @@ public final class BotHelper {
 
 	private static BotHelper instance;
 
-	private final Map<String, Choice> answerHash;
-
 	private BotHelper() {
-		answerHash = new HashMap<String, Choice>();
 	}
 
 	public static BotHelper getInstance() {
@@ -69,11 +63,10 @@ public final class BotHelper {
 	public Choice findAnswer(QuestionChoice q, String answerId)
 			throws Exception {
 		for (Choice answer : q.getAllAlternatives()) {
-			if (answer.getId().equalsIgnoreCase(answerId)
-					|| answer.getName().equalsIgnoreCase(answerId)) return answer;
+			if (answer.getName().equalsIgnoreCase(answerId)) return answer;
 		}
 		throw new Exception("Not found id [" + answerId + "] for question ["
-				+ q + "][" + q.getId() + "]");
+				+ q + "][" + q.getName() + "]");
 	}
 
 	public String pretty(String text) {
@@ -102,16 +95,6 @@ public final class BotHelper {
 			text = text.replace("_", "");
 		}
 		return text;
-	}
-
-	public void buildAnswerHashFor(KnowledgeBase k) {
-		for (Question q : k.getManager().getQuestions()) {
-			if (q instanceof QuestionChoice) {
-				for (Choice a : ((QuestionChoice) q).getAllAlternatives()) {
-					answerHash.put(a.getId(), a);
-				}
-			}
-		}
 	}
 
 	public String prettyLabel(String label) {
@@ -157,7 +140,7 @@ public final class BotHelper {
 			KnowledgeBase kb) throws Exception {
 		Solution foundDiagnosis = null;
 		for (Solution d : kb.getManager().getSolutions()) {
-			if (diagnosisIDorText.equals(d.getId())
+			if (diagnosisIDorText.equals(d.getName())
 					|| diagnosisIDorText.equals(d.getName())) foundDiagnosis = d;
 		}
 		if (foundDiagnosis == null) throw new Exception("Diagnosis not found for ID/Text: "

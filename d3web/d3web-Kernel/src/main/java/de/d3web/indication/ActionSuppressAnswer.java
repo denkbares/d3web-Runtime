@@ -27,8 +27,8 @@ import java.util.List;
 
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.Session;
 
@@ -125,7 +125,7 @@ public class ActionSuppressAnswer extends PSAction {
 	public String toString() {
 		return "<RuleAction type=\"SupressAnswer\">\n"
 				+ "  ["
-				+ getQuestion().getId()
+				+ getQuestion().getName()
 				+ ": "
 				+ getSuppress()
 				+ "]"

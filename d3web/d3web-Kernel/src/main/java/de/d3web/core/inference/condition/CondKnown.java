@@ -24,9 +24,9 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 
 /**
- * This condition checks, if an NamedObject (e.g. Question) has a value and was not
- * answered with {@link AnswerUnknown}. The composite pattern is used for this.
- * This class is a "leaf". Creation date: (13.09.2000 14:07:14)
+ * This condition checks, if an NamedObject (e.g. Question) has a value and was
+ * not answered with {@link AnswerUnknown}. The composite pattern is used for
+ * this. This class is a "leaf". Creation date: (13.09.2000 14:07:14)
  * 
  * @author Norman Bruemmer
  */
@@ -54,7 +54,7 @@ public class CondKnown extends CondQuestion {
 
 	@Override
 	public String toString() {
-		return "\u2190 CondKnown question: " + getQuestion().getId();
+		return "\u2190 CondKnown question: " + getQuestion().getName();
 	}
 
 	@Override

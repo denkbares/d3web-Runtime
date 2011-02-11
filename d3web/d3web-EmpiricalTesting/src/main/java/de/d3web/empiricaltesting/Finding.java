@@ -51,8 +51,7 @@ public class Finding implements Comparable<Finding> {
 	public Finding(QuestionChoice question, String answerIDorText) throws Exception {
 		Choice foundAnswer = null;
 		for (Choice ac : question.getAllAlternatives()) {
-			if (answerIDorText.equals(ac.getId())
-					|| answerIDorText.equals(ac.getName())) foundAnswer = ac;
+			if (answerIDorText.equals(ac.getName())) foundAnswer = ac;
 		}
 		if (foundAnswer == null) throw new Exception("Answer not found for ID/Text: "
 				+ answerIDorText);
@@ -168,9 +167,7 @@ public class Finding implements Comparable<Finding> {
 
 	@Override
 	public int compareTo(Finding o) {
-		int comp = question.getId().compareTo(o.getQuestion().getId());
-		if (comp != 0) return comp;
-		comp = question.getName().compareTo(o.getQuestion().getName());
+		int comp = question.getName().compareTo(o.getQuestion().getName());
 		if (comp != 0) return comp;
 		comp = value.compareTo(o.value);
 		return comp;

@@ -74,7 +74,7 @@ public class CondDState extends TerminalCondition {
 	@Override
 	public String toString() {
 		return "\u2190 CondDState diagnosis: "
-				+ solution.getId()
+				+ solution.getName()
 				+ " value: "
 				+ this.getStatus();
 	}

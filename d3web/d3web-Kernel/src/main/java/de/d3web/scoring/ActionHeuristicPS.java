@@ -46,7 +46,7 @@ public class ActionHeuristicPS extends PSAction {
 	public String toString() {
 		String diagnosisId = null;
 		if (getSolution() != null) {
-			diagnosisId = getSolution().getId();
+			diagnosisId = getSolution().getName();
 		}
 		return "<RuleAction type=\"Heuristic\">\n"
 				+ "  ["

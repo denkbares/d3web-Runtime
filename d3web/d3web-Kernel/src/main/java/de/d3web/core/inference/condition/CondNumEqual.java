@@ -50,7 +50,7 @@ public class CondNumEqual extends CondNum {
 	@Override
 	public String toString() {
 		return "\u2190 CondNumEqual question: "
-				+ getQuestion().getId()
+				+ getQuestion().getName()
 				+ " value: "
 				+ getConditionValue();
 	}

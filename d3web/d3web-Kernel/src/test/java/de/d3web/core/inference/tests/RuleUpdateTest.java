@@ -55,9 +55,6 @@ public class RuleUpdateTest {
 		QuestionNum bmi = new QuestionNum(kb, "bmi");
 		QuestionNum weight = new QuestionNum(kb, "weight");
 		QuestionNum height = new QuestionNum(kb, "height");
-		kb.getManager().putTerminologyObject(bmi);
-		kb.getManager().putTerminologyObject(weight);
-		kb.getManager().putTerminologyObject(height);
 		QNumWrapper weightWrapper = new QNumWrapper(weight);
 		QNumWrapper heightWrapper = new QNumWrapper(height);
 		Operator quad = new Operator(heightWrapper, heightWrapper, Operator.Operation.Mult);

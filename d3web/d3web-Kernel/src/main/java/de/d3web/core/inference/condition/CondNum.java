@@ -130,8 +130,8 @@ public abstract class CondNum extends CondQuestion {
 
 	@Override
 	public int hashCode() {
-		if (getQuestion() != null && getQuestion().getId() != null) {
-			return (getQuestion().getId()).hashCode();
+		if (getQuestion() != null && getQuestion().getName() != null) {
+			return (getQuestion().getName()).hashCode();
 		}
 		else {
 			return (getClass().toString() + toString()).hashCode();

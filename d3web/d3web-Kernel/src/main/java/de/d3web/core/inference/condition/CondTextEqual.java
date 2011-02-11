@@ -51,7 +51,7 @@ public class CondTextEqual extends CondTextQuestion {
 	@Override
 	public String toString() {
 		return "\u2190 CondTextEqual question: "
-				+ getQuestion().getId()
+				+ getQuestion().getName()
 				+ " value: "
 				+ getValue();
 	}

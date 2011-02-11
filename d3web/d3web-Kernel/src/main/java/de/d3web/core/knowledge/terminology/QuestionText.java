@@ -32,6 +32,14 @@ public class QuestionText extends Question {
 	private int height;
 	private int width;
 
+	/**
+	 * Creates a new QuestionText and adds it to the knowledgebase, so no manual
+	 * adding of the created object to the kb is needed
+	 * 
+	 * @param kb {@link KnowledgeBase} in which the QuestionText should be
+	 *        inserted
+	 * @param name the name of the new QuestionText
+	 */
 	public QuestionText(KnowledgeBase kb, String name) {
 		super(kb, name);
 	}

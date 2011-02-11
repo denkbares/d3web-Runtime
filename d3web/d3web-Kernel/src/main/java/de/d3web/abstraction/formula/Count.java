@@ -87,19 +87,6 @@ public class Count implements FormulaNumberElement {
 		return questionMC;
 	}
 
-	/**
-	 * Creation date: (20.06.2001 15:34:57)
-	 * 
-	 * @return the XML-representation of this Count object
-	 */
-	public String getXMLString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("<Count>\n");
-		sb.append("<QuestionMC>" + getQuestionMC().getId() + "</QuestionMC>\n");
-		sb.append("</Count>\n");
-		return sb.toString();
-	}
-
 	@Override
 	public String toString() {
 		return "#" + (getQuestionMC() != null ? " " + getQuestionMC().toString() : ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

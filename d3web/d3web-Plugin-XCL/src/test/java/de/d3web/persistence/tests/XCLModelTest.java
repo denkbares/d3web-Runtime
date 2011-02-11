@@ -146,7 +146,6 @@ public class XCLModelTest extends TestCase {
 		alternatives.add(action);
 		alternatives.add(love);
 		genre.setAlternatives(alternatives);
-		k.getManager().putTerminologyObject(genre);
 		container.addChild(genre);
 
 		// the question "player"
@@ -156,7 +155,6 @@ public class XCLModelTest extends TestCase {
 		alt.add(arnold);
 		alt.add(will);
 		player.setAlternatives(alt);
-		k.getManager().putTerminologyObject(player);
 		container.addChild(player);
 
 		// the question "rated"
@@ -166,7 +164,6 @@ public class XCLModelTest extends TestCase {
 		aPlayer.add(plus18);
 		aPlayer.add(baby);
 		rated.setAlternatives(aPlayer);
-		k.getManager().putTerminologyObject(rated);
 		container.addChild(rated);
 		// XCL for Terminator
 		// Genre = action
@@ -183,7 +180,6 @@ public class XCLModelTest extends TestCase {
 		model.setSuggestedThreshold(0.7);
 		model.setEstablishedThreshold(0.8);
 		terminator.addKnowledge(PSMethodXCL.class, model, XCLModel.XCLMODEL);
-		k.getManager().putTerminologyObject(terminator);
 		k.getRootSolution().addChild(terminator);
 	}
 

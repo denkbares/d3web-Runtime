@@ -31,6 +31,14 @@ import de.d3web.core.knowledge.KnowledgeBase;
  */
 public class QuestionMC extends QuestionChoice {
 
+	/**
+	 * Creates a new QuestionMC and adds it to the knowledgebase, so no manual
+	 * adding of the created object to the kb is needed
+	 * 
+	 * @param kb {@link KnowledgeBase} in which the QuestionMC should be
+	 *        inserted
+	 * @param name the name of the new QuestionMC
+	 */
 	public QuestionMC(KnowledgeBase kb, String name) {
 		super(kb, name);
 	}

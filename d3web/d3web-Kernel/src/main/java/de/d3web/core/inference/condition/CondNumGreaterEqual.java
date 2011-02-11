@@ -49,7 +49,7 @@ public class CondNumGreaterEqual extends CondNum {
 	@Override
 	public String toString() {
 		return "\u2190 CondNumGreaterEqual question: "
-				+ getQuestion().getId()
+				+ getQuestion().getName()
 				+ " value: "
 				+ getConditionValue();
 	}

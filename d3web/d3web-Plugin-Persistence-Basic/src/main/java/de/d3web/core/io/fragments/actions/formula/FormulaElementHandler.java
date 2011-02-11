@@ -125,7 +125,7 @@ public class FormulaElementHandler implements FragmentHandler {
 		else if (object instanceof QDateWrapper) {
 			QDateWrapper fa = (QDateWrapper) object;
 			element = createFormulaPrimitive(doc, "FormulaDatePrimitive", "QDateWrapper",
-					fa.getQuestion().getId());
+					fa.getQuestion().getName());
 		}
 		else if (object instanceof Today) {
 			Today fa = (Today) object;
@@ -136,7 +136,7 @@ public class FormulaElementHandler implements FragmentHandler {
 			Count fa = (Count) object;
 			element = doc.createElement("Count");
 			Element questionmcNode = doc.createElement("QuestionMC");
-			questionmcNode.setTextContent(fa.getQuestionMC().getId());
+			questionmcNode.setTextContent(fa.getQuestionMC().getName());
 			element.appendChild(questionmcNode);
 		}
 		else if (object instanceof FormulaNumber) {
@@ -147,7 +147,7 @@ public class FormulaElementHandler implements FragmentHandler {
 		else if (object instanceof QNumWrapper) {
 			QNumWrapper fa = (QNumWrapper) object;
 			element = createFormulaPrimitive(doc, "FormulaPrimitive", "QNumWrapper",
-					fa.getQuestion().getId());
+					fa.getQuestion().getName());
 		}
 		else {
 			throw new IOException("Object " + object + " not supported in FormulaElementHandler.");

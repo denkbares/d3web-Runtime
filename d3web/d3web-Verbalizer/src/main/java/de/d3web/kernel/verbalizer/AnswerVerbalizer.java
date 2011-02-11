@@ -114,7 +114,7 @@ public class AnswerVerbalizer implements Verbalizer {
 
 		String s = a.toString();
 		if (idVisible) {
-			s += " (" + a.getId() + ")";
+			s += " (" + a.getName() + ")";
 		}
 
 		return s;

@@ -48,10 +48,11 @@ public abstract class Question extends QASet implements ValueObject {
 	private static final MethodKind KIND = MethodKind.BACKWARD;
 
 	/**
-	 * Creates a new {@link Question} instance with the specified unique
-	 * identifier.
+	 * Creates a new Question and adds it to the knowledgebase, so no manual
+	 * adding of the created object to the kb is needed
 	 * 
-	 * @param id the specified unique identifier
+	 * @param kb {@link KnowledgeBase} in which the Question should be inserted
+	 * @param name the name of the new Question
 	 */
 	public Question(KnowledgeBase kb, String name) {
 		super(kb, name);

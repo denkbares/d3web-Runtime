@@ -386,7 +386,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 			if (solution == null) {
 				return DEFAULT_SOLUTION;
 			}
-			id = "XCLM_" + solution.getId();
+			id = "XCLM_" + solution.getName();
 		}
 		return id;
 	}

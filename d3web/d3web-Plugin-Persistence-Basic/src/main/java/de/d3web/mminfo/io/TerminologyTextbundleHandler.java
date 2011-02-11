@@ -77,12 +77,12 @@ public class TerminologyTextbundleHandler implements KnowledgeWriter {
 			print(writer, question);
 		}
 		for (Solution solution : knowledge.getManager().getSolutions()) {
-			append(writer, solution.getId(), ".title=" + solution.getName());
+			append(writer, solution.getName(), ".title=" + solution.getName());
 		}
 	}
 
 	private void print(Writer writer, Question question) throws IOException {
-		final String id = question.getId(); // oid.genID();
+		final String id = question.getName(); // oid.genID();
 		append(writer, id, ".title=" + question.getName());
 		if (question instanceof QuestionChoice) {
 			List<Choice> choices = ((QuestionChoice) question).getAllAlternatives();

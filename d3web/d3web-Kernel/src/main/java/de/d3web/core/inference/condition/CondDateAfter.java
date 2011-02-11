@@ -46,7 +46,7 @@ public class CondDateAfter extends CondDate {
 	@Override
 	public String toString() {
 		return "\u2190 CondDateAfter question: "
-				+ getQuestion().getId()
+				+ getQuestion().getName()
 				+ " value: "
 				+ getValue();
 	}

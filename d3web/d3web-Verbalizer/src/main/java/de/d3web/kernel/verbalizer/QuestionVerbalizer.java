@@ -100,7 +100,7 @@ public class QuestionVerbalizer implements Verbalizer {
 
 		String s = q.getName();
 		if (idVisible) {
-			s += " (" + q.getId() + ")";
+			s += " (" + q.getName() + ")";
 		}
 
 		return s;

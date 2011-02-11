@@ -40,6 +40,14 @@ public class QuestionDate extends Question {
 	public final static String TYPE_TIME = "time";
 	public final static String TYPE_DATE_TIME = "date_time";
 
+	/**
+	 * Creates a new QuestionDate and adds it to the knowledgebase, so no manual
+	 * adding of the created object to the kb is needed
+	 * 
+	 * @param kb {@link KnowledgeBase} in which the QuestionDate should be
+	 *        inserted
+	 * @param name the name of the new QuestionDate
+	 */
 	public QuestionDate(KnowledgeBase kb, String name) {
 		super(kb, name);
 	}

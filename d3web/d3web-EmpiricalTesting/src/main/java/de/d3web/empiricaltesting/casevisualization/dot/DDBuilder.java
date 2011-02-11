@@ -146,7 +146,7 @@ public final class DDBuilder implements CaseVisualizer {
 				if (partitioned.getRepository().size() > 0) {
 					generateDDNet(partitioned.getRepository());
 					String printFilePath =
-							checkDotFilePath(dotFile, answerOfFirstQuestion.getId());
+							checkDotFilePath(dotFile, answerOfFirstQuestion.getName());
 					System.out.println(printFilePath);
 					try {
 						write(new FileOutputStream(printFilePath));

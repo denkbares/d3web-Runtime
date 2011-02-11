@@ -33,9 +33,12 @@ import de.d3web.core.knowledge.KnowledgeBase;
 public class QContainer extends QASet {
 
 	/**
-	 * Creates a new instance with the specified unique identifier.
+	 * Creates a new QContainer and adds it to the knowledgebase, so no manual
+	 * adding of the created object to the kb is needed
 	 * 
-	 * @param id the unique identifier
+	 * @param kb {@link KnowledgeBase} in which the QContainer should be
+	 *        inserted
+	 * @param name the name of the new QContainer
 	 */
 	public QContainer(KnowledgeBase kb, String name) {
 		super(kb, name);
