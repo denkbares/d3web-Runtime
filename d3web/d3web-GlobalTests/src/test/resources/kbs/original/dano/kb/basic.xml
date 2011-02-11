@@ -1716,8 +1716,8 @@
 <Child name="Solution: P109"/>
 <Child name="Solution: P110"/>
 <Child name="Solution: P111"/>
-<Child link="true" name="Solution: P50"/>
-<Child link="true" name="Solution: P41"/>
+<Child name="Solution: P50"/>
+<Child name="Solution: P41"/>
 <Child name="Solution: P112"/>
 <Child name="Solution: P113"/>
 <Child name="Solution: P114"/>
@@ -1742,7 +1742,7 @@
 <Child name="Solution: P118"/>
 <Child name="Solution: P119"/>
 <Child name="Solution: P120"/>
-<Child link="true" name="Solution: P54"/>
+<Child name="Solution: P54"/>
 <Child name="Solution: P121"/>
 <Child name="Solution: P122"/>
 <Child name="Solution: P123"/>
@@ -1839,7 +1839,7 @@
 <Child name="Solution: P26"/>
 <Child name="Solution: P27"/>
 <Child name="Solution: P28"/>
-<Child link="true" name="Solution: P17"/>
+<Child name="Solution: P17"/>
 <Child name="Solution: P29"/>
 </Children>
 </Diagnosis>
@@ -1924,9 +1924,9 @@
 <Child name="Solution: P63"/>
 <Child name="Solution: P64"/>
 <Child name="Solution: P65"/>
-<Child link="true" name="Solution: P25"/>
-<Child link="true" name="Solution: P23"/>
-<Child link="true" name="Solution: P42"/>
+<Child name="Solution: P25"/>
+<Child name="Solution: P23"/>
+<Child name="Solution: P42"/>
 <Child name="Solution: P66"/>
 <Child name="Solution: P67"/>
 </Children>
@@ -1946,14 +1946,14 @@
 <Child name="Solution: P70"/>
 <Child name="Solution: P71"/>
 <Child name="Solution: P72"/>
-<Child link="true" name="Solution: P53"/>
-<Child link="true" name="Solution: P36"/>
+<Child name="Solution: P53"/>
+<Child name="Solution: P36"/>
 <Child name="Solution: P73"/>
 <Child name="Solution: P74"/>
 <Child name="Solution: P75"/>
 <Child name="Solution: P76"/>
 <Child name="Solution: P77"/>
-<Child link="true" name="Solution: P26"/>
+<Child name="Solution: P26"/>
 <Child name="Solution: P78"/>
 <Child name="Solution: P79"/>
 <Child name="Solution: P80"/>
@@ -2014,11 +2014,11 @@
 <Diagnosis name="Solution: P98"/>
 <Diagnosis name="Solution: P99">
 <Children>
-<Child link="true" name="Solution: P50"/>
-<Child link="true" name="Solution: P52"/>
+<Child name="Solution: P50"/>
+<Child name="Solution: P52"/>
 <Child name="Solution: P100"/>
 <Child name="Solution: P101"/>
-<Child link="true" name="Solution: P69"/>
+<Child name="Solution: P69"/>
 <Child name="Solution: P102"/>
 <Child name="Solution: P103"/>
 </Children>

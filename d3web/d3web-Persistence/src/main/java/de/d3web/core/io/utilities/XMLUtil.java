@@ -305,10 +305,6 @@ public final class XMLUtil {
 		return ret;
 	}
 
-	private static boolean isLinkedChild(AbstractTerminologyObject topQ, TerminologyObject theChild) {
-		return topQ.getLinkedChildren().contains(theChild);
-	}
-
 	/**
 	 * Adds the children of the AbstractTerminologyObject to the specified
 	 * element
@@ -326,9 +322,6 @@ public final class XMLUtil {
 			for (TerminologyObject child : children) {
 				Element childElement = doc.createElement("Child");
 				childElement.setAttribute("name", child.getName());
-				if (isLinkedChild(namedObject, child)) {
-					childElement.setAttribute("link", "true");
-				}
 				childrenElement.appendChild(childElement);
 			}
 			element.appendChild(childrenElement);
@@ -356,15 +349,9 @@ public final class XMLUtil {
 		if (children != null) {
 			for (Element child : children) {
 				String id = child.getAttribute("name");
-				String link = child.getAttribute("link");
 				AbstractTerminologyObject no = (AbstractTerminologyObject) kb.getManager().search(
 						id);
-				if (link != null && link.equals("true")) {
-					namedObject.addLinkedChild(no);
-				}
-				else {
-					namedObject.addChild(no);
-				}
+				namedObject.addChild(no);
 			}
 		}
 	}

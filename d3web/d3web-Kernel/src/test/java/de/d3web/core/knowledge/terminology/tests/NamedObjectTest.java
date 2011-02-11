@@ -22,7 +22,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -58,10 +57,6 @@ public class NamedObjectTest {
 	NamedObjectMock childTwo;
 	NamedObjectMock childThree;
 
-	NamedObjectMock linkedChildOne;
-	NamedObjectMock linkedChildTwo;
-	NamedObjectMock linkedChildThree;
-
 	private KnowledgeBase kb;
 
 	@Before
@@ -78,54 +73,27 @@ public class NamedObjectTest {
 		parent.addChild(childTwo);
 		childThree = new NamedObjectMock(kb, "childThree");
 		parent.addChild(childThree);
-
-		// initialize the linked children
-		linkedChildOne = new NamedObjectMock(kb, "linkedChildOne");
-		parent.addLinkedChild(linkedChildOne);
-		linkedChildTwo = new NamedObjectMock(kb, "linkedChildTwo");
-		parent.addLinkedChild(linkedChildTwo);
-		linkedChildThree = new NamedObjectMock(kb, "linkedChildThree");
-		parent.addLinkedChild(linkedChildThree);
 	}
 
 	/**
-	 * Summary: Test if all children and linked children are present and in
-	 * correct order
+	 * Summary: Test if all children are present and in correct order
 	 * 
 	 * @created 23.08.2010
 	 */
 	@Test
 	public void testCorrectInitialization() {
 		// children count = number of children + number of linked children
-		assertThat(parent.getNumberOfChildren(), is(6));
+		assertThat(parent.getNumberOfChildren(), is(3));
 
 		// verify all children and their correct ordering
 		TerminologyObject[] children = parent.getChildren();
 		assertThat(children[0], is(equalTo((TerminologyObject) childOne)));
 		assertThat(children[1], is(equalTo((TerminologyObject) childTwo)));
 		assertThat(children[2], is(equalTo((TerminologyObject) childThree)));
-		assertThat(children[3], is(equalTo((TerminologyObject) linkedChildOne)));
-		assertThat(children[4], is(equalTo((TerminologyObject) linkedChildTwo)));
-		assertThat(children[5], is(equalTo((TerminologyObject) linkedChildThree)));
 
 		// verify that every child has only one (to correct!) parent
 		for (TerminologyObject terminologyObjectChild : children) {
 			TerminologyObject[] parents = terminologyObjectChild.getParents();
-			assertThat(parents.length, is(1));
-			assertThat(parents[0], is(equalTo((TerminologyObject) parent)));
-		}
-
-		// verify all linked children
-		Collection<AbstractTerminologyObject> linkedChildren = parent.getLinkedChildren();
-		assertThat(linkedChildren.size(), is(3));
-
-		assertThat(linkedChildren.contains(linkedChildOne), is(true));
-		assertThat(linkedChildren.contains(linkedChildTwo), is(true));
-		assertThat(linkedChildren.contains(linkedChildThree), is(true));
-
-		// verify that every linked child has only one (to correct!) parent
-		for (TerminologyObject namedObjectLinkedChild : linkedChildren) {
-			TerminologyObject[] parents = namedObjectLinkedChild.getParents();
 			assertThat(parents.length, is(1));
 			assertThat(parents[0], is(equalTo((TerminologyObject) parent)));
 		}
@@ -182,18 +150,14 @@ public class NamedObjectTest {
 		List<AbstractTerminologyObject> newParents = new LinkedList<AbstractTerminologyObject>();
 		newParents.add(newParentOne);
 		newParents.add(newParentTwo);
-		// now set the list as new parents of the child "linkedChildOne"
-		linkedChildOne.setParents(newParents);
 
+		childOne.setParents(newParents);
 		// now verify the success of the operation
-		assertThat(parent.getNumberOfChildren(), is(5)); // old parent
+		assertThat(parent.getNumberOfChildren(), is(2)); // old parent (one
+															// child is
+															// "stolen")
 		assertThat(newParentOne.getNumberOfChildren(), is(1));
 		assertThat(newParentTwo.getNumberOfChildren(), is(1));
-
-		TerminologyObject[] parents = linkedChildOne.getParents();
-		assertThat(parents.length, is(2));
-		assertThat(parents[0], is(equalTo((TerminologyObject) newParentOne)));
-		assertThat(parents[1], is(equalTo((TerminologyObject) newParentTwo)));
 	}
 
 	/**
@@ -210,26 +174,19 @@ public class NamedObjectTest {
 	@Test
 	public void testMoveChildToPosition() {
 		// move linkedChildTwo (currently at index 4) to position at index 1
-		parent.moveChildToPosition(linkedChildTwo, 1);
 		// verify all the new positions:
 		TerminologyObject[] children = parent.getChildren();
 		assertThat(children[0], is(equalTo((TerminologyObject) childOne)));
-		assertThat(children[1], is(equalTo((TerminologyObject) linkedChildTwo)));
-		assertThat(children[2], is(equalTo((TerminologyObject) childTwo)));
-		assertThat(children[3], is(equalTo((TerminologyObject) childThree)));
-		assertThat(children[4], is(equalTo((TerminologyObject) linkedChildOne)));
-		assertThat(children[5], is(equalTo((TerminologyObject) linkedChildThree)));
+		assertThat(children[1], is(equalTo((TerminologyObject) childTwo)));
+		assertThat(children[2], is(equalTo((TerminologyObject) childThree)));
 
 		// now move the childOne (currently at index 0) at the end of the list
 		parent.moveChildToPosition(childOne, Integer.MAX_VALUE);
 		// verify all the new positions:
 		children = parent.getChildren();
-		assertThat(children[0], is(equalTo((TerminologyObject) linkedChildTwo)));
-		assertThat(children[1], is(equalTo((TerminologyObject) childTwo)));
-		assertThat(children[2], is(equalTo((TerminologyObject) childThree)));
-		assertThat(children[3], is(equalTo((TerminologyObject) linkedChildOne)));
-		assertThat(children[4], is(equalTo((TerminologyObject) linkedChildThree)));
-		assertThat(children[5], is(equalTo((TerminologyObject) childOne)));
+		assertThat(children[0], is(equalTo((TerminologyObject) childTwo)));
+		assertThat(children[1], is(equalTo((TerminologyObject) childThree)));
+		assertThat(children[2], is(equalTo((TerminologyObject) childOne)));
 	}
 
 	/**
@@ -245,16 +202,9 @@ public class NamedObjectTest {
 		// try to remove the "childThree"
 		assertThat(parent.removeChild(childThree), is(true));
 		// the number of children should have decreased
-		assertThat(parent.getNumberOfChildren(), is(5));
+		assertThat(parent.getNumberOfChildren(), is(2));
 		// the child can't be removed twice, therefore this method should fail
 		assertThat(parent.removeChild(childThree), is(false));
-
-		// now try to remove the linked child "linkedChildOne"
-		parent.removeLinkedChild(linkedChildOne);
-		// this operation should remove the "linkedChild" completely from the
-		// parents children and linkedChildren
-		assertThat(parent.getLinkedChildren().size(), is(2));// dropped from 3
-		assertThat(parent.getNumberOfChildren(), is(4));// dropped from 5
 	}
 
 }

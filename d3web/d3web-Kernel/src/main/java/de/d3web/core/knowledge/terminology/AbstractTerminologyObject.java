@@ -77,16 +77,6 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	private List<AbstractTerminologyObject> children;
 
 	/**
-	 * The linked children of this object (also included in 'children')
-	 */
-	private Collection<AbstractTerminologyObject> linkedChildren;
-
-	/**
-	 * The linked parents of this object (also included in 'parents')
-	 */
-	private Collection<AbstractTerminologyObject> linkedParents;
-
-	/**
 	 * Knowledge storage of this object: Problem-solving knowledge, that is
 	 * related to this object, is stored with the combined key {@link PSMethod}
 	 * and {@link MethodKind}: In general, a {@link List} of
@@ -103,8 +93,6 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 
 		children = new LinkedList<AbstractTerminologyObject>();
 		parents = new LinkedList<AbstractTerminologyObject>();
-		linkedChildren = new LinkedList<AbstractTerminologyObject>();
-		linkedParents = new LinkedList<AbstractTerminologyObject>();
 	}
 
 	/**
@@ -144,25 +132,6 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	public void addChild(AbstractTerminologyObject child) {
 		if (!hasChild(child)) {
 			addParentChildLink(this, child);
-		}
-	}
-
-	/**
-	 * Appends the specified {@link AbstractTerminologyObject} as a 'linked
-	 * child' to the list of children. A linked child relation denotes, that the
-	 * link is not static, but the child is located at another position in the
-	 * hierarchy. This object is also linked as a linked parent to the specified
-	 * child.
-	 * 
-	 * @param child the new linked child
-	 */
-	public void addLinkedChild(AbstractTerminologyObject child) {
-		if (!hasChild(child)) {
-			addChild(child);
-		}
-		if (!getLinkedChildren().contains(child)) {
-			linkedChildren.add(child);
-			child.addLinkedParent(this);
 		}
 	}
 
@@ -243,24 +212,6 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	}
 
 	/**
-	 * Adds this {@link AbstractTerminologyObject} as a linked child to the
-	 * specified parent and the specified parent is added to the 'linked
-	 * parents' list of this instance. This instance is appended to the linked
-	 * parent's list of children.
-	 * 
-	 * @param parent a new linked parent of this instance
-	 */
-	public synchronized void addLinkedParent(AbstractTerminologyObject parent) {
-		if (!hasParent(parent)) {
-			addParent(parent);
-		}
-		if (!getLinkedParents().contains(parent)) {
-			linkedParents.add(parent);
-			parent.addLinkedChild(this);
-		}
-	}
-
-	/**
 	 * Returns the list of knowledge slices for a given problem-solver class and
 	 * the specified context of the problem-solving method ({@link MethodKind}).
 	 * 
@@ -331,7 +282,6 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	private static void removeParentChildLink(AbstractTerminologyObject parent,
 			AbstractTerminologyObject child) {
 		parent.children.remove(child);
-		parent.linkedChildren.remove(child);
 		child.parents.remove(parent);
 	}
 
@@ -346,20 +296,6 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * Removes the specified instance from the linked children of this instance.
-	 * 
-	 * @param child the specified linked child to be removed from the list
-	 */
-	public void removeLinkedChild(AbstractTerminologyObject child) {
-		if (getLinkedChildren().contains(child)) {
-			linkedChildren.remove(child);
-			child.removeLinkedParent(this);
-
-			removeParentChildLink(this, child);
-		}
 	}
 
 	/**
@@ -491,20 +427,6 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	}
 
 	/**
-	 * Removes the specified {@link AbstractTerminologyObject} instance from the
-	 * list of linked parents.
-	 * 
-	 * @param parent the instance to be removed from the list of linked parents
-	 */
-	public synchronized void removeLinkedParent(AbstractTerminologyObject parent) {
-		if (getLinkedParents().contains(parent)) {
-			linkedParents.remove(parent);
-			parent.removeLinkedChild(this);
-			removeParentChildLink(parent, this);
-		}
-	}
-
-	/**
 	 * Sets the specified list of {@link AbstractTerminologyObject} instances as
 	 * the complete list of children of this object.
 	 * 
@@ -532,30 +454,6 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	@Override
 	public String toString() {
 		return getName();
-	}
-
-	/**
-	 * Returns the linked children of this instance. A linked child relation
-	 * denotes, that the link is not static, but the child is located at another
-	 * position in the hierarchy. This object is also linked as a linked parent
-	 * to the specified child.
-	 * 
-	 * @return the linked children of this instance
-	 */
-	public Collection<AbstractTerminologyObject> getLinkedChildren() {
-		return linkedChildren;
-	}
-
-	/**
-	 * Returns the linked parents of this instance. A linked parent relation
-	 * denotes, that the link is not static, but the parent is located at
-	 * another position in the hierarchy. This object is also linked as a linked
-	 * child to the specified parent.
-	 * 
-	 * @return the linked children of this instance
-	 */
-	private Collection<AbstractTerminologyObject> getLinkedParents() {
-		return linkedParents;
 	}
 
 	/**

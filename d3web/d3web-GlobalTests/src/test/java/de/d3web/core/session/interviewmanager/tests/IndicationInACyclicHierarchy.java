@@ -80,7 +80,7 @@ public class IndicationInACyclicHierarchy {
 				new String[] {
 						"yes", "no" });
 		// insert cyclic child relation
-		pregnancyTest.addLinkedChild(pregnant);
+		pregnancyTest.addChild(pregnant);
 
 		certain = new ChoiceValue(kbm.findChoice(pregnant, "certain"));
 		dontKnow = new ChoiceValue(kbm.findChoice(pregnant, "dontKnow"));
