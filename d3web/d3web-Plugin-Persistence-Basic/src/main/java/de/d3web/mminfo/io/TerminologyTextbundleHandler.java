@@ -59,7 +59,7 @@ public class TerminologyTextbundleHandler implements KnowledgeWriter {
 
 	@Override
 	public int getEstimatedSize(KnowledgeBase kb) {
-		return kb.getManager().getAllIDObjects().size() + 1;
+		return kb.getManager().getAllTerminologyObjects().size() + 1;
 	}
 
 	/**

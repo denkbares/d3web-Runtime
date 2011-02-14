@@ -19,10 +19,9 @@
 package de.d3web.core.knowledge;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -292,26 +291,7 @@ public class TerminologyManager {
 		return qASets;
 	}
 
-	public List<NamedObject> getAllIDObjects() {
-		List<NamedObject> objects = new LinkedList<NamedObject>();
-		objects.addAll(getQContainers());
-		objects.addAll(getSolutions());
-		objects.addAll(getQuestions());
-		objects.addAll(catchAnswersFromQuestions(getQuestions()));
-		return objects;
-	}
-
-	private static List<Choice> catchAnswersFromQuestions(List<Question> questions) {
-		List<Choice> ret = new LinkedList<Choice>();
-
-		Iterator<Question> iter = questions.iterator();
-		while (iter.hasNext()) {
-			Object o = iter.next();
-			if (o instanceof QuestionChoice) {
-				QuestionChoice qc = (QuestionChoice) o;
-				ret.addAll(qc.getAllAlternatives());
-			}
-		}
-		return ret;
+	public Collection<TerminologyObject> getAllTerminologyObjects() {
+		return objectNameMap.values();
 	}
 }
