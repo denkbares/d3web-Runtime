@@ -21,12 +21,12 @@
 package de.d3web.core.knowledge;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -54,16 +54,16 @@ import de.d3web.core.manage.KnowledgeBaseManagement;
  * New terminology objects should be added here and should be created using the
  * KnowlegdeBaseManagement factory. For the creation of problem-solving/dialog
  * knowledge, you should use the factories provided with the particular
- * KnowledgeSlices (e.g., Rule, XCLModel).
+ * KnowledgeSlices (e.g. XCLModel).
  * 
  * @author joba
  * @author Christian Betz
  * @see Solution
  * @see Question
- * @see RuleComplex
+ * @see Rule
  * @see QASet
  */
-public class KnowledgeBase implements NamedObject, KnowledgeContainer {
+public class KnowledgeBase implements NamedObject {
 
 	private final InfoStore infoStore = new DefaultInfoStore();
 
@@ -83,11 +83,7 @@ public class KnowledgeBase implements NamedObject, KnowledgeContainer {
 
 	private TerminologyManager manager = new TerminologyManager(this);
 
-	/**
-	 * Map with key="ps-method type" value="list of e.g. rules provided by this
-	 * type"
-	 */
-	private final Map<Class<? extends PSMethod>, Map<MethodKind, List<KnowledgeSlice>>> knowledgeMap;
+	private KnowledgeStore knowledgeStore = new DefaultKnowledgeStore();
 
 	/**
 	 * @return the unique identifier of this KnowledgeBase instance.
@@ -109,175 +105,12 @@ public class KnowledgeBase implements NamedObject, KnowledgeContainer {
 	}
 
 	/**
-	 * An access method to retrieve the particular {@link KnowledgeSlice}
-	 * instance for a given problem-solver and the access key {@link MethodKind}
-	 * 
-	 * @return usually a List of knowledge slices relating to this
-	 *         AbstractTerminologyObject, the specified problem-solver class and
-	 *         it's kind.
-	 * @param problemsolver the specified problem-solver
-	 * @param kind the access key for the type of knowledge to be retrieved
-	 */
-	@Override
-	public Object getKnowledge(Class<? extends PSMethod> problemsolver, MethodKind kind) {
-		Map<MethodKind, List<KnowledgeSlice>> o = knowledgeMap.get(problemsolver);
-		if (o != null) {
-			return o.get(kind);
-		}
-		else {
-			return null;
-		}
-	}
-
-	/**
 	 * Creates a new knowledge base instance. For the general creation of a
 	 * knowledge base and its corresponding objects we recommend to use the
 	 * {@link KnowledgeBaseManagement} class.
 	 */
 	public KnowledgeBase() {
 		initQuestions = new HashMap<QASet, Integer>();
-		// unsynchronized version, allows null values
-		knowledgeMap = new HashMap<Class<? extends PSMethod>, Map<MethodKind, List<KnowledgeSlice>>>();
-
-	}
-
-	/**
-	 * Removes the specified {@link KnowledgeSlice} instance from the knowledge
-	 * base. <BR>
-	 * How it is done: <BR>
-	 * <OL>
-	 * <LI>Internal linking/indexes of the {@link KnowledgeSlice} are removed.
-	 * <LI>Instance is set to <code>null</code> (garbage collector removes
-	 * {@link KnowledgeSlice} instance from memory).
-	 * </OL>
-	 * 
-	 * @param slice the {@link KnowledgeSlice} instance to be removed from the
-	 *        {@link KnowledgeBase}
-	 * @return true, if the knowledge slice was contained in knowledge base and
-	 *         could be successfully removed
-	 */
-	public boolean remove(KnowledgeSlice slice) {
-		boolean removed = removeKnowledge(slice.getProblemsolverContext(),
-				slice);
-		slice.remove();
-		return removed;
-	}
-
-	/**
-	 * Inserts a {@link KnowledgeSlice} instance to this {@link KnowledgeBase}
-	 * instance. The knowledge is indexed in the knowledge base according to its
-	 * corresponding problem-solver and the access key within the
-	 * problem-solver.
-	 * 
-	 * @param problemsolver the problem-solver, that uses the added
-	 *        {@link KnowledgeSlice} instance
-	 * @param knowledgeSlice the {@link KnowledgeSlice} instance to be added to
-	 *        this {@link KnowledgeBase}
-	 * @param knowledgeContext the access key for the indexing with the
-	 *        problem-solver
-	 */
-	@Override
-	public final synchronized void addKnowledge(Class<? extends PSMethod> problemsolver,
-			KnowledgeSlice knowledgeSlice, MethodKind knowledgeContext) {
-		/* make sure, that a storage for the problemsolver is available */
-		if (knowledgeMap.get(problemsolver) == null) {
-			// usually only 2 kinds (FORWARD and BACKWARD) of knowledge is
-			// needed
-			knowledgeMap.put(problemsolver,
-					new HashMap<MethodKind, List<KnowledgeSlice>>());
-		}
-		Map<MethodKind, List<KnowledgeSlice>> storage = knowledgeMap
-				.get(problemsolver);
-
-		/* make sure, that a storage for the kind of knowledge is available */
-		if (storage.get(knowledgeContext) == null) {
-			List<KnowledgeSlice> knowledgeSlices = new LinkedList<KnowledgeSlice>();
-			storage.put(knowledgeContext, knowledgeSlices);
-		}
-
-		/* all right: now put that slice of knowledge in its slot */
-		storage.get(knowledgeContext).add(knowledgeSlice);
-	}
-
-	/**
-	 * Deletes a specified {@link KnowledgeSlice} instance from the
-	 * {@link KnowledgeBase} independently from the {@link MethodKind} access
-	 * key.
-	 * 
-	 * @param problemsolver the problem-solver, that uses the added
-	 *        {@link KnowledgeSlice} instance
-	 * @param knowledgeSlice the {@link KnowledgeSlice} instance to be deleted
-	 *        from this {@link KnowledgeBase}
-	 * @return true, if the {@link KnowledgeSlice} instance was removed
-	 *         successfully
-	 * @author joba
-	 * @date 15.04.2010
-	 */
-	public boolean removeKnowledge(Class<? extends PSMethod> problemsolver,
-			KnowledgeSlice knowledgeSlice) {
-		boolean result = false;
-		Map<MethodKind, List<KnowledgeSlice>> knowledge = knowledgeMap
-				.get(problemsolver);
-		if (knowledge != null) {
-			for (MethodKind context : knowledge.keySet()) {
-				result |= removeKnowledge(problemsolver, knowledgeSlice,
-						context);
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Deletes a specified {@link KnowledgeSlice} instance from the
-	 * {@link KnowledgeBase}. The {@link KnowledgeSlice} is assumed to be
-	 * indexed by the specified problem-solver and access key.
-	 * 
-	 * @param problemsolver the problem-solver, that uses the added
-	 *        {@link KnowledgeSlice} instance
-	 * @param knowledgeSlice the {@link KnowledgeSlice} instance to be deleted
-	 *        from this {@link KnowledgeBase}
-	 * @param accessKey the access key specifying how the {@link KnowledgeSlice}
-	 *        instance is indexed
-	 * @return true, if the {@link KnowledgeSlice} instance was removed
-	 *         successfully
-	 * @author joba
-	 * @date 15.04.2010
-	 */
-	public boolean removeKnowledge(Class<? extends PSMethod> problemsolver,
-			KnowledgeSlice knowledgeSlice, MethodKind accessKey) {
-		Map<MethodKind, List<KnowledgeSlice>> knowledge = knowledgeMap
-				.get(problemsolver);
-		if (knowledge != null) {
-			List<KnowledgeSlice> slices = knowledge.get(accessKey);
-			if (slices != null) {
-				while (slices.remove(knowledgeSlice)) { // NOSONAR
-					// remove all occurring slices
-					// this is ok, because work is done in the condition
-				}
-				return true;
-			}
-		}
-		return false;
-	}
-
-	// /**
-	// * Are query and item case insensitive equal or is item a substring of
-	// * query?
-	// *
-	// */
-	// public static boolean fuzzyEqual(String query, String item) {
-	// return item.toLowerCase().indexOf(query.toLowerCase()) != -1;
-	// }
-
-	/**
-	 * Returns all problem-solvers, for which {@link KnowledgeSlice} instances
-	 * are stores in the {@link KnowledgeBase}.
-	 * 
-	 * @return a {@link Collection} of all problem-solvers storing knowledge in
-	 *         this {@link KnowledgeBase}
-	 */
-	public Collection<Class<? extends PSMethod>> getAllKnownProblemSolver() {
-		return knowledgeMap.keySet();
 	}
 
 	/**
@@ -288,10 +121,10 @@ public class KnowledgeBase implements NamedObject, KnowledgeContainer {
 	 *         contained in the {@link KnowledgeBase}
 	 */
 	public Collection<KnowledgeSlice> getAllKnowledgeSlices() {
-		Set<KnowledgeSlice> allKnowledgeSlices = new HashSet<KnowledgeSlice>();
-		Iterator<Class<? extends PSMethod>> psmIter = knowledgeMap.keySet().iterator();
-		while (psmIter.hasNext()) {
-			allKnowledgeSlices.addAll(getAllKnowledgeSlicesFor(psmIter.next()));
+		Set<KnowledgeSlice> allKnowledgeSlices = new HashSet<KnowledgeSlice>(
+				Arrays.asList(getKnowledgeStore().getKnowledge()));
+		for (TerminologyObject to : manager.getAllTerminologyObjects()) {
+			allKnowledgeSlices.addAll(Arrays.asList(to.getKnowledgeStore().getKnowledge()));
 		}
 		return allKnowledgeSlices;
 	}
@@ -306,12 +139,9 @@ public class KnowledgeBase implements NamedObject, KnowledgeContainer {
 	public Collection<KnowledgeSlice> getAllKnowledgeSlicesFor(
 			Class<? extends PSMethod> problemSolverContext) {
 		Set<KnowledgeSlice> slices = new HashSet<KnowledgeSlice>();
-		Map<MethodKind, List<KnowledgeSlice>> knowledge = knowledgeMap
-				.get(problemSolverContext);
-		if (knowledge != null) {
-			Iterator<MethodKind> kindIter = knowledge.keySet().iterator();
-			while (kindIter.hasNext()) {
-				slices.addAll(knowledge.get(kindIter.next()));
+		for (KnowledgeSlice ks : getAllKnowledgeSlices()) {
+			if (ks.getProblemsolverContext().equals(problemSolverContext)) {
+				slices.add(ks);
 			}
 		}
 		return slices;
@@ -333,12 +163,14 @@ public class KnowledgeBase implements NamedObject, KnowledgeContainer {
 	 *         access key
 	 */
 	public Collection<KnowledgeSlice> getAllKnowledgeSlicesFor(Class<? extends PSMethod> problemsolver, MethodKind accesskey) {
-		Map<MethodKind, List<KnowledgeSlice>> knowledge = knowledgeMap
-				.get(problemsolver);
-		if (knowledge != null) {
-			return knowledge.get(accesskey);
+		Collection<KnowledgeSlice> slices = new LinkedList<KnowledgeSlice>();
+		KnowledgeSlice ks = getKnowledgeStore().getKnowledge(problemsolver, accesskey);
+		if (ks != null) slices.add(ks);
+		for (TerminologyObject to : manager.getAllTerminologyObjects()) {
+			ks = to.getKnowledgeStore().getKnowledge(problemsolver, accesskey);
+			if (ks != null) slices.add(ks);
 		}
-		return new ArrayList<KnowledgeSlice>();
+		return slices;
 	}
 
 	/**
@@ -569,6 +401,10 @@ public class KnowledgeBase implements NamedObject, KnowledgeContainer {
 
 	public TerminologyManager getManager() {
 		return manager;
+	}
+
+	public KnowledgeStore getKnowledgeStore() {
+		return knowledgeStore;
 	}
 
 }

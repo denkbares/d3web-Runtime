@@ -86,12 +86,13 @@ public final class Util {
 		QuestionOC question1 = (QuestionOC) kbm.findQuestion(question);
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, question1,
-						kbm.findValue(question1, answer), PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
+						kbm.findValue(question1, answer), PSMethodUserSelected.getInstance(),
+						PSMethodUserSelected.getInstance()));
 		session.getPropagationManager().commitPropagation();
 	}
 
 	public static StateTransition extractStateTransition(QContainer qcon) {
-		KnowledgeSlice knowledge = qcon.getKnowledge(PSMethodCostBenefit.class,
+		KnowledgeSlice knowledge = qcon.getKnowledgeStore().getKnowledge(PSMethodCostBenefit.class,
 				StateTransition.STATE_TRANSITION);
 		if (knowledge != null) {
 			if (knowledge instanceof StateTransition) {

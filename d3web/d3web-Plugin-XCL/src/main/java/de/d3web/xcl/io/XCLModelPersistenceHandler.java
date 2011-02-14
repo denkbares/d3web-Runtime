@@ -203,7 +203,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 		if (considerOnlyRelevantRelations != null) {
 			model.setConsiderOnlyRelevantRelations(Boolean.parseBoolean(considerOnlyRelevantRelations));
 		}
-		diag.addKnowledge(PSMethodXCL.class, model, XCLModel.XCLMODEL);
+		diag.getKnowledgeStore().addKnowledge(PSMethodXCL.class, XCLModel.XCLMODEL, model);
 
 	}
 

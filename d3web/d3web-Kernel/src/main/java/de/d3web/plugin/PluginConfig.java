@@ -42,10 +42,15 @@ public class PluginConfig implements KnowledgeSlice {
 
 	public static final MethodKind PLUGINCONFIG = new MethodKind("ExtensionConfig");
 
+	/**
+	 * Creates a new PluginConfig and adds itself to the KnowledgeBase
+	 * 
+	 * @param kb
+	 */
 	public PluginConfig(KnowledgeBase kb) {
 		super();
 		this.kb = kb;
-		kb.addKnowledge(getProblemsolverContext(), this, PLUGINCONFIG);
+		kb.getKnowledgeStore().addKnowledge(getProblemsolverContext(), PLUGINCONFIG, this);
 	}
 
 	@Override
@@ -60,7 +65,7 @@ public class PluginConfig implements KnowledgeSlice {
 
 	@Override
 	public void remove() {
-		kb.removeKnowledge(getProblemsolverContext(), this);
+		kb.getKnowledgeStore().removeKnowledge(getProblemsolverContext(), PLUGINCONFIG, this);
 	}
 
 	/**
@@ -110,7 +115,6 @@ public class PluginConfig implements KnowledgeSlice {
 		// if there is no knowledge slice PluginConfiguration, create one
 		if (pc == null) {
 			pc = new PluginConfig(kb);
-			kb.addKnowledge(PROBLEMSOLVER, pc, PLUGINCONFIG);
 		}
 		return pc;
 	}

@@ -23,7 +23,6 @@ package de.d3web.core.inference;
 import java.util.Collection;
 
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.session.Session;
 
 /**
@@ -36,12 +35,12 @@ import de.d3web.core.session.Session;
 public abstract class PSMethodRulebased extends PSMethodAdapter {
 
 	/**
-	 * Check if AbstractTerminologyObject has rules connected with this problem-solver and
-	 * check them, if available
+	 * Check if AbstractTerminologyObject has rules connected with this
+	 * problem-solver and check them, if available
 	 */
 	protected final void propagate(Session session, TerminologyObject nob) {
 		if (nob != null) {
-			KnowledgeSlice slices = ((AbstractTerminologyObject) nob).getKnowledge(this
+			KnowledgeSlice slices = nob.getKnowledgeStore().getKnowledge(this
 					.getClass(), MethodKind.FORWARD);
 			if (slices instanceof RuleSet) {
 				RuleSet rs = (RuleSet) slices;

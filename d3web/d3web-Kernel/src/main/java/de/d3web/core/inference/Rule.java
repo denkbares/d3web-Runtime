@@ -394,13 +394,14 @@ public class Rule implements CaseObjectSource {
 	 */
 	public static void removeFrom(Rule r, Class<? extends PSMethod> psContext, MethodKind kind, TerminologyObject nob) {
 		if (nob != null) {
-			KnowledgeSlice knowledge = ((AbstractTerminologyObject) nob).getKnowledge(psContext,
+			KnowledgeSlice knowledge = ((AbstractTerminologyObject) nob).getKnowledgeStore().getKnowledge(
+					psContext,
 					kind);
 			if (knowledge != null) {
 				RuleSet rs = (RuleSet) knowledge;
 				rs.removeRule(r);
 				if (rs.isEmpty()) {
-					((AbstractTerminologyObject) nob).removeKnowledge(psContext, rs, kind);
+					nob.getKnowledgeStore().removeKnowledge(psContext, kind, rs);
 				}
 			}
 		}
@@ -436,7 +437,8 @@ public class Rule implements CaseObjectSource {
 	 */
 	public static void insertInto(Rule r, Class<? extends PSMethod> psContext, MethodKind kind, TerminologyObject nob) {
 		if (nob != null) {
-			KnowledgeSlice knowledge = ((AbstractTerminologyObject) nob).getKnowledge(psContext,
+			KnowledgeSlice knowledge = ((AbstractTerminologyObject) nob).getKnowledgeStore().getKnowledge(
+					psContext,
 					kind);
 			if (knowledge != null) {
 				RuleSet rs = (RuleSet) knowledge;
@@ -445,7 +447,7 @@ public class Rule implements CaseObjectSource {
 			else {
 				RuleSet rs = new RuleSet(psContext);
 				rs.addRule(r);
-				((AbstractTerminologyObject) nob).addKnowledge(psContext, rs, kind);
+				nob.getKnowledgeStore().addKnowledge(psContext, kind, rs);
 			}
 		}
 	}

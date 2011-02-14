@@ -179,7 +179,7 @@ public class XCLModelTest extends TestCase {
 		model.setMinSupport(0.3);
 		model.setSuggestedThreshold(0.7);
 		model.setEstablishedThreshold(0.8);
-		terminator.addKnowledge(PSMethodXCL.class, model, XCLModel.XCLMODEL);
+		terminator.getKnowledgeStore().addKnowledge(PSMethodXCL.class, XCLModel.XCLMODEL, model);
 		k.getRootSolution().addChild(terminator);
 	}
 

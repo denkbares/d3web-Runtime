@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.session.Session;
@@ -49,15 +50,13 @@ public final class DiaFluxUtils {
 	private DiaFluxUtils() {
 	}
 
-	@SuppressWarnings("unchecked")
 	public static FlowSet getFlowSet(KnowledgeBase knowledgeBase) {
 
-		List<FlowSet> knowledge = (List<FlowSet>) knowledgeBase.getKnowledge(FluxSolver.class,
+		KnowledgeSlice knowledge = knowledgeBase.getKnowledgeStore().getKnowledge(
+				FluxSolver.class,
 				FluxSolver.DIAFLUX);
 
-		if (knowledge == null || knowledge.isEmpty()) return null;
-
-		return knowledge.get(0);
+		return (FlowSet) knowledge;
 
 	}
 
@@ -112,21 +111,16 @@ public final class DiaFluxUtils {
 	 * @param flow
 	 * @param base
 	 */
-	@SuppressWarnings("unchecked")
 	public static void addFlow(Flow flow, KnowledgeBase base) {
 
-		List<FlowSet> ks = (List<FlowSet>) base.getKnowledge(FluxSolver.class, FluxSolver.DIAFLUX);
-
-		FlowSet flowSet;
-		if (ks == null) {
+		FlowSet flowSet = (FlowSet) base.getKnowledgeStore().getKnowledge(FluxSolver.class,
+				FluxSolver.DIAFLUX);
+		;
+		if (flowSet == null) {
 			flowSet = new FlowSet();
-			base.addKnowledge(FluxSolver.class, flowSet, FluxSolver.DIAFLUX);
+			base.getKnowledgeStore().addKnowledge(FluxSolver.class, FluxSolver.DIAFLUX, flowSet);
 
 		}
-		else {
-			flowSet = ks.get(0);
-		}
-
 		flowSet.put(flow);
 
 		registerComposedNodes(flow, base);
@@ -174,19 +168,16 @@ public final class DiaFluxUtils {
 	 * @param base
 	 * @return s the NodeRegistry to look up nodes by Name
 	 */
-	@SuppressWarnings("unchecked")
 	public static NodeRegistry getNodeRegistry(KnowledgeBase base) {
-		List<NodeRegistry> ks = (List<NodeRegistry>) base.getKnowledge(FluxSolver.class,
+		NodeRegistry registry = (NodeRegistry) base.getKnowledgeStore().getKnowledge(
+				FluxSolver.class,
 				FluxSolver.NODE_REGISTRY);
 
-		NodeRegistry registry;
-		if (ks == null) {
+		if (registry == null) {
 			registry = new NodeRegistry();
-			base.addKnowledge(FluxSolver.class, registry, FluxSolver.NODE_REGISTRY);
+			base.getKnowledgeStore().addKnowledge(FluxSolver.class, FluxSolver.NODE_REGISTRY,
+					registry);
 
-		}
-		else {
-			registry = (NodeRegistry) ks.get(0);
 		}
 		return registry;
 	}

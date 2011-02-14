@@ -30,7 +30,7 @@ public interface KnowledgeStore {
 
 	void removeKnowledge(Class<? extends PSMethod> solver, MethodKind kind, KnowledgeSlice slice);
 
-	KnowledgeSlice[] getKnowledge(Class<? extends PSMethod> solver, MethodKind kind);
+	KnowledgeSlice getKnowledge(Class<? extends PSMethod> solver, MethodKind kind);
 
 	KnowledgeSlice[] getKnowledge();
 

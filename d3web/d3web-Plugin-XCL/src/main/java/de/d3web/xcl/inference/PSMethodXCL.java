@@ -78,7 +78,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 			// do not handle strategic changes
 			if (change.isStrategic()) continue;
 			AbstractTerminologyObject nob = (AbstractTerminologyObject) change.getObject();
-			KnowledgeSlice ks = nob.getKnowledge(
+			KnowledgeSlice ks = nob.getKnowledgeStore().getKnowledge(
 					PSMethodXCL.class, XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
 			if (ks != null) {
 				XCLContributedModelSet ms = (XCLContributedModelSet) ks;
@@ -195,7 +195,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 		float totalweight = 0;
 		for (Solution solution : solutions) {
 			Set<Condition> pot = new HashSet<Condition>();
-			KnowledgeSlice ks = solution.getKnowledge(PSMethodXCL.class,
+			KnowledgeSlice ks = solution.getKnowledgeStore().getKnowledge(PSMethodXCL.class,
 					XCLModel.XCLMODEL);
 			if (ks == null) continue;
 			XCLModel model = (XCLModel) ks;
@@ -263,7 +263,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 			Collection<Solution> solutions, Session session) {
 		Set<Question> coveredSymptoms = new HashSet<Question>();
 		for (Solution solution : solutions) {
-			KnowledgeSlice ks = solution.getKnowledge(
+			KnowledgeSlice ks = solution.getKnowledgeStore().getKnowledge(
 					PSMethodXCL.class, XCLModel.XCLMODEL);
 			if (ks == null) continue;
 			XCLModel model = (XCLModel) ks;

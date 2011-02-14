@@ -82,10 +82,8 @@ public class TerminologyManager {
 	}
 
 	/**
-	 * Deletes a terminology object from the knowledge base. Before the deletion
-	 * the corresponding knowledge instances (KnowledgeSlices) are also removed.
-	 * Exception thrown: An object cannot be removed, if it has children
-	 * relations.
+	 * Deletes a terminology object from the knowledge base. Exception thrown:
+	 * An object cannot be removed, if it has children or parent relations.
 	 * 
 	 * Do not call this method directly, use
 	 * TerminologyObject.removeFromKnowledgeBase()
@@ -100,7 +98,6 @@ public class TerminologyManager {
 							+ " has some children or parents, that should be removed/relinked before deletion.");
 		}
 		else {
-			object.removeAllKnowledge();
 			objectNameMap.remove(object.getName());
 		}
 	}

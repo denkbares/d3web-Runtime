@@ -338,7 +338,7 @@ public class BasicPersistenceHandler implements
 		Iterator<Question> questionsIter = kb.getManager().getQuestions().iterator();
 		while (questionsIter.hasNext()) {
 			Question question = questionsIter.next();
-			KnowledgeSlice o = question.getKnowledge(context, methodKind);
+			KnowledgeSlice o = question.getKnowledgeStore().getKnowledge(context, methodKind);
 			if ((o != null)) {
 				time++;
 			}

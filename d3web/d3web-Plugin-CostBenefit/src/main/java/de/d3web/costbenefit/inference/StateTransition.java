@@ -95,7 +95,8 @@ public class StateTransition implements KnowledgeSlice {
 
 	@Override
 	public void remove() {
-		qcontainer.removeKnowledge(getProblemsolverContext(), this, STATE_TRANSITION);
+		qcontainer.getKnowledgeStore().removeKnowledge(getProblemsolverContext(), STATE_TRANSITION,
+				this);
 	}
 
 	/**
@@ -145,7 +146,8 @@ public class StateTransition implements KnowledgeSlice {
 	 * @return StateTransition of the QContainer or null if it has none
 	 */
 	public static StateTransition getStateTransition(QContainer qcon) {
-		return (StateTransition) qcon.getKnowledge(PROBLEMSOLVER, STATE_TRANSITION);
+		return (StateTransition) qcon.getKnowledgeStore().getKnowledge(PROBLEMSOLVER,
+				STATE_TRANSITION);
 	}
 
 	/**

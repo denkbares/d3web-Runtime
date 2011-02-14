@@ -99,12 +99,14 @@ public final class FlowFactory {
 			// index them at the NamedObjects their condition contains
 			for (AbstractTerminologyObject nobject : condition.getTerminalObjects()) {
 
-				EdgeMap slice = (EdgeMap) nobject.getKnowledge(FluxSolver.class,
+				EdgeMap slice = (EdgeMap) nobject.getKnowledgeStore().getKnowledge(
+						FluxSolver.class,
 						MethodKind.FORWARD);
 
 				if (slice == null) {
 					slice = new EdgeMap("EdgeMap" + nobject.getName());
-					nobject.addKnowledge(FluxSolver.class, slice, MethodKind.FORWARD);
+					nobject.getKnowledgeStore().addKnowledge(FluxSolver.class, MethodKind.FORWARD,
+							slice);
 				}
 
 				slice.addEdge(edge);
@@ -123,14 +125,15 @@ public final class FlowFactory {
 			// index them at the NamedObjects their condition contains
 			for (TerminologyObject nobject : list) {
 				// TODO use different MK
-				NodeList slice = (NodeList) ((AbstractTerminologyObject) nobject).getKnowledge(
+				NodeList slice = (NodeList) ((AbstractTerminologyObject) nobject).getKnowledgeStore().getKnowledge(
 						FluxSolver.class,
 						MethodKind.BACKWARD);
 
 				if (slice == null) {
 					slice = new NodeList();
-					((AbstractTerminologyObject) nobject).addKnowledge(FluxSolver.class, slice,
-							MethodKind.BACKWARD);
+					((AbstractTerminologyObject) nobject).getKnowledgeStore().addKnowledge(
+							FluxSolver.class, MethodKind.BACKWARD,
+							slice);
 				}
 
 				slice.addNode(node);

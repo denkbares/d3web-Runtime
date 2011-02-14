@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.utilities.IdentitySet;
 
 /**
@@ -61,16 +60,6 @@ public class RuleSet implements KnowledgeSlice {
 	public void remove() {
 		for (Rule r : new ArrayList<Rule>(rules)) {
 			r.remove();
-		}
-	}
-
-	public static RuleSet getRuleSet(KnowledgeBase kb, Class<? extends PSMethod> problemsolver, MethodKind methodKind) {
-		Object knowledge = kb.getKnowledge(problemsolver, methodKind);
-		if (knowledge == null) {
-			return new RuleSet(problemsolver);
-		}
-		else {
-			return (RuleSet) knowledge;
 		}
 	}
 

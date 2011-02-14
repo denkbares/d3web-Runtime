@@ -68,11 +68,11 @@ public abstract class Question extends QASet implements ValueObject {
 	 *         DerivationType
 	 */
 	public DerivationType getDerivationType() {
-		if (hasElements(getKnowledge(QUESTION_SETTER, KIND))
-				&& hasElements(getKnowledge(FOLLOW_QUESTION, KIND))) {
+		if (hasElements(getKnowledgeStore().getKnowledge(QUESTION_SETTER, KIND))
+				&& hasElements(getKnowledgeStore().getKnowledge(FOLLOW_QUESTION, KIND))) {
 			return DerivationType.MIXED;
 		}
-		else if (hasElements(getKnowledge(QUESTION_SETTER, KIND))) {
+		else if (hasElements(getKnowledgeStore().getKnowledge(QUESTION_SETTER, KIND))) {
 			return DerivationType.DERIVED;
 		}
 		else {

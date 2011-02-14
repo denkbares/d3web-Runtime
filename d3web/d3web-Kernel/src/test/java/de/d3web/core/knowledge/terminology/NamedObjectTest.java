@@ -26,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.KnowledgeStore;
 import de.d3web.core.knowledge.TerminologyObject;
 
 /**
@@ -43,6 +44,12 @@ public class NamedObjectTest {
 		 */
 		public NamedObjectMock(KnowledgeBase kb, String name) {
 			super(kb, name);
+		}
+
+		@Override
+		public KnowledgeStore getKnowledgeStore() {
+			// not tested
+			return null;
 		}
 
 	}

@@ -18,7 +18,6 @@
  */
 package de.d3web.costbenefit.model;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -64,8 +63,7 @@ public class Node {
 		this.qContainer = qcon;
 		this.questions = new LinkedList<QuestionOC>();
 		collectQuestions(this.qContainer, this.questions);
-		Collection<KnowledgeSlice> allKnowledge = qContainer.getAllKnowledge();
-		for (KnowledgeSlice ks : allKnowledge) {
+		for (KnowledgeSlice ks : qContainer.getKnowledgeStore().getKnowledge()) {
 			if (ks instanceof StateTransition) st = (StateTransition) ks;
 		}
 	}

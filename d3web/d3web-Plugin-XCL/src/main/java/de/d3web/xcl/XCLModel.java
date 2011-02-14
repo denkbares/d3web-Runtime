@@ -156,7 +156,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 			newModel.addRelation(relation, type);
 			// TODO: must it be added to the knowledge base?
 			// kb.addKnowledge(PSMethodXCL.class, newModel, XCLModel.XCLMODEL);
-			d.addKnowledge(PSMethodXCL.class, newModel, XCLModel.XCLMODEL);
+			d.getKnowledgeStore().addKnowledge(PSMethodXCL.class, XCLModel.XCLMODEL, newModel);
 
 		}
 
@@ -199,13 +199,14 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 
 	public boolean addRelation(XCLRelation relation, XCLRelationType type) {
 		for (AbstractTerminologyObject nob : relation.getConditionedFinding().getTerminalObjects()) {
-			KnowledgeSlice knowledge = nob.getKnowledge(PSMethodXCL.class,
+			KnowledgeSlice knowledge = nob.getKnowledgeStore().getKnowledge(PSMethodXCL.class,
 					XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
 			XCLContributedModelSet set = null;
 			if (knowledge == null) {
 				set = new XCLContributedModelSet();
-				nob.addKnowledge(PSMethodXCL.class, set,
-						XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
+				nob.getKnowledgeStore().addKnowledge(PSMethodXCL.class,
+						XCLContributedModelSet.XCL_CONTRIBUTED_MODELS,
+						set);
 			}
 			else {
 				set = (XCLContributedModelSet) knowledge;
@@ -229,14 +230,15 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 
 	public void removeRelation(XCLRelation rel) {
 		for (AbstractTerminologyObject nob : rel.getConditionedFinding().getTerminalObjects()) {
-			KnowledgeSlice knowledge = nob.getKnowledge(PSMethodXCL.class,
+			KnowledgeSlice knowledge = nob.getKnowledgeStore().getKnowledge(PSMethodXCL.class,
 					XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
 			if (knowledge instanceof XCLContributedModelSet) {
 				XCLContributedModelSet set = (XCLContributedModelSet) knowledge;
 				set.removeModel(this);
 				if (set.isEmpty()) {
-					nob.removeKnowledge(PSMethodXCL.class, set,
-							XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
+					nob.getKnowledgeStore().removeKnowledge(PSMethodXCL.class,
+							XCLContributedModelSet.XCL_CONTRIBUTED_MODELS,
+							set);
 				}
 			}
 		}
@@ -403,9 +405,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 	 */
 	@Override
 	public void remove() {
-		solution.getKnowledgeBase().removeKnowledge(PSMethodXCL.class, this,
-				XCLModel.XCLMODEL);
-		solution.removeKnowledge(getProblemsolverContext(), this, XCLMODEL);
+		solution.getKnowledgeStore().removeKnowledge(getProblemsolverContext(), XCLMODEL, this);
 		for (XCLRelation rel : new LinkedList<XCLRelation>(relations)) {
 			removeRelation(rel);
 		}

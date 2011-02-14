@@ -158,7 +158,8 @@ public class FluxSolver implements PostHookablePSMethod {
 			}
 
 			TerminologyObject object = propagationEntry.getObject();
-			EdgeMap slice = (EdgeMap) ((AbstractTerminologyObject) object).getKnowledge(FluxSolver.class,
+			EdgeMap slice = (EdgeMap) ((AbstractTerminologyObject) object).getKnowledgeStore().getKnowledge(
+					FluxSolver.class,
 					MethodKind.FORWARD);
 
 			// TO does not occur in any edge
@@ -186,7 +187,7 @@ public class FluxSolver implements PostHookablePSMethod {
 		for (PropagationEntry propagationEntry : changes) {
 
 			TerminologyObject object = propagationEntry.getObject();
-			NodeList knowledge = (NodeList) ((AbstractTerminologyObject) object).getKnowledge(
+			NodeList knowledge = (NodeList) ((AbstractTerminologyObject) object).getKnowledgeStore().getKnowledge(
 					FluxSolver.class,
 					MethodKind.BACKWARD);
 
