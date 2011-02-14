@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
-import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.INode;
 import de.d3web.diaFlux.flow.ISupport;
@@ -102,8 +102,7 @@ public class CallFlowAction extends PSAction {
 			// invalid
 			// support by this node
 			FluxSolver.removeSupport(session, startNode, support);
-			
-			
+
 			support = null;
 		}
 
@@ -111,8 +110,8 @@ public class CallFlowAction extends PSAction {
 	}
 
 	@Override
-	public List<AbstractTerminologyObject> getBackwardObjects() {
-		return new ArrayList<AbstractTerminologyObject>(0);
+	public List<TerminologyObject> getBackwardObjects() {
+		return new ArrayList<TerminologyObject>(0);
 	}
 
 	public String getFlowName() {

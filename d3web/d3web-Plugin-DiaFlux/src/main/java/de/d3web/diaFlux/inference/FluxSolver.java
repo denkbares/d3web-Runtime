@@ -30,7 +30,6 @@ import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PostHookablePSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
@@ -158,7 +157,7 @@ public class FluxSolver implements PostHookablePSMethod {
 			}
 
 			TerminologyObject object = propagationEntry.getObject();
-			EdgeMap slice = (EdgeMap) ((AbstractTerminologyObject) object).getKnowledgeStore().getKnowledge(
+			EdgeMap slice = (EdgeMap) object.getKnowledgeStore().getKnowledge(
 					FluxSolver.class,
 					MethodKind.FORWARD);
 
@@ -187,7 +186,7 @@ public class FluxSolver implements PostHookablePSMethod {
 		for (PropagationEntry propagationEntry : changes) {
 
 			TerminologyObject object = propagationEntry.getObject();
-			NodeList knowledge = (NodeList) ((AbstractTerminologyObject) object).getKnowledgeStore().getKnowledge(
+			NodeList knowledge = (NodeList) object.getKnowledgeStore().getKnowledge(
 					FluxSolver.class,
 					MethodKind.BACKWARD);
 

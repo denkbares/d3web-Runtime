@@ -43,7 +43,6 @@ import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -140,7 +139,7 @@ public final class XMLUtil {
 	 * type
 	 * 
 	 * @param doc Document, where the Element should be created
-	 * @param nob AbstractTerminologyObject, whose ID should be used
+	 * @param nob TerminologyObject, whose ID should be used
 	 * @param type type of the condition
 	 * @return condition element
 	 */
@@ -161,7 +160,7 @@ public final class XMLUtil {
 	 * type and value
 	 * 
 	 * @param doc Document, where the Element should be created
-	 * @param nob AbstractTerminologyObject, whose ID should be used
+	 * @param nob TerminologyObject, whose ID should be used
 	 * @param type type of the condition
 	 * @param value value of the condition
 	 * @return condition element
@@ -179,7 +178,7 @@ public final class XMLUtil {
 	 * type and value. The value is stored in a child element.
 	 * 
 	 * @param doc Document, where the Element should be created
-	 * @param nob AbstractTerminologyObject, whose ID should be used
+	 * @param nob TerminologyObject, whose ID should be used
 	 * @param type type of the condition
 	 * @param value value of the condition
 	 * @return condition element
@@ -196,7 +195,7 @@ public final class XMLUtil {
 	 * newly created node.
 	 * 
 	 * @param doc Document, where the Element should be created
-	 * @param nob AbstractTerminologyObject, whose ID should be used
+	 * @param nob TerminologyObject, whose ID should be used
 	 * @param type type of the condition
 	 * @param value value of the condition
 	 * @return condition element
@@ -212,7 +211,7 @@ public final class XMLUtil {
 	 * type and values
 	 * 
 	 * @param doc Document, where the Element should be created
-	 * @param nob AbstractTerminologyObject, whose ID should be used
+	 * @param nob TerminologyObject, whose ID should be used
 	 * @param type type of the condition
 	 * @param values List of answers, which are used as values
 	 * @return condition element
@@ -307,15 +306,14 @@ public final class XMLUtil {
 	}
 
 	/**
-	 * Adds the children of the AbstractTerminologyObject to the specified
-	 * element
+	 * Adds the children of the TerminologyObject to the specified element
 	 * 
-	 * @param namedObject AbstractTerminologyObject, whose children should be
-	 *        appended as Elements
+	 * @param namedObject TerminologyObject, whose children should be appended
+	 *        as Elements
 	 * @param element Element representing the namedObject, where the children
 	 *        will be appended
 	 */
-	public static void appendChildren(AbstractTerminologyObject namedObject, Element element) {
+	public static void appendChildren(TerminologyObject namedObject, Element element) {
 		Document doc = element.getOwnerDocument();
 		TerminologyObject[] children = namedObject.getChildren();
 		if (children.length != 0) {
@@ -330,15 +328,14 @@ public final class XMLUtil {
 	}
 
 	/**
-	 * Adds the children given from the xml structure to the
-	 * AbstractTerminologyObject
+	 * Adds the children given from the xml structure to the TerminologyObject
 	 * 
 	 * @param kb KnowledgeBase containing the children
 	 * @param namedObject where the children should be appended
 	 * @param element representing the namedObject and containing the children
 	 *        as childnodes
 	 */
-	public static void appendChildren(KnowledgeBase kb, AbstractTerminologyObject namedObject, Element element) throws IOException {
+	public static void appendChildren(KnowledgeBase kb, TerminologyObject namedObject, Element element) throws IOException {
 		List<Element> children = null;
 		NodeList childNodes = element.getChildNodes();
 		for (int i = 0; i < childNodes.getLength(); i++) {
@@ -350,7 +347,7 @@ public final class XMLUtil {
 		if (children != null) {
 			for (Element child : children) {
 				String id = child.getAttribute("name");
-				AbstractTerminologyObject no = (AbstractTerminologyObject) kb.getManager().search(
+				TerminologyObject no = kb.getManager().search(
 						id);
 				if (namedObject instanceof QASet && no instanceof QASet) {
 					((QASet) namedObject).addChild(((QASet) no));

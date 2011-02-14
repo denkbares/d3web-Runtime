@@ -36,7 +36,6 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  * 
  * @author joba, chris
  * @see NamedObject
- * @see AbstractTerminologyObject
  * @see ScoreRating
  * @see Rating
  */

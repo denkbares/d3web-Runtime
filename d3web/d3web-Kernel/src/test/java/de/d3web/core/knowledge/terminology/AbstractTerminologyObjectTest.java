@@ -35,7 +35,7 @@ import de.d3web.core.knowledge.TerminologyObject;
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 23.08.2010
  */
-public class NamedObjectTest {
+public class AbstractTerminologyObjectTest {
 
 	private class NamedObjectMock extends AbstractTerminologyObject {
 
@@ -86,7 +86,7 @@ public class NamedObjectTest {
 	@Test
 	public void testCorrectInitialization() {
 		// children count = number of children + number of linked children
-		assertThat(parent.getNumberOfChildren(), is(3));
+		assertThat(parent.getChildren().length, is(3));
 
 		// verify all children and their correct ordering
 		TerminologyObject[] children = parent.getChildren();
@@ -144,7 +144,7 @@ public class NamedObjectTest {
 		// try to remove the "childThree"
 		assertThat(parent.removeChild(childThree), is(true));
 		// the number of children should have decreased
-		assertThat(parent.getNumberOfChildren(), is(2));
+		assertThat(parent.getChildren().length, is(2));
 		// the child can't be removed twice, therefore this method should fail
 		assertThat(parent.removeChild(childThree), is(false));
 	}

@@ -23,7 +23,7 @@ package de.d3web.core.inference.condition;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
+import de.d3web.core.knowledge.TerminologyObject;
 
 /**
  * Abstract condition for all terminal conditions. A terminal condition contains
@@ -34,7 +34,7 @@ import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
  */
 public abstract class TerminalCondition implements Condition {
 
-	private final Collection<AbstractTerminologyObject> terminal = new ArrayList<AbstractTerminologyObject>(
+	private final Collection<TerminologyObject> terminal = new ArrayList<TerminologyObject>(
 			1);
 
 	/**
@@ -42,7 +42,7 @@ public abstract class TerminalCondition implements Condition {
 	 * 
 	 * @param conds the specified condition
 	 */
-	protected TerminalCondition(AbstractTerminologyObject idobject) {
+	protected TerminalCondition(TerminologyObject idobject) {
 		terminal.add(idobject);
 	}
 
@@ -53,7 +53,7 @@ public abstract class TerminalCondition implements Condition {
 	 * @return the terminal object of this condition
 	 */
 	@Override
-	public Collection<? extends AbstractTerminologyObject> getTerminalObjects() {
+	public Collection<? extends TerminologyObject> getTerminalObjects() {
 		return terminal;
 	}
 

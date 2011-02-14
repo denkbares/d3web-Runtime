@@ -77,7 +77,7 @@ public final class PSMethodHeuristic extends PSMethodAdapter {
 	}
 
 	/**
-	 * Check if AbstractTerminologyObject has nextQASet rules and check them, if
+	 * Check if TerminologyObject has nextQASet rules and check them, if
 	 * available
 	 */
 	@Override

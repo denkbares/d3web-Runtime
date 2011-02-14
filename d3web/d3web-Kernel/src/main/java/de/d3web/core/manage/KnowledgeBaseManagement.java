@@ -34,7 +34,6 @@ import java.util.Map;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -323,7 +322,7 @@ public final class KnowledgeBaseManagement {
 	}
 
 	private TerminologyObject findNamedObject(String name,
-			Collection<? extends AbstractTerminologyObject> namedObjects) {
+			Collection<? extends TerminologyObject> namedObjects) {
 		// old iterating search method
 		for (TerminologyObject o : namedObjects) {
 			if (o != null && name != null
@@ -449,18 +448,6 @@ public final class KnowledgeBaseManagement {
 			return UndefinedValue.getInstance();
 		}
 	}
-
-	/**
-	 * Sets ID, name, parent
-	 * 
-	 * @param theObject
-	 * @param name
-	 * @param parent
-	 */
-	// private void setBasicProperties(AbstractTerminologyObject theObject,
-	// String name) {
-	// theObject.setText(name);
-	// }
 
 	private void addToParent(QASet theObject, QASet parent) {
 		if (parent != null) {

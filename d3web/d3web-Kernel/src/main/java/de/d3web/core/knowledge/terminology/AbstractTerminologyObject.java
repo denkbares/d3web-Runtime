@@ -206,10 +206,6 @@ public abstract class AbstractTerminologyObject implements TerminologyObject {
 		return children.toArray(new TerminologyObject[children.size()]);
 	}
 
-	public int getNumberOfChildren() {
-		return children != null ? children.size() : 0;
-	}
-
 	public void moveChildToPosition(AbstractTerminologyObject child, int pos) {
 		if (children.remove(child)) {
 			children.add(pos > children.size() ? children.size() : pos, child);

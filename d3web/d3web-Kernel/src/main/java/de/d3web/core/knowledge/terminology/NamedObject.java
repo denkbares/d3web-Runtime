@@ -27,7 +27,6 @@ import de.d3web.core.knowledge.InfoStore;
  * Nearly all knowledge base objects should extend this class.
  * 
  * @author joba, Christian Betz
- * @see AbstractTerminologyObject
  */
 public interface NamedObject {
 

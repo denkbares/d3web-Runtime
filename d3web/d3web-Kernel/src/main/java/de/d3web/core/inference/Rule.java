@@ -26,7 +26,6 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseRuleComplex;
@@ -394,7 +393,7 @@ public class Rule implements CaseObjectSource {
 	 */
 	public static void removeFrom(Rule r, Class<? extends PSMethod> psContext, MethodKind kind, TerminologyObject nob) {
 		if (nob != null) {
-			KnowledgeSlice knowledge = ((AbstractTerminologyObject) nob).getKnowledgeStore().getKnowledge(
+			KnowledgeSlice knowledge = nob.getKnowledgeStore().getKnowledge(
 					psContext,
 					kind);
 			if (knowledge != null) {
@@ -437,7 +436,7 @@ public class Rule implements CaseObjectSource {
 	 */
 	public static void insertInto(Rule r, Class<? extends PSMethod> psContext, MethodKind kind, TerminologyObject nob) {
 		if (nob != null) {
-			KnowledgeSlice knowledge = ((AbstractTerminologyObject) nob).getKnowledgeStore().getKnowledge(
+			KnowledgeSlice knowledge = nob.getKnowledgeStore().getKnowledge(
 					psContext,
 					kind);
 			if (knowledge != null) {

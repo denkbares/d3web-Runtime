@@ -28,7 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
+import de.d3web.core.knowledge.TerminologyObject;
 
 /**
  * Abstract condition for all non-terminal conditions. A non-terminal condition
@@ -60,8 +60,8 @@ public abstract class NonTerminalCondition implements Condition {
 	}
 
 	@Override
-	public Collection<AbstractTerminologyObject> getTerminalObjects() {
-		Set<AbstractTerminologyObject> v = new HashSet<AbstractTerminologyObject>();
+	public Collection<TerminologyObject> getTerminalObjects() {
+		Set<TerminologyObject> v = new HashSet<TerminologyObject>();
 		for (Condition condition : terms) {
 			v.addAll(condition.getTerminalObjects());
 		}

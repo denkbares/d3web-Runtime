@@ -48,7 +48,7 @@ import de.d3web.core.inference.condition.CondTextEqual;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.inference.condition.TerminalCondition;
-import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.AnswerNo;
 import de.d3web.core.knowledge.terminology.AnswerYes;
 import de.d3web.core.knowledge.terminology.NamedObject;
@@ -306,7 +306,7 @@ public class ConditionVerbalizer implements Verbalizer {
 
 	private CondVerbalization createTerminalConditionVerbalization(TerminalCondition tCondition) {
 
-		Collection<? extends AbstractTerminologyObject> terminalObjects = tCondition.getTerminalObjects();
+		Collection<? extends TerminologyObject> terminalObjects = tCondition.getTerminalObjects();
 		if (terminalObjects == null) {
 			// Fail-safe, shouldn't happen!
 			return new TerminalCondVerbalization("TerminalObject", "=", "null", "");

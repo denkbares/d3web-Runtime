@@ -23,7 +23,7 @@ package de.d3web.core.inference.condition;
 import java.util.Collection;
 
 import de.d3web.core.inference.Rule;
-import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
@@ -64,7 +64,7 @@ public interface Condition extends Cloneable {
 	 * 
 	 * @return all used questions and diagnoses used in this condition
 	 */
-	public Collection<? extends AbstractTerminologyObject> getTerminalObjects();
+	public Collection<? extends TerminologyObject> getTerminalObjects();
 
 	/**
 	 * Compares this condition with another condition.

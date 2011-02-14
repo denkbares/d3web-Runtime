@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
-import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.INode;
@@ -70,7 +70,7 @@ public class FlowchartProcessedCondition implements Condition {
 	}
 
 	@Override
-	public List<? extends AbstractTerminologyObject> getTerminalObjects() {
+	public List<? extends TerminologyObject> getTerminalObjects() {
 		// TODO
 		return Collections.emptyList();
 	}

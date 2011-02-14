@@ -26,7 +26,6 @@ import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.diaFlux.inference.CallFlowAction;
 import de.d3web.diaFlux.inference.ConditionTrue;
 import de.d3web.diaFlux.inference.FluxSolver;
@@ -97,7 +96,7 @@ public final class FlowFactory {
 
 			// For all other edges:
 			// index them at the NamedObjects their condition contains
-			for (AbstractTerminologyObject nobject : condition.getTerminalObjects()) {
+			for (TerminologyObject nobject : condition.getTerminalObjects()) {
 
 				EdgeMap slice = (EdgeMap) nobject.getKnowledgeStore().getKnowledge(
 						FluxSolver.class,
@@ -125,13 +124,13 @@ public final class FlowFactory {
 			// index them at the NamedObjects their condition contains
 			for (TerminologyObject nobject : list) {
 				// TODO use different MK
-				NodeList slice = (NodeList) ((AbstractTerminologyObject) nobject).getKnowledgeStore().getKnowledge(
+				NodeList slice = (NodeList) nobject.getKnowledgeStore().getKnowledge(
 						FluxSolver.class,
 						MethodKind.BACKWARD);
 
 				if (slice == null) {
 					slice = new NodeList();
-					((AbstractTerminologyObject) nobject).getKnowledgeStore().addKnowledge(
+					nobject.getKnowledgeStore().addKnowledge(
 							FluxSolver.class, MethodKind.BACKWARD,
 							slice);
 				}

@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -90,7 +89,7 @@ public class TerminologyManager {
 	 * 
 	 * @param object the object to be removed
 	 */
-	public void remove(AbstractTerminologyObject object) {
+	public void remove(TerminologyObject object) {
 		if ((object.getChildren() != null) && (object.getChildren().length > 0)
 				|| (object.getParents() != null) && (object.getParents().length > 0)) {
 			throw new IllegalArgumentException(

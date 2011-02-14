@@ -35,8 +35,8 @@ import de.d3web.core.session.Session;
 public abstract class PSMethodRulebased extends PSMethodAdapter {
 
 	/**
-	 * Check if AbstractTerminologyObject has rules connected with this
-	 * problem-solver and check them, if available
+	 * Check if TerminologyObject has rules connected with this problem-solver
+	 * and check them, if available
 	 */
 	protected final void propagate(Session session, TerminologyObject nob) {
 		if (nob != null) {

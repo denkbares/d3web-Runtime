@@ -47,7 +47,6 @@ public class QuestionYN extends QuestionOC {
 	 * 
 	 * @see QuestionOC
 	 * @see Question
-	 * @see AbstractTerminologyObject
 	 */
 	public QuestionYN(KnowledgeBase kb, String name) {
 		this(kb, name, YES_STRING, NO_STRING);

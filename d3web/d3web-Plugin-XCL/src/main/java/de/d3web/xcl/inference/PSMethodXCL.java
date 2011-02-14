@@ -34,7 +34,6 @@ import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Rating.State;
@@ -77,7 +76,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 		for (PropagationEntry change : changes) {
 			// do not handle strategic changes
 			if (change.isStrategic()) continue;
-			AbstractTerminologyObject nob = (AbstractTerminologyObject) change.getObject();
+			TerminologyObject nob = change.getObject();
 			KnowledgeSlice ks = nob.getKnowledgeStore().getKnowledge(
 					PSMethodXCL.class, XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
 			if (ks != null) {
@@ -222,7 +221,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 	}
 
 	private static void addRelationConditions(Set<Condition> pot,
-			Collection<? extends AbstractTerminologyObject> qaset, XCLModel model) {
+			Collection<? extends TerminologyObject> qaset, XCLModel model) {
 		for (TerminologyObject nob : qaset) {
 			addRelationConditions(pot, nob, model);
 		}

@@ -50,7 +50,7 @@ import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
@@ -169,7 +169,7 @@ public class BasicPersistenceHandler implements
 		abstime += qASetNodes.size();
 		float time = 0;
 
-		Map<Element, AbstractTerminologyObject> hierarchiemap = new HashMap<Element, AbstractTerminologyObject>();
+		Map<Element, TerminologyObject> hierarchiemap = new HashMap<Element, TerminologyObject>();
 
 		for (Element child : qASetNodes) {
 			listener.updateProgress(time++ / abstime, "Building qasets");
@@ -279,7 +279,7 @@ public class BasicPersistenceHandler implements
 		}
 
 		Element qContainersElement = doc.createElement("QASets");
-		Map<AbstractTerminologyObject, Element> possibleParents = new HashMap<AbstractTerminologyObject, Element>();
+		Map<TerminologyObject, Element> possibleParents = new HashMap<TerminologyObject, Element>();
 		List<QASet> qASets = kb.getManager().getQASets();
 		Collections.sort(qASets, new IDObjectComparator());
 		PersistenceManager pm = PersistenceManager.getInstance();
@@ -313,7 +313,7 @@ public class BasicPersistenceHandler implements
 		father.appendChild(diagnosisElement);
 
 		// appendChildren
-		for (AbstractTerminologyObject parent : possibleParents.keySet()) {
+		for (TerminologyObject parent : possibleParents.keySet()) {
 			XMLUtil.appendChildren(parent, possibleParents.get(parent));
 		}
 
