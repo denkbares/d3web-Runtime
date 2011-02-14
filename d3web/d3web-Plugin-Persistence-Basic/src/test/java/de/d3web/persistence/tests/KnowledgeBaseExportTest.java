@@ -135,7 +135,7 @@ public class KnowledgeBaseExportTest {
 		QContainer c1 = new QContainer(kb, "c1");
 
 		Question q1 = new QuestionText(kb, "q1");
-		q1.addParent(c1);
+		c1.addChild(q1);
 
 		QContainerHandler qcw = new QContainerHandler();
 
@@ -154,7 +154,7 @@ public class KnowledgeBaseExportTest {
 		Solution diag = new Solution(kb, "d1");
 
 		Solution diagChild = new Solution(kb, "d11");
-		diagChild.addParent(diag);
+		diag.addChild(diagChild);
 
 		SolutionsHandler dw = new SolutionsHandler();
 

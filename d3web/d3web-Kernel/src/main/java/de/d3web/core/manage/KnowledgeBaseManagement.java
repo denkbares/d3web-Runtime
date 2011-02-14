@@ -462,24 +462,21 @@ public final class KnowledgeBaseManagement {
 	// theObject.setText(name);
 	// }
 
-	/**
-	 * Adds the specified object to the given parent. If parent==null then add
-	 * the object to the corresponding root object.
-	 * 
-	 * @param theObject
-	 * @param parent
-	 */
-	private void addToParent(AbstractTerminologyObject theObject, AbstractTerminologyObject parent) {
+	private void addToParent(QASet theObject, QASet parent) {
 		if (parent != null) {
 			parent.addChild(theObject);
 		}
 		else {
-			if (theObject instanceof Solution) {
-				knowledgeBase.getRootSolution().addChild(theObject);
-			}
-			else if (theObject instanceof QASet) {
-				knowledgeBase.getRootQASet().addChild(theObject);
-			}
+			knowledgeBase.getRootQASet().addChild(theObject);
+		}
+	}
+
+	private void addToParent(Solution theObject, Solution parent) {
+		if (parent != null) {
+			parent.addChild(theObject);
+		}
+		else {
+			knowledgeBase.getRootSolution().addChild(theObject);
 		}
 	}
 

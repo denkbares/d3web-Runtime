@@ -72,10 +72,10 @@ public class QContainerTest {
 	public void testQContainerWithChildren() throws Exception {
 		KnowledgeBase kb = new KnowledgeBase();
 		Question q1 = new QuestionText(kb, "q1");
-		q1.addParent(qc1);
+		qc1.addChild(q1);
 
 		Question q2 = new QuestionText(kb, "q2");
-		q2.addParent(qc1);
+		qc1.addChild(q2);
 
 		isTag = new XMLTag(qcw.write(qc1, Util.createEmptyDocument()));
 

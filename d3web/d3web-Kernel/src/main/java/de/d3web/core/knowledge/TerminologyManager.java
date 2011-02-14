@@ -87,19 +87,19 @@ public class TerminologyManager {
 	 * Exception thrown: An object cannot be removed, if it has children
 	 * relations.
 	 * 
+	 * Do not call this method directly, use
+	 * TerminologyObject.removeFromKnowledgeBase()
+	 * 
 	 * @param object the object to be removed
-	 * @throws IllegalAccessException if the knowledge could not be removed from
-	 *         the {@link KnowledgeBase}
 	 */
-	public void remove(AbstractTerminologyObject object) throws IllegalAccessException {
-		if ((object.getChildren() != null) && (object.getChildren().length > 0)) {
-			throw new IllegalAccessException(
+	public void remove(AbstractTerminologyObject object) {
+		if ((object.getChildren() != null) && (object.getChildren().length > 0)
+				|| (object.getParents() != null) && (object.getParents().length > 0)) {
+			throw new IllegalArgumentException(
 					object
-							+ " has some children, that should be removed/relinked before deletion.");
+							+ " has some children or parents, that should be removed/relinked before deletion.");
 		}
 		else {
-			// removes object from list of children of all parents
-			object.setParents(new ArrayList<AbstractTerminologyObject>(0));
 			object.removeAllKnowledge();
 			objectNameMap.remove(object.getName());
 		}

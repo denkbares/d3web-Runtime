@@ -68,4 +68,12 @@ public abstract class QASet extends AbstractTerminologyObject implements Intervi
 		}
 		return false;
 	}
+
+	public void addChild(QASet child) {
+		super.addChild(child);
+	}
+
+	public boolean removeChild(QASet child) {
+		return super.removeChild(child);
+	}
 }

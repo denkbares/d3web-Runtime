@@ -52,6 +52,7 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.knowledge.terminology.info.Property.Autosave;
 import de.d3web.core.manage.KnowledgeBaseManagement;
@@ -337,7 +338,7 @@ public final class XMLUtil {
 	 * @param element representing the namedObject and containing the children
 	 *        as childnodes
 	 */
-	public static void appendChildren(KnowledgeBase kb, AbstractTerminologyObject namedObject, Element element) {
+	public static void appendChildren(KnowledgeBase kb, AbstractTerminologyObject namedObject, Element element) throws IOException {
 		List<Element> children = null;
 		NodeList childNodes = element.getChildNodes();
 		for (int i = 0; i < childNodes.getLength(); i++) {
@@ -351,7 +352,16 @@ public final class XMLUtil {
 				String id = child.getAttribute("name");
 				AbstractTerminologyObject no = (AbstractTerminologyObject) kb.getManager().search(
 						id);
-				namedObject.addChild(no);
+				if (namedObject instanceof QASet && no instanceof QASet) {
+					((QASet) namedObject).addChild(((QASet) no));
+				}
+				else if (namedObject instanceof Solution && no instanceof Solution) {
+					((Solution) namedObject).addChild(((Solution) no));
+				}
+				else {
+					throw new IOException("The types of " + namedObject + " and " + no
+							+ " don't match.");
+				}
 			}
 		}
 	}

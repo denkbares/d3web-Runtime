@@ -31,6 +31,8 @@ public interface TerminologyObject extends NamedObject {
 
 	KnowledgeBase getKnowledgeBase();
 
+	void removeFromKnowledgeBase();
+
 	// --- storing knowledge ---
 	// KnowledgeStore getKnowledgeStore();
 

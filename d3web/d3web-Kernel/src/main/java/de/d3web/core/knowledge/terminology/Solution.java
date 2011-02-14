@@ -99,4 +99,12 @@ public class Solution extends AbstractTerminologyObject implements ValueObject {
 		return new Rating(State.UNCLEAR);
 	}
 
+	public void addChild(Solution child) {
+		super.addChild(child);
+	}
+
+	public boolean removeChild(Solution child) {
+		return super.removeChild(child);
+	}
+
 }

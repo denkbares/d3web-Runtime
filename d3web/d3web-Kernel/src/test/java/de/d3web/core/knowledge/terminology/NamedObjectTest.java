@@ -16,21 +16,17 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.core.knowledge.terminology.tests;
+package de.d3web.core.knowledge.terminology;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-
-import java.util.LinkedList;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 
 /**
  * Unit test for {@link AbstractTerminologyObject}
@@ -97,67 +93,6 @@ public class NamedObjectTest {
 			assertThat(parents.length, is(1));
 			assertThat(parents[0], is(equalTo((TerminologyObject) parent)));
 		}
-	}
-
-	/**
-	 * Summary: Tests the AbstractTerminologyObject#setChildren(java.util.List)
-	 * method which deletes all current children of the
-	 * AbstractTerminologyObject Instance and inserts all the NamedObjects from
-	 * the given list as new children
-	 * 
-	 * @see AbstractTerminologyObject#setChildren(java.util.List)
-	 * 
-	 * @created 23.08.2010
-	 */
-	@Test
-	public void testSetChildrenByList() {
-		// create and instantiate the new children
-		NamedObjectMock newChildOne = new NamedObjectMock(kb, "newChildOne");
-		NamedObjectMock newChildTwo = new NamedObjectMock(kb, "newChildTwo");
-		// create a list of the new two children
-		List<AbstractTerminologyObject> newChildren = new LinkedList<AbstractTerminologyObject>();
-		newChildren.add(newChildOne);
-		newChildren.add(newChildTwo);
-		// now set the list as new children of the parent
-		parent.setChildren(newChildren);
-		// verify that the "new" children of the parent consist only of
-		// "newChildOne" and "newChildTwo"
-		assertThat(parent.getNumberOfChildren(), is(2));
-		TerminologyObject[] children = parent.getChildren();
-		assertThat(children[0], is(equalTo((TerminologyObject) newChildOne)));
-		assertThat(children[1], is(equalTo((TerminologyObject) newChildTwo)));
-	}
-
-	/**
-	 * Summary: Tests the AbstractTerminologyObject#setParents(java.util.List)
-	 * method which removes all the parents of the current
-	 * AbstractTerminologyObject instance and inserts all the NamedObjects from
-	 * the given list as new parents.
-	 * <p>
-	 * Decouple the child "linkedChildOne" from its current parent "parent" and
-	 * give it two new parents: "newParentOne" and "newParentTwo"
-	 * 
-	 * @see AbstractTerminologyObject#setParents(java.util.List)
-	 * 
-	 * @created 23.08.2010
-	 */
-	@Test
-	public void testSetParentsByList() {
-		// create and instantiate the new parents
-		NamedObjectMock newParentOne = new NamedObjectMock(kb, "newParentOne");
-		NamedObjectMock newParentTwo = new NamedObjectMock(kb, "newParentTwo");
-		// create a list of the two new parents
-		List<AbstractTerminologyObject> newParents = new LinkedList<AbstractTerminologyObject>();
-		newParents.add(newParentOne);
-		newParents.add(newParentTwo);
-
-		childOne.setParents(newParents);
-		// now verify the success of the operation
-		assertThat(parent.getNumberOfChildren(), is(2)); // old parent (one
-															// child is
-															// "stolen")
-		assertThat(newParentOne.getNumberOfChildren(), is(1));
-		assertThat(newParentTwo.getNumberOfChildren(), is(1));
 	}
 
 	/**

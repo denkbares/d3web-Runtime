@@ -21,7 +21,6 @@
 package de.d3web.core.knowledge.terminology;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -69,12 +68,12 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	/**
 	 * The parents of this object (including the linked parents).
 	 */
-	private List<AbstractTerminologyObject> parents;
+	private List<AbstractTerminologyObject> parents = new LinkedList<AbstractTerminologyObject>();
 
 	/**
 	 * The children of this object (including the linked children).
 	 */
-	private List<AbstractTerminologyObject> children;
+	private List<AbstractTerminologyObject> children = new LinkedList<AbstractTerminologyObject>();
 
 	/**
 	 * Knowledge storage of this object: Problem-solving knowledge, that is
@@ -83,17 +82,9 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	 * {@link KnowledgeSlice} instances is returned. The map has to be
 	 * transient, so that huge knowledge bases can be serialized!
 	 */
-	private transient Map<Class<? extends PSMethod>, Map<MethodKind, KnowledgeSlice>> knowledgeMap;
+	private transient Map<Class<? extends PSMethod>, Map<MethodKind, KnowledgeSlice>> knowledgeMap = new HashMap<Class<? extends PSMethod>, Map<MethodKind, KnowledgeSlice>>();
 
 	private final InfoStore infoStore = new DefaultInfoStore();
-
-	private void init() {
-		// unsynchronized version, allows null values
-		knowledgeMap = new HashMap<Class<? extends PSMethod>, Map<MethodKind, KnowledgeSlice>>();
-
-		children = new LinkedList<AbstractTerminologyObject>();
-		parents = new LinkedList<AbstractTerminologyObject>();
-	}
 
 	/**
 	 * Creates a new {@link AbstractTerminologyObject} instance with a given
@@ -112,7 +103,6 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 		this.knowledgeBase = kb;
 		this.name = name;
 		kb.getManager().putTerminologyObject(this);
-		init();
 	}
 
 	@Override
@@ -129,8 +119,8 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	 * @param child a new child of this {@link AbstractTerminologyObject}
 	 * @see #addParent(AbstractTerminologyObject parent)
 	 */
-	public void addChild(AbstractTerminologyObject child) {
-		if (!hasChild(child)) {
+	protected void addChild(AbstractTerminologyObject child) {
+		if (!children.contains(child)) {
 			addParentChildLink(this, child);
 		}
 	}
@@ -164,45 +154,6 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 		if (getKnowledgeBase() != null) {
 			getKnowledgeBase().addKnowledge(problemsolver, knowledgeSlice,
 					knowledgeContext);
-		}
-	}
-
-	/**
-	 * Adds this AbstractTerminologyObject as parent of new children.
-	 */
-	private synchronized void addToNewChildren(List<AbstractTerminologyObject> children) {
-		if (children != null) {
-			for (AbstractTerminologyObject namedObject : children) {
-				namedObject.addParent(this);
-			}
-		}
-	}
-
-	/**
-	 * Adds the specified list of {@link AbstractTerminologyObject} instances as
-	 * parents to the list of parents. The objects are also linked as children
-	 * to the specified parent.
-	 * 
-	 * @param newParents the list parents to be added
-	 */
-	private synchronized void addToNewParents(List<AbstractTerminologyObject> newParents) {
-		if (newParents != null) {
-			for (AbstractTerminologyObject parent : newParents) {
-				parent.addChild(this);
-			}
-		}
-	}
-
-	/**
-	 * Adds this {@link AbstractTerminologyObject} as a child to the specified
-	 * parent and the specified parent is added to the 'parents' list of this
-	 * instance. This instance is appended to the parent's list of children.
-	 * 
-	 * @param parent a new parent of this instance
-	 */
-	public synchronized void addParent(AbstractTerminologyObject parent) {
-		if (!hasParent(parent)) {
-			addParentChildLink(parent, this);
 		}
 	}
 
@@ -243,30 +194,6 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	}
 
 	/**
-	 * Checks, whether this instance has the specified
-	 * {@link AbstractTerminologyObject} as parent.
-	 * 
-	 * @param namedObject the specified object that is possibly a parent
-	 * @return true, if namedObject is a parent of this instance
-	 */
-	public boolean hasParent(TerminologyObject namedObject) {
-		if (getParents() == null) {
-			return false;
-		}
-		return Arrays.asList(getParents()).contains(namedObject);
-	}
-
-	/**
-	 * Tests, if the specified object is a child of this instance.
-	 * 
-	 * @param child the object to test
-	 * @return true if the specified object is a child of this instance
-	 */
-	public boolean hasChild(AbstractTerminologyObject child) {
-		return child.hasParent(this);
-	}
-
-	/**
 	 * The text of a {@link AbstractTerminologyObject} is the name or a short
 	 * description of the object. Please keep it brief and use other fields for
 	 * longer content (e.g., prompt for {@link Question}, and comments for
@@ -290,8 +217,8 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	 * 
 	 * @param child the specified child to be removed from the list
 	 */
-	public boolean removeChild(AbstractTerminologyObject child) {
-		if (hasChild(child)) {
+	protected boolean removeChild(AbstractTerminologyObject child) {
+		if (children.contains(child)) {
 			removeParentChildLink(this, child);
 			return true;
 		}
@@ -392,65 +319,6 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 		}
 	}
 
-	private synchronized void removeAllChildren() {
-		if ((children != null)) {
-			while (!children.isEmpty()) {
-				AbstractTerminologyObject child = children.get(0);
-				child.removeParent(this);
-			}
-		}
-	}
-
-	/**
-	 * Removes this AbstractTerminologyObject as children of parents.
-	 */
-	private synchronized void removeAllParents() {
-		if (parents != null) {
-			while (!parents.isEmpty()) {
-				AbstractTerminologyObject parent = parents.get(0);
-				removeParent(parent);
-			}
-		}
-	}
-
-	/**
-	 * Removes the specified {@link AbstractTerminologyObject} instance from the
-	 * list of parents.
-	 * 
-	 * @param parent the instance to be removed from the list of parents
-	 */
-	public synchronized void removeParent(AbstractTerminologyObject parent) {
-		if (hasParent(parent)) {
-			parents.remove(parent);
-			removeParentChildLink(parent, this);
-		}
-	}
-
-	/**
-	 * Sets the specified list of {@link AbstractTerminologyObject} instances as
-	 * the complete list of children of this object.
-	 * 
-	 * @param the new list of children of this instance
-	 */
-	public void setChildren(List<AbstractTerminologyObject> children) {
-		removeAllChildren();
-		addToNewChildren(children);
-		this.children = children;
-	}
-
-	/**
-	 * Sets the specified list of {@link AbstractTerminologyObject} instances as
-	 * the complete list of parents of this object.
-	 * 
-	 * @param the new list of parents of this instance
-	 */
-	public void setParents(List<AbstractTerminologyObject> parents) {
-		removeAllParents(); // from the old parents
-		addToNewParents(parents); // to the new parents
-		this.parents = parents; // NB: set the parents here!
-		// due to the hasParent/hasChild check!!
-	}
-
 	@Override
 	public String toString() {
 		return getName();
@@ -512,5 +380,13 @@ public abstract class AbstractTerminologyObject implements TerminologyObject,
 	@Override
 	public InfoStore getInfoStore() {
 		return infoStore;
+	}
+
+	@Override
+	public void removeFromKnowledgeBase() {
+		for (AbstractTerminologyObject object : parents) {
+			object.children.remove(this);
+		}
+		knowledgeBase.getManager().remove(this);
 	}
 }
