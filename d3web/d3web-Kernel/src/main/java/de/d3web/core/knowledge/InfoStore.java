@@ -10,7 +10,6 @@
 
 package de.d3web.core.knowledge;
 
-import java.net.URL;
 import java.util.Collection;
 import java.util.Locale;
 
@@ -18,33 +17,6 @@ import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.utilities.Triple;
 
 public interface InfoStore {
-
-	/**
-	 * Default key to store the title text of a terminology object. The type of
-	 * the info item stored should be {@link String}.
-	 */
-	public static final String TITLE = "title";
-
-	/**
-	 * Default key to store the descriptive text of a terminology object. The
-	 * type of the info item stored should be {@link String}.
-	 */
-	public static final String DESCRIPTION = "description";
-
-	/**
-	 * Default key to store a link of a terminology object. The type of the info
-	 * item stored should be {@link URL}.
-	 */
-	public static final String LINK = "link";
-
-	/**
-	 * Default key to store the relative pathname of a knowledge base resource
-	 * associated to a terminology object. The type of the info item stored
-	 * should be {@link String}. You may use the knowledge base method
-	 * {@link KnowledgeBase#getResource(String)} to access the associated
-	 * resource.
-	 */
-	public static final String RESOURCE = "resource";
 
 	public static final Locale NO_LANGUAGE = null;
 
