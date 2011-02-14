@@ -20,7 +20,6 @@
 
 package de.d3web.core.inference;
 
-
 /**
  * Specifies that implementing classes are used as explict knowledge. Each
  * KnowledgeSlice needs to have a problem-solver context in which it is relevant
@@ -57,14 +56,4 @@ public interface KnowledgeSlice {
 	// slices to know where they are added. This may be useful for rules but not
 	// appropriate for general knowledge slices.
 	public void remove();
-
-	/**
-	 * generic verbalization method
-	 * 
-	 * @return java.lang.String
-	 */
-	// TODO: vb: definitely remove this. toString should NOT be specified with a
-	// new sematics (here: xml!)
-	@Override
-	public String toString();
 }
