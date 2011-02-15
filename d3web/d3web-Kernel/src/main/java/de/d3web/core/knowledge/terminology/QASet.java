@@ -76,4 +76,16 @@ public abstract class QASet extends AbstractTerminologyObject implements Intervi
 	public boolean removeChild(QASet child) {
 		return super.removeChild(child);
 	}
+
+	/**
+	 * Inserts the child at the specified position. If it is already contained
+	 * in another position, this position will be overwritten
+	 * 
+	 * @created 15.02.2011
+	 * @param child
+	 * @param pos
+	 */
+	public void addChild(QASet child, int pos) {
+		super.addChild(child, pos);
+	}
 }

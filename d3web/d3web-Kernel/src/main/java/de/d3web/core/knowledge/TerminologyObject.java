@@ -31,7 +31,12 @@ public interface TerminologyObject extends NamedObject {
 
 	KnowledgeBase getKnowledgeBase();
 
-	void removeFromKnowledgeBase();
+	/**
+	 * Removes the object from all parents
+	 * 
+	 * @created 15.02.2011
+	 */
+	void destroy();
 
 	// --- storing knowledge ---
 	KnowledgeStore getKnowledgeStore();

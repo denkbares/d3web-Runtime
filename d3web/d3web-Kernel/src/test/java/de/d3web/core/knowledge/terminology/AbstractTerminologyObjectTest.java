@@ -123,7 +123,7 @@ public class AbstractTerminologyObjectTest {
 		assertThat(children[2], is(equalTo((TerminologyObject) childThree)));
 
 		// now move the childOne (currently at index 0) at the end of the list
-		parent.moveChildToPosition(childOne, Integer.MAX_VALUE);
+		parent.addChild(childOne, Integer.MAX_VALUE);
 		// verify all the new positions:
 		children = parent.getChildren();
 		assertThat(children[0], is(equalTo((TerminologyObject) childTwo)));

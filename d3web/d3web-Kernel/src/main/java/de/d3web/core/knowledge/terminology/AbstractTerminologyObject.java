@@ -206,10 +206,17 @@ public abstract class AbstractTerminologyObject implements TerminologyObject {
 		return children.toArray(new TerminologyObject[children.size()]);
 	}
 
-	public void moveChildToPosition(AbstractTerminologyObject child, int pos) {
-		if (children.remove(child)) {
-			children.add(pos > children.size() ? children.size() : pos, child);
-		}
+	/**
+	 * Inserts the child at the specified position. If it is already contained
+	 * in another position, this position will be overwritten
+	 * 
+	 * @created 15.02.2011
+	 * @param child
+	 * @param pos
+	 */
+	protected void addChild(AbstractTerminologyObject child, int pos) {
+		children.remove(child);
+		children.add(pos > children.size() ? children.size() : pos, child);
 	}
 
 	@Override
@@ -218,7 +225,7 @@ public abstract class AbstractTerminologyObject implements TerminologyObject {
 	}
 
 	@Override
-	public void removeFromKnowledgeBase() {
+	public void destroy() {
 		for (AbstractTerminologyObject object : parents) {
 			object.children.remove(this);
 		}
