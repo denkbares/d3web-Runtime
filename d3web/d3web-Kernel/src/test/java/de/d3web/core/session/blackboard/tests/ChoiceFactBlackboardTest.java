@@ -93,7 +93,7 @@ public class ChoiceFactBlackboardTest {
 		assertEquals(noFactValue, UndefinedValue.getInstance());
 
 		// Assign the value 'monday' to 'weekday'
-		Choice mondayChoice = kbm.findChoice(weekdayQuestion, "Monday");
+		Choice mondayChoice = KnowledgeBaseManagement.findChoice(weekdayQuestion, "Monday");
 		assertNotNull("Choice 'Monday' not found in question 'Weekday'", mondayChoice);
 		Fact weekday_is_monday = createFact(weekdayQuestion, new ChoiceValue(mondayChoice));
 		blackboard.addValueFact(weekday_is_monday);
@@ -103,7 +103,7 @@ public class ChoiceFactBlackboardTest {
 
 		// Assign another value 'tuesday' to 'weekday'; same source, should
 		// overwrite 'monday'
-		Choice tuesdayChoice = kbm.findChoice(weekdayQuestion, "Tuesday");
+		Choice tuesdayChoice = KnowledgeBaseManagement.findChoice(weekdayQuestion, "Tuesday");
 		assertNotNull("Choice 'Tuesday' not found in question 'Weekday'", tuesdayChoice);
 		Fact weekday_is_tuesday = createFact(weekdayQuestion,
 				new ChoiceValue(tuesdayChoice), alternativeSource);
@@ -138,7 +138,7 @@ public class ChoiceFactBlackboardTest {
 		assertEquals(noFactValue, UndefinedValue.getInstance());
 
 		// Assign the value 'monday' to 'weekday'
-		Choice mondayChoice = kbm.findChoice(weekdayQuestion, "Monday");
+		Choice mondayChoice = KnowledgeBaseManagement.findChoice(weekdayQuestion, "Monday");
 		assertNotNull("Choice 'Monday' not found in question 'Weekday'", mondayChoice);
 		Fact weekday_is_monday = createFact(weekdayQuestion, new ChoiceValue(mondayChoice));
 		blackboard.addValueFact(weekday_is_monday);
@@ -148,7 +148,7 @@ public class ChoiceFactBlackboardTest {
 
 		// Assign another value 'tuesday' to 'weekday'; same source, should
 		// overwrite 'monday'
-		Choice tuesdayChoice = kbm.findChoice(weekdayQuestion, "Tuesday");
+		Choice tuesdayChoice = KnowledgeBaseManagement.findChoice(weekdayQuestion, "Tuesday");
 		assertNotNull("Choice 'Tuesday' not found in question 'Weekday'", tuesdayChoice);
 		Fact weekday_is_tuesday = createFact(weekdayQuestion, new ChoiceValue(tuesdayChoice));
 		blackboard.addValueFact(weekday_is_tuesday);
@@ -181,14 +181,14 @@ public class ChoiceFactBlackboardTest {
 		assertEquals(noFactValue, UndefinedValue.getInstance());
 
 		// Assign 'red' to the question 'colors'
-		Choice redChoice = kbm.findChoice(colors, "red");
+		Choice redChoice = KnowledgeBaseManagement.findChoice(colors, "red");
 		assertNotNull("Choice 'red' not found in knowledge base.", redChoice);
 		Value red = new MultipleChoiceValue(new ChoiceID(redChoice));
 		blackboard.addValueFact(createFact(colors, red));
 		assertEquals(red, blackboard.getValue(colors));
 
 		// Assign 'red+green' to the question 'colors'
-		Choice greenChoice = kbm.findChoice(colors, "green");
+		Choice greenChoice = KnowledgeBaseManagement.findChoice(colors, "green");
 		assertNotNull("Choice 'red' not found in knowledge base.", redChoice);
 		Value red_and_green = new MultipleChoiceValue(
 				new ChoiceID(redChoice),
@@ -221,7 +221,7 @@ public class ChoiceFactBlackboardTest {
 		assertEquals(noFactValue, UndefinedValue.getInstance());
 
 		// Assign 'red' to the question 'colors'
-		Choice redChoice = kbm.findChoice(colors, "red");
+		Choice redChoice = KnowledgeBaseManagement.findChoice(colors, "red");
 		assertNotNull("Choice 'red' not found in knowledge base.", redChoice);
 		Value red = new MultipleChoiceValue(new ChoiceID(redChoice));
 		Fact color_is_red = createFact(colors, red);
@@ -229,7 +229,7 @@ public class ChoiceFactBlackboardTest {
 		assertEquals(red, blackboard.getValue(colors));
 
 		// Assign 'red+green' to the question 'colors'
-		Choice greenChoice = kbm.findChoice(colors, "green");
+		Choice greenChoice = KnowledgeBaseManagement.findChoice(colors, "green");
 		assertNotNull("Choice 'red' not found in knowledge base.", redChoice);
 		Value red_and_green = new MultipleChoiceValue(
 				new ChoiceID(redChoice),

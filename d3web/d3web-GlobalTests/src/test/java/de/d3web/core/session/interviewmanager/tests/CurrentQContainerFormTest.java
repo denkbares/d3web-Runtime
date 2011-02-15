@@ -82,8 +82,8 @@ public class CurrentQContainerFormTest {
 		pregnancyQuestions = kbm.createQContainer("pregnancyQuestions", root);
 		sex = kbm.createQuestionOC("sex", pregnancyQuestions, new String[] {
 				"male", "female" });
-		female = new ChoiceValue(kbm.findChoice(sex, "female"));
-		male = new ChoiceValue(kbm.findChoice(sex, "male"));
+		female = new ChoiceValue(KnowledgeBaseManagement.findChoice(sex, "female"));
+		male = new ChoiceValue(KnowledgeBaseManagement.findChoice(sex, "male"));
 		pregnant = kbm.createQuestionOC("pregnant", sex, new String[] {
 				"yes", "no" });
 		ask_for_pregnancy = kbm.createQuestionOC("ask for pregnancy", pregnancyQuestions,
@@ -127,7 +127,8 @@ public class CurrentQContainerFormTest {
 
 		// SET : second question of pregnancyQuestions
 		// EXPECT: now 'heightWeightQuestions' should be active
-		setValue(ask_for_pregnancy, new ChoiceValue(kbm.findChoice(ask_for_pregnancy, "no")));
+		setValue(ask_for_pregnancy,
+				new ChoiceValue(KnowledgeBaseManagement.findChoice(ask_for_pregnancy, "no")));
 		formObject = session.getInterview().nextForm().getInterviewObject();
 		assertEquals(heightWeightQuestions, formObject);
 
@@ -167,7 +168,8 @@ public class CurrentQContainerFormTest {
 		// sex=female => follow-up question is indicated
 		// EXPECT: pregnancyQuestions should be still active, because of
 		// follow-up-questions
-		setValue(ask_for_pregnancy, new ChoiceValue(kbm.findChoice(ask_for_pregnancy, "no")));
+		setValue(ask_for_pregnancy,
+				new ChoiceValue(KnowledgeBaseManagement.findChoice(ask_for_pregnancy, "no")));
 		setValue(sex, female);
 		Form form = session.getInterview().nextForm();
 		assertEquals(pregnancyQuestions, form.getInterviewObject());
@@ -176,7 +178,7 @@ public class CurrentQContainerFormTest {
 		// EXPECT: no the next qcontainer 'heightWeightQuestions' should be
 		// active,
 		// since all questions (including follow-ups) have been answered
-		setValue(pregnant, new ChoiceValue(kbm.findChoice(pregnant, "no")));
+		setValue(pregnant, new ChoiceValue(KnowledgeBaseManagement.findChoice(pregnant, "no")));
 		assertEquals(heightWeightQuestions, session.getInterview().nextForm().getInterviewObject());
 
 		// SET : answer the questions 'height' and 'weight'

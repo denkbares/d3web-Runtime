@@ -82,8 +82,8 @@ public class DialogAgendaTest {
 		pregnancyQuestions = kbm.createQContainer("pregnancyQuestions", root);
 		sex = kbm.createQuestionOC("sex", pregnancyQuestions, new String[] {
 				"male", "female" });
-		female = new ChoiceValue(kbm.findChoice(sex, "female"));
-		male = new ChoiceValue(kbm.findChoice(sex, "male"));
+		female = new ChoiceValue(KnowledgeBaseManagement.findChoice(sex, "female"));
+		male = new ChoiceValue(KnowledgeBaseManagement.findChoice(sex, "male"));
 		pregnant = kbm.createQuestionOC("pregnant", sex, new String[] {
 				"yes", "no" });
 		ask_for_pregnancy = kbm.createQuestionOC("ask for pregnancy", pregnancyQuestions,
@@ -208,7 +208,8 @@ public class DialogAgendaTest {
 
 		// Answer the second & last question in the qcontainer, so the
 		// qcontainer should be INACTIVE
-		setValue(ask_for_pregnancy, new ChoiceValue(kbm.findChoice(ask_for_pregnancy, "no")));
+		setValue(ask_for_pregnancy,
+				new ChoiceValue(KnowledgeBaseManagement.findChoice(ask_for_pregnancy, "no")));
 		assertTrue(agenda.hasState(pregnancyQuestions, InterviewState.INACTIVE));
 
 		// Set the first answer to undefined, so the qcontainer should be ACTIVE

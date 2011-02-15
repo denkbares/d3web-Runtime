@@ -103,10 +103,9 @@ public class TestKfz {
 		QuestionNum Mf5 = (QuestionNum) kb.getManager().searchQuestion(
 				"Üblicher Kraftstoffverbrauch/100km");
 		QuestionMC Mf7 = (QuestionMC) kb.getManager().searchQuestion("Motorgeräusche");
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase());
 
-		Choice Mf7a1 = kbm.findChoice(Mf7, "klopfen");
-		Choice Mf7a2 = kbm.findChoice(Mf7, "klingeln");
+		Choice Mf7a1 = KnowledgeBaseManagement.findChoice(Mf7, "klopfen");
+		Choice Mf7a2 = KnowledgeBaseManagement.findChoice(Mf7, "klingeln");
 		Choice[] choices = new Choice[] {
 				Mf7a1, Mf7a2 };
 		List<Choice> values = new ArrayList<Choice>(choices.length);
@@ -144,8 +143,7 @@ public class TestKfz {
 				"Tatsächlicher Kraftstoffverbrauch/100km");
 		QuestionOC Mf4 = (QuestionOC) kb.getManager().searchQuestion(
 				"Bewertung Kraftstoffverbrauch");
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase());
-		Choice Mf4a1 = kbm.findChoice(Mf4, "normal");
+		Choice Mf4a1 = KnowledgeBaseManagement.findChoice(Mf4, "normal");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, Mf4,
 						new ChoiceValue(Mf4a1), PSMethodUserSelected.getInstance(),
@@ -182,7 +180,7 @@ public class TestKfz {
 				"Error: isDone should be false (1)",
 				UndefinedValue.getInstance().equals(session.getBlackboard().getValue(questionOC)));
 
-		Choice answerChoice = KnowledgeBaseManagement.createInstance(kb).findChoice(questionOC,
+		Choice answerChoice = KnowledgeBaseManagement.findChoice(questionOC,
 				"schwarz");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, questionOC,

@@ -114,7 +114,7 @@ public class RunningACase {
 		pregnant = kbm.createQuestionOC("pregnant", demoQuestions, new String[] {
 				"yes",
 				"no" });
-		yes = new ChoiceValue(kbm.findChoice(pregnant, "yes"));
+		yes = new ChoiceValue(KnowledgeBaseManagement.findChoice(pregnant, "yes"));
 		weight = kbm.createQuestionNum("weight", demoQuestions);
 
 		dangerousMood = kbm.createSolution("dangerousMood");

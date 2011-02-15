@@ -61,17 +61,19 @@ public class DefaultFactTest {
 	public void setUp() throws Exception {
 		InitPluginManager.init();
 		kbm = KnowledgeBaseManagement.createInstance();
-		
+
 		materialQuestion = kbm.createQuestionOC("materialQuestion",
 				kbm.getKnowledgeBase().getRootQASet(),
-				new String[] { "Steel", "Wood", "Plastic" });
-		wood = new ChoiceValue(kbm.findChoice(materialQuestion, "Wood"));
-				
+				new String[] {
+						"Steel", "Wood", "Plastic" });
+		wood = new ChoiceValue(KnowledgeBaseManagement.findChoice(materialQuestion, "Wood"));
+
 		material_is_wood = FactFactory.createUserEnteredFact(materialQuestion, wood);
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.blackboard.DefaultFact#hashCode()}.
+	 * Test method for
+	 * {@link de.d3web.core.session.blackboard.DefaultFact#hashCode()}.
 	 */
 	@Test
 	public void testHashCode() {
@@ -102,7 +104,8 @@ public class DefaultFactTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.blackboard.DefaultFact#toString()}.
+	 * Test method for
+	 * {@link de.d3web.core.session.blackboard.DefaultFact#toString()}.
 	 */
 	@Test
 	public void testToString() {
@@ -111,7 +114,9 @@ public class DefaultFactTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.blackboard.DefaultFact#equals(java.lang.Object)}.
+	 * Test method for
+	 * {@link de.d3web.core.session.blackboard.DefaultFact#equals(java.lang.Object)}
+	 * .
 	 */
 	@Test
 	public void testEqualsObject() {

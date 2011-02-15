@@ -427,7 +427,7 @@ public final class XMLUtil {
 		}
 
 		if (q instanceof QuestionChoice) {
-			Choice choice = KnowledgeBaseManagement.createInstance(q.getKnowledgeBase()).findChoice(
+			Choice choice = KnowledgeBaseManagement.findChoice(
 					(QuestionChoice) q, idOrValue);
 			return new ChoiceValue(choice);
 		}

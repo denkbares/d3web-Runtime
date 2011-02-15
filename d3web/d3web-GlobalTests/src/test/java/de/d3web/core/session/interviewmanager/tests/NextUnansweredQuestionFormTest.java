@@ -81,8 +81,8 @@ public class NextUnansweredQuestionFormTest {
 		pregnancyQuestions = kbm.createQContainer("pregnancyQuestions", root);
 		sex = kbm.createQuestionOC("sex", pregnancyQuestions, new String[] {
 				"male", "female" });
-		female = new ChoiceValue(kbm.findChoice(sex, "female"));
-		male = new ChoiceValue(kbm.findChoice(sex, "male"));
+		female = new ChoiceValue(KnowledgeBaseManagement.findChoice(sex, "female"));
+		male = new ChoiceValue(KnowledgeBaseManagement.findChoice(sex, "male"));
 		pregnant = kbm.createQuestionOC("pregnant", sex, new String[] {
 				"yes", "no" });
 		ask_for_pregnancy = kbm.createQuestionOC("ask for pregnancy", pregnancyQuestions,
@@ -124,7 +124,7 @@ public class NextUnansweredQuestionFormTest {
 
 		// ANSWER: pregnant=no
 		// EXPECT: no more questions to ask
-		setValue(pregnant, new ChoiceValue(kbm.findChoice(pregnant, "no")));
+		setValue(pregnant, new ChoiceValue(KnowledgeBaseManagement.findChoice(pregnant, "no")));
 		Form form = session.getInterview().nextForm();
 		assertEquals(EmptyForm.getInstance(), form);
 	}

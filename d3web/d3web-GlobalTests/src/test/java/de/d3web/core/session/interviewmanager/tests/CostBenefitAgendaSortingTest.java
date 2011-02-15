@@ -80,8 +80,8 @@ public class CostBenefitAgendaSortingTest {
 		pregnancyQuestions = kbm.createQContainer("pregnancyQuestions", root);
 		sex = kbm.createQuestionOC("sex", pregnancyQuestions, new String[] {
 				"male", "female" });
-		female = new ChoiceValue(kbm.findChoice(sex, "female"));
-		male = new ChoiceValue(kbm.findChoice(sex, "male"));
+		female = new ChoiceValue(KnowledgeBaseManagement.findChoice(sex, "female"));
+		male = new ChoiceValue(KnowledgeBaseManagement.findChoice(sex, "male"));
 		name = kbm.createQuestionText("name", pregnancyQuestions);
 
 		// Container: heightWeightQuestions = { weight, height } 

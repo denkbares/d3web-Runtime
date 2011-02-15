@@ -82,9 +82,9 @@ public class IndicationInACyclicHierarchy {
 		// insert cyclic child relation
 		pregnancyTest.addChild(pregnant);
 
-		certain = new ChoiceValue(kbm.findChoice(pregnant, "certain"));
-		dontKnow = new ChoiceValue(kbm.findChoice(pregnant, "dontKnow"));
-		yes = new ChoiceValue(kbm.findChoice(pregnancyTest, "yes"));
+		certain = new ChoiceValue(KnowledgeBaseManagement.findChoice(pregnant, "certain"));
+		dontKnow = new ChoiceValue(KnowledgeBaseManagement.findChoice(pregnant, "dontKnow"));
+		yes = new ChoiceValue(KnowledgeBaseManagement.findChoice(pregnancyTest, "yes"));
 
 		RuleFactory.createIndicationRule(pregnancyQuestions, new CondEqual(pregnant,
 				dontKnow));

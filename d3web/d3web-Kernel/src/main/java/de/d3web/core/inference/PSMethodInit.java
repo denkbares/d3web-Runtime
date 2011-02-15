@@ -87,7 +87,7 @@ public class PSMethodInit implements PSMethod {
 						QuestionOC qc = (QuestionOC) q;
 						String choiceID = ids.get(0);
 						Choice choice =
-								KnowledgeBaseManagement.createInstance(kb).findChoice(qc, choiceID);
+								KnowledgeBaseManagement.findChoice(qc, choiceID);
 						if (choice != null) {
 							Fact fact = FactFactory.createFact(session, qc,
 									new ChoiceValue(choice),

@@ -84,8 +84,8 @@ public class RepeatedIndicationTest {
 		happy = kbm.createQuestionOC("happy", pregnancyQuestions, new String[] {
 				"yes", "no" });
 
-		yes = new ChoiceValue(kbm.findChoice(pregnant, "yes"));
-		male = new ChoiceValue(kbm.findChoice(sex, "male"));
+		yes = new ChoiceValue(KnowledgeBaseManagement.findChoice(pregnant, "yes"));
+		male = new ChoiceValue(KnowledgeBaseManagement.findChoice(sex, "male"));
 
 		// IF (pregnant = yes && sex = m) THEN repeatIndicate (sex)
 		List<Condition> conditions = new ArrayList<Condition>(2);

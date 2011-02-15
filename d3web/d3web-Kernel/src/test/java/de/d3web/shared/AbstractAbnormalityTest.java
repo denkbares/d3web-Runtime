@@ -105,12 +105,13 @@ public class AbstractAbnormalityTest {
 		QuestionChoice questionOC = kbm.createQuestionOC("questionYN", kb.getRootQASet(),
 				new String[] {
 						"yes", "no" });
-		ChoiceValue yes = new ChoiceValue(kbm.findChoice(questionOC, "yes"));
+		ChoiceValue yes = new ChoiceValue(KnowledgeBaseManagement.findChoice(questionOC, "yes"));
 		// before setting the abnormality for this question, the
 		// default-abnormality A5 should be returned:
 		assertThat(AbnormalityUtils.getAbnormality(questionOC, yes), is(Abnormality.A5));
 		// now set the question for the abnormality...
-		questionOC.getInfoStore().addValue(BasicProperties.DEFAULT_ABNORMALITIY, abstractAbnormality);
+		questionOC.getInfoStore().addValue(BasicProperties.DEFAULT_ABNORMALITIY,
+				abstractAbnormality);
 		abstractAbnormality.addValue(yes, Abnormality.A2);
 		// ...and retrieve the abnormality again:
 		// It should be A2 (set in constructor)

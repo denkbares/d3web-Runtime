@@ -244,7 +244,7 @@ public abstract class AbstractDiaFluxTest {
 	protected void setChoiceValue(QuestionOC question, String answerName) {
 		System.out.println("Setting '" + question.getName() + "' to '" + answerName + "'.");
 
-		Choice choice = kbm.findChoice(question, answerName);
+		Choice choice = KnowledgeBaseManagement.findChoice(question, answerName);
 
 		Fact fact = FactFactory.createUserEnteredFact(question, new ChoiceValue(choice));
 

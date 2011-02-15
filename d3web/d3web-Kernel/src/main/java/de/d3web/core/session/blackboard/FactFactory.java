@@ -106,8 +106,7 @@ public final class FactFactory {
 		}
 		if (question instanceof QuestionChoice) {
 			QuestionChoice qc = (QuestionChoice) question;
-			KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(kb);
-			Choice choice = kbm.findChoice(qc, answerID);
+			Choice choice = KnowledgeBaseManagement.findChoice(qc, answerID);
 			if (choice != null) {
 				return createUserEnteredFact(qc, new ChoiceValue(choice));
 			}

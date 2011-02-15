@@ -66,12 +66,12 @@ public class DialogTest {
 				"male", "female" });
 		pregnant = kbm.createQuestionOC("pregnant", sex, new String[] {
 				"yes", "no" });
-		female = new ChoiceValue(kbm.findChoice(sex, "female"));
+		female = new ChoiceValue(KnowledgeBaseManagement.findChoice(sex, "female"));
 
 		ask_for_pregnancy = kbm.createQuestionOC("ask for pregnancy", pregnancyQuestions,
 				new String[] {
 						"yes", "no" });
-		dont_ask = new ChoiceValue(kbm.findChoice(ask_for_pregnancy, "no"));
+		dont_ask = new ChoiceValue(KnowledgeBaseManagement.findChoice(ask_for_pregnancy, "no"));
 
 		heightWeightQuestions = kbm.createQContainer("heightWeightQuestions", root);
 		weight = kbm.createQuestionNum("weight", heightWeightQuestions);
@@ -92,27 +92,35 @@ public class DialogTest {
 
 		// Rule: initQuestion = pregnacyQuestions => INDICATE CONTAINER (
 		// pregnancyQuestions )
-		RuleFactory.createIndicationRule(pregnancyQuestions,
+		RuleFactory.createIndicationRule(
+				pregnancyQuestions,
 				new CondEqual(initQuestion,
-						new ChoiceValue(kbm.findChoice(initQuestion, "pregnacyQuestions"))));
+						new ChoiceValue(KnowledgeBaseManagement.findChoice(initQuestion,
+								"pregnacyQuestions"))));
 
 		// Rule: initQuestion = height+weight => INDICATE CONTAINER (
 		// heightWeightQuestions )
-		RuleFactory.createIndicationRule(heightWeightQuestions,
+		RuleFactory.createIndicationRule(
+				heightWeightQuestions,
 				new CondEqual(initQuestion,
-						new ChoiceValue(kbm.findChoice(initQuestion, "height+weight"))));
+						new ChoiceValue(KnowledgeBaseManagement.findChoice(initQuestion,
+								"height+weight"))));
 
 		// Rule: initQuestion = all => INDICATE CONTAINER ( pregnancyQuestions,
 		// heightWeightQuestions )
-		RuleFactory.createIndicationRule(Arrays.asList(new QASet[] {
-				pregnancyQuestions, heightWeightQuestions }),
-				new CondEqual(initQuestion, new ChoiceValue(kbm.findChoice(initQuestion, "all"))));
+		RuleFactory.createIndicationRule(
+				Arrays.asList(new QASet[] {
+						pregnancyQuestions, heightWeightQuestions }),
+				new CondEqual(initQuestion, new ChoiceValue(KnowledgeBaseManagement.findChoice(
+						initQuestion, "all"))));
 
 		// Rule: pregnancyContainerIndication = yes => INDICATE CONTAINER (
 		// pregnancyQuestions )
-		RuleFactory.createIndicationRule(pregnancyQuestions,
+		RuleFactory.createIndicationRule(
+				pregnancyQuestions,
 				new CondEqual(pregnancyContainerIndication,
-						new ChoiceValue(kbm.findChoice(pregnancyContainerIndication, "yes"))));
+						new ChoiceValue(KnowledgeBaseManagement.findChoice(
+								pregnancyContainerIndication, "yes"))));
 
 		session = SessionFactory.createSession(kbm.getKnowledgeBase());
 	}
@@ -163,7 +171,8 @@ public class DialogTest {
 		// SET: initQuestion = all
 		// EXPECT: INDICATE CONTAINER ( pregnancyQuestions,
 		// heightWeightQuestions )
-		setValue(initQuestion, new ChoiceValue(kbm.findChoice(initQuestion, "all")));
+		setValue(initQuestion,
+				new ChoiceValue(KnowledgeBaseManagement.findChoice(initQuestion, "all")));
 		assertEquals(
 				new Indication(State.INDICATED),
 				session.getBlackboard().getIndication(pregnancyQuestions));
@@ -188,7 +197,8 @@ public class DialogTest {
 		// SET: initQuestion = all
 		// EXPECT: INDICATE CONTAINER ( pregnancyQuestions,
 		// heightWeightQuestions )
-		setValue(initQuestion, new ChoiceValue(kbm.findChoice(initQuestion, "all")));
+		setValue(initQuestion,
+				new ChoiceValue(KnowledgeBaseManagement.findChoice(initQuestion, "all")));
 		assertEquals(
 				new Indication(State.INDICATED),
 				session.getBlackboard().getIndication(pregnancyQuestions));
@@ -199,7 +209,7 @@ public class DialogTest {
 		// SET: pregnancyContainerIndication = yes
 		// EXPECT: INDICATE CONTAINER ( pregnancyQuestions ) // i.e. doubled
 		// indication of pregnancyQuestions
-		setValue(pregnancyContainerIndication, new ChoiceValue(kbm.findChoice(
+		setValue(pregnancyContainerIndication, new ChoiceValue(KnowledgeBaseManagement.findChoice(
 				pregnancyContainerIndication, "yes")));
 		assertEquals(
 				new Indication(State.INDICATED),

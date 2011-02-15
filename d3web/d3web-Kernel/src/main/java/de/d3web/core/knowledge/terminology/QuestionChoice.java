@@ -58,7 +58,7 @@ public abstract class QuestionChoice extends Question {
 	 */
 	@Deprecated
 	public Choice findChoice(String choiceID) {
-		return KnowledgeBaseManagement.createInstance(getKnowledgeBase()).findChoice(this, choiceID);
+		return KnowledgeBaseManagement.findChoice(this, choiceID);
 	}
 
 	/**
