@@ -302,7 +302,7 @@ public class BasicPersistenceHandler implements
 		// father.appendChild(questionsElement);
 
 		Element diagnosisElement = doc.createElement("Diagnoses");
-		List<Solution> solutions = kb.getManager().getSolutions();
+		List<Solution> solutions = new ArrayList<Solution>(kb.getManager().getSolutions());
 		Collections.sort(solutions, new IDObjectComparator());
 		for (Solution diag : solutions) {
 			listener.updateProgress(time++ / abstime, "Saving knowledge base: diagnosis");

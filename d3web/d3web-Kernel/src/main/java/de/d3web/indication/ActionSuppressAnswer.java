@@ -22,6 +22,7 @@ package de.d3web.indication;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.inference.PSAction;
@@ -44,7 +45,7 @@ public class ActionSuppressAnswer extends PSAction {
 	private QuestionChoice question = null;
 
 	/* alternatives that should be suppressed, if rule fires */
-	private final List<ChoiceID> suppress = null;
+	private final List<ChoiceID> suppress = new LinkedList<ChoiceID>();
 
 	/**
 	 * Creates a new ActionSuppressAnswer for the given corresponding rule

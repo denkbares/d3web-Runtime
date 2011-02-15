@@ -112,6 +112,9 @@ public abstract class AbstractTerminologyObject implements TerminologyObject {
 	}
 
 	private static void addParentChildLink(AbstractTerminologyObject parent, AbstractTerminologyObject child) {
+		if (parent.getKnowledgeBase() != child.getKnowledgeBase()) {
+			throw new IllegalArgumentException("KnowledgeBase beetween parent and child differs");
+		}
 		parent.children.add(child);
 		child.parents.add(parent);
 	}

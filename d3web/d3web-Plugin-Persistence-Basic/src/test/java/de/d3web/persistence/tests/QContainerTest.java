@@ -48,12 +48,13 @@ public class QContainerTest {
 	private QContainerHandler qcw;
 	private XMLTag isTag;
 	private XMLTag shouldTag;
+	private KnowledgeBase kb;
 
 	@Before
 	public void setUp() throws IOException {
 		InitPluginManager.init();
-
-		qc1 = new QContainer(new KnowledgeBase(), "c1");
+		kb = new KnowledgeBase();
+		qc1 = new QContainer(kb, "c1");
 
 		shouldTag = new XMLTag("QContainer");
 		shouldTag.addAttribute("name", "c1");
@@ -70,7 +71,6 @@ public class QContainerTest {
 
 	@Test
 	public void testQContainerWithChildren() throws Exception {
-		KnowledgeBase kb = new KnowledgeBase();
 		Question q1 = new QuestionText(kb, "q1");
 		qc1.addChild(q1);
 
