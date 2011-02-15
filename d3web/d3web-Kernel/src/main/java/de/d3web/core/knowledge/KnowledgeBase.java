@@ -57,11 +57,6 @@ import de.d3web.core.manage.KnowledgeBaseManagement;
  * KnowledgeSlices (e.g. XCLModel).
  * 
  * @author joba
- * @author Christian Betz
- * @see Solution
- * @see Question
- * @see Rule
- * @see QASet
  */
 public class KnowledgeBase implements NamedObject {
 
@@ -71,6 +66,8 @@ public class KnowledgeBase implements NamedObject {
 
 	// stores all qasets contained in the init questionnaires together with
 	// their respective priority
+	// TODO: vb: move this into a knowledge slice of PSMethodInit and indicate
+	// them by that problem solver
 	private Map<QASet, Integer> initQuestions = new HashMap<QASet, Integer>();
 
 	private final List<Resource> resouces = new ArrayList<Resource>();
