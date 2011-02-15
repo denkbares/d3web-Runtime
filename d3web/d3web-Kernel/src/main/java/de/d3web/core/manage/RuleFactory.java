@@ -378,7 +378,9 @@ public final class RuleFactory {
 
 		ActionSuppressAnswer theAction = new ActionSuppressAnswer();
 		theAction.setQuestion(theQuestion);
-		theAction.setSuppress(theAnswers);
+		for (Choice choice : theAnswers) {
+			theAction.addSuppress(choice);
+		}
 
 		setRuleParams(rule, theAction, theCondition, theRuleException);
 

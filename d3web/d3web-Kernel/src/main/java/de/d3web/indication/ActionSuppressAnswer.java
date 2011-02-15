@@ -21,8 +21,7 @@
 package de.d3web.indication;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.Collections;
 import java.util.List;
 
 import de.d3web.core.inference.PSAction;
@@ -31,6 +30,7 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.values.ChoiceID;
 
 /**
  * RuleAction to suppress alternatives of a specified Question
@@ -44,7 +44,7 @@ public class ActionSuppressAnswer extends PSAction {
 	private QuestionChoice question = null;
 
 	/* alternatives that should be suppressed, if rule fires */
-	private List<Choice> suppress = null;
+	private final List<ChoiceID> suppress = null;
 
 	/**
 	 * Creates a new ActionSuppressAnswer for the given corresponding rule
@@ -89,8 +89,8 @@ public class ActionSuppressAnswer extends PSAction {
 	 * @return a list of alternatives to be suppressed. Creation date: (26.10.00
 	 *         14:57:55)
 	 */
-	public List<Choice> getSuppress() {
-		return suppress;
+	public List<ChoiceID> getSuppress() {
+		return Collections.unmodifiableList(suppress);
 	}
 
 	/**
@@ -101,18 +101,12 @@ public class ActionSuppressAnswer extends PSAction {
 		this.question = theQuestion;
 	}
 
-	/**
-	 * Sets the answers to be suppressed. Creation date: (26.10.00 14:57:55)
-	 */
-	public void setSuppress(Choice[] theSuppressArray) {
-		setSuppress(Arrays.asList(theSuppressArray));
+	public void addSuppress(ChoiceID choiceToSuppress) {
+		this.suppress.add(choiceToSuppress);
 	}
 
-	/**
-	 * Sets the answers to be suppressed. Creation date: (26.10.00 14:57:55)
-	 */
-	public void setSuppress(List<Choice> theSuppress) {
-		this.suppress = theSuppress;
+	public void addSuppress(Choice choiceToSuppress) {
+		this.suppress.add(new ChoiceID(choiceToSuppress));
 	}
 
 	/**
@@ -148,7 +142,9 @@ public class ActionSuppressAnswer extends PSAction {
 	public PSAction copy() {
 		ActionSuppressAnswer a = new ActionSuppressAnswer();
 		a.setQuestion(getQuestion());
-		a.setSuppress(new LinkedList<Choice>(getSuppress()));
+		for (ChoiceID choice : this.suppress) {
+			a.addSuppress(choice);
+		}
 		return a;
 	}
 

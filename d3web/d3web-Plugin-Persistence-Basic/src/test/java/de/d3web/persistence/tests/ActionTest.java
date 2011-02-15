@@ -108,14 +108,11 @@ public class ActionTest {
 	@Test
 	public void testActionSuppressAnswer() throws IOException {
 
-		List<Choice> suppressList = new LinkedList<Choice>();
-		suppressList.add(answerNo);
-		suppressList.add(answerYes);
-
 		ActionSuppressAnswer actionSuppressAnswer = new ActionSuppressAnswer();
 		rule.setAction(actionSuppressAnswer);
 		actionSuppressAnswer.setQuestion(questionMC);
-		actionSuppressAnswer.setSuppress(suppressList);
+		actionSuppressAnswer.addSuppress(answerNo);
+		actionSuppressAnswer.addSuppress(answerYes);
 
 		shouldTag = new XMLTag("Action");
 		shouldTag.addAttribute("type", "ActionSuppressAnswer");

@@ -341,9 +341,9 @@ public final class KnowledgeBaseManagement {
 	 * @param answerText the requested answer text
 	 * @return null, if no answer found for specified params
 	 */
-	public Choice findChoice(QuestionChoice question,
-			String answerText) {
-		if (question == null || question.getAllAlternatives() == null
+	public static Choice findChoice(QuestionChoice question, String answerText) {
+		if (question == null
+				|| question.getAllAlternatives() == null
 				|| answerText == null) {
 			return null;
 		}

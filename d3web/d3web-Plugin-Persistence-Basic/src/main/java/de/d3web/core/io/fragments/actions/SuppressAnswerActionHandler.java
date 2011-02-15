@@ -20,8 +20,6 @@
 package de.d3web.core.io.fragments.actions;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -31,9 +29,8 @@ import org.w3c.dom.NodeList;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.session.values.ChoiceID;
 import de.d3web.indication.ActionSuppressAnswer;
 
 /**
@@ -55,14 +52,13 @@ public class SuppressAnswerActionHandler implements FragmentHandler {
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		Question q = null;
-		List<Choice> suppress = new LinkedList<Choice>();
+		ActionSuppressAnswer action = new ActionSuppressAnswer();
 		NodeList nl = element.getChildNodes();
 		for (int i = 0; i < nl.getLength(); ++i) {
 			Node n = nl.item(i);
 			if (n.getNodeName().equalsIgnoreCase("Question")) {
 				String id = n.getAttributes().getNamedItem("name").getNodeValue();
-				q = kb.getManager().searchQuestion(id);
+				action.setQuestion((QuestionChoice) kb.getManager().searchQuestion(id));
 			}
 			else if (n.getNodeName().equalsIgnoreCase("Suppress")) {
 				NodeList sanslist = n.getChildNodes();
@@ -70,15 +66,11 @@ public class SuppressAnswerActionHandler implements FragmentHandler {
 					Node answer = sanslist.item(k);
 					if (answer.getNodeName().equalsIgnoreCase("Answer")) {
 						String id = answer.getAttributes().getNamedItem("name").getNodeValue();
-						Choice ans = kb.getManager().searchAnswerChoice(id);
-						suppress.add(ans);
+						action.addSuppress(new ChoiceID(id));
 					}
 				}
 			}
 		}
-		ActionSuppressAnswer action = new ActionSuppressAnswer();
-		action.setQuestion((QuestionChoice) q);
-		action.setSuppress(suppress);
 		return action;
 	}
 
@@ -89,9 +81,9 @@ public class SuppressAnswerActionHandler implements FragmentHandler {
 		element.setAttribute("type", "ActionSuppressAnswer");
 		XMLUtil.appendQuestionLinkElement(element, action.getQuestion());
 		Element suppressNode = doc.createElement("Suppress");
-		for (Choice a : action.getSuppress()) {
+		for (ChoiceID choice : action.getSuppress()) {
 			Element answerNode = doc.createElement("Answer");
-			answerNode.setAttribute("name", a.getName());
+			answerNode.setAttribute("name", choice.getText());
 			suppressNode.appendChild(answerNode);
 		}
 		element.appendChild(suppressNode);

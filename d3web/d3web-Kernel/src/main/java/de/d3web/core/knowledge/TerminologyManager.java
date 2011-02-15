@@ -25,12 +25,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
 
 /**
@@ -108,13 +106,7 @@ public class TerminologyManager {
 	 *         {@link KnowledgeBase}
 	 */
 	public List<Solution> getSolutions() {
-		List<Solution> solutions = new ArrayList<Solution>();
-		for (NamedObject o : objectNameMap.values()) {
-			if (o instanceof Solution) {
-				solutions.add((Solution) o);
-			}
-		}
-		return solutions;
+		return getObjects(Solution.class);
 	}
 
 	/**
@@ -124,13 +116,7 @@ public class TerminologyManager {
 	 *         contained in this {@link KnowledgeBase}
 	 */
 	public List<QContainer> getQContainers() {
-		List<QContainer> qcontainers = new ArrayList<QContainer>();
-		for (NamedObject o : objectNameMap.values()) {
-			if (o instanceof QContainer) {
-				qcontainers.add((QContainer) o);
-			}
-		}
-		return qcontainers;
+		return getObjects(QContainer.class);
 	}
 
 	/**
@@ -141,36 +127,25 @@ public class TerminologyManager {
 	 * @return list of all questions contained in this KnowledgeBase
 	 */
 	public List<Question> getQuestions() {
-		List<Question> questions = new ArrayList<Question>();
-		for (NamedObject o : objectNameMap.values()) {
-			if (o instanceof Question) {
-				questions.add((Question) o);
-			}
-		}
-		return Collections.unmodifiableList(questions);
+		return getObjects(Question.class);
 	}
 
 	/**
-	 * Tries to find a {@link Choice} with the specified identifier. Choices are
-	 * only contained in {@link QuestionChoice} instances.
+	 * Returns the (flattened) {@link List} of all {@link TerminologyObject}
+	 * instances represented in this knowledge base being an instance of the
+	 * specified class. The returned list is unmodifiable.
 	 * 
-	 * @param name the unique identifier of the
-	 * @return a {@link Choice} instance having the specified unique identifier,
-	 *         <code>null</code> if no {@link Choice} was found.
+	 * @return list of all TerminologyObjects of a certain type contained in
+	 *         this KnowledgeBase
 	 */
-	public Choice searchAnswerChoice(String name) {
-		for (Question q : getQuestions()) {
-			if (q instanceof QuestionChoice) {
-				QuestionChoice qc = (QuestionChoice) q;
-				List<Choice> allAlternatives = qc.getAllAlternatives();
-				for (Choice a : allAlternatives) {
-					if (a.getName().equals(name)) {
-						return a;
-					}
-				}
+	public <T extends TerminologyObject> List<T> getObjects(Class<T> clazz) {
+		List<T> questions = new ArrayList<T>();
+		for (NamedObject o : objectNameMap.values()) {
+			if (clazz.isInstance(o)) {
+				questions.add(clazz.cast(o));
 			}
 		}
-		return null;
+		return Collections.unmodifiableList(questions);
 	}
 
 	/**
