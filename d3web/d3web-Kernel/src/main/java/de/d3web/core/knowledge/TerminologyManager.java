@@ -202,7 +202,7 @@ public class TerminologyManager {
 	 * @return a {@link QContainer} instance with the specified unique name;
 	 *         <code>null</code> if none found
 	 */
-	public QContainer searchQContainers(String name) {
+	public QContainer searchQContainer(String name) {
 		if (objectNameMap.containsKey(name)) {
 			NamedObject o = objectNameMap.get(name);
 			if (o instanceof QContainer) {

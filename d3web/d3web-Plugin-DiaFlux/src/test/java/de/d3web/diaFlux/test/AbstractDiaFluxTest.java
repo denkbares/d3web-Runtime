@@ -53,7 +53,7 @@ public abstract class AbstractDiaFluxTest {
 	protected static final int TORTURE_LIMIT = 10;
 
 	protected final String fileName;
-	protected KnowledgeBaseManagement kbm;
+	protected KnowledgeBase kb;
 	protected Session session;
 
 	protected QuestionOC quest1;
@@ -128,27 +128,25 @@ public abstract class AbstractDiaFluxTest {
 
 		File file = new File(PATH + fileName);
 
-		KnowledgeBase kb = PersistenceManager.getInstance().load(file);
-
-		kbm = KnowledgeBaseManagement.createInstance(kb);
+		kb = PersistenceManager.getInstance().load(file);
 
 		findQuestions();
 
-		session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		session = SessionFactory.createSession(kb);
 
 	}
 
 	private void findQuestions() {
-		quest1 = (QuestionOC) kbm.findQuestion("QuestOC1");
-		quest2 = (QuestionOC) kbm.findQuestion("QuestOC2");
-		quest3 = (QuestionOC) kbm.findQuestion("QuestOC3");
-		quest4 = (QuestionOC) kbm.findQuestion("QuestOC4");
-		quest5 = (QuestionOC) kbm.findQuestion("QuestOC5");
-		quest6 = (QuestionNum) kbm.findQuestion("QuestNum6");
-		quest7 = (QuestionNum) kbm.findQuestion("QuestNum7");
-		quest8 = (QuestionNum) kbm.findQuestion("QuestNum8");
-		quest9 = (QuestionNum) kbm.findQuestion("QuestNum9");
-		quest10 = (QuestionNum) kbm.findQuestion("QuestNum10");
+		quest1 = (QuestionOC) kb.getManager().searchQuestion("QuestOC1");
+		quest2 = (QuestionOC) kb.getManager().searchQuestion("QuestOC2");
+		quest3 = (QuestionOC) kb.getManager().searchQuestion("QuestOC3");
+		quest4 = (QuestionOC) kb.getManager().searchQuestion("QuestOC4");
+		quest5 = (QuestionOC) kb.getManager().searchQuestion("QuestOC5");
+		quest6 = (QuestionNum) kb.getManager().searchQuestion("QuestNum6");
+		quest7 = (QuestionNum) kb.getManager().searchQuestion("QuestNum7");
+		quest8 = (QuestionNum) kb.getManager().searchQuestion("QuestNum8");
+		quest9 = (QuestionNum) kb.getManager().searchQuestion("QuestNum9");
+		quest10 = (QuestionNum) kb.getManager().searchQuestion("QuestNum10");
 
 	}
 

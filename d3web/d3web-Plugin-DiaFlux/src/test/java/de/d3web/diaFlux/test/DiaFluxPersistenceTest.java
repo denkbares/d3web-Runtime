@@ -62,7 +62,7 @@ import de.d3web.scoring.Score;
 public class DiaFluxPersistenceTest {
 
 	private static final FlowFactory FF = FlowFactory.getInstance();
-	private KnowledgeBaseManagement kbm;
+	private KnowledgeBase kb;
 	private Session session;
 
 	@Before
@@ -73,15 +73,13 @@ public class DiaFluxPersistenceTest {
 		KnowledgeBase createdKB = createTestKB();
 		PersistenceManager.getInstance().save(createdKB, file);
 
-		KnowledgeBase loadedKB = PersistenceManager.getInstance().load(file);
+		kb = PersistenceManager.getInstance().load(file);
 
-		kbm = KnowledgeBaseManagement.createInstance(loadedKB);
+		session = SessionFactory.createSession(kb);
 
-		session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		System.out.println(createdKB.equals(kb));
 
-		System.out.println(createdKB.equals(loadedKB));
-
-		FlowSet loadedFlowSet = DiaFluxUtils.getFlowSet(loadedKB);
+		FlowSet loadedFlowSet = DiaFluxUtils.getFlowSet(kb);
 
 		FlowSet createdFlowSet = DiaFluxUtils.getFlowSet(createdKB);
 
@@ -95,15 +93,15 @@ public class DiaFluxPersistenceTest {
 
 	@Test
 	public void testFluxSolver() {
-		Question question = kbm.findQuestion("YesNoQuestion");
-		Solution solution = kbm.findSolution("SolutionFoo");
+		Question question = kb.getManager().searchQuestion("YesNoQuestion");
+		Solution solution = kb.getManager().searchSolution("SolutionFoo");
 
 		Rating solutionState = session.getBlackboard().getRating(solution);
 		assertTrue("Solution has wrong state. Expected 'UNCLEAR'",
 				solutionState.hasState(Rating.State.UNCLEAR));// this is true
 
 		// Answer question with "Yes", this should execute the flow
-		Value yes = kbm.findValue(question, "Yes");
+		Value yes = KnowledgeBaseManagement.findValue(question, "Yes");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, question,
 						yes, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
@@ -113,7 +111,7 @@ public class DiaFluxPersistenceTest {
 
 		// When Answer "No" is set, the establishment of the solution
 		// should be retracted:
-		Value no = kbm.findValue(question, "No");
+		Value no = KnowledgeBaseManagement.findValue(question, "No");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, question,
 						no, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
@@ -150,7 +148,7 @@ public class DiaFluxPersistenceTest {
 		IEdge startToQuestion = FF.createEdge("startToQuestionEdge_ID", startNode, questionNode,
 				ConditionTrue.INSTANCE);
 
-		Value yes = kbm.findValue(questionYN, "Yes");
+		Value yes = KnowledgeBaseManagement.findValue(questionYN, "Yes");
 		Condition yesCondition = new CondEqual(questionYN, yes);
 
 		IEdge questionToSolution = FF.createEdge("questionToSolution_ID", questionNode,

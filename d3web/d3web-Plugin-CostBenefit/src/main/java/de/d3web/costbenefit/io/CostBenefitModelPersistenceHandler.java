@@ -152,7 +152,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 
 	private void addSTKnowledge(KnowledgeBaseManagement kbm, Node current) throws IOException {
 		String qcontainerID = current.getAttributes().getNamedItem("QID").getTextContent();
-		QContainer qcontainer = kbm.getKnowledgeBase().getManager().searchQContainers(qcontainerID);
+		QContainer qcontainer = kbm.getKnowledgeBase().getManager().searchQContainer(qcontainerID);
 		NodeList children = current.getChildNodes();
 		Condition activationCondition = null;
 		List<ValueTransition> postTransitions = new ArrayList<ValueTransition>();
@@ -166,13 +166,13 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 			}
 			else if (n.getNodeName().equals("ValueTransition")) {
 				String question = n.getAttributes().getNamedItem("QID").getTextContent();
-				Question q = kbm.findQuestion(question);
+				Question q = kbm.getKnowledgeBase().getManager().searchQuestion(question);
 				List<ConditionalValueSetter> cvss = new ArrayList<ConditionalValueSetter>();
 				NodeList childNodes = n.getChildNodes();
 				for (int j = 0; j < childNodes.getLength(); j++) {
 					Node child = childNodes.item(j);
 					if (child.getNodeName().equals("ConditionalValueSetter")) {
-						Value answer = kbm.findValue(
+						Value answer = KnowledgeBaseManagement.findValue(
 								q,
 								child.getAttributes().getNamedItem("AID").getTextContent());
 						Condition condition = null;

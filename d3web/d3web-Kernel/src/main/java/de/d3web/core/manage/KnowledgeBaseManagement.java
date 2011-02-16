@@ -24,7 +24,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -35,7 +34,6 @@ import java.util.Map;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -89,7 +87,7 @@ public final class KnowledgeBaseManagement {
 	 * @return a newly creates knowledge base with one root Solution (P000) and
 	 *         one root QContainer (Q000).
 	 */
-	private static KnowledgeBase createKnowledgeBase() {
+	public static KnowledgeBase createKnowledgeBase() {
 		KnowledgeBase theK = new KnowledgeBase();
 
 		// we don't use internal methods, because we need to set
@@ -261,79 +259,6 @@ public final class KnowledgeBaseManagement {
 	}
 
 	/**
-	 * Returns the Solution object for which either the text or the id is equal
-	 * to the specified name String
-	 * 
-	 * @param name a specified name string
-	 * @return a Diagnosis object or null, if nothing found
-	 */
-	public Solution findSolution(String name) {
-		// Uses hash for name in KB
-		NamedObject ob = knowledgeBase.getManager().searchObjectForName(name);
-		if (ob instanceof Solution) {
-			return (Solution) ob;
-		}
-		TerminologyObject o = findNamedObject(name, knowledgeBase.getManager().getSolutions());
-		if (o instanceof Solution) {
-			return (Solution) o;
-		}
-		return null;
-	}
-
-	/**
-	 * Returns the Question object for which either the text or the id is equal
-	 * to the specified name String
-	 * 
-	 * @param name a specified name string
-	 * @return a Question object or null, if nothing found
-	 */
-	public Question findQuestion(String name) {
-		// Uses hash for name in KB
-		NamedObject ob = knowledgeBase.getManager().searchObjectForName(name);
-		if (ob instanceof Question) {
-			return (Question) ob;
-		}
-		TerminologyObject o = findNamedObject(name, knowledgeBase.getManager().getQuestions());
-		if (o instanceof Question) {
-			return (Question) o;
-		}
-		return null;
-	}
-
-	/**
-	 * Returns the QContainer object for which either the text or the id is
-	 * equal to the specified name String
-	 * 
-	 * @param name a specified name string
-	 * @return a QContainer object or null, if nothing found
-	 */
-	public QContainer findQContainer(String name) {
-		// Uses hash for name in KB
-		NamedObject ob = knowledgeBase.getManager().searchObjectForName(name);
-		if (ob instanceof QContainer) {
-			return (QContainer) ob;
-		}
-		TerminologyObject o = findNamedObject(name, knowledgeBase.getManager()
-				.getQContainers());
-		if (o instanceof QContainer) {
-			return (QContainer) o;
-		}
-		return null;
-	}
-
-	private TerminologyObject findNamedObject(String name,
-			Collection<? extends TerminologyObject> namedObjects) {
-		// old iterating search method
-		for (TerminologyObject o : namedObjects) {
-			if (o != null && name != null
-					&& (name.equals(o.getName()))) {
-				return o;
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * Retrieves the AnswerChoice object contained in the alternatives list of
 	 * the specified question, that has the specified text as answer text
 	 * 
@@ -355,10 +280,10 @@ public final class KnowledgeBaseManagement {
 		return null;
 	}
 
-	public MultipleChoiceValue findMultipleChoiceValue(QuestionMC quesiton, List<String> valueNames) {
+	public static MultipleChoiceValue findMultipleChoiceValue(QuestionMC question, List<String> valueNames) {
 		List<Choice> choices = new ArrayList<Choice>(valueNames.size());
 		for (String name : valueNames) {
-			Choice choice = findChoice(quesiton, name);
+			Choice choice = findChoice(question, name);
 			if (choice != null) {
 				choices.add(choice);
 			}
@@ -366,7 +291,7 @@ public final class KnowledgeBaseManagement {
 		return MultipleChoiceValue.fromChoices(choices);
 	}
 
-	public Value findValue(Question question, String valueString) {
+	public static Value findValue(Question question, String valueString) {
 		if (valueString.equals(UndefinedValue.UNDEFINED_ID)) {
 			return UndefinedValue.getInstance();
 		}

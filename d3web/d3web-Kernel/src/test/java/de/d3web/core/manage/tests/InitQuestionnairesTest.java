@@ -68,13 +68,13 @@ public class InitQuestionnairesTest {
 		// including the root there should be 4 qcontainers
 		assertThat(qcontainers.size(), is(4));
 
-		QContainer qc1 = knowledge.getManager().searchQContainers("qcontainer1");
+		QContainer qc1 = knowledge.getManager().searchQContainer("qcontainer1");
 		assertThat(qc1.getName(), is("qcontainer1"));
 
-		QContainer qc2 = knowledge.getManager().searchQContainers("qcontainer2");
+		QContainer qc2 = knowledge.getManager().searchQContainer("qcontainer2");
 		assertThat(qc2.getName(), is("qcontainer2"));
 
-		QContainer qc3 = knowledge.getManager().searchQContainers("qcontainer3");
+		QContainer qc3 = knowledge.getManager().searchQContainer("qcontainer3");
 		assertThat(qc3.getName(), is("qcontainer3"));
 	}
 

@@ -32,6 +32,7 @@ import org.junit.Test;
 
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -68,25 +69,25 @@ import de.d3web.plugin.test.InitPluginManager;
  */
 public class MultipleChoiceAbstractionTest {
 
-	private static KnowledgeBaseManagement kbm;
+	private static KnowledgeBase kb;
 	private static Session session;
 
 	@BeforeClass
 	public static void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
+		kb = KnowledgeBaseManagement.createKnowledgeBase();
 		addTerminologyObjects();
 		addRules();
-		session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		session = SessionFactory.createSession(kb);
 	}
 
 	private static void addTerminologyObjects() {
-
+		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(kb);
 		// Question 'Day'
 		String day = "Day";
 		String[] dayAlternatives = new String[] {
 				"Workday", "Weekend" };
-		kbm.createQuestionMC(day, kbm.getKnowledgeBase().getRootQASet(), dayAlternatives);
+		kbm.createQuestionMC(day, kb.getRootQASet(), dayAlternatives);
 
 		// Question 'Weekday'
 		String weekday = "Weekday";
@@ -94,26 +95,26 @@ public class MultipleChoiceAbstractionTest {
 				"Monday", "Tuesday", "Wednesday", "Thursday",
 				"Friday", "Saturday", "Sunday" };
 		Question weekdayQuestion =
-				kbm.createQuestionMC(weekday, kbm.getKnowledgeBase().getRootQASet(),
+				kbm.createQuestionMC(weekday, kb.getRootQASet(),
 						weekdayAlternatives);
 		weekdayQuestion.getInfoStore().addValue(BasicProperties.ABSTRACTION_QUESTION, Boolean.TRUE);
 	}
 
 	private static void addRules() {
 
-		Question weekday = kbm.findQuestion("Weekday");
+		Question weekday = kb.getManager().searchQuestion("Weekday");
 
 		// Day = Workday => Weekday = Monday, Tuesday, Wednesday, Thursday,
 		// Friday
-		Question day = kbm.findQuestion("Day");
-		Value workday = kbm.findValue(day, "Workday");
+		Question day = kb.getManager().searchQuestion("Day");
+		Value workday = KnowledgeBaseManagement.findValue(day, "Workday");
 		Condition condition = new CondEqual(day, workday);
 		List<String> ignoredValues = Arrays.asList("Saturday", "Sunday");
 		RuleFactory.createSetValueRule(weekday,
 				getWeekdayMCValue(ignoredValues), condition);
 
 		// Day = Weekend => Weekday = Saturday, Sunday
-		Value weekend = kbm.findValue(day, "Weekend");
+		Value weekend = KnowledgeBaseManagement.findValue(day, "Weekend");
 		condition = new CondEqual(day, weekend);
 		ignoredValues = Arrays.asList("Monday", "Tuesday", "Wednesday", "Thursday", "Friday");
 		RuleFactory.createSetValueRule(weekday,
@@ -136,12 +137,12 @@ public class MultipleChoiceAbstractionTest {
 	 * @return a MultipleChoiceValue containing the desired weekdays
 	 */
 	private static MultipleChoiceValue getDayMCValue(List<String> ignoredValues) {
-		QuestionChoice day = (QuestionChoice) kbm.findQuestion("Day");
+		QuestionChoice day = (QuestionChoice) kb.getManager().searchQuestion("Day");
 		return getAllMCValue(day, ignoredValues);
 	}
 
 	private static MultipleChoiceValue getWeekdayMCValue(List<String> ignoredValues) {
-		QuestionChoice weekday = (QuestionChoice) kbm.findQuestion("Weekday");
+		QuestionChoice weekday = (QuestionChoice) kb.getManager().searchQuestion("Weekday");
 		return getAllMCValue(weekday, ignoredValues);
 	}
 
@@ -157,36 +158,36 @@ public class MultipleChoiceAbstractionTest {
 	public void testTerminlogyObjectExistence() {
 
 		// Question 'Day'
-		Question day = kbm.findQuestion("Day");
+		Question day = kb.getManager().searchQuestion("Day");
 		assertNotNull("Question 'Day' isn't in the Knowledgebase.", day);
 
 		// Values of 'Day'
-		Value workday = kbm.findValue(day, "Workday");
+		Value workday = KnowledgeBaseManagement.findValue(day, "Workday");
 		assertNotNull("Value 'Workday' for Question 'Day' isn't in the Knowledgebase", workday);
-		Value weekend = kbm.findValue(day, "Weekend");
+		Value weekend = KnowledgeBaseManagement.findValue(day, "Weekend");
 		assertNotNull("Value 'Weekend' for Question 'Day' isn't in the Knowledgebase", weekend);
 
 		// Question 'Weekday'
-		Question weekday = kbm.findQuestion("Weekday");
+		Question weekday = kb.getManager().searchQuestion("Weekday");
 		assertNotNull("Question 'Weekday' isn't in the Knowledgebase.", weekday);
 
 		// Values of 'Weekday'
-		Value monday = kbm.findValue(weekday, "Monday");
+		Value monday = KnowledgeBaseManagement.findValue(weekday, "Monday");
 		assertNotNull("Value 'Monday' for Question 'Weekday' isn't in the Knowledgebase", monday);
-		Value tuesday = kbm.findValue(weekday, "Tuesday");
+		Value tuesday = KnowledgeBaseManagement.findValue(weekday, "Tuesday");
 		assertNotNull("Value 'Tuesday' for Question 'Weekday' isn't in the Knowledgebase", tuesday);
-		Value wednesday = kbm.findValue(weekday, "Wednesday");
+		Value wednesday = KnowledgeBaseManagement.findValue(weekday, "Wednesday");
 		assertNotNull("Value 'Wednesday' for Question 'Weekday' isn't in the Knowledgebase",
 				wednesday);
-		Value thursday = kbm.findValue(weekday, "Thursday");
+		Value thursday = KnowledgeBaseManagement.findValue(weekday, "Thursday");
 		assertNotNull("Value 'Thursday' for Question 'Weekday' isn't in the Knowledgebase",
 				thursday);
-		Value friday = kbm.findValue(weekday, "Friday");
+		Value friday = KnowledgeBaseManagement.findValue(weekday, "Friday");
 		assertNotNull("Value 'Friday' for Question 'Weekday' isn't in the Knowledgebase", friday);
-		Value saturday = kbm.findValue(weekday, "Saturday");
+		Value saturday = KnowledgeBaseManagement.findValue(weekday, "Saturday");
 		assertNotNull("Value 'Saturday' for Question 'Weekday' isn't in the Knowledgebase",
 				saturday);
-		Value sunday = kbm.findValue(weekday, "Sunday");
+		Value sunday = KnowledgeBaseManagement.findValue(weekday, "Sunday");
 		assertNotNull("Value 'Sunday' for Question 'Weekday' isn't in the Knowledgebase", sunday);
 	}
 
@@ -194,7 +195,7 @@ public class MultipleChoiceAbstractionTest {
 	public void testAbstractionProperty() {
 
 		// TEST Weekday <abstract> ?
-		Question weekday = kbm.findQuestion("Weekday");
+		Question weekday = kb.getManager().searchQuestion("Weekday");
 		Boolean abstractionProperty = weekday.getInfoStore().getValue(
 				BasicProperties.ABSTRACTION_QUESTION);
 		assertEquals("Question 'Day' isn't abstract.", Boolean.TRUE, abstractionProperty);
@@ -203,11 +204,11 @@ public class MultipleChoiceAbstractionTest {
 	@Test
 	public void testSetAndChangeOneValue() {
 
-		Question day = kbm.findQuestion("Day");
-		Question weekday = kbm.findQuestion("Weekday");
+		Question day = kb.getManager().searchQuestion("Day");
+		Question weekday = kb.getManager().searchQuestion("Weekday");
 
 		// SET 'Day' = 'Workday'
-		Value workday = kbm.findValue(day, "Workday");
+		Value workday = KnowledgeBaseManagement.findValue(day, "Workday");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, day,
 						workday, PSMethodUserSelected.getInstance(),
@@ -224,7 +225,7 @@ public class MultipleChoiceAbstractionTest {
 		assertEquals("Abstract question 'Weekday' has wrong value", workdayValues, weekdayValue);
 
 		// SET 'Day' = 'Weekend'
-		Value weekend = kbm.findValue(day, "Weekend");
+		Value weekend = KnowledgeBaseManagement.findValue(day, "Weekend");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, day,
 						weekend, PSMethodUserSelected.getInstance(),
@@ -244,8 +245,8 @@ public class MultipleChoiceAbstractionTest {
 	@Test
 	public void testSetMultipleChoiceValue() {
 
-		Question day = kbm.findQuestion("Day");
-		Question weekday = kbm.findQuestion("Weekday");
+		Question day = kb.getManager().searchQuestion("Day");
+		Question weekday = kb.getManager().searchQuestion("Weekday");
 
 		// SET 'Day' = 'Weekend, Workday'
 		session.getBlackboard().addValueFact(
@@ -269,8 +270,8 @@ public class MultipleChoiceAbstractionTest {
 	@Test
 	public void testSetUndefinedValue() {
 
-		Question day = kbm.findQuestion("Day");
-		Question weekday = kbm.findQuestion("Weekday");
+		Question day = kb.getManager().searchQuestion("Day");
+		Question weekday = kb.getManager().searchQuestion("Weekday");
 
 		// SET 'Day' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(

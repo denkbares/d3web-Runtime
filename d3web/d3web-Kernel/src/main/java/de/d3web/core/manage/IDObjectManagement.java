@@ -50,10 +50,6 @@ public interface IDObjectManagement {
 
 	Solution findSolution(String name);
 
-	Choice findAnswerChoice(QuestionChoice qc, String name);
-
-	Value findValue(Question q, String name);
-
 	QContainer createQContainer(String name, QASet parent);
 
 	QuestionOC createQuestionOC(String name, QASet parent, Choice[] answers);
@@ -81,4 +77,8 @@ public interface IDObjectManagement {
 	Choice addChoiceAnswer(QuestionChoice qc, String value);
 
 	KnowledgeBase getKnowledgeBase();
+
+	Value findValue(Question q, String name);
+
+	Choice findChoice(QuestionChoice qc, String name);
 }

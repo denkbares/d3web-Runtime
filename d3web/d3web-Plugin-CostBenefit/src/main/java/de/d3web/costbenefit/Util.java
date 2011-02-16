@@ -80,12 +80,13 @@ public final class Util {
 	}
 
 	public static void setQuestion(Session session, String question, String answer) {
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(session.getKnowledgeBase());
+		KnowledgeBase kb = session.getKnowledgeBase();
 		session.getPropagationManager().openPropagation();
-		QuestionOC question1 = (QuestionOC) kbm.findQuestion(question);
+		QuestionOC question1 = (QuestionOC) kb.getManager().searchQuestion(question);
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, question1,
-						kbm.findValue(question1, answer), PSMethodUserSelected.getInstance(),
+						KnowledgeBaseManagement.findValue(question1, answer),
+						PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 		session.getPropagationManager().commitPropagation();
 	}

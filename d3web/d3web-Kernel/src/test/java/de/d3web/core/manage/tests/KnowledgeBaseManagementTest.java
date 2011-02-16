@@ -59,9 +59,9 @@ public class KnowledgeBaseManagementTest {
 		qmc.addAlternative(choice1);
 		qmc.addAlternative(choice2);
 
-		assertThat(KnowledgeBaseManagement.createInstance().findValue(qmc, "choice1"),
+		assertThat(KnowledgeBaseManagement.findValue(qmc, "choice1"),
 				is(mcValToFind));
-		assertNull(KnowledgeBaseManagement.createInstance().findValue(qmc,
+		assertNull(KnowledgeBaseManagement.findValue(qmc,
 				"FindchoiceNULL"));
 	}
 
@@ -79,16 +79,16 @@ public class KnowledgeBaseManagementTest {
 		choiceList.add(choice1);
 		choiceList.add(choice2);
 		Value mcValToFind = MultipleChoiceValue.fromChoices(choiceList);
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance();
-		QuestionChoice qmc = new QuestionMC(kbm.getKnowledgeBase(), "Please enter: ");
+		KnowledgeBase kb = KnowledgeBaseManagement.createKnowledgeBase();
+		QuestionChoice qmc = new QuestionMC(kb, "Please enter: ");
 		qmc.addAlternative(choice1);
 		qmc.addAlternative(choice2);
 
-		assertThat(kbm.findValue(qmc, "choice1#####choice2"),
+		assertThat(KnowledgeBaseManagement.findValue(qmc, "choice1#####choice2"),
 				is(mcValToFind));
-		assertNull(kbm.findValue(qmc,
+		assertNull(KnowledgeBaseManagement.findValue(qmc,
 				"FindchoiceNULL#####2"));
-		assertNull(kbm.findValue(qmc,
+		assertNull(KnowledgeBaseManagement.findValue(qmc,
 				"FindchoiceNULL"));
 	}
 
@@ -105,28 +105,28 @@ public class KnowledgeBaseManagementTest {
 		Choice choice2 = new Choice("choice2");
 		Value choiceValToFind1 = new ChoiceValue(choice1);
 		Value choiceValToFind2 = new ChoiceValue(choice2);
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance();
-		QuestionChoice qc = new QuestionOC(kbm.getKnowledgeBase(), "Please enter: ");
+		KnowledgeBase kb = KnowledgeBaseManagement.createKnowledgeBase();
+		QuestionChoice qc = new QuestionOC(kb, "Please enter: ");
 		qc.addAlternative(choice1);
 		qc.addAlternative(choice2);
-		assertThat(kbm.findValue(qc, "choice1"),
+		assertThat(KnowledgeBaseManagement.findValue(qc, "choice1"),
 				is(choiceValToFind1));
-		assertThat(kbm.findValue(qc, "choice2"),
+		assertThat(KnowledgeBaseManagement.findValue(qc, "choice2"),
 				is(choiceValToFind2));
-		assertNull(kbm.findValue(qc, "FindchoiceNULL"));
+		assertNull(KnowledgeBaseManagement.findValue(qc, "FindchoiceNULL"));
 
 		// test yes no question
 		Choice YES = new Choice("Yes");
 		Choice NO = new Choice("No");
 		Value yes = new ChoiceValue(YES);
 		Value no = new ChoiceValue(NO);
-		QuestionYN qyn = new QuestionYN(kbm.getKnowledgeBase(), "");
+		QuestionYN qyn = new QuestionYN(kb, "");
 
-		assertThat(kbm.findValue(qyn, "Yes"),
+		assertThat(KnowledgeBaseManagement.findValue(qyn, "Yes"),
 				is(yes));
-		assertThat(kbm.findValue(qyn, "No"),
+		assertThat(KnowledgeBaseManagement.findValue(qyn, "No"),
 				is(no));
-		assertNull(kbm.findValue(qyn, "FindchoiceNULL"));
+		assertNull(KnowledgeBaseManagement.findValue(qyn, "FindchoiceNULL"));
 	}
 
 	/**
@@ -138,9 +138,9 @@ public class KnowledgeBaseManagementTest {
 	public void testFindValue_NumVal() {
 		Value numToGet = new NumValue(1.0);
 		String numValInput = "1.0";
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance();
-		QuestionNum qn = new QuestionNum(kbm.getKnowledgeBase(), "Please enter: ");
-		assertThat(kbm.findValue(qn, numValInput),
+		KnowledgeBase kb = KnowledgeBaseManagement.createKnowledgeBase();
+		QuestionNum qn = new QuestionNum(kb, "Please enter: ");
+		assertThat(KnowledgeBaseManagement.findValue(qn, numValInput),
 				is(numToGet));
 	}
 
@@ -153,9 +153,9 @@ public class KnowledgeBaseManagementTest {
 	public void testFindValue_TextVal() {
 		Value textToGet = new TextValue("My Text");
 		String textValInput = "My Text";
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance();
-		QuestionText qt = new QuestionText(kbm.getKnowledgeBase(), "Please enter: ");
-		assertThat(kbm.findValue(qt, textValInput),
+		KnowledgeBase kb = KnowledgeBaseManagement.createKnowledgeBase();
+		QuestionText qt = new QuestionText(kb, "Please enter: ");
+		assertThat(KnowledgeBaseManagement.findValue(qt, textValInput),
 				is(textToGet));
 	}
 
@@ -179,13 +179,13 @@ public class KnowledgeBaseManagementTest {
 			e.printStackTrace();
 		}
 		String dateValInput = "2010-09-02-12-13-30";
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance();
+		KnowledgeBase kb = KnowledgeBaseManagement.createKnowledgeBase();
 		QuestionDate qd = new
-				QuestionDate(kbm.getKnowledgeBase(), "Please enter: ");
-		assertThat(kbm.findValue(qd,
+				QuestionDate(kb, "Please enter: ");
+		assertThat(KnowledgeBaseManagement.findValue(qd,
 				dateValInput), is(dateToGet));
 		dateValInput = "wrong date format";
-		assertNull(kbm.findValue(qd,
+		assertNull(KnowledgeBaseManagement.findValue(qd,
 				dateValInput));
 	}
 
@@ -197,20 +197,20 @@ public class KnowledgeBaseManagementTest {
 	 */
 	@Test
 	public void testFindValue_complete() {
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance();
-		Question q = new QuestionText(kbm.getKnowledgeBase(), "#");
+		KnowledgeBase kb = KnowledgeBaseManagement.createKnowledgeBase();
+		Question q = new QuestionText(kb, "#");
 
 		// test undefined id given
-		assertEquals(kbm.findValue(q,
+		assertEquals(KnowledgeBaseManagement.findValue(q,
 				UndefinedValue.UNDEFINED_ID), UndefinedValue.getInstance());
 
 		// test unknown id given
-		assertEquals(kbm.findValue(q,
+		assertEquals(KnowledgeBaseManagement.findValue(q,
 				Unknown.UNKNOWN_ID), Unknown.getInstance());
 
 		Value textToGet = new TextValue("My Text");
 		String textValInput = "My Text";
-		assertThat(kbm.findValue(q, textValInput),
+		assertThat(KnowledgeBaseManagement.findValue(q, textValInput),
 				is(textToGet));
 	}
 

@@ -183,7 +183,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 				current);
 		String considerOnlyRelevantRelations = getAttribute("considerOnlyRelevantRelations",
 				current);
-		Solution diag = kbm.findSolution(solutionName);
+		Solution diag = kbm.getKnowledgeBase().getManager().searchSolution(solutionName);
 		XCLModel model = new XCLModel(diag);
 		NodeList relations = current.getChildNodes();
 		for (int i = 0; i < relations.getLength(); i++) {

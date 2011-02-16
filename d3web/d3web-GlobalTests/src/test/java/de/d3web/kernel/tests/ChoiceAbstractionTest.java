@@ -94,11 +94,11 @@ public class ChoiceAbstractionTest {
 
 	private static void addRules() {
 
-		Question day = kbm.findQuestion("Day");
+		Question day = kbm.getKnowledgeBase().getManager().searchQuestion("Day");
 		Value workday = kbm.findValue(day, "Workday");
 		Value weekend = kbm.findValue(day, "Weekend");
 
-		Question weekday = kbm.findQuestion("Weekday");
+		Question weekday = kbm.getKnowledgeBase().getManager().searchQuestion("Weekday");
 
 		// Weekday = Monday => Day = Workday
 		Value monday = kbm.findValue(weekday, "Monday");
@@ -140,7 +140,7 @@ public class ChoiceAbstractionTest {
 	public void testTerminlogyObjectExistence() {
 
 		// Question 'Weekday'
-		Question weekday = kbm.findQuestion("Weekday");
+		Question weekday = kbm.getKnowledgeBase().getManager().searchQuestion("Weekday");
 		assertNotNull("Question 'Weekday' isn't in the Knowledgebase.", weekday);
 
 		// Values of 'Weekday'
@@ -163,7 +163,7 @@ public class ChoiceAbstractionTest {
 		assertNotNull("Value 'Sunday' for Question 'Weekday' isn't in the Knowledgebase", sunday);
 
 		// Question 'Day'
-		Question day = kbm.findQuestion("Day");
+		Question day = kbm.getKnowledgeBase().getManager().searchQuestion("Day");
 		assertNotNull("Question 'Day' isn't in the Knowledgebase.", day);
 
 		// Values of 'Day'
@@ -177,7 +177,7 @@ public class ChoiceAbstractionTest {
 	public void testAbstractionProperty() {
 
 		// TEST 'Day' <abstract> ?
-		Question day = kbm.findQuestion("Day");
+		Question day = kbm.getKnowledgeBase().getManager().searchQuestion("Day");
 		Boolean abstractionProperty = day.getInfoStore().getValue(
 				BasicProperties.ABSTRACTION_QUESTION);
 		assertEquals("Question 'Day' isn't abstract.", Boolean.TRUE, abstractionProperty);
@@ -186,8 +186,8 @@ public class ChoiceAbstractionTest {
 	@Test
 	public void testSetAndChangeValue() {
 
-		Question weekday = kbm.findQuestion("Weekday");
-		Question day = kbm.findQuestion("Day");
+		Question weekday = kbm.getKnowledgeBase().getManager().searchQuestion("Weekday");
+		Question day = kbm.getKnowledgeBase().getManager().searchQuestion("Day");
 
 		// SET 'Weekday' = 'Monday'
 		Value monday = kbm.findValue(weekday, "Monday");
@@ -223,8 +223,8 @@ public class ChoiceAbstractionTest {
 	@Test
 	public void testSetUndefinedValue() {
 
-		Question weekday = kbm.findQuestion("Weekday");
-		Question day = kbm.findQuestion("Day");
+		Question weekday = kbm.getKnowledgeBase().getManager().searchQuestion("Weekday");
+		Question day = kbm.getKnowledgeBase().getManager().searchQuestion("Day");
 
 		// SET 'Weekday' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(

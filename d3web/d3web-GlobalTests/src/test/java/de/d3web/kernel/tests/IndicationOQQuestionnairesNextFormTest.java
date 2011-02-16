@@ -116,16 +116,18 @@ public class IndicationOQQuestionnairesNextFormTest {
 	// TODO: rework, new KB
 	private static void addRules() {
 
-		Question sex = kbm.findQuestion("Sex");
+		Question sex = kbm.getKnowledgeBase().getManager().searchQuestion("Sex");
 		Value male = kbm.findValue(sex, "Male");
 		Value female = kbm.findValue(sex, "Female");
 
-		Question pregnant = kbm.findQuestion("Pregnant");
+		Question pregnant = kbm.getKnowledgeBase().getManager().searchQuestion("Pregnant");
 		Value yes = kbm.findValue(pregnant, "Yes");
 		Value no = kbm.findValue(pregnant, "No");
 
-		QContainer pregProbs = kbm.findQContainer("Pregnancy Problems");
-		QContainer otherProbs = kbm.findQContainer("Other Problems");
+		QContainer pregProbs = kbm.getKnowledgeBase().getManager().searchQContainer(
+				"Pregnancy Problems");
+		QContainer otherProbs = kbm.getKnowledgeBase().getManager().searchQContainer(
+				"Other Problems");
 
 		// Create indication rule: Sex == Female => Pregnant
 		Condition condition = new CondEqual(sex, female);

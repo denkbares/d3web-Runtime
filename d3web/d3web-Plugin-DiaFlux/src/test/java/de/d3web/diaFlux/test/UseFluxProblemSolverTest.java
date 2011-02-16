@@ -124,7 +124,7 @@ public class UseFluxProblemSolverTest {
 		IEdge startToQuestion = FF.createEdge("startToQuestionEdge_ID", startNode, questionNode,
 				ConditionTrue.INSTANCE);
 
-		Value yes = kbm.findValue(questionYN, "Yes");
+		Value yes = KnowledgeBaseManagement.findValue(questionYN, "Yes");
 		Condition yesCondition = new CondEqual(questionYN, yes);
 
 		IEdge questionToSolution = FF.createEdge("questionToSolution_ID", questionNode,
@@ -159,7 +159,7 @@ public class UseFluxProblemSolverTest {
 		assertTrue("YesNoQuestion should be the next form",
 				session.getInterview().nextForm().getInterviewObject() == questionYN);
 		// Answer question with "Yes", this should execute the flow
-		Value yes = kbm.findValue(questionYN, "Yes");
+		Value yes = KnowledgeBaseManagement.findValue(questionYN, "Yes");
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(questionYN, yes));
 		solutionState = session.getBlackboard().getRating(solutionFoo);
@@ -170,7 +170,7 @@ public class UseFluxProblemSolverTest {
 	private void testDeactivation() {
 		// When Answer "No" is set, the establishment of the solution
 		// should be retracted:
-		Value no = kbm.findValue(questionYN, "No");
+		Value no = KnowledgeBaseManagement.findValue(questionYN, "No");
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(questionYN, no));
 		Rating solutionState = session.getBlackboard().getRating(solutionFoo);
@@ -229,7 +229,7 @@ public class UseFluxProblemSolverTest {
 		nodesList.add(solutionNode4);
 
 		// create edges to Solutions
-		Value no = kbm.findValue(questionYN, "No");
+		Value no = KnowledgeBaseManagement.findValue(questionYN, "No");
 		Condition noCondition = new CondEqual(questionYN, no);
 
 		IEdge questionToSolution2 = FF.createEdge("questionToSolution_ID2", questionNode,
@@ -269,7 +269,7 @@ public class UseFluxProblemSolverTest {
 		Assert.assertEquals(2, solutions.size());
 		assertTrue(solutions.contains(solutionFoo2));
 		assertTrue(solutions.contains(solutionFoo3));
-		Value yes = kbm.findValue(questionYN, "Yes");
+		Value yes = KnowledgeBaseManagement.findValue(questionYN, "Yes");
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(questionYN, yes));
 		// Solution 1 and 4 should be established
 		Assert.assertEquals(2, solutions.size());

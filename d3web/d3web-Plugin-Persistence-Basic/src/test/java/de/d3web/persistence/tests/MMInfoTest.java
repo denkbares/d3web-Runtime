@@ -58,7 +58,7 @@ public class MMInfoTest {
 		pm.save(kb, file);
 		KnowledgeBase reloadedKB = pm.load(file);
 		kbm = KnowledgeBaseManagement.createInstance(reloadedKB);
-		oc = (QuestionOC) kbm.findQuestion("Question");
+		oc = (QuestionOC) kb.getManager().searchQuestion("Question");
 		Assert.assertEquals("Frage", oc.getInfoStore().getValue(MMInfo.DESCRIPTION, Locale.GERMAN));
 		Assert.assertEquals("Antwort 1",
 				oc.getAlternative(0).getInfoStore().getValue(MMInfo.DESCRIPTION, Locale.GERMAN));

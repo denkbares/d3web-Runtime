@@ -130,7 +130,7 @@ public class XCLModelTest extends TestCase {
 
 		// init diagnosis "Terminator"
 		kbm.createSolution("Terminator", rootdia);
-		terminator = kbm.findSolution("Terminator");
+		terminator = k.getManager().searchSolution("Terminator");
 
 		QContainer container = rootContainer;
 

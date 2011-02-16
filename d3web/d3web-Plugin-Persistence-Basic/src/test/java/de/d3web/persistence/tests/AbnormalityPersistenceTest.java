@@ -69,9 +69,8 @@ public class AbnormalityPersistenceTest {
 		PersistenceManager pm = PersistenceManager.getInstance();
 		pm.save(kb, file);
 		KnowledgeBase reloadedKB = pm.load(file);
-		kbm = KnowledgeBaseManagement.createInstance(reloadedKB);
-		oc = (QuestionOC) kbm.findQuestion("OC");
-		num = (QuestionNum) kbm.findQuestion("Num");
+		oc = (QuestionOC) reloadedKB.getManager().searchQuestion("OC");
+		num = (QuestionNum) reloadedKB.getManager().searchQuestion("Num");
 		choice = oc.getAlternatives().get(0);
 		a = oc.getInfoStore().getValue(BasicProperties.DEFAULT_ABNORMALITIY);
 		Assert.assertEquals(Abnormality.A0, a.getValue(new ChoiceValue(choice)));
