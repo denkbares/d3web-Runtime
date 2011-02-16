@@ -22,9 +22,9 @@ package de.d3web.scoring.inference;
 
 import java.util.Collection;
 
+import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.MethodKind;
-import de.d3web.core.inference.PSMethodAdapter;
+import de.d3web.core.inference.PSMethodRulebased;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
@@ -56,12 +56,20 @@ import de.d3web.scoring.Score;
  * 
  * @author joba
  */
-public final class PSMethodHeuristic extends PSMethodAdapter {
+public final class PSMethodHeuristic extends PSMethodRulebased {
 
-	private static PSMethodHeuristic instance = null;
+	public final static KnowledgeKind<RuleSet> FORWARD = new KnowledgeKind<RuleSet>(
+			"HEURISTIC.FORWARD",
+			RuleSet.class);
+	public final static KnowledgeKind<RuleSet> BACKWARD = new KnowledgeKind<RuleSet>(
+			"HEURISTIC.BACKWARD",
+			RuleSet.class);
+
+	// do not move this line above the declarations of the Knowledgekinds
+	private static PSMethodHeuristic instance = new PSMethodHeuristic();
 
 	private PSMethodHeuristic() {
-		super();
+		super(FORWARD, BACKWARD);
 	}
 
 	/**
@@ -70,9 +78,6 @@ public final class PSMethodHeuristic extends PSMethodAdapter {
 	 * @return the one and only instance of this ps-method (Singleton)
 	 */
 	public static PSMethodHeuristic getInstance() {
-		if (instance == null) {
-			instance = new PSMethodHeuristic();
-		}
 		return instance;
 	}
 
@@ -93,8 +98,7 @@ public final class PSMethodHeuristic extends PSMethodAdapter {
 	 * @param nob
 	 */
 	private void checkRulesFor(Session session, TerminologyObject nob) {
-		KnowledgeSlice knowledgeSlices = nob.getKnowledgeStore().getKnowledge(this.getClass(),
-				MethodKind.FORWARD);
+		KnowledgeSlice knowledgeSlices = nob.getKnowledgeStore().getKnowledge(FORWARD);
 		if (knowledgeSlices != null) {
 			RuleSet rs = (RuleSet) knowledgeSlices;
 			for (Rule rule : rs.getRules()) {

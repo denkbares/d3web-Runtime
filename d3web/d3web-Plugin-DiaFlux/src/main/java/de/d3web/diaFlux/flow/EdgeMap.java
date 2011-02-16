@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.PSMethod;
-import de.d3web.diaFlux.inference.FluxSolver;
 
 /**
  * An EdgeMap is a KowledgeSlice to be added at a TerminologyObject. It saves
@@ -53,16 +51,6 @@ public class EdgeMap implements KnowledgeSlice {
 	@Override
 	public String getId() {
 		return id;
-	}
-
-	@Override
-	public Class<? extends PSMethod> getProblemsolverContext() {
-		return FluxSolver.class;
-	}
-
-	@Override
-	public void remove() {
-
 	}
 
 	@Override

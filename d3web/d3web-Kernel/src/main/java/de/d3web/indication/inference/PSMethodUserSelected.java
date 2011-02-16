@@ -20,7 +20,11 @@
 
 package de.d3web.indication.inference;
 
-import de.d3web.core.inference.PSMethodRulebased;
+import java.util.Collection;
+
+import de.d3web.core.inference.PSMethodAdapter;
+import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 
@@ -30,7 +34,7 @@ import de.d3web.core.session.blackboard.Facts;
  * 
  * @author Christian Betz
  */
-public class PSMethodUserSelected extends PSMethodRulebased {
+public class PSMethodUserSelected extends PSMethodAdapter {
 
 	private static PSMethodUserSelected instance = null;
 
@@ -74,5 +78,10 @@ public class PSMethodUserSelected extends PSMethodRulebased {
 	public double getPriority() {
 		// highest priority
 		return 0;
+	}
+
+	@Override
+	public void propagate(Session session, Collection<PropagationEntry> changes) {
+		// do nothing
 	}
 }

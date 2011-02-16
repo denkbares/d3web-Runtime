@@ -38,10 +38,8 @@ import org.w3c.dom.Node;
 
 import de.d3web.abstraction.ActionSetValue;
 import de.d3web.abstraction.inference.PSMethodAbstraction;
-import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSAction;
-import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.PSMethodRulebased;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.io.fragments.PropertiesHandler;
 import de.d3web.core.io.progress.ProgressListener;
@@ -52,7 +50,6 @@ import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
-import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property.Autosave;
 import de.d3web.indication.ActionContraIndication;
@@ -331,18 +328,6 @@ public class BasicPersistenceHandler implements
 		time += kb.getManager().getQContainers().size();
 		time += kb.getManager().getSolutions().size();
 		time += kb.getInitQuestions().size();
-		// Schemas
-		final MethodKind methodKind = PSMethodAbstraction.NUM2CHOICE_SCHEMA;
-		final Class<? extends PSMethod> context = PSMethodAbstraction.class;
-
-		Iterator<Question> questionsIter = kb.getManager().getQuestions().iterator();
-		while (questionsIter.hasNext()) {
-			Question question = questionsIter.next();
-			KnowledgeSlice o = question.getKnowledgeStore().getKnowledge(context, methodKind);
-			if ((o != null)) {
-				time++;
-			}
-		}
 		return time;
 	}
 
@@ -416,7 +401,7 @@ public class BasicPersistenceHandler implements
 	 * @param action PSAction
 	 * @return ProblemsolverContext
 	 */
-	private static Class<? extends PSMethod> getContext(PSAction action) {
+	private static Class<? extends PSMethodRulebased> getContext(PSAction action) {
 		if (action instanceof ActionContraIndication) {
 			return PSMethodStrategic.class;
 		}

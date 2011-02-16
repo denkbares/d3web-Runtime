@@ -22,9 +22,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.MethodKind;
-import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.KnowledgeBase;
 
 /**
@@ -36,11 +35,10 @@ import de.d3web.core.knowledge.KnowledgeBase;
 public class PluginConfig implements KnowledgeSlice {
 
 	// TODO change
-	private static final Class<PSMethod> PROBLEMSOLVER = PSMethod.class;
-	private final KnowledgeBase kb;
 	private final Map<String, PluginEntry> entries = new HashMap<String, PluginEntry>();
 
-	public static final MethodKind PLUGINCONFIG = new MethodKind("ExtensionConfig");
+	public static final KnowledgeKind<PluginConfig> KNOWLEDGE_KIND = new KnowledgeKind<PluginConfig>(
+			"ExtensionConfig", PluginConfig.class);
 
 	/**
 	 * Creates a new PluginConfig and adds itself to the KnowledgeBase
@@ -49,23 +47,12 @@ public class PluginConfig implements KnowledgeSlice {
 	 */
 	public PluginConfig(KnowledgeBase kb) {
 		super();
-		this.kb = kb;
-		kb.getKnowledgeStore().addKnowledge(getProblemsolverContext(), PLUGINCONFIG, this);
+		kb.getKnowledgeStore().addKnowledge(KNOWLEDGE_KIND, this);
 	}
 
 	@Override
 	public String getId() {
-		return PLUGINCONFIG.toString();
-	}
-
-	@Override
-	public final Class<? extends PSMethod> getProblemsolverContext() {
-		return PROBLEMSOLVER;
-	}
-
-	@Override
-	public void remove() {
-		kb.getKnowledgeStore().removeKnowledge(getProblemsolverContext(), PLUGINCONFIG, this);
+		return KNOWLEDGE_KIND.toString();
 	}
 
 	/**
@@ -104,14 +91,7 @@ public class PluginConfig implements KnowledgeSlice {
 	 * @return PluginConfig of the kb
 	 */
 	public static PluginConfig getPluginConfig(KnowledgeBase kb) {
-		Collection<KnowledgeSlice> pluginconfigs = kb.getAllKnowledgeSlicesFor(PROBLEMSOLVER);
-		PluginConfig pc = null;
-		for (KnowledgeSlice ks : pluginconfigs) {
-			if (ks instanceof PluginConfig) {
-				pc = (PluginConfig) ks;
-				break;
-			}
-		}
+		PluginConfig pc = kb.getKnowledgeStore().getKnowledge(KNOWLEDGE_KIND);
 		// if there is no knowledge slice PluginConfiguration, create one
 		if (pc == null) {
 			pc = new PluginConfig(kb);

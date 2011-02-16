@@ -20,8 +20,9 @@
 
 package de.d3web.abstraction.inference;
 
-import de.d3web.core.inference.MethodKind;
+import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.PSMethodRulebased;
+import de.d3web.core.inference.RuleSet;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 
@@ -33,23 +34,24 @@ import de.d3web.core.session.blackboard.Facts;
  */
 public class PSMethodAbstraction extends PSMethodRulebased {
 
-	/**
-	 * Used, if numerical answers are given to an oc-question.
-	 * 
-	 * @see de.d3web.core.knowledge.terminology.info.Num2ChoiceSchema
-	 */
-	public final static MethodKind NUM2CHOICE_SCHEMA =
-			new MethodKind("NUM2CHOICE_SCHEMA");
+	public final static KnowledgeKind<RuleSet> FORWARD = new KnowledgeKind<RuleSet>(
+			"ABSTRACTION.FORWARD",
+			RuleSet.class);
+	public final static KnowledgeKind<RuleSet> BACKWARD = new KnowledgeKind<RuleSet>(
+			"ABSTRACTION.BACKWARD",
+			RuleSet.class);
 
-	private static PSMethodAbstraction instance = null;
+	public PSMethodAbstraction() {
+		super(FORWARD, BACKWARD);
+	}
+
+	// do not move this line above the declarations of the Knowledgekinds
+	private static final PSMethodAbstraction instance = new PSMethodAbstraction();
 
 	/**
 	 * @return the one and only instance of this PSMethod
 	 */
 	public static PSMethodAbstraction getInstance() {
-		if (instance == null) {
-			instance = new PSMethodAbstraction();
-		}
 		return instance;
 	}
 

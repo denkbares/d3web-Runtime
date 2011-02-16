@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -43,7 +43,8 @@ import de.d3web.xcl.inference.PSMethodXCL;
 
 public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, CaseObjectSource {
 
-	public final static MethodKind XCLMODEL = new MethodKind("XCLMODEL");
+	public final static KnowledgeKind<XCLModel> KNOWLEDGE_KIND = new KnowledgeKind<XCLModel>("KNOWLEDGE_KIND",
+			XCLModel.class);
 
 	private Solution solution;
 
@@ -125,25 +126,16 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 
 		// insert XCL
 		XCLRelation relation = null;
-		Collection<KnowledgeSlice> models = kb
-				.getAllKnowledgeSlicesFor(PSMethodXCL.class);
-
-		boolean foundModel = false;
-		for (KnowledgeSlice knowledgeSlice : models) {
-			if (knowledgeSlice instanceof XCLModel) {
-				if (((XCLModel) knowledgeSlice).getSolution().equals(d)) {
-					relation = XCLRelation.createXCLRelation(
+		XCLModel xclModel = d.getKnowledgeStore().getKnowledge(KNOWLEDGE_KIND);
+		if (xclModel != null) {
+			relation = XCLRelation.createXCLRelation(
 							theCondition, weight);
-					if (kdomNodeID != null) {
-						relation.setKdmomID(kdomNodeID);
-					}
-					((XCLModel) knowledgeSlice).addRelation(relation, type);
-					foundModel = true;
-
-				}
+			if (kdomNodeID != null) {
+				relation.setKdmomID(kdomNodeID);
 			}
+			xclModel.addRelation(relation, type);
 		}
-		if (!foundModel) {
+		else {
 			XCLModel newModel = new XCLModel(d);
 			relation = XCLRelation.createXCLRelation(theCondition,
 					weight);
@@ -154,8 +146,8 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 
 			newModel.addRelation(relation, type);
 			// TODO: must it be added to the knowledge base?
-			// kb.addKnowledge(PSMethodXCL.class, newModel, XCLModel.XCLMODEL);
-			d.getKnowledgeStore().addKnowledge(PSMethodXCL.class, XCLModel.XCLMODEL, newModel);
+			// kb.addKnowledge(PSMethodXCL.class, newModel, XCLModel.KNOWLEDGE_KIND);
+			d.getKnowledgeStore().addKnowledge(XCLModel.KNOWLEDGE_KIND, newModel);
 
 		}
 
@@ -189,7 +181,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 	}
 
 	private PSMethodXCL getPSMethodXCL(Session session) {
-		return (PSMethodXCL) session.getPSMethodInstance(getProblemsolverContext());
+		return session.getPSMethodInstance(PSMethodXCL.class);
 	}
 
 	public boolean addRelation(XCLRelation relation) {
@@ -198,17 +190,12 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 
 	public boolean addRelation(XCLRelation relation, XCLRelationType type) {
 		for (TerminologyObject nob : relation.getConditionedFinding().getTerminalObjects()) {
-			KnowledgeSlice knowledge = nob.getKnowledgeStore().getKnowledge(PSMethodXCL.class,
-					XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
-			XCLContributedModelSet set = null;
-			if (knowledge == null) {
+			XCLContributedModelSet set = nob.getKnowledgeStore().getKnowledge(
+					XCLContributedModelSet.KNOWLEDGE_KIND);
+			if (set == null) {
 				set = new XCLContributedModelSet();
-				nob.getKnowledgeStore().addKnowledge(PSMethodXCL.class,
-						XCLContributedModelSet.XCL_CONTRIBUTED_MODELS,
+				nob.getKnowledgeStore().addKnowledge(XCLContributedModelSet.KNOWLEDGE_KIND,
 						set);
-			}
-			else {
-				set = (XCLContributedModelSet) knowledge;
 			}
 			set.addModel(this);
 		}
@@ -229,14 +216,13 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 
 	public void removeRelation(XCLRelation rel) {
 		for (TerminologyObject nob : rel.getConditionedFinding().getTerminalObjects()) {
-			KnowledgeSlice knowledge = nob.getKnowledgeStore().getKnowledge(PSMethodXCL.class,
-					XCLContributedModelSet.XCL_CONTRIBUTED_MODELS);
-			if (knowledge instanceof XCLContributedModelSet) {
-				XCLContributedModelSet set = (XCLContributedModelSet) knowledge;
+			XCLContributedModelSet set = nob.getKnowledgeStore().getKnowledge(
+					XCLContributedModelSet.KNOWLEDGE_KIND);
+			if (set != null) {
 				set.removeModel(this);
 				if (set.isEmpty()) {
-					nob.getKnowledgeStore().removeKnowledge(PSMethodXCL.class,
-							XCLContributedModelSet.XCL_CONTRIBUTED_MODELS,
+					nob.getKnowledgeStore().removeKnowledge(
+							XCLContributedModelSet.KNOWLEDGE_KIND,
 							set);
 				}
 			}
@@ -390,24 +376,6 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 			id = "XCLM_" + solution.getName();
 		}
 		return id;
-	}
-
-	@Override
-	public Class<PSMethodXCL> getProblemsolverContext() {
-		return PSMethodXCL.class;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.d3web.kernel.domainModel.KnowledgeSlice#remove()
-	 */
-	@Override
-	public void remove() {
-		solution.getKnowledgeStore().removeKnowledge(getProblemsolverContext(), XCLMODEL, this);
-		for (XCLRelation rel : new LinkedList<XCLRelation>(relations)) {
-			removeRelation(rel);
-		}
 	}
 
 	public List<XCLRelation> getAllRelations() {

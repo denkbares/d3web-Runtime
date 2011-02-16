@@ -18,49 +18,45 @@
  * site: http://www.fsf.org.
  */
 
-package de.d3web.core.knowledge.terminology;
-
+package de.d3web.core.inference;
 
 /**
- * Contains e.g. the information if a symptom is abstract knowledge or if it can
- * be answered by a dialog (or both)
+ * Helper class to provide explict information about the knowledge to be stored
+ * in the ps-method knowledge maps. Creation date: (07.09.00 13:40:08)
  * 
  * @author Joachim Baumeister
  */
-public final class DerivationType {
+public class KnowledgeKind<T extends KnowledgeSlice> {
+
+	private final String kind;
+	private final Class<T> clazz;
 
 	/**
-	 * used for SIs (derived knowledge)
+	 * Insert the method's description here. Creation date: (07.09.00 13:40:46)
+	 * 
+	 * @param theKind java.lang.String
 	 */
-	public final static DerivationType DERIVED = new DerivationType("DERIVED");
+	public KnowledgeKind(String kind, Class<T> clazz) {
+		this.kind = kind;
+		this.clazz = clazz;
+	}
 
 	/**
-	 * used for Questions that can be answered in a dialog
+	 * @return a string representation of this Object
 	 */
-	public final static DerivationType BASIC = new DerivationType("BASIC");
-
-	/**
-	 * used, when a symptom is DERIVED and BASIC
-	 */
-	public final static DerivationType MIXED = new DerivationType("MIXED");
-
-	private java.lang.String name;
-
-	private DerivationType(String newName) {
-		setName(newName);
+	@Override
+	public String toString() {
+		return kind;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((kind == null) ? 0 : kind.hashCode());
 		return result;
 	}
 
-	/**
-	 * Compares the names of the DerivationTypes
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -72,34 +68,19 @@ public final class DerivationType {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		DerivationType other = (DerivationType) obj;
-		if (name == null) {
-			if (other.name != null) {
+		KnowledgeKind<?> other = (KnowledgeKind<?>) obj;
+		if (kind == null) {
+			if (other.kind != null) {
 				return false;
 			}
 		}
-		else if (!name.equals(other.name)) {
+		else if (!kind.equals(other.kind)) {
 			return false;
 		}
 		return true;
 	}
 
-	/**
-	 * @return the String value of this derivation type
-	 */
-	public String getName() {
-		return name;
-	}
-
-	private void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * @return the name of the DerivationType
-	 */
-	@Override
-	public String toString() {
-		return getName();
+	public Class<T> getClazz() {
+		return clazz;
 	}
 }

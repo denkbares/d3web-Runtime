@@ -27,11 +27,9 @@ import java.util.List;
 import java.util.Map;
 
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.PSMethod;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.diaFlux.inference.FluxSolver;
 import de.d3web.diaFlux.inference.Path;
 
 /**
@@ -170,15 +168,6 @@ public class Flow implements CaseObjectSource, KnowledgeSlice {
 	@Override
 	public String getId() {
 		return id;
-	}
-
-	@Override
-	public Class<? extends PSMethod> getProblemsolverContext() {
-		return FluxSolver.class;
-	}
-
-	@Override
-	public void remove() {
 	}
 
 }

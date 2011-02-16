@@ -59,7 +59,7 @@ public interface Session extends SessionHeader {
 	 */
 	List<? extends PSMethod> getPSMethods();
 
-	PSMethod getPSMethodInstance(Class<? extends PSMethod> solverClass);
+	<T extends PSMethod> T getPSMethodInstance(Class<T> solverClass);
 
 	// --- access information ---
 	/**

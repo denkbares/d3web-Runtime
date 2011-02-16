@@ -26,11 +26,9 @@ import java.util.Map;
 import java.util.Set;
 
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.PSMethod;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.diaFlux.inference.FluxSolver;
 import de.d3web.diaFlux.inference.IPath;
 
 /**
@@ -109,16 +107,6 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource, Iterable<Flow>
 	@Override
 	public String getId() {
 		return ID;
-	}
-
-	@Override
-	public Class<? extends PSMethod> getProblemsolverContext() {
-		return FluxSolver.class;
-	}
-
-	@Override
-	public void remove() {
-		// TODO
 	}
 
 	@Override

@@ -28,6 +28,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.w3c.dom.Document;
@@ -35,8 +36,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.PSMethodRulebased;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
 import de.d3web.core.io.FragmentManager;
@@ -122,19 +122,18 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 
 	private Set<Rule> getRules(KnowledgeBase kb) {
 		Set<Rule> rules = new HashSet<Rule>();
-		for (KnowledgeSlice slice : kb.getAllKnowledgeSlicesFor(getProblemSolverContent())) {
-			if (slice instanceof RuleSet) {
-				RuleSet rs = (RuleSet) slice;
+		try {
+			for (RuleSet rs : kb.getAllKnowledgeSlicesFor(PSMethodRulebased.getForwardKind(getProblemSolverContent()))) {
 				rules.addAll(rs.getRules());
 			}
 		}
-
-		rules.remove(null);
-
+		catch (NoSuchElementException e) {
+			// nothing todo, occurs when there is no rule of the psm in the kb
+		}
 		return rules;
 	}
 
-	protected abstract Class<? extends PSMethod> getProblemSolverContent();
+	protected abstract Class<? extends PSMethodRulebased> getProblemSolverContent();
 
 	@Override
 	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {

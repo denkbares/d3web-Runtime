@@ -20,7 +20,9 @@
 
 package de.d3web.indication.inference;
 
+import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.PSMethodRulebased;
+import de.d3web.core.inference.RuleSet;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 
@@ -32,16 +34,24 @@ import de.d3web.core.session.blackboard.Facts;
  */
 public class PSMethodStrategic extends PSMethodRulebased {
 
-	private static PSMethodStrategic instance = null;
+	public final static KnowledgeKind<RuleSet> FORWARD = new KnowledgeKind<RuleSet>(
+			"STRATEGIC.FORWARD",
+			RuleSet.class);
+	public final static KnowledgeKind<RuleSet> BACKWARD = new KnowledgeKind<RuleSet>(
+			"STRATEGIC.BACKWARD",
+			RuleSet.class);
+	// do not move this line above the declarations of the Knowledgekinds
+	private static final PSMethodStrategic instance = new PSMethodStrategic();
+
+	public PSMethodStrategic() {
+		super(FORWARD, BACKWARD);
+	}
 
 	/**
 	 * @return the one and only instance of this PSMethodContraIndication
 	 *         (Singleton)
 	 */
 	public static PSMethodStrategic getInstance() {
-		if (instance == null) {
-			instance = new PSMethodStrategic();
-		}
 		return instance;
 	}
 

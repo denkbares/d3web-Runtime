@@ -48,7 +48,6 @@ import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.ValueFactory;
 import de.d3web.costbenefit.inference.ConditionalValueSetter;
-import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
 
@@ -82,15 +81,9 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 
 	@Override
 	public int getEstimatedSize(de.d3web.core.knowledge.KnowledgeBase kb) {
-		Collection<KnowledgeSlice> relations = kb
-				.getAllKnowledgeSlicesFor(PSMethodCostBenefit.class);
-		int counter = 0;
-		for (KnowledgeSlice ks : relations) {
-			if (ks instanceof StateTransition) {
-				counter++;
-			}
-		}
-		return counter;
+		Collection<StateTransition> relations = kb
+				.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND);
+		return relations.size();
 	}
 
 	@Override
@@ -201,7 +194,6 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 			}
 		}
 		StateTransition st = new StateTransition(activationCondition, postTransitions, qcontainer);
-		qcontainer.getKnowledgeStore().addKnowledge(st.getProblemsolverContext(),
-				StateTransition.STATE_TRANSITION, st);
+		qcontainer.getKnowledgeStore().addKnowledge(StateTransition.KNOWLEDGE_KIND, st);
 	}
 }

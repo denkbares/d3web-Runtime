@@ -18,7 +18,7 @@
  */
 package de.d3web.core.io.rules;
 
-import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.PSMethodRulebased;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
@@ -34,7 +34,7 @@ public class HeuristicRulesPersitenceHandler extends
 	}
 
 	@Override
-	protected Class<? extends PSMethod> getProblemSolverContent() {
+	protected Class<? extends PSMethodRulebased> getProblemSolverContent() {
 		return PSMethodHeuristic.class;
 	}
 

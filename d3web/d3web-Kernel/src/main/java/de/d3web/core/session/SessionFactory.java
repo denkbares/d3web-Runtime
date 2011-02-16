@@ -32,7 +32,6 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.session.interviewmanager.FormStrategy;
 import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
 import de.d3web.core.session.interviewmanager.PSMethodInterview;
-import de.d3web.indication.inference.PSMethodDialogControlling;
 import de.d3web.indication.inference.PSMethodStrategic;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.scoring.inference.PSMethodHeuristic;
@@ -46,7 +45,6 @@ public final class SessionFactory {
 
 	private static final List<PSMethod> commonPSMethods = Arrays.asList(
 			PSMethodUserSelected.getInstance(),
-			new PSMethodDialogControlling(),
 			PSMethodStrategic.getInstance(),
 			PSMethodAbstraction.getInstance(),
 			PSMethodHeuristic.getInstance(),

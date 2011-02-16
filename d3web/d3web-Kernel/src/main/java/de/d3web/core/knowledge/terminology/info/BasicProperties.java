@@ -12,6 +12,7 @@ package de.d3web.core.knowledge.terminology.info;
 import java.util.Date;
 
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityNum;
 import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
 
@@ -127,5 +128,10 @@ public class BasicProperties {
 	 */
 	public static final Property<AbnormalityNum> ABNORMALITIY_NUM = Property.getProperty(
 			"abnormalityNum", AbnormalityNum.class);
+
+	public static boolean isAbstract(Question question) {
+		Boolean value = question.getInfoStore().getValue(ABSTRACTION_QUESTION);
+		return value != null && value.booleanValue();
+	}
 
 }

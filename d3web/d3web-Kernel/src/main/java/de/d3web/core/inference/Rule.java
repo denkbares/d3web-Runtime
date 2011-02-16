@@ -70,7 +70,7 @@ public class Rule implements CaseObjectSource {
 	 */
 	private Condition diagnosisContext;
 
-	private Class<? extends PSMethod> problemsolverContext;
+	private Class<? extends PSMethodRulebased> problemsolverContext;
 
 	/**
 	 * The specified action the rule activates, if <it>condition</it> is true
@@ -79,8 +79,27 @@ public class Rule implements CaseObjectSource {
 	 */
 	private PSAction ruleAction;
 
-	public Rule(Class<? extends PSMethod> context) {
+	public Rule(Class<? extends PSMethodRulebased> context) {
 		this.problemsolverContext = context;
+		activateContextClass(context);
+	}
+
+	/**
+	 * This is needed to fill the maps of FORWARD and BACKWARD in
+	 * PSMethodRuleBased
+	 * 
+	 * @created 16.02.2011
+	 * @param context
+	 */
+	private void activateContextClass(Class<? extends PSMethodRulebased> context) {
+		if (context != null) {
+			try {
+				Class.forName(context.getCanonicalName());
+			}
+			catch (ClassNotFoundException e) {
+				throw new IllegalArgumentException(e);
+			}
+		}
 	}
 
 	/**
@@ -265,7 +284,7 @@ public class Rule implements CaseObjectSource {
 		return exception;
 	}
 
-	public Class<? extends PSMethod> getProblemsolverContext() {
+	public Class<? extends PSMethodRulebased> getProblemsolverContext() {
 		return problemsolverContext;
 	}
 
@@ -299,37 +318,36 @@ public class Rule implements CaseObjectSource {
 	protected void updateActionReferences(
 			PSAction oldAction,
 			PSAction newAction) {
+		// do not add any knowledge when the problemsolver context is still null
+		if (getProblemsolverContext() == null) return;
+
 		if ((oldAction != null)
 				&& (oldAction.getBackwardObjects() != null)) {
 			removeFrom(
 					this,
 					oldAction.getBackwardObjects(),
-					getProblemsolverContext(),
-					MethodKind.BACKWARD);
+					PSMethodRulebased.getBackwardKind(getProblemsolverContext()));
 		}
 		if ((oldAction != null)
 				&& (oldAction.getForwardObjects() != null)) {
 			removeFrom(
 					this,
 					oldAction.getForwardObjects(),
-					getProblemsolverContext(),
-					MethodKind.FORWARD);
+					PSMethodRulebased.getForwardKind(getProblemsolverContext()));
 		}
 		if ((newAction != null)
 				&& (newAction.getBackwardObjects() != null)) {
 			insertInto(
 					this,
 					newAction.getBackwardObjects(),
-					getProblemsolverContext(),
-					MethodKind.BACKWARD);
+					PSMethodRulebased.getBackwardKind(getProblemsolverContext()));
 		}
 		if ((newAction != null)
 				&& (newAction.getForwardObjects() != null)) {
 			insertInto(
 					this,
 					newAction.getForwardObjects(),
-					getProblemsolverContext(),
-					MethodKind.FORWARD);
+					PSMethodRulebased.getForwardKind(getProblemsolverContext()));
 		}
 		updateConditionTerminals(oldAction, newAction, getCondition());
 		updateConditionTerminals(oldAction, newAction, getException());
@@ -349,15 +367,13 @@ public class Rule implements CaseObjectSource {
 				removeFrom(
 						this,
 						condi.getTerminalObjects(),
-						getProblemsolverContext(),
-						MethodKind.FORWARD);
+						PSMethodRulebased.getForwardKind(getProblemsolverContext()));
 			}
 			if (newAction != null) {
 				insertInto(
 						this,
 						condi.getTerminalObjects(),
-						getProblemsolverContext(),
-						MethodKind.FORWARD);
+						PSMethodRulebased.getForwardKind(getProblemsolverContext()));
 			}
 		}
 	}
@@ -374,11 +390,10 @@ public class Rule implements CaseObjectSource {
 	public static void removeFrom(
 			Rule r,
 			Collection<? extends TerminologyObject> namedObjects,
-			Class<? extends PSMethod> psContext,
-			MethodKind kind) {
+			KnowledgeKind<RuleSet> kind) {
 		if (namedObjects != null) {
 			for (TerminologyObject nob : namedObjects) {
-				removeFrom(r, psContext, kind, nob);
+				removeFrom(r, kind, nob);
 			}
 		}
 	}
@@ -391,16 +406,14 @@ public class Rule implements CaseObjectSource {
 	 * @param kind Methodkind
 	 * @param nob specified Object
 	 */
-	public static void removeFrom(Rule r, Class<? extends PSMethod> psContext, MethodKind kind, TerminologyObject nob) {
+	public static void removeFrom(Rule r, KnowledgeKind<RuleSet> kind, TerminologyObject nob) {
 		if (nob != null) {
-			KnowledgeSlice knowledge = nob.getKnowledgeStore().getKnowledge(
-					psContext,
+			RuleSet rs = nob.getKnowledgeStore().getKnowledge(
 					kind);
-			if (knowledge != null) {
-				RuleSet rs = (RuleSet) knowledge;
+			if (rs != null) {
 				rs.removeRule(r);
 				if (rs.isEmpty()) {
-					nob.getKnowledgeStore().removeKnowledge(psContext, kind, rs);
+					nob.getKnowledgeStore().removeKnowledge(kind, rs);
 				}
 			}
 		}
@@ -417,11 +430,10 @@ public class Rule implements CaseObjectSource {
 	public static void insertInto(
 			Rule r,
 			Collection<? extends TerminologyObject> namedObjects,
-			Class<? extends PSMethod> psContext,
-			MethodKind kind) {
+			KnowledgeKind<RuleSet> kind) {
 		if (namedObjects != null) {
 			for (TerminologyObject nob : namedObjects) {
-				insertInto(r, psContext, kind, nob);
+				insertInto(r, kind, nob);
 			}
 		}
 	}
@@ -434,19 +446,18 @@ public class Rule implements CaseObjectSource {
 	 * @param kind Methodkind
 	 * @param nob specified Object
 	 */
-	public static void insertInto(Rule r, Class<? extends PSMethod> psContext, MethodKind kind, TerminologyObject nob) {
+	public static void insertInto(Rule r, KnowledgeKind<RuleSet> kind, TerminologyObject nob) {
 		if (nob != null) {
 			KnowledgeSlice knowledge = nob.getKnowledgeStore().getKnowledge(
-					psContext,
 					kind);
 			if (knowledge != null) {
 				RuleSet rs = (RuleSet) knowledge;
 				rs.addRule(r);
 			}
 			else {
-				RuleSet rs = new RuleSet(psContext);
+				RuleSet rs = new RuleSet();
 				rs.addRule(r);
-				nob.getKnowledgeStore().addKnowledge(psContext, kind, rs);
+				nob.getKnowledgeStore().addKnowledge(kind, rs);
 			}
 		}
 	}
@@ -458,14 +469,18 @@ public class Rule implements CaseObjectSource {
 	 */
 	public void setCondition(
 			de.d3web.core.inference.condition.Condition newCondition) {
+		// do not add any knowledge when the problemsolver context is still null
+		if (getProblemsolverContext() == null) {
+			condition = newCondition;
+			return;
+		}
 
 		/* check, if there are already some conditions */
 		if (getCondition() != null) {
 			removeFrom(
 					this,
 					getCondition().getTerminalObjects(),
-					getProblemsolverContext(),
-					MethodKind.FORWARD);
+					PSMethodRulebased.getForwardKind(getProblemsolverContext()));
 		}
 		// removeRuleFromObjects(getCondition().getTerminalObjects());
 		condition = newCondition;
@@ -473,8 +488,7 @@ public class Rule implements CaseObjectSource {
 			insertInto(
 					this,
 					getCondition().getTerminalObjects(),
-					getProblemsolverContext(),
-					MethodKind.FORWARD);
+					PSMethodRulebased.getForwardKind(getProblemsolverContext()));
 			// insertRuleIntoObjects(getCondition().getTerminalObjects());
 		}
 	}
@@ -488,18 +502,23 @@ public class Rule implements CaseObjectSource {
 	 * heuristic problem solver is used.
 	 */
 	public void setContext(Condition newDiagnosisContext) {
+		// do not add any knowledge when the problemsolver context is still null
+		if (getProblemsolverContext() == null) {
+			diagnosisContext = newDiagnosisContext;
+			return;
+		}
 
 		/* check, if there are already some conditions */
 		if (getContext() != null) {
 			removeFrom(this,
 					getContext().getTerminalObjects(),
-					getProblemsolverContext(), MethodKind.FORWARD);
+					PSMethodRulebased.getForwardKind(getProblemsolverContext()));
 		}
 		diagnosisContext = newDiagnosisContext;
 		if (getContext() != null) {
 			insertInto(this,
 					getContext().getTerminalObjects(),
-					getProblemsolverContext(), MethodKind.FORWARD);
+					PSMethodRulebased.getForwardKind(getProblemsolverContext()));
 		}
 
 	}
@@ -509,17 +528,21 @@ public class Rule implements CaseObjectSource {
 	 */
 	public void setException(
 			de.d3web.core.inference.condition.Condition newException) {
+		// do not add any knowledge when the problemsolver context is still null
+		if (getProblemsolverContext() == null) {
+			exception = newException;
+			return;
+		}
+
 		/* check, if there are already some conditions */
 		if (getException() != null) {
 			removeFrom(this, getException().getTerminalObjects(),
-					getProblemsolverContext(),
-					MethodKind.FORWARD);
+					PSMethodRulebased.getForwardKind(getProblemsolverContext()));
 		}
 		exception = newException;
 		if (getException() != null) {
 			insertInto(this, getException().getTerminalObjects(),
-					getProblemsolverContext(),
-					MethodKind.FORWARD);
+					PSMethodRulebased.getForwardKind(getProblemsolverContext()));
 		}
 	}
 
@@ -531,75 +554,75 @@ public class Rule implements CaseObjectSource {
 		((CaseRuleComplex) session.getCaseObject(this)).setFired(newFired);
 	}
 
-	public void setProblemsolverContext(Class<? extends PSMethod> problemsolverContext) { // NOSONAR
+	public void setProblemsolverContext(Class<? extends PSMethodRulebased> problemsolverContext) { // NOSONAR
+		if (problemsolverContext == null) {
+			throw new NullPointerException(
+					"Setting the problemsolver context to null is not allowed.");
+		}
 		if (this.problemsolverContext != problemsolverContext) {
-			// remove old indexes
-			if (getCondition() != null) {
-				removeFrom(
+			activateContextClass(problemsolverContext);
+			// when the problemsolvercontext was null, nothing was added to the
+			// knowledgestores
+			if (getProblemsolverContext() != null) {
+				// remove old indexes
+				if (getCondition() != null) {
+					removeFrom(
 							this,
 							getCondition().getTerminalObjects(),
-							getProblemsolverContext(),
-							MethodKind.FORWARD);
-			}
-			if (getContext() != null) {
-				removeFrom(this,
+							PSMethodRulebased.getForwardKind(getProblemsolverContext()));
+				}
+				if (getContext() != null) {
+					removeFrom(this,
 							getContext().getTerminalObjects(),
-							getProblemsolverContext(), MethodKind.FORWARD);
-			}
-			if (getException() != null) {
-				removeFrom(this, getException().getTerminalObjects(),
-							getProblemsolverContext(),
-							MethodKind.FORWARD);
-			}
-			if (getAction() != null && (getAction().getBackwardObjects() != null)) {
-				removeFrom(
+							PSMethodRulebased.getForwardKind(getProblemsolverContext()));
+				}
+				if (getException() != null) {
+					removeFrom(this, getException().getTerminalObjects(),
+							PSMethodRulebased.getForwardKind(getProblemsolverContext()));
+				}
+				if (getAction() != null && (getAction().getBackwardObjects() != null)) {
+					removeFrom(
 							this,
 							getAction().getBackwardObjects(),
-							getProblemsolverContext(),
-							MethodKind.BACKWARD);
-			}
-			if (getAction() != null && (getAction().getForwardObjects() != null)) {
-				removeFrom(
+							PSMethodRulebased.getBackwardKind(getProblemsolverContext()));
+				}
+				if (getAction() != null && (getAction().getForwardObjects() != null)) {
+					removeFrom(
 							this,
 							getAction().getForwardObjects(),
-							getProblemsolverContext(),
-							MethodKind.FORWARD);
+							PSMethodRulebased.getBackwardKind(getProblemsolverContext()));
+				}
 			}
-
 			// insert new indexes
 			this.problemsolverContext = problemsolverContext;
 			if (getCondition() != null) {
 				insertInto(
 						this,
 						getCondition().getTerminalObjects(),
-						getProblemsolverContext(),
-						MethodKind.FORWARD);
+						PSMethodRulebased.getForwardKind(getProblemsolverContext()));
 			}
 			if (getContext() != null) {
 				insertInto(this,
 						getContext().getTerminalObjects(),
-						getProblemsolverContext(), MethodKind.FORWARD);
+						PSMethodRulebased.getForwardKind(getProblemsolverContext()));
 			}
 			if (getException() != null) {
 				insertInto(this, getException().getTerminalObjects(),
-						getProblemsolverContext(),
-						MethodKind.FORWARD);
+						PSMethodRulebased.getForwardKind(getProblemsolverContext()));
 			}
 			if ((getAction() != null)
 					&& (getAction().getBackwardObjects() != null)) {
 				insertInto(
 						this,
 						getAction().getBackwardObjects(),
-						getProblemsolverContext(),
-						MethodKind.BACKWARD);
+						PSMethodRulebased.getBackwardKind(getProblemsolverContext()));
 			}
 			if ((getAction() != null)
 					&& (getAction().getForwardObjects() != null)) {
 				insertInto(
 						this,
 						getAction().getForwardObjects(),
-						getProblemsolverContext(),
-						MethodKind.FORWARD);
+						PSMethodRulebased.getForwardKind(getProblemsolverContext()));
 			}
 		}
 	}

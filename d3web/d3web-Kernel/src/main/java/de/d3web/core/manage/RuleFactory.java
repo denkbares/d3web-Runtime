@@ -29,7 +29,7 @@ import de.d3web.abstraction.ActionSetValue;
 import de.d3web.abstraction.formula.FormulaElement;
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.PSAction;
-import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.PSMethodRulebased;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.terminology.Choice;
@@ -113,7 +113,7 @@ public final class RuleFactory {
 				null);
 	}
 
-	public static Rule createRule(PSAction theAction, Condition theCondition, Condition theException, Condition theContext, Class<? extends PSMethod> psMethodContext) {
+	public static Rule createRule(PSAction theAction, Condition theCondition, Condition theException, Condition theContext, Class<? extends PSMethodRulebased> psMethodContext) {
 		Rule rule = new Rule(psMethodContext);
 		setRuleParams(rule, theAction, theCondition, theException);
 		rule.setContext(theContext);

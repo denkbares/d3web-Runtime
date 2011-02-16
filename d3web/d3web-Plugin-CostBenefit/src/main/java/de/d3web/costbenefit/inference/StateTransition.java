@@ -21,9 +21,8 @@ package de.d3web.costbenefit.inference;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.MethodKind;
-import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
@@ -43,9 +42,8 @@ import de.d3web.core.session.blackboard.Fact;
  */
 public class StateTransition implements KnowledgeSlice {
 
-	private static final Class<PSMethodCostBenefit> PROBLEMSOLVER = PSMethodCostBenefit.class;
-
-	public static final MethodKind STATE_TRANSITION = new MethodKind("STATE_TRANSITION");
+	public static final KnowledgeKind<StateTransition> KNOWLEDGE_KIND = new KnowledgeKind<StateTransition>(
+			"KNOWLEDGE_KIND", StateTransition.class);
 
 	private Condition activationCondition;
 	private List<ValueTransition> postTransitions;
@@ -86,17 +84,6 @@ public class StateTransition implements KnowledgeSlice {
 
 	public QContainer getQcontainer() {
 		return qcontainer;
-	}
-
-	@Override
-	public Class<? extends PSMethod> getProblemsolverContext() {
-		return PROBLEMSOLVER;
-	}
-
-	@Override
-	public void remove() {
-		qcontainer.getKnowledgeStore().removeKnowledge(getProblemsolverContext(), STATE_TRANSITION,
-				this);
 	}
 
 	/**
@@ -146,8 +133,7 @@ public class StateTransition implements KnowledgeSlice {
 	 * @return StateTransition of the QContainer or null if it has none
 	 */
 	public static StateTransition getStateTransition(QContainer qcon) {
-		return (StateTransition) qcon.getKnowledgeStore().getKnowledge(PROBLEMSOLVER,
-				STATE_TRANSITION);
+		return qcon.getKnowledgeStore().getKnowledge(KNOWLEDGE_KIND);
 	}
 
 	/**

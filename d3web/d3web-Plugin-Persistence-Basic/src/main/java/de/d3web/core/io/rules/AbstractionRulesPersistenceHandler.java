@@ -19,7 +19,7 @@
 package de.d3web.core.io.rules;
 
 import de.d3web.abstraction.inference.PSMethodAbstraction;
-import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.PSMethodRulebased;
 
 /**
  * PersistenceHanlder for abstraction rules
@@ -34,7 +34,7 @@ public class AbstractionRulesPersistenceHandler extends
 	}
 
 	@Override
-	protected Class<? extends PSMethod> getProblemSolverContent() {
+	protected Class<? extends PSMethodRulebased> getProblemSolverContent() {
 		return PSMethodAbstraction.class;
 	}
 }

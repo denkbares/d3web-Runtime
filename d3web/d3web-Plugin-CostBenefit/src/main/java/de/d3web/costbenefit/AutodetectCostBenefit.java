@@ -20,9 +20,8 @@ package de.d3web.costbenefit;
 
 import java.util.Collection;
 
-import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.costbenefit.inference.PSMethodCostBenefit;
+import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.plugin.Autodetect;
 
 /**
@@ -34,7 +33,7 @@ public class AutodetectCostBenefit implements Autodetect {
 
 	@Override
 	public boolean check(KnowledgeBase kb) {
-		Collection<KnowledgeSlice> ks = kb.getAllKnowledgeSlicesFor(PSMethodCostBenefit.class);
+		Collection<StateTransition> ks = kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND);
 		return (ks.size() != 0);
 	}
 

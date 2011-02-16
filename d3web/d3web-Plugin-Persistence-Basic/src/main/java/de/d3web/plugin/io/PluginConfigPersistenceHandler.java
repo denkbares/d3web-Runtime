@@ -30,9 +30,7 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSConfig;
-import de.d3web.core.inference.PSMethod;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.PersistenceManager;
@@ -136,14 +134,7 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 	}
 
 	private Collection<PluginEntry> getEntries(KnowledgeBase kb) {
-		Collection<KnowledgeSlice> pluginconfigs = kb.getAllKnowledgeSlicesFor(PSMethod.class);
-		for (KnowledgeSlice ks : pluginconfigs) {
-			if (ks instanceof PluginConfig) {
-				PluginConfig pc = (PluginConfig) ks;
-				return pc.getEntries();
-			}
-		}
-		return null;
+		return PluginConfig.getPluginConfig(kb).getEntries();
 	}
 
 }

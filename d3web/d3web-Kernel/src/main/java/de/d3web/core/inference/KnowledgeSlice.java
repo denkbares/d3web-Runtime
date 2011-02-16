@@ -37,23 +37,4 @@ public interface KnowledgeSlice {
 	// TODO: vb: discuss whether each slice should have an id? what is the sense
 	// behind that?
 	String getId();
-
-	/**
-	 * Creation date: (30.08.00 17:23:04)
-	 * 
-	 * @return the class of the PSMethod in which this KnowledgeSlice makes
-	 *         sense.
-	 */
-	// TODO: vb: Either (1) delete this method (only used for rules) or (2)
-	// change addKnowledge in a way that the context need not to be specified.
-	public Class<? extends PSMethod> getProblemsolverContext();
-
-	/**
-	 * Prompts the knowledgeslice to remove itsself from all objects
-	 * 
-	 */
-	// TODO: vb: discuss whether this method should be defined. It forces the
-	// slices to know where they are added. This may be useful for rules but not
-	// appropriate for general knowledge slices.
-	public void remove();
 }

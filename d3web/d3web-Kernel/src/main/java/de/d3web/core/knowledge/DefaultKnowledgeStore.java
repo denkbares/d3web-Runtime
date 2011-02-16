@@ -21,10 +21,8 @@ package de.d3web.core.knowledge;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.MethodKind;
-import de.d3web.core.inference.PSMethod;
-import de.d3web.core.utilities.Pair;
 
 /**
  * Default implementation of a KnowledgeStore
@@ -34,36 +32,31 @@ import de.d3web.core.utilities.Pair;
  */
 public class DefaultKnowledgeStore implements KnowledgeStore {
 
-	private final Map<Pair<Class<? extends PSMethod>, MethodKind>, KnowledgeSlice> entries = new HashMap<Pair<Class<? extends PSMethod>, MethodKind>, KnowledgeSlice>();
+	private final Map<KnowledgeKind<?>, KnowledgeSlice> entries = new HashMap<KnowledgeKind<?>, KnowledgeSlice>();
 
 	@Override
-	public void addKnowledge(Class<? extends PSMethod> solver, MethodKind kind, KnowledgeSlice slice) {
-		entries.put(createEntryKey(solver, kind), slice);
+	public void addKnowledge(KnowledgeKind<?> kind, KnowledgeSlice slice) {
+		entries.put(kind, slice);
 	}
 
 	@Override
-	public void removeKnowledge(Class<? extends PSMethod> solver, MethodKind kind, KnowledgeSlice slice) {
-		if (getKnowledge(solver, kind) == slice) {
-			entries.remove(createEntryKey(solver, kind));
+	public void removeKnowledge(KnowledgeKind<?> kind, KnowledgeSlice slice) {
+		if (getKnowledge(kind) == slice) {
+			entries.remove(kind);
 		}
 		else {
-			throw new IllegalArgumentException("Slice " + slice + " not contained with " + solver
-					+ " and " + kind);
+			throw new IllegalArgumentException("Slice " + slice
+					+ " not contained with KnowlegeKind " + kind);
 		}
 	}
 
 	@Override
-	public KnowledgeSlice getKnowledge(Class<? extends PSMethod> solver, MethodKind kind) {
-		return entries.get(createEntryKey(solver, kind));
+	public <T extends KnowledgeSlice> T getKnowledge(KnowledgeKind<T> kind) {
+		return kind.getClazz().cast(entries.get(kind));
 	}
 
 	@Override
 	public KnowledgeSlice[] getKnowledge() {
 		return entries.values().toArray(new KnowledgeSlice[entries.size()]);
 	}
-
-	private Pair<Class<? extends PSMethod>, MethodKind> createEntryKey(Class<? extends PSMethod> clazz, MethodKind methodKind) {
-		return new Pair<Class<? extends PSMethod>, MethodKind>(clazz, methodKind);
-	}
-
 }

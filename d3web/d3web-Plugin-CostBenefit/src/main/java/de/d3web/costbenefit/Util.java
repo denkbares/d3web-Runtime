@@ -35,7 +35,6 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
@@ -92,8 +91,8 @@ public final class Util {
 	}
 
 	public static StateTransition extractStateTransition(QContainer qcon) {
-		KnowledgeSlice knowledge = qcon.getKnowledgeStore().getKnowledge(PSMethodCostBenefit.class,
-				StateTransition.STATE_TRANSITION);
+		KnowledgeSlice knowledge = qcon.getKnowledgeStore().getKnowledge(
+				StateTransition.KNOWLEDGE_KIND);
 		if (knowledge != null) {
 			if (knowledge instanceof StateTransition) {
 				return (StateTransition) knowledge;

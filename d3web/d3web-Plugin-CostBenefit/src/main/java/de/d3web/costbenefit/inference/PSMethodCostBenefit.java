@@ -215,8 +215,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		for (QContainer qcon : qcons) {
 			if (isDone(qcon, session)) {
 				KnowledgeSlice ks = qcon.getKnowledgeStore().getKnowledge(
-						PSMethodCostBenefit.class,
-						StateTransition.STATE_TRANSITION);
+						StateTransition.KNOWLEDGE_KIND);
 				if (ks != null) {
 					StateTransition st = (StateTransition) ks;
 					st.fire(session);

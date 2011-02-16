@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.d3web.core.inference.MethodKind;
+import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.PostHookablePSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -35,6 +35,7 @@ import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
 import de.d3web.diaFlux.flow.EdgeMap;
+import de.d3web.diaFlux.flow.FlowSet;
 import de.d3web.diaFlux.flow.IEdge;
 import de.d3web.diaFlux.flow.INode;
 import de.d3web.diaFlux.flow.INodeData;
@@ -52,8 +53,14 @@ import de.d3web.diaFlux.flow.ValidSupport;
  */
 public class FluxSolver implements PostHookablePSMethod {
 
-	public static final MethodKind DIAFLUX = new MethodKind("DIAFLUX");
-	public static final MethodKind NODE_REGISTRY = new MethodKind("NodeRegistry");
+	public static final KnowledgeKind<FlowSet> DIAFLUX = new KnowledgeKind<FlowSet>("DIAFLUX",
+			FlowSet.class);
+	public static final KnowledgeKind<NodeRegistry> NODE_REGISTRY = new KnowledgeKind<NodeRegistry>(
+			"NodeRegistry", NodeRegistry.class);
+	public final static KnowledgeKind<EdgeMap> FORWARD = new KnowledgeKind<EdgeMap>(
+			"FLUXSOLVER.FORWARD", EdgeMap.class);
+	public final static KnowledgeKind<NodeList> BACKWARD = new KnowledgeKind<NodeList>(
+			"FLUXSOLVER.BACKWARD", NodeList.class);
 
 	public static final Level LEVEL = Level.INFO;
 
@@ -157,9 +164,7 @@ public class FluxSolver implements PostHookablePSMethod {
 			}
 
 			TerminologyObject object = propagationEntry.getObject();
-			EdgeMap slice = (EdgeMap) object.getKnowledgeStore().getKnowledge(
-					FluxSolver.class,
-					MethodKind.FORWARD);
+			EdgeMap slice = object.getKnowledgeStore().getKnowledge(FORWARD);
 
 			// TO does not occur in any edge
 			if (slice == null) {
@@ -186,9 +191,7 @@ public class FluxSolver implements PostHookablePSMethod {
 		for (PropagationEntry propagationEntry : changes) {
 
 			TerminologyObject object = propagationEntry.getObject();
-			NodeList knowledge = (NodeList) object.getKnowledgeStore().getKnowledge(
-					FluxSolver.class,
-					MethodKind.BACKWARD);
+			NodeList knowledge = object.getKnowledgeStore().getKnowledge(BACKWARD);
 
 			if (knowledge == null) continue;
 

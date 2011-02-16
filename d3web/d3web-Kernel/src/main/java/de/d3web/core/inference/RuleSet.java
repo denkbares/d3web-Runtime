@@ -19,7 +19,6 @@
 
 package de.d3web.core.inference;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -28,7 +27,7 @@ import java.util.List;
 import de.d3web.core.utilities.IdentitySet;
 
 /**
- * Encapsulates rules of one PSMethod and one MethodKind to one KnowlegeSlice
+ * Encapsulates rules of one PSMethod and one KnowledgeKind to one KnowlegeSlice
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
@@ -38,29 +37,15 @@ public class RuleSet implements KnowledgeSlice {
 	// rules that equal are entered into the set, but the same rule
 	// (reference-identity) will not be inserted twice
 	private final Collection<Rule> rules = new IdentitySet<Rule>();
-	private final Class<? extends PSMethod> psContext;
 	private final String id;
 
-	public RuleSet(Class<? extends PSMethod> psContext) {
-		this.psContext = psContext;
+	public RuleSet() {
 		id = "RuleSet" + count++;
 	}
 
 	@Override
 	public String getId() {
 		return id;
-	}
-
-	@Override
-	public Class<? extends PSMethod> getProblemsolverContext() {
-		return psContext;
-	}
-
-	@Override
-	public void remove() {
-		for (Rule r : new ArrayList<Rule>(rules)) {
-			r.remove();
-		}
 	}
 
 	public List<Rule> getRules() {
@@ -75,7 +60,15 @@ public class RuleSet implements KnowledgeSlice {
 		return rules.isEmpty();
 	}
 
+	/**
+	 * Adds a Rule to the RuleSet
+	 * 
+	 * @created 15.02.2011
+	 * @param r Rule
+	 * @throws NullPointerException when the rule is null
+	 */
 	public void addRule(Rule r) {
+		if (r == null) throw new NullPointerException();
 		rules.add(r);
 	}
 

@@ -34,6 +34,7 @@ import de.d3web.abstraction.ActionSetValue;
 import de.d3web.abstraction.formula.FormulaDateElement;
 import de.d3web.abstraction.formula.FormulaNumber;
 import de.d3web.abstraction.formula.Today;
+import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.io.fragments.actions.ContraIndicationActionHandler;
 import de.d3web.core.io.fragments.actions.HeuristicPSActionHandler;
@@ -54,10 +55,12 @@ import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.indication.ActionContraIndication;
 import de.d3web.indication.ActionIndication;
 import de.d3web.indication.ActionSuppressAnswer;
+import de.d3web.indication.inference.PSMethodStrategic;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.scoring.ActionHeuristicPS;
 import de.d3web.scoring.Score;
+import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
  * @author merz
@@ -107,7 +110,7 @@ public class ActionTest {
 
 	@Test
 	public void testActionSuppressAnswer() throws IOException {
-
+		rule.setProblemsolverContext(PSMethodStrategic.class);
 		ActionSuppressAnswer actionSuppressAnswer = new ActionSuppressAnswer();
 		rule.setAction(actionSuppressAnswer);
 		actionSuppressAnswer.setQuestion(questionMC);
@@ -142,6 +145,7 @@ public class ActionTest {
 		indicationList.add(qContainer);
 		indicationList.add(questionMC);
 
+		rule.setProblemsolverContext(PSMethodStrategic.class);
 		ActionIndication ai = new ActionIndication();
 		rule.setAction(ai);
 		ai.setQASets(indicationList);
@@ -193,6 +197,7 @@ public class ActionTest {
 
 	@Test
 	public void testActionHeuristicPS() throws Exception {
+		rule.setProblemsolverContext(PSMethodHeuristic.class);
 		ActionHeuristicPS ah = new ActionHeuristicPS();
 		rule.setAction(ah);
 		ah.setSolution(solution);
@@ -224,6 +229,7 @@ public class ActionTest {
 		setValueList.add(fn);
 		setValueList.add(answerYes);
 
+		rule.setProblemsolverContext(PSMethodAbstraction.class);
 		ActionSetValue aav = new ActionSetValue();
 		rule.setAction(aav);
 		aav.setQuestion(questionMC);
@@ -296,6 +302,7 @@ public class ActionTest {
 	public void testActionSetValueAndActionAddValueDate() throws Exception {
 		FormulaDateElement fn = new Today(new FormulaNumber(new Double(13)));
 
+		rule.setProblemsolverContext(PSMethodAbstraction.class);
 		ActionSetValue aav = new ActionSetValue();
 		rule.setAction(aav);
 		aav.setQuestion(questionDate);

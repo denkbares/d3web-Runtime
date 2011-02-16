@@ -47,7 +47,6 @@ import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
 import de.d3web.xcl.XCLRelationType;
-import de.d3web.xcl.inference.PSMethodXCL;
 
 /**
  * PersistenceHandler for XCLModels
@@ -73,7 +72,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 
 	@Override
 	public int getEstimatedSize(KnowledgeBase kb) {
-		return kb.getAllKnowledgeSlicesFor(PSMethodXCL.class, XCLModel.XCLMODEL).size();
+		return kb.getAllKnowledgeSlicesFor(XCLModel.KNOWLEDGE_KIND).size();
 	}
 
 	public Element getModelElement(XCLModel xclmodel, Document doc) throws IOException {
@@ -138,7 +137,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 		root.appendChild(ksNode);
 
 		ArrayList<KnowledgeSlice> slices = new ArrayList<KnowledgeSlice>(
-				kb.getAllKnowledgeSlicesFor(PSMethodXCL.class, XCLModel.XCLMODEL));
+				kb.getAllKnowledgeSlicesFor(XCLModel.KNOWLEDGE_KIND));
 		Collections.sort(slices, new KnowledgeSliceComparator());
 		float cur = 0;
 		int max = getEstimatedSize(kb);
@@ -203,7 +202,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 		if (considerOnlyRelevantRelations != null) {
 			model.setConsiderOnlyRelevantRelations(Boolean.parseBoolean(considerOnlyRelevantRelations));
 		}
-		diag.getKnowledgeStore().addKnowledge(PSMethodXCL.class, XCLModel.XCLMODEL, model);
+		diag.getKnowledgeStore().addKnowledge(XCLModel.KNOWLEDGE_KIND, model);
 
 	}
 

@@ -34,10 +34,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSConfig;
-import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -128,24 +127,6 @@ public class KnowledgeBase implements NamedObject {
 
 	/**
 	 * Collects and returns all {@link KnowledgeSlice} instances that are stored
-	 * in this {@link KnowledgeBase} for a specified problem-solver.
-	 * 
-	 * @return Collection containing objects of type {@link KnowledgeSlice} for
-	 *         the specified problem-solver
-	 */
-	public Collection<KnowledgeSlice> getAllKnowledgeSlicesFor(
-			Class<? extends PSMethod> problemSolverContext) {
-		Set<KnowledgeSlice> slices = new HashSet<KnowledgeSlice>();
-		for (KnowledgeSlice ks : getAllKnowledgeSlices()) {
-			if (ks.getProblemsolverContext().equals(problemSolverContext)) {
-				slices.add(ks);
-			}
-		}
-		return slices;
-	}
-
-	/**
-	 * Collects and returns all {@link KnowledgeSlice} instances that are stored
 	 * in this {@link KnowledgeBase} for a specified problem-solver and
 	 * specified access key.
 	 * 
@@ -153,18 +134,18 @@ public class KnowledgeBase implements NamedObject {
 	 *         the specified problem-solver and access key
 	 * 
 	 * @param problemsolver the specified problem-solver
-	 * @param accesskey the specified access key how the knowledge is stored in
-	 *        the problem-solver
+	 * @param kind the specified access key how the knowledge is stored in the
+	 *        problem-solver
 	 * @return a {@link Collection} of {@link KnowledgeSlice} instances
 	 *         containing all knowledge for the specified problem-solver and
 	 *         access key
 	 */
-	public Collection<KnowledgeSlice> getAllKnowledgeSlicesFor(Class<? extends PSMethod> problemsolver, MethodKind accesskey) {
-		Collection<KnowledgeSlice> slices = new LinkedList<KnowledgeSlice>();
-		KnowledgeSlice ks = getKnowledgeStore().getKnowledge(problemsolver, accesskey);
+	public <T extends KnowledgeSlice> Collection<T> getAllKnowledgeSlicesFor(KnowledgeKind<T> kind) {
+		Collection<T> slices = new LinkedList<T>();
+		T ks = getKnowledgeStore().getKnowledge(kind);
 		if (ks != null) slices.add(ks);
 		for (TerminologyObject to : manager.getAllTerminologyObjects()) {
-			ks = to.getKnowledgeStore().getKnowledge(problemsolver, accesskey);
+			ks = to.getKnowledgeStore().getKnowledge(kind);
 			if (ks != null) slices.add(ks);
 		}
 		return slices;

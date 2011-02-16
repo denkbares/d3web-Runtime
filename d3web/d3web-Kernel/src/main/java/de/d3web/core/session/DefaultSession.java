@@ -277,10 +277,10 @@ public class DefaultSession implements Session {
 	 * @param psmethodClass java.lang.Class
 	 */
 	@Override
-	public PSMethod getPSMethodInstance(Class<? extends PSMethod> context) {
+	public <T extends PSMethod> T getPSMethodInstance(Class<T> context) {
 		for (PSMethod psm : usedPSMethods) {
 			if (psm.getClass().equals(context)) {
-				return psm;
+				return context.cast(psm);
 			}
 		}
 		return null;

@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.PSMethod;
 import de.d3web.core.utilities.Pair;
 import de.d3web.diaFlux.flow.INode;
 
@@ -142,15 +141,4 @@ public class NodeRegistry implements KnowledgeSlice {
 	public String getId() {
 		return "NodeRegistry"; // There will only be one
 	}
-
-	@Override
-	public Class<? extends PSMethod> getProblemsolverContext() {
-		return FluxSolver.class;
-	}
-
-	@Override
-	public void remove() {
-
-	}
-
 }

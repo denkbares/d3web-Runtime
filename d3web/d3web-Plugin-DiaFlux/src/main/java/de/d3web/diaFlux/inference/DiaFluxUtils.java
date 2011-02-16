@@ -53,7 +53,6 @@ public final class DiaFluxUtils {
 	public static FlowSet getFlowSet(KnowledgeBase knowledgeBase) {
 
 		KnowledgeSlice knowledge = knowledgeBase.getKnowledgeStore().getKnowledge(
-				FluxSolver.class,
 				FluxSolver.DIAFLUX);
 
 		return (FlowSet) knowledge;
@@ -113,12 +112,11 @@ public final class DiaFluxUtils {
 	 */
 	public static void addFlow(Flow flow, KnowledgeBase base) {
 
-		FlowSet flowSet = (FlowSet) base.getKnowledgeStore().getKnowledge(FluxSolver.class,
-				FluxSolver.DIAFLUX);
+		FlowSet flowSet = base.getKnowledgeStore().getKnowledge(FluxSolver.DIAFLUX);
 		;
 		if (flowSet == null) {
 			flowSet = new FlowSet();
-			base.getKnowledgeStore().addKnowledge(FluxSolver.class, FluxSolver.DIAFLUX, flowSet);
+			base.getKnowledgeStore().addKnowledge(FluxSolver.DIAFLUX, flowSet);
 
 		}
 		flowSet.put(flow);
@@ -169,13 +167,11 @@ public final class DiaFluxUtils {
 	 * @return s the NodeRegistry to look up nodes by Name
 	 */
 	public static NodeRegistry getNodeRegistry(KnowledgeBase base) {
-		NodeRegistry registry = (NodeRegistry) base.getKnowledgeStore().getKnowledge(
-				FluxSolver.class,
-				FluxSolver.NODE_REGISTRY);
+		NodeRegistry registry = base.getKnowledgeStore().getKnowledge(FluxSolver.NODE_REGISTRY);
 
 		if (registry == null) {
 			registry = new NodeRegistry();
-			base.getKnowledgeStore().addKnowledge(FluxSolver.class, FluxSolver.NODE_REGISTRY,
+			base.getKnowledgeStore().addKnowledge(FluxSolver.NODE_REGISTRY,
 					registry);
 
 		}

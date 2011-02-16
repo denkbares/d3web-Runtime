@@ -24,5 +24,8 @@ public interface Autodetect {
 
 	public final static String EXTENSIONPOINT_ID = "Autodetect";
 
+	/**
+	 * @return true, if the Plugin is needed, false otherwise
+	 */
 	public boolean check(KnowledgeBase kb);
 }

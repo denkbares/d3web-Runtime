@@ -28,7 +28,6 @@ import java.util.Collection;
 import java.util.List;
 
 import junit.framework.TestCase;
-import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -42,7 +41,6 @@ import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
 import de.d3web.xcl.XCLRelationType;
-import de.d3web.xcl.inference.PSMethodXCL;
 import de.d3web.xcl.io.XCLModelPersistenceHandler;
 
 /**
@@ -104,14 +102,11 @@ public class XCLModelTest extends TestCase {
 		File file2 = new File("target/kbs/test.jar");
 		pm.save(k, file2);
 		KnowledgeBase k2 = pm.load(file2);
-		Collection<KnowledgeSlice> col = k2.getAllKnowledgeSlicesFor(PSMethodXCL.class);
-		for (Object current : col) {
-			if (current instanceof de.d3web.xcl.XCLModel) {
-				XCLModel model = (XCLModel) current;
-				assertEquals(0.3, model.getMinSupport());
-				assertEquals(0.7, model.getSuggestedThreshold());
-				assertEquals(0.8, model.getEstablishedThreshold());
-			}
+		Collection<XCLModel> col = k2.getAllKnowledgeSlicesFor(XCLModel.KNOWLEDGE_KIND);
+		for (XCLModel model : col) {
+			assertEquals(0.3, model.getMinSupport());
+			assertEquals(0.7, model.getSuggestedThreshold());
+			assertEquals(0.8, model.getEstablishedThreshold());
 		}
 
 	}
@@ -179,7 +174,7 @@ public class XCLModelTest extends TestCase {
 		model.setMinSupport(0.3);
 		model.setSuggestedThreshold(0.7);
 		model.setEstablishedThreshold(0.8);
-		terminator.getKnowledgeStore().addKnowledge(PSMethodXCL.class, XCLModel.XCLMODEL, model);
+		terminator.getKnowledgeStore().addKnowledge(XCLModel.KNOWLEDGE_KIND, model);
 		k.getRootSolution().addChild(terminator);
 	}
 

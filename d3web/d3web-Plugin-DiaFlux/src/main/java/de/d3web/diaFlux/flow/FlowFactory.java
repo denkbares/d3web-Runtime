@@ -22,7 +22,6 @@ package de.d3web.diaFlux.flow;
 
 import java.util.List;
 
-import de.d3web.core.inference.MethodKind;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -98,13 +97,12 @@ public final class FlowFactory {
 			// index them at the NamedObjects their condition contains
 			for (TerminologyObject nobject : condition.getTerminalObjects()) {
 
-				EdgeMap slice = (EdgeMap) nobject.getKnowledgeStore().getKnowledge(
-						FluxSolver.class,
-						MethodKind.FORWARD);
+				EdgeMap slice = nobject.getKnowledgeStore().getKnowledge(
+						FluxSolver.FORWARD);
 
 				if (slice == null) {
 					slice = new EdgeMap("EdgeMap" + nobject.getName());
-					nobject.getKnowledgeStore().addKnowledge(FluxSolver.class, MethodKind.FORWARD,
+					nobject.getKnowledgeStore().addKnowledge(FluxSolver.FORWARD,
 							slice);
 				}
 
@@ -124,14 +122,13 @@ public final class FlowFactory {
 			// index them at the NamedObjects their condition contains
 			for (TerminologyObject nobject : list) {
 				// TODO use different MK
-				NodeList slice = (NodeList) nobject.getKnowledgeStore().getKnowledge(
-						FluxSolver.class,
-						MethodKind.BACKWARD);
+				NodeList slice = nobject.getKnowledgeStore().getKnowledge(
+						FluxSolver.BACKWARD);
 
 				if (slice == null) {
 					slice = new NodeList();
 					nobject.getKnowledgeStore().addKnowledge(
-							FluxSolver.class, MethodKind.BACKWARD,
+							FluxSolver.BACKWARD,
 							slice);
 				}
 

@@ -18,7 +18,7 @@
  */
 package de.d3web.core.io.rules;
 
-import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.PSMethodRulebased;
 import de.d3web.indication.inference.PSMethodStrategic;
 
 /**
@@ -34,7 +34,7 @@ public class StrategicRulesPersistenceHandler extends
 	}
 
 	@Override
-	protected Class<? extends PSMethod> getProblemSolverContent() {
+	protected Class<? extends PSMethodRulebased> getProblemSolverContent() {
 		return PSMethodStrategic.class;
 	}
 

@@ -22,10 +22,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.MethodKind;
-import de.d3web.core.inference.PSMethod;
-import de.d3web.xcl.inference.PSMethodXCL;
 
 /**
  * Stores XCLModels in one KnowledgeSlice
@@ -35,11 +33,11 @@ import de.d3web.xcl.inference.PSMethodXCL;
 public class XCLContributedModelSet implements KnowledgeSlice {
 
 	/**
-	 * MethodKind for backward referenced xclModels from the NamedObjects of the
-	 * Conditions of the contained relations
+	 * KnowledgeKind for backward referenced xclModels from the NamedObjects of
+	 * the Conditions of the contained relations
 	 */
-	public final static MethodKind XCL_CONTRIBUTED_MODELS = new MethodKind(
-			"XCL_CONTRIBUTED_MODELS");
+	public final static KnowledgeKind<XCLContributedModelSet> KNOWLEDGE_KIND = new KnowledgeKind<XCLContributedModelSet>(
+			"KNOWLEDGE_KIND", XCLContributedModelSet.class);
 	private static int count = 0;
 	private String id = null;
 	private List<XCLModel> models = new ArrayList<XCLModel>();
@@ -50,17 +48,6 @@ public class XCLContributedModelSet implements KnowledgeSlice {
 			id = "XCLContributedModelSet" + count++;
 		}
 		return id;
-	}
-
-	@Override
-	public Class<? extends PSMethod> getProblemsolverContext() {
-		return PSMethodXCL.class;
-	}
-
-	@Override
-	public void remove() {
-		// nothing to do, XCL Models should be removed from their diagnosis
-
 	}
 
 	public void addModel(XCLModel model) {
