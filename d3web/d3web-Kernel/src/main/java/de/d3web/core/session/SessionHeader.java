@@ -67,4 +67,7 @@ public interface SessionHeader extends NamedObject {
 	 */
 	public Date getCreationDate();
 
+	@Override
+	public String getId();
+
 }

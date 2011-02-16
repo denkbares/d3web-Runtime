@@ -71,6 +71,7 @@ public class DefaultSession implements Session {
 
 	private final Map<CaseObjectSource, SessionObject> dynamicStore;
 
+	private String id = null;
 	private final Blackboard blackboard;
 	private Protocol protocol = new DefaultProtocol();
 
@@ -79,24 +80,19 @@ public class DefaultSession implements Session {
 	private final Date created;
 	private Date edited;
 
-	private final String name;
+	private String name;
 	private final InfoStore infoStore = new SessionInfoStore(this);
 
-	protected DefaultSession(String name, KnowledgeBase knowledgebase, Date creationDate) {
-		this(name, knowledgebase, creationDate, true);
+	protected DefaultSession(String id, KnowledgeBase knowledgebase, Date creationDate) {
+		this(id, knowledgebase, creationDate, true);
 	}
 
-	protected DefaultSession(String name, KnowledgeBase knowledgebase, Date creationDate, boolean psm) {
+	protected DefaultSession(String id, KnowledgeBase knowledgebase, Date creationDate, boolean psm) {
 		// check that we have a valid date
 		if (creationDate == null) {
 			creationDate = new Date();
 		}
-		if (name != null) {
-			this.name = name;
-		}
-		else {
-			this.name = createNewCaseName();
-		}
+		this.id = id;
 		this.created = creationDate;
 		this.edited = creationDate;
 		this.kb = knowledgebase;
@@ -138,10 +134,6 @@ public class DefaultSession implements Session {
 		// TODO: add knowlegde base id, name, version
 		// into the case header (dc markup?, properties?)
 
-	}
-
-	private String createNewCaseName() {
-		return UUID.randomUUID().toString();
 	}
 
 	/**
@@ -221,9 +213,11 @@ public class DefaultSession implements Session {
 	 * @see de.d3web.kernel.domainModel.IDReference#getId()
 	 */
 	@Override
-	@Deprecated
 	public String getId() {
-		return getName();
+		if (id == null) {
+			id = createNewCaseId();
+		}
+		return id;
 	}
 
 	@Override
@@ -234,6 +228,10 @@ public class DefaultSession implements Session {
 	@Override
 	public Protocol getProtocol() {
 		return this.protocol;
+	}
+
+	private String createNewCaseId() {
+		return UUID.randomUUID().toString();
 	}
 
 	/**
@@ -354,6 +352,10 @@ public class DefaultSession implements Session {
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override
