@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -32,13 +33,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
-import de.d3web.core.io.utilities.KnowledgeSliceComparator;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -95,17 +94,15 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 		doc.appendChild(root);
 		Element ksNode = doc.createElement("KnowledgeSlices");
 		root.appendChild(ksNode);
-		SortedSet<KnowledgeSlice> knowledgeSlices = new TreeSet<KnowledgeSlice>(
-				new KnowledgeSliceComparator());
-		for (KnowledgeSlice knowledgeSlice : kb.getAllKnowledgeSlices()) {
+		SortedSet<StateTransition> knowledgeSlices = new TreeSet<StateTransition>(
+				new StateTransitionComparator());
+		for (StateTransition knowledgeSlice : kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND)) {
 			if (knowledgeSlice != null) {
 				knowledgeSlices.add(knowledgeSlice);
 			}
 		}
-		for (KnowledgeSlice model : knowledgeSlices) {
-			if (model instanceof StateTransition) {
-				ksNode.appendChild(getElement((StateTransition) model, doc));
-			}
+		for (StateTransition model : knowledgeSlices) {
+			ksNode.appendChild(getElement(model, doc));
 		}
 
 		Util.writeDocumentToOutputStream(doc, stream);
@@ -113,7 +110,6 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 
 	private Element getElement(StateTransition st, Document doc) throws IOException {
 		Element element = doc.createElement("StateTransition");
-		element.setAttribute("ID", st.getId());
 		element.setAttribute("QID", st.getQcontainer().getName());
 		Condition activationCondition = st.getActivationCondition();
 		if (activationCondition != null) {
@@ -195,5 +191,14 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 		}
 		StateTransition st = new StateTransition(activationCondition, postTransitions, qcontainer);
 		qcontainer.getKnowledgeStore().addKnowledge(StateTransition.KNOWLEDGE_KIND, st);
+	}
+
+	private class StateTransitionComparator implements Comparator<StateTransition> {
+
+		@Override
+		public int compare(StateTransition r1, StateTransition r2) {
+			return (r1.getQcontainer().getName().compareTo(r2.getQcontainer().getName()));
+		}
+
 	}
 }

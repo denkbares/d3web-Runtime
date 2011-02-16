@@ -136,9 +136,4 @@ public class NodeRegistry implements KnowledgeSlice {
 	private Pair<String, String> createPair(String flowName, String nodeName) {
 		return new Pair<String, String>(flowName, nodeName);
 	}
-
-	@Override
-	public String getId() {
-		return "NodeRegistry"; // There will only be one
-	}
 }

@@ -1,61 +1,46 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <KnowledgeBase system="d3web" type="xclpattern">
 <KnowledgeSlices>
-<XCLModel ID="XCLM_P1" SID="Damaged idle speed system" considerOnlyRelevantRelations="true">
+<XCLModel SID="Bad ignition timing" considerOnlyRelevantRelations="true">
 <necessaryRelations/>
 <sufficientRelations>
-<relation ID="XCLRelation_149">
-<Condition name="Idle speed system o.k.?" type="equal" value="no"/>
+<relation ID="XCLRelation_170">
+<Condition name="Ignition timing o.k.?" type="equal" value="no"/>
 </relation>
 </sufficientRelations>
 <contradictingRelations>
-<relation ID="XCLRelation_153">
-<Condition name="Idle speed system o.k.?" type="equal" value="yes"/>
+<relation ID="XCLRelation_177">
+<Condition name="Ignition timing o.k.?" type="equal" value="yes"/>
 </relation>
 </contradictingRelations>
 <Relations>
-<relation ID="XCLRelation_150">
-<Condition name="Engine start" type="equal" value="engine barely starts"/>
-</relation>
-<relation ID="XCLRelation_151">
-<Condition name="Driving" type="equal" value="low idle speed"/>
-</relation>
-<relation ID="XCLRelation_152">
-<Condition name="Driving" type="equal" value="unsteady idle speed"/>
-</relation>
-</Relations>
-</XCLModel>
-<XCLModel ID="XCLM_P2" SID="Leaking air intake system" considerOnlyRelevantRelations="true">
-<necessaryRelations/>
-<sufficientRelations>
-<relation ID="XCLRelation_154">
-<Condition name="Air intake system o.k.?" type="equal" value="no"/>
-</relation>
-</sufficientRelations>
-<contradictingRelations>
-<relation ID="XCLRelation_159">
-<Condition name="Air intake system o.k.?" type="equal" value="yes"/>
-</relation>
-</contradictingRelations>
-<Relations>
-<relation ID="XCLRelation_155">
+<relation ID="XCLRelation_171">
 <Condition type="or">
-<Condition name="Mileage evaluation" type="equal" value="slightly increased"/>
-<Condition name="Mileage evaluation" type="equal" value="increased"/>
+<Condition name="Engine noises" type="equal" value="ringing"/>
+<Condition name="Engine noises" type="equal" value="knocking"/>
 </Condition>
 </relation>
-<relation ID="XCLRelation_156">
-<Condition name="Driving" type="equal" value="insufficient power on full load"/>
+<relation ID="XCLRelation_172">
+<Condition type="or">
+<Condition name="Engine start" type="equal" value="does not start"/>
+<Condition name="Engine start" type="equal" value="engine barely starts"/>
+</Condition>
 </relation>
-<relation ID="XCLRelation_157">
-<Condition name="Driving" type="equal" value="insufficient power on partial load"/>
+<relation ID="XCLRelation_173">
+<Condition name="Starter" type="equal" value="turns over"/>
 </relation>
-<relation ID="XCLRelation_158">
+<relation ID="XCLRelation_174">
+<Condition name="Driving" type="equal" value="weak acceleration"/>
+</relation>
+<relation ID="XCLRelation_175">
+<Condition name="Driving" type="equal" value="delayed take-off"/>
+</relation>
+<relation ID="XCLRelation_176">
 <Condition name="Driving" type="equal" value="unsteady idle speed"/>
 </relation>
 </Relations>
 </XCLModel>
-<XCLModel ID="XCLM_P3" SID="Clogged air filter" considerOnlyRelevantRelations="true">
+<XCLModel SID="Clogged air filter" considerOnlyRelevantRelations="true">
 <necessaryRelations/>
 <sufficientRelations>
 <relation ID="XCLRelation_160">
@@ -100,46 +85,31 @@
 </relation>
 </Relations>
 </XCLModel>
-<XCLModel ID="XCLM_P4" SID="Bad ignition timing" considerOnlyRelevantRelations="true">
+<XCLModel SID="Damaged idle speed system" considerOnlyRelevantRelations="true">
 <necessaryRelations/>
 <sufficientRelations>
-<relation ID="XCLRelation_170">
-<Condition name="Ignition timing o.k.?" type="equal" value="no"/>
+<relation ID="XCLRelation_149">
+<Condition name="Idle speed system o.k.?" type="equal" value="no"/>
 </relation>
 </sufficientRelations>
 <contradictingRelations>
-<relation ID="XCLRelation_177">
-<Condition name="Ignition timing o.k.?" type="equal" value="yes"/>
+<relation ID="XCLRelation_153">
+<Condition name="Idle speed system o.k.?" type="equal" value="yes"/>
 </relation>
 </contradictingRelations>
 <Relations>
-<relation ID="XCLRelation_171">
-<Condition type="or">
-<Condition name="Engine noises" type="equal" value="ringing"/>
-<Condition name="Engine noises" type="equal" value="knocking"/>
-</Condition>
-</relation>
-<relation ID="XCLRelation_172">
-<Condition type="or">
-<Condition name="Engine start" type="equal" value="does not start"/>
+<relation ID="XCLRelation_150">
 <Condition name="Engine start" type="equal" value="engine barely starts"/>
-</Condition>
 </relation>
-<relation ID="XCLRelation_173">
-<Condition name="Starter" type="equal" value="turns over"/>
+<relation ID="XCLRelation_151">
+<Condition name="Driving" type="equal" value="low idle speed"/>
 </relation>
-<relation ID="XCLRelation_174">
-<Condition name="Driving" type="equal" value="weak acceleration"/>
-</relation>
-<relation ID="XCLRelation_175">
-<Condition name="Driving" type="equal" value="delayed take-off"/>
-</relation>
-<relation ID="XCLRelation_176">
+<relation ID="XCLRelation_152">
 <Condition name="Driving" type="equal" value="unsteady idle speed"/>
 </relation>
 </Relations>
 </XCLModel>
-<XCLModel ID="XCLM_P5" SID="Empty battery" considerOnlyRelevantRelations="true">
+<XCLModel SID="Empty battery" considerOnlyRelevantRelations="true">
 <necessaryRelations/>
 <sufficientRelations>
 <relation ID="XCLRelation_178">
@@ -160,6 +130,36 @@
 <Condition name="Engine start" type="equal" value="does not start"/>
 <Condition name="Engine start" type="equal" value="engine barely starts"/>
 </Condition>
+</relation>
+</Relations>
+</XCLModel>
+<XCLModel SID="Leaking air intake system" considerOnlyRelevantRelations="true">
+<necessaryRelations/>
+<sufficientRelations>
+<relation ID="XCLRelation_154">
+<Condition name="Air intake system o.k.?" type="equal" value="no"/>
+</relation>
+</sufficientRelations>
+<contradictingRelations>
+<relation ID="XCLRelation_159">
+<Condition name="Air intake system o.k.?" type="equal" value="yes"/>
+</relation>
+</contradictingRelations>
+<Relations>
+<relation ID="XCLRelation_155">
+<Condition type="or">
+<Condition name="Mileage evaluation" type="equal" value="slightly increased"/>
+<Condition name="Mileage evaluation" type="equal" value="increased"/>
+</Condition>
+</relation>
+<relation ID="XCLRelation_156">
+<Condition name="Driving" type="equal" value="insufficient power on full load"/>
+</relation>
+<relation ID="XCLRelation_157">
+<Condition name="Driving" type="equal" value="insufficient power on partial load"/>
+</relation>
+<relation ID="XCLRelation_158">
+<Condition name="Driving" type="equal" value="unsteady idle speed"/>
 </relation>
 </Relations>
 </XCLModel>

@@ -43,7 +43,7 @@ import de.d3web.core.session.blackboard.Fact;
 public class StateTransition implements KnowledgeSlice {
 
 	public static final KnowledgeKind<StateTransition> KNOWLEDGE_KIND = new KnowledgeKind<StateTransition>(
-			"KNOWLEDGE_KIND", StateTransition.class);
+			"STATE_TRANSITION", StateTransition.class);
 
 	private Condition activationCondition;
 	private List<ValueTransition> postTransitions;
@@ -70,16 +70,6 @@ public class StateTransition implements KnowledgeSlice {
 
 	public void setPostTransitions(List<ValueTransition> postTransition) {
 		this.postTransitions = postTransition;
-	}
-
-	@Override
-	public String getId() {
-		if (qcontainer != null) {
-			return "StateTransition_" + qcontainer.getName();
-		}
-		else {
-			return "StateTransition_withoutQcontainer";
-		}
 	}
 
 	public QContainer getQcontainer() {

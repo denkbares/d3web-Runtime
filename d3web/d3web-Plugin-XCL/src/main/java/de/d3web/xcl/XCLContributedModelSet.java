@@ -37,18 +37,8 @@ public class XCLContributedModelSet implements KnowledgeSlice {
 	 * the Conditions of the contained relations
 	 */
 	public final static KnowledgeKind<XCLContributedModelSet> KNOWLEDGE_KIND = new KnowledgeKind<XCLContributedModelSet>(
-			"KNOWLEDGE_KIND", XCLContributedModelSet.class);
-	private static int count = 0;
-	private String id = null;
+			"XCLContributedModelSet", XCLContributedModelSet.class);
 	private List<XCLModel> models = new ArrayList<XCLModel>();
-
-	@Override
-	public String getId() {
-		if (id == null) {
-			id = "XCLContributedModelSet" + count++;
-		}
-		return id;
-	}
 
 	public void addModel(XCLModel model) {
 		if (!models.contains(model)) {

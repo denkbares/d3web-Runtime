@@ -26,6 +26,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.w3c.dom.Document;
@@ -39,7 +40,6 @@ import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
-import de.d3web.core.io.utilities.KnowledgeSliceComparator;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Solution;
@@ -83,7 +83,6 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 				"suggestedThreshold", "" + xclmodel.getSuggestedThreshold());
 		if (xclmodel.getEstablishedThreshold() != null) modelelement.setAttribute(
 				"establishedThreshold", "" + xclmodel.getEstablishedThreshold());
-		modelelement.setAttribute("ID", xclmodel.getId());
 		modelelement.setAttribute("SID", xclmodel.getSolution().getName());
 		modelelement.setAttribute("considerOnlyRelevantRelations", ""
 				+ xclmodel.isConsiderOnlyRelevantRelations());
@@ -136,9 +135,9 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 		Element ksNode = doc.createElement("KnowledgeSlices");
 		root.appendChild(ksNode);
 
-		ArrayList<KnowledgeSlice> slices = new ArrayList<KnowledgeSlice>(
+		ArrayList<XCLModel> slices = new ArrayList<XCLModel>(
 				kb.getAllKnowledgeSlicesFor(XCLModel.KNOWLEDGE_KIND));
-		Collections.sort(slices, new KnowledgeSliceComparator());
+		Collections.sort(slices, new XCLModelComparator());
 		float cur = 0;
 		int max = getEstimatedSize(kb);
 		for (KnowledgeSlice model : slices) {
@@ -178,7 +177,6 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 
 	private void addKnowledge(KnowledgeBaseManagement kbm, Node current) throws IOException {
 		String solutionName = getAttribute("SID", current);
-		String id = getAttribute("ID", current);
 		String minSupportS = getAttribute("minSupport", current);
 		String suggestedThresholdS = getAttribute("suggestedThreshold", current);
 		String establishedThresholdS = getAttribute("establishedThreshold",
@@ -192,7 +190,6 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 			addRelations(kbm, model, relations.item(i).getChildNodes());
 		}
 
-		model.setId(id);
 		if (minSupportS != null) model.setMinSupport(Double.parseDouble(minSupportS));
 		if (suggestedThresholdS != null) model
 					.setSuggestedThreshold(Double
@@ -245,6 +242,15 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 				}
 			}
 
+		}
+
+	}
+
+	private class XCLModelComparator implements Comparator<XCLModel> {
+
+		@Override
+		public int compare(XCLModel r1, XCLModel r2) {
+			return (r1.getSolution().getName().compareTo(r2.getSolution().getName()));
 		}
 
 	}

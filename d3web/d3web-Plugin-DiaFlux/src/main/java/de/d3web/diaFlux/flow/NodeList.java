@@ -53,11 +53,6 @@ public class NodeList implements KnowledgeSlice, Iterable<INode> {
 	}
 
 	@Override
-	public String getId() {
-		return ID;
-	}
-
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

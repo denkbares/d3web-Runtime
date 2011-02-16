@@ -43,7 +43,8 @@ import de.d3web.xcl.inference.PSMethodXCL;
 
 public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, CaseObjectSource {
 
-	public final static KnowledgeKind<XCLModel> KNOWLEDGE_KIND = new KnowledgeKind<XCLModel>("KNOWLEDGE_KIND",
+	public final static KnowledgeKind<XCLModel> KNOWLEDGE_KIND = new KnowledgeKind<XCLModel>(
+			"XCLModel",
 			XCLModel.class);
 
 	private Solution solution;
@@ -52,7 +53,6 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 	private Double suggestedThreshold = null;
 	private Double minSupport = null;
 
-	private String id = null;
 	private final Collection<XCLRelation> relations;
 	private final Collection<XCLRelation> necessaryRelations;
 	private final Collection<XCLRelation> sufficientRelations;
@@ -146,7 +146,8 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 
 			newModel.addRelation(relation, type);
 			// TODO: must it be added to the knowledge base?
-			// kb.addKnowledge(PSMethodXCL.class, newModel, XCLModel.KNOWLEDGE_KIND);
+			// kb.addKnowledge(PSMethodXCL.class, newModel,
+			// XCLModel.KNOWLEDGE_KIND);
 			d.getKnowledgeStore().addKnowledge(XCLModel.KNOWLEDGE_KIND, newModel);
 
 		}
@@ -361,21 +362,6 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Cas
 		else {
 			this.minSupport = null;
 		}
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	@Override
-	public String getId() {
-		if (id == null) {
-			if (solution == null) {
-				return DEFAULT_SOLUTION;
-			}
-			id = "XCLM_" + solution.getName();
-		}
-		return id;
 	}
 
 	public List<XCLRelation> getAllRelations() {

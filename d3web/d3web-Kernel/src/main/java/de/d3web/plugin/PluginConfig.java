@@ -50,11 +50,6 @@ public class PluginConfig implements KnowledgeSlice {
 		kb.getKnowledgeStore().addKnowledge(KNOWLEDGE_KIND, this);
 	}
 
-	@Override
-	public String getId() {
-		return KNOWLEDGE_KIND.toString();
-	}
-
 	/**
 	 * Adds a ExtensionEntry to this KnowledgeSlice
 	 * 

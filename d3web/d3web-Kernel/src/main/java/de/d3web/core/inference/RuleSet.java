@@ -33,20 +33,9 @@ import de.d3web.core.utilities.IdentitySet;
  */
 public class RuleSet implements KnowledgeSlice {
 
-	private static int count = 0;
 	// rules that equal are entered into the set, but the same rule
 	// (reference-identity) will not be inserted twice
 	private final Collection<Rule> rules = new IdentitySet<Rule>();
-	private final String id;
-
-	public RuleSet() {
-		id = "RuleSet" + count++;
-	}
-
-	@Override
-	public String getId() {
-		return id;
-	}
 
 	public List<Rule> getRules() {
 		return Collections.unmodifiableList(new LinkedList<Rule>(rules));

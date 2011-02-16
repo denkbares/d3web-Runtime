@@ -49,11 +49,6 @@ public class EdgeMap implements KnowledgeSlice {
 	}
 
 	@Override
-	public String getId() {
-		return id;
-	}
-
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

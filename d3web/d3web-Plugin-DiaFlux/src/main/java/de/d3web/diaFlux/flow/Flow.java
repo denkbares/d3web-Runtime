@@ -165,7 +165,6 @@ public class Flow implements CaseObjectSource, KnowledgeSlice {
 				+ "@" + Integer.toHexString(hashCode());
 	}
 
-	@Override
 	public String getId() {
 		return id;
 	}

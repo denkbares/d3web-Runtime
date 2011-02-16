@@ -21,20 +21,10 @@
 package de.d3web.core.inference;
 
 /**
- * Specifies that implementing classes are used as explict knowledge. Each
- * KnowledgeSlice needs to have a problem-solver context in which it is relevant
- * and if it has already been used (e.g. rule = hasFired).
+ * Specifies that implementing classes are used as explict knowledge.
  * 
  * @author joba
  */
 public interface KnowledgeSlice {
 
-	/**
-	 * Provide a unique id for each part of knowledge.
-	 * 
-	 * @return java.lang.String
-	 */
-	// TODO: vb: discuss whether each slice should have an id? what is the sense
-	// behind that?
-	String getId();
 }
