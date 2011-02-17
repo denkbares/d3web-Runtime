@@ -528,7 +528,7 @@
 		<parameter id="description" value="KnowledgeWriter for exporting a terminology bundle." />
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
-		<parameter id="filename" value="mminfo/textbundle.properties" />
+		<parameter id="filename" value="exports/textbundle.properties" />
 	</extension>
 	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"

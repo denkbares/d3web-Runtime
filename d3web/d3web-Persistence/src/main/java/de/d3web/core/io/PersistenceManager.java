@@ -62,6 +62,7 @@ import de.d3web.plugin.PluginManager;
 public final class PersistenceManager extends FragmentManager {
 
 	public static final String MULTIMEDIA_PATH_PREFIX = "multimedia/";
+	public static final String EXTENDS_PATH_PREFIX = "exports/";
 
 	public static final String EXTENDED_PLUGIN_ID = "KnowledgePersistenceExtensionPoints";
 	public static final String EXTENDED_POINT_READER = "KnowledgeReader";
@@ -168,7 +169,7 @@ public final class PersistenceManager extends FragmentManager {
 					// nothing to to, files were necessary for previous versions
 					// of persistence
 				}
-				else {
+				else if (!entry.getName().startsWith(EXTENDS_PATH_PREFIX)) {
 					Logger.getLogger("Persistence").warning("No parser for entry " + name +
 							" available. This file will be lost when saving the KnowledgeBase.");
 				}
