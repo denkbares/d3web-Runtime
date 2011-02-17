@@ -20,6 +20,7 @@
 
 package de.d3web.core.knowledge.terminology;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -61,16 +62,16 @@ public abstract class AbstractTerminologyObject implements TerminologyObject {
 	/**
 	 * The parents of this object (including the linked parents).
 	 */
-	private List<AbstractTerminologyObject> parents = new LinkedList<AbstractTerminologyObject>();
+	private final List<AbstractTerminologyObject> parents = new LinkedList<AbstractTerminologyObject>();
 
 	/**
 	 * The children of this object (including the linked children).
 	 */
-	private List<AbstractTerminologyObject> children = new LinkedList<AbstractTerminologyObject>();
+	private final List<AbstractTerminologyObject> children = new LinkedList<AbstractTerminologyObject>();
 
 	private final InfoStore infoStore = new DefaultInfoStore();
 
-	private KnowledgeStore knowledgeStore = new DefaultKnowledgeStore();
+	private final KnowledgeStore knowledgeStore = new DefaultKnowledgeStore();
 
 	/**
 	 * Creates a new {@link AbstractTerminologyObject} instance with a given
@@ -229,8 +230,8 @@ public abstract class AbstractTerminologyObject implements TerminologyObject {
 
 	@Override
 	public void destroy() {
-		for (AbstractTerminologyObject object : parents) {
-			object.children.remove(this);
+		for (AbstractTerminologyObject object : new ArrayList<AbstractTerminologyObject>(parents)) {
+			removeParentChildLink(object, this);
 		}
 		knowledgeBase.getManager().remove(this);
 	}
