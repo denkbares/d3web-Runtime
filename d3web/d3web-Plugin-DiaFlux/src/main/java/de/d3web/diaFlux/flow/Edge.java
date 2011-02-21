@@ -21,15 +21,12 @@
 package de.d3web.diaFlux.flow;
 
 import de.d3web.core.inference.condition.Condition;
-import de.d3web.core.session.CaseObjectSource;
-import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.SessionObject;
 
 /**
  * @author Reinhard Hatko
  * 
  */
-public class Edge implements IEdge, CaseObjectSource {
+public class Edge implements IEdge {
 
 	private final INode startNode;
 	private final INode endNode;
@@ -53,11 +50,6 @@ public class Edge implements IEdge, CaseObjectSource {
 		this.condition = condition;
 		this.id = id;
 
-	}
-
-	@Override
-	public SessionObject createCaseObject(Session session) {
-		return new EdgeData(this);
 	}
 
 	@Override

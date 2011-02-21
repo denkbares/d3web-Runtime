@@ -20,10 +20,8 @@
 
 package de.d3web.diaFlux.flow;
 
-import java.util.List;
-
 import de.d3web.core.session.Session;
-import de.d3web.diaFlux.inference.DiaFluxUtils;
+import de.d3web.diaFlux.inference.FluxSolver;
 
 /**
  * 
@@ -42,23 +40,26 @@ public class EndNode extends Node {
 	}
 
 	@Override
-	public void activate(Session session) {
+	public void activate(Session session, FlowRun run) {
 
-		List<INode> registrations = DiaFluxUtils.getNodeRegistry(session).getRegisteredNodes(this);
-
-		for (INode node : registrations) {
-			DiaFluxUtils.getPath(node, session).propagate(session, node);
+		for (INode node : run) {
+			if (node instanceof ComposedNode) {
+				FluxSolver.checkSuccessorsOnActivation(node, run, session);
+			}
 		}
 
 	}
 
 	@Override
-	public void deactivate(Session session) {
-		List<INode> registrations = DiaFluxUtils.getNodeRegistry(session).getRegisteredNodes(this);
+	public void deactivate(Session session, FlowRun run) {
 
-		for (INode node : registrations) {
-			DiaFluxUtils.getPath(node, session).propagate(session, node);
+		for (INode node : run) {
+			if (node instanceof ComposedNode) {
+				FluxSolver.checkSuccessorsOnDeactivation(node, run, session);
+			}
+
 		}
+
 	}
 
 }

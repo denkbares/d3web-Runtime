@@ -25,13 +25,9 @@ import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.inference.Rule;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
-import de.d3web.diaFlux.flow.INode;
-import de.d3web.diaFlux.flow.ISupport;
-import de.d3web.diaFlux.flow.NodeSupport;
-import de.d3web.diaFlux.flow.RuleSupport;
+import de.d3web.diaFlux.flow.FlowRun;
 import de.d3web.diaFlux.flow.StartNode;
 
 /**
@@ -43,7 +39,6 @@ public class CallFlowAction extends PSAction {
 
 	private final String flowName;
 	private final String startNodeName;
-	private ISupport support;
 
 	public CallFlowAction(String flow, String node) {
 		this.flowName = flow;
@@ -66,18 +61,7 @@ public class CallFlowAction extends PSAction {
 							flowName + "'.");
 		}
 
-		// TODO not very nice
-		if (source instanceof Rule) {
-			support = new RuleSupport((Rule) source);
-		}
-		else if (source instanceof INode) {
-			support = new NodeSupport((INode) source);
-		}
-		else {
-			throw new UnsupportedOperationException("Unknown source type " + source);
-		}
-
-		FluxSolver.activate(session, startNode, support);
+		FluxSolver.activateNode(startNode, (FlowRun) source, session);
 
 	}
 
@@ -92,21 +76,8 @@ public class CallFlowAction extends PSAction {
 							flowName + "'.");
 		}
 
-		// This action can have already been undone when this composed node
-		// starts propagating after the exit node has been reached by ...
-		if (support != null) {
+		FluxSolver.deactivateNode(startNode, (FlowRun) source, session);
 
-			// TODO this is most likely unnecessary, because this node has no
-			// support any more
-			// then, calling propagate on the startnode, should remove the
-			// invalid
-			// support by this node
-			FluxSolver.removeSupport(session, startNode, support);
-
-			support = null;
-		}
-
-		DiaFluxUtils.getPath(startNode, session).propagate(session, startNode);
 	}
 
 	@Override

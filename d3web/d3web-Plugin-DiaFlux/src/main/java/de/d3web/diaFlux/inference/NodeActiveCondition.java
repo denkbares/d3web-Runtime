@@ -27,6 +27,7 @@ import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.EndNode;
+import de.d3web.diaFlux.flow.FlowRun;
 
 /**
  * 
@@ -54,7 +55,13 @@ public class NodeActiveCondition implements Condition {
 		// But this type of condition per se allows to check for every node
 		EndNode exitNode = DiaFluxUtils.findExitNode(session, flowName, nodeName);
 
-		return DiaFluxUtils.getNodeData(exitNode, session).isSupported();
+		for (FlowRun run : DiaFluxUtils.getDiaFluxCaseObject(session).getRuns()) {
+
+			if (run.isActive(exitNode)) return true;
+		}
+
+		return false;
+		// return DiaFluxUtils.getNodeData(exitNode, session).isSupported();
 	}
 
 	@Override

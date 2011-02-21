@@ -25,11 +25,7 @@ import java.util.Collections;
 import java.util.List;
 
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.diaFlux.inference.DiaFluxUtils;
-import de.d3web.diaFlux.inference.FluxSolver;
 
 /**
  * 
@@ -37,7 +33,7 @@ import de.d3web.diaFlux.inference.FluxSolver;
  * @author Reinhard Hatko
  * @created 08.08.2009
  */
-public abstract class Node implements INode, CaseObjectSource {
+public abstract class Node implements INode {
 
 	private final List<IEdge> outgoing;
 	private final List<IEdge> incoming;
@@ -111,22 +107,17 @@ public abstract class Node implements INode, CaseObjectSource {
 	}
 
 	@Override
-	public SessionObject createCaseObject(Session session) {
-		return new NodeData(this);
-	}
-
-	@Override
 	public String getID() {
 		return id;
 	}
 
 	@Override
-	public void activate(Session session) {
+	public void activate(Session session, FlowRun run) {
 
 	}
 
 	@Override
-	public void deactivate(Session session) {
+	public void deactivate(Session session, FlowRun run) {
 
 	}
 
@@ -146,13 +137,11 @@ public abstract class Node implements INode, CaseObjectSource {
 	 */
 	@Override
 	public boolean couldActivate(Session session) {
-		return !DiaFluxUtils.getNodeData(this, session).isSupported();
+		return true;
 	}
 
 	@Override
-	public void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes) {
-
-		DiaFluxUtils.getNodeData(this, session).reset(session);
+	public void takeSnapshot(Session session, SnapshotNode snapshotNode) {
 
 	}
 
@@ -163,15 +152,6 @@ public abstract class Node implements INode, CaseObjectSource {
 
 	@Override
 	public void propagate(Session session) {
-
-		INodeData data = DiaFluxUtils.getNodeData(this, session);
-
-		boolean support = data.checkSupport(session);
-
-		if (!support) {
-			FluxSolver.deactivate(session, this);
-
-		}
 
 	}
 

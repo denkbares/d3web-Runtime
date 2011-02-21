@@ -20,17 +20,9 @@
 
 package de.d3web.diaFlux.flow;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-
-import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.inference.CallFlowAction;
-import de.d3web.diaFlux.inference.DiaFluxUtils;
-import de.d3web.diaFlux.inference.FlowchartProcessedCondition;
 import de.d3web.diaFlux.inference.FluxSolver;
-import de.d3web.diaFlux.inference.NodeActiveCondition;
 
 /**
  * 
@@ -47,108 +39,14 @@ public class ComposedNode extends Node {
 	}
 
 	@Override
-	public void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes) {
-
-		// collects all exit nodes in the called flow that match an
-		// active outgoing egde's condition
-		// need to do this before the super call -> this resets the edges
-		Collection<INode> exitNodes = findActiveExitNodes(session);
-
-		super.takeSnapshot(session, snapshotNode, nodes);
-
-		// if the start this CN calls is already snapshotted
-		// then do nothing
-		// TODO need some more sophisticated test here
-		// could be a problem with some weird unconnected flows
-		// or even with subflows that contain an SSN
-
-		// This is not right -> subflow containing SSN, cycle through only that
-		// one
-		// StartNode startNode = DiaFluxUtils.findStartNode(session,
-		// action.getFlowName(), action.getStartNodeName());
-		//
-		// if (nodes.contains(startNode)) {
-		// return;
-		// }
-
-		for (INode exitNode : exitNodes) {
-			DiaFluxUtils.getPath(exitNode, session).takeSnapshot(session, snapshotNode, exitNode,
-					nodes);
-
-		}
+	public void activate(Session session, FlowRun run) {
+		action.doIt(session, run, session.getPSMethodInstance(FluxSolver.class));
 
 	}
 
 	@Override
-	public void activate(Session session) {
-		action.doIt(session, this, session.getPSMethodInstance(FluxSolver.class));
-
-	}
-
-	@Override
-	public void deactivate(Session session) {
-		action.undo(session, this, session.getPSMethodInstance(FluxSolver.class));
-	}
-
-	@Override
-	public boolean couldActivate(Session session) {
-
-		// TODO better check would be nice
-		for (IEdge edge : getIncomingEdges()) {
-			if (DiaFluxUtils.getEdgeData(edge, session).hasFired()) {
-
-				// if one of the incoming edges has fired
-				// then the calling start node must be active
-				return false;
-			}
-
-		}
-
-		// get the called start node
-		StartNode startNode = DiaFluxUtils.findStartNode(session, action.getFlowName(),
-				action.getStartNodeName());
-
-		if (startNode == null) {
-			return false;
-			// throw new NullPointerException("Start node '" +
-			// action.getStartNodeName()
-			// + "' in flow '" + action.getFlowName() + "' not found.");
-		}
-
-		// this node can be activated, if the called start node can be activated
-		return startNode.couldActivate(session);
-	}
-
-	@Override
-	public void propagate(Session session) {
-		super.propagate(session);
-
-		// check for supported is not enough
-		// SSN inside the called flow can maintain support for the CN
-		// but the repeated call to the start node must be retracted, if no edge
-		// supports the re-calling the start node
-		for (IEdge edge : getIncomingEdges()) {
-			if (DiaFluxUtils.getEdgeData(edge, session).hasFired()) {
-
-				// if one of the incoming edges has fired
-				// then the calling start node should be active
-				return;
-			}
-
-		}
-
-		// no incoming edge has fired -> undoAction
-		FluxSolver.deactivate(session, this);
-
-		// TODO can this trigger a NPE, because the CFA has not been done
-		// before? or already been undone?
-		// then the support the CFA wants to retract is null
-
-		// this also tries to undo the action after propagating to the exit node
-		// of the called flow after taking a snapshot.
-		// but then the support can of course not be removed because this has
-		// been done while taking the snapshot
-
+	public void deactivate(Session session, FlowRun run) {
+		action.undo(session, run, session.getPSMethodInstance(FluxSolver.class));
 	}
 
 	public String getFlowName() {
@@ -157,55 +55,6 @@ public class ComposedNode extends Node {
 
 	public String getStartNodeName() {
 		return action.getStartNodeName();
-	}
-
-	private Collection<INode> findActiveExitNodes(Session session) {
-
-		// A combination of IS_ACTIVE and PROCESSED Conditions could lead to
-		// duplicated entries, so use set
-		Collection<INode> result = new HashSet<INode>();
-
-		for (IEdge edge : getOutgoingEdges()) {
-
-			// if the edge has not fired, the exit node is not active
-			// But: the edge could also be resetted already, so do not do this
-			// check
-			// EdgeData edgeData = DiaFluxUtils.getEdgeData(edge, session);
-			// if (!edgeData.hasFired()) continue;
-
-			Condition condition = edge.getCondition();
-
-			if (condition instanceof NodeActiveCondition) {
-				NodeActiveCondition nodeActiveCondition = (NodeActiveCondition) condition;
-				String flowName = nodeActiveCondition.getFlowName();
-				String nodeName = nodeActiveCondition.getNodeName();
-
-				EndNode node = DiaFluxUtils.findExitNode(session, flowName, nodeName);
-
-				if (DiaFluxUtils.getNodeData(node, session).isSupported()) {
-					result.add(node);
-				}
-
-			}
-			else if (condition instanceof FlowchartProcessedCondition) {
-
-				FlowchartProcessedCondition processedCondition = (FlowchartProcessedCondition) condition;
-				String flowName = processedCondition.getFlowName();
-
-				Flow flow = DiaFluxUtils.getFlowSet(session).getByName(flowName);
-				for (EndNode node : flow.getExitNodes()) {
-					if (DiaFluxUtils.getNodeData(node, session).isSupported()) {
-						result.add(node);
-					}
-
-				}
-
-			}
-
-		}
-
-		return result;
-
 	}
 
 }

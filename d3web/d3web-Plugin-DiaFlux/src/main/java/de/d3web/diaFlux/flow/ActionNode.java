@@ -49,7 +49,7 @@ public class ActionNode extends Node {
 	}
 
 	@Override
-	public void activate(Session session) {
+	public void activate(Session session, FlowRun run) {
 		getAction().doIt(session, this, session.getPSMethodInstance(FluxSolver.class));
 
 	}
@@ -86,7 +86,7 @@ public class ActionNode extends Node {
 	}
 
 	@Override
-	public void deactivate(Session session) {
+	public void deactivate(Session session, FlowRun run) {
 		getAction().undo(session, this, session.getPSMethodInstance(FluxSolver.class));
 	}
 
@@ -109,12 +109,12 @@ public class ActionNode extends Node {
 	}
 
 	@Override
-	public void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes) {
+	public void takeSnapshot(Session session, SnapshotNode snapshotNode) {
 
-		super.takeSnapshot(session, snapshotNode, nodes);
+		super.takeSnapshot(session, snapshotNode);
 
 		// redo action with SSN as source
-		deactivate(session);
+		deactivate(session, null);
 
 		getAction().doIt(session, snapshotNode, session.getPSMethodInstance(FluxSolver.class));
 

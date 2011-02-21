@@ -20,11 +20,8 @@
 
 package de.d3web.diaFlux.flow;
 
-import java.util.List;
-
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
-import de.d3web.diaFlux.inference.FluxSolver;
 
 /**
  * 
@@ -39,60 +36,14 @@ public class SnapshotNode extends Node {
 	}
 
 	@Override
-	public void activate(Session session) {
+	public void activate(Session session, FlowRun run) {
 
 		DiaFluxUtils.getDiaFluxCaseObject(session).registerSnapshot(this, session);
 	}
 
 	@Override
-	public void deactivate(Session session) {
+	public void deactivate(Session session, FlowRun run) {
 		DiaFluxUtils.getDiaFluxCaseObject(session).unregisterSnapshot(this, session);
-	}
-
-	@Override
-	public void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes) {
-		super.takeSnapshot(session, snapshotNode, nodes);
-
-		// this node is the new starting point of the flow
-		// so give it support
-		// ^^ not true if there are 2 SSN and this one is the END of the current
-		// flow.
-
-		// BUT: this is a problem, in cycles with just 1 SSN.
-		// if it gets activated once, it won't deactivate later, because it
-		// still holds is ValidSupport
-		// BUT: it should must active if it is the node that started the SS
-
-		if (this == snapshotNode) {
-			FluxSolver.addSupport(session, this, new ValidSupport());
-		}
-
-	}
-
-	@Override
-	public void propagate(Session session) {
-		super.propagate(session);
-
-		for (IEdge edge : getIncomingEdges()) {
-			if (DiaFluxUtils.getEdgeData(edge, session).hasFired()) {
-
-				// if one of the incoming edges has fired
-				// then the calling start node should be active
-				return;
-			}
-
-		}
-
-		// no incoming edge has fired -> undoAction
-		FluxSolver.deactivate(session, this);
-	}
-
-	/**
-	 * Returns true, as SnapshotNodes can always be activated
-	 */
-	@Override
-	public boolean couldActivate(Session session) {
-		return true;
 	}
 
 }

@@ -28,6 +28,7 @@ import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.Flow;
+import de.d3web.diaFlux.flow.FlowRun;
 import de.d3web.diaFlux.flow.INode;
 
 /**
@@ -60,8 +61,11 @@ public class FlowchartProcessedCondition implements Condition {
 		// if one of the exit nodes is supported, then the flowchart has been
 		// processed
 		for (INode node : flow.getExitNodes()) {
-			if (DiaFluxUtils.getNodeData(node, session).isSupported()) {
-				return true;
+
+			List<FlowRun> runs = DiaFluxUtils.getDiaFluxCaseObject(session).getRuns();
+
+			for (FlowRun flowRun : runs) {
+				if (flowRun.isActive(node)) return true;
 			}
 
 		}

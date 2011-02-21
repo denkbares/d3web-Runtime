@@ -21,22 +21,14 @@
 package de.d3web.diaFlux.flow;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-
-import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.session.CaseObjectSource;
-import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.diaFlux.inference.Path;
 
 /**
  * @author Reinhard Hatko
  * 
  */
-public class Flow implements CaseObjectSource, KnowledgeSlice {
+public class Flow {
 
 	private final List<IEdge> edges;
 	private final List<INode> nodes;
@@ -71,24 +63,6 @@ public class Flow implements CaseObjectSource, KnowledgeSlice {
 			node.setFlow(this);
 		}
 
-	}
-
-	@Override
-	public SessionObject createCaseObject(Session session) {
-
-		Map<INode, INodeData> nodedata = new HashMap<INode, INodeData>(getNodes().size());
-
-		for (INode nodeDecl : getNodes()) {
-			nodedata.put(nodeDecl, (INodeData) nodeDecl.createCaseObject(session));
-		}
-
-		Map<IEdge, EdgeData> edgeData = new HashMap<IEdge, EdgeData>(getEdges().size());
-
-		for (IEdge edge : getEdges()) {
-			edgeData.put(edge, (EdgeData) edge.createCaseObject(session));
-		}
-
-		return new Path(this, nodedata, edgeData);
 	}
 
 	@Override

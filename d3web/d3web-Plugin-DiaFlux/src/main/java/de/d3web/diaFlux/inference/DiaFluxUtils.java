@@ -31,13 +31,11 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.ComposedNode;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
-import de.d3web.diaFlux.flow.EdgeData;
 import de.d3web.diaFlux.flow.EndNode;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowSet;
 import de.d3web.diaFlux.flow.IEdge;
 import de.d3web.diaFlux.flow.INode;
-import de.d3web.diaFlux.flow.INodeData;
 import de.d3web.diaFlux.flow.StartNode;
 
 /**
@@ -59,31 +57,10 @@ public final class DiaFluxUtils {
 
 	}
 
-	public static INodeData getNodeData(INode node, Session session) {
-		return getDiaFluxCaseObject(session).getPath(node.getFlow()).getNodeData(node);
-
-	}
-
-	public static EdgeData getEdgeData(IEdge edge, Session session) {
-		return getPath(edge, session).getEdgeData(edge);
-	}
-
 	public static FlowSet getFlowSet(Session session) {
 
 		return getFlowSet(session.getKnowledgeBase());
 
-	}
-
-	public static IPath getPath(Flow flow, Session session) {
-		return getDiaFluxCaseObject(session).getPath(flow);
-	}
-
-	public static IPath getPath(INode node, Session session) {
-		return getPath(node.getFlow(), session);
-	}
-
-	public static IPath getPath(IEdge edge, Session session) {
-		return getPath(edge.getStartNode().getFlow(), session);
 	}
 
 	public static boolean isFlowCase(Session session) {

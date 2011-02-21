@@ -29,7 +29,6 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.diaFlux.inference.IPath;
 
 /**
  * 
@@ -48,14 +47,7 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource, Iterable<Flow>
 	@Override
 	public SessionObject createCaseObject(Session session) {
 
-		Map<Flow, IPath> flowdatas = new HashMap<Flow, IPath>();
-
-		for (Flow flow : map.values()) {
-			IPath flowdata = (IPath) flow.createCaseObject(session);
-			flowdatas.put(flow, flowdata);
-		}
-
-		return new DiaFluxCaseObject(this, flowdatas);
+		return new DiaFluxCaseObject(this);
 	}
 
 	public boolean contains(String id) {

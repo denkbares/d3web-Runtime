@@ -26,14 +26,13 @@ package de.d3web.diaFlux.flow;
 import java.util.List;
 
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 
 /**
  * @author Reinhard Hatko
  * 
  */
-public interface INode extends CaseObjectSource {
+public interface INode {
 
 	/**
 	 * 
@@ -86,15 +85,17 @@ public interface INode extends CaseObjectSource {
 	 * Does the action that is associated with this node.
 	 * 
 	 * @param session the session
+	 * @param run TODO
 	 */
-	void activate(Session session);
+	void activate(Session session, FlowRun run);
 
 	/**
 	 * Undoes the action that is associated with this node.
 	 * 
 	 * @param session the session
+	 * @param run TODO
 	 */
-	void deactivate(Session session);
+	void deactivate(Session session, FlowRun run);
 
 	/**
 	 * This method returns if this node can be activated. Usually a node should
@@ -126,9 +127,8 @@ public interface INode extends CaseObjectSource {
 	 * @created 12.11.2010
 	 * @param session the current session
 	 * @param snapshotNode the snapshot node that started this snapshot
-	 * @param nodes the list of nodes snapshotted so far
 	 */
-	void takeSnapshot(Session session, SnapshotNode snapshotNode, List<INode> nodes);
+	void takeSnapshot(Session session, SnapshotNode snapshotNode);
 
 	/**
 	 * This method is called during TMS. It must check the node's support by

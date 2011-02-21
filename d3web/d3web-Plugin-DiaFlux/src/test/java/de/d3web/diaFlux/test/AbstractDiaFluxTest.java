@@ -184,15 +184,16 @@ public abstract class AbstractDiaFluxTest {
 		Flow flow = flowSet.getByName(flowName);
 
 		nextNode: for (INode node : flow.getNodes()) {
-			boolean supported = DiaFluxUtils.getNodeData(node, session).isSupported();
+			// boolean supported = DiaFluxUtils.getNodeData(node,
+			// session).isSupported();
 
 			for (String id : activeIDs) {
 				if (node.getID().equalsIgnoreCase(id)) {
 
-					if (!supported) {
-						failWithUnsupportedNode(flowName, id);
+					// if (!supported) {
+					// failWithUnsupportedNode(flowName, id);
 
-					}
+					// }
 					continue nextNode;
 				}
 			}
@@ -207,9 +208,10 @@ public abstract class AbstractDiaFluxTest {
 		Flow flow = flowSet.getByName(flowName);
 		System.out.print("Supported Nodes in '" + flowName + "': ");
 		for (INode node : flow.getNodes()) {
-			boolean supported = DiaFluxUtils.getNodeData(node, session).isSupported();
+			// boolean supported = DiaFluxUtils.getNodeData(node,
+			// session).isSupported();
 
-			if (supported) System.out.print(node.getID() + ", ");
+			// if (supported) System.out.print(node.getID() + ", ");
 
 		}
 		System.out.println();
@@ -225,12 +227,14 @@ public abstract class AbstractDiaFluxTest {
 		Flow flow = flowSet.getByName(flowName);
 
 		nextNode: for (INode node : flow.getNodes()) {
-			boolean supported = DiaFluxUtils.getNodeData(node, session).isSupported();
+			// boolean supported = DiaFluxUtils.getNodeData(node,
+			// session).isSupported();
 
 			for (String id : inactiveIDs) {
 				if (node.getID().equalsIgnoreCase(id)) {
 
-					Assert.assertFalse("Node '" + id + "' must be inactive.", supported);
+					// Assert.assertFalse("Node '" + id + "' must be inactive.",
+					// supported);
 					continue nextNode;
 				}
 			}
