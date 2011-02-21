@@ -71,8 +71,6 @@ public class SnapshotInSubflow1Test extends AbstractDiaFluxTest {
 
 		// Quest1 -> Answ1 => Snapshot
 		setChoiceValue(quest1, answer1);
-		setChoiceValue(quest1, answer2);
-		setChoiceValue(quest1, answer1);
 
 		assertNodeStates(Flow1, composed1);
 		assertNodeStates(Flow2, snapshot1, nodeQ3);
