@@ -117,12 +117,12 @@ public class IndicationOQQuestionnairesNextFormTest {
 	private static void addRules() {
 
 		Question sex = kbm.getKnowledgeBase().getManager().searchQuestion("Sex");
-		Value male = kbm.findValue(sex, "Male");
-		Value female = kbm.findValue(sex, "Female");
+		Value male = KnowledgeBaseManagement.findValue(sex, "Male");
+		Value female = KnowledgeBaseManagement.findValue(sex, "Female");
 
 		Question pregnant = kbm.getKnowledgeBase().getManager().searchQuestion("Pregnant");
-		Value yes = kbm.findValue(pregnant, "Yes");
-		Value no = kbm.findValue(pregnant, "No");
+		Value yes = KnowledgeBaseManagement.findValue(pregnant, "Yes");
+		Value no = KnowledgeBaseManagement.findValue(pregnant, "No");
 
 		QContainer pregProbs = kbm.getKnowledgeBase().getManager().searchQContainer(
 				"Pregnancy Problems");

@@ -118,19 +118,19 @@ public class XCLSolutionDerivationTest {
 
 		// Question 'Team sport' and alternatives
 		Question teamSport = kbm.getKnowledgeBase().getManager().searchQuestion("Team sport");
-		Value teamSportYes = kbm.findValue(teamSport, "Yes");
-		Value teamSportNo = kbm.findValue(teamSport, "No");
+		Value teamSportYes = KnowledgeBaseManagement.findValue(teamSport, "Yes");
+		Value teamSportNo = KnowledgeBaseManagement.findValue(teamSport, "No");
 
 		// Question 'Health problems' and alternatives
 		Question healthProblems = kbm.getKnowledgeBase().getManager().searchQuestion(
 				"Health problems");
-		Value healthProblemsYes = kbm.findValue(healthProblems, "Yes");
-		Value healthProblemsNo = kbm.findValue(healthProblems, "No");
+		Value healthProblemsYes = KnowledgeBaseManagement.findValue(healthProblems, "Yes");
+		Value healthProblemsNo = KnowledgeBaseManagement.findValue(healthProblems, "No");
 
 		// Question 'Importance of fun' and alternatives
 		Question fun = kbm.getKnowledgeBase().getManager().searchQuestion("Importance of fun");
-		Value funImportant = kbm.findValue(fun, "important");
-		Value funNotImportant = kbm.findValue(fun, "not important");
+		Value funImportant = KnowledgeBaseManagement.findValue(fun, "important");
+		Value funNotImportant = KnowledgeBaseManagement.findValue(fun, "not important");
 
 		// Model 'Football'
 
@@ -180,11 +180,11 @@ public class XCLSolutionDerivationTest {
 		assertNotNull("Question 'Team sport' isn't in the Knowledgebase",
 				teamSport);
 
-		Value teamSportYes = kbm.findValue(teamSport, "Yes");
+		Value teamSportYes = KnowledgeBaseManagement.findValue(teamSport, "Yes");
 		assertNotNull("Value 'Yes' of Question 'Team sport' isn't in the Knowledgebase",
 				teamSportYes);
 
-		Value teamSportNo = kbm.findValue(teamSport, "No");
+		Value teamSportNo = KnowledgeBaseManagement.findValue(teamSport, "No");
 		assertNotNull("Value 'No' of Question 'Team sport' isn't in the Knowledgebase",
 				teamSportNo);
 
@@ -194,11 +194,11 @@ public class XCLSolutionDerivationTest {
 		assertNotNull("Question 'Health problems' isn't in the Knowledgebase",
 				healthProblems);
 
-		Value healthProblemsYes = kbm.findValue(healthProblems, "Yes");
+		Value healthProblemsYes = KnowledgeBaseManagement.findValue(healthProblems, "Yes");
 		assertNotNull("Value 'Yes' of Question 'Health problems' isn't in the Knowledgebase",
 				healthProblemsYes);
 
-		Value healthProblemsNo = kbm.findValue(healthProblems, "No");
+		Value healthProblemsNo = KnowledgeBaseManagement.findValue(healthProblems, "No");
 		assertNotNull("Value 'No' of Question 'Health problems' isn't in the Knowledgebase",
 				healthProblemsNo);
 
@@ -207,11 +207,11 @@ public class XCLSolutionDerivationTest {
 		assertNotNull("Question 'Importance of fun' isn't in the Knowledgebase",
 				fun);
 
-		Value funImportant = kbm.findValue(fun, "important");
+		Value funImportant = KnowledgeBaseManagement.findValue(fun, "important");
 		assertNotNull(
 				"Value 'important' of Question 'Importance of fun' isn't in the Knowledgebase",
 				funImportant);
-		Value funNotImportant = kbm.findValue(fun, "not important");
+		Value funNotImportant = KnowledgeBaseManagement.findValue(fun, "not important");
 		assertNotNull(
 				"Value 'not important' of Question 'Importance of fun' isn't in the Knowledgebase",
 				funNotImportant);
@@ -227,16 +227,16 @@ public class XCLSolutionDerivationTest {
 
 		// Question 'Team sport' and alternatives
 		Question teamSport = kbm.getKnowledgeBase().getManager().searchQuestion("Team sport");
-		Value teamSportYes = kbm.findValue(teamSport, "Yes");
+		Value teamSportYes = KnowledgeBaseManagement.findValue(teamSport, "Yes");
 
 		// Question 'Health problems' and alternatives
 		Question healthProblems = kbm.getKnowledgeBase().getManager().searchQuestion(
 				"Health problems");
-		Value healthProblemsNo = kbm.findValue(healthProblems, "No");
+		Value healthProblemsNo = KnowledgeBaseManagement.findValue(healthProblems, "No");
 
 		// Question 'Importance of fun' and alternatives
 		Question fun = kbm.getKnowledgeBase().getManager().searchQuestion("Importance of fun");
-		Value funNotImportant = kbm.findValue(fun, "not important");
+		Value funNotImportant = KnowledgeBaseManagement.findValue(fun, "not important");
 
 		// SET 'Health problems' = 'No'
 		session.getBlackboard().addValueFact(
@@ -305,12 +305,12 @@ public class XCLSolutionDerivationTest {
 
 		// Question 'Team sport' and alternatives
 		Question teamSport = kbm.getKnowledgeBase().getManager().searchQuestion("Team sport");
-		Value teamSportNo = kbm.findValue(teamSport, "No");
+		Value teamSportNo = KnowledgeBaseManagement.findValue(teamSport, "No");
 
 		// Question 'Health problems' and alternatives
 		Question healthProblems = kbm.getKnowledgeBase().getManager().searchQuestion(
 				"Health problems");
-		Value healthProblemsYes = kbm.findValue(healthProblems, "Yes");
+		Value healthProblemsYes = KnowledgeBaseManagement.findValue(healthProblems, "Yes");
 
 		// SET 'Health problems' = 'Yes'
 		session.getBlackboard().addValueFact(

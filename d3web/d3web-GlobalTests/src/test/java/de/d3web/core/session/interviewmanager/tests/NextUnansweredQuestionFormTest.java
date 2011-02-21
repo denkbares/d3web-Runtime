@@ -152,7 +152,7 @@ public class NextUnansweredQuestionFormTest {
 		// EXPECT: since all questions of the qcontainer are answered, we expect
 		// no more
 		// questions to be asked next, i.e., the EmptyForm singleton is returned
-		setValue(ask_for_pregnancy, kbm.findValue(ask_for_pregnancy, "no"));
+		setValue(ask_for_pregnancy, KnowledgeBaseManagement.findValue(ask_for_pregnancy, "no"));
 		assertEquals(EmptyForm.getInstance(), session.getInterview().nextForm());
 	}
 
