@@ -23,19 +23,27 @@ package de.d3web.empiricaltesting;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import de.d3web.casegeneration.HeuristicScoreRatingStrategy;
 import de.d3web.casegeneration.RatingStrategy;
 import de.d3web.casegeneration.StateRatingStrategy;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
+import de.d3web.core.session.values.ChoiceID;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
 
 public class SequentialTestCase {
 
@@ -131,10 +139,9 @@ public class SequentialTestCase {
 
 		for (RatedTestCase rtc : ratedTestCases) {
 			// Answer and Question setting in Case
-			for (Finding f : rtc.getFindings()) {
-
+			Collection<Finding> findings = preprocessFindings(rtc.getFindings());
+			for (Finding f : findings) {
 				Fact fact = FactFactory.createUserEnteredFact(f.getQuestion(), f.getValue());
-
 				session.getBlackboard().addValueFact(fact);
 			}
 
@@ -161,6 +168,66 @@ public class SequentialTestCase {
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HHmm");
 			rtc.setTestingDate(df.format(new Date()));
 		}
+	}
+
+	/**
+	 * The specified findings are searched for MC questions and combined, when
+	 * one MC question has more than one finding in the given list. The merged
+	 * findings are returned; all other findings are returned as given.
+	 * 
+	 * @created 22.02.2011
+	 * @param findings the specified findings
+	 * @return the specified findings, but with MC questions merged
+	 */
+	private Collection<Finding> preprocessFindings(List<Finding> findings) {
+		Collection<Finding> mergedFindings = new ArrayList<Finding>(findings.size());
+		Collection<QuestionMC> mcquestions = getMCQuestionsIn(findings);
+		// combine the mc findings and add the combined to merged
+		for (QuestionMC questionMC : mcquestions) {
+			Finding mf = mergeFinding(questionMC, findings);
+			if (mf != null) mergedFindings.add(mf);
+		}
+		// add the remaining findings
+		for (Finding finding : findings) {
+			if (!mcquestions.contains(finding.getQuestion())) {
+				mergedFindings.add(finding);
+			}
+		}
+		return mergedFindings;
+	}
+
+	/**
+	 * Merge all findings into one, that contain the specified question.
+	 */
+	private Finding mergeFinding(QuestionMC questionMC, List<Finding> findings) {
+		Collection<ChoiceID> choiceIDs = new HashSet<ChoiceID>();
+
+		for (Finding finding : findings) {
+			if (questionMC.equals(finding.getQuestion())) {
+				Value v = finding.getValue();
+				if (v instanceof ChoiceValue) {
+					choiceIDs.add(((ChoiceValue) v).getChoiceID());
+				}
+				else if (v instanceof MultipleChoiceValue) {
+					choiceIDs.addAll(((MultipleChoiceValue) v).getChoiceIDs());
+				}
+				else {
+					throw new IllegalArgumentException("Choice value expected!");
+				}
+			}
+		}
+		if (choiceIDs.isEmpty()) return null;
+		else return new Finding(questionMC, new MultipleChoiceValue(choiceIDs));
+	}
+
+	private Collection<QuestionMC> getMCQuestionsIn(List<Finding> findings) {
+		Set<QuestionMC> questions = new HashSet<QuestionMC>();
+		for (Finding finding : findings) {
+			if (finding.getQuestion() instanceof QuestionMC) {
+				questions.add((QuestionMC) finding.getQuestion());
+			}
+		}
+		return questions;
 	}
 
 	@Override
