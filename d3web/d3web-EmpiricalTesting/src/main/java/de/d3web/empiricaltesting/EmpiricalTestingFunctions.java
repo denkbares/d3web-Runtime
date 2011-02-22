@@ -34,7 +34,7 @@ public final class EmpiricalTestingFunctions {
 
 	// -------Chained Precision--------
 
-	private int wp(int i) {
+	private int wp() {
 		return 1;
 	}
 
@@ -73,8 +73,8 @@ public final class EmpiricalTestingFunctions {
 			}
 			else {
 				for (int i = 0; i < stc.getCases().size(); i++) {
-					numerator += wp(i) * state.precision(stc.getCases().get(i));
-					denominator += wp(i);
+					numerator += wp() * state.precision(stc.getCases().get(i));
+					denominator += wp();
 				}
 			}
 
@@ -87,7 +87,7 @@ public final class EmpiricalTestingFunctions {
 	/**
 	 * Köööönte man noch iiirgendwann mal inverse annealing machen ;-)
 	 */
-	private int wr(int i) {
+	private int wr() {
 		return 1;
 	}
 
@@ -125,8 +125,8 @@ public final class EmpiricalTestingFunctions {
 			}
 			else {
 				for (int i = 0; i < stc.getCases().size(); i++) {
-					numerator += wr(i) * state.recall(stc.getCases().get(i));
-					denominator += wr(i);
+					numerator += wr() * state.recall(stc.getCases().get(i));
+					denominator += wr();
 				}
 			}
 			return numerator / denominator;

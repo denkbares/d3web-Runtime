@@ -137,13 +137,13 @@ public final class AnswerSelector {
 			return determineNumValues((QuestionNum) question);
 		}
 		else if (question instanceof QuestionText) {
-			return determineTextValues((QuestionText) question);
+			return determineTextValues();
 		}
 
 		throw new UnsupportedDataTypeException();
 	}
 
-	private List<? extends Value> determineTextValues(QuestionText question) {
+	private List<? extends Value> determineTextValues() {
 		List<Value> answers = new ArrayList<Value>(3);
 		answers.add(new TextValue("test"));
 		answers.add(new TextValue("."));

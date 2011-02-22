@@ -69,8 +69,8 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 			Rating oldState = model.getState(session);
 			// calculate scores
 			// and the calculate states (based on that scores)
-			double currentScore = computeScore(model, trace, session);
-			double currentSupport = computeSupport(model, trace, session);
+			double currentScore = computeScore(trace);
+			double currentSupport = computeSupport(model, trace);
 			Rating currentState = computeState(model, trace, currentScore,
 					currentSupport);
 			trace.setScore(currentScore);
@@ -119,7 +119,7 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 		trace.refreshRelations(xclModel, session);
 	}
 
-	private double computeScore(XCLModel model, InferenceTrace trace, Session session) {
+	private double computeScore(InferenceTrace trace) {
 
 		// score is the sum of matching relations compared to evaluated
 		// relations
@@ -134,7 +134,7 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 		return posSum / (negSum + posSum);
 	}
 
-	private double computeSupport(XCLModel model, InferenceTrace trace, Session session) {
+	private double computeSupport(XCLModel model, InferenceTrace trace) {
 		// support is the sum of evaluated relations compared to all relations
 		double posSum = weightedSumOf(trace.getPosRelations())
 				+ weightedSumOf(trace.getReqPosRelations());

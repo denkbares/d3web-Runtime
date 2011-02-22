@@ -148,7 +148,7 @@ public final class KnowledgeBaseManagement {
 	public QuestionOC createQuestionOC(String name, QASet parent,
 			String[] answers) {
 		QuestionOC q = createQuestionOC(name, parent, new Choice[] {});
-		q.setAlternatives(toList(createAnswers(q, answers)));
+		q.setAlternatives(toList(createAnswers(answers)));
 		return q;
 	}
 
@@ -173,7 +173,7 @@ public final class KnowledgeBaseManagement {
 	public QuestionMC createQuestionMC(String name, QASet parent,
 			String[] answers) {
 		QuestionMC q = createQuestionMC(name, parent, new Choice[] {});
-		q.setAlternatives(toList(createAnswers(q, answers)));
+		q.setAlternatives(toList(createAnswers(answers)));
 		return q;
 	}
 
@@ -232,7 +232,7 @@ public final class KnowledgeBaseManagement {
 		return answer;
 	}
 
-	private Choice[] createAnswers(QuestionChoice q, String[] answers) {
+	private Choice[] createAnswers(String[] answers) {
 		Choice[] a = new Choice[answers.length];
 		for (int i = 0; i < answers.length; i++) {
 			a[i] = AnswerFactory.createAnswerChoice(
