@@ -40,17 +40,17 @@ import de.d3web.plugin.test.InitPluginManager;
 public final class EmpiricalTester {
 
 	// Input variables
-	static String workspace = "D:/Projekte/Temp/EmpiricalTesting/";
-	static String kbFile = "KnowledgeBases/dano.jar";
-	static String caseFile = "dano.xml";
+	private static String workspace = "D:/Projekte/Temp/EmpiricalTesting/";
+	private static String kbFile = "KnowledgeBases/dano.jar";
+	private static String caseFile = "dano.xml";
 
 	// Output file for DDBuilder (DOT-File for GraphViz)
-	static String dotFile = "dano.dot";
+	private static String dotFile = "dano.dot";
 	// Output file for JUNGCaseVisualizer (PDF-File)
-	static String pdfFile = "dano.pdf";
+	private static String pdfFile = "dano.pdf";
 	// Output files for InterviewBot
-	static String xmlFile = "dano";
-	static String txtFile = "dano";
+	private static String xmlFile = "dano";
+	private static String txtFile = "dano";
 
 	private EmpiricalTester() {
 	}
@@ -80,49 +80,50 @@ public final class EmpiricalTester {
 	 * 
 	 * @throws Exception
 	 */
-	public static void demoComputePrecisionAndRecall() throws Exception {
-
+	public static String demoComputePrecisionAndRecall() throws Exception {
+		StringBuffer buffy = new StringBuffer();
 		KnowledgeBase kb = loadKnowledgeBase(workspace + kbFile);
 		TestCase testSuite = new TestCase();
 		testSuite.setKb(kb);
 		testSuite.loadRepository(workspace + caseFile);
 
-		System.out.println("DerivedSolutions-Precision (Non-Sequential): "
-				+ testSuite.totalNonSequentialPrecision());
-		System.out.println("DerivedSolutions-Recall (Non-Sequential): "
-				+ testSuite.totalNonSequentialRecall());
-		System.out.println("DerivedSolutions-Precision: " + testSuite.totalPrecision());
-		System.out.println("DerivedSolutions-Recall: " + testSuite.totalRecall());
-		System.out.println("Interview-Precision: " + testSuite.totalPrecisionInterview());
-		System.out.println("Interview-Recall: " + testSuite.totalRecallInterview());
-		showDifferences(testSuite);
+		buffy.append("DerivedSolutions-Precision (Non-Sequential): "
+				+ testSuite.totalNonSequentialPrecision() + "\n");
+		buffy.append("DerivedSolutions-Recall (Non-Sequential): "
+				+ testSuite.totalNonSequentialRecall() + "\n");
+		buffy.append("DerivedSolutions-Precision: " + testSuite.totalPrecision() + "\n");
+		buffy.append("DerivedSolutions-Recall: " + testSuite.totalRecall() + "\n");
+		buffy.append("Interview-Precision: " + testSuite.totalPrecisionInterview() + "\n");
+		buffy.append("Interview-Recall: " + testSuite.totalRecallInterview() + "\n");
+		showDifferences(testSuite, buffy);
+		return buffy.toString();
 	}
 
-	private static void showDifferences(TestCase t) {
+	private static void showDifferences(TestCase t, StringBuffer buffy) {
 
 		for (SequentialTestCase stc : t.getRepository()) {
 
 			for (RatedTestCase rtc : stc.getCases()) {
 				if (!rtc.isCorrect()) {
-					System.out.println("SequentialTestCase: " + stc.getName());
-					System.out.println("RatedTestCase: " + rtc.getName());
-					System.out.println("Findings: ");
+					buffy.append("SequentialTestCase: " + stc.getName() + "\n");
+					buffy.append("RatedTestCase: " + rtc.getName() + "\n");
+					buffy.append("Findings: " + "\n");
 					for (Finding f : rtc.getFindings()) {
-						System.out.println(f.toString());
+						buffy.append(f.toString());
 					}
-					System.out.println("Expected: ");
+					buffy.append("Expected: " + "\n");
 					Collections.sort(rtc.getExpectedSolutions(),
 							new RatedSolution.RatingComparatorByName());
 					for (RatedSolution rs : rtc.getExpectedSolutions()) {
-						System.out.println("\t" + rs.toString());
+						buffy.append("\t" + rs.toString() + "\n");
 					}
-					System.out.println("\nDerived: ");
+					buffy.append("\nDerived: " + "\n");
 					Collections.sort(rtc.getDerivedSolutions(),
 							new RatedSolution.RatingComparatorByName());
 					for (RatedSolution rs : rtc.getDerivedSolutions()) {
-						System.out.println("\t" + rs.toString());
+						buffy.append("\t" + rs.toString() + "\n");
 					}
-					System.out.println("-----------------------------------------");
+					buffy.append("-----------------------------------------" + "\n");
 				}
 			}
 

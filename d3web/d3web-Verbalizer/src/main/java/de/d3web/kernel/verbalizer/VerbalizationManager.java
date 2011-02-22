@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.d3web.kernel.psmethods.verbalizer.XclVerbalizer;
@@ -88,7 +89,7 @@ public final class VerbalizationManager {
 	/**
 	 * A list of Verbalizers registered in the Manager
 	 */
-	private ArrayList<Verbalizer> registeredVerbalizers = new ArrayList<Verbalizer>();
+	private List<Verbalizer> registeredVerbalizers = new ArrayList<Verbalizer>();
 
 	/**
 	 * This Hashmap saves the priorities of the Verbalizers

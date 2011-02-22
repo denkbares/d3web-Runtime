@@ -25,11 +25,11 @@ import java.util.List;
 
 public class TestCaseComparator {
 
-	List<SequentialTestCase> cases1, cases2;
+	private List<SequentialTestCase> cases1, cases2;
 
-	public List<SequentialTestCase> intersectingCases;
-	public List<SequentialTestCase> onlyInCase1;
-	List<SequentialTestCase> onlyInCase2;
+	private List<SequentialTestCase> intersectingCases;
+	private List<SequentialTestCase> onlyInCase1;
+	private List<SequentialTestCase> onlyInCase2;
 
 	/**
 	 * Default Constructor

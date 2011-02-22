@@ -31,9 +31,9 @@ import de.d3web.empiricaltesting.RatedTestCase;
  */
 public class EdgeFinding {
 
-	RatedTestCase source;
-	RatedTestCase destination;
-	Finding finding;
+	private RatedTestCase source;
+	private RatedTestCase destination;
+	private Finding finding;
 
 	/**
 	 * Default Constructor

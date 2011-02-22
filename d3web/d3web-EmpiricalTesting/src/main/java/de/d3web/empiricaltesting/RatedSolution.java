@@ -26,8 +26,8 @@ import de.d3web.core.knowledge.terminology.Solution;
 
 public class RatedSolution implements Comparable<RatedSolution> {
 
-	Solution solution;
-	Rating rating;
+	private Solution solution;
+	private Rating rating;
 
 	static class InverseRatingComparator implements Comparator<RatedSolution> {
 

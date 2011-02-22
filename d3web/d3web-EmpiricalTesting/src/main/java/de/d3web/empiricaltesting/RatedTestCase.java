@@ -28,8 +28,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import de.d3web.core.knowledge.terminology.Solution;
-
 public class RatedTestCase {
 
 	/**
@@ -276,24 +274,24 @@ public class RatedTestCase {
 		return derivedSolutions;
 	}
 
-	@Deprecated
-	public void update(Solution solution, Rating rating) {
-		RatedSolution rsolution = getBySolution(solution);
-		if (rsolution == null) {
-			addExpected(new RatedSolution(solution, rating));
-		}
-		else {
-			rsolution.update(rating);
-		}
-	}
-
-	@Deprecated
-	private RatedSolution getBySolution(Solution solution) {
-		for (RatedSolution rsol : expectedSolutions) {
-			if (rsol.solution.equals(solution)) return rsol;
-		}
-		return null;
-	}
+	// @Deprecated
+	// public void update(Solution solution, Rating rating) {
+	// RatedSolution rsolution = getBySolution(solution);
+	// if (rsolution == null) {
+	// addExpected(new RatedSolution(solution, rating));
+	// }
+	// else {
+	// rsolution.update(rating);
+	// }
+	// }
+	//
+	// @Deprecated
+	// private RatedSolution getBySolution(Solution solution) {
+	// for (RatedSolution rsol : expectedSolutions) {
+	// if (rsol.solution.equals(solution)) return rsol;
+	// }
+	// return null;
+	// }
 
 	/**
 	 * A new instance is created and the lists solutions and findings are copied

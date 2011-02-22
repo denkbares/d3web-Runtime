@@ -19,7 +19,7 @@ import java.util.List;
 
 public class DefaultProtocol implements Protocol {
 
-	private final ArrayList<ProtocolEntry> entries = new ArrayList<ProtocolEntry>();
+	private final List<ProtocolEntry> entries = new ArrayList<ProtocolEntry>();
 
 	public DefaultProtocol() {
 	}

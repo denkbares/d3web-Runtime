@@ -34,9 +34,9 @@ import de.d3web.empiricaltesting.writer.TestSuiteXMLWriter;
 
 public final class InterviewBotRunner {
 
-	static String workspace = "D:/Projekte/Temp/EmpiricalTesting/";
-	static String filename = "";
-	static Stopwatch watch = new Stopwatch();
+	private static String workspace = "D:/Projekte/Temp/EmpiricalTesting/";
+	private static String filename = "";
+	private static Stopwatch watch = new Stopwatch();
 
 	private InterviewBotRunner() {
 	}

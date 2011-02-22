@@ -49,7 +49,7 @@ public final class JPFPluginManager extends PluginManager {
 
 	private final org.java.plugin.PluginManager manager;
 
-	private final HashMap<org.java.plugin.registry.Extension, Extension> cachedExtension = new HashMap<org.java.plugin.registry.Extension, Extension>();
+	private final Map<org.java.plugin.registry.Extension, Extension> cachedExtension = new HashMap<org.java.plugin.registry.Extension, Extension>();
 
 	/**
 	 * Contains the registered Plugins. The field will be initialized lazy by

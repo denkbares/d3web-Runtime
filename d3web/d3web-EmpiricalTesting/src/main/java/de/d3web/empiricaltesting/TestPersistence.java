@@ -97,7 +97,7 @@ public final class TestPersistence {
 	private SequentialTestCase stc = null;
 	private RatedTestCase rtc = null;
 
-	BotHelper bh = BotHelper.getInstance();
+	private BotHelper bh = BotHelper.getInstance();
 
 	private static TestPersistence instance;
 

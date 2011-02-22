@@ -60,7 +60,7 @@ public final class AnswerSelector {
 	 * Number of numerical answers generated in case of a {@link QuestionNum}.<BR>
 	 * Default value is 3 possible answers.
 	 */
-	public int numberOfNumericalValues = 3;
+	private int numberOfNumericalValues = 3;
 
 	private Map<Question, List<Value>> forbiddenAnswers = new HashMap<Question, List<Value>>();
 
@@ -153,7 +153,7 @@ public final class AnswerSelector {
 
 	private List<? extends Value> determineNumValues(QuestionNum question) {
 		List<Value> answers = new LinkedList<Value>();
-		NumericalInterval range = (NumericalInterval) question.getInfoStore().getValue(
+		NumericalInterval range = question.getInfoStore().getValue(
 				BasicProperties.QUESTION_NUM_RANGE);
 		if (range == null) {
 			range = DEFAULT_INTERVAL;

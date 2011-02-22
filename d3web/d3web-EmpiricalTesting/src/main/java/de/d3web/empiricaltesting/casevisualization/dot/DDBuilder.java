@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import de.d3web.core.knowledge.terminology.Choice;
@@ -63,11 +64,11 @@ public final class DDBuilder implements CaseVisualizer {
 
 	private static DDBuilder instance = new DDBuilder();
 
-	BotHelper bh = BotHelper.getInstance();
-	ConfigLoader config = ConfigLoader.getInstance();
+	private BotHelper bh = BotHelper.getInstance();
+	private ConfigLoader config = ConfigLoader.getInstance();
 
 	private Set<String> createdEdges;
-	private HashMap<String, DDNode> nodes;
+	private Map<String, DDNode> nodes;
 
 	public enum caseType {
 		old_case, new_case, incorrect
@@ -410,10 +411,10 @@ public final class DDBuilder implements CaseVisualizer {
 		// b.append("    <TR><TD COLSPAN=\""+intColSpan+"\" BGCOLOR=\"" +
 		// nodeColor + "\">" + bh.pretty(nodeName) + "</TD> </TR>\n");
 
-		// Put all RatedSolutions in HashMaps
-		HashMap<Solution, RatedSolution> expSolutions =
+		// Put all RatedSolutions in Maps
+		Map<Solution, RatedSolution> expSolutions =
 				getSolutionsInHashMap(node.getTestCase().getExpectedSolutions());
-		HashMap<Solution, RatedSolution> derSolutions =
+		Map<Solution, RatedSolution> derSolutions =
 				getSolutionsInHashMap(node.getTestCase().getDerivedSolutions());
 		HashSet<Solution> solutions = new HashSet<Solution>();
 
@@ -452,16 +453,16 @@ public final class DDBuilder implements CaseVisualizer {
 	}
 
 	/**
-	 * Returns all elements (RatedSolution) of a List in a HashMap.
+	 * Returns all elements (RatedSolution) of a List in a Map.
 	 * 
 	 * @param solutions List<RatedSolution>
 	 * 
-	 * @return HashMap<Diagnosis, RatedSolution>
+	 * @return Map<Diagnosis, RatedSolution>
 	 */
-	private HashMap<Solution, RatedSolution> getSolutionsInHashMap(
+	private Map<Solution, RatedSolution> getSolutionsInHashMap(
 			List<RatedSolution> solutions) {
 
-		HashMap<Solution, RatedSolution> result =
+		Map<Solution, RatedSolution> result =
 				new HashMap<Solution, RatedSolution>();
 
 		for (RatedSolution rs : solutions) {

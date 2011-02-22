@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -105,7 +106,7 @@ public class JPFPlugin implements Plugin {
 	// contains the exported resources of the plugin, initialized lazy
 	private Resource[] resources = null;
 	// contains the export filter of the plugin, initialized lazy
-	private ArrayList<ResourceFilter> resourceFilters = null;
+	private List<ResourceFilter> resourceFilters = null;
 
 	public JPFPlugin(PluginDescriptor descriptor) {
 		this.descriptor = descriptor;

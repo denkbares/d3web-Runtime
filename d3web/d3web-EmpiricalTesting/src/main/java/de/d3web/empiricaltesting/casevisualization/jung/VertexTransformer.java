@@ -27,12 +27,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.collections15.Transformer;
 
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.Rating.State;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.empiricaltesting.ConfigLoader;
 import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.RatedSolution;
@@ -88,7 +90,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 	@Override
 	public String transform(RatedTestCase rtc) {
 
-		HashMap<String, String> cfg = getConfigs(rtc);
+		Map<String, String> cfg = getConfigs(rtc);
 
 		StringBuilder result = new StringBuilder();
 		result.append("<html>");
@@ -111,11 +113,11 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 	 * @param rtc Current RatedTestCase.
 	 * @return HashMap containing config information.
 	 */
-	private HashMap<String, String> getConfigs(RatedTestCase rtc) {
+	private Map<String, String> getConfigs(RatedTestCase rtc) {
 
 		ConfigLoader config = ConfigLoader.getInstance();
 
-		HashMap<String, String> configs = new HashMap<String, String>();
+		Map<String, String> configs = new HashMap<String, String>();
 		String nodeColor = config.getProperty("nodeColorNewCase");
 		String correctColor = config.getProperty("nodeColorNewCase");
 		String colspan = "3";
@@ -160,7 +162,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 	 * @return String representing the Finding.
 	 */
 	private String transformFinding(RatedTestCase rtc,
-			HashMap<String, String> cfg) {
+			Map<String, String> cfg) {
 
 		StringBuilder result = new StringBuilder();
 		for (Finding f : rtc.getFindings()) {
@@ -190,13 +192,13 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 	 * @return String representing the Solutions.
 	 */
 	private String transformSolutions(RatedTestCase rtc,
-			HashMap<String, String> cfg) {
+			Map<String, String> cfg) {
 
-		HashMap<Solution, RatedSolution> expSolutions =
+		Map<Solution, RatedSolution> expSolutions =
 				getSolutionsInHashMap(rtc.getExpectedSolutions());
-		HashMap<Solution, RatedSolution> derSolutions =
+		Map<Solution, RatedSolution> derSolutions =
 				getSolutionsInHashMap(rtc.getDerivedSolutions());
-		HashSet<Solution> solutions = new HashSet<Solution>();
+		Set<Solution> solutions = new HashSet<Solution>();
 
 		solutions.addAll(expSolutions.keySet());
 		solutions.addAll(derSolutions.keySet());
@@ -227,10 +229,10 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 	 * 
 	 * @return HashMap<Diagnosis, RatedSolution>
 	 */
-	private HashMap<Solution, RatedSolution> getSolutionsInHashMap(
+	private Map<Solution, RatedSolution> getSolutionsInHashMap(
 			List<RatedSolution> solutions) {
 
-		HashMap<Solution, RatedSolution> result =
+		Map<Solution, RatedSolution> result =
 				new HashMap<Solution, RatedSolution>();
 
 		for (RatedSolution rs : solutions) {
@@ -247,7 +249,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 	 * 
 	 * @return String representing the header of the solutions part of the table
 	 */
-	private String transformSolutionsHeader(HashMap<String, String> cfg) {
+	private String transformSolutionsHeader(Map<String, String> cfg) {
 
 		StringBuilder result = new StringBuilder();
 
@@ -281,12 +283,12 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 	 * @param derived RatedSolution the derived solution which will be
 	 *        transformed
 	 * 
-	 * @param cfg HashMap containing configuration information
+	 * @param cfg Map containing configuration information
 	 * 
 	 * @return String representing the transformed RatedSolution
 	 */
 	private String transformCorrectSolution(RatedSolution derived,
-			HashMap<String, String> cfg) {
+			Map<String, String> cfg) {
 
 		StringBuilder result = new StringBuilder();
 
@@ -326,7 +328,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 	 * @return String representing the transformed RatedSolutions
 	 */
 	private String transformIncorrectSolutions(RatedSolution expected,
-			RatedSolution derived, HashMap<String, String> cfg) {
+			RatedSolution derived, Map<String, String> cfg) {
 
 		StringBuilder result = new StringBuilder();
 		String solName = (expected == null ?
@@ -371,7 +373,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 	 * @return String representing the score of the currently processed
 	 *         Solution.
 	 */
-	private String transformState(RatedSolution rs, HashMap<String,
+	private String transformState(RatedSolution rs, Map<String,
 			String> cfg) {
 
 		StringBuilder result = new StringBuilder();
@@ -437,7 +439,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 	 * 
 	 * @return String representing the color
 	 */
-	private String getColor(RatedSolution rs, HashMap<String, String> cfg) {
+	private String getColor(RatedSolution rs, Map<String, String> cfg) {
 
 		if (rs == null) {
 			return cfg.get("nodeColor");
@@ -478,7 +480,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 	 * @param cfg HashMap containing the required information
 	 * @return String which is empty if column is not required.
 	 */
-	private String createCorrectionColumn(HashMap<String, String> cfg) {
+	private String createCorrectionColumn(Map<String, String> cfg) {
 
 		if (cfg.get("colspan").equals("4")) {
 			return "<td width=\"50\" bgcolor=\"#FFFFFF\"></td>";
@@ -497,7 +499,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 	 * @return String representing a list of answers which will be asked next.
 	 */
 	private String transformNextQuestion(RatedTestCase rtc,
-			HashMap<String, String> cfg) {
+			Map<String, String> cfg) {
 
 		List<Question> nextQuestions = getNextQuestions(rtc);
 
