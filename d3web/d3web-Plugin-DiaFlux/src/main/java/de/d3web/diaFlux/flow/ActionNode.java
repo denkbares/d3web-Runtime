@@ -20,6 +20,7 @@
 
 package de.d3web.diaFlux.flow;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.abstraction.ActionSetValue;
@@ -79,7 +80,8 @@ public class ActionNode extends Node {
 
 	@Override
 	public List<? extends TerminologyObject> getForwardKnowledge() {
-		List<? extends TerminologyObject> objects = action.getForwardObjects();
+		List<? extends TerminologyObject> objects = new LinkedList<TerminologyObject>(
+				action.getForwardObjects());
 		objects.removeAll(action.getBackwardObjects());
 
 		return objects;

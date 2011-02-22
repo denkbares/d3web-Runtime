@@ -212,34 +212,23 @@ public class FluxSolver implements PostHookablePSMethod {
 			}
 
 		}
+		// check backward knowledge
+		for (PropagationEntry propagationEntry : changes) {
 
-		// for (PropagationEntry propagationEntry : changes) {
-		//
-		// TerminologyObject object = propagationEntry.getObject();
-		// NodeList knowledge =
-		// object.getKnowledgeStore().getKnowledge(BACKWARD);
-		//
-		// if (knowledge == null) continue;
-		//
-		// for (INode node : knowledge) {
-		//
-		// IPath path = DiaFluxUtils.getPath(node, session);
-		//
-		// if (path.getNodeData(node).isSupported()) {
-		//
-		// if (node.isReevaluate()) {
-		//
-		// activate(session, node);
-		// path.propagate(session, node);
-		//
-		// }
-		//
-		// }
-		//
-		// }
-		//
-		// }
+			TerminologyObject object = propagationEntry.getObject();
+			NodeList knowledge =
+					object.getKnowledgeStore().getKnowledge(BACKWARD);
 
+			if (knowledge == null) continue;
+
+			for (INode node : knowledge) {
+				for (FlowRun run : DiaFluxUtils.getDiaFluxCaseObject(session).getRuns()) {
+					if (run.isActive(node) || node.isReevaluate()) {
+						activate(session, node, run);
+					}
+				}
+			}
+		}
 		Logger.getLogger(FluxSolver.class.getName()).info("Finished propagating.");
 
 	}
