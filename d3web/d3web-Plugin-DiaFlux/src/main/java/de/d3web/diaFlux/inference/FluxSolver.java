@@ -223,7 +223,7 @@ public class FluxSolver implements PostHookablePSMethod {
 
 			for (INode node : knowledge) {
 				for (FlowRun run : DiaFluxUtils.getDiaFluxCaseObject(session).getRuns()) {
-					if (run.isActive(node) || node.isReevaluate()) {
+					if (run.isActive(node) && node.isReevaluate()) {
 						activate(session, node, run);
 					}
 				}
