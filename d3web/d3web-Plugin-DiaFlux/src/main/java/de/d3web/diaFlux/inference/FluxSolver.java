@@ -22,10 +22,8 @@ package de.d3web.diaFlux.inference;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,10 +32,7 @@ import de.d3web.core.inference.PostHookablePSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
-import de.d3web.core.knowledge.Indication;
-import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
@@ -128,7 +123,6 @@ public class FluxSolver implements PostHookablePSMethod {
 		Logger.getLogger(FluxSolver.class.getName()).info(
 				"Start propagating: " + changes);
 
-		Set<TerminologyObject> objects = new HashSet<TerminologyObject>();
 		for (PropagationEntry propagationEntry : changes) {
 
 			// strategic entries do not matter so far...
@@ -136,81 +130,66 @@ public class FluxSolver implements PostHookablePSMethod {
 				continue;
 			}
 			else {
-				objects.add(propagationEntry.getObject());
-			}
-		}
-		// add all questions that are indicated via repeatedindication by this
-		// psm to the list of possible changes
-		for (TerminologyObject to : session.getBlackboard().getInterviewObjects()) {
-			if (to instanceof Question) {
-				Fact fact = session.getBlackboard().getInterviewFact(to);
-				if (fact.getPSMethod() == this && fact.getValue() instanceof Indication) {
-					Indication indication = (Indication) fact.getValue();
-					if (indication.hasState(State.REPEATED_INDICATED)) {
-						objects.add(to);
-					}
+
+				TerminologyObject object = propagationEntry.getObject();
+
+				EdgeMap slice = object.getKnowledgeStore().getKnowledge(FORWARD);
+
+				// TO does not occur in any edge
+				if (slice == null) {
+					continue;
 				}
-			}
-		}
 
-		for (TerminologyObject object : objects) {
+				// iterate over all edges that contain the changed TO
+				for (IEdge edge : slice.getEdges()) {
 
-			EdgeMap slice = object.getKnowledgeStore().getKnowledge(FORWARD);
+					INode start = edge.getStartNode();
+					INode end = edge.getEndNode();
 
-			// TO does not occur in any edge
-			if (slice == null) {
-				continue;
-			}
+					boolean active = evalEdge(session, edge);
+					List<FlowRun> runs = DiaFluxUtils.getDiaFluxCaseObject(session).getRuns();
 
-			// iterate over all edges that contain the changed TO
-			for (IEdge edge : slice.getEdges()) {
+					if (active) {
 
-				INode start = edge.getStartNode();
-				INode end = edge.getEndNode();
+						for (FlowRun flowRun : runs) {
 
-				boolean active = evalEdge(session, edge);
-				List<FlowRun> runs = DiaFluxUtils.getDiaFluxCaseObject(session).getRuns();
-
-				if (active) {
-
-					for (FlowRun flowRun : runs) {
-
-						// begin node is not active, do nothing
-						if (!flowRun.isActive(start)) {
-							continue;
-						}
-						else {
-							// Edge was not active before
-							if (!flowRun.isActive(end) || end instanceof SnapshotNode
-									|| end instanceof ComposedNode) {
-								activateNode(end, flowRun, session);
-
-							}
-
-						}
-
-					}
-
-				}
-				else {
-					for (FlowRun flowRun : runs) {
-						if (flowRun.isActive(end)) {
-							boolean support = checkSupport(session, end, flowRun);
-
-							if (support) {
+							// begin node is not active, do nothing
+							if (!flowRun.isActive(start)) {
 								continue;
 							}
 							else {
-								deactivateNode(end, flowRun, session);
+								// Edge was not active before
+								if (!flowRun.isActive(end) || end instanceof SnapshotNode
+										|| end instanceof ComposedNode) {
+									activateNode(end, flowRun, session);
+
+								}
+
 							}
 
 						}
+
+					}
+					else {
+						for (FlowRun flowRun : runs) {
+							if (flowRun.isActive(end)) {
+								boolean support = checkSupport(session, end, flowRun);
+
+								if (support) {
+									continue;
+								}
+								else {
+									deactivateNode(end, flowRun, session);
+								}
+
+							}
+						}
+
 					}
 
 				}
 
 			}
-
 		}
 		// check backward knowledge
 		for (PropagationEntry propagationEntry : changes) {

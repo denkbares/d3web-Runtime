@@ -78,4 +78,17 @@ public class PropagationEntry {
 				+ "]" + Integer.toHexString(hashCode());
 	}
 
+	public boolean hasChanged() {
+		if (newValue == null && oldValue == null) {
+			return false;
+		}
+		else if (newValue != null) {
+			return !newValue.equals(oldValue);
+		}
+		else {
+			// newValue is null, oldvalue is not null
+			return true;
+		}
+	}
+
 }

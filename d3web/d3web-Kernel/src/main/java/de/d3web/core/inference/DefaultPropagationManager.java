@@ -81,36 +81,6 @@ public class DefaultPropagationManager implements PropagationManager {
 			return interviewPropagationEntries.size() > 0 || propagationEntries.size() > 0;
 		}
 
-		/**
-		 * Removes all unnecessary entries (no value change) from the
-		 * propagation entries.
-		 * 
-		 * @created 27.01.2011
-		 */
-		public void removeUnnecessaryEntries() {
-			for (Map.Entry<ValueObject, Value> change : new ArrayList<Map.Entry<ValueObject, Value>>(
-					propagationEntries.entrySet())) {
-				ValueObject object = change.getKey();
-				Value oldValue = change.getValue();
-				Value value = session.getBlackboard().getValue(object);
-				// do not propagate changes changing nothing
-				if (oldValue != null && oldValue.equals(value)) {
-					propagationEntries.remove(object);
-				}
-			}
-			for (InterviewObject object : new ArrayList<InterviewObject>(interviewOrder)) {
-				Value oldValue = interviewPropagationEntries.get(object);
-				Value value = session.getBlackboard().getIndication(object);
-				PropagationEntry entry = new PropagationEntry(object, oldValue, value);
-				entry.setStrategic(true);
-				// do not propagate changes changing nothing
-				if (oldValue != null && oldValue.equals(value)) {
-					interviewPropagationEntries.remove(object);
-					interviewOrder.remove(object);
-				}
-			}
-		}
-
 		public void propagate() {
 			try {
 				Collection<PropagationEntry> entries = new ArrayList<PropagationEntry>(
@@ -288,7 +258,6 @@ public class DefaultPropagationManager implements PropagationManager {
 	 */
 	private PSMethodHandler findNextHandler() {
 		for (PSMethodHandler handler : this.psHandlers) {
-			handler.removeUnnecessaryEntries();
 			if (handler.hasPropagationEntries() || !handler.hasPropagated()) {
 				return handler;
 			}

@@ -208,7 +208,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		Set<QContainer> qcons = new HashSet<QContainer>();
 		for (PropagationEntry entry : changes) {
 			TerminologyObject object = entry.getObject();
-			if (!entry.isStrategic() && object instanceof Question) {
+			if (!entry.isStrategic() && entry.hasChanged() && object instanceof Question) {
 				addParentContainers(qcons, object);
 			}
 		}
