@@ -252,4 +252,9 @@ class FactAggregator {
 		}
 	}
 
+	@Override
+	public String toString() {
+		Fact fact = getMergedFact();
+		return "[FactAggregator " + (fact != null ? fact.getValue() : "null") + "]";
+	}
 }
