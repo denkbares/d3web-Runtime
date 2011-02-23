@@ -75,7 +75,7 @@ public class RatedTestCase {
 	private boolean wasTestedBefore;
 
 	/**
-	 * Propagationtime
+	 * Propagation time
 	 */
 	private Date timeStamp;
 
@@ -150,11 +150,11 @@ public class RatedTestCase {
 	}
 
 	public boolean addExpectedFinding(Finding finding) {
-		return expectedFindings.add(finding);
+		return this.expectedFindings.add(finding);
 	}
 
-	public boolean addExpectedFindings(Collection<Finding> fingings) {
-		return expectedFindings.addAll(findings);
+	public boolean addExpectedFindings(Collection<Finding> expectedFindings) {
+		return this.expectedFindings.addAll(expectedFindings);
 	}
 
 	/**
@@ -240,7 +240,8 @@ public class RatedTestCase {
 	@Override
 	public String toString() {
 		return "<" + name + " (\n\tFindings:" + findings + "; \n\tExpected:"
-				+ expectedSolutions + "; \n\tDerived:" + derivedSolutions + "; \n\t)>";
+				+ expectedSolutions + ", " + expectedFindings + "; \n\tDerived:" + derivedSolutions
+				+ "; \n\t)>";
 	}
 
 	/**
