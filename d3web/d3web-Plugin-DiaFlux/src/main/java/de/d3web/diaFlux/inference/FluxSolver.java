@@ -106,7 +106,7 @@ public class FluxSolver implements PostHookablePSMethod {
 				"Activating startnode '" + startNode.getName() + "' of flow '"
 						+ startNode.getFlow().getName() + "'.");
 
-		FlowRun run = new FlowRun(startNode);
+		FlowRun run = new FlowRun();
 
 		DiaFluxUtils.getDiaFluxCaseObject(session).addRun(run);
 		activateNode(startNode, run, session);
@@ -386,7 +386,7 @@ public class FluxSolver implements PostHookablePSMethod {
 					if (run.isActive(snapshot)) {
 						caseObject.removeRun(run);
 						snapshot.deactivate(session, run);
-						FlowRun newRun = new FlowRun(snapshot);
+						FlowRun newRun = new FlowRun();
 						newRun.add(snapshot);
 						List<SnapshotNode> otherSnaptshots = new LinkedList<SnapshotNode>();
 						for (INode n : run) {

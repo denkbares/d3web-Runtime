@@ -32,9 +32,8 @@ public class FlowRun implements Iterable<INode> {
 
 	private final Set<INode> nodes;
 
-	public FlowRun(INode node) {
+	public FlowRun() {
 		this.nodes = new HashSet<INode>();
-		// this.nodes.add(node);
 	}
 
 	public boolean isActive(INode node) {
