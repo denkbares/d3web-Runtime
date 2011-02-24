@@ -221,7 +221,7 @@ public abstract class AbstractDiaFluxTest {
 		System.out.print("Supported Nodes in '" + flowName + "': ");
 		Set<INode> nodes = new HashSet<INode>();
 		for (FlowRun run : DiaFluxUtils.getDiaFluxCaseObject(session).getRuns()) {
-			for (INode node : run) {
+			for (INode node : run.getActiveNodes()) {
 				nodes.add(node);
 			}
 		}

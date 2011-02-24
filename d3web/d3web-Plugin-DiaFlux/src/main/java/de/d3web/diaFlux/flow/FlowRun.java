@@ -18,9 +18,9 @@
  */
 package de.d3web.diaFlux.flow;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Set;
 
 /**
@@ -28,16 +28,18 @@ import java.util.Set;
  * @author Reinhard Hatko
  * @created 17.02.2011
  */
-public class FlowRun implements Iterable<INode> {
+public class FlowRun {
 
 	private final Set<INode> nodes;
+	private final Set<INode> startNodes;
 
 	public FlowRun() {
 		this.nodes = new HashSet<INode>();
+		this.startNodes = new HashSet<INode>();
 	}
 
 	public boolean isActive(INode node) {
-		return nodes.contains(node);
+		return nodes.contains(node) || startNodes.contains(node);
 	}
 
 	public boolean add(INode node) {
@@ -48,9 +50,19 @@ public class FlowRun implements Iterable<INode> {
 		return nodes.remove(node);
 	}
 
-	@Override
-	public Iterator<INode> iterator() {
-		return new LinkedList<INode>(nodes).iterator();
+	public boolean addStartNode(INode node) {
+		return this.startNodes.add(node);
+	}
+
+	public Collection<INode> getActiveNodes() {
+		Collection<INode> activeNodes = new HashSet<INode>();
+		activeNodes.addAll(startNodes);
+		activeNodes.addAll(nodes);
+		return Collections.unmodifiableCollection(activeNodes);
+	}
+
+	public boolean isStartNode(INode node) {
+		return startNodes.contains(node);
 	}
 
 }

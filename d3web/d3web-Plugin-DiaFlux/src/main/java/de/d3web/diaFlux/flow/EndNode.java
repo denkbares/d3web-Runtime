@@ -42,7 +42,7 @@ public class EndNode extends Node {
 	@Override
 	public void activate(Session session, FlowRun run) {
 
-		for (INode node : run) {
+		for (INode node : run.getActiveNodes()) {
 			if (node instanceof ComposedNode) {
 				FluxSolver.checkSuccessorsOnActivation(node, run, session);
 			}
@@ -53,7 +53,7 @@ public class EndNode extends Node {
 	@Override
 	public void deactivate(Session session, FlowRun run) {
 
-		for (INode node : run) {
+		for (INode node : run.getActiveNodes()) {
 			if (node instanceof ComposedNode) {
 				FluxSolver.checkSuccessorsOnDeactivation(node, run, session);
 			}
