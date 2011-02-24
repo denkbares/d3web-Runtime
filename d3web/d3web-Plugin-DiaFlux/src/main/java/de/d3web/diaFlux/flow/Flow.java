@@ -24,11 +24,15 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.d3web.core.knowledge.DefaultInfoStore;
+import de.d3web.core.knowledge.InfoStore;
+import de.d3web.core.knowledge.terminology.NamedObject;
+
 /**
  * @author Reinhard Hatko
  * 
  */
-public class Flow {
+public class Flow implements NamedObject {
 
 	private final List<IEdge> edges;
 	private final List<INode> nodes;
@@ -36,6 +40,8 @@ public class Flow {
 	private final String id;
 	private String origin;
 	private boolean autostart;
+
+	private final InfoStore infoStore = new DefaultInfoStore();
 
 	public Flow(String id, String name, List<INode> nodes, List<IEdge> edges) {
 
@@ -141,6 +147,11 @@ public class Flow {
 
 	public String getId() {
 		return id;
+	}
+
+	@Override
+	public InfoStore getInfoStore() {
+		return infoStore;
 	}
 
 }
