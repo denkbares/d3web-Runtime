@@ -65,4 +65,8 @@ public class FlowRun {
 		return startNodes.contains(node);
 	}
 
+	public Collection<INode> getStartNodes() {
+		return Collections.unmodifiableCollection(this.startNodes);
+	}
+
 }
