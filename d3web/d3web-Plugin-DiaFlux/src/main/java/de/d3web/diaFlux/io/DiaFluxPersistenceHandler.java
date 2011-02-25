@@ -35,6 +35,7 @@ import de.d3web.core.io.NoSuchFragmentHandlerException;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.Util;
+import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowFactory;
@@ -135,6 +136,9 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 
 		}
 
+		// TODO autosave??
+		XMLUtil.appendInfoStore(flowElem, flow, null);
+
 		return flowElem;
 
 	}
@@ -227,7 +231,28 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 			Element flowElem = (Element) flows.item(i);
 
 			Flow flow = readFlow(knowledgeBase, flowElem);
+
+			fillInfoStore(flow, flowElem, knowledgeBase);
+
 			DiaFluxUtils.addFlow(flow, knowledgeBase);
+		}
+
+	}
+
+	/**
+	 * 
+	 * @created 24.02.2011
+	 * @param flow
+	 * @param flowElem
+	 * @param knowledgeBase
+	 * @throws IOException
+	 */
+	private void fillInfoStore(Flow flow, Element flowElem, KnowledgeBase knowledgeBase) throws IOException {
+
+		NodeList list = flowElem.getElementsByTagName(XMLUtil.INFO_STORE);
+
+		if (list.getLength() != 0) {
+			XMLUtil.fillInfoStore(flow.getInfoStore(), (Element) list.item(0), knowledgeBase);
 		}
 
 	}

@@ -25,17 +25,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
@@ -166,7 +169,21 @@ public class DiaFluxPersistenceTest {
 
 		DiaFluxUtils.addFlow(testFlow, kbm.getKnowledgeBase());
 
+		// add a property to Infostore, to test its persistence
+		testFlow.getInfoStore().addValue(MMInfo.DESCRIPTION,
+				"infostoretestvalue");
+
 		return kbm.getKnowledgeBase();
+
+	}
+
+	@Test
+	public void testInfoStorePersistence() {
+		InfoStore infoStore = DiaFluxUtils.getFlowSet(kb).get("testFlow_ID").getInfoStore();
+
+		Assert.assertTrue("Infostore does not contain a description",
+				infoStore.contains(MMInfo.DESCRIPTION));
+		Assert.assertEquals("infostoretestvalue", infoStore.getValue(MMInfo.DESCRIPTION));
 
 	}
 
