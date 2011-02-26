@@ -31,7 +31,7 @@ import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
@@ -53,7 +53,6 @@ import de.d3web.plugin.test.InitPluginManager;
  */
 public class MixedUserRuleIndicationTest {
 
-	KnowledgeBaseManagement kbm;
 	KnowledgeBase kb;
 	Session session;
 	InterviewAgenda agenda;
@@ -63,11 +62,10 @@ public class MixedUserRuleIndicationTest {
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
-		kb = kbm.getKnowledgeBase();
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
 
-		init = kbm.createQContainer("init");
-		qc = kbm.createQContainer("qc");
+		init = new QContainer(kb.getRootQASet(), "init");
+		qc = new QContainer(kb.getRootQASet(), "qc");
 
 		// THE QUESTION TREE
 		// init {container}
@@ -77,10 +75,10 @@ public class MixedUserRuleIndicationTest {
 		// qc {container}
 		// - importantQuestions
 
-		weight = kbm.createQuestionNum("weight", init);
-		abnormalWeight = kbm.createQuestionNum("abnormalWeight", weight);
-		height = kbm.createQuestionNum("height", init);
-		importantQuestion = kbm.createQuestionNum("importantQuestion", qc);
+		weight = new QuestionNum(init, "weight");
+		abnormalWeight = new QuestionNum(weight, "abnormalWeight");
+		height = new QuestionNum(init, "height");
+		importantQuestion = new QuestionNum(qc, "importantQuestion");
 
 		kb.setInitQuestions(Arrays.asList(init));
 
@@ -93,7 +91,7 @@ public class MixedUserRuleIndicationTest {
 	public void testStandardIndicationWithoutFollowQuestion() {
 		// Summary: First question is answered, but follow-up indication rule
 		// does not fire, so the second question is presented next
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 
 		// expect the first question of the init container
 		assertEquals(weight, session.getInterview().nextForm().getInterviewObject());
@@ -108,7 +106,7 @@ public class MixedUserRuleIndicationTest {
 	public void testStandardIndicationWithFollowQuestion() {
 		// Summary: first question of the questionnaire is answered, then its
 		// follow-up question should be indicated
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 
 		// expect the first question of the init container
 		assertEquals(weight, session.getInterview().nextForm().getInterviewObject());
@@ -128,7 +126,7 @@ public class MixedUserRuleIndicationTest {
 		// Summary: A question is selected by the user, which is located in the
 		// same container
 
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 
 		// expect the first question of the init container
 		assertEquals(weight, session.getInterview().nextForm().getInterviewObject());
@@ -149,7 +147,7 @@ public class MixedUserRuleIndicationTest {
 		// Summary: A question is selected by the user, which is located in
 		// another container
 
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 
 		// expect the first question of the init container
 		assertEquals(weight, session.getInterview().nextForm().getInterviewObject());
@@ -170,7 +168,7 @@ public class MixedUserRuleIndicationTest {
 		// Summary: A questionnaire is selected by the user, we expect the first
 		// question of this container "qc" to be the next question to be asked
 
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 
 		// expect the first question of the init container
 		assertEquals(weight, session.getInterview().nextForm().getInterviewObject());

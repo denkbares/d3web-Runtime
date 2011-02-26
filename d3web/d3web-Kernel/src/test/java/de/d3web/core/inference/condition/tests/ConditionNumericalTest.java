@@ -41,7 +41,7 @@ import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.FactFactory;
@@ -57,7 +57,6 @@ import de.d3web.plugin.test.InitPluginManager;
  */
 public class ConditionNumericalTest {
 
-	KnowledgeBaseManagement kbm;
 	KnowledgeBase kb;
 	Session session;
 	QContainer init;
@@ -66,16 +65,15 @@ public class ConditionNumericalTest {
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
-		kb = kbm.getKnowledgeBase();
-		init = kbm.createQContainer("init");
-		numericalQuestion = kbm.createQuestionNum("numericalQuestion", init);
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
+		init = new QContainer(kb.getRootQASet(), "init");
+		numericalQuestion = new QuestionNum(init, "numericalQuestion");
 	}
 
 	@Test(expected = NoAnswerException.class)
 	public void noAnswerExceptionThrown() throws NoAnswerException {
 		// Summary: Test for a Condition where no answer is set
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		Condition condition = new CondNumEqual(numericalQuestion, 10.0);
 		try {
 			condition.eval(session);
@@ -92,7 +90,7 @@ public class ConditionNumericalTest {
 
 		// open up a new session and enter a unknown value for the
 		// numericalQuestion
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "numericalQuestion", Unknown.getInstance()));
 
@@ -137,7 +135,7 @@ public class ConditionNumericalTest {
 
 		// open up a new session and enter a fact which should match the
 		// first condition, but not the second
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "numericalQuestion", 10.0));
 		try {
@@ -178,7 +176,7 @@ public class ConditionNumericalTest {
 
 		// open up a new session and enter a value of 50.0 for the
 		// numericalQuestion
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "numericalQuestion", 50.0));
 		try {
@@ -222,7 +220,7 @@ public class ConditionNumericalTest {
 
 		// open up a new session and enter a value of 50.0 for the
 		// numericalQuestion
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "numericalQuestion", 50.0));
 		try {
@@ -265,7 +263,7 @@ public class ConditionNumericalTest {
 
 		// open up a new session and enter a value of 50.0 for the
 		// numericalQuestion
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "numericalQuestion", 50.0));
 		try {
@@ -308,7 +306,7 @@ public class ConditionNumericalTest {
 
 		// open up a new session and enter a value of 50.0 for the
 		// numericalQuestion
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "numericalQuestion", 50.0));
 		try {
@@ -361,7 +359,7 @@ public class ConditionNumericalTest {
 
 		// open up a new session and enter a value of 50.0 for the
 		// numericalQuestion
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "numericalQuestion", 50.0));
 		try {

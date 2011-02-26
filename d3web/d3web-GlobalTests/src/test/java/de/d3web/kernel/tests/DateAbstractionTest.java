@@ -39,8 +39,9 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionDate;
+import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
@@ -79,26 +80,24 @@ public class DateAbstractionTest {
 	@BeforeClass
 	public static void setUp() throws Exception {
 		InitPluginManager.init();
-		kb = KnowledgeBaseManagement.createInstance().getKnowledgeBase();
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
 		addTerminologyObjects();
 		addRules();
 		session = SessionFactory.createSession(kb);
 	}
 
 	private static void addTerminologyObjects() {
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(kb);
-		kbm.createQuestionDate("Date", kb.getRootQASet());
+		new QuestionDate(kb.getRootQASet(), "Date");
 
 		String[] separationAlternatives = {
 				"Yes", "No" };
 		Question separation =
-				kbm.createQuestionOC("Is Germany separated?",
-						kb.getRootQASet(), separationAlternatives);
+				new QuestionOC(kb.getRootQASet(), "Is Germany separated?", separationAlternatives);
 		separation.getInfoStore().addValue(BasicProperties.ABSTRACTION_QUESTION, Boolean.TRUE);
 
 		String[] eventAlternatives = {
 				"Fall of the Berlin Wall", "German unity" };
-		Question event = kbm.createQuestionOC("Event", kb.getRootQASet(),
+		Question event = new QuestionOC(kb.getRootQASet(), "Event",
 				eventAlternatives);
 		event.getInfoStore().addValue(BasicProperties.ABSTRACTION_QUESTION, Boolean.TRUE);
 	}
@@ -115,7 +114,7 @@ public class DateAbstractionTest {
 		calendar.set(1989, Calendar.NOVEMBER, 9, 0, 0, 0);
 		DateValue fallOfTheWallDate = new DateValue(calendar.getTime());
 		Condition fallOfTheWallCondition = new CondDateEqual(date, fallOfTheWallDate);
-		Value fallOfTheWall = KnowledgeBaseManagement.findValue(event, "Fall of the Berlin Wall");
+		Value fallOfTheWall = KnowledgeBaseUtils.findValue(event, "Fall of the Berlin Wall");
 		RuleFactory.createSetValueRule(event, fallOfTheWall,
 				fallOfTheWallCondition);
 
@@ -124,7 +123,7 @@ public class DateAbstractionTest {
 		calendar.set(1990, Calendar.OCTOBER, 3, 0, 0, 0);
 		DateValue germanUnityDate = new DateValue(calendar.getTime());
 		Condition germanUnityCondition = new CondDateEqual(date, germanUnityDate);
-		Value germanUnity = KnowledgeBaseManagement.findValue(event, "German unity");
+		Value germanUnity = KnowledgeBaseUtils.findValue(event, "German unity");
 		RuleFactory.createSetValueRule(event, germanUnity, germanUnityCondition);
 
 		// Date > 1949-10-07 AND Date < 1990-10-03 => Germany is separated = Yes
@@ -140,7 +139,7 @@ public class DateAbstractionTest {
 
 		Condition separationAndCondition = new CondAnd(Arrays.asList(beginSeparationCondition,
 				endSeparationCondition));
-		Value yes = KnowledgeBaseManagement.findValue(separation, "Yes");
+		Value yes = KnowledgeBaseUtils.findValue(separation, "Yes");
 		RuleFactory.createSetValueRule(separation, yes, separationAndCondition);
 
 		// Date < 1949-10-07 OR Date > 1990-10-03 => Germany is separated = No
@@ -148,7 +147,7 @@ public class DateAbstractionTest {
 		Condition postSeparationCondition = new CondDateAfter(date, endSeparationDate);
 		Condition unityOrCondition = new CondOr(Arrays.asList(preSeparationCondition,
 				postSeparationCondition));
-		Value no = KnowledgeBaseManagement.findValue(separation, "No");
+		Value no = KnowledgeBaseUtils.findValue(separation, "No");
 		RuleFactory.createSetValueRule(separation, no, unityOrCondition);
 	}
 
@@ -164,10 +163,10 @@ public class DateAbstractionTest {
 		assertNotNull("Question 'Is Germany separated?' isn't in the Knowledgebase.", separation);
 
 		// Values of 'Is Germany separated?'
-		Value yes = KnowledgeBaseManagement.findValue(separation, "Yes");
+		Value yes = KnowledgeBaseUtils.findValue(separation, "Yes");
 		assertNotNull("Value 'Yes' of Question 'Is Germany separated?' isn't in the Knowledgebase",
 				yes);
-		Value no = KnowledgeBaseManagement.findValue(separation, "No");
+		Value no = KnowledgeBaseUtils.findValue(separation, "No");
 		assertNotNull("Value 'No' of Question 'Is Germany separated?' isn't in the Knowledgebase",
 				no);
 
@@ -176,11 +175,11 @@ public class DateAbstractionTest {
 		assertNotNull("Question 'Event' isn't in the Knowledgebase.", event);
 
 		// Values of 'Event'
-		Value fallOfTheWall = KnowledgeBaseManagement.findValue(event, "Fall of the Berlin Wall");
+		Value fallOfTheWall = KnowledgeBaseUtils.findValue(event, "Fall of the Berlin Wall");
 		assertNotNull(
 				"Value 'Fall of the Berlin Wall' of Question 'Event' isn't in the Knowledgebase",
 				fallOfTheWall);
-		Value germanUnity = KnowledgeBaseManagement.findValue(event, "German unity");
+		Value germanUnity = KnowledgeBaseUtils.findValue(event, "German unity");
 		assertNotNull("Value 'German Unity' of Question 'Event' isn't in the Knowledgebase",
 				germanUnity);
 	}
@@ -223,7 +222,7 @@ public class DateAbstractionTest {
 
 		// TEST 'Germany is separated?' == 'Yes'
 		Value currentSeparationValue = session.getBlackboard().getValue(separation);
-		Value yes = KnowledgeBaseManagement.findValue(separation, "Yes");
+		Value yes = KnowledgeBaseUtils.findValue(separation, "Yes");
 		assertEquals("Question 'Is Germany separated?' has wrong value", yes,
 				currentSeparationValue);
 	}
@@ -249,7 +248,7 @@ public class DateAbstractionTest {
 
 		// TEST 'Germany is separated?' == 'No'
 		Value currentSeparationValue = session.getBlackboard().getValue(separation);
-		Value no = KnowledgeBaseManagement.findValue(separation, "No");
+		Value no = KnowledgeBaseUtils.findValue(separation, "No");
 		assertEquals("Question 'Is Germany separated?' has wrong value", no, currentSeparationValue);
 	}
 
@@ -275,7 +274,7 @@ public class DateAbstractionTest {
 
 		// TEST 'Event' == 'Fall of the Berlin Wall'
 		Value currentEventValue = session.getBlackboard().getValue(event);
-		Value fallOfTheWallValue = KnowledgeBaseManagement.findValue(event,
+		Value fallOfTheWallValue = KnowledgeBaseUtils.findValue(event,
 				"Fall of the Berlin Wall");
 		assertEquals("Question 'Event' has wrong value", fallOfTheWallValue, currentEventValue);
 
@@ -294,7 +293,7 @@ public class DateAbstractionTest {
 
 		// TEST 'Event' == 'German Unity'
 		currentEventValue = session.getBlackboard().getValue(event);
-		Value germanUnityValue = KnowledgeBaseManagement.findValue(event, "German unity");
+		Value germanUnityValue = KnowledgeBaseUtils.findValue(event, "German unity");
 		assertEquals("Question 'Event' has wrong value", germanUnityValue, currentEventValue);
 	}
 

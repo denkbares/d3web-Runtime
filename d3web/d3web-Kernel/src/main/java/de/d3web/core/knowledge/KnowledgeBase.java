@@ -43,7 +43,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 
 /**
  * The KnowledgeBase stores all terminology objects (Question, Solution, etc.)
@@ -103,7 +103,7 @@ public class KnowledgeBase implements NamedObject {
 	/**
 	 * Creates a new knowledge base instance. For the general creation of a
 	 * knowledge base and its corresponding objects we recommend to use the
-	 * {@link KnowledgeBaseManagement} class.
+	 * {@link KnowledgeBaseUtils} class.
 	 */
 	public KnowledgeBase() {
 		initQuestions = new HashMap<QASet, Integer>();

@@ -23,7 +23,6 @@ package de.d3web.core.knowledge.terminology;
 import java.util.Arrays;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.manage.AnswerFactory;
 
 /**
  * This is a simple extension of the QuestionChoice with only has two possible
@@ -52,10 +51,22 @@ public class QuestionYN extends QuestionOC {
 		this(kb, name, YES_STRING, NO_STRING);
 	}
 
-	public QuestionYN(KnowledgeBase kb, String name, String yesText, String noText) {
+	/**
+	 * Creates a new QuestionYN, adds it to the knowledgebase and to the parent.
+	 * No manual adding of the created object to the kb is needed
+	 * 
+	 * @param parent the parent {@link QASet}
+	 * @param name the name of the new QuestionYN
+	 */
+	public QuestionYN(QASet parent, String name) {
+		this(parent.getKnowledgeBase(), name);
+		parent.addChild(this);
+	}
+
+	private QuestionYN(KnowledgeBase kb, String name, String yesText, String noText) {
 		super(kb, name);
-		answerChoiceYes = AnswerFactory.createAnswerYes(yesText);
-		answerChoiceNo = AnswerFactory.createAnswerNo(noText);
+		answerChoiceYes = new AnswerYes(yesText);
+		answerChoiceNo = new AnswerNo(noText);
 		setAlternatives(Arrays.asList(new Choice[] {
 				answerChoiceYes, answerChoiceNo }));
 	}

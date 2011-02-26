@@ -35,7 +35,8 @@ import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.knowledge.terminology.QuestionYN;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
@@ -86,7 +87,7 @@ public class IndicationOQQuestionsNextFormTest {
 	@BeforeClass
 	public static void setUp() throws Exception {
 		InitPluginManager.init();
-		kb = KnowledgeBaseManagement.createKnowledgeBase();
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
 		addTerminologyObjects();
 		addRules();
 		session = SessionFactory.createSession(kb);
@@ -96,44 +97,43 @@ public class IndicationOQQuestionsNextFormTest {
 
 	// add the knowledge base objects, i.e., questions and answers
 	private static void addTerminologyObjects() {
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(kb);
 		// Question 'Sex'
 		String sex = "Sex";
 		String[] sexAlternatives = new String[] {
 				"Female", "Male" };
 		QuestionOC sexQ =
-				kbm.createQuestionOC(sex, kb.getRootQASet(), sexAlternatives);
+				new QuestionOC(kb.getRootQASet(), sex, sexAlternatives);
 
 		// Question 'Pregnant'
 		String pregnant = "Pregnant";
-		kbm.createQuestionYN(pregnant, sexQ);
+		new QuestionYN(sexQ, pregnant);
 
 		// Question 'Ask_Headache'
 		String askHead = "Ask_Headache";
-		kbm.createQuestionYN(askHead, kbm.getKnowledgeBase().getRootQASet());
+		new QuestionYN(kb.getRootQASet(), askHead);
 
 		// Question 'Headache'
 		String headache = "Headache";
-		kbm.createQuestionYN(headache, kbm.getKnowledgeBase().getRootQASet());
+		new QuestionYN(kb.getRootQASet(), headache);
 
 		// Question 'Nausea'
 		String nausea = "Nausea";
-		kbm.createQuestionYN(nausea, kbm.getKnowledgeBase().getRootQASet());
+		new QuestionYN(kb.getRootQASet(), nausea);
 	}
 
 	// add the indication rules to the knowledge base
 	private static void addRules() {
 
 		Question sex = kb.getManager().searchQuestion("Sex");
-		Value female = KnowledgeBaseManagement.findValue(sex, "Female");
+		Value female = KnowledgeBaseUtils.findValue(sex, "Female");
 
 		Question pregnant = kb.getManager().searchQuestion("Pregnant");
-		Value yes = KnowledgeBaseManagement.findValue(pregnant, "Yes");
+		Value yes = KnowledgeBaseUtils.findValue(pregnant, "Yes");
 
 		Question nausea = kb.getManager().searchQuestion("Nausea");
 
 		Question askHead = kb.getManager().searchQuestion("Ask_Headache");
-		Value no = KnowledgeBaseManagement.findValue(askHead, "No");
+		Value no = KnowledgeBaseUtils.findValue(askHead, "No");
 
 		Question headache = kb.getManager().searchQuestion("Headache");
 
@@ -159,10 +159,10 @@ public class IndicationOQQuestionsNextFormTest {
 		assertNotNull("Question 'Sex' isn't contained in the knowledge base.", sex);
 
 		// Values of 'Sex'
-		Value male = KnowledgeBaseManagement.findValue(sex, "Male");
+		Value male = KnowledgeBaseUtils.findValue(sex, "Male");
 		assertNotNull("Value 'Male' for Question 'Sex' isn't contained " +
 				"in the knowledge base", male);
-		Value female = KnowledgeBaseManagement.findValue(sex, "Female");
+		Value female = KnowledgeBaseUtils.findValue(sex, "Female");
 		assertNotNull("Value 'Female' for Question 'Sex' isn't contained " +
 				"in the knowledge base", female);
 
@@ -172,10 +172,10 @@ public class IndicationOQQuestionsNextFormTest {
 				"base.", pregnant);
 
 		// Values of 'Pregnant'
-		Value yes = KnowledgeBaseManagement.findValue(pregnant, "Yes");
+		Value yes = KnowledgeBaseUtils.findValue(pregnant, "Yes");
 		assertNotNull("Value 'Yes' for Question 'Pregnant' isn't " +
 				"contained in the knowledge base", yes);
-		Value no = KnowledgeBaseManagement.findValue(pregnant, "No");
+		Value no = KnowledgeBaseUtils.findValue(pregnant, "No");
 		assertNotNull("Value 'No' for Question 'Pregnant' isn't " +
 				"contained in the knowledge base", no);
 
@@ -185,10 +185,10 @@ public class IndicationOQQuestionsNextFormTest {
 				"base.", askHead);
 
 		// Values of 'Ask Headache'
-		yes = KnowledgeBaseManagement.findValue(askHead, "Yes");
+		yes = KnowledgeBaseUtils.findValue(askHead, "Yes");
 		assertNotNull("Value 'Yes' for Question 'Ask_Headache' isn't " +
 				"contained in the knowledge base", yes);
-		no = KnowledgeBaseManagement.findValue(askHead, "No");
+		no = KnowledgeBaseUtils.findValue(askHead, "No");
 		assertNotNull("Value 'No' for Question 'Ask_Headache' isn't " +
 				"contained in the knowledge base", no);
 
@@ -198,10 +198,10 @@ public class IndicationOQQuestionsNextFormTest {
 				"base.", headache);
 
 		// Values of 'Headache'
-		yes = KnowledgeBaseManagement.findValue(headache, "Yes");
+		yes = KnowledgeBaseUtils.findValue(headache, "Yes");
 		assertNotNull("Value 'Yes' for Question 'Headache' isn't " +
 				"contained in the knowledge base", yes);
-		no = KnowledgeBaseManagement.findValue(headache, "No");
+		no = KnowledgeBaseUtils.findValue(headache, "No");
 		assertNotNull("Value 'No' for Question 'Headache' isn't " +
 				"contained in the knowledge base", no);
 
@@ -211,10 +211,10 @@ public class IndicationOQQuestionsNextFormTest {
 				"base.", nausea);
 
 		// Values of 'Nausea'
-		yes = KnowledgeBaseManagement.findValue(nausea, "Yes");
+		yes = KnowledgeBaseUtils.findValue(nausea, "Yes");
 		assertNotNull("Value 'Yes' for Question 'Nausea' isn't " +
 				"contained in the knowledge base", yes);
-		no = KnowledgeBaseManagement.findValue(nausea, "No");
+		no = KnowledgeBaseUtils.findValue(nausea, "No");
 		assertNotNull("Value 'No' for Question 'Nausea' isn't " +
 				"contained in the knowledge base", no);
 	}
@@ -241,7 +241,7 @@ public class IndicationOQQuestionsNextFormTest {
 		agenda.append(askHead);
 
 		// SET Sex == Male and test whether that worked correctly
-		Value male = KnowledgeBaseManagement.findValue(sex, "Male");
+		Value male = KnowledgeBaseUtils.findValue(sex, "Male");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, sex,
 						male, PSMethodUserSelected.getInstance(),
@@ -266,7 +266,7 @@ public class IndicationOQQuestionsNextFormTest {
 				session.getBlackboard().getIndication(pregnant));
 
 		// SET Sex == Female and test whether that worked correctly
-		Value female = KnowledgeBaseManagement.findValue(sex, "Female");
+		Value female = KnowledgeBaseUtils.findValue(sex, "Female");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, sex,
 						female, PSMethodUserSelected.getInstance(),
@@ -289,7 +289,7 @@ public class IndicationOQQuestionsNextFormTest {
 				session.getBlackboard().getIndication(pregnant));
 
 		// RESET Sex = Male and test whether setting worked
-		male = KnowledgeBaseManagement.findValue(sex, "Male");
+		male = KnowledgeBaseUtils.findValue(sex, "Male");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, sex,
 						male, PSMethodUserSelected.getInstance(),
@@ -335,7 +335,7 @@ public class IndicationOQQuestionsNextFormTest {
 		agenda.append(nausea);
 
 		// SET Ask_Headache == Yes and test setting
-		Value yes = KnowledgeBaseManagement.findValue(askHead, "Yes");
+		Value yes = KnowledgeBaseUtils.findValue(askHead, "Yes");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, askHead,
 						yes, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
@@ -359,7 +359,7 @@ public class IndicationOQQuestionsNextFormTest {
 		// SET Ask_Headache == No and test setting
 		agenda.activate(headache);
 		System.out.println(session.getBlackboard().getIndication(headache));
-		Value no = KnowledgeBaseManagement.findValue(askHead, "No");
+		Value no = KnowledgeBaseUtils.findValue(askHead, "No");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, askHead,
 						no, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));

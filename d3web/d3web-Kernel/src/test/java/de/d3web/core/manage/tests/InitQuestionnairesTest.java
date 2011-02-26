@@ -32,7 +32,8 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 
 /**
  * This test class checks the correct management of init questionnaires as done
@@ -45,24 +46,24 @@ public class InitQuestionnairesTest {
 
 	QContainer qcontainer1, qcontainer2, qcontainer3;
 	Question question1, question2, question3;
-	KnowledgeBaseManagement kbm;
+	KnowledgeBase kb;
 
 	@Before
 	public void setUp() throws Exception {
-		kbm = KnowledgeBaseManagement.createInstance();
-		qcontainer1 = kbm.createQContainer("qcontainer1");
-		question1 = kbm.createQuestionNum("question1", qcontainer1);
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
+		qcontainer1 = new QContainer(kb.getRootQASet(), "qcontainer1");
+		question1 = new QuestionNum(qcontainer1, "question1");
 
-		qcontainer2 = kbm.createQContainer("qcontainer2");
-		question2 = kbm.createQuestionNum("question2", qcontainer2);
+		qcontainer2 = new QContainer(kb.getRootQASet(), "qcontainer2");
+		question2 = new QuestionNum(qcontainer2, "question2");
 
-		qcontainer3 = kbm.createQContainer("qcontainer3");
-		question3 = kbm.createQuestionNum("question3", qcontainer3);
+		qcontainer3 = new QContainer(kb.getRootQASet(), "qcontainer3");
+		question3 = new QuestionNum(qcontainer3, "question3");
 	}
 
 	@Test
 	public void testKnowledgeBaseCreation() {
-		KnowledgeBase knowledge = kbm.getKnowledgeBase();
+		KnowledgeBase knowledge = kb;
 		List<QContainer> qcontainers = knowledge.getManager().getQContainers();
 
 		// including the root there should be 4 qcontainers
@@ -80,7 +81,7 @@ public class InitQuestionnairesTest {
 
 	@Test
 	public void testSettingOfInitQContainers() {
-		KnowledgeBase knowledge = kbm.getKnowledgeBase();
+		KnowledgeBase knowledge = kb;
 		List<QContainer> initQuestions = Arrays.asList(qcontainer3, qcontainer1);
 		knowledge.setInitQuestions(initQuestions);
 
@@ -90,7 +91,7 @@ public class InitQuestionnairesTest {
 
 	@Test
 	public void testAddAndRemoveOfInitQContainers() {
-		KnowledgeBase knowledge = kbm.getKnowledgeBase();
+		KnowledgeBase knowledge = kb;
 
 		// we want to create the list (qcontainer3,qcontainer1)
 		knowledge.addInitQuestion(qcontainer1, 2);

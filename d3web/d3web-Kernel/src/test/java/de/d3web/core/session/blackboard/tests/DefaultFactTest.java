@@ -27,9 +27,10 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QuestionOC;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
@@ -46,7 +47,7 @@ import de.d3web.plugin.test.InitPluginManager;
  */
 public class DefaultFactTest {
 
-	private static KnowledgeBaseManagement kbm;
+	private static KnowledgeBase kb;
 
 	QuestionOC materialQuestion;
 	ChoiceValue wood;
@@ -60,13 +61,11 @@ public class DefaultFactTest {
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
 
-		materialQuestion = kbm.createQuestionOC("materialQuestion",
-				kbm.getKnowledgeBase().getRootQASet(),
-				new String[] {
-						"Steel", "Wood", "Plastic" });
-		wood = new ChoiceValue(KnowledgeBaseManagement.findChoice(materialQuestion, "Wood"));
+		materialQuestion = new QuestionOC(kb.getRootQASet(),
+				"materialQuestion", "Steel", "Wood", "Plastic");
+		wood = new ChoiceValue(KnowledgeBaseUtils.findChoice(materialQuestion, "Wood"));
 
 		material_is_wood = FactFactory.createUserEnteredFact(materialQuestion, wood);
 	}

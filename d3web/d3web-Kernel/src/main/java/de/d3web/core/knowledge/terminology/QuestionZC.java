@@ -41,8 +41,28 @@ public class QuestionZC extends QuestionOC {
 
 	public static final String XML_IDENTIFIER = "Info";
 
+	/**
+	 * Creates a new QuestionZC and adds it to the knowledgebase, so no manual
+	 * adding of the created object to the kb is needed
+	 * 
+	 * @param kb {@link KnowledgeBase} in which the QuestionOC should be
+	 *        inserted
+	 * @param name the name of the new QuestionOC
+	 */
 	public QuestionZC(KnowledgeBase kb, String name) {
 		super(kb, name);
+	}
+
+	/**
+	 * Creates a new QuestionZC, adds it to the knowledgebase and to the parent.
+	 * No manual adding of the created object to the kb is needed
+	 * 
+	 * @param parent the parent {@link QASet}
+	 * @param name the name of the new QuestionZC
+	 */
+	public QuestionZC(QASet parent, String name) {
+		this(parent.getKnowledgeBase(), name);
+		parent.addChild(this);
 	}
 
 	@Override

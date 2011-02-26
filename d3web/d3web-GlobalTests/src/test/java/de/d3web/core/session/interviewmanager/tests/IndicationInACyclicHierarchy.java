@@ -27,10 +27,11 @@ import org.junit.Test;
 
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.knowledge.InterviewObject;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionOC;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
@@ -50,7 +51,7 @@ import de.d3web.plugin.test.InitPluginManager;
  */
 public class IndicationInACyclicHierarchy {
 
-	KnowledgeBaseManagement kbm;
+	KnowledgeBase kb;
 	Session session;
 	InterviewAgenda agenda;
 
@@ -61,9 +62,9 @@ public class IndicationInACyclicHierarchy {
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
 
-		QASet root = kbm.getKnowledgeBase().getRootQASet();
+		QASet root = kb.getRootQASet();
 
 		// root {container}
 		// - pregnancyQuestions {container}
@@ -73,27 +74,24 @@ public class IndicationInACyclicHierarchy {
 		// if pregnant=don't know, then indicate pregancyQuestions again and the
 		// other question 'pregancyTest'
 
-		pregnancyQuestions = kbm.createQContainer("pregnancyQuestions", root);
-		pregnant = kbm.createQuestionOC("pregnant", pregnancyQuestions, new String[] {
-				"certain", "dontKnow" });
-		pregnancyTest = kbm.createQuestionOC("pregnancyTest", pregnant,
-				new String[] {
-						"yes", "no" });
+		pregnancyQuestions = new QContainer(root, "pregnancyQuestions");
+		pregnant = new QuestionOC(pregnancyQuestions, "pregnant", "certain", "dontKnow");
+		pregnancyTest = new QuestionOC(pregnant, "pregnancyTest", "yes", "no");
 		// insert cyclic child relation
 		pregnancyTest.addChild(pregnant);
 
-		certain = new ChoiceValue(KnowledgeBaseManagement.findChoice(pregnant, "certain"));
-		dontKnow = new ChoiceValue(KnowledgeBaseManagement.findChoice(pregnant, "dontKnow"));
-		yes = new ChoiceValue(KnowledgeBaseManagement.findChoice(pregnancyTest, "yes"));
+		certain = new ChoiceValue(KnowledgeBaseUtils.findChoice(pregnant, "certain"));
+		dontKnow = new ChoiceValue(KnowledgeBaseUtils.findChoice(pregnant, "dontKnow"));
+		yes = new ChoiceValue(KnowledgeBaseUtils.findChoice(pregnancyTest, "yes"));
 
 		RuleFactory.createIndicationRule(pregnancyQuestions, new CondEqual(pregnant,
 				dontKnow));
 		RuleFactory.createIndicationRule(pregnancyTest,
 				new CondEqual(pregnant, dontKnow));
 
-		kbm.getKnowledgeBase().setInitQuestions(Arrays.asList(new QASet[] { pregnancyQuestions }));
+		kb.setInitQuestions(Arrays.asList(new QASet[] { pregnancyQuestions }));
 
-		session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		session = SessionFactory.createSession(kb);
 		session.getInterview().setFormStrategy(new NextUnansweredQuestionFormStrategy());
 		agenda = session.getInterview().getInterviewAgenda();
 	}

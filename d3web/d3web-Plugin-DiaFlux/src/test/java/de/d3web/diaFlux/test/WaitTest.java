@@ -33,8 +33,9 @@ import de.d3web.abstraction.formula.Operator.Operation;
 import de.d3web.abstraction.formula.QNumWrapper;
 import de.d3web.core.inference.condition.CondNumGreater;
 import de.d3web.core.inference.condition.CondNumLessEqual;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.values.NumValue;
@@ -55,15 +56,15 @@ import de.d3web.plugin.test.InitPluginManager;
  */
 public class WaitTest {
 
-	private KnowledgeBaseManagement kbm;
+	private KnowledgeBase kb;
 	private static final FlowFactory FF = FlowFactory.getInstance();
 	private QuestionNum time;
 
 	@Before
 	public void setUp() throws IOException {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
-		time = kbm.createQuestionNum("Time", kbm.getKnowledgeBase().getRootQASet());
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
+		time = new QuestionNum(kb.getRootQASet(), "Time");
 		// time.getInfoStore().addValue(BasicProperties.INIT, "0");
 		// creating wait as a FlowChart
 		// starting with the nodes
@@ -90,7 +91,7 @@ public class WaitTest {
 		List<IEdge> waitEdges = Arrays.asList(e1, e2, e3, e4, e5, e6);
 		// create Flow and add it to the kb
 		Flow waitFlow = FF.createFlow("waitFlow", "waitFlow", waitNodes, waitEdges);
-		DiaFluxUtils.addFlow(waitFlow, kbm.getKnowledgeBase());
+		DiaFluxUtils.addFlow(waitFlow, kb);
 
 		// creating the loop flowchart
 		INode loopStart = FF.createStartNode("loopstart", "loopstart");
@@ -103,7 +104,7 @@ public class WaitTest {
 		IEdge e15 = FF.createEdge("e15", dummyStartLoop, loopComposed, ConditionTrue.INSTANCE);
 		Flow loopFlow = FF.createFlow("loopFlow", "loopFlow",
 				Arrays.asList(loopStart, loopComposed, dummyStartLoop), Arrays.asList(e7, e8, e15));
-		DiaFluxUtils.addFlow(loopFlow, kbm.getKnowledgeBase());
+		DiaFluxUtils.addFlow(loopFlow, kb);
 
 		// creating the primary flow
 		INode primaryStart = FF.createStartNode("startPrimary", "startPrimary");
@@ -124,7 +125,7 @@ public class WaitTest {
 				Arrays.asList(primaryStart, primaryComposed, split, primaryEnd,
 						join),
 				Arrays.asList(e9, e10, e11, e12, e16));
-		DiaFluxUtils.addFlow(primaryFlow, kbm.getKnowledgeBase());
+		DiaFluxUtils.addFlow(primaryFlow, kb);
 
 		// creating global flow
 		INode start = FF.createStartNode("Start", "Start");
@@ -141,12 +142,12 @@ public class WaitTest {
 		Flow global = FF.createFlow("Main", "Main", Arrays.asList(start, primary, loop, setTime),
 				Arrays.asList(e13, e14, e17));
 		global.setAutostart(true);
-		DiaFluxUtils.addFlow(global, kbm.getKnowledgeBase());
+		DiaFluxUtils.addFlow(global, kb);
 	}
 
 	@Test
 	public void test() {
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		NumValue value = (NumValue) session.getBlackboard().getValue(time);
 		Assert.assertEquals(20.0, value.getDouble().doubleValue(), 0.001);
 	}

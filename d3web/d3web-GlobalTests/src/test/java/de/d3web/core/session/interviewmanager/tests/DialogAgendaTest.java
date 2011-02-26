@@ -31,12 +31,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.inference.condition.CondEqual;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
@@ -51,7 +52,7 @@ import de.d3web.plugin.test.InitPluginManager;
 
 public class DialogAgendaTest {
 
-	KnowledgeBaseManagement kbm;
+	KnowledgeBase kb;
 	Session session;
 	InterviewAgenda agenda;
 
@@ -63,9 +64,9 @@ public class DialogAgendaTest {
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
 
-		QASet root = kbm.getKnowledgeBase().getRootQASet();
+		QASet root = kb.getRootQASet();
 
 		// root {container}
 		// - pregnancyQuestions {container}
@@ -79,26 +80,21 @@ public class DialogAgendaTest {
 
 		// Container: pregnancyQuestions = { sex {pregnant}, ask_for_pregnancy
 		// } 
-		pregnancyQuestions = kbm.createQContainer("pregnancyQuestions", root);
-		sex = kbm.createQuestionOC("sex", pregnancyQuestions, new String[] {
+		pregnancyQuestions = new QContainer(root, "pregnancyQuestions");
+		sex = new QuestionOC(pregnancyQuestions, "sex", new String[] {
 				"male", "female" });
-		female = new ChoiceValue(KnowledgeBaseManagement.findChoice(sex, "female"));
-		male = new ChoiceValue(KnowledgeBaseManagement.findChoice(sex, "male"));
-		pregnant = kbm.createQuestionOC("pregnant", sex, new String[] {
-				"yes", "no" });
-		ask_for_pregnancy = kbm.createQuestionOC("ask for pregnancy", pregnancyQuestions,
-				new String[] {
-						"yes", "no" });
+		female = new ChoiceValue(KnowledgeBaseUtils.findChoice(sex, "female"));
+		male = new ChoiceValue(KnowledgeBaseUtils.findChoice(sex, "male"));
+		pregnant = new QuestionOC(sex, "pregnant", "yes", "no");
+		ask_for_pregnancy = new QuestionOC(pregnancyQuestions, "ask for pregnancy", "yes", "no");
 
 		// Container: heightWeightQuestions = { weight, height } 
-		heightWeightQuestions = kbm.createQContainer("heightWeightQuestions", root);
-		weight = kbm.createQuestionNum("weight", heightWeightQuestions);
-		height = kbm.createQuestionNum("height", heightWeightQuestions);
+		heightWeightQuestions = new QContainer(root, "heightWeightQuestions");
+		weight = new QuestionNum(heightWeightQuestions, "weight");
+		height = new QuestionNum(heightWeightQuestions, "height");
 
-		initQuestion = kbm.createQuestionOC("initQuestion", root,
-				new String[] {
-						"all", "pregnacyQuestions", "height+weight" });
-		session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		initQuestion = new QuestionOC(root, "all", "pregnacyQuestions", "height+weight");
+		session = SessionFactory.createSession(kb);
 		agenda = session.getInterview().getInterviewAgenda();
 	}
 
@@ -209,7 +205,7 @@ public class DialogAgendaTest {
 		// Answer the second & last question in the qcontainer, so the
 		// qcontainer should be INACTIVE
 		setValue(ask_for_pregnancy,
-				new ChoiceValue(KnowledgeBaseManagement.findChoice(ask_for_pregnancy, "no")));
+				new ChoiceValue(KnowledgeBaseUtils.findChoice(ask_for_pregnancy, "no")));
 		assertTrue(agenda.hasState(pregnancyQuestions, InterviewState.INACTIVE));
 
 		// Set the first answer to undefined, so the qcontainer should be ACTIVE

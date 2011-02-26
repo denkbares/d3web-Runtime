@@ -34,7 +34,7 @@ import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
 import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityNum;
 import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.plugin.test.InitPluginManager;
@@ -50,14 +50,13 @@ public class AbnormalityPersistenceTest {
 	@Test
 	public void testWritingAndReading() throws IOException {
 		InitPluginManager.init();
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance();
-		KnowledgeBase kb = kbm.getKnowledgeBase();
+		KnowledgeBase kb = KnowledgeBaseUtils.createKnowledgeBase();
 		String[] answers = new String[2];
 		answers[0] = "Antwort1";
 		answers[1] = "Antwort2";
-		QuestionOC oc = kbm.createQuestionOC("OC", null, answers);
+		QuestionOC oc = new QuestionOC(kb.getRootQASet(), "OC", answers);
 		Choice choice = oc.getAlternatives().get(0);
-		QuestionNum num = kbm.createQuestionNum("Num", null);
+		QuestionNum num = new QuestionNum(kb.getRootQASet(), "Num");
 		DefaultAbnormality a = new DefaultAbnormality();
 		a.addValue(new ChoiceValue(choice), Abnormality.A0);
 		oc.getInfoStore().addValue(BasicProperties.DEFAULT_ABNORMALITIY, a);

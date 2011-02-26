@@ -38,8 +38,9 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
@@ -77,28 +78,27 @@ public class FormulaExpressionAbstractionTest {
 	@BeforeClass
 	public static void setUp() throws Exception {
 		InitPluginManager.init();
-		kb = KnowledgeBaseManagement.createKnowledgeBase();
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
 		addTerminologyObjects();
 		addRules();
 		session = SessionFactory.createSession(kb);
 	}
 
 	private static void addTerminologyObjects() {
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(kb);
 		// Question 'Weight'
-		kbm.createQuestionNum("Weight", kbm.getKnowledgeBase().getRootQASet());
+		new QuestionNum(kb.getRootQASet(), "Weight");
 
 		// Question 'Height'
-		kbm.createQuestionNum("Height", kbm.getKnowledgeBase().getRootQASet());
+		new QuestionNum(kb.getRootQASet(), "Height");
 
 		// Question 'BMI'
-		Question bmi = kbm.createQuestionNum("BMI", kbm.getKnowledgeBase().getRootQASet());
+		Question bmi = new QuestionNum(kb.getRootQASet(), "BMI");
 		bmi.getInfoStore().addValue(BasicProperties.ABSTRACTION_QUESTION, Boolean.TRUE);
 
 		// Question 'Category'
 		String[] categoryAlternatives = {
 				"Underweight", "Normal", "Overweight" };
-		Question category = kbm.createQuestionOC("Category", kbm.getKnowledgeBase().getRootQASet(),
+		Question category = new QuestionOC(kb.getRootQASet(), "Category",
 				categoryAlternatives);
 		category.getInfoStore().addValue(BasicProperties.ABSTRACTION_QUESTION, Boolean.TRUE);
 	}
@@ -124,18 +124,18 @@ public class FormulaExpressionAbstractionTest {
 		Question category = kb.getManager().searchQuestion("Category");
 
 		// BMI < 18.5 => Category = Underweight
-		Value underweight = KnowledgeBaseManagement.findValue(category, "Underweight");
+		Value underweight = KnowledgeBaseUtils.findValue(category, "Underweight");
 		CondNumLess underweightCondition = new CondNumLess(bmi, 18.5);
 		RuleFactory.createSetValueRule(category, underweight,
 				underweightCondition);
 
 		// BMI IN[18.5, 25.0] => Category = Normal
-		Value normal = KnowledgeBaseManagement.findValue(category, "Normal");
+		Value normal = KnowledgeBaseUtils.findValue(category, "Normal");
 		CondNumIn normalCondition = new CondNumIn(bmi, 18.5, 25.0);
 		RuleFactory.createSetValueRule(category, normal, normalCondition);
 
 		// BMI > 25 => Category = Overweight
-		Value overweight = KnowledgeBaseManagement.findValue(category, "Overweight");
+		Value overweight = KnowledgeBaseUtils.findValue(category, "Overweight");
 		CondNumGreater overweightCondition = new CondNumGreater(bmi, 25.0);
 		RuleFactory.createSetValueRule(category, overweight,
 				overweightCondition);
@@ -161,12 +161,12 @@ public class FormulaExpressionAbstractionTest {
 		assertNotNull("Question 'Category' isn't in the Knowledgebase.", category);
 
 		// Values of 'Category'
-		Value underweight = KnowledgeBaseManagement.findValue(category, "Underweight");
+		Value underweight = KnowledgeBaseUtils.findValue(category, "Underweight");
 		assertNotNull("Value 'Underweight' of Question 'Category' isn't in the Knowledgebase",
 				underweight);
-		Value normal = KnowledgeBaseManagement.findValue(category, "Normal");
+		Value normal = KnowledgeBaseUtils.findValue(category, "Normal");
 		assertNotNull("Value 'Normal' of Question 'Category' isn't in the Knowledgebase", normal);
-		Value overweight = KnowledgeBaseManagement.findValue(category, "Overweight");
+		Value overweight = KnowledgeBaseUtils.findValue(category, "Overweight");
 		assertNotNull("Value 'Overweight' of Question 'Category' isn't in the Knowledgebase",
 				overweight);
 	}
@@ -223,7 +223,7 @@ public class FormulaExpressionAbstractionTest {
 				currentBmiValue.getValue());
 
 		// TEST 'Category' == 'Normal'
-		Value normal = KnowledgeBaseManagement.findValue(category, "Normal");
+		Value normal = KnowledgeBaseUtils.findValue(category, "Normal");
 		Value categoryValue = session.getBlackboard().getValue(category);
 		assertEquals("Abstract Question 'Category' has wrong value", normal, categoryValue);
 	}
@@ -257,7 +257,7 @@ public class FormulaExpressionAbstractionTest {
 				currentBmiValue.getValue());
 
 		// TEST 'Category' == 'Overweight'
-		Value overweight = KnowledgeBaseManagement.findValue(category, "Overweight");
+		Value overweight = KnowledgeBaseUtils.findValue(category, "Overweight");
 		Value categoryValue = session.getBlackboard().getValue(category);
 		assertEquals("Abstract Question 'Category' has wrong value", overweight, categoryValue);
 
@@ -282,7 +282,7 @@ public class FormulaExpressionAbstractionTest {
 				currentBmiValue.getValue());
 
 		// TEST 'Category' == 'Overweight'
-		Value underweight = KnowledgeBaseManagement.findValue(category, "Underweight");
+		Value underweight = KnowledgeBaseUtils.findValue(category, "Underweight");
 		categoryValue = session.getBlackboard().getValue(category);
 		assertEquals("Abstract Question 'Category' has wrong value", underweight, categoryValue);
 	}

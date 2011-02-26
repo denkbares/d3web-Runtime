@@ -33,12 +33,14 @@ import org.junit.Test;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.InterviewObject;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
@@ -63,7 +65,7 @@ import de.d3web.scoring.Score;
  */
 public class UseFluxProblemSolverTest {
 
-	private static KnowledgeBaseManagement kbm;
+	private static KnowledgeBase kb;
 	private static Session session;
 	private static INode questionNode;
 	private static INode solutionNode;
@@ -80,7 +82,7 @@ public class UseFluxProblemSolverTest {
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
 		setUpFlux();
 
 	}
@@ -95,12 +97,11 @@ public class UseFluxProblemSolverTest {
 	 */
 	private void setUpFlux() {
 
-		questionYN = kbm.createQuestionYN("YesNoQuestion",
-				kbm.getKnowledgeBase().getRootQASet());
-		solutionFoo = kbm.createSolution("SolutionFoo");
-		solutionFoo2 = kbm.createSolution("SolutionFoo2");
-		solutionFoo3 = kbm.createSolution("SolutionFoo3");
-		solutionFoo4 = kbm.createSolution("SolutionFoo4");
+		questionYN = new QuestionYN(kb.getRootQASet(), "YesNoQuestion");
+		solutionFoo = new Solution(kb.getRootSolution(), "SolutionFoo");
+		solutionFoo2 = new Solution(kb.getRootSolution(), "SolutionFoo2");
+		solutionFoo3 = new Solution(kb.getRootSolution(), "SolutionFoo3");
+		solutionFoo4 = new Solution(kb.getRootSolution(), "SolutionFoo4");
 
 		INode startNode = FF.createStartNode("Start_ID", "Start");
 		INode endNode = FF.createEndNode("End_ID", "Ende");
@@ -124,7 +125,7 @@ public class UseFluxProblemSolverTest {
 		IEdge startToQuestion = FF.createEdge("startToQuestionEdge_ID", startNode, questionNode,
 				ConditionTrue.INSTANCE);
 
-		Value yes = KnowledgeBaseManagement.findValue(questionYN, "Yes");
+		Value yes = KnowledgeBaseUtils.findValue(questionYN, "Yes");
 		Condition yesCondition = new CondEqual(questionYN, yes);
 
 		IEdge questionToSolution = FF.createEdge("questionToSolution_ID", questionNode,
@@ -144,8 +145,8 @@ public class UseFluxProblemSolverTest {
 		// Create the flowchart...
 		Flow testFlow = FF.createFlow("testFlow_ID", "Main", nodesList, edgesList);
 		testFlow.setAutostart(true);
-		DiaFluxUtils.addFlow(testFlow, kbm.getKnowledgeBase());
-		session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		DiaFluxUtils.addFlow(testFlow, kb);
+		session = SessionFactory.createSession(kb);
 		testBasicFlow();
 		testDeactivation();
 	}
@@ -159,7 +160,7 @@ public class UseFluxProblemSolverTest {
 		assertTrue("YesNoQuestion should be the next form",
 				session.getInterview().nextForm().getInterviewObject() == questionYN);
 		// Answer question with "Yes", this should execute the flow
-		Value yes = KnowledgeBaseManagement.findValue(questionYN, "Yes");
+		Value yes = KnowledgeBaseUtils.findValue(questionYN, "Yes");
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(questionYN, yes));
 		solutionState = session.getBlackboard().getRating(solutionFoo);
@@ -170,7 +171,7 @@ public class UseFluxProblemSolverTest {
 	private void testDeactivation() {
 		// When Answer "No" is set, the establishment of the solution
 		// should be retracted:
-		Value no = KnowledgeBaseManagement.findValue(questionYN, "No");
+		Value no = KnowledgeBaseUtils.findValue(questionYN, "No");
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(questionYN, no));
 		Rating solutionState = session.getBlackboard().getRating(solutionFoo);
@@ -182,7 +183,7 @@ public class UseFluxProblemSolverTest {
 	public void testSubFlows() {
 		// create inner flowchart
 		Flow innerFlow = FF.createFlow("Flow1", "innerFlow", nodesList, edgesList);
-		DiaFluxUtils.addFlow(innerFlow, kbm.getKnowledgeBase());
+		DiaFluxUtils.addFlow(innerFlow, kb);
 		// create surrounding flowchart
 		INode startNode = FF.createStartNode("Start_ID2", "Start");
 		INode innerFlowNode = FF.createComposedNode("Flow1", "innerFlow", "Start");
@@ -197,8 +198,8 @@ public class UseFluxProblemSolverTest {
 		List<IEdge> edgeList = Arrays.asList(e1, e2);
 		Flow outerFlow = FF.createFlow("Flow2", "Main", nodesList, edgeList);
 		outerFlow.setAutostart(true);
-		DiaFluxUtils.addFlow(outerFlow, kbm.getKnowledgeBase());
-		session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		DiaFluxUtils.addFlow(outerFlow, kb);
+		session = SessionFactory.createSession(kb);
 		testBasicFlow();
 		assertTrue(session.getBlackboard().getRating(solutionFoo2).hasState(
 				Rating.State.ESTABLISHED));
@@ -229,7 +230,7 @@ public class UseFluxProblemSolverTest {
 		nodesList.add(solutionNode4);
 
 		// create edges to Solutions
-		Value no = KnowledgeBaseManagement.findValue(questionYN, "No");
+		Value no = KnowledgeBaseUtils.findValue(questionYN, "No");
 		Condition noCondition = new CondEqual(questionYN, no);
 
 		IEdge questionToSolution2 = FF.createEdge("questionToSolution_ID2", questionNode,
@@ -255,8 +256,8 @@ public class UseFluxProblemSolverTest {
 
 		Flow testFlow = FF.createFlow("testFlow_Snapshot", "Main", nodesList, edgesList);
 		testFlow.setAutostart(true);
-		DiaFluxUtils.addFlow(testFlow, kbm.getKnowledgeBase());
-		session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		DiaFluxUtils.addFlow(testFlow, kb);
+		session = SessionFactory.createSession(kb);
 		testBasicFlow();
 		// Solution 1 and 4 should be established (solution 1 is tested in
 		// testBasicFlow)
@@ -269,7 +270,7 @@ public class UseFluxProblemSolverTest {
 		Assert.assertEquals(2, solutions.size());
 		assertTrue(solutions.contains(solutionFoo2));
 		assertTrue(solutions.contains(solutionFoo3));
-		Value yes = KnowledgeBaseManagement.findValue(questionYN, "Yes");
+		Value yes = KnowledgeBaseUtils.findValue(questionYN, "Yes");
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(questionYN, yes));
 		// Solution 1 and 4 should be established
 		Assert.assertEquals(2, solutions.size());

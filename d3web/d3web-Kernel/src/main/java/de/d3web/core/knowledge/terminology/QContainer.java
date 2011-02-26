@@ -43,4 +43,16 @@ public class QContainer extends QASet {
 	public QContainer(KnowledgeBase kb, String name) {
 		super(kb, name);
 	}
+
+	/**
+	 * Creates a new QContainer, adds it to the knowledgebase and adds it to
+	 * it's parent. No manual adding of the created object to the kb is needed
+	 * 
+	 * @param parent the parent {@link QASet}
+	 * @param name the name of the new QContainer
+	 */
+	public QContainer(QASet parent, String name) {
+		this(parent.getKnowledgeBase(), name);
+		parent.addChild(this);
+	}
 }

@@ -43,7 +43,7 @@ import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.ValueFactory;
 import de.d3web.costbenefit.inference.ConditionalValueSetter;
@@ -66,14 +66,12 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 		Document doc = Util.streamToDocument(stream);
 		String message = "Loading cost benefit knowledge";
 		listener.updateProgress(0, message);
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement
-				.createInstance(kb);
 		NodeList stmodels = doc.getElementsByTagName("StateTransition");
 		int max = stmodels.getLength();
 		float count = 0;
 		for (int i = 0; i < stmodels.getLength(); i++) {
 			Node current = stmodels.item(i);
-			addSTKnowledge(kbm, current);
+			addSTKnowledge(kb, current);
 			listener.updateProgress(++count / max, message);
 		}
 	}
@@ -150,9 +148,9 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 		return element;
 	}
 
-	private void addSTKnowledge(KnowledgeBaseManagement kbm, Node current) throws IOException {
+	private void addSTKnowledge(KnowledgeBase kb, Node current) throws IOException {
 		String qcontainerID = current.getAttributes().getNamedItem("QID").getTextContent();
-		QContainer qcontainer = kbm.getKnowledgeBase().getManager().searchQContainer(qcontainerID);
+		QContainer qcontainer = kb.getManager().searchQContainer(qcontainerID);
 		NodeList children = current.getChildNodes();
 		Condition activationCondition = null;
 		List<ValueTransition> postTransitions = new ArrayList<ValueTransition>();
@@ -161,24 +159,24 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 			if (n.getNodeName().equals("activationCondition")) {
 				for (Element child : XMLUtil.getElementList(n.getChildNodes())) {
 					activationCondition = (Condition) PersistenceManager.getInstance().readFragment(
-							child, kbm.getKnowledgeBase());
+							child, kb);
 				}
 			}
 			else if (n.getNodeName().equals("ValueTransition")) {
 				String question = n.getAttributes().getNamedItem("QID").getTextContent();
-				Question q = kbm.getKnowledgeBase().getManager().searchQuestion(question);
+				Question q = kb.getManager().searchQuestion(question);
 				List<ConditionalValueSetter> cvss = new ArrayList<ConditionalValueSetter>();
 				NodeList childNodes = n.getChildNodes();
 				for (int j = 0; j < childNodes.getLength(); j++) {
 					Node child = childNodes.item(j);
 					if (child.getNodeName().equals("ConditionalValueSetter")) {
-						Value answer = KnowledgeBaseManagement.findValue(
+						Value answer = KnowledgeBaseUtils.findValue(
 								q,
 								child.getAttributes().getNamedItem("AID").getTextContent());
 						Condition condition = null;
 						for (Element grandchild : XMLUtil.getElementList(child.getChildNodes())) {
 							condition = (Condition) PersistenceManager.getInstance().readFragment(
-									grandchild, kbm.getKnowledgeBase());
+									grandchild, kb);
 						}
 						ConditionalValueSetter cvs = new ConditionalValueSetter(
 								answer, condition);

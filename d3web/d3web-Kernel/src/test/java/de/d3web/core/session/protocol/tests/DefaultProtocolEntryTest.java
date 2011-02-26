@@ -32,7 +32,7 @@ import org.junit.Test;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.protocol.FactProtocolEntry;
@@ -55,9 +55,8 @@ public class DefaultProtocolEntryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance();
-		knowledgeBase = kbm.getKnowledgeBase();
-		QuestionNum questionNum = kbm.createQuestionNum("questionNum", null);
+		knowledgeBase = KnowledgeBaseUtils.createKnowledgeBase();
+		QuestionNum questionNum = new QuestionNum(knowledgeBase.getRootQASet(), "questionNum");
 		NumValue numValue = new NumValue(1.9);
 		protocolFact = FactFactory.createUserEnteredFact(questionNum, numValue);
 

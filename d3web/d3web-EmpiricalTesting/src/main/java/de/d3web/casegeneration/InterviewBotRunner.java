@@ -27,7 +27,6 @@ import java.util.List;
 
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.writer.TestSuiteKnOfficeWriter;
 import de.d3web.empiricaltesting.writer.TestSuiteXMLWriter;
@@ -86,12 +85,10 @@ public final class InterviewBotRunner {
 		writeCasesXML(filename, cases);
 	}
 
-	@SuppressWarnings("unused")
 	private static void demoForCarSolution() throws Exception {
 		filename = "minicar.jar";
 
 		KnowledgeBase k = loadKnowledgebase(filename);
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(k);
 
 		watch.start();
 		InterviewBot bot = new InterviewBot.Builder(k).

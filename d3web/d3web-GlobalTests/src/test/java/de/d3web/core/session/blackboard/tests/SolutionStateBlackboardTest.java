@@ -27,9 +27,10 @@ import org.junit.Test;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
@@ -58,7 +59,7 @@ import de.d3web.xcl.inference.PSMethodXCL;
 public class SolutionStateBlackboardTest {
 
 	private static Blackboard blackboard;
-	private static KnowledgeBaseManagement kbm;
+	private static KnowledgeBase kb;
 	private static final PSMethod heuristicSource = PSMethodHeuristic.getInstance();
 
 	// used as sources for blackboard merge management
@@ -70,11 +71,11 @@ public class SolutionStateBlackboardTest {
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
-		session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
+		session = SessionFactory.createSession(kb);
 		blackboard = session.getBlackboard();
 
-		happy = kbm.createSolution("happy");
+		happy = new Solution(kb.getRootSolution(), "happy");
 
 		// rules are only needed for the source context of the blackboard
 		// management

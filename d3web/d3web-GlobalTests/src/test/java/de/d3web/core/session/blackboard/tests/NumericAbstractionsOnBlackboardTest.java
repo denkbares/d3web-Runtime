@@ -32,8 +32,9 @@ import de.d3web.abstraction.formula.QNumWrapper;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondNumGreater;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
@@ -67,19 +68,19 @@ import de.d3web.plugin.test.InitPluginManager;
 public class NumericAbstractionsOnBlackboardTest {
 
 	private static Blackboard blackboard;
-	private static KnowledgeBaseManagement kbm;
+	private static KnowledgeBase kb;
 	private QuestionNum bmi, height, weight;
 
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
+		Session session = SessionFactory.createSession(kb);
 		blackboard = session.getBlackboard();
 
-		bmi = kbm.createQuestionNum("BMI", kbm.getKnowledgeBase().getRootQASet());
-		weight = kbm.createQuestionNum("weight", kbm.getKnowledgeBase().getRootQASet());
-		height = kbm.createQuestionNum("height", kbm.getKnowledgeBase().getRootQASet());
+		bmi = new QuestionNum(kb.getRootQASet(), "BMI");
+		weight = new QuestionNum(kb.getRootQASet(), "weight");
+		height = new QuestionNum(kb.getRootQASet(), "height");
 
 		// Now create the formula expression:
 		// Formula: (weight / (height * height))
@@ -100,10 +101,10 @@ public class NumericAbstractionsOnBlackboardTest {
 		// BMI is not defined at the beginning
 		assertEquals(UndefinedValue.getInstance(), blackboard.getValue(bmi));
 
-		blackboard.addValueFact(FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(),
+		blackboard.addValueFact(FactFactory.createUserEnteredFact(kb,
 				"weight",
 				new Double(200)));
-		blackboard.addValueFact(FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(),
+		blackboard.addValueFact(FactFactory.createUserEnteredFact(kb,
 				"height",
 				new Double(1.9)));
 
@@ -112,7 +113,7 @@ public class NumericAbstractionsOnBlackboardTest {
 		assertEquals(55.4, bmiValue, 0.1);
 
 		// set weight=80, so that the rule need to update the bmi value
-		blackboard.addValueFact(FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(),
+		blackboard.addValueFact(FactFactory.createUserEnteredFact(kb,
 				"weight",
 				new Double(80)));
 
@@ -122,7 +123,7 @@ public class NumericAbstractionsOnBlackboardTest {
 
 		// now the user sets the bmi value manually
 		// user values should always overwrite value derived by rules
-		Fact userSetFact = FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(), "BMI",
+		Fact userSetFact = FactFactory.createUserEnteredFact(kb, "BMI",
 				new Double(30));
 		blackboard.addValueFact(userSetFact);
 		bmiValue = (Double) (blackboard.getValue(bmi).getValue());

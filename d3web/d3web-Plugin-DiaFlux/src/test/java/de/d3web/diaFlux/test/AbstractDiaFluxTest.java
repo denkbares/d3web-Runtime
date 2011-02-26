@@ -32,7 +32,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.Fact;
@@ -259,7 +259,7 @@ public abstract class AbstractDiaFluxTest {
 	protected void setChoiceValue(QuestionOC question, String answerName) {
 		System.out.println("Setting '" + question.getName() + "' to '" + answerName + "'.");
 
-		Choice choice = KnowledgeBaseManagement.findChoice(question, answerName);
+		Choice choice = KnowledgeBaseUtils.findChoice(question, answerName);
 
 		Fact fact = FactFactory.createUserEnteredFact(question, new ChoiceValue(choice));
 

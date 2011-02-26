@@ -43,7 +43,6 @@ import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.manage.KnowledgeBaseManagement;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
 import de.d3web.xcl.XCLRelationType;
@@ -159,8 +158,6 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 
 	public KnowledgeBase loadKnowledgeSlices(KnowledgeBase kb, Document doc, ProgressListener listener) throws IOException {
 		listener.updateProgress(0, "Loading knowledge base");
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement
-				.createInstance(kb);
 		NodeList xclmodels = doc.getElementsByTagName("XCLModel");
 		int cur = 0;
 		int max = xclmodels.getLength();
@@ -168,14 +165,14 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 
 			Node current = xclmodels.item(i);
 
-			addKnowledge(kbm, current);
+			addKnowledge(kb, current);
 			listener.updateProgress(++cur / max, "Loading knowledge base: XCL Models");
 		}
 
 		return kb;
 	}
 
-	private void addKnowledge(KnowledgeBaseManagement kbm, Node current) throws IOException {
+	private void addKnowledge(KnowledgeBase kb, Node current) throws IOException {
 		String solutionName = getAttribute("SID", current);
 		String minSupportS = getAttribute("minSupport", current);
 		String suggestedThresholdS = getAttribute("suggestedThreshold", current);
@@ -183,11 +180,11 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 				current);
 		String considerOnlyRelevantRelations = getAttribute("considerOnlyRelevantRelations",
 				current);
-		Solution diag = kbm.getKnowledgeBase().getManager().searchSolution(solutionName);
+		Solution diag = kb.getManager().searchSolution(solutionName);
 		XCLModel model = new XCLModel(diag);
 		NodeList relations = current.getChildNodes();
 		for (int i = 0; i < relations.getLength(); i++) {
-			addRelations(kbm, model, relations.item(i).getChildNodes());
+			addRelations(kb, model, relations.item(i).getChildNodes());
 		}
 
 		if (minSupportS != null) model.setMinSupport(Double.parseDouble(minSupportS));
@@ -203,7 +200,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 
 	}
 
-	private void addRelations(KnowledgeBaseManagement kbm, XCLModel model,
+	private void addRelations(KnowledgeBase kb, XCLModel model,
 			NodeList relationsOfAType) throws IOException {
 
 		for (int i = 0; i < relationsOfAType.getLength(); i++) {
@@ -220,7 +217,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 					// TODO: check jochen
 					child.getTextContent();
 					ac = (Condition) PersistenceManager.getInstance().readFragment((Element) child,
-							kbm.getKnowledgeBase());
+							kb);
 				}
 				else if (child.getNodeName().equals("weight")) {
 					weight = Double.parseDouble(child.getTextContent());

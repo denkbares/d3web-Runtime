@@ -25,10 +25,13 @@ import org.junit.Test;
 
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.QuestionYN;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Value;
 import de.d3web.plugin.test.InitPluginManager;
@@ -63,12 +66,12 @@ import de.d3web.plugin.test.InitPluginManager;
  */
 public class IndicationOQQuestionnairesNextFormTest {
 
-	private static KnowledgeBaseManagement kbm;
+	private static KnowledgeBase kb;
 
 	@BeforeClass
 	public static void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
 		addTerminologyObjects();
 		addRules();
 	}
@@ -83,29 +86,29 @@ public class IndicationOQQuestionnairesNextFormTest {
 		String sex = "Sex";
 		String[] sexAlternatives = new String[] {
 				"Female", "Male" };
-		kbm.createQuestionOC(sex, kbm.getKnowledgeBase().getRootQASet(), sexAlternatives);
+		new QuestionOC(kb.getRootQASet(), sex, sexAlternatives);
 
 		// Question Pregnant
 		String pregnant = "Pregnant";
-		kbm.createQuestionYN(pregnant, kbm.getKnowledgeBase().getRootQASet());
+		new QuestionYN(kb.getRootQASet(), pregnant);
 
 		// QContainer Pregnancy Problems
 		String pregProb = "Pregnancy Problems";
-		QASet pregProbQASet = kbm.createQContainer(pregProb);
+		QASet pregProbQASet = new QContainer(kb.getRootQASet(), pregProb);
 
 		// Question Nausea
 		String nausea = "Nausea";
-		kbm.createQuestionYN(nausea, pregProbQASet);
+		new QuestionYN(pregProbQASet, nausea);
 
 		// Question Month
 
 		// QContainer Common Questions
 		String otherProb = "Common Questions";
-		QASet commonQASet = kbm.createQContainer(otherProb);
+		QASet commonQASet = new QContainer(kb.getRootQASet(), otherProb);
 
 		// Question 'Headache'
 		String headache = "Headache";
-		kbm.createQuestionYN(headache, commonQASet);
+		new QuestionYN(commonQASet, headache);
 
 		// QContainer Male Specific
 
@@ -116,17 +119,17 @@ public class IndicationOQQuestionnairesNextFormTest {
 	// TODO: rework, new KB
 	private static void addRules() {
 
-		Question sex = kbm.getKnowledgeBase().getManager().searchQuestion("Sex");
-		Value male = KnowledgeBaseManagement.findValue(sex, "Male");
-		Value female = KnowledgeBaseManagement.findValue(sex, "Female");
+		Question sex = kb.getManager().searchQuestion("Sex");
+		Value male = KnowledgeBaseUtils.findValue(sex, "Male");
+		Value female = KnowledgeBaseUtils.findValue(sex, "Female");
 
-		Question pregnant = kbm.getKnowledgeBase().getManager().searchQuestion("Pregnant");
-		Value yes = KnowledgeBaseManagement.findValue(pregnant, "Yes");
-		Value no = KnowledgeBaseManagement.findValue(pregnant, "No");
+		Question pregnant = kb.getManager().searchQuestion("Pregnant");
+		Value yes = KnowledgeBaseUtils.findValue(pregnant, "Yes");
+		Value no = KnowledgeBaseUtils.findValue(pregnant, "No");
 
-		QContainer pregProbs = kbm.getKnowledgeBase().getManager().searchQContainer(
+		QContainer pregProbs = kb.getManager().searchQContainer(
 				"Pregnancy Problems");
-		QContainer otherProbs = kbm.getKnowledgeBase().getManager().searchQContainer(
+		QContainer otherProbs = kb.getManager().searchQContainer(
 				"Other Problems");
 
 		// Create indication rule: Sex == Female => Pregnant

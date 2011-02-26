@@ -40,7 +40,7 @@ import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionDate;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.FactFactory;
@@ -57,7 +57,6 @@ import de.d3web.plugin.test.InitPluginManager;
  */
 public class ConditionDateTest {
 
-	KnowledgeBaseManagement kbm;
 	KnowledgeBase kb;
 	Session session;
 	QContainer init;
@@ -66,16 +65,15 @@ public class ConditionDateTest {
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
-		kb = kbm.getKnowledgeBase();
-		init = kbm.createQContainer("init");
-		dateQuestion = kbm.createQuestionDate("dateQuestion", init);
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
+		init = new QContainer(kb.getRootQASet(), "init");
+		dateQuestion = new QuestionDate(init, "dateQuestion");
 	}
 
 	@Test(expected = NoAnswerException.class)
 	public void noAnswerExceptionThrown() throws NoAnswerException {
 		// Summary: Test for a Condition where no answer is set
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		Condition condition = new CondDateEqual(dateQuestion, new DateValue(new Date()));
 		try {
 			condition.eval(session);
@@ -91,7 +89,7 @@ public class ConditionDateTest {
 		Condition condition = new CondDateEqual(dateQuestion, new DateValue(new Date()));
 
 		// open up a new session and enter a unknown value for the dateQuestion
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "dateQuestion", Unknown.getInstance()));
 
@@ -143,7 +141,7 @@ public class ConditionDateTest {
 
 		// open up a new session and enter a fact which should match the
 		// first condition, but not the second
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "dateQuestion",
 						new DateValue(firstDate)));
@@ -189,7 +187,7 @@ public class ConditionDateTest {
 		assertThat(conditionCopied, is(equalTo(conditionBeforeValue)));
 
 		// open up a new session and set "Now" as value for the dateQuestion
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "dateQuestion",
 						new DateValue(new Date(now))));
@@ -237,7 +235,7 @@ public class ConditionDateTest {
 		assertThat(conditionCopied, is(equalTo(conditionBeforeValue)));
 
 		// open up a new session and set "Now" as value for the dateQuestion
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "dateQuestion",
 						new DateValue(new Date(now))));

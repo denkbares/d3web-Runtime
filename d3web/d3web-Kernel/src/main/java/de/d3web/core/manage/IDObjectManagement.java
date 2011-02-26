@@ -66,8 +66,6 @@ public interface IDObjectManagement {
 
 	QuestionYN createQuestionYN(String name, QASet parent);
 
-	QuestionYN createQuestionYN(String name, String yesAlternativeText, String noAlternativeText, QASet parent);
-
 	QuestionDate createQuestionDate(String name, QASet parent);
 
 	QuestionText createQuestionText(String name, QASet parent);

@@ -44,7 +44,7 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
@@ -104,8 +104,8 @@ public class TestKfz {
 				"Üblicher Kraftstoffverbrauch/100km");
 		QuestionMC Mf7 = (QuestionMC) kb.getManager().searchQuestion("Motorgeräusche");
 
-		Choice Mf7a1 = KnowledgeBaseManagement.findChoice(Mf7, "klopfen");
-		Choice Mf7a2 = KnowledgeBaseManagement.findChoice(Mf7, "klingeln");
+		Choice Mf7a1 = KnowledgeBaseUtils.findChoice(Mf7, "klopfen");
+		Choice Mf7a2 = KnowledgeBaseUtils.findChoice(Mf7, "klingeln");
 		Choice[] choices = new Choice[] {
 				Mf7a1, Mf7a2 };
 		List<Choice> values = new ArrayList<Choice>(choices.length);
@@ -143,7 +143,7 @@ public class TestKfz {
 				"Tatsächlicher Kraftstoffverbrauch/100km");
 		QuestionOC Mf4 = (QuestionOC) kb.getManager().searchQuestion(
 				"Bewertung Kraftstoffverbrauch");
-		Choice Mf4a1 = KnowledgeBaseManagement.findChoice(Mf4, "normal");
+		Choice Mf4a1 = KnowledgeBaseUtils.findChoice(Mf4, "normal");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, Mf4,
 						new ChoiceValue(Mf4a1), PSMethodUserSelected.getInstance(),
@@ -180,7 +180,7 @@ public class TestKfz {
 				"Error: isDone should be false (1)",
 				UndefinedValue.getInstance().equals(session.getBlackboard().getValue(questionOC)));
 
-		Choice answerChoice = KnowledgeBaseManagement.findChoice(questionOC,
+		Choice answerChoice = KnowledgeBaseUtils.findChoice(questionOC,
 				"schwarz");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, questionOC,

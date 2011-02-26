@@ -27,11 +27,12 @@ import org.junit.Test;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
 import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityUtils;
 import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.plugin.test.InitPluginManager;
 
@@ -43,7 +44,6 @@ import de.d3web.plugin.test.InitPluginManager;
  */
 public class AbstractAbnormalityTest {
 
-	KnowledgeBaseManagement kbm;
 	KnowledgeBase kb;
 
 	DefaultAbnormality abstractAbnormality;
@@ -51,8 +51,7 @@ public class AbstractAbnormalityTest {
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
-		kb = kbm.getKnowledgeBase();
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
 		// the AbstractAbnormality instance Under Test
 		abstractAbnormality = new DefaultAbnormality();
 	}
@@ -102,10 +101,8 @@ public class AbstractAbnormalityTest {
 	 */
 	@Test
 	public void testGetAbnormality() {
-		QuestionChoice questionOC = kbm.createQuestionOC("questionYN", kb.getRootQASet(),
-				new String[] {
-						"yes", "no" });
-		ChoiceValue yes = new ChoiceValue(KnowledgeBaseManagement.findChoice(questionOC, "yes"));
+		QuestionChoice questionOC = new QuestionOC(kb.getRootQASet(), "questionYN", "yes", "no");
+		ChoiceValue yes = new ChoiceValue(KnowledgeBaseUtils.findChoice(questionOC, "yes"));
 		// before setting the abnormality for this question, the
 		// default-abnormality A5 should be returned:
 		assertThat(AbnormalityUtils.getAbnormality(questionOC, yes), is(Abnormality.A5));

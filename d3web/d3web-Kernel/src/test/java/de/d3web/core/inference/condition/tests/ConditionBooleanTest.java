@@ -38,7 +38,7 @@ import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionOC;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.FactFactory;
@@ -53,7 +53,6 @@ import de.d3web.plugin.test.InitPluginManager;
  */
 public class ConditionBooleanTest {
 
-	KnowledgeBaseManagement kbm;
 	KnowledgeBase kb;
 	QContainer init;
 	QuestionOC choiceQuestion1, choiceQuestion2;
@@ -64,12 +63,11 @@ public class ConditionBooleanTest {
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
-		kb = kbm.getKnowledgeBase();
-		init = kbm.createQContainer("init");
-		choiceQuestion1 = kbm.createQuestionOC("choiceQuestion1", init, new String[] {
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
+		init = new QContainer(kb.getRootQASet(), "init");
+		choiceQuestion1 = new QuestionOC(init, "choiceQuestion1", new String[] {
 				"yes", "no" });
-		choiceQuestion2 = kbm.createQuestionOC("choiceQuestion2", init, new String[] {
+		choiceQuestion2 = new QuestionOC(init, "choiceQuestion2", new String[] {
 				"yes", "no" });
 
 		// two ChoiceValues, representing to two possible answers "yes" and "no"
@@ -93,7 +91,7 @@ public class ConditionBooleanTest {
 	public void testBooleanConditionAnd_NoAnswerExceptionThrown() throws NoAnswerException {
 		// Summary: Test for a Condition where no answer is set
 		// open up a new session, but enter no answers
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		Condition conditionAnd = new CondAnd(Arrays.asList(conditions));
 		try {
 			conditionAnd.eval(session);
@@ -109,7 +107,7 @@ public class ConditionBooleanTest {
 
 		// open up a new session and enter a unknown value for the
 		// choiceQuestion1
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "choiceQuestion1", Unknown.getInstance()));
 		session.getBlackboard().addValueFact(
@@ -130,7 +128,7 @@ public class ConditionBooleanTest {
 
 		// open up a new session and enter "yes" for the first and "no" for the
 		// second question
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "choiceQuestion1", choiceValueYes));
 		session.getBlackboard().addValueFact(
@@ -165,7 +163,7 @@ public class ConditionBooleanTest {
 	public void testBooleanConditionOr_NoAnswerExceptionThrown() throws NoAnswerException {
 		// Summary: Test for a OR-Condition where no answer is set
 		// open up a new session, but enter no answers
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		Condition conditionOr = new CondOr(Arrays.asList(conditions));
 		try {
 			conditionOr.eval(session);
@@ -181,7 +179,7 @@ public class ConditionBooleanTest {
 
 		// open up a new session and enter a unknown value for the
 		// choiceQuestion1
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "choiceQuestion1", Unknown.getInstance()));
 		session.getBlackboard().addValueFact(
@@ -199,7 +197,7 @@ public class ConditionBooleanTest {
 	public void testBooleanConditionOr() {
 		// open up a new session and enter "yes" for the first and "no" for the
 		// second question
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "choiceQuestion1", choiceValueYes));
 		session.getBlackboard().addValueFact(
@@ -237,7 +235,7 @@ public class ConditionBooleanTest {
 	public void testBooleanConditionNot_NoAnswerExceptionThrown() throws NoAnswerException {
 		// Summary: Test for a Not-Condition where no answer is set
 		// open up a new session, but enter no answers
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		Condition conditionNot = new CondNot(conditionQ1Yes);
 		try {
 			conditionNot.eval(session);
@@ -253,7 +251,7 @@ public class ConditionBooleanTest {
 
 		// open up a new session and enter a unknown value for the
 		// choiceQuestion1
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "choiceQuestion1", Unknown.getInstance()));
 		Condition conditionNot = new CondNot(conditionQ1Yes);
@@ -270,7 +268,7 @@ public class ConditionBooleanTest {
 
 		// open up a new session and enter "yes" for the first and "no" for the
 		// second question
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "choiceQuestion1", choiceValueYes));
 		session.getBlackboard().addValueFact(

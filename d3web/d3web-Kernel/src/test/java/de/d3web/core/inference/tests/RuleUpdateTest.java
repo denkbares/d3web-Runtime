@@ -30,7 +30,7 @@ import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
@@ -51,7 +51,7 @@ public class RuleUpdateTest {
 	@Test
 	public void testWithoutCondition() throws IOException {
 		InitPluginManager.init();
-		KnowledgeBase kb = KnowledgeBaseManagement.createInstance().getKnowledgeBase();
+		KnowledgeBase kb = KnowledgeBaseUtils.createKnowledgeBase();
 		QuestionNum bmi = new QuestionNum(kb, "bmi");
 		QuestionNum weight = new QuestionNum(kb, "weight");
 		QuestionNum height = new QuestionNum(kb, "height");

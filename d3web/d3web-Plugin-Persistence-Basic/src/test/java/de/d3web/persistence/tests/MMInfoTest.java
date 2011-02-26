@@ -31,7 +31,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
@@ -44,11 +44,10 @@ public class MMInfoTest {
 	@Test
 	public void test() throws IOException {
 		InitPluginManager.init();
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance();
-		KnowledgeBase kb = kbm.getKnowledgeBase();
+		KnowledgeBase kb = KnowledgeBaseUtils.createKnowledgeBase();
 		String[] answers = new String[1];
 		answers[0] = "Answer 1";
-		QuestionOC oc = kbm.createQuestionOC("Question", null, answers);
+		QuestionOC oc = new QuestionOC(kb.getRootQASet(), "Question", answers);
 		Choice choice = oc.getAlternative(0);
 		oc.getInfoStore().addValue(MMInfo.DESCRIPTION, Locale.GERMAN, "Frage");
 		choice.getInfoStore().addValue(MMInfo.DESCRIPTION, Locale.GERMAN, "Antwort 1");
@@ -57,8 +56,7 @@ public class MMInfoTest {
 		PersistenceManager pm = PersistenceManager.getInstance();
 		pm.save(kb, file);
 		KnowledgeBase reloadedKB = pm.load(file);
-		kbm = KnowledgeBaseManagement.createInstance(reloadedKB);
-		oc = (QuestionOC) kb.getManager().searchQuestion("Question");
+		oc = (QuestionOC) reloadedKB.getManager().searchQuestion("Question");
 		Assert.assertEquals("Frage", oc.getInfoStore().getValue(MMInfo.DESCRIPTION, Locale.GERMAN));
 		Assert.assertEquals("Antwort 1",
 				oc.getAlternative(0).getInfoStore().getValue(MMInfo.DESCRIPTION, Locale.GERMAN));

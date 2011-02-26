@@ -46,6 +46,44 @@ public class QuestionOC extends QuestionChoice {
 		super(kb, name);
 	}
 
+	/**
+	 * Creates a new QuestionOC, adds it to the knowledgebase and to the parent.
+	 * No manual adding of the created object to the kb is needed
+	 * 
+	 * @param parent the parent {@link QASet}
+	 * @param name the name of the new QuestionOC
+	 */
+	public QuestionOC(QASet parent, String name) {
+		this(parent.getKnowledgeBase(), name);
+		parent.addChild(this);
+	}
+
+	/**
+	 * Creates a new QuestionOC, adds it to the knowledgebase and to the parent.
+	 * No manual adding of the created object to the kb is needed
+	 * 
+	 * @param parent the parent {@link QASet}
+	 * @param name the name of the new QuestionOC
+	 * @param choices the choices
+	 */
+	public QuestionOC(QASet parent, String name, Choice... choices) {
+		super(parent.getKnowledgeBase(), name, choices);
+		parent.addChild(this);
+	}
+
+	/**
+	 * Creates a new QuestionOC, adds it to the knowledgebase and to the parent.
+	 * No manual adding of the created object to the kb is needed
+	 * 
+	 * @param parent the parent {@link QASet}
+	 * @param name the name of the new QuestionOC
+	 * @param choices the strings of choice names
+	 */
+	public QuestionOC(QASet parent, String name, String... choices) {
+		super(parent.getKnowledgeBase(), name, choices);
+		parent.addChild(this);
+	}
+
 	public Choice getAlternative(int key) {
 		return getAlternatives().get(key);
 	}

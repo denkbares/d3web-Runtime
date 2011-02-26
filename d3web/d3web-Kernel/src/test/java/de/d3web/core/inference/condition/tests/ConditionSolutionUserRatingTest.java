@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2010 University Wuerzburg, Computer Science VI
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.core.inference.condition.tests;
 
@@ -31,7 +31,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.Blackboard;
@@ -39,15 +39,13 @@ import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.plugin.test.InitPluginManager;
 
-
 /**
  * 
  * @author Reinhard Hatko
- * @created 22.11.2010 
+ * @created 22.11.2010
  */
 public class ConditionSolutionUserRatingTest {
 
-	KnowledgeBaseManagement kbm;
 	KnowledgeBase kb;
 	Solution solution1;
 	Solution solution2;
@@ -58,20 +56,18 @@ public class ConditionSolutionUserRatingTest {
 	public void setup() throws Exception {
 
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
-		kb = kbm.getKnowledgeBase();
-		session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
+		session = SessionFactory.createSession(kb);
 
-		solution1 = kbm.createSolution("Solution1");
-		solution2 = kbm.createSolution("Solution2");
-		solution3 = kbm.createSolution("Solution3");
+		solution1 = new Solution(kb.getRootSolution(), "Solution1");
+		solution2 = new Solution(kb.getRootSolution(), "Solution2");
+		solution3 = new Solution(kb.getRootSolution(), "Solution3");
 
 	}
 
 	// creates confirmed UserRating for Solution1
 	@Test
 	public void testUserRatingConfirmed() {
-
 
 		PSMethodUserSelected psMethod = PSMethodUserSelected.getInstance();
 
@@ -86,10 +82,8 @@ public class ConditionSolutionUserRatingTest {
 
 		Rating value2 = (Rating) blackboard.getValue(solution1, psMethod);
 
-
 		assertThat(value2.getState(), is(State.ESTABLISHED));
-		
-		
+
 	}
 
 	// creates rejected UserRating for Solution2
@@ -108,7 +102,6 @@ public class ConditionSolutionUserRatingTest {
 				psMethod));
 
 		Rating value2 = (Rating) blackboard.getValue(solution2, psMethod);
-
 
 		assertThat(value2.getState(), is(State.EXCLUDED));
 

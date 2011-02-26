@@ -35,8 +35,7 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.manage.AnswerFactory;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
@@ -52,8 +51,7 @@ import de.d3web.xcl.io.XCLModelPersistenceHandler;
 public class XCLModelTest extends TestCase {
 
 	XCLModel model;
-	KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance();
-	KnowledgeBase k = kbm.getKnowledgeBase();
+	KnowledgeBase k = KnowledgeBaseUtils.createKnowledgeBase();
 	Solution terminator = new Solution(k, "D1");
 
 	QuestionOC genre = new QuestionOC(k, "GENRE");
@@ -124,19 +122,18 @@ public class XCLModelTest extends TestCase {
 	}
 
 	private void createKnowledgeBase() {
-		k = kbm.getKnowledgeBase();
 		Solution rootdia = k.getRootSolution();
 		QContainer rootContainer = (QContainer) k.getRootQASet();
 
 		// init diagnosis "Terminator"
-		kbm.createSolution("Terminator", rootdia);
+		new Solution(rootdia, "Terminator");
 		terminator = k.getManager().searchSolution("Terminator");
 
 		QContainer container = rootContainer;
 
 		// the question "Genre"
-		action = AnswerFactory.createAnswerChoice("action");
-		love = AnswerFactory.createAnswerChoice("love");
+		action = new Choice("action");
+		love = new Choice("love");
 		List<Choice> alternatives = new ArrayList<Choice>();
 		alternatives.add(action);
 		alternatives.add(love);
@@ -144,8 +141,8 @@ public class XCLModelTest extends TestCase {
 		container.addChild(genre);
 
 		// the question "player"
-		arnold = AnswerFactory.createAnswerChoice("arnold");
-		will = AnswerFactory.createAnswerChoice("will");
+		arnold = new Choice("arnold");
+		will = new Choice("will");
 		List<Choice> alt = new ArrayList<Choice>();
 		alt.add(arnold);
 		alt.add(will);
@@ -154,8 +151,8 @@ public class XCLModelTest extends TestCase {
 
 		// the question "rated"
 		List<Choice> aPlayer = new ArrayList<Choice>();
-		plus18 = AnswerFactory.createAnswerChoice("18+");
-		baby = AnswerFactory.createAnswerChoice("baby");
+		plus18 = new Choice("18+");
+		baby = new Choice("baby");
 		aPlayer.add(plus18);
 		aPlayer.add(baby);
 		rated.setAlternatives(aPlayer);

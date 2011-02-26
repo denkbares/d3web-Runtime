@@ -29,12 +29,13 @@ import org.junit.Test;
 
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.Fact;
@@ -50,7 +51,7 @@ import de.d3web.plugin.test.InitPluginManager;
 
 public class CostBenefitAgendaSortingTest {
 
-	KnowledgeBaseManagement kbm;
+	KnowledgeBase kb;
 	Session session;
 	InterviewAgenda agenda;
 
@@ -64,9 +65,9 @@ public class CostBenefitAgendaSortingTest {
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
 
-		QASet root = kbm.getKnowledgeBase().getRootQASet();
+		QASet root = kb.getRootQASet();
 
 		// root {container}
 		// - pregnancyQuestions {container}
@@ -77,19 +78,19 @@ public class CostBenefitAgendaSortingTest {
 		// - weight [num]
 		// - height [num]
 
-		pregnancyQuestions = kbm.createQContainer("pregnancyQuestions", root);
-		sex = kbm.createQuestionOC("sex", pregnancyQuestions, new String[] {
+		pregnancyQuestions = new QContainer(root, "pregnancyQuestions");
+		sex = new QuestionOC(pregnancyQuestions, "sex", new String[] {
 				"male", "female" });
-		female = new ChoiceValue(KnowledgeBaseManagement.findChoice(sex, "female"));
-		male = new ChoiceValue(KnowledgeBaseManagement.findChoice(sex, "male"));
-		name = kbm.createQuestionText("name", pregnancyQuestions);
+		female = new ChoiceValue(KnowledgeBaseUtils.findChoice(sex, "female"));
+		male = new ChoiceValue(KnowledgeBaseUtils.findChoice(sex, "male"));
+		name = new QuestionText(pregnancyQuestions, "name");
 
 		// Container: heightWeightQuestions = { weight, height } 
-		heightWeightQuestions = kbm.createQContainer("heightWeightQuestions", root);
-		weight = kbm.createQuestionNum("weight", heightWeightQuestions);
-		height = kbm.createQuestionNum("height", heightWeightQuestions);
+		heightWeightQuestions = new QContainer(root, "heightWeightQuestions");
+		weight = new QuestionNum(heightWeightQuestions, "weight");
+		height = new QuestionNum(heightWeightQuestions, "height");
 
-		session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		session = SessionFactory.createSession(kb);
 		costBenefit = new PSMethodCostBenefit();
 		costBenefit.init(session);
 

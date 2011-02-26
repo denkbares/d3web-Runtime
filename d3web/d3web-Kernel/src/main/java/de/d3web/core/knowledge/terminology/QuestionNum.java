@@ -47,6 +47,18 @@ public class QuestionNum extends Question {
 	}
 
 	/**
+	 * Creates a new QuestionNum, adds it to the knowledgebase and to the
+	 * parent. No manual adding of the created object to the kb is needed
+	 * 
+	 * @param parent the parent {@link QASet}
+	 * @param name the name of the new QuestionNum
+	 */
+	public QuestionNum(QASet parent, String name) {
+		this(parent.getKnowledgeBase(), name);
+		parent.addChild(this);
+	}
+
+	/**
 	 * List of meaningful partitions for the numerical value range of this
 	 * question.
 	 */

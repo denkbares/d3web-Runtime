@@ -44,7 +44,7 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
@@ -61,7 +61,6 @@ import de.d3web.scoring.Score;
  */
 public class ConditionMiscellaneousTest {
 
-	KnowledgeBaseManagement kbm;
 	KnowledgeBase kb;
 	QContainer init;
 	QuestionOC choiceQuestion1, choiceQuestion2, choiceQuestion3;
@@ -72,15 +71,11 @@ public class ConditionMiscellaneousTest {
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
-		kb = kbm.getKnowledgeBase();
-		init = kbm.createQContainer("init");
-		choiceQuestion1 = kbm.createQuestionOC("choiceQuestion1", init, new String[] {
-				"yes", "no" });
-		choiceQuestion2 = kbm.createQuestionOC("choiceQuestion2", init, new String[] {
-				"yes", "no" });
-		choiceQuestion3 = kbm.createQuestionOC("choiceQuestion3", init, new String[] {
-				"yes", "no" });
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
+		init = new QContainer(kb.getRootQASet(), "init");
+		choiceQuestion1 = new QuestionOC(init, "choiceQuestion1", "yes", "no");
+		choiceQuestion2 = new QuestionOC(init, "choiceQuestion2", "yes", "no");
+		choiceQuestion3 = new QuestionOC(init, "choiceQuestion3", "yes", "no");
 
 		// two ChoiceValues, representing to two possible answers "yes" and "no"
 		// for the above questions
@@ -105,7 +100,7 @@ public class ConditionMiscellaneousTest {
 		// Summary: Test for a M of N-Condition where no answer in the
 		// subconditions is set
 		// open up a new session, but enter no answer:
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		Condition conditionMofN = new CondMofN(Arrays.asList(conditions), 1, 2);
 		try {
 			conditionMofN.eval(session);
@@ -119,7 +114,7 @@ public class ConditionMiscellaneousTest {
 	public void testConditionMofN() {
 		// open up a new session and enter "yes" for the first and "no" for the
 		// second question
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 
 		// a M of N condition should evaluate to true, if at least one and
 		// not more than two (of the three included) Conditions are true
@@ -184,7 +179,7 @@ public class ConditionMiscellaneousTest {
 	public void testConditionKnown_NoAnswerExceptionThrown() throws NoAnswerException {
 		// Summary: Test for a KnownCondition where no answer is set
 		// open up a new session, but enter no answer:
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		Condition conditionKnown = new CondKnown(choiceQuestion1);
 		try {
 			conditionKnown.eval(session);
@@ -209,7 +204,7 @@ public class ConditionMiscellaneousTest {
 		assertThat(conditionKnown, is(equalTo(copiedCondition)));
 
 		// open up a new session:
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 
 		try {
 			// set a unknown value for the question "choiceQuestion1"
@@ -242,7 +237,7 @@ public class ConditionMiscellaneousTest {
 	// NoAnswerException {
 	// // Summary: Test for a UnknownCondition where no answer is set
 	// // open up a new session, but enter no answer:
-	// Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+	// Session session = SessionFactory.createSession(kb);
 	// Condition conditionUnknown = new CondUnknown(choiceQuestion1);
 	// try {
 	// conditionUnknown.eval(session);
@@ -267,7 +262,7 @@ public class ConditionMiscellaneousTest {
 		assertThat(conditionUnknown, is(equalTo(copiedCondition)));
 
 		// open up a new session:
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 
 		try {
 			// set a unknown value for the question "choiceQuestion1"
@@ -297,7 +292,7 @@ public class ConditionMiscellaneousTest {
 
 	@Test
 	public void testConditionDiagnosisState() {
-		Solution solution = kbm.createSolution("solutionDiagnosis");
+		Solution solution = new Solution(kb.getRootSolution(), "solutionDiagnosis");
 
 		// Create the following rule:
 		//
@@ -324,7 +319,7 @@ public class ConditionMiscellaneousTest {
 		assertThat(conditionDState.hashCode(), is(not(0)));
 
 		// open up a new session:
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 
 		try {
 			assertThat(conditionDState.eval(session), is(false));

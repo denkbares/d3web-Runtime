@@ -45,6 +45,18 @@ public class QuestionText extends Question {
 	}
 
 	/**
+	 * Creates a new QuestionText, adds it to the knowledgebase and to the
+	 * parent. No manual adding of the created object to the kb is needed
+	 * 
+	 * @param parent the parent {@link QASet}
+	 * @param name the name of the new QuestionText
+	 */
+	public QuestionText(QASet parent, String name) {
+		this(parent.getKnowledgeBase(), name);
+		parent.addChild(this);
+	}
+
+	/**
 	 * @return the height of the displayed text field asking the text question.
 	 */
 	public int getHeight() {

@@ -30,9 +30,10 @@ import de.d3web.core.inference.condition.CondTextEqual;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
@@ -68,19 +69,18 @@ public class TextAbstractionTest {
 	@BeforeClass
 	public static void setUp() throws Exception {
 		InitPluginManager.init();
-		kb = KnowledgeBaseManagement.createKnowledgeBase();
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
 		addTerminologyObjects();
 		addRules();
 		session = SessionFactory.createSession(kb);
 	}
 
 	private static void addTerminologyObjects() {
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance(kb);
-		kbm.createQuestionText("Emoticon", kb.getRootQASet());
+		new QuestionText(kb.getRootQASet(), "Emoticon");
 
 		String[] eventAlternatives = {
 				"Happiness", "Sadness" };
-		Question event = kbm.createQuestionOC("Feeling", kb.getRootQASet(),
+		Question event = new QuestionOC(kb.getRootQASet(), "Feeling",
 				eventAlternatives);
 		event.getInfoStore().addValue(BasicProperties.ABSTRACTION_QUESTION, Boolean.TRUE);
 	}
@@ -92,12 +92,12 @@ public class TextAbstractionTest {
 
 		// Emoticon = ":-)" => Feeling = Happiness
 		Condition happinessCondition = new CondTextEqual(emoticon, ":-)");
-		Value happiness = KnowledgeBaseManagement.findValue(feeling, "Happiness");
+		Value happiness = KnowledgeBaseUtils.findValue(feeling, "Happiness");
 		RuleFactory.createSetValueRule(feeling, happiness, happinessCondition);
 
 		// Emoticon = ":-(" => Feeling = Sadness
 		Condition sadnessCondition = new CondTextEqual(emoticon, ":-(");
-		Value sadness = KnowledgeBaseManagement.findValue(feeling, "Sadness");
+		Value sadness = KnowledgeBaseUtils.findValue(feeling, "Sadness");
 		RuleFactory.createSetValueRule(feeling, sadness, sadnessCondition);
 	}
 
@@ -113,10 +113,10 @@ public class TextAbstractionTest {
 		assertNotNull("Question 'Feeling' isn't in the Knowledgebase.", feeling);
 
 		// Values of 'Feeling'
-		Value happiness = KnowledgeBaseManagement.findValue(feeling, "Happiness");
+		Value happiness = KnowledgeBaseUtils.findValue(feeling, "Happiness");
 		assertNotNull("Value 'Happiness' of Question 'Feeling' isn't in the Knowledgebase",
 				happiness);
-		Value sadness = KnowledgeBaseManagement.findValue(feeling, "Sadness");
+		Value sadness = KnowledgeBaseUtils.findValue(feeling, "Sadness");
 		assertNotNull("Value 'Sadness' of Question 'Feeling' isn't in the Knowledgebase", sadness);
 	}
 
@@ -149,7 +149,7 @@ public class TextAbstractionTest {
 
 		// TEST 'Feeling' == 'Happiness'
 		Value currentFeelingValue = session.getBlackboard().getValue(feeling);
-		Value happiness = KnowledgeBaseManagement.findValue(feeling, "Happiness");
+		Value happiness = KnowledgeBaseUtils.findValue(feeling, "Happiness");
 		assertEquals("Question 'Feeling' has wrong value", happiness, currentFeelingValue);
 
 		// SET 'Emoticon' = ':-('
@@ -165,7 +165,7 @@ public class TextAbstractionTest {
 
 		// TEST 'Feeling' == 'Sadness'
 		currentFeelingValue = session.getBlackboard().getValue(feeling);
-		Value sadness = KnowledgeBaseManagement.findValue(feeling, "Sadness");
+		Value sadness = KnowledgeBaseUtils.findValue(feeling, "Sadness");
 		assertEquals("Question 'Feeling' has wrong value", sadness, currentFeelingValue);
 	}
 

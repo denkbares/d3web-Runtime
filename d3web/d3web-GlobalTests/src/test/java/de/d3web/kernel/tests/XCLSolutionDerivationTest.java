@@ -29,10 +29,12 @@ import org.junit.Test;
 
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
@@ -68,16 +70,16 @@ import de.d3web.xcl.XCLRelationType;
  */
 public class XCLSolutionDerivationTest {
 
-	private static KnowledgeBaseManagement kbm;
+	private static KnowledgeBase kb;
 	private static Session session;
 
 	@BeforeClass
 	public static void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
 		addTerminologyObjects();
 		addXCLModels();
-		session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		session = SessionFactory.createSession(kb);
 	}
 
 	private static void addTerminologyObjects() {
@@ -86,132 +88,132 @@ public class XCLSolutionDerivationTest {
 		String teamSport = "Team sport";
 		String[] teamSportAlternatives = new String[] {
 				"Yes", "No" };
-		kbm.createQuestionOC(teamSport, kbm.getKnowledgeBase().getRootQASet(),
+		new QuestionOC(kb.getRootQASet(), teamSport,
 				teamSportAlternatives);
 
 		// Question 'Health problems'
 		String healthProblems = "Health problems";
 		String[] healthProblemsAlternatives = new String[] {
 				"Yes", "No" };
-		kbm.createQuestionOC(healthProblems, kbm.getKnowledgeBase().getRootQASet(),
+		new QuestionOC(kb.getRootQASet(), healthProblems,
 				healthProblemsAlternatives);
 
 		// Question 'Importance of fun'
 		String fun = "Importance of fun";
 		String[] funAlternatives = new String[] {
 				"important", "not important" };
-		kbm.createQuestionOC(fun, kbm.getKnowledgeBase().getRootQASet(),
+		new QuestionOC(kb.getRootQASet(), fun,
 				funAlternatives);
 
 		// Solution 'Football'
-		kbm.createSolution("Football");
+		new Solution(kb.getRootSolution(), "Football");
 
 		// Solution 'Swimming'
-		kbm.createSolution("Swimming");
+		new Solution(kb.getRootSolution(), "Swimming");
 	}
 
 	private static void addXCLModels() {
 
 		// Solutions
-		Solution football = kbm.getKnowledgeBase().getManager().searchSolution("Football");
-		Solution swimming = kbm.getKnowledgeBase().getManager().searchSolution("Swimming");
+		Solution football = kb.getManager().searchSolution("Football");
+		Solution swimming = kb.getManager().searchSolution("Swimming");
 
 		// Question 'Team sport' and alternatives
-		Question teamSport = kbm.getKnowledgeBase().getManager().searchQuestion("Team sport");
-		Value teamSportYes = KnowledgeBaseManagement.findValue(teamSport, "Yes");
-		Value teamSportNo = KnowledgeBaseManagement.findValue(teamSport, "No");
+		Question teamSport = kb.getManager().searchQuestion("Team sport");
+		Value teamSportYes = KnowledgeBaseUtils.findValue(teamSport, "Yes");
+		Value teamSportNo = KnowledgeBaseUtils.findValue(teamSport, "No");
 
 		// Question 'Health problems' and alternatives
-		Question healthProblems = kbm.getKnowledgeBase().getManager().searchQuestion(
+		Question healthProblems = kb.getManager().searchQuestion(
 				"Health problems");
-		Value healthProblemsYes = KnowledgeBaseManagement.findValue(healthProblems, "Yes");
-		Value healthProblemsNo = KnowledgeBaseManagement.findValue(healthProblems, "No");
+		Value healthProblemsYes = KnowledgeBaseUtils.findValue(healthProblems, "Yes");
+		Value healthProblemsNo = KnowledgeBaseUtils.findValue(healthProblems, "No");
 
 		// Question 'Importance of fun' and alternatives
-		Question fun = kbm.getKnowledgeBase().getManager().searchQuestion("Importance of fun");
-		Value funImportant = KnowledgeBaseManagement.findValue(fun, "important");
-		Value funNotImportant = KnowledgeBaseManagement.findValue(fun, "not important");
+		Question fun = kb.getManager().searchQuestion("Importance of fun");
+		Value funImportant = KnowledgeBaseUtils.findValue(fun, "important");
+		Value funNotImportant = KnowledgeBaseUtils.findValue(fun, "not important");
 
 		// Model 'Football'
 
 		// Relation 'Team sport' = 'Yes' [++]
 		Condition condTeamSportYes = new CondEqual(teamSport, teamSportYes);
-		XCLModel.insertXCLRelation(kbm.getKnowledgeBase(), condTeamSportYes, football,
+		XCLModel.insertXCLRelation(kb, condTeamSportYes, football,
 				XCLRelationType.sufficiently);
 
 		// Relation 'Health problems = 'No'
 		Condition condHealthProblemsNo = new CondEqual(healthProblems, healthProblemsNo);
-		XCLModel.insertXCLRelation(kbm.getKnowledgeBase(), condHealthProblemsNo, football);
+		XCLModel.insertXCLRelation(kb, condHealthProblemsNo, football);
 
 		// Relation 'Importance of fun' = 'important'
 		Condition condFunImportant = new CondEqual(fun, funImportant);
-		XCLModel.insertXCLRelation(kbm.getKnowledgeBase(), condFunImportant, football);
+		XCLModel.insertXCLRelation(kb, condFunImportant, football);
 
 		// Model 'Swimming'
 
 		// Relation 'Team sport' = 'No'
 		Condition condTeamSportNo = new CondEqual(teamSport, teamSportNo);
-		XCLModel.insertXCLRelation(kbm.getKnowledgeBase(), condTeamSportNo, swimming);
+		XCLModel.insertXCLRelation(kb, condTeamSportNo, swimming);
 
 		// Relation 'Health problems' = 'Yes' [++]
 		Condition condHealthProblemsYes = new CondEqual(healthProblems, healthProblemsYes);
-		XCLModel.insertXCLRelation(kbm.getKnowledgeBase(), condHealthProblemsYes, swimming);
+		XCLModel.insertXCLRelation(kb, condHealthProblemsYes, swimming);
 
 		// Relation 'Importance of fun' = 'not important'
 		Condition condFunNotImportant = new CondEqual(fun, funNotImportant);
-		XCLModel.insertXCLRelation(kbm.getKnowledgeBase(), condFunNotImportant, swimming);
+		XCLModel.insertXCLRelation(kb, condFunNotImportant, swimming);
 	}
 
 	@Test
 	public void testTerminlogyObjectExistence() {
 
 		// Solution 'Football'
-		Solution football = kbm.getKnowledgeBase().getManager().searchSolution("Football");
+		Solution football = kb.getManager().searchSolution("Football");
 		assertNotNull("Solution 'Football' isn't in the Knowledgebase",
 				football);
 
 		// Solution 'Swimming'
-		Solution swimming = kbm.getKnowledgeBase().getManager().searchSolution("Swimming");
+		Solution swimming = kb.getManager().searchSolution("Swimming");
 		assertNotNull("Solution 'Swimming' isn't in the Knowledgebase",
 				swimming);
 
 		// Question 'Team sport' and alternatives
-		Question teamSport = kbm.getKnowledgeBase().getManager().searchQuestion("Team sport");
+		Question teamSport = kb.getManager().searchQuestion("Team sport");
 		assertNotNull("Question 'Team sport' isn't in the Knowledgebase",
 				teamSport);
 
-		Value teamSportYes = KnowledgeBaseManagement.findValue(teamSport, "Yes");
+		Value teamSportYes = KnowledgeBaseUtils.findValue(teamSport, "Yes");
 		assertNotNull("Value 'Yes' of Question 'Team sport' isn't in the Knowledgebase",
 				teamSportYes);
 
-		Value teamSportNo = KnowledgeBaseManagement.findValue(teamSport, "No");
+		Value teamSportNo = KnowledgeBaseUtils.findValue(teamSport, "No");
 		assertNotNull("Value 'No' of Question 'Team sport' isn't in the Knowledgebase",
 				teamSportNo);
 
 		// Question 'Health problems' and alternatives
-		Question healthProblems = kbm.getKnowledgeBase().getManager().searchQuestion(
+		Question healthProblems = kb.getManager().searchQuestion(
 				"Health problems");
 		assertNotNull("Question 'Health problems' isn't in the Knowledgebase",
 				healthProblems);
 
-		Value healthProblemsYes = KnowledgeBaseManagement.findValue(healthProblems, "Yes");
+		Value healthProblemsYes = KnowledgeBaseUtils.findValue(healthProblems, "Yes");
 		assertNotNull("Value 'Yes' of Question 'Health problems' isn't in the Knowledgebase",
 				healthProblemsYes);
 
-		Value healthProblemsNo = KnowledgeBaseManagement.findValue(healthProblems, "No");
+		Value healthProblemsNo = KnowledgeBaseUtils.findValue(healthProblems, "No");
 		assertNotNull("Value 'No' of Question 'Health problems' isn't in the Knowledgebase",
 				healthProblemsNo);
 
 		// Question 'Importance of fun' and alternatives
-		Question fun = kbm.getKnowledgeBase().getManager().searchQuestion("Importance of fun");
+		Question fun = kb.getManager().searchQuestion("Importance of fun");
 		assertNotNull("Question 'Importance of fun' isn't in the Knowledgebase",
 				fun);
 
-		Value funImportant = KnowledgeBaseManagement.findValue(fun, "important");
+		Value funImportant = KnowledgeBaseUtils.findValue(fun, "important");
 		assertNotNull(
 				"Value 'important' of Question 'Importance of fun' isn't in the Knowledgebase",
 				funImportant);
-		Value funNotImportant = KnowledgeBaseManagement.findValue(fun, "not important");
+		Value funNotImportant = KnowledgeBaseUtils.findValue(fun, "not important");
 		assertNotNull(
 				"Value 'not important' of Question 'Importance of fun' isn't in the Knowledgebase",
 				funNotImportant);
@@ -222,21 +224,21 @@ public class XCLSolutionDerivationTest {
 	public void testSetValue() {
 
 		// Solutions
-		Solution football = kbm.getKnowledgeBase().getManager().searchSolution("Football");
-		Solution swimming = kbm.getKnowledgeBase().getManager().searchSolution("Swimming");
+		Solution football = kb.getManager().searchSolution("Football");
+		Solution swimming = kb.getManager().searchSolution("Swimming");
 
 		// Question 'Team sport' and alternatives
-		Question teamSport = kbm.getKnowledgeBase().getManager().searchQuestion("Team sport");
-		Value teamSportYes = KnowledgeBaseManagement.findValue(teamSport, "Yes");
+		Question teamSport = kb.getManager().searchQuestion("Team sport");
+		Value teamSportYes = KnowledgeBaseUtils.findValue(teamSport, "Yes");
 
 		// Question 'Health problems' and alternatives
-		Question healthProblems = kbm.getKnowledgeBase().getManager().searchQuestion(
+		Question healthProblems = kb.getManager().searchQuestion(
 				"Health problems");
-		Value healthProblemsNo = KnowledgeBaseManagement.findValue(healthProblems, "No");
+		Value healthProblemsNo = KnowledgeBaseUtils.findValue(healthProblems, "No");
 
 		// Question 'Importance of fun' and alternatives
-		Question fun = kbm.getKnowledgeBase().getManager().searchQuestion("Importance of fun");
-		Value funNotImportant = KnowledgeBaseManagement.findValue(fun, "not important");
+		Question fun = kb.getManager().searchQuestion("Importance of fun");
+		Value funNotImportant = KnowledgeBaseUtils.findValue(fun, "not important");
 
 		// SET 'Health problems' = 'No'
 		session.getBlackboard().addValueFact(
@@ -300,17 +302,17 @@ public class XCLSolutionDerivationTest {
 	public void testChangeValue() {
 
 		// Solutions
-		Solution football = kbm.getKnowledgeBase().getManager().searchSolution("Football");
-		Solution swimming = kbm.getKnowledgeBase().getManager().searchSolution("Swimming");
+		Solution football = kb.getManager().searchSolution("Football");
+		Solution swimming = kb.getManager().searchSolution("Swimming");
 
 		// Question 'Team sport' and alternatives
-		Question teamSport = kbm.getKnowledgeBase().getManager().searchQuestion("Team sport");
-		Value teamSportNo = KnowledgeBaseManagement.findValue(teamSport, "No");
+		Question teamSport = kb.getManager().searchQuestion("Team sport");
+		Value teamSportNo = KnowledgeBaseUtils.findValue(teamSport, "No");
 
 		// Question 'Health problems' and alternatives
-		Question healthProblems = kbm.getKnowledgeBase().getManager().searchQuestion(
+		Question healthProblems = kb.getManager().searchQuestion(
 				"Health problems");
-		Value healthProblemsYes = KnowledgeBaseManagement.findValue(healthProblems, "Yes");
+		Value healthProblemsYes = KnowledgeBaseUtils.findValue(healthProblems, "Yes");
 
 		// SET 'Health problems' = 'Yes'
 		session.getBlackboard().addValueFact(
@@ -358,18 +360,18 @@ public class XCLSolutionDerivationTest {
 	public void testSetUndefinedValue() {
 
 		// Solutions
-		Solution football = kbm.getKnowledgeBase().getManager().searchSolution("Football");
-		Solution swimming = kbm.getKnowledgeBase().getManager().searchSolution("Swimming");
+		Solution football = kb.getManager().searchSolution("Football");
+		Solution swimming = kb.getManager().searchSolution("Swimming");
 
 		// Question 'Team sport'
-		Question teamSport = kbm.getKnowledgeBase().getManager().searchQuestion("Team sport");
+		Question teamSport = kb.getManager().searchQuestion("Team sport");
 
 		// Question 'Health problems'
-		Question healthProblems = kbm.getKnowledgeBase().getManager().searchQuestion(
+		Question healthProblems = kb.getManager().searchQuestion(
 				"Health problems");
 
 		// Question 'Importance of fun'
-		Question fun = kbm.getKnowledgeBase().getManager().searchQuestion("Importance of fun");
+		Question fun = kb.getManager().searchQuestion("Importance of fun");
 
 		// SET 'Health problems' = 'Undefined'
 		session.getBlackboard().addValueFact(

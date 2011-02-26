@@ -29,7 +29,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.DefaultSession;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Blackboard;
@@ -85,7 +85,7 @@ public final class Util {
 		QuestionOC question1 = (QuestionOC) kb.getManager().searchQuestion(question);
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, question1,
-						KnowledgeBaseManagement.findValue(question1, answer),
+						KnowledgeBaseUtils.findValue(question1, answer),
 						PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 		session.getPropagationManager().commitPropagation();

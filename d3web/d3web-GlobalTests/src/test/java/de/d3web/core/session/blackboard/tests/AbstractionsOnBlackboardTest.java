@@ -28,8 +28,9 @@ import org.junit.Test;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
@@ -59,19 +60,19 @@ import de.d3web.plugin.test.InitPluginManager;
 public class AbstractionsOnBlackboardTest {
 
 	private static Blackboard blackboard;
-	private static KnowledgeBaseManagement kbm;
+	private static KnowledgeBase kb;
 	private QuestionNum bmi, height, weight;
 
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
+		Session session = SessionFactory.createSession(kb);
 		blackboard = session.getBlackboard();
 
-		bmi = kbm.createQuestionNum("BMI", kbm.getKnowledgeBase().getRootQASet());
-		weight = kbm.createQuestionNum("weight", kbm.getKnowledgeBase().getRootQASet());
-		height = kbm.createQuestionNum("height", kbm.getKnowledgeBase().getRootQASet());
+		bmi = new QuestionNum(kb.getRootQASet(), "BMI");
+		weight = new QuestionNum(kb.getRootQASet(), "weight");
+		height = new QuestionNum(kb.getRootQASet(), "height");
 
 		// Rule: IF height=2 AND weight=200 THEN bmi=50
 		RuleFactory.createSetValueRule(bmi, new NumValue(50),
@@ -85,17 +86,17 @@ public class AbstractionsOnBlackboardTest {
 		// BMI is not defined at the beginning
 		assertEquals(UndefinedValue.getInstance(), blackboard.getValue(bmi));
 
-		blackboard.addValueFact(FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(),
+		blackboard.addValueFact(FactFactory.createUserEnteredFact(kb,
 				"weight",
 				new Double(200)));
-		blackboard.addValueFact(FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(),
+		blackboard.addValueFact(FactFactory.createUserEnteredFact(kb,
 				"height",
 				new Double(1.9)));
 		// BMI still undefined, since the rule couldn't fire
 		assertEquals(UndefinedValue.getInstance(), blackboard.getValue(bmi));
 
 		// set height=2, so that the rule can fire and the bmi is set
-		blackboard.addValueFact(FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(),
+		blackboard.addValueFact(FactFactory.createUserEnteredFact(kb,
 				"height",
 				new Double(2.0)));
 
@@ -109,10 +110,10 @@ public class AbstractionsOnBlackboardTest {
 		assertEquals(UndefinedValue.getInstance(), blackboard.getValue(bmi));
 
 		// set the weight/height, so that rule can fire
-		blackboard.addValueFact(FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(),
+		blackboard.addValueFact(FactFactory.createUserEnteredFact(kb,
 				"weight",
 				new Double(200)));
-		blackboard.addValueFact(FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(),
+		blackboard.addValueFact(FactFactory.createUserEnteredFact(kb,
 				"height",
 				new Double(2)));
 
@@ -120,7 +121,7 @@ public class AbstractionsOnBlackboardTest {
 		assertEquals(new NumValue(50), blackboard.getValue(bmi));
 
 		// now, user overwrite the bmi value
-		blackboard.addValueFact(FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(),
+		blackboard.addValueFact(FactFactory.createUserEnteredFact(kb,
 				"BMI",
 				new Double(10)));
 
@@ -135,7 +136,7 @@ public class AbstractionsOnBlackboardTest {
 		assertEquals(UndefinedValue.getInstance(), blackboard.getValue(bmi));
 
 		// user overwrite the abstraction question: bmi
-		blackboard.addValueFact(FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(),
+		blackboard.addValueFact(FactFactory.createUserEnteredFact(kb,
 				"BMI",
 				new Double(10)));
 
@@ -143,10 +144,10 @@ public class AbstractionsOnBlackboardTest {
 		assertEquals(new NumValue(10), blackboard.getValue(bmi));
 
 		// set the weight/height, so that rule can fire
-		blackboard.addValueFact(FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(),
+		blackboard.addValueFact(FactFactory.createUserEnteredFact(kb,
 				"weight",
 				new Double(200)));
-		blackboard.addValueFact(FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(),
+		blackboard.addValueFact(FactFactory.createUserEnteredFact(kb,
 				"height",
 				new Double(2)));
 

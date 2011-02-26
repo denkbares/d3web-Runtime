@@ -37,7 +37,7 @@ import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionText;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.FactFactory;
@@ -52,7 +52,6 @@ import de.d3web.plugin.test.InitPluginManager;
  */
 public class ConditionTextTest {
 
-	KnowledgeBaseManagement kbm;
 	KnowledgeBase kb;
 	Session session;
 	QContainer init;
@@ -61,16 +60,15 @@ public class ConditionTextTest {
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
-		kb = kbm.getKnowledgeBase();
-		init = kbm.createQContainer("init");
-		textQuestion = kbm.createQuestionText("textQuestion", init);
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
+		init = new QContainer(kb.getRootQASet(), "init");
+		textQuestion = new QuestionText(init, "textQuestion");
 	}
 
 	@Test(expected = NoAnswerException.class)
 	public void noAnswerExceptionThrown() throws NoAnswerException {
 		// Summary: Test for a Condition where no answer is set
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		Condition condition = new CondTextEqual(textQuestion, "Some Question Text...");
 		try {
 			condition.eval(session);
@@ -86,7 +84,7 @@ public class ConditionTextTest {
 		Condition condition = new CondTextEqual(textQuestion, "Some Question Text...");
 
 		// open up a new session and enter a unknown value for the dateQuestion
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "textQuestion", Unknown.getInstance()));
 
@@ -131,7 +129,7 @@ public class ConditionTextTest {
 
 		// open up a new session and enter a fact which should match the
 		// first condition, but not the second
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "textQuestion",
 						new TextValue("Some Question Text...")));
@@ -173,7 +171,7 @@ public class ConditionTextTest {
 
 		// open up a new session and enter a fact which should match the
 		// first condition, but not the second
-		Session session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		Session session = SessionFactory.createSession(kb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "textQuestion",
 						new TextValue("This is some Question Text with dots!")));

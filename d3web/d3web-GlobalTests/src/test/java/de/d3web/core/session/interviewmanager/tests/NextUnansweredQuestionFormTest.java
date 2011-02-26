@@ -29,12 +29,13 @@ import org.junit.Test;
 
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.knowledge.InterviewObject;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
@@ -50,7 +51,7 @@ import de.d3web.plugin.test.InitPluginManager;
 
 public class NextUnansweredQuestionFormTest {
 
-	KnowledgeBaseManagement kbm;
+	KnowledgeBase kb;
 	Session session;
 	InterviewAgenda agenda;
 
@@ -62,9 +63,9 @@ public class NextUnansweredQuestionFormTest {
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
 
-		QASet root = kbm.getKnowledgeBase().getRootQASet();
+		QASet root = kb.getRootQASet();
 
 		// root {container}
 		// - pregnancyQuestions {container}
@@ -78,26 +79,21 @@ public class NextUnansweredQuestionFormTest {
 
 		// Container: pregnancyQuestions = { sex {pregnant}, ask_for_pregnancy
 		// } 
-		pregnancyQuestions = kbm.createQContainer("pregnancyQuestions", root);
-		sex = kbm.createQuestionOC("sex", pregnancyQuestions, new String[] {
-				"male", "female" });
-		female = new ChoiceValue(KnowledgeBaseManagement.findChoice(sex, "female"));
-		male = new ChoiceValue(KnowledgeBaseManagement.findChoice(sex, "male"));
-		pregnant = kbm.createQuestionOC("pregnant", sex, new String[] {
-				"yes", "no" });
-		ask_for_pregnancy = kbm.createQuestionOC("ask for pregnancy", pregnancyQuestions,
-				new String[] {
-						"yes", "no" });
+		pregnancyQuestions = new QContainer(root, "pregnancyQuestions");
+		sex = new QuestionOC(pregnancyQuestions, "sex", "male", "female");
+		female = new ChoiceValue(KnowledgeBaseUtils.findChoice(sex, "female"));
+		male = new ChoiceValue(KnowledgeBaseUtils.findChoice(sex, "male"));
+		pregnant = new QuestionOC(sex, "pregnant", "yes", "no");
+		ask_for_pregnancy = new QuestionOC(pregnancyQuestions, "ask for pregnancy", "yes", "no");
 
 		// Container: heightWeightQuestions = { weight, height } 
-		heightWeightQuestions = kbm.createQContainer("heightWeightQuestions", root);
-		weight = kbm.createQuestionNum("weight", heightWeightQuestions);
-		height = kbm.createQuestionNum("height", heightWeightQuestions);
+		heightWeightQuestions = new QContainer(root, "heightWeightQuestions");
+		weight = new QuestionNum(heightWeightQuestions, "weight");
+		height = new QuestionNum(heightWeightQuestions, "height");
 
-		initQuestion = kbm.createQuestionOC("initQuestion", root,
-				new String[] {
-						"all", "pregnacyQuestions", "height+weight" });
-		session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		initQuestion = new QuestionOC(root, "initQuestion", "all", "pregnacyQuestions",
+				"height+weight");
+		session = SessionFactory.createSession(kb);
 		session.getInterview().setFormStrategy(new NextUnansweredQuestionFormStrategy());
 		agenda = session.getInterview().getInterviewAgenda();
 	}
@@ -124,7 +120,7 @@ public class NextUnansweredQuestionFormTest {
 
 		// ANSWER: pregnant=no
 		// EXPECT: no more questions to ask
-		setValue(pregnant, new ChoiceValue(KnowledgeBaseManagement.findChoice(pregnant, "no")));
+		setValue(pregnant, new ChoiceValue(KnowledgeBaseUtils.findChoice(pregnant, "no")));
 		Form form = session.getInterview().nextForm();
 		assertEquals(EmptyForm.getInstance(), form);
 	}
@@ -152,7 +148,7 @@ public class NextUnansweredQuestionFormTest {
 		// EXPECT: since all questions of the qcontainer are answered, we expect
 		// no more
 		// questions to be asked next, i.e., the EmptyForm singleton is returned
-		setValue(ask_for_pregnancy, KnowledgeBaseManagement.findValue(ask_for_pregnancy, "no"));
+		setValue(ask_for_pregnancy, KnowledgeBaseUtils.findValue(ask_for_pregnancy, "no"));
 		assertEquals(EmptyForm.getInstance(), session.getInterview().nextForm());
 	}
 

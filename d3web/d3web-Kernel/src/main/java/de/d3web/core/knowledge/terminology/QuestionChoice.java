@@ -24,7 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 
 /**
  * Storage for Questions with predefined answers (alternatives). Abstract
@@ -38,6 +38,20 @@ public abstract class QuestionChoice extends Question {
 
 	public QuestionChoice(KnowledgeBase kb, String name) {
 		super(kb, name);
+	}
+
+	public QuestionChoice(KnowledgeBase kb, String name, String... choices) {
+		super(kb, name);
+		for (String c : choices) {
+			alternatives.add(new Choice(c));
+		}
+	}
+
+	public QuestionChoice(KnowledgeBase kb, String name, Choice... choices) {
+		super(kb, name);
+		for (Choice c : choices) {
+			alternatives.add(c);
+		}
 	}
 
 	private final List<Choice> alternatives = new LinkedList<Choice>();
@@ -54,11 +68,11 @@ public abstract class QuestionChoice extends Question {
 	}
 
 	/**
-	 * @deprecated Use KnowledgeBaseManagement.findChoice(...)
+	 * @deprecated Use KnowledgeBaseUtils.findChoice(...)
 	 */
 	@Deprecated
 	public Choice findChoice(String choiceID) {
-		return KnowledgeBaseManagement.findChoice(this, choiceID);
+		return KnowledgeBaseUtils.findChoice(this, choiceID);
 	}
 
 	/**

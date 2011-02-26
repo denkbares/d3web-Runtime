@@ -30,12 +30,13 @@ import org.junit.Test;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
@@ -48,7 +49,7 @@ import de.d3web.plugin.test.InitPluginManager;
 
 public class DialogTest {
 
-	KnowledgeBaseManagement kbm;
+	KnowledgeBase kb;
 	QContainer pregnancyQuestions, heightWeightQuestions;
 	QuestionOC sex, pregnant, ask_for_pregnancy, initQuestion, pregnancyContainerIndication;
 	QuestionNum weight, height;
@@ -58,31 +59,27 @@ public class DialogTest {
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
 
-		QASet root = kbm.getKnowledgeBase().getRootQASet();
-		pregnancyQuestions = kbm.createQContainer("pregnancyQuestions", root);
-		sex = kbm.createQuestionOC("sex", pregnancyQuestions, new String[] {
-				"male", "female" });
-		pregnant = kbm.createQuestionOC("pregnant", sex, new String[] {
+		QASet root = kb.getRootQASet();
+		pregnancyQuestions = new QContainer(root, "pregnancyQuestions");
+		sex = new QuestionOC(pregnancyQuestions, "sex", "male", "female");
+		pregnant = new QuestionOC(sex, "pregnant", new String[] {
 				"yes", "no" });
-		female = new ChoiceValue(KnowledgeBaseManagement.findChoice(sex, "female"));
+		female = new ChoiceValue(KnowledgeBaseUtils.findChoice(sex, "female"));
 
-		ask_for_pregnancy = kbm.createQuestionOC("ask for pregnancy", pregnancyQuestions,
-				new String[] {
-						"yes", "no" });
-		dont_ask = new ChoiceValue(KnowledgeBaseManagement.findChoice(ask_for_pregnancy, "no"));
+		ask_for_pregnancy = new QuestionOC(pregnancyQuestions, "ask for pregnancy", "yes", "no");
+		dont_ask = new ChoiceValue(KnowledgeBaseUtils.findChoice(ask_for_pregnancy, "no"));
 
-		heightWeightQuestions = kbm.createQContainer("heightWeightQuestions", root);
-		weight = kbm.createQuestionNum("weight", heightWeightQuestions);
-		height = kbm.createQuestionNum("height", heightWeightQuestions);
+		heightWeightQuestions = new QContainer(root, "heightWeightQuestions");
+		weight = new QuestionNum(heightWeightQuestions, "weight");
+		height = new QuestionNum(heightWeightQuestions, "height");
 
-		initQuestion = kbm.createQuestionOC("initQuestion", root, new String[] {
-				"all", "pregnacyQuestions", "height+weight" });
+		initQuestion = new QuestionOC(root, "initQuestion", "all", "pregnacyQuestions",
+				"height+weight");
 
-		pregnancyContainerIndication = kbm.createQuestionOC("pregnancyContainerIndication", root,
-				new String[] {
-						"yes", "no" });
+		pregnancyContainerIndication = new QuestionOC(root, "pregnancyContainerIndication", "yes",
+				"no");
 
 		// Rule: sex = female => INDICATE ( pregnant )
 		RuleFactory.createIndicationRule(pregnant, new CondEqual(sex, female));
@@ -95,7 +92,7 @@ public class DialogTest {
 		RuleFactory.createIndicationRule(
 				pregnancyQuestions,
 				new CondEqual(initQuestion,
-						new ChoiceValue(KnowledgeBaseManagement.findChoice(initQuestion,
+						new ChoiceValue(KnowledgeBaseUtils.findChoice(initQuestion,
 								"pregnacyQuestions"))));
 
 		// Rule: initQuestion = height+weight => INDICATE CONTAINER (
@@ -103,7 +100,7 @@ public class DialogTest {
 		RuleFactory.createIndicationRule(
 				heightWeightQuestions,
 				new CondEqual(initQuestion,
-						new ChoiceValue(KnowledgeBaseManagement.findChoice(initQuestion,
+						new ChoiceValue(KnowledgeBaseUtils.findChoice(initQuestion,
 								"height+weight"))));
 
 		// Rule: initQuestion = all => INDICATE CONTAINER ( pregnancyQuestions,
@@ -111,7 +108,7 @@ public class DialogTest {
 		RuleFactory.createIndicationRule(
 				Arrays.asList(new QASet[] {
 						pregnancyQuestions, heightWeightQuestions }),
-				new CondEqual(initQuestion, new ChoiceValue(KnowledgeBaseManagement.findChoice(
+				new CondEqual(initQuestion, new ChoiceValue(KnowledgeBaseUtils.findChoice(
 						initQuestion, "all"))));
 
 		// Rule: pregnancyContainerIndication = yes => INDICATE CONTAINER (
@@ -119,10 +116,10 @@ public class DialogTest {
 		RuleFactory.createIndicationRule(
 				pregnancyQuestions,
 				new CondEqual(pregnancyContainerIndication,
-						new ChoiceValue(KnowledgeBaseManagement.findChoice(
+						new ChoiceValue(KnowledgeBaseUtils.findChoice(
 								pregnancyContainerIndication, "yes"))));
 
-		session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		session = SessionFactory.createSession(kb);
 	}
 
 	@Test
@@ -172,7 +169,7 @@ public class DialogTest {
 		// EXPECT: INDICATE CONTAINER ( pregnancyQuestions,
 		// heightWeightQuestions )
 		setValue(initQuestion,
-				new ChoiceValue(KnowledgeBaseManagement.findChoice(initQuestion, "all")));
+				new ChoiceValue(KnowledgeBaseUtils.findChoice(initQuestion, "all")));
 		assertEquals(
 				new Indication(State.INDICATED),
 				session.getBlackboard().getIndication(pregnancyQuestions));
@@ -198,7 +195,7 @@ public class DialogTest {
 		// EXPECT: INDICATE CONTAINER ( pregnancyQuestions,
 		// heightWeightQuestions )
 		setValue(initQuestion,
-				new ChoiceValue(KnowledgeBaseManagement.findChoice(initQuestion, "all")));
+				new ChoiceValue(KnowledgeBaseUtils.findChoice(initQuestion, "all")));
 		assertEquals(
 				new Indication(State.INDICATED),
 				session.getBlackboard().getIndication(pregnancyQuestions));
@@ -209,7 +206,7 @@ public class DialogTest {
 		// SET: pregnancyContainerIndication = yes
 		// EXPECT: INDICATE CONTAINER ( pregnancyQuestions ) // i.e. doubled
 		// indication of pregnancyQuestions
-		setValue(pregnancyContainerIndication, new ChoiceValue(KnowledgeBaseManagement.findChoice(
+		setValue(pregnancyContainerIndication, new ChoiceValue(KnowledgeBaseUtils.findChoice(
 				pregnancyContainerIndication, "yes")));
 		assertEquals(
 				new Indication(State.INDICATED),

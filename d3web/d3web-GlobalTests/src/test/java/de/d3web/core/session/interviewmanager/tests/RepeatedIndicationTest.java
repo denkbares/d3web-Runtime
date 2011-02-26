@@ -31,10 +31,11 @@ import org.junit.Test;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionOC;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
@@ -54,7 +55,7 @@ import de.d3web.plugin.test.InitPluginManager;
  */
 public class RepeatedIndicationTest {
 
-	KnowledgeBaseManagement kbm;
+	KnowledgeBase kb;
 	Session session;
 	InterviewAgenda agenda;
 
@@ -65,9 +66,9 @@ public class RepeatedIndicationTest {
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
 
-		QASet root = kbm.getKnowledgeBase().getRootQASet();
+		QASet root = kb.getRootQASet();
 
 		// root {container}
 		// - pregnancyQuestions {container}
@@ -75,17 +76,14 @@ public class RepeatedIndicationTest {
 		// -- pregnant [oc]
 		// IF (pregnant = yes && sex = m) THEN repeatIndicate (sex)
 
-		pregnancyQuestions = kbm.createQContainer("pregnancyQuestions", root);
+		pregnancyQuestions = new QContainer(root, "pregnancyQuestions");
 
-		sex = kbm.createQuestionOC("sex", pregnancyQuestions, new String[] {
-				"male", "female" });
-		pregnant = kbm.createQuestionOC("pregnant", pregnancyQuestions, new String[] {
-				"yes", "no" });
-		happy = kbm.createQuestionOC("happy", pregnancyQuestions, new String[] {
-				"yes", "no" });
+		sex = new QuestionOC(pregnancyQuestions, "sex", "male", "female");
+		pregnant = new QuestionOC(pregnancyQuestions, "pregnant", "yes", "no");
+		happy = new QuestionOC(pregnancyQuestions, "happy", "yes", "no");
 
-		yes = new ChoiceValue(KnowledgeBaseManagement.findChoice(pregnant, "yes"));
-		male = new ChoiceValue(KnowledgeBaseManagement.findChoice(sex, "male"));
+		yes = new ChoiceValue(KnowledgeBaseUtils.findChoice(pregnant, "yes"));
+		male = new ChoiceValue(KnowledgeBaseUtils.findChoice(sex, "male"));
 
 		// IF (pregnant = yes && sex = m) THEN repeatIndicate (sex)
 		List<Condition> conditions = new ArrayList<Condition>(2);
@@ -94,9 +92,9 @@ public class RepeatedIndicationTest {
 		Condition cond = new CondAnd(conditions);
 		RuleFactory.createRepeatedIndicationRule(sex, cond);
 
-		kbm.getKnowledgeBase().setInitQuestions(Arrays.asList(new QASet[] { pregnancyQuestions }));
+		kb.setInitQuestions(Arrays.asList(new QASet[] { pregnancyQuestions }));
 
-		session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		session = SessionFactory.createSession(kb);
 		session.getInterview().setFormStrategy(new NextUnansweredQuestionFormStrategy());
 		agenda = session.getInterview().getInterviewAgenda();
 	}
@@ -109,13 +107,13 @@ public class RepeatedIndicationTest {
 		// expect the first question of the init container
 		assertEquals(sex, session.getInterview().nextForm().getInterviewObject());
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(), "sex", "female"));
+				FactFactory.createUserEnteredFact(kb, "sex", "female"));
 		assertEquals(pregnant, session.getInterview().nextForm().getInterviewObject());
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(), "pregnant", "yes"));
+				FactFactory.createUserEnteredFact(kb, "pregnant", "yes"));
 		assertEquals(happy, session.getInterview().nextForm().getInterviewObject());
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(), "happy", "yes"));
+				FactFactory.createUserEnteredFact(kb, "happy", "yes"));
 		assertEquals(EmptyForm.getInstance(), session.getInterview().nextForm());
 	}
 
@@ -126,18 +124,18 @@ public class RepeatedIndicationTest {
 		// expect the first question of the init container
 		assertEquals(sex, session.getInterview().nextForm().getInterviewObject());
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(), "sex", "male"));
+				FactFactory.createUserEnteredFact(kb, "sex", "male"));
 		assertEquals(pregnant, session.getInterview().nextForm().getInterviewObject());
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(), "pregnant", "yes"));
+				FactFactory.createUserEnteredFact(kb, "pregnant", "yes"));
 		assertEquals(happy, session.getInterview().nextForm().getInterviewObject());
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(), "happy", "yes"));
+				FactFactory.createUserEnteredFact(kb, "happy", "yes"));
 
 		// ask sex for the second time!
 		assertEquals(sex, session.getInterview().nextForm().getInterviewObject());
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(), "sex", "female"));
+				FactFactory.createUserEnteredFact(kb, "sex", "female"));
 		assertEquals(EmptyForm.getInstance(), session.getInterview().nextForm());
 	}
 
@@ -150,29 +148,29 @@ public class RepeatedIndicationTest {
 		// expect the first question of the init container
 		assertEquals(sex, session.getInterview().nextForm().getInterviewObject());
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(), "sex", "male"));
+				FactFactory.createUserEnteredFact(kb, "sex", "male"));
 		assertEquals(pregnant, session.getInterview().nextForm().getInterviewObject());
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(), "pregnant", "yes"));
+				FactFactory.createUserEnteredFact(kb, "pregnant", "yes"));
 		assertEquals(happy, session.getInterview().nextForm().getInterviewObject());
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(), "happy", "yes"));
+				FactFactory.createUserEnteredFact(kb, "happy", "yes"));
 
 		// ask sex for the second time!
 		assertEquals(sex, session.getInterview().nextForm().getInterviewObject());
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(), "sex", "female"));
+				FactFactory.createUserEnteredFact(kb, "sex", "female"));
 		// some new facts to active the rule for the second time
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(), "happy", "yes"));
+				FactFactory.createUserEnteredFact(kb, "happy", "yes"));
 
 		// reanswer the question in order to ask for the third time
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(), "sex", "male"));
+				FactFactory.createUserEnteredFact(kb, "sex", "male"));
 		assertEquals(sex, session.getInterview().nextForm().getInterviewObject());
 
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(), "sex", "female"));
+				FactFactory.createUserEnteredFact(kb, "sex", "female"));
 
 		assertEquals(EmptyForm.getInstance(), session.getInterview().nextForm());
 	}
@@ -184,20 +182,20 @@ public class RepeatedIndicationTest {
 		// expect the first question of the init container
 		assertEquals(sex, session.getInterview().nextForm().getInterviewObject());
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(), "sex", "male"));
+				FactFactory.createUserEnteredFact(kb, "sex", "male"));
 		assertEquals(pregnant, session.getInterview().nextForm().getInterviewObject());
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(), "pregnant", "yes"));
+				FactFactory.createUserEnteredFact(kb, "pregnant", "yes"));
 		assertEquals(happy, session.getInterview().nextForm().getInterviewObject());
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(), "happy", "yes"));
+				FactFactory.createUserEnteredFact(kb, "happy", "yes"));
 
 		// ask sex for the second time!
 		assertEquals(sex, session.getInterview().nextForm().getInterviewObject());
 
 		// answer a question in order to retract the repeated indication rule
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(kbm.getKnowledgeBase(), "pregnant", "no"));
+				FactFactory.createUserEnteredFact(kb, "pregnant", "no"));
 		assertEquals(EmptyForm.getInstance(), session.getInterview().nextForm());
 	}
 

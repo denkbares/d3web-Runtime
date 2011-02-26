@@ -36,10 +36,11 @@ import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
@@ -104,7 +105,7 @@ public class DiaFluxPersistenceTest {
 				solutionState.hasState(Rating.State.UNCLEAR));// this is true
 
 		// Answer question with "Yes", this should execute the flow
-		Value yes = KnowledgeBaseManagement.findValue(question, "Yes");
+		Value yes = KnowledgeBaseUtils.findValue(question, "Yes");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, question,
 						yes, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
@@ -114,7 +115,7 @@ public class DiaFluxPersistenceTest {
 
 		// When Answer "No" is set, the establishment of the solution
 		// should be retracted:
-		Value no = KnowledgeBaseManagement.findValue(question, "No");
+		Value no = KnowledgeBaseUtils.findValue(question, "No");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, question,
 						no, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
@@ -124,11 +125,10 @@ public class DiaFluxPersistenceTest {
 	}
 
 	public static KnowledgeBase createTestKB() {
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance();
+		KnowledgeBase kb = KnowledgeBaseUtils.createKnowledgeBase();
 
-		Question questionYN = kbm.createQuestionYN("YesNoQuestion",
-				kbm.getKnowledgeBase().getRootQASet());
-		Solution solutionFoo = kbm.createSolution("SolutionFoo");
+		Question questionYN = new QuestionYN(kb.getRootQASet(), "YesNoQuestion");
+		Solution solutionFoo = new Solution(kb.getRootSolution(), "SolutionFoo");
 
 		INode startNode = FF.createStartNode("Start_ID", "Start");
 		INode endNode = FF.createEndNode("End_ID", "Ende");
@@ -151,7 +151,7 @@ public class DiaFluxPersistenceTest {
 		IEdge startToQuestion = FF.createEdge("startToQuestionEdge_ID", startNode, questionNode,
 				ConditionTrue.INSTANCE);
 
-		Value yes = KnowledgeBaseManagement.findValue(questionYN, "Yes");
+		Value yes = KnowledgeBaseUtils.findValue(questionYN, "Yes");
 		Condition yesCondition = new CondEqual(questionYN, yes);
 
 		IEdge questionToSolution = FF.createEdge("questionToSolution_ID", questionNode,
@@ -167,13 +167,13 @@ public class DiaFluxPersistenceTest {
 		Flow testFlow = FF.createFlow("testFlow_ID", "Main", nodesList, edgesList);
 		testFlow.setAutostart(true);
 
-		DiaFluxUtils.addFlow(testFlow, kbm.getKnowledgeBase());
+		DiaFluxUtils.addFlow(testFlow, kb);
 
 		// add a property to Infostore, to test its persistence
 		testFlow.getInfoStore().addValue(MMInfo.DESCRIPTION,
 				"infostoretestvalue");
 
-		return kbm.getKnowledgeBase();
+		return kb;
 
 	}
 

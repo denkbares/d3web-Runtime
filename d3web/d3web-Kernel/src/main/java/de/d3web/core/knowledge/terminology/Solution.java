@@ -61,6 +61,18 @@ public class Solution extends AbstractTerminologyObject implements ValueObject {
 	}
 
 	/**
+	 * Creates a new Solution, adds it to the knowledgebase and adds it to it's
+	 * parent, so no manual adding of the created object to the kb is needed
+	 * 
+	 * @param parent the parent {@link Solution}
+	 * @param name the name of the new QContainer
+	 */
+	public Solution(Solution parent, String name) {
+		this(parent.getKnowledgeBase(), name);
+		parent.addChild(this);
+	}
+
+	/**
 	 * Returns the prior probability of this solution. The 'probability' is
 	 * represented by a {@link Score}, and the use of this probability depends
 	 * on the particular {@link PSMethod}.

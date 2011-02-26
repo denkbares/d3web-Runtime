@@ -37,7 +37,7 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
@@ -107,20 +107,20 @@ public class RunningACase {
 
 		// Solution: dangerousMood
 		InitPluginManager.init();
-		KnowledgeBaseManagement kbm = KnowledgeBaseManagement.createInstance();
-		QASet root = kbm.getKnowledgeBase().getRootQASet();
+		KnowledgeBase kb = KnowledgeBaseUtils.createKnowledgeBase();
+		QASet root = kb.getRootQASet();
 
-		demoQuestions = kbm.createQContainer("demoQuestions", root);
-		pregnant = kbm.createQuestionOC("pregnant", demoQuestions, new String[] {
+		demoQuestions = new QContainer(root, "demoQuestions");
+		pregnant = new QuestionOC(demoQuestions, "pregnant", new String[] {
 				"yes",
 				"no" });
-		yes = new ChoiceValue(KnowledgeBaseManagement.findChoice(pregnant, "yes"));
-		weight = kbm.createQuestionNum("weight", demoQuestions);
+		yes = new ChoiceValue(KnowledgeBaseUtils.findChoice(pregnant, "yes"));
+		weight = new QuestionNum(demoQuestions, "weight");
 
-		dangerousMood = kbm.createSolution("dangerousMood");
+		dangerousMood = new Solution(kb.getRootSolution(), "dangerousMood");
 
 		// Define the init questionnaire
-		kbm.getKnowledgeBase().setInitQuestions(Arrays.asList(demoQuestions));
+		kb.setInitQuestions(Arrays.asList(demoQuestions));
 
 		// Define the magic rule: preganant=yes AND weight > 70 => dangerousMood
 		// (P7)
@@ -129,7 +129,7 @@ public class RunningACase {
 		terms.add(new CondNumGreater(weight, Double.valueOf(70)));
 		RuleFactory.createHeuristicPSRule(dangerousMood, Score.P7, new CondAnd(terms));
 
-		return kbm.getKnowledgeBase();
+		return kb;
 	}
 
 }

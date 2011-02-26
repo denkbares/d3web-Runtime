@@ -41,10 +41,7 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
-import de.d3web.core.knowledge.terminology.QuestionYN;
-import de.d3web.core.knowledge.terminology.QuestionZC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceID;
@@ -57,26 +54,26 @@ import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 
 /**
- * A facade controlling (all) operations on a knowledge base. Created on
- * 11.01.2005
+ * Provides utilitymethods for {@link KnowledgeBase}
  * 
  * @author baumeister
  */
-public final class KnowledgeBaseManagement {
+public final class KnowledgeBaseUtils {
 
 	private KnowledgeBase knowledgeBase;
 
-	private KnowledgeBaseManagement(KnowledgeBase k) {
+	private KnowledgeBaseUtils(KnowledgeBase k) {
 		knowledgeBase = k;
 	}
 
-	public static KnowledgeBaseManagement createInstance(KnowledgeBase k) {
-		return new KnowledgeBaseManagement(k);
-	}
-
-	public static KnowledgeBaseManagement createInstance() {
+	/**
+	 * @deprecated use KnowledgeBase in all methods of all classes and
+	 *             interfaces
+	 */
+	@Deprecated
+	public static KnowledgeBaseUtils createInstance() {
 		KnowledgeBase theKnowledge = createKnowledgeBase();
-		return createInstance(theKnowledge);
+		return new KnowledgeBaseUtils(theKnowledge);
 	}
 
 	public void clearKnowledgeBase() {
@@ -101,161 +98,10 @@ public final class KnowledgeBaseManagement {
 		return theK;
 	}
 
-	public Solution createSolution(String name, Solution parent) {
-		Solution d = new Solution(knowledgeBase, name);
-		addToParent(d, parent);
-		return d;
-	}
-
-	/**
-	 * Creates a new solution and adds the instance as child of the root of the
-	 * solution hierarchy.
-	 * 
-	 * @param name The name of the new solution
-	 * @return the newly created solution
-	 */
-	public Solution createSolution(String name) {
-		return createSolution(name, knowledgeBase.getRootSolution());
-	}
-
-	/**
-	 * Creates a new questionnaire with the specified name as a child of the
-	 * root questionnaire hierarchy.
-	 * 
-	 * @param name the specified name of the questionnaire
-	 * @return the newly created {@link QContainer}
-	 */
-	public QContainer createQContainer(String name) {
-		return createQContainer(name, knowledgeBase.getRootQASet());
-	}
-
-	public QContainer createQContainer(String name, QASet parent) {
-		if (parent instanceof Question) {
-			throw new IllegalArgumentException("Parent is a question, only QContainers allowed");
-		}
-		QContainer q = new QContainer(knowledgeBase, name);
-		addToParent(q, parent);
-		return q;
-	}
-
-	public QuestionOC createQuestionOC(String name, QASet parent,
-			Choice[] answers) {
-		QuestionOC q = new QuestionOC(knowledgeBase, name);
-		setChoiceProperties(q, parent, answers);
-		return q;
-	}
-
-	public QuestionOC createQuestionOC(String name, QASet parent,
-			String[] answers) {
-		QuestionOC q = createQuestionOC(name, parent, new Choice[] {});
-		q.setAlternatives(toList(createAnswers(answers)));
-		return q;
-	}
-
-	public QuestionZC createQuestionZC(String name, QASet parent) {
-		QuestionZC q = new QuestionZC(knowledgeBase, name);
-		setChoiceProperties(q, parent, new Choice[] {});
-		return q;
-	}
-
-	private void setChoiceProperties(QuestionChoice q, QASet parent, Choice[] answers) {
-		addToParent(q, parent);
-		q.setAlternatives(toList(answers));
-	}
-
-	public QuestionMC createQuestionMC(String name, QASet parent,
-			Choice[] answers) {
-		QuestionMC q = new QuestionMC(knowledgeBase, name);
-		setChoiceProperties(q, parent, answers);
-		return q;
-	}
-
-	public QuestionMC createQuestionMC(String name, QASet parent,
-			String[] answers) {
-		QuestionMC q = createQuestionMC(name, parent, new Choice[] {});
-		q.setAlternatives(toList(createAnswers(answers)));
-		return q;
-	}
-
-	public QuestionNum createQuestionNum(String name, QASet parent) {
-		QuestionNum q = new QuestionNum(knowledgeBase, name);
-		addToParent(q, parent);
-		return q;
-	}
-
-	public QuestionYN createQuestionYN(String name, QASet parent) {
-		return createQuestionYN(null, name, parent);
-	}
-
-	public QuestionYN createQuestionYN(String id, String name, QASet parent) {
-		return createQuestionYN(name, null, null, parent);
-	}
-
-	public QuestionYN createQuestionYN(String name, String yesAlternativeText,
-			String noAlternativeText, QASet parent) {
-		QuestionYN q = null;
-		if (yesAlternativeText != null && noAlternativeText != null) {
-			q = new QuestionYN(knowledgeBase, name, yesAlternativeText, noAlternativeText);
-		}
-		else {
-			q = new QuestionYN(knowledgeBase, name);
-		}
-		addToParent(q, parent);
-		return q;
-	}
-
-	public QuestionDate createQuestionDate(String name, QASet parent) {
-		QuestionDate q = new QuestionDate(knowledgeBase, name);
-		addToParent(q, parent);
-		return q;
-	}
-
-	public QuestionText createQuestionText(String name, QASet parent) {
-		return createQuestionText(null, name, parent);
-	}
-
-	public QuestionText createQuestionText(String id, String name, QASet parent) {
-		QuestionText q = new QuestionText(knowledgeBase, name);
-		addToParent(q, parent);
-		return q;
-	}
-
-	public Choice addChoiceAnswer(QuestionChoice question, String answerText) {
-		Choice answer = AnswerFactory.createAnswerChoice(answerText);
-		question.addAlternative(answer);
-		return answer;
-	}
-
-	public Choice addChoiceAnswer(QuestionChoice question, String answerText, int pos) {
-		Choice answer = AnswerFactory.createAnswerChoice(answerText);
+	public static Choice addChoiceAnswer(QuestionChoice question, String answerText, int pos) {
+		Choice answer = new Choice(answerText);
 		question.addAlternative(answer, pos);
 		return answer;
-	}
-
-	private Choice[] createAnswers(String[] answers) {
-		Choice[] a = new Choice[answers.length];
-		for (int i = 0; i < answers.length; i++) {
-			a[i] = AnswerFactory.createAnswerChoice(
-					answers[i]);
-		}
-		return a;
-	}
-
-	/**
-	 * Arrays.asList creates immutable lists, therefore an own method :-(
-	 * 
-	 * @param answers
-	 * @return
-	 */
-	private static List<Choice> toList(Choice[] answers) {
-		if (answers == null) {
-			return new LinkedList<Choice>();
-		}
-		ArrayList<Choice> l = new ArrayList<Choice>(answers.length);
-		for (int i = 0; i < answers.length; i++) {
-			l.add(answers[i]);
-		}
-		return l;
 	}
 
 	/**
@@ -374,24 +220,6 @@ public final class KnowledgeBaseManagement {
 		}
 	}
 
-	private void addToParent(QASet theObject, QASet parent) {
-		if (parent != null) {
-			parent.addChild(theObject);
-		}
-		else {
-			knowledgeBase.getRootQASet().addChild(theObject);
-		}
-	}
-
-	private void addToParent(Solution theObject, Solution parent) {
-		if (parent != null) {
-			parent.addChild(theObject);
-		}
-		else {
-			knowledgeBase.getRootSolution().addChild(theObject);
-		}
-	}
-
 	public KnowledgeBase getKnowledgeBase() {
 		return knowledgeBase;
 	}
@@ -401,7 +229,12 @@ public final class KnowledgeBaseManagement {
 	 * 
 	 * @param unsorted the unsorted list
 	 */
-	public void sortQContainers(List<QContainer> unsorted) {
+	public static void sortQContainers(List<QContainer> unsorted) {
+		if (unsorted.isEmpty()) {
+			// empty list doesn't need be sorted
+			return;
+		}
+		KnowledgeBase knowledgeBase = unsorted.get(0).getKnowledgeBase();
 		HashMap<TerminologyObject, Integer> qcontainerIndex = new HashMap<TerminologyObject, Integer>();
 		reindex(knowledgeBase.getRootQASet(), qcontainerIndex, Integer.valueOf(0));
 		Collections.sort(unsorted, new DFSTreeSortingComparator(qcontainerIndex));
@@ -411,7 +244,7 @@ public final class KnowledgeBaseManagement {
 	 * Traverses the QASet hierarchy using a depth-first search and attaches an
 	 * ordering number to each visited {@link QASet}.
 	 */
-	private void reindex(TerminologyObject qaset, Map<TerminologyObject, Integer> qcontainerIndex, Integer maxOrderingNumber) {
+	private static void reindex(TerminologyObject qaset, Map<TerminologyObject, Integer> qcontainerIndex, Integer maxOrderingNumber) {
 		qcontainerIndex.put(qaset, maxOrderingNumber);
 		Integer maxOrdNum = maxOrderingNumber;
 
@@ -432,7 +265,7 @@ public final class KnowledgeBaseManagement {
 	 * index number
 	 */
 
-	private class DFSTreeSortingComparator implements Comparator<QContainer> {
+	private static class DFSTreeSortingComparator implements Comparator<QContainer> {
 
 		private final Map<TerminologyObject, Integer> index;
 
@@ -457,7 +290,7 @@ public final class KnowledgeBaseManagement {
 	 * @param name Name of the {@link TerminologyObject}
 	 * @return {@link TerminologyObject} with the specified name
 	 */
-	public TerminologyObject findTerminologyObjectByName(String name) {
+	public static TerminologyObject findTerminologyObjectByName(String name, KnowledgeBase knowledgeBase) {
 		List<TerminologyObject> objects = new LinkedList<TerminologyObject>();
 		objects.addAll(knowledgeBase.getManager().getQContainers());
 		objects.addAll(knowledgeBase.getManager().getSolutions());

@@ -43,4 +43,42 @@ public class QuestionMC extends QuestionChoice {
 		super(kb, name);
 	}
 
+	/**
+	 * Creates a new QuestionMC, adds it to the knowledgebase and to the parent.
+	 * No manual adding of the created object to the kb is needed
+	 * 
+	 * @param parent the parent {@link QASet}
+	 * @param name the name of the new QuestionMC
+	 */
+	public QuestionMC(QASet parent, String name) {
+		this(parent.getKnowledgeBase(), name);
+		parent.addChild(this);
+	}
+
+	/**
+	 * Creates a new QuestionMC, adds it to the knowledgebase and to the parent.
+	 * No manual adding of the created object to the kb is needed
+	 * 
+	 * @param parent the parent {@link QASet}
+	 * @param name the name of the new QuestionMC
+	 * @param choices the choices
+	 */
+	public QuestionMC(QASet parent, String name, Choice... choices) {
+		super(parent.getKnowledgeBase(), name, choices);
+		parent.addChild(this);
+	}
+
+	/**
+	 * Creates a new QuestionMC, adds it to the knowledgebase and to the parent.
+	 * No manual adding of the created object to the kb is needed
+	 * 
+	 * @param parent the parent {@link QASet}
+	 * @param name the name of the new QuestionMC
+	 * @param choices the strings of choice names
+	 */
+	public QuestionMC(QASet parent, String name, String... choices) {
+		super(parent.getKnowledgeBase(), name, choices);
+		parent.addChild(this);
+	}
+
 }

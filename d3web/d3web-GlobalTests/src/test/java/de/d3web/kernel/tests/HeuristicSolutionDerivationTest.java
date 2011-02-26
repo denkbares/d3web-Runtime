@@ -29,10 +29,12 @@ import org.junit.Test;
 
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.manage.KnowledgeBaseManagement;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
@@ -65,16 +67,16 @@ import de.d3web.scoring.Score;
  */
 public class HeuristicSolutionDerivationTest {
 
-	private static KnowledgeBaseManagement kbm;
+	private static KnowledgeBase kb;
 	private static Session session;
 
 	@BeforeClass
 	public static void setUp() throws Exception {
 		InitPluginManager.init();
-		kbm = KnowledgeBaseManagement.createInstance();
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
 		addTerminologyObjects();
 		addRules();
-		session = SessionFactory.createSession(kbm.getKnowledgeBase());
+		session = SessionFactory.createSession(kb);
 	}
 
 	private static void addTerminologyObjects() {
@@ -83,35 +85,35 @@ public class HeuristicSolutionDerivationTest {
 		String exhaustFumes = "Exhaust fumes";
 		String[] exhaustFumesAlternatives = new String[] {
 				"black", "blue", "invisible" };
-		kbm.createQuestionOC(exhaustFumes, kbm.getKnowledgeBase().getRootQASet(),
+		new QuestionOC(kb.getRootQASet(), exhaustFumes,
 				exhaustFumesAlternatives);
 
 		// Question 'Fuel'
 		String fuel = "Fuel";
 		String[] fuelAlternatives = new String[] {
 				"diesel", "unleaded gasoline" };
-		kbm.createQuestionOC(fuel, kbm.getKnowledgeBase().getRootQASet(),
+		new QuestionOC(kb.getRootQASet(), fuel,
 				fuelAlternatives);
 
 		// Solution 'Clogged air filter'
-		kbm.createSolution("Clogged air filter");
+		new Solution(kb.getRootSolution(), "Clogged air filter");
 	}
 
 	private static void addRules() {
 
-		Solution cloggedAirFilter = kbm.getKnowledgeBase().getManager().searchSolution(
+		Solution cloggedAirFilter = kb.getManager().searchSolution(
 				"Clogged air filter");
 
 		// Exhaust fumes = black => Clogged air filter = P3
-		Question exhaustFumes = kbm.getKnowledgeBase().getManager().searchQuestion("Exhaust fumes");
-		Value black = KnowledgeBaseManagement.findValue(exhaustFumes, "black");
+		Question exhaustFumes = kb.getManager().searchQuestion("Exhaust fumes");
+		Value black = KnowledgeBaseUtils.findValue(exhaustFumes, "black");
 		Condition condition = new CondEqual(exhaustFumes, black);
 		RuleFactory.createHeuristicPSRule(cloggedAirFilter, Score.P3,
 				condition);
 
 		// Fuel = unleaded gasoline => Clogged air filter = P5
-		Question fuel = kbm.getKnowledgeBase().getManager().searchQuestion("Fuel");
-		Value unleadedGasoline = KnowledgeBaseManagement.findValue(fuel, "unleaded gasoline");
+		Question fuel = kb.getManager().searchQuestion("Fuel");
+		Value unleadedGasoline = KnowledgeBaseUtils.findValue(fuel, "unleaded gasoline");
 		condition = new CondEqual(fuel, unleadedGasoline);
 		RuleFactory.createHeuristicPSRule(cloggedAirFilter, Score.P5,
 				condition);
@@ -121,39 +123,39 @@ public class HeuristicSolutionDerivationTest {
 	public void testTerminlogyObjectExistence() {
 
 		// Question 'Exhaust fumes'
-		Question exhaustFumes = kbm.getKnowledgeBase().getManager().searchQuestion("Exhaust fumes");
+		Question exhaustFumes = kb.getManager().searchQuestion("Exhaust fumes");
 		assertNotNull("Question 'Exhaust fumes' isn't in the Knowledgebase.",
 				exhaustFumes);
 
 		// Values of 'Exhaust fumes'
-		Value black = KnowledgeBaseManagement.findValue(exhaustFumes, "black");
+		Value black = KnowledgeBaseUtils.findValue(exhaustFumes, "black");
 		assertNotNull(
 				"Value 'black' for Question 'Exhaust fumes' isn't in the Knowledgebase",
 				black);
-		Value blue = KnowledgeBaseManagement.findValue(exhaustFumes, "blue");
+		Value blue = KnowledgeBaseUtils.findValue(exhaustFumes, "blue");
 		assertNotNull(
 				"Value 'blue' for Question 'Exhaust fumes' isn't in the Knowledgebase",
 				blue);
-		Value invisible = KnowledgeBaseManagement.findValue(exhaustFumes, "invisible");
+		Value invisible = KnowledgeBaseUtils.findValue(exhaustFumes, "invisible");
 		assertNotNull(
 				"Value 'blue' for Question 'Exhaust fumes' isn't in the Knowledgebase",
 				invisible);
 
 		// Question 'Fuel'
-		Question fuel = kbm.getKnowledgeBase().getManager().searchQuestion("Fuel");
+		Question fuel = kb.getManager().searchQuestion("Fuel");
 		assertNotNull("Question 'Fuel' isn't in the Knowledgebase.", fuel);
 
 		// Values of 'Fuel'
-		Value unleadedGasoline = KnowledgeBaseManagement.findValue(fuel, "unleaded gasoline");
+		Value unleadedGasoline = KnowledgeBaseUtils.findValue(fuel, "unleaded gasoline");
 		assertNotNull(
 				"Value 'unleaded gasoline' for Question 'Fuel' isn't in the Knowledgebase",
 				unleadedGasoline);
-		Value diesel = KnowledgeBaseManagement.findValue(fuel, "diesel");
+		Value diesel = KnowledgeBaseUtils.findValue(fuel, "diesel");
 		assertNotNull("Value 'diesel' for Question 'Fuel' isn't in the Knowledgebase",
 				diesel);
 
 		// Solution 'Clogged air filter'
-		Solution cloggedAirFilter = kbm.getKnowledgeBase().getManager().searchSolution(
+		Solution cloggedAirFilter = kb.getManager().searchSolution(
 				"Clogged air filter");
 		assertNotNull("Solution 'Clogged air filter' isn't in the Knowledgebase",
 				cloggedAirFilter);
@@ -162,12 +164,12 @@ public class HeuristicSolutionDerivationTest {
 	@Test
 	public void testSetValue() {
 
-		Question exhaustFumes = kbm.getKnowledgeBase().getManager().searchQuestion("Exhaust fumes");
-		Question fuel = kbm.getKnowledgeBase().getManager().searchQuestion("Fuel");
-		Solution solution = kbm.getKnowledgeBase().getManager().searchSolution("Clogged air filter");
+		Question exhaustFumes = kb.getManager().searchQuestion("Exhaust fumes");
+		Question fuel = kb.getManager().searchQuestion("Fuel");
+		Solution solution = kb.getManager().searchSolution("Clogged air filter");
 
 		// SET 'Exhaust fumes' = 'black'
-		Value black = KnowledgeBaseManagement.findValue(exhaustFumes, "black");
+		Value black = KnowledgeBaseUtils.findValue(exhaustFumes, "black");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, exhaustFumes,
 						black, PSMethodUserSelected.getInstance(),
@@ -183,7 +185,7 @@ public class HeuristicSolutionDerivationTest {
 				cloggedAirFilterState.hasState(Rating.State.SUGGESTED));
 
 		// SET 'Fuel' = 'unleaded gasoline'
-		Value unleadedGasoline = KnowledgeBaseManagement.findValue(fuel, "unleaded gasoline");
+		Value unleadedGasoline = KnowledgeBaseUtils.findValue(fuel, "unleaded gasoline");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, fuel,
 						unleadedGasoline, PSMethodUserSelected.getInstance(),
@@ -203,13 +205,13 @@ public class HeuristicSolutionDerivationTest {
 	@Test
 	public void testChangeValue() {
 
-		Question fuel = kbm.getKnowledgeBase().getManager().searchQuestion("Fuel");
-		Question exhaustFumes = kbm.getKnowledgeBase().getManager().searchQuestion("Exhaust fumes");
-		Solution cloggedAirFilter = kbm.getKnowledgeBase().getManager().searchSolution(
+		Question fuel = kb.getManager().searchQuestion("Fuel");
+		Question exhaustFumes = kb.getManager().searchQuestion("Exhaust fumes");
+		Solution cloggedAirFilter = kb.getManager().searchSolution(
 				"Clogged air filter");
 
 		// SET 'Fuel' = 'diesel'
-		Value diesel = KnowledgeBaseManagement.findValue(fuel, "diesel");
+		Value diesel = KnowledgeBaseUtils.findValue(fuel, "diesel");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, fuel,
 						diesel, PSMethodUserSelected.getInstance(),
@@ -226,7 +228,7 @@ public class HeuristicSolutionDerivationTest {
 				cloggedAirFilterState.hasState(Rating.State.SUGGESTED));
 
 		// SET 'Exhaust fumes' = 'blue'
-		Value blue = KnowledgeBaseManagement.findValue(exhaustFumes, "blue");
+		Value blue = KnowledgeBaseUtils.findValue(exhaustFumes, "blue");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, exhaustFumes,
 						blue, PSMethodUserSelected.getInstance(),
@@ -245,12 +247,12 @@ public class HeuristicSolutionDerivationTest {
 	@Test
 	public void testSetUndefinedValue() {
 
-		Question exhaustFumes = kbm.getKnowledgeBase().getManager().searchQuestion("Exhaust fumes");
-		Solution cloggedAirFilter = kbm.getKnowledgeBase().getManager().searchSolution(
+		Question exhaustFumes = kb.getManager().searchQuestion("Exhaust fumes");
+		Solution cloggedAirFilter = kb.getManager().searchSolution(
 				"Clogged air filter");
 
 		// SET 'Exhaust fumes' = 'black'
-		Value black = KnowledgeBaseManagement.findValue(exhaustFumes, "black");
+		Value black = KnowledgeBaseUtils.findValue(exhaustFumes, "black");
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(session, exhaustFumes,
 						black, PSMethodUserSelected.getInstance(),

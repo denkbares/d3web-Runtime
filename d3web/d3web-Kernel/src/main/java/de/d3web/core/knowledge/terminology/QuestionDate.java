@@ -52,4 +52,16 @@ public class QuestionDate extends Question {
 		super(kb, name);
 	}
 
+	/**
+	 * Creates a new QuestionDate, adds it to the knowledgebase and to the
+	 * parent. No manual adding of the created object to the kb is needed
+	 * 
+	 * @param parent the parent {@link QASet}
+	 * @param name the name of the new QuestionDate
+	 */
+	public QuestionDate(QASet parent, String name) {
+		this(parent.getKnowledgeBase(), name);
+		parent.addChild(this);
+	}
+
 }
