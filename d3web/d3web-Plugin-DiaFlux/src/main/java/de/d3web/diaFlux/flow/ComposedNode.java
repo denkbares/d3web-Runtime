@@ -49,10 +49,14 @@ public class ComposedNode extends Node {
 		action.undo(session, run, session.getPSMethodInstance(FluxSolver.class));
 	}
 
+	// TODO: vb: rename to getCalledFlowName
+	// TODO: vb: add method getCalledFlow() -> Flow
 	public String getFlowName() {
 		return action.getFlowName();
 	}
 
+	// TODO: vb: rename to getCalledStartNodeName
+	// TODO: vb: add method getCalledStartNode -> StartNode
 	public String getStartNodeName() {
 		return action.getStartNodeName();
 	}

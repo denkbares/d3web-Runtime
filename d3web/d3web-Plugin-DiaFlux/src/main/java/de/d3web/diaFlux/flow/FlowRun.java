@@ -61,6 +61,21 @@ public class FlowRun {
 		return Collections.unmodifiableCollection(activeNodes);
 	}
 
+	public <T> Collection<T> getActiveNodesOfClass(Class<T> clazz) {
+		Collection<T> activeNodes = new HashSet<T>();
+		for (INode node : startNodes) {
+			if (clazz.isInstance(node)) {
+				activeNodes.add(clazz.cast(node));
+			}
+		}
+		for (INode node : nodes) {
+			if (clazz.isInstance(node)) {
+				activeNodes.add(clazz.cast(node));
+			}
+		}
+		return Collections.unmodifiableCollection(activeNodes);
+	}
+
 	public boolean isStartNode(INode node) {
 		return startNodes.contains(node);
 	}

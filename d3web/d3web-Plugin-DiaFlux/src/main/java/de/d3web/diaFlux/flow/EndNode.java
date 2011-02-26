@@ -41,25 +41,20 @@ public class EndNode extends Node {
 
 	@Override
 	public void activate(Session session, FlowRun run) {
-
-		for (INode node : run.getActiveNodes()) {
-			if (node instanceof ComposedNode) {
-				FluxSolver.checkSuccessorsOnActivation(node, run, session);
-			}
+		// TODO: vb: only check nodes calling this sheet by
+		// Flow.getCallingNodes()
+		for (ComposedNode node : run.getActiveNodesOfClass(ComposedNode.class)) {
+			FluxSolver.checkSuccessorsOnActivation(node, run, session);
 		}
-
 	}
 
 	@Override
 	public void deactivate(Session session, FlowRun run) {
-
-		for (INode node : run.getActiveNodes()) {
-			if (node instanceof ComposedNode) {
-				FluxSolver.checkSuccessorsOnDeactivation(node, run, session);
-			}
-
+		// TODO: vb: only check nodes calling this sheet by
+		// Flow.getCallingNodes()
+		for (ComposedNode node : run.getActiveNodesOfClass(ComposedNode.class)) {
+			FluxSolver.checkSuccessorsOnDeactivation(node, run, session);
 		}
-
 	}
 
 }

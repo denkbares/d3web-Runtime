@@ -105,6 +105,7 @@ public class ActionNode extends Node {
 	}
 
 	@Override
+	// TODO: vb: replace method by PSAction.hasChangedValue(...)?
 	public boolean isReevaluate() {
 		return action instanceof ActionSetValue
 				|| action.getClass().getName().equals("cc.d3web.expression.eval.ExpressionAction");

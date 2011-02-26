@@ -37,7 +37,6 @@ public class SnapshotNode extends Node {
 
 	@Override
 	public void activate(Session session, FlowRun run) {
-
 		DiaFluxUtils.getDiaFluxCaseObject(session).registerSnapshot(this, session);
 	}
 

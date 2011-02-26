@@ -61,14 +61,13 @@ public class Flow implements NamedObject {
 	}
 
 	/**
-	 * Checks the consistency of nodes and edges and sets backreference to flwo
+	 * Checks the consistency of nodes and edges and sets backreference to flow
 	 * in nodes
 	 */
 	private void checkFlow() {
 		for (INode node : nodes) {
 			node.setFlow(this);
 		}
-
 	}
 
 	@Override
@@ -92,6 +91,13 @@ public class Flow implements NamedObject {
 		return true;
 	}
 
+	/**
+	 * Returns the name of this slow. The name is intended to be unique inside a
+	 * single knowledge base.
+	 * 
+	 * @return the name of the flow
+	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -116,10 +122,12 @@ public class Flow implements NamedObject {
 		return getNodesOfType(StartNode.class);
 	}
 
+	// TODO: vb: delete this method, it is useless for core funcitonalities
 	public String getOrigin() {
 		return origin;
 	}
 
+	// TODO: vb: delete this method, it is useless for core funcitonalities
 	public void setOrigin(String origin) {
 		this.origin = origin;
 	}
@@ -145,6 +153,8 @@ public class Flow implements NamedObject {
 				+ "@" + Integer.toHexString(hashCode());
 	}
 
+	@Override
+	@Deprecated
 	public String getId() {
 		return id;
 	}
