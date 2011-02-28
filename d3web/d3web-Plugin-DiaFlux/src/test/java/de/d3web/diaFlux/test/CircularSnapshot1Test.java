@@ -36,8 +36,9 @@ public class CircularSnapshot1Test extends AbstractDiaFluxTest {
 	@Test
 	public void testSnapshotSimpleCircle() throws Exception {
 
+		Thread.sleep(2);
 		doFirstCycle();
-
+		Thread.sleep(2);
 		doSecondCycle();
 
 	}
@@ -71,10 +72,12 @@ public class CircularSnapshot1Test extends AbstractDiaFluxTest {
 	@Test
 	public void testSnapCircleTorture() throws Exception {
 
+		Thread.sleep(2);
 		doFirstCycle();
 
 		for (int i = 0; i < TORTURE_LIMIT; i++) {
 
+			Thread.sleep(2);
 			doSecondCycle();
 
 		}
