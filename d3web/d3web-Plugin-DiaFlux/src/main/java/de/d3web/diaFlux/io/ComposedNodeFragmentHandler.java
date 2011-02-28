@@ -61,13 +61,13 @@ public class ComposedNodeFragmentHandler extends
 		Element flowElem = doc.createElement(CallFlowActionFragmentHandler.FLOW_NAME);
 		composedElem.appendChild(flowElem);
 
-		Text flowNameNode = doc.createTextNode(node.getFlowName());
+		Text flowNameNode = doc.createTextNode(node.getCalledFlowName());
 		flowElem.appendChild(flowNameNode);
 
 		Element startNodeElem = doc.createElement(CallFlowActionFragmentHandler.START_NODE_NAME);
 		composedElem.appendChild(startNodeElem);
 
-		Text startNameNode = doc.createTextNode(node.getStartNodeName());
+		Text startNameNode = doc.createTextNode(node.getCalledStartNodeName());
 		startNodeElem.appendChild(startNameNode);
 
 		return nodeElement;

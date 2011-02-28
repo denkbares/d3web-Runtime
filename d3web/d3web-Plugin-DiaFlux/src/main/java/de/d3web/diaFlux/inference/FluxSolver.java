@@ -206,7 +206,7 @@ public class FluxSolver implements PostHookablePSMethod {
 
 			for (INode node : knowledge) {
 				for (FlowRun run : DiaFluxUtils.getDiaFluxCaseObject(session).getRuns()) {
-					if (run.isActive(node) && node.isReevaluate()) {
+					if (run.isActive(node) && node.isReevaluate(session)) {
 						activate(session, node, run);
 					}
 				}
@@ -254,7 +254,7 @@ public class FluxSolver implements PostHookablePSMethod {
 			deactivate(session, end, flowRun);
 			// do not remove it, when it has an active snapshot in it
 			Flow subflow = DiaFluxUtils.getFlowSet(session).getByName(
-					((ComposedNode) end).getFlowName());
+					((ComposedNode) end).getCalledFlowName());
 			for (INode n : subflow.getNodes()) {
 				if (n instanceof SnapshotNode && flowRun.isActive(n)) {
 					return;
@@ -474,7 +474,7 @@ public class FluxSolver implements PostHookablePSMethod {
 		Flow calledFlow = child.getFlow();
 		for (INode node : allNodes) {
 			if (node instanceof ComposedNode) {
-				String calledFlowname = ((ComposedNode) node).getFlowName();
+				String calledFlowname = ((ComposedNode) node).getCalledFlowName();
 				if (calledFlow.getName().equals(calledFlowname)) {
 					result.add(node);
 					computeParentsRecursive(node, result, allNodes);
@@ -561,7 +561,7 @@ public class FluxSolver implements PostHookablePSMethod {
 			if (node instanceof ComposedNode) {
 				ComposedNode cn = (ComposedNode) node;
 				Flow subflow = DiaFluxUtils.getFlowSet(session).getByName(
-						cn.getFlowName());
+						cn.getCalledFlowName());
 				for (INode child : children) {
 					if (subflow.getNodes().contains(child)
 							&& (hasIncomingActivation(cn, oldrun, session) || hasNotLeftStartNode(

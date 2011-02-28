@@ -146,7 +146,7 @@ public abstract class Node implements INode {
 	}
 
 	@Override
-	public boolean isReevaluate() {
+	public boolean isReevaluate(Session session) {
 		return false;
 	}
 

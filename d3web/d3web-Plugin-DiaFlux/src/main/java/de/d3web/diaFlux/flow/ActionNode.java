@@ -23,7 +23,6 @@ package de.d3web.diaFlux.flow;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.abstraction.ActionSetValue;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -105,10 +104,8 @@ public class ActionNode extends Node {
 	}
 
 	@Override
-	// TODO: vb: replace method by PSAction.hasChangedValue(...)?
-	public boolean isReevaluate() {
-		return action instanceof ActionSetValue
-				|| action.getClass().getName().equals("cc.d3web.expression.eval.ExpressionAction");
+	public boolean isReevaluate(Session session) {
+		return action.hasChangedValue(session);
 	}
 
 	@Override

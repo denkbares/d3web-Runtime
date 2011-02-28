@@ -145,8 +145,9 @@ public interface INode {
 	 * knowledge. Nodes containing e.g. calculations have to return true
 	 * 
 	 * @created 10.12.2010
+	 * @param session
 	 * @return true if the node should be reevaluated
 	 */
-	boolean isReevaluate();
+	boolean isReevaluate(Session session);
 
 }

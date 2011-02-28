@@ -114,7 +114,7 @@ public final class DiaFluxUtils {
 
 			if (node instanceof ComposedNode) {
 
-				String flowName = ((ComposedNode) node).getFlowName();
+				String flowName = ((ComposedNode) node).getCalledFlowName();
 
 				for (IEdge edge : node.getOutgoingEdges()) {
 

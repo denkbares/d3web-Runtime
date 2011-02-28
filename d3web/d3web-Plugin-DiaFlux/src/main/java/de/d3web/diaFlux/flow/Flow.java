@@ -122,16 +122,6 @@ public class Flow implements NamedObject {
 		return getNodesOfType(StartNode.class);
 	}
 
-	// TODO: vb: delete this method, it is useless for core funcitonalities
-	public String getOrigin() {
-		return origin;
-	}
-
-	// TODO: vb: delete this method, it is useless for core funcitonalities
-	public void setOrigin(String origin) {
-		this.origin = origin;
-	}
-
 	public List<EndNode> getExitNodes() {
 		return getNodesOfType(EndNode.class);
 	}
