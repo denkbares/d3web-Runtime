@@ -60,24 +60,7 @@ import de.d3web.core.session.values.Unknown;
  */
 public final class KnowledgeBaseUtils {
 
-	private KnowledgeBase knowledgeBase;
-
-	private KnowledgeBaseUtils(KnowledgeBase k) {
-		knowledgeBase = k;
-	}
-
-	/**
-	 * @deprecated use KnowledgeBase in all methods of all classes and
-	 *             interfaces
-	 */
-	@Deprecated
-	public static KnowledgeBaseUtils createInstance() {
-		KnowledgeBase theKnowledge = createKnowledgeBase();
-		return new KnowledgeBaseUtils(theKnowledge);
-	}
-
-	public void clearKnowledgeBase() {
-		this.knowledgeBase = createKnowledgeBase();
+	private KnowledgeBaseUtils() {
 	}
 
 	/**
@@ -218,10 +201,6 @@ public final class KnowledgeBaseUtils {
 		else {
 			return UndefinedValue.getInstance();
 		}
-	}
-
-	public KnowledgeBase getKnowledgeBase() {
-		return knowledgeBase;
 	}
 
 	/**
