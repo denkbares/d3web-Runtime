@@ -81,7 +81,7 @@ public class DiaFluxCaseObject extends SessionObject {
 	}
 
 	public Set<SnapshotNode> getRegisteredSnapshots() {
-		return Collections.unmodifiableSet(snapshotNodes);
+		return Collections.unmodifiableSet(new HashSet<SnapshotNode>(this.snapshotNodes));
 	}
 
 	public void clearRegisteredSnapshots() {
