@@ -64,13 +64,13 @@ public class ActionNode extends Node {
 			Fact interviewFact = session.getBlackboard().getInterviewFact(question, psMethod);
 			Fact valueFact = session.getBlackboard().getValueFact(question);
 
-			if (valueFact == null) {
-				return true;
+			if (valueFact == null || interviewFact == null) {
+				return false;
 			}
 
 			long indicationTime = interviewFact.getTime();
 			long valueTime = valueFact.getTime();
-			return valueTime >= indicationTime;
+			return valueTime > indicationTime;
 		}
 		else {
 			return super.canFireEdges(session);

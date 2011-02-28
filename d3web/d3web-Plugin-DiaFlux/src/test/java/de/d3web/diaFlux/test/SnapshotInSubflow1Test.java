@@ -79,8 +79,9 @@ public class SnapshotInSubflow1Test extends AbstractDiaFluxTest {
 	@Test
 	public void testSnapshotReachedSecondTime() throws Exception {
 
+		Thread.sleep(2);
 		doFirstCycle();
-
+		Thread.sleep(2);
 		doSecondCycle();
 
 	}
@@ -106,6 +107,7 @@ public class SnapshotInSubflow1Test extends AbstractDiaFluxTest {
 		doFirstCycle();
 
 		for (int i = 0; i < TORTURE_LIMIT; i++) {
+			Thread.sleep(2);
 			doSecondCycle();
 		}
 

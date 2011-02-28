@@ -20,8 +20,6 @@
 
 package de.d3web.diaFlux.flow;
 
-import de.d3web.core.session.Session;
-import de.d3web.diaFlux.inference.DiaFluxUtils;
 
 /**
  * 
@@ -33,16 +31,6 @@ public class SnapshotNode extends Node {
 
 	public SnapshotNode(String id, String name) {
 		super(id, name);
-	}
-
-	@Override
-	public void activate(Session session, FlowRun run) {
-		DiaFluxUtils.getDiaFluxCaseObject(session).registerSnapshot(this, session);
-	}
-
-	@Override
-	public void deactivate(Session session, FlowRun run) {
-		DiaFluxUtils.getDiaFluxCaseObject(session).unregisterSnapshot(this, session);
 	}
 
 }

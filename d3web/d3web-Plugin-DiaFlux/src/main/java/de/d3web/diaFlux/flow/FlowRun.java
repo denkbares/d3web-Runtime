@@ -38,8 +38,31 @@ public class FlowRun {
 		this.startNodes = new HashSet<INode>();
 	}
 
+	/**
+	 * Returns if the node is active within this flow run. Active means the node
+	 * is either a start node or has been activated during the flow run.
+	 * 
+	 * @created 28.02.2011
+	 * @param node the node to be checked to be active
+	 * @return if the node is active
+	 */
 	public boolean isActive(INode node) {
 		return nodes.contains(node) || startNodes.contains(node);
+	}
+
+	/**
+	 * Returns if the node has been activated by propagation within this flow
+	 * run. this means that the node has got an incoming edge in this flow run.
+	 * Please note that {@link #isActive(INode)} also returns true for start
+	 * nodes, regardless wether they have incoming active edges, while this
+	 * method does not.
+	 * 
+	 * @created 28.02.2011
+	 * @param node the node to be checked to be activated
+	 * @return if the node is activated
+	 */
+	public boolean isActivated(INode node) {
+		return nodes.contains(node);
 	}
 
 	public boolean add(INode node) {
@@ -61,6 +84,15 @@ public class FlowRun {
 		return Collections.unmodifiableCollection(activeNodes);
 	}
 
+	/**
+	 * Return the active nodes of that flow run, that matches the specified
+	 * class (being of this class or a subclass.
+	 * 
+	 * @created 28.02.2011
+	 * @param <T>
+	 * @param clazz the class for the nodes
+	 * @return the active nodes
+	 */
 	public <T> Collection<T> getActiveNodesOfClass(Class<T> clazz) {
 		Collection<T> activeNodes = new HashSet<T>();
 		for (INode node : startNodes) {
@@ -68,6 +100,27 @@ public class FlowRun {
 				activeNodes.add(clazz.cast(node));
 			}
 		}
+		for (INode node : nodes) {
+			if (clazz.isInstance(node)) {
+				activeNodes.add(clazz.cast(node));
+			}
+		}
+		return Collections.unmodifiableCollection(activeNodes);
+	}
+
+	/**
+	 * Return the activated nodes of that flow run, that matches the specified
+	 * class (being of this class or a subclass. Activated nodes are those notes
+	 * that have active incoming edges, regardless if they are start nodes or
+	 * not.
+	 * 
+	 * @created 28.02.2011
+	 * @param <T>
+	 * @param clazz the class for the nodes
+	 * @return the activated nodes
+	 */
+	public <T> Collection<T> getActivatedNodesOfClass(Class<T> clazz) {
+		Collection<T> activeNodes = new HashSet<T>();
 		for (INode node : nodes) {
 			if (clazz.isInstance(node)) {
 				activeNodes.add(clazz.cast(node));

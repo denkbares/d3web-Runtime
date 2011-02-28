@@ -129,6 +129,7 @@ public class WaitTest {
 
 		// creating global flow
 		INode start = FF.createStartNode("Start", "Start");
+		INode start2 = FF.createStartNode("Start2", "Start2");
 		ActionSetValue actionSetValue = new ActionSetValue();
 		actionSetValue.setQuestion(time);
 		actionSetValue.setValue(new NumValue(0));
@@ -137,9 +138,10 @@ public class WaitTest {
 		INode primary = FF.createComposedNode("primary", "primaryFlow", "startPrimary");
 		INode loop = FF.createComposedNode("loop", "loopFlow", "loopstart");
 		IEdge e13 = FF.createEdge("e13", start, setTime, ConditionTrue.INSTANCE);
-		IEdge e14 = FF.createEdge("e14", setTime, loop, ConditionTrue.INSTANCE);
 		IEdge e17 = FF.createEdge("e17", setTime, primary, ConditionTrue.INSTANCE);
-		Flow global = FF.createFlow("Main", "Main", Arrays.asList(start, primary, loop, setTime),
+		IEdge e14 = FF.createEdge("e14", start2, loop, ConditionTrue.INSTANCE);
+		Flow global = FF.createFlow("Main", "Main",
+				Arrays.asList(start, primary, loop, setTime, start2),
 				Arrays.asList(e13, e14, e17));
 		global.setAutostart(true);
 		DiaFluxUtils.addFlow(global, kb);
@@ -148,6 +150,13 @@ public class WaitTest {
 	@Test
 	public void test() {
 		Session session = SessionFactory.createSession(kb);
+		// commit some times due to cycle elemination (each cycle is propagated
+		// not more than once per propagation frame
+		long now = System.currentTimeMillis();
+		for (int i = 0; i < 10; i++) {
+			session.getPropagationManager().openPropagation(now + i);
+			session.getPropagationManager().commitPropagation();
+		}
 		NumValue value = (NumValue) session.getBlackboard().getValue(time);
 		Assert.assertEquals(20.0, value.getDouble().doubleValue(), 0.001);
 	}
