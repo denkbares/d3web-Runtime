@@ -78,21 +78,14 @@ public class DiaFluxPersistenceTest {
 		PersistenceManager.getInstance().save(createdKB, file);
 
 		kb = PersistenceManager.getInstance().load(file);
-
 		session = SessionFactory.createSession(kb);
 
-		System.out.println(createdKB.equals(kb));
-
 		FlowSet loadedFlowSet = DiaFluxUtils.getFlowSet(kb);
-
 		FlowSet createdFlowSet = DiaFluxUtils.getFlowSet(createdKB);
-
-		System.out.println(loadedFlowSet.equals(createdFlowSet));
 
 		System.out.println("Created: " + createdFlowSet);
 		System.out.println();
 		System.out.println("Loaded: " + loadedFlowSet);
-
 	}
 
 	@Test

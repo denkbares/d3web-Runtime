@@ -26,7 +26,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.KnowledgeKind;
@@ -67,12 +66,6 @@ public class FluxSolver implements PostHookablePSMethod {
 	public final static KnowledgeKind<NodeList> BACKWARD = new KnowledgeKind<NodeList>(
 			"FLUXSOLVER.BACKWARD", NodeList.class);
 
-	public static final Level LEVEL = Level.INFO;
-
-	static {
-		Logger.getLogger(FluxSolver.class.getName()).setLevel(LEVEL);
-	}
-
 	public FluxSolver() {
 	}
 
@@ -83,7 +76,7 @@ public class FluxSolver implements PostHookablePSMethod {
 			return;
 		}
 
-		Logger.getLogger(FluxSolver.class.getName()).info(
+		Logger.getLogger(FluxSolver.class.getName()).fine(
 				"Initing FluxSolver with case: " + session);
 
 		try {
@@ -122,7 +115,7 @@ public class FluxSolver implements PostHookablePSMethod {
 			return;
 		}
 
-		Logger.getLogger(FluxSolver.class.getName()).info(
+		Logger.getLogger(FluxSolver.class.getName()).fine(
 				"Start propagating: " + changes);
 
 		for (PropagationEntry propagationEntry : changes) {
@@ -196,7 +189,7 @@ public class FluxSolver implements PostHookablePSMethod {
 				}
 			}
 		}
-		Logger.getLogger(FluxSolver.class.getName()).info("Finished propagating.");
+		Logger.getLogger(FluxSolver.class.getName()).fine("Finished propagating.");
 
 	}
 
@@ -343,7 +336,7 @@ public class FluxSolver implements PostHookablePSMethod {
 			FlowRun run = new FlowRun();
 			run.addStartNode(snapshotNode);
 			Collection<INode> snappyNode =
-					getActiveNodesLeadingToSnapshopNode(snapshotNode, caseObject);
+					getActiveNodesLeadingToSnapshopNode(snapshotNode, snappyFlows.keySet());
 			addParentsToStartNodes(run, snapshotNode, snappyNode, session);
 			newRuns.add(run);
 			// inform the flux solver that this snapshot node has been
@@ -385,9 +378,9 @@ public class FluxSolver implements PostHookablePSMethod {
 	 * @param caseObject the case object of this session
 	 * @return the list of active snapshots
 	 */
-	private Collection<INode> getActiveNodesLeadingToSnapshopNode(SnapshotNode snapshotNode, DiaFluxCaseObject caseObject) {
+	private Collection<INode> getActiveNodesLeadingToSnapshopNode(SnapshotNode snapshotNode, Collection<FlowRun> snapshotFlows) {
 		Collection<INode> result = new HashSet<INode>();
-		for (FlowRun run : caseObject.getRuns()) {
+		for (FlowRun run : snapshotFlows) {
 			if (run.isActivated(snapshotNode)) {
 				result.addAll(run.getActiveNodes());
 			}
