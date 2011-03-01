@@ -21,6 +21,7 @@
 package de.d3web.diaFlux.inference;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -330,14 +331,24 @@ public class FluxSolver implements PostHookablePSMethod {
 				enteredSnapshots,
 				caseObject);
 
+		// we clear the current trace if the last snapshot is out-dated.
+		// we do not if the propagation time is still the same (so we are in the
+		// same propagation cycle from the users perspective)
+		Date lastTime = caseObject.getLatestSnaphotTime();
+		long thisTime = session.getPropagationManager().getPropagationTime();
+		if (lastTime == null || lastTime.getTime() < thisTime) {
+			caseObject.clearTrace();
+		}
+
 		// Calculate new flow runs (before changing anything in the session)
 		Collection<FlowRun> newRuns = new HashSet<FlowRun>();
 		for (SnapshotNode snapshotNode : enteredSnapshots) {
 			FlowRun run = new FlowRun();
 			run.addStartNode(snapshotNode);
-			Collection<INode> snappyNode =
+			Collection<INode> snappyNodes =
 					getActiveNodesLeadingToSnapshopNode(snapshotNode, snappyFlows.keySet());
-			addParentsToStartNodes(run, snapshotNode, snappyNode, session);
+			traceNodesAndEdges(session, caseObject, snappyNodes);
+			addParentsToStartNodes(run, snapshotNode, snappyNodes, session);
 			newRuns.add(run);
 			// inform the flux solver that this snapshot node has been
 			// snapshoted
@@ -367,6 +378,27 @@ public class FluxSolver implements PostHookablePSMethod {
 			}
 		}
 
+	}
+
+	/**
+	 * Traces the Nodes and active outgoing Edges if trace mode is enabled.
+	 * 
+	 * @created 01.03.2011
+	 * @param session the current session
+	 * @param caseObject to flux solver data
+	 * @param snappyNodes the active nodes to be traced
+	 */
+	private void traceNodesAndEdges(Session session, DiaFluxCaseObject caseObject, Collection<INode> tracedNodes) {
+		if (!DiaFluxCaseObject.isTraceMode()) return;
+
+		for (INode node : tracedNodes) {
+			caseObject.traceNodes(node);
+			for (IEdge edge : node.getOutgoingEdges()) {
+				if (evalEdge(session, edge)) {
+					caseObject.traceEdges(edge);
+				}
+			}
+		}
 	}
 
 	/**

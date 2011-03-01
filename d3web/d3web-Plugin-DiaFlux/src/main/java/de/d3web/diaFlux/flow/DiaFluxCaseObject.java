@@ -22,6 +22,7 @@ package de.d3web.diaFlux.flow;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -42,9 +43,118 @@ public class DiaFluxCaseObject extends SessionObject {
 	private final List<FlowRun> runs;
 	private final Map<SnapshotNode, Long> latestSnapshotTime = new HashMap<SnapshotNode, Long>();
 
+	// fields for trace mode
+	private static boolean traceMode = false;
+	private final Collection<INode> tracedActiveNodes = new HashSet<INode>();
+	private final Collection<IEdge> tracedActiveEdges = new HashSet<IEdge>();
+
 	public DiaFluxCaseObject(CaseObjectSource theSourceObject) {
 		super(theSourceObject);
 		this.runs = new ArrayList<FlowRun>();
+	}
+
+	/**
+	 * Enables/disables the trace mode of the flux solver. The trace mode
+	 * records information about the state before the last snapshot has been
+	 * taken.
+	 * 
+	 * @created 01.03.2011
+	 * @param traceMode the new trace mode state
+	 */
+	public static void setTraceMode(boolean traceMode) {
+		DiaFluxCaseObject.traceMode = traceMode;
+	}
+
+	/**
+	 * Returns if the flux solver is in trace mode, recording information about
+	 * the state before the last snapshot has been taken.
+	 * 
+	 * @created 01.03.2011
+	 * @return if the flux solver is in trace mode
+	 */
+	public static boolean isTraceMode() {
+		return traceMode;
+	}
+
+	/**
+	 * Clears the trace. All traced information about the last snapshot taken
+	 * will be forgotten after this call.
+	 * 
+	 * @created 01.03.2011
+	 */
+	public void clearTrace() {
+		this.tracedActiveNodes.clear();
+		this.tracedActiveEdges.clear();
+	}
+
+	/**
+	 * Adds a set of edges to the traced edges before the snapshot will be
+	 * taken. The traced information are intended to describe the state before
+	 * the last snapshot has been taken.
+	 * 
+	 * @created 01.03.2011
+	 * @param edges the edges to be added.
+	 */
+	public void traceEdges(Collection<IEdge> edges) {
+		this.tracedActiveEdges.addAll(edges);
+	}
+
+	/**
+	 * Adds a set of edges to the traced edges before the snapshot will be
+	 * taken. The traced information are intended to describe the state before
+	 * the last snapshot has been taken.
+	 * 
+	 * @created 01.03.2011
+	 * @param edges the edges to be added.
+	 */
+	public void traceEdges(IEdge... edges) {
+		Collections.addAll(this.tracedActiveEdges, edges);
+	}
+
+	/**
+	 * Adds a set of nodes to the traced nodes before the snapshot will be
+	 * taken. The traced information are intended to describe the state before
+	 * the last snapshot has been taken.
+	 * 
+	 * @created 01.03.2011
+	 * @param nodes the ndoes to be added.
+	 */
+	public void traceNodes(Collection<INode> nodes) {
+		this.tracedActiveNodes.addAll(nodes);
+	}
+
+	/**
+	 * Adds a set of nodes to the traced nodes before the snapshot will be
+	 * taken. The traced information are intended to describe the state before
+	 * the last snapshot has been taken.
+	 * 
+	 * @created 01.03.2011
+	 * @param nodes the nodes to be added.
+	 */
+	public void traceNodes(INode... nodes) {
+		Collections.addAll(this.tracedActiveNodes, nodes);
+	}
+
+	/**
+	 * Returns the set of traced edges. These are the active edges before the
+	 * snapshot has been taken.
+	 * 
+	 * @created 01.03.2011
+	 * @return the traced edges
+	 */
+	public Collection<IEdge> getTracedEdges() {
+		return Collections.unmodifiableCollection(this.tracedActiveEdges);
+	}
+
+	/**
+	 * Returns the set of traced nodes. These are the active nodes before the
+	 * snapshot has been taken.
+	 * 
+	 * @created 01.03.2011
+	 * @return the traced nodes
+	 */
+	public Collection<INode> getTracedNodes() {
+		return Collections.unmodifiableCollection(this.tracedActiveNodes);
 	}
 
 	/**
@@ -59,6 +169,24 @@ public class DiaFluxCaseObject extends SessionObject {
 	public void snapshotDone(SnapshotNode node, Session session) {
 		long time = session.getPropagationManager().getPropagationTime();
 		this.latestSnapshotTime.put(node, new Long(time));
+	}
+
+	/**
+	 * Returns the latest (most recent) time a snapshot has been taken. If no
+	 * snapshot has been taken yet, null is returned.
+	 * 
+	 * @created 01.03.2011
+	 * @return the most recent snapshot time
+	 */
+	public Date getLatestSnaphotTime() {
+		Collection<Long> values = this.latestSnapshotTime.values();
+		if (values.isEmpty()) return null;
+
+		long maxTime = Long.MIN_VALUE;
+		for (Long time : values) {
+			maxTime = Math.max(maxTime, time.longValue());
+		}
+		return new Date(maxTime);
 	}
 
 	private boolean snapshotAllowed(SnapshotNode node, Session session) {
