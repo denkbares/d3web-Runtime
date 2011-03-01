@@ -257,4 +257,15 @@ class FactAggregator {
 		Fact fact = getMergedFact();
 		return "[FactAggregator " + (fact != null ? fact.getValue() : "null") + "]";
 	}
+
+	public Fact getFact(PSMethod psmethod, Object source) {
+		Iterator<Fact> iterator = facts.iterator();
+		while (iterator.hasNext()) {
+			Fact fact = iterator.next();
+			if (source.equals(fact.getSource()) && psmethod.equals(fact.getPSMethod())) {
+				return fact;
+			}
+		}
+		return null;
+	}
 }

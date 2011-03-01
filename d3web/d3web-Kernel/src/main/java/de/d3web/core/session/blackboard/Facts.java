@@ -46,7 +46,7 @@ public final class Facts {
 	/**
 	 * A Comparator for sorting Facts in ascending order of their time stamps
 	 */
-	public static Comparator<Fact> TIMECOMPARATOR = new Comparator<Fact>() {
+	public final static Comparator<Fact> TIMECOMPARATOR = new Comparator<Fact>() {
 
 		@Override
 		public int compare(Fact o1, Fact o2) {
@@ -80,7 +80,7 @@ public final class Facts {
 			}
 			// otherwise maximize the rating
 			if (maxFact == null
-					|| rating.compareTo((Rating) maxFact.getValue()) > 0) {
+					|| rating.compareTo(maxFact.getValue()) > 0) {
 				maxFact = fact;
 			}
 		}
@@ -128,7 +128,7 @@ public final class Facts {
 			}
 			// otherwise maximize the rating
 			if (maxFact == null
-					|| factValue.compareTo((Indication) maxFact.getValue()) > 0) {
+					|| factValue.compareTo(maxFact.getValue()) > 0) {
 				maxFact = fact;
 			}
 		}
@@ -207,7 +207,7 @@ public final class Facts {
 		Fact[] filteredFacts = filterFactsForSourceSolvers(facts);
 		if (filteredFacts.length == 1) return filteredFacts[0];
 		for (Fact fact : filteredFacts) {
-			Value value = (Value) fact.getValue();
+			Value value = fact.getValue();
 			long time = fact.getTime();
 
 			resultTime = Math.max(time, resultTime);

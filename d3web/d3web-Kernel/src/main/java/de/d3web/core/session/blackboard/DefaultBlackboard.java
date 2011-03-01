@@ -256,6 +256,12 @@ public class DefaultBlackboard implements Blackboard {
 	}
 
 	@Override
+	public Value getValue(ValueObject object, PSMethod psmethod, Object source) {
+		return getValueFromFact(object,
+				valueStorage.getAggregator(object).getFact(psmethod, source));
+	}
+
+	@Override
 	public Indication getIndication(InterviewObject interviewElement) {
 		Fact fact = getInterviewFact(interviewElement);
 		return getValueFromFact(interviewElement, fact);

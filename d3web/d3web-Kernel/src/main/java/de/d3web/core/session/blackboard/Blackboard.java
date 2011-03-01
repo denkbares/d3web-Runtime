@@ -204,6 +204,16 @@ public interface Blackboard {
 	public Value getValue(ValueObject object, PSMethod psmethod);
 
 	/**
+	 * Returns the Value of a {@link ValueObject}, calculated by the specified
+	 * source
+	 * 
+	 * @param object {@link ValueObject}
+	 * @param source
+	 * @return Value
+	 */
+	public Value getValue(ValueObject object, PSMethod psmethod, Object source);
+
+	/**
 	 * Returns the Value of a Solution, calculated by the specified psmethod
 	 * 
 	 * @param solution Solution

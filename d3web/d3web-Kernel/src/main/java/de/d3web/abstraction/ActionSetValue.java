@@ -120,7 +120,7 @@ public class ActionSetValue extends PSAction {
 	 */
 	@Override
 	public void doIt(Session session, Object source, PSMethod psmethod) {
-		Value oldValue = session.getBlackboard().getValue(getQuestion());
+		Value oldValue = session.getBlackboard().getValue(getQuestion(), psmethod, source);
 		if (getValue() != null) {
 			Value tempVal;
 			if (getValue() instanceof FormulaElement) {

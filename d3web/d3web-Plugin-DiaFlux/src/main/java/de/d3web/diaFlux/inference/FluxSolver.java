@@ -66,7 +66,7 @@ public class FluxSolver implements PostHookablePSMethod {
 			"FLUXSOLVER.FORWARD", EdgeMap.class);
 	public final static KnowledgeKind<NodeList> BACKWARD = new KnowledgeKind<NodeList>(
 			"FLUXSOLVER.BACKWARD", NodeList.class);
-
+	
 	public FluxSolver() {
 	}
 

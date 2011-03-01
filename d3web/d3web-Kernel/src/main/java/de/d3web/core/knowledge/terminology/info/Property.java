@@ -193,8 +193,7 @@ public class Property<T> {
 		}
 		// this cast is save due to the test before
 		// thus we can accept the @SuppressWarnings("unchecked")
-		Property<StoreageType> typedProperty = (Property<StoreageType>) property;
-		return typedProperty;
+		return (Property<StoreageType>) property;
 	}
 
 	/**

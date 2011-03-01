@@ -36,7 +36,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
  */
 public class DateHandler implements FragmentHandler {
 
-	private String ELEMENT_NAME = "Date";
+	private final static String ELEMENT_NAME = "Date";
 	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
 
 	@Override
