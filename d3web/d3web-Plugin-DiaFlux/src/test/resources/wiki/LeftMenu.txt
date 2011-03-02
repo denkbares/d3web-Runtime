@@ -8,6 +8,7 @@ __Snapshot__\\
 [SnapshotAfterSubflow1Test]\\
 [SnapshotInSubflow1Test]\\
 [MultipleSnapshots1Test]\\
+[EndlessCircleTest]
 
 __General__\\
 [AutostartTest]\\

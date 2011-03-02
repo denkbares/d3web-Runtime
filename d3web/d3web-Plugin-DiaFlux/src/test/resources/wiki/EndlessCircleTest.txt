@@ -1,0 +1,78 @@
+[{KnowWEPlugin quickInterview}]
+
+%%Question
+QContainer
+-Question[num]
+-Dummy[oc]
+--next
+@package: circle
+%
+
+%%KnowledgeBase 
+  @uses: circle
+%
+
+%%DiaFlux
+<flowchart fcid="flow_0610818f" name="EndlessCircleFlow" icon="sanduhr.gif" width="750" height="170" autostart="true" idCounter="19">
+
+	<!-- nodes of the flowchart -->
+	<node fcid="#node_2">
+		<position left="26" top="46"></position>
+		<start>Start</start>
+	</node>
+
+	<node fcid="#node_6">
+		<position left="417" top="31"></position>
+		<snapshot>Snapshot</snapshot>
+	</node>
+
+	<node fcid="#node_9">
+		<position left="125" top="35"></position>
+		<action markup="KnOffice">"Question" = (5)</action>
+	</node>
+
+	<node fcid="#node_12">
+		<position left="357" top="121"></position>
+		<action markup="KnOffice">"Question" = ((Question + 10))</action>
+	</node>
+
+	<node fcid="#node_16">
+		<position left="295" top="31"></position>
+		<comment>Comment</comment>
+	</node>
+
+
+	<!-- rules of the flowchart -->
+	<edge fcid="#rule_10">
+		<origin>#node_2</origin>
+		<target>#node_9</target>
+	</edge>
+
+	<edge fcid="#rule_13">
+		<origin>#node_6</origin>
+		<target>#node_12</target>
+	</edge>
+
+	<edge fcid="#rule_17">
+		<origin>#node_9</origin>
+		<target>#node_16</target>
+	</edge>
+
+	<edge fcid="#rule_18">
+		<origin>#node_16</origin>
+		<target>#node_6</target>
+	</edge>
+
+	<edge fcid="#rule_19">
+		<origin>#node_12</origin>
+		<target>#node_16</target>
+	</edge>
+
+	<preview mimetype="text/html">
+		<![CDATA[
+<DIV class="Flowchart" style=" width: 753px; height: 173px;"><DIV class="Node" id="#node_2" style="left: 26px;top: 46px; width: 75px; height: 20px;"><DIV class="start" style=" width: 62px; height: 20px;"><DIV class="decorator" style=" width: 20px; height: 20px;"></DIV><DIV class="title" style=" width: 60px; height: 15px;">Start</DIV></DIV></DIV><DIV class="Node" id="#node_6" style="left: 417px;top: 31px; width: 75px; height: 20px;"><DIV class="snapshot" style=" width: 62px; height: 20px;"><DIV class="decorator" style=" width: 20px; height: 20px;"></DIV><DIV class="title" style=" width: 60px; height: 15px;">Snapshot</DIV></DIV></DIV><DIV class="Node" id="#node_12" style="left: 357px;top: 121px; width: 117px; height: 42px;"><DIV class="action" style=" width: 104px; height: 42px;"><DIV class="decorator" style=" width: 20px; height: 20px;"></DIV><DIV class="ActionPane" style=" width: 102px; height: 38px;"><DIV class="object" style=" width: 102px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 15px;"><IMG src="cc/image/kbinfo/num.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>Question</DIV><DIV class="value" style=" width: 102px; height: 19px;">= (Question + 10)</DIV></DIV></DIV></DIV><DIV class="Rule" id="#rule_10" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="h_line" style="position: absolute;left: 101px;top: 56px;overflow: visible; width: 24px; height: 1px;"><DIV class="arrow_right" style=" width: 6px; height: 5px;"></DIV></DIV><DIV style="position: absolute;left: 101px;top: 56px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 3px; width: 0px; height: 0px;"><DIV class="GuardPane" style=" width: 0px; height: 0px;"><DIV style=" width: 0px; height: 0px;">  </DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 98px;top: 53px;overflow: hidden; width: 30px; height: 7px;"></DIV></DIV></DIV><DIV class="Node" id="#node_9" style="left: 125px;top: 35px; width: 95px; height: 42px;"><DIV class="action" style=" width: 82px; height: 42px;"><DIV class="decorator" style=" width: 20px; height: 20px;"></DIV><DIV class="ActionPane" style=" width: 80px; height: 38px;"><DIV class="object" style=" width: 80px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 15px;"><IMG src="cc/image/kbinfo/num.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>Question</DIV><DIV class="value" style=" width: 80px; height: 19px;">= 5</DIV></DIV></DIV></DIV><DIV class="Node" id="#node_16" style="left: 295px;top: 31px; width: 75px; height: 20px;"><DIV class="comment" style=" width: 62px; height: 20px;"><DIV class="decorator" style=" width: 20px; height: 20px;"></DIV><DIV class="title" style=" width: 60px; height: 15px;">Comment</DIV></DIV></DIV><DIV class="Rule" id="#rule_13" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="v_line" style="position: absolute;left: 454px;top: 51px;overflow: visible; width: 1px; height: 70px;"><DIV class="arrow_down" style=" width: 5px; height: 6px;"></DIV></DIV><DIV style="position: absolute;left: 454px;top: 51px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 2px;top: 3px; width: 0px; height: 0px;"><DIV class="GuardPane" style=" width: 0px; height: 0px;"><DIV style=" width: 0px; height: 0px;">  </DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 451px;top: 48px;overflow: hidden; width: 7px; height: 76px;"></DIV></DIV></DIV><DIV class="Rule" id="#rule_17" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="h_line" style="position: absolute;left: 220px;top: 43px;overflow: visible; width: 75px; height: 1px;"><DIV class="arrow_right" style=" width: 6px; height: 5px;"></DIV></DIV><DIV style="position: absolute;left: 220px;top: 43px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 3px; width: 0px; height: 0px;"><DIV class="GuardPane" style=" width: 0px; height: 0px;"><DIV style=" width: 0px; height: 0px;">  </DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 217px;top: 40px;overflow: hidden; width: 81px; height: 7px;"></DIV></DIV></DIV><DIV class="Rule" id="#rule_18" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="h_line" style="position: absolute;left: 370px;top: 41px;overflow: visible; width: 47px; height: 1px;"><DIV class="arrow_right" style=" width: 6px; height: 5px;"></DIV></DIV><DIV style="position: absolute;left: 370px;top: 41px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 3px; width: 0px; height: 0px;"><DIV class="GuardPane" style=" width: 0px; height: 0px;"></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 367px;top: 38px;overflow: hidden; width: 53px; height: 7px;"></DIV></DIV></DIV><DIV class="Rule" id="#rule_19" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="v_line" style="position: absolute;left: 363px;top: 51px;overflow: visible; width: 1px; height: 70px;"><DIV class="arrow_up" style=" width: 5px; height: 6px;"></DIV></DIV><DIV style="position: absolute;left: 363px;top: 120px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 2px;bottom: 3px; width: 0px; height: 0px;"><DIV class="GuardPane" style=" width: 0px; height: 0px;"><DIV style=" width: 0px; height: 0px;">  </DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 360px;top: 48px;overflow: hidden; width: 7px; height: 76px;"></DIV></DIV></DIV></DIV>
+		]]>
+	</preview>
+</flowchart> 
+ @package: circle
+%
