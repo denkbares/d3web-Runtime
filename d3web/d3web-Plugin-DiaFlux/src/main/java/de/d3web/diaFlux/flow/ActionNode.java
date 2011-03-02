@@ -55,7 +55,7 @@ public class ActionNode extends Node {
 	}
 
 	@Override
-	public boolean canFireEdges(Session session) {
+	public boolean canFireEdges(Session session, FlowRun run) {
 		if (action instanceof ActionRepeatedIndication) {
 
 			// TODO check for IOBE, only works for Questions
@@ -73,7 +73,7 @@ public class ActionNode extends Node {
 			return valueTime > indicationTime;
 		}
 		else {
-			return super.canFireEdges(session);
+			return super.canFireEdges(session, run);
 		}
 	}
 

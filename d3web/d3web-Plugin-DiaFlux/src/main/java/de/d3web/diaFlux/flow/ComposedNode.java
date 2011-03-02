@@ -20,8 +20,11 @@
 
 package de.d3web.diaFlux.flow;
 
+import java.util.Collection;
+
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.inference.CallFlowAction;
+import de.d3web.diaFlux.inference.DiaFluxUtils;
 import de.d3web.diaFlux.inference.FluxSolver;
 
 /**
@@ -57,6 +60,24 @@ public class ComposedNode extends Node {
 	// TODO: vb: add method getCalledStartNode -> StartNode
 	public String getCalledStartNodeName() {
 		return action.getStartNodeName();
+	}
+
+	@Override
+	public boolean canFireEdges(Session session, FlowRun run) {
+		// an outgoing edge of the composed node cannot fire
+		// if the composed node's flowchart contains a node that is a
+		// start node (in the flow run).
+		Collection<INode> startNodes = run.getStartNodes();
+		// if we are a start node, we can fire
+		if (startNodes.contains(this)) return true;
+		// only other composed notes using the same flowcharts may be blocked
+		Flow flow = DiaFluxUtils.getFlowSet(session).getByName(action.getFlowName());
+		for (INode node : flow.getNodes()) {
+			if (startNodes.contains(node)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

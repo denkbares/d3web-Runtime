@@ -122,7 +122,7 @@ public abstract class Node implements INode {
 	}
 
 	@Override
-	public boolean canFireEdges(Session session) {
+	public boolean canFireEdges(Session session, FlowRun run) {
 		return true;
 	}
 
@@ -148,11 +148,6 @@ public abstract class Node implements INode {
 	@Override
 	public boolean isReevaluate(Session session) {
 		return false;
-	}
-
-	@Override
-	public void propagate(Session session) {
-
 	}
 
 	@Override

@@ -109,6 +109,9 @@ public interface INode {
 	 * @param session the session
 	 * @return true if the node should be activated, false otherwise
 	 */
+	// TODO: vb: why couldActivate() instead of canActivate() ?
+	// TODO: vb: better specify FlowRun in additon to session, see
+	// canFireEdges()
 	boolean couldActivate(Session session);
 
 	/**
@@ -118,7 +121,7 @@ public interface INode {
 	 * @param session the session
 	 * @return
 	 */
-	boolean canFireEdges(Session session);
+	boolean canFireEdges(Session session, FlowRun run);
 
 	/**
 	 * This method is called during a snapshot. It has to reset this node (TODO
@@ -129,16 +132,6 @@ public interface INode {
 	 * @param snapshotNode the snapshot node that started this snapshot
 	 */
 	void takeSnapshot(Session session, SnapshotNode snapshotNode);
-
-	/**
-	 * This method is called during TMS. It must check the node's support by
-	 * calling {@link INodeData#checkSupport(Session)}. If the node is no longer
-	 * supported, the node must be deactivated.
-	 * 
-	 * @created 07.12.2010
-	 * @param session
-	 */
-	void propagate(Session session);
 
 	/**
 	 * Returns if the node should be re-evaluated on changes in its forward

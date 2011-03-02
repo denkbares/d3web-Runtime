@@ -103,10 +103,9 @@ public class FluxSolver implements PostHookablePSMethod {
 						+ startNode.getFlow().getName() + "'.");
 
 		FlowRun run = new FlowRun();
-
+		run.addStartNode(startNode);
 		DiaFluxUtils.getDiaFluxCaseObject(session).addRun(run);
 		activateNode(startNode, run, session);
-
 	}
 
 	@Override
@@ -142,11 +141,10 @@ public class FluxSolver implements PostHookablePSMethod {
 					INode start = edge.getStartNode();
 					INode end = edge.getEndNode();
 
-					boolean active = evalEdge(session, edge);
 					List<FlowRun> runs = DiaFluxUtils.getDiaFluxCaseObject(session).getRuns();
-
-					if (active) {
-						for (FlowRun flowRun : runs) {
+					for (FlowRun flowRun : runs) {
+						boolean active = evalEdge(session, flowRun, edge);
+						if (active) {
 							// begin node is not active, do nothing
 							if (flowRun.isActive(start)) {
 								// Edge was not active before
@@ -155,9 +153,7 @@ public class FluxSolver implements PostHookablePSMethod {
 								}
 							}
 						}
-					}
-					else {
-						for (FlowRun flowRun : runs) {
+						else {
 							if (flowRun.isActivated(end)) {
 								boolean support = checkSupport(session, end, flowRun);
 								if (!support) {
@@ -165,11 +161,8 @@ public class FluxSolver implements PostHookablePSMethod {
 								}
 							}
 						}
-
 					}
-
 				}
-
 			}
 		}
 
@@ -204,7 +197,7 @@ public class FluxSolver implements PostHookablePSMethod {
 	public static boolean checkSupport(Session session, INode end, FlowRun flowRun) {
 		List<IEdge> inc = end.getIncomingEdges();
 		for (IEdge edge2 : inc) {
-			if (evalEdge(session, edge2)) {
+			if (evalEdge(session, flowRun, edge2)) {
 				if (flowRun.isActive(edge2.getStartNode())) {
 					return true;
 				}
@@ -272,7 +265,7 @@ public class FluxSolver implements PostHookablePSMethod {
 	 */
 	public static void checkSuccessorsOnActivation(INode end, FlowRun flowRun, Session session) {
 		for (IEdge out : end.getOutgoingEdges()) {
-			if (!evalEdge(session, out)) continue;
+			if (!evalEdge(session, flowRun, out)) continue;
 			activateNode(out.getEndNode(), flowRun, session);
 		}
 	}
@@ -284,12 +277,17 @@ public class FluxSolver implements PostHookablePSMethod {
 	 * @param edge
 	 * @return
 	 */
-	public static boolean evalEdge(Session session, IEdge edge) {
-		boolean active;
-		if (!edge.getStartNode().canFireEdges(session)) return false;
-		active = evalToTrue(session, edge);
+	public static boolean evalEdge(Session session, FlowRun run, IEdge edge) {
+		if (!edge.getStartNode().canFireEdges(session, run)) return false;
+		return evalToTrue(session, edge);
+	}
 
-		return active;
+	private static boolean evalEdge(Session session, Collection<FlowRun> runs, IEdge edge) {
+		if (!evalToTrue(session, edge)) return false;
+		for (FlowRun run : runs) {
+			if (edge.getStartNode().canFireEdges(session, run)) return true;
+		}
+		return false;
 	}
 
 	public List<IEdge> selectTrueEdges(INode node, Session session) {
@@ -373,7 +371,7 @@ public class FluxSolver implements PostHookablePSMethod {
 		// Add and propagate the new flow runs
 		for (FlowRun run : newRuns) {
 			caseObject.addRun(run);
-			for (INode node : run.getStartNodes()) {
+			for (INode node : run.getActiveNodesOfClass(SnapshotNode.class)) {
 				checkSuccessorsOnActivation(node, run, session);
 			}
 		}
@@ -394,7 +392,7 @@ public class FluxSolver implements PostHookablePSMethod {
 		for (INode node : tracedNodes) {
 			caseObject.traceNodes(node);
 			for (IEdge edge : node.getOutgoingEdges()) {
-				if (evalEdge(session, edge)) {
+				if (evalEdge(session, caseObject.getRuns(), edge)) {
 					caseObject.traceEdges(edge);
 				}
 			}
