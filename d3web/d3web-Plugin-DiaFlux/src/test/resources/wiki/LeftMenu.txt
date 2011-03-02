@@ -11,6 +11,7 @@ __Snapshot__\\
 [EndlessCircleTest]\\
 [StopAfterSubflowTest]\\
 [RepeatedIndicationTest]\\
+[SnapshotSequenceInSubFlowTest]\\
 
 __General__\\
 [AutostartTest]\\

@@ -38,6 +38,7 @@ import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.NumValue;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowRun;
 import de.d3web.diaFlux.flow.FlowSet;
@@ -98,6 +99,10 @@ public abstract class AbstractDiaFluxTest {
 	protected final String composed1 = "composed1";
 	protected final String composed2 = "composed2";
 	protected final String composed3 = "composed3";
+
+	protected final String comment1 = "comment1";
+	protected final String comment2 = "comment2";
+	protected final String comment3 = "comment3";
 
 	protected final String nodeQ1 = "nodeQ1";
 	protected final String nodeQ2 = "nodeQ2";
@@ -253,6 +258,14 @@ public abstract class AbstractDiaFluxTest {
 			}
 
 		}
+
+	}
+
+	protected void testNumValue(QuestionNum num, double expected) {
+		double actual = ((NumValue) session.getBlackboard().getValue(num)).getDouble().doubleValue();
+
+		Assert.assertEquals("Question '" + num.getName() + "' does not have the expected value.",
+				expected, actual, 0.005);
 
 	}
 
