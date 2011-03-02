@@ -20,7 +20,9 @@
 
 package de.d3web.diaFlux.flow;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,7 +40,6 @@ public class Flow implements NamedObject {
 	private final List<INode> nodes;
 	private final String name;
 	private final String id;
-	private String origin;
 	private boolean autostart;
 
 	private final InfoStore infoStore = new DefaultInfoStore();
@@ -108,6 +109,16 @@ public class Flow implements NamedObject {
 
 	public List<INode> getNodes() {
 		return nodes;
+	}
+
+	public <T> Collection<T> getNodesOfClass(Class<T> clazz) {
+		Collection<T> result = new HashSet<T>();
+		for (INode node : nodes) {
+			if (clazz.isInstance(node)) {
+				result.add(clazz.cast(node));
+			}
+		}
+		return Collections.unmodifiableCollection(result);
 	}
 
 	public boolean isAutostart() {

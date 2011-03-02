@@ -110,32 +110,19 @@ public final class DiaFluxUtils {
 	private static void registerComposedNodes(Flow flow, KnowledgeBase base) {
 		NodeRegistry registry = getNodeRegistry(base);
 
-		for (INode node : flow.getNodes()) {
-
-			if (node instanceof ComposedNode) {
-
-				String flowName = ((ComposedNode) node).getCalledFlowName();
-
-				for (IEdge edge : node.getOutgoingEdges()) {
-
-					Condition condition = edge.getCondition();
-
-					if (condition instanceof NodeActiveCondition) {
-						String exitNodeName = ((NodeActiveCondition) condition).getNodeName();
-
-						registry.registerNode(flowName, exitNodeName, node);
-
-					}
-					else if (condition instanceof FlowchartProcessedCondition) {
-						registry.registerFlow(flowName, node);
-					}
-
+		for (ComposedNode node : flow.getNodesOfClass(ComposedNode.class)) {
+			String flowName = node.getCalledFlowName();
+			for (IEdge edge : node.getOutgoingEdges()) {
+				Condition condition = edge.getCondition();
+				if (condition instanceof NodeActiveCondition) {
+					String exitNodeName = ((NodeActiveCondition) condition).getNodeName();
+					registry.registerNode(flowName, exitNodeName, node);
 				}
-
+				else if (condition instanceof FlowchartProcessedCondition) {
+					registry.registerFlow(flowName, node);
+				}
 			}
-
 		}
-
 	}
 
 	/**
