@@ -1,0 +1,80 @@
+Tests Repeated-Indications in Flowchart
+
+----
+
+%%ShowSolutions
+@master: RepeatedIndicationTest
+%
+
+[{KnowWEPlugin quickinterview}]
+
+
+
+%%DiaFlux
+<flowchart fcid="mainID" name="RepeatedIndication" icon="sanduhr.gif" width="750" height="150" autostart="true" idCounter="28">
+
+	<!-- nodes of the flowchart -->
+	<node fcid="start1">
+		<position left="41" top="48"></position>
+		<start>start1</start>
+	</node>
+
+	<node fcid="nodeQ1">
+		<position left="170" top="23"></position>
+		<action markup="KnOffice">ALWAYS[QuestOC1]</action>
+	</node>
+
+	<node fcid="exit1">
+		<position left="513" top="34"></position>
+		<exit>exit1</exit>
+	</node>
+
+	<node fcid="#node_25">
+		<position left="332" top="23"></position>
+		<action markup="KnOffice">"Solution1" = P7</action>
+	</node>
+
+
+	<!-- rules of the flowchart -->
+	<edge fcid="#rule_26">
+		<origin>start1</origin>
+		<target>nodeQ1</target>
+	</edge>
+
+	<edge fcid="#rule_27">
+		<origin>nodeQ1</origin>
+		<target>#node_25</target>
+	</edge>
+
+	<edge fcid="#rule_28">
+		<origin>#node_25</origin>
+		<target>exit1</target>
+	</edge>
+
+	<preview mimetype="text/html">
+		<![CDATA[
+<DIV class="Flowchart" style=" width: 753px; height: 153px;"><DIV class="Node" id="start1" style="left: 41px;top: 48px; width: 75px; height: 20px;"><DIV class="start" style=" width: 62px; height: 20px;"><DIV class="decorator" style=" width: 20px; height: 20px;"></DIV><DIV class="title" style=" width: 60px; height: 15px;">start1</DIV></DIV></DIV><DIV class="Node" id="exit1" style="left: 513px;top: 34px; width: 75px; height: 20px;"><DIV class="exit" style=" width: 62px; height: 20px;"><DIV class="decorator" style=" width: 20px; height: 20px;"></DIV><DIV class="title" style=" width: 60px; height: 15px;">exit1</DIV></DIV></DIV><DIV class="Node" id="nodeQ1" style="left: 170px;top: 23px; width: 95px; height: 42px;"><DIV class="question" style=" width: 82px; height: 42px;"><DIV class="decorator" style=" width: 20px; height: 20px;"></DIV><DIV class="ActionPane" style=" width: 80px; height: 38px;"><DIV class="object" style=" width: 80px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 15px;"><IMG src="cc/image/kbinfo/single.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>QuestOC1</DIV><DIV class="value" style=" width: 80px; height: 19px;">always ask</DIV></DIV></DIV></DIV><DIV class="Node" id="#node_25" style="left: 332px;top: 23px; width: 95px; height: 42px;"><DIV class="action" style=" width: 82px; height: 42px;"><DIV class="decorator" style=" width: 20px; height: 20px;"></DIV><DIV class="ActionPane" style=" width: 80px; height: 38px;"><DIV class="object" style=" width: 80px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 15px;"><IMG src="cc/image/kbinfo/diagnosis.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>Solution1</DIV><DIV class="value" style=" width: 80px; height: 19px;">established</DIV></DIV></DIV></DIV><DIV class="Rule" id="#rule_26" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="h_line" style="position: absolute;left: 116px;top: 58px;overflow: visible; width: 54px; height: 1px;"><DIV class="arrow_right" style=" width: 6px; height: 5px;"></DIV></DIV><DIV style="position: absolute;left: 116px;top: 58px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 3px; width: 0px; height: 0px;"><DIV class="GuardPane" style=" width: 0px; height: 0px;"></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 113px;top: 55px;overflow: hidden; width: 60px; height: 7px;"></DIV></DIV></DIV><DIV class="Rule" id="#rule_27" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="h_line" style="position: absolute;left: 265px;top: 44px;overflow: visible; width: 67px; height: 1px;"><DIV class="arrow_right" style=" width: 6px; height: 5px;"></DIV></DIV><DIV style="position: absolute;left: 265px;top: 44px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 3px; width: 0px; height: 0px;"><DIV class="GuardPane" style=" width: 0px; height: 0px;"><DIV style=" width: 0px; height: 0px;">  </DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 262px;top: 41px;overflow: hidden; width: 73px; height: 7px;"></DIV></DIV></DIV><DIV class="Rule" id="#rule_28" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="h_line" style="position: absolute;left: 427px;top: 44px;overflow: visible; width: 86px; height: 1px;"><DIV class="arrow_right" style=" width: 6px; height: 5px;"></DIV></DIV><DIV style="position: absolute;left: 427px;top: 44px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 3px; width: 0px; height: 0px;"><DIV class="GuardPane" style=" width: 0px; height: 0px;"><DIV style=" width: 0px; height: 0px;">  </DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 424px;top: 41px;overflow: hidden; width: 92px; height: 7px;"></DIV></DIV></DIV></DIV>
+		]]>
+	</preview>
+</flowchart>
+	
+
+%
+
+
+%%KnowledgeBase 
+  @uses: this
+%
+
+
+
+%%Question
+QuestionnaireOC #1
+- QuestOC1 [oc]
+-- Answ1
+-- Answ2
+%
+
+%%Solution
+Solution1
+%
