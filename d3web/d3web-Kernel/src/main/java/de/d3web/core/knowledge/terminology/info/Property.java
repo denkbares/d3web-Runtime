@@ -25,6 +25,9 @@ import de.d3web.plugin.PluginManager;
  * Represents a Property. Properties can only be created by extending the
  * Extensionpoint "Property"
  * 
+ * For more information about the xml markup, see plugin.xml of
+ * d3web-Plugin-ExtensionPoints
+ * 
  * @author Markus Friedrich (denkbares GmbH)
  * @created 06.10.2010
  */

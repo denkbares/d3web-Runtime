@@ -22,7 +22,9 @@
 	<extension-point id="Property">
 		<parameter-def id="name" />
 		<parameter-def id="description" />
+		<!-- defines if the property is multilingual, possibilities: true or false -->
 		<parameter-def id="multilingual" />
+		<!-- defines the location where the property should be saved automatically, possibilities: basic, mminfo or none -->
 		<parameter-def id="autosave" />
 		<parameter-def id="priority" type="number" />
 		<!-- defines the class of stores instances -->
