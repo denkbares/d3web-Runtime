@@ -26,7 +26,7 @@ package de.d3web.diaFlux.flow;
  * @author Reinhard Hatko
  *
  */
-public class CommentNode extends Node {
+public class CommentNode extends AbstractNode {
 
 	public CommentNode(String id, String name) {
 		super(id, name);

@@ -34,8 +34,8 @@ import de.d3web.diaFlux.flow.DiaFluxCaseObject;
 import de.d3web.diaFlux.flow.EndNode;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowSet;
-import de.d3web.diaFlux.flow.IEdge;
-import de.d3web.diaFlux.flow.INode;
+import de.d3web.diaFlux.flow.Edge;
+import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.flow.StartNode;
 
 /**
@@ -112,7 +112,7 @@ public final class DiaFluxUtils {
 
 		for (ComposedNode node : flow.getNodesOfClass(ComposedNode.class)) {
 			String flowName = node.getCalledFlowName();
-			for (IEdge edge : node.getOutgoingEdges()) {
+			for (Edge edge : node.getOutgoingEdges()) {
 				Condition condition = edge.getCondition();
 				if (condition instanceof NodeActiveCondition) {
 					String exitNodeName = ((NodeActiveCondition) condition).getNodeName();
@@ -162,7 +162,7 @@ public final class DiaFluxUtils {
 
 	}
 
-	public static INode findNode(Session session, String flowName, String nodeName) {
+	public static Node findNode(Session session, String flowName, String nodeName) {
 		FlowSet flowSet = getFlowSet(session);
 
 		if (flowSet == null) {
@@ -178,9 +178,9 @@ public final class DiaFluxUtils {
 			return null;
 		}
 
-		List<INode> startNodes = subflow.getNodes();
+		List<Node> startNodes = subflow.getNodes();
 
-		for (INode node : startNodes) {
+		for (Node node : startNodes) {
 			if (node.getName().equalsIgnoreCase(nodeName)) {
 				return node;
 

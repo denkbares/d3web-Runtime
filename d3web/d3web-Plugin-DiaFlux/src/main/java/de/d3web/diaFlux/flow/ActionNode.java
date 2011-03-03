@@ -24,24 +24,34 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.inference.PSAction;
-import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.condition.CondRepeatedAnswered;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.Fact;
+import de.d3web.diaFlux.inference.ConditionTrue;
 import de.d3web.diaFlux.inference.FluxSolver;
 import de.d3web.indication.ActionRepeatedIndication;
 
-public class ActionNode extends Node {
+public class ActionNode extends AbstractNode {
 
 	private final PSAction action;
+	private final Condition edgePrecondition;
 
 	public ActionNode(String id, String name, PSAction action) {
 		super(id, name);
 
 		if (action == null) throw new IllegalArgumentException("'action' must not be null.");
-
 		this.action = action;
+
+		if (this.action instanceof ActionRepeatedIndication) {
+			Question question = (Question) ((ActionRepeatedIndication) action).getQASets().get(0);
+			this.edgePrecondition = new CondRepeatedAnswered(question);
+		}
+		else {
+			edgePrecondition = ConditionTrue.INSTANCE;
+		}
+
 	}
 
 	public PSAction getAction() {
@@ -49,32 +59,15 @@ public class ActionNode extends Node {
 	}
 
 	@Override
-	public void activate(Session session, FlowRun run) {
+	public void execute(Session session, FlowRun run) {
 		getAction().doIt(session, this, session.getPSMethodInstance(FluxSolver.class));
 
 	}
 
+
 	@Override
-	public boolean canFireEdges(Session session, FlowRun run) {
-		if (action instanceof ActionRepeatedIndication) {
-
-			// TODO check for IOBE, only works for Questions
-			Question question = (Question) ((ActionRepeatedIndication) action).getQASets().get(0);
-			PSMethod psMethod = session.getPSMethodInstance(FluxSolver.class);
-			Fact interviewFact = session.getBlackboard().getInterviewFact(question, psMethod);
-			Fact valueFact = session.getBlackboard().getValueFact(question);
-
-			if (valueFact == null || interviewFact == null) {
-				return false;
-			}
-
-			long indicationTime = interviewFact.getTime();
-			long valueTime = valueFact.getTime();
-			return valueTime > indicationTime;
-		}
-		else {
-			return super.canFireEdges(session, run);
-		}
+	public Condition getEdgePrecondition() {
+		return edgePrecondition;
 	}
 
 	@Override
@@ -87,19 +80,19 @@ public class ActionNode extends Node {
 	}
 
 	@Override
-	public void deactivate(Session session, FlowRun run) {
+	public void retract(Session session, FlowRun run) {
 		getAction().undo(session, this, session.getPSMethodInstance(FluxSolver.class));
 	}
 
 	@Override
-	public boolean couldActivate(Session session) {
+	public boolean canActivate(Session session) {
 		// TODO repeated indication of Questions also without snapshots
 		// not sure yet if this works
 		if (action instanceof ActionRepeatedIndication) {
 			return true;
 		}
 		else {
-			return super.couldActivate(session);
+			return super.canActivate(session);
 		}
 	}
 
@@ -114,7 +107,7 @@ public class ActionNode extends Node {
 		super.takeSnapshot(session, snapshotNode);
 
 		// redo action with SSN as source
-		deactivate(session, null);
+		retract(session, null);
 
 		getAction().doIt(session, snapshotNode, session.getPSMethodInstance(FluxSolver.class));
 

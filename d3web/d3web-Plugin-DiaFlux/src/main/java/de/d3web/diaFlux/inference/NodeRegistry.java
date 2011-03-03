@@ -26,7 +26,7 @@ import java.util.Map;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.utilities.Pair;
-import de.d3web.diaFlux.flow.INode;
+import de.d3web.diaFlux.flow.Node;
 
 /**
  * A Lookup-Table for nodes and flows. Nodes can register for either a pair of
@@ -39,21 +39,21 @@ import de.d3web.diaFlux.flow.INode;
  */
 public class NodeRegistry implements KnowledgeSlice {
 
-	private final Map<Pair<String, String>, List<INode>> nodeMap;
-	private final Map<String, List<INode>> flowMap;
+	private final Map<Pair<String, String>, List<Node>> nodeMap;
+	private final Map<String, List<Node>> flowMap;
 
 	public NodeRegistry() {
-		this.nodeMap = new HashMap<Pair<String, String>, List<INode>>();
-		this.flowMap = new HashMap<String, List<INode>>();
+		this.nodeMap = new HashMap<Pair<String, String>, List<Node>>();
+		this.flowMap = new HashMap<String, List<Node>>();
 	}
 
-	public void registerNode(String flowName, String exitNodeName, INode node) {
+	public void registerNode(String flowName, String exitNodeName, Node node) {
 		Pair<String, String> pair = createPair(flowName, exitNodeName);
 
-		List<INode> registrations = nodeMap.get(pair);
+		List<Node> registrations = nodeMap.get(pair);
 
 		if (registrations == null) {
-			registrations = new ArrayList<INode>(3);
+			registrations = new ArrayList<Node>(3);
 			nodeMap.put(pair, registrations);
 
 		}
@@ -61,12 +61,12 @@ public class NodeRegistry implements KnowledgeSlice {
 		registrations.add(node);
 	}
 
-	public void registerFlow(String flowName, INode node) {
+	public void registerFlow(String flowName, Node node) {
 
-		List<INode> registrations = flowMap.get(flowName);
+		List<Node> registrations = flowMap.get(flowName);
 
 		if (registrations == null) {
-			registrations = new ArrayList<INode>(3);
+			registrations = new ArrayList<Node>(3);
 			flowMap.put(flowName, registrations);
 
 		}
@@ -74,11 +74,11 @@ public class NodeRegistry implements KnowledgeSlice {
 		registrations.add(node);
 	}
 
-	public void removeNodeRegistration(String flowName, String nodeName, INode node) {
+	public void removeNodeRegistration(String flowName, String nodeName, Node node) {
 
 		Pair<String, String> pair = createPair(flowName, nodeName);
 
-		List<INode> list = nodeMap.get(pair);
+		List<Node> list = nodeMap.get(pair);
 
 		if (list == null) {
 			return;
@@ -88,9 +88,9 @@ public class NodeRegistry implements KnowledgeSlice {
 
 	}
 
-	public void removeFlowRegistration(String flowName, INode node) {
+	public void removeFlowRegistration(String flowName, Node node) {
 
-		List<INode> list = flowMap.get(flowName);
+		List<Node> list = flowMap.get(flowName);
 
 		if (list == null) {
 			return;
@@ -100,18 +100,18 @@ public class NodeRegistry implements KnowledgeSlice {
 
 	}
 
-	public List<INode> getRegisteredNodes(INode node) {
-		List<INode> nodes = new ArrayList<INode>(3);
+	public List<Node> getRegisteredNodes(Node node) {
+		List<Node> nodes = new ArrayList<Node>(3);
 		nodes.addAll(getNodeRegistrations(node.getFlow().getName(), node.getName()));
 		nodes.addAll(getFlowRegistrations(node.getFlow().getName()));
 		return nodes;
 	}
 
-	public List<INode> getNodeRegistrations(String flowName, String nodeName) {
+	public List<Node> getNodeRegistrations(String flowName, String nodeName) {
 
 		Pair<String, String> pair = createPair(flowName, nodeName);
 
-		List<INode> registrations = nodeMap.get(pair);
+		List<Node> registrations = nodeMap.get(pair);
 
 		if (registrations == null) {
 			return Collections.emptyList();
@@ -121,8 +121,8 @@ public class NodeRegistry implements KnowledgeSlice {
 		}
 	}
 
-	protected List<INode> getFlowRegistrations(String flowName) {
-		List<INode> registrations = flowMap.get(flowName);
+	protected List<Node> getFlowRegistrations(String flowName) {
+		List<Node> registrations = flowMap.get(flowName);
 
 		if (registrations == null) {
 			return Collections.emptyList();

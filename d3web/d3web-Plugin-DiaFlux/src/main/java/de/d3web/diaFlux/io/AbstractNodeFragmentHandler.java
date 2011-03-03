@@ -21,7 +21,7 @@ package de.d3web.diaFlux.io;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.diaFlux.flow.INode;
+import de.d3web.diaFlux.flow.Node;
 
 /**
  * 
@@ -30,7 +30,7 @@ import de.d3web.diaFlux.flow.INode;
  */
 public abstract class AbstractNodeFragmentHandler implements NodeFragmentHandler {
 
-	protected Element createNodeElement(INode node, Document doc) {
+	protected Element createNodeElement(Node node, Document doc) {
 		Element nodeElem = doc.createElement(DiaFluxPersistenceHandler.NODE_ELEM);
 		nodeElem.setAttribute(DiaFluxPersistenceHandler.ID, node.getID());
 		nodeElem.setAttribute(DiaFluxPersistenceHandler.NAME, node.getName());

@@ -25,26 +25,26 @@ import de.d3web.core.inference.KnowledgeSlice;
 
 /**
  * An EdgeMap is a KowledgeSlice to be added at a TerminologyObject. It saves
- * all Egdes that contain the TerminologyObject in its guard.
+ * all Edges that contain the TerminologyObject in its guard.
  * 
  * @author Reinhard Hatko
  * @created 04.11.2010
  */
 public class EdgeMap implements KnowledgeSlice {
 
-	private final List<IEdge> edges;
+	private final List<Edge> edges;
 	private final String id;
 
 	public EdgeMap(String id) {
 		this.id = id;
-		this.edges = new ArrayList<IEdge>();
+		this.edges = new ArrayList<Edge>();
 	}
 
-	public void addEdge(IEdge edge) {
+	public void addEdge(Edge edge) {
 		edges.add(edge);
 	}
 
-	public List<IEdge> getEdges() {
+	public List<Edge> getEdges() {
 		return edges;
 	}
 

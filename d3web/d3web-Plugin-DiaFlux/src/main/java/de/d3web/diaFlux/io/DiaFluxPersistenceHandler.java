@@ -40,8 +40,8 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowFactory;
 import de.d3web.diaFlux.flow.FlowSet;
-import de.d3web.diaFlux.flow.IEdge;
-import de.d3web.diaFlux.flow.INode;
+import de.d3web.diaFlux.flow.Edge;
+import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
 
 /**
@@ -127,11 +127,11 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 		Element edgesElem = doc.createElement(EDGES_ELEM);
 		flowElem.appendChild(edgesElem);
 
-		for (INode node : flow.getNodes()) {
+		for (Node node : flow.getNodes()) {
 			nodesElem.appendChild(createNodeElement(node, doc));
 		}
 
-		for (IEdge edge : flow.getEdges()) {
+		for (Edge edge : flow.getEdges()) {
 			nodesElem.appendChild(createEdgeElement(edge, doc));
 
 		}
@@ -150,7 +150,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	 * @return
 	 * @throws IOException
 	 */
-	private Element createEdgeElement(IEdge edge, Document doc) throws IOException {
+	private Element createEdgeElement(Edge edge, Document doc) throws IOException {
 		Element edgeElem = doc.createElement(EDGE_ELEM);
 
 		edgeElem.setAttribute(FROM_ID, edge.getStartNode().getID());
@@ -172,7 +172,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	 * @return
 	 * @throws IOException
 	 */
-	private Element createNodeElement(INode node, Document doc) throws IOException {
+	private Element createNodeElement(Node node, Document doc) throws IOException {
 
 		NodeFragmentHandler handler = getFragmentHandler(node);
 
@@ -189,7 +189,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	 * @param node
 	 * @throws NoSuchFragmentHandlerException
 	 */
-	private NodeFragmentHandler getFragmentHandler(INode node) throws NoSuchFragmentHandlerException {
+	private NodeFragmentHandler getFragmentHandler(Node node) throws NoSuchFragmentHandlerException {
 
 		for (NodeFragmentHandler handler : HANDLERS) {
 			if (handler.canWrite(node)) return handler;
@@ -266,14 +266,14 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	 */
 	private Flow readFlow(KnowledgeBase knowledgeBase, Element flowElem) throws IOException {
 		NodeList nodeList = flowElem.getElementsByTagName(NODE_ELEM);
-		List<INode> nodes = new ArrayList<INode>();
+		List<Node> nodes = new ArrayList<Node>();
 
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			nodes.add(readNode(knowledgeBase, (Element) nodeList.item(i)));
 		}
 
 		NodeList edgeList = flowElem.getElementsByTagName(EDGE_ELEM);
-		List<IEdge> edges = new ArrayList<IEdge>();
+		List<Edge> edges = new ArrayList<Edge>();
 
 		for (int i = 0; i < edgeList.getLength(); i++) {
 			edges.add(readEdge(knowledgeBase, (Element) edgeList.item(i), nodes));
@@ -296,27 +296,27 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	 * @return
 	 * @throws IOException
 	 */
-	private IEdge readEdge(KnowledgeBase knowledgeBase, Element edgeElem, List<INode> nodes) throws IOException {
+	private Edge readEdge(KnowledgeBase knowledgeBase, Element edgeElem, List<Node> nodes) throws IOException {
 
 		String fromID = edgeElem.getAttribute(FROM_ID);
 		String toID = edgeElem.getAttribute(TO_ID);
 		String id = edgeElem.getAttribute(ID);
 
-		INode startNode = getNodeByID(fromID, nodes);
-		INode endNode = getNodeByID(toID, nodes);
+		Node startNode = getNodeByID(fromID, nodes);
+		Node endNode = getNodeByID(toID, nodes);
 
 		Condition condition = (Condition) PersistenceManager.getInstance().readFragment(
 				(Element) edgeElem.getElementsByTagName("Condition").item(0), knowledgeBase);
 		return FlowFactory.getInstance().createEdge(id, startNode, endNode, condition);
 	}
 
-	private INode readNode(KnowledgeBase knowledgeBase, Element node) throws IOException {
+	private Node readNode(KnowledgeBase knowledgeBase, Element node) throws IOException {
 
-		return (INode) getFragmentHandler(node).read(knowledgeBase, node);
+		return (Node) getFragmentHandler(node).read(knowledgeBase, node);
 	}
 
-	public static INode getNodeByID(String nodeID, List<INode> nodes) {
-		for (INode node : nodes) {
+	public static Node getNodeByID(String nodeID, List<Node> nodes) {
+		for (Node node : nodes) {
 			if (node.getID().equals(nodeID)) return node;
 		}
 

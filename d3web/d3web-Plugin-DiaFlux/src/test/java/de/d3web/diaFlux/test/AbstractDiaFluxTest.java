@@ -42,7 +42,7 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowRun;
 import de.d3web.diaFlux.flow.FlowSet;
-import de.d3web.diaFlux.flow.INode;
+import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
 import de.d3web.plugin.test.InitPluginManager;
 
@@ -166,7 +166,7 @@ public abstract class AbstractDiaFluxTest {
 
 		List<String> inactiveIDs = new ArrayList<String>();
 
-		nextNode: for (INode node : flow.getNodes()) {
+		nextNode: for (Node node : flow.getNodes()) {
 			String nodeID = node.getID();
 
 			for (String id : activeIDs) {
@@ -191,7 +191,7 @@ public abstract class AbstractDiaFluxTest {
 
 		Flow flow = flowSet.getByName(flowName);
 
-		nextNode: for (INode node : flow.getNodes()) {
+		nextNode: for (Node node : flow.getNodes()) {
 			boolean supported = isSupported(node);
 
 			for (String id : activeIDs) {
@@ -209,7 +209,7 @@ public abstract class AbstractDiaFluxTest {
 
 	}
 
-	private boolean isSupported(INode node) {
+	private boolean isSupported(Node node) {
 		List<FlowRun> runs = DiaFluxUtils.getDiaFluxCaseObject(session).getRuns();
 		for (FlowRun run : runs) {
 			if (run.isActive(node)) {
@@ -224,13 +224,13 @@ public abstract class AbstractDiaFluxTest {
 
 		Flow flow = flowSet.getByName(flowName);
 		System.out.print("Supported Nodes in '" + flowName + "': ");
-		Set<INode> nodes = new HashSet<INode>();
+		Set<Node> nodes = new HashSet<Node>();
 		for (FlowRun run : DiaFluxUtils.getDiaFluxCaseObject(session).getRuns()) {
-			for (INode node : run.getActiveNodes()) {
+			for (Node node : run.getActiveNodes()) {
 				nodes.add(node);
 			}
 		}
-		for (INode node : flow.getNodes()) {
+		for (Node node : flow.getNodes()) {
 			System.out.print(node.getID() + ", ");
 
 		}
@@ -246,7 +246,7 @@ public abstract class AbstractDiaFluxTest {
 
 		Flow flow = flowSet.getByName(flowName);
 
-		nextNode: for (INode node : flow.getNodes()) {
+		nextNode: for (Node node : flow.getNodes()) {
 			boolean supported = isSupported(node);
 
 			for (String id : inactiveIDs) {
@@ -279,7 +279,7 @@ public abstract class AbstractDiaFluxTest {
 		session.getBlackboard().addValueFact(fact);
 
 		try {
-			Thread.sleep(10);
+			Thread.sleep(50);
 		}
 		catch (InterruptedException e) {
 			e.printStackTrace();

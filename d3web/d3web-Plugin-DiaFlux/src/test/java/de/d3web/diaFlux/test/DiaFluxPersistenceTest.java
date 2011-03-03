@@ -48,8 +48,8 @@ import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowFactory;
 import de.d3web.diaFlux.flow.FlowSet;
-import de.d3web.diaFlux.flow.IEdge;
-import de.d3web.diaFlux.flow.INode;
+import de.d3web.diaFlux.flow.Edge;
+import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.inference.ConditionTrue;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
 import de.d3web.indication.ActionInstantIndication;
@@ -123,36 +123,36 @@ public class DiaFluxPersistenceTest {
 		Question questionYN = new QuestionYN(kb.getRootQASet(), "YesNoQuestion");
 		Solution solutionFoo = new Solution(kb.getRootSolution(), "SolutionFoo");
 
-		INode startNode = FF.createStartNode("Start_ID", "Start");
-		INode endNode = FF.createEndNode("End_ID", "Ende");
+		Node startNode = FF.createStartNode("Start_ID", "Start");
+		Node endNode = FF.createEndNode("End_ID", "Ende");
 
 		List<QASet> qasets = new ArrayList<QASet>();
 		qasets.add(questionYN);
 		ActionInstantIndication instantIndication = new ActionInstantIndication();
 		instantIndication.setQASets(qasets);
-		INode questionNode = FF.createActionNode("questionNode_ID", instantIndication);
+		Node questionNode = FF.createActionNode("questionNode_ID", instantIndication);
 
 		ActionHeuristicPS heuristicAction = new ActionHeuristicPS();
 		heuristicAction.setScore(Score.P7);
 		heuristicAction.setSolution(solutionFoo);
-		INode solutionNode = FF.createActionNode("solutionNode_ID", heuristicAction);
+		Node solutionNode = FF.createActionNode("solutionNode_ID", heuristicAction);
 
-		List<INode> nodesList = Arrays.asList(startNode, endNode, questionNode, solutionNode);
+		List<Node> nodesList = Arrays.asList(startNode, endNode, questionNode, solutionNode);
 
 		// ---------------------------------
 
-		IEdge startToQuestion = FF.createEdge("startToQuestionEdge_ID", startNode, questionNode,
+		Edge startToQuestion = FF.createEdge("startToQuestionEdge_ID", startNode, questionNode,
 				ConditionTrue.INSTANCE);
 
 		Value yes = KnowledgeBaseUtils.findValue(questionYN, "Yes");
 		Condition yesCondition = new CondEqual(questionYN, yes);
 
-		IEdge questionToSolution = FF.createEdge("questionToSolution_ID", questionNode,
+		Edge questionToSolution = FF.createEdge("questionToSolution_ID", questionNode,
 				solutionNode, yesCondition);
 
-		IEdge solutionToEnd = FF.createEdge("solutionToEnd_ID", solutionNode, endNode,
+		Edge solutionToEnd = FF.createEdge("solutionToEnd_ID", solutionNode, endNode,
 				ConditionTrue.INSTANCE);
-		List<IEdge> edgesList = Arrays.asList(startToQuestion, questionToSolution, solutionToEnd);
+		List<Edge> edgesList = Arrays.asList(startToQuestion, questionToSolution, solutionToEnd);
 
 		// ----------------------------------
 

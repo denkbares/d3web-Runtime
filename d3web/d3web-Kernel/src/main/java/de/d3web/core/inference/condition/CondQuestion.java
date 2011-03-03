@@ -62,7 +62,6 @@ public abstract class CondQuestion extends TerminalCondition {
 	protected void checkAnswer(Session session)
 			throws NoAnswerException, UnknownAnswerException {
 		Value value = session.getBlackboard().getValue(question);
-		;
 		if (value instanceof UndefinedValue || value == null) {
 			throw NoAnswerException.getInstance();
 		}

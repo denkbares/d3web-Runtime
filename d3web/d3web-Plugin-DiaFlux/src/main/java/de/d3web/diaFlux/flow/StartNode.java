@@ -26,14 +26,14 @@ package de.d3web.diaFlux.flow;
  * @author Reinhard Hatko
  * 
  */
-public class StartNode extends Node {
+public class StartNode extends AbstractNode {
 
 	public StartNode(String id, String name) {
 		super(id, name);
 	}
 
 	@Override
-	protected boolean addIncomingEdge(IEdge edge) {
+	protected boolean addIncomingEdge(Edge edge) {
 		throw new UnsupportedOperationException("Can not add incoming edge to start node");
 	}
 

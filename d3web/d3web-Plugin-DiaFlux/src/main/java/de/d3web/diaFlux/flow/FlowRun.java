@@ -30,12 +30,12 @@ import java.util.Set;
  */
 public class FlowRun {
 
-	private final Set<INode> nodes;
-	private final Set<INode> startNodes;
+	private final Set<Node> nodes;
+	private final Set<Node> startNodes;
 
 	public FlowRun() {
-		this.nodes = new HashSet<INode>();
-		this.startNodes = new HashSet<INode>();
+		this.nodes = new HashSet<Node>();
+		this.startNodes = new HashSet<Node>();
 	}
 
 	/**
@@ -46,14 +46,14 @@ public class FlowRun {
 	 * @param node the node to be checked to be active
 	 * @return if the node is active
 	 */
-	public boolean isActive(INode node) {
+	public boolean isActive(Node node) {
 		return nodes.contains(node) || startNodes.contains(node);
 	}
 
 	/**
 	 * Returns if the node has been activated by propagation within this flow
 	 * run. this means that the node has got an incoming edge in this flow run.
-	 * Please note that {@link #isActive(INode)} also returns true for start
+	 * Please note that {@link #isActive(Node)} also returns true for start
 	 * nodes, regardless wether they have incoming active edges, while this
 	 * method does not.
 	 * 
@@ -61,24 +61,24 @@ public class FlowRun {
 	 * @param node the node to be checked to be activated
 	 * @return if the node is activated
 	 */
-	public boolean isActivated(INode node) {
+	public boolean isActivated(Node node) {
 		return nodes.contains(node);
 	}
 
-	public boolean add(INode node) {
+	public boolean add(Node node) {
 		return nodes.add(node);
 	}
 
-	public boolean remove(INode node) {
+	public boolean remove(Node node) {
 		return nodes.remove(node);
 	}
 
-	public boolean addStartNode(INode node) {
+	public boolean addStartNode(Node node) {
 		return this.startNodes.add(node);
 	}
 
-	public Collection<INode> getActiveNodes() {
-		Collection<INode> activeNodes = new HashSet<INode>();
+	public Collection<Node> getActiveNodes() {
+		Collection<Node> activeNodes = new HashSet<Node>();
 		activeNodes.addAll(startNodes);
 		activeNodes.addAll(nodes);
 		return Collections.unmodifiableCollection(activeNodes);
@@ -95,12 +95,12 @@ public class FlowRun {
 	 */
 	public <T> Collection<T> getActiveNodesOfClass(Class<T> clazz) {
 		Collection<T> activeNodes = new HashSet<T>();
-		for (INode node : startNodes) {
+		for (Node node : startNodes) {
 			if (clazz.isInstance(node)) {
 				activeNodes.add(clazz.cast(node));
 			}
 		}
-		for (INode node : nodes) {
+		for (Node node : nodes) {
 			if (clazz.isInstance(node)) {
 				activeNodes.add(clazz.cast(node));
 			}
@@ -121,7 +121,7 @@ public class FlowRun {
 	 */
 	public <T> Collection<T> getActivatedNodesOfClass(Class<T> clazz) {
 		Collection<T> activeNodes = new HashSet<T>();
-		for (INode node : nodes) {
+		for (Node node : nodes) {
 			if (clazz.isInstance(node)) {
 				activeNodes.add(clazz.cast(node));
 			}
@@ -129,11 +129,11 @@ public class FlowRun {
 		return Collections.unmodifiableCollection(activeNodes);
 	}
 
-	public boolean isStartNode(INode node) {
+	public boolean isStartNode(Node node) {
 		return startNodes.contains(node);
 	}
 
-	public Collection<INode> getStartNodes() {
+	public Collection<Node> getStartNodes() {
 		return Collections.unmodifiableCollection(this.startNodes);
 	}
 

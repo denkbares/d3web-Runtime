@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.diaFlux.flow.FlowFactory;
-import de.d3web.diaFlux.flow.INode;
+import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.flow.SnapshotNode;
 
 /**
@@ -48,7 +48,7 @@ public class SnapshotNodeFragmentHandler extends
 
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
-		INode node = (INode) object;
+		Node node = (Node) object;
 		Element nodeElement = createNodeElement(node, doc);
 
 		Element snapshotElement = doc.createElement(SNAPSHOT);

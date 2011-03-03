@@ -30,25 +30,25 @@ import de.d3web.core.inference.KnowledgeSlice;
  * @author Reinhard Hatko
  * @created 25.11.2010
  */
-public class NodeList implements KnowledgeSlice, Iterable<INode> {
+public class NodeList implements KnowledgeSlice, Iterable<Node> {
 
-	private final List<INode> nodes;
+	private final List<Node> nodes;
 	private static final String ID = "FOOBAR";
 
 	public NodeList() {
-		this.nodes = new ArrayList<INode>();
+		this.nodes = new ArrayList<Node>();
 	}
 
-	public void addNode(INode edge) {
+	public void addNode(Node edge) {
 		nodes.add(edge);
 	}
 
-	public List<INode> getNodes() {
+	public List<Node> getNodes() {
 		return nodes;
 	}
 
 	@Override
-	public Iterator<INode> iterator() {
+	public Iterator<Node> iterator() {
 		return nodes.iterator();
 	}
 

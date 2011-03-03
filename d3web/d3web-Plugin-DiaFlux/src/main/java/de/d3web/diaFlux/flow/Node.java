@@ -18,175 +18,130 @@
  * site: http://www.fsf.org.
  */
 
+/**
+ *
+ */
 package de.d3web.diaFlux.flow;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 
 /**
- * 
- * 
  * @author Reinhard Hatko
- * @created 08.08.2009
+ * 
  */
-public abstract class Node implements INode {
-
-	private final List<IEdge> outgoing;
-	private final List<IEdge> incoming;
-	private final String id;
-	private Flow flow;
-	private final String name;
-
-	public Node(String id, String name) {
-
-		this.id = id;
-		this.outgoing = new ArrayList<IEdge>();
-		this.incoming = new ArrayList<IEdge>();
-		this.name = name;
-	}
-
-	protected boolean addOutgoingEdge(IEdge edge) {
-		if (edge == null) {
-			throw new IllegalArgumentException("edge must not be null");
-		}
-
-		if (edge.getStartNode() != this) {
-			throw new IllegalArgumentException("edge '" + edge + "' does not start at: "
-					+ this.toString());
-		}
-
-		return outgoing.add(edge);
-
-	}
-
-	protected boolean addIncomingEdge(IEdge edge) {
-		if (edge == null) {
-			throw new IllegalArgumentException("edge must not be null");
-		}
-
-		if (edge.getEndNode() != this) {
-			throw new IllegalArgumentException("edge '" + edge + "' does not end at: "
-					+ this.toString());
-		}
-
-		return incoming.add(edge);
-
-	}
-
-	@Override
-	public final List<IEdge> getOutgoingEdges() {
-		return Collections.unmodifiableList(outgoing);
-	}
-
-	@Override
-	public List<IEdge> getIncomingEdges() {
-		return Collections.unmodifiableList(incoming);
-	}
-
-	@Override
-	public Flow getFlow() {
-		return flow;
-	}
-
-	@Override
-	public void setFlow(Flow flow) {
-		if (flow == null) {
-			throw new IllegalArgumentException("Flow must not be null");
-		}
-
-		this.flow = flow;
-	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public String getID() {
-		return id;
-	}
-
-	@Override
-	public void activate(Session session, FlowRun run) {
-
-	}
-
-	@Override
-	public void deactivate(Session session, FlowRun run) {
-
-	}
-
-	@Override
-	public boolean canFireEdges(Session session, FlowRun run) {
-		return true;
-	}
-
-	@Override
-	public List<? extends TerminologyObject> getForwardKnowledge() {
-		return Collections.emptyList();
-	}
+public interface Node {
 
 	/**
-	 * This method implements the default behavior for a node: to be only
-	 * activated when it is not supported
+	 * 
+	 * @return s a list of this node's outgoing edges.
 	 */
-	@Override
-	public boolean couldActivate(Session session) {
-		return true;
-	}
+	List<Edge> getOutgoingEdges();
 
-	@Override
-	public void takeSnapshot(Session session, SnapshotNode snapshotNode) {
+	/**
+	 * 
+	 * @return s a list of this node's incoming edges.
+	 */
+	List<Edge> getIncomingEdges();
 
-	}
+	/**
+	 * @return s the id of the node
+	 */
+	String getID();
 
-	@Override
-	public boolean isReevaluate(Session session) {
-		return false;
-	}
+	/**
+	 * @return s the flow this node belongs to
+	 */
+	Flow getFlow();
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((flow == null) ? 0 : flow.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
+	/**
+	 * sets this nodes containing flow
+	 */
+	void setFlow(Flow flow);
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
+	/**
+	 * 
+	 * 
+	 * @return s the name of the node
+	 */
+	String getName();
 
-		if (getClass() != obj.getClass()) return false;
+	/**
+	 * Returns the collection of questions and solutions, that the node is
+	 * interested in receiving notifications of. This list can usually be empty,
+	 * as the conditions on outgoing edges are checked against all changes.
+	 * Certain types (like formula nodes) but have to receive state changes of
+	 * their own.
+	 * 
+	 * 
+	 * @return s the list of questions and diagnosis, this node wants to be
+	 *         notified of.
+	 */
+	List<? extends TerminologyObject> getForwardKnowledge();
 
-		Node other = (Node) obj;
-		if (flow == null) {
-			if (other.flow != null) return false;
-		}
-		else if (!flow.equals(other.flow)) return false;
-		if (id == null) {
-			if (other.id != null) return false;
-		}
-		else if (!id.equals(other.id)) return false;
-		return true;
-	}
+	/**
+	 * Does the action that is associated with this node.
+	 * 
+	 * @param session the session
+	 * @param run TODO
+	 */
+	void execute(Session session, FlowRun run);
 
-	@Override
-	public String toString() {
-		String nameString = getClass().getSimpleName() + "[" + getID() + ", " + getName() + "]";
-		if (flow != null) {
-			nameString += " in " + flow.getName();
+	/**
+	 * Undoes the action that is associated with this node.
+	 * 
+	 * @param session the session
+	 * @param run TODO
+	 */
+	void retract(Session session, FlowRun run);
 
-		}
+	/**
+	 * This method returns if this node can be activated. Usually a node should
+	 * only be activated each time its status changes from unsupported to
+	 * supported. But there are exceptions, e.g. SnapshotNodes.
+	 * 
+	 * As the result of this methods usually depends on the support of a node,
+	 * it must be called before changing a nodes support.
+	 * 
+	 * @created 12.11.2010
+	 * @param session the session
+	 * @return true if the node should be activated, false otherwise
+	 */
+	// TODO: vb: better specify FlowRun in additon to session, see
+	// canFireEdges()
+	boolean canActivate(Session session);
 
-		return nameString;
-	}
+	/**
+	 * This method is called during a snapshot. It can carry out node specific
+	 * actions.
+	 * 
+	 * @created 12.11.2010
+	 * @param session the current session
+	 * @param snapshotNode the snapshot node that started this snapshot
+	 */
+	void takeSnapshot(Session session, SnapshotNode snapshotNode);
+
+	/**
+	 * Returns if the node should be re-evaluated on changes in its forward
+	 * knowledge. Nodes containing e.g. calculations have to return true
+	 * 
+	 * @created 10.12.2010
+	 * @param session
+	 * @return true if the node should be reevaluated
+	 */
+	boolean isReevaluate(Session session);
+
+	/**
+	 * A node can specify a special condition that has to be true, before its
+	 * outgoing edges can fire.
+	 * 
+	 * 
+	 * @created 02.03.2011
+	 * @return a Condition
+	 */
+	Condition getEdgePrecondition();
 
 }

@@ -20,9 +20,11 @@
 
 package de.d3web.diaFlux.flow;
 
+import java.util.Arrays;
 import java.util.List;
 
 import de.d3web.core.inference.PSAction;
+import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.diaFlux.inference.CallFlowAction;
@@ -61,9 +63,9 @@ public final class FlowFactory {
 	 * @param edges
 	 * @return
 	 */
-	public Flow createFlow(String id, String name, List<INode> nodes, List<IEdge> edges) {
+	public Flow createFlow(String id, String name, List<Node> nodes, List<Edge> edges) {
 
-		for (IEdge edge : edges) {
+		for (Edge edge : edges) {
 			if (!nodes.contains(edge.getStartNode())) {
 				throw new IllegalArgumentException("Start node '" + edge.getStartNode()
 						+ "' of edge '" + edge + " 'is not contained in list of nodes.");
@@ -85,7 +87,7 @@ public final class FlowFactory {
 
 	private void createEdgeMaps(Flow flow) {
 
-		for (IEdge edge : flow.getEdges()) {
+		for (Edge edge : flow.getEdges()) {
 
 			Condition condition = edge.getCondition();
 
@@ -114,7 +116,7 @@ public final class FlowFactory {
 
 	private void createNodeLists(Flow flow) {
 
-		for (INode node : flow.getNodes()) {
+		for (Node node : flow.getNodes()) {
 
 			List<? extends TerminologyObject> list = node.getForwardKnowledge();
 
@@ -138,30 +140,38 @@ public final class FlowFactory {
 		}
 	}
 
-	public INode createActionNode(String id, PSAction action) {
+	public Node createActionNode(String id, PSAction action) {
 		return new ActionNode(id, action.toString(), action);
 
 	}
 
-	public IEdge createEdge(String id, INode startNode, INode endNode, Condition condition) {
-		Edge edge = new Edge(id, startNode, endNode, condition);
+	public Edge createEdge(String id, Node startNode, Node endNode, Condition condition) {
+		DefaultEdge edge = new DefaultEdge(id, startNode, endNode, condition);
 
-		((Node) startNode).addOutgoingEdge(edge);
-		((Node) endNode).addIncomingEdge(edge);
+		Condition defaultCondition = startNode.getEdgePrecondition();
+
+		// If the node specifies a default condition, it is AND'ed with the
+		// condition on the edge
+		if (defaultCondition != null) {
+			condition = new CondAnd(Arrays.asList(defaultCondition, condition));
+		}
+
+		((AbstractNode) startNode).addOutgoingEdge(edge);
+		((AbstractNode) endNode).addIncomingEdge(edge);
 
 		return edge;
 	}
 
-	public INode createStartNode(String id, String name) {
+	public Node createStartNode(String id, String name) {
 		return new StartNode(id, name);
 	}
 
-	public INode createEndNode(String id, String name) {
+	public Node createEndNode(String id, String name) {
 
 		return new EndNode(id, name);
 	}
 
-	public INode createComposedNode(String id, String flowName, String startNodeName) {
+	public Node createComposedNode(String id, String flowName, String startNodeName) {
 
 		CallFlowAction action = new CallFlowAction(flowName, startNodeName);
 
@@ -170,12 +180,12 @@ public final class FlowFactory {
 		return new ComposedNode(id, name, action);
 	}
 
-	public INode createCommentNode(String id, String name) {
+	public Node createCommentNode(String id, String name) {
 
 		return new CommentNode(id, name);
 	}
 
-	public INode createSnapshotNode(String id, String name) {
+	public Node createSnapshotNode(String id, String name) {
 		return new SnapshotNode(id, name);
 	}
 

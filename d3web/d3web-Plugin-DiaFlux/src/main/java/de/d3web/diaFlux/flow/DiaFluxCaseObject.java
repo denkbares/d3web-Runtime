@@ -45,8 +45,8 @@ public class DiaFluxCaseObject extends SessionObject {
 
 	// fields for trace mode
 	private static boolean traceMode = false;
-	private final Collection<INode> tracedActiveNodes = new HashSet<INode>();
-	private final Collection<IEdge> tracedActiveEdges = new HashSet<IEdge>();
+	private final Collection<Node> tracedActiveNodes = new HashSet<Node>();
+	private final Collection<Edge> tracedActiveEdges = new HashSet<Edge>();
 
 	public DiaFluxCaseObject(CaseObjectSource theSourceObject) {
 		super(theSourceObject);
@@ -95,7 +95,7 @@ public class DiaFluxCaseObject extends SessionObject {
 	 * @created 01.03.2011
 	 * @param edges the edges to be added.
 	 */
-	public void traceEdges(Collection<IEdge> edges) {
+	public void traceEdges(Collection<Edge> edges) {
 		this.tracedActiveEdges.addAll(edges);
 	}
 
@@ -107,7 +107,7 @@ public class DiaFluxCaseObject extends SessionObject {
 	 * @created 01.03.2011
 	 * @param edges the edges to be added.
 	 */
-	public void traceEdges(IEdge... edges) {
+	public void traceEdges(Edge... edges) {
 		Collections.addAll(this.tracedActiveEdges, edges);
 	}
 
@@ -119,7 +119,7 @@ public class DiaFluxCaseObject extends SessionObject {
 	 * @created 01.03.2011
 	 * @param nodes the ndoes to be added.
 	 */
-	public void traceNodes(Collection<INode> nodes) {
+	public void traceNodes(Collection<Node> nodes) {
 		this.tracedActiveNodes.addAll(nodes);
 	}
 
@@ -131,7 +131,7 @@ public class DiaFluxCaseObject extends SessionObject {
 	 * @created 01.03.2011
 	 * @param nodes the nodes to be added.
 	 */
-	public void traceNodes(INode... nodes) {
+	public void traceNodes(Node... nodes) {
 		Collections.addAll(this.tracedActiveNodes, nodes);
 	}
 
@@ -142,7 +142,7 @@ public class DiaFluxCaseObject extends SessionObject {
 	 * @created 01.03.2011
 	 * @return the traced edges
 	 */
-	public Collection<IEdge> getTracedEdges() {
+	public Collection<Edge> getTracedEdges() {
 		return Collections.unmodifiableCollection(this.tracedActiveEdges);
 	}
 
@@ -153,7 +153,7 @@ public class DiaFluxCaseObject extends SessionObject {
 	 * @created 01.03.2011
 	 * @return the traced nodes
 	 */
-	public Collection<INode> getTracedNodes() {
+	public Collection<Node> getTracedNodes() {
 		return Collections.unmodifiableCollection(this.tracedActiveNodes);
 	}
 

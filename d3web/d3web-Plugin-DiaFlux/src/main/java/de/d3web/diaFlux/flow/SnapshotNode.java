@@ -27,7 +27,7 @@ package de.d3web.diaFlux.flow;
  * @author Reinhard Hatko
  * @created 01.09.2010
  */
-public class SnapshotNode extends Node {
+public class SnapshotNode extends AbstractNode {
 
 	public SnapshotNode(String id, String name) {
 		super(id, name);

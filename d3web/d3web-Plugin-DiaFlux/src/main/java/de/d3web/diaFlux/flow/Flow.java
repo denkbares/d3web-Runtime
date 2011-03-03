@@ -36,15 +36,15 @@ import de.d3web.core.knowledge.terminology.NamedObject;
  */
 public class Flow implements NamedObject {
 
-	private final List<IEdge> edges;
-	private final List<INode> nodes;
+	private final List<Edge> edges;
+	private final List<Node> nodes;
 	private final String name;
 	private final String id;
 	private boolean autostart;
 
 	private final InfoStore infoStore = new DefaultInfoStore();
 
-	public Flow(String id, String name, List<INode> nodes, List<IEdge> edges) {
+	public Flow(String id, String name, List<Node> nodes, List<Edge> edges) {
 
 		if (nodes == null) throw new IllegalArgumentException("nodes is null");
 
@@ -66,7 +66,7 @@ public class Flow implements NamedObject {
 	 * in nodes
 	 */
 	private void checkFlow() {
-		for (INode node : nodes) {
+		for (Node node : nodes) {
 			node.setFlow(this);
 		}
 	}
@@ -103,17 +103,17 @@ public class Flow implements NamedObject {
 		return name;
 	}
 
-	public List<IEdge> getEdges() {
+	public List<Edge> getEdges() {
 		return edges;
 	}
 
-	public List<INode> getNodes() {
+	public List<Node> getNodes() {
 		return nodes;
 	}
 
 	public <T> Collection<T> getNodesOfClass(Class<T> clazz) {
 		Collection<T> result = new HashSet<T>();
-		for (INode node : nodes) {
+		for (Node node : nodes) {
 			if (clazz.isInstance(node)) {
 				result.add(clazz.cast(node));
 			}
@@ -141,7 +141,7 @@ public class Flow implements NamedObject {
 	private <T> List<T> getNodesOfType(Class<T> clazz) {
 		List<T> result = new LinkedList<T>();
 
-		for (INode node : nodes) {
+		for (Node node : nodes) {
 			if (clazz.isAssignableFrom(node.getClass())) result.add((T) node);
 		}
 

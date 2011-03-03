@@ -36,8 +36,6 @@ import de.d3web.core.session.blackboard.SessionObject;
  */
 public class FlowSet implements KnowledgeSlice, CaseObjectSource, Iterable<Flow> {
 
-	// hardcoded it ATM due to comment in Interface
-	private static final String ID = "Flowset";
 	private final Map<String, Flow> map;
 
 	public FlowSet() {
@@ -100,7 +98,6 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource, Iterable<Flow>
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
 		result = prime * result + ((map == null) ? 0 : map.hashCode());
 		return result;
 	}
@@ -121,7 +118,7 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource, Iterable<Flow>
 
 	@Override
 	public String toString() {
-		return "FlowSet [id=" + ID + ", map=" + map + "]";
+		return "FlowSet [map=" + map + "]";
 	}
 
 }

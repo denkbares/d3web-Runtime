@@ -28,19 +28,19 @@ import de.d3web.diaFlux.inference.FluxSolver;
  * @author Reinhard Hatko
  * 
  */
-public class EndNode extends Node {
+public class EndNode extends AbstractNode {
 
 	public EndNode(String id, String name) {
 		super(id, name);
 	}
 
 	@Override
-	protected boolean addOutgoingEdge(IEdge edge) {
+	protected boolean addOutgoingEdge(Edge edge) {
 		throw new UnsupportedOperationException("Can not add outgoing edge to exit node.");
 	}
 
 	@Override
-	public void activate(Session session, FlowRun run) {
+	public void execute(Session session, FlowRun run) {
 		// TODO: vb: only check nodes calling this sheet by
 		// Flow.getCallingNodes()
 		for (ComposedNode node : run.getActiveNodesOfClass(ComposedNode.class)) {
@@ -49,7 +49,7 @@ public class EndNode extends Node {
 	}
 
 	@Override
-	public void deactivate(Session session, FlowRun run) {
+	public void retract(Session session, FlowRun run) {
 		// TODO: vb: only check nodes calling this sheet by
 		// Flow.getCallingNodes()
 		for (ComposedNode node : run.getActiveNodesOfClass(ComposedNode.class)) {

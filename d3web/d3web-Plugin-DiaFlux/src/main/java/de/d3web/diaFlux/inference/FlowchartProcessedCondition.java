@@ -29,7 +29,7 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowRun;
-import de.d3web.diaFlux.flow.INode;
+import de.d3web.diaFlux.flow.Node;
 
 /**
  * 
@@ -60,7 +60,7 @@ public class FlowchartProcessedCondition implements Condition {
 
 		// if one of the exit nodes is supported, then the flowchart has been
 		// processed
-		for (INode node : flow.getExitNodes()) {
+		for (Node node : flow.getExitNodes()) {
 
 			List<FlowRun> runs = DiaFluxUtils.getDiaFluxCaseObject(session).getRuns();
 

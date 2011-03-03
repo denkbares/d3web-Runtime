@@ -30,12 +30,12 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.d3web.diaFlux.flow.Edge;
+import de.d3web.diaFlux.flow.DefaultEdge;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowFactory;
-import de.d3web.diaFlux.flow.IEdge;
-import de.d3web.diaFlux.flow.INode;
+import de.d3web.diaFlux.flow.Edge;
 import de.d3web.diaFlux.flow.Node;
+import de.d3web.diaFlux.flow.AbstractNode;
 import de.d3web.diaFlux.inference.ConditionTrue;
 
 /**
@@ -51,19 +51,19 @@ public class NodeTest {
 	 * @author Marc-Oliver Ochlast (denkbares GmbH)
 	 * @created 11.11.2010
 	 */
-	private class NodeMock extends Node {
+	private class NodeMock extends AbstractNode {
 
 		public NodeMock(String id, String name) {
 			super(id, name);
 		}
 
 		@Override
-		protected boolean addOutgoingEdge(IEdge edge) {
+		protected boolean addOutgoingEdge(Edge edge) {
 			return super.addOutgoingEdge(edge);
 		}
 
 		@Override
-		protected boolean addIncomingEdge(IEdge edge) {
+		protected boolean addIncomingEdge(Edge edge) {
 			return super.addIncomingEdge(edge);
 		}
 	}
@@ -75,8 +75,8 @@ public class NodeTest {
 	private NodeMock incomingNode1, incomingNode2;
 	private NodeMock outgoingNode1, outgoingNode2;
 
-	private Edge incomingEdge1, incomingEdge2;
-	private Edge outgoingEdge1, outgoingEdge2;
+	private DefaultEdge incomingEdge1, incomingEdge2;
+	private DefaultEdge outgoingEdge1, outgoingEdge2;
 
 	/**
 	 * 
@@ -94,19 +94,19 @@ public class NodeTest {
 		outgoingNode1 = new NodeMock("outgoingNode1", "outgoingNode1");
 		outgoingNode2 = new NodeMock("outgoingNode2", "outgoingNode2");
 		// create incoming edges
-		incomingEdge1 = (Edge) FF.createEdge("incomingEdge1", incomingNode1,
+		incomingEdge1 = (DefaultEdge) FF.createEdge("incomingEdge1", incomingNode1,
 				testSubject, ConditionTrue.INSTANCE);
-		incomingEdge2 = (Edge) FF.createEdge("incomingEdge2", incomingNode2,
+		incomingEdge2 = (DefaultEdge) FF.createEdge("incomingEdge2", incomingNode2,
 				testSubject, ConditionTrue.INSTANCE);
 		// create outgoing edges
-		outgoingEdge1 = (Edge) FF.createEdge("outgoingEdge1", testSubject,
+		outgoingEdge1 = (DefaultEdge) FF.createEdge("outgoingEdge1", testSubject,
 				outgoingNode1, ConditionTrue.INSTANCE);
-		outgoingEdge2 = (Edge) FF.createEdge("outgoingEdge2", testSubject,
+		outgoingEdge2 = (DefaultEdge) FF.createEdge("outgoingEdge2", testSubject,
 				outgoingNode2, ConditionTrue.INSTANCE);
 	}
 
 	/**
-	 * Test method for {@link de.d3web.diaFlux.flow.Node#hashCode()}.
+	 * Test method for {@link de.d3web.diaFlux.flow.AbstractNode#hashCode()}.
 	 */
 	@Test
 	public void testHashCode() {
@@ -114,7 +114,7 @@ public class NodeTest {
 	}
 
 	/**
-	 * Test that {@link Node#addOutgoingEdge(IEdge)} throws a
+	 * Test that {@link AbstractNode#addOutgoingEdge(Edge)} throws a
 	 * IllegalArgumentException when IEdge parameter is null
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -123,7 +123,7 @@ public class NodeTest {
 	}
 
 	/**
-	 * Test that {@link Node#addIncomingEdge(IEdge)} throws a
+	 * Test that {@link AbstractNode#addIncomingEdge(Edge)} throws a
 	 * IllegalArgumentException when IEdge parameter is null
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -132,33 +132,33 @@ public class NodeTest {
 	}
 
 	/**
-	 * Test that {@link Node#addOutgoingEdge(IEdge)} throws a
+	 * Test that {@link AbstractNode#addOutgoingEdge(Edge)} throws a
 	 * IllegalArgumentException when this node is not the start-node of the
 	 * IEdge given via parameter
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddOutgoingEdgeThrowsIllegalArgumentExceptionWhenStartNodeIsInvalid() {
-		IEdge edge = new Edge("invalidEdge", outgoingNode1, incomingNode1, ConditionTrue.INSTANCE);
+		Edge edge = new DefaultEdge("invalidEdge", outgoingNode1, incomingNode1, ConditionTrue.INSTANCE);
 		incomingNode1.addOutgoingEdge(edge);
 	}
 
 	/**
-	 * Test that {@link Node#addIncomingEdge(IEdge)} throws a
+	 * Test that {@link AbstractNode#addIncomingEdge(Edge)} throws a
 	 * IllegalArgumentException when this node is not the end-node of the IEdge
 	 * given via parameter
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddIncomingEdgeThrowsIllegalArgumentExceptionWhenStartNodeIsInvalid() {
-		IEdge edge = new Edge("invalidEdge", outgoingNode1, incomingNode1, ConditionTrue.INSTANCE);
+		Edge edge = new DefaultEdge("invalidEdge", outgoingNode1, incomingNode1, ConditionTrue.INSTANCE);
 		outgoingNode1.addIncomingEdge(edge);
 	}
 
 	/**
-	 * Test method for {@link Node#getOutgoingEdges()}.
+	 * Test method for {@link AbstractNode#getOutgoingEdges()}.
 	 */
 	@Test
 	public void testGetOutgoingEdges() {
-		List<IEdge> edges = testSubject.getOutgoingEdges();
+		List<Edge> edges = testSubject.getOutgoingEdges();
 		assertThat(edges.contains(incomingEdge1), is(false));
 		assertThat(edges.contains(incomingEdge2), is(false));
 		assertThat(edges.contains(outgoingEdge1), is(true));
@@ -166,11 +166,11 @@ public class NodeTest {
 	}
 
 	/**
-	 * Test method for {@link Node#getIncomingEdges()}.
+	 * Test method for {@link AbstractNode#getIncomingEdges()}.
 	 */
 	@Test
 	public void testGetIncomingEdges() {
-		List<IEdge> edges = testSubject.getIncomingEdges();
+		List<Edge> edges = testSubject.getIncomingEdges();
 		assertThat(edges.contains(incomingEdge1), is(true));
 		assertThat(edges.contains(incomingEdge2), is(true));
 		assertThat(edges.contains(outgoingEdge1), is(false));
@@ -178,15 +178,15 @@ public class NodeTest {
 	}
 
 	/**
-	 * Test method for {@link Node#getFlow()} and {@link Node#setFlow()}.
+	 * Test method for {@link AbstractNode#getFlow()} and {@link AbstractNode#setFlow()}.
 	 */
 	// @Test
 	public void testSetAndGetFlow() {
 		// TODO fix this
-		List<INode> nodeList = Arrays.asList((INode) incomingNode1,
-				(INode) incomingNode2, (INode) outgoingNode1, (INode) outgoingNode2);
-		List<IEdge> edgeList = Arrays.asList((IEdge) incomingEdge1, (IEdge) incomingEdge2,
-				(IEdge) outgoingEdge1, (IEdge) outgoingEdge2);
+		List<Node> nodeList = Arrays.asList((Node) incomingNode1,
+				(Node) incomingNode2, (Node) outgoingNode1, (Node) outgoingNode2);
+		List<Edge> edgeList = Arrays.asList((Edge) incomingEdge1, (Edge) incomingEdge2,
+				(Edge) outgoingEdge1, (Edge) outgoingEdge2);
 		Flow testFlow = FF.createFlow("testFlow_ID", "Main", nodeList, edgeList);
 		testFlow.setAutostart(true);
 
@@ -196,7 +196,7 @@ public class NodeTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.diaFlux.flow.Node#getName()}.
+	 * Test method for {@link de.d3web.diaFlux.flow.AbstractNode#getName()}.
 	 */
 	@Test
 	public void testGetName() {
@@ -205,7 +205,7 @@ public class NodeTest {
 
 	/**
 	 * Test method for
-	 * {@link de.d3web.diaFlux.flow.Node#createCaseObject(de.d3web.core.session.Session)}
+	 * {@link de.d3web.diaFlux.flow.AbstractNode#createCaseObject(de.d3web.core.session.Session)}
 	 * .
 	 */
 	@Test
@@ -214,7 +214,7 @@ public class NodeTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.diaFlux.flow.Node#getID()}.
+	 * Test method for {@link de.d3web.diaFlux.flow.AbstractNode#getID()}.
 	 */
 	@Test
 	public void testGetID() {
@@ -223,7 +223,7 @@ public class NodeTest {
 
 	/**
 	 * Test method for
-	 * {@link de.d3web.diaFlux.flow.Node#takeSnapshot(de.d3web.core.session.Session, de.d3web.diaFlux.flow.SnapshotNode)}
+	 * {@link de.d3web.diaFlux.flow.AbstractNode#takeSnapshot(de.d3web.core.session.Session, de.d3web.diaFlux.flow.SnapshotNode)}
 	 * .
 	 */
 	@Test
@@ -233,7 +233,7 @@ public class NodeTest {
 
 	/**
 	 * Test method for
-	 * {@link de.d3web.diaFlux.flow.Node#resetNodeData(de.d3web.core.session.Session)}
+	 * {@link de.d3web.diaFlux.flow.AbstractNode#resetNodeData(de.d3web.core.session.Session)}
 	 * .
 	 */
 	@Test
@@ -243,7 +243,7 @@ public class NodeTest {
 
 	/**
 	 * Test method for
-	 * {@link de.d3web.diaFlux.flow.Node#equals(java.lang.Object)}.
+	 * {@link de.d3web.diaFlux.flow.AbstractNode#equals(java.lang.Object)}.
 	 */
 	@Test
 	public void testEqualsObject() {
@@ -255,7 +255,7 @@ public class NodeTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.diaFlux.flow.Node#toString()}.
+	 * Test method for {@link de.d3web.diaFlux.flow.AbstractNode#toString()}.
 	 */
 	@Test
 	public void testToString() {
