@@ -24,7 +24,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.diaFlux.flow.FlowFactory;
 import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.flow.StartNode;
 
@@ -43,7 +42,7 @@ public class StartNodeFragmentHandler extends
 		String id = element.getAttribute(DiaFluxPersistenceHandler.ID);
 		String name = element.getAttribute(DiaFluxPersistenceHandler.NAME);
 
-		return FlowFactory.getInstance().createStartNode(id, name);
+		return new StartNode(id, name);
 	}
 
 	@Override

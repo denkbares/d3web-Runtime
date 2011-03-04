@@ -25,7 +25,6 @@ import org.w3c.dom.Element;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.diaFlux.flow.CommentNode;
-import de.d3web.diaFlux.flow.FlowFactory;
 import de.d3web.diaFlux.flow.Node;
 
 /**
@@ -43,7 +42,7 @@ public class CommentNodeFragmentHandler extends
 		String id = element.getAttribute(DiaFluxPersistenceHandler.ID);
 		String name = element.getAttribute(DiaFluxPersistenceHandler.NAME);
 
-		return FlowFactory.getInstance().createCommentNode(id, name);
+		return new CommentNode(id, name);
 	}
 
 	@Override

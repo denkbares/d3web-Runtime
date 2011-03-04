@@ -23,11 +23,9 @@ package de.d3web.diaFlux.flow;
 import java.util.Arrays;
 import java.util.List;
 
-import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.diaFlux.inference.CallFlowAction;
 import de.d3web.diaFlux.inference.ConditionTrue;
 import de.d3web.diaFlux.inference.FluxSolver;
 
@@ -37,16 +35,6 @@ import de.d3web.diaFlux.inference.FluxSolver;
  * 
  */
 public final class FlowFactory {
-
-	private static final FlowFactory INSTANCE;
-
-	static {
-		INSTANCE = new FlowFactory();
-	}
-
-	public static FlowFactory getInstance() {
-		return INSTANCE;
-	}
 
 	private FlowFactory() {
 
@@ -63,7 +51,7 @@ public final class FlowFactory {
 	 * @param edges
 	 * @return
 	 */
-	public Flow createFlow(String id, String name, List<Node> nodes, List<Edge> edges) {
+	public static Flow createFlow(String id, String name, List<Node> nodes, List<Edge> edges) {
 
 		for (Edge edge : edges) {
 			if (!nodes.contains(edge.getStartNode())) {
@@ -85,7 +73,7 @@ public final class FlowFactory {
 
 	}
 
-	private void createEdgeMaps(Flow flow) {
+	private static void createEdgeMaps(Flow flow) {
 
 		for (Edge edge : flow.getEdges()) {
 
@@ -114,7 +102,7 @@ public final class FlowFactory {
 		}
 	}
 
-	private void createNodeLists(Flow flow) {
+	private static void createNodeLists(Flow flow) {
 
 		for (Node node : flow.getNodes()) {
 
@@ -139,12 +127,7 @@ public final class FlowFactory {
 		}
 	}
 
-	public Node createActionNode(String id, PSAction action) {
-		return new ActionNode(id, action.toString(), action);
-
-	}
-
-	public Edge createEdge(String id, Node startNode, Node endNode, Condition condition) {
+	public static Edge createEdge(String id, Node startNode, Node endNode, Condition condition) {
 		DefaultEdge edge = new DefaultEdge(id, startNode, endNode, condition);
 
 		Condition defaultCondition = startNode.getEdgePrecondition();
@@ -160,32 +143,4 @@ public final class FlowFactory {
 
 		return edge;
 	}
-
-	public Node createStartNode(String id, String name) {
-		return new StartNode(id, name);
-	}
-
-	public Node createEndNode(String id, String name) {
-
-		return new EndNode(id, name);
-	}
-
-	public Node createComposedNode(String id, String flowName, String startNodeName) {
-
-		CallFlowAction action = new CallFlowAction(flowName, startNodeName);
-
-		String name = "CALL[" + flowName + "(" + startNodeName + ")]";
-
-		return new ComposedNode(id, name, action);
-	}
-
-	public Node createCommentNode(String id, String name) {
-
-		return new CommentNode(id, name);
-	}
-
-	public Node createSnapshotNode(String id, String name) {
-		return new SnapshotNode(id, name);
-	}
-
 }

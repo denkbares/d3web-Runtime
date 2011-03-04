@@ -25,7 +25,6 @@ import org.w3c.dom.Element;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.diaFlux.flow.EndNode;
-import de.d3web.diaFlux.flow.FlowFactory;
 import de.d3web.diaFlux.flow.Node;
 
 /**
@@ -43,7 +42,7 @@ public class ExitNodeFragmentHandler extends
 		String id = element.getAttribute(DiaFluxPersistenceHandler.ID);
 		String name = element.getAttribute(DiaFluxPersistenceHandler.NAME);
 
-		return FlowFactory.getInstance().createEndNode(id, name);
+		return new EndNode(id, name);
 	}
 
 	@Override

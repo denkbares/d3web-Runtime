@@ -30,7 +30,9 @@ import de.d3web.core.session.Session;
 import de.d3web.diaFlux.inference.ConditionTrue;
 
 /**
+ * Abstract Implementation of Node.
  * 
+ * Provides basic implementations of the methods
  * 
  * @author Reinhard Hatko
  * @created 08.08.2009

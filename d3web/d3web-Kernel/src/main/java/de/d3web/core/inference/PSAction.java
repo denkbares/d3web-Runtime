@@ -60,8 +60,6 @@ public abstract class PSAction implements Cloneable {
 		return new LinkedList<TerminologyObject>();
 	}
 
-	// public abstract Class<? extends PSMethod> getProblemsolverContext();
-
 	/**
 	 * Checks if any action value (e.g. terminal objects of a formula) have
 	 * changed since last call to {@link #doIt(Session)}.

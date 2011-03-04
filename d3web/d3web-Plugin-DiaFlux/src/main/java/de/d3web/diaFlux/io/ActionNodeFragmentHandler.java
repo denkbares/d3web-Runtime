@@ -28,7 +28,6 @@ import de.d3web.core.inference.PSAction;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.diaFlux.flow.ActionNode;
-import de.d3web.diaFlux.flow.FlowFactory;
 
 /**
  * 
@@ -49,7 +48,7 @@ public class ActionNodeFragmentHandler extends
 		PSAction action = (PSAction) PersistenceManager.getInstance().readFragment(
 				(Element) actionElem, kb);
 
-		return FlowFactory.getInstance().createActionNode(id, action);
+		return new ActionNode(id, action);
 
 	}
 

@@ -46,7 +46,12 @@ public class ComposedNode extends AbstractNode {
 	public ComposedNode(String id, String name, CallFlowAction action) {
 		super(id, name);
 		this.action = action;
+	}
 
+	public ComposedNode(String id, String flowName, String startNodeName) {
+		super(id, "CALL[" + flowName + "(" + startNodeName + ")]");
+		CallFlowAction action = new CallFlowAction(flowName, startNodeName);
+		this.action = action;
 	}
 
 	@Override
@@ -82,7 +87,6 @@ public class ComposedNode extends AbstractNode {
 	 */
 	private final class ComposedNodePrecondition implements Condition {
 
-
 		@Override
 		public Collection<? extends TerminologyObject> getTerminalObjects() {
 			return Collections.emptyList();
@@ -115,6 +119,5 @@ public class ComposedNode extends AbstractNode {
 			return this;
 		}
 	}
-
 
 }

@@ -26,7 +26,6 @@ import org.w3c.dom.Text;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.diaFlux.flow.ComposedNode;
-import de.d3web.diaFlux.flow.FlowFactory;
 
 /**
  * 
@@ -47,7 +46,7 @@ public class ComposedNodeFragmentHandler extends
 		String startNodeName = element.getElementsByTagName(
 				CallFlowActionFragmentHandler.START_NODE_NAME).item(0).getTextContent();
 
-		return FlowFactory.getInstance().createComposedNode(id, flowName, startNodeName);
+		return new ComposedNode(id, flowName, startNodeName);
 	}
 
 	@Override

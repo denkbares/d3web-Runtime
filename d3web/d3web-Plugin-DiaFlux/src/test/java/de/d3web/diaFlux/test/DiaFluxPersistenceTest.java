@@ -45,11 +45,14 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
+import de.d3web.diaFlux.flow.ActionNode;
+import de.d3web.diaFlux.flow.Edge;
+import de.d3web.diaFlux.flow.EndNode;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowFactory;
 import de.d3web.diaFlux.flow.FlowSet;
-import de.d3web.diaFlux.flow.Edge;
 import de.d3web.diaFlux.flow.Node;
+import de.d3web.diaFlux.flow.StartNode;
 import de.d3web.diaFlux.inference.ConditionTrue;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
 import de.d3web.indication.ActionInstantIndication;
@@ -65,7 +68,6 @@ import de.d3web.scoring.Score;
  */
 public class DiaFluxPersistenceTest {
 
-	private static final FlowFactory FF = FlowFactory.getInstance();
 	private KnowledgeBase kb;
 	private Session session;
 
@@ -123,41 +125,42 @@ public class DiaFluxPersistenceTest {
 		Question questionYN = new QuestionYN(kb.getRootQASet(), "YesNoQuestion");
 		Solution solutionFoo = new Solution(kb.getRootSolution(), "SolutionFoo");
 
-		Node startNode = FF.createStartNode("Start_ID", "Start");
-		Node endNode = FF.createEndNode("End_ID", "Ende");
+		Node startNode = new StartNode("Start_ID", "Start");
+		Node endNode = new EndNode("End_ID", "Ende");
 
 		List<QASet> qasets = new ArrayList<QASet>();
 		qasets.add(questionYN);
 		ActionInstantIndication instantIndication = new ActionInstantIndication();
 		instantIndication.setQASets(qasets);
-		Node questionNode = FF.createActionNode("questionNode_ID", instantIndication);
+		Node questionNode = new ActionNode("questionNode_ID", instantIndication);
 
 		ActionHeuristicPS heuristicAction = new ActionHeuristicPS();
 		heuristicAction.setScore(Score.P7);
 		heuristicAction.setSolution(solutionFoo);
-		Node solutionNode = FF.createActionNode("solutionNode_ID", heuristicAction);
+		Node solutionNode = new ActionNode("solutionNode_ID", heuristicAction);
 
 		List<Node> nodesList = Arrays.asList(startNode, endNode, questionNode, solutionNode);
 
 		// ---------------------------------
 
-		Edge startToQuestion = FF.createEdge("startToQuestionEdge_ID", startNode, questionNode,
+		Edge startToQuestion = FlowFactory.createEdge("startToQuestionEdge_ID", startNode,
+				questionNode,
 				ConditionTrue.INSTANCE);
 
 		Value yes = KnowledgeBaseUtils.findValue(questionYN, "Yes");
 		Condition yesCondition = new CondEqual(questionYN, yes);
 
-		Edge questionToSolution = FF.createEdge("questionToSolution_ID", questionNode,
+		Edge questionToSolution = FlowFactory.createEdge("questionToSolution_ID", questionNode,
 				solutionNode, yesCondition);
 
-		Edge solutionToEnd = FF.createEdge("solutionToEnd_ID", solutionNode, endNode,
+		Edge solutionToEnd = FlowFactory.createEdge("solutionToEnd_ID", solutionNode, endNode,
 				ConditionTrue.INSTANCE);
 		List<Edge> edgesList = Arrays.asList(startToQuestion, questionToSolution, solutionToEnd);
 
 		// ----------------------------------
 
 		// Create the flowchart...
-		Flow testFlow = FF.createFlow("testFlow_ID", "Main", nodesList, edgesList);
+		Flow testFlow = FlowFactory.createFlow("testFlow_ID", "Main", nodesList, edgesList);
 		testFlow.setAutostart(true);
 
 		DiaFluxUtils.addFlow(testFlow, kb);

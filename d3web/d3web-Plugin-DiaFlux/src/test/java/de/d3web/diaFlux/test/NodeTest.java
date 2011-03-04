@@ -30,12 +30,12 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.diaFlux.flow.AbstractNode;
 import de.d3web.diaFlux.flow.DefaultEdge;
+import de.d3web.diaFlux.flow.Edge;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowFactory;
-import de.d3web.diaFlux.flow.Edge;
 import de.d3web.diaFlux.flow.Node;
-import de.d3web.diaFlux.flow.AbstractNode;
 import de.d3web.diaFlux.inference.ConditionTrue;
 
 /**
@@ -68,8 +68,6 @@ public class NodeTest {
 		}
 	}
 
-	private static final FlowFactory FF = FlowFactory.getInstance();
-
 	private NodeMock testSubject;
 
 	private NodeMock incomingNode1, incomingNode2;
@@ -94,14 +92,14 @@ public class NodeTest {
 		outgoingNode1 = new NodeMock("outgoingNode1", "outgoingNode1");
 		outgoingNode2 = new NodeMock("outgoingNode2", "outgoingNode2");
 		// create incoming edges
-		incomingEdge1 = (DefaultEdge) FF.createEdge("incomingEdge1", incomingNode1,
+		incomingEdge1 = (DefaultEdge) FlowFactory.createEdge("incomingEdge1", incomingNode1,
 				testSubject, ConditionTrue.INSTANCE);
-		incomingEdge2 = (DefaultEdge) FF.createEdge("incomingEdge2", incomingNode2,
+		incomingEdge2 = (DefaultEdge) FlowFactory.createEdge("incomingEdge2", incomingNode2,
 				testSubject, ConditionTrue.INSTANCE);
 		// create outgoing edges
-		outgoingEdge1 = (DefaultEdge) FF.createEdge("outgoingEdge1", testSubject,
+		outgoingEdge1 = (DefaultEdge) FlowFactory.createEdge("outgoingEdge1", testSubject,
 				outgoingNode1, ConditionTrue.INSTANCE);
-		outgoingEdge2 = (DefaultEdge) FF.createEdge("outgoingEdge2", testSubject,
+		outgoingEdge2 = (DefaultEdge) FlowFactory.createEdge("outgoingEdge2", testSubject,
 				outgoingNode2, ConditionTrue.INSTANCE);
 	}
 
@@ -138,7 +136,8 @@ public class NodeTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddOutgoingEdgeThrowsIllegalArgumentExceptionWhenStartNodeIsInvalid() {
-		Edge edge = new DefaultEdge("invalidEdge", outgoingNode1, incomingNode1, ConditionTrue.INSTANCE);
+		Edge edge = new DefaultEdge("invalidEdge", outgoingNode1, incomingNode1,
+				ConditionTrue.INSTANCE);
 		incomingNode1.addOutgoingEdge(edge);
 	}
 
@@ -149,7 +148,8 @@ public class NodeTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddIncomingEdgeThrowsIllegalArgumentExceptionWhenStartNodeIsInvalid() {
-		Edge edge = new DefaultEdge("invalidEdge", outgoingNode1, incomingNode1, ConditionTrue.INSTANCE);
+		Edge edge = new DefaultEdge("invalidEdge", outgoingNode1, incomingNode1,
+				ConditionTrue.INSTANCE);
 		outgoingNode1.addIncomingEdge(edge);
 	}
 
@@ -178,7 +178,8 @@ public class NodeTest {
 	}
 
 	/**
-	 * Test method for {@link AbstractNode#getFlow()} and {@link AbstractNode#setFlow()}.
+	 * Test method for {@link AbstractNode#getFlow()} and
+	 * {@link AbstractNode#setFlow()}.
 	 */
 	// @Test
 	public void testSetAndGetFlow() {
@@ -187,7 +188,7 @@ public class NodeTest {
 				(Node) incomingNode2, (Node) outgoingNode1, (Node) outgoingNode2);
 		List<Edge> edgeList = Arrays.asList((Edge) incomingEdge1, (Edge) incomingEdge2,
 				(Edge) outgoingEdge1, (Edge) outgoingEdge2);
-		Flow testFlow = FF.createFlow("testFlow_ID", "Main", nodeList, edgeList);
+		Flow testFlow = FlowFactory.createFlow("testFlow_ID", "Main", nodeList, edgeList);
 		testFlow.setAutostart(true);
 
 		assertThat(testSubject.getFlow(), is(nullValue()));

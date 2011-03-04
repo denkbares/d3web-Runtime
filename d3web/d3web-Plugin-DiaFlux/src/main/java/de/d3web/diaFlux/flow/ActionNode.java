@@ -38,10 +38,9 @@ public class ActionNode extends AbstractNode {
 	private final PSAction action;
 	private final Condition edgePrecondition;
 
-	public ActionNode(String id, String name, PSAction action) {
-		super(id, name);
+	public ActionNode(String id, PSAction action) {
+		super(id, action.toString());
 
-		if (action == null) throw new IllegalArgumentException("'action' must not be null.");
 		this.action = action;
 
 		if (this.action instanceof ActionRepeatedIndication) {
@@ -63,7 +62,6 @@ public class ActionNode extends AbstractNode {
 		getAction().doIt(session, this, session.getPSMethodInstance(FluxSolver.class));
 
 	}
-
 
 	@Override
 	public Condition getEdgePrecondition() {

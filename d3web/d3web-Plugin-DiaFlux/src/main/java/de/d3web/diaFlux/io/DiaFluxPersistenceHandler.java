@@ -37,10 +37,10 @@ import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.diaFlux.flow.Edge;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowFactory;
 import de.d3web.diaFlux.flow.FlowSet;
-import de.d3web.diaFlux.flow.Edge;
 import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
 
@@ -282,7 +282,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 		String name = flowElem.getAttribute(NAME);
 		String id = flowElem.getAttribute(ID);
 		boolean autostart = Boolean.parseBoolean(flowElem.getAttribute(AUTOSTART));
-		Flow flow = FlowFactory.getInstance().createFlow(id, name, nodes, edges);
+		Flow flow = FlowFactory.createFlow(id, name, nodes, edges);
 		flow.setAutostart(autostart);
 		return flow;
 
@@ -307,7 +307,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 
 		Condition condition = (Condition) PersistenceManager.getInstance().readFragment(
 				(Element) edgeElem.getElementsByTagName("Condition").item(0), knowledgeBase);
-		return FlowFactory.getInstance().createEdge(id, startNode, endNode, condition);
+		return FlowFactory.createEdge(id, startNode, endNode, condition);
 	}
 
 	private Node readNode(KnowledgeBase knowledgeBase, Element node) throws IOException {

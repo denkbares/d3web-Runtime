@@ -45,10 +45,15 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
+import de.d3web.diaFlux.flow.ActionNode;
+import de.d3web.diaFlux.flow.ComposedNode;
+import de.d3web.diaFlux.flow.Edge;
+import de.d3web.diaFlux.flow.EndNode;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowFactory;
-import de.d3web.diaFlux.flow.Edge;
 import de.d3web.diaFlux.flow.Node;
+import de.d3web.diaFlux.flow.SnapshotNode;
+import de.d3web.diaFlux.flow.StartNode;
 import de.d3web.diaFlux.inference.ConditionTrue;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
 import de.d3web.diaFlux.inference.NodeActiveCondition;
@@ -75,7 +80,6 @@ public class UseFluxProblemSolverTest {
 	private static Solution solutionFoo3;
 	private static Solution solutionFoo4;
 
-	private static final FlowFactory FF = FlowFactory.getInstance();
 	private List<Edge> edgesList;
 	private List<Node> nodesList;
 
@@ -103,35 +107,36 @@ public class UseFluxProblemSolverTest {
 		solutionFoo3 = new Solution(kb.getRootSolution(), "SolutionFoo3");
 		solutionFoo4 = new Solution(kb.getRootSolution(), "SolutionFoo4");
 
-		Node startNode = FF.createStartNode("Start_ID", "Start");
-		Node endNode = FF.createEndNode("End_ID", "Ende");
+		Node startNode = new StartNode("Start_ID", "Start");
+		Node endNode = new EndNode("End_ID", "Ende");
 
 		List<QASet> qasets = new ArrayList<QASet>();
 		qasets.add(questionYN);
 		ActionInstantIndication instantIndication = new ActionInstantIndication();
 		instantIndication.setQASets(qasets);
-		questionNode = FF.createActionNode("questionNode_ID", instantIndication);
+		questionNode = new ActionNode("questionNode_ID", instantIndication);
 
 		ActionHeuristicPS heuristicAction = new ActionHeuristicPS();
 		heuristicAction.setScore(Score.P7);
 		heuristicAction.setSolution(solutionFoo);
-		solutionNode = FF.createActionNode("solutionNode_ID", heuristicAction);
+		solutionNode = new ActionNode("solutionNode_ID", heuristicAction);
 
 		nodesList = new LinkedList<Node>(Arrays.asList(startNode, endNode, questionNode,
 				solutionNode));
 
 		// ---------------------------------
 
-		Edge startToQuestion = FF.createEdge("startToQuestionEdge_ID", startNode, questionNode,
+		Edge startToQuestion = FlowFactory.createEdge("startToQuestionEdge_ID", startNode,
+				questionNode,
 				ConditionTrue.INSTANCE);
 
 		Value yes = KnowledgeBaseUtils.findValue(questionYN, "Yes");
 		Condition yesCondition = new CondEqual(questionYN, yes);
 
-		Edge questionToSolution = FF.createEdge("questionToSolution_ID", questionNode,
+		Edge questionToSolution = FlowFactory.createEdge("questionToSolution_ID", questionNode,
 				solutionNode, yesCondition);
 
-		Edge solutionToEnd = FF.createEdge("solutionToEnd_ID", solutionNode, endNode,
+		Edge solutionToEnd = FlowFactory.createEdge("solutionToEnd_ID", solutionNode, endNode,
 				ConditionTrue.INSTANCE);
 		edgesList = new LinkedList<Edge>(Arrays.asList(startToQuestion, questionToSolution,
 				solutionToEnd));
@@ -143,7 +148,7 @@ public class UseFluxProblemSolverTest {
 	@Test
 	public void testFluxSolver() {
 		// Create the flowchart...
-		Flow testFlow = FF.createFlow("testFlow_ID", "Main", nodesList, edgesList);
+		Flow testFlow = FlowFactory.createFlow("testFlow_ID", "Main", nodesList, edgesList);
 		testFlow.setAutostart(true);
 		DiaFluxUtils.addFlow(testFlow, kb);
 		session = SessionFactory.createSession(kb);
@@ -182,21 +187,21 @@ public class UseFluxProblemSolverTest {
 	@Test
 	public void testSubFlows() {
 		// create inner flowchart
-		Flow innerFlow = FF.createFlow("Flow1", "innerFlow", nodesList, edgesList);
+		Flow innerFlow = FlowFactory.createFlow("Flow1", "innerFlow", nodesList, edgesList);
 		DiaFluxUtils.addFlow(innerFlow, kb);
 		// create surrounding flowchart
-		Node startNode = FF.createStartNode("Start_ID2", "Start");
-		Node innerFlowNode = FF.createComposedNode("Flow1", "innerFlow", "Start");
-		Edge e1 = FF.createEdge("e1", startNode, innerFlowNode, ConditionTrue.INSTANCE);
+		Node startNode = new StartNode("Start_ID2", "Start");
+		Node innerFlowNode = new ComposedNode("Flow1", "innerFlow", "Start");
+		Edge e1 = FlowFactory.createEdge("e1", startNode, innerFlowNode, ConditionTrue.INSTANCE);
 		ActionHeuristicPS heuristicAction = new ActionHeuristicPS();
 		heuristicAction.setScore(Score.P7);
 		heuristicAction.setSolution(solutionFoo2);
-		Node setterNode = FF.createActionNode("foo2setter", heuristicAction);
-		Edge e2 = FF.createEdge("e2", innerFlowNode, setterNode, new NodeActiveCondition(
+		Node setterNode = new ActionNode("foo2setter", heuristicAction);
+		Edge e2 = FlowFactory.createEdge("e2", innerFlowNode, setterNode, new NodeActiveCondition(
 				"innerFlow", "Ende"));
 		List<Node> nodesList = Arrays.asList(startNode, innerFlowNode, setterNode);
 		List<Edge> edgeList = Arrays.asList(e1, e2);
-		Flow outerFlow = FF.createFlow("Flow2", "Main", nodesList, edgeList);
+		Flow outerFlow = FlowFactory.createFlow("Flow2", "Main", nodesList, edgeList);
 		outerFlow.setAutostart(true);
 		DiaFluxUtils.addFlow(outerFlow, kb);
 		session = SessionFactory.createSession(kb);
@@ -214,47 +219,47 @@ public class UseFluxProblemSolverTest {
 		ActionHeuristicPS heuristicAction2 = new ActionHeuristicPS();
 		heuristicAction2.setScore(Score.P7);
 		heuristicAction2.setSolution(solutionFoo2);
-		Node solutionNode2 = FF.createActionNode("solutionNode_ID2", heuristicAction2);
+		Node solutionNode2 = new ActionNode("solutionNode_ID2", heuristicAction2);
 		nodesList.add(solutionNode2);
 
 		ActionHeuristicPS heuristicAction3 = new ActionHeuristicPS();
 		heuristicAction3.setScore(Score.P7);
 		heuristicAction3.setSolution(solutionFoo3);
-		Node solutionNode3 = FF.createActionNode("solutionNode_ID3", heuristicAction3);
+		Node solutionNode3 = new ActionNode("solutionNode_ID3", heuristicAction3);
 		nodesList.add(solutionNode3);
 
 		ActionHeuristicPS heuristicAction4 = new ActionHeuristicPS();
 		heuristicAction4.setScore(Score.P7);
 		heuristicAction4.setSolution(solutionFoo4);
-		Node solutionNode4 = FF.createActionNode("solutionNode_ID4", heuristicAction4);
+		Node solutionNode4 = new ActionNode("solutionNode_ID4", heuristicAction4);
 		nodesList.add(solutionNode4);
 
 		// create edges to Solutions
 		Value no = KnowledgeBaseUtils.findValue(questionYN, "No");
 		Condition noCondition = new CondEqual(questionYN, no);
 
-		Edge questionToSolution2 = FF.createEdge("questionToSolution_ID2", questionNode,
+		Edge questionToSolution2 = FlowFactory.createEdge("questionToSolution_ID2", questionNode,
 				solutionNode2, noCondition);
 		edgesList.add(questionToSolution2);
 
-		Edge questionToSolution3 = FF.createEdge("questionToSolution_ID3", questionNode,
+		Edge questionToSolution3 = FlowFactory.createEdge("questionToSolution_ID3", questionNode,
 				solutionNode3, noCondition);
 		edgesList.add(questionToSolution3);
 
-		Edge solutionToSolution4 = FF.createEdge("solutionToSolution4_ID", solutionNode,
+		Edge solutionToSolution4 = FlowFactory.createEdge("solutionToSolution4_ID", solutionNode,
 				solutionNode4, ConditionTrue.INSTANCE);
 		edgesList.add(solutionToSolution4);
 
 		// create Snapshot Node
-		Node snapshotNode = FF.createSnapshotNode("Snapshot1", "Snapshot");
+		Node snapshotNode = new SnapshotNode("Snapshot1", "Snapshot");
 		nodesList.add(snapshotNode);
 
 		// create edge to Snapshot Node
-		Edge solution3ToSnapshot = FF.createEdge("e2", solutionNode3, snapshotNode,
+		Edge solution3ToSnapshot = FlowFactory.createEdge("e2", solutionNode3, snapshotNode,
 				ConditionTrue.INSTANCE);
 		edgesList.add(solution3ToSnapshot);
 
-		Flow testFlow = FF.createFlow("testFlow_Snapshot", "Main", nodesList, edgesList);
+		Flow testFlow = FlowFactory.createFlow("testFlow_Snapshot", "Main", nodesList, edgesList);
 		testFlow.setAutostart(true);
 		DiaFluxUtils.addFlow(testFlow, kb);
 		session = SessionFactory.createSession(kb);
