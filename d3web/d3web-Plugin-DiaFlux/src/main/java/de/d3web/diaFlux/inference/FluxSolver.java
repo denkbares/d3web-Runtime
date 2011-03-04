@@ -63,11 +63,11 @@ public class FluxSolver implements PostHookablePSMethod {
 			FlowSet.class);
 	public static final KnowledgeKind<NodeRegistry> NODE_REGISTRY = new KnowledgeKind<NodeRegistry>(
 			"NodeRegistry", NodeRegistry.class);
-	public final static KnowledgeKind<EdgeMap> FORWARD = new KnowledgeKind<EdgeMap>(
-			"FLUXSOLVER.FORWARD", EdgeMap.class);
-	public final static KnowledgeKind<NodeList> BACKWARD = new KnowledgeKind<NodeList>(
-			"FLUXSOLVER.BACKWARD", NodeList.class);
-	
+	public final static KnowledgeKind<EdgeMap> DEPENDANT_EDGES = new KnowledgeKind<EdgeMap>(
+			"DEPENDANT_EDGES", EdgeMap.class);
+	public final static KnowledgeKind<NodeList> DEPENDANT_NODES = new KnowledgeKind<NodeList>(
+			"DEPENDANT_NODES", NodeList.class);
+
 	public FluxSolver() {
 	}
 
@@ -129,7 +129,7 @@ public class FluxSolver implements PostHookablePSMethod {
 
 				TerminologyObject object = propagationEntry.getObject();
 
-				EdgeMap slice = object.getKnowledgeStore().getKnowledge(FORWARD);
+				EdgeMap slice = object.getKnowledgeStore().getKnowledge(DEPENDANT_EDGES);
 
 				// TO does not occur in any edge
 				if (slice == null) {
@@ -172,7 +172,7 @@ public class FluxSolver implements PostHookablePSMethod {
 		for (PropagationEntry propagationEntry : changes) {
 			TerminologyObject object = propagationEntry.getObject();
 			NodeList knowledge =
-					object.getKnowledgeStore().getKnowledge(BACKWARD);
+					object.getKnowledgeStore().getKnowledge(DEPENDANT_NODES);
 
 			if (knowledge == null) continue;
 

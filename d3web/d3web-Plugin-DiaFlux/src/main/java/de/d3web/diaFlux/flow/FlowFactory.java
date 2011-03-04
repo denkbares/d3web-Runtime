@@ -100,11 +100,11 @@ public final class FlowFactory {
 			for (TerminologyObject nobject : condition.getTerminalObjects()) {
 
 				EdgeMap slice = nobject.getKnowledgeStore().getKnowledge(
-						FluxSolver.FORWARD);
+						FluxSolver.DEPENDANT_EDGES);
 
 				if (slice == null) {
 					slice = new EdgeMap("EdgeMap" + nobject.getName());
-					nobject.getKnowledgeStore().addKnowledge(FluxSolver.FORWARD,
+					nobject.getKnowledgeStore().addKnowledge(FluxSolver.DEPENDANT_EDGES,
 							slice);
 				}
 
@@ -118,19 +118,18 @@ public final class FlowFactory {
 
 		for (Node node : flow.getNodes()) {
 
-			List<? extends TerminologyObject> list = node.getForwardKnowledge();
+			List<? extends TerminologyObject> list = node.getHookedObjects();
 
 			// For all other edges:
 			// index them at the NamedObjects their condition contains
 			for (TerminologyObject nobject : list) {
-				// TODO use different MK
 				NodeList slice = nobject.getKnowledgeStore().getKnowledge(
-						FluxSolver.BACKWARD);
+						FluxSolver.DEPENDANT_NODES);
 
 				if (slice == null) {
 					slice = new NodeList();
 					nobject.getKnowledgeStore().addKnowledge(
-							FluxSolver.BACKWARD,
+							FluxSolver.DEPENDANT_NODES,
 							slice);
 				}
 
