@@ -12,6 +12,7 @@ __Snapshot__\\
 [StopAfterSubflowTest]\\
 [RepeatedIndicationTest]\\
 [SnapshotSequenceInSubFlowTest]\\
+[WaitTest]\\
 
 __General__\\
 [AutostartTest]\\
