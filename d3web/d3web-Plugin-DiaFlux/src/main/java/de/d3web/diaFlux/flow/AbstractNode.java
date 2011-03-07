@@ -136,11 +136,6 @@ public abstract class AbstractNode implements Node {
 	}
 
 	@Override
-	public boolean canActivate(Session session) {
-		return true;
-	}
-
-	@Override
 	public void takeSnapshot(Session session, SnapshotNode snapshotNode) {
 
 	}

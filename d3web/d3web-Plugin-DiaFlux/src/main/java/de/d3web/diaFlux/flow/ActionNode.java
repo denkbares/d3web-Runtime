@@ -83,18 +83,6 @@ public class ActionNode extends AbstractNode {
 	}
 
 	@Override
-	public boolean canActivate(Session session) {
-		// TODO repeated indication of Questions also without snapshots
-		// not sure yet if this works
-		if (action instanceof ActionRepeatedIndication) {
-			return true;
-		}
-		else {
-			return super.canActivate(session);
-		}
-	}
-
-	@Override
 	public boolean isReevaluate(Session session) {
 		return action.hasChangedValue(session);
 	}

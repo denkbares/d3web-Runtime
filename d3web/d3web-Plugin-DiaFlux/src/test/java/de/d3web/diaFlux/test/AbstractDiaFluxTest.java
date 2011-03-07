@@ -279,7 +279,7 @@ public abstract class AbstractDiaFluxTest {
 		session.getBlackboard().addValueFact(fact);
 
 		try {
-			Thread.sleep(50);
+			Thread.sleep(2);
 		}
 		catch (InterruptedException e) {
 			e.printStackTrace();

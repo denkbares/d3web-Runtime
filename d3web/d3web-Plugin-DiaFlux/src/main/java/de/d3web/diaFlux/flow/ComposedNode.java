@@ -101,7 +101,11 @@ public class ComposedNode extends AbstractNode {
 				Collection<Node> startNodes = run.getStartNodes();
 				// if we are a start node, we can fire
 				if (startNodes.contains(ComposedNode.this)) return true;
-				// only other composed notes using the same flowcharts may
+			}
+
+			for (FlowRun run : runs) {
+				Collection<Node> startNodes = run.getStartNodes();
+				// only other composed nodes using the same flowcharts may
 				// be blocked
 				Flow flow = DiaFluxUtils.getFlowSet(session).getByName(action.getFlowName());
 				for (Node node : flow.getNodes()) {
@@ -109,8 +113,8 @@ public class ComposedNode extends AbstractNode {
 						return false;
 					}
 				}
-			}
 
+			}
 			return true;
 		}
 

@@ -99,22 +99,6 @@ public interface Node {
 	void retract(Session session, FlowRun run);
 
 	/**
-	 * This method returns if this node can be activated. Usually a node should
-	 * only be activated each time its status changes from unsupported to
-	 * supported. But there are exceptions, e.g. SnapshotNodes.
-	 * 
-	 * As the result of this methods usually depends on the support of a node,
-	 * it must be called before changing a nodes support.
-	 * 
-	 * @created 12.11.2010
-	 * @param session the session
-	 * @return true if the node should be activated, false otherwise
-	 */
-	// TODO: vb: better specify FlowRun in additon to session, see
-	// canFireEdges()
-	boolean canActivate(Session session);
-
-	/**
 	 * This method is called during a snapshot. It can carry out node specific
 	 * actions.
 	 * 

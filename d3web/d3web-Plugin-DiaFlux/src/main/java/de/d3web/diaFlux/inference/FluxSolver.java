@@ -285,9 +285,7 @@ public class FluxSolver implements PostHookablePSMethod {
 
 	private static boolean evalEdge(Session session, Collection<FlowRun> runs, Edge edge) {
 		if (!evalToTrue(session, edge.getCondition())) return false;
-		for (FlowRun run : runs) {
-			if (FluxSolver.evalToTrue(session, edge.getStartNode().getEdgePrecondition())) return true;
-		}
+		if (FluxSolver.evalToTrue(session, edge.getStartNode().getEdgePrecondition())) return true;
 		return false;
 	}
 
