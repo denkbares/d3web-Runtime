@@ -61,8 +61,6 @@ public class FluxSolver implements PostHookablePSMethod {
 
 	public static final KnowledgeKind<FlowSet> DIAFLUX = new KnowledgeKind<FlowSet>("DIAFLUX",
 			FlowSet.class);
-	public static final KnowledgeKind<NodeRegistry> NODE_REGISTRY = new KnowledgeKind<NodeRegistry>(
-			"NodeRegistry", NodeRegistry.class);
 	public final static KnowledgeKind<EdgeMap> DEPENDANT_EDGES = new KnowledgeKind<EdgeMap>(
 			"DEPENDANT_EDGES", EdgeMap.class);
 	public final static KnowledgeKind<NodeList> DEPENDANT_NODES = new KnowledgeKind<NodeList>(

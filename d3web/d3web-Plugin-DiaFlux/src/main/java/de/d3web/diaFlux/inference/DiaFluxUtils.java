@@ -26,15 +26,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.session.Session;
-import de.d3web.diaFlux.flow.ComposedNode;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
 import de.d3web.diaFlux.flow.EndNode;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowSet;
-import de.d3web.diaFlux.flow.Edge;
 import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.flow.StartNode;
 
@@ -98,52 +95,6 @@ public final class DiaFluxUtils {
 		}
 		flowSet.put(flow);
 
-		registerComposedNodes(flow, base);
-
-	}
-
-	/**
-	 * 
-	 * @param flow
-	 * @param base
-	 */
-	private static void registerComposedNodes(Flow flow, KnowledgeBase base) {
-		NodeRegistry registry = getNodeRegistry(base);
-
-		for (ComposedNode node : flow.getNodesOfClass(ComposedNode.class)) {
-			String flowName = node.getCalledFlowName();
-			for (Edge edge : node.getOutgoingEdges()) {
-				Condition condition = edge.getCondition();
-				if (condition instanceof NodeActiveCondition) {
-					String exitNodeName = ((NodeActiveCondition) condition).getNodeName();
-					registry.registerNode(flowName, exitNodeName, node);
-				}
-				else if (condition instanceof FlowchartProcessedCondition) {
-					registry.registerFlow(flowName, node);
-				}
-			}
-		}
-	}
-
-	/**
-	 * 
-	 * @param base
-	 * @return s the NodeRegistry to look up nodes by Name
-	 */
-	public static NodeRegistry getNodeRegistry(KnowledgeBase base) {
-		NodeRegistry registry = base.getKnowledgeStore().getKnowledge(FluxSolver.NODE_REGISTRY);
-
-		if (registry == null) {
-			registry = new NodeRegistry();
-			base.getKnowledgeStore().addKnowledge(FluxSolver.NODE_REGISTRY,
-					registry);
-
-		}
-		return registry;
-	}
-
-	public static NodeRegistry getNodeRegistry(Session session) {
-		return getNodeRegistry(session.getKnowledgeBase());
 	}
 
 	public static List<StartNode> getAutostartNodes(KnowledgeBase base) {
