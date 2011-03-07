@@ -237,5 +237,8 @@
 		<module>d3web-Plugin-Persistence-Basic</module>
 		<module>d3web-Plugin-Persistence-ExtensionPoints</module>
 		<module>d3web-Plugin-XCL</module>
+		<module>d3web-SessionPersistence</module>
+		<module>d3web-Plugin-SessionPersistence-ExtensionPoints</module>
+		<module>d3web-Plugin-SessionPersistence-Basic</module>
 	</modules>
 </project>
