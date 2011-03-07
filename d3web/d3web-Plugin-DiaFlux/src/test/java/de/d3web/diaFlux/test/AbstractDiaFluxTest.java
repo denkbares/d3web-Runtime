@@ -276,9 +276,9 @@ public abstract class AbstractDiaFluxTest {
 
 		Fact fact = FactFactory.createUserEnteredFact(question, new ChoiceValue(choice));
 
-		session.getBlackboard().addValueFact(fact);
-
 		try {
+			Thread.sleep(2);
+			session.getBlackboard().addValueFact(fact);
 			Thread.sleep(2);
 		}
 		catch (InterruptedException e) {
