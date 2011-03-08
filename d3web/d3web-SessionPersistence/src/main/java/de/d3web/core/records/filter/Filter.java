@@ -16,28 +16,24 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.core.records;
+package de.d3web.core.records.filter;
 
-import java.util.List;
-
-import de.d3web.core.session.SessionHeader;
+import de.d3web.core.records.SessionRecord;
 
 /**
- * Represents a persistent session
+ * Interface to filter {@link SessionRecord}s
  * 
  * @author Markus Friedrich (denkbares GmbH)
- * @created 20.09.2010
+ * @created 07.03.2011
  */
-public interface SessionRecord extends SessionHeader {
+public interface Filter {
 
-	void addValueFact(FactRecord fact);
-
-	void addInterviewFact(FactRecord fact);
-
-	List<FactRecord> getValueFacts();
-
-	List<FactRecord> getInterviewFacts();
-
-	void setName(String name);
-
+	/**
+	 * Returns true when the record matches the filters requirements
+	 * 
+	 * @created 07.03.2011
+	 * @param record {@link SessionRecord}
+	 * @return true if it matches the requirements, false otherwise
+	 */
+	boolean match(SessionRecord record);
 }

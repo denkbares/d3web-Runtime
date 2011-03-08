@@ -158,8 +158,8 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 
 	/**
 	 * Special implementation of a Session Record. This record has a reference
-	 * to a file, if some information other than die id oder the kb is asked,
-	 * the record will be parsed. This Record also remembers, if something could
+	 * to a file, if some information other than the id or the kb is asked, the
+	 * record will be parsed. This Record also remembers, if something could
 	 * have been modified since it was loaded.
 	 * 
 	 * @author Markus Friedrich (denkbares GmbH)
@@ -205,7 +205,7 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 				}
 				else if (loadedSessions.size() == 0) {
 					throw new IOException("The file " + file.getCanonicalPath()
-							+ " contains more no sessionrecord.");
+							+ " contains no sessionrecord.");
 				}
 				else {
 					realRecord = loadedSessions.iterator().next();

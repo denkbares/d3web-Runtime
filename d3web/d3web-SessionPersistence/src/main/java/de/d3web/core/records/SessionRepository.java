@@ -18,7 +18,10 @@
  */
 package de.d3web.core.records;
 
+import java.util.Collection;
 import java.util.Iterator;
+
+import de.d3web.core.records.filter.Filter;
 
 /**
  * This interface specifies the methods required for all SessionRepository
@@ -50,7 +53,7 @@ public interface SessionRepository {
 	 * @return true, if the SessionRecord was added to the SessionRepository;
 	 *         false otherwise
 	 */
-	public boolean add(SessionRecord sessionRecord);
+	boolean add(SessionRecord sessionRecord);
 
 	/**
 	 * Tries to remove the specified {@link DefaultSessionRecord} from this
@@ -67,7 +70,7 @@ public interface SessionRepository {
 	 * @return true, if the SessionRecord was removed from the
 	 *         SessionRepository, false otherwise.
 	 */
-	public boolean remove(SessionRecord sessionRecord);
+	boolean remove(SessionRecord sessionRecord);
 
 	/**
 	 * Returns an {@link Iterator} instance, that offers access to the
@@ -75,18 +78,27 @@ public interface SessionRepository {
 	 * 
 	 * @return the Iterator which offers access to the stored SessionRecords.
 	 */
-	public Iterator<SessionRecord> iterator();
+	Iterator<SessionRecord> iterator();
 
 	/**
-	 * Traverses the SessionRepository for a {@link DefaultSessionRecord} with
-	 * the specified unique identifier. If a SessionRecord with this identifier
-	 * was found, the it will be returned. Otherwise the returned value will be
+	 * Traverses the SessionRepository for a {@link SessionRecord} with the
+	 * specified unique identifier. If a SessionRecord with this identifier was
+	 * found, the it will be returned. Otherwise the returned value will be
 	 * null.
 	 * 
 	 * @param id the specified identifier of the desired SessionRecord
 	 * @return the SessionRecord with the specified ID if it exists, otherwise
 	 *         null.
 	 */
-	public SessionRecord getSessionRecordById(String id);
+	SessionRecord getSessionRecordById(String id);
+
+	/**
+	 * Returns all SessionRecords that are matched by the filter
+	 * 
+	 * @created 08.03.2011
+	 * @param filter {@link Filter}
+	 * @return Collection of matching SessionRecords
+	 */
+	Collection<SessionRecord> getSessionRecords(Filter filter);
 
 }

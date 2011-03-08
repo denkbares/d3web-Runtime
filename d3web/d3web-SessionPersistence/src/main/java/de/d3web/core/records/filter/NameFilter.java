@@ -16,28 +16,31 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.core.records;
+package de.d3web.core.records.filter;
 
-import java.util.List;
+import java.util.regex.Pattern;
 
-import de.d3web.core.session.SessionHeader;
+import de.d3web.core.records.SessionRecord;
 
 /**
- * Represents a persistent session
+ * Matches SessionRecords which name fits to a regular expression
  * 
  * @author Markus Friedrich (denkbares GmbH)
- * @created 20.09.2010
+ * @created 07.03.2011
  */
-public interface SessionRecord extends SessionHeader {
+public class NameFilter implements Filter {
 
-	void addValueFact(FactRecord fact);
+	private Pattern p;
 
-	void addInterviewFact(FactRecord fact);
+	public NameFilter(String regex) {
+		p = Pattern.compile(regex);
+	}
 
-	List<FactRecord> getValueFacts();
-
-	List<FactRecord> getInterviewFacts();
-
-	void setName(String name);
+	@Override
+	public boolean match(SessionRecord record) {
+		String name = record.getName();
+		if (name == null) return false;
+		return p.matcher(name).matches();
+	}
 
 }

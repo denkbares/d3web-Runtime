@@ -18,10 +18,19 @@
  */
 package de.d3web.core.records;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import de.d3web.core.records.filter.AndFilter;
+import de.d3web.core.records.filter.CreationDateFilter;
+import de.d3web.core.records.filter.Filter;
+import de.d3web.core.records.filter.OrFilter;
 
 /**
  * Default Implementation of the SessionRepository Interface (@link
@@ -84,6 +93,88 @@ public class DefaultSessionRepository implements SessionRepository {
 		if (id.matches("\\s+")) throw new IllegalArgumentException(id
 				+ " is not a valid ID.");
 		return sessionRecords.get(id);
+	}
+
+	@Override
+	public Collection<SessionRecord> getSessionRecords(Filter filter) {
+		// to enable recursive calls with a subset of the sessionRecords, the
+		// method is extracted
+		return getSessionRecords(sessionRecords.values(), filter);
+	}
+
+	private Collection<SessionRecord> getSessionRecords(Collection<SessionRecord> sessionRecords, Filter filter) {
+		List<Filter> simpleFilters = new LinkedList<Filter>();
+		List<OrFilter> orFilters = new LinkedList<OrFilter>();
+		List<Filter> complexFilters = new LinkedList<Filter>();
+		sortFilters(filter, simpleFilters, orFilters, complexFilters);
+		// shrinks the possible matches by appling simply filtes first
+		Collection<SessionRecord> matchingRecords = filterRecords(sessionRecords,
+					simpleFilters.toArray(new Filter[simpleFilters.size()]));
+		// handels or, this may also shrink the matching records by using
+		// primarily the cheap filters:
+		// for example: (A and B) or (C and D)
+		for (OrFilter or : orFilters) {
+			Collection<SessionRecord> temp = new HashSet<SessionRecord>();
+			temp.addAll(getSessionRecords(matchingRecords, or.getF1()));
+			temp.addAll(getSessionRecords(matchingRecords, or.getF2()));
+			matchingRecords = new LinkedList<SessionRecord>(temp);
+		}
+		// at last all nonoptimizable Filters are used
+		matchingRecords = filterRecords(matchingRecords,
+					complexFilters.toArray(new Filter[complexFilters.size()]));
+		return matchingRecords;
+	}
+
+	/**
+	 * @created 08.03.2011
+	 * @return a Collection of all SessionRecods, being matched by all filters
+	 */
+	private static Collection<SessionRecord> filterRecords(Collection<SessionRecord> sessionRecords, Filter... filters) {
+		Collection<SessionRecord> matchingRecords = new LinkedList<SessionRecord>();
+		next: for (SessionRecord sr : sessionRecords) {
+			for (Filter filter : filters) {
+				if (!filter.match(sr)) {
+					continue next;
+				}
+			}
+			// each filter matched
+			matchingRecords.add(sr);
+		}
+		return matchingRecords;
+	}
+
+	private void sortFilters(Filter filter, List<Filter> simpleFilters, List<OrFilter> orFilters, List<Filter> complexFilters) {
+		if (filter instanceof AndFilter) {
+			sortFilters(((AndFilter) filter).getF1(), simpleFilters, orFilters, complexFilters);
+			sortFilters(((AndFilter) filter).getF2(), simpleFilters, orFilters, complexFilters);
+		}
+		else if (isSimpleFilter(filter)) {
+			simpleFilters.add(filter);
+		}
+		else if (filter instanceof OrFilter) {
+			orFilters.add((OrFilter) filter);
+		}
+		else {
+			complexFilters.add(filter);
+		}
+	}
+
+	/**
+	 * Returns true, if evaluating the filter is cheaper than evaluating common
+	 * filters. Usually this method can be overwritten to mark which filters can
+	 * be executed without loading the whole record
+	 * 
+	 * @created 08.03.2011
+	 * @param f {@link Filter}
+	 * @return true if the {@link Filter} is simple
+	 */
+	protected boolean isSimpleFilter(Filter f) {
+		// an or filter is simple, when both subfilters are simple
+		if (f instanceof OrFilter) {
+			OrFilter or = (OrFilter) f;
+			return isSimpleFilter(or.getF1()) && isSimpleFilter(or.getF2());
+		}
+		return (f instanceof CreationDateFilter);
 	}
 
 }

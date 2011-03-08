@@ -16,28 +16,36 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.core.records;
+package de.d3web.core.records.filter;
 
-import java.util.List;
-
-import de.d3web.core.session.SessionHeader;
+import de.d3web.core.records.SessionRecord;
 
 /**
- * Represents a persistent session
+ * Matches if either one ore the other filter matches
  * 
  * @author Markus Friedrich (denkbares GmbH)
- * @created 20.09.2010
+ * @created 07.03.2011
  */
-public interface SessionRecord extends SessionHeader {
+public class OrFilter implements Filter {
 
-	void addValueFact(FactRecord fact);
+	private final Filter f1;
+	private final Filter f2;
 
-	void addInterviewFact(FactRecord fact);
+	public OrFilter(Filter f1, Filter f2) {
+		this.f1 = f1;
+		this.f2 = f2;
+	}
 
-	List<FactRecord> getValueFacts();
+	@Override
+	public boolean match(SessionRecord record) {
+		return f1.match(record) || f2.match(record);
+	}
 
-	List<FactRecord> getInterviewFacts();
+	public Filter getF1() {
+		return f1;
+	}
 
-	void setName(String name);
-
+	public Filter getF2() {
+		return f2;
+	}
 }
