@@ -188,7 +188,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 	}
 
 	@Override
-	public double getEntropy(Collection<? extends QASet> qasets,
+	public double getInformationGain(Collection<? extends QASet> qasets,
 			Collection<Solution> solutions, Session session) {
 		Map<Set<Condition>, Float> map = new HashMap<Set<Condition>, Float>();
 		float totalweight = 0;
@@ -244,7 +244,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 	}
 
 	@Override
-	public Collection<Solution> getPossibleSolutions(Session session) {
+	public Collection<Solution> getUndiscriminatedSolutions(Session session) {
 		List<Solution> solutions = session.getBlackboard().getSolutions(State.ESTABLISHED);
 		if (solutions.size() > 0) {
 			return solutions;

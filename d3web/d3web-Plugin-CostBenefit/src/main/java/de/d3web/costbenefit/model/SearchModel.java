@@ -95,7 +95,7 @@ public class SearchModel {
 	 */
 	public void addTarget(Target target) {
 		targets.add(target);
-		for (QContainer qcon : target) {
+		for (QContainer qcon : target.getQContainers()) {
 			Node key = getQContainerNode(qcon);
 			List<Target> refs = this.referencingTargets.get(key);
 			if (refs == null) {
@@ -249,8 +249,9 @@ public class SearchModel {
 	public Collection<? extends Node> getCombinedTargetsNodes() {
 		List<Node> list = new LinkedList<Node>();
 		for (Target t : targets) {
-			if (t.size() > 1) {
-				for (QContainer qcon : t) {
+			List<QContainer> qContainers = t.getQContainers();
+			if (qContainers.size() > 1) {
+				for (QContainer qcon : qContainers) {
 					list.add(map.get(qcon));
 				}
 			}

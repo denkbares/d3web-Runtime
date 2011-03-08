@@ -32,6 +32,7 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.costbenefit.model.SearchModel;
+import de.d3web.costbenefit.model.Target;
 
 /**
  * CaseObject for CostBenefit
@@ -41,11 +42,12 @@ import de.d3web.costbenefit.model.SearchModel;
 public class CostBenefitCaseObject extends SessionObject {
 
 	private QContainer[] currentSequence;
-	private SearchModel cbm;
+	private SearchModel searchModel;
 	private List<Fact> indicatedFacts = new LinkedList<Fact>();
 	private int currentPathIndex = -1;
 	private boolean hasBegun = false;
-	private Set<Solution> diags = new HashSet<Solution>();
+	private Set<Solution> undiscriminatedSolutions = new HashSet<Solution>();
+	private Set<Target> discriminatingTargets = new HashSet<Target>();
 	private final Session session;
 
 	public CostBenefitCaseObject(CaseObjectSource theSourceObject, Session session) {
@@ -65,12 +67,12 @@ public class CostBenefitCaseObject extends SessionObject {
 		this.currentSequence = Arrays.copyOf(currentSequence, currentSequence.length);
 	}
 
-	public SearchModel getCbm() {
-		return cbm;
+	public SearchModel getSearchModel() {
+		return searchModel;
 	}
 
-	public void setCbm(SearchModel cbm) {
-		this.cbm = cbm;
+	public void setSearchModel(SearchModel searchModel) {
+		this.searchModel = searchModel;
 	}
 
 	public int getCurrentPathIndex() {
@@ -118,12 +120,20 @@ public class CostBenefitCaseObject extends SessionObject {
 		return indicatedFacts.remove(fact);
 	}
 
-	public Set<Solution> getDiags() {
-		return diags;
+	public Set<Solution> getUndiscriminatedSolutions() {
+		return undiscriminatedSolutions;
 	}
 
-	public void setDiags(Set<Solution> diags) {
-		this.diags = diags;
+	public void setUndiscriminatedSolutions(Set<Solution> undiscriminatedSolutions) {
+		this.undiscriminatedSolutions = undiscriminatedSolutions;
+	}
+
+	public void setDiscriminatingTargets(Set<Target> allDiscriminatingTargets) {
+		this.discriminatingTargets = allDiscriminatingTargets;
+	}
+
+	public Set<Target> getDiscriminatingTargets() {
+		return discriminatingTargets;
 	}
 
 }

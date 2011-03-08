@@ -119,55 +119,144 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		}
 	}
 
-	private void calculateNewPath(CostBenefitCaseObject caseObject) {
-		Session session = caseObject.getSession();
-		Blackboard blackboard = session.getBlackboard();
+	void calculateNewPathTo(CostBenefitCaseObject caseObject, Target target) throws AbortException {
+		// first reset the search path
 		caseObject.resetPath();
+
+		// if there are any other interview objects left (e.g. from other
+		// problem solvers), we first are going to answer these before creating
+		// a new path
+		Session session = caseObject.getSession();
 		if (!session.getInterview().getInterviewAgenda().isEmpty()) return;
-		List<StrategicSupport> stratgicSupports = getStrategicSupports(session);
-		HashSet<Solution> diags = new HashSet<Solution>();
-		caseObject.setDiags(diags);
-		SearchModel cbm = new SearchModel(session);
-		caseObject.setCbm(cbm);
-		for (StrategicSupport strategicSupport : stratgicSupports) {
+
+		// searching for the best cost/benefit result
+		// (only if there is any benefitual target
+		initializeSearchModelTo(caseObject, target);
+		SearchModel searchModel = caseObject.getSearchModel();
+		searchAlgorithm.search(session, searchModel);
+
+		// sets the new path based on the result stored in the search model
+		// inside the specified case object.
+		Target bestTarget = searchModel.getBestCostBenefitTarget();
+		if (!(bestTarget == null || bestTarget.getMinPath() == null)) {
+			Path minPath = bestTarget.getMinPath();
+			activatePath(caseObject, minPath);
+		}
+		else {
+			throw new AbortException();
+		}
+	}
+
+	private void initializeSearchModelTo(CostBenefitCaseObject caseObject, Target target) {
+		Session session = caseObject.getSession();
+		SearchModel searchModel = new SearchModel(session);
+
+		searchModel.addTarget(target);
+		searchModel.maximizeBenefit(target, 1);
+
+		// set the undiscriminated solution to "null" to indicate that we will
+		// not consider them for checking to execute a new search
+		// we also leave the "discriminating targets" of the case object
+		// untouched because they are still valid.
+		caseObject.setUndiscriminatedSolutions(null);
+		caseObject.setSearchModel(searchModel);
+	}
+
+	private void calculateNewPath(CostBenefitCaseObject caseObject) {
+		// first reset the search path
+		caseObject.resetPath();
+
+		// if there are any other interview objects left (e.g. from other
+		// problem solvers), we first are going to answer these before creating
+		// a new path
+		Session session = caseObject.getSession();
+		if (!session.getInterview().getInterviewAgenda().isEmpty()) return;
+
+		// searching for the best cost/benefit result
+		// (only if there is any benefitual target
+		initializeSearchModel(caseObject);
+		SearchModel searchModel = caseObject.getSearchModel();
+		if (searchModel.getBestBenefit() != 0) {
+			searchAlgorithm.search(session, searchModel);
+		}
+
+		// sets the new path based on the result stored in the search model
+		// inside the specified case object.
+		Target bestTarget = searchModel.getBestCostBenefitTarget();
+		if (!(bestTarget == null || bestTarget.getMinPath() == null)) {
+			Path minPath = bestTarget.getMinPath();
+			activatePath(caseObject, minPath);
+		}
+	}
+
+	/**
+	 * Initializes the search model of this cost benefit case object to search
+	 * for the best cost benefit target. All possible questions to discriminate
+	 * are taken into account. Questions (or questionnaires) being
+	 * contra-indicated are left out from this search.
+	 * 
+	 * @created 08.03.2011
+	 * @param caseObject the case object to be initialized for searching
+	 */
+	private void initializeSearchModel(CostBenefitCaseObject caseObject) {
+		Session session = caseObject.getSession();
+		HashSet<Solution> allSolutions = new HashSet<Solution>();
+		HashSet<Target> allTargets = new HashSet<Target>();
+		SearchModel searchModel = new SearchModel(session);
+		List<StrategicSupport> strategicSupports = getStrategicSupports(session);
+		for (StrategicSupport strategicSupport : strategicSupports) {
+			// calculate the targets from the strategic support items
 			Collection<Solution> solutions = strategicSupport
-					.getPossibleSolutions(session);
-			diags.addAll(solutions);
+					.getUndiscriminatedSolutions(session);
 			Collection<Question> discriminatingQuestions = strategicSupport
 					.getDiscriminatingQuestions(solutions, session);
 			Collection<Target> targets = targetFunction.getTargets(session,
 					discriminatingQuestions, solutions, strategicSupport);
+			// TODO: remove targets of contra-indicated questions/qcontainers
+			// and rate the targets into the cost/benefit search model
 			for (Target target : targets) {
-				double benefit = strategicSupport.getEntropy(target, solutions, session);
+				double benefit = strategicSupport.getInformationGain(
+						target.getQContainers(), solutions, session);
 				if (benefit == 0) continue;
-				cbm.addTarget(target);
-				cbm.maximizeBenefit(target, benefit);
+				searchModel.addTarget(target);
+				searchModel.maximizeBenefit(target, benefit);
 			}
+			// recall them for storing into the case object
+			allSolutions.addAll(solutions);
+			allTargets.addAll(allTargets);
 		}
-		if (cbm.getBestBenefit() != 0) {
-			searchAlgorithm.search(session, cbm);
-			Target bestTarget = cbm.getBestCostBenefitTarget();
-			if (!(bestTarget == null || bestTarget.getMinPath() == null)) {
-				Path minPath = bestTarget.getMinPath();
-				Collection<Node> nodes = minPath.getNodes();
-				QContainer[] currentSequence = new QContainer[nodes.size()];
-				int i = 0;
-				List<Fact> facts = new LinkedList<Fact>();
-				for (Node node : nodes) {
-					QContainer qContainer = node.getQContainer();
-					currentSequence[i] = qContainer;
-					makeOKQuestionsUndone(currentSequence[i], session);
-					i++;
-					Fact fact = FactFactory.createFact(session, qContainer,
-							new Indication(State.INDICATED), this, this);
-					facts.add(fact);
-					blackboard.addInterviewFact(fact);
-				}
-				caseObject.setCurrentSequence(currentSequence);
-				caseObject.setIndicatedFacts(facts);
-			}
-			caseObject.setCurrentPathIndex(-1);
+		caseObject.setUndiscriminatedSolutions(allSolutions);
+		caseObject.setSearchModel(searchModel);
+		caseObject.setDiscriminatingTargets(allTargets);
+	}
+
+	/**
+	 * Activates a ready-made path by indicating its questionnaires and storing
+	 * it into the specified case object
+	 * 
+	 * @created 08.03.2011
+	 * @param caseObject the case object for this cost benefit session
+	 * @param path the path to be activated
+	 */
+	private void activatePath(CostBenefitCaseObject caseObject, Path path) {
+		Session session = caseObject.getSession();
+		Collection<Node> nodes = path.getNodes();
+		QContainer[] currentSequence = new QContainer[nodes.size()];
+		int i = 0;
+		List<Fact> facts = new LinkedList<Fact>();
+		for (Node node : nodes) {
+			QContainer qContainer = node.getQContainer();
+			currentSequence[i] = qContainer;
+			makeOKQuestionsUndone(currentSequence[i], session);
+			i++;
+			Fact fact = FactFactory.createFact(session, qContainer,
+					new Indication(State.INDICATED), this, this);
+			facts.add(fact);
+			session.getBlackboard().addInterviewFact(fact);
 		}
+		caseObject.setCurrentSequence(currentSequence);
+		caseObject.setCurrentPathIndex(-1);
+		caseObject.setIndicatedFacts(facts);
 	}
 
 	private List<StrategicSupport> getStrategicSupports(Session session) {
@@ -233,41 +322,50 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 				&& !isDone(currentSequence[caseObject.getCurrentPathIndex()], session)) {
 			return;
 		}
-		// if the possible Diagnosis have changed, a flag that a new path has to
-		// be calculated is set
-		boolean changeddiags = false;
-		List<StrategicSupport> strategicSupports = getStrategicSupports(session);
-		HashSet<Solution> possibleDiagnoses = new HashSet<Solution>();
-		for (StrategicSupport strategicSupport : strategicSupports) {
-			possibleDiagnoses.addAll(strategicSupport.getPossibleSolutions(session));
-		}
-		final Set<Solution> diags = caseObject.getDiags();
-		if (possibleDiagnoses.size() == diags.size()) {
-			for (Solution d : possibleDiagnoses) {
-				if (!diags.contains(d)) {
-					changeddiags = true;
-					break;
-				}
-			}
-		}
-		else {
-			changeddiags = true;
-		}
-		// if there is no sequence calculated, the possible diags have changed
-		// or the next qcontainer is not applicable, a new branch is calculated
-		if (currentSequence == null || changeddiags) {
+
+		// if there is no sequence calculated, the possible solutions have
+		// changed or the next qcontainer is not applicable, a new branch is
+		// calculated
+		if (currentSequence == null || hasChangedUndiscriminatedSolutions(caseObject)) {
 			calculateNewPath(caseObject);
 		}
 		activateNextQContainer(caseObject);
 	}
 
 	/**
+	 * Returns if the undiscriminated solutions have changed since the last use
+	 * of the search algorithm. This indicates that a new search should be
+	 * performed to adapt to the new diagnostic situation.
+	 * 
+	 * @created 08.03.2011
+	 * @param caseObject the cost benefit case object to be checked for changed
+	 *        solutions
+	 * @return if the undiscriminated solutions have been changed
+	 */
+	private boolean hasChangedUndiscriminatedSolutions(CostBenefitCaseObject caseObject) {
+		// if the current set of undiscriminated solutions is null
+		// this indicated that we will not check for undiscriminated solutions
+		// at all
+		if (caseObject.getUndiscriminatedSolutions() == null) return false;
+
+		// otherwise calculate the current solution sto be discriminated and
+		// compare them to the previous ones
+		Session session = caseObject.getSession();
+		HashSet<Solution> currentSolutions = new HashSet<Solution>();
+		for (StrategicSupport strategicSupport : getStrategicSupports(session)) {
+			currentSolutions.addAll(strategicSupport.getUndiscriminatedSolutions(session));
+		}
+		final Set<Solution> previousSolutions = caseObject.getUndiscriminatedSolutions();
+		return !previousSolutions.equals(currentSolutions);
+	}
+
+	/**
 	 * Checks, if all questions, contained in the specified {@link QASet} have a
 	 * value assigned to them in the specified session.
 	 * 
-	 * @param qaset the specified quaset
+	 * @param qaset the qaset to be checked
 	 * @param session the specified session
-	 * @return
+	 * @return if the qaset is fully answered
 	 */
 	private boolean isDone(QASet qaset, Session session) {
 		if (qaset instanceof Question) {

@@ -76,12 +76,14 @@ class IterativeDeepeningSearch {
 
 			@Override
 			public int compare(Target o1, Target o2) {
-				return -1 * (o1.getFirst().getName().compareTo(o2.getFirst().getName()));
+				String name1 = o1.getQContainers().get(0).getName();
+				String name2 = o2.getQContainers().get(0).getName();
+				return -1 * (name1.compareTo(name2));
 			}
 		});
 		List<Node> temp = new LinkedList<Node>();
 		for (Target t : possibleTargets) {
-			for (QContainer qcon : t) {
+			for (QContainer qcon : t.getQContainers()) {
 				temp.add(model.getQContainerNode(qcon));
 			}
 		}
