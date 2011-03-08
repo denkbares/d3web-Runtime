@@ -180,6 +180,7 @@ public final class SessionConversionFactory {
 			}
 
 		}
+		target.touch(source.getLastChangeDate());
 		return target;
 	}
 

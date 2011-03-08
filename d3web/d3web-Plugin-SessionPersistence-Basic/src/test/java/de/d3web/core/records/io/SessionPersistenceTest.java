@@ -53,6 +53,7 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.records.DefaultSessionRecord;
@@ -140,6 +141,7 @@ public class SessionPersistenceTest {
 		RuleFactory.createHeuristicPSRule(solution, Score.P7, new CondNumLess(questionNum,
 				0.0));
 		DefaultSession session = (DefaultSession) SessionFactory.createSession(kb);
+		session.getInfoStore().addValue(MMInfo.DESCRIPTION, "First test session");
 		session.setName(TESTNAME);
 		sessionID = session.getId();
 		Blackboard blackboard = session.getBlackboard();
@@ -423,6 +425,8 @@ public class SessionPersistenceTest {
 	private void checkValuesAfterReload(Session session, Session session2) throws IOException {
 		Assert.assertEquals(sessionID, session.getId());
 		Assert.assertEquals(TESTNAME, session.getName());
+		Assert.assertEquals("First test session",
+				session.getInfoStore().getValue(MMInfo.DESCRIPTION));
 		Assert.assertEquals(session2ID, session2.getId());
 		Assert.assertEquals(creationDate, session.getCreationDate());
 		Assert.assertEquals(lastChangeDate, session.getLastChangeDate());

@@ -153,6 +153,7 @@ public final class SessionPersistenceManager extends FragmentManager {
 							SessionPersistenceHandler theHandler = (SessionPersistenceHandler) extension.getSingleton();
 							theHandler.read(e, sr, listener);
 						}
+						sr.touch(dateOfLastEdit);
 						sessionRecords.add(sr);
 					}
 					catch (ParseException e1) {
