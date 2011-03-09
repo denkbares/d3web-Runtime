@@ -180,7 +180,7 @@ public interface Blackboard {
 	 * 
 	 * @return the collection of interview rated terminology objects
 	 */
-	public Collection<TerminologyObject> getInterviewObjects();
+	public Collection<InterviewObject> getInterviewObjects();
 
 	/**
 	 * Returns the current rating of the diagnosis. The returned rating is the

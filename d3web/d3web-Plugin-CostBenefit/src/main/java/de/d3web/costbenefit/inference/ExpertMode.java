@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
@@ -49,6 +50,11 @@ public class ExpertMode extends SessionObject {
 
 		@Override
 		public SessionObject createCaseObject(Session session) {
+			// check if it is allowed to create such an object
+			if (getPSMethodCostBenefit(session) == null) {
+				throw new IllegalStateException(
+						"ExpertMode cannot be used if session does not contain the cost benefit strategix solver");
+			}
 			return new ExpertMode(session);
 		}
 	};
@@ -57,8 +63,8 @@ public class ExpertMode extends SessionObject {
 
 		@Override
 		public int compare(Target target1, Target target2) {
-			// sort by the costs of the target
-			return (int) Math.signum(target1.getBenefit() - target2.getBenefit());
+			// sort by the costs of the target (sort descending)
+			return (int) Math.signum(target2.getBenefit() - target1.getBenefit());
 		}
 	};
 
@@ -68,11 +74,16 @@ public class ExpertMode extends SessionObject {
 	}
 
 	/**
-	 * Returns the ExportMode object for the specified session.
+	 * Returns the ExportMode object for the specified session. The expert mode
+	 * can only be received for sessions that uses a cost benefit strategic
+	 * solver. Otherwise an IllegalStateException is thrown.
 	 * 
 	 * @created 07.03.2011
 	 * @param session the session to get the expert mode instance for
 	 * @return the ExpertMode instance
+	 * @throws AbortException if no path towards the target could be found
+	 * @throws IllegalStateException if no cost benefit strategic solver is
+	 *         available in the specified session
 	 */
 	public static ExpertMode getExpertMode(Session session) {
 		return (ExpertMode) session.getCaseObject(EXPERT_MODE_SOURCE);
@@ -90,18 +101,19 @@ public class ExpertMode extends SessionObject {
 	 * become no longer applicable.
 	 * 
 	 * @created 07.03.2011
-	 * @param session
-	 * @return
+	 * @return the list of all alternative targets sorted by their benefit
 	 */
 	public List<Target> getAlternativeTargets() {
 		PSMethodCostBenefit psm = getPSMethodCostBenefit();
 		CostBenefitCaseObject pso = getCostBenefitCaseObject(psm);
-		SearchModel searchModel = pso.getSearchModel();
 
-		// create a list of all targets without the currently selected one
+		// create a list of all targets
 		List<Target> result = new ArrayList<Target>();
 		result.addAll(pso.getDiscriminatingTargets());
-		result.remove(searchModel.getBestCostBenefitTarget());
+
+		// but without the currently selected one
+		Target currentTarget = getCurrentTarget();
+		result.remove(currentTarget);
 
 		// sort the list regarding to their benefit to become our result
 		Collections.sort(result, BENEFIT_COMPARATOR);
@@ -113,7 +125,12 @@ public class ExpertMode extends SessionObject {
 	}
 
 	private PSMethodCostBenefit getPSMethodCostBenefit() {
-		return session.getPSMethodInstance(PSMethodCostBenefit.class);
+		return getPSMethodCostBenefit(session);
+	}
+
+	private static PSMethodCostBenefit getPSMethodCostBenefit(Session session) {
+		PSMethodCostBenefit psm = session.getPSMethodInstance(PSMethodCostBenefit.class);
+		return psm;
 	}
 
 	/**
@@ -137,7 +154,7 @@ public class ExpertMode extends SessionObject {
 	 * 
 	 * @created 07.03.2011
 	 * @param target the target to select
-	 * @throws AbortException
+	 * @throws AbortException if no path towards the target could be found
 	 * @see AbortException
 	 * @see AbortStrategy
 	 * @see SearchAlgorithm
@@ -147,12 +164,80 @@ public class ExpertMode extends SessionObject {
 		PSMethodCostBenefit psm = getPSMethodCostBenefit();
 		CostBenefitCaseObject pso = getCostBenefitCaseObject(psm);
 
-		psm.calculateNewPathTo(pso, target);
+		PropagationManager propagationManager = session.getPropagationManager();
+		try {
+			propagationManager.openPropagation();
+			psm.calculateNewPathTo(pso, target);
+			psm.activateNextQContainer(pso);
+		}
+		finally {
+			propagationManager.commitPropagation();
+		}
 	}
 
+	/**
+	 * Selects a new target for the interview strategy. This makes the cost
+	 * benefit problem solver to arrange a new questionnaire sequence (path) to
+	 * cover the selected target questionnaire. Because it might be complex to
+	 * find such a path (covering the target and preparing its preconditions),
+	 * this operation may require a long calculation.
+	 * <p>
+	 * The selected target questionnaire and the created path are valid until
+	 * the user answer some unexpected value. If he does the path becomes
+	 * invalid and the cost benefit strategic solver is in charge to create a
+	 * new path to the cost/benefit optimal target (based on the new situation).
+	 * If this behavior is not desired a new target has to be selected manually
+	 * afterwards, using this method again.
+	 * <p>
+	 * <b>Note:</b><br>
+	 * If the search algorithm is not able to provide such a path or if it
+	 * implements an abort strategy that prevents the algorithm from finding
+	 * such a path this method results in an {@link AbortException}.
+	 * 
+	 * @created 07.03.2011
+	 * @param target the target to select
+	 * @throws AbortException if no path towards the target could be found
+	 * @see AbortException
+	 * @see AbortStrategy
+	 * @see SearchAlgorithm
+	 * @see Target
+	 */
 	public void selectTarget(QContainer targetQuestionnaire) throws AbortException {
 		Target target = new Target(targetQuestionnaire);
 		selectTarget(target);
+	}
+
+	/**
+	 * Returns the current target. This is the target a path has been calculated
+	 * for and selected into the interview agenda. May return null if no current
+	 * target is available.
+	 * 
+	 * @created 08.03.2011
+	 * @return the current target of the cost benefit strategic solver
+	 */
+	public Target getCurrentTarget() {
+		PSMethodCostBenefit psm = getPSMethodCostBenefit();
+		CostBenefitCaseObject pso = getCostBenefitCaseObject(psm);
+
+		SearchModel searchModel = pso.getSearchModel();
+		if (searchModel == null) return null;
+
+		return searchModel.getBestCostBenefitTarget();
+	}
+
+	public void selectBestSequence() throws AbortException {
+		PSMethodCostBenefit psm = getPSMethodCostBenefit();
+		CostBenefitCaseObject pso = getCostBenefitCaseObject(psm);
+
+		PropagationManager propagationManager = session.getPropagationManager();
+		try {
+			propagationManager.openPropagation();
+			psm.calculateNewPath(pso);
+			psm.activateNextQContainer(pso);
+		}
+		finally {
+			propagationManager.commitPropagation();
+		}
 	}
 
 }

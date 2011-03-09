@@ -234,15 +234,12 @@ public class KnowledgeBase implements NamedObject {
 	 * @param qaset the specified init question to be added
 	 * @param priority a priority used to sort the specified question into the
 	 *        list of already existing init questionnaires
-	 * @return false, when the specified priority was already used
+	 * @return true, when the specified priority was already used before
 	 */
-	public boolean addInitQuestion(QASet qaset, Integer priority) {
-		boolean unusedPriority = false;
-		if (this.initQuestions.values().contains(priority)) {
-			unusedPriority = true;
-		}
+	public boolean addInitQuestion(QASet qaset, int priority) {
+		boolean alreadyused = this.initQuestions.values().contains(priority);
 		this.initQuestions.put(qaset, priority);
-		return unusedPriority;
+		return alreadyused;
 	}
 
 	/**

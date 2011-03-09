@@ -107,7 +107,7 @@ public final class SessionConversionFactory {
 				if (psMethod != null) {
 					if (psMethod.hasType(Type.source)) {
 						Value value = factRecord.getValue();
-						TerminologyObject object = kb.getManager().searchObjectForName(
+						TerminologyObject object = kb.getManager().search(
 								factRecord.getObjectName());
 						if (object == null) {
 							throw new IOException(

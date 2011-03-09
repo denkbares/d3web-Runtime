@@ -19,6 +19,7 @@
 
 package de.d3web.core.session.blackboard;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -240,9 +241,13 @@ public class DefaultBlackboard implements Blackboard {
 	}
 
 	@Override
-	public Collection<TerminologyObject> getInterviewObjects() {
-		return Collections.unmodifiableCollection(
-				this.interviewStorage.getValuedObjects());
+	public Collection<InterviewObject> getInterviewObjects() {
+		Collection<TerminologyObject> objects = this.interviewStorage.getValuedObjects();
+		ArrayList<InterviewObject> result = new ArrayList<InterviewObject>(objects.size());
+		for (TerminologyObject object : objects) {
+			result.add((InterviewObject) object);
+		}
+		return Collections.unmodifiableCollection(result);
 	}
 
 	@Override

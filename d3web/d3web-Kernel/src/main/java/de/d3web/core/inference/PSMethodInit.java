@@ -25,8 +25,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
@@ -68,6 +70,15 @@ public class PSMethodInit implements PSMethod {
 	public void init(Session session) {
 		session.getPropagationManager().openPropagation();
 		try {
+
+			// init default indications
+			List<? extends QASet> initQuestions = session.getKnowledgeBase().getInitQuestions();
+			for (QASet object : initQuestions) {
+				Fact fact = FactFactory.createIndicationFact(
+						session, object, new Indication(Indication.State.INDICATED), this, this);
+				session.getBlackboard().addInterviewFact(fact);
+			}
+
 			// initialise all questions
 			KnowledgeBase kb = session.getKnowledgeBase();
 			for (Question q : kb.getManager().getQuestions()) {

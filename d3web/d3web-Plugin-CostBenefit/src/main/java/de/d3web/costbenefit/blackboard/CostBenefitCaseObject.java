@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Solution;
@@ -45,7 +46,6 @@ public class CostBenefitCaseObject extends SessionObject {
 	private SearchModel searchModel;
 	private List<Fact> indicatedFacts = new LinkedList<Fact>();
 	private int currentPathIndex = -1;
-	private boolean hasBegun = false;
 	private Set<Solution> undiscriminatedSolutions = new HashSet<Solution>();
 	private Set<Target> discriminatingTargets = new HashSet<Target>();
 	private final Session session;
@@ -63,8 +63,14 @@ public class CostBenefitCaseObject extends SessionObject {
 		return currentSequence;
 	}
 
-	public void setCurrentSequence(QContainer[] currentSequence) {
-		this.currentSequence = Arrays.copyOf(currentSequence, currentSequence.length);
+	public boolean hasCurrentSequence() {
+		return this.currentSequence != null;
+	}
+
+	public void setCurrentSequence(QContainer[] newSequence) {
+		this.currentSequence = Arrays.copyOf(newSequence, newSequence.length);
+		Logger.getLogger(getClass().getName()).fine(
+				"new cost benefit sequence: " + Arrays.asList(newSequence));
 	}
 
 	public SearchModel getSearchModel() {
@@ -85,10 +91,11 @@ public class CostBenefitCaseObject extends SessionObject {
 
 	public void incCurrentPathIndex() {
 		currentPathIndex++;
-	}
-
-	public boolean isHasBegun() {
-		return hasBegun;
+		Logger.getLogger(getClass().getName()).fine(
+				"next qcontianer: "
+						+ (currentPathIndex >= currentSequence.length
+								? null
+								: currentSequence[currentPathIndex]));
 	}
 
 	/**
@@ -101,11 +108,6 @@ public class CostBenefitCaseObject extends SessionObject {
 		}
 		indicatedFacts = new LinkedList<Fact>();
 		this.currentPathIndex = -1;
-		hasBegun = false;
-	}
-
-	public void setHasBegun(boolean hasBegun) {
-		this.hasBegun = hasBegun;
 	}
 
 	public void setIndicatedFacts(List<Fact> indicatedFacts) {

@@ -102,7 +102,7 @@ public final class FactFactory {
 		Question question = kb.getManager().searchQuestion(questionID);
 		if (question == null) {
 			// if not found, then try to find a question with this name
-			question = (Question) kb.getManager().searchObjectForName(questionID);
+			question = (Question) kb.getManager().search(questionID);
 		}
 		if (question instanceof QuestionChoice) {
 			QuestionChoice qc = (QuestionChoice) question;
@@ -146,7 +146,7 @@ public final class FactFactory {
 		Question question = kb.getManager().searchQuestion(questionID);
 		if (question == null) {
 			// if not found, then try to find a question with this name
-			question = (Question) kb.getManager().searchObjectForName(questionID);
+			question = (Question) kb.getManager().search(questionID);
 		}
 		if (question != null) {
 			return createUserEnteredFact(question, value);

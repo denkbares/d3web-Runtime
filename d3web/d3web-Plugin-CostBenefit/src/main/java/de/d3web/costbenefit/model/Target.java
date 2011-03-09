@@ -172,4 +172,32 @@ public class Target {
 	public List<QContainer> getQContainers() {
 		return Collections.unmodifiableList(qContainers);
 	}
+
+	@Override
+	public String toString() {
+		return "Target" + this.qContainers +
+				"#B:" + this.benefit +
+				"#C:" + (minPath != null ? minPath.getCosts() : "?");
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		Target other = (Target) obj;
+		if (qContainers == null) {
+			if (other.qContainers != null) return false;
+		}
+		else if (!qContainers.equals(other.qContainers)) return false;
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((qContainers == null) ? 0 : qContainers.hashCode());
+		return result;
+	}
 }

@@ -19,6 +19,7 @@
 package de.d3web.costbenefit.inference;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -32,6 +33,7 @@ import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
+import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -97,43 +99,54 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 	 * 
 	 * @param caseObject {@link CaseObjectSource}
 	 */
-	private void activateNextQContainer(CostBenefitCaseObject caseObject) {
+	void activateNextQContainer(CostBenefitCaseObject caseObject) {
 		QContainer[] currentSequence = caseObject.getCurrentSequence();
 		Session session = caseObject.getSession();
-		if (currentSequence != null) {
-			if (caseObject.getCurrentPathIndex() == -1
+		if (currentSequence == null) return;
+		// only check if the current one is done
+		// (or no current one has been activated yet)
+		if (caseObject.getCurrentPathIndex() == -1
 					|| isDone(currentSequence[caseObject.getCurrentPathIndex()], session)) {
-				caseObject.incCurrentPathIndex();
-				caseObject.setHasBegun(false);
-				if (caseObject.getCurrentPathIndex() >= currentSequence.length) {
-					calculateNewPath(caseObject);
-					activateNextQContainer(caseObject);
-					return;
-				}
-				QContainer qc = currentSequence[caseObject.getCurrentPathIndex()];
-				if (!new Node(qc, null).isApplicable(session)) {
-					calculateNewPath(caseObject);
-					activateNextQContainer(caseObject);
-				}
+			caseObject.incCurrentPathIndex();
+			if (caseObject.getCurrentPathIndex() >= currentSequence.length) {
+				calculateNewPath(caseObject);
+				activateNextQContainer(caseObject);
+				return;
+			}
+			QContainer qc = currentSequence[caseObject.getCurrentPathIndex()];
+			if (!new Node(qc, null).isApplicable(session)) {
+				calculateNewPath(caseObject);
+				activateNextQContainer(caseObject);
 			}
 		}
 	}
 
+	/**
+	 * Calculates a new path to a specific target. The method also selects the
+	 * calculated path into the interview. The method ensures that the path will
+	 * be followed as long as possible.
+	 * <p>
+	 * Due to changing indications, this method should only be called inside a
+	 * propagation frame.
+	 * 
+	 * @created 08.03.2011
+	 * @param caseObject the case object to select the path for
+	 * @param target the target for the path to be calculated
+	 * @throws AbortException if no path could been established towards the
+	 *         specified target
+	 */
 	void calculateNewPathTo(CostBenefitCaseObject caseObject, Target target) throws AbortException {
 		// first reset the search path
 		caseObject.resetPath();
 
-		// if there are any other interview objects left (e.g. from other
-		// problem solvers), we first are going to answer these before creating
-		// a new path
-		Session session = caseObject.getSession();
-		if (!session.getInterview().getInterviewAgenda().isEmpty()) return;
+		// in contrast to the "usual" path creation we do *not* consider if
+		// there are already any other indicated qasets.
 
 		// searching for the best cost/benefit result
 		// (only if there is any benefitual target
 		initializeSearchModelTo(caseObject, target);
 		SearchModel searchModel = caseObject.getSearchModel();
-		searchAlgorithm.search(session, searchModel);
+		searchAlgorithm.search(caseObject.getSession(), searchModel);
 
 		// sets the new path based on the result stored in the search model
 		// inside the specified case object.
@@ -152,7 +165,11 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		SearchModel searchModel = new SearchModel(session);
 
 		searchModel.addTarget(target);
-		searchModel.maximizeBenefit(target, 1);
+		// initialize benefit in search model to a positive value
+		// (use 1 if there is no benefit inside the target)
+		double benefit = target.getBenefit();
+		if (benefit <= 0) benefit = 1.0;
+		searchModel.maximizeBenefit(target, benefit);
 
 		// set the undiscriminated solution to "null" to indicate that we will
 		// not consider them for checking to execute a new search
@@ -162,7 +179,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		caseObject.setSearchModel(searchModel);
 	}
 
-	private void calculateNewPath(CostBenefitCaseObject caseObject) {
+	void calculateNewPath(CostBenefitCaseObject caseObject) {
 		// first reset the search path
 		caseObject.resetPath();
 
@@ -170,10 +187,10 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 		// problem solvers), we first are going to answer these before creating
 		// a new path
 		Session session = caseObject.getSession();
-		if (!session.getInterview().getInterviewAgenda().isEmpty()) return;
+		if (hasUnansweredQuestions(session)) return;
 
 		// searching for the best cost/benefit result
-		// (only if there is any benefitual target
+		// (only if there is any benefit target)
 		initializeSearchModel(caseObject);
 		SearchModel searchModel = caseObject.getSearchModel();
 		if (searchModel.getBestBenefit() != 0) {
@@ -187,6 +204,19 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 			Path minPath = bestTarget.getMinPath();
 			activatePath(caseObject, minPath);
 		}
+	}
+
+	private boolean hasUnansweredQuestions(Session session) {
+		// return ! session.getInterview().getInterviewAgenda().isEmpty();
+		Blackboard blackboard = session.getBlackboard();
+		for (InterviewObject interviewObject : blackboard.getInterviewObjects()) {
+			if (blackboard.getIndication(interviewObject).isRelevant()) {
+				if (!isDone(interviewObject, session)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -223,7 +253,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 			}
 			// recall them for storing into the case object
 			allSolutions.addAll(solutions);
-			allTargets.addAll(allTargets);
+			allTargets.addAll(targets);
 		}
 		caseObject.setUndiscriminatedSolutions(allSolutions);
 		caseObject.setSearchModel(searchModel);
@@ -294,15 +324,27 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		CostBenefitCaseObject caseObject = (CostBenefitCaseObject) session.getCaseObject(this);
-		Set<QContainer> qcons = new HashSet<QContainer>();
+		Set<QContainer> answeredQuestionnaires = new HashSet<QContainer>();
 		for (PropagationEntry entry : changes) {
 			TerminologyObject object = entry.getObject();
 			if (!entry.isStrategic() && entry.hasChanged() && object instanceof Question) {
-				addParentContainers(qcons, object);
+				addParentContainers(answeredQuestionnaires, object);
 			}
 		}
-		for (QContainer qcon : qcons) {
+		// only proceed if we have received reals answers
+		if (answeredQuestionnaires.isEmpty()) return;
+
+		// for every finished QContainter fire its post transitions
+		boolean isAnyQuesionnaireDone = false;
+		List<QContainer> sequence = caseObject.getCurrentSequence() != null
+				? Arrays.asList(caseObject.getCurrentSequence())
+				: new LinkedList<QContainer>();
+		for (QContainer qcon : answeredQuestionnaires) {
 			if (isDone(qcon, session)) {
+				// mark is the questionnaire is either indicated or in our
+				// current sequence
+				isAnyQuesionnaireDone |= session.getBlackboard().getIndication(qcon).isRelevant();
+				isAnyQuesionnaireDone |= sequence.contains(qcon);
 				KnowledgeSlice ks = qcon.getKnowledgeStore().getKnowledge(
 						StateTransition.KNOWLEDGE_KIND);
 				if (ks != null) {
@@ -311,24 +353,36 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 				}
 			}
 		}
-		// determines if the user has begun our current qContainer
-		final QContainer[] currentSequence = caseObject.getCurrentSequence();
-		if (caseObject.getCurrentPathIndex() != -1 && !caseObject.isHasBegun()
-				&& currentSequence != null) {
-			caseObject.setHasBegun(qcons.contains(currentSequence[caseObject.getCurrentPathIndex()]));
-		}
-		// returns if the actual QContainer is not done and has begun yet
-		if (caseObject.isHasBegun()
-				&& !isDone(currentSequence[caseObject.getCurrentPathIndex()], session)) {
+
+		// only check if the current path entry is done
+		// this is important, because we have to complete a questionnaire to
+		// fire its transitions
+		// 1. we do not have any sequence yet
+		// 2. solutions have changed
+		// 3. next questionnaire is no longer applicable
+
+		// 1. we do not have any sequence yet
+		// and no other indication is unanswered
+		if (!caseObject.hasCurrentSequence() && !hasUnansweredQuestions(session)) {
+			calculateNewPath(caseObject);
+			activateNextQContainer(caseObject);
 			return;
 		}
 
-		// if there is no sequence calculated, the possible solutions have
-		// changed or the next qcontainer is not applicable, a new branch is
-		// calculated
-		if (currentSequence == null || hasChangedUndiscriminatedSolutions(caseObject)) {
+		// cost benefit only requires to act after at least one indicated
+		// questionnaire has been completed
+		if (!isAnyQuesionnaireDone) return;
+
+		// 2. check if there are any changed to our remembered solutions
+		if (hasChangedUndiscriminatedSolutions(caseObject)) {
 			calculateNewPath(caseObject);
+			activateNextQContainer(caseObject);
+			return;
 		}
+
+		// continue with our current sequence
+		// if current qcontainer is done
+		// recalculate if next step of sequence is not applicable
 		activateNextQContainer(caseObject);
 	}
 
@@ -367,7 +421,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 	 * @param session the specified session
 	 * @return if the qaset is fully answered
 	 */
-	private boolean isDone(QASet qaset, Session session) {
+	private boolean isDone(InterviewObject qaset, Session session) {
 		if (qaset instanceof Question) {
 			Value value = session.getBlackboard().getValue((Question) qaset);
 			if (UndefinedValue.isNotUndefinedValue(value)) {

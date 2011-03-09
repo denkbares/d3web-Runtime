@@ -196,7 +196,7 @@ public class ProtocolConversion {
 		if (psMethod == null) return null;
 
 		// find Question/Solution/QContainer
-		TerminologyObject terminologyObject = knowledgeBase.getManager().searchObjectForName(
+		TerminologyObject terminologyObject = knowledgeBase.getManager().search(
 				entry.getTerminologyObjectName());
 		if (terminologyObject == null) return null;
 

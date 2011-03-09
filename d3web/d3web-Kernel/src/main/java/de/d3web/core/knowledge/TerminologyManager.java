@@ -220,7 +220,9 @@ public class TerminologyManager {
 	 * @return the search terminology object; <code>null</code> if none found
 	 * @author joba
 	 * @date 15.04.2010
+	 * @deprecated use {@link #search(String)} instead
 	 */
+	@Deprecated
 	public TerminologyObject searchObjectForName(String name) {
 		return this.objectNameMap.get(name);
 	}

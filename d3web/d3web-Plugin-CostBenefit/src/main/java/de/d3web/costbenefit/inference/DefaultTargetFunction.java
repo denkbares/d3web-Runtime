@@ -23,11 +23,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.d3web.core.inference.StrategicSupport;
+import de.d3web.core.knowledge.Indication;
+import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.model.Target;
 
@@ -44,20 +47,39 @@ public class DefaultTargetFunction implements TargetFunction {
 			Collection<Question> relevantQuestions,
 			Collection<Solution> diagnosisToDiscriminate, StrategicSupport strategicSupport) {
 		Set<Target> set = new HashSet<Target>();
-		for (Question q : relevantQuestions) {
-			if (UndefinedValue.isUndefinedValue(session.getBlackboard().getValue(q))) addParentContainers(
-					set, q);
+		for (Question question : relevantQuestions) {
+			// ignore contra indicated question to be used as targets
+			if (isContraIndicated(session, question)) continue;
+			// if the question is not already answered,
+			// use its containers as possible targets
+			if (isUndefined(session, question)) addParentContainers(set, session, question);
 		}
 		return set;
 	}
 
-	private static void addParentContainers(Set<Target> targets, TerminologyObject q) {
-		for (TerminologyObject qaset : q.getParents()) {
-			if (qaset instanceof QContainer) {
-				targets.add(new Target((QContainer) qaset));
+	private static boolean isUndefined(Session session, Question question) {
+		Value value = session.getBlackboard().getValue(question);
+		return UndefinedValue.isUndefinedValue(value);
+	}
+
+	private static boolean isContraIndicated(Session session, InterviewObject object) {
+		Indication indication = session.getBlackboard().getIndication(object);
+		return indication.isContraIndicated();
+	}
+
+	private static void addParentContainers(Set<Target> targets, Session session, TerminologyObject object) {
+		for (TerminologyObject parent : object.getParents()) {
+			// if the parent is contra indicated
+			// we are not allowed to use it
+			if (isContraIndicated(session, (InterviewObject) parent)) continue;
+			if (parent instanceof QContainer) {
+				// if questionnaire, use it as target
+				targets.add(new Target((QContainer) parent));
 			}
 			else {
-				addParentContainers(targets, qaset);
+				// if not, check its parents
+				// (maybe the discriminating question is a follow-up question)
+				addParentContainers(targets, session, parent);
 			}
 		}
 
