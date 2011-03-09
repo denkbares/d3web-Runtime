@@ -225,7 +225,31 @@ public class ExpertMode extends SessionObject {
 		return searchModel.getBestCostBenefitTarget();
 	}
 
-	public void selectBestSequence() throws AbortException {
+	/**
+	 * Makes the cost benefit strategic solver to recalculate the possible
+	 * targets, search for paths towards these targets and to select the path
+	 * with the best cost/benefit ratio.
+	 * <p>
+	 * It can be used to switch back to the originally selected target after
+	 * using {@link #selectTarget(Target)} or {@link #selectTarget(QContainer)}
+	 * method. It might also be used to reinitialize the cost benefit solver
+	 * after setting a couple of values manually that are not part of the
+	 * questionnaires to be answered. (Note that due to performance reasons the
+	 * cost benefit solver recalculate the path only automatically after a
+	 * relevant/indicated questionnaire has been fully answered.)
+	 * <p>
+	 * <b>Note:</b><br>
+	 * The cost benefit solver does not selects any path if there are still
+	 * other questions open to be answered (the are already indicated to the
+	 * interview agenda but no answer has given yet). In such a situation, this
+	 * method also cancels the currently selected path of the cost benefit
+	 * strategic solver and does not calculate a new one. Instead this is done
+	 * automatically afterwards when all open indicated questions will have been
+	 * answered.
+	 * 
+	 * @created 09.03.2011
+	 */
+	public void selectBestSequence() {
 		PSMethodCostBenefit psm = getPSMethodCostBenefit();
 		CostBenefitCaseObject pso = getCostBenefitCaseObject(psm);
 
