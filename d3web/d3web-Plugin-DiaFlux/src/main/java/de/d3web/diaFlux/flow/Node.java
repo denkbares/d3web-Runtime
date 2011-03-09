@@ -104,9 +104,8 @@ public interface Node {
 	 * 
 	 * @created 12.11.2010
 	 * @param session the current session
-	 * @param snapshotNode the snapshot node that started this snapshot
 	 */
-	void takeSnapshot(Session session, SnapshotNode snapshotNode);
+	void takeSnapshot(Session session);
 
 	/**
 	 * Returns if the node should be re-evaluated on changes in its forward

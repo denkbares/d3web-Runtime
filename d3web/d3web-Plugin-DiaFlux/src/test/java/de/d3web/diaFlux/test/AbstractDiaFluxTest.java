@@ -20,9 +20,11 @@ package de.d3web.diaFlux.test;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -125,6 +127,7 @@ public abstract class AbstractDiaFluxTest {
 	protected final String nodeQ8_2 = nodeQ8 + "_2";
 	protected final String nodeQ9_2 = nodeQ9 + "_2";
 	protected final String nodeQ10_2 = nodeQ10 + "_2";
+	private long time;
 
 	AbstractDiaFluxTest(String fileName) {
 		this.fileName = fileName;
@@ -139,8 +142,8 @@ public abstract class AbstractDiaFluxTest {
 		kb = PersistenceManager.getInstance().load(file);
 
 		findQuestions();
-
-		session = SessionFactory.createSession(kb);
+		time = System.currentTimeMillis();
+		session = SessionFactory.createSession(kb, new Date(time));
 
 	}
 
@@ -223,7 +226,7 @@ public abstract class AbstractDiaFluxTest {
 		FlowSet flowSet = DiaFluxUtils.getFlowSet(session);
 
 		Flow flow = flowSet.getByName(flowName);
-		System.out.print("Supported Nodes in '" + flowName + "': ");
+		StringBuffer buffy = new StringBuffer("Supported Nodes in '" + flowName + "': ");
 		Set<Node> nodes = new HashSet<Node>();
 		for (FlowRun run : DiaFluxUtils.getDiaFluxCaseObject(session).getRuns()) {
 			for (Node node : run.getActiveNodes()) {
@@ -231,10 +234,10 @@ public abstract class AbstractDiaFluxTest {
 			}
 		}
 		for (Node node : flow.getNodes()) {
-			System.out.print(node.getID() + ", ");
+			buffy.append(node.getID() + ", ");
 
 		}
-		System.out.println();
+		Logger.getLogger(getClass().getName()).info(buffy.toString());
 
 		Assert.fail("Node '" + id + "' must be active.");
 
@@ -270,20 +273,16 @@ public abstract class AbstractDiaFluxTest {
 	}
 
 	protected void setChoiceValue(QuestionOC question, String answerName) {
-		System.out.println("Setting '" + question.getName() + "' to '" + answerName + "'.");
+		Logger.getLogger(getClass().getName()).info(
+				"Setting '" + question.getName() + "' to '" + answerName + "'.");
 
 		Choice choice = KnowledgeBaseUtils.findChoice(question, answerName);
 
 		Fact fact = FactFactory.createUserEnteredFact(question, new ChoiceValue(choice));
 
-		try {
-			Thread.sleep(2);
-			session.getBlackboard().addValueFact(fact);
-			Thread.sleep(2);
-		}
-		catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		session.getPropagationManager().openPropagation(++time);
+		session.getBlackboard().addValueFact(fact);
+		session.getPropagationManager().commitPropagation();
 
 	}
 

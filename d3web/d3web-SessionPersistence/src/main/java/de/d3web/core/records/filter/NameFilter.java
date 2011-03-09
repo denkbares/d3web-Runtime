@@ -37,7 +37,7 @@ public class NameFilter implements Filter {
 	}
 
 	@Override
-	public boolean match(SessionRecord record) {
+	public boolean accept(SessionRecord record) {
 		String name = record.getName();
 		if (name == null) return false;
 		return p.matcher(name).matches();

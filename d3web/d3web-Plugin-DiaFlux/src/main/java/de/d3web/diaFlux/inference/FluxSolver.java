@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -38,7 +37,6 @@ import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
-import de.d3web.core.session.blackboard.Facts;
 import de.d3web.diaFlux.flow.ComposedNode;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
 import de.d3web.diaFlux.flow.Edge;
@@ -65,6 +63,8 @@ public class FluxSolver implements PostHookablePSMethod {
 			"DEPENDANT_EDGES", EdgeMap.class);
 	public final static KnowledgeKind<NodeList> DEPENDANT_NODES = new KnowledgeKind<NodeList>(
 			"DEPENDANT_NODES", NodeList.class);
+
+	public static final Object SNAPSHOT_SOURCE = SnapshotNode.class;
 
 	public FluxSolver() {
 	}
@@ -114,7 +114,7 @@ public class FluxSolver implements PostHookablePSMethod {
 			return;
 		}
 
-		Logger.getLogger(FluxSolver.class.getName()).fine(
+		Logger.getLogger(FluxSolver.class.getName()).info(
 				"Start propagating: " + changes);
 
 		for (PropagationEntry propagationEntry : changes) {
@@ -287,19 +287,6 @@ public class FluxSolver implements PostHookablePSMethod {
 		return false;
 	}
 
-	public List<Edge> selectTrueEdges(Node node, Session session) {
-
-		List<Edge> result = new LinkedList<Edge>();
-
-		for (Edge edge : node.getOutgoingEdges()) {
-			if (evalToTrue(session, edge.getCondition())) {
-				result.add(edge);
-			}
-		}
-
-		return result;
-	}
-
 	@Override
 	public void postPropagate(Session session) {
 		if (!DiaFluxUtils.isFlowCase(session)) {
@@ -325,7 +312,8 @@ public class FluxSolver implements PostHookablePSMethod {
 		Map<FlowRun, Collection<SnapshotNode>> snappyFlows = getFlowRunsWithEnteredSnapshot(
 				enteredSnapshots,
 				caseObject);
-
+		Logger.getLogger(FluxSolver.class.getName()).info(
+				"Taking snapshots: " + snappyFlows);
 		// we clear the current trace if the last snapshot is out-dated.
 		// we do not if the propagation time is still the same (so we are in the
 		// same propagation cycle from the users perspective)
@@ -353,9 +341,8 @@ public class FluxSolver implements PostHookablePSMethod {
 		// Make snapshot of all related nodes
 		for (FlowRun flow : snappyFlows.keySet()) {
 			Collection<Node> activeNodes = flow.getActiveNodes();
-			Collection<SnapshotNode> activeSnapshots = snappyFlows.get(flow);
 			for (Node node : activeNodes) {
-				takeSnapshotFor(node, activeSnapshots, session);
+				node.takeSnapshot(session);
 				node.retract(session, flow);
 			}
 		}
@@ -451,27 +438,6 @@ public class FluxSolver implements PostHookablePSMethod {
 		return false;
 	}
 
-	// Set<INode> foundComposedNodes = new HashSet<INode>();
-	// for (INode node : allNodes) {
-	// node.getFlow();
-	// if (node instanceof ComposedNode) {
-	// ComposedNode cn = (ComposedNode) node;
-	// Flow subflow = DiaFluxUtils.getFlowSet(session).getByName(
-	// cn.getFlowName());
-	// for (INode child : children) {
-	// if (subflow.getNodes().contains(child)
-	// && (hasIncomingActivation(cn, oldrun, session) || hasNotLeftStartNode(
-	// cn, oldrun, session))) {
-	// newRun.addStartNode(cn);
-	// foundComposedNodes.add(cn);
-	// }
-	// }
-	// }
-	// }
-	// if (!foundComposedNodes.isEmpty()) {
-	// addRecursiveComposedNodes(foundComposedNodes, oldrun, newRun, session);
-	// }
-
 	private void computeParentsRecursive(Node child, Collection<Node> result, Collection<Node> allNodes) {
 		Flow calledFlow = child.getFlow();
 		for (Node node : allNodes) {
@@ -482,12 +448,6 @@ public class FluxSolver implements PostHookablePSMethod {
 					computeParentsRecursive(node, result, allNodes);
 				}
 			}
-		}
-	}
-
-	private void takeSnapshotFor(Node node, Collection<SnapshotNode> activeSnapshots, Session session) {
-		for (SnapshotNode snapshotNode : activeSnapshots) {
-			node.takeSnapshot(session, snapshotNode);
 		}
 	}
 
@@ -535,14 +495,14 @@ public class FluxSolver implements PostHookablePSMethod {
 		node.execute(session, flowRun);
 	}
 
-	public static void takeSnapshot(Session session, SnapshotNode node) {
-
-	}
-
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
-
-		return Facts.getLatestFact(facts);
+		for (Fact fact : facts) {
+			if (!(fact.getSource() == SNAPSHOT_SOURCE)) {
+				return fact;
+			}
+		}
+		return facts[0];
 	}
 
 	@Override

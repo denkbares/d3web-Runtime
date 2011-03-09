@@ -35,5 +35,5 @@ public interface Filter {
 	 * @param record {@link SessionRecord}
 	 * @return true if it matches the requirements, false otherwise
 	 */
-	boolean match(SessionRecord record);
+	boolean accept(SessionRecord record);
 }

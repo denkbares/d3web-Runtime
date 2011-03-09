@@ -88,14 +88,15 @@ public class ActionNode extends AbstractNode {
 	}
 
 	@Override
-	public void takeSnapshot(Session session, SnapshotNode snapshotNode) {
+	public void takeSnapshot(Session session) {
 
-		super.takeSnapshot(session, snapshotNode);
+		super.takeSnapshot(session);
 
 		// redo action with SSN as source
 		retract(session, null);
 
-		getAction().doIt(session, snapshotNode, session.getPSMethodInstance(FluxSolver.class));
+		getAction().doIt(session, FluxSolver.SNAPSHOT_SOURCE,
+				session.getPSMethodInstance(FluxSolver.class));
 
 	}
 

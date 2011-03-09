@@ -36,7 +36,6 @@ public class MultipleSnapshots1Test extends AbstractDiaFluxTest {
 	@Test
 	public void testFirstCycle() throws Exception {
 
-		Thread.sleep(2);
 		doFirstCycle();
 
 	}
@@ -73,20 +72,16 @@ public class MultipleSnapshots1Test extends AbstractDiaFluxTest {
 	@Test
 	public void testSecondCycle() throws Exception {
 
-		Thread.sleep(2);
 		doFirstCycle();
-		Thread.sleep(2);
 		doSecondCycle();
 
 	}
 
 	@Test
 	public void testTorture() throws Exception {
-		Thread.sleep(2);
 		doFirstCycle();
 
 		for (int i = 0; i < TORTURE_LIMIT; i++) {
-			Thread.sleep(2);
 			doSecondCycle();
 		}
 

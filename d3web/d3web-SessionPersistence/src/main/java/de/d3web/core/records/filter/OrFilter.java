@@ -37,8 +37,8 @@ public class OrFilter implements Filter {
 	}
 
 	@Override
-	public boolean match(SessionRecord record) {
-		return f1.match(record) || f2.match(record);
+	public boolean accept(SessionRecord record) {
+		return f1.accept(record) || f2.accept(record);
 	}
 
 	public Filter getF1() {

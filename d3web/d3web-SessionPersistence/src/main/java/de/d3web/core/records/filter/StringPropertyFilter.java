@@ -48,7 +48,7 @@ public class StringPropertyFilter implements Filter {
 	}
 
 	@Override
-	public boolean match(SessionRecord record) {
+	public boolean accept(SessionRecord record) {
 		String value;
 		if (locale != null) {
 			value = record.getInfoStore().getValue(property, locale);

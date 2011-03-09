@@ -23,10 +23,15 @@ package de.d3web.indication;
 import java.util.ArrayList;
 
 import de.d3web.core.inference.PSAction;
+import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.session.Session;
+import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.FactFactory;
 
 /**
  * This action type indicates a list of {@link QASet} instances no matter,
@@ -44,11 +49,26 @@ public class ActionRepeatedIndication extends ActionNextQASet {
 		return INDICATION;
 	}
 
-
 	@Override
 	public PSAction copy() {
 		ActionRepeatedIndication a = new ActionRepeatedIndication();
 		a.setQASets(new ArrayList<QASet>(getQASets()));
 		return a;
+	}
+
+	@Override
+	public void doIt(Session session, Object source, PSMethod psmethod) {
+		for (QASet qaset : getQASets()) {
+
+			if (qaset == null) continue;
+
+			Indication oldIndication = session.getBlackboard().getIndication(qaset);
+			Fact fact = FactFactory.createFact(
+					session, qaset, getIndication(), source, psmethod);
+			session.getBlackboard().addInterviewFact(fact);
+			// notify immediately to enable usage in condition
+			PropagationEntry entry = new PropagationEntry(qaset, oldIndication, INDICATION);
+			session.getInterview().notifyFactChange(entry);
+		}
 	}
 }

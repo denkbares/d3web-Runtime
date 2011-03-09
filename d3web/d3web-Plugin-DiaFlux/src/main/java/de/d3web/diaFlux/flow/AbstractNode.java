@@ -136,7 +136,7 @@ public abstract class AbstractNode implements Node {
 	}
 
 	@Override
-	public void takeSnapshot(Session session, SnapshotNode snapshotNode) {
+	public void takeSnapshot(Session session) {
 
 	}
 

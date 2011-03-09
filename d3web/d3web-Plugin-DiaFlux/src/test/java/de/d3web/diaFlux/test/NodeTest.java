@@ -224,7 +224,7 @@ public class NodeTest {
 
 	/**
 	 * Test method for
-	 * {@link de.d3web.diaFlux.flow.AbstractNode#takeSnapshot(de.d3web.core.session.Session, de.d3web.diaFlux.flow.SnapshotNode)}
+	 * {@link de.d3web.diaFlux.flow.AbstractNode#takeSnapshot(de.d3web.core.session.Session)}
 	 * .
 	 */
 	@Test

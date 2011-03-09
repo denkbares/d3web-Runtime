@@ -18,9 +18,10 @@
  */
 package de.d3web.core.inference.condition;
 
+import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
 
 /**
  * This condition checks, if an NamedObject (e.g. Question) has a value or was
@@ -43,16 +44,10 @@ public class CondRepeatedAnswered extends CondQuestion {
 
 	@Override
 	public boolean eval(Session session) throws NoAnswerException {
-		Fact interviewFact = session.getBlackboard().getInterviewFact(getQuestion());
-		Fact valueFact = session.getBlackboard().getValueFact(getQuestion());
-
-		if (valueFact == null || interviewFact == null) {
-			return false;
-		}
-
-		long indicationTime = interviewFact.getTime();
-		long valueTime = valueFact.getTime();
-		return valueTime > indicationTime;
+		return session.getBlackboard().getIndication(getQuestion()).hasState(
+				Indication.State.REPEATED_INDICATED)
+				&& session.getInterview().getInterviewAgenda().hasState(getQuestion(),
+						InterviewState.INACTIVE);
 	}
 
 	@Override

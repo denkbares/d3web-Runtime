@@ -97,6 +97,7 @@ public class DefaultSessionRepository implements SessionRepository {
 
 	@Override
 	public Collection<SessionRecord> getSessionRecords(Filter filter) {
+		if (filter == null) return sessionRecords.values();
 		// to enable recursive calls with a subset of the sessionRecords, the
 		// method is extracted
 		return getSessionRecords(sessionRecords.values(), filter);
@@ -133,7 +134,7 @@ public class DefaultSessionRepository implements SessionRepository {
 		Collection<SessionRecord> matchingRecords = new LinkedList<SessionRecord>();
 		next: for (SessionRecord sr : sessionRecords) {
 			for (Filter filter : filters) {
-				if (!filter.match(sr)) {
+				if (!filter.accept(sr)) {
 					continue next;
 				}
 			}

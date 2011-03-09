@@ -45,6 +45,8 @@ import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionMC;
@@ -116,6 +118,8 @@ public class SessionPersistenceTest {
 	private File directory;
 	private Date creationDate;
 	private Date lastChangeDate;
+	private DefaultSession session;
+	private Session session2;
 
 	@Before
 	public void setUp() throws IOException {
@@ -140,7 +144,7 @@ public class SessionPersistenceTest {
 				0.0));
 		RuleFactory.createHeuristicPSRule(solution, Score.P7, new CondNumLess(questionNum,
 				0.0));
-		DefaultSession session = (DefaultSession) SessionFactory.createSession(kb);
+		session = (DefaultSession) SessionFactory.createSession(kb);
 		session.getInfoStore().addValue(MMInfo.DESCRIPTION, "First test session");
 		session.setName(TESTNAME);
 		sessionID = session.getId();
@@ -162,7 +166,7 @@ public class SessionPersistenceTest {
 		creationDate = session.getCreationDate();
 		lastChangeDate = session.getLastChangeDate();
 		sessionRecord = SessionConversionFactory.copyToSessionRecord(session);
-		Session session2 = SessionFactory.createSession(kb);
+		session2 = SessionFactory.createSession(kb);
 		session2ID = session2.getId();
 		session2.getPropagationManager().openPropagation();
 		Blackboard blackboard2 = session2.getBlackboard();
@@ -457,6 +461,26 @@ public class SessionPersistenceTest {
 		Assert.assertEquals(protocol2.getProtocolHistory(FactProtocolEntry.class).size(), 2);
 		Assert.assertEquals(protocol.getProtocolHistory(TextProtocolEntry.class).size(), 2);
 		Assert.assertEquals(protocol2.getProtocolHistory(TextProtocolEntry.class).size(), 0);
+		// compare all facts
+		compareFacts(this.session, session);
+		compareFacts(this.session2, session2);
+	}
+
+	private static void compareFacts(Session originalSession, Session reloadedSession) {
+		Blackboard reloadedBlackboard = reloadedSession.getBlackboard();
+		Blackboard originalBlackboard = originalSession.getBlackboard();
+		for (TerminologyObject to : originalBlackboard.getValuedObjects()) {
+			TerminologyObject toReloaded = reloadedSession.getKnowledgeBase().getManager().search(
+					to.getName());
+			Assert.assertEquals(originalBlackboard.getValueFact((ValueObject) to),
+					reloadedBlackboard.getValueFact((ValueObject) toReloaded));
+		}
+		for (TerminologyObject to : originalBlackboard.getInterviewObjects()) {
+			TerminologyObject toReloaded = reloadedSession.getKnowledgeBase().getManager().search(
+					to.getName());
+			Assert.assertEquals(originalBlackboard.getInterviewFact(to),
+					reloadedBlackboard.getInterviewFact(toReloaded));
+		}
 	}
 
 	/**

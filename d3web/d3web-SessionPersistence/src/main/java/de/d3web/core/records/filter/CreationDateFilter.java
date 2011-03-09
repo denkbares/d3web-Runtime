@@ -63,7 +63,7 @@ public class CreationDateFilter implements Filter {
 	}
 
 	@Override
-	public boolean match(SessionRecord record) {
+	public boolean accept(SessionRecord record) {
 		Date creationDate = record.getCreationDate();
 		if (creationDate.equals(startDate) && includingStartDate) {
 			return true;

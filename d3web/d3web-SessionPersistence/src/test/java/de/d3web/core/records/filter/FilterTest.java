@@ -138,10 +138,10 @@ public class FilterTest {
 		Filter or = new OrFilter(f1, f2);
 		Collection<SessionRecord> records = repository.getSessionRecords(and);
 		Assert.assertEquals(1, records.size());
-		Assert.assertTrue(and.match(records.iterator().next()));
+		Assert.assertTrue(and.accept(records.iterator().next()));
 		records = repository.getSessionRecords(or);
 		Assert.assertEquals(3, records.size());
-		Assert.assertTrue(or.match(records.iterator().next()));
+		Assert.assertTrue(or.accept(records.iterator().next()));
 		// after time +1
 		f1 = new CreationDateFilter(new Date(time + 1), null, false, false);
 		// before time +1
@@ -180,7 +180,7 @@ public class FilterTest {
 		}
 
 		@Override
-		public boolean match(SessionRecord record) {
+		public boolean accept(SessionRecord record) {
 			count--;
 			if (count < 0) throw new AssertionFailedError("Filter was called to often.");
 			return true;
