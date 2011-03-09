@@ -188,7 +188,7 @@ public class NodeTest {
 				(Node) incomingNode2, (Node) outgoingNode1, (Node) outgoingNode2);
 		List<Edge> edgeList = Arrays.asList((Edge) incomingEdge1, (Edge) incomingEdge2,
 				(Edge) outgoingEdge1, (Edge) outgoingEdge2);
-		Flow testFlow = FlowFactory.createFlow("testFlow_ID", "Main", nodeList, edgeList);
+		Flow testFlow = FlowFactory.createFlow(null, "Main", nodeList, edgeList);
 		testFlow.setAutostart(true);
 
 		assertThat(testSubject.getFlow(), is(nullValue()));

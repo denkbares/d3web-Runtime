@@ -117,7 +117,6 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	 */
 	private Element writeFlow(Flow flow, Document doc) throws IOException {
 		Element flowElem = doc.createElement(FLOW_ELEM);
-		flowElem.setAttribute(ID, flow.getId());
 		flowElem.setAttribute(AUTOSTART, Boolean.toString(flow.isAutostart()));
 		flowElem.setAttribute(NAME, flow.getName());
 
@@ -136,7 +135,6 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 
 		}
 
-		// TODO autosave??
 		XMLUtil.appendInfoStore(flowElem, flow, null);
 
 		return flowElem;
@@ -234,7 +232,6 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 
 			fillInfoStore(flow, flowElem, knowledgeBase);
 
-			DiaFluxUtils.addFlow(flow, knowledgeBase);
 		}
 
 	}
@@ -280,9 +277,8 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 		}
 
 		String name = flowElem.getAttribute(NAME);
-		String id = flowElem.getAttribute(ID);
 		boolean autostart = Boolean.parseBoolean(flowElem.getAttribute(AUTOSTART));
-		Flow flow = FlowFactory.createFlow(id, name, nodes, edges);
+		Flow flow = FlowFactory.createFlow(knowledgeBase, name, nodes, edges);
 		flow.setAutostart(autostart);
 		return flow;
 

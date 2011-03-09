@@ -160,10 +160,8 @@ public class DiaFluxPersistenceTest {
 		// ----------------------------------
 
 		// Create the flowchart...
-		Flow testFlow = FlowFactory.createFlow("testFlow_ID", "Main", nodesList, edgesList);
+		Flow testFlow = FlowFactory.createFlow(kb, "Main", nodesList, edgesList);
 		testFlow.setAutostart(true);
-
-		DiaFluxUtils.addFlow(testFlow, kb);
 
 		// add a property to Infostore, to test its persistence
 		testFlow.getInfoStore().addValue(MMInfo.DESCRIPTION,
@@ -175,7 +173,7 @@ public class DiaFluxPersistenceTest {
 
 	@Test
 	public void testInfoStorePersistence() {
-		InfoStore infoStore = DiaFluxUtils.getFlowSet(kb).get("testFlow_ID").getInfoStore();
+		InfoStore infoStore = DiaFluxUtils.getFlowSet(kb).get("Main").getInfoStore();
 
 		Assert.assertTrue("Infostore does not contain a description",
 				infoStore.contains(MMInfo.DESCRIPTION));

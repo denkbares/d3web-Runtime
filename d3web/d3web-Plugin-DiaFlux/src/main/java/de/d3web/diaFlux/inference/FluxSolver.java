@@ -35,15 +35,16 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.session.CaseObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.diaFlux.flow.ComposedNode;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
 import de.d3web.diaFlux.flow.Edge;
 import de.d3web.diaFlux.flow.EdgeMap;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowRun;
-import de.d3web.diaFlux.flow.FlowSet;
 import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.flow.NodeList;
 import de.d3web.diaFlux.flow.SnapshotNode;
@@ -55,10 +56,8 @@ import de.d3web.diaFlux.flow.StartNode;
  * @created: 10.09.2009
  * 
  */
-public class FluxSolver implements PostHookablePSMethod {
+public class FluxSolver implements PostHookablePSMethod, CaseObjectSource {
 
-	public static final KnowledgeKind<FlowSet> DIAFLUX = new KnowledgeKind<FlowSet>("DIAFLUX",
-			FlowSet.class);
 	public final static KnowledgeKind<EdgeMap> DEPENDANT_EDGES = new KnowledgeKind<EdgeMap>(
 			"DEPENDANT_EDGES", EdgeMap.class);
 	public final static KnowledgeKind<NodeList> DEPENDANT_NODES = new KnowledgeKind<NodeList>(
@@ -233,6 +232,11 @@ public class FluxSolver implements PostHookablePSMethod {
 				}
 			}
 		}
+	}
+
+	@Override
+	public SessionObject createCaseObject(Session session) {
+		return new DiaFluxCaseObject(this);
 	}
 
 	/**

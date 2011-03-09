@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
@@ -45,12 +44,18 @@ public final class DiaFluxUtils {
 	private DiaFluxUtils() {
 	}
 
+	// TODO cleanup, new FlowSet is created on each call
 	public static FlowSet getFlowSet(KnowledgeBase knowledgeBase) {
 
-		KnowledgeSlice knowledge = knowledgeBase.getKnowledgeStore().getKnowledge(
-				FluxSolver.DIAFLUX);
+		List<Flow> objects = knowledgeBase.getManager().getObjects(Flow.class);
 
-		return (FlowSet) knowledge;
+		FlowSet set = new FlowSet();
+
+		for (Flow flow : objects) {
+			set.put(flow);
+		}
+
+		return set;
 
 	}
 
@@ -72,29 +77,7 @@ public final class DiaFluxUtils {
 	}
 
 	public static DiaFluxCaseObject getDiaFluxCaseObject(Session session) {
-
-		FlowSet flowSet = getFlowSet(session);
-
-		return (DiaFluxCaseObject) session.getCaseObject(flowSet);
-	}
-
-	/**
-	 * Adds the supplied flow to the knowledge base.
-	 * 
-	 * @param flow
-	 * @param base
-	 */
-	public static void addFlow(Flow flow, KnowledgeBase base) {
-
-		FlowSet flowSet = base.getKnowledgeStore().getKnowledge(FluxSolver.DIAFLUX);
-		;
-		if (flowSet == null) {
-			flowSet = new FlowSet();
-			base.getKnowledgeStore().addKnowledge(FluxSolver.DIAFLUX, flowSet);
-
-		}
-		flowSet.put(flow);
-
+		return (DiaFluxCaseObject) session.getCaseObject(session.getPSMethodInstance(FluxSolver.class));
 	}
 
 	public static List<StartNode> getAutostartNodes(KnowledgeBase base) {
@@ -121,7 +104,7 @@ public final class DiaFluxUtils {
 					("No Flowcharts found in kb."));
 		}
 
-		Flow subflow = flowSet.getByName(flowName);
+		Flow subflow = flowSet.get(flowName);
 
 		if (subflow == null) {
 			Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,
@@ -157,7 +140,7 @@ public final class DiaFluxUtils {
 					("No Flowcharts found in kb."));
 		}
 
-		Flow subflow = flowSet.getByName(flowName);
+		Flow subflow = flowSet.get(flowName);
 
 		if (subflow == null) {
 			Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,
@@ -193,7 +176,7 @@ public final class DiaFluxUtils {
 					("No Flowcharts found in kb."));
 		}
 
-		Flow subflow = flowSet.getByName(flowName);
+		Flow subflow = flowSet.get(flowName);
 
 		if (subflow == null) {
 			Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,

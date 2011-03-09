@@ -165,7 +165,7 @@ public abstract class AbstractDiaFluxTest {
 
 		FlowSet flowSet = DiaFluxUtils.getFlowSet(session);
 
-		Flow flow = flowSet.getByName(flowName);
+		Flow flow = flowSet.get(flowName);
 
 		List<String> inactiveIDs = new ArrayList<String>();
 
@@ -192,7 +192,7 @@ public abstract class AbstractDiaFluxTest {
 
 		FlowSet flowSet = DiaFluxUtils.getFlowSet(session);
 
-		Flow flow = flowSet.getByName(flowName);
+		Flow flow = flowSet.get(flowName);
 
 		nextNode: for (Node node : flow.getNodes()) {
 			boolean supported = isSupported(node);
@@ -225,7 +225,7 @@ public abstract class AbstractDiaFluxTest {
 	private void failWithUnsupportedNode(String flowName, String id) {
 		FlowSet flowSet = DiaFluxUtils.getFlowSet(session);
 
-		Flow flow = flowSet.getByName(flowName);
+		Flow flow = flowSet.get(flowName);
 		StringBuffer buffy = new StringBuffer("Supported Nodes in '" + flowName + "': ");
 		Set<Node> nodes = new HashSet<Node>();
 		for (FlowRun run : DiaFluxUtils.getDiaFluxCaseObject(session).getRuns()) {
@@ -247,7 +247,7 @@ public abstract class AbstractDiaFluxTest {
 
 		FlowSet flowSet = DiaFluxUtils.getFlowSet(session);
 
-		Flow flow = flowSet.getByName(flowName);
+		Flow flow = flowSet.get(flowName);
 
 		nextNode: for (Node node : flow.getNodes()) {
 			boolean supported = isSupported(node);
@@ -283,7 +283,7 @@ public abstract class AbstractDiaFluxTest {
 		session.getPropagationManager().openPropagation(++time);
 		session.getBlackboard().addValueFact(fact);
 		session.getPropagationManager().commitPropagation();
-
+		
 	}
 
 }

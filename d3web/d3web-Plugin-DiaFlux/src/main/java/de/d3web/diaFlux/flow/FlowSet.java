@@ -26,15 +26,12 @@ import java.util.Map;
 import java.util.Set;
 
 import de.d3web.core.inference.KnowledgeSlice;
-import de.d3web.core.session.CaseObjectSource;
-import de.d3web.core.session.Session;
-import de.d3web.core.session.blackboard.SessionObject;
 
 /**
  * 
  * @author Reinhard Hatko Created on: 04.11.2009
  */
-public class FlowSet implements KnowledgeSlice, CaseObjectSource, Iterable<Flow> {
+public class FlowSet implements KnowledgeSlice, Iterable<Flow> {
 
 	private final Map<String, Flow> map;
 
@@ -42,31 +39,16 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource, Iterable<Flow>
 		this.map = new HashMap<String, Flow>();
 	}
 
-	@Override
-	public SessionObject createCaseObject(Session session) {
-
-		return new DiaFluxCaseObject(this);
-	}
-
-	public boolean contains(String id) {
-		return map.containsKey(id);
+	public boolean contains(String name) {
+		return map.containsKey(name);
 	}
 
 	public boolean containsValue(Flow flow) {
 		return map.containsValue(flow);
 	}
 
-	public Flow get(String id) {
-		return map.get(id);
-	}
-
-	public Flow getByName(String name) {
-
-		for (Flow flow : getFlows()) {
-			if (flow.getName().equals(name)) return flow;
-		}
-
-		return null;
+	public Flow get(String name) {
+		return map.get(name);
 	}
 
 	public Set<String> getIDs() {
@@ -74,11 +56,11 @@ public class FlowSet implements KnowledgeSlice, CaseObjectSource, Iterable<Flow>
 	}
 
 	public Flow put(Flow flow) {
-		return map.put(flow.getId(), flow);
+		return map.put(flow.getName(), flow);
 	}
 
-	public Flow remove(String id) {
-		return map.remove(id);
+	public Flow remove(String name) {
+		return map.remove(name);
 	}
 
 	public int size() {

@@ -55,7 +55,6 @@ import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.flow.SnapshotNode;
 import de.d3web.diaFlux.flow.StartNode;
 import de.d3web.diaFlux.inference.ConditionTrue;
-import de.d3web.diaFlux.inference.DiaFluxUtils;
 import de.d3web.diaFlux.inference.NodeActiveCondition;
 import de.d3web.indication.ActionInstantIndication;
 import de.d3web.plugin.test.InitPluginManager;
@@ -148,9 +147,8 @@ public class UseFluxProblemSolverTest {
 	@Test
 	public void testFluxSolver() {
 		// Create the flowchart...
-		Flow testFlow = FlowFactory.createFlow("testFlow_ID", "Main", nodesList, edgesList);
+		Flow testFlow = FlowFactory.createFlow(kb, "Main", nodesList, edgesList);
 		testFlow.setAutostart(true);
-		DiaFluxUtils.addFlow(testFlow, kb);
 		session = SessionFactory.createSession(kb);
 		testBasicFlow();
 		testDeactivation();
@@ -187,8 +185,7 @@ public class UseFluxProblemSolverTest {
 	@Test
 	public void testSubFlows() {
 		// create inner flowchart
-		Flow innerFlow = FlowFactory.createFlow("Flow1", "innerFlow", nodesList, edgesList);
-		DiaFluxUtils.addFlow(innerFlow, kb);
+		FlowFactory.createFlow(kb, "innerFlow", nodesList, edgesList);
 		// create surrounding flowchart
 		Node startNode = new StartNode("Start_ID2", "Start");
 		Node innerFlowNode = new ComposedNode("Flow1", "innerFlow", "Start");
@@ -201,9 +198,8 @@ public class UseFluxProblemSolverTest {
 				"innerFlow", "Ende"));
 		List<Node> nodesList = Arrays.asList(startNode, innerFlowNode, setterNode);
 		List<Edge> edgeList = Arrays.asList(e1, e2);
-		Flow outerFlow = FlowFactory.createFlow("Flow2", "Main", nodesList, edgeList);
+		Flow outerFlow = FlowFactory.createFlow(kb, "Main", nodesList, edgeList);
 		outerFlow.setAutostart(true);
-		DiaFluxUtils.addFlow(outerFlow, kb);
 		session = SessionFactory.createSession(kb);
 		testBasicFlow();
 		assertTrue(session.getBlackboard().getRating(solutionFoo2).hasState(
@@ -259,9 +255,8 @@ public class UseFluxProblemSolverTest {
 				ConditionTrue.INSTANCE);
 		edgesList.add(solution3ToSnapshot);
 
-		Flow testFlow = FlowFactory.createFlow("testFlow_Snapshot", "Main", nodesList, edgesList);
+		Flow testFlow = FlowFactory.createFlow(kb, "Main", nodesList, edgesList);
 		testFlow.setAutostart(true);
-		DiaFluxUtils.addFlow(testFlow, kb);
 		session = SessionFactory.createSession(kb);
 		testBasicFlow();
 		// Solution 1 and 4 should be established (solution 1 is tested in

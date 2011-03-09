@@ -50,7 +50,7 @@ public class FlowchartProcessedCondition implements Condition {
 	@Override
 	public boolean eval(Session session) throws NoAnswerException, UnknownAnswerException {
 
-		Flow flow = DiaFluxUtils.getFlowSet(session).getByName(flowName);
+		Flow flow = DiaFluxUtils.getFlowSet(session).get(flowName);
 
 		if (flow == null) {
 			Logger.getLogger(getClass().getName()).warning(

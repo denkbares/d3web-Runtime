@@ -26,26 +26,21 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.knowledge.DefaultInfoStore;
-import de.d3web.core.knowledge.InfoStore;
-import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
 
 /**
  * @author Reinhard Hatko
  * 
  */
-public class Flow implements NamedObject {
+public class Flow extends AbstractTerminologyObject {
 
 	private final List<Edge> edges;
 	private final List<Node> nodes;
-	private final String name;
-	private final String id;
 	private boolean autostart;
 
-	private final InfoStore infoStore = new DefaultInfoStore();
-
-	public Flow(String id, String name, List<Node> nodes, List<Edge> edges) {
-
+	public Flow(KnowledgeBase kb, String name, List<Node> nodes, List<Edge> edges) {
+		super(kb, name);
 		if (nodes == null) throw new IllegalArgumentException("nodes is null");
 
 		if (edges == null) throw new IllegalArgumentException("edges is null");
@@ -54,8 +49,6 @@ public class Flow implements NamedObject {
 
 		this.nodes = Collections.unmodifiableList(nodes);
 		this.edges = Collections.unmodifiableList(edges);
-		this.name = name;
-		this.id = id;
 		this.autostart = false;
 
 		checkFlow();
@@ -75,7 +68,7 @@ public class Flow implements NamedObject {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
 		return result;
 	}
 
@@ -85,22 +78,11 @@ public class Flow implements NamedObject {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		Flow other = (Flow) obj;
-		if (id == null) {
-			if (other.id != null) return false;
+		if (getName() == null) {
+			if (other.getName() != null) return false;
 		}
-		else if (!id.equals(other.id)) return false;
+		else if (!getName().equals(other.getName())) return false;
 		return true;
-	}
-
-	/**
-	 * Returns the name of this slow. The name is intended to be unique inside a
-	 * single knowledge base.
-	 * 
-	 * @return the name of the flow
-	 */
-	@Override
-	public String getName() {
-		return name;
 	}
 
 	public List<Edge> getEdges() {
@@ -150,19 +132,8 @@ public class Flow implements NamedObject {
 
 	@Override
 	public String toString() {
-		return "Flow [" + getName() + ", " + nodes.size() + " nodes, " + edges.size() + " edges] "
+		return "Flow [" + getName() + "]"
 				+ "@" + Integer.toHexString(hashCode());
-	}
-
-	@Override
-	@Deprecated
-	public String getId() {
-		return id;
-	}
-
-	@Override
-	public InfoStore getInfoStore() {
-		return infoStore;
 	}
 
 }

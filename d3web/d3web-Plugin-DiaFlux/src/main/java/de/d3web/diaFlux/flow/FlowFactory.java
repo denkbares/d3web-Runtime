@@ -25,6 +25,7 @@ import java.util.List;
 
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.diaFlux.inference.ConditionTrue;
 import de.d3web.diaFlux.inference.FluxSolver;
@@ -45,13 +46,13 @@ public final class FlowFactory {
 	 * creates the EdgeMap KnowledgeSlices and attaches them to the according
 	 * TerminologyObjects.
 	 * 
-	 * @param id
+	 * @param knowledgeBase
 	 * @param name
 	 * @param nodes
 	 * @param edges
 	 * @return
 	 */
-	public static Flow createFlow(String id, String name, List<Node> nodes, List<Edge> edges) {
+	public static Flow createFlow(KnowledgeBase knowledgeBase, String name, List<Node> nodes, List<Edge> edges) {
 
 		for (Edge edge : edges) {
 			if (!nodes.contains(edge.getStartNode())) {
@@ -64,7 +65,7 @@ public final class FlowFactory {
 			}
 		}
 
-		Flow flow = new Flow(id, name, nodes, edges);
+		Flow flow = new Flow(knowledgeBase, name, nodes, edges);
 
 		createEdgeMaps(flow);
 		createNodeLists(flow);

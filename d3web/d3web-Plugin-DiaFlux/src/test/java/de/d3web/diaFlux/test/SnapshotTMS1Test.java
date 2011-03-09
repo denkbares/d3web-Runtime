@@ -73,7 +73,7 @@ public class SnapshotTMS1Test extends AbstractDiaFluxTest {
 
 		assertNodeStates(Flow1, snapshot1, nodeQ3, nodeQ2_2);
 
-		List<Node> nodes = DiaFluxUtils.getFlowSet(session).getByName(Flow1).getNodes();
+		List<Node> nodes = DiaFluxUtils.getFlowSet(session).get(Flow1).getNodes();
 
 		// TODO could be easier to get the node, having the id
 		for (Node node : nodes) {

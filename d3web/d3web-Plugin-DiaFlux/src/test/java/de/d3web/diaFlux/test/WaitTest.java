@@ -50,7 +50,6 @@ import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.flow.SnapshotNode;
 import de.d3web.diaFlux.flow.StartNode;
 import de.d3web.diaFlux.inference.ConditionTrue;
-import de.d3web.diaFlux.inference.DiaFluxUtils;
 import de.d3web.diaFlux.inference.NodeActiveCondition;
 import de.d3web.plugin.test.InitPluginManager;
 
@@ -95,8 +94,7 @@ public class WaitTest {
 		Edge e6 = FlowFactory.createEdge("e6", waitComment, endWait, new CondNumGreater(time, 5.0));
 		List<Edge> waitEdges = Arrays.asList(e1, e2, e3, e4, e5, e6);
 		// create Flow and add it to the kb
-		Flow waitFlow = new Flow("waitFlow", "waitFlow", waitNodes, waitEdges);
-		DiaFluxUtils.addFlow(waitFlow, kb);
+		FlowFactory.createFlow(kb, "waitFlow", waitNodes, waitEdges);
 
 		// creating the loop flowchart
 		Node loopStart = new StartNode("loopstart", "loopstart");
@@ -109,9 +107,8 @@ public class WaitTest {
 						"EndWait"));
 		Edge e15 = FlowFactory.createEdge("e15", dummyStartLoop, loopComposed,
 				ConditionTrue.INSTANCE);
-		Flow loopFlow = new Flow("loopFlow", "loopFlow",
+		FlowFactory.createFlow(kb, "loopFlow",
 				Arrays.asList(loopStart, loopComposed, dummyStartLoop), Arrays.asList(e7, e8, e15));
-		DiaFluxUtils.addFlow(loopFlow, kb);
 
 		// creating the primary flow
 		Node primaryStart = new StartNode("startPrimary", "startPrimary");
@@ -128,11 +125,10 @@ public class WaitTest {
 				15.0));
 		Edge e12 = FlowFactory.createEdge("e12", split, primaryEnd, new CondNumGreater(time, 15.0));
 		Edge e16 = FlowFactory.createEdge("e16", join, primaryComposed, ConditionTrue.INSTANCE);
-		Flow primaryFlow = new Flow("primaryFlow", "primaryFlow",
+		FlowFactory.createFlow(kb, "primaryFlow",
 				Arrays.asList(primaryStart, primaryComposed, split, primaryEnd,
 						join),
 				Arrays.asList(e9, e10, e11, e12, e16));
-		DiaFluxUtils.addFlow(primaryFlow, kb);
 
 		// creating global flow
 		Node start = new StartNode("Start", "Start");
@@ -147,11 +143,10 @@ public class WaitTest {
 		Edge e13 = FlowFactory.createEdge("e13", start, setTime, ConditionTrue.INSTANCE);
 		Edge e17 = FlowFactory.createEdge("e17", setTime, primary, ConditionTrue.INSTANCE);
 		Edge e14 = FlowFactory.createEdge("e14", start2, loop, ConditionTrue.INSTANCE);
-		Flow global = new Flow("Main", "Main",
+		Flow global = new Flow(kb, "Main",
 				Arrays.asList(start, primary, loop, setTime, start2),
 				Arrays.asList(e13, e14, e17));
 		global.setAutostart(true);
-		DiaFluxUtils.addFlow(global, kb);
 	}
 
 	@Test

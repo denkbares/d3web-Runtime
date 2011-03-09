@@ -1,6 +1,9 @@
 package de.d3web.diaFlux.test;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.MethodRule;
+import org.junit.rules.Timeout;
 
 /*
  * Copyright (C) 2011 University Wuerzburg, Computer Science VI
@@ -27,6 +30,9 @@ import org.junit.Test;
  * @created 02.03.2011
  */
 public class EndlessCircleTest extends AbstractDiaFluxTest {
+
+	@Rule
+	public MethodRule timeout = new Timeout(1000);
 
 	private static final String FILE = "EndlessCircleTest.d3web";
 
