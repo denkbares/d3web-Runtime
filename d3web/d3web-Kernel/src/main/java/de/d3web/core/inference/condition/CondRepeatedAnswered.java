@@ -46,8 +46,8 @@ public class CondRepeatedAnswered extends CondQuestion {
 	public boolean eval(Session session) throws NoAnswerException {
 		return session.getBlackboard().getIndication(getQuestion()).hasState(
 				Indication.State.REPEATED_INDICATED)
-				&& session.getInterview().getInterviewAgenda().hasState(getQuestion(),
-						InterviewState.INACTIVE);
+				&& session.getInterview().getInterviewAgenda().hasState(
+						getQuestion(), InterviewState.INACTIVE);
 	}
 
 	@Override

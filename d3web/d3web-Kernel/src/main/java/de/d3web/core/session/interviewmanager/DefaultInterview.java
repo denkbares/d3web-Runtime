@@ -196,10 +196,10 @@ public class DefaultInterview implements Interview {
 			this.agenda.activate(indicatedObject);
 			checkParentalQContainer(indicatedObject);
 		}
-		else {
+		else if (!oldIndication.getState().equals(newIndication.getState())) {
 			Logger.getLogger(this.getClass().getName()).warning(
-					"UNKNOWN INDICATION STATE: old=(" + oldIndication + ") new=("
-							+ newIndication + ")");
+					"unknown indication state: old=(" + oldIndication + ") new=("
+							+ newIndication + "), ignoring it");
 		}
 	}
 
@@ -375,7 +375,6 @@ public class DefaultInterview implements Interview {
 
 	@Override
 	public boolean isActive(InterviewObject interviewObject) {
-		return getInterviewAgenda().hasState(interviewObject,
-				InterviewState.ACTIVE);
+		return getInterviewAgenda().hasState(interviewObject, InterviewState.ACTIVE);
 	}
 }

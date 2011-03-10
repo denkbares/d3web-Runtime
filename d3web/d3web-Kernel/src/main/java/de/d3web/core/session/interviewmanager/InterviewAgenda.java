@@ -43,6 +43,7 @@ public final class InterviewAgenda {
 	private final Session session;
 	// Strategy: how to sort the entries on the agenda?
 	private AgendaSortingStrategy agendaSortingStrategy;
+	private transient boolean requireOrganizeAgenda = false;
 
 	public final class AgendaEntry implements Comparable<AgendaEntry> {
 
@@ -153,13 +154,6 @@ public final class InterviewAgenda {
 		agenda = new ArrayList<AgendaEntry>();
 		this.session = session;
 		this.agendaSortingStrategy = new DFSTreeAgendaSortingStrategy(this.session);
-
-		// Put the init questions to the agenda first:
-		// TODO: move to PSMethodInit.init() by adding indication to blackboard
-		List<? extends QASet> initQuestions = this.session.getKnowledgeBase().getInitQuestions();
-		for (QASet initQuestion : initQuestions) {
-			append(initQuestion);
-		}
 	}
 
 	/**
@@ -184,7 +178,7 @@ public final class InterviewAgenda {
 				}
 			}
 			agenda.add(new AgendaEntry(interviewObject, InterviewState.ACTIVE));
-			organizeAgenda();
+			setRequireOrganizeAgenda();
 		}
 	}
 
@@ -199,7 +193,7 @@ public final class InterviewAgenda {
 		if (entry != null) {
 			entry.setInterviewState(InterviewState.INACTIVE);
 		}
-		organizeAgenda();
+		setRequireOrganizeAgenda();
 	}
 
 	/**
@@ -216,14 +210,20 @@ public final class InterviewAgenda {
 		else {
 			entry.setInterviewState(InterviewState.ACTIVE);
 		}
-		organizeAgenda();
+		setRequireOrganizeAgenda();
 	}
 
 	/**
 	 * Sorts the agenda with respect to the newly added items.
 	 */
-	private void organizeAgenda() {
+	private synchronized void organizeAgendaIfRequired() {
+		if (!requireOrganizeAgenda) return;
 		this.agenda = agendaSortingStrategy.sort(this.agenda);
+		requireOrganizeAgenda = false;
+	}
+
+	private synchronized void setRequireOrganizeAgenda() {
+		requireOrganizeAgenda = true;
 	}
 
 	// private void trace(String string) {
@@ -270,14 +270,21 @@ public final class InterviewAgenda {
 		return (findAgendaEntry(interviewObject) != null);
 	}
 
+	/**
+	 * Returns if the specified interview object is on the agenda and has the
+	 * specified state.
+	 * <p>
+	 * The method returns false (!) for any object not being on the agenda, even
+	 * if checking for the state {@link InterviewState#INACTIVE}.
+	 * 
+	 * @created 10.03.2011
+	 * @param interviewObject the object to be checked
+	 * @param state the state to be expected
+	 * @return if the object is on the agenda and has the expected state
+	 */
 	public boolean hasState(InterviewObject interviewObject, InterviewState state) {
-		if (onAgenda(interviewObject)) {
-			AgendaEntry entry = findAgendaEntry(interviewObject);
-			return entry.hasState(state);
-		}
-		else {
-			return false;
-		}
+		AgendaEntry entry = findAgendaEntry(interviewObject);
+		return (entry != null) && entry.hasState(state);
 	}
 
 	/**
@@ -287,6 +294,8 @@ public final class InterviewAgenda {
 	 *         agenda
 	 */
 	public List<InterviewObject> getCurrentlyActiveObjects() {
+		// organize if required
+		organizeAgendaIfRequired();
 		List<InterviewObject> objects = new ArrayList<InterviewObject>();
 		for (AgendaEntry entry : this.agenda) {
 			if (entry.hasState(InterviewState.ACTIVE)) {

@@ -25,11 +25,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
+import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.blackboard.Blackboard;
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.interviewmanager.InterviewAgenda.AgendaEntry;
 
 /**
@@ -97,14 +101,23 @@ public class DFSTreeAgendaSortingStrategy implements AgendaSortingStrategy {
 
 	@Override
 	public List<AgendaEntry> sort(List<AgendaEntry> entries) {
-		// 1) Split entries into a) instant indicated & b) standard indicated
-		// 2) Sort both lists separately
+		// 1) Split entries into
+		// 1.a) instant indicated
+		// 1.b) init inidacted
+		// 1.c) standard indicated
+		// 2) Sort all lists separately
 		// 3) Join the sorted sets, so that the instant indications come first
 
+		// 1.a
 		List<AgendaEntry> instantIndicatedEntries = getInstantIndicatedEntries(entries);
+		// 1.b: search init in the remaining ones only (avoid duplicates)
 		List<AgendaEntry> remainingEntries = new ArrayList<AgendaEntry>(entries);
 		remainingEntries.removeAll(instantIndicatedEntries);
+		List<AgendaEntry> initEntries = getInitEntries(remainingEntries);
+		// 1.c: the remaining ones are standard indicated
+		remainingEntries.removeAll(initEntries);
 
+		// the initEntries are already sorted by the getInitEntries method
 		Collections.sort(instantIndicatedEntries, new DFSTreeSortingComparator(this.qasetIndex));
 		Collections.sort(remainingEntries, new DFSTreeSortingComparator(this.qasetIndex));
 
@@ -112,8 +125,34 @@ public class DFSTreeAgendaSortingStrategy implements AgendaSortingStrategy {
 		// entries.addAll(remainingEntries);
 		// return entries;
 
+		instantIndicatedEntries.addAll(initEntries);
 		instantIndicatedEntries.addAll(remainingEntries);
 		return instantIndicatedEntries;
+	}
+
+	/**
+	 * Returns all entries from the specified {@link AgendaEntry} list, that
+	 * contain objects indicated by the init indication.
+	 * 
+	 * @created 10.03.2011
+	 * @param entries
+	 * @return
+	 */
+	private List<AgendaEntry> getInitEntries(List<AgendaEntry> entries) {
+		Blackboard blackboard = this.session.getBlackboard();
+		List<AgendaEntry> initEntries = new ArrayList<InterviewAgenda.AgendaEntry>();
+		for (AgendaEntry agendaEntry : entries) {
+			InterviewObject object = agendaEntry.getInterviewObject();
+			Fact fact = blackboard.getInterviewFact(object);
+			// null should usually not happen, but we are graceful here
+			// having sometimes intermediate states
+			if (fact == null) continue;
+			// only accept if fact comes from init solver
+			if (fact.getPSMethod() instanceof PSMethodInit) {
+				initEntries.add(agendaEntry);
+			}
+		}
+		return initEntries;
 	}
 
 	/**

@@ -121,7 +121,7 @@ public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
 				else {
 					List<Question> followUpQuestions = collectFollowUpQuestions(question);
 					for (Question followUp : followUpQuestions) {
-						if (isActiveOnAgenda(followUp, session)) {
+						if (session.getInterview().isActive(followUp)) {
 							return true;
 						}
 					}

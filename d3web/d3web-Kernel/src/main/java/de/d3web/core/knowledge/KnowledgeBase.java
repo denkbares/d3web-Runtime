@@ -27,11 +27,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import de.d3web.core.inference.KnowledgeKind;
@@ -159,27 +157,20 @@ public class KnowledgeBase implements NamedObject {
 	 * @return a list of the initial questions/questionnaires
 	 */
 	public List<QASet> getInitQuestions() {
-		Map<QASet, Integer> sortedInit = sortByValue(this.initQuestions);
-		return new ArrayList<QASet>(sortedInit.keySet());
+		return Collections.unmodifiableList(sortByValue(this.initQuestions));
 	}
 
-	private static Map<QASet, Integer> sortByValue(Map<QASet, Integer> map) {
-		List<Map.Entry<QASet, Integer>> list = new LinkedList<Map.Entry<QASet, Integer>>(
-				map.entrySet());
-
-		Collections.sort(list, new Comparator<Map.Entry<QASet, Integer>>() {
+	private static List<QASet> sortByValue(final Map<QASet, Integer> map) {
+		List<QASet> result = new LinkedList<QASet>(map.keySet());
+		Collections.sort(result, new Comparator<QASet>() {
 
 			@Override
-			public int compare(Entry<QASet, Integer> o1, Entry<QASet, Integer> o2) {
-				return o1.getValue().compareTo(o2.getValue());
-				// ((Comparable) ((Map.Entry) (o1)).getValue())
-				// .compareTo(((Map.Entry) (o2)).getValue());
+			public int compare(QASet o1, QASet o2) {
+				Integer prio1 = map.get(o1);
+				Integer prio2 = map.get(o2);
+				return prio1.compareTo(prio2);
 			}
 		});
-		Map<QASet, Integer> result = new LinkedHashMap<QASet, Integer>();
-		for (Map.Entry<QASet, Integer> entry : list) {
-			result.put(entry.getKey(), entry.getValue());
-		}
 		return result;
 	}
 

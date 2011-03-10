@@ -22,7 +22,6 @@ package de.d3web.core.session.interviewmanager;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
 import de.d3web.core.session.values.UndefinedValue;
 
 /**
@@ -47,21 +46,6 @@ public abstract class AbstractFormStrategy implements FormStrategy {
 	protected boolean hasValueUndefined(Question question, Session session) {
 		Value value = session.getBlackboard().getValue(question);
 		return (value instanceof UndefinedValue);
-	}
-
-	/**
-	 * Helper method to check, if the specified {@link Question} instance has an
-	 * ACTIVE state on the {@link InterviewAgenda} of the specified
-	 * {@link Session} instance.
-	 * 
-	 * @param question the specified {@link Question} instance
-	 * @param session the specified {@link Session} instance
-	 * @return true, when the specified question is ACTIVE on the interview
-	 *         agenda
-	 */
-	protected boolean isActiveOnAgenda(Question question, Session session) {
-		return session.getInterview().getInterviewAgenda().hasState(
-				question, InterviewState.ACTIVE);
 	}
 
 }

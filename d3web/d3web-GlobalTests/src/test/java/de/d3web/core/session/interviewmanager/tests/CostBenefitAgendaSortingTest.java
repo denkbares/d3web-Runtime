@@ -128,9 +128,9 @@ public class CostBenefitAgendaSortingTest {
 
 		// EXPECT: all question have been answered, so the QContainer
 		// heightWeightQuestion should be removed
-		assertFalse(session.getInterview().getInterviewAgenda().onAgenda(heightWeightQuestions));
+		assertFalse(session.getInterview().isActive(heightWeightQuestions));
 		// EXPECT: QContainer pregnancyQuestions is still on agenda
-		assertTrue(session.getInterview().getInterviewAgenda().onAgenda(pregnancyQuestions));
+		assertTrue(session.getInterview().isActive(pregnancyQuestions));
 
 		// EXPECT: sex is the next question
 		assertEquals(sex, session.getInterview().nextForm().getInterviewObject());
@@ -145,7 +145,7 @@ public class CostBenefitAgendaSortingTest {
 
 		// EXPECT: all question have been answered, so the QContainer
 		// pregnancyQuestions should be removed
-		assertFalse(session.getInterview().getInterviewAgenda().onAgenda(pregnancyQuestions));
+		assertFalse(session.getInterview().isActive(pregnancyQuestions));
 
 		// EXPECT: the agenda is empty now
 		assertEquals(session.getInterview().nextForm(), EmptyForm.getInstance());

@@ -101,7 +101,7 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 			// questionnaire but is
 			// active on agenda (follow-up question).
 			else if (isNotDirectQContainerQuestion(question) &&
-					isActiveOnAgenda(question, session)) {
+					session.getInterview().isActive(question)) {
 				return question;
 			}
 			// Recursively traverse for finding follow-up questions and check
@@ -153,7 +153,7 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 	}
 
 	/**
-	 * @see
+	 * @see 
 	 *      NextUnansweredQuestionFormStrategy.isDirectQContainerQuestion(question
 	 *      )
 	 */
