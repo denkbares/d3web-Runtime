@@ -87,7 +87,7 @@ public class DefaultFactTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testDefaultFactThrowsNullPointerException() {
-		new DefaultFact(null, null, 0, null, null);
+		new DefaultFact(null, null, null, null);
 	}
 
 	/**

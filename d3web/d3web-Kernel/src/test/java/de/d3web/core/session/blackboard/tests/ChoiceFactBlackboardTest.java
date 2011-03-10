@@ -246,7 +246,7 @@ public class ChoiceFactBlackboardTest {
 	}
 
 	private Fact createFact(Question question, Value value, Object source) {
-		return new DefaultFact(question, value, 0, source, PSMethodUserSelected.getInstance());
+		return new DefaultFact(question, value, source, PSMethodUserSelected.getInstance());
 	}
 
 	private Fact createFact(Question question, Value value) {

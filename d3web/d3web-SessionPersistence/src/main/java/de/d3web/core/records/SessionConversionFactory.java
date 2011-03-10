@@ -117,7 +117,7 @@ public final class SessionConversionFactory {
 
 						// TODO save and load time?
 						long time = System.currentTimeMillis();
-						valueFacts.add(new DefaultFact(object, value, time, psMethod, psMethod));
+						valueFacts.add(new DefaultFact(object, value, psMethod, psMethod));
 					}
 				}
 				else {

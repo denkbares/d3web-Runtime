@@ -113,7 +113,7 @@ public class FluxSolver implements PostHookablePSMethod, CaseObjectSource {
 			return;
 		}
 
-		Logger.getLogger(FluxSolver.class.getName()).info(
+		Logger.getLogger(FluxSolver.class.getName()).fine(
 				"Start propagating: " + changes);
 
 		for (PropagationEntry propagationEntry : changes) {
@@ -316,7 +316,7 @@ public class FluxSolver implements PostHookablePSMethod, CaseObjectSource {
 		Map<FlowRun, Collection<SnapshotNode>> snappyFlows = getFlowRunsWithEnteredSnapshot(
 				enteredSnapshots,
 				caseObject);
-		Logger.getLogger(FluxSolver.class.getName()).info(
+		Logger.getLogger(FluxSolver.class.getName()).fine(
 				"Taking snapshots: " + snappyFlows);
 		// we clear the current trace if the last snapshot is out-dated.
 		// we do not if the propagation time is still the same (so we are in the

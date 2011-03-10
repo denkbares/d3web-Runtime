@@ -20,9 +20,7 @@
 package de.d3web.core.session.blackboard;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
@@ -42,17 +40,6 @@ import de.d3web.core.session.values.Unknown;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 public final class Facts {
-
-	/**
-	 * A Comparator for sorting Facts in ascending order of their time stamps
-	 */
-	public final static Comparator<Fact> TIMECOMPARATOR = new Comparator<Fact>() {
-
-		@Override
-		public int compare(Fact o1, Fact o2) {
-			return (int) (o1.getTime() - o2.getTime());
-		}
-	};
 
 	private Facts() { // suppress default constructor for noninstantiability
 	}
@@ -201,16 +188,12 @@ public final class Facts {
 	 */
 	public static Fact mergeAnswerFacts(Fact[] facts) {
 		Value resultValue = null;
-		long resultTime = Long.MIN_VALUE;
 		Question question = (Question) facts[0].getTerminologyObject();
 		PSMethod psMethod = facts[0].getPSMethod();
 		Fact[] filteredFacts = filterFactsForSourceSolvers(facts);
 		if (filteredFacts.length == 1) return filteredFacts[0];
 		for (Fact fact : filteredFacts) {
 			Value value = fact.getValue();
-			long time = fact.getTime();
-
-			resultTime = Math.max(time, resultTime);
 
 			if (value instanceof Unknown) { // NOSONAR
 				// handle unknown as first one!
@@ -257,7 +240,7 @@ public final class Facts {
 			resultValue = Unknown.getInstance();
 		}
 
-		return new DefaultFact(question, resultValue, resultTime, psMethod, psMethod);
+		return new DefaultFact(question, resultValue, psMethod, psMethod);
 	}
 
 	/**
@@ -320,21 +303,4 @@ public final class Facts {
 				"Invalid facts created for PSMethod "
 						+ facts[0].getPSMethod());
 	}
-
-	/**
-	 * This method returns the latest fact in the supplied array of facts
-	 * according to their time stamps.
-	 * 
-	 * @created 19.11.2010
-	 * @param facts
-	 * @return s the latest Fact according to its time stamp
-	 */
-	public static Fact getLatestFact(Fact[] facts) {
-
-		Arrays.sort(facts, TIMECOMPARATOR);
-
-		return facts[facts.length - 1];
-
-	}
-
 }

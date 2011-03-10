@@ -64,7 +64,7 @@ public final class FactFactory {
 			TerminologyObject terminologyObject, Value value, Object source, PSMethod psMethod) {
 		long time = System.currentTimeMillis();
 
-		return new DefaultFact(terminologyObject, value, time, source, psMethod);
+		return new DefaultFact(terminologyObject, value, source, psMethod);
 	}
 
 	/**
@@ -81,8 +81,7 @@ public final class FactFactory {
 
 		long time = System.currentTimeMillis();
 
-		return new DefaultFact(terminologyObject, value, time, PSMethodUserSelected.getInstance(),
-				PSMethodUserSelected.getInstance());
+		return new DefaultFact(terminologyObject, value, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance());
 	}
 
 	/**
@@ -173,7 +172,7 @@ public final class FactFactory {
 
 		long time = getCurrentTime(session);
 
-		return new DefaultFact(terminologyObject, indication, time, source, psMethodContext);
+		return new DefaultFact(terminologyObject, indication, source, psMethodContext);
 	}
 
 	/**

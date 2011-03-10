@@ -77,8 +77,8 @@ public class ConditionSolutionUserRatingTest {
 
 		assertThat(value1.getState(), is(State.UNCLEAR));
 
-		blackboard.addValueFact(new DefaultFact(solution1, new Rating(State.ESTABLISHED), 0,
-				psMethod, psMethod));
+		blackboard.addValueFact(new DefaultFact(solution1, new Rating(State.ESTABLISHED), psMethod,
+				psMethod));
 
 		Rating value2 = (Rating) blackboard.getValue(solution1, psMethod);
 
@@ -98,8 +98,7 @@ public class ConditionSolutionUserRatingTest {
 
 		assertThat(value1.getState(), is(State.UNCLEAR));
 
-		blackboard.addValueFact(new DefaultFact(solution2, new Rating(State.EXCLUDED), 0, psMethod,
-				psMethod));
+		blackboard.addValueFact(new DefaultFact(solution2, new Rating(State.EXCLUDED), psMethod, psMethod));
 
 		Rating value2 = (Rating) blackboard.getValue(solution2, psMethod);
 

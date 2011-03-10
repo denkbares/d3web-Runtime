@@ -207,7 +207,7 @@ public class ProtocolConversion {
 		long time = entry.getDate().getTime();
 
 		// and return the fact if everything worked fine
-		return new DefaultFact(terminologyObject, value, time, psMethod, psMethod);
+		return new DefaultFact(terminologyObject, value, psMethod, psMethod);
 	}
 
 }
