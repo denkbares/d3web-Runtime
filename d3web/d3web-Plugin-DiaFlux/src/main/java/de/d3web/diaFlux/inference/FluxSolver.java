@@ -347,6 +347,8 @@ public class FluxSolver implements PostHookablePSMethod, CaseObjectSource {
 			Collection<Node> activeNodes = flow.getActiveNodes();
 			for (Node node : activeNodes) {
 				node.takeSnapshot(session);
+			}
+			for (Node node : activeNodes) {
 				node.retract(session, flow);
 			}
 		}
