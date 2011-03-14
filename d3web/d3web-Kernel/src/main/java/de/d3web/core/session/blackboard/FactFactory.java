@@ -62,8 +62,6 @@ public final class FactFactory {
 	 */
 	public static Fact createFact(Session session,
 			TerminologyObject terminologyObject, Value value, Object source, PSMethod psMethod) {
-		long time = System.currentTimeMillis();
-
 		return new DefaultFact(terminologyObject, value, source, psMethod);
 	}
 
@@ -78,10 +76,8 @@ public final class FactFactory {
 	 */
 	public static Fact createUserEnteredFact(
 			TerminologyObject terminologyObject, Value value) {
-
-		long time = System.currentTimeMillis();
-
-		return new DefaultFact(terminologyObject, value, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance());
+		return new DefaultFact(terminologyObject, value, PSMethodUserSelected.getInstance(),
+				PSMethodUserSelected.getInstance());
 	}
 
 	/**
@@ -169,9 +165,6 @@ public final class FactFactory {
 	 */
 	public static Fact createIndicationFact(Session session, TerminologyObject terminologyObject,
 			Indication indication, Object source, PSMethod psMethodContext) {
-
-		long time = getCurrentTime(session);
-
 		return new DefaultFact(terminologyObject, indication, source, psMethodContext);
 	}
 
