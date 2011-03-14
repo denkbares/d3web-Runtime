@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -459,7 +460,20 @@ public class SessionPersistenceTest {
 		Assert.assertEquals(protocol2.getProtocolHistory().size(), 2);
 		Assert.assertEquals(protocol.getProtocolHistory(FactProtocolEntry.class).size(), 6);
 		Assert.assertEquals(protocol2.getProtocolHistory(FactProtocolEntry.class).size(), 2);
-		Assert.assertEquals(protocol.getProtocolHistory(TextProtocolEntry.class).size(), 2);
+		List<TextProtocolEntry> textprotocolHistory = protocol.getProtocolHistory(TextProtocolEntry.class);
+		Assert.assertEquals(textprotocolHistory.size(), 2);
+		boolean[] foundEntries = new boolean[2];
+		for (TextProtocolEntry entry : textprotocolHistory) {
+			if (entry.getMessage().equals("ancient entry")) {
+				Assert.assertEquals(new Date(startDate.getTime() - 10), entry.getDate());
+				foundEntries[0] = true;
+			}
+			else if (entry.getMessage().equals("future entry")) {
+				foundEntries[1] = true;
+			}
+		}
+		// both textentries are present
+		Assert.assertTrue(foundEntries[0] && foundEntries[1]);
 		Assert.assertEquals(protocol2.getProtocolHistory(TextProtocolEntry.class).size(), 0);
 		// compare all facts
 		compareFacts(this.session, session);
