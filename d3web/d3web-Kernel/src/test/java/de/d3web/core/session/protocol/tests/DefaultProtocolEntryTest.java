@@ -50,7 +50,7 @@ public class DefaultProtocolEntryTest {
 	// underlying Fact-instance
 	Fact protocolFact;
 	KnowledgeBase knowledgeBase;
-	// the DefaultProtocolEntry under testt
+	// the DefaultProtocolEntry under test
 	FactProtocolEntry defaultProtocolEntryUnderTest;
 
 	@Before
@@ -85,6 +85,8 @@ public class DefaultProtocolEntryTest {
 		// DefaultProtocolEntry(protocolFact) vs.
 		// DefaultProtocolEntry(protocolFact)
 		assertThat(defaultProtocolEntryUnderTest.equals(defaultProtocolEntryUnderTest), is(true));
+		assertThat(defaultProtocolEntryUnderTest.equals(new FactProtocolEntry(
+				defaultProtocolEntryUnderTest.getDate().getTime(), protocolFact)), is(true));
 		// DefaultProtocolEntry(protocolFact) vs. null
 		assertThat(defaultProtocolEntryUnderTest.equals(null), is(false));
 		// DefaultProtocolEntry(protocolFact) vs. protocolFact
