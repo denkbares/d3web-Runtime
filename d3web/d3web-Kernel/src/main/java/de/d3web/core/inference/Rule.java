@@ -26,7 +26,7 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.session.CaseObjectSource;
+import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.CaseRuleComplex;
 import de.d3web.core.session.blackboard.SessionObject;
@@ -39,7 +39,7 @@ import de.d3web.core.session.blackboard.SessionObject;
  * 
  * @author Michael Wolber, joba
  */
-public class Rule implements CaseObjectSource {
+public class Rule implements SessionObjectSource {
 
 	/**
 	 * Flag indicates, if the rule is activated.
@@ -238,7 +238,7 @@ public class Rule implements CaseObjectSource {
 	}
 
 	@Override
-	public SessionObject createCaseObject(Session session) {
+	public SessionObject createSessionObject(Session session) {
 		return new CaseRuleComplex(this);
 	}
 
@@ -293,7 +293,7 @@ public class Rule implements CaseObjectSource {
 	 * specified user case.
 	 */
 	public boolean hasFired(Session session) {
-		return ((CaseRuleComplex) session.getCaseObject(this)).hasFired();
+		return ((CaseRuleComplex) session.getSessionObject(this)).hasFired();
 	}
 
 	/**
@@ -551,7 +551,7 @@ public class Rule implements CaseObjectSource {
 	 * specified userCase.
 	 */
 	protected void setFired(boolean newFired, Session session) {
-		((CaseRuleComplex) session.getCaseObject(this)).setFired(newFired);
+		((CaseRuleComplex) session.getSessionObject(this)).setFired(newFired);
 	}
 
 	public void setProblemsolverContext(Class<? extends PSMethodRulebased> problemsolverContext) { // NOSONAR

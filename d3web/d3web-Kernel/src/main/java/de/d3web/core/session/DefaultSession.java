@@ -69,7 +69,7 @@ public class DefaultSession implements Session {
 	private final DefaultPropagationManager propagationController;
 	private final Interview interview;
 
-	private final Map<CaseObjectSource, SessionObject> dynamicStore;
+	private final Map<SessionObjectSource, SessionObject> dynamicStore;
 
 	private String id = null;
 	private final Blackboard blackboard;
@@ -97,7 +97,7 @@ public class DefaultSession implements Session {
 		this.edited = creationDate;
 		this.kb = knowledgebase;
 		this.blackboard = new DefaultBlackboard(this);
-		this.dynamicStore = new HashMap<CaseObjectSource, SessionObject>();
+		this.dynamicStore = new HashMap<SessionObjectSource, SessionObject>();
 		// add problem-solving methods used for this case
 		this.usedPSMethods = new TreeSet<PSMethod>(new PSMethodComparator());
 		this.propagationController = new DefaultPropagationManager(this);
@@ -251,10 +251,10 @@ public class DefaultSession implements Session {
 	 *         (static) knowledge base object.
 	 */
 	@Override
-	public SessionObject getCaseObject(CaseObjectSource cos) {
+	public SessionObject getSessionObject(SessionObjectSource cos) {
 		SessionObject co = dynamicStore.get(cos);
 		if (co == null) {
-			co = cos.createCaseObject(this);
+			co = cos.createSessionObject(this);
 			dynamicStore.put(cos, co);
 		}
 		return co;

@@ -40,7 +40,7 @@ import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
-import de.d3web.core.session.CaseObjectSource;
+import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
@@ -54,7 +54,7 @@ import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
 
 public final class PSMethodXCL implements PSMethod, StrategicSupport,
-		CaseObjectSource {
+		SessionObjectSource {
 
 	public static final String PLUGIN_ID = "d3web-XCL";
 	public static final String EXTENSION_ID = "PSMethodXCL";
@@ -104,7 +104,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 
 	private void updateAnsweredWeight(Session session,
 			Collection<PropagationEntry> changes) {
-		XCLCaseObject caseObject = (XCLCaseObject) session.getCaseObject(this);
+		XCLCaseObject caseObject = (XCLCaseObject) session.getSessionObject(this);
 		for (PropagationEntry entry : changes) {
 			if (entry.getObject() instanceof Question) {
 				Question question = (Question) entry.getObject();
@@ -292,16 +292,16 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 	}
 
 	@Override
-	public SessionObject createCaseObject(Session session) {
+	public SessionObject createSessionObject(Session session) {
 		return new XCLCaseObject(this);
 	}
 
 	public int getAnsweredQuestionsCount(Session session) {
-		return ((XCLCaseObject) session.getCaseObject(this)).totalAnsweredCount;
+		return ((XCLCaseObject) session.getSessionObject(this)).totalAnsweredCount;
 	}
 
 	public double getAnsweredQuestionsAbnormality(Session session) {
-		return ((XCLCaseObject) session.getCaseObject(this)).totalAnsweredAbnormality;
+		return ((XCLCaseObject) session.getSessionObject(this)).totalAnsweredAbnormality;
 	}
 
 	/**

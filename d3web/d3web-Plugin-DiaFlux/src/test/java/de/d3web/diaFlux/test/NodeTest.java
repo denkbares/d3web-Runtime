@@ -206,7 +206,7 @@ public class NodeTest {
 
 	/**
 	 * Test method for
-	 * {@link de.d3web.diaFlux.flow.AbstractNode#createCaseObject(de.d3web.core.session.Session)}
+	 * {@link de.d3web.diaFlux.flow.AbstractNode#createSessionObject(de.d3web.core.session.Session)}
 	 * .
 	 */
 	@Test

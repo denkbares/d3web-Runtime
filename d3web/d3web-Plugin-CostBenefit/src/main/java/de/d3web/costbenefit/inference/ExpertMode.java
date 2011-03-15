@@ -25,7 +25,7 @@ import java.util.List;
 
 import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.knowledge.terminology.QContainer;
-import de.d3web.core.session.CaseObjectSource;
+import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
@@ -46,10 +46,10 @@ public class ExpertMode extends SessionObject {
 
 	private final Session session;
 
-	private final static CaseObjectSource EXPERT_MODE_SOURCE = new CaseObjectSource() {
+	private final static SessionObjectSource EXPERT_MODE_SOURCE = new SessionObjectSource() {
 
 		@Override
-		public SessionObject createCaseObject(Session session) {
+		public SessionObject createSessionObject(Session session) {
 			// check if it is allowed to create such an object
 			if (getPSMethodCostBenefit(session) == null) {
 				throw new IllegalStateException(
@@ -86,7 +86,7 @@ public class ExpertMode extends SessionObject {
 	 *         available in the specified session
 	 */
 	public static ExpertMode getExpertMode(Session session) {
-		return (ExpertMode) session.getCaseObject(EXPERT_MODE_SOURCE);
+		return (ExpertMode) session.getSessionObject(EXPERT_MODE_SOURCE);
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class ExpertMode extends SessionObject {
 	}
 
 	private CostBenefitCaseObject getCostBenefitCaseObject(PSMethodCostBenefit psm) {
-		return (CostBenefitCaseObject) session.getCaseObject(psm);
+		return (CostBenefitCaseObject) session.getSessionObject(psm);
 	}
 
 	private PSMethodCostBenefit getPSMethodCostBenefit() {

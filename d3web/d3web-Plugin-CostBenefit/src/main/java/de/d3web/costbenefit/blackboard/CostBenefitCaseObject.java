@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.CaseObjectSource;
+import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.SessionObject;
@@ -50,7 +50,7 @@ public class CostBenefitCaseObject extends SessionObject {
 	private Set<Target> discriminatingTargets = new HashSet<Target>();
 	private final Session session;
 
-	public CostBenefitCaseObject(CaseObjectSource theSourceObject, Session session) {
+	public CostBenefitCaseObject(SessionObjectSource theSourceObject, Session session) {
 		super(theSourceObject);
 		this.session = session;
 	}

@@ -41,7 +41,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.CaseObjectSource;
+import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Blackboard;
@@ -65,7 +65,7 @@ import de.d3web.costbenefit.session.interviewmanager.CostBenefitAgendaSortingStr
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSource {
+public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjectSource {
 
 	private TargetFunction targetFunction;
 	private CostFunction costFunction;
@@ -86,7 +86,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 
 	@Override
 	public void init(Session session) {
-		CostBenefitCaseObject caseObject = (CostBenefitCaseObject) session.getCaseObject(this);
+		CostBenefitCaseObject caseObject = (CostBenefitCaseObject) session.getSessionObject(this);
 		session.getInterview().getInterviewAgenda().setAgendaSortingStrategy(
 				new CostBenefitAgendaSortingStrategy(caseObject));
 		calculateNewPath(caseObject);
@@ -97,7 +97,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 	 * This method is just for refreshing the path of the CaseObject, the Facts
 	 * get pushed into the blackboard by calculateNewPath
 	 * 
-	 * @param caseObject {@link CaseObjectSource}
+	 * @param caseObject {@link SessionObjectSource}
 	 */
 	void activateNextQContainer(CostBenefitCaseObject caseObject) {
 		QContainer[] currentSequence = caseObject.getCurrentSequence();
@@ -323,7 +323,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
-		CostBenefitCaseObject caseObject = (CostBenefitCaseObject) session.getCaseObject(this);
+		CostBenefitCaseObject caseObject = (CostBenefitCaseObject) session.getSessionObject(this);
 		Set<QContainer> answeredQuestionnaires = new HashSet<QContainer>();
 		for (PropagationEntry entry : changes) {
 			TerminologyObject object = entry.getObject();
@@ -488,7 +488,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements CaseObjectSo
 	}
 
 	@Override
-	public SessionObject createCaseObject(Session session) {
+	public SessionObject createSessionObject(Session session) {
 		return new CostBenefitCaseObject(this, session);
 	}
 

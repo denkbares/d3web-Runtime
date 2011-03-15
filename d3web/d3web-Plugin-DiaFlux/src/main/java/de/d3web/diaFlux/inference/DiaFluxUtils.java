@@ -77,7 +77,7 @@ public final class DiaFluxUtils {
 	}
 
 	public static DiaFluxCaseObject getDiaFluxCaseObject(Session session) {
-		return (DiaFluxCaseObject) session.getCaseObject(session.getPSMethodInstance(FluxSolver.class));
+		return (DiaFluxCaseObject) session.getSessionObject(session.getPSMethodInstance(FluxSolver.class));
 	}
 
 	public static List<StartNode> getAutostartNodes(KnowledgeBase base) {

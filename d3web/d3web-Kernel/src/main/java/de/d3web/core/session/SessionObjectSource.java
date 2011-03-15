@@ -26,7 +26,7 @@ import de.d3web.core.session.blackboard.SessionObject;
  * States the ability that the implementing object are able to create an session
  * object to store session depending data into.
  */
-public interface CaseObjectSource {
+public interface SessionObjectSource {
 
 	/**
 	 * Create a session object for itself, to store all dynamic values (session
@@ -34,11 +34,11 @@ public interface CaseObjectSource {
 	 * <p>
 	 * <b>Do not call this method directly.</b> It is created by the
 	 * {@link Session} implementations to create the dynamic objects. Use
-	 * {@link Session#getCaseObject(CaseObjectSource)} instead.
+	 * {@link Session#getSessionObject(SessionObjectSource)} instead.
 	 * 
 	 * @param session the session instance this object is created for
 	 * 
 	 * @return the created session object for this instance
 	 */
-	public SessionObject createCaseObject(Session session);
+	public SessionObject createSessionObject(Session session);
 }

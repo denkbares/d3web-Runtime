@@ -20,7 +20,7 @@
 
 package de.d3web.core.session.blackboard;
 
-import de.d3web.core.session.CaseObjectSource;
+import de.d3web.core.session.SessionObjectSource;
 
 /**
  * Superclass for any dynamic, session specific object.
@@ -29,9 +29,9 @@ import de.d3web.core.session.CaseObjectSource;
  */
 public abstract class SessionObject {
 
-	private CaseObjectSource sourceObject;
+	private SessionObjectSource sourceObject;
 
-	public SessionObject(CaseObjectSource theSourceObject) {
+	public SessionObject(SessionObjectSource theSourceObject) {
 		super();
 		setSourceObject(theSourceObject);
 	}
@@ -41,12 +41,12 @@ public abstract class SessionObject {
 	 * 
 	 * @return the NamedObject this dynamic SessionObject has been created for
 	 */
-	protected CaseObjectSource getSourceObject() {
+	protected SessionObjectSource getSourceObject() {
 		return sourceObject;
 	}
 
 	private void setSourceObject(
-			CaseObjectSource newSourceObject) {
+			SessionObjectSource newSourceObject) {
 		sourceObject = newSourceObject;
 	}
 }
