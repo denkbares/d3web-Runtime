@@ -140,16 +140,6 @@ public class ActionSuppressAnswer extends PSAction {
 	}
 
 	@Override
-	public PSAction copy() {
-		ActionSuppressAnswer a = new ActionSuppressAnswer();
-		a.setQuestion(getQuestion());
-		for (ChoiceID choice : this.suppress) {
-			a.addSuppress(choice);
-		}
-		return a;
-	}
-
-	@Override
 	public int hashCode() {
 		int hash = 0;
 		if (getQuestion() != null) {

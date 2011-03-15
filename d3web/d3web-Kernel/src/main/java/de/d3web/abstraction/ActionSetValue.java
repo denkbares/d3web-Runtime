@@ -154,14 +154,6 @@ public class ActionSetValue extends PSAction {
 	}
 
 	@Override
-	public PSAction copy() {
-		ActionSetValue a = new ActionSetValue();
-		a.setQuestion(getQuestion());
-		a.setValue(getValue());
-		return a;
-	}
-
-	@Override
 	public boolean equals(Object o) {
 		if (o == this) {
 			return true;

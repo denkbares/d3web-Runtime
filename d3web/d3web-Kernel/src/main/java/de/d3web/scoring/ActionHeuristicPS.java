@@ -131,14 +131,6 @@ public class ActionHeuristicPS extends PSAction {
 	}
 
 	@Override
-	public PSAction copy() {
-		ActionHeuristicPS a = new ActionHeuristicPS();
-		a.setSolution(getSolution());
-		a.setScore(getScore());
-		return a;
-	}
-
-	@Override
 	public int hashCode() {
 		int hash = 0;
 		if (getSolution() != null) {

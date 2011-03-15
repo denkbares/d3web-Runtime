@@ -32,7 +32,7 @@ import de.d3web.core.session.Session;
  * 
  * @author Joachim Baumeister
  */
-public abstract class PSAction implements Cloneable {
+public abstract class PSAction {
 
 	/**
 	 * Executes the included action.
@@ -76,15 +76,4 @@ public abstract class PSAction implements Cloneable {
 	 * @param psmethod psmethod the psmethod of the source
 	 */
 	public abstract void undo(Session session, Object source, PSMethod psmethod);
-
-	/**
-	 * Returns a clone of this RuleAction.
-	 * <p>
-	 */
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		return super.clone();
-	}
-
-	public abstract PSAction copy();
 }

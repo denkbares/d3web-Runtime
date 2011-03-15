@@ -46,11 +46,6 @@ public class CallFlowAction extends PSAction {
 	}
 
 	@Override
-	public PSAction copy() {
-		return new CallFlowAction(flowName, startNodeName);
-	}
-
-	@Override
 	public void doIt(Session session, Object source, PSMethod psmethod) {
 
 		StartNode startNode = DiaFluxUtils.findStartNode(session, flowName, startNodeName);

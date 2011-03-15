@@ -50,10 +50,4 @@ public final class NOOPAction extends PSAction {
 	@Override
 	public void undo(Session session, Object source, PSMethod psmethod) {
 	}
-
-	@Override
-	public PSAction copy() {
-		return INSTANCE;
-	}
-
 }

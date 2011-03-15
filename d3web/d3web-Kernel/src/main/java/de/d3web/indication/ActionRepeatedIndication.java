@@ -20,9 +20,6 @@
 
 package de.d3web.indication;
 
-import java.util.ArrayList;
-
-import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.Indication;
@@ -47,13 +44,6 @@ public class ActionRepeatedIndication extends ActionNextQASet {
 	@Override
 	public Indication getIndication() {
 		return INDICATION;
-	}
-
-	@Override
-	public PSAction copy() {
-		ActionRepeatedIndication a = new ActionRepeatedIndication();
-		a.setQASets(new ArrayList<QASet>(getQASets()));
-		return a;
 	}
 
 	@Override

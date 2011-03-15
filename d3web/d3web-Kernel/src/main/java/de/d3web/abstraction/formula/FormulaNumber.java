@@ -39,13 +39,6 @@ public class FormulaNumber implements FormulaNumberElement {
 	private final Double value;
 
 	/**
-	 * Creates a new FormulaNubmer with 0 as value.
-	 */
-	public FormulaNumber() {
-		this(new Double(0));
-	}
-
-	/**
 	 * Creates a new FormulaNumber object
 	 * 
 	 * @param value value of this FormulaElement

@@ -20,12 +20,8 @@
 
 package de.d3web.indication;
 
-import java.util.ArrayList;
-
-import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
-import de.d3web.core.knowledge.terminology.QASet;
 
 /**
  * Indicates a QASet like ActionIndication, but for QContainers: Then, the
@@ -37,15 +33,7 @@ import de.d3web.core.knowledge.terminology.QASet;
  */
 public class ActionInstantIndication extends ActionNextQASet {
 
-
 	private static final Indication INDICATION = new Indication(State.INSTANT_INDICATED);
-
-	@Override
-	public PSAction copy() {
-		ActionInstantIndication a = new ActionInstantIndication();
-		a.setQASets(new ArrayList<QASet>(getQASets()));
-		return a;
-	}
 
 	@Override
 	public Indication getIndication() {

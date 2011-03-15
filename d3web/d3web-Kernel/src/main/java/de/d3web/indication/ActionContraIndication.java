@@ -20,7 +20,6 @@
 
 package de.d3web.indication;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -127,12 +126,5 @@ public class ActionContraIndication extends PSAction {
 		else {
 			return false;
 		}
-	}
-
-	@Override
-	public PSAction copy() {
-		ActionContraIndication newAction = new ActionContraIndication();
-		newAction.setQASets(new LinkedList<QASet>(getQASets()));
-		return newAction;
 	}
 }

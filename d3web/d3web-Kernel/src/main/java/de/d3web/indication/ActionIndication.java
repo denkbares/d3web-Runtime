@@ -20,12 +20,8 @@
 
 package de.d3web.indication;
 
-import java.util.ArrayList;
-
-import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
-import de.d3web.core.knowledge.terminology.QASet;
 
 /**
  * ActionIndication represents the general indication of a QASet. Creation date:
@@ -35,19 +31,10 @@ import de.d3web.core.knowledge.terminology.QASet;
  */
 public class ActionIndication extends ActionNextQASet {
 
-
 	private static final Indication INDICATION = new Indication(State.INDICATED);
 
 	@Override
 	public Indication getIndication() {
 		return INDICATION;
 	}
-
-	@Override
-	public PSAction copy() {
-		ActionIndication a = new ActionIndication();
-		a.setQASets(new ArrayList<QASet>(getQASets()));
-		return a;
-	}
-
 }
