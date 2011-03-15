@@ -31,9 +31,8 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 
 import de.d3web.abstraction.ActionSetValue;
-import de.d3web.abstraction.formula.FormulaDateElement;
+import de.d3web.abstraction.formula.FormulaElement;
 import de.d3web.abstraction.formula.FormulaNumber;
-import de.d3web.abstraction.formula.Today;
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.io.fragments.actions.ContraIndicationActionHandler;
@@ -300,7 +299,7 @@ public class ActionTest {
 
 	@Test
 	public void testActionSetValueAndActionAddValueDate() throws Exception {
-		FormulaDateElement fn = new Today(new FormulaNumber(new Double(13)));
+		FormulaElement fn = new FormulaNumber(new Double(13));
 
 		rule.setProblemsolverContext(PSMethodAbstraction.class);
 		ActionSetValue aav = new ActionSetValue();
@@ -328,15 +327,13 @@ public class ActionTest {
 		XMLTag fe1Tag = new XMLTag("Value");
 		fe1Tag.addAttribute("type", "evaluatable");
 
-		XMLTag today = new XMLTag("Today");
 		XMLTag number = new XMLTag("FormulaPrimitive");
 		number.addAttribute("type", "FormulaNumber");
 		XMLTag value = new XMLTag("Value");
 		value.setContent("13.0");
 		number.addChild(value);
-		today.addChild(number);
 
-		fe1Tag.addChild(today);
+		fe1Tag.addChild(number);
 
 		valuesTag.addChild(fe1Tag);
 

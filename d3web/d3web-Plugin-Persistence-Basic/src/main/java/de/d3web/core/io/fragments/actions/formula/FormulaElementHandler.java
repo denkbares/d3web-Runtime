@@ -20,9 +20,6 @@
 package de.d3web.core.io.fragments.actions.formula;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import org.w3c.dom.DOMException;
@@ -31,26 +28,18 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.d3web.abstraction.formula.Count;
-import de.d3web.abstraction.formula.FormulaDate;
-import de.d3web.abstraction.formula.FormulaDateElement;
 import de.d3web.abstraction.formula.FormulaElement;
 import de.d3web.abstraction.formula.FormulaNumber;
 import de.d3web.abstraction.formula.FormulaNumberElement;
 import de.d3web.abstraction.formula.Operator;
 import de.d3web.abstraction.formula.Operator.Operation;
-import de.d3web.abstraction.formula.QDateWrapper;
 import de.d3web.abstraction.formula.QNumWrapper;
-import de.d3web.abstraction.formula.Today;
-import de.d3web.abstraction.formula.YearDiff;
 import de.d3web.core.io.FragmentManager;
 import de.d3web.core.io.NoSuchFragmentHandlerException;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.QuestionDate;
-import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 
 /**
@@ -85,15 +74,6 @@ public class FormulaElementHandler implements FragmentHandler {
 		else if (element.getNodeName().equalsIgnoreCase("FormulaTerm")) {
 			expr = createFormulaTerm(element, kb);
 		}
-		else if (element.getNodeName().equalsIgnoreCase("Count")) {
-			expr = createCount(element, kb);
-		}
-		else if (element.getNodeName().equalsIgnoreCase("FormulaDatePrimitive")) {
-			expr = createFormulaDatePrimitive(element, kb);
-		}
-		else if (element.getNodeName().equalsIgnoreCase("Today")) {
-			expr = createToday(element, kb);
-		}
 		else if (element.getNodeName().equalsIgnoreCase("QuestionNum")) {
 			// [MISC) tobi: QuestionNums are never saved directly.
 			// Is this legacy-Code or can it be removed?
@@ -109,35 +89,9 @@ public class FormulaElementHandler implements FragmentHandler {
 	public Element write(Object object, Document doc) throws IOException {
 		Element element = null;
 		FragmentManager pm = PersistenceManager.getInstance();
-		if (object instanceof YearDiff) {
-			YearDiff fa = (YearDiff) object;
-			element = createFormulaTerm(doc, fa.getSymbol(), fa.getArg1(), fa.getArg2());
-		}
-		else if (object instanceof Operator) {
+		if (object instanceof Operator) {
 			Operator fa = (Operator) object;
 			element = createFormulaTerm(doc, fa.getSymbol(), fa.getArg1(), fa.getArg2());
-		}
-		else if (object instanceof FormulaDate) {
-			FormulaDate fa = (FormulaDate) object;
-			element = createFormulaPrimitive(doc, "FormulaDatePrimitive", "FormulaDate",
-					FormulaDate.format.format(fa.getValue()));
-		}
-		else if (object instanceof QDateWrapper) {
-			QDateWrapper fa = (QDateWrapper) object;
-			element = createFormulaPrimitive(doc, "FormulaDatePrimitive", "QDateWrapper",
-					fa.getQuestion().getName());
-		}
-		else if (object instanceof Today) {
-			Today fa = (Today) object;
-			element = doc.createElement("Today");
-			element.appendChild(pm.writeFragment(fa.getArg(), doc));
-		}
-		else if (object instanceof Count) {
-			Count fa = (Count) object;
-			element = doc.createElement("Count");
-			Element questionmcNode = doc.createElement("QuestionMC");
-			questionmcNode.setTextContent(fa.getQuestionMC().getName());
-			element.appendChild(questionmcNode);
 		}
 		else if (object instanceof FormulaNumber) {
 			FormulaNumber fa = (FormulaNumber) object;
@@ -253,73 +207,6 @@ public class FormulaElementHandler implements FragmentHandler {
 		else if (type.equalsIgnoreCase("min")) {
 			ret = new Operator((FormulaNumberElement) arg1,
 					(FormulaNumberElement) arg2, Operation.Min);
-		}
-		else if (type.equalsIgnoreCase("YEARDIFF")) {
-			ret = new YearDiff((FormulaDateElement) arg1,
-					(FormulaDateElement) arg2);
-		}
-
-		return ret;
-	}
-
-	private static Count createCount(Node countNode, KnowledgeBase kb) {
-		Count ret = null;
-		NodeList nl = countNode.getChildNodes();
-		for (int i = 0; i < nl.getLength(); ++i) {
-			Node n = nl.item(i);
-			if (n.getNodeName().equalsIgnoreCase("QuestionMC")) {
-				NodeList qnl = n.getChildNodes();
-				String id = qnl.item(0).getNodeValue();
-				if (id == null) id = qnl.item(1).getNodeValue();
-				QuestionMC countQuestion = (QuestionMC) kb.getManager().searchQuestion(id);
-				if (countQuestion != null) ret = new Count(countQuestion);
-			}
-		}
-		return ret;
-	}
-
-	private static FormulaDateElement createFormulaDatePrimitive(Node termNode, KnowledgeBase kb) throws IOException {
-		FormulaDateElement ret = null;
-		String type = termNode.getAttributes().getNamedItem("type").getNodeValue();
-		NodeList nl = termNode.getChildNodes();
-		for (int i = 0; i < nl.getLength(); ++i) {
-			Node valNode = nl.item(i);
-			if (valNode.getNodeName().equalsIgnoreCase("value")) {
-				String val = valNode.getChildNodes().item(0).getNodeValue();
-				if (val == null) {
-					val = valNode.getChildNodes().item(1).getNodeValue();
-				}
-				if (val != null) {
-					if (type.equalsIgnoreCase("FormulaDate")) {
-						Date date = null;
-						try {
-							date = FormulaDate.format.parse(val);
-						}
-						catch (ParseException e) {
-							throw new IOException(
-									"ParseExpetion while creating FormulaDatePrimitive", e);
-						}
-						ret = new FormulaDate(date);
-					}
-					else if (type.equalsIgnoreCase("QDateWrapper")) {
-						QuestionDate qdate = (QuestionDate) kb.getManager().searchQuestion(val);
-						ret = new QDateWrapper(qdate);
-					}
-				}
-			}
-		}
-		return ret;
-	}
-
-	private static Today createToday(Node todayNode, KnowledgeBase kb) throws IOException {
-		Today ret = null;
-		Collection<Element> nl = XMLUtil.getElementList(todayNode.getChildNodes());
-		for (Element argElem : nl) {
-			FormulaElement elem = (FormulaElement) PersistenceManager.getInstance().readFragment(
-					argElem, kb);
-			if (elem instanceof FormulaNumberElement) {
-				ret = new Today((FormulaNumberElement) elem);
-			}
 		}
 		return ret;
 	}
