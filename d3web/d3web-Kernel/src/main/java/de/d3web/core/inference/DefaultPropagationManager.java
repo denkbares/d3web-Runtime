@@ -82,38 +82,40 @@ public class DefaultPropagationManager implements PropagationManager {
 		}
 
 		public void propagate() {
-			try {
-				Collection<PropagationEntry> entries = new ArrayList<PropagationEntry>(
-						propagationEntries.size());
-				for (Map.Entry<ValueObject, Value> change : propagationEntries.entrySet()) {
-					ValueObject object = change.getKey();
-					Value oldValue = change.getValue();
-					Value value = session.getBlackboard().getValue(object);
-					PropagationEntry entry = new PropagationEntry(object, oldValue, value);
-					entries.add(entry);
-				}
-				for (InterviewObject object : interviewOrder) {
-					Value oldValue = interviewPropagationEntries.get(object);
-					Value value = session.getBlackboard().getIndication(object);
-					PropagationEntry entry = new PropagationEntry(object, oldValue, value);
-					entry.setStrategic(true);
-					entries.add(entry);
-				}
-				propagationEntries.clear();
-				interviewPropagationEntries.clear();
-				interviewOrder.clear();
 
+			Collection<PropagationEntry> entries = new ArrayList<PropagationEntry>(
+					propagationEntries.size());
+			for (Map.Entry<ValueObject, Value> change : propagationEntries.entrySet()) {
+				ValueObject object = change.getKey();
+				Value oldValue = change.getValue();
+				Value value = session.getBlackboard().getValue(object);
+				PropagationEntry entry = new PropagationEntry(object, oldValue, value);
+				entries.add(entry);
+			}
+			for (InterviewObject object : interviewOrder) {
+				Value oldValue = interviewPropagationEntries.get(object);
+				Value value = session.getBlackboard().getIndication(object);
+				PropagationEntry entry = new PropagationEntry(object, oldValue, value);
+				entry.setStrategic(true);
+				entries.add(entry);
+			}
+			propagationEntries.clear();
+			interviewPropagationEntries.clear();
+			interviewOrder.clear();
+
+			try {
 				// propagate the changes, using the new interface
 				getPSMethod().propagate(DefaultPropagationManager.this.session, entries);
-				setPropagated(true);
 			}
 			catch (Throwable e) { // NOSONAR because execution has to continue
 									// after catch
 				Logger.getLogger("Kernel").log(
 						Level.SEVERE,
 						"internal error in pluggable problem solver #" +
-								getPSMethod().getClass(),
-						e);
+								getPSMethod().getClass(), e);
+			}
+			finally {
+				setPropagated(true);
 			}
 		}
 	}
