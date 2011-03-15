@@ -123,12 +123,6 @@ public class CondMofN extends NonTerminalCondition {
 	}
 
 	@Override
-	protected Condition createInstance(List<Condition> theTerms, Condition o) {
-		CondMofN cond = (CondMofN) o;
-		return new CondMofN(theTerms, cond.getMin(), cond.getMax());
-	}
-
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
@@ -139,12 +133,22 @@ public class CondMofN extends NonTerminalCondition {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) { return true; }
-		if (!super.equals(obj)) { return false; }
-		if (getClass() != obj.getClass()) { return false; }
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
 		CondMofN other = (CondMofN) obj;
-		if (max != other.max) { return false; }
-		if (min != other.min) { return false; }
+		if (max != other.max) {
+			return false;
+		}
+		if (min != other.min) {
+			return false;
+		}
 		return true;
 	}
 }

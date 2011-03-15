@@ -53,11 +53,6 @@ public class CondDateEqual extends CondDate {
 	}
 
 	@Override
-	public Condition copy() {
-		return new CondDateEqual((QuestionDate) getQuestion(), getValue());
-	}
-
-	@Override
 	protected boolean compare(DateValue caseValue) {
 		return caseValue.equals(getValue());
 	}

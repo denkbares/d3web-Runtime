@@ -148,9 +148,4 @@ public class CondNumIn extends CondNum {
 		out.append(getInterval().isRightOpen() ? ")" : "]");
 		return out.toString();
 	}
-
-	@Override
-	public Condition copy() {
-		return new CondNumIn((QuestionNum) getQuestion(), getInterval());
-	}
 }

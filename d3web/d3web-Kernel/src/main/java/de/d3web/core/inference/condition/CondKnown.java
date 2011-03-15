@@ -57,8 +57,4 @@ public class CondKnown extends CondQuestion {
 		return "\u2190 CondKnown question: " + getQuestion().getName();
 	}
 
-	@Override
-	public Condition copy() {
-		return new CondKnown(getQuestion());
-	}
 }

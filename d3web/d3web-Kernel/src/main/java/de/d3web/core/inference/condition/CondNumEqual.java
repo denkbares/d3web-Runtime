@@ -55,9 +55,4 @@ public class CondNumEqual extends CondNum {
 				+ getConditionValue();
 	}
 
-	@Override
-	public Condition copy() {
-		return new CondNumEqual((QuestionNum) getQuestion(), getConditionValue());
-	}
-
 }

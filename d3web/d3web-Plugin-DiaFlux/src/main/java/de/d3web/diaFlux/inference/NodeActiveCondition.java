@@ -70,11 +70,6 @@ public class NodeActiveCondition implements Condition {
 		return Collections.emptyList();
 	}
 
-	@Override
-	public Condition copy() {
-		return new NodeActiveCondition(flowName, nodeName);
-	}
-
 	public String getFlowName() {
 		return flowName;
 	}

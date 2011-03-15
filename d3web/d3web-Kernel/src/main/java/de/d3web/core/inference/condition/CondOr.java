@@ -82,9 +82,4 @@ public class CondOr extends NonTerminalCondition {
 		return ret;
 
 	}
-
-	@Override
-	protected Condition createInstance(List<Condition> theTerms, Condition o) {
-		return new CondOr(theTerms);
-	}
 }

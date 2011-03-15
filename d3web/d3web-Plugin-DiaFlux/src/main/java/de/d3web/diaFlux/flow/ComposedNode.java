@@ -117,11 +117,6 @@ public class ComposedNode extends AbstractNode {
 			}
 			return true;
 		}
-
-		@Override
-		public Condition copy() {
-			return this;
-		}
 	}
 
 }

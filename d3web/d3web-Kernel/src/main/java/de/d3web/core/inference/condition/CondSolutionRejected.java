@@ -62,11 +62,6 @@ public class CondSolutionRejected extends TerminalCondition {
 	}
 
 	@Override
-	public Condition copy() {
-		return new CondSolutionRejected(getSolution());
-	}
-
-	@Override
 	public String toString() {
 		return getClass().getName() + "(" + getSolution().getName() + ")";
 	}

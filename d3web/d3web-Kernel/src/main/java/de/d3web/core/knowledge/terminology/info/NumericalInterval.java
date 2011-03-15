@@ -20,7 +20,6 @@
 
 package de.d3web.core.knowledge.terminology.info;
 
-
 /**
  * A Numerical Interval <BR>
  * Represents a numerical interval with a left and a right border. <BR>
@@ -144,42 +143,6 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 	 */
 	public final boolean isRightOpen() {
 		return rightOpen;
-	}
-
-	/**
-	 * Sets the left boundary
-	 * 
-	 * @param left The left to set
-	 */
-	public final void setLeft(double left) {
-		this.left = left;
-	}
-
-	/**
-	 * Sets the whether left boundary is open or not.
-	 * 
-	 * @param leftopen The leftopen to set
-	 */
-	public final void setLeftOpen(boolean leftOpen) {
-		this.leftOpen = leftOpen;
-	}
-
-	/**
-	 * Sets the right boundary
-	 * 
-	 * @param right The right to set
-	 */
-	public final void setRight(double right) {
-		this.right = right;
-	}
-
-	/**
-	 * Sets whether right boundary is open or not.
-	 * 
-	 * @param rightopen The rightopen to set
-	 */
-	public final void setRightOpen(boolean rightOpen) {
-		this.rightOpen = rightOpen;
 	}
 
 	/**

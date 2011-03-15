@@ -88,15 +88,4 @@ public class CondAnd extends NonTerminalCondition {
 		ret += "}";
 		return ret;
 	}
-
-	/**
-	 * This method is used to simplify the copy action of a
-	 * {@link NonTerminalCondition}. Do not use in the wild.
-	 * 
-	 */
-	@Override
-	protected Condition createInstance(List<Condition> theTerms, Condition o) {
-		return new CondAnd(theTerms);
-	}
-
 }

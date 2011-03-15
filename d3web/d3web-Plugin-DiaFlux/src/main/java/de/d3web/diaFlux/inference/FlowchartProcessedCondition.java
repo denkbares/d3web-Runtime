@@ -79,11 +79,6 @@ public class FlowchartProcessedCondition implements Condition {
 		return Collections.emptyList();
 	}
 
-	@Override
-	public Condition copy() {
-		return new FlowchartProcessedCondition(flowName);
-	}
-
 	public String getFlowName() {
 		return flowName;
 	}

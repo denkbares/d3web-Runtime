@@ -55,9 +55,4 @@ public class CondTextEqual extends CondTextQuestion {
 				+ " value: "
 				+ getValue();
 	}
-
-	@Override
-	public Condition copy() {
-		return new CondTextEqual((QuestionText) getQuestion(), getValue());
-	}
 }

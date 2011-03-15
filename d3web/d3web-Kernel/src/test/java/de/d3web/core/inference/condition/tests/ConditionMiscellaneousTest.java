@@ -134,7 +134,7 @@ public class ConditionMiscellaneousTest {
 		assertThat(string.isEmpty(), is(false));
 
 		// try to copy and
-		Condition copiedCondition = conditionMofN.copy();
+		Condition copiedCondition = new CondMofN(Arrays.asList(conditions), 1, 2);
 		assertThat(conditionMofN, is(equalTo(copiedCondition)));
 
 		try {
@@ -200,7 +200,7 @@ public class ConditionMiscellaneousTest {
 		assertThat(string.length(), is(not(0)));
 
 		// test the copy method:
-		Condition copiedCondition = conditionKnown.copy();
+		Condition copiedCondition = new CondKnown(choiceQuestion1);
 		assertThat(conditionKnown, is(equalTo(copiedCondition)));
 
 		// open up a new session:
@@ -258,7 +258,7 @@ public class ConditionMiscellaneousTest {
 		assertThat(string.isEmpty(), is(false));
 
 		// test the copy method:
-		Condition copiedCondition = conditionUnknown.copy();
+		Condition copiedCondition = new CondUnknown(choiceQuestion1);
 		assertThat(conditionUnknown, is(equalTo(copiedCondition)));
 
 		// open up a new session:
@@ -313,7 +313,7 @@ public class ConditionMiscellaneousTest {
 		assertThat(string.isEmpty(), is(false));
 
 		// .equals() Method of CondDState is possibly buggy!!
-		Condition copiedCondition = conditionDState.copy();
+		Condition copiedCondition = new CondDState(solution, ratingEstablished);
 		assertThat(conditionDState, is(equalTo(copiedCondition)));
 
 		assertThat(conditionDState.hashCode(), is(not(0)));

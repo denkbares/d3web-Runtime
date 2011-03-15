@@ -124,7 +124,7 @@ public class ConditionTextTest {
 
 		// copy the first condition and check if the copied condition is equal
 		// to the first condition
-		Condition copiedCondition = conditionEqual.copy();
+		Condition copiedCondition = new CondTextEqual(textQuestion, "Some Question Text...");
 		assertThat(copiedCondition, is(equalTo(conditionEqual)));
 
 		// open up a new session and enter a fact which should match the
@@ -166,7 +166,8 @@ public class ConditionTextTest {
 
 		// copy the first condition and check if the copied condition is equal
 		// to the first condition
-		Condition copiedCondition = conditionContains.copy();
+		Condition copiedCondition = new CondTextContains(textQuestion,
+				"some Question Text");
 		assertThat(copiedCondition, is(equalTo(conditionContains)));
 
 		// open up a new session and enter a fact which should match the

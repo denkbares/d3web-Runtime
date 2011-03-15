@@ -45,7 +45,9 @@ public class NumericalIntervalTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.knowledge.terminology.info.NumericalInterval#hashCode()}.
+	 * Test method for
+	 * {@link de.d3web.core.knowledge.terminology.info.NumericalInterval#hashCode()}
+	 * .
 	 */
 	@Test
 	public void testHashCode() {
@@ -72,7 +74,9 @@ public class NumericalIntervalTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.knowledge.terminology.info.NumericalInterval#contains(double)}.
+	 * Test method for
+	 * {@link de.d3web.core.knowledge.terminology.info.NumericalInterval#contains(double)}
+	 * .
 	 */
 	@Test
 	public void testContains() {
@@ -88,10 +92,8 @@ public class NumericalIntervalTest {
 	 * {@link NumericalInterval#getLeft()}.
 	 */
 	@Test
-	public void testSetAndGetLeft() {
+	public void testGetLeft() {
 		assertThat(four_seven_closed_closed.getLeft(), is(4d));
-		four_seven_closed_closed.setLeft(3.8);
-		assertThat(four_seven_closed_closed.getLeft(), is(3.8));
 	}
 
 	/**
@@ -99,10 +101,8 @@ public class NumericalIntervalTest {
 	 * {@link NumericalInterval#SetRight()}.
 	 */
 	@Test
-	public void testSetAndGetRight() {
+	public void testGetRight() {
 		assertThat(four_seven_closed_closed.getRight(), is(7d));
-		four_seven_closed_closed.setRight(6.6);
-		assertThat(four_seven_closed_closed.getRight(), is(6.6));
 	}
 
 	/**
@@ -110,10 +110,8 @@ public class NumericalIntervalTest {
 	 * {@link NumericalInterval#isLeftOpen()}.
 	 */
 	@Test
-	public void testSetAndGetLeftOpen() {
+	public void testGetLeftOpen() {
 		assertThat(four_seven_closed_closed.isLeftOpen(), is(false));
-		four_seven_closed_closed.setLeftOpen(true);
-		assertThat(four_seven_closed_closed.isLeftOpen(), is(true));
 	}
 
 	/**
@@ -121,14 +119,14 @@ public class NumericalIntervalTest {
 	 * {@link NumericalInterval#isRightOpen()}.
 	 */
 	@Test
-	public void testSetAndGetRightOpen() {
+	public void testGetRightOpen() {
 		assertThat(four_seven_closed_closed.isRightOpen(), is(false));
-		four_seven_closed_closed.setRightOpen(true);
-		assertThat(four_seven_closed_closed.isRightOpen(), is(true));
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.knowledge.terminology.info.NumericalInterval#equals(java.lang.Object)}.
+	 * Test method for
+	 * {@link de.d3web.core.knowledge.terminology.info.NumericalInterval#equals(java.lang.Object)}
+	 * .
 	 */
 	@Test
 	public void testEqualsObject() {
@@ -140,7 +138,9 @@ public class NumericalIntervalTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.knowledge.terminology.info.NumericalInterval#intersects(de.d3web.core.knowledge.terminology.info.NumericalInterval)}.
+	 * Test method for
+	 * {@link de.d3web.core.knowledge.terminology.info.NumericalInterval#intersects(de.d3web.core.knowledge.terminology.info.NumericalInterval)}
+	 * .
 	 */
 	@Test
 	public void testIntersects() {
@@ -161,7 +161,9 @@ public class NumericalIntervalTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.knowledge.terminology.info.NumericalInterval#toString()}.
+	 * Test method for
+	 * {@link de.d3web.core.knowledge.terminology.info.NumericalInterval#toString()}
+	 * .
 	 */
 	@Test
 	public void testToString() {
@@ -170,7 +172,9 @@ public class NumericalIntervalTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.knowledge.terminology.info.NumericalInterval#compareTo(de.d3web.core.knowledge.terminology.info.NumericalInterval)}.
+	 * Test method for
+	 * {@link de.d3web.core.knowledge.terminology.info.NumericalInterval#compareTo(de.d3web.core.knowledge.terminology.info.NumericalInterval)}
+	 * .
 	 */
 	@Test
 	public void testCompareTo() {

@@ -62,11 +62,6 @@ public class CondSolutionConfirmed extends TerminalCondition {
 	}
 
 	@Override
-	public Condition copy() {
-		return new CondSolutionConfirmed(getSolution());
-	}
-
-	@Override
 	public String toString() {
 		return getClass().getName() + "(" + getSolution().getName() + ")";
 	}

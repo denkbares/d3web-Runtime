@@ -47,9 +47,4 @@ public final class ConditionTrue extends TerminalCondition {
 			UnknownAnswerException {
 		return true;
 	}
-
-	@Override
-	public Condition copy() {
-		return this;
-	}
 }

@@ -21,8 +21,6 @@
 package de.d3web.core.inference.condition;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Logger;
 
 import de.d3web.core.session.Session;
 
@@ -59,17 +57,5 @@ public class CondNot extends NonTerminalCondition {
 	@Override
 	public String toString() {
 		return "\u2190 CondNot {" + condition.toString() + "}";
-	}
-
-	@Override
-	protected Condition createInstance(List<Condition> theTerms, Condition o) {
-		if (theTerms.size() == 1) {
-			return new CondNot((theTerms.get(0)));
-		}
-		else {
-			Logger.getLogger(CondNot.class.getName()).severe("Tried to" +
-					"create a CondNont instance with more/less than 1 argument.");
-			return null;
-		}
 	}
 }

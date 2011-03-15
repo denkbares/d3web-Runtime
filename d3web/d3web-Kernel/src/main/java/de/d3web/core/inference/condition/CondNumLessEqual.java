@@ -53,9 +53,4 @@ public class CondNumLessEqual extends CondNum {
 				+ " value: "
 				+ getConditionValue();
 	}
-
-	@Override
-	public Condition copy() {
-		return new CondNumLessEqual((QuestionNum) getQuestion(), getConditionValue());
-	}
 }

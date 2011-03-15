@@ -23,8 +23,6 @@ package de.d3web.core.inference.condition;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -115,26 +113,4 @@ public abstract class NonTerminalCondition implements Condition {
 	public int hashCode() {
 		return getTerms().hashCode();
 	}
-
-	@Override
-	public Condition copy() {
-		List<Condition> newTerms = new LinkedList<Condition>();
-		Iterator<Condition> tIter = getTerms().iterator();
-		while (tIter.hasNext()) {
-			Condition c = tIter.next();
-			newTerms.add(c.copy());
-		}
-		return createInstance(newTerms, this);
-	}
-
-	/**
-	 * Template method. Needs to be implemented in sub-classes by their
-	 * constructor.
-	 * 
-	 * @param theTerms the conditions to be enclosed in the newly created
-	 *        instance
-	 * @param original the original condition that is the basis of the newly
-	 *        created instance
-	 */
-	protected abstract Condition createInstance(List<Condition> theTerms, Condition original);
 }

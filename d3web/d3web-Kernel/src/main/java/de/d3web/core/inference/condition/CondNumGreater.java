@@ -54,10 +54,4 @@ public class CondNumGreater extends CondNum {
 				+ " value: "
 				+ getConditionValue();
 	}
-
-	@Override
-	public Condition copy() {
-		return new CondNumGreater((QuestionNum) getQuestion(), getConditionValue());
-	}
-
 }

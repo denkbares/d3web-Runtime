@@ -88,16 +88,6 @@ public class CondEqual extends CondQuestion {
 		return conditionValue;
 	}
 
-	/**
-	 * Sets the values that have to be assigned to the question to fulfill the
-	 * condition.
-	 * 
-	 * @param newValues the constrained values of this condition
-	 */
-	public void setValue(Value newValue) {
-		conditionValue = newValue;
-	}
-
 	@Override
 	public String toString() {
 		String ret = "\u2190 CondEqual question: "
@@ -117,11 +107,6 @@ public class CondEqual extends CondQuestion {
 		else {
 			return this.getValue() == ((CondEqual) other).getValue();
 		}
-	}
-
-	@Override
-	public Condition copy() {
-		return new CondEqual(getQuestion(), getValue());
 	}
 
 	@Override

@@ -54,10 +54,4 @@ public class CondAnswered extends CondQuestion {
 	public String toString() {
 		return "\u2190 CondAnswered question: " + getQuestion().getName();
 	}
-
-	@Override
-	public Condition copy() {
-		return new CondAnswered(getQuestion());
-	}
-
 }

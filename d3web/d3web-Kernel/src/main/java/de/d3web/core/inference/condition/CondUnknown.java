@@ -60,9 +60,4 @@ public class CondUnknown extends CondQuestion {
 		return "\u2190 CondTextContains question: " + getQuestion().getName();
 	}
 
-	@Override
-	public Condition copy() {
-		return new CondUnknown(getQuestion());
-	}
-
 }

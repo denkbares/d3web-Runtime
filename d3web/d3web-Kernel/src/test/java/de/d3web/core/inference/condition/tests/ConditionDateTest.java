@@ -136,7 +136,7 @@ public class ConditionDateTest {
 
 		// copy the first condition and check if the copied condition is equal
 		// to the first condition
-		Condition copiedCondition = conditionEqual.copy();
+		Condition copiedCondition = new CondDateEqual(dateQuestion, new DateValue(firstDate));
 		assertThat(copiedCondition, is(equalTo(conditionEqual)));
 
 		// open up a new session and enter a fact which should match the
@@ -183,7 +183,8 @@ public class ConditionDateTest {
 
 		// copy the first condition and check if the copied condition is equal
 		// to the first condition
-		Condition conditionCopied = conditionBeforeValue.copy();
+		Condition conditionCopied = new CondDateAfter(dateQuestion,
+				new DateValue(new Date(now - 1000)));
 		assertThat(conditionCopied, is(equalTo(conditionBeforeValue)));
 
 		// open up a new session and set "Now" as value for the dateQuestion
@@ -231,7 +232,8 @@ public class ConditionDateTest {
 
 		// copy the first condition and check if the copied condition is equal
 		// to the first condition
-		Condition conditionCopied = conditionBeforeValue.copy();
+		Condition conditionCopied = new CondDateBefore(dateQuestion,
+				new DateValue(new Date(now - 1000)));
 		assertThat(conditionCopied, is(equalTo(conditionBeforeValue)));
 
 		// open up a new session and set "Now" as value for the dateQuestion

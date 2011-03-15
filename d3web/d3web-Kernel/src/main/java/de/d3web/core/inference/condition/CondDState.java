@@ -124,10 +124,4 @@ public class CondDState extends TerminalCondition {
 
 		return str.hashCode();
 	}
-
-	@Override
-	public Condition copy() {
-		return new CondDState(getSolution(), getStatus());
-	}
-
 }

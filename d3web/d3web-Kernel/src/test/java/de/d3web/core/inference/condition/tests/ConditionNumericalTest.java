@@ -130,7 +130,7 @@ public class ConditionNumericalTest {
 
 		// copy the first condition and check if the copied condition is equal
 		// to the first condition
-		Condition copiedCondition = conditionEqual.copy();
+		Condition copiedCondition = new CondNumEqual(numericalQuestion, 10.0);
 		assertThat(copiedCondition, is(equalTo(conditionEqual)));
 
 		// open up a new session and enter a fact which should match the
@@ -171,7 +171,7 @@ public class ConditionNumericalTest {
 
 		// copy the first condition and check if the copied condition is equal
 		// to the first condition
-		Condition conditionCopied = conditionSmallerThanValue.copy();
+		Condition conditionCopied = new CondNumGreater(numericalQuestion, 10.0);
 		assertThat(conditionCopied, is(equalTo(conditionSmallerThanValue)));
 
 		// open up a new session and enter a value of 50.0 for the
@@ -215,7 +215,7 @@ public class ConditionNumericalTest {
 
 		// copy the first condition and check if the copied condition is equal
 		// to the first condition
-		Condition conditionCopied = conditionSmallerThanValue.copy();
+		Condition conditionCopied = new CondNumGreaterEqual(numericalQuestion, 10.0);
 		assertThat(conditionCopied, is(equalTo(conditionSmallerThanValue)));
 
 		// open up a new session and enter a value of 50.0 for the
@@ -258,7 +258,7 @@ public class ConditionNumericalTest {
 
 		// copy the first condition and check if the copied condition is equal
 		// to the first condition
-		Condition conditionCopied = conditionSmallerThanValue.copy();
+		Condition conditionCopied = new CondNumLess(numericalQuestion, 10.0);
 		assertThat(conditionCopied, is(equalTo(conditionSmallerThanValue)));
 
 		// open up a new session and enter a value of 50.0 for the
@@ -301,7 +301,7 @@ public class ConditionNumericalTest {
 
 		// copy the first condition and check if the copied condition is equal
 		// to the first condition
-		Condition conditionCopied = conditionSmallerThanValue.copy();
+		Condition conditionCopied = new CondNumLessEqual(numericalQuestion, 10.0);
 		assertThat(conditionCopied, is(equalTo(conditionSmallerThanValue)));
 
 		// open up a new session and enter a value of 50.0 for the
@@ -354,7 +354,7 @@ public class ConditionNumericalTest {
 
 		// copy the first condition and check if the copied condition is equal
 		// to the first condition
-		Condition conditionCopied = conditionRangeIn.copy();
+		Condition conditionCopied = new CondNumIn(numericalQuestion, 45.0, 55.0);
 		assertThat(conditionCopied, is(equalTo(conditionRangeIn)));
 
 		// open up a new session and enter a value of 50.0 for the

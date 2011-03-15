@@ -55,10 +55,4 @@ public class CondTextContains extends CondTextQuestion {
 				+ " value: "
 				+ getValue();
 	}
-
-	@Override
-	public Condition copy() {
-		return new CondTextContains((QuestionText) getQuestion(), getValue());
-	}
-
 }

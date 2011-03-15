@@ -52,11 +52,6 @@ public class CondDateAfter extends CondDate {
 	}
 
 	@Override
-	public Condition copy() {
-		return new CondDateAfter((QuestionDate) getQuestion(), getValue());
-	}
-
-	@Override
 	protected boolean compare(DateValue caseValue) {
 		return caseValue.compareTo(getValue()) > 0;
 	}
