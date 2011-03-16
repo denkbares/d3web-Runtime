@@ -224,7 +224,6 @@
 	<modules>
 		<module>d3web-Kernel</module>
 		<module>d3web-Persistence</module>
-		<module>d3web-Verbalizer</module>
 		<module>d3web-EmpiricalTesting</module>
 		<module>d3web-PluginManager</module>
 		<module>d3web-GlobalTests</module>
