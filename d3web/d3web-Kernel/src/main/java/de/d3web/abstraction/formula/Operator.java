@@ -57,6 +57,8 @@ public class Operator implements FormulaNumberElement {
 	public Operator(FormulaNumberElement arg1, FormulaNumberElement arg2, Operation operator) {
 		if (arg1 == null || arg2 == null) throw new NullPointerException(
 				"The arguments must not be null.");
+		if (operator == null) throw new NullPointerException(
+				"The operator must not be null.");
 		this.operator = operator;
 		this.arg1 = arg1;
 		this.arg2 = arg2;
@@ -89,11 +91,10 @@ public class Operator implements FormulaNumberElement {
 		case Mult:
 			return new NumValue(new Double(evaluatedArg1.doubleValue()
 					* evaluatedArg2.doubleValue()));
-		case Sub:
+		default:
+			// only Sub is left
 			return new NumValue(new Double(evaluatedArg1.doubleValue()
 					- evaluatedArg2.doubleValue()));
-		default:
-			return null;
 		}
 	}
 
@@ -103,12 +104,7 @@ public class Operator implements FormulaNumberElement {
 	 * @return first argument of the term
 	 */
 	public FormulaNumberElement getArg1() {
-		if (arg1 == null) {
-			return new FormulaNumber(null);
-		}
-		else {
-			return arg1;
-		}
+		return arg1;
 	}
 
 	/**
@@ -117,12 +113,7 @@ public class Operator implements FormulaNumberElement {
 	 * @return second argument of the term
 	 */
 	public FormulaNumberElement getArg2() {
-		if (arg2 == null) {
-			return new FormulaNumber(null);
-		}
-		else {
-			return arg2;
-		}
+		return arg2;
 	}
 
 	public String getSymbol() {

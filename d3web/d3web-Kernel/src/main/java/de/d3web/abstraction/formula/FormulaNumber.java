@@ -44,6 +44,7 @@ public class FormulaNumber implements FormulaNumberElement {
 	 * @param value value of this FormulaElement
 	 */
 	public FormulaNumber(Double value) {
+		if (value == null) throw new NullPointerException("value must not be null.");
 		this.value = value;
 	}
 
@@ -62,12 +63,7 @@ public class FormulaNumber implements FormulaNumberElement {
 	 **/
 	@Override
 	public String toString() {
-		if (value == null) {
-			return "null";
-		}
-		else {
-			return trim(value);
-		}
+		return trim(value);
 	}
 
 	/**

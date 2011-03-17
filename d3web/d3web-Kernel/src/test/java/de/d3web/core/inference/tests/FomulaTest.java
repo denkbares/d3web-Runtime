@@ -19,6 +19,7 @@
 package de.d3web.core.inference.tests;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import junit.framework.Assert;
 
@@ -26,8 +27,10 @@ import org.junit.Test;
 
 import de.d3web.abstraction.formula.FormulaNumber;
 import de.d3web.abstraction.formula.Operator;
+import de.d3web.abstraction.formula.Operator.Operation;
 import de.d3web.abstraction.formula.QNumWrapper;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
@@ -52,11 +55,17 @@ public class FomulaTest {
 		QNumWrapper wrappedQuestion = new QNumWrapper(question);
 		FormulaNumber three = new FormulaNumber(3.0);
 		Operator add = new Operator(wrappedQuestion, three, Operator.Operation.Add);
+		Assert.assertEquals("+", add.getSymbol());
 		Operator sub = new Operator(wrappedQuestion, three, Operator.Operation.Sub);
+		Assert.assertEquals("-", sub.getSymbol());
 		Operator div = new Operator(wrappedQuestion, three, Operator.Operation.Div);
+		Assert.assertEquals("/", div.getSymbol());
 		Operator max = new Operator(wrappedQuestion, three, Operator.Operation.Max);
+		Assert.assertEquals("max", max.getSymbol());
 		Operator min = new Operator(wrappedQuestion, three, Operator.Operation.Min);
+		Assert.assertEquals("min", min.getSymbol());
 		Operator mult = new Operator(wrappedQuestion, three, Operator.Operation.Mult);
+		Assert.assertEquals("*", mult.getSymbol());
 		Session session = SessionFactory.createSession(kb);
 		Assert.assertTrue(UndefinedValue.isUndefinedValue(add.eval(session)));
 		session.getBlackboard().addValueFact(
@@ -67,5 +76,23 @@ public class FomulaTest {
 		Assert.assertEquals(9.0, ((NumValue) max.eval(session)).getDouble());
 		Assert.assertEquals(3.0, ((NumValue) min.eval(session)).getDouble());
 		Assert.assertEquals(27.0, ((NumValue) mult.eval(session)).getDouble());
+		Collection<? extends TerminologyObject> terminalObjects = mult.getTerminalObjects();
+		Assert.assertEquals(1, terminalObjects.size());
+		Assert.assertEquals(question, terminalObjects.iterator().next());
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testNPEonFormulaNumber() {
+		new FormulaNumber(null);
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testNPEonOperator() {
+		new Operator(null, null, Operation.Add);
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testNPEonOperator2() {
+		new Operator(new FormulaNumber(5.0), new FormulaNumber(5.0), null);
 	}
 }
