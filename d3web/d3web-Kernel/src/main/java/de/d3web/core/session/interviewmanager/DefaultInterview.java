@@ -269,13 +269,13 @@ public class DefaultInterview implements Interview {
 		return InterviewState.INACTIVE;
 	}
 
-	private List<TerminologyObject> getAllFollowUpChildrenOf(
+	private static List<TerminologyObject> getAllFollowUpChildrenOf(
 			TerminologyObject[] objects) {
 		Collection<TerminologyObject> followers = new HashSet<TerminologyObject>();
 		return getAllFollowUpChildrenOf(objects, followers);
 	}
 
-	private List<TerminologyObject> getAllFollowUpChildrenOf(
+	private static List<TerminologyObject> getAllFollowUpChildrenOf(
 			TerminologyObject[] objects, Collection<TerminologyObject> followers) {
 		List<TerminologyObject> children = new ArrayList<TerminologyObject>();
 		for (TerminologyObject object : objects) {
@@ -303,7 +303,7 @@ public class DefaultInterview implements Interview {
 	 * @return true, when the specified objects are all instances of
 	 *         {@link QContainer}.
 	 */
-	private boolean allQContainers(TerminologyObject[] objects) {
+	private static boolean allQContainers(TerminologyObject[] objects) {
 		for (TerminologyObject object : objects) {
 			if (!(object instanceof QContainer)) {
 				return false;
@@ -320,7 +320,7 @@ public class DefaultInterview implements Interview {
 	 * @return true, when the specified objects are all instances of
 	 *         {@link Question}.
 	 */
-	private boolean allQuestions(TerminologyObject[] objects) {
+	private static boolean allQuestions(TerminologyObject[] objects) {
 		for (TerminologyObject object : objects) {
 			if (!(object instanceof Question)) {
 				return false;

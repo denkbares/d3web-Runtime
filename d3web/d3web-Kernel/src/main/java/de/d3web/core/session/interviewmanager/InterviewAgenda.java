@@ -43,7 +43,6 @@ public final class InterviewAgenda {
 	private final Session session;
 	// Strategy: how to sort the entries on the agenda?
 	private AgendaSortingStrategy agendaSortingStrategy;
-	private transient boolean requireOrganizeAgenda = false;
 
 	public final class AgendaEntry implements Comparable<AgendaEntry> {
 
@@ -162,7 +161,6 @@ public final class InterviewAgenda {
 	 * @param interviewObject {@link InterviewObject}
 	 */
 	public final void append(InterviewObject interviewObject) {
-		// trace("Append: " + interviewObject);
 		if (onAgenda(interviewObject)) {
 			activate(interviewObject);
 		}
@@ -178,7 +176,7 @@ public final class InterviewAgenda {
 				}
 			}
 			agenda.add(new AgendaEntry(interviewObject, InterviewState.ACTIVE));
-			setRequireOrganizeAgenda();
+			organizeAgenda();
 		}
 	}
 
@@ -188,12 +186,11 @@ public final class InterviewAgenda {
 	 * @param interviewObject {@link InterviewObject}
 	 */
 	public void deactivate(InterviewObject interviewObject) {
-		// trace("De-activate: " + interviewObject);
 		AgendaEntry entry = findAgendaEntry(interviewObject);
 		if (entry != null) {
 			entry.setInterviewState(InterviewState.INACTIVE);
 		}
-		setRequireOrganizeAgenda();
+		organizeAgenda();
 	}
 
 	/**
@@ -202,7 +199,6 @@ public final class InterviewAgenda {
 	 * @param interviewObject {@link InterviewObject}
 	 */
 	public void activate(InterviewObject interviewObject) {
-		// trace("Activate: " + interviewObject);
 		AgendaEntry entry = findAgendaEntry(interviewObject);
 		if (entry == null) {
 			append(interviewObject);
@@ -210,25 +206,15 @@ public final class InterviewAgenda {
 		else {
 			entry.setInterviewState(InterviewState.ACTIVE);
 		}
-		setRequireOrganizeAgenda();
+		organizeAgenda();
 	}
 
 	/**
 	 * Sorts the agenda with respect to the newly added items.
 	 */
-	private synchronized void organizeAgendaIfRequired() {
-		if (!requireOrganizeAgenda) return;
+	private void organizeAgenda() {
 		this.agenda = agendaSortingStrategy.sort(this.agenda);
-		requireOrganizeAgenda = false;
 	}
-
-	private synchronized void setRequireOrganizeAgenda() {
-		requireOrganizeAgenda = true;
-	}
-
-	// private void trace(String string) {
-	// System.out.println(string);
-	// }
 
 	private AgendaEntry findAgendaEntry(InterviewObject interviewObject) {
 		for (AgendaEntry entry : this.agenda) {
@@ -294,8 +280,6 @@ public final class InterviewAgenda {
 	 *         agenda
 	 */
 	public List<InterviewObject> getCurrentlyActiveObjects() {
-		// organize if required
-		organizeAgendaIfRequired();
 		List<InterviewObject> objects = new ArrayList<InterviewObject>();
 		for (AgendaEntry entry : this.agenda) {
 			if (entry.hasState(InterviewState.ACTIVE)) {
