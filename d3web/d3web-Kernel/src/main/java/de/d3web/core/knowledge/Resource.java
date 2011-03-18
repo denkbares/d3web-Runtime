@@ -35,7 +35,25 @@ public interface Resource {
 	public long getSize();
 
 	/**
-	 * @return an InputStream to read the data of this resource
+	 * Returns the input stream of the specified resource.
+	 * <p>
+	 * <b>Note:</b><br>
+	 * The input stream may create a write lock to the whole knowledge base
+	 * archive the resource is contained in. Therefore make sure to close the
+	 * stream immediately after reading from it. Use the following code snipplet
+	 * for accessing resource streams: <br>
+	 * <code><pre>
+	 * InputStream in = myResource.getInputStream();
+	 * try {
+	 *   // read from the stream
+	 *   in.read(...);
+	 * }
+	 * finally {
+	 *   in.close();
+	 * }
+	 * </pre></code>
+	 * 
+	 * @return the InputStream to read the data of this resource
 	 * @throws IOException if the stream cannot be provided
 	 */
 	public InputStream getInputStream() throws IOException;

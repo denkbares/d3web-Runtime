@@ -18,7 +18,6 @@
  */
 package de.d3web.core.io;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,25 +48,76 @@ public class JarBinaryRessource implements Resource {
 
 	@Override
 	public InputStream getInputStream() throws IOException {
-		ZipFile zipfile = new ZipFile(file);
-		try {
-			ZipEntry entry = zipfile.getEntry(entryPath);
-			InputStream inputStream = zipfile.getInputStream(entry);
-			byte[] buffer = new byte[size];
-			int read = 0;
-			int len = 0;
-			while (read != -1 && len != size) {
-				len += read;
-				read = inputStream.read(buffer, len, size - len);
+
+		/*
+		 * originally we copied the stream content into a buffer and returned a
+		 * stream to that buffer
+		 * 
+		 * this shall no longer be needed as long as all callers handle the
+		 * stream well (closing it every time) therefore this code is removed.
+		 * 
+		 * Instead, we deliver the zip entry stream directly, but add some
+		 * decoration also closing the zip file when closing the stream itself.
+		 * It is not possible to directly close the zip file, because after
+		 * doing so, you cannot read from the stream any longer.
+		 * 
+		 * The decorated stream makes sure that the zip file is closed as soon
+		 * as possible instead of relying on the garbage collector.
+		 */
+
+		final ZipFile zipfile = new ZipFile(file);
+		ZipEntry entry = zipfile.getEntry(entryPath);
+		final InputStream inputStream = zipfile.getInputStream(entry);
+		// we will return a decoration stream
+		// that closes the zip file on closing the stream
+		return new InputStream() {
+
+			@Override
+			public int available() throws IOException {
+				return inputStream.available();
 			}
-			if (size != len) {
-				throw new IOException("Cannot read complete entry");
+
+			@Override
+			public void close() throws IOException {
+				inputStream.close();
+				zipfile.close();
 			}
-			return new ByteArrayInputStream(buffer);
-		}
-		finally {
-			zipfile.close();
-		}
+
+			@Override
+			public synchronized void mark(int count) {
+				inputStream.mark(count);
+			}
+
+			@Override
+			public boolean markSupported() {
+				return inputStream.markSupported();
+			}
+
+			@Override
+			public int read() throws IOException {
+				return inputStream.read();
+			}
+
+			@Override
+			public int read(byte[] buffer) throws IOException {
+				return inputStream.read(buffer);
+			}
+
+			@Override
+			public int read(byte[] buffer, int arg1, int arg2) throws IOException {
+				return inputStream.read(buffer, arg1, arg2);
+			}
+
+			@Override
+			public synchronized void reset() throws IOException {
+				inputStream.reset();
+			}
+
+			@Override
+			public long skip(long arg0) throws IOException {
+				return inputStream.skip(arg0);
+			}
+		};
 	}
 
 	@Override

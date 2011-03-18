@@ -262,9 +262,8 @@ public class KnowledgeBase implements NamedObject {
 	}
 
 	/**
-	 * Inserts a new resource for this {@link KnowledgeBase} instance. For
-	 * example, a resource is a multimedia file attached to the
-	 * {@link KnowledgeBase}.
+	 * Inserts a new resource for this {@link KnowledgeBase} instance. A
+	 * resource is a multimedia file attached to the {@link KnowledgeBase}.
 	 * <p>
 	 * The path is represented from its root path without any trailing "/". The
 	 * path folder separator used is always "/", independent from the underlying
@@ -279,8 +278,32 @@ public class KnowledgeBase implements NamedObject {
 	}
 
 	/**
-	 * Returns all resources stored in this {@link KnowledgeBase} instance. For
-	 * example, a multi-media is a resource.
+	 * Removes a resource for this {@link KnowledgeBase} instance. A resource is
+	 * a multimedia file attached to the {@link KnowledgeBase}.
+	 * 
+	 * @param resource a resource to be removed
+	 * @author volker.belli
+	 * @date 16.03.2011
+	 */
+	public void removeResouce(Resource resource) {
+		this.resouces.add(resource);
+	}
+
+	/**
+	 * Removes all resources for this {@link KnowledgeBase} instance. A resource
+	 * is a multimedia file attached to the {@link KnowledgeBase}.
+	 * {@link KnowledgeBase}.
+	 * 
+	 * @author volker.belli
+	 * @date 16.03.2011
+	 */
+	public void clearResouces() {
+		this.resouces.clear();
+	}
+
+	/**
+	 * Returns all resources stored in this {@link KnowledgeBase} instance. A
+	 * resource is a multimedia file attached to the {@link KnowledgeBase}.
 	 * 
 	 * @return all resources of this knowledge base
 	 * @author joba
@@ -292,7 +315,8 @@ public class KnowledgeBase implements NamedObject {
 
 	/**
 	 * Returns a stored resource for a specified pathname accessor (a relative
-	 * path that must not start with "/").
+	 * path that must not start with "/"). A resource is a multimedia file
+	 * attached to the {@link KnowledgeBase}.
 	 * 
 	 * @param pathname the specified pathname accessor.
 	 * @return a resource stored by the specified accessor
