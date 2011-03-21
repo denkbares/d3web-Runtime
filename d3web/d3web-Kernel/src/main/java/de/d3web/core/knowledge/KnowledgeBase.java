@@ -125,13 +125,11 @@ public class KnowledgeBase implements NamedObject {
 
 	/**
 	 * Collects and returns all {@link KnowledgeSlice} instances that are stored
-	 * in this {@link KnowledgeBase} for a specified problem-solver and
-	 * specified access key.
+	 * in this {@link KnowledgeBase} for a specified problem-solver key.
 	 * 
 	 * @return Collection containing objects of type {@link KnowledgeSlice} for
 	 *         the specified problem-solver and access key
 	 * 
-	 * @param problemsolver the specified problem-solver
 	 * @param kind the specified access key how the knowledge is stored in the
 	 *        problem-solver
 	 * @return a {@link Collection} of {@link KnowledgeSlice} instances
