@@ -43,6 +43,7 @@ public final class InterviewAgenda {
 	private final Session session;
 	// Strategy: how to sort the entries on the agenda?
 	private AgendaSortingStrategy agendaSortingStrategy;
+	private transient boolean requireOrganizeAgenda = false;
 
 	public final class AgendaEntry implements Comparable<AgendaEntry> {
 
@@ -176,7 +177,7 @@ public final class InterviewAgenda {
 				}
 			}
 			agenda.add(new AgendaEntry(interviewObject, InterviewState.ACTIVE));
-			organizeAgenda();
+			setRequireOrganizeAgenda();
 		}
 	}
 
@@ -190,7 +191,7 @@ public final class InterviewAgenda {
 		if (entry != null) {
 			entry.setInterviewState(InterviewState.INACTIVE);
 		}
-		organizeAgenda();
+		setRequireOrganizeAgenda();
 	}
 
 	/**
@@ -206,14 +207,20 @@ public final class InterviewAgenda {
 		else {
 			entry.setInterviewState(InterviewState.ACTIVE);
 		}
-		organizeAgenda();
+		setRequireOrganizeAgenda();
 	}
 
 	/**
 	 * Sorts the agenda with respect to the newly added items.
 	 */
-	private void organizeAgenda() {
+	private synchronized void organizeAgendaIfRequired() {
+		if (!requireOrganizeAgenda) return;
 		this.agenda = agendaSortingStrategy.sort(this.agenda);
+		requireOrganizeAgenda = false;
+	}
+
+	private synchronized void setRequireOrganizeAgenda() {
+		requireOrganizeAgenda = true;
 	}
 
 	private AgendaEntry findAgendaEntry(InterviewObject interviewObject) {
@@ -280,6 +287,8 @@ public final class InterviewAgenda {
 	 *         agenda
 	 */
 	public List<InterviewObject> getCurrentlyActiveObjects() {
+		// organize if required
+		organizeAgendaIfRequired();
 		List<InterviewObject> objects = new ArrayList<InterviewObject>();
 		for (AgendaEntry entry : this.agenda) {
 			if (entry.hasState(InterviewState.ACTIVE)) {

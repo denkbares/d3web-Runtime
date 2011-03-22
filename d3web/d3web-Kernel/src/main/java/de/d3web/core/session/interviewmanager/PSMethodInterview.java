@@ -20,9 +20,11 @@
 package de.d3web.core.session.interviewmanager;
 
 import java.util.Collection;
+import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
@@ -43,6 +45,19 @@ public class PSMethodInterview extends PSMethodAdapter {
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		for (PropagationEntry change : changes) {
 			session.getInterview().notifyFactChange(change);
+		}
+		// force sorting
+		if (!changes.isEmpty()) {
+			/*
+			 * as a workaround we access the fully sorted interview agenda to
+			 * force the sorting strategy being activated this is required,
+			 * because some sorting strategies (like CostBenefitSortingStrategy
+			 * are also changing the objects contained (not only sorting) and
+			 * therefore have other side effects.
+			 */
+			Collection<InterviewObject> objects = session.getInterview().getInterviewAgenda().getCurrentlyActiveObjects();
+			Logger.getLogger(getClass().getName()).info(
+					"Agenda (" + changes.size() + " changes): " + objects);
 		}
 	}
 
