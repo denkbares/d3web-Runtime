@@ -56,7 +56,7 @@ public class PSMethodInterview extends PSMethodAdapter {
 			 * therefore have other side effects.
 			 */
 			Collection<InterviewObject> objects = session.getInterview().getInterviewAgenda().getCurrentlyActiveObjects();
-			Logger.getLogger(getClass().getName()).info(
+			Logger.getLogger(getClass().getName()).fine(
 					"Agenda (" + changes.size() + " changes): " + objects);
 		}
 	}
