@@ -20,86 +20,69 @@
 
 package de.d3web.empiricaltesting;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Choice;
 
 public final class TestCase {
 
-	private final TestPersistence persistence = TestPersistence.getInstance();
-	private final EmpiricalTestingFunctions functions = EmpiricalTestingFunctions.getInstance();
-
+	private String name;
 	private List<SequentialTestCase> repository;
 	private KnowledgeBase kb;
-
-	private String name;
-	private boolean useInterviewCalculator;
-	private boolean derived;
+	private boolean interviewAgendaRelevant;
 
 	/**
-	 * Default Constructor
+	 * Creates a new collection of {@link SequentialTestCase} instances.
 	 */
 	public TestCase() {
 		repository = new ArrayList<SequentialTestCase>();
 	}
 
 	/**
-	 * Constructor, which sets the KnowledgeBase directly.
+	 * Returns the underlying {@link KnowledgeBase} of this instance.
 	 * 
-	 * @param kb the KnowledgeBase to be set
-	 */
-	public TestCase(KnowledgeBase kb) {
-		setKb(kb);
-	}
-
-	/**
-	 * Returns the underlying KnowledgeBase of this TestSuite.
-	 * 
-	 * @return the KnowledgeBase of this TestSuite
+	 * @return the KnowledgeBase of this instance
 	 */
 	public KnowledgeBase getKb() {
 		return kb;
 	}
 
 	/**
-	 * Sets the KnowledgeBase of this TestSuite.
+	 * Sets the {@link KnowledgeBase} of this instance.
 	 * 
-	 * @param kb the KnowledgeBase to be set
+	 * @param kb the {@link KnowledgeBase} to be set
 	 */
 	public void setKb(KnowledgeBase kb) {
 		this.kb = kb;
 	}
 
 	/**
-	 * Sets the Name of this TestSuite
+	 * Sets the name of this instance
 	 * 
-	 * @param name desired name of this TestSuite
+	 * @param name the given name of this instance
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * Returns the name of this TestSuite.
+	 * Returns the name of this instance.
 	 * 
-	 * @return name of this TestSuite.
+	 * @return the name of this instance.
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * Returns true if this TestSuite uses the InteviewCalculator.
+	 * Returns true, if this uses the InteviewCalculator.
 	 * 
-	 * @return true if this TestSuite uses the InterviewCalculator. Else false.
+	 * @return true if this instance uses the InterviewCalculator; false
+	 *         otherwise.
 	 */
-	public boolean getUseInterviewCalculator() {
-		return useInterviewCalculator;
+	public boolean interviewAgendsIsRelevant() {
+		return interviewAgendaRelevant;
 	}
 
 	/**
@@ -107,21 +90,22 @@ public final class TestCase {
 	 * 
 	 * @param b boolean value representing the usage of the InterviewCalculator.
 	 */
-	public void setUseInterviewCalculator(boolean b) {
-		this.useInterviewCalculator = b;
+	public void setInterviewAgendsIsRelevant(boolean b) {
+		this.interviewAgendaRelevant = b;
 	}
 
 	/**
-	 * Returns the Repository of this SequentialTestCase.
+	 * Returns the repository of this test case.
 	 * 
-	 * @return List of SequentitalTestCases representing the repository
+	 * @return all cases included in the repository
 	 */
 	public synchronized List<SequentialTestCase> getRepository() {
 		return repository;
 	}
 
 	/**
-	 * Sets the Repository.
+	 * Sets the collection of {@link SequentialTestCase} instances used in this
+	 * text case.
 	 * 
 	 * @param repository the repository to set
 	 */
@@ -130,64 +114,14 @@ public final class TestCase {
 	}
 
 	/**
-	 * Loads a SequentialTestCase Repository into this TestSuite. If the loading
-	 * was successful deriveAllSolutions() is called.
+	 * Checks for consistency of this TestSuite A TestSuite is consistent, if
+	 * there exist no two sequential test cases with
+	 * <OL>
+	 * <li>The first (q - 1) sequences of the cases are identical</li>
+	 * <li>The findings in sequence q are identical but their solutions differ</li>
+	 * </OL>
 	 * 
-	 * @param casesUrl URL-formatted String pointing to a XML Test Case
-	 *        Repository
-	 */
-	public void loadRepository(String casesUrl) {
-		try {
-			setRepository(persistence.loadCases(new File(casesUrl).toURI().toURL(), kb));
-		}
-		catch (MalformedURLException e) {
-			System.err.println("Malformed URL: " + casesUrl);
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Saves the TestSuite.
-	 * 
-	 * @param casesUrl URL-formatted String representing the output file
-	 * @param bWriteDerivedSolutions Boolean representing whether
-	 *        derivedSolutions are written to the output file or not
-	 */
-	public void saveRepository(String casesUrl, boolean bWriteDerivedSolutions) {
-		try {
-			persistence.writeCases(new URL(casesUrl), this, bWriteDerivedSolutions);
-		}
-		catch (MalformedURLException e) {
-			System.err.println("Malformed URL: " + casesUrl);
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Saves TestSuite without derivedSolutions
-	 * 
-	 * @param casesUrl URL-formatted String representing the output file
-	 */
-	public void saveRepositoryOnlyexpectedSolutions(String casesUrl) {
-		saveRepository(casesUrl, false);
-	}
-
-	/**
-	 * Saves TestSuite with derivedSolutions
-	 * 
-	 * @param casesUrl URL-formatted String representing the output file
-	 */
-	public void saveRepositoryWithDerivedSolutions(String casesUrl) {
-		saveRepository(casesUrl, true);
-	}
-
-	/**
-	 * Checks for Consistency of this TestSuite A TestSuite is consistent, if
-	 * there exist no two sequential test cases with 1.) The first (q - 1)
-	 * sequences of the cases are identical 2.) The findings in sequence q are
-	 * identical but their solutions differ
-	 * 
-	 * @return true if this TestSuite is Consistent. Else false.
+	 * @return true if the tests are consistent; false otherwise.
 	 */
 	public boolean isConsistent() {
 		for (SequentialTestCase stc1 : repository) {
@@ -202,9 +136,6 @@ public final class TestCase {
 						if (!rtc1.getExpectedSolutions().equals(
 								rtc2.getExpectedSolutions())) {
 							// ...the TestSuite is not consistent!
-							System.err.println("Warning! TestSuite is not consistent!");
-							System.err.println(rtc1);
-							System.err.println(rtc2);
 							return false;
 						}
 					}
@@ -215,142 +146,4 @@ public final class TestCase {
 		return true;
 	}
 
-	/**
-	 * Derives the Solutions for all SequentialTestCases in this Repositoty
-	 */
-	public void deriveAllSolutions() {
-		if (!derived) {
-			for (SequentialTestCase stc : repository) {
-				stc.deriveSolutions(kb);
-			}
-			derived = true;
-		}
-	}
-
-	/**
-	 * Calculates the TotalPrecision of this (consistent!) TestSuite.
-	 * 
-	 * @return 0, if this TestSuite is not consistent. Else: The Total Precision
-	 */
-	public double totalPrecision() {
-		double prec = 0;
-		if (!isConsistent()) {
-			return prec;
-		}
-		deriveAllSolutions();
-		for (SequentialTestCase stc : repository) {
-			prec += functions.precision(stc, DerivedSolutionsCalculator.getInstance(), false);
-		}
-		prec /= repository.size();
-		return prec;
-	}
-
-	/**
-	 * Calculates the TotalPrecision of this (consistent!) TestSuite.
-	 * NonSequential means, that only the last RatedTestCase of each
-	 * SequentialTestCase is taken into account.
-	 * 
-	 * @return 0, if this TestSuite is not consistent. Else: The Total Precision
-	 */
-	public double totalNonSequentialPrecision() {
-		double prec = 0;
-		if (!isConsistent()) {
-			return prec;
-		}
-		deriveAllSolutions();
-		for (SequentialTestCase stc : repository) {
-			prec += functions.precision(stc, DerivedSolutionsCalculator.getInstance(), true);
-		}
-		prec /= repository.size();
-		return prec;
-	}
-
-	/**
-	 * Calculates the total Interview-Precision of this TestSuite. During the
-	 * Interview-Calculation the TestSuite checks if the asked question in the
-	 * dialog is exactly the one which was expected in the RatedTestCase.
-	 * 
-	 * @return Double value representing the total Interview-Precision.
-	 */
-	public double totalPrecisionInterview() {
-		double prec = 0;
-		if (!isConsistent()) {
-			return prec;
-		}
-		deriveAllSolutions();
-		for (SequentialTestCase stc : repository) {
-			prec += functions.precision(stc, new InterviewCalculator(kb), false);
-		}
-		prec /= repository.size();
-		return prec;
-	}
-
-	/**
-	 * Calculates the TotalRecall of this (consistent!) TestSuite
-	 * 
-	 * @return 0, if this TestSuite is not consistent. Else: The Total Recall
-	 */
-	public double totalRecall() {
-		double rec = 0;
-		if (!isConsistent()) {
-			return rec;
-		}
-		deriveAllSolutions();
-		for (SequentialTestCase stc : repository) {
-			rec += functions.recall(stc, DerivedSolutionsCalculator.getInstance(), false);
-		}
-		rec /= repository.size();
-		return rec;
-	}
-
-	/**
-	 * Calculates the TotalRecall of this (consistent!) TestSuite. NonSequential
-	 * means, that only the last RatedTestCase of each SequentialTestCase is
-	 * taken into account.
-	 * 
-	 * @return 0, if this TestSuite is not consistent. Else: The Total Recall
-	 */
-	public double totalNonSequentialRecall() {
-		double rec = 0;
-		if (!isConsistent()) {
-			return rec;
-		}
-		deriveAllSolutions();
-		for (SequentialTestCase stc : repository) {
-			rec += functions.recall(stc, DerivedSolutionsCalculator.getInstance(), true);
-		}
-		rec /= repository.size();
-		return rec;
-	}
-
-	/**
-	 * Calculates the total Interview-Recall of this TestSuite. During the
-	 * Interview-Calculation the TestSuite checks if the asked question in the
-	 * dialog is exactly the one which was expected in the RatedTestCase.
-	 * 
-	 * @return Double value representing the total Interview-Recall.
-	 */
-	public double totalRecallInterview() {
-		double rec = 0;
-		if (!isConsistent()) {
-			return rec;
-		}
-		deriveAllSolutions();
-		for (SequentialTestCase stc : repository) {
-			rec += functions.recall(stc, new InterviewCalculator(kb), false);
-		}
-		rec /= repository.size();
-		return rec;
-	}
-
-	// TODO: Nicht nur eine Antwort (auf eine Frage) sondern mehrere
-	// Antworten auf mehrere (erste) Fragen möglich
-	public TestCase getPartiallyAnsweredSuite(Choice answer) {
-		TestCase ret = new TestCase();
-		for (SequentialTestCase stc : getRepository()) {
-			if (stc.getCases().get(0).getFindings().get(0).getValue().equals(answer)) ret.getRepository().add(
-					stc);
-		}
-		return ret;
-	}
 }

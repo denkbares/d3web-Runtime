@@ -20,6 +20,8 @@
 
 package de.d3web.empiricaltesting.casevisualization;
 
+import java.util.List;
+
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
@@ -31,6 +33,8 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.empiricaltesting.SequentialTestCase;
+import de.d3web.empiricaltesting.TestCase;
 
 public final class BotHelper {
 
@@ -158,5 +162,16 @@ public final class BotHelper {
 		if (question.getParents()[0].getName().equals(questionnaireText)) return true;
 
 		return false;
+	}
+
+	// TODO: Nicht nur eine Antwort (auf eine Frage) sondern mehrere
+	// Antworten auf mehrere (erste) Fragen möglich
+	public TestCase getPartiallyAnsweredSuite(Choice answer, List<SequentialTestCase> repository) {
+		TestCase ret = new TestCase();
+		for (SequentialTestCase stc : repository) {
+			if (stc.getCases().get(0).getFindings().get(0).getValue().equals(answer)) ret.getRepository().add(
+					stc);
+		}
+		return ret;
 	}
 }

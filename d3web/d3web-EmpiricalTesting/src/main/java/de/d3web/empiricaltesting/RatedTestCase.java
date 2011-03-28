@@ -327,22 +327,6 @@ public class RatedTestCase {
 		this.name = name;
 	}
 
-	/**
-	 * Returns true if this RatedTestCase is correct.
-	 * 
-	 * @return true if RatedTestCase is correct, false if RatedTestCase isn't
-	 *         correct
-	 */
-	public boolean isCorrect() {
-		ConfigLoader cf = ConfigLoader.getInstance();
-		// EmpiricalTestingFunctions functions =
-		// EmpiricalTestingFunctions.getInstance();
-		double fMeasureDiff = Double.parseDouble(cf.getProperty("fMeasureDiff"));
-		PrecisionRecallCalculator pr = DerivedSolutionsCalculator.getInstance();
-		// return functions.fMeasure(1, this) >= (1.0-fMeasureDiff);
-		return pr.fMeasure(1, this) >= (1.0 - fMeasureDiff);
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;

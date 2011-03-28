@@ -23,7 +23,6 @@ package de.d3web.empiricaltesting;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 import de.d3web.casegeneration.InterviewBot;
@@ -31,8 +30,6 @@ import de.d3web.casegeneration.StateRatingStrategy;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ConsoleProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.empiricaltesting.casevisualization.dot.DDBuilder;
-import de.d3web.empiricaltesting.casevisualization.jung.JUNGCaseVisualizer;
 import de.d3web.empiricaltesting.writer.TestSuiteKnOfficeWriter;
 import de.d3web.empiricaltesting.writer.TestSuiteXMLWriter;
 import de.d3web.plugin.test.InitPluginManager;
@@ -42,12 +39,12 @@ public final class EmpiricalTester {
 	// Input variables
 	private static String workspace = "D:/Projekte/Temp/EmpiricalTesting/";
 	private static String kbFile = "KnowledgeBases/dano.jar";
-	private static String caseFile = "dano.xml";
+	// private static String caseFile = "dano.xml";
 
 	// Output file for DDBuilder (DOT-File for GraphViz)
-	private static String dotFile = "dano.dot";
+	// private static String dotFile = "dano.dot";
 	// Output file for JUNGCaseVisualizer (PDF-File)
-	private static String pdfFile = "dano.pdf";
+	// private static String pdfFile = "dano.pdf";
 	// Output files for InterviewBot
 	private static String xmlFile = "dano";
 	private static String txtFile = "dano";
@@ -75,63 +72,6 @@ public final class EmpiricalTester {
 	}
 
 	/**
-	 * Demo that computes the Precision and Recall for the derived solutions and
-	 * the interview.
-	 * 
-	 * @throws Exception
-	 */
-	public static String demoComputePrecisionAndRecall() throws Exception {
-		StringBuffer buffy = new StringBuffer();
-		KnowledgeBase kb = loadKnowledgeBase(workspace + kbFile);
-		TestCase testSuite = new TestCase();
-		testSuite.setKb(kb);
-		testSuite.loadRepository(workspace + caseFile);
-
-		buffy.append("DerivedSolutions-Precision (Non-Sequential): "
-				+ testSuite.totalNonSequentialPrecision() + "\n");
-		buffy.append("DerivedSolutions-Recall (Non-Sequential): "
-				+ testSuite.totalNonSequentialRecall() + "\n");
-		buffy.append("DerivedSolutions-Precision: " + testSuite.totalPrecision() + "\n");
-		buffy.append("DerivedSolutions-Recall: " + testSuite.totalRecall() + "\n");
-		buffy.append("Interview-Precision: " + testSuite.totalPrecisionInterview() + "\n");
-		buffy.append("Interview-Recall: " + testSuite.totalRecallInterview() + "\n");
-		showDifferences(testSuite, buffy);
-		return buffy.toString();
-	}
-
-	private static void showDifferences(TestCase t, StringBuffer buffy) {
-
-		for (SequentialTestCase stc : t.getRepository()) {
-
-			for (RatedTestCase rtc : stc.getCases()) {
-				if (!rtc.isCorrect()) {
-					buffy.append("SequentialTestCase: " + stc.getName() + "\n");
-					buffy.append("RatedTestCase: " + rtc.getName() + "\n");
-					buffy.append("Findings: " + "\n");
-					for (Finding f : rtc.getFindings()) {
-						buffy.append(f.toString());
-					}
-					buffy.append("Expected: " + "\n");
-					Collections.sort(rtc.getExpectedSolutions(),
-							new RatedSolution.RatingComparatorByName());
-					for (RatedSolution rs : rtc.getExpectedSolutions()) {
-						buffy.append("\t" + rs.toString() + "\n");
-					}
-					buffy.append("\nDerived: " + "\n");
-					Collections.sort(rtc.getDerivedSolutions(),
-							new RatedSolution.RatingComparatorByName());
-					for (RatedSolution rs : rtc.getDerivedSolutions()) {
-						buffy.append("\t" + rs.toString() + "\n");
-					}
-					buffy.append("-----------------------------------------" + "\n");
-				}
-			}
-
-		}
-
-	}
-
-	/**
 	 * Demo that generates sequential test cases simulating an interview with
 	 * the d3web interview manager by exhaustively traversing all possible
 	 * answers of the currently active question.
@@ -154,43 +94,6 @@ public final class EmpiricalTester {
 
 		writeCasesTXT(txtFile, cases);
 		writeCasesXML(xmlFile, cases);
-	}
-
-	/**
-	 * Demo that generates a visualization of the specified test suite using
-	 * JUNGCaseVisualizer. The visualization is saved in a PDF file at the
-	 * location specified above.
-	 * 
-	 * @throws IOException
-	 */
-	public static void demoCaseVisualization() throws IOException {
-
-		KnowledgeBase kb = loadKnowledgeBase(workspace + kbFile);
-		TestCase testSuite = new TestCase();
-		testSuite.setKb(kb);
-		testSuite.loadRepository(workspace + caseFile);
-		testSuite.deriveAllSolutions();
-
-		JUNGCaseVisualizer.getInstance().writeToFile(testSuite, workspace + pdfFile);
-
-	}
-
-	/**
-	 * Demo that generates a visualization of the specified test suite using
-	 * DDBuilder. The visualization is saved in DOT format to the file specified
-	 * above.
-	 * 
-	 * @throws IOException
-	 */
-	public static void demoBuildDDTree() throws IOException {
-
-		KnowledgeBase kb = loadKnowledgeBase(workspace + kbFile);
-		TestCase testSuite = new TestCase();
-		testSuite.setKb(kb);
-		testSuite.loadRepository(workspace + caseFile);
-		testSuite.deriveAllSolutions();
-
-		DDBuilder.getInstance().writeToFile(testSuite, workspace + dotFile);
 	}
 
 	/**
@@ -233,22 +136,5 @@ public final class EmpiricalTester {
 		long casesK = cases.size();
 		conv.write(cases, workspace + filename + "_" + casesK + "_cases.txt");
 	}
-
-	// public static void demoBotTestCases(String kbPath, String casesPath)
-	// throws Exception {
-	// KnowledgeBase k = loadKnowledgeBase(kbPath);
-	// DDBot2Runner botRunner = new DDBot2Runner(k);
-	// botRunner.setCaseNamePraefix("STC");
-	//
-	// // Example: run ALL cases and store it to a file
-	// List<SequentialTestCase> cases =
-	// botRunner.generateSequentialTestCases(1,1);
-	// botRunner.storeCases(cases, casesPath, true);
-	//
-	// // Example: compare two nets and print differences in a dot
-	// botRunner.testDriveDDNetComparison(workspace, "some_bigger_exp.xml",
-	// "some_bigger_exp2.xml", "some_bigger_exp.dot");
-	//
-	// }
 
 }

@@ -18,43 +18,53 @@
  * site: http://www.fsf.org.
  */
 
-package de.d3web.empiricaltesting;
+package de.d3web.empiricaltesting.caseAnalysis.functions;
+
+import de.d3web.empiricaltesting.caseAnalysis.RTCDiff;
 
 public abstract class PrecisionRecallCalculator {
 
 	/**
 	 * Returns the precision of a RatedTestCase
 	 * 
-	 * @param rtc The RatedTestCase necessary for the calculation.
+	 * @param rtcDiff The RatedTestCase necessary for the calculation.
 	 * @return precision of the RatedTestCase.
 	 */
-	public double precision(RatedTestCase rtc) {
-		if (rtc.getExpectedSolutions().size() > 0) return prec(rtc);
-		else return 1;
+	public double precision(RTCDiff rtcDiff) {
+		if (rtcDiff.hasDifferences()) {
+			return prec(rtcDiff);
+		}
+		else {
+			return 1;
+		}
 	}
 
-	public abstract double prec(RatedTestCase rtc);
+	public abstract double prec(RTCDiff rtc);
 
 	/**
 	 * Returns the recall of a RatedTestCase
 	 * 
-	 * @param rtc The RatedTestCase necessary for the calculation.
+	 * @param rtcDiff The RatedTestCase necessary for the calculation.
 	 * @return recall of the RatedTestCase.
 	 */
-	public double recall(RatedTestCase rtc) {
-		if (rtc.getExpectedSolutions().size() > 0) return rec(rtc);
-		else return 1;
+	public double recall(RTCDiff rtcDiff) {
+		if (rtcDiff.hasDifferences()) {
+			return rec(rtcDiff);
+		}
+		else {
+			return 1;
+		}
 	}
 
-	public abstract double rec(RatedTestCase rtc);
+	public abstract double rec(RTCDiff rtcDiff);
 
 	/**
 	 * Returns the fMeasure for a RatedTestCase and a specified Beta.
 	 */
-	public double fMeasure(double beta, RatedTestCase rtc) {
-		double numerator = (Math.pow(beta, 2) + 1) * precision(rtc)
-				* recall(rtc);
-		double denominator = Math.pow(beta, 2) * precision(rtc) + recall(rtc);
+	public double fMeasure(double beta, RTCDiff rtcDiff) {
+		double numerator = (Math.pow(beta, 2) + 1) * precision(rtcDiff)
+				* recall(rtcDiff);
+		double denominator = Math.pow(beta, 2) * precision(rtcDiff) + recall(rtcDiff);
 		return numerator / denominator;
 	}
 

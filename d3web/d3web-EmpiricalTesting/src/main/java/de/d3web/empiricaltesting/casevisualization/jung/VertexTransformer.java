@@ -132,16 +132,6 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 			correctColor = nodeColor;
 		}
 
-		if (!rtc.isCorrect()) {
-			nodeColor = config.getProperty("nodeColorIncorrectCase");
-			colorSuggested = config.getProperty("solutionColorSuggested");
-			colorEstablished = config.getProperty("solutionColorEstablished");
-			correctColor = config.getProperty("nodeColorNewCase");
-			if (config.getProperty("printCorrectionColumn").equals("true")) {
-				colspan = "4";
-			}
-		}
-
 		configs.put("colorSuggested", colorSuggested);
 		configs.put("colorEstablished", colorEstablished);
 		configs.put("onlySymbolicStates",

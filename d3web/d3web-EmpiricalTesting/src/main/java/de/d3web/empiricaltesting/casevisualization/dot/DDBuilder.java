@@ -143,7 +143,8 @@ public final class DDBuilder implements CaseVisualizer {
 			List<Choice> firstAnswers = firstQuestion.getAllAlternatives();
 			for (Choice answerOfFirstQuestion : firstAnswers) {
 				TestCase partitioned =
-						testSuite.getPartiallyAnsweredSuite(answerOfFirstQuestion);
+						BotHelper.getInstance().getPartiallyAnsweredSuite(answerOfFirstQuestion,
+								testSuite.getRepository());
 				if (partitioned.getRepository().size() > 0) {
 					generateDDNet(partitioned.getRepository());
 					String printFilePath =
@@ -223,8 +224,6 @@ public final class DDBuilder implements CaseVisualizer {
 				sessionType = caseType.new_case;
 
 				if (ratedTestCase.wasTestedBefore()) sessionType = caseType.old_case;
-
-				if (!ratedTestCase.isCorrect()) sessionType = caseType.incorrect;
 
 				node.setTheCaseType(sessionType);
 

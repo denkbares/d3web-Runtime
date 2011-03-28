@@ -20,6 +20,7 @@ package de.d3web.empiricaltesting.caseAnalysis;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import de.d3web.core.knowledge.TerminologyObject;
@@ -27,6 +28,8 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
+import de.d3web.empiricaltesting.Finding;
+import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;
 
 /**
@@ -98,6 +101,59 @@ public class RTCDiff {
 
 	public ValueDiff getDiffFor(TerminologyObject terminologyObject) {
 		return differences.get(terminologyObject);
+	}
+
+	public boolean hasDiff(TerminologyObject terminologyObject) {
+		return (getDiffFor(terminologyObject) != null);
+	}
+
+	/**
+	 * Returns all questions and solutions, that were derived with the result as
+	 * expected.
+	 * 
+	 * @created 25.03.2011
+	 * @return
+	 */
+	public Collection<TerminologyObject> correctlyDerived() {
+		Collection<TerminologyObject> correct = new HashSet<TerminologyObject>();
+		for (Finding finding : rtc.getExpectedFindings()) {
+			if (!hasDiff(finding.getQuestion())) correct.add(finding.getQuestion());
+		}
+		for (RatedSolution rsolution : rtc.getExpectedSolutions()) {
+			if (!hasDiff(rsolution.getSolution())) correct.add(rsolution.getSolution());
+		}
+		return correct;
+	}
+
+	/**
+	 * Returns the positively derived terminology objects.
+	 * 
+	 * @created 25.03.2011
+	 * @return all positively derived terminology objects.
+	 */
+	public Collection<TerminologyObject> getDerived() {
+		Collection<TerminologyObject> all_derived = new HashSet<TerminologyObject>();
+		all_derived.addAll(differences.keySet());
+		all_derived.addAll(correctlyDerived());
+
+		return all_derived;
+	}
+
+	/**
+	 * All expected questions and solutions of this rated test case.
+	 * 
+	 * @created 25.03.2011
+	 * @return All expected questions and solutions of this rated test case.
+	 */
+	public Collection<TerminologyObject> getExpected() {
+		Collection<TerminologyObject> expected = new HashSet<TerminologyObject>();
+		for (Finding finding : getCase().getExpectedFindings()) {
+			expected.add(finding.getQuestion());
+		}
+		for (RatedSolution rsolution : getCase().getExpectedSolutions()) {
+			expected.add(rsolution.getSolution());
+		}
+		return expected;
 	}
 
 }

@@ -18,7 +18,7 @@
  * site: http://www.fsf.org.
  */
 
-package de.d3web.empiricaltesting;
+package de.d3web.empiricaltesting.caseAnalysis.functions;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
@@ -28,6 +28,9 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
+import de.d3web.empiricaltesting.Finding;
+import de.d3web.empiricaltesting.RatedTestCase;
+import de.d3web.empiricaltesting.caseAnalysis.RTCDiff;
 
 public class InterviewCalculator extends PrecisionRecallCalculator {
 
@@ -47,10 +50,9 @@ public class InterviewCalculator extends PrecisionRecallCalculator {
 	 * @return Interview-Precision of RatedTestCase
 	 */
 	@Override
-	public double prec(RatedTestCase rtc) {
-		double numerator = similarity(rtc);
-		// TODO: Divisor muss geändert werden! Momentan aber noch nicht geklärt.
-		numerator /= rtc.getFindings().size();
+	public double prec(RTCDiff rtcDiff) {
+		double numerator = similarity(rtcDiff.getCase());
+		numerator /= rtcDiff.getCase().getFindings().size();
 		return numerator;
 	}
 
@@ -59,13 +61,13 @@ public class InterviewCalculator extends PrecisionRecallCalculator {
 	/**
 	 * Calculates the Interview-Recall of a RatedTestCase.
 	 * 
-	 * @param rtc The RatedTestCase necessary for the calculation
+	 * @param rtcDiff The RatedTestCase necessary for the calculation
 	 * @return Interview-Recall of RatedTestCase
 	 */
 	@Override
-	public double rec(RatedTestCase rtc) {
-		double numerator = similarity(rtc);
-		numerator /= rtc.getFindings().size();
+	public double rec(RTCDiff rtcDiff) {
+		double numerator = similarity(rtcDiff.getCase());
+		numerator /= rtcDiff.getCase().getFindings().size();
 		return numerator;
 	}
 
@@ -73,7 +75,7 @@ public class InterviewCalculator extends PrecisionRecallCalculator {
 
 	/**
 	 * Calculates an overall similarity of expected an actually asked questions.
-	 * This Method is necessary for the precision and recall calculation.
+	 * This method is necessary for the precision and recall calculation.
 	 * 
 	 * @param rtc The RatedTestCase necessary for the calculation
 	 * @return Total similarity of expected and actually asked questions
@@ -106,9 +108,7 @@ public class InterviewCalculator extends PrecisionRecallCalculator {
 	 * @param a Answer which will be set.
 	 */
 	private void setCaseValue(Question q, Value v) {
-
 		Fact fact = FactFactory.createUserEnteredFact(q, v);
-
 		session.getBlackboard().addValueFact(fact);
 	}
 

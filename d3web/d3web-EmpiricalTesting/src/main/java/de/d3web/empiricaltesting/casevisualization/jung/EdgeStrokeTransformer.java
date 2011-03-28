@@ -55,15 +55,13 @@ public class EdgeStrokeTransformer implements Transformer<EdgeFinding, Stroke> {
 	 * Transforms a Finding to color depending on the state of the next
 	 * RatedTestCase
 	 */
+	@Override
 	public Stroke transform(EdgeFinding f) {
 
 		RatedTestCase rtc = graph.getDest(f);
 		String strength = ConfigLoader.getInstance().getProperty("edgeWidthNewCase");
 
-		if (!rtc.isCorrect()) {
-			strength = ConfigLoader.getInstance().getProperty("edgeWidthIncorrectCase");
-		}
-		else if (rtc.wasTestedBefore()) {
+		if (rtc.wasTestedBefore()) {
 			strength = ConfigLoader.getInstance().getProperty("edgeWidthOldCase");
 		}
 

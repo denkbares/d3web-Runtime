@@ -53,15 +53,13 @@ public class EdgeColorTransformer implements Transformer<EdgeFinding, Paint> {
 	 * Transforms a Finding to color depending on the state of the next
 	 * RatedTestCase
 	 */
+	@Override
 	public Paint transform(EdgeFinding f) {
 
 		RatedTestCase rtc = graph.getDest(f);
 		String color = ConfigLoader.getInstance().getProperty("edgeColorNewCase");
 
-		if (!rtc.isCorrect()) {
-			color = ConfigLoader.getInstance().getProperty("edgeColorIncorrectCase");
-		}
-		else if (rtc.wasTestedBefore()
+		if (rtc.wasTestedBefore()
 				&& ConfigLoader.getInstance().getProperty("renderOldCasesLikeNewCases").equals(
 						"false")) {
 			color = ConfigLoader.getInstance().getProperty("edgeColorOldCase");

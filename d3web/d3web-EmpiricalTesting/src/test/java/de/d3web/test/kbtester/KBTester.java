@@ -34,9 +34,11 @@ import org.junit.Test;
 
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.TestCase;
+import de.d3web.empiricaltesting.TestPersistence;
+import de.d3web.empiricaltesting.caseAnalysis.functions.TestCaseAnalysisReport;
+import de.d3web.empiricaltesting.caseAnalysis.functions.TestCaseAnalysis;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
@@ -62,10 +64,8 @@ public class KBTester {
 	@Test
 	public void testKB() {
 		for (TestCase t : testsuites) {
-			t.deriveAllSolutions();
-			testCorrectnessAndActuallity(t);
 			testPrecisionAndRecall(t);
-			if (t.getUseInterviewCalculator()) testPrecisionAndRecallInterview(t);
+			if (t.interviewAgendsIsRelevant()) testPrecisionAndRecallInterview(t);
 		}
 	}
 
@@ -75,17 +75,20 @@ public class KBTester {
 	 * @param t the underlying TestSuite
 	 */
 	private void testPrecisionAndRecallInterview(TestCase t) {
+		TestCaseAnalysis analysis = (TestCaseAnalysis) TestCaseAnalysis.getInstance();
+		TestCaseAnalysisReport result = analysis.runAndAnalyze(t);
 		StringBuilder precisionFailureMsg = new StringBuilder();
 		precisionFailureMsg.append("\nInterview-Precision differ in test suite ");
 		precisionFailureMsg.append(t.getName() + " should be 1.0 but is ");
-		precisionFailureMsg.append(t.totalPrecisionInterview() + "\n");
-		assertEquals(precisionFailureMsg.toString(), 1.0, t.totalPrecisionInterview(), 0.0);
+		precisionFailureMsg.append(result.interviewPrecision(t.getKb()) + "\n");
+		assertEquals(precisionFailureMsg.toString(), 1.0,
+				result.interviewPrecision(t.getKb()), 0.0);
 
 		StringBuilder recallFailureMsg = new StringBuilder();
 		recallFailureMsg.append("\nInterview-Recall differ in test suite ");
 		recallFailureMsg.append(t.getName() + " should be 1.0 but is ");
-		recallFailureMsg.append(t.totalRecallInterview() + "\n");
-		assertEquals(recallFailureMsg.toString(), 1.0, t.totalRecallInterview(), 0.0);
+		recallFailureMsg.append(result.interviewRecall(t.getKb()) + "\n");
+		assertEquals(recallFailureMsg.toString(), 1.0, result.interviewRecall(t.getKb()), 0.0);
 
 	}
 
@@ -95,46 +98,20 @@ public class KBTester {
 	 * @param t the underlying TestSuite
 	 */
 	private void testPrecisionAndRecall(TestCase t) {
-
+		TestCaseAnalysis analysis = (TestCaseAnalysis) TestCaseAnalysis.getInstance();
+		TestCaseAnalysisReport result = analysis.runAndAnalyze(t);
 		StringBuilder precisionFailureMsg = new StringBuilder();
 		precisionFailureMsg.append("\nPrecision differ in test suite ");
 		precisionFailureMsg.append(t.getName() + " should be 1.0 but is ");
-		precisionFailureMsg.append(t.totalPrecision() + "\n");
-		assertEquals(precisionFailureMsg.toString(), 1.0, t.totalPrecision(), 0.0);
+		precisionFailureMsg.append(result.precision() + "\n");
+		assertEquals(precisionFailureMsg.toString(), 1.0, result.precision(), 0.0);
 
 		StringBuilder recallFailureMsg = new StringBuilder();
 		recallFailureMsg.append("\nRecall differ in test suite ");
 		recallFailureMsg.append(t.getName() + " should be 1.0 but is ");
-		recallFailureMsg.append(t.totalRecall() + "\n");
-		assertEquals(recallFailureMsg.toString(), 1.0, t.totalRecall(), 0.0);
+		recallFailureMsg.append(result.recall() + "\n");
+		assertEquals(recallFailureMsg.toString(), 1.0, result.recall(), 0.0);
 
-	}
-
-	/**
-	 * Tests the actuality and correctness of the derived solutions.
-	 * 
-	 * @param t the underlying TestSuite
-	 */
-	private void testCorrectnessAndActuallity(TestCase t) {
-
-		for (SequentialTestCase stc : t.getRepository()) {
-			for (RatedTestCase rtc : stc.getCases()) {
-				StringBuilder notUpToDateErrorMsg = new StringBuilder();
-				notUpToDateErrorMsg.append("\nDerived Solutions aren't up to date\n in test suite ");
-				notUpToDateErrorMsg.append(t.getName() + "\n in STC ");
-				notUpToDateErrorMsg.append(stc.getName() + "\n in RTC ");
-				notUpToDateErrorMsg.append(rtc.toString() + "!\n");
-				assertEquals(notUpToDateErrorMsg.toString(), true,
-						rtc.getDerivedSolutionsAreUpToDate());
-
-				StringBuilder notCorrectErrorMsg = new StringBuilder();
-				notCorrectErrorMsg.append("\nDerived Solutions aren't up to date\n in test suite ");
-				notCorrectErrorMsg.append(t.getName() + "\n    in STC ");
-				notCorrectErrorMsg.append(stc.getName() + "\n      in RTC ");
-				notCorrectErrorMsg.append(rtc.toString() + "!\n");
-				assertEquals(notCorrectErrorMsg.toString(), true, rtc.isCorrect());
-			}
-		}
 	}
 
 	/**
@@ -167,10 +144,14 @@ public class KBTester {
 				TestCase t = new TestCase();
 				t.setName(config[1]);
 				t.setKb(kb);
-				t.loadRepository(casespath);
 				if (config[2].equals("true")) {
-					t.setUseInterviewCalculator(true);
+					t.setInterviewAgendsIsRelevant(true);
 				}
+
+				List<SequentialTestCase> cases = TestPersistence.getInstance().loadCases(
+						new File(casespath).toURI().toURL(), kb);
+				t.setRepository(cases);
+
 				testsuites.add(t);
 			}
 		}

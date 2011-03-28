@@ -16,26 +16,27 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.empiricaltesting.caseAnalysis;
+package de.d3web.empiricaltesting.caseAnalysis.functions;
 
-import java.io.Writer;
 import java.util.List;
 
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.empiricaltesting.RatedTestCase;
+import de.d3web.empiricaltesting.caseAnalysis.RTCDiff;
+import de.d3web.empiricaltesting.caseAnalysis.ValueDiff;
 
 /**
- * Print the results of an analysis to a {@link Writer}.
+ * Print the results of an analysis to a {@link String}.
  * 
  * @author Joachim Baumeister (denkbares GmbH)
  * @created 24.03.2011
  */
 public class STCAnalysisWriter {
 
-	public static String write(List<STCDiff> diffs) {
+	public static String write(List<Diff> diffs) {
 		StringBuffer buffy = new StringBuffer();
 		int counter = 0;
-		for (STCDiff stcDiff : diffs) {
+		for (Diff stcDiff : diffs) {
 			if (counter > 0) {
 				buffy.append("\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ \n\n");
 			}
@@ -46,7 +47,7 @@ public class STCAnalysisWriter {
 		return buffy.toString();
 	}
 
-	public static String write(STCDiff diff) {
+	public static String write(Diff diff) {
 		StringBuffer buffy = new StringBuffer();
 
 		buffy.append("Case: " + diff.getCase().getName() + "\n");
@@ -84,7 +85,7 @@ public class STCAnalysisWriter {
 		return offset;
 	}
 
-	private static int getMaxOffset(STCDiff diff) {
+	private static int getMaxOffset(Diff diff) {
 		int maxOffset = 0;
 		for (RatedTestCase rtc : diff.getCasesWithDifference()) {
 			int namelength = rtc.getName().length();

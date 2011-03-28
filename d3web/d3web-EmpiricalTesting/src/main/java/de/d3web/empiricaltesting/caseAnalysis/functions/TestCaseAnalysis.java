@@ -16,7 +16,7 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.empiricaltesting.caseAnalysis;
+package de.d3web.empiricaltesting.caseAnalysis.functions;
 
 import java.util.Date;
 
@@ -32,6 +32,9 @@ import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.ScoreRating;
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.StateRating;
+import de.d3web.empiricaltesting.TestCase;
+import de.d3web.empiricaltesting.caseAnalysis.RTCDiff;
+import de.d3web.empiricaltesting.caseAnalysis.STCDiff;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.scoring.HeuristicRating;
 
@@ -43,20 +46,49 @@ import de.d3web.scoring.HeuristicRating;
  * @author Joachim Baumeister (denkbares GmbH)
  * @created 24.03.2011
  */
-public class STCAnalysis {
+public class TestCaseAnalysis {
+
+	private static TestCaseAnalysis instance = new TestCaseAnalysis();
+
+	public static TestCaseAnalysis getInstance() {
+		return instance;
+	}
 
 	/**
-	 * Runs the specified test case using the specified knowledge base and
-	 * compares the expected solutions/findings with the actually derived facts.
-	 * The returned {@link STCDiff} stores the results of this comparison
+	 * Performs a test case analysis on the specified collection of
+	 * {@link SequentialTestCase} instances. Each {@link SequentialTestCase}
+	 * instance is run by a single {@link Session} and the expected and derived
+	 * facts are compared. As the result of the comparison, a
+	 * {@link TestCaseAnalysisReport} is returned.
 	 * 
-	 * @created 24.03.2011
-	 * @param stc the specified sequential test case
-	 * @param knowledge the specified knowledge base
-	 * @return the results of the comparison
+	 * @created 28.03.2011
+	 * @param suite the specified collection of {@link SequentialTestCase}
+	 *        instances.
+	 * @return the generated report of differences between expected and derived
+	 *         facts
 	 */
-	public static STCDiff runAndAnalyze(SequentialTestCase stc, KnowledgeBase knowledge) {
-		STCDiff diff = new STCDiff(stc);
+	public TestCaseAnalysisReport runAndAnalyze(TestCase suite) {
+		TestCaseAnalysisReport result = new AnalysisReport();
+		for (SequentialTestCase stc : suite.getRepository()) {
+			Diff diff = runAndAnalyze(stc, suite.getKb());
+			result.add(diff);
+		}
+		return result;
+	}
+
+	/**
+	 * The specified {@link SequentialTestCase} instance is run by a single
+	 * {@link Session} and the expected and derived facts are compared. As the
+	 * result of the comparison, a {@link TestCaseAnalysisReport} is returned.
+	 * 
+	 * @created 28.03.2011
+	 * @param stc the specified {@link SequentialTestCase}
+	 * @param knowledge the knowledge base used for the {@link Session} run
+	 * @return the generated report of differences between expected and derived
+	 *         facts
+	 */
+	public Diff runAndAnalyze(SequentialTestCase stc, KnowledgeBase knowledge) {
+		Diff diff = new STCDiff(stc);
 		Date creationDate = getCreationDate(stc);
 		Session session = SessionFactory.createSession(stc.getName() + now().toString(), knowledge,
 				creationDate);
@@ -65,14 +97,28 @@ public class STCAnalysis {
 			RTCDiff rtc_diff = compareExpectations(session, rtc);
 
 			if (rtc_diff.hasDifferences()) {
-				diff.add(rtc_diff);
+				((STCDiff) diff).add(rtc_diff);
 			}
 		}
 		return diff;
 	}
 
+	/**
+	 * Sets all findings given in the specified {@link RatedTestCase} into the
+	 * specified {@link Session}. If a time stamp is given in the
+	 * {@link RatedTestCase}, then it is considered. If no time stamp is given,
+	 * then the currently valid system time is used.
+	 * 
+	 * @created 28.03.2011
+	 * @param session the specified {@link Session}
+	 * @param rtc the specified {@link RatedTestCase}
+	 */
 	private static void setFindings(Session session, RatedTestCase rtc) {
-		long time = rtc.getTimeStamp().getTime();
+		Date timestamp = rtc.getTimeStamp();
+		if (timestamp == null) {
+			timestamp = now();
+		}
+		long time = timestamp.getTime();
 		session.getPropagationManager().openPropagation(time);
 		for (Finding f : rtc.getFindings()) {
 			session.getBlackboard().addValueFact(
@@ -84,13 +130,14 @@ public class STCAnalysis {
 	}
 
 	/**
-	 * Returns the creation date of the sequential test case, i.e., the
-	 * timestamp of the first rated test case. If none is available, then we
-	 * take the current date.
+	 * Returns the creation date of the sequential test case, i.e., the time
+	 * stamp of the first rated test case. If none is available, then we take
+	 * the current date.
 	 * 
 	 * @created 24.03.2011
 	 * @param stc the specified sequential test case
-	 * @return the creation date of the stc if available; NOW otherwise
+	 * @return the creation date of the {@link SequentialTestCase} if available;
+	 *         NOW otherwise
 	 */
 	private static Date getCreationDate(SequentialTestCase stc) {
 		if (stc.getCases() != null && stc.getCases().get(0) != null) {
@@ -102,7 +149,7 @@ public class STCAnalysis {
 	}
 
 	/**
-	 * Returns the creation date of the rated test case, i.e., its timestamp If
+	 * Returns the creation date of the rated test case, i.e., its time stamp If
 	 * none is available, then we take the current date.
 	 * 
 	 * @created 24.03.2011
@@ -119,6 +166,22 @@ public class STCAnalysis {
 		}
 	}
 
+	/**
+	 * The expected solutions/findings of a specified {@link RatedTestCase} are
+	 * compared with the corresponding values currently valid in the specified
+	 * {@link Session}. A {@link RTCDiff} instance is created to store these
+	 * differences.
+	 * 
+	 * TODO: Currently, only the "expected/not derived" relations are stored,
+	 * but not the "derived/but not expected" relations. We should consider this
+	 * at least for solutions.
+	 * 
+	 * @created 28.03.2011
+	 * @param session the specified {@link Session}
+	 * @param rtc the specified {@link RatedTestCase}
+	 * @return the differences between expected and derived facts for the
+	 *         specified {@link RatedTestCase}
+	 */
 	private static RTCDiff compareExpectations(Session session, RatedTestCase rtc) {
 		RTCDiff diffs = new RTCDiff(rtc);
 		for (Finding expected : rtc.getExpectedFindings()) {
@@ -131,7 +194,7 @@ public class STCAnalysis {
 			// Caution: THESE ARE DIFFERENT TYPES OF RATINGS
 			Rating derived = session.getBlackboard().getRating(expected.getSolution());
 			Rating expectedRating = convert(expected.getRating());
-			if (!derived.equals(expectedRating)) {
+			if (!expectedRating.equals(derived)) {
 				diffs.addExpectedButNotDerived(expected.getSolution(), expectedRating, derived);
 			}
 		}
@@ -139,8 +202,8 @@ public class STCAnalysis {
 	}
 
 	/**
-	 * Convert the Rating known in EmpiricalTesting into a Rating known in the
-	 * d3web Kernel.
+	 * Convert the {@link de.d3web.empiricaltesting.Rating} known in
+	 * EmpiricalTesting into a {@link Rating} known in the d3web Kernel.
 	 * 
 	 * @created 24.03.2011
 	 * @param rating as known in EmpiricalTesting plugin

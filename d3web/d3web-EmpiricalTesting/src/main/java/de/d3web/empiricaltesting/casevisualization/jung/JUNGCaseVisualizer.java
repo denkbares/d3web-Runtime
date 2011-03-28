@@ -154,7 +154,8 @@ public final class JUNGCaseVisualizer implements CaseVisualizer {
 			for (Choice answerOfFirstQuestion : firstAnswers) {
 
 				TestCase partitioned =
-						t.getPartiallyAnsweredSuite(answerOfFirstQuestion);
+						BotHelper.getInstance().getPartiallyAnsweredSuite(answerOfFirstQuestion,
+								t.getRepository());
 
 				if (partitioned.getRepository().size() > 0) {
 					writeToFile(partitioned.getRepository(),
