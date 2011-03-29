@@ -100,22 +100,39 @@ public class ChoiceValue implements QuestionValue {
 		return result;
 	}
 
+	/**
+	 * Checks, if the specified object is a {@link ChoiceValue} or a
+	 * {@link MultipleChoiceValue} and then checks the included values. It is
+	 * important to notice, that this method also returns true, when a
+	 * {@link ChoiceValue} is compared with a {@link MultipleChoiceValue} and
+	 * both contain the same single choice.
+	 * 
+	 * @author joba
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
+		else if (obj == null) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
+		else if (obj instanceof MultipleChoiceValue) {
+			MultipleChoiceValue other = (MultipleChoiceValue) obj;
+			if (other.getChoiceIDs().size() != 1) {
+				return false;
+			}
+			else {
+				return other.getChoiceIDs().contains(choiceID);
+			}
+		}
+		else if (obj instanceof ChoiceValue) {
+			ChoiceValue other = (ChoiceValue) obj;
+			return choiceID.equals(other.getChoiceID());
+		}
+		else {
 			return false;
 		}
-		ChoiceValue other = (ChoiceValue) obj;
-		if (!choiceID.equals(other.choiceID)) {
-			return false;
-		}
-		return true;
 	}
 
 	@Override
