@@ -50,12 +50,17 @@ public class STCAnalysisWriter {
 	public static String write(Diff diff) {
 		StringBuffer buffy = new StringBuffer();
 
-		buffy.append("Case: " + diff.getCase().getName() + "\n");
-		buffy.append("Date: " + diff.getAnalysisDate() + "\n");
 		if (diff.hasDifferences()) {
 			buffy.append("FAILURE: " + diff.getCasesWithDifference().size() +
-					" diff(s) in " + diff.getCase().getCases().size() + " sequences\n");
-			buffy.append("\n");
+					" diff(s) in " + diff.getCase().getCases().size() + " sequences\n\n");
+		}
+		else {
+			buffy.append("SUCCESS (no differences found).\n\n");
+		}
+		buffy.append("Case: " + diff.getCase().getName() + "\n");
+		buffy.append("Date: " + diff.getAnalysisDate() + "\n");
+
+		if (diff.hasDifferences()) {
 			int maxSize = getMaxOffset(diff);
 
 			for (RatedTestCase rtc : diff.getCase().getCases()) {
@@ -64,10 +69,6 @@ public class STCAnalysisWriter {
 					buffy.append(write(rtc_diff, getOffset(rtc.getName(), maxSize)));
 				}
 			}
-
-		}
-		else {
-			buffy.append("SUCCESS (no differences found).\n\n");
 		}
 
 		return buffy.toString();
