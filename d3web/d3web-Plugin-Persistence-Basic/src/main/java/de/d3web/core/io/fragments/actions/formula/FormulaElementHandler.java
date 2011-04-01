@@ -88,7 +88,6 @@ public class FormulaElementHandler implements FragmentHandler {
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
 		Element element = null;
-		FragmentManager pm = PersistenceManager.getInstance();
 		if (object instanceof Operator) {
 			Operator fa = (Operator) object;
 			element = createFormulaTerm(doc, fa.getSymbol(), fa.getArg1(), fa.getArg2());
