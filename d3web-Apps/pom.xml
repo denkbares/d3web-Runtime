@@ -1,0 +1,45 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.uniwue</groupId>
+	<artifactId>d3web-Apps</artifactId>
+	<version>0.2-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>d3web-Apps</name>
+	<issueManagement>
+		<system>Trac</system>
+		<url>https://isci.informatik.uni-wuerzburg.de/trac/</url>
+	</issueManagement>
+
+	<ciManagement>
+		<system>Hudson</system>
+		<url>https://isci.informatik.uni-wuerzburg.de/hudson/</url>
+	</ciManagement>
+
+	<licenses>
+		<license>
+			<name>GNU Lesser General Public License, version 3</name>
+			<url>http://www.gnu.org/licenses/lgpl.txt</url>
+		</license>
+	</licenses>
+
+	<build>
+		<defaultGoal>package</defaultGoal>
+		<plugins>
+			<!-- Set Java 1.6 as source and target -->
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<modules>
+		<module>CaseGenerator</module>
+		<module>DDTreeVisualisation</module>
+		<module>ExampleApps</module>
+	</modules>
+</project>
