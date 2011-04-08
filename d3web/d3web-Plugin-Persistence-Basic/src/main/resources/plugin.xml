@@ -520,17 +520,6 @@
 		<parameter id="filename" value="kb/settings.xml" />
 	</extension>
 	
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeWriter"
-		id="TerminologyTextbundleHandler.Writer">
-		<parameter id="class"
-			value="de.d3web.mminfo.io.TerminologyTextbundleHandler" />
-		<parameter id="name" value="TerminologyTextbundleHandler" />
-		<parameter id="description" value="KnowledgeWriter for exporting a terminology bundle." />
-		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
-		<parameter id="filename" value="exports/textbundle.properties" />
-	</extension>
-	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="DefaultAbnormalityHandler">
 		<parameter id="class"
