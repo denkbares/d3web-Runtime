@@ -89,8 +89,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		CostBenefitCaseObject caseObject = (CostBenefitCaseObject) session.getSessionObject(this);
 		session.getInterview().getInterviewAgenda().setAgendaSortingStrategy(
 				new CostBenefitAgendaSortingStrategy(caseObject));
-		calculateNewPath(caseObject);
-		activateNextQContainer(caseObject);
+		// calculateNewPath(caseObject);
+		// activateNextQContainer(caseObject);
 	}
 
 	/**
