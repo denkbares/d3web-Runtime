@@ -150,11 +150,4 @@ public class XCLRelation {
 		return toString().hashCode();
 	}
 
-	public double getDegreeOfTruth(Session session) throws NoAnswerException, UnknownAnswerException {
-		if (conditionedFinding.eval(session)) {
-			return 1;
-		}
-		return 0;
-	}
-
 }
