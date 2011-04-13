@@ -192,9 +192,7 @@ public class ActionSetValue extends PSAction {
 
 	@Override
 	public String toString() {
-		return "<RuleAction type=\"SetValue\">\n" + "  ["
-				+ getQuestion().getName() + ": " + getValue() + "]"
-				+ "\n</RuleAction>";
+		return "set: " + getQuestion().getName() + " = " + getValue();
 	}
 
 }

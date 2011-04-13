@@ -50,4 +50,9 @@ public final class NOOPAction extends PSAction {
 	@Override
 	public void undo(Session session, Object source, PSMethod psmethod) {
 	}
+
+	@Override
+	public String toString() {
+		return "NOOP";
+	}
 }
