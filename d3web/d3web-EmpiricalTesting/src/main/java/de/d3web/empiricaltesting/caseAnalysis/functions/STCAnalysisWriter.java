@@ -55,7 +55,7 @@ public class STCAnalysisWriter {
 					" diff(s) in " + diff.getCase().getCases().size() + " sequences\n\n");
 		}
 		else {
-			buffy.append("SUCCESS (no differences found).\n\n");
+			buffy.append("SUCCESS.\n\n");
 		}
 		buffy.append("Case: " + diff.getCase().getName() + "\n");
 		buffy.append("Date: " + diff.getAnalysisDate() + "\n");
