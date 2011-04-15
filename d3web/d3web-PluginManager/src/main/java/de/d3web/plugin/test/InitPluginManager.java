@@ -24,11 +24,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
 
 import de.d3web.plugin.JPFPluginManager;
 
@@ -89,35 +85,16 @@ public abstract class InitPluginManager {
 	}
 
 	private static boolean checkIfPlugin(File f) {
-		if (f.isDirectory()) {
-			File[] files = f.listFiles();
-			for (File file : files) {
-				if (file.getName().equalsIgnoreCase("plugin.xml")) {
-					return true;
-				}
-			}
-			return false;
+		File project = f;
+		if (f.getName().equals("classes")) {
+			// jump two levels higher because dependencies to eclipse
+			// projects are named: projectname/target/classes
+			// the absolute file is needed to prevent a nullpointer in the own
+			// project
+			project = f.getParentFile().getAbsoluteFile();
+			project = project.getParentFile();
 		}
-		else {
-			ZipFile zipfile;
-			try {
-				zipfile = new ZipFile(f);
-				Enumeration<? extends ZipEntry> entries = zipfile.entries();
-				while (entries.hasMoreElements()) {
-					ZipEntry entry = entries.nextElement();
-					if (entry.getName().equalsIgnoreCase("plugin.xml")) {
-						return true;
-					}
-				}
-				return false;
-			}
-			catch (ZipException e) {
-				return false;
-			}
-			catch (IOException e) {
-				return false;
-			}
-
-		}
+		return (project.getName().startsWith("d3web-Plugin-") || project.getName().startsWith(
+				"KnowWE-Plugin-"));
 	}
 }
