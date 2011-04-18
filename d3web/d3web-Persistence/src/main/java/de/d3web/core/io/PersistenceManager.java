@@ -24,11 +24,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.jar.Attributes;
+import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.logging.Logger;
@@ -42,6 +45,7 @@ import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.Resource;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
+import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.plugin.Autodetect;
 import de.d3web.plugin.Extension;
 import de.d3web.plugin.Plugin;
@@ -73,6 +77,120 @@ public final class PersistenceManager extends FragmentManager {
 
 	private Extension[] readerPlugins;
 	private Extension[] writerPlugins;
+
+	public static class KnowledgeBaseInfo {
+
+		private final String name;
+		private final String description;
+		private final String author;
+		private final Date date;
+		private final Resource favIcon;
+
+		private KnowledgeBaseInfo(File kbFile, Manifest manifest) {
+			this.favIcon = createFavIconResource(kbFile);
+			String pureFileName = kbFile.getName().replaceAll("\\.\\p{Alnum}*$", "");
+			if (manifest == null) {
+				this.name = pureFileName;
+				this.description = kbFile.getAbsolutePath();
+				this.author = null;
+				this.date = new Date(kbFile.lastModified());
+			}
+			else {
+				String manifestName = manifest.getMainAttributes().getValue("Name");
+				if (manifestName != null && !manifestName.trim().isEmpty()) {
+					this.name = manifestName;
+				}
+				else {
+					this.name = pureFileName;
+				}
+				this.description = manifest.getMainAttributes().getValue("Description");
+				this.author = manifest.getMainAttributes().getValue("Author");
+				String dateString = manifest.getMainAttributes().getValue("Date");
+				Date parsedDate = null;
+				try {
+					parsedDate = DateFormat.getDateInstance().parse(dateString);
+				}
+				catch (ParseException e) {
+					// no nothing
+				}
+				this.date = parsedDate;
+			}
+		}
+
+		/**
+		 * Returns the name of the knowledge base, as specified in the manifest
+		 * file.
+		 * 
+		 * @created 17.04.2011
+		 * @return the name of the knowledge base
+		 */
+		public String getName() {
+			return name;
+		}
+
+		/**
+		 * Returns the description text of the knowledge base, as specified in
+		 * the manifest file.
+		 * 
+		 * @created 17.04.2011
+		 * @return the description of the knowledge base
+		 */
+		public String getDescription() {
+			return description;
+		}
+
+		/**
+		 * Returns the author's name of this knowledge base, as specified in the
+		 * manifest file.
+		 * 
+		 * @created 17.04.2011
+		 * @return the author of the knowledge base
+		 */
+		public String getAuthor() {
+			return author;
+		}
+
+		/**
+		 * Returns the date of this knowledge base, as specified in the manifest
+		 * file.
+		 * 
+		 * @created 17.04.2011
+		 * @return the date of the knowledge base
+		 */
+		public Date getDate() {
+			return date;
+		}
+
+		/**
+		 * Returns the fav icon of this knowledge base.
+		 * 
+		 * @created 17.04.2011
+		 * @return the date of the knowledge base
+		 */
+		public Resource getFavIcon() {
+			return favIcon;
+		}
+
+		private static Resource createFavIconResource(File kbFile) {
+			try {
+				ZipFile zipfile = new ZipFile(kbFile);
+				try {
+					String path = MULTIMEDIA_PATH_PREFIX + "favicon.png";
+					ZipEntry entry = zipfile.getEntry(path);
+					if (entry != null) {
+						return new JarBinaryRessource(entry, kbFile);
+					}
+				}
+				finally {
+					zipfile.close();
+				}
+			}
+			catch (IOException e) {
+				// at exception do nothing (providing no icon)
+			}
+			return null;
+		}
+	}
 
 	/**
 	 * Private constructor: For public access getInstance() should be used
@@ -201,6 +319,17 @@ public final class PersistenceManager extends FragmentManager {
 		return load(file, new DummyProgressListener());
 	}
 
+	public KnowledgeBaseInfo loadKnowledgeBaseInfo(File file) throws IOException {
+		JarFile zipfile = new JarFile(file);
+		try {
+			Manifest manifest = zipfile.getManifest();
+			return new KnowledgeBaseInfo(file, manifest);
+		}
+		finally {
+			zipfile.close();
+		}
+	}
+
 	/**
 	 * Saves the knowledge base to the specified {@link File}. The file is a
 	 * compressed ZIP containing different XML files and resources comprising
@@ -219,8 +348,9 @@ public final class PersistenceManager extends FragmentManager {
 		Attributes mainAttributes = manifest.getMainAttributes();
 		mainAttributes.put(Attributes.Name.MANIFEST_VERSION, "2.0");
 		mainAttributes.put(new Attributes.Name("Date"), new Date().toString());
+		String prompt = knowledgeBase.getInfoStore().getValue(MMInfo.PROMPT);
 		mainAttributes.put(new Attributes.Name("Name"),
-				knowledgeBase.getName());
+				prompt != null ? prompt : knowledgeBase.getName());
 		mainAttributes.put(new Attributes.Name("ID"), knowledgeBase.getId());
 		mainAttributes.put(new Attributes.Name("Author"),
 				knowledgeBase.getInfoStore().getValue(BasicProperties.AUTHOR));
