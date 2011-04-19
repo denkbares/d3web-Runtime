@@ -46,7 +46,6 @@ import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.protocol.ProtocolEntry;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
-import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.scoring.Score;
 
@@ -67,20 +66,19 @@ public class RunningACase {
 		KnowledgeBase knowledgeBase = buildKnowledgeBase();
 
 		PrintStream out = System.out;
-		// Create a case (problem-solving session and set all specified
-		// question/answers
+		// Create a case (problem-solving session and set
+		// all specified question/answers
 		out.println("+++ Setting values +++");
 		Session session = SessionFactory.createSession(knowledgeBase);
 
 		// set: pregnant = yes
-		Fact fact1 = FactFactory.createFact(session, pregnant, yes, PSMethodUserSelected
-								.getInstance(), PSMethodUserSelected.getInstance());
+		Fact fact1 = FactFactory.createUserEnteredFact(
+				pregnant, yes);
 		session.getBlackboard().addValueFact(fact1);
 		out.println(fact1);
 		// set: weight = 80
-		Fact fact2 = FactFactory.createFact(session, weight,
-				new NumValue(80),
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance());
+		Fact fact2 = FactFactory.createUserEnteredFact(
+				weight, new NumValue(80));
 		session.getBlackboard().addValueFact(fact2);
 		out.println(fact2);
 
@@ -88,8 +86,9 @@ public class RunningACase {
 		out.println("+++ Solutions +++");
 		for (Solution solution : knowledgeBase.getManager().getSolutions()) {
 			Rating state = session.getBlackboard().getRating(solution);
-			if (!state.hasState(Rating.State.UNCLEAR)) out.println("  " + solution + " (" + state
-					+ ")");
+			if (!state.hasState(Rating.State.UNCLEAR)) {
+				out.println("  " + solution + " (" + state + ")");
+			}
 		}
 
 		// Show all entered findings
