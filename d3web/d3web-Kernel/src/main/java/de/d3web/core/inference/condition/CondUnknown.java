@@ -25,8 +25,8 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.values.Unknown;
 
 /**
- * Condition that checks if a Question has been answered by
- * {@link AnswerUnknown}.
+ * Condition that checks if a Question has been answered with the value
+ * {@link Unknown}.
  * 
  * Creation date: (23.11.2000 13:18:44)
  * 
@@ -47,12 +47,6 @@ public class CondUnknown extends CondQuestion {
 	@Override
 	public boolean eval(Session session) throws NoAnswerException {
 		return (session.getBlackboard().getValue(getQuestion()) instanceof Unknown);
-		// try {
-		// checkAnswer(session);
-		// return false;
-		// } catch (UnknownAnswerException ex) {
-		// return ((Answer) question.getValue(session)).isUnknown();
-		// }
 	}
 
 	@Override

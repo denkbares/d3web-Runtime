@@ -26,16 +26,16 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.blackboard.CaseRuleComplex;
 import de.d3web.core.session.blackboard.SessionObject;
 
 /**
  * Abstract super class for all rules. <BR>
  * It stores the condition, the check routine and if it has fired or not. The
- * action of a rule is specified by the extensions of RuleComplex. Additionally
- * it is possible to store an exception, when this rule must not fire.
+ * action of a rule is specified by the extensions of Rule. Additionally, it is
+ * possible to store an exception, when this rule must not fire.
  * 
  * @author Michael Wolber, joba
  */
@@ -121,21 +121,20 @@ public class Rule implements SessionObjectSource {
 		}
 		catch (NoAnswerException ex) {
 			/*
-			 * The exception could not be testet --> just go on and treat it
+			 * The exception could not be tested --> just go on and treat it
 			 * like there is no exception
 			 */
-			// D3WebCase.trace("Exception contained unknown term ");
 		}
 		catch (UnknownAnswerException uex) {
 			/*
-			 * The exception could not be testet --> just go on and treat it
+			 * The exception could not be tested --> just go on and treat it
 			 * like there is no exception
 			 */
 		}
 
 		try {
 			/*
-			 * if a diagnosis context is available and it is false, then do not
+			 * if a solution context is available and it is false, then do not
 			 * fire!
 			 */
 			if ((getContext() != null) && !getContext().eval(session)) {
@@ -153,7 +152,6 @@ public class Rule implements SessionObjectSource {
 			/*
 			 * the condition could not be tested --> return false
 			 */
-			// D3WebCase.trace("Condition contained unknown term ");
 			return false;
 		}
 	}
@@ -188,9 +186,6 @@ public class Rule implements SessionObjectSource {
 
 			// ... do nothing, if not active
 			if (!active) {
-				/*
-				 * if(hasFired) { undo(session); }
-				 */
 				return;
 			}
 
@@ -247,7 +242,6 @@ public class Rule implements SessionObjectSource {
 	 */
 	public void doIt(Session session) {
 		setFired(true, session);
-		// session.trace("  <<RULE FIRE>> " + getId());
 		if (getAction() != null) {
 			getAction().doIt(session, this, session.getPSMethodInstance(getProblemsolverContext()));
 		}
@@ -259,19 +253,19 @@ public class Rule implements SessionObjectSource {
 	}
 
 	/**
-	 * @return the condtion which must be true, so that the rule can fire.
+	 * @return the condition which must be true, so that the rule can fire.
 	 */
 	public Condition getCondition() {
 		return condition;
 	}
 
 	/**
-	 * @return the specified <it>diagnosis context</it>. If not defined this
+	 * @return the specified <it>solution context</it>. If not defined this
 	 *         method returns null. <BR>
-	 *         A diagnosis context is a condition which contains
+	 *         A solution context is a condition which contains
 	 *         CondDState(diagnosis, ESTABLISHED) to formulate a context of
-	 *         established diagnoses in which the rule is able to fire. If
-	 *         specified diagnoses are not established, then rule must not fire.
+	 *         established solutions in which the rule is able to fire. If
+	 *         specified solutions are not established, then rule must not fire.
 	 */
 	public Condition getContext() {
 		return diagnosisContext;
@@ -290,7 +284,7 @@ public class Rule implements SessionObjectSource {
 
 	/**
 	 * Simply checks if the rule has already been fired in context of the
-	 * specified user case.
+	 * specified user session.
 	 */
 	public boolean hasFired(Session session) {
 		return ((CaseRuleComplex) session.getSessionObject(this)).hasFired();
@@ -318,7 +312,8 @@ public class Rule implements SessionObjectSource {
 	protected void updateActionReferences(
 			PSAction oldAction,
 			PSAction newAction) {
-		// do not add any knowledge when the problemsolver context is still null
+		// do not add any knowledge when the problem solver context is still
+		// null
 		if (getProblemsolverContext() == null) return;
 
 		if ((oldAction != null)
@@ -399,12 +394,11 @@ public class Rule implements SessionObjectSource {
 	}
 
 	/**
-	 * Removes the specified rule from the knowledge of the specified object
+	 * Removes the specified rule from the knowledge of the specified object.
 	 * 
 	 * @param r specified rule
-	 * @param psContext Problemsolver
-	 * @param kind Methodkind
-	 * @param nob specified Object
+	 * @param kind knowledge kind
+	 * @param nob specified object
 	 */
 	public static void removeFrom(Rule r, KnowledgeKind<RuleSet> kind, TerminologyObject nob) {
 		if (nob != null) {
@@ -442,9 +436,8 @@ public class Rule implements SessionObjectSource {
 	 * Adds the specified rule to the knowledge map of the specified objects.
 	 * 
 	 * @param r specified rule
-	 * @param psContext Problemsolver
-	 * @param kind Methodkind
-	 * @param nob specified Object
+	 * @param kind knowledge kind
+	 * @param nob specified object
 	 */
 	public static void insertInto(Rule r, KnowledgeKind<RuleSet> kind, TerminologyObject nob) {
 		if (nob != null) {
@@ -464,12 +457,13 @@ public class Rule implements SessionObjectSource {
 
 	/**
 	 * Sets the condition which must be true, so that the rule can fire. This
-	 * Method also inserts this instance as knowledge (backward/forward) into
+	 * method also inserts this instance as knowledge (backward/forward) into
 	 * the involved objects contained in the condition.
 	 */
 	public void setCondition(
 			de.d3web.core.inference.condition.Condition newCondition) {
-		// do not add any knowledge when the problemsolver context is still null
+		// do not add any knowledge when the problem-solver context is still
+		// null
 		if (getProblemsolverContext() == null) {
 			condition = newCondition;
 			return;
@@ -482,14 +476,12 @@ public class Rule implements SessionObjectSource {
 					getCondition().getTerminalObjects(),
 					PSMethodRulebased.getForwardKind(getProblemsolverContext()));
 		}
-		// removeRuleFromObjects(getCondition().getTerminalObjects());
 		condition = newCondition;
 		if (getCondition() != null) {
 			insertInto(
 					this,
 					getCondition().getTerminalObjects(),
 					PSMethodRulebased.getForwardKind(getProblemsolverContext()));
-			// insertRuleIntoObjects(getCondition().getTerminalObjects());
 		}
 	}
 
@@ -502,7 +494,8 @@ public class Rule implements SessionObjectSource {
 	 * heuristic problem solver is used.
 	 */
 	public void setContext(Condition newDiagnosisContext) {
-		// do not add any knowledge when the problemsolver context is still null
+		// do not add any knowledge when the problem-solver context is still
+		// null
 		if (getProblemsolverContext() == null) {
 			diagnosisContext = newDiagnosisContext;
 			return;
@@ -528,7 +521,8 @@ public class Rule implements SessionObjectSource {
 	 */
 	public void setException(
 			de.d3web.core.inference.condition.Condition newException) {
-		// do not add any knowledge when the problemsolver context is still null
+		// do not add any knowledge when the problem-solver context is still
+		// null
 		if (getProblemsolverContext() == null) {
 			exception = newException;
 			return;
@@ -561,8 +555,9 @@ public class Rule implements SessionObjectSource {
 		}
 		if (this.problemsolverContext != problemsolverContext) {
 			activateContextClass(problemsolverContext);
-			// when the problemsolvercontext was null, nothing was added to the
-			// knowledgestores
+			// when the problem-solver context was null, nothing was added to
+			// the
+			// knowledge stores
 			if (getProblemsolverContext() != null) {
 				// remove old indexes
 				if (getCondition() != null) {
@@ -633,7 +628,6 @@ public class Rule implements SessionObjectSource {
 	 */
 	public void undo(Session session) {
 		setFired(false, session);
-		// session.trace("  <<RULE UNDO>> " + getId());
 		if (getAction() != null) {
 			getAction().undo(session, this, session.getPSMethodInstance(getProblemsolverContext()));
 		}

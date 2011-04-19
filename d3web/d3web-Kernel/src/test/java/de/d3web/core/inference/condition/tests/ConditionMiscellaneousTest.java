@@ -22,6 +22,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -30,6 +31,7 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondKnown;
@@ -50,6 +52,7 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.scoring.Score;
@@ -67,6 +70,7 @@ public class ConditionMiscellaneousTest {
 	Condition conditionQ1Yes, conditionQ2Yes, conditionQ3No;
 	ChoiceValue choiceValueYes, choiceValueNo;
 	Condition[] conditions;
+	Solution solution;
 
 	@Before
 	public void setUp() throws Exception {
@@ -76,6 +80,8 @@ public class ConditionMiscellaneousTest {
 		choiceQuestion1 = new QuestionOC(init, "choiceQuestion1", "yes", "no");
 		choiceQuestion2 = new QuestionOC(init, "choiceQuestion2", "yes", "no");
 		choiceQuestion3 = new QuestionOC(init, "choiceQuestion3", "yes", "no");
+
+		solution = new Solution(kb, "Solutionname");
 
 		// two ChoiceValues, representing to two possible answers "yes" and "no"
 		// for the above questions
@@ -89,6 +95,71 @@ public class ConditionMiscellaneousTest {
 
 		conditions = new Condition[] {
 				conditionQ1Yes, conditionQ2Yes, conditionQ3No };
+	}
+
+	@Test
+	public void testContextCondition() {
+		Session session = SessionFactory.createSession(kb);
+		Condition condition = new CondEqual(choiceQuestion1, choiceValueYes);
+		Condition contextCondition = new CondDState(solution, new Rating(State.ESTABLISHED));
+
+		// RULE: q1=YES => q3=YES (CONTEXT: solution=ESTABLISHED
+		Rule rule = RuleFactory.createSetValueRule(choiceQuestion3, choiceValueYes, condition);
+		rule.setContext(contextCondition);
+
+		session.getBlackboard().addValueFact(
+				FactFactory.createUserEnteredFact(choiceQuestion1, choiceValueYes));
+		assertEquals(UndefinedValue.getInstance(),
+				session.getBlackboard().getValue(choiceQuestion3));
+
+		// activate context, so rule can fire
+		session.getBlackboard().addValueFact(
+				FactFactory.createUserEnteredFact(solution, new Rating(State.ESTABLISHED)));
+		assertEquals(choiceValueYes,
+				session.getBlackboard().getValue(choiceQuestion3));
+		assertThat(rule.isUsed(session), is(true));
+
+		// retract context
+		session.getBlackboard().addValueFact(
+				FactFactory.createUserEnteredFact(solution, new Rating(State.EXCLUDED)));
+		assertEquals(UndefinedValue.getInstance(),
+				session.getBlackboard().getValue(choiceQuestion3));
+		assertThat(rule.isUsed(session), is(false));
+
+	}
+
+	@Test
+	public void testExceptionCondition() {
+		Session session = SessionFactory.createSession(kb);
+		Condition condition = new CondEqual(choiceQuestion1, choiceValueYes);
+		Condition excepCondition = new CondEqual(choiceQuestion2, choiceValueYes);
+
+		// RULE: choiceQuestion1=YES => choiceQuestion3=YES
+		// (EXCEPT choiceQuestion2=Yes)
+		RuleFactory.createSetValueRule(choiceQuestion3, choiceValueYes, condition,
+				excepCondition);
+
+		session.getBlackboard().addValueFact(
+				FactFactory.createUserEnteredFact(choiceQuestion1, choiceValueYes));
+		assertEquals(choiceValueYes, session.getBlackboard().getValue(choiceQuestion3));
+
+		// now answer q2, so that the exception is activated
+		session.getBlackboard().addValueFact(
+				FactFactory.createUserEnteredFact(choiceQuestion2, choiceValueYes));
+		assertEquals(UndefinedValue.getInstance(),
+				session.getBlackboard().getValue(choiceQuestion3));
+
+		// retract exception condition
+		session.getBlackboard().addValueFact(
+				FactFactory.createUserEnteredFact(choiceQuestion2, choiceValueNo));
+		assertEquals(choiceValueYes, session.getBlackboard().getValue(choiceQuestion3));
+
+		// retract standard condition
+		session.getBlackboard().addValueFact(
+				FactFactory.createUserEnteredFact(choiceQuestion1, choiceValueNo));
+		assertEquals(UndefinedValue.getInstance(),
+				session.getBlackboard().getValue(choiceQuestion3));
+
 	}
 
 	// ---------------------
@@ -231,21 +302,6 @@ public class ConditionMiscellaneousTest {
 	// ---------------------
 	// Unknown - Conditions |
 	// ---------------------
-
-	// @Test(expected = NoAnswerException.class)
-	// public void testConditionUnknown_NoAnswerExceptionThrown() throws
-	// NoAnswerException {
-	// // Summary: Test for a UnknownCondition where no answer is set
-	// // open up a new session, but enter no answer:
-	// Session session = SessionFactory.createSession(kb);
-	// Condition conditionUnknown = new CondUnknown(choiceQuestion1);
-	// try {
-	// conditionUnknown.eval(session);
-	// }
-	// catch (UnknownAnswerException e) {
-	// fail("Unexpected exception thrown: UnknownAnswerException");
-	// }
-	// }
 
 	@Test
 	public void testConditionUnknown() {

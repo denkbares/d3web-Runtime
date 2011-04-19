@@ -34,6 +34,7 @@ import de.d3web.core.knowledge.terminology.AnswerNo;
 import de.d3web.core.knowledge.terminology.AnswerYes;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 
 /**
  * This class tests the "Choices" which utilize the answer alternatives for
@@ -80,15 +81,15 @@ public class ChoiceTest {
 	public void testCompareTo() {
 		Choice choiceOne = new Choice("choiceOne");
 		Choice choiceTwo = new Choice("choiceTwo");
-		Choice choiceThree = new Choice("choiceThree");
 
 		List<Choice> choicesList = new ArrayList<Choice>();
 		choicesList.add(choiceOne);
 		choicesList.add(choiceTwo);
-		choicesList.add(choiceThree);
 
 		QuestionOC question = new QuestionOC(new KnowledgeBase(), "id");
 		question.setAlternatives(choicesList);
+		KnowledgeBaseUtils.addChoiceAnswer(question, "choiceThree", 2);
+		Choice choiceThree = KnowledgeBaseUtils.findChoice(question, "choiceThree");
 
 		// choiceOne is two answer alternatives in front of choiceThree
 		assertThat(choiceOne.compareTo(choiceThree), is(-2));

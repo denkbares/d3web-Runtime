@@ -109,12 +109,15 @@ public final class KnowledgeBaseUtils {
 		return null;
 	}
 
-	public static MultipleChoiceValue findMultipleChoiceValue(QuestionMC question, List<String> valueNames) {
+	public static MultipleChoiceValue findMultipleChoiceValue(QuestionMC question, List<String> valueNames) throws IllegalArgumentException {
 		List<Choice> choices = new ArrayList<Choice>(valueNames.size());
 		for (String name : valueNames) {
 			Choice choice = findChoice(question, name);
 			if (choice != null) {
 				choices.add(choice);
+			}
+			else {
+				throw new IllegalArgumentException("Unknown choice name: " + name);
 			}
 		}
 		return MultipleChoiceValue.fromChoices(choices);
@@ -260,26 +263,4 @@ public final class KnowledgeBaseUtils {
 			return order1 - order2;
 		}
 	}
-
-	/**
-	 * Finds the {@link TerminologyObject} with the specified name. This method
-	 * is case insensitive
-	 * 
-	 * @created 10.11.2010
-	 * @param name Name of the {@link TerminologyObject}
-	 * @return {@link TerminologyObject} with the specified name
-	 */
-	public static TerminologyObject findTerminologyObjectByName(String name, KnowledgeBase knowledgeBase) {
-		List<TerminologyObject> objects = new LinkedList<TerminologyObject>();
-		objects.addAll(knowledgeBase.getManager().getQContainers());
-		objects.addAll(knowledgeBase.getManager().getSolutions());
-		objects.addAll(knowledgeBase.getManager().getQuestions());
-		for (TerminologyObject object : objects) {
-			if (object.getName().equalsIgnoreCase(name)) {
-				return object;
-			}
-		}
-		return null;
-	}
-
 }

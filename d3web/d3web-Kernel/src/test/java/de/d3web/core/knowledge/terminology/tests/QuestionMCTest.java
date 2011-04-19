@@ -22,7 +22,11 @@ package de.d3web.core.knowledge.terminology.tests;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +34,9 @@ import org.junit.Test;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
+import de.d3web.core.manage.KnowledgeBaseUtils;
+import de.d3web.core.session.values.ChoiceID;
+import de.d3web.core.session.values.MultipleChoiceValue;
 
 /**
  * Unit test for {@link QuestionMC}
@@ -39,11 +46,34 @@ import de.d3web.core.knowledge.terminology.QuestionMC;
  */
 public class QuestionMCTest {
 
-	QuestionMC questionMC;
+	QuestionMC questionMC, qMC2;
+	KnowledgeBase knowledge;
 
 	@Before
 	public void setUp() throws Exception {
-		questionMC = new QuestionMC(new KnowledgeBase(), "questionMCtext");
+		knowledge = KnowledgeBaseUtils.createKnowledgeBase();
+
+		questionMC = new QuestionMC(knowledge, "questionMCtext");
+	}
+
+	@Test
+	public void testMultipleChoiceValue() {
+		qMC2 = new QuestionMC(knowledge, "qMC2");
+		Choice c1 = new Choice("c1");
+		Choice c2 = new Choice("c2");
+		Choice c3 = new Choice("c3");
+		qMC2.addAlternative(c1);
+		qMC2.addAlternative(c2);
+		qMC2.addAlternative(c3);
+
+		List<String> valueNames = new ArrayList<String>(2);
+		valueNames.add("c2");
+		valueNames.add("c3");
+
+		// find an existing combination of values
+		MultipleChoiceValue expected = new MultipleChoiceValue(new ChoiceID(c2), new ChoiceID(c3));
+		MultipleChoiceValue value = KnowledgeBaseUtils.findMultipleChoiceValue(qMC2, valueNames);
+		assertEquals(expected, value);
 	}
 
 	/**
