@@ -21,16 +21,22 @@
 package de.d3web.casegeneration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.activation.UnsupportedDataTypeException;
 
+import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
@@ -40,7 +46,6 @@ import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.Form;
 import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
 import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.RatedSolution;
@@ -82,36 +87,23 @@ public final class InterviewBot {
 	// default 0 means no restriction in the number of cases to be generated
 	private long maxCases;
 	// praefix of a sequential test case
-	private String sqtcasePraefix;
+	private String sequentialTestCasePraefix;
 	// praefix of a part of a sequential test case
-	private String rtcasePraefix;
+	private String ratedTestCasePraefix;
 	// findings that are already set for all generated cases
 	private List<Finding> initFindings;
 	// the knowledge used to generate the cases
 	private KnowledgeBase knowledge;
 	// the method of how to determine the rating of a solution
 	private RatingStrategy ratingStrategy;
-	// this findings are answered with a given value, WHEN they are asked during
-	// the interview
-	private Map<Question, Value> knownAnswers;
-	// the answers for the given question are omitted during the interview
-	private Map<Question, List<Value>> forbiddenAnswers;
-	// default 0 means no restriction in the number of answer combinations
-	private int maxAnswerCombinations;
-	// number of combinations for specified questions
-	private Map<Question, Integer> maxAnswerCombinationsForQuestion;
-	// forbidden answer combinations for a specified question
-	private Map<Question, Collection<Choice[]>> forbiddenAnswerCombinations;
-	// allowed answer combinations for a specified question
-	private Map<Question, Collection<Choice[]>> allowedAnswerCombinations;
+
+	// the strategy to select questions and possible values
+	private BotStrategy strategy = new DefaultBotStrategy();
 
 	// the generated cases
 	private List<SequentialTestCase> cases;
 	// the number of generated cases
 	private int casesCounter = 1;
-
-	private AnswerSelector answerSelector = AnswerSelector.getInstance();
-	private final ValueCombinator answerCombinator = ValueCombinator.getInstance();
 
 	/**
 	 * Generates a collection of {@link SequentialTestCase} instances based on
@@ -123,13 +115,10 @@ public final class InterviewBot {
 	 */
 	public List<SequentialTestCase> generate() throws UnsupportedDataTypeException {
 		init();
+
 		Session session = createCase(initFindings);
-
-		SequentialTestCase stc = new SequentialTestCase();
-		stc.setName(sqtcasePraefix);
-		addInitalCase(session, stc);
-
-		traverse(stc, getNextQuestion(session, stc), knowledge);
+		SequentialTestCase stc = createInitalCase(session);
+		traverse(stc, session);
 
 		return cases;
 	}
@@ -137,105 +126,65 @@ public final class InterviewBot {
 	private void init() {
 		casesCounter = 1;
 		cases = new LinkedList<SequentialTestCase>();
-		answerSelector = AnswerSelector.getInstance();
-		answerSelector.setForbiddenAnswers(forbiddenAnswers);
-		answerCombinator.setAllowedAnswerCombinations(allowedAnswerCombinations);
-		answerCombinator.setForbiddenAnswerCombinations(forbiddenAnswerCombinations);
-
 	}
 
-	private void traverse(SequentialTestCase sqCase, Question currentQuestion, KnowledgeBase knowledge) throws UnsupportedDataTypeException {
+	private void traverse(SequentialTestCase thisCase, Session thisSession) throws UnsupportedDataTypeException {
 		// Termination of the recursion: no more questions to ask
 		// or maximum number of cases generated.
-		if (currentQuestion == null) {
-			store(sqCase);
+		InterviewObject[] interviewItems = strategy.getNextSequenceItems(thisSession);
+		if (interviewItems == null || interviewItems.length == 0) {
+			store(thisCase);
 			return;
 		}
-		else if (maxCases > 0 && casesCounter >= maxCases) {
-			return;
-		}
+
+		// do noting more if we reached the maximum number of cases
+		if (maxCases > 0 && casesCounter > maxCases) return;
 
 		// Get all possible answers (combinations) for the question
-		List<? extends Value> possibleAnswers =
-				new ArrayList<Value>(answerSelector.determineValues(currentQuestion));
-
-		// check if there is a limitation of combinations for QuestionMC
-		int numberOfCombinations = determineNumberOfCombinations(possibleAnswers, currentQuestion);
+		FactSet[] factSets = strategy.getNextSequenceAnswers(thisSession, interviewItems);
 
 		// Iterate over all possible answers of the next question
-		for (int i = 0; i < numberOfCombinations; i++) {
-			Value nextValue = possibleAnswers.get(i);
-			Session session = createCase(sqCase);
-			setCaseValue(session, currentQuestion, nextValue);
-			SequentialTestCase newSequentialCase = packNewSequence(sqCase,
-					currentQuestion, nextValue, session);
+		for (FactSet factSet : factSets) {
+			Session nextSession = createCase(thisCase);
+			factSet.apply(nextSession);
+			SequentialTestCase nextSequentialCase = packNewSequence(
+					thisCase,
+					toFindings(factSet),
+					toRatedSolutions(nextSession));
 
 			// step down in recursion with the next suitable question to ask
-			Question nextQuestion = getNextQuestion(session, newSequentialCase);
-			traverse(newSequentialCase, nextQuestion, knowledge);
+			traverse(nextSequentialCase, nextSession);
 		}
 	}
 
-	/**
-	 * Determines how many combinations of the available value combinations are
-	 * considered.
-	 * 
-	 * @param currentNumberOfCombinations List<Value> all available combinations
-	 * @param currentQuestion Question the current Question
-	 * @return int number of considered combinations
-	 */
-	private int determineNumberOfCombinations(Collection<? extends Value> possibleValues, Question currentQuestion) {
-
-		int availableCombinations = possibleValues.size();
-
-		// The combination constraints apply only to QuestionMCs
-		if (currentQuestion instanceof QuestionMC) {
-			if (maxAnswerCombinationsForQuestion.get(currentQuestion) != null) {
-				int maxCombinationsQuestion = maxAnswerCombinationsForQuestion.get(currentQuestion).intValue();
-				if (maxCombinationsQuestion < availableCombinations) {
-					return maxCombinationsQuestion;
-				}
-			}
-			else if (maxAnswerCombinations > 0 && maxAnswerCombinations < availableCombinations) {
-				return maxAnswerCombinations;
-			}
-		}
-
-		return availableCombinations;
-
-	}
-
-	private SequentialTestCase packNewSequence(SequentialTestCase sqCase, Question currentQuestion, Value nextValue, Session session) {
-		SequentialTestCase newSequentialCase = sqCase.flatClone();
-		newSequentialCase.setName(sqtcasePraefix + dateToString());
-		newSequentialCase.add(createRatedTestCase(currentQuestion, nextValue, session,
-				sqCase));
-		return newSequentialCase;
-	}
-
-	private RatedTestCase createRatedTestCase(Question currentQuestion, Value nextValue, Session session, SequentialTestCase sqCase) {
-
+	private SequentialTestCase packNewSequence(SequentialTestCase sqCase, List<Finding> findings, List<RatedSolution> solutions) {
 		RatedTestCase ratedCase = new RatedTestCase();
-		ratedCase.add(new Finding(currentQuestion, nextValue));
-		ratedCase.addExpected(toRatedSolutions(session));
+		ratedCase.addFindings(findings);
+		ratedCase.addExpected(solutions);
 		ratedCase.inverseSortSolutions();
 
 		String namePraefix = sqCase.getName() + "_";
-		String nameSuffix = rtcasePraefix + sqCase.getCases().size();
+		String nameSuffix = ratedTestCasePraefix + sqCase.getCases().size();
 		ratedCase.setName(namePraefix + nameSuffix);
-		return ratedCase;
+
+		SequentialTestCase newSequentialCase = sqCase.flatClone();
+		newSequentialCase.setName(sequentialTestCasePraefix + dateToString());
+		newSequentialCase.add(ratedCase);
+		return newSequentialCase;
 	}
 
-	private void addInitalCase(Session session, SequentialTestCase stc) {
-		if (initFindings.isEmpty()) return;
-		else {
+	private SequentialTestCase createInitalCase(Session session) {
+		SequentialTestCase stc = new SequentialTestCase();
+		stc.setName(sequentialTestCasePraefix);
+		if (!initFindings.isEmpty()) {
 			RatedTestCase ratedTestCase = new RatedTestCase();
 			ratedTestCase.addFindings(initFindings);
 			ratedTestCase.addExpected(toRatedSolutions(session));
 			ratedTestCase.inverseSortSolutions();
-			ratedTestCase.setName(rtcasePraefix + "0");
+			ratedTestCase.setName(ratedTestCasePraefix + "0");
 			stc.add(ratedTestCase);
 		}
+		return stc;
 	}
 
 	/**
@@ -246,30 +195,21 @@ public final class InterviewBot {
 	 *        the collection of generated cases
 	 */
 	private void store(SequentialTestCase theSeqCase) {
-		theSeqCase.setName(sqtcasePraefix + casesCounter);
+		theSeqCase.setName(sequentialTestCasePraefix + casesCounter);
 		cases.add(theSeqCase);
 		casesCounter++;
 	}
 
-	private Question getNextQuestion(Session session, SequentialTestCase sqCase) {
-		Question question = nextQuestionFromAgenda(session);
-		while (knownAnswers.get(question) != null) {
-			Value value = knownAnswers.get(question);
-			setCaseValue(session, question, value);
-			sqCase.add(createRatedTestCase(question, value, session, sqCase));
-			question = nextQuestionFromAgenda(session);
+	private List<Finding> toFindings(FactSet factSet) {
+		List<Finding> findings = new LinkedList<Finding>();
+		for (Fact fact : factSet.getValueFacts()) {
+			TerminologyObject object = fact.getTerminologyObject();
+			if (object instanceof Question) {
+				Finding finding = new Finding((Question) object, fact.getValue());
+				findings.add(finding);
+			}
 		}
-		return question;
-	}
-
-	public static Question nextQuestionFromAgenda(Session session) {
-		Form form = session.getInterview().nextForm();
-		if (form.getInterviewObject() instanceof Question) {
-			return (Question) form.getInterviewObject();
-		}
-		else {
-			return null;
-		}
+		return findings;
 	}
 
 	private List<RatedSolution> toRatedSolutions(Session session) {
@@ -319,17 +259,16 @@ public final class InterviewBot {
 	public static class Builder {
 
 		private long maxCases = 0;
-		private String sqtcasePraefix = "STC";
-		private String rtcasePraefix = "RTC";
+		private String sequentialTestCasePraefix = "STC";
+		private String ratedTestCasePraefix = "RTC";
 		private List<Finding> initFindings = new LinkedList<Finding>();
 		private RatingStrategy ratingStrategy = new StateRatingStrategy();
-		private final Map<Question, Value> knownAnswers = new HashMap<Question, Value>();
+		private final Map<Question, List<Value>> allowedAnswers = new HashMap<Question, List<Value>>();
 		private final Map<Question, List<Value>> forbiddenAnswers = new HashMap<Question, List<Value>>();
 		private int maxAnswerCombinations = 0;
-		private final Map<Question, Integer> maxAnswerCombinationsForQuestion = new HashMap<Question, Integer>();
-		private final Map<Question, Collection<Choice[]>> forbiddenAnswerCombinations = new HashMap<Question, Collection<Choice[]>>();
-		private final Map<Question, Collection<Choice[]>> allowedAnswerCombinations = new HashMap<Question, Collection<Choice[]>>();
-
+		private final Map<QuestionMC, Integer> maxAnswerCombinationsForQuestion = new HashMap<QuestionMC, Integer>();
+		private final Map<QuestionMC, Collection<Set<Choice>>> forbiddenAnswerCombinations = new HashMap<QuestionMC, Collection<Set<Choice>>>();
+		private final Map<QuestionMC, Collection<Set<Choice>>> allowedAnswerCombinations = new HashMap<QuestionMC, Collection<Set<Choice>>>();
 		private KnowledgeBase knowledge;
 
 		public Builder(KnowledgeBase knowledge) {
@@ -341,18 +280,23 @@ public final class InterviewBot {
 			return this;
 		}
 
-		public Builder sqtcasePraefix(String val) {
-			sqtcasePraefix = val;
+		public Builder sequentialTestCasePraefix(String val) {
+			sequentialTestCasePraefix = val;
 			return this;
 		}
 
-		public Builder rtcasePraefix(String val) {
-			rtcasePraefix = val;
+		public Builder ratedTestCasePraefix(String val) {
+			ratedTestCasePraefix = val;
 			return this;
 		}
 
-		public Builder initFindings(List<Finding> val) {
-			initFindings = val;
+		public Builder initFindings(List<Finding> additinalFindings) {
+			initFindings.addAll(additinalFindings);
+			return this;
+		}
+
+		public Builder initFindings(Finding... additinalFindings) {
+			Collections.addAll(this.initFindings, additinalFindings);
 			return this;
 		}
 
@@ -366,18 +310,40 @@ public final class InterviewBot {
 			return this;
 		}
 
-		public Builder knownAnswers(Finding f) {
-			knownAnswers.put(f.getQuestion(), f.getValue());
+		public Builder knownAnswer(Finding f) {
+			return knownAnswer(f.getQuestion(), f.getValue());
+		}
+
+		public Builder knownAnswer(Question question, Value value) {
+			allowedAnswers.put(question, Arrays.asList(value));
+			return this;
+		}
+
+		public Builder allowedAnswer(Finding f) {
+			return allowedAnswer(f.getQuestion(), f.getValue());
+		}
+
+		public Builder allowedAnswer(Question question, Value value) {
+			List<Value> answers = allowedAnswers.get(question);
+			if (answers == null) {
+				answers = new ArrayList<Value>();
+			}
+			answers.add(value);
+			allowedAnswers.put(question, answers);
 			return this;
 		}
 
 		public Builder forbiddenAnswer(Finding f) {
-			List<Value> answers = forbiddenAnswers.get(f.getQuestion());
+			return forbiddenAnswer(f.getQuestion(), f.getValue());
+		}
+
+		public Builder forbiddenAnswer(Question question, Value value) {
+			List<Value> answers = forbiddenAnswers.get(question);
 			if (answers == null) {
 				answers = new ArrayList<Value>();
 			}
-			answers.add(f.getValue());
-			forbiddenAnswers.put(f.getQuestion(), answers);
+			answers.add(value);
+			forbiddenAnswers.put(question, answers);
 			return this;
 		}
 
@@ -386,62 +352,65 @@ public final class InterviewBot {
 			return this;
 		}
 
-		public Builder maxAnswerCombinations(Question q, int val) {
+		public Builder maxAnswerCombinations(QuestionMC q, int val) {
 			maxAnswerCombinationsForQuestion.put(q, Integer.valueOf(val));
 			return this;
 		}
 
 		public Builder forbiddenAnswerCombination(FindingMC f) throws Exception {
-			if (allowedAnswerCombinations.containsKey(f.getQuestion())) throw new Exception(
-					"There are already forbidden answer combinations defined for question \""
-							+ f.getQuestion().getName() + "\".");
+			return forbiddenAnswerCombination(f.getQuestion(), f.getAnswers());
+		}
 
-			Collection<Choice[]> answers = forbiddenAnswerCombinations.get(f.getQuestion());
+		public Builder forbiddenAnswerCombination(QuestionMC question, Choice[] choices) throws Exception {
+			Collection<Set<Choice>> answers = forbiddenAnswerCombinations.get(question);
 			if (answers == null) {
-				answers = new LinkedList<Choice[]>();
+				answers = new LinkedList<Set<Choice>>();
 			}
-			answers.add(f.getAnswers());
-			forbiddenAnswerCombinations.put(f.getQuestion(), answers);
+			answers.add(new HashSet<Choice>(Arrays.asList(choices)));
+			forbiddenAnswerCombinations.put(question, answers);
 			return this;
 		}
 
 		public Builder allowedAnswerCombination(FindingMC f) {
-			if (forbiddenAnswerCombinations.containsKey(f.getQuestion())) throw new IllegalArgumentException(
-					"There are already allowed answer combinations defined for question \""
-							+ f.getQuestion().getName() + "\".");
+			return allowedAnswerCombination(f.getQuestion(), f.getAnswers());
+		}
 
-			Collection<Choice[]> answers = allowedAnswerCombinations.get(f.getQuestion());
+		public Builder allowedAnswerCombination(QuestionMC question, Choice[] choices) {
+			Collection<Set<Choice>> answers = allowedAnswerCombinations.get(question);
 			if (answers == null) {
-				answers = new LinkedList<Choice[]>();
+				answers = new LinkedList<Set<Choice>>();
 			}
-			answers.add(f.getAnswers());
-			allowedAnswerCombinations.put(f.getQuestion(), answers);
+			answers.add(new HashSet<Choice>(Arrays.asList(choices)));
+			allowedAnswerCombinations.put(question, answers);
 			return this;
 		}
 
-		public InterviewBot build() throws Exception {
-			return new InterviewBot(this);
+		public InterviewBot build() {
+			// create strategy
+			DefaultBotStrategy strategy = new DefaultBotStrategy();
+			strategy.setAllowedAnswers(this.allowedAnswers);
+			strategy.setForbiddenAnswers(this.forbiddenAnswers);
+			strategy.setMaxChoiceCombinations(this.maxAnswerCombinations);
+			strategy.setMaxChoiceCombinationsForQuestion(this.maxAnswerCombinationsForQuestion);
+			strategy.setForbiddenChoiceCombinations(this.forbiddenAnswerCombinations);
+			strategy.setRequiredChoiceCombinations(this.allowedAnswerCombinations);
+			// create interview bot
+			InterviewBot bot = new InterviewBot(this);
+			bot.maxCases = this.maxCases;
+			bot.sequentialTestCasePraefix = this.sequentialTestCasePraefix;
+			bot.ratedTestCasePraefix = this.ratedTestCasePraefix;
+			bot.initFindings = this.initFindings;
+			bot.knowledge = this.knowledge;
+			bot.ratingStrategy = this.ratingStrategy;
+			bot.strategy = strategy;
+			return bot;
 		}
-
 	}
 
 	private InterviewBot() {
 	}
 
 	private InterviewBot(Builder builder) {
-		this();
-		maxCases = builder.maxCases;
-		sqtcasePraefix = builder.sqtcasePraefix;
-		rtcasePraefix = builder.rtcasePraefix;
-		initFindings = builder.initFindings;
-		knowledge = builder.knowledge;
-		ratingStrategy = builder.ratingStrategy;
-		knownAnswers = builder.knownAnswers;
-		forbiddenAnswers = builder.forbiddenAnswers;
-		maxAnswerCombinations = builder.maxAnswerCombinations;
-		maxAnswerCombinationsForQuestion = builder.maxAnswerCombinationsForQuestion;
-		forbiddenAnswerCombinations = builder.forbiddenAnswerCombinations;
-		allowedAnswerCombinations = builder.allowedAnswerCombinations;
 	}
 
 	private String dateToString() {

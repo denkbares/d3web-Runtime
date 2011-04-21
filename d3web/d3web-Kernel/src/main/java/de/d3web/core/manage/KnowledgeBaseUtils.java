@@ -27,9 +27,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -85,6 +87,36 @@ public final class KnowledgeBaseUtils {
 		Choice answer = new Choice(answerText);
 		question.addAlternative(answer, pos);
 		return answer;
+	}
+
+	/**
+	 * Collects all tree successors starting from the specified object. The
+	 * objects are collected in a depth first order. Duplicate objects (having
+	 * multiple parents within this sub-tree) will be contained only once at its
+	 * first occurrence. The specified terminologyObject is always the first
+	 * element of this list.
+	 * 
+	 * @created 20.04.2011
+	 * @param terminologyObject the root of the sub-tree to be specified
+	 * @return the depth-first search tree items
+	 */
+	public static List<TerminologyObject> getSuccessors(TerminologyObject terminologyObject) {
+		List<TerminologyObject> result = new LinkedList<TerminologyObject>();
+		Set<TerminologyObject> visited = new HashSet<TerminologyObject>();
+		collectSuccessors(terminologyObject, visited, result);
+		return Collections.unmodifiableList(result);
+	}
+
+	private static void collectSuccessors(TerminologyObject terminologyObject, Set<TerminologyObject> visited, List<TerminologyObject> result) {
+		// if not already visited, we add the object...
+		if (visited.contains(terminologyObject)) return;
+		visited.add(terminologyObject);
+		result.add(terminologyObject);
+
+		// ...and process its children recursively
+		for (TerminologyObject child : terminologyObject.getChildren()) {
+			collectSuccessors(child, visited, result);
+		}
 	}
 
 	/**

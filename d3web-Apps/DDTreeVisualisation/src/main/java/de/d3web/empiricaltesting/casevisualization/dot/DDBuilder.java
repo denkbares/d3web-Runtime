@@ -235,8 +235,7 @@ public final class DDBuilder implements CaseVisualizer {
 		}
 	}
 
-	@Deprecated
-	public String generateDOT(boolean cutQuestionnaireSiblingIndication) {
+	public String generateDOT() {
 		StringBuffer b = new StringBuffer(HEADER);
 		for (DDNode node : nodes.values()) {
 			createNode(b, node, computeOutgoing(node));
@@ -246,10 +245,6 @@ public final class DDBuilder implements CaseVisualizer {
 		}
 		b.append(FOOTER);
 		return b.toString();
-	}
-
-	public String generateDOT() {
-		return generateDOT(false);
 	}
 
 	private void write(OutputStream out) throws IOException {

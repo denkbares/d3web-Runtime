@@ -38,7 +38,7 @@ import de.d3web.core.knowledge.terminology.QuestionMC;
  */
 public class FindingMC {
 
-	private final Question question;
+	private final QuestionMC question;
 	private final Choice[] answers;
 
 	/**
@@ -47,7 +47,7 @@ public class FindingMC {
 	 * @param question Question
 	 * @param answers Answer[]
 	 */
-	public FindingMC(Question question, Choice[] answers) {
+	public FindingMC(QuestionMC question, Choice[] answers) {
 		this.question = question;
 		this.answers = Arrays.copyOf(answers, answers.length);
 	}
@@ -81,7 +81,9 @@ public class FindingMC {
 							}
 						}
 					}
-					return new FindingMC(q, answers.toArray(new Choice[answers.size()]));
+					return new FindingMC(
+							(QuestionMC) q,
+							answers.toArray(new Choice[answers.size()]));
 				}
 				else {
 					throw new Exception("Inappropriate question type.");
@@ -96,7 +98,7 @@ public class FindingMC {
 	 * 
 	 * @return Question the Question of this FindingMC
 	 */
-	public Question getQuestion() {
+	public QuestionMC getQuestion() {
 		return question;
 	}
 
