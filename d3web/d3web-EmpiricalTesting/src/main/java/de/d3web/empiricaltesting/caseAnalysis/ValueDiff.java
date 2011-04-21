@@ -40,7 +40,7 @@ public class ValueDiff {
 
 	public boolean differ() {
 		if (this.expected != null && this.derived != null) {
-			return expected.equals(derived);
+			return !expected.equals(derived);
 		}
 		else if (this.expected == null && this.derived == null) {
 			return false;
@@ -58,6 +58,6 @@ public class ValueDiff {
 		else {
 			return "eq val: " + this.expected;
 		}
-
 	}
+
 }
