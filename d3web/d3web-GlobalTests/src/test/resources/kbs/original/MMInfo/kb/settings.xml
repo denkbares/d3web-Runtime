@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <settings>
 <plugins>
-<plugin ID="KnowWE-Basic-Plugins" autodetect="true" necessary="false"/>
-<plugin ID="KnowWE-JSPWiki-Connector-jpf-plugin" autodetect="true" necessary="false"/>
-<plugin ID="KnowWE-Plugin-CI4KE" autodetect="true" necessary="false"/>
-<plugin ID="KnowWE-Plugin-Flowchart" autodetect="true" necessary="false"/>
-<plugin ID="KnowWE-Plugin-QuickInterview" autodetect="true" necessary="false"/>
-<plugin ID="KnowWE-Plugin-SemanticCore" autodetect="true" necessary="false"/>
-<plugin ID="KnowWE-Plugin-Table" autodetect="true" necessary="false"/>
-<plugin ID="KnowWE-Plugin-TestSuite" autodetect="true" necessary="false"/>
-<plugin ID="KnowWE-Plugin-d3web" autodetect="true" necessary="false"/>
-<plugin ID="KnowWE-Plugin-d3web-MarkupSet" autodetect="true" necessary="false"/>
-<plugin ID="KnowWE-Plugin-d3web-basic" autodetect="true" necessary="false"/>
-<plugin ID="KnowWEExtensionPoints" autodetect="true" necessary="false"/>
-<plugin ID="KnowledgePersistenceBasicExtensions" autodetect="true" necessary="true"/>
-<plugin ID="KnowledgePersistenceExtensionPoints" autodetect="true" necessary="true"/>
-<plugin ID="d3web-BasicProperties" autodetect="true" necessary="true"/>
-<plugin ID="d3web-CostBenefit" autodetect="true" necessary="false"/>
-<plugin ID="d3web-DiaFlux" autodetect="true" necessary="false"/>
-<plugin ID="d3web-Kernel-ExtensionPoints" autodetect="true" necessary="true"/>
-<plugin ID="d3web-Persistence-ImageQuestion" autodetect="true" necessary="false"/>
-<plugin ID="d3web-XCL" autodetect="true" necessary="false"/>
-<plugin ID="knowledgePersistenceShared" autodetect="true" necessary="false"/>
+<plugin ID="KnowWE-Basic-Plugins" autodetect="false" required="false"/>
+<plugin ID="KnowWE-JSPWiki-Connector-jpf-plugin" autodetect="false" required="false"/>
+<plugin ID="KnowWE-Plugin-CI4KE" autodetect="false" required="false"/>
+<plugin ID="KnowWE-Plugin-Flowchart" autodetect="false" required="false"/>
+<plugin ID="KnowWE-Plugin-QuickInterview" autodetect="false" required="false"/>
+<plugin ID="KnowWE-Plugin-SemanticCore" autodetect="false" required="false"/>
+<plugin ID="KnowWE-Plugin-Table" autodetect="false" required="false"/>
+<plugin ID="KnowWE-Plugin-TestSuite" autodetect="false" required="false"/>
+<plugin ID="KnowWE-Plugin-d3web" autodetect="false" required="false"/>
+<plugin ID="KnowWE-Plugin-d3web-MarkupSet" autodetect="false" required="false"/>
+<plugin ID="KnowWE-Plugin-d3web-basic" autodetect="false" required="false"/>
+<plugin ID="KnowWEExtensionPoints" autodetect="false" required="false"/>
+<plugin ID="KnowledgePersistenceBasicExtensions" autodetect="false" required="false"/>
+<plugin ID="KnowledgePersistenceExtensionPoints" autodetect="false" required="false"/>
+<plugin ID="d3web-BasicProperties" autodetect="false" required="false"/>
+<plugin ID="d3web-CostBenefit" autodetect="true" required="false"/>
+<plugin ID="d3web-DiaFlux" autodetect="false" required="false"/>
+<plugin ID="d3web-Kernel-ExtensionPoints" autodetect="false" required="false"/>
+<plugin ID="d3web-Persistence-ImageQuestion" autodetect="false" required="false"/>
+<plugin ID="d3web-XCL" autodetect="true" required="false"/>
+<plugin ID="knowledgePersistenceShared" autodetect="false" required="false"/>
 </plugins>
 <psmethods>
 <psEntry extensionID="PSMethodXCL" pluginID="d3web-XCL" priority="5.0" state="autodetect">
