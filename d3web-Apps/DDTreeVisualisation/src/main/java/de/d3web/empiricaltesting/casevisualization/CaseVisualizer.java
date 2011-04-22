@@ -20,7 +20,8 @@
 
 package de.d3web.empiricaltesting.casevisualization;
 
-import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 import de.d3web.empiricaltesting.SequentialTestCase;
@@ -28,10 +29,34 @@ import de.d3web.empiricaltesting.TestCase;
 
 public interface CaseVisualizer {
 
-	public void writeToFile(TestCase testsuite, String filepath);
+	/**
+	 * Creates a visualized DDTree from a TestCase suite and writes it to a
+	 * specified file.
+	 * 
+	 * @created 22.04.2011
+	 * @param testsuite the test suite to be visualized
+	 * @param filepath the file to write into
+	 */
+	public void writeToFile(TestCase testsuite, String filepath) throws IOException;
 
-	public void writeToFile(List<SequentialTestCase> cases, String filepath);
+	/**
+	 * Creates a visualized DDTree from a list of {@link SequentialTestCase}s
+	 * and writes it to a specified file.
+	 * 
+	 * @created 22.04.2011
+	 * @param cases the sequential test cases to be visualized
+	 * @param filepath the file to write into
+	 */
+	public void writeToFile(List<SequentialTestCase> cases, String filepath) throws IOException;
 
-	public ByteArrayOutputStream getByteArrayOutputStream(List<SequentialTestCase> cases);
+	/**
+	 * Creates a visualized DDTree from a list of {@link SequentialTestCase}s
+	 * and writes it to a specified stream.
+	 * 
+	 * @created 22.04.2011
+	 * @param cases the sequential test cases to be visualized
+	 * @param outStream the stream to write into
+	 */
+	public void writeToStream(List<SequentialTestCase> cases, OutputStream outStream) throws IOException;
 
 }

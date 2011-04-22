@@ -51,33 +51,41 @@ import de.d3web.plugin.PluginManager;
 public class PluginConfigPersistenceHandler implements KnowledgeReader,
 		KnowledgeWriter {
 
+	private static final String ELEMENT_SETTINGS = "settings";
+	private static final String ELEMENT_PLUGINS = "plugins";
+	private static final String ELEMENT_PLUGIN = "plugin";
+	private static final String ELEMENT_PSMETHODS = "psmethods";
+	private static final String ATTRIBUTE_ID = "ID";
+	private static final String ATTRIBUTE_AUTODETECT = "autodetect";
+	private static final String ATTRIBUTE_REQUIRED = "required";
+
 	@Override
 	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
 		Document doc = Util.streamToDocument(stream);
 		PluginConfig pc = new PluginConfig(kb);
 		Element root = doc.getDocumentElement();
-		if (root.getNodeName().equals("settings")) {
+		if (root.getNodeName().equals(ELEMENT_SETTINGS)) {
 			for (Element father : XMLUtil.getElementList(root.getChildNodes())) {
-				if (father.getNodeName().equals("plugins")) {
+				if (father.getNodeName().equals(ELEMENT_PLUGINS)) {
 					List<Element> children = XMLUtil.getElementList(father.getChildNodes());
 					for (Element e : children) {
-						boolean necessary = Boolean.parseBoolean(e.getAttribute("necesary"));
-						boolean autodetect = Boolean.parseBoolean(e.getAttribute("autodetect"));
-						String id = e.getAttribute("ID");
+						boolean required = Boolean.parseBoolean(e.getAttribute(ATTRIBUTE_REQUIRED));
+						boolean autodetect = Boolean.parseBoolean(e.getAttribute(ATTRIBUTE_AUTODETECT));
+						String id = e.getAttribute(ATTRIBUTE_ID);
 						Plugin plugin = PluginManager.getInstance().getPlugin(id);
 						if (plugin == null) {
-							if (necessary) {
-								throw new IOException("Necessary plugin " + id
+							if (required) {
+								throw new IOException("Required plugin " + id
 										+ " is not available");
 							}
 							else {
 								plugin = new DummyPlugin(id);
 							}
 						}
-						pc.addEntry(new PluginEntry(plugin, necessary, autodetect));
+						pc.addEntry(new PluginEntry(plugin, required, autodetect));
 					}
 				}
-				else if (father.getNodeName().equals("psmethods")) {
+				else if (father.getNodeName().equals(ELEMENT_PSMETHODS)) {
 					List<Element> children = XMLUtil.getElementList(father.getChildNodes());
 					for (Element e : children) {
 						kb.addPSConfig((PSConfig) PersistenceManager.getInstance().readFragment(
@@ -91,8 +99,8 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 	@Override
 	public void write(KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
 		Document doc = Util.createEmptyDocument();
-		Element root = doc.createElement("settings");
-		Element plugins = doc.createElement("plugins");
+		Element root = doc.createElement(ELEMENT_SETTINGS);
+		Element plugins = doc.createElement(ELEMENT_PLUGINS);
 		doc.appendChild(root);
 		root.appendChild(plugins);
 		listener.updateProgress(0, "Saving plugin configuration");
@@ -106,18 +114,19 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 			}
 		});
 		if (entries != null) {
-			int max = entries.size();
+			float max = entries.size();
 			for (PluginEntry conf : entries) {
-				Element pluginElement = doc.createElement("plugin");
+				Element pluginElement = doc.createElement(ELEMENT_PLUGIN);
 				Plugin plugin = conf.getPlugin();
-				pluginElement.setAttribute("ID", plugin.getPluginID());
-				pluginElement.setAttribute("necessary", "" + conf.isNecessary());
-				pluginElement.setAttribute("autodetect", "" + conf.isAutodetect());
+				pluginElement.setAttribute(ATTRIBUTE_ID, plugin.getPluginID());
+				pluginElement.setAttribute(ATTRIBUTE_REQUIRED, String.valueOf(conf.isRequired()));
+				pluginElement.setAttribute(ATTRIBUTE_AUTODETECT,
+						String.valueOf(conf.isAutodetect()));
 				plugins.appendChild(pluginElement);
 				listener.updateProgress(count++ / max, "Saving plugin configuration");
 			}
 		}
-		Element psmethods = doc.createElement("psmethods");
+		Element psmethods = doc.createElement(ELEMENT_PSMETHODS);
 		root.appendChild(psmethods);
 		LinkedList<PSConfig> psconfigs = new LinkedList<PSConfig>(kb.getPsConfigs());
 		Collections.sort(psconfigs);

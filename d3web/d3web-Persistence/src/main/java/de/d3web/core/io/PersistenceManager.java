@@ -372,17 +372,17 @@ public final class PersistenceManager extends FragmentManager {
 			PluginEntry pluginEntry = pc.getPluginEntry(plugin.getPluginID());
 			// when there is no entry, create one with auto-detect = true
 			if (pluginEntry == null) {
-				pluginEntry = new PluginEntry(plugin, false, true);
+				pluginEntry = new PluginEntry(plugin);
 				pc.addEntry(pluginEntry);
 			}
 			// when autodetect is true, refresh the necessary state
 			if (pluginEntry.isAutodetect()) {
 				Autodetect auto = pluginEntry.getAutodetect();
-				if (auto == null) {
-					pluginEntry.setNecessary(true);
-				}
-				else {
-					pluginEntry.setNecessary(auto.check(knowledgeBase));
+				// should not be null, because the pluginEntry return
+				// isAutodetect only if the plugin has autodetection
+				// capabilities
+				if (auto != null) {
+					pluginEntry.setRequired(auto.check(knowledgeBase));
 				}
 			}
 		}

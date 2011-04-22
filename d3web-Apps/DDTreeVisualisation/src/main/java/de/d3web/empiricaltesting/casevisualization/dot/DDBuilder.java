@@ -20,7 +20,6 @@
 
 package de.d3web.empiricaltesting.casevisualization.dot;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -88,16 +87,9 @@ public final class DDBuilder implements CaseVisualizer {
 	 * @param out OutputStream
 	 */
 	@Override
-	public ByteArrayOutputStream getByteArrayOutputStream(List<SequentialTestCase> cases) {
+	public void writeToStream(List<SequentialTestCase> cases, OutputStream outStream) throws IOException {
 		generateDDNet(cases);
-		ByteArrayOutputStream bstream = new ByteArrayOutputStream();
-		try {
-			write(bstream);
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		return bstream;
+		write(outStream);
 	}
 
 	/**
@@ -110,14 +102,14 @@ public final class DDBuilder implements CaseVisualizer {
 	 *        will be stored.
 	 */
 	@Override
-	public void writeToFile(List<SequentialTestCase> cases, String filepath) {
-		generateDDNet(cases);
+	public void writeToFile(List<SequentialTestCase> cases, String filepath) throws IOException {
 		filepath = checkDotFilePath(filepath, "");
+		FileOutputStream fileOutputStream = new FileOutputStream(filepath);
 		try {
-			write(new FileOutputStream(filepath));
+			writeToStream(cases, fileOutputStream);
 		}
-		catch (IOException e) {
-			e.printStackTrace();
+		finally {
+			fileOutputStream.close();
 		}
 	}
 
@@ -131,7 +123,7 @@ public final class DDBuilder implements CaseVisualizer {
 	 *        will be stored.
 	 */
 	@Override
-	public void writeToFile(TestCase testSuite, String dotFile) {
+	public void writeToFile(TestCase testSuite, String dotFile) throws IOException {
 
 		String partitionTree = config.getProperty("partitionTree");
 		if (partitionTree.equals("true")) {
@@ -146,28 +138,15 @@ public final class DDBuilder implements CaseVisualizer {
 						CaseUtils.getInstance().getPartiallyAnsweredSuite(answerOfFirstQuestion,
 								testSuite.getRepository());
 				if (partitioned.getRepository().size() > 0) {
-					generateDDNet(partitioned.getRepository());
 					String printFilePath =
 							checkDotFilePath(dotFile, answerOfFirstQuestion.getName());
-					System.out.println(printFilePath);
-					try {
-						write(new FileOutputStream(printFilePath));
-					}
-					catch (IOException e) {
-						e.printStackTrace();
-					}
+					writeToFile(partitioned.getRepository(), printFilePath);
 				}
 			}
 		}
 		else {
-			generateDDNet(testSuite.getRepository());
 			dotFile = checkDotFilePath(dotFile, "");
-			try {
-				write(new FileOutputStream(dotFile));
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
+			writeToFile(testSuite.getRepository(), dotFile);
 		}
 
 	}

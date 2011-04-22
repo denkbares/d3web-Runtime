@@ -24,12 +24,9 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 
@@ -141,7 +138,7 @@ public final class JUNGCaseVisualizer implements CaseVisualizer {
 	 *        will be stored.
 	 */
 	@Override
-	public void writeToFile(TestCase t, String filepath) {
+	public void writeToFile(TestCase t, String filepath) throws IOException {
 
 		String partitionTree = ConfigLoader.getInstance().getProperty("partitionTree");
 
@@ -181,28 +178,15 @@ public final class JUNGCaseVisualizer implements CaseVisualizer {
 	 *        will be stored.
 	 */
 	@Override
-	public void writeToFile(List<SequentialTestCase> cases, String filepath) {
+	public void writeToFile(List<SequentialTestCase> cases, String filepath) throws IOException {
 
-		checkFilePath(filepath, "");
-
+		filepath = checkFilePath(filepath, "");
+		FileOutputStream fileOutputStream = new FileOutputStream(filepath);
 		try {
-
-			ByteArrayOutputStream bstream = getByteArrayOutputStream(cases);
-			bstream.writeTo(new FileOutputStream(filepath));
-
+			writeToStream(cases, fileOutputStream);
 		}
-		catch (FileNotFoundException e) {
-			Logger.getLogger(this.getClass().getName())
-					.warning("Can not access the specified file (" + filepath +
-							"), probably because it is opened. " +
-							"Close the file and try again.");
-
-		}
-		catch (IOException e) {
-			Logger.getLogger(this.getClass().getName())
-					.warning(
-							"Error while writing to file. The file was not created. "
-									+ e.getMessage());
+		finally {
+			fileOutputStream.close();
 		}
 	}
 
@@ -213,20 +197,19 @@ public final class JUNGCaseVisualizer implements CaseVisualizer {
 	 * @param out OutputStream
 	 */
 	@Override
-	public ByteArrayOutputStream getByteArrayOutputStream(List<SequentialTestCase> cases) {
+	public void writeToStream(java.util.List<SequentialTestCase> cases, java.io.OutputStream outStream) throws IOException {
 
 		init(cases);
 
 		int w = vv.getGraphLayout().getSize().width;
 		int h = vv.getGraphLayout().getSize().height;
 
-		ByteArrayOutputStream bstream = new ByteArrayOutputStream();
 		Document document = new Document();
 
 		try {
 
 			PdfWriter writer =
-					PdfWriter.getInstance(document, bstream);
+					PdfWriter.getInstance(document, outStream);
 			document.setPageSize(new Rectangle(w, h));
 			document.open();
 
@@ -244,14 +227,9 @@ public final class JUNGCaseVisualizer implements CaseVisualizer {
 
 		}
 		catch (DocumentException e) {
-			Logger.getLogger(this.getClass().getName())
-					.warning(
-							"Error while writing to file. The file was not created. "
-									+ e.getMessage());
+			throw new IOException(
+					"Error while writing to file. The file was not created. ", e);
 		}
-
-		return bstream;
-
 	}
 
 	/**

@@ -26,15 +26,31 @@ package de.d3web.plugin;
 public class PluginEntry {
 
 	private Plugin plugin;
-	private boolean necessary;
+	private boolean required;
 	private boolean autodetect;
+	private Autodetect autodetectInstance = null;
 
-	public PluginEntry(Plugin plugin, boolean necessary,
-			boolean autodetect) {
-		super();
+	public PluginEntry(Plugin plugin, boolean required, boolean autodetect) {
 		this.plugin = plugin;
-		this.necessary = necessary;
+		this.required = required;
 		this.autodetect = autodetect;
+
+		// search for autodetect instance
+		for (Extension e : PluginManager.getInstance().getExtensions(
+				"d3web-Kernel-ExtensionPoints", Autodetect.EXTENSIONPOINT_ID)) {
+			if (e.getPluginID().equals(plugin.getPluginID())) {
+				autodetectInstance = (Autodetect) e.getSingleton();
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Creates a new Plugin entry for a specific plugin with default initialized
+	 * values for {@link #required} and {@link #autodetect}.
+	 */
+	public PluginEntry(Plugin plugin) {
+		this(plugin, false, true);
 	}
 
 	/**
@@ -45,39 +61,48 @@ public class PluginEntry {
 	}
 
 	/**
-	 * @return true, if the Extension is necessary for the kb, false otherwise
+	 * @return true, if the Extension is required to load the knowledge base,
+	 *         false otherwise.
 	 */
-	public boolean isNecessary() {
-		return necessary;
+	public boolean isRequired() {
+		return required;
 	}
 
 	/**
-	 * @return true, if the necessity of the Extension is detected automatically
-	 *         false, if it is set by the user
+	 * Returns true, if the necessity of the Extension should be detected
+	 * automatically, false otherwise. If the specific plugin has no autodetect
+	 * capabilities, this method always returns false, regardless what value is
+	 * set by the {@link #setAutodetect(boolean)} method.
+	 * 
 	 */
 	public boolean isAutodetect() {
-		return autodetect;
+		return autodetect && autodetectInstance != null;
 	}
 
 	/**
-	 * Returns the Autodetect singleton of this plugin
+	 * Returns the Autodetect singleton of this plugin. This is the instance to
+	 * detect if the plugin is required to load a specific knowledge base. If
+	 * the plugin has no autodetect capabilities, null is returned.
 	 * 
-	 * @return Autodetect
+	 * @return Autodetect the instance to detect if the plugin is required to
+	 *         load a specific knowledge base
+	 * @see Autodetect
 	 */
 	public Autodetect getAutodetect() {
-		Autodetect auto = null;
-		for (Extension e : PluginManager.getInstance().getExtensions(
-				"d3web-Kernel-ExtensionPoints", Autodetect.EXTENSIONPOINT_ID)) {
-			if (e.getPluginID().equals(plugin.getPluginID())) {
-				auto = (Autodetect) e.getSingleton();
-				break;
-			}
-		}
-		return auto;
+		return autodetectInstance;
 	}
 
-	public void setNecessary(boolean necessary) {
-		this.necessary = necessary;
+	/**
+	 * Sets the internal flag to signal id the plugin is required for loading
+	 * the knowledge base. This flag will be ignored if {@link #autodetect} is
+	 * <code>true</code> and the plugin has autodetect capabilities.
+	 * 
+	 * @created 22.04.2011
+	 * @param required if the plugin is required for loading the knowledge base
+	 * @see #getAutodetect()
+	 */
+	public void setRequired(boolean required) {
+		this.required = required;
 	}
 
 	public void setAutodetect(boolean autodetect) {

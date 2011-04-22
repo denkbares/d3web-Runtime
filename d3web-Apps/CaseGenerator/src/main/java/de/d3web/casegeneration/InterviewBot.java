@@ -34,6 +34,8 @@ import java.util.Set;
 
 import javax.activation.UnsupportedDataTypeException;
 
+import de.d3web.core.io.progress.DummyProgressListener;
+import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -114,11 +116,24 @@ public final class InterviewBot {
 	 *         question type not supported by the generator
 	 */
 	public List<SequentialTestCase> generate() throws UnsupportedDataTypeException {
+		return generate(new DummyProgressListener());
+	}
+
+	/**
+	 * Generates a collection of {@link SequentialTestCase} instances based on
+	 * the settings defined by the Builder.
+	 * 
+	 * @param progress the progress listener to observe the creation
+	 * @return a collection of {@link SequentialTestCase} instances
+	 * @throws UnsupportedDataTypeException when the knowledge bases uses a
+	 *         question type not supported by the generator
+	 */
+	public List<SequentialTestCase> generate(ProgressListener progress) throws UnsupportedDataTypeException {
 		init();
 
 		Session session = createCase(initFindings);
 		SequentialTestCase stc = createInitalCase(session);
-		traverse(stc, session);
+		traverse(stc, session, progress, 1.0);
 
 		return cases;
 	}

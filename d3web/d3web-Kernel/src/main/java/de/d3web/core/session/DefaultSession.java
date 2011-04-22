@@ -169,7 +169,7 @@ public class DefaultSession implements Session {
 			PluginEntry pluginEntry = pc.getPluginEntry(e.getPluginID());
 			if (pluginEntry == null) {
 				Plugin plugin = PluginManager.getInstance().getPlugin(e.getPluginID());
-				pluginEntry = new PluginEntry(plugin, false, true);
+				pluginEntry = new PluginEntry(plugin);
 				pc.addEntry(pluginEntry);
 			}
 			// get autodetect of the psMethod

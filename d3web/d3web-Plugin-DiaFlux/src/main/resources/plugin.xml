@@ -65,6 +65,16 @@
 		<parameter id="filename" value="kb/diaflux.xml" />
 	</extension>
 	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Autodetect"
+		id="DiaFluxAutoDetect">
+		<parameter id="class"
+			value="de.d3web.diaFlux.flow.DiaFluxAutoDetect" />
+		<parameter id="name" value="DiaFluxAutoDetect" />
+		<parameter id="description" value="Autodetect if DiaFlux is needed to load and execute a knowledge base" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="CallFlowActionHandler">
 		<parameter id="class"
