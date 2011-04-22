@@ -133,7 +133,7 @@ public final class InterviewBot {
 
 		Session session = createCase(initFindings);
 		SequentialTestCase stc = createInitalCase(session);
-		traverse(stc, session, progress, 1.0);
+		traverse(stc, session /* , progress, 1.0 */);
 
 		return cases;
 	}
