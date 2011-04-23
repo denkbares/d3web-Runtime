@@ -19,34 +19,47 @@
 package de.d3web.core.io.progress;
 
 /**
- * Combines multiple progresses in one ProgressListener
+ * Combines multiple progresses in one ProgressListener.
+ * <p>
+ * The progress is divided into a set of certain steps with a specified size
+ * each. If the progress is updated (by 0% to 100%) only the part of the current
+ * step is progressed.
+ * <p>
+ * Example: you created a CombinedProgressListener of total size 100. The you
+ * finished the first step with step size 20 and proceeding with the next step
+ * of size 30. Updating the progress to 0% will lead to a percentage of 20% in
+ * the decorated ProgressListener, while updating the progress to 100% will lead
+ * to a percentage of 50%.
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class CombinedProgressListener implements ProgressListener {
 
-	private int index = 0;
-	private long size;
-	private long actualsize = 0;
-	private ProgressListener father;
+	private long totalSize;
+	private long currentStepStart = 0;
+	private long currentStepSize = 0;
+	private ProgressListener decratedListener;
 
-	public CombinedProgressListener(long size, ProgressListener father) {
-		this.size = size;
-		this.father = father;
+	public CombinedProgressListener(long totalSize, ProgressListener decratedListener) {
+		this.totalSize = totalSize;
+		this.decratedListener = decratedListener;
 	}
 
 	@Override
 	public void updateProgress(float percent, String message) {
-		father.updateProgress((percent * actualsize + index) / size, message);
+		decratedListener.updateProgress(
+				(percent * currentStepSize + currentStepStart) / totalSize,
+				message);
 	}
 
 	/**
-	 * Indicates that the next element will be parsed
+	 * Indicates that the next step of this progress has begun. You need to
+	 * specify what amount of the total size this step will take.
 	 * 
-	 * @param size Size of the next element
+	 * @param size size of this step (part of the total size)
 	 */
 	public void next(long size) {
-		index += actualsize;
-		actualsize = size;
+		currentStepStart += currentStepSize;
+		currentStepSize = size;
 	}
 }
