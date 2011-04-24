@@ -29,6 +29,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -389,15 +390,24 @@ public final class DDBuilder implements CaseVisualizer {
 				getSolutionsInHashMap(node.getTestCase().getExpectedSolutions());
 		Map<Solution, RatedSolution> derSolutions =
 				getSolutionsInHashMap(node.getTestCase().getDerivedSolutions());
-		HashSet<Solution> solutions = new HashSet<Solution>();
 
-		solutions.addAll(expSolutions.keySet());
-		solutions.addAll(derSolutions.keySet());
+		// prepare list of all solutions
+		List<RatedSolution> allRatedSolutions = new LinkedList<RatedSolution>();
+		allRatedSolutions.addAll(node.getTestCase().getExpectedSolutions());
+		allRatedSolutions.addAll(node.getTestCase().getDerivedSolutions());
 
 		// Print Solutions
 		b.append(transformSolutionsHeader(nodeColor, intColSpan));
 
-		for (Solution d : solutions) {
+		// iterate over all rated solutions, but avoid duplicates
+		Set<Solution> printedSolutions = new HashSet<Solution>();
+		for (RatedSolution ratedSolution : allRatedSolutions) {
+			// check if solution is already done
+			Solution d = ratedSolution.getSolution();
+			if (printedSolutions.contains(d)) continue;
+			printedSolutions.add(d);
+
+			// otherwise print it
 			RatedSolution expected = expSolutions.get(d);
 			RatedSolution derived = derSolutions.get(d);
 
