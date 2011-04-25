@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
@@ -63,9 +62,7 @@ public class Node {
 		this.qContainer = qcon;
 		this.questions = new LinkedList<QuestionOC>();
 		collectQuestions(this.qContainer, this.questions);
-		for (KnowledgeSlice ks : qContainer.getKnowledgeStore().getKnowledge()) {
-			if (ks instanceof StateTransition) st = (StateTransition) ks;
-		}
+		this.st = qContainer.getKnowledgeStore().getKnowledge(StateTransition.KNOWLEDGE_KIND);
 	}
 
 	private void collectQuestions(TerminologyObject namedObject, List<QuestionOC> result) {
