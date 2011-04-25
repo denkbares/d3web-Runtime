@@ -237,7 +237,6 @@ public final class InterviewBot {
 		RatedTestCase ratedCase = new RatedTestCase();
 		ratedCase.addFindings(findings);
 		ratedCase.addExpected(solutions);
-		ratedCase.inverseSortSolutions();
 
 		String namePraefix = sqCase.getName() + "_";
 		String nameSuffix = ratedTestCasePraefix + sqCase.getCases().size();
@@ -256,7 +255,6 @@ public final class InterviewBot {
 			RatedTestCase ratedTestCase = new RatedTestCase();
 			ratedTestCase.addFindings(initFindings);
 			ratedTestCase.addExpected(toRatedSolutions(session));
-			ratedTestCase.inverseSortSolutions();
 			ratedTestCase.setName(ratedTestCasePraefix + "0");
 			stc.add(ratedTestCase);
 		}
@@ -276,15 +274,14 @@ public final class InterviewBot {
 	}
 
 	private List<RatedSolution> toRatedSolutions(Session session) {
-		List<RatedSolution> ratedSolutions = new LinkedList<RatedSolution>();
-		for (Solution solution : session.getKnowledgeBase().getManager().getSolutions()) {
+		Solution[] solutions = strategy.getExpectedSolutions(session);
+		List<RatedSolution> result = new LinkedList<RatedSolution>();
+		for (Solution solution : solutions) {
 			Rating rating = ratingStrategy.getRatingFor(solution, session);
-			if (rating.isProblemSolvingRelevant()) {
-				RatedSolution ratedSolution = new RatedSolution(solution, rating);
-				ratedSolutions.add(ratedSolution);
-			}
+			RatedSolution ratedSolution = new RatedSolution(solution, rating);
+			result.add(ratedSolution);
 		}
-		return ratedSolutions;
+		return result;
 	}
 
 	private Session createCase(SequentialTestCase sqCase) {
@@ -325,7 +322,7 @@ public final class InterviewBot {
 		private String sequentialTestCasePraefix = "STC";
 		private String ratedTestCasePraefix = "RTC";
 		private List<Finding> initFindings = new LinkedList<Finding>();
-		private RatingStrategy ratingStrategy = new StateRatingStrategy();
+		private RatingStrategy ratingStrategy = new DefaultRatingStrategy();
 		private final Map<Question, List<Value>> allowedAnswers = new HashMap<Question, List<Value>>();
 		private final Map<Question, List<Value>> forbiddenAnswers = new HashMap<Question, List<Value>>();
 		private int maxAnswerCombinations = 0;

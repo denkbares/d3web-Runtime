@@ -40,8 +40,8 @@ import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
-import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
@@ -54,7 +54,7 @@ import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
 
 public final class PSMethodXCL implements PSMethod, StrategicSupport,
-		SessionObjectSource {
+		SessionObjectSource<PSMethodXCL.XCLCaseObject> {
 
 	public static final String PLUGIN_ID = "d3web-XCL";
 	public static final String EXTENSION_ID = "PSMethodXCL";
@@ -281,19 +281,15 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 		return true;
 	}
 
-	private static class XCLCaseObject extends SessionObject {
+	public static class XCLCaseObject implements SessionObject {
 
 		private int totalAnsweredCount = 0;
 		private double totalAnsweredAbnormality = 0.0;
-
-		private XCLCaseObject(PSMethodXCL methodXCL) {
-			super(methodXCL);
-		}
 	}
 
 	@Override
-	public SessionObject createSessionObject(Session session) {
-		return new XCLCaseObject(this);
+	public XCLCaseObject createSessionObject(Session session) {
+		return new XCLCaseObject();
 	}
 
 	public int getAnsweredQuestionsCount(Session session) {

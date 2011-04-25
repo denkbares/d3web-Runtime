@@ -29,7 +29,6 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.blackboard.CaseRuleComplex;
-import de.d3web.core.session.blackboard.SessionObject;
 
 /**
  * Abstract super class for all rules. <BR>
@@ -39,7 +38,7 @@ import de.d3web.core.session.blackboard.SessionObject;
  * 
  * @author Michael Wolber, joba
  */
-public class Rule implements SessionObjectSource {
+public class Rule implements SessionObjectSource<CaseRuleComplex> {
 
 	/**
 	 * Flag indicates, if the rule is activated.
@@ -233,8 +232,8 @@ public class Rule implements SessionObjectSource {
 	}
 
 	@Override
-	public SessionObject createSessionObject(Session session) {
-		return new CaseRuleComplex(this);
+	public CaseRuleComplex createSessionObject(Session session) {
+		return new CaseRuleComplex();
 	}
 
 	/**

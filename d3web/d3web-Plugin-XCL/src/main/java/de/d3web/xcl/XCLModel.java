@@ -36,12 +36,13 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.xcl.XCLModel.XCLCaseModel;
 import de.d3web.xcl.inference.PSMethodXCL;
 
-public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, SessionObjectSource {
+public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, SessionObjectSource<XCLCaseModel> {
 
 	public final static KnowledgeKind<XCLModel> KNOWLEDGE_KIND = new KnowledgeKind<XCLModel>(
 			"XCLModel",
@@ -394,19 +395,18 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 		return this.solution.getName().compareTo(o.solution.getName());
 	}
 
-	private static class XCLCaseModel extends SessionObject {
+	public static class XCLCaseModel implements SessionObject {
 
 		private final InferenceTrace inferenceTrace;
 
 		private XCLCaseModel(XCLModel model, Session session) {
-			super(model);
 			ScoreAlgorithm scoreAlgorithm = model.getPSMethodXCL(session).getScoreAlgorithm();
 			this.inferenceTrace = scoreAlgorithm.createInferenceTrace(model);
 		}
 	}
 
 	@Override
-	public SessionObject createSessionObject(Session session) {
+	public XCLCaseModel createSessionObject(Session session) {
 		return new XCLCaseModel(this, session);
 	}
 

@@ -28,7 +28,6 @@ import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.SessionObject;
@@ -40,7 +39,7 @@ import de.d3web.costbenefit.model.Target;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class CostBenefitCaseObject extends SessionObject {
+public class CostBenefitCaseObject implements SessionObject {
 
 	private QContainer[] currentSequence;
 	private SearchModel searchModel;
@@ -50,8 +49,7 @@ public class CostBenefitCaseObject extends SessionObject {
 	private Set<Target> discriminatingTargets = new HashSet<Target>();
 	private final Session session;
 
-	public CostBenefitCaseObject(SessionObjectSource theSourceObject, Session session) {
-		super(theSourceObject);
+	public CostBenefitCaseObject(Session session) {
 		this.session = session;
 	}
 

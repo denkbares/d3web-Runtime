@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.LinkedList;
 
 import de.d3web.core.inference.PropagationManager;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
@@ -77,6 +78,25 @@ public class FactSet {
 	 */
 	public Collection<Fact> getInterviewFacts() {
 		return Collections.unmodifiableCollection(this.interviewFacts);
+	}
+
+	/**
+	 * Removes all facts for the specified terminology object.
+	 * 
+	 * @created 25.04.2011
+	 * @param object the terminology object to remove the facts for
+	 */
+	public void removeFacts(TerminologyObject object) {
+		for (Fact fact : valueFacts) {
+			if (fact.getTerminologyObject() == object) {
+				valueFacts.remove(fact);
+			}
+		}
+		for (Fact fact : interviewFacts) {
+			if (fact.getTerminologyObject() == object) {
+				interviewFacts.remove(fact);
+			}
+		}
 	}
 
 	/**

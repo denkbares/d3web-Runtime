@@ -28,7 +28,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
 
@@ -38,7 +37,7 @@ import de.d3web.core.session.blackboard.SessionObject;
  * 
  *         Created on: 04.11.2009
  */
-public class DiaFluxCaseObject extends SessionObject {
+public class DiaFluxCaseObject implements SessionObject {
 
 	private final List<FlowRun> runs;
 	private final Map<SnapshotNode, Long> latestSnapshotTime = new HashMap<SnapshotNode, Long>();
@@ -48,8 +47,7 @@ public class DiaFluxCaseObject extends SessionObject {
 	private final Collection<Node> tracedActiveNodes = new HashSet<Node>();
 	private final Collection<Edge> tracedActiveEdges = new HashSet<Edge>();
 
-	public DiaFluxCaseObject(SessionObjectSource theSourceObject) {
-		super(theSourceObject);
+	public DiaFluxCaseObject() {
 		this.runs = new ArrayList<FlowRun>();
 	}
 

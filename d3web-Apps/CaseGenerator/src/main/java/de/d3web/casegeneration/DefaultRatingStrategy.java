@@ -18,12 +18,27 @@
  * site: http://www.fsf.org.
  */
 
-package de.d3web.core.session.blackboard;
+package de.d3web.casegeneration;
 
-/**
- * Superclass for any dynamic, session specific object.
- * 
- * @author volker.belli, joba
- */
-public interface SessionObject {
+import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.session.Session;
+import de.d3web.empiricaltesting.Rating;
+import de.d3web.empiricaltesting.ScoreRating;
+import de.d3web.empiricaltesting.StateRating;
+import de.d3web.scoring.HeuristicRating;
+
+public class DefaultRatingStrategy implements RatingStrategy {
+
+	@Override
+	public Rating getRatingFor(Solution solution, Session session) {
+		de.d3web.core.knowledge.terminology.Rating state =
+				session.getBlackboard().getRating(solution);
+		if (state instanceof HeuristicRating) {
+			HeuristicRating hr = (HeuristicRating) state;
+			return new ScoreRating(hr.getScore());
+		}
+		else {
+			return new StateRating(state);
+		}
+	}
 }

@@ -25,8 +25,8 @@ import java.util.List;
 
 import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.knowledge.terminology.QContainer;
-import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costbenefit.model.SearchModel;
@@ -42,14 +42,14 @@ import de.d3web.costbenefit.model.Target;
  * @author volker_belli
  * @created 07.03.2011
  */
-public class ExpertMode extends SessionObject {
+public class ExpertMode implements SessionObject {
 
 	private final Session session;
 
-	private final static SessionObjectSource EXPERT_MODE_SOURCE = new SessionObjectSource() {
+	private final static SessionObjectSource<ExpertMode> EXPERT_MODE_SOURCE = new SessionObjectSource<ExpertMode>() {
 
 		@Override
-		public SessionObject createSessionObject(Session session) {
+		public ExpertMode createSessionObject(Session session) {
 			// check if it is allowed to create such an object
 			if (getPSMethodCostBenefit(session) == null) {
 				throw new IllegalStateException(
@@ -69,7 +69,6 @@ public class ExpertMode extends SessionObject {
 	};
 
 	private ExpertMode(Session session) {
-		super(EXPERT_MODE_SOURCE);
 		this.session = session;
 	}
 

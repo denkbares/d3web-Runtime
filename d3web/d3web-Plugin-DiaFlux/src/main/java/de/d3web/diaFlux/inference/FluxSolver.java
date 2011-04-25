@@ -35,10 +35,9 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.blackboard.Fact;
-import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.diaFlux.flow.ComposedNode;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
 import de.d3web.diaFlux.flow.Edge;
@@ -56,7 +55,7 @@ import de.d3web.diaFlux.flow.StartNode;
  * @created: 10.09.2009
  * 
  */
-public class FluxSolver implements PostHookablePSMethod, SessionObjectSource {
+public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<DiaFluxCaseObject> {
 
 	public final static KnowledgeKind<EdgeMap> DEPENDANT_EDGES = new KnowledgeKind<EdgeMap>(
 			"DEPENDANT_EDGES", EdgeMap.class);
@@ -235,8 +234,8 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource {
 	}
 
 	@Override
-	public SessionObject createSessionObject(Session session) {
-		return new DiaFluxCaseObject(this);
+	public DiaFluxCaseObject createSessionObject(Session session) {
+		return new DiaFluxCaseObject();
 	}
 
 	/**

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,11 +39,15 @@ import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
+import de.d3web.core.knowledge.terminology.Rating;
+import de.d3web.core.knowledge.terminology.Rating.State;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
@@ -105,6 +110,37 @@ public class DefaultBotStrategy implements BotStrategy {
 			result[index++] = factSet;
 		}
 		return result;
+	}
+
+	@Override
+	public Solution[] getExpectedSolutions(Session session) {
+		final Blackboard blackboard = session.getBlackboard();
+		// collect all relevant solutions
+		List<Solution> result = new LinkedList<Solution>();
+		result.addAll(blackboard.getSolutions(State.ESTABLISHED));
+		result.addAll(blackboard.getSolutions(State.SUGGESTED));
+		result.addAll(blackboard.getSolutions(State.EXCLUDED));
+		// create the sorted array (first by rating, then by name)
+		Solution[] array = result.toArray(new Solution[result.size()]);
+		Arrays.sort(array, new Comparator<Solution>() {
+
+			@Override
+			public int compare(Solution o1, Solution o2) {
+				Rating r1 = blackboard.getRating(o1);
+				Rating r2 = blackboard.getRating(o2);
+				int result = r1.compareTo(r2);
+				if (result != 0) {
+					// if the ratings are different
+					// sort it in reverse order
+					return -result;
+				}
+				else {
+					// otherwise sort by name in natural order
+					return o1.getName().compareTo(o2.getName());
+				}
+			}
+		});
+		return array;
 	}
 
 	private Question searchFirstActiveQuestion(Session session, InterviewObject[] interviewItems) {

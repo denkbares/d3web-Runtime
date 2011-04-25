@@ -31,7 +31,7 @@ import de.d3web.core.inference.Rule;
  * @author Christian Betz, joba
  * @see Rule
  */
-public class CaseRuleComplex extends SessionObject {
+public class CaseRuleComplex implements SessionObject {
 
 	private boolean fired = false;
 
@@ -39,8 +39,7 @@ public class CaseRuleComplex extends SessionObject {
 	 * Creates a new CaseRuleComlplex. The dynamic store for the given
 	 * RuleComplex.
 	 */
-	public CaseRuleComplex(Rule rule) {
-		super(rule);
+	public CaseRuleComplex() {
 	}
 
 	/**

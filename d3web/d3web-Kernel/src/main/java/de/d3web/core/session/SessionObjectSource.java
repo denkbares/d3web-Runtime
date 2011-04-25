@@ -26,7 +26,7 @@ import de.d3web.core.session.blackboard.SessionObject;
  * States the ability that the implementing object are able to create an session
  * object to store session depending data into.
  */
-public interface SessionObjectSource {
+public interface SessionObjectSource<T extends SessionObject> {
 
 	/**
 	 * Create a session object for itself, to store all dynamic values (session
@@ -40,5 +40,5 @@ public interface SessionObjectSource {
 	 * 
 	 * @return the created session object for this instance
 	 */
-	public SessionObject createSessionObject(Session session);
+	public T createSessionObject(Session session);
 }

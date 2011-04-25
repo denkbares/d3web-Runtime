@@ -19,6 +19,7 @@
 package de.d3web.casegeneration;
 
 import de.d3web.core.knowledge.InterviewObject;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 
 /**
@@ -71,4 +72,22 @@ public interface BotStrategy {
 	 * @return
 	 */
 	FactSet[] getNextSequenceAnswers(Session session, InterviewObject[] interviewItems);
+
+	/**
+	 * Returns a list of solutions that will be considered as expected solutions
+	 * in the current sequence step.
+	 * <p>
+	 * When this method is called, the facts previously accessed by
+	 * {@link #getNextSequenceAnswers(Session, InterviewObject[])} are already
+	 * set in this session, thus the strategy can rely on the results of these
+	 * sets.
+	 * <p>
+	 * Please note that this strategy will also be called at the very beginning
+	 * to derive expected solutions after initializing the seed of the tree.
+	 * 
+	 * @created 24.04.2011
+	 * @param session the current session
+	 * @return the list of expected solutions
+	 */
+	Solution[] getExpectedSolutions(Session session);
 }

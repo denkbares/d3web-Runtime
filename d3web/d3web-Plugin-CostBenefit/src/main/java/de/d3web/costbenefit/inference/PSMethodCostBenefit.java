@@ -48,7 +48,6 @@ import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.Facts;
-import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costbenefit.ids.IterativeDeepeningSearchAlgorithm;
@@ -65,7 +64,7 @@ import de.d3web.costbenefit.session.interviewmanager.CostBenefitAgendaSortingStr
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjectSource {
+public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjectSource<CostBenefitCaseObject> {
 
 	private TargetFunction targetFunction;
 	private CostFunction costFunction;
@@ -488,8 +487,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	}
 
 	@Override
-	public SessionObject createSessionObject(Session session) {
-		return new CostBenefitCaseObject(this, session);
+	public CostBenefitCaseObject createSessionObject(Session session) {
+		return new CostBenefitCaseObject(session);
 	}
 
 	@Override

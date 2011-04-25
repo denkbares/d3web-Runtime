@@ -106,12 +106,12 @@ public interface Session extends SessionHeader {
 
 	/**
 	 * Returns the {@link SessionObject} (dynamically created flyweight object)
-	 * corresponding to the specified {@link SessionObjectSource} instance (often
-	 * this is a {@link Question} or a {@link Solution}.
+	 * corresponding to the specified {@link SessionObjectSource} instance
+	 * (often this is a {@link Question} or a {@link Solution}.
 	 * 
 	 * @param item the specified object for which the corresponding session
 	 *        object should be returned
 	 * @return the corresponding {@link SessionObject} of the specified object
 	 */
-	SessionObject getSessionObject(SessionObjectSource item);
+	<T extends SessionObject> T getSessionObject(SessionObjectSource<T> item);
 }
