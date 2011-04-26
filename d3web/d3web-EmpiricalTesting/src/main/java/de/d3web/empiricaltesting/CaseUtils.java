@@ -33,8 +33,6 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
-import de.d3web.empiricaltesting.SequentialTestCase;
-import de.d3web.empiricaltesting.TestCase;
 
 public final class CaseUtils {
 
@@ -93,7 +91,7 @@ public final class CaseUtils {
 	}
 
 	public String removeBadChars(String text) {
-		String badChars = ": =()[]{}.?/\\-";
+		String badChars = ": =()[]{},.?/\\-";
 		for (int i = 0; i < badChars.length(); i++) {
 			text = text.replace(badChars.charAt(i), '_');
 			text = text.replace("_", "");
@@ -114,6 +112,8 @@ public final class CaseUtils {
 		l = l.replaceAll("\\/", "_");
 		l = l.replaceAll(",", "_");
 		l = l.replaceAll("\\¡", "");
+		l = l.replaceAll("\\[", "");
+		l = l.replaceAll("\\]", "");
 		l = l.replaceAll(":", "");
 		return l;
 	}
