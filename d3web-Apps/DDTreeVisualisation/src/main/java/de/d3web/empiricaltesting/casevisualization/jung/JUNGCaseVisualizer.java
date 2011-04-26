@@ -24,6 +24,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -134,38 +135,34 @@ public final class JUNGCaseVisualizer implements CaseVisualizer {
 	 * 
 	 * @param testsuite TestSuite which's cases will be visualized by this
 	 *        class.
-	 * @param filepath String which specifies where the created <b>PDF file</b>
-	 *        will be stored.
+	 * @param file String which specifies where the created <b>PDF file</b> will
+	 *        be stored.
 	 */
 	@Override
-	public void writeToFile(TestCase t, String filepath) throws IOException {
+	public void writeToFile(TestCase testSuite, File file) throws IOException {
+		writeToFile(testSuite, file.getPath());
+	}
 
+	private void writeToFile(TestCase testSuite, String filepath) throws IOException {
 		String partitionTree = ConfigLoader.getInstance().getProperty("partitionTree");
-
 		if (partitionTree.equals("true")) {
-
-			QuestionChoice firstQuestion = (QuestionChoice) t.getRepository().get(0).
+			QuestionChoice firstQuestion = (QuestionChoice) testSuite.getRepository().get(0).
 					getCases().get(0).getFindings().get(0).getQuestion();
 			List<Choice> firstAnswers = firstQuestion.getAllAlternatives();
 
 			for (Choice answerOfFirstQuestion : firstAnswers) {
-
 				TestCase partitioned =
 						CaseUtils.getInstance().getPartiallyAnsweredSuite(answerOfFirstQuestion,
-								t.getRepository());
-
+								testSuite.getRepository());
 				if (partitioned.getRepository().size() > 0) {
 					writeToFile(partitioned.getRepository(),
 							checkFilePath(filepath, answerOfFirstQuestion.toString()));
 				}
 			}
-
 		}
 		else {
-
-			writeToFile(t.getRepository(), checkFilePath(filepath, ""));
+			writeToFile(testSuite.getRepository(), checkFilePath(filepath, ""));
 		}
-
 	}
 
 	/**
@@ -174,12 +171,15 @@ public final class JUNGCaseVisualizer implements CaseVisualizer {
 	 * 
 	 * @param cases List<SequentialTestCase> which's elements will be visualized
 	 *        by this class.
-	 * @param filepath String which specifies where the created <b>PDF file</b>
-	 *        will be stored.
+	 * @param file String which specifies where the created <b>PDF file</b> will
+	 *        be stored.
 	 */
 	@Override
-	public void writeToFile(List<SequentialTestCase> cases, String filepath) throws IOException {
+	public void writeToFile(List<SequentialTestCase> cases, File file) throws IOException {
+		writeToFile(cases, file.getPath());
+	}
 
+	private void writeToFile(List<SequentialTestCase> cases, String filepath) throws IOException {
 		filepath = checkFilePath(filepath, "");
 		FileOutputStream fileOutputStream = new FileOutputStream(filepath);
 		try {

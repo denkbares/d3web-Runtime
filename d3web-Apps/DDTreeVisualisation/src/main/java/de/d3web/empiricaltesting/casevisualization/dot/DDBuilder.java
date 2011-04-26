@@ -20,6 +20,7 @@
 
 package de.d3web.empiricaltesting.casevisualization.dot;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -99,11 +100,15 @@ public final class DDBuilder implements CaseVisualizer {
 	 * 
 	 * @param cases List<SequentialTestCase> which's elements will be visualized
 	 *        by this class.
-	 * @param filepath String which specifies where the created <b>DOT file</b>
-	 *        will be stored.
+	 * @param file String which specifies where the created <b>DOT file</b> will
+	 *        be stored.
 	 */
 	@Override
-	public void writeToFile(List<SequentialTestCase> cases, String filepath) throws IOException {
+	public void writeToFile(List<SequentialTestCase> cases, File file) throws IOException {
+		writeToFile(cases, file.getPath());
+	}
+
+	private void writeToFile(List<SequentialTestCase> cases, String filepath) throws IOException {
 		filepath = checkDotFilePath(filepath, "");
 		FileOutputStream fileOutputStream = new FileOutputStream(filepath);
 		try {
@@ -120,12 +125,15 @@ public final class DDBuilder implements CaseVisualizer {
 	 * 
 	 * @param testSuite TestSuite which's cases will be visualized by this
 	 *        class.
-	 * @param filepath String which specifies where the created <b>DOT file</b>
-	 *        will be stored.
+	 * @param file String which specifies where the created <b>DOT file</b> will
+	 *        be stored.
 	 */
 	@Override
-	public void writeToFile(TestCase testSuite, String dotFile) throws IOException {
+	public void writeToFile(TestCase testSuite, File dotFile) throws IOException {
+		writeToFile(testSuite, dotFile.getPath());
+	}
 
+	private void writeToFile(TestCase testSuite, String dotFilePath) throws IOException {
 		String partitionTree = config.getProperty("partitionTree");
 		if (partitionTree.equals("true")) {
 
@@ -140,14 +148,14 @@ public final class DDBuilder implements CaseVisualizer {
 								testSuite.getRepository());
 				if (partitioned.getRepository().size() > 0) {
 					String printFilePath =
-							checkDotFilePath(dotFile, answerOfFirstQuestion.getName());
+							checkDotFilePath(dotFilePath, answerOfFirstQuestion.getName());
 					writeToFile(partitioned.getRepository(), printFilePath);
 				}
 			}
 		}
 		else {
-			dotFile = checkDotFilePath(dotFile, "");
-			writeToFile(testSuite.getRepository(), dotFile);
+			dotFilePath = checkDotFilePath(dotFilePath, "");
+			writeToFile(testSuite.getRepository(), dotFilePath);
 		}
 
 	}

@@ -20,6 +20,7 @@
 
 package de.d3web.empiricaltesting.casevisualization;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
@@ -35,9 +36,9 @@ public interface CaseVisualizer {
 	 * 
 	 * @created 22.04.2011
 	 * @param testsuite the test suite to be visualized
-	 * @param filepath the file to write into
+	 * @param file the file to write into
 	 */
-	public void writeToFile(TestCase testsuite, String filepath) throws IOException;
+	public void writeToFile(TestCase testsuite, File file) throws IOException;
 
 	/**
 	 * Creates a visualized DDTree from a list of {@link SequentialTestCase}s
@@ -45,9 +46,9 @@ public interface CaseVisualizer {
 	 * 
 	 * @created 22.04.2011
 	 * @param cases the sequential test cases to be visualized
-	 * @param filepath the file to write into
+	 * @param file the file to write into
 	 */
-	public void writeToFile(List<SequentialTestCase> cases, String filepath) throws IOException;
+	public void writeToFile(List<SequentialTestCase> cases, File file) throws IOException;
 
 	/**
 	 * Creates a visualized DDTree from a list of {@link SequentialTestCase}s
