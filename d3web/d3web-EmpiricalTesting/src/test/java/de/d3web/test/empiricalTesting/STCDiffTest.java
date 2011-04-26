@@ -31,9 +31,6 @@ import org.junit.Test;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.knowledge.terminology.Rating;
-import de.d3web.core.knowledge.terminology.Rating.State;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.NumValue;
@@ -51,25 +48,18 @@ import de.d3web.empiricaltesting.caseAnalysis.STCDiff;
  */
 public class STCDiffTest {
 
-	private Solution solution;
 	private KnowledgeBase knowledge;
 	private QuestionNum question;
 	private Value q_expected, q_derived;
-	private Rating s_expected, s_derived;
 	private RTCDiff rtcDiff;
 	private RatedTestCase rtc;
 
 	@Before
 	public void setUp() {
 		knowledge = KnowledgeBaseUtils.createKnowledgeBase();
-
-		solution = new Solution(knowledge, "solution_name");
 		question = new QuestionNum(knowledge, "questionnum_name");
 		q_expected = new NumValue(1.0);
 		q_derived = new NumValue(2.0);
-
-		s_expected = new Rating(State.ESTABLISHED);
-		s_derived = new Rating(State.SUGGESTED);
 
 		rtc = new RatedTestCase();
 		rtc.add(new Finding(question, q_expected));

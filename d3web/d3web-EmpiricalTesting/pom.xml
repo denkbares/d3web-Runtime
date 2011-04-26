@@ -20,9 +20,6 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<argLine>-Xmx1024M</argLine>
-					<includes>
-						<include>**/KBTester.java</include>
-					</includes>
 				</configuration>
 			</plugin>
 			<plugin>
