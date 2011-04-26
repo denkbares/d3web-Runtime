@@ -27,7 +27,7 @@ import de.d3web.core.knowledge.Indication.State;
  * ActionIndication represents the general indication of a QASet. Creation date:
  * (21.02.2002 13:14:06)
  * 
- * @author Christian Betz
+ * @author Christian Betz, joba
  */
 public class ActionIndication extends ActionNextQASet {
 

@@ -110,8 +110,7 @@ public abstract class ActionNextQASet extends PSAction {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "@"
-				+ Integer.toHexString(hashCode()) + getQASets();
+		return "Indicate: " + getQASets();
 	}
 
 	@Override
