@@ -26,8 +26,8 @@ import java.util.logging.Logger;
 
 import org.java.plugin.PluginLifecycleException;
 import org.java.plugin.registry.Extension;
-import org.java.plugin.registry.PluginDescriptor;
 import org.java.plugin.registry.Extension.Parameter;
+import org.java.plugin.registry.PluginDescriptor;
 
 /**
  * The Implementation of the Extension-Interface for the java plugin framework
@@ -38,8 +38,8 @@ import org.java.plugin.registry.Extension.Parameter;
 public class JPFExtension implements de.d3web.plugin.Extension {
 
 	private Object singleton;
-	private Extension extension;
-	private org.java.plugin.PluginManager manager;
+	private final Extension extension;
+	private final org.java.plugin.PluginManager manager;
 
 	public JPFExtension(Extension extension, org.java.plugin.PluginManager manager) {
 		this.manager = manager;
@@ -128,6 +128,11 @@ public class JPFExtension implements de.d3web.plugin.Extension {
 	@Override
 	public String getID() {
 		return extension.getId();
+	}
+
+	@Override
+	public String toString() {
+		return getID();
 	}
 
 	@Override
