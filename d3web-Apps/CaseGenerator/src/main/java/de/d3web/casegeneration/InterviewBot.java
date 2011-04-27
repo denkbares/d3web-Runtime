@@ -48,7 +48,6 @@ import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
 import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;
@@ -96,6 +95,8 @@ public final class InterviewBot {
 	private List<Finding> initFindings;
 	// the knowledge used to generate the cases
 	private KnowledgeBase knowledge;
+	// the init session to be used for generating
+	private Session initSession;
 	// the method of how to determine the rating of a solution
 	private RatingStrategy ratingStrategy;
 
@@ -178,9 +179,9 @@ public final class InterviewBot {
 		 */
 		public void generate() {
 			progressListener.updateProgress(0f, "preparing generation");
-			Session session = createCase(initFindings);
-			SequentialTestCase stc = createInitalCase(session);
-			traverse(session, stc, 0f, 1f);
+			initializeInitSession();
+			SequentialTestCase stc = createInitalCase(initSession);
+			traverse(initSession, stc, 0f, 1f);
 		}
 
 		private void updateProgress(float percent) {
@@ -294,13 +295,15 @@ public final class InterviewBot {
 		return session;
 	}
 
-	private Session createCase(List<Finding> findings) {
-		Session session = SessionFactory.createSession(knowledge);
-		session.getInterview().setFormStrategy(new NextUnansweredQuestionFormStrategy());
-		for (Finding finding : findings) {
-			setCaseValue(session, finding.getQuestion(), finding.getValue());
+	private void initializeInitSession() {
+		if (initSession == null) {
+			initSession = SessionFactory.createSession(knowledge);
+			// initSession.getInterview().setFormStrategy(new
+			// NextUnansweredQuestionFormStrategy());
 		}
-		return session;
+		for (Finding finding : initFindings) {
+			setCaseValue(initSession, finding.getQuestion(), finding.getValue());
+		}
 	}
 
 	private void setCaseValue(Session session, Question q, Value v) {
@@ -330,6 +333,7 @@ public final class InterviewBot {
 		private final Map<QuestionMC, Collection<Set<Choice>>> forbiddenAnswerCombinations = new HashMap<QuestionMC, Collection<Set<Choice>>>();
 		private final Map<QuestionMC, Collection<Set<Choice>>> allowedAnswerCombinations = new HashMap<QuestionMC, Collection<Set<Choice>>>();
 		private KnowledgeBase knowledge;
+		private Session session;
 
 		public Builder(KnowledgeBase knowledge) {
 			this.knowledge = knowledge;
@@ -360,8 +364,15 @@ public final class InterviewBot {
 			return this;
 		}
 
+		public Builder initSession(Session val) {
+			knowledge = val.getKnowledgeBase();
+			session = val;
+			return this;
+		}
+
 		public Builder knowledgeBase(KnowledgeBase val) {
 			knowledge = val;
+			session = null;
 			return this;
 		}
 
@@ -461,6 +472,7 @@ public final class InterviewBot {
 			bot.ratedTestCasePraefix = this.ratedTestCasePraefix;
 			bot.initFindings = this.initFindings;
 			bot.knowledge = this.knowledge;
+			bot.initSession = this.session;
 			bot.ratingStrategy = this.ratingStrategy;
 			bot.strategy = strategy;
 			return bot;
