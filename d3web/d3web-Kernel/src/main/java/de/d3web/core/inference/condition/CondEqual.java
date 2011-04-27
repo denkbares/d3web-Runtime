@@ -90,9 +90,8 @@ public class CondEqual extends CondQuestion {
 
 	@Override
 	public String toString() {
-		String ret = "\u2190 CondEqual question: "
-				+ getQuestion().getName()
-				+ " value: " + this.conditionValue;
+		String ret = getQuestion().getName() +
+				" == " + this.conditionValue;
 		return ret;
 	}
 
