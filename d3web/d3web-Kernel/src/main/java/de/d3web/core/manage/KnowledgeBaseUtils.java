@@ -30,12 +30,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -45,6 +48,7 @@ import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
@@ -54,6 +58,7 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
+import de.d3web.core.utilities.Triple;
 
 /**
  * Provides utilitymethods for {@link KnowledgeBase}
@@ -293,6 +298,46 @@ public final class KnowledgeBaseUtils {
 			int order1 = this.index.get(entry1);
 			int order2 = this.index.get(entry2);
 			return order1 - order2;
+		}
+	}
+
+	/**
+	 * Extract all {@link Locale}s from a {@link KnowledgeBase} (and its
+	 * containing {@link NamedObject}s). It will return every {@link Locale}
+	 * that is used for at least one property within the knowledge base.
+	 * <p>
+	 * Implementation note: <br>
+	 * Because of searching every property within the whole knowledge base it is
+	 * a good idea to store and reused the result of this operation instead of
+	 * calling this method multiple times on the same knowledge base.
+	 * 
+	 * @created 15.12.2010
+	 * @param kb the knowledge base to be examined
+	 * @return the available locales
+	 */
+	public static Set<Locale> getAvailableLocales(KnowledgeBase kb) {
+		Set<Locale> locales = new HashSet<Locale>();
+		// get all locales from knowledge base
+		getAvailableLocales(kb, locales);
+		for (NamedObject object : kb.getManager().getAllTerminologyObjects()) {
+			// get all locales from every NamedObject within the knowledge base
+			getAvailableLocales(object, locales);
+			if (object instanceof QuestionChoice) {
+				for (Choice c : ((QuestionChoice) object).getAllAlternatives()) {
+					getAvailableLocales(c, locales);
+				}
+			}
+		}
+		return locales;
+	}
+
+	private static void getAvailableLocales(NamedObject object, Set<Locale> locales) {
+		InfoStore store = object.getInfoStore();
+		for (Triple<Property<?>, Locale, Object> entry : store.entries()) {
+			Locale locale = entry.getB();
+			if (locale != null) {
+				locales.add(locale);
+			}
 		}
 	}
 }
