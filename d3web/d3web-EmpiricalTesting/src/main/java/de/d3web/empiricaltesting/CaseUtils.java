@@ -21,14 +21,17 @@
 package de.d3web.empiricaltesting;
 
 import java.util.List;
+import java.util.Locale;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
@@ -91,7 +94,7 @@ public final class CaseUtils {
 	}
 
 	public String removeBadChars(String text) {
-		String badChars = ": =()[]{},.?/\\-";
+		String badChars = ": =()[]{},.?/\\-#'";
 		for (int i = 0; i < badChars.length(); i++) {
 			text = text.replace(badChars.charAt(i), '_');
 			text = text.replace("_", "");
@@ -114,8 +117,18 @@ public final class CaseUtils {
 		l = l.replaceAll("\\¡", "");
 		l = l.replaceAll("\\[", "");
 		l = l.replaceAll("\\]", "");
+		l = l.replaceAll("\\#", "");
+		l = l.replaceAll("\\'", "");
 		l = l.replaceAll(":", "");
 		return l;
+	}
+
+	public static String getPrompt(NamedObject object) {
+		String prompt = object.getInfoStore().getValue(MMInfo.PROMPT, Locale.getDefault());
+		if (prompt == null) {
+			prompt = object.getName();
+		}
+		return prompt;
 	}
 
 	public Question getQuestionByIDorText(String questionIDorText,

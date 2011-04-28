@@ -263,16 +263,16 @@ public final class DDBuilder implements CaseVisualizer {
 		StringBuilder s0name = new StringBuilder();
 		s0name.append(bh.removeBadChars(edge.getBegin().getTestCase().getName()));
 		s0name.append("_");
-		s0name.append(bh.removeBadChars(edge.getBegin().getTestCase().getFindings().get(0).getQuestion().toString()));
+		s0name.append(bh.removeBadChars(edge.getBegin().getTestCase().getFindings().get(0).getQuestionPrompt()));
 		s0name.append("_");
-		s0name.append(bh.removeBadChars(edge.getBegin().getTestCase().getFindings().get(0).getValue().toString()));
+		s0name.append(bh.removeBadChars(edge.getBegin().getTestCase().getFindings().get(0).getValuePrompt()));
 
 		StringBuilder s1name = new StringBuilder();
 		s1name.append(bh.removeBadChars(edge.getEnd().getTestCase().getName()));
 		s1name.append("_");
-		s1name.append(bh.removeBadChars(edge.getEnd().getTestCase().getFindings().get(0).getQuestion().toString()));
+		s1name.append(bh.removeBadChars(edge.getEnd().getTestCase().getFindings().get(0).getQuestionPrompt()));
 		s1name.append("_");
-		s1name.append(bh.removeBadChars(edge.getEnd().getTestCase().getFindings().get(0).getValue().toString()));
+		s1name.append(bh.removeBadChars(edge.getEnd().getTestCase().getFindings().get(0).getValuePrompt()));
 
 		String arcName = s0name.toString() + "-" + s1name.toString();
 		if (createdEdges.contains(arcName)) return;
@@ -286,7 +286,7 @@ public final class DDBuilder implements CaseVisualizer {
 			b.append("\"" + s0name + "\" -> \"" + s1name + "\" [");
 			b.append("label = \"");
 			for (Finding f : edge.getEnd().getFindings()) {
-				b.append(bh.prettyLabel(f.getValue().toString()));
+				b.append(bh.prettyLabel(f.getValuePrompt()));
 				b.append("\\l");
 			}
 			b.append("\"");
@@ -333,9 +333,9 @@ public final class DDBuilder implements CaseVisualizer {
 
 		b.append(bh.removeBadChars(node.getTestCase().getName()));
 		b.append("_");
-		b.append(bh.removeBadChars(node.getTestCase().getFindings().get(0).getQuestion().toString()));
+		b.append(bh.removeBadChars(node.getTestCase().getFindings().get(0).getQuestionPrompt()));
 		b.append("_");
-		b.append(bh.removeBadChars(node.getTestCase().getFindings().get(0).getValue().toString()));
+		b.append(bh.removeBadChars(node.getTestCase().getFindings().get(0).getValuePrompt()));
 		b.append(" [\n  label=<\n");
 		b.append("   <TABLE>\n");
 
@@ -382,7 +382,7 @@ public final class DDBuilder implements CaseVisualizer {
 
 		String nodeName;
 		for (Finding f : node.getTestCase().getFindings()) {
-			nodeName = f.toString();
+			nodeName = f.getQuestionPrompt() + " = " + f.getValuePrompt();
 			b.append("    <TR><TD COLSPAN=\"" + intColSpan + "\" BGCOLOR=\"" +
 					nodeColor + "\">" + bh.pretty(nodeName) + "</TD> </TR>\n");
 		}
@@ -435,8 +435,9 @@ public final class DDBuilder implements CaseVisualizer {
 
 		// print questions to be asked next (mostly only one)
 		for (Question question : nextQuestions) {
+			String name = CaseUtils.getPrompt(question);
 			b.append("    <TR><TD COLSPAN=\"" + intColSpan + "\" BGCOLOR=\"" +
-					nodeColor + "\">" + bh.pretty(question.getName()) + "</TD> </TR>\n");
+					nodeColor + "\">" + bh.pretty(name) + "</TD> </TR>\n");
 		}
 
 		b.append("   </TABLE>>\n");
@@ -535,7 +536,7 @@ public final class DDBuilder implements CaseVisualizer {
 		result.append("<TD BGCOLOR=\"");
 		result.append(color);
 		result.append("\">");
-		result.append(bh.pretty(derived.getSolution().getName()));
+		result.append(bh.pretty(CaseUtils.getPrompt(derived.getSolution())));
 		result.append("</TD>");
 		result.append("<TD COLSPAN=\"2\" ALIGN=\"CENTER\" BGCOLOR=\"");
 		result.append(color);
@@ -573,9 +574,9 @@ public final class DDBuilder implements CaseVisualizer {
 			String derivedColor, String nodeColor, boolean symbolicstates) {
 
 		StringBuilder result = new StringBuilder();
-		String solName = (expected == null ?
-				derived.getSolution().getName() :
-				expected.getSolution().getName());
+		String solName = CaseUtils.getPrompt(expected == null ?
+				derived.getSolution() :
+				expected.getSolution());
 
 		result.append("    <TR>");
 		result.append("<TD BGCOLOR=\"");
