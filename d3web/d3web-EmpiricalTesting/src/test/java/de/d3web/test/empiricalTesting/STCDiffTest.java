@@ -85,6 +85,13 @@ public class STCDiffTest {
 
 		Collection<RatedTestCase> casesWithDifference = diff.getCasesWithDifference();
 		assertTrue(casesWithDifference.contains(rtc));
+
+		assertTrue(diff.hasDiff(rtc));
+
+		assertTrue(diff.hasDiff(null));
+
+		assertEquals(stc, diff.getCase());
+
 	}
 
 }

@@ -39,14 +39,11 @@ public class ValueDiff {
 	}
 
 	public boolean differ() {
-		if (this.expected != null && this.derived != null) {
-			return !expected.equals(derived);
-		}
-		else if (this.expected == null && this.derived == null) {
+		if (this.expected == null || this.derived == null) {
 			return false;
 		}
-		else {
-			return true;
+		else { // (this.expected != null && this.derived != null) {
+			return !expected.equals(derived);
 		}
 	}
 

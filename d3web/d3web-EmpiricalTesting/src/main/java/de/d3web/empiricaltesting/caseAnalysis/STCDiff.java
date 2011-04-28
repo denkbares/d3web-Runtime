@@ -85,6 +85,10 @@ public class STCDiff implements Diff {
 	 */
 	@Override
 	public boolean hasDiff(RatedTestCase rtc) {
+		if (rtc == null) {
+			return true;
+		}
+
 		RTCDiff rtcDiff = this.rtc_diffs.get(rtc);
 		if (rtcDiff == null || !rtcDiff.hasDifferences()) {
 			return false;

@@ -98,6 +98,8 @@ public class RTCDiffTest {
 		Collection<TerminologyObject> expected = diff.getExpected();
 		assertTrue(expected.isEmpty());
 
+		assertTrue(diff.hasDiff(question));
+
 	}
 
 }

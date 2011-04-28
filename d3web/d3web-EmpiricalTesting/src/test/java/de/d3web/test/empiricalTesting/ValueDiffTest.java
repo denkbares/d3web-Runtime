@@ -45,6 +45,10 @@ public class ValueDiffTest {
 		Value v2 = new ChoiceValue(new Choice("v2"));
 		Value v1n = new ChoiceValue(new Choice("v1"));
 
+		assertFalse(new ValueDiff(v1, null).differ());
+		assertFalse(new ValueDiff(null, v1).differ());
+		assertFalse(new ValueDiff(null, null).differ());
+
 		assertFalse(new ValueDiff(v1, v1).differ());
 		assertFalse(new ValueDiff(v1, v1n).differ());
 		assertTrue(new ValueDiff(v1, v2).differ());
