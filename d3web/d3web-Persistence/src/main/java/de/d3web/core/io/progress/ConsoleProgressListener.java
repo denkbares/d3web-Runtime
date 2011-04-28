@@ -25,9 +25,15 @@ package de.d3web.core.io.progress;
  */
 public class ConsoleProgressListener implements ProgressListener {
 
+	private String lastProgressText = "";
+
 	@Override
 	public void updateProgress(float percent, String message) {
-		System.out.println("" + Math.round(percent * 100) + "%: " + message);
+		String progressText = "" + Math.round(percent * 100) + "%: " + message;
+		if (!progressText.equals(lastProgressText)) {
+			lastProgressText = progressText;
+			System.out.println(progressText);
+		}
 	}
 
 }
