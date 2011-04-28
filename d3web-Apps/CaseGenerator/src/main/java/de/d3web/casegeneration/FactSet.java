@@ -21,6 +21,7 @@ package de.d3web.casegeneration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import de.d3web.core.inference.PropagationManager;
@@ -87,12 +88,16 @@ public class FactSet {
 	 * @param object the terminology object to remove the facts for
 	 */
 	public void removeFacts(TerminologyObject object) {
-		for (Fact fact : valueFacts) {
+		Iterator<Fact> iterator = valueFacts.iterator();
+		while (iterator.hasNext()) {
+			Fact fact = iterator.next();
 			if (fact.getTerminologyObject() == object) {
-				valueFacts.remove(fact);
+				iterator.remove();
 			}
 		}
-		for (Fact fact : interviewFacts) {
+		iterator = interviewFacts.iterator();
+		while (iterator.hasNext()) {
+			Fact fact = iterator.next();
 			if (fact.getTerminologyObject() == object) {
 				interviewFacts.remove(fact);
 			}

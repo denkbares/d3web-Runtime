@@ -95,13 +95,11 @@ public final class InterviewBot {
 	private List<Finding> initFindings;
 	// the knowledge used to generate the cases
 	private KnowledgeBase knowledge;
-	// the init session to be used for generating
-	private Session initSession;
 	// the method of how to determine the rating of a solution
 	private RatingStrategy ratingStrategy;
 
 	// the strategy to select questions and possible values
-	private BotStrategy strategy = new DefaultBotStrategy();
+	private BotStrategy strategy;
 
 	/**
 	 * Private inner class to store all transient information during the
@@ -124,11 +122,10 @@ public final class InterviewBot {
 			this.progressListener = progressListener;
 		}
 
-		private void traverse(Session thisSession, SequentialTestCase thisCase, float minPercent, float maxPercent) {
+		private void traverse(Session thisSession, SequentialTestCase thisCase, int depth, float minPercent, float maxPercent) {
 			// Termination of the recursion: no more questions to ask
 			// or maximum number of cases generated.
-			InterviewObject[] interviewItems = strategy.getNextSequenceItems(thisSession);
-			if (interviewItems == null || interviewItems.length == 0) {
+			if (getBotStrategy().isFinished(thisSession)) {
 				store(thisCase);
 				updateProgress(maxPercent);
 				return;
@@ -138,25 +135,52 @@ public final class InterviewBot {
 			if (maxCases > 0 && casesCounter >= maxCases) return;
 
 			// Get all possible answers (combinations) for the question
-			FactSet[] factSets = strategy.getNextSequenceAnswers(thisSession, interviewItems);
+			InterviewObject[] interviewItems = getBotStrategy().getNextSequenceItems(thisSession);
+			FactSet[] factSets = getBotStrategy().getNextSequenceAnswers(thisSession,
+					interviewItems);
 
 			// prepare progress
 			float deltaPercent = (maxPercent - minPercent) / factSets.length;
 			float currentPercent = minPercent;
-			// Iterate over all possible answers of the next question(s)
-			for (FactSet factSet : factSets) {
-				Session nextSession = createCase(thisCase);
-				factSet.apply(nextSession);
+			// if we have an unexpected knowledge base layout
+			// we sometimes will receive an empty fact set
+			if (factSets == null || factSets.length == 0) {
+				System.out.println("\tcut off branch, no fact sets received for "
+						+ Arrays.asList(interviewItems));
+				// in this case, we produce an example branch
+				List<Finding> findings = Collections.emptyList();
+				List<RatedSolution> solutions = Collections.emptyList();
 				SequentialTestCase nextSequentialCase = packNewSequence(
-						thisCase,
-						toFindings(factSet),
-						toRatedSolutions(nextSession));
+						thisCase, findings, solutions);
+				store(nextSequentialCase);
+				updateProgress(maxPercent);
+			}
+			else {
+				// otherwise continue with the follow-up fact sets
+				System.out.println("\tdepth: " + depth +
+						", branches: " + factSets.length +
+						", items: " + Arrays.asList(interviewItems));
+				// Iterate over all possible answers of the next question(s)
+				for (FactSet factSet : factSets) {
+					// prepare session for recursive iteration.
+					// if we only have one follow-up fact set,
+					// we can simply reuse the existing session
+					Session nextSession = (factSets.length == 1)
+							? thisSession
+							: createCase(thisCase);
+					factSet.apply(nextSession);
+					SequentialTestCase nextSequentialCase = packNewSequence(
+							thisCase,
+							toFindings(factSet),
+							toRatedSolutions(nextSession));
 
-				// step down in recursion with the next suitable question to ask
-				traverse(nextSession, nextSequentialCase,
-						currentPercent, currentPercent + deltaPercent);
-				// increase progress
-				currentPercent += deltaPercent;
+					// step down in recursion with the next suitable question to
+					// ask
+					traverse(nextSession, nextSequentialCase, depth + 1,
+							currentPercent, currentPercent + deltaPercent);
+					// increase progress
+					currentPercent += deltaPercent;
+				}
 			}
 		}
 
@@ -179,9 +203,11 @@ public final class InterviewBot {
 		 */
 		public void generate() {
 			progressListener.updateProgress(0f, "preparing generation");
-			initializeInitSession();
+			Session initSession = createInitSession();
 			SequentialTestCase stc = createInitalCase(initSession);
-			traverse(initSession, stc, 0f, 1f);
+			updateProgress(0f);
+			// start with depth 2, because the seed is depth 1
+			traverse(initSession, stc, 2, 0f, 1f);
 		}
 
 		private void updateProgress(float percent) {
@@ -189,7 +215,7 @@ public final class InterviewBot {
 			// we use the generated cases compared to the max number of cases as
 			// progress indicator
 			percent = Math.max(percent, casesCounter / (float) maxCases);
-			progressListener.updateProgress(percent, "generating case " + casesCounter);
+			progressListener.updateProgress(percent, "generating case " + (casesCounter + 1));
 		}
 
 		/**
@@ -275,7 +301,7 @@ public final class InterviewBot {
 	}
 
 	private List<RatedSolution> toRatedSolutions(Session session) {
-		Solution[] solutions = strategy.getExpectedSolutions(session);
+		Solution[] solutions = getBotStrategy().getExpectedSolutions(session);
 		List<RatedSolution> result = new LinkedList<RatedSolution>();
 		for (Solution solution : solutions) {
 			Rating rating = ratingStrategy.getRatingFor(solution, session);
@@ -295,15 +321,14 @@ public final class InterviewBot {
 		return session;
 	}
 
-	private void initializeInitSession() {
-		if (initSession == null) {
-			initSession = SessionFactory.createSession(knowledge);
-			// initSession.getInterview().setFormStrategy(new
-			// NextUnansweredQuestionFormStrategy());
-		}
+	private Session createInitSession() {
+		Session initSession = SessionFactory.createSession(knowledge);
+		// initSession.getInterview().setFormStrategy(new
+		// NextUnansweredQuestionFormStrategy());
 		for (Finding finding : initFindings) {
 			setCaseValue(initSession, finding.getQuestion(), finding.getValue());
 		}
+		return initSession;
 	}
 
 	private void setCaseValue(Session session, Question q, Value v) {
@@ -333,7 +358,6 @@ public final class InterviewBot {
 		private final Map<QuestionMC, Collection<Set<Choice>>> forbiddenAnswerCombinations = new HashMap<QuestionMC, Collection<Set<Choice>>>();
 		private final Map<QuestionMC, Collection<Set<Choice>>> allowedAnswerCombinations = new HashMap<QuestionMC, Collection<Set<Choice>>>();
 		private KnowledgeBase knowledge;
-		private Session session;
 
 		public Builder(KnowledgeBase knowledge) {
 			this.knowledge = knowledge;
@@ -364,15 +388,8 @@ public final class InterviewBot {
 			return this;
 		}
 
-		public Builder initSession(Session val) {
-			knowledge = val.getKnowledgeBase();
-			session = val;
-			return this;
-		}
-
 		public Builder knowledgeBase(KnowledgeBase val) {
 			knowledge = val;
-			session = null;
 			return this;
 		}
 
@@ -472,9 +489,8 @@ public final class InterviewBot {
 			bot.ratedTestCasePraefix = this.ratedTestCasePraefix;
 			bot.initFindings = this.initFindings;
 			bot.knowledge = this.knowledge;
-			bot.initSession = this.session;
 			bot.ratingStrategy = this.ratingStrategy;
-			bot.strategy = strategy;
+			bot.setBotStrategy(strategy);
 			return bot;
 		}
 	}
@@ -487,6 +503,14 @@ public final class InterviewBot {
 
 	private String dateToString() {
 		return "" + Calendar.getInstance().getTimeInMillis();
+	}
+
+	public void setBotStrategy(BotStrategy strategy) {
+		this.strategy = strategy;
+	}
+
+	public BotStrategy getBotStrategy() {
+		return strategy;
 	}
 
 }
