@@ -30,6 +30,9 @@ import de.d3web.empiricaltesting.casevisualization.dot.DDBuilder.caseType;
 
 public final class DDNode {
 
+	private static int idCounter = 0;
+	private final String id = "node" + (idCounter++);
+
 	private RatedTestCase testCase;
 	private List<DDEdge> outgoing;
 	private List<DDEdge> incoming;
@@ -149,6 +152,15 @@ public final class DDNode {
 
 	public List<DDEdge> getIncoming() {
 		return incoming;
+	}
+
+	/**
+	 * 
+	 * @created 28.04.2011
+	 * @return
+	 */
+	public String getID() {
+		return id;
 	}
 
 }

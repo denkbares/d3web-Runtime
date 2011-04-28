@@ -145,14 +145,9 @@ public final class InterviewBot {
 			// if we have an unexpected knowledge base layout
 			// we sometimes will receive an empty fact set
 			if (factSets == null || factSets.length == 0) {
-				System.out.println("\tcut off branch, no fact sets received for "
-						+ Arrays.asList(interviewItems));
-				// in this case, we produce an example branch
-				List<Finding> findings = Collections.emptyList();
-				List<RatedSolution> solutions = Collections.emptyList();
-				SequentialTestCase nextSequentialCase = packNewSequence(
-						thisCase, findings, solutions);
-				store(nextSequentialCase);
+				storeError(thisCase,
+						"\tcut off branch, no fact sets received for "
+								+ Arrays.asList(interviewItems));
 				updateProgress(maxPercent);
 			}
 			else {
@@ -165,15 +160,21 @@ public final class InterviewBot {
 					// prepare session for recursive iteration.
 					// if we only have one follow-up fact set,
 					// we can simply reuse the existing session
-					Session nextSession = (factSets.length == 1)
-							? thisSession
-							: createCase(thisCase);
+					Session nextSession =
+								(factSets.length == 1) ? thisSession :
+										createCase(thisCase);
 					factSet.apply(nextSession);
 					SequentialTestCase nextSequentialCase = packNewSequence(
 							thisCase,
 							toFindings(factSet),
 							toRatedSolutions(nextSession));
 
+					if (maxCases > 0 && casesCounter >= maxCases) {
+						store(nextSequentialCase);
+						storeError(nextSequentialCase, "cut branch, we are already finished");
+						updateProgress(currentPercent + deltaPercent);
+						continue;
+					}
 					// step down in recursion with the next suitable question to
 					// ask
 					traverse(nextSession, nextSequentialCase, depth + 1,
@@ -182,6 +183,16 @@ public final class InterviewBot {
 					currentPercent += deltaPercent;
 				}
 			}
+		}
+
+		private void storeError(SequentialTestCase thisCase, String message) {
+			System.out.println("\t" + message);
+			// in this case, we produce an example branch
+			List<Finding> findings = Collections.emptyList();
+			List<RatedSolution> solutions = Collections.emptyList();
+			SequentialTestCase nextSequentialCase = packNewSequence(
+					thisCase, findings, solutions);
+			store(nextSequentialCase);
 		}
 
 		/**
@@ -215,7 +226,12 @@ public final class InterviewBot {
 			// we use the generated cases compared to the max number of cases as
 			// progress indicator
 			percent = Math.max(percent, casesCounter / (float) maxCases);
-			progressListener.updateProgress(percent, "generating case " + (casesCounter + 1));
+			if (percent >= 1f) {
+				progressListener.updateProgress(1f, "finishing case generation");
+			}
+			else {
+				progressListener.updateProgress(percent, "generating case " + (casesCounter + 1));
+			}
 		}
 
 		/**

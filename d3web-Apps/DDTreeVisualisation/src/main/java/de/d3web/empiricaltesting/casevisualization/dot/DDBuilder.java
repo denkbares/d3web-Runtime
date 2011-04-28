@@ -69,7 +69,7 @@ public final class DDBuilder implements CaseVisualizer {
 	private ConfigLoader config = ConfigLoader.getInstance();
 
 	private Set<String> createdEdges;
-	private Map<String, DDNode> nodes;
+	private Map<RatedTestCase, DDNode> nodes;
 
 	public enum caseType {
 		old_case, new_case, incorrect
@@ -190,7 +190,7 @@ public final class DDBuilder implements CaseVisualizer {
 	private void generateDDNet(List<SequentialTestCase> cases) {
 
 		createdEdges = new HashSet<String>();
-		nodes = new HashMap<String, DDNode>();
+		nodes = new HashMap<RatedTestCase, DDNode>();
 
 		for (SequentialTestCase stc : cases) {
 
@@ -202,25 +202,31 @@ public final class DDBuilder implements CaseVisualizer {
 
 				caseType sessionType;
 
-				String name = ratedTestCase.getName()
-						+ ratedTestCase.getFindings().get(0).toString();
-
-				if (nodes.get(name) == null) nodes.put(name, new DDNode(ratedTestCase));
-
-				DDNode node = nodes.get(name);
+				DDNode node = getDDNode(ratedTestCase);
 
 				sessionType = caseType.new_case;
-
 				if (ratedTestCase.wasTestedBefore()) sessionType = caseType.old_case;
 
 				node.setTheCaseType(sessionType);
 
-				if (prec != null && node.getFindings().size() > 0) prec.addChild(node,
-						node.getFindings().get(0), sessionType);
+				if (prec != null) {
+					Finding label = null;
+					if (node.getFindings().size() > 0) label = node.getFindings().get(0);
+					prec.addChild(node, label, sessionType);
+				}
 
 				prec = node;
 			}
 		}
+	}
+
+	private DDNode getDDNode(RatedTestCase ratedTestCase) {
+		DDNode node = nodes.get(ratedTestCase);
+		if (node == null) {
+			node = new DDNode(ratedTestCase);
+			nodes.put(ratedTestCase, node);
+		}
+		return node;
 	}
 
 	public String generateDOT() {
@@ -260,30 +266,30 @@ public final class DDBuilder implements CaseVisualizer {
 	}
 
 	private void createEdge(StringBuffer b, DDEdge edge) {
-		StringBuilder s0name = new StringBuilder();
-		s0name.append(bh.removeBadChars(edge.getBegin().getTestCase().getName()));
-		s0name.append("_");
-		s0name.append(bh.removeBadChars(edge.getBegin().getTestCase().getFindings().get(0).getQuestionPrompt()));
-		s0name.append("_");
-		s0name.append(bh.removeBadChars(edge.getBegin().getTestCase().getFindings().get(0).getValuePrompt()));
+		String name0 = edge.getBegin().getID();
+		String name1 = edge.getEnd().getID();
+		// StringBuilder s0name = new StringBuilder();
+		// s0name.append(bh.removeBadChars(edge.getBegin().getTestCase().getName()));
+		// s0name.append("_");
+		// s0name.append(bh.removeBadChars(edge.getBegin().getTestCase().getFindings().get(0).getQuestionPrompt()));
+		// s0name.append("_");
+		// s0name.append(bh.removeBadChars(edge.getBegin().getTestCase().getFindings().get(0).getValuePrompt()));
 
-		StringBuilder s1name = new StringBuilder();
-		s1name.append(bh.removeBadChars(edge.getEnd().getTestCase().getName()));
-		s1name.append("_");
-		s1name.append(bh.removeBadChars(edge.getEnd().getTestCase().getFindings().get(0).getQuestionPrompt()));
-		s1name.append("_");
-		s1name.append(bh.removeBadChars(edge.getEnd().getTestCase().getFindings().get(0).getValuePrompt()));
+		// StringBuilder s1name = new StringBuilder();
+		// s1name.append(bh.removeBadChars(edge.getEnd().getTestCase().getName()));
+		// s1name.append("_");
+		// s1name.append(bh.removeBadChars(edge.getEnd().getTestCase().getFindings().get(0).getQuestionPrompt()));
+		// s1name.append("_");
+		// s1name.append(bh.removeBadChars(edge.getEnd().getTestCase().getFindings().get(0).getValuePrompt()));
 
-		String arcName = s0name.toString() + "-" + s1name.toString();
+		String arcName = name0 + "-" + name1;
+		// String arcName = s0name.toString() + "-" + s1name.toString();
 		if (createdEdges.contains(arcName)) return;
 		else {
 			createdEdges.add(arcName);
-			// String label = edge.getLabel().getAnswer().toString();
-			//
-			// b.append("\"" + s0name + "\" -> \"" + s1name + "\" [");
-			// b.append("label = " + bh.prettyLabel(label));
 
-			b.append("\"" + s0name + "\" -> \"" + s1name + "\" [");
+			b.append("\"" + name0 + "\" -> \"" + name1 + "\" [");
+			// b.append("\"" + s0name + "\" -> \"" + s1name + "\" [");
 			b.append("label = \"");
 			for (Finding f : edge.getEnd().getFindings()) {
 				b.append(bh.prettyLabel(f.getValuePrompt()));
@@ -329,13 +335,35 @@ public final class DDBuilder implements CaseVisualizer {
 		}
 	}
 
+	private void createEmptyNode(StringBuffer b, DDNode node) {
+		b.append(node.getID());
+		b.append(" [\n  label=<\n");
+		b.append("   <TABLE>\n");
+		String nodeColor = config.getProperty("nodeColorIncorrectCase");
+		b.append("    <TR><TD BGCOLOR=\"" +
+				nodeColor + "\">truncated</TD> </TR>\n");
+		b.append("   </TABLE>>\n");
+		b.append("];\n");
+	}
+
 	private void createNode(StringBuffer b, DDNode node, List<Question> nextQuestions) {
 
-		b.append(bh.removeBadChars(node.getTestCase().getName()));
-		b.append("_");
-		b.append(bh.removeBadChars(node.getTestCase().getFindings().get(0).getQuestionPrompt()));
-		b.append("_");
-		b.append(bh.removeBadChars(node.getTestCase().getFindings().get(0).getValuePrompt()));
+		// prepare list of all solutions
+		List<RatedSolution> allRatedSolutions = new LinkedList<RatedSolution>();
+		allRatedSolutions.addAll(node.getTestCase().getExpectedSolutions());
+		allRatedSolutions.addAll(node.getTestCase().getDerivedSolutions());
+
+		if (node.getTestCase().getFindings().isEmpty() && allRatedSolutions.isEmpty()) {
+			createEmptyNode(b, node);
+			return;
+		}
+
+		b.append(node.getID());
+		// b.append(bh.removeBadChars(node.getTestCase().getName()));
+		// b.append("_");
+		// b.append(bh.removeBadChars(node.getTestCase().getFindings().get(0).getQuestionPrompt()));
+		// b.append("_");
+		// b.append(bh.removeBadChars(node.getTestCase().getFindings().get(0).getValuePrompt()));
 		b.append(" [\n  label=<\n");
 		b.append("   <TABLE>\n");
 
@@ -398,11 +426,6 @@ public final class DDBuilder implements CaseVisualizer {
 				getSolutionsInHashMap(node.getTestCase().getExpectedSolutions());
 		Map<Solution, RatedSolution> derSolutions =
 				getSolutionsInHashMap(node.getTestCase().getDerivedSolutions());
-
-		// prepare list of all solutions
-		List<RatedSolution> allRatedSolutions = new LinkedList<RatedSolution>();
-		allRatedSolutions.addAll(node.getTestCase().getExpectedSolutions());
-		allRatedSolutions.addAll(node.getTestCase().getDerivedSolutions());
 
 		// Print Solutions
 		b.append(transformSolutionsHeader(nodeColor, intColSpan));
