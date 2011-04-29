@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
@@ -69,6 +70,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	private TargetFunction targetFunction;
 	private CostFunction costFunction;
 	private SearchAlgorithm searchAlgorithm;
+	private static final Pattern PATTERN_OK_CHOICE = Pattern.compile("^(.*#)?ok$",
+			Pattern.CASE_INSENSITIVE);
 
 	public PSMethodCostBenefit(TargetFunction targetFunction,
 			CostFunction costFunction, SearchAlgorithm searchAlgorithm) {
@@ -85,7 +88,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 	@Override
 	public void init(Session session) {
-		CostBenefitCaseObject caseObject = (CostBenefitCaseObject) session.getSessionObject(this);
+		CostBenefitCaseObject caseObject = session.getSessionObject(this);
 		session.getInterview().getInterviewAgenda().setAgendaSortingStrategy(
 				new CostBenefitAgendaSortingStrategy(caseObject));
 		// calculateNewPath(caseObject);
@@ -305,7 +308,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				QuestionOC qoc = (QuestionOC) nob;
 				List<Choice> choices = qoc.getAllAlternatives();
 				if (choices.size() == 1
-						&& "OK".equals(choices.get(0).getName())) {
+						&& PATTERN_OK_CHOICE.matcher(choices.get(0).getName()).matches()) {
 					Blackboard blackboard = session.getBlackboard();
 					if (UndefinedValue.isNotUndefinedValue(blackboard.getValue(qoc))) {
 
@@ -322,7 +325,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
-		CostBenefitCaseObject caseObject = (CostBenefitCaseObject) session.getSessionObject(this);
+		CostBenefitCaseObject caseObject = session.getSessionObject(this);
 		Set<QContainer> answeredQuestionnaires = new HashSet<QContainer>();
 		for (PropagationEntry entry : changes) {
 			TerminologyObject object = entry.getObject();
