@@ -156,6 +156,7 @@ public final class InterviewBot {
 						", branches: " + factSets.length +
 						", items: " + Arrays.asList(interviewItems));
 				// Iterate over all possible answers of the next question(s)
+				updateProgress(currentPercent);
 				for (FactSet factSet : factSets) {
 					// prepare session for recursive iteration.
 					// if we only have one follow-up fact set,
@@ -172,15 +173,15 @@ public final class InterviewBot {
 					if (maxCases > 0 && casesCounter >= maxCases) {
 						store(nextSequentialCase);
 						storeError(nextSequentialCase, "cut branch, we are already finished");
-						updateProgress(currentPercent + deltaPercent);
-						continue;
 					}
-					// step down in recursion with the next suitable question to
-					// ask
-					traverse(nextSession, nextSequentialCase, depth + 1,
-							currentPercent, currentPercent + deltaPercent);
+					else {
+						// step down in recursion with the next suitable
+						// question to ask
+						traverse(nextSession, nextSequentialCase, depth + 1,
+								currentPercent, currentPercent + deltaPercent);
+					}
 					// increase progress
-					currentPercent += deltaPercent;
+					updateProgress(currentPercent += deltaPercent);
 				}
 			}
 		}
