@@ -199,20 +199,12 @@ public final class DDBuilder implements CaseVisualizer {
 
 			for (int i = 0; i < ratedCases.size(); i++) {
 				RatedTestCase ratedTestCase = ratedCases.get(i);
-
-				caseType sessionType;
-
 				DDNode node = getDDNode(ratedTestCase);
-
-				sessionType = caseType.new_case;
-				if (ratedTestCase.wasTestedBefore()) sessionType = caseType.old_case;
-
-				node.setTheCaseType(sessionType);
-
+				if (ratedTestCase.wasTestedBefore()) {
+					node.setTheCaseType(caseType.old_case);
+				}
 				if (prec != null) {
-					Finding label = null;
-					if (node.getFindings().size() > 0) label = node.getFindings().get(0);
-					prec.addChild(node, label, sessionType);
+					prec.addChild(node);
 				}
 
 				prec = node;
@@ -268,28 +260,12 @@ public final class DDBuilder implements CaseVisualizer {
 	private void createEdge(StringBuffer b, DDEdge edge) {
 		String name0 = edge.getBegin().getID();
 		String name1 = edge.getEnd().getID();
-		// StringBuilder s0name = new StringBuilder();
-		// s0name.append(bh.removeBadChars(edge.getBegin().getTestCase().getName()));
-		// s0name.append("_");
-		// s0name.append(bh.removeBadChars(edge.getBegin().getTestCase().getFindings().get(0).getQuestionPrompt()));
-		// s0name.append("_");
-		// s0name.append(bh.removeBadChars(edge.getBegin().getTestCase().getFindings().get(0).getValuePrompt()));
-
-		// StringBuilder s1name = new StringBuilder();
-		// s1name.append(bh.removeBadChars(edge.getEnd().getTestCase().getName()));
-		// s1name.append("_");
-		// s1name.append(bh.removeBadChars(edge.getEnd().getTestCase().getFindings().get(0).getQuestionPrompt()));
-		// s1name.append("_");
-		// s1name.append(bh.removeBadChars(edge.getEnd().getTestCase().getFindings().get(0).getValuePrompt()));
-
 		String arcName = name0 + "-" + name1;
-		// String arcName = s0name.toString() + "-" + s1name.toString();
 		if (createdEdges.contains(arcName)) return;
 		else {
 			createdEdges.add(arcName);
 
 			b.append("\"" + name0 + "\" -> \"" + name1 + "\" [");
-			// b.append("\"" + s0name + "\" -> \"" + s1name + "\" [");
 			b.append("label = \"");
 			for (Finding f : edge.getEnd().getFindings()) {
 				b.append(bh.prettyLabel(f.getValuePrompt()));
@@ -300,7 +276,7 @@ public final class DDBuilder implements CaseVisualizer {
 			boolean bolOldCasesLikeNewCases =
 					config.getProperty("renderOldCasesLikeNewCases").equals("true");
 
-			switch (edge.getTheCasetype()) {
+			switch (edge.getCaseType()) {
 			case new_case:
 				b.append(" color = \"" +
 						config.getProperty("edgeColorNewCase") + "\"");
@@ -359,11 +335,6 @@ public final class DDBuilder implements CaseVisualizer {
 		}
 
 		b.append(node.getID());
-		// b.append(bh.removeBadChars(node.getTestCase().getName()));
-		// b.append("_");
-		// b.append(bh.removeBadChars(node.getTestCase().getFindings().get(0).getQuestionPrompt()));
-		// b.append("_");
-		// b.append(bh.removeBadChars(node.getTestCase().getFindings().get(0).getValuePrompt()));
 		b.append(" [\n  label=<\n");
 		b.append("   <TABLE>\n");
 
@@ -414,12 +385,6 @@ public final class DDBuilder implements CaseVisualizer {
 			b.append("    <TR><TD COLSPAN=\"" + intColSpan + "\" BGCOLOR=\"" +
 					nodeColor + "\">" + bh.pretty(nodeName) + "</TD> </TR>\n");
 		}
-
-		// Finding currentFinding = node.getTestCase().getFindings().get(0);
-		// String nodeName = currentFinding.toString();
-		//
-		// b.append("    <TR><TD COLSPAN=\""+intColSpan+"\" BGCOLOR=\"" +
-		// nodeColor + "\">" + bh.pretty(nodeName) + "</TD> </TR>\n");
 
 		// Put all RatedSolutions in Maps
 		Map<Solution, RatedSolution> expSolutions =

@@ -20,33 +20,22 @@
 
 package de.d3web.empiricaltesting.casevisualization.dot;
 
-import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.casevisualization.dot.DDBuilder.caseType;
 
 public final class DDEdge {
 
-	private DDNode begin;
-	private DDNode end;
-	private Finding label;
-	private caseType sessiontype;
+	private final DDNode begin;
+	private final DDNode end;
+	private final caseType sessiontype;
 
-	public DDEdge(DDNode begin, DDNode end, Finding label, caseType sessiontype) {
-		setLabel(label);
-		setBegin(begin);
-		setEnd(end);
-		setTheCasetype(sessiontype);
-	}
-
-	public DDEdge(DDNode begin, DDNode end, Finding label) {
-		this(begin, end, label, caseType.new_case);
+	public DDEdge(DDNode begin, DDNode end, caseType sessiontype) {
+		this.begin = begin;
+		this.end = end;
+		this.sessiontype = sessiontype;
 	}
 
 	public DDEdge(DDNode begin, DDNode end) {
-		this(begin, end, null, caseType.new_case);
-	}
-
-	public DDEdge(DDNode begin, DDNode end, caseType sessiontype) {
-		this(begin, end, null, sessiontype);
+		this(begin, end, caseType.new_case);
 	}
 
 	@Override
@@ -55,7 +44,6 @@ public final class DDEdge {
 		int result = 1;
 		result = prime * result + ((begin == null) ? 0 : begin.hashCode());
 		result = prime * result + ((end == null) ? 0 : end.hashCode());
-		result = prime * result + ((label == null) ? 0 : label.hashCode());
 		return result;
 	}
 
@@ -73,10 +61,6 @@ public final class DDEdge {
 			if (other.end != null) return false;
 		}
 		else if (!end.equals(other.end)) return false;
-		if (label == null) {
-			if (other.label != null) return false;
-		}
-		else if (!label.equals(other.label)) return false;
 		return true;
 	}
 
@@ -88,27 +72,8 @@ public final class DDEdge {
 		return end;
 	}
 
-	public Finding getLabel() {
-		return label;
-	}
-
-	public void setBegin(DDNode begin) {
-		this.begin = begin;
-	}
-
-	public void setEnd(DDNode end) {
-		this.end = end;
-	}
-
-	public void setLabel(Finding label) {
-		this.label = label;
-	}
-
-	public caseType getTheCasetype() {
+	public caseType getCaseType() {
 		return sessiontype;
 	}
 
-	public void setTheCasetype(caseType sessiontype) {
-		this.sessiontype = sessiontype;
-	}
 }

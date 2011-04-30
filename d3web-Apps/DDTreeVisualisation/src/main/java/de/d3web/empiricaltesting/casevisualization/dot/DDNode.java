@@ -21,9 +21,9 @@
 package de.d3web.empiricaltesting.casevisualization.dot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.casevisualization.dot.DDBuilder.caseType;
@@ -33,19 +33,14 @@ public final class DDNode {
 	private static int idCounter = 0;
 	private final String id = "node" + (idCounter++);
 
-	private RatedTestCase testCase;
-	private List<DDEdge> outgoing;
-	private List<DDEdge> incoming;
+	private final RatedTestCase testCase;
+	private final List<DDEdge> outgoing = new ArrayList<DDEdge>();
+	private final List<DDEdge> incoming = new ArrayList<DDEdge>();
 
-	private boolean isCuttedNode;
 	private caseType sessionType;
-	private QASet cuttedQContainer;
 
 	public DDNode(RatedTestCase testCase, caseType sessiontype) {
 		this.testCase = testCase;
-		this.outgoing = new ArrayList<DDEdge>();
-		this.setIncoming(new ArrayList<DDEdge>());
-		isCuttedNode = false;
 		setTheCaseType(sessiontype);
 	}
 
@@ -54,28 +49,17 @@ public final class DDNode {
 	}
 
 	public boolean hasPredecessors() {
-		return (getIncoming() != null && !getIncoming().isEmpty());
+		return (!incoming.isEmpty());
 	}
 
 	public List<Finding> getFindings() {
 		return testCase.getFindings();
 	}
 
-	public boolean addChild(DDEdge edge, boolean oldEdge) {
-		edge.getEnd().getIncoming().add(edge);
-		return outgoing.add(edge);
-	}
-
-	public boolean addChild(DDEdge edge) {
-		return addChild(edge, false);
-	}
-
-	public boolean addChild(DDNode targetNode, Finding label, caseType sessiontype) {
-		return addChild(new DDEdge(this, targetNode, label, sessiontype));
-	}
-
-	public boolean addChild(DDNode targetNode, Finding label) {
-		return addChild(new DDEdge(this, targetNode, label), false);
+	public void addChild(DDNode targetNode) {
+		DDEdge edge = new DDEdge(this, targetNode, sessionType);
+		edge.getEnd().incoming.add(edge);
+		this.outgoing.add(edge);
 	}
 
 	public RatedTestCase getTestCase() {
@@ -83,15 +67,7 @@ public final class DDNode {
 	}
 
 	public List<DDEdge> getOutgoing() {
-		return outgoing;
-	}
-
-	public void setTestCase(RatedTestCase testCase) {
-		this.testCase = testCase;
-	}
-
-	public void setOutgoing(List<DDEdge> outgoing) {
-		this.outgoing = outgoing;
+		return Collections.unmodifiableList(outgoing);
 	}
 
 	@Override
@@ -122,22 +98,6 @@ public final class DDNode {
 		return true;
 	}
 
-	public boolean isCuttedNode() {
-		return isCuttedNode;
-	}
-
-	public void setCuttedNode(boolean isCuttedNode) {
-		this.isCuttedNode = isCuttedNode;
-	}
-
-	public QASet getCuttedQContainer() {
-		return cuttedQContainer;
-	}
-
-	public void setCuttedQContainer(QASet cuttedQContainer) {
-		this.cuttedQContainer = cuttedQContainer;
-	}
-
 	public caseType getTheCaseType() {
 		return sessionType;
 	}
@@ -146,19 +106,10 @@ public final class DDNode {
 		this.sessionType = sessionType;
 	}
 
-	public void setIncoming(List<DDEdge> incoming) {
-		this.incoming = incoming;
-	}
-
 	public List<DDEdge> getIncoming() {
-		return incoming;
+		return Collections.unmodifiableList(incoming);
 	}
 
-	/**
-	 * 
-	 * @created 28.04.2011
-	 * @return
-	 */
 	public String getID() {
 		return id;
 	}
