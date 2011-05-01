@@ -288,10 +288,14 @@ public class DefaultBlackboard implements Blackboard {
 	@Override
 	public List<Question> getAnsweredQuestions() {
 		List<Question> questions = new LinkedList<Question>();
-		for (Question q : session.getKnowledgeBase().getManager().getQuestions()) {
-			Fact mergedFact = valueStorage.getMergedFact(q);
-			if (mergedFact != null && UndefinedValue.isNotUndefinedValue(mergedFact.getValue())) {
-				questions.add(q);
+		// for (Question q :
+		// session.getKnowledgeBase().getManager().getQuestions()) {
+		for (TerminologyObject object : getValuedObjects()) {
+			if (object instanceof Question) {
+				Fact mergedFact = valueStorage.getMergedFact(object);
+				if (mergedFact != null && UndefinedValue.isNotUndefinedValue(mergedFact.getValue())) {
+					questions.add((Question) object);
+				}
 			}
 		}
 		return questions;
@@ -300,9 +304,25 @@ public class DefaultBlackboard implements Blackboard {
 	@Override
 	public List<Solution> getSolutions(Rating.State state) {
 		List<Solution> result = new LinkedList<Solution>();
-		for (Solution diag : getSession().getKnowledgeBase().getManager().getSolutions()) {
-			if (getRating(diag).getState().equals(state)) {
-				result.add(diag);
+		if (state.equals(Rating.State.UNCLEAR)) {
+			// if the state is unclear
+			// we can have to look at all objects
+			for (Solution diag : getSession().getKnowledgeBase().getManager().getSolutions()) {
+				if (getRating(diag).getState().equals(state)) {
+					result.add(diag);
+				}
+			}
+		}
+		else {
+			// if the state is not unclear
+			// we can restrict looking at values objects (instead of all)
+			for (Object object : getValuedObjects()) {
+				if (object instanceof Solution) {
+					Solution diag = (Solution) object;
+					if (getRating(diag).getState().equals(state)) {
+						result.add(diag);
+					}
+				}
 			}
 		}
 		return result;
