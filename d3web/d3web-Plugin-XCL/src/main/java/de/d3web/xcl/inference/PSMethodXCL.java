@@ -293,11 +293,11 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 	}
 
 	public int getAnsweredQuestionsCount(Session session) {
-		return ((XCLCaseObject) session.getSessionObject(this)).totalAnsweredCount;
+		return session.getSessionObject(this).totalAnsweredCount;
 	}
 
 	public double getAnsweredQuestionsAbnormality(Session session) {
-		return ((XCLCaseObject) session.getSessionObject(this)).totalAnsweredAbnormality;
+		return session.getSessionObject(this).totalAnsweredAbnormality;
 	}
 
 	/**
