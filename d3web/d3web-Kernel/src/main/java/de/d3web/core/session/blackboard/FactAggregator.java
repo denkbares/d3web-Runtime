@@ -39,7 +39,7 @@ import de.d3web.core.knowledge.terminology.Rating;
  * @author volker_belli
  * 
  */
-class FactAggregator {
+final class FactAggregator {
 
 	private final List<Fact> facts = new ArrayList<Fact>();
 	private Fact mergedFact = null;
@@ -229,6 +229,33 @@ class FactAggregator {
 	 */
 	public boolean isEmpty() {
 		return this.facts.isEmpty();
+	}
+
+	/**
+	 * Returns whether the aggregator is empty for a specific problem or
+	 * stratgic solver due to having no facts from this solver.
+	 * 
+	 * @param psMethod the solver to check for facts
+	 * @return whether the aggregator is empty
+	 */
+	public boolean isEmpty(PSMethod psMethod) {
+		for (Fact f : facts) {
+			if (f.getPSMethod().equals(psMethod)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Returns whether the aggregator has facts for a specific problem or
+	 * stratgic solver.
+	 * 
+	 * @param psMethod the solver to check for facts
+	 * @return if there are facts for the solver
+	 */
+	public final boolean hasFacts(PSMethod psMethod) {
+		return !isEmpty(psMethod);
 	}
 
 	/**

@@ -136,8 +136,7 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public Value getValue(ValueObject valueObject) {
-		return getValueFromFact(valueObject,
-				this.valueStorage.getAggregator(valueObject).getMergedFact());
+		return getValueFromFact(valueObject, this.valueStorage.getMergedFact(valueObject));
 	}
 
 	@Override
@@ -232,12 +231,12 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public Fact getInterviewFact(TerminologyObject terminologyObject) {
-		return this.interviewStorage.getAggregator(terminologyObject).getMergedFact();
+		return this.interviewStorage.getMergedFact(terminologyObject);
 	}
 
 	@Override
 	public Fact getInterviewFact(TerminologyObject terminologyObject, PSMethod psmethod) {
-		return this.interviewStorage.getAggregator(terminologyObject).getMergedFact(psmethod);
+		return this.interviewStorage.getMergedFact(terminologyObject, psmethod);
 	}
 
 	@Override
@@ -257,13 +256,12 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public Value getValue(ValueObject object, PSMethod psmethod) {
-		return getValueFromFact(object, valueStorage.getAggregator(object).getMergedFact(psmethod));
+		return getValueFromFact(object, valueStorage.getMergedFact(object, psmethod));
 	}
 
 	@Override
 	public Value getValue(ValueObject object, PSMethod psmethod, Object source) {
-		return getValueFromFact(object,
-				valueStorage.getAggregator(object).getFact(psmethod, source));
+		return getValueFromFact(object, valueStorage.getFact(object, psmethod, source));
 	}
 
 	@Override
@@ -291,7 +289,7 @@ public class DefaultBlackboard implements Blackboard {
 	public List<Question> getAnsweredQuestions() {
 		List<Question> questions = new LinkedList<Question>();
 		for (Question q : session.getKnowledgeBase().getManager().getQuestions()) {
-			Fact mergedFact = valueStorage.getAggregator(q).getMergedFact();
+			Fact mergedFact = valueStorage.getMergedFact(q);
 			if (mergedFact != null && UndefinedValue.isNotUndefinedValue(mergedFact.getValue())) {
 				questions.add(q);
 			}
@@ -312,7 +310,7 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public Rating getRating(Solution solution, PSMethod psmethod) {
-		Fact mergedFact = valueStorage.getAggregator(solution).getMergedFact(psmethod);
+		Fact mergedFact = valueStorage.getMergedFact(solution, psmethod);
 		if (mergedFact == null) {
 			return new Rating(State.UNCLEAR);
 		}
@@ -325,7 +323,7 @@ public class DefaultBlackboard implements Blackboard {
 	public List<PSMethod> getContributingPSMethods(TerminologyObject object) {
 		List<PSMethod> list = new LinkedList<PSMethod>();
 		for (PSMethod psm : session.getPSMethods()) {
-			if (valueStorage.getAggregator(object).getMergedFact(psm) != null) {
+			if (valueStorage.hasFact(object, psm)) {
 				list.add(psm);
 			}
 		}
@@ -336,7 +334,7 @@ public class DefaultBlackboard implements Blackboard {
 	public List<PSMethod> getIndicatingPSMethods(TerminologyObject object) {
 		List<PSMethod> list = new LinkedList<PSMethod>();
 		for (PSMethod psm : session.getPSMethods()) {
-			if (interviewStorage.getAggregator(object).getMergedFact(psm) != null) {
+			if (interviewStorage.hasFact(object, psm)) {
 				list.add(psm);
 			}
 		}
@@ -345,7 +343,7 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public Fact getValueFact(ValueObject valueObject) {
-		return this.valueStorage.getAggregator(valueObject).getMergedFact();
+		return this.valueStorage.getMergedFact(valueObject);
 	}
 
 	private Value getValueFromFact(ValueObject object, Fact fact) {
