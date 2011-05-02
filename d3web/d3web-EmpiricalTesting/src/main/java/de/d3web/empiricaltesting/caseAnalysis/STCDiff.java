@@ -118,7 +118,12 @@ public class STCDiff implements Diff {
 	 */
 	@Override
 	public boolean hasDifferences() {
-		return !rtc_diffs.keySet().isEmpty();
+		for (RTCDiff rtcDiff : rtc_diffs.values()) {
+			if (rtcDiff.hasDifferences()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

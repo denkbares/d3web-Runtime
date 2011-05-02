@@ -101,7 +101,9 @@ public class KnowledgeBase implements NamedObject {
 	/**
 	 * Creates a new knowledge base instance. For the general creation of a
 	 * knowledge base and its corresponding objects we recommend to use the
-	 * {@link KnowledgeBaseUtils} class.
+	 * {@link KnowledgeBaseUtils} class. Caution: This constructor does not
+	 * create root objects for questions and solutions (use
+	 * {@link KnowledgeBaseUtils} instead).
 	 */
 	public KnowledgeBase() {
 		initQuestions = new HashMap<QASet, Integer>();

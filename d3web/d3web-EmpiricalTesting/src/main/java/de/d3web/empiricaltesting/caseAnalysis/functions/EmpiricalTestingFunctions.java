@@ -136,7 +136,7 @@ public final class EmpiricalTestingFunctions {
 	 */
 	public double fMeasure(double beta, STCDiff stcDiff, PrecisionRecallCalculator strategy) {
 		double numerator = 0;
-		for (RatedTestCase rtc : stcDiff.getCasesWithDifference()) {
+		for (RatedTestCase rtc : stcDiff.getCase().getCases()) {
 			numerator += strategy.fMeasure(beta, stcDiff.getDiff(rtc));
 		}
 		double denominator = stcDiff.getCase().getCases().size();

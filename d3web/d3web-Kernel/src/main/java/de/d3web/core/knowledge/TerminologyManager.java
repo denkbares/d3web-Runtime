@@ -62,7 +62,7 @@ public class TerminologyManager {
 				throw new IllegalArgumentException(
 						"TerminologyObject "
 								+ object
-								+ " cannot be added, an Object with the same name is already contained in the knowledgebase.");
+								+ " cannot be added, an Object with the same name is already contained in the knowledge base.");
 			}
 			else {
 				// no need to insert the object twice
@@ -73,7 +73,7 @@ public class TerminologyManager {
 			throw new IllegalArgumentException(
 					"TerminologyObject "
 							+ object
-							+ " cannot be added, it belongs to another knowledgebase.");
+							+ " cannot be added, it belongs to another knowledge base.");
 		}
 		objectNameMap.put(object.getName(), object);
 	}

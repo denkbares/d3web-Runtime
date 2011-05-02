@@ -122,14 +122,17 @@ public class RatedTestCase {
 	}
 
 	/**
-	 * Appends one RatedSolution to this RatedTestCase's List of expected
-	 * Solutions.
+	 * Appends some RatedSolution instances to this RatedTestCase's List of
+	 * expected solutions.
 	 * 
-	 * @param solution The RatedSolution to be added
-	 * @return True if RatedSolution was successfully appended
+	 * @param solutions The RatedSolution instances to be added
+	 * @return True if the solutions were successfully appended
 	 */
-	public boolean addExpected(RatedSolution solution) {
-		boolean result = expectedSolutions.add(solution);
+	public boolean addExpected(RatedSolution... solutions) {
+		boolean result = true;
+		for (RatedSolution solution : solutions) {
+			result = result && expectedSolutions.add(solution);
+		}
 		if (result) derivedSolutionsAreUpToDate = false;
 		return result;
 	}
@@ -149,8 +152,12 @@ public class RatedTestCase {
 		return result;
 	}
 
-	public boolean addExpectedFinding(Finding finding) {
-		return this.expectedFindings.add(finding);
+	public boolean addExpectedFinding(Finding... findings) {
+		boolean allAdded = true;
+		for (Finding finding : findings) {
+			allAdded = allAdded && this.expectedFindings.add(finding);
+		}
+		return allAdded;
 	}
 
 	public boolean addExpectedFindings(Collection<Finding> expectedFindings) {
@@ -158,14 +165,17 @@ public class RatedTestCase {
 	}
 
 	/**
-	 * Appends one RatedSolution to this RatedTestCase´s List of derived
-	 * Solutions.
+	 * Appends some RatedSolution instances to this RatedTestCase´s List of
+	 * derived solutions.
 	 * 
-	 * @param solution The RatedSolution to be added
+	 * @param solutions The RatedSolution instances to be added
 	 * @return True if RatedSolution was successfully appended
 	 */
-	public boolean addDerived(RatedSolution solution) {
-		boolean result = derivedSolutions.add(solution);
+	public boolean addDerived(RatedSolution... solutions) {
+		boolean result = true;
+		for (RatedSolution solution : solutions) {
+			result = result && derivedSolutions.add(solution);
+		}
 		if (result) derivedSolutionsAreUpToDate = false;
 		return result;
 	}

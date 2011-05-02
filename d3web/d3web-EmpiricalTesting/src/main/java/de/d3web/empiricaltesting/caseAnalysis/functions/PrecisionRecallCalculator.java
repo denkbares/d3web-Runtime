@@ -62,10 +62,18 @@ public abstract class PrecisionRecallCalculator {
 	 * Returns the fMeasure for a RatedTestCase and a specified Beta.
 	 */
 	public double fMeasure(double beta, RTCDiff rtcDiff) {
-		double numerator = (Math.pow(beta, 2) + 1) * precision(rtcDiff)
-				* recall(rtcDiff);
+		if (rtcDiff == null) {
+			return 1;
+		}
+
+		double numerator = (Math.pow(beta, 2) + 1) * precision(rtcDiff) * recall(rtcDiff);
 		double denominator = Math.pow(beta, 2) * precision(rtcDiff) + recall(rtcDiff);
-		return numerator / denominator;
+		if (denominator == 0) {
+			return 0;
+		}
+		else {
+			return numerator / denominator;
+		}
 	}
 
 }
