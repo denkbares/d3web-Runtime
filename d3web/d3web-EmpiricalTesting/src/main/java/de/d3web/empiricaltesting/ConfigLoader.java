@@ -68,11 +68,17 @@ public final class ConfigLoader {
 		config.setProperty("fMeasureDiff", "0.01");
 		config.setProperty("compareOnlySymbolicStates", "false");
 		// Formatting Nodes
+		config.setProperty("nodeColorQuestionnaireTitle", "#BBBBBB");
+		config.setProperty("nodeColorSolutionTitle", "#BBBBBB");
 		config.setProperty("nodeColorNewCase", "#04B404");
 		config.setProperty("nodeColorOldCase", "#FFFFFF");
 		config.setProperty("nodeColorIncorrectCase", "#FF0000");
 		config.setProperty("solutionColorSuggested", "#FFFF00");
 		config.setProperty("solutionColorEstablished", "#FF8000");
+		config.setProperty("showQuestionnairePrompt", "false");
+		config.setProperty("showQuestionnaireName", "false");
+		config.setProperty("showNextQuestions", "true");
+		config.setProperty("maxVisibleSolutions", "20");
 		// Formatting Edges
 		config.setProperty("edgeWidthNewCase", "15");
 		config.setProperty("edgeWidthOldCase", "3");
@@ -80,10 +86,14 @@ public final class ConfigLoader {
 		config.setProperty("edgeColorNewCase", "#04B404");
 		config.setProperty("edgeColorOldCase", "#A4A4A4");
 		config.setProperty("edgeColorIncorrectCase", "#FF0000");
+		config.setProperty("onlyDecisiveAnswers", "false");
 	}
 
 	public String getProperty(String key) {
 		return config.getProperty(key);
 	}
 
+	public void setProperty(String key, String value) {
+		config.setProperty(key, value);
+	}
 }

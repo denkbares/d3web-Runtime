@@ -132,7 +132,11 @@ public final class InterviewBot {
 			}
 
 			// do noting more if we reached the maximum number of cases
-			if (maxCases > 0 && casesCounter >= maxCases) return;
+			if (maxCases > 0 && casesCounter >= maxCases) {
+				store(thisCase);
+				storeError(thisCase, "cut branch, we are already finished");
+				return;
+			}
 
 			// Get all possible answers (combinations) for the question
 			InterviewObject[] interviewItems = getBotStrategy().getNextSequenceItems(thisSession);
@@ -146,7 +150,7 @@ public final class InterviewBot {
 			// we sometimes will receive an empty fact set
 			if (factSets == null || factSets.length == 0) {
 				storeError(thisCase,
-						"\tcut off branch, no fact sets received for "
+						"cut off branch, no fact sets received for "
 								+ Arrays.asList(interviewItems));
 				updateProgress(maxPercent);
 			}
@@ -170,16 +174,11 @@ public final class InterviewBot {
 							toFindings(factSet),
 							toRatedSolutions(nextSession));
 
-					if (maxCases > 0 && casesCounter >= maxCases) {
-						store(nextSequentialCase);
-						storeError(nextSequentialCase, "cut branch, we are already finished");
-					}
-					else {
-						// step down in recursion with the next suitable
-						// question to ask
-						traverse(nextSession, nextSequentialCase, depth + 1,
-								currentPercent, currentPercent + deltaPercent);
-					}
+					// step down in recursion with the next suitable
+					// question to ask
+					traverse(nextSession, nextSequentialCase, depth + 1,
+							currentPercent, currentPercent + deltaPercent);
+
 					// increase progress
 					updateProgress(currentPercent += deltaPercent);
 				}
@@ -349,9 +348,7 @@ public final class InterviewBot {
 	}
 
 	private void setCaseValue(Session session, Question q, Value v) {
-
 		Fact fact = FactFactory.createUserEnteredFact(q, v);
-
 		session.getBlackboard().addValueFact(fact);
 	}
 
@@ -359,7 +356,6 @@ public final class InterviewBot {
 	 * This builder creates a configured interview bot.
 	 * 
 	 * @author joba
-	 * 
 	 */
 	public static class Builder {
 

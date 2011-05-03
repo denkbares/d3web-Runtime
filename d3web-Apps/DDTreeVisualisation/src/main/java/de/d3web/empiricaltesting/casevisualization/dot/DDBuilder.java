@@ -35,11 +35,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.session.Value;
 import de.d3web.empiricaltesting.CaseUtils;
 import de.d3web.empiricaltesting.ConfigLoader;
 import de.d3web.empiricaltesting.Finding;
@@ -55,6 +58,7 @@ import de.d3web.scoring.HeuristicRating;
 
 public final class DDBuilder implements CaseVisualizer {
 
+	private static final String CORRECTION_CELL = "<TD BGCOLOR=\"#FFFFFF\" WIDTH=\"50\"></TD>";
 	private final static String HEADER = "digraph g { \ngraph [ \n  rankdir = \"TD\" \n"
 			+ "]; \n" + "node [\n" + " fontname=Helvetica\n"
 			+ " fontsize = \"16\"\n" + "  shape = none\n" + "];\n"
@@ -63,9 +67,6 @@ public final class DDBuilder implements CaseVisualizer {
 
 	private static NumberFormat formater = new DecimalFormat("#########");
 
-	private static DDBuilder instance = new DDBuilder();
-
-	private CaseUtils bh = CaseUtils.getInstance();
 	private ConfigLoader config = ConfigLoader.getInstance();
 
 	private Set<String> createdEdges;
@@ -75,11 +76,7 @@ public final class DDBuilder implements CaseVisualizer {
 		old_case, new_case, incorrect
 	};
 
-	private DDBuilder() {
-	}
-
-	public static DDBuilder getInstance() {
-		return instance;
+	public DDBuilder() {
 	}
 
 	/**
@@ -134,7 +131,7 @@ public final class DDBuilder implements CaseVisualizer {
 	}
 
 	private void writeToFile(TestCase testSuite, String dotFilePath) throws IOException {
-		String partitionTree = config.getProperty("partitionTree");
+		String partitionTree = getConfig().getProperty("partitionTree");
 		if (partitionTree.equals("true")) {
 
 			// Die erste Frage ermitteln
@@ -221,12 +218,12 @@ public final class DDBuilder implements CaseVisualizer {
 		return node;
 	}
 
-	public String generateDOT() {
+	public String render() {
 		StringBuffer b = new StringBuffer(HEADER);
 		for (DDNode node : nodes.values()) {
-			createNode(b, node, computeOutgoing(node));
+			renderNode(b, node, computeOutgoing(node));
 			for (DDEdge edge : node.getOutgoing()) {
-				createEdge(b, edge);
+				renderEdge(b, edge);
 			}
 		}
 		b.append(FOOTER);
@@ -236,7 +233,7 @@ public final class DDBuilder implements CaseVisualizer {
 	private void write(OutputStream out) throws IOException {
 		OutputStreamWriter dotwriter =
 				new OutputStreamWriter(out, "UTF-8");
-		dotwriter.write(generateDOT());
+		dotwriter.write(render());
 		dotwriter.close();
 	}
 
@@ -257,7 +254,7 @@ public final class DDBuilder implements CaseVisualizer {
 		return outgoingQuestions;
 	}
 
-	private void createEdge(StringBuffer b, DDEdge edge) {
+	public void renderEdge(StringBuffer b, DDEdge edge) {
 		String name0 = edge.getBegin().getID();
 		String name1 = edge.getEnd().getID();
 		String arcName = name0 + "-" + name1;
@@ -267,43 +264,48 @@ public final class DDBuilder implements CaseVisualizer {
 
 			b.append("\"" + name0 + "\" -> \"" + name1 + "\" [");
 			b.append("label = \"");
-			for (Finding f : edge.getEnd().getFindings()) {
-				b.append(bh.prettyLabel(f.getValuePrompt()));
+			boolean onlyDecisiveAnswers =
+					Boolean.valueOf(getConfig().getProperty("onlyDecisiveAnswers"));
+			List<Finding> findings = edge.getEnd().getFindings();
+			for (Finding f : findings) {
+				if (onlyDecisiveAnswers
+						&& !hasMultipleOutgoingValues(f.getQuestion(), edge.getBegin())) {
+					continue;
+				}
+				b.append(renderEdgeLabel(f));
 				b.append("\\l");
 			}
 			b.append("\"");
 
 			boolean bolOldCasesLikeNewCases =
-					config.getProperty("renderOldCasesLikeNewCases").equals("true");
+					getConfig().getProperty("renderOldCasesLikeNewCases").equals("true");
 
 			switch (edge.getCaseType()) {
 			case new_case:
 				b.append(" color = \"" +
-						config.getProperty("edgeColorNewCase") + "\"");
+						getConfig().getProperty("edgeColorNewCase") + "\"");
 				b.append(" penwidth = " +
-						config.getProperty("edgeWidthNewCase"));
+						getConfig().getProperty("edgeWidthNewCase"));
 				break;
 			case old_case:
-
 				if (bolOldCasesLikeNewCases) {
 					b.append(" color = \"" +
-							config.getProperty("edgeColorNewCase") + "\"");
+							getConfig().getProperty("edgeColorNewCase") + "\"");
 					b.append(" penwidth = " +
-							config.getProperty("edgeWidthNewCase"));
+							getConfig().getProperty("edgeWidthNewCase"));
 				}
 				else {
 					b.append(" color = \"" +
-							config.getProperty("edgeColorOldCase") + "\"");
+							getConfig().getProperty("edgeColorOldCase") + "\"");
 					b.append(" penwidth = " +
-							config.getProperty("edgeWidthOldCase"));
+							getConfig().getProperty("edgeWidthOldCase"));
 				}
-
 				break;
 			case incorrect:
 				b.append(" color = \"" +
-						config.getProperty("edgeColorIncorrectCase") + "\"");
+						getConfig().getProperty("edgeColorIncorrectCase") + "\"");
 				b.append(" penwidth = " +
-						config.getProperty("edgeWidthIncorrectCase"));
+						getConfig().getProperty("edgeWidthIncorrectCase"));
 				break;
 			}
 
@@ -311,18 +313,91 @@ public final class DDBuilder implements CaseVisualizer {
 		}
 	}
 
-	private void createEmptyNode(StringBuffer b, DDNode node) {
+	/**
+	 * Returns if the specified {@link Question} has multiple values within the
+	 * outgoing paths of a specified source {@link DDNode}.
+	 * 
+	 * @created 02.05.2011
+	 * @param question the question to be checked
+	 * @param outgoingNode the node where the different paths starts
+	 * @return if there are multiple different values for this question
+	 */
+	private boolean hasMultipleOutgoingValues(Question question, DDNode sourceNode) {
+		Set<Value> values = new HashSet<Value>();
+		List<DDEdge> outgoing = sourceNode.getOutgoing();
+		for (DDEdge edge : outgoing) {
+			List<Finding> findings = edge.getEnd().getFindings();
+			for (Finding finding : findings) {
+				if (question.equals(finding.getQuestion())) {
+					values.add(finding.getValue());
+				}
+			}
+		}
+		return values.size() >= 2;
+	}
+
+	/**
+	 * Encodes the specified text by replacing all possible invalid characters
+	 * by HTML entities as specified in DOT language. The returned text will be
+	 * displayed as the original one, but does not contain any invalid
+	 * characters.
+	 * 
+	 * @created 02.05.2011
+	 * @param text the text to be encoded
+	 * @return the encoded text
+	 */
+	public String encodeHTML(String text) {
+		StringBuilder result = new StringBuilder(text.length() * 5);
+		for (int i = 0; i < text.length(); i++) {
+			char c = text.charAt(i);
+			if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')
+					|| (c >= '0' && c <= '9')) {
+				result.append(c);
+			}
+			else if (Character.isWhitespace(c)) {
+				result.append(" ");
+			}
+			else {
+				result.append("&#").append(String.valueOf((int) c)).append(";");
+			}
+		}
+		return result.toString();
+	}
+
+	/**
+	 * Renders the name of one finding to be displayed as an edge label. The
+	 * rendered label must not contain any invalid characters. If you expect
+	 * those, use #encodeHTML(String) method.
+	 * 
+	 * @created 02.05.2011
+	 * @param finding the finding to be rendered as a label
+	 * @return the rendered finding
+	 */
+	public String renderEdgeLabel(Finding finding) {
+		// if the next questions are shown in the previous node
+		// we only display the answers
+		String result = encodeHTML(finding.getValuePrompt());
+		boolean showNextQuestions =
+				Boolean.valueOf(getConfig().getProperty("showNextQuestions"));
+		if (!showNextQuestions) {
+			// otherwise also the prompt
+			result = encodeHTML(finding.getQuestionPrompt()) + " = " + result;
+		}
+		return result;
+	}
+
+	public void renderEmptyNode(StringBuffer b, DDNode node) {
 		b.append(node.getID());
 		b.append(" [\n  label=<\n");
 		b.append("   <TABLE>\n");
-		String nodeColor = config.getProperty("nodeColorIncorrectCase");
+		String nodeColor = getConfig().getProperty("nodeColorIncorrectCase");
 		b.append("    <TR><TD BGCOLOR=\"" +
 				nodeColor + "\">truncated</TD> </TR>\n");
 		b.append("   </TABLE>>\n");
 		b.append("];\n");
 	}
 
-	private void createNode(StringBuffer b, DDNode node, List<Question> nextQuestions) {
+	public void renderNode(StringBuffer result, DDNode node, List<Question> nextQuestions) {
 
 		// prepare list of all solutions
 		List<RatedSolution> allRatedSolutions = new LinkedList<RatedSolution>();
@@ -330,61 +405,57 @@ public final class DDBuilder implements CaseVisualizer {
 		allRatedSolutions.addAll(node.getTestCase().getDerivedSolutions());
 
 		if (node.getTestCase().getFindings().isEmpty() && allRatedSolutions.isEmpty()) {
-			createEmptyNode(b, node);
+			renderEmptyNode(result, node);
 			return;
 		}
 
-		b.append(node.getID());
-		b.append(" [\n  label=<\n");
-		b.append("   <TABLE>\n");
+		result.append(node.getID());
+		result.append(" [\n  label=<\n");
 
-		// Colspan
-		int intColSpan = 3;
+		boolean correctionColumn = false;
 
 		String strSolutionColorCorrect =
-				config.getProperty("nodeColorNewCase");
+				getConfig().getProperty("nodeColorNewCase");
 
 		String strSolutionColorSuggested =
-				config.getProperty("solutionColorSuggested");
+				getConfig().getProperty("solutionColorSuggested");
 		String strSolutionColorEstablished =
-				config.getProperty("solutionColorEstablished");
+				getConfig().getProperty("solutionColorEstablished");
 
 		String nodeColor = "";
-		boolean bolOldCasesLikeNewCases =
-				config.getProperty("renderOldCasesLikeNewCases").equals("true");
+		boolean oldCasesLikeNewCases =
+				Boolean.valueOf(getConfig().getProperty("renderOldCasesLikeNewCases"));
 
-		boolean bolCompareOnlySymbolicStates =
-				config.getProperty("compareOnlySymbolicStates").equals("true");
+		boolean symbolicStates =
+				Boolean.valueOf(getConfig().getProperty("compareOnlySymbolicStates"));
 
 		switch (node.getTheCaseType()) {
 		case new_case:
-			nodeColor = config.getProperty("nodeColorNewCase");
+			nodeColor = getConfig().getProperty("nodeColorNewCase");
 			strSolutionColorSuggested = nodeColor;
 			strSolutionColorEstablished = nodeColor;
 			break;
 		case old_case:
-
-			if (bolOldCasesLikeNewCases) nodeColor = config.getProperty("nodeColorNewCase");
-			else nodeColor = config.getProperty("nodeColorOldCase");
+			if (oldCasesLikeNewCases) nodeColor = getConfig().getProperty("nodeColorNewCase");
+			else nodeColor = getConfig().getProperty("nodeColorOldCase");
 
 			strSolutionColorCorrect = nodeColor;
 			strSolutionColorSuggested = nodeColor;
 			strSolutionColorEstablished = nodeColor;
 			break;
 		case incorrect:
-			nodeColor = config.getProperty("nodeColorIncorrectCase");
-			if (config.getProperty("printCorrectionColumn").equals("true")) intColSpan = 4;
+			nodeColor = getConfig().getProperty("nodeColorIncorrectCase");
+			if (Boolean.valueOf(getConfig().getProperty("printCorrectionColumn"))) {
+				correctionColumn = true;
+			}
 			break;
 		}
 
+		result.append("   <TABLE BGCOLOR=\"").append(nodeColor).append("\">\n");
+
 		// print question answered for deriving the current solutions
 
-		String nodeName;
-		for (Finding f : node.getTestCase().getFindings()) {
-			nodeName = f.getQuestionPrompt() + " = " + f.getValuePrompt();
-			b.append("    <TR><TD COLSPAN=\"" + intColSpan + "\" BGCOLOR=\"" +
-					nodeColor + "\">" + bh.pretty(nodeName) + "</TD> </TR>\n");
-		}
+		renderNodeAnswers(result, node);
 
 		// Put all RatedSolutions in Maps
 		Map<Solution, RatedSolution> expSolutions =
@@ -392,44 +463,130 @@ public final class DDBuilder implements CaseVisualizer {
 		Map<Solution, RatedSolution> derSolutions =
 				getSolutionsInHashMap(node.getTestCase().getDerivedSolutions());
 
-		// Print Solutions
-		b.append(transformSolutionsHeader(nodeColor, intColSpan));
+		// Print Solutions Header
+		if (!allRatedSolutions.isEmpty()) {
+			renderSolutionsHeader(result, node, correctionColumn);
+		}
 
-		// iterate over all rated solutions, but avoid duplicates
-		Set<Solution> printedSolutions = new HashSet<Solution>();
-		for (RatedSolution ratedSolution : allRatedSolutions) {
-			// check if solution is already done
-			Solution d = ratedSolution.getSolution();
-			if (printedSolutions.contains(d)) continue;
-			printedSolutions.add(d);
+		int maxCount = Integer.valueOf(config.getProperty("maxVisibleSolutions"));
+		if (allRatedSolutions.size() > maxCount) {
+			renderTableLine(result, null, false,
+					"..." + allRatedSolutions.size() + " solutions left...");
+		}
+		else {
+			// iterate over all rated solutions, but avoid duplicates
+			Set<Solution> printedSolutions = new HashSet<Solution>();
+			for (RatedSolution ratedSolution : allRatedSolutions) {
+				// check if solution is already done
+				Solution d = ratedSolution.getSolution();
+				if (printedSolutions.contains(d)) continue;
+				printedSolutions.add(d);
 
-			// otherwise print it
-			RatedSolution expected = expSolutions.get(d);
-			RatedSolution derived = derSolutions.get(d);
+				// otherwise print it
+				RatedSolution expected = expSolutions.get(d);
+				RatedSolution derived = derSolutions.get(d);
 
-			if (expected != null && derived != null && expected.equals(derived)) {
-				b.append(transformCorrectSolution(derived, strSolutionColorCorrect,
-						intColSpan, bolCompareOnlySymbolicStates));
-			}
-			else {
-				String expColor = getColor(expected, strSolutionColorSuggested,
-						strSolutionColorEstablished, nodeColor);
-				String derColor = getColor(derived, strSolutionColorSuggested,
-						strSolutionColorEstablished, nodeColor);
-				b.append(transformIncorrectSolutions(expected, derived, intColSpan,
-						expColor, derColor, nodeColor, bolCompareOnlySymbolicStates));
+				if (expected != null && derived != null && expected.equals(derived)) {
+					renderCorrectSolution(result, node,
+							derived, strSolutionColorCorrect,
+							correctionColumn, symbolicStates);
+				}
+				else {
+					String expColor = getColor(expected, strSolutionColorSuggested,
+							strSolutionColorEstablished, nodeColor);
+					String derColor = getColor(derived, strSolutionColorSuggested,
+							strSolutionColorEstablished, nodeColor);
+					renderIncorrectSolutions(result, node, expected, derived,
+							expColor, derColor, correctionColumn, symbolicStates);
+				}
 			}
 		}
 
-		// print questions to be asked next (mostly only one)
+		boolean showNextQuestions =
+				Boolean.valueOf(getConfig().getProperty("showNextQuestions"));
+		if (showNextQuestions) {
+			// print questions to be asked next (mostly only one)
+			renderNodeNextQuestions(result, node, nextQuestions);
+		}
+
+		result.append("   </TABLE>>\n");
+		result.append("];\n");
+	}
+
+	/**
+	 * Renders the questions to be answered next after the specified node into
+	 * the result buffer. This method must render a set of HTML table rows into
+	 * the buffer (including the opening and closing &lt;TR&gt;...&lt;/TR&gt;
+	 * tags), as specified in the dot language for HTML nodes.
+	 * 
+	 * @created 02.05.2011
+	 * @param result the result buffer to render into
+	 * @param node the node to render its findings as answers
+	 * @param nextQuestions the next questions of that node
+	 */
+	public void renderNodeNextQuestions(StringBuffer result, DDNode node, List<Question> nextQuestions) {
 		for (Question question : nextQuestions) {
 			String name = CaseUtils.getPrompt(question);
-			b.append("    <TR><TD COLSPAN=\"" + intColSpan + "\" BGCOLOR=\"" +
-					nodeColor + "\">" + bh.pretty(name) + "</TD> </TR>\n");
+			result.append("    <TR><TD COLSPAN=\"4\">")
+					.append(encodeHTML(name))
+					.append("</TD> </TR>\n");
 		}
+	}
 
-		b.append("   </TABLE>>\n");
-		b.append("];\n");
+	/**
+	 * Renders the given answers of the specified node into the result buffer.
+	 * The answers are the findings of the node's corresponding test case. This
+	 * method must render a set of HTML table rows into the buffer (including
+	 * the opening and closing &lt;TR&gt;...&lt;/TR&gt; tags), as specified in
+	 * the dot language for HTML nodes.
+	 * 
+	 * @created 02.05.2011
+	 * @param result the result buffer to render into
+	 * @param node the node to render its findings as answers
+	 */
+	public void renderNodeAnswers(StringBuffer result, DDNode node) {
+		List<Finding> findings = node.getTestCase().getFindings();
+		if (findings.isEmpty()) return;
+
+		Boolean showPrompt = Boolean.valueOf(getConfig().getProperty("showQuestionnairePrompt"));
+		Boolean showName = Boolean.valueOf(getConfig().getProperty("showQuestionnaireName"));
+		if (showPrompt || showName) {
+			String color = getConfig().getProperty("nodeColorQuestionnaireTitle");
+			QContainer parent = findQContainer(findings.get(0).getQuestion());
+			String title;
+			String prompt = CaseUtils.getPrompt(parent);
+			String name = parent.getName();
+			if (showName && showPrompt && !name.equals(prompt)) {
+				title = prompt + " (" + name + ")";
+			}
+			else if (showPrompt) {
+				title = prompt;
+			}
+			else {
+				title = parent.getName();
+			}
+			renderTableLine(result, color, false, encodeHTML(title));
+		}
+		for (Finding finding : findings) {
+			renderTableLine(
+					result, null, false,
+					encodeHTML(finding.getQuestionPrompt()) + " = "
+							+ encodeHTML(finding.getValuePrompt()));
+		}
+	}
+
+	private QContainer findQContainer(TerminologyObject object) {
+		TerminologyObject[] parents = object.getParents();
+		for (TerminologyObject parent : parents) {
+			if (parent instanceof QContainer) {
+				return (QContainer) parent;
+			}
+			QContainer result = findQContainer(parent);
+			if (result != null) {
+				return result;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -452,169 +609,141 @@ public final class DDBuilder implements CaseVisualizer {
 		return result;
 	}
 
-	/**
-	 * Generates the header for the solutions in the table (node).
-	 * 
-	 * @param color String containing coloration information
-	 * @parm colspan int containing colspan information
-	 * 
-	 * @return String representing the header of the solutions part of the table
-	 */
-	private String transformSolutionsHeader(String color, int colspan) {
-
-		StringBuilder result = new StringBuilder();
-
+	public void renderTableLine(StringBuffer result, String color, boolean correctionColumn, String... cells) {
+		int colspan = 5 - cells.length;
+		if (correctionColumn) colspan--;
+		String bgColor = (color == null) ? "" : " BGCOLOR=\"" + color + "\"";
 		result.append("    <TR>");
-		result.append("<TD BGCOLOR=\"");
-		result.append(color);
-		result.append("\">");
-		result.append("Solution");
-		result.append("</TD>");
-		result.append("<TD BGCOLOR=\"");
-		result.append(color);
-		result.append("\">");
-		result.append("exp.");
-		result.append("</TD>");
-		result.append("<TD BGCOLOR=\"");
-		result.append(color);
-		result.append("\">");
-		result.append("der.");
-		result.append("</TD>");
-		result.append(createCorrectionColumn(colspan));
-		result.append("</TR>\n");
-
-		return result.toString();
-	}
-
-	/**
-	 * Checks if it is necessary to render a column for user correction.
-	 * 
-	 * @parm colspan int containing colspan information
-	 * 
-	 * @return String which is empty if column is not required.
-	 */
-	private String createCorrectionColumn(int colspan) {
-
-		if (colspan == 4) {
-			return "<TD BGCOLOR=\"#FFFFFF\" WIDTH=\"50\"></TD>";
+		for (int i = 0; i < cells.length; i++) {
+			result.append("<TD").append(bgColor);
+			if (i == cells.length - 1) {
+				result.append(" COLSPAN=\"").append(colspan).append("\"");
+			}
+			result.append(">");
+			result.append(cells[i]);
+			result.append("</TD>");
 		}
+		if (correctionColumn) {
+			result.append(CORRECTION_CELL);
+		}
+		result.append("</TR>\n");
+	}
 
-		return "";
+	public void renderTableRuler(StringBuffer result) {
+		renderTableLine(result, "#000000", false, "");
 	}
 
 	/**
-	 * Transforms a correct (expected = derived) solution to a nice formatted
-	 * String representation in preparation for rendering.
+	 * Renders the header for the solutions into the result buffer. This method
+	 * must render a set of HTML table rows into the buffer (including the
+	 * opening and closing &lt;TR&gt;...&lt;/TR&gt; tags), as specified in the
+	 * dot language for HTML nodes.
 	 * 
+	 * @created 02.05.2011
+	 * @param result the result buffer to render into
+	 * @param node the node to render its findings as answers
+	 * @param correctionColumn is a correction column required
+	 * 
+	 */
+	public void renderSolutionsHeader(StringBuffer result, DDNode node, boolean correctionColumn) {
+		String color = getConfig().getProperty("nodeColorQuestionnaireTitle");
+		renderTableLine(result, color, correctionColumn, "Solution", "exp.", "der.");
+	}
+
+	/**
+	 * Renders a correct (expected = derived) solution to the specified target
+	 * buffer. This method must render a set of HTML table rows into the buffer
+	 * (including the opening and closing &lt;TR&gt;...&lt;/TR&gt; tags), as
+	 * specified in the dot language for HTML nodes.
+	 * 
+	 * @created 02.05.2011
+	 * @param result the result buffer to render into
+	 * @param node the node to render its findings as answers
 	 * @param derived RatedSolution the derived solution which will be
 	 *        transformed
-	 * @param color String containing coloration information
-	 * @parm colspan int containing colspan information
-	 * @parm symbolicstates boolean containing information whether states are
-	 *       shown as symbolic states or scores
+	 * @param color String containing color information
+	 * @param symbolicStates boolean containing information whether states are
+	 *        shown as symbolic states or scores
 	 * 
 	 * @return String representing the transformed RatedSolution
 	 */
-	private String transformCorrectSolution(RatedSolution derived,
-			String color, int colspan, boolean symbolicstates) {
-
-		StringBuilder result = new StringBuilder();
-
-		result.append("    <TR>");
-		result.append("<TD BGCOLOR=\"");
-		result.append(color);
-		result.append("\">");
-		result.append(bh.pretty(CaseUtils.getPrompt(derived.getSolution())));
-		result.append("</TD>");
-		result.append("<TD COLSPAN=\"2\" ALIGN=\"CENTER\" BGCOLOR=\"");
-		result.append(color);
-		result.append("\">");
-		result.append(transformState(derived, symbolicstates));
-		result.append("</TD>");
-		result.append(createCorrectionColumn(colspan));
-		result.append("</TR>\n");
-
-		return result.toString();
+	public void renderCorrectSolution(StringBuffer result, DDNode node, RatedSolution derived,
+			String color, boolean correctionColumn, boolean symbolicStates) {
+		renderTableLine(result, color, correctionColumn,
+				encodeHTML(CaseUtils.getPrompt(derived.getSolution())),
+				renderSolutionState(derived, symbolicStates));
 	}
 
 	/**
-	 * Transforms two incorrect (expected != derived) solutions to a nice
-	 * formatted String representation in preparation for rendering.
+	 * Renders two incorrect (expected != derived) solutions to the result
+	 * buffer. This method must render a set of HTML table rows into the buffer
+	 * (including the opening and closing &lt;TR&gt;...&lt;/TR&gt; tags), as
+	 * specified in the dot language for HTML nodes.
 	 * 
+	 * @created 02.05.2011
+	 * @param result the result buffer to render into
+	 * @param node the node to render its findings as answers
+	 * @param derived RatedSolution the derived solution which will be rendered
 	 * @param expected RatedSolution the expected solution which will be
-	 *        transformed
-	 * 
-	 * @param derived RatedSolution the derived solution which will be
-	 *        transformed
-	 * @parm colspan int containing colspan information
-	 * @param expectedcolor String containing coloration information for
-	 *        expected solution
-	 * @param derivedcolor String containing coloration information for derived
+	 *        rendered
+	 * @param expectedColor String containing color information for expected
 	 *        solution
-	 * @param nodecolor String containing coloration information for the node
-	 * @parm symbolicstates boolean containing information whether states are
-	 *       shown as symbolic states or scores
-	 * 
-	 * @return String representing the transformed RatedSolutions
+	 * @param derivedColor String containing color information for derived
+	 *        solution
+	 * @param correctionColumn
+	 * @param symbolicStates boolean containing information whether states are
+	 *        shown as symbolic states or scores
 	 */
-	private String transformIncorrectSolutions(RatedSolution expected,
-			RatedSolution derived, int colSpan, String expectedColor,
-			String derivedColor, String nodeColor, boolean symbolicstates) {
+	public void renderIncorrectSolutions(StringBuffer result, DDNode node, RatedSolution expected,
+			RatedSolution derived, String expectedColor,
+			String derivedColor, boolean correctionColumn, boolean symbolicStates) {
 
-		StringBuilder result = new StringBuilder();
 		String solName = CaseUtils.getPrompt(expected == null ?
-				derived.getSolution() :
-				expected.getSolution());
+						derived.getSolution() :
+						expected.getSolution());
+
+		int colspan = correctionColumn ? 1 : 2;
 
 		result.append("    <TR>");
-		result.append("<TD BGCOLOR=\"");
-		result.append(nodeColor);
-		result.append("\">");
-		result.append(bh.pretty(solName));
+		result.append("<TD>");
+		result.append(encodeHTML(solName));
 		result.append("</TD>");
 		result.append("<TD ALIGN=\"CENTER\" BGCOLOR=\"");
 		result.append(expectedColor);
 		result.append("\">");
-		result.append(expected == null ? "N/A" : transformState(expected, symbolicstates));
+		result.append(expected == null ? "N/A" : renderSolutionState(expected, symbolicStates));
 		result.append("</TD>");
 		result.append("<TD ALIGN=\"CENTER\" BGCOLOR=\"");
 		result.append(derivedColor);
-		result.append("\">");
-		result.append(derived == null ? "N/A" : transformState(derived, symbolicstates));
+		result.append("\" COLSPAN=\"").append(colspan).append("\">");
+		result.append(derived == null ? "N/A" : renderSolutionState(derived, symbolicStates));
 		result.append("</TD>");
-		result.append(createCorrectionColumn(colSpan));
+		if (correctionColumn) {
+			result.append(CORRECTION_CELL);
+		}
 		result.append("</TR>\n");
-
-		return result.toString();
 	}
 
 	/**
-	 * Transforms the state of a RatedSolution to a nice formatted String in
+	 * Renders the state of a RatedSolution to a nice formatted String in
 	 * preparation for rendering.
 	 * 
 	 * @param rs RatedSolution representing the currently processed
 	 *        RatedSolution
 	 * 
-	 * @parm symbolicstates boolean containing information whether states are
-	 *       shown as symbolic states or scores
+	 * @param symbolicStates boolean containing information whether states are
+	 *        shown as symbolic states or scores
 	 * 
 	 * @return String representing the score of the currently processed
 	 *         Solution.
 	 */
-	private String transformState(RatedSolution rs, boolean symbolicstates) {
-
-		StringBuilder result = new StringBuilder();
-
-		if (symbolicstates) {
-			result.append(transformSymbolicStates(rs.getRating()));
-
+	public String renderSolutionState(RatedSolution rs, boolean symbolicStates) {
+		if (symbolicStates) {
+			return renderSymbolicState(rs.getRating());
 		}
 		else {
-			result.append(transformScores(rs.getRating()));
-
+			return renderScore(rs.getRating());
 		}
-
-		return result.toString();
 	}
 
 	/**
@@ -628,12 +757,9 @@ public final class DDBuilder implements CaseVisualizer {
 	 * @return String representing the state of the currently processed
 	 *         solution.
 	 */
-	private String transformSymbolicStates(Rating score) {
-
+	public String renderSymbolicState(Rating score) {
 		de.d3web.core.knowledge.terminology.Rating state = getState(score);
-
 		return state.getName();
-
 	}
 
 	/**
@@ -646,14 +772,11 @@ public final class DDBuilder implements CaseVisualizer {
 	 * @return String representing the score of the currently processed
 	 *         Solution.
 	 */
-	private String transformScores(Rating score) {
-
+	public String renderScore(Rating score) {
 		if (score instanceof ScoreRating) {
 			return formater.format(score.getRating());
 		}
-
-		return score.getRating().toString();
-
+		return renderSymbolicState(score);
 	}
 
 	/**
@@ -703,6 +826,14 @@ public final class DDBuilder implements CaseVisualizer {
 		else {
 			return suggested;
 		}
+	}
+
+	public void setConfig(ConfigLoader config) {
+		this.config = config;
+	}
+
+	public ConfigLoader getConfig() {
+		return config;
 	}
 
 }
