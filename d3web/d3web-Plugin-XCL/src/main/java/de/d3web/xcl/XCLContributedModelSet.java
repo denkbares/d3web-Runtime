@@ -24,9 +24,12 @@ import java.util.List;
 
 import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.KnowledgeSlice;
+import de.d3web.core.knowledge.TerminologyObject;
 
 /**
- * Stores XCLModels in one KnowledgeSlice
+ * Stores XCLModels in one KnowledgeSlice. Its intension is to store the
+ * backward referenced xcl models from the {@link TerminologyObject}s of the
+ * Conditions of the contained relations to the xcl model.
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */

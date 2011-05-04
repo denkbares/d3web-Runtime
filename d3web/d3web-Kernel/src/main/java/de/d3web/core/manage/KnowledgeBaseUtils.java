@@ -106,21 +106,41 @@ public final class KnowledgeBaseUtils {
 	 * @return the depth-first search tree items
 	 */
 	public static List<TerminologyObject> getSuccessors(TerminologyObject terminologyObject) {
-		List<TerminologyObject> result = new LinkedList<TerminologyObject>();
+		return getSuccessors(terminologyObject, TerminologyObject.class);
+	}
+
+	/**
+	 * Collects all tree successors of a specified type starting from the
+	 * specified object. The objects are collected in a depth first order.
+	 * Duplicate objects (having multiple parents within this sub-tree) will be
+	 * contained only once at its first occurrence. The specified
+	 * terminologyObject is always the first element of this list.
+	 * 
+	 * @created 04.05.2011
+	 * @param <T> the type of the successors to be found
+	 * @param terminologyObject the root of the sub-tree to be specified
+	 * @param typeOf the class of the successors to be found
+	 * @return the depth-first search tree items
+	 */
+	public static <T extends TerminologyObject> List<T> getSuccessors(TerminologyObject terminologyObject, Class<T> typeOf) {
+		List<T> result = new LinkedList<T>();
 		Set<TerminologyObject> visited = new HashSet<TerminologyObject>();
-		collectSuccessors(terminologyObject, visited, result);
+		collectSuccessors(terminologyObject, visited, result, typeOf);
 		return Collections.unmodifiableList(result);
 	}
 
-	private static void collectSuccessors(TerminologyObject terminologyObject, Set<TerminologyObject> visited, List<TerminologyObject> result) {
+	private static <T extends TerminologyObject> void collectSuccessors(TerminologyObject terminologyObject, Set<TerminologyObject> visited, List<T> result, Class<T> typeOf) {
 		// if not already visited, we add the object...
 		if (visited.contains(terminologyObject)) return;
 		visited.add(terminologyObject);
-		result.add(terminologyObject);
 
+		// ...add the current item if matches
+		if (typeOf.isInstance(terminologyObject)) {
+			result.add(typeOf.cast(terminologyObject));
+		}
 		// ...and process its children recursively
 		for (TerminologyObject child : terminologyObject.getChildren()) {
-			collectSuccessors(child, visited, result);
+			collectSuccessors(child, visited, result, typeOf);
 		}
 	}
 

@@ -141,4 +141,30 @@ public class FactSet {
 			manager.commitPropagation();
 		}
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((interviewFacts == null) ? 0 : interviewFacts.hashCode());
+		result = prime * result + ((valueFacts == null) ? 0 : valueFacts.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		FactSet other = (FactSet) obj;
+		if (interviewFacts == null) {
+			if (other.interviewFacts != null) return false;
+		}
+		else if (!interviewFacts.equals(other.interviewFacts)) return false;
+		if (valueFacts == null) {
+			if (other.valueFacts != null) return false;
+		}
+		else if (!valueFacts.equals(other.valueFacts)) return false;
+		return true;
+	}
 }

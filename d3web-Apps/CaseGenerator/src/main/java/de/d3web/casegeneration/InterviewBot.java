@@ -22,7 +22,6 @@ package de.d3web.casegeneration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.activation.UnsupportedDataTypeException;
 
@@ -127,13 +127,11 @@ public final class InterviewBot {
 			// or maximum number of cases generated.
 			if (getBotStrategy().isFinished(thisSession)) {
 				store(thisCase);
-				updateProgress(maxPercent);
 				return;
 			}
 
 			// do noting more if we reached the maximum number of cases
 			if (maxCases > 0 && casesCounter >= maxCases) {
-				store(thisCase);
 				storeError(thisCase, "cut branch, we are already finished");
 				return;
 			}
@@ -152,42 +150,42 @@ public final class InterviewBot {
 				storeError(thisCase,
 						"cut off branch, no fact sets received for "
 								+ Arrays.asList(interviewItems));
-				updateProgress(maxPercent);
+				return;
 			}
-			else {
-				// otherwise continue with the follow-up fact sets
-				System.out.println("\tdepth: " + depth +
+
+			// otherwise continue with the follow-up fact sets
+			System.out.println("\tdepth: " + depth +
 						", branches: " + factSets.length +
 						", items: " + Arrays.asList(interviewItems));
-				// Iterate over all possible answers of the next question(s)
-				updateProgress(currentPercent);
-				for (FactSet factSet : factSets) {
-					// prepare session for recursive iteration.
-					// if we only have one follow-up fact set,
-					// we can simply reuse the existing session
-					Session nextSession =
+
+			// Iterate over all possible answers of the next question(s)
+			updateProgress(currentPercent);
+			for (FactSet factSet : factSets) {
+				// prepare session for recursive iteration.
+				// if we only have one follow-up fact set,
+				// we can simply reuse the existing session
+				Session nextSession =
 								(factSets.length == 1) ? thisSession :
 										createCase(thisCase);
-					factSet.apply(nextSession);
-					SequentialTestCase nextSequentialCase = packNewSequence(
+				factSet.apply(nextSession);
+				SequentialTestCase nextSequentialCase = packNewSequence(
 							thisCase,
 							toFindings(factSet),
 							toRatedSolutions(nextSession));
 
-					// step down in recursion with the next suitable
-					// question to ask
-					traverse(nextSession, nextSequentialCase, depth + 1,
+				// step down in recursion with the next suitable
+				// question to ask
+				traverse(nextSession, nextSequentialCase, depth + 1,
 							currentPercent, currentPercent + deltaPercent);
 
-					// increase progress
-					updateProgress(currentPercent += deltaPercent);
-				}
+				// increase progress
+				updateProgress(currentPercent += deltaPercent);
 			}
 		}
 
 		private void storeError(SequentialTestCase thisCase, String message) {
+			// then store the message node
 			System.out.println("\t" + message);
-			// in this case, we produce an example branch
 			List<Finding> findings = Collections.emptyList();
 			List<RatedSolution> solutions = Collections.emptyList();
 			SequentialTestCase nextSequentialCase = packNewSequence(
@@ -278,15 +276,12 @@ public final class InterviewBot {
 
 	private SequentialTestCase packNewSequence(SequentialTestCase sqCase, List<Finding> findings, List<RatedSolution> solutions) {
 		RatedTestCase ratedCase = new RatedTestCase();
+		ratedCase.setName(UUID.randomUUID().toString());
 		ratedCase.addFindings(findings);
 		ratedCase.addExpected(solutions);
 
-		String namePraefix = sqCase.getName() + "_";
-		String nameSuffix = ratedTestCasePraefix + sqCase.getCases().size();
-		ratedCase.setName(namePraefix + nameSuffix);
-
 		SequentialTestCase newSequentialCase = sqCase.flatClone();
-		newSequentialCase.setName(sequentialTestCasePraefix + dateToString());
+		newSequentialCase.setName(UUID.randomUUID().toString());
 		newSequentialCase.add(ratedCase);
 		return newSequentialCase;
 	}
@@ -512,10 +507,6 @@ public final class InterviewBot {
 	}
 
 	private InterviewBot(Builder builder) {
-	}
-
-	private String dateToString() {
-		return "" + Calendar.getInstance().getTimeInMillis();
 	}
 
 	public void setBotStrategy(BotStrategy strategy) {

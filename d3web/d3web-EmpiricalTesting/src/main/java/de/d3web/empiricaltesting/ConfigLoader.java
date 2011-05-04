@@ -75,6 +75,8 @@ public final class ConfigLoader {
 		config.setProperty("nodeColorIncorrectCase", "#FF0000");
 		config.setProperty("solutionColorSuggested", "#FFFF00");
 		config.setProperty("solutionColorEstablished", "#FF8000");
+		config.setProperty("showTestCaseName", "false");
+		config.setProperty("testCaseNameColor", "#FFAAAA");
 		config.setProperty("showQuestionnairePrompt", "false");
 		config.setProperty("showQuestionnaireName", "false");
 		config.setProperty("showNextQuestions", "true");

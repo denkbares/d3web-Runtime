@@ -386,15 +386,32 @@ public final class DDBuilder implements CaseVisualizer {
 		return result;
 	}
 
-	public void renderEmptyNode(StringBuffer b, DDNode node) {
-		b.append(node.getID());
-		b.append(" [\n  label=<\n");
-		b.append("   <TABLE>\n");
+	public void renderEmptyNode(StringBuffer result, DDNode node) {
+		result.append(node.getID());
+		result.append(" [\n  label=<\n");
+		result.append("   <TABLE>\n");
 		String nodeColor = getConfig().getProperty("nodeColorIncorrectCase");
-		b.append("    <TR><TD BGCOLOR=\"" +
-				nodeColor + "\">truncated</TD> </TR>\n");
-		b.append("   </TABLE>>\n");
-		b.append("];\n");
+		renderNodeCaseNameRow(result, node);
+		renderTableLine(result, nodeColor, false, "truncated");
+		result.append("   </TABLE>>\n");
+		result.append("];\n");
+	}
+
+	/**
+	 * Renders the case name as the header of a node into the result buffer.
+	 * This method must render a set of HTML table rows into the buffer
+	 * (including the opening and closing &lt;TR&gt;...&lt;/TR&gt; tags), as
+	 * specified in the dot language for HTML nodes.
+	 * 
+	 * @created 03.05.2011
+	 * @param result the result buffer to render into
+	 * @param node the node to render its case name
+	 */
+	public void renderNodeCaseNameRow(StringBuffer result, DDNode node) {
+		if (Boolean.valueOf(config.getProperty("showTestCaseName"))) {
+			String color = config.getProperty("testCaseNameColor");
+			renderTableLine(result, color, false, node.getTestCase().getName());
+		}
 	}
 
 	public void renderNode(StringBuffer result, DDNode node, List<Question> nextQuestions) {
@@ -453,8 +470,9 @@ public final class DDBuilder implements CaseVisualizer {
 
 		result.append("   <TABLE BGCOLOR=\"").append(nodeColor).append("\">\n");
 
-		// print question answered for deriving the current solutions
+		renderNodeCaseNameRow(result, node);
 
+		// print question answered for deriving the current solutions
 		renderNodeAnswers(result, node);
 
 		// Put all RatedSolutions in Maps
