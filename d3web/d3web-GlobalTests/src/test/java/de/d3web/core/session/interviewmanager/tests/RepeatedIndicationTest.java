@@ -19,6 +19,7 @@
 package de.d3web.core.session.interviewmanager.tests;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.inference.PSMethod.Type;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
@@ -44,6 +46,7 @@ import de.d3web.core.session.interviewmanager.EmptyForm;
 import de.d3web.core.session.interviewmanager.InterviewAgenda;
 import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.indication.inference.PSMethodStrategic;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
@@ -199,8 +202,9 @@ public class RepeatedIndicationTest {
 		assertEquals(EmptyForm.getInstance(), session.getInterview().nextForm());
 	}
 
-	public void testDummy() {
-		assertTrue(session != null);
-		assertEquals(true, true);
+	@Test
+	public void testPSType() {
+		assertNotNull(session);
+		assertTrue(session.getPSMethodInstance(PSMethodStrategic.class).hasType(Type.strategic));
 	}
 }

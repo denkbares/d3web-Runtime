@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -26,6 +27,8 @@ import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
@@ -35,13 +38,25 @@ import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 
 /**
- * Tests the correct behaviour of the KnowledgeBaseUtils class and
- * contained methods
+ * Tests the correct behavior of the KnowledgeBaseUtils class and contained
+ * methods
  * 
  * @author Martina Freiberg
  * @created 02.09.2010
  */
 public class KnowledgeBaseManagementTest {
+
+	private Choice choice1;
+	private Choice choice2;
+	private KnowledgeBase knowledge;
+
+	@Before
+	public void setUp() {
+		knowledge = KnowledgeBaseUtils.createKnowledgeBase();
+		choice1 = new Choice("choice1");
+		choice2 = new Choice("choice2");
+
+	}
 
 	/**
 	 * Test findValue: MCValue as single value
@@ -50,12 +65,10 @@ public class KnowledgeBaseManagementTest {
 	 */
 	@Test
 	public void testFindValue_MCValSingleVal() {
-		Choice choice1 = new Choice("choice1");
-		Choice choice2 = new Choice("choice2");
 		List<Choice> choiceList = new LinkedList<Choice>();
 		choiceList.add(choice1);
 		Value mcValToFind = MultipleChoiceValue.fromChoices(choiceList);
-		QuestionChoice qmc = new QuestionMC(new KnowledgeBase(), "Please enter: ");
+		QuestionChoice qmc = new QuestionMC(knowledge, "Please enter: ");
 		qmc.addAlternative(choice1);
 		qmc.addAlternative(choice2);
 
@@ -72,15 +85,11 @@ public class KnowledgeBaseManagementTest {
 	 */
 	@Test
 	public void testFindValue_MCValRealMC() {
-
-		Choice choice1 = new Choice("choice1");
-		Choice choice2 = new Choice("choice2");
 		List<Choice> choiceList = new LinkedList<Choice>();
 		choiceList.add(choice1);
 		choiceList.add(choice2);
 		Value mcValToFind = MultipleChoiceValue.fromChoices(choiceList);
-		KnowledgeBase kb = KnowledgeBaseUtils.createKnowledgeBase();
-		QuestionChoice qmc = new QuestionMC(kb, "Please enter: ");
+		QuestionChoice qmc = new QuestionMC(knowledge, "Please enter: ");
 		qmc.addAlternative(choice1);
 		qmc.addAlternative(choice2);
 
@@ -105,8 +114,7 @@ public class KnowledgeBaseManagementTest {
 		Choice choice2 = new Choice("choice2");
 		Value choiceValToFind1 = new ChoiceValue(choice1);
 		Value choiceValToFind2 = new ChoiceValue(choice2);
-		KnowledgeBase kb = KnowledgeBaseUtils.createKnowledgeBase();
-		QuestionChoice qc = new QuestionOC(kb, "Please enter: ");
+		QuestionChoice qc = new QuestionOC(knowledge, "Please enter: ");
 		qc.addAlternative(choice1);
 		qc.addAlternative(choice2);
 		assertThat(KnowledgeBaseUtils.findValue(qc, "choice1"),
@@ -120,7 +128,7 @@ public class KnowledgeBaseManagementTest {
 		Choice NO = new Choice("No");
 		Value yes = new ChoiceValue(YES);
 		Value no = new ChoiceValue(NO);
-		QuestionYN qyn = new QuestionYN(kb, "");
+		QuestionYN qyn = new QuestionYN(knowledge, "");
 
 		assertThat(KnowledgeBaseUtils.findValue(qyn, "Yes"),
 				is(yes));
@@ -138,8 +146,7 @@ public class KnowledgeBaseManagementTest {
 	public void testFindValue_NumVal() {
 		Value numToGet = new NumValue(1.0);
 		String numValInput = "1.0";
-		KnowledgeBase kb = KnowledgeBaseUtils.createKnowledgeBase();
-		QuestionNum qn = new QuestionNum(kb, "Please enter: ");
+		QuestionNum qn = new QuestionNum(knowledge, "Please enter: ");
 		assertThat(KnowledgeBaseUtils.findValue(qn, numValInput),
 				is(numToGet));
 	}
@@ -153,8 +160,7 @@ public class KnowledgeBaseManagementTest {
 	public void testFindValue_TextVal() {
 		Value textToGet = new TextValue("My Text");
 		String textValInput = "My Text";
-		KnowledgeBase kb = KnowledgeBaseUtils.createKnowledgeBase();
-		QuestionText qt = new QuestionText(kb, "Please enter: ");
+		QuestionText qt = new QuestionText(knowledge, "Please enter: ");
 		assertThat(KnowledgeBaseUtils.findValue(qt, textValInput),
 				is(textToGet));
 	}
@@ -179,9 +185,8 @@ public class KnowledgeBaseManagementTest {
 			e.printStackTrace();
 		}
 		String dateValInput = "2010-09-02-12-13-30";
-		KnowledgeBase kb = KnowledgeBaseUtils.createKnowledgeBase();
 		QuestionDate qd = new
-				QuestionDate(kb, "Please enter: ");
+				QuestionDate(knowledge, "Please enter: ");
 		assertThat(KnowledgeBaseUtils.findValue(qd,
 				dateValInput), is(dateToGet));
 		dateValInput = "wrong date format";
@@ -214,4 +219,12 @@ public class KnowledgeBaseManagementTest {
 				is(textToGet));
 	}
 
+	@Test
+	public void testBadCreationOfFacts() {
+		QuestionChoice qc = new QuestionOC(knowledge, "Please enter: ");
+		assertThat(qc != null, is(true));
+
+		Fact badFact = FactFactory.createUserEnteredFact(knowledge, "Please enter: ", (String) null);
+		assertThat(badFact == null, is(true));
+	}
 }

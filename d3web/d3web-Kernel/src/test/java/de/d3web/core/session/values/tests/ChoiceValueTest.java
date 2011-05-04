@@ -30,10 +30,11 @@ import org.junit.Test;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.Unknown;
 
 /**
- * Unit tests for {@link ChoiceValue}
+ * Unit tests for {@link ChoiceValue} and {@link ChoiceID}.
  * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 25.08.2010
@@ -41,6 +42,8 @@ import de.d3web.core.session.values.Unknown;
 public class ChoiceValueTest {
 
 	ChoiceValue choiceValue;
+	private ChoiceID c1;
+	private ChoiceID c2;
 
 	/**
 	 * 
@@ -50,6 +53,8 @@ public class ChoiceValueTest {
 	@Before
 	public void setUp() throws Exception {
 		Choice choice = new Choice("choiceText");
+		c1 = new ChoiceID(choice);
+		c2 = new ChoiceID(new Choice("choiceText2"));
 		choiceValue = new ChoiceValue(choice);
 	}
 
@@ -60,6 +65,16 @@ public class ChoiceValueTest {
 	@Test(expected = NullPointerException.class)
 	public void testChoiceValueChoiceThrowsNullPointerException() {
 		new ChoiceValue((Choice) null);
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testChoiceValueChoiceIDThrowsNullPointerException() {
+		new ChoiceValue((ChoiceID) null);
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testChoiceIDThrowsNullPointerException() {
+		new ChoiceID((String) null);
 	}
 
 	/**
@@ -115,6 +130,18 @@ public class ChoiceValueTest {
 		assertThat(choiceValue.equals(new Object()), is(false));
 		ChoiceValue newChoiceValue = new ChoiceValue(new Choice("choice"));
 		assertThat(choiceValue.equals(newChoiceValue), is(false));
+	}
+
+	@Test
+	public void testEqualsWithMC() {
+		// for a MultipleChoiceValue with only one and the same choice, the
+		// equals test should return true
+		MultipleChoiceValue mcv = new MultipleChoiceValue(c1);
+		assertThat(choiceValue.equals(mcv), is(true));
+
+		// for a MCValue with more values, it should always return false
+		mcv = new MultipleChoiceValue(c1, c2);
+		assertThat(choiceValue.equals(mcv), is(false));
 	}
 
 	/**

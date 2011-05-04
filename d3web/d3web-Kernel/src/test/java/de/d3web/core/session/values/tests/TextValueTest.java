@@ -41,10 +41,11 @@ public class TextValueTest {
 
 	TextValue textValueOne;
 	TextValue textValueTwo;
+	final static String TEXT_VALUE_ONE = "textValueOne";
 
 	@Before
 	public void setUp() throws Exception {
-		textValueOne = new TextValue("textValueOne");
+		textValueOne = new TextValue(TEXT_VALUE_ONE);
 		textValueTwo = new TextValue("textValueTwo");
 	}
 
@@ -74,6 +75,8 @@ public class TextValueTest {
 		if (!(o instanceof String)) {
 			fail("Return type of getValue() is not an instance of type String!");
 		}
+
+		assertThat(textValueOne.getText(), is(TEXT_VALUE_ONE));
 	}
 
 	/**
@@ -99,7 +102,7 @@ public class TextValueTest {
 		assertThat(textValueOne.equals(null), is(false));
 		assertThat(textValueOne.equals(new Object()), is(false));
 		assertThat(textValueOne.equals(textValueTwo), is(false));
-		assertThat(textValueOne.equals(new TextValue("textValueOne")), is(true));
+		assertThat(textValueOne.equals(new TextValue(TEXT_VALUE_ONE)), is(true));
 	}
 
 	/**

@@ -22,8 +22,8 @@ package de.d3web.core.session.values.tests;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -33,7 +33,6 @@ import org.junit.Test;
 
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.TextValue;
-
 
 /**
  * Unit tests for {@link DateValue}
@@ -45,16 +44,18 @@ public class DateValueTest {
 
 	DateValue dateValue;
 	TextValue textValue;
+	final static Date TIME = new GregorianCalendar(2010, 7, 25).getTime();
 
 	@Before
 	public void setUp() throws Exception {
 		// 25.08.2010, 00:00:00
-		dateValue = new DateValue(new GregorianCalendar(2010, 7, 25).getTime());
+		dateValue = new DateValue(TIME);
 		textValue = new TextValue("textValue");
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.DateValue#hashCode()}.
+	 * Test method for {@link de.d3web.core.session.values.DateValue#hashCode()}
+	 * .
 	 */
 	@Test
 	public void testHashCode() {
@@ -62,7 +63,8 @@ public class DateValueTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.DateValue#DateValue(java.util.Date)}.
+	 * Test method for
+	 * {@link de.d3web.core.session.values.DateValue#DateValue(java.util.Date)}.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testDateValueThrowsNullPointerException() {
@@ -70,18 +72,20 @@ public class DateValueTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.DateValue#getValue()}.
+	 * Test method for {@link de.d3web.core.session.values.DateValue#getValue()}
+	 * .
 	 */
 	@Test
 	public void testGetValue() {
-		Object o = dateValue.getValue();
-		if (!(o instanceof Date)) {
-			fail("Return type of getValue() is not an instance of type Date!");
-		}
+		assertEquals(Date.class, dateValue.getValue().getClass());
+
+		Date dateTime = (Date) (dateValue.getValue());
+		assertEquals(TIME, dateTime);
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.DateValue#getDateString()}.
+	 * Test method for
+	 * {@link de.d3web.core.session.values.DateValue#getDateString()}.
 	 */
 	@Test
 	public void testGetDateString() {
@@ -89,7 +93,8 @@ public class DateValueTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.DateValue#toString()}.
+	 * Test method for {@link de.d3web.core.session.values.DateValue#toString()}
+	 * .
 	 */
 	@Test
 	public void testToString() {
@@ -99,7 +104,8 @@ public class DateValueTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.DateValue#equals(java.lang.Object)}.
+	 * Test method for
+	 * {@link de.d3web.core.session.values.DateValue#equals(java.lang.Object)}.
 	 */
 	@Test
 	public void testEqualsObject() {
@@ -130,7 +136,9 @@ public class DateValueTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.DateValue#compareTo(de.d3web.core.session.Value)}.
+	 * Test method for
+	 * {@link de.d3web.core.session.values.DateValue#compareTo(de.d3web.core.session.Value)}
+	 * .
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testCompareToThrowsIllegalArgumentException() {

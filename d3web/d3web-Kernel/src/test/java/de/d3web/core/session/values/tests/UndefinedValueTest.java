@@ -22,6 +22,7 @@ package de.d3web.core.session.values.tests;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -49,7 +50,8 @@ public class UndefinedValueTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.UndefinedValue#getValue()}.
+	 * Test method for
+	 * {@link de.d3web.core.session.values.UndefinedValue#getValue()}.
 	 */
 	@Test
 	public void testGetValue() {
@@ -60,7 +62,8 @@ public class UndefinedValueTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.UndefinedValue#toString()}.
+	 * Test method for
+	 * {@link de.d3web.core.session.values.UndefinedValue#toString()}.
 	 */
 	@Test
 	public void testToString() {
@@ -70,7 +73,9 @@ public class UndefinedValueTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.UndefinedValue#compareTo(de.d3web.core.session.Value)}.
+	 * Test method for
+	 * {@link de.d3web.core.session.values.UndefinedValue#compareTo(de.d3web.core.session.Value)}
+	 * .
 	 */
 	@Test
 	public void testCompareTo() {
@@ -80,7 +85,9 @@ public class UndefinedValueTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.UndefinedValue#equals(java.lang.Object)}.
+	 * Test method for
+	 * {@link de.d3web.core.session.values.UndefinedValue#equals(java.lang.Object)}
+	 * .
 	 */
 	@Test
 	public void testEqualsObject() {
@@ -89,16 +96,25 @@ public class UndefinedValueTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.UndefinedValue#isUndefinedValue(de.d3web.core.session.Value)}.
+	 * Test method for
+	 * {@link de.d3web.core.session.values.UndefinedValue#isUndefinedValue(de.d3web.core.session.Value)}
+	 * .
 	 */
 	@Test
 	public void testIsUndefinedValue() {
 		assertThat(UndefinedValue.isUndefinedValue(undefinedValue), is(true));
 		assertThat(UndefinedValue.isUndefinedValue(textValue), is(false));
+		// Additionally check the method hashCode()
+		assertEquals(UndefinedValue.UNDEFINED_ID.hashCode(),
+				UndefinedValue.getInstance().hashCode());
+		assertEquals(UndefinedValue.getInstance().hashCode(),
+				UndefinedValue.getInstance().hashCode());
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.session.values.UndefinedValue#isNotUndefinedValue(de.d3web.core.session.Value)}.
+	 * Test method for
+	 * {@link de.d3web.core.session.values.UndefinedValue#isNotUndefinedValue(de.d3web.core.session.Value)}
+	 * .
 	 */
 	@Test
 	public void testIsNotUndefinedValue() {

@@ -30,7 +30,11 @@ import de.d3web.core.knowledge.InterviewObject;
  */
 public class EmptyForm implements Form {
 
-	private static final Form instance = new EmptyForm();
+	public static final String EMPTY_FORM_STRING = "EMPTY";
+	private static Form instance;
+
+	private EmptyForm() {
+	}
 
 	@Override
 	public InterviewObject getInterviewObject() {
@@ -39,10 +43,13 @@ public class EmptyForm implements Form {
 
 	@Override
 	public String getTitle() {
-		return "EMPTY";
+		return EMPTY_FORM_STRING;
 	}
 
 	public static Form getInstance() {
+		if (instance == null) {
+			instance = new EmptyForm();
+		}
 		return instance;
 	}
 
@@ -51,4 +58,23 @@ public class EmptyForm implements Form {
 		return false;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof EmptyForm) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return getTitle().hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return EMPTY_FORM_STRING;
+	}
 }

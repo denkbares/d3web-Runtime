@@ -32,6 +32,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.inference.Rule;
+import de.d3web.core.inference.condition.CondAnswered;
 import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondKnown;
@@ -258,6 +259,29 @@ public class ConditionMiscellaneousTest {
 		catch (UnknownAnswerException e) {
 			fail("Unexpected exception thrown: UnknownAnswerException");
 		}
+	}
+
+	@Test
+	public void testConditionAnswered() {
+		// CondAnswered == true, when answered with a value or with default
+		// value unknown
+		CondAnswered cond = new CondAnswered(choiceQuestion1);
+		assertThat(cond.toString(), notNullValue());
+
+		Session session = SessionFactory.createSession(kb);
+		try {
+			session.getBlackboard().addValueFact(
+					FactFactory.createUserEnteredFact(kb, "choiceQuestion1", Unknown.getInstance()));
+			assertThat(cond.eval(session), is(true));
+
+			session.getBlackboard().addValueFact(
+					FactFactory.createUserEnteredFact(kb, "choiceQuestion1", choiceValueYes));
+			assertThat(cond.eval(session), is(true));
+		}
+		catch (NoAnswerException e) {
+			fail("Unexpected exception thrown: NoAnswerException");
+		}
+
 	}
 
 	@Test

@@ -81,6 +81,11 @@ public class UnknownValueTest {
 		if (!(o instanceof String)) {
 			fail("Return type of getValue() is not an instance of type String!");
 		}
+
+		// With the change of the toString method, this assertion may fail.
+		// In this case, feel free to change this assertion.
+		assertThat(unknownValue.toString(), is(Unknown.UNKNOWN_VALUE));
+
 	}
 
 	/**
