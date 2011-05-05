@@ -18,6 +18,8 @@
  */
 package de.d3web.core.io.utilities;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -56,11 +58,12 @@ public final class Util {
 	}
 
 	/**
-	 * Creates an Document from the given InputStream
+	 * Creates an XML {@link Document} from the given {@link InputStream}.
 	 * 
-	 * @param stream input stream
-	 * @return Document
-	 * @throws IOException when an error occurs
+	 * @param stream the XML input stream
+	 * @return Document the document created from the stream
+	 * @throws IOException if the stream cannot be read or does not contains
+	 *         valid XML content or the XML parser cannot be configured
 	 */
 	public static Document streamToDocument(InputStream stream) throws IOException {
 		DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
@@ -74,6 +77,23 @@ public final class Util {
 		}
 		catch (SAXException e) {
 			throw new IOException(e);
+		}
+	}
+
+	/**
+	 * Creates an XML {@link Document} from the {@link File}.
+	 * 
+	 * @param stream the xml input stream
+	 * @return Document the document created from the stream
+	 * @throws IOException when an error occurs
+	 */
+	public static Document fileToDocument(File file) throws IOException {
+		InputStream in = new FileInputStream(file);
+		try {
+			return streamToDocument(in);
+		}
+		finally {
+			in.close();
 		}
 	}
 

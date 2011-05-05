@@ -44,7 +44,6 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
@@ -102,6 +101,8 @@ public final class InterviewBot {
 	private BotStrategy strategy;
 	// symbolize if canceled
 	private boolean isCanceled;
+	// creates new sessions for branching in the tree
+	private SessionFactory sessionFactory;
 
 	/**
 	 * Private inner class to store all transient information during the
@@ -234,7 +235,7 @@ public final class InterviewBot {
 			percent = Math.max(percent, casesCounter / (float) maxCases);
 			if (isCanceled) {
 				progressListener.updateProgress(
-						Math.min(percent, 1f), "stopping case generation, please wait");
+						Math.min(percent, 1f), "stopping, please wait...");
 			}
 			else if (percent >= 1f) {
 				progressListener.updateProgress(1f, "finishing case generation");
@@ -335,7 +336,7 @@ public final class InterviewBot {
 	}
 
 	private Session createCase(SequentialTestCase sqCase) {
-		Session session = SessionFactory.createSession(knowledge);
+		Session session = this.sessionFactory.createSession(knowledge);
 		for (RatedTestCase c : sqCase.getCases()) {
 			for (Finding finding : c.getFindings()) {
 				setCaseValue(session, finding.getQuestion(), finding.getValue());
@@ -345,7 +346,7 @@ public final class InterviewBot {
 	}
 
 	private Session createInitSession() {
-		Session initSession = SessionFactory.createSession(knowledge);
+		Session initSession = this.sessionFactory.createSession(knowledge);
 		// initSession.getInterview().setFormStrategy(new
 		// NextUnansweredQuestionFormStrategy());
 		for (Finding finding : initFindings) {
@@ -378,6 +379,7 @@ public final class InterviewBot {
 		private final Map<QuestionMC, Collection<Set<Choice>>> forbiddenAnswerCombinations = new HashMap<QuestionMC, Collection<Set<Choice>>>();
 		private final Map<QuestionMC, Collection<Set<Choice>>> allowedAnswerCombinations = new HashMap<QuestionMC, Collection<Set<Choice>>>();
 		private KnowledgeBase knowledge;
+		private SessionFactory sessionFactory = new DefaultSessionFactory();
 
 		public Builder(KnowledgeBase knowledge) {
 			this.knowledge = knowledge;
@@ -410,6 +412,11 @@ public final class InterviewBot {
 
 		public Builder knowledgeBase(KnowledgeBase val) {
 			knowledge = val;
+			return this;
+		}
+
+		public Builder sessionFactory(SessionFactory val) {
+			this.sessionFactory = val;
 			return this;
 		}
 
@@ -510,6 +517,7 @@ public final class InterviewBot {
 			bot.initFindings = this.initFindings;
 			bot.knowledge = this.knowledge;
 			bot.ratingStrategy = this.ratingStrategy;
+			bot.sessionFactory = this.sessionFactory;
 			bot.setBotStrategy(strategy);
 			return bot;
 		}
