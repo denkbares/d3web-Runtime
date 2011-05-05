@@ -100,6 +100,8 @@ public final class InterviewBot {
 
 	// the strategy to select questions and possible values
 	private BotStrategy strategy;
+	// symbolize if canceled
+	private boolean isCanceled;
 
 	/**
 	 * Private inner class to store all transient information during the
@@ -132,7 +134,13 @@ public final class InterviewBot {
 
 			// do noting more if we reached the maximum number of cases
 			if (maxCases > 0 && casesCounter >= maxCases) {
-				storeError(thisCase, "cut branch, we are already finished");
+				storeError(thisCase, "truncated (max cases reached)");
+				return;
+			}
+
+			// do noting more if user has canceled
+			if (isCanceled) {
+				storeError(thisCase, "truncated (cancel)");
 				return;
 			}
 
@@ -148,8 +156,8 @@ public final class InterviewBot {
 			// we sometimes will receive an empty fact set
 			if (factSets == null || factSets.length == 0) {
 				storeError(thisCase,
-						"cut off branch, no fact sets received for "
-								+ Arrays.asList(interviewItems));
+						"truncated (no fact sets for "
+								+ Arrays.asList(interviewItems) + ")");
 				return;
 			}
 
@@ -224,7 +232,11 @@ public final class InterviewBot {
 			// we use the generated cases compared to the max number of cases as
 			// progress indicator
 			percent = Math.max(percent, casesCounter / (float) maxCases);
-			if (percent >= 1f) {
+			if (isCanceled) {
+				progressListener.updateProgress(
+						Math.min(percent, 1f), "stopping case generation, please wait");
+			}
+			else if (percent >= 1f) {
 				progressListener.updateProgress(1f, "finishing case generation");
 			}
 			else {
@@ -515,6 +527,14 @@ public final class InterviewBot {
 
 	public BotStrategy getBotStrategy() {
 		return strategy;
+	}
+
+	/**
+	 * 
+	 * @created 05.05.2011
+	 */
+	public void cancel() {
+		this.isCanceled = true;
 	}
 
 }
