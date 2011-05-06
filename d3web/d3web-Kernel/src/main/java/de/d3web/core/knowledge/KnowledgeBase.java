@@ -389,10 +389,28 @@ public class KnowledgeBase implements NamedObject {
 		return infoStore;
 	}
 
+	/**
+	 * Returns the {@link TerminologyManager} instance related to this
+	 * {@link KnowledgeBase} instance. The {@link TerminologyManager} provides
+	 * convenient methods to access/search single elements included in the
+	 * {@link KnowledgeBase}.
+	 * 
+	 * @created 06.05.2011
+	 * @return the corresponding {@link TerminologyManager} instance
+	 */
 	public TerminologyManager getManager() {
 		return manager;
 	}
 
+	/**
+	 * Returns the {@link KnowledgeStore} instance related to this
+	 * {@link KnowledgeBase} instance. Here meta-data is stored relevant for the
+	 * {@link KnowledgeBase}.
+	 * 
+	 * @created 06.05.2011
+	 * @return the {@link KnowledgeStore} instance corresponding to this
+	 *         {@link KnowledgeBase} instance
+	 */
 	public KnowledgeStore getKnowledgeStore() {
 		return knowledgeStore;
 	}

@@ -21,24 +21,63 @@
 package de.d3web.core.knowledge;
 
 import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.Solution;
 
+/**
+ * This interface summarizes all common methods provided by objects that
+ * statically define the entities of a knowledge base. For instance,
+ * {@link Solution} and {@link Question} instances (transitively) inherit their
+ * interfaces from {@link TerminologyObject}. {@link TerminologyObject}
+ * instances should be organized in a poly-hierarchy having a root element for
+ * solutions and questions, each.
+ * 
+ * @author Markus Friedrich, Joachim Baumeister (denkbares GmbH)
+ * @created 06.05.2011
+ */
 public interface TerminologyObject extends NamedObject {
 
-	// --- structure of terminology ---
+	/**
+	 * Gives all parents of this objects based on the defined poly-hierarchy.
+	 * 
+	 * @created 06.05.2011
+	 * @return all parents of this object
+	 */
 	TerminologyObject[] getParents();
 
+	/**
+	 * Returns all children objects of this instance. Please note that an object
+	 * can be a child of more than one object, this defining a poly-hierarchy.
+	 * 
+	 * @created 06.05.2011
+	 * @return all children of this object
+	 */
 	TerminologyObject[] getChildren();
 
+	/**
+	 * Every instance has to correspond to a {@link KnowledgeBase} instance.
+	 * 
+	 * @created 06.05.2011
+	 * @return returns the {@link KnowledgeBase} instance, this object
+	 *         corresponds to.
+	 */
 	KnowledgeBase getKnowledgeBase();
 
 	/**
-	 * Removes the object from all parents
+	 * Removes this instance from all parents
 	 * 
 	 * @created 15.02.2011
 	 */
 	void destroy();
 
-	// --- storing knowledge ---
+	/**
+	 * The problem-solving knowledge corresponding to this instance is managed
+	 * by a {@link KnowledgeStore} instance, for example, (scoring) rules and
+	 * set-covering models.
+	 * 
+	 * @return the {@link KnowledgeStore} data structure storing all
+	 *         problem-solving knowledge corresponding with this object
+	 */
 	KnowledgeStore getKnowledgeStore();
 
 }

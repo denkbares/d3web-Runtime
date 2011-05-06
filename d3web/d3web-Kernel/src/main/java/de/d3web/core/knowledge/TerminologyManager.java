@@ -32,6 +32,8 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 
 /**
+ * The {@link TerminologyManager} provides convinient methods to access or
+ * search for elements of a {@link KnowledgeBase} instance.
  * 
  * @author Markus Friedrich (denkbares GmbH)
  * @created 12.01.2011
@@ -46,12 +48,21 @@ public class TerminologyManager {
 	private final KnowledgeBase kb;
 
 	/**
-	 * @param knowledgeBase
+	 * Creates a new manager for the specified {@link KnowledgeBase} instance.
+	 * 
+	 * @param knowledgeBase the specified {@link KnowledgeBase} instance
 	 */
 	public TerminologyManager(KnowledgeBase knowledgeBase) {
 		this.kb = knowledgeBase;
 	}
 
+	/**
+	 * Inserts the specified {@link TerminologyObject} instance into the
+	 * {@link KnowledgeBase}.
+	 * 
+	 * @created 06.05.2011
+	 * @param object the specified {@link TerminologyObject} instance
+	 */
 	public void putTerminologyObject(TerminologyObject object) {
 		if (object.getName() == null) {
 			throw new IllegalStateException("TerminologyObject " + object
@@ -83,7 +94,7 @@ public class TerminologyManager {
 	 * An object cannot be removed, if it has children or parent relations.
 	 * 
 	 * Do not call this method directly, use
-	 * TerminologyObject.removeFromKnowledgeBase()
+	 * TerminologyObject.removeFromKnowledgeBase().
 	 * 
 	 * @param object the object to be removed
 	 */
@@ -264,6 +275,14 @@ public class TerminologyManager {
 		return qASets;
 	}
 
+	/**
+	 * Returns all {@link TerminologyObject} instances contained in the
+	 * corresponding {@link KnowledgeBase}.
+	 * 
+	 * @created 06.05.2011
+	 * @return all {@link TerminologyObject} instances contained in the
+	 *         corresponding {@link KnowledgeBase}
+	 */
 	public Collection<TerminologyObject> getAllTerminologyObjects() {
 		return objectNameMap.values();
 	}
