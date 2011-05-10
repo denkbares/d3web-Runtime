@@ -327,10 +327,21 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		CostBenefitCaseObject caseObject = session.getSessionObject(this);
 		Set<QContainer> answeredQuestionnaires = new HashSet<QContainer>();
+		List<QContainer> sequence = caseObject.getCurrentSequence() != null
+				? Arrays.asList(caseObject.getCurrentSequence())
+				: new LinkedList<QContainer>();
 		for (PropagationEntry entry : changes) {
 			TerminologyObject object = entry.getObject();
 			if (!entry.isStrategic() && entry.hasChanged() && object instanceof Question) {
 				addParentContainers(answeredQuestionnaires, object);
+			}
+			if (entry.isStrategic() && entry.hasChanged() && object instanceof QContainer) {
+				Indication indication = (Indication) entry.getNewValue();
+				if (indication.isContraIndicated() && sequence.contains(object)) {
+					calculateNewPath(caseObject);
+					activateNextQContainer(caseObject);
+					return;
+				}
 			}
 		}
 		// only proceed if we have received reals answers
@@ -338,9 +349,6 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 		// for every finished QContainter fire its post transitions
 		boolean isAnyQuesionnaireDone = false;
-		List<QContainer> sequence = caseObject.getCurrentSequence() != null
-				? Arrays.asList(caseObject.getCurrentSequence())
-				: new LinkedList<QContainer>();
 		for (QContainer qcon : answeredQuestionnaires) {
 			if (isDone(qcon, session)) {
 				// mark is the questionnaire is either indicated or in our

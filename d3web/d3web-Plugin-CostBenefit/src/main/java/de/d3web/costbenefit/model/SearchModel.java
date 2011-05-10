@@ -54,8 +54,10 @@ public class SearchModel {
 	private final Map<Question, List<Value>> expectedValues = new HashMap<Question, List<Value>>();
 	private int countMinPaths = 0;
 	private CostFunction costFunction;
+	private final Session session;
 
 	public SearchModel(Session session) {
+		this.session = session;
 		PSMethod problemsolver = session.getPSMethodInstance(PSMethodCostBenefit.class);
 		PSMethodCostBenefit ps = (PSMethodCostBenefit) problemsolver;
 		if (ps != null) {
@@ -298,5 +300,9 @@ public class SearchModel {
 	 */
 	public boolean oneTargetReached() {
 		return (bestCostBenefitTarget != null);
+	}
+
+	public Session getSession() {
+		return session;
 	}
 }

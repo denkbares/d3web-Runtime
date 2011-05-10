@@ -28,6 +28,7 @@ import java.util.Set;
 
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.costbenefit.Util;
 import de.d3web.costbenefit.inference.AbortException;
@@ -90,10 +91,13 @@ class IterativeDeepeningSearch {
 		finalNodes = temp.toArray(new Node[temp.size()]);
 		Set<Node> nodeList = model.getNodes();
 		HashSet<Node> relevantNodes = new HashSet<Node>();
+		Blackboard blackboard = model.getSession().getBlackboard();
 		// Nodes without post transitions are not relevant as successors
 		// TODO more sophisticated filter of successors (only relevant
 		// transitions, maybe backward search)
 		for (Node node : nodeList) {
+			// contraindicated QContainers must not be used
+			if (blackboard.getIndication(node.getQContainer()).isContraIndicated()) continue;
 			if (node.getStateTransition() != null
 					&& node.getStateTransition().getPostTransitions() != null
 					&& !node.getStateTransition().getPostTransitions()
