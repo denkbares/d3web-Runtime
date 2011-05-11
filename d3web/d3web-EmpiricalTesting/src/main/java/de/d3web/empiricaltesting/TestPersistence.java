@@ -37,6 +37,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -96,7 +97,7 @@ public final class TestPersistence {
 	private SequentialTestCase stc = null;
 	private RatedTestCase rtc = null;
 
-	private CaseUtils bh = CaseUtils.getInstance();
+	private final CaseUtils bh = CaseUtils.getInstance();
 
 	private static TestPersistence instance;
 
@@ -145,19 +146,31 @@ public final class TestPersistence {
 	private List<SequentialTestCase> loadTheCases(URL casesUrl,
 			KnowledgeBase kb) throws FileNotFoundException, XMLStreamException, URISyntaxException {
 
-		int etype;
-
 		File fCases = new File(casesUrl.toURI().getPath());
+		InputStream in = new FileInputStream(fCases);
 
+		return loadCases(in, kb);
+	}
+
+	/**
+	 * 
+	 * @created 11.05.2011
+	 * @param in
+	 * @param kb
+	 * @return
+	 * @throws FactoryConfigurationError
+	 * @throws FileNotFoundException
+	 * @throws XMLStreamException
+	 */
+	public List<SequentialTestCase> loadCases(InputStream in, KnowledgeBase kb) throws FactoryConfigurationError, FileNotFoundException, XMLStreamException {
 		// First create a new XMLInputFactory
 		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 		// Setup a new eventReader
-		InputStream in = new FileInputStream(fCases);
 		XMLStreamReader sr = inputFactory.createXMLStreamReader(in);
 		// Read the XML document
 		while (sr.hasNext()) {
 
-			etype = sr.next();
+			int etype = sr.next();
 
 			switch (etype) {
 			case XMLStreamConstants.START_ELEMENT:
