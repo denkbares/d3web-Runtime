@@ -80,7 +80,7 @@ public final class InterviewAgenda {
 
 		@Override
 		public String toString() {
-			return this.interviewObject + " [" + this.interviewState + "]";
+			return "[" + this.interviewState + "] " + this.interviewObject;
 		}
 
 		@Override
