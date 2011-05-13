@@ -61,4 +61,10 @@ public class ActionRepeatedIndication extends ActionNextQASet {
 			session.getInterview().notifyFactChange(entry);
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "RepeatedIndicate: " + getQASets();
+	}
+
 }
