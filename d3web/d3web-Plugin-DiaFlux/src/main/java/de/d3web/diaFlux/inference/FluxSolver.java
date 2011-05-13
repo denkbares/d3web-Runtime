@@ -34,10 +34,12 @@ import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.Facts;
 import de.d3web.diaFlux.flow.ComposedNode;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
 import de.d3web.diaFlux.flow.Edge;
@@ -267,7 +269,9 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 */
 	public static void checkSuccessorsOnActivation(Node end, FlowRun flowRun, Session session) {
 		for (Edge out : end.getOutgoingEdges()) {
-			if (!evalEdge(session, flowRun, out)) continue;
+			if (!evalEdge(session, flowRun, out)) {
+				continue;
+			}
 			activateNode(out.getEndNode(), flowRun, session);
 		}
 	}
@@ -502,12 +506,18 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
-		for (Fact fact : facts) {
-			if (!(fact.getSource() == SNAPSHOT_SOURCE)) {
-				return fact;
-			}
+		if (facts[0].getValue() instanceof Indication) {
+			return Facts.mergeIndicationFacts(facts);
 		}
-		return facts[0];
+		else {
+
+			for (Fact fact : facts) {
+				if (!(fact.getSource() == SNAPSHOT_SOURCE)) {
+					return fact;
+				}
+			}
+			return facts[0];
+		}
 	}
 
 	@Override
