@@ -22,11 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -44,11 +41,9 @@ import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
-import de.d3web.core.io.utilities.IDObjectComparator;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.TerminologyObject;
 
 /**
  * This abstract class provides basic functions for rule handlers
@@ -56,47 +51,6 @@ import de.d3web.core.knowledge.TerminologyObject;
  * @author Markus Friedrich (denkbares GmbH)
  */
 public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter, KnowledgeReader {
-
-	/**
-	 * 
-	 * @author Markus Friedrich (denkbares GmbH)
-	 * @created 31.01.2011
-	 */
-	private final class RuleComparator implements Comparator<Rule> {
-
-		@Override
-		public int compare(Rule o1, Rule o2) {
-			// get all idobjects of the conditions and try to sort the rules by
-			// the ids of them
-			Collection<? extends TerminologyObject> terminalObjects = o1.getCondition().getTerminalObjects();
-			Collection<? extends TerminologyObject> terminalObjects2 = o2.getCondition().getTerminalObjects();
-			int comparator = compareIDObjectLists(terminalObjects, terminalObjects2);
-			if (comparator != 0) return comparator;
-			// conditions contain the same idobjects, try to compare actions
-			List<? extends TerminologyObject> backwardObjects = o1.getAction().getBackwardObjects();
-			List<? extends TerminologyObject> backwardObjects2 = o2.getAction().getBackwardObjects();
-			comparator = compareIDObjectLists(backwardObjects, backwardObjects2);
-			if (comparator != 0) return comparator;
-			// actions contain the same idodjects, compare by toString
-			return o1.toString().compareTo(o2.toString());
-		}
-
-		public int compareIDObjectLists(Collection<? extends TerminologyObject> terminalObjects, Collection<? extends TerminologyObject> terminalObjects2) {
-			List<TerminologyObject> allTerminalObjects = new LinkedList<TerminologyObject>();
-			allTerminalObjects.addAll(terminalObjects);
-			allTerminalObjects.addAll(terminalObjects2);
-			Collections.sort(allTerminalObjects, new IDObjectComparator());
-			for (TerminologyObject o : allTerminalObjects) {
-				if (!terminalObjects.contains(o)) {
-					return -1;
-				}
-				if (!terminalObjects2.contains(o)) {
-					return 1;
-				}
-			}
-			return 0;
-		}
-	}
 
 	protected String ruletype;
 
