@@ -224,12 +224,7 @@ public class MultipleChoiceValue implements QuestionValue {
 		}
 		else if (obj instanceof MultipleChoiceValue) {
 			MultipleChoiceValue other = (MultipleChoiceValue) obj;
-			if (choiceIDs.containsAll(other.choiceIDs) && other.choiceIDs.containsAll(choiceIDs)) {
-				return true;
-			}
-			else {
-				return false;
-			}
+			return (choiceIDs.containsAll(other.choiceIDs) && other.choiceIDs.containsAll(choiceIDs));
 		}
 		else if (obj instanceof ChoiceValue) {
 			if (choiceIDs.size() != 1) {

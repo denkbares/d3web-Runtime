@@ -50,8 +50,8 @@ public class ComposedNode extends AbstractNode {
 
 	public ComposedNode(String id, String flowName, String startNodeName) {
 		super(id, "CALL[" + flowName + "(" + startNodeName + ")]");
-		CallFlowAction action = new CallFlowAction(flowName, startNodeName);
-		this.action = action;
+		CallFlowAction callFlowAction = new CallFlowAction(flowName, startNodeName);
+		this.action = callFlowAction;
 	}
 
 	@Override

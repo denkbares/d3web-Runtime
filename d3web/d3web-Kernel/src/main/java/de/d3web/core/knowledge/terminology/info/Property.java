@@ -40,7 +40,7 @@ import de.d3web.plugin.PluginManager;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 06.10.2010
  */
-public class Property<T> {
+public final class Property<T> {
 
 	private static final String EXTENSIONPOINT_ID = "Property";
 	private static final Map<String, Property<?>> properties = new HashMap<String, Property<?>>();

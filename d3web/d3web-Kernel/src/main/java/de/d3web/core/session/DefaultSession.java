@@ -88,13 +88,17 @@ public class DefaultSession implements Session {
 	}
 
 	protected DefaultSession(String id, KnowledgeBase knowledgebase, Date creationDate, boolean psm) {
+		this.id = id;
+		Date checkedDate;
 		// check that we have a valid date
 		if (creationDate == null) {
-			creationDate = new Date();
+			checkedDate = new Date();
 		}
-		this.id = id;
-		this.created = creationDate;
-		this.edited = creationDate;
+		else {
+			checkedDate = creationDate;
+		}
+		this.created = checkedDate;
+		this.edited = checkedDate;
 		this.kb = knowledgebase;
 		this.blackboard = new DefaultBlackboard(this);
 		this.dynamicStore = new HashMap<SessionObjectSource<?>, SessionObject>();

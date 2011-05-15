@@ -32,6 +32,8 @@ import de.d3web.core.utilities.Triple;
 
 public class DefaultInfoStore implements InfoStore {
 
+	private static final String KEY_MUST_NOT_BE_NULL = "The key must not be null.";
+
 	private final Map<Pair<Property<?>, Locale>, Object> entries =
 			new HashMap<Pair<Property<?>, Locale>, Object>();
 
@@ -50,7 +52,9 @@ public class DefaultInfoStore implements InfoStore {
 
 	@Override
 	public <StoredType> StoredType getValue(Property<StoredType> key) {
-		if (key == null) throw new NullPointerException("The key must not be null.");
+		if (key == null) {
+			throw new NullPointerException(KEY_MUST_NOT_BE_NULL);
+		}
 		// if not available check for entry with no language
 		StoredType value = getEntry(key, NO_LANGUAGE);
 		if (value != null) {
@@ -62,7 +66,7 @@ public class DefaultInfoStore implements InfoStore {
 
 	@Override
 	public <StoredType> StoredType getValue(Property<StoredType> key, Locale language) {
-		if (key == null) throw new NullPointerException("The key must not be null.");
+		if (key == null) throw new NullPointerException(KEY_MUST_NOT_BE_NULL);
 		// check for entry
 		StoredType value = getEntry(key, language);
 		if (value != null) {
@@ -99,13 +103,13 @@ public class DefaultInfoStore implements InfoStore {
 
 	@Override
 	public boolean remove(Property<?> key) {
-		if (key == null) throw new NullPointerException("The key must not be null.");
+		if (key == null) throw new NullPointerException(KEY_MUST_NOT_BE_NULL);
 		return remove(key, NO_LANGUAGE);
 	}
 
 	@Override
 	public boolean remove(Property<?> key, Locale language) {
-		if (key == null) throw new NullPointerException("The key must not be null.");
+		if (key == null) throw new NullPointerException(KEY_MUST_NOT_BE_NULL);
 		return (this.entries.remove(createEntryKey(key, language)) != null);
 	}
 
@@ -127,7 +131,7 @@ public class DefaultInfoStore implements InfoStore {
 	@Override
 	public void addValue(Property<?> key, Locale language, Object value) {
 		if (value == null) throw new NullPointerException("The value must not be null.");
-		if (key == null) throw new NullPointerException("The key must not be null.");
+		if (key == null) throw new NullPointerException(KEY_MUST_NOT_BE_NULL);
 		if (language != NO_LANGUAGE && !key.isMultilingual()) {
 			throw new IllegalArgumentException("The property " + key
 					+ " does not support a language");

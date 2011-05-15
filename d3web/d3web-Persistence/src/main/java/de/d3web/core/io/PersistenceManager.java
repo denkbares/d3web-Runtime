@@ -78,7 +78,7 @@ public final class PersistenceManager extends FragmentManager {
 	private Extension[] readerPlugins;
 	private Extension[] writerPlugins;
 
-	public static class KnowledgeBaseInfo {
+	public final static class KnowledgeBaseInfo {
 
 		private final String name;
 		private final String description;

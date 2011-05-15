@@ -28,7 +28,7 @@ import de.d3web.core.knowledge.InterviewObject;
  * @author joba
  * 
  */
-public class EmptyForm implements Form {
+public final class EmptyForm implements Form {
 
 	public static final String EMPTY_FORM_STRING = "EMPTY";
 	private static Form instance;
@@ -60,12 +60,7 @@ public class EmptyForm implements Form {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof EmptyForm) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return (o instanceof EmptyForm);
 	}
 
 	@Override
