@@ -130,7 +130,9 @@ public class MultipleChoiceValue implements QuestionValue {
 		else if (value instanceof MultipleChoiceValue) {
 			return containsAll((MultipleChoiceValue) value);
 		}
-		else return false;
+		else {
+			return false;
+		}
 	}
 
 	/**

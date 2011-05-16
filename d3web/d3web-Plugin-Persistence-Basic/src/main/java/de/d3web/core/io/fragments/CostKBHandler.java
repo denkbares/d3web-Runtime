@@ -27,7 +27,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.CostObject;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -64,7 +63,9 @@ public class CostKBHandler implements FragmentHandler {
 				String unit = null;
 				for (int j = 0; j < cc.getLength(); j++) {
 					Node child = cc.item(j);
-					if (child.getNodeName().equals("Verbalization")) verbalization = XMLUtil.getText(child);
+					if (child.getNodeName().equals("Verbalization")) {
+						verbalization = XMLUtil.getText(child);
+					}
 					else if (child.getNodeName().equals("Unit")) {
 						unit = XMLUtil.getText(child);
 					}
@@ -86,8 +87,12 @@ public class CostKBHandler implements FragmentHandler {
 				}
 			}
 
-			if (co == null) throw new IOException("cost could not be set");
-			else return co;
+			if (co == null) {
+				throw new IOException("cost could not be set");
+			}
+			else {
+				return co;
+			}
 
 		}
 		else {

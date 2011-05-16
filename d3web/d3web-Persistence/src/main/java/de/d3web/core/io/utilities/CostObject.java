@@ -91,8 +91,13 @@ public class CostObject {
 		return verbalization;
 	}
 
+	@Override
 	public String toString() {
-		if (id != null && value != null) return "(" + id + ")[" + value.doubleValue() + "]";
-		else return super.toString();
+		if (id != null && value != null) {
+			return "(" + id + ")[" + value.doubleValue() + "]";
+		}
+		else {
+			return super.toString();
+		}
 	}
 }

@@ -91,9 +91,13 @@ public class AbnormalityNum implements Abnormality {
 	}
 
 	public void addValue(AbnormalityInterval ai) {
-		if (checkIntervals(ai)) intervals.add(ai);
-		else throw new NumericalInterval.IntervalException(
-				"new AbnormalityInterval overlaps one of the existing AbnormalityIntervals");
+		if (checkIntervals(ai)) {
+			intervals.add(ai);
+		}
+		else {
+			throw new NumericalInterval.IntervalException(
+					"new AbnormalityInterval overlaps one of the existing AbnormalityIntervals");
+		}
 	}
 
 	/**

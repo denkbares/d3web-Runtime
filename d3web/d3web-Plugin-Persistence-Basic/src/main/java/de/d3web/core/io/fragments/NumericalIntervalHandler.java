@@ -26,7 +26,6 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
@@ -64,8 +63,12 @@ public class NumericalIntervalHandler implements FragmentHandler {
 	}
 
 	private static double string2double(String value) throws NumericalIntervalException {
-		if (NEGATIVE_INFINITY.equals(value)) return Double.NEGATIVE_INFINITY;
-		if (POSITIVE_INFINITY.equals(value)) return Double.POSITIVE_INFINITY;
+		if (NEGATIVE_INFINITY.equals(value)) {
+			return Double.NEGATIVE_INFINITY;
+		}
+		else if (POSITIVE_INFINITY.equals(value)) {
+			return Double.POSITIVE_INFINITY;
+		}
 		else {
 			try {
 				return Double.parseDouble(value);
@@ -77,14 +80,22 @@ public class NumericalIntervalHandler implements FragmentHandler {
 	}
 
 	private static boolean[] string2booleanTypes(String value) throws NumericalIntervalException {
-		if ("LeftOpenRightOpenInterval".equals(value)) return new boolean[] {
-				true, true };
-		if ("LeftOpenRightClosedInterval".equals(value)) return new boolean[] {
-				true, false };
-		if ("LeftClosedRightOpenInterval".equals(value)) return new boolean[] {
-				false, true };
-		if ("LeftClosedRightClosedInterval".equals(value)) return new boolean[] {
-				false, false };
+		if ("LeftOpenRightOpenInterval".equals(value)) {
+			return new boolean[] {
+					true, true };
+		}
+		else if ("LeftOpenRightClosedInterval".equals(value)) {
+			return new boolean[] {
+					true, false };
+		}
+		else if ("LeftClosedRightOpenInterval".equals(value)) {
+			return new boolean[] {
+					false, true };
+		}
+		else if ("LeftClosedRightClosedInterval".equals(value)) {
+			return new boolean[] {
+					false, false };
+		}
 		else throw new NumericalIntervalException();
 	}
 
