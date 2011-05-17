@@ -21,8 +21,8 @@
 package de.d3web.core.inference;
 
 /**
- * Helper class to provide explict information about the knowledge to be stored
- * in the ps-method knowledge maps. Creation date: (07.09.00 13:40:08)
+ * Helper class to provide explicit information about the knowledge to be stored
+ * in the knowledge maps. Creation date: (07.09.00 13:40:08)
  * 
  * @author Joachim Baumeister
  */
