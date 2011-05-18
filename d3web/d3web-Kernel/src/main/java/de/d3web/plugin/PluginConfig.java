@@ -117,4 +117,9 @@ public class PluginConfig implements KnowledgeSlice {
 		getPluginConfig(kb).addEntry(entry);
 	}
 
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + ": " + getEntries().toString();
+	}
+
 }

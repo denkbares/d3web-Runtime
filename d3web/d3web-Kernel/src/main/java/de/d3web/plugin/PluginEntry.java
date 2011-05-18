@@ -25,7 +25,7 @@ package de.d3web.plugin;
  */
 public class PluginEntry {
 
-	private Plugin plugin;
+	private final Plugin plugin;
 	private boolean required;
 	private boolean autodetect;
 	private Autodetect autodetectInstance = null;
@@ -107,5 +107,10 @@ public class PluginEntry {
 
 	public void setAutodetect(boolean autodetect) {
 		this.autodetect = autodetect;
+	}
+
+	@Override
+	public String toString() {
+		return plugin.getPluginID();
 	}
 }
