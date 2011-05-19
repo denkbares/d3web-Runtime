@@ -25,7 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.inference.Rule;
-import de.d3web.core.io.utilities.IDObjectComparator;
+import de.d3web.core.io.utilities.NamedObjectComparator;
 import de.d3web.core.knowledge.TerminologyObject;
 
 /**
@@ -59,7 +59,7 @@ public final class RuleComparator implements Comparator<Rule> {
 		List<TerminologyObject> allTerminalObjects = new LinkedList<TerminologyObject>();
 		allTerminalObjects.addAll(terminalObjects);
 		allTerminalObjects.addAll(terminalObjects2);
-		Collections.sort(allTerminalObjects, new IDObjectComparator());
+		Collections.sort(allTerminalObjects, new NamedObjectComparator());
 		for (TerminologyObject o : allTerminalObjects) {
 			if (!terminalObjects.contains(o)) {
 				return -1;

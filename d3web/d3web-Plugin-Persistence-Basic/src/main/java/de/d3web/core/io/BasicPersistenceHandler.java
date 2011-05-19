@@ -43,7 +43,7 @@ import de.d3web.core.inference.PSMethodRulebased;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.io.fragments.PropertiesHandler;
 import de.d3web.core.io.progress.ProgressListener;
-import de.d3web.core.io.utilities.IDObjectComparator;
+import de.d3web.core.io.utilities.NamedObjectComparator;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.InfoStoreUtil;
@@ -278,7 +278,7 @@ public class BasicPersistenceHandler implements
 		Element qContainersElement = doc.createElement("QASets");
 		Map<TerminologyObject, Element> possibleParents = new HashMap<TerminologyObject, Element>();
 		List<QASet> qASets = kb.getManager().getQASets();
-		Collections.sort(qASets, new IDObjectComparator());
+		Collections.sort(qASets, new NamedObjectComparator());
 		PersistenceManager pm = PersistenceManager.getInstance();
 		for (QASet qASet : qASets) {
 			listener.updateProgress(time++ / abstime, "Saving knowledge base: QASets");
@@ -300,7 +300,7 @@ public class BasicPersistenceHandler implements
 
 		Element diagnosisElement = doc.createElement("Diagnoses");
 		List<Solution> solutions = new ArrayList<Solution>(kb.getManager().getSolutions());
-		Collections.sort(solutions, new IDObjectComparator());
+		Collections.sort(solutions, new NamedObjectComparator());
 		for (Solution diag : solutions) {
 			listener.updateProgress(time++ / abstime, "Saving knowledge base: diagnosis");
 			Element singleDiagnosisElement = pm.writeFragment(diag, doc);

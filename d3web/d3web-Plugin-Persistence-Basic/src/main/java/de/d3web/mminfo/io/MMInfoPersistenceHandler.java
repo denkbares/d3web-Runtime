@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.progress.ProgressListener;
-import de.d3web.core.io.utilities.IDObjectComparator;
+import de.d3web.core.io.utilities.NamedObjectComparator;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -120,7 +120,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		float aktvalue = 0;
 		List<TerminologyObject> objects = new ArrayList<TerminologyObject>(
 				kb.getManager().getAllTerminologyObjects());
-		Collections.sort(objects, new IDObjectComparator());
+		Collections.sort(objects, new NamedObjectComparator());
 
 		Document doc = Util.createEmptyDocument();
 		Element mminfosElement = doc.createElement("MMInfos");
