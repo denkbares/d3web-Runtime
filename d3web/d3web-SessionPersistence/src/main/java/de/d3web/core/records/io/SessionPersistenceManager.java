@@ -81,23 +81,55 @@ public final class SessionPersistenceManager extends FragmentManager {
 				EXTENDED_POINT_FRAGMENTHANDLER);
 	}
 
-	public void saveSessions(File file, Collection<SessionRecord> sessionRecord, ProgressListener listener) throws IOException {
+	/**
+	 * Writes a set of session records as xml into the specified file.
+	 * 
+	 * @created 19.05.2011
+	 * @param file the target file to be written
+	 * @param sessionRecords the session records to be stored
+	 * @param listener the progress listener to indicate the progress
+	 * @throws IOException if the xml content cannot be written into the file
+	 */
+	public void saveSessions(File file, Collection<SessionRecord> sessionRecords, ProgressListener listener) throws IOException {
+		OutputStream stream = new FileOutputStream(file);
+		try {
+			saveSessions(stream, sessionRecords, listener);
+		}
+		finally {
+			stream.close();
+		}
+		// find the latest change date to adapt the file to
+		Date latestChange = new Date(0);
+		for (SessionRecord co : sessionRecords) {
+			if (co.getLastChangeDate().after(latestChange)) {
+				latestChange = co.getLastChangeDate();
+			}
+		}
+		file.setLastModified(latestChange.getTime());
+	}
+
+	/**
+	 * Writes a set of session records as xml into the specified stream.
+	 * 
+	 * @created 19.05.2011
+	 * @param stream the target stream to be written
+	 * @param sessionRecords the session records to be stored
+	 * @param listener the progress listener to indicate the progress
+	 * @throws IOException if the xml content cannot be written into the file
+	 */
+	public void saveSessions(OutputStream stream, Collection<SessionRecord> sessionRecords, ProgressListener listener) throws IOException {
 		updateHandler();
 		Document doc = Util.createEmptyDocument();
 		Element repElement = doc.createElement(REPOSITORY_TAG);
 		doc.appendChild(repElement);
-		Date latestChange = new Date(0);
 		int counter = 0;
-		for (SessionRecord co : sessionRecord) {
+		for (SessionRecord co : sessionRecords) {
 			// update progress
-			float percent = sessionRecord.size() / (float) counter++;
+			float percent = sessionRecords.size() / (float) counter++;
 			listener.updateProgress(
 					percent * 0.7f,
-					"writing record " + counter + " of " + sessionRecord.size());
+					"writing record " + counter + " of " + sessionRecords.size());
 
-			if (co.getLastChangeDate().after(latestChange)) {
-				latestChange = co.getLastChangeDate();
-			}
 			Element sessionElement = doc.createElement(SESSION_TAG);
 			sessionElement.setAttribute("id", co.getId());
 			sessionElement.setAttribute("created", DATE_FORMAT.format(co.getCreationDate()));
@@ -108,17 +140,10 @@ public final class SessionPersistenceManager extends FragmentManager {
 			}
 			repElement.appendChild(sessionElement);
 		}
-		file.setLastModified(latestChange.getTime());
 
 		listener.updateProgress(0.7f, "writing records to disc");
-		OutputStream stream = new FileOutputStream(file);
-		try {
-			Util.writeDocumentToOutputStream(doc, stream);
-			listener.updateProgress(1f, "writing records done");
-		}
-		finally {
-			stream.close();
-		}
+		Util.writeDocumentToOutputStream(doc, stream);
+		listener.updateProgress(1f, "writing records done");
 	}
 
 	public Collection<SessionRecord> loadSessions(File file, ProgressListener listener) throws IOException {
